@@ -1,312 +1,81 @@
-Return-Path: <linux-nfs+bounces-13045-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13046-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32B36B03F65
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EED6B03FAF
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:24:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D6983B13C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:14:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B38AF4A3780
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B33A23C50A;
-	Mon, 14 Jul 2025 13:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtcjbjzS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C6825EFBC;
+	Mon, 14 Jul 2025 13:18:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D1E1E5B63
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E0125DB12
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752498870; cv=none; b=Y3EODZ59AySsE9m+i0BSP5OV4hmQAU4RqAbcwreRfK3lFiPB1iVASpn/GMsabNMUPNzv9kCSj36x52jvUd/dvIVVDxlcXxc2hDJdRPOF5eenBqee+Qsm9I/gGf1RfTuvbxzH7EzSQDoIBDHCkxLK3NBc/EaCQFFh/fx4y36cmjQ=
+	t=1752499130; cv=none; b=gsYpZk+4R/cQkXOgs6sdN7THH1WgvuK7unKXI4F7QWS1ZK0k9MJSUZpKWjXPTW1HtkSUOshZtL1FVYIh1qFeNUGRQUFoQiv/JFHcDn52WuBFMRbRbbrYR9NmAf+NdF6XE6s806bXbCb0E94Rr0S7BByIrK/Ay9kNa76f+ecV9js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752498870; c=relaxed/simple;
-	bh=hvt0efFcZUmBUEKELYY5Yv8pZ6UyKKCGpgzjrdXv/S0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mvzaH2+DT0LChrAy/9hkWWSxFxxD18akOXEEALPdE9kXAVWBwrTfMOhKmFBrCybjfngm0mElpmKcJEw9dKjHT2uhHw1E0XGNlb/s3oJsFq+FShxElPOKcKewyfezP+prfXAkTpE7GqDcEnCp4rihEpxIf68zycglSFSCu5CLR9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtcjbjzS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC065C4CEF4;
-	Mon, 14 Jul 2025 13:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752498870;
-	bh=hvt0efFcZUmBUEKELYY5Yv8pZ6UyKKCGpgzjrdXv/S0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KtcjbjzSno7yUx8gSdOYmJnyVT4isqY0Ve/J9GhSmVox6PloR9EzbkV5z9vTydAal
-	 NzNGSWy6BQmE1+nhukYVCtUuONL6yG7AD6cEYgXL+p6OYsooDZ1JFMaLVRV4lSqzUu
-	 he3fz//6ZX9vWcoXzMmYR87qRjowN7VY3HR/4JX+oYHeSHYTjmg9Gy3o3ybzYdVWni
-	 VhqiV5cS+4rqcqsdu1Anq50KPpEcK8Bq+cSPKivJCSc3Wjkfnp0FUC2cxdVbDf8b0m
-	 SIhFU/quScR3bcvppy8zdkgiCXXCCGu1oM6pMSsmAazONZIXSBY12uIKJjyXNJcuq9
-	 gOaSSy28uT/fg==
-Message-ID: <fe1eccd60b2eff90f763aca232875d13643083fd.camel@kernel.org>
+	s=arc-20240116; t=1752499130; c=relaxed/simple;
+	bh=GE/KTmRQv6lkBbgNl1iIM1N96o2umNpMv54NVQqxWa4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gb4WNO98fy2ZI+Y/rUwCXlKEOWH+RL8jkMmBPEktHBeI5SxVHEfT3D4tzaDWgLEjnPDpWdLDgYgmv1ivxH3axb/JDcqrMJKr9F4S35N2F3+Fw0MgTShLTXRYZK2xh73b9/pty13+qoUl5rRGJkkbMT1sS2Db166VXirnrzn/pwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D8A8B227A88; Mon, 14 Jul 2025 15:18:44 +0200 (CEST)
+Date: Mon, 14 Jul 2025 15:18:44 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH 4/4] NFS: use a hash table for delegation lookup
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Date: Mon, 14 Jul 2025 09:14:27 -0400
-In-Reply-To: <20250714111651.1565055-5-hch@lst.de>
-References: <20250714111651.1565055-1-hch@lst.de>
-	 <20250714111651.1565055-5-hch@lst.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+Message-ID: <20250714131844.GA9138@lst.de>
+References: <20250714111651.1565055-1-hch@lst.de> <20250714111651.1565055-5-hch@lst.de> <fe1eccd60b2eff90f763aca232875d13643083fd.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe1eccd60b2eff90f763aca232875d13643083fd.camel@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, 2025-07-14 at 13:16 +0200, Christoph Hellwig wrote:
-> nfs_delegation_find_inode currently has to walk the entire list of
-> delegations per inode, which can become pretty large, and can become even
-> larger when increasing the delegation watermark.
->=20
-> Add a hash table to speed up the delegation lookup, sized as a fraction
-> of the delegation watermark.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/nfs/client.c           | 23 +++++++++++++++++++----
->  fs/nfs/delegation.c       | 15 +++++++++++++--
->  fs/nfs/delegation.h       |  3 +++
->  include/linux/nfs_fs_sb.h |  2 ++
->  4 files changed, 37 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index f55188928f67..94684a476dd8 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -994,6 +994,7 @@ static DEFINE_IDA(s_sysfs_ids);
->  struct nfs_server *nfs_alloc_server(void)
->  {
->  	struct nfs_server *server;
-> +	int delegation_buckets, i;
-> =20
->  	server =3D kzalloc(sizeof(struct nfs_server), GFP_KERNEL);
->  	if (!server)
-> @@ -1019,11 +1020,18 @@ struct nfs_server *nfs_alloc_server(void)
->  	atomic_set(&server->active, 0);
->  	atomic_long_set(&server->nr_active_delegations, 0);
-> =20
-> +	delegation_buckets =3D roundup_pow_of_two(nfs_delegation_watermark / 16=
-);
-> +	server->delegation_hash_mask =3D delegation_buckets - 1;
-> +	server->delegation_hash_table =3D kmalloc_array(delegation_buckets,
-> +			sizeof(*server->delegation_hash_table), GFP_KERNEL);
-> +	if (!server->delegation_hash_table)
-> +		goto out_free_server;
-> +	for (i =3D 0; i < delegation_buckets; i++)
-> +		INIT_HLIST_HEAD(&server->delegation_hash_table[i]);
-> +
+On Mon, Jul 14, 2025 at 09:14:27AM -0400, Jeff Layton wrote:
+> > +	delegation_buckets = roundup_pow_of_two(nfs_delegation_watermark / 16);
+> > +	server->delegation_hash_mask = delegation_buckets - 1;
+> > +	server->delegation_hash_table = kmalloc_array(delegation_buckets,
+> > +			sizeof(*server->delegation_hash_table), GFP_KERNEL);
+> > +	if (!server->delegation_hash_table)
+> > +		goto out_free_server;
+> > +	for (i = 0; i < delegation_buckets; i++)
+> > +		INIT_HLIST_HEAD(&server->delegation_hash_table[i]);
+> > +
+> 
+> This is going to get created for any mount, even v3 ones. It might be
+> better to only bother with this for v4 mounts. Maybe do this in
+> nfs4_server_common_setup() instead?
 
-This is going to get created for any mount, even v3 ones. It might be
-better to only bother with this for v4 mounts. Maybe do this in
-nfs4_server_common_setup() instead?
+Yeah, good idea.
 
-Also, I wonder if you'd be better off using the rhashtable
-infrastructure instead of adding a fixed-size one? The number of
-delegations in flight is very workload-dependent, so a resizeable
-hashtable may be a better option.
+> Also, I wonder if you'd be better off using the rhashtable
+> infrastructure instead of adding a fixed-size one? The number of
+> delegations in flight is very workload-dependent, so a resizeable
+> hashtable may be a better option.
 
->  	server->io_stats =3D nfs_alloc_iostats();
-> -	if (!server->io_stats) {
-> -		kfree(server);
-> -		return NULL;
-> -	}
-> +	if (!server->io_stats)
-> +		goto out_free_delegation_hash;
-> =20
->  	server->change_attr_type =3D NFS4_CHANGE_TYPE_IS_UNDEFINED;
-> =20
-> @@ -1036,6 +1044,12 @@ struct nfs_server *nfs_alloc_server(void)
->  	rpc_init_wait_queue(&server->uoc_rpcwaitq, "NFS UOC");
-> =20
->  	return server;
-> +
-> +out_free_delegation_hash:
-> +	kfree(server->delegation_hash_table);
-> +out_free_server:
-> +	kfree(server);
-> +	return NULL;
->  }
->  EXPORT_SYMBOL_GPL(nfs_alloc_server);
-> =20
-> @@ -1044,6 +1058,7 @@ static void delayed_free(struct rcu_head *p)
->  	struct nfs_server *server =3D container_of(p, struct nfs_server, rcu);
-> =20
->  	nfs_free_iostats(server->io_stats);
-> +	kfree(server->delegation_hash_table);
->  	kfree(server);
->  }
-> =20
-> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 621b635d1c56..ca830ceb466e 100644
-> --- a/fs/nfs/delegation.c
-> +++ b/fs/nfs/delegation.c
-> @@ -27,9 +27,16 @@
-> =20
->  #define NFS_DEFAULT_DELEGATION_WATERMARK (15000U)
-> =20
-> -static unsigned nfs_delegation_watermark =3D NFS_DEFAULT_DELEGATION_WATE=
-RMARK;
-> +unsigned nfs_delegation_watermark =3D NFS_DEFAULT_DELEGATION_WATERMARK;
->  module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
- 0644);
-> =20
-> +static struct hlist_head *nfs_delegation_hash(struct nfs_server *server,
-> +		const struct nfs_fh *fhandle)
-> +{
-> +	return server->delegation_hash_table +
-> +		(nfs_fhandle_hash(fhandle) & server->delegation_hash_mask);
-> +}
-> +
->  static void __nfs_free_delegation(struct nfs_delegation *delegation)
->  {
->  	put_cred(delegation->cred);
-> @@ -367,6 +374,7 @@ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
->  		spin_unlock(&delegation->lock);
->  		return NULL;
->  	}
-> +	hlist_del_init_rcu(&delegation->hash);
->  	list_del_rcu(&delegation->super_list);
->  	delegation->inode =3D NULL;
->  	rcu_assign_pointer(nfsi->delegation, NULL);
-> @@ -529,6 +537,8 @@ int nfs_inode_set_delegation(struct inode *inode, con=
-st struct cred *cred,
->  	spin_unlock(&inode->i_lock);
-> =20
->  	list_add_tail_rcu(&delegation->super_list, &server->delegations);
-> +	hlist_add_head_rcu(&delegation->hash,
-> +			nfs_delegation_hash(server, &NFS_I(inode)->fh));
->  	rcu_assign_pointer(nfsi->delegation, delegation);
->  	delegation =3D NULL;
-> =20
-> @@ -1166,11 +1176,12 @@ static struct inode *
->  nfs_delegation_find_inode_server(struct nfs_server *server,
->  				 const struct nfs_fh *fhandle)
->  {
-> +	struct hlist_head *head =3D nfs_delegation_hash(server, fhandle);
->  	struct nfs_delegation *delegation;
->  	struct super_block *freeme =3D NULL;
->  	struct inode *res =3D NULL;
-> =20
-> -	list_for_each_entry_rcu(delegation, &server->delegations, super_list) {
-> +	hlist_for_each_entry_rcu(delegation, head, hash) {
->  		spin_lock(&delegation->lock);
->  		if (delegation->inode !=3D NULL &&
->  		    !test_bit(NFS_DELEGATION_REVOKED, &delegation->flags) &&
-> diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-> index 8ff5ab9c5c25..9f1fb9b39c43 100644
-> --- a/fs/nfs/delegation.h
-> +++ b/fs/nfs/delegation.h
-> @@ -14,6 +14,7 @@
->   * NFSv4 delegation
->   */
->  struct nfs_delegation {
-> +	struct hlist_node hash;
->  	struct list_head super_list;
->  	const struct cred *cred;
->  	struct inode *inode;
-> @@ -123,4 +124,6 @@ static inline int nfs_have_delegated_mtime(struct ino=
-de *inode)
->  						 NFS_DELEGATION_FLAG_TIME);
->  }
-> =20
-> +extern unsigned nfs_delegation_watermark;
-> +
->  #endif
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index fe930d685780..88212306fd87 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -256,6 +256,8 @@ struct nfs_server {
->  	struct list_head	layouts;
->  	struct list_head	delegations;
->  	atomic_long_t		nr_active_delegations;
-> +	unsigned int		delegation_hash_mask;
-> +	struct hlist_head	*delegation_hash_table;
->  	struct list_head	ss_copies;
->  	struct list_head	ss_src_copies;
-> =20
+I did try that first.  But the rhashtable expects the hash key to
+be embedded into the structure that has the rhash_head embedded into
+it, while delegations use the file handle embeded into the inode as
+the key.  So we'd have to bloat the deleations with a key copy for
+that.
 
---=20
-Jeff Layton <jlayton@kernel.org>
 
