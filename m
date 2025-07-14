@@ -1,58 +1,59 @@
-Return-Path: <linux-nfs+bounces-13040-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13041-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D393B03E88
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 14:24:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5792B03EAB
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 14:28:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3658189C3A9
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 12:24:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9178716E26C
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 12:28:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C57F242D98;
-	Mon, 14 Jul 2025 12:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62EAB246335;
+	Mon, 14 Jul 2025 12:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRAfduAl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="petbxnSr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CBD4A1A
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 12:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD42244669
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 12:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752495839; cv=none; b=nNO8teys5/YD6+7IBlsv4Nq592p6P/D1HGtgD21mtBKvbtL/nr0OizEmuoWoURGHtD143u+GiGHnYscWyexXbd09YiVTfPd1w8pnljUAd4JNG27mV1KxJDQRSXRUnmFe75tXL9cI+mZnGjfRKhN3BtjBBaciFPDkyqICyW6W0e0=
+	t=1752496104; cv=none; b=LYyyvQvU2Mofh24bKc4Qo0d4rquqVSPW+K7em7NnwJ9AH2DuQNrjQhnf2m9XWlu1n0Yn06D8HGdd1zJYqDAp70Y8JdiGxmPqSM+nyQqIxZAZANRR4vteKkGTHTgJF/ksFvkVWM8d0cIHP6YdumMxCCGOgLGOoP9+VJl6vr1/i24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752495839; c=relaxed/simple;
-	bh=CUwzs/Jvr9qkHYqO3/QsMJAD7sbhrHTTkualeZSQJ88=;
+	s=arc-20240116; t=1752496104; c=relaxed/simple;
+	bh=3OeJ0BIAsKYuwmUzFvhW1JE8QWew2U10tlwHuWdDOAE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nf1s+PJZiSKN/UidpSpjhgRg0S37DFMrqBGiBug77yD/mBbEHHMC4sswrY4qx2mTpbtVvTEQkXRP1abG7joOtTs3Lg53JeTkD3FXx8QQJwHg1Z1CNpenot7wXECMpsVUo/SXV/BkLLZsr4XgvGXERzJ+Cs7TFrDEQanBv4854jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRAfduAl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304AFC4CEED;
-	Mon, 14 Jul 2025 12:23:58 +0000 (UTC)
+	 Content-Type:MIME-Version; b=XAecqF6vYVeLEN94sCJ4Pq3t010F/EUKGn+nHeJWmQapzNEDiYUUynUL4Ck3IZOqqLauXkNVWUSlNDH2NUHEDqaaH9ovxni5KDMyMQhCMPX5euWfNX9hjgHaapHwfEsvIwZhGc3IovFYz/LzPTmvBTDQjJUxgnjjtrq5SFY7cVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=petbxnSr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4655CC4CEED;
+	Mon, 14 Jul 2025 12:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752495838;
-	bh=CUwzs/Jvr9qkHYqO3/QsMJAD7sbhrHTTkualeZSQJ88=;
+	s=k20201202; t=1752496103;
+	bh=3OeJ0BIAsKYuwmUzFvhW1JE8QWew2U10tlwHuWdDOAE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JRAfduAlytTL+0PlKY21itp7kQAJSSrqTNGx8HVKehSOtC2SnUj6EBZFT+uKmiSj1
-	 yWBHMYsZ4ZPUD2sCczCPfZGUknvMtZ2wCw1KVpKR/6dhQOn4ZCPxzFBoM6pZANy14w
-	 qKy++9xwGfIFIvPhyEidZf9xMI/ceA+J6Sj6mwCBLcrF9Xhfxl1LqH2pjrDxiZuX4B
-	 cpUwwxp9LcwCHT8zXFTyLSS1SlOkkRmrtypGOz9qxGtDVZuv6akvIbF4ob2+uSb2NL
-	 AEAot4jnKuuYv452WzbNu/6BLfYC8KdGbi91EO3sGI00aN3ZoycAKNLHr0wJ/cdFtu
-	 3bWisiIA1eV4Q==
-Message-ID: <035364beea042fb932f8333ed5825c2a62d22eb5.camel@kernel.org>
-Subject: Re: [for-6.16-final PATCH 8/9] nfs/localio: avoid bouncing LOCALIO
- if nfs_client_is_local()
+	b=petbxnSrlqENJcfC8qe5J0i+/8xRBH+s7JZH19VqeINL3op+MYHZckSvjAS18tPuY
+	 F/LyGoG+0yhucJrOkHEk5liUfNXNus/j4PgCHPhFSOztQUzMKufHsblvWKpaO5/PMT
+	 sDVJarVx+W8X6awfGjgYPqjvg21N64trz7R02nJMJ6wLPQXU0MNFssKIqhOIXkODaa
+	 NCnfa527EqMe6MXwx3t+4Jwasxe4hqm+AkIklMXuDR2/IQSSG98ahwvc80+YTk2NCn
+	 l1OuG1VlAkyV4LorRri9cmagVW9842YwD2FsEkdRvFCA7j1QkpqE52zv4rCS83Ev1f
+	 lni3/AAIb9J7Q==
+Message-ID: <579139f6eaaf3f807991e041f509db14d2ffc721.camel@kernel.org>
+Subject: Re: [for-6.16-final PATCH 9/9] nfs/localio: add localio_async_probe
+ modparm
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Trond Myklebust <trondmy@hammerspace.com>, Chuck Lever
- <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 14 Jul 2025 08:23:56 -0400
-In-Reply-To: <20250714031359.10192-9-snitzer@kernel.org>
+To: NeilBrown <neil@brown.name>, Mike Snitzer <snitzer@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
+ <trondmy@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>,
+ linux-nfs@vger.kernel.org
+Date: Mon, 14 Jul 2025 08:28:22 -0400
+In-Reply-To: <175246700631.2234665.18042187680516755344@noble.neil.brown.name>
 References: <20250714031359.10192-1-snitzer@kernel.org>
-	 <20250714031359.10192-9-snitzer@kernel.org>
+	, <20250714031359.10192-10-snitzer@kernel.org>
+	 <175246700631.2234665.18042187680516755344@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,63 +138,78 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-07-13 at 23:13 -0400, Mike Snitzer wrote:
-> From: Mike Snitzer <snitzer@hammerspace.com>
+On Mon, 2025-07-14 at 14:23 +1000, NeilBrown wrote:
+> On Mon, 14 Jul 2025, Mike Snitzer wrote:
+> > From: Mike Snitzer <snitzer@hammerspace.com>
+> >=20
+> > This knob influences the LOCALIO handshake so that it happens
+> > synchronously upon NFS client creation.. which reduces the window of
+> > opportunity for a bunch of IO to flood page cache and send out over to
+> > NFSD before LOCALIO handshake negotiates that the client and server
+> > are local.  The knob is:
+> >   echo N > /sys/module/nfs/parameters/localio_async_probe
 >=20
-> Previously nfs_local_probe() was made to disable and then attempt to
-> re-enable LOCALIO (via LOCALIO protocol handshake) if/when it was
-> called and LOCALIO already enabled.
+> I understand why you are adding this but ....  yuck.  Tuning knobs are
+> best avoided.
 >=20
-> Vague memory for _why_ this was the case is that this was useful
-> if/when a local NFS server were to be restarted with a local NFS
-> client connected to it.
+> Maybe we could still do the probe async, but in mount wait for 200ms,
+> or for the probe to get a reply.   That should make everyone happy.
 >=20
-> But as it happens this causes an absurd amount of LOCALIO flapping
-> which has a side-effect of too much IO being needlessly sent to NFSD
-> (using RPC over the loopback network interface).  This is the
-> definition of "serious performance loss" (that negates the point of
-> having LOCALIO).
+> NeilBrown
 >=20
-> So remove this mis-optimization for re-enabling LOCALIO if/when an NFS
-> server is restarted (which is an extremely rare thing to do).  Will
-> revisit testing that scenario again but in the meantime this patch
-> restores the full benefit of LOCALIO.
->=20
-> Fixes: 56bcd0f07fdb ("nfs: implement client support for NFS_LOCALIO_PROGR=
-AM")
-> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
-> ---
->  fs/nfs/localio.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index a4bacd9a5052..e3ae003118cb 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -180,10 +180,8 @@ static void nfs_local_probe(struct nfs_client *clp)
->  		return;
->  	}
-> =20
-> -	if (nfs_client_is_local(clp)) {
-> -		/* If already enabled, disable and re-enable */
-> -		nfs_localio_disable_client(clp);
-> -	}
-> +	if (nfs_client_is_local(clp))
-> +		return;
-> =20
->  	if (!nfs_uuid_begin(&clp->cl_uuid))
->  		return;
-> @@ -241,7 +239,8 @@ __nfs_local_open_fh(struct nfs_client *clp, const str=
-uct cred *cred,
->  		case -ENOMEM:
->  		case -ENXIO:
->  		case -ENOENT:
-> -			/* Revalidate localio, will disable if unsupported */
-> +			/* Revalidate localio */
-> +			nfs_localio_disable_client(clp);
->  			nfs_local_probe(clp);
->  		}
->  	}
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Agreed. I'd prefer to not need a tuning knob for this. Doing a short
+wait in the mount for localio negotiation would be a lot more
+reasonable.
+
+That said, why is the LOCALIO negotiation taking so long? Shouldn't
+that be basically instantaneous during the mount? Do we really have
+applications that are hammering reads and writes just after the mount
+returns but before the localio negotiation completes?
+
+>=20
+> >=20
+> > Fixes: 1ff4716f420b ("NFS: always probe for LOCALIO support asynchronou=
+sly")
+> > Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+> > ---
+> >  fs/nfs/localio.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> > index e3ae003118cb..76ca9bd21d2e 100644
+> > --- a/fs/nfs/localio.c
+> > +++ b/fs/nfs/localio.c
+> > @@ -49,6 +49,11 @@ struct nfs_local_fsync_ctx {
+> >  static bool localio_enabled __read_mostly =3D true;
+> >  module_param(localio_enabled, bool, 0644);
+> > =20
+> > +static bool localio_async_probe __read_mostly =3D true;
+> > +module_param(localio_async_probe, bool, 0644);
+> > +MODULE_PARM_DESC(localio_async_probe,
+> > +		 "Probe for LOCALIO support asynchronously.");
+> > +
+> >  static bool localio_O_DIRECT_semantics __read_mostly =3D false;
+> >  module_param(localio_O_DIRECT_semantics, bool, 0644);
+> >  MODULE_PARM_DESC(localio_O_DIRECT_semantics,
+> > @@ -203,7 +208,10 @@ void nfs_local_probe_async_work(struct work_struct=
+ *work)
+> > =20
+> >  void nfs_local_probe_async(struct nfs_client *clp)
+> >  {
+> > -	queue_work(nfsiod_workqueue, &clp->cl_local_probe_work);
+> > +	if (likely(localio_async_probe))
+> > +		queue_work(nfsiod_workqueue, &clp->cl_local_probe_work);
+> > +	else
+> > +		nfs_local_probe(clp);
+> >  }
+> >  EXPORT_SYMBOL_GPL(nfs_local_probe_async);
+> > =20
+> > --=20
+> > 2.44.0
+> >=20
+> >=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
