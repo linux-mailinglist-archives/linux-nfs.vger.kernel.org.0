@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-13043-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13044-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51012B03F3C
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:06:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE91B03F3E
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AEAD171430
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:06:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 546DA189EB80
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:07:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D1618C034;
-	Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6071E18C034;
+	Mon, 14 Jul 2025 13:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNJqjzHq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryPClRcE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44C8247295
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5B54315A
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752498403; cv=none; b=tUw4QIa2JUJ3gcmuvzUH/4gJFUBcjfxsM48cUCNGyI0FJB9cfg/b88AFvC+GXJTGvUoqLZue/Jd4/HOIK3/aech9jmoIi+PRgieUtHUerJs4HVuTa5kzJiVXhYEfkFI3wGrnpF85jW7Fg8gpWEdrkmSC/MZy+I+RGttWLrSVgk0=
+	t=1752498453; cv=none; b=A4+cwoW2nftvAUqttCch7AJiYPcndKUcsglSErgTsXJ6f1oleLrvHZBbk7HgC7anbzKIZr1NNW5wfzPt6C9ux2AGmkbU7DdjYqUmDgz/vJs5wt0nTSpdblz83xuw+kw4qnmQShIrW4N3vjBOwg4ih1vzk1K+jDbuYlnEnI8oFMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752498403; c=relaxed/simple;
-	bh=s+hdEm2ALrAuUi6F4pHt0OBQE5Jo+tFaHYFgVK9jrAE=;
+	s=arc-20240116; t=1752498453; c=relaxed/simple;
+	bh=Fen5luEZ29jz0ZCMQph1mP//rxGARphm9Q4wO6kyw28=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qStIGhkxqW8k/14l13hHKTHuD2GRwyTzcOMy5oza8XcSblz01nBBnHCfoI+OmWsoWawvj/AoCALYiUJhT4tKdNV1LYr0AUsZDuPyoArOjDcSeWnIgg1rI1DNwwnf+KHjXJx+3xHum1NE0xuFWd7NDjz644sCIZM5tj3hwFks/fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNJqjzHq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25630C4CEED;
-	Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=X2reJW7R4gucYoMRXA1zq1/3+Z2YXOTWEe9yKaTdh3a9TJ9vOhTHRopGuB9qrm9kWfCcE9Fzj6TlmIbiIDwqpJIZzQ9SKFqKsSdeCC74zIJsO+Esm2LA1JdHDBPvjpX9UeZjk0GR0Ny6T6xf7AJZ8ExiZozWHmJMthxS8tTV5ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryPClRcE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58F1C4CEED;
+	Mon, 14 Jul 2025 13:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752498403;
-	bh=s+hdEm2ALrAuUi6F4pHt0OBQE5Jo+tFaHYFgVK9jrAE=;
+	s=k20201202; t=1752498453;
+	bh=Fen5luEZ29jz0ZCMQph1mP//rxGARphm9Q4wO6kyw28=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hNJqjzHqybX3YASkncSiFA1KikTIXmDoHLPVlDbtR05mwi54dQ+zncuAotdzKvRZm
-	 HJhFfy4scc8wPSwVIf/+MMjGHpxLUYd1q7UIISN48yjjlccuetwEwyzMmNZrj7O31M
-	 kNtTWkMt8Q/qppXa5bsFwx7m8xR4GuII9FeNe9jRl+jV8O6/9h93uXl1OY3okujZFF
-	 M6qeuCE+5HAQqvW1E4PQ6/ZvgxK3JCsDAUVhgpgk7v+MMdYOw6ESSY6zWpOuTBhQ2p
-	 +kBKmIxCmgLPeHC1eeAsR6wNmCFgq1jZ8NrofZmn67bRUY96lCMSKPKcnNXTtrlLWu
-	 V3H4169RetOcA==
-Message-ID: <7af8b8239a10a0141be841cb00b8992834a55b43.camel@kernel.org>
-Subject: Re: [PATCH 2/4] NFS: move the delegation_watermark module parameter
+	b=ryPClRcEOKKGAQ9SgkZ5pfvYrOmK1MhduLRYTplyxQoq5eE0kXYWgAk9247gN7e8h
+	 R/2kJLEjdKCOx/P6402qoUiqfh2Dz8uDnlPyPu7iE2cA/Mlk+FUAtNZ0dWilHFGgAt
+	 zRAnFz7160xn85/BVKyVq1ewbYHlKVW39DM0xe6fXbjDLTsxd/10e8AYGtutKBhmrS
+	 dqyayuIRKzpUFTD73bthWEQTY9gX7rmvGA4wi+CWRb2WvWm6324SCKqRKC8F+pCTWQ
+	 ICH7VTfOO0KHbQjfdugkLL8MrpmzXFrUdYJ/I22ovneNAV5eS1DKAzbFRsWR/sDsbA
+	 Ye6vLjepqEoqg==
+Message-ID: <6db09cc485ae37a4c8c89b4a9a2bcf0dd1302733.camel@kernel.org>
+Subject: Re: [PATCH 3/4] NFS: track active delegations per-server
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>
 Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Date: Mon, 14 Jul 2025 09:06:42 -0400
-In-Reply-To: <20250714111651.1565055-3-hch@lst.de>
+Date: Mon, 14 Jul 2025 09:07:30 -0400
+In-Reply-To: <20250714111651.1565055-4-hch@lst.de>
 References: <20250714111651.1565055-1-hch@lst.de>
-	 <20250714111651.1565055-3-hch@lst.de>
+	 <20250714111651.1565055-4-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,39 +135,201 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2025-07-14 at 13:16 +0200, Christoph Hellwig wrote:
-> Keep the module_param_named next to the variable declaration instead of
-> somewhere unrelated, following the best practice in the rest of the
-> kernel.
+> The active delegation watermark was added to avoid overloading servers.
+> Track the active delegation per-server instead of globally so that client=
+s
+> talking to multiple servers aren't limited by the global limit.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/nfs/delegation.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  fs/nfs/client.c           |  1 +
+>  fs/nfs/delegation.c       | 35 +++++++++++++++++++----------------
+>  include/linux/nfs_fs_sb.h |  1 +
+>  3 files changed, 21 insertions(+), 16 deletions(-)
 >=20
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 1a55debab6e5..f55188928f67 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -1017,6 +1017,7 @@ struct nfs_server *nfs_alloc_server(void)
+>  	INIT_LIST_HEAD(&server->ss_src_copies);
+> =20
+>  	atomic_set(&server->active, 0);
+> +	atomic_long_set(&server->nr_active_delegations, 0);
+> =20
+>  	server->io_stats =3D nfs_alloc_iostats();
+>  	if (!server->io_stats) {
 > diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 56bb2a7e1793..d036796dbe69 100644
+> index d036796dbe69..621b635d1c56 100644
 > --- a/fs/nfs/delegation.c
 > +++ b/fs/nfs/delegation.c
-> @@ -29,6 +29,7 @@
+> @@ -27,7 +27,6 @@
 > =20
->  static atomic_long_t nfs_active_delegations;
+>  #define NFS_DEFAULT_DELEGATION_WATERMARK (15000U)
+> =20
+> -static atomic_long_t nfs_active_delegations;
 >  static unsigned nfs_delegation_watermark =3D NFS_DEFAULT_DELEGATION_WATE=
 RMARK;
-> +module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
+>  module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
  0644);
 > =20
->  static void __nfs_free_delegation(struct nfs_delegation *delegation)
->  {
-> @@ -1575,5 +1576,3 @@ bool nfs4_delegation_flush_on_close(const struct in=
-ode *inode)
->  	rcu_read_unlock();
->  	return ret;
+> @@ -38,11 +37,12 @@ static void __nfs_free_delegation(struct nfs_delegati=
+on *delegation)
+>  	kfree_rcu(delegation, rcu);
 >  }
-> -
-> -module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
- 0644);
+> =20
+> -static void nfs_mark_delegation_revoked(struct nfs_delegation *delegatio=
+n)
+> +static void nfs_mark_delegation_revoked(struct nfs_server *server,
+> +		struct nfs_delegation *delegation)
+>  {
+>  	if (!test_and_set_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
+>  		delegation->stateid.type =3D NFS4_INVALID_STATEID_TYPE;
+> -		atomic_long_dec(&nfs_active_delegations);
+> +		atomic_long_dec(&server->nr_active_delegations);
+>  		if (!test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
+>  			nfs_clear_verifier_delegated(delegation->inode);
+>  	}
+> @@ -60,9 +60,10 @@ static void nfs_put_delegation(struct nfs_delegation *=
+delegation)
+>  		__nfs_free_delegation(delegation);
+>  }
+> =20
+> -static void nfs_free_delegation(struct nfs_delegation *delegation)
+> +static void nfs_free_delegation(struct nfs_server *server,
+> +		struct nfs_delegation *delegation)
+>  {
+> -	nfs_mark_delegation_revoked(delegation);
+> +	nfs_mark_delegation_revoked(server, delegation);
+>  	nfs_put_delegation(delegation);
+>  }
+> =20
+> @@ -261,7 +262,7 @@ void nfs_inode_reclaim_delegation(struct inode *inode=
+, const struct cred *cred,
+>  	}
+>  	clear_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags);
+>  	if (test_and_clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
+> -		atomic_long_inc(&nfs_active_delegations);
+> +		atomic_long_inc(&NFS_SERVER(inode)->nr_active_delegations);
+>  	spin_unlock(&delegation->lock);
+>  	rcu_read_unlock();
+>  	put_cred(oldcred);
+> @@ -413,7 +414,8 @@ nfs_update_delegation_cred(struct nfs_delegation *del=
+egation,
+>  }
+> =20
+>  static void
+> -nfs_update_inplace_delegation(struct nfs_delegation *delegation,
+> +nfs_update_inplace_delegation(struct nfs_server *server,
+> +		struct nfs_delegation *delegation,
+>  		const struct nfs_delegation *update)
+>  {
+>  	if (nfs4_stateid_is_newer(&update->stateid, &delegation->stateid)) {
+> @@ -426,7 +428,7 @@ nfs_update_inplace_delegation(struct nfs_delegation *=
+delegation,
+>  			nfs_update_delegation_cred(delegation, update->cred);
+>  			/* smp_mb__before_atomic() is implicit due to xchg() */
+>  			clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
+> -			atomic_long_inc(&nfs_active_delegations);
+> +			atomic_long_inc(&server->nr_active_delegations);
+>  		}
+>  	}
+>  }
+> @@ -481,7 +483,7 @@ int nfs_inode_set_delegation(struct inode *inode, con=
+st struct cred *cred,
+>  	if (nfs4_stateid_match_other(&old_delegation->stateid,
+>  				&delegation->stateid)) {
+>  		spin_lock(&old_delegation->lock);
+> -		nfs_update_inplace_delegation(old_delegation,
+> +		nfs_update_inplace_delegation(server, old_delegation,
+>  				delegation);
+>  		spin_unlock(&old_delegation->lock);
+>  		goto out;
+> @@ -530,7 +532,7 @@ int nfs_inode_set_delegation(struct inode *inode, con=
+st struct cred *cred,
+>  	rcu_assign_pointer(nfsi->delegation, delegation);
+>  	delegation =3D NULL;
+> =20
+> -	atomic_long_inc(&nfs_active_delegations);
+> +	atomic_long_inc(&server->nr_active_delegations);
+> =20
+>  	trace_nfs4_set_delegation(inode, type);
+> =20
+> @@ -544,7 +546,7 @@ int nfs_inode_set_delegation(struct inode *inode, con=
+st struct cred *cred,
+>  		__nfs_free_delegation(delegation);
+>  	if (freeme !=3D NULL) {
+>  		nfs_do_return_delegation(inode, freeme, 0);
+> -		nfs_free_delegation(freeme);
+> +		nfs_free_delegation(server, freeme);
+>  	}
+>  	return status;
+>  }
+> @@ -756,7 +758,7 @@ void nfs_inode_evict_delegation(struct inode *inode)
+>  		set_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+>  		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+>  		nfs_do_return_delegation(inode, delegation, 1);
+> -		nfs_free_delegation(delegation);
+> +		nfs_free_delegation(NFS_SERVER(inode), delegation);
+>  	}
+>  }
+> =20
+> @@ -842,7 +844,8 @@ void nfs4_inode_return_delegation_on_close(struct ino=
+de *inode)
+>  	if (!delegation)
+>  		goto out;
+>  	if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags) ||
+> -	    atomic_long_read(&nfs_active_delegations) >=3D nfs_delegation_water=
+mark) {
+> +	    atomic_long_read(&NFS_SERVER(inode)->nr_active_delegations) >=3D
+> +	    nfs_delegation_watermark) {
+>  		spin_lock(&delegation->lock);
+>  		if (delegation->inode &&
+>  		    list_empty(&NFS_I(inode)->open_files) &&
+> @@ -1018,7 +1021,7 @@ static void nfs_revoke_delegation(struct inode *ino=
+de,
+>  		}
+>  		spin_unlock(&delegation->lock);
+>  	}
+> -	nfs_mark_delegation_revoked(delegation);
+> +	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
+>  	ret =3D true;
+>  out:
+>  	rcu_read_unlock();
+> @@ -1050,7 +1053,7 @@ void nfs_delegation_mark_returned(struct inode *ino=
+de,
+>  			delegation->stateid.seqid =3D stateid->seqid;
+>  	}
+> =20
+> -	nfs_mark_delegation_revoked(delegation);
+> +	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
+>  	clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+>  	spin_unlock(&delegation->lock);
+>  	if (nfs_detach_delegation(NFS_I(inode), delegation, NFS_SERVER(inode)))
+> @@ -1272,7 +1275,7 @@ static int nfs_server_reap_unclaimed_delegations(st=
+ruct nfs_server *server,
+>  		if (delegation !=3D NULL) {
+>  			if (nfs_detach_delegation(NFS_I(inode), delegation,
+>  						server) !=3D NULL)
+> -				nfs_free_delegation(delegation);
+> +				nfs_free_delegation(server, delegation);
+>  			/* Match nfs_start_delegation_return_locked */
+>  			nfs_put_delegation(delegation);
+>  		}
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index 73bed04529a7..fe930d685780 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -255,6 +255,7 @@ struct nfs_server {
+>  	struct list_head	state_owners_lru;
+>  	struct list_head	layouts;
+>  	struct list_head	delegations;
+> +	atomic_long_t		nr_active_delegations;
+>  	struct list_head	ss_copies;
+>  	struct list_head	ss_src_copies;
+> =20
 
-Sure, but I'd just squash this into patch #3:
+Good idea. I like this.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
