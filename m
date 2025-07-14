@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-13028-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13029-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61605B03715
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 08:31:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 615A6B03716
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 08:31:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 707C51892B18
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 06:31:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BE4D1747C2
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 06:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0B4D223DDF;
-	Mon, 14 Jul 2025 06:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2532253A7;
+	Mon, 14 Jul 2025 06:31:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kw2xE2dH"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Muy42ywc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42592BE4A
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 06:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C369BE4A
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 06:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752474659; cv=none; b=nH2TfZLe6qqLI9qGOfTza1nNXt5Oj82ZreOUxjvT/xPv+1BV3Qd8Sv10amwAdrBuw75ARJ4eUmiR4O3M/GKYeuWVbZuPQXHjYZC/mL0XtQhijSAAkUaR3BV9gEx4We2czVGeqRgxnwpZqe3PkHvaNXRliRh9ldai9qrxX72SeQE=
+	t=1752474662; cv=none; b=Slyn//a/RIjnu/CYfcmS8DilrZlE7p6MrVBGVMYyZbK9MSTyroiKr2nLUbPV2TaCuyeRFHqDNDOl4kRiOKOOLSkD/iWKIPtVIynq73UWktGn6fMNQwdAVyI/4qgqpyVmiWU2UhGE6P7Uw9UJGIOw3zsHMtzsam/nae6JCpL95iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752474659; c=relaxed/simple;
-	bh=DiZk0e1hLXEtL4dST/OxIB4j0gnJHAa/fDiOmWFuL1g=;
+	s=arc-20240116; t=1752474662; c=relaxed/simple;
+	bh=ByVRIDBJqQ5/EPNKiSMS/4rVu5PXAweiWmd63ChiquY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TNkRDVrnB8r2VHweuG0QW9EyxNV1ew75QeBmuFp4fE9TtbN9cliMAVkJmDj/fKe9XHFy304aLiQiVSkhvelg1Hu10i9wDMEHSMxJgZTfXtc+zB/e02SYfkgTGBwRCudBU/lqE6jzbiWyFxmaW/5ZPwHzSmUb0hOsUWIda0KxoR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kw2xE2dH; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=GOcdb5hCC/po2eud3mGwHpRA/rNTC3LsfrePJ8YtN1VE0Sr9GgICjZvZV8N8HJynqZ45hSXNKMsOQfUzAxIJL8KjLH1QuMHhcrixBByPDxEtYsKIbTjxodGqLu7NcHWLm0/VShN9zjcm7Uno1XrTbzKC4lJP8Xq2iDR+ZXxQvyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Muy42ywc; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=leV/Thyy5SNmzKeYmryIl7eFBQNxzodpX6UMtgZNRlo=; b=kw2xE2dHnSvNXfOP11OJ3Xhr/2
-	0MMm2D9oktA3rC2m4yNiGFsBVz/B4zmwMJqLfoJkzXXLVv2BNHmOvWnU4D2X3JW36JlK19jqJhXnK
-	6ZJ/VAvIpyKqDyloPYAKlqvJ9svFFzZIh3MDrQIaw8ToUJaxC6f3uNd2Bzpjay4o2+rXclfvhBURB
-	NQI5Dw3mRQOK/Yp76ryCgZj4QSzfPPPKgsQ6ugH9xAvD6uCP8+E7ERgHwuIz4C16Wr0qWLdWX+q5p
-	gue306zY1aXc1vBCND2TxL9wDmAKiLFAH1TcIxTztl6CrtLrn5MYtjNNKQ5ASSkf0JIKgCYIHdauB
-	MzhBbjog==;
+	bh=DYFHpRz4cgmJapo7ZSrhtPfCBI7JPRjyP5bKiL53jyU=; b=Muy42ywcFotXV8b84xHZzA6GFa
+	1YdSpn9iAlCtdlTBr824E6bLEAumYiZpWWykZuWbsnIxo1blL872Buqt4qMpLzcrVJP3bbBlmz1aM
+	hRhiBK9uICZHax7WSEH8aSWx+EORU8AfIB1Wn2ZZCsiPhrXx/ouH6w95nBl01rn9xQMX/mA1Xwq2X
+	e5qWv5ca8Hr68W8LNHGVPa09I2yGqekZUp3tlLZZlhqgPVqhEBsmRsw0/eMv9LJ0mXyF6VY+q9chL
+	cHKIyOn9PR9qUfi4dsarWj4He1jB8BqPrNFAOzobY7j4dFi6zX6LoNx8LmuZa9i+S37fFl6x2vh3G
+	9PHcSm5Q==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubCiH-00000001Lyw-2VZo;
-	Mon, 14 Jul 2025 06:30:57 +0000
+	id 1ubCiJ-00000001LzB-3Wqm;
+	Mon, 14 Jul 2025 06:31:00 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFS: pass struct nfs_client_initdata to nfs4_set_client
-Date: Mon, 14 Jul 2025 08:30:45 +0200
-Message-ID: <20250714063053.1487761-2-hch@lst.de>
+Subject: [PATCH 2/2] NFS: add a clientid mount option
+Date: Mon, 14 Jul 2025 08:30:46 +0200
+Message-ID: <20250714063053.1487761-3-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250714063053.1487761-1-hch@lst.de>
 References: <20250714063053.1487761-1-hch@lst.de>
@@ -64,245 +64,185 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Passed the partially filled out structure to nfs4_set_client instead of
-11 arguments that then get stashed into the structure.
+Add a mount option to set a clientid, similarly to how it can be
+configured through the per-netfs sysfs file.  This allows for easy
+testing of behavior that relies on the client ID likes locks or
+delegations with having to resort to separate VMs or containers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/nfs4client.c | 151 ++++++++++++++++++++------------------------
- 1 file changed, 68 insertions(+), 83 deletions(-)
+ fs/nfs/client.c           | 12 ++++++++++++
+ fs/nfs/fs_context.c       | 12 ++++++++++++
+ fs/nfs/internal.h         |  2 ++
+ fs/nfs/nfs4client.c       |  1 +
+ fs/nfs/nfs4proc.c         |  7 ++++++-
+ include/linux/nfs_fs_sb.h |  1 +
+ 6 files changed, 34 insertions(+), 1 deletion(-)
 
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 47258dc3af70..1a55debab6e5 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -181,6 +181,12 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	clp->cl_nconnect = cl_init->nconnect;
+ 	clp->cl_max_connect = cl_init->max_connect ? cl_init->max_connect : 1;
+ 	clp->cl_net = get_net_track(cl_init->net, &clp->cl_ns_tracker, GFP_KERNEL);
++	if (cl_init->clientid) {
++		err = -ENOMEM;
++		clp->clientid = kstrdup(cl_init->clientid, GFP_KERNEL);
++		if (!clp->clientid)
++			goto error_free_host;
++	}
+ 
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ 	seqlock_init(&clp->cl_boot_lock);
+@@ -193,6 +199,8 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	clp->cl_xprtsec = cl_init->xprtsec;
+ 	return clp;
+ 
++error_free_host:
++	kfree(clp->cl_hostname);
+ error_cleanup:
+ 	put_nfs_version(clp->cl_nfs_mod);
+ error_dealloc:
+@@ -254,6 +262,7 @@ void nfs_free_client(struct nfs_client *clp)
+ 	put_nfs_version(clp->cl_nfs_mod);
+ 	kfree(clp->cl_hostname);
+ 	kfree(clp->cl_acceptor);
++	kfree(clp->clientid);
+ 	kfree_rcu(clp, rcu);
+ }
+ EXPORT_SYMBOL_GPL(nfs_free_client);
+@@ -339,6 +348,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_xprtsec.policy != data->xprtsec.policy)
+ 			continue;
+ 
++		if (data->clientid && data->clientid != clp->clientid)
++			continue;
++
+ 		refcount_inc(&clp->cl_count);
+ 		return clp;
+ 	}
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 9e94d18448ff..fe9ecdc8db3c 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -98,6 +98,7 @@ enum nfs_param {
+ 	Opt_xprtsec,
+ 	Opt_cert_serial,
+ 	Opt_privkey_serial,
++	Opt_clientid,
+ };
+ 
+ enum {
+@@ -225,6 +226,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_string("xprtsec",	Opt_xprtsec),
+ 	fsparam_s32("cert_serial",	Opt_cert_serial),
+ 	fsparam_s32("privkey_serial",	Opt_privkey_serial),
++	fsparam_string("clientid",	Opt_clientid),
+ 	{}
+ };
+ 
+@@ -1031,6 +1033,14 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 			goto out_invalid_value;
+ 		}
+ 		break;
++	case Opt_clientid:
++		if (!param->string || strlen(param->string) == 0 ||
++		    strlen(param->string) > NFS4_CLIENT_ID_UNIQ_LEN - 1)
++			goto out_of_bounds;
++		kfree(ctx->clientid);
++		ctx->clientid = param->string;
++		param->string = NULL;
++		break;
+ 
+ 		/*
+ 		 * Special options
+@@ -1650,6 +1660,7 @@ static int nfs_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
+ 	ctx->nfs_server.hostname	= NULL;
+ 	ctx->fscache_uniq		= NULL;
+ 	ctx->clone_data.fattr		= NULL;
++	ctx->clientid			= NULL;
+ 	fc->fs_private = ctx;
+ 	return 0;
+ }
+@@ -1670,6 +1681,7 @@ static void nfs_fs_context_free(struct fs_context *fc)
+ 		kfree(ctx->fscache_uniq);
+ 		nfs_free_fhandle(ctx->mntfh);
+ 		nfs_free_fattr(ctx->clone_data.fattr);
++		kfree(ctx->clientid);
+ 		kfree(ctx);
+ 	}
+ }
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 69c2c10ee658..1a392676d27c 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -86,6 +86,7 @@ struct nfs_client_initdata {
+ 	struct xprtsec_parms xprtsec;
+ 	unsigned long connect_timeout;
+ 	unsigned long reconnect_timeout;
++	const char *clientid;
+ };
+ 
+ /*
+@@ -115,6 +116,7 @@ struct nfs_fs_context {
+ 	unsigned short		mountfamily;
+ 	bool			has_sec_mnt_opts;
+ 	int			lock_status;
++	char			*clientid;
+ 
+ 	struct {
+ 		union {
 diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 162c85a83a14..2e623da1a787 100644
+index 2e623da1a787..3ab5cc985224 100644
 --- a/fs/nfs/nfs4client.c
 +++ b/fs/nfs/nfs4client.c
-@@ -895,55 +895,40 @@ nfs4_find_client_sessionid(struct net *net, const struct sockaddr *addr,
-  * Set up an NFS4 client
-  */
- static int nfs4_set_client(struct nfs_server *server,
--		const char *hostname,
--		const struct sockaddr_storage *addr,
--		const size_t addrlen,
--		const char *ip_addr,
--		int proto, const struct rpc_timeout *timeparms,
--		u32 minorversion, unsigned int nconnect,
--		unsigned int max_connect,
--		struct net *net,
--		struct xprtsec_parms *xprtsec)
-+		struct nfs_client_initdata *cl_init)
- {
--	struct nfs_client_initdata cl_init = {
--		.hostname = hostname,
--		.addr = addr,
--		.addrlen = addrlen,
--		.ip_addr = ip_addr,
--		.nfs_mod = &nfs_v4,
--		.proto = proto,
--		.minorversion = minorversion,
--		.net = net,
--		.timeparms = timeparms,
--		.cred = server->cred,
--		.xprtsec = *xprtsec,
--	};
- 	struct nfs_client *clp;
+@@ -1153,6 +1153,7 @@ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
+ 		.xprtsec = ctx->xprtsec,
+ 		.nconnect = ctx->nfs_server.nconnect,
+ 		.max_connect = ctx->nfs_server.max_connect,
++		.clientid = ctx->clientid,
+ 	};
+ 	int error;
  
--	if (minorversion == 0)
--		__set_bit(NFS_CS_REUSEPORT, &cl_init.init_flags);
--	else
--		cl_init.max_connect = max_connect;
--	switch (proto) {
-+	cl_init->nfs_mod = &nfs_v4;
-+	cl_init->cred = server->cred;
-+
-+	if (cl_init->minorversion == 0) {
-+		__set_bit(NFS_CS_REUSEPORT, &cl_init->init_flags);
-+		cl_init->max_connect = 0;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index ef2077e185b6..ad53bc4ef50c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6487,6 +6487,11 @@ nfs4_get_uniquifier(struct nfs_client *clp, char *buf, size_t buflen)
+ 
+ 	buf[0] = '\0';
+ 
++	if (clp->clientid) {
++		strscpy(buf, clp->clientid, buflen);
++		goto out;
 +	}
 +
-+	switch (cl_init->proto) {
- 	case XPRT_TRANSPORT_RDMA:
- 	case XPRT_TRANSPORT_TCP:
- 	case XPRT_TRANSPORT_TCP_TLS:
--		cl_init.nconnect = nconnect;
-+		break;
-+	default:
-+		cl_init->nconnect = 0;
- 	}
+ 	if (nn_clp) {
+ 		rcu_read_lock();
+ 		id = rcu_dereference(nn_clp->identifier);
+@@ -6497,7 +6502,7 @@ nfs4_get_uniquifier(struct nfs_client *clp, char *buf, size_t buflen)
  
- 	if (server->flags & NFS_MOUNT_NORESVPORT)
--		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
-+		__set_bit(NFS_CS_NORESVPORT, &cl_init->init_flags);
- 	if (server->options & NFS_OPTION_MIGRATION)
--		__set_bit(NFS_CS_MIGRATION, &cl_init.init_flags);
-+		__set_bit(NFS_CS_MIGRATION, &cl_init->init_flags);
- 	if (test_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status))
--		__set_bit(NFS_CS_TSM_POSSIBLE, &cl_init.init_flags);
--	server->port = rpc_get_port((struct sockaddr *)addr);
-+		__set_bit(NFS_CS_TSM_POSSIBLE, &cl_init->init_flags);
-+	server->port = rpc_get_port((struct sockaddr *)cl_init->addr);
- 
- 	if (server->flags & NFS_MOUNT_NETUNREACH_FATAL)
--		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
-+		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init->init_flags);
- 
- 	/* Allocate or find a client reference we can use */
--	clp = nfs_get_client(&cl_init);
-+	clp = nfs_get_client(cl_init);
- 	if (IS_ERR(clp))
- 		return PTR_ERR(clp);
- 
-@@ -1156,6 +1141,19 @@ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
- {
- 	struct nfs_fs_context *ctx = nfs_fc2context(fc);
- 	struct rpc_timeout timeparms;
-+	struct nfs_client_initdata cl_init = {
-+		.hostname = ctx->nfs_server.hostname,
-+		.addr = &ctx->nfs_server._address,
-+		.addrlen = ctx->nfs_server.addrlen,
-+		.ip_addr = ctx->client_address,
-+		.proto = ctx->nfs_server.protocol,
-+		.minorversion = ctx->minorversion,
-+		.net = fc->net_ns,
-+		.timeparms = &timeparms,
-+		.xprtsec = ctx->xprtsec,
-+		.nconnect = ctx->nfs_server.nconnect,
-+		.max_connect = ctx->nfs_server.max_connect,
-+	};
- 	int error;
- 
- 	nfs_init_timeout_values(&timeparms, ctx->nfs_server.protocol,
-@@ -1175,18 +1173,7 @@ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
- 		ctx->selected_flavor = RPC_AUTH_UNIX;
- 
- 	/* Get a client record */
--	error = nfs4_set_client(server,
--				ctx->nfs_server.hostname,
--				&ctx->nfs_server._address,
--				ctx->nfs_server.addrlen,
--				ctx->client_address,
--				ctx->nfs_server.protocol,
--				&timeparms,
--				ctx->minorversion,
--				ctx->nfs_server.nconnect,
--				ctx->nfs_server.max_connect,
--				fc->net_ns,
--				&ctx->xprtsec);
-+	error = nfs4_set_client(server, &cl_init);
- 	if (error < 0)
- 		return error;
- 
-@@ -1246,18 +1233,28 @@ struct nfs_server *nfs4_create_server(struct fs_context *fc)
- struct nfs_server *nfs4_create_referral_server(struct fs_context *fc)
- {
- 	struct nfs_fs_context *ctx = nfs_fc2context(fc);
--	struct nfs_client *parent_client;
--	struct nfs_server *server, *parent_server;
--	int proto, error;
-+	struct nfs_server *parent_server = NFS_SB(ctx->clone_data.sb);
-+	struct nfs_client *parent_client = parent_server->nfs_client;
-+	struct nfs_client_initdata cl_init = {
-+		.hostname = ctx->nfs_server.hostname,
-+		.addr = &ctx->nfs_server._address,
-+		.addrlen = ctx->nfs_server.addrlen,
-+		.ip_addr = parent_client->cl_ipaddr,
-+		.minorversion = parent_client->cl_mvops->minor_version,
-+		.net = parent_client->cl_net,
-+		.timeparms = parent_server->client->cl_timeout,
-+		.xprtsec = parent_client->cl_xprtsec,
-+		.nconnect = parent_client->cl_nconnect,
-+		.max_connect = parent_client->cl_max_connect,
-+	};
-+	struct nfs_server *server;
- 	bool auth_probe;
-+	int error;
- 
- 	server = nfs_alloc_server();
- 	if (!server)
- 		return ERR_PTR(-ENOMEM);
- 
--	parent_server = NFS_SB(ctx->clone_data.sb);
--	parent_client = parent_server->nfs_client;
+ 	if (nfs4_client_id_uniquifier[0] != '\0' && buf[0] == '\0')
+ 		strscpy(buf, nfs4_client_id_uniquifier, buflen);
 -
- 	server->cred = get_cred(parent_server->cred);
++out:
+ 	return strlen(buf);
+ }
  
- 	/* Initialise the client representation from the parent server */
-@@ -1266,38 +1263,17 @@ struct nfs_server *nfs4_create_referral_server(struct fs_context *fc)
- 	/* Get a client representation */
- #if IS_ENABLED(CONFIG_SUNRPC_XPRT_RDMA)
- 	rpc_set_port(&ctx->nfs_server.address, NFS_RDMA_PORT);
--	error = nfs4_set_client(server,
--				ctx->nfs_server.hostname,
--				&ctx->nfs_server._address,
--				ctx->nfs_server.addrlen,
--				parent_client->cl_ipaddr,
--				XPRT_TRANSPORT_RDMA,
--				parent_server->client->cl_timeout,
--				parent_client->cl_mvops->minor_version,
--				parent_client->cl_nconnect,
--				parent_client->cl_max_connect,
--				parent_client->cl_net,
--				&parent_client->cl_xprtsec);
-+	cl_init.proto = XPRT_TRANSPORT_RDMA;
-+	error = nfs4_set_client(server, &cl_init);
- 	if (!error)
- 		goto init_server;
- #endif	/* IS_ENABLED(CONFIG_SUNRPC_XPRT_RDMA) */
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index d2d36711a119..73bed04529a7 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -128,6 +128,7 @@ struct nfs_client {
+ 	netns_tracker		cl_ns_tracker;
+ 	struct list_head	pending_cb_stateids;
+ 	struct rcu_head		rcu;
++	const char		*clientid;
  
--	proto = XPRT_TRANSPORT_TCP;
-+	cl_init.proto = XPRT_TRANSPORT_TCP;
- 	if (parent_client->cl_xprtsec.policy != RPC_XPRTSEC_NONE)
--		proto = XPRT_TRANSPORT_TCP_TLS;
-+		cl_init.proto = XPRT_TRANSPORT_TCP_TLS;
- 	rpc_set_port(&ctx->nfs_server.address, NFS_PORT);
--	error = nfs4_set_client(server,
--				ctx->nfs_server.hostname,
--				&ctx->nfs_server._address,
--				ctx->nfs_server.addrlen,
--				parent_client->cl_ipaddr,
--				proto,
--				parent_server->client->cl_timeout,
--				parent_client->cl_mvops->minor_version,
--				parent_client->cl_nconnect,
--				parent_client->cl_max_connect,
--				parent_client->cl_net,
--				&parent_client->cl_xprtsec);
-+	error = nfs4_set_client(server, &cl_init);
- 	if (error < 0)
- 		goto error;
- 
-@@ -1353,6 +1329,19 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
- 	char buf[INET6_ADDRSTRLEN + 1];
- 	struct sockaddr_storage address;
- 	struct sockaddr *localaddr = (struct sockaddr *)&address;
-+	struct nfs_client_initdata cl_init = {
-+		.hostname = hostname,
-+		.addr = sap,
-+		.addrlen = salen,
-+		.ip_addr = buf,
-+		.proto = clp->cl_proto,
-+		.minorversion = clp->cl_minorversion,
-+		.net = net,
-+		.timeparms = clnt->cl_timeout,
-+		.xprtsec = clp->cl_xprtsec,
-+		.nconnect = clp->cl_nconnect,
-+		.max_connect = clp->cl_max_connect,
-+	};
- 	int error;
- 
- 	error = rpc_switch_client_transport(clnt, &xargs, clnt->cl_timeout);
-@@ -1368,11 +1357,7 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
- 
- 	nfs_server_remove_lists(server);
- 	set_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
--	error = nfs4_set_client(server, hostname, sap, salen, buf,
--				clp->cl_proto, clnt->cl_timeout,
--				clp->cl_minorversion,
--				clp->cl_nconnect, clp->cl_max_connect,
--				net, &clp->cl_xprtsec);
-+	error = nfs4_set_client(server, &cl_init);
- 	clear_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
- 	if (error != 0) {
- 		nfs_server_insert_lists(server);
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ 	struct timespec64	cl_nfssvc_boot;
 -- 
 2.47.2
 
