@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-13072-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13073-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EDD8B05890
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:15:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4C54B0589B
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:19:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7A471A624EA
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:15:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBD2C3A9577
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:19:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED212D837E;
-	Tue, 15 Jul 2025 11:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C33E27054A;
+	Tue, 15 Jul 2025 11:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q10BMC8b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUOgvVOZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5375223E320
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 11:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0777826E6F1
+	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 11:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752578104; cv=none; b=XJZDu26vgHfmx5JcMCJDi9vlCib2zJInREhiXONUEsWh6PiYV56wOcf/DFjp0su/3VxJ6lCftLuY3P+H5g3MR5YElAspBz4bJYWX/nePjBLbQdZTdQziJdBHcYzaeh7drH4edTPk0GyMeo6hM75XDVH7To24uLiwfXEc0uS32ck=
+	t=1752578379; cv=none; b=DV5jm5INOHIIks3wpBNvygAUpO33bG883KsEepF8/p5dFVXNcadKP5lt+JZnKhe/8PCYr6WYwcg3YMkwRXC9jsAzAPiE6HRNoePe8HBGoV47quH5Dv0RaAeomjpJV5SFkrfKeuGIZ+fmzuVgu7to3mIYukQr4bWv9t6bKPblBsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752578104; c=relaxed/simple;
-	bh=ZoO+SaPAeElVkAwPlcEaT+16Xinm26W69BaYXyqWOv4=;
+	s=arc-20240116; t=1752578379; c=relaxed/simple;
+	bh=EPv9uvhagN7jcRlc2YF0lYB+NXmYKe26C5vZasKtFNM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iqpaLSxcSi/XfQtnJapV3lw+eF28RS80+PWGqcKv13jR0qWc2hdsZEE4WEWaekGjCG+/vRUr6J7dC+DH3Ea9TEhIg5lYnwwG7xkOET5ihSx+2bCsNOIUs1wsXO/5S4GyG4R3O5uYHxXpnMWMrYmdhXHX7Ixq6FYY2txGfi8H1Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q10BMC8b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C43C4CEE3;
-	Tue, 15 Jul 2025 11:15:03 +0000 (UTC)
+	 Content-Type:MIME-Version; b=YxyCf4k88tdQdKAuYmsow8lp7Wk8webeIucjHEpTXT/eLlwxv4tgyRUNCa8dwKIMMFwe+huXDl7lbMuSzBkn+rejvjaE3KrggBEf/MorVZSxBUL8q6LRZEth1e2SWu0QEHL1lD74XLuTI/BMjKdlCcs021sJiClQHAoMRn8/J14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUOgvVOZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111A0C4CEE3;
+	Tue, 15 Jul 2025 11:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752578103;
-	bh=ZoO+SaPAeElVkAwPlcEaT+16Xinm26W69BaYXyqWOv4=;
+	s=k20201202; t=1752578378;
+	bh=EPv9uvhagN7jcRlc2YF0lYB+NXmYKe26C5vZasKtFNM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=q10BMC8bxFScCugKyPnrY6jG+Z/ZyMq898foV16YfqF0f21KXdAzNAb1OgvIeFnXs
-	 H0FORSu8FAAaNkz4HqAFX/hZ2WlyB2b56bVqyrByIyzJTsnmIYDlak9a/ozqS6/88x
-	 X8Vm9E9N95bsdq96Uz/7jd/DxucgPvKSKI4z0M6yxsM8MCacJYVPIx2FyYdo45WVdU
-	 M7yA2srRUCwdDWVCPcRCjl+F9Mm+h88mTqb5fzfR+UGGTFeLvqWaF02HBlV2vpgs0Y
-	 XpSBV6Q3YBwFb+Vv3HT0wO4b12mXjMPInmVJ74aEzS04iZJTG0/weN6ouuTPmv000D
-	 vHJSznf+0kCRw==
-Message-ID: <4d8a6e18efff41280c9449f3be2da0632eafa35c.camel@kernel.org>
-Subject: Re: [PATCH 2/4] NFS: move the delegation_watermark module parameter
+	b=mUOgvVOZREJankvLbdCyNu6krmCKqmp/ccbQtBnSQiCBS6FYMIZD2k9jtnGUPVozW
+	 6U/txG/H+UPEh1fYcbA4FlXzmPf5b/XnM3KtHh+q7t3yCXjXOLzDRRHOy97r6bcHBv
+	 xRAVi0Iw48bxF1ezzdU/TC2ZZPZ12WWgrDBvFVtQv4IxgBtnt5s7FMGYBGd5WHfIJE
+	 39bbv/1Qukbt1UhqKZORFkBQQpgRVmwjxmKTqB3ns5xHyYxkikgc52+g7GHff4x5W0
+	 Z0j6WUG2j8dFZDdSGmSnmHl4t7IPrzRfwyws3pV13gt8FFhBrZNXC4c/mhK+8njNie
+	 UqozuYl9Qd4nA==
+Message-ID: <c7aec332813db8baca01c5a1b00d4853594c3f91.camel@kernel.org>
+Subject: Re: [PATCH 4/4] NFS: use a hash table for delegation lookup
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>
 Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
 	linux-nfs@vger.kernel.org
-Date: Tue, 15 Jul 2025 07:15:02 -0400
-In-Reply-To: <20250715080329.GA20590@lst.de>
+Date: Tue, 15 Jul 2025 07:19:37 -0400
+In-Reply-To: <20250715085844.GA21655@lst.de>
 References: <20250714111651.1565055-1-hch@lst.de>
-	 <20250714111651.1565055-3-hch@lst.de>
-	 <7af8b8239a10a0141be841cb00b8992834a55b43.camel@kernel.org>
-	 <20250715080329.GA20590@lst.de>
+	 <20250714111651.1565055-5-hch@lst.de>
+	 <fe1eccd60b2eff90f763aca232875d13643083fd.camel@kernel.org>
+	 <20250715085844.GA21655@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,18 +137,33 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-07-15 at 10:03 +0200, Christoph Hellwig wrote:
-> On Mon, Jul 14, 2025 at 09:06:42AM -0400, Jeff Layton wrote:
-> > > -
-> > > -module_param_named(delegation_watermark, nfs_delegation_watermark, u=
-int, 0644);
+On Tue, 2025-07-15 at 10:58 +0200, Christoph Hellwig wrote:
+> On Mon, Jul 14, 2025 at 09:14:27AM -0400, Jeff Layton wrote:
+> > > +	delegation_buckets =3D roundup_pow_of_two(nfs_delegation_watermark =
+/ 16);
+> > > +	server->delegation_hash_mask =3D delegation_buckets - 1;
+> > > +	server->delegation_hash_table =3D kmalloc_array(delegation_buckets,
+> > > +			sizeof(*server->delegation_hash_table), GFP_KERNEL);
+> > > +	if (!server->delegation_hash_table)
+> > > +		goto out_free_server;
+> > > +	for (i =3D 0; i < delegation_buckets; i++)
+> > > +		INIT_HLIST_HEAD(&server->delegation_hash_table[i]);
+> > > +
 > >=20
-> > Sure, but I'd just squash this into patch #3:
+> > This is going to get created for any mount, even v3 ones. It might be
+> > better to only bother with this for v4 mounts. Maybe do this in
+> > nfs4_server_common_setup() instead?
 >=20
-> Why?  It's completely unrelated to the changes there.
+> I tried that, but it crashes because the usual mount process goes
+> through nfs_clone_server, which then doesn't set up the hash table.
+>=20
+> I think the best idea is to pass the version to nfs_allocate_server
+> and just make this code conditional, but I'm open to other suggestions.
 
-It's a trivial change and patch #3 makes changes in the same area. It's
-not a big deal though.
+The other thing you could do is move the allocation and setup into a
+helper function, and have nfs_clone_server() call that if the source
+server has a hashtable present.
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
