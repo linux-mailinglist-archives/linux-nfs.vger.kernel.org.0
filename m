@@ -1,242 +1,247 @@
-Return-Path: <linux-nfs+bounces-13074-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13075-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E9F6B058C9
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:29:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5351FB058E7
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:34:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 519DC1A6657D
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:29:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A1763A5297
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:33:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A74D2DCF5D;
-	Tue, 15 Jul 2025 11:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D0419DF6A;
+	Tue, 15 Jul 2025 11:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY6ScinZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3lgC5x4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89FE2DCF56
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 11:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E31D2FB;
+	Tue, 15 Jul 2025 11:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752578925; cv=none; b=QDfVwlIsNhAN21GWHzWoPHDI99NtDetAh+z9Rq1l4lewVS+cb/8hanGAY1fcTwRqdQLXBseEl9O3Y+mzNaHYAxMOtWogWVCzBgyoCvX7r37hsUkF5h4OmssC96aQhwZan9y36dNoFZVj0jzn378JSW+EdyubAwC7YmolB5Zhdvo=
+	t=1752579253; cv=none; b=fZ8YSDaB/84qRahZ7yV3H6X8lxAybRCyiKWr4fJHPciyabimWmC6Z/TT5EiJppb9bDV5fdsgkEjrjG+Zk62Dm6qvcsYmqaWMsbWIVv52nE6Tmdy+KGb70eeLVsZRjMt8WSkxqPQuC32UeHxW/2Gni4n4wQOWjZmAhMZ6iUY5IIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752578925; c=relaxed/simple;
-	bh=2pIZvCCs0rLA67/s4z9oCBFXjuaSQg/cNRqmPhQU284=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l0vwWtv3Fe8tYVRLth5arqTo2uLDMt6S9c1XEJjagXUphcR6/yzSB4BLWBYDxgm5Jo2Z70Z+3iqrfm+UOmeu3piO16ecezXpcPFuj47EyrUNAOhfV+VsMld2Rvj2Zk6/7bam9ft2zaXNBVS77mA7VaafC3jV0cF3ysVUX3j4264=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY6ScinZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDD0C4CEF6;
-	Tue, 15 Jul 2025 11:28:44 +0000 (UTC)
+	s=arc-20240116; t=1752579253; c=relaxed/simple;
+	bh=VoCKJg3aglPoXGmYCQF7UL2bstbcwOkJVWtLwxYKV0c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iupihh3ZJ27spAuW0L/D5zcYUcbzIv61cYfetxzG6Ti/Kks597sh0fh4HW0TzgUeVuMWr+WhskS+BoiPo+MeINlNyAAjQ1knIML0RMN/40bbpN3Rg4SH0xVMo2w9Sq8klspW4iPsPh1Nqz//iOKldrV01GMmp6O/fCeypVDJFuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3lgC5x4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D79C4CEE3;
+	Tue, 15 Jul 2025 11:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752578925;
-	bh=2pIZvCCs0rLA67/s4z9oCBFXjuaSQg/cNRqmPhQU284=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EY6ScinZjZvScolsTxcJq7VISABnCo9hEFV9VqedPFKtGD7CAIF3PHNCcqVr7dtt/
-	 sbypbAXez3hi/lsnwBuf24NWKfGSz+qJIHSfFZiIKKHKz4qTxRIdivbUmFGEiEZwJm
-	 PRp1jjYOmx2reKH/K5HVHbH0MWmfOTxsakIqGZ6pL3AT8dNHU7jGHGcqQk1STFfPRu
-	 yxxTScwEDnuAuyQAoYJAAF3G4XJPjPNvqF3aDnOt/UIEpApwPdhHB15MjBiM+ZqcvI
-	 gDG8QIcgwSaBz3u+GWntCmD2/mmEOSnslx1UKffOxIrAn2WltwTgZ2McjcYEs79T32
-	 vejVFGj+s0TNA==
-Message-ID: <1c3196b0d57c94f29f7a29402ae6e66ae44c9d02.camel@kernel.org>
-Subject: Re: [PATCH v3 0/5] NFSD: add "NFSD DIRECT" and "NFSD DONTCACHE" IO
- modes
+	s=k20201202; t=1752579253;
+	bh=VoCKJg3aglPoXGmYCQF7UL2bstbcwOkJVWtLwxYKV0c=;
+	h=From:Date:Subject:To:Cc:From;
+	b=I3lgC5x4mPnfAQ0c3rbpkWDSqPod8sD26yfu/CYb2guG0bYKjCTQYsRBSspapHLAS
+	 SpXSsKoL1/g0xrTRMRI2C8Z/2vz6d9Fxkp58bmbFoDKbu92uA3JcRG03y3jMUzL+8S
+	 dRPd90RhTcDJP0Ejs37r++nn/El6oWFqL2S/djzk22UbKWDGLfTKkZilCGP/k449nv
+	 Ei4k5jGPfxlIbMYyGEA6b8WPowNF0efhncU7QSppkjD5n/5GY25SNsbz9V4C/ny2vm
+	 d2t/cbF2vc7NYzwW82c80ew09w6L8yHiVrIsyO1LdTyFdY0/Fqwa7MQH1VVHYldCf5
+	 dMfd2I/veDxZQ==
 From: Jeff Layton <jlayton@kernel.org>
-To: Daire Byrne <daire@dneg.com>, Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date: Tue, 15 Jul 2025 07:28:43 -0400
-In-Reply-To: <CAPt2mGOwiXi3U5X3Pq1f425VmsKRJOSn6zA1S6CdoDx_twsv2Q@mail.gmail.com>
-References: <20250714224216.14329-1-snitzer@kernel.org>
-	 <CAPt2mGOwiXi3U5X3Pq1f425VmsKRJOSn6zA1S6CdoDx_twsv2Q@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+Date: Tue, 15 Jul 2025 07:34:10 -0400
+Subject: [PATCH] nfsd: don't set the ctime on delegated atime updates
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250715-tsfix-v1-1-da21665d4626@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALI8dmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDc0NT3ZLitMwKXXMLAyMTM0sDk0QDQyWg2oKiVKAw2Jzo2NpaAFAgewZ
+ XAAAA
+X-Change-ID: 20250715-tsfix-780246904a01
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5986; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=VoCKJg3aglPoXGmYCQF7UL2bstbcwOkJVWtLwxYKV0c=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBodjy0qIcFlPaUFRGlYK9bRl83a+rpITi4FQzWt
+ jVksrJhIlaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaHY8tAAKCRAADmhBGVaC
+ FQKJEADSH7zGxPYXcitdceOD52SBKZqXW6slRxvfFJeFaFgMgm/N02wau2Dro9MzrCCwec4mdHO
+ FMHn+PnZE2W3ILpErLDlC0XD3Bj0gvVOcylyO79RAyZno4zPJF5W57H6MdQey/7yFbvf66Am/7h
+ bTPIzXKr4RAfF3sH+ASCcl2mDfrSlcXND9UJ/BUH3zPBU/KNN09xSjD5QE7UIIVCkkSeu+J7VnI
+ 9y53I2/umT3pFh3rMMsmdmh5oHBaX4wgycHGnr4D+MqkkvJJJx6Gf3XwUn/PVC6lkyN27pU6262
+ ZxZ5h5lQvFlhsbf59PAsmfQ29deOaLD/883aGSRJC36Kc4dRr6Un/2b4iKAodo2ehvkKKKuICEw
+ GdUSKFl1rksjBOl9BJv0QeANKLoKhWAQQdsL+4aqko6DPXGTen7pLhBErLqOtaYmBxJUb10bQRC
+ stTKgcejhmRihZBPfin56OiYyrq4HlnlYf7gAClhiBC7iI0SheVZtV78G7wJcr8jANrR9KskWmW
+ rwTmLQ5t230849Dn4zVk/GZHagALVPW+56NMyHcFZlu18LZVSDtrtvA1UDkB/+brHbX40tCl95U
+ W6ODpeCrOJ4dbcHru1Gye1xMbwNxI85CTgQ3+wnbPJ0+51gVVes2cdyxqBmkQDZOgEJ7hmnGTfd
+ cH2g1mDU8g8bDAg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Understood. We're not looking to abandon you guys. I think bog-standard
-buffered I/O will be the default option for the forseeable future. We
-are pretty keen to add other I/O modes as an _option_, however because
-they do help other important workloads.
+Clients will typically precede a DELEGRETURN for a delegation with
+delegated timestamp with a SETATTR to set the timestamps on the server
+to match what the client has.
 
-The hard part is how we make this tunable without shooting our future
-selves in our collective feet. That's the main reason this is all being
-done in debugfs for the moment, since that carries no ABI guarantees.
+knfsd implements this by using the nfsd_setattr() infrastructure, which
+will set ATTR_CTIME on any update that goes to notify_change(). This is
+problematic as it means that the client will get a spurious ctime
+updates when updating the atime.
 
--- Jeff
+Fix this by pushing the handling of ATTR_CTIME down into the decoder
+functions so that they are set earlier and more deliberately, and stop
+nfsd_setattr() from implicitly adding it to every notify_change() call.
 
-On Tue, 2025-07-15 at 10:24 +0100, Daire Byrne wrote:
-> Just a quick note to say that we are one of the examples (batch render
-> farm) where we rely on the NFSD pagecache a lot.
->=20
-> We have read heavy workloads where many clients share much of the same
-> input data (e.g. rendering sequential frames).
->=20
-> In fact, our 2 x 100gbit servers have 3TB of RAM and serve 70% of all
-> reads from nfsd pagecache. It is not uncommon to max out the 200gbit
-> network in this way even with spinning rust storage.
->=20
-> Anyway, as you were.
->=20
-> Daire
->=20
-> On Mon, 14 Jul 2025 at 23:42, Mike Snitzer <snitzer@kernel.org> wrote:
-> >=20
-> > Hi,
-> >=20
-> > Summary (by Jeff Layton [0]):
-> > "The basic problem is that the pagecache is pretty useless for
-> > satisfying READs from nfsd. Most NFS workloads don't involve I/O to
-> > the same files from multiple clients. The client ends up having most
-> > of the data in its cache already and only very rarely do we need to
-> > revisit the data on the server.
-> >=20
-> > At the same time, it's really easy to overwhelm the storage with
-> > pagecache writeback with modern memory sizes. Having nfsd bypass the
-> > pagecache altogether is potentially a huge performance win, if it can
-> > be made to work safely."
-> >=20
-> > The performance win associated with using NFSD DIRECT was previously
-> > summarized here:
-> > https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
-> > This picture offers a nice summary of performance gains:
-> > https://original.art/NFSD_direct_vs_buffered_IO.jpg
-> >=20
-> > This v3 series was developed ontop of Chuck's nfsd_testing which has 2
-> > patches that saw fh_getattr() moved, etc (v2 of this series included
-> > those patches but since they got review during v2 and Chuck already
-> > has them staged in nfsd-testing I didn't think it made sense to keep
-> > them included in this v3).
-> >=20
-> > Changes since v2 include:
-> > - explored suggestion to use string based interface (e.g. "direct"
-> >   instead of 3) but debugfs seems to only supports numeric values.
-> > - shifted numeric values for debugfs interface from 0-2 to 1-3 and
-> >   made 0 UNSPECIFIED (which is the default)
-> > - if user specifies io_cache_read or io_cache_write mode other than 1,
-> >   2 or 3 (via debugfs) they will get an error message
-> > - pass a data structure to nfsd_analyze_read_dio rather than so many
-> >   in/out params
-> > - improved comments as requested (e.g. "Must remove first
-> >   start_extra_page from rqstp->rq_bvec" was reworked)
-> > - use memmove instead of opencoded shift in
-> >   nfsd_complete_misaligned_read_dio
-> > - dropped the still very important "lib/iov_iter: remove piecewise
-> >   bvec length checking in iov_iter_aligned_bvec" patch because it
-> >   needs to be handled separately.
-> > - various other changes to improve code
-> >=20
-> > Thanks,
-> > Mike
-> >=20
-> > [0]: https://lore.kernel.org/linux-nfs/b1accdad470f19614f9d3865bb3a4c69=
-958e5800.camel@kernel.org/
-> >=20
-> > Mike Snitzer (5):
-> >   NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
-> >   NFSD: pass nfsd_file to nfsd_iter_read()
-> >   NFSD: add io_cache_read controls to debugfs interface
-> >   NFSD: add io_cache_write controls to debugfs interface
-> >   NFSD: issue READs using O_DIRECT even if IO is misaligned
-> >=20
-> >  fs/nfsd/debugfs.c          | 102 +++++++++++++++++++
-> >  fs/nfsd/filecache.c        |  32 ++++++
-> >  fs/nfsd/filecache.h        |   4 +
-> >  fs/nfsd/nfs4xdr.c          |   8 +-
-> >  fs/nfsd/nfsd.h             |  10 ++
-> >  fs/nfsd/nfsfh.c            |   4 +
-> >  fs/nfsd/trace.h            |  37 +++++++
-> >  fs/nfsd/vfs.c              | 197 ++++++++++++++++++++++++++++++++++---
-> >  fs/nfsd/vfs.h              |   2 +-
-> >  include/linux/sunrpc/svc.h |   5 +-
-> >  10 files changed, 383 insertions(+), 18 deletions(-)
-> >=20
-> > --
-> > 2.44.0
-> >=20
-> >=20
+Fixes: 7e13f4f8d27d ("nfsd: handle delegated timestamps in SETATTR")
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+I finally was able to spend some time on the gitr failures with
+delegated timestamps and found this. With this patch I was able to run
+the gitr suite in the "stress" configuration under kdevops and it
+passed.
+---
+ fs/nfsd/nfs3xdr.c   |  3 +++
+ fs/nfsd/nfs4state.c |  2 +-
+ fs/nfsd/nfs4xdr.c   | 18 +++++++++---------
+ fs/nfsd/nfsxdr.c    |  3 +++
+ fs/nfsd/vfs.c       |  1 -
+ 5 files changed, 16 insertions(+), 11 deletions(-)
 
---=20
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index ef4971d71ac4bfee5171537eda80dec6e367060d..3058c73fe2d204131c33e31e76f7ca15c2545d36 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -289,6 +289,9 @@ svcxdr_decode_sattr3(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		return false;
+ 	}
+ 
++	if (iap->ia_valid)
++		iap->ia_valid |= ATTR_CTIME;
++
+ 	return true;
+ }
+ 
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index d5694987f86fadab985e55cce6261ad680e83b69..3aa430c8d941570840fc482efc750daa5df3ae84 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5690,7 +5690,7 @@ nfsd4_truncate(struct svc_rqst *rqstp, struct svc_fh *fh,
+ 		struct nfsd4_open *open)
+ {
+ 	struct iattr iattr = {
+-		.ia_valid = ATTR_SIZE,
++		.ia_valid = ATTR_SIZE | ATTR_CTIME,
+ 		.ia_size = 0,
+ 	};
+ 	struct nfsd_attrs attrs = {
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 3afcdbed6e1465929ec7da67593243a8bf97b3f4..568b30619c79a857429113015b2ff7081557681f 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -409,7 +409,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 		if (xdr_stream_decode_u64(argp->xdr, &size) < 0)
+ 			return nfserr_bad_xdr;
+ 		iattr->ia_size = size;
+-		iattr->ia_valid |= ATTR_SIZE;
++		iattr->ia_valid |= ATTR_SIZE | ATTR_CTIME;
+ 	}
+ 	if (bmval[0] & FATTR4_WORD0_ACL) {
+ 		status = nfsd4_decode_acl(argp, acl);
+@@ -424,7 +424,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 			return nfserr_bad_xdr;
+ 		iattr->ia_mode = mode;
+ 		iattr->ia_mode &= (S_IFMT | S_IALLUGO);
+-		iattr->ia_valid |= ATTR_MODE;
++		iattr->ia_valid |= ATTR_MODE | ATTR_CTIME;
+ 	}
+ 	if (bmval[1] & FATTR4_WORD1_OWNER) {
+ 		u32 length;
+@@ -438,7 +438,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 					      &iattr->ia_uid);
+ 		if (status)
+ 			return status;
+-		iattr->ia_valid |= ATTR_UID;
++		iattr->ia_valid |= ATTR_UID | ATTR_CTIME;
+ 	}
+ 	if (bmval[1] & FATTR4_WORD1_OWNER_GROUP) {
+ 		u32 length;
+@@ -452,7 +452,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 					      &iattr->ia_gid);
+ 		if (status)
+ 			return status;
+-		iattr->ia_valid |= ATTR_GID;
++		iattr->ia_valid |= ATTR_GID | ATTR_CTIME;
+ 	}
+ 	if (bmval[1] & FATTR4_WORD1_TIME_ACCESS_SET) {
+ 		u32 set_it;
+@@ -464,10 +464,10 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 			status = nfsd4_decode_nfstime4(argp, &iattr->ia_atime);
+ 			if (status)
+ 				return status;
+-			iattr->ia_valid |= (ATTR_ATIME | ATTR_ATIME_SET);
++			iattr->ia_valid |= ATTR_ATIME | ATTR_ATIME_SET | ATTR_CTIME;
+ 			break;
+ 		case NFS4_SET_TO_SERVER_TIME:
+-			iattr->ia_valid |= ATTR_ATIME;
++			iattr->ia_valid |= ATTR_ATIME | ATTR_CTIME;
+ 			break;
+ 		default:
+ 			return nfserr_bad_xdr;
+@@ -492,10 +492,10 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 			status = nfsd4_decode_nfstime4(argp, &iattr->ia_mtime);
+ 			if (status)
+ 				return status;
+-			iattr->ia_valid |= (ATTR_MTIME | ATTR_MTIME_SET);
++			iattr->ia_valid |= ATTR_MTIME | ATTR_MTIME_SET | ATTR_CTIME;
+ 			break;
+ 		case NFS4_SET_TO_SERVER_TIME:
+-			iattr->ia_valid |= ATTR_MTIME;
++			iattr->ia_valid |= ATTR_MTIME | ATTR_CTIME;
+ 			break;
+ 		default:
+ 			return nfserr_bad_xdr;
+@@ -519,7 +519,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 		if (xdr_stream_decode_u32(argp->xdr, &mask) < 0)
+ 			return nfserr_bad_xdr;
+ 		*umask = mask & S_IRWXUGO;
+-		iattr->ia_valid |= ATTR_MODE;
++		iattr->ia_valid |= ATTR_MODE | ATTR_CTIME;
+ 	}
+ 	if (bmval[2] & FATTR4_WORD2_TIME_DELEG_ACCESS) {
+ 		fattr4_time_deleg_access access;
+diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+index fc262ceafca972df353a389eea2d7e99fd6bc1d2..8372a374623a5d98fff7c0227a73a9b562da407d 100644
+--- a/fs/nfsd/nfsxdr.c
++++ b/fs/nfsd/nfsxdr.c
+@@ -196,6 +196,9 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 			iap->ia_valid &= ~(ATTR_ATIME_SET|ATTR_MTIME_SET);
+ 	}
+ 
++	if (iap->ia_valid)
++		iap->ia_valid |= ATTR_CTIME;
++
+ 	return true;
+ }
+ 
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index cd689df2ca5d7396cffb5ed9dc14f774a8f3881c..383a724e9aa20a4c6a71a563281fc8a618dd36d3 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -470,7 +470,6 @@ static int __nfsd_setattr(struct dentry *dentry, struct iattr *iap)
+ 	if (!iap->ia_valid)
+ 		return 0;
+ 
+-	iap->ia_valid |= ATTR_CTIME;
+ 	return notify_change(&nop_mnt_idmap, dentry, iap, NULL);
+ }
+ 
+
+---
+base-commit: 347e9f5043c89695b01e66b3ed111755afcf1911
+change-id: 20250715-tsfix-780246904a01
+
+Best regards,
+-- 
 Jeff Layton <jlayton@kernel.org>
+
 
