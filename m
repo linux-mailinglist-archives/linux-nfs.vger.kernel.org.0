@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-13067-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13068-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2554B050FD
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 07:30:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A6DB050FF
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 07:31:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D45A178F77
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 05:30:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 094FA1AA65ED
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 05:31:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0BB92620F1;
-	Tue, 15 Jul 2025 05:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F9481A275;
+	Tue, 15 Jul 2025 05:31:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97849251791
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 05:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C237E610D
+	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 05:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752557412; cv=none; b=Vrbuu7wLPhn5UptCCBhxOMNffWRy/mFy3RVOBAZCn7rG1u3uurs417hspPg4YMwC+sMucL/p9hEU5vY9xfa584WtdMmAkyHBhu1dFIipcMmdW63dOK5/HyaKSl1AbSV25nDvlaND5hc6E1pRxGxcv9YtWEiz+3gn/E0UAyC603k=
+	t=1752557483; cv=none; b=qtaUhCx/vpv9TU6OMh/Xhechcqbw0fokn26Lc7HExKNTHj+z/zhtOqv3EH63OtaHTm0yASrfPXmnDGc2hsmZ7RJbRXrUqnj3qGQlLvWtIb157D7kGR1E0eOtT3T8nOpCu99dShWML1rxRLnk9aNHY+T31QZEBALE24TD7xRYkEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752557412; c=relaxed/simple;
-	bh=Pq9httspaCJYqSYW9eVnrFG/Q9TJVF34IPEpWX6eY58=;
+	s=arc-20240116; t=1752557483; c=relaxed/simple;
+	bh=go1hAswRXOBT73l0R+kqETfpQsksMbbkOaqargSEJGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6a0SNdRN/l6GPNm/F/BynISTbpwsyxAntpUbyyEDUZohBTrZhOv4vYggt/F+n6c842/E0napA0TiOA5/zMOwMclB+MhqVuOfzilbPV18N1o3Kj7R8sARphMcoXEQiVZuL0GIqAkh0cDhYnfAwFUW5A6r2AIV4me8uVdHsRlI+U=
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwiIn9iRygnKbwHU5/9aUPWHIi0VYI/QE1bLA6rRzgPq6IRstoEDse9giTIYjDURirWYJoVB2eBG5BdCFAFbrEq3bC4uPDOe21nwPSHTPI6z31xluOj1jVix8aBRqtDqiVmGUcW+neJYN4KPyJNLrWItJCsxjaG22+ZU7YujFu4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id F393C227A8E; Tue, 15 Jul 2025 07:30:01 +0200 (CEST)
-Date: Tue, 15 Jul 2025 07:30:00 +0200
+	id 3BDD1227AAA; Tue, 15 Jul 2025 07:31:15 +0200 (CEST)
+Date: Tue, 15 Jul 2025 07:31:14 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>,
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Christoph Hellwig <hch@lst.de>,
 	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH 2/2] NFS: add a clientid mount option
-Message-ID: <20250715053000.GA17897@lst.de>
-References: <20250714063053.1487761-1-hch@lst.de> <20250714063053.1487761-3-hch@lst.de> <cf337014-f8a6-44d6-8760-61663fef576d@oracle.com> <20250714133135.GB10090@lst.de> <6b5de853-b283-4b5e-9628-fd0b50d7645c@oracle.com>
+Message-ID: <20250715053114.GB17897@lst.de>
+References: <20250714063053.1487761-1-hch@lst.de> <20250714063053.1487761-3-hch@lst.de> <cf337014-f8a6-44d6-8760-61663fef576d@oracle.com> <20250714133135.GB10090@lst.de> <6b5de853-b283-4b5e-9628-fd0b50d7645c@oracle.com> <7045a21c6fb5c98c6b86754880589ce1fc5ec049.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -47,39 +47,28 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6b5de853-b283-4b5e-9628-fd0b50d7645c@oracle.com>
+In-Reply-To: <7045a21c6fb5c98c6b86754880589ce1fc5ec049.camel@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Jul 14, 2025 at 10:47:54AM -0400, Chuck Lever wrote:
-> It would be helpful to explain exactly what test you are trying to do or
-> what bug you are trying to explore. I can't think of a way that the
-> current client code base would ever need to behave this way. So I assume
-> you are trying to test some kind of server behavior. If that's the case,
-> why not craft one or more pynfs test cases? (Or, maybe pynfs already
-> handles this case).
+On Mon, Jul 14, 2025 at 08:49:51AM -0700, Trond Myklebust wrote:
+> There is a lot of potential for tripping over your own shoelaces with
+> this mount option.
+> 
+> I can't think of any circumstances where an ordinary user should need
+> to set a different client identifier depending on the server. I too am
+> therefore sceptical that anyone will need this functionality other than
+> for kernel development purposes. It requires very deep knowledge of the
+> NFSv4 protocol both to understand what it does,
 
-In this case I test the performance of delegation recalls on the client,
-for which I need another client to trigger the recall.  See the
-"use a hash for looking up delegation" series for the result.
+I agree so far.
 
-> Since this is for development testing (?) I am hesitant to endorse
-> adding it as part of the everyday administrative interface. Especially
-> since this will break things (on purpose, of course). I don't relish
-> having to support administrators coming to us complaining that some
-> unimagined future use case is not working with the clientid= mount
-> option.
+> and to stay out of
+> trouble when using it.
 
-What use case would this break?  It basically means that if you mount
-the same export multiple times, where at least one of the mounts has
-this option specified you don't share the connection and sb, but get
-a new one with a different client id.  I don't see any good use case
-for that outside of testing, but I also don't see how it could create
-problems.
+But I don't really see the trouble when using it, except for the fact
+that no one really should use it.
 
-> If clientid= does get merged, though, what is your plan for an nfs(5)
-> update?
-
-Add it and discourage the use.  Which reminds me that the man page also
-needs an update for the tls key changes.
+But hey, I can live with this not getting merged if the use case is
+too narrow, at least it can be found now if someone needs it :)
 
 
