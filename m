@@ -1,58 +1,56 @@
-Return-Path: <linux-nfs+bounces-13073-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13074-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4C54B0589B
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:19:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E9F6B058C9
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 13:29:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBD2C3A9577
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:19:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 519DC1A6657D
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 11:29:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C33E27054A;
-	Tue, 15 Jul 2025 11:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A74D2DCF5D;
+	Tue, 15 Jul 2025 11:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUOgvVOZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY6ScinZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0777826E6F1
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 11:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89FE2DCF56
+	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 11:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752578379; cv=none; b=DV5jm5INOHIIks3wpBNvygAUpO33bG883KsEepF8/p5dFVXNcadKP5lt+JZnKhe/8PCYr6WYwcg3YMkwRXC9jsAzAPiE6HRNoePe8HBGoV47quH5Dv0RaAeomjpJV5SFkrfKeuGIZ+fmzuVgu7to3mIYukQr4bWv9t6bKPblBsI=
+	t=1752578925; cv=none; b=QDfVwlIsNhAN21GWHzWoPHDI99NtDetAh+z9Rq1l4lewVS+cb/8hanGAY1fcTwRqdQLXBseEl9O3Y+mzNaHYAxMOtWogWVCzBgyoCvX7r37hsUkF5h4OmssC96aQhwZan9y36dNoFZVj0jzn378JSW+EdyubAwC7YmolB5Zhdvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752578379; c=relaxed/simple;
-	bh=EPv9uvhagN7jcRlc2YF0lYB+NXmYKe26C5vZasKtFNM=;
+	s=arc-20240116; t=1752578925; c=relaxed/simple;
+	bh=2pIZvCCs0rLA67/s4z9oCBFXjuaSQg/cNRqmPhQU284=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YxyCf4k88tdQdKAuYmsow8lp7Wk8webeIucjHEpTXT/eLlwxv4tgyRUNCa8dwKIMMFwe+huXDl7lbMuSzBkn+rejvjaE3KrggBEf/MorVZSxBUL8q6LRZEth1e2SWu0QEHL1lD74XLuTI/BMjKdlCcs021sJiClQHAoMRn8/J14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUOgvVOZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111A0C4CEE3;
-	Tue, 15 Jul 2025 11:19:37 +0000 (UTC)
+	 Content-Type:MIME-Version; b=l0vwWtv3Fe8tYVRLth5arqTo2uLDMt6S9c1XEJjagXUphcR6/yzSB4BLWBYDxgm5Jo2Z70Z+3iqrfm+UOmeu3piO16ecezXpcPFuj47EyrUNAOhfV+VsMld2Rvj2Zk6/7bam9ft2zaXNBVS77mA7VaafC3jV0cF3ysVUX3j4264=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY6ScinZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDD0C4CEF6;
+	Tue, 15 Jul 2025 11:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752578378;
-	bh=EPv9uvhagN7jcRlc2YF0lYB+NXmYKe26C5vZasKtFNM=;
+	s=k20201202; t=1752578925;
+	bh=2pIZvCCs0rLA67/s4z9oCBFXjuaSQg/cNRqmPhQU284=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mUOgvVOZREJankvLbdCyNu6krmCKqmp/ccbQtBnSQiCBS6FYMIZD2k9jtnGUPVozW
-	 6U/txG/H+UPEh1fYcbA4FlXzmPf5b/XnM3KtHh+q7t3yCXjXOLzDRRHOy97r6bcHBv
-	 xRAVi0Iw48bxF1ezzdU/TC2ZZPZ12WWgrDBvFVtQv4IxgBtnt5s7FMGYBGd5WHfIJE
-	 39bbv/1Qukbt1UhqKZORFkBQQpgRVmwjxmKTqB3ns5xHyYxkikgc52+g7GHff4x5W0
-	 Z0j6WUG2j8dFZDdSGmSnmHl4t7IPrzRfwyws3pV13gt8FFhBrZNXC4c/mhK+8njNie
-	 UqozuYl9Qd4nA==
-Message-ID: <c7aec332813db8baca01c5a1b00d4853594c3f91.camel@kernel.org>
-Subject: Re: [PATCH 4/4] NFS: use a hash table for delegation lookup
+	b=EY6ScinZjZvScolsTxcJq7VISABnCo9hEFV9VqedPFKtGD7CAIF3PHNCcqVr7dtt/
+	 sbypbAXez3hi/lsnwBuf24NWKfGSz+qJIHSfFZiIKKHKz4qTxRIdivbUmFGEiEZwJm
+	 PRp1jjYOmx2reKH/K5HVHbH0MWmfOTxsakIqGZ6pL3AT8dNHU7jGHGcqQk1STFfPRu
+	 yxxTScwEDnuAuyQAoYJAAF3G4XJPjPNvqF3aDnOt/UIEpApwPdhHB15MjBiM+ZqcvI
+	 gDG8QIcgwSaBz3u+GWntCmD2/mmEOSnslx1UKffOxIrAn2WltwTgZ2McjcYEs79T32
+	 vejVFGj+s0TNA==
+Message-ID: <1c3196b0d57c94f29f7a29402ae6e66ae44c9d02.camel@kernel.org>
+Subject: Re: [PATCH v3 0/5] NFSD: add "NFSD DIRECT" and "NFSD DONTCACHE" IO
+ modes
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org
-Date: Tue, 15 Jul 2025 07:19:37 -0400
-In-Reply-To: <20250715085844.GA21655@lst.de>
-References: <20250714111651.1565055-1-hch@lst.de>
-	 <20250714111651.1565055-5-hch@lst.de>
-	 <fe1eccd60b2eff90f763aca232875d13643083fd.camel@kernel.org>
-	 <20250715085844.GA21655@lst.de>
+To: Daire Byrne <daire@dneg.com>, Mike Snitzer <snitzer@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date: Tue, 15 Jul 2025 07:28:43 -0400
+In-Reply-To: <CAPt2mGOwiXi3U5X3Pq1f425VmsKRJOSn6zA1S6CdoDx_twsv2Q@mail.gmail.com>
+References: <20250714224216.14329-1-snitzer@kernel.org>
+	 <CAPt2mGOwiXi3U5X3Pq1f425VmsKRJOSn6zA1S6CdoDx_twsv2Q@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,32 +135,107 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-07-15 at 10:58 +0200, Christoph Hellwig wrote:
-> On Mon, Jul 14, 2025 at 09:14:27AM -0400, Jeff Layton wrote:
-> > > +	delegation_buckets =3D roundup_pow_of_two(nfs_delegation_watermark =
-/ 16);
-> > > +	server->delegation_hash_mask =3D delegation_buckets - 1;
-> > > +	server->delegation_hash_table =3D kmalloc_array(delegation_buckets,
-> > > +			sizeof(*server->delegation_hash_table), GFP_KERNEL);
-> > > +	if (!server->delegation_hash_table)
-> > > +		goto out_free_server;
-> > > +	for (i =3D 0; i < delegation_buckets; i++)
-> > > +		INIT_HLIST_HEAD(&server->delegation_hash_table[i]);
-> > > +
-> >=20
-> > This is going to get created for any mount, even v3 ones. It might be
-> > better to only bother with this for v4 mounts. Maybe do this in
-> > nfs4_server_common_setup() instead?
->=20
-> I tried that, but it crashes because the usual mount process goes
-> through nfs_clone_server, which then doesn't set up the hash table.
->=20
-> I think the best idea is to pass the version to nfs_allocate_server
-> and just make this code conditional, but I'm open to other suggestions.
+Understood. We're not looking to abandon you guys. I think bog-standard
+buffered I/O will be the default option for the forseeable future. We
+are pretty keen to add other I/O modes as an _option_, however because
+they do help other important workloads.
 
-The other thing you could do is move the allocation and setup into a
-helper function, and have nfs_clone_server() call that if the source
-server has a hashtable present.
+The hard part is how we make this tunable without shooting our future
+selves in our collective feet. That's the main reason this is all being
+done in debugfs for the moment, since that carries no ABI guarantees.
+
+-- Jeff
+
+On Tue, 2025-07-15 at 10:24 +0100, Daire Byrne wrote:
+> Just a quick note to say that we are one of the examples (batch render
+> farm) where we rely on the NFSD pagecache a lot.
+>=20
+> We have read heavy workloads where many clients share much of the same
+> input data (e.g. rendering sequential frames).
+>=20
+> In fact, our 2 x 100gbit servers have 3TB of RAM and serve 70% of all
+> reads from nfsd pagecache. It is not uncommon to max out the 200gbit
+> network in this way even with spinning rust storage.
+>=20
+> Anyway, as you were.
+>=20
+> Daire
+>=20
+> On Mon, 14 Jul 2025 at 23:42, Mike Snitzer <snitzer@kernel.org> wrote:
+> >=20
+> > Hi,
+> >=20
+> > Summary (by Jeff Layton [0]):
+> > "The basic problem is that the pagecache is pretty useless for
+> > satisfying READs from nfsd. Most NFS workloads don't involve I/O to
+> > the same files from multiple clients. The client ends up having most
+> > of the data in its cache already and only very rarely do we need to
+> > revisit the data on the server.
+> >=20
+> > At the same time, it's really easy to overwhelm the storage with
+> > pagecache writeback with modern memory sizes. Having nfsd bypass the
+> > pagecache altogether is potentially a huge performance win, if it can
+> > be made to work safely."
+> >=20
+> > The performance win associated with using NFSD DIRECT was previously
+> > summarized here:
+> > https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
+> > This picture offers a nice summary of performance gains:
+> > https://original.art/NFSD_direct_vs_buffered_IO.jpg
+> >=20
+> > This v3 series was developed ontop of Chuck's nfsd_testing which has 2
+> > patches that saw fh_getattr() moved, etc (v2 of this series included
+> > those patches but since they got review during v2 and Chuck already
+> > has them staged in nfsd-testing I didn't think it made sense to keep
+> > them included in this v3).
+> >=20
+> > Changes since v2 include:
+> > - explored suggestion to use string based interface (e.g. "direct"
+> >   instead of 3) but debugfs seems to only supports numeric values.
+> > - shifted numeric values for debugfs interface from 0-2 to 1-3 and
+> >   made 0 UNSPECIFIED (which is the default)
+> > - if user specifies io_cache_read or io_cache_write mode other than 1,
+> >   2 or 3 (via debugfs) they will get an error message
+> > - pass a data structure to nfsd_analyze_read_dio rather than so many
+> >   in/out params
+> > - improved comments as requested (e.g. "Must remove first
+> >   start_extra_page from rqstp->rq_bvec" was reworked)
+> > - use memmove instead of opencoded shift in
+> >   nfsd_complete_misaligned_read_dio
+> > - dropped the still very important "lib/iov_iter: remove piecewise
+> >   bvec length checking in iov_iter_aligned_bvec" patch because it
+> >   needs to be handled separately.
+> > - various other changes to improve code
+> >=20
+> > Thanks,
+> > Mike
+> >=20
+> > [0]: https://lore.kernel.org/linux-nfs/b1accdad470f19614f9d3865bb3a4c69=
+958e5800.camel@kernel.org/
+> >=20
+> > Mike Snitzer (5):
+> >   NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+> >   NFSD: pass nfsd_file to nfsd_iter_read()
+> >   NFSD: add io_cache_read controls to debugfs interface
+> >   NFSD: add io_cache_write controls to debugfs interface
+> >   NFSD: issue READs using O_DIRECT even if IO is misaligned
+> >=20
+> >  fs/nfsd/debugfs.c          | 102 +++++++++++++++++++
+> >  fs/nfsd/filecache.c        |  32 ++++++
+> >  fs/nfsd/filecache.h        |   4 +
+> >  fs/nfsd/nfs4xdr.c          |   8 +-
+> >  fs/nfsd/nfsd.h             |  10 ++
+> >  fs/nfsd/nfsfh.c            |   4 +
+> >  fs/nfsd/trace.h            |  37 +++++++
+> >  fs/nfsd/vfs.c              | 197 ++++++++++++++++++++++++++++++++++---
+> >  fs/nfsd/vfs.h              |   2 +-
+> >  include/linux/sunrpc/svc.h |   5 +-
+> >  10 files changed, 383 insertions(+), 18 deletions(-)
+> >=20
+> > --
+> > 2.44.0
+> >=20
+> >=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
