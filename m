@@ -1,39 +1,39 @@
-Return-Path: <linux-nfs+bounces-13095-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13096-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C98B06B11
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 03:22:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C009B06B29
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 03:31:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 610057AE851
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 01:20:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77F8A3A43BF
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 01:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6409D42049;
-	Wed, 16 Jul 2025 01:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63C45155C88;
+	Wed, 16 Jul 2025 01:31:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01F12E3700
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 01:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9BC2F50
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 01:31:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752628935; cv=none; b=VIaSoOrnYBFOGRG0Sz99iL6sNex4p1C/QDiqQijCJ4hIXGxaca0BTLv6KU3uBJvpoIDT7xLZtaiN4esX/l21L4CAKUP5PkntfkVcE0Vir5ma6jI4inXYduu8L9g6VkVhfOre6UKw94vuBRKEqMdNrEnGfwe14iZUTPybBE52kII=
+	t=1752629492; cv=none; b=VXWvpXSj0XGtke4eSCtAsrRN1y4CO3z+0iSjELpJHusEZQEOLMsSZLBI6ZEIzg0nq3FnRSrPSHOIycTbd32hbuBQREF2V5mJkOYCEwr5PUQiyIkiwG9o4DrBFYc0SzFVGW99hT+gp4j+aLcVsBRNC5Wi9CjD6wMGZPNq0x3jKqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752628935; c=relaxed/simple;
-	bh=heK9lgY8ovgKLCtnHHTk9eOpJ+Ymhpfg+NuXqjoyw+k=;
+	s=arc-20240116; t=1752629492; c=relaxed/simple;
+	bh=5XbMs7gYm3SYo+s9tIushJXSOC80ucJZyGysRt8ksKw=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=BOMl5t1hbWXyHrvd7wCdyvWTrel+WqmGCDzZJM8yWb6TFB9Z+zCZ3ZgAgdBjVYDt/J5H41Xj3Z6REY2YQ/yrrvGbV/3w4h1Ng+/CRpR75R/pUwnATWOnjOW7z0ffHVnmWrF1wkCs+wRL6Tx5wmFDv0hkiyiFSqu4pVrim9s5Bfo=
+	 References:Date:Message-id; b=EwZaRcgVDCDNfwNqHQcaXkmANT+ofKwfQzCodHZYdDX0dJ8HPz7MvAeNd9G+ZDTG9eEef0yWCqGybMUk/cTve8k7D1IQuTJqxraLbKiXeQ8LPRRX3ULOAi01vUPyoe7OPZGwWqlj1Hycm4KVTsc4Cb9u52VTDGRjIwW0N+1wQsE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1ubqqW-002ANt-RU;
-	Wed, 16 Jul 2025 01:22:10 +0000
+	id 1ubqzW-002APQ-Oh;
+	Wed, 16 Jul 2025 01:31:28 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -46,51 +46,51 @@ From: "NeilBrown" <neil@brown.name>
 To: "Trond Myklebust" <trondmy@kernel.org>
 Cc: "Anna Schumaker" <anna.schumaker@oracle.com>,
  "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] NFS/localio: nfs_uuid_put() fix the wait for file
- unlink events
-In-reply-to: =?utf-8?q?=3C5d191a4f112055a6b79881a2dade9c0721f91830=2E1752618?=
+Subject: Re: [PATCH 3/3] NFS/localio: nfs_uuid_put() fix the wake up after
+ unlinking the file
+In-reply-to: =?utf-8?q?=3C2d9b6631ff2256320208250fbec9bc6e0918377e=2E1752618?=
  =?utf-8?q?161=2Egit=2Etrond=2Emyklebust=40hammerspace=2Ecom=3E?=
 References: <cover.1752618161.git.trond.myklebust@hammerspace.com>, 
- =?utf-8?q?=3C5d191a4f112055a6b79881a2dade9c0721f91830=2E1752618161=2Egit=2E?=
+ =?utf-8?q?=3C2d9b6631ff2256320208250fbec9bc6e0918377e=2E1752618161=2Egit=2E?=
  =?utf-8?q?trond=2Emyklebust=40hammerspace=2Ecom=3E?=
-Date: Wed, 16 Jul 2025 11:22:10 +1000
-Message-id: <175262893035.2234665.1735173020338594784@noble.neil.brown.name>
+Date: Wed, 16 Jul 2025 11:31:28 +1000
+Message-id: <175262948827.2234665.1891349021754495573@noble.neil.brown.name>
 
 On Wed, 16 Jul 2025, Trond Myklebust wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> No reference to nfl is held when waiting in nfs_uuid_put(), so not only
-> must the event condition check if the first entry in the list has
-> changed, it must also check if the nfl->nfs_uuid field is still NULL,
-> in case the old entry was replaced.
+> After setting nfl->nfs_uuid to NULL, dereferences of nfl should be
+> avoided, since there are no further guarantees that the memory is still
+> allocated.
 
-As no reference is held to nfl, it cannot be safe to check if
-nfl->nfs_uuid is still NULL.  It could be freed and the memory reused
-for anything.
+nfl is not being dereferenced here.  The difference between using "nfl"
+and "&nfl->nfs_uuid" as the event variable is simply some address
+arithmetic.  As long as both are the same it doesn't matter which is
+used.
 
-At this point, with nfs_uuid->net set to NULL, nothing can be added to
-nfs_uuid->files.  Things can only be removed.
-So if list_first_entry_or_null stops being nfl, then we know that nfl
-has been removed from the list and cannot possibly be added again.
-This must have been done by nfs_close_local_fh() which set ->nfs_uuid to
-NULL so that  nfs_uuid_put() decided to wait.
 
->=20
-> Also change the event variable to be nfs_uuid, for the same reason that
-> no reference is held to nfl.
+> Also change the wake_up_var_locked() to be a regular wake_up_var(),
+> since nfs_close_local_fh() cannot retake the nfs_uuid->lock after
+> dropping it.
 
-The event variable is never dereferenced so we don't need to hold a
-reference to it.  The address is hashed to choose a wait queue - that is
-all it is used for.
+The point of wake_up_var_locked() is to document why wake_up_var() is
+safe.  In general you need a barrier between an assignment and a
+wake_up_var().  I would like to eventually remove all wake_up_var()
+calls, replacing them with other calls which document why the wakeup is
+safe (e.g.  store_release_wake_up(), atomic_dec_and_wake_up()).  In this
+case it is safe because both the waker and the waiter hold the same
+spinlock.  I would like that documentation to remain.
 
-So it is perfectly safe to wait on &nfl->nfs_uuid or to wake it up
-without a reference to nfl.  All that matters is that the waker and the
-waiter use the same address.
+Also the change from RCU_INIT_POINTER() to rcu_assign_pointer() is not
+documented and not needed.  The primary purpose of rcu_assign_pointer()
+is to include a barer so that anything that the new value points to will
+be visible to a concurrent reader that uses rcu_dereference_pointer().
+As NULL doesn't point to anything, no possible barrier is needed and
+RCU_INIT_POINTER() is the correct interface to use.
 
-So I believe this patch is wrong.  The extra test on nfl->nfs_uuid is
-incorrect and not needed.  The change to the event variable is not needed
-except that they must both be the same (which is what my earlier patch
-did).
+So I think this patch is unnecessary and while it doesn't change
+behaviour in any important way, it does make the intention of the code a
+little less clear.
 
 Thanks,
 NeilBrown
@@ -103,42 +103,34 @@ NeilBrown
 nfs_close_local_fh()")
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs_common/nfslocalio.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
+>  fs/nfs_common/nfslocalio.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >=20
 > diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-> index 64949c46c174..d157fdc068d7 100644
+> index d157fdc068d7..27ad5263e400 100644
 > --- a/fs/nfs_common/nfslocalio.c
 > +++ b/fs/nfs_common/nfslocalio.c
-> @@ -177,12 +177,13 @@ static bool nfs_uuid_put(nfs_uuid_t *nfs_uuid)
->  			/* nfs_close_local_fh() is doing the
->  			 * close and we must wait. until it unlinks
->  			 */
-> -			wait_var_event_spinlock(nfl,
-> -						list_first_entry_or_null(
-> -							&nfs_uuid->files,
-> -							struct nfs_file_localio,
-> -							list) !=3D nfl,
-> -						&nfs_uuid->lock);
-> +			wait_var_event_spinlock(
-> +				nfs_uuid,
-> +				list_first_entry_or_null(
-> +					&nfs_uuid->files,
-> +					struct nfs_file_localio, list) !=3D nfl ||
-> +					rcu_access_pointer(nfl->nfs_uuid),
-> +				&nfs_uuid->lock);
->  			continue;
->  		}
+> @@ -199,8 +199,8 @@ static bool nfs_uuid_put(nfs_uuid_t *nfs_uuid)
+>  		/* Now we can allow racing nfs_close_local_fh() to
+>  		 * skip the locking.
+>  		 */
+> -		RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+> -		wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
+> +		rcu_assign_pointer(nfl->nfs_uuid, NULL);
+> +		wake_up_var(nfl);
+>  	}
 > =20
-> @@ -338,7 +339,7 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
->  	 */
->  	spin_lock(&nfs_uuid->lock);
->  	list_del_init(&nfl->list);
-> -	wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
-> +	wake_up_var_locked(nfs_uuid, &nfs_uuid->lock);
->  	spin_unlock(&nfs_uuid->lock);
->  }
->  EXPORT_SYMBOL_GPL(nfs_close_local_fh);
+>  	/* Remove client from nn->local_clients */
+> @@ -321,8 +321,7 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
+>  		 */
+>  		spin_unlock(&nfs_uuid->lock);
+>  		rcu_read_unlock();
+> -		wait_var_event(&nfl->nfs_uuid,
+> -			       rcu_access_pointer(nfl->nfs_uuid) =3D=3D NULL);
+> +		wait_var_event(nfl, rcu_access_pointer(nfl->nfs_uuid) =3D=3D NULL);
+>  		return;
+>  	}
+>  	/* tell nfs_uuid_put() to wait for us */
 > --=20
 > 2.50.1
 >=20
