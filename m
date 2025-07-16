@@ -1,126 +1,153 @@
-Return-Path: <linux-nfs+bounces-13111-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13112-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E17AB07848
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 16:39:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F577B0796B
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 17:19:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 713004E4A76
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 14:38:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 089EE16657C
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 15:19:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFAA26057A;
-	Wed, 16 Jul 2025 14:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F5B1DE892;
+	Wed, 16 Jul 2025 15:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="lZ/UvWGE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNUv1aGA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B40225C81C
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 14:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B286E2C1A2
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 15:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752676735; cv=none; b=Ks9MtzxkylEOfZe/4vtYEur+bItYJ0wIev5AwvuyKbzWyhI80J1Xtw53Z92Ksep84ZG5y3wcC5f06XmW0w8FPaNfCCM1Yb89zmNHtokjSzYFZX0kOp9/R8iJz0n9cqcKY8n8iOdHsRa9tBpi7MIuRXKWVH8e9Vq4AVnCaEL9QQw=
+	t=1752679169; cv=none; b=aZ0+hWSQZmN84/g9zjcvUOh07f1BKK6Y0UxuXFZXM9GlEWpEVabQeFQqZ8m1gYrx3mBiQ7aqXD9vGP1IqZan+DaDO8le6rG5r86mzi0fqFPzALhC0NSuc1utGkvaG+kOdRY7kk9fnmfQ9Ii1aWozWkd9pL7dE6OBO2m7tWDJOgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752676735; c=relaxed/simple;
-	bh=G+S/L4vDU7ik5AAtN9qkBKBLi+s5yYxSyrlW2Liq+UM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mmJFwW06DfxAnFoVZ+MKt2QgfzqQPMyPI4w6pOQMgAtC1n/T/4cgKPL3yXBz1zU8kDGKySVgmknYVAf42w8Stj6ABHbkdLlLymJl21ON1wqS5T7XLdu6zqPnOQSAe4MfpPwBzfa7+4hZo+DoOi2iLKCt8jwnWT0c2QSZPS1SDdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=lZ/UvWGE; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a6e2d85705so3926009f8f.0
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 07:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mandelbit.com; s=google; t=1752676732; x=1753281532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sa4++ALrt6t+/8Jjl/X2ucfX3WrNgLwrbp0fvXsZWM0=;
-        b=lZ/UvWGE/MQuu4NfytzroISBiP0LI/yNhRVG+lCK+09feSb1Bb41ecPMPzT0GOWvS4
-         YFkD1mkQVV75QBRS+G/WBDdvUQV+as+1AxSlZEWLlwTlOrL+I6v6RW8IK7D2YzGl4Nsp
-         IXuKuiMP/xRFIi0ZexOzCxdpzHVFOVAEnxo0U24B7bNh1XjAsBXLCZoSigo4Ak4GXGMl
-         OUkIgThJM22zPS60zzFTxd6mVPH4zrpNFbtLAA37sjjGCECglcVgYuQjAerqOWF59MkJ
-         H+LwIOoxboMhIUh0lNb2rXHuoEGsf4Yrmns/CWqy6YaKWuDJb0QMKetgWJ55BZg2d8Jr
-         zVvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752676732; x=1753281532;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Sa4++ALrt6t+/8Jjl/X2ucfX3WrNgLwrbp0fvXsZWM0=;
-        b=TV49OkA8JxEvNxWHsqL1M1xo+CWwdRlJPvO73G+cYq8cF5Zoz/4aiKCEBu90ujhz1h
-         HsX2HulIW7Lkp/q0E8PfCFrA4zt8+yMvttYcPt+TKIB6FfwlvmcwHunSoBEczj0z9bCW
-         gn1wCosW3HneawTnYi5mO3ML1K1d4vwxOPB/U9iNcNaLyc9NWDnAATi7sAaZ+SYwfja+
-         pSxvMMqQw+hr6xAKiwQ8hKRIdUIZWfmZiKpO4LgPdHGzbMDeDzS4rbCYvHT6CFEajUpV
-         tYfn998X37K+3QMBtI2vZ6nWXeoD98Sha6yb4CLlVkO9kHQV+gmejTr7TGk8E9nrruBr
-         o3MA==
-X-Gm-Message-State: AOJu0YxAbV1gryRusVQ4py7z/Ftz7km0AW7EGkUMQVBURYGqohhhkoS8
-	O1OoJQtfdGOHMf4c9UaQFQueQcbcRpjHFDXtnoozCrRFohxNwc20vtAJtp3dQYc+5/d0BCNgcWK
-	eHPxsuvY=
-X-Gm-Gg: ASbGncvQJEyM5EAS6Xhp77sfP+14LKjrCHvYsgemKLq99inaVKxZ0uG1uFyc9otXSMw
-	4kJBXYmn8hSWa0HaBJrjlhDJ3HOn2Uxdaq9qJ+CmJZG1OgnXLIujpkeu2YgA62AVNFBAd/idcAN
-	654/cuOUWOh8Tq4eSFAtgjG00pNAuWd7gslTkpE1aQEAWQAt7FlOW3qqgvrJfnWsHYOV0E47gmS
-	4/AcpyARiaZWP2rCfZFnkiJi2pWj/QUgKmQ801QFn/vvMpMNQaGas8IZqQyH3kQh798CIZ7STzu
-	5yVUAdyvbXE4eX4hv6i+mgtAGwBYq77aBNQRNThalYmB0EcjSfzjGaB5ZmM5b2ItCWrkCrDmv8N
-	F6NT9l3luX6n26hhZofNRCuQepDmzx5vNvp6aasbRCkwYmroV
-X-Google-Smtp-Source: AGHT+IGf2Nv6Qpohj3Wa6bab7v4TtpxjOwm0RwXHgagimM5JxzC2vsSdod5ASrIKxtXObfnaxVfabw==
-X-Received: by 2002:a5d:6f16:0:b0:3a5:2d42:aa25 with SMTP id ffacd0b85a97d-3b60ddc6025mr2426874f8f.50.1752676732281;
-        Wed, 16 Jul 2025 07:38:52 -0700 (PDT)
-Received: from inifinity.homelan.mandelbit.com ([2001:67c:2fbc:1:96ff:526e:2192:5194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e14e82sm18202521f8f.71.2025.07.16.07.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 07:38:51 -0700 (PDT)
-From: Antonio Quartulli <antonio@mandelbit.com>
-To: linux-nfs@vger.kernel.org
-Cc: Antonio Quartulli <antonio@mandelbit.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Sergey Bashirov <sergeybashirov@gmail.com>,
-	Konstantin Evtushenko <koevtushenko@yandex.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pNFS: fix uninitialized pointer access
-Date: Wed, 16 Jul 2025 16:38:48 +0200
-Message-ID: <20250716143848.14713-1-antonio@mandelbit.com>
-X-Mailer: git-send-email 2.49.1
+	s=arc-20240116; t=1752679169; c=relaxed/simple;
+	bh=O4IZQln+35YXdXPwbzc6vVJkgrGXyVw7jdG70GKCeBA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QMP5qib+wFuNOBW1hZ+PcSwjO4J3FpI1bVlHq+XAg5KzJanVGHqfKH/d+sjHXDEXLfLWcJD3qhuZS1EituTeUXKr2/KDQ56+Cj5mCcDcC1wrxSB+huI77ufxlYzNVUzYqn/SXpjb2MVVzljdhYZRqA+BdIX/D9o0AhyECznb0i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNUv1aGA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4278C4CEE7;
+	Wed, 16 Jul 2025 15:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752679169;
+	bh=O4IZQln+35YXdXPwbzc6vVJkgrGXyVw7jdG70GKCeBA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rNUv1aGAOaWT0wTCcM9MA7D/HByZ3S/4O1xwa2b5Wx7R+M6UKRxMfenUMbgVHMdiY
+	 Hg8JAfgCZ25bQGJ1iJTlmPd0+9wJIld0/Iv7/rDxJqUDw3SkxbvhKaqouCSLQxptJ1
+	 siL52Ds1UnQKcA/83tw6fBCGPCgxkk3352E/eLy8yo0VFTRUoqWcJUIEZssnktt7MI
+	 T7qSek4G76zhWJ6F2C5cD67LNCVILRvIrqcVvsaNm1nf9dvjsb630Z72cw9duSTn7b
+	 lCkc8eZmpvCzAEMz6aSYFhEdICB0x0EOR3FGGDvH31jGeIaWrouUcCWaxos7dDCP/3
+	 I52Dv0/zlfvXQ==
+Message-ID: <593804825ffbeb1e7f60224bd208f4401d3e1223.camel@kernel.org>
+Subject: Re: [PATCH 3/3] NFS/localio: nfs_uuid_put() fix the wake up after
+ unlinking the file
+From: Trond Myklebust <trondmy@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>, Mike Snitzer
+	 <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Date: Wed, 16 Jul 2025 08:19:27 -0700
+In-Reply-To: <175264242036.2234665.5415540733180170207@noble.neil.brown.name>
+References: <>, <ca1e6690006c4bbb4d62d0f2f340c1fb68191402.camel@kernel.org>
+	 <175264242036.2234665.5415540733180170207@noble.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In ext_tree_encode_commit() if no block extent is encoded due to lack
-of buffer space, ret is set to -ENOSPC and we end up accessing be_prev
-despite it being uninitialized.
+On Wed, 2025-07-16 at 15:07 +1000, NeilBrown wrote:
+> On Wed, 16 Jul 2025, Trond Myklebust wrote:
+> > On Wed, 2025-07-16 at 11:31 +1000, NeilBrown wrote:
+> > > On Wed, 16 Jul 2025, Trond Myklebust wrote:
+> > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > >=20
+> > > > After setting nfl->nfs_uuid to NULL, dereferences of nfl should
+> > > > be
+> > > > avoided, since there are no further guarantees that the memory
+> > > > is
+> > > > still
+> > > > allocated.
+> > >=20
+> > > nfl is not being dereferenced here.=C2=A0 The difference between usin=
+g
+> > > "nfl"
+> > > and "&nfl->nfs_uuid" as the event variable is simply some address
+> > > arithmetic.=C2=A0 As long as both are the same it doesn't matter whic=
+h
+> > > is
+> > > used.
+> > >=20
+> > >=20
+> > > > Also change the wake_up_var_locked() to be a regular
+> > > > wake_up_var(),
+> > > > since nfs_close_local_fh() cannot retake the nfs_uuid->lock
+> > > > after
+> > > > dropping it.
+> > >=20
+> > > The point of wake_up_var_locked() is to document why
+> > > wake_up_var() is
+> > > safe.=C2=A0 In general you need a barrier between an assignment and a
+> > > wake_up_var().=C2=A0 I would like to eventually remove all
+> > > wake_up_var()
+> > > calls, replacing them with other calls which document why the
+> > > wakeup
+> > > is
+> > > safe (e.g.=C2=A0 store_release_wake_up(), atomic_dec_and_wake_up()).=
+=C2=A0
+> > > In
+> > > this
+> > > case it is safe because both the waker and the waiter hold the
+> > > same
+> > > spinlock.=C2=A0 I would like that documentation to remain.
+> >=20
+> >=20
+> > The documentation is wrong. The waiter and waker do not both hold
+> > the
+> > spin lock.
+>=20
+> True.=C2=A0 In that case it would make sense to use
+> store_release_wake_up()
+> in nfs_uuid_put().=C2=A0 Though that doesn't have the right rcu
+> annotations....
+> I think=20
+> =C2=A0=C2=A0=C2=A0 store_release_wake_up(&nfl->nfs_uuid, RCU_INITIALIZER(=
+NULL));
+> would be correct.
+>=20
+> >=20
+> > nfs_close_local_fh() calls wait_var_event() after it has dropped
+> > the
+> > nfs_uuid->lock, and it has no guarantee that nfs_uuid still exists
+> > after that is the case.
+> > In order to guarantee that, it would have to go through the whole
+> > rcu_dereference(nfl->nfs_uuid) rhumba from beginning of the call
+> > again.
+> >=20
+> > The point of the rcu_assign_pointer() is therefore to add the
+> > barrier
+> > that is missing before the call to wake_up_var().
+>=20
+> rcu_assign_pointer()s add a barrier before the assignment.=C2=A0
+> wake_up_var()
+> requires a barrier after the assignment.
+> In fact, when the val is NULL, rcu_assign_pointer() doesn't even
+> include
+> that barrier - it acts exactly like RCU_INIT_POINTER() - interesting.
+>=20
 
-Fix this behaviour by bailing out right away when no extent is encoded.
+Fair enough. I have a v2 of this patchset that Mike is testing out, and
+that should fix this issue as well as the ones raised by the second
+patch. I'll post once he is satisfied.
 
-Fixes: d84c4754f874 ("pNFS: Fix extent encoding in block/scsi layout")
-Addresses-Coverity-ID: 1647611 ("Memory - illegal accesses  (UNINIT)")
-Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
----
- fs/nfs/blocklayout/extent_tree.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/fs/nfs/blocklayout/extent_tree.c b/fs/nfs/blocklayout/extent_tree.c
-index 315949a7e92d..82e19205f425 100644
---- a/fs/nfs/blocklayout/extent_tree.c
-+++ b/fs/nfs/blocklayout/extent_tree.c
-@@ -598,6 +598,11 @@ ext_tree_encode_commit(struct pnfs_block_layout *bl, __be32 *p,
- 		if (ext_tree_layoutupdate_size(bl, *count) > buffer_size) {
- 			(*count)--;
- 			ret = -ENOSPC;
-+			/* bail out right away if no extent was encoded */
-+			if (!*count) {
-+				spin_unlock(&bl->bl_ext_lock);
-+				return ret;
-+			}
- 			break;
- 		}
- 
--- 
-2.49.1
-
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
