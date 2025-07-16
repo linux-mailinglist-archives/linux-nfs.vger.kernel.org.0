@@ -1,108 +1,100 @@
-Return-Path: <linux-nfs+bounces-13093-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13094-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D0FB0696C
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 00:53:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C3D2B06AFA
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 03:09:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A29C65653C6
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Jul 2025 22:53:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D69DE1A65531
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 01:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56AB2D130B;
-	Tue, 15 Jul 2025 22:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeCJxWiA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670A6481B1;
+	Wed, 16 Jul 2025 01:09:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23CE2D0C9F
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Jul 2025 22:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B547C219E8
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 01:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752619974; cv=none; b=AW9KWblBPrdrDZtPmD2O3HhcPZVqK1hPPjpprThCVI8F9p87Kioj5y480L4UJEx2prLBevmAL4mSDTSlWtCahZ+SVV1VM8lc6iQBLDv77w42UGn865H6m4ziGBZQVOxZIEGYNBW2gCGk1Vnj4UDAs/KpRA7cqkVlXc77EmUyjhQ=
+	t=1752628180; cv=none; b=tES/Sd+s0p8CTli/2WaXKiANWJlE0ruSgJPm+tGrx6WxEKmj/oEx4qsPbh8P5mE9sg0vg8cXsZxGjUaF3q38oojDyx96KSkoukEFho+Zq2cgZ6L/l8as5r/jL3U3mYgvqTfkVxKqT6a6PhUC1ncVLBmaaOUCQ2Hqh6YFmLUyxj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752619974; c=relaxed/simple;
-	bh=Ojby/sAEJ3Q72dCQrj8loP7i6dk9kUDHOuwiXePmfxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kh5Mh9Z2KecYF07687+rbeybyQ3faOPQCYPT5GBquiDAn5CAQX0Y2xV6MGYRqVGTbe4uPgHS69B9Yn/3xAEcmZDKLj8baKNhbO/6wchJuyel7V1ar+Y8oNm7w0pCbCh55HvB1gvuBs/WtqLsnvdMf7lLe2As7HAiThnqXHwNWQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeCJxWiA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AAEC4CEF6;
-	Tue, 15 Jul 2025 22:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752619974;
-	bh=Ojby/sAEJ3Q72dCQrj8loP7i6dk9kUDHOuwiXePmfxM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BeCJxWiAzNCQQyCSoZF94gQduKaNUQRnLrnBm+BD/UBQbI/qIhpZSf35PKzJm6v8R
-	 NfFc7t55gxaVcbGZBcsjw9/VOmNwuNip3/pAcPmtx/f8wXqG3bJUWXiiVCV2/2IwaR
-	 ABaimvOH+EuxScw10iPSFxnHKRlV2LUCMDmsTZZ6INKGdakJCr7z1PFWKcm6LIqJlK
-	 cfkvAH0XtyvoFmVd5K9xqNvG5Msie7apDkCM6N0rzqVQN5J6r+vnCVg3jyo1pc3rvi
-	 8Mwco1JJ+H4SFwfTwrmdnDu+bn8VebCzqsqaHlv39yNJqHxsrLkBTwOx4l/nVPdRz8
-	 +qj3tmwyldVyg==
-From: Trond Myklebust <trondmy@kernel.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: NeilBrown <neil@brown.name>,
-	Mike Snitzer <snitzer@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFS/localio: nfs_uuid_put() fix the wake up after unlinking the file
-Date: Tue, 15 Jul 2025 15:52:50 -0700
-Message-ID: <2d9b6631ff2256320208250fbec9bc6e0918377e.1752618161.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1752618161.git.trond.myklebust@hammerspace.com>
-References: <cover.1752618161.git.trond.myklebust@hammerspace.com>
+	s=arc-20240116; t=1752628180; c=relaxed/simple;
+	bh=aKX9oX6VHEH9Z3noRm6FoQqWp9OLyYZYPHSA1wpFRxU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=nXSc4e5dbAF053CCCe9fdUaZ3Kz/YfgiDEP4ZTVeFpcTvDHlF3sUEEr3lMbm1m2aE1gGleKRVeobru3IoqSDxaku1yLdKiMOZxAbRTXvDwjqT1U7U7aC5MUJxW4Cl77X61DaoUAlcuJj9YD3uuVljE2bYUPXpcrJCgX27boIEkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1ubqeL-002AMR-L0;
+	Wed, 16 Jul 2025 01:09:35 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neil@brown.name>
+To: "Trond Myklebust" <trondmy@kernel.org>
+Cc: "Anna Schumaker" <anna.schumaker@oracle.com>,
+ "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH 1/3] NFS/localio: nfs_close_local_fh() fix check for file closed
+In-reply-to: =?utf-8?q?=3C22ed73dbab3897d63f88849ea92db672a267945e=2E1752618?=
+ =?utf-8?q?161=2Egit=2Etrond=2Emyklebust=40hammerspace=2Ecom=3E?=
+References: <cover.1752618161.git.trond.myklebust@hammerspace.com>, 
+ =?utf-8?q?=3C22ed73dbab3897d63f88849ea92db672a267945e=2E1752618161=2Egit=2E?=
+ =?utf-8?q?trond=2Emyklebust=40hammerspace=2Ecom=3E?=
+Date: Wed, 16 Jul 2025 11:09:35 +1000
+Message-id: <175262817515.2234665.17111966773278658899@noble.neil.brown.name>
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, 16 Jul 2025, Trond Myklebust wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>=20
+> If the struct nfs_file_localio is closed, its list entry will be empty,
+> but the nfs_uuid->files list might still contain other entries.
+>=20
+> Acked-by: Mike Snitzer <snitzer@kernel.org>
+> Tested-by: Mike Snitzer <snitzer@kernel.org>
+> Fixes: 21fb44034695 ("nfs_localio: protect race between nfs_uuid_put() and =
+nfs_close_local_fh()")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs_common/nfslocalio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+> index 05c7c16e37ab..64949c46c174 100644
+> --- a/fs/nfs_common/nfslocalio.c
+> +++ b/fs/nfs_common/nfslocalio.c
+> @@ -314,7 +314,7 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
+>  		rcu_read_unlock();
+>  		return;
+>  	}
+> -	if (list_empty(&nfs_uuid->files)) {
+> +	if (list_empty(&nfl->list)) {
 
-After setting nfl->nfs_uuid to NULL, dereferences of nfl should be
-avoided, since there are no further guarantees that the memory is still
-allocated.
-Also change the wake_up_var_locked() to be a regular wake_up_var(),
-since nfs_close_local_fh() cannot retake the nfs_uuid->lock after
-dropping it.
+Yes of course... This must match:
 
-Acked-by: Mike Snitzer <snitzer@kernel.org>
-Tested-by: Mike Snitzer <snitzer@kernel.org>
-Fixes: 21fb44034695 ("nfs_localio: protect race between nfs_uuid_put() and nfs_close_local_fh()")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs_common/nfslocalio.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+		/* Remove nfl from nfs_uuid->files list */
+		list_del_init(&nfl->list);
+		spin_unlock(&nfs_uuid->lock);
 
-diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-index d157fdc068d7..27ad5263e400 100644
---- a/fs/nfs_common/nfslocalio.c
-+++ b/fs/nfs_common/nfslocalio.c
-@@ -199,8 +199,8 @@ static bool nfs_uuid_put(nfs_uuid_t *nfs_uuid)
- 		/* Now we can allow racing nfs_close_local_fh() to
- 		 * skip the locking.
- 		 */
--		RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
--		wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
-+		rcu_assign_pointer(nfl->nfs_uuid, NULL);
-+		wake_up_var(nfl);
- 	}
- 
- 	/* Remove client from nn->local_clients */
-@@ -321,8 +321,7 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
- 		 */
- 		spin_unlock(&nfs_uuid->lock);
- 		rcu_read_unlock();
--		wait_var_event(&nfl->nfs_uuid,
--			       rcu_access_pointer(nfl->nfs_uuid) == NULL);
-+		wait_var_event(nfl, rcu_access_pointer(nfl->nfs_uuid) == NULL);
- 		return;
- 	}
- 	/* tell nfs_uuid_put() to wait for us */
--- 
-2.50.1
+in nfs_uuid_put().  If nfs_uuid_put() disconnects nfl from the list
+first, nfs_close_local_fh() must skip the closing and wait for
+->nfs_uuid to become NULL.  So it really must be testing the same
+list_head.
 
+Reviewed-by: NeilBrown <neil@brown.name>
+
+Thanks,
+NeilBrown
 
