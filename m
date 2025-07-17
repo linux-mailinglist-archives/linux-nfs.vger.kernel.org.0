@@ -1,91 +1,86 @@
-Return-Path: <linux-nfs+bounces-13128-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13129-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3F6DB0886F
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 10:52:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 271D6B089CA
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 11:51:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 430523B82CD
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 08:51:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70D1B565C28
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 09:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BD0289351;
-	Thu, 17 Jul 2025 08:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27535291C29;
+	Thu, 17 Jul 2025 09:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctk6BJua"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ejkt5jv3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524FF28724A;
-	Thu, 17 Jul 2025 08:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62663291C24
+	for <linux-nfs@vger.kernel.org>; Thu, 17 Jul 2025 09:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752742242; cv=none; b=fKuJa8idKyMLKPriH7o/a19ITLOJ8+IaEy78+RyKwziLEHDL5euO/f9UFP+YxL/A+V5K7e7p7FfkjA/vgR78RPSmtjPyIhsJspA2S+0YVfY36qimbzD1mAUP2wWl1MGZnq+QEaQQjECTlUX3V33fZ1jmWg5mNHMp00nYLWpxPSE=
+	t=1752745889; cv=none; b=brjYyNeW3MFzMufxMRuKXgtT2yG3hStEGvVCnCHBNw6ty7EGgvTnTrsxrtmOUUaFb77ImsTV+ItrU3vMXeR/uEze8xK+VtkMxy/spF7QKI9peYZXV5vg3Paz+dmb9QvKgEon4pjOrmgt9vVj89AlLI3QaLUThiUTb3uupdAPmMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752742242; c=relaxed/simple;
-	bh=hSUwB2Rkn6GwUnqElF3ycdaKapO5eQPIfHXpVmKmQJQ=;
+	s=arc-20240116; t=1752745889; c=relaxed/simple;
+	bh=xGjj6rCV39Lcnnvi/1LW9lZJrXMy3MTtRSwImv99cYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0IKHopZNMtZrjTwdeUCo4+sFlBiNssTO0PjAMpaVC1Qazelmj75uOM79dleNNI5EnghM1tOLH4sce+2MO29XYjqmuLPV31eaHZo0aypE8vOoGT8Yxk9ZOvcB0m+30lI52B6wr9X4WMIKwrp6/b3h0uZz6nIAwTiqtA71vT7IJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctk6BJua; arc=none smtp.client-ip=209.85.167.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMwHvteIJvB1rgjfzeEtPyLpmc/hE8tyM2ln99f6AiF1EVQhqjFp/XIpEwWg2LwB1IJur/B7HnLKqQbYAY79TMXNq++l4Vdb95lyPYLtQRqNCwpZGucthpfFbAvRaIjh47SX14qkDYzYG7qC8biM0vzsR1TR3uosR4Zy6F5F9BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ejkt5jv3; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-555024588b1so781185e87.1;
-        Thu, 17 Jul 2025 01:50:39 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55a10c74f31so827392e87.1
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Jul 2025 02:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752742238; x=1753347038; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1752745885; x=1753350685; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a2lx5iA902TzGSJo4q8BNEZwisigf9Cj6fV1YQOnO5U=;
-        b=ctk6BJuadoHhwsmyITDLRX/55UrO2Wr+/xFfIp1kMrPnhkJPUVq88/C8K3NphQc2CD
-         97UQYtg9VEz7vdNYG7qn2x+1YY6Kohr4NxX1K0EXJgIJdF960ZvchatGyZQ189g5dnj9
-         6ynTAJ4bP72DQ/cqPgSgTel1NheZH9ldJL2j0792CV+oVvJM1HV9pnMHVL+skisLhVO2
-         /b6HbJIxT/RCaSips/NNaaiW6wvbQ/M84hXukgop0GDPCvBGjNWLJl75gnUm1eKgVjAb
-         h513PqVh2xBBc1OG3Rhkp4pXR17CpAl399njfczNwbdTRhgXnd8W+6KQpDDx6/C5Tt0B
-         +MQQ==
+        bh=xGjj6rCV39Lcnnvi/1LW9lZJrXMy3MTtRSwImv99cYQ=;
+        b=Ejkt5jv3E5C1CchJvfQcHSQV739DsUwsyqOat4kTxQRhucm3apllEVZz3b1L3CZJLd
+         OpGpVtnzrsFNoBTM1I0Oo6mEeH4WPCsqXviUweBRb76w31iGJXADigGSGL+MbAzkdA+w
+         DJLU35XfD5ghh9ebBg3V03A37gd3FbdA7x0Qo1CLpLlzvzznfWxTSgoIBceFL/Nx14h0
+         v83m15Rkceg/aVf2NxfkQlmdvR3aYeMmVhdvICyErzmU20qTXPjFILCD2gDCDIot5zRD
+         33NymD8CmsnK/jIkXMx9XQz9X8lRXgOa7RarbITO9yl0g+utpARFcCPkg0IIqiZ8U5kO
+         ZLgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752742238; x=1753347038;
+        d=1e100.net; s=20230601; t=1752745885; x=1753350685;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a2lx5iA902TzGSJo4q8BNEZwisigf9Cj6fV1YQOnO5U=;
-        b=ImgfZDA1uM5b5afRZ+nf5XAD/iGQdy542mebzAfUajApbn4T1yaXwmgaxQgQGEPdc5
-         X8lATYmt7b1brdk/HxBOba1hgYTBA6xh0TlVnwenZkgStsgOf3GqSiia1FG2smPFlD4P
-         Z9aB9g1kS0L6Dp5pR6/sw700YQR/C3EGJHBOnItIOYIM99zfGoGES6gh/BM9vd6+BRxw
-         jil0bjlUe9n0g3R8IkWipFCbnIJEeo6tKDTdvNrxZLZXlSBp0Vq122GfZI3L+IV3NTmd
-         lNxbG4Q0Se5nIqqyhx/KB87y8h2yEiZ+DAPj6284yDgIXM8RUwpClUNFiEIb5HP0kaIB
-         dJGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWbGbjdiTK98Z0+n0wWL32pcDJTKB2X3ZIuUzxonmxm+qvCfqIALhSjxu1y4Sc5zkYFMTdAulTfmqUKVs=@vger.kernel.org, AJvYcCW8jXFJnPdZw94HZAo4tRWttL8hMXrgsw1NPCXPQSatfUW7W8REXQp7Cz/eUFQ5PG5lnb36jCHWL0cI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2k4T24YAGzoDrWUhr+yFsXn2Kw/uKylLqOM+8jEr5YiWzYSRB
-	nuwcQ+WdyY8ipfbazBHQ92g3/+ojUPWmHQNBUvmBv40UHvzgViQKaYXx
-X-Gm-Gg: ASbGncsx98XwhvychSev9B3uRFL9HFBgsSL5Q83ls6fgxKk6wld+mB18UNgQfMdJA/X
-	+CY58FHRa8tEfpoJUGuMaT0uH8rYprSfPbe2R+ta6Zj+YiNRYzrkLhmOgFWIVDjEtxY0045ZIVH
-	qSUyD7GZ1P3HINNQ/ccdKJGA06utbP6QC4VWPjSR5z9pzhGWsBXb6iCHXpcdF8DzDOXB2uyyrNd
-	yuq4jjTu6DfiKrJVZgO3J7b/lEyAqRD+ZTM1YVSrFkG7dmHKansTXe0RWzcPbiIyKvoYDFSRXLG
-	yKcQem+0RmONHupoFzVe1PKf7NJaKqIumzy7uh/ssQmggsrokc3KVnOyuQNk9AriQCp6u54AmUY
-	9SMvXMUTT4AUQU9X5xb5zGDQco0dC8W/Ao79n/TOspxeBNv7ZgnU=
-X-Google-Smtp-Source: AGHT+IGSxV413k604UJGtlq7ScVSWLRihC73xMIQWa9p1uSC0wY+k6OBC7dQeJxyoKd3yhuZShec6g==
-X-Received: by 2002:a05:6512:ac8:b0:553:aa60:faff with SMTP id 2adb3069b0e04-55a23f0e640mr1656819e87.23.1752742237872;
-        Thu, 17 Jul 2025 01:50:37 -0700 (PDT)
+        bh=xGjj6rCV39Lcnnvi/1LW9lZJrXMy3MTtRSwImv99cYQ=;
+        b=d5/OpWRNbKrwP5pxlPZmlBSDRvhFghDymcuSG5hIdjnBRDPCAbqC0DaNIGKMnczD3K
+         AzKl6fF0itK4zK7ThikkGqFM0rNFRsMY3fU/Y46HDKBTER5kadZ3MRRv4EVtwmrJqTIz
+         oztgfsJ9F9V47PUAfRIK1aFKfo+eEbYqwGzyzL2Z8c2ii39UmisBllX6jCmQVdbU+TSe
+         VizyrT97cbo+ZVxWqzwXALFl54x5ZAkb1icQ+bJUb+++RorWyDGIe/CUUbb/JAUjsnjW
+         GkP+OnlzUyW461S3/y2H0XzNuLvi7DOC9lKAI7MoTRgdy7lUyJDYtnK/Px5xf7CiyuMW
+         VHMg==
+X-Gm-Message-State: AOJu0Yz7A7bLYG2Pwf7S2Jydz5OmafOMe5FVrKwKjrBcoqmXPKUlamxc
+	B93/iyXIU84trfJYLJ0D+7mNjnfFbRezhLOFbEPZF8mbF8zn2DHK2QgF
+X-Gm-Gg: ASbGncsFQEaBqRrmA6snmr/IUKuOT+6nusdGwbAwotWSSktz3XHCNqy9GwUeBt8wLMa
+	mQwjIm/ouEP6XVsserL2sTRU4Tn1ZXDYo/gdkciYwnmFQcJEW36nSxCNqUUOdGZ0ggfQwzZPE4B
+	NweWC4aMF0LSgc/MFTmTrmMewaNbVdGsMXECo+mxZZKVn5YoCI86aujinvta9QondNdmETh2+Ac
+	yDbEqdbrBL+e/wP6sq0r0jRmOXJLjDmDg+AjujpLejTYKH5w3clcPwZxt/ztTtwYeucyHFVS+RC
+	2wpKk9zkYBuB96tnMbY3xe7+7ViBFp0DQhNmr0FzfCE4QmAoOHPgctgB6wmN5UaR5wz3/hugTNz
+	KeobVn5dsHxtCEjp3TpuAKHJNrjDfW7MkNdgnJj5DVn23T1KP6m4=
+X-Google-Smtp-Source: AGHT+IFUgb8oizWf0J2qlJ0rgWA0DpQF8kTh3UcUsq5IssI5FN8eZgxoo8AOC2oyuaOQ9hWxg9OFCQ==
+X-Received: by 2002:a05:6512:3c99:b0:553:268e:5019 with SMTP id 2adb3069b0e04-55a23edf97emr1644893e87.11.1752745885067;
+        Thu, 17 Jul 2025 02:51:25 -0700 (PDT)
 Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.192.104])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5593c9d08f3sm2941950e87.103.2025.07.17.01.50.36
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55943b635ecsm2956441e87.166.2025.07.17.02.51.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 01:50:37 -0700 (PDT)
-Date: Thu, 17 Jul 2025 11:50:36 +0300
+        Thu, 17 Jul 2025 02:51:24 -0700 (PDT)
+Date: Thu, 17 Jul 2025 12:51:23 +0300
 From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Antonio Quartulli <antonio@mandelbit.com>, 
+To: Chuck Lever <chuck.lever@oracle.com>, 
 	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>, Sergey Bashirov <sergeybashirov@gmail.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pNFS: fix uninitialized pointer access
-Message-ID: <gveqi6a4a7zt2v3iytoold5y2fevhzm5vaokelfpwkdzbiuwed@edr7ruel66ga>
-References: <20250716143848.14713-1-antonio@mandelbit.com>
- <h4ydkt7c23ha46j33i42wh2ecdwtcrgxnvfb6c7mo3dqc7l2kz@ng7fev5rbqmi>
- <b927d3dd-a4ed-46d7-b129-59eaf60305c7@suswa.mountain>
- <d9b026f1-6ed3-41ca-8699-914c45b0339b@mandelbit.com>
+Cc: linux-nfs@vger.kernel.org, Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: Re: [bug report] nfsd: Implement large extent array support in pNFS
+Message-ID: <pvhfeuelzkpm4xektlzsels4t2x4p62sjh4q7l2ccfwok6wmdh@r43hmsbvke4t>
+References: <9892f785-e9f5-4a29-9ff7-fd89dbf7e474@sabinyo.mountain>
+ <34905201-eec8-4fd9-ad3e-40a9a3cdf03c@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -94,33 +89,25 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d9b026f1-6ed3-41ca-8699-914c45b0339b@mandelbit.com>
+In-Reply-To: <34905201-eec8-4fd9-ad3e-40a9a3cdf03c@oracle.com>
 User-Agent: NeoMutt/20231103
 
-Hi Antonio, Dan,
+Hi Chuck, Dan,
 
-I have an idea how to refactor the code a little to make the static
-analyzer happy. Will send a patch soon, but first I want to check
-that it won't affect functionality.
-
-On Thu, Jul 17, 2025 at 10:01:42AM +0200, Antonio Quartulli wrote:
-> On 17/07/2025 06:56, Dan Carpenter wrote:
-> > No, it won't.  I feel like the code is confusing enough that maybe a
-> > comment is warranted.  /* We always iterate through the loop at least
-> > once so be_prev is correct. */
-> >
+On Wed, Jul 16, 2025 at 04:31:49PM -0400, Chuck Lever wrote:
+> On 7/16/25 3:40 PM, Dan Carpenter wrote:
+> > #4: Change xdr_stream_decode_opaque_fixed() to return zero on success.
+> > This is the best fix.
 >
-> I agree a comment would help.
-
-I see, will add a comment.
-
-> > Another option would be to initialize the be_prev to NULL.  This will
-> > silence the uninitialized variable warning.
+> Since the XDR field is fixed in size, the caller already knows how many
+> bytes were decoded, on success. Thus, xdr_stream_decode_opaque_fixed()
+> doesn't need to return that value. And, xdr_stream_decode_u32 and _u64
+> both return zero on success.
 >
-> But will likely trigger a potential NULL-ptr-deref, because the static
-> analyzer believes we can get there with count==0.
+> Since there is only one other caller, modifying the set of return values
+> of xdr_stream_decode_opaque_fixed() seems sensible to me.
 
-I agree, this will most likely result in another warning.
+I like this solution too, will send patches to fix.
 
 --
 Sergey Bashirov
