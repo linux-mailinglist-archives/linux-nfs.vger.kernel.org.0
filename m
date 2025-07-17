@@ -1,75 +1,89 @@
-Return-Path: <linux-nfs+bounces-13124-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13125-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E89A7B0841B
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 06:37:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 399D0B0842B
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 06:56:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E9C77BA856
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 04:35:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82628A43280
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 04:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C062B202997;
-	Thu, 17 Jul 2025 04:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B32202F9F;
+	Thu, 17 Jul 2025 04:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTKbb0pp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vePLrTIz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1BF2556E
-	for <linux-nfs@vger.kernel.org>; Thu, 17 Jul 2025 04:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3EA202F8E
+	for <linux-nfs@vger.kernel.org>; Thu, 17 Jul 2025 04:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752726926; cv=none; b=eJlXearwMqkhmm9PueObtSzAx9tBoN+6FL4db3WOpxH9cRgaaiM/R8NyaaAZAXKgfRHkbQXl7PKC1YM7wxRbFltaCtZDQBpl2sa2sCJdOwQnSz1P/7GvbIyanVV46hIUS4LjhNeG2CWusIyIk8C0yM1W7d8GR3DtCasY3aYZ3+w=
+	t=1752728167; cv=none; b=F3Vs9KFbgs4At46OzNWdps1Rn/GX5JpnHeJXQaPvREdtyr+WNuqRP9Exjp02cO3ga0csBgWyWsm/XKDVlSP3ULHdLfJFrPo4zrc1Azmb0RTknQMilH3KIIiJN9tP3lseDkaZLktoSVaIzN4z907A2Rv9vy5hIwcBfaHqyXFR54w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752726926; c=relaxed/simple;
-	bh=Y+GBUNYoFmTj3TRd9W9ZVegJYdDmPDpwQ7FrxZnbxTg=;
+	s=arc-20240116; t=1752728167; c=relaxed/simple;
+	bh=QSPPpdjiCgbm71LufB9qfPMayTfg7vGy5VVrEX1c/B8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbW173suRjIbil89OZLvrV6cJCTOBC5V+1Uqay+Rf7+JPucHJ/TMPoz3bOEUf4Gc99lO7ulYVUT4bJ8SQ11NTKe7H57nVLp9nTuBBRUS4rrONJjQ5hJfGm//F0ivQDlgE7JSA2zIE3H5HajdXLALjJkoYHgiaVQFi1mms6pqiQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTKbb0pp; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752726926; x=1784262926;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y+GBUNYoFmTj3TRd9W9ZVegJYdDmPDpwQ7FrxZnbxTg=;
-  b=WTKbb0ppLH6uupJ/elP4CJ9KHBKxT5SmpXAX7ue6V0hIFkSYLqB5f8c2
-   3ptRtzIbu0horZVcJwaDwcbBv0w9qEbIc4Q5RRDQf84nvrW5gHSAnqQKO
-   Ikw4DlzEEGI5XQSCs2+8knqGBpOpKvMlioX1vuY+TFDZsuJGqcl5J8tjU
-   AkECnz6lsvpHXtnCfzXNIBJLMbVO95mcQQx3nJRf7I3qXJD8eTIU3P9oW
-   11Hz1a+X2dNXqToZpt77ytQg3I8QqzHB/PGMbKu/BLMbRq+ahuWhJEfzZ
-   MBuAw4RHJh/ShD2ncZzGPrpu0ij5oOCfE5oTtcAKFoSpTwVfeoD/yRL+v
-   A==;
-X-CSE-ConnectionGUID: +x61Koy2RcCCsHRch1kX7A==
-X-CSE-MsgGUID: oOwQLlj5RKeZEV6Xz/NAeA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="58657219"
-X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
-   d="scan'208";a="58657219"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 21:35:26 -0700
-X-CSE-ConnectionGUID: Je1JB7WrSSqDRS1vZcfHkA==
-X-CSE-MsgGUID: TJoyXuxaStKR0QRoE1Tzkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
-   d="scan'208";a="158392716"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Jul 2025 21:35:23 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ucGL2-000D9P-2j;
-	Thu, 17 Jul 2025 04:35:20 +0000
-Date: Thu, 17 Jul 2025 12:35:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Anna Schumaker <anna@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 4/4] NFS: use a hash table for delegation lookup
-Message-ID: <202507171246.w67NRPWN-lkp@intel.com>
-References: <20250716132657.2167548-5-hch@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZDcIa23s+LGToEykOsvlC2AUmk4Z11+zehrT8j7acx9pj7M4SWqmmzj1PEMvj+D4J1UA0OcXiLlrvWEhMe6S7dFd3Qfx6kxYjzL4X4VDYkDUuHTMyN+oYFB52VbXEtTX9aSxTi47+XAEnhI8uoWeECjwk2+EjKwkK3BXAZIEMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vePLrTIz; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-73e5d932ab5so307449a34.0
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 21:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752728165; x=1753332965; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wA9OwdCE8eIhbOlePq6ADzlr/9GCVKPNA4d/k7TtyMI=;
+        b=vePLrTIzPbviP6AVoE787fgchLw384a41d1VFw9sZc/eKR7l/m7/iFGXSlczySYbK/
+         dZ1QaTMPBz2OsRVpnKWi56IMSjzb+NY3AKzkE2ayBJ3zFW3XIQBH9fYQLD5Dk4PjTa/2
+         KHp3P1rpVYuvYLZYSLKrmeAHuQ4CGj2iUaqG3CB/0g/hWaYKC9sncoa5GZy6hJjUkVUl
+         dvc0rRJ8111MiyXKWNUt1cKC3Tdh6f9cs6i/UiXYJSyNKm0uXmcFzfSsw8HvchdH2rqT
+         4Z5ui0PF2BNruVI/BaidpgWp83sL9oIrPViy+lyyLxa5+Cd7+MqFzzzFiZ04xeIe26lP
+         asGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752728165; x=1753332965;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wA9OwdCE8eIhbOlePq6ADzlr/9GCVKPNA4d/k7TtyMI=;
+        b=tRcMvu7Wobi24IstU/PC2YGB6pVg3LjRkCq5beP0N5l8fiFOgrWI8v+Y7MQWnZJ/Qg
+         6dXq4JcriZfpDY42F+WbO4NjNCsJJe6cZ+Tk4GrAiKnJSaJius6RXD4RmlnMQdaOrztG
+         8XElL7wKgJqTtjReKJcTXxgCgEZr5LUDPPuW7vXtTL5ONYQ2OOChcuzF3hs9/Rgb5k3B
+         pJEucjkpvrvfprobTvVHptMZoJI/r1OlcYCx6lFOJpn4ITOAGwQF9m+N7tIpMOhP09SG
+         /oZavRflpIcOpA+W377LyJCYfLnnA4OAAzYeStcykeTU9Es4ssmN9mSsuSk/ipvxh/nT
+         PmkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmSX4RtGzio8pI3vg6hH1aTIG/J1P9Bi2/gkkRZNnSDTpy9PCmbfJ5peZ2APdW6EIg5fru/TLmQyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJceUyUHPL2IIf4wP37NE2zBt/RCwuLAe85KJyqgcC7M2+TDe
+	XjBEmDUyev4oOo0Wq/sYFHWpjBvRU2bec/wHlqDbUnV58yGIJGyFEp1lK767FXPi2JE=
+X-Gm-Gg: ASbGnctsfD9xnRVGol8qCyuekgUoP98xEheVt/h9nX5rLVKEd6xnNxvWSFAjsfPKd/1
+	znW1IEStSxKYnVNevXRYopOmSM7WVwO3BgWxj9i2Yprlr8tyMVhKKBkvFeyOlY0IbL840rdnxBg
+	DbGrH/WRQxLFPAwtIqU33fIwJokrZeyckBvHmLe94qBz8I+9+3Zwu7yOSlJ7KVmpA/KUv+4qxGh
+	w8LfdDP5XqOTdmYG49KbftKbl4eWpqzcCQj5+teBk48rqIeZnSy8HmiuKQRYYgA1RcIbZiCbYtM
+	Oc9J+ryyYMpXGzCq5ppb7OilnGnX4RLjl2Ibl971ndm/yAIT3pvgpg5OVxBSmCzu11xdLs6uAYm
+	r3PPrxxH6MA6fzFVv4gO35StJpJWpIqX0Pk/dM7o=
+X-Google-Smtp-Source: AGHT+IGR0DWY+RgBfgz02jJwa7z2iGG+/Sq+0RXAC0URhjVOZTXMc0+fpwm5U0mKQklYBMr0tBVsEg==
+X-Received: by 2002:a05:6870:9626:b0:2d5:ba2d:80df with SMTP id 586e51a60fabf-2ffb21eb6a6mr3622667fac.8.1752728164899;
+        Wed, 16 Jul 2025 21:56:04 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:2c38:70d4:43e:b901])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ff111c36a0sm4116929fac.2.2025.07.16.21.56.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jul 2025 21:56:03 -0700 (PDT)
+Date: Thu, 17 Jul 2025 07:56:01 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Antonio Quartulli <antonio@mandelbit.com>, linux-nfs@vger.kernel.org,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pNFS: fix uninitialized pointer access
+Message-ID: <b927d3dd-a4ed-46d7-b129-59eaf60305c7@suswa.mountain>
+References: <20250716143848.14713-1-antonio@mandelbit.com>
+ <h4ydkt7c23ha46j33i42wh2ecdwtcrgxnvfb6c7mo3dqc7l2kz@ng7fev5rbqmi>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -78,109 +92,76 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250716132657.2167548-5-hch@lst.de>
+In-Reply-To: <h4ydkt7c23ha46j33i42wh2ecdwtcrgxnvfb6c7mo3dqc7l2kz@ng7fev5rbqmi>
 
-Hi Christoph,
+On Thu, Jul 17, 2025 at 03:27:50AM +0300, Sergey Bashirov wrote:
+> On Wed, Jul 16, 2025 at 04:38:48PM +0200, Antonio Quartulli wrote:
+> > In ext_tree_encode_commit() if no block extent is encoded due to lack
+> > of buffer space, ret is set to -ENOSPC and we end up accessing be_prev
+> > despite it being uninitialized.
+> 
+> This static check warning appears to be a false positive. This is an
+> internal static function that is not exported outside the module via
+> an interface or API. Inside the module we always use a buffer size
+> that is a multiple of PAGE_SIZE, so at least one page is provided.
+> The block extent size does not exceed 44 bytes, so we can always
+> encode at least one extent. Thus, we never fail on the first iteration.
+> Either ret is zero, or ret is nonzero and at least one extent is encoded.
+> 
+> > Fix this behaviour by bailing out right away when no extent is encoded.
+> >
+> > Fixes: d84c4754f874 ("pNFS: Fix extent encoding in block/scsi layout")
+> > Addresses-Coverity-ID: 1647611 ("Memory - illegal accesses  (UNINIT)")
+> > Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+> > ---
+> >  fs/nfs/blocklayout/extent_tree.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/fs/nfs/blocklayout/extent_tree.c b/fs/nfs/blocklayout/extent_tree.c
+> > index 315949a7e92d..82e19205f425 100644
+> > --- a/fs/nfs/blocklayout/extent_tree.c
+> > +++ b/fs/nfs/blocklayout/extent_tree.c
+> > @@ -598,6 +598,11 @@ ext_tree_encode_commit(struct pnfs_block_layout *bl, __be32 *p,
+> >  		if (ext_tree_layoutupdate_size(bl, *count) > buffer_size) {
+> >  			(*count)--;
+> >  			ret = -ENOSPC;
+> > +			/* bail out right away if no extent was encoded */
+> > +			if (!*count) {
+> 
+> We can't exit here without setting the value of lastbyte, which is one
+> of the function outputs. Please set it to U64_MAX to let upper layer
+> logic handle it properly. Or, see the alternative solution at the end.
+>   +				*lastbyte = U64_MAX;
+> 
+> > +				spin_unlock(&bl->bl_ext_lock);
+> > +				return ret;
+> > +			}
+> >  			break;
+> >  		}
+> >
+> 
+> If we need to fix this, I'd rather add an early check whether the buffer
+> size is large enough to encode at least one extent at the beginning of
+> the function. Before spinlock is acquired and ext_tree traversed. This
+> looks more natural to me. But I'm not sure if this will satisfy the
+> static checker.
+> 
 
-kernel test robot noticed the following build errors:
+No, it won't.  I feel like the code is confusing enough that maybe a
+comment is warranted.  /* We always iterate through the loop at least
+once so be_prev is correct. */
 
-[auto build test ERROR on trondmy-nfs/linux-next]
-[also build test ERROR on linus/master v6.16-rc6 next-20250716]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Another option would be to initialize the be_prev to NULL.  This will
+silence the uninitialized variable warning.  And everyone sensible runs
+with CONFIG_INIT_STACK_ALL_ZERO set in production so it doesn't affect
+run time at all.  Btw, we changed our test systems to set
+CONFIG_INIT_STACK_ALL_PATTERN=y a few months ago and immediately ran
+into an uninitialized variable bug.  So I've heard there are a couple
+distros which don't set CONFIG_INIT_STACK_ALL_ZERO which is very daring
+when every single developer is testing with uninitialized variables
+defaulting to zero.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Hellwig/NFS-move-the-delegation_watermark-module-parameter/20250716-222708
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20250716132657.2167548-5-hch%40lst.de
-patch subject: [PATCH 4/4] NFS: use a hash table for delegation lookup
-config: i386-randconfig-013-20250717 (https://download.01.org/0day-ci/archive/20250717/202507171246.w67NRPWN-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507171246.w67NRPWN-lkp@intel.com/reproduce)
+regards,
+dan carpenter
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507171246.w67NRPWN-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: fs/nfs/client.o: in function `nfs_clone_server':
->> fs/nfs/client.c:1162: undefined reference to `nfs4_delegation_hash_alloc'
-
-
-vim +1162 fs/nfs/client.c
-
-  1135	
-  1136	/*
-  1137	 * Clone an NFS2, NFS3 or NFS4 server record
-  1138	 */
-  1139	struct nfs_server *nfs_clone_server(struct nfs_server *source,
-  1140					    struct nfs_fh *fh,
-  1141					    struct nfs_fattr *fattr,
-  1142					    rpc_authflavor_t flavor)
-  1143	{
-  1144		struct nfs_server *server;
-  1145		int error;
-  1146	
-  1147		server = nfs_alloc_server();
-  1148		if (!server)
-  1149			return ERR_PTR(-ENOMEM);
-  1150	
-  1151		server->cred = get_cred(source->cred);
-  1152	
-  1153		/* Copy data from the source */
-  1154		server->nfs_client = source->nfs_client;
-  1155		server->destroy = source->destroy;
-  1156		refcount_inc(&server->nfs_client->cl_count);
-  1157		nfs_server_copy_userdata(server, source);
-  1158	
-  1159		server->fsid = fattr->fsid;
-  1160	
-  1161		if (IS_ENABLED(CONFIG_NFS_V4) && server->delegation_hash_table) {
-> 1162			error = nfs4_delegation_hash_alloc(server);
-  1163			if (error)
-  1164				goto out_free_server;
-  1165		}
-  1166	
-  1167		nfs_sysfs_add_server(server);
-  1168	
-  1169		nfs_sysfs_link_rpc_client(server,
-  1170			server->nfs_client->cl_rpcclient, "_state");
-  1171	
-  1172		error = nfs_init_server_rpcclient(server,
-  1173				source->client->cl_timeout,
-  1174				flavor);
-  1175		if (error < 0)
-  1176			goto out_free_delegation_hash;
-  1177	
-  1178		/* probe the filesystem info for this server filesystem */
-  1179		error = nfs_probe_server(server, fh);
-  1180		if (error < 0)
-  1181			goto out_free_delegation_hash;
-  1182	
-  1183		if (server->namelen == 0 || server->namelen > NFS4_MAXNAMLEN)
-  1184			server->namelen = NFS4_MAXNAMLEN;
-  1185	
-  1186		error = nfs_start_lockd(server);
-  1187		if (error < 0)
-  1188			goto out_free_delegation_hash;
-  1189	
-  1190		nfs_server_insert_lists(server);
-  1191		server->mount_time = jiffies;
-  1192	
-  1193		return server;
-  1194	
-  1195	out_free_delegation_hash:
-  1196		kfree(server->delegation_hash_table);
-  1197	out_free_server:
-  1198		nfs_free_server(server);
-  1199		return ERR_PTR(error);
-  1200	}
-  1201	EXPORT_SYMBOL_GPL(nfs_clone_server);
-  1202	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
