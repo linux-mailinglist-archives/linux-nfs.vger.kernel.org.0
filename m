@@ -1,165 +1,169 @@
-Return-Path: <linux-nfs+bounces-13121-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13122-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEBF4B08104
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 01:27:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 337D4B08164
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 02:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BCC1580CE7
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Jul 2025 23:27:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 677E64A7D70
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Jul 2025 00:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E09B2EF640;
-	Wed, 16 Jul 2025 23:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D984C2CCC8;
+	Thu, 17 Jul 2025 00:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMyYpB5r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDzlUWKL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767902EF2BD
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Jul 2025 23:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4681799F;
+	Thu, 17 Jul 2025 00:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752708421; cv=none; b=CbeyPl6o1Ra0g8CeXmxkFHJcywXwutwtOkcXzj3laZQDxhCcZxCz/0U+XZx+GXxNAuU8PMxihfiLxqCqDLf9+6FWHRm0hg/spW+2BHClp9igZc6ybuWJ3cf8s23S2RgtwU7iCZYyuDtogFaXpssyuPI+cMSLFH8NT87/N9FR1p4=
+	t=1752712076; cv=none; b=ZqMM95C/SaSNJSwrD8RPI5xyHhjUv9ftndkLc1YY9r6ORuLlrfgL1SN/yRVxHF5Rf8aC9YlgEbRntZGBVGaU5V179HD2scRQ1vMh76BLZkZnqBb7UvYxXZmqZJISsAE74j9rI9F6gWxITUhGDJjvIlPa5aD5AV4WJ865RD2nyGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752708421; c=relaxed/simple;
-	bh=1wgKW+X5lNcUr3Hu4MocCJNiAUFiv5viU6zmcpeVWd0=;
+	s=arc-20240116; t=1752712076; c=relaxed/simple;
+	bh=B1VrwBO8GfeRLwe0QIm4yIzRse6Q7xt/6UjTMPlmCuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9ElJK4PqnV2l0y4jVJ3aPMZh1IRe6UP4+sLWYp3sz9scWmZmRBqdIyDn6pdAuXlt2u7LWTTqAW/nQnDaS+bsuKvMQn4ELORRPz+/6prLThvJwiYKuwZx959w7Bdao1FECIIo9AdXjMNHvwi7nWo2ay4gG04yco//hIApycnALo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMyYpB5r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18852C4CEE7;
-	Wed, 16 Jul 2025 23:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752708421;
-	bh=1wgKW+X5lNcUr3Hu4MocCJNiAUFiv5viU6zmcpeVWd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nMyYpB5rFuObgarOZeIFJ6CDjG454m/IaNb7xRuz6FdnswfwLJv3HU6pKZGEM7aYk
-	 5TjtYJO/Z2jVS2yGP5co3DVM6HxBMOrgw9fzUIM6kmI5bFD5W0LyJ1H7jTYF0KS57Q
-	 QIwgZHip6mE0wsWJ2O6TinSz3rHvRqhjYfQl/hrL09tlB26KR4FdU2NYKEHl9H4nYI
-	 B7mgG1SUx8mlg9g8W6PxEQbrYfX/4R4oKDQe+62+VBDH66ybWBNLbTDCBNP22ya0IA
-	 LiWYGz9X6aJRkyY/Wx288YDBpt2P88Zy6oW8krJSQUwO+erqRokTLXFWgoBLWjZhFe
-	 m2ANoLSElxLQg==
-Date: Wed, 16 Jul 2025 19:27:00 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Fix localio hangs
-Message-ID: <aHg1RLw-5Csbiber@kernel.org>
-References: <cover.1752618161.git.trond.myklebust@hammerspace.com>
- <cover.1752671200.git.trond.myklebust@hammerspace.com>
- <175270375199.2234665.7748991440226043304@noble.neil.brown.name>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mUBjwyIeFbWnkG2CiutYZ0QO0Q8RLAHfcw7Cec09OXERw8Jcs5Cq55SapzCgCzyxQl+HAKjVutPX3P5MN4Xil935etbr659qUE0ItYmGQEbiEPrG85c6p/g0lPjqZhIprS2ldEGv8cd6vNK+JzcrqJl5+vmBM1aU7jAz0ba32o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDzlUWKL; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b8134ef6aso4209551fa.0;
+        Wed, 16 Jul 2025 17:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752712073; x=1753316873; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NI1Ghd98wnZnXdj9LhDIQuSGHuKyUbZcQleXiLmcq1Y=;
+        b=CDzlUWKL4kuC96p3/QXVkn9NTJke82GjIoZx6lB7MKPVKqZ2oXpo4Un8H2xQjTzeIi
+         Z/IqoM1lSigtWPHmA9cD87DsEg1PFyEX+jnz7Lmt9ne6pDMsqks+tHLRKyDIFIDdnAyy
+         DQX/x6t+1LavOrTgxPhWLHUY/XBRx2AtvFS73djHXrGdZIwY4gkzeoxAzZLAW7rp2bqt
+         sz70724ll7qw/KaC8BFnUOtDg17VDoew1Wk6MAf8ecFFRFBtrny7zQOF4+gcdtdpX71W
+         8P4YprDhkOJp4LPxJ7Scp+t0q01csc7ImbswPKBqibQ2peQeco7mI47lUbdqK2i8BgAw
+         U/pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752712073; x=1753316873;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NI1Ghd98wnZnXdj9LhDIQuSGHuKyUbZcQleXiLmcq1Y=;
+        b=cFqtIe0WZ7JUkVwhjJBjNhGPvtIw/62FoazZVu2bbApVHRSqF0RGrFpG4pG6Zi9xoS
+         WBV/Ylq9OnsvwCuwWBIhZZp4cqxJhGZZZbAdX8iNm7EMQ06NTYv8rNNV0BWQsfIptwLu
+         URLZulus3WsCW/Kg3ZINooDsm4mbqv6K4ZAO+DZfX8By/cjbmjR/9Eg6zZitnj1/qnyl
+         9KpiUjvHrQHTeBZEEOFlAg3hqbdfEZeZEgccCFdqPC4Vq+Swpm2b+D0+vnH2BkVQrseE
+         iiTy2nxActYDkXoDkiBhmsAAAIwKnGzlAFJIedo3tBH2X+lDMnr0KUOiFJlNjS98KXp9
+         D94Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUIM/TCSml0iLDaWqf+KzhEymjTe2osTqAcdFnLKYLyM0HL2jyim3OAlJ+fGv5UnIDramDhBHwKF0kv@vger.kernel.org, AJvYcCWnTVs/4Md/S9WR0QyyBb0a8kDnXEaPHyU/MnPGmH+WRKw2MAKQg5WOWJs7Kh/BWRgd7oxR3N0GZ0aDyHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdGqtx/YsNo6eTCU9Ml6WpFVslI7QdBSNHilDmK6eTj/+ihx2i
+	mvGf7CX7dM+RC6ommr9COhIlWsVs6A4GTIPy5lMNvwkNhRxaEkQeX4Lg
+X-Gm-Gg: ASbGncvYow6KhJCve0TIsDPuTnveTLujCDi3QadEYHqodUJFRO30ueaVOHKvus+gu4Z
+	wim0Kp1fxXae1UfdT363Zd5tHXK/Wuw8p2Qp+YyyC/xkx/Bkipn0O40F873uWYUdyM0ZaauO4wg
+	JMvocD5gDSAVM8j4JNYIp4OPCI7U1OMKYJ/tRlvim0ID92ZxC7BJkr6WAhXteRcKF/1HnmDrwwt
+	RdfOxdaZBW/BPwQbBHCSotAQ2O34GoY9pORT997WkbERpKEiMZAAfbwZIWvyvYGXqkj/mdaQ8AI
+	Qegsby4UI1L0IUWSnFWCmvBxoU7MZgrTVXJ/UppOF1+MwPVV9eZDl/ZP7un0sh+JRXkJ7EuzHPQ
+	KSgOPbKwT9UJS9zK39BHbGB6VsBDdMwLTDymxnr/fUT89j4EMGhs=
+X-Google-Smtp-Source: AGHT+IEtnpCQntmpq2730cwK3D2dKN35j2w4G9/hV8f0woAbrYcmCW/k6Pk/MtGuOpl2V9gC93akGA==
+X-Received: by 2002:ac2:4c46:0:b0:553:2f33:ac04 with SMTP id 2adb3069b0e04-55a296fcefbmr262480e87.26.1752712072668;
+        Wed, 16 Jul 2025 17:27:52 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.192.104])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5593c7ee97asm2793177e87.78.2025.07.16.17.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jul 2025 17:27:52 -0700 (PDT)
+Date: Thu, 17 Jul 2025 03:27:50 +0300
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Antonio Quartulli <antonio@mandelbit.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-nfs@vger.kernel.org
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Sergey Bashirov <sergeybashirov@gmail.com>, Konstantin Evtushenko <koevtushenko@yandex.com>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pNFS: fix uninitialized pointer access
+Message-ID: <h4ydkt7c23ha46j33i42wh2ecdwtcrgxnvfb6c7mo3dqc7l2kz@ng7fev5rbqmi>
+References: <20250716143848.14713-1-antonio@mandelbit.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <175270375199.2234665.7748991440226043304@noble.neil.brown.name>
+In-Reply-To: <20250716143848.14713-1-antonio@mandelbit.com>
+User-Agent: NeoMutt/20231103
 
-On Thu, Jul 17, 2025 at 08:09:11AM +1000, NeilBrown wrote:
-> On Thu, 17 Jul 2025, Trond Myklebust wrote:
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > 
-> > The following patch series fixes a series of issues with the current
-> > localio code, as reported in the link
-> > https://lore.kernel.org/linux-nfs/aG0pJXVtApZ9C5vy@kernel.org/
-> > 
-> > 
-> > Trond Myklebust (3):
-> >   NFS/localio: nfs_close_local_fh() fix check for file closed
-> >   NFS/localio: nfs_uuid_put() fix races with nfs_open/close_local_fh()
-> >   NFS/localio: nfs_uuid_put() fix the wake up after unlinking the file
-> 
-> That all looks good to me - thanks a lot for finding and fixing my bugs.
-> 
-> Reviewed-by: NeilBrown <neil@brown.name>
-> 
-> I'd still like to fix the nfsd_file_cache_purge() issue but that is
-> quite separate especially now that you've prevented it causing problems
-> for nfs_uuid_put().
-> 
-> thanks,
-> NeilBrown
+On Wed, Jul 16, 2025 at 04:38:48PM +0200, Antonio Quartulli wrote:
+> In ext_tree_encode_commit() if no block extent is encoded due to lack
+> of buffer space, ret is set to -ENOSPC and we end up accessing be_prev
+> despite it being uninitialized.
 
-Unfortunately even with these 3 v2 fixes I was just able to hit the
-same hang on NFSD shutdown.  It took 5 iterations of the fio test,
-reported here:
-https://lore.kernel.org/linux-nfs/aG0pJXVtApZ9C5vy@kernel.org/
-So it is harder to hit with these v2 fixes, nevertheless:
+This static check warning appears to be a false positive. This is an
+internal static function that is not exported outside the module via
+an interface or API. Inside the module we always use a buffer size
+that is a multiple of PAGE_SIZE, so at least one page is provided.
+The block extent size does not exceed 44 bytes, so we can always
+encode at least one extent. Thus, we never fail on the first iteration.
+Either ret is zero, or ret is nonzero and at least one extent is encoded.
 
-[  369.528839] task:rpc.nfsd        state:D stack:0     pid:10569 tgid:10569 ppid:1      flags:0x00004006
-[  369.528985] Call Trace:
-[  369.529127]  <TASK>
-[  369.529295]  __schedule+0x26d/0x530
-[  369.529435]  schedule+0x27/0xa0
-[  369.529566]  schedule_timeout+0x14e/0x160
-[  369.529700]  ? svc_destroy+0xce/0x160 [sunrpc]
-[  369.529882]  ? lockd_put+0x5f/0x90 [lockd]
-[  369.530022]  __wait_for_common+0x8f/0x1d0
-[  369.530154]  ? __pfx_schedule_timeout+0x10/0x10
-[  369.530329]  nfsd_destroy_serv+0x13f/0x1a0 [nfsd]
-[  369.530516]  nfsd_svc+0xe0/0x170 [nfsd]
-[  369.530684]  write_threads+0xc3/0x190 [nfsd]
-[  369.530845]  ? simple_transaction_get+0xc2/0xe0
-[  369.530973]  ? __pfx_write_threads+0x10/0x10 [nfsd]
-[  369.531133]  nfsctl_transaction_write+0x47/0x80 [nfsd]
-[  369.531324]  vfs_write+0xfa/0x420
-[  369.531448]  ? do_filp_open+0xae/0x150
-[  369.531574]  ksys_write+0x63/0xe0
-[  369.531693]  do_syscall_64+0x7d/0x160
-[  369.531816]  ? do_sys_openat2+0x81/0xd0
-[  369.531937]  ? syscall_exit_work+0xf3/0x120
-[  369.532058]  ? syscall_exit_to_user_mode+0x32/0x1b0
-[  369.532178]  ? do_syscall_64+0x89/0x160
-[  369.532344]  ? __mod_memcg_lruvec_state+0x95/0x150
-[  369.532465]  ? __lruvec_stat_mod_folio+0x84/0xd0
-[  369.532584]  ? syscall_exit_work+0xf3/0x120
-[  369.532705]  ? syscall_exit_to_user_mode+0x32/0x1b0
-[  369.532827]  ? do_syscall_64+0x89/0x160
-[  369.532947]  ? __handle_mm_fault+0x326/0x730
-[  369.533066]  ? __mod_memcg_lruvec_state+0x95/0x150
-[  369.533187]  ? __count_memcg_events+0x53/0xf0
-[  369.533306]  ? handle_mm_fault+0x245/0x340
-[  369.533427]  ? do_user_addr_fault+0x341/0x6b0
-[  369.533547]  ? exc_page_fault+0x70/0x160
-[  369.533666]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  369.533787] RIP: 0033:0x7f1db10fd617
+> Fix this behaviour by bailing out right away when no extent is encoded.
+>
+> Fixes: d84c4754f874 ("pNFS: Fix extent encoding in block/scsi layout")
+> Addresses-Coverity-ID: 1647611 ("Memory - illegal accesses  (UNINIT)")
+> Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+> ---
+>  fs/nfs/blocklayout/extent_tree.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/fs/nfs/blocklayout/extent_tree.c b/fs/nfs/blocklayout/extent_tree.c
+> index 315949a7e92d..82e19205f425 100644
+> --- a/fs/nfs/blocklayout/extent_tree.c
+> +++ b/fs/nfs/blocklayout/extent_tree.c
+> @@ -598,6 +598,11 @@ ext_tree_encode_commit(struct pnfs_block_layout *bl, __be32 *p,
+>  		if (ext_tree_layoutupdate_size(bl, *count) > buffer_size) {
+>  			(*count)--;
+>  			ret = -ENOSPC;
+> +			/* bail out right away if no extent was encoded */
+> +			if (!*count) {
 
-crash> dis -l nfsd_destroy_serv+0x13f
-/root/snitm/git/linux-HS/fs/nfsd/nfssvc.c: 468
-0xffffffffc172e36f <nfsd_destroy_serv+319>:     mov    %r12,%rdi
+We can't exit here without setting the value of lastbyte, which is one
+of the function outputs. Please set it to U64_MAX to let upper layer
+logic handle it properly. Or, see the alternative solution at the end.
+  +				*lastbyte = U64_MAX;
 
-which is the percpu_ref_exit() in nfsd_shutdown_net():
+> +				spin_unlock(&bl->bl_ext_lock);
+> +				return ret;
+> +			}
+>  			break;
+>  		}
+>
 
-static void nfsd_shutdown_net(struct net *net)
-{
-        struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+If we need to fix this, I'd rather add an early check whether the buffer
+size is large enough to encode at least one extent at the beginning of
+the function. Before spinlock is acquired and ext_tree traversed. This
+looks more natural to me. But I'm not sure if this will satisfy the
+static checker.
 
-        if (!nn->nfsd_net_up)
-                return;
+diff --git a/fs/nfs/blocklayout/extent_tree.c b/fs/nfs/blocklayout/extent_tree.c
+index 315949a7e92d..e80f2f82378f 100644
+--- a/fs/nfs/blocklayout/extent_tree.c
++++ b/fs/nfs/blocklayout/extent_tree.c
+@@ -588,6 +588,12 @@ ext_tree_encode_commit(struct pnfs_block_layout *bl, __be32 *p,
+        struct pnfs_block_extent *be, *be_prev;
+        int ret = 0;
 
-        percpu_ref_kill_and_confirm(&nn->nfsd_net_ref, nfsd_net_done);
-        wait_for_completion(&nn->nfsd_net_confirm_done);
++       if (ext_tree_layoutupdate_size(bl, 1) > buffer_size) {
++               *count = 0;
++               *lastbyte = U64_MAX;
++               return -ENOSPC;
++       }
++
+        spin_lock(&bl->bl_ext_lock);
+        for (be = ext_tree_first(&bl->bl_ext_rw); be; be = ext_tree_next(be)) {
+                if (be->be_state != PNFS_BLOCK_INVALID_DATA ||
 
-        nfsd_export_flush(net);
-        nfs4_state_shutdown_net(net);
-        nfsd_reply_cache_shutdown(nn);
-        nfsd_file_cache_shutdown_net(net);
-        if (nn->lockd_up) {
-                lockd_down(net);
-                nn->lockd_up = false;
-        }
 
-        wait_for_completion(&nn->nfsd_net_free_done);
-   ---> percpu_ref_exit(&nn->nfsd_net_ref);
-
-        nn->nfsd_net_up = false;
-        nfsd_shutdown_generic();
-}
+--
+Sergey Bashirov
 
