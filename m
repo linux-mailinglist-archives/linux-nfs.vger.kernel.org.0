@@ -1,57 +1,60 @@
-Return-Path: <linux-nfs+bounces-13146-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13147-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B307EB09D86
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jul 2025 10:15:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91989B09D87
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jul 2025 10:15:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07EC816FAE3
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jul 2025 08:15:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 56CFC7BD305
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Jul 2025 08:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73034145346;
-	Fri, 18 Jul 2025 08:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D734C9D;
+	Fri, 18 Jul 2025 08:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yAtRqI8z"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RGz+ik5S"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F8B1F8AC5
-	for <linux-nfs@vger.kernel.org>; Fri, 18 Jul 2025 08:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00171FBCA1
+	for <linux-nfs@vger.kernel.org>; Fri, 18 Jul 2025 08:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752826515; cv=none; b=ToilRFIXT+9bLkzr/Q2azrEz48i+HQnD36U0iUtggzQ/IwdohvFB3AU4YFRgSkAOiXiD1EkOmwBsE8bSKJOOV5Y27ZkU3eWUqeElnDdYg7QoRAqtXFakI2Anqsgr0zlJ7Vl742aWC0DkbM6l5yOIbhP5hrBc6ztbFjRuSRFIERA=
+	t=1752826518; cv=none; b=NuftDTFIp1v+H79FFPjklWlF4J8hCXkE5l18v6GEHxzjF2L/8EWOGdzcZXtlAK801Y9eNcJNwHepC9VLrpZwtyVguI/QeGs5JB038Fo1ps1khcTNXfCooSVwFd6p8rX3ptWrFhRCALYLRcWl5tEBqCmU0lAH9506whxjJLptkAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752826515; c=relaxed/simple;
-	bh=o3YULVY7CqhCA5/Go9SZzGQ3z55o97Wuy5fLDcyYnJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fYzQCkUInICPo76aFnP5mP37LmK7cT1iktVUGIvCpWVS984+SmY88QNB/mXbzIUA785Cjl/2OnJ407CI1dXIOwG12Yp4eBTHxry/bS4Wgzt5UOXKWpPQy2XRH+YMmQH1sTMQ5VTyM6Y7b3FSusE6Rmo8Zo5SZ7vYOCW3dFurTj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yAtRqI8z; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1752826518; c=relaxed/simple;
+	bh=+txq4r6E788XiOSzoptwb51kKfkT4FGnRKjYdm1YSWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hFJZS8TmlEfc35ODzpCkfwogPJifWx+1tBZ4cGQkfeAjxd16rXRB+Lor6AWPzBKRG6stxGeAW5X1NqxJ0SdqhUkRgE9WfWSojt+A/bxRL/FVOJHeqtE+rgzTjsasNSt40P7Qwf6CEKRK6ywA3jmOY9b14A4jFtAA9Mhtcx59FIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RGz+ik5S; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=1i8UEnLt36b6ZqCe5eL9sAc9XO2ALEnxVU+/LKn98Vw=; b=yAtRqI8zV5PlfdouExuDJcjNSR
-	We4BLrYRUblzz7a6dJxDvbgc9A3i1hS53y3Uy32qQYpAPd6jCKrLWvNUIjnQBGELtgQqtCbsYIl8w
-	P2tNM95+h/wEYqU/4nrB0fmtHlKcXilCzBjsQdTPLxUa0uUcvCY7X6oEtqZsSDVI/oz8HAJV6kPa2
-	ybcWXJt008Oc/KWafa/msr8I+TYLR0LLikIThRQKai+e12wpbM15cHHp1JVuSWcguVQxmZ6M76aOy
-	9YPSJB2JkR33VDTT/SNBKLzRN5Gzs/JU3i5lZwKeMUpu1U1FHViWVxef47XsQq1RqItxPhkDlS7Oe
-	cEgNQWOA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=GI+fqoKc34XxbYKLNADoFcrRG5P+fGFwcx9k6OZ6w8A=; b=RGz+ik5S8YKs07p61Wa9N6+2zy
+	eV3q6d1mgU6N+STWdF3hL4VhWE6O44OD7+Yx78ds28btO7AChSv83/7iTRS5g1oQPrGcr1pfwVvRb
+	n7zajBCKY0xeChv4thtDXxSwjveDZMKrw3njohWYN+/5yZtC8Tn7XiSB01UEfTT/YAPoXBdFLavT9
+	gHYMU1YWHCKGo5N/cOstsfdaY0VLfZll/6I1BcpVJKlVEv/yO5ebFM0BV+ZEU2o5XBsFI+OCNz6kE
+	617d4rqTEFQJFr0usflAXB7BgvF3Vf6uYzlcSkgy5zEE0YrY26yiBloP0MR23Zhg9BmpxaGsu4lHG
+	sqKSHNiQ==;
 Received: from [2001:4bb8:2dd:a44:6557:72e7:fc8:56bc] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ucgFM-0000000Bzru-33vS;
-	Fri, 18 Jul 2025 08:15:13 +0000
+	id 1ucgFP-0000000Bzt2-12m6;
+	Fri, 18 Jul 2025 08:15:15 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>
 Cc: Anna Schumaker <anna@kernel.org>,
 	linux-nfs@vger.kernel.org
-Subject: use a hash for looking up delegation v3
-Date: Fri, 18 Jul 2025 10:14:45 +0200
-Message-ID: <20250718081509.2607553-1-hch@lst.de>
+Subject: [PATCH 1/5] NFS: cleanup error handling in nfs4_server_common_setup
+Date: Fri, 18 Jul 2025 10:14:46 +0200
+Message-ID: <20250718081509.2607553-2-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250718081509.2607553-1-hch@lst.de>
+References: <20250718081509.2607553-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,35 +64,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi all,
+Return error directly instead of using a goto label for it.
 
-currently recalling delegations has to walk the server->delegations
-list, and then take the lock for each delegation.  This can take a lot of
-time and has adverse effects to the rest of the system due to the number
-atomic operations, cache lines touched and a long RCU critical section.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/nfs/nfs4client.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-This series first converts the delegation watermark to be per-server, as
-all the state guarded by it is per-server and the commit message adding
-it talks about server side overhead as well, and then adds a very simple
-hash for finding the delegation for a given file handle in
-nfs_delegation_find_inode_server.
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 2e623da1a787..5943a192f36b 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -1103,14 +1103,14 @@ static int nfs4_server_common_setup(struct nfs_server *server,
+ 	/* We must ensure the session is initialised first */
+ 	error = nfs4_init_session(server->nfs_client);
+ 	if (error < 0)
+-		goto out;
++		return error;
+ 
+ 	nfs4_server_set_init_caps(server);
+ 
+ 	/* Probe the root fh to retrieve its FSID and filehandle */
+ 	error = nfs4_get_rootfh(server, mntfh, auth_probe);
+ 	if (error < 0)
+-		goto out;
++		return error;
+ 
+ 	dprintk("Server FSID: %llx:%llx\n",
+ 			(unsigned long long) server->fsid.major,
+@@ -1119,7 +1119,7 @@ static int nfs4_server_common_setup(struct nfs_server *server,
+ 
+ 	error = nfs_probe_server(server, mntfh);
+ 	if (error < 0)
+-		goto out;
++		return error;
+ 
+ 	nfs4_session_limit_rwsize(server);
+ 	nfs4_session_limit_xasize(server);
+@@ -1130,8 +1130,7 @@ static int nfs4_server_common_setup(struct nfs_server *server,
+ 	nfs_server_insert_lists(server);
+ 	server->mount_time = jiffies;
+ 	server->destroy = nfs4_destroy_server;
+-out:
+-	return error;
++	return 0;
+ }
+ 
+ /*
+-- 
+2.47.2
 
-With this hash sample microbenchmarks that cause delegation recalls in
-reverse list order are sped up ~5 percent, although the time is still
-very variable due to other factors.
-
-Changes since v2:
- - keep the hash allocation for cloning inside the nfsv4 module
-
-Changes since v1:
- - only allocate the delegation hash for v4 mounts
-
-Diffstat:
- fs/nfs/client.c           |    1 
- fs/nfs/delegation.c       |  110 ++++++++++++++++++++++++++++------------------
- fs/nfs/delegation.h       |    3 +
- fs/nfs/nfs4client.c       |   14 +++--
- fs/nfs/nfs4proc.c         |   22 ++++++++-
- include/linux/nfs_fs_sb.h |    3 +
- 6 files changed, 106 insertions(+), 47 deletions(-)
 
