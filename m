@@ -1,59 +1,57 @@
-Return-Path: <linux-nfs+bounces-13194-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13195-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3F55B0E454
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 21:40:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4097DB0E462
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 21:51:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC9827A8D5F
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 19:38:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A6D83B163C
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 19:50:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E18E2853E7;
-	Tue, 22 Jul 2025 19:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF87280CC9;
+	Tue, 22 Jul 2025 19:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuppnTyd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/pFndXb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232AB2853E3
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 19:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53BD221297
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 19:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753213208; cv=none; b=qQIls3d8kXxF68nJmN5tw3sbOxArU2esUoq8mA3NL0Pz0uTjRsLmPSFxLT3hN6DYzs0/AMhEa+MxNIghD9VHo4HNehbKal9T9LBcpYFQLmuTrUOLUODVpNIjJWNALvqMMGBH6g9dUieTZmXvfAxFuPPaoIe7cZXU1XTEaVAGANI=
+	t=1753213884; cv=none; b=oZuF5DuMSK57vfrlrIhku7yDpxCx0sEQ6MTS93JE7vIde+gXU14zEsnI6WrFn3drHrRMgpqchXejg52NR8TtLYHTTEYO8+fYQKMtPuK57V5j68XKJHeYh8duzPpCO2MonWlRcOLitR0yhdMcURuERR2HfH3yONKT5fDVLvXorTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753213208; c=relaxed/simple;
-	bh=Pr1eRKRIbg6A4+vwXd92JWlchRhLLDbUIJs1V7ePYOU=;
+	s=arc-20240116; t=1753213884; c=relaxed/simple;
+	bh=Qr/c93UFTJEStKD0uZQr4zM9DJykQ4JVCXP4rAOUFKg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PvBR9uAW6/jWYwsAPCXNl109r7P77Ou4uheB54YBRPv36XTU3JPX5IBVA7mxp4dqA1pL5pK+YmH6mq3hCXDqoPcJrYsXxLIJREXxylDUhi756yGjzw+UWh7jEPzUoSXm/70vkuQ4vRWQO/n1lXozVC+dcvws0p+VkEnwuoH9Is8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuppnTyd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7019BC4CEEB;
-	Tue, 22 Jul 2025 19:40:07 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ArSCvsJLJ/gDNUlbD8mtbanGBJyZDzE4KrtNWbfLaDbzQDM/CxC6aomSNxjvMwkb9lA9hronZENuhAhSYoTCHsWSUq/2fUCQm/QxYVpC/xHvGsPGyVmNRbNasT/9DbUHpf2HIiN+On4Jj/YwKw8uDNWn8tXa9ndJ2/eAsY86gLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/pFndXb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D07A9C4CEEB;
+	Tue, 22 Jul 2025 19:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753213207;
-	bh=Pr1eRKRIbg6A4+vwXd92JWlchRhLLDbUIJs1V7ePYOU=;
+	s=k20201202; t=1753213884;
+	bh=Qr/c93UFTJEStKD0uZQr4zM9DJykQ4JVCXP4rAOUFKg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fuppnTydFu5eMmR/2lV/xHkLCZ4xDJc6qfybrys3bkJaYQCe2KFtaG6WVRX9DSrI8
-	 pAK7MPrzUxP7QNFajM7GBSXK9L1ZD02ZPxhVyjHl1NALxRMT8f13BriDGduldZryok
-	 6Pl773/iWO2VewRe4iX5i6rlxsjBwHknTcF2By3EJCmrJOk8A5zVTK78rDOnkIYsoo
-	 sMego+sgKS5FL8FkKwVG39JRmgbq1mi0tC9FGwRwddyMw7ajjXqSO2gBWY9AdlrwbO
-	 5FjCDMd5xs4uVb2daJRHlI6uaIpd7qbL7QPknAWpCL0dsSw3ttB6hIIjYuwGlMIpLy
-	 msH+RFvVvVhTQ==
-Message-ID: <60b1e1be9ce67496e8774ccb64e9ff637ab2a75d.camel@kernel.org>
-Subject: Re: nfs client and io_uring zero copy receive
+	b=b/pFndXbLoZCyg7fW5LFX50vDlVuXOyrjfY9Bu12TD18HnTwvY71MJsViQfyI4SIa
+	 iZGTAqt1B8fKokVva+3enfNO2+B6PZ6jUmvYq8J9CSxNNCEY6TTWNe7plCzroaBKOC
+	 BXForvJtevGWlc0k/EKhH8YMCUsKJnoPt52Li9kkU+4sRbJfNKCyUT0AReBsDm0MN8
+	 1cotMg2GMJXDjxiVKK1IT2vWgJCOndEdMRfmNOAzZgUAXeJVnUA2oesVIHb2eRs+H5
+	 WULVZcqVm6CNZ0IgcuV6iTpcPSNXHHcsIbvA3mO8yZDjTTxhGVnddEbNgiCeWvVpgT
+	 t2X56s5uyEEhw==
+Message-ID: <1b1d82709ee0edb5de4f4ac6d3eb6d72219583e0.camel@kernel.org>
+Subject: Re: delegated timestamp woes
 From: Trond Myklebust <trondmy@kernel.org>
-To: Anton Gavriliuk <antosha20xx@gmail.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Tue, 22 Jul 2025 15:40:06 -0400
-In-Reply-To: <CAAiJnjrmeZUexNkJJmvuUDKvTqvuQhahWY2uFhOgBOmoLrLbLw@mail.gmail.com>
-References: 
-	<CAAiJnjqvKAE_dUiCTr8D5UShNK5fxJuUHpP=nDFadF-OYhYbfw@mail.gmail.com>
-	 <76c35f2fc9386f3e77defe87375c4ad110618aaf.camel@kernel.org>
-	 <CAAiJnjrmeZUexNkJJmvuUDKvTqvuQhahWY2uFhOgBOmoLrLbLw@mail.gmail.com>
+To: Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Thomas Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org, Chuck Lever
+	 <chuck.lever@oracle.com>
+Date: Tue, 22 Jul 2025 15:51:22 -0400
+In-Reply-To: <bfa20f4a81e0c2d5df8525476fb29af156f4f5f1.camel@kernel.org>
+References: <bfa20f4a81e0c2d5df8525476fb29af156f4f5f1.camel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -62,81 +60,79 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-T24gVHVlLCAyMDI1LTA3LTIyIGF0IDIyOjAxICswMzAwLCBBbnRvbiBHYXZyaWxpdWsgd3JvdGU6
-Cj4gPiBUaGUgb25seSB3YXkgeW91IGNhbiBhdm9pZCBtZW1vcnkgY29waWVzIGhlcmUgaXMgdG8g
-dXNlIFJETUEgdG8KPiA+IGFsbG93Cj4gPiB0aGUgc2VydmVyIHRvIHdyaXRlIGl0cyByZXBsaWVz
-IGRpcmVjdGx5IGludG8gdGhlIGNvcnJlY3QgY2xpZW50Cj4gPiByZWFkCj4gPiBidWZmZXJzLgo+
-IAo+IEkgcmVtb3VudGVkIHdpdGggcmRtYQo+IAo+IFtyb290QDIzLTEyNy03Ny02IH5dIyBtb3Vu
-dCAtdCBuZnMgLW8KPiBwcm90bz1yZG1hLG5jb25uZWN0PTE2LHJzaXplPTQxOTQzMDQsd3NpemU9
-NDE5NDMwNCAxOTIuMTY4LjAuNzovbW50Cj4gL21udAo+IFtyb290QDIzLTEyNy03Ny02IH5dIyBt
-b3VudCAtdnxncmVwIC1pIHJkbWEKPiAxOTIuMTY4LjAuNzovbW50IG9uIC9tbnQgdHlwZSBuZnM0
-Cj4gKHJ3LHJlbGF0aW1lLHZlcnM9NC4yLHJzaXplPTEwNDg1NzYsd3NpemU9MTA0ODU3NixuYW1s
-ZW49MjU1LGhhcmQsZmF0Cj4gYWxfbmV0ZXJyb3JzPW5vbmUscHJvdG89cmRtYSxuY29ubmVjdD0x
-Nixwb3J0PTIwMDQ5LHRpbWVvPTYwMCxyZXRyYW5zCj4gPTIsc2VjPXN5cyxjbGllbnRhZGRyPTE5
-Mi4xNjguMC44LGxvY2FsX2xvY2s9bm9uZSxhZGRyPTE5Mi4xNjguMC43KQo+IFtyb290QDIzLTEy
-Ny03Ny02IH5dIwo+IAo+IGFuZCByZXBlYXQgc2VxdWVudGlhbCByZWFkLgo+IAo+IEFjY29yZGlu
-ZyB0byBwZXJmIHRvcCwgbWVtY3B5IGlzIGdvbmUsCj4gCj4gU2FtcGxlczogNjRLIG9mIGV2ZW50
-ICdjeWNsZXM6UCcsIDQwMDAgSHosIEV2ZW50IGNvdW50IChhcHByb3guKToKPiAyMjUxMDIxNzYz
-MyBsb3N0OiAwLzAgZHJvcDogMC8wCj4gT3ZlcmhlYWTCoCBTaGFyZWQgT2JqZWN0wqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFN5bWJvbAo+IMKgIDEzLDEyJcKgIFtu
-ZnNdwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBba10gbmZzX2dlbmVyaWNfcGdfdGVzdAo+IMKgIDExLDMyJcKgIFtuZnNdwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10gbmZz
-X3BhZ2VfZ3JvdXBfbG9jawo+IMKgIDEwLDQyJcKgIFtuZnNdwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10gbmZzX2NsZWFyX3JlcXVl
-c3QKPiDCoMKgIDUsNDElwqAgW2tlcm5lbF3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIFtrXSBndXBfZmFzdF9wdGVfcmFuZ2UKPiDCoMKgIDQsMTEl
-wqAgW25mc13CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIFtrXQo+IG5mc19wYWdlX2dyb3VwX3N5bmNfb25fYml0Cj4gwqDCoCAzLDM2JcKg
-IFtuZnNdwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBba10gbmZzX3BhZ2VfY3JlYXRlCj4gwqDCoCAzLDEzJcKgIFtuZnNdwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10KPiBf
-X25mc19wYWdlaW9fYWRkX3JlcXVlc3QKPiDCoMKgIDIsMTAlwqAgW25mc13CoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFtrXQo+IF9fbmZz
-X2ZpbmRfbG9ja19jb250ZXh0Cj4gCj4gYnV0IGl0IGRpZG4ndCBpbXByb3ZlIHJlYWQgYmFuZHdp
-ZHRoIGF0IGFsbC7CoCBFdmVuIHNsaWdodGx5IHdvcnNlCj4gY29tcGFyZWQgdG8gcHJvdG89dGNw
-LgoKU28gdGhhdCBtb3JlIG9yIGxlc3MgcHJvdmVzIHRoYXQgdGhvc2UgbWVtY3B5cyB3ZXJlIG5l
-dmVyIHRoZSByb290CmNhdXNlIG9mIHlvdXIgcGVyZm9ybWFuY2UgcHJvYmxlbS4KCkkgc3VzcGVj
-dCB5b3UnbGwgd2FudCB0byBsb29rIGF0IHRoZSBzZXJ2ZXIgcGVyZm9ybWFuY2UuIE1heWJlIGFs
-c28KbG9vayBhdCB0aGUgY2xpZW50IHR1bmFibGVzIHRoYXQgbGltaXQgY29uY3VycmVuY3ksIHN1
-Y2ggYXMgdGhlCnN1bnJwYy5yZG1hX3Nsb3RfdGFibGVfZW50cmllcyBzeXNjdGwsIG9yIHRoZSBu
-ZnMubWF4X3Nlc3Npb25fc2xvdHMKbW9kdWxlIHBhcmFtZXRlciwgZXRjLgoKPiAKPiBBbnRvbgo+
-IAo+INCy0YIsIDIyINC40Y7Quy4gMjAyNeKAr9CzLiDQsiAyMTo0MywgVHJvbmQgTXlrbGVidXN0
-IDx0cm9uZG15QGtlcm5lbC5vcmc+Ogo+ID4gCj4gPiBPbiBUdWUsIDIwMjUtMDctMjIgYXQgMjE6
-MTAgKzAzMDAsIEFudG9uIEdhdnJpbGl1ayB3cm90ZToKPiA+ID4gSGkKPiA+ID4gCj4gPiA+IEkg
-YW0gdHJ5aW5nIHRvIGV4Y2VlZCAyMCBHQi9zIGRvaW5nIHNlcXVlbnRpYWwgcmVhZCBmcm9tIGEg
-c2luZ2xlCj4gPiA+IGZpbGUKPiA+ID4gb24gdGhlIG5mcyBjbGllbnQuCj4gPiA+IAo+ID4gPiBw
-ZXJmIHRvcCBzaG93cyBleGNlc3NpdmUgbWVtY3B5IHVzYWdlOgo+ID4gPiAKPiA+ID4gU2FtcGxl
-czogMjM3SyBvZiBldmVudCAnY3ljbGVzOlAnLCA0MDAwIEh6LCBFdmVudCBjb3VudAo+ID4gPiAo
-YXBwcm94Lik6Cj4gPiA+IDEyMDg3MjczOTExMiBsb3N0OiAwLzAgZHJvcDogMC8wCj4gPiA+IE92
-ZXJoZWFkwqAgU2hhcmVkIE9iamVjdMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBTeW1ib2wKPiA+ID4gwqAgMjAsNTQlwqAgW2tlcm5lbF3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFtrXSBtZW1jcHkKPiA+ID4gwqDC
-oCA2LDUyJcKgIFtuZnNdwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBba10KPiA+ID4gbmZzX2dlbmVyaWNfcGdfdGVzdAo+ID4gPiDCoMKg
-IDUsMTIlwqAgW25mc13CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIFtrXQo+ID4gPiBuZnNfcGFnZV9ncm91cF9sb2NrCj4gPiA+IMKgwqAg
-NCw5MiXCoCBba2VybmVsXcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgW2tdIF9jb3B5X3RvX2l0ZXIKPiA+ID4gwqDCoCA0LDc5JcKgIFtrZXJuZWxd
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10g
-Z3JvX2xpc3RfcHJlcGFyZQo+ID4gPiDCoMKgIDIsNzclwqAgW25mc13CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFtrXQo+ID4gPiBuZnNf
-Y2xlYXJfcmVxdWVzdAo+ID4gPiDCoMKgIDIsMTAlwqAgW25mc13CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFtrXQo+ID4gPiBfX25mc19w
-YWdlaW9fYWRkX3JlcXVlc3QKPiA+ID4gwqDCoCAyLDA3JcKgIFtrZXJuZWxdwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10KPiA+ID4gY2hlY2tf
-aGVhcF9vYmplY3QKPiA+ID4gwqDCoCAyLDAwJcKgIFtrZXJuZWxdwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10gX19zbGFiX2ZyZWUKPiA+ID4g
-Cj4gPiA+IENhbiBuZnMgY2xpZW50IGJlIGFkb3B0ZWQgdG8gdXNlIHplcm8gY29weSA/LCBmb3Ig
-ZXhhbXBsZSBieQo+ID4gPiB1c2luZwo+ID4gPiBpb191cmluZyB6ZXJvIGNvcHkgcnguCj4gPiA+
-IAo+ID4gCj4gPiBUaGUgY2xpZW50IGhhcyBubyBpZGVhIGluIHdoaWNoIG9yZGVyIHRoZSBzZXJ2
-ZXIgd2lsbCByZXR1cm4KPiA+IHJlcGxpZXMgdG8KPiA+IHRoZSBSUEMgY2FsbHMgaXQgc2VuZHMu
-IFNvIG5vLCBpdCBjYW4ndCBxdWV1ZSB1cCB0aG9zZSByZXBseQo+ID4gYnVmZmVycyBpbgo+ID4g
-YWR2YW5jZS4KPiA+IAo+ID4gVGhlIG9ubHkgd2F5IHlvdSBjYW4gYXZvaWQgbWVtb3J5IGNvcGll
-cyBoZXJlIGlzIHRvIHVzZSBSRE1BIHRvCj4gPiBhbGxvdwo+ID4gdGhlIHNlcnZlciB0byB3cml0
-ZSBpdHMgcmVwbGllcyBkaXJlY3RseSBpbnRvIHRoZSBjb3JyZWN0IGNsaWVudAo+ID4gcmVhZAo+
-ID4gYnVmZmVycy4KPiA+IAo+ID4gLS0KPiA+IFRyb25kIE15a2xlYnVzdAo+ID4gTGludXggTkZT
-IGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQo+ID4gdHJvbmRteUBrZXJuZWwub3JnLCB0
-cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tCg==
+On Tue, 2025-07-22 at 15:27 -0400, Jeff Layton wrote:
+> I've been chasing some problems with the git regression testsuite
+> that
+> crop up with delegated timestamps enabled. I've knocked down a couple
+> of problems on the server side, but I'm not sure how to fix the
+> latest
+> issue.
+>=20
+> Most of the problems with gitr suite and delegated timestamps
+> manifest
+> as spurious changes to the timestamps. e.g., it will do a git
+> checkout
+> and then later find that some file in the checkout appears to have
+> changed when it didn't expect that.
+>=20
+> I reproduced one of the problems with some debugging turned up. What
+> we
+> see is this in the wireshark capture (filtered on the filehandle):
+>=20
+> 939238 1753209666.985827 192.168.122.151 =E2=86=92 192.168.122.103 NFS 48=
+6 V4
+> Reply (Call In 939237) OPEN StateID: 0xafa9
+> 939239 1753209666.987808 192.168.122.103 =E2=86=92 192.168.122.151 NFS 29=
+8 V4
+> Call SETATTR FH: 0x68fcd843
+> 939240 1753209666.995860 192.168.122.151 =E2=86=92 192.168.122.103 NFS 29=
+4 V4
+> Reply (Call In 939239) SETATTR
+> 939241 1753209666.999909 192.168.122.103 =E2=86=92 192.168.122.151 NFS 27=
+8 V4
+> Call WRITE StateID: 0xe7e8 Offset: 0 Len: 2
+> 939242 1753209667.019570 192.168.122.151 =E2=86=92 192.168.122.103 NFS 18=
+2 V4
+> Reply (Call In 939241) WRITE
+> 944922 1753209696.313938 192.168.122.103 =E2=86=92 192.168.122.151 NFS 15=
+14
+> V4 Call SETATTR FH: 0xb6dd63b6 | DELEGRETURN StateID: 0x3eebV4 Call
+> SETATTR FH: 0xcf57bbcb | DELEGRETURN StateID: 0x69ca=C2=A0 ; V4 Call
+> SETATTR FH: 0x68fcd843 | DELEGRETURN StateID: 0xe245=C2=A0 ; V4 Call
+> SETATTR FH: 0x02d757ea | DELEGRETURN StateID: 0xc788=C2=A0 ; V4 Call
+> SETATTR FH: 0x130870b2 | DELEGRETURN StateID: 0x8c12
+> 946410 1753209702.893917 192.168.122.103 =E2=86=92 192.168.122.151 NFS 25=
+4 V4
+> Call GETATTR FH: 0x68fcd843
+> 946411 1753209702.895304 192.168.122.151 =E2=86=92 192.168.122.103 NFS 31=
+0 V4
+> Reply (Call In 946410) GETATTR
+>=20
+> We get an open for write (with no open stateid and delegated
+> timestamps), a write, and then and=C2=A0 setattr|delegreturn. git had the
+> delegated mtime (1753209666.995071118) on file because the delegation
+> allowed getattr() on the client to return before writeback had
+> completed.
+>=20
+> In this case, the setattr for the delegated mtime was for a value
+> older
+> than the existing mtime, so it was ignored. Note that the reply to
 
+Uhh... Why is the existing value of the mtime on the server grounds for
+rejecting the delegated mtime? The client owns that value.=20
+
+> the
+> WRITE didn't go out until 1753209667.019570, which is after
+> 1753209666.995071118.
+>=20
+> Eventually the client gets the "real" mtime from the server after
+> returning the delegation, which now doesn't match the one git has on
+> file.
+>=20
+> I don't see a way to fix this right offhand. Any thoughts?
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
