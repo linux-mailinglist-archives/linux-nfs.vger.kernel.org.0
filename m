@@ -1,95 +1,117 @@
-Return-Path: <linux-nfs+bounces-13188-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13189-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E76FAB0E39E
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 20:43:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04055B0E3B6
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 20:52:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215FF1651AB
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 18:43:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 751D17AD25F
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 18:51:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7E481E5B70;
-	Tue, 22 Jul 2025 18:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C4B283680;
+	Tue, 22 Jul 2025 18:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEn6x90k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mell/UAH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9386F1B808
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 18:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284B0280CD5;
+	Tue, 22 Jul 2025 18:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753209818; cv=none; b=STh3nis2iHMG1CItutPFFPZCk+W3L4QfBD2jqBo93iUDwCrcqPBvvPmOGdwQdGJ9klVoh3dQ8ksXDd0/PVlOKhsV//gXLCwbu9+N5bspNhmhQyqbirzfhqLtbMUDJXhWgFJ4KFhUg9lS4uktCuhUokHBe0GF489p3LN61V5IHrA=
+	t=1753210361; cv=none; b=XpESH9lTMabKgbam4ZOKQGLh0xAyIDuOFL5t1tlJ19hh+dY1OvZpKhBEWtqyjlpXFADtdV3mELcfq2muv3Wu08thEgA4K8ZHaMiqAxirHAm9bUcNT/aDuBud19cDiqoP+hBp9EwxqQEjMiCG0pXJjxVfeEEI1tabXVhwoYbWmEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753209818; c=relaxed/simple;
-	bh=ODfS0MriTe2BkDH3/8ZqCheu41IF2WEZjajJtc/1ijA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j1/Xb3fBisC32iAWWQqAyQ+ft5c+Mr7/9BbipuPkAKhIMiUHsERvKnn2WPjNBYTGuNEy52w+aD32r1eOmBwAww17j4QwSTX5+cJxBH8wOv883d1ElDCQEGqV31LGS2lZrhIWDpcWp7tjLWtYiSDYP0bXta7uyKbTnxwbJsOUXug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEn6x90k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DE5C4CEEB;
-	Tue, 22 Jul 2025 18:43:35 +0000 (UTC)
+	s=arc-20240116; t=1753210361; c=relaxed/simple;
+	bh=0bqNmtkfCsYAScjWaHpJG8KA1tQSPtNgsYNa1N1PLBc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tFmH9pVrX5rLfmcVlf2aFFxMVj+6bLycVvlFvc/zgAEnbsfHEZPS6hn1S1aRGAiOfLfDGxVk8bhdDCpGxmtAn+RH2O0nWe/QPUleLsG0uyKpjJY+Cjpce8KgFKqQYHjgnW6BNTya2gtQh6B6LQPFjhitkyj5QTF+f9NyqLlEYNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mell/UAH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FD2C4CEEB;
+	Tue, 22 Jul 2025 18:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753209816;
-	bh=ODfS0MriTe2BkDH3/8ZqCheu41IF2WEZjajJtc/1ijA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=pEn6x90kpm4jfLj79Ydq2Ri2YVwlXSK5/juSPuM5j8BaR79ke+1rr/ekMg7PzeR0O
-	 9cw1j/BHvOXijSIribUYbVUpT8VTQxgFc6kImKC5DCYpWQY/LerB8IYlu0hl0n1uSP
-	 6fvpwk8j5GWN7S1mPQ94GveV8DlOCghMjezdNf3g5IAXHVtPk1eUNz/GesDQZZARHY
-	 P0VdCEfQgi5uEeT/wINItZgLFsyk7VF7eLxnhRelDINUrLw/o2J2ZXZFfz4iaMCAMc
-	 Frl/ELMkH6jdzV/aGW4ZaakiIdbtee76dtY5J/JtGI9PDXgW/QMX++Jk0WOCURCbUC
-	 vun2rc6rgX2kw==
-Message-ID: <76c35f2fc9386f3e77defe87375c4ad110618aaf.camel@kernel.org>
-Subject: Re: nfs client and io_uring zero copy receive
-From: Trond Myklebust <trondmy@kernel.org>
-To: Anton Gavriliuk <antosha20xx@gmail.com>, linux-nfs@vger.kernel.org
-Date: Tue, 22 Jul 2025 14:43:34 -0400
-In-Reply-To: <CAAiJnjqvKAE_dUiCTr8D5UShNK5fxJuUHpP=nDFadF-OYhYbfw@mail.gmail.com>
-References: 
-	<CAAiJnjqvKAE_dUiCTr8D5UShNK5fxJuUHpP=nDFadF-OYhYbfw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=k20201202; t=1753210360;
+	bh=0bqNmtkfCsYAScjWaHpJG8KA1tQSPtNgsYNa1N1PLBc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mell/UAHhEupqN1ihr8wD2p+a66P894U7xosZGiCFUFhI/gqe6gCdspjjfLESve+4
+	 K7aJUAF9YrfIr6sFDtwVljCtWvDk9VyrWRIR7BshauRwqBnq14DrlMw8cittZW6aDQ
+	 8ZevBhSkkfxnqgEoN0UpNLEM7mkGjhMnQ5vAYXnIMb0aqseKmdAUyhfjoFZLmJDts+
+	 fJfvBytXGLRFX+ei+gFfHrKd72p9xKhjF0EfrAKeL+kXkmlXNsS9rbzO6R+YphDh/n
+	 vVhf/SUJfAeInkxNgsMWWdEUV1Jt+/D8jB4XwGlIDayDAw0tiBUgXQ5L0VJJbps28w
+	 6JAk2CHVkAFHQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/2] vfs: fix delegated timestamp updates
+Date: Tue, 22 Jul 2025 14:52:26 -0400
+Message-Id: <20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOrdf2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcyMj3by04hTdktTiksy8dF3TVAszw0Tj5DTjRAMloJaCotS0zAqwcdG
+ xtbUARkr6rV4AAAA=
+X-Change-ID: 20250722-nfsd-testing-5e861a3cf3a0
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1178; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=0bqNmtkfCsYAScjWaHpJG8KA1tQSPtNgsYNa1N1PLBc=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBof93wGhlWpmqTHkzCVVjiwNm1iAoAltacYDp32
+ Vm/gjLcF9SJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaH/d8AAKCRAADmhBGVaC
+ FT5AD/0Rx12McPNE4b5aGc9AGUIGbtrY77+YpbumA/EcSrCy80NEeLNvwJfKTNuxCmbIeloOOSa
+ vjPnB8bc90nWQ60oDLHuEBMpVEKt6lApjbvUQLjlrbdFpm5oTCqlxeby2oWAunG7evpBzYpaEM6
+ 5kIw58XIUBWqWkjtNdhaHt8oSvLomvV/rNoa2tkdAUekuOyU6P+93SKt3E3lekA2p9YYeJndRXN
+ JVlqGvnwYbyWfSBmikTy516CbtGEUxaT9oIdzMqZT2FYsM+VvJnhBUHN1taUMn8f4ThYqZRU0DS
+ VxbRicmMgB1o3PEftEmqLMSYaL/8mCz60trN339kBdzTk/BIJRzhpYVjzM4ccFJQqHsDJUIzWrz
+ SODxO6oLVPw/qcXVyimeuO/z/k5+RnoSAKraCH8Fhjf3UIQpRB1uzdG6PtlBw2gFQzkZL94atXN
+ BuBqDt/CEtfi2vpCJAYhhak3U97v3b7lZ4MX/kHfcROSU/isjoFoOE4lNsL8zNCDYgfR6XHspNV
+ qg1kTpG0VdmLGn+A2HQk5qZ9p6QSwCNKmE27xKuIaBlJu5TeqmHqVhd1blgLQgUvd90RwRU4R0R
+ jVq6g8nNI2unchG4r8Ne93S7oUngDJBwZ8bmUZu5dJ8afk44kRS59uB2Mp0IVZDafujcBLHLsaO
+ 7cyCjK9XTVKApLA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-T24gVHVlLCAyMDI1LTA3LTIyIGF0IDIxOjEwICswMzAwLCBBbnRvbiBHYXZyaWxpdWsgd3JvdGU6
-Cj4gSGkKPiAKPiBJIGFtIHRyeWluZyB0byBleGNlZWQgMjAgR0IvcyBkb2luZyBzZXF1ZW50aWFs
-IHJlYWQgZnJvbSBhIHNpbmdsZQo+IGZpbGUKPiBvbiB0aGUgbmZzIGNsaWVudC4KPiAKPiBwZXJm
-IHRvcCBzaG93cyBleGNlc3NpdmUgbWVtY3B5IHVzYWdlOgo+IAo+IFNhbXBsZXM6IDIzN0sgb2Yg
-ZXZlbnQgJ2N5Y2xlczpQJywgNDAwMCBIeiwgRXZlbnQgY291bnQgKGFwcHJveC4pOgo+IDEyMDg3
-MjczOTExMiBsb3N0OiAwLzAgZHJvcDogMC8wCj4gT3ZlcmhlYWTCoCBTaGFyZWQgT2JqZWN0wqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFN5bWJvbAo+IMKgIDIwLDU0
-JcKgIFtrZXJuZWxdwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBba10gbWVtY3B5Cj4gwqDCoCA2LDUyJcKgIFtuZnNdwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10gbmZzX2dlbmVyaWNf
-cGdfdGVzdAo+IMKgwqAgNSwxMiXCoCBbbmZzXcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgW2tdIG5mc19wYWdlX2dyb3VwX2xvY2sKPiDC
-oMKgIDQsOTIlwqAgW2tlcm5lbF3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIFtrXSBfY29weV90b19pdGVyCj4gwqDCoCA0LDc5JcKgIFtrZXJuZWxd
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10g
-Z3JvX2xpc3RfcHJlcGFyZQo+IMKgwqAgMiw3NyXCoCBbbmZzXcKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgW2tdIG5mc19jbGVhcl9yZXF1
-ZXN0Cj4gwqDCoCAyLDEwJcKgIFtuZnNdwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBba10KPiBfX25mc19wYWdlaW9fYWRkX3JlcXVlc3QK
-PiDCoMKgIDIsMDclwqAgW2tlcm5lbF3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIFtrXSBjaGVja19oZWFwX29iamVjdAo+IMKgwqAgMiwwMCXCoCBb
-a2VybmVsXcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgW2tdIF9fc2xhYl9mcmVlCj4gCj4gQ2FuIG5mcyBjbGllbnQgYmUgYWRvcHRlZCB0byB1c2Ug
-emVybyBjb3B5ID8sIGZvciBleGFtcGxlIGJ5IHVzaW5nCj4gaW9fdXJpbmcgemVybyBjb3B5IHJ4
-Lgo+IAoKVGhlIGNsaWVudCBoYXMgbm8gaWRlYSBpbiB3aGljaCBvcmRlciB0aGUgc2VydmVyIHdp
-bGwgcmV0dXJuIHJlcGxpZXMgdG8KdGhlIFJQQyBjYWxscyBpdCBzZW5kcy4gU28gbm8sIGl0IGNh
-bid0IHF1ZXVlIHVwIHRob3NlIHJlcGx5IGJ1ZmZlcnMgaW4KYWR2YW5jZS4KClRoZSBvbmx5IHdh
-eSB5b3UgY2FuIGF2b2lkIG1lbW9yeSBjb3BpZXMgaGVyZSBpcyB0byB1c2UgUkRNQSB0byBhbGxv
-dwp0aGUgc2VydmVyIHRvIHdyaXRlIGl0cyByZXBsaWVzIGRpcmVjdGx5IGludG8gdGhlIGNvcnJl
-Y3QgY2xpZW50IHJlYWQKYnVmZmVycy4KCi0tIApUcm9uZCBNeWtsZWJ1c3QKTGludXggTkZTIGNs
-aWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQp0cm9uZG15QGtlcm5lbC5vcmcsIHRyb25kLm15
-a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20K
+We had been seeing some failures in the git regression testsuite when
+run on NFS with delegated timestamps enabled. The first patch adds a
+tracepoint that was helpful for tracking down the problem. The second
+patch _mostly_ fixes the actual issue. With this, the git regression
+testsuite is passing a lot more often for me, even when run in the
+"stress" configuration under kdevops.
+
+That said, I'm still seeing an occasional failure that I think may be a
+problem on the client. I'll send email about that separately.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (2):
+      vfs: add tracepoints in inode_set_ctime_deleg
+      vfs: fix delegated timestamp handling in setattr_copy()
+
+ fs/attr.c                        | 52 +++++++++++++++++++++++++++++-----------
+ fs/inode.c                       |  5 +++-
+ fs/nfsd/nfs4xdr.c                |  4 +---
+ include/trace/events/timestamp.h | 40 +++++++++++++++++++++++++++++++
+ 4 files changed, 83 insertions(+), 18 deletions(-)
+---
+base-commit: bab771b8eba6f3b13446ced52751be122af0d3b7
+change-id: 20250722-nfsd-testing-5e861a3cf3a0
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
