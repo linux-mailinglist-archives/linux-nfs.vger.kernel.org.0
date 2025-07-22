@@ -1,53 +1,56 @@
-Return-Path: <linux-nfs+bounces-13170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0A44B0CFDC
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 04:49:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEC85B0CFDE
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 04:49:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D65653AFEC2
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 02:49:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A58637A18F1
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 02:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C6BF2737F0;
-	Tue, 22 Jul 2025 02:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9AC273802;
+	Tue, 22 Jul 2025 02:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKncOFne"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsWEEjN9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7E1272E6B
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 02:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DBE272E6B
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 02:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753152566; cv=none; b=jcACK/K0YIfgwLZAugzOKbebDHHKzo7Wvvtl3mHrZJLcITr/tNNPTvRg+dVhsqUNe9EFL6ceBrULroLgyXByloONqr3D89Iu1X8ICGPqgNorxXujpRa5Ewiqs197Ob7Oq0dkJURoQlBMRlSfzODb9MdIhZtk9IWfff+CbphMW40=
+	t=1753152567; cv=none; b=lUS2t3EEPKeFgAJwp1CFmUu6/wKQoo9VRAwhJ6OANS/iGNNkR2nrYUQpelu+DoU/TtkHDzkgOE+4e7tso0ZmTqjEiw7ww0jgaX1TBUQT8a1OWo7LaiFXD0mBfO+KJDB76hLyNT8c8WO558uUjMdl6IKpoNIRMpcb7QSXCFQt6AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753152566; c=relaxed/simple;
-	bh=f9jnpPhYb/ImzUCnnR0tgxteUTl84fcOVy1NC2XFFMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pGkg0USyNU4clm6BnA7YVQVwo9WIfK9BoNk4QDfBxl1h4TMOneaQ881KBVNICipNwJW48ZB1djWh4X59iqKTwKMBv0TtmT6JMFJ74Hsw9At6zCbsdCMlIc8Y5ATDFX4Zr23AHGwowFYXnvTC4dU3tKBfHT5FC1caJNuvgIbeyoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKncOFne; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7E7C4CEED;
-	Tue, 22 Jul 2025 02:49:25 +0000 (UTC)
+	s=arc-20240116; t=1753152567; c=relaxed/simple;
+	bh=3JlBlNu9YSycTI9u/dIkyiyMNt1HFdi72gm6pZEMSWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FySFFXrcdYT6ECJao6HRQXti6mLLrC63//EkxmeC6A79GwH1fSclc4DGtxMWUKYADkJvBoPQNSn4zPlLeM2LOT44uenGXab+yV/M4cvqUm+4MSBKgBiLRU+X8g6hlKdHVpzMlmiagSTib4zRo4TjpoR/9OeyXOuEgdYvL+ezYZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsWEEjN9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025E2C4CEF1;
+	Tue, 22 Jul 2025 02:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753152565;
-	bh=f9jnpPhYb/ImzUCnnR0tgxteUTl84fcOVy1NC2XFFMs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GKncOFneNY3qfWyTzXtxhDQ4KoZpmaYkj9gUQBoNL9lipWT+s+VfQnsDX9/mCsCZt
-	 Wo8Apc/NVeWwFboj9IYONHOzbnlfLMxo1t93GNgb1KTNbazir1+s+++KUFvwoBWt/o
-	 BAb+VclArFyktO6LA5Xtvy7KhStYGsw6cU730Dk5F5WoNm8ogqzZuvLMug5+ywVgHs
-	 mw0ZAf4aa2kvba3AMrQFZr36jiCcBndqhCKH+cf+GWYhuHLvCS/XZl5sDEN5TzbESD
-	 bO71GDIE32TprfUTsNNvfc+6xh7hXlZQvTYh6AtSs3e8s9j42bhkopdmR8eCWqFCQA
-	 toBpeyE7yjKxg==
+	s=k20201202; t=1753152567;
+	bh=3JlBlNu9YSycTI9u/dIkyiyMNt1HFdi72gm6pZEMSWs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fsWEEjN9zJyjwGg+DwQA/q/yz/aok3Aphm3AW9o7qhqBIPWXXy/E2TSNIVTxOMzg1
+	 hJWzHB5cG28X48zYJBzOByjOxgSOVNgzxUQNriIU3vZXXjT/jOrHBBjunqctE2nTWq
+	 8yC+C1pLhZvZRiqqj7W7FA6OUk9DLtYuike4hQdggFncF2oa0UvXAEIxyfuiPSN6L9
+	 EmurM3naXsDVouxTjOwSM2LWdkgVseuwBAtu2MOEQUy6VGBPZdOFcTJxqSIpVg0g6N
+	 CJ56jiOBGOxk6DGjs/KFmhuWRmFPN/nvFRRFIjHZGre4OdaELdsBmrn6MCi2D50qXC
+	 MGoYa6hiVi2mA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 0/7] NFS DIRECT: handle misaligned READ and WRITE for LOCALIO
-Date: Mon, 21 Jul 2025 22:49:17 -0400
-Message-ID: <20250722024924.49877-1-snitzer@kernel.org>
+Subject: [PATCH v2 1/7] nfs/localio: avoid bouncing LOCALIO if nfs_client_is_local()
+Date: Mon, 21 Jul 2025 22:49:18 -0400
+Message-ID: <20250722024924.49877-2-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250722024924.49877-1-snitzer@kernel.org>
+References: <20250722024924.49877-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,56 +59,61 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Mike Snitzer <snitzer@hammerspace.com>
 
-This "NFS DIRECT" series depends on the "NFSD DIRECT" series here:
-https://lore.kernel.org/linux-nfs/20250714224216.14329-1-snitzer@kernel.org/
-(for the benefit of nfsd_file_dio_alignment patch in this series)
+Previously nfs_local_probe() was made to disable and then attempt to
+re-enable LOCALIO (via LOCALIO protocol handshake) if/when it was
+called and LOCALIO already enabled.
 
-The first patch was posted as part of a LOCALIO revert series I posted
-a week or so ago, thankfully that series isn't needed thanks to Trond
-and Neil's efforts.  BUT the first patch is needed, has Reviewed-by
-from Jeff and Neil and is marked for stable@.
+Vague memory for _why_ this was the case is that this was useful
+if/when a local NFS server were to be restarted with a local NFS
+client connected to it.
 
-The biggest change in v2 is the introduction of O_DIRECT misaligned
-READ and WRITE handling for the benefit of LOCALIO. Please see patches
-6 and 7 for more details.
+But as it happens this causes an absurd amount of LOCALIO flapping
+which has a side-effect of too much IO being needlessly sent to NFSD
+(using RPC over the loopback network interface).  This is the
+definition of "serious performance loss" (that negates the point of
+having LOCALIO).
 
-Changes since v1:
-- renamed nfs modparam from localio_O_DIRECT_align_misaligned_READ to
-  localio_O_DIRECT_align_misaligned_IO (is used for misaligned READ
-  and WRITE support in fs/nfs/direct.c)
-- added misaligned O_DIRECT handling for both READ and WRITE to
-  fs/nfs/direct.c which in practice obviates LOCALIO's need to
-  fallback to sending misaligned READs to NFSD.
-- But the 5th patch that adds LOCALIO support to fallback to NFSD is a
-  useful backup mechanism (that will hopefully never be needed unless
-  some fs/nfs/direct.c bug gets introduced in the future). Patch 5
-  also provides refactoring that is useful.
+So remove this mis-optimization for re-enabling LOCALIO if/when an NFS
+server is restarted (which is an extremely rare thing to do).  Will
+revisit testing that scenario again but in the meantime this patch
+restores the full benefit of LOCALIO.
 
-Thanks,
-Mike
+Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: NeilBrown <neil@brown.name>
+---
+ fs/nfs/localio.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Mike Snitzer (7):
-  nfs/localio: avoid bouncing LOCALIO if nfs_client_is_local()
-  nfs/localio: make trace_nfs_local_open_fh more useful
-  nfs/localio: add nfsd_file_dio_alignment
-  nfs/localio: refactor iocb initialization
-  nfs/localio: fallback to NFSD for misaligned O_DIRECT READs
-  nfs/direct: add misaligned READ handling
-  nfs/direct: add misaligned WRITE handling
-
- fs/nfs/direct.c                        | 262 +++++++++++++++++++++++--
- fs/nfs/flexfilelayout/flexfilelayout.c |   1 +
- fs/nfs/internal.h                      |  17 +-
- fs/nfs/localio.c                       | 231 ++++++++++++++--------
- fs/nfs/nfstrace.h                      |  47 ++++-
- fs/nfs/pagelist.c                      |  22 ++-
- fs/nfsd/localio.c                      |  11 ++
- include/linux/nfs_page.h               |   1 +
- include/linux/nfslocalio.h             |   2 +
- 9 files changed, 485 insertions(+), 109 deletions(-)
-
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index 510d0a16cfe9..ecfe22a105ea 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -180,10 +180,8 @@ static void nfs_local_probe(struct nfs_client *clp)
+ 		return;
+ 	}
+ 
+-	if (nfs_client_is_local(clp)) {
+-		/* If already enabled, disable and re-enable */
+-		nfs_localio_disable_client(clp);
+-	}
++	if (nfs_client_is_local(clp))
++		return;
+ 
+ 	if (!nfs_uuid_begin(&clp->cl_uuid))
+ 		return;
+@@ -244,7 +242,8 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
+ 		case -ENOMEM:
+ 		case -ENXIO:
+ 		case -ENOENT:
+-			/* Revalidate localio, will disable if unsupported */
++			/* Revalidate localio */
++			nfs_localio_disable_client(clp);
+ 			nfs_local_probe(clp);
+ 		}
+ 	}
 -- 
 2.44.0
 
