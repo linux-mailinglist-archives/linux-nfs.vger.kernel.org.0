@@ -1,58 +1,63 @@
-Return-Path: <linux-nfs+bounces-13199-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13200-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D755B0E52E
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 23:00:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 783B0B0E657
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jul 2025 00:19:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FAA0AA0161
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 21:00:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99AC63B2285
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 22:19:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38272285040;
-	Tue, 22 Jul 2025 21:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E66E2877E8;
+	Tue, 22 Jul 2025 22:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r3VsP/N5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R27Xon8Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1103128468B
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 21:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16C828725F;
+	Tue, 22 Jul 2025 22:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753218049; cv=none; b=n8jkzWXlYxywFFiZjNHfAUnQm3vqmuxXiAV35qmCY4IGZTCrrO7hyfJuPxt3butqphjooZY8btyH/fauUN6sT6SZ8BPDWIFvgF1cTJchV8UBIQcAxT2S0UH9qz4ND0kM0D2ysq7ggijkGDq9eG5ug8ONUSDs+a4h1TH+SFZXwO4=
+	t=1753222793; cv=none; b=n0yUXBf7MBmCJ8ZZOBaynDPSFYO9CEf/V7nLZsamXlyZTt3mNNtUhQZg0SrK2wUPlFT98+40RF1NrcbIr1kNLMWE8u2uZqICLXUzcehxwar3F/7FLLwqMAuRfZrdADpoQzk5VaLrj1wOZMjG2hl79ZFZZ63rN7HYvgcHQyVFFQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753218049; c=relaxed/simple;
-	bh=Urplgr3LaO5zbGpxjuiACrdOpFJQ9fvcIMJ0EXVUY8M=;
+	s=arc-20240116; t=1753222793; c=relaxed/simple;
+	bh=ssaXsvIAkUPfB6W28Y4tZMmth7R68kQGLxxToq6hOrQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y0+/ojAhoUrljYqwkxT+fomEdUoMNvHZWK+qSFW/Rl1J9RWQ4yUGZjRufCtk2KHniy03AwI5+mR44USqWvRJx9qwv2MHf5LKmJzCsMnvURWXw7iiMN9FXzHx6PzkTJFy2WOaxKVsWNKz8AgJWawOh9+jT4h9BEFiBumCzutdrdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r3VsP/N5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37736C4CEEB;
-	Tue, 22 Jul 2025 21:00:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=oN6tKJJZkP7NQgcHoDgNwXBS7lJehGWdTbo4+LhsEi50NC0SXzSHCvE+nE1t7OeCV3kURnbzoGRPv4vk+78znc6z1lIMYRcffvUxWE0CIYJSQT4iYe6qv6cmjw1lcZdEDNJEUMpmaFWqU0Hr4tT7e0Nu2BZ75TzT3i0Ze/FLzAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R27Xon8Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23EC2C4CEEB;
+	Tue, 22 Jul 2025 22:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753218048;
-	bh=Urplgr3LaO5zbGpxjuiACrdOpFJQ9fvcIMJ0EXVUY8M=;
+	s=k20201202; t=1753222793;
+	bh=ssaXsvIAkUPfB6W28Y4tZMmth7R68kQGLxxToq6hOrQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=r3VsP/N5vR1cBMyEmWfr9HCa66ZJk4x5OND/k4H0CKd8jfOJELYqdsfC5MlBitAIv
-	 cmF+R/6ksu/IZs4PFGbrREXbyYWJMyQSJJgBzI1hYeLW0YkR5jrD22+daxs96OspkK
-	 zdDmMNj4sYfnvyR9tCTaVO2HV6rqXiT1ehMTRf1Pv0JlkunyDXxv2xBPpUMPCsr24d
-	 dw3vBs5JRF+hkk5JURoDBkKNSoYXR0hvm/xlL2ItVENhtz8hy6RKlYYfUB6+5OZXOY
-	 JwWpsX7aILayZK8uF+x+npYNHeGKSJDy4FmWiSMVfZDzE+oAubhhaq+m3vZkXlUVsF
-	 O1Byn2zbpzICw==
-Message-ID: <682822f27962e1b878159cb8456927b26a5c951f.camel@kernel.org>
-Subject: Re: delegated timestamp woes
+	b=R27Xon8QZBSfwP0XyetYRyVj778L3QdJdtT8mCHuXIV3p2TBNPvsJ0A6HhdGn64xV
+	 ZE5bQEzE6EEUvgJISR9VfmluRLhXVcFpSpoAsVrya+tyJcyG1p0cCk3VPmK/GeTXP9
+	 ULbFnsBJcX3hPIxUSXLzi/Xh45TtMIUshFRzHc6IAuu4X35ACi7Ev2OEckMD0X+eZ6
+	 g77spQNk26BlIGPs4T2rtj2BU/Izk6bZjeDhCNh8m/MevvIY5KZQXgRtOc+qcnFijH
+	 2eFwB9NqJpVadYHLwdJwD8xKt2OXyHY37W8TpppdHySrtu8JnggELOxWBxlOPlWZ7p
+	 5PFgTDkmiAQlQ==
+Message-ID: <e28297a2abe8253c0aa590831b3857432bef60f7.camel@kernel.org>
+Subject: Re: [PATCH 2/2] vfs: fix delegated timestamp handling in
+ setattr_copy()
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Thomas Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org, Chuck Lever
-	 <chuck.lever@oracle.com>
-Date: Tue, 22 Jul 2025 17:00:47 -0400
-In-Reply-To: <47a4e40310e797f21b5137e847b06bb203d99e66.camel@kernel.org>
-References: <bfa20f4a81e0c2d5df8525476fb29af156f4f5f1.camel@kernel.org>
-			 <1b1d82709ee0edb5de4f4ac6d3eb6d72219583e0.camel@kernel.org>
-		 <da5ce5ea155d761f16c8834c9525f46b705da79f.camel@kernel.org>
-	 <47a4e40310e797f21b5137e847b06bb203d99e66.camel@kernel.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever
+ <chuck.lever@oracle.com>, NeilBrown	 <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Tue, 22 Jul 2025 18:19:51 -0400
+In-Reply-To: <20250722-nfsd-testing-v1-2-31321c7fc97f@kernel.org>
+References: <20250722-nfsd-testing-v1-0-31321c7fc97f@kernel.org>
+	 <20250722-nfsd-testing-v1-2-31321c7fc97f@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,152 +142,151 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-07-22 at 16:16 -0400, Trond Myklebust wrote:
-> On Tue, 2025-07-22 at 16:03 -0400, Jeff Layton wrote:
-> > On Tue, 2025-07-22 at 15:51 -0400, Trond Myklebust wrote:
-> > > On Tue, 2025-07-22 at 15:27 -0400, Jeff Layton wrote:
-> > > > I've been chasing some problems with the git regression testsuite
-> > > > that
-> > > > crop up with delegated timestamps enabled. I've knocked down a
-> > > > couple
-> > > > of problems on the server side, but I'm not sure how to fix the
-> > > > latest
-> > > > issue.
-> > > >=20
-> > > > Most of the problems with gitr suite and delegated timestamps
-> > > > manifest
-> > > > as spurious changes to the timestamps. e.g., it will do a git
-> > > > checkout
-> > > > and then later find that some file in the checkout appears to
-> > > > have
-> > > > changed when it didn't expect that.
-> > > >=20
-> > > > I reproduced one of the problems with some debugging turned up.
-> > > > What
-> > > > we
-> > > > see is this in the wireshark capture (filtered on the
-> > > > filehandle):
-> > > >=20
-> > > > 939238 1753209666.985827 192.168.122.151 =E2=86=92 192.168.122.103 =
-NFS
-> > > > 486 V4
-> > > > Reply (Call In 939237) OPEN StateID: 0xafa9
-> > > > 939239 1753209666.987808 192.168.122.103 =E2=86=92 192.168.122.151 =
-NFS
-> > > > 298 V4
-> > > > Call SETATTR FH: 0x68fcd843
-> > > > 939240 1753209666.995860 192.168.122.151 =E2=86=92 192.168.122.103 =
-NFS
-> > > > 294 V4
-> > > > Reply (Call In 939239) SETATTR
-> > > > 939241 1753209666.999909 192.168.122.103 =E2=86=92 192.168.122.151 =
-NFS
-> > > > 278 V4
-> > > > Call WRITE StateID: 0xe7e8 Offset: 0 Len: 2
-> > > > 939242 1753209667.019570 192.168.122.151 =E2=86=92 192.168.122.103 =
-NFS
-> > > > 182 V4
-> > > > Reply (Call In 939241) WRITE
-> > > > 944922 1753209696.313938 192.168.122.103 =E2=86=92 192.168.122.151 =
-NFS
-> > > > 1514
-> > > > V4 Call SETATTR FH: 0xb6dd63b6 | DELEGRETURN StateID: 0x3eebV4
-> > > > Call
-> > > > SETATTR FH: 0xcf57bbcb | DELEGRETURN StateID: 0x69ca=C2=A0 ; V4 Cal=
-l
-> > > > SETATTR FH: 0x68fcd843 | DELEGRETURN StateID: 0xe245=C2=A0 ; V4 Cal=
-l
-> > > > SETATTR FH: 0x02d757ea | DELEGRETURN StateID: 0xc788=C2=A0 ; V4 Cal=
-l
-> > > > SETATTR FH: 0x130870b2 | DELEGRETURN StateID: 0x8c12
-> > > > 946410 1753209702.893917 192.168.122.103 =E2=86=92 192.168.122.151 =
-NFS
-> > > > 254 V4
-> > > > Call GETATTR FH: 0x68fcd843
-> > > > 946411 1753209702.895304 192.168.122.151 =E2=86=92 192.168.122.103 =
-NFS
-> > > > 310 V4
-> > > > Reply (Call In 946410) GETATTR
-> > > >=20
-> > > > We get an open for write (with no open stateid and delegated
-> > > > timestamps), a write, and then and=C2=A0 setattr|delegreturn. git h=
-ad
-> > > > the
-> > > > delegated mtime (1753209666.995071118) on file because the
-> > > > delegation
-> > > > allowed getattr() on the client to return before writeback had
-> > > > completed.
-> > > >=20
-> > > > In this case, the setattr for the delegated mtime was for a value
-> > > > older
-> > > > than the existing mtime, so it was ignored. Note that the reply
-> > > > to
-> > >=20
-> > > Uhh... Why is the existing value of the mtime on the server grounds
-> > > for
-> > > rejecting the delegated mtime? The client owns that value.=20
-> > >=20
-> >=20
-> > From RFC 9754:
-> >=20
-> > =C2=A0=C2=A0 When the time presented is before the original time, then =
-the
-> > update
-> > =C2=A0=C2=A0 is ignored.=C2=A0 When the time presented is in the future=
-, the server
-> > can
-> > =C2=A0=C2=A0 either clamp the new time to the current time or return
-> > NFS4ERR_DELAY
-> > =C2=A0=C2=A0 to the client, allowing it to retry.
-> >=20
-> > In this case, the preceding WRITE operation from the client updated
-> > the
-> > mtime and ctime on the server. That operation happened after the
-> > mtime
-> > was updated on the client for that write.
-> >=20
-> > Are you suggesting that the server needs to "disable" mtime/ctime
-> > updates from WRITE calls (and I guess atime updates from READs) when
-> > there is a delegation outstanding? If so, that would potentially be
-> > quite ugly in the face of a crash.
+On Tue, 2025-07-22 at 14:52 -0400, Jeff Layton wrote:
+> There are a couple of problems with delegated timestamp updates via
+> setattr:
 >=20
-> It just needs to record what the original atime and mtime was on the
-> file when it issued the delegation.
-
-Ok, so you interpret "original time" as the timestamp before there was
-a delegation, not the "original" timestamp on the file just before the
-SETATTR? That's not exactly clear in my reading of the RFC, but that
-does make a bit more sense.
-
-> That gets a little complicated if the server reboots, and the client
-> has to reclaim the delegation and so you might want to give it a little
-> more leeway in that situation.
+> 1/ the ia_ctime is always clobbered by notify_change(), so setting the
+> ia_ctime to the same value as the ia_mtime in nfsd4_decode_fattr4()
+> doesn't work.
 >=20
+> 2/ while it does test the ctime's validity vs. the existing ctime and
+> current_time(), the same is not done for the atime or mtime. The spec
+> requires this.
+>=20
+> Add a new setattr_copy_delegts() function that handles updating the
+> timestamps whenever ATTR_DELEG is set. For both atime and mtime,
+> validate and clamp the value to current_time(), and then set it. If the
+> mtime gets updated, also update the ctime.
+>=20
+> Fixes: 7f2c86cba3c5 ("fs: handle delegated timestamps in setattr_copy_mgt=
+ime")
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/attr.c         | 52 ++++++++++++++++++++++++++++++++++++++-----------=
+---
+>  fs/nfsd/nfs4xdr.c |  4 +---
+>  2 files changed, 39 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/fs/attr.c b/fs/attr.c
+> index 9caf63d20d03e86c535e9c8c91d49c2a34d34b7a..3e636943d26a36aeeed0ff8b4=
+28b6dd3e63f8dde 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -287,14 +287,7 @@ static void setattr_copy_mgtime(struct inode *inode,=
+ const struct iattr *attr)
+>  	struct timespec64 now;
+> =20
+>  	if (ia_valid & ATTR_CTIME) {
+> -		/*
+> -		 * In the case of an update for a write delegation, we must respect
+> -		 * the value in ia_ctime and not use the current time.
+> -		 */
+> -		if (ia_valid & ATTR_DELEG)
+> -			now =3D inode_set_ctime_deleg(inode, attr->ia_ctime);
+> -		else
+> -			now =3D inode_set_ctime_current(inode);
+> +		now =3D inode_set_ctime_current(inode);
+>  	} else {
+>  		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
+>  		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
+> @@ -312,6 +305,39 @@ static void setattr_copy_mgtime(struct inode *inode,=
+ const struct iattr *attr)
+>  		inode_set_mtime_to_ts(inode, now);
+>  }
+> =20
+> +/*
+> + * Skip update if new value is older than existing time. Clamp
+> + * to current_time() if it's in the future.
+> + */
+> +static void setattr_copy_delegts(struct inode *inode, const struct iattr=
+ *attr)
+> +{
+> +	struct timespec64 now =3D current_time(inode);
+> +	unsigned int ia_valid =3D attr->ia_valid;
+> +
+> +	if (ia_valid & ATTR_MTIME) {
+> +		struct timespec64 cur =3D inode_get_mtime(inode);
+> +
+> +		if (timespec64_compare(&attr->ia_mtime, &cur) > 0) {
+> +			if (timespec64_compare(&attr->ia_mtime, &now) > 0)
+> +				inode_set_mtime_to_ts(inode, now);
+> +			else
+> +				inode_set_mtime_to_ts(inode, attr->ia_mtime);
+> +			inode_set_ctime_deleg(inode, attr->ia_mtime);
+> +		}
+> +	}
+> +
+> +	if (ia_valid & ATTR_ATIME) {
+> +		struct timespec64 cur =3D inode_get_atime(inode);
+> +
+> +		if (timespec64_compare(&attr->ia_atime, &cur) > 0) {
+> +			if (timespec64_compare(&attr->ia_atime, &now) > 0)
+> +				inode_set_atime_to_ts(inode, now);
+> +			else
+> +				inode_set_atime_to_ts(inode, attr->ia_atime);
+> +		}
+> +	}
+> +}
+> +
+>  /**
+>   * setattr_copy - copy simple metadata updates into the generic inode
+>   * @idmap:	idmap of the mount the inode was found from
+> @@ -352,6 +378,8 @@ void setattr_copy(struct mnt_idmap *idmap, struct ino=
+de *inode,
+>  		inode->i_mode =3D mode;
+>  	}
+> =20
+> +	if (ia_valid & ATTR_DELEG)
+> +		return setattr_copy_delegts(inode, attr);
+>  	if (is_mgtime(inode))
+>  		return setattr_copy_mgtime(inode, attr);
+> =20
+> @@ -359,12 +387,8 @@ void setattr_copy(struct mnt_idmap *idmap, struct in=
+ode *inode,
+>  		inode_set_atime_to_ts(inode, attr->ia_atime);
+>  	if (ia_valid & ATTR_MTIME)
+>  		inode_set_mtime_to_ts(inode, attr->ia_mtime);
+> -	if (ia_valid & ATTR_CTIME) {
+> -		if (ia_valid & ATTR_DELEG)
+> -			inode_set_ctime_deleg(inode, attr->ia_ctime);
+> -		else
+> -			inode_set_ctime_to_ts(inode, attr->ia_ctime);
+> -	}
+> +	if (ia_valid & ATTR_CTIME)
+> +		inode_set_ctime_to_ts(inode, attr->ia_ctime);
+>  }
+>  EXPORT_SYMBOL(setattr_copy);
+> =20
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 8b68f74a8cf08c6aa1305a2a3093467656085e4a..e6899a3502332d686138abee2=
+284c87fc7fbc0ae 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -537,9 +537,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, =
+u32 *bmval, u32 bmlen,
+>  			return nfserr_bad_xdr;
+>  		iattr->ia_mtime.tv_sec =3D modify.seconds;
+>  		iattr->ia_mtime.tv_nsec =3D modify.nseconds;
+> -		iattr->ia_ctime.tv_sec =3D modify.seconds;
+> -		iattr->ia_ctime.tv_nsec =3D modify.seconds;
+> -		iattr->ia_valid |=3D ATTR_CTIME | ATTR_MTIME | ATTR_MTIME_SET | ATTR_D=
+ELEG;
+> +		iattr->ia_valid |=3D ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
+>  	}
+> =20
+>  	/* request sanity: did attrlist4 contain the expected number of words? =
+*/
 
-Yeah, that's the ugly bit. I could store the original times in the
-delegation, but nfsd doesn't have a way to store per-delegation
-persistent state.
+Based on Trond's comments in this thread, I think I'm going to have to
+respin this:
 
-I guess we could flag the delegation after a reclaim (like you
-suggest), and clear it on the next WRITE. If the client just sends a
-SETATTR after reclaiming, then I guess we could allow for a window of
-5-10s or so before the current timestamp on the file?
+https://lore.kernel.org/linux-nfs/bfa20f4a81e0c2d5df8525476fb29af156f4f5f1.=
+camel@kernel.org/
 
-Or maybe we could just trust the client in that case. I'll have to
-think about how to implement that.
+I'll post a v2 in the near future.
 
-> >=20
-> > > > the
-> > > > WRITE didn't go out until 1753209667.019570, which is after
-> > > > 1753209666.995071118.
-> > > >=20
-> > > > Eventually the client gets the "real" mtime from the server after
-> > > > returning the delegation, which now doesn't match the one git has
-> > > > on
-> > > > file.
-> > > >=20
-> > > > I don't see a way to fix this right offhand. Any thoughts?
-
+Cheers,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
