@@ -1,132 +1,130 @@
-Return-Path: <linux-nfs+bounces-13185-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13186-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB6F5B0E01B
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 17:13:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E818B0E07C
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 17:30:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3BA17A4F22
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 15:11:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15E4E7A55D1
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Jul 2025 15:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC5E1C84DE;
-	Tue, 22 Jul 2025 15:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2910926A0A0;
+	Tue, 22 Jul 2025 15:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8Dc+MrA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+O3Bv5X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F1128A1EA
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 15:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059E6268683
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Jul 2025 15:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753197186; cv=none; b=ESGh1JK15CQGuMJNu2tIQMmjiNL7FK8ZQysxA008uD1jdV9qct0OmIgPjkZRVaIjY0CmHTqdW5MD8D8GaCZ6nC/F4ZRc643RuQjAZQYXl7vfTb6KHvqzGg0sb73DI+FjNDKtADEKc//eigyMiXGm9iDTUpR4FfH0WUb0/9x61LM=
+	t=1753198199; cv=none; b=eXM5zidhXcjL06O0KDNamP0E5WilbtiBBChVkqMfuIIivdPwPAcGw958w4lEsF+l2dVGh3MKxwde0lvswuYJ8LVMjNz9ELsA0E5vN1s5omAvPff4yc/bgVGZ7w9b/q61OEeH8Ly+a4TSxm38vy4lebsUu4Ni3/m7IyNiwLdhIFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753197186; c=relaxed/simple;
-	bh=jWRuxfsCH5trOeU3YbGYfVITvNEnt57i+X2yCHxLeqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dHOWhuz4GYvcqFfHJjHw6lKZZYAQU+nDW9VLF+EMGyuFg8n0UQsFXm8b0WHKa3JIgpvpJcTIOSHwqtzJRv1aO2cFNA6c2jkFnlAeBGpBu8WZr4EytH/2bbPhIdLnETGt9quc6x1ZI9/iP3QbUSyr7jDi3aShW7GWCAZgwO9tPEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d8Dc+MrA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753197183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zsT9YUfB4TQbSuR6h8dYsaFfEiXDrUH9Zy2B0wO6l0k=;
-	b=d8Dc+MrAF5lLifeqt1FVShQgrILUg7Xiu2Uc7GwNCKGuARehGdP0GEmJ2oFJhFX1yAffVN
-	ABik7sbYsfcxVyg5QVXmSPil3pSktwtw971+TR22JMnV12NGnZDnaMOezEmyTkf3bGZlp0
-	OKmTzErez5x8wJ76cptudWPbXfSYGHc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-278-E16bIlZ0NUGhZBPTRnytqA-1; Tue,
- 22 Jul 2025 11:13:00 -0400
-X-MC-Unique: E16bIlZ0NUGhZBPTRnytqA-1
-X-Mimecast-MFC-AGG-ID: E16bIlZ0NUGhZBPTRnytqA_1753197179
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 515A319541A7;
-	Tue, 22 Jul 2025 15:12:58 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.76.8])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B0BE618016F9;
-	Tue, 22 Jul 2025 15:12:50 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- Laurence Oberman <loberman@redhat.com>, Jeff Layton <jlayton@kernel.org>,
- Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3] NFS: Fixup allocation flags for nfsiod's __GFP_NORETRY
-Date: Tue, 22 Jul 2025 11:12:48 -0400
-Message-ID: <315CF087-770E-464A-A4D5-70FA658357BA@redhat.com>
-In-Reply-To: <f83ac1155a4bc670f2663959a7a068571e06afd9.1752111622.git.bcodding@redhat.com>
-References: <f83ac1155a4bc670f2663959a7a068571e06afd9.1752111622.git.bcodding@redhat.com>
+	s=arc-20240116; t=1753198199; c=relaxed/simple;
+	bh=oe6PzVJPALZREz452ejOzHqT7rmdiWZbcFXTs+3Iwjw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qyHCmHtvC0h3djjoG1iscl/0N1UEzSuzRlOojuotpVyzVo9vuEzdKJg4LXyc2ugTOUQxqjqKHaepty3Tx2CReS9opclvyZQ0dpq5anLWWKjmyDe+HbiJDddpJdV3OTECfAt90bBp/ci9LN5HQZ0TC1Mw86kQyya420rK/vrkuxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+O3Bv5X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37ED8C4CEEB;
+	Tue, 22 Jul 2025 15:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753198198;
+	bh=oe6PzVJPALZREz452ejOzHqT7rmdiWZbcFXTs+3Iwjw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=L+O3Bv5X45m1OsRHBpJEk01RFQaZFO5DDSbPe3+oOnDWCjXyjajn+dKxIKXgA5H9V
+	 S8fq1ZxlBOPSxtQtwukUg4TIVLCI7f/T99TBFH/KaeiAl0LtPVYnVzGnpdejawWvGI
+	 a9Heo1mOzaCV1llqOlCfj5oplrcBEFjPokHIo2tGZ6dBPi1oY1Pa8kPbVbUhEGSRZy
+	 rmlqgxCIm1dUIyD97rLstrAq84OaDFDLeXLhmI3DGEyKaSUbyJdzhegYdoBJi9gi5K
+	 JtChRDUe4ARPaVsYL3HFLAmS9dWX+z4x7MVKqDBRNaweGxZ/Ypmj/tLPdFJUHqLhmD
+	 egnYdEkzxsvgg==
+Message-ID: <6d363a6f462b0646a065a5d188b6d05a56429efa.camel@kernel.org>
+Subject: Re: [PATCH] NFS: Fix filehandle bounds checking in
+ nfs_fh_to_dentry()
+From: Trond Myklebust <trondmy@kernel.org>
+To: "zhangjian (CG)" <zhangjian496@huawei.com>, linux-nfs@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+Date: Tue, 22 Jul 2025 11:29:08 -0400
+In-Reply-To: <838a9fd6-2a22-4677-9a50-c48341faf08b@huawei.com>
+References: 
+	<ef93a685e01a281b5e2a25ce4e3428cf9371a205.1753192530.git.trond.myklebust@hammerspace.com>
+	 <838a9fd6-2a22-4677-9a50-c48341faf08b@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Gentle ping on this one - let me know if anyone has further review or
-critique.
+On Tue, 2025-07-22 at 22:17 +0800, zhangjian (CG) wrote:
+>=20
+>=20
+> On 2025/7/22 21:58, Trond Myklebust wrote:
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >=20
+> > The function needs to check the minimal filehandle length before it
+> > can
+> > access the embedded filehandle.
+> >=20
+> > Reported-by: zhangjian <zhangjian496@huawei.com>
+> > Fixes: 20fa19027286 ("nfs: add export operations")
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> > =C2=A0fs/nfs/export.c | 11 +++++++++--
+> > =C2=A01 file changed, 9 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+> > index e9c233b6fd20..a10dd5f9d078 100644
+> > --- a/fs/nfs/export.c
+> > +++ b/fs/nfs/export.c
+> > @@ -66,14 +66,21 @@ nfs_fh_to_dentry(struct super_block *sb, struct
+> > fid *fid,
+> > =C2=A0{
+> > =C2=A0	struct nfs_fattr *fattr =3D NULL;
+> > =C2=A0	struct nfs_fh *server_fh =3D nfs_exp_embedfh(fid->raw);
+> > -	size_t fh_size =3D offsetof(struct nfs_fh, data) +
+> > server_fh->size;
+> > +	size_t fh_size =3D offsetof(struct nfs_fh, data);
+> > =C2=A0	const struct nfs_rpc_ops *rpc_ops;
+> > =C2=A0	struct dentry *dentry;
+> > =C2=A0	struct inode *inode;
+> > -	int len =3D EMBED_FH_OFF + XDR_QUADLEN(fh_size);
+> > +	int len =3D EMBED_FH_OFF;
+> > =C2=A0	u32 *p =3D fid->raw;
+> > =C2=A0	int ret;
+> > =C2=A0
+> > +	/* Initial check of bounds */
+> > +	if (fh_len < len + XDR_QUADLEN(fh_size) ||
+> > +	=C2=A0=C2=A0=C2=A0 fh_len > XDR_QUADLEN(NFS_MAXFHSIZE))
+> > +		return NULL;
+>=20
+> May this return ERR_PTR(-EINVAL) instead of NULL?
+> I'm not sure if it is expected to be translated as ESTALE.
 
-Ben
+Technically, knfsd should be returning NFSERR_BADHANDLE in both this
+case and in the check below, however there doesn't appear to be a way
+to get nfsd_set_fh_dentry() to return that error.
 
-On 9 Jul 2025, at 21:47, Benjamin Coddington wrote:
+For open_by_handle_at(), the manpage documents the error to be returned
+as being ESTALE, and that is enforced in 'do_handle_to_path()'.
 
-> If the NFS client is doing writeback from a workqueue context, avoid using
-> __GFP_NORETRY for allocations if the task has set PF_MEMALLOC_NOIO or
-> PF_MEMALLOC_NOFS.  The combination of these flags makes memory allocation
-> failures much more likely.
->
-> We've seen those allocation failures show up when the loopback driver is
-> doing writeback from a workqueue to a file on NFS, where memory allocation
-> failure results in errors or corruption within the loopback device's
-> filesystem.
->
-> Suggested-by: Trond Myklebust <trondmy@kernel.org>
-> Fixes: 0bae835b63c5 ("NFS: Avoid writeback threads getting stuck in mempool_alloc()")
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> Reviewed-by: Laurence Oberman <loberman@redhat.com>
-> Tested-by: Laurence Oberman <loberman@redhat.com>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> ---
->
-> 	On V3: fix ugly return (Thanks Paulo), add Jeff's R-b
-> 	On V2: add missing 'Fixes' and Laurence's R-b T-b
->
->  fs/nfs/internal.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 69c2c10ee658..d8f768254f16 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -671,9 +671,12 @@ nfs_write_match_verf(const struct nfs_writeverf *verf,
->
->  static inline gfp_t nfs_io_gfp_mask(void)
->  {
-> -	if (current->flags & PF_WQ_WORKER)
-> -		return GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN;
-> -	return GFP_KERNEL;
-> +	gfp_t ret = current_gfp_context(GFP_KERNEL);
-> +
-> +	/* For workers __GFP_NORETRY only with __GFP_IO or __GFP_FS */
-> +	if ((current->flags & PF_WQ_WORKER) && ret == GFP_KERNEL)
-> +		ret |= __GFP_NORETRY | __GFP_NOWARN;
-> +	return ret;
->  }
->
->  /*
-> -- 
-> 2.47.0
+>=20
+> > +	/* Calculate embedded filehandle size */
+> > +	fh_size +=3D server_fh->size;
+> > +	len +=3D XDR_QUADLEN(fh_size);
+> > =C2=A0	/* NULL translates to ESTALE */
+> > =C2=A0	if (fh_len < len || fh_type !=3D len)
+> > =C2=A0		return NULL;
+>=20
 
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
