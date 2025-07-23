@@ -1,85 +1,53 @@
-Return-Path: <linux-nfs+bounces-13209-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13210-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DE4B0F700
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jul 2025 17:28:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF92CB0F751
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jul 2025 17:43:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F792544066
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jul 2025 15:28:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D99C51C279DF
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Jul 2025 15:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1B02F5C57;
-	Wed, 23 Jul 2025 15:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02861F873B;
+	Wed, 23 Jul 2025 15:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QMFyoUfA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUjR4XjX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E351D2F5C28
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Jul 2025 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAF61EB5DD
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Jul 2025 15:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753284472; cv=none; b=q7cr8KXdimZHGzEpz7wRTr6EqVCpPlPzA+x2yQM0qvmAeR7BLUvB7Vz8nUxcQtzm6v8R9OX/Q6vBx9RjhUfQy4HT7Aa/bkZ6AzyO66uBlUNYw/BoR5ThwNqO3gD7U1spO1H1QO4TYNOxCcjP0r+QSVIRYgOUrt41OceT/pToDcE=
+	t=1753285434; cv=none; b=G2Vp9tsyGCFrBLfORWf3FTrxPlnHe7NzM3KkTM47Oweb3rXWptFPeMZeinRLz28O2+G9yYH4//wvaHmNEoC79ZMybuEdn7G4jA1WYXFAoI4ghkiXobaEI/BJEYY5TVocH+rl+A9PywACXfvtXZQ/pwMk/iXhZUMZD0GxBh8Wrlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753284472; c=relaxed/simple;
-	bh=H8WZHyhCUziFa4JF7H4Sba2/4Obs4rqDf/EcYsGK9xc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c5p6ifg63JXpyq2GfHOb6GFkbVhg4FfGYi05BVjmt4/QzgASd3+PY7YUnL9sPKJUjTGCDfPFwSY4FtUFb2Jft2BbfiCOATGoiN90TkHm+Q5e3uv3VmSalGnOILbUYDZRT5efRkGbZhkhLwuZjODVudkfVdjQmUaWinSPaNtfPO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QMFyoUfA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753284469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MWN6l3G7ppInAFjyNR6+62lMchBicZsgF1zHbx0Hv9Q=;
-	b=QMFyoUfAuuocW/IfNI+x7YBxn4CBVCO4p/rcK9H7DeqioMKx1pv+R2A7BMC9MKvoNDH58+
-	PaCjb2yKaPIGFfT58A5rxORrmY7EJoJUAWYbb3mSiwh23Hn6ESk5zdJBGDtCuAyj6dm/KC
-	Pua9zil09AMavv2uCLRJqjJuEbPSmwM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-60--ryxfrpCPpyQie6smZlMjw-1; Wed,
- 23 Jul 2025 11:27:45 -0400
-X-MC-Unique: -ryxfrpCPpyQie6smZlMjw-1
-X-Mimecast-MFC-AGG-ID: -ryxfrpCPpyQie6smZlMjw_1753284463
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E07218004A7;
-	Wed, 23 Jul 2025 15:27:43 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.8])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 262AC180049D;
-	Wed, 23 Jul 2025 15:27:36 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <christian@brauner.io>
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jeffrey Altman <jaltman@auristor.com>,
-	Steve French <SteveFrenchsfrench@samba.org>,
-	linux-afs@lists.infradead.org,
-	openafs-devel@openafs.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Etienne Champetier <champetier.etienne@gmail.com>,
-	Chet Ramey <chet.ramey@case.edu>,
-	Cheyenne Wills <cwills@sinenomine.net>,
-	Christian Brauner <brauner@kernel.org>,
-	Steve French <sfrench@samba.org>
-Subject: [PATCH 2/2] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
-Date: Wed, 23 Jul 2025 16:26:51 +0100
-Message-ID: <20250723152709.256768-3-dhowells@redhat.com>
-In-Reply-To: <20250723152709.256768-1-dhowells@redhat.com>
-References: <20250723152709.256768-1-dhowells@redhat.com>
+	s=arc-20240116; t=1753285434; c=relaxed/simple;
+	bh=eKjNmLTfBR8pEtxB4ZeI8tayw7lRKDeEYZJCuietgys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qYIk/4dC3OfGp8d7EWB7xIe7zEEHSVuRwC7Ei08o+ZOXaMBw/7ZEF8fn/N8t9clnBfjg3+CvDSXMLXT7P/K1B9aEeWwjDi5f7GfikUBQL9llSv3buBOpTXnfyxIwQOvkAF3w0d2vMRWONsvGX2Xs31mACyMBppYT97WsMNCmsV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUjR4XjX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03327C4CEE7;
+	Wed, 23 Jul 2025 15:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753285433;
+	bh=eKjNmLTfBR8pEtxB4ZeI8tayw7lRKDeEYZJCuietgys=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IUjR4XjXPFoKmJ8hGgF9vwmB3bU4yJsav3UX8bCKBAdFl/OYtJwnVIN914mIdePnD
+	 ZafGkZYRdcmmUf4zFJU5PDExrUCV/UrdkOPZgX7Dm+K+tJjxvu9ePZ2kxHP6qIfEs6
+	 wsTatLY0SzaBD/XBfhgSDuCohqVXXldiHYtbOsga1dFAJJG5pZfxTGOGN1Uljr0kpO
+	 Umqfu6XvlHPzBhMfLBpq3I08IJY1JKXRwNq3a3qiLPw/2KHiBhEPl0bFulcPxPtAqB
+	 3n8w3QgL3UzKqfCqJcDtEAhBguXaH2FDVGoecY91i0UV9fm9Tk2/UTZqOr9rxO1cUO
+	 yUAgScKDQZKBQ==
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/5] NFSD: add "NFSD DIRECT" and "NFSD DONTCACHE" IO modes
+Date: Wed, 23 Jul 2025 11:43:46 -0400
+Message-ID: <20250723154351.59042-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -87,195 +55,69 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Since version 1.11 (January 1992) Bash has a work around in redir_open()
-that causes open(O_CREAT) of a file to be retried without O_CREAT if open()
-fails with an EACCES error if bash was built with AFS workarounds
-configured:
+Hi,
 
-        #if defined (AFS)
-              if ((fd < 0) && (errno == EACCES))
-            {
-              fd = open (filename, flags & ~O_CREAT, mode);
-              errno = EACCES;    /* restore errno */
-            }
+Some workloads benefit from NFSD avoiding the page cache, particularly
+those with a working set that is significantly larger than available
+system memory.  This patchset introduces _optional_ support to
+configure the use of O_DIRECT or DONTCACHE for NFSD's READ and WRITE
+support.  The NFSD default to use page cache is left unchanged.
 
-        #endif /* AFS */
+The performance win associated with using NFSD DIRECT was previously
+summarized here:
+https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
+This picture offers a nice summary of performance gains:
+https://original.art/NFSD_direct_vs_buffered_IO.jpg
 
-The ~O_CREAT fallback logic was introduced to workaround a bug[1] in the
-IBM AFS 3.1 cache manager and server which can return EACCES in preference
-to EEXIST if the requested file exists but the caller is neither granted
-explicit PRSFS_READ permission nor is the file owner and is granted
-PRSFS_INSERT permission on the directory.  IBM AFS 3.2 altered the cache
-manager permission checks but failed to correct the permission checks in
-the AFS server.  As of this writing, all IBM AFS derived servers continue
-to return EACCES in preference to EEXIST when these conditions are met.
-Bug reports have been filed with all implementations.
+Very minor changes for this v4.
 
-As an unintended side effect, the Bash fallback logic also undermines the
-Linux kernel protections against O_CREAT opening FIFOs and regular files
-not owned by the user in world writeable sticky directories - unless the
-owner is the same as that of the directory - as was added in commit
-30aba6656f61e ("namei: allow restricted O_CREAT of FIFOs and regular
-files").
+Thanks,
+Mike
 
-As a result the Bash fallback logic masks an incompatibility between the
-ownership checks performed by may_create_in_sticky() and network
-filesystems such as AFS where the uid namespace is disjoint from the uid
-namespace of the local system.
+Changes since v3:
+- Fix a copy-n-paste bug in nfsd_vfs_write:
+  s/nf_dio_read_offset_align/nf_dio_offset_align/
+- Rename struct nfsd_dio_io to nfsd_read_dio.
 
-However, the bash work around is going to be removed[2].
+Changes since v2:
+- explored suggestion to use string based interface (e.g. "direct"
+  instead of 3) but debugfs seems to only supports numeric values.
+- shifted numeric values for debugfs interface from 0-2 to 1-3 and
+  made 0 UNSPECIFIED (which is the default)
+- if user specifies io_cache_read or io_cache_write mode other than 1,
+  2 or 3 (via debugfs) they will get an error message
+- pass a data structure to nfsd_analyze_read_dio rather than so many
+  in/out params
+- improved comments as requested (e.g. "Must remove first
+  start_extra_page from rqstp->rq_bvec" was reworked)
+- use memmove instead of opencoded shift in
+  nfsd_complete_misaligned_read_dio
+- dropped the still very important "lib/iov_iter: remove piecewise
+  bvec length checking in iov_iter_aligned_bvec" patch because it
+  needs to be handled separately.
+- various other changes to improve code
 
-Fix this in the kernel by using a preceding patch that allows the user ID
-comparisons to be overridden by:
+Mike Snitzer (5):
+  NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+  NFSD: pass nfsd_file to nfsd_iter_read()
+  NFSD: add io_cache_read controls to debugfs interface
+  NFSD: add io_cache_write controls to debugfs interface
+  NFSD: issue READs using O_DIRECT even if IO is misaligned
 
- (1) Implement the ->is_owned_by_me() inode op for kafs to determine if the
-     caller owns the file by checking to see if the server indicated the
-     ADMINISTER bit was set in the access rights returned by the
-     FS.FetchStatus and suchlike instead of checking the i_uid to
-     current_fsuid().
+ fs/nfsd/debugfs.c          | 102 +++++++++++++++++++
+ fs/nfsd/filecache.c        |  32 ++++++
+ fs/nfsd/filecache.h        |   4 +
+ fs/nfsd/nfs4xdr.c          |   8 +-
+ fs/nfsd/nfsd.h             |  10 ++
+ fs/nfsd/nfsfh.c            |   4 +
+ fs/nfsd/trace.h            |  37 +++++++
+ fs/nfsd/vfs.c              | 197 ++++++++++++++++++++++++++++++++++---
+ fs/nfsd/vfs.h              |   2 +-
+ include/linux/sunrpc/svc.h |   5 +-
+ 10 files changed, 383 insertions(+), 18 deletions(-)
 
-     Unfortunately, this check doesn't work for directories, but none of
-     the ops should require that.
-
-     Note that anonymous accesses to AFS will never see the ADMINISTER bit
-     being set and so will not be perceived as owning an anonymously-owned
-     file.
-
- (2) Implement the ->have_same_owner() inode op, for kafs to compare the
-     AFS owner IDs retrieved by FS.FetchStatus (which are 64-bit integers
-     with AuriStor's YFS server and, as such, won't fit in a kuid_t).
-
-     Note that whilst an anonymously-owned file will match an
-     anonymously-owned parent directory, an anonymously-owned directory
-     cannot have the sticky bit set.
-
-This can be tested by creating a sticky directory (the user must have a
-token to do this) and creating a file in it.  Then strace bash doing "echo
-foo >>file" and look at whether bash does a single, successful O_CREAT open
-on the file or whether that one fails and then bash does one without
-O_CREAT that succeeds.
-
-Fixes: 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and regular files")
-Reported-by: Etienne Champetier <champetier.etienne@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeffrey Altman <jaltman@auristor.com>
-cc: Chet Ramey <chet.ramey@case.edu>
-cc: Cheyenne Wills <cwills@sinenomine.net>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Steve French <sfrench@samba.org>
-cc: linux-afs@lists.infradead.org
-cc: openafs-devel@openafs.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-Link: https://groups.google.com/g/gnu.bash.bug/c/6PPTfOgFdL4/m/2AQU-S1N76UJ [1]
-Link: https://git.savannah.gnu.org/cgit/bash.git/tree/redir.c?h=bash-5.3-rc1#n733 [2]
----
- fs/afs/dir.c      |  2 ++
- fs/afs/file.c     |  2 ++
- fs/afs/internal.h |  3 +++
- fs/afs/security.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 53 insertions(+)
-
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index bfb69e066672..644782a416d7 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -65,6 +65,8 @@ const struct inode_operations afs_dir_inode_operations = {
- 	.permission	= afs_permission,
- 	.getattr	= afs_getattr,
- 	.setattr	= afs_setattr,
-+	.is_owned_by_me	= afs_is_owned_by_me,
-+	.have_same_owner = afs_have_same_owner,
- };
- 
- const struct address_space_operations afs_dir_aops = {
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index fc15497608c6..0317f0a36cf2 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -47,6 +47,8 @@ const struct inode_operations afs_file_inode_operations = {
- 	.getattr	= afs_getattr,
- 	.setattr	= afs_setattr,
- 	.permission	= afs_permission,
-+	.is_owned_by_me	= afs_is_owned_by_me,
-+	.have_same_owner = afs_have_same_owner,
- };
- 
- const struct address_space_operations afs_file_aops = {
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 1124ea4000cb..8c2ca00ac237 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1515,6 +1515,9 @@ extern struct key *afs_request_key(struct afs_cell *);
- extern struct key *afs_request_key_rcu(struct afs_cell *);
- extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_t *);
- extern int afs_permission(struct mnt_idmap *, struct inode *, int);
-+int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode);
-+int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode1,
-+			struct inode *inode2);
- extern void __exit afs_clean_up_permit_cache(void);
- 
- /*
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index 6a7744c9e2a2..19b11c7cb1ff 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -477,6 +477,52 @@ int afs_permission(struct mnt_idmap *idmap, struct inode *inode,
- 	return ret;
- }
- 
-+/*
-+ * Determine if an inode is owned by 'me' - whatever that means for the
-+ * filesystem.  In the case of AFS, this means that the file is owned by the
-+ * AFS user represented by the Rx Security Class token held in a key.  Returns
-+ * 0 if owned by me, 1 if not; can also return an error.
-+ */
-+int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode)
-+{
-+	struct afs_vnode *vnode = AFS_FS_I(inode);
-+	afs_access_t access;
-+	struct key *key;
-+	int ret;
-+
-+	if (S_ISDIR(inode->i_mode))
-+		return 1; /* The ADMIN right check doesn't work for directories. */
-+
-+	key = afs_request_key(vnode->volume->cell);
-+	if (IS_ERR(key))
-+		return PTR_ERR(key);
-+
-+	/* Get the access rights for the key on this file. */
-+	ret = afs_check_permit(vnode, key, &access);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* We get the ADMINISTER bit if we own the file. */
-+	ret = (access & AFS_ACE_ADMINISTER) ? 0 : 1;
-+error:
-+	key_put(key);
-+	return ret;
-+}
-+
-+/*
-+ * Determine if a file has the same owner as its parent - whatever that means
-+ * for the filesystem.  In the case of AFS, this means comparing their AFS
-+ * UIDs.  Returns 0 if same, 1 if not same; can also return an error.
-+ */
-+int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode1,
-+			struct inode *inode2)
-+{
-+	const struct afs_vnode *vnode1 = AFS_FS_I(inode1);
-+	const struct afs_vnode *vnode2 = AFS_FS_I(inode2);
-+
-+	return vnode1->status.owner != vnode2->status.owner;
-+}
-+
- void __exit afs_clean_up_permit_cache(void)
- {
- 	int i;
+-- 
+2.44.0
 
 
