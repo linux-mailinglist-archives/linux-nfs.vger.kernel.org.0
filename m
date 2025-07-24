@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-13231-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13232-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7D72B111BD
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:31:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33958B111BE
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:31:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C71B1CE7E5F
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B595586E1B
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:31:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF45F2EE5F2;
-	Thu, 24 Jul 2025 19:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E422ED85C;
+	Thu, 24 Jul 2025 19:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIcPqMGW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoU7xrtH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF142ED847
-	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EF82ED847
+	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753385466; cv=none; b=fpGzabvR6bULj/bJ6EhjdLD5XnruhxD7TBnWP8WHPMaqgpJTyw2k/eeub1DgNOrKWnx6XthL5Uy+4qDVYHYk5Qn8vGCnD4usTkjfo+qW/OncUYrkD6yRfagrk93PDJBzI1pulDds9g9UFpBAFeO/WxkyXi9y47iECNEDiX8W7HA=
+	t=1753385468; cv=none; b=okwyniwzd7MG26o/acE5a9tjb+NxV6eVgAQiWxWoqf0flf7ZIRcP2KOKhjopZwwOPpO4jw8045k28JQlVDzOxXvJWCEgtjadsr9ZvXggz34Jy+6oeyBY4FxalRiDLpiYPGtPVINgzmampEbQ6pgRQl9OjxJkKbuHqXIEW87jWvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753385466; c=relaxed/simple;
-	bh=fTGCjgSv5oqGdJPUE00zaRLf3RVN6Ji8J0cGjapEgv4=;
+	s=arc-20240116; t=1753385468; c=relaxed/simple;
+	bh=bfxGurubjhYHxpiq8AxsCNBSBFuttP/MuFX6xje9VHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gCj09dGMxo5yCl7TlM/943jniDJBi2Y5n5lelfIyJHCrnNkNQdOKYeVNgKDTMzcqbuxE2CLYRjgDM0kzK5gO6LHsL9klWoPXWChyWlopthOTFexXJ8J4xEUCzHxXYD1uXzhOXmT2x8+xotadSCsCOnB3c25hNuQhJiiwUJG+mFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIcPqMGW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28116C4CEED;
-	Thu, 24 Jul 2025 19:31:06 +0000 (UTC)
+	 MIME-Version; b=ra8FoIpvwRB/dahLkvrPmZLLjOEvrV79dT0FjQA77DLJ9Egv5DfaydOo4ICkfY3LjjhSgzlb9vvQ9DTCYiWtFTOUpAf7Po3AFAto1qW3ouB7OtPdvMuO3ppVuos/9xEUbEsbfh7cN231CUM1XlRORATrwg2xqFefCSuiRIR17wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoU7xrtH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893C2C4CEED;
+	Thu, 24 Jul 2025 19:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753385466;
-	bh=fTGCjgSv5oqGdJPUE00zaRLf3RVN6Ji8J0cGjapEgv4=;
+	s=k20201202; t=1753385467;
+	bh=bfxGurubjhYHxpiq8AxsCNBSBFuttP/MuFX6xje9VHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sIcPqMGWqtu7hdRMRfRzsesI8kCrODEL3cVIgbtp2sftDU/upOFaIpNxxwllG61h6
-	 dzdISCy2s8o1Jv6w4vGlUwnyNdILtgKOFJUHw1qsHcNYqj9kV5uLlfnXrC+tTDNuzx
-	 6P8Un2G5tiKofiE1OCiPWIhgG8NMFKeocTXnqZ3brFEemMInRGqVrN0mWEcPHHw8/b
-	 XHmC+xR8FJmpEjlOpU4lyQ8PMjfDXywyfaXcNtjEUmOTW/bPftIYfk0YKe5tGd9uBy
-	 UbO0KmtsPCyCqEVRr8z/heFw74ikqZi5Qk/8ZRn8AMrOfmV4pBJNT/e0J4KrvlDcZm
-	 2Ww+uVvOlXmfA==
+	b=FoU7xrtHshu6rxS+tmHNwvpkynRp1VfeMOGUy2oMRS5SSIjxizp1fLdcHAyiEnEpX
+	 vVwPEWCTexByXqcyft745/ojkr90ccr4sgOZPsP/AXZEcZWbXBPew0UDhn8qGZT3Pq
+	 P0E7gbEhTK1zSQ9VMsN8Bxh9YTfFpejWdaVD24DrNeb3dNCqpHJ0cmE++V4cb8PTxv
+	 ZR4gLydZgdGtV3RcX52mWPThEH1zMnLKkFzApUwBVI88WLa3wqzqtnx+6NN7+lQ6n0
+	 Mqwee7klmIW3nb+qzaC3qI1NuF3KznX1FTQSUUQa6TKPUMo6ind9MCIz8K+C1jh9IT
+	 shbpJXiZ0SkPQ==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v5 02/13] NFSD: pass nfsd_file to nfsd_iter_read()
-Date: Thu, 24 Jul 2025 15:30:51 -0400
-Message-ID: <20250724193102.65111-3-snitzer@kernel.org>
+Subject: [PATCH v5 03/13] NFSD: add io_cache_read controls to debugfs interface
+Date: Thu, 24 Jul 2025 15:30:52 -0400
+Message-ID: <20250724193102.65111-4-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250724193102.65111-1-snitzer@kernel.org>
 References: <20250724193102.65111-1-snitzer@kernel.org>
@@ -61,102 +61,166 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepares for nfsd_iter_read() to use DIO alignment stored in nfsd_file.
+Add 'io_cache_read' to NFSD's debugfs interface so that: Any data
+read by NFSD will either be:
+- cached using page cache (NFSD_IO_BUFFERED=1)
+- cached but removed from the page cache upon completion
+  (NFSD_IO_DONTCACHE=2).
+- not cached (NFSD_IO_DIRECT=3)
+
+io_cache_read may be set by writing to:
+  /sys/kernel/debug/nfsd/io_cache_read
+
+If NFSD_IO_DONTCACHE is specified using 2, FOP_DONTCACHE must be
+advertised as supported by the underlying filesystem (e.g. XFS),
+otherwise all IO flagged with RWF_DONTCACHE will fail with
+-EOPNOTSUPP.
+
+If NFSD_IO_DIRECT is specified using 3, the IO must be aligned
+relative to the underlying block device's logical_block_size. Also the
+memory buffer used to store the read must be aligned relative to the
+underlying block device's dma_alignment.
 
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 8 ++++----
- fs/nfsd/vfs.c     | 7 ++++---
- fs/nfsd/vfs.h     | 2 +-
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ fs/nfsd/debugfs.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/nfsd.h    |  9 ++++++++
+ fs/nfsd/vfs.c     | 16 +++++++++++++
+ 3 files changed, 83 insertions(+)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 8b68f74a8cf0..c5a9b5680005 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4464,7 +4464,7 @@ static __be32 nfsd4_encode_splice_read(
- 
- static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 				 struct nfsd4_read *read,
--				 struct file *file, unsigned long maxcount)
-+				 unsigned long maxcount)
+diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+index 84b0c8b559dc..c07f71d4e84f 100644
+--- a/fs/nfsd/debugfs.c
++++ b/fs/nfsd/debugfs.c
+@@ -27,11 +27,66 @@ static int nfsd_dsr_get(void *data, u64 *val)
+ static int nfsd_dsr_set(void *data, u64 val)
  {
- 	struct xdr_stream *xdr = resp->xdr;
- 	unsigned int base = xdr->buf->page_len & ~PAGE_MASK;
-@@ -4475,7 +4475,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
- 		return nfserr_resource;
+ 	nfsd_disable_splice_read = (val > 0) ? true : false;
++	if (!nfsd_disable_splice_read) {
++		/*
++		 * Cannot use NFSD_IO_DONTCACHE or NFSD_IO_DIRECT
++		 * if splice_read is enabled.
++		 */
++		nfsd_io_cache_read = NFSD_IO_BUFFERED;
++	}
+ 	return 0;
+ }
  
--	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, file,
-+	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, read->rd_nf,
- 				read->rd_offset, &maxcount, base,
- 				&read->rd_eof);
- 	read->rd_length = maxcount;
-@@ -4522,7 +4522,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	if (file->f_op->splice_read && splice_ok)
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
- 	else
--		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_readv(resp, read, maxcount);
- 	if (nfserr) {
- 		xdr_truncate_encode(xdr, eof_offset);
- 		return nfserr;
-@@ -5418,7 +5418,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 	if (file->f_op->splice_read && splice_ok)
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
- 	else
--		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_readv(resp, read, maxcount);
- 	if (nfserr)
- 		return nfserr;
+ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%llu\n");
  
++/*
++ * /sys/kernel/debug/nfsd/io_cache_read
++ *
++ * Contents:
++ *   %1: NFS READ will use buffered IO
++ *   %2: NFS READ will use dontcache (buffered IO w/ dropbehind)
++ *   %3: NFS READ will use direct IO
++ *
++ * The default value of this setting is zero (UNSPECIFIED).
++ * This setting takes immediate effect for all NFS versions,
++ * all exports, and in all NFSD net namespaces.
++ */
++
++static int nfsd_io_cache_read_get(void *data, u64 *val)
++{
++	*val = nfsd_io_cache_read;
++	return 0;
++}
++
++static int nfsd_io_cache_read_set(void *data, u64 val)
++{
++	int ret = 0;
++
++	switch (val) {
++	case NFSD_IO_BUFFERED:
++		nfsd_io_cache_read = NFSD_IO_BUFFERED;
++		break;
++	case NFSD_IO_DONTCACHE:
++	case NFSD_IO_DIRECT:
++		/*
++		 * Must disable splice_read when enabling
++		 * NFSD_IO_DONTCACHE or NFSD_IO_DIRECT.
++		 */
++		nfsd_disable_splice_read = true;
++		nfsd_io_cache_read = val;
++		break;
++	default:
++		nfsd_io_cache_read = NFSD_IO_UNSPECIFIED;
++		ret = -EINVAL;
++		break;
++	}
++
++	return ret;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(nfsd_io_cache_read_fops, nfsd_io_cache_read_get,
++			 nfsd_io_cache_read_set, "%llu\n");
++
+ void nfsd_debugfs_exit(void)
+ {
+ 	debugfs_remove_recursive(nfsd_top_dir);
+@@ -44,4 +99,7 @@ void nfsd_debugfs_init(void)
+ 
+ 	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
+ 			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
++
++	debugfs_create_file("io_cache_read", S_IWUSR | S_IRUGO,
++			    nfsd_top_dir, NULL, &nfsd_io_cache_read_fops);
+ }
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 1cd0bed57bc2..6ef799405145 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -153,6 +153,15 @@ static inline void nfsd_debugfs_exit(void) {}
+ 
+ extern bool nfsd_disable_splice_read __read_mostly;
+ 
++enum {
++	NFSD_IO_UNSPECIFIED = 0,
++	NFSD_IO_BUFFERED,
++	NFSD_IO_DONTCACHE,
++	NFSD_IO_DIRECT,
++};
++
++extern u64 nfsd_io_cache_read __read_mostly;
++
+ extern int nfsd_max_blksize;
+ 
+ static inline int nfsd_v4client(struct svc_rqst *rq)
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index eaf04751d07f..9bbc97aebbea 100644
+index 9bbc97aebbea..145f6d635ac7 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1076,7 +1076,7 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * nfsd_iter_read - Perform a VFS read using an iterator
-  * @rqstp: RPC transaction context
-  * @fhp: file handle of file to be read
-- * @file: opened struct file of file to be read
-+ * @nf: opened struct nfsd_file of file to be read
-  * @offset: starting byte offset
-  * @count: IN: requested number of bytes; OUT: number of bytes read
-  * @base: offset in first page of read buffer
-@@ -1089,9 +1089,10 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * returned.
-  */
- __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		      struct file *file, loff_t offset, unsigned long *count,
-+		      struct nfsd_file *nf, loff_t offset, unsigned long *count,
- 		      unsigned int base, u32 *eof)
- {
-+	struct file *file = nf->nf_file;
- 	unsigned long v, total;
- 	struct iov_iter iter;
- 	struct kiocb kiocb;
-@@ -1313,7 +1314,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (file->f_op->splice_read && nfsd_read_splice_ok(rqstp))
- 		err = nfsd_splice_read(rqstp, fhp, file, offset, count, eof);
- 	else
--		err = nfsd_iter_read(rqstp, fhp, file, offset, count, 0, eof);
-+		err = nfsd_iter_read(rqstp, fhp, nf, offset, count, 0, eof);
+@@ -49,6 +49,7 @@
+ #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
  
- 	nfsd_file_put(nf);
- 	trace_nfsd_read_done(rqstp, fhp, offset, *count);
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 0c0292611c6d..fa46f8b5f132 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -121,7 +121,7 @@ __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				unsigned long *count,
- 				u32 *eof);
- __be32		nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
--				struct file *file, loff_t offset,
-+				struct nfsd_file *nf, loff_t offset,
- 				unsigned long *count, unsigned int base,
- 				u32 *eof);
- bool		nfsd_read_splice_ok(struct svc_rqst *rqstp);
+ bool nfsd_disable_splice_read __read_mostly;
++u64 nfsd_io_cache_read __read_mostly;
+ 
+ /**
+  * nfserrno - Map Linux errnos to NFS errnos
+@@ -1116,6 +1117,21 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 
+ 	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+ 	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
++
++	switch (nfsd_io_cache_read) {
++	case NFSD_IO_DIRECT:
++		if (nf->nf_dio_mem_align && nf->nf_dio_read_offset_align &&
++		    iov_iter_is_aligned(&iter, nf->nf_dio_mem_align - 1,
++					nf->nf_dio_read_offset_align - 1))
++			kiocb.ki_flags = IOCB_DIRECT;
++		break;
++	case NFSD_IO_DONTCACHE:
++		kiocb.ki_flags = IOCB_DONTCACHE;
++		break;
++	case NFSD_IO_BUFFERED:
++		break;
++	}
++
+ 	host_err = vfs_iocb_iter_read(file, &kiocb, &iter);
+ 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+ }
 -- 
 2.44.0
 
