@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-13238-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13237-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BD44B111C5
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:31:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AC84B111C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:31:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F4F01CE7F65
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:31:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 437603B0727
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E072EE276;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20CB82ED85F;
 	Thu, 24 Jul 2025 19:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jK1nt8J1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbeLtJt/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12F82ECE8D
-	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:31:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F128822AE5D
+	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753385477; cv=none; b=uQM2wD0okrTZwXchUgQ/nzdqfoujJ3GkLDH9QQhfnZfVEf9GdJsssmhpzGWB0nruoe+3uyvKYn9jYwOPPkKOLRRoLKhF4VWB7EHZj25gYmrbrB5h4Sh6Wie21YBaYuxmqdx/P5JAGDEiMZw/fglg9pDPFaPyN8SuvXWcM6hXTcc=
+	t=1753385477; cv=none; b=Im3Z7Sh/Q/V98QQIELopcEubZCYGJaVLf0UyH2EfI7IexVEgE0BU1o+60azTcE7A7RXUBXjLbemqX6x/npTkX6X3e5IUzPJwx/aYwlBMgRpPxi2IjZmwMaVUS2C/zBvwygNexEgx7ZEE+2LGNULvbo/TfzrEjGRrLAnCRnzYxno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1753385477; c=relaxed/simple;
-	bh=3SX/cdANFDfluY7wRW1X4SjYrX2gieE5fsDBJl6UvFM=;
+	bh=DSmvlNxXzNmqa0Qu8i3JUhrsjcQBmSjxoYBtvP/PJA8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gr42SLjVIv4eOoQ1E3g3BmS0tS0d+cZzee1p3RZaF4NdM/UjyfxMZhOGUhSD5ccGc0rzNGgs93Y1VdYrQO41TQn2REwQH9LqWyEamcIO89hQsdVgN6n9lPN4vbBblE7HgBNd5fcE9Nf22mNcY6QUjr8jC9P/fsW2zmYUk/721iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jK1nt8J1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040E5C4CEED;
-	Thu, 24 Jul 2025 19:31:14 +0000 (UTC)
+	 MIME-Version; b=P1jlKvtFT3gvm3sYdC+5sdcxLIeOEl2+GJCQTaJIUah9yjqvuap1SMLmU1Hn59bgCStCGpw4tJtWC/CpteRM3Yv4ZSAzi0bCXZe20kLe9jvO2E/wzBOLzXrZv+n0akJRy5j6Ya1EUxq00GgNUbMCe6k6JkOoteu7ddfF4LZU+xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbeLtJt/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C074C4CEF1;
+	Thu, 24 Jul 2025 19:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753385475;
-	bh=3SX/cdANFDfluY7wRW1X4SjYrX2gieE5fsDBJl6UvFM=;
+	s=k20201202; t=1753385476;
+	bh=DSmvlNxXzNmqa0Qu8i3JUhrsjcQBmSjxoYBtvP/PJA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jK1nt8J1sKZMgAB3SobkV1Jf+/kxj7epL78kCAEGoAG//kvZl8sWI3gSEXqC1wgb6
-	 K+mZ87xK+bjir32J9y0brjCYRZuBDZyb6GZtghGl9/p6ZYvgbFJ16anApp9JOWAtqk
-	 AAe9uSdYL89cYzxYj1lY6xR6piqkNNOBFOQAnlk/Rvb0fTMEyRwkvXufUhOZDLTHU+
-	 fvfIBP+t8HrB4VOq7cp7DulscXif/ekMT88YK+g5BOijMS8mwTH2CwpiESTMdujEVu
-	 vjGe7MrYOKA7luP7FZ/fOoNrSitTa0X0zrYmkndWAP9xzVj7lqtORFgN/e4a9grKFo
-	 RBPxqzzc9bSHA==
+	b=NbeLtJt/NlnNEnIXyC/XHaNowU0VVdWtf/XkhRBxpV3NW0CJ8eIbuUCUSo8ln1rED
+	 tdPluHTSYFlLweYaGuTyiG83jT9P43rxYmwY4liZ64K/Nou2I+oNO2Ps1u/Q3m+KyP
+	 ZgACxr9hHpfLVLCojX8l0SyOtDKtyKTl5EwAHh2DZoxv8HaxKkNa9ymJwEGY6Pv10T
+	 +gsvFb/NN3MNfuat1wOZuP/yOTK58j0qnMu1fqA9VjaTjJd9EmouhlE3uJHC4e3sAI
+	 1Bjzqv9Zbd3jLx9zZchIrmEPI1F7ldN74FG0GT8iYuEUBwyjDN2MFhDNp9Iu4LHZkF
+	 xs3idSfXy9gwA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v5 08/13] nfs/localio: make trace_nfs_local_open_fh more useful
-Date: Thu, 24 Jul 2025 15:30:57 -0400
-Message-ID: <20250724193102.65111-9-snitzer@kernel.org>
+Subject: [PATCH v5 09/13] nfs/localio: add nfsd_file_dio_alignment
+Date: Thu, 24 Jul 2025 15:30:58 -0400
+Message-ID: <20250724193102.65111-10-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250724193102.65111-1-snitzer@kernel.org>
 References: <20250724193102.65111-1-snitzer@kernel.org>
@@ -63,60 +63,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Mike Snitzer <snitzer@hammerspace.com>
 
-Always trigger trace event when LOCALIO opens a file.
+And use it to avoid issuing misaligned IO using O_DIRECT.
 
 Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
 ---
- fs/nfs/localio.c  | 5 +++--
- fs/nfs/nfstrace.h | 6 +++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ fs/nfs/localio.c           | 26 ++++++++++++++++++++++----
+ fs/nfsd/localio.c          | 11 +++++++++++
+ include/linux/nfslocalio.h |  2 ++
+ 3 files changed, 35 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index ecfe22a105ea..0b54f01299d2 100644
+index 0b54f01299d2..0c48db38f74f 100644
 --- a/fs/nfs/localio.c
 +++ b/fs/nfs/localio.c
-@@ -231,13 +231,13 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
- 		    struct nfsd_file __rcu **pnf,
- 		    const fmode_t mode)
- {
-+	int status = 0;
- 	struct nfsd_file *localio;
- 
- 	localio = nfs_open_local_fh(&clp->cl_uuid, clp->cl_rpcclient,
- 				    cred, fh, nfl, pnf, mode);
- 	if (IS_ERR(localio)) {
--		int status = PTR_ERR(localio);
--		trace_nfs_local_open_fh(fh, mode, status);
-+		status = PTR_ERR(localio);
- 		switch (status) {
- 		case -ENOMEM:
- 		case -ENXIO:
-@@ -247,6 +247,7 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
- 			nfs_local_probe(clp);
- 		}
+@@ -322,12 +322,10 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
+ 		return NULL;
  	}
-+	trace_nfs_local_open_fh(fh, mode, status);
+ 
++	init_sync_kiocb(&iocb->kiocb, file);
+ 	if (localio_O_DIRECT_semantics &&
+-	    test_bit(NFS_IOHDR_ODIRECT, &hdr->flags)) {
+-		iocb->kiocb.ki_filp = file;
++	    test_bit(NFS_IOHDR_ODIRECT, &hdr->flags))
+ 		iocb->kiocb.ki_flags = IOCB_DIRECT;
+-	} else
+-		init_sync_kiocb(&iocb->kiocb, file);
+ 
+ 	iocb->kiocb.ki_pos = hdr->args.offset;
+ 	iocb->hdr = hdr;
+@@ -346,6 +344,26 @@ nfs_local_iter_init(struct iov_iter *i, struct nfs_local_kiocb *iocb, int dir)
+ 		      hdr->args.count + hdr->args.pgbase);
+ 	if (hdr->args.pgbase != 0)
+ 		iov_iter_advance(i, hdr->args.pgbase);
++
++	if (iocb->kiocb.ki_flags & IOCB_DIRECT) {
++		u32 nf_dio_mem_align, nf_dio_offset_align, nf_dio_read_offset_align;
++		/* Verify the IO is DIO-aligned as required */
++		nfs_to->nfsd_file_dio_alignment(iocb->localio, &nf_dio_mem_align,
++						&nf_dio_offset_align,
++						&nf_dio_read_offset_align);
++		if (dir == READ)
++			nf_dio_offset_align = nf_dio_read_offset_align;
++		/* direct I/O must be aligned to device logical sector size */
++		if (nf_dio_mem_align && nf_dio_offset_align &&
++		    (((hdr->args.offset | hdr->args.count) & (nf_dio_offset_align-1)) == 0) &&
++		    iov_iter_is_aligned(i, nf_dio_mem_align - 1,
++					nf_dio_offset_align - 1))
++			return 0;
++
++		/* Fallback to using buffered for this misaligned IO */
++		iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
++		iocb->kiocb.ki_filp->f_flags &= ~O_DIRECT;
++	}
+ }
+ 
+ static void
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index 269fa9391dc4..be710d809a3b 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -117,12 +117,23 @@ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
  	return localio;
  }
  
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 7a058bd8c566..334e65d6bc72 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -1707,10 +1707,10 @@ TRACE_EVENT(nfs_local_open_fh,
- 		),
++static void nfsd_file_dio_alignment(struct nfsd_file *nf,
++				    u32 *nf_dio_mem_align,
++				    u32 *nf_dio_offset_align,
++				    u32 *nf_dio_read_offset_align)
++{
++	*nf_dio_mem_align = nf->nf_dio_mem_align;
++	*nf_dio_offset_align = nf->nf_dio_offset_align;
++	*nf_dio_read_offset_align = nf->nf_dio_read_offset_align;
++}
++
+ static const struct nfsd_localio_operations nfsd_localio_ops = {
+ 	.nfsd_net_try_get  = nfsd_net_try_get,
+ 	.nfsd_net_put  = nfsd_net_put,
+ 	.nfsd_open_local_fh = nfsd_open_local_fh,
+ 	.nfsd_file_put_local = nfsd_file_put_local,
+ 	.nfsd_file_file = nfsd_file_file,
++	.nfsd_file_dio_alignment = nfsd_file_dio_alignment,
+ };
  
- 		TP_printk(
--			"error=%d fhandle=0x%08x mode=%s",
--			__entry->error,
-+			"fhandle=0x%08x mode=%s result=%d",
- 			__entry->fhandle,
--			show_fs_fmode_flags(__entry->fmode)
-+			show_fs_fmode_flags(__entry->fmode),
-+			__entry->error
- 		)
- );
+ void nfsd_localio_ops_init(void)
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index 59ea90bd136b..3d91043254e6 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -64,6 +64,8 @@ struct nfsd_localio_operations {
+ 						const fmode_t);
+ 	struct net *(*nfsd_file_put_local)(struct nfsd_file __rcu **);
+ 	struct file *(*nfsd_file_file)(struct nfsd_file *);
++	void (*nfsd_file_dio_alignment)(struct nfsd_file *,
++					u32 *, u32 *, u32 *);
+ } ____cacheline_aligned;
  
+ extern void nfsd_localio_ops_init(void);
 -- 
 2.44.0
 
