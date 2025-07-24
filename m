@@ -1,257 +1,128 @@
-Return-Path: <linux-nfs+bounces-13242-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13243-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42291B111CA
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:31:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBBEDB111D5
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 21:39:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F1921D00373
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:32:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2785AC845C
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Jul 2025 19:38:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B681F2EE5E9;
-	Thu, 24 Jul 2025 19:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E979622AE5D;
+	Thu, 24 Jul 2025 19:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4n3pv8p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlw2ryUD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AFB21B192
-	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:31:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C532621422B
+	for <linux-nfs@vger.kernel.org>; Thu, 24 Jul 2025 19:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753385482; cv=none; b=rMdEtzg048hNid92IExVuqi7EzEZ6pRpsUfY8GNgjrB4H9cM8t2BLbIFrjVO/fhib6ZTZUqreXP0vYIDAwOKB9eIybileIRMQs3aU0zVzTf1n3qpQveJMT6wdvWH5t0QjRriuXXLzhA8htfgMRHMihPsFNjsBuFWf03kcNgQVbo=
+	t=1753385951; cv=none; b=RWw4dhaU+2cfX1S8iX8c9JQnCIR+6fOrB24VUZtGw532EOPgG7UuMtc2RvlwNlBka7QoeunPAZlEgep8iW2XPc8S3HFioxXC2vfd8Nq6Shyhb/q7LsN/ZlEPpCAd/5NwZi1zYN6QlD1DofPlYSEmIJ6+WI1FLAEzCWy6ig5pDXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753385482; c=relaxed/simple;
-	bh=hto0eLFMU0nw+zHYrsfQJae+ySNuu0bHnYmPMt25sQU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O470JYRL9C56GxvSZSfeKo3PyHPZmKpBCQqz5mjdhzDDrWm0FRobefSAQHRQe6ZVeMrnEUu3NcB5Lh2GEmpwq69syTJaiC9pQzCOuJJ0tGU7t0lnmp+nS5rSYOjt9bx97avT5JnmZnllZ9i6pw0uRCINi4wHHHu61XwqQVxeMwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4n3pv8p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9AADC4CEF1;
-	Thu, 24 Jul 2025 19:31:21 +0000 (UTC)
+	s=arc-20240116; t=1753385951; c=relaxed/simple;
+	bh=ss5iqmi4HhXIlCzsbNF35U6aM/q8S9KBA95FTOrUNTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzhjLOA82AFcbuJ8T2+vmhIUN/eejKV8d8bhfITv0OK++iXjnKndJaLJTRsCFJWdoBuwXXn8eAuTNZomh56QCnoyiJo8vLQXJu+hbGy0/V/hbwZbrByi3f5BJHeypfTWOvuMbUYpO/ILCFhlyzW+ENhAFEHfBIrTveSWy0f6NVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlw2ryUD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28673C4CEED;
+	Thu, 24 Jul 2025 19:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753385482;
-	bh=hto0eLFMU0nw+zHYrsfQJae+ySNuu0bHnYmPMt25sQU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q4n3pv8pPHGj4swE8RgWW7qKyfICQiYOfdM5UV9sAXvVT7SNnWW3cGUq7HkM2Mu1I
-	 wFdFchHC3Nb05s7GiwHgkoKpCExhmUvNHRZnYkkZrOHHw9n94sWLTV/MF3qFD/RV6A
-	 fVHxuMPQCH8xXoIXGMsG7mFPOKQjxGpJbY1EOw+pMjzroafpLeZ9z9OCybXpxxPF9g
-	 SkWCR1DCdogzBeU13h2TNwC0N0BdoNpP9k6CFl0hmbNA0Oz7FTKrS4fXFN3D7lEPog
-	 Ka4AD50ppNnDATjI3a2rDbeS1hS83IP3lzmkd9ByK7gmH7HdWedoS+TnEPrZ2i5VYV
-	 tiFIUTtT+3zvw==
+	s=k20201202; t=1753385951;
+	bh=ss5iqmi4HhXIlCzsbNF35U6aM/q8S9KBA95FTOrUNTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hlw2ryUDs97Mlnc4BhqHdnyu0zUvrSzkSifCghV1pmQua+6SFPc6lbloJNii+4itg
+	 9EtbAsp6hCFi2e5EMOzNa6vrag62xzaJGCH9p0RZ6t/RWkJQ0Yu4jW9SBYnskuUASS
+	 bNwxFBZ/KUrFNPeX+97SmlrE/XyCIhV2U//Iz77YB7H4HxYCVE/uqArqb3quQwFjUu
+	 uHkohVuVR5qChBTGSUcrIuLwYV6CjHk0sHu9otMWwznmGrof2c+iihQZ3csYwDjrQf
+	 RdOaEcg5pgym3A8Kt6B7B+mHlbTrLKxab6Ozn0B8OZFGJAsUwGbR/mo1Wcz+/uSW5Q
+	 9DvWOKxCXwoqQ==
+Date: Thu, 24 Jul 2025 15:39:10 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna.schumaker@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v5 13/13] nfs/direct: add misaligned WRITE handling
-Date: Thu, 24 Jul 2025 15:31:02 -0400
-Message-ID: <20250724193102.65111-14-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250724193102.65111-1-snitzer@kernel.org>
-References: <20250724193102.65111-1-snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v2 0/7] NFS DIRECT: handle misaligned READ and WRITE for
+ LOCALIO
+Message-ID: <aIKL3vzTZ5W27crD@kernel.org>
+References: <20250722024924.49877-1-snitzer@kernel.org>
+ <aIEskxZEnEq1qK80@kernel.org>
+ <db121b40-f3da-4ecc-9e07-e3c3c8979b91@oracle.com>
+ <aIF14KpfHWI2239c@kernel.org>
+ <558b51b6-6f0d-434d-ac3c-a7989453017f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <558b51b6-6f0d-434d-ac3c-a7989453017f@oracle.com>
 
-Because the NFS client will already happily handle misaligned O_DIRECT
-IO (by sending it out to NFSD via RPC) this commit's new capabilities
-are for the benefit of LOCALIO and require the nfs modparam:
-  localio_O_DIRECT_align_misaligned_IO=Y
+On Thu, Jul 24, 2025 at 09:28:39AM -0400, Chuck Lever wrote:
+> On 7/23/25 7:53 PM, Mike Snitzer wrote:
+> > On Wed, Jul 23, 2025 at 02:42:56PM -0400, Chuck Lever wrote:
+> >> On 7/23/25 2:40 PM, Mike Snitzer wrote:
+> >>> On Mon, Jul 21, 2025 at 10:49:17PM -0400, Mike Snitzer wrote:
+> >>>> Hi,
+> >>>>
+> >>>> This "NFS DIRECT" series depends on the "NFSD DIRECT" series here:
+> >>>> https://lore.kernel.org/linux-nfs/20250714224216.14329-1-snitzer@kernel.org/
+> >>>> (for the benefit of nfsd_file_dio_alignment patch in this series)
+> >>>>
+> >>>> The first patch was posted as part of a LOCALIO revert series I posted
+> >>>> a week or so ago, thankfully that series isn't needed thanks to Trond
+> >>>> and Neil's efforts.  BUT the first patch is needed, has Reviewed-by
+> >>>> from Jeff and Neil and is marked for stable@.
+> >>>>
+> >>>> The biggest change in v2 is the introduction of O_DIRECT misaligned
+> >>>> READ and WRITE handling for the benefit of LOCALIO. Please see patches
+> >>>> 6 and 7 for more details.
+> >>>
+> >>> Turns out that these NFS client (fs/nfs/direct.c) changes that focused
+> >>> on benefiting LOCALIO actually also benefit NFSD if/when it is
+> >>> configured to use O_DIRECT [0].
+> >>>
+> >>> Such that the NFS client's O_DIRECT code will split any misaligned
+> >>> WRITE IO and NFSD will then happily issue the DIO-aligned "middle" of
+> >>> a given misaligned WRITE IO down to the underlying filesystem.
+> >>>
+> >>> Same goes for READ, NFS client will expand the front of any misaligned
+> >>> READ such that the bulk of the IO becomes DIO-aligned (only the final
+> >>> partial tail page is misaligned).
+> >>>
+> >>> So with the NFS client changes in this series we actually don't _need_
+> >>> NFSD to have the same type of misaligned IO analysis and handling to
+> >>> expand READs or split WRITEs to be DIO-aligned.  Which reduces work
+> >>> that NFSD needs to do by leaning on the NFS client having the
+> >>> capability.
+> >>
+> >> I'm not quite following. Does that apply to non-Linux NFS clients too?
+> > 
+> > No, old Linux clients without these changes or non-Linux clients
+> > wouldn't have the capabilities offered (extending READs, splitting
+> > WRITEs to be DIO-aligned).  The question is: do we care?  Long-term:
+> > probably.
+> 
+> It sounds like we can't rely on clients to align the payload for NFSD.
+> So I'd say "we care".
 
-When enabled, misaligned WRITE IO is split into a start, middle and
-end as needed. The large middle extent is DIO-aligned and the start
-and/or end are misaligned (due to each being a partial page).
+Not old or non-Linux clients, no...
 
-Like the READ support that came before this WRITE support, the
-nfs_analyze_dio trace event shows how the NFS client split a given
-misaligned IO into a mix of misaligned page(s) and a DIO-aligned
-extent.
+> Maybe NFSD could recognize when the content is already properly aligned
+> and take a shorter code path? I'm not familiar enough with your patches
+> yet to make a guess.
 
-This combination of trace events is useful for LOCALIO WRITEs:
+Its pretty well optimized as-is, yes.  So that isn't a major concern.
 
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_analyze_dio/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_initiate_write/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_writeback_done/enable
-  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
+I've just posted a rolled up v5 that keeps the NFSD capability, thanks
+for your guidance.
 
-Which for this dd command:
-
-  dd if=/dev/zero of=/mnt/share1/test bs=47008 count=2 oflag=direct
-
-Results in:
-
-              dd-63257   [001] ..... 83742.427650: nfs_analyze_dio: WRITE offset=0 len=47008 start=0+0 middle=0+45056 end=45056+1952
-              dd-63257   [001] ..... 83742.427659: nfs_initiate_write: fileid=00:2e:219750 fhandle=0xf6927a01 offset=0 count=45056 stable=UNSTABLE
-              dd-63257   [001] ..... 83742.427662: nfs_initiate_write: fileid=00:2e:219750 fhandle=0xf6927a01 offset=45056 count=1952 stable=UNSTABLE
-  kworker/u193:3-62985   [011] ..... 83742.427664: xfs_file_direct_write: dev 259:22 ino 0x5e0000a3 disize 0x0 pos 0x0 bytecount 0xb000
-  kworker/u193:3-62985   [011] ..... 83742.427695: nfs_writeback_done: error=0 fileid=00:2e:219750 fhandle=0xf6927a01 offset=0 count=45056 res=45056 stable=UNSTABLE verifier=a8b37e6803d1eb1e
-  kworker/u193:4-63221   [004] ..... 83742.427699: nfs_writeback_done: error=0 fileid=00:2e:219750 fhandle=0xf6927a01 offset=45056 count=1952 res=1952 stable=UNSTABLE verifier=a8b37e6803d1eb1e
-
-              dd-63257   [001] ..... 83742.427755: nfs_analyze_dio: WRITE offset=47008 len=47008 start=47008+2144 middle=49152+40960 end=90112+3904
-              dd-63257   [001] ..... 83742.427758: nfs_initiate_write: fileid=00:2e:219750 fhandle=0xf6927a01 offset=47008 count=2144 stable=UNSTABLE
-              dd-63257   [001] ..... 83742.427760: nfs_initiate_write: fileid=00:2e:219750 fhandle=0xf6927a01 offset=49152 count=40960 stable=UNSTABLE
-  kworker/u193:4-63221   [004] ..... 83742.427761: nfs_writeback_done: error=0 fileid=00:2e:219750 fhandle=0xf6927a01 offset=47008 count=2144 res=2144 stable=UNSTABLE verifier=a8b37e6803d1eb1e
-              dd-63257   [001] ..... 83742.427763: nfs_initiate_write: fileid=00:2e:219750 fhandle=0xf6927a01 offset=90112 count=3904 stable=UNSTABLE
-  kworker/u193:4-63221   [004] ..... 83742.427763: xfs_file_direct_write: dev 259:22 ino 0x5e0000a3 disize 0xb7a0 pos 0xc000 bytecount 0xa000
-  kworker/u193:4-63221   [004] ..... 83742.427783: nfs_writeback_done: error=0 fileid=00:2e:219750 fhandle=0xf6927a01 offset=49152 count=40960 res=40960 stable=UNSTABLE verifier=a8b37e6803d1eb1e
-  kworker/u193:3-62985   [011] ..... 83742.427788: nfs_writeback_done: error=0 fileid=00:2e:219750 fhandle=0xf6927a01 offset=90112 count=3904 res=3904 stable=UNSTABLE verifier=a8b37e6803d1eb1e
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/direct.c   | 84 ++++++++++++++++++++++++++++++++++++++++++++---
- fs/nfs/internal.h |  1 +
- 2 files changed, 80 insertions(+), 5 deletions(-)
-
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 4e1e668eaa1f..80c2ca37cf28 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -1048,11 +1048,19 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 		if (result < 0)
- 			break;
- 
--		bytes = result;
--		npages = (result + pgbase + PAGE_SIZE - 1) / PAGE_SIZE;
-+		/* Limit the amount of bytes serviced each iteration to aligned batches */
-+		if (pos < dreq->middle_offset && dreq->start_len)
-+			bytes = min_t(size_t, dreq->start_len, result);
-+		else if (pos < dreq->end_offset && dreq->middle_len)
-+			bytes = min_t(size_t, dreq->middle_len, result);
-+		else
-+			bytes = result;
-+		npages = (bytes + pgbase + PAGE_SIZE - 1) / PAGE_SIZE;
-+
- 		for (i = 0; i < npages; i++) {
- 			struct nfs_page *req;
- 			unsigned int req_len = min_t(size_t, bytes, PAGE_SIZE - pgbase);
-+			bool issue_dio_now = false;
- 
- 			req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
- 							pgbase, pos, req_len);
-@@ -1068,6 +1076,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 			}
- 
- 			pgbase = 0;
-+			result -= req_len;
- 			bytes -= req_len;
- 			requested_bytes += req_len;
- 			pos += req_len;
-@@ -1077,9 +1086,27 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 				continue;
- 			}
- 
-+			/* Looking ahead, is this req the end of the start or middle? */
-+			if (bytes == 0) {
-+				if ((dreq->start_len &&
-+				     pos == dreq->middle_offset && result >= dreq->middle_len) ||
-+				    (dreq->end_len &&
-+				     pos == dreq->end_offset && result == dreq->end_len)) {
-+					desc.pg_doio_now = 1;
-+					issue_dio_now = true;
-+					/* Reset iter to the last boundary, isse the current
-+					 * req and then handle iter to next boundary or end.
-+					 */
-+					iov_iter_revert(iter, result);
-+				}
-+			}
-+
- 			nfs_lock_request(req);
--			if (nfs_pageio_add_request(&desc, req))
-+			if (nfs_pageio_add_request(&desc, req)) {
-+				if (issue_dio_now)
-+					break;
- 				continue;
-+			}
- 
- 			/* Exit on hard errors */
- 			if (desc.pg_error < 0 && desc.pg_error != -EAGAIN) {
-@@ -1120,6 +1147,50 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	return requested_bytes;
- }
- 
-+/*
-+ * If localio_O_DIRECT_align_misaligned_WRITE enabled, split misaligned
-+ * WRITE to a DIO-aligned middle and misaligned head and/or tail.
-+ */
-+static bool nfs_analyze_write_dio(loff_t offset, __u32 len,
-+				  struct nfs_direct_req *dreq)
-+{
-+#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-+	/* Hardcoded to PAGE_SIZE (since don't have LOCALIO nfsd_file's
-+	 * dio_alignment), works for smaller alignment too (e.g. 512b).
-+	 */
-+	u32 dio_blocksize = PAGE_SIZE;
-+	loff_t start_end, orig_end, middle_end;
-+
-+	/* Return early if feature disabled, if IO is irreparably
-+	 * misaligned (len < PAGE_SIZE) or if IO is already DIO-aligned.
-+	 */
-+	if (!nfs_localio_O_DIRECT_align_misaligned_IO() ||
-+	    unlikely(len < dio_blocksize) ||
-+	    (((offset | len) & (dio_blocksize-1)) == 0))
-+		return false;
-+
-+	start_end = round_up(offset, dio_blocksize);
-+	orig_end = offset + len;
-+	middle_end = round_down(orig_end, dio_blocksize);
-+
-+	dreq->io_start = offset;
-+	dreq->max_count = orig_end - offset;
-+
-+	dreq->start_len = start_end - offset;
-+	dreq->middle_offset = start_end;
-+	dreq->middle_len = middle_end - start_end;
-+	dreq->end_offset = middle_end;
-+	dreq->end_len = orig_end - middle_end;
-+
-+	trace_nfs_analyze_dio(WRITE, offset, len, offset, dreq->start_len,
-+			      dreq->middle_offset, dreq->middle_len,
-+			      dreq->end_offset, dreq->end_len);
-+	return true;
-+#else
-+	return false;
-+#endif
-+}
-+
- /**
-  * nfs_file_direct_write - file direct write operation for NFS files
-  * @iocb: target I/O control block
-@@ -1176,9 +1247,12 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter,
- 	if (!dreq)
- 		goto out;
- 
-+	if (swap || !nfs_analyze_write_dio(pos, count, dreq)) {
-+		dreq->max_count = count;
-+		dreq->io_start = pos;
-+	}
-+
- 	dreq->inode = inode;
--	dreq->max_count = count;
--	dreq->io_start = pos;
- 	dreq->ctx = get_nfs_open_context(nfs_file_open_context(iocb->ki_filp));
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 06a15bf08357..8daed5b1aa50 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -995,6 +995,7 @@ struct nfs_direct_req {
- 	struct bio_vec *        start_extra_bvec;
- 	loff_t			middle_offset;	/* Offset for start of DIO-aligned middle */
- 	loff_t			end_offset;	/* Offset for start of DIO-aligned end */
-+	ssize_t			start_len;	/* Length for misaligned first page */
- 	ssize_t			middle_len;	/* Length for DIO-aligned middle */
- 	ssize_t			end_len;	/* Length for misaligned last page */
- };
--- 
-2.44.0
-
+Mike
 
