@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-13261-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13262-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 882C6B12D08
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 01:13:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60A9EB12D09
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 01:13:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F9863B981B
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jul 2025 23:12:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5623A1897933
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jul 2025 23:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187E6202C45;
-	Sat, 26 Jul 2025 23:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A5B321C166;
+	Sat, 26 Jul 2025 23:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFzaqq8x"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Upp7HVSt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D383417DFE7
-	for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 23:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E42917DFE7
+	for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 23:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753571588; cv=none; b=AWjO01o22uIzTlyu0mNmwEMY3GU4MlS1Ewa6+YfNtmz+uIsqd6cUn0xDpbkEs3/GVjX1jJOB5yXCLHw6ODgz20CPfE+0lX1J4/FJGYwDX25HuEoMNiv2I4spgyN+1f+PuJbmGBP401n3H8vnWubnLIXUD9dpUtr1LnOTpxM5bHg=
+	t=1753571619; cv=none; b=euP/T6vCZiPpUPrFxrK0AqqgTmB6lkbD6QKdI/+qkEPmif6aiUMS16tyXV0Clf82QAfLZEubhq2dsQWlStwXBxPyXxww5htghhi7V41TUYwt2K4XnS9ZFE1CVi4+bfqN0gWT+HhUg5GPY3jrAL28HysxpSAWSP6A7LyQD1EFYsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753571588; c=relaxed/simple;
-	bh=Si5OxBiFFjyFY0lpYqUuGb1XS1HTmIX+w3EdSya9mF0=;
+	s=arc-20240116; t=1753571619; c=relaxed/simple;
+	bh=002poAq1GhsXWb41tc2T8WBg5Ay9uQPVyd2eo2Ygkww=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7pJVWMqnEnqipiXjPhTIZGDrBjSk8Bl8JwOqSSRoamW+ZfXJxx1Fad/+x91CE0U9Wtkq2jSqJschsvIXu/Z4Fdsgc1dmgMiW/IpgE17AMf/D4UxhExM+cMQIFgDDDgzOaFKuxTlnqDKfTRCFSogBVHBpEkGMSJfZADWsX5+Sks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PFzaqq8x; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=pHEkPS1aSIIDQtYU5vwA/skrEHJd0cz3SmLNenlu5f32ZcbV5APYEkrD+wiyF/atCS31nP7rWOf2MP7dkevFfOEoCYWgKcjNhcn62kPdg4tBcVPFp4pwX/u/1GBGrWMtJ5hO+rh6RUCBanCEFk21HEvp7uKstk6DflUnNICBNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Upp7HVSt; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753571584;
+	s=mimecast20190719; t=1753571616;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kqt+l7oR8ebIsxyszkkKIN0lgi+U1xVdKw4TvL4+Emk=;
-	b=PFzaqq8xcflR8Cy+jiyxRGfe06NuzVURepy+wnJ67JP/R3gkWKn1YoiSEBWuAcXsyVcMcC
-	ljG5e6i6t17vJedSoobcSrVob/7BF65VALKy/nBDIj2A8ghofF0/z5R3JRcd/dDljY/S44
-	DAbBCBgR4PjD3vH+Z78ZKKtslNbxcDc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=fMeJvHrB0Dkd4OSKUl3T1xTf+tnan8IbBllxJHd/kXg=;
+	b=Upp7HVStvcP6PUEmDrZJDy5IQdJNy3j2h5QJIdh0tsE/iHuuyxJkzmaAcEZElFBzu1D44m
+	pOtHJn/luXASUR0ZkpRCOsbNJFo6XtcMpKWtD5JoJ0lFw4ENMGCOateAFX8SyX7cnqtlB2
+	YBnYfb9RnN0RkRhnlqekgVVkRFKDCh8=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-322-a9hRAGaiOLyGIasN-HqhPg-1; Sat, 26 Jul 2025 19:13:02 -0400
-X-MC-Unique: a9hRAGaiOLyGIasN-HqhPg-1
-X-Mimecast-MFC-AGG-ID: a9hRAGaiOLyGIasN-HqhPg_1753571582
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-702b5e87d98so60654056d6.0
-        for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 16:13:02 -0700 (PDT)
+ us-mta-368-jOm789-qMn6eQvPdBGuNuw-1; Sat, 26 Jul 2025 19:13:34 -0400
+X-MC-Unique: jOm789-qMn6eQvPdBGuNuw-1
+X-Mimecast-MFC-AGG-ID: jOm789-qMn6eQvPdBGuNuw_1753571614
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4ab801d931cso66544671cf.2
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 16:13:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753571582; x=1754176382;
+        d=1e100.net; s=20230601; t=1753571614; x=1754176414;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kqt+l7oR8ebIsxyszkkKIN0lgi+U1xVdKw4TvL4+Emk=;
-        b=cUF5vraDd/HwPlw/JUbQi0s3JfQwoSHXK+XbrxZwYEPawjuzrGNAAGC5lM8DFPqpMD
-         W8D3DLeIG0RDr6LM1Z4ZZH6nCIcM6l8nQshA8w3XzYKnavzL11wg4ICrEEcOx8pS18yh
-         imG+QdT5AbxwNRp9rlLorG8e6dlG3o+3HLKX9FJnjlKDmVkZpBqEWtnFkcSsP5R7hhLB
-         gwNgRJB8PJUQ9qbrvJ8JKuaVWGB0CQRdCg9y9/T4mwUMP8HCHyrgvHVzJjqkzX4/EXkS
-         4Ei6Ggs3DTr4lW5gflAGrz7X5lJxTSQE5AX6rumvZBpgyDycxWcgxImw4YUsDfBiJESH
-         t7Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWOGEclddcTRibRVP5iI/GUlMpj2vZLd+Xh561g3x4ht19dkJP4H5E8KXzVcqDbMYALM+iXWGq48u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzEyfx6FdZtht3l1xTrt36tUwp5JbZjEGfOUXWuRbYIpfO27dd
-	OWs+b5L/pJy7dONVc1mL+7gkFaWq23IWJsU6MTxKhAoYUjoeLBR4mHPZ+NRd1HwfgS1SGHJu04I
-	wRtH0EjmT8bi7wTmOwJv5aZjUlzITzqWny3YUrUY2YNGhCQ1IuQm1jf+4KiNSfQ==
-X-Gm-Gg: ASbGncvqV6+ERxeXyXwArx/Utzlr8NMD6itI6I07kK/uBd2SjOS23xhYGAD7JrL7ZO5
-	CwA05JNuIk/ozLmwCmh1kfxQLJqO5VibaF21ZF0Mn8aVAYi102IjypI80l83URs9kn4rwjgxaZ0
-	03FYi672FP2RCJ6QF0tEt9XXqHzx3b5SFwxMliVxg7K+QKisGPg4xl5KNAs+uGQ8FPyBESH5Hm0
-	gO3DphaP9lhxqvW2mENXkPGVX/drgcwDUWbQRHv9UYCg2aKN5xASHNPjeYyABuRhhu++eBLroxx
-	9pynpldhYYcpyX7FkYXCYV4PRhFzxYEP9LoCw0ws
-X-Received: by 2002:a05:6214:242a:b0:704:b066:f299 with SMTP id 6a1803df08f44-707205418bdmr109338036d6.11.1753571582323;
-        Sat, 26 Jul 2025 16:13:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHAVuwyrW3fqJs+SlLb6lKN7Hf4yCmpbdNHUVvWBfbVNxnx961IOOmccyPNr3X9a5/31c5Rfg==
-X-Received: by 2002:a05:6214:242a:b0:704:b066:f299 with SMTP id 6a1803df08f44-707205418bdmr109337696d6.11.1753571581890;
-        Sat, 26 Jul 2025 16:13:01 -0700 (PDT)
+        bh=fMeJvHrB0Dkd4OSKUl3T1xTf+tnan8IbBllxJHd/kXg=;
+        b=Onpn5SrfOFljq3aCmu+izGeMeYURYcjlFhmuxT6hvoAjzCzTHuXrWl9rhYM6YLq6Kd
+         UptYGxHdC8JLwXDXO04xaE7OWftklAh4h1Tp8+YYm9zs+WJwT1L41ZUYiWfXBW/8h3C4
+         UCQhpuxfQopCj/0NYVN1XsaKx/Lfxs+1tX5atc3OZ42Y0uXw3A9a5pNTkx41PttQ+Wju
+         +vgkyaTlGNzItwiG2xS983AI/UGWU+wQE6ALPQnB9nS/XKNdihbyL3CSWM9i104EwhdX
+         X7zAud4PM7q4TbPLCDA+RhUjasVT+9uAfJkbfDpwU+CWbhTOfSyrqhmgkAwldTPEwC7z
+         qHBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmwghlCyaWdm0gDJoj31I0weC8uVy8sS9tfWZuoT8bqVWYzTHltKIUeT57KgiROfYVplO/e8uC9L4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH3WbCbDW/olMyttfSY9B65C+PKalnFrYnz1Hczvovej257uMD
+	26HJKKiY0x8LFlnajXTGkcXoBIwpmRvEUhgo3qPx8NDOur//z5UAB0yZY6RL4YYxmJsXGxgToQk
+	iVhHVihBCWkgde5FfwF6CCRjOW3tcxNDdSA2rbnNZtzxEz41vnsQxRNvsdhbN7A==
+X-Gm-Gg: ASbGnct0/MwELlndS2fYtc/DOnbXwEjJXzvzpTdRLPtb96VymKj4cIrH3mX3pSzFiB+
+	ZPcVxrlRsoIIebkeb4dCFNQwMvbxN9AuXyjXWaLW/f02JOdJn9+lKaQ5kU00kvNqzZYvO4V+ZOR
+	mAEH58ymekLxgoHXrKEojOpOm0mMY4BCS0NFPalCXhcrgqPz38vG1GIL914Km+vtTzsxNHlEHkb
+	jUNuWA0wJlfUOQWFPNQ85LBEDYk9Fu79UV6MEja1p4X+yhNhNHrLu0C3nUd1+3yMU4vm+cF6YVw
+	XVMdbgzrBIRFhOYweKKbWB42zElgO0nkhnJftp0q
+X-Received: by 2002:a05:622a:54:b0:4ab:659a:61b4 with SMTP id d75a77b69052e-4ae8ef7ddeemr103533741cf.14.1753571614160;
+        Sat, 26 Jul 2025 16:13:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7WWgnjUVoC+j+r8iiGXo+B/JXfwcwJzO5Biv3HK91J2vigOSqz3jstH6i3gq8a+ZxhOoKwg==
+X-Received: by 2002:a05:622a:54:b0:4ab:659a:61b4 with SMTP id d75a77b69052e-4ae8ef7ddeemr103533481cf.14.1753571613729;
+        Sat, 26 Jul 2025 16:13:33 -0700 (PDT)
 Received: from [172.31.1.136] ([70.105.240.227])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-707299ff148sm14897276d6.21.2025.07.26.16.13.00
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ae9963b704sm16324771cf.34.2025.07.26.16.13.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Jul 2025 16:13:00 -0700 (PDT)
-Message-ID: <944684e8-1e80-4190-a608-6631236833e9@redhat.com>
-Date: Sat, 26 Jul 2025 19:12:59 -0400
+        Sat, 26 Jul 2025 16:13:33 -0700 (PDT)
+Message-ID: <03db5b0e-00f6-4647-a3bb-0593d9815400@redhat.com>
+Date: Sat, 26 Jul 2025 19:13:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,46 +88,183 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rpcbind 1/2] man/rpcbind: Update list of options
+Subject: Re: [PATCH rpcbind 2/2] rpcbind: Add -v flag to print version and
+ config
 To: Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org
 Cc: libtirpc-devel@lists.sourceforge.net, =?UTF-8?Q?Ricardo_B_=2E_Marli?=
  =?UTF-8?Q?=C3=A8re?= <rbm@suse.com>
 References: <20250605060042.1182574-1-pvorel@suse.cz>
+ <20250605060042.1182574-2-pvorel@suse.cz>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250605060042.1182574-1-pvorel@suse.cz>
+In-Reply-To: <20250605060042.1182574-2-pvorel@suse.cz>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/5/25 2:00 AM, Petr Vorel wrote:
-> -L was removed in 718ab7e, -w added in 9b1aaa6, -f added in eb36cf1.
+> This helps to see compiled time options, e.g. remote calls enablement.
 > 
-> Fixes: 718ab7e ("Removed the documentation about the non-existent '-L' flag")
-> Fixes: 9b1aaa6 ("Allow the warms start code to be enabled at compile time...")
-> Fixes: eb36cf1 ("rpcbind: add no-fork mode")
+> $ ./rpcbind -v
+> rpcbind 1.2.7
+> debug: no, libset debug: no, libwrap: no, nss modules: files, remote calls: no, statedir: /run/rpcbind, systemd: yes, user: root, warm start: no
+> 
 > Signed-off-by: Petr Vorel <pvorel@suse.cz>
 Committed... (tag: rpcbind-1_2_8-rc3)
 
 steved.
 
 > ---
->   man/rpcbind.8 | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   man/rpcbind.8 |  6 +++-
+>   src/rpcbind.c | 81 +++++++++++++++++++++++++++++++++++++++++++++++++--
+>   2 files changed, 83 insertions(+), 4 deletions(-)
 > 
 > diff --git a/man/rpcbind.8 b/man/rpcbind.8
-> index cdcdcfd..cd0f817 100644
+> index cd0f817..15b70f9 100644
 > --- a/man/rpcbind.8
 > +++ b/man/rpcbind.8
 > @@ -11,7 +11,7 @@
 >   .Nd universal addresses to RPC program number mapper
 >   .Sh SYNOPSIS
 >   .Nm
-> -.Op Fl adhiLls
-> +.Op Fl adfhilsw
+> -.Op Fl adfhilsw
+> +.Op Fl adfhilsvw
 >   .Sh DESCRIPTION
 >   The
 >   .Nm
+> @@ -141,6 +141,10 @@ to use non-privileged ports for outgoing connections, preventing non-privileged
+>   clients from using
+>   .Nm
+>   to connect to services from a privileged port.
+> +.It Fl v
+> +Print
+> +.Nm
+> +version and builtin configuration and exit.
+>   .It Fl w
+>   Cause
+>   .Nm
+> diff --git a/src/rpcbind.c b/src/rpcbind.c
+> index 122ce6a..bf7b499 100644
+> --- a/src/rpcbind.c
+> +++ b/src/rpcbind.c
+> @@ -96,10 +96,11 @@ char *rpcbinduser = RPCBIND_USER;
+>   char *rpcbinduser = NULL;
+>   #endif
+>   
+> +#define NSS_MODULES_DEFAULT "files"
+>   #ifdef NSS_MODULES
+>   char *nss_modules = NSS_MODULES;
+>   #else
+> -char *nss_modules = "files";
+> +char *nss_modules = NSS_MODULES_DEFAULT;
+>   #endif
+>   
+>   /* who to suid to if -s is given */
+> @@ -143,6 +144,76 @@ static void rbllist_add(rpcprog_t, rpcvers_t, struct netconfig *,
+>   static void terminate(int);
+>   static void parseargs(int, char *[]);
+>   
+> +static void version()
+> +{
+> +	fprintf(stderr, "%s\n", PACKAGE_STRING);
+> +
+> +	fprintf(stderr, "debug: ");
+> +#ifdef RPCBIND_DEBUG
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, ", libset debug: ");
+> +#ifdef LIB_SET_DEBUG
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, ", libwrap: ");
+> +#ifdef LIBWRAP
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, ", nss modules: ");
+> +#ifdef NSS_MODULES
+> +	fprintf(stderr, "%s", NSS_MODULES);
+> +#else
+> +	fprintf(stderr, "%s", NSS_MODULES_DEFAULT);
+> +#endif
+> +
+> +	fprintf(stderr, ", remote calls: ");
+> +#ifdef RMTCALLS
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, ", statedir: ");
+> +#ifdef RPCBIND_STATEDIR
+> +	fprintf(stderr, "%s", RPCBIND_STATEDIR);
+> +#else
+> +	fprintf(stderr, "");
+> +#endif
+> +
+> +	fprintf(stderr, ", systemd: ");
+> +#ifdef SYSTEMD
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, ", user: ");
+> +#ifdef RPCBIND_USER
+> +	fprintf(stderr, "%s", RPCBIND_USER);
+> +#else
+> +	fprintf(stderr, "");
+> +#endif
+> +
+> +	fprintf(stderr, ", warm start: ");
+> +#ifdef WARMSTART
+> +	fprintf(stderr, "yes");
+> +#else
+> +	fprintf(stderr, "no");
+> +#endif
+> +
+> +	fprintf(stderr, "\n");
+> +}
+> +
+>   int
+>   main(int argc, char *argv[])
+>   {
+> @@ -888,7 +959,7 @@ parseargs(int argc, char *argv[])
+>   {
+>   	int c;
+>   	oldstyle_local = 1;
+> -	while ((c = getopt(argc, argv, "adh:ilswf")) != -1) {
+> +	while ((c = getopt(argc, argv, "adfh:ilsvw")) != -1) {
+>   		switch (c) {
+>   		case 'a':
+>   			doabort = 1;	/* when debugging, do an abort on */
+> @@ -918,13 +989,17 @@ parseargs(int argc, char *argv[])
+>   		case 'f':
+>   			dofork = 0;
+>   			break;
+> +		case 'v':
+> +			version();
+> +			exit(0);
+> +			break;
+>   #ifdef WARMSTART
+>   		case 'w':
+>   			warmstart = 1;
+>   			break;
+>   #endif
+>   		default:	/* error */
+> -			fprintf(stderr,	"usage: rpcbind [-adhilswf]\n");
+> +			fprintf(stderr,	"usage: rpcbind [-adfhilsvw]\n");
+>   			exit (1);
+>   		}
+>   	}
 
 
