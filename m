@@ -1,107 +1,118 @@
-Return-Path: <linux-nfs+bounces-14431-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13265-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72516B57CEE
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 15:27:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45124B12F77
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 14:29:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 127421AA094C
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:28:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23FE8188AD31
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 12:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F15315D23;
-	Mon, 15 Sep 2025 13:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4622E212B3D;
+	Sun, 27 Jul 2025 12:29:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="nI8+/yiF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCnDFuMX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9557313283
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 13:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA7220B7FE
+	for <linux-nfs@vger.kernel.org>; Sun, 27 Jul 2025 12:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757942832; cv=none; b=ufeZsaAvAAyUbOz/fBLG2SySMfWjrfB/udk4jLBkZnbYlEWxOzvWc2yn3BAeg5HKuIcjguOg+StmkTYa4aVYNeeY/ovtIN0C8Ls0bA1e4PaF0pQKziDyasXLkZRUIELvv/GErylxKofaQyDUuz7hVANAjRDjaFwIdd8WTcKchg4=
+	t=1753619382; cv=none; b=m6UpCTxIcEdaAAYMCC/dthINB6g9H0iUiHIrHMVGRxgIr1lmPmqT7KHkl7Ngk3F7Mf5FRXv5HbP9JR9mN5BqDEkFcPj1niaw/lUInx3Fzy8z4pzdgNMrg7nl+M0YkMbBmRLEgb9Hql3pykIpBix2pgCWBt2fq1rpXjZ71UoXr2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757942832; c=relaxed/simple;
-	bh=BwK6smIWY8UxaoR0F/gPy8p2dUTxAcFk9K5CxGQyCDc=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=RwoxEOWdpngPNBYzBKI96FoXWqjcbH5Whr+BmdSLd4edOR4vRh76+EVm3Lky+a+yIKLRft45QA7BxDoIKyFnaqJynoo47JqAItrHcJpQTx6Rd6TEcwJ1gkD7LD2L7kAYvAj4LqeKh7Nf9XVTSwmzbKk74zIVOQOZJSrwQfcSeWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=nI8+/yiF; arc=none smtp.client-ip=162.62.57.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1757942517; bh=uckOZk/nJoZWWehA5rrqTsGGnE1WONqJczjs0xYA7fE=;
-	h=From:To:Cc:Subject:Date;
-	b=nI8+/yiFF3O5SWKB4sSbOsZr5C/tHzmLaELzFOPcRiUYYIHw39EUCrXGDtS/7fXnE
-	 dr4J2hrFhuvo0ELrhH0zSzBIS5Wb7pVaiPOmzN3k+pPoHbX49I2pzXJKfsT1kU3/0a
-	 z2FQT5k5pJEEeE9Qzz1E4/JHloPq0KTDllBTKN2o=
-Received: from localhost.localdomain ([115.60.178.104])
-	by newxmesmtplogicsvrszb42-0.qq.com (NewEsmtp) with SMTP
-	id 5779AA04; Mon, 15 Sep 2025 21:21:55 +0800
-X-QQ-mid: xmsmtpt1757942515twp57q9sy
-Message-ID: <tencent_AD6578717AD07FA01AED37FCC2D8C966F509@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmaUT6LyLw8W3HEM5cA52MqBJCkrUFDnyVRuhu9Jit3wCFflwJ+qL
-	 F7C6V5wE6k9uOmgZqHsbg5MOoJObyDMbz1hYHHxRR8zLN3Gg5P0UQyRiWBeY8EUGxQQ5hdidzhtx
-	 f8ud1eUfclpNC4qSua83FLulQJgw+ZyYrOiCtGjDoP51JPgLhIKNvr+kqRESSLwBSfXwyHAovLsx
-	 8/sla+cjn5gO13waWJoXjUooJ+b70bYvJ7X2p9blVH9xLEVuSyLZsAxwHmcNm77Q0AiEP9CaEcVQ
-	 WrDDJQh8IFm/fg99++rWnAl8J5VhY4WYZiNtcR5a/3FMkNj9KMFcAuHDIv6whAnHpmELFrcC3BS5
-	 rEm0shYjfMTS3ingd4PRBBDUxGZN419SKqDWf5aFsYUKh/PmuXCO3Bf7Qa+TFqoZHXU5+5YGwCMN
-	 9vyVvf5D2BViCv00714TGai2Y3ESmtjqqYC2GMFLFSQYpjOBJIyJX63WvtqxtcRjeukzAQG3WEin
-	 Fgeq+UrkqPzq0yipZu3NByU6764f8LpJAzZaY3oqsDPR1sinZKVBanIfr4qTj3E9P7NfUXpwb0TR
-	 nPQcZHs0CRWYRnPfzTywQsdairOP75ku7gSWfOxNgAXv40ZFdr2dsxL+K2KtMEdNTFa+Pt2rnjsF
-	 acpRV05155T3QpJ+T3QlByO9YnkUlcWS6ySBTnGwRMx5LerPB1+JulRwO6A5AHJMxPR/y+e6NL1N
-	 7vH/GP+JnzwMqUnVqU0Rt0/40uYFeJAvxmGPNI/Mosk7cvy7KheBQ89EM6L7lT60c0CJsUJbuEK8
-	 oR1MO5/WHGrwitfzg2UVUvtDSWtsxkL0uc8BBNvp73uxCR+FFkO9fcVi3O+zK900SmVc2HER0L8a
-	 OG9dXMxg6NjkJAmvNYMn4DofBEYAmpuWnRfqiHTrz1Kzoq6miOsi+jLVhnw2iLy9J5zUXQouZT4W
-	 lHzk+TnsE=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: 597607025@qq.com
-To: linux-nfs@vger.kernel.org
-Cc: zhangyaqi@kylinos.cn,
-	steved@redhat.com
-Subject: [PATCH] nfsdcld:fix potential PATH_MAX overflows in recovery dir handling
-Date: Thu, 12 Jun 2025 01:07:41 +0800
-X-OQ-MSGID: <20250611170741.8562-1-597607025@qq.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1753619382; c=relaxed/simple;
+	bh=9RgZ4c0A1jwhqbJfZO4K5K2jFbG85pykJdcR+6p1O/w=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Q40UCudBLMG8h77gQiA/eWBA+p1JuSB6hj3NpB6izEChCcvv/Szm40w4NjcV005RaZYhr4l3n9UGomd8Kl5hjFzEE8j5dAx0y6tc96DRBdCoput95Qv0O03xpCycI8nBBijov5HiF0qn3hGIBbHY2IbNIkpnLx8mFcsSwqURc0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XCnDFuMX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753619379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xTtOU5sBjJweaBmskNdX/Q2AVfNzl4oGFuC+RoKRN0A=;
+	b=XCnDFuMXP780vQ8BZdwuggq6OmwuNwNMWEFgXzhj1VScKkTRfo+Js76K/Fy9Xfha+1ji97
+	UEQHa0gGr5wRejqaJMa3nKGe+JnC91ZHssaUbJF1XMl29GTErdygNpcnXk7Y6LzTA2lWzY
+	C8yFoM+C7fk8e3QpmPEKjPtj0ho+wpI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-ipy_G77SOBWeGL371axe8g-1; Sun, 27 Jul 2025 08:29:37 -0400
+X-MC-Unique: ipy_G77SOBWeGL371axe8g-1
+X-Mimecast-MFC-AGG-ID: ipy_G77SOBWeGL371axe8g_1753619377
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-70744318bdfso11303696d6.3
+        for <linux-nfs@vger.kernel.org>; Sun, 27 Jul 2025 05:29:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753619377; x=1754224177;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xTtOU5sBjJweaBmskNdX/Q2AVfNzl4oGFuC+RoKRN0A=;
+        b=W0s2o8trX5F64g2/cV3fvNac43WwiEIESqcU/93Yi3GDN2W+8Fqy5G+0Aw54BOvZCN
+         H+IhJ2UeusjNsigzJB2eI+9zmK0FN57Y3LS/biU19AOyAvGBs2s2JRYHKCls8EfFXocC
+         UbKUBCtxHPu+aInYcUX2mpIXTdcLZFNzcjRZoUqpatgPakqPWfQlEQlAEvjC/X9wTh1k
+         DE6Ky/JgmK2is8wx+6PiRB8lOAYFonCY7MiPXQkXaNmfHN3w/5lqMH+nsNvU9qQ+zmOV
+         yVhF+BkNnRAmV4AD9BBjcx7UOxBkvvmUqlQnLt/NgTLIA28oCBcV5qBF9T8eLsbWcxa8
+         8tOw==
+X-Gm-Message-State: AOJu0Yy9WAyzHo204+N4Rq2rWLbWnNZkfkYayXfqmLBs6Og91jStnoyN
+	499xGPT817SbpEu7RwG2E0UiAF7iTaHhRmFEZVygS2f2Jfpo4vo1xKqWovjv+YEbFqE5z9lopjG
+	le9ZrSDyWZSFRXq86Uj2Xd1XB9VhfxrT/Jo1Jnh8p4oyiXhLU9iulzE4ugqGBFQ==
+X-Gm-Gg: ASbGncsjfapsnlPf7mJ8dDpqqTLwghlNUN7HC1WJBIImSSYK9wlbCMcvl2NiR7WPqFb
+	FjAE4egaNCIrHn9hBdhbk3tIoWSwCVSRm43TzrzbuHlVZf8IMqYIHd62bMSVb3NJWc2vR3SV381
+	p9gKiORJvCWONw56xRvsLeu52vUqACAHQTk060ufXdDg9H/buQ+RpQWBoQ/iBFZXIJ/pNtAgSRs
+	FMEfykvKqNztoQ3Tw2MVwkYVF4MOFoY0T/dt/SytdUB+QsajyrkCj7Z2sWeRyzMWHhmYVHoccZH
+	wOWXd2xh0+60u0dOG89oW8IiRQ2ucC9D6cUrPAH/
+X-Received: by 2002:a05:6214:300c:b0:6e8:ddf6:d11e with SMTP id 6a1803df08f44-707205413ddmr123821906d6.21.1753619377050;
+        Sun, 27 Jul 2025 05:29:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkb5z1if33aqITQk0CzAjrA6ko0KBrEMPbJD4mvgvUc48qeCyPSh6JiCuSsCL3yGB+F1+WTw==
+X-Received: by 2002:a05:6214:300c:b0:6e8:ddf6:d11e with SMTP id 6a1803df08f44-707205413ddmr123821566d6.21.1753619376643;
+        Sun, 27 Jul 2025 05:29:36 -0700 (PDT)
+Received: from [172.31.1.136] ([70.105.240.227])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70729ad99d0sm19894126d6.46.2025.07.27.05.29.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Jul 2025 05:29:35 -0700 (PDT)
+Message-ID: <b553cc5a-46eb-453b-80f0-cfe69ccb7b21@redhat.com>
+Date: Sun, 27 Jul 2025 08:29:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Steve Dickson <steved@redhat.com>
+Subject: ANNOUNCE: rpcbind-1.2.8 released.
+To: libtirpc <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: zhangyaqi <zhangyaqi@kylinos.cn>
+This release contains:
+- Added in compile info to -v flag to show
+   what compile defines are set.
+- A number of systemd updates/bug fixes.
+- A number of manpage updates.
+- Moved rpcbind.lock and default configs to /run instead of /var/run
+- A couple of bug fixes
 
-Signed-off-by: zhangyaqi <zhangyaqi@kylinos.cn>
----
- utils/nfsdcld/legacy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks to Petr Vorel <pvorel@suse.cz> for doing most
+of the work.
 
-diff --git a/utils/nfsdcld/legacy.c b/utils/nfsdcld/legacy.c
-index b89374c9..c6f6925c 100644
---- a/utils/nfsdcld/legacy.c
-+++ b/utils/nfsdcld/legacy.c
-@@ -65,7 +65,7 @@ legacy_load_clients_from_recdir(int *num_records)
- 		return;
- 	}
- 	/* the output from the proc file isn't null-terminated */
--	recdirname[PATH_MAX] = '\0';
-+	recdirname[(n < PATH_MAX) ? n : PATH_MAX] = '\0';
- 	nl = strchr(recdirname, '\n');
- 	if (!nl)
- 		return;
-@@ -133,7 +133,7 @@ legacy_clear_recdir(void)
- 		return;
- 	}
- 	/* the output from the proc file isn't null-terminated */
--	recdirname[PATH_MAX] = '\0';
-+	recdirname[(n < PATH_MAX) ? n : PATH_MAX] = '\0';
- 	nl = strchr(recdirname, '\n');
- 	if (!nl)
- 		return;
--- 
-2.27.0
+Both the tarball and change log can be found at
+   http://sourceforge.net/projects/rpcbind
+
+The git tree was moved to:
+    git://linux-nfs.org/~steved/rpcbind.git
+
+Please send comments/bugs to linux-nfs@vger.kernel.org and/or
+libtirpc-devel@lists.sourceforge.net
+
+steved.
 
 
