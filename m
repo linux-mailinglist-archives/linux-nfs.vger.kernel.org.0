@@ -1,421 +1,176 @@
-Return-Path: <linux-nfs+bounces-13263-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13264-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6347FB12D0A
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 01:14:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED5DFB12DC6
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 06:51:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46CE71899CEF
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Jul 2025 23:15:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B4E44A075A
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 04:50:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBA5621C166;
-	Sat, 26 Jul 2025 23:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evYtjJE6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3293717A2FC;
+	Sun, 27 Jul 2025 04:51:05 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB05917DFE7
-	for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 23:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCA20E6
+	for <linux-nfs@vger.kernel.org>; Sun, 27 Jul 2025 04:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753571690; cv=none; b=THhS+Zw3FnkOYw7vYm0F4LaRt8TCoAfJKgVt7dJ77Kf5bpQvuPqw9QCU1cGnWLhOn6sOvXSyqx68iR19FKhhPjdcLgKFvWcZfJ68jSQ3xzdoQ9GmDRo5dwJ0U9wTxB5qzrbrOxAToPJmTud9Phw17BgS1eK1QERh+m3K1tmz4ZQ=
+	t=1753591865; cv=none; b=IowiG/VN+JOdhI9lhLjsBqifb0b45nsxi1b+zN5kUzLfOh/S0/eE0MPoBI6Cp47qeUxQwBZHV6vVD8MtwPcN+1Csw1pszC2TfDaGCmrtOAoxRYjIP65f3fe0AXmuRuVltcp3PMAB6B44HOGKwzNpcTzKFfAH0HGofhJPbdzBU2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753571690; c=relaxed/simple;
-	bh=2aJSitVn/B2Ec/8DN0/lXiQXqUfyI5biDfD76QE3UOE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=o4iFudIg5uO9W7rxii39OwCdWJh/15LSXVxetw67wVd4r69VxmRlN/qZUC3xR7druA7OVVjQdhLB299O17ztA7haIdpaxlYGOHv2mLQUtvDHM0aujG80okJV3xs5rUK4iSPm0EQgP7n677AsFXpy3GsUEeGNZaNHWOfYDdrGK9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=evYtjJE6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753571687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5MPr6PiifGFvLWT2HKuPV0Z34tFFoJxTIs8mjvhcyIs=;
-	b=evYtjJE6XizNJ7SSFmOmB1dGECaCKKkGDLp/bEzH/p4GAz45aFrnX914Nd5tfo9LBNsOEc
-	fP4Kv4l1ioNDVO/Htkq5weyZJVZ96Fzg8SQ37vv8yX8p+0WUd/l1QeVyhOryBgDMZmpNgQ
-	QPFHENtD5ebU1U2njwteahp1csY784Q=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-3OIpaFGCOLuq9QXeP4Hslw-1; Sat, 26 Jul 2025 19:14:46 -0400
-X-MC-Unique: 3OIpaFGCOLuq9QXeP4Hslw-1
-X-Mimecast-MFC-AGG-ID: 3OIpaFGCOLuq9QXeP4Hslw_1753571686
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fb5f71b363so69331566d6.2
-        for <linux-nfs@vger.kernel.org>; Sat, 26 Jul 2025 16:14:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753571686; x=1754176486;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MPr6PiifGFvLWT2HKuPV0Z34tFFoJxTIs8mjvhcyIs=;
-        b=sT3o6M/lQh9qa1ezaGIHuH1uVzgUxgCrrR0PGE8dVPtN/8X3HqPCJqLcoybzps0cCw
-         7xPWX/qaB9EcVUs2lZ3Oze83EMLl7lieNZUCXxprExU750YANeQo9i4QgZqsuW79srrO
-         PZbKUBKam34S5m4uGHy95Ffwo840fekyQOHib+lRBR0rr/DXZ3bXLLONJsrVUR38FJn7
-         r94OSqo7jJfegEsuDYDBkSftt5xjcq7ubIeOCdjuP5EX6/gk5qvFda0LB8i+QdDG/kBi
-         HvZUdozCmcFajyw0LmEueQ5Xj8o5/Y+Tu1UzTpYAZf1mocuR1cWXY1LhRWugtwgzKfKp
-         b5gA==
-X-Gm-Message-State: AOJu0YyHExK2rocmQcY/xA8VtyTSHH9ooRbtAPvBg1mYcRVxPd0P6+DC
-	NH1lp2nAPnY2XC/Fq/y0pab/orAC/iga48DlhY6HRKBHLAQ67owKcan3hRKv5bc+6mZoAeCs4wc
-	RW9Vz4wO7sKDJRrjujsUMm82iQ1N2WxPy/9NTd6qWUoo3eCTpT3KQwi/a/w0mWA==
-X-Gm-Gg: ASbGnctkWmVItelpXQUknnpy+nCpCAT6JSoC/EG6yIbxLohacUnkj9xRmQNUr4f+OE7
-	q6ynqdqKUT1oWpkVXwiqr/4WGArJGblnGoJDO2XjlYUVR490P+J9j7aAbrV1XGwecsbKb8hUOBC
-	mYQS2YtKV5cd2QxUzEE4w3q2hUZcMC9CxTGyWNCXwnn12f3SNhHNKy6zLheD+JuUD3YedpE/KVM
-	uEHH+Iup/HJrfmcX9rqcQM++j7+aBh2Eea/3umCIFfvo0Aege3Q+1Obe6XNSv3jiMpt4ynBqwN/
-	7u5ly/XP46RLI8tVVxO4ZpSgYuI4hE1QhQoxMU9m
-X-Received: by 2002:a05:6214:cc4:b0:707:2628:3cb1 with SMTP id 6a1803df08f44-70726284170mr95222296d6.28.1753571685895;
-        Sat, 26 Jul 2025 16:14:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPfyFBF8NtudGmtY6gZTLHy/OSphAzWdvZYm5ZczW1CDoTEikh1rpTFj/TcMKVDqqElXkYfg==
-X-Received: by 2002:a05:6214:cc4:b0:707:2628:3cb1 with SMTP id 6a1803df08f44-70726284170mr95222086d6.28.1753571685427;
-        Sat, 26 Jul 2025 16:14:45 -0700 (PDT)
-Received: from [172.31.1.136] ([70.105.240.227])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70729a6237esm14976806d6.25.2025.07.26.16.14.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Jul 2025 16:14:44 -0700 (PDT)
-Message-ID: <a29f2040-2ae6-468c-a91c-668f1a52ddd5@redhat.com>
-Date: Sat, 26 Jul 2025 19:14:44 -0400
+	s=arc-20240116; t=1753591865; c=relaxed/simple;
+	bh=FaElcyjfIxJBkb7B15WeFUn8G6/fTpZTiAhPSM6CWjM=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ZCpsaa5QPcwYF94eQkjtubNGwPXheeYWhH1uHrupGKL8raahV6VkkNS9G4sJqW/5KQXobMuVllw3yhLH7HTi2W9GZL1bByZ91Fquddy1TLyX9A+DqVrifTeQFmHjidpK8mwM2ExCiMNS2D0gxktdmIPynSklgUIqaFJUGA18Mwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uftLU-003aFd-2A;
+	Sun, 27 Jul 2025 04:50:49 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rpcinfo: Removed a number of "old-style function
- definition" warnings
-From: Steve Dickson <steved@redhat.com>
-To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20250726210000.37744-1-steved@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20250726210000.37744-1-steved@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neil@brown.name>
+To: "Harshvardhan Jha" <harshvardhan.j.jha@oracle.com>
+Cc: "Mark Brown" <broonie@kernel.org>, trondmy@kernel.org,
+ linux-nfs@vger.kernel.org, Aishwarya.TCV@arm.com, ltp@lists.linux.it,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Anna Schumaker" <anna@kernel.org>
+Subject: Re: [PATCH 1/2] SUNRPC: Don't allow waiting for exiting tasks
+In-reply-to: <c5d1eb2b-2697-4413-983c-0650eab389e9@oracle.com>
+References: <>, <c5d1eb2b-2697-4413-983c-0650eab389e9@oracle.com>
+Date: Sun, 27 Jul 2025 14:50:48 +1000
+Message-id: <175359184844.2234665.17719114991555307336@noble.neil.brown.name>
+
+On Fri, 25 Jul 2025, Harshvardhan Jha wrote:
+> On 23/07/25 1:37 PM, NeilBrown wrote:
+> > On Wed, 23 Jul 2025, Harshvardhan Jha wrote:
+> >> On 08/04/25 4:01 PM, Mark Brown wrote:
+> >>> On Fri, Mar 28, 2025 at 01:40:44PM -0400, trondmy@kernel.org wrote:
+> >>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >>>>
+> >>>> Once a task calls exit_signals() it can no longer be signalled. So do
+> >>>> not allow it to do killable waits.
+> >>> We're seeing the LTP acct02 test failing in kernels with this patch
+> >>> applied, testing on systems with NFS root filesystems:
+> >>>
+> >>> 10271 05:03:09.064993  tst_test.c:1900: TINFO: LTP version: 20250130-1-=
+g60fe84aaf
+> >>> 10272 05:03:09.076425  tst_test.c:1904: TINFO: Tested kernel: 6.15.0-rc=
+1 #1 SMP PREEMPT Sun Apr  6 21:18:14 UTC 2025 aarch64
+> >>> 10273 05:03:09.076733  tst_kconfig.c:88: TINFO: Parsing kernel config '=
+/proc/config.gz'
+> >>> 10274 05:03:09.087803  tst_test.c:1722: TINFO: Overall timeout per run =
+is 0h 01m 30s
+> >>> 10275 05:03:09.088107  tst_kconfig.c:88: TINFO: Parsing kernel config '=
+/proc/config.gz'
+> >>> 10276 05:03:09.093097  acct02.c:63: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=
+=3Dy
+> >>> 10277 05:03:09.093400  acct02.c:240: TINFO: Verifying using 'struct acc=
+t_v3'
+> >>> 10278 05:03:10.053504  <6>[   98.043143] Process accounting resumed
+> >>> 10279 05:03:10.053935  <6>[   98.043143] Process accounting resumed
+> >>> 10280 05:03:10.064653  acct02.c:193: TINFO: =3D=3D entry 1 =3D=3D
+> >>> 10281 05:03:10.064953  acct02.c:84: TINFO: ac_comm !=3D 'acct02_helper'=
+ ('acct02')
+> >>> 10282 05:03:10.076029  acct02.c:133: TINFO: ac_exitcode !=3D 32768 (0)
+> >>> 10283 05:03:10.076331  acct02.c:141: TINFO: ac_ppid !=3D 2466 (2461)
+> > It seems that the acct02 process got logged..
+> > Maybe the vfork attempt (trying to run acct02_helper) got half way an
+> > aborted.
+> > It got far enough that accounting got interested.
+> > It didn't get far enough to update the ppid.
+> > I'd be surprised if that were even possible....
+> >
+> > If you would like to help debug this, changing the
+> >
+> > +       if (unlikely(current->flags & PF_EXITING))
+> >
+> > to
+> >
+> > +       if (unlikely(WARN_ON(current->flags & PF_EXITING)))
+> >
+> > would provide stack traces so we can wee where -EINTR is actually being
+> > returned.  That should provide some hints.
+> >
+> > NeilBrown
+>=20
+> Hi Neil,
+>=20
+> Upon this addition I got this in the logs
+
+Thanks for testing.  Was there anything new in the kernel logs?  I was
+expecting a WARNING message followed by a "Call Trace".
+
+If there wasn't, then this patch cannot have caused the problem.
+If there was, then I need to see it.
+
+Thanks,
+NeilBrown
 
 
-
-On 7/26/25 5:00 PM, Steve Dickson wrote:
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... (tag: rpcbind-1_2_8-rc3)
-
-steved.
-
-> ---
->   src/rpcinfo.c | 142 +++++++++++++++++++++-----------------------------
->   1 file changed, 58 insertions(+), 84 deletions(-)
-> 
-> diff --git a/src/rpcinfo.c b/src/rpcinfo.c
-> index 006057a..c59e8b4 100644
-> --- a/src/rpcinfo.c
-> +++ b/src/rpcinfo.c
-> @@ -356,9 +356,7 @@ local_rpcb (rpcprog_t prog, rpcvers_t vers)
->   
->   #ifdef PORTMAP
->   static enum clnt_stat
-> -ip_ping_one(client, vers)
-> -     CLIENT *client;
-> -     u_int32_t vers;
-> +ip_ping_one(CLIENT * client, u_int32_t vers)
->   {
->     struct timeval to = { .tv_sec = 10, .tv_usec = 0 };
->   
-> @@ -376,11 +374,7 @@ ip_ping_one(client, vers)
->    * version 0 calls succeeds, it tries for MAXVERS call and repeats the same.
->    */
->   static void
-> -ip_ping (portnum, proto, argc, argv)
-> -     u_short portnum;
-> -     char *proto;
-> -     int argc;
-> -     char **argv;
-> +ip_ping (u_short portnum, char *proto, int argc, char **argv)
->   {
->     CLIENT *client;
->     enum clnt_stat rpc_stat;
-> @@ -480,9 +474,7 @@ ip_ping (portnum, proto, argc, argv)
->    * Dump all the portmapper registerations
->    */
->   static void
-> -pmapdump (argc, argv)
-> -     int argc;
-> -     char **argv;
-> +pmapdump (int argc, char **argv)
->   {
->     struct pmaplist *head = NULL;
->     struct timeval minutetimeout;
-> @@ -581,11 +573,8 @@ pmapdump (argc, argv)
->    * the address using rpcb_getaddr.
->    */
->   CLIENT *
-> -ip_getclient(hostname, prognum, versnum, proto)
-> -     const char *hostname;
-> -     rpcprog_t prognum;
-> -     rpcvers_t versnum;
-> -     const char *proto;
-> +ip_getclient(const char *hostname, rpcprog_t prognum,
-> +	rpcvers_t versnum, const char *proto)
->   {
->     void *handle;
->     enum clnt_stat saved_stat = RPC_SUCCESS;
-> @@ -674,10 +663,10 @@ sa_len(struct sockaddr *sa)
->    */
->   
->    /*ARGSUSED*/ static bool_t
-> -reply_proc (res, who, nconf)
-> -     void *res;			/* Nothing comes back */
-> -     struct netbuf *who;	/* Who sent us the reply */
-> -     struct netconfig *nconf;	/* On which transport the reply came */
-> +reply_proc (
-> +     void *res,			/* Nothing comes back */
-> +     struct netbuf *who,	/* Who sent us the reply */
-> +     struct netconfig *nconf)	/* On which transport the reply came */
->   {
->     char *uaddr;
->     char hostbuf[NI_MAXHOST];
-> @@ -703,9 +692,7 @@ reply_proc (res, who, nconf)
->   }
->   
->   static void
-> -brdcst (argc, argv)
-> -     int argc;
-> -     char **argv;
-> +brdcst (int argc, char **argv)
->   {
->     enum clnt_stat rpc_stat;
->     u_long prognum, vers;
-> @@ -731,9 +718,7 @@ brdcst (argc, argv)
->   }
->   
->   static bool_t
-> -add_version (rs, vers)
-> -     struct rpcbdump_short *rs;
-> -     u_long vers;
-> +add_version (struct rpcbdump_short *rs, u_long vers)
->   {
->     struct verslist *vl;
->   
-> @@ -752,9 +737,7 @@ add_version (rs, vers)
->   }
->   
->   static bool_t
-> -add_netid (rs, netid)
-> -     struct rpcbdump_short *rs;
-> -     char *netid;
-> +add_netid (struct rpcbdump_short *rs, char *netid)
->   {
->     struct netidlist *nl;
->   
-> @@ -773,11 +756,11 @@ add_netid (rs, netid)
->   }
->   
->   static void
-> -rpcbdump (dumptype, netid, argc, argv)
-> -     int dumptype;
-> -     char *netid;
-> -     int argc;
-> -     char **argv;
-> +rpcbdump (
-> +     int dumptype,
-> +     char *netid,
-> +     int argc,
-> +     char **argv)
->   {
->     rpcblist_ptr head = NULL;
->     struct timeval minutetimeout;
-> @@ -1021,10 +1004,10 @@ error:fprintf (stderr, "rpcinfo: no memory\n");
->   static char nullstring[] = "\000";
->   
->   static void
-> -rpcbaddrlist (netid, argc, argv)
-> -     char *netid;
-> -     int argc;
-> -     char **argv;
-> +rpcbaddrlist (
-> +     char *netid,
-> +     int argc,
-> +     char **argv)
->   {
->     rpcb_entry_list_ptr head = NULL;
->     struct timeval minutetimeout;
-> @@ -1143,9 +1126,7 @@ rpcbaddrlist (netid, argc, argv)
->    * monitor rpcbind
->    */
->   static void
-> -rpcbgetstat (argc, argv)
-> -     int argc;
-> -     char **argv;
-> +rpcbgetstat (int argc, char **argv)
->   {
->     rpcb_stat_byvers inf;
->     struct timeval minutetimeout;
-> @@ -1379,10 +1360,10 @@ rpcbgetstat (argc, argv)
->    * Delete registeration for this (prog, vers, netid)
->    */
->   static void
-> -deletereg (netid, argc, argv)
-> -     char *netid;
-> -     int argc;
-> -     char **argv;
-> +deletereg (
-> +     char *netid,
-> +     int argc,
-> +     char **argv)
->   {
->     struct netconfig *nconf = NULL;
->   
-> @@ -1414,11 +1395,11 @@ deletereg (netid, argc, argv)
->    * Exit if cannot create handle.
->    */
->   static CLIENT *
-> -clnt_addr_create (address, nconf, prog, vers)
-> -     char *address;
-> -     struct netconfig *nconf;
-> -     u_long prog;
-> -     u_long vers;
-> +clnt_addr_create (
-> +     char *address,
-> +     struct netconfig *nconf,
-> +     u_long prog,
-> +     u_long vers)
->   {
->     CLIENT *client;
->     static struct netbuf *nbuf;
-> @@ -1456,11 +1437,11 @@ clnt_addr_create (address, nconf, prog, vers)
->    * sent directly to the services themselves.
->    */
->   static void
-> -addrping (address, netid, argc, argv)
-> -     char *address;
-> -     char *netid;
-> -     int argc;
-> -     char **argv;
-> +addrping (
-> +     char *address,
-> +     char *netid,
-> +     int argc,
-> +     char **argv)
->   {
->     CLIENT *client;
->     struct timeval to;
-> @@ -1583,10 +1564,10 @@ addrping (address, netid, argc, argv)
->    * then sent directly to the services themselves.
->    */
->   static void
-> -progping (netid, argc, argv)
-> -     char *netid;
-> -     int argc;
-> -     char **argv;
-> +progping (
-> +     char *netid,
-> +     int argc,
-> +     char **argv)
->   {
->     CLIENT *client;
->     struct timeval to;
-> @@ -1729,8 +1710,7 @@ usage ()
->   }
->   
->   static u_long
-> -getprognum (arg)
-> -     char *arg;
-> +getprognum (char *arg)
->   {
->     char *strptr;
->     register struct rpcent *rpc;
-> @@ -1761,8 +1741,7 @@ getprognum (arg)
->   }
->   
->   static u_long
-> -getvers (arg)
-> -     char *arg;
-> +getvers (char *arg)
->   {
->     char *strptr;
->     register u_long vers;
-> @@ -1784,10 +1763,10 @@ getvers (arg)
->    * a good error message.
->    */
->   static int
-> -pstatus (client, prog, vers)
-> -     register CLIENT *client;
-> -     u_long prog;
-> -     u_long vers;
-> +pstatus (
-> +     register CLIENT *client,
-> +     u_long prog,
-> +     u_long vers)
->   {
->     struct rpc_err rpcerr;
->   
-> @@ -1806,10 +1785,10 @@ pstatus (client, prog, vers)
->   }
->   
->   static CLIENT *
-> -clnt_rpcbind_create (host, rpcbversnum, targaddr)
-> -     char *host;
-> -     int rpcbversnum;
-> -     struct netbuf **targaddr;
-> +clnt_rpcbind_create (
-> +     char *host,
-> +     int rpcbversnum,
-> +     struct netbuf **targaddr)
->   {
->     static char *tlist[3] = {
->       "circuit_n", "circuit_v", "datagram_v"
-> @@ -1842,11 +1821,11 @@ clnt_rpcbind_create (host, rpcbversnum, targaddr)
->   }
->   
->   static CLIENT *
-> -getclnthandle (host, nconf, rpcbversnum, targaddr)
-> -     char *host;
-> -     struct netconfig *nconf;
-> -     u_long rpcbversnum;
-> -     struct netbuf **targaddr;
-> +getclnthandle (
-> +     char *host,
-> +     struct netconfig *nconf,
-> +     u_long rpcbversnum,
-> +     struct netbuf **targaddr)
->   {
->     struct netbuf addr;
->     struct addrinfo hints, *res;
-> @@ -1898,9 +1877,7 @@ getclnthandle (host, nconf, rpcbversnum, targaddr)
->   }
->   
->   static void
-> -print_rmtcallstat (rtype, infp)
-> -     int rtype;
-> -     rpcb_stat *infp;
-> +print_rmtcallstat (int rtype, rpcb_stat *infp)
->   {
->     register rpcbs_rmtcalllist_ptr pr;
->     struct rpcent *rpc;
-> @@ -1924,9 +1901,7 @@ print_rmtcallstat (rtype, infp)
->   }
->   
->   static void
-> -print_getaddrstat (rtype, infp)
-> -     int rtype;
-> -     rpcb_stat *infp;
-> +print_getaddrstat (int rtype, rpcb_stat *infp)
->   {
->     rpcbs_addrlist_ptr al;
->     register struct rpcent *rpc;
-> @@ -1945,8 +1920,7 @@ print_getaddrstat (rtype, infp)
->   }
->   
->   static char *
-> -spaces (howmany)
-> -     int howmany;
-> +spaces (int howmany)
->   {
->     static char space_array[] =	/* 64 spaces */
->       "                                                                ";
-
+>=20
+> <<<test_start>>>
+> tag=3Dacct02 stime=3D1753444172
+> cmdline=3D"acct02"
+> contacts=3D""
+> analysis=3Dexit
+> <<<test_output>>>
+> tst_kconfig.c:88: TINFO: Parsing kernel config
+> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
+> tst_tmpdir.c:316: TINFO: Using /tmpdir/ltp-w1ozKKlJ6n/LTP_acc4RRfLh as
+> tmpdir (nfs filesystem)
+> tst_test.c:2004: TINFO: LTP version: 20250530-105-gda73e1527
+> tst_test.c:2007: TINFO: Tested kernel:
+> 6.15.8-1.bug38227970.el9.rc2.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 25
+> 02:03:04 PDT 2025 x86_64
+> tst_kconfig.c:88: TINFO: Parsing kernel config
+> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
+> tst_test.c:1825: TINFO: Overall timeout per run is 0h 00m 30s
+> tst_kconfig.c:88: TINFO: Parsing kernel config
+> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
+> acct02.c:61: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=3Dy
+> acct02.c:238: TINFO: Verifying using 'struct acct_v3'
+> acct02.c:191: TINFO: =3D=3D entry 1 =3D=3D
+> acct02.c:82: TINFO: ac_comm !=3D 'acct02_helper' ('acct02')
+> acct02.c:131: TINFO: ac_exitcode !=3D 32768 (0)
+> acct02.c:139: TINFO: ac_ppid !=3D 88929 (88928)
+> acct02.c:181: TFAIL: end of file reached
+>=20
+> HINT: You _MAY_ be missing kernel fixes:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3D4d9570158b626
+>=20
+> Summary:
+> passed=C2=A0 =C2=A00
+> failed=C2=A0 =C2=A01
+> broken=C2=A0 =C2=A00
+> skipped=C2=A0 0
+> warnings 0
+> incrementing stop
+> <<<execution_status>>>
+> initiation_status=3D"ok"
+> duration=3D1 termination_type=3Dexited termination_id=3D1 corefile=3Dno
+> cutime=3D0 cstime=3D20
+>=20
+> <<<test_end>>>
+>=20
+>=20
+> Thanks & Regards,
+>=20
+> Harshvardhan
 
