@@ -1,335 +1,274 @@
-Return-Path: <linux-nfs+bounces-13282-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13283-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A8E7B13794
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jul 2025 11:34:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A424EB13A4B
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jul 2025 14:15:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABF86188778D
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jul 2025 09:35:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E2317A60EC
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Jul 2025 12:14:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84512522B1;
-	Mon, 28 Jul 2025 09:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBEA2522BA;
+	Mon, 28 Jul 2025 12:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOvOItuq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1052122C35D
-	for <linux-nfs@vger.kernel.org>; Mon, 28 Jul 2025 09:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3BB1E0B91;
+	Mon, 28 Jul 2025 12:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753695275; cv=none; b=m4264fAHpXJYEpr9OZYW+Cktrtk7KJMrSwk8A8WsEf2JQIkyRq0bmSxZ/bH0unKelnWxNG1nilg13DXSKyCA9u8Wvc6rUFpOy/FD+u6iZ0YItkBrVFUHbHI9iCAr9qXqjEA8N0zTEDw06WUgehnmiqMuWi5gWm2dG0f1lpK2K7c=
+	t=1753704950; cv=none; b=aTzA3vD0zATSJ+eAlWV3zruMFpFWAVV/MQHFEtQtsXbuI8562ygtOJCpYmidDV2F1rxAEkLhQWCFQgBVl9rrkCAjxyf53crwe+Sxk+Ro3GDjLPws1LX1LyqAhHaYcpLgWyqffbcw69aNsQaHYVoAYVfm5qlhoftwtV+qq9SiMj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753695275; c=relaxed/simple;
-	bh=ME2sXheKPwUhgeX8VCgIjKWE2o5IusPoGre5VtpnZ1o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=NFKgSxeie156QcMXYRsp/8YB8OmHvt/1juE6Otu8KrrKBK2cjWsAM4HTRL1TqD2Yg8CraalJI5WNJPPEJqC9d7WwV77aQ5iAatlRUKhgI6EZTb2bjq3aGF4w818iapW/af433Oqi54KyOdi7v40TzaekmHdsyheTwbZHhF+3Bvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1ugKFO-003hOF-7L;
-	Mon, 28 Jul 2025 09:34:19 +0000
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1753704950; c=relaxed/simple;
+	bh=m5sPV1ZOXM1q550D6B/XDlfGEltiLJrjE1arTlZ2WOE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uUep9KZ7IgCZ81DFNw3HCqkvRptfkyHId/vAWZ1eMWJzgkUa5vzFzejky9PZyvxnJ4Z/EzCIko6x0/6A6KaxEYeJD90+q4NddIuFcp/TQtnVZ6/zZtw6/ww8Fx+Q90xnpSq/6dOAlwA3fFFs+rE3KMb+yskwIp7HssAZeJGXv+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOvOItuq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA40C4CEE7;
+	Mon, 28 Jul 2025 12:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753704949;
+	bh=m5sPV1ZOXM1q550D6B/XDlfGEltiLJrjE1arTlZ2WOE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=QOvOItuqJ6HIgxPq/6CkUFRWMbT8R0jV1QxNPJUNESWptCSDgH6X+mSTy7sMihHa6
+	 fMll9rCbjWs5J3gEIDFrX/H4kqaghetzFVRx2Jg7i1+27xbpXSR3uSfBam0jk0ZVbJ
+	 o33mQ+2X6KJOmQQHjeN4xKbNN3o4UaQOHSUZiKIcIOHMe1eeCtZgpVwrIYFkMoR5Vj
+	 cJKWhREhONEgspRnhMVbTG/rySvc/oXv7J2vM7oj5BDwxkvdYGCe36YfC4rNLkViH/
+	 97V5wJrTGd4jrFzGHrzU098Wzre7Ys+UnYmGHQ4mkvOC8pqvljHqq1W3PUJiNBIEjb
+	 lQzHMK/31yn9w==
+Message-ID: <09e1f0dbff56189467c29c1e29214e9c46e3f1fe.camel@kernel.org>
+Subject: Re: [PATCH v3 3/8] vfs: add ATTR_CTIME_SET flag
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever
+ <chuck.lever@oracle.com>, Olga Kornievskaia	 <okorniev@redhat.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,  Trond Myklebust
+ <trondmy@hammerspace.com>, Anna Schumaker <anna@kernel.org>,
+ linux-fsdevel@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, 	linux-nfs@vger.kernel.org
+Date: Mon, 28 Jul 2025 08:15:47 -0400
+In-Reply-To: <175366747582.2234665.13002356331033442863@noble.neil.brown.name>
+References: <>, <3d02578c8fa2c6b17d4fde12af328d0b5f93ca5e.camel@kernel.org>
+	 <175366747582.2234665.13002356331033442863@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Harshvardhan Jha" <harshvardhan.j.jha@oracle.com>
-Cc: "Mark Brown" <broonie@kernel.org>, trondmy@kernel.org,
- linux-nfs@vger.kernel.org, Aishwarya.TCV@arm.com, ltp@lists.linux.it,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Anna Schumaker" <anna@kernel.org>
-Subject: Re: [PATCH 1/2] SUNRPC: Don't allow waiting for exiting tasks
-In-reply-to: <b0393ddb-fca7-48b9-832f-ed17ccec1f19@oracle.com>
-References: <>, <b0393ddb-fca7-48b9-832f-ed17ccec1f19@oracle.com>
-Date: Mon, 28 Jul 2025 19:34:19 +1000
-Message-id: <175369525960.2234665.4427615634985880450@noble.neil.brown.name>
 
-On Mon, 28 Jul 2025, Harshvardhan Jha wrote:
-> On 27/07/25 10:20 AM, NeilBrown wrote:
-> > On Fri, 25 Jul 2025, Harshvardhan Jha wrote:
-> >> On 23/07/25 1:37 PM, NeilBrown wrote:
-> >>> On Wed, 23 Jul 2025, Harshvardhan Jha wrote:
-> >>>> On 08/04/25 4:01 PM, Mark Brown wrote:
-> >>>>> On Fri, Mar 28, 2025 at 01:40:44PM -0400, trondmy@kernel.org wrote:
-> >>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >>>>>>
-> >>>>>> Once a task calls exit_signals() it can no longer be signalled. So do
-> >>>>>> not allow it to do killable waits.
-> >>>>> We're seeing the LTP acct02 test failing in kernels with this patch
-> >>>>> applied, testing on systems with NFS root filesystems:
-> >>>>>
-> >>>>> 10271 05:03:09.064993  tst_test.c:1900: TINFO: LTP version: 20250130-=
-1-g60fe84aaf
-> >>>>> 10272 05:03:09.076425  tst_test.c:1904: TINFO: Tested kernel: 6.15.0-=
-rc1 #1 SMP PREEMPT Sun Apr  6 21:18:14 UTC 2025 aarch64
-> >>>>> 10273 05:03:09.076733  tst_kconfig.c:88: TINFO: Parsing kernel config=
- '/proc/config.gz'
-> >>>>> 10274 05:03:09.087803  tst_test.c:1722: TINFO: Overall timeout per ru=
-n is 0h 01m 30s
-> >>>>> 10275 05:03:09.088107  tst_kconfig.c:88: TINFO: Parsing kernel config=
- '/proc/config.gz'
-> >>>>> 10276 05:03:09.093097  acct02.c:63: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=
-=3Dy
-> >>>>> 10277 05:03:09.093400  acct02.c:240: TINFO: Verifying using 'struct a=
-cct_v3'
-> >>>>> 10278 05:03:10.053504  <6>[   98.043143] Process accounting resumed
-> >>>>> 10279 05:03:10.053935  <6>[   98.043143] Process accounting resumed
-> >>>>> 10280 05:03:10.064653  acct02.c:193: TINFO: =3D=3D entry 1 =3D=3D
-> >>>>> 10281 05:03:10.064953  acct02.c:84: TINFO: ac_comm !=3D 'acct02_helpe=
-r' ('acct02')
-> >>>>> 10282 05:03:10.076029  acct02.c:133: TINFO: ac_exitcode !=3D 32768 (0)
-> >>>>> 10283 05:03:10.076331  acct02.c:141: TINFO: ac_ppid !=3D 2466 (2461)
-> >>> It seems that the acct02 process got logged..
-> >>> Maybe the vfork attempt (trying to run acct02_helper) got half way an
-> >>> aborted.
-> >>> It got far enough that accounting got interested.
-> >>> It didn't get far enough to update the ppid.
-> >>> I'd be surprised if that were even possible....
-> >>>
-> >>> If you would like to help debug this, changing the
-> >>>
-> >>> +       if (unlikely(current->flags & PF_EXITING))
-> >>>
-> >>> to
-> >>>
-> >>> +       if (unlikely(WARN_ON(current->flags & PF_EXITING)))
-> >>>
-> >>> would provide stack traces so we can wee where -EINTR is actually being
-> >>> returned.  That should provide some hints.
-> >>>
-> >>> NeilBrown
-> >> Hi Neil,
-> >>
-> >> Upon this addition I got this in the logs
-> > Thanks for testing.  Was there anything new in the kernel logs?  I was
-> > expecting a WARNING message followed by a "Call Trace".
-> >
-> > If there wasn't, then this patch cannot have caused the problem.
-> > If there was, then I need to see it.
-> >
-> > Thanks,
-> > NeilBrown
+On Mon, 2025-07-28 at 11:51 +1000, NeilBrown wrote:
+> On Mon, 28 Jul 2025, Jeff Layton wrote:
+> > On Mon, 2025-07-28 at 10:04 +1000, NeilBrown wrote:
+> > > On Mon, 28 Jul 2025, Jeff Layton wrote:
+> > > > When ATTR_ATIME_SET and ATTR_MTIME_SET are set in the ia_valid mask=
+, the
+> > > > notify_change() logic takes that to mean that the request should se=
+t
+> > > > those values explicitly, and not override them with "now".
+> > > >=20
+> > > > With the advent of delegated timestamps, similar functionality is n=
+eeded
+> > > > for the ctime. Add a ATTR_CTIME_SET flag, and use that to indicate =
+that
+> > > > the ctime should be accepted as-is. Also, clean up the if statement=
+s to
+> > > > eliminate the extra negatives.
+> > >=20
+> > > I don't feel entirely comfortable with this.  ctime is a fallback for
+> > > "has anything changed" - mtime can be changed but ctime is always
+> > > reliable, controlled by VFS and FS.
+> > >=20
+> > > Until now.
+> > >=20
+> >=20
+> > I know. I have many of the same reservations, but the specification is
+> > pretty clear (now that I understand it better). I don't see a better
+> > way to do this.
+> >=20
+> > > I know you aren't exposing this to user-space, but then not doing so
+> > > blocks user-space file servers from using this functionality.
+> > >=20
+> > > I see that you also move vetting of the value out of vfs code and int=
+o
+> > > nfsd code.  I don't really understand why you did that.  Maybe nfsd h=
+as
+> > > more information about previous timestamps than the vfs has?
+> > >=20
+> >=20
+> > Yes. We need to track the timestamps of the inode at the time that the
+> > delegation was handed out. nfsd is (arguably) in a better position to
+> > do this than the VFS is. Patch #5 adds this functionality.
+> >=20
+> > > Anyway I would much prefer that ATTR_CTIME_SET could only change the
+> > > ctime value to something between the old ctime value and the current
+> > > time (inclusive).
+> > >=20
+> >=20
+> > That will be a problem. What you're suggesting is the current status
+> > quo with the delegated attrs code, and that behavior was the source of
+> > the problems that we were seeing in the git regression testsuite.
+> >=20
+> >=20
+> > When git checks out an object, it opens a file, writes to it and then
+> > stats it so that it can later see whether it changed. If it gets a
+> > WRITE_ATTRS_DELEG delegation, the client doesn't wait on writeback
+> > before returning from that stat().
+> >=20
+> > Then later, we go to do writeback. The mtime and ctime on the server
+> > get set to the server's local time (which is later than the time that
+> > git has recorded). Finally, the client does the SETATTR+DELEGRETURN and
+> > tries to set the timestamps to the same times that git has recorded,
+> > but those times are too early vs. the current timestamps on the file
+> > and they get ignored (in accordance with the spec).
+> >=20
+> > This was the source of my confusion with the spec. When it says
+> > "original time", it means the timestamps at the time that the
+> > delegation was created, but I interpreted it the same way you did.
+> >=20
+> > Unfortunately, if we want to do this, then we have to allow nfsd to set
+> > the ctime to a time earlier than the current ctime on the inode. I too
+> > have some reservations with this. This means that applications on the
+> > server may see the ctime go backward, which I really do not like.=C2=A0
 >=20
-> This is what the dmesg contains:
+> An alternate approach would be to allow the writeback through a
+> delegation to skip the mtime/ctime update, possibly making use of
+> FMODE_NOCMTIME.
 >=20
-> [=C2=A0 678.814887] LTP: starting acct02
-> [=C2=A0 679.831232] ------------[ cut here ]------------
-> [=C2=A0 679.833500] WARNING: CPU: 6 PID: 88930 at net/sunrpc/sched.c:279
-> rpc_wait_bit_killable+0x76/0x90 [sunrpc]
-> [=C2=A0 679.837308] Modules linked in: rpcsec_gss_krb5 nfsv4 dns_resolver n=
-fs
-> netfs rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd
-> grace loop nft_redir ipt_REJECT xt_comment xt_owner nft_compat
-> nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib rfkill nft_reject_inet
-> nf_reject_
-> ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
-> nf_defrag_ipv6 nf_defrag_ipv4 ip_set cuse vfat fat intel_rapl_msr
-> intel_rapl_common kvm_amd ccp kvm drm_shmem_helper irqbypass i2c_piix4
-> drm_kms_helper pcspkr pvpanic_mmio i2c_smbus pvpanic drm fuse xfs
-> crc32c_generic
-> =C2=A0nvme_tcp nvme_fabrics nvme_core nvme_keyring nvme_auth sd_mod
-> virtio_net sg net_failover virtio_scsi failover ata_generic pata_acpi
-> ata_piix ghash_clmulni_intel libata sha512_ssse3 virtio_pci sha256_ssse3
-> virtio_pci_legacy_dev sha1_ssse3 virtio_pci_modern_dev serio_raw
-> dm_multipath btrfs
-> =C2=A0blake2b_generic xor zstd_compress raid6_pq sunrpc dm_mirror
-> dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 tls
-> cxgb3i cxgb3 mdio libcxgbi libcxgb
-> [=C2=A0 679.837524]=C2=A0 qla4xxx iscsi_tcp libiscsi_tcp libiscsi
-> scsi_transport_iscsi iscsi_ibft iscsi_boot_sysfs qemu_fw_cfg aesni_intel
-> crypto_simd cryptd [last unloaded: kheaders]
-> [=C2=A0 679.873316] CPU: 6 UID: 0 PID: 88930 Comm: acct02_helper Kdump:
-> loaded Not tainted 6.15.8-1.el9.rc2.x86_64 #1 PREEMPT(voluntary)
-> [=C2=A0 679.877769] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.6.4 02/27/2023
-> [=C2=A0 679.880782] RIP: 0010:rpc_wait_bit_killable+0x76/0x90 [sunrpc]
-> [=C2=A0 679.883189] Code: 01 b8 00 fe ff ff 75 d5 48 8b 85 48 0d 00 00 5b 5d
-> 48 c1 e8 08 83 e0 01 f7 d8 19 c0 25 00 fe ff ff 31 d2 31 f6 e9 8a e6 c4
-> d4 <0f> 0b b8 fc ff ff ff 5b 5d 31 d2 31 f6 e9 78 e6 c4 d4 0f 1f 84 00
-> [=C2=A0 679.889976] RSP: 0018:ffffaf47811a7770 EFLAGS: 00010202
-> [=C2=A0 679.892196] RAX: ffff97be48e00330 RBX: ffffaf47811a77c0 RCX:
-> 0000000000000000
-> [=C2=A0 679.894978] RDX: 0000000000000001 RSI: 0000000000002102 RDI:
-> ffffaf47811a77c0
-> [=C2=A0 679.897786] RBP: ffff97be61588000 R08: 0000000000000000 R09:
-> 0000000000000000
-> [=C2=A0 679.900600] R10: 0000000000000000 R11: 0000000000000000 R12:
-> 0000000000002102
-> [=C2=A0 679.903432] R13: ffffffff96408ea0 R14: ffffaf47811a77d8 R15:
-> ffffffffc07568e0
-> [=C2=A0 679.906233] FS:=C2=A0 00007fc2563f8600(0000) GS:ffff97c5c890f000(00=
-00)
-> knlGS:0000000000000000
-> [=C2=A0 679.909289] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [=C2=A0 679.911736] CR2: 00007fc2561fba70 CR3: 00000003bce3a000 CR4:
-> 00000000003506f0
-> [=C2=A0 679.914555] Call Trace:
-> [=C2=A0 679.915918]=C2=A0 <TASK>
-> [=C2=A0 679.917215]=C2=A0 __wait_on_bit+0x31/0xa0
-> [=C2=A0 679.918932]=C2=A0 out_of_line_wait_on_bit+0x93/0xc0
-> [=C2=A0 679.920914]=C2=A0 ? __pfx_wake_bit_function+0x10/0x10
-> [=C2=A0 679.922944]=C2=A0 __rpc_execute+0x109/0x310 [sunrpc]
-> [=C2=A0 679.925024]=C2=A0 rpc_execute+0x137/0x160 [sunrpc]
-> [=C2=A0 679.927020]=C2=A0 rpc_run_task+0x107/0x170 [sunrpc]
-> [=C2=A0 679.929032]=C2=A0 nfs4_call_sync_sequence+0x74/0xc0 [nfsv4]
-> [=C2=A0 679.931319]=C2=A0 _nfs4_proc_statfs+0xc7/0x100 [nfsv4]
-> [=C2=A0 679.933520]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.935391]=C2=A0 nfs4_proc_statfs+0x6b/0xb0 [nfsv4]
-> [=C2=A0 679.937367]=C2=A0 nfs_statfs+0x7e/0x1e0 [nfs]
-> [=C2=A0 679.939138]=C2=A0 statfs_by_dentry+0x67/0xa0
-> [=C2=A0 679.940887]=C2=A0 vfs_statfs+0x1c/0x40
-> [=C2=A0 679.942596]=C2=A0 check_free_space+0x71/0x110
-
-Thanks.  I'm not sure why this causes a problem as if vfs_statfs() fail,
-check_free_space() assumes there is still free space.
-However it does strongly suggest that we still need to NFS to work in
-processes where signals have been shutdown.
-
-Could you change rpc_wait_bit_killable() to be the following and retest?
-I intention is that when the process is exiting, we wait up to 5 seconds
-for each request and then fail.  It's a bit ugly, but it is a rather
-strange situation.  It blocking forever that we really want to avoid
-here, not blocking at all.
-
-Thanks,
-NeilBrown
-
-
-static int rpc_wait_bit_killable(struct wait_bit_key *key, int mode)
-{
-	if (unlikely(current->flags & PF_EXITING)) {
-		if (schedule_timeout(5*HZ) > 0)
-			/* timed out */
-			return 0;
-		return -EINTR;
-	}
-	schedule();
-	if (signal_pending_state(mode, current))
-		return -ERESTARTSYS;
-	return 0;
-}
-
-
-> [=C2=A0 679.944433]=C2=A0 acct_write_process+0x45/0x180
-> [=C2=A0 679.946313]=C2=A0 acct_process+0xff/0x180
-> [=C2=A0 679.948003]=C2=A0 do_exit+0x216/0x480
-> [=C2=A0 679.949799]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.951621]=C2=A0 do_group_exit+0x30/0x80
-> [=C2=A0 679.953329]=C2=A0 __x64_sys_exit_group+0x18/0x20
-> [=C2=A0 679.955217]=C2=A0 x64_sys_call+0xfdb/0x14f0
-> [=C2=A0 679.956971]=C2=A0 do_syscall_64+0x82/0x7a0
-> [=C2=A0 679.958717]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.960550]=C2=A0 ? ___pte_offset_map+0x1b/0x1a0
-> [=C2=A0 679.962434]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.964261]=C2=A0 ? __alloc_frozen_pages_noprof+0x18d/0x340
-> [=C2=A0 679.966389]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.968183]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.969945]=C2=A0 ? __mod_memcg_lruvec_state+0xb6/0x1b0
-> [=C2=A0 679.971977]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.973690]=C2=A0 ? __lruvec_stat_mod_folio+0x83/0xd0
-> [=C2=A0 679.975671]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.977392]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.979079]=C2=A0 ? set_ptes.isra.0+0x36/0x90
-> [=C2=A0 679.980771]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.982375]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.984052]=C2=A0 ? wp_page_copy+0x333/0x730
-> [=C2=A0 679.985648]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.987220]=C2=A0 ? __handle_mm_fault+0x397/0x6f0
-> [=C2=A0 679.988818]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.990411]=C2=A0 ? __count_memcg_events+0xbb/0x150
-> [=C2=A0 679.992111]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.993689]=C2=A0 ? count_memcg_events.constprop.0+0x26/0x50
-> [=C2=A0 679.995590]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 679.997177]=C2=A0 ? handle_mm_fault+0x245/0x350
-> [=C2=A0 679.998807]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 680.000339]=C2=A0 ? do_user_addr_fault+0x221/0x690
-> [=C2=A0 680.002042]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 680.003553]=C2=A0 ? arch_exit_to_user_mode_prepare.isra.0+0x1e/0xd0
-> [=C2=A0 680.005643]=C2=A0 ? srso_return_thunk+0x5/0x5f
-> [=C2=A0 680.007202]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [=C2=A0 680.009025] RIP: 0033:0x7fc2560d985d
-> [=C2=A0 680.010510] Code: Unable to access opcode bytes at 0x7fc2560d9833.
-> [=C2=A0 680.012660] RSP: 002b:00007ffde591df68 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000000e7
-> [=C2=A0 680.015355] RAX: ffffffffffffffda RBX: 00007fc2561f59e0 RCX:
-> 00007fc2560d985d
-> [=C2=A0 680.017749] RDX: 00000000000000e7 RSI: ffffffffffffff88 RDI:
-> 0000000000000080
-> [=C2=A0 680.020292] RBP: 0000000000000080 R08: 0000000000000000 R09:
-> 0000000000000020
-> [=C2=A0 680.022729] R10: 00007ffde591de10 R11: 0000000000000246 R12:
-> 00007fc2561f59e0
-> [=C2=A0 680.025174] R13: 00007fc2561faf20 R14: 0000000000000001 R15:
-> 00007fc2561faf08
-> [=C2=A0 680.027593]=C2=A0 </TASK>
-> [=C2=A0 680.028661] ---[ end trace 0000000000000000 ]---
+> It would be nice to have some mechanism in the VFS to ensure there was
+> an ATTR_CTIME_SET request on any file which had made use of
+> FMODE_NOCMTIME before that file was closed, else the times would be set
+> to the time of the close.  That wouldn't be entirely straight forward,
+> but should be manageable.  (I would allow some way to avoid the ctime
+> update on close so XFS_IOC_OPENBY_HANDLE could still be supported, but
+> it would need to be explicit somewhere).
 >=20
+> While FMODE_NOCMTIME also distorts the meaning of ctime, I think it is
+> better than making it too easy for ctime to go backwards.
 >=20
-> Thanks & Regards,
-> Harshvardhan
->=20
-> >
-> >> <<<test_start>>>
-> >> tag=3Dacct02 stime=3D1753444172
-> >> cmdline=3D"acct02"
-> >> contacts=3D""
-> >> analysis=3Dexit
-> >> <<<test_output>>>
-> >> tst_kconfig.c:88: TINFO: Parsing kernel config
-> >> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> >> tst_tmpdir.c:316: TINFO: Using /tmpdir/ltp-w1ozKKlJ6n/LTP_acc4RRfLh as
-> >> tmpdir (nfs filesystem)
-> >> tst_test.c:2004: TINFO: LTP version: 20250530-105-gda73e1527
-> >> tst_test.c:2007: TINFO: Tested kernel:
-> >> 6.15.8-1.bug38227970.el9.rc2.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 25
-> >> 02:03:04 PDT 2025 x86_64
-> >> tst_kconfig.c:88: TINFO: Parsing kernel config
-> >> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> >> tst_test.c:1825: TINFO: Overall timeout per run is 0h 00m 30s
-> >> tst_kconfig.c:88: TINFO: Parsing kernel config
-> >> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> >> acct02.c:61: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=3Dy
-> >> acct02.c:238: TINFO: Verifying using 'struct acct_v3'
-> >> acct02.c:191: TINFO: =3D=3D entry 1 =3D=3D
-> >> acct02.c:82: TINFO: ac_comm !=3D 'acct02_helper' ('acct02')
-> >> acct02.c:131: TINFO: ac_exitcode !=3D 32768 (0)
-> >> acct02.c:139: TINFO: ac_ppid !=3D 88929 (88928)
-> >> acct02.c:181: TFAIL: end of file reached
-> >>
-> >> HINT: You _MAY_ be missing kernel fixes:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
-t/?id=3D4d9570158b626
-> >>
-> >> Summary:
-> >> passed=C2=A0 =C2=A00
-> >> failed=C2=A0 =C2=A01
-> >> broken=C2=A0 =C2=A00
-> >> skipped=C2=A0 0
-> >> warnings 0
-> >> incrementing stop
-> >> <<<execution_status>>>
-> >> initiation_status=3D"ok"
-> >> duration=3D1 termination_type=3Dexited termination_id=3D1 corefile=3Dno
-> >> cutime=3D0 cstime=3D20
-> >>
-> >> <<<test_end>>>
-> >>
-> >>
-> >> Thanks & Regards,
-> >>
-> >> Harshvardhan
+> How would you feel about that approach?
 >=20
 
+I do like the idea of "freezing" timestamp updates until the delegation
+is returned. Doing a bit of git-archaeology shows that the NOCMTIME
+flag was added here:
+
+commit 4d4be482a4d78ca906f45e99fd9fdb91e907f5ad
+Author: Christoph Hellwig <hch@infradead.org>
+Date:   Tue Dec 9 04:47:33 2008 -0500
+
+    [XFS] add a FMODE flag to make XFS invisible I/O less hacky
+   =20
+    XFS has a mode called invisble I/O that doesn't update any of the
+    timestamps.  It's used for HSM-style applications and exposed through
+    the nasty open by handle ioctl.
+   =20
+    Instead of doing directly assignment of file operations that set an
+    internal flag for it add a new FMODE_NOCMTIME flag that we can check
+    in the normal file operations.
+   =20
+    (addition of the generic VFS flag has been ACKed by Al as an interims
+     solution)
+   =20
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: Lachlan McIlroy <lachlan@sgi.com>
+
+Delegated timestamps seems like a similar enough use-case that we can
+probably make this work.
+
+The main catch here is that there is no guarantee that the client will
+ever follow up with a SETATTR, so (like you mentioned), we'd need a
+mechanism to ensure that the cmtime can be updated on close, if the
+file is ever written while the delegation is in force and the final
+SETATTR never comes in.
+
+I'll do a bit of research an get back to you on whether this is
+feasible. Thanks for the suggestion!
+--=20
+Jeff Layton <jlayton@kernel.org>
 
