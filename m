@@ -1,78 +1,78 @@
-Return-Path: <linux-nfs+bounces-13295-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13296-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E30C0B14674
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jul 2025 04:44:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 458F0B1467A
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jul 2025 04:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 525427A0584
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jul 2025 02:42:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 726FC17FB2A
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Jul 2025 02:44:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D05F9217648;
-	Tue, 29 Jul 2025 02:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0436621767A;
+	Tue, 29 Jul 2025 02:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNuvCED7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IOW3eCtl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7132144C9;
-	Tue, 29 Jul 2025 02:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230D1F419A;
+	Tue, 29 Jul 2025 02:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753757032; cv=none; b=bU2fiZWzrNY+jAVVOGVSWpmvDsNPDc1ZYYGZviKdMo5FU73mfb9XrpzDZO9RnIAAfWBy812hnO7zK8zfSFQ/bvHs80zrJe5AEhrPvK6/SS4CnkYusJsZFLzkLE8qCzoIiQOXWf/vgBmULuoG/mM2k8TzbG24eswprhl9ColFC70=
+	t=1753757042; cv=none; b=Ok4wlXioj+kXbAHDIpMzvFeK+Qei0uemWCh98SErLjX9IQbfDd9doqq73YS8wOpU+mslhZFuOiYAtlgxeVrlyEJSJiYMvmgIPAARN7cd2FT7CXZyvUXWDWLRDDDYCBOyv2EwZ4pAJ94tg3Qgl0I5Qv6chWmYEo3ETwgPoAjQrTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753757032; c=relaxed/simple;
-	bh=l1v2UzDTGF6SZCH5BGbDUHWH2BX0eFO3PYu1YlOwF5I=;
+	s=arc-20240116; t=1753757042; c=relaxed/simple;
+	bh=EvYmYWtgKd8mjhgilzaDMPo8Q/bubDoA5KPliFrUEW8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EZ3ERYwU03mSfbHMgV9AdS9eqbfmT9K1Wb1q0TXash2tY7Lu9G9w5Mcc6YJm/K891PEqVDRpw/grFAiX1HJpDtcBSN3yZg/TEA4JXh0VovIb6YILntOp+fxyCltvtk5YNl55x2Yx10VUtvpEALebUcF8n7D/xOaSUdMx17zT6tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNuvCED7; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=GTxZv/w+mP7fqIQj8ut0D08b8/xNn/0ySyAeJJFjRoqqX/lL2UFn0sWPvqClILVifKFtMbkZOK9xCk6yKHnSiLZp06wBLu1cxDSL2TqiYxV9Txs/dRQAJ+8a/3iCLoMu9FevcNEiGcNc38kz12Xt/Fl1bvcHdO72MTYd3Dw5E1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IOW3eCtl; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2401b855980so14728825ad.1;
-        Mon, 28 Jul 2025 19:43:51 -0700 (PDT)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b31d489a76dso5258000a12.1;
+        Mon, 28 Jul 2025 19:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753757030; x=1754361830; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1753757040; x=1754361840; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QKApX5AD9aIEi6uewJIQf4uaw0UGX/OqxGUTe4X6NvU=;
-        b=HNuvCED7sISefPcBcZiqFxrua7D51BdEeqi2bA2Dl5emuUMZC8c4kEJX6pttSIWc3v
-         H3QmHurgc3HG41XGn6oigHZGmWbhmclHTRKnBKOyc8jDNwZK6++/HGkiqXG9yYQ3Pqa9
-         L1GORsGborJQUTGMRq9jL5K6LvwY1Otfnyj6GXOr/akqado1lgOGQ5gKqVWKrEkm0Hyp
-         KmWiiCNw2b5rrO5ue+/Y/6/PbF3cfAZ3VXF6ZeBvHGFTKq8r35l0kgTcqJgO49Umuhij
-         tSJAoaMLO9Rh062diHXkNpIG31Ga6Pq2tMnxCDdOig1ZkJi1iilBtNeGoeUlJBoy5NPv
-         CS4Q==
+        bh=zgt0RW1ytIxlMXzvFaCd3u+wuWOkXNFg3PALHarFCkw=;
+        b=IOW3eCtlPgrnTCEy8mVt92olomZDUx5FFiYk3wVMZ1KausvJWhNk7GTwCb7zvH+RaB
+         D9Oknfxdjjd+7MRaUAb+JqGyZd/h9n35yIvW1Rv/IaSFiVaUSSQwnwdfaGW0NDsYBEuQ
+         4fU2CKTPQEQX6zLRFUu4L2enqyAisq3JTYpTRaSt1EjpWBf5+HynOxrYPyMyCHphbwtI
+         zR71SmwUYkcLjVozgJ/ZEmJ7AHGuwdjJILsk8wmExWR/8nb5q1DFHRRuPz08qPapxtIZ
+         8NMTWW5E8embLEE4GQhXJ+IT+Ht+MZbTfQjvl6vDav+yq9yu5/Ex/S8SRT5CJ70A+cP5
+         Ieiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753757030; x=1754361830;
+        d=1e100.net; s=20230601; t=1753757040; x=1754361840;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QKApX5AD9aIEi6uewJIQf4uaw0UGX/OqxGUTe4X6NvU=;
-        b=pe3Vsyc+hAzU9z3DVUdGWnJLNMHa6ExIiG+BPgCbmC0upYZRNNTqhfpFyfp6A4xje8
-         J2ELiTtdb8NuvAUrO5AsnC2YC5mCvqstDRqB7JYhkwGhP2F5bAKLPxMtG+S8/2qYzpRt
-         8Ko+dEXcPgCJALMt+X6xr6xn2hBQcsjk6ZUveHl/AHSX0YDySZH+OMpiQdFCHlsox2OL
-         GXBjn4hWeuD5WbT7oHzgevw/1/1eKs8dlMx06WO5O0Wu/NaCo/W9pmAvB2Geajmr9ccR
-         ZETU+s1ugI4yz+2GQX9238pN2NYMKkU0MxbXhj9X8rlyJ5YgpTLvC0c/yxyx7lh7bL7v
-         bRRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUZrK1KcacLiLByju8va545C0a4OyL0vA5fR0WPYesKrJkbpqEY/7qosA9ZUyL6jC6duGdYuG9MYk7@vger.kernel.org, AJvYcCVkRVXFiQQKPLbvl7pdDcS7QZEq8jN9nYidBPXq9SpOmzPhzwSf5UBBaf62q7dXBY3z52x3UuSM@vger.kernel.org, AJvYcCWXbCHDOqWFSsx95Qi9NzO/M5dIXfDSpUhCyyEvR6NKXkLO09edPt8lauCfUTdqVyYrscrWlv989NA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9BuBP186yGNKQO4LMOiFDytyl0x0Bb6r7LoWfXUHiJhYpcP9q
-	riw38jIJsjhD1iOWUk/nK6GBuAK4CFGWA1wKOy88I8xIzo/hC3gYRciK
-X-Gm-Gg: ASbGnct7ejHBPd5Oj1ITd8dhuUwYG+RuN/ZtZrOB//zK89vwQc7ljs59k24wp8TXbL4
-	wnhL46t42PWsPJY7VAEFrfRmw3K1kWiGVpDGXjIDKhUewAAzxokLUSIle+E+4SepkRU1slf6eoy
-	CV6zJJTVbsIBRuJzB9UE9wWpsNd/8jFMlWv7DOYPdPFj0djZMcRoSiKtzu9uvIwaZrl67JiW5JR
-	CW8N9kZbYZybrd4mFF2GJaaRCzdyQ4DO2LgHL9QXNA82anQec8/RXV6r5gFrAWyBmOQTPT4WtNG
-	kbqc+GcNpVsQ5NWB+ogA2i/bZk3YBcmk0mUbtQCLuRV9nTZn+CDmW25f/Rvdx0ko4QYy0YjN9jb
-	ZG1ref1bLQmMvQDqtsOW7TFQhqQ==
-X-Google-Smtp-Source: AGHT+IHdjXTtHTwMGQwZ9/tvr6W/g4hhHNiDFkExB3KA8O1wMz4OUmUJOvFvEzI8mjgHYmK3eABYWQ==
-X-Received: by 2002:a17:902:ef4e:b0:240:b28:22a3 with SMTP id d9443c01a7336-2400b282b9amr114633395ad.29.1753757030520;
-        Mon, 28 Jul 2025 19:43:50 -0700 (PDT)
+        bh=zgt0RW1ytIxlMXzvFaCd3u+wuWOkXNFg3PALHarFCkw=;
+        b=gRHxJnoIpdj9HbZq8+so9XpmmJYijeUtSVKtaIWtsueW3IWrs60KgE0BYUClLF6AkZ
+         h+YVcZ5hszA2gkwWVYGfOt0wtIxGUDq7fZA6zm6JzPcsc2Tz4u+wKd9erYrDpWVzF+qK
+         jRdy2cVZHMPVFNeMAD7R8uKnbogt+WKgeVqaiRE5u/b4NA6tCzSm+lIAXkb4tnQj2b7N
+         LjH6U6F/idjUb9c1LvDseJu+kR1FJRbfIXUo31xDq9CxP/kPNLKWJ9NeRVJJPdcy6lon
+         J7kH1kAB60juEL8ELmQRqqzl0hut7cIRNRvoB4K1kFSu0eikLHUpUqehbnJsht2TtfOs
+         p7WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOJ5RBH7mZn1kfLpUYxvrz7KZQ67WGPUve6mI08vHzfEYAQSqG9nmZ8AXdI48/lIrEphT8xLD6Nucf@vger.kernel.org, AJvYcCVU7gs4PEpPYVpm1tguPrS6jgmxEmNonjb5rDXgEYlMbkKxcKn1Adi46wK36TscLuNzfRXfx7V9OmM=@vger.kernel.org, AJvYcCXNOwvEksKaXdPR2Ty+ZuW0wgcFPRXyKgf9WR8PrESBHJOy/Tswae/bL5zzyUjiM5A5b0DghXwf@vger.kernel.org
+X-Gm-Message-State: AOJu0YymLxkdGXT7u0GFK61gOJHsqOXcxxhcPbhL9ecJbw++8K52RNyA
+	f9/WMGLq7rHTa2NqlOU15mZM4VyEQYerh+Kmb0hFKydFoAzusJ8Q0VBZ
+X-Gm-Gg: ASbGnctGFhwUWXnydzllaxKOzA9/waAkj64iAp7X3Ach45XL8T2J7xRC23gq4p6xEWM
+	TR86/VhkYpPGY+TkxFx2pzxbgKPU14KqQ+W9tdVCZFDifRqMAsEk2LjMCD9gq/g7Lt+zC8o0GpM
+	peToGCIEpnPMEs7qOmhRj693DQYjxY5JKW6IpXiIgDm7i0fubSTqMQE/6OLb9H3JhMIao9ljHGh
+	c73fRKHc49W3NIIS1IpSrjNbw2TjDPZgvEKcxBXqSyZIYpYcuIwBA3A4HsRFwthLIMIFwOI0lRB
+	1zu/ppOouKgLHNdYM4ER0VUu9e+TsjTSHaKo1OtWRyNxixziDVT5dX4tnwBoz1WCH0gpMNfjk35
+	CMyPK+aGivtiTKZD7mryIpqq8sg==
+X-Google-Smtp-Source: AGHT+IHoH2RqRBEpNTQOrmGzch5WJntLLn2XCTRa7EVmeo/2jrFb47DkbxUEJrAbw3CNGKSshrbO6A==
+X-Received: by 2002:a17:903:98d:b0:240:44aa:7f3a with SMTP id d9443c01a7336-24044aa8419mr55052065ad.31.1753757040472;
+        Mon, 28 Jul 2025 19:44:00 -0700 (PDT)
 Received: from fedora ([159.196.5.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23fecd9ed12sm51327855ad.8.2025.07.28.19.43.40
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23fecd9ed12sm51327855ad.8.2025.07.28.19.43.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 19:43:50 -0700 (PDT)
+        Mon, 28 Jul 2025 19:43:59 -0700 (PDT)
 From: Wilfred Mallawa <wilfred.opensource@gmail.com>
 To: alistair.francis@wdc.com,
 	dlemoal@kernel.org,
@@ -105,9 +105,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-nvme@lists.infradead.org,
 	linux-nfs@vger.kernel.org,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: [RFC 3/4] nvme/host/tcp: set max record size in the tls context
-Date: Tue, 29 Jul 2025 12:41:51 +1000
-Message-ID: <20250729024150.222513-6-wilfred.opensource@gmail.com>
+Subject: [RFC 4/4] nvme/target/tcp: set max record size in the tls context
+Date: Tue, 29 Jul 2025 12:41:52 +1000
+Message-ID: <20250729024150.222513-7-wilfred.opensource@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250729024150.222513-2-wilfred.opensource@gmail.com>
 References: <20250729024150.222513-2-wilfred.opensource@gmail.com>
@@ -122,8 +122,8 @@ Content-Transfer-Encoding: 8bit
 From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 
 During a tls handshake, a host may specify the tls record size limit
-using the tls "record_size_limit" extension. Currently, the NVMe TCP
-host driver does not specify this value to the tls layer.
+using the tls "record_size_limit" extension. Currently, the NVMe target
+driver does not specify this value to the tls layer.
 
 This patch adds support for setting the tls record size limit into the
 tls context, such that outgoing records may not exceed this limit
@@ -131,42 +131,47 @@ specified by the endpoint.
 
 Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 ---
- drivers/nvme/host/tcp.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/nvme/target/tcp.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 65ceadb4ffed..84a55736f269 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1677,6 +1677,7 @@ static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid,
- 			      size_t tls_record_size_limit)
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 60e308401a54..f2ab473ea5de 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1784,6 +1784,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
+ 					size_t tls_record_size_limit)
  {
- 	struct nvme_tcp_queue *queue = data;
+ 	struct nvmet_tcp_queue *queue = data;
 +	struct tls_context *tls_ctx = tls_get_ctx(queue->sock->sk);
- 	struct nvme_tcp_ctrl *ctrl = queue->ctrl;
- 	int qid = nvme_tcp_queue_id(queue);
- 	struct key *tls_key;
-@@ -1700,6 +1701,20 @@ static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid,
- 			ctrl->ctrl.tls_pskid = key_serial(tls_key);
- 		key_put(tls_key);
- 		queue->tls_err = 0;
+ 
+ 	pr_debug("queue %d: TLS handshake done, key %x, status %d\n",
+ 		 queue->idx, peerid, status);
+@@ -1795,6 +1796,17 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
+ 	if (!status) {
+ 		queue->tls_pskid = peerid;
+ 		queue->state = NVMET_TCP_Q_CONNECTING;
 +
 +		/* Endpoint has specified a maximum tls record size limit */
 +		if (tls_record_size_limit > TLS_MAX_PAYLOAD_SIZE) {
-+			dev_err(ctrl->ctrl.device,
-+				"queue %d: invalid tls max record size limit: %zd\n",
-+				nvme_tcp_queue_id(queue), tls_record_size_limit);
-+			queue->tls_err = -EINVAL;
-+			goto out_complete;
++			pr_err("queue %d: invalid tls max record size limit: %zu\n",
++			       queue->idx, tls_record_size_limit);
++			queue->state = NVMET_TCP_Q_FAILED;
 +		} else if (tls_record_size_limit > 0) {
 +			tls_ctx->tls_record_size_limit = (u32)tls_record_size_limit;
-+			dev_dbg(ctrl->ctrl.device,
-+				"queue %d: target specified tls_record_size_limit %u\n",
-+				nvme_tcp_queue_id(queue), tls_ctx->tls_record_size_limit);
++			pr_debug("queue %d: host specified tls max record size %u\n",
++				 queue->idx, tls_ctx->tls_record_size_limit);
 +		}
- 	}
+ 	} else
+ 		queue->state = NVMET_TCP_Q_FAILED;
+ 	spin_unlock_bh(&queue->state_lock);
+@@ -1808,6 +1820,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
+ 		nvmet_tcp_schedule_release_queue(queue);
+ 	else
+ 		nvmet_tcp_set_queue_sock(queue);
++
+ 	kref_put(&queue->kref, nvmet_tcp_release_queue);
+ }
  
- out_complete:
 -- 
 2.50.1
 
