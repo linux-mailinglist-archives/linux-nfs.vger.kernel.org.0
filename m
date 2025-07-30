@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-13320-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13322-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E9FDB16764
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Jul 2025 22:09:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCDC2B1676B
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Jul 2025 22:10:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11D0A176FD2
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Jul 2025 20:09:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 401201898437
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Jul 2025 20:10:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEC621FF4C;
-	Wed, 30 Jul 2025 20:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5736E21B195;
+	Wed, 30 Jul 2025 20:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzpiYHAu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4ZTh0SW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4779D21770D
-	for <linux-nfs@vger.kernel.org>; Wed, 30 Jul 2025 20:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5537204C0F
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Jul 2025 20:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753906154; cv=none; b=NcdCTiyh03+E6GOJoXw4PDioFfpAaG89AceEj2v8yqVdMT72q0nfSu12yJ6Bn7V/oJeyF5RPmw1DYANZW9Icro6Mur55RunaqHMiNo1CHwDW10oVdMNh5XdLeGeYbS8H9KQGix+udJt93p0zc6WjTcNgFnvBQM1JnDwFzxYvp3A=
+	t=1753906166; cv=none; b=dMYxZVauwNNRkn/DHpu/9Cn5743oLkaIAi/5rbhbI2Ag0a2JKmmbQelsiK29K41KdtQWS5lWV620oMY79XDD49G2ZmkP2p+QbKSXVRbkNV867t6PCgx/D6sl/3xLlQgQQa0A82xlvYGifm5ELO5l9/zXjD/mWinZP9h4FIn63gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753906154; c=relaxed/simple;
-	bh=msGAgYHjg3EqrsS8JGYBSQeolb+jpdrcAKm9OfF0gJA=;
+	s=arc-20240116; t=1753906166; c=relaxed/simple;
+	bh=l9q1KhydXYLZiJVg4gebha3IYzAEKW/jLvTcITgGeaE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EmbcwjFAFemljm9sH6Ay90wtc7wA4AFwdH/OchS+uM/EVAUD09/+uUcsE1PV6nC5JLoXYu7L3UEt53sRyKjha0kNu93kGqKVCL0NwAGigOjp9KVbj3X2RISOT9bd3NLF9O6+wvjRApWZysQ6l+lq/VFKu9FrF8N5m0nXaXN3OFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PzpiYHAu; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=BN2deI7Nqvoac+olSJby86wJOpHX3d1lQJUYSyEIj7cttkxuwU+Pw3C2Yi6X7zHa+UABrS+UHoicymkYSjp1AwYGCYgqJQY3QY3x+fpVIPxPfsQ3SZqy5HFvJ+1Q9pSPdYmR09cZbDXaoyaHERNpmnCAJerpEMf+ai9cuzU5gLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e4ZTh0SW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753906151;
+	s=mimecast20190719; t=1753906163;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DIOMBxTocdtOcHALdwqkdwvZOSdxmaAj5WjkXd5GOVY=;
-	b=PzpiYHAu4fG8L/Ts0yo1+uCl+MzpKQ2oVM9Sd/Y2kaFaWTENWzilh9Ef9WiX6GrWw/UqFB
-	Au5/63gazlQDKuiZQIn5f0eTsVQi+jYU4g/dZKkch2FRu+WK7ygylVZRUihqDDViU3pMRc
-	oceKxetg1DuIRq7AoOViyIgPOF46kLg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=EwlSYH4pHXJHS23Q958HAkOdcfwX7Ed+I4j1/OG/8XM=;
+	b=e4ZTh0SWA52KYGQ/hfOjmQReC+T3iPYsEE980v7Luby/9nZLgPx4HBcpCXvUaS7w0Q8jIq
+	pYns7Yon6TV1GMG9u0i5zh5OQseovSMQWCbW3x9vxT/86FlXyRAHJGeMYib90lMmiIjGO5
+	sFJAd/9Fyk90x64dCCnbM68k5UgMTMA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-507-ZE4jH27VP0KmMVDbqzDEwA-1; Wed,
- 30 Jul 2025 16:09:06 -0400
-X-MC-Unique: ZE4jH27VP0KmMVDbqzDEwA-1
-X-Mimecast-MFC-AGG-ID: ZE4jH27VP0KmMVDbqzDEwA_1753906143
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-PaztnwTWNkGbbyxUEbxixA-1; Wed,
+ 30 Jul 2025 16:09:16 -0400
+X-MC-Unique: PaztnwTWNkGbbyxUEbxixA-1
+X-Mimecast-MFC-AGG-ID: PaztnwTWNkGbbyxUEbxixA_1753906151
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4251C1954202;
-	Wed, 30 Jul 2025 20:09:00 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9E026189C318;
+	Wed, 30 Jul 2025 20:09:04 +0000 (UTC)
 Received: from okorniev-mac.redhat.com (unknown [10.22.90.16])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 77A9F19560A2;
-	Wed, 30 Jul 2025 20:08:54 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 16AD919560BE;
+	Wed, 30 Jul 2025 20:08:59 +0000 (UTC)
 From: Olga Kornievskaia <okorniev@redhat.com>
 To: chuck.lever@oracle.com,
 	jlayton@kernel.org,
@@ -79,9 +79,9 @@ Cc: linux-nfs@vger.kernel.org,
 	hare@suse.de,
 	horms@kernel.org,
 	kbusch@kernel.org
-Subject: [PATCH 2/4] sunrpc: fix client side handling of tls alerts
-Date: Wed, 30 Jul 2025 16:08:33 -0400
-Message-Id: <20250730200835.80605-3-okorniev@redhat.com>
+Subject: [PATCH 3/4] nvmet-tcp: fix handling of tls alerts
+Date: Wed, 30 Jul 2025 16:08:34 -0400
+Message-Id: <20250730200835.80605-4-okorniev@redhat.com>
 In-Reply-To: <20250730200835.80605-1-okorniev@redhat.com>
 References: <20250730200835.80605-1-okorniev@redhat.com>
 Precedence: bulk
@@ -93,115 +93,98 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-A security exploit was discovered in NFS over TLS in tls_alert_recv
-due to its assumption that there is valid data in the msghdr's
-iterator's kvec.
+Revert kvec msg iterator before trying to process a TLS alert
+when possible.
 
-Instead, this patch proposes the rework how control messages are
-setup and used by sock_recvmsg().
+In nvmet_tcp_try_recv_data(), it's assumed that no msg control
+message buffer is set prior to sock_recvmsg(). Hannes suggested
+that upon detecting that TLS control message is received log a
+message and error out. Left comments in the code for the future
+improvements.
 
-If no control message structure is setup, kTLS layer will read and
-process TLS data record types. As soon as it encounters a TLS control
-message, it would return an error. At that point, NFS can setup a kvec
-backed control buffer and read in the control message such as a TLS
-alert. Scott found that a msg iterator can advance the kvec pointer
-as a part of the copy process thus we need to revert the iterator
-before calling into the tls_alert_recv.
-
-Fixes: dea034b963c8 ("SUNRPC: Capture CMSG metadata on client-side receive")
-Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
-Suggested-by: Scott Mayhew <smayhew@redhat.com>
+Fixes: a1c5dd8355b1 ("nvmet-tcp: control messages for recvmsg()")
+Suggested-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Hannes Reinecky <hare@susu.de>
 Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
 ---
- net/sunrpc/xprtsock.c | 40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
+ drivers/nvme/target/tcp.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 04ff66758fc3..c5f7bbf5775f 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -358,7 +358,7 @@ xs_alloc_sparse_pages(struct xdr_buf *buf, size_t want, gfp_t gfp)
- 
- static int
- xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
--		     struct cmsghdr *cmsg, int ret)
-+		     unsigned int *msg_flags, struct cmsghdr *cmsg, int ret)
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 688033b88d38..055e420d3f2e 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1161,6 +1161,7 @@ static int nvmet_tcp_try_recv_pdu(struct nvmet_tcp_queue *queue)
+ 	if (unlikely(len < 0))
+ 		return len;
+ 	if (queue->tls_pskid) {
++		iov_iter_revert(&msg.msg_iter, len);
+ 		ret = nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
+ 		if (ret < 0)
+ 			return ret;
+@@ -1217,19 +1218,28 @@ static void nvmet_tcp_prep_recv_ddgst(struct nvmet_tcp_cmd *cmd)
+ static int nvmet_tcp_try_recv_data(struct nvmet_tcp_queue *queue)
  {
- 	u8 content_type = tls_get_record_type(sock->sk, cmsg);
- 	u8 level, description;
-@@ -371,7 +371,7 @@ xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
- 		 * record, even though there might be more frames
- 		 * waiting to be decrypted.
- 		 */
--		msg->msg_flags &= ~MSG_EOR;
-+		*msg_flags &= ~MSG_EOR;
- 		break;
- 	case TLS_RECORD_TYPE_ALERT:
- 		tls_alert_recv(sock->sk, msg, &level, &description);
-@@ -386,19 +386,33 @@ xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
- }
+ 	struct nvmet_tcp_cmd  *cmd = queue->cmd;
+-	int len, ret;
++	int len;
  
- static int
--xs_sock_recv_cmsg(struct socket *sock, struct msghdr *msg, int flags)
-+xs_sock_recv_cmsg(struct socket *sock, unsigned int *msg_flags, int flags)
- {
- 	union {
- 		struct cmsghdr	cmsg;
- 		u8		buf[CMSG_SPACE(sizeof(u8))];
- 	} u;
-+	u8 alert[2];
-+	struct kvec alert_kvec = {
-+		.iov_base = alert,
-+		.iov_len = sizeof(alert),
-+	};
-+	struct msghdr msg = {
-+		.msg_flags = *msg_flags,
-+		.msg_control = &u,
-+		.msg_controllen = sizeof(u),
-+	};
- 	int ret;
+ 	while (msg_data_left(&cmd->recv_msg)) {
++		/* to detect that we received a TlS alert, we assumed that
++		 * cmg->recv_msg's control buffer is not setup. kTLS will
++		 * return an error when no control buffer is set and
++		 * non-tls-data payload is received.
++		 */
+ 		len = sock_recvmsg(cmd->queue->sock, &cmd->recv_msg,
+ 			cmd->recv_msg.msg_flags);
++		if (cmd->recv_msg.msg_flags & MSG_CTRUNC) {
++			if (len == 0 || len == -EIO) {
++				pr_err("queue %d: unhandled control message\n",
++				       queue->idx);
++				/* note that unconsumed TLS control message such
++				 * as TLS alert is still on the socket.
++				 */
++				return -EAGAIN;
++			}
++		}
+ 		if (len <= 0)
+ 			return len;
+-		if (queue->tls_pskid) {
+-			ret = nvmet_tcp_tls_record_ok(cmd->queue,
+-					&cmd->recv_msg, cmd->recv_cbuf);
+-			if (ret < 0)
+-				return ret;
+-		}
  
--	msg->msg_control = &u;
--	msg->msg_controllen = sizeof(u);
--	ret = sock_recvmsg(sock, msg, flags);
--	if (msg->msg_controllen != sizeof(u))
--		ret = xs_sock_process_cmsg(sock, msg, &u.cmsg, ret);
-+	iov_iter_kvec(&msg.msg_iter, ITER_DEST, &alert_kvec, 1,
-+		      alert_kvec.iov_len);
-+	ret = sock_recvmsg(sock, &msg, flags);
-+	if (ret > 0 &&
-+	    tls_get_record_type(sock->sk, &u.cmsg) == TLS_RECORD_TYPE_ALERT) {
-+		iov_iter_revert(&msg.msg_iter, ret);
-+		ret = xs_sock_process_cmsg(sock, &msg, msg_flags, &u.cmsg,
-+					   -EAGAIN);
-+	}
- 	return ret;
- }
+ 		cmd->pdu_recv += len;
+ 		cmd->rbytes_done += len;
+@@ -1267,6 +1277,7 @@ static int nvmet_tcp_try_recv_ddgst(struct nvmet_tcp_queue *queue)
+ 	if (unlikely(len < 0))
+ 		return len;
+ 	if (queue->tls_pskid) {
++		iov_iter_revert(&msg.msg_iter, len);
+ 		ret = nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
+ 		if (ret < 0)
+ 			return ret;
+@@ -1453,10 +1464,6 @@ static int nvmet_tcp_alloc_cmd(struct nvmet_tcp_queue *queue,
+ 	if (!c->r2t_pdu)
+ 		goto out_free_data;
  
-@@ -408,7 +422,13 @@ xs_sock_recvmsg(struct socket *sock, struct msghdr *msg, int flags, size_t seek)
- 	ssize_t ret;
- 	if (seek != 0)
- 		iov_iter_advance(&msg->msg_iter, seek);
--	ret = xs_sock_recv_cmsg(sock, msg, flags);
-+	ret = sock_recvmsg(sock, msg, flags);
-+	/* Handle TLS inband control message lazily */
-+	if (msg->msg_flags & MSG_CTRUNC) {
-+		msg->msg_flags &= ~(MSG_CTRUNC | MSG_EOR);
-+		if (ret == 0 || ret == -EIO)
-+			ret = xs_sock_recv_cmsg(sock, &msg->msg_flags, flags);
-+	}
- 	return ret > 0 ? ret + seek : ret;
- }
+-	if (queue->state == NVMET_TCP_Q_TLS_HANDSHAKE) {
+-		c->recv_msg.msg_control = c->recv_cbuf;
+-		c->recv_msg.msg_controllen = sizeof(c->recv_cbuf);
+-	}
+ 	c->recv_msg.msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL;
  
-@@ -434,7 +454,7 @@ xs_read_discard(struct socket *sock, struct msghdr *msg, int flags,
- 		size_t count)
- {
- 	iov_iter_discard(&msg->msg_iter, ITER_DEST, count);
--	return xs_sock_recv_cmsg(sock, msg, flags);
-+	return xs_sock_recvmsg(sock, msg, flags, 0);
- }
+ 	list_add_tail(&c->entry, &queue->free_list);
+@@ -1736,6 +1743,7 @@ static int nvmet_tcp_try_peek_pdu(struct nvmet_tcp_queue *queue)
+ 		return len;
+ 	}
  
- #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
++	iov_iter_revert(&msg.msg_iter, len);
+ 	ret = nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.47.1
 
