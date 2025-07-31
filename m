@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-13352-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13353-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFCD8B17771
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 22:53:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B167B17772
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 22:54:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 035DA7B9E42
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 20:52:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1695E3AA33D
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 20:54:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AC23C38;
-	Thu, 31 Jul 2025 20:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A6DDDC1;
+	Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKm6hjQY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRk/ptFg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028DD35977
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 20:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3543C38
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753995225; cv=none; b=U+VvxukfMTqFBlSPvH0MIHmUu0sY2VbjyHeyNRNAdkwktC0XMD09jfkNErYnk2O0mLBR/1wNGD6io+xbzzzG/pq2UAAoR9IUtMgMu/V+xx4eMp5CZrkhE+X9ZmOwPDFxoSQD1YxuL96ERtgN7vyu7qIbJzEN/fQqGLXfXjQKGhs=
+	t=1753995262; cv=none; b=u5bWLnPwlZisAToof2w2Tul/Ul3Qi7Jwd7CjR1E8AaQ8RW4TX8t1RfA4z1eyKX1SThKufAmVac8vdHWBxEMavQhGk324/WZaNRk8mSn6nyIUlHVAsWvIuSUPLTz2lngmadDljC+VLS5S96zGfxNsMBQceWTkYDfviJOgo7SxEFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753995225; c=relaxed/simple;
-	bh=uyIh5MvZ2bbPsQUMuUGVhMut8PPUGORRPGjzQAJr0ks=;
+	s=arc-20240116; t=1753995262; c=relaxed/simple;
+	bh=ewu2rtLOA44I23XiJ9g7Q+1njp6FM8ofwfg3fRtu9RA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fLe/1rKUg7AZ/ev1O4gogBGs9jHYL7npiCiHMpJsKKbJ7366McRI/FoHyu8rr9CW1jGjxJ6DF63eh/IUiGSkq3xvEeD+z2J3J+ambQjqC5VpykoFPhCXfJqiscVkbPFretVjdHZiHUWgz5HM57xHoiQlLWib8oI0f6nPIqaMLPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKm6hjQY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CFABC4CEEF;
-	Thu, 31 Jul 2025 20:53:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=mX7/6pN6sRFfqnbHX5mv6GCsaKpZNgMPgW0U89oF2kpILJ/M84aasV+PkT8Hy5EmiMpojCz5AlwKvcBGMyNcUTTLhuZrw2QrwLRmZRx1VGhWRdLZAUR9CNMQoS388u//yVXXkaE3WQwKSSdUZDn4+inIf92ZumM5WSWMbBEjyiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRk/ptFg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6B5C4CEEF;
+	Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753995223;
-	bh=uyIh5MvZ2bbPsQUMuUGVhMut8PPUGORRPGjzQAJr0ks=;
+	s=k20201202; t=1753995262;
+	bh=ewu2rtLOA44I23XiJ9g7Q+1njp6FM8ofwfg3fRtu9RA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oKm6hjQYcQqGITL/kTvDH0W2zKE9v53al4tinBQ/b9EVstB6LaX7qIwgVmh/Ey01/
-	 wr1xdFGtTiJW8Ipi4yxIoxYo+68EiAFf531wfk9c8rFgSwpCecw14HJw8WUgqOKjKn
-	 wGQ27o4emsClD0njqnHl5REglVP9NpVEplAg6BXwu90hnMZaOqPQ/iD5Jzz0bVJWDM
-	 sQQhvowVi++LakK+GfN3PjiXsJF7JkO6+EaCWOd2yVU37zUuVvsPxJdIDhjYhxxPFu
-	 1FKFKe8bsoo2qseWmVwZ8mH3w0rjsN6VGheo9GsfyEFr/+UyCxzmUBBwc2mtb9mT6h
-	 83KsKgdpu5umA==
-Message-ID: <a3aed4850845716687c3c951cd1bdfa8fe8d7851.camel@kernel.org>
-Subject: Re: [PATCH v2 3/4] NFSD: issue WRITEs using O_DIRECT even if IO is
- misaligned
+	b=YRk/ptFgAHAyyNE1pmb5/ym0oo1fqw4rLhbFXKpKyuAbNQ3sB4OyW9kneGNjbasOP
+	 unOp0Ak6ZXnnnxPcdt5BjEwNY4cAa79wjaYm3UBpizezPijOM1AZQ8n7b/iIbcywRW
+	 EVTHjl6GGl+T4L+vS8dohbLihv/q7FqSWmkj0xjFDFmsgjiCS4k4z1cdkXn9KL6sV5
+	 BYJXctixeEjfstYt1+YKoZ3uIAsHPboNAVlWA6ih/rydCp+GuidjpjTRKHLECl8h3L
+	 xR0NOBxRTjs3+vIc2/74Xbgr/3je73QXX+JvreaWpxzXx/dz67oG8ZkW2k232Bm71B
+	 jezYixvTtlc4Q==
+Message-ID: <a2a06c483f55590349d6edffe98cbd8b17dc1eef.camel@kernel.org>
+Subject: Re: [PATCH v2 2/4] NFSD: prepare nfsd_vfs_write() to use O_DIRECT
+ on misaligned WRITEs
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 31 Jul 2025 16:53:42 -0400
-In-Reply-To: <20250731194448.88816-4-snitzer@kernel.org>
+Date: Thu, 31 Jul 2025 16:54:21 -0400
+In-Reply-To: <20250731194448.88816-3-snitzer@kernel.org>
 References: <20250731194448.88816-1-snitzer@kernel.org>
-	 <20250731194448.88816-4-snitzer@kernel.org>
+	 <20250731194448.88816-3-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,245 +136,86 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-07-31 at 15:44 -0400, Mike Snitzer wrote:
-> If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-> middle and end as needed. The large middle extent is DIO-aligned and
-> the start and/or end are misaligned. Buffered IO is used for the
-> misaligned extents and O_DIRECT is used for the middle DIO-aligned
-> extent.
->=20
-> The nfsd_analyze_write_dio trace event shows how NFSD splits a given
-> misaligned WRITE into a mix of misaligned extent(s) and a DIO-aligned
-> extent.
->=20
-> This combination of trace events is useful:
->=20
->   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
->   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_write_dio/enable
->   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
->   echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
->=20
-> Which for this dd command:
->=20
->   dd if=3D/dev/zero of=3D/mnt/share1/test bs=3D47008 count=3D2 oflag=3Ddi=
-rect
->=20
-> Results in:
->=20
->   nfsd-55714   [043] ..... 79976.260851: nfsd_write_opened: xid=3D0x966c5=
-d2d fh_hash=3D0x4d34e6c1 offset=3D0 len=3D47008
->   nfsd-55714   [043] ..... 79976.260852: nfsd_analyze_write_dio: xid=3D0x=
-966c5d2d fh_hash=3D0x4d34e6c1 offset=3D0 len=3D47008 start=3D0+0 middle=3D0=
-+45056 end=3D45056+1952
->   nfsd-55714   [043] ..... 79976.260857: xfs_file_direct_write: dev 259:1=
-2 ino 0x3e00008f disize 0x0 pos 0x0 bytecount 0xb000
->   nfsd-55714   [043] ..... 79976.260965: nfsd_write_io_done: xid=3D0x966c=
-5d2d fh_hash=3D0x4d34e6c1 offset=3D0 len=3D47008
->=20
->   nfsd-55714   [043] ..... 79976.307762: nfsd_write_opened: xid=3D0x67e5c=
-e6f fh_hash=3D0x4d34e6c1 offset=3D47008 len=3D47008
->   nfsd-55714   [043] ..... 79976.307762: nfsd_analyze_write_dio: xid=3D0x=
-67e5ce6f fh_hash=3D0x4d34e6c1 offset=3D47008 len=3D47008 start=3D47008+2144=
- middle=3D49152+40960 end=3D90112+3904
->   nfsd-55714   [043] ..... 79976.307797: xfs_file_direct_write: dev 259:1=
-2 ino 0x3e00008f disize 0xc000 pos 0xc000 bytecount 0xa000
->   nfsd-55714   [043] ..... 79976.307866: nfsd_write_io_done: xid=3D0x67e5=
-ce6f fh_hash=3D0x4d34e6c1 offset=3D47008 len=3D47008
+> Refactor nfsd_vfs_write() to support splitting a WRITE into parts
+> (which will be either misaligned or DIO-aligned).  Doing so in a
+> preliminary commit just allows for indentation and slight
+> transformation to be more easily understood and reviewed.
 >=20
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/vfs.c | 135 ++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 124 insertions(+), 11 deletions(-)
+>  fs/nfsd/vfs.c | 50 ++++++++++++++++++++++++++++++--------------------
+>  1 file changed, 30 insertions(+), 20 deletions(-)
 >=20
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index e4855c32dad12..23360825455a2 100644
+> index 35c29b8ade9c3..e4855c32dad12 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1314,6 +1314,113 @@ static int wait_for_concurrent_writes(struct file=
- *file)
->  	return err;
->  }
-> =20
-> +struct nfsd_write_dio
-> +{
-> +	loff_t middle_offset;	/* Offset for start of DIO-aligned middle */
-> +	loff_t end_offset;	/* Offset for start of DIO-aligned end */
-> +	ssize_t	start_len;	/* Length for misaligned first extent */
-> +	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
-> +	ssize_t	end_len;	/* Length for misaligned last extent */
-> +};
-> +
-> +static void init_nfsd_write_dio(struct nfsd_write_dio *write_dio)
-> +{
-> +	memset(write_dio, 0, sizeof(*write_dio));
-> +}
-> +
-> +static bool nfsd_analyze_write_dio(struct svc_rqst *rqstp, struct svc_fh=
- *fhp,
-> +				   struct nfsd_file *nf, loff_t offset,
-> +				   unsigned long len, struct nfsd_write_dio *write_dio)
-> +{
-> +	const u32 dio_blocksize =3D nf->nf_dio_offset_align;
-> +	loff_t orig_end, middle_end, start_end, start_offset =3D offset;
-> +	ssize_t start_len =3D len;
-> +	bool aligned =3D true;
-> +
-> +	if (WARN_ONCE(!nf->nf_dio_mem_align || !dio_blocksize,
-> +		      "%s: underlying filesystem has not provided DIO alignment info\n=
-",
-> +		      __func__))
-> +		return false;
-> +
-> +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
-> +		      "%s: underlying storage's dio_blocksize=3D%u > PAGE_SIZE=3D%lu\n=
-",
-> +		      __func__, dio_blocksize, PAGE_SIZE))
-> +		return false;
-> +
-> +	if (unlikely(len < dio_blocksize)) {
-> +		aligned =3D false;
-> +		goto out;
-> +	}
-> +
-> +	if (((offset | len) & (dio_blocksize-1)) =3D=3D 0) {
-> +		/* already DIO-aligned, no misaligned head or tail */
-> +		write_dio->middle_offset =3D offset;
-> +		write_dio->middle_len =3D len;
-> +		/* clear these for the benefit of trace_nfsd_analyze_write_dio */
-> +		start_offset =3D 0;
-> +		start_len =3D 0;
-> +		goto out;
-> +	}
-> +
-> +	start_end =3D round_up(offset, dio_blocksize);
-> +	start_len =3D start_end - offset;
-> +	orig_end =3D offset + len;
-> +	middle_end =3D round_down(orig_end, dio_blocksize);
-> +
-> +	write_dio->start_len =3D start_len;
-> +	write_dio->middle_offset =3D start_end;
-> +	write_dio->middle_len =3D middle_end - start_end;
-> +	write_dio->end_offset =3D middle_end;
-> +	write_dio->end_len =3D orig_end - middle_end;
-> +out:
-> +	trace_nfsd_analyze_write_dio(rqstp, fhp, offset, len, start_offset, sta=
-rt_len,
-> +				     write_dio->middle_offset, write_dio->middle_len,
-> +				     write_dio->end_offset, write_dio->end_len);
-> +	return aligned;
-> +}
-> +
-> +/*
-> + * Setup as many as 3 iov_iter based on extents possibly described by @w=
-rite_dio.
-> + * @iterp: pointer to pointer to onstack array of 3 iov_iter structs fro=
-m caller.
-> + * @rq_bvec: backing bio_vec used to setup all 3 iov_iter permutations.
-> + * @nvecs: number of segments in @rq_bvec
-> + * @cnt: size of the request in bytes
-> + * @write_dio: nfsd_write_dio struct that describes start, middle and en=
-d extents.
-> + *
-> + * Returns the number of iov_iter that were setup.
-> + */
-> +static int nfsd_setup_write_iters(struct iov_iter **iterp, struct bio_ve=
-c *rq_bvec,
-> +				  unsigned int nvecs, unsigned long cnt,
-> +				  struct nfsd_write_dio *write_dio)
-> +{
-> +	int n_iters =3D 0;
-> +	struct iov_iter *iters =3D *iterp;
-> +
-> +	/* Setup misaligned start? */
-> +	if (write_dio->start_len) {
-> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> +		iters[n_iters].count =3D write_dio->start_len;
-> +		n_iters++;
-> +	}
-> +
-> +	/* Setup possibly DIO-aligned middle */
-> +	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> +	if (write_dio->start_len)
-> +		iov_iter_advance(&iters[n_iters], write_dio->start_len);
-> +	iters[n_iters].count -=3D write_dio->end_len;
-> +	n_iters++;
-> +
-> +	/* Setup misaligned end? */
-> +	if (write_dio->end_len) {
-> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> +		iov_iter_advance(&iters[n_iters],
-> +				 write_dio->start_len + write_dio->middle_len);
-> +		n_iters++;
-> +	}
-> +
-> +	return n_iters;
-> +}
-> +
->  /**
->   * nfsd_vfs_write - write data to an already-open file
->   * @rqstp: RPC execution context
-> @@ -1348,9 +1455,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
+> @@ -1341,7 +1341,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	struct super_block	*sb =3D file_inode(file)->i_sb;
+>  	struct kiocb		kiocb;
+>  	struct svc_export	*exp;
+> -	struct iov_iter		iter;
+>  	errseq_t		since;
+>  	__be32			nfserr;
+>  	int			host_err;
+> @@ -1349,6 +1348,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
 >  	unsigned int		pflags =3D current->flags;
 >  	bool			restore_flags =3D false;
 >  	unsigned int		nvecs;
-> -	struct iov_iter		iter_stack[1];
-> +	struct iov_iter		iter_stack[3];
->  	struct iov_iter		*iter =3D iter_stack;
->  	unsigned int		n_iters =3D 0;
-> +	bool                    dio_aligned =3D false;
-> +	struct nfsd_write_dio	write_dio;
+> +	struct iov_iter		iter_stack[1];
+> +	struct iov_iter		*iter =3D iter_stack;
+> +	unsigned int		n_iters =3D 0;
 > =20
 >  	trace_nfsd_write_opened(rqstp, fhp, offset, *cnt);
 > =20
-> @@ -1379,18 +1488,12 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
+> @@ -1378,14 +1380,15 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
 _fh *fhp,
->  	if (stable && !fhp->fh_use_wgather)
 >  		kiocb.ki_flags |=3D IOCB_DSYNC;
 > =20
-> -	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> -	iov_iter_bvec(&iter[0], ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> -	n_iters++;
-> -
-> +	init_nfsd_write_dio(&write_dio);
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +	iov_iter_bvec(&iter[0], ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +	n_iters++;
+> =20
 >  	switch (nfsd_io_cache_write) {
 >  	case NFSD_IO_DIRECT:
-> -		/* direct I/O must be aligned to device logical sector size */
-> -		if (nf->nf_dio_mem_align && nf->nf_dio_offset_align &&
-> -		    (((offset | *cnt) & (nf->nf_dio_offset_align-1)) =3D=3D 0) &&
-> -		    iov_iter_is_aligned(&iter[0], nf->nf_dio_mem_align - 1,
-> -					nf->nf_dio_offset_align - 1))
-> -			kiocb.ki_flags =3D IOCB_DIRECT;
-> +		if (nfsd_analyze_write_dio(rqstp, fhp, nf, offset,
-> +					   *cnt, &write_dio))
-> +			dio_aligned =3D true;
+>  		/* direct I/O must be aligned to device logical sector size */
+>  		if (nf->nf_dio_mem_align && nf->nf_dio_offset_align &&
+>  		    (((offset | *cnt) & (nf->nf_dio_offset_align-1)) =3D=3D 0) &&
+> -		    iov_iter_is_aligned(&iter, nf->nf_dio_mem_align - 1,
+> +		    iov_iter_is_aligned(&iter[0], nf->nf_dio_mem_align - 1,
+>  					nf->nf_dio_offset_align - 1))
+>  			kiocb.ki_flags =3D IOCB_DIRECT;
 >  		break;
->  	case NFSD_IO_DONTCACHE:
->  		kiocb.ki_flags =3D IOCB_DONTCACHE;
-> @@ -1399,12 +1502,22 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
+> @@ -1396,25 +1399,32 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
 _fh *fhp,
 >  		break;
 >  	}
 > =20
-> +	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> +	n_iters =3D nfsd_setup_write_iters(&iter, rqstp->rq_bvec, nvecs, *cnt, =
-&write_dio);
-> +
->  	*cnt =3D 0;
->  	for (int i =3D 0; i < n_iters; i++) {
->  		since =3D READ_ONCE(file->f_wb_err);
->  		if (verf)
->  			nfsd_copy_write_verifier(verf, nn);
+> -	since =3D READ_ONCE(file->f_wb_err);
+> -	if (verf)
+> -		nfsd_copy_write_verifier(verf, nn);
+> -	host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
+> -	if (host_err < 0) {
+> -		commit_reset_write_verifier(nn, rqstp, host_err);
+> -		goto out_nfserr;
+> -	}
+> -	*cnt =3D host_err;
+> -	nfsd_stats_io_write_add(nn, exp, *cnt);
+> -	fsnotify_modify(file);
+> -	host_err =3D filemap_check_wb_err(file->f_mapping, since);
+> -	if (host_err < 0)
+> -		goto out_nfserr;
+> +	*cnt =3D 0;
+> +	for (int i =3D 0; i < n_iters; i++) {
+> +		since =3D READ_ONCE(file->f_wb_err);
+> +		if (verf)
+> +			nfsd_copy_write_verifier(verf, nn);
 > =20
-> +		if (dio_aligned) {
-> +			if (iov_iter_is_aligned(&iter[i], nf->nf_dio_mem_align - 1,
-> +						nf->nf_dio_offset_align - 1))
-> +				kiocb.ki_flags |=3D IOCB_DIRECT;
-> +			else
-> +				kiocb.ki_flags &=3D ~IOCB_DIRECT;
-> +		}
->  		host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter[i]);
->  		if (host_err < 0) {
->  			commit_reset_write_verifier(nn, rqstp, host_err);
+
+Once you remove the above bits outside the loop, you can add:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
