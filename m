@@ -1,251 +1,268 @@
-Return-Path: <linux-nfs+bounces-13331-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13332-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12E47B173FB
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 17:30:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE875B173FC
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 17:31:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 000C1626A41
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 15:29:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 762601C264F5
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 15:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B39BE6C;
-	Thu, 31 Jul 2025 15:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6645BE6C;
+	Thu, 31 Jul 2025 15:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dmh0XvdY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Uacx3U"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDF319ABAC
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 15:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810927482
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 15:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753975823; cv=none; b=O/TK+9oTo94FpDJsyiFX2pfOrOM4K3e6Ex+7H7qN6R1Z62AfWLeQbRQtNyhgW2+hjYsH1D5IFaDxL0551QeZ2t8Az6mp+LeGXTnuhnfgAyMzPTQYtAJ4cKtp7Eirpgk+UiAsI/yJae8qpqs5QEU5qXkft9mwnOiiClZLfivh028=
+	t=1753975891; cv=none; b=t/9uDI8wWzya8VQHotJeGEBPcfqc8CyMA2WQhmLnkuR1bvKU/xzrx3xIuYjZfoxcwXmdctiRqTPOZ0Q710EDzkIHHvPGE6Bp4Kunj2qsSx5YiSE4iQTiIL1YptivTtWXwjDK36MAuUaJPS0qbQH8eIoPvHp4hLGHLb4xfgkedBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753975823; c=relaxed/simple;
-	bh=8jmN7HSIprpvchOA3h5PYxRrb3kV7jr1wO++TShAHRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ymm+S0wYACj04i2QvOTPyAJaKx4GPrikqKp3n5M9RehVhHOrDj0SSzdfIkDluEWaS7bRhEmWpzZ3PdDv/lVkpBeplz+hPZAx1mcPCCsx2JC8NZvJGQhADXiXqdwZYgYNva//HyJ2+NGWK5yElU/TvnuKvDkhL+UjrC6aPJ0FDlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dmh0XvdY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753975820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=efGuZE+wy/IQW6vpAnhNn2yJPMeIDc4VvmD3tdcVmA0=;
-	b=dmh0XvdYx+zdVoLaJvfbUJsFWD3x6c9yxKzDr1HT9X7FONAwf92+niTv5zwpnMFQAbte31
-	JdyyMqdpDZS5HCkOfZN24hwJP/el4xk3F7t6YPDNZfHc1tsC5BtGO4z/gZHW4Dwcv6YJXV
-	bDLe6GlDq+6nutghqYRbpk3OdInCv1s=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-nST0b3hhN9-pDp_p70FOvQ-1; Thu, 31 Jul 2025 11:30:15 -0400
-X-MC-Unique: nST0b3hhN9-pDp_p70FOvQ-1
-X-Mimecast-MFC-AGG-ID: nST0b3hhN9-pDp_p70FOvQ_1753975814
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae9bf1c5947so263496766b.0
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 08:30:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753975811; x=1754580611;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=efGuZE+wy/IQW6vpAnhNn2yJPMeIDc4VvmD3tdcVmA0=;
-        b=Qq7HwgznUi5BpKScZmHhyJc25MIsgjoYyeHfeS6qDt1gjrtDhlv51cn1TvtM3h5+0Z
-         miabq4H8BUrhfUGWG/fKsYY7alkfltdK1reEg52n5kDuFGSxHxG72lnXkQrHDXjUiHiK
-         cPf9339Pk7oFzi27gRggtMTlhho76y2HyUB03MWwpbPGNL11bRuHBTqyjXze/lDPzR/Y
-         PT0IuSDexWtL6LKwz/VBxvDgiNTudAahGU2K/zYMNneSGsRjwZpDawKLfah/84AF4J9W
-         i1cfmPUIw8C7YK0yqci+eOrae4WIj0w7PDXg2w7Ja2ymsbbQtHwhWDaVIzCc160f+ShR
-         CIGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfSq34Bcmqgp/FKyXcI34c9WFQE3S2q3TgBUqCtFbAa9CTyC07/oaFEy74zyx9WRvAaxpkf7EfARw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7aGS0mg/ozZjQ8R80r8JDILiPN18GW7bSZqavkAPznnaTxgrp
-	P0Ls44bH8hcazNm4aYMraB14qVAIix1+uDyC60zPi/y/zzRQw9COGNqt+h7+d/CNODGWtCd/hpV
-	lU7mcppT2q4u89YF8wUj5T/QCD/H4khZnTZ1i2+z7Hrkk/MPbYWI/bgmQiKA0t17w2ULVBm7/CW
-	HBwCcpsDDAP2Hk9K7QIIMo0xLNcE8amt2u7fRP
-X-Gm-Gg: ASbGncuqUx0LCCfuc/mQwdpJtGpZMdOy6qVJfuQMvvHg527vOvoCmbSVlDokBGmI0ZQ
-	KvarpWo8ukjqFQCP1uD7VpdvcoCFnSav+q8T3/c8yZTxWrOSek9mu9EokQTovjPD4/Kh41Tbfvi
-	GcFHL0GQcNIufDgynxcxbpf0tqw9d6iKQ7ayBh0eyM+wNbZqD4jmeClQ==
-X-Received: by 2002:a17:906:fe02:b0:ae6:c334:af3a with SMTP id a640c23a62f3a-af91bbff55emr339555766b.6.1753975811044;
-        Thu, 31 Jul 2025 08:30:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5c9yIisVqfaFsfCitspiLklBi+v8OwNwd+81HnIxrh0XVGF7Bd2GCjIVQsJ7OLqh9uU8xi9NdthF8zdbYdEE=
-X-Received: by 2002:a17:906:fe02:b0:ae6:c334:af3a with SMTP id
- a640c23a62f3a-af91bbff55emr339550366b.6.1753975810480; Thu, 31 Jul 2025
- 08:30:10 -0700 (PDT)
+	s=arc-20240116; t=1753975891; c=relaxed/simple;
+	bh=DceamN/yRfPnbwYqleSrS3PT9oH/fYENfFHTdgYEeqE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jBv2VMmx+044MmYxxdO34dDdsUx/vPoF3fxEUoewFSR7mv56ocIsFo3gS5KdWUpR2uKoawfN+kPn6YfLl+IY+4iD95ROyIVzKk4wIpZb3posWTj0hOqRsTUqW4gYIHnvwg3vKHS+xFFprc4ULlYThfHM+zL7T/ESspuNAv+ZoJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Uacx3U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1957FC4CEEF;
+	Thu, 31 Jul 2025 15:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753975891;
+	bh=DceamN/yRfPnbwYqleSrS3PT9oH/fYENfFHTdgYEeqE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=t4Uacx3UdZ2X4RDi+RNMczpc83IT7J8XW9aH3hsEIggn3cOcga2l0i5dMf+8zy/e9
+	 j0q6H8SlnQpEEsE9ET5jcXFRJOCmAOVnMNB2zbyK9xhbE0Lc0dk0NGUm84j69JOm1E
+	 xWCy2arPoTvxN7B6E7eslur46oHBkPoN5ev9LMFAWKsiEcgT7/JpX50i0brQYHJqJC
+	 dGojSltC/3bMUxdnAX1DV/v4KZDeG7XjWwgRSdtdVVLxL27J/i2+9V57SiEXZNX1En
+	 CaNexqz39rqg11Byj8AutPiaenePAB3n2ueHC6LKIBuHG4U2JRda/CHAltUAPMgfGN
+	 uoRKmhlJoUCkg==
+Message-ID: <19f157f743681fe8bb28279747248b0c3ca7b81c.camel@kernel.org>
+Subject: Re: [PATCH 1/3] NFSD: rename and update nfsd_read_vector_dio trace
+ event to nfsd_analyze_dio
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 31 Jul 2025 11:31:29 -0400
+In-Reply-To: <20250730230524.84976-2-snitzer@kernel.org>
+References: <20250730230524.84976-1-snitzer@kernel.org>
+	 <20250730230524.84976-2-snitzer@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250730200835.80605-1-okorniev@redhat.com> <20250730200835.80605-4-okorniev@redhat.com>
- <cdeb5e12-5c61-4a95-8e31-c56a3a90d6a3@suse.de>
-In-Reply-To: <cdeb5e12-5c61-4a95-8e31-c56a3a90d6a3@suse.de>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Thu, 31 Jul 2025 11:29:58 -0400
-X-Gm-Features: Ac12FXyu4ke7AXpdJWvJjWBL1u_s87jJMDfrMGmbaMXP6xuZW7P6B3nrHVs7sWU
-Message-ID: <CACSpFtCu+it5n2z=OXRARznR02aU4d3r2z7Sok6WzGt24C6-NQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] nvmet-tcp: fix handling of tls alerts
-To: Hannes Reinecke <hare@suse.de>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, trondmy@hammerspace.com, 
-	anna.schumaker@oracle.com, hch@lst.de, sagi@grimberg.me, kch@nvidia.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	netdev@vger.kernel.org, kernel-tls-handshake@lists.linux.dev, neil@brown.name, 
-	Dai.Ngo@oracle.com, tom@talpey.com, horms@kernel.org, kbusch@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 31, 2025 at 2:10=E2=80=AFAM Hannes Reinecke <hare@suse.de> wrot=
-e:
->
-> On 7/30/25 22:08, Olga Kornievskaia wrote:
-> > Revert kvec msg iterator before trying to process a TLS alert
-> > when possible.
-> >
-> > In nvmet_tcp_try_recv_data(), it's assumed that no msg control
-> > message buffer is set prior to sock_recvmsg(). Hannes suggested
-> > that upon detecting that TLS control message is received log a
-> > message and error out. Left comments in the code for the future
-> > improvements.
-> >
-> > Fixes: a1c5dd8355b1 ("nvmet-tcp: control messages for recvmsg()")
-> > Suggested-by: Hannes Reinecke <hare@suse.de>
-> > Reviewed-by: Hannes Reinecky <hare@susu.de>
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > ---
-> >   drivers/nvme/target/tcp.c | 30 +++++++++++++++++++-----------
-> >   1 file changed, 19 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-> > index 688033b88d38..055e420d3f2e 100644
-> > --- a/drivers/nvme/target/tcp.c
-> > +++ b/drivers/nvme/target/tcp.c
-> > @@ -1161,6 +1161,7 @@ static int nvmet_tcp_try_recv_pdu(struct nvmet_tc=
-p_queue *queue)
-> >       if (unlikely(len < 0))
-> >               return len;
-> >       if (queue->tls_pskid) {
-> > +             iov_iter_revert(&msg.msg_iter, len);
-> >               ret =3D nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
-> >               if (ret < 0)
-> >                       return ret;
-> > @@ -1217,19 +1218,28 @@ static void nvmet_tcp_prep_recv_ddgst(struct nv=
-met_tcp_cmd *cmd)
-> >   static int nvmet_tcp_try_recv_data(struct nvmet_tcp_queue *queue)
-> >   {
-> >       struct nvmet_tcp_cmd  *cmd =3D queue->cmd;
-> > -     int len, ret;
-> > +     int len;
-> >
-> >       while (msg_data_left(&cmd->recv_msg)) {
-> > +             /* to detect that we received a TlS alert, we assumed tha=
-t
-> > +              * cmg->recv_msg's control buffer is not setup. kTLS will
-> > +              * return an error when no control buffer is set and
-> > +              * non-tls-data payload is received.
-> > +              */
-> >               len =3D sock_recvmsg(cmd->queue->sock, &cmd->recv_msg,
-> >                       cmd->recv_msg.msg_flags);
-> > +             if (cmd->recv_msg.msg_flags & MSG_CTRUNC) {
-> > +                     if (len =3D=3D 0 || len =3D=3D -EIO) {
-> > +                             pr_err("queue %d: unhandled control messa=
-ge\n",
-> > +                                    queue->idx);
-> > +                             /* note that unconsumed TLS control messa=
-ge such
-> > +                              * as TLS alert is still on the socket.
-> > +                              */
->
-> Hmm. Will it get cleared when we close the socket?
+On Wed, 2025-07-30 at 19:05 -0400, Mike Snitzer wrote:
+> From: Mike Snitzer <snitzer@hammerspace.com>
+>=20
+> Rename nfsd_read_vector_dio trace event to nfsd_analyze_dio and update
+> it so that it provides useful tracing for both READ and WRITE.  This
+> prepares for nfsd_vfs_write() to also make use of it when handling
+> misaligned WRITEs.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+> ---
+>  fs/nfsd/trace.h | 37 ++++++++++++++++++++++++-------------
+>  fs/nfsd/vfs.c   | 11 ++++++-----
+>  2 files changed, 30 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 55055482f8a8..51b47fd041a8 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -473,41 +473,52 @@ DEFINE_NFSD_IO_EVENT(write_done);
+>  DEFINE_NFSD_IO_EVENT(commit_start);
+>  DEFINE_NFSD_IO_EVENT(commit_done);
+> =20
+> -TRACE_EVENT(nfsd_read_vector_dio,
+> +TRACE_EVENT(nfsd_analyze_dio,
+>  	TP_PROTO(struct svc_rqst *rqstp,
+>  		 struct svc_fh	*fhp,
+> +		 u32		rw,
 
-If the socket is closed then any data on that socket would be freed.
+I would do this a bit differently. You're hardcoding READ and WRITE
+into both tracepoints. I would turn this trace event into a class a'la
+DECLARE_EVENT_CLASS, and then just define two different tracepoints
+(maybe trace_nfsd_analyze_read/write_dio). Then you can just drop the
+above u32 field, and it'll still be evident whether it's a read or
+write in the log.
 
-> Or shouldn't we rather introduce proper cmsg handling?
+>  		 u64		offset,
+>  		 u32		len,
+> -		 loff_t         start,
+> -		 loff_t         start_extra,
+> -		 loff_t         end,
+> -		 loff_t         end_extra),
+> -	TP_ARGS(rqstp, fhp, offset, len, start, start_extra, end, end_extra),
+> +		 loff_t		start,
+> +		 ssize_t	start_len,
+> +		 loff_t		middle,
+> +		 ssize_t	middle_len,
+> +		 loff_t		end,
+> +		 ssize_t	end_len),
+> +	TP_ARGS(rqstp, fhp, rw, offset, len, start, start_len, middle, middle_l=
+en, end, end_len),
+>  	TP_STRUCT__entry(
+>  		__field(u32, xid)
+>  		__field(u32, fh_hash)
+> +		__field(u32, rw)
+>  		__field(u64, offset)
+>  		__field(u32, len)
+>  		__field(loff_t, start)
+> -		__field(loff_t, start_extra)
+> +		__field(ssize_t, start_len)
+> +		__field(loff_t, middle)
+> +		__field(ssize_t, middle_len)
+>  		__field(loff_t, end)
+> -		__field(loff_t, end_extra)
+> +		__field(ssize_t, end_len)
+>  	),
+>  	TP_fast_assign(
+>  		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+>  		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> +		__entry->rw =3D rw;
+>  		__entry->offset =3D offset;
+>  		__entry->len =3D len;
+>  		__entry->start =3D start;
+> -		__entry->start_extra =3D start_extra;
+> +		__entry->start_len =3D start_len;
+> +		__entry->middle =3D middle;
+> +		__entry->middle_len =3D middle_len;
+>  		__entry->end =3D end;
+> -		__entry->end_extra =3D end_extra;
+> +		__entry->end_len =3D end_len;
+>  	),
+> -	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x offset=3D%llu len=3D%u start=
+=3D%llu+%llu end=3D%llu-%llu",
+> +	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x %s offset=3D%llu len=3D%u star=
+t=3D%llu+%lu middle=3D%llu+%lu end=3D%llu+%lu",
+>  		  __entry->xid, __entry->fh_hash,
+> +		  __entry->rw ? "WRITE" : "READ",
+>  		  __entry->offset, __entry->len,
+> -		  __entry->start, __entry->start_extra,
+> -		  __entry->end, __entry->end_extra)
+> +		  __entry->start, __entry->start_len,
+> +		  __entry->middle, __entry->middle_len,
+> +		  __entry->end, __entry->end_len)
+>  );
+> =20
+>  DECLARE_EVENT_CLASS(nfsd_err_class,
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 46189020172f..0863350c4259 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1094,7 +1094,7 @@ static bool nfsd_analyze_read_dio(struct svc_rqst *=
+rqstp, struct svc_fh *fhp,
+>  				  struct nfsd_read_dio *read_dio)
+>  {
+>  	const u32 dio_blocksize =3D nf->nf_dio_read_offset_align;
+> -	loff_t orig_end =3D offset + len;
+> +	loff_t middle_end, orig_end =3D offset + len;
+> =20
+>  	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
+>  		      "%s: underlying filesystem has not provided DIO alignment info\n=
+",
+> @@ -1133,10 +1133,11 @@ static bool nfsd_analyze_read_dio(struct svc_rqst=
+ *rqstp, struct svc_fh *fhp,
+>  	}
+> =20
+>  	/* Show original offset and count, and how it was expanded for DIO */
+> -	trace_nfsd_read_vector_dio(rqstp, fhp, offset, len,
+> -				   read_dio->start, read_dio->start_extra,
+> -				   read_dio->end, read_dio->end_extra);
+> -
+> +	middle_end =3D read_dio->end - read_dio->end_extra;
+> +	trace_nfsd_analyze_dio(rqstp, fhp, READ, offset, len,
+> +			       read_dio->start, read_dio->start_extra,
+> +			       offset, (middle_end - offset),
+> +			       middle_end, read_dio->end_extra);
+>  	return true;
+>  }
+> =20
 
-That would be what I have originally proposed (I know that was on the
-private list). But yes, we can setup a dedicated kvec to receive the
-TLS control message once its been detected and then call
-nvme_tcp_tls_record_ok().
-
-Let me know if proper cmsg handling is what's desired for this patch.
-
-> (If we do, we'll need it to do on the host side, too)
-
-I can see that the host doesn't have any TLS alert handling now. If
-the only place where (TLS) traffic is read from is in host/tcp.c
-nvme_tcp_init_connection(), then that's seems like an easy case
-because it uses a kvec to back the kernel_recvmsg() msg structure. If
-the ctype is tls alert, you can call tls_alert_recv() and pass in the
-"iov".  -- assuming patch#4 already went in by that time)
-
->
-> > +                             return -EAGAIN;
-> > +                     }
-> > +             }
-> >               if (len <=3D 0)
-> >                       return len;
-> > -             if (queue->tls_pskid) {
-> > -                     ret =3D nvmet_tcp_tls_record_ok(cmd->queue,
-> > -                                     &cmd->recv_msg, cmd->recv_cbuf);
-> > -                     if (ret < 0)
-> > -                             return ret;
-> > -             }
-> >
-> >               cmd->pdu_recv +=3D len;
-> >               cmd->rbytes_done +=3D len;
-> > @@ -1267,6 +1277,7 @@ static int nvmet_tcp_try_recv_ddgst(struct nvmet_=
-tcp_queue *queue)
-> >       if (unlikely(len < 0))
-> >               return len;
-> >       if (queue->tls_pskid) {
-> > +             iov_iter_revert(&msg.msg_iter, len);
-> >               ret =3D nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
-> >               if (ret < 0)
-> >                       return ret;
-> > @@ -1453,10 +1464,6 @@ static int nvmet_tcp_alloc_cmd(struct nvmet_tcp_=
-queue *queue,
-> >       if (!c->r2t_pdu)
-> >               goto out_free_data;
-> >
-> > -     if (queue->state =3D=3D NVMET_TCP_Q_TLS_HANDSHAKE) {
-> > -             c->recv_msg.msg_control =3D c->recv_cbuf;
-> > -             c->recv_msg.msg_controllen =3D sizeof(c->recv_cbuf);
-> > -     }
->
-> As you delete this you can also remove the definition of 'recv_msg'
-> from nvmet_tcp_cmd structure.
-
-You mean 'recv_cbuf', right? recv_msg would still be needed by the code.
-
-I can send v2 with that change. Whether or not cmsg handling is needed
-in v2 I'd need a confirmation on. Given I'm working on compile only
-mode, I'd rather keep changes to minimal.
-
-> >       c->recv_msg.msg_flags =3D MSG_DONTWAIT | MSG_NOSIGNAL;
-> >
-> >       list_add_tail(&c->entry, &queue->free_list);
-> > @@ -1736,6 +1743,7 @@ static int nvmet_tcp_try_peek_pdu(struct nvmet_tc=
-p_queue *queue)
-> >               return len;
-> >       }
-> >
-> > +     iov_iter_revert(&msg.msg_iter, len);
-> >       ret =3D nvmet_tcp_tls_record_ok(queue, &msg, cbuf);
-> >       if (ret < 0)
-> >               return ret;
->
-> Cheers,
->
-> Hannes
-> --
-> Dr. Hannes Reinecke                  Kernel Storage Architect
-> hare@suse.de                                +49 911 74053 688
-> SUSE Software Solutions GmbH, Frankenstr. 146, 90461 N=C3=BCrnberg
-> HRB 36809 (AG N=C3=BCrnberg), GF: I. Totev, A. McDonald, W. Knoblich
->
-
+--=20
+Jeff Layton <jlayton@kernel.org>
 
