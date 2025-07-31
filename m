@@ -1,298 +1,311 @@
-Return-Path: <linux-nfs+bounces-13359-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13360-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48837B1786D
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 23:49:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFAF7B17886
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 23:56:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70A7B17C1E0
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 21:49:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E194254005F
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 21:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B09F266573;
-	Thu, 31 Jul 2025 21:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A57E2586C2;
+	Thu, 31 Jul 2025 21:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bePk/JrV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfcDrjTI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AA225FA00
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 21:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADD6246BA1
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 21:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753998565; cv=none; b=Rzh5J8gxjwucZSmWuuFBOJnVS5KQc9kcFkKu9O5MHnL8FTwE3kKae3o63XiiIJ92GOrcIE+OycTNfGDwwqQ8zdfQ8ppDrReBrjcI5zQNZpxMiYPCVDv2uXjaapRpIIZIxFj7wNjzySYtBuVkqaCWsAZAvKJl+LRGw6VB79VYXEU=
+	t=1753998971; cv=none; b=Bb4niHL/Mw32eB+3wjd7xyrS3c0LXsFuYblSq4eRUBJiXzkKROn2JA3hWSZR3Y8MNnaJXKwaeuR4ETMB1Piia512YSdIwOnL+KpzjKbkebgYyfAW9OSEpv0jQZhm2tNJm1VkBsieYLLBCpjem9LGv8dS6nPEiO2QQOEjxTpLvtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753998565; c=relaxed/simple;
-	bh=IsrZ9pDzyn2FbFV01R+949d2j3tFDQOKMD0WyfIHQxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFQgoW4pBaybnDp22HtGKval4Xw80xXHV8gwowuOmCj37RvTgqIS6mfPhmksdSQ2mWmYgKA1vQ05sTyH6AsPGrm5LUIOAieNlNDO8AyE67ICZ5tRJA08+I/5GIpFVVMe9NuoPJfzTQJRsqbvvPiltOdNY9Yrv8rpKKJiN2BueEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bePk/JrV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753998562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hHj5xH4R+P37siFUDPZLmpm1nW06q+7WgjWP5fY1b8w=;
-	b=bePk/JrVBI9kNmxZTnmYNZI3evUXveR3djvmblOrnBM306vSOV6ypWzDLszpQ6lk12JoWz
-	hUAZ+OR5l8VQNiD6wNfHzJ3HdmuODzf1eEYFZOX+/9SFqi1LUdQm9G4eTV0EIbHagm86zk
-	vjimuCOLNSU72/xXL2Ujb4JWA2W4bt0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-497-KoGbl1N8PUG_wWRWlyPkeg-1; Thu,
- 31 Jul 2025 17:49:19 -0400
-X-MC-Unique: KoGbl1N8PUG_wWRWlyPkeg-1
-X-Mimecast-MFC-AGG-ID: KoGbl1N8PUG_wWRWlyPkeg_1753998557
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B82721800446;
-	Thu, 31 Jul 2025 21:49:17 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.88.132])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2B1CC3000199;
-	Thu, 31 Jul 2025 21:49:17 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 584DF35DA6A; Thu, 31 Jul 2025 17:49:15 -0400 (EDT)
-Date: Thu, 31 Jul 2025 17:49:15 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org
-Cc: neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
-	tom@talpey.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: decouple the xprtsec policy check from
- check_nfsd_access()
-Message-ID: <aIvk266w5fxJwUhQ@aion>
-References: <20250731211441.1908508-1-smayhew@redhat.com>
+	s=arc-20240116; t=1753998971; c=relaxed/simple;
+	bh=Z+Q3n/KJqaQxK1DqteRp1ALwKZfBO1vYhlhUBS3tWfs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uUu+jBU4TMEpF7zXPFfY0aqWBYqJhOwIm9c1LtKAo1tiSVFqyRxC9XXQzQPdRTKPtc2lVbhV2JREE3EWMtfkzDwoNBKx3oPj2kfHPFnCozD8OH4THi3XhR78vdGEVopNQDocrL5Q0FUXNNRqM7YsmIPu96rOypUxJ9Kua/sAgFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfcDrjTI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08AE7C4CEEF;
+	Thu, 31 Jul 2025 21:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753998970;
+	bh=Z+Q3n/KJqaQxK1DqteRp1ALwKZfBO1vYhlhUBS3tWfs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ZfcDrjTICvsShrfmSKfKD3LybhiH1WBaJZCTZcosijCzga/ZvFGktPyOOu5DHgKK7
+	 o05TKk5HiELSs6DI63cIuDtISxER6/dRVOzOj+KTqH7oTR6SkbD+rPwvpR01NVDbFz
+	 PnhdiauYro1fEjLGDGe6th+Lh+9Q4brwt3H6Cq654O4l5bUplkLITsPEQ7LavNcwm/
+	 96EgIyP3+CckJ+5oNkSFFKo4J2nFnutGWUMMzuqBSh61hucnGIIe6KQYSA2jIMPLYH
+	 nuYUZfXcqjgVjYiMW+49kxqQ4S2naTCLzSHMlihTbU13ijw5IXZ8Wxf+9NX5oH1y3j
+	 5drqgzNnn3sxA==
+Message-ID: <752db17aff35a92b79e4c7bd3003ed890fe91403.camel@kernel.org>
+Subject: Re: parts of pages on NFS being replaced by swaths of NULs
+From: Trond Myklebust <trondmy@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date: Thu, 31 Jul 2025 17:56:08 -0400
+In-Reply-To: <1c42a7fd9677ad1aa9a3a53eda738b3a6da3728e.camel@kernel.org>
+References: <1c42a7fd9677ad1aa9a3a53eda738b3a6da3728e.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250731211441.1908508-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, 31 Jul 2025, Scott Mayhew wrote:
+On Wed, 2025-07-30 at 10:52 -0400, Jeff Layton wrote:
+> We've been seeing a rather nasty bit of data corruption with NFS in
+> our
+> environment. The clients in this env run a patched v6.9 kernel
+> (mostly
+> due to GPU driver requirements). Most of the patches are NFS
+> containerization fixes.
+>=20
+> The workload is python scripts writing JSONL files sequentially using
+> bog-standard buffered write() calls. We're fairly certain that
+> userland
+> is not seeking so there should be no gaps in the data written.
+>=20
+> The problem is that we see ranges of written files being replaced by
+> NULs. The length of the file seemingly doesn't change from what it
+> should be, but a chunk of it will be zeroed-out. Looking at the
+> offsets
+> of the zeroed out ranges, the front part of one page is fine, but the
+> data from some random offset in the page to the end of the page is
+> zeroes.
+>=20
+> We have a reproducer but we have to run it in a heavily parallel
+> configuration to make it happen, so it's evidently a tight race of
+> some
+> sort.
+>=20
+> We've turned up some tracepoints and reproduced this twice. What we
+> see
+> in both cases is that the client just doesn't write some section of
+> the
+> file.
+>=20
+> In the first trace, there was is a gap of 2201 bytes between these
+> two
+> writes on the wire:
+>=20
+> =C2=A0kworker/u1038:1-2597138 [106] ..... 46138.516795:
+> nfs_initiate_write: fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55
+> offset=3D53248 count=3D1895 stable=3DUNSTABLE
+> =C2=A0oil-localfs-252-2605046 [163] ..... 46138.551459:
+> nfs_initiate_write: fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55
+> offset=3D57344 count=3D443956 stable=3DFILE_SYNC
+>=20
+> The zeroed-out range is from 55143-57344. At the same time that the
+> file is growing from 53248 to 55143 (due to sequential write()
+> activity), the client is kicking off writeback for the range up to
+> 55143. It's issuing 2 writes, one for 0-53248 and one for 53248-55143
+> (note that I've filtered out all but one of the DS filehandles for
+> brevity):
+>=20
+> =C2=A0oil-localfs-252-2605046 [162] ..... 46138.516414: nfs_size_grow:
+> fileid=3D00:aa:10056165185 fhandle=3D0x8bfc64c9
+> version=3D1753485366409158129 cursize=3D49152 newsize=3D50130
+> =C2=A0oil-localfs-252-2605046 [162] ..... 46138.516593: nfs_size_grow:
+> fileid=3D00:aa:10056165185 fhandle=3D0x8bfc64c9
+> version=3D1753485366409158129 cursize=3D50130 newsize=3D53248
+> =C2=A0kworker/u1038:1-2597138 [106] ..... 46138.516740:
+> nfs_initiate_write: fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55
+> offset=3D0 count=3D53248 stable=3DUNSTABLE
+> =C2=A0oil-localfs-252-2605046 [162] ..... 46138.516753: nfs_size_grow:
+> fileid=3D00:aa:10056165185 fhandle=3D0x8bfc64c9
+> version=3D1753485366409158129 cursize=3D53248 newsize=3D55143
+> =C2=A0kworker/u1038:1-2597138 [106] ..... 46138.516795:
+> nfs_initiate_write: fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55
+> offset=3D53248 count=3D1895 stable=3DUNSTABLE
+> =C2=A0kworker/u1037:2-2871862 [097] ..... 46138.517659: nfs4_pnfs_write:
+> error=3D0 (OK) fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55 offset=3D0
+> count=3D53248 res=3D53248 stateid=3D1:0x79a9c471 layoutstateid=3D1:0xcbd8=
+aaad
+> =C2=A0kworker/u1037:2-2871862 [097] ..... 46138.517662:
+> nfs_writeback_done: error=3D53248 fileid=3D00:aa:10056165185
+> fhandle=3D0x6bd94d55 offset=3D0 count=3D53248 res=3D53248 stable=3DUNSTAB=
+LE
+> verifier=3D5199cdae2816c899
+> =C2=A0kworker/u1037:5-2593935 [226] ..... 46138.517669: nfs4_pnfs_write:
+> error=3D0 (OK) fileid=3D00:aa:10056165185 fhandle=3D0x6bd94d55 offset=3D5=
+3248
+> count=3D1895 res=3D1895 stateid=3D1:0x79a9c471 layoutstateid=3D1:0xcbd8aa=
+ad
+> =C2=A0kworker/u1037:5-2593935 [226] ..... 46138.517672:
+> nfs_writeback_done: error=3D1895 fileid=3D00:aa:10056165185
+> fhandle=3D0x6bd94d55 offset=3D53248 count=3D1895 res=3D1895 stable=3DUNST=
+ABLE
+> verifier=3D5199cdae2816c899
+> =C2=A0oil-localfs-252-2605046 [162] ..... 46138.518360: nfs_size_grow:
+> fileid=3D00:aa:10056165185 fhandle=3D0x8bfc64c9
+> version=3D1753485366409158129 cursize=3D55143 newsize=3D57344
+> =C2=A0oil-localfs-252-2605046 [162] ..... 46138.518556: nfs_size_grow:
+> fileid=3D00:aa:10056165185 fhandle=3D0x8bfc64c9
+> version=3D1753485366409158129 cursize=3D57344 newsize=3D60156
+>=20
+> ...and just after writeback completes, we see the file size grow from
+> 55143 to the end of the page (57344).
+>=20
+> The second trace has similar symptoms. There is a lot more (smaller)
+> write activity (due to memory pressure?). There is a gap of 3791
+> bytes
+> between these on-the-wire writes, however:
+>=20
+> =C2=A0kworker/u1036:0-2339252 [217] ..... 479572.054622:
+> nfs_initiate_write: fileid=3D00:96:10067193438 fhandle=3D0xc9992232
+> offset=3D221184 count=3D4401 stable=3DUNSTABLE
+> =C2=A0kworker/u1030:1-2297876 [042] ..... 479572.074194:
+> nfs_initiate_write: fileid=3D00:96:10067193438 fhandle=3D0xc9992232
+> offset=3D229376 count=3D261898 stable=3DUNSTABLE
+>=20
+> Same situation -- the at page at offset 53248 has 305 bytes on it,
+> and
+> the remaining is zeroed. This trace shows similar racing write() and
+> writeback activity as in Friday's trace. At around the same time as
+> the
+> client was growing the file over the affected range, writeback was
+> kicking off for everything up to the affected range (this has some
+> other wb related calls filtered for brevity):
+>=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.053987: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D217088
+> newsize=3D220572=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+> =C2=A0kworker/u1036:8-2339326 [088] ..... 479572.054008:
+> nfs_initiate_write: fileid=3D00:96:10067193438 fhandle=3D0xc9992232
+> offset=3D217088 count=3D3484
+> stable=3DUNSTABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.054405: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D220572
+> newsize=3D221184=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+> =C2=A0kworker/u1036:1-2297875 [217] ..... 479572.054418:
+> nfs_initiate_write: fileid=3D00:96:10067193438 fhandle=3D0xc9992232
+> offset=3D220572 count=3D612
+> stable=3DUNSTABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.054581: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D221184
+> newsize=3D225280=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.054584: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D225280
+> newsize=3D225585=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+> =C2=A0kworker/u1036:0-2339252 [217] ..... 479572.054622:
+> nfs_initiate_write: fileid=3D00:96:10067193438 fhandle=3D0xc9992232
+> offset=3D221184 count=3D4401
+> stable=3DUNSTABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.054997: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D225585
+> newsize=3D229376=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+> =C2=A0 oil-localfs-86-727850=C2=A0 [215] ..... 479572.055190: nfs_size_gr=
+ow:
+> fileid=3D00:96:10067193438 fhandle=3D0x14c40498
+> version=3D1753823598774309300 cursize=3D229376
+> newsize=3D230598=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=20
+>=20
+> Could this be a race between extending an existing dirty page, and
+> writeback kicking off for the pre-extension range on the page? Maybe
+> the client is clearing the dirty bit, thinking that the write covers
+> the dirty range, but it has an outdated idea about what that range is
+> or doesn't properly check?
+>=20
+> Traces for both events, filtered on the relevant fileid are attached.
+> I've rolled patches for some new tracepoints that I'm going to
+> attempt
+> to turn up next, but I thought that this was a good point to solicit
+> ideas.
+>=20
+> Happy to entertain other thoughts or patches!
 
-> A while back I had reported that an NFSv3 client could successfully
-> mount using '-o xprtsec=none' an export that had been exported with
-> 'xprtsec=tls:mtls'.  By "successfully" I mean that the mount command
-> would succeed and the mount would show up in /proc/mounts.  Attempting
-> to do anything futher with the mount would be met with NFS3ERR_ACCES.
-> 
-> This was fixed (albeit accidentally) by bb4f07f2409c ("nfsd: Fix
-> NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT") and was
-> subsequently re-broken by 0813c5f01249 ("nfsd: fix access checking for
-> NLM under XPRTSEC policies").
-> 
-> Transport Layer Security isn't an RPC security flavor or pseudo-flavor,
-> so they shouldn't be conflated when determining whether the access
-> checks can be bypassed.
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  fs/nfsd/export.c   | 60 ++++++++++++++++++++++++++++++++++++----------
->  fs/nfsd/export.h   |  1 +
->  fs/nfsd/nfs4proc.c |  6 ++++-
->  fs/nfsd/nfs4xdr.c  |  3 +++
->  fs/nfsd/nfsfh.c    |  8 +++++++
->  fs/nfsd/vfs.c      |  3 +++
->  6 files changed, 67 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index cadfc2bae60e..bc54b01bb516 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -1082,19 +1082,27 @@ static struct svc_export *exp_find(struct cache_detail *cd,
->  }
->  
->  /**
-> - * check_nfsd_access - check if access to export is allowed.
-> + * check_xprtsec_policy - check if access to export is permitted by the
-> + * 			  xprtsec policy
->   * @exp: svc_export that is being accessed.
->   * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-> - * @may_bypass_gss: reduce strictness of authorization check
-> + *
-> + * This logic should not be combined with check_nfsd_access, as the rules
-> + * for bypassing GSS are not the same as for bypassing the xprtsec policy
-> + * check:
-> + * 	- NFSv3 FSINFO and GETATTR can bypass the GSS for the root dentry,
-> + * 	  but that doesn't mean they can bypass the xprtsec poolicy check
+So... The fact that we are seeing a nfs_size_grow() for the hole at
+offset 55143 means that either an existing request was updated, or a
+new one was created in order to cover that hole, and it must have been
+marked as dirty.
 
-typo
+I'm not seeing anything in the NFS code that can lose that request
+without triggering either the nfs_write_error tracepoint, the
+nfs_commit_error tracepoint, the nfs_invalidate_folio tracepoint or
+else completing the write.
 
-> + * 	- NLM can bypass the GSS check on exports exported with the
-> + * 	  NFSEXP_NOAUTHNLM flag
-> + * 	- NLM can always bypass the xprtsec policy check since TLS isn't
-> + * 	  implemented for the sidecar protocols
->   *
->   * Return values:
->   *   %nfs_ok if access is granted, or
-> - *   %nfserr_wrongsec if access is denied
-> + *   %nfserr_acces or %nfserr_wrongsec if access is denied
->   */
-> -__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
-> -			 bool may_bypass_gss)
-> +__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp)
->  {
-> -	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
->  	struct svc_xprt *xprt;
->  
->  	/*
-> @@ -1110,22 +1118,49 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
->  
->  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
->  		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
-> -			goto ok;
-> +			return nfs_ok;
->  	}
->  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_TLS) {
->  		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
->  		    !test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
-> -			goto ok;
-> +			return nfs_ok;
->  	}
->  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
->  		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
->  		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
-> -			goto ok;
-> +			return nfs_ok;
->  	}
-> -	if (!may_bypass_gss)
-> -		goto denied;
->  
-> -ok:
-> +	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
-> +}
-> +
-> +/**
-> + * check_nfsd_access - check if access to export is allowed.
-> + * @exp: svc_export that is being accessed.
-> + * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-> + * @may_bypass_gss: reduce strictness of authorization check
-> + *
-> + * Return values:
-> + *   %nfs_ok if access is granted, or
-> + *   %nfserr_wrongsec if access is denied
-> + */
-> +__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
-> +			 bool may_bypass_gss)
-> +{
-> +	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
-> +	struct svc_xprt *xprt;
-> +
-> +	/*
-> +	 * If rqstp is NULL, this is a LOCALIO request which will only
-> +	 * ever use a filehandle/credential pair for which access has
-> +	 * been affirmed (by ACCESS or OPEN NFS requests) over the
-> +	 * wire. So there is no need for further checks here.
-> +	 */
-> +	if (!rqstp)
-> +		return nfs_ok;
-> +
-> +	xprt = rqstp->rq_xprt;
-> +
->  	/* legacy gss-only clients are always OK: */
->  	if (exp->ex_client == rqstp->rq_gssclient)
->  		return nfs_ok;
-> @@ -1167,7 +1202,6 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
->  		}
->  	}
->  
-> -denied:
->  	return nfserr_wrongsec;
->  }
->  
-> diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-> index b9c0adb3ce09..c5a45f4b72be 100644
-> --- a/fs/nfsd/export.h
-> +++ b/fs/nfsd/export.h
-> @@ -101,6 +101,7 @@ struct svc_expkey {
->  
->  struct svc_cred;
->  int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp);
-> +__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp);
->  __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
->  			 bool may_bypass_gss);
->  
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 71b428efcbb5..71e9a170f7bf 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -2902,8 +2902,12 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  				clear_current_stateid(cstate);
->  
->  			if (current_fh->fh_export &&
-> -					need_wrongsec_check(rqstp))
-> +					need_wrongsec_check(rqstp)) {
-> +				op->status = check_xprtsec_policy(current_fh->fh_export, rqstp);
-> +				if (op->status)
-> +					goto encode_op;
->  				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
-> +			}
->  		}
->  encode_op:
->  		if (op->status == nfserr_replay_me) {
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index ea91bad4eee2..48d55c13c918 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -3859,6 +3859,9 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
->  			nfserr = nfserrno(err);
->  			goto out_put;
->  		}
-> +		nfserr = check_xprtsec_policy(exp, cd->rd_rqstp);
-> +		if (nfserr)
-> +			goto out_put;
->  		nfserr = check_nfsd_access(exp, cd->rd_rqstp, false);
->  		if (nfserr)
->  			goto out_put;
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index 74cf1f4de174..1ffc33662582 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -364,6 +364,14 @@ __fh_verify(struct svc_rqst *rqstp,
->  	if (error)
->  		goto out;
->  
-> +	if (access & NFSD_MAY_NLM)
-> +		/* NLM is allowed to bypass the xprtssec policy check */
-> +		goto out;
+The only other way I can see this data being lost is if something is
+corrupting folio->private, or if the page cache is somehow managing to
+throw away a dirty folio.
+Of the two, there was for a while a netfs bug which would corrupt
+folio->private, but I assume you're not using cachefs?
 
-This would automatically bypass the auth check too.  I'll send a v2.
-
-> +
-> +	error = check_xprtsec_policy(exp, rqstp);
-> +	if (error)
-> +		goto out;
-> +
->  	if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAUTHNLM))
->  		/* NLM is allowed to fully bypass authentication */
->  		goto out;
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 98ab55ba3ced..1b66aff1d750 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -323,6 +323,9 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
->  	err = nfsd_lookup_dentry(rqstp, fhp, name, len, &exp, &dentry);
->  	if (err)
->  		return err;
-> +	err = check_xprtsec_policy(exp, rqstp);
-> +	if (err)
-> +		goto out;
->  	err = check_nfsd_access(exp, rqstp, false);
->  	if (err)
->  		goto out;
-> -- 
-> 2.48.1
-> 
-> 
-
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
