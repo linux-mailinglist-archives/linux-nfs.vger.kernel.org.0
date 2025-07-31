@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-13353-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13354-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B167B17772
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 22:54:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78B5AB1777A
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 22:58:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1695E3AA33D
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 20:54:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 94BFA588271
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 20:58:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A6DDDC1;
-	Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D128A2135AC;
+	Thu, 31 Jul 2025 20:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRk/ptFg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj+EdnTp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3543C38
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC1C20B22
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 20:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753995262; cv=none; b=u5bWLnPwlZisAToof2w2Tul/Ul3Qi7Jwd7CjR1E8AaQ8RW4TX8t1RfA4z1eyKX1SThKufAmVac8vdHWBxEMavQhGk324/WZaNRk8mSn6nyIUlHVAsWvIuSUPLTz2lngmadDljC+VLS5S96zGfxNsMBQceWTkYDfviJOgo7SxEFU=
+	t=1753995482; cv=none; b=OJnrwA0wvvODYRkRaaY1V41al0pnBYSIMW/d5oLTUSLwkMUceehTW04TL3ky5JkRwYSsMWkC6WEObpH4YnfrCrngVQ/r2BdFELrCbPPFm4Mpdkz5ees4a07pi71kGoD5/uK1Sy7hfkgsDZf1VFkvZ5U2Hwt4OtNobji4HvcI7I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753995262; c=relaxed/simple;
-	bh=ewu2rtLOA44I23XiJ9g7Q+1njp6FM8ofwfg3fRtu9RA=;
+	s=arc-20240116; t=1753995482; c=relaxed/simple;
+	bh=JDK58JBUPDKyA32F9JBYW3vXa3yg4WoAPYqcud2EMdc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mX7/6pN6sRFfqnbHX5mv6GCsaKpZNgMPgW0U89oF2kpILJ/M84aasV+PkT8Hy5EmiMpojCz5AlwKvcBGMyNcUTTLhuZrw2QrwLRmZRx1VGhWRdLZAUR9CNMQoS388u//yVXXkaE3WQwKSSdUZDn4+inIf92ZumM5WSWMbBEjyiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRk/ptFg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6B5C4CEEF;
-	Thu, 31 Jul 2025 20:54:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=RcAQMmCDdRhk1NrDK/9iP8oYsW9xGmZIzeqwEB6bnUtDcZo4UV1K2AIYMcKUWRnovYZpPux4VZ2AuQlG5/dDGvhvn2fxQVb7bgkJR9zAX3/zwIr6qkM4YBxXzCuoj0YXFsVbMcgq+bTyB/ifmUvCceq1SCom67rM8eW6s+983og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj+EdnTp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0259C4CEEF;
+	Thu, 31 Jul 2025 20:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753995262;
-	bh=ewu2rtLOA44I23XiJ9g7Q+1njp6FM8ofwfg3fRtu9RA=;
+	s=k20201202; t=1753995482;
+	bh=JDK58JBUPDKyA32F9JBYW3vXa3yg4WoAPYqcud2EMdc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YRk/ptFgAHAyyNE1pmb5/ym0oo1fqw4rLhbFXKpKyuAbNQ3sB4OyW9kneGNjbasOP
-	 unOp0Ak6ZXnnnxPcdt5BjEwNY4cAa79wjaYm3UBpizezPijOM1AZQ8n7b/iIbcywRW
-	 EVTHjl6GGl+T4L+vS8dohbLihv/q7FqSWmkj0xjFDFmsgjiCS4k4z1cdkXn9KL6sV5
-	 BYJXctixeEjfstYt1+YKoZ3uIAsHPboNAVlWA6ih/rydCp+GuidjpjTRKHLECl8h3L
-	 xR0NOBxRTjs3+vIc2/74Xbgr/3je73QXX+JvreaWpxzXx/dz67oG8ZkW2k232Bm71B
-	 jezYixvTtlc4Q==
-Message-ID: <a2a06c483f55590349d6edffe98cbd8b17dc1eef.camel@kernel.org>
-Subject: Re: [PATCH v2 2/4] NFSD: prepare nfsd_vfs_write() to use O_DIRECT
- on misaligned WRITEs
+	b=Rj+EdnTpmL1/f4g+qp7bWoNHqTbgtl+m8SZYi7V1UmzLxLufonPl0oTW7TkmJY1zy
+	 EAcBcb8asgbClspqnFW7eO4mD1mpy4vRsCDedX/F9eXtfKpRyRjq1bT5Gh7Z+YlTOQ
+	 oyiWvFV+r8WWWqlFDqw0ot/0zFR9ze08SKOfuOo4LmvH0mQXm6z213iieiM3pCRLYU
+	 qzvjaGztzzrTL7eqSJObQE1UU7OX5iLvTx3ZVNKaS073o+dN/SCRC/i/WwdhAPI5iC
+	 Rg7Mxnm9DZ0+7hD7aE8r78OyhC94fII/nKXrIQ4r0YMDrv5q/V22ZI7u8rOlTLh1hY
+	 ah3BjoSIvldHw==
+Message-ID: <b5e2e433e70189b4ed05417f8bdb2ff98a82881e.camel@kernel.org>
+Subject: Re: [PATCH v2 4/4] NFSD: handle unaligned DIO for NFS reexport
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 31 Jul 2025 16:54:21 -0400
-In-Reply-To: <20250731194448.88816-3-snitzer@kernel.org>
+Date: Thu, 31 Jul 2025 16:58:00 -0400
+In-Reply-To: <20250731194448.88816-5-snitzer@kernel.org>
 References: <20250731194448.88816-1-snitzer@kernel.org>
-	 <20250731194448.88816-3-snitzer@kernel.org>
+	 <20250731194448.88816-5-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,86 +135,94 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-07-31 at 15:44 -0400, Mike Snitzer wrote:
-> Refactor nfsd_vfs_write() to support splitting a WRITE into parts
-> (which will be either misaligned or DIO-aligned).  Doing so in a
-> preliminary commit just allows for indentation and slight
-> transformation to be more easily understood and reviewed.
+> NFS doesn't have any DIO alignment constraints but it doesn't support
+> STATX_DIOALIGN, so update NFSD such that it doesn't disable the use of
+> NFSD_IO_DIRECT if it is reexporting NFS.
 >=20
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/vfs.c | 50 ++++++++++++++++++++++++++++++--------------------
->  1 file changed, 30 insertions(+), 20 deletions(-)
+>  fs/nfs/export.c          |  3 ++-
+>  fs/nfsd/filecache.c      | 11 +++++++++++
+>  include/linux/exportfs.h | 13 +++++++++++++
+>  3 files changed, 26 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 35c29b8ade9c3..e4855c32dad12 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1341,7 +1341,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
-h *fhp,
->  	struct super_block	*sb =3D file_inode(file)->i_sb;
->  	struct kiocb		kiocb;
->  	struct svc_export	*exp;
-> -	struct iov_iter		iter;
->  	errseq_t		since;
->  	__be32			nfserr;
->  	int			host_err;
-> @@ -1349,6 +1348,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
-h *fhp,
->  	unsigned int		pflags =3D current->flags;
->  	bool			restore_flags =3D false;
->  	unsigned int		nvecs;
-> +	struct iov_iter		iter_stack[1];
-> +	struct iov_iter		*iter =3D iter_stack;
-> +	unsigned int		n_iters =3D 0;
+> diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+> index e9c233b6fd209..2cae75ba6b35d 100644
+> --- a/fs/nfs/export.c
+> +++ b/fs/nfs/export.c
+> @@ -155,5 +155,6 @@ const struct export_operations nfs_export_ops =3D {
+>  		 EXPORT_OP_REMOTE_FS		|
+>  		 EXPORT_OP_NOATOMIC_ATTR	|
+>  		 EXPORT_OP_FLUSH_ON_CLOSE	|
+> -		 EXPORT_OP_NOLOCKS,
+> +		 EXPORT_OP_NOLOCKS		|
+> +		 EXPORT_OP_NO_DIOALIGN_NEEDED,
+>  };
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 5601e839a72da..ea489dd44fd9a 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1066,6 +1066,17 @@ nfsd_file_getattr(const struct svc_fh *fhp, struct=
+ nfsd_file *nf)
+>  	     nfsd_io_cache_write !=3D NFSD_IO_DIRECT))
+>  		return nfs_ok;
 > =20
->  	trace_nfsd_write_opened(rqstp, fhp, offset, *cnt);
+> +	if (exportfs_handles_unaligned_dio(nf->nf_file->f_path.mnt->mnt_sb->s_e=
+xport_op)) {
+> +		/* Underlying filesystem doesn't support STATX_DIOALIGN
+> +		 * but it can handle all unaligned DIO, so establish
+> +		 * DIO alignment that is accommodating.
+> +		 */
+> +		nf->nf_dio_mem_align =3D 4;
+> +		nf->nf_dio_offset_align =3D PAGE_SIZE;
+> +		nf->nf_dio_read_offset_align =3D nf->nf_dio_offset_align;
+> +		return nfs_ok;
+> +	}
+> +
+>  	status =3D fh_getattr(fhp, &stat);
+>  	if (status !=3D nfs_ok)
+>  		return status;
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 9369a607224c1..626b8486dd985 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -247,6 +247,7 @@ struct export_operations {
+>  						*/
+>  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close=
+ */
+>  #define EXPORT_OP_NOLOCKS		(0x40) /* no file locking support */
+> +#define EXPORT_OP_NO_DIOALIGN_NEEDED	(0x80) /* fs can handle unaligned D=
+IO */
+>  	unsigned long	flags;
+>  };
 > =20
-> @@ -1378,14 +1380,15 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
-_fh *fhp,
->  		kiocb.ki_flags |=3D IOCB_DSYNC;
+> @@ -262,6 +263,18 @@ exportfs_cannot_lock(const struct export_operations =
+*export_ops)
+>  	return export_ops->flags & EXPORT_OP_NOLOCKS;
+>  }
 > =20
->  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> +	iov_iter_bvec(&iter[0], ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> +	n_iters++;
-> =20
->  	switch (nfsd_io_cache_write) {
->  	case NFSD_IO_DIRECT:
->  		/* direct I/O must be aligned to device logical sector size */
->  		if (nf->nf_dio_mem_align && nf->nf_dio_offset_align &&
->  		    (((offset | *cnt) & (nf->nf_dio_offset_align-1)) =3D=3D 0) &&
-> -		    iov_iter_is_aligned(&iter, nf->nf_dio_mem_align - 1,
-> +		    iov_iter_is_aligned(&iter[0], nf->nf_dio_mem_align - 1,
->  					nf->nf_dio_offset_align - 1))
->  			kiocb.ki_flags =3D IOCB_DIRECT;
->  		break;
-> @@ -1396,25 +1399,32 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
-_fh *fhp,
->  		break;
->  	}
-> =20
-> -	since =3D READ_ONCE(file->f_wb_err);
-> -	if (verf)
-> -		nfsd_copy_write_verifier(verf, nn);
-> -	host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
-> -	if (host_err < 0) {
-> -		commit_reset_write_verifier(nn, rqstp, host_err);
-> -		goto out_nfserr;
-> -	}
-> -	*cnt =3D host_err;
-> -	nfsd_stats_io_write_add(nn, exp, *cnt);
-> -	fsnotify_modify(file);
-> -	host_err =3D filemap_check_wb_err(file->f_mapping, since);
-> -	if (host_err < 0)
-> -		goto out_nfserr;
-> +	*cnt =3D 0;
-> +	for (int i =3D 0; i < n_iters; i++) {
-> +		since =3D READ_ONCE(file->f_wb_err);
-> +		if (verf)
-> +			nfsd_copy_write_verifier(verf, nn);
-> =20
+> +/**
+> + * exportfs_handles_unaligned_dio() - check if export can handle unalign=
+ed DIO
+> + * @export_ops:	the nfs export operations to check
+> + *
+> + * Returns true if the export can handle unaligned DIO.
+> + */
+> +static inline bool
+> +exportfs_handles_unaligned_dio(const struct export_operations *export_op=
+s)
+> +{
+> +	return export_ops->flags & EXPORT_OP_NO_DIOALIGN_NEEDED;
+> +}
+> +
+>  extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid=
+,
+>  				    int *max_len, struct inode *parent,
+>  				    int flags);
 
-Once you remove the above bits outside the loop, you can add:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Would it not be simpler (better?) to add support for STATX_DIOALIGN to
+NFS, and just have it report '1' for both values?
+--=20
+Jeff Layton <jlayton@kernel.org>
 
