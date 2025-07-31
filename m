@@ -1,145 +1,143 @@
-Return-Path: <linux-nfs+bounces-13335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCAFFB175E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 19:58:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0915B175E8
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 20:01:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18B577B956C
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 17:57:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0050561ABD
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 18:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8CD1D799D;
-	Thu, 31 Jul 2025 17:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17AE51DDA3E;
+	Thu, 31 Jul 2025 18:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jxa6kWZi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0ndMO5/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680E101EE
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 17:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813EFB644
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 18:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753984712; cv=none; b=R1lfAfR9XIQClJOLgOhUKfj0Ljo8RxOdMZOZnpr38HZap4gDCB3cZS+os/UwKZKKpBcuJv+y1cdvdSIm5f/XsXaWfpDTnDp+4GwM+RBElEaMPFfjjqnPUkRY03YVdF52SRPqeQk1kfY30A2RUzPczvps5qEGHI4CnPo1ltGCXF0=
+	t=1753984874; cv=none; b=Dd2GON9iDjP3qxibf+eg53GwDx+P4iI5CvtFpzGSCBH8g7GsXkPasubphWVT6L4xA2iQtF0iO/7VszwR7Z+hHavMAS1iauSiGC/5wLKkDIRwW0nDNdefX3XBeiEoHIC6Rvqw5ExjCYvd4G/WBMbSZBUWOZNE4HgSxCJLJimfrR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753984712; c=relaxed/simple;
-	bh=nkDWy34SayzIGOHaqpOPJJ64cggSw3mGbQFjwr/POsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGPKUXnxGl/eUkQJwwal1oCoD/c5ni29lF2elhDdljoccqjrn7hnEpkZT7OzG4fJ5K3MCuVxtfl5TXHrJ8xrPHrgvzmXwDccOTIEKXhXLaDmSv1IkCjXwRgf3mgRsCzfWZfWhPSVty084X1r5DAD02011wmF9e8Dt/ea2ymj99M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jxa6kWZi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0F3C4CEEF;
-	Thu, 31 Jul 2025 17:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753984712;
-	bh=nkDWy34SayzIGOHaqpOPJJ64cggSw3mGbQFjwr/POsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jxa6kWZiTRVXKvlJbCwhBeJXyTz08dvQGYOsNtU9gPDhmG0wsukPxVMN80PCTVVLc
-	 RmZBwCIb0FgncYafg/yQUloDuSF0svX3BnSKh06f4DFRfgQ6pOebwXEXNDWSuE1z9Z
-	 phR1OpIyErsK1miO7Ph4yLTZ30QL7TQWou/c7OnSnMJi9d8ucBqLhlaEA5DnGm4sS3
-	 iPMl+rO4Cipzg46j4GfYJGFnDlfudfR2Bnx0toxKOMnBnuMuduUsPBpp2p9eI3kkya
-	 zaBt+dZJFsujsPFnEg6NPFh5Q/06r4hSAdFnGg8/q3k3xSBpD+pBW8ommHaCFLrsZ9
-	 JmsRWL1Wj0a9A==
-Date: Thu, 31 Jul 2025 13:58:31 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anton Gavriliuk <antosha20xx@gmail.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: mount NFS with localio
-Message-ID: <aIuux1V2l5jNaikF@kernel.org>
-References: <CAAiJnjoNd37p6kqSZSOPzYup_fWaHZgJv3gEpfThpxn--MqpqA@mail.gmail.com>
+	s=arc-20240116; t=1753984874; c=relaxed/simple;
+	bh=Zwc0SPPcbghkacEJD90D95EyeI17XLPTAdfZUkhNCX4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PnroqXwPIYm6AilYY4ZpA7nOOaPHKNaKOmCsorA9qk8YqJgDeXi89xOs3WtnGob2/hzRW8ivD5ANSGuvzNYnqOXIP+b/CTVsIK/i4FP61lZuh1RYxhTKfnskOlNsSLj2nTphGJ4XDW5tyci+kFQ/+CuarPeT1ppt94xCFvBF4RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0ndMO5/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753984871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nyoDhXJsyJ+eWJFNkLxVXQYz79heny9XiWvBr8bapU4=;
+	b=g0ndMO5/r8c1KPYge+raYd0+tXOQ1b1IxRP55zvOETXld4lqfq+XaGg7Ypd4pjbuHlBdlV
+	XrMkUU2sQeh0ml8EAYGw0MD2xwGx6IECneK06PG//N2uJ9adD1FNw8+WqKgVOOzGV1LGRP
+	QojQ1tSTsgFBEZCW7isFudMAg4Rm+kU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-mAvch5gkO1mh3SLvpv5GGw-1; Thu,
+ 31 Jul 2025 14:01:07 -0400
+X-MC-Unique: mAvch5gkO1mh3SLvpv5GGw-1
+X-Mimecast-MFC-AGG-ID: mAvch5gkO1mh3SLvpv5GGw_1753984865
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 64E93180045B;
+	Thu, 31 Jul 2025 18:01:04 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.82.42])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A085230001B3;
+	Thu, 31 Jul 2025 18:00:59 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	trondmy@hammerspace.com,
+	anna.schumaker@oracle.com,
+	hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-nfs@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	netdev@vger.kernel.org,
+	kernel-tls-handshake@lists.linux.dev,
+	neil@brown.name,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	hare@suse.de,
+	horms@kernel.org,
+	kbusch@kernel.org
+Subject: [PATCH v2 0/4] address tls_alert_recv usage by NFS and NvME
+Date: Thu, 31 Jul 2025 14:00:54 -0400
+Message-Id: <20250731180058.4669-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAiJnjoNd37p6kqSZSOPzYup_fWaHZgJv3gEpfThpxn--MqpqA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, Jul 30, 2025 at 03:43:00PM +0300, Anton Gavriliuk wrote:
-> Hi
-> 
-> How to mount NFS with localio on Fedora Server 42 (6.15.8 kernel) ?
-> 
-> Localio enabled in kernel
-> 
-> [root@23-127-77-5 ~]# cat /boot/config-6.15.8-200.fc42.x86_64 | grep -i localio
-> CONFIG_NFS_COMMON_LOCALIO_SUPPORT=m
-> CONFIG_NFS_LOCALIO=y
-> 
-> [root@23-127-77-5 ~]# lsmod | grep -i localio
-> nfs_localio            36864  2 nfsd,nfs
-> sunrpc                925696  30
-> nfs_localio,nfsd,rpcrdma,nfsv4,auth_rpcgss,lockd,rpcsec_gss_krb5,nfs_acl,nfs
-> 
-> [root@23-127-77-5 ~]# mount -t nfs 127.0.0.1:/mnt /mnt1
-> [root@23-127-77-5 ~]#
-> [root@23-127-77-5 ~]# mount | grep -i mnt1
-> 127.0.0.1:/mnt on /mnt1 type nfs4
-> (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1,local_lock=none,addr=127.0.0.1)
-> 
-> So /mnt1 is mounted with localio ?
+v2: patch#3 changed to remove unused recv_cbuf member of nvmet_tcp_cmd
 
-Should be.
+This is a multi-component patch series: NFS client, NFS server,
+NvME (target), net.
 
-One way to tell, albeit less ironclad, is that performance improves
-(reduced use of network/sunrpc is also a tell-tale).
+tls_alert_recv() has been originally written to retrieve TLS alert
+payload out of the msg iterator's kvec buffer. Yet, the callers of
+tls_alert_recv() have not been careful enough to make sure that
+msg has always been initialized with a kvec-backed iterator (ie.,
+some times bvec was used). Furthermore, callers didn't account
+for the fact that the msg iterator's kvec is advanced by sock_recvmsg
+upon filling up the provided space by the copy. All that lead to
+the ability to construct a malicious payload that would trigger
+badness in tls_alert_recv().
 
-But see commit 62d2cde203def ("NFS: add localio to sysfs")
-It adds semi-useful exposure of whether LOCALIO is active for a given
-rpc client.  I say "semi-useful" because I'm left wanting on the
-reliability of this interface (particularly when pnfs flexfiles is
-used, the separate NFS client that is established to connect to the
-local NFSD over v3 isn't getting added to sysfs for some reason.. not
-put time to fixing that yet).  But for simple loopback NFS mount that
-doesn't use pnfs flexfiles it _should_ work, e.g.:
+This patch series attempts to address it in a couple of steps.
+First, there are patches for each of the current consumers (NFS
+server, NFS client, NvME target) of tls_alert_recv to address
+an immediate problem which I think should be backported.
 
-  # cat /sys/fs/nfs/0\:46/localio
-  1
+Note, patch#3 is NvME patch that had no testing. Compile only patch.
 
-I've found that the best way to _know_ LOCALIO enabled is to use trace
-points, but yeah that is kind of obscure and certainly not common in
-production.
+Second, the last patch builds on top of the fixes but changes
+tls_alert_recv to force the callers to provide the kvec directly
+in hopes that any future users of tls_alert_recv would be more
+congnizant of providing location to the actual TLS alert payload.
 
-These tracepoints really showcase LOCALIO is being used:
+Again note that nvme changes in patch#4 are compile only.
 
- echo 1 > /sys/kernel/tracing/events/sunrpc/svc_process/enable
- echo 1 > /sys/kernel/tracing/events/nfs_localio/nfs_localio_enable_client/enable
- echo 1 > /sys/kernel/tracing/events/nfs_localio/nfs_localio_disable_client/enable
- echo 1 > /sys/kernel/tracing/events/nfs/nfs_local_open_fh/enable
+Olga Kornievskaia (4):
+  sunrpc: fix handling of server side tls alerts
+  sunrpc: fix client side handling of tls alerts
+  nvmet-tcp: fix handling of tls alerts
+  net/handshake: change tls_alert_recv to receive a kvec
 
-(NOTE: it is only with this patch applied that the nfs_local_open_fh
-tracepoint is made much more useful, otherwise it'd only show if the
-function failed to open the fh.. unfortunately not yet picked up for
-upstream:
-https://lore.kernel.org/linux-nfs/20250724193102.65111-9-snitzer@kernel.org/
-)
+Olga Kornievskaia (4):
+  sunrpc: fix handling of server side tls alerts
+  sunrpc: fix client side handling of tls alerts
+  nvmet-tcp: fix handling of tls alerts
+  net/handshake: change tls_alert_recv to receive a kvec
 
- echo nop > /sys/kernel/debug/tracing/current_tracer
- echo 1 > /sys/kernel/debug/tracing/tracing_on
+ drivers/nvme/target/tcp.c | 38 ++++++++++++++------------
+ include/net/handshake.h   |  2 +-
+ net/handshake/alert.c     |  6 ++---
+ net/sunrpc/svcsock.c      | 56 ++++++++++++++++++++++++++++-----------
+ net/sunrpc/xprtsock.c     | 51 ++++++++++++++++++++++++-----------
+ 5 files changed, 101 insertions(+), 52 deletions(-)
 
-With these enabled, mounting NFS via loopback and doing a simple dd
-shows the following in: cat /sys/kernel/debug/tracing/trace
+-- 
+2.47.1
 
-            nfsd-10448   [024] .....  4316.520916: svc_process: addr=192.168.1.106 xid=0xcf2cdbdf service=nfslocalio vers=1 proc=UUID_IS_LOCAL
-  kworker/u194:0-9772    [042] .....  4316.520951: nfs_localio_enable_client: server=192.168.1.106 NFSv3
-  kworker/u194:0-9772    [042] .....  4316.647334: nfs_local_open_fh: fhandle=0x4d34e6c1 mode=READ|WRITE result=0
-
-Also, enabling various nfsd tracepoints and seeing the absence of them
-is telling.  Similarly, enabling tracepoints for NFSD's underlying
-filesystem (e.g. xfs) and seeing the process that is triggering the
-trace isn't nfsd showcases LOCALIO being used, e.g.:
-
-with LOCALIO:
-
-  kworker/u194:3-9540    [027] .....  5155.011380: xfs_file_direct_write: dev 259:16 ino 0x3e00008f disize 0xb7a0 pos 0xc000 bytecount 0xa000
-
-without LOCALIO:
-
-            nfsd-10448   [034] .....  5730.314274: xfs_file_direct_write: dev 259:16 ino 0x3e00008f disize 0xb7a0 pos 0xc000 bytecount 0xa000
-
-Hope this helps,
-Mike
 
