@@ -1,288 +1,164 @@
-Return-Path: <linux-nfs+bounces-13355-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13356-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2234B177E1
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 23:14:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56F07B1782F
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 23:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D12C1C272E6
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 21:15:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7FBED7B572D
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Jul 2025 21:26:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10403257426;
-	Thu, 31 Jul 2025 21:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D5023ABB1;
+	Thu, 31 Jul 2025 21:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LCt+njBq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaTO/nmB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212C111CA0
-	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 21:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE2921A433
+	for <linux-nfs@vger.kernel.org>; Thu, 31 Jul 2025 21:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753996494; cv=none; b=scpmmBm0QFCEsKJ0JVoCmktOaV9ZnzA4V3394DTYTiIn32Gs2kTvVeRGMmz3bDyDWOOytvYfKia+BeUV9U4P2+ONWWnrK+TzA3U8wodNSPgYovMFfY5LPsCnCl5pRBOmAhVhzff4sLn4JFjtvW8ySW49LE/WsFTF2jw9WmjcxMI=
+	t=1753997294; cv=none; b=fA+GBHdj5/XHns/S0QQjP4PVSKo0K/xOvfX+1pDJzVQR5MZqGf9OhYRHARwr4JYL041kORB6Qy4qUHyG6hiQy9CErTIf6BvobNRvB0t6By1txS/poP2tGNu2VZzjqcpV1SwCSHsBbNuAA3ky0DoWvBu+QAUJzXgz4aZtPD8MIFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753996494; c=relaxed/simple;
-	bh=U8Hky+RTfgvTNeLSu0vUDdo6Tch9a/0dEFs/ScF5QOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o1Cglz7U0XDVRY6z5nx/5hap7v0lNQ1RjlRRexvYqvAy9ZBO/+GV4R9dMzPbRlQaaf6ODMldndhutAizm6d5P22ncWC1bijxBeei1jA0qpTXcQwjtJRyhaxw28iTa5x9fL5LsjxgD6nqpIjeGLEToxfzoJ0cxe3FJJC93yvbyp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LCt+njBq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753996491;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ufP9LEcyZ3cKF/ma3hQua4xRrtz0dUOz/ApoFoorWwQ=;
-	b=LCt+njBqPbisjNvRpS/j1TmBw0HD4WOEDAh0MSSg0NWYY/cR8/YXQzDhc7zOewtum1Chmr
-	E8MyDNEQ4HuzZyau723e85oJI03PqUeegvGJBlXNmFyUWGKiOzaxC4uh9O5aG9NwuLePrn
-	sFxGVFvFiRlLbNCRGZeb6IpEsUbB7H8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-248-ZlFWT_54PlysSH0Sv0g-dA-1; Thu,
- 31 Jul 2025 17:14:45 -0400
-X-MC-Unique: ZlFWT_54PlysSH0Sv0g-dA-1
-X-Mimecast-MFC-AGG-ID: ZlFWT_54PlysSH0Sv0g-dA_1753996484
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BE081800256;
-	Thu, 31 Jul 2025 21:14:44 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.88.132])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D31C1800285;
-	Thu, 31 Jul 2025 21:14:43 +0000 (UTC)
-Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 5481B35DA53;
-	Thu, 31 Jul 2025 17:14:41 -0400 (EDT)
-From: Scott Mayhew <smayhew@redhat.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org
-Cc: neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: decouple the xprtsec policy check from check_nfsd_access()
-Date: Thu, 31 Jul 2025 17:14:41 -0400
-Message-ID: <20250731211441.1908508-1-smayhew@redhat.com>
+	s=arc-20240116; t=1753997294; c=relaxed/simple;
+	bh=jwre78cGeEaFb2cdecMUAhILPEw3OD56fe6I/bCzKk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNv25kGHDlUeLZEPg5n3rAoj+CaLqUEGNRQzw4Kt52eWLkuJlIyPMLiiM63yf/MxlbrprRlPIjUh6Jcx96sOPczg/0mDVLSef/6jKANMJvLXjj58uSPqPiDqCONt2G2qPDP5d0rSE27A5LGp/iBcxPgDhYQ2zO60uo717rN7kOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaTO/nmB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3619DC4CEEF;
+	Thu, 31 Jul 2025 21:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753997294;
+	bh=jwre78cGeEaFb2cdecMUAhILPEw3OD56fe6I/bCzKk4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DaTO/nmBWpY33fd1+IN8nteeDxZjL9pmsz2SdUmzTO3dcXKMuAeCde5pqXQJm3yIK
+	 6ycs28sKlCol/aUK053X5Tg3ODhR3lYCASj1CC3dLl7XQbOdFKHIraip2en8M9y/Qb
+	 EX456QDURP+foO/RsUQqveloSywuyrIb6quK45EFndboMt/YXyyVzCw+44uNPdeWzN
+	 e/cwI6f3bhJc9267IFgBL0LAgHvYS8qXikI7jlX/FGx4XupGu4EIQU1NCQWCCMoHjl
+	 ChpsVF+SQuq+kGUyG0Fw3/O9IcBsC6OzBBG1mvmH9xyJ4AnOpIA5IeV6CkPCSL4UU4
+	 IhHefnz+SnsRw==
+Date: Thu, 31 Jul 2025 17:28:13 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+	hch@lst.de
+Subject: Re: [PATCH v2 4/4] NFSD: handle unaligned DIO for NFS reexport
+Message-ID: <aIvf7VqSeNE3Ma1m@kernel.org>
+References: <20250731194448.88816-1-snitzer@kernel.org>
+ <20250731194448.88816-5-snitzer@kernel.org>
+ <b5e2e433e70189b4ed05417f8bdb2ff98a82881e.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5e2e433e70189b4ed05417f8bdb2ff98a82881e.camel@kernel.org>
 
-A while back I had reported that an NFSv3 client could successfully
-mount using '-o xprtsec=none' an export that had been exported with
-'xprtsec=tls:mtls'.  By "successfully" I mean that the mount command
-would succeed and the mount would show up in /proc/mounts.  Attempting
-to do anything futher with the mount would be met with NFS3ERR_ACCES.
+On Thu, Jul 31, 2025 at 04:58:00PM -0400, Jeff Layton wrote:
+> On Thu, 2025-07-31 at 15:44 -0400, Mike Snitzer wrote:
+> > NFS doesn't have any DIO alignment constraints but it doesn't support
+> > STATX_DIOALIGN, so update NFSD such that it doesn't disable the use of
+> > NFSD_IO_DIRECT if it is reexporting NFS.
+> > 
+> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > ---
+> >  fs/nfs/export.c          |  3 ++-
+> >  fs/nfsd/filecache.c      | 11 +++++++++++
+> >  include/linux/exportfs.h | 13 +++++++++++++
+> >  3 files changed, 26 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+> > index e9c233b6fd209..2cae75ba6b35d 100644
+> > --- a/fs/nfs/export.c
+> > +++ b/fs/nfs/export.c
+> > @@ -155,5 +155,6 @@ const struct export_operations nfs_export_ops = {
+> >  		 EXPORT_OP_REMOTE_FS		|
+> >  		 EXPORT_OP_NOATOMIC_ATTR	|
+> >  		 EXPORT_OP_FLUSH_ON_CLOSE	|
+> > -		 EXPORT_OP_NOLOCKS,
+> > +		 EXPORT_OP_NOLOCKS		|
+> > +		 EXPORT_OP_NO_DIOALIGN_NEEDED,
+> >  };
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 5601e839a72da..ea489dd44fd9a 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -1066,6 +1066,17 @@ nfsd_file_getattr(const struct svc_fh *fhp, struct nfsd_file *nf)
+> >  	     nfsd_io_cache_write != NFSD_IO_DIRECT))
+> >  		return nfs_ok;
+> >  
+> > +	if (exportfs_handles_unaligned_dio(nf->nf_file->f_path.mnt->mnt_sb->s_export_op)) {
+> > +		/* Underlying filesystem doesn't support STATX_DIOALIGN
+> > +		 * but it can handle all unaligned DIO, so establish
+> > +		 * DIO alignment that is accommodating.
+> > +		 */
+> > +		nf->nf_dio_mem_align = 4;
+> > +		nf->nf_dio_offset_align = PAGE_SIZE;
+> > +		nf->nf_dio_read_offset_align = nf->nf_dio_offset_align;
+> > +		return nfs_ok;
+> > +	}
+> > +
+> >  	status = fh_getattr(fhp, &stat);
+> >  	if (status != nfs_ok)
+> >  		return status;
+> > diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> > index 9369a607224c1..626b8486dd985 100644
+> > --- a/include/linux/exportfs.h
+> > +++ b/include/linux/exportfs.h
+> > @@ -247,6 +247,7 @@ struct export_operations {
+> >  						*/
+> >  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close */
+> >  #define EXPORT_OP_NOLOCKS		(0x40) /* no file locking support */
+> > +#define EXPORT_OP_NO_DIOALIGN_NEEDED	(0x80) /* fs can handle unaligned DIO */
+> >  	unsigned long	flags;
+> >  };
+> >  
+> > @@ -262,6 +263,18 @@ exportfs_cannot_lock(const struct export_operations *export_ops)
+> >  	return export_ops->flags & EXPORT_OP_NOLOCKS;
+> >  }
+> >  
+> > +/**
+> > + * exportfs_handles_unaligned_dio() - check if export can handle unaligned DIO
+> > + * @export_ops:	the nfs export operations to check
+> > + *
+> > + * Returns true if the export can handle unaligned DIO.
+> > + */
+> > +static inline bool
+> > +exportfs_handles_unaligned_dio(const struct export_operations *export_ops)
+> > +{
+> > +	return export_ops->flags & EXPORT_OP_NO_DIOALIGN_NEEDED;
+> > +}
+> > +
+> >  extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
+> >  				    int *max_len, struct inode *parent,
+> >  				    int flags);
+> 
+> 
+> Would it not be simpler (better?) to add support for STATX_DIOALIGN to
+> NFS, and just have it report '1' for both values?
 
-This was fixed (albeit accidentally) by bb4f07f2409c ("nfsd: Fix
-NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT") and was
-subsequently re-broken by 0813c5f01249 ("nfsd: fix access checking for
-NLM under XPRTSEC policies").
+I suppose adding NFS support for STATX_DIOALIGN, that doesn't actually
+go over the wire, does make sense.
 
-Transport Layer Security isn't an RPC security flavor or pseudo-flavor,
-so they shouldn't be conflated when determining whether the access
-checks can be bypassed.
+But I wouldn't think setting them to 1 valid.  Pretty sure they need
+to be a power-of-2 (since they are used as masks passed to
+iov_iter_is_aligned).
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfsd/export.c   | 60 ++++++++++++++++++++++++++++++++++++----------
- fs/nfsd/export.h   |  1 +
- fs/nfsd/nfs4proc.c |  6 ++++-
- fs/nfsd/nfs4xdr.c  |  3 +++
- fs/nfsd/nfsfh.c    |  8 +++++++
- fs/nfsd/vfs.c      |  3 +++
- 6 files changed, 67 insertions(+), 14 deletions(-)
+In addition, we want to make sure NFS's default DIO alignment (which
+isn't informed by actual DIO alignment advertised by NFSD's underlying
+filesystem and hardware, e.g. XFS and NVMe) is able to be compatible
+with both finer (512b) and coarser (4096b) grained DIO alignment.
+Only way to achieve that would be to skew toward the coarse-grained
+end of the spectrum, right?
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index cadfc2bae60e..bc54b01bb516 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1082,19 +1082,27 @@ static struct svc_export *exp_find(struct cache_detail *cd,
- }
- 
- /**
-- * check_nfsd_access - check if access to export is allowed.
-+ * check_xprtsec_policy - check if access to export is permitted by the
-+ * 			  xprtsec policy
-  * @exp: svc_export that is being accessed.
-  * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-- * @may_bypass_gss: reduce strictness of authorization check
-+ *
-+ * This logic should not be combined with check_nfsd_access, as the rules
-+ * for bypassing GSS are not the same as for bypassing the xprtsec policy
-+ * check:
-+ * 	- NFSv3 FSINFO and GETATTR can bypass the GSS for the root dentry,
-+ * 	  but that doesn't mean they can bypass the xprtsec poolicy check
-+ * 	- NLM can bypass the GSS check on exports exported with the
-+ * 	  NFSEXP_NOAUTHNLM flag
-+ * 	- NLM can always bypass the xprtsec policy check since TLS isn't
-+ * 	  implemented for the sidecar protocols
-  *
-  * Return values:
-  *   %nfs_ok if access is granted, or
-- *   %nfserr_wrongsec if access is denied
-+ *   %nfserr_acces or %nfserr_wrongsec if access is denied
-  */
--__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
--			 bool may_bypass_gss)
-+__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp)
- {
--	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
- 	struct svc_xprt *xprt;
- 
- 	/*
-@@ -1110,22 +1118,49 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
- 
- 	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
- 		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
--			goto ok;
-+			return nfs_ok;
- 	}
- 	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_TLS) {
- 		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
- 		    !test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
--			goto ok;
-+			return nfs_ok;
- 	}
- 	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
- 		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
- 		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
--			goto ok;
-+			return nfs_ok;
- 	}
--	if (!may_bypass_gss)
--		goto denied;
- 
--ok:
-+	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
-+}
-+
-+/**
-+ * check_nfsd_access - check if access to export is allowed.
-+ * @exp: svc_export that is being accessed.
-+ * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
-+ * @may_bypass_gss: reduce strictness of authorization check
-+ *
-+ * Return values:
-+ *   %nfs_ok if access is granted, or
-+ *   %nfserr_wrongsec if access is denied
-+ */
-+__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
-+			 bool may_bypass_gss)
-+{
-+	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
-+	struct svc_xprt *xprt;
-+
-+	/*
-+	 * If rqstp is NULL, this is a LOCALIO request which will only
-+	 * ever use a filehandle/credential pair for which access has
-+	 * been affirmed (by ACCESS or OPEN NFS requests) over the
-+	 * wire. So there is no need for further checks here.
-+	 */
-+	if (!rqstp)
-+		return nfs_ok;
-+
-+	xprt = rqstp->rq_xprt;
-+
- 	/* legacy gss-only clients are always OK: */
- 	if (exp->ex_client == rqstp->rq_gssclient)
- 		return nfs_ok;
-@@ -1167,7 +1202,6 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
- 		}
- 	}
- 
--denied:
- 	return nfserr_wrongsec;
- }
- 
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index b9c0adb3ce09..c5a45f4b72be 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -101,6 +101,7 @@ struct svc_expkey {
- 
- struct svc_cred;
- int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp);
-+__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp);
- __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
- 			 bool may_bypass_gss);
- 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 71b428efcbb5..71e9a170f7bf 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2902,8 +2902,12 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 				clear_current_stateid(cstate);
- 
- 			if (current_fh->fh_export &&
--					need_wrongsec_check(rqstp))
-+					need_wrongsec_check(rqstp)) {
-+				op->status = check_xprtsec_policy(current_fh->fh_export, rqstp);
-+				if (op->status)
-+					goto encode_op;
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
-+			}
- 		}
- encode_op:
- 		if (op->status == nfserr_replay_me) {
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index ea91bad4eee2..48d55c13c918 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3859,6 +3859,9 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
- 			nfserr = nfserrno(err);
- 			goto out_put;
- 		}
-+		nfserr = check_xprtsec_policy(exp, cd->rd_rqstp);
-+		if (nfserr)
-+			goto out_put;
- 		nfserr = check_nfsd_access(exp, cd->rd_rqstp, false);
- 		if (nfserr)
- 			goto out_put;
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 74cf1f4de174..1ffc33662582 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -364,6 +364,14 @@ __fh_verify(struct svc_rqst *rqstp,
- 	if (error)
- 		goto out;
- 
-+	if (access & NFSD_MAY_NLM)
-+		/* NLM is allowed to bypass the xprtssec policy check */
-+		goto out;
-+
-+	error = check_xprtsec_policy(exp, rqstp);
-+	if (error)
-+		goto out;
-+
- 	if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAUTHNLM))
- 		/* NLM is allowed to fully bypass authentication */
- 		goto out;
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 98ab55ba3ced..1b66aff1d750 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -323,6 +323,9 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
- 	err = nfsd_lookup_dentry(rqstp, fhp, name, len, &exp, &dentry);
- 	if (err)
- 		return err;
-+	err = check_xprtsec_policy(exp, rqstp);
-+	if (err)
-+		goto out;
- 	err = check_nfsd_access(exp, rqstp, false);
- 	if (err)
- 		goto out;
--- 
-2.48.1
+More conservative but more likely to work with everything.
 
+Mike
 
