@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-13381-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13382-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D9B0B18651
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Aug 2025 19:10:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A24FB18652
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Aug 2025 19:10:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B112173A43
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Aug 2025 17:10:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 262881764F4
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Aug 2025 17:10:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4CA61DED47;
-	Fri,  1 Aug 2025 17:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A1F1DF755;
+	Fri,  1 Aug 2025 17:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjYEAx2t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjIJw/rw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE526F2F2
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Aug 2025 17:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B491DED4C
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Aug 2025 17:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754068253; cv=none; b=XduQy2RLQenkQEIzYeLJNYsAEOuK8nQ0HgsCSyzw9zJe/xPuudV2MKJ6GDwOu1CtjXglrcDS8AHv0/FkxQOcO3aF+JLLHO3tcnbN8+RDh93SlTrmDYnviVpM3KRhwe6EQXOwxffR7t3L9FFBHFTeGQ2F8tgGRfwdszCqyu7CiEE=
+	t=1754068254; cv=none; b=JuDqVgTu1Gk4z7DwvqQrqFjOIGNmfVUoTndOK17syz5j2yL4V1AbBl2+Sh+fAEMgccug/RU05ZT3ht/zKpAOUwDrf1JbNovisHUcslZHu9Sbn4FCTrAcVudVIwQ4jQDMFKgiwnZIrsOguYIVFCN6dF9TMlsFxxmH+CIR31WpEkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754068253; c=relaxed/simple;
-	bh=22zp6XZfxtW0VGlxDfahfz2vH97nD2M26SHIVYlutPI=;
+	s=arc-20240116; t=1754068254; c=relaxed/simple;
+	bh=9jAPvPAH1B/qaPyKoebiOEBGo3zDEPjaGDFnulj5Pok=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ACLnKfit8UYeryNaU/28N91owQrzyiSRKg8V3+c+JdymjQiEmTNM8w89hakznXCO1+oq4P5nWxlldahvXXSo/Nq0pXgiqK2HpB4Rrx2cuo0sVbTGx9Am5HuEXWpWAHBg8LOywm3zPWvuJocCyGQzYxzUcBvfURmz/usZRcKBtq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjYEAx2t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E64C4CEE7;
-	Fri,  1 Aug 2025 17:10:52 +0000 (UTC)
+	 MIME-Version; b=p+n89408p2bGDZj/TjQY4mywECPpW0jUGRtf/v2ibm30QVtf+DNVPusB3SSFM4pG28tZ74cyr+SYbFK5UN9F/RYHfkPs2OrWNqRYzEMz9+XK1MJ+Ye7B7ud5/xtgCnhGS/zjw4Hx35LDLdf+/CYI8REV0VBVgWAOaESIynCTmMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjIJw/rw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62109C4CEF6;
+	Fri,  1 Aug 2025 17:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754068252;
-	bh=22zp6XZfxtW0VGlxDfahfz2vH97nD2M26SHIVYlutPI=;
+	s=k20201202; t=1754068253;
+	bh=9jAPvPAH1B/qaPyKoebiOEBGo3zDEPjaGDFnulj5Pok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HjYEAx2tfAnA6YWiPEQWn2umpkqb1rbnm0kSOKahxwr9XMhBs6TRYLV/Ea8LRp4+3
-	 D8ivwC4ivTZKlDRSgG09AQuZVSjV0W6dPfgf3vfwUNFEoSMUD7PyDB8EPjSFwH073E
-	 989dsHcPYhZvlqU0i4g3acDwgGDxrySO3p1xsLrJSxNCqHaBnYl8WUL0jgx1gBI5/m
-	 XaA6gKpay60B4i5YVaj4y7F9Kv+3manTCiqMfxCSluGDYp849lwyhE8WmVbXN1dmjX
-	 0w2NfK11HG887uYXCm68SrBa3+rT46+D/mw6q+hXdDzCWqZgkQjohEQc1wrTYO3fVs
-	 ND2Om4/LNt9ww==
+	b=GjIJw/rwsy5Qf8xfSiupB+YaFnmSPTgDFMfjUcMKc+2qVpkS5i/VO3t0ZC6rMVEwD
+	 u6uK/rnWGCYvp6ASn8aDfOZ8DR2S9YHgQIf8r1+FF0ejaP/o8Aly6Fm/XC/1XYFclo
+	 oqIq+hoIdZFuJaGbPFhXuJUoDO6LYRxJypoqB99dKMr1CTB/ob8X7olDL2W/0FewHa
+	 WwUhYYRbPeHQ2/YpRhsyjRzitvsnsNe82ntyUJGXuX8MVW3BegeOoAjh/DPV6yJ6qW
+	 PuafCkPoLSEUfmWrsPWdoOGtB9kUZRoua4Emk+krUVL0YLzZXB1y8qGF8cr9H9pvaV
+	 cTCPJ21ypoQJA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v6 1/7] nfs/localio: avoid bouncing LOCALIO if nfs_client_is_local()
-Date: Fri,  1 Aug 2025 13:10:43 -0400
-Message-ID: <20250801171049.94235-2-snitzer@kernel.org>
+Subject: [PATCH v6 2/7] nfs/localio: make trace_nfs_local_open_fh more useful
+Date: Fri,  1 Aug 2025 13:10:44 -0400
+Message-ID: <20250801171049.94235-3-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250801171049.94235-1-snitzer@kernel.org>
 References: <20250801171049.94235-1-snitzer@kernel.org>
@@ -61,59 +61,60 @@ Content-Transfer-Encoding: 8bit
 
 From: Mike Snitzer <snitzer@hammerspace.com>
 
-Previously nfs_local_probe() was made to disable and then attempt to
-re-enable LOCALIO (via LOCALIO protocol handshake) if/when it was
-called and LOCALIO already enabled.
-
-Vague memory for _why_ this was the case is that this was useful
-if/when a local NFS server were to be restarted with a local NFS
-client connected to it.
-
-But as it happens this causes an absurd amount of LOCALIO flapping
-which has a side-effect of too much IO being needlessly sent to NFSD
-(using RPC over the loopback network interface).  This is the
-definition of "serious performance loss" (that negates the point of
-having LOCALIO).
-
-So remove this mis-optimization for re-enabling LOCALIO if/when an NFS
-server is restarted (which is an extremely rare thing to do).  Will
-revisit testing that scenario again but in the meantime this patch
-restores the full benefit of LOCALIO.
+Always trigger trace event when LOCALIO opens a file.
 
 Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: NeilBrown <neil@brown.name>
 ---
- fs/nfs/localio.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/nfs/localio.c  | 5 +++--
+ fs/nfs/nfstrace.h | 6 +++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index 510d0a16cfe91..ecfe22a105eaf 100644
+index ecfe22a105eaf..0b54f01299d2c 100644
 --- a/fs/nfs/localio.c
 +++ b/fs/nfs/localio.c
-@@ -180,10 +180,8 @@ static void nfs_local_probe(struct nfs_client *clp)
- 		return;
- 	}
+@@ -231,13 +231,13 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
+ 		    struct nfsd_file __rcu **pnf,
+ 		    const fmode_t mode)
+ {
++	int status = 0;
+ 	struct nfsd_file *localio;
  
--	if (nfs_client_is_local(clp)) {
--		/* If already enabled, disable and re-enable */
--		nfs_localio_disable_client(clp);
--	}
-+	if (nfs_client_is_local(clp))
-+		return;
- 
- 	if (!nfs_uuid_begin(&clp->cl_uuid))
- 		return;
-@@ -244,7 +242,8 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
+ 	localio = nfs_open_local_fh(&clp->cl_uuid, clp->cl_rpcclient,
+ 				    cred, fh, nfl, pnf, mode);
+ 	if (IS_ERR(localio)) {
+-		int status = PTR_ERR(localio);
+-		trace_nfs_local_open_fh(fh, mode, status);
++		status = PTR_ERR(localio);
+ 		switch (status) {
  		case -ENOMEM:
  		case -ENXIO:
- 		case -ENOENT:
--			/* Revalidate localio, will disable if unsupported */
-+			/* Revalidate localio */
-+			nfs_localio_disable_client(clp);
+@@ -247,6 +247,7 @@ __nfs_local_open_fh(struct nfs_client *clp, const struct cred *cred,
  			nfs_local_probe(clp);
  		}
  	}
++	trace_nfs_local_open_fh(fh, mode, status);
+ 	return localio;
+ }
+ 
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index 96b1323318c2f..4ec66d5e9cc6c 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -1712,10 +1712,10 @@ TRACE_EVENT(nfs_local_open_fh,
+ 		),
+ 
+ 		TP_printk(
+-			"error=%d fhandle=0x%08x mode=%s",
+-			__entry->error,
++			"fhandle=0x%08x mode=%s result=%d",
+ 			__entry->fhandle,
+-			show_fs_fmode_flags(__entry->fmode)
++			show_fs_fmode_flags(__entry->fmode),
++			__entry->error
+ 		)
+ );
+ 
 -- 
 2.44.0
 
