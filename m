@@ -1,220 +1,88 @@
-Return-Path: <linux-nfs+bounces-13391-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13392-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EA7AB18A59
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 04:02:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0709B18FDF
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 22:07:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AD89AA5AA8
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 02:02:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15BEB17C1F4
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 20:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534697081E;
-	Sat,  2 Aug 2025 02:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9C51DF270;
+	Sat,  2 Aug 2025 20:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BySllj1F"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HaoGMeQ6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE032CA9;
-	Sat,  2 Aug 2025 02:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81822AD11
+	for <linux-nfs@vger.kernel.org>; Sat,  2 Aug 2025 20:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754100171; cv=none; b=qpa40518lqI2frFfRkam/yCtcFLOshlbDsxmjwZBBq/Nn9Ms+MjWFF6D/FvhLUp1dCs7cq0KOhmy/AdFe98PQq1qMLd3funq7tLOkTAFM+R0vaJozLlmRk1pTWE7QftlsA/UGs+M7Pixv1qfU2tOoUjW+Wm+pR4n55eTT7t9Vi0=
+	t=1754165223; cv=none; b=Ts+Sb4nbqjcZ7PJP8XEnMdcGOyga/yd6v+haaInSH6KSb/5qQ3+krKUsV2A1HEikZ3PoUGCaJB/xPWEn2JJz8Q0SEpR/i8BPVs02zC0lQIf77W2Cu4un5VJOq1KQG5Y2PfBj2yFpXueybQ0gBF/vvthamC6wsUk5BITfjpNp8TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754100171; c=relaxed/simple;
-	bh=6bITi9gvtbX7RAdnVVPYE2QrTPy+diCSRNMo8t0owvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8rHpA5BGd49qcKlGZlzS8/zN61TS8vlTNnaNPwT6kKcaimYqMVrTaG/sLV0RfbwraGCpwIqpe3pNPn+O7KnfO4oVs2WSBTlZPXxaQ/GJAcEdy99fPho6OO9GP1h45pTBQiGnn/C+2ogLhD/wKs2XHSv/TTOftjSkFcnhRIn/T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BySllj1F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF51C4CEE7;
-	Sat,  2 Aug 2025 02:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754100170;
-	bh=6bITi9gvtbX7RAdnVVPYE2QrTPy+diCSRNMo8t0owvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BySllj1FubO0oyO0tHAr96uaOj4qO4A5jIQwliWhAJ+MYQboc8F6bjo+a4mDDl5s8
-	 vytkyV5rWN+Gb9VLglRtyPwRihX5XPLqJsa01osMw7D7w8FaMl34Am+p1N8hDuZbBE
-	 Zaj54jJyLrZ8nP1IkUUYX/+cVeezt0gNRKqL7A8bHdHztbBC9TvidGcPAyHkTzNqNl
-	 KNYxW3Vpp5rH6Cte8Idfp9ypvhJRWF1IEIbEaBXmkYbFdfVoUhOMqSS1xzsaYtPm/I
-	 WLSElLTTH4uqNDIuqPqD6rApaq56Bog93dKEY4nCl436AJxcYUnSUATRY/55mFq/+y
-	 QEBH9tOBXjljg==
-Date: Fri, 1 Aug 2025 22:02:49 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, axboe@kernel.dk, dw@davidwei.uk,
-	brauner@kernel.org, Keith Busch <kbusch@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 7/7] iov_iter: remove iov_iter_is_aligned
-Message-ID: <aI1xySNUdQ2B0dbJ@kernel.org>
-References: <20250801234736.1913170-1-kbusch@meta.com>
- <20250801234736.1913170-8-kbusch@meta.com>
+	s=arc-20240116; t=1754165223; c=relaxed/simple;
+	bh=/fpSIJZiKBG8PFtdr1EYbaj+owOIrcy2b0pF5ObT7FU=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TmgF6rZvaEbGSSv5vWQRcqm4QkIKc4CgRIht0KhF+ernVz41i+ZheHZgvzJMELrJahBNY8nNplt36vm1WF1+aS4TsBBCDkUxkqLeBTokwPNSrEOIMbi6Hsf0B7KdeJwzLKg8h7z80Kj4g8YesKXhLRyn+xcfnwjhttmDLutMrA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HaoGMeQ6; arc=none smtp.client-ip=51.77.79.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1754165204; x=1754424404;
+	bh=/fpSIJZiKBG8PFtdr1EYbaj+owOIrcy2b0pF5ObT7FU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=HaoGMeQ6DBbaL8ZqNG+63StKIFy2Ke+0Z62zO/lXQ4DulTCHF7J1brJtpPi1+UG9D
+	 mGooH7WXqnlAAVEJYGgLw8hLEzOnqBm3ohMxGw9PDdk5D0qEdkrJKlYoEjUZGJzEqg
+	 sCsChe8cN+LCbqV5+k4Tm5IM9BKMZJKnHvtcqnabD+4U3new3LeLoPwFQLQQmmb3GT
+	 8PsSyUbqVSOOb3QKRc2bt3UTjleEnQigvI5hRtK8CGubXn3DP0v+uOX05t2s/OVqx2
+	 A6aTzcz7fgpseNcRMWBeZtSKcSm8fq4voqpIqytu6aPVC1Zk18iSRecAicSO4k5ftK
+	 kRIXboWrJPFww==
+Date: Sat, 02 Aug 2025 20:06:40 +0000
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+From: John <therealgraysky@proton.me>
+Cc: John <therealgraysky@proton.me>
+Subject: Missing pipe /var/lib/nfs/rpc_pipefs/nfsd/cld on OpenWrt
+Message-ID: <Pm2hmCTqzxzgnGtJpzqYHI5uV7Z7oQjykswavqCewEF_9wqXOJo3_EXS76gIzkpfu9eJLSDlKgNwJrNmTWgD2vKSEr3kLyDsr_Fzzj6jRYs=@proton.me>
+Feedback-ID: 47473199:user:proton
+X-Pm-Message-ID: 584caf9f40a396c5a686816b4ee7a7466d108f20
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250801234736.1913170-8-kbusch@meta.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 01, 2025 at 04:47:36PM -0700, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> No more callers.
-> 
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
+I want to modify the nfs-kernel-server package to use nfsdcld for client tr=
+acking, but am hitting a snag: I can't figure out why the pipe /var/lib/nfs=
+/rpc_pipefs/nfsd/cld is missing or what creates it.
 
-You had me up until this last patch.
+Here is my current version: https://github.com/graysky2/packages/commit/c68=
+d0ca16b3b69a0ffcad3dbb20bad58ee49a638
 
-I'm actually making use of iov_iter_is_aligned() in a series of
-changes for both NFS and NFSD.  Chuck has included some of the
-NFSD changes in his nfsd-testing branch, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-testing&id=5d78ac1e674b45f9c9e3769b48efb27c44f4e4d3
+I have the lines in the init script to start /usr/sbin/nfsdcld commented ou=
+t so it can be run manually with the debug option on the shell to see why i=
+t fails. What creates the pipe /var/lib/nfs/rpc_pipefs/nfsd/cld and why is =
+it not doing so is the questions I cannot answer. Any insights are apprecia=
+ted.
 
-And the balance of my work that is pending review/inclusion is:
-https://lore.kernel.org/linux-nfs/20250731230633.89983-1-snitzer@kernel.org/
-https://lore.kernel.org/linux-nfs/20250801171049.94235-1-snitzer@kernel.org/
+# nfsdcld -F -d
+nfsdcld: sqlite_startup_query_grace: current_epoch=3D1 recovery_epoch=3D0
+nfsdcld: sqlite_check_db_health: returning 0
+nfsdcld: sqlite_copy_cltrack_records: returning -1
+nfsdcld: sqlite_prepare_dbh: num_cltrack_records =3D 0
 
-I only need iov_iter_aligned_bvec, but recall I want to relax its
-checking with this patch:
-https://lore.kernel.org/linux-nfs/20250708160619.64800-5-snitzer@kernel.org/
+nfsdcld: sqlite_prepare_dbh: num_legacy_records =3D 0
 
-Should I just add iov_iter_aligned_bvec() to fs/nfs_common/ so that
-both NFS and NFSD can use it?
-
-Thanks,
-Mike
-
-> ---
->  include/linux/uio.h |  2 -
->  lib/iov_iter.c      | 95 ---------------------------------------------
->  2 files changed, 97 deletions(-)
-> 
-> diff --git a/include/linux/uio.h b/include/linux/uio.h
-> index 2e86c653186c6..5b127043a1519 100644
-> --- a/include/linux/uio.h
-> +++ b/include/linux/uio.h
-> @@ -286,8 +286,6 @@ size_t _copy_mc_to_iter(const void *addr, size_t bytes, struct iov_iter *i);
->  #endif
->  
->  size_t iov_iter_zero(size_t bytes, struct iov_iter *);
-> -bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
-> -			unsigned len_mask);
->  unsigned long iov_iter_alignment(const struct iov_iter *i);
->  unsigned long iov_iter_gap_alignment(const struct iov_iter *i);
->  void iov_iter_init(struct iov_iter *i, unsigned int direction, const struct iovec *iov,
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index f9193f952f499..2fe66a6b8789e 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -784,101 +784,6 @@ void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count)
->  }
->  EXPORT_SYMBOL(iov_iter_discard);
->  
-> -static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned addr_mask,
-> -				   unsigned len_mask)
-> -{
-> -	const struct iovec *iov = iter_iov(i);
-> -	size_t size = i->count;
-> -	size_t skip = i->iov_offset;
-> -
-> -	do {
-> -		size_t len = iov->iov_len - skip;
-> -
-> -		if (len > size)
-> -			len = size;
-> -		if (len & len_mask)
-> -			return false;
-> -		if ((unsigned long)(iov->iov_base + skip) & addr_mask)
-> -			return false;
-> -
-> -		iov++;
-> -		size -= len;
-> -		skip = 0;
-> -	} while (size);
-> -
-> -	return true;
-> -}
-> -
-> -static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
-> -				  unsigned len_mask)
-> -{
-> -	const struct bio_vec *bvec = i->bvec;
-> -	unsigned skip = i->iov_offset;
-> -	size_t size = i->count;
-> -
-> -	do {
-> -		size_t len = bvec->bv_len - skip;
-> -
-> -		if (len > size)
-> -			len = size;
-> -		if (len & len_mask)
-> -			return false;
-> -		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
-> -			return false;
-> -
-> -		bvec++;
-> -		size -= len;
-> -		skip = 0;
-> -	} while (size);
-> -
-> -	return true;
-> -}
-> -
-> -/**
-> - * iov_iter_is_aligned() - Check if the addresses and lengths of each segments
-> - * 	are aligned to the parameters.
-> - *
-> - * @i: &struct iov_iter to restore
-> - * @addr_mask: bit mask to check against the iov element's addresses
-> - * @len_mask: bit mask to check against the iov element's lengths
-> - *
-> - * Return: false if any addresses or lengths intersect with the provided masks
-> - */
-> -bool iov_iter_is_aligned(const struct iov_iter *i, unsigned addr_mask,
-> -			 unsigned len_mask)
-> -{
-> -	if (likely(iter_is_ubuf(i))) {
-> -		if (i->count & len_mask)
-> -			return false;
-> -		if ((unsigned long)(i->ubuf + i->iov_offset) & addr_mask)
-> -			return false;
-> -		return true;
-> -	}
-> -
-> -	if (likely(iter_is_iovec(i) || iov_iter_is_kvec(i)))
-> -		return iov_iter_aligned_iovec(i, addr_mask, len_mask);
-> -
-> -	if (iov_iter_is_bvec(i))
-> -		return iov_iter_aligned_bvec(i, addr_mask, len_mask);
-> -
-> -	/* With both xarray and folioq types, we're dealing with whole folios. */
-> -	if (iov_iter_is_xarray(i)) {
-> -		if (i->count & len_mask)
-> -			return false;
-> -		if ((i->xarray_start + i->iov_offset) & addr_mask)
-> -			return false;
-> -	}
-> -	if (iov_iter_is_folioq(i)) {
-> -		if (i->count & len_mask)
-> -			return false;
-> -		if (i->iov_offset & addr_mask)
-> -			return false;
-> -	}
-> -
-> -	return true;
-> -}
-> -EXPORT_SYMBOL_GPL(iov_iter_is_aligned);
-> -
->  static unsigned long iov_iter_alignment_iovec(const struct iov_iter *i)
->  {
->  	const struct iovec *iov = iter_iov(i);
-> -- 
-> 2.47.3
-> 
+nfsdcld: cld_pipe_init: init pipe handlers
+nfsdcld: cld_pipe_open: opening upcall pipe /var/lib/nfs/rpc_pipefs/nfsd/cl=
+d
+nfsdcld: cld_pipe_open: open of /var/lib/nfs/rpc_pipefs/nfsd/cld failed: No=
+ such file or directory
+nfsdcld: main: Starting event dispatch handler.
 
