@@ -1,88 +1,108 @@
-Return-Path: <linux-nfs+bounces-13392-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13393-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0709B18FDF
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 22:07:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CAF0B19640
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Aug 2025 23:24:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15BEB17C1F4
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Aug 2025 20:07:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F12B518949AE
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Aug 2025 21:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9C51DF270;
-	Sat,  2 Aug 2025 20:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B51A0221F13;
+	Sun,  3 Aug 2025 21:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HaoGMeQ6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAviez+F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81822AD11
-	for <linux-nfs@vger.kernel.org>; Sat,  2 Aug 2025 20:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A9421CA1E
+	for <linux-nfs@vger.kernel.org>; Sun,  3 Aug 2025 21:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754165223; cv=none; b=Ts+Sb4nbqjcZ7PJP8XEnMdcGOyga/yd6v+haaInSH6KSb/5qQ3+krKUsV2A1HEikZ3PoUGCaJB/xPWEn2JJz8Q0SEpR/i8BPVs02zC0lQIf77W2Cu4un5VJOq1KQG5Y2PfBj2yFpXueybQ0gBF/vvthamC6wsUk5BITfjpNp8TU=
+	t=1754256152; cv=none; b=uPulEgO3j74jOM3RyUXWhPaek4R3ZPdtXHM1nIHyT65jPxa8gqfH5Qdzlyil2DqP9/JuYkwgC9P3bkrDGllNwgFTcRRAO/LBNUfFdUqwwMspkb/vvXIByRJEv8uI/6EWEMod6aApTfuxtudX5jxqrj99w5UC783IlWcdLR/wGQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754165223; c=relaxed/simple;
-	bh=/fpSIJZiKBG8PFtdr1EYbaj+owOIrcy2b0pF5ObT7FU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TmgF6rZvaEbGSSv5vWQRcqm4QkIKc4CgRIht0KhF+ernVz41i+ZheHZgvzJMELrJahBNY8nNplt36vm1WF1+aS4TsBBCDkUxkqLeBTokwPNSrEOIMbi6Hsf0B7KdeJwzLKg8h7z80Kj4g8YesKXhLRyn+xcfnwjhttmDLutMrA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HaoGMeQ6; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1754165204; x=1754424404;
-	bh=/fpSIJZiKBG8PFtdr1EYbaj+owOIrcy2b0pF5ObT7FU=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=HaoGMeQ6DBbaL8ZqNG+63StKIFy2Ke+0Z62zO/lXQ4DulTCHF7J1brJtpPi1+UG9D
-	 mGooH7WXqnlAAVEJYGgLw8hLEzOnqBm3ohMxGw9PDdk5D0qEdkrJKlYoEjUZGJzEqg
-	 sCsChe8cN+LCbqV5+k4Tm5IM9BKMZJKnHvtcqnabD+4U3new3LeLoPwFQLQQmmb3GT
-	 8PsSyUbqVSOOb3QKRc2bt3UTjleEnQigvI5hRtK8CGubXn3DP0v+uOX05t2s/OVqx2
-	 A6aTzcz7fgpseNcRMWBeZtSKcSm8fq4voqpIqytu6aPVC1Zk18iSRecAicSO4k5ftK
-	 kRIXboWrJPFww==
-Date: Sat, 02 Aug 2025 20:06:40 +0000
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-From: John <therealgraysky@proton.me>
-Cc: John <therealgraysky@proton.me>
-Subject: Missing pipe /var/lib/nfs/rpc_pipefs/nfsd/cld on OpenWrt
-Message-ID: <Pm2hmCTqzxzgnGtJpzqYHI5uV7Z7oQjykswavqCewEF_9wqXOJo3_EXS76gIzkpfu9eJLSDlKgNwJrNmTWgD2vKSEr3kLyDsr_Fzzj6jRYs=@proton.me>
-Feedback-ID: 47473199:user:proton
-X-Pm-Message-ID: 584caf9f40a396c5a686816b4ee7a7466d108f20
+	s=arc-20240116; t=1754256152; c=relaxed/simple;
+	bh=sW4AifLlIcjcsLBu9rPB5UoBxQFwI/2eoC0ZK76CaQU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L3ZC8IwWU8QNKaDPb7+/12HfHY7P+6NZRbRZ+kCpHdz3ySabgMe2I2lQxQdjH4P2IO9CQL784C/plSbA14c/wrglX2oU7bTE7wSM/KdiDp7wo06zYmN7sUEc5dTR2fjPV1273v1OY+3ADONrQl1NbThcgFh45XPAcmYnLYXasjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAviez+F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E042C4CEF0;
+	Sun,  3 Aug 2025 21:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754256152;
+	bh=sW4AifLlIcjcsLBu9rPB5UoBxQFwI/2eoC0ZK76CaQU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OAviez+FA7LVxXp2TNPZ4DvtG1ZaqiLWLDwt94CO7G3EADnsTlYMoCtI3Nvpkzykj
+	 RO+C1bUftXlOX36gkhrupXiV0BcM/hD/mz5nP06G7VT43S8NylUkuFPB1L9ATt12ut
+	 2YnoLv8a+UmjZdcQGhI5ah7lxjHgQnd6jaevQNBary1yq48hJNbh5jTCYmQRwTshcA
+	 5aPFcl0j6jI/Z3JvNtDNWOPwxuR/mhu5pq9lgfbJL73Kq3iWWmYL5Avc9F7nJkJj0u
+	 QcY43lY3JXkbHfRcmLC5kLZpubKQyXyQ77aqQjuyWsFHboYOgfrCEJw0SI+mflbRBs
+	 BXXY2CwKw3IjA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org
+Cc: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] nfsd: Don't force CRYPTO_LIB_SHA256 to be built-in
+Date: Sun,  3 Aug 2025 14:21:30 -0700
+Message-ID: <20250803212130.105700-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-I want to modify the nfs-kernel-server package to use nfsdcld for client tr=
-acking, but am hitting a snag: I can't figure out why the pipe /var/lib/nfs=
-/rpc_pipefs/nfsd/cld is missing or what creates it.
+Now that nfsd is accessing SHA-256 via the library API instead of via
+crypto_shash, there is a direct symbol dependency on the SHA-256 code
+and there is no benefit to be gained from forcing it to be built-in.
+Therefore, select CRYPTO_LIB_SHA256 from NFSD (conditional on NFSD_V4)
+instead of from NFSD_V4, so that it can be 'm' if NFSD is 'm'.
 
-Here is my current version: https://github.com/graysky2/packages/commit/c68=
-d0ca16b3b69a0ffcad3dbb20bad58ee49a638
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
+ fs/nfsd/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have the lines in the init script to start /usr/sbin/nfsdcld commented ou=
-t so it can be run manually with the debug option on the shell to see why i=
-t fails. What creates the pipe /var/lib/nfs/rpc_pipefs/nfsd/cld and why is =
-it not doing so is the questions I cannot answer. Any insights are apprecia=
-ted.
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index 879e0b104d1c8..e134dce45e350 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -3,10 +3,11 @@ config NFSD
+ 	tristate "NFS server support"
+ 	depends on INET
+ 	depends on FILE_LOCKING
+ 	depends on FSNOTIFY
+ 	select CRC32
++	select CRYPTO_LIB_SHA256 if NFSD_V4
+ 	select LOCKD
+ 	select SUNRPC
+ 	select EXPORTFS
+ 	select NFS_COMMON
+ 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
+@@ -75,11 +76,10 @@ config NFSD_V4
+ 	bool "NFS server support for NFS version 4"
+ 	depends on NFSD && PROC_FS
+ 	select FS_POSIX_ACL
+ 	select RPCSEC_GSS_KRB5
+ 	select CRYPTO
+-	select CRYPTO_LIB_SHA256
+ 	select CRYPTO_MD5
+ 	select GRACE_PERIOD
+ 	select NFS_V4_2_SSC_HELPER if NFS_V4_2
+ 	help
+ 	  This option enables support in your system's NFS server for
 
-# nfsdcld -F -d
-nfsdcld: sqlite_startup_query_grace: current_epoch=3D1 recovery_epoch=3D0
-nfsdcld: sqlite_check_db_health: returning 0
-nfsdcld: sqlite_copy_cltrack_records: returning -1
-nfsdcld: sqlite_prepare_dbh: num_cltrack_records =3D 0
+base-commit: 186f3edfdd41f2ae87fc40a9ccba52a3bf930994
+-- 
+2.50.1
 
-nfsdcld: sqlite_prepare_dbh: num_legacy_records =3D 0
-
-nfsdcld: cld_pipe_init: init pipe handlers
-nfsdcld: cld_pipe_open: opening upcall pipe /var/lib/nfs/rpc_pipefs/nfsd/cl=
-d
-nfsdcld: cld_pipe_open: open of /var/lib/nfs/rpc_pipefs/nfsd/cld failed: No=
- such file or directory
-nfsdcld: main: Starting event dispatch handler.
 
