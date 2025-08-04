@@ -1,214 +1,136 @@
-Return-Path: <linux-nfs+bounces-13409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13410-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C4DFB1A838
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 18:54:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2F29B1A945
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 20:47:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B600163E02
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 16:54:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A1FF7A9F7F
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 18:45:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41CAD28AAE7;
-	Mon,  4 Aug 2025 16:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C821B4F2C;
+	Mon,  4 Aug 2025 18:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jij15pKt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EPYtk8gO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB5428A72E
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 16:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECEA1CEACB
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 18:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754326464; cv=none; b=Fz8xH+UsC0GdMSHBG39fQFm8qGNrs8cbulwWaDw00GYLEDgqhzt4lCbcpNUD6MUHlZJNQTAhlN1OGDSo+cX+jHkMjlM2Wmr8a/v3CK8g7rMRVkfmsl/j0hZEbBe/duwm76dBjO9PQSx14k13xCQ6i44/DT3uXkV04zcPwOyLEAM=
+	t=1754333219; cv=none; b=o9/RJY+78eyRf8oXRO0lsePc7TDpm20BozR3nlCs920ngcs6Un4Nlp/BbxVDByN6LdPM/8N4HdJCEgaYJ9Is+rxq5njTt8QvYNFaqcB9N1tNLI/nWJWSDLVCctG3MTlAbp+y9LcN+ODYYpAxOdAJ5xPpTpcNJcGqCHhCv3vTu4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754326464; c=relaxed/simple;
-	bh=wcdVqqF2J3VJ8DssweqjZgSe/1Lwf1zk9lpFKt/rk0o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S8+pcbadrSZ63fqADnN0yK2vP5C44Aj6/GGuA30xuhCmXhAy/GLBT/gjX9mSmuBuF0Hk0WgNSo7ZR6nUZL9smbRukbHWT9gwaJ/IouoWNRDKNOE3FP6DydFbCI7e8LWjHDtv9C5vx/qx0oc3vQq7f/797VVM7V2taj1ZIABzSgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jij15pKt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7525C4CEE7;
-	Mon,  4 Aug 2025 16:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754326464;
-	bh=wcdVqqF2J3VJ8DssweqjZgSe/1Lwf1zk9lpFKt/rk0o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Jij15pKthFM/Ic1SMZM+pJF/tpmOd7NjQBEyC+i6sa9xNv3vZYzjIrG+9Cm5f8s0r
-	 pFbiMBrzewgNuzAyXDIc8m9JZWUGnmLes+VjenoXSxy9rC+YwCGG/ANvfXV8P0tu9X
-	 E1jlxtNGIrJb8+QzY8bPAVE//g6P4ZkffeHHMVSTj3BESYMIrkaNtLPIvDi9fDLIMO
-	 UoImN0+fVB3qg5lgj7Be55MbCn1N6diGjRibrFx7sKg5ruZdzIfIR5WsZoW5wUDSYn
-	 HlAuvP2m5eMkHLv2ZXEvDZIupOn491sFTiubDTAK/VI/myWITlu6hIvXQk3EvKkMZ6
-	 zXwzaLGPtpLiQ==
-Message-ID: <5036eb3f8190034811ee380d4df3ed6036de5148.camel@kernel.org>
-Subject: Re: [PATCH 2/2] NFSv4: Remove duplicate lookups, capability probes
- and fsinfo calls
-From: Trond Myklebust <trondmy@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>
+	s=arc-20240116; t=1754333219; c=relaxed/simple;
+	bh=DtG9x0/KImLxol+9hSaAJb6yxYkmTmF8Y5QaVf6hMjY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=L0eUdX5bdDGW/oYHr393eHdwz6CENO0ConiCs7O4Vdh55WbRswAK8XGKJUWa8jF2cZdEox48b5Qq1rRsDl5/2P2UlkYTHGRiDyhzdRXF0AnhUle4ppD5PdNhBgbP4E7eOLWi58g0DCsNGB5fdQQHMYSWoayO78nMZleSju3YZmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EPYtk8gO; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 574D6ZvS009202;
+	Mon, 4 Aug 2025 18:46:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:date:from:message-id:subject:to; s=corp-2025-04-25; bh=bG/Xv44Z
+	/P8SzgOw9zeQsJ/9RNRwiy3u+JHRDLcoUmc=; b=EPYtk8gOXSjntxnUdgoj6Av6
+	QQ7eADlRaEp79sCNLHUEMUQhy3V1tjlEZ3Nvb72C2eQdPDvyqcsGuY/PyiJ9Oc8n
+	1MY0oW6/0vqzbvAiFHWAMsq4AnNcVEwi1rOQJpjuqe4RM5uRH61kUzuoad3W/YdX
+	yGP5WbuUAtSTBoOST0poE7nbSSbcjfwotVemLD2hanFGssF/YhCr4CPihch3jeYI
+	jP0IsctpJBDgf7Jw9xxl3M6DPYIwBPVkJZlClZIHTw78FypZfJECiM5y2XLZMjDG
+	whuBSTOpZkVo8p0dTNp4xMyQRCM0+SDRs5VujLbUEGy9o8N2aktVXDRq6hHGNw==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 489b7xk85r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 18:46:45 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 574I2b3c013447;
+	Mon, 4 Aug 2025 18:46:44 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48a7mrsunk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 18:46:44 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 574Iki4F011322;
+	Mon, 4 Aug 2025 18:46:44 GMT
+Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 48a7mrsumr-1;
+	Mon, 04 Aug 2025 18:46:44 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        okorniev@redhat.com, tom@talpey.com
 Cc: linux-nfs@vger.kernel.org
-Date: Mon, 04 Aug 2025 09:54:22 -0700
-In-Reply-To: <4FB030C4-24BD-40ED-8442-8A0BFC970269@redhat.com>
-References: <cover.1754270543.git.trond.myklebust@hammerspace.com>
-	 <c7c737e442abb6984cef194fd8d66acab2e0b83f.1754270543.git.trond.myklebust@hammerspace.com>
-	 <4FB030C4-24BD-40ED-8442-8A0BFC970269@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+Subject: [PATCH 1/1] SUNRPC: call_connect_status needs to destroy transport on ETIMEDOUT before retry
+Date: Mon,  4 Aug 2025 11:46:38 -0700
+Message-Id: <1754333198-62658-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-04_08,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2508040108
+X-Authority-Analysis: v=2.4 cv=MdNsu4/f c=1 sm=1 tr=0 ts=68910016 b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=2OwXVqhp2XgA:10 a=yPCof4ZbAAAA:8 a=v5Xu6_3S6vMue248_I4A:9 cc=ntf
+ awl=host:13596
+X-Proofpoint-ORIG-GUID: ZGN4QMmuWzG2AJeXfWzo8DMQacV-Q3mr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA0MDEwOSBTYWx0ZWRfX4XZ0hRZuQVz4
+ pvSYmznegzGzdL0u5W6zkt65onDmR8vECmUEap6Rfv+SwNCtDKEn+3NFM7/8w0SHew9xAQghqcg
+ Q7MT0RoI2iZc9PyDZUangWfzNlyZgccoAeq+AUaxXTIimflmUVNs3XJGHEzrE4aY41snLmPnJAm
+ S+H1s/ST+T8EpDBuC5jVSiBDYUecZyeJj/Y+1i4qAoVs9Q2XmNIdlxtzog8HZyjXBJjUp9HTOz4
+ t3V3Nv/7uNBzR+/wij17fKgdb2V5ebIPJVxFh2evZl1EM5UDQulQ5o4meEdaKtoM3AT4Y60fJ53
+ 3pY3nFiDXhy7y6CLawTKxrbfF6Rq6I37QrGKXT5itUCWOGLAEQWGbiaKHuLlVyPulzJkTQ6kPt9
+ ZKc80Fz8l2H3VgzBWrUQsXSgm1SGc3CwTtydBbo1VTkONWZp0oDN/vTYwMWckYxjm68jJt4E
+X-Proofpoint-GUID: ZGN4QMmuWzG2AJeXfWzo8DMQacV-Q3mr
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Mon, 2025-08-04 at 12:43 -0400, Benjamin Coddington wrote:
-> On 3 Aug 2025, at 21:29, Trond Myklebust wrote:
->=20
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >=20
-> > When crossing into a new filesystem, the NFSv4 client will look up
-> > the
-> > new directory, and then call nfs4_server_capabilities() as well as
-> > nfs4_do_fsinfo() at least twice.
-> >=20
-> > This patch removes the duplicate calls, and reduces the initial
-> > lookup
-> > to retrieve just a minimal set of attributes.
-> >=20
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > ---
-> > =C2=A0fs/nfs/nfs4_fs.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 ++-
-> > =C2=A0fs/nfs/nfs4getroot.c | 14 +++----
-> > =C2=A0fs/nfs/nfs4proc.c=C2=A0=C2=A0=C2=A0 | 87 ++++++++++++++++++++----=
-----------------
-> > ----
-> > =C2=A03 files changed, 48 insertions(+), 58 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-> > index d3ca91f60fc1..c34c89af9c7d 100644
-> > --- a/fs/nfs/nfs4_fs.h
-> > +++ b/fs/nfs/nfs4_fs.h
-> > @@ -63,7 +63,7 @@ struct nfs4_minor_version_ops {
-> > =C2=A0	bool	(*match_stateid)(const nfs4_stateid *,
-> > =C2=A0			const nfs4_stateid *);
-> > =C2=A0	int	(*find_root_sec)(struct nfs_server *, struct
-> > nfs_fh *,
-> > -			struct nfs_fsinfo *);
-> > +				 struct nfs_fattr *);
-> > =C2=A0	void	(*free_lock_state)(struct nfs_server *,
-> > =C2=A0			struct nfs4_lock_state *);
-> > =C2=A0	int	(*test_and_free_expired)(struct nfs_server *,
-> > @@ -296,7 +296,8 @@ extern int nfs4_call_sync(struct rpc_clnt *,
-> > struct nfs_server *,
-> > =C2=A0extern void nfs4_init_sequence(struct nfs4_sequence_args *, struc=
-t
-> > nfs4_sequence_res *, int, int);
-> > =C2=A0extern int nfs4_proc_setclientid(struct nfs_client *, u32,
-> > unsigned short, const struct cred *, struct nfs4_setclientid_res
-> > *);
-> > =C2=A0extern int nfs4_proc_setclientid_confirm(struct nfs_client *,
-> > struct nfs4_setclientid_res *arg, const struct cred *);
-> > -extern int nfs4_proc_get_rootfh(struct nfs_server *, struct nfs_fh
-> > *, struct nfs_fsinfo *, bool);
-> > +extern int nfs4_proc_get_rootfh(struct nfs_server *, struct nfs_fh
-> > *,
-> > +				struct nfs_fattr *, bool);
-> > =C2=A0extern int nfs4_proc_bind_conn_to_session(struct nfs_client *,
-> > const struct cred *cred);
-> > =C2=A0extern int nfs4_proc_exchange_id(struct nfs_client *clp, const
-> > struct cred *cred);
-> > =C2=A0extern int nfs4_destroy_clientid(struct nfs_client *clp);
-> > diff --git a/fs/nfs/nfs4getroot.c b/fs/nfs/nfs4getroot.c
-> > index 1a69479a3a59..e67ea345de69 100644
-> > --- a/fs/nfs/nfs4getroot.c
-> > +++ b/fs/nfs/nfs4getroot.c
-> > @@ -12,30 +12,28 @@
-> >=20
-> > =C2=A0int nfs4_get_rootfh(struct nfs_server *server, struct nfs_fh
-> > *mntfh, bool auth_probe)
-> > =C2=A0{
-> > -	struct nfs_fsinfo fsinfo;
-> > +	struct nfs_fattr *fattr =3D nfs_alloc_fattr();
-> > =C2=A0	int ret =3D -ENOMEM;
-> >=20
-> > -	fsinfo.fattr =3D nfs_alloc_fattr();
-> > -	if (fsinfo.fattr =3D=3D NULL)
-> > +	if (fattr =3D=3D NULL)
-> > =C2=A0		goto out;
-> >=20
-> > =C2=A0	/* Start by getting the root filehandle from the server */
-> > -	ret =3D nfs4_proc_get_rootfh(server, mntfh, &fsinfo,
-> > auth_probe);
-> > +	ret =3D nfs4_proc_get_rootfh(server, mntfh, fattr,
-> > auth_probe);
-> > =C2=A0	if (ret < 0) {
-> > =C2=A0		dprintk("nfs4_get_rootfh: getroot error =3D %d\n", -
-> > ret);
-> > =C2=A0		goto out;
-> > =C2=A0	}
-> >=20
-> > -	if (!(fsinfo.fattr->valid & NFS_ATTR_FATTR_TYPE)
-> > -			|| !S_ISDIR(fsinfo.fattr->mode)) {
-> > +	if (!(fattr->valid & NFS_ATTR_FATTR_TYPE) ||
-> > !S_ISDIR(fattr->mode)) {
-> > =C2=A0		printk(KERN_ERR "nfs4_get_rootfh:"
-> > =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 " getroot encountered non-=
-directory\n");
-> > =C2=A0		ret =3D -ENOTDIR;
-> > =C2=A0		goto out;
-> > =C2=A0	}
-> >=20
-> > -	memcpy(&server->fsid, &fsinfo.fattr->fsid, sizeof(server-
-> > >fsid));
-> > +	memcpy(&server->fsid, &fattr->fsid, sizeof(server->fsid));
-> > =C2=A0out:
-> > -	nfs_free_fattr(fsinfo.fattr);
-> > +	nfs_free_fattr(fattr);
-> > =C2=A0	return ret;
-> > =C2=A0}
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index c7c7ec22f21d..7d2b67e06cc3 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -4240,15 +4240,18 @@ static int nfs4_discover_trunking(struct
-> > nfs_server *server,
-> > =C2=A0}
-> >=20
-> > =C2=A0static int _nfs4_lookup_root(struct nfs_server *server, struct
-> > nfs_fh *fhandle,
-> > -		struct nfs_fsinfo *info)
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs_fattr *fattr)
-> > =C2=A0{
-> > -	u32 bitmask[3];
-> > +	u32 bitmask[3] =3D {
-> > +		[0] =3D FATTR4_WORD0_TYPE | FATTR4_WORD0_CHANGE |
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FATTR4_WORD0_SIZE | FATTR4_WORD0_FSID=
-,
->=20
-> Just a thought when noticing this change --
->=20
-> Don't we want at least FATTR4_WORD0_FILEID and
-> FATTR4_WORD1_MOUNTED_ON_FILEID as well here?
+Currently, when an RPC connection times out during the connect phase,
+the task is retried by placing it back on the pending queue and waiting
+again. In some cases, the timeout occurs because TCP is unable to send
+the SYN packet. This situation most often arises on bare metal systems
+at boot time, when the NFS mount is attempted while the network link
+appears to be up but is not yet stable.
 
+This patch addresses the issue by updating call_connect_status to destroy
+the transport on ETIMEDOUT error before retrying the connection. This
+ensures that subsequent connection attempts use a fresh transport,
+reducing the likelihood of repeated failures due to lingering network
+issues.
 
-Only FATTR4_WORD0_TYPE and FATTR4_WORD0_FSID are used by the caller, so
-we don't actually need FATTR4_WORD0_CHANGE or FATTR4_WORD0_SIZE either.
-I put them in so that the test for the auth flavour would have more
-chances of catching a problem.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Note that neither FATTR4_WORD0_FILEID or FATTR4_WORD1_MOUNTED_ON_FILEID
-are mandatory attributes, so I also chose to avoid them + all the
-timestamps for that reason.
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 21426c3049d3..701b742750c5 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2215,6 +2215,7 @@ call_connect_status(struct rpc_task *task)
+ 	case -EHOSTUNREACH:
+ 	case -EPIPE:
+ 	case -EPROTO:
++	case -ETIMEDOUT:
+ 		xprt_conditional_disconnect(task->tk_rqstp->rq_xprt,
+ 					    task->tk_rqstp->rq_connect_cookie);
+ 		if (RPC_IS_SOFTCONN(task))
+@@ -2225,7 +2226,6 @@ call_connect_status(struct rpc_task *task)
+ 	case -EADDRINUSE:
+ 	case -ENOTCONN:
+ 	case -EAGAIN:
+-	case -ETIMEDOUT:
+ 		if (!(task->tk_flags & RPC_TASK_NO_ROUND_ROBIN) &&
+ 		    (task->tk_flags & RPC_TASK_MOVEABLE) &&
+ 		    test_bit(XPRT_REMOVE, &xprt->state)) {
+-- 
+2.43.5
 
->=20
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
->=20
-> Ben
->=20
-
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
 
