@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-13399-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13400-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45007B1A0C2
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 13:54:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69517B1A0C3
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 13:55:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C85AD189A07A
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 11:55:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D15E47A4462
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 11:53:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34FE724DCE5;
-	Mon,  4 Aug 2025 11:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93B723D294;
+	Mon,  4 Aug 2025 11:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ol1BEwmK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksyGZQhk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B541C3027
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 11:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BFA1C3027
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 11:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754308497; cv=none; b=oYrs0slfONAlpj0qscSv93K7/Wv9JkLOxCkwm9UPTtTYO6C3UOvV4vXqIIxRq+BdUk+LKIDMCDXEp09L+Cnnwu9PIyiaWAOaiAE3oFW/7R9D7C3VaxNj2hls3ZjslB/NOs+WSPTc8C7iKRG2PIUUL9/nifvoSm1/lYkrApoLaNY=
+	t=1754308519; cv=none; b=feJ66n4kEkRvjipS63ABkmgkgQAR9EqDcr6faktL4oWZuq01jRbApzn2vH5GSOQIT6EZTwSh94iR3VVF3PJU6YosOFR0bz/SyhdQUqPfMmA/TMHvXkxKyuAkoBelzsJ67xKRhH2DyhkU3EpF/Zf7sUD+IZIvTg4GP7etPtKW9ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754308497; c=relaxed/simple;
-	bh=pYz2FU28IDsmM+9xAkd+XEZCLr7745tKyTTz+DlXtVA=;
+	s=arc-20240116; t=1754308519; c=relaxed/simple;
+	bh=byy5sj418Pv+SR1uG5AnkBMv+z0b8i7J2zYNKGzxR1E=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EjBlO63cES4zZGvDcE6EB1F1L4SE/fsfN5rO6lCHccExdqAI4/wLLjaOpkUVplEpcueXTB0WUyFSEXTV5bzwJv0lOcjHHHyTZ2SAxSSzETIqr9cdrJfrCS/fxpimByc2PkjRfxXmZZIfCEF40bLqDddP/ZIRhtjx6qEmAPH/kT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ol1BEwmK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD32C4CEE7;
-	Mon,  4 Aug 2025 11:54:55 +0000 (UTC)
+	 Content-Type:MIME-Version; b=R4sRoZ7oa0KPK2OSqy72Kz5WcoRkuvJOifOIdkGhcrLfycVlZuvWtkMspWsPK/m90ypSUFJ2vjg9Agm0rJkljMf0UDPz6KM7UfZNy5UV9PL+6TpWS2ZkQmOWSPmgTvblfCT6H0TgaQfC2SsG6LkbUHgCfi3862qwOqH5qZXNZxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksyGZQhk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2A6C4CEE7;
+	Mon,  4 Aug 2025 11:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754308496;
-	bh=pYz2FU28IDsmM+9xAkd+XEZCLr7745tKyTTz+DlXtVA=;
+	s=k20201202; t=1754308518;
+	bh=byy5sj418Pv+SR1uG5AnkBMv+z0b8i7J2zYNKGzxR1E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ol1BEwmKlXXUL6Di1dysW5j838X29lVLjq6nP5ga/AB4uQRV94PP9n4ZqdiPuoXSc
-	 EJj2Pq7+Z3v2eCF8pSJQ1xC5/CDqgj/1sPS6+z8I0dmazM77dbgxzeAzhk8kOGGn0a
-	 2EI92bIBi0yqaGjbVvCB5cCH19OUmVmlV+4WQd/NiGSyYg7sy3nAuzs/le9fjGi7My
-	 kBOFb998RV5Gbq6Iv747BqtWi0eRpA5n2qWQUk0LAcZEAbTvtB0x5GpkhLJehhubLL
-	 w5pl2n7I9MmpO0kMfEbsBtShkEfPVK0VhN9IZBDPRAJK3aHj0neQYeIvYhiTUXa5vf
-	 pXlCi4mDK9PLw==
-Message-ID: <c61db0149e29e3a9eb334f45df72f160eba006f5.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Don't force CRYPTO_LIB_SHA256 to be built-in
+	b=ksyGZQhkGLyvLQePsDlIiYFjtCT68FeAs1ed6gpboKigS2u2bg56hGE/bxRUjQTgD
+	 zFWm+BYwCcWbpmXnguf6S2m/gXE8QzKHAZ9Udvw3BOmHjru8GHGg88e+x5Gi32lBJ7
+	 T/BY6bnmSEG0Cpx3DNG4aF1QXx6zwY7X0/U/GEQF1NrgkDfkVaElmKUJSbO60gY0s5
+	 Ofxv8uJ7KOYCLnxIHx5WMGdNgbzxlMu6ksu2Llp8PIDyR+lZPCih9L62jS21R8kjKb
+	 2E6lpEunOvbD12Yb7/sfA71a/vN8d9tPAa9jn0mZt35eFTiyFDyFt01ZEKW/X4Ps3m
+	 vUh2P4M+e8ysg==
+Message-ID: <0067724225d7c5590b840b4bc1c373a1b7973d87.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Replace open-coded conversion of bytes to hex
 From: Jeff Layton <jlayton@kernel.org>
 To: Eric Biggers <ebiggers@kernel.org>, Chuck Lever
  <chuck.lever@oracle.com>, 	linux-nfs@vger.kernel.org
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Mon, 04 Aug 2025 07:54:54 -0400
-In-Reply-To: <20250803212130.105700-1-ebiggers@kernel.org>
-References: <20250803212130.105700-1-ebiggers@kernel.org>
+Date: Mon, 04 Aug 2025 07:55:16 -0400
+In-Reply-To: <20250803212448.117174-1-ebiggers@kernel.org>
+References: <20250803212448.117174-1-ebiggers@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,46 +135,64 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-08-03 at 14:21 -0700, Eric Biggers wrote:
-> Now that nfsd is accessing SHA-256 via the library API instead of via
-> crypto_shash, there is a direct symbol dependency on the SHA-256 code
-> and there is no benefit to be gained from forcing it to be built-in.
-> Therefore, select CRYPTO_LIB_SHA256 from NFSD (conditional on NFSD_V4)
-> instead of from NFSD_V4, so that it can be 'm' if NFSD is 'm'.
+On Sun, 2025-08-03 at 14:24 -0700, Eric Biggers wrote:
+> Since the Linux kernel's sprintf() has conversion to hex built-in via
+> "%*phN", delete md5_to_hex() and just use that.  Also add an explicit
+> array bound to the dname parameter of nfs4_make_rec_clidname() to make
+> its size clear.  No functional change.
 >=20
 > Signed-off-by: Eric Biggers <ebiggers@kernel.org>
 > ---
->  fs/nfsd/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/nfsd/nfs4recover.c | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
 >=20
-> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-> index 879e0b104d1c8..e134dce45e350 100644
-> --- a/fs/nfsd/Kconfig
-> +++ b/fs/nfsd/Kconfig
-> @@ -3,10 +3,11 @@ config NFSD
->  	tristate "NFS server support"
->  	depends on INET
->  	depends on FILE_LOCKING
->  	depends on FSNOTIFY
->  	select CRC32
-> +	select CRYPTO_LIB_SHA256 if NFSD_V4
->  	select LOCKD
->  	select SUNRPC
->  	select EXPORTFS
->  	select NFS_COMMON
->  	select NFS_ACL_SUPPORT if NFSD_V2_ACL
-> @@ -75,11 +76,10 @@ config NFSD_V4
->  	bool "NFS server support for NFS version 4"
->  	depends on NFSD && PROC_FS
->  	select FS_POSIX_ACL
->  	select RPCSEC_GSS_KRB5
->  	select CRYPTO
-> -	select CRYPTO_LIB_SHA256
->  	select CRYPTO_MD5
->  	select GRACE_PERIOD
->  	select NFS_V4_2_SSC_HELPER if NFS_V4_2
->  	help
->  	  This option enables support in your system's NFS server for
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index 2231192ec33f5..54f5e5392ef9d 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -90,26 +90,12 @@ static void
+>  nfs4_reset_creds(const struct cred *original)
+>  {
+>  	put_cred(revert_creds(original));
+>  }
+> =20
+> -static void
+> -md5_to_hex(char *out, char *md5)
+> -{
+> -	int i;
+> -
+> -	for (i=3D0; i<16; i++) {
+> -		unsigned char c =3D md5[i];
+> -
+> -		*out++ =3D '0' + ((c&0xf0)>>4) + (c>=3D0xa0)*('a'-'9'-1);
+> -		*out++ =3D '0' + (c&0x0f) + ((c&0x0f)>=3D0x0a)*('a'-'9'-1);
+> -	}
+> -	*out =3D '\0';
+> -}
+> -
+>  static int
+> -nfs4_make_rec_clidname(char *dname, const struct xdr_netobj *clname)
+> +nfs4_make_rec_clidname(char dname[HEXDIR_LEN], const struct xdr_netobj *=
+clname)
+>  {
+>  	struct xdr_netobj cksum;
+>  	struct crypto_shash *tfm;
+>  	int status;
+> =20
+> @@ -131,11 +117,11 @@ nfs4_make_rec_clidname(char *dname, const struct xd=
+r_netobj *clname)
+>  	status =3D crypto_shash_tfm_digest(tfm, clname->data, clname->len,
+>  					 cksum.data);
+>  	if (status)
+>  		goto out;
+> =20
+> -	md5_to_hex(dname, cksum.data);
+> +	sprintf(dname, "%*phN", 16, cksum.data);
+> =20
+>  	status =3D 0;
+>  out:
+>  	kfree(cksum.data);
+>  	crypto_free_shash(tfm);
 >=20
 > base-commit: 186f3edfdd41f2ae87fc40a9ccba52a3bf930994
 
