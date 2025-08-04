@@ -1,235 +1,134 @@
-Return-Path: <linux-nfs+bounces-13413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACF32B1A95B
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 21:08:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C42A7B1A95D
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 21:09:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3B5B180603
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 19:08:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4D5518A2B81
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 19:09:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA05EEB2;
-	Mon,  4 Aug 2025 19:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 869A310942;
+	Mon,  4 Aug 2025 19:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fbu1DQlZ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UpGmkjWt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CE310942
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 19:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE4AEEB2
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 19:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754334488; cv=none; b=L5Ij9neYUH0at+f9nQtjEUOeDMmtpvOuV8jDkohqJ/wuw7Pum2usoRVlvNe2y+lmk1f5ILPMitFPYZa5zyblQgLZDRg6o8GCZbadqsPOOgJ8bjVzqRqWjiGmUYfn6MRuzqgo/J+/te6vZmPar4TzC8hBsgL8Y6x3HBzJP1rQS8A=
+	t=1754334524; cv=none; b=YmFa6E8JSPdYAyGpqBYvfdrsygZlT6IuT9axTXrBFvOs5a0+Q2TjGWSg/JQ4KP127mtJ2MZU7WeVt0zj7beRH+LwI7PAYf6FyPWB5wDo0IPdZcu+iYFpBiTvg6hMeerVzVa7p93jKz9ju+m54g/x7bSMWy1aqzkSQfni2qwzCgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754334488; c=relaxed/simple;
-	bh=oIDH6K3Yy8bBH5a9RDuXLZkHBci22C2j+C/WXDW+PU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A6vdtj5XeN/RFVjD4tpXoS7eH8WfzmDBAuMovDhY9v9Y5N2kws8SWGm9Jfjc9kmfFCfEojo4tVLRmfpae9Opj7mzXmfLeMS28KOH6dEj65HbNUhVQiJdVlnUuZXJ6/ejZitW2TysRw2Yxk3TrS2+NgXK6FdGm2LPqoESJWH6DCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fbu1DQlZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754334485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ylmJStQPHdR5ic1TslzM4DRqi3FNv5K1UjbIepgdJ9Y=;
-	b=fbu1DQlZkCKFCI4ieRv2njuGCKIrI850kFKq++0oFmxqP3Eb5khtXB51La90nxboJlP3To
-	pO01/UtrjyktW7F9XeoPSnhM4nmXZkmzewhIhnaQoI8vNiqxMnyqWNs84B7X0KuRJ2yyE3
-	2r/yYzu9P9G+oL8EGJIgxXu6ODIrqo0=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-477-O8kf5n8qMJOMCk4l3pKLbw-1; Mon,
- 04 Aug 2025 15:08:02 -0400
-X-MC-Unique: O8kf5n8qMJOMCk4l3pKLbw-1
-X-Mimecast-MFC-AGG-ID: O8kf5n8qMJOMCk4l3pKLbw_1754334481
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8AC8B19560B6;
-	Mon,  4 Aug 2025 19:08:01 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.74.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 038E61954B04;
-	Mon,  4 Aug 2025 19:08:00 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>
+	s=arc-20240116; t=1754334524; c=relaxed/simple;
+	bh=DtG9x0/KImLxol+9hSaAJb6yxYkmTmF8Y5QaVf6hMjY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Ay+VzhDiDWj6HQ9JF92+lwg4VMFQ1DXlUOYzyN87thtYyzIws4dBZc+NpyIwoyhd9aG3BvivA8K8WgwwNC2H5gX3a3OsqQxhfUklpvzuShtVVMbcZ/u5jnv14EF+r9hiPWQKTf0tsPsiewQIXPoPEJCouNI4fOZZRIF2fFp2bg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UpGmkjWt; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 574D6apr031666;
+	Mon, 4 Aug 2025 19:08:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:date:from:message-id:subject:to; s=corp-2025-04-25; bh=bG/Xv44Z
+	/P8SzgOw9zeQsJ/9RNRwiy3u+JHRDLcoUmc=; b=UpGmkjWtodnFjjC2DvTd6212
+	tQrgr8b/FV/uRCSI9p7AGth3ZNyTvsJYWhwv89vBSKfFx4waxwwY54pmUEQatq27
+	nFP1SZQziYWByqsDtcqwqZxOPO84Y7Ec4Vpu0GqVUGyqYs1eXxb38VN9Rb5DVdYG
+	OuAdDmEwUVyC2zIbKrBeoVh/vcQBRcEHzbSIX1VLaAF/m1GM66cOOXYf6TGzL2le
+	zl8F2dmkXZt0ao3/9SRrrtHt3+EfVdiUY7EILsVXY0lMP+TZz/PudpC4iOu4tLl4
+	Rq8k6xAO8IafgZxCYSCSiBqfEQQQzcp/LJG+84rLvozzykjqkmdnHGE7L+Yfgg==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 489ajdk91p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 19:08:38 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 574HJVYS031908;
+	Mon, 4 Aug 2025 19:08:37 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48a7jv1ccb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 19:08:37 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 574J8anr040239;
+	Mon, 4 Aug 2025 19:08:36 GMT
+Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 48a7jv1cah-1;
+	Mon, 04 Aug 2025 19:08:36 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: trondmy@kernel.org, anna@kernel.org
 Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] NFSv4: Remove duplicate lookups, capability probes
- and fsinfo calls
-Date: Mon, 04 Aug 2025 15:07:58 -0400
-Message-ID: <32CC64BD-C2EE-4474-BF40-3532AEC06F1F@redhat.com>
-In-Reply-To: <5036eb3f8190034811ee380d4df3ed6036de5148.camel@kernel.org>
-References: <cover.1754270543.git.trond.myklebust@hammerspace.com>
- <c7c737e442abb6984cef194fd8d66acab2e0b83f.1754270543.git.trond.myklebust@hammerspace.com>
- <4FB030C4-24BD-40ED-8442-8A0BFC970269@redhat.com>
- <5036eb3f8190034811ee380d4df3ed6036de5148.camel@kernel.org>
+Subject: [PATCH 1/1] SUNRPC: call_connect_status needs to destroy transport on ETIMEDOUT before retry
+Date: Mon,  4 Aug 2025 12:08:25 -0700
+Message-Id: <1754334505-65027-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-04_08,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2508040112
+X-Proofpoint-GUID: hNWY-L1bhPHWE8OCmlMPmIr0T7TMHhTe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA0MDExMSBTYWx0ZWRfX7PyWufvmlVmW
+ qJbaUpS18+ZG9WlgGIMINwJuCfxPQ6zs8wlzB6B2WCs7Vz4Spq2fz1xSSsL/tccYirj3mVMPT3J
+ iCix/Lhchkzj/yOeu4q4F/UBWdzPaEvx6kNq5dDDTpYXWeLO6nVjQCUWLPQpxT1iorSpwwIfo04
+ QNxbfsMDpPhy0yjBw8iepyWZkPC7BzQoojczkGMSD4QhUqipzmv6tMkEJn44xkHDa1dplh190/f
+ BZYeL5MULxL41LoLZNyKQCaEe25K766aeFUwxNA5GKRUMA4udunuMF0B+nesPIFgGSiG3PRoKFn
+ fEJwqSY6Qc8aGLEGASkDqBNBa0ks2CHf88z0e9GgKAvyOUQXMKHE+a+msE4im3jS7AUef7Tf/4A
+ XvkHQjtaZuL55IqDq9E//EVzg8h6VvVPg3m50jSqPa0HpA4HBeK3XxeB9U4kCEiVf/YCQuNL
+X-Proofpoint-ORIG-GUID: hNWY-L1bhPHWE8OCmlMPmIr0T7TMHhTe
+X-Authority-Analysis: v=2.4 cv=FIobx/os c=1 sm=1 tr=0 ts=68910536 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=2OwXVqhp2XgA:10 a=yPCof4ZbAAAA:8 a=v5Xu6_3S6vMue248_I4A:9
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 4 Aug 2025, at 12:54, Trond Myklebust wrote:
+Currently, when an RPC connection times out during the connect phase,
+the task is retried by placing it back on the pending queue and waiting
+again. In some cases, the timeout occurs because TCP is unable to send
+the SYN packet. This situation most often arises on bare metal systems
+at boot time, when the NFS mount is attempted while the network link
+appears to be up but is not yet stable.
 
-> On Mon, 2025-08-04 at 12:43 -0400, Benjamin Coddington wrote:
->> On 3 Aug 2025, at 21:29, Trond Myklebust wrote:
->>
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> When crossing into a new filesystem, the NFSv4 client will look up
->>> the
->>> new directory, and then call nfs4_server_capabilities() as well as
->>> nfs4_do_fsinfo() at least twice.
->>>
->>> This patch removes the duplicate calls, and reduces the initial
->>> lookup
->>> to retrieve just a minimal set of attributes.
->>>
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>> ---
->>>  fs/nfs/nfs4_fs.h     |  5 ++-
->>>  fs/nfs/nfs4getroot.c | 14 +++----
->>>  fs/nfs/nfs4proc.c    | 87 ++++++++++++++++++++--------------------
->>> ----
->>>  3 files changed, 48 insertions(+), 58 deletions(-)
->>>
->>> diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
->>> index d3ca91f60fc1..c34c89af9c7d 100644
->>> --- a/fs/nfs/nfs4_fs.h
->>> +++ b/fs/nfs/nfs4_fs.h
->>> @@ -63,7 +63,7 @@ struct nfs4_minor_version_ops {
->>>  	bool	(*match_stateid)(const nfs4_stateid *,
->>>  			const nfs4_stateid *);
->>>  	int	(*find_root_sec)(struct nfs_server *, struct
->>> nfs_fh *,
->>> -			struct nfs_fsinfo *);
->>> +				 struct nfs_fattr *);
->>>  	void	(*free_lock_state)(struct nfs_server *,
->>>  			struct nfs4_lock_state *);
->>>  	int	(*test_and_free_expired)(struct nfs_server *,
->>> @@ -296,7 +296,8 @@ extern int nfs4_call_sync(struct rpc_clnt *,
->>> struct nfs_server *,
->>>  extern void nfs4_init_sequence(struct nfs4_sequence_args *, struct
->>> nfs4_sequence_res *, int, int);
->>>  extern int nfs4_proc_setclientid(struct nfs_client *, u32,
->>> unsigned short, const struct cred *, struct nfs4_setclientid_res
->>> *);
->>>  extern int nfs4_proc_setclientid_confirm(struct nfs_client *,
->>> struct nfs4_setclientid_res *arg, const struct cred *);
->>> -extern int nfs4_proc_get_rootfh(struct nfs_server *, struct nfs_fh
->>> *, struct nfs_fsinfo *, bool);
->>> +extern int nfs4_proc_get_rootfh(struct nfs_server *, struct nfs_fh
->>> *,
->>> +				struct nfs_fattr *, bool);
->>>  extern int nfs4_proc_bind_conn_to_session(struct nfs_client *,
->>> const struct cred *cred);
->>>  extern int nfs4_proc_exchange_id(struct nfs_client *clp, const
->>> struct cred *cred);
->>>  extern int nfs4_destroy_clientid(struct nfs_client *clp);
->>> diff --git a/fs/nfs/nfs4getroot.c b/fs/nfs/nfs4getroot.c
->>> index 1a69479a3a59..e67ea345de69 100644
->>> --- a/fs/nfs/nfs4getroot.c
->>> +++ b/fs/nfs/nfs4getroot.c
->>> @@ -12,30 +12,28 @@
->>>
->>>  int nfs4_get_rootfh(struct nfs_server *server, struct nfs_fh
->>> *mntfh, bool auth_probe)
->>>  {
->>> -	struct nfs_fsinfo fsinfo;
->>> +	struct nfs_fattr *fattr = nfs_alloc_fattr();
->>>  	int ret = -ENOMEM;
->>>
->>> -	fsinfo.fattr = nfs_alloc_fattr();
->>> -	if (fsinfo.fattr == NULL)
->>> +	if (fattr == NULL)
->>>  		goto out;
->>>
->>>  	/* Start by getting the root filehandle from the server */
->>> -	ret = nfs4_proc_get_rootfh(server, mntfh, &fsinfo,
->>> auth_probe);
->>> +	ret = nfs4_proc_get_rootfh(server, mntfh, fattr,
->>> auth_probe);
->>>  	if (ret < 0) {
->>>  		dprintk("nfs4_get_rootfh: getroot error = %d\n", -
->>> ret);
->>>  		goto out;
->>>  	}
->>>
->>> -	if (!(fsinfo.fattr->valid & NFS_ATTR_FATTR_TYPE)
->>> -			|| !S_ISDIR(fsinfo.fattr->mode)) {
->>> +	if (!(fattr->valid & NFS_ATTR_FATTR_TYPE) ||
->>> !S_ISDIR(fattr->mode)) {
->>>  		printk(KERN_ERR "nfs4_get_rootfh:"
->>>  		       " getroot encountered non-directory\n");
->>>  		ret = -ENOTDIR;
->>>  		goto out;
->>>  	}
+This patch addresses the issue by updating call_connect_status to destroy
+the transport on ETIMEDOUT error before retrying the connection. This
+ensures that subsequent connection attempts use a fresh transport,
+reducing the likelihood of repeated failures due to lingering network
+issues.
 
-.. now I think we won't have fattr->mode here, more below:
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->>>
->>> -	memcpy(&server->fsid, &fsinfo.fattr->fsid, sizeof(server-
->>>> fsid));
->>> +	memcpy(&server->fsid, &fattr->fsid, sizeof(server->fsid));
->>>  out:
->>> -	nfs_free_fattr(fsinfo.fattr);
->>> +	nfs_free_fattr(fattr);
->>>  	return ret;
->>>  }
->>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>> index c7c7ec22f21d..7d2b67e06cc3 100644
->>> --- a/fs/nfs/nfs4proc.c
->>> +++ b/fs/nfs/nfs4proc.c
->>> @@ -4240,15 +4240,18 @@ static int nfs4_discover_trunking(struct
->>> nfs_server *server,
->>>  }
->>>
->>>  static int _nfs4_lookup_root(struct nfs_server *server, struct
->>> nfs_fh *fhandle,
->>> -		struct nfs_fsinfo *info)
->>> +			     struct nfs_fattr *fattr)
->>>  {
->>> -	u32 bitmask[3];
->>> +	u32 bitmask[3] = {
->>> +		[0] = FATTR4_WORD0_TYPE | FATTR4_WORD0_CHANGE |
->>> +		      FATTR4_WORD0_SIZE | FATTR4_WORD0_FSID,
->>
->> Just a thought when noticing this change --
->>
->> Don't we want at least FATTR4_WORD0_FILEID and
->> FATTR4_WORD1_MOUNTED_ON_FILEID as well here?
->
->
-> Only FATTR4_WORD0_TYPE and FATTR4_WORD0_FSID are used by the caller, so
-> we don't actually need FATTR4_WORD0_CHANGE or FATTR4_WORD0_SIZE either.
-> I put them in so that the test for the auth flavour would have more
-> chances of catching a problem.
-
-Ah, I see now...  we're going to call ->fsinfo() again (as you stated in the
-description).
-
-But I don't see how _CHANGE or _SIZE are used..  and as I was hunting around
-there's that check in nfs4_get_rootfh() (above) for S_ISDIR(fattr->mode), but this
-dropped the fsinfo call out of nfs4_proc_get_rootfh(), so I think
-fattr->mode will never be set.
-
-> Note that neither FATTR4_WORD0_FILEID or FATTR4_WORD1_MOUNTED_ON_FILEID
-> are mandatory attributes, so I also chose to avoid them + all the
-> timestamps for that reason.
-
-Gotcha, making sense.  This is tricky for me to review, maybe I should just
-test it..  :)
-
-Ben
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 21426c3049d3..701b742750c5 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2215,6 +2215,7 @@ call_connect_status(struct rpc_task *task)
+ 	case -EHOSTUNREACH:
+ 	case -EPIPE:
+ 	case -EPROTO:
++	case -ETIMEDOUT:
+ 		xprt_conditional_disconnect(task->tk_rqstp->rq_xprt,
+ 					    task->tk_rqstp->rq_connect_cookie);
+ 		if (RPC_IS_SOFTCONN(task))
+@@ -2225,7 +2226,6 @@ call_connect_status(struct rpc_task *task)
+ 	case -EADDRINUSE:
+ 	case -ENOTCONN:
+ 	case -EAGAIN:
+-	case -ETIMEDOUT:
+ 		if (!(task->tk_flags & RPC_TASK_NO_ROUND_ROBIN) &&
+ 		    (task->tk_flags & RPC_TASK_MOVEABLE) &&
+ 		    test_bit(XPRT_REMOVE, &xprt->state)) {
+-- 
+2.43.5
 
 
