@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-13441-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13442-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7F60B1BA6C
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 20:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 858BAB1BA6D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 20:44:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0AC9188E1EE
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 18:44:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB1211895F82
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 18:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD56299944;
-	Tue,  5 Aug 2025 18:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0DA2299A84;
+	Tue,  5 Aug 2025 18:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZByf8shJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+xZ6Sf4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872DB25394C
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Aug 2025 18:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB7725394C
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Aug 2025 18:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754419471; cv=none; b=g7TfkSkn4ui8x2OE4NCsVo0/XI11XUslTS/Kj6q7YH728yOwTTrai3YfsEe2M6Qee8hGwNLytU734MWYxad0Aj1d9988Kntc4KuBUHfaWTZkk1yGsbRor9TKht0HZAejXErs/Yg0gtEGgIon5VBHi4GjW9x/K3As/IR+ahtQv0U=
+	t=1754419472; cv=none; b=FQeVK51aQXXvGuR0zG6bWOqKugl3vEZUQ1CFRVSONWsMQIeHTL29EZSLtbJdnQ7221nhi1AhZ5gbKkc02ZdpXd5SXGMPMVEapWu1obDXok+9dhHtjpKwcYdFKm4vMcNmH8oG+c3cnieMGvM2H8J5KQP7vw0K2CCsaT3dijk0hPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754419471; c=relaxed/simple;
-	bh=Phetx1Z0yj6+Gkn9ZxDbDyywbvLSkhkFuvJZYSc2wiQ=;
+	s=arc-20240116; t=1754419472; c=relaxed/simple;
+	bh=rIAsgV8OZOucXIWc9uV0WhWNgdyyQcTcq7ysmiXTFls=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d656Oj03kdk81mPlOJn5X0vtnQRFdxVtsPD+RyLuGFhQnnQ0z5KN4m13CDvLAP4GKH2IsuJe7c/Ag5XRZYNPmSg0vQEv8Fb36oMaWOgsFalvUtN8cI60HW987/nMmcsx/UrF8ysWLNgIMmdeQDlh1V2VAv0EoaFL8wBFKjnwA1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZByf8shJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4401C4CEF0;
-	Tue,  5 Aug 2025 18:44:30 +0000 (UTC)
+	 MIME-Version; b=eZFf8dhh86yeUnoTcCFF92e0LTzeVNhdf79c4cjcWbS/GHw6A9lWPFT7i8RsgQG9k40pwHHnhqdoYriFy/do7uaJRUBC+3B0eF5keaabCmRMQ2fgCAeGJQpY9gGED9nnWay60Kmd4rsEvV5X1FINV1FDANjpUBxTGV/d7apuS+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+xZ6Sf4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31416C4CEF0;
+	Tue,  5 Aug 2025 18:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754419471;
-	bh=Phetx1Z0yj6+Gkn9ZxDbDyywbvLSkhkFuvJZYSc2wiQ=;
+	s=k20201202; t=1754419472;
+	bh=rIAsgV8OZOucXIWc9uV0WhWNgdyyQcTcq7ysmiXTFls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZByf8shJmE/gcYYoDeKJzLUfiWxeeuehL80ZP8wy77Qhz6jxm5tmyXbNtUmb1jeoH
-	 KSvTCdw5ml57LVu49YkoKPiEjSvbqGqWcXFyjkFIsOkuQY3vSjJwaZl149fmVQz16W
-	 3OYw2xh67frni9x3nqwk4AcIl3qJR7HLupjvvQV01ezb2gKM5gb070SNymqd9Zdgxp
-	 QavUyGOKN3WGXLYYDbRtFOwF1HO+fano9OWkgH1AyXyd9C8DBFwjb0wwuvPKhW/SNp
-	 E++SZbHVuOCcZPmp8oy69E5fYfGSnMyNn78pD5VapO4npFIKGPQvV5JDqD4D2AvDYy
-	 kRuZ3D6BvU6CA==
+	b=n+xZ6Sf4saVqviMl935y991A3i7/S6+6mrKG+3njrhbToAwiWlFZ2CsVPNpw9t2dP
+	 7bsTssHdA51RSG40rM0nDSXnErsPM7t1VWDXg72w83db59Wk1iaNcJ69p1EnM7nP/K
+	 8qWzp6IjrCPLx68fAQXKz9/mP0alJQSPe3WYFuwuVOU9JymAE5F3AHWiceJESnsVpk
+	 6fA04PA9H0l5KCMadhQDsjEJMAFzus5qORqM/XG3vscQ2B332l+4n9HCe2V6GIpmzM
+	 7KwfonNFuvWxcGB+3ZMXP8PdvA4fmrwj1AwicdMhdliZOQio4YPjPd+APrw1HQhs6X
+	 iLcRNxiuPawgA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v4 1/4] NFSD: avoid using iov_iter_is_aligned() in nfsd_iter_read()
-Date: Tue,  5 Aug 2025 14:44:25 -0400
-Message-ID: <20250805184428.5848-2-snitzer@kernel.org>
+Subject: [PATCH v4 2/4] NFSD: refactor nfsd_read_vector_dio to EVENT_CLASS useful for READ and WRITE
+Date: Tue,  5 Aug 2025 14:44:26 -0400
+Message-ID: <20250805184428.5848-3-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250805184428.5848-1-snitzer@kernel.org>
 References: <20250805184428.5848-1-snitzer@kernel.org>
@@ -59,85 +59,133 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mike Snitzer <snitzer@hammerspace.com>
+Transform nfsd_read_vector_dio trace event into nfsd_analyze_dio_class
+and use it to create nfsd_analyze_read_dio and nfsd_analyze_write_dio
+trace events.
 
-Check the bvec is DIO-aligned while creating it, saves CPU cycles by
-avoiding iterating the bvec elements a second time using
-iov_iter_is_aligned().
+This prepares for nfsd_vfs_write() to also make use of it when
+handling misaligned WRITEs.
 
-This prepares for Keith Busch's near-term removal of the
-iov_iter_is_aligned() interface.  This fixes cel/nfsd-testing commit
-5d78ac1e674b4 ("NFSD: issue READs using O_DIRECT even if IO is
-misaligned") and it should be folded into that commit so that NFSD
-doesn't require iov_iter_is_aligned() while it is being removed
-upstream in parallel.
-
-Fixes: cel/nfsd-testing 5d78ac1e674b4 ("NFSD: issue READs using O_DIRECT even if IO is misaligned")
-Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/vfs.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ fs/nfsd/trace.h | 52 ++++++++++++++++++++++++++++++++++++-------------
+ fs/nfsd/vfs.c   | 11 ++++++-----
+ 2 files changed, 44 insertions(+), 19 deletions(-)
 
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 55055482f8a84..4173bd9344b6b 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -473,25 +473,29 @@ DEFINE_NFSD_IO_EVENT(write_done);
+ DEFINE_NFSD_IO_EVENT(commit_start);
+ DEFINE_NFSD_IO_EVENT(commit_done);
+ 
+-TRACE_EVENT(nfsd_read_vector_dio,
++DECLARE_EVENT_CLASS(nfsd_analyze_dio_class,
+ 	TP_PROTO(struct svc_rqst *rqstp,
+ 		 struct svc_fh	*fhp,
+ 		 u64		offset,
+ 		 u32		len,
+-		 loff_t         start,
+-		 loff_t         start_extra,
+-		 loff_t         end,
+-		 loff_t         end_extra),
+-	TP_ARGS(rqstp, fhp, offset, len, start, start_extra, end, end_extra),
++		 loff_t		start,
++		 ssize_t	start_len,
++		 loff_t		middle,
++		 ssize_t	middle_len,
++		 loff_t		end,
++		 ssize_t	end_len),
++	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len),
+ 	TP_STRUCT__entry(
+ 		__field(u32, xid)
+ 		__field(u32, fh_hash)
+ 		__field(u64, offset)
+ 		__field(u32, len)
+ 		__field(loff_t, start)
+-		__field(loff_t, start_extra)
++		__field(ssize_t, start_len)
++		__field(loff_t, middle)
++		__field(ssize_t, middle_len)
+ 		__field(loff_t, end)
+-		__field(loff_t, end_extra)
++		__field(ssize_t, end_len)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->xid = be32_to_cpu(rqstp->rq_xid);
+@@ -499,16 +503,36 @@ TRACE_EVENT(nfsd_read_vector_dio,
+ 		__entry->offset = offset;
+ 		__entry->len = len;
+ 		__entry->start = start;
+-		__entry->start_extra = start_extra;
++		__entry->start_len = start_len;
++		__entry->middle = middle;
++		__entry->middle_len = middle_len;
+ 		__entry->end = end;
+-		__entry->end_extra = end_extra;
++		__entry->end_len = end_len;
+ 	),
+-	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u start=%llu+%llu end=%llu-%llu",
++	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u start=%llu+%lu middle=%llu+%lu end=%llu+%lu",
+ 		  __entry->xid, __entry->fh_hash,
+ 		  __entry->offset, __entry->len,
+-		  __entry->start, __entry->start_extra,
+-		  __entry->end, __entry->end_extra)
+-);
++		  __entry->start, __entry->start_len,
++		  __entry->middle, __entry->middle_len,
++		  __entry->end, __entry->end_len)
++)
++
++#define DEFINE_NFSD_ANALYZE_DIO_EVENT(name)			\
++DEFINE_EVENT(nfsd_analyze_dio_class, nfsd_analyze_##name##_dio,	\
++	TP_PROTO(struct svc_rqst *rqstp,			\
++		 struct svc_fh	*fhp,				\
++		 u64		offset,				\
++		 u32		len,				\
++		 loff_t		start,				\
++		 ssize_t	start_len,			\
++		 loff_t		middle,				\
++		 ssize_t	middle_len,			\
++		 loff_t		end,				\
++		 ssize_t	end_len),			\
++	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len))
++
++DEFINE_NFSD_ANALYZE_DIO_EVENT(read);
++DEFINE_NFSD_ANALYZE_DIO_EVENT(write);
+ 
+ DECLARE_EVENT_CLASS(nfsd_err_class,
+ 	TP_PROTO(struct svc_rqst *rqstp,
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 46189020172fb..e1751d3715264 100644
+index e1751d3715264..609b85f8bde3e 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1226,7 +1226,10 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 			 */
- 			offset = read_dio.start;
- 			in_count = read_dio.end - offset;
--			kiocb.ki_flags = IOCB_DIRECT;
-+			/* Verify ondisk DIO alignment, memory addrs checked below */
-+			if (likely(((offset | in_count) &
-+				    (nf->nf_dio_read_offset_align - 1)) == 0))
-+				kiocb.ki_flags = IOCB_DIRECT;
- 		}
- 	} else if (nfsd_io_cache_read == NFSD_IO_DONTCACHE)
- 		kiocb.ki_flags = IOCB_DONTCACHE;
-@@ -1236,16 +1239,24 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	v = 0;
- 	total = in_count;
- 	if (read_dio.start_extra) {
--		bvec_set_page(&rqstp->rq_bvec[v++], read_dio.start_extra_page,
-+		bvec_set_page(&rqstp->rq_bvec[v], read_dio.start_extra_page,
- 			      read_dio.start_extra, PAGE_SIZE - read_dio.start_extra);
-+		if (unlikely((kiocb.ki_flags & IOCB_DIRECT) &&
-+			     rqstp->rq_bvec[v].bv_offset & (nf->nf_dio_mem_align - 1)))
-+			kiocb.ki_flags &= ~IOCB_DIRECT;
- 		total -= read_dio.start_extra;
-+		v++;
+@@ -1094,7 +1094,7 @@ static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				  struct nfsd_read_dio *read_dio)
+ {
+ 	const u32 dio_blocksize = nf->nf_dio_read_offset_align;
+-	loff_t orig_end = offset + len;
++	loff_t middle_end, orig_end = offset + len;
+ 
+ 	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
+ 		      "%s: underlying filesystem has not provided DIO alignment info\n",
+@@ -1133,10 +1133,11 @@ static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
  	}
- 	while (total) {
- 		len = min_t(size_t, total, PAGE_SIZE - base);
--		bvec_set_page(&rqstp->rq_bvec[v++], *(rqstp->rq_next_page++),
--			      len, base);
-+		bvec_set_page(&rqstp->rq_bvec[v], *(rqstp->rq_next_page++), len, base);
-+		/* No need to verify memory is DIO-aligned since bv_offset is 0 */
-+		if (unlikely((kiocb.ki_flags & IOCB_DIRECT) && base &&
-+			     (base & (nf->nf_dio_mem_align - 1))))
-+			kiocb.ki_flags &= ~IOCB_DIRECT;
- 		total -= len;
- 		base = 0;
-+		v++;
- 	}
- 	if (WARN_ONCE(v > rqstp->rq_maxpages,
- 		      "%s: v=%lu exceeds rqstp->rq_maxpages=%lu\n", __func__,
-@@ -1256,16 +1267,6 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (!host_err) {
- 		trace_nfsd_read_vector(rqstp, fhp, offset, in_count);
- 		iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, in_count);
+ 
+ 	/* Show original offset and count, and how it was expanded for DIO */
+-	trace_nfsd_read_vector_dio(rqstp, fhp, offset, len,
+-				   read_dio->start, read_dio->start_extra,
+-				   read_dio->end, read_dio->end_extra);
 -
--		/* Double check nfsd_analyze_read_dio's DIO-aligned result */
--		if (unlikely((kiocb.ki_flags & IOCB_DIRECT) &&
--			     !iov_iter_is_aligned(&iter,
--				nf->nf_dio_mem_align - 1,
--				nf->nf_dio_read_offset_align - 1))) {
--			/* Fallback to buffered IO */
--			kiocb.ki_flags &= ~IOCB_DIRECT;
--		}
--
- 		host_err = vfs_iocb_iter_read(file, &kiocb, &iter);
- 	}
++	middle_end = read_dio->end - read_dio->end_extra;
++	trace_nfsd_analyze_read_dio(rqstp, fhp, offset, len,
++				    read_dio->start, read_dio->start_extra,
++				    offset, (middle_end - offset),
++				    middle_end, read_dio->end_extra);
+ 	return true;
+ }
  
 -- 
 2.44.0
