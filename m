@@ -1,237 +1,360 @@
-Return-Path: <linux-nfs+bounces-13428-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13429-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3887AB1B68A
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 16:29:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20571B1B693
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 16:32:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79D271895BD8
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 14:29:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDCAC3B40C5
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 14:32:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB78274FDB;
-	Tue,  5 Aug 2025 14:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA94B22F74D;
+	Tue,  5 Aug 2025 14:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+AqQZis"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcMkpF6K"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA99E274B22
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Aug 2025 14:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E9622F74A
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Aug 2025 14:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754404147; cv=none; b=ORjRkaEHn3ldjXFnfxNixlJDYMbM7VgEUmhw2eL+vI2uBlNjV1BrEmjbeilQaZo2dKbszqhqdg8MKlvWF7omGJC0BHerTKYgMEozOWwt12tJB6W5s63eS7uOsBmp8uMw/lhI/eNP4SXhs3yUEZYy0jbOodwqr2wds+H3xH8tUpI=
+	t=1754404346; cv=none; b=UKVKGUGY/Z+OVZlTIqw3FFyRpyySzcxU09KQQphyHv9HbCBKhAZ3qm7MALdiXYU+WwaXx2BMmcYLXx79AcCP9x0x0TfmSyXiIWepts6pXKs8dx5OBt1lhsKnLM/Q0xV8qBXWOj5gI9fQTUDURipe8SKNzzBTJeyUE1yH9dPlfF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754404147; c=relaxed/simple;
-	bh=RttKq/ER4VpidgdDiyZuFA9r5/TBYkh9uqlGoVj9smw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HN7B1RMYeUIl1aM/6mQ3ew92ol3KTeSvrT+RPAP74xkO6JiNQTiXnzMKWjhvOwwh6igK3wWbdtBNPU5qK4yNwuLlehOFtJRTuDlg9TPPA6VkopHTmfxwp5UkoUEX+cWqTMg+mAhq6fL/Csr6gHqvGzG/5OmimuJ6bIV8+w1Wzxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+AqQZis; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57CBC4CEF0;
-	Tue,  5 Aug 2025 14:29:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754404145;
-	bh=RttKq/ER4VpidgdDiyZuFA9r5/TBYkh9uqlGoVj9smw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N+AqQZisLMLSFR06qcPGQsy+SLK86PgAgEikWHTT3pI0UcTvaWTyb2WjB97K17Il2
-	 XqdPrxXvhtb91fbh5fx6ptkUlkoZtgH6NkAx7+zc/Y+Cd4WvqDp4Yw7mnfrL1FJUqr
-	 B6AG91ZpJ0u42Sqqc74ddHK2AW7vkcdnunv30IQxmBQrNV5z9NufD6anoabumN3lEX
-	 ZkHw9v9vtoVZPT4wgXmXgnDqzcqDS20r9raJrKWwy5FWWVu4+gbh4QFEkaFX58XXzI
-	 GDKg6LEVCbnBOQl894Milv7j5WCzGCPWIM368UkoLg9zxxGyYhPA98256nBnwtrpt3
-	 2A/BK6IXbGgHQ==
-Message-ID: <5456186e0cf2687391511d9bc65b791aff261be8.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] nfsd: Eliminate an allocation in
- nfs4_make_rec_clidname()
-From: Jeff Layton <jlayton@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>, 	linux-nfs@vger.kernel.org
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Tue, 05 Aug 2025 10:29:03 -0400
-In-Reply-To: <20250804224701.2278773-3-ebiggers@kernel.org>
-References: <20250804224701.2278773-1-ebiggers@kernel.org>
-	 <20250804224701.2278773-3-ebiggers@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1754404346; c=relaxed/simple;
+	bh=Oa5dBFqE7zozaqo/gxMCig8/KlU5zR4ylaGk/AcSczQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PdCMowPR4mXMccI/LAT3bR2DlcWO1GOODjjzi0bKRMH9DCTlmFlC24WYzfDhwEfy5UBsd3IOxE7+5DPJbbj2JTOsoX1Pcp6ANYx02WO6Pw4LhSrUXDuxciSCgcjJrP9wTPOGhVdlPRY9y+m50bFMX4qWnfkXx+OYKtZtlKR4/dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PcMkpF6K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754404343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vuz+2MBlUbvPWZfVMpblLhvpLoCaY0PoqM4u8GaYGXo=;
+	b=PcMkpF6KccDPpCbWit8hIm8rOWhRYEYEeNMHJJR4YFldcFnWmE/o65qsmzKU92rYpp2/bE
+	tV2C4kvNGGgS4TFEoMC1G+3ECNUekXtP6Txvi3TdqEgKSukMDjRo3+vv9pLe7TxgmQMxlO
+	llxBlnv7prVElchBVb1+y1kbQscnV7I=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-484-gYpRAh6VN8StuAX_0Uoj9g-1; Tue,
+ 05 Aug 2025 10:32:18 -0400
+X-MC-Unique: gYpRAh6VN8StuAX_0Uoj9g-1
+X-Mimecast-MFC-AGG-ID: gYpRAh6VN8StuAX_0Uoj9g_1754404333
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F7B019774F3;
+	Tue,  5 Aug 2025 14:32:10 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.88.50])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4021B1954B0E;
+	Tue,  5 Aug 2025 14:32:10 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id B1E3535ECC3; Tue, 05 Aug 2025 10:32:08 -0400 (EDT)
+Date: Tue, 5 Aug 2025 10:32:08 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: decouple the xprtsec policy check from
+ check_nfsd_access()
+Message-ID: <aJIV6I5MNYOU1YQC@aion>
+References: <20250731211441.1908508-1-smayhew@redhat.com>
+ <3cd2b16e-d264-48e0-ba20-0c666d88d39c@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3cd2b16e-d264-48e0-ba20-0c666d88d39c@oracle.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, 2025-08-04 at 22:47 +0000, Eric Biggers wrote:
-> Since MD5 digests are fixed-size, make nfs4_make_rec_clidname() store
-> the digest in a stack buffer instead of a dynamically allocated buffer.
-> Use MD5_DIGEST_SIZE instead of a hard-coded value, both in
-> nfs4_make_rec_clidname() and in the definition of HEXDIR_LEN.
->=20
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
->  fs/nfsd/nfs4recover.c | 15 ++++-----------
->  fs/nfsd/state.h       |  4 +++-
->  2 files changed, 7 insertions(+), 12 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index 54f5e5392ef9..e2b9472e5c78 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -93,11 +93,11 @@ nfs4_reset_creds(const struct cred *original)
->  }
-> =20
->  static int
->  nfs4_make_rec_clidname(char dname[HEXDIR_LEN], const struct xdr_netobj *=
-clname)
->  {
-> -	struct xdr_netobj cksum;
-> +	u8 digest[MD5_DIGEST_SIZE];
->  	struct crypto_shash *tfm;
->  	int status;
-> =20
->  	dprintk("NFSD: nfs4_make_rec_clidname for %.*s\n",
->  			clname->len, clname->data);
-> @@ -105,27 +105,20 @@ nfs4_make_rec_clidname(char dname[HEXDIR_LEN], cons=
-t struct xdr_netobj *clname)
->  	if (IS_ERR(tfm)) {
->  		status =3D PTR_ERR(tfm);
->  		goto out_no_tfm;
->  	}
-> =20
-> -	cksum.len =3D crypto_shash_digestsize(tfm);
-> -	cksum.data =3D kmalloc(cksum.len, GFP_KERNEL);
-> -	if (cksum.data =3D=3D NULL) {
-> -		status =3D -ENOMEM;
-> - 		goto out;
-> -	}
-> -
->  	status =3D crypto_shash_tfm_digest(tfm, clname->data, clname->len,
-> -					 cksum.data);
-> +					 digest);
->  	if (status)
->  		goto out;
-> =20
-> -	sprintf(dname, "%*phN", 16, cksum.data);
-> +	static_assert(HEXDIR_LEN =3D=3D 2 * MD5_DIGEST_SIZE + 1);
-> +	sprintf(dname, "%*phN", MD5_DIGEST_SIZE, digest);
-> =20
->  	status =3D 0;
->  out:
-> -	kfree(cksum.data);
->  	crypto_free_shash(tfm);
->  out_no_tfm:
->  	return status;
->  }
-> =20
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 8adc2550129e..b7d4c6d6f3d4 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -33,10 +33,11 @@
->   */
-> =20
->  #ifndef _NFSD4_STATE_H
->  #define _NFSD4_STATE_H
-> =20
-> +#include <crypto/md5.h>
->  #include <linux/idr.h>
->  #include <linux/refcount.h>
->  #include <linux/sunrpc/svc_xprt.h>
->  #include "nfsfh.h"
->  #include "nfsd.h"
-> @@ -379,11 +380,12 @@ struct nfsd4_sessionid {
->  	clientid_t	clientid;
->  	u32		sequence;
->  	u32		reserved;
->  };
-> =20
-> -#define HEXDIR_LEN     33 /* hex version of 16 byte md5 of cl_name plus =
-'\0' */
-> +/* Length of MD5 digest as hex, plus terminating '\0' */
-> +#define HEXDIR_LEN	(2 * MD5_DIGEST_SIZE + 1)
-> =20
->  /*
->   *       State                Meaning                  Where set
->   * ---------------------------------------------------------------------=
------
->   * | NFSD4_ACTIVE      | Confirmed, active    | Default                 =
-    |
+On Fri, 01 Aug 2025, Chuck Lever wrote:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> On 7/31/25 5:14 PM, Scott Mayhew wrote:
+> > A while back I had reported that an NFSv3 client could successfully
+> > mount using '-o xprtsec=none' an export that had been exported with
+> > 'xprtsec=tls:mtls'.  By "successfully" I mean that the mount command
+> > would succeed and the mount would show up in /proc/mounts.  Attempting
+> > to do anything futher with the mount would be met with NFS3ERR_ACCES.
+> 
+> I agree, though it doesn't compromise access to file data, that's not
+> the most desirable behavior.
+> 
+> Can you find your report on lore, and a Link: to it here in the patch
+> description?
+
+Will do.
+> 
+> 
+> > This was fixed (albeit accidentally) by bb4f07f2409c ("nfsd: Fix
+> > NFSD_MAY_BYPASS_GSS and NFSD_MAY_BYPASS_GSS_ON_ROOT") and was
+> > subsequently re-broken by 0813c5f01249 ("nfsd: fix access checking for
+> > NLM under XPRTSEC policies").
+> > 
+> > Transport Layer Security isn't an RPC security flavor or pseudo-flavor,
+> > so they shouldn't be conflated when determining whether the access
+> > checks can be bypassed.
+> 
+> Fixes: 9280c5774314 ("NFSD: Handle new xprtsec= export option")
+> 
+> 
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  fs/nfsd/export.c   | 60 ++++++++++++++++++++++++++++++++++++----------
+> >  fs/nfsd/export.h   |  1 +
+> >  fs/nfsd/nfs4proc.c |  6 ++++-
+> >  fs/nfsd/nfs4xdr.c  |  3 +++
+> >  fs/nfsd/nfsfh.c    |  8 +++++++
+> >  fs/nfsd/vfs.c      |  3 +++
+> >  6 files changed, 67 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> > index cadfc2bae60e..bc54b01bb516 100644
+> > --- a/fs/nfsd/export.c
+> > +++ b/fs/nfsd/export.c
+> > @@ -1082,19 +1082,27 @@ static struct svc_export *exp_find(struct cache_detail *cd,
+> >  }
+> >  
+> >  /**
+> > - * check_nfsd_access - check if access to export is allowed.
+> > + * check_xprtsec_policy - check if access to export is permitted by the
+> > + * 			  xprtsec policy
+> >   * @exp: svc_export that is being accessed.
+> >   * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
+> > - * @may_bypass_gss: reduce strictness of authorization check
+> > + *
+> > + * This logic should not be combined with check_nfsd_access, as the rules
+> > + * for bypassing GSS are not the same as for bypassing the xprtsec policy
+> > + * check:
+> > + * 	- NFSv3 FSINFO and GETATTR can bypass the GSS for the root dentry,
+> > + * 	  but that doesn't mean they can bypass the xprtsec poolicy check
+> > + * 	- NLM can bypass the GSS check on exports exported with the
+> > + * 	  NFSEXP_NOAUTHNLM flag
+> > + * 	- NLM can always bypass the xprtsec policy check since TLS isn't
+> > + * 	  implemented for the sidecar protocols
+> >   *
+> >   * Return values:
+> >   *   %nfs_ok if access is granted, or
+> > - *   %nfserr_wrongsec if access is denied
+> > + *   %nfserr_acces or %nfserr_wrongsec if access is denied
+> >   */
+> > -__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+> > -			 bool may_bypass_gss)
+> > +__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp)
+> >  {
+> > -	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
+> >  	struct svc_xprt *xprt;
+> >  
+> >  	/*
+> > @@ -1110,22 +1118,49 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+> >  
+> >  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
+> >  		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
+> > -			goto ok;
+> > +			return nfs_ok;
+> >  	}
+> >  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_TLS) {
+> >  		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
+> >  		    !test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
+> > -			goto ok;
+> > +			return nfs_ok;
+> >  	}
+> >  	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
+> >  		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
+> >  		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
+> > -			goto ok;
+> > +			return nfs_ok;
+> >  	}
+> > -	if (!may_bypass_gss)
+> > -		goto denied;
+> >  
+> > -ok:
+> > +	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
+> 
+> We recently spilled a lot of electrons trying to get these version
+> checks out of the generic security checking paths. For one thing, this
+> particular check is valid only for the NFS program.
+> 
+> Returning nfserr_wrongsec unconditionally, as check_nfsd_access now
+> does, should be sufficient.
+
+Okay.
+> 
+> 
+> > +}
+> > +
+> > +/**
+> > + * check_nfsd_access - check if access to export is allowed.
+> > + * @exp: svc_export that is being accessed.
+> > + * @rqstp: svc_rqst attempting to access @exp (will be NULL for LOCALIO).
+> > + * @may_bypass_gss: reduce strictness of authorization check
+> > + *
+> > + * Return values:
+> > + *   %nfs_ok if access is granted, or
+> > + *   %nfserr_wrongsec if access is denied
+> > + */
+> > +__be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+> > +			 bool may_bypass_gss)
+> > +{
+> > +	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
+> > +	struct svc_xprt *xprt;
+> > +
+> > +	/*
+> > +	 * If rqstp is NULL, this is a LOCALIO request which will only
+> > +	 * ever use a filehandle/credential pair for which access has
+> > +	 * been affirmed (by ACCESS or OPEN NFS requests) over the
+> > +	 * wire. So there is no need for further checks here.
+> > +	 */
+> > +	if (!rqstp)
+> > +		return nfs_ok;
+> 
+> Is this true of all of check_nfsd_access's callers, or only of
+> __fh_verify ?
+> 
+Looking at the commit where this check was added, and looking at the
+other callers, it looks like this is only true of __fh_verify().
+
+I'm splitting up check_nfsd_access() into two helpers has you suggested,
+having __fh_verify() call the helpers directly while having the other
+callers continue to use check_nfsd_access().
+
+Should I add an argument to the helpers indicate when they have been
+called directly?  Something like 'bool maybe_localio', which can
+then be incorporated into the above check, e.g.
+
+        if (!rqstp) {
+                if (maybe_localio) {
+                        return nfs_ok;
+                } else {
+                        WARN_ON_ONCE(1);
+                        return nfserr_wrongsec;
+                }
+        }
+
+
+
+> 
+> > +
+> > +	xprt = rqstp->rq_xprt;
+> > +
+> >  	/* legacy gss-only clients are always OK: */
+> >  	if (exp->ex_client == rqstp->rq_gssclient)
+> >  		return nfs_ok;
+> > @@ -1167,7 +1202,6 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+> >  		}
+> >  	}
+> >  
+> > -denied:
+> >  	return nfserr_wrongsec;
+> >  }
+> >  
+> > diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
+> > index b9c0adb3ce09..c5a45f4b72be 100644
+> > --- a/fs/nfsd/export.h
+> > +++ b/fs/nfsd/export.h
+> > @@ -101,6 +101,7 @@ struct svc_expkey {
+> >  
+> >  struct svc_cred;
+> >  int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp);
+> > +__be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp);
+> >  __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+> >  			 bool may_bypass_gss);
+> >  
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index 71b428efcbb5..71e9a170f7bf 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -2902,8 +2902,12 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+> >  				clear_current_stateid(cstate);
+> >  
+> >  			if (current_fh->fh_export &&
+> > -					need_wrongsec_check(rqstp))
+> > +					need_wrongsec_check(rqstp)) {
+> > +				op->status = check_xprtsec_policy(current_fh->fh_export, rqstp);
+> > +				if (op->status)
+> > +					goto encode_op;
+> >  				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
+> > +			}
+> >  		}
+> >  encode_op:
+> >  		if (op->status == nfserr_replay_me) {
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index ea91bad4eee2..48d55c13c918 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -3859,6 +3859,9 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
+> >  			nfserr = nfserrno(err);
+> >  			goto out_put;
+> >  		}
+> > +		nfserr = check_xprtsec_policy(exp, cd->rd_rqstp);
+> > +		if (nfserr)
+> > +			goto out_put;
+> >  		nfserr = check_nfsd_access(exp, cd->rd_rqstp, false);
+> >  		if (nfserr)
+> >  			goto out_put;
+> > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> > index 74cf1f4de174..1ffc33662582 100644
+> > --- a/fs/nfsd/nfsfh.c
+> > +++ b/fs/nfsd/nfsfh.c
+> > @@ -364,6 +364,14 @@ __fh_verify(struct svc_rqst *rqstp,
+> >  	if (error)
+> >  		goto out;
+> >  
+> > +	if (access & NFSD_MAY_NLM)
+> > +		/* NLM is allowed to bypass the xprtssec policy check */
+> 		/* because lockd currently does not support xprtsec */> +		goto out;
+> Every check_xprtsec_policy / check_nfsd_access call site now has two
+> function calls, resulting in duplicate code.
+> 
+> Why not leave check_nfsd_access() in place, but replace it's guts with
+> two helpers, and then call the two helpers directly here in __fh_verify?
+
+I'll create the two helpers as you suggest.
+
+I'll still need to check the access flags for NFSD_MAY_NLM before
+calling the xprtsec helper though (I'll make sure I do it in the right
+place this time).
+
+-Scott
+> 
+> 
+> > +
+> > +	error = check_xprtsec_policy(exp, rqstp);
+> > +	if (error)
+> > +		goto out;
+> > +
+> >  	if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAUTHNLM))
+> >  		/* NLM is allowed to fully bypass authentication */
+> >  		goto out;
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index 98ab55ba3ced..1b66aff1d750 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -323,6 +323,9 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
+> >  	err = nfsd_lookup_dentry(rqstp, fhp, name, len, &exp, &dentry);
+> >  	if (err)
+> >  		return err;
+> > +	err = check_xprtsec_policy(exp, rqstp);
+> > +	if (err)
+> > +		goto out;
+> >  	err = check_nfsd_access(exp, rqstp, false);
+> >  	if (err)
+> >  		goto out;
+> 
+> 
+> -- 
+> Chuck Lever
+> 
+
 
