@@ -1,237 +1,134 @@
-Return-Path: <linux-nfs+bounces-13424-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13425-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56AFBB1ABA0
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 01:55:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9747DB1ABD3
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 02:50:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10F0E3B6891
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Aug 2025 23:55:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3316C6220D4
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Aug 2025 00:50:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A16291C17;
-	Mon,  4 Aug 2025 23:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F263213B5AE;
+	Tue,  5 Aug 2025 00:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9rOdZup"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H3rlI24D"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F87291C15
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Aug 2025 23:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E403FE7
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Aug 2025 00:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754351736; cv=none; b=JrHgkTJHR1rmpVncrmg3PSU3ksE5D1Y4z5mcHF+AoDoXsQSI8gmZIYA8JQyw75ids8sPxO07pKa5xQaG25DOV8TVjBPBMjsejtJwKMcVk41oNoOrrE7AF2/8eyMMqgDyzrVQUEXRq+LAtWVcYFKlqJqcCxUiZj4MKoyEMr++Y60=
+	t=1754355003; cv=none; b=iws2CySqfODHlY4mLj4+6b5gRqqDI5lagHoM2fnnu/m2hwFdDp6qSFK0d1jkpUUX2u/enugmEo8VQ1X1b3t2nvNayvP9YCN+Z5shI4QrpCiCs6Y4qzPzPFSoAL1XcW8QpZ9u1TUzJN5CzrnuuwBlB8B9G7xR9IR2AnuMFV+hXew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754351736; c=relaxed/simple;
-	bh=4UrIRKk4Kiq1NcMVBskZHoeuMI+9p3rGjYqF9FNGl5k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VDtuefWmdcmeiyjeQR7C50aRo1MLrufDlfnQ/XPcZxqMXt1o/c4i1fXgXN0+OaGRo+p1+QsnXPFrPEa4TxeksucKcjhSp9ewWmY4fOveuDXisviWTopXMIIxfmvhm0HB2OVUQA8XdEg7UnV83u9i2QWqsHNzaukEW8kZwMKDXxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9rOdZup; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F46C4CEF0;
-	Mon,  4 Aug 2025 23:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754351736;
-	bh=4UrIRKk4Kiq1NcMVBskZHoeuMI+9p3rGjYqF9FNGl5k=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=g9rOdZupwgzcJ6mu+4Kin0JjL3t2Pt7TIXwTirLbTGRW36tbRXwSRcpYtxVUAfd8Z
-	 osOAgPS/C7coqYtNIhy0qEk1YhE+DQYl6GaBBvXWwkgi5BaygNz0qJ1O/ZbXwIDfhT
-	 YvgCWqmo6E8T9tFB0vxoTOYxF7x6wQmN5b1cuRSxp1cPeHsFTvZXVdIBMEj9tMjuDA
-	 AQIAv9Bqhb94CkNoRr4eHsjEC1Zwe7AemrUXR2zRbLGc+PTqy8fF+Vt/TCEkXDevA2
-	 EG6yrhQwyDfUVnkLEFzvcPr/XLta1NKuweSoO1zD39WlS2sdsFx4eHzhtrXL6WWCXm
-	 ajJaqet7Llczw==
-Message-ID: <23fbff6b80f0c7c4b963f214c4c1e5d7b31c1d23.camel@kernel.org>
-Subject: Re: [PATCH 1/1] SUNRPC: call_connect_status needs to destroy
- transport on ETIMEDOUT before retry
-From: Trond Myklebust <trondmy@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 04 Aug 2025 16:55:34 -0700
-In-Reply-To: <72e387a8-b800-431b-89c3-0104fbfe6273@oracle.com>
-References: <1754334505-65027-1-git-send-email-dai.ngo@oracle.com>
-	 <48287a80e639d61eb507175ceb44d216e8032510.camel@kernel.org>
-	 <72e387a8-b800-431b-89c3-0104fbfe6273@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1754355003; c=relaxed/simple;
+	bh=tp4LUybg21H6fyW47VZKnfnLBoQoWUkCXDoqquXpH1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eqvaQ3aJDbg2KL0eqjzbd5KVDBcH0BZNKACLLRAkh0HK7J7hB7wmcHw5+TSReTM0og2GdfmhSz6YGKxi7HYy8iJKk+UjrNW9G7wCEbAwA94iWMWN1CExsOkduMjOKjuXlxISqZPAPJSUbHy/OJ/+g+Ochghr5FV6jckPLBYbZtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H3rlI24D; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-615398dc162so8780445a12.3
+        for <linux-nfs@vger.kernel.org>; Mon, 04 Aug 2025 17:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1754355000; x=1754959800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7SmZnL6VRL7+bBKpNPXZ08UcqiyXXe6UNiZZAKtnzU=;
+        b=H3rlI24D1kXwrLXSgg7mD9ozXVrEOM+fs9aOoXv/hxAhddxsREof8faZv11jtGLSEL
+         4cGRub/NMz2mj4j2QtMPHeGurUDcpI5yScIttSsIl6crIuw/6Fwq+hyB53TQj5RIhKIA
+         /ZKM/XcldbTVNsKiPULdubq3fzqbAXsHlv4EeRhO94/vBGfEiTnG7ly7LoYN4nx+lf0T
+         p+IkdkbbhM0HBnygK/sEUhbHhL7B02WsuR9wRUbmbpvpma8rrFyPPgm7zd6efWmQ0Faj
+         xKpRFtktIPLwCJfSpvycK4fFK3siOskxk5aEmNSWQ0lexnf8TTRTxh2sGtALivLP3+CP
+         VOmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754355000; x=1754959800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B7SmZnL6VRL7+bBKpNPXZ08UcqiyXXe6UNiZZAKtnzU=;
+        b=H0KINVPakVizByzFU+/w9KXK+ZFu+taEWA2moo4JlJRE42ZS98cxOp8tUK+GhDv3MX
+         dHQzHqRq8nAzkTRtTHVp4qRc9A4OP2ZGTwy06ZMWfV0vho1RfxFu9pxxKhSp1Lawsy4E
+         jg7U521cn/aQfRGewyKpEHNVnAEt730D1QiWLu7ci1e/oTgVEeJvw7O022tKgjGGVuzI
+         ykSJE8AX3qtsvx+9s9g+LemqMAnOtTySn0NlEy7ZcdH4PURhCWIuQijj4vb+ClsFDXNK
+         UpCTsb3Fcu943kKLpZ4Hd9Nc73I5VHW5lkrkhXZfcuQW1M2IuB20kmW13Wene+WmC1mR
+         2j6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUgyxu51X6SzBWDQtUPnE0VwqvdCv2vjmRn6Xkz3KC807iMaHnVneYPp6vKJQTMr00HXovxm+Blba8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1RtZGYo7usgDvgZXeKccx2d29B9R/bXV5V0B3SyefdMgDXJtr
+	XYCShCPAaQNEWXUOvAtcrvRKU4FyhVCAIa0rcQBfbbRDfnn+AW+nrJl1Yi/ZGLFcVg==
+X-Gm-Gg: ASbGncvj6wMmz0ajUn3FYqxv9hUi6xCMYVsWeN1os3aDlCJlW48tD26B/asjj9VyDad
+	aQoyclPiorpMwaUNqD+EWEVscXbS2ANcuFY7hFu+pyUrBu9nt6pEVn5DXQv7c/WgTvU2inZaqAc
+	BJoZH88HQfoAFWaTlwDEx+SWUKpTUK4FdmT9x0ftQYO29pCOUDtxCxiwWo8wInfBN29FJ330Fgh
+	nktVw1iMumuHC1ee9FoOYbB+Pfyzv90hhuM1K5H5V/p5RN4CrRaYin6/GP0uujwGBs/LHvfsw+p
+	Ktyp5ESOwJ5B+qWO7efomBR3rGyLCiz0Jf48Rr4fZT1e6s1uaqj/R8ittqdLOtbOybsdXM3nmO4
+	jAhjs2HnDuYCbQjMVf/qOKA==
+X-Google-Smtp-Source: AGHT+IGIQjCeSDqY/s6JlgToDECfsuhclrMba5m8nVMsSJIXgIMv0OCDtHOftBADr/L00dAGjPOkFQ==
+X-Received: by 2002:a05:6402:26c9:b0:612:7439:4190 with SMTP id 4fb4d7f45d1cf-615e6ed02c7mr9869858a12.10.1754354999710;
+        Mon, 04 Aug 2025 17:49:59 -0700 (PDT)
+Received: from localhost ([2a07:de40:b240:0:2ad6:ed42:2ad6:ed42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a8f15fa5sm7414342a12.14.2025.08.04.17.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Aug 2025 17:49:59 -0700 (PDT)
+Date: Tue, 5 Aug 2025 00:49:57 +0000
+From: Wei Gao <wegao@suse.com>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: ltp@lists.linux.it, libtirpc-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
+	Ricardo B =?iso-8859-1?Q?=2E_Marli=E8re?= <rbm@suse.com>
+Subject: Re: [LTP] [PATCH 1/1] rpc_test.sh: Check for rpcbind remote calls
+ support
+Message-ID: <aJFVNdvkdfqPFsse@localhost>
+References: <20250804184850.313101-1-pvorel@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250804184850.313101-1-pvorel@suse.cz>
 
-On Mon, 2025-08-04 at 13:13 -0700, Dai Ngo wrote:
->=20
-> On 8/4/25 12:21 PM, Trond Myklebust wrote:
-> > On Mon, 2025-08-04 at 12:08 -0700, Dai Ngo wrote:
-> > > Currently, when an RPC connection times out during the connect
-> > > phase,
-> > > the task is retried by placing it back on the pending queue and
-> > > waiting
-> > > again. In some cases, the timeout occurs because TCP is unable to
-> > > send
-> > > the SYN packet. This situation most often arises on bare metal
-> > > systems
-> > > at boot time, when the NFS mount is attempted while the network
-> > > link
-> > > appears to be up but is not yet stable.
-> > >=20
-> > > This patch addresses the issue by updating call_connect_status to
-> > > destroy
-> > > the transport on ETIMEDOUT error before retrying the connection.
-> > > This
-> > > ensures that subsequent connection attempts use a fresh
-> > > transport,
-> > > reducing the likelihood of repeated failures due to lingering
-> > > network
-> > > issues.
-> > >=20
-> > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > ---
-> > > =C2=A0=C2=A0net/sunrpc/clnt.c | 2 +-
-> > > =C2=A0=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> > > index 21426c3049d3..701b742750c5 100644
-> > > --- a/net/sunrpc/clnt.c
-> > > +++ b/net/sunrpc/clnt.c
-> > > @@ -2215,6 +2215,7 @@ call_connect_status(struct rpc_task *task)
-> > > =C2=A0=C2=A0	case -EHOSTUNREACH:
-> > > =C2=A0=C2=A0	case -EPIPE:
-> > > =C2=A0=C2=A0	case -EPROTO:
-> > > +	case -ETIMEDOUT:
-> > > =C2=A0=C2=A0		xprt_conditional_disconnect(task->tk_rqstp-
-> > > >rq_xprt,
-> > > =C2=A0=C2=A0					=C2=A0=C2=A0=C2=A0 task->tk_rqstp-
-> > > > rq_connect_cookie);
-> > > =C2=A0=C2=A0		if (RPC_IS_SOFTCONN(task))
-> > > @@ -2225,7 +2226,6 @@ call_connect_status(struct rpc_task *task)
-> > > =C2=A0=C2=A0	case -EADDRINUSE:
-> > > =C2=A0=C2=A0	case -ENOTCONN:
-> > > =C2=A0=C2=A0	case -EAGAIN:
-> > > -	case -ETIMEDOUT:
-> > > =C2=A0=C2=A0		if (!(task->tk_flags & RPC_TASK_NO_ROUND_ROBIN)
-> > > &&
-> > > =C2=A0=C2=A0		=C2=A0=C2=A0=C2=A0 (task->tk_flags & RPC_TASK_MOVEABLE)=
- &&
-> > > =C2=A0=C2=A0		=C2=A0=C2=A0=C2=A0 test_bit(XPRT_REMOVE, &xprt->state))=
- {
-> > Why is this needed? The ETIMEDOUT is supposed to be a task level
-> > error,
-> > not a connection level thing.
->=20
-> If TCP was not able to sent the SYN out on due to the transient error
-> with the link status and the task just turns around a wait again,
-> since
-> TCP does not retry the SYN, eventually systemd times out and stops
-> the
-> mount.
->=20
->=20
-> Below is the snippet from the system log with rpcdebug enabled:
->=20
->=20
-> Jun 20 10:23:01 qa-i360-odi03 kernel: i40e 0000:98:00.0 eth1: NIC
-> Link is Up, 10 Gbps Full Duplex, Flow Control: None
-> Jun 20 10:23:09 qa-i360-odi03 NetworkManager[1511]: <info>=C2=A0
-> [1750414989.6033] manager: startup complete
->=20
-> ... <NFS mount starts>
-> Jun 20 10:23:09 qa-i360-odi03 systemd[1]: Mounting /odi...
-> ...
-> Jun 20 10:23:09 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 adde=
-d to queue
-> 0000000093f481cd "xprt_pending"
-> Jun 20 10:23:09 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 sett=
-ing alarm for
-> 60000 ms
->=20
-> ... <link status down & up>
-> Jun 20 10:23:10 qa-i360-odi03 kernel: tg3 0000:04:00.0 em1: Link is
-> up at 1000 Mbps, full duplex
-> Jun 20 10:23:10 qa-i360-odi03 NetworkManager[1511]: <info>=C2=A0
-> [1750414990.6359] device (em1): state change: disconnected -> prepare
-> (reason 'none', sys-iface-state: 'managed')
-> Jun 20 10:23:10 qa-i360-odi03 NetworkManager[1511]: <info>=C2=A0
-> [1750414990.6361] device (em1): state change: prepare -> config
-> (reason 'none', sys-iface-state: 'managed')
-> Jun 20 10:23:10 qa-i360-odi03 NetworkManager[1511]: <info>=C2=A0
-> [1750414990.6364] device (em1): state change: config -> ip-config
-> (reason 'none', sys-iface-state: 'managed')
-> Jun 20 10:23:10 qa-i360-odi03 NetworkManager[1511]: <info>=C2=A0
-> [1750414990.6383] device (em1): Activation: successful, device
-> activated.
->=20
-> ... <connect timed out>
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 time=
-out
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 __rp=
-c_wake_up_task
-> (now 4294742016)
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 disa=
-bling timer
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 remo=
-ved from queue
-> 0000000093f481cd "xprt_pending"
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 call=
-_connect_status
-> (status -110)
->=20
-> ... <wait again>
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 slee=
-p_on(queue
-> "xprt_pending" time 4294742016)
-> Jun 20 10:24:11 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 adde=
-d to queue
-> 0000000093f481cd "xprt_pending"
->=20
-> ... <systemd timed out>
-> Jun 20 10:24:39 qa-i360-odi03 systemd[1]: odi.mount: Mounting timed
-> out. Terminating.
->=20
-> Jun 20 10:24:39 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 got =
-signal
-> Jun 20 10:24:39 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 __rp=
-c_wake_up_task
-> (now 4294770229)
-> Jun 20 10:24:39 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 disa=
-bling timer
-> Jun 20 10:24:39 qa-i360-odi03 kernel: RPC:=C2=A0=C2=A0=C2=A0=C2=A0 1 remo=
-ved from queue
-> 0000000093f481cd "xprt_pending"
->=20
-> Jun 20 10:24:39 qa-i360-odi03 kernel: <-- nfs4_try_mount() =3D -512
-> [error]
-> Jun 20 10:24:39 qa-i360-odi03 systemd[1]: odi.mount: Mount process
-> exited, code=3Dkilled status=3D15
-> Jun 20 10:24:39 qa-i360-odi03 systemd[1]: odi.mount: Failed with
-> result 'timeout'.
->=20
-> This patch forces TCP to send the SYN on ETIMEDOUT error.
->=20
-
-Something is very wrong here...
-
-If this patch is correct, and the call to xprt_conditional_disconnect()
-does indeed cause the socket to close, then something must have bumped
-xprt->connect_cookie. The only things that can do that are the state
-changes recorded in xs_tcp_state_change(),
-xs_sock_reset_connection_flags(), or xprt_autoclose().
-
-If it was xs_tcp_state_change() that bumped xprt->connect_cookie, then
-either we're in TCP_ESTABLISHED (in which case triggering a close on
-ETIMEDOUT is just wrong), or we're in the TCP_CLOSE state, in which
-case autoclose should already be scheduled.
-If xs_sock_reset_connection_flags() got called, then the socket is in
-the process of being closed.
-Ditto if xprt_autoclose() got called.
-
-So why do we need the call to xprt_conditional_disconnect()?
-
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+On Mon, Aug 04, 2025 at 08:48:50PM +0200, Petr Vorel wrote:
+> client binaries rpc_pmap_rmtcall and tirpc_rpcb_rmtcall require rpcbind
+> compiled with remote calls.  rpcbind has disabled remote calls by
+> default in 1.2.5. But this was not detectable until 1.2.8, which brought
+> this info in -v flag.
+> 
+> Detect the support and skip on these 2 functions when disabled.
+> 
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+> Hi,
+> 
+>  testcases/network/rpc/rpc-tirpc/rpc_test.sh | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/testcases/network/rpc/rpc-tirpc/rpc_test.sh b/testcases/network/rpc/rpc-tirpc/rpc_test.sh
+> index cadae55203..1a8cf46399 100755
+> --- a/testcases/network/rpc/rpc-tirpc/rpc_test.sh
+> +++ b/testcases/network/rpc/rpc-tirpc/rpc_test.sh
+> @@ -53,6 +53,11 @@ setup()
+>  		fi
+>  	fi
+>  
+> +	if [ "$CLIENT" = 'rpc_pmap_rmtcall' -o "$CLIENT" = 'tirpc_rpcb_rmtcall' ] && \
+> +		rpcbind -v 2>/dev/null && rpcbind -v 2>&1 | grep -q 'remote calls: no'; then
+> +		tst_brk TCONF "skip due rpcbind compiled without remote calls"
+> +	fi
+Should we check rpcbind version? Since you mentioned remove call
+detectable until 1.2.8.
+> +
+>  	[ -n "$CLIENT" ] || tst_brk TBROK "client program not set"
+>  	tst_check_cmds $CLIENT $SERVER || tst_brk TCONF "LTP compiled without TI-RPC support?"
+>  
+> -- 
+> 2.50.1
+> 
+> 
+> -- 
+> Mailing list info: https://lists.linux.it/listinfo/ltp
 
