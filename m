@@ -1,91 +1,112 @@
-Return-Path: <linux-nfs+bounces-13475-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13476-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB935B1DB0F
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 17:53:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC859B1DB79
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 18:15:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6AC458533E
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 15:53:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E68EE7A201E
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 16:13:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48977263F52;
-	Thu,  7 Aug 2025 15:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6D0C26FD9F;
+	Thu,  7 Aug 2025 16:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zk/5klhc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig09r9Xj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D70263C8F
-	for <linux-nfs@vger.kernel.org>; Thu,  7 Aug 2025 15:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AAE26E71E
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Aug 2025 16:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754581999; cv=none; b=I/i2DXN2bahxuzMN+jD/YOtCT24u9F3ezIU2hPabKHX8BAiR2FsJf7t+Lm+7UEMPHLTZJD1X+q+lUTaJkSR7DTKpPuGLLuxgrA0MIosILhpPd11prkeK0eCUpVY6aifu2brEd1oBOfvZfJVUHxedxJdfXIOHeDPcDSUbaINyu54=
+	t=1754583311; cv=none; b=G79ERsR5NdDD9xNNJEqqeZWaVHOTeo5ZXm/DgkpMu8MojehF6vpdmVcu3faY6wzkmQmh/GNKhNZiueS6VYJoq/MImqNOypkiLcra+VymlZPlCbMii9VWGPAErNL4l+MTLe8NxcKtXWgUBQYxNcuUvimMrJK6n/hFPrWkl/iot74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754581999; c=relaxed/simple;
-	bh=y81mD010BpqOXmDhfKNCKQf4T7k7HGxEEvQfiEU1kbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UOq++tWUNPnRagbaGWCpmeANgp4vqKm00iR0gNP+fNkDmOmmIv/sCma5lzL0BR2eqfiyznZ/ow+HnTDDdP7hQ+ILlBCWSk2EwGHVJ4lXf35OyX2gWM6hoQJn+VWLGxh6HYvAClXj7059htpG41bgVyqdteJNmvp5Ww3oPLfQXkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zk/5klhc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF0A3C4CEEB;
-	Thu,  7 Aug 2025 15:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754581999;
-	bh=y81mD010BpqOXmDhfKNCKQf4T7k7HGxEEvQfiEU1kbg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zk/5klhcpL4iSCDkzl97tel7IbTMXwS0azvytxK5zl2YcWbJElTXnAI/HJn6DHBgn
-	 /PPKnFw8Jdw2yzZNIj+I1SbkPzQHiZGypT2D7NKcrwO6qywGzgHS1HMan6u1R1jH4H
-	 PEZU/a9MNW8NtlD8jdLiinV+a3ntwcDYXg6fnyPTplq/fNTetsgmZhZYLTQWPX8+yd
-	 9u7OkYv0TKm5PmacNa4TLzmprc/TpvFVABOYg+Hnkow7tMwX7Pjs6YUPXuvWqFbLIm
-	 MqRm0ZR5ZDElDhCUfTngcVBMG3SZoXiz8iUM/pbmEF4dkQvxVaoONw+4dKpfEMbuYh
-	 qXM3HGT/sW9Wg==
-Date: Thu, 7 Aug 2025 11:53:17 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: sparse warnings with nfsd-testing [was: Re: [PATCH v4 1/4] NFSD:
- avoid using iov_iter_is_aligned() in nfsd_iter_read()]
-Message-ID: <aJTL7WtMWXtuIsrM@kernel.org>
-References: <20250805184428.5848-1-snitzer@kernel.org>
- <20250805184428.5848-2-snitzer@kernel.org>
- <d3249463-411d-4e0d-aa20-6489cd52c787@oracle.com>
- <aJN7dr37mo1LXkQx@kernel.org>
- <aJTLL6z0OVZ1k_XC@kernel.org>
- <92a4ae05-1437-43f0-8300-f286ac7452b3@oracle.com>
+	s=arc-20240116; t=1754583311; c=relaxed/simple;
+	bh=5jStWWCjaP0JV4+FcpprNQXMf0EfrFjzCaVhf4bzd4M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=FGo4Egf4Vd/McoVzyCQOnNXYgEw65q7umnw6gVxbw5slVACJjwrKg9awXGPS10/yP9lYXYeBlx9pq3Jjo1JthLLnuHm8pEJZKwu2kUgXz8wCTHfNONYUiYwxexSwzVc7XCXeI5dr1cR2cT09jNXT5pE1ZsofUvcPEd68wAoPCUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ig09r9Xj; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4aeb2e06b82so6554471cf.2
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Aug 2025 09:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754583309; x=1755188109; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WF6nBEqiFr25e1JDP4OVyxkoh94QRguP3Taix+F8VOs=;
+        b=ig09r9XjE2ru8ydRdV5bsxOB3M8e6HStZN0uSNO2EU+RaNc/dekeLaXzTYsgbrtJMX
+         /1lQbmlpAaWz/QAn4DRB2rxqyOSnS7krBS1iq72nPYHtwO3nQUApjLfQS8OapWFoNpAr
+         TOZGxv8miFsaFFuCxN0+r9+/n8KOnqU5z89zotUhZ2fa2TX73Jp08tAFHQUVPGYA87SM
+         /JHsAppn/eEVzpY0hUynWGTxwyGnrOBZ/XrJF3Jud7LbXsoHXLBxC8chtv2hmxi8z4bW
+         Jv7vFPzuT5tb4TzWfpLY79iB6dDrnDYaWgM1t+ZIzqCnwm2W84VjKJMfX5Gc4ZBeQiHV
+         Y8Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754583309; x=1755188109;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WF6nBEqiFr25e1JDP4OVyxkoh94QRguP3Taix+F8VOs=;
+        b=F2tVxxQNVEAGh8C+1kNnTwrXqiyNoCFT+nZvFxYlsokht8MAp67c9ovUhc+DNo+1kG
+         U2yrdgS1Dv7shHC2X+lZr0TSNB87C8DUdILD7MovCjp2Liq4LthdfRQyqvRiw+EmILJT
+         Wimj5qa8lPrXcKgvIRcg2EJaHEVfgHJ7/5ec32VfL0SxFEcY+pvLl0NVMLV13V5S4qGY
+         jGkJosXjNYj8DhQ3e+JMYmk4xg6AHnzXZ1w69Ta4OfhSmRC2eiEnUPww/I3eFAVMRMwA
+         31aNI9rh/QPHh0nIqZJPj1s5NcOuDPte5MgWR0cShhbgiACCFvLAccRqKhzfB6ViEiof
+         OwIQ==
+X-Gm-Message-State: AOJu0Yxs8Iexpi78eFoFsAmuB7hh4AqezEvFrZs/pO0JQruiZUdWQBZX
+	NLFNVCsxFE+b4Xmcjl6V0N94ZKdfHc/umsPdHjrFKvurIKhKOSnbWIRFoiSJC+Pl+5yByRFQXOo
+	bCf+5MaPd8HD3QfhDSyXWhD31WNaih1wD3cDA
+X-Gm-Gg: ASbGncvqd1rUrD1cxgWU8SvDrMI0o+bBCN61kDbE0506qTkEMOiHMzbHfqHYmKYbes0
+	r3YMPLDQP9iPBmdd/JtbAlVThVs0UhO9sAN4T5UJ3x8GzuPme2REb76RS0t//4LIUPb/eD7+7Xw
+	XklwS1j+9yZwTANWrmYwwUO73TG1Qaqimivlopf8TyxYFaza7WE/DWWqNm4N97M19tJboCQutPi
+	A38zBvahIJh3d/emLs=
+X-Google-Smtp-Source: AGHT+IGYnUG/eo1c7+2UYvBuQDrRJfWPT9e7QodlhNPd42BAKoIZYykdFsqO6arQqeR+cw9OZNk28S1NC0NC4X6/0lw=
+X-Received: by 2002:a05:622a:413:b0:4b0:6da3:26df with SMTP id
+ d75a77b69052e-4b09268dfe0mr126142711cf.29.1754583307979; Thu, 07 Aug 2025
+ 09:15:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92a4ae05-1437-43f0-8300-f286ac7452b3@oracle.com>
+From: Haihua Yang <yanghh@gmail.com>
+Date: Thu, 7 Aug 2025 09:14:57 -0700
+X-Gm-Features: Ac12FXxnPG-FS8i3PdenrK0cpZlofLqcVgVJsNEW8momWCYHIZjaGlmnkqU9QZc
+Message-ID: <CALzt5Pk81rdgaBhk=s+cHEeSAP3rFrrsD3Q3Sx5rCsi_jkWuqQ@mail.gmail.com>
+Subject: LAYOUTCOMMIT Failure After CB_LAYOUTRECALL in pNFS Filelayout Scenario
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 07, 2025 at 11:51:49AM -0400, Chuck Lever wrote:
-> On 8/7/25 11:50 AM, Mike Snitzer wrote:
-> > On Wed, Aug 06, 2025 at 11:57:42AM -0400, Mike Snitzer wrote:
-> >> On Wed, Aug 06, 2025 at 09:18:51AM -0400, Chuck Lever wrote:
-> >>  
-> >>> Before reposting, please do run checkpatch.pl on the series.
-> >>
-> >> Will do, will also ensure bisect safe and that sparse is happy.
-> > 
-> > FYI, I'm preparing my next patchset and sparse is happy with it, but I
-> > wanted to share these warnings seen with nfsd-testing through commit
-> > ae83299cc048e ("NFSD: Fix last write offset handling in
-> > layoutcommit"):
-> > 
-> > fs/nfsd/nfs4state.c: note: in included file (through include/linux/wait.h, include/linux/wait_bit.h, include/linux/fs.h):
-> > ./include/linux/list.h:229:25: warning: context imbalance in 'put_clnt_odstate' - unexpected unlock
-> > fs/nfsd/nfs4state.c:1188:9: warning: context imbalance in 'nfs4_put_stid' - unexpected unlock
-> > 
-> > I haven't looked at them closer. Could be you're well aware of them?
-> 
-> These warnings have been there forever. I'm told they are the result of
-> bugs in sparse.
+I'm observing a consistent failure of LAYOUTCOMMIT when the NFS client
+accesses a pNFS share using filelayout. Below is the sequence of
+events:
+  1, The client opens a file for writing and successfully receives a
+layout (stateid with seqid =3D 1).
+  2, The client writes data to the data server (DS) successfully.
+  3, The NFS server sends a CB_LAYOUTRECALL (stateid with seqid =3D 2)
+due to some change on the server side.
+  4, The client sends a LAYOUTCOMMIT (still with seqid =3D 1), followed
+by a LAYOUTRETURN (with seqid =3D 2).
+  5, The server responds to LAYOUTCOMMIT with NFS4ERR_OLD_STATEID.
+  6, The server responds to LAYOUTRETURN with NFS4ERR_OK.
+  7, The client retries LAYOUTCOMMIT (still using seqid =3D 1).
+  8, The server replies with NFS4ERR_BAD_STATEID because the state was
+already removed when processing the LAYOUTRETURN.
 
-OK, good to know, thanks!
+It seems there may be two issues with the Linux NFS client=E2=80=99s behavi=
+or:
+  1, The client should not send LAYOUTRETURN before receiving a
+non-retryable response to LAYOUTCOMMIT.
+  2, After receiving a CB_LAYOUTRECALL, the client should not continue
+using the old seqid.
+
+Would you consider this a bug in the client? Or is there something I
+may have misunderstood in the protocol behavior?
+
+Thanks,
+Haihua Yang
 
