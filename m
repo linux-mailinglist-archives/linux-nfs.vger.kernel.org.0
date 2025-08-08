@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-13500-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13501-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91B2BB1E7BB
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 13:49:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC775B1E7BD
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 13:51:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 983131683F6
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 11:49:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 983701889DAA
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 11:51:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F6A12750EC;
-	Fri,  8 Aug 2025 11:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 028CE275858;
+	Fri,  8 Aug 2025 11:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="it4Xt+b9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjA8Tubv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9E025C813
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 11:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D0E275855
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 11:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754653778; cv=none; b=AYDpB2pZK3F1FNdfrvT+Go2a90jP9RjE3KogWIpKApPQUt2mkHi1WisZyPAUMt1AQlaB8K5sQHHx/SBdi2h8Gw3NherQRiy1my0wbSroYJlDBJJQ0x6S0hCpNPduOuWjJ22zgZ9SDihMCd9NnqwGXzSgx7Z5iX734kEn6FUn8Qs=
+	t=1754653871; cv=none; b=mSSOiunXTK8kHWR5wY4OxwoAjWj1C5hR8QcermJFiEYRYc2PsLxqqLj3MyNoJW/0Yrr0l5mBPNKbblFjIq2VNFMkFp49oyG8TGGKz+40XMOvJl7FSqQHAQ2hRpe/yFF6VvkmEuPRPbM8jYuXoKpGaVZhVNmIlD6yTipTrSEJXCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754653778; c=relaxed/simple;
-	bh=INghMXjxZYPnQeH6s5oBNhswh580/vsm24IK3hvTmxU=;
+	s=arc-20240116; t=1754653871; c=relaxed/simple;
+	bh=vhjJR0rHmrD+5nO38MIKn4WJRNNZX5wzstXSvqijEws=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AyI1nSuAoNOSz8Zwt5JM8v+xpgrhFx/kMcoAv99iGkmKlnqUXK8b+XZ4fid0v25jwSef6KKHT9t1pWL2GStXdAjsd8MwI9FgDhZiff2NF9ez4ElDucwMUxX0XrgYsN32i2m0IIRj7FG6SLAtxAAVZOGmoknsol++k592kdwjKUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=it4Xt+b9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F865C4CEED;
-	Fri,  8 Aug 2025 11:49:36 +0000 (UTC)
+	 Content-Type:MIME-Version; b=bF9iHn2s03UBEG3uHF3INyFxc2LvyrPpjIGCyv23UNhPQ2n/G781yn2GwpT723tQt44Uq0+RHivSXhnepUoqe2B2iEa20V0qcn8YUQrqMzuUdVEs61yrMMRROocogD6sChGkxegaBykfDS5UkJIz/zsPW3wPqwB6EZDVAyHGaCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjA8Tubv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AE25C4CEED;
+	Fri,  8 Aug 2025 11:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754653776;
-	bh=INghMXjxZYPnQeH6s5oBNhswh580/vsm24IK3hvTmxU=;
+	s=k20201202; t=1754653871;
+	bh=vhjJR0rHmrD+5nO38MIKn4WJRNNZX5wzstXSvqijEws=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=it4Xt+b9FDyzBKcYQIf59UaTPYo5T41z4GqymXMKvSANzxB5XC0hac03MAJRq7Ziq
-	 qMtxcJ35HYXUqXhoow0etCfntMKv232H3/a0prORfa8jbZ4HnJVcvhk8gg9h3LCvxV
-	 fQInSkxse01mpGMwLwfHJStMW+U23JCJZq8Cxp/YFE7DSiHSR1piVQtFG9DSwHFKOZ
-	 46q7b1wKmGrB+UsqeyQehL+ISpsek9j29PHHmMfgB0aJZJirGO5ubUzAkF0QqmMRYs
-	 SppQHd0s/atTClHyhzEBfYTL8dxJzOD4D1hzrjUMj+pAXnOjwC5uqtQAUVJBBYyb6q
-	 3e8qEPYLkq+EA==
-Message-ID: <25e0335a8d1da69f0b68a46d217d83e192b3703c.camel@kernel.org>
-Subject: Re: [PATCH v5 1/7] NFSD: filecache: add STATX_DIOALIGN and
- STATX_DIO_READ_ALIGN support
+	b=NjA8TubvXZTdcfM/Yhpktj0NQKbJp3eyEgh+E/bUoO56l0HOmpCR1D7XoLdobK9Fo
+	 d/gSO0n1H7zcmnpuZdVMmLHo8ue6KtYeRLhDxNvSDTTJyW0XnjbPm1lhO6bim1IBH3
+	 2L3Ma5EQiiN8d1O/0afdZo4IGZ7JIg+MfwsFaZb8gX7dekNpQXFWwl41B0fQZiz5eU
+	 mznnO2szZvggd7w+JMVAhCeC59q2pHwerhfZ7wmFr8l4eGI2vfKZ557VMKQqxcFHHK
+	 apg5e9AynInA/42y3iia+fq8JoOy9zryMGSDYTOioCxXhrkf8bRms2mqIfsdm4w7uT
+	 6/9qMVoRcXHJg==
+Message-ID: <24cf97f2ca9da2ce9f93763ce5a491bbe084e3e0.camel@kernel.org>
+Subject: Re: [PATCH v5 2/7] NFSD: pass nfsd_file to nfsd_iter_read()
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Date: Fri, 08 Aug 2025 07:49:35 -0400
-In-Reply-To: <20250807162544.17191-2-snitzer@kernel.org>
+Date: Fri, 08 Aug 2025 07:51:10 -0400
+In-Reply-To: <20250807162544.17191-3-snitzer@kernel.org>
 References: <20250807162544.17191-1-snitzer@kernel.org>
-	 <20250807162544.17191-2-snitzer@kernel.org>
+	 <20250807162544.17191-3-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,110 +135,109 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-08-07 at 12:25 -0400, Mike Snitzer wrote:
-> Use STATX_DIOALIGN and STATX_DIO_READ_ALIGN to get and store DIO
-> alignment attributes from underlying filesystem in associated
-> nfsd_file.  This is done when the nfsd_file is first opened for
-> a regular file.
+> Prepares for nfsd_iter_read() to use DIO alignment stored in nfsd_file.
 >=20
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/filecache.c | 32 ++++++++++++++++++++++++++++++++
->  fs/nfsd/filecache.h |  4 ++++
->  fs/nfsd/nfsfh.c     |  4 ++++
->  3 files changed, 40 insertions(+)
+>  fs/nfsd/nfs4xdr.c | 8 ++++----
+>  fs/nfsd/vfs.c     | 7 ++++---
+>  fs/nfsd/vfs.h     | 2 +-
+>  3 files changed, 9 insertions(+), 8 deletions(-)
 >=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 8581c131338b8..5447dba6c5da0 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -231,6 +231,9 @@ nfsd_file_alloc(struct net *net, struct inode *inode,=
- unsigned char need,
->  	refcount_set(&nf->nf_ref, 1);
->  	nf->nf_may =3D need;
->  	nf->nf_mark =3D NULL;
-> +	nf->nf_dio_mem_align =3D 0;
-> +	nf->nf_dio_offset_align =3D 0;
-> +	nf->nf_dio_read_offset_align =3D 0;
->  	return nf;
->  }
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 7d19925f46e45..d519f4156cfad 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -4464,7 +4464,7 @@ static __be32 nfsd4_encode_splice_read(
 > =20
-> @@ -1048,6 +1051,33 @@ nfsd_file_is_cached(struct inode *inode)
->  	return ret;
->  }
+>  static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+>  				 struct nfsd4_read *read,
+> -				 struct file *file, unsigned long maxcount)
+> +				 unsigned long maxcount)
+>  {
+>  	struct xdr_stream *xdr =3D resp->xdr;
+>  	unsigned int base =3D xdr->buf->page_len & ~PAGE_MASK;
+> @@ -4475,7 +4475,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compo=
+undres *resp,
+>  	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
+>  		return nfserr_resource;
 > =20
-> +static __be32
-> +nfsd_file_getattr(const struct svc_fh *fhp, struct nfsd_file *nf)
-> +{
-> +	struct inode *inode =3D file_inode(nf->nf_file);
-> +	struct kstat stat;
-> +	__be32 status;
-> +
-> +	/* Currently only need to get DIO alignment info for regular files */
-> +	if (!S_ISREG(inode->i_mode))
-> +		return nfs_ok;
-> +
-> +	status =3D fh_getattr(fhp, &stat);
-> +	if (status !=3D nfs_ok)
-> +		return status;
-> +
-> +	if (stat.result_mask & STATX_DIOALIGN) {
-> +		nf->nf_dio_mem_align =3D stat.dio_mem_align;
-> +		nf->nf_dio_offset_align =3D stat.dio_offset_align;
-> +	}
-> +	if (stat.result_mask & STATX_DIO_READ_ALIGN)
-> +		nf->nf_dio_read_offset_align =3D stat.dio_read_offset_align;
-> +	else
-> +		nf->nf_dio_read_offset_align =3D nf->nf_dio_offset_align;
-> +
-> +	return status;
-> +}
-> +
->  static __be32
->  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
->  		     struct svc_cred *cred,
-> @@ -1166,6 +1196,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- net *net,
->  			}
->  			status =3D nfserrno(ret);
->  			trace_nfsd_file_open(nf, status);
-> +			if (status =3D=3D nfs_ok)
-> +				status =3D nfsd_file_getattr(fhp, nf);
->  		}
->  	} else
->  		status =3D nfserr_jukebox;
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index 24ddf60e8434a..e3d6ca2b60308 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -54,6 +54,10 @@ struct nfsd_file {
->  	struct list_head	nf_gc;
->  	struct rcu_head		nf_rcu;
->  	ktime_t			nf_birthtime;
-> +
-> +	u32			nf_dio_mem_align;
-> +	u32			nf_dio_offset_align;
-> +	u32			nf_dio_read_offset_align;
->  };
+> -	nfserr =3D nfsd_iter_read(resp->rqstp, read->rd_fhp, file,
+> +	nfserr =3D nfsd_iter_read(resp->rqstp, read->rd_fhp, read->rd_nf,
+>  				read->rd_offset, &maxcount, base,
+>  				&read->rd_eof);
+>  	read->rd_length =3D maxcount;
+> @@ -4522,7 +4522,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, _=
+_be32 nfserr,
+>  	if (file->f_op->splice_read && splice_ok)
+>  		nfserr =3D nfsd4_encode_splice_read(resp, read, file, maxcount);
+>  	else
+> -		nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount);
+> +		nfserr =3D nfsd4_encode_readv(resp, read, maxcount);
+>  	if (nfserr) {
+>  		xdr_truncate_encode(xdr, eof_offset);
+>  		return nfserr;
+> @@ -5418,7 +5418,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundre=
+s *resp,
+>  	if (file->f_op->splice_read && splice_ok)
+>  		nfserr =3D nfsd4_encode_splice_read(resp, read, file, maxcount);
+>  	else
+> -		nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount);
+> +		nfserr =3D nfsd4_encode_readv(resp, read, maxcount);
+>  	if (nfserr)
+>  		return nfserr;
 > =20
->  int nfsd_file_cache_init(void);
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index f4a3cc9e31e05..bdba2ba828a6a 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -677,8 +677,12 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct k=
-stat *stat)
->  		.mnt		=3D fhp->fh_export->ex_path.mnt,
->  		.dentry		=3D fhp->fh_dentry,
->  	};
-> +	struct inode *inode =3D d_inode(p.dentry);
->  	u32 request_mask =3D STATX_BASIC_STATS;
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 0c0f25b2c8e38..79439ad93880a 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1075,7 +1075,7 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, str=
+uct svc_fh *fhp,
+>   * nfsd_iter_read - Perform a VFS read using an iterator
+>   * @rqstp: RPC transaction context
+>   * @fhp: file handle of file to be read
+> - * @file: opened struct file of file to be read
+> + * @nf: opened struct nfsd_file of file to be read
+>   * @offset: starting byte offset
+>   * @count: IN: requested number of bytes; OUT: number of bytes read
+>   * @base: offset in first page of read buffer
+> @@ -1088,9 +1088,10 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, st=
+ruct svc_fh *fhp,
+>   * returned.
+>   */
+>  __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> -		      struct file *file, loff_t offset, unsigned long *count,
+> +		      struct nfsd_file *nf, loff_t offset, unsigned long *count,
+>  		      unsigned int base, u32 *eof)
+>  {
+> +	struct file *file =3D nf->nf_file;
+>  	unsigned long v, total;
+>  	struct iov_iter iter;
+>  	struct kiocb kiocb;
+> @@ -1312,7 +1313,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  	if (file->f_op->splice_read && nfsd_read_splice_ok(rqstp))
+>  		err =3D nfsd_splice_read(rqstp, fhp, file, offset, count, eof);
+>  	else
+> -		err =3D nfsd_iter_read(rqstp, fhp, file, offset, count, 0, eof);
+> +		err =3D nfsd_iter_read(rqstp, fhp, nf, offset, count, 0, eof);
 > =20
-> +	if (S_ISREG(inode->i_mode))
-> +		request_mask |=3D (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
-> +
->  	if (fhp->fh_maxsize =3D=3D NFS4_FHSIZE)
->  		request_mask |=3D (STATX_BTIME | STATX_CHANGE_COOKIE);
-> =20
+>  	nfsd_file_put(nf);
+>  	trace_nfsd_read_done(rqstp, fhp, offset, *count);
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index 0c0292611c6de..fa46f8b5f1320 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -121,7 +121,7 @@ __be32		nfsd_splice_read(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+>  				unsigned long *count,
+>  				u32 *eof);
+>  __be32		nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> -				struct file *file, loff_t offset,
+> +				struct nfsd_file *nf, loff_t offset,
+>  				unsigned long *count, unsigned int base,
+>  				u32 *eof);
+>  bool		nfsd_read_splice_ok(struct svc_rqst *rqstp);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
