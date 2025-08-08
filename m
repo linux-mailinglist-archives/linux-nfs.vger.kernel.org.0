@@ -1,371 +1,426 @@
-Return-Path: <linux-nfs+bounces-13521-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13522-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F6E7B1EE4E
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 20:19:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF2AAB1EE75
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 20:46:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 705325A3529
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 18:19:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 312533A03B9
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 18:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99985280A3B;
-	Fri,  8 Aug 2025 18:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 547FD20297C;
+	Fri,  8 Aug 2025 18:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwuDJU02"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVT4Uib8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A612206AF
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 18:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3EE1361;
+	Fri,  8 Aug 2025 18:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754677180; cv=none; b=Qw896xzjMk610QgYwuL8SHPpRsn6mKnDtcT1/6fX/kmysr/JNlfUW2QO0tdl2H3W1tq/p+uVtfSe5iGv4NbcJ73QLnrgxuCQ75mW6zyAuRc7GSfq/vtUqI4lNFtyXWIZqoyEG/QWQrcIg8UGxuvavIKrBNqlYQ8E57fihWjXX3E=
+	t=1754678812; cv=none; b=BoGSbjPUq4nWlWp8wtkfRfWMkVPPEhezqaYrja4bag1+eETKc0YipdqqEKtL0te6bSz2M9SmPDrriL+j37aLDjsWbwhl8Dk73VAyf+zsqJ0ZL1YatuyHgKk5I4ktU8NOKiNZiBGBb80gmlCfK/UjlIW6Mq2FKsG+iOzLSAFCQOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754677180; c=relaxed/simple;
-	bh=pIoADvmtG47qgGnf1CYrNNnK87Ms5J4mH4XIDEWcsTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CXQmuvf0Kg7O3dQsuAOmDi0cYK8QBa52bkk5HL7Y7HNnwrE6dyxtOhsjSCciV3Rl/HhJUH43DH4JIuPCSU1aKa3jazKTX6I/NNWYwVu/AWunPN8UgJStFzg645Rba6nhb0SCjm3Q+RrWYJMHwGEWP8NY7rVj9d3OQ6IGCyXTCVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwuDJU02; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB00C4CEED;
-	Fri,  8 Aug 2025 18:19:39 +0000 (UTC)
+	s=arc-20240116; t=1754678812; c=relaxed/simple;
+	bh=dFLZiPoSw3LaxzIiYREnQ+3wF1AR454Fh8fo9S3GhMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p8DZkf1aUZS97dCKHxje2jLzJmn7tVTwgKWzi6GFdR6rLMkPbHirQx09OHYHLiIdpyXEPtDwVKehR2FBpeRyBs/3qvyJNZOuCzhC+bg67Mb/UtB78le8aEI8EA7ixr33VFb0yeGHlzFrmfCSCjFio93wZ+sWodEXxtcHw0HxTK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVT4Uib8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3367DC4CEED;
+	Fri,  8 Aug 2025 18:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754677180;
-	bh=pIoADvmtG47qgGnf1CYrNNnK87Ms5J4mH4XIDEWcsTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KwuDJU02NT8J9U0cJMX607wKIOd77+Udq+uCekmAMUyNwHyGkR6397bYHYWo7Ta78
-	 zQK1tETwApHxmuwgeoeoFDTujYBDOTAGq1gvN6Boq9W9T1egFPKyOb1QSzeL62TxnP
-	 8rMZ18qyq8h8fb4O7+Jumk+mY+2oSLscHdEdNVz07M3ptDI2p8LkYVI1s6UbzXK1vP
-	 mI/pSqUr2zlCCMzVWCcO4HIwQnYlX9ycMMLOu5SYJZV7oNI0PbyOa0TaiJ+Uf4M2J5
-	 b/W3ap1dsSEd5evpP8ZNgwDwyk0j/axJFiGgTD1feD0WmjY+kG3o7qWROwh8T9MgUW
-	 +XAL3/zrwrr3g==
-Date: Fri, 8 Aug 2025 14:19:38 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] NFSD: issue READs using O_DIRECT even if IO is
- misaligned
-Message-ID: <aJY_unu7uL7h3Q4z@kernel.org>
-References: <20250807162544.17191-1-snitzer@kernel.org>
- <20250807162544.17191-7-snitzer@kernel.org>
- <9df6001e-8930-4618-841a-14e1831b720d@oracle.com>
+	s=k20201202; t=1754678811;
+	bh=dFLZiPoSw3LaxzIiYREnQ+3wF1AR454Fh8fo9S3GhMg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZVT4Uib8hi1AeoVie9vq+KlZuBpZTYWRcvVA4bjrLMpl/ZzmXLyYzv4mB6ioMH/fJ
+	 HQYm+6CoYzox3kSsCwSuYTjjXGbo7mYBq8fyoEILPibwUKdJAcpkf3wiRuUIt8+E5B
+	 aJuaBxWANiU1SyRP2z+tnRRg1FCM6Fg1FXE8RLkvvmZZ+z4gtdujgmusrK/OEWEHGF
+	 fvjShcupgQN3WZG8tydF8W6oJSL/+bCpK056KkcFQ+ceImUW/+8dYPo3U190Dq9OVh
+	 a9dVpBWfzkAdrJzonVZXF0SjJ099bnWq8idwWwujlUQpAOSPzvObMloeFnhabpM0EB
+	 zK3QYJJXKYVdQ==
+From: Chuck Lever <cel@kernel.org>
+To: <linux-nfs@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH] svcrdma: Introduce Receive buffer arenas
+Date: Fri,  8 Aug 2025 14:46:48 -0400
+Message-ID: <20250808184648.120866-1-cel@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9df6001e-8930-4618-841a-14e1831b720d@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 08, 2025 at 01:59:47PM -0400, Chuck Lever wrote:
-> On 8/7/25 12:25 PM, Mike Snitzer wrote:
-> > If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
-> > DIO-aligned block (on either end of the READ). The expanded READ is
-> > verified to have proper offset/len (logical_block_size) and
-> > dma_alignment checking.
-> > 
-> > Must allocate and use a bounce-buffer page (called 'start_extra_page')
-> > if/when expanding the misaligned READ requires reading extra partial
-> > page at the start of the READ so that its DIO-aligned. Otherwise that
-> > extra page at the start will make its way back to the NFS client and
-> > corruption will occur. As found, and then this fix of using an extra
-> > page verified, using the 'dt' utility:
-> >   dt of=/mnt/share1/dt_a.test passes=1 bs=47008 count=2 \
-> >      iotype=sequential pattern=iot onerr=abort oncerr=abort
-> > see: https://github.com/RobinTMiller/dt.git
-> > 
-> > Any misaligned READ that is less than 32K won't be expanded to be
-> > DIO-aligned (this heuristic just avoids excess work, like allocating
-> > start_extra_page, for smaller IO that can generally already perform
-> > well using buffered IO).
-> > 
-> > Also add EVENT_CLASS nfsd_analyze_dio_class and use it to create
-> > nfsd_analyze_read_dio and nfsd_analyze_write_dio trace events. This
-> > prepares for nfsd_vfs_write() to also make use of it when handling
-> > misaligned WRITEs.
-> > 
-> > This combination of trace events is useful:
-> > 
-> >  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
-> >  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_read_dio/enable
-> >  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
-> >  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
-> > 
-> > Which for this dd command:
-> > 
-> >  dd if=/mnt/share1/test of=/dev/null bs=47008 count=2 iflag=direct
-> > 
-> > Results in:
-> > 
-> >   nfsd-23908   [010] ..... 10375.141640: nfsd_analyze_read_dio: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47008 start=0+0 middle=0+47008 end=47008+96
-> >   nfsd-23908   [010] ..... 10375.141642: nfsd_read_vector: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47104
-> >   nfsd-23908   [010] ..... 10375.141643: xfs_file_direct_read: dev 259:2 ino 0xc00116 disize 0x226e0 pos 0x0 bytecount 0xb800
-> >   nfsd-23908   [010] ..... 10375.141773: nfsd_read_io_done: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47008
-> > 
-> >   nfsd-23908   [010] ..... 10375.142063: nfsd_analyze_read_dio: xid=0x83c5923b fh_hash=0x857ca4fc offset=47008 len=47008 start=46592+416 middle=47008+47008 end=94016+192
-> >   nfsd-23908   [010] ..... 10375.142064: nfsd_read_vector: xid=0x83c5923b fh_hash=0x857ca4fc offset=46592 len=47616
-> >   nfsd-23908   [010] ..... 10375.142065: xfs_file_direct_read: dev 259:2 ino 0xc00116 disize 0x226e0 pos 0xb600 bytecount 0xba00
-> >   nfsd-23908   [010] ..... 10375.142103: nfsd_read_io_done: xid=0x83c5923b fh_hash=0x857ca4fc offset=47008 len=47008
-> > 
-> > Suggested-by: Jeff Layton <jlayton@kernel.org>
-> > Suggested-by: Chuck Lever <chuck.lever@oracle.com>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfsd/trace.h            |  61 ++++++++++++++
-> >  fs/nfsd/vfs.c              | 167 ++++++++++++++++++++++++++++++++++---
-> >  include/linux/sunrpc/svc.h |   5 +-
-> >  3 files changed, 221 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > index a664fdf1161e9..4173bd9344b6b 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -473,6 +473,67 @@ DEFINE_NFSD_IO_EVENT(write_done);
-> >  DEFINE_NFSD_IO_EVENT(commit_start);
-> >  DEFINE_NFSD_IO_EVENT(commit_done);
-> >  
-> > +DECLARE_EVENT_CLASS(nfsd_analyze_dio_class,
-> > +	TP_PROTO(struct svc_rqst *rqstp,
-> > +		 struct svc_fh	*fhp,
-> > +		 u64		offset,
-> > +		 u32		len,
-> > +		 loff_t		start,
-> > +		 ssize_t	start_len,
-> > +		 loff_t		middle,
-> > +		 ssize_t	middle_len,
-> > +		 loff_t		end,
-> > +		 ssize_t	end_len),
-> > +	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len),
-> > +	TP_STRUCT__entry(
-> > +		__field(u32, xid)
-> > +		__field(u32, fh_hash)
-> > +		__field(u64, offset)
-> > +		__field(u32, len)
-> > +		__field(loff_t, start)
-> > +		__field(ssize_t, start_len)
-> > +		__field(loff_t, middle)
-> > +		__field(ssize_t, middle_len)
-> > +		__field(loff_t, end)
-> > +		__field(ssize_t, end_len)
-> > +	),
-> > +	TP_fast_assign(
-> > +		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-> > +		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-> > +		__entry->offset = offset;
-> > +		__entry->len = len;
-> > +		__entry->start = start;
-> > +		__entry->start_len = start_len;
-> > +		__entry->middle = middle;
-> > +		__entry->middle_len = middle_len;
-> > +		__entry->end = end;
-> > +		__entry->end_len = end_len;
-> > +	),
-> > +	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u start=%llu+%lu middle=%llu+%lu end=%llu+%lu",
-> > +		  __entry->xid, __entry->fh_hash,
-> > +		  __entry->offset, __entry->len,
-> > +		  __entry->start, __entry->start_len,
-> > +		  __entry->middle, __entry->middle_len,
-> > +		  __entry->end, __entry->end_len)
-> > +)
-> > +
-> > +#define DEFINE_NFSD_ANALYZE_DIO_EVENT(name)			\
-> > +DEFINE_EVENT(nfsd_analyze_dio_class, nfsd_analyze_##name##_dio,	\
-> > +	TP_PROTO(struct svc_rqst *rqstp,			\
-> > +		 struct svc_fh	*fhp,				\
-> > +		 u64		offset,				\
-> > +		 u32		len,				\
-> > +		 loff_t		start,				\
-> > +		 ssize_t	start_len,			\
-> > +		 loff_t		middle,				\
-> > +		 ssize_t	middle_len,			\
-> > +		 loff_t		end,				\
-> > +		 ssize_t	end_len),			\
-> > +	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len))
-> > +
-> > +DEFINE_NFSD_ANALYZE_DIO_EVENT(read);
-> > +DEFINE_NFSD_ANALYZE_DIO_EVENT(write);
-> > +
-> 
-> Just a random thought: usually I add new trace points at the end of
-> the series to keep the deeper patches smaller.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-OK, will do.
+Reduce the per-connection footprint in the host's and RNIC's memory
+management TLBs by combining each connection's Receive buffers into
+a single IOVA.
 
-> >  DECLARE_EVENT_CLASS(nfsd_err_class,
-> >  	TP_PROTO(struct svc_rqst *rqstp,
-> >  		 struct svc_fh	*fhp,
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 5768244c7a3c3..be083a8812717 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/splice.h>
-> >  #include <linux/falloc.h>
-> >  #include <linux/fcntl.h>
-> > +#include <linux/math.h>
-> >  #include <linux/namei.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/fsnotify.h>
-> > @@ -1073,6 +1074,116 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
-> >  }
-> >  
-> > +struct nfsd_read_dio {
-> > +	loff_t start;
-> > +	loff_t end;
-> > +	unsigned long start_extra;
-> > +	unsigned long end_extra;
-> > +	struct page *start_extra_page;
-> > +};
-> > +
-> > +static void init_nfsd_read_dio(struct nfsd_read_dio *read_dio)
-> > +{
-> > +	memset(read_dio, 0, sizeof(*read_dio));
-> > +	read_dio->start_extra_page = NULL;
-> > +}
-> > +
-> > +static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> > +				  struct nfsd_file *nf, loff_t offset,
-> > +				  unsigned long len, unsigned int base,
-> > +				  struct nfsd_read_dio *read_dio)
-> > +{
-> > +	const u32 dio_blocksize = nf->nf_dio_read_offset_align;
-> > +	loff_t middle_end, orig_end = offset + len;
-> > +
-> > +	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
-> > +		      "%s: underlying filesystem has not provided DIO alignment info\n",
-> > +		      __func__))
-> > +		return false;
-> > +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
-> > +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
-> > +		      __func__, dio_blocksize, PAGE_SIZE))
-> > +		return false;
-> > +
-> > +	/* Return early if IO is irreparably misaligned
-> > +	 * (len < PAGE_SIZE, or base not aligned).
-> > +	 */
-> > +	if (unlikely(len < dio_blocksize) ||
-> > +	    ((base & (nf->nf_dio_mem_align-1)) != 0))
-> > +		return false;
-> > +
-> > +	read_dio->start = round_down(offset, dio_blocksize);
-> > +	read_dio->end = round_up(orig_end, dio_blocksize);
-> > +	read_dio->start_extra = offset - read_dio->start;
-> > +	read_dio->end_extra = read_dio->end - orig_end;
-> > +
-> > +	/* don't expand READ for IO less than 32K */
-> 
-> The code already says "don't expand READ for IO less than 32K". The
-> comment needs to explain why. Move the rationale from the patch
-> description to this comment, maybe?
-> 
-> 
-> > +	if ((read_dio->start_extra || read_dio->end_extra) && (len < (32 << 10))) {
-> > +		init_nfsd_read_dio(read_dio);
-> > +		return false;
-> > +	}
-> 
-> Nit: Let's replace the raw integer with a symbolic constant. But let's
-> resist the urge to expose this as a tunable for now ;-)
+I don't have a good way to measure whether this approach is
+effective.
 
-Ack to both.
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/linux/sunrpc/svc_rdma.h         |   3 +
+ net/sunrpc/xprtrdma/Makefile            |   2 +-
+ net/sunrpc/xprtrdma/pool.c              | 162 ++++++++++++++++++++++++
+ net/sunrpc/xprtrdma/pool.h              |  25 ++++
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  43 +++----
+ 5 files changed, 210 insertions(+), 25 deletions(-)
+ create mode 100644 net/sunrpc/xprtrdma/pool.c
+ create mode 100644 net/sunrpc/xprtrdma/pool.h
 
-> > +
-> > +	if (read_dio->start_extra) {
-> > +		read_dio->start_extra_page = alloc_page(GFP_KERNEL);
-> > +		if (WARN_ONCE(read_dio->start_extra_page == NULL,
-> > +			      "%s: Unable to allocate start_extra_page\n", __func__)) {
-> > +			init_nfsd_read_dio(read_dio);
-> > +			return false;
-> > +		}
-> > +	}
-> > +
-> > +	/* Show original offset and count, and how it was expanded for DIO */
-> > +	middle_end = read_dio->end - read_dio->end_extra;
-> > +	trace_nfsd_analyze_read_dio(rqstp, fhp, offset, len,
-> > +				    read_dio->start, read_dio->start_extra,
-> > +				    offset, (middle_end - offset),
-> > +				    middle_end, read_dio->end_extra);
-> > +	return true;
-> > +}
-> > +
-> > +static ssize_t nfsd_complete_misaligned_read_dio(struct svc_rqst *rqstp,
-> > +						 struct nfsd_read_dio *read_dio,
-> > +						 ssize_t bytes_read,
-> > +						 unsigned long bytes_expected,
-> > +						 loff_t *offset,
-> > +						 unsigned long *rq_bvec_numpages)
-> > +{
-> > +	ssize_t host_err = bytes_read;
-> > +	loff_t v;
-> > +
-> > +	/* If nfsd_analyze_read_dio() allocated a start_extra_page it must
-> > +	 * be removed from rqstp->rq_bvec[] to avoid returning unwanted data.
-> > +	 */
-> > +	if (read_dio->start_extra_page) {
-> > +		__free_page(read_dio->start_extra_page);
-> > +		*rq_bvec_numpages -= 1;
-> > +		v = *rq_bvec_numpages;
-> > +		memmove(rqstp->rq_bvec, rqstp->rq_bvec + 1,
-> > +			v * sizeof(struct bio_vec));
-> > +	}
-> > +	/* Eliminate any end_extra bytes from the last page */
-> > +	v = *rq_bvec_numpages;
-> > +	rqstp->rq_bvec[v].bv_len -= read_dio->end_extra;
-> > +
-> > +	if (host_err < 0)
-> > +		return host_err;
-> > +
-> > +	/* nfsd_analyze_read_dio() may have expanded the start and end,
-> > +	 * if so adjust returned read size to reflect original extent.
-> > +	 */
-> > +	*offset += read_dio->start_extra;
-> > +	if (likely(host_err >= read_dio->start_extra)) {
-> > +		host_err -= read_dio->start_extra;
-> > +		if (host_err > bytes_expected)
-> > +			host_err = bytes_expected;
-> > +	} else {
-> > +		/* Short read that didn't read any of requested data */
-> > +		host_err = 0;
-> > +	}
-> > +
-> > +	return host_err;
-> > +}
-> > +
-> >  /**
-> >   * nfsd_iter_read - Perform a VFS read using an iterator
-> >   * @rqstp: RPC transaction context
-> > @@ -1094,26 +1205,49 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> >  		      unsigned int base, u32 *eof)
-> >  {
-> >  	struct file *file = nf->nf_file;
-> > -	unsigned long v, total;
-> > +	unsigned long v, total, in_count = *count;
-> > +	struct nfsd_read_dio read_dio;
-> >  	struct iov_iter iter;
-> >  	struct kiocb kiocb;
-> > -	ssize_t host_err;
-> > +	ssize_t host_err = 0;
-> >  	size_t len;
-> >  
-> > +	init_nfsd_read_dio(&read_dio);
-> 
-> Initialize only if direct I/O is in use. I think all this new read code
-> needs the same treatment as the write path: move the handling of the
-> esoteric I/O types out of the hot (buffered) path.
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index 22704c2e5b9b..b4f3c01f1b94 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -73,6 +73,8 @@ extern struct percpu_counter svcrdma_stat_recv;
+ extern struct percpu_counter svcrdma_stat_sq_starve;
+ extern struct percpu_counter svcrdma_stat_write;
+ 
++struct rpcrdma_pool;
++
+ struct svcxprt_rdma {
+ 	struct svc_xprt      sc_xprt;		/* SVC transport structure */
+ 	struct rdma_cm_id    *sc_cm_id;		/* RDMA connection id */
+@@ -112,6 +114,7 @@ struct svcxprt_rdma {
+ 	unsigned long	     sc_flags;
+ 	struct work_struct   sc_work;
+ 
++	struct rpcrdma_pool  *sc_recv_pool;
+ 	struct llist_head    sc_recv_ctxts;
+ 
+ 	atomic_t	     sc_completion_ids;
+diff --git a/net/sunrpc/xprtrdma/Makefile b/net/sunrpc/xprtrdma/Makefile
+index 3232aa23cdb4..f69456dffe87 100644
+--- a/net/sunrpc/xprtrdma/Makefile
++++ b/net/sunrpc/xprtrdma/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_SUNRPC_XPRT_RDMA) += rpcrdma.o
+ 
+-rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o \
++rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o pool.o \
+ 	svc_rdma.o svc_rdma_backchannel.o svc_rdma_transport.o \
+ 	svc_rdma_sendto.o svc_rdma_recvfrom.o svc_rdma_rw.o \
+ 	svc_rdma_pcl.o module.o
+diff --git a/net/sunrpc/xprtrdma/pool.c b/net/sunrpc/xprtrdma/pool.c
+new file mode 100644
+index 000000000000..ef338528a594
+--- /dev/null
++++ b/net/sunrpc/xprtrdma/pool.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2025, Oracle and/or its affiliates.
++ *
++ * Pools for Send and Receive buffers.
++ *
++ * A buffer pool attempts to conserve both the number of DMA mappings
++ * and the device's IOVA space by collecting small buffers together
++ * into a chunk that has a single DMA mapping.
++ *
++ * Future work:
++ *   - Manage pool resources by reference count
++ *   - Manage chunk free space via a bitmap
++ */
++
++#include <linux/list.h>
++#include <linux/sunrpc/svc_rdma.h>
++
++#include <rdma/ib_verbs.h>
++
++#include "pool.h"
++
++struct rpcrdma_pool {
++	struct list_head	rp_chunk_list;
++
++	struct ib_device	*rp_device;
++	size_t			rp_chunksize;
++	size_t			rp_bufsize;
++	enum dma_data_direction	rp_direction;
++};
++
++struct rpcrdma_pool_chunk {
++	struct list_head	pc_next_chunk;
++
++	u8			*pc_cpu_addr;
++	dma_addr_t		pc_dma_addr;
++	size_t			pc_free_start;
++};
++
++static struct rpcrdma_pool_chunk *
++rpcrdma_pool_chunk_create(struct rpcrdma_pool *pool, gfp_t flags)
++{
++	struct rpcrdma_pool_chunk *chunk;
++
++	chunk = kmalloc(sizeof(*chunk), flags);
++	if (!chunk)
++		return NULL;
++	chunk->pc_cpu_addr = kmalloc_node(pool->rp_chunksize, flags,
++					  ibdev_to_node(pool->rp_device));
++	if (!chunk->pc_cpu_addr) {
++		kfree(chunk);
++		return NULL;
++	}
++	chunk->pc_dma_addr = ib_dma_map_single(pool->rp_device,
++					       chunk->pc_cpu_addr,
++					       pool->rp_chunksize,
++					       pool->rp_direction);
++	if (ib_dma_mapping_error(pool->rp_device, chunk->pc_dma_addr)) {
++		kfree(chunk->pc_cpu_addr);
++		kfree(chunk);
++		return NULL;
++	}
++
++	chunk->pc_free_start = 0;
++	return chunk;
++}
++
++/**
++ * rpcrdma_pool_create - Initialize a buffer pool
++ * @args: pool creation arguments
++ * @flags: GFP flags for pool creation
++ *
++ * Returns a pointer to an opaque rpcrdma_pool object or
++ * NULL. If a pool object is returned, caller must free the
++ * returned object using rpcrdma_pool_destroy().
++ */
++struct rpcrdma_pool *
++rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags)
++{
++	struct rpcrdma_pool *pool;
++
++	pool = kmalloc(sizeof(*pool), flags);
++	if (!pool)
++		return NULL;
++
++	INIT_LIST_HEAD(&pool->rp_chunk_list);
++	pool->rp_device = args->pa_device;
++	pool->rp_chunksize = RPCRDMA_MAX_INLINE_THRESH;
++	pool->rp_bufsize = args->pa_bufsize;
++	pool->rp_direction = args->pa_direction;
++	return pool;
++}
++
++/**
++ * rpcrdma_pool_destroy - Release resources owned by a buffer pool
++ * @pool: buffer pool object that will no longer be used
++ */
++void
++rpcrdma_pool_destroy(struct rpcrdma_pool *pool)
++{
++	struct rpcrdma_pool_chunk *chunk;
++
++	while (!list_empty(&pool->rp_chunk_list)) {
++		chunk = list_first_entry(&pool->rp_chunk_list,
++					 struct rpcrdma_pool_chunk,
++					 pc_next_chunk);
++		list_del(&chunk->pc_next_chunk);
++		ib_dma_unmap_single(pool->rp_device, chunk->pc_dma_addr,
++				    pool->rp_chunksize, pool->rp_direction);
++		kfree(chunk->pc_cpu_addr);
++		kfree(chunk);
++	}
++	kfree(pool);
++}
++
++static struct rpcrdma_pool_chunk *
++rpcrdma_pool_find_chunk(struct rpcrdma_pool *pool, gfp_t flags)
++{
++	struct rpcrdma_pool_chunk *chunk;
++
++	list_for_each_entry(chunk, &pool->rp_chunk_list, pc_next_chunk) {
++		size_t remaining = pool->rp_chunksize - chunk->pc_free_start;
++
++		if (pool->rp_bufsize >= remaining)
++			return chunk;
++	}
++
++	chunk = rpcrdma_pool_chunk_create(pool, flags);
++	if (chunk)
++		list_add(&chunk->pc_next_chunk, &pool->rp_chunk_list);
++	return chunk;
++}
++
++/**
++ * rpcrdma_pool_alloc_buffer - Allocate a buffer from a pool
++ * @pool: buffer pool from which to allocate the buffer
++ * @flags: GFP flags for the allocation
++ * @cpu_addr: CPU address of the buffer
++ * @dma_addr: mapped DMA address of the buffer
++ *
++ * Return values:
++ *   %true: @cpu_addr and @dma_addr are filled in with a DMA-mapped buffer
++ *   %false: No buffer is available
++ *
++ * When successful, the returned buffer is freed automatically when the
++ * buffer pool is released by rpcrdma_pool_destroy().
++ */
++bool
++rpcrdma_pool_alloc_buffer(struct rpcrdma_pool *pool, gfp_t flags,
++			  void **cpu_addr, dma_addr_t *dma_addr)
++{
++	struct rpcrdma_pool_chunk *chunk;
++
++	chunk = rpcrdma_pool_find_chunk(pool, flags);
++	if (!chunk)
++		return false;
++
++	*cpu_addr = chunk->pc_cpu_addr + chunk->pc_free_start;
++	*dma_addr = chunk->pc_dma_addr + chunk->pc_free_start;
++	chunk->pc_free_start += pool->rp_bufsize;
++	return true;
++}
+diff --git a/net/sunrpc/xprtrdma/pool.h b/net/sunrpc/xprtrdma/pool.h
+new file mode 100644
+index 000000000000..666543e22b5b
+--- /dev/null
++++ b/net/sunrpc/xprtrdma/pool.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2025, Oracle and/or its affiliates.
++ *
++ * Pools for Send and Receive buffers.
++ */
++
++#ifndef RPCRDMA_POOL_H
++#define RPCRDMA_POOL_H
++
++struct rpcrdma_pool_args {
++	struct ib_device	*pa_device;
++	size_t			pa_bufsize;
++	enum dma_data_direction	pa_direction;
++};
++
++struct rpcrdma_pool;
++
++struct rpcrdma_pool *
++rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags);
++void rpcrdma_pool_destroy(struct rpcrdma_pool *pool);
++bool rpcrdma_pool_alloc_buffer(struct rpcrdma_pool *pool, gfp_t flags,
++			       void **cpu_addr, dma_addr_t *dma_addr);
++
++#endif /* RPCRDMA_POOL_H */
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index e7e4a39ca6c6..8f0328d899d6 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -104,9 +104,9 @@
+ #include <linux/sunrpc/svc_rdma.h>
+ 
+ #include "xprt_rdma.h"
+-#include <trace/events/rpcrdma.h>
++#include "pool.h"
+ 
+-static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
++#include <trace/events/rpcrdma.h>
+ 
+ static inline struct svc_rdma_recv_ctxt *
+ svc_rdma_next_recv_ctxt(struct list_head *list)
+@@ -115,14 +115,14 @@ svc_rdma_next_recv_ctxt(struct list_head *list)
+ 					rc_list);
+ }
+ 
++static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
++
+ static struct svc_rdma_recv_ctxt *
+ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ {
+ 	int node = ibdev_to_node(rdma->sc_cm_id->device);
+ 	struct svc_rdma_recv_ctxt *ctxt;
+ 	unsigned long pages;
+-	dma_addr_t addr;
+-	void *buffer;
+ 
+ 	pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
+ 	ctxt = kzalloc_node(struct_size(ctxt, rc_pages, pages),
+@@ -130,13 +130,11 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	if (!ctxt)
+ 		goto fail0;
+ 	ctxt->rc_maxpages = pages;
+-	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
+-	if (!buffer)
++
++	if (!rpcrdma_pool_alloc_buffer(rdma->sc_recv_pool, GFP_KERNEL,
++				       &ctxt->rc_recv_buf,
++				       &ctxt->rc_recv_sge.addr))
+ 		goto fail1;
+-	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
+-				 rdma->sc_max_req_size, DMA_FROM_DEVICE);
+-	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
+-		goto fail2;
+ 
+ 	svc_rdma_recv_cid_init(rdma, &ctxt->rc_cid);
+ 	pcl_init(&ctxt->rc_call_pcl);
+@@ -149,30 +147,17 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	ctxt->rc_recv_wr.sg_list = &ctxt->rc_recv_sge;
+ 	ctxt->rc_recv_wr.num_sge = 1;
+ 	ctxt->rc_cqe.done = svc_rdma_wc_receive;
+-	ctxt->rc_recv_sge.addr = addr;
+ 	ctxt->rc_recv_sge.length = rdma->sc_max_req_size;
+ 	ctxt->rc_recv_sge.lkey = rdma->sc_pd->local_dma_lkey;
+-	ctxt->rc_recv_buf = buffer;
+ 	svc_rdma_cc_init(rdma, &ctxt->rc_cc);
+ 	return ctxt;
+ 
+-fail2:
+-	kfree(buffer);
+ fail1:
+ 	kfree(ctxt);
+ fail0:
+ 	return NULL;
+ }
+ 
+-static void svc_rdma_recv_ctxt_destroy(struct svcxprt_rdma *rdma,
+-				       struct svc_rdma_recv_ctxt *ctxt)
+-{
+-	ib_dma_unmap_single(rdma->sc_pd->device, ctxt->rc_recv_sge.addr,
+-			    ctxt->rc_recv_sge.length, DMA_FROM_DEVICE);
+-	kfree(ctxt->rc_recv_buf);
+-	kfree(ctxt);
+-}
+-
+ /**
+  * svc_rdma_recv_ctxts_destroy - Release all recv_ctxt's for an xprt
+  * @rdma: svcxprt_rdma being torn down
+@@ -185,8 +170,9 @@ void svc_rdma_recv_ctxts_destroy(struct svcxprt_rdma *rdma)
+ 
+ 	while ((node = llist_del_first(&rdma->sc_recv_ctxts))) {
+ 		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
+-		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
++		kfree(ctxt);
+ 	}
++	rpcrdma_pool_destroy(rdma->sc_recv_pool);
+ }
+ 
+ /**
+@@ -305,8 +291,17 @@ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
+  */
+ bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma)
+ {
++	struct rpcrdma_pool_args args = {
++		.pa_device	= rdma->sc_cm_id->device,
++		.pa_bufsize	= rdma->sc_max_req_size,
++		.pa_direction	= DMA_FROM_DEVICE,
++	};
+ 	unsigned int total;
+ 
++	rdma->sc_recv_pool = rpcrdma_pool_create(&args, GFP_KERNEL);
++	if (!rdma->sc_recv_pool)
++		return false;
++
+ 	/* For each credit, allocate enough recv_ctxts for one
+ 	 * posted Receive and one RPC in process.
+ 	 */
+-- 
+2.50.0
 
-Will try to pull that off, but the read path needs a bit more
-branching, etc.  As you mentioned, splice is already the default so
-nfsd_iter_read() theoretically afforded some additional lattitude
-_but_ I don't disagree with the ideal of being as light as possible.
-
-Took me a solid day to refactor the WRITE side, so this will slip
-until next week.
-
-Thanks,
-Mike
 
