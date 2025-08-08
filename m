@@ -1,159 +1,363 @@
-Return-Path: <linux-nfs+bounces-13487-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13488-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD705B1DC65
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 19:23:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E00F0B1E0A1
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 04:30:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2B4616507A
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Aug 2025 17:23:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 975617A88AB
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 02:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE98E25DB1C;
-	Thu,  7 Aug 2025 17:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4659A17A30F;
+	Fri,  8 Aug 2025 02:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRbJrhxX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLIRTIjc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1812D3208
-	for <linux-nfs@vger.kernel.org>; Thu,  7 Aug 2025 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C5C78F39
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 02:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754587382; cv=none; b=A0juwqdOIlQN+aDlBU1GHV5BRfwQhw8EP+0GmM272/lk5+tiV6/KAABW2L+QYFh2qhg3r/0LeTTLqZVNRO7FhLkFOwNsmO89xiRAsJNN+5deWAZWEvyuQheXbWAELAaU3cg/Ef8cWOOXFEIXUAHuDYAfA+YtBWJ8PePVMJd8ybQ=
+	t=1754620253; cv=none; b=J0Qz5mqLAtBXlYXNmEO8dWkIXoKdghoPn9qmtn8OcMA/fW7SjmA8wHs2lIMUAp2Rhth32xvis5DdmkG//sW/nYBO3F/yy+59Ix10sLU1ZrMDSueaxfskbgpULDjeWxmsZs8qgOpL3msiJr2fOfwaAjPe5uCohberzrDpurHo1jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754587382; c=relaxed/simple;
-	bh=0ne9adInAslElKAoqoqeH2yISf4OPB22MnqzjshGzMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vt0jUv26L9mffP29NmTF6ca5daNgJt36tYTDabxHIE5T9WidPJrf30/af3PkHfXw2L7Ya197alDTg9oLQTgebURN6cyleaZsQjylzYr0Xn9m0R9IpqGQGWtc3DDAGv/xxhedtxXGwk340baHm+lt2MCFnopfgXR/SrlGOrUFUeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FRbJrhxX; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4b06d6cb45fso16005011cf.1
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Aug 2025 10:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754587380; x=1755192180; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GAQkiA8ntnnbbnkuYYUovCaX5gBUtvcHAIMPWia5+ls=;
-        b=FRbJrhxX1oYMiS6LB6p3skQsCCha0cbVBCInETa7GrnJNakkKRA50tlBkinuiYzhX7
-         D8te+ikD6SEoj99cUm4EzfT6ACWMMLp6x+gIuHMjaNVqAiVR3EGGUiShvHjpoKjMKwH8
-         TWMKopAcwOEdwU815VkYrIfYPOv68Af9k1dDNMkrr4iZjgrIkrWirKp3EpyFrzKSYaEW
-         v8gb7/rr2lHRRNLpFA6O21yspYJrxWtBQRcTyRjOXHf4u3OnDLmlgjr1nzVOTIOMUzcR
-         fKTnxAexCtdrffh9RoFgHXZcJgEUTfUfrcDOBeLIFXL7iA+fLS5VuhMQogFVEew+81kL
-         2MsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754587380; x=1755192180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GAQkiA8ntnnbbnkuYYUovCaX5gBUtvcHAIMPWia5+ls=;
-        b=ryuBC27W7GZ7xIJwq0LrvelHhEC2OsMAvuoFhQ62XEafvmCpbK8E37Vfgt/hIK4qWP
-         ovVG0kY46G9BD/VmYGkZBdk/jbPAJhOMyWWEzlZEElwS1fcjGJTHSNuqVsCtXd3aJZqJ
-         rxvcLZsjwXTplS9t/u/14R3b73sE45ypztWxD9CnCRyjgwtxXoMnZ+tdibOGKBdHgUmX
-         m4UsbW+buShCv/R5nk42ybHLXcTpUF2gw0Kdn6y7yD+MWlQX2ztVdKskicQkjDtr1IZH
-         RFZBbCsMzl8VzzUOHsKFyLWMhOWcdIV5ZP5k1shE6KxxC/FqLqwxMJf9yDNvydxD1/i0
-         2juQ==
-X-Gm-Message-State: AOJu0YxxtGKYpfaiEnKKmdZQ24GwHZ73h9oB9iSnEf3dOwqdNdYroKrS
-	i63kvtbGpwWOBDFmMudn48jEqyxBiuvuM5yEG4Oyurt3qlyaChjE+nLWfZB7T1ipq6QqgQ8M+gv
-	kreliEiGH/wg5QnvXMsxikaU7jF0KixTiZ+orwdU=
-X-Gm-Gg: ASbGncvgUEe7g7p/+egamMCLC434lglsLB2e1nohtZSEFeAdPFnvWJvaQ4zWpLnAaAg
-	4cioezc6IW4OqQr8ZYyV0Pe04zG3i4UFd7JQOWe7ToZ0cVd2mr5CFgOiiSoydMp5Z8chVGVHWM8
-	l2X0rTQqUtUe40DlL8e4K8S331p0fp0b91twmLu6XRFRAajwXyonNBg7GQaY25W7rfQuPKckvGU
-	PUvVWFFoHYwoCzHJF0=
-X-Google-Smtp-Source: AGHT+IFAeSQ/ViWVIJyPgVNAJ7ehGOs/SJ/7ObuIKwaKRHx71xmAgZNhVLHXkRFBpfhnlbApXYXu02RI5iI2ygZdxzw=
-X-Received: by 2002:a05:622a:1a0a:b0:4b0:6cef:19d2 with SMTP id
- d75a77b69052e-4b0aed031fcmr934201cf.8.1754587379771; Thu, 07 Aug 2025
- 10:22:59 -0700 (PDT)
+	s=arc-20240116; t=1754620253; c=relaxed/simple;
+	bh=tepUknmoT0dRM2px0e3fv/OtXRfhpSNs8Z7X6pZ08/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xqv0PSs8bzwrjtkpmW4DKxa9SJkRdH3L59VZsIqwaimdpGti7pRTy9OvSBg+bAjaBedqBEGiEDQxgsYPcUVJaEH6UG/BK0dGj0ftkcJ0dsQhVvO7x7NDL3bxPfpdMiukfUAJA7C9wughxt54eWOy7STOFPmK9xt9o3NNoRWIUu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLIRTIjc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CDFCC4CEEB;
+	Fri,  8 Aug 2025 02:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754620252;
+	bh=tepUknmoT0dRM2px0e3fv/OtXRfhpSNs8Z7X6pZ08/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hLIRTIjc+iAMbRdysSK7DfMj4AuUa0zYC0IAUc3xo1OqhV6IPW3SzQmlpEpzFFlve
+	 IdKRqwlIcWgSHMBaGaybKDirHLXVWEjJTV6JAdYn3siqhEKmRK8Hn61QkQO0lUDuyK
+	 NF2rQ29rr4fBpQPcd9gn5U8aWlmTj7v6mS39UPqo0WzsflN29NtGk4GsyztFKdTN2G
+	 T/fl38XyRUjgrhm6j9T+4EdTovrHTGFoysk+7i/YFJOsXYODZsKuxmJJXF7syAcrCP
+	 TCPNu1T8XQVfPGRerobQvd1ug9khZFfFgH66bJWEKcaewB9qT8TWekUZh0PNAWGel3
+	 4K6Oxz9wBN0cg==
+Date: Thu, 7 Aug 2025 22:30:51 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] NFSD: issue WRITEs using O_DIRECT even if IO is
+ misaligned
+Message-ID: <aJVhW2LEnD9VpMAE@kernel.org>
+References: <20250807162544.17191-1-snitzer@kernel.org>
+ <20250807162544.17191-8-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALzt5Pk81rdgaBhk=s+cHEeSAP3rFrrsD3Q3Sx5rCsi_jkWuqQ@mail.gmail.com>
- <1473033738.919249.1754584380847.JavaMail.zimbra@desy.de>
-In-Reply-To: <1473033738.919249.1754584380847.JavaMail.zimbra@desy.de>
-From: Haihua Yang <yanghh@gmail.com>
-Date: Thu, 7 Aug 2025 10:22:49 -0700
-X-Gm-Features: Ac12FXz3lkv8BPmnlAjKcCuGjtI6b4tWhPlK5bkmA4DribFLIpP-uoQvdscodVE
-Message-ID: <CALzt5P=Ls6AcBEvEFtCqw7==ZnR21tRJGDeDe+3V1jxArh2beA@mail.gmail.com>
-Subject: Re: LAYOUTCOMMIT Failure After CB_LAYOUTRECALL in pNFS Filelayout Scenario
-To: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250807162544.17191-8-snitzer@kernel.org>
 
-Tigran,
-I forgot to mention in the previous email, after step 4, client also
-sends a reply to the CB_LAYOUTRECALL. But when retrying the
-LAYOUTCOMMIT afterword, it still uses seqid 1.
-From what I observed in the Linux implementation, the retry logic
-doesn=E2=80=99t update the request arguments, so the client ends up resendi=
-ng
-the same LAYOUTCOMMIT with the old seqid.
+On Thu, Aug 07, 2025 at 12:25:44PM -0400, Mike Snitzer wrote:
+> If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+> middle and end as needed. The large middle extent is DIO-aligned and
+> the start and/or end are misaligned. Buffered IO is used for the
+> misaligned extents and O_DIRECT is used for the middle DIO-aligned
+> extent.
+> 
+> The nfsd_analyze_write_dio trace event shows how NFSD splits a given
+> misaligned WRITE into a mix of misaligned extent(s) and a DIO-aligned
+> extent.
+> 
+> This combination of trace events is useful:
+> 
+>   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
+>   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_write_dio/enable
+>   echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
+>   echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
+> 
+> Which for this dd command:
+> 
+>   dd if=/dev/zero of=/mnt/share1/test bs=47008 count=2 oflag=direct
+> 
+> Results in:
+> 
+>   nfsd-23908   [010] ..... 10374.902333: nfsd_write_opened: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008
+>   nfsd-23908   [010] ..... 10374.902335: nfsd_analyze_write_dio: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008 start=0+0 middle=0+46592 end=46592+416
+>   nfsd-23908   [010] ..... 10374.902343: xfs_file_direct_write: dev 259:2 ino 0xc00116 disize 0x0 pos 0x0 bytecount 0xb600
+>   nfsd-23908   [010] ..... 10374.902697: nfsd_write_io_done: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008
+> 
+>   nfsd-23908   [010] ..... 10374.902925: nfsd_write_opened: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008
+>   nfsd-23908   [010] ..... 10374.902926: nfsd_analyze_write_dio: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008 start=47008+96 middle=47104+46592 end=93696+320
+>   nfsd-23908   [010] ..... 10374.903010: xfs_file_direct_write: dev 259:2 ino 0xc00116 disize 0xb800 pos 0xb800 bytecount 0xb600
+>   nfsd-23908   [010] ..... 10374.903239: nfsd_write_io_done: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008
+> 
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  fs/nfsd/vfs.c | 183 ++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 170 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index be083a8812717..1b5aa3e6e6623 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1315,6 +1315,167 @@ static int wait_for_concurrent_writes(struct file *file)
+>  	return err;
+>  }
+>  
+> +struct nfsd_write_dio {
+> +	loff_t middle_offset;	/* Offset for start of DIO-aligned middle */
+> +	loff_t end_offset;	/* Offset for start of DIO-aligned end */
+> +	ssize_t	start_len;	/* Length for misaligned first extent */
+> +	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
+> +	ssize_t	end_len;	/* Length for misaligned last extent */
+> +};
+> +
+> +static bool
+> +nfsd_analyze_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		       struct nfsd_file *nf, loff_t offset,
+> +		       unsigned long len, struct nfsd_write_dio *write_dio)
+> +{
+> +	const u32 dio_blocksize = nf->nf_dio_offset_align;
+> +	loff_t orig_end, middle_end, start_end, start_offset = offset;
+> +	ssize_t start_len = len;
+> +
+> +	if (WARN_ONCE(!nf->nf_dio_mem_align || !dio_blocksize,
+> +		      "%s: underlying filesystem has not provided DIO alignment info\n",
+> +		      __func__))
+> +		return false;
+> +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
+> +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
+> +		      __func__, dio_blocksize, PAGE_SIZE))
+> +		return false;
+> +	if (unlikely(len < dio_blocksize))
+> +		return false;
+> +
+> +	memset(write_dio, 0, sizeof(*write_dio));
+> +
+> +	if (((offset | len) & (dio_blocksize-1)) == 0) {
+> +		/* already DIO-aligned, no misaligned head or tail */
+> +		write_dio->middle_offset = offset;
+> +		write_dio->middle_len = len;
+> +		/* clear these for the benefit of trace_nfsd_analyze_write_dio */
+> +		start_offset = 0;
+> +		start_len = 0;
+> +		goto out;
+> +	}
+> +
+> +	start_end = round_up(offset, dio_blocksize);
+> +	start_len = start_end - offset;
+> +	orig_end = offset + len;
+> +	middle_end = round_down(orig_end, dio_blocksize);
+> +
+> +	write_dio->start_len = start_len;
+> +	write_dio->middle_offset = start_end;
+> +	write_dio->middle_len = middle_end - start_end;
+> +	write_dio->end_offset = middle_end;
+> +	write_dio->end_len = orig_end - middle_end;
+> +out:
+> +	trace_nfsd_analyze_write_dio(rqstp, fhp, offset, len, start_offset, start_len,
+> +				     write_dio->middle_offset, write_dio->middle_len,
+> +				     write_dio->end_offset, write_dio->end_len);
+> +	return true;
+> +}
+> +
+> +/*
+> + * Setup as many as 3 iov_iter based on extents described by @write_dio.
+> + * @iterp: pointer to pointer to onstack array of 3 iov_iter structs from caller.
+> + * @iter_is_dio_aligned: pointer to onstack array of 3 bools from caller.
+> + * @rq_bvec: backing bio_vec used to setup all 3 iov_iter permutations.
+> + * @nvecs: number of segments in @rq_bvec
+> + * @cnt: size of the request in bytes
+> + * @write_dio: nfsd_write_dio struct that describes start, middle and end extents.
+> + *
+> + * Returns the number of iov_iter that were setup.
+> + */
+> +static int
+> +nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
+> +			   struct bio_vec *rq_bvec, unsigned int nvecs,
+> +			   unsigned long cnt, struct nfsd_write_dio *write_dio)
+> +{
+> +	int n_iters = 0;
+> +	struct iov_iter *iters = *iterp;
+> +
+> +	/* Setup misaligned start? */
+> +	if (write_dio->start_len) {
+> +		iter_is_dio_aligned[n_iters] = false;
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iters[n_iters].count = write_dio->start_len;
+> +		n_iters++;
+> +	}
+> +
+> +	/* Setup DIO-aligned middle */
+> +	iter_is_dio_aligned[n_iters] = true;
+> +	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +	if (write_dio->start_len)
+> +		iov_iter_advance(&iters[n_iters], write_dio->start_len);
+> +	iters[n_iters].count -= write_dio->end_len;
+> +	n_iters++;
+> +
+> +	/* Setup misaligned end? */
+> +	if (write_dio->end_len) {
+> +		iter_is_dio_aligned[n_iters] = false;
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iov_iter_advance(&iters[n_iters],
+> +				 write_dio->start_len + write_dio->middle_len);
+> +		n_iters++;
+> +	}
+> +
+> +	return n_iters;
+> +}
+> +
+> +static int
+> +nfsd_issue_write_buffered(struct svc_rqst *rqstp, struct file *file,
+> +			  unsigned int nvecs, unsigned long *cnt,
+> +			  struct kiocb *kiocb)
+> +{
+> +	struct iov_iter iter;
+> +	int host_err;
+> +
+> +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
+> +	if (host_err < 0)
+> +		return host_err;
+> +	*cnt = host_err;
+> +
+> +	return 0;
+> +}
+> +
+> +static noinline int
+> +nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		     struct nfsd_file *nf, loff_t offset,
+> +		     unsigned int nvecs, unsigned long *cnt,
+> +		     struct kiocb *kiocb)
+> +{
+> +	struct nfsd_write_dio write_dio;
+> +	struct file *file = nf->nf_file;
+> +
+> +	if (!nfsd_analyze_write_dio(rqstp, fhp, nf, offset,
+> +				    *cnt, &write_dio)) {
+> +		return nfsd_issue_write_buffered(rqstp, file,
+> +					nvecs, cnt, kiocb);
+> +	} else {
+> +		bool iter_is_dio_aligned[3];
+> +		struct iov_iter iter_stack[3];
+> +		struct iov_iter *iter = iter_stack;
+> +		unsigned int n_iters = 0;
+> +		int host_err;
+> +
+> +		n_iters = nfsd_setup_write_dio_iters(&iter,
+> +				iter_is_dio_aligned, rqstp->rq_bvec,
+> +				nvecs, *cnt, &write_dio);
+> +		*cnt = 0;
+> +		for (int i = 0; i < n_iters; i++) {
+> +			if (iter_is_dio_aligned[i])
+> +				kiocb->ki_flags |= IOCB_DIRECT;
+> +			else
+> +				kiocb->ki_flags &= ~IOCB_DIRECT;
+> +			host_err = vfs_iocb_iter_write(file, kiocb,
+> +						       &iter[i]);
+> +			if (host_err < 0)
+> +				return host_err;
+> +			*cnt += host_err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * nfsd_vfs_write - write data to an already-open file
+>   * @rqstp: RPC execution context
+> @@ -1342,7 +1503,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	struct super_block	*sb = file_inode(file)->i_sb;
+>  	struct kiocb		kiocb;
+>  	struct svc_export	*exp;
+> -	struct iov_iter		iter;
+>  	errseq_t		since;
+>  	__be32			nfserr;
+>  	int			host_err;
+> @@ -1379,31 +1539,28 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		kiocb.ki_flags |= IOCB_DSYNC;
+>  
+>  	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +
+> +	since = READ_ONCE(file->f_wb_err);
+> +	if (verf)
+> +		nfsd_copy_write_verifier(verf, nn);
+>  
+>  	switch (nfsd_io_cache_write) {
+>  	case NFSD_IO_DIRECT:
+> -		/* direct I/O must be aligned to device logical sector size */
+> -		if (nf->nf_dio_mem_align && nf->nf_dio_offset_align &&
+> -		    (((offset | *cnt) & (nf->nf_dio_offset_align-1)) == 0))
+> -			kiocb.ki_flags |= IOCB_DIRECT;
+> +		host_err = nfsd_issue_write_dio(rqstp, fhp, nf, offset,
+> +						nvecs, cnt, &kiocb);
+>  		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		kiocb.ki_flags |= IOCB_DONTCACHE;
+> -		break;
+> +		fallthrough;
+>  	case NFSD_IO_BUFFERED:
+> +		host_err = nfsd_issue_write_buffered(rqstp, file,
+> +						nvecs, cnt, &kiocb);
+>  		break;
+>  	}
+> -
+> -	since = READ_ONCE(file->f_wb_err);
+> -	if (verf)
+> -		nfsd_copy_write_verifier(verf, nn);
+> -	host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
+>  	if (host_err < 0) {
+>  		commit_reset_write_verifier(nn, rqstp, host_err);
+>  		goto out_nfserr;
+>  	}
+> -	*cnt = host_err;
+>  	nfsd_stats_io_write_add(nn, exp, *cnt);
+>  	fsnotify_modify(file);
+>  	host_err = filemap_check_wb_err(file->f_mapping, since);
+> -- 
+> 2.44.0
+> 
+> 
 
-Regards,
-Haihua Yang
+Embarrassingly, turns out I only tested the NFSD_IO_DIRECT case prior
+to submitting this v5, if the 'nfsd_io_cache_write' debugfs file is
+never written it defaults to NFSD_IO_UNSPECIFIED.  But even if that's
+the case we need to treat NFSD_IO_UNSPECIFIED like NFSD_IO_BUFFERED.
+(that is how nfsd_vfs_read behaves, but I missed this in
+nfsd_vfs_write when I refactored the code for v5).
 
+This incremental patch fixes this oversight, Chuck should I submit a
+v8 or you're OK with folding this fixup (if the rest of the code is
+OK)?
 
-On Thu, Aug 7, 2025 at 9:33=E2=80=AFAM Mkrtchyan, Tigran
-<tigran.mkrtchyan@desy.de> wrote:
->
->
->
-> ----- Original Message -----
-> > From: "Haihua Yang" <yanghh@gmail.com>
-> > To: "linux-nfs" <linux-nfs@vger.kernel.org>
-> > Sent: Thursday, 7 August, 2025 18:14:57
-> > Subject: LAYOUTCOMMIT Failure After CB_LAYOUTRECALL in pNFS Filelayout =
-Scenario
->
-> > I'm observing a consistent failure of LAYOUTCOMMIT when the NFS client
-> > accesses a pNFS share using filelayout. Below is the sequence of
-> > events:
-> >  1, The client opens a file for writing and successfully receives a
-> > layout (stateid with seqid =3D 1).
-> >  2, The client writes data to the data server (DS) successfully.
-> >  3, The NFS server sends a CB_LAYOUTRECALL (stateid with seqid =3D 2)
-> > due to some change on the server side.
-> >  4, The client sends a LAYOUTCOMMIT (still with seqid =3D 1), followed
-> > by a LAYOUTRETURN (with seqid =3D 2).
-> >  5, The server responds to LAYOUTCOMMIT with NFS4ERR_OLD_STATEID.
-> >  6, The server responds to LAYOUTRETURN with NFS4ERR_OK.
-> >  7, The client retries LAYOUTCOMMIT (still using seqid =3D 1).
-> >  8, The server replies with NFS4ERR_BAD_STATEID because the state was
-> > already removed when processing the LAYOUTRETURN.
-> >
-> > It seems there may be two issues with the Linux NFS client=E2=80=99s be=
-havior:
-> >  1, The client should not send LAYOUTRETURN before receiving a
-> > non-retryable response to LAYOUTCOMMIT.
-> >  2, After receiving a CB_LAYOUTRECALL, the client should not continue
-> > using the old seqid.
->
-> I think this question should go to NFSv4 IETF working group list.
-> Noetheless, rfc8881 says:
->
->    For CB_LAYOUTRECALL arguments, the client MUST send a response to the =
-recall before using the seqid.
->
-> So, it sounds, as long as the client hasn't responded to CB_LAYOUTRECALL,=
- the 'valid' seqid is 1. Thus,
-> LAYOUTCOMMIT seqid=3D1, LAYOUTRETURN seqid=3D2 looks correct.
->
-> See: https://datatracker.ietf.org/doc/html/rfc8881#layout_stateid
->
-> Best regards,
->    Tigran.
->
-> >
-> > Would you consider this a bug in the client? Or is there something I
-> > may have misunderstood in the protocol behavior?
-> >
-> > Thanks,
-> > Haihua Yang
+Thanks,
+Mike
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 1b5aa3e6e6623..b529754a20bd5 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1505,7 +1505,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct svc_export	*exp;
+ 	errseq_t		since;
+ 	__be32			nfserr;
+-	int			host_err;
++	int			host_err = 0;
+ 	unsigned long		exp_op_flags = 0;
+ 	unsigned int		pflags = current->flags;
+ 	bool			restore_flags = false;
+@@ -1552,6 +1552,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	case NFSD_IO_DONTCACHE:
+ 		kiocb.ki_flags |= IOCB_DONTCACHE;
+ 		fallthrough;
++	case NFSD_IO_UNSPECIFIED:
+ 	case NFSD_IO_BUFFERED:
+ 		host_err = nfsd_issue_write_buffered(rqstp, file,
+ 						nvecs, cnt, &kiocb);
 
