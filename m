@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-13503-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13504-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E168AB1E7F4
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 14:05:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE709B1E7F8
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 14:05:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B081A1898851
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 12:05:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 663791C22157
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Aug 2025 12:05:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CF625D1E6;
-	Fri,  8 Aug 2025 12:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23D6A260592;
+	Fri,  8 Aug 2025 12:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlL19d2S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYe42kg+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415662367B6
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 12:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F702367B6
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Aug 2025 12:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754654709; cv=none; b=YPkK5it1V2D63k0V7B3oq7CqNQ+k/aGdePSml3bkZetFsT4Pg0iUwU19EhRDO6bgAp99d7ZAeCI0OTXLyil0ePsXwSUa8WLioYHlJy2GmScyVuTi4u92B+JJbd7XntVkGCZsjY07t4H/mWGMLh3QYweAwFu3HoOAgim1TmmCYN0=
+	t=1754654727; cv=none; b=uSCcxvpymlyAI6eW3t0ioZMk5H+8Po4zGyfUWyx3INUQcyVFEm29u5jphImV2+Ljg45QfWEd78XeaZqfW181l04JM/9UhR/N2DdOQp8sLkyt85SowpvPIPyaxAGmh7fKHuQYK0FKeYxEdrTlA9Sgdz55RJV6WIyxid1UAl+yDJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754654709; c=relaxed/simple;
-	bh=HrzlevnFXWocxTcFC9Mwwk2djJHL1hbuTHKY+RrWQts=;
+	s=arc-20240116; t=1754654727; c=relaxed/simple;
+	bh=vUavdnF57DASllB4K2SP8UHOeUg1oao35axJPNTtzmA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qpAJq3RXZp7xn3mDLiRbYqcPjk/3rDgR8oFuFV2o3pMtgLj3HG6wvAuhJ/QTf/4Tb1Xn+hpQbCQAL/s1neo4w3mxEAW8Ucutm679CuGuUNAt2CH77Sp97L596wsjTDnCMHLxI8zdmOF7B3JeKUHc31mgMXw31W2wgMbUvfVhy4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlL19d2S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802AFC4CEED;
-	Fri,  8 Aug 2025 12:05:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=SPSP9GjuJDBTUE9B3ddhlZkFzA5x05/yXRBTLN41IoGY9Xr/bl6+Chatnks0uLsVBosqggyKXRa9GkstDmBH6RF8KpPcvaaka7xd+BAKTx8QPp5hvtBEfzyxuVzcBtqRZdO53Fu2vrxuK4m9JhAOsoLEgOkL/RDzIhYiy9KIn1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYe42kg+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D82C4CEF4;
+	Fri,  8 Aug 2025 12:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754654708;
-	bh=HrzlevnFXWocxTcFC9Mwwk2djJHL1hbuTHKY+RrWQts=;
+	s=k20201202; t=1754654726;
+	bh=vUavdnF57DASllB4K2SP8UHOeUg1oao35axJPNTtzmA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SlL19d2SV5VcIPg+/J0KWRDYuxTiJTl9tKpEB32ddWwiSxbJ/V7QKd2g4hMjjUNEG
-	 cLhClR7FOHTBRGmIg2AhkCnE+mmlI8oxBEIaAajHuK0JjK2c9aqdx3wuCkcr8q/b0F
-	 j2nHztbBiz9vsFnMV1YD2MTpOAwr76q/AEvDOle4dF2AUmFOEbsHthX1vXYi/S8mU6
-	 +05/PyOIXtCBMb4R7ecCc8/DOrA4/saTNE/KahhPdWvi4sb8r8Ih6N8W8EViXkRYUd
-	 WAL86mwL6EaluGFv/8wIBmWaykmn8bFrjOshXUnj/M87zmWalAFh95HYV8sugDFvCE
-	 M6xqXnzY/45Dw==
-Message-ID: <c57877a2007cb6e629cd5a7e8c69fedc028caa89.camel@kernel.org>
+	b=iYe42kg+SjnR9YslvCeWrNvYpvMj8OJVn5quXwOrAYW7IUiw7dwbiPU0dfK68IApX
+	 D6SaPAH6uGW1k3JOybcBlomgpwUg/MdbPIqlQpJiwC+9eHpfxkFL1Cd26C9CB410XE
+	 XLpBItaXhIVtU/WZYW2sI8waAx1GV4VEE7CpP2d5FO1zRrTgktRpgE0QD393bRHzUK
+	 TqQlFg7haF1SJqQnSVZDFmYKfEf/6JDJVcbTtShb8wT8gC11QAfI4g6G6Ok9+ya9N9
+	 R82cFj2ba0NNgmbOjCWFvNmgBkmffW6qnLqtqOtd0Aqi68qQEvi9GgCAba+J/h1T0N
+	 YtlO25xLGeU4A==
+Message-ID: <ae3e3ceeb1eb1940037cd6caf7450090871c99e7.camel@kernel.org>
 Subject: Re: [PATCH v5 3/7] NFSD: add io_cache_read controls to debugfs
  interface
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Date: Fri, 08 Aug 2025 08:05:07 -0400
+Date: Fri, 08 Aug 2025 08:05:25 -0400
 In-Reply-To: <20250807162544.17191-4-snitzer@kernel.org>
 References: <20250807162544.17191-1-snitzer@kernel.org>
 	 <20250807162544.17191-4-snitzer@kernel.org>
@@ -156,9 +156,6 @@ On Thu, 2025-08-07 at 12:25 -0400, Mike Snitzer wrote:
 > memory buffer used to store the read must be aligned relative to the
 > underlying block device's dma_alignment.
 >=20
-
-Ditto here. Looks like this falls back to buffered I/O until patch #6?
-
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
 >  fs/nfsd/debugfs.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -316,6 +313,5 @@ uct svc_fh *fhp,
 >  	WARN_ON_ONCE(v > rqstp->rq_maxpages);
 > =20
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
