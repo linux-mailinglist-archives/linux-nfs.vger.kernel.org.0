@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-13534-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13535-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7234B1F641
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 23:02:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41095B1F6D0
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 23:49:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEB87178A69
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 21:02:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30F3017E596
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 21:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 531371B394F;
-	Sat,  9 Aug 2025 21:02:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72DB1F0995;
+	Sat,  9 Aug 2025 21:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mybqsThq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6JlJV0G"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FD6AD5A
-	for <linux-nfs@vger.kernel.org>; Sat,  9 Aug 2025 21:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6431EF36C
+	for <linux-nfs@vger.kernel.org>; Sat,  9 Aug 2025 21:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754773366; cv=none; b=GB71jEbQ6QGUU52HexlDqRg0OrMySd8daU4Rsf8M90d/aBs0Grb/cRnf2hoA2nNz3lzrzz0d8I7kjngSvvDBDC1aAU3HEcLAg82SZEHZRSs5OM2uxKisQquxVVQYHIb9qXM4fh4T/AR0XGUDq4J4RNY4T78PCJmXmRyJMMTb5nY=
+	t=1754776163; cv=none; b=CMoPcyL09NHzCEfFKWAUXcB0EoGWuIp6NJ/0NXDpKj4ZDrsp4+XqwYoi3NinFPICRJx4aZ6Qny1abwJEdoxdMNQPoUCE5gFb5XC5c7IbpodF0Q3oOk3Cw4g7ZLO+JNoyXYBASDELLIB2HCDjedwmbi3T+8AWd7WC7Qpboe6P0LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754773366; c=relaxed/simple;
-	bh=Lr2PrgxYE81GaBtmTyOvqG6O90jRNKiZj+1BmcWBYdk=;
+	s=arc-20240116; t=1754776163; c=relaxed/simple;
+	bh=3s+s5jZXp7+sQ4wMIB06M4OsbH3OAC4VIVLciUaQM/w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HeUiS8rQReEfSUwjYkZs9twMeUXTSTKVhTxK1ncDGKK/5x0ZVwoFYNodkpE87kDzFGCYmqL/LSSaSRIcsWdZ6qgvXsx+HgGha/6MGFGZS2YYB6KpedmphdIzosE9+315RGGTmUK0IJkdGyjty6KnlwoXdB6bQvgrP5eybf3H6QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mybqsThq; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=mgnKw0UKLIGKINeWxvuATNgSW12H5PohHBnpS0dIALgoAMj/ptqrHPnsEbepZphgLwALRvsadgbjNj1t22PYyWm3Yi9Cqu9u1LISrn3Z8AitqTQOjG036PEmLnjuLsXWbmPVNRPMKDN30n0EyinqwMUEvyLItZh3yt6kqE0QmkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6JlJV0G; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af94e75445dso586067166b.0
-        for <linux-nfs@vger.kernel.org>; Sat, 09 Aug 2025 14:02:44 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-af958127df5so487274466b.2
+        for <linux-nfs@vger.kernel.org>; Sat, 09 Aug 2025 14:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754773363; x=1755378163; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754776160; x=1755380960; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UZFSNuvUwMgn1IPIJxKTkMsooeskNeI0zv/uMTISkL0=;
-        b=mybqsThq4AqWc4PBRjn4WI9X/iqb5XMLMB0XsnG77iU1uPQSWLnCFw/kfqUc3UYsKp
-         aLUKhQlWYVNRM8Bn3gb0iuLBBboduk3o4CuJsjLNkjKa/olxxib0o6UH2UAHRI8aOWEK
-         AP5fj0EPhmPes2BEpBPSY3hmqSjjQhWi1QEhPiZZYmezZX5JngaeU56McyLZHJnwpfc2
-         6+KIvVSRqcasxEeCv4eRequdznoT2W6808AjCdwXVdMgLpspvLz04iazIUnDV4Qwjz0c
-         L9HAzeHL+/fJSI2a7PpeABzInHz7aIjh9xQM/LF8REGBVE8I4F17gSI6EHCq6JQRcafj
-         l0Bg==
+        bh=UvIMDpu2zN5g2oRoi0l5nbArIbsRkaGUCdBnPURC2pI=;
+        b=Q6JlJV0GLjXG+nPh9/nobXfRvYqbtRSILPTS++l7wqS/e8+UxKBiBNLQqZVxqLFs+b
+         wCyLwnUkagC2+lvW/kFus0S0M2E2U/uecGXTMBh6svVqTpaDmSR7jcq7tCVr+b0WsAUE
+         3bugHWiE4A6gaitA1VO0lGqYd7NuGdL9j9loXYs5vfyWJp//sB4aTL3TjhYEYNIoGDq8
+         H/q9KQkw9R05RBZ9TUSnmmg7h5FrD8hVEQNWzQO9F/cXsmdfb1guYjdD3qLV4DC5eDyH
+         Ks8Ijilw+sC0voaK9eMdmcVyT8ZG5hzUbC4BO+3KEZbwXaBMPGakqWrFSdaoceBuXM23
+         890A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754773363; x=1755378163;
+        d=1e100.net; s=20230601; t=1754776160; x=1755380960;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UZFSNuvUwMgn1IPIJxKTkMsooeskNeI0zv/uMTISkL0=;
-        b=GUgnDRKfRTflSYYZrgosyXzq0ppmFwoCdh5PaNrjtRgwEepdDUBwXhmUbhRFhjFBWY
-         cpHEZGLctX8W9EBbPuTa9gEVQ6qwhFoWTV+vRAVzUz+lSGFf1x/5VLe1M0zggtB06IoS
-         yxn/AybJmBApUrcta8CmybvfvyUccyfBBw/LmYFjNBFbFUIOc7nXuOBSen3xaTOZWtiI
-         tk8hX/PeVJMHUk6c7Fy8LeixNj1AU9J5sljcpRlgyNbU5cQFBY5ThLFglvM6cjCZb1xA
-         ZpZGLbwQwXAR9/zwDvndN0OCclkw7cDSj/Mn5ojARfHqJx/YGVszPZddmsxVksRzKYsV
-         hZow==
-X-Forwarded-Encrypted: i=1; AJvYcCVs+EOmmZP2PGezZtb4pnPqrtZLGW01o6bUMWOw8Psfpkh+3X+8j4vpk9DAPZ4yjmTSP3JZySofSDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydxQtznae3lpEyrDc/LxPN10rRy1tRkEcmz3b+J6eHyEhdy7OO
-	0yf7oLvWjulgw7h++nrfNdoBbJS+QfeAXuP2K1KoMtxgz18FAmXXaAEDmEMiVbfdPo1fNSg8t32
-	T+6PsSfhc0iMkTmuuG+ZTzp3xN3oxhg9X
-X-Gm-Gg: ASbGnctJr593COpLAXIS3ke/phNd4R+bvMrIFzrsrrNpIT2M7wjJTMhjNEXGqT7l89c
-	yLDMG+o6bhq8SUPWG2CUuS180mLp7K6v7bqFs0rBzREcPknNsf7LYQ5ekY6leegmSVRisv9h1Ko
-	PI+y6KOTP5XXNBqmsiCuh3emN3COUIPAgFiFWvBr+DFonDdR4zDjPbKLEykVG24MOX6hY8dxnzV
-	veGpyqRvfK8ODEOXQGnFeJYrzBdrHUuDDhqBHA=
-X-Google-Smtp-Source: AGHT+IH3rfMkEssvCZ2fT80VY25JnUUDFiuC5ZDL5QokmUsBhTm+mJM6B4q3nyTPgFgG9V86YnHV+8T0JNH2DF0lEKQ=
-X-Received: by 2002:a17:907:1c22:b0:af9:71c2:9f7 with SMTP id
- a640c23a62f3a-af9c63b0ca7mr601023066b.2.1754773362497; Sat, 09 Aug 2025
- 14:02:42 -0700 (PDT)
+        bh=UvIMDpu2zN5g2oRoi0l5nbArIbsRkaGUCdBnPURC2pI=;
+        b=t2C3LJlbRl4AyYUV0MslmJAtpZwGq54lGq2lAEB4rRgCN0VOzdkAsYqretGQ624iRB
+         EI4gHcqWk0U/+FkQY4ZnWhRMWJRcEEvvufH2xW0KljW/DnEUSnlSPf0v8k46PaAm+jWw
+         4/YYKvfPOUlSMqQHe0ahCshKGlowtnZuwhMzrpe91BhLMP0AA2D0cdtfnmJROpoqEpoO
+         ZLIxZmvhr82vuVOpoqZktuJFHlbfwW34r2gnijCGEplsZlcTcSoPEqeK2vXrhzBHW5iT
+         cNpYYN7FngJEzSqePei5D+agf2jn5RbtekK5taUD23LnQdD7lGZYOYndfrOKdG1/2lcM
+         lbrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVastUWt2ogaiJZNCfaJ6Ll2dgdNxxYn6lC6l0cI7jRaacioIN2sLfcyICZmvrxCCB+nNlrhhvHjy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjrZyCNbyD6fC2JD8SCCNKVi/3mOaBioG+rUAKdPJ2eD7HjQt4
+	JK987cuo0Wy3Lc2Ud5c6R1T09ZX/toe3/4cTk1XNMSXnp4QWTlWZLZq4mVw2+megr7a6cIJLquq
+	yPhW6+dAgXSKqFhtYwbTJgg4TQGvRaQ==
+X-Gm-Gg: ASbGncuMPPjVUxW5cAHwl9einTwam/ZoDD6bOY4FrVJqGH5Qui0klDbR0lLJKsik9xJ
+	t8DS4LZ6tBsVcoE5DVa0gTp2vOdgVwWdwxBGm6OBz1tigN3CjoLoYHZfWw7e/O6uSX43W25vgkG
+	KpqJjgRpdFwbVZy9Du5acEesDCnOJWeX/Azy39QvEgQ86V3TpoCw/tQVRifrMAU1BNJQ5d+2mTz
+	25IvngznKv2ahPhEXC8ZAKA8bMsIlnk/jgjMVY=
+X-Google-Smtp-Source: AGHT+IEBLIUhJN76tMfEFdV34jQVF+8FGQtZsGd7tYG1hkpzthb4aRZ/APJTm+dbUZUzq61faWjNlrZDvlSudrd3Bks=
+X-Received: by 2002:a17:907:3e89:b0:af9:34a0:1b20 with SMTP id
+ a640c23a62f3a-af9c63b09e9mr815496866b.5.1754776160046; Sat, 09 Aug 2025
+ 14:49:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -80,9 +80,9 @@ References: <CAM5tNy4L1Smwc-H01AuKjNbtu9WMzWxJVRtuOjr0Fp_yLiZX7Q@mail.gmail.com>
  <CAM5tNy7Aab8fQ58BghMBsWvs6Xc5U90q9gXWaKeEaZaqcs2Ltw@mail.gmail.com> <CADaq8jeAhdOLrD9Y6o1xJsMuGYZLoJdMAonfB5RuX63xV_i0UA@mail.gmail.com>
 In-Reply-To: <CADaq8jeAhdOLrD9Y6o1xJsMuGYZLoJdMAonfB5RuX63xV_i0UA@mail.gmail.com>
 From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sat, 9 Aug 2025 14:02:30 -0700
-X-Gm-Features: Ac12FXyV_PXS3M7SI3sKat43Hd-st4zGKdTC-0b6JKX8xpKqwbdlJ6tRbslIM8M
-Message-ID: <CAM5tNy4kPWfPHHRVr712AG=g5wJ+fThG9KFX_9JoT85seTSE=g@mail.gmail.com>
+Date: Sat, 9 Aug 2025 14:49:08 -0700
+X-Gm-Features: Ac12FXxpfRsCQBJxtDjCq6SjpVONxOO6ayl19g1RB0NNN1ioWl27HnQpbQ7rpgU
+Message-ID: <CAM5tNy7RoMK7pSRcVnAVkREaJpNzxoHo-rsPQ5_X7AJk0fMM9g@mail.gmail.com>
 Subject: Re: [nfsv4] Is NFSv4.2's clone_blksize per-file or per-file-system?
 To: David Noveck <davenoveck@gmail.com>
 Cc: Trond Myklebust <trondmy@gmail.com>, NFSv4 <nfsv4@ietf.org>, 
@@ -118,6 +118,25 @@ l.com> wrote:
 >
 > Given the uncertainty in the spec, you may wind up dealing clients that a=
 ssume it is per-fs.
+Actually, it looks like the Linux client assumes per-server.
+(I'm going to ask over on linux-nfs@ to see what the implications of
+getting the value wrong are. All I can see is that remap_file_range will
+return EINVAL if a request isn't aligned.
+--> The NFSv4.2 server would also reply EINVAL if the alignment is not
+      correct, I think? (Actually RFC7862 says it must be aligned, but fail=
+s
+      to specify the error reply for this case. However it specifies
+NFS4ERR_INVAL
+      for other cases, so I think it makes sense to return that.)
+
+      Hopefully someone over on linux-nfs@ will know if returning NFS4ERR_I=
+NVAL
+      for CLONE from the NFSv4.2 server will be more serious than a return =
+of
+      EINVAL for remap_file_range. (Other than a wasted RPC roundtrip.)
+
+rick
+
 >
 > Although this is not a  catastrophe, you might want to file an errata rep=
 ort explaining the negative consequences of assuming this is per-fs. It won=
@@ -137,24 +156,6 @@ you can right now .
 >
 >
 > The guy who allowed that probably thinks it's a helpful feature.  Sigh!
-It's not just a feature change after creation, it turns out to be based
-on file size as well.  A small file gets 512 and a larger one gets a full r=
-ecord
-(128K on my test system).
-
-And, yes, block cloning requires alignment with 512bytes or 128Kbytes
-depending on the file.
-
-I can return 128K for clone_blksize and that will (sub-optimally) handle
-the 512byte case, but I think it is also possible to increase the record
-size from 128K-> after the file system has files in it.
-
-I'll take a look at the Linux client to try and see if/how it uses
-clone_blksize.  I need to decide if I should always return 128K
-(or whatever the full recordsize is) or 512 for the small files.
-
-Thanks for the comments, rick
-
 >
 >> >>
 >
