@@ -1,79 +1,182 @@
-Return-Path: <linux-nfs+bounces-13533-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13534-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD88B1F256
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 07:20:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7234B1F641
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 23:02:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C15F9A041D6
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 05:20:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEB87178A69
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Aug 2025 21:02:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4FE27A460;
-	Sat,  9 Aug 2025 05:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 531371B394F;
+	Sat,  9 Aug 2025 21:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbvRJbaE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mybqsThq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D6B27A44A;
-	Sat,  9 Aug 2025 05:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FD6AD5A
+	for <linux-nfs@vger.kernel.org>; Sat,  9 Aug 2025 21:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754716788; cv=none; b=o21y3c8znpwnVG/LYd7NZrPSpOdDPutiNRWaeGCcFIRQspQFmC0YDgi9Q/WSrW51Eedq89bzd2UtuCaQTiSNpdesgau3LUc5DbJ0GAgOCIWstX3r5XiIUx/yztU4+69T3ofi4Z9z1O3uP2f7QUv7ccVNmL+OwGHii2MdvTUfj44=
+	t=1754773366; cv=none; b=GB71jEbQ6QGUU52HexlDqRg0OrMySd8daU4Rsf8M90d/aBs0Grb/cRnf2hoA2nNz3lzrzz0d8I7kjngSvvDBDC1aAU3HEcLAg82SZEHZRSs5OM2uxKisQquxVVQYHIb9qXM4fh4T/AR0XGUDq4J4RNY4T78PCJmXmRyJMMTb5nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754716788; c=relaxed/simple;
-	bh=Iks88uJIXClFLUe5jAuTx6gIZ0c3isCD3OKp+zeg/ug=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jlAAdKz8WUFzd/diwVClbAdR08EfYB6Zu91m/VrCdLW9ROlwQi7o2BBCtbvRdwKy1u2Dtdd/Hrj9fJPI9gIJqtr/LCAwj7mw65c/mLMlqpRDiw+8f+94eClWC+oLmvNgobCNvtqKbDcGmAsU59GTkyEtodcSmjR9k9tkLlWYnzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbvRJbaE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9E1C4CEE7;
-	Sat,  9 Aug 2025 05:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754716788;
-	bh=Iks88uJIXClFLUe5jAuTx6gIZ0c3isCD3OKp+zeg/ug=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=KbvRJbaE2XV92LmTIySac9T/MuPdovLquVknpDYCip7kh2+IHn4KXc1UBPX7Po6g2
-	 xa7pVG/JtRTJXKCvw8FDO5h8TSyoJQ5t0b1gho1nHuUXKPCzE/gM6v78qGgwEf68lS
-	 +R1GGbZKivJbu50qlyokehAbwKufDP+tHrYP3YqRYaxVWSIlrFe3GXAWfKeUwpzPqh
-	 nz8QCwoQXb4yUJMyzGTDje7NSg0oE0fJCozKujc7aFP7wT9Y7a9KioYjjJCLMFa24w
-	 t9yW087tyFCBwGsWm93xQ257W4KBD6+YZHOB7yVxxX9xmFOj6QaKXK5NptGzCxXEsg
-	 vmgg4HgfSu1TQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id CC9B5383BF5A;
-	Sat,  9 Aug 2025 05:20:02 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull NFS client changes for Linux 6.17
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <f94837ec978d8ca505006f024b3cae3c920e5f58.camel@kernel.org>
-References: <f94837ec978d8ca505006f024b3cae3c920e5f58.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f94837ec978d8ca505006f024b3cae3c920e5f58.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.17-1
-X-PR-Tracked-Commit-Id: 4ec752ce6debd5a0e7e0febf6bcf780ccda6ab5e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ccc1ead23c3311be76e87d1b06620f6cb697b42a
-Message-Id: <175471680160.380510.9682163862016537322.pr-tracker-bot@kernel.org>
-Date: Sat, 09 Aug 2025 05:20:01 +0000
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1754773366; c=relaxed/simple;
+	bh=Lr2PrgxYE81GaBtmTyOvqG6O90jRNKiZj+1BmcWBYdk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HeUiS8rQReEfSUwjYkZs9twMeUXTSTKVhTxK1ncDGKK/5x0ZVwoFYNodkpE87kDzFGCYmqL/LSSaSRIcsWdZ6qgvXsx+HgGha/6MGFGZS2YYB6KpedmphdIzosE9+315RGGTmUK0IJkdGyjty6KnlwoXdB6bQvgrP5eybf3H6QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mybqsThq; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af94e75445dso586067166b.0
+        for <linux-nfs@vger.kernel.org>; Sat, 09 Aug 2025 14:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754773363; x=1755378163; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UZFSNuvUwMgn1IPIJxKTkMsooeskNeI0zv/uMTISkL0=;
+        b=mybqsThq4AqWc4PBRjn4WI9X/iqb5XMLMB0XsnG77iU1uPQSWLnCFw/kfqUc3UYsKp
+         aLUKhQlWYVNRM8Bn3gb0iuLBBboduk3o4CuJsjLNkjKa/olxxib0o6UH2UAHRI8aOWEK
+         AP5fj0EPhmPes2BEpBPSY3hmqSjjQhWi1QEhPiZZYmezZX5JngaeU56McyLZHJnwpfc2
+         6+KIvVSRqcasxEeCv4eRequdznoT2W6808AjCdwXVdMgLpspvLz04iazIUnDV4Qwjz0c
+         L9HAzeHL+/fJSI2a7PpeABzInHz7aIjh9xQM/LF8REGBVE8I4F17gSI6EHCq6JQRcafj
+         l0Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754773363; x=1755378163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UZFSNuvUwMgn1IPIJxKTkMsooeskNeI0zv/uMTISkL0=;
+        b=GUgnDRKfRTflSYYZrgosyXzq0ppmFwoCdh5PaNrjtRgwEepdDUBwXhmUbhRFhjFBWY
+         cpHEZGLctX8W9EBbPuTa9gEVQ6qwhFoWTV+vRAVzUz+lSGFf1x/5VLe1M0zggtB06IoS
+         yxn/AybJmBApUrcta8CmybvfvyUccyfBBw/LmYFjNBFbFUIOc7nXuOBSen3xaTOZWtiI
+         tk8hX/PeVJMHUk6c7Fy8LeixNj1AU9J5sljcpRlgyNbU5cQFBY5ThLFglvM6cjCZb1xA
+         ZpZGLbwQwXAR9/zwDvndN0OCclkw7cDSj/Mn5ojARfHqJx/YGVszPZddmsxVksRzKYsV
+         hZow==
+X-Forwarded-Encrypted: i=1; AJvYcCVs+EOmmZP2PGezZtb4pnPqrtZLGW01o6bUMWOw8Psfpkh+3X+8j4vpk9DAPZ4yjmTSP3JZySofSDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydxQtznae3lpEyrDc/LxPN10rRy1tRkEcmz3b+J6eHyEhdy7OO
+	0yf7oLvWjulgw7h++nrfNdoBbJS+QfeAXuP2K1KoMtxgz18FAmXXaAEDmEMiVbfdPo1fNSg8t32
+	T+6PsSfhc0iMkTmuuG+ZTzp3xN3oxhg9X
+X-Gm-Gg: ASbGnctJr593COpLAXIS3ke/phNd4R+bvMrIFzrsrrNpIT2M7wjJTMhjNEXGqT7l89c
+	yLDMG+o6bhq8SUPWG2CUuS180mLp7K6v7bqFs0rBzREcPknNsf7LYQ5ekY6leegmSVRisv9h1Ko
+	PI+y6KOTP5XXNBqmsiCuh3emN3COUIPAgFiFWvBr+DFonDdR4zDjPbKLEykVG24MOX6hY8dxnzV
+	veGpyqRvfK8ODEOXQGnFeJYrzBdrHUuDDhqBHA=
+X-Google-Smtp-Source: AGHT+IH3rfMkEssvCZ2fT80VY25JnUUDFiuC5ZDL5QokmUsBhTm+mJM6B4q3nyTPgFgG9V86YnHV+8T0JNH2DF0lEKQ=
+X-Received: by 2002:a17:907:1c22:b0:af9:71c2:9f7 with SMTP id
+ a640c23a62f3a-af9c63b0ca7mr601023066b.2.1754773362497; Sat, 09 Aug 2025
+ 14:02:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <CAM5tNy4L1Smwc-H01AuKjNbtu9WMzWxJVRtuOjr0Fp_yLiZX7Q@mail.gmail.com>
+ <CAABAsM5nzVzPDB3Ubeqg35F7Qd8pBveiYPi1M+KFnMPjb2dxXw@mail.gmail.com>
+ <CAM5tNy7Aab8fQ58BghMBsWvs6Xc5U90q9gXWaKeEaZaqcs2Ltw@mail.gmail.com> <CADaq8jeAhdOLrD9Y6o1xJsMuGYZLoJdMAonfB5RuX63xV_i0UA@mail.gmail.com>
+In-Reply-To: <CADaq8jeAhdOLrD9Y6o1xJsMuGYZLoJdMAonfB5RuX63xV_i0UA@mail.gmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Sat, 9 Aug 2025 14:02:30 -0700
+X-Gm-Features: Ac12FXyV_PXS3M7SI3sKat43Hd-st4zGKdTC-0b6JKX8xpKqwbdlJ6tRbslIM8M
+Message-ID: <CAM5tNy4kPWfPHHRVr712AG=g5wJ+fThG9KFX_9JoT85seTSE=g@mail.gmail.com>
+Subject: Re: [nfsv4] Is NFSv4.2's clone_blksize per-file or per-file-system?
+To: David Noveck <davenoveck@gmail.com>
+Cc: Trond Myklebust <trondmy@gmail.com>, NFSv4 <nfsv4@ietf.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Fri, 08 Aug 2025 07:10:12 -0700:
+On Sat, Aug 9, 2025 at 1:12=E2=80=AFPM David Noveck <davenoveck@gmail.com> =
+wrote:
+>
+>
+>
+> On Friday, August 8, 2025, Rick Macklem <rick.macklem@gmail.com> wrote:
+>>
+>> On Fri, Aug 8, 2025 at 8:38=E2=80=AFPM Trond Myklebust <trondmy@gmail.co=
+m> wrote:
+>> >
+>> >
+>> >
+>> > On Fri, Aug 8, 2025 at 9:47=E2=80=AFPM Rick Macklem <rick.macklem@gmai=
+l.com> wrote:
+>> >>
+>> >> Hi,
+>> >>
+>> >> I'm looking at RFC7862 and I cannot find where it
+>> >> states if the clone_blksize attribute is per-file or
+>> >> per-file-system.
+>> >>
+>> >> If it is not in the RFC, which do others think it is?
+>
+>
+>  Before you told us about ZFS,  I would have assumed per-fs.
+>
+> Given the uncertainty in the spec, you may wind up dealing clients that a=
+ssume it is per-fs.
+>
+> Although this is not a  catastrophe, you might want to file an errata rep=
+ort explaining the negative consequences of assuming this is per-fs. It won=
+'t get into a spec for a long while but it does provide as much warning as =
+you can right now .
+>
+>
+>
+>>
+>> >> (Or maybe, if you have implemented CLONE,
+>> >> which does your implementation assume?)
+>> >>
+>> >> In case you are wondering why I am asking,
+>> >> it turns out that files in a ZFS volume can have
+>> >> different block sizes. (It can be changed after the
+>> >> file system is created.)
+>
+>
+> The guy who allowed that probably thinks it's a helpful feature.  Sigh!
+It's not just a feature change after creation, it turns out to be based
+on file size as well.  A small file gets 512 and a larger one gets a full r=
+ecord
+(128K on my test system).
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.17-1
+And, yes, block cloning requires alignment with 512bytes or 128Kbytes
+depending on the file.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ccc1ead23c3311be76e87d1b06620f6cb697b42a
+I can return 128K for clone_blksize and that will (sub-optimally) handle
+the 512byte case, but I think it is also possible to increase the record
+size from 128K-> after the file system has files in it.
 
-Thank you!
+I'll take a look at the Linux client to try and see if/how it uses
+clone_blksize.  I need to decide if I should always return 128K
+(or whatever the full recordsize is) or 512 for the small files.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks for the comments, rick
+
+>
+>> >>
+>
+>
+>>
+>> >> Thanks, rick
+>> >>
+>> >
+>> > Yes, but since ZFS only supports filesystem level snapshots, and not a=
+ctual file cloning, does that matter to anything?
+>> ZFS now has a feature it calls block cloning, which does clone file rang=
+es.
+>> (It was only added recently. I do not know if the Linux port uses it yet=
+?)
+>>
+>> rick
+>>
+>> >
+>> > Cheers
+>> >   Trond
+>>
+>> _______________________________________________
+>> nfsv4 mailing list -- nfsv4@ietf.org
+>> To unsubscribe send an email to nfsv4-leave@ietf.org
 
