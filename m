@@ -1,219 +1,164 @@
-Return-Path: <linux-nfs+bounces-13539-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13540-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B5FDB1FA6E
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 Aug 2025 16:32:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36333B1FA7F
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 Aug 2025 16:40:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95C3618948C6
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 Aug 2025 14:32:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48A0017A37F
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 Aug 2025 14:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AB2185E4A;
-	Sun, 10 Aug 2025 14:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FBAF265284;
+	Sun, 10 Aug 2025 14:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/syACmr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Redr6KOR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F05F27462
-	for <linux-nfs@vger.kernel.org>; Sun, 10 Aug 2025 14:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48174263C9F
+	for <linux-nfs@vger.kernel.org>; Sun, 10 Aug 2025 14:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754836352; cv=none; b=kAaJdfKBM+zKijj/o838gFTqB0kYGWVWhlLd+Olh5TmG2Z+5gSBzMISHI8t/LZXJSYc4aNbCFo8L4mama6sU3xIWXH/LrAJyxFkcJwew+8wYWuFOA7w08GbQtKa9O6PbeCzf5TIsVz78TPvU+nz1M3d3PDEOt+ATUMab2tyEVLI=
+	t=1754836776; cv=none; b=BLTpCKjyfjdL/zBH7az84OOiojwB5DMgENzyt6jmnJn0aOfXcKAo9eNfkbjHDjfMXTeQ4oLVtsRwiVvhvnAMShylSs6dJB25PXo6mqK8615FI6xCJ5jvvjBYv1LTYiPLtqJ7WNgP/ber/XSBPwnP99vz1yXX+YitX7UTQyLAhwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754836352; c=relaxed/simple;
-	bh=a590KERpwWHksZQWGEElTz/0scPdjiT/DUBza8W095o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mc890osklI3xwhVX3i3DyiDgq/IUlMhmE+NVwYzK7z5TdkoHJl+ItIah/yn0d6fr/v2ieYInX4YW7l90kY4mzTJ7agGCkdwQYyYkU//wCotcbYkolxC2lgCLMQehwLsmTsXsxwmhiKxE6/NzkvBMIcfd0U/weALjxcnYX6y6VvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/syACmr; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6157c81ff9eso5556667a12.3
-        for <linux-nfs@vger.kernel.org>; Sun, 10 Aug 2025 07:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754836349; x=1755441149; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FGMcg9vwg8Ly31kHzOkC50du481ce8biWwiEskuTq24=;
-        b=e/syACmrjXi0PyQt5puFWH8yFaTD2lBExiKzjn7s+b/WF8+NGp443qV6Uqme0A9+zf
-         inRHmhbIfjbAFlzA/7cDZZmwqmN/VzjVVQra+CN5DqDgGFFqEISpKCZHr1BsvjchcIsV
-         VaUp65SzxZjm5HAB51d7wUqr887gXiXZCC/qoDBOJjaRCWbqYEqXZA4pDq0YqzNr7udd
-         ST+jv17HUu0ly1Fp66EZHq+fqfoBGLlkjNW5hkpLB3sbAPsDBcY/0X8P1uPWgAa0ZL/1
-         sgZ0eVeUVXfP00V3llp5W0a+DLC8m/3VT0l4Qz9Rr4cKXb8wS5FRdan9DoFitZwc/hyN
-         5bGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754836349; x=1755441149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FGMcg9vwg8Ly31kHzOkC50du481ce8biWwiEskuTq24=;
-        b=N9KwduacmjwAGp0DpXvafo7OvgEDM3D7erYREhkrm961FLpO9dAsLORyQew0ACSTlw
-         dL4RDK21tklVK2uX8awTVK7h4D/Au01MrIhBTHXUJ7gPs3avacWLMk8QlmHDgZgrd+Tv
-         gVlzr7Sc4cmCFlrysXsQuseW88mPVhY9hu2QV/00SlJ+9DLeqIwGc77+dnwdc4zItnCh
-         jAU61C9Ajdx0RkMHizy6irpJ1uZFhrrEE2P1ZTfLbjLVNNvHTyHaeapIU9uGERb2Qdlo
-         BfJXGbkCmq2DRjGKDDVdzrZs22yEYqg0l4EigRtWD8wOsEBC3x7uOnhRQWCB0WfuRtjV
-         NGxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFfXiBGnbF8rihHf949xCWVfuryxHSlr5yw5Sk2w7XmYGGdHHTkNHAk1LKLCYTKcoLagt7zgjxlzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWD0WkEKUANx6LB3trVy64dQgl6J5VO34+xCZ3lpZhv5NOHIkm
-	I5WSPXLDst0rSACKaovMo4xDAYwhUi7iF+A63+YSnkbV94bPn0SBib6jPd4OSPqsOBXmGRRWz/b
-	4zyiELPNZwQnVsW2yMRp5UuQfKCAi+nnN
-X-Gm-Gg: ASbGncv+JKKaj+2DqHRpV/9ADeO33x39ffXFEsG9RpmduBIfUVxcSEtgBAWyn3jbMyh
-	tlJqXXDV1dPoLs0En2MWRUbje4g6t3zevqoYg7ORT2u2IvvXsazUhUX7egKwHzmslCpXxA9vao0
-	sG1CEV1BPrbZycZte9etGJ3yD7nzQ0dhedd1G8nQ6QhDZxxxmRnQyS129CVbRKKAevKQK4fh5UG
-	0WrpzmeBM/mjdJVJONuYO/05w2lKzFtEKg9K8Q=
-X-Google-Smtp-Source: AGHT+IE6Mmu6OaD8hOYi3i1mHOBkjChorFSX+sVDLN+N8/0QNSy9DbcSaSSfnFihjlEXiS4ztDgSCumxz6p0Dmse1wQ=
-X-Received: by 2002:a17:907:3d42:b0:ae0:66e8:9ddb with SMTP id
- a640c23a62f3a-af9c63aa040mr967025266b.19.1754836349106; Sun, 10 Aug 2025
- 07:32:29 -0700 (PDT)
+	s=arc-20240116; t=1754836776; c=relaxed/simple;
+	bh=JBLoU8osXa7PzxWSmtq08BNAIrNU3Uo6q7olDI/O7Ko=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z28qNivE0T4EOc2JT3jt+pa74bVloiin+ylHY5tDF+b5mvexDcDBGGW7nLDfcpV9V3b7DFMkv7+PZlUJFMlr+ljPgRNNbao9Cfds1cAPIir8TsnDRvb/FtySfFBrC52Pfd31P1IQ7Fna7msJ3NTS0nVqrCG2G+OU2rTJC+5H+Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Redr6KOR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91398C4CEEB;
+	Sun, 10 Aug 2025 14:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754836775;
+	bh=JBLoU8osXa7PzxWSmtq08BNAIrNU3Uo6q7olDI/O7Ko=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=Redr6KORjVVKxlBuSgKAZWO2WqTQxfluKj2AKUb3iXfUJ+VlDb/5BpViqEZKRt7XE
+	 BuqsYnulI3auqiefcnbBCuhNfwuDb8hduEp3bDFPtPp8rotGnoDCMCGkic8WvUuQxF
+	 dzxYKOpFGrXCvLiLr/1v7stxBOfj6ux0Zb/FtvDo9HbBnRjehqhQmoma1W7RFRAlwN
+	 fs/d/u54qOrK7VkE2ddDbu6VR0PJGtTkalmaCXrk9azlRvG87VZrOwtYgqbao9AEhV
+	 HnIDq3CPwRki++i941D4g3j6TmV3n8afFhNniUIKPmub4RH5Hj9kCiI9YqMbwKduNa
+	 JfC5Uh9SKViMg==
+Message-ID: <e0990bba947a2dd259458a8b7c39050237ef3418.camel@kernel.org>
+Subject: Re: possible optimization in nfsd_set_fh_dentry
+From: Jeff Layton <jlayton@kernel.org>
+To: Charles Hedrick <hedrick@rutgers.edu>, Linux Nfs
+ <linux-nfs@vger.kernel.org>
+Date: Sun, 10 Aug 2025 10:39:34 -0400
+In-Reply-To: <PH0PR14MB5493CE0EF511E2D827A5ADCFAA2FA@PH0PR14MB5493.namprd14.prod.outlook.com>
+References: 
+	<PH0PR14MB5493CE0EF511E2D827A5ADCFAA2FA@PH0PR14MB5493.namprd14.prod.outlook.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy4L1Smwc-H01AuKjNbtu9WMzWxJVRtuOjr0Fp_yLiZX7Q@mail.gmail.com>
- <CAABAsM5nzVzPDB3Ubeqg35F7Qd8pBveiYPi1M+KFnMPjb2dxXw@mail.gmail.com>
- <CAM5tNy7Aab8fQ58BghMBsWvs6Xc5U90q9gXWaKeEaZaqcs2Ltw@mail.gmail.com>
- <CADaq8jeAhdOLrD9Y6o1xJsMuGYZLoJdMAonfB5RuX63xV_i0UA@mail.gmail.com>
- <CAM5tNy4kPWfPHHRVr712AG=g5wJ+fThG9KFX_9JoT85seTSE=g@mail.gmail.com> <CADaq8jdfV0EjVehzGNFw2MxKZvc_Dj-t6Af0NqNKe3oZ66xDMQ@mail.gmail.com>
-In-Reply-To: <CADaq8jdfV0EjVehzGNFw2MxKZvc_Dj-t6Af0NqNKe3oZ66xDMQ@mail.gmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sun, 10 Aug 2025 07:32:16 -0700
-X-Gm-Features: Ac12FXyogCovr_yeSIB4K0KFLCoFLN5QOzkphlhoKdrZZsJKGettf3ouHaLHymw
-Message-ID: <CAM5tNy4jx3ML_XhWaAo=Ffde3ZzqR5mGd-kcVvpAtxXjesChJA@mail.gmail.com>
-Subject: Re: [nfsv4] Is NFSv4.2's clone_blksize per-file or per-file-system?
-To: David Noveck <davenoveck@gmail.com>
-Cc: Trond Myklebust <trondmy@gmail.com>, NFSv4 <nfsv4@ietf.org>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 10, 2025 at 6:58=E2=80=AFAM David Noveck <davenoveck@gmail.com>=
- wrote:
->
->
->
-> On Sat, Aug 9, 2025 at 5:02=E2=80=AFPM Rick Macklem <rick.macklem@gmail.c=
-om> wrote:
->>
->> On Sat, Aug 9, 2025 at 1:12=E2=80=AFPM David Noveck <davenoveck@gmail.co=
-m> wrote:
->> >
->> >
->> >
->> > On Friday, August 8, 2025, Rick Macklem <rick.macklem@gmail.com> wrote=
-:
->> >>
->> >> On Fri, Aug 8, 2025 at 8:38=E2=80=AFPM Trond Myklebust <trondmy@gmail=
-.com> wrote:
->> >> >
->> >> >
->> >> >
->> >> > On Fri, Aug 8, 2025 at 9:47=E2=80=AFPM Rick Macklem <rick.macklem@g=
-mail.com> wrote:
->> >> >>
->> >> >> Hi,
->> >> >>
->> >> >> I'm looking at RFC7862 and I cannot find where it
->> >> >> states if the clone_blksize attribute is per-file or
->> >> >> per-file-system.
->> >> >>
->> >> >> If it is not in the RFC, which do others think it is?
->> >
->> >
->> >  Before you told us about ZFS,  I would have assumed per-fs.
->> >
->> > Given the uncertainty in the spec, you may wind up dealing clients tha=
-t assume it is per-fs.
->> >
->> > Although this is not a  catastrophe, you might want to file an errata =
-report explaining the negative consequences of assuming this is per-fs. It =
-won't get into a spec for a long while but it does provide as much warning =
-as you can right now .
->> >
->> >
->> >
->> >>
->> >> >> (Or maybe, if you have implemented CLONE,
->> >> >> which does your implementation assume?)
->> >> >>
->> >> >> In case you are wondering why I am asking,
->> >> >> it turns out that files in a ZFS volume can have
->> >> >> different block sizes. (It can be changed after the
->> >> >> file system is created.)
->> >
->> >
->> > The guy who allowed that probably thinks it's a helpful feature.  Sigh=
-!
->> It's not just a feature change after creation, it turns out to be based
->> on file size as well.  A small file gets 512 and a larger one gets a ful=
-l record
->> (128K on my test system).
->>
->> And, yes, block cloning requires alignment with 512bytes or 128Kbytes
->> depending on the file.
->>
->> I can return 128K for clone_blksize and that will (sub-optimally) handle
->> the 512byte case, but I think it is also possible to increase the record
->> size from 128K-> after the file system has files in it.
->>
->> I'll take a look at the Linux client to try and see if/how it uses
->> clone_blksize.  I need to decide if I should always return 128K
->> (or whatever the full recordsize is) or 512 for the small files.
->
->
-> I don't see the point of returning anything but 128K given what you said =
-above.
-> If a file has to be smaller than 512 to merit the 512 block size, it coul=
-d still be cloned with a 128k clone_block_size.  The spec makes an exceptio=
-n for the last block of a file being shorter than the block size so returni=
-ng a 512-byte clone_block_size.
-I'll be experimenting with it soon.
-What I do not know (you could write what I know about ZFS on a
-postage stamp;-) is whether the blksize for a file changes as it
-grows.
---> So the problem is a file might get 512 because it is small when
-     first created and then grow large. Again, I do not currently know
-     what determines the blksize. Whether it is the first write being less
-     than a record size when created or maybe it does switch to recordsize
-     (128K in my case) when it grows beyond 128K or ???
-     - I do know that ZFS allocates new blocks whenever data is written
-       to a file, even if the file is not growing. (Which is why it cannot
-       support ALLOCATE at this time and probably never will.)
+On Fri, 2025-08-08 at 17:22 +0000, Charles Hedrick wrote:
+> In the past we've seen high CPU in cases where we had a very large number=
+ of subdirectories in a directory. This was due to the cost of reconnecting=
+ them.
+>=20
+> In a patch March 9 in Centos 9, "ovl: do not try to reconnect a disconnec=
+ted origin dentry", an optimization was made to avoid this, but it was only=
+ implemented for overlay. Would it make sense to do the same thing in nfsd?
+>=20
+> in nfsfs.c, it would change the call to exportfs_decode_fh_raw so that wh=
+en to pass
+> exp->ex_flags & NFSEXP_NOSUBTREECHECK ? NULL : nfsd_acceptable, since nfs=
+d_acceptable will always return true if NOSUBTREECHECK is set.
 
-I'll be poking at it. For now, I just do not know, rick
+Can that function cope with a disconnected dir dentry? Note this a
+little while later in the function:
 
+        if (d_is_dir(dentry) &&
+                        (dentry->d_flags & DCACHE_DISCONNECTED)) {
+                printk("nfsd: find_fh_dentry returned a DISCONNECTED direct=
+ory: %pd2\n",
+                                dentry);
+        }
 
->>
->>
->> Thanks for the comments, rick
->>
->> >
->> >> >>
->> >
->> >
->> >>
->> >> >> Thanks, rick
->> >> >>
->> >> >
->> >> > Yes, but since ZFS only supports filesystem level snapshots, and no=
-t actual file cloning, does that matter to anything?
->> >> ZFS now has a feature it calls block cloning, which does clone file r=
-anges.
->> >> (It was only added recently. I do not know if the Linux port uses it =
-yet?)
->> >>
->> >> rick
->> >>
->> >> >
->> >> > Cheers
->> >> >   Trond
->> >>
->> >> _______________________________________________
->> >> nfsv4 mailing list -- nfsv4@ietf.org
->> >> To unsubscribe send an email to nfsv4-leave@ietf.org
+...so I imagine such a change will make that printk pop a lot more.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
