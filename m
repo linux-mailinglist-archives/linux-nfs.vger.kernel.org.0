@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-13562-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13563-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B6C6B21537
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 21:15:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57D72B2154C
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 21:23:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A198190224F
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 19:15:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67F5C7ABFAC
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 19:22:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1205727AC3D;
-	Mon, 11 Aug 2025 19:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB248149C51;
+	Mon, 11 Aug 2025 19:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XO4RXJQs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7Grbw0g"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1006E555
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Aug 2025 19:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B645C1A9F8F
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Aug 2025 19:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754939679; cv=none; b=BaGZX8v8NSAfKXidqSFzH/eT4u+5w3LGTYELNtwvJgDlPPyvdNs2tWZArB8xDFUSGdGRXSFtXHqoOVgJHiyHE1++cfCJMK/I06srij2zKV+WMsqD3MdkFgCyH4tQboVJ6UGkkJlWHiwmsoMQ7ZQx+ovfsyFdpZe6QU1KkOGCrlY=
+	t=1754940223; cv=none; b=Z0nsRvRwAyQ80MZb2yWnfrvzVRUUn/MzQjxHNkvcPPwHy7J5XNaKfYZBPZLfaVohwGglzZqB2HDSEqgoDf2aVwgy56o/V6z5Y+xJlDmazWt2XHjb/7E9yhKv/FZr/y0TsdTWEcTvAsfea/G/gjQ2B+A84UYsuAo6lPBERpGMs64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754939679; c=relaxed/simple;
-	bh=V71tmqSh7BiaKgD3405jOmmSPftQik7C62Uw9ouynmk=;
+	s=arc-20240116; t=1754940223; c=relaxed/simple;
+	bh=qRYOnyxJyklNEi9/rA5UMc9zIRuv/EorPb8a+DIlFW4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fF1n8uVQReSSCiDvO0NfdjCyE7flmNqWyMRaC30pciL9PPwV7s0Ql5FVuAxKESav4AK1gD9/a6tOmVWQWzTtCSq+N5ZNHsV3G9hbIAh2YaU9RNQFbc33w0G/xuER0q5mrrGs75GA6OX1HXmyKtAbtDMl+yzdntBVbqvWrCbUgHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XO4RXJQs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BA2C4CEED;
-	Mon, 11 Aug 2025 19:14:37 +0000 (UTC)
+	 Content-Type:MIME-Version; b=cRTfuM9TqHkvknpE36nVyBmfI/lyQUmKWutvQ3MKEINoIWAc+/Gnj8iKTmI7r29Jm5oNeAa5eBRhkOFDstBDbpJKtYATJTY6DAV0LQeAkQxHipUwvEOOSkvu5axMTX6L5MOjzujLSbsqryM5skTdgVOWw8rTzr8mrz9LiljK5JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7Grbw0g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2C69C4CEED;
+	Mon, 11 Aug 2025 19:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754939678;
-	bh=V71tmqSh7BiaKgD3405jOmmSPftQik7C62Uw9ouynmk=;
+	s=k20201202; t=1754940223;
+	bh=qRYOnyxJyklNEi9/rA5UMc9zIRuv/EorPb8a+DIlFW4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XO4RXJQsD3gdsXEjXQOwwniYCPUys1Q2ysps5dsaj3PMm+J83jvZTRtBPxegAQhaV
-	 nhJqb69wLc/deLoPRjf5DcTOSRC0ZE8UcTDjnqstbmfpkd/TGQWAO0T4cq4AFUK4yR
-	 yivreQGFq+I4aj4sk7tav8OmbVaAogBTfHDSwltNUi28G77asRnawKIGFJxTN7dsQb
-	 pKygiBnka3/21g+x9OSrJhNWl6AR2ktWu/kW5Ebr1XJGawkShTLp9phed+Zo56AqP8
-	 v73OL39FCYkkBjnpggD++muZ5qaAvhVsIN5uyoO3i8X6yoeH+sb81BLlHhhf+Jec/a
-	 oBiyE1L3Fe4wg==
-Message-ID: <dffafd607b30e170939af01e054a9652c9ac6f30.camel@kernel.org>
-Subject: Re: [RFC PATCH 2/2] lockd: while grace prefer to fail with
- nlm_lck_denied_grace_period
+	b=W7Grbw0gkHT+4tR1vKlSFNcZ6kk1pvlj17sY5l6qD7oBdn9Kn7xauazUC3zqnoxgr
+	 wfpFKLqSdvJUXQVAGMfoBiSvAQd85j7OxSfSCORhi5hnjbTDUYwi9if6A5XOHTRlkZ
+	 6Nkax/JO12Nl4U63VtZIDFqsc/nIXmYT+WhC7KlsKnYdDe+QRbvsaDjjJ4uS68ObZ+
+	 FVgj+wdEcdEoz2TIbDIZklHJuFY1MLPwGWn3jt8PjYiddsitIplWMcc0eKcQsTU+jr
+	 KaG1QCPonixZbNhndePD1uUSzzPVPexAGLXTvA771aLkFR9uqPtCFNVjbe2ca0a4k0
+	 AfM4DnbRSqRlQ==
+Message-ID: <903f4a158e04f15b9f493be7061ee7d9643d1772.camel@kernel.org>
+Subject: Re: [RFC PATCH 1/2] nfsd: nfserr_jukebox in nlm_fopen should lead
+ to a retry
 From: Jeff Layton <jlayton@kernel.org>
 To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
 Cc: linux-nfs@vger.kernel.org, neil@brown.name, Dai.Ngo@oracle.com, 
 	tom@talpey.com
-Date: Mon, 11 Aug 2025 15:14:37 -0400
-In-Reply-To: <20250811181840.99269-3-okorniev@redhat.com>
+Date: Mon, 11 Aug 2025 15:23:41 -0400
+In-Reply-To: <c7bf2dca30c1ac3c947da3fa9ee537cf3b57536a.camel@kernel.org>
 References: <20250811181840.99269-1-okorniev@redhat.com>
-	 <20250811181840.99269-3-okorniev@redhat.com>
+		 <20250811181840.99269-2-okorniev@redhat.com>
+	 <c7bf2dca30c1ac3c947da3fa9ee537cf3b57536a.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,48 +137,65 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-08-11 at 14:18 -0400, Olga Kornievskaia wrote:
-> When nfsd is in grace and receives an NLM LOCK request which turns
-> out to have a conflicting delegation, return that the server is in
-> grace.
+On Mon, 2025-08-11 at 15:10 -0400, Jeff Layton wrote:
+> On Mon, 2025-08-11 at 14:18 -0400, Olga Kornievskaia wrote:
+> > When v3 NLM request finds a conflicting delegation, it triggers
+> > a delegation recall and nfsd_open fails with EAGAIN. nfsd_open
+> > then translates EAGAIN into nfserr_jukebox. In nlm_fopen, instead
+> > of returning nlm_failed for when there is a conflicting delegation,
+> > drop this NLM request so that the client retries. Once delegation
+> > is recalled and if a local lock is claimed, a retry would lead to
+> > nfsd returning a nlm_lck_blocked error or a successful nlm lock.
+> >=20
+> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > ---
+> >  fs/nfsd/lockd.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
+> > index edc9f75dc75c..ad3e461f30c0 100644
+> > --- a/fs/nfsd/lockd.c
+> > +++ b/fs/nfsd/lockd.c
+> > @@ -57,6 +57,7 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, s=
+truct file **filp,
+> >  	switch (nfserr) {
+> >  	case nfs_ok:
+> >  		return 0;
+> > +	case nfserr_jukebox:
+> >  	case nfserr_dropit:
+> >  		return nlm_drop_reply;
+> >  	case nfserr_stale:
 >=20
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> ---
->  fs/lockd/svc4proc.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+> This works by triggering a RPC retransmission. That could time out on
+> soft mounts if it takes a while to return a delegation. Looking at the
+> NLM spec here:
 >=20
-> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-> index 109e5caae8c7..7ac4af5c9875 100644
-> --- a/fs/lockd/svc4proc.c
-> +++ b/fs/lockd/svc4proc.c
-> @@ -141,8 +141,19 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct n=
-lm_res *resp)
->  	resp->cookie =3D argp->cookie;
-> =20
->  	/* Obtain client and file */
-> -	if ((resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &file))=
-)
-> -		return resp->status =3D=3D nlm_drop_reply ? rpc_drop_reply :rpc_succes=
-s;
-> +	resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &file);
-> +	switch (resp->status) {
-> +	case 0:
-> +		break;
-> +	case nlm_drop_reply:
-> +		if (locks_in_grace(SVC_NET(rqstp))) {
-> +			resp->status =3D nlm_lck_denied_grace_period;
-> +			return rpc_success;
-> +		}
-> +		return nlm_drop_reply;
-> +	default:
-> +		return rpc_success;
-> +	}
-> =20
->  	/* Now try to lock the file */
->  	resp->status =3D nlmsvc_lock(rqstp, file, host, &argp->lock,
+>     https://pubs.opengroup.org/onlinepubs/9629799/chap14.htm
+>=20
+> What about returning NLM4_DENIED instead? The description there is:
+>     =20
+> NLM4_DENIED
+>     The call failed. For attempts to set a lock, this status implies
+> that if the client retries the call later, it may succeed.=20
+>=20
+> Presumably the client should redrive this effectively indefinitely that
+> way?
 
-ACK to returning the right error code in this case, but you may want to
-do this differently if you agree with me on patch #1.
+Scratch that idea. The client treats that as a fatal error in
+nlmclnt_lock():
+
+        /*
+         * EAGAIN doesn't make sense for sleeping locks, and in some
+         * cases NLM_LCK_DENIED is returned for a permanent error.  So
+         * turn it into an ENOLCK.
+         */
+        if (resp->status =3D=3D nlm_lck_denied && (flags & FL_SLEEP))
+                status =3D -ENOLCK;
+        else
+                status =3D nlm_stat_to_errno(resp->status);
+
+
+Dropping the call might be next best option then.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
