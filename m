@@ -1,388 +1,190 @@
-Return-Path: <linux-nfs+bounces-13573-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13574-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FF98B21CB8
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 07:07:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D7EB225EE
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 13:34:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10B834669CA
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 05:07:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7D1816960D
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 11:34:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9E11991D4;
-	Tue, 12 Aug 2025 05:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3243B2EBB97;
+	Tue, 12 Aug 2025 11:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW8PpyTw"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="nnjCBjy4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11013021.outbound.protection.outlook.com [40.107.44.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B7C1A23A0
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Aug 2025 05:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754975248; cv=none; b=brCAc/xBfDjPEvsCv6mJcR/r5MqlGi0zaFxY28vrO34DC6Y8j5Xu2hsYW7RMfsWGbI+8WykGbhyEJmoqNZ562f8hzWn5Lkx74RFC/BKKDhuPlpF7XJQSCz8Ji7AvdO5HabnOD+YWjYgvxEk6nH3+0aao9RkmvzcLS6Ly+Ak+N+c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754975248; c=relaxed/simple;
-	bh=rVg2FtVDZPWczFl3POFf557wHJLFvgb9u7DraVSiaoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J5NL9/kgLXc4P0j7+/DJ8McbUaQo40TlFNVhuLr8144DrUs8pR2eDkxCfPksPlbybC+HNO9vuXesD3RWZ162+TnR0EiAe3UTJtBwcqOdNjavSHbFBGIZxAjlFYHpzDn3tSDvdgc+V/s6YQZ6bHnls/nDY6mcNZ1Lm1vDDDn2ry0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DW8PpyTw; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23ffa7b3b30so46853895ad.1
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Aug 2025 22:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754975246; x=1755580046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O9yjQnIWOwZSDxZg11uLNIMzLA1f7JIsD184DCpFF/0=;
-        b=DW8PpyTwnbCpb6REKpJY5HW+FUXpxVsCEeJJPHhq2afxqwu0kCnflAitbW9fR5/mHB
-         3HwQBuls2IqnaGMGEPReAyYJxFuPc6yaSeI9KfoOuobi9wv+GRwxwvH6N3NItFEUy4iz
-         pkc/4mAFalHeUOLoWRLbLWPgl/5SxgJo0uErbN2knpIyRfL8kB31jxmpEr0+sLWy0gt2
-         7RUHgcxtgHUWMCLFU9eMNxY2zU8pN74z2KyT4GHp3GqMpGCa/OHwDQVfdS8z2UUbEqMI
-         mRNqf4n7w6SoMsSBV7yepo7uwpHYQm8pAjWoLBAtfUE3riD/1c7R1LQrGaLobIlZ987h
-         Dv3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754975246; x=1755580046;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O9yjQnIWOwZSDxZg11uLNIMzLA1f7JIsD184DCpFF/0=;
-        b=hSg7lrCNSzOYW3gJ38394GboIohKvNGL5MqE6klsaq3azAORWg2eFlLjZWtKIYGRU7
-         RKEnAN1+tlGo9rWqapIGp7Y+ObsNmniZ4JxDtFvgtV3OXXF+ms35n3RYTFpaapBmy2Ha
-         FUIX4EJwOC6uis7K6a30H/zyaV523W62jzFMgMxAfnUlcKDVNvJF8AV81+/F/jfIrQn6
-         WfGIgQM8bZn1xzDHgtj6Y0rUEClpMqGKKsK45MM5Y3fhN5A2hEtGqpeMSqXjR3naFuo+
-         LMZu+IhtU7vWl32EuDuvuSLPjOFqMPHpaVHehr8Ex142XIU1MC+oMredBB8ie0zGHAv8
-         mNHw==
-X-Gm-Message-State: AOJu0Yxv5hYd3vjpuSqr5VXcXQS4Sm3brAoFRIh62me0U0ST3BMKwV2e
-	tho23b196DJ7PoM1KCo6SzYQb64XjD+K1zwDhSR0CFptZ0mjHKZ/B00j
-X-Gm-Gg: ASbGnctW1p3hgMyt/ccv/ADMYntTEAwM6X0cMuaPv9d6HkZOM/h1zR6m/VuKdEj2Cr4
-	jZLRmeHAO9flhqAtA16mVMEcMKug+ZT10DRuUvt6NoLWp5rVpfjIi4cl9w17iApWIBWGZrECrRL
-	23Yp8PSoQ1V0vhQr+p8jNniROLCJiH/uS+HrjnDW9IDBXWE4dCn4FvaFXWdeTrxZZaLQRDddR1n
-	Q2REblXS0c1YnHhOy0NHJIhNLMhfi9nQVB+QdpMMahY3+WjnWBs4YmBgCG7JLURX4vvRec8sYQV
-	lf7JU6x9A/wzTIE4F5wSfejLFt8PWrVSNQpFbfxrXaeF3xBKVBsowPsZYVZXjckadX5v/VuQapo
-	xRzXZxDtHQY7We4pTx5S3v4gnYhpjHKRD
-X-Google-Smtp-Source: AGHT+IGjmeLhMlOd6n7wjCrLCP0HgBayGCqXfngAgtI6ABo9jEa70Q9dBnrvZbmzTZgpdXbdg5YQ9Q==
-X-Received: by 2002:a17:903:19cc:b0:242:a3fc:5900 with SMTP id d9443c01a7336-242c1ffce82mr202974935ad.8.1754975245705;
-        Mon, 11 Aug 2025 22:07:25 -0700 (PDT)
-Received: from apollo.tail3ccdd3.ts.net ([2601:646:8201:fd20::ee1b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aabdedsm288266765ad.167.2025.08.11.22.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 22:07:25 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
-To: libtirpc-devel@lists.sourceforge.net
-Cc: linux-nfs@vger.kernel.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH v2] Add conditional version script support
-Date: Mon, 11 Aug 2025 22:07:22 -0700
-Message-ID: <20250812050722.4033349-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360112EA17E;
+	Tue, 12 Aug 2025 11:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754998461; cv=fail; b=jNTOy50tjLcVZydf+BDccGWnXCgG9ZSGRtLt2CjOkprxPd8gzzeF0cMvsPP2XwFvYaebkX7KkFsU6EfoPfcLxGsa3maCnkWfFLp7osB8qAtPO/bDYX6sNkA75cEa32P6y0EjUErmivgfqRESrLNX3gD2aQdADRGp2X8Y+YeycWI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754998461; c=relaxed/simple;
+	bh=TabD27GdXHONyENLSQtqHBbcV4tr9PnfjMTkED5oLRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=o07KlMwPB650H9PsX0SbdDTaHVEXNAkBPnIEH/jkc0GlF6q1vg+PjQDe+6ZTXruJnS7jySlgXwrkCFiI5uptZIOB2YqnRIIxpsABp1/EMjf+QRzjo3QhiHpjbaaQs1eQ74z0amW8NYtsZF71pn+5UVhFIBccBA9n9vcPEVgPv3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=nnjCBjy4; arc=fail smtp.client-ip=40.107.44.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EGFrrX5wlF2BvjKkDWJRXLP1lLV9gw/YYEbcsgGUiIwvf/DZ+8VAZfFLgDCACCf20xi/+8DFe3TS1e6YxdMds810aytIrE47CeoE0nzwRh3UbXVMQpE/c1jm4WkoeQQdGgn9c2E6sk8x+I5dPNJK3htAxvKzw9sw5bdTwCUcBzUQVZHIwmswG12W9mJiNvE+vQaw5+Do7UCyoDcQQYzoeDaXJZ3xssbUOJsBG34wjNRhZDeJNoqQ5FNdxfVCTYOv5Iw9KM+OkdJ09RUKZdbpxnG7kBePmOQIIT/bz59sfpmzBN6f8iS3YLtcOY67AB7pr6CAHyAnyQ3pdKiJqjW1Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1IwlqlZzNq6ayJ6w/WuOr+H+M6ru0ciLcn/hjII2nxg=;
+ b=gYQLpIV/JLRRqjmOEJC1WypVIfGuiVhuZhy5Y210TWxV9ILb7FJSmQ+pPA042zvWGzeSAZuk2uxOIBqFitzbSWXnlYATznjvTlBtDEIwxLhxv5orwi6/48qRBJJblIFydQvQ4jEml0dNPLK1UKL5tIOCeQsHCQvpdpTMxqgWb26ILt97pTth34181PIuzAEjYxlU1z+ph33hbqGtKZ0B12tGuW5n218J8nR1/k2eROyCyTHfwUcl5BGaRhCW2U5+vdIXezmm5b6Hw9dARLi++J0EYMWZ2eG8hn2wEYn/Lmy+HewPIefeBdHF8shNzzWyKM0Q53Zkwl/D8YSOvCgqnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1IwlqlZzNq6ayJ6w/WuOr+H+M6ru0ciLcn/hjII2nxg=;
+ b=nnjCBjy4YK4NVmuBjmSrmcG7mNnIwJXkxIo9AJHcWYZKUWAwGbD/BSAVjO2bh7/zjumQ3hO6avh737wimdq1bVJnIoGw4x2OFNOvzXnv6PwnUDhB0KMGfEjZ7l5DFB3NWBxl5EK3ZgzcEVnAoXroVc9S77bhvqb5HnEinPzHEvwGHGWZURMlYm00MthOqT5A6NbaKUuUzbkEzVk3fn6y3hopbkM6k+mQJmjOQkDO+EsRMCy+pAyQyso1++8IbYNK5zAEnBF5dPIg/TySRoWzcLI58i1HgF0CXtkXx0gTgYBaZFu5+fDfPfq4NYWR1GPzomdg5sgDKixa0226myK4dw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR06MB6020.apcprd06.prod.outlook.com (2603:1096:820:d8::5)
+ by JH0PR06MB7107.apcprd06.prod.outlook.com (2603:1096:990:9b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.22; Tue, 12 Aug
+ 2025 11:34:15 +0000
+Received: from KL1PR06MB6020.apcprd06.prod.outlook.com
+ ([fe80::4ec9:a94d:c986:2ceb]) by KL1PR06MB6020.apcprd06.prod.outlook.com
+ ([fe80::4ec9:a94d:c986:2ceb%5]) with mapi id 15.20.9009.018; Tue, 12 Aug 2025
+ 11:34:15 +0000
+From: Xichao Zhao <zhao.xichao@vivo.com>
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	horms@kernel.org,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xichao Zhao <zhao.xichao@vivo.com>
+Subject: [PATCH] sunrpc: fix "occurence"->"occurrence"
+Date: Tue, 12 Aug 2025 19:33:59 +0800
+Message-Id: <20250812113359.178412-1-zhao.xichao@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:3:18::18) To KL1PR06MB6020.apcprd06.prod.outlook.com
+ (2603:1096:820:d8::5)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6020:EE_|JH0PR06MB7107:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5eeb4e7-0f7e-467e-1672-08ddd9942a8b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Y2SBBYMwl6utJnEsCd3FVpD++8phSBN6lISXAQwOrGh4s/PYVoasthDK+CRz?=
+ =?us-ascii?Q?F4NoPH4xTTL6mZJIeQPuHvWK1OI8v8s4LeaHUvUs1YRmoPLuwR9B8dDIjWsZ?=
+ =?us-ascii?Q?JmyqgEd3zo1l9FBJXhLRIzOs2MmPg0cX2YnODwQHCvc+7VWWks8hPxvkVtrt?=
+ =?us-ascii?Q?YpwhY6ZZpDkw0b8/Dw6tI2BgqVbrkNQp1XV8cSVHvlkU7/qq0NLs2v9UWjD8?=
+ =?us-ascii?Q?k2DqklG+N/0G1OOGe9Rq7FTvYYEsc7v546OyQwM1mnqIhepj/PeyVRPrPgf9?=
+ =?us-ascii?Q?8l9EC3ovgm1pgBxHRxaCUk9k3WedfeEuaiVpRsRbFVh6xKHE+koCfYl0HUp+?=
+ =?us-ascii?Q?9LSPZJefZeCee36TcccDG9iQFfOSRMYutQru/hWEx8A7KsJTGtScKyHbSvUJ?=
+ =?us-ascii?Q?vfrXoNBBVimF6JJkA4z2ZsoGS7x92HcJDRPo0AygPcHyQHdgjaSpgu2TMJsL?=
+ =?us-ascii?Q?tr+5ybl9fL4cbNqJpvzs2akT58FyxNZeoxiG1jsWBgRErzoHsxm8k7iVI7Bj?=
+ =?us-ascii?Q?OB09qYDDEZOLISwUrG/w8J3919IwOFdSN7o634IMhqWjdVH82CZyMNh/oBHG?=
+ =?us-ascii?Q?YY5+9TuAgEzqTfB+zaG8RcfyL04MyWu9oUNu9oPtQimvtjdAzcVzGwdVBbSn?=
+ =?us-ascii?Q?BT5+YiFb9DhnZpP0FkVDFzOkL+6SbAeE6Hk+KFcWpRCEenr3LVS9GgoL7JrE?=
+ =?us-ascii?Q?rJya/AfONaj8d1Bh+SNIWFwQmNvyFfx7UP4xr6ltuIRYmLFz3dvdgY3AERaL?=
+ =?us-ascii?Q?f2d3R+ZzQAaQxUoUABiCLKzbs8827mqI+nWnaJr4CPvWe9B8wrrAzCMepAtn?=
+ =?us-ascii?Q?8F4ald4XisRCJt2DQTNEGlDEFEI/vjTQSGxhoYrRHhhSAR5MkXVw8YuiS10T?=
+ =?us-ascii?Q?Joerqgz5JNYm5A6hb5rmcG/JRDlwv7QTLQXnyE++p5ECN+I7HBLnOvJpFAah?=
+ =?us-ascii?Q?YHfMiRR/Yatateotuf2MaVnnNwsjLWbKcio+eLfSV9pySntNo/zTVrvftutc?=
+ =?us-ascii?Q?NcCSwQgQ+8syOj3sdTP8tUxYFj0lYDroB8TJGHUMtkEZM9S4vvG2mRyYTxHa?=
+ =?us-ascii?Q?dvbiTzy4CpL2yHfbzor/OQ1PXorl5ouawAHE0zMN1I8AtJrmGWnGbPl+NqFo?=
+ =?us-ascii?Q?n2QzxLV6K1lFjoVUGUk1kw2GEzji8Kim2AuL+UjzyoFcMECRV8n1U6etSUCQ?=
+ =?us-ascii?Q?CQRlF93BRgWlCSUZdbrO+HZkDW80a89XKveSdeWYFR3xINo2ZLXK5w5NLeO2?=
+ =?us-ascii?Q?qrNg7IEZhelfAsOO5Dpp78bEED18hCVb8iyorfqgl/lCvKritmvMaDSHVe95?=
+ =?us-ascii?Q?qWvQQ6d5x46KrHZf3LSLd2ld77wtsUOn/DZarINsz03iBK659dsLJoHFvfEW?=
+ =?us-ascii?Q?KKW943mahp1mxjlKhlVUwZ8w9gZROxe5p2Oz9+ZVeb4+8d9v34bW0A5EZZoq?=
+ =?us-ascii?Q?QwlbUsr0THhmvLwcp3eIU7LnXp3b114BFCyxHcAX+w4pRlvJdjSwcQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6020.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Okotj3mdsfr82qoDk3sDmtOhwt3vGsiDRZTdpkvCSfusA85jHcWBKRuW5+iV?=
+ =?us-ascii?Q?rA2bLboUroq5+rrF5lu5yweMZ3HJMfVL9avByJsMPIV+L4svScYZMwQT0TEx?=
+ =?us-ascii?Q?4xfrVRuJduMUbcucRqKQyDYFMH1ExeQFXf58LslF+Ek4JMVqyN/J2s0yJvJH?=
+ =?us-ascii?Q?HjaqNo6hf4KorNaSXPwUJHx0d19DhWLqOIiEGhhhueru3aW5NMsGeHJXYecC?=
+ =?us-ascii?Q?8t6ndgLc8emKtxBgAm9yaiuGBC6aQhmI1cIrN8axszE1gMT4RlMYYhVMtjEE?=
+ =?us-ascii?Q?RzHzp8wIHamjmndX99NRzISRINVvV4DyhBcAj140V9qt2pO9Ht78MYTOWO2Q?=
+ =?us-ascii?Q?OqeokDwtRG2NGko/MIP8T8z5uDG3JXbjM6/cfwBE9/GnK1VynYE07QuZBQUt?=
+ =?us-ascii?Q?CG9BzfJL//rORhJ979dL6H8QCT5/mXOlfZbaRg55wktgqodCoFYqs93+Yxba?=
+ =?us-ascii?Q?k9MbFeimoxI1pBZHybxa36loyaDo3N2q5E0onENZaOn5x7RwxFA8MMIRbxaE?=
+ =?us-ascii?Q?l2uCnsKUQBtfQSDd64eXrrCuw5v+wmzp0NfanRhvGPtH/ot+JkA5J0m16BP7?=
+ =?us-ascii?Q?r8FUfm2j28hgoAS6GGR/1xemHKSwUYvOUy18AXdnkh7WCo6IlpTy6YW+2caV?=
+ =?us-ascii?Q?gyNoDbxBKZIQJF7sI+hCv/lpGQSbCRLC+vObdG6cVrz7DrLFNMzEDcZAd4v+?=
+ =?us-ascii?Q?zyYIGdTwi3GhrBUS9qfagJPoAhZk9TIlrp+IYyVV/5ioojIOCiX3UvEZVJCU?=
+ =?us-ascii?Q?laeuUcAD1HpyHX/PPzkhFOW6a3Ur/Jady6ADC7Nv0yC4SqdHS/V6xuGjN08S?=
+ =?us-ascii?Q?/dkNomTBi3lIwm8ruzqUAtNPTI/J1r3Q++hTfeOFnx81Rskb2IAYKhh/h1hH?=
+ =?us-ascii?Q?X+8yOHDRol9Trwr+YVAJWdEmQb81FplqnI+QcXF0cwKJ3EXf5ejQKIPUhtUb?=
+ =?us-ascii?Q?BFjwLdFvbmMcJ3a/EBHebDFjAOjIHAjZ7Vb+ThOttUKqu5TGzrkrUjyBfTWq?=
+ =?us-ascii?Q?m5ZKKwqY5/uGXevKmjEi9j9KAligyarwaqvh2IJACSKpxqFMnnLEuvms/bYm?=
+ =?us-ascii?Q?/muuJbY/Tipx0aJ2end4x2rC9i5BNgTSStX9+72Gvjt2VYumrmZUSrCEtTnB?=
+ =?us-ascii?Q?MLOL0qlV0UYPh/j+reINDB4jtDixA0dpcfPVJelgqrGNApFjUvkxjDOOIGiU?=
+ =?us-ascii?Q?YUexnI6MJ4cWDzUl0fdjK9tyNDKSSb3GQ29vEH940I4T8s/HD5xh/S+j5XL+?=
+ =?us-ascii?Q?jo9B+d8dsGqHBL7u18UDtobE900nKdQUdCCHbtL9pRz91BVzGXyxVKl94gxT?=
+ =?us-ascii?Q?m70GzyOFjbOaOe4qgc8LtAp3DHxsEVxgjatfccWfiUd0bgP6l6BQIf25hDyI?=
+ =?us-ascii?Q?E1k1+eyHi4qOvWQx/eJUz45gJmR6sBxGT7a//YR8iBaAgyQ5us2XHuoWTLmh?=
+ =?us-ascii?Q?OmsLTiXxwL70/ABkfUdcgWYMqT/we2JEcZgoLglQg9tQghIsHo1D/pJQSdMz?=
+ =?us-ascii?Q?yWh239I7BfUlrmITAPnMY0cSZ8uQGmuNqloc2qN+1S4uKIsEVee5gzQXDMOR?=
+ =?us-ascii?Q?a2MIr6Y8ndS81mdDT7KIcpG9OwZHl/I871UyIFpA?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5eeb4e7-0f7e-467e-1672-08ddd9942a8b
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6020.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 11:34:15.0985
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ajs8SpLS+QRZ4GDd8pdaz3S92R2onFR6M53lfEh0Tb0Tu7Hy7nVQquyc6eSlhmIMytWC7vLmftKih3RrH93Z5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7107
 
-This patch adds conditional symbol versioning to libtirpc, allowing
-GSS-API, DES crypto, and RPC database symbols to be conditionally
-included in the version script based on build configuration.
+Trivial fix to spelling mistake in comment text.
 
-LLD is strict about undefined symbols referenced in a version script.
-Some libtirpc symbols (rpcsec_gss, old DES helpers, rpc database
-helpers) are optional and may not be built depending on configure
-options or missing deps. GNU ld tolerated this; LLD errors out.
-
-This change keeps the canonical symbol map in src/libtirpc.map, but
-adds a make-time rule to generate a filtered copy
-where names from disabled features are deleted. The lib is then linked
-against the generated linker map file.
-
-Fixes linking errors when these features are not available.
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Xichao Zhao <zhao.xichao@vivo.com>
 ---
-v2: Fix access to generated libtirpc.map when Srcdir != Builddir
+ net/sunrpc/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- configure.ac                          | 50 +++++++++++++++++++++++++++
- src/Makefile.am                       | 23 ++++++++++--
- src/{libtirpc.map => libtirpc.map.in} | 48 +++++--------------------
- 3 files changed, 78 insertions(+), 43 deletions(-)
- rename src/{libtirpc.map => libtirpc.map.in} (84%)
+diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+index 09434e1143c5..8b01b7ae2690 100644
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -389,7 +389,7 @@ static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
+ 	saddr = (struct sockaddr *)&xprt->addr;
+ 	port = rpc_get_port(saddr);
+ 
+-	/* buf_len is the len until the first occurence of either
++	/* buf_len is the len until the first occurrence of either
+ 	 * '\n' or '\0'
+ 	 */
+ 	buf_len = strcspn(buf, "\n");
+-- 
+2.34.1
 
-diff --git a/configure.ac b/configure.ac
-index e813b14..e8ff741 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -77,6 +77,20 @@ if test "x$enable_ipv6" != xno; then
- 	AC_DEFINE(INET6, 1, [Define to 1 if IPv6 is available])
- fi
- 
-+# RPC database support
-+AC_ARG_ENABLE(rpcdb,
-+    [AS_HELP_STRING([--enable-rpcdb], [Enable RPC Database support @<:@default=no@:>@])],
-+    [], [enable_rpcdb=no],
-+    [enable_rpcdb=auto])
-+if test "x$enable_rpcdb" != "xno"; then
-+    AC_CHECK_FUNCS([getrpcent getrpcbyname getrpcbynumber], [have_rpcdb=yes])
-+
-+    if test "x$have_rpcdb" = "xyes"; then
-+        AC_DEFINE([RPCDB], [1], [Define if RPC database support is available])
-+    fi
-+fi
-+AM_CONDITIONAL(RPCDB, test "x$enable_rpcdb" != xno)
-+
- AC_ARG_ENABLE(symvers,
- 	[AS_HELP_STRING([--disable-symvers],[Disable symbol versioning @<:@default=no@:>@])],
-       [],[enable_symvers=maybe])
-@@ -97,6 +111,33 @@ fi
- 
- AM_CONDITIONAL(SYMVERS, test "x$enable_symvers" = xyes)
- 
-+# Generate symbol lists for version script
-+if test "x$enable_gssapi" = "xyes"; then
-+    GSS_SYMBOLS="_svcauth_gss; authgss_create; authgss_create_default; authgss_free_private_data; authgss_get_private_data; authgss_service; gss_log_debug; gss_log_hexdump; gss_log_status; rpc_gss_get_error; rpc_gss_get_mech_info; rpc_gss_get_mechanisms; rpc_gss_get_principal_name; rpc_gss_get_versions; rpc_gss_qop_to_num; rpc_gss_seccreate; rpc_gss_set_callback; rpc_gss_set_defaults; rpc_gss_set_svc_name; rpc_gss_svc_max_data_length;"
-+
-+    GSS_SYMBOLS_031="svcauth_gss_get_principal; svcauth_gss_set_svc_name;"
-+else
-+    GSS_SYMBOLS=""
-+    GSS_SYMBOLS_031=""
-+fi
-+
-+if test "x$enable_authdes" = "xyes"; then
-+    DES_SYMBOLS="cbc_crypt; ecb_crypt; xdr_authdes_cred; xdr_authdes_verf; xdr_rpc_gss_cred; xdr_rpc_gss_data; xdr_rpc_gss_init_args; xdr_rpc_gss_init_res;"
-+else
-+    DES_SYMBOLS=""
-+fi
-+
-+if test "x$enable_rpcdb" = "xyes"; then
-+    RPCDB_SYMBOLS="endrpcent; getrpcent; getrpcbynumber; getrpcbyname; setrpcent;"
-+else
-+    RPCDB_SYMBOLS=""
-+fi
-+
-+AC_SUBST([GSS_SYMBOLS])
-+AC_SUBST([GSS_SYMBOLS_031])
-+AC_SUBST([DES_SYMBOLS])
-+AC_SUBST([RPCDB_SYMBOLS])
-+
- AC_CANONICAL_BUILD
- # Check for which host we are on and setup a few things
- # specifically based on the host
-@@ -167,7 +208,16 @@ AC_CHECK_FUNCS([getpeereid getrpcbyname getrpcbynumber setrpcent endrpcent getrp
- AC_CHECK_TYPES(struct rpcent,,, [
-       #include <netdb.h>])
- AC_CONFIG_FILES([Makefile src/Makefile man/Makefile doc/Makefile])
-+AC_CONFIG_FILES([src/libtirpc.map])
- AC_CONFIG_FILES([libtirpc.pc])
- AC_OUTPUT
- 
-+# Configuration summary
-+AC_MSG_NOTICE([
-+libtirpc configuration summary:
-+  GSS-API support: $enable_gssapi
-+  DES crypto support: $enable_authdes
-+  RPC database support: $enable_rpcdb
-+  Symbol versioning: $enable_symvers
-+])
- 
-diff --git a/src/Makefile.am b/src/Makefile.am
-index 0cef093..bae14ca 100644
---- a/src/Makefile.am
-+++ b/src/Makefile.am
-@@ -6,6 +6,9 @@
- ## anything like that.
- 
- noinst_HEADERS = rpc_com.h debug.h
-+EXTRA_DIST = libtirpc.map.in
-+# Generated files
-+BUILT_SOURCES = libtirpc.map
- 
- AM_CPPFLAGS = -I$(top_srcdir)/tirpc -include config.h -DPORTMAP -DINET6 \
- 		-D_GNU_SOURCE -Wall -pipe
-@@ -15,10 +18,19 @@ lib_LTLIBRARIES = libtirpc.la
- libtirpc_la_LDFLAGS = @LDFLAG_NOUNDEFINED@ -no-undefined @PTHREAD_LIBS@
- libtirpc_la_LDFLAGS += -version-info @LT_VERSION_INFO@
- 
-+# Generate version script from template
-+libtirpc.map: $(srcdir)/libtirpc.map.in
-+	$(AM_V_GEN)$(SED) \
-+		-e 's|@GSS_SYMBOLS@|$(GSS_SYMBOLS)|g' \
-+		-e 's|@GSS_SYMBOLS_031@|$(GSS_SYMBOLS_031)|g' \
-+		-e 's|@DES_SYMBOLS@|$(DES_SYMBOLS)|g' \
-+		-e 's|@RPCDB_SYMBOLS@|$(RPCDB_SYMBOLS)|g' \
-+		< $(srcdir)/libtirpc.map.in > $@ || rm -f $@
-+
- libtirpc_la_SOURCES = auth_none.c auth_unix.c authunix_prot.c \
-         binddynport.c bindresvport.c \
-         clnt_bcast.c clnt_dg.c clnt_generic.c clnt_perror.c clnt_raw.c clnt_simple.c \
--        clnt_vc.c rpc_dtablesize.c getnetconfig.c getnetpath.c getrpcent.c \
-+        clnt_vc.c rpc_dtablesize.c getnetconfig.c getnetpath.c \
-         getrpcport.c mt_misc.c pmap_clnt.c pmap_getmaps.c pmap_getport.c \
-         pmap_prot.c pmap_prot2.c pmap_rmt.c rpc_prot.c rpc_commondata.c \
-         rpc_callmsg.c rpc_generic.c rpc_soc.c rpcb_clnt.c rpcb_prot.c \
-@@ -34,7 +46,7 @@ endif
- libtirpc_la_SOURCES += xdr.c xdr_rec.c xdr_array.c xdr_float.c xdr_mem.c xdr_reference.c xdr_stdio.c xdr_sizeof.c
- 
- if SYMVERS
--    libtirpc_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libtirpc.map
-+    libtirpc_la_LDFLAGS += -Wl,--version-script=$(builddir)/libtirpc.map
- endif
- 
- ## Secure-RPC
-@@ -45,8 +57,13 @@ if GSS
-     libtirpc_la_CFLAGS = -DHAVE_RPCSEC_GSS $(GSSAPI_CFLAGS)
- endif
- 
-+# Conditionally add RPC database sources
-+if RPCDB
-+		libtirpc_la_SOURCES += getrpcent.c
-+endif
-+
- libtirpc_la_SOURCES += key_call.c key_prot_xdr.c getpublickey.c
- libtirpc_la_SOURCES += netname.c netnamer.c rpcdname.c rtime.c
- 
--CLEANFILES	       = cscope.* *~
-+CLEANFILES	       = cscope.* libtirpc.map *~
- DISTCLEANFILES	       = Makefile.in
-diff --git a/src/libtirpc.map b/src/libtirpc.map.in
-similarity index 84%
-rename from src/libtirpc.map
-rename to src/libtirpc.map.in
-index 21d6065..6cf563b 100644
---- a/src/libtirpc.map
-+++ b/src/libtirpc.map.in
-@@ -34,16 +34,10 @@ TIRPC_0.3.0 {
-     _svcauth_none;
-     _svcauth_short;
-     _svcauth_unix;
--    _svcauth_gss;
- 
-     # a*
-     authdes_create;
-     authdes_seccreate;
--    authgss_create;
--    authgss_create_default;
--    authgss_free_private_data;
--    authgss_get_private_data;
--    authgss_service;
-     authnone_create;
-     authunix_create;
-     authunix_create_default;
-@@ -54,7 +48,6 @@ TIRPC_0.3.0 {
- 
-     # c*
-     callrpc;
--    cbc_crypt;
-     clnt_broadcast;
-     clnt_create;
-     clnt_create_timed;
-@@ -79,10 +72,8 @@ TIRPC_0.3.0 {
-     clntunix_create;
- 
-     # e*
--    ecb_crypt;
-     endnetconfig;
-     endnetpath;
--    endrpcent;
- 
-     # f*
-     freenetconfigent;
-@@ -92,13 +83,7 @@ TIRPC_0.3.0 {
-     getnetconfig;
-     getnetconfigent;
-     getnetpath;
--    getrpcent;
--    getrpcbynumber;
--    getrpcbyname;
-     getrpcport;
--    gss_log_debug;
--    gss_log_hexdump;
--    gss_log_status;
- 
-     # n*
-     nc_perror;
-@@ -118,21 +103,6 @@ TIRPC_0.3.0 {
-     rpc_call;
-     rpc_control;
-     rpc_createerr;
--    rpc_gss_get_error;
--    rpc_gss_get_mech_info;
--    rpc_gss_get_mechanisms;
--    rpc_gss_get_principal_name;
--    rpc_gss_get_versions;
--    rpc_gss_getcred;
--    rpc_gss_is_installed;
--    rpc_gss_max_data_length;
--    rpc_gss_mech_to_oid;
--    rpc_gss_qop_to_num;
--    rpc_gss_seccreate;
--    rpc_gss_set_callback;
--    rpc_gss_set_defaults;
--    rpc_gss_set_svc_name;
--    rpc_gss_svc_max_data_length;
-     rpc_nullproc;
-     rpc_reg;
-     rpcb_getaddr;
-@@ -147,7 +117,6 @@ TIRPC_0.3.0 {
-     # s*
-     setnetconfig;
-     setnetpath;
--    setrpcent;
-     svc_auth_reg;
-     svc_create;
-     svc_dg_create;
-@@ -194,8 +163,6 @@ TIRPC_0.3.0 {
-     # x*
-     xdr_accepted_reply;
-     xdr_array;
--    xdr_authdes_cred;
--    xdr_authdes_verf;
-     xdr_authunix_parms;
-     xdr_bool;
-     xdr_bytes;
-@@ -228,10 +195,6 @@ TIRPC_0.3.0 {
-     xdr_replymsg;
-     xdr_rmtcall_args;
-     xdr_rmtcallres;
--    xdr_rpc_gss_cred;
--    xdr_rpc_gss_data;
--    xdr_rpc_gss_init_args;
--    xdr_rpc_gss_init_res;
-     xdr_rpcb;
-     xdr_rpcb_entry;
-     xdr_rpcb_entry_list_ptr;
-@@ -275,14 +238,20 @@ TIRPC_0.3.0 {
-     xdrstdio_create;
-     xprt_register;
-     xprt_unregister;
-+    # GSS-API symbols (conditionally included)
-+@GSS_SYMBOLS@
-+    # DES crypto symbols (conditionally included)
-+@DES_SYMBOLS@
-+    # RPC database symbols (conditionally included)
-+@RPCDB_SYMBOLS@
- 
-   local:
-     *;
- };
- 
- TIRPC_0.3.1 {
--    svcauth_gss_get_principal;
--    svcauth_gss_set_svc_name;
-+# GSS-API symbols (conditionally included)
-+@GSS_SYMBOLS_031@
- } TIRPC_0.3.0;
- 
- TIRPC_0.3.2 {
-@@ -290,7 +259,6 @@ TIRPC_0.3.2 {
-     getpublicandprivatekey;
-     getpublickey;
-     host2netname;
--    key_call_destroy;
-     key_decryptsession;
-     key_decryptsession_pk;
-     key_encryptsession;
 
