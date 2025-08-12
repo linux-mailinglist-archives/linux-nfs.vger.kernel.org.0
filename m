@@ -1,53 +1,74 @@
-Return-Path: <linux-nfs+bounces-13568-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13600-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C34BB21691
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 22:35:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67251B23C84
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 01:53:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 360F217B5AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Aug 2025 20:35:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DF362A8140
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 23:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB2752DBF5E;
-	Mon, 11 Aug 2025 20:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAD1dniE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1312E266D;
+	Tue, 12 Aug 2025 23:53:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813B226AA91;
-	Mon, 11 Aug 2025 20:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D46B2DAFCE;
+	Tue, 12 Aug 2025 23:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754944542; cv=none; b=GjaidN2k5sCNOYWC26EbYzap+GYHhvEix7P2R5vZhxri1dWyqFWxtsk7FcZWHsKbY4OP3raY/XT1ZdPtWtosGEehIn9FO5JhRTXfhx57TVcddqo6pT1T6b37VAXhEJvrkHbFut856k0v0isuAh/bEEEn+JlnVzuKsyG6IGWuCF0=
+	t=1755042784; cv=none; b=qaD+ynXvSLH3xtSxD0AEqeyO/GzZDmpIPFvgh64IUR86OXISxzaXxxJkUnFLoFC3UNxCdBxeYfiClfrCnGxjRKw6ISULmcsEUBWDxtdRM6ubXAoyj67nVS9hdvnAmrAz2kgfPhGcvHfhbfmtV/+CBCNCdUZrExu96/nIq9mts/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754944542; c=relaxed/simple;
-	bh=+wrMYAXVu57IfOqOJCw3l6xiG+9Ojk+54cYW2ocE7xI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Or91+eXUyD+b50PaNzh3/QqJ1qgcC7LuJydywhgta9s3a8nSZg+naWvyBrXaCoYZEVunuMoMoAc3GUaQgNKtI4NOoVXCUeTmpTOlNst/mJ34MPhQi2XvHxtLT9x+O0XdU5VldxPFkbMAXusQf8zyXvwU4O4FErbexxpP0Pb1qSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAD1dniE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96938C4CEED;
-	Mon, 11 Aug 2025 20:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754944542;
-	bh=+wrMYAXVu57IfOqOJCw3l6xiG+9Ojk+54cYW2ocE7xI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QAD1dniE3qoch5CSZRfhgKeKO4F8ASLPz/z3sM5yUIGwFyWxtbPrc/vDOnfUxoFbe
-	 czcCHsvNwCVfvCGv661Dmttl7te/nbZCu7WXcLY7z4B/i7gcir5lYmYhT979+an4uM
-	 F7KEsF5xDt3Hd7Qk8a5e2CzqTXO70GQn6BMeJ1gza+Mj6lNt/2fnP24s3vvGHt+yiU
-	 Pb4ZrKpx+hqWa2qwtNRQEDX+r5hWL/WOfoLJPkSCagwCPS5TO8MVoFeM8zbEpmKFCH
-	 48ZZq9wOv/WWZgS+rQZm1HTOpEmqyos5OqiGaAmLqdoz/uPZe+h7i5mx3bmdVDE1Ux
-	 s+lMOUtggRj5g==
-From: Chuck Lever <cel@kernel.org>
-To: <linux-nfs@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH v2] svcrdma: Introduce Receive buffer arenas
-Date: Mon, 11 Aug 2025 16:35:39 -0400
-Message-ID: <20250811203539.1702-1-cel@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1755042784; c=relaxed/simple;
+	bh=gn54IA1/q/Cn2j1DUaCUAMg4l43QdpVX0r604C6RKaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sCDw1VF2S9Abc2JQPlRxAHaZtQqIS8HoQm2Iav8kVbIFb4Ssio3zWCX1WvMMGEfRgj4/mHt5qJDVMhbKJtzzXTqulEjLs2e9a5/aaOPgggn7A0r7grVEbmbNDd5UOXFUHTWpd+rZJudamba+eYGim4VhUA/rVciF8KDX5IG5ubw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1ulynI-005Y1s-6o;
+	Tue, 12 Aug 2025 23:52:41 +0000
+From: NeilBrown <neil@brown.name>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Steve French <sfrench@samba.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-afs@lists.infradead.org,
+	netfs@lists.linux.dev,
+	ceph-devel@vger.kernel.org,
+	ecryptfs@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-nfs@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] VFS: prepare for changes to directory locking
+Date: Tue, 12 Aug 2025 12:25:03 +1000
+Message-ID: <20250812235228.3072318-1-neil@brown.name>
+X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,549 +77,118 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+This is the first of 3 sets of patches which, together, allow
+filesystems to opt-out of having the directory inode lock held over
+directory operations (except readdir).
+- This set creates some new APIs in the VFS and makes a few changes in
+  callers either because they are trivial (patch 08) or because they
+  involve a flag-day change (patches 06, 07, and 09).
+- The second set rolls the new APIs out to all non-VFS code which 
+  invokes directory operations.
+- The third (which isn't yet bug-free) changes the implementation
+  of these APIs to make the use of inode_lock() optional.
 
-Reduce the per-connection footprint in the host's and RNIC's memory
-management TLBs by combining groups of a connection's Receive
-buffers into fewer IOVAs.
+I imagine these three set landing in three different merge windows,
+though some of the second set could get in the same window as the first.
 
-I don't have a good way to measure whether this approach is
-effective.
+The patches are listed below and are available at 
+   https://github.com/neilbrown/linux
+in branch pdirops.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_rdma.h         |   3 +
- include/trace/events/rpcrdma.h          |  99 +++++++++++
- net/sunrpc/xprtrdma/Makefile            |   2 +-
- net/sunrpc/xprtrdma/pool.c              | 223 ++++++++++++++++++++++++
- net/sunrpc/xprtrdma/pool.h              |  25 +++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  43 ++---
- 6 files changed, 370 insertions(+), 25 deletions(-)
- create mode 100644 net/sunrpc/xprtrdma/pool.c
- create mode 100644 net/sunrpc/xprtrdma/pool.h
+This first set adds and updates APIs with three particular goals:
+1/ centralising all lookup and locking for directory ops.  This
+  includes a variety of dentry_lookup() calls with done_dentry_lookup(),
+  and rename_lookup() with done_rename_lookup().
+2/ Removing the use of d_drop() during a directory operation (it is
+   OK for d_drop to happen at the end).  As the goal is for locks
+   to be based on the dentry, a dropped dentry will no longer protect the name.
+   The only change in this patch set is 08 which changes d_splice_alias()
+   and d_add() to not require a preceding d_drop(), and then removes
+   the unnecessary d_drop()s.
+3/ No blocking in d_alloc_parallel() within readdir() (iterate_shared()) requests.
+   We will need to invert the ordering between d_alloc_parallel() and
+   inode_lock(), so blocking in d_alloc_parallel() to, e.g., prime the
+   dcache during readdir must be avoided.  The last patch introduces
+   new interfaces that can be used instead and explains them.
+   Patches 9 and 10 prepare for this.
 
-Changes since v1:
-- Rename "chunks" to "shards" -- RPC/RDMA already has chunks
-- Replace pool's list of shards with an xarray
-- Implement bitmap-based shard free space management
-- Implement some naive observability
+Please review and consider for 6.18.
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 22704c2e5b9b..b4f3c01f1b94 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -73,6 +73,8 @@ extern struct percpu_counter svcrdma_stat_recv;
- extern struct percpu_counter svcrdma_stat_sq_starve;
- extern struct percpu_counter svcrdma_stat_write;
- 
-+struct rpcrdma_pool;
-+
- struct svcxprt_rdma {
- 	struct svc_xprt      sc_xprt;		/* SVC transport structure */
- 	struct rdma_cm_id    *sc_cm_id;		/* RDMA connection id */
-@@ -112,6 +114,7 @@ struct svcxprt_rdma {
- 	unsigned long	     sc_flags;
- 	struct work_struct   sc_work;
- 
-+	struct rpcrdma_pool  *sc_recv_pool;
- 	struct llist_head    sc_recv_ctxts;
- 
- 	atomic_t	     sc_completion_ids;
-diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index e6a72646c507..8bc713082c1a 100644
---- a/include/trace/events/rpcrdma.h
-+++ b/include/trace/events/rpcrdma.h
-@@ -2336,6 +2336,105 @@ DECLARE_EVENT_CLASS(rpcrdma_client_register_class,
- DEFINE_CLIENT_REGISTER_EVENT(rpcrdma_client_register);
- DEFINE_CLIENT_REGISTER_EVENT(rpcrdma_client_unregister);
- 
-+TRACE_EVENT(rpcrdma_pool_create,
-+	TP_PROTO(
-+		unsigned int poolid,
-+		size_t bufsize
-+	),
-+
-+	TP_ARGS(poolid, bufsize),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, poolid)
-+		__field(size_t, bufsize)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->poolid = poolid;
-+		__entry->bufsize = bufsize;
-+	),
-+
-+	TP_printk("poolid=%u bufsize=%zu bytes",
-+		__entry->poolid, __entry->bufsize
-+	)
-+);
-+
-+TRACE_EVENT(rpcrdma_pool_destroy,
-+	TP_PROTO(
-+		unsigned int poolid
-+	),
-+
-+	TP_ARGS(poolid),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, poolid)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->poolid = poolid;),
-+
-+	TP_printk("poolid=%u",
-+		__entry->poolid
-+	)
-+);
-+
-+DECLARE_EVENT_CLASS(rpcrdma_pool_shard_class,
-+	TP_PROTO(
-+		unsigned int poolid,
-+		u32 shardid
-+	),
-+
-+	TP_ARGS(poolid, shardid),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, poolid)
-+		__field(u32, shardid)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->poolid = poolid;
-+		__entry->shardid = shardid;
-+	),
-+
-+	TP_printk("poolid=%u shardid=%u",
-+		__entry->poolid, __entry->shardid
-+	)
-+);
-+
-+#define DEFINE_RPCRDMA_POOL_SHARD_EVENT(name)				\
-+	DEFINE_EVENT(rpcrdma_pool_shard_class, name,			\
-+	TP_PROTO(							\
-+		unsigned int poolid,					\
-+		u32 shardid						\
-+	),								\
-+	TP_ARGS(poolid, shardid))
-+
-+DEFINE_RPCRDMA_POOL_SHARD_EVENT(rpcrdma_pool_shard_new);
-+DEFINE_RPCRDMA_POOL_SHARD_EVENT(rpcrdma_pool_shard_free);
-+
-+TRACE_EVENT(rpcrdma_pool_buffer,
-+	TP_PROTO(
-+		unsigned int poolid,
-+		const void *buffer
-+	),
-+
-+	TP_ARGS(poolid, buffer),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, poolid)
-+		__field(const void *, buffer)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->poolid = poolid;
-+		__entry->buffer = buffer;
-+	),
-+
-+	TP_printk("poolid=%u buffer=%p",
-+		__entry->poolid, __entry->buffer
-+	)
-+);
-+
- #endif /* _TRACE_RPCRDMA_H */
- 
- #include <trace/define_trace.h>
-diff --git a/net/sunrpc/xprtrdma/Makefile b/net/sunrpc/xprtrdma/Makefile
-index 3232aa23cdb4..f69456dffe87 100644
---- a/net/sunrpc/xprtrdma/Makefile
-+++ b/net/sunrpc/xprtrdma/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_SUNRPC_XPRT_RDMA) += rpcrdma.o
- 
--rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o \
-+rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o pool.o \
- 	svc_rdma.o svc_rdma_backchannel.o svc_rdma_transport.o \
- 	svc_rdma_sendto.o svc_rdma_recvfrom.o svc_rdma_rw.o \
- 	svc_rdma_pcl.o module.o
-diff --git a/net/sunrpc/xprtrdma/pool.c b/net/sunrpc/xprtrdma/pool.c
-new file mode 100644
-index 000000000000..e285c3e9c38e
---- /dev/null
-+++ b/net/sunrpc/xprtrdma/pool.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates.
-+ *
-+ * Pools for RPC-over-RDMA Receive buffers.
-+ *
-+ * A buffer pool attempts to conserve both the number of DMA mappings
-+ * and the device's IOVA space by collecting small buffers together
-+ * into a shard that has a single DMA mapping.
-+ *
-+ * API Contract:
-+ *  - Buffers contained in one rpcrdma_pool instance are the same
-+ *    size (rp_bufsize), no larger than RPCRDMA_MAX_INLINE_THRESH
-+ *  - Buffers in one rpcrdma_pool instance are mapped using the same
-+ *    DMA direction
-+ *  - Buffers in one rpcrdma_pool instance are automatically released
-+ *    when the instance is destroyed
-+ *
-+ * Future work:
-+ *   - Manage pool resources by reference count
-+ */
-+
-+#include <linux/list.h>
-+#include <linux/xarray.h>
-+#include <linux/sunrpc/svc_rdma.h>
-+
-+#include <rdma/ib_verbs.h>
-+
-+#include "xprt_rdma.h"
-+#include "pool.h"
-+
-+#include <trace/events/rpcrdma.h>
-+
-+/*
-+ * An idr would give near perfect pool ID uniqueness, but for
-+ * the moment the pool ID is used only for observability, not
-+ * correctness.
-+ */
-+static atomic_t rpcrdma_pool_id;
-+
-+struct rpcrdma_pool {
-+	struct xarray		rp_xa;
-+	struct ib_device	*rp_device;
-+	size_t			rp_shardsize;	// in bytes
-+	size_t			rp_bufsize;	// in bytes
-+	enum dma_data_direction	rp_direction;
-+	unsigned int		rp_bufs_per_shard;
-+	unsigned int		rp_pool_id;
-+};
-+
-+struct rpcrdma_pool_shard {
-+	u8			*pc_cpu_addr;
-+	u64			pc_mapped_addr;
-+	unsigned long		*pc_bitmap;
-+};
-+
-+static struct rpcrdma_pool_shard *
-+rpcrdma_pool_shard_alloc(struct rpcrdma_pool *pool, gfp_t flags)
-+{
-+	struct rpcrdma_pool_shard *shard;
-+	size_t bmap_size;
-+
-+	shard = kmalloc(sizeof(*shard), flags);
-+	if (!shard)
-+		goto fail;
-+
-+	bmap_size = BITS_TO_LONGS(pool->rp_bufs_per_shard) * sizeof(unsigned long);
-+	shard->pc_bitmap = kzalloc(bmap_size, flags);
-+	if (!shard->pc_bitmap)
-+		goto free_shard;
-+
-+	/*
-+	 * For good NUMA awareness, allocate the shard's I/O buffer
-+	 * on the NUMA node that the underlying device is affined to.
-+	 */
-+	shard->pc_cpu_addr = kmalloc_node(pool->rp_shardsize, flags,
-+					  ibdev_to_node(pool->rp_device));
-+	if (!shard->pc_cpu_addr)
-+		goto free_bitmap;
-+	shard->pc_mapped_addr = ib_dma_map_single(pool->rp_device,
-+						  shard->pc_cpu_addr,
-+						  pool->rp_shardsize,
-+						  pool->rp_direction);
-+	if (ib_dma_mapping_error(pool->rp_device, shard->pc_mapped_addr))
-+		goto free_iobuf;
-+
-+	return shard;
-+
-+free_iobuf:
-+	kfree(shard->pc_cpu_addr);
-+free_bitmap:
-+	kfree(shard->pc_bitmap);
-+free_shard:
-+	kfree(shard);
-+fail:
-+	return NULL;
-+}
-+
-+static void
-+rpcrdma_pool_shard_free(struct rpcrdma_pool *pool,
-+			struct rpcrdma_pool_shard *shard)
-+{
-+	ib_dma_unmap_single(pool->rp_device, shard->pc_mapped_addr,
-+			    pool->rp_shardsize, pool->rp_direction);
-+	kfree(shard->pc_cpu_addr);
-+	kfree(shard->pc_bitmap);
-+	kfree(shard);
-+}
-+
-+/**
-+ * rpcrdma_pool_create - Allocate and initialize an rpcrdma_pool instance
-+ * @args: pool creation arguments
-+ * @flags: GFP flags used during pool creation
-+ *
-+ * Returns a pointer to an opaque rpcrdma_pool instance or
-+ * NULL. If a pool instance is returned, caller must free the
-+ * returned instance using rpcrdma_pool_destroy().
-+ */
-+struct rpcrdma_pool *
-+rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags)
-+{
-+	struct rpcrdma_pool *pool;
-+
-+	pool = kmalloc(sizeof(*pool), flags);
-+	if (!pool)
-+		return NULL;
-+
-+	xa_init_flags(&pool->rp_xa, XA_FLAGS_ALLOC);
-+	pool->rp_device = args->pa_device;
-+	pool->rp_shardsize = RPCRDMA_MAX_INLINE_THRESH;
-+	pool->rp_bufsize = args->pa_bufsize;
-+	pool->rp_direction = args->pa_direction;
-+	pool->rp_bufs_per_shard = pool->rp_shardsize / pool->rp_bufsize;
-+	pool->rp_pool_id = atomic_inc_return(&rpcrdma_pool_id);
-+
-+	trace_rpcrdma_pool_create(pool->rp_pool_id, pool->rp_bufsize);
-+	return pool;
-+}
-+
-+/**
-+ * rpcrdma_pool_destroy - Release resources owned by @pool
-+ * @pool: buffer pool instance that will no longer be used
-+ *
-+ * This call releases all buffers in @pool that were allocated
-+ * via rpcrdma_pool_buffer_alloc().
-+ */
-+void
-+rpcrdma_pool_destroy(struct rpcrdma_pool *pool)
-+{
-+	struct rpcrdma_pool_shard *shard;
-+	unsigned long index;
-+
-+	trace_rpcrdma_pool_destroy(pool->rp_pool_id);
-+
-+	xa_for_each(&pool->rp_xa, index, shard) {
-+		trace_rpcrdma_pool_shard_free(pool->rp_pool_id, index);
-+		xa_erase(&pool->rp_xa, index);
-+		rpcrdma_pool_shard_free(pool, shard);
-+	}
-+
-+	xa_destroy(&pool->rp_xa);
-+	kfree(pool);
-+}
-+
-+/**
-+ * rpcrdma_pool_buffer_alloc - Allocate a buffer from @pool
-+ * @pool: buffer pool from which to allocate the buffer
-+ * @flags: GFP flags used during this allocation
-+ * @cpu_addr: CPU address of the buffer
-+ * @mapped_addr: mapped address of the buffer
-+ *
-+ * Return values:
-+ *   %true: @cpu_addr and @mapped_addr are filled in with a DMA-mapped buffer
-+ *   %false: No buffer is available
-+ *
-+ * When rpcrdma_pool_buffer_alloc() is successful, the returned
-+ * buffer is freed automatically when the buffer pool is released
-+ * by rpcrdma_pool_destroy().
-+ */
-+bool
-+rpcrdma_pool_buffer_alloc(struct rpcrdma_pool *pool, gfp_t flags,
-+			  void **cpu_addr, u64 *mapped_addr)
-+{
-+	struct rpcrdma_pool_shard *shard;
-+	u64 returned_mapped_addr;
-+	void *returned_cpu_addr;
-+	unsigned long index;
-+	u32 id;
-+
-+	xa_for_each(&pool->rp_xa, index, shard) {
-+		unsigned int i;
-+
-+		returned_cpu_addr = shard->pc_cpu_addr;
-+		returned_mapped_addr = shard->pc_mapped_addr;
-+		for (i = 0; i < pool->rp_bufs_per_shard; i++) {
-+			if (!test_and_set_bit(i, shard->pc_bitmap)) {
-+				returned_cpu_addr += i * pool->rp_bufsize;
-+				returned_mapped_addr += i * pool->rp_bufsize;
-+				goto out;
-+			}
-+		}
-+	}
-+
-+	shard = rpcrdma_pool_shard_alloc(pool, flags);
-+	if (!shard)
-+		return false;
-+	set_bit(0, shard->pc_bitmap);
-+	returned_cpu_addr = shard->pc_cpu_addr;
-+	returned_mapped_addr = shard->pc_mapped_addr;
-+
-+	if (xa_alloc(&pool->rp_xa, &id, shard, xa_limit_16b, flags) != 0) {
-+		rpcrdma_pool_shard_free(pool, shard);
-+		return false;
-+	}
-+	trace_rpcrdma_pool_shard_new(pool->rp_pool_id, id);
-+
-+out:
-+	*cpu_addr = returned_cpu_addr;
-+	*mapped_addr = returned_mapped_addr;
-+
-+	trace_rpcrdma_pool_buffer(pool->rp_pool_id, returned_cpu_addr);
-+	return true;
-+}
-diff --git a/net/sunrpc/xprtrdma/pool.h b/net/sunrpc/xprtrdma/pool.h
-new file mode 100644
-index 000000000000..214f8fe78b9a
---- /dev/null
-+++ b/net/sunrpc/xprtrdma/pool.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2025, Oracle and/or its affiliates.
-+ *
-+ * Pools for Send and Receive buffers.
-+ */
-+
-+#ifndef RPCRDMA_POOL_H
-+#define RPCRDMA_POOL_H
-+
-+struct rpcrdma_pool_args {
-+	struct ib_device	*pa_device;
-+	size_t			pa_bufsize;
-+	enum dma_data_direction	pa_direction;
-+};
-+
-+struct rpcrdma_pool;
-+
-+struct rpcrdma_pool *
-+rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags);
-+void rpcrdma_pool_destroy(struct rpcrdma_pool *pool);
-+bool rpcrdma_pool_buffer_alloc(struct rpcrdma_pool *pool, gfp_t flags,
-+			       void **cpu_addr, u64 *mapped_addr);
-+
-+#endif /* RPCRDMA_POOL_H */
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index e7e4a39ca6c6..f625f1ede434 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -104,9 +104,9 @@
- #include <linux/sunrpc/svc_rdma.h>
- 
- #include "xprt_rdma.h"
--#include <trace/events/rpcrdma.h>
-+#include "pool.h"
- 
--static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
-+#include <trace/events/rpcrdma.h>
- 
- static inline struct svc_rdma_recv_ctxt *
- svc_rdma_next_recv_ctxt(struct list_head *list)
-@@ -115,14 +115,14 @@ svc_rdma_next_recv_ctxt(struct list_head *list)
- 					rc_list);
- }
- 
-+static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
-+
- static struct svc_rdma_recv_ctxt *
- svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
- {
- 	int node = ibdev_to_node(rdma->sc_cm_id->device);
- 	struct svc_rdma_recv_ctxt *ctxt;
- 	unsigned long pages;
--	dma_addr_t addr;
--	void *buffer;
- 
- 	pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
- 	ctxt = kzalloc_node(struct_size(ctxt, rc_pages, pages),
-@@ -130,13 +130,11 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
- 	if (!ctxt)
- 		goto fail0;
- 	ctxt->rc_maxpages = pages;
--	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
--	if (!buffer)
-+
-+	if (!rpcrdma_pool_buffer_alloc(rdma->sc_recv_pool, GFP_KERNEL,
-+				       &ctxt->rc_recv_buf,
-+				       &ctxt->rc_recv_sge.addr))
- 		goto fail1;
--	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
--				 rdma->sc_max_req_size, DMA_FROM_DEVICE);
--	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
--		goto fail2;
- 
- 	svc_rdma_recv_cid_init(rdma, &ctxt->rc_cid);
- 	pcl_init(&ctxt->rc_call_pcl);
-@@ -149,30 +147,17 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
- 	ctxt->rc_recv_wr.sg_list = &ctxt->rc_recv_sge;
- 	ctxt->rc_recv_wr.num_sge = 1;
- 	ctxt->rc_cqe.done = svc_rdma_wc_receive;
--	ctxt->rc_recv_sge.addr = addr;
- 	ctxt->rc_recv_sge.length = rdma->sc_max_req_size;
- 	ctxt->rc_recv_sge.lkey = rdma->sc_pd->local_dma_lkey;
--	ctxt->rc_recv_buf = buffer;
- 	svc_rdma_cc_init(rdma, &ctxt->rc_cc);
- 	return ctxt;
- 
--fail2:
--	kfree(buffer);
- fail1:
- 	kfree(ctxt);
- fail0:
- 	return NULL;
- }
- 
--static void svc_rdma_recv_ctxt_destroy(struct svcxprt_rdma *rdma,
--				       struct svc_rdma_recv_ctxt *ctxt)
--{
--	ib_dma_unmap_single(rdma->sc_pd->device, ctxt->rc_recv_sge.addr,
--			    ctxt->rc_recv_sge.length, DMA_FROM_DEVICE);
--	kfree(ctxt->rc_recv_buf);
--	kfree(ctxt);
--}
--
- /**
-  * svc_rdma_recv_ctxts_destroy - Release all recv_ctxt's for an xprt
-  * @rdma: svcxprt_rdma being torn down
-@@ -185,8 +170,9 @@ void svc_rdma_recv_ctxts_destroy(struct svcxprt_rdma *rdma)
- 
- 	while ((node = llist_del_first(&rdma->sc_recv_ctxts))) {
- 		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
--		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
-+		kfree(ctxt);
- 	}
-+	rpcrdma_pool_destroy(rdma->sc_recv_pool);
- }
- 
- /**
-@@ -305,8 +291,17 @@ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
-  */
- bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma)
- {
-+	struct rpcrdma_pool_args args = {
-+		.pa_device	= rdma->sc_cm_id->device,
-+		.pa_bufsize	= rdma->sc_max_req_size,
-+		.pa_direction	= DMA_FROM_DEVICE,
-+	};
- 	unsigned int total;
- 
-+	rdma->sc_recv_pool = rpcrdma_pool_create(&args, GFP_KERNEL);
-+	if (!rdma->sc_recv_pool)
-+		return false;
-+
- 	/* For each credit, allocate enough recv_ctxts for one
- 	 * posted Receive and one RPC in process.
- 	 */
--- 
-2.50.0
+Thanks,
+NeilBrown
+
+ [PATCH 01/11] VFS: discard err2 in filename_create()
+ [PATCH 02/11] VFS: introduce dentry_lookup() and friends
+ [PATCH 03/11] VFS: add dentry_lookup_killable()
+ [PATCH 04/11] VFS: introduce dentry_lookup_continue()
+ [PATCH 05/11] VFS: add rename_lookup()
+ [PATCH 06/11] VFS: unify old_mnt_idmap and new_mnt_idmap in
+ [PATCH 07/11] VFS: Change vfs_mkdir() to unlock on failure.
+ [PATCH 08/11] VFS: allow d_splice_alias() and d_add() to work on
+ [PATCH 09/11] VFS: use global wait-queue table for d_alloc_parallel()
+ [PATCH 10/11] VFS: use d_alloc_parallel() in lookup_one_qstr_excl().
+ [PATCH 11/11] VFS: introduce d_alloc_noblock() and d_alloc_locked()
+
+Future patches:
+
+set 2:
+ devtmpfs: use new dentry locking APIs
+ audit: use new dentry locking APIs
+ debugfs: use new dentry locking APIs.
+ binderfs: use new dentry locking APIs.
+ binfmt_misc: use new dentry locking APIs.
+ kernel/bpf: use new dentry locking APIs.
+ devpts: use new dentry locking APIs.
+ ipc/mqueue: use new dentry locking APIs.
+ s390/hypfs: use new dentry locking APIs.
+ security: use new dentry locking APIs.
+ tracefs: use new dentry locking APIs.
+
+ ecryptfs: use dentry_lookup_continue() in lock_parent()
+ ecryptfs: use rename_lookup()
+
+ fs/proc: Don't look root inode when creating "self" and "thread-self"
+ proc: use d_alloc_locked() and lock_lookup()
+
+ bcachefs: use new dentry locking APIs
+ exfat: use d_splice_alias(), don't d_drop()
+ coda: don't d_drop() early.
+ smb/server: use new dentry locking APIs.
+ nfsd: use new dentry locking APIs.
+ cachefiles: use new dentry locking APIs.
+ btrfs: use dentry_lookup_killable()
+ fuse: use new dentry locking APIs.
+ sunrpc/rpc_pipe: use new dentry locking APIs.
+ xfs: use new dentry locking APIs.
+
+ ovl: use is_subdir() for testing if one thing is a subdir of another
+ ovl: introduce ovl_upper_dentry_lookup() and use it.
+ ovl: switch from parent_lock() to dentry_lookup_continue() except for rename.
+ ovl: use dentry_lookup_killable() in ovl_check_whiteouts()
+ ovl: split ovl_tempname() out from ovl_lookup_temp().
+ ovl: Change ovl_lookup_temp() to use ovl_upper_dentry_lookup()
+ ovl: Change all rename code to use rename_lookup_noperm()
+ ovl: don't dget_parent() in ovl_lookup_real_one()
+ ovl: use new APIs in ovl_lookup_real_one()
+ ovl: use new dir apis in ovl_cache_update()
+
+ NFS: remove d_drop() from nfs_atomic_open()
+ nfs: use d_alloc_noblock() in silly-rename
+
+ afs: use d_splice_alias() in afs_vnode_new_inode()
+ afs: use d_time instead of d_fsdata
+ afs: don't unhash/rehash dentries during unlink/rename
+ AFS: use new dir access APIs.
+
+set 3:
+ VFS: make various namei.c functions static.
+ VFS: Remove lookup_one() and lookup_noperm()
+ VFS: Introduce S_DYING which warns that S_DEAD might follow.
+ VFS: lift d_alloc_parallel above inode_lock
+ VFS: provide alternative to s_vfs_rename_mutex
+ VFS: Add ability to exclusively lock a dentry
+ VFS: use new dentry locking for open/create/remove/rename
+ VFS: allow a filesystem to opt out of directory locking.
+ NFS: allow concurrent dir ops.
 
 
