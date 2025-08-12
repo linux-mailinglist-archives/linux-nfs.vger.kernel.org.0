@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-13572-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13573-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19192B21C10
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 06:19:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FF98B21CB8
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 07:07:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 271201A230BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 04:20:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10B834669CA
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 05:07:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56A5242930;
-	Tue, 12 Aug 2025 04:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9E11991D4;
+	Tue, 12 Aug 2025 05:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LesdMIdO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW8PpyTw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318061F09B3
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Aug 2025 04:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B7C1A23A0
+	for <linux-nfs@vger.kernel.org>; Tue, 12 Aug 2025 05:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754972393; cv=none; b=aV2gdYzTDd97AqJ0P7rSfdZTGVCM8JWLTEFU/FF7AR3Gma8LpIghURd/Lbywj/oH1SSQxuYiapZj88phx7oxg0Uk9p933Nh+2PVZPlSkCVSQNm74kR/8ytd3iZq6nunIX+6A8gXpjZWwSkRMsc/2GZg362CihORekOAw++IRdC4=
+	t=1754975248; cv=none; b=brCAc/xBfDjPEvsCv6mJcR/r5MqlGi0zaFxY28vrO34DC6Y8j5Xu2hsYW7RMfsWGbI+8WykGbhyEJmoqNZ562f8hzWn5Lkx74RFC/BKKDhuPlpF7XJQSCz8Ji7AvdO5HabnOD+YWjYgvxEk6nH3+0aao9RkmvzcLS6Ly+Ak+N+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754972393; c=relaxed/simple;
-	bh=3P9zUfxwp9CP/JN/diUDTm121QR6VqUpDL0bnNFX+lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lk0kI1bEKNTetRrCE1s0277+xC1oUoPm8dPnyKSaS4Liw/oBVZflxTK6ODQeIQ/OQbqiJOKUivXhMKoWmzHjcNtSWiOezc5cFytZ5UyGhUSEeK+i3KNGW4dqrOuDFU3FwujizyZiQ9okGAxgFY+a9L+lRiuqVYnRdbgDQ3Olg0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LesdMIdO; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1754975248; c=relaxed/simple;
+	bh=rVg2FtVDZPWczFl3POFf557wHJLFvgb9u7DraVSiaoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J5NL9/kgLXc4P0j7+/DJ8McbUaQo40TlFNVhuLr8144DrUs8pR2eDkxCfPksPlbybC+HNO9vuXesD3RWZ162+TnR0EiAe3UTJtBwcqOdNjavSHbFBGIZxAjlFYHpzDn3tSDvdgc+V/s6YQZ6bHnls/nDY6mcNZ1Lm1vDDDn2ry0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DW8PpyTw; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23ffdea3575so32743385ad.2
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Aug 2025 21:19:51 -0700 (PDT)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23ffa7b3b30so46853895ad.1
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Aug 2025 22:07:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754972391; x=1755577191; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754975246; x=1755580046; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yJEivR5X+ZkF/tFOdvGaWwQsCXUwbe7Sc3qIr/F1TT0=;
-        b=LesdMIdO2Y7tMyNnqy/P6R0zR1MneRQn82CGH24sb15j5v/qpotVAXUNP00b/Ecx8m
-         qzbWhmdcay8RnCE8jrB9s04TF6b1KydIsMeCNOfAb7DxFsSw1TVaZ/ZzBvMk5mNSPoKr
-         4VQIxZCParAkOwj7X0g514m+GKngr6qwdjzbZ4cs/wq7wwoQIG5TrAaVG3kgjq62sFc8
-         L7azLp63dJGEUAqRiPiZprBmlZlKNDwLnrFCJfINWv7HDlDiNOCU65fbJIxIg4Pp43xw
-         p+70iHgch7LHqp35UW7k8kQwNHpxBOsin1BKjra+aLbwELh6Ws4O6nLkbaVMfm6Zp4r4
-         094w==
+        bh=O9yjQnIWOwZSDxZg11uLNIMzLA1f7JIsD184DCpFF/0=;
+        b=DW8PpyTwnbCpb6REKpJY5HW+FUXpxVsCEeJJPHhq2afxqwu0kCnflAitbW9fR5/mHB
+         3HwQBuls2IqnaGMGEPReAyYJxFuPc6yaSeI9KfoOuobi9wv+GRwxwvH6N3NItFEUy4iz
+         pkc/4mAFalHeUOLoWRLbLWPgl/5SxgJo0uErbN2knpIyRfL8kB31jxmpEr0+sLWy0gt2
+         7RUHgcxtgHUWMCLFU9eMNxY2zU8pN74z2KyT4GHp3GqMpGCa/OHwDQVfdS8z2UUbEqMI
+         mRNqf4n7w6SoMsSBV7yepo7uwpHYQm8pAjWoLBAtfUE3riD/1c7R1LQrGaLobIlZ987h
+         Dv3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754972391; x=1755577191;
+        d=1e100.net; s=20230601; t=1754975246; x=1755580046;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yJEivR5X+ZkF/tFOdvGaWwQsCXUwbe7Sc3qIr/F1TT0=;
-        b=IhA6x0lrmgY5IUMqKAaZ3E+ImQgizedCprzemMPFjdeiQtHzulwOsWmUC4NA3I5o+6
-         Z6zFuJBsoiSa7WNU64ltsVwX0JtmT/yLWd2ttQ8qFsWE353gY0BBQZ2Ula+RDOMK4D6w
-         ylXFgalB3GHCsi0iFYaKrDzWIcSwLBBXlj6Nmg0fnmbHiQtg4XfTao+MfmNcXINBE1hm
-         YW6i2UST+NAlOZcV7ziWFB++Pw2xN21wmNuDtnxjt4aWpVzRBrB6KwBKZL38xSZJzVZX
-         du7CaoNjXK/C6a3kuOvJwCTOfPqc12MSfz7HHsV6rUOrB/C1f2IeiYi58DmV4HJ4C62V
-         eKQA==
-X-Gm-Message-State: AOJu0Ywt1CUPGxh7DJ+nbvzD+i6T166jZcmJ0brbNuUyGvLvoKmNY+ci
-	hS3CqdDKxMZnDjI/9QKYFwiwyTo3CQoBHELZtKHBZOCfsW7JxZZtSq7Q
-X-Gm-Gg: ASbGncunen5bOPx7Is/F4VGEP9agMKbuiXItxux3bY0f6QQ5Vl1Qxo6oahPjuq5IB9I
-	hLcTNu+6wNoaY9RGdDPzZd5Lr1Y1SA98ci15svt6iSuoUA1418Wf5SCDv4TydmYqmdXxJcGQ6Ft
-	XwFNkObpsD7jE4+72B6k8dTjaPahsFgecM9a+hTmry/PaXCqftEmzax9lqsDynBEfQpVsUjMapY
-	b3vr3ulu42NMoLkAx/smd7jlCKTBS6gVOvYww9s0+V0ItdlyYQWdRvK0A9OHVby3yPd6korKH4q
-	U7pa6J84EKNRQVqqdMSGZMhXAMTmVEPrg8YgRU6ZuI3O+v+YN/HKEcWOiFBFy/KH9qrD8GfZCKP
-	QvTL81ZJMdb/mMiclsaODXA==
-X-Google-Smtp-Source: AGHT+IHhBZI05sdLvlulxjTyQFvoFed1pkjRc7e5Johjn8cI0BzFOJVpDpLC4LNpTPF2OJ0pjD8rHQ==
-X-Received: by 2002:a17:903:3583:b0:240:3e73:6df with SMTP id d9443c01a7336-242c203d426mr178273885ad.14.1754972391202;
-        Mon, 11 Aug 2025 21:19:51 -0700 (PDT)
+        bh=O9yjQnIWOwZSDxZg11uLNIMzLA1f7JIsD184DCpFF/0=;
+        b=hSg7lrCNSzOYW3gJ38394GboIohKvNGL5MqE6klsaq3azAORWg2eFlLjZWtKIYGRU7
+         RKEnAN1+tlGo9rWqapIGp7Y+ObsNmniZ4JxDtFvgtV3OXXF+ms35n3RYTFpaapBmy2Ha
+         FUIX4EJwOC6uis7K6a30H/zyaV523W62jzFMgMxAfnUlcKDVNvJF8AV81+/F/jfIrQn6
+         WfGIgQM8bZn1xzDHgtj6Y0rUEClpMqGKKsK45MM5Y3fhN5A2hEtGqpeMSqXjR3naFuo+
+         LMZu+IhtU7vWl32EuDuvuSLPjOFqMPHpaVHehr8Ex142XIU1MC+oMredBB8ie0zGHAv8
+         mNHw==
+X-Gm-Message-State: AOJu0Yxv5hYd3vjpuSqr5VXcXQS4Sm3brAoFRIh62me0U0ST3BMKwV2e
+	tho23b196DJ7PoM1KCo6SzYQb64XjD+K1zwDhSR0CFptZ0mjHKZ/B00j
+X-Gm-Gg: ASbGnctW1p3hgMyt/ccv/ADMYntTEAwM6X0cMuaPv9d6HkZOM/h1zR6m/VuKdEj2Cr4
+	jZLRmeHAO9flhqAtA16mVMEcMKug+ZT10DRuUvt6NoLWp5rVpfjIi4cl9w17iApWIBWGZrECrRL
+	23Yp8PSoQ1V0vhQr+p8jNniROLCJiH/uS+HrjnDW9IDBXWE4dCn4FvaFXWdeTrxZZaLQRDddR1n
+	Q2REblXS0c1YnHhOy0NHJIhNLMhfi9nQVB+QdpMMahY3+WjnWBs4YmBgCG7JLURX4vvRec8sYQV
+	lf7JU6x9A/wzTIE4F5wSfejLFt8PWrVSNQpFbfxrXaeF3xBKVBsowPsZYVZXjckadX5v/VuQapo
+	xRzXZxDtHQY7We4pTx5S3v4gnYhpjHKRD
+X-Google-Smtp-Source: AGHT+IGjmeLhMlOd6n7wjCrLCP0HgBayGCqXfngAgtI6ABo9jEa70Q9dBnrvZbmzTZgpdXbdg5YQ9Q==
+X-Received: by 2002:a17:903:19cc:b0:242:a3fc:5900 with SMTP id d9443c01a7336-242c1ffce82mr202974935ad.8.1754975245705;
+        Mon, 11 Aug 2025 22:07:25 -0700 (PDT)
 Received: from apollo.tail3ccdd3.ts.net ([2601:646:8201:fd20::ee1b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1ef5970sm285414305ad.20.2025.08.11.21.19.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aabdedsm288266765ad.167.2025.08.11.22.07.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 21:19:50 -0700 (PDT)
+        Mon, 11 Aug 2025 22:07:25 -0700 (PDT)
 From: Khem Raj <raj.khem@gmail.com>
 To: libtirpc-devel@lists.sourceforge.net
 Cc: linux-nfs@vger.kernel.org,
 	Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] Add conditional version script support
-Date: Mon, 11 Aug 2025 21:19:44 -0700
-Message-ID: <20250812041944.2767074-1-raj.khem@gmail.com>
+Subject: [PATCH v2] Add conditional version script support
+Date: Mon, 11 Aug 2025 22:07:22 -0700
+Message-ID: <20250812050722.4033349-1-raj.khem@gmail.com>
 X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -104,10 +104,12 @@ Fixes linking errors when these features are not available.
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
+v2: Fix access to generated libtirpc.map when Srcdir != Builddir
+
  configure.ac                          | 50 +++++++++++++++++++++++++++
- src/Makefile.am                       | 21 +++++++++--
+ src/Makefile.am                       | 23 ++++++++++--
  src/{libtirpc.map => libtirpc.map.in} | 48 +++++--------------------
- 3 files changed, 77 insertions(+), 42 deletions(-)
+ 3 files changed, 78 insertions(+), 43 deletions(-)
  rename src/{libtirpc.map => libtirpc.map.in} (84%)
 
 diff --git a/configure.ac b/configure.ac
@@ -187,7 +189,7 @@ index e813b14..e8ff741 100644
 +])
  
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 0cef093..5f37254 100644
+index 0cef093..bae14ca 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
 @@ -6,6 +6,9 @@
@@ -221,6 +223,15 @@ index 0cef093..5f37254 100644
          getrpcport.c mt_misc.c pmap_clnt.c pmap_getmaps.c pmap_getport.c \
          pmap_prot.c pmap_prot2.c pmap_rmt.c rpc_prot.c rpc_commondata.c \
          rpc_callmsg.c rpc_generic.c rpc_soc.c rpcb_clnt.c rpcb_prot.c \
+@@ -34,7 +46,7 @@ endif
+ libtirpc_la_SOURCES += xdr.c xdr_rec.c xdr_array.c xdr_float.c xdr_mem.c xdr_reference.c xdr_stdio.c xdr_sizeof.c
+ 
+ if SYMVERS
+-    libtirpc_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libtirpc.map
++    libtirpc_la_LDFLAGS += -Wl,--version-script=$(builddir)/libtirpc.map
+ endif
+ 
+ ## Secure-RPC
 @@ -45,8 +57,13 @@ if GSS
      libtirpc_la_CFLAGS = -DHAVE_RPCSEC_GSS $(GSSAPI_CFLAGS)
  endif
