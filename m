@@ -1,67 +1,53 @@
-Return-Path: <linux-nfs+bounces-13593-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13594-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC8FB23ACC
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 23:38:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 309E2B23AD1
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 23:40:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D4733A3962
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 21:38:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 722671AA49CF
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 21:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E632F0661;
-	Tue, 12 Aug 2025 21:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B30F197A76;
+	Tue, 12 Aug 2025 21:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXdN8v4c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpCrMc1J"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D112D0618
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Aug 2025 21:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0058C7081F;
+	Tue, 12 Aug 2025 21:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755034711; cv=none; b=nw7WVdBxOThO+xAQ15dRIV3lmolsfiq6ac6N/BvTQv9SV7UH/l08rqZIU2I7SdfqAIBmeJdR8+RvU21892wTFM1yd8VUQ8FTmj9RijuYsCFkcg3SoqZTYJjnOAGeG8Hxg198jSQjuPxb7ex28eLGmVr8vu7KSoTPKJTS5gywgoo=
+	t=1755034815; cv=none; b=USm4Z9oToRf5NfSswgQoWSfI8Dgl+2PZ5E+GUTb0J3PBl686KNlq/mpcRTX1+2p39MKydAA3wOnNTeLyZGZ157Hv4szUhjDG4VauSEr77tjRJKCxF9sIx/jiE2dKQEP3gc84LrVyc991FaHsJeJ31z0OK1eyGFGrGLfOfMB2lEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755034711; c=relaxed/simple;
-	bh=zrcNdbqwFxasgEHpfjq7To71wBNAxo6gnEKahJ8pP+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=huhQ2QGbLrum2FQ3PD4mYNRAGF28VrTpL4VBI7lT2K1dHCA+jUhMQfZ8uuqsNz8OhWvvjd2s1cae68M8SISXhJH8muGmlE0rFkCqHqvq1r08TQ49RJSIqFZFhvBBNu2fyP2ZEiQaUf1Vjy/hhxfZqILvHmd8SjRGKLsL9aSRavE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SXdN8v4c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755034709;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oEuIZtwk5nlstzv/3AvGWbPy5sVy/y3wf4vmyz9yARI=;
-	b=SXdN8v4cs0NqbagY2SsrMR32mA87cxwPCiN64vFtk8Gb+wchk7JsfVq4S9dJ/SFEo9wQ/y
-	hhkBl78n9/GAX7FRspSR2nVkKtp150kuTCdCioXKYu6aC7w0xbGqdbdhax+FCtNdEjfqMT
-	v1v4VLL63G29BXRFQeesvff/cqAMwP0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-319-BIgW-_1pNkKxjyZr8rMyVQ-1; Tue,
- 12 Aug 2025 17:38:28 -0400
-X-MC-Unique: BIgW-_1pNkKxjyZr8rMyVQ-1
-X-Mimecast-MFC-AGG-ID: BIgW-_1pNkKxjyZr8rMyVQ_1755034707
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C53E195604F
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Aug 2025 21:38:27 +0000 (UTC)
-Received: from tbecker-thinkpadp16vgen1.rmtbr.csb (unknown [10.96.134.180])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D162219560AB;
-	Tue, 12 Aug 2025 21:38:25 +0000 (UTC)
-From: tbecker@redhat.com
-To: steved@redhat.com,
-	linux-nfs@vger.kernel.org
-Cc: Thiago Becker <tbecker@redhat.com>
-Subject: [PATCH] nfsrahead: modify get_device_info logic
-Date: Tue, 12 Aug 2025 18:38:22 -0300
-Message-ID: <20250812213822.403844-1-tbecker@redhat.com>
+	s=arc-20240116; t=1755034815; c=relaxed/simple;
+	bh=3YwlQnJDsBpYv33OodhCrSrkKD5WqZPDu5PY99TU3n4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h3+rjMdqpKi0iahNqzCXp6sLy22TRWXdJmIsjXLwL2IBwdDI4Mfk6mn5PGrevNlUeST2UyugTBD5OYPKk7F5ci0Hb9Ugu3fQmrou3ONwtr9v7aqJUcFnqRo6ooVqcGnJu0f4yDa7OCnYlKSs1cFTbic1Egm0plgDnwbRBTnNSAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpCrMc1J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F72C4CEF0;
+	Tue, 12 Aug 2025 21:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755034814;
+	bh=3YwlQnJDsBpYv33OodhCrSrkKD5WqZPDu5PY99TU3n4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CpCrMc1JMusph0aAsMpyTGFflmAA2O7aNGRwaRqlFzBiDQMowehqPn6V10Pj89iTh
+	 BFv1WuGLAcgDAVymKMuNefXDuPPHUhpCm5TJh/pN4BMHOAlFjH8ihgfGla6ZGOaGH9
+	 6kIGmwGL9Ovd497j4YTDhMzycx7cnQNh7iG97nXNM20nDq/icIjtmOPlS78MyL+0IL
+	 oz2cgjmSVUNMwgAe2x2tjmDvJmcwecgJ8tEtQQuW4xh36hK/d17HP2fWVV5Aw+gG65
+	 j2xRTVXSUbSMBw7z/6GPzKw3azVE7pgXcK9vFOJMYPjv7sKvoACmmtAYeMF5+48Feh
+	 rGa9F6OFhq3Rw==
+From: Trond Myklebust <trondmy@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	Mike Snitzer <snitzer@kernel.org>
+Subject: [PATCH v2 0/2] Initial NFS client support for RWF_DONTCACHE
+Date: Tue, 12 Aug 2025 14:40:05 -0700
+Message-ID: <cover.1755034536.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -69,67 +55,33 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: Thiago Becker <tbecker@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-There are a few reports of failures by nfsrahead to set the read ahead
-when the nfs mount information is not available when the udev event
-fires. This was alleviated by retrying to read mountinfo multiple times,
-but some cases where still failing to find the device information. To
-further alleviate this issue, this patch adds a 50ms delay between
-attempts. To not incur into unecessary delays, the logic in
-get_device_info is reworked.
+The following patch set attempts to add support for the RWF_DONTCACHE
+flag in preadv2() and pwritev2() on NFS filesystems.
 
-While we are in this, remove a second loop of reptitions of
-get_device_info.
+The main issue is allowing support on 2 stage writes (i.e. unstable
+WRITE followed by a COMMIT) since those don't follow the current
+assumption that the 'dropbehind' flag can be fulfilled as soon as the
+writeback lock is dropped.
 
-Signed-off-by: Thiago Becker <tbecker@redhat.com>
----
- tools/nfsrahead/main.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+v2:
+ - Make use of the new iocb parameter for nfs_write_begin()
 
-diff --git a/tools/nfsrahead/main.c b/tools/nfsrahead/main.c
-index 8a11cf1a..b7b889ff 100644
---- a/tools/nfsrahead/main.c
-+++ b/tools/nfsrahead/main.c
-@@ -117,9 +117,11 @@ out_free_device_info:
- 
- static int get_device_info(const char *device_number, struct device_info *device_info)
- {
--	int ret = ENOENT;
--	for (int retry_count = 0; retry_count < 10 && ret != 0; retry_count++)
-+	int ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-+	for (int retry_count = 0; retry_count < 5 && ret != 0; retry_count++) {
-+		usleep(50000);
- 		ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-+	}
- 
- 	return ret;
- }
-@@ -135,7 +137,7 @@ static int conf_get_readahead(const char *kind) {
- 
- int main(int argc, char **argv)
- {
--	int ret = 0, retry, opt;
-+	int ret = 0, opt;
- 	struct device_info device;
- 	unsigned int readahead = 128, log_level, log_stderr = 0;
- 
-@@ -163,11 +165,7 @@ int main(int argc, char **argv)
- 	if ((argc - optind) != 1)
- 		xlog_err("expected the device number of a BDI; is udev ok?");
- 
--	for (retry = 0; retry <= 10; retry++ )
--		if ((ret = get_device_info(argv[optind], &device)) == 0)
--			break;
--
--	if (ret != 0 || device.fstype == NULL) {
-+	if ((ret = get_device_info(argv[optind], &device)) != 0 || device.fstype == NULL) {
- 		xlog(D_GENERAL, "unable to find device %s\n", argv[optind]);
- 		goto out;
- 	}
+Trond Myklebust (2):
+  filemap: Add a helper for filesystems implementing dropbehind
+  NFS: Enable the RWF_DONTCACHE flag for the NFS client
+
+ fs/nfs/file.c            |  7 +++----
+ fs/nfs/nfs4file.c        |  2 ++
+ fs/nfs/write.c           | 12 +++++++++++-
+ include/linux/nfs_page.h |  1 +
+ include/linux/pagemap.h  |  1 +
+ mm/filemap.c             | 16 ++++++++++++++++
+ 6 files changed, 34 insertions(+), 5 deletions(-)
+
 -- 
-2.43.5
+2.50.1
 
 
