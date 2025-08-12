@@ -1,185 +1,117 @@
-Return-Path: <linux-nfs+bounces-13596-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13610-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A0E1B23AD3
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 23:40:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F68CB23CF3
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 02:05:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C60296E214D
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Aug 2025 21:40:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 234D617BAD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 00:05:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0BE2D7395;
-	Tue, 12 Aug 2025 21:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKrxnxaz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF10BA48;
+	Wed, 13 Aug 2025 00:04:56 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A342D738D;
-	Tue, 12 Aug 2025 21:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2610B2C0F87
+	for <linux-nfs@vger.kernel.org>; Wed, 13 Aug 2025 00:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755034816; cv=none; b=dp4v8oYApvWbSVC+IUIS7KXO/1x/jESlewQttE7ZH5LxaZBf5zDaxHVyuRm57t8ukBZApBdYRohS87LR5Y5csHHcFvl/nuOmKMqxVo8CmEkuC9vD+HUu3aibF0BKCghxCjN1xEe5mrdnEuqQdOfjJdpfM4zIVpx+qnpsy62JmkA=
+	t=1755043496; cv=none; b=YPwGA+45R9xrDN9cYtEzyd88ZMe0WwtybeXHnwWBFPxFTCF69O3IOyRK7wJuekCDFkeixIhjgK0psaEhnGOT+CDO2PX5BPT0N6EzcgTTr9U2GDJiBeZzPBgyNZqq9M0I2vqpYY6D99B9fgsWiHm3RjNcWfLT6hVlJlXvSGrZlO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755034816; c=relaxed/simple;
-	bh=8TW0eXZP92s+XC5I+VYEbzJtei48JcvXtRyPtrxqQic=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HMUsku/oU0Pv4utUUcFFxAcAiTm7xV8TpzsXZKpKFIL9ZbLqK+slvzwI+w3BWyMmMlssKvfJOT34n6r2zoE3GrWxlworM3gwWYxC2iM5uH12MYRz+EXrMlFcI79oMLlTxGeflanVJ/C2z/GZgTRwL6lLDoaNMlI6PSmOZs/5yQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKrxnxaz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C1DC4CEF8;
-	Tue, 12 Aug 2025 21:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755034815;
-	bh=8TW0eXZP92s+XC5I+VYEbzJtei48JcvXtRyPtrxqQic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tKrxnxazGoBOFlW1w70c6XEETb2O4UCgjZqea90Tw2zaQdZ13A3VJfWbbyM0sZID6
-	 +1HWAX37COoRPwqwQwVkrPoAOHDb14uCqDQeSbtR8J3HO+5NTVN6DJVs1AelNmaNu+
-	 TLDCPLq1jU06TAylJcwS/ZHT3J6KM9JRyqr3ifVCJnKytUz2UHeWsUtLIOkXIjJVJK
-	 auCB880pGWue3qjy81NUdG1lapv7yTHr1e81Oxl0A718WCQ1qqeu52GNlGGNpptUvo
-	 +uQqm7QJic2jhaCe2CWq+YdA3jdVal5HLKxFotWN9yXu5OIcPgzIEfRJMplfZBAciY
-	 X+99D/LXoFFyw==
-From: Trond Myklebust <trondmy@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: [PATCH v2 2/2] NFS: Enable the RWF_DONTCACHE flag for the NFS client
-Date: Tue, 12 Aug 2025 14:40:07 -0700
-Message-ID: <3100a108d35c0a79803a4ded1e93916150c350d7.1755034536.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1755034536.git.trond.myklebust@hammerspace.com>
-References: <cover.1755034536.git.trond.myklebust@hammerspace.com>
+	s=arc-20240116; t=1755043496; c=relaxed/simple;
+	bh=0JdL0dI2k+fxtGRDQICsRVfCWQgNKrUopN3GTPmaSDY=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=H8n71/zXhc67TICAkG3pyXYoYDMz1NDKgc64TKbhNYfjIG+EJwYZ4387Bc2j1m2s2HWp9NY/1jqtooC1SjUq2Hh13z25v/ZP+S3tKjcKydLyHOoCHOnSHqofwSJBQJUOJUHehKxGVNgKGuYLD25Z8kWyE1vYBg0S3OYYmoI7ofA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1ulyka-005Y13-LI;
+	Tue, 12 Aug 2025 23:49:54 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neil@brown.name>
+To: "Olga Kornievskaia" <okorniev@redhat.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org,
+ Dai.Ngo@oracle.com, tom@talpey.com
+Subject: Re: [PATCH v2 2/2] lockd: while grace prefer to fail with
+ nlm_lck_denied_grace_period
+In-reply-to: <20250812160317.25363-2-okorniev@redhat.com>
+References: <20250812160317.25363-1-okorniev@redhat.com>,
+ <20250812160317.25363-2-okorniev@redhat.com>
+Date: Wed, 13 Aug 2025 09:49:54 +1000
+Message-id: <175504259409.2234665.8366862194585275180@noble.neil.brown.name>
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, 13 Aug 2025, Olga Kornievskaia wrote:
+> When nfsd is in grace and receives an NLM LOCK request which turns
+> out to have a conflicting delegation, return that the server is in
+> grace.
+>=20
+> Reviewed-by: Jeff Layton <jlayton@redhat.com>
+> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> ---
+>  fs/lockd/svc4proc.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 109e5caae8c7..7ac4af5c9875 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -141,8 +141,19 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm=
+_res *resp)
+>  	resp->cookie =3D argp->cookie;
+> =20
+>  	/* Obtain client and file */
+> -	if ((resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
+> -		return resp->status =3D=3D nlm_drop_reply ? rpc_drop_reply :rpc_success;
+> +	resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &file);
+> +	switch (resp->status) {
+> +	case 0:
+> +		break;
+> +	case nlm_drop_reply:
+> +		if (locks_in_grace(SVC_NET(rqstp))) {
+> +			resp->status =3D nlm_lck_denied_grace_period;
 
-While the NFS readahead code has no problems using the generic code to
-manage the dropbehind behaviour enabled by RWF_DONTCACHE, the write code
-needs to deal with the fact that NFS writeback uses a 2 step process
-(UNSTABLE write followed by COMMIT).
-This commit replaces the use of the folio dropbehind flag with a local
-NFS request flag that triggers the dropbehind behaviour once the data
-has been written to stable storage.
+I think this is wrong.  If the lock request has the "reclaim" flag set,
+then nlm_lck_denied_grace_period is not a meaningful error.
+nlm4svc_retrieve_args() returns nlm_drop_reply when there is a delay
+getting a response to an upcall to mountd.  For NLM the request really
+must be dropped.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Link: https://lore.kernel.org/all/ec165b304a7b56d1fa4c6c2b1ad1c04d4dcbd3f6.1745381692.git.trond.myklebust@hammerspace.com/
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/file.c            |  7 +++----
- fs/nfs/nfs4file.c        |  2 ++
- fs/nfs/write.c           | 12 +++++++++++-
- include/linux/nfs_page.h |  1 +
- 4 files changed, 17 insertions(+), 5 deletions(-)
+At the very least we need to guard against the reclaim flag being set in
+the above test.  But I would much rather a more clear distinction were
+made between "drop because of a conflicting delegation" and "drop
+because of a delay getting upcall response".
+Maybe a new "nlm_conflicting_delegtion" return from ->fopen which nlm4
+(and ideally nlm2) handles appropriately.
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 86e36c630f09..fffb536bfcdd 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -348,7 +348,6 @@ static int nfs_write_begin(const struct kiocb *iocb,
- 			   loff_t pos, unsigned len, struct folio **foliop,
- 			   void **fsdata)
- {
--	fgf_t fgp = FGP_WRITEBEGIN;
- 	struct folio *folio;
- 	struct file *file = iocb->ki_filp;
- 	int once_thru = 0;
-@@ -357,10 +356,8 @@ static int nfs_write_begin(const struct kiocb *iocb,
- 	dfprintk(PAGECACHE, "NFS: write_begin(%pD2(%lu), %u@%lld)\n",
- 		file, mapping->host->i_ino, len, (long long) pos);
- 
--	fgp |= fgf_set_order(len);
- start:
--	folio = __filemap_get_folio(mapping, pos >> PAGE_SHIFT, fgp,
--				    mapping_gfp_mask(mapping));
-+	folio = write_begin_get_folio(iocb, mapping, pos >> PAGE_SHIFT, len);
- 	if (IS_ERR(folio))
- 		return PTR_ERR(folio);
- 	*foliop = folio;
-@@ -915,5 +912,7 @@ const struct file_operations nfs_file_operations = {
- 	.splice_write	= iter_file_splice_write,
- 	.check_flags	= nfs_check_flags,
- 	.setlease	= simple_nosetlease,
-+
-+	.fop_flags	= FOP_DONTCACHE,
- };
- EXPORT_SYMBOL_GPL(nfs_file_operations);
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 1d6b5f4230c9..70f6887ded0e 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -454,4 +454,6 @@ const struct file_operations nfs4_file_operations = {
- #else
- 	.llseek		= nfs_file_llseek,
- #endif
-+
-+	.fop_flags	= FOP_DONTCACHE,
- };
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index fa5c41d0989a..e6b1f69058cf 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -359,8 +359,12 @@ static void nfs_folio_end_writeback(struct folio *folio)
- static void nfs_page_end_writeback(struct nfs_page *req)
- {
- 	if (nfs_page_group_sync_on_bit(req, PG_WB_END)) {
-+		struct folio *folio = nfs_page_to_folio(req);
-+
-+		if (folio_test_clear_dropbehind(folio))
-+			set_bit(PG_DROPBEHIND, &req->wb_flags);
- 		nfs_unlock_request(req);
--		nfs_folio_end_writeback(nfs_page_to_folio(req));
-+		nfs_folio_end_writeback(folio);
- 	} else
- 		nfs_unlock_request(req);
- }
-@@ -797,6 +801,9 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 			clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
- 		}
- 		spin_unlock(&mapping->i_private_lock);
-+
-+		if (test_bit(PG_DROPBEHIND, &req->wb_flags))
-+			folio_end_dropbehind(folio);
- 	}
- 
- 	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
-@@ -2077,6 +2084,7 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 		.range_start = range_start,
- 		.range_end = range_start + len - 1,
- 	};
-+	bool dropbehind = folio_test_clear_dropbehind(folio);
- 	int ret;
- 
- 	trace_nfs_writeback_folio(inode, range_start, len);
-@@ -2097,6 +2105,8 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 			goto out_error;
- 	}
- out_error:
-+	if (dropbehind)
-+		folio_set_dropbehind(folio);
- 	trace_nfs_writeback_folio_done(inode, range_start, len, ret);
- 	return ret;
- }
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index 169b4ae30ff4..1a017b5b476f 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -37,6 +37,7 @@ enum {
- 	PG_REMOVE,		/* page group sync bit in write path */
- 	PG_CONTENDED1,		/* Is someone waiting for a lock? */
- 	PG_CONTENDED2,		/* Is someone waiting for a lock? */
-+	PG_DROPBEHIND,		/* Implement RWF_DONTCACHE */
- };
- 
- struct nfs_inode;
--- 
-2.50.1
+NeilBrown
+
+
+> +			return rpc_success;
+> +		}
+> +		return nlm_drop_reply;
+> +	default:
+> +		return rpc_success;
+> +	}
+> =20
+>  	/* Now try to lock the file */
+>  	resp->status =3D nlmsvc_lock(rqstp, file, host, &argp->lock,
+> --=20
+> 2.47.1
+>=20
+>=20
 
 
