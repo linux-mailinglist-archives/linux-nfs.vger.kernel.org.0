@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-13619-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13620-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7663FB241C8
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 08:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87E83B241F3
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 08:53:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92FCD580A72
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 06:44:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3FBC16EA10
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 06:53:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 210952D3A6B;
-	Wed, 13 Aug 2025 06:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DE02D5C9B;
+	Wed, 13 Aug 2025 06:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vt6VckGn"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Wiz2DxV1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89DF2D2397;
-	Wed, 13 Aug 2025 06:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064E21FDE39;
+	Wed, 13 Aug 2025 06:53:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755067487; cv=none; b=RzY8CcZHBdqH5x3KwZTb8S3DtNRPn6zJFsRr6xnQQpjMQ4X2maxuzhT8H9eAzIO1giOFFJz+y5OcrfBDFjgN8JrjTu1r+sQ3GxtYmUYk72PrR54y5A42GwI1tmZOiEmVePZdQSaxemKizJrI8R7b5AayzUZtp/MqzE09zeEFmGM=
+	t=1755068026; cv=none; b=SzYWYpUOfcDt8FrOOUo1O8pbXkIqqvcSIOCs4wT28uE86gYttXDuH1rV5BHOUjJqx8ZOBfRabUZNlxyf2O20196zg4X6KsjPXJNz8Loe0drGxELdXx7KgvhzUdcO6atGlKRPyYeIBCC8WiCBUeyrdJjsfxSnHeAdPFBnkpro3xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755067487; c=relaxed/simple;
-	bh=bquKFG0kbBHJUv82BQCZOUnkm2velApg2/ANEduHk8Y=;
+	s=arc-20240116; t=1755068026; c=relaxed/simple;
+	bh=rDW+t1UVopUdYO3K7v4ygjbrDYxS9M/67RhudSEQ5QU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TsBYi47RM2dIaJiEGr4coIsATYTSPfCVkQTIKylt3iFNdzgt8+AHJnJ3AKYd64SDqv3qWC43EHT5EK74zI8pzPyT+JvPs3qkQYJfm1AlGfQtkRLsGaWJm6qA30BDa076BoxpSMw6G+/qutpOlX1t3CG+MK2gQ+ECuM9VEjuzQBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=vt6VckGn; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjpBhfs2Db8EOYAMIUkEiqJO4Sh7MMtqaGXEDbcils0eTIQBc0d4A+UPnXIswJNYeZpA6GuRcGaVuv9yaApZNlrKb3OmlCkhkoRw8v3gyZly+WkcEY0ZJQ6GvkwGZh40cK4ngSw98AJ+7G21duxcJrnu8V0Trfq6q3PFcF6y7Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Wiz2DxV1; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0SNIdZiTJR/nPW1SdNBX7/DJYyYBUtTTIadH/4Y1HCg=; b=vt6VckGnfO/bRRiyFxmXG9ogQn
-	sU3C5xi4iIp5tuRc34S9kxl5tNaRl9AtTgEm+7SWGAGEbW4/p/dK1U9ns6ca+6XQpjKnsL6WwqfPv
-	IiWYMQMqYj6y3NQs1sn1zJub+2HYiOP4yyFS8U9o0DSMHmZUwO0/Xd42zILkkvfEL7P/0vayh8GHw
-	tQcul4hTNmy+uZj/vdV/WA6o58XjgJCGKYJTITnQenOcJRPIwOFEIqfpTy/8WEpgr1Hp+0+EilJ92
-	68d+GTcpetaDTVjn8KbX7NpVPzyNwIFk0u7npkiQcDSDEbOy7Xsl3S+yIvv1gjeukl5q9naab7Bqn
-	xPYjpGFw==;
+	bh=Hm2PPtsNJuhxIDGNuJHriEQn1/qO4cQcfmhS7NNUXJg=; b=Wiz2DxV1z9TM0lkmOxo+TJ4Vyd
+	qaiPgAgUlzH3xCeLVoqdhjk7kJp8cMmXYoXTwPYofwtXHrSvl9ppyTshskwHpMRPhlYCPhUJMpTsW
+	+vVSXhupFsOFNuR4VbYt3owuewFlVzfQcb1JsbZ7Jiusct2xvleX1CdDxxTvJ8BJ1TnX+j6e+Ku7s
+	y56pYVKPdxxRHSymM6lmpFG4sirXoAdBByGwJP5wHvqMg3ug2hH7dgBGlDuYBWTuO7R6N29I3aSAW
+	+sDrkOErZO7FCVjKQYxCFBUQuHjT2Z9MS7ggd9RMaGQLx4GQeZLgzzsSedW2k5IyAZs9+AnXrvVq1
+	8O4crq/Q==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1um5Dr-00000006iOl-1FbN;
-	Wed, 13 Aug 2025 06:44:31 +0000
-Date: Wed, 13 Aug 2025 07:44:31 +0100
+	id 1um5Mb-00000006n9D-1KiH;
+	Wed, 13 Aug 2025 06:53:33 +0000
+Date: Wed, 13 Aug 2025 07:53:33 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: NeilBrown <neil@brown.name>
 Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
@@ -68,11 +68,11 @@ Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
 	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] VFS: use global wait-queue table for
- d_alloc_parallel()
-Message-ID: <20250813064431.GF222315@ZenIV>
+Subject: Re: [PATCH 11/11] VFS: introduce d_alloc_noblock() and
+ d_alloc_locked()
+Message-ID: <20250813065333.GG222315@ZenIV>
 References: <20250812235228.3072318-1-neil@brown.name>
- <20250812235228.3072318-10-neil@brown.name>
+ <20250812235228.3072318-12-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -81,109 +81,46 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250812235228.3072318-10-neil@brown.name>
+In-Reply-To: <20250812235228.3072318-12-neil@brown.name>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Aug 12, 2025 at 12:25:12PM +1000, NeilBrown wrote:
+On Tue, Aug 12, 2025 at 12:25:14PM +1000, NeilBrown wrote:
+> Several filesystems use the results of readdir to prime the dcache.
+> These filesystems use d_alloc_parallel() which can block if there is a
+> concurrent lookup.  Blocking in that case is pointless as the lookup
+> will add info to the dcache and there is no value in the readdir waiting
+> to see if it should add the info too.
+> 
+> Also these calls to d_alloc_parallel() are made while the parent
+> directory is locked.  A proposed change to locking will lock the parent
+> later, after d_alloc_parallel().  This means it won't be safe to wait in
+> d_alloc_parallel() while holding the directory lock.
+> 
+> So this patch introduces d_alloc_noblock() which doesn't block
+> but instead returns ERR_PTR(-EWOULDBLOCK).  Filesystems that prime the
+> dcache now use that and ignore -EWOULDBLOCK errors as harmless.
+> 
+> A few filesystems need more than -EWOULDBLOCK - they need to be able to
+> create the missing dentry within the readdir.  procfs is a good example
+> as the inode number is not known until the lookup completes, so readdir
+> must perform a full lookup.
+> 
+> For these filesystems d_alloc_locked() is provided.  It will return a
+> dentry which is already d_in_lookup() but will also lock it against
+> concurrent lookup.  The filesystem's ->lookup function must co-operate
+> by calling lock_lookup() before proceeding with the lookup.  This way we
+> can ensure exclusion between a lookup performed in ->iterate_shared and
+> a lookup performed in ->lookup.  Currently this exclusion is provided by
+> waiting in d_wait_lookup().  The proposed changed to dir locking will
+> mean that calling d_wait_lookup() (in readdir) while already holding
+> i_rwsem could deadlock.
 
-> +** mandatory**
-> +
-> +d_alloc_parallel() no longer requires a waitqueue_head.  It uses one
-> +from an internal table when needed.
+The last one is playing fast and loose with one assertion that is used
+in quite a few places in correctness proofs - that the only thing other
+threads do to in-lookup dentries is waiting on them (and that - only
+in d_wait_lookup()).  I can't tell whether it will be a problem without
+seeing what you do in the users of that thing, but that creates an
+unpleasant areas to watch out for in the future ;-/
 
-Misleading, IMO - that sounds like "giving it a wq is optional, it will
-pick one if needed" when reality is "calling conventions have changed,
-no more passing it a waitqueue at all".
-
-> +#define	PAR_LOOKUP_WQ_BITS	8
-> +#define PAR_LOOKUP_WQS (1 << PAR_LOOKUP_WQ_BITS)
-> +static wait_queue_head_t par_wait_table[PAR_LOOKUP_WQS] __cacheline_aligned;
-
-I wonder how hot these cachelines will be...
-
-> +static int __init par_wait_init(void)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < PAR_LOOKUP_WQS; i++)
-> +		init_waitqueue_head(&par_wait_table[i]);
-> +	return 0;
-> +}
-> +fs_initcall(par_wait_init);
-
-Let's not open _that_ can of worms; just call it from dcache_init().
-
-> +static inline void d_wake_waiters(struct wait_queue_head *d_wait,
-> +				  struct dentry *dentry)
-> +{
-> +	/* ->d_wait is only set if some thread is actually waiting.
-> +	 * If we find it is NULL - the common case - then there was no
-> +	 * contention and there are no waiters to be woken.
-> +	 */
-> +	if (d_wait)
-> +		__wake_up(d_wait, TASK_NORMAL, 0, dentry);
-
-Might be worth a note re "this is wake_up_all(), except that key is dentry
-rather than NULL" - or a helper in wait.h to that effect, for that matter.
-I see several other places where we have the same thing (do_notify_pidfd(),
-nfs4_callback_notify_lock(), etc.), so...
-
-
-> +		struct wait_queue_head *wq;
-> +		if (!dentry->d_wait)
-> +			dentry->d_wait = &par_wait_table[hash_ptr(dentry,
-> +								  PAR_LOOKUP_WQ_BITS)];
-> +		wq = dentry->d_wait;
-
-Yecchhh...  Cosmetic change: take
-	&par_wait_table[hash_ptr(dentry, PAR_LOOKUP_WQ_BITS)];
-into an inlined helper, please.
-
-BTW, while we are at it - one change I have for that function is
-(in the current form)
-static bool d_wait_lookup(struct dentry *dentry,
-			  struct dentry *parent,
-			  const struct qstr *name)
-{
-	bool valid = true;
-	spin_lock(&dentry->d_lock);
-        if (d_in_lookup(dentry)) {
-		DECLARE_WAITQUEUE(wait, current);
-		add_wait_queue(dentry->d_wait, &wait);
-		do {   
-			set_current_state(TASK_UNINTERRUPTIBLE);
-			spin_unlock(&dentry->d_lock);
-			schedule();
-			spin_lock(&dentry->d_lock);
-		} while (d_in_lookup(dentry));
-	}
-	/*
-	 * it's not in-lookup anymore; in principle the caller should repeat
-	 * everything from dcache lookup, but it's likely to be what
-	 * d_lookup() would've found anyway.  If so, they can use it as-is.
-	 */
-	if (unlikely(dentry->d_name.hash != name->hash ||
-		     dentry->d_parent != parent ||
-		     d_unhashed(dentry) ||
-		     !d_same_name(dentry, parent, name)))
-		valid = false;
-	spin_unlock(&dentry->d_lock);
-	return valid;
-}
-
-with
-	if (unlikely(d_wait_lookup(dentry, parent, name))) {
-                dput(dentry);
-		goto retry;
-	}
-	dput(new);
-	return dentry;
-in the caller (d_alloc_parallel()).  Caller easier to follow and fewer functions
-that are not neutral wrt ->d_lock...  I'm not suggesting to fold that with
-yours - just a heads-up on needing to coordinate.
-
-Anyway, modulo fs_initcall() thing it's all cosmetical; I certainly like
-the simplified callers, if nothing else.
-
-That's another patch I'd like to see pulled in front of the queue.
+Which filesystems are those, aside of procfs?
 
