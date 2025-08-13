@@ -1,277 +1,113 @@
-Return-Path: <linux-nfs+bounces-13625-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13626-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06C27B243B3
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 10:06:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DCC2B244E2
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 11:03:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A18C17B8CE
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 08:04:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4096A1B62F62
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 09:01:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371062DE216;
-	Wed, 13 Aug 2025 08:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 236EE61FFE;
+	Wed, 13 Aug 2025 09:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="GjprlOyL";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="GjprlOyL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F438286433;
-	Wed, 13 Aug 2025 08:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4461FAC34
+	for <linux-nfs@vger.kernel.org>; Wed, 13 Aug 2025 09:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755072282; cv=none; b=mziKFNgfCz0jmUUSsOjh5TXzjHth+UlsqcutfpmGLhrmbAutSAuoEEoLs3fQmRPxK7w6HzYab4OE7N5byqxC6Yf0H5NxvsKg33k6t6LUCsQRxOHTLs0mkIL8HcGzUbZg7fjTGMU0ejVi+TRnDYBdYDT+ghoUOMsFYpKzxchn6Gc=
+	t=1755075660; cv=none; b=uk+kpSVPjeUzYoiJ2Hu7TsFCo0aQbAmn6NPdhWx+fBSMnCiIgHn82eGdos6NSWrV7Lu3lrpWXmr7DniTs5WUA1+N/buHAiBzSSawvCcPJnZSd8ymZP/zzxsK2Git9N3bLVXn6YmzPGpRJg9tr5UNVGX09hEYzU6wpOzL4wKl8P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755072282; c=relaxed/simple;
-	bh=FhzdVlboS0uvBRS2ec6VoJqaPXvCKsIFRA8PZ0M7YZc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=VEpT6kl/CeIHjNET535VUxGOgrFM+XfcQnS5QZW2cO86Pdq7Itc92dsdtXEvaLJ4pZE59ztd+kYS5vZWhc12k3XGTVf1Ae9MJZaatIWxcQBlZYO6KCNM5O5d8J4/nsMdKC5qmH9WIOoo9Awkh7GI+/4r68IyDKnyhLNlPiYfYz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1um6TH-005b1O-BY;
-	Wed, 13 Aug 2025 08:04:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1755075660; c=relaxed/simple;
+	bh=zGNM9q/RWj/4h4w7Z4WT1YjSbVutjlbGgiMmDlqZECw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=twElWzOZ0BvdPw0APfkr6z6CN3dSUSHc90CH63rsLtsst1BDuCjO9mpc5E5/VtriqfpqWOSqJQ7XVsEVISDArMPsfMKh4EzGRok6aqB+wK7nDhRvC26aeFsfyc5TgZulrNj9DgoQh2H5s0E/PE70npyXiJSDNCp7e6U3XbPDYew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=GjprlOyL; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=GjprlOyL; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: from kunlun.arch.suse.cz (unknown [10.100.128.76])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 4C2A21F455;
+	Wed, 13 Aug 2025 09:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1755075656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oHUAVau6ODGU75nNV2EzA/QFjAlgW0s2lUCpX++ZvD8=;
+	b=GjprlOyLI5tLNC3Myp8OSZ4WtvsY8O7750q00gX+lfxzSn9ib66XJNfbpU5KiunvHzoBo0
+	Q9e7XxGy1uYD8+sWKXhVii5tQNJe0jcZ7IF1ReUg5r9qx+ZxpnSSA2tUwKqylQ1uBv8VG7
+	9nShxTBDVM7VL5SMGhWGB6hiP0/GxCY=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1755075656; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oHUAVau6ODGU75nNV2EzA/QFjAlgW0s2lUCpX++ZvD8=;
+	b=GjprlOyLI5tLNC3Myp8OSZ4WtvsY8O7750q00gX+lfxzSn9ib66XJNfbpU5KiunvHzoBo0
+	Q9e7XxGy1uYD8+sWKXhVii5tQNJe0jcZ7IF1ReUg5r9qx+ZxpnSSA2tUwKqylQ1uBv8VG7
+	9nShxTBDVM7VL5SMGhWGB6hiP0/GxCY=
+From: Anthony Iliopoulos <ailiop@suse.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: "J . Bruce Fields" <bfields@fieldses.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2] NFSv4.1 client initialization related fixes
+Date: Wed, 13 Aug 2025 11:00:45 +0200
+Message-ID: <20250813090047.92365-1-ailiop@suse.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "David Howells" <dhowells@redhat.com>,
- "Marc Dionne" <marc.dionne@auristor.com>, "Xiubo Li" <xiubli@redhat.com>,
- "Ilya Dryomov" <idryomov@gmail.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>, "Steve French" <sfrench@samba.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
- netfs@lists.linux.dev, ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/11] VFS: add rename_lookup()
-In-reply-to: <20250813043531.GB222315@ZenIV>
-References: <>, <20250813043531.GB222315@ZenIV>
-Date: Wed, 13 Aug 2025 18:04:32 +1000
-Message-id: <175507227245.2234665.4311084523419609794@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.980];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCPT_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On Wed, 13 Aug 2025, Al Viro wrote:
-> On Tue, Aug 12, 2025 at 12:25:08PM +1000, NeilBrown wrote:
-> > rename_lookup() combines lookup and locking for a rename.
-> >=20
-> > Two names - new_last and old_last - are added to struct renamedata so it
-> > can be passed to rename_lookup() to have the old and new dentries filled
-> > in.
-> >=20
-> > __rename_lookup() in vfs-internal and assumes that the names are already
-> > hashed and skips permission checking.  This is appropriate for use after
-> > filename_parentat().
-> >=20
-> > rename_lookup_noperm() does hash the name but avoids permission
-> > checking.  This will be used by debugfs.
->=20
-> WTF would debugfs do anything of that sort?  Explain.  Unlike vfs_rename(),
-> there we
-> 	* are given the source dentry
-> 	* are limited to pure name changes - same-directory only and
-> target must not exist.
-> 	* do not take ->s_vfs_rename_mutex
-> 	...
+This short series addresses two separate issues related with NFSv4.1 client
+initialization.
 
-Sure, debugfs_change_name() could have a simplified rename_lookup()
-which doesn't just skip the perm checking but also skips other
-s_vfs_rename_mutex etc.  But is there any value in creating a neutered
-interface just because there is a case where all the functionality isn't
-needed?
+The first is an issue with backchannel parameter verification when
+negotiating with a non-linux nfs server that does not accept larger
+max_resp_sz values.
 
-Or maybe I misunderstand your problem with rename_lookup_noperm().
+The second issue is a side-effect of the first (although it could be caused
+by number of other failures during CREATE_SESSION), which makes mount hang
+due to lack of -EINVAL error handling in the nfs4_state_manager.
 
+Anthony Iliopoulos (2):
+  NFSv4.1: fix backchannel max_resp_sz verification check
+  NFSv4.1: fix mount hang after CREATE_SESSION failure
 
->=20
-> > If either old_dentry or new_dentry are not NULL, the corresponding
-> > "last" is ignored and the dentry is used as-is.  This provides similar
-> > functionality to dentry_lookup_continue().  After locks are obtained we
-> > check that the parent is still correct.  If old_parent was not given,
-> > then it is set to the parent of old_dentry which was locked.  new_parent
-> > must never be NULL.
->=20
-> That screams "bad API" to me...  Again, I want to see the users; you are
-> asking to accept a semantics that smells really odd, and it's impossible
-> to review without seeing the users.
+ fs/nfs/nfs4proc.c  | 2 +-
+ fs/nfs/nfs4state.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-There is a git tree you could pull.....
+-- 
+2.50.1
 
-My API effectively supports both lock_rename() users and
-lock_rename_child() users.  Maybe you want to preserve the two different
-APIs.  I'd rather avoid the code duplication.
-
->=20
-> > On success new references are geld on old_dentry, new_dentry and old_pare=
-nt.
-> >=20
-> > done_rename_lookup() unlocks and drops those three references.
-> >=20
-> > No __free() support is provided as done_rename_lookup() cannot be safely
-> > called after rename_lookup() returns an error.
-> >=20
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> >  fs/namei.c            | 318 ++++++++++++++++++++++++++++++++++--------
-> >  include/linux/fs.h    |   4 +
-> >  include/linux/namei.h |   3 +
-> >  3 files changed, 263 insertions(+), 62 deletions(-)
-> >=20
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index df21b6fa5a0e..cead810d53c6 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -3507,6 +3507,233 @@ void unlock_rename(struct dentry *p1, struct dent=
-ry *p2)
-> >  }
-> >  EXPORT_SYMBOL(unlock_rename);
-> > =20
-> > +/**
-> > + * __rename_lookup - lookup and lock names for rename
-> > + * @rd:           rename data containing relevant details
-> > + * @lookup_flags: extra flags to pass to ->lookup (e.g. LOOKUP_REVAL,
-> > + *                LOOKUP_NO_SYMLINKS etc).
-> > + *
-> > + * Optionally look up two names and ensure locks are in place for
-> > + * rename.
-> > + * Normally @rd.old_dentry and @rd.new_dentry are %NULL and the
-> > + * old and new directories and last names are given in @rd.  In this
-> > + * case the names are looked up with appropriate locking and the
-> > + * results stored in @rd.old_dentry and @rd.new_dentry.
-> > + *
-> > + * If either are not NULL, then the corresponding lookup is avoided but
-> > + * the required locks are still taken.  In this case @rd.old_parent may
-> > + * be %NULL, otherwise @rd.old_dentry must still have @rd.old_parent as
-> > + * its d_parent after the locks are obtained.  @rd.new_parent must
-> > + * always be non-NULL, and must always be the correct parent after
-> > + * locking.
-> > + *
-> > + * On success a reference is held on @rd.old_dentry, @rd.new_dentry,
-> > + * and @rd.old_parent whether they were originally %NULL or not.  These
-> > + * references are dropped by done_rename_lookup().  @rd.new_parent
-> > + * must always be non-NULL and no extra reference is taken.
-> > + *
-> > + * The passed in qstrs must have the hash calculated, and no permission
-> > + * checking is performed.
-> > + *
-> > + * Returns: zero or an error.
-> > + */
-> > +static int
-> > +__rename_lookup(struct renamedata *rd, int lookup_flags)
-> > +{
-> > +	struct dentry *p;
-> > +	struct dentry *d1, *d2;
-> > +	int target_flags =3D LOOKUP_RENAME_TARGET | LOOKUP_CREATE;
-> > +	int err;
-> > +
-> > +	if (rd->flags & RENAME_EXCHANGE)
-> > +		target_flags =3D 0;
-> > +	if (rd->flags & RENAME_NOREPLACE)
-> > +		target_flags |=3D LOOKUP_EXCL;
-> > +
-> > +	if (rd->old_dentry) {
-> > +		/* Already have the dentry - need to be sure to lock the correct paren=
-t */
-> > +		p =3D lock_rename_child(rd->old_dentry, rd->new_parent);
-> > +		if (IS_ERR(p))
-> > +			return PTR_ERR(p);
-> > +		if (d_unhashed(rd->old_dentry) ||
-> > +		    (rd->old_parent && rd->old_parent !=3D rd->old_dentry->d_parent)) {
-> > +			/* dentry was removed, or moved and explicit parent requested */
-> > +			unlock_rename(rd->old_dentry->d_parent, rd->new_parent);
-> > +			return -EINVAL;
-> > +		}
-> > +		rd->old_parent =3D dget(rd->old_dentry->d_parent);
-> > +		d1 =3D dget(rd->old_dentry);
-> > +	} else {
-> > +		p =3D lock_rename(rd->old_parent, rd->new_parent);
-> > +		if (IS_ERR(p))
-> > +			return PTR_ERR(p);
-> > +		dget(rd->old_parent);
-> > +
-> > +		d1 =3D lookup_one_qstr_excl(&rd->old_last, rd->old_parent,
-> > +					  lookup_flags);
-> > +		if (IS_ERR(d1))
-> > +			goto out_unlock_1;
-> > +	}
-> > +	if (rd->new_dentry) {
-> > +		if (d_unhashed(rd->new_dentry) ||
-> > +		    rd->new_dentry->d_parent !=3D rd->new_parent) {
-> > +			/* new_dentry was moved or removed! */
-> > +			goto out_unlock_2;
-> > +		}
-> > +		d2 =3D dget(rd->new_dentry);
-> > +	} else {
-> > +		d2 =3D lookup_one_qstr_excl(&rd->new_last, rd->new_parent,
-> > +					  lookup_flags | target_flags);
-> > +		if (IS_ERR(d2))
-> > +			goto out_unlock_2;
-> > +	}
-> > +
-> > +	if (d1 =3D=3D p) {
-> > +		/* source is an ancestor of target */
-> > +		err =3D -EINVAL;
-> > +		goto out_unlock_3;
-> > +	}
-> > +
-> > +	if (d2 =3D=3D p) {
-> > +		/* target is an ancestor of source */
-> > +		if (rd->flags & RENAME_EXCHANGE)
-> > +			err =3D -EINVAL;
-> > +		else
-> > +			err =3D -ENOTEMPTY;
-> > +		goto out_unlock_3;
-> > +	}
-> > +
-> > +	rd->old_dentry =3D d1;
-> > +	rd->new_dentry =3D d2;
-> > +	return 0;
-> > +
-> > +out_unlock_3:
-> > +	dput(d2);
-> > +	d2 =3D ERR_PTR(err);
-> > +out_unlock_2:
-> > +	dput(d1);
-> > +	d1 =3D d2;
-> > +out_unlock_1:
-> > +	unlock_rename(rd->old_parent, rd->new_parent);
-> > +	dput(rd->old_parent);
-> > +	return PTR_ERR(d1);
-> > +}
->=20
-> This is too fucking ugly to live, IMO.  Too many things are mixed into it.
-> I will NAK that until I get a chance to see the users of all that stuff.
-> Sorry.
->=20
-
-Can you say more about what you think it ugly?
-
-Are you OK with combining the lookup and the locking in the one
-function?
-Are you OK with passing a 'struct rename_data' rather than a list of
-assorted args?
-Are you OK with deducing the target flags in this function, or do you
-want them explicitly passed in?
-Is it just that the function can use with lock_rename or
-lock_rename_child depending on context?
-
-???
-
-Thanks,
-NeilBrown
 
