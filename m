@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-13609-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13611-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C562B23CEC
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 02:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57EC8B23EF5
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 05:23:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BE4B17A5F9
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 00:01:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6625179438
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 03:22:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D402C0F7A;
-	Wed, 13 Aug 2025 00:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7B5270EBF;
+	Wed, 13 Aug 2025 03:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="cZbBypAr"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="fAFNgc1a"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAC1163;
-	Wed, 13 Aug 2025 00:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503D71C860B;
+	Wed, 13 Aug 2025 03:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755043281; cv=none; b=mhkrT0POOITMy7Gu4PJVSFZIihL428GpZxf7fqHP1BFe1ZRHlKG+NOOl1PU3b3j/qKJIc8xgL9cC5E5D48ONBlBJTkZuDDUg4X5a86yewpb/5OEH6M9VLqjJ92rWeMwfxfPlU4D2GA8q+a5fu+hX/RpLciyDblC2MVfvK2TRBeo=
+	t=1755055354; cv=none; b=eT+6lbq8K5dj4JLIWcWxiHY97U90Ut6dj9x75+JwN6caLPvkurXSZy9mDYdG1hXpmaOh1ZyqPt++VnTNTklIYc8f8mbOnDB+TY5UH8eZM3mMRtddI3vKE9nY3FHLJBqk258tkvuQhAu6mSnAVJvz6tZKMdXUfj8Z1E4X2o2CsEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755043281; c=relaxed/simple;
-	bh=j4r1hppquktqtYidrhW4W0wl7fe8offrZaopf6cG3G0=;
+	s=arc-20240116; t=1755055354; c=relaxed/simple;
+	bh=zxMEJ8m+zRkwij8kWIT31y8xRPVRlMmpgTq7ZqEzhG8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dhfPFzbd/82yY6tDiLtDkCoR7YhAWEwQrRxkDreopdzzoi0J1d4SylvlE5o7NqN3auxnljo8eqCfyHWmlhj72qisNVPuhDCpMMYThw/dyZDS0GEt7InEtiR8bjf0hsm3TXNvSlPAS4bcWMDa1WdRhGzCE0i8V3omEqwBZBEpvC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=cZbBypAr; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=bk3av9VmFKu0F520qnq1rUSMmdws56OasBnfWVlO/5YgO+LT8/Edu5prLC50em76LFXS0u6piQsQaHay0XuMiZlD8o16UFx0DvY9KnB0oS+3Ivrybb0m7juN8V3f8jR23MLo1dZCSqkiUHzIm2tV1thuNJKMnbXGcSCDMnlah3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=fAFNgc1a; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j4r1hppquktqtYidrhW4W0wl7fe8offrZaopf6cG3G0=; b=cZbBypArsAwEupU5gvJSbx81kI
-	Qosd5QsgwcTBqjCvjrl9+522yt1DsRHkxW3rP4QAtNBLuPkNqySvn9xNhx4W8UKAuQRjCZFER9Q+q
-	OU7f9ZV2fnoJgxNmuLvs+ROm2HQIttuS7sdzJM4TKl8JXUJt7kHFJ0HzLbIvH539ChpirDHa95hk0
-	0jIldmck0numN0slLAIZ1NO2d/wYZ2QGgElgnPrudAOXVUCPogdbljQ+lo4cAZuF/fAYQ7+h58qa0
-	Y+ivu7VmgfbRR4UATQ5PHl9u0DWkjAMVf4kUbfjIu4pzP85eSzA7U8m0V2v8gQf19C/Fc36DoyW7p
-	DX85i4rQ==;
+	bh=mZv6+PvJUXtJWPttoq47kMgqdSRNoX5QOTrEIOYs1uE=; b=fAFNgc1auSoV8mA7b6YMBtX+j5
+	rl8bDV/EeCqND0al4fPbDzIAEpPYcyF7qkiUImV7O4z6/z4uY4kXywRzc1pGW1crAJalXzhJBGEzd
+	S6obRySg4KfM6Rlmcyo74FXF9pwKE1B0Uz9zgiAO73PqvC5pg/VHWinHUWiWDIDBgZElXJt0aq0XM
+	tvIU6HFgTuPeaU4k8wfdhReTrAd/x6tskDlpsFNzLn1+69HtZ8V07NJFErG7xVWEdqrKPndQ4zIOJ
+	yLXsMqeqHWjN1NAVE5WT0ZDeTc2PqoTipg/C9vNxL5JZKL1GnCqx5nKXIadgYfbGnlkr7P1ZiQwmV
+	l/wZ3+4w==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ulyvN-00000003Gyx-2z1h;
-	Wed, 13 Aug 2025 00:01:01 +0000
-Date: Wed, 13 Aug 2025 01:01:01 +0100
+	id 1um24B-00000004v1A-2JpQ;
+	Wed, 13 Aug 2025 03:22:19 +0000
+Date: Wed, 13 Aug 2025 04:22:19 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: NeilBrown <neil@brown.name>
 Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
@@ -68,9 +68,10 @@ Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
 	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] VFS: prepare for changes to directory locking
-Message-ID: <20250813000101.GW222315@ZenIV>
+Subject: Re: [PATCH 01/11] VFS: discard err2 in filename_create()
+Message-ID: <20250813032219.GX222315@ZenIV>
 References: <20250812235228.3072318-1-neil@brown.name>
+ <20250812235228.3072318-2-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -79,14 +80,18 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250812235228.3072318-1-neil@brown.name>
+In-Reply-To: <20250812235228.3072318-2-neil@brown.name>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Aug 12, 2025 at 12:25:03PM +1000, NeilBrown wrote:
-> This is the first of 3 sets of patches which, together, allow
-> filesystems to opt-out of having the directory inode lock held over
-> directory operations (except readdir).
+On Tue, Aug 12, 2025 at 12:25:04PM +1000, NeilBrown wrote:
+> During the time when "err2" holds a value, "error" does not hold any
+> meaningful value.  So there is no need for two different err variables.
+> This patch discards "err2" and uses "error' throughout.
 
-[just a quick reply for now - I'm going to be away for about an hour,
-then will review and reply]
+I'd probably replace the first sentence with something like this:
+
+Since 204a575e91f3 "VFS: add common error checks to lookup_one_qstr_excl()"
+filename_create() does not need to stash the error value from mnt_want_write()
+into a separate variable - the logics that used to clobber 'error' after the
+call of mnt_want_write() has migrated into lookup_one_qstr_excl().
 
