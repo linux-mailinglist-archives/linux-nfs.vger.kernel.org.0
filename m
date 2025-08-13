@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-13617-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13618-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47C74B24004
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 07:07:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60FF9B2401A
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 07:20:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 958E7584826
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 05:07:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7546D17E094
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 05:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A65A293C71;
-	Wed, 13 Aug 2025 05:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCC9029C35A;
+	Wed, 13 Aug 2025 05:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="un83pMT3"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="iTDCL4fx"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F513A1D2;
-	Wed, 13 Aug 2025 05:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB022110E;
+	Wed, 13 Aug 2025 05:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755061650; cv=none; b=hPTLbHo48C8WgKX0TlwlgHf/e2+v34N2UXAnSwH0Vp+X7Stqx37fwxTUV6ZXboQeB8XfiDopqD77Th6q95x0+T8Iz9kTGY50qq1zT0nFh7UFnUsDuZGlqq/fYZP6uw9JO4APdkEQ1lyWEGrCPEXQ2xEU0sVbRDj5F4u7/mdYFOo=
+	t=1755062408; cv=none; b=tK8NlR7/Lvu9GEPrb0bx75QaB8FlYwA+ZOFwygQOavxQlVuMy+2kZhKwrD2Tax1wpMpUdXol4HKfZ7+TIyGAf9ZQkhXYlfOrc6ipVl6XlU7/Xzp8ICZ0RYYEWsbJ9utsjbTZNmFRsNENBYG3PMJ3J2h2bdLOhtP+NARJDKe2sqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755061650; c=relaxed/simple;
-	bh=JKTQA9qH82HV2H1Eq1113FuCQKbjc3L96FALVs8Fb0o=;
+	s=arc-20240116; t=1755062408; c=relaxed/simple;
+	bh=pCg5tUn3Jxoz1Rz+ldIsZRcCH30DqmzroJThlBQBMOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdbma1CS1Fe5XFSpWy4Z4jzWNAQOxHawTTyks6BuAfW1caQ+Ddt1T9EWN58lJRFLo48Ns9iS4fVViVNWznbrbptVNl8myrGvhT1Chdn/UhZoFMwawCiaXYkhmkH0s3q1o9bc1e7WS0fGC+PTrYdFZVLjo52G/gRdLOjFgjtbgWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=un83pMT3; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDGndwLHcPb3Fzqrub4sQhBkdNgT4g1y2LP2JheSxUvgq2TeuzEgjMTYRA5ELSoN6kGRpSYSdbreghcEs34qA5eXVkcHhCDZoUE1Q0K2uCLpdrwKVV8UCzxoVb//Ht5YLCrgfQgEt06lNKwbg/464iP5eXsxXnHcOYV6eR8v/is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=iTDCL4fx; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=e5U3Jru4QvSh+gZ04F1oAlS7nb9ho9LY7nJhfMe2Y4U=; b=un83pMT3ThYrtWrTPu0bibcpbE
-	BhUC6V5s+qnM99OgBU47KW2hMWIdhipx/U9SZn/PdD5iZY3ahTAcXwq0aIxkt/cJakChWWNFTKPg4
-	KUV08pYtA3kYj7Qi54yRbxc1ShhWm0mwXMUg8spwnTkBA2O2czkBvvncj4SlMtbpXBh8ZbIJnzhaV
-	t3TqAeoDG9jd597x8lKORHvF0/SM6VIUE3IYa0LtNhsmUiE7+0UUNaiBptlPyw+SYYRdhm7rHe2x4
-	clE/Z7F1jUQIcL3U0LQCMV7ZGPCCaw1nVh4wbA+er1lwdT2MMj5YKE8J7LmoK82NbdHuiQOaxtcEk
-	RoN1I42w==;
+	bh=KjOxKUPYOtNCnCd/lus2iP6rL3ZLot/rSauSdHj7XKM=; b=iTDCL4fxLjR1WN6UEkahPvC+Y2
+	GNjJps5E4fZouWLRmdQbBwPPH1mCH8GZuT1VtFvidzQL9pFIjrGIy8ger7QFw7qUyB6DSxBFMCmOF
+	LWPLns4WENW88IC5y4vnenhiTfcrGz8QaFmiqlZW4dgt3+6URBn25Y2dWP0fnObUcRYE8u8S8Js5y
+	356r4/zM5bVk/SCK07iXGFW/ISD/v++GRjYnfAAg17BYdfFru3K+z/kofWvdZPtyUz04rBR64zWhV
+	xRBFvJ9qCQ9oZR61+VgVm7T7iOng5g5A6eo9EhDBsPuoLLKcGhLWYsTuqHrwQk8XzDEDDy/1Shto+
+	7gs0hgMg==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1um3hl-00000005txc-0wPb;
-	Wed, 13 Aug 2025 05:07:17 +0000
-Date: Wed, 13 Aug 2025 06:07:17 +0100
+	id 1um3u1-000000060h7-0Shj;
+	Wed, 13 Aug 2025 05:19:57 +0000
+Date: Wed, 13 Aug 2025 06:19:57 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: NeilBrown <neil@brown.name>
 Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
@@ -68,11 +68,11 @@ Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
 	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/11] VFS: allow d_splice_alias() and d_add() to work on
- hashed dentries.
-Message-ID: <20250813050717.GD222315@ZenIV>
+Subject: Re: [PATCH 10/11] VFS: use d_alloc_parallel() in
+ lookup_one_qstr_excl().
+Message-ID: <20250813051957.GE222315@ZenIV>
 References: <20250812235228.3072318-1-neil@brown.name>
- <20250812235228.3072318-9-neil@brown.name>
+ <20250812235228.3072318-11-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -81,38 +81,14 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250812235228.3072318-9-neil@brown.name>
+In-Reply-To: <20250812235228.3072318-11-neil@brown.name>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Aug 12, 2025 at 12:25:11PM +1000, NeilBrown wrote:
-> Proposed locking changes will require a dentry to remain hashed during
-> all directory operations which are currently protected by i_rwsem, or
-> for there to be a controlled transition from one hashed dentry to
-> another which maintains the lock - which will then be on the dentry.
-> 
-> The current practice of dropping (unhashing) a dentry before calling
-> d_splice_alias() and d_add() defeats this need.
-> 
-> This patch changes d_splice_alias() and d_add() to accept a hashed
-> dentry and to only drop it when necessary immediately before an
-> alternate dentry is hashed.  These functions will, in a subsequent patch,
-> transfer the dentry locking across so that the name remains locked in
-> the directory.
+On Tue, Aug 12, 2025 at 12:25:13PM +1000, NeilBrown wrote:
 
-The problem I have with that is the loss of information.  That is to
-say, "is it hashed here" is hard to deduce from code.  I would rather
-add d_splice_alias_hashed() and d_add_hashed(), and then see what's
-going on in specific callers.  
+> + * If it is d_in_lookup() then these conditions can only be checked by the
+> + * file system when carrying out the intent (create or rename).
 
-And yes, it requires analysis of places where we have d_drop()+d_add() -
-better have it done upfront than repeat it on every code audit *for*
-*each* *single* *call* *of* d_add(), including the ones that are currently
-obviously meant to be called for unhashed dentries.
-
-I realize that it's no fun at all - in particular, I'd never been able
-to get ceph folks to explain what is and what is not possible there.
-
-I would really hate to have that expand by order of magnitude - in
-effect, you make *all* calls of d_splice_alias() and d_add() similar
-mysteries.
+I do not understand.  In which cases would that happen and what would happen
+prior to that patch in the same cases?
 
