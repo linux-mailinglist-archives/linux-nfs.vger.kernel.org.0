@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-13613-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13614-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D18DBB23F5F
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 06:15:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E30F7B23F71
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 06:22:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 904AD720A82
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 04:15:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3FB5582EE8
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 04:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF3152505A5;
-	Wed, 13 Aug 2025 04:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECDCA256C84;
+	Wed, 13 Aug 2025 04:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ZVkRJfHg"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="E+YLf8qv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDE91A9F94;
-	Wed, 13 Aug 2025 04:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794F32505A5;
+	Wed, 13 Aug 2025 04:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755058516; cv=none; b=O1cUQ4pY9quyKFHqwhu2KqyWl021rRO6xRgEgrE8b8dIdvSVIwI8xnRIlHicGH4xCsPbRhxKwxRabjiafG2neCKC5aCxX2lRugNIlk9hCt7i9UGiywpQbp1XXnJmgGZWAXA5S1Cw7zp5oYUP3xCw5BUvZ8IG9wRMdkpYfQLhnmA=
+	t=1755058933; cv=none; b=spwVn0VDtFg49Ekn1h3jGFzAqLuKw5XRa3B0jK+KvKNbrmzAP/UJs3vlVaQfxkiQK0HcZ5sA9xkC8mEufmleDOsWzE6Mn1PSe/ASHwh3+FYaE7Jhb3KF2f6lrZbMte1XeEM2p9nH4FTphiFK3+4ELn7sAYd/AnYIXYHn7d6ZFxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755058516; c=relaxed/simple;
-	bh=sSbpl5CI0JvCP5aS9c8WvgFkbzdw8n7k3hEHefjuRek=;
+	s=arc-20240116; t=1755058933; c=relaxed/simple;
+	bh=VMh2BLGphXRvG/FFzhL1PFA92eHn/bxF7Kk0BRTOyHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWvpM7sBbYQWK3x5bRNMrrcDselfuOfg6Gfrq3aGR6QW037MOl4SDka6DGY0/oFXfhabYMmUVIHfnQ1Lc1r7F+oDNvQTpyyabibhVPDrbebonWcM5STfUoonBMnmME+Hn5zocSHiOX57AjgwwFgddhIfmNX0lgxI6P0FPQXK/ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ZVkRJfHg; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=LXTKcPd8bN78a/buuIPfOHGXjPTe1NaE4ndRz8gwfIUXkSZz7d9SauHVJSZxwEKXTjBX8IBv0luzrqEYlQ7OBzCoxraE3mEjbf7SzAgvecgnAavdDKfKeXX+oHTwXz+O0NCzWJdw38KYzuK+T2nfTCYgqqw7wXobu5mmEOYtYiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=E+YLf8qv; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mGFlvnNAi/Tl7nNsEWG2qsCanGGPDT6DKS+ZvemjV5o=; b=ZVkRJfHgEHCeXHIbXJ1rESudU6
-	thRh1RQkyDWCEzipzEmpweoNke5WA2w7PIb8rrshD9j1gudgyh0P+mekEtlO8xV9OdXB4XVVZ+HDx
-	fgfWBOHyTHhQ6AxToVRTAifMjbEr7rK16KK4zRdXmnjOoTB2gAgOnHf0C6ryNFFuIEEKr2mB0Z7YJ
-	4jy6xB2tleJ5hykFw28TkBDDtoZZrAqkAGRkGw9seWWd8uvdiFdAr0nMJSso+TWnJy/OUVRSmVYsc
-	VRnEh6YqdZtpTJi8r8qD0bgUk8cc8uyfTgPsjWiSV1g9qsmSbOKjXj7BuQ4k+P0Pj6aGQ4EWD/aAO
-	oqv0joyg==;
+	bh=xdU/0zwSMH2y0O1TRA9YmJ5Fw0UxuvH5pkvmlwTE5W4=; b=E+YLf8qvXLfxYK0as6o9jTXHlV
+	yV1NRjXLvW9S0R51j1f3lLc0CGwYDCeWM7y/ylMOtQm9Jx2ANDc9nb+S+roZZ7ANg1Myuq0go4ZR1
+	Z+zJpGFlqLoT3GF0gU1JVh+h459QD9szlEO+8ULWb9wPt5XR9Go9ehuUZEike+kKFfYZxzwA2JovI
+	OWx1fqHFlkh6c9KE8pGaNxB7aN0eqFbkARwEvK3rACEuaDUiKtCBGKXNWP90A8UpYtw1tAMjG1b/Y
+	HsCWforfyvrltzOcXDT9AapZpUs3yCk6YpcxDcZIYg3osY9wQcz6z4BAkW9+MUEp7h3sUGYpc5Q0L
+	Gl0P2Sbw==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1um2tG-00000005RsT-0Enk;
-	Wed, 13 Aug 2025 04:15:06 +0000
-Date: Wed, 13 Aug 2025 05:15:06 +0100
+	id 1um2zy-00000005WTr-37Ng;
+	Wed, 13 Aug 2025 04:22:02 +0000
+Date: Wed, 13 Aug 2025 05:22:02 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: NeilBrown <neil@brown.name>
 Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
@@ -68,10 +68,10 @@ Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
 	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/11] VFS: add dentry_lookup_killable()
-Message-ID: <20250813041506.GZ222315@ZenIV>
+Subject: Re: [PATCH 04/11] VFS: introduce dentry_lookup_continue()
+Message-ID: <20250813042202.GA222315@ZenIV>
 References: <20250812235228.3072318-1-neil@brown.name>
- <20250812235228.3072318-4-neil@brown.name>
+ <20250812235228.3072318-5-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -80,18 +80,35 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250812235228.3072318-4-neil@brown.name>
+In-Reply-To: <20250812235228.3072318-5-neil@brown.name>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Aug 12, 2025 at 12:25:06PM +1000, NeilBrown wrote:
-> btrfs/ioctl.c uses a "killable" lock on the directory when creating an
-> destroying subvols.  overlayfs also does this.
+On Tue, Aug 12, 2025 at 12:25:07PM +1000, NeilBrown wrote:
+> A few callers operate on a dentry which they already have - unlike the
+> normal case where a lookup proceeds an operation.
 > 
-> This patch adds dentry_lookup_killable() for these users.
+> For these callers dentry_lookup_continue() is provided where other
+> callers would use dentry_lookup().  The call will fail if, after the
+> lock was gained, the child is no longer a child of the given parent.
 > 
-> Possibly all dentry_lookup should be killable as there is no down-side,
-> but that can come in a later patch.
+> There are a couple of callers that want to lock a dentry in whatever
+> its current parent is.  For these a NULL parent can be passed, in which
+> case ->d_parent is used.  In this case the call cannot fail.
+> 
+> The idea behind the name is that the actual lookup occurred some time
+> ago, and now we are continuing with an operation on the dentry.
+> 
+> When the operation completes done_dentry_lookup() must be called.  An
+> extra reference is taken when the dentry_lookup_continue() call succeeds
+> and will be dropped by done_dentry_lookup().
+> 
+> This will be used in smb/server, ecryptfs, and overlayfs, each of which
+> have their own lock_parent() or parent_lock() or similar; and a few
+> other places which lock the parent but don't check if the parent is
+> still correct (often because rename isn't supported so parent cannot be
+> incorrect).
 
-Same objections re lookup_flags and it would be better to do that
-at the same point where you convert the (btrfs and overlayfs?) callers.
+I would really like the see the conversion of these callers.  You are
+asking for a buy-in for a primitive with specific semantics; that's
+hard to review without seeing how it will be used.
 
