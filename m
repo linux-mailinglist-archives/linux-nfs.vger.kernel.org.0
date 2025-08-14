@@ -1,108 +1,114 @@
-Return-Path: <linux-nfs+bounces-13630-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13631-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E99BAB256DC
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 00:42:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59883B258A0
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 02:58:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1078A7B5239
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Aug 2025 22:40:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42D966267BF
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 00:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E862FCBE6;
-	Wed, 13 Aug 2025 22:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXGkoLDS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6CC14386D;
+	Thu, 14 Aug 2025 00:57:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25816302752
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Aug 2025 22:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4784B2FF66B;
+	Thu, 14 Aug 2025 00:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755124894; cv=none; b=icv9vgo0HEAA7oKg/+errHqUVZb3E587MVntJBTzXD8s/JmqiGpv3HWmtCLYQ996JeYtfC00r9w1/a6IBZiS+vOSqBdreOIFNa3OazHVdhqJAEh4dyqhxkNUXt/hzOoGdqyASCszszvPnPyvBk1m1rh+eUp64ttmv+C3BDDTrvA=
+	t=1755133051; cv=none; b=Lo79vIERZLY4OXBnNASC8tPJPCevC5ZBN0O6/gVOXbIfNun7ijIevObsKJghHTlfxTiRZL7ZfZb80nc+VoF7/00Rpm2ieDfZunuOSTUJfRgQzzI9778anLQs7pX578jtxuFvXjzoQ2iEoxTEZ8MreLEnwHVvo3NXTM7Dv6NJZu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755124894; c=relaxed/simple;
-	bh=AnpwWtP79bPgXzywq6IPbqv/YExZGaI8mHh7RHIcCwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hYDZSQovG4TcUvGIFxDl62IlIHBVLZClexcRai8Wm7DXsEbiVnIahV5IlwYwglg/zcexP8vJ6Jn+WuA0jhetJCMXCDBQMlh42+M5y9a7qRoLVAlibS5I+6ayQekgrFWwvWbdLd+/Tz7YgdO6ssCc/cznA2QsnrL0A0VgDeVRueg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXGkoLDS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68BD4C4CEEB;
-	Wed, 13 Aug 2025 22:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755124894;
-	bh=AnpwWtP79bPgXzywq6IPbqv/YExZGaI8mHh7RHIcCwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bXGkoLDSXOD0pPI1wV2n6GMg/qhHsxIJNW4ZnD7TQi+UVzdAR+dptuOSUmm1MKO6z
-	 Za4EITDB+2DcN1JW6GajWR4YXecQ/8v0bYeTLmQHkcZfIFAWLTxI9k+JFfbF78qBhm
-	 o23+TTyJE0U2xq8k8kX2Xy4zPHGS+IKROl7MJmVs0wol4R2TOoteKbXd4Ej1L7LTTF
-	 dg6rfQnbw5/RZop3vlz07OgaO1UnnvVHv2fxqfYqxWrRJUyeIe2UH+IY1qrqCzA4Al
-	 t/JfcbOr92Zt1Re4kX0ju1ac2n2BPoG6VSgdmYAX3HE/TUOM1Xl5f0ZNEPsUC+8F4/
-	 Q7BifF/ovIBiA==
-Date: Wed, 13 Aug 2025 18:41:32 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, kbusch@kernel.org
-Subject: Re: [PATCH v6 0/7] NFSD: add "NFSD DIRECT" and "NFSD DONTCACHE" IO
- modes
-Message-ID: <aJ0UnNAA5J-SCtHt@kernel.org>
-References: <20250809050257.27355-1-snitzer@kernel.org>
+	s=arc-20240116; t=1755133051; c=relaxed/simple;
+	bh=FsILFVHrLouIwQUepaOtEF88P07nkFMv9H8p9pBzu1s=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=QXX7dQRFmIaRm787+WpgyN84Z7kTE0q5TEdGzxzkQUhADZ2jN2BV9C3BiyuNPXO1iLsZBVPu2gr+ue2HkCyNszQiCxzbkaPCX2e7rHgFCne6weORsrvHFmcjnLmH1vTAVEzzl1OahuUzaRtOIO6yYlkozF5hDt1SienQhBnzUDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1umMH3-005gzt-L3;
+	Thu, 14 Aug 2025 00:56:59 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250809050257.27355-1-snitzer@kernel.org>
+From: "NeilBrown" <neil@brown.name>
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>, "Xiubo Li" <xiubli@redhat.com>,
+ "Ilya Dryomov" <idryomov@gmail.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Steve French" <sfrench@samba.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
+ linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+ netfs@lists.linux.dev, ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 10/11] VFS: use d_alloc_parallel() in lookup_one_qstr_excl().
+In-reply-to: <20250813051957.GE222315@ZenIV>
+References: <>, <20250813051957.GE222315@ZenIV>
+Date: Thu, 14 Aug 2025 10:56:58 +1000
+Message-id: <175513301880.2234665.7949166216437739702@noble.neil.brown.name>
 
-On Sat, Aug 09, 2025 at 01:02:50AM -0400, Mike Snitzer wrote:
-> Hi,
-> 
-> Some workloads benefit from NFSD avoiding the page cache, particularly
-> those with a working set that is significantly larger than available
-> system memory.  This patchset introduces _optional_ support to
-> configure the use of O_DIRECT or DONTCACHE for NFSD's READ and WRITE
-> support.  The NFSD default to use page cache is left unchanged.
-> 
-> The performance win associated with using NFSD DIRECT was previously
-> summarized here:
-> https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
-> This picture offers a nice summary of performance gains:
-> https://original.art/NFSD_direct_vs_buffered_IO.jpg
-> 
-> This series builds on what has been staged in the nfsd-testing branch.
-> 
-> This code has proven to work well during my testing.  Any suggestions
-> for further refinement are welcome.
-> 
-> Thanks,
-> Mike
-> 
-> Changes since v5:
-> - #define NFSD_READ_DIO_MIN_KB (32 << 10)
-> - switch to using pre-increment from post-increment.
-> - always get DIO alignment when opening regular nfsd_file (dropped
->   patch that only did if NFSD_IO_DIRECT).
-> - fixed nfsd_io_cache_{read,write}_set to not set NFSD_IO_UNSPECIFIED
->   if returning -EINVAL due to unrecognized value. 
-> - use a switch statement in nfsd_iter_read like nfsd_iter_write
-> - Optimize nfsd_iter_read for default being buffered IO, like was done
->   for nfsd_iter_write in v5.
+On Wed, 13 Aug 2025, Al Viro wrote:
+> On Tue, Aug 12, 2025 at 12:25:13PM +1000, NeilBrown wrote:
+>=20
+> > + * If it is d_in_lookup() then these conditions can only be checked by t=
+he
+> > + * file system when carrying out the intent (create or rename).
+>=20
+> I do not understand.  In which cases would that happen and what would happen
+> prior to that patch in the same cases?
+>=20
 
-FYI, I've found that in general we _do_ need to verify DIO-alignment
-more comprehensively. Which means I've needed to reinstate the use of
-a modified iov_iter_is_aligned.
+NFS (and I think it is only NFS) returns NULL from ->lookup() without
+instantiating the dentry and without clearing DENTRY_PAR_LOOKUP if
+passed "LOOKUP_CREATE | LOOKUP_EXCL" or "LOOKUP_RENAME_TARGET".
 
-Otherwise the piece-wise checking that Keith suggested, by adding
-checks to existing loops and such, results in the underlying
-filesystem (XFS) returning -EINVAL due to alignment issues.
+So when e.g. filename_create() calls lookup_one_qstr_excl() the result could
+be a d_in_lookup() dentry.  It could be that the name exists on the
+server, but the client hasn't bothered to check.  So determining that
+the result wasn't ERR_PTR(-EEXIST) does NOT assure us that the name
+doesn't exist.
 
-So I'm now focusing on correctness and will hopefully be posting v7 of
-this patchset by the end of the week.
+The intent needs to be attempted, such as when do_mknodat() goes on to
+call e.g.  vfs_create().  Only once that returns an error can we know if
+the name existed.
 
-Mike
+i.e. the API promise:
+
++ *   Will return -EEXIST if name is found and LOOKUP_EXCL was passed.
+
+must be understood against the background that the name might not be
+found due to the lookup being short-circuited and not attempted.
+The other promise:
+
++ *   Will return -ENOENT if name isn't found and LOOKUP_CREATE wasn't passed.
+
+is currently safe from confusion, but I can imagine that one day a
+LOOKUP_UNLINK intent could allow a filesystem to short-circuit the
+lookup in do_unlinkat() and simply send an UNLINK request to a server
+and return the result.
+
+So I thought it worth highlighting the fact that these errors are
+best-effort, and that d_in_lookup() is a real possibility.
+
+NeilBrown
 
