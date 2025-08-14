@@ -1,197 +1,103 @@
-Return-Path: <linux-nfs+bounces-13640-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13641-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35E0DB2682B
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 15:54:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEEBBB26886
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 16:06:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A417A1C87AEF
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 13:49:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B4005E796B
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 13:58:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9333019A3;
-	Thu, 14 Aug 2025 13:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44ADF2FAC11;
+	Thu, 14 Aug 2025 13:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVmMjtHj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNXnqdIY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF48301498;
-	Thu, 14 Aug 2025 13:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FAB3002D8
+	for <linux-nfs@vger.kernel.org>; Thu, 14 Aug 2025 13:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755179289; cv=none; b=rTb5V07GBWZngK/qCP0C9WgsTwe6o0sQmZsLzHszyi+XWUaRUt3iZrgDNx5CDbWEyYGpjizCyhYyzmh17lvpa8AgUAPiC6IxsbGiXtKa6b7hOK01QjUWE9fOs0VQc73g3sbBocreBgxU1QeergeEYDIlxQXNJl2g3wB0Rjlj+A4=
+	t=1755179909; cv=none; b=CPjxe+O9l0jifZXIFwYogUJA9fqsVdu0oBQv+uSdkmUJoPXdopEInw7/+WebOrz29XcdDNfSzNkHOqsUqTC/SIzxWc2HxDlpMe0RGJB0Gef9NBL0lRDshnBpHBJf4/bJkh+1qY7zfiyo1/jeU8AYGljsWrlzT0dHpJ51mbVxWv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755179289; c=relaxed/simple;
-	bh=3nDch1TwnwnOFxnyGs00pASm7HAHD3urGrnQFPRpJis=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ISiDJqpCuCcWbMBThjKavPdFwKr82cnx7yVtYf27l4lUPZqj5bg4C7uErbDQXVNuutY9xYUK2c8GFdj95JfX0k8tEcmEm5SiM18fI2mq2z8H2nyH5rKqGTyF3+Bf+VTqVw0It7uUMRrbpe1gdApk2JeyuvLKaPjcku1MlO8+oaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SVmMjtHj; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6188b5b11b2so1238311a12.0;
-        Thu, 14 Aug 2025 06:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755179285; x=1755784085; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kknE7rDUjEpODcHDSlY2nJGg21LqzdjsCFp42JS4Ico=;
-        b=SVmMjtHjyDWUAv8RYC77foqLZ64FkzLAVO+E5YBxcj8zgauvxcJk6RQKFlux1yLNP3
-         3f8HP4YvicdbqH91iKsn5YwEc/Faeoq8bMx9a4nQVr0R1TqBvK7ixdfK8UNiQB1YXv99
-         +24TYdIYlFoamRmOz44EZEBIq3rMS3LRQ1PlqRzBUR2ekMDCG5M7X3VoCvLejlYC8xDF
-         xLlHn1ESboMXuSUZsbpJOYP7eu65BRT5rJdCXn5jCNPAOao3AaXUUFlojJcc12OxvV7H
-         Bdj8/FiIZdn17RsylTeCamTst6WBS6+HDdp6dfOIiRGoRv7plTGlO4lNY/ooVDbO94uy
-         rtNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755179285; x=1755784085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kknE7rDUjEpODcHDSlY2nJGg21LqzdjsCFp42JS4Ico=;
-        b=SPVIOlOPdCjDSEM/Ppi851QV7x6H7Rrdcj9Z7+nxnfwRi5lrriGZ10ply2ppexLA9E
-         OJutZ01AUg87uKyVwSNzf9VmQAQGewuj4zGHcSylYbqtJ9RC6Gw6H9yYxnDyHpghRhSx
-         /yuAdPfLZdTThdE7iBDtXdryOHumP7zHnUMwZ1dV61uKaK4/CpCQKZys9ocjZLu2HA5p
-         WBCPLdADBFCPSbNQwpqMfk/9sunTZCSpAu5T08gMWjjtWi7M3QJMgDKxhWfmEW974aLn
-         YFlFc8jzZjEPOd4qK7KKxUcglNOBL/4bs6gkfWELJoTewbYtpAanVi5ZbaWO5kfLSguT
-         a6Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPPd1yk+8bkQrdGZayvR3aO78+O39btGP4Hg/Vu1+zg9fvek6R30uUMbHgI0Xzm/maRVLIFTbJA44FiBCJhg==@vger.kernel.org, AJvYcCVGOth4jlR3SQK+ZjfZSmXur7Z0B7o+yLMBEt8s7LC5RBhboqwWeU8iZesqAm9zEnU3/t3VOXJc0962@vger.kernel.org, AJvYcCVjuTGjcKpOuYDJ+gJwWPVw1c5ceo70617t82C6UtPyiwjyz9FpDUMnVPtWkrdFSXeSQt2sQ63QfetI@vger.kernel.org, AJvYcCVw87kqUXv8fkx7nEoilm+uwX5s2QVqNhQwS+FOdRA0nS2w2X6R3vRsL5dHarFu6Key81Uq7HjJgiP4+LM2bA==@vger.kernel.org, AJvYcCW4YVL5ezYSSVLmHS7BA9ubQHEnKVVdNceS8VycGNlj4W8XNSygxfo+BTnmFlC4kSM9DD/vPYcdcdVfXNpW@vger.kernel.org, AJvYcCWK+onlHzVxCAewGSF1hJjxiow87uTEGD0HfXpY41jEkD295G0NE6+y/fckuTvoYh4cMgnFjJ6EIOM=@vger.kernel.org, AJvYcCWrlqX8T5H4KCYH05jz+USPJ/2B6g6X+3LKDD8Wgpl5HPtX0FqJyZer/JW286eHzJkIY30GLGqeA7aM@vger.kernel.org, AJvYcCXD0cTu8rngZ1WDlNbtJjQe7YY7IYOl4P9e6IV5cK9E+jORsKjKH0DpkI07YMSJwA9xnDSIwPRiW41PIA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOjWpIxv9ccUFwMoKZLhoC0Wrop8ActjLNQpy8P6UM47aYKfLK
-	ZX3rLpUvYlfSrO0yECTO1djyptq42TM9UEHWhiwT5EDzrlVXzB7UCMFSAipPGnhR0p9KMsCvT0n
-	Xx76BT5aGZhJ/gcvO8cdwDrnfYle1pdU=
-X-Gm-Gg: ASbGncsJF2IVjEnva+sKKHYhcBv4pR0ab5eZJxUvkm6Cg+LoHAcOh39ibttib2NILjZ
-	oKWxN4AR1fbjptTI2L2ZCrdYHavCnuhgbH6eoWrdJ/TPgIjkKGZVHp9yK07lW0hlMJCkSYstbOl
-	7A8VrOP6a1OFohWsFoHGJ5upHMu9Zawow2AgoKx424V5ZfqiMnf9hNzwsvxUO5KXzgTzIgsgF/w
-	Ev3Ceo=
-X-Google-Smtp-Source: AGHT+IEyNlWqeAhk/LpScYt9w4g0zV4KI7o0RDFgyEsYgfPOIWzZIEz6LWnNRfl0s84eTTaO2QcDUYXHT6IzkeoX6zs=
-X-Received: by 2002:a05:6402:348e:b0:617:b2ab:fba2 with SMTP id
- 4fb4d7f45d1cf-6188c1f81c9mr2881340a12.34.1755179284840; Thu, 14 Aug 2025
- 06:48:04 -0700 (PDT)
+	s=arc-20240116; t=1755179909; c=relaxed/simple;
+	bh=sSOFJuCWYYiK+YXIXDLuJyjRlD1/GyMURt7Sv0N6h+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nTnJaC9hT0oFkRKvMBs1zwZLlpJgSPcQ+mMyNKqfZ6bi/XzwrhJL33FaVmytL7hG28gYmHj6pRSIEbH/ZV+snyhL/Ak0LRSekqja5cxLUYnvxoaS8Ye7baSIFvNIgIlZU4i3z8RMicVOQFVkI/aIhrN1KpjxpH/eggkS5k0BqmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RNXnqdIY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755179906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgpGla/B109kvRwEAs1an2xOE9xA/sCFYTKkztkpR1k=;
+	b=RNXnqdIY5b+DcLsprQbODpSxqbSHdRzlt8jadiQ3/e3y7tIyR6QW/FhpANnJreD4pQG0mq
+	6GykMdkvFSsnV2OXPuBPCsjWKlp8nN6qCEyVFAylHQp5q87ZWeE11P15vSEFsR3AtoUQ5E
+	QH00mXv2f2BqmwhkxRutkf8lsI9VcA0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-4Yy1aqxeOGym0my7f1tQ0w-1; Thu,
+ 14 Aug 2025 09:58:20 -0400
+X-MC-Unique: 4Yy1aqxeOGym0my7f1tQ0w-1
+X-Mimecast-MFC-AGG-ID: 4Yy1aqxeOGym0my7f1tQ0w_1755179899
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AFA64180034A;
+	Thu, 14 Aug 2025 13:58:19 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.8])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D75718003FC;
+	Thu, 14 Aug 2025 13:58:18 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Anthony Iliopoulos <ailiop@suse.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ "J . Bruce Fields" <bfields@fieldses.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] NFSv4.1: fix mount hang after CREATE_SESSION failure
+Date: Thu, 14 Aug 2025 09:58:16 -0400
+Message-ID: <60F16D3A-C453-49F6-91AC-955C0E727E4A@redhat.com>
+In-Reply-To: <20250813090047.92365-3-ailiop@suse.com>
+References: <20250813090047.92365-1-ailiop@suse.com>
+ <20250813090047.92365-3-ailiop@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813065333.GG222315@ZenIV> <175513726277.2234665.5395852687971371437@noble.neil.brown.name>
-In-Reply-To: <175513726277.2234665.5395852687971371437@noble.neil.brown.name>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 14 Aug 2025 15:47:53 +0200
-X-Gm-Features: Ac12FXwtQAorrE4W3bWM28WxLsn_dOcgt6iMm2QuEDqDEmfUynv58IGzMVEJihs
-Message-ID: <CAOQ4uxjOvsfV7o5Mnn_VBKYCR15FkmQBDASvwq0UQKPwxh1H2g@mail.gmail.com>
-Subject: Re: [PATCH 11/11] VFS: introduce d_alloc_noblock() and d_alloc_locked()
-To: NeilBrown <neil@brown.name>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Steve French <sfrench@samba.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Carlos Maiolino <cem@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, netfs@lists.linux.dev, 
-	ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Aug 14, 2025 at 4:08=E2=80=AFAM NeilBrown <neil@brown.name> wrote:
->
-> On Wed, 13 Aug 2025, Al Viro wrote:
-> > On Tue, Aug 12, 2025 at 12:25:14PM +1000, NeilBrown wrote:
-> > > Several filesystems use the results of readdir to prime the dcache.
-> > > These filesystems use d_alloc_parallel() which can block if there is =
-a
-> > > concurrent lookup.  Blocking in that case is pointless as the lookup
-> > > will add info to the dcache and there is no value in the readdir wait=
-ing
-> > > to see if it should add the info too.
-> > >
-> > > Also these calls to d_alloc_parallel() are made while the parent
-> > > directory is locked.  A proposed change to locking will lock the pare=
-nt
-> > > later, after d_alloc_parallel().  This means it won't be safe to wait=
- in
-> > > d_alloc_parallel() while holding the directory lock.
-> > >
-> > > So this patch introduces d_alloc_noblock() which doesn't block
-> > > but instead returns ERR_PTR(-EWOULDBLOCK).  Filesystems that prime th=
-e
-> > > dcache now use that and ignore -EWOULDBLOCK errors as harmless.
-> > >
-> > > A few filesystems need more than -EWOULDBLOCK - they need to be able =
-to
-> > > create the missing dentry within the readdir.  procfs is a good examp=
-le
-> > > as the inode number is not known until the lookup completes, so readd=
-ir
-> > > must perform a full lookup.
-> > >
-> > > For these filesystems d_alloc_locked() is provided.  It will return a
-> > > dentry which is already d_in_lookup() but will also lock it against
-> > > concurrent lookup.  The filesystem's ->lookup function must co-operat=
-e
-> > > by calling lock_lookup() before proceeding with the lookup.  This way=
- we
-> > > can ensure exclusion between a lookup performed in ->iterate_shared a=
-nd
-> > > a lookup performed in ->lookup.  Currently this exclusion is provided=
- by
-> > > waiting in d_wait_lookup().  The proposed changed to dir locking will
-> > > mean that calling d_wait_lookup() (in readdir) while already holding
-> > > i_rwsem could deadlock.
-> >
-> > The last one is playing fast and loose with one assertion that is used
-> > in quite a few places in correctness proofs - that the only thing other
-> > threads do to in-lookup dentries is waiting on them (and that - only
-> > in d_wait_lookup()).  I can't tell whether it will be a problem without
-> > seeing what you do in the users of that thing, but that creates an
-> > unpleasant areas to watch out for in the future ;-/
->
-> Yeah, it's not my favourite part of the series.
->
-> >
-> > Which filesystems are those, aside of procfs?
-> >
->
-> afs in afs_lookup_atsys().  While looking up a name that ends "@sys" it
-> need to look up the prefix with various alternate suffixes appended.
-> So this isn't readdir related, but is a lookup-within-a-lookup.
->
-> The use of d_add_ci() in xfs is the same basic pattern.
->
-> overlayfs does something in ovl_lookup_real_one() that I don't
-> understand yet but it seems to need a lookup while the directory is
-> locked.
+On 13 Aug 2025, at 5:00, Anthony Iliopoulos wrote:
 
-We decoded a connected real directory path (from file handle) and we
-are trying to lookup in overlay a directory that is referencing the
-underlying real dir that we decoded.
-
-This is the context. Not sure what problem exactly this code gives you.
-
+> When client initialization goes through server trunking discovery, it
+> schedules the state manager and then sleeps waiting for nfs_client
+> initialization completion.
 >
-> ovl_cache_update is in the ovl iterate_shared code (which in fact holds
-> an exclusive lock).  I think this is the same pattern as procfs in that
-> an inode number needs to be allocated at lookup time, but there might be
-> more too it.
+> The state manager can fail during state recovery, and specifically in
+> lease establishment as nfs41_init_clientid() will bail out in case of
+> errors returned from nfs4_proc_create_session(), without ever marking
+> the client ready. The session creation can fail for a variety of reasons
+> e.g. during backchannel parameter negotiation, with status -EINVAL.
 >
+> The error status will propagate all the way to the nfs4_state_manager
+> but the client status will not be marked, and thus the mount process
+> will remain blocked waiting.
+>
+> Fix it by adding -EINVAL error handling to nfs4_state_manager().
 
-It's kind of a hack I guess.
-ovl has those rules (see xino) to compose a consistent inode number
-from real inode number and layer number.
-lookup of children during readdir composes the child stack to realize
-the consistent xino.
+Looks correct, but consider reducing the scope of this change by handling
+the error within nfs41_init_clientid() instead of modifying all the possible
+paths that might return -EINVAL from the state manager.  IMO a comment about
+-EINVAL probably resulting from improper negotiation would be nice as well.
 
-We could do this internally in ovl by doing lookups on the real layers
-and composing the xino, but calling lookup on ovl during readdir was
-so much easier :/
+Ben
 
-Thanks,
-Amir.
 
