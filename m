@@ -1,166 +1,128 @@
-Return-Path: <linux-nfs+bounces-13681-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13682-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB1A5B28588
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 20:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C853AB285A1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 20:13:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E0371D042CF
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 18:08:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EBBF1D03809
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 18:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489B01E51EB;
-	Fri, 15 Aug 2025 18:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CB4301031;
+	Fri, 15 Aug 2025 18:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e62ENeVD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hyri/WCF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAC8317717
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 18:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311042F9C3B;
+	Fri, 15 Aug 2025 18:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755281279; cv=none; b=n30ZE4SMmXvUz2YxTUd0lr1urwpR5Gu3JPCFpTQ2ySzeGYL/X2ZsxAs18yAY6+Bw/5b2CJjXVumocfXoArf4EurnMbNFJB2ht8GVtPPAyxzwzUcwff20bxLYKjHimEMaAPYfuwSSzAmQMwBMrbrs1J2viKIEw5fXF/5vFVcLAjw=
+	t=1755281596; cv=none; b=OBgXKimaLcGssZ3wC97CLr/EyQDk5zSVssliNFniFURaZObRXrrCFQZ/PIkiX/orhw4BvYZrrHl63LRc3vabCVX9Ar51+mN0J97nMZh5IvAd11srMZg4I6hHvCSbW7Bg75vKfRoLp5WVvEo4izfYyVCHJOFYZbFuqxiiBmI7RNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755281279; c=relaxed/simple;
-	bh=ZN1jzVyjghbEQt/NQXOSgI5Wlgv2uvBZ1dPvRmRf2CA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Np6UICk7hYGeslK6T/Yv6Y4hjBYenV7oK1rjG3BDGdDn1j+Nbx0csYMwubTaaDXInjIpIXb3ZFs4JQmO1YyYcbAYlP4z/t9D1yMgbAP7FKRv9QKzVSs/eimapmRrlhQPewt6e+U/oJG2Q1oeoyAGJEkIS1jPbw8Jy3yoB0iVmxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e62ENeVD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755281276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2SFW18LTLoe+/CiLZYVMYpI6hxkLfwDo8eZq9MNOd5M=;
-	b=e62ENeVDMyN7oDzWYohbMvU9phQMRqodLauMuemEEYkrvDhZeMSykkhWFjDYlLvIeySSga
-	bEx7IkGgLAS8Ks4PkR/2UgBpynYkaK/QZox9bP125w4yO+aKfAysdaufOWBAlQZS4iVcDN
-	1uWIropCVYb76uVdWWu8YQg18tH+HVU=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-461-oU0SutbuPZeTiwJfJh1aHQ-1; Fri, 15 Aug 2025 14:07:55 -0400
-X-MC-Unique: oU0SutbuPZeTiwJfJh1aHQ-1
-X-Mimecast-MFC-AGG-ID: oU0SutbuPZeTiwJfJh1aHQ_1755281274
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b109c4c2cfso86000651cf.3
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 11:07:54 -0700 (PDT)
+	s=arc-20240116; t=1755281596; c=relaxed/simple;
+	bh=fFYyh5J/EOcbKjLUREgW3XR+vjT/ijh4iRwnyj4BFpc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=oOzyZFs4hrChSL5Gm3O5w3F8DzdVmvNFN8apN8x+qeMPJFkwLDozMPKEKMAxneUKnfDPCPlyStRGjhp923IusjG3mYJAvycV2NezI7155N4p+Zn3aldjv/iZ0UTcXiTCWZQ1ogkalZ/5b880rrwdF7IAzouJtLDfinmm5UlWy3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hyri/WCF; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-24457f47492so15255455ad.0;
+        Fri, 15 Aug 2025 11:13:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755281594; x=1755886394; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JyFLdgUQkPQ1EBi1OP2pK+ChQ9j+YhjltNfXhrruJdc=;
+        b=Hyri/WCFQASc5sPmRX3r/WEdq+EgDNCfaoqN0KTfERAzeB/4xdEgAdlmYfuUO1CXC5
+         JHSsFlYKekAzcUIlBVt3/YteOpNOnSblhbfWeCiaT8tWUs/oHq96i1wPqNhhagA3cy9G
+         Uz0gpmcQGOCi+/7kP0BayokdxOFJsiCTJcocw/xm7TU9zduYryHbTE54ldiO9zBN1uFk
+         /Tz4q8uuE853RszzUe1Jisb/DvacymAIEqyydOn5vk7j1ThAW7UK49WIb3BmsrbSuG+P
+         yyCV6eXN0PLG0X7ivBJVIa2ZHRQKNV/A/bwPBBA1YnkQKbLsMp+OZGr0wXTMfl5IW7Dp
+         uJiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755281274; x=1755886074;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2SFW18LTLoe+/CiLZYVMYpI6hxkLfwDo8eZq9MNOd5M=;
-        b=NjPjJwnwMCmh+L1h4mHpFQEvy8jugSeE2FtYGYCOTL0BVJ/Vh8NDNCgcm3M/Tje2Ft
-         z5r0918xx7n5YjzWOTOVPMyRO2+ip+13IRkNs3bZeiVdox6RQsSlgouAZfQwtqVmgSDl
-         g0IaFxyNyObAwXO7WV6cDNJF0FLpa9s4T4LwSZMgFPBoHUsWEjhyStITfe6eZ6J1ZxK6
-         0dCDJ11NidEtNSrWdo/6xa6uJGDJjOj9T3gNHehbfL0p+cWBvridyZWgrLBTSBpCon+r
-         trT2RICvbPXEzesRC8oNUgyqv/PE6b8IrSOKAral5eiK4Hp4k1oBY/L7AixHQ65PaTmo
-         QQ3w==
-X-Gm-Message-State: AOJu0Yw6KMMgtJjtXY1DXkG19XG8/oE6FC6994q/ByLwBV78ezdhDt0+
-	j+ndGuEOM7tgX0v2VAB7nclSR4tXkB9w/2oQcQM7w4E3L6KyqnfF17yGYXL0bMYnb4k+Qollk6+
-	wqTKqfiFlll0k6uc6WTDXAPca+ghOIysLUWrvHr6THilJX6t/GGVQGrDXy9o9Fw==
-X-Gm-Gg: ASbGncuM6dFCk8sK9tkVN5DNecL5A6NpRGj4S2487Hz6kMj53BGnAgIu2iYKdppFKex
-	Xtxt5nyKBcnrjlVl6ay5l3W0JzuEBkzffH99dw7r94IV71TqSektf/SlVjNkshQrxfBbdZYGY8x
-	zlA790MlJGBTTeDdiroM9pX8lrDzSJr1FCRbWNRUuQPcryYTRIJujxeB/vJ27V1d1i60X9Gqg7l
-	aIfLDb4NmjjXse4DRCr0FkwryNDmbdg/KOBVVdH6EG/gZsbip0akoWBCBKixeEifI4TTIb5RzNc
-	i/8DNJWahcrS5udUn5AzZ7yY1+CNJ1j4pZLkdRc9
-X-Received: by 2002:a05:622a:1e18:b0:4b0:8092:9912 with SMTP id d75a77b69052e-4b11e1d90acmr46799431cf.19.1755281274179;
-        Fri, 15 Aug 2025 11:07:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIFL8g7XQhsMPGTyoNv6Li38ROXnd8WvcQK4CNRnxnJmk7FseGl37XyM7Hw3AFNb+Bp13NLw==
-X-Received: by 2002:a05:622a:1e18:b0:4b0:8092:9912 with SMTP id d75a77b69052e-4b11e1d90acmr46798801cf.19.1755281273659;
-        Fri, 15 Aug 2025 11:07:53 -0700 (PDT)
-Received: from [172.31.1.136] ([70.105.250.115])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70ba906706esm11645436d6.17.2025.08.15.11.07.52
+        d=1e100.net; s=20230601; t=1755281594; x=1755886394;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JyFLdgUQkPQ1EBi1OP2pK+ChQ9j+YhjltNfXhrruJdc=;
+        b=YKiDVK7wcsV20lic1Aodh5hmXw4e4Rd9+E5BvyEX7HVjRSZG0yVVCfIaiRDGMBJ9JU
+         e5RR+MW//vCAcve5WUHaEy9sf5VKXFIUoPP72SuIchR6jBnWk+XIvJjPZWzppXaIMtr8
+         +JKp+gjY+bQzppOZAwApbo7CG6H0qrjeNeVmVOsKCj6NyBci8tfFvVhe16iuCzt0gDtl
+         8ReJzQZJJLtJV2bEz62wbjWrsdNO5jIjsd1VWWBA9y2OkmJCG01D38vzSPwJ6nJTxTVE
+         kpFJn/s8pHsob8eC7gDW/ckE0BNW4aIsgkS+eWxWPaY5ISVb8RPe/3U0jfB8Ib/ymsD1
+         bULQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoxCEPxS2AiLALX+swgEYgyalGNrL24mMwtFs+IBZMgeEIEINB2zrRwWLdflZJEUG3fCsrxLCaQrGc@vger.kernel.org, AJvYcCVhG1W/o/QlhTxxYIwsrVnv6ybgVhD0zQUxUybMl+yWxsh2vaYEz5Ohx3Uxrzsk4vvrzP2DVQwWW+0h9SJX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5zwNbZkdRH/w0PjCsdl9984d0Uw8TvFBwhfxLIQ0ko8+vFf8k
+	GQcOcYTd3UXCbtgbIv5cjaCCBgp0G6d0T9hBb33jfNgkPrmj+j1xoce7
+X-Gm-Gg: ASbGncsKQ1cFN44KPw/cwRIeeK9MwiRYq9KE+CrReOk2ODXxT1korHaSmeDiJHYIvu1
+	adez26F7WGkBE0rT99aiKuKTt3qqCDntrhxuGd5xir0kZZt6E2vc4qTshLWk4pjJS2ZHBF3/54M
+	jWzqbDfW8IaunHYJbDT3w0CPR+fDa+osc+aNkySJQzXDtxQWF3VS+fl5FaE5R/k6IJEKq3epa2C
+	cIqowEVVNhVmwGZdzypDkO7hCVTj0ALh8HJTUg3YWuUpvC8dAOCoY41enpGl2O0/yikgYi+6Vgp
+	8p7muhQi5+9EhcbPvYnfLlFeRxYFV/10kF7toBzUiHz/KQroj+DfBhrJmODlHa4vF5ur9E6zQ5/
+	HhxODHoZthVj/rR0qYV9jJTIYGQ==
+X-Google-Smtp-Source: AGHT+IHhLAqcn6t3IKYb9FoYhIYSVfavKpTay3V9ds/iGSURETjrjA8ktGyW8ESLrAQPBiPxojQ7nQ==
+X-Received: by 2002:a17:902:e80a:b0:240:63a9:30c9 with SMTP id d9443c01a7336-2446d71ebadmr46619365ad.17.1755281594292;
+        Fri, 15 Aug 2025 11:13:14 -0700 (PDT)
+Received: from localhost ([65.144.169.45])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446cb07105sm18948305ad.55.2025.08.15.11.13.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Aug 2025 11:07:53 -0700 (PDT)
-Message-ID: <42121eeb-6e7e-4138-9520-8ee81679ddac@redhat.com>
-Date: Fri, 15 Aug 2025 14:07:52 -0400
+        Fri, 15 Aug 2025 11:13:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: -Wold-style-definition warnings
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
- libtirpc <libtirpc-devel@lists.sourceforge.net>
-References: <482e394f-67bc-48bf-88e4-3808f508737e@redhat.com>
- <9d84391f-d724-4693-90d9-c56d54ece17e@oracle.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <9d84391f-d724-4693-90d9-c56d54ece17e@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 15 Aug 2025 12:17:44 -0600
+Message-Id: <DC37HOOZSBJA.3ADYC1VKXSHJ6@gmail.com>
+Cc: <io-uring@vger.kernel.org>, <axboe@kernel.dk>,
+ <linux-fsdevel@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
+ <brauner@kernel.org>, <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/6] fhandle: create helper for name_to_handle_at(2)
+From: "Thomas Bertschinger" <tahbertschinger@gmail.com>
+To: "Amir Goldstein" <amir73il@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250814235431.995876-1-tahbertschinger@gmail.com>
+ <20250814235431.995876-2-tahbertschinger@gmail.com>
+ <CAOQ4uxhPMOoJEK_nVn-fyBX+TzE_EJBb8wmXPg2ZCWfyEA+utQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhPMOoJEK_nVn-fyBX+TzE_EJBb8wmXPg2ZCWfyEA+utQ@mail.gmail.com>
 
-Hey!
+On Fri Aug 15, 2025 at 4:21 AM MDT, Amir Goldstein wrote:
+> On Fri, Aug 15, 2025 at 1:51=E2=80=AFAM Thomas Bertschinger
+> <tahbertschinger@gmail.com> wrote:
+>> +/*
+>> + * fs/fhandle.c
+>> + */
+>> +long do_name_to_handle_at(int dfd, const char __user *name,
+>> +                         struct file_handle __user *handle,
+>> +                         void __user *mnt_id, int flag, int lookup_flag=
+s);
+>
+> I really dislike do_XXX() helpers because we use them interchangeably
+> sometimes to wrap vfs_XXX() helpers and sometimes the other way around,
+> so exporting them in the vfs internal interface is a very bad pattern IMO=
+.
+>
+> io_uring has a common pattern that requires a helper with all the syscall
+> args and for that purpose, it uses do_renameat2(), do_unlinkat(), ...
+>
+> I would much rather that we stop this pattern and start with following
+> the do_sys_XXX() pattern as in the do_sys_ftruncate() helper.
+>
+> Lucky for us, you just renamed the confusing helper named
+> do_sys_name_to_handle(), so you are free to reuse this name
+> (+ _at) in a non confusing placement.
+>
+> Thanks,
+> Amir.
 
-On 8/15/25 1:26 PM, Chuck Lever wrote:
-> On 8/15/25 12:23 PM, Steve Dickson wrote:
->> Hello,
->>
->> On the more recent gcc version (15.1.1) the
->> -Wold-style-definition flag is set by default.
->>
->> This causes
->>      warning: old-style function definition [-Wold-style-definition]
->>
->> warnings when functions are defined like
->>
->> int add(a, b)
->> int a;
->> int b;
->> {}
->>
->> instead of like this
->>
->> int add(int a, int b)
->> {}
->>
->> Now I did fix these warnings in the latest rpcbind
->> release... But libtirpc is a different story.
->>
->> I would have to change almost every single function
->> in the library to remove these warnings or add I
->> could add -Wno-old-style-definition to the CFLAGS.
->>
->> Now I'm more that willing to do the work... Heck
->> I'm halfway through... But does it make sense to
->> change the foot print of every function for a
->> warning that may not make any sense?
-> 
-> I recommend breaking up the work into several smaller
-> patches, and posting them here for review before you
-> commit.
-Not quite sure how to do that... at this point it
-is one huge commit... growing as we speak. Even if
-I do it by file... it will still be a ton of patches.
-But I agree... trying to make it easier to review
-would be a good thing.
-
-> 
-> Maybe you could also pass the result through a C linter
-> or clang-tidy. But don't go too crazy. You get the idea.
-No worries... I will not go crazy! ;-) But if I do that
-God only knows what would be found! :-)
-This is old code... but point taken.
-
-> 
-> Out of curiosity, what is the test plan once your
-> conversion is code-complete?
-The upcoming bakeathon?? In general I lean on the
-Fedora guys to do the regression testing...
-
-But at the end of the day, I didn't realize
-there would be this much change... so I have
-not thought that through. Idea welcome!
-
-steved.
-
+That makes sense, I can adjust it like that in v2. Thanks!
 
