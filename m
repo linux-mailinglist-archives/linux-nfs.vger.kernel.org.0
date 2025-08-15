@@ -1,201 +1,142 @@
-Return-Path: <linux-nfs+bounces-13685-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13686-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9AEFB285DE
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 20:34:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5E69B286DE
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 22:04:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36E4B60945E
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 18:33:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A5FF7B8167
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 20:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAF6244664;
-	Fri, 15 Aug 2025 18:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6EE29B76F;
+	Fri, 15 Aug 2025 20:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T8K1PPkd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJb3AlOk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA9822FAFD
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 18:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE2426F44D;
+	Fri, 15 Aug 2025 20:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755282771; cv=none; b=L8Y50AkFS/zYwiNeE4SqXLCVdxxMa96dvjoPM9Ub/bWUg+1cmMAVfJCZVs+Sq4P4O58NgbwDGET9/RwZtbxZ7amjNzEZl5rfZbgGGIpyLcmeFzDU0qUANcfWWoK3bOEFz/erW5GUFJW6t5utAfN045mHOfUhyU2E1R6nq3jrR90=
+	t=1755288248; cv=none; b=MT83VmRL7YJxNT53B//zls0RTev9YM+oSdUDMjHUFBE4sVQmIahjNZgoSq2yv602dYWnRYcZGr5fHwoICFf/qfA1AkYAA8F5qoIOb4dPbdgCKQ+zKrmyk6DO5BNsZ4HYhXLjkuvKih63pKum5B9YatAPgqCuxen7Fa9dQ2glcnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755282771; c=relaxed/simple;
-	bh=r9c3rQ5z9MWHvvPdWBRGs6A3839nl+e4ZYt9QLADMUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HHVvS+wRd3eGVAwdMYaKkKSuW3sNcD5ZMA6EF4DAnV05eRm0KZLVvc46Co3rhXuh7+rG+pfHn1+7Ra7Y3SReN9U2CDfqiVjtIo4PuIO/hecTRmFE1k1RJctlZ17Cg95Afjb+Y08gHf/3P76ShSyZnT21tZYcAH2ebtYHSC35JwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T8K1PPkd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755282768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r7E2ze0OJ7SDZCFayIVgSwqY4PHLaA2wt5SNOV0/IzY=;
-	b=T8K1PPkdTFADQlFLGZZdMB9E4/t1Y3PNsCiSVuePNd3HrrfOxYSHavjgVeHrhuHlct32Zy
-	Er0f5n6mL365SHKVI1FlPnLqoz+wGvO+GY3Ajfd3FcyYii7IWsLikxPmCng4oBseKbwgSZ
-	qwYSB24xC2W8jkD1MlshI30l3+ZS+NE=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-pqFYTwilPwGmO96EQ0fIEQ-1; Fri, 15 Aug 2025 14:32:46 -0400
-X-MC-Unique: pqFYTwilPwGmO96EQ0fIEQ-1
-X-Mimecast-MFC-AGG-ID: pqFYTwilPwGmO96EQ0fIEQ_1755282766
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-71d604dcc4dso30965447b3.2
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 11:32:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755282766; x=1755887566;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7E2ze0OJ7SDZCFayIVgSwqY4PHLaA2wt5SNOV0/IzY=;
-        b=dGgmQgFVfVxo31w5GgWwxk0vzOQLdbdXht81g7OTG6UJBD5spX5NBn2VIQoLqcrunl
-         H9QXlWXbVgjmWQrfD9v4f6z/yef+HKoQi23vAl7Fl7GwhQ/8mirKq472qpUOqEJhnQKx
-         htpwtAUOOEGzXq1n5no4oDL94rOAcZQjtH0LC6CeS4idDFZ96QW5NSn0lvESfMI32GC6
-         YM1IgZviOfIe/ssaDraV6RQag3mk/rUC8iy6qNrskIgab53/wVX+53Hw6Q0eLREUyPM9
-         se11hNQp2hlNBblYAz1KI2DPTs+jOxH3tz6O5KcYltAvw8UjBU9Qb6ZJkM6fnuaTR+KZ
-         Z5/w==
-X-Gm-Message-State: AOJu0YzJMMpy3IYNhYLHAYT/Cq7UiUZw1bsW2dECH+gNKUbasZureEU/
-	OEWrMhjj0koC7Fkt5lP4u3dPOTKxlB1Rm+qpyni5/BuDaquEaxbAYUShVu6GVXTIbP24H9uJBri
-	6HUs9uuFzq+Owf9KwzjmYDwXY+hPNslbdkHxv7t+0JOOcI56GEEyXamk0lkqHMw==
-X-Gm-Gg: ASbGncuqqtPw75Bj5F/bNvGY+zfKfuRVFLwfUr8Pj7hXFJ1i8M72OunXa1iTefJwu0Y
-	YUbvbYDSnJ5f8H29+Y0RStVkHW1hXYWu657oqOOjRU1Tc4O5Ig7+1Ln+4LbIiRLl6Rbh946yKix
-	RlETJxn/K6DJNaKeA24YMNW2byzm5pO12ebuLL4z47Bl34RxPCQn8M70UWvY7k2y376/fyauFhG
-	HFPnjC5FTdl9nX2shbGMu0gwAbOg/b8/MAt7qYo9dU0XZDX1cJS+oS4egXvuCfQl+Oeqyl4JGuB
-	de9Zx0NYkpUsM5mWhHeKPPllALM4eu/erK95b/CS
-X-Received: by 2002:a05:690c:d0f:b0:71b:b928:74ed with SMTP id 00721157ae682-71e6ddeae9dmr42115217b3.20.1755282766305;
-        Fri, 15 Aug 2025 11:32:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUYtMK5nxegjUP6+sITqsrzvx62pHkOZjmZSX0c7a3EwA1t/InLWwH1zuGr2PCT4uBlBz7rQ==
-X-Received: by 2002:a05:690c:d0f:b0:71b:b928:74ed with SMTP id 00721157ae682-71e6ddeae9dmr42114877b3.20.1755282765910;
-        Fri, 15 Aug 2025 11:32:45 -0700 (PDT)
-Received: from [172.31.1.136] ([70.105.250.115])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71e6e058dbasm5482657b3.47.2025.08.15.11.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Aug 2025 11:32:45 -0700 (PDT)
-Message-ID: <28d4e637-7469-4dcf-8bff-c5c69bf65dd4@redhat.com>
-Date: Fri, 15 Aug 2025 14:32:44 -0400
+	s=arc-20240116; t=1755288248; c=relaxed/simple;
+	bh=KdoNFM0JyALmDBeXeK9bjvyngTHO5qk2sJ3MRHhIr5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2KGvfEMNCBSwPhrQCwwdNKXDJ2LXzrjXSd/0il+YdWce6JrxYc4xM8tWNUlFL8IGUIwk+mPxPOV+tKEVXmR0ZRChBI2KRtpwberGPuAvR+I5D8X7m5Ha624454FaATMNvUdHqNlz6Uc+46G47GWrHi4+JufSFoea6/H3uVv+UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJb3AlOk; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755288247; x=1786824247;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KdoNFM0JyALmDBeXeK9bjvyngTHO5qk2sJ3MRHhIr5Y=;
+  b=IJb3AlOkwuwTKo2lScWfnVce0Lqy6O0lB2Cr+LTB74a86UVpLM27/C0o
+   stH6XifF8Ezm2BreCe5VF4z0pP3h4vBbScP6QOrDb+YW4Ykg0zd0TwhGV
+   IkP6ZbdkdTPWS6IAyqlO4RGSXGqvnGXCoa+FKn2xyjaNl+8F6pQeYdwjM
+   Xay4SXTjdriMdwl+/wRIQzO3wbYSf3vz8qd3BcY4Az0D8vYP4FHrlW5nS
+   b6pa/7O4EHkWW6l1TuIA31mS0oel9Xois5NynKc+XXdhZCwKY8I+2sD8A
+   Cotzu+2FIjnBLRL2A6uwTreYJV4XOstgxTZZlYVmTAGfnWxZ33ob3M6fP
+   g==;
+X-CSE-ConnectionGUID: 4lWAmQuqTHK/B2aGtTZcaA==
+X-CSE-MsgGUID: lthB33xtSbyt5pYTu4gsiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11523"; a="57716990"
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="57716990"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2025 13:04:06 -0700
+X-CSE-ConnectionGUID: p62lv+19RGmetwWyYZhq1A==
+X-CSE-MsgGUID: ipz8qSBhSIme0DYb3mWaXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="167048938"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 15 Aug 2025 13:04:02 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1un0eZ-000CIy-2g;
+	Fri, 15 Aug 2025 20:03:57 +0000
+Date: Sat, 16 Aug 2025 04:03:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
+	kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kbusch@kernel.org,
+	axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
+	alistair23@gmail.com, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH 2/8] net/handshake: Make handshake_req_cancel public
+Message-ID: <202508160354.iNoLUr4h-lkp@intel.com>
+References: <20250815050210.1518439-3-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: -Wold-style-definition warnings
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
- libtirpc <libtirpc-devel@lists.sourceforge.net>
-References: <482e394f-67bc-48bf-88e4-3808f508737e@redhat.com>
- <9d84391f-d724-4693-90d9-c56d54ece17e@oracle.com>
- <42121eeb-6e7e-4138-9520-8ee81679ddac@redhat.com>
- <ad23a6d9-72a4-4363-bee5-e52164e3ed17@oracle.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <ad23a6d9-72a4-4363-bee5-e52164e3ed17@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250815050210.1518439-3-alistair.francis@wdc.com>
+
+Hi,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on net/main net-next/main linus/master linux-nvme/for-next v6.17-rc1 next-20250815]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/alistair23-gmail-com/net-handshake-Store-the-key-serial-number-on-completion/20250815-130804
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20250815050210.1518439-3-alistair.francis%40wdc.com
+patch subject: [PATCH 2/8] net/handshake: Make handshake_req_cancel public
+config: arm-mps2_defconfig (https://download.01.org/0day-ci/archive/20250816/202508160354.iNoLUr4h-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 93d24b6b7b148c47a2fa228a4ef31524fa1d9f3f)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250816/202508160354.iNoLUr4h-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508160354.iNoLUr4h-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> net/handshake/request.c:312:6: warning: no previous prototype for function 'handshake_req_cancel' [-Wmissing-prototypes]
+     312 | bool handshake_req_cancel(struct sock *sk)
+         |      ^
+   net/handshake/request.c:312:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     312 | bool handshake_req_cancel(struct sock *sk)
+         | ^
+         | static 
+   1 warning generated.
 
 
+vim +/handshake_req_cancel +312 net/handshake/request.c
 
-On 8/15/25 2:18 PM, Chuck Lever wrote:
-> On 8/15/25 2:07 PM, Steve Dickson wrote:
->> Hey!
->>
->> On 8/15/25 1:26 PM, Chuck Lever wrote:
->>> On 8/15/25 12:23 PM, Steve Dickson wrote:
->>>> Hello,
->>>>
->>>> On the more recent gcc version (15.1.1) the
->>>> -Wold-style-definition flag is set by default.
->>>>
->>>> This causes
->>>>       warning: old-style function definition [-Wold-style-definition]
->>>>
->>>> warnings when functions are defined like
->>>>
->>>> int add(a, b)
->>>> int a;
->>>> int b;
->>>> {}
->>>>
->>>> instead of like this
->>>>
->>>> int add(int a, int b)
->>>> {}
->>>>
->>>> Now I did fix these warnings in the latest rpcbind
->>>> release... But libtirpc is a different story.
->>>>
->>>> I would have to change almost every single function
->>>> in the library to remove these warnings or add I
->>>> could add -Wno-old-style-definition to the CFLAGS.
->>>>
->>>> Now I'm more that willing to do the work... Heck
->>>> I'm halfway through... But does it make sense to
->>>> change the foot print of every function for a
->>>> warning that may not make any sense?
->>>
->>> I recommend breaking up the work into several smaller
->>> patches, and posting them here for review before you
->>> commit.
->> Not quite sure how to do that... at this point it
->> is one huge commit... growing as we speak. Even if
->> I do it by file... it will still be a ton of patches.
->> But I agree... trying to make it easier to review
->> would be a good thing.
-> 
-> Yes, making it easier to review is exactly the idea.
-> 
-> Possibilities (that you are free to disregard):
-> 
->   - Write a cocchinele script or two?
-> 
->   - Ask an AI for advice on how to strategize the changes
-> 
->   - Change internal (non-public) functions first
-> 
->   - Stage the changes across several library releases
-This might be a good idea... But I'm thinking of grouping
-the commits by functionality... commit src/clnt_* files
-then src/pmap_* file etc... I'm thinking there would be ten
-or so patches... I'll see what it looks like.
+3b3009ea8abb71 Chuck Lever 2023-04-17  300  
+3b3009ea8abb71 Chuck Lever 2023-04-17  301  /**
+3b3009ea8abb71 Chuck Lever 2023-04-17  302   * handshake_req_cancel - Cancel an in-progress handshake
+3b3009ea8abb71 Chuck Lever 2023-04-17  303   * @sk: socket on which there is an ongoing handshake
+3b3009ea8abb71 Chuck Lever 2023-04-17  304   *
+3b3009ea8abb71 Chuck Lever 2023-04-17  305   * Request cancellation races with request completion. To determine
+3b3009ea8abb71 Chuck Lever 2023-04-17  306   * who won, callers examine the return value from this function.
+3b3009ea8abb71 Chuck Lever 2023-04-17  307   *
+3b3009ea8abb71 Chuck Lever 2023-04-17  308   * Return values:
+3b3009ea8abb71 Chuck Lever 2023-04-17  309   *   %true - Uncompleted handshake request was canceled
+3b3009ea8abb71 Chuck Lever 2023-04-17  310   *   %false - Handshake request already completed or not found
+3b3009ea8abb71 Chuck Lever 2023-04-17  311   */
+3b3009ea8abb71 Chuck Lever 2023-04-17 @312  bool handshake_req_cancel(struct sock *sk)
 
-> 
-> 
->>> Maybe you could also pass the result through a C linter
->>> or clang-tidy. But don't go too crazy. You get the idea.
->> No worries... I will not go crazy! ;-) But if I do that
->> God only knows what would be found! :-)
->> This is old code... but point taken.
-> 
-> Yeah, ignore the complaints about actual code. Just look at function
-> definitions and declarations, etc.
-True.
-
-> 
-> 
->>> Out of curiosity, what is the test plan once your
->>> conversion is code-complete?
->> The upcoming bakeathon?? In general I lean on the
->> Fedora guys to do the regression testing...
-> 
-> Are there critical applications or packages that build against
-> libtirpc? I guess... rpcbind, nfs-utils, any NIS packages left? Do you
-> need to build libtirpc with alternate C libraries? On alternate hardware
-> platforms?
-> 
-> It's hard for me to imagine functional breakage if the code is still
-> compiling.
-I agree... My carpal tunnel syndrome might acted up
-do to all the repetitive typing ;-) This should be
-straightforward... just a lot of change.
-
-steved.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
