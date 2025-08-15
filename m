@@ -1,92 +1,98 @@
-Return-Path: <linux-nfs+bounces-13648-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13649-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 710B6B27338
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 01:52:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 607CCB277F1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 07:02:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0521C5E83D3
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Aug 2025 23:52:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DA5B1CE2C48
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 05:02:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E7A1F582E;
-	Thu, 14 Aug 2025 23:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D534223DEC;
+	Fri, 15 Aug 2025 05:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jum9qaPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTp7wtoo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E5A28937D;
-	Thu, 14 Aug 2025 23:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0F374C4;
+	Fri, 15 Aug 2025 05:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755215514; cv=none; b=JZn1FSO2jZF4EFdz1nKFKsqlbnRrVssM9DGtoSOGrlvFWGO0BqDdV4rppPXS6DkW2E/paz85QGu9hShvAG4hPYAKgYQbM40/pUdk6+T6ILa2rK3o0zgopF4Bn4pKoCXG1KoVOytaq2yLBaMiqhGsoCZbmoSbGFR04HK6iK8/1vI=
+	t=1755234142; cv=none; b=G9wz0i9l9ir+gjSiUtuuvCNzydP4hmVX41PlgaTbfVD1FQ1R4TeyYd8ctnjbvE5TYRGfEIYj3LbJYS2V+/03LbQMqGfSU4xCUNSgXQ1Y7BPwabxRvL4q565NoAKdPjSKQsyGd9qSc3gkpn3YbMDylujk5p+00ZyMKC+rEhz0JwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755215514; c=relaxed/simple;
-	bh=VZVKNFxEnLweOafgl0TbIkx6Kr3Ygs7abNi0A0rT6AA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s7686r5iFC7cy3SEbu9qSeXbJz0mj9fT9dDN+2tBO+xKOgt6vLPuHWhIBm7cstzKB7N8THfib0dljH7Zk5RGphPFdjHYY9QqfBYCxwAodgklpjyQKd+UYtQ6cNeXc3itDDmbMSXLfENvvijz7ZitGmlbbAUHPs8AZp7ZsY9sEdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jum9qaPv; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1755234142; c=relaxed/simple;
+	bh=4aoISFqoZW3xIWfmCOYas+QHZ7GQjQ+ceAIQLkxwDZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CV+VcVIzgC/XVPEEvy3Ji+dMOB/FqUT278YRQOtgy3I6XDJw2ydKMX8R6+QHR7AIiPkn5/xvCS3XlF66TcReJZP4e2emjnD1ONYrAeUfPRt/TSKRsW6ytjHgVwFWv9o2BVARdI77Uuslf5Lr06kxBzCX+qMtHwPYg0ZAF7/egQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTp7wtoo; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-32326e67c95so2019923a91.3;
-        Thu, 14 Aug 2025 16:51:52 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-32326793a85so1502012a91.1;
+        Thu, 14 Aug 2025 22:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755215512; x=1755820312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nWEAphj4m/uzejg39gNHA2RWkzZcuFUCit1TiH9ELm0=;
-        b=jum9qaPv0NmunVZJ+bKIn0fRJQLkpRxQ+imsb6W4ICCPuHsCjOCKdA7gm/Awexam+Q
-         18PKLKeLZF5IFpSafsGDd/ln6IMpbt4jGg1BdT8T8Hd8IMpKzJB71mOYmYQE3PAMMhZu
-         l3U3oatoTAncjqOwC5gyR0EJM+seQzRYoes3OzBkANd9lVmfYFKIGT0V187HktW5hZli
-         bzRRagE/+mOWwDOtNmHzUesfL0dpkYUdcwNhNZ8dqRXwxKIrDBzamRnFfSwo7XLejHEF
-         Q/NXkaIzwL8fiX8RBIPgia/5BbGN2VEOT1feJyhvtPOswPW9k4xW7/masalS8fHPcrpZ
-         w+gg==
+        d=gmail.com; s=20230601; t=1755234140; x=1755838940; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HvJ9vjlQgWj0JGVdSmCK4V4OH1FNmLUxKe8JArbwI44=;
+        b=PTp7wtoo24622jPyRmbLk+NyKrV9mx7f5+XG3+2wMR1DqVEGnMjZB1i0MZYSGEFH8n
+         7q0nU6LoEBlSNij2PfXSVsEpQnF8Mknu59Ym0o6jkW4Uo6xRQ7FfC1oN597Qv36bH6O2
+         xgiS59Y0KRbkAlWsZLReitOf/4oI5w4Nv2xtLqwBcuGdZtfNmWMouM8VifCW08JkjUHR
+         OBqvoIxQ2XoW63+03UCVrRykwkV2I+82JqVZSL4ibJC+pnm4katf26FNfTGw+e8pwWQH
+         7BbTBzPFvd8AjzVuGqTPqB6IOtFo6YU+Wk9VOfof4eIzMeGi89/9W0i7VQASeq8w1M+F
+         le1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755215512; x=1755820312;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nWEAphj4m/uzejg39gNHA2RWkzZcuFUCit1TiH9ELm0=;
-        b=lPrfSGFUAlElp77vJHBM+PyQd7Ng36FHw5XL+LgNDzsZ3brFs7gegHuA1SB2SDaAwZ
-         ocPbe052tLZZ+zSgHfr5KdPg6917fohIH2CwC5/XNTZJ/7iBKkPWizbVlOSxOtzB0xLz
-         9JfUn2zosedtBJmlTURl/aF8l0IICnvd4Ze9sH2dz8he8G8TsCA7wBhdrihI1JmzQQiG
-         Pm2l7I5YzgNQfYMA/h2FyazlJETsvYJvURCflFMfhuJYHYG4lVwBu0YAwt4nioC2v79O
-         HsaELcwgDfcDM3qRw68JQoLc24mygtdno9KTI8svaaJs+6IdQJfIWLo1JsIy0ahmEPGG
-         ojRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXnff0Yco0qtxudxjxnXSNirCIrZirvG6KquJ1TRirUJxLKabzsUhgDQjXI27ZyzntiObmGKR3UWkq@vger.kernel.org, AJvYcCXh4lidyQrNB2sd7jltlLfb3Xv3EJjkphyjU0qHYuvs9shVsk3hFHHNFT9QC9ae37juD/7IwtdWO5UdZN6Z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5BYsDEzDnQJMfdmJHcGOfe8B8wQDlDEZJW+oT08jzKULPA3Cu
-	sPYv0+IbNg5rO9Bb5iJjrMntTLptZELlnBlaPWQsazhV5eEpzo7sHXfU2AhhFxtDe6o=
-X-Gm-Gg: ASbGncstK7697mR4+i19hdZvSu/8UeEVYhYqsFahWrZDHj0Z+dQ15kYaW4yHlcGb9Fh
-	PIIwZ6k1z+dn83L32sligdSOR6ujWm4AzxQ6DoatoD8Me1Hv0X/NoY6wnH84K1DNDtXCiEztmvl
-	hQ6ZbiAOE9wGTI0q9KBEdyo9LQEWzmUCE2gNJzT/svVTnvrIldyCjtQE5Y8k6gC5BWfXmd6k4zG
-	RJVXvpsTuaAEyo7IXxqwlb9WoUmU0HTi1ljQRbq6Npf87N/XXdlKsRNyWebsKdBsX434MysJNNY
-	r8w8/C2JTme1b/r3IQ7eHw433sfON+L/iwqWjik0XB6lfWyl0YZ685YwIkap9B9OVU4wG5IMIVz
-	CU3xXyggiavJdSwKj75Jyrd6M
-X-Google-Smtp-Source: AGHT+IGAH2BfgBfw7vvtObihS4KTIKjz40J3ccIYBwu2pqgeegIP/7mgDHHjGJdmmuA4bGd2c1q2oQ==
-X-Received: by 2002:a17:90a:c10e:b0:31f:485f:fab6 with SMTP id 98e67ed59e1d1-32341df8efamr245772a91.4.1755215512102;
-        Thu, 14 Aug 2025 16:51:52 -0700 (PDT)
-Received: from jicarita ([65.144.169.45])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3233100c1d0sm2974721a91.17.2025.08.14.16.51.51
+        d=1e100.net; s=20230601; t=1755234140; x=1755838940;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HvJ9vjlQgWj0JGVdSmCK4V4OH1FNmLUxKe8JArbwI44=;
+        b=qSLBmB/0BhD5RAL72BIXcK4f/wYr7xrO3Iwn0Ja2n3hPKnIr4wyex03M4oiJmwAecN
+         YlR+rJOMMpOgFYq1pNNpU9NK3BSVTVV5gqgj7OFUHmfpvQVzf0bUcoHJyDfWiILDHYk0
+         r8TERz8BK9qMY9h68uI/fLBq68nMzcI46PwUI755PdiPGQl4btrvDmbFgrMm40wcI+Pe
+         OB2QpKXARqeJ61OOvnLFs6BvEqDMybmZANL9ETUc4Lyv0ZDdX5T95UPGXAWiJTamHhDZ
+         CDc9N4LyrjhgLm5qQ3CAK9KeJw7l75n5szkthvZJDUr95+Gvkijk/8ZfFKd/ncJMJ95I
+         abkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2SVTdRQVG19FGgRi+DS3xdybjeGEPYsUoz+VDsXLIvzmdlEBBOHvYpDsPYTtA9lZ0xk/jMYgmUOnjPDVd@vger.kernel.org, AJvYcCWq9+j1e2+VGxvzX0baAqc0aUcKR4zXhSyQrfbnYJKq/QJ8Anssoez9wZQTCzW3+Lb5hli+n7bMTp5e@vger.kernel.org, AJvYcCXp+Icc+Z7TQslMknr9Z6Kt8XQEhFIQ3xFYdwEsQI5ZQuTPc7gchJmRPS0ZMqYrZynje69wzhsRTok=@vger.kernel.org, AJvYcCXzM4GmwkdzwtIxyOO87CsFysTzfVoZmUzTVZ9nAxSEljl0CIAbrMo2iOUt4Zf0xLZIV1GCumdT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTgRYlIna7iM8IS4mlyTWkkQjLW+MXNZAFbuyntqJhbCMWkrKQ
+	Br8PaKj9D4VbBKiRrPNzH62FsulHOiHjfPdU91S8tcGc5izGgwIvxFGr
+X-Gm-Gg: ASbGncsV9kkFHtvm2hfPx142dgBP+TJxXKlyZM1ZkkVKFyFzYU0jpiEo7R3akd8RAnX
+	XbMBSJpAbTu8lGpdCKGFCfo+RHJrTJxk46jzSsBCf/1xcTLuRYsNx+sfvbhPKe97bYtzlvMpkO9
+	p7cv3TQnHGLw9aY7ztXhkl3lR12ceiEXhZG1LzL6Wxg5e69iNO6vQJvxXrslMvWJKACDgitU2Vw
+	XAXN7C47AH584A3SXcFt7s/xJmIc7rbW192zezd8AJK7tAfYkU1UWWXVyNXattMrfJZo+03j0g4
+	7ZYIpeib7ympgQ/6etDPgLydKpVhhEJ9iDtP6iVuMvnvlCt0H23xb6S9fPu5WxjPpTGerZNRES9
+	q420lhB7CDksw4WU3g6X3xqoCakcdHDJB4/grj6kwtDB0LwrBLknBvuXd00FjsN63Bf70fPJ19w
+	osJiLX/Wuk+zeu2uEccGiUO7dLS89pB7lCBzC7Uw==
+X-Google-Smtp-Source: AGHT+IFc/j6gSSFssjIPr1g+lc0GaAJwz273eKQ4JRPcXd+8ZTYMotiRajoz1cIteit3jJWFjwumvg==
+X-Received: by 2002:a17:903:41c3:b0:242:e0f1:f4bf with SMTP id d9443c01a7336-2446d720275mr11691175ad.18.1755234139897;
+        Thu, 14 Aug 2025 22:02:19 -0700 (PDT)
+Received: from toolbx.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d53c6e1sm5128645ad.115.2025.08.14.22.02.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 16:51:51 -0700 (PDT)
-From: Thomas Bertschinger <tahbertschinger@gmail.com>
-To: io-uring@vger.kernel.org,
-	axboe@kernel.dk,
-	linux-fsdevel@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
+        Thu, 14 Aug 2025 22:02:19 -0700 (PDT)
+From: alistair23@gmail.com
+X-Google-Original-From: alistair.francis@wdc.com
+To: chuck.lever@oracle.com,
+	hare@kernel.org,
+	kernel-tls-handshake@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
 	linux-nfs@vger.kernel.org
-Cc: Thomas Bertschinger <tahbertschinger@gmail.com>
-Subject: [PATCH 6/6] io_uring: add support for IORING_OP_OPEN_BY_HANDLE_AT
-Date: Thu, 14 Aug 2025 17:54:31 -0600
-Message-ID: <20250814235431.995876-7-tahbertschinger@gmail.com>
+Cc: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	alistair23@gmail.com,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH 0/8] nvme-tcp: Support receiving KeyUpdate requests
+Date: Fri, 15 Aug 2025 15:02:02 +1000
+Message-ID: <20250815050210.1518439-1-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250814235431.995876-1-tahbertschinger@gmail.com>
-References: <20250814235431.995876-1-tahbertschinger@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -95,151 +101,64 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adds support for open_by_handle_at(2) to io_uring.
+From: Alistair Francis <alistair.francis@wdc.com>
 
-Non-blocking open by handle is not yet supported, so this always runs in
-async context.
+The TLS 1.3 specification allows the TLS client or server to send a
+KeyUpdate. This is generally used when the sequence is about to
+overflow or after a certain amount of bytes have been encrypted.
 
-Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
----
- include/uapi/linux/io_uring.h |  1 +
- io_uring/opdef.c              |  7 ++++
- io_uring/openclose.c          | 64 ++++++++++++++++++++++++++++++++++-
- io_uring/openclose.h          |  2 ++
- 4 files changed, 73 insertions(+), 1 deletion(-)
+The TLS spec doesn't mandate the conditions though, so a KeyUpdate
+can be sent by the TLS client or server at any time. This includes
+when running NVMe-OF over a TLS 1.3 connection.
 
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 596bae788b48..946da13e1454 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -290,6 +290,7 @@ enum io_uring_op {
- 	IORING_OP_WRITEV_FIXED,
- 	IORING_OP_PIPE,
- 	IORING_OP_NAME_TO_HANDLE_AT,
-+	IORING_OP_OPEN_BY_HANDLE_AT,
- 
- 	/* this goes last, obviously */
- 	IORING_OP_LAST,
-diff --git a/io_uring/opdef.c b/io_uring/opdef.c
-index ff2672bbd583..e2e0f4ed0d9d 100644
---- a/io_uring/opdef.c
-+++ b/io_uring/opdef.c
-@@ -578,6 +578,10 @@ const struct io_issue_def io_issue_defs[] = {
- 		.prep			= io_name_to_handle_at_prep,
- 		.issue			= io_name_to_handle_at,
- 	},
-+	[IORING_OP_OPEN_BY_HANDLE_AT] = {
-+		.prep			= io_open_by_handle_at_prep,
-+		.issue			= io_open_by_handle_at,
-+	},
- };
- 
- const struct io_cold_def io_cold_defs[] = {
-@@ -831,6 +835,9 @@ const struct io_cold_def io_cold_defs[] = {
- 	[IORING_OP_NAME_TO_HANDLE_AT] = {
- 		.name			= "NAME_TO_HANDLE_AT",
- 	},
-+	[IORING_OP_OPEN_BY_HANDLE_AT] = {
-+		.name			= "OPEN_BY_HANDLE_AT",
-+	}
- };
- 
- const char *io_uring_get_opcode(u8 opcode)
-diff --git a/io_uring/openclose.c b/io_uring/openclose.c
-index 8be061783207..5be17d7a46e0 100644
---- a/io_uring/openclose.c
-+++ b/io_uring/openclose.c
-@@ -22,7 +22,13 @@ struct io_open {
- 	struct file			*file;
- 	int				dfd;
- 	u32				file_slot;
--	struct filename			*filename;
-+	union {
-+		/* For openat(), openat2() */
-+		struct filename		*filename;
-+
-+		/* For open_by_handle_at() */
-+		struct file_handle __user *ufh;
-+	};
- 	struct open_how			how;
- 	unsigned long			nofile;
- };
-@@ -244,6 +250,62 @@ int io_name_to_handle_at(struct io_kiocb *req, unsigned int issue_flags)
- 	return IOU_COMPLETE;
- }
- 
-+int io_open_by_handle_at_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+{
-+	struct io_open *open = io_kiocb_to_cmd(req, struct io_open);
-+	u64 flags;
-+
-+	flags = READ_ONCE(sqe->open_flags);
-+	open->how = build_open_how(flags, 0);
-+	open->ufh = u64_to_user_ptr(READ_ONCE(sqe->addr));
-+
-+	__io_open_prep(req, sqe);
-+
-+	return 0;
-+}
-+
-+int io_open_by_handle_at(struct io_kiocb *req, unsigned int issue_flags)
-+{
-+	struct io_open *open = io_kiocb_to_cmd(req, struct io_open);
-+	struct file *file;
-+	bool fixed = !!open->file_slot;
-+	int ret;
-+
-+	/*
-+	 * Always try again if we aren't supposed to block, because there is no
-+	 * way of preventing the FS implementation from blocking.
-+	 */
-+	if (issue_flags & IO_URING_F_NONBLOCK)
-+		return -EAGAIN;
-+
-+	if (!fixed) {
-+		ret = __get_unused_fd_flags(open->how.flags, open->nofile);
-+		if (ret < 0)
-+			goto err;
-+	}
-+
-+	file = __do_handle_open(open->dfd, open->ufh, open->how.flags);
-+
-+	if (IS_ERR(file)) {
-+		if (!fixed)
-+			put_unused_fd(ret);
-+		ret = PTR_ERR(file);
-+		goto err;
-+	}
-+
-+	if (!fixed)
-+		fd_install(ret, file);
-+	else
-+		ret = io_fixed_fd_install(req, issue_flags, file,
-+					  open->file_slot);
-+
-+err:
-+	if (ret < 0)
-+		req_set_fail(req);
-+	io_req_set_res(req, ret, 0);
-+	return IOU_COMPLETE;
-+}
-+
- int __io_close_fixed(struct io_ring_ctx *ctx, unsigned int issue_flags,
- 		     unsigned int offset)
- {
-diff --git a/io_uring/openclose.h b/io_uring/openclose.h
-index 3d1096abffac..a6304fa856bf 100644
---- a/io_uring/openclose.h
-+++ b/io_uring/openclose.h
-@@ -12,6 +12,8 @@ int io_openat2(struct io_kiocb *req, unsigned int issue_flags);
- 
- int io_name_to_handle_at_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe);
- int io_name_to_handle_at(struct io_kiocb *req, unsigned int issue_flags);
-+int io_open_by_handle_at_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe);
-+int io_open_by_handle_at(struct io_kiocb *req, unsigned int issue_flags);
- 
- int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe);
- int io_close(struct io_kiocb *req, unsigned int issue_flags);
+As such Linux should be able to handle a KeyUpdate event, as the
+other NVMe side could initiate a KeyUpdate.
+
+Upcoming WD NVMe-TCP hardware controllers implement TLS support
+and send KeyUpdate requests.
+
+This series builds on top of the existing TLS EKEYEXPIRED work,
+which already detects a KeyUpdate request. We can now pass that
+information up to the NVMe layer (target and host) and then pass
+it up to userspace.
+
+Userspace (ktls-utils) will need to save the connection state
+in the keyring during the initial handshake. The kernel then
+provides the key serial back to userspace when handling a
+KeyUpdate. Userspace can use this to restore the connection
+information and then update the keys, this final process
+is similar to the initial handshake.
+
+Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
+
+Alistair Francis (8):
+  net/handshake: Store the key serial number on completion
+  net/handshake: Make handshake_req_cancel public
+  net/handshake: Expose handshake_sk_destruct_req publically
+  tls: Allow callers to clear errors
+  net/handshake: Support KeyUpdate message types
+  nvme-tcp: Support KeyUpdate
+  net/handshake: Support decoding the HandshakeType
+  nvmet-tcp: Support KeyUpdate
+
+ Documentation/netlink/specs/handshake.yaml | 19 +++++-
+ Documentation/networking/tls-handshake.rst |  4 +-
+ drivers/nvme/host/tcp.c                    | 78 ++++++++++++++++++++--
+ drivers/nvme/target/tcp.c                  | 71 ++++++++++++++++++--
+ include/net/handshake.h                    | 18 ++++-
+ include/net/tls.h                          |  6 ++
+ include/net/tls_prot.h                     | 17 +++++
+ include/uapi/linux/handshake.h             | 14 ++++
+ net/handshake/alert.c                      | 26 ++++++++
+ net/handshake/genl.c                       |  5 +-
+ net/handshake/handshake-test.c             |  1 +
+ net/handshake/handshake.h                  |  1 -
+ net/handshake/request.c                    | 17 +++++
+ net/handshake/tlshd.c                      | 46 +++++++++++--
+ net/sunrpc/svcsock.c                       |  3 +-
+ net/sunrpc/xprtsock.c                      |  3 +-
+ 16 files changed, 300 insertions(+), 29 deletions(-)
+
 -- 
 2.50.1
 
