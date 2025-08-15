@@ -1,191 +1,102 @@
-Return-Path: <linux-nfs+bounces-13662-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13663-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D88E4B27E7F
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 12:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C1F16B280B7
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 15:38:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B97F1BC1D4C
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 10:41:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07ACA1CE0E8E
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 13:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65A532FC89D;
-	Fri, 15 Aug 2025 10:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2918428724D;
+	Fri, 15 Aug 2025 13:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i57ytt/V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQMYZaGN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD0021FF5D;
-	Fri, 15 Aug 2025 10:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6203C30275D
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 13:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755254446; cv=none; b=WAEke12Swdl1oohjWt6Nydl8+JPwV5CHMIGAdPrc5VOIsZiVIRYDoBHf2XegWA2DwmvJxY8lR/Yo2f/Uq6ktMXCGuTAv6cM6vFFysj2baNaode9OW06yypa2FLkrcE9x2O3Lkq9JxDgbSeHL8ICXBr9/EACd7why+fQaEozls4c=
+	t=1755265077; cv=none; b=bi+21PI1uM0hAxhNTFuCqwkPDLemmyhEgSSTSDUkWQ91jKnNSHKVbWzl0xibgXbDMB46Ru2zpjTS/eILxwKwDjtCc7v4HQnpWeGemJkuAYWfFdPhN/H5OmPrta+uJm9iq9BvV1o/lsT+1FB9AgQA5rPmOhga9jDRgT7WJ6H28Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755254446; c=relaxed/simple;
-	bh=T2zmVJzu63dIJxj/InbZiHhVIQ76K9RRNnQS9NdUg6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q11eYRk4fKlCz7P8XNBK77oo2za+ZnL0MgoR+urquyasdWibccQF941YmvTOO3xQSZDCLFfrno8uZ6ZIva58qhadFkXXU+z2QeM3r2SZ2pVsuFUYX31TvVVxyVKHsaQj8OYoapzcvhztPBQEWZPM3HcnkcJxwVVNTS1yo5KbiTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i57ytt/V; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6188b656159so3016261a12.1;
-        Fri, 15 Aug 2025 03:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755254443; x=1755859243; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6saLdyCKyWgYTitSChnqlSV/HwqtSRKtrlc/BKwH1uI=;
-        b=i57ytt/Vw8aiZKmJdDEEQSBwQE8Zqyg/lx7adk70ut8tRz1DP1MCqjUMgjpLyYt/6K
-         4UCwe/09jSd4jrvZf0IUNHyGIktFTHvJB+367SwTv3i2lOrTS8OmbdFVvyRCn22YhUdm
-         G3aZ4XorcWTVz41kL3YavONjJjw9J8/EQ+D0cOja3hsZwPAUQYjnXKJvZx8Q8mszEwgB
-         //dHJfl8Mu4eC44l5RK6Xd6l89TNgq2WRfXOUlT8C9eHlzGf4U+JJ7/rcXrDR+gzUURj
-         i5hS4/px1Zdi2W/VNSMJHt98Lm0RQYfkpYa87aoaKuEnueA0xm6LHa5hpDwiiCwPU6G3
-         6qDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755254443; x=1755859243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6saLdyCKyWgYTitSChnqlSV/HwqtSRKtrlc/BKwH1uI=;
-        b=oCURSa2wwMwM9wtZHw4qedBOiMYDPM2yG+/as9lYEuoZcT35+zxEYqTNefbQNN5zJm
-         QR2YMp2y4Cg97ceNEFxxXDEMRgOELNXbbWVKBknUyrZD+YFa753dQdDeoh+7onlg5bQU
-         JM2Q2C5u/ajObvuVcv5M31iolqNJ9wOQ5rTohFFwakLzfFHMQJ00fvZj6u87XRhJ5SVW
-         kbE9UDV6eQbD1CLw/RqAmtfeiI0FsEyBWF7DpymVxLdo7JEZfotMSh71pRnziSA3hm9r
-         1Z695cWAsQoZ0DRtWI/cH6Z6lrrMayMm7BdCx6Hq1PClMQTG1HGq46WgURZeYntLmEVR
-         3CkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXk2cXbUfDVPRaRlR4bdIhnmCv1PXvv9v8sZA9Qq61lqmPnKeU+EanzHCjCpJzjZlzQIsyMz8lQiVVt@vger.kernel.org, AJvYcCXu95VMmtUiEKy6gVF3+4OrC9YL6/JUjkf/nKVNUFH99wstDIsiiSSn6ekS73XzZOUI6OKAtIwATa9GGdRP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygg2NlVL1nAv/pugx5k3u+SZNyizJF9VpKrUMhhIL2Fb9CLWtR
-	lGscWmAL1jFg0uorfrwm6ew17DBNiqrEh+ACUhJJqDuuLLLVLMIrXgsEeFKLEW8R89Xl85VWR39
-	5wRdFxfvwgSAis/3pJHlNAK8M9Aoduac=
-X-Gm-Gg: ASbGncthVluSaBW/S89xgFuuvybVviq+2irzuiWY05eU5pfDdlX/vCNeXjQRwgmP+Bi
-	YKYckPggWdkXSrAiWWOUjmFL3n9V7MlemTKdJHAaU1ULHo7r4Fonqku684aK7CFm459dmvtmsLA
-	/peKVLf/LoI1OhL5FW1vbCXNZmYxLs8OosSuouxqgQQZnUjasBiwS/Zx+c6vs2/JcLq/sTMu4jM
-	ggpkCI=
-X-Google-Smtp-Source: AGHT+IHr1mQiEi5hGc8LoTPvGoLdd5QVhL+mSQ6I7Z+WHas2N2JwqHmxzeClECMUR7o+kDNlLieag+nrqU2AUyIwDLQ=
-X-Received: by 2002:a05:6402:274c:b0:618:28c3:aee0 with SMTP id
- 4fb4d7f45d1cf-618b0514affmr1311507a12.8.1755254442790; Fri, 15 Aug 2025
- 03:40:42 -0700 (PDT)
+	s=arc-20240116; t=1755265077; c=relaxed/simple;
+	bh=zohQStUtasR74FoPPexlk29/16mtENQ7si36wqkEW7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b2vNufNg6+LZ39Mjma5aSHijd2y2RHPiCPQN7bsDgaErgvBVvriYWU/Z8iPoZ1doEPP0nXOpi8VPIn8DKOfjAVHArSTkWY0p5eAXoEsNqXUfX4YosKyus74g4xoe209zWuozs7SjXeQdVXh3Mmj2kezz2k+hm2kbnaVbb9upIt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LQMYZaGN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755265074;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E7fadAPMRgdi9iNHL+KE0F+VcFjkUrMEdBg4YPpUQks=;
+	b=LQMYZaGNqjbYbBVleyQYZO/Frcp2k6F1Kd+GvBwt0MjhTJfCFZi1uCtkxjwKs1TZ9lVbUe
+	nw8I34sG/aO9XUcE3mpV40xgdFXlUtltcULXG/6A9e4PhgJH6ZYFE/CCDG/CeWieSvs3k+
+	wP3Su6epeNiYRYlstbY3cUfZKlM1fzs=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-208-icr0oH6mP7St_ayQRmmmSg-1; Fri,
+ 15 Aug 2025 09:37:52 -0400
+X-MC-Unique: icr0oH6mP7St_ayQRmmmSg-1
+X-Mimecast-MFC-AGG-ID: icr0oH6mP7St_ayQRmmmSg_1755265072
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D989A195605A;
+	Fri, 15 Aug 2025 13:37:51 +0000 (UTC)
+Received: from dobby.home.dicksonnet.net (unknown [10.22.89.202])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 275581954B06;
+	Fri, 15 Aug 2025 13:37:50 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] rpc.statd: fails to create RPC listeners when restarting nfs-server
+Date: Fri, 15 Aug 2025 09:37:48 -0400
+Message-ID: <20250815133748.671243-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250814235431.995876-1-tahbertschinger@gmail.com> <20250814235431.995876-3-tahbertschinger@gmail.com>
-In-Reply-To: <20250814235431.995876-3-tahbertschinger@gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 15 Aug 2025 12:40:31 +0200
-X-Gm-Features: Ac12FXwxDqoYDV52a6isgUjTEqvFVvz0jiyF8Xvn6aAFtsGWkEQS--xwOQ3NvtQ
-Message-ID: <CAOQ4uxhAOFyei+7GqR3L9WHp4SqhC7oVpwW9eDpxe1o7mDzjoQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] io_uring: add support for IORING_OP_NAME_TO_HANDLE_AT
-To: Thomas Bertschinger <tahbertschinger@gmail.com>
-Cc: io-uring@vger.kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, Aug 15, 2025 at 1:51=E2=80=AFAM Thomas Bertschinger
-<tahbertschinger@gmail.com> wrote:
->
-> Add support for name_to_handle_at(2) to io_uring.
->
-> Like openat*(), this tries to do a non-blocking lookup first and resorts
-> to async lookup when that fails.
->
-> This uses sqe->addr for the path, ->addr2 for the file handle which is
-> filled in by the kernel, and ->addr3 for the mouint_id which is filled
-> in by the kernel.
->
-> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
-> ---
->  include/uapi/linux/io_uring.h |  1 +
->  io_uring/opdef.c              |  7 ++++++
->  io_uring/openclose.c          | 43 +++++++++++++++++++++++++++++++++++
->  io_uring/openclose.h          |  3 +++
->  4 files changed, 54 insertions(+)
->
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.=
-h
-> index 6957dc539d83..596bae788b48 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -289,6 +289,7 @@ enum io_uring_op {
->         IORING_OP_READV_FIXED,
->         IORING_OP_WRITEV_FIXED,
->         IORING_OP_PIPE,
-> +       IORING_OP_NAME_TO_HANDLE_AT,
->
->         /* this goes last, obviously */
->         IORING_OP_LAST,
-> diff --git a/io_uring/opdef.c b/io_uring/opdef.c
-> index 9568785810d9..ff2672bbd583 100644
-> --- a/io_uring/opdef.c
-> +++ b/io_uring/opdef.c
-> @@ -574,6 +574,10 @@ const struct io_issue_def io_issue_defs[] =3D {
->                 .prep                   =3D io_pipe_prep,
->                 .issue                  =3D io_pipe,
->         },
-> +       [IORING_OP_NAME_TO_HANDLE_AT] =3D {
-> +               .prep                   =3D io_name_to_handle_at_prep,
-> +               .issue                  =3D io_name_to_handle_at,
-> +       },
->  };
->
->  const struct io_cold_def io_cold_defs[] =3D {
-> @@ -824,6 +828,9 @@ const struct io_cold_def io_cold_defs[] =3D {
->         [IORING_OP_PIPE] =3D {
->                 .name                   =3D "PIPE",
->         },
-> +       [IORING_OP_NAME_TO_HANDLE_AT] =3D {
-> +               .name                   =3D "NAME_TO_HANDLE_AT",
-> +       },
->  };
->
->  const char *io_uring_get_opcode(u8 opcode)
-> diff --git a/io_uring/openclose.c b/io_uring/openclose.c
-> index d70700e5cef8..f15a9307f811 100644
-> --- a/io_uring/openclose.c
-> +++ b/io_uring/openclose.c
-> @@ -27,6 +27,15 @@ struct io_open {
->         unsigned long                   nofile;
->  };
->
-> +struct io_name_to_handle {
-> +       struct file                     *file;
-> +       int                             dfd;
-> +       int                             open_flag;
+From: Yongcheng Yang <yoyang@redhat.com>
 
-These are not open_flags, there are handle_flags
-(e.g. AT_HANDLE_FID)
+When rpcbind is stopped and the nfs-server is restarted
+rpc.statd failes to create RPC listeners.
 
-> +       struct file_handle __user       *ufh;
-> +       char __user                     *path;
-> +       void __user                     *mount_id;
-> +};
-> +
->  struct io_close {
->         struct file                     *file;
->         int                             fd;
-> @@ -187,6 +196,40 @@ void io_open_cleanup(struct io_kiocb *req)
->                 putname(open->filename);
->  }
->
-> +int io_name_to_handle_at_prep(struct io_kiocb *req, const struct io_urin=
-g_sqe *sqe)
-> +{
-> +       struct io_name_to_handle *nh =3D io_kiocb_to_cmd(req, struct io_n=
-ame_to_handle);
-> +
-> +       nh->dfd =3D READ_ONCE(sqe->fd);
-> +       nh->open_flag =3D READ_ONCE(sqe->open_flags);
+Changed rpc-statd-service to Require rpcbind.service
 
-Please also create union member sqe->handle_flags
-or name_to_handle_flags.
+Fixes: https://issues.redhat.com/browse/RHEL-96937
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ systemd/rpc-statd.service | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Amir.
+diff --git a/systemd/rpc-statd.service b/systemd/rpc-statd.service
+index 660ed861..f5c2e486 100644
+--- a/systemd/rpc-statd.service
++++ b/systemd/rpc-statd.service
+@@ -3,7 +3,7 @@ Description=NFS status monitor for NFSv2/3 locking.
+ Documentation=man:rpc.statd(8)
+ DefaultDependencies=no
+ Conflicts=umount.target
+-Requires=nss-lookup.target rpcbind.socket
++Requires=nss-lookup.target rpcbind.service
+ Wants=network-online.target
+ Wants=rpc-statd-notify.service
+ After=network-online.target nss-lookup.target rpcbind.service
+-- 
+2.50.1
+
 
