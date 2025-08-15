@@ -1,232 +1,269 @@
-Return-Path: <linux-nfs+bounces-13676-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13677-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D755B2826F
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 16:51:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56260B282D2
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 17:21:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA0543A146D
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 14:46:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9A1416271B
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 15:21:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9010123D7CD;
-	Fri, 15 Aug 2025 14:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70E41E51EB;
+	Fri, 15 Aug 2025 15:21:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JD79GM4m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WX5dGb5B"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C526230BFD
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 14:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBCF319844
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 15:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755269179; cv=none; b=Cm7k2NbCJQ+WMOvY6kfy2anRMs0+jkA3+hGTlhk58sVogWpIb//3lzO0RQEGqWMCdLO11Cc8taCNmHq+7A6lGhYZsl0vodCjDArtY4t6gW7t1jC70fySnLBlf+IY7XHE2UcExibAFMzpyuVLfzUTiKmXVKRKCliq+QNvJ3AEL4s=
+	t=1755271262; cv=none; b=lClPkbr6EZXtJqoDoz1JlvUzyHWRNZhmqcQyN0kbpwY4NiD43jsXYTFcyJ+9nTi19RivYc1JAlMQZF0l3pDn2RTWXWQ5Tbi1hqkwqRk2b/mnhtdqHdQLeyWNFp2YLo/4HKExC4UY8FVFbk4T5ETZKEUfAQLx3G29054+jqyeS6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755269179; c=relaxed/simple;
-	bh=9YffGov4+O0DOV7OQcWZ/JRinhDkM5GfZEAu1B4h57g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=erq1UzOUyibi8Oj9zY+GuGsVneCU/1Ai/vKFCsNDEuchiJ1EY6rqRzA2eBFl+JPODqaDXq+pu3BEsdoZGDWulF2WSJ98SDGZ72e4cVI69vLlgiG9IYd99lPeFNJJYZcRWL7uFj9eiFeXVDdqCe5exjvEQ7yDnqqBgIB4BA2JcI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JD79GM4m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1690CC4CEF0;
-	Fri, 15 Aug 2025 14:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755269179;
-	bh=9YffGov4+O0DOV7OQcWZ/JRinhDkM5GfZEAu1B4h57g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JD79GM4m5TAmd6YlNyGTmLdCCAlSQc7kGzkUV7q8LCqA7NY7T46eQeopAPGUai+/j
-	 08Z03g7szXyXsFz/aCPKvCLIZnadX/0kqwgl+CncmzXF2PHRd3ISpaZaAf3wsX4I56
-	 URBalBeh84nwxxLwAvyea79/fHyNTJonl5dYTJ1Z1xQy7GNXYldgchjRRSmFxeBDm5
-	 A2G9gXVuxdBftjFEOYIyDujL7GcLeXq5yumD7jzvPmvGWSfYo0KQfoVNCZM8NwBKxX
-	 jYAGZA3Eu+Y4IdKaqh6L5pVfb3l+g0cICL8YHrjTcGlaAs+vlS/3w6qxs7kmv81E5N
-	 SaxKI0W7ugqoA==
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v7 7/7] NFSD: add nfsd_analyze_read_dio and nfsd_analyze_write_dio trace events
-Date: Fri, 15 Aug 2025 10:46:07 -0400
-Message-ID: <20250815144607.50967-8-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250815144607.50967-1-snitzer@kernel.org>
-References: <20250815144607.50967-1-snitzer@kernel.org>
+	s=arc-20240116; t=1755271262; c=relaxed/simple;
+	bh=AIKq9RRz3/NQBCtuwVWwNCfu5OwlQD/rMTsIZRoZN3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=dSGT/1ULqHRAKQKeDfOiB0/4J+NL5TvRX31QsOOABNNutdqDhTQkwQ8AnmfI6RL/RiznGRgurs+QOCvvt7Nnein9HmID/CGXys5KMRBycVRbOxKR2sGacerEAQWHSCTcClhsDm73WlwHoEbuU+v0gRjm+2PAXIfNqipnrLz5IYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WX5dGb5B; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afcb78d5e74so333550766b.1
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 08:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755271259; x=1755876059; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ds7vWRs3ae0FYggHp6P3i/EE92Jw2MJUQMfiJoX9zO4=;
+        b=WX5dGb5BSkNQvgtv8vnoGz+JraP26LmZfS1tHXh+YMwk3/SSfgA0tMcx9iTGZrTvDa
+         yNuqKlpuNQYsSqnbBIK44TzjHOe8Kb2E9A6mVqsAQiwmuxp0ZZggYFq8y6uwKYo3gF5E
+         gMja4H+tjUbo08YFQXGKaNHEZ//gOgb+mHtNVWplDUF8DBm2c/K1ynRuegCe0QvffrMG
+         i9vW83c9CNwo4rEF8oQQYfVjB6RT56VTyyG6OOsOIJkXl7Ct19bC/xSWwt3DZDP1KbAL
+         UkK4xV03g1WJxKElHWAQsOLymka80m7ud+yEigWA71aWhDD/CikmsBPzITY9qTSULoeW
+         k+wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755271259; x=1755876059;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ds7vWRs3ae0FYggHp6P3i/EE92Jw2MJUQMfiJoX9zO4=;
+        b=lGHQSP6HYxXMfGuPQtmLa2n6oT6962aRBiWxE1MBPLa/JdGDLh5NtZn53jYsXucoKd
+         vbPLJOTOLxG0CI/RYey3bIn2rIQVaNcjGUQIQLqxcU5CU3qRtT4U6lvZKZFBdFRpyY16
+         6f7B561tHoltf0KGZHN+f5y7U7/Oyj/QAaZtVIFMOq+wnEnuH+M/uE1GslrawgmYEO4c
+         dH99aU4x0kr5YZWHK9QKkOK34vkbdiO+cdeyB/AChjMvpVlSEmpf7v0SluCHlte3DA9f
+         sOZGP2N/rWgdTbPcvYHndUBwk8lI4Kl3PEgCvqO5lDTqHRQpA1sJMZPF3sTGk1HxXD5a
+         Sb/w==
+X-Gm-Message-State: AOJu0YyvSo3ePTvfYvBMSv1bPMAui+fdCP/MA8EaCSO/XsUcAEDTY1Dj
+	R5YyCbMFmdiJ9ddOyRzg8cgL9OrY01MgrTSgpbcQQCNEt3yLpiHKkzhx+njsWcbAXVXZnpJTsut
+	oV8udnEn13/149NYBlXkRQjRUqnggAYqQdjHyPH0=
+X-Gm-Gg: ASbGnctfrL1aZ4CB0MTrodSdRehNtk8h3LjWTBcFy0/+vBgVrD/3RjZugBwYUsv0l+x
+	XzO2HYYKkBiscpPLvyodRTY3TN+B/EqEQHZ3ukuN+3e26vGg6CMgAdccYYta8UF+nKmhvoYSUD1
+	4RhA4EVgpqYA6i0D1+gtUjDgOsxATL93YEHsT4szpA+JGt0l7irlasmKZizpRteVIssi99AMq27
+	2zfLY0=
+X-Google-Smtp-Source: AGHT+IGp7yyGOKmktNzAAxTAVhcTjmYP6vUs5Z8106FEhuZJOwXg7O7J0zfngO2LfiSFBoqsZU4ysnWwfZdO9qXZG/I=
+X-Received: by 2002:a17:907:788:b0:ad5:74cd:1824 with SMTP id
+ a640c23a62f3a-afcdc35dff2mr233804566b.38.1755271258704; Fri, 15 Aug 2025
+ 08:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230901083421.2139-1-chenhx.fnst@fujitsu.com> <3461ADBE-EAD4-4EEF-B7B0-45348BCDB92C@redhat.com>
+In-Reply-To: <3461ADBE-EAD4-4EEF-B7B0-45348BCDB92C@redhat.com>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Fri, 15 Aug 2025 17:20:22 +0200
+X-Gm-Features: Ac12FXyOZLG98uArxaF3_uVb08BgTVyh8XZ17PJKaHtUb0EK22DYOar_QNDd-q4
+Message-ID: <CA+1jF5pHpXHMOv_gRf_en2uX9jfwcCNhoDhYoq5butAFiiMsxg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] nfsv4: Add support for the birth time attribute
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add EVENT_CLASS nfsd_analyze_dio_class and use it to create
-nfsd_analyze_read_dio and nfsd_analyze_write_dio trace events.
+What is the status of this patch? did it ever made it into the Linus
+mainline kernel?
 
-The nfsd_analyze_read_dio trace event shows how NFSD expands any
-misaligned READ to the next DIO-aligned block (on either end of the
-original READ, as needed).
+Aur=C3=A9lien
 
- This combination of trace events is useful for READs:
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_read_dio/enable
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
-  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
+On Tue, May 13, 2025 at 6:08=E2=80=AFPM Benjamin Coddington <bcodding@redha=
+t.com> wrote:
+>
+> I'm interested in this work, Chen are you still interested in moving this
+> forward?   I have another question below --
+>
+> On 1 Sep 2023, at 4:34, Chen Hanxiao wrote:
+>
+> > nfsd already support btime by commit e377a3e698.
+> >
+> > This patch enable nfs to report btime in nfs_getattr.
+> > If underlying filesystem supports "btime" timestamp,
+> > statx will report btime for STATX_BTIME.
+> >
+> > Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> >
+> > ---
+> > v1.1:
+> >       minor fix
+> > v2:
+> >       properly set cache validity
+> >
+> >  fs/nfs/inode.c          | 28 ++++++++++++++++++++++++----
+> >  fs/nfs/nfs4proc.c       |  3 +++
+> >  fs/nfs/nfs4xdr.c        | 23 +++++++++++++++++++++++
+> >  include/linux/nfs_fs.h  |  2 ++
+> >  include/linux/nfs_xdr.h |  5 ++++-
+> >  5 files changed, 56 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> > index 8172dd4135a1..cfdf68b07982 100644
+> > --- a/fs/nfs/inode.c
+> > +++ b/fs/nfs/inode.c
+> > @@ -196,7 +196,8 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
+igned long flags)
+> >               if (!(flags & NFS_INO_REVAL_FORCED))
+> >                       flags &=3D ~(NFS_INO_INVALID_MODE |
+> >                                  NFS_INO_INVALID_OTHER |
+> > -                                NFS_INO_INVALID_XATTR);
+> > +                                NFS_INO_INVALID_XATTR |
+> > +                                NFS_INO_INVALID_BTIME);
+> >               flags &=3D ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZ=
+E);
+> >       }
+> >
+> > @@ -515,6 +516,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh=
+, struct nfs_fattr *fattr)
+> >               memset(&inode->i_atime, 0, sizeof(inode->i_atime));
+> >               memset(&inode->i_mtime, 0, sizeof(inode->i_mtime));
+> >               memset(&inode->i_ctime, 0, sizeof(inode->i_ctime));
+> > +             memset(&nfsi->btime, 0, sizeof(nfsi->btime));
+> >               inode_set_iversion_raw(inode, 0);
+> >               inode->i_size =3D 0;
+> >               clear_nlink(inode);
+> > @@ -538,6 +540,10 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *f=
+h, struct nfs_fattr *fattr)
+> >                       inode->i_ctime =3D fattr->ctime;
+> >               else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+> >                       nfs_set_cache_invalid(inode, NFS_INO_INVALID_CTIM=
+E);
+> > +             if (fattr->valid & NFS_ATTR_FATTR_BTIME)
+> > +                     nfsi->btime =3D fattr->btime;
+> > +             else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+> > +                     nfs_set_cache_invalid(inode, NFS_INO_INVALID_BTIM=
+E);
+> >               if (fattr->valid & NFS_ATTR_FATTR_CHANGE)
+> >                       inode_set_iversion_raw(inode, fattr->change_attr)=
+;
+> >               else
+> > @@ -835,6 +841,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const stru=
+ct path *path,
+> >  {
+> >       struct inode *inode =3D d_inode(path->dentry);
+> >       struct nfs_server *server =3D NFS_SERVER(inode);
+> > +     struct nfs_inode *nfsi =3D NFS_I(inode);
+> >       unsigned long cache_validity;
+> >       int err =3D 0;
+> >       bool force_sync =3D query_flags & AT_STATX_FORCE_SYNC;
+> > @@ -845,7 +852,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const stru=
+ct path *path,
+> >
+> >       request_mask &=3D STATX_TYPE | STATX_MODE | STATX_NLINK | STATX_U=
+ID |
+> >                       STATX_GID | STATX_ATIME | STATX_MTIME | STATX_CTI=
+ME |
+> > -                     STATX_INO | STATX_SIZE | STATX_BLOCKS |
+> > +                     STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_BTI=
+ME |
+> >                       STATX_CHANGE_COOKIE;
+> >
+> >       if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
+> > @@ -920,6 +927,10 @@ int nfs_getattr(struct mnt_idmap *idmap, const str=
+uct path *path,
+> >               stat->attributes |=3D STATX_ATTR_CHANGE_MONOTONIC;
+> >       if (S_ISDIR(inode->i_mode))
+> >               stat->blksize =3D NFS_SERVER(inode)->dtsize;
+> > +     if (!(server->fattr_valid & NFS_ATTR_FATTR_BTIME))
+> > +             stat->result_mask &=3D ~STATX_BTIME;
+> > +     else
+> > +             stat->btime =3D nfsi->btime;
+> >  out:
+> >       trace_nfs_getattr_exit(inode, err);
+> >       return err;
+> > @@ -1803,7 +1814,7 @@ static int nfs_inode_finish_partial_attr_update(c=
+onst struct nfs_fattr *fattr,
+> >               NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
+> >               NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
+> >               NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
+> > -             NFS_INO_INVALID_NLINK;
+> > +             NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
+> >       unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
+> >       enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_at=
+tr_type;
+> >
+> > @@ -2122,7 +2133,8 @@ static int nfs_update_inode(struct inode *inode, =
+struct nfs_fattr *fattr)
+> >       nfsi->cache_validity &=3D ~(NFS_INO_INVALID_ATTR
+> >                       | NFS_INO_INVALID_ATIME
+> >                       | NFS_INO_REVAL_FORCED
+> > -                     | NFS_INO_INVALID_BLOCKS);
+> > +                     | NFS_INO_INVALID_BLOCKS
+> > +                     | NFS_INO_INVALID_BTIME);
+> >
+> >       /* Do atomic weak cache consistency updates */
+> >       nfs_wcc_update_inode(inode, fattr);
+> > @@ -2161,6 +2173,7 @@ static int nfs_update_inode(struct inode *inode, =
+struct nfs_fattr *fattr)
+> >                                       | NFS_INO_INVALID_BLOCKS
+> >                                       | NFS_INO_INVALID_NLINK
+> >                                       | NFS_INO_INVALID_MODE
+> > +                                     | NFS_INO_INVALID_BTIME
+> >                                       | NFS_INO_INVALID_OTHER;
+> >                               if (S_ISDIR(inode->i_mode))
+> >                                       nfs_force_lookup_revalidate(inode=
+);
+> > @@ -2189,6 +2202,12 @@ static int nfs_update_inode(struct inode *inode,=
+ struct nfs_fattr *fattr)
+> >               nfsi->cache_validity |=3D
+> >                       save_cache_validity & NFS_INO_INVALID_MTIME;
+> >
+> > +     if (fattr->valid & NFS_ATTR_FATTR_BTIME) {
+> > +             nfsi->btime =3D fattr->btime;
+> > +     } else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+> > +             nfsi->cache_validity |=3D
+> > +                     save_cache_validity & NFS_INO_INVALID_BTIME;
+> > +
+> >       if (fattr->valid & NFS_ATTR_FATTR_CTIME)
+> >               inode->i_ctime =3D fattr->ctime;
+> >       else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+> > @@ -2332,6 +2351,7 @@ struct inode *nfs_alloc_inode(struct super_block =
+*sb)
+> >  #endif /* CONFIG_NFS_V4 */
+> >  #ifdef CONFIG_NFS_V4_2
+> >       nfsi->xattr_cache =3D NULL;
+> > +     memset(&nfsi->btime, 0, sizeof(nfsi->btime));
+>
+>
+> ^^ is this redundant if we're going to do it anyway in nfs_fhget for I_NE=
+W?
+>
+> .. actually, I don't understand why were doing /any/ nfsi member
+> initialization here.. am I missing something?
+>
+> Otherwise, this gets
+>
+> Tested-by: Benjamin Coddington <bcodding@redhat.com>
+> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+>
+> Ben
+>
+>
 
- Which for this dd command:
-  dd if=/mnt/share1/test of=/dev/null bs=47008 count=2 iflag=direct
 
- Results in:
-  nfsd-23908[010] ..... 10375.141640: nfsd_analyze_read_dio: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47008 start=0+0 middle=0+47008 end=47008+96
-  nfsd-23908[010] ..... 10375.141642: nfsd_read_vector: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47104
-  nfsd-23908[010] ..... 10375.141643: xfs_file_direct_read: dev 259:2 ino 0xc00116 disize 0x226e0 pos 0x0 bytecount 0xb800
-  nfsd-23908[010] ..... 10375.141773: nfsd_read_io_done: xid=0x82c5923b fh_hash=0x857ca4fc offset=0 len=47008
-
-  nfsd-23908[010] ..... 10375.142063: nfsd_analyze_read_dio: xid=0x83c5923b fh_hash=0x857ca4fc offset=47008 len=47008 start=46592+416 middle=47008+47008 end=94016+192
-  nfsd-23908[010] ..... 10375.142064: nfsd_read_vector: xid=0x83c5923b fh_hash=0x857ca4fc offset=46592 len=47616
-  nfsd-23908[010] ..... 10375.142065: xfs_file_direct_read: dev 259:2 ino 0xc00116 disize 0x226e0 pos 0xb600 bytecount 0xba00
-  nfsd-23908[010] ..... 10375.142103: nfsd_read_io_done: xid=0x83c5923b fh_hash=0x857ca4fc offset=47008 len=47008
-
-The nfsd_analyze_write_dio trace event shows how NFSD splits a given
-misaligned WRITE into a mix of misaligned extent(s) and a DIO-aligned
-extent.
-
- This combination of trace events is useful for WRITEs:
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_write_dio/enable
-  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
-  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
-
- Which for this dd command:
-  dd if=/dev/zero of=/mnt/share1/test bs=47008 count=2 oflag=direct
-
- Results in:
-  nfsd-23908[010] ..... 10374.902333: nfsd_write_opened: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008
-  nfsd-23908[010] ..... 10374.902335: nfsd_analyze_write_dio: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008 start=0+0 middle=0+46592 end=46592+416
-  nfsd-23908[010] ..... 10374.902343: xfs_file_direct_write: dev 259:2 ino 0xc00116 disize 0x0 pos 0x0 bytecount 0xb600
-  nfsd-23908[010] ..... 10374.902697: nfsd_write_io_done: xid=0x7fc5923b fh_hash=0x857ca4fc offset=0 len=47008
-
-  nfsd-23908[010] ..... 10374.902925: nfsd_write_opened: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008
-  nfsd-23908[010] ..... 10374.902926: nfsd_analyze_write_dio: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008 start=47008+96 middle=47104+46592 end=93696+320
-  nfsd-23908[010] ..... 10374.903010: xfs_file_direct_write: dev 259:2 ino 0xc00116 disize 0xb800 pos 0xb800 bytecount 0xb600
-  nfsd-23908[010] ..... 10374.903239: nfsd_write_io_done: xid=0x80c5923b fh_hash=0x857ca4fc offset=47008 len=47008
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfsd/trace.h | 61 +++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/vfs.c   | 13 +++++++++--
- 2 files changed, 72 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index a664fdf1161e9..4173bd9344b6b 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -473,6 +473,67 @@ DEFINE_NFSD_IO_EVENT(write_done);
- DEFINE_NFSD_IO_EVENT(commit_start);
- DEFINE_NFSD_IO_EVENT(commit_done);
- 
-+DECLARE_EVENT_CLASS(nfsd_analyze_dio_class,
-+	TP_PROTO(struct svc_rqst *rqstp,
-+		 struct svc_fh	*fhp,
-+		 u64		offset,
-+		 u32		len,
-+		 loff_t		start,
-+		 ssize_t	start_len,
-+		 loff_t		middle,
-+		 ssize_t	middle_len,
-+		 loff_t		end,
-+		 ssize_t	end_len),
-+	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len),
-+	TP_STRUCT__entry(
-+		__field(u32, xid)
-+		__field(u32, fh_hash)
-+		__field(u64, offset)
-+		__field(u32, len)
-+		__field(loff_t, start)
-+		__field(ssize_t, start_len)
-+		__field(loff_t, middle)
-+		__field(ssize_t, middle_len)
-+		__field(loff_t, end)
-+		__field(ssize_t, end_len)
-+	),
-+	TP_fast_assign(
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-+		__entry->offset = offset;
-+		__entry->len = len;
-+		__entry->start = start;
-+		__entry->start_len = start_len;
-+		__entry->middle = middle;
-+		__entry->middle_len = middle_len;
-+		__entry->end = end;
-+		__entry->end_len = end_len;
-+	),
-+	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u start=%llu+%lu middle=%llu+%lu end=%llu+%lu",
-+		  __entry->xid, __entry->fh_hash,
-+		  __entry->offset, __entry->len,
-+		  __entry->start, __entry->start_len,
-+		  __entry->middle, __entry->middle_len,
-+		  __entry->end, __entry->end_len)
-+)
-+
-+#define DEFINE_NFSD_ANALYZE_DIO_EVENT(name)			\
-+DEFINE_EVENT(nfsd_analyze_dio_class, nfsd_analyze_##name##_dio,	\
-+	TP_PROTO(struct svc_rqst *rqstp,			\
-+		 struct svc_fh	*fhp,				\
-+		 u64		offset,				\
-+		 u32		len,				\
-+		 loff_t		start,				\
-+		 ssize_t	start_len,			\
-+		 loff_t		middle,				\
-+		 ssize_t	middle_len,			\
-+		 loff_t		end,				\
-+		 ssize_t	end_len),			\
-+	TP_ARGS(rqstp, fhp, offset, len, start, start_len, middle, middle_len, end, end_len))
-+
-+DEFINE_NFSD_ANALYZE_DIO_EVENT(read);
-+DEFINE_NFSD_ANALYZE_DIO_EVENT(write);
-+
- DECLARE_EVENT_CLASS(nfsd_err_class,
- 	TP_PROTO(struct svc_rqst *rqstp,
- 		 struct svc_fh	*fhp,
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index afcc22fdddefc..9b631eb4dd934 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1143,6 +1143,12 @@ static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		}
- 	}
- 
-+	/* Show original offset and count, and how it was expanded for DIO */
-+	middle_end = read_dio->end - read_dio->end_extra;
-+	trace_nfsd_analyze_read_dio(rqstp, fhp, offset, len,
-+				    read_dio->start, read_dio->start_extra,
-+				    offset, (middle_end - offset),
-+				    middle_end, read_dio->end_extra);
- 	return true;
- }
- 
-@@ -1392,7 +1398,7 @@ nfsd_analyze_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		/* clear these for the benefit of trace_nfsd_analyze_write_dio */
- 		start_offset = 0;
- 		start_len = 0;
--		return true;
-+		goto out;
- 	}
- 
- 	start_end = round_up(offset, dio_blocksize);
-@@ -1405,7 +1411,10 @@ nfsd_analyze_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	write_dio->middle_len = middle_end - start_end;
- 	write_dio->end_offset = middle_end;
- 	write_dio->end_len = orig_end - middle_end;
--
-+out:
-+	trace_nfsd_analyze_write_dio(rqstp, fhp, offset, len, start_offset, start_len,
-+				     write_dio->middle_offset, write_dio->middle_len,
-+				     write_dio->end_offset, write_dio->end_len);
- 	return true;
- }
- 
--- 
-2.44.0
-
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
