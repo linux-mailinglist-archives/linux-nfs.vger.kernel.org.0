@@ -1,269 +1,134 @@
-Return-Path: <linux-nfs+bounces-13677-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13678-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56260B282D2
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 17:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B279B283C1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 18:23:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9A1416271B
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 15:21:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF10E5C0B12
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 16:23:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70E41E51EB;
-	Fri, 15 Aug 2025 15:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97A6E1EE7DC;
+	Fri, 15 Aug 2025 16:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WX5dGb5B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVCrpc1C"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBCF319844
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 15:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED411227B9F
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 16:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755271262; cv=none; b=lClPkbr6EZXtJqoDoz1JlvUzyHWRNZhmqcQyN0kbpwY4NiD43jsXYTFcyJ+9nTi19RivYc1JAlMQZF0l3pDn2RTWXWQ5Tbi1hqkwqRk2b/mnhtdqHdQLeyWNFp2YLo/4HKExC4UY8FVFbk4T5ETZKEUfAQLx3G29054+jqyeS6E=
+	t=1755275002; cv=none; b=nPbbJsf4G3J00E8A6FzbTaLdVQ2fqTJzX+Hl9M124TN5QO8ygVQGSW37R0i5xj/inZqZSWDkOn7YUKI0A+W/sCfe09KUAXkUFll1ot7t+xKAquVCNtpY7c398fzsDfurQoV6SkH5fy02a6dZHzHoBojdSUwnRAI1RBKLanoU0LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755271262; c=relaxed/simple;
-	bh=AIKq9RRz3/NQBCtuwVWwNCfu5OwlQD/rMTsIZRoZN3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=dSGT/1ULqHRAKQKeDfOiB0/4J+NL5TvRX31QsOOABNNutdqDhTQkwQ8AnmfI6RL/RiznGRgurs+QOCvvt7Nnein9HmID/CGXys5KMRBycVRbOxKR2sGacerEAQWHSCTcClhsDm73WlwHoEbuU+v0gRjm+2PAXIfNqipnrLz5IYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WX5dGb5B; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-afcb78d5e74so333550766b.1
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 08:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755271259; x=1755876059; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ds7vWRs3ae0FYggHp6P3i/EE92Jw2MJUQMfiJoX9zO4=;
-        b=WX5dGb5BSkNQvgtv8vnoGz+JraP26LmZfS1tHXh+YMwk3/SSfgA0tMcx9iTGZrTvDa
-         yNuqKlpuNQYsSqnbBIK44TzjHOe8Kb2E9A6mVqsAQiwmuxp0ZZggYFq8y6uwKYo3gF5E
-         gMja4H+tjUbo08YFQXGKaNHEZ//gOgb+mHtNVWplDUF8DBm2c/K1ynRuegCe0QvffrMG
-         i9vW83c9CNwo4rEF8oQQYfVjB6RT56VTyyG6OOsOIJkXl7Ct19bC/xSWwt3DZDP1KbAL
-         UkK4xV03g1WJxKElHWAQsOLymka80m7ud+yEigWA71aWhDD/CikmsBPzITY9qTSULoeW
-         k+wg==
+	s=arc-20240116; t=1755275002; c=relaxed/simple;
+	bh=jspMvQ1kpvYiRBeRmegWBKyH0g1bnT7TRjpUNBzRRvA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=XgYoAdVKpWrL8FFTGRc1frqS9JAIKaX4Vg1r47N2sf1nqkVwtuIetOayy+r0eS8HiK4Iexzcwe36619QjzwED8mptP0rw6T2N0NbvLiRAaEKHFBStnRUl+18R4KUGBZvAZ118uPMSwji/vSy4xtZOkh4GLsXX3Z+/Vp9gDdndeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eVCrpc1C; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755274999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4kl0pvKbHNDKaiTbluQzTJQoKkEPOzfEQpayor54VSU=;
+	b=eVCrpc1CXtVrZOaoJOtF9datD2Enn8S3/eBJDt9OH35ywX1EQ67Ax4KYyUSme03/4auyFq
+	eTiyldIU61rFF4VqlsOFaXysaqpGNwroXbLJxq/2FE6IllpLkGSBQuxjftWx5m4gjVlimX
+	oQZNz7H0czGpAF8XfgIovipcvy8n74c=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-_N5AtEl5OOuhYdxyWa-Ylg-1; Fri, 15 Aug 2025 12:23:18 -0400
+X-MC-Unique: _N5AtEl5OOuhYdxyWa-Ylg-1
+X-Mimecast-MFC-AGG-ID: _N5AtEl5OOuhYdxyWa-Ylg_1755274998
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4b1292b00cfso140371cf.3
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 09:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755271259; x=1755876059;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ds7vWRs3ae0FYggHp6P3i/EE92Jw2MJUQMfiJoX9zO4=;
-        b=lGHQSP6HYxXMfGuPQtmLa2n6oT6962aRBiWxE1MBPLa/JdGDLh5NtZn53jYsXucoKd
-         vbPLJOTOLxG0CI/RYey3bIn2rIQVaNcjGUQIQLqxcU5CU3qRtT4U6lvZKZFBdFRpyY16
-         6f7B561tHoltf0KGZHN+f5y7U7/Oyj/QAaZtVIFMOq+wnEnuH+M/uE1GslrawgmYEO4c
-         dH99aU4x0kr5YZWHK9QKkOK34vkbdiO+cdeyB/AChjMvpVlSEmpf7v0SluCHlte3DA9f
-         sOZGP2N/rWgdTbPcvYHndUBwk8lI4Kl3PEgCvqO5lDTqHRQpA1sJMZPF3sTGk1HxXD5a
-         Sb/w==
-X-Gm-Message-State: AOJu0YyvSo3ePTvfYvBMSv1bPMAui+fdCP/MA8EaCSO/XsUcAEDTY1Dj
-	R5YyCbMFmdiJ9ddOyRzg8cgL9OrY01MgrTSgpbcQQCNEt3yLpiHKkzhx+njsWcbAXVXZnpJTsut
-	oV8udnEn13/149NYBlXkRQjRUqnggAYqQdjHyPH0=
-X-Gm-Gg: ASbGnctfrL1aZ4CB0MTrodSdRehNtk8h3LjWTBcFy0/+vBgVrD/3RjZugBwYUsv0l+x
-	XzO2HYYKkBiscpPLvyodRTY3TN+B/EqEQHZ3ukuN+3e26vGg6CMgAdccYYta8UF+nKmhvoYSUD1
-	4RhA4EVgpqYA6i0D1+gtUjDgOsxATL93YEHsT4szpA+JGt0l7irlasmKZizpRteVIssi99AMq27
-	2zfLY0=
-X-Google-Smtp-Source: AGHT+IGp7yyGOKmktNzAAxTAVhcTjmYP6vUs5Z8106FEhuZJOwXg7O7J0zfngO2LfiSFBoqsZU4ysnWwfZdO9qXZG/I=
-X-Received: by 2002:a17:907:788:b0:ad5:74cd:1824 with SMTP id
- a640c23a62f3a-afcdc35dff2mr233804566b.38.1755271258704; Fri, 15 Aug 2025
- 08:20:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755274997; x=1755879797;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4kl0pvKbHNDKaiTbluQzTJQoKkEPOzfEQpayor54VSU=;
+        b=D1QGajORazbSGYZj//WjF6KJjLJj710vr3XLAQ7HTE7VbN6y7cGJcZABWCdBzMf9w8
+         feX+Q6p639lZnj3Ir4QjUk0jSyW9UOVPLunD4buqn14fcmSOTD1F6fKycwtkr/QqCRQa
+         Fh9HxfL7nvO0GdvN9qronPrbm+jYAJgMH18ycOzQAudhiB4V9CdLrUHU3oFQi3HdnI73
+         Z5KpOZSZ/BgTrRfFqrJEXq2muAffLU8FGhMSlWRa/nhCjs+pdQP5LttsLQcpU9SKm3er
+         66lt4qIMN5sW2SIwJX8PnLo58M4frDPrv1ZE5QYumvgerGOhikG9Yz/lBMTV5y2y7qnj
+         zicw==
+X-Gm-Message-State: AOJu0YxOmv/0UFaAhC9KNuzcZEglP2pi287BJB+0s/mqp3FpHaaJTmBI
+	CeVtPscpjXP4ETJBp14E4uuPYEifGh5AS3iTndINKXsiiV7qSHRgUUhD9piZduWSg4koY76jic8
+	Rkqz5S7c6ReoLLiyqcdZxRx6Kobg7V0i/w48rNpfdwD9dGhFZZIl+bdZLSXGcMZ/xvDE1pw==
+X-Gm-Gg: ASbGncva/vxPPSIqu3I5OwatuFy1lqFe3zV5b5HZ3IWZIYt9H7gaLT1utltUoouGpNt
+	9dPIgCB3pHpCo2ZZrtmKskVE2IwxFNOo3agdJVTRC/MCGemt8zViReVE1Ac+h63aPMVRVzJAVAn
+	IZb67CwAzZpRrwlDo8pDlIC7UCQyOGswgU7CHgrlDD/7r/M9eZQFf4UoB7hBEDC2nsxR6MefiJC
+	88w1xjqqGcVtmYLj1FuE0qTaiFet/NqthlSnLI+4BS37JcCDb1CD6E0NUVW3u583ZA3wYjTXuuD
+	8dSh3m4m3WDqV+haHpVvpslkyybFteN4ELcT1LCs
+X-Received: by 2002:ac8:5aca:0:b0:4b0:7b0a:8985 with SMTP id d75a77b69052e-4b11e12186cmr38330261cf.22.1755274996640;
+        Fri, 15 Aug 2025 09:23:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExrSt4umKeBc3xstkG2AgKwL0TAS2fdHZgRacL9a5PV4EJhdI/7oSqzBCxDk/vo5jiMnn3WA==
+X-Received: by 2002:ac8:5aca:0:b0:4b0:7b0a:8985 with SMTP id d75a77b69052e-4b11e12186cmr38329881cf.22.1755274996185;
+        Fri, 15 Aug 2025 09:23:16 -0700 (PDT)
+Received: from [172.31.1.136] ([70.105.250.115])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b11de1a63esm11428661cf.47.2025.08.15.09.23.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Aug 2025 09:23:15 -0700 (PDT)
+Message-ID: <482e394f-67bc-48bf-88e4-3808f508737e@redhat.com>
+Date: Fri, 15 Aug 2025 12:23:14 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230901083421.2139-1-chenhx.fnst@fujitsu.com> <3461ADBE-EAD4-4EEF-B7B0-45348BCDB92C@redhat.com>
-In-Reply-To: <3461ADBE-EAD4-4EEF-B7B0-45348BCDB92C@redhat.com>
-From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
-Date: Fri, 15 Aug 2025 17:20:22 +0200
-X-Gm-Features: Ac12FXyOZLG98uArxaF3_uVb08BgTVyh8XZ17PJKaHtUb0EK22DYOar_QNDd-q4
-Message-ID: <CA+1jF5pHpXHMOv_gRf_en2uX9jfwcCNhoDhYoq5butAFiiMsxg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] nfsv4: Add support for the birth time attribute
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: libtirpc <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+From: Steve Dickson <steved@redhat.com>
+Subject: -Wold-style-definition warnings
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-What is the status of this patch? did it ever made it into the Linus
-mainline kernel?
+Hello,
 
-Aur=C3=A9lien
+On the more recent gcc version (15.1.1) the
+-Wold-style-definition flag is set by default.
 
-On Tue, May 13, 2025 at 6:08=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> I'm interested in this work, Chen are you still interested in moving this
-> forward?   I have another question below --
->
-> On 1 Sep 2023, at 4:34, Chen Hanxiao wrote:
->
-> > nfsd already support btime by commit e377a3e698.
-> >
-> > This patch enable nfs to report btime in nfs_getattr.
-> > If underlying filesystem supports "btime" timestamp,
-> > statx will report btime for STATX_BTIME.
-> >
-> > Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-> >
-> > ---
-> > v1.1:
-> >       minor fix
-> > v2:
-> >       properly set cache validity
-> >
-> >  fs/nfs/inode.c          | 28 ++++++++++++++++++++++++----
-> >  fs/nfs/nfs4proc.c       |  3 +++
-> >  fs/nfs/nfs4xdr.c        | 23 +++++++++++++++++++++++
-> >  include/linux/nfs_fs.h  |  2 ++
-> >  include/linux/nfs_xdr.h |  5 ++++-
-> >  5 files changed, 56 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > index 8172dd4135a1..cfdf68b07982 100644
-> > --- a/fs/nfs/inode.c
-> > +++ b/fs/nfs/inode.c
-> > @@ -196,7 +196,8 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
-igned long flags)
-> >               if (!(flags & NFS_INO_REVAL_FORCED))
-> >                       flags &=3D ~(NFS_INO_INVALID_MODE |
-> >                                  NFS_INO_INVALID_OTHER |
-> > -                                NFS_INO_INVALID_XATTR);
-> > +                                NFS_INO_INVALID_XATTR |
-> > +                                NFS_INO_INVALID_BTIME);
-> >               flags &=3D ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZ=
-E);
-> >       }
-> >
-> > @@ -515,6 +516,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh=
-, struct nfs_fattr *fattr)
-> >               memset(&inode->i_atime, 0, sizeof(inode->i_atime));
-> >               memset(&inode->i_mtime, 0, sizeof(inode->i_mtime));
-> >               memset(&inode->i_ctime, 0, sizeof(inode->i_ctime));
-> > +             memset(&nfsi->btime, 0, sizeof(nfsi->btime));
-> >               inode_set_iversion_raw(inode, 0);
-> >               inode->i_size =3D 0;
-> >               clear_nlink(inode);
-> > @@ -538,6 +540,10 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *f=
-h, struct nfs_fattr *fattr)
-> >                       inode->i_ctime =3D fattr->ctime;
-> >               else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
-> >                       nfs_set_cache_invalid(inode, NFS_INO_INVALID_CTIM=
-E);
-> > +             if (fattr->valid & NFS_ATTR_FATTR_BTIME)
-> > +                     nfsi->btime =3D fattr->btime;
-> > +             else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
-> > +                     nfs_set_cache_invalid(inode, NFS_INO_INVALID_BTIM=
-E);
-> >               if (fattr->valid & NFS_ATTR_FATTR_CHANGE)
-> >                       inode_set_iversion_raw(inode, fattr->change_attr)=
-;
-> >               else
-> > @@ -835,6 +841,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const stru=
-ct path *path,
-> >  {
-> >       struct inode *inode =3D d_inode(path->dentry);
-> >       struct nfs_server *server =3D NFS_SERVER(inode);
-> > +     struct nfs_inode *nfsi =3D NFS_I(inode);
-> >       unsigned long cache_validity;
-> >       int err =3D 0;
-> >       bool force_sync =3D query_flags & AT_STATX_FORCE_SYNC;
-> > @@ -845,7 +852,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const stru=
-ct path *path,
-> >
-> >       request_mask &=3D STATX_TYPE | STATX_MODE | STATX_NLINK | STATX_U=
-ID |
-> >                       STATX_GID | STATX_ATIME | STATX_MTIME | STATX_CTI=
-ME |
-> > -                     STATX_INO | STATX_SIZE | STATX_BLOCKS |
-> > +                     STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_BTI=
-ME |
-> >                       STATX_CHANGE_COOKIE;
-> >
-> >       if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
-> > @@ -920,6 +927,10 @@ int nfs_getattr(struct mnt_idmap *idmap, const str=
-uct path *path,
-> >               stat->attributes |=3D STATX_ATTR_CHANGE_MONOTONIC;
-> >       if (S_ISDIR(inode->i_mode))
-> >               stat->blksize =3D NFS_SERVER(inode)->dtsize;
-> > +     if (!(server->fattr_valid & NFS_ATTR_FATTR_BTIME))
-> > +             stat->result_mask &=3D ~STATX_BTIME;
-> > +     else
-> > +             stat->btime =3D nfsi->btime;
-> >  out:
-> >       trace_nfs_getattr_exit(inode, err);
-> >       return err;
-> > @@ -1803,7 +1814,7 @@ static int nfs_inode_finish_partial_attr_update(c=
-onst struct nfs_fattr *fattr,
-> >               NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
-> >               NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
-> >               NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
-> > -             NFS_INO_INVALID_NLINK;
-> > +             NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
-> >       unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
-> >       enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_at=
-tr_type;
-> >
-> > @@ -2122,7 +2133,8 @@ static int nfs_update_inode(struct inode *inode, =
-struct nfs_fattr *fattr)
-> >       nfsi->cache_validity &=3D ~(NFS_INO_INVALID_ATTR
-> >                       | NFS_INO_INVALID_ATIME
-> >                       | NFS_INO_REVAL_FORCED
-> > -                     | NFS_INO_INVALID_BLOCKS);
-> > +                     | NFS_INO_INVALID_BLOCKS
-> > +                     | NFS_INO_INVALID_BTIME);
-> >
-> >       /* Do atomic weak cache consistency updates */
-> >       nfs_wcc_update_inode(inode, fattr);
-> > @@ -2161,6 +2173,7 @@ static int nfs_update_inode(struct inode *inode, =
-struct nfs_fattr *fattr)
-> >                                       | NFS_INO_INVALID_BLOCKS
-> >                                       | NFS_INO_INVALID_NLINK
-> >                                       | NFS_INO_INVALID_MODE
-> > +                                     | NFS_INO_INVALID_BTIME
-> >                                       | NFS_INO_INVALID_OTHER;
-> >                               if (S_ISDIR(inode->i_mode))
-> >                                       nfs_force_lookup_revalidate(inode=
-);
-> > @@ -2189,6 +2202,12 @@ static int nfs_update_inode(struct inode *inode,=
- struct nfs_fattr *fattr)
-> >               nfsi->cache_validity |=3D
-> >                       save_cache_validity & NFS_INO_INVALID_MTIME;
-> >
-> > +     if (fattr->valid & NFS_ATTR_FATTR_BTIME) {
-> > +             nfsi->btime =3D fattr->btime;
-> > +     } else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
-> > +             nfsi->cache_validity |=3D
-> > +                     save_cache_validity & NFS_INO_INVALID_BTIME;
-> > +
-> >       if (fattr->valid & NFS_ATTR_FATTR_CTIME)
-> >               inode->i_ctime =3D fattr->ctime;
-> >       else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
-> > @@ -2332,6 +2351,7 @@ struct inode *nfs_alloc_inode(struct super_block =
-*sb)
-> >  #endif /* CONFIG_NFS_V4 */
-> >  #ifdef CONFIG_NFS_V4_2
-> >       nfsi->xattr_cache =3D NULL;
-> > +     memset(&nfsi->btime, 0, sizeof(nfsi->btime));
->
->
-> ^^ is this redundant if we're going to do it anyway in nfs_fhget for I_NE=
-W?
->
-> .. actually, I don't understand why were doing /any/ nfsi member
-> initialization here.. am I missing something?
->
-> Otherwise, this gets
->
-> Tested-by: Benjamin Coddington <bcodding@redhat.com>
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
->
-> Ben
->
->
+This causes
+     warning: old-style function definition [-Wold-style-definition]
 
+warnings when functions are defined like
 
---=20
-Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
-Big Data/Data mining expert, chess enthusiast
+int add(a, b)
+int a;
+int b;
+{}
+
+instead of like this
+
+int add(int a, int b)
+{}
+
+Now I did fix these warnings in the latest rpcbind
+release... But libtirpc is a different story.
+
+I would have to change almost every single function
+in the library to remove these warnings or add I
+could add -Wno-old-style-definition to the CFLAGS.
+
+Now I'm more that willing to do the work... Heck
+I'm halfway through... But does it make sense to
+change the foot print of every function for a
+warning that may not make any sense?
+
+Thoughts...
+
+tia,
+
+steved.
+
 
