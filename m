@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-13674-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13675-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0D19B2825A
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 16:48:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC3C0B28255
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 16:47:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A2171891B18
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 14:46:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 455E7174371
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Aug 2025 14:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2283E1DD0EF;
-	Fri, 15 Aug 2025 14:46:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DFBB23BF9C;
+	Fri, 15 Aug 2025 14:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAkwrqUG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hmTa/Tkc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30EB18DB37
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 14:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693D422FF22
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Aug 2025 14:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755269177; cv=none; b=FVzwOhwpdvtFcxDSYPFztzRy1bO640AufCqtWhDF8ehrGyKLQaxbUlB+Kbah9TvEndO872DAVGCUFzJeuN79WbUtagEGA7aBCgBE/7uGR3TbK88Xk9eNEnAolHtIBqe2xYtDTDRLz11wtjdD0qqF6FcErXzxsuhYNAFwZlH8fH8=
+	t=1755269179; cv=none; b=SDw9NpYVDktp5uWQwgltBfRRHgTtA066oXpE0udpFmP6Bv6t8E/O9649rpwnjGCWRjbwjNjzmnF4+ou9l5hTaIlo34XjeHQmj4Cbfys2sEn+NVxhpRZ6TBhOxh1qB+j67f1X1X2/P6NkpMTMIXYhQcqcx/cEC1SPJRjjzkEgXdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755269177; c=relaxed/simple;
-	bh=0upepBXPj5X0JOS8I0zwPaXDp0O3zJ09gZolvFvDU5w=;
+	s=arc-20240116; t=1755269179; c=relaxed/simple;
+	bh=beEYdRdnQMsqJ2i4Uz6zM59xr9ql/Weaa7t++c4js7w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qevC/PA5tciTrZGOOnXA86flf3IWWlB+IEx7TUJ0MND4LZylqAaPIyr2a9TG2pkc5PlT2Ktf60jE/IWSIx6YGPSXSf+LrKLrUnDCZBiuCiKyTcnoJEBn7TgisWC55avK3rmUhRfa3YqR3BNbAexe1Ir6XzV55tyQLbkQGIMdj3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAkwrqUG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A71C4CEEB;
-	Fri, 15 Aug 2025 14:46:16 +0000 (UTC)
+	 MIME-Version; b=ZMs9K3YzVf/QDxkIDA2T6BNLluieY/Tqq00S3CsbIl0SozlEZvE5jVAkow9/nGSRpdKjO9yeqocEaEX48cOf8Lj6Hkju3d5cRmlxaceIuwnjB3/YbJzFOU2msOpiloeRG+MHVGri/fVXZCxxmLqsz+Meb10dzsqnSDAYuaKomxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hmTa/Tkc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA978C4CEEB;
+	Fri, 15 Aug 2025 14:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755269176;
-	bh=0upepBXPj5X0JOS8I0zwPaXDp0O3zJ09gZolvFvDU5w=;
+	s=k20201202; t=1755269178;
+	bh=beEYdRdnQMsqJ2i4Uz6zM59xr9ql/Weaa7t++c4js7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lAkwrqUG2wZDsoW3R8GCTJYnF6m3af6SGpRBlzFMulEDBztuwD6w2RE6VseYsvmML
-	 fHtWcwj0+0GsaKwrLoHKBcXBc4lqhoUgymilTT8DX/TJkPucjAzAvkX3wdswyX3DBC
-	 /284z7UDSkbSuXQMrL8w7YMd/sTqXE4ilsZ1TWRFMFJzU7ddMLEt9KktXQfwsBqDYS
-	 2QDsGSycOXcEVgHTwvfRB2cs8V29zLOJnPDp51SMoyzphxv1gulNhHo5jxRw0/kcPd
-	 kRfDV5vx1sXxFKylOGnwWSb7tMti7Endm0wTiOhBXVvbuXnk4pBcIWZ9KsiAKk+jYj
-	 /QOz0ZdFBBlHQ==
+	b=hmTa/TkchAtKnrPP8ywWr3CYzXqv4YGBGl7M9Nyrl7Nhr6ZsARxBpdA5/ifTTyOzM
+	 xo+GKAIm2VXxrtkuDB4P5Dsf/S6uhfbN5wM9m5/g4fA+MoBCOdWxzwOEaa3Q48u595
+	 C8i19PZh+a8pfc6mk7QNoaB03Cn38iw6ayWW47bPhBwqte0Jp7dBg1WckoLTWnQIqH
+	 0NoNtQYofnkJcUSSIYGOjiPtxVKypIByecqVH6BJf98NNBVwDNyBsmjvOKM2uuKLlJ
+	 smAXfezWc51BsjTUsRN4Vyj2HgtYOUrSOyS4LyShJTR7A15nriL/X4foPFIdcebLu5
+	 H5kgLcgsUk7Bw==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v7 5/7] NFSD: issue READs using O_DIRECT even if IO is misaligned
-Date: Fri, 15 Aug 2025 10:46:05 -0400
-Message-ID: <20250815144607.50967-6-snitzer@kernel.org>
+Subject: [PATCH v7 6/7] NFSD: issue WRITEs using O_DIRECT even if IO is misaligned
+Date: Fri, 15 Aug 2025 10:46:06 -0400
+Message-ID: <20250815144607.50967-7-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250815144607.50967-1-snitzer@kernel.org>
 References: <20250815144607.50967-1-snitzer@kernel.org>
@@ -59,75 +59,43 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
-DIO-aligned block (on either end of the READ). The expanded READ is
-verified to have proper offset/len (logical_block_size) and
-dma_alignment checking.
+If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+middle and end as needed. The large middle extent is DIO-aligned and
+the start and/or end are misaligned. Buffered IO is used for the
+misaligned extents and O_DIRECT is used for the middle DIO-aligned
+extent.
 
-Must allocate and use a bounce-buffer page (called 'start_extra_page')
-if/when expanding the misaligned READ requires reading extra partial
-page at the start of the READ so that its DIO-aligned. Otherwise that
-extra page at the start will make its way back to the NFS client and
-corruption will occur. As found, and then this fix of using an extra
-page verified, using the 'dt' utility:
-  dt of=/mnt/share1/dt_a.test passes=1 bs=47008 count=2 \
-     iotype=sequential pattern=iot onerr=abort oncerr=abort
-see: https://github.com/RobinTMiller/dt.git
-
-Any misaligned READ that is less than 32K won't be expanded to be
-DIO-aligned (this heuristic just avoids excess work, like allocating
-start_extra_page, for smaller IO that can generally already perform
-well using buffered IO).
-
-Suggested-by: Jeff Layton <jlayton@kernel.org>
-Suggested-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/vfs.c              | 200 +++++++++++++++++++++++++++++++++++--
- include/linux/sunrpc/svc.h |   5 +-
- 2 files changed, 194 insertions(+), 11 deletions(-)
+ fs/nfsd/vfs.c | 176 +++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 168 insertions(+), 8 deletions(-)
 
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index c340708fbab4d..64732dc8985d6 100644
+index 64732dc8985d6..afcc22fdddefc 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -19,6 +19,7 @@
- #include <linux/splice.h>
- #include <linux/falloc.h>
- #include <linux/fcntl.h>
-+#include <linux/math.h>
- #include <linux/namei.h>
- #include <linux/delay.h>
- #include <linux/fsnotify.h>
-@@ -1073,6 +1074,153 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+@@ -1355,6 +1355,169 @@ static int wait_for_concurrent_writes(struct file *file)
+ 	return err;
  }
  
-+struct nfsd_read_dio {
-+	loff_t start;
-+	loff_t end;
-+	unsigned long start_extra;
-+	unsigned long end_extra;
-+	struct page *start_extra_page;
++struct nfsd_write_dio {
++	loff_t middle_offset;	/* Offset for start of DIO-aligned middle */
++	loff_t end_offset;	/* Offset for start of DIO-aligned end */
++	ssize_t	start_len;	/* Length for misaligned first extent */
++	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
++	ssize_t	end_len;	/* Length for misaligned last extent */
 +};
 +
-+static void init_nfsd_read_dio(struct nfsd_read_dio *read_dio)
++static bool
++nfsd_analyze_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
++		       struct nfsd_file *nf, loff_t offset,
++		       unsigned long len, struct nfsd_write_dio *write_dio)
 +{
-+	memset(read_dio, 0, sizeof(*read_dio));
-+	read_dio->start_extra_page = NULL;
-+}
++	const u32 dio_blocksize = nf->nf_dio_offset_align;
++	loff_t orig_end, middle_end, start_end, start_offset = offset;
++	ssize_t start_len = len;
 +
-+#define NFSD_READ_DIO_MIN_KB (32 << 10)
-+
-+static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+				  struct nfsd_file *nf, loff_t offset,
-+				  unsigned long len, unsigned int base,
-+				  struct nfsd_read_dio *read_dio)
-+{
-+	const u32 dio_blocksize = nf->nf_dio_read_offset_align;
-+	loff_t middle_end, orig_end = offset + len;
-+
-+	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
++	if (WARN_ONCE(!nf->nf_dio_mem_align || !dio_blocksize,
 +		      "%s: underlying filesystem has not provided DIO alignment info\n",
 +		      __func__))
 +		return false;
@@ -135,226 +103,192 @@ index c340708fbab4d..64732dc8985d6 100644
 +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
 +		      __func__, dio_blocksize, PAGE_SIZE))
 +		return false;
-+
-+	/* Return early if IO is irreparably misaligned (len < PAGE_SIZE,
-+	 * or base not aligned).
-+	 * Ondisk alignment is implied by the following code that expands
-+	 * misaligned IO to have a DIO-aligned offset and len.
-+	 */
-+	if (unlikely(len < dio_blocksize) || ((base & (nf->nf_dio_mem_align-1)) != 0))
++	if (unlikely(len < dio_blocksize))
 +		return false;
 +
-+	init_nfsd_read_dio(read_dio);
++	memset(write_dio, 0, sizeof(*write_dio));
 +
-+	read_dio->start = round_down(offset, dio_blocksize);
-+	read_dio->end = round_up(orig_end, dio_blocksize);
-+	read_dio->start_extra = offset - read_dio->start;
-+	read_dio->end_extra = read_dio->end - orig_end;
-+
-+	/*
-+	 * Any misaligned READ less than NFSD_READ_DIO_MIN_KB won't be expanded
-+	 * to be DIO-aligned (this heuristic avoids excess work, like allocating
-+	 * start_extra_page, for smaller IO that can generally already perform
-+	 * well using buffered IO).
-+	 */
-+	if ((read_dio->start_extra || read_dio->end_extra) &&
-+	    (len < NFSD_READ_DIO_MIN_KB)) {
-+		init_nfsd_read_dio(read_dio);
-+		return false;
++	if (((offset | len) & (dio_blocksize-1)) == 0) {
++		/* already DIO-aligned, no misaligned head or tail */
++		write_dio->middle_offset = offset;
++		write_dio->middle_len = len;
++		/* clear these for the benefit of trace_nfsd_analyze_write_dio */
++		start_offset = 0;
++		start_len = 0;
++		return true;
 +	}
 +
-+	if (read_dio->start_extra) {
-+		read_dio->start_extra_page = alloc_page(GFP_KERNEL);
-+		if (WARN_ONCE(read_dio->start_extra_page == NULL,
-+			      "%s: Unable to allocate start_extra_page\n", __func__)) {
-+			init_nfsd_read_dio(read_dio);
-+			return false;
++	start_end = round_up(offset, dio_blocksize);
++	start_len = start_end - offset;
++	orig_end = offset + len;
++	middle_end = round_down(orig_end, dio_blocksize);
++
++	write_dio->start_len = start_len;
++	write_dio->middle_offset = start_end;
++	write_dio->middle_len = middle_end - start_end;
++	write_dio->end_offset = middle_end;
++	write_dio->end_len = orig_end - middle_end;
++
++	return true;
++}
++
++/*
++ * Setup as many as 3 iov_iter based on extents described by @write_dio.
++ * @iterp: pointer to pointer to onstack array of 3 iov_iter structs from caller.
++ * @iter_is_dio_aligned: pointer to onstack array of 3 bools from caller.
++ * @rq_bvec: backing bio_vec used to setup all 3 iov_iter permutations.
++ * @nvecs: number of segments in @rq_bvec
++ * @cnt: size of the request in bytes
++ * @write_dio: nfsd_write_dio struct that describes start, middle and end extents.
++ *
++ * Returns the number of iov_iter that were setup.
++ */
++static int
++nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
++			   struct bio_vec *rq_bvec, unsigned int nvecs,
++			   unsigned long cnt, struct nfsd_write_dio *write_dio)
++{
++	int n_iters = 0;
++	struct iov_iter *iters = *iterp;
++
++	/* Setup misaligned start? */
++	if (write_dio->start_len) {
++		iter_is_dio_aligned[n_iters] = false;
++		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++		iters[n_iters].count = write_dio->start_len;
++		++n_iters;
++	}
++
++	/* Setup DIO-aligned middle */
++	iter_is_dio_aligned[n_iters] = true;
++	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++	if (write_dio->start_len)
++		iov_iter_advance(&iters[n_iters], write_dio->start_len);
++	iters[n_iters].count -= write_dio->end_len;
++	++n_iters;
++
++	/* Setup misaligned end? */
++	if (write_dio->end_len) {
++		iter_is_dio_aligned[n_iters] = false;
++		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++		iov_iter_advance(&iters[n_iters],
++				 write_dio->start_len + write_dio->middle_len);
++		++n_iters;
++	}
++
++	return n_iters;
++}
++
++static int
++nfsd_issue_write_buffered(struct svc_rqst *rqstp, struct file *file,
++			  unsigned int nvecs, unsigned long *cnt,
++			  struct kiocb *kiocb)
++{
++	struct iov_iter iter;
++	int host_err;
++
++	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
++	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
++	if (host_err < 0)
++		return host_err;
++	*cnt = host_err;
++
++	return 0;
++}
++
++static noinline int
++nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
++		     struct nfsd_file *nf, loff_t offset,
++		     unsigned int nvecs, unsigned long *cnt,
++		     struct kiocb *kiocb)
++{
++	struct nfsd_write_dio write_dio;
++	struct file *file = nf->nf_file;
++
++	if (!nfsd_analyze_write_dio(rqstp, fhp, nf, offset, *cnt, &write_dio))
++		return nfsd_issue_write_buffered(rqstp, file, nvecs, cnt, kiocb);
++	else {
++		bool iter_is_dio_aligned[3];
++		struct iov_iter iter_stack[3];
++		struct iov_iter *iter = iter_stack;
++		unsigned int n_iters = 0;
++		int host_err;
++
++		n_iters = nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
++				rqstp->rq_bvec, nvecs, *cnt, &write_dio);
++		*cnt = 0;
++		for (int i = 0; i < n_iters; i++) {
++			if (iter_is_dio_aligned[i] &&
++			    nfsd_iov_iter_aligned_bvec(&iter[i], nf->nf_dio_mem_align-1,
++						       nf->nf_dio_offset_align-1))
++				kiocb->ki_flags |= IOCB_DIRECT;
++			else
++				kiocb->ki_flags &= ~IOCB_DIRECT;
++			host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
++			if (host_err < 0) {
++				/* Underlying FS will return -EINVAL if misaligned
++				 * DIO is attempted because it shouldn't be.
++				 */
++				WARN_ON_ONCE(host_err == -EINVAL);
++				return host_err;
++			}
++			*cnt += host_err;
++			if (host_err < iter[i].count) /* partial write? */
++				return *cnt;
 +		}
 +	}
 +
-+	return true;
-+}
-+
-+static ssize_t nfsd_complete_misaligned_read_dio(struct svc_rqst *rqstp,
-+						 struct nfsd_read_dio *read_dio,
-+						 ssize_t bytes_read,
-+						 unsigned long bytes_expected,
-+						 loff_t *offset,
-+						 unsigned long *rq_bvec_numpages)
-+{
-+	ssize_t host_err = bytes_read;
-+	loff_t v;
-+
-+	if (!read_dio->start_extra && !read_dio->end_extra)
-+		return host_err;
-+
-+	/* If nfsd_analyze_read_dio() allocated a start_extra_page it must
-+	 * be removed from rqstp->rq_bvec[] to avoid returning unwanted data.
-+	 */
-+	if (read_dio->start_extra_page) {
-+		__free_page(read_dio->start_extra_page);
-+		*rq_bvec_numpages -= 1;
-+		v = *rq_bvec_numpages;
-+		memmove(rqstp->rq_bvec, rqstp->rq_bvec + 1,
-+			v * sizeof(struct bio_vec));
-+	}
-+	/* Eliminate any end_extra bytes from the last page */
-+	v = *rq_bvec_numpages;
-+	rqstp->rq_bvec[v].bv_len -= read_dio->end_extra;
-+
-+	if (host_err < 0) {
-+		/* Underlying FS will return -EINVAL if misaligned
-+		 * DIO is attempted because it shouldn't be.
-+		 */
-+		WARN_ON_ONCE(host_err == -EINVAL);
-+		return host_err;
-+	}
-+
-+	/* nfsd_analyze_read_dio() may have expanded the start and end,
-+	 * if so adjust returned read size to reflect original extent.
-+	 */
-+	*offset += read_dio->start_extra;
-+	if (likely(host_err >= read_dio->start_extra)) {
-+		host_err -= read_dio->start_extra;
-+		if (host_err > bytes_expected)
-+			host_err = bytes_expected;
-+	} else {
-+		/* Short read that didn't read any of requested data */
-+		host_err = 0;
-+	}
-+
-+	return host_err;
-+}
-+
-+static bool nfsd_iov_iter_aligned_bvec(const struct iov_iter *i,
-+		unsigned addr_mask, unsigned len_mask)
-+{
-+	const struct bio_vec *bvec = i->bvec;
-+	unsigned skip = i->iov_offset;
-+	size_t size = i->count;
-+
-+	if (size & len_mask)
-+		return false;
-+	do {
-+		size_t len = bvec->bv_len;
-+
-+		if (len > size)
-+			len = size;
-+		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
-+			return false;
-+		bvec++;
-+		size -= len;
-+		skip = 0;
-+	} while (size);
-+
-+	return true;
++	return 0;
 +}
 +
  /**
-  * nfsd_iter_read - Perform a VFS read using an iterator
-  * @rqstp: RPC transaction context
-@@ -1094,7 +1242,8 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		      unsigned int base, u32 *eof)
- {
- 	struct file *file = nf->nf_file;
--	unsigned long v, total;
-+	unsigned long v, total, in_count = *count;
-+	struct nfsd_read_dio read_dio;
- 	struct iov_iter iter;
- 	struct kiocb kiocb;
- 	ssize_t host_err;
-@@ -1102,13 +1251,34 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+  * nfsd_vfs_write - write data to an already-open file
+  * @rqstp: RPC execution context
+@@ -1382,7 +1545,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct super_block	*sb = file_inode(file)->i_sb;
+ 	struct kiocb		kiocb;
+ 	struct svc_export	*exp;
+-	struct iov_iter		iter;
+ 	errseq_t		since;
+ 	__be32			nfserr;
+ 	int			host_err;
+@@ -1419,31 +1581,29 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		kiocb.ki_flags |= IOCB_DSYNC;
  
- 	init_sync_kiocb(&kiocb, file);
- 
-+	v = 0;
-+	total = in_count;
+ 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+-	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
 +
- 	switch (nfsd_io_cache_read) {
+ 	since = READ_ONCE(file->f_wb_err);
+ 	if (verf)
+ 		nfsd_copy_write_verifier(verf, nn);
+ 
+ 	switch (nfsd_io_cache_write) {
  	case NFSD_IO_DIRECT:
--		/* Verify ondisk and memory DIO alignment */
--		if (nf->nf_dio_mem_align && nf->nf_dio_read_offset_align &&
--		    (((offset | *count) & (nf->nf_dio_read_offset_align - 1)) == 0) &&
--		    (base & (nf->nf_dio_mem_align - 1)) == 0)
--			kiocb.ki_flags = IOCB_DIRECT;
-+		/*
-+		 * If NFSD_IO_DIRECT enabled, expand any misaligned READ to
-+		 * the next DIO-aligned block (on either end of the READ).
-+		 */
-+		if (nfsd_analyze_read_dio(rqstp, fhp, nf, offset,
-+					  in_count, base, &read_dio)) {
-+			/* trace_nfsd_read_vector() will reflect larger
-+			 * DIO-aligned READ.
-+			 */
-+			offset = read_dio.start;
-+			in_count = read_dio.end - offset;
-+			total = in_count;
-+
-+			kiocb.ki_flags |= IOCB_DIRECT;
-+			if (read_dio.start_extra) {
-+				len = read_dio.start_extra;
-+				bvec_set_page(&rqstp->rq_bvec[v],
-+					      read_dio.start_extra_page,
-+					      len, PAGE_SIZE - len);
-+				total -= len;
-+				++v;
-+			}
-+		}
+-		/* direct I/O must be aligned to device logical sector size */
+-		if (nf->nf_dio_mem_align && nf->nf_dio_offset_align &&
+-		    (((offset | *cnt) & (nf->nf_dio_offset_align-1)) == 0))
+-			kiocb.ki_flags |= IOCB_DIRECT;
++		host_err = nfsd_issue_write_dio(rqstp, fhp, nf, offset,
++						nvecs, cnt, &kiocb);
  		break;
  	case NFSD_IO_DONTCACHE:
- 		kiocb.ki_flags = IOCB_DONTCACHE;
-@@ -1120,8 +1290,6 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	kiocb.ki_pos = offset;
- 
--	v = 0;
--	total = *count;
- 	while (total) {
- 		len = min_t(size_t, total, PAGE_SIZE - base);
- 		bvec_set_page(&rqstp->rq_bvec[v], *(rqstp->rq_next_page++),
-@@ -1132,9 +1300,21 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		kiocb.ki_flags |= IOCB_DONTCACHE;
+ 		fallthrough;
+ 	case NFSD_IO_UNSPECIFIED:
+ 	case NFSD_IO_BUFFERED:
++		host_err = nfsd_issue_write_buffered(rqstp, file,
++						nvecs, cnt, &kiocb);
+ 		break;
  	}
- 	WARN_ON_ONCE(v > rqstp->rq_maxpages);
- 
--	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
--	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
-+	trace_nfsd_read_vector(rqstp, fhp, offset, in_count);
-+	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, in_count);
-+
-+	if ((kiocb.ki_flags & IOCB_DIRECT) &&
-+	    !nfsd_iov_iter_aligned_bvec(&iter, nf->nf_dio_mem_align-1,
-+					nf->nf_dio_read_offset_align-1))
-+		kiocb.ki_flags &= ~IOCB_DIRECT;
-+
- 	host_err = vfs_iocb_iter_read(file, &kiocb, &iter);
-+
-+	if (in_count != *count) {
-+		/* misaligned DIO expanded read to be DIO-aligned */
-+		host_err = nfsd_complete_misaligned_read_dio(rqstp, &read_dio,
-+					host_err, *count, &offset, &v);
-+	}
- 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
- }
- 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index e64ab444e0a7f..190c2667500e2 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -163,10 +163,13 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
-  * pages, one for the request, and one for the reply.
-  * nfsd_splice_actor() might need an extra page when a READ payload
-  * is not page-aligned.
-+ * nfsd_iter_read() might need two extra pages when a READ payload
-+ * is not DIO-aligned -- but nfsd_iter_read() and nfsd_splice_actor()
-+ * are mutually exclusive (so reuse page reserved for nfsd_splice_actor).
-  */
- static inline unsigned long svc_serv_maxpages(const struct svc_serv *serv)
- {
--	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1;
-+	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1 + 1;
- }
- 
- /*
+-	host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
+ 	if (host_err < 0) {
+ 		commit_reset_write_verifier(nn, rqstp, host_err);
+ 		goto out_nfserr;
+ 	}
+-	*cnt = host_err;
+ 	nfsd_stats_io_write_add(nn, exp, *cnt);
+ 	fsnotify_modify(file);
+ 	host_err = filemap_check_wb_err(file->f_mapping, since);
 -- 
 2.44.0
 
