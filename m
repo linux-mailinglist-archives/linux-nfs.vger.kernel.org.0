@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-13702-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13703-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A8CB28F29
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 17:32:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE9DB28FBF
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 19:17:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34CA31C27B7C
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 15:32:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC2A916EBB8
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 17:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B99B1DFDE;
-	Sat, 16 Aug 2025 15:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5461A254E;
+	Sat, 16 Aug 2025 17:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCI1uNSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rULWF/J9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A7B137E
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Aug 2025 15:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38529139579
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Aug 2025 17:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755358314; cv=none; b=edvVq9HA76jwzpTy7cPR+87VmlqeCmLPhD2CtwFXUxjzADFtB8FPXke0pmfVjWJrOmb3TtC07X1eZpJxYZG88oPxXXTYhBfriOfFdsl9HFk66FuhdWWnswSHPR8vbMeS4HmR31qgePWTpj26YgXTrWozwkGX5zf2U+x1Bs8F9wg=
+	t=1755364593; cv=none; b=PEnWLWPZi8QekUX1DxdT3jiGyigzVsPuL0VnDZNRvpXZUNIS2CMSsOCTkyTfLHU54a4AcWQ9y9zf7JZ68pOATNNaG4BTODBS+B16bEQW25iHErfarZmvn+vmFk2PbzqAbUtz/gNDDH1a9swcr6kDhnKD89jkoCHeTUlO2eD1gcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755358314; c=relaxed/simple;
-	bh=ui0pIXNDpHF8nkwxh9hsYX/giyWYXjuvo4754/aKqms=;
+	s=arc-20240116; t=1755364593; c=relaxed/simple;
+	bh=BCCpxhSeBDa2i0XhfwQIxZtzal3rKEmnOKSRRHN96IA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PYSlFGRecgTkSnsIPsjNBzB894qkJ6f9g85NvkTg0QmwGVZCwRilTl+D45uTPRUzZZK31YkFjbiurzNClttK31h3aTfyhHrzIfmC+zJevRuAOcHHZOa53TkvChLr2IKBTEzhuubFjDmOLCJS99SHgbmRRCw8IJy0MtUHLl4No/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCI1uNSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7D0C4CEEF;
-	Sat, 16 Aug 2025 15:31:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BSCPPcLEmfZi38s96dh3Q+73F87mn+aSIesUgtQloMO4owv0qVIXU1XuhqC4qar3pyWyDYE5qanmspw91ZMmgZNMm+fL37lwCi51IU1KKMPWyUQfmKkFaQJf9LqtpH7LnvFe566EkgJd4PA1g7CRN9LGxCsXxCfyU75ZjTypMug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rULWF/J9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A6FC4CEEF;
+	Sat, 16 Aug 2025 17:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755358313;
-	bh=ui0pIXNDpHF8nkwxh9hsYX/giyWYXjuvo4754/aKqms=;
+	s=k20201202; t=1755364592;
+	bh=BCCpxhSeBDa2i0XhfwQIxZtzal3rKEmnOKSRRHN96IA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gCI1uNSr2Ei4lFG7gf4qHpZ6pPMNp7bHe8JyBK46n+l1ZAaKVdc3VujHMMAbim+Ne
-	 6OIEOM6qVYIsuGYEXmdCsz1z/abevGjxRefz/8ndkv47+qFl4sLxdqM0Fw0swwnLcX
-	 HOaALe2p/SIXy5IQ797HJtDGVODJ36nDyj5JXydsR1iLq2OcanInMi2bhmYA+ndaX7
-	 T1wc09H5I55Lvn9qt9tQVxl1d1biyXkYJFtgoFG9VgluUAUBmOBxlRL5/LE9YjQA2Z
-	 tu1is0KE0fTjrUTlQrwXoJkQLCf0qhmzHrC7EXqmonLLn90ijRGntFv9AlDbc76X5Q
-	 EtN84c5reKiAg==
-Message-ID: <0aee8afcba5e6c90566f5ad43d4dda0825d62f70.camel@kernel.org>
+	b=rULWF/J9sNeriTWDAMMV8s6n1cTU6UNFaZ8bx47EtF5ziDcxm9SeQtEuuBBr/5uWu
+	 k8m89lCSQbGxvPqeyMuhVBfdbPFBcacy25dWLIrgejXl6pWFPdzCCd7osqYtZF1Ddu
+	 kTrl5h7W074dJA7ADmVbSMzXlogbYgueb5MeKmBkDKbZCRlwZJb5QFCyy1mB4G3UUd
+	 khUATbvmvt1VFrRqwYLmQvHNKCOOY4qtyEgJJ2Us2nmfUkjNarC4lb/FXiyKuVJEia
+	 6HqKmzK+IHCNf2e5wZfsgEl4PtHttmnatuuS1hiRDZXOUqewL0/UusszNYxE3U38d2
+	 /fk6bA1jSxiuw==
+Message-ID: <9e0560b4cc0f992547dd24765652060c3188d61a.camel@kernel.org>
 Subject: Re: parts of pages on NFS being replaced by swaths of NULs
 From: Jeff Layton <jlayton@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date: Sat, 16 Aug 2025 11:31:51 -0400
+Date: Sat, 16 Aug 2025 13:16:31 -0400
 In-Reply-To: <ce7e7d92581a2d447f7c5e70b280431528d289aa.camel@kernel.org>
 References: <1c42a7fd9677ad1aa9a3a53eda738b3a6da3728e.camel@kernel.org>
 					 <752db17aff35a92b79e4c7bd3003ed890fe91403.camel@kernel.org>
@@ -236,14 +236,6 @@ MOVE, &req->wb_flags))
 >=20
 > That's not sufficient AFAICS. Does the following patch work?
 >=20
-
-The patch looks good to me and it seems like it should close the race.
-I'll have to look at backporting it to v6.9, and we'll have to build
-images, etc. Hopefully we will have some results in a week or so. I'll
-keep you posted!
-
-Thanks,
-
 > 8<------------------------------------------------------------
 > From fc9690dda01f001c6cd11665701394da8ebba1ab Mon Sep 17 00:00:00 2001
 > Message-ID: <fc9690dda01f001c6cd11665701394da8ebba1ab.1755355810.git.tron=
@@ -266,6 +258,20 @@ d.myklebust@hammerspace.com>
 > Reported-by: Jeff Layton <jlayton@kernel.org>
 > Fixes: c3f2235782c3 ("nfs: fold nfs_folio_find_and_lock_request into nfs_=
 lock_and_join_requests")
+
+One comment here: The above patch went into v6.11. The kernel we've
+been reproducing this on doesn't have it, so I don't think that's the
+correct Fixes tag.
+
+Also, I got a second occurrence with the bpftrace script. Looks like
+the same problem (just for confirmation):
+
+Missing nfs_page: ino=3D10123250003 idx=3D23 flags=3D0x5ffff0000000009
+Hole: ino=3D10123250003 idx=3D24 off=3D95247 size=3D3057
+Prev folio: idx=3D23 flags=3D0x5ffff0000000008 pgbase=3D0 bytes=3D1956 req=
+=3D0 prevreq=3D0xffff8882ab9b6a00
+
+
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
 >  fs/nfs/pagelist.c        |  9 +++++----
