@@ -1,87 +1,113 @@
-Return-Path: <linux-nfs+bounces-13739-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13740-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84D6DB2ADC8
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 18:09:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DCB4B2AE88
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 18:50:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79BCD7ADDDB
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 16:07:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 733C41886766
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 16:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5776F261B92;
-	Mon, 18 Aug 2025 16:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C30A278146;
+	Mon, 18 Aug 2025 16:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nvg6YV+v"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4giumnp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB14322C66;
-	Mon, 18 Aug 2025 16:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B182765DF;
+	Mon, 18 Aug 2025 16:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755533336; cv=none; b=T21n5FaXbbduWoolRC9QBvUjK19vXGome/OxZqOzO4+L+7nFvjkMgrXzKErGrEe8gqwhZAftj24CeN8Zi4yyIukWdMwRbisLHoKTpAkXCs5fIiyYKMThLYrXWQPzpeXvma4mQz+usRNMg2cIm9BpmaR2cEUqbWUppLnw9YVTjYQ=
+	t=1755535789; cv=none; b=h3hBIJJUsllpA807c8FTxPy0c6uMxRa0QPoaxKacKrMSr2tTGmsRKoWj0n3WoXin8RoFDtP7d11xhcSuvIDgGlkLOwZN2oTyA2CA7rXNvDPcjxDKxUFFfDlA7gKjqcZkFEdggKUvS30EX78CoDwXp0ErxXRd8eoOtgiBlGBK5e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755533336; c=relaxed/simple;
-	bh=UdGCmFEGEHdcwqEhmwdNM9Jw1ANM9uK1sFznAmDJTZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q+IQucYBoD9i+9hrLD0SiFjLAM6NOGNDvvQZZ6psGZbrsifKQsEEbsCzqZyxpf3U/r56lwdkaxb5TigGf9k5lqaDTrSPixgHa6w+eDc4gA8xM4SpZqnUD6Lt/buGxn3o0in+hnxkRmwTMcihM6aSSM0p1luTx+zzRB5onq4Prts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nvg6YV+v; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ahlcvw0CG9EFcXpjOsyDakpp1kscynNMdyN1Mvg+wGM=; b=nvg6YV+ve12DBWofpc0jK3jC+D
-	Gxsp2flKmsnxRk0yqHFC9cjoLMIZpsx80HSLlAmYytxW3pfgHp9EtiUl7lZI/32SgT2nREsF0uVRk
-	HRrRM2IQh7r7PsX5HSXUANcbO4j4bA8kkDNG4DL0O5hXUPpnG540MVbhpIaQ56J6KUpssy/0nUqEw
-	b9/ZoxZTsm4GvCXuvATaDg2p4WlhICh0HFd6uBGV76MyW9TFlCNQLhMvg8JZoVnyvd9E8mSr3MRud
-	Kz1rCwPmP32i+nu7mVC95roxnMBt9TCqyJ0Coj177Zgm9qtY02SVN8wUZ6/cOSWf0iEtQn7pzxMmP
-	Poi1BzsQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uo2Pk-00000008HRo-307E;
-	Mon, 18 Aug 2025 16:08:52 +0000
-Date: Mon, 18 Aug 2025 17:08:52 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	s=arc-20240116; t=1755535789; c=relaxed/simple;
+	bh=VGpm/1hHmniKJ6u6ZsB5IgUFZkxw7tYKazfEW3iawLw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lcFbc+6vlzXM/jn+Z4mAyPHjUTredo10MR4eltrbZYfYgPWDPlK4OerB0wI0G8mBSrBNQgHDzO5w301NChYJxid8yaEbJXlw7bQyQSqx/T96hu10rePEdYYU74SvEf+OjS5exKfxMUQoqM5kjsvOmMiGc1PFqDrw00AZWHbqyz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4giumnp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B75DC4CEEB;
+	Mon, 18 Aug 2025 16:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755535788;
+	bh=VGpm/1hHmniKJ6u6ZsB5IgUFZkxw7tYKazfEW3iawLw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=H4giumnpH4N75mXAx1pgSv85dH7+XnVe+SJekeagcGqbd4qsZT/L/QPrjnHSfk4VP
+	 aKPJtUGS4eighlJVNkA9f28vsee5/CNDON1vezSiM7fWJ6SDyW21CfqiEIE2Y2jGc0
+	 7y3QJVTHAFUNzFNPLi0awqIRbEeV9Dc4b+ej84z6hI2cfSs74fm9EY23hOKsByFW96
+	 Gc/1MDg93lJvgvSRr3RegV+UI4nqI1i6/ICBpmZ6HylZ80erMJFtNS2Uo9k7KtNOpG
+	 3JWIy7p4J+AtQ6iARdrg1f2dNHjMh6vcg0lDAjeGhgukBQhp2esTnXeDURLAsjeDxp
+	 +uTqr5UC6ZoJQ==
+Message-ID: <c3d5dead2b76161ba96187b85497e55a8a01032a.camel@kernel.org>
+Subject: Re: [PATCH v3 2/2] NFS: Enable the RWF_DONTCACHE flag for the NFS
+ client
+From: Trond Myklebust <trondmy@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH v3 1/2] filemap: Add a helper for filesystems
- implementing dropbehind
-Message-ID: <aKNQFBhhTIkUbK6e@casper.infradead.org>
+Date: Mon, 18 Aug 2025 09:49:47 -0700
+In-Reply-To: <aKNNkFJ3mt0svnyw@casper.infradead.org>
 References: <cover.1755527537.git.trond.myklebust@hammerspace.com>
- <ba478422e240f18eb9331e16c1d67d309b5a72cd.1755527537.git.trond.myklebust@hammerspace.com>
- <aKM99bjgILBwRQus@casper.infradead.org>
- <5109a45f43249d88882400f92e0cef27503c0704.camel@kernel.org>
+	 <001e5575d7ddbcdb925626151a7dcc7353445543.1755527537.git.trond.myklebust@hammerspace.com>
+	 <aKNE9UnyBoaE_UzJ@casper.infradead.org>
+	 <88e2e70a827618b5301d92b094ef07efacba0577.camel@kernel.org>
+	 <aKNNkFJ3mt0svnyw@casper.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5109a45f43249d88882400f92e0cef27503c0704.camel@kernel.org>
 
-On Mon, Aug 18, 2025 at 08:59:41AM -0700, Trond Myklebust wrote:
-> On Mon, 2025-08-18 at 15:51 +0100, Matthew Wilcox wrote:
-> > On Mon, Aug 18, 2025 at 07:39:49AM -0700, Trond Myklebust wrote:
-> > > +void folio_end_dropbehind(struct folio *folio)
-> > > +{
-> > > +	filemap_end_dropbehind_write(folio);
-> > > +}
-> > > +EXPORT_SYMBOL(folio_end_dropbehind);
-> > 
-> > Why not just export filemap_end_dropbehind_write()?
-> 
-> It seemed more appropriate to use the 'folio' prefix when exporting, so
-> that it is symmetric with folio_end_writeback().
-> 
-> I'm perfectly fine with changing that if people disagree.
+On Mon, 2025-08-18 at 16:58 +0100, Matthew Wilcox wrote:
+> On Mon, Aug 18, 2025 at 08:56:31AM -0700, Trond Myklebust wrote:
+> > On Mon, 2025-08-18 at 16:21 +0100, Matthew Wilcox wrote:
+> > > I don't think this technique is "safe".=C2=A0 By clearing the flag
+> > > early,
+> > > the page cache can't see that a folio that was created by
+> > > dropbehind
+> > > has now been reused and should have its dropbehind flag cleared.=C2=
+=A0
+> > > So
+> > > we
+> > > might see pages dropped from the cache that really should not be.
+> >=20
+> > The only alternative would be to add back in a helper in
+> > mm/filemap.c
+> > that does the normal folio_end_writeback() routine, but ignores the
+> > dropbehind flag. (folio_end_writeback_ignore_dropbehind()?)
+>=20
+> Can you remind me why we clear the writeback flag as soon as the
+> WRITE
+> completes instead of leaving it set until the COMMIT completes?
 
-I don't mind renaming filemap_end_dropbehind_write() to
-folio_end_dropbehind() as a solution!
+It's about reducing latency.
+
+An unstable WRITE is typically a quick operation because it only
+requires the server to cache the data.
+
+COMMIT requires persistence, and so it is typically slower.
+Furthermore, the intention of COMMIT is to also allow the batching of
+writeback on the server, so that disk wakeup and seeks are minimised.
+While that is probably much less of a concern with modern SSDs vs older
+hard drives, the NFS client design has to cater to both.
+
+So by clearing the writeback flag after the WRITE, we allow operations
+that want to further modify a specific folio to proceed without having
+to wait for persistence of the entire batch.
+
+More importantly, it also speeds up stat() calls, since we can retrieve
+the updated mtime+ctime values from the server as soon as the WRITEs
+are complete, without having to wait for COMMIT.
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
