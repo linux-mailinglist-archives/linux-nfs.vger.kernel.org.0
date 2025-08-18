@@ -1,518 +1,240 @@
-Return-Path: <linux-nfs+bounces-13704-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13705-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6195FB290A7
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 23:25:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43270B295F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 02:52:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB6EB1C21E27
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Aug 2025 21:25:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B530717F018
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 00:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0A741FBE80;
-	Sat, 16 Aug 2025 21:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1016D54758;
+	Mon, 18 Aug 2025 00:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6ahHLyr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fksJ9HUE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20C1E1A17
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Aug 2025 21:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198C71E25FA
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 00:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755379530; cv=none; b=DGObZva6KkFg7cT4pzIBxXk5ESJKJRGxNMiqY66gpo0z871XLx6M/E1WTtEd+zk5ht9AmX2nLh+6bOrZd+N0nk+YYjpSkL8O1ABWvsfuAIi59QEellIwMLjh6uZKfYgiE5TofeooN7arulBPxqf7mz5GQbUEde/v2mI21d+CJRo=
+	t=1755478260; cv=none; b=oGlNsVcgFQozJsP1YY+0sRAe5AwkpGsX9uNHYQ8TN8G9UK9HdWkB0rW7jNOx7OTiAjrPZ81SrqQo2iAhsOA8WXyiZE7irbtWC4TBCXoFYQwuVmVBN+8m0EQVlN2NN8p/HCJwI86JZfvQNBIqld47n2f5sLzlxY4BdfLCCzBwjrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755379530; c=relaxed/simple;
-	bh=zuTbOMzxM4dCuDSar1aj7fSwKFXEMnAZhvy5YfoXqHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ar7ruJQpElGIw7tQRxmiXc2LWFUmXVIGi0a1/RwClj0i4daCkD6UyLiYiOZ3/QLWWv+WsfnPKnOb3EQ9wvqQsad+B9jjsNUI+o1GU0s7nk4axr79ElTagdC7TH1ELtZXZnas+aL6yFiSSLhxdB/H0R4OOys8w/0iuzylpOPRRnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6ahHLyr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFFF2C4CEEF;
-	Sat, 16 Aug 2025 21:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755379530;
-	bh=zuTbOMzxM4dCuDSar1aj7fSwKFXEMnAZhvy5YfoXqHI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c6ahHLyr6MnppyfAo9Mx9i0Dg6u39ssr7/BRRPnZhrYvyqvcuVxv2SUdPwdpauhML
-	 jg/pUiaI8qINt1zuYmwu8eUcg5Y4T0qL8w8fwsmYG7ffDdq73l9bw5GvKKCSWgnpnu
-	 FGyneUg4wKS9cVny4ORwelHbbZeUGNhjFsaoWHCH/Yxe0C2ODVcS14K2vDmcuw1rfU
-	 946X+uJ9PIoylsCuBOAKqDlWELS+ted3IylSaKrGs3VJWyEGIjghfZiVHk595PTD4Y
-	 edwBunknUWnKo/13s94PeCf+5z5cyMqYTlZMua1HdBDN9LzNR+VPdROcJZPnbVkooE
-	 3+ZFiIF16N9LQ==
-Date: Sat, 16 Aug 2025 17:25:28 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-	jonathan.flynn@hammerspace.com
-Subject: Re: parts of pages on NFS being replaced by swaths of NULs
-Message-ID: <aKD3SFcyCnb8snst@kernel.org>
-References: <1c42a7fd9677ad1aa9a3a53eda738b3a6da3728e.camel@kernel.org>
- <752db17aff35a92b79e4c7bd3003ed890fe91403.camel@kernel.org>
- <be7114cedde5867041dda00562beebded4cdce9e.camel@kernel.org>
- <e583450b5d0ccc5d82fc383f58fc4f02495f5c2c.camel@kernel.org>
- <972c7790fa69cc64a591b71fcc7a40b2cd477beb.camel@kernel.org>
- <ce7e7d92581a2d447f7c5e70b280431528d289aa.camel@kernel.org>
+	s=arc-20240116; t=1755478260; c=relaxed/simple;
+	bh=PF1OT+fPY2wSFa31k4ilOmk1Jmk4wDaiTKIFgqEQ148=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=THum5z5BzKBdddnDuoFmnYg3TZZzbdNXQUeX+1G1oHTnBt+TLZOHQxHpQl/Dp0bPuggC0Guc/EC6mKUmJwZ4ImiY/YP8dZB6RQi8CgDeeHkuhhXz8Qj63ZfZ6tDQT7ifUE3pl9puRIhJXSOlpjuhC8ekMMKiyD8OHFAuhy+pUwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fksJ9HUE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755478256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6skRmLO0QxhlQAZqTh/vGEZoU682gHAIupnw44XtRgI=;
+	b=fksJ9HUEyse5nuF0dbH5JiTpbtl8lPwadCpuG6IM0mlF7maCc64GIINgbo1K+3bg+PjWJ9
+	K9Gf9YrctFDZ5KgBAANDIO0hQPvZ4RiowMlrV2EpPkE3cP0QKwysFTJtu2Q/uP5SNqo8gp
+	AAqERnKqTjm/AczSkih2c7fZH+G7Rb0=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-3jue6DvtOcKbocxhGckXaw-1; Sun, 17 Aug 2025 20:50:54 -0400
+X-MC-Unique: 3jue6DvtOcKbocxhGckXaw-1
+X-Mimecast-MFC-AGG-ID: 3jue6DvtOcKbocxhGckXaw_1755478254
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-24458194d82so34768725ad.2
+        for <linux-nfs@vger.kernel.org>; Sun, 17 Aug 2025 17:50:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755478254; x=1756083054;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6skRmLO0QxhlQAZqTh/vGEZoU682gHAIupnw44XtRgI=;
+        b=XQDcLrHzzIuL2f+jA1wrNavqU1NByy89ruELzd99Z0Okb9Kjpkcpx2wTiTnHx7fztW
+         QBeonCZ4Wnf2OkIdQYL339ISVFqEUdqTVJ//9kaM2s5dIkHEGwAnNhcF1meYHpqS6pro
+         MT5e71iu7CWAtGA4rmDkbw6aVb9DrkPIXQ9llYWgvoNWL+JXGfQ0TKe1YcsH9rs1y6NT
+         mdLUrVk5rb1phgrKxuJtdSFwTzEXB9+l80EuuLTWpau2IhOEwty/JD6Es0eYzPo43YEi
+         8uXf5uEFS6yNRPTLrhuwh5v6JkinLMevs7LNFy0eP2RUmTUgWZSghZ1XMg4QK5+ZpC2U
+         QwdA==
+X-Gm-Message-State: AOJu0YzDc6GtnnHfpfYGyk3vsqvOVV0Z46hRXQgof6zT6p0lb8Wgy9nR
+	CTIuLm2eW3wuOGCHLBeb7mEY0xyQgA3eXTVMUrvJcrVgmnBNju6u2ZiMGVZSEkBcm/HHXj8nENb
+	Fk3nMJAAHh9QpVJF43n7eVCLBpUdsKIpUKnO2R2jr/HZiU/UEStjSODRPhIeXbA==
+X-Gm-Gg: ASbGnctuLFcpAYURja8ZoVjEYXhllH3N5Kwn3VGPl20soA7XEpy/rY8CMx07leTK7VI
+	9rUIV5ZAPY1on+yClfxyjMsThTF/9ZfMmObe5jynzaUQMXzG1DtdQyNibJF55gynHe4ypwgS5CI
+	WPMJTrXF7xH8ZrxujiiCcobfkrg4ZrD6kc5MBANzz5rWvbyDlwJLg4UthFuBZ3tNbMI7U8ly/FB
+	j2htNmBVh4GRjpZ+5yTsH/8R6JvZwx0ms0EhS7ysZo05c9xjKZIK3HCHzscCx3frN1TkZ+i19qF
+	miCRWWdPbeTz50nMzbpakiP4Lmajqox1kPpm0VCTpya7HZnwqSzXMHhc5xMw1P7jad1buGVM5MB
+	kmxvaUHgdZ0QouHxd
+X-Received: by 2002:a17:903:38cc:b0:235:f143:9b07 with SMTP id d9443c01a7336-2446d5afbacmr140750595ad.5.1755478253632;
+        Sun, 17 Aug 2025 17:50:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGKvoveUjy5ylntz1JSLMgmZbb42DVWDQ/8f4mKHokeOJzIDFIHw0OGLzEeE1veJLXM/BcqA==
+X-Received: by 2002:a17:903:38cc:b0:235:f143:9b07 with SMTP id d9443c01a7336-2446d5afbacmr140750465ad.5.1755478253256;
+        Sun, 17 Aug 2025 17:50:53 -0700 (PDT)
+Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net. [159.196.82.144])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32330fc5161sm9633534a91.12.2025.08.17.17.50.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Aug 2025 17:50:52 -0700 (PDT)
+Message-ID: <303bf381-dce5-495e-a3f0-0fb9f215ad82@redhat.com>
+Date: Mon, 18 Aug 2025 08:50:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="2XDoF3yvYa3Qjteu"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce7e7d92581a2d447f7c5e70b280431528d289aa.camel@kernel.org>
-
-
---2XDoF3yvYa3Qjteu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-
-On Sat, Aug 16, 2025 at 07:51:17AM -0700, Trond Myklebust wrote:
-> On Sat, 2025-08-16 at 09:01 -0400, Jeff Layton wrote:
-> > 
-> > I finally caught something concrete today. I had the attached
-> > bpftrace
-> > script running while running the reproducer on a dozen or so
-> > machines,
-> > and it detected a hole in some data being written:
-> > 
-> > -------------8<---------------
-> > Attached 2 probes
-> > Missing nfs_page: ino=10122173116 idx=2 flags=0x15ffff0000000029
-> > Hole: ino=10122173116 idx=3 off=10026 size=2262
-> > Prev folio: idx=2 flags=0x15ffff0000000028 pgbase=0 bytes=4096 req=0
-> > prevreq=0xffff8955b2f55980
-> > -------------8<---------------
-> > 
-> > What this tells us is that the page at idx=2 got submitted to
-> > nfs_do_writepage() (so it was marked dirty in the pagecache), but
-> > when
-> > it got there, folio->private was NULL and it was ignored.
-> > 
-> > The kernel in this case is based on v6.9, so it's (just) pre-large-
-> > folio support. It has a fair number of NFS patches, but not much to
-> > this portion of the code. Most of them are are containerization
-> > fixes.
-> > 
-> > I'm looking askance at nfs_inode_remove_request(). It does this:
-> > 
-> >         if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
-> >                 struct folio *folio = nfs_page_to_folio(req-
-> > >wb_head);
-> >                 struct address_space *mapping = folio->mapping;
-> > 
-> >                 spin_lock(&mapping->i_private_lock);
-> >                 if (likely(folio)) {
-> >                         folio->private = NULL;
-> >                         folio_clear_private(folio);
-> >                         clear_bit(PG_MAPPED, &req->wb_head-
-> > >wb_flags);
-> >                 }
-> >                 spin_unlock(&mapping->i_private_lock);
-> >         }
-> > 
-> > If nfs_page_group_sync_on_bit() returns true, then the nfs_page gets
-> > detached from the folio. Meanwhile, if a new write request comes in
-> > just after that, nfs_lock_and_join_requests() will call
-> > nfs_cancel_remove_inode() to try to "cancel" PG_REMOVE:
-> > 
-> > static int
-> > nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
-> > {
-> >         int ret;
-> > 
-> >         if (!test_bit(PG_REMOVE, &req->wb_flags))
-> >                 return 0;
-> >         ret = nfs_page_group_lock(req);
-> >         if (ret)
-> >                 return ret;
-> >         if (test_and_clear_bit(PG_REMOVE, &req->wb_flags))
-> >                 nfs_page_set_inode_ref(req, inode);
-> >         nfs_page_group_unlock(req);                          
-> >         return 0;                                    
-> > }                     
-> > 
-> > ...but that does not reattach the nfs_page to the folio. Should it?
-> >                         
-> 
-> That's not sufficient AFAICS. Does the following patch work?
-> 
-> 8<------------------------------------------------------------
-> From fc9690dda01f001c6cd11665701394da8ebba1ab Mon Sep 17 00:00:00 2001
-> Message-ID: <fc9690dda01f001c6cd11665701394da8ebba1ab.1755355810.git.trond.myklebust@hammerspace.com>
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Date: Sat, 16 Aug 2025 07:25:20 -0700
-> Subject: [PATCH] NFS: Fix a race when updating an existing write
-> 
-> After nfs_lock_and_join_requests() tests for whether the request is
-> still attached to the mapping, nothing prevents a call to
-> nfs_inode_remove_request() from succeeding until we actually lock the
-> page group.
-> The reason is that whoever called nfs_inode_remove_request() doesn't
-> necessarily have a lock on the page group head.
-> 
-> So in order to avoid races, let's take the page group lock earlier in
-> nfs_lock_and_join_requests(), and hold it across the removal of the
-> request in nfs_inode_remove_request().
-> 
-> Reported-by: Jeff Layton <jlayton@kernel.org>
-> Fixes: c3f2235782c3 ("nfs: fold nfs_folio_find_and_lock_request into nfs_lock_and_join_requests")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/pagelist.c        |  9 +++++----
->  fs/nfs/write.c           | 29 ++++++++++-------------------
->  include/linux/nfs_page.h |  1 +
->  3 files changed, 16 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-> index 11968dcb7243..6e69ce43a13f 100644
-> --- a/fs/nfs/pagelist.c
-> +++ b/fs/nfs/pagelist.c
-> @@ -253,13 +253,14 @@ nfs_page_group_unlock(struct nfs_page *req)
->  	nfs_page_clear_headlock(req);
->  }
->  
-> -/*
-> - * nfs_page_group_sync_on_bit_locked
-> +/**
-> + * nfs_page_group_sync_on_bit_locked - Test if all requests have @bit set
-> + * @req: request in page group
-> + * @bit: PG_* bit that is used to sync page group
->   *
->   * must be called with page group lock held
->   */
-> -static bool
-> -nfs_page_group_sync_on_bit_locked(struct nfs_page *req, unsigned int bit)
-> +bool nfs_page_group_sync_on_bit_locked(struct nfs_page *req, unsigned int bit)
->  {
->  	struct nfs_page *head = req->wb_head;
->  	struct nfs_page *tmp;
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index fa5c41d0989a..8b7c04737967 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -153,20 +153,10 @@ nfs_page_set_inode_ref(struct nfs_page *req, struct inode *inode)
->  	}
->  }
->  
-> -static int
-> -nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
-> +static void nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
->  {
-> -	int ret;
-> -
-> -	if (!test_bit(PG_REMOVE, &req->wb_flags))
-> -		return 0;
-> -	ret = nfs_page_group_lock(req);
-> -	if (ret)
-> -		return ret;
->  	if (test_and_clear_bit(PG_REMOVE, &req->wb_flags))
->  		nfs_page_set_inode_ref(req, inode);
-> -	nfs_page_group_unlock(req);
-> -	return 0;
->  }
->  
->  /**
-> @@ -585,19 +575,18 @@ static struct nfs_page *nfs_lock_and_join_requests(struct folio *folio)
->  		}
->  	}
->  
-> +	ret = nfs_page_group_lock(head);
-> +	if (ret < 0)
-> +		goto out_unlock;
-> +
->  	/* Ensure that nobody removed the request before we locked it */
->  	if (head != folio->private) {
-> +		nfs_page_group_unlock(head);
->  		nfs_unlock_and_release_request(head);
->  		goto retry;
->  	}
->  
-> -	ret = nfs_cancel_remove_inode(head, inode);
-> -	if (ret < 0)
-> -		goto out_unlock;
-> -
-> -	ret = nfs_page_group_lock(head);
-> -	if (ret < 0)
-> -		goto out_unlock;
-> +	nfs_cancel_remove_inode(head, inode);
->  
->  	/* lock each request in the page group */
->  	for (subreq = head->wb_this_page;
-> @@ -786,7 +775,8 @@ static void nfs_inode_remove_request(struct nfs_page *req)
->  {
->  	struct nfs_inode *nfsi = NFS_I(nfs_page_to_inode(req));
->  
-> -	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
-> +	nfs_page_group_lock(req);
-> +	if (nfs_page_group_sync_on_bit_locked(req, PG_REMOVE)) {
->  		struct folio *folio = nfs_page_to_folio(req->wb_head);
->  		struct address_space *mapping = folio->mapping;
->  
-> @@ -798,6 +788,7 @@ static void nfs_inode_remove_request(struct nfs_page *req)
->  		}
->  		spin_unlock(&mapping->i_private_lock);
->  	}
-> +	nfs_page_group_unlock(req);
->  
->  	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
->  		atomic_long_dec(&nfsi->nrequests);
-> diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-> index 169b4ae30ff4..9aed39abc94b 100644
-> --- a/include/linux/nfs_page.h
-> +++ b/include/linux/nfs_page.h
-> @@ -160,6 +160,7 @@ extern void nfs_join_page_group(struct nfs_page *head,
->  extern int nfs_page_group_lock(struct nfs_page *);
->  extern void nfs_page_group_unlock(struct nfs_page *);
->  extern bool nfs_page_group_sync_on_bit(struct nfs_page *, unsigned int);
-> +extern bool nfs_page_group_sync_on_bit_locked(struct nfs_page *, unsigned int);
->  extern	int nfs_page_set_headlock(struct nfs_page *req);
->  extern void nfs_page_clear_headlock(struct nfs_page *req);
->  extern bool nfs_async_iocounter_wait(struct rpc_task *, struct nfs_lock_context *);
-> -- 
-> 2.50.1
-> 
-> 
-
-
-Trond,
-
-You're the best! ;)
-
-Your patch fixes corruption I've been chasing for the past week
-relative to NFS DIRECT, specifically with:
-echo Y > /sys/module/nfs/parameters/localio_O_DIRECT_align_misaligned_IO
-
-So you need my latest NFS DIRECT patchset:
-https://lore.kernel.org/linux-nfs/20250815233003.55071-1-snitzer@kernel.org/
-
-With it, writes would be corrupted when using the attached reproducer
-(from Jon Flynn, with the assistance of ChatGPT) that pulls out the
-subset of MLperf unet3d test (when ran in buffered IO mode, so
-entirely misaligned relative to DIO-alignment requirements) that we've
-seen npz CRC compare failure with.
-
-I tested my patchset with your patch applied and it all "just works".
-
-Ship it all!
-
-Thanks,
-Mike
-
-ps. running the attached reproducer is as simple as:
-./mlperf_npz_tool.py --npz-path /mnt/share1/sample_a.npz
-
---2XDoF3yvYa3Qjteu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename="mlperf_npz_tool.py"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Libtirpc-devel] -Wold-style-definition warnings
+To: Chuck Lever <chuck.lever@oracle.com>, Steve Dickson <steved@redhat.com>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
+ libtirpc <libtirpc-devel@lists.sourceforge.net>
+References: <482e394f-67bc-48bf-88e4-3808f508737e@redhat.com>
+ <9d84391f-d724-4693-90d9-c56d54ece17e@oracle.com>
+ <42121eeb-6e7e-4138-9520-8ee81679ddac@redhat.com>
+ <ad23a6d9-72a4-4363-bee5-e52164e3ed17@oracle.com>
+Content-Language: en-AU
+From: Ian Kent <ikent@redhat.com>
+Autocrypt: addr=ikent@redhat.com; keydata=
+ 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
+In-Reply-To: <ad23a6d9-72a4-4363-bee5-e52164e3ed17@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-#!/usr/bin/env python3
-import argparse, math, os, struct, zlib
-from pathlib import Path
-import numpy as np
-import zipfile
+On 16/8/25 02:18, Chuck Lever via Libtirpc-devel wrote:
+> On 8/15/25 2:07 PM, Steve Dickson wrote:
+>> Hey!
+>>
+>> On 8/15/25 1:26 PM, Chuck Lever wrote:
+>>> On 8/15/25 12:23 PM, Steve Dickson wrote:
+>>>> Hello,
+>>>>
+>>>> On the more recent gcc version (15.1.1) the
+>>>> -Wold-style-definition flag is set by default.
+>>>>
+>>>> This causes
+>>>>  Â Â Â Â  warning: old-style function definition [-Wold-style-definition]
+>>>>
+>>>> warnings when functions are defined like
+>>>>
+>>>> int add(a, b)
+>>>> int a;
+>>>> int b;
+>>>> {}
+>>>>
+>>>> instead of like this
+>>>>
+>>>> int add(int a, int b)
+>>>> {}
+>>>>
+>>>> Now I did fix these warnings in the latest rpcbind
+>>>> release... But libtirpc is a different story.
+>>>>
+>>>> I would have to change almost every single function
+>>>> in the library to remove these warnings or add I
+>>>> could add -Wno-old-style-definition to the CFLAGS.
+>>>>
+>>>> Now I'm more that willing to do the work... Heck
+>>>> I'm halfway through... But does it make sense to
+>>>> change the foot print of every function for a
+>>>> warning that may not make any sense?
+>>> I recommend breaking up the work into several smaller
+>>> patches, and posting them here for review before you
+>>> commit.
+>> Not quite sure how to do that... at this point it
+>> is one huge commit... growing as we speak. Even if
+>> I do it by file... it will still be a ton of patches.
+>> But I agree... trying to make it easier to review
+>> would be a good thing.
+> Yes, making it easier to review is exactly the idea.
+>
+> Possibilities (that you are free to disregard):
+>
+>   - Write a cocchinele script or two?
+>
+>   - Ask an AI for advice on how to strategize the changes
+>
+>   - Change internal (non-public) functions first
+>
+>   - Stage the changes across several library releases
+>
+>
+>>> Maybe you could also pass the result through a C linter
+>>> or clang-tidy. But don't go too crazy. You get the idea.
+>> No worries... I will not go crazy! ;-) But if I do that
+>> God only knows what would be found! :-)
+>> This is old code... but point taken.
+> Yeah, ignore the complaints about actual code. Just look at function
+> definitions and declarations, etc.
+>
+>
+>>> Out of curiosity, what is the test plan once your
+>>> conversion is code-complete?
+>> The upcoming bakeathon?? In general I lean on the
+>> Fedora guys to do the regression testing...
+> Are there critical applications or packages that build against
+> libtirpc? I guess... rpcbind, nfs-utils, any NIS packages left? Do you
+> need to build libtirpc with alternate C libraries? On alternate hardware
+> platforms?
 
-# -----------------------
-# Defaults (from your YAML)
-# -----------------------
-DEFAULT_MEAN_BYTES  = 146_600_628
-DEFAULT_STDEV_BYTES = 68_341_808
-DEFAULT_RESIZE      = 2_097_152     # 2 MiB
-DEFAULT_SAMPLES     = 1
-DEFAULT_DTYPE       = "uint8"
-DEFAULT_SEED        = 10
+autofs depends on libtirpc and I'm pretty sure there are independent
 
-# -----------------------
-# Helpers
-# -----------------------
-DTYPE_SIZES = {
-    "uint8": 1, "int8": 1,
-    "uint16": 2, "int16": 2,
-    "uint32": 4, "int32": 4,
-    "float32": 4, "float64": 8,
-}
+developed products that rely on TI-RPC but the the change is more
 
-def choose_target_bytes(mean_b, stdev_b, resize, randomize):
-    if randomize and stdev_b > 0:
-        draw = int(np.random.normal(loc=mean_b, scale=stdev_b))
-        draw = max(draw, 1)
-    else:
-        draw = int(mean_b)
-    # Round to nearest multiple of resize
-    return int(round(draw / resize) * resize)
-
-def choose_hw_for_bytes(total_bytes, samples, dtype_size):
-    """
-    Choose H, W making H*W*samples*dtype_size == total_bytes.
-    We factor total elements and spread powers of two across H and W
-    to avoid super-skinny arrays.
-    """
-    total_elems = total_bytes // (dtype_size * samples)
-    if total_elems == 0:
-        raise ValueError("Total elements computed as 0; check inputs.")
-    n = total_elems
-    # Factor out powers of two
-    exp2 = (n & -n).bit_length() - 1
-    odd  = n >> exp2
-    h = 1 << (exp2 // 2)
-    w = (1 << (exp2 - exp2 // 2)) * odd
-    return int(h), int(w)
-
-def save_npz(out_path: Path, *, mean_bytes, stdev_bytes, resize_bytes,
-             samples, dtype_name, seed, compress, randomize):
-    dtype = getattr(np, dtype_name)
-    dtype_size = DTYPE_SIZES[dtype_name]
-
-    np.random.seed(seed)
-    target_bytes = choose_target_bytes(mean_bytes, stdev_bytes, resize_bytes, randomize)
-    # Ensure divisibility:
-    elems_per_sample = target_bytes // dtype_size // samples
-    if elems_per_sample * dtype_size * samples != target_bytes:
-        raise ValueError("Target bytes not divisible by dtype_size*samples; adjust params.")
-
-    h, w = choose_hw_for_bytes(target_bytes, samples, dtype_size)
-
-    x = np.random.randint(255, size=(h, w, samples), dtype=dtype if dtype_name == "uint8" else np.uint8)
-    if dtype_name != "uint8":
-        x = x.astype(dtype, copy=False)
-    y = np.zeros((samples,), dtype=np.uint8)  # matches DLIO NPZ generator convention
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    if compress:
-        np.savez_compressed(out_path, x=x, y=y)
-    else:
-        np.savez(out_path, x=x, y=y)
-
-    print(f"âœ… Wrote {out_path}")
-    try:
-        sz = out_path.stat().st_size
-        print(f"   size={sz} bytes, x.shape={x.shape}, dtype={x.dtype}, samples={samples}")
-    except FileNotFoundError:
-        pass
-
-def list_and_crc(npz_path: Path, deep=False):
-    print(f"ðŸ“‚ File: {npz_path}")
-    with zipfile.ZipFile(npz_path, "r") as zf:
-        names = zf.namelist()
-        print(f"ðŸ“¦ Files in archive: {names}\n")
-        for name in names:
-            info = zf.getinfo(name)
-            print(f"--- {name} ---")
-            print(f"Stored CRC32       : 0x{info.CRC:08x}")
-            print(f"Compressed Size    : {info.compress_size}")
-            print(f"Uncompressed Size  : {info.file_size}")
-            try:
-                with zf.open(info) as f:
-                    _ = f.read()                 # will raise if CRC mismatch
-                print("âœ… CRC verified by zipfile.\n")
-            except zipfile.BadZipFile as e:
-                print(f"âš ï¸ CRC error via zipfile: {e}")
-                if deep:
-                    ok = deep_crc_check(npz_path, info)
-                    print("ðŸ”Ž Deep check      :", "âœ… OK\n" if ok else "âŒ Mismatch\n")
-                else:
-                    print("â„¹ï¸  Re-run with --deep-check to diagnose.\n")
-            except Exception as e:
-                print(f"âŒ Unexpected error: {e}\n")
-
-def deep_crc_check(npz_path: Path, info: zipfile.ZipInfo) -> bool:
-    """
-    Manual CRC of the *uncompressed* payload.
-    Parse the local file header to find the compressed bytes, then
-    decompress and compute CRC32 of the uncompressed stream.
-    """
-    with npz_path.open("rb") as fh:
-        fh.seek(info.header_offset)
-        local = fh.read(30)  # fixed part of local header
-        # local file header sig 'PK\x03\x04'
-        if local[:4] != b'PK\x03\x04':
-            return False
-        # filename length, extra length
-        name_len, extra_len = struct.unpack("<HH", local[26:30])
-        fh.seek(info.header_offset + 30 + name_len + extra_len)
-        comp = fh.read(info.compress_size)
-
-    # Decompress if needed
-    if info.compress_type == zipfile.ZIP_STORED:
-        data = comp
-    elif info.compress_type == zipfile.ZIP_DEFLATED:
-        # ZIP uses raw DEFLATE stream (no zlib header): wbits = -15
-        try:
-            data = zlib.decompress(comp, -15)
-        except zlib.error:
-            # Some writers include zlib headers; try normal
-            data = zlib.decompress(comp)
-    else:
-        # Other methods not handled here
-        return False
-
-    crc = zlib.crc32(data) & 0xFFFFFFFF
-    print(f"Computed CRC32     : 0x{crc:08x}")
-    return crc == info.CRC
-
-# -----------------------
-# CLI
-# -----------------------
-def parse_args():
-    p = argparse.ArgumentParser(description="MLPerf-style NPZ save & check tool")
-    mode = p.add_mutually_exclusive_group()
-    mode.add_argument("--save-only", action="store_true", help="Only save the NPZ")
-    mode.add_argument("--check-only", action="store_true", help="Only verify/show the NPZ")
-
-    p.add_argument("--npz-path", type=Path, help="Full output/check path to NPZ (overrides --out-dir/--name)")
-    p.add_argument("--out-dir", type=Path, default=Path("/mnt/hs_test"), help="Directory for output NPZ")
-    p.add_argument("--name", default="sample_000000.npz", help="Filename for output NPZ")
-    p.add_argument("--compress", action="store_true", help="Use compressed NPZ (deflate)")
-
-    # Size/dtype controls
-    p.add_argument("--mean-bytes", type=int, default=DEFAULT_MEAN_BYTES, help="record_length_bytes")
-    p.add_argument("--stdev-bytes", type=int, default=DEFAULT_STDEV_BYTES, help="record_length_bytes_stdev")
-    p.add_argument("--resize-bytes", type=int, default=DEFAULT_RESIZE, help="record_length_bytes_resize multiple")
-    p.add_argument("--randomize", action="store_true", help="Draw size from N(mean,stdev) before rounding")
-    p.add_argument("--samples", type=int, default=DEFAULT_SAMPLES, help="num_samples_per_file")
-    p.add_argument("--dtype", choices=DTYPE_SIZES.keys(), default=DEFAULT_DTYPE, help="Data dtype for 'x'")
-    p.add_argument("--seed", type=int, default=DEFAULT_SEED, help="RNG seed for reproducibility")
-
-    # Check controls
-    p.add_argument("--deep-check", action="store_true", help="When checking, manually parse & CRC the member data")
-    return p.parse_args()
-
-def main():
-    args = parse_args()
-    out_path = args.npz_path or (args.out_dir / args.name)
-
-    did_save = False
-    if not args.check_only:
-        save_npz(
-            out_path=out_path,
-            mean_bytes=args.mean_bytes,
-            stdev_bytes=args.stdev_bytes,
-            resize_bytes=args.resize_bytes,
-            samples=args.samples,
-            dtype_name=args.dtype,
-            seed=args.seed,
-            compress=args.compress,
-            randomize=args.randomize,
-        )
-        did_save = True
-
-    if not args.save_only:
-        if not out_path.exists():
-            raise SystemExit(f"File not found for check: {out_path}")
-        list_and_crc(out_path, deep=args.deep_check)
-    elif did_save:
-        # echo path for easy piping
-        print(out_path)
-
-if __name__ == "__main__":
-    main()
+syntax than anything so I'm not sure the risk is actually high.
 
 
---2XDoF3yvYa3Qjteu--
+>
+> It's hard for me to imagine functional breakage if the code is still
+> compiling.
+
+Indeed so, yes.
+
+
+Ian
+
 
