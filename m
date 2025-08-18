@@ -1,265 +1,95 @@
-Return-Path: <linux-nfs+bounces-13733-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13735-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14B66B2AC60
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 17:16:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0E3B2ACAD
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 17:25:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC2CF4E1707
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 15:09:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 721373A8AA1
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 15:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23CA2494F8;
-	Mon, 18 Aug 2025 15:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13954221DBD;
+	Mon, 18 Aug 2025 15:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dmQ7TbLn"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JycF+HWn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2666E24A078
-	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 15:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE4A2550D5;
+	Mon, 18 Aug 2025 15:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755529730; cv=none; b=NS1X4BUmYFuQ1yd6ExgxYd4HtuiPzVHRI98HZpJ62pHJNlnGPY9jYeO10aGZ1tH06Sm8SJq6yR8oQHFpzpA6yeRoPPlHZ6RO7zLvRMNLSqlqpnuAlc9mBOMZDYqzQQErkHgjphXOBGwBLRLKqck+rljb9O5ovPq8Qcg1VyP6ab0=
+	t=1755530489; cv=none; b=W9612T0OgyXQhkc2PvVfdDtEujw00QmR9vAQvy4SFrQ8M8YVgHbZwo6atrHaNu2HGEfUXOFSdZnu0O6i80FTidx5eBEAfpBM8CLxmNyKyb2/sJVWudC3vLx8uofWD0ZTegVx1K3zJY/LVUkqp4xK/j5tOsmG4lp9yhVYKZj5ChA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755529730; c=relaxed/simple;
-	bh=uR1/HhoDYeFmP5nIUboqmsdt1zeR8R/NaLExwghmLOw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G/R/HbBP0AbLkzKy/77Vbo2hQnctn//oYRSAbV51C1aqndxD2EoRPYIw9zIe8ClVupIAE0011D4Zg0yzFgh7DHPtrPsBwgwAzQZuHC8ymxa6soQVZ8i1sEa/xPtBhOqNIrRsQt976xi3jhcZugvDbSTSU0f6CZ4QDvSXe+KNLBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dmQ7TbLn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755529728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uzuHkaiUgFOFNEV3OY/I9gEsVGOngRiBNxTVDWcdEuw=;
-	b=dmQ7TbLni/tTnuj18/jRIgqfxVj7siiMXBIRahb20v2ixzFrqlmFvyTo2zVaKWvG+ykSkc
-	HdANk8PcdLWbJXznUmpXzHCASnRN4Kr6yVBRkqgEDClLHTSY97lQC6zschDaEp7mAyxa+X
-	rHtdMwMMgX0hg8qyPtAs+7bE+scrucQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-9v7BD60SMkGmggbY4exKRg-1; Mon,
- 18 Aug 2025 11:08:46 -0400
-X-MC-Unique: 9v7BD60SMkGmggbY4exKRg-1
-X-Mimecast-MFC-AGG-ID: 9v7BD60SMkGmggbY4exKRg_1755529725
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB9E5197753E;
-	Mon, 18 Aug 2025 15:08:45 +0000 (UTC)
-Received: from dobby.home.dicksonnet.net (unknown [10.22.64.4])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1E4E830001A8;
-	Mon, 18 Aug 2025 15:08:44 +0000 (UTC)
-From: Steve Dickson <steved@redhat.com>
-To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 12/12] Convert old-style function definitions into modern-style definitions
-Date: Mon, 18 Aug 2025 11:08:29 -0400
-Message-ID: <20250818150829.1044948-13-steved@redhat.com>
-In-Reply-To: <20250818150829.1044948-1-steved@redhat.com>
-References: <20250818150829.1044948-1-steved@redhat.com>
+	s=arc-20240116; t=1755530489; c=relaxed/simple;
+	bh=ybT3elApIajWSCKl67U2LxsXVp/ZqEfe0e1Txum4w9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qC0T/CYpIbbBGDmtoiW+qo9inkhgCrmKXQ5GYnUTSf9DjXGZOKM8/4AEv95gut6UbdKHiyJE9hRq8W4BlOa4j9NiSPw0/ODeehTHTk2jdBCUSoNB8Gc/EjrVba4nG4U5iXU7HAF46OZB/n+4KAEv8wQaVEwoKYq7KC3Xw63M3nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JycF+HWn; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vr/RdZMhiaGI1ngCH3UQz2IFmEHsSacQUq/ySyRWpEI=; b=JycF+HWnFn1+yHSfiepZrxbO7r
+	nZWN2G9IiimTFw/8K9O7ddLHqtpmzBElB6Q5QnEMe2rPx+cakd39zSuJck2MjUpobrSTfR9Cnpi22
+	QTHquBYRuuqe+zmn95Im5MJCKJoQn7q9+dcw3lg6roHCm1uzxm90ScwCMDZGXho5fxL7Sz7BfwZA1
+	GxuB0IvuVYFBrGZ0xjvJU0a5a2KNJds5ZbUzBF4VpJXp1NeXOobx4xUO1vQz5bpdFgpiZa8GoBkKs
+	OwEfSci8t6xjXjcgvDXIN/YAPeP0l7G1pYRFwaCZjY9NZo8/u5MkXvbDhYsGhGHBV7ov7HFIlFFsY
+	rtIuygEA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uo1fp-00000007kTX-1i95;
+	Mon, 18 Aug 2025 15:21:25 +0000
+Date: Mon, 18 Aug 2025 16:21:25 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
+Subject: Re: [PATCH v3 2/2] NFS: Enable the RWF_DONTCACHE flag for the NFS
+ client
+Message-ID: <aKNE9UnyBoaE_UzJ@casper.infradead.org>
+References: <cover.1755527537.git.trond.myklebust@hammerspace.com>
+ <001e5575d7ddbcdb925626151a7dcc7353445543.1755527537.git.trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <001e5575d7ddbcdb925626151a7dcc7353445543.1755527537.git.trond.myklebust@hammerspace.com>
 
-With newer compilers (gcc 15.1.1) -Wold-style-definition
-flag is set by default which causes warnings for
-most of the functions in these files.
+On Mon, Aug 18, 2025 at 07:39:50AM -0700, Trond Myklebust wrote:
+> @@ -349,8 +349,12 @@ static void nfs_folio_end_writeback(struct folio *folio)
+>  static void nfs_page_end_writeback(struct nfs_page *req)
+>  {
+>  	if (nfs_page_group_sync_on_bit(req, PG_WB_END)) {
+> +		struct folio *folio = nfs_page_to_folio(req);
+> +
+> +		if (folio_test_clear_dropbehind(folio))
+> +			set_bit(PG_DROPBEHIND, &req->wb_head->wb_flags);
+>  		nfs_unlock_request(req);
+> @@ -787,8 +791,15 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+>  			clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
+>  		}
+>  		spin_unlock(&mapping->i_private_lock);
+> -	}
+> -	nfs_page_group_unlock(req);
+> +		nfs_page_group_unlock(req);
+> +
+> +		if (test_and_clear_bit(PG_DROPBEHIND,
+> +				       &req->wb_head->wb_flags)) {
+> +			folio_set_dropbehind(folio);
+> +			folio_end_dropbehind(folio);
+> +		}
 
-    warning: old-style function definition [-Wold-style-definition]
-
-The warnings are remove by converting the old-style
-function definitions into modern-style definitions
-
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- src/auth_time.c     | 42 +++++++++++++++++++-----------------------
- src/auth_unix.c     | 29 +++++++++++------------------
- src/authunix_prot.c |  4 +---
- 3 files changed, 31 insertions(+), 44 deletions(-)
-
-diff --git a/src/auth_time.c b/src/auth_time.c
-index c21b1df..16de1aa 100644
---- a/src/auth_time.c
-+++ b/src/auth_time.c
-@@ -58,8 +58,7 @@
- static int saw_alarm = 0;
- 
- static void
--alarm_hndler(s)
--	int	s;
-+alarm_hndler(int s)
- {
- 	saw_alarm = 1;
- 	return;
-@@ -80,12 +79,9 @@ alarm_hndler(s)
-  * Turn a 'universal address' into a struct sockaddr_in.
-  * Bletch.
-  */
--static int uaddr_to_sockaddr(uaddr, sin)
--#ifdef foo
--	endpoint		*endpt;
--#endif
--	char			*uaddr;
--	struct sockaddr_in	*sin;
-+static int uaddr_to_sockaddr(
-+	char *uaddr,
-+	struct sockaddr_in *sin)
- {
- 	unsigned char		p_bytes[2];
- 	int			i;
-@@ -115,9 +111,9 @@ static int uaddr_to_sockaddr(uaddr, sin)
-  * Free the strings that were strduped into the eps structure.
-  */
- static void
--free_eps(eps, num)
--	endpoint	eps[];
--	int		num;
-+free_eps(
-+	endpoint	eps[],
-+	int		num)
- {
- 	int		i;
- 
-@@ -141,12 +137,12 @@ free_eps(eps, num)
-  * structure already populated.
-  */
- static nis_server *
--get_server(sin, host, srv, eps, maxep)
--	struct sockaddr_in *sin;
--	char		*host;	/* name of the time host	*/
--	nis_server	*srv;	/* nis_server struct to use.	*/
--	endpoint	eps[];	/* array of endpoints		*/
--	int		maxep;	/* max array size		*/
-+get_server(
-+	struct sockaddr_in *sin,
-+	char		*host,	/* name of the time host	*/
-+	nis_server	*srv,	/* nis_server struct to use.	*/
-+	endpoint	eps[],	/* array of endpoints		*/
-+	int		maxep)	/* max array size		*/
- {
- 	char			hname[256];
- 	int			num_ep = 0, i;
-@@ -226,12 +222,12 @@ get_server(sin, host, srv, eps, maxep)
-  * td = "server" - "client"
-  */
- int
--__rpc_get_time_offset(td, srv, thost, uaddr, netid)
--	struct timeval	*td;	 /* Time difference			*/
--	nis_server	*srv;	 /* NIS Server description 		*/
--	char		*thost;	 /* if no server, this is the timehost	*/
--	char		**uaddr; /* known universal address		*/
--	struct sockaddr_in *netid; /* known network identifier		*/
-+__rpc_get_time_offset(
-+	struct timeval	*td,	 /* Time difference			*/
-+	nis_server	*srv,	 /* NIS Server description 		*/
-+	char		*thost,	 /* if no server, this is the timehost	*/
-+	char		**uaddr, /* known universal address		*/
-+	struct sockaddr_in *netid) /* known network identifier		*/
- {
- 	CLIENT			*clnt; 		/* Client handle 	*/
- 	endpoint		*ep,		/* useful endpoints	*/
-diff --git a/src/auth_unix.c b/src/auth_unix.c
-index fc2be02..78a76b6 100644
---- a/src/auth_unix.c
-+++ b/src/auth_unix.c
-@@ -82,12 +82,12 @@ struct audata {
-  * Returns an auth handle with the given stuff in it.
-  */
- AUTH *
--authunix_create(machname, uid, gid, len, aup_gids)
--	char *machname;
--	uid_t uid;
--	gid_t gid;
--	int len;
--	gid_t *aup_gids;
-+authunix_create(
-+	char *machname,
-+	uid_t uid,
-+	gid_t gid,
-+	int len,
-+	gid_t *aup_gids)
- {
- 	struct authunix_parms aup;
- 	char mymem[MAX_AUTH_BYTES];
-@@ -251,16 +251,13 @@ out_err:
- 
- /* ARGSUSED */
- static void
--authunix_nextverf(auth)
--	AUTH *auth;
-+authunix_nextverf(AUTH *auth)
- {
- 	/* no action necessary */
- }
- 
- static bool_t
--authunix_marshal(auth, xdrs)
--	AUTH *auth;
--	XDR *xdrs;
-+authunix_marshal(AUTH *auth, XDR *xdrs)
- {
- 	struct audata *au;
- 
-@@ -272,9 +269,7 @@ authunix_marshal(auth, xdrs)
- }
- 
- static bool_t
--authunix_validate(auth, verf)
--	AUTH *auth;
--	struct opaque_auth *verf;
-+authunix_validate(AUTH *auth, struct opaque_auth *verf)
- {
- 	struct audata *au;
- 	XDR xdrs;
-@@ -350,8 +345,7 @@ done:
- }
- 
- static void
--authunix_destroy(auth)
--	AUTH *auth;
-+authunix_destroy(AUTH *auth)
- {
- 	struct audata *au;
- 
-@@ -376,8 +370,7 @@ authunix_destroy(auth)
-  * sets private data, au_marshed and au_mpos
-  */
- static void
--marshal_new_auth(auth)
--	AUTH *auth;
-+marshal_new_auth(AUTH *auth)
- {
- 	XDR	xdr_stream;
- 	XDR	*xdrs = &xdr_stream;
-diff --git a/src/authunix_prot.c b/src/authunix_prot.c
-index 0a04336..32e6f8b 100644
---- a/src/authunix_prot.c
-+++ b/src/authunix_prot.c
-@@ -45,9 +45,7 @@
-  * XDR for unix authentication parameters.
-  */
- bool_t
--xdr_authunix_parms(xdrs, p)
--	XDR *xdrs;
--	struct authunix_parms *p;
-+xdr_authunix_parms(XDR *xdrs, struct authunix_parms *p)
- {
- 
- 	assert(xdrs != NULL);
--- 
-2.50.1
-
+I don't think this technique is "safe".  By clearing the flag early,
+the page cache can't see that a folio that was created by dropbehind
+has now been reused and should have its dropbehind flag cleared.  So we
+might see pages dropped from the cache that really should not be.
 
