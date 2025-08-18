@@ -1,259 +1,348 @@
-Return-Path: <linux-nfs+bounces-13747-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13748-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B6BB2B199
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 21:28:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 866EFB2B1C0
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 21:36:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A4CB1B262BD
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 19:28:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61FD7520ABA
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 19:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E9826E143;
-	Mon, 18 Aug 2025 19:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7201AAE17;
+	Mon, 18 Aug 2025 19:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mkw8dSf+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QoRmJSTR";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Sw2Z+hzr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FFE20C00B
-	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 19:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755545278; cv=none; b=sgAcBKBqFy0wR+OW7NZR90EtGkfJYo/L3h/8xQfHInx1ClduMjg2icCN3wIP3nHXv44EDaEbJA5xC+Strt8Nc+BxUYWlMAFKlntKMGVtsuPtsXCs278obDwobop8UwamVgkVSwtAiW92cc7zc6/VjVjhWEGzqxeMbLif8ql/TNo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755545278; c=relaxed/simple;
-	bh=opGCD/JR6Y/SHqLGtRX7sxzmX2B2KsfpnCqz35E93FQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fk8Dy0A0Y4l/egfR47HBa+TgIghNqksViCsvp8ET828NWz5dcOd/uWVJjV+NpH6fSTCMnFjVp4d3TBPK7JCIxnjeybz5lykX/47/9IG1c0Eyx+am+4D07GWXKdiHGwgPOwLm3dZ1roiEqeSV7okCby4mB1Fm4S4LY05jb2wFUsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mkw8dSf+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAA8C4CEEB;
-	Mon, 18 Aug 2025 19:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755545277;
-	bh=opGCD/JR6Y/SHqLGtRX7sxzmX2B2KsfpnCqz35E93FQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Mkw8dSf+nxa2Nv8dKe6T+ni/6Ku6Jqm9Ijcg/EK3NEqgjVlt6Rmdze5Se/Fi/WdEH
-	 imvMi7KnbTsA6XjG1vXY3AK7v259ToOC+MUjLZOSrEdyOXOFHmxfx9K4LTyNro91GP
-	 Hd1QSgMZB3X6yJcNG3KrVKA4TUxYKttL0RnXdYKkiTlubM25NQYHJ3HGPslKEa3De+
-	 H+MeJKhO6PNME7Aplv+12EVk0Vrs6pGz5gkN3vc9IOkZKHP8E+gB+dWKGoF8KIIb2k
-	 RtO8Frl1Ls6ToGXiDa47s7os4JNGdLLOkgrQWlY9PU6b2ZCosTXEX8QKJxP76KHcDO
-	 RbddtZvCNfvtg==
-Message-ID: <eea0862de2cc9d9204527ddcbd9455422bcd042e.camel@kernel.org>
-Subject: Re: [PATCH v7 5/7] NFSD: issue READs using O_DIRECT even if IO is
- misaligned
-From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date: Mon, 18 Aug 2025 15:27:56 -0400
-In-Reply-To: <aKN5Yy6Y08VozjwF@kernel.org>
-References: <20250815144607.50967-1-snitzer@kernel.org>
-	 <20250815144607.50967-6-snitzer@kernel.org>
-	 <ddc5b0acc656a5f920fb494c420d8e79bd7681ab.camel@kernel.org>
-	 <aKN5Yy6Y08VozjwF@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64363451DF
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 19:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755545807; cv=fail; b=HKalHt7kXknEAsx9zNslzQZAyJMXzOOnPtHDXMokd2L01MZozYday1v5za/03+Ven2qQDBqxdzcwMr8LcvJzeQsrn/2QmqUxDubUjqx8poyFGGIfKTWKzQUa6Hxw0VdzNO6/63bFkTQk0Qq+TvoUxejDNyNDEx8SFDe8e0W82LA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755545807; c=relaxed/simple;
+	bh=1PyABvHEwdKRp2ziWoIq3vddVxPgXTu3Zpal/pdN16s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=M3+Xqv6lA1+Bog4IqElZm8rcOJro7VW000s4QoEX0qPynMNPkiS94dAyIBUb8p/GnDWDd5wNV/TSLGSCNOrTnptLYV/fiq8gZTzrx6emwFxj0doSRWYPORXbl6hH1yJ8CgVCDKpAlU1T6s62OuC6dTDe1nmsrmdXoavfA/Jq1LU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QoRmJSTR; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Sw2Z+hzr; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57IJC2s2030402;
+	Mon, 18 Aug 2025 19:36:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=/Zrxh5pbMfGmrC8Ykb+VjExGeVBQuh8JgowO3rPGPsE=; b=
+	QoRmJSTRy4Tr3jbF8ie8jSoo45Sgive/q2nHITzkjSSbQQpm+29nAPVbqs9KsGnk
+	Hmm2gqGbin9V+4XsOQv6j3K34s6RC2+RCix8pHZjNgVqbMW/iuyrxqUTGUFam1NU
+	0eq97aiGx7kqPbzHifF/1obt3gxb33ISR41vJPLaToWh9XMll+c6GB2qUeLA0kl8
+	Ag+14ktOerL9NTVe0b92oMCPKbqHoKwxEvoVbdg8LxzcjxDSfN17VxMMbmUvMtFZ
+	Ui7Fppyi5ByHe5xU7m4cv2LYaChsXMn7botbEeZL+LehxHBj9cUnsxAcpiPjNdlI
+	jDO5Xfyj9aTaDxqc1JVL1g==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48jhkuuu5n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 18 Aug 2025 19:36:36 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57IIJDvR030812;
+	Mon, 18 Aug 2025 19:36:35 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48jge97d93-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 18 Aug 2025 19:36:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XQqzQ3q1FlYs1bl4D1Td11kk5LH5srEYQT6Rb1Pr61lNap2kHqt8PGi0hUpKQXg27vPCSF0HOYedQ4KEm/Dp/5osWvh4DZ71skkPnKyo/oxdO2B6kpCg91SEstB3sPUSV6cXvG3lmFKTFukEejG+FKioMwwakqOR4L/eAhteitPbqENQFwXm7IIrJn0QUIE//H2Aw/r3FqfBsR+2eePVwBetIp8Er4W8mH/51ijdi2qNlP+oVMARqj9HzYqLqUVJ23YeVnUq+tvren4ju0jpdl0KQffGKB6BYT0czKtCXGrJOrpLZT+y9t6xeLlshkes69+BUaUsFMbEXOPgUB48Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/Zrxh5pbMfGmrC8Ykb+VjExGeVBQuh8JgowO3rPGPsE=;
+ b=UKTgXP03rr/V9fBlCFIMBjqtl9Wf/FEyqQHbYdWi3CrKiC61VjskHNiUWYIXh50pE9+hqAlLMSOmqxHJLZS6Vjz2+Jf7wUWCYZFOMli296feZHTSGPsjQ3A/KQrjP+X0nC1h3WCRw7BpY4QhywqFIhMlnY3N5FA3+jDNbrZ50YkRJ1AI/DraKIK/j2D2JXWaTknVN+OcXegkhcQeyigKVU5GJYujY7SWtCdobwJPl0TWA9DvjLbxLF0Hx5+HNzkK6IELZO/PzNFOuQO08rY+dos8V+8vx+4+nlnVSKdqJDMOBXDzmajQLqb/DJUod3TBk6GbKQwcAxcyoSb0yjmh5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/Zrxh5pbMfGmrC8Ykb+VjExGeVBQuh8JgowO3rPGPsE=;
+ b=Sw2Z+hzrJMUPR3mrnjXRw5jKv9/oXa7ocz4Sol7G7u4FP8SbmrUekjqom8UydkzbYxfV2U0OeGx3ybUr2Ub8lChsNkbbjsGYi0vMF2VL3AaAzc6lHF4AJqfp1XIsSKzNMoRLT8xNM51wua/tcfJO4jSjVyv5AxJITufXj1wRkhk=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SJ0PR10MB4576.namprd10.prod.outlook.com (2603:10b6:a03:2ae::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.24; Mon, 18 Aug
+ 2025 19:36:32 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.9031.023; Mon, 18 Aug 2025
+ 19:36:32 +0000
+Message-ID: <ff15eec1-3827-4057-a116-1f1bbc9bc8fd@oracle.com>
+Date: Mon, 18 Aug 2025 15:36:30 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] nfsd: unregister with rpcbind when deleting a
+ transport
+To: Olga Kornievskaia <okorniev@redhat.com>,
+        Olga Kornievskaia <aglo@umich.edu>
+Cc: jlayton@kernel.org, linux-nfs@vger.kernel.org, neil@brown.name,
+        Dai.Ngo@oracle.com, tom@talpey.com
+References: <20250818182557.11259-1-okorniev@redhat.com>
+ <c4722c18-57a5-49b5-818b-1e46cb4733b8@oracle.com>
+ <CAN-5tyHincZxuNL3z5QDZ8Sv1F=fqT1b-3nUt2DVvFhr0MePRw@mail.gmail.com>
+ <CACSpFtB3WDtWL7sv3FEyBh7UYiYSwiQwDr42vDck_nVQB_Z2ww@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CACSpFtB3WDtWL7sv3FEyBh7UYiYSwiQwDr42vDck_nVQB_Z2ww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR13CA0021.namprd13.prod.outlook.com
+ (2603:10b6:610:b1::26) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SJ0PR10MB4576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64102388-3bf8-432c-e375-08ddde8e88f6
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?N0t5cEV6bTVxWWc0andIT3ZWY21wMGJFUUNsQVlHTFZtR2wxRjNKMmltOERx?=
+ =?utf-8?B?VHliV2JpNWJCS3B4dHhwRlgyQklqcmN0K013VHJQa0RCSGdwUjJnSGhEVTFv?=
+ =?utf-8?B?ZUtCcDVTNm5HMlI2anV1SFM2eHR4YW5nRTZ6ZjkySXFBOXlwTWVDY0lBT3ZK?=
+ =?utf-8?B?NWtNRlZReGk0dzd5anA3SnBLTGNiYzNNQ3k2ek85VnorM3FNbXJ4b1RFTzNG?=
+ =?utf-8?B?a08wdGF5WkNBUXBacXdkNXlGRnRLdGpHK2lEOXNLV2xGcHVlRGxESTdjNGtM?=
+ =?utf-8?B?ODNKRCszSnZlZFR3ZWllSVNKY09xZjl6QkpkUmVaeFpidHJSbEZ2NjVBYWl6?=
+ =?utf-8?B?VXppVzAxK1dyOHpBa2s0M1lZZmFPMGxvcDU0T3Ixbmw2dlVidzFmdHVkUks2?=
+ =?utf-8?B?T2xCMkh5TWk3b0hnTXQ2T2FiczlrWUZUNlRoZFZDMVJ1akc5VW4wNlVYM2NM?=
+ =?utf-8?B?WmtHMnFWWnpmMyttVG1DZk9qZ1Z5K2VLeWRQcnpVdkVNRU1xVG1ZQ0NsRC9V?=
+ =?utf-8?B?TWwzeHhOTmZScTF4SEk4c0xJN0diYlFwd1lUQndvaXhJVEhTRGJIOU1kdGJ0?=
+ =?utf-8?B?bFJvQlVYTWNWSkRQbzBsVEphaXFKYmZuUlV2VEpwOEFwMGtiUWpFbUJubTlt?=
+ =?utf-8?B?czM2NlZOMmkvRnJMbWRaOG9NbWswVzZLemJNUDJ6QU9XbDJGcWI4UnU5NGh1?=
+ =?utf-8?B?akZHR05scy9oa3Zwbk92YmR6MS93T1ZOMjFOM2ppaUJSTGxkTno4cktYWGFY?=
+ =?utf-8?B?QVhtWDZmN2VBS01WV0ZUWkg3cDdUUFdHVjBIRGdsTEdhR3MyRzdpa0FQb1Yr?=
+ =?utf-8?B?TlJMTit2QmhIbzFPMVQrMkdRcGUrRDd5N3lSTEhlRXp5Y09wQy9DQzNPUGo2?=
+ =?utf-8?B?dXNlMURVVnRFak9ZQTY1OGtyVkE4c0hna3dWK0NCalBsVVFRZy9tT2tWR2FP?=
+ =?utf-8?B?U1NzakhuNjNPRDRraTd5dFBPK0kvZCs1T2s1WVRWOGI4WTBTZDRRZ1lRWFZL?=
+ =?utf-8?B?OHZ1Y2pnK3hlV2Yzbi9McS80RzhtZjRLQlhJcTZMOENjSVArLzM0NkhLWFZB?=
+ =?utf-8?B?c0pNT2VUT2ZtTjRjNEFaSUlnNmRpTnhEZXZtZTJLdWQwYXNzUEt6eFZOSWxB?=
+ =?utf-8?B?SFRUb2h4MWtWd1pWS2VMUjZWUjlmQXlJaWcrTGN1Z3lCOS9sWmFJTDdIQlA0?=
+ =?utf-8?B?dkd5STI5L3RENW5oNlhTb0V6RlREL2dVM0hscHNVcnErYTdIc2JPcUIvNS9U?=
+ =?utf-8?B?ZHVSRHBBVUdSa0VSWkV1dnBmSFhnbU1LTnhkSXFwOFBNL2pwMS9WVERVVjlm?=
+ =?utf-8?B?UHloZVU3dDR0dEZ3cm9zY0RnZHQ5UnBZY2M3ZG1IQlpSUFRKQUVoZHRLU1lC?=
+ =?utf-8?B?ajExY2ZBdzUySkRSWHpSSHljVDFSWlZKRUlyL1E0NGJOcUlCSktLbGlkd01o?=
+ =?utf-8?B?QXBmSXc4TFFRb2FsLzRicWhEWmRTOUxyTzJ2MEFsSzZXMTlsRFRmKzJ3ejZB?=
+ =?utf-8?B?WVluS0ZEUjVhTXZrTk82RGVYUW9zR1RpSmcxNEFJcVcvV3Z0OFhYaThwOWR4?=
+ =?utf-8?B?QWRQUVBtMVEwb2FRWGJ2R3dGdGsxb2ZHcys4RUIvVExaTnArbnVWd0ZueTVl?=
+ =?utf-8?B?ME4wRHZwWk8valpRY3lGQXdxS3JRSExqeENyRENnWGRYUDdyN3ZEQ3EyTzZm?=
+ =?utf-8?B?eE5INldMOE9XTjRwZHVZS1lNbjFxdW16aUJsU3c0MDVWWmFlYkV1K3NmVUZT?=
+ =?utf-8?B?a0p4elpweE5SR3Ixbkt3Smt1RHN0Qko0ekk0dmNWQ25EeitDVHpDWWVUR3Fy?=
+ =?utf-8?B?b280dWFWbGQ2Ym04TlFjdFllUksxQ3MyOUFEU2RyZUVPbHRyZ1ZTcVJKbHJE?=
+ =?utf-8?B?dFo5UWhrNC8zMFlFdVorbVBpYS9HUmMyTUMyTU1EZEZ3dTRGZU9iOWV6TDkv?=
+ =?utf-8?Q?/uSEYNOOWM0=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?aTFmci9LaUEwK1dncTV6S0JDLzFzUDhYdkQrWGhvZXlTT3lVVHFWL2JUbzA1?=
+ =?utf-8?B?c3ZlQzZNaFc3Z1psczNYd0RKbFMzYTVRckZOZ3o3RDU2ZjJiUGkxMHVVZ0hX?=
+ =?utf-8?B?Y1JyWk5oaGQ4UTJ4SEdUcHhPbTB0alZCdW5mYXhWM043SnZZRXh5eWxuOUVO?=
+ =?utf-8?B?NXZ6UkVhYTBOaHRiTHAwajlqU1Z1RkNHM0JsY2JIODRLb09MbFRtWGNxaHBS?=
+ =?utf-8?B?QldBQ0VQalFaM2JkQlk5V2pOSDBwNU9oSVN3TElEbXdhREpra2ZaUnNua25U?=
+ =?utf-8?B?MldHdFplZUZ1a04rTjJCS3A5bGdLa0gyY3huS0dzZzVzYWh1TGpBVlZTL1Fn?=
+ =?utf-8?B?U0hHQVJTSDR0cEs1Ry9OcDlXUDVrZnlpOGlxS01LRUIwOUswOXNObWdob3Uz?=
+ =?utf-8?B?UlF0NEVFY2NlUHEvaHlvZHBWeUN2WGhnMTJhVGZTZnIvNCtoc1Ftbkd2Rng5?=
+ =?utf-8?B?UHl0WW00SlJpbGtvSlBuMUNFbEFHOTMrMFpqRDdrNEl0Vm5vVmFoN0pRQksw?=
+ =?utf-8?B?d2xtMmRZRTFKd3JBNzg2ZVRVR1FjaVRwQzZQN2JaaUxJTGt5YUtldEpuU0R3?=
+ =?utf-8?B?d2V2dVlUeGcwWXZuSzJONWQ2R2Z6MlJmRWRaaDVzMEV4d0NNbWx2Z3R5dE1m?=
+ =?utf-8?B?M21vUk1wNlNPUVZzOHhwckowN3g4NllnU1o0NU8vd0VTRktmRWtsTFFzUDZ6?=
+ =?utf-8?B?YkdyV0RadGtlNGZUNzdmYmJaWmloWURyd3V4eFZ3dEU4T3FpNlpUMzd4QUtB?=
+ =?utf-8?B?TDRTYlBBbmxmM003VStKY3JLc1RveWFxZjRlbENLcmlrdkVFd0IvaFNpR3Ba?=
+ =?utf-8?B?b0RUdEhMM2lPK2VxZHNkOGVLUVFhaUFVbXlIc3BGaEQ2dU9iK2VtRzZicjV6?=
+ =?utf-8?B?T0FjUWhpWU55WVdmRXBlQ2FLUUF2T3B2OWJObGdCVXNlR3g4SGhuRStlOTVt?=
+ =?utf-8?B?V3JJdXpCZ3pGb1A5RzA1MHZ2dzc3emorc1IxSHRvVDhsWUVPdVpDa2hRK3JL?=
+ =?utf-8?B?bUQvWlBPNDhVdXlFdk1TL1k1K1pkWXFKVHpjOFJiT1czWG0wK1BmMlNCQUFq?=
+ =?utf-8?B?d21XUUtKVjNSZXlUYjhWZCtCa2ZONVU2YkZ2Ymhpd3dOd1Y0dFNtemU2QS81?=
+ =?utf-8?B?VUdoN3VwZmpjTHRjZ2VGN21rRGtiaXNybEtacEdiWnVVazRuL28va0V1RHE4?=
+ =?utf-8?B?Mnk5WlRkQ0tQcXU3eCtOMkswYTN2Tzl4dXc5RGRqY3hjVGE4Y2lRT0pRMDRt?=
+ =?utf-8?B?OWk4eW5NN3NoUWpDMFVKT3p5SDdod2JFa1hJZGhkRVIzdGwxeS9ydHNud1la?=
+ =?utf-8?B?RnFpVW13bHk3OU1EZzVucFYrOElQdk9XNUxHVXR5aklmVlBFcEk5b2JaRGQ0?=
+ =?utf-8?B?MlRsMEk2WnEzdmxEVWFSdmVKamhBZ1FITHlGVFNrYmJaOHFadnRucWZBaWZo?=
+ =?utf-8?B?MEhGRitXK2h2L2ZPLzZqUDIrekdQYlJHcENWL0x1Ly9XWkNUaFhQZkhibExL?=
+ =?utf-8?B?bDdvamh5dzRVZmt1M1Y2MjJURy9jWnlIZnF3akFlWms3bENPU0xzVURpU05U?=
+ =?utf-8?B?U2RrSE9oR09zSjZhYk5PVml3bnhacys4WEFJYmRNRGIxUnhVYkZJVGhIYUFD?=
+ =?utf-8?B?WWxVZ2RCemtzMElNTHNnR2dFMnh1UU5qZkQ1THAyNUV4RlNTNGhKcHpzZ1RF?=
+ =?utf-8?B?aHpiZE9BTDR2VkZsR3o1ZW1HemxEb0lYUnVHeDgyUElpc3gyVjBqS3NnLzlX?=
+ =?utf-8?B?NFlrTDNSM01JeEJuVGtHWEdVblkzUU9sZDRpWmxmOWExYzZ3ZTZkeWhSSThY?=
+ =?utf-8?B?eUtnQVdRWEQ0cXgrZUl3dlFQKzNwcjdYTkpDMDU5SFFNcURWNzdYTUhmRzl3?=
+ =?utf-8?B?YWt5QXhzSWNIWmtxZGNpampYOGxHdHlJaEt0bmVpOXIwMVczV1RNcUdvT3ky?=
+ =?utf-8?B?cWJaTFV5MUpHVkVPVkkySFVONmhPMktCdkROK3VVSHk5VXVmSmhld0hlbk9q?=
+ =?utf-8?B?MHg3amdhOXNmK0NPTWFJZlZKNEdScThSeHA0MWVtWVA0SFovcXl3YU9tcVUz?=
+ =?utf-8?B?RDFJYzd2ekxqZHI0VlFZV2g3L1NONEtMNm96enQyNkgvUFVQWmU0NmpQUTZ4?=
+ =?utf-8?Q?pTElxhGlB2+99Fn+NYhYGaoHr?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Sb9W8JVHKP3D3jsSAPC+dPzyNDHqIaYycvYEekFTgzaJYSEkwtqCiivS8WcYPWkbKiH6qrmOzSyQRRXCFiDnb+CmpXWCG5ru22dExKPDr6i7x/38oGG1N/ushGQ4ZOQC3WcjlV/n/Z065netVhdkuOhys46DmBQFzq03k6QzsjRY0SVtXM0oz1LGtgpxKhxhCYWe/XArP74VAE9PRa9iMQJoF+3CerLBSmAc3OBgBJsp3dCmP9X2/6bIPj/SZd7ynAiEIBzozgdokgSEAXOujBncA7wSdYaktXyzHu7dJE0EZUVKgp846HWjG4Gomtegh05wteKSQks/bolaAOqFM9LcHf9djxl20DgDXyTaYPzkbs87FCEYstDX8BtElv0uOpjXNIjfwQHmomykZgpPl/6hFw/S+c43fi3b2McJiiAAHoc2Mk+hzA5meTQFb05CNnmv650YPKsRtjBT7eKNlSoKZX1BVextyk457UuLyRz4aei2dTMNnjqAMraHI/cwmUn9GcF5M6tdwOc47LpQPljqxmKMnQ2jIdhi8vIYXhBMkYKrmhNtPxMmziFN+qAHiMCJB/TmU2Yq1WuIYVPGtQk0jj07kOMq/K3R67ukJwc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64102388-3bf8-432c-e375-08ddde8e88f6
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2025 19:36:32.2453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bu1dFLWAp6KKDO7cMrgJqW2mTN16NqZOYxWBpn27WbIIs6DNLwlggGEwvYMxtY3qra1XzYjdgyBTEU26/0lnaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4576
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-18_06,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ spamscore=0 phishscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2507300000
+ definitions=main-2508180183
+X-Proofpoint-GUID: 1AcCWT_rntUnGB3QwIMqc415DDuNfWSj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE4MDE4MiBTYWx0ZWRfX3QZinZWBH/Bk
+ z/3J5mXSjW1bgSYvvhKINnhr5UnEESFzO0fvQBCR0UAJmMjxp9USqRZ03HKCFycozgQTJdiIJTc
+ a2wUQvMWo372nnmmXr08StmmhrHXhuw+Slf4Z6BJujpb3Zee8QLcUgEy2HizemWUYAvRxlfNcc0
+ BsQ4YBrpSKhQQNxa6DGe3iW55sb/EkNCxonHssu0hlEClJ+cOIF364RfRLc77rLrPwFJy2wfnhm
+ XbuwzJXDagthYIg7+YN7aysqgUvIEM37KBTsidz9FqFHAtUkOP92SBQmBbaSWCRMozAN6ngJNzK
+ ecyJ5v5w0mxUhlCzSShR8T5AwBr//TlIDNfHln1+ri4EsNSHUsyRFfgILDu+NaJu5yVxe+ArdxY
+ FwJl6sBQf6HaCmUsr60meHiXqFTqlHu8kZMTyLhGSzcuBzrSSJUUkBloyvwBC/UjDBR8pIMO
+X-Proofpoint-ORIG-GUID: 1AcCWT_rntUnGB3QwIMqc415DDuNfWSj
+X-Authority-Analysis: v=2.4 cv=HKzDFptv c=1 sm=1 tr=0 ts=68a380c4 b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8
+ a=_vtpuhW3pNVvnM2qfsQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf
+ awl=host:12069
 
-On Mon, 2025-08-18 at 15:05 -0400, Mike Snitzer wrote:
-> On Mon, Aug 18, 2025 at 10:45:47AM -0400, Jeff Layton wrote:
-> > On Fri, 2025-08-15 at 10:46 -0400, Mike Snitzer wrote:
-> > > If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
-> > > DIO-aligned block (on either end of the READ). The expanded READ is
-> > > verified to have proper offset/len (logical_block_size) and
-> > > dma_alignment checking.
-> > >=20
-> > > Must allocate and use a bounce-buffer page (called 'start_extra_page'=
-)
-> > > if/when expanding the misaligned READ requires reading extra partial
-> > > page at the start of the READ so that its DIO-aligned. Otherwise that
-> > > extra page at the start will make its way back to the NFS client and
-> > > corruption will occur. As found, and then this fix of using an extra
-> > > page verified, using the 'dt' utility:
-> > >   dt of=3D/mnt/share1/dt_a.test passes=3D1 bs=3D47008 count=3D2 \
-> > >      iotype=3Dsequential pattern=3Diot onerr=3Dabort oncerr=3Dabort
-> > > see: https://github.com/RobinTMiller/dt.git
-> > >=20
-> > > Any misaligned READ that is less than 32K won't be expanded to be
-> > > DIO-aligned (this heuristic just avoids excess work, like allocating
-> > > start_extra_page, for smaller IO that can generally already perform
-> > > well using buffered IO).
-> > >=20
-> > > Suggested-by: Jeff Layton <jlayton@kernel.org>
-> > > Suggested-by: Chuck Lever <chuck.lever@oracle.com>
-> > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > > ---
-> > >  fs/nfsd/vfs.c              | 200 +++++++++++++++++++++++++++++++++++=
---
-> > >  include/linux/sunrpc/svc.h |   5 +-
-> > >  2 files changed, 194 insertions(+), 11 deletions(-)
-> > >=20
-> > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > > index c340708fbab4d..64732dc8985d6 100644
-> > > --- a/fs/nfsd/vfs.c
-> > > +++ b/fs/nfsd/vfs.c
-> > > @@ -19,6 +19,7 @@
-> > >  #include <linux/splice.h>
-> > >  #include <linux/falloc.h>
-> > >  #include <linux/fcntl.h>
-> > > +#include <linux/math.h>
-> > >  #include <linux/namei.h>
-> > >  #include <linux/delay.h>
-> > >  #include <linux/fsnotify.h>
-> > > @@ -1073,6 +1074,153 @@ __be32 nfsd_splice_read(struct svc_rqst *rqst=
-p, struct svc_fh *fhp,
-> > >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_=
-err);
-> > >  }
-> > > =20
-> > > +struct nfsd_read_dio {
-> > > +	loff_t start;
-> > > +	loff_t end;
-> > > +	unsigned long start_extra;
-> > > +	unsigned long end_extra;
-> > > +	struct page *start_extra_page;
-> > > +};
-> > > +
-> > > +static void init_nfsd_read_dio(struct nfsd_read_dio *read_dio)
-> > > +{
-> > > +	memset(read_dio, 0, sizeof(*read_dio));
-> > > +	read_dio->start_extra_page =3D NULL;
-> > > +}
-> > > +
-> > > +#define NFSD_READ_DIO_MIN_KB (32 << 10)
-> > > +
-> > > +static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc=
-_fh *fhp,
-> > > +				  struct nfsd_file *nf, loff_t offset,
-> > > +				  unsigned long len, unsigned int base,
-> > > +				  struct nfsd_read_dio *read_dio)
-> > > +{
-> > > +	const u32 dio_blocksize =3D nf->nf_dio_read_offset_align;
-> > > +	loff_t middle_end, orig_end =3D offset + len;
-> > > +
-> > > +	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_alig=
-n,
-> > > +		      "%s: underlying filesystem has not provided DIO alignment in=
-fo\n",
-> > > +		      __func__))
-> > > +		return false;
-> > > +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
-> > > +		      "%s: underlying storage's dio_blocksize=3D%u > PAGE_SIZE=3D%=
-lu\n",
-> > > +		      __func__, dio_blocksize, PAGE_SIZE))
-> > > +		return false;
-> > > +
-> > > +	/* Return early if IO is irreparably misaligned (len < PAGE_SIZE,
-> > > +	 * or base not aligned).
-> > > +	 * Ondisk alignment is implied by the following code that expands
-> > > +	 * misaligned IO to have a DIO-aligned offset and len.
-> > > +	 */
-> > > +	if (unlikely(len < dio_blocksize) || ((base & (nf->nf_dio_mem_align=
--1)) !=3D 0))
-> > > +		return false;
-> >=20
-> > The small len check makes sense, but "base" at this point is the offset
-> > into the first page. Here you're bailing out early if that's not
-> > aligned. Isn't that contrary to what this patch is supposed to do
-> > (which is expand the range so that the I/O is aligned)?
->=20
-> No matter whether we're expanding the read or not (that's a means to
-> make the area read from disk DIO-aligned): the memory alignment is
-> what it is -- so it isn't something that we can change (not without an
-> extra copy). But thankfully with RDMA the memory for the READ payload
-> is generally always aligned.
->=20
-> Chcuk did say in reply to an earlier version of this patchset
-> (paraphrasing, rather not go splunking in the linux-nfs archive to
-> find it): a future improvement would be to make sure the READ
-> payload's memory is always aligned.
->=20
+On 8/18/25 3:04 PM, Olga Kornievskaia wrote:
+> On Mon, Aug 18, 2025 at 2:55 PM Olga Kornievskaia <aglo@umich.edu> wrote:
+>>
+>> On Mon, Aug 18, 2025 at 2:48 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>
+>>> Hi Olga -
+>>>
+>>> On 8/18/25 2:25 PM, Olga Kornievskaia wrote:
+>>>> When a listener is added, a part of creation of transport also registers
+>>>> program/port with rpcbind. However, when the listener is removed,
+>>>> while transport goes away, rpcbind still has the entry for that
+>>>> port/type.
+>>>>
+>>>> When deleting the transport, unregister with rpcbind when appropriate.
+>>>
+>>> The patch description needs to explain why this is needed. Did you
+>>> mention to me there was a crash or other malfunction?
+>>
+>> Malfunction is that nfsdctl removed a listener (nfsdctl listener
+>> -udp::2049)  but rpcinfo query still shows it (rpcinfo -p |grep -w
+>> nfs).
+>>
+>>>> Fixes: d093c9089260 ("nfsd: fix management of listener transports")
+>>>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+>>>> ---
+>>>>  net/sunrpc/svc_xprt.c | 17 +++++++++++++++++
+>>>>  1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>>>> index 8b1837228799..223737fac95d 100644
+>>>> --- a/net/sunrpc/svc_xprt.c
+>>>> +++ b/net/sunrpc/svc_xprt.c
+>>>> @@ -1014,6 +1014,23 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
+>>>>       struct svc_serv *serv = xprt->xpt_server;
+>>>>       struct svc_deferred_req *dr;
+>>>>
+>>>> +     /* unregister with rpcbind for when transport type is TCP or UDP.
+>>>> +      * Only TCP and RDMA sockets are marked as LISTENER sockets, so
+>>>> +      * check for UDP separately.
+>>>> +      */
+>>>> +     if ((test_bit(XPT_LISTENER, &xprt->xpt_flags) &&
+>>>> +         xprt->xpt_class->xcl_ident != XPRT_TRANSPORT_RDMA) ||
+>>>> +         xprt->xpt_class->xcl_ident == XPRT_TRANSPORT_UDP) {
+>>>
+>>> Now I thought that UDP also had a rpcbind registration ... ?
+>>
+>> Correct.
+>>
+>>> So I don't
+>>> quite understand why gating the unregistration is necessary.
+>>
+>> We are sending unregister for when the transport xprt is of type
+>> LISTENER (which covers TCP but not UDP) so to also send unregister for
+>> UDP we need to check for it separately. RDMA listener transport is
+>> also marked as listener but we do not want to trigger unregister here
+>> because rpcbind knows nothing about rdma type.
 
-Oh right, I got confused between the mem and block alignment here.
+rpcbind is supposed to know about the "rdma" and "rdma6" netids. The
+convention though is not to register them. Registering those transports
+should work just fine.
 
-In light of that, you can add
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>> Transports are not necessarily of listener type and thus we don't want
+>> to trigger rpcbind unregister for that.
+
+Ah. Maybe svc_delete_xprt() is not the right place for unregistration.
+
+The "listener" check here doesn't seem like the correct approach, but
+I don't know enough about how UDP set-up works to understand how that
+transport is registered.
+
+A xpo_register and a xpo_unregister method can be added to the
+svc_xprt_ops structure to partially handle the differences. The question
+is where should those methods be called?
+
+
+> I still feel that unregistering "all" with rpcbind in nfsctl after we
+> call svc_xprt_destroy_all() seems cleaner (single call vs a call per
+> registered transport). But this approach would go for when listeners
+> are allowed to be deleted while the server is running. Perhaps both
+> patches can be considered for inclusion.
+
+You and Jeff both seem to want to punt on this, but...
+
+People will see that a transport can be removed, but having to shut down
+the whole NFS service to do that seems... unexpected and rather useless.
+At the very least, it would indicate to me as a sysadmin that the
+"remove transport" feature is not finished, and is thus unusable in its
+current form.
+
+An alternative is to simply disable the "remove transport" API until it
+can be implemented correctly.
+
+
+>>>> +             struct svc_sock *svsk = container_of(xprt, struct svc_sock,
+>>>> +                                                  sk_xprt);
+>>>> +             struct socket *sock = svsk->sk_sock;
+>>>> +
+>>>> +             if (svc_register(serv, xprt->xpt_net, sock->sk->sk_family,
+>>>> +                              sock->sk->sk_protocol, 0) < 0)
+>>>> +                     pr_warn("failed to unregister %s with rpcbind\n",
+>>>> +                             xprt->xpt_class->xcl_name);
+>>>> +     }
+>>>> +
+>>>>       if (test_and_set_bit(XPT_DEAD, &xprt->xpt_flags))
+>>>>               return;
+>>>>
+>>>
+>>>
+>>> --
+>>> Chuck Lever
+>>>
+>>
+> 
+
+
+-- 
+Chuck Lever
 
