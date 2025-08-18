@@ -1,179 +1,226 @@
-Return-Path: <linux-nfs+bounces-13711-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13712-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFCE2B2A203
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 14:47:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3B62B2A2C2
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 15:02:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 431A2165C80
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 12:40:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 559EB560483
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 12:53:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7061B31B13E;
-	Mon, 18 Aug 2025 12:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2D8B31E103;
+	Mon, 18 Aug 2025 12:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCkg6G/d"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AvhKbEy1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c7DKhGrX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AvhKbEy1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c7DKhGrX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940D731B11D;
-	Mon, 18 Aug 2025 12:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF5E31E0FA
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 12:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755520776; cv=none; b=VZeojTLQ/+sA6/jMY9TsyljqdVf411zhKbty/KdNOXaaIUDXFopuPIryp1qdNN09/aMunrA0W1gltvuWIPSg48RIJa6H5ewOLkHIIqfJyrRgAeKgUgfOIFG8XBQVczdc6MNsyXoapZjO09Emphx4PGKSWferBkKXZU5XMhzGgcM=
+	t=1755521540; cv=none; b=Itccc19ByCNDQs00+XEtkalE5P70cCPfWfuJ4kqZqTAWTUQff5F4+zgHLqljF633P/JJt0SRmfr06/MaFH0H282Bi3qm7d1WD6nZJy5ah+ZA5A6e9t0opGCSQN5EGTtydItRA8MYl12tDOJFTB4eCuZ0dXKiYw679tuXT6XzWuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755520776; c=relaxed/simple;
-	bh=iRiQFMBV+DKdPhtateZaMw71WRCGXS+1o0qcYMlsaNw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BA/AuoVy7T1bDJcoXnCcE0sq46g/D68UrXpWiFGoFLeLKPR1hz4YxV5egp7PtAvV/pJrMGSrCuH1WnkzCg0fGnlvTTdGnL3Yt5kl/SGyyK0izEQvAe3BtwXrrdAkL4pZvpMSfkTIGeaF3se3zmzpNJQT7Xwd8cQ/BYd3CxgLodk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JCkg6G/d; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6188b73bef3so7369849a12.3;
-        Mon, 18 Aug 2025 05:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755520773; x=1756125573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ubbjo8h4cvXI+kpbxgHKGsgNRSO5oS6kJQNOdicLg+U=;
-        b=JCkg6G/dEzZAyztvOMPrbTJUURh1ZfaJwZJvoJFNYb1IhakyprOGSklKUBjfkUiDRz
-         ZLxndigssEOiOXVJkEE1SO7jA/Q83wH27/mduR/zIQqBoDewr8m7XnV4lTiwEvW1l6kH
-         YG+W7RkxeuB5QgMdG7wdLpt+k8XQld/5LSTqYqxCLsKsTT2nlMAvZKlVKxLKiJNZpW/M
-         Cm7Xmf58QxLWGb8fxjDaQznds6deqC3AXmsuappwZg3OhtDLpUfyb80Wvf2hNy0ru774
-         6c7sPpDfl5dYsK1/OzTWPs/Fz83B2fvy2vieXvlhLsrmPdkASen6klQoAQd7jS9buzIT
-         bKYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755520773; x=1756125573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ubbjo8h4cvXI+kpbxgHKGsgNRSO5oS6kJQNOdicLg+U=;
-        b=Ml2paIi0BRiZidRnxAFMA29PlPUhRC2Pjf3myF4lAcGAvpi74r9XundLc3oKE4vTo+
-         5iiPVSH/BOjTGXfKmzWbt6tSmC7ROgBuWL7/IJc5Bt4esHWT9G1osAvMHmP5aPjv33lU
-         xTJHKjxTudTJq6vcU9RChsWfkPeBvgEDArfGG+v1z5K9SIVakF4jPdtVwmXJsy6D8vUt
-         OhDpXpfZwVkg1GNHR6Yc1X/XWJeQLb1w0ndQbUd0XQ7V1cNmU3YOehZoW7loRAKB0lIU
-         ewaeHEmni6VeGtXbBzxda5xlXEmBjg3RpB76+qbPF+bNA1K+jsRW+GMbSq/WzPtjQkur
-         a/YA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGH52+LRpXAuQYgtnvNZkh2xvRGBikEGYyI2kU3YZsABSYTZ8u3+P1o0KkkUJgYvVZvwF9fsw2mfSF@vger.kernel.org, AJvYcCUHzAO8Vlcbwj1aTT2OHmpiqINDYD722CRI1haOnsbMpYoXjs+jXRrPeRP9hWdb8D0k/Va1DX4SuXE=@vger.kernel.org, AJvYcCUbO0DM9dONilK5jCRh/k+10NLexU9h8QGx7OTYkyuf1o9pZqfSuH1to7R4qVbMRarBXNu2KqeaUH7KOtQ57Q==@vger.kernel.org, AJvYcCVJIo6t8ftsTupNlRWC1VpqeDOyhWwvKNXksIj+IvLPTLfHHXAFTVLkNmjBBYdXNjCMELV/OQjTPuFpE0Lh@vger.kernel.org, AJvYcCVehUBlbpVCzwLALZh1Zc8m6BMjqxdxleqW01NiN086UgIUJKkXcdwhcz+CIHklfIcKTntiEZK7IVEd@vger.kernel.org, AJvYcCWKgkWcC5I/qRD+EVGTTQChe8UW1440sD+MogJqkALxV09CwbmuVL0LQ1GdM1Mziz1MSRtSizZ0NPHoc+6akQ==@vger.kernel.org, AJvYcCWmuqJIVhdHseERtcLDubnOqNoa7mm9SaIysp7mDCkOyJC3ftjuzcccXfqXkV14Oumea2Pb84zT2QiM@vger.kernel.org, AJvYcCX/f/0UMtL3kYMtTv9NLfSzy+RljlR0bk9EP1aTfImiSfY6lRnEvnnuVvZTH16Zn7azJpiUFa0lGbuPZQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnE4h9ZL8/PjdHeccvqkKQyTZymbijRnJEG8letTMeYXuN+rVk
-	Ea58tGhbbbBuKInNh6mYWWTiCK/sponVjvt4y/8Q2lJORImSHP4t9MYTYMZXBfVnnzb8hInyd3Z
-	hA5Txoc2oDndm6eJj2lNU8J9VX9sH+TzDHxTQoMHKIQ==
-X-Gm-Gg: ASbGnctF7TubNPR8nXjABLwAbAovoikkJJWyA2KxcojMSOmbXvqweSrxDkZ0z8WdyZO
-	hS7gmDYDrbMKsh3Lm+4g7hG/8fh3OQVpBJYJi+EOgspVXLlNS+9zcSFMfuh6tUnSUC3ReVBou4w
-	pPZtiBxVLIqvrnCLZ31DbopEaU4czkD9UadP8R8V45Bdv7U1uUdJUy6ZJe+S5rTT8+d+24bjL9x
-	7Sxwaw=
-X-Google-Smtp-Source: AGHT+IHreI+It7iS6Rfr+brWbz70Us6HtoYs+C56L+JOM9s0ucMSXKqtnWOloo9akQbTFfs/x14TcE577HD2A1hPXyo=
-X-Received: by 2002:a05:6402:278f:b0:612:d3cf:d1e4 with SMTP id
- 4fb4d7f45d1cf-619b707c2a0mr6715378a12.8.1755520772728; Mon, 18 Aug 2025
- 05:39:32 -0700 (PDT)
+	s=arc-20240116; t=1755521540; c=relaxed/simple;
+	bh=zfyzDSAVxnMaaSs01hyHjmHTlAAMSq3eN1p2RnLSdz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ru4dnAe6Mq6oBla1tFFt5JjdK/OdYpMg05qsGc0oJcn/GBX5JGdsaVf7DVeBJ+E8g8wcmU8Yn/iKltQqLSPQn/KR2oCuNfByE8Fl5ZwSvARtDuvNzyCIueaWS5e0VpkwzFmpyRIpl5vng2KlDz54UDZ/3DYiwmt6ok8haU7nmgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AvhKbEy1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c7DKhGrX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AvhKbEy1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c7DKhGrX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A37E51F44E;
+	Mon, 18 Aug 2025 12:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755521535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dYgRIvxhgQ9HCB25wkduiasp17FHQMerfEPYfWkM8W4=;
+	b=AvhKbEy19hKEV2FFEiHgKDM8P8hVYDU59C7pdywm8+FgDQ6VNld014PFPF2qu77nm40k0j
+	lmwGJ5rbhFW6V5LnOTOvG9SaayZGPNcSqstuc/4Csq6U9Utx3HdUQJhOwJJFU1kcNFxxnU
+	7+sJ7fwbqe/cfEuQTzVq3bd26gZqN7w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755521535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dYgRIvxhgQ9HCB25wkduiasp17FHQMerfEPYfWkM8W4=;
+	b=c7DKhGrXdg8go5WZN1alZFwPx+wb0ZMA03t7v79QmYiQB705wP187YVYmqgVrBDYcQ7fIs
+	mUMxMzl4zH+kpAAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=AvhKbEy1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=c7DKhGrX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755521535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dYgRIvxhgQ9HCB25wkduiasp17FHQMerfEPYfWkM8W4=;
+	b=AvhKbEy19hKEV2FFEiHgKDM8P8hVYDU59C7pdywm8+FgDQ6VNld014PFPF2qu77nm40k0j
+	lmwGJ5rbhFW6V5LnOTOvG9SaayZGPNcSqstuc/4Csq6U9Utx3HdUQJhOwJJFU1kcNFxxnU
+	7+sJ7fwbqe/cfEuQTzVq3bd26gZqN7w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755521535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dYgRIvxhgQ9HCB25wkduiasp17FHQMerfEPYfWkM8W4=;
+	b=c7DKhGrXdg8go5WZN1alZFwPx+wb0ZMA03t7v79QmYiQB705wP187YVYmqgVrBDYcQ7fIs
+	mUMxMzl4zH+kpAAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92BEC13686;
+	Mon, 18 Aug 2025 12:52:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kwDmIv4ho2ilewAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 18 Aug 2025 12:52:14 +0000
+Message-ID: <107506e2-7870-45df-b595-583b57137a29@suse.de>
+Date: Mon, 18 Aug 2025 14:52:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812235228.3072318-1-neil@brown.name> <20250812235228.3072318-5-neil@brown.name>
-In-Reply-To: <20250812235228.3072318-5-neil@brown.name>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 18 Aug 2025 14:39:21 +0200
-X-Gm-Features: Ac12FXwaOAmOjlUtH5bpB7wOuhOZPTQBUdVvt2kp3aUZBDH4-UANLHNzz7IOKqs
-Message-ID: <CAOQ4uxjFPOZe004Cv+tT=NyQg2JOY6MOYQniSjaefVcg+3s-Kg@mail.gmail.com>
-Subject: Re: [PATCH 04/11] VFS: introduce dentry_lookup_continue()
-To: NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Steve French <sfrench@samba.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Carlos Maiolino <cem@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, netfs@lists.linux.dev, 
-	ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] nvme-tcp: Support KeyUpdate
+To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
+ kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
+References: <20250815050210.1518439-1-alistair.francis@wdc.com>
+ <20250815050210.1518439-7-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250815050210.1518439-7-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,ietf.org:url,wdc.com:email];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: A37E51F44E
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 
-On Wed, Aug 13, 2025 at 1:53=E2=80=AFAM NeilBrown <neil@brown.name> wrote:
->
-> A few callers operate on a dentry which they already have - unlike the
-> normal case where a lookup proceeds an operation.
->
-> For these callers dentry_lookup_continue() is provided where other
-> callers would use dentry_lookup().  The call will fail if, after the
-> lock was gained, the child is no longer a child of the given parent.
->
-> There are a couple of callers that want to lock a dentry in whatever
-> its current parent is.  For these a NULL parent can be passed, in which
-> case ->d_parent is used.  In this case the call cannot fail.
->
-> The idea behind the name is that the actual lookup occurred some time
-> ago, and now we are continuing with an operation on the dentry.
->
-> When the operation completes done_dentry_lookup() must be called.  An
-> extra reference is taken when the dentry_lookup_continue() call succeeds
-> and will be dropped by done_dentry_lookup().
->
-> This will be used in smb/server, ecryptfs, and overlayfs, each of which
-> have their own lock_parent() or parent_lock() or similar; and a few
-> other places which lock the parent but don't check if the parent is
-> still correct (often because rename isn't supported so parent cannot be
-> incorrect).
->
-> Signed-off-by: NeilBrown <neil@brown.name>
+On 8/15/25 07:02, alistair23@gmail.com wrote:
+> From: Alistair Francis <alistair.francis@wdc.com>
+> 
+> If the nvme_tcp_try_send() or nvme_tcp_try_recv() functions return
+> EKEYEXPIRED then the underlying TLS keys need to be updated. This occurs
+> on an KeyUpdate event.
+> 
+> If the NVMe Target (TLS server) initiates a KeyUpdate this patch will
+> allow the NVMe layer to process the KeyUpdate request and forward the
+> request to userspace. Userspace must then update the key to keep the
+> connection alive.
+> 
+> This patch allows us to handle the NVMe target sending a KeyUpdate
+> request without aborting the connection. At this time we don't support
+> initiating a KeyUpdate.
+> 
+> Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 > ---
->  fs/namei.c            | 39 +++++++++++++++++++++++++++++++++++++++
->  include/linux/namei.h |  2 ++
->  2 files changed, 41 insertions(+)
->
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 7af9b464886a..df21b6fa5a0e 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1874,6 +1874,45 @@ struct dentry *dentry_lookup_killable(struct mnt_i=
-dmap *idmap,
->  }
->  EXPORT_SYMBOL(dentry_lookup_killable);
->
-> +/**
-> + * dentry_lookup_continue: lock a dentry if it is still in the given par=
-ent, prior to dir ops
-> + * @child: the dentry to lock
-> + * @parent: the dentry of the assumed parent
-> + *
-> + * The child is locked - currently by taking i_rwsem on the parent - to
-> + * prepare for create/remove operations.  If the given parent is not
-> + * %NULL and is no longer the parent of the dentry after the lock is
-> + * gained, the lock is released and the call fails (returns
-> + * ERR_PTR(-EINVAL).
-> + *
-> + * On success a reference to the child is taken and returned.  The lock
-> + * and reference must both be dropped by done_dentry_lookup() after the
-> + * operation completes.
-> + */
-> +struct dentry *dentry_lookup_continue(struct dentry *child,
-> +                                     struct dentry *parent)
-> +{
-> +       struct dentry *p =3D parent;
+>   drivers/nvme/host/tcp.c | 63 ++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index cc3332529355..0c14d3ad58af 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -171,6 +171,7 @@ struct nvme_tcp_queue {
+>   	bool			tls_enabled;
+>   	u32			rcv_crc;
+>   	u32			snd_crc;
+> +	key_serial_t		user_key_serial;
+>   	__le32			exp_ddgst;
+>   	__le32			recv_ddgst;
+>   	struct completion       tls_complete;
+> @@ -1313,6 +1314,7 @@ static int nvme_tcp_try_send(struct nvme_tcp_queue *queue)
+>   	struct nvme_tcp_request *req;
+>   	unsigned int noreclaim_flag;
+>   	int ret = 1;
+> +	enum nvme_ctrl_state state = nvme_ctrl_state(&(queue->ctrl->ctrl));
+>   
+>   	if (!queue->request) {
+>   		queue->request = nvme_tcp_fetch_request(queue);
+> @@ -1347,6 +1349,29 @@ static int nvme_tcp_try_send(struct nvme_tcp_queue *queue)
+>   done:
+>   	if (ret == -EAGAIN) {
+>   		ret = 0;
+> +	} else if (ret == -EKEYEXPIRED &&
+> +		state != NVME_CTRL_CONNECTING &&
+> +		state != NVME_CTRL_RESETTING) {
+> +		int qid = nvme_tcp_queue_id(queue);
 > +
-> +again:
-> +       if (!parent)
-> +               p =3D dget_parent(child);
-> +       inode_lock_nested(d_inode(p), I_MUTEX_PARENT);
-> +       if (child->d_parent !=3D p) {
+> +		dev_dbg(queue->ctrl->ctrl.device,
+> +			"updating key for queue %d\n", qid);
+> +
+> +		nvme_change_ctrl_state(&(queue->ctrl->ctrl), NVME_CTRL_RESETTING);
 
-|| d_unhashed(child))
+Rah. Don't do that.
+The 'resetting' state is tied to the resetting mechanism
+(LIVE->RESETTING->CONNECTING->LIVE) and is being relied on
+for the timeout handler. Setting it manually will confuse error
+handling.
 
-;)
+And really, having the key update in two places is a bit ... odd.
+I'd rather stop the I/O queue in nvme_tcp_io_work() once a
+EKEYEXPIRED error has been hit, and start the key update via
+nvme_tcp_start_tls() function directly from there.
+No need to change the controller state.
 
-and what about silly renames? are those also d_unhashed()?
+Cheers,
 
-Thanks,
-Amir.
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
