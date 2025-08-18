@@ -1,193 +1,385 @@
-Return-Path: <linux-nfs+bounces-13745-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13746-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7836EB2B129
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 21:08:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CE8BB2B13A
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 21:10:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2E0D189017E
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 19:05:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A02CF68809C
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 19:05:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA12C272E53;
-	Mon, 18 Aug 2025 19:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0CA3451AD;
+	Mon, 18 Aug 2025 19:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpubwqWt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkdl7Mf9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2596D3451A6
-	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 19:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23F53451AC
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 19:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755543860; cv=none; b=i7lQhBUnZ4QxAsjWWjopvYtSLD0POT/p132LoVC/CbVjtLqBk4ZlNKvBEqE1Eem+yitUFBwKYuM1PSrXPeIct0XVsEZ+bPIX0xcaFUV9+kcv/rldaOomRUT7andP4eBpJjdGT4RXPi+XxKQl75K0uJMaxIQdzppBQpPyuek+C/s=
+	t=1755543909; cv=none; b=TpcJKFeXj4pVeLtyI81A+L3dqOM3WSl7aVUwKjQKktIYc5laZU3z+enGlp+wAnInaaXg1NbmffmZsIZVLE+I6/A/DobckBfN2Niz53MhBG79xMq56pF0y/utVCEVqXv3NaTpSnBPkpm5XsipskAevqFgFit4bGJqcSj1OrDvooA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755543860; c=relaxed/simple;
-	bh=b+YHco7nPM5jl0qSSDPUPtgutA/XPSC/KIRaDCYXLA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FKMsi9EyrQuj0FbjFn4p1saLjaXuHQ5eVlrXwtK0Y3r1dGKL7vcU9Ckg5AA3Xj9X59MuIZs6JSGN+Q5WNsQMYcensnp+pLqbNbbLIqVUiT0N8oRWHuMI+ftTJfXv16pEpU7AloK6Ur3HvfrHGT8twg1RvdjMv6zoSI5X9VTvPAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FpubwqWt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755543858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z9u3kvjuCNEbd9r3n57Y1Qg+DL3l1APwB8aZ/Q/x4Hk=;
-	b=FpubwqWtTUOOGfqUh3fPa+bYZJ49SIlHGgPwQn2q83rjE3vnIW0ts/4HQtsRPNq5KLlbfP
-	6me867y+zF+uW4NkYAgHyADYud95Xsi6yHDNsv9DK/VaeV+HbO5UyG/daPshP70Wi+ZTSz
-	gmJtgDcJu6Uyg8Az2f8c+ALo1ekrWe8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-440-6zWQqnDCOU6qH2blxI8Mww-1; Mon, 18 Aug 2025 15:04:16 -0400
-X-MC-Unique: 6zWQqnDCOU6qH2blxI8Mww-1
-X-Mimecast-MFC-AGG-ID: 6zWQqnDCOU6qH2blxI8Mww_1755543855
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-afcb7af3e41so295151166b.3
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 12:04:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755543855; x=1756148655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z9u3kvjuCNEbd9r3n57Y1Qg+DL3l1APwB8aZ/Q/x4Hk=;
-        b=OQxAB30wgC9bkcgDw2uWsmGZm64QelunfkJNe7LX77u7p6W3qAKcfmqZ+i9q8Qjjtw
-         r8pbkrWuiT4eAp45Dk5YTqOi2OAz5toG7juUCGF5LOHzJVHsmpvdCEERp7VWQAj8fvie
-         aXIDtA9hXx8B7O5/AuhyTfTfI54JqiqjRRvZdbbvMkxD/dctbds3aQy3x+rQVapKr2bz
-         /vaUfl6RZurQlxW13V+225sD0YIEx8/+mPjo5KqOtpZiWvHmm37L2fE4RGqi4bnbAWlO
-         vMvljmZosvemhs+KFUMy3K54TRRpVFpjpFGIgQE3Bf/7wKy9VjS97EFZA0MVvx7QZpxM
-         WJ+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXmV0kTNZantbJ6WTgU+ErI1M74ogWSnSuwWD0gEatoiqpwSSHMlkTaelFg1qpzYG2KL6K/yAwOvC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu+/RqL/5mtSr84uGjF+PuBcYJluqF+2ndBWwron0ZtQ/7z6wa
-	6RTeeZH2qGn5I61uNYdFOK8i6ln6M0v862SypfZ6IURvSjs7hdvAwr+LwxI2nNvb2qnZMtYyzn5
-	JPeSzPWAl7/49PgZcgpk62tOf5GI3IVQC+PG2Kpzlxj7qARyjrBNRSXgnaakXHFFKJ8FhcDwjms
-	XwJjR+YNW9EbyBwVbX4xohK0ZSBkp5CjUIQ7rY
-X-Gm-Gg: ASbGnctVXI7wTyb6xztnrd99Rga4CTo/56AFXDSGYIKOP23BbRDySi0m9qYg+RUiudV
-	X+OOVv4s1XGcqA0dsQIF8oiGvzkbpL6bANC2gT4TtL1WVsFqa2C/eovaBX+jdsqWJp2pGcTMqTz
-	H14X2k10TSINCDXFoBeJUfXLLvg2AwjcjYikfB0pPVVjC7mwndZoJ2
-X-Received: by 2002:a17:907:847:b0:ae3:53b3:b67d with SMTP id a640c23a62f3a-afceacad5a1mr988424866b.1.1755543855344;
-        Mon, 18 Aug 2025 12:04:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZaoeopW/vXFhe59Aa1tpe1Uxsj3Zoji3RQs1HnteXilncs7X2Z9yEHqxP0iA+KpB6PVfLGYSZ3mKWAXrDeLU=
-X-Received: by 2002:a17:907:847:b0:ae3:53b3:b67d with SMTP id
- a640c23a62f3a-afceacad5a1mr988422466b.1.1755543854890; Mon, 18 Aug 2025
- 12:04:14 -0700 (PDT)
+	s=arc-20240116; t=1755543909; c=relaxed/simple;
+	bh=RCFW9G57axMUopSJ3QpGVYnHkqJ5BOu/MxWuIGPbiNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Xl8gcoWZP4XayimQZ+loyHT+rhbSrz2gv+YtK86H3qiFneKE8xsAfZ6HIDMSBMlU9R7hbojiEYoN211Uz3QclNR1zfOBUFgq/Pm+3m9BVsL4hicKezvmThRTsLglTJvEP6bvtntvgkyO2XWeOaFpzWD56K9eSme+uOfj9fg+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkdl7Mf9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A7FC4CEEB;
+	Mon, 18 Aug 2025 19:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755543909;
+	bh=RCFW9G57axMUopSJ3QpGVYnHkqJ5BOu/MxWuIGPbiNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qkdl7Mf97fouwymDkezEzeZlLql+2UCJO1lSo5kMMufai2LGCk4NYlbQtoQ76r9mc
+	 GfuLndjbeNyGjWowhpht/eEW4sWgT2B0ewcIDY3NkCtGrQen5LjjmdZzj86UcQWE4k
+	 enkyevLljpRcR7piAwpXNS/ATiR1K85/EwCAahbjBhH2Q/DVVOjscOxHhdBUgg7wZV
+	 qr9wwNky1Xeuk+Fi+C2Oq+e0u+pQhavi2C/3arCsg+ZLbRY8EA6yN23V1R8woWMwsa
+	 tyP+wDJIhcS+VXQDaeceE8Btm7ntD4aeoUPz8WJEcQi4Rh9//UVMUP5skZG68QdVWx
+	 i6inULE+R2MGQ==
+Date: Mon, 18 Aug 2025 15:05:07 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v7 5/7] NFSD: issue READs using O_DIRECT even if IO is
+ misaligned
+Message-ID: <aKN5Yy6Y08VozjwF@kernel.org>
+References: <20250815144607.50967-1-snitzer@kernel.org>
+ <20250815144607.50967-6-snitzer@kernel.org>
+ <ddc5b0acc656a5f920fb494c420d8e79bd7681ab.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250818182557.11259-1-okorniev@redhat.com> <c4722c18-57a5-49b5-818b-1e46cb4733b8@oracle.com>
- <CAN-5tyHincZxuNL3z5QDZ8Sv1F=fqT1b-3nUt2DVvFhr0MePRw@mail.gmail.com>
-In-Reply-To: <CAN-5tyHincZxuNL3z5QDZ8Sv1F=fqT1b-3nUt2DVvFhr0MePRw@mail.gmail.com>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Mon, 18 Aug 2025 15:04:03 -0400
-X-Gm-Features: Ac12FXxRY5k_sTacy00DOrGE6srxk-PpdjfA5c3BIwhSQ6ZjCsLNVon0-Yf4qr4
-Message-ID: <CACSpFtB3WDtWL7sv3FEyBh7UYiYSwiQwDr42vDck_nVQB_Z2ww@mail.gmail.com>
-Subject: Re: [PATCH 1/1] nfsd: unregister with rpcbind when deleting a transport
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Chuck Lever <chuck.lever@oracle.com>, jlayton@kernel.org, linux-nfs@vger.kernel.org, 
-	neil@brown.name, Dai.Ngo@oracle.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddc5b0acc656a5f920fb494c420d8e79bd7681ab.camel@kernel.org>
 
-On Mon, Aug 18, 2025 at 2:55=E2=80=AFPM Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->
-> On Mon, Aug 18, 2025 at 2:48=E2=80=AFPM Chuck Lever <chuck.lever@oracle.c=
-om> wrote:
-> >
-> > Hi Olga -
-> >
-> > On 8/18/25 2:25 PM, Olga Kornievskaia wrote:
-> > > When a listener is added, a part of creation of transport also regist=
-ers
-> > > program/port with rpcbind. However, when the listener is removed,
-> > > while transport goes away, rpcbind still has the entry for that
-> > > port/type.
-> > >
-> > > When deleting the transport, unregister with rpcbind when appropriate=
-.
-> >
-> > The patch description needs to explain why this is needed. Did you
-> > mention to me there was a crash or other malfunction?
->
-> Malfunction is that nfsdctl removed a listener (nfsdctl listener
-> -udp::2049)  but rpcinfo query still shows it (rpcinfo -p |grep -w
-> nfs).
->
-> > > Fixes: d093c9089260 ("nfsd: fix management of listener transports")
-> > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > ---
-> > >  net/sunrpc/svc_xprt.c | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > >
-> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > > index 8b1837228799..223737fac95d 100644
-> > > --- a/net/sunrpc/svc_xprt.c
-> > > +++ b/net/sunrpc/svc_xprt.c
-> > > @@ -1014,6 +1014,23 @@ static void svc_delete_xprt(struct svc_xprt *x=
-prt)
-> > >       struct svc_serv *serv =3D xprt->xpt_server;
-> > >       struct svc_deferred_req *dr;
-> > >
-> > > +     /* unregister with rpcbind for when transport type is TCP or UD=
-P.
-> > > +      * Only TCP and RDMA sockets are marked as LISTENER sockets, so
-> > > +      * check for UDP separately.
-> > > +      */
-> > > +     if ((test_bit(XPT_LISTENER, &xprt->xpt_flags) &&
-> > > +         xprt->xpt_class->xcl_ident !=3D XPRT_TRANSPORT_RDMA) ||
-> > > +         xprt->xpt_class->xcl_ident =3D=3D XPRT_TRANSPORT_UDP) {
-> >
-> > Now I thought that UDP also had a rpcbind registration ... ?
->
-> Correct.
->
-> > So I don't
-> > quite understand why gating the unregistration is necessary.
->
-> We are sending unregister for when the transport xprt is of type
-> LISTENER (which covers TCP but not UDP) so to also send unregister for
-> UDP we need to check for it separately. RDMA listener transport is
-> also marked as listener but we do not want to trigger unregister here
-> because rpcbind knows nothing about rdma type.
->
-> Transports are not necessarily of listener type and thus we don't want
-> to trigger rpcbind unregister for that.
+On Mon, Aug 18, 2025 at 10:45:47AM -0400, Jeff Layton wrote:
+> On Fri, 2025-08-15 at 10:46 -0400, Mike Snitzer wrote:
+> > If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
+> > DIO-aligned block (on either end of the READ). The expanded READ is
+> > verified to have proper offset/len (logical_block_size) and
+> > dma_alignment checking.
+> > 
+> > Must allocate and use a bounce-buffer page (called 'start_extra_page')
+> > if/when expanding the misaligned READ requires reading extra partial
+> > page at the start of the READ so that its DIO-aligned. Otherwise that
+> > extra page at the start will make its way back to the NFS client and
+> > corruption will occur. As found, and then this fix of using an extra
+> > page verified, using the 'dt' utility:
+> >   dt of=/mnt/share1/dt_a.test passes=1 bs=47008 count=2 \
+> >      iotype=sequential pattern=iot onerr=abort oncerr=abort
+> > see: https://github.com/RobinTMiller/dt.git
+> > 
+> > Any misaligned READ that is less than 32K won't be expanded to be
+> > DIO-aligned (this heuristic just avoids excess work, like allocating
+> > start_extra_page, for smaller IO that can generally already perform
+> > well using buffered IO).
+> > 
+> > Suggested-by: Jeff Layton <jlayton@kernel.org>
+> > Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > ---
+> >  fs/nfsd/vfs.c              | 200 +++++++++++++++++++++++++++++++++++--
+> >  include/linux/sunrpc/svc.h |   5 +-
+> >  2 files changed, 194 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index c340708fbab4d..64732dc8985d6 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/splice.h>
+> >  #include <linux/falloc.h>
+> >  #include <linux/fcntl.h>
+> > +#include <linux/math.h>
+> >  #include <linux/namei.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/fsnotify.h>
+> > @@ -1073,6 +1074,153 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+> >  }
+> >  
+> > +struct nfsd_read_dio {
+> > +	loff_t start;
+> > +	loff_t end;
+> > +	unsigned long start_extra;
+> > +	unsigned long end_extra;
+> > +	struct page *start_extra_page;
+> > +};
+> > +
+> > +static void init_nfsd_read_dio(struct nfsd_read_dio *read_dio)
+> > +{
+> > +	memset(read_dio, 0, sizeof(*read_dio));
+> > +	read_dio->start_extra_page = NULL;
+> > +}
+> > +
+> > +#define NFSD_READ_DIO_MIN_KB (32 << 10)
+> > +
+> > +static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> > +				  struct nfsd_file *nf, loff_t offset,
+> > +				  unsigned long len, unsigned int base,
+> > +				  struct nfsd_read_dio *read_dio)
+> > +{
+> > +	const u32 dio_blocksize = nf->nf_dio_read_offset_align;
+> > +	loff_t middle_end, orig_end = offset + len;
+> > +
+> > +	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
+> > +		      "%s: underlying filesystem has not provided DIO alignment info\n",
+> > +		      __func__))
+> > +		return false;
+> > +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
+> > +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
+> > +		      __func__, dio_blocksize, PAGE_SIZE))
+> > +		return false;
+> > +
+> > +	/* Return early if IO is irreparably misaligned (len < PAGE_SIZE,
+> > +	 * or base not aligned).
+> > +	 * Ondisk alignment is implied by the following code that expands
+> > +	 * misaligned IO to have a DIO-aligned offset and len.
+> > +	 */
+> > +	if (unlikely(len < dio_blocksize) || ((base & (nf->nf_dio_mem_align-1)) != 0))
+> > +		return false;
+> 
+> The small len check makes sense, but "base" at this point is the offset
+> into the first page. Here you're bailing out early if that's not
+> aligned. Isn't that contrary to what this patch is supposed to do
+> (which is expand the range so that the I/O is aligned)?
 
-I still feel that unregistering "all" with rpcbind in nfsctl after we
-call svc_xprt_destroy_all() seems cleaner (single call vs a call per
-registered transport). But this approach would go for when listeners
-are allowed to be deleted while the server is running. Perhaps both
-patches can be considered for inclusion.
+No matter whether we're expanding the read or not (that's a means to
+make the area read from disk DIO-aligned): the memory alignment is
+what it is -- so it isn't something that we can change (not without an
+extra copy). But thankfully with RDMA the memory for the READ payload
+is generally always aligned.
 
->
-> > > +             struct svc_sock *svsk =3D container_of(xprt, struct svc=
-_sock,
-> > > +                                                  sk_xprt);
-> > > +             struct socket *sock =3D svsk->sk_sock;
-> > > +
-> > > +             if (svc_register(serv, xprt->xpt_net, sock->sk->sk_fami=
-ly,
-> > > +                              sock->sk->sk_protocol, 0) < 0)
-> > > +                     pr_warn("failed to unregister %s with rpcbind\n=
-",
-> > > +                             xprt->xpt_class->xcl_name);
-> > > +     }
-> > > +
-> > >       if (test_and_set_bit(XPT_DEAD, &xprt->xpt_flags))
-> > >               return;
-> > >
-> >
-> >
-> > --
-> > Chuck Lever
-> >
->
+Chcuk did say in reply to an earlier version of this patchset
+(paraphrasing, rather not go splunking in the linux-nfs archive to
+find it): a future improvement would be to make sure the READ
+payload's memory is always aligned.
 
+Mike
+
+> 
+> > +
+> > +	init_nfsd_read_dio(read_dio);
+> > +
+> > +	read_dio->start = round_down(offset, dio_blocksize);
+> > +	read_dio->end = round_up(orig_end, dio_blocksize);
+> > +	read_dio->start_extra = offset - read_dio->start;
+> > +	read_dio->end_extra = read_dio->end - orig_end;
+> > +
+> > +	/*
+> > +	 * Any misaligned READ less than NFSD_READ_DIO_MIN_KB won't be expanded
+> > +	 * to be DIO-aligned (this heuristic avoids excess work, like allocating
+> > +	 * start_extra_page, for smaller IO that can generally already perform
+> > +	 * well using buffered IO).
+> > +	 */
+> > +	if ((read_dio->start_extra || read_dio->end_extra) &&
+> > +	    (len < NFSD_READ_DIO_MIN_KB)) {
+> > +		init_nfsd_read_dio(read_dio);
+> > +		return false;
+> > +	}
+> > +
+> > +	if (read_dio->start_extra) {
+> > +		read_dio->start_extra_page = alloc_page(GFP_KERNEL);
+> > +		if (WARN_ONCE(read_dio->start_extra_page == NULL,
+> > +			      "%s: Unable to allocate start_extra_page\n", __func__)) {
+> > +			init_nfsd_read_dio(read_dio);
+> > +			return false;
+> > +		}
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static ssize_t nfsd_complete_misaligned_read_dio(struct svc_rqst *rqstp,
+> > +						 struct nfsd_read_dio *read_dio,
+> > +						 ssize_t bytes_read,
+> > +						 unsigned long bytes_expected,
+> > +						 loff_t *offset,
+> > +						 unsigned long *rq_bvec_numpages)
+> > +{
+> > +	ssize_t host_err = bytes_read;
+> > +	loff_t v;
+> > +
+> > +	if (!read_dio->start_extra && !read_dio->end_extra)
+> > +		return host_err;
+> > +
+> > +	/* If nfsd_analyze_read_dio() allocated a start_extra_page it must
+> > +	 * be removed from rqstp->rq_bvec[] to avoid returning unwanted data.
+> > +	 */
+> > +	if (read_dio->start_extra_page) {
+> > +		__free_page(read_dio->start_extra_page);
+> > +		*rq_bvec_numpages -= 1;
+> > +		v = *rq_bvec_numpages;
+> > +		memmove(rqstp->rq_bvec, rqstp->rq_bvec + 1,
+> > +			v * sizeof(struct bio_vec));
+> > +	}
+> > +	/* Eliminate any end_extra bytes from the last page */
+> > +	v = *rq_bvec_numpages;
+> > +	rqstp->rq_bvec[v].bv_len -= read_dio->end_extra;
+> > +
+> > +	if (host_err < 0) {
+> > +		/* Underlying FS will return -EINVAL if misaligned
+> > +		 * DIO is attempted because it shouldn't be.
+> > +		 */
+> > +		WARN_ON_ONCE(host_err == -EINVAL);
+> > +		return host_err;
+> > +	}
+> > +
+> > +	/* nfsd_analyze_read_dio() may have expanded the start and end,
+> > +	 * if so adjust returned read size to reflect original extent.
+> > +	 */
+> > +	*offset += read_dio->start_extra;
+> > +	if (likely(host_err >= read_dio->start_extra)) {
+> > +		host_err -= read_dio->start_extra;
+> > +		if (host_err > bytes_expected)
+> > +			host_err = bytes_expected;
+> > +	} else {
+> > +		/* Short read that didn't read any of requested data */
+> > +		host_err = 0;
+> > +	}
+> > +
+> > +	return host_err;
+> > +}
+> > +
+> > +static bool nfsd_iov_iter_aligned_bvec(const struct iov_iter *i,
+> > +		unsigned addr_mask, unsigned len_mask)
+> > +{
+> > +	const struct bio_vec *bvec = i->bvec;
+> > +	unsigned skip = i->iov_offset;
+> > +	size_t size = i->count;
+> > +
+> > +	if (size & len_mask)
+> > +		return false;
+> > +	do {
+> > +		size_t len = bvec->bv_len;
+> > +
+> > +		if (len > size)
+> > +			len = size;
+> > +		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
+> > +			return false;
+> > +		bvec++;
+> > +		size -= len;
+> > +		skip = 0;
+> > +	} while (size);
+> > +
+> > +	return true;
+> > +}
+> > +
+> >  /**
+> >   * nfsd_iter_read - Perform a VFS read using an iterator
+> >   * @rqstp: RPC transaction context
+> > @@ -1094,7 +1242,8 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  		      unsigned int base, u32 *eof)
+> >  {
+> >  	struct file *file = nf->nf_file;
+> > -	unsigned long v, total;
+> > +	unsigned long v, total, in_count = *count;
+> > +	struct nfsd_read_dio read_dio;
+> >  	struct iov_iter iter;
+> >  	struct kiocb kiocb;
+> >  	ssize_t host_err;
+> > @@ -1102,13 +1251,34 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  
+> >  	init_sync_kiocb(&kiocb, file);
+> >  
+> > +	v = 0;
+> > +	total = in_count;
+> > +
+> >  	switch (nfsd_io_cache_read) {
+> >  	case NFSD_IO_DIRECT:
+> > -		/* Verify ondisk and memory DIO alignment */
+> > -		if (nf->nf_dio_mem_align && nf->nf_dio_read_offset_align &&
+> > -		    (((offset | *count) & (nf->nf_dio_read_offset_align - 1)) == 0) &&
+> > -		    (base & (nf->nf_dio_mem_align - 1)) == 0)
+> > -			kiocb.ki_flags = IOCB_DIRECT;
+> > +		/*
+> > +		 * If NFSD_IO_DIRECT enabled, expand any misaligned READ to
+> > +		 * the next DIO-aligned block (on either end of the READ).
+> > +		 */
+> > +		if (nfsd_analyze_read_dio(rqstp, fhp, nf, offset,
+> > +					  in_count, base, &read_dio)) {
+> > +			/* trace_nfsd_read_vector() will reflect larger
+> > +			 * DIO-aligned READ.
+> > +			 */
+> > +			offset = read_dio.start;
+> > +			in_count = read_dio.end - offset;
+> > +			total = in_count;
+> > +
+> > +			kiocb.ki_flags |= IOCB_DIRECT;
+> > +			if (read_dio.start_extra) {
+> > +				len = read_dio.start_extra;
+> > +				bvec_set_page(&rqstp->rq_bvec[v],
+> > +					      read_dio.start_extra_page,
+> > +					      len, PAGE_SIZE - len);
+> > +				total -= len;
+> > +				++v;
+> > +			}
+> > +		}
+> >  		break;
+> >  	case NFSD_IO_DONTCACHE:
+> >  		kiocb.ki_flags = IOCB_DONTCACHE;
+> > @@ -1120,8 +1290,6 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  
+> >  	kiocb.ki_pos = offset;
+> >  
+> > -	v = 0;
+> > -	total = *count;
+> >  	while (total) {
+> >  		len = min_t(size_t, total, PAGE_SIZE - base);
+> >  		bvec_set_page(&rqstp->rq_bvec[v], *(rqstp->rq_next_page++),
+> > @@ -1132,9 +1300,21 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  	}
+> >  	WARN_ON_ONCE(v > rqstp->rq_maxpages);
+> >  
+> > -	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+> > -	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
+> > +	trace_nfsd_read_vector(rqstp, fhp, offset, in_count);
+> > +	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, in_count);
+> > +
+> > +	if ((kiocb.ki_flags & IOCB_DIRECT) &&
+> > +	    !nfsd_iov_iter_aligned_bvec(&iter, nf->nf_dio_mem_align-1,
+> > +					nf->nf_dio_read_offset_align-1))
+> > +		kiocb.ki_flags &= ~IOCB_DIRECT;
+> > +
+> >  	host_err = vfs_iocb_iter_read(file, &kiocb, &iter);
+> > +
+> > +	if (in_count != *count) {
+> > +		/* misaligned DIO expanded read to be DIO-aligned */
+> > +		host_err = nfsd_complete_misaligned_read_dio(rqstp, &read_dio,
+> > +					host_err, *count, &offset, &v);
+> > +	}
+> >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+> >  }
+> >  
+> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > index e64ab444e0a7f..190c2667500e2 100644
+> > --- a/include/linux/sunrpc/svc.h
+> > +++ b/include/linux/sunrpc/svc.h
+> > @@ -163,10 +163,13 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+> >   * pages, one for the request, and one for the reply.
+> >   * nfsd_splice_actor() might need an extra page when a READ payload
+> >   * is not page-aligned.
+> > + * nfsd_iter_read() might need two extra pages when a READ payload
+> > + * is not DIO-aligned -- but nfsd_iter_read() and nfsd_splice_actor()
+> > + * are mutually exclusive (so reuse page reserved for nfsd_splice_actor).
+> >   */
+> >  static inline unsigned long svc_serv_maxpages(const struct svc_serv *serv)
+> >  {
+> > -	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1;
+> > +	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1 + 1;
+> >  }
+> >  
+> >  /*
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
 
