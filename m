@@ -1,85 +1,308 @@
-Return-Path: <linux-nfs+bounces-13714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB63DB2A953
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 16:18:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67299B2AAED
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 16:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27C6D6E31C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 14:10:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 41B747B408E
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 14:37:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4123B34AAE1;
-	Mon, 18 Aug 2025 14:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C97C35A2A5;
+	Mon, 18 Aug 2025 14:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTzIr15h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itGw5IeD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F023375D4;
-	Mon, 18 Aug 2025 14:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DD835A2A3
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 14:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755525679; cv=none; b=DYUAdHpBxFWDj0ZCwQFjc2mqwXQM4rXzeg28xPVVWEPRNIbFDGPYA7k2TmL7Oj6fawsYEGjRt5lWtjzx/T6bRcp/YDadWtC3KzJ4M+shd1vrNRhu7MRnGC9LAoBpsp1AnU2Azs5yXjlAD2eNOiE6lfHC7XgrrxCqVASCEnpqgnU=
+	t=1755527592; cv=none; b=F18WEaBLrruIbN9w/wH/YW0xgclxprLUuB0jjc4u6tlLcs3lz3QeM+XshLRYwNWC9ZlGo0P/ekKVIWGiVyz/XjsbY2v6DN+oSGEhLfBXlOJMaaE7ch8fl93V44Pvz8GGHWFNmkvSPxpPhlMRiH+FgvJE3+Z5/w+xVpBnPNOECFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755525679; c=relaxed/simple;
-	bh=aNAyYi27OGoTDXnS0yJLC/hDmA8wpEF3Axk2bYbNUsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=foQDYNa/CQWFF/r9tT0QUM9W2zk9DiniX1iWe5xSgIBTosuOq3xO9GFgm1Mv7tpSioLlertM745mmCFmGg4+eJmfE5k29T//ZgijByNvITQCoRPP0Ux+4mCORBsZzST2wzbnnkCswzLQeGyPbz3ygc7y4WuyOfUDYdTL81pDpVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTzIr15h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC18DC4CEEB;
-	Mon, 18 Aug 2025 14:01:17 +0000 (UTC)
+	s=arc-20240116; t=1755527592; c=relaxed/simple;
+	bh=rcH34hbHSg/rEc+XH549K/H7ajY7fFoz5L4lTZA7/8U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qE9K0okFCUeJa/10gZA5a6vqudj2MVbEn4GW3KpqAP2sHVqpyrjLvfhBiYvg29Q12OsF49p9R75W8pCGSmz23UvrSTMZmkLQ11eMlfMDqjPIkJNukHaKDXv4M0DJBJG6peva0uP1vtxqdmOZL1MO7mBibTokvthvDSm3BktqZ54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itGw5IeD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B72C4CEEB;
+	Mon, 18 Aug 2025 14:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755525678;
-	bh=aNAyYi27OGoTDXnS0yJLC/hDmA8wpEF3Axk2bYbNUsY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KTzIr15hFVsTsgl1iSmzQzcpzXRUu3NCCqQkCOFTGuT6kAR/7/GdZ6XzVj/slW9xN
-	 Ij+tfrjkxf7AP6xpE9dl1q+syBBPExlTWaLL46We1TrTd2jrD9hLDczOXAbowyueG9
-	 bbPjQLO32lqFUOXUzVh0Ib2nUVtGvpB3tdv8xFjYGWbMVTg4zkMW0gw0O3mQKCKwpk
-	 8ZHiI+qUdBQfrqaeOl3XL1vDVCQtKN8mg2Fhr7lL7suMmc9qnQ9TUEN8WHYX95kfnh
-	 sd49fTR2r2t4VguGOC/5oqDianlgNASiVGDFZ+uEmYNt751b8qp8gnuLC9tJmSBsIV
-	 rie+CxDvpPMIg==
-From: Chuck Lever <cel@kernel.org>
-To: jlayton@kernel.org,
-	Xichao Zhao <zhao.xichao@vivo.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] NFSD: Drop redundant conversion to bool
-Date: Mon, 18 Aug 2025 10:01:15 -0400
-Message-ID: <175552566805.832278.5767019281006426668.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250818100320.572105-1-zhao.xichao@vivo.com>
-References: <20250818100320.572105-1-zhao.xichao@vivo.com>
+	s=k20201202; t=1755527591;
+	bh=rcH34hbHSg/rEc+XH549K/H7ajY7fFoz5L4lTZA7/8U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=itGw5IeDTGk+XCJhHQ7XMQug1rnYNV+ylo8Y4d8SjRmUlOP5c1PJcBZjEisOoRCfM
+	 yMUk93A7d3/9ZJztCeRCM/d+M7bwrI0LRcj+yVED6WuUrJGINjuOHari1FHqgXJbbE
+	 /aP0ajrwy0QGhPA0fafrhtv12+fb0kqY+K+fQDS8hwSBAyly3Y2tlZ8zXnRKHLjKj7
+	 rsPoyA4o6fnk61aUvrqGwgnNZ7TzQdP0wWizOwuBxqhmo4/HPgc5a46Ad6Qou+yOHu
+	 C7/xERzmiQLX98OMA9Eu7fB2/Pv9o/TFIr63SnqMh7Re8E8L0qhtXGWD2LhwiZ7QpY
+	 2GylXYTsLK74g==
+Message-ID: <8fb5d28a95c88285fbec27a9db04843a0dbc05e8.camel@kernel.org>
+Subject: Re: [PATCH v7 3/7] NFSD: add io_cache_read controls to debugfs
+ interface
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 18 Aug 2025 10:33:10 -0400
+In-Reply-To: <20250815144607.50967-4-snitzer@kernel.org>
+References: <20250815144607.50967-1-snitzer@kernel.org>
+	 <20250815144607.50967-4-snitzer@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, 2025-08-15 at 10:46 -0400, Mike Snitzer wrote:
+> Add 'io_cache_read' to NFSD's debugfs interface so that: Any data
+> read by NFSD will either be:
+> - cached using page cache (NFSD_IO_BUFFERED=3D1)
+> - cached but removed from the page cache upon completion
+>   (NFSD_IO_DONTCACHE=3D2).
+> - not cached (NFSD_IO_DIRECT=3D3)
+>=20
+> io_cache_read may be set by writing to:
+>   /sys/kernel/debug/nfsd/io_cache_read
+>=20
+> If NFSD_IO_DONTCACHE is specified using 2, FOP_DONTCACHE must be
+> advertised as supported by the underlying filesystem (e.g. XFS),
+> otherwise all IO flagged with RWF_DONTCACHE will fail with
+> -EOPNOTSUPP.
+>=20
+> If NFSD_IO_DIRECT is specified using 3, the IO must be aligned
+> relative to the underlying block device's logical_block_size. Also the
+> memory buffer used to store the read must be aligned relative to the
+> underlying block device's dma_alignment.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  fs/nfsd/debugfs.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/nfsd.h    |  9 ++++++++
+>  fs/nfsd/vfs.c     | 18 +++++++++++++++
+>  3 files changed, 84 insertions(+)
+>=20
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 84b0c8b559dc9..3cadd45868b48 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -27,11 +27,65 @@ static int nfsd_dsr_get(void *data, u64 *val)
+>  static int nfsd_dsr_set(void *data, u64 val)
+>  {
+>  	nfsd_disable_splice_read =3D (val > 0) ? true : false;
+> +	if (!nfsd_disable_splice_read) {
+> +		/*
+> +		 * Cannot use NFSD_IO_DONTCACHE or NFSD_IO_DIRECT
+> +		 * if splice_read is enabled.
+> +		 */
+> +		nfsd_io_cache_read =3D NFSD_IO_BUFFERED;
+> +	}
+>  	return 0;
+>  }
+> =20
+>  DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%ll=
+u\n");
+> =20
+> +/*
+> + * /sys/kernel/debug/nfsd/io_cache_read
+> + *
+> + * Contents:
+> + *   %1: NFS READ will use buffered IO
+> + *   %2: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> + *   %3: NFS READ will use direct IO
+> + *
+> + * The default value of this setting is zero (UNSPECIFIED).
+> + * This setting takes immediate effect for all NFS versions,
+> + * all exports, and in all NFSD net namespaces.
+> + */
+> +
+> +static int nfsd_io_cache_read_get(void *data, u64 *val)
+> +{
+> +	*val =3D nfsd_io_cache_read;
+> +	return 0;
+> +}
+> +
+> +static int nfsd_io_cache_read_set(void *data, u64 val)
+> +{
+> +	int ret =3D 0;
+> +
+> +	switch (val) {
+> +	case NFSD_IO_BUFFERED:
+> +		nfsd_io_cache_read =3D NFSD_IO_BUFFERED;
+> +		break;
+> +	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+> +		/*
+> +		 * Must disable splice_read when enabling
+> +		 * NFSD_IO_DONTCACHE or NFSD_IO_DIRECT.
+> +		 */
+> +		nfsd_disable_splice_read =3D true;
+> +		nfsd_io_cache_read =3D val;
+> +		break;
+> +	default:
+> +		ret =3D -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +DEFINE_DEBUGFS_ATTRIBUTE(nfsd_io_cache_read_fops, nfsd_io_cache_read_get=
+,
+> +			 nfsd_io_cache_read_set, "%llu\n");
+> +
+>  void nfsd_debugfs_exit(void)
+>  {
+>  	debugfs_remove_recursive(nfsd_top_dir);
+> @@ -44,4 +98,7 @@ void nfsd_debugfs_init(void)
+> =20
+>  	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
+>  			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
+> +
+> +	debugfs_create_file("io_cache_read", S_IWUSR | S_IRUGO,
+> +			    nfsd_top_dir, NULL, &nfsd_io_cache_read_fops);
+>  }
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 1cd0bed57bc2f..6ef799405145f 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -153,6 +153,15 @@ static inline void nfsd_debugfs_exit(void) {}
+> =20
+>  extern bool nfsd_disable_splice_read __read_mostly;
+> =20
+> +enum {
+> +	NFSD_IO_UNSPECIFIED =3D 0,
+> +	NFSD_IO_BUFFERED,
+> +	NFSD_IO_DONTCACHE,
+> +	NFSD_IO_DIRECT,
+> +};
+> +
+> +extern u64 nfsd_io_cache_read __read_mostly;
+> +
+>  extern int nfsd_max_blksize;
+> =20
+>  static inline int nfsd_v4client(struct svc_rqst *rq)
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 79439ad93880a..8ea8b80097195 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -49,6 +49,7 @@
+>  #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
+> =20
+>  bool nfsd_disable_splice_read __read_mostly;
+> +u64 nfsd_io_cache_read __read_mostly;
+> =20
+>  /**
+>   * nfserrno - Map Linux errnos to NFS errnos
+> @@ -1099,6 +1100,23 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+>  	size_t len;
+> =20
+>  	init_sync_kiocb(&kiocb, file);
+> +
+> +	switch (nfsd_io_cache_read) {
+> +	case NFSD_IO_DIRECT:
+> +		/* Verify ondisk and memory DIO alignment */
+> +		if (nf->nf_dio_mem_align && nf->nf_dio_read_offset_align &&
+> +		    (((offset | *count) & (nf->nf_dio_read_offset_align - 1)) =3D=3D 0=
+) &&
+> +		    (base & (nf->nf_dio_mem_align - 1)) =3D=3D 0)
+> +			kiocb.ki_flags =3D IOCB_DIRECT;
+> +		break;
+> +	case NFSD_IO_DONTCACHE:
+> +		kiocb.ki_flags =3D IOCB_DONTCACHE;
+> +		fallthrough;
+> +	case NFSD_IO_UNSPECIFIED:
+> +	case NFSD_IO_BUFFERED:
+> +		break;
+> +	}
+> +
+>  	kiocb.ki_pos =3D offset;
+> =20
+>  	v =3D 0;
 
-On Mon, 18 Aug 2025 18:03:20 +0800, Xichao Zhao wrote:
-> The result of integer comparison already evaluates to bool. No need for
-> explicit conversion.
-> 
-> 
+I'd still prefer a text-based interface, but I can live with it.
 
-Applied to nfsd-testing, thanks!
-
-[1/1] NFSD: Drop redundant conversion to bool
-      commit: 1baa19c0b871e309dbbd4e26f244944db2589ac4
-
---
-Chuck Lever
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
