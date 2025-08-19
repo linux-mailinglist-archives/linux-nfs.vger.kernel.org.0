@@ -1,482 +1,229 @@
-Return-Path: <linux-nfs+bounces-13762-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13763-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C6CAB2B3F5
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 00:08:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5A16B2BBFE
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 10:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF3483AAF0A
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Aug 2025 22:08:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2D7B5284B4
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 08:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498C727AC3C;
-	Mon, 18 Aug 2025 22:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5EAE3115A7;
+	Tue, 19 Aug 2025 08:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="fn8uq7iq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbD+nLdc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6FC1E25F2
-	for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 22:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07091255F5E;
+	Tue, 19 Aug 2025 08:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755554935; cv=none; b=hzZZxuo0X/7ZkKQCc/KLxTtd/uGxmfOxVSZ3XzNHO/JeRsM4Q2SNfLlzU4O4jfKplOnJdrBuA/mhcyokCk86TwZph0gc+/PUVhu8jBLRyaGRmkumup29DxFL5tgfGQ+ID8zdbm85e/lJCQ8pUrMZp5GCaBLMRU3bTd+muyC3M1s=
+	t=1755592666; cv=none; b=WWlY1Q0VVT93mrzU50voTLX2r/srHdG/Wz2S8mAGwTsCFhLd5dOu52nm0b9XgnhZCcnZxM+A1hPl8zDbCJpknyLRN0Qcn6OLERVUeqppH4yFGEFOYaY8+NrDZDfBFVMzvQeyzF6JJ2D05s3in34+hBAhX6opg+dRSx7HPPZCIcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755554935; c=relaxed/simple;
-	bh=XGhKrop+17OYir1NqM8j5jvhaMkicQIwPnymgTbAq90=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QPx8o/zDWuxqT6D5emvRAtHygHXLa2e9MhnyQ8bCoM8L4JeE8ZPZszJS0nGCfFizyNq9fkudb3EQV8m6iwcus8NBXOBFGsnWTdu7ACihAIWItDaCY4MG//6PjInIk/J0H1pIxrJhqaGvwQuu4u37ZNyUnmEe8EHDeCUCQmcVYTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=fn8uq7iq; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-618b62dbb21so6106863a12.2
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Aug 2025 15:08:53 -0700 (PDT)
+	s=arc-20240116; t=1755592666; c=relaxed/simple;
+	bh=ov/SDoBL+KsjXinmNBAv6oD0ygTe84CUkHPGDAYLt90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwi8kncZlyUYUOf8gtiWsB5E9ZuCeXd1ASDAQHq/gP5BKFfXms6rbi6SMWcWLauoGF5H38S6yGq/yxCDxsB8FWZrnfmpFNKnv1T9gL8dvqUpbUWyb7oVp/rxRN+XJWszYJILayioRflH1MEbiJQ+PDNrD+7ElEJDPr7zBzHyU8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HbD+nLdc; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6188b654241so8938557a12.1;
+        Tue, 19 Aug 2025 01:37:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1755554932; x=1756159732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1755592663; x=1756197463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mT5O+FLfTRxCU2w0ib628Dfu2yu2/CDwalkTABmEb14=;
-        b=fn8uq7iqt8ZbGDkzTHE0NNsqwqmcQWDjQ3UaOpErt+GY2c5YeOthZO4BgiL016Pu2F
-         OJuBJ8GJoNRYZ8K4wvwMU8YlZ4PlD++ffn33jKGVqim3CS2FOFKudu41fQIgful/iewV
-         ALgpZehG4chUxasIDAHymBCQufJfAclikHAqr+YLHzj2aFpL+BbGNAuzT8RlrDi2phq8
-         9NYwMWLG2NuCKCUE+PQqiCSLosjwZcDLAWeQiALEdgDHKUhz7FeWH+bIlusrr3vko2Nn
-         afqx+Npg54B2dpdGWaZEp5nhiGvhLZSjiYjnMdEptHQLg5yEpD29lL3wr+0tsRTE8evQ
-         +6+w==
+        bh=eFsGbO5uv2uZgsEZblgTie/lOV7b8K80hkUH8T7DIVU=;
+        b=HbD+nLdciHnzHGLZWK7rd9vx0k0s77RcTGDq8lOzaIT+iDewhaTDddhEYxHG4qw7rh
+         B1NvvruURnsOqmVA1Nrf1F/vD87IPKfcqDRejCCUkn8/EM5pXAvxfs2dkF1/mgAxFLQu
+         VM7ywV7oxpnn8wnbtOxxabzCMlmaOr7eLRCEPe5OcnHVoaEf3UOMts0s+3HRALMd4Pfp
+         yb4bsrne6PJG10xbjRgiovkXGwXUfiASPJt5wIT7ntNnDZj9PqM7y5sbtz30I/c/APfa
+         T5o/jXRmXUaSn1qKFliWXSvu/PxggqmeoSApI4UF+nw1FMmgbJetKueGHJO6tXgPflGN
+         wZPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755554932; x=1756159732;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1755592663; x=1756197463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mT5O+FLfTRxCU2w0ib628Dfu2yu2/CDwalkTABmEb14=;
-        b=l4cmUVY6NsZ220qNWx/5/uzqVSd1DElWpgiAtHw15KQVV7La2f3b9r+afvJ1nGXs67
-         LlBtWe4PBOxBCd5H9wG1iJfEZIyeIsEJTA5lVasf7BRqP+GfWz25IFvKXDepvh+qydJ5
-         sQ+RU7jpzxl/r1yGLFAj76Pk0M1eSxZtdUs5p2B5jpJjntQW/KWcbpBVOtn1k1jIivD6
-         x0udKsG47wWpLwQPlrbDSJIylAwxs3PS4eZ8LQbBfRVnOS8SXCpzsncsfUoXDIsOnLgJ
-         qbpUx9u4Akp22o+3iHWT7e+ZKq4Yy2dJ6cCKJXBBfP54z9YYppWfvjpC/BfL9bYouUmd
-         5bdg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1CQoRK1MW5Fsmq+Tk/B8pG35Cgm1lYDVU64gZFUVy1OckQCGtQUb2YK5/30JYggy/1bRqibE+78M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyiq5kf4LobWX5tZct9HJjlVFde1uaPwh5xg6qGL9U/mX21xwPr
-	qZvhxng4zxTUoplenxhPKUdWBCSXz9WLWXWrq0myKskvDk24eYB30jHz/gS5f0GD4kc=
-X-Gm-Gg: ASbGncuOOfM+9tTkU6lT1SKlexBXKFFvuVjC3KNZg9gFz4fQHJz8MgncHSA8ikcHC9n
-	lUPd7KH9dCLoDcLsc3NXUfd0Z56CLaWxkmVo1t0R8qhYa5y9nvUZKpXKJqFI8jOtFlgmQdIRMix
-	H+mAB2H7T/DvFUn3GDqd6XCMubk2Yx582cf6p8XMgc3vgErW4NeiZ8fROyFzD0ZZGqdOttWVtsw
-	o/kxkcLLmUPzbX9JB+sbCLleZpAlQpGmeQe3yEx6oDFXvmv4IjCn1Nul0yEwnb6ijPXHON5ayKg
-	t1hradE4og/BK7brPFfSCP5OVHIDvsHM0iuwnlLw/znWqvCckyBgV+dV/xsFubcN2Mp3Nu4lTrw
-	MOMtT6g1h0JlMwRgtApLzgM0=
-X-Google-Smtp-Source: AGHT+IEtXmS9oVc8cWUIvreVGKBoeAozv0nJzFX3GkbEXpgGy6ogPPoE27EhPCUMQaRHA4D2yw2ndg==
-X-Received: by 2002:a05:6402:440a:b0:615:979c:e8b2 with SMTP id 4fb4d7f45d1cf-61a7e75e7c6mr103997a12.29.1755554931675;
-        Mon, 18 Aug 2025 15:08:51 -0700 (PDT)
-Received: from localhost ([208.88.158.128])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-61a761f2599sm478609a12.5.2025.08.18.15.08.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Aug 2025 15:08:51 -0700 (PDT)
-From: Jonathan Curley <jcurley@purestorage.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Jonathan Curley <jcurley@purestorage.com>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH 9/9] NFSv4/flexfiles: Add support for striped layouts
-Date: Mon, 18 Aug 2025 22:07:50 +0000
-Message-Id: <20250818220750.47085-10-jcurley@purestorage.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250818220750.47085-1-jcurley@purestorage.com>
-References: <20250818220750.47085-1-jcurley@purestorage.com>
+        bh=eFsGbO5uv2uZgsEZblgTie/lOV7b8K80hkUH8T7DIVU=;
+        b=GbckA80S61lQ0FmSJ/5ztmHpIFNvst27brsThRMb49dpxu9iCfsk75+TduGDkZiO7W
+         J5BNoVoSz6CaoqFg+5Ur7MbIcIFKNR3wnzdlyBSV7BdS0suJpZthcehyu7QmtdMKv9O/
+         q4bUe3h9SxlSiyQkFb3sdP4xjDQMQyrk+YEvlzwSNXVnOyY5FFamCSYrSHe6d7fHBvNZ
+         +FBFg47TQOcKmfIHn5dUQEIYdlzLY5Ufa0T31ppY8ppv2Ac+97xsW4uOR3HVwjrmvMqD
+         9G6MBh8pyZ0J3ZvJydtuumqGMkAOoVoisGAsgrJDApU2SAULiYDBe915thBfod6ll5Rz
+         oujg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOsiP1464NzzQh3WzreCrFHFnIwQGXVInlAGJWViWbIzJol9/GSq/j2X0d6tf056fcYvxNeMEv/2yT@vger.kernel.org, AJvYcCUXOv5DdF2hpb5lmRczwUv7p3jgU//L/F1NV/iFJ4DOXJPu4sgGvH1eOSqBxQy04Khea4eLMdM1igYlDP9m4A==@vger.kernel.org, AJvYcCV1V4yajExvvO6y3YRNXCe6gi73ZdYXalQC+ovfmVHJpyHMTWSvio3pDQqBwwmFfwppB9uV6y919e8=@vger.kernel.org, AJvYcCV1uynxGQfVPGCeewu+nXUYe6x8Eg5L6Wzot/zf4foycowdbQEC7eaUjXHf9717ldvs+4n4gxDA/XkVCg==@vger.kernel.org, AJvYcCVnG2Vv3oiREGpxvl0SdKVVN1HuZEclV8HHApm/iX7eakfGsJQGFTULqbA52Mt7AozSPWYq/4b353Ft@vger.kernel.org, AJvYcCWOAKHOImEHcKf3Vrl66I4SfDsbrANijYoPN95Oh1TYJ3GSR164mAeX7H8+5X0wx5fwx8bgYgGyOjHfuZh+@vger.kernel.org, AJvYcCXEznR2b3GRPEiHg/61Z9vxqEyTo8L+8ZN63bRJwe90t6aZadX13KIlmfRcmx2zj6PjKLPqmkxDhtan/1jEGA==@vger.kernel.org, AJvYcCXsNJvpXGrtSi6lbopAh993v3NYlL8eI1sc+GzzoeUp3x1T+J6WXzuk6VQFv/onmMdfAzEbI5B5yJ/2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxruDJCD/jFhY51OgsbHuZP33F5unKwJfsEhMH+szfytiT5tMZ6
+	9rhwkSxir8u+Zdvya9/EM0mRG9fNTtcdeuxcbfEv/Ql/ZodrmyXamr3JKOb/lli5JhyhE+t4eQJ
+	xubISonmenC/LpaGSbqMNPwje4LMAA4A=
+X-Gm-Gg: ASbGncvFAVpBL5pKgjzSv6iuPA5cXcHN+/N7ZTj6EkZD8iMLb5APF9OCikGtMQI2hYq
+	pLgLv1Xu5BJGtCmRKTWUMKILZyPHumeCnMuQe3PiU27N9ipAprtnt5xaFN/1KshaCZ2d1jamWR0
+	c4YtJ2RlYB2ItzQnxEYYa3hR1WsSYnW/Z6/6pVvL8lw+Wh0O7ZGLKF3vwXr6fPN5A9CeAcJZJhp
+	dZn3/w=
+X-Google-Smtp-Source: AGHT+IFPkGLsERbAFWtJMeBST+thbMymAyNwr9qtEZC9tmGauxnR7YuwZ/KcrAjTg48I0n7BxxoUhzcNK86fTEQQ3U8=
+X-Received: by 2002:a05:6402:2110:b0:61a:8956:80da with SMTP id
+ 4fb4d7f45d1cf-61a89568752mr355544a12.17.1755592662958; Tue, 19 Aug 2025
+ 01:37:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAOQ4uxjFPOZe004Cv+tT=NyQg2JOY6MOYQniSjaefVcg+3s-Kg@mail.gmail.com>
+ <175555395905.2234665.9441673384189011517@noble.neil.brown.name>
+In-Reply-To: <175555395905.2234665.9441673384189011517@noble.neil.brown.name>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 19 Aug 2025 10:37:30 +0200
+X-Gm-Features: Ac12FXy8T19V7sCZ2PjPpODnDn2SH0EuiMx3-E257rrZ7RxWX_LLM7LKSQroU_c
+Message-ID: <CAOQ4uxjh1RmAEWV22V_tdazOGxekmKUy6bdu13OhtoXboT3neg@mail.gmail.com>
+Subject: Re: [PATCH 04/11] VFS: introduce dentry_lookup_continue()
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Tyler Hicks <code@tyhicks.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Steve French <sfrench@samba.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Carlos Maiolino <cem@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-afs@lists.infradead.org, netfs@lists.linux.dev, 
+	ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Updates lseg creation path to parse and add striped layouts. Enable
-support for striped layouts.
+On Mon, Aug 18, 2025 at 11:53=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
+>
+> On Mon, 18 Aug 2025, Amir Goldstein wrote:
+> > On Wed, Aug 13, 2025 at 1:53=E2=80=AFAM NeilBrown <neil@brown.name> wro=
+te:
+> > >
+> > > A few callers operate on a dentry which they already have - unlike th=
+e
+> > > normal case where a lookup proceeds an operation.
+> > >
+> > > For these callers dentry_lookup_continue() is provided where other
+> > > callers would use dentry_lookup().  The call will fail if, after the
+> > > lock was gained, the child is no longer a child of the given parent.
+> > >
+> > > There are a couple of callers that want to lock a dentry in whatever
+> > > its current parent is.  For these a NULL parent can be passed, in whi=
+ch
+> > > case ->d_parent is used.  In this case the call cannot fail.
+> > >
+> > > The idea behind the name is that the actual lookup occurred some time
+> > > ago, and now we are continuing with an operation on the dentry.
+> > >
+> > > When the operation completes done_dentry_lookup() must be called.  An
+> > > extra reference is taken when the dentry_lookup_continue() call succe=
+eds
+> > > and will be dropped by done_dentry_lookup().
+> > >
+> > > This will be used in smb/server, ecryptfs, and overlayfs, each of whi=
+ch
+> > > have their own lock_parent() or parent_lock() or similar; and a few
+> > > other places which lock the parent but don't check if the parent is
+> > > still correct (often because rename isn't supported so parent cannot =
+be
+> > > incorrect).
+> > >
+> > > Signed-off-by: NeilBrown <neil@brown.name>
+> > > ---
+> > >  fs/namei.c            | 39 +++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/namei.h |  2 ++
+> > >  2 files changed, 41 insertions(+)
+> > >
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index 7af9b464886a..df21b6fa5a0e 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -1874,6 +1874,45 @@ struct dentry *dentry_lookup_killable(struct m=
+nt_idmap *idmap,
+> > >  }
+> > >  EXPORT_SYMBOL(dentry_lookup_killable);
+> > >
+> > > +/**
+> > > + * dentry_lookup_continue: lock a dentry if it is still in the given=
+ parent, prior to dir ops
+> > > + * @child: the dentry to lock
+> > > + * @parent: the dentry of the assumed parent
+> > > + *
+> > > + * The child is locked - currently by taking i_rwsem on the parent -=
+ to
+> > > + * prepare for create/remove operations.  If the given parent is not
+> > > + * %NULL and is no longer the parent of the dentry after the lock is
+> > > + * gained, the lock is released and the call fails (returns
+> > > + * ERR_PTR(-EINVAL).
+> > > + *
+> > > + * On success a reference to the child is taken and returned.  The l=
+ock
+> > > + * and reference must both be dropped by done_dentry_lookup() after =
+the
+> > > + * operation completes.
+> > > + */
+> > > +struct dentry *dentry_lookup_continue(struct dentry *child,
+> > > +                                     struct dentry *parent)
+> > > +{
+> > > +       struct dentry *p =3D parent;
+> > > +
+> > > +again:
+> > > +       if (!parent)
+> > > +               p =3D dget_parent(child);
+> > > +       inode_lock_nested(d_inode(p), I_MUTEX_PARENT);
+> > > +       if (child->d_parent !=3D p) {
+> >
+> > || d_unhashed(child))
+> >
+> > ;)
+>
+> As you say!
+>
+> >
+> > and what about silly renames? are those also d_unhashed()?
+>
+> With NFS it is not unhashed (i.e.  it is still hashed, but with a
+> different name).  I haven't checked AFS.
+>
+> But does it matter?  As long as it has the right parent and is not
+> unhashed, it is a suitable dentry to pass to vfs_unlink() etc.
+>
+> If this race happened with NFS then ovl could try to remove the .nfsXXX
+> file and would get ETXBUSY due to DCACH_NFSFS_RENAMED.  I don't think
+> this is a problem.
+>
 
-Limitations:
+Not a problem IMO.
 
-1. All mirrors must have the same number of stripes.
+FYI, ovl does not accept NFS as a valid upper fs
+on account of ->d_revalidate() and no RENAME_WHITEOUT support.
 
-Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 247 ++++++++++++++++---------
- fs/nfs/flexfilelayout/flexfilelayout.h |   2 +
- 2 files changed, 157 insertions(+), 92 deletions(-)
+        if (ovl_dentry_remote(ofs->workdir) &&
+            (!d_type || !rename_whiteout || ofs->noxattr)) {
+                pr_err("upper fs missing required features.\n");
+                err =3D -EINVAL;
+                goto out;
+        }
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 24d0eef0b6a4..444267938081 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -177,18 +177,19 @@ ff_local_open_fh(struct pnfs_layout_segment *lseg, u32 ds_idx, u32 dss_id,
- #endif
- }
- 
--static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
--		const struct nfs4_ff_layout_mirror *m2)
-+static bool ff_dss_match_fh(const struct nfs4_ff_layout_ds_stripe *dss1,
-+		const struct nfs4_ff_layout_ds_stripe *dss2)
- {
- 	int i, j;
- 
--	if (m1->dss[0].fh_versions_cnt != m2->dss[0].fh_versions_cnt)
-+	if (dss1->fh_versions_cnt != dss2->fh_versions_cnt)
- 		return false;
--	for (i = 0; i < m1->dss[0].fh_versions_cnt; i++) {
-+
-+	for (i = 0; i < dss1->fh_versions_cnt; i++) {
- 		bool found_fh = false;
--		for (j = 0; j < m2->dss[0].fh_versions_cnt; j++) {
--			if (nfs_compare_fh(&m1->dss[0].fh_versions[i],
--					&m2->dss[0].fh_versions[j]) == 0) {
-+		for (j = 0; j < dss2->fh_versions_cnt; j++) {
-+			if (nfs_compare_fh(&dss1->fh_versions[i],
-+					&dss2->fh_versions[j]) == 0) {
- 				found_fh = true;
- 				break;
- 			}
-@@ -199,6 +200,38 @@ static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
- 	return true;
- }
- 
-+static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
-+		const struct nfs4_ff_layout_mirror *m2)
-+{
-+	u32 dss_id;
-+
-+	if (m1->dss_count != m2->dss_count)
-+		return false;
-+
-+	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
-+		if (!ff_dss_match_fh(&m1->dss[dss_id], &m2->dss[dss_id]))
-+			return false;
-+
-+	return true;
-+}
-+
-+static bool ff_mirror_match_devid(const struct nfs4_ff_layout_mirror *m1,
-+		const struct nfs4_ff_layout_mirror *m2)
-+{
-+	u32 dss_id;
-+
-+	if (m1->dss_count != m2->dss_count)
-+		return false;
-+
-+	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
-+		if (memcmp(&m1->dss[dss_id].devid,
-+			   &m2->dss[dss_id].devid,
-+			   sizeof(m1->dss[dss_id].devid)) != 0)
-+			return false;
-+
-+	return true;
-+}
-+
- static struct nfs4_ff_layout_mirror *
- ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
- 		struct nfs4_ff_layout_mirror *mirror)
-@@ -209,8 +242,7 @@ ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
- 
- 	spin_lock(&inode->i_lock);
- 	list_for_each_entry(pos, &ff_layout->mirrors, mirrors) {
--		if (memcmp(&mirror->dss[0].devid, &pos->dss[0].devid,
--			   sizeof(pos->dss[0].devid)) != 0)
-+		if (!ff_mirror_match_devid(mirror, pos))
- 			continue;
- 		if (!ff_mirror_match_fh(mirror, pos))
- 			continue;
-@@ -241,13 +273,15 @@ ff_layout_remove_mirror(struct nfs4_ff_layout_mirror *mirror)
- static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
- {
- 	struct nfs4_ff_layout_mirror *mirror;
-+	u32 dss_id;
- 
- 	mirror = kzalloc(sizeof(*mirror), gfp_flags);
- 	if (mirror != NULL) {
- 		spin_lock_init(&mirror->lock);
- 		refcount_set(&mirror->ref, 1);
- 		INIT_LIST_HEAD(&mirror->mirrors);
--		nfs_localio_file_init(&mirror->dss[0].nfl);
-+		for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
-+			nfs_localio_file_init(&mirror->dss[dss_id].nfl);
- 	}
- 	return mirror;
- }
-@@ -255,17 +289,19 @@ static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
- static void ff_layout_free_mirror(struct nfs4_ff_layout_mirror *mirror)
- {
- 	const struct cred	*cred;
--	int dss_id = 0;
-+	u32 dss_id;
- 
- 	ff_layout_remove_mirror(mirror);
- 
--	kfree(mirror->dss[dss_id].fh_versions);
--	nfs_close_local_fh(&mirror->dss[dss_id].nfl);
--	cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
--	put_cred(cred);
--	cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
--	put_cred(cred);
--	nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
-+	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++) {
-+		kfree(mirror->dss[dss_id].fh_versions);
-+		cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
-+		put_cred(cred);
-+		cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
-+		put_cred(cred);
-+		nfs_close_local_fh(&mirror->dss[dss_id].nfl);
-+		nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
-+	}
- 
- 	kfree(mirror->dss);
- 	kfree(mirror);
-@@ -371,14 +407,24 @@ ff_layout_add_lseg(struct pnfs_layout_hdr *lo,
- 			free_me);
- }
- 
-+static u32 ff_mirror_efficiency_sum(const struct nfs4_ff_layout_mirror *mirror)
-+{
-+	u32 dss_id, sum = 0;
-+
-+	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
-+		sum += mirror->dss[dss_id].efficiency;
-+
-+	return sum;
-+}
-+
- static void ff_layout_sort_mirrors(struct nfs4_ff_layout_segment *fls)
- {
- 	int i, j;
- 
- 	for (i = 0; i < fls->mirror_array_cnt - 1; i++) {
- 		for (j = i + 1; j < fls->mirror_array_cnt; j++)
--			if (fls->mirror_array[i]->dss[0].efficiency <
--			    fls->mirror_array[j]->dss[0].efficiency)
-+			if (ff_mirror_efficiency_sum(fls->mirror_array[i]) <
-+			    ff_mirror_efficiency_sum(fls->mirror_array[j]))
- 				swap(fls->mirror_array[i],
- 				     fls->mirror_array[j]);
- 	}
-@@ -398,6 +444,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 	u32 mirror_array_cnt;
- 	__be32 *p;
- 	int i, rc;
-+	struct nfs4_ff_layout_ds_stripe *dss_info;
- 
- 	dprintk("--> %s\n", __func__);
- 	scratch = alloc_page(gfp_flags);
-@@ -440,17 +487,24 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		kuid_t uid;
- 		kgid_t gid;
- 		u32 fh_count, id;
--		int j, dss_id = 0;
-+		int j, dss_id;
- 
- 		rc = -EIO;
- 		p = xdr_inline_decode(&stream, 4);
- 		if (!p)
- 			goto out_err_free;
- 
--		dss_count = be32_to_cpup(p);
-+		// Ensure all mirrors have same stripe count.
-+		if (dss_count == 0)
-+			dss_count = be32_to_cpup(p);
-+		else if (dss_count != be32_to_cpup(p))
-+			goto out_err_free;
-+
-+		if (dss_count > NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT ||
-+		    dss_count == 0)
-+			goto out_err_free;
- 
--		/* FIXME: allow for striping? */
--		if (dss_count != 1)
-+		if (dss_count > 1 && stripe_unit == 0)
- 			goto out_err_free;
- 
- 		fls->mirror_array[i] = ff_layout_alloc_mirror(gfp_flags);
-@@ -464,91 +518,100 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		    kcalloc(dss_count, sizeof(struct nfs4_ff_layout_ds_stripe),
- 			    gfp_flags);
- 
--		/* deviceid */
--		rc = decode_deviceid(&stream, &fls->mirror_array[i]->dss[dss_id].devid);
--		if (rc)
--			goto out_err_free;
-+		for (dss_id = 0; dss_id < dss_count; dss_id++) {
-+			dss_info = &fls->mirror_array[i]->dss[dss_id];
-+			dss_info->mirror = fls->mirror_array[i];
- 
--		/* efficiency */
--		rc = -EIO;
--		p = xdr_inline_decode(&stream, 4);
--		if (!p)
--			goto out_err_free;
--		fls->mirror_array[i]->dss[dss_id].efficiency = be32_to_cpup(p);
-+			/* deviceid */
-+			rc = decode_deviceid(&stream, &dss_info->devid);
-+			if (rc)
-+				goto out_err_free;
- 
--		/* stateid */
--		rc = decode_pnfs_stateid(&stream, &fls->mirror_array[i]->dss[dss_id].stateid);
--		if (rc)
--			goto out_err_free;
-+			/* efficiency */
-+			rc = -EIO;
-+			p = xdr_inline_decode(&stream, 4);
-+			if (!p)
-+				goto out_err_free;
-+			dss_info->efficiency = be32_to_cpup(p);
- 
--		/* fh */
--		rc = -EIO;
--		p = xdr_inline_decode(&stream, 4);
--		if (!p)
--			goto out_err_free;
--		fh_count = be32_to_cpup(p);
-+			/* stateid */
-+			rc = decode_pnfs_stateid(&stream, &dss_info->stateid);
-+			if (rc)
-+				goto out_err_free;
- 
--		fls->mirror_array[i]->dss[dss_id].fh_versions =
--		    kcalloc(fh_count, sizeof(struct nfs_fh),
--			    gfp_flags);
--		if (fls->mirror_array[i]->dss[dss_id].fh_versions == NULL) {
--			rc = -ENOMEM;
--			goto out_err_free;
--		}
-+			/* fh */
-+			rc = -EIO;
-+			p = xdr_inline_decode(&stream, 4);
-+			if (!p)
-+				goto out_err_free;
-+			fh_count = be32_to_cpup(p);
- 
--		for (j = 0; j < fh_count; j++) {
--			rc = decode_nfs_fh(&stream,
--					   &fls->mirror_array[i]->dss[dss_id].fh_versions[j]);
-+			dss_info->fh_versions =
-+			    kcalloc(fh_count, sizeof(struct nfs_fh),
-+				    gfp_flags);
-+			if (dss_info->fh_versions == NULL) {
-+				rc = -ENOMEM;
-+				goto out_err_free;
-+			}
-+
-+			for (j = 0; j < fh_count; j++) {
-+				rc = decode_nfs_fh(&stream,
-+						   &dss_info->fh_versions[j]);
-+				if (rc)
-+					goto out_err_free;
-+			}
-+
-+			dss_info->fh_versions_cnt = fh_count;
-+
-+			/* user */
-+			rc = decode_name(&stream, &id);
- 			if (rc)
- 				goto out_err_free;
--		}
- 
--		fls->mirror_array[i]->dss[dss_id].fh_versions_cnt = fh_count;
-+			uid = make_kuid(&init_user_ns, id);
- 
--		/* user */
--		rc = decode_name(&stream, &id);
--		if (rc)
--			goto out_err_free;
-+			/* group */
-+			rc = decode_name(&stream, &id);
-+			if (rc)
-+				goto out_err_free;
- 
--		uid = make_kuid(&init_user_ns, id);
-+			gid = make_kgid(&init_user_ns, id);
- 
--		/* group */
--		rc = decode_name(&stream, &id);
--		if (rc)
--			goto out_err_free;
-+			if (gfp_flags & __GFP_FS)
-+				kcred = prepare_kernel_cred(&init_task);
-+			else {
-+				unsigned int nofs_flags = memalloc_nofs_save();
- 
--		gid = make_kgid(&init_user_ns, id);
-+				kcred = prepare_kernel_cred(&init_task);
-+				memalloc_nofs_restore(nofs_flags);
-+			}
-+			rc = -ENOMEM;
-+			if (!kcred)
-+				goto out_err_free;
-+			kcred->fsuid = uid;
-+			kcred->fsgid = gid;
-+			cred = RCU_INITIALIZER(kcred);
- 
--		if (gfp_flags & __GFP_FS)
--			kcred = prepare_kernel_cred(&init_task);
--		else {
--			unsigned int nofs_flags = memalloc_nofs_save();
--			kcred = prepare_kernel_cred(&init_task);
--			memalloc_nofs_restore(nofs_flags);
-+			if (lgr->range.iomode == IOMODE_READ)
-+				rcu_assign_pointer(dss_info->ro_cred, cred);
-+			else
-+				rcu_assign_pointer(dss_info->rw_cred, cred);
- 		}
--		rc = -ENOMEM;
--		if (!kcred)
--			goto out_err_free;
--		kcred->fsuid = uid;
--		kcred->fsgid = gid;
--		cred = RCU_INITIALIZER(kcred);
--
--		if (lgr->range.iomode == IOMODE_READ)
--			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
--		else
--			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
- 
- 		mirror = ff_layout_add_mirror(lh, fls->mirror_array[i]);
- 		if (mirror != fls->mirror_array[i]) {
--			/* swap cred ptrs so free_mirror will clean up old */
--			if (lgr->range.iomode == IOMODE_READ) {
--				cred = xchg(&mirror->dss[dss_id].ro_cred,
--					    fls->mirror_array[i]->dss[dss_id].ro_cred);
--				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
--			} else {
--				cred = xchg(&mirror->dss[dss_id].rw_cred,
--					    fls->mirror_array[i]->dss[dss_id].rw_cred);
--				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
-+			for (dss_id = 0; dss_id < dss_count; dss_id++) {
-+				dss_info = &fls->mirror_array[i]->dss[dss_id];
-+				/* swap cred ptrs so free_mirror will clean up old */
-+				if (lgr->range.iomode == IOMODE_READ) {
-+					cred = xchg(&mirror->dss[dss_id].ro_cred,
-+						    dss_info->ro_cred);
-+					rcu_assign_pointer(dss_info->ro_cred, cred);
-+				} else {
-+					cred = xchg(&mirror->dss[dss_id].rw_cred,
-+						    dss_info->rw_cred);
-+					rcu_assign_pointer(dss_info->rw_cred, cred);
-+				}
- 			}
- 			ff_layout_free_mirror(fls->mirror_array[i]);
- 			fls->mirror_array[i] = mirror;
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index 142324d6d5c5..17a008c8e97c 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -21,6 +21,8 @@
-  * due to network error etc. */
- #define NFS4_FLEXFILE_LAYOUT_MAX_MIRROR_CNT 4096
- 
-+#define NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT 4096
-+
- /* LAYOUTSTATS report interval in ms */
- #define FF_LAYOUTSTATS_REPORT_INTERVAL (60000L)
- #define FF_LAYOUTSTATS_MAXDEV 4
--- 
-2.34.1
+> If we really wanted to be sure the name hadn't changed we could do a
+> lookup and check that the same dentry is returned.
+>
+> OVL is by nature exposed to possible races if something else tried to
+> modify the upper directory tree.  I don't think it needs to provide
+> perfect semantics in that case, it only needs to fail-safe.  I think
+> this recent change is enough to be safe in the face of concurrent
+> unlinks.
 
+<nod>
+
+Thanks,
+Amir.
 
