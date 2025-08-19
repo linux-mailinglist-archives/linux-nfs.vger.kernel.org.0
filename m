@@ -1,262 +1,157 @@
-Return-Path: <linux-nfs+bounces-13781-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13782-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3739CB2CB49
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 19:47:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CF02B2CBA9
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 20:07:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0FC293B4054
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 17:42:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E207F1BC8B3F
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 18:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FD1830BF74;
-	Tue, 19 Aug 2025 17:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3128330EF80;
+	Tue, 19 Aug 2025 18:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W40KVOV8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11022077.outbound.protection.outlook.com [40.93.200.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F4C2E2297;
-	Tue, 19 Aug 2025 17:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.200.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755625195; cv=fail; b=bM5J4ntLd8+4csSX9DxfO7xCEtHbNTVbbrEHwjJTfe/23r9Mp/NHiLx0QZZ8Z3s1w4k8cUmZ1gvxlxFHcC+kCoJ4avd70lnkAX5skH6jZ470k7imcsB3yLXBzgial7zKlKmnoYcLod04eCTHUcNack7om6OlhO4ksQh9lRSUlNw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755625195; c=relaxed/simple;
-	bh=iZNokIZwJNR4kfKBdhCTXgr8d855CCihCYSoYOhxc+E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qJbgNhcfu9X6m5YHDM6N9tjSY4YspFo2n1TeO8SL/t9rlqMDW+NvDLtieajz24w/nuQaXf2F5gp52WWC7AOz8Cu05Wz3Ys8ambuMBJMiELgdJi26a1TXmG6dRczrq0FKd6bYitPeLPO+R32LJxFFpiY4qwNuGlioM4O4ZQ/tSBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.93.200.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RLNhOT72S2wT2eWR+AEObaVqsY1TjxBoJso05mxmgIKK3l70fBvKBZCMzo4Rr0ASsidJpmu8lxALQjwmRJw3xX/mb2TKX8PCh/7XSWeeooXYlxyCOBsWR28a4/d1fwL5r91MZ5iS3XMMvZnBAYDbIijh+QdGjl9uYcIyqtJm1D3fvJFmxulkxCSlFPylkkd4p57W2I7LjY1qApPMZGp+eKf4EKGRvCRn/TRyuOygRDQUPW+i9+auDxDE/BInOozv8fgSAzKcOC8p3jtWn4DH4iVDUd6oZOT6ETrTu2NezCQ3FDMe3jwEN+Mr8bBX73cqHcSmQtxxwwPBc0hnAZyFUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IuNG637aA/XhPRMbkJafaEBjB1Vtife/uvV/ZzV4tnI=;
- b=NWr5K4w+fEPuAy36b2rq3XaVQFTVjWuGO6AgUMk0Ll+2P7ZTMy1hgbuWK7yCQP/wxUe8MlpFDTYIDCiS2tASE4UFU4iNSmOenGDk7+0BKEV6ZXjcJH5xyw9lKJDvKu3JM8Za+KZQ7alUGPU/H0hMjWd1h5ZnfrSfc2Sw5FcuD4laE/g067JV728KxpxUNPEIsj0qer3IqfxsSB1ntQdtTktQQCW38VNa/SE+smi4t+780Y0DVFWu+wGHv9LNZvPPI8fwCVfDmwWfljBQbSABoZ6k8lJKF3alNBSv1cxDkax2UDp7Hqp3l1Auu0+UibFODAR57BLKk6zEyZTMy+ONTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from DM5PR0102MB3414.prod.exchangelabs.com (2603:10b6:4:a8::22) by
- SJ2PR01MB8583.prod.exchangelabs.com (2603:10b6:a03:53e::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9031.24; Tue, 19 Aug 2025 17:39:50 +0000
-Received: from DM5PR0102MB3414.prod.exchangelabs.com
- ([fe80::cc85:45b5:e6fe:e2db]) by DM5PR0102MB3414.prod.exchangelabs.com
- ([fe80::cc85:45b5:e6fe:e2db%5]) with mapi id 15.20.9031.021; Tue, 19 Aug 2025
- 17:39:50 +0000
-Message-ID: <044700d6-4f40-4ac8-bcd5-d3856af9f926@talpey.com>
-Date: Tue, 19 Aug 2025 13:39:53 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] svcrdma: Introduce Receive buffer arenas
-To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
- linux-rdma@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>
-References: <20250811203539.1702-1-cel@kernel.org>
- <a1ce98e1-83b6-45c4-bde0-c4b71be67868@talpey.com>
- <1cea814e-8be3-4bf9-ae3b-5bf21eae0a3c@kernel.org>
- <383ea66a-8b0e-4b90-98c7-69a737c23f82@talpey.com>
- <ee20aca3-8c32-48f4-8a90-5e4cd4e05aab@kernel.org>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <ee20aca3-8c32-48f4-8a90-5e4cd4e05aab@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:208:23a::17) To DM5PR0102MB3414.prod.exchangelabs.com
- (2603:10b6:4:a8::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B94130EF9D
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Aug 2025 18:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755626816; cv=none; b=opCYQ6HoKxlIO+OFgEtN/TAvZJ4jsuOoeFRsZwVosCEjeqN40ivoYUn91RAyKdG1dMFQXuV5pn0hWt8Vm5bzmm3ZGRCDyXjEzPghzIdz0VucAtQzfw4lIK3Lu2MdXoglTwl+EgH5PyHIldfDi6GMmwJXVlWZD2mI1qhqbiGrx3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755626816; c=relaxed/simple;
+	bh=I3W1jikWtKN1PuKLIS7IzkHeMBuAUdWjQkfCtZoW148=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bwBCO/FfTXeP7R+ZLiy2S2Tw+ld0YMdtwYFVoBRNbtzGahhcRVIbVfHBUDLuzMwcCWmzKiiY4jKP2ay1S5fr5f0fC9QC/jFwCr0m0GhH1yjJKV8Xi+2S9vMAb4kGwlpRjNldxJBMgFFUECo1g3aIqHk3bDwBBksW5c4ejzaRu28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W40KVOV8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755626806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cqYm/m99tID/jHL4khoHNy8+vtMNv6VMMnm6kUIfjBg=;
+	b=W40KVOV8Mpoeile8C3XTrDwz4nypxRORZCVSAB1uWgNnbJIFwai1YlGoaFP7btzXXsmJPx
+	VvdR5Rw/CaQEClJGiVebi3TPmBsAOTalou17AfqAKmj0L5gQKAa4TxfLXnU7wgN+WajGGa
+	vZ6i0mpyPH9nezcJRMBDjspSQdb70pg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-OIzuGSJWPnS5iePcwo1P-w-1; Tue,
+ 19 Aug 2025 14:05:01 -0400
+X-MC-Unique: OIzuGSJWPnS5iePcwo1P-w-1
+X-Mimecast-MFC-AGG-ID: OIzuGSJWPnS5iePcwo1P-w_1755626652
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 556501800290;
+	Tue, 19 Aug 2025 18:04:05 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.89.9])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 063931955F24;
+	Tue, 19 Aug 2025 18:04:03 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	neil@brown.name,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Subject: [PATCH v2 1/1] nfsd: unregister with rpcbind when deleting a transport
+Date: Tue, 19 Aug 2025 14:04:02 -0400
+Message-Id: <20250819180403.33090-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3414:EE_|SJ2PR01MB8583:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67d7d284-6c80-43eb-47e8-08dddf4765d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TS8xaHBnRWNSMXY5Ynd4cCtLQ2dzZVB5anF4ZENMbEVmM1Jnb2RzU2oxQmh4?=
- =?utf-8?B?bTQyYWRoemJpSVQzckJXb2RhMzFJQml5ZmdaUlRlNU5EbHVLelJUbkk2NUF4?=
- =?utf-8?B?TXFjNEN3ZDRxYVhGSnh6MllpY3dJY3dyaUdBd082ckhXeUZ3eHFQMUhUSTRH?=
- =?utf-8?B?K1ozUVBWT3RTNHVKK0xzb2ZiemtFWnlzdlRLNjF6N0tZZDg4aFl5OXJYMFpD?=
- =?utf-8?B?QlczdmpReUd0a0FnL0JINEZQTlFxWWxKcXAxcTFVWTlUVkd0b2wxZExiTzhC?=
- =?utf-8?B?a0NySlEyYStEZnJkbUt3YXZ1eUZUaS9oS2gvYllNeTRUTlozKzN6SlFhVCtD?=
- =?utf-8?B?V3VpWmJYaWRPdDRuR0F3cEZFT21XYnFRb25wWDBkZ3FoYlFiMm04b2Iyb3ha?=
- =?utf-8?B?RzEvakt6ZkFtd0pEeFFPKzZhWFdZQVVOdGU0U2tvTmVrTkQyandJeFgyQ1hn?=
- =?utf-8?B?MmZJa2lpVXljRDVESUF4bGRHU1FPZUQ1UkkzWnd2WVVLa3F3VFNCZTErZ0hT?=
- =?utf-8?B?VEtJQnY2YllqdldzVDNocTlpUFJoUDVrOWpwaTNnUTR4NTJSQTJoRGxmUlRl?=
- =?utf-8?B?LzliS0xSTllJZEpFOE81bFd6WElJMmZtMEdUWVcvVGpxNkcxbEM2VWpyUldW?=
- =?utf-8?B?TGJIc0tIUTFkbUQvU1c4Ky9NTVROSW4wajB5WGd0T0w0WXI3N0wzcm85alJQ?=
- =?utf-8?B?eUFPdjRwTWZ2dC9NZDZ2eWRRTTBjK0RTZDYzTFEvZWZBZDd4S2RzMVlMWHZB?=
- =?utf-8?B?cTJOVHpDKys2cFF1eUdqbk1leTh1WEdqcTJITUlqdU5RVm5pSGpDR0ErOGgz?=
- =?utf-8?B?ck9KU1ZKeitCdWlMdFE2aU9ORGRWbmF6MjhxZmFvd0NTZ0xFTU1ycUtVd0sy?=
- =?utf-8?B?aHRLRk4rYzI1N1IvNFgwa1h1VC9kVXpVV2FGa1duOGJVZisxRnk1eXg3Z3Z2?=
- =?utf-8?B?bjZHbG13ZjU5Z1BLc05reUNtOUFZbHc1d28xeDRNODZtK1RLUkVVR1pJK0Vk?=
- =?utf-8?B?UU5vUUJ3cENMcXo5S0o3YS9ld1JwaWdUQjdwSk1IT1EveXV0eHVCa2dQcTV3?=
- =?utf-8?B?THB6L0V6cTJvRDlob01tZTluRFd2eU5KZUxrVUNLMFpWcDF0UnJpVXFXN1Fq?=
- =?utf-8?B?WklILzdJRG5JcjFCKy9FQlh4Q21ZVGtJSzBwTVo0YzhtL1JHcmNjSkJWYjRa?=
- =?utf-8?B?ZHBYYjBjRlRsYk1VcGYwV1VpcE1DQ0YzVzEzZENjZStLZzdnZExpTWYyU0la?=
- =?utf-8?B?R3dSNE1TU2FLUG53enRPM1R1RHpXeVBqcmRQYkVsTWVidGVRUE5pYzJYbnN3?=
- =?utf-8?B?bXFvaUJ2V0FnYlJlRWlkZlpCU2Q0eHlocGlBYW8zQUQwVlZUbHRPc3RheFVo?=
- =?utf-8?B?NHltOSs5TFRjMXhVekVvU1JPaUtpaTFhTkczSUtycXI1dUdIWmpLTkRLWVdN?=
- =?utf-8?B?YzdmZlR5Y2ZtR3h4Q2JXc1p2bWJkdFd1QmtiMFNTZU9TR296UnRxRmU3TitD?=
- =?utf-8?B?ZkVtYUNyRi9wZWZWVnhyY3JxditlTXZRNVNuZS9xM0RreitkclhiT3RrbCty?=
- =?utf-8?B?RHAydjlsSS9oWllrU0l6WGx3aUxuQzhXQ3U3YXFlbURlZ1ZJd3RQSE9OcDgz?=
- =?utf-8?B?ZnlFYmRRSkZzT0JpVS9Kc0NiQm1QNGdxOWJETUhIbHRqeXB3eCtJSUJLclBV?=
- =?utf-8?B?MnhIR1VFK0FCemdzZWROYjlEWWdEd3dMRVdMemtoTUZlYjQ0d2VMSmM5MHlW?=
- =?utf-8?B?ZFlYdFJiaC9VVFg5NDNLSGVnS1JPS1ZOMkplRTQ3eW4xYUtjdGJudy96YXVr?=
- =?utf-8?B?a3UwOTNTZnpGS1gwTEZrWWo0NTZkMm90dkRLdWF4OFZJM3pMdlBvL3hGRWtw?=
- =?utf-8?B?cEFFRWxnSFdaNEp2TkNTSFk0Unp1eis2TzlYTzlyVjBCd2c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3414.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SktXbW9pUHp6Si9rcElLa0oydlVVa284SkJ2NWswRWpSLzZWU25DdEd4TlNz?=
- =?utf-8?B?RFNZTGFOM2xUY2d1RXJMblBvYWU1T0Fyc1ZuWWlySUVZRXRtbm8rSU9DcnBl?=
- =?utf-8?B?VlVJQzJrMStoNTlTZ09ZenlueStpaEtJRDByb3dWblpDYnJ4ZHVtNkxkaVV2?=
- =?utf-8?B?OHEyNW14MnFXazRra3JtbkVDN3JIeVFJU0FySW4zNTU2SUh5T2xCbjgvMDl1?=
- =?utf-8?B?OW90OHZQQTlaQ0NrNDV2MlJBSnJaeU5HTko2d2QzdmZPNlEvMHJvVFRDRGlD?=
- =?utf-8?B?Zmp2N3BzcjNQcWtkQ3daUEE4UnNRZEZVUjdxMXFKSE9kZEx2bTFyZFdscXZ0?=
- =?utf-8?B?ek1OVHlha0k3VGM0WFBCNGFIWXZqa2ZhNEhHSHo5cFFUZXlCMmNieHluelFZ?=
- =?utf-8?B?ajlnQUNJa1RZRlJiVE84WTZQWTBMSWU1TGhjMm53dFZuUi9QbUxvSlhTTUFx?=
- =?utf-8?B?aG5hTzdwV3Q5dHl5M2RmMHRnK0hSR1lxT3JVWjVLNDQwc0RGZG9WaVJxRWxM?=
- =?utf-8?B?M0MyVDd0Kzk0VHF5UHhqMEhKb0EraTZpc2plMExXZE8yQk5DOHRLVmJDRGV4?=
- =?utf-8?B?VmFtbGhkZWRRK2xqQkxBdk4vYStzblhBeER3YXNSN0NrbmxkWWlsNG4vSU5n?=
- =?utf-8?B?d3p0V1lzRmF1eTh2ZHIxS1BGa0xidS8zbDVRNkZJdmNZVjRrZmFLS0hLRTE0?=
- =?utf-8?B?aFNrQ3NoVURweWlDY0FFb1gxWWwxd0FlRjJReWVEbFpSZEp3NjJKbXgrNzA4?=
- =?utf-8?B?M1JON2NaaDR3ejUxbGJKTWRhQ1pMZXBTSmRLakp3dzFXTm90QlU1VGFRajJ4?=
- =?utf-8?B?dWJLdFV5eUc3NHZnWGMwZmhYNzMzYldWU1dOdndmT1U2dHZOVXlCc2hyRGdB?=
- =?utf-8?B?YUZJbkZkTGxNWEFUQkE0ajIyYjhISkF1elhsdjMzcEFRQytzV3VUQ2pGTG5W?=
- =?utf-8?B?NStNNmhYaFRiVkZwL0Mrc2d2ZlZWVmQ5SzJybXoyWnN2K1FDdzZMcSt5R1RQ?=
- =?utf-8?B?Q3JzWHFTd2lsMEpOQWY4VVNjdGNWdlRTc0hSR3FFcTFWS3piYndLZHM2ekRG?=
- =?utf-8?B?VnhUVWpOQnpxS05LMW5JSGNJMngvY1VoZjhidDhnWmg3Y3BNWmtwRnJ3Tkps?=
- =?utf-8?B?ektsdzNRVERmalk5OVJtdGtNZzVCNVdwOThjUXo2ckFGUGpoeHFjNGgvRXFu?=
- =?utf-8?B?Q2hFVTJJd2ovVm51S09UU3NnTDhCc1RZakZMQ2s0T3ViS0hhM2MvdFNxTzVk?=
- =?utf-8?B?eFZsVVFCdjQ0VWVhaEMxcU5UM2ViSVpJeGF2N1k3ZVNCRmpyeVV2Y01BV3Bh?=
- =?utf-8?B?Ykl6VWlKeWdtNG9PSVdXUTNVS3RmdzlneWVEV1lzTm5MOWpsaCtpaXdBSlcw?=
- =?utf-8?B?bDZGdC85dmdLd3ptWi8raHRvN0ZhbHVDOVB4aWlMWkhJWkNheDlBQ1Q3bUo3?=
- =?utf-8?B?ZGJaZHlsaE1BZUJ4SE9qL205WWdGQURhd05nbG5WZjU5eWZOSnhqOFloVG1p?=
- =?utf-8?B?RlFzSmVtY3FENXErVEtqa0NaeFpFdmc3MUxONFcyT0M2SXVIbGhKdGcwNzhl?=
- =?utf-8?B?YlFacXNxVFZJNWV0MEF6ZSs3VnVHbVp6ZzI1OGMwREZhRjFDdmpTbWhmektu?=
- =?utf-8?B?YnFLRnBuSUVBWEh6eW5Dejl4Skx6Y2dWZ3l2KytkbXhmL1NMaTFjbG5QcThw?=
- =?utf-8?B?Nkx5M1diaGNXQkRMdDNna3NENHJ2bHRPdU9rTXhpS3E4eFJyODg5UW03aFNo?=
- =?utf-8?B?cnpHcDRyc1ZJMS9lUll3R0lER2NvZlJrbHlhdWIvQmFQb1BiRVpTZU1KakRx?=
- =?utf-8?B?dGpDZ21KT3N3WHlLKzFZS05PVGQvK3dtc1gyd3FVNVlKU2dJWlBKT0pDRndC?=
- =?utf-8?B?dUhqRGR1cmdHRG5sbFhjNzBQeDlKN1RNT3JNMjdwbUNmRnhteldZblBzUUpV?=
- =?utf-8?B?ZjZySVJDK0pJc2t5Rk40QktiT3ZLK3laZHBnR01vaG1TS0Q4VFphaVlHZ3JD?=
- =?utf-8?B?eWwxZEdCbnVpVWtGZFo3OExER3liSGFmNEVPK0dMUU8wSS9nNVg4WVp5YjUy?=
- =?utf-8?B?V1JQOEcvdkNBdE52OFBxRTR6cmxZZ3NoWWcrNDRqSnJhZDlta1hDVTNzWUpF?=
- =?utf-8?Q?9vtftW6V8p3DRU9D/nBIHP1yo?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67d7d284-6c80-43eb-47e8-08dddf4765d3
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3414.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 17:39:50.2513
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VqdTf2A/fuPUVx2XLuJRn+aqPxvc62gZeNupvxpjxyW/LwRiQFwMjqBfXtwfom7k
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR01MB8583
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 8/19/2025 1:16 PM, Chuck Lever wrote:
-> On 8/19/25 12:58 PM, Tom Talpey wrote:
->> On 8/19/2025 12:08 PM, Chuck Lever wrote:
->>> On 8/19/25 12:03 PM, Tom Talpey wrote:
->>>> On 8/11/2025 4:35 PM, Chuck Lever wrote:
->>>>> From: Chuck Lever <chuck.lever@oracle.com>
->>>>>
->>>>> Reduce the per-connection footprint in the host's and RNIC's memory
->>>>> management TLBs by combining groups of a connection's Receive
->>>>> buffers into fewer IOVAs.
->>>>
->>>> This is an interesting and potentially useful approach. Keeping
->>>> the iova count (==1) reduces the size of work requests and greatly
->>>> simplifies processing.
->>>>
->>>> But how large are the iova's currently? RPCRDMA_DEF_INLINE_THRESH
->>>> is just 4096, which would mean typically <= 2 iova's. The max is
->>>> arbitrarily but consistently 64KB, is this complexity worth it?
->>>
->>> The pool's shard size is RPCRDMA_MAX_INLINE_THRESH, or 64KB. That's the
->>> largest inline threshold this implementation allows.
->>>
->>> The default inline threshold is 4KB, so one shared can hold up to
->>> sixteen 4KB Receive buffers. The default credit limit is 64, plus 8
->>> batch overflow, so 72 Receive buffers total per connection.
->>>
->>>
->>>> And, allocating large contiguous buffers would seem to shift the
->>>> burden to kmalloc and/or the IOMMU, so it's not free, right?
->>>
->>> Can you elaborate on what you mean by "burden" ?
->>
->> Sure, it's that somebody has to manage the iova scatter/gather
->> segments.
->>
->> Using kmalloc or its moral equivalent offers a contract that the
->> memory returned is physically contiguous, 1 segment. That's
->> gonna scale badly.
-> 
-> I'm still not sure what's not going to scale. We're already using
-> kmalloc today, one per Receive buffer. I'm making it one kmalloc per
-> shard (which can contain more than a dozen Receive buffers).
+When a listener is added, a part of creation of transport also registers
+program/port with rpcbind. However, when the listener is removed,
+while transport goes away, rpcbind still has the entry for that
+port/type.
 
+When deleting the transport, unregister with rpcbind when appropriate.
 
-Sorry - availability of free contiguous memory (pages). Over
-time, fragmentation and demand may limit this or at least make
-it more costly/precious.
+---v2 created a new xpt_flag XPT_RPCB_UNREG to mark TCP and UDP
+transport and at xprt destroy send rpcbind unregister if flag set.
 
->> Using the IOMMU, when available, stuffs the s/g list into its
->> hardware. Simple at the verb layer (again 1 segment) but uses
->> the shared hardware resource to provide it.
->>
->> Another approach might be to use fast-register for the receive
->> buffers, instead of ib_register_mr on the privileged lmr. This
->> would be a page list with first-byte-offset and length, which
->> would put it the adapter's TPT instead of the PCI-facing IOMMU.
->> The fmr's would registerd only once, unlike the fmr's used for
->> remote transfers, so the cost would remain low. And fmr's typically
->> support 16 segments minimum, so no restriction there.
-> 
-> I can experiment with fast registration. The goal of this work is to
-> reduce the per-connection hardware footprint.
-> 
-> 
->> My point is that it seems unnecessary somehow in the RPCRDMA
->> layer.
-> 
-> Well, if this effort is intriguing to others, it can certainly be moved
-> into the RDMA core. I already intend to convert the RPC/RDMA client
-> Receive code to use it too.
+Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: d093c9089260 ("nfsd: fix management of listener transports")
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ include/linux/sunrpc/svc_xprt.h |  3 +++
+ net/sunrpc/svc_xprt.c           | 13 +++++++++++++
+ net/sunrpc/svcsock.c            |  2 ++
+ 3 files changed, 18 insertions(+)
 
-Not sure. The SMBdirect code doesn't need it, because it uses
-somewhat small receive buffers that are much smaller than 4KB.
-Block protocols probably not.
-
-I sort-of think this is a special requirement of the rpcrdma
-protocol, which was architected in part to preserve older xdr
-code by hiding RDMA from the RPC consumer and therefore segmenting
-almost everything. But there may be other reasons to consider this,
-need to ponder that a bit.
-
->> But, that's just my intuition. Finding some way to measure
->> any benefit (performance, setup overhead, scalbility, ...) would
->> be certainly be useful.
-> 
-> That is a primary purpose of me posting this RFC. As stated in the patch
-> description, I would like some help quantifying the improvement (if
-> there is any).
-I'll ponder that too. There are potential benefits at several
-layers, this makes things tricky.
-
-Tom.
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index 369a89aea186..2b886f7eb295 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -104,6 +104,9 @@ enum {
+ 				 * it has access to.  It is NOT counted
+ 				 * in ->sv_tmpcnt.
+ 				 */
++	XPT_RPCB_UNREG,		/* transport that needs unregistering
++				 * with rpcbind (TCP, UDP) on destroy
++				 */
+ };
+ 
+ /*
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 8b1837228799..b800d704d807 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -1014,6 +1014,19 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
+ 	struct svc_serv	*serv = xprt->xpt_server;
+ 	struct svc_deferred_req *dr;
+ 
++	/* unregister with rpcbind for when transport type is TCP or UDP.
++	 */
++	if (test_bit(XPT_RPCB_UNREG, &xprt->xpt_flags)) {
++		struct svc_sock *svsk = container_of(xprt, struct svc_sock,
++						     sk_xprt);
++		struct socket *sock = svsk->sk_sock;
++
++		if (svc_register(serv, xprt->xpt_net, sock->sk->sk_family,
++				 sock->sk->sk_protocol, 0) < 0)
++			pr_warn("failed to unregister %s with rpcbind\n",
++				xprt->xpt_class->xcl_name);
++	}
++
+ 	if (test_and_set_bit(XPT_DEAD, &xprt->xpt_flags))
+ 		return;
+ 
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index c0d5a27ba674..7b90abc5cf0e 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -836,6 +836,7 @@ static void svc_udp_init(struct svc_sock *svsk, struct svc_serv *serv)
+ 	/* data might have come in before data_ready set up */
+ 	set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+ 	set_bit(XPT_CHNGBUF, &svsk->sk_xprt.xpt_flags);
++	set_bit(XPT_RPCB_UNREG, &svsk->sk_xprt.xpt_flags);
+ 
+ 	/* make sure we get destination address info */
+ 	switch (svsk->sk_sk->sk_family) {
+@@ -1350,6 +1351,7 @@ static void svc_tcp_init(struct svc_sock *svsk, struct svc_serv *serv)
+ 	if (sk->sk_state == TCP_LISTEN) {
+ 		strcpy(svsk->sk_xprt.xpt_remotebuf, "listener");
+ 		set_bit(XPT_LISTENER, &svsk->sk_xprt.xpt_flags);
++		set_bit(XPT_RPCB_UNREG, &svsk->sk_xprt.xpt_flags);
+ 		sk->sk_data_ready = svc_tcp_listen_data_ready;
+ 		set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
+ 	} else {
+-- 
+2.47.1
 
 
