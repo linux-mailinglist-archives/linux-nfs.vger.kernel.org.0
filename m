@@ -1,762 +1,409 @@
-Return-Path: <linux-nfs+bounces-13778-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13779-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D77CBB2CA3A
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 19:01:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2135B2CA4A
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 19:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37FE95A26AD
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 16:59:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB0827B7E7B
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Aug 2025 17:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07DE52C3276;
-	Tue, 19 Aug 2025 16:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A163C2D8DD4;
+	Tue, 19 Aug 2025 17:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDmKOJRJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2091.outbound.protection.outlook.com [40.107.96.91])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040862C3256;
-	Tue, 19 Aug 2025 16:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.91
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755622747; cv=fail; b=S3xWgTUHzKyDlSKrV8TH8aOpm1y9LYdcKQy1kZjaWmAilnwJEMIZVXWOiG2R3lXxWBe1pmX0htjRwVBnXOQr7+DhSuMultgnHzhiUkHnDT5sm85MocIMyOTfq5sBPtnGQFAPGtDOs0yB6PuOOk++uh9srBxl92NdxlY768UqP8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755622747; c=relaxed/simple;
-	bh=T4CBV2Phij4M4Q4sK7n1oX/ztUVV1dqjbPCrfTj0BOE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ac6/j3Zijds/Nsn0DCjDC6Yp7uteVhVUVRorTEEtxUjxfyEUDKJ+94u3O4PPutDnAiN9425xhUsePYE/qunhDX5Aip5Cw0G38c/VRQkexJOPT0b0JCGDk2eK/p2U8+5LGMhYBffFHkEwssEYQWnHb8FUaFkRQGPuyN4XvM5yhS4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.96.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TaYwxvMLonJ1bixgp0FCFer5oIVVoVkatiDSrZYtrLzHg/d6sU366n+c+V8xsKk+YZsjtGN9fpGFLczdRcW0BDKboFYnI8vaS1gBcUK+y/WFz8FZknpq2xY8gRsNMX8yuFjaP+iWtfkMVZkjIkEE6uxR+c7Y1RbdGbcmn6Iji5ngn0xNPlWY2SVdLslkovRLVqXlo46SN7iHlPXdcUEtJROJgUvB48ITmzcz2zzCb04v233aFtZuQCEBk9lSCVcb5OpN3LO+UbX294N5zVBTV44fSh0pUWKsvlx0Cr1OY3QkIYfivkI9DZKza7KUZnqE1F3ssGwYF/F9mEBsp68btA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BOoXBTOZ0ulzQt7GqyF9RhfuRs2aHtHSLMjzad7N96U=;
- b=KJBGNSg2Qms89HyoQ1Mrc4Y3WKN+laE8hbUr999o324MJ51eVSSUpq4TODk64gKf5KUo5+Q7YfXjpnOrvkEAzyq9czhNXyTmiYrSIWGkycEP3o+jy9nzOEMIpyl6Wjom5kahLIo+g/Je9T2rbjPYHN1nSL2Lp1p5D+EoCgeIWFPBHp4VqvU3u5wfYNQvE8cVor3JXU0H3ZPMt7y5tnU5U2P7A585Wx8ZvJA9CwoziLkKklQnndz6ILhGLc6Hygsvp3808wQzDPDpizbBdoK9AO+alEDqoSBi1S5j0KSdsoXm/Oz+5Ocj6KcKaGw9EuOWJBUoEJ+l6npA1d6QokAzBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from DM5PR0102MB3414.prod.exchangelabs.com (2603:10b6:4:a8::22) by
- SA1PR01MB9107.prod.exchangelabs.com (2603:10b6:806:458::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9031.16; Tue, 19 Aug 2025 16:59:02 +0000
-Received: from DM5PR0102MB3414.prod.exchangelabs.com
- ([fe80::cc85:45b5:e6fe:e2db]) by DM5PR0102MB3414.prod.exchangelabs.com
- ([fe80::cc85:45b5:e6fe:e2db%5]) with mapi id 15.20.9031.021; Tue, 19 Aug 2025
- 16:59:02 +0000
-Message-ID: <383ea66a-8b0e-4b90-98c7-69a737c23f82@talpey.com>
-Date: Tue, 19 Aug 2025 12:58:59 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] svcrdma: Introduce Receive buffer arenas
-To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
- linux-rdma@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>
-References: <20250811203539.1702-1-cel@kernel.org>
- <a1ce98e1-83b6-45c4-bde0-c4b71be67868@talpey.com>
- <1cea814e-8be3-4bf9-ae3b-5bf21eae0a3c@kernel.org>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <1cea814e-8be3-4bf9-ae3b-5bf21eae0a3c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0097.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::12) To DM5PR0102MB3414.prod.exchangelabs.com
- (2603:10b6:4:a8::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9E01E47BA
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Aug 2025 17:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755623461; cv=none; b=QGUHEYb/rTIac3mdi/GjDa1Zjwpdhw9sBxrBb7rCn68Ojjv2A6xSdWkI+h8GRgXMFRrhxMhTSmwM37BIQoaDOWXJlSWCU1i9525+NyuVtf9AJCYGD1V/GlHmO4ns+NzBBrkUhTSs+6EBFwKp4Hd3FQQRvtfiOPX6fVRwY8QAEBk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755623461; c=relaxed/simple;
+	bh=bqa8/TyPIB4o17aNojQhO6XddXifDSM5dqwCCfsvEBc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=R9IVQ1IRyXqmalopjqkIyf9v0roblQcQZiY//Jck3Od0ReTxyzl3gcMroH1WY84GvlunVcSM2sBLGHYGdtbCxtCkyEOW7BJQ72AEs4Kb4QJigBhm+aWO6zQp9+zd87lEObudLBPn7G6bzG58PwcGxGWPK5hrIxDVfCJSA4lrd0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDmKOJRJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFF9C4CEF1;
+	Tue, 19 Aug 2025 17:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755623461;
+	bh=bqa8/TyPIB4o17aNojQhO6XddXifDSM5dqwCCfsvEBc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=HDmKOJRJNfh+m/crL9dZfKxUkRrfwr++iI9SE881OV73OWBVZ6brLQgvPw0eU91Z2
+	 cDNaxHBCfz+zzN97I/JVvual7v7INdw3a2SHaU+Cs9QKUVLtS3WuyN9LtyuBR43BJb
+	 rBU8GA96On2Jd9uwwWExma3ZPNU5uFFZNGuBkDWBhznwZ7E4utKGZiHeiW4hG+9vh7
+	 yUl6O2CZdVsUay0R2VEql877YdFbEtNCoDjvUXfYkLumoOKocPWmNPwLvzYVmsNZHJ
+	 8YUf1KXo80GKcbcHLwaDhrdqOBNgISeNlMlnk1IyumJeMZxeuprDs153drT63PpXo1
+	 XzRHf3S2ZD6Lg==
+Message-ID: <91cdd62fb2c8c4e5632ae8d1f830451577d6c3f1.camel@kernel.org>
+Subject: Re: parts of pages on NFS being replaced by swaths of NULs
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Joe
+ Quanaim <jdq@meta.com>, Andrew Steffen <aksteffen@meta.com>
+Date: Tue, 19 Aug 2025 13:10:59 -0400
+In-Reply-To: <ce7e7d92581a2d447f7c5e70b280431528d289aa.camel@kernel.org>
+References: <1c42a7fd9677ad1aa9a3a53eda738b3a6da3728e.camel@kernel.org>
+					 <752db17aff35a92b79e4c7bd3003ed890fe91403.camel@kernel.org>
+				 <be7114cedde5867041dda00562beebded4cdce9e.camel@kernel.org>
+			 <e583450b5d0ccc5d82fc383f58fc4f02495f5c2c.camel@kernel.org>
+		 <972c7790fa69cc64a591b71fcc7a40b2cd477beb.camel@kernel.org>
+	 <ce7e7d92581a2d447f7c5e70b280431528d289aa.camel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3414:EE_|SA1PR01MB9107:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56ea692f-7718-4eec-3e12-08dddf41b295
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TUJBL0xMTVJoV0Q3STFPWGNsVkRXNkxhTFAxZTl0SVh3VTVKMDQxZm5yQy9Y?=
- =?utf-8?B?ZHJaeVI5SXUwNml6Mnk2SGJmWU8rY21HT1VZc2xzYU5DQmxkTU1UUSttV3dP?=
- =?utf-8?B?aTY5MlMzSmdBWjU1aDF4TUpjZ2hEN01udHd3SlBzWmVVMWhiYVhkUUFBSjBH?=
- =?utf-8?B?VTJPckpIZFdDd3psUFRvQTVBNU54ZE5Ia0Z3d1JuMHRSRUtOdjBUT213Wko2?=
- =?utf-8?B?Y3BkMnVBUzVzUmpyQnVXako1V3ltZGJqbGJSejNSZGFldTZHZ1FPMFhUK1NC?=
- =?utf-8?B?VkY2c3hSS0ZUL05wcjRRVzRuM3ZLRFRGTWdJK280Skk4WmdSWXR6ZGZrOSt0?=
- =?utf-8?B?YjNrZm5YaG1jQUNaU010ejhrWkQ3SVU1YzlkVngvdHRXWGdyS2VpaytUYytJ?=
- =?utf-8?B?QkxPWjVyYWJiWm8renhaOWtCcDRLQ0g3SFN0QTdkMVZUZ2xkb3Q2S1RmR1BW?=
- =?utf-8?B?YnhVSjI3dmJFV0JhYlRJdXFhL3pLOXFxekVoRWlucDl1TkhuZk45QnRqVUx2?=
- =?utf-8?B?SElJVUpaZVF1cnVXamlFbkxubm1Bd3RVK3hEWTBLT1ZkbVdaTmxhcy9VdkJX?=
- =?utf-8?B?VjZKR3NGb0FGWU9wZndhano5YkxIMStRS3JXNm5mZTkrcWdqZ3NrQ0FMWWFH?=
- =?utf-8?B?NkFhVmJpZmdBVzdubC9aNjR6YzEwdWw4N1Zuak1IM1NvS2JLODR4UzJsQi9M?=
- =?utf-8?B?MVRzdmU5VzdTVG85TDJxSlhIYlM2VzZvR2FzNWJ2T0I1empveE4reWVwaVNF?=
- =?utf-8?B?Nys0dkxJL21VcG4xNituTDY4N3BDSHdRRFF6OG9VK3JGS3c3c25qM0VnVVJR?=
- =?utf-8?B?Rkc0aHA1MWZpZ05yUERBL2hwTjNIaEdFaVN2SExNdDZ1WDhDRkNJZ3hmWnV1?=
- =?utf-8?B?Q3Y3WURQMzhWZ0FZWjNPL2lTNVl3Rm9uQkZJV0czU0hvMXNFZ3RpZDRaUjNF?=
- =?utf-8?B?T3ppOXlid21ZenJKNGxlZSs4aFNack9UUjFIV0pvMm1MVUI0L0pXU3MyWGJ3?=
- =?utf-8?B?K2xkUjBabDlhZWdCTEM1VHAxK0hEQThHOVFQbU5hK0dBakg3MEtnUmdzZnhz?=
- =?utf-8?B?T3YyTnhJWkprcUVQL2Mza3pRaTBXdkhJekZJajkrTCtNY3Nma1dHY2NDTlBo?=
- =?utf-8?B?cGVDajhvVGh3NmFoUHV2ZnZYd1Bnb1BxbTZLam9TeFpKT0luaEFNajFHM0dP?=
- =?utf-8?B?S2NncnIvVjlKUFNwbXU5UHRROWpUNGFwRHVvUENhUExOdVRlY25rL3pFV1Vi?=
- =?utf-8?B?ZElic2dUdkxUbUE0aUlmYTdkbFlhTURzU29aTmE2aTRVUW1zL1VZSjQ4MHZP?=
- =?utf-8?B?VWd1TDRweU43ekorM1FFSVdteFlTMmN1eDg2Mi83UG9Xdkp5dHhIVXBzN2pK?=
- =?utf-8?B?aDY4MGZmZnJWV3pZM0Z5YVc0RnBwM1V3cWFRa2hueEpOODdrWE5MV2dlL1Fp?=
- =?utf-8?B?ek5LSzcxS2xBZ0FHS2hWUU5hTEZuWlVYbjB0ZTExWC9iUFU4TU9RNVBaTGhJ?=
- =?utf-8?B?VVNmcUNPc0FQRzdMRWM2TzNlZnZTenpFUzhIcnpJc2FWNG5lam1VQnljcWFX?=
- =?utf-8?B?U09pWit4UW5wOS93UUdNdUJwZWZ5bEhRMW9Hd1dkeURZYytSYjE1UEdBU2w2?=
- =?utf-8?B?QTRIQ1VNUlY0ZnBDeXBJcnpTOHdPK3E0akxBTG5pb0V5SjRYV1hOL24yU3dr?=
- =?utf-8?B?VUNUQ3ZMbWxnbklyWUlLODlYQnJHTGZ6bWxwQTdqdW9qODJ3N3UwbDhUR1dM?=
- =?utf-8?B?bENsdlFQaThidGFUaS9Zbm9IZmRub1pVNUZQWER4dDdjTnVKN0pMcWJLRTFr?=
- =?utf-8?B?MkZJUkd6c2hrSUp5Mlp0VjkxQXd3eWZDOGRJNVBEWEpjbHYrZWZQNU56WmZ3?=
- =?utf-8?B?dEpBMnovODNnYXc1NmZLWkthd204ZndjeFpXRWtJd0hVcnc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3414.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aTJGSXBQa3MwamtNUWNISGdhdUVOemZVWktwQkFDek1KWklSOXFhUGthemNG?=
- =?utf-8?B?RXIya0Q3dTlzMnRUVmYyemU5a1VkdFVPQVcrVTZNbHQ5em9HSHJsckE5ZHZm?=
- =?utf-8?B?NzJHQm5iYWwwRVJPblVSUHY2RjB0RE1OZ1ZGVUFmMUVtWGNialIzZ3BBV0c2?=
- =?utf-8?B?YzZya0crblZnZnlDRHdQMFkrUS9QT0NGZTExZnBNbTg1dWtMTEZMVGpvdEwx?=
- =?utf-8?B?ZWcxc0lnamt0dVRreFdWdnVPK0xEQ0kxMmN2OVYwL0lNRDcvUitmR2R2VkF6?=
- =?utf-8?B?aUFOTXBIVjdWSndjalhBMXNWT1RJYXBzS2I0MHJ6eHRjTVVlcXE5WmVsMGZJ?=
- =?utf-8?B?bWRCOFpoZzg1N21DZFMvVWRNK1ZRdFNmVlF2Q0JDNzBQTklNUzF3WmVOVzNM?=
- =?utf-8?B?UGJFMndQdllIWDBBcjV4eS9OY3g2K0hSa3hmekxERlowQTRqTVVmUHBLdmlh?=
- =?utf-8?B?RkFWZFV4N0VuYmtSdDRPRmtIS0ZuMUtGZ3JhTW1nMHFJU01lSzdNdElpZm5i?=
- =?utf-8?B?UExSdGV1RXI1MEhBcGtOT0RJTzNpc2xxMkppeC9sK1FmSk80OWhvbW9qUkU2?=
- =?utf-8?B?Vmhsc21oM0RmRkdsZWd4djNHdmwrOURVOXh5UDdGNk8rQ3ZnUExJMEJuRzVk?=
- =?utf-8?B?RXFheFROQmYwVUlKTGRXV2hrYTRJdEFyTm5nbndFNmpkdlN2VWlra21qcHZM?=
- =?utf-8?B?VzVDbVhIYTVtbUwzMGdvVDlUWEhuNEZYd1VGazZibU9tQUV3d3R6cnZvUkpo?=
- =?utf-8?B?MVhISC9FbWU5UGo2RG51T051TzZaQk5LUGo1akFNRW5XbmN2STlaRUxsZVE5?=
- =?utf-8?B?VWtzYk5yTytadFh2VmxrY25OakQ2cHpyd0FLWlpCSjZPOG1nUHNIbFFnMDV3?=
- =?utf-8?B?SWtkM01qRlM4akhaMy94UE1waTJITjhtY1NnTnpEbUhtcXp0TEcvNTBSSklW?=
- =?utf-8?B?UE0yVXlEZ29wd3psOEQ0Zm8zd0ZRY1lkMU5HcTY3REtlbUtqMEswMGx6VjdY?=
- =?utf-8?B?OXo4MkJpS1BvR0dqeW5OUFZFdVNpZGVTdUlOTndzbXM5dGludjZBSmlOdG5Y?=
- =?utf-8?B?bkl6aVR3aC8wZGRqTDVlNVd2eS9KUUkvc252WVRyMW94aVJjWVFhRkxWckhy?=
- =?utf-8?B?TlN3WXhES3ZOUzZwdyt3c28ySkNIUkc2MisxS2p6WFFyNlFzeE5rTjZSNjlU?=
- =?utf-8?B?SXFZUVdEalNGYUlMaVp6Z3MyT2hydDgxeENDd21wWUhZOTdaRk1zdTRjcElW?=
- =?utf-8?B?ckE0VzVHWkpwa1BjTmt5WjdKZ3BMVGx2RG9nckZoT08xRDVOVG9jZHJJbWtG?=
- =?utf-8?B?UCtBa2xKd2JwdkpQbkNmWXlCRTk2blY1ZVArazI2S2U4ZTg3S2wvdXNzNmFo?=
- =?utf-8?B?elFlT1Z3Q3FzMXFSaFJPd0pJMVN1OFZrNWNIV3RKS2xhbkFEV1JWQm4rL29i?=
- =?utf-8?B?RkR3Q2VrZjU0ZEdSSWJJL0NkeWxLVUJ5STJYR0t1ZS8rdmk2WVBZSHJYc2JS?=
- =?utf-8?B?aWduUUdvR0xyTzhCbDlOd1IzRUtHOVhmQkhTcEttZ2RRYmxiRDBzMWcvTE9K?=
- =?utf-8?B?NENITWY2OEFUMFYzeWhzc21RQ2JJTkRrWVVBQ01ZL3JhN0RXUUEwK0dNblN2?=
- =?utf-8?B?TmMzMnJTaW1rTlNGSHllNzZZQUVZS2pLOUt0aW56ZEFxWDMzcnV3U1IzanAr?=
- =?utf-8?B?TlgyK29VSU5FOUl5RWptY3h1VXpFVGo5UDk2VVMyQWVHZmdsY0pqMUo3U0dI?=
- =?utf-8?B?UnBZSVZFSHZjMXZ2SDRyZkk2d204ZFJjdytucG9GTis0NGVqSG5CYkJQNUhY?=
- =?utf-8?B?d3Z3VXUvSFBYc2hYWFZGNkx3YUZKVUhrY3NMSUVTM0RSMkZNSmVyMTZ2S1Jn?=
- =?utf-8?B?Y0pWcEhkZWJNdHVodmhCNDYybW5LSDhhSC9wbjhhR0IwVDl3dWlzcytxVTh5?=
- =?utf-8?B?VUE2QkpuK3A0V2FrV2MwRnJRZEZHQ0ExTFhwQjNQSDA4RldWenhyenh0Qk5O?=
- =?utf-8?B?UWlPZDVocUMzbkJQY3BTd1ZTc3J5QUJ6ZE90V0lWazBxek94SHpuYWpWRlZF?=
- =?utf-8?B?L2g0a0VHYlBBeFdtY0NwakQxbDhtZG5nR2xGcjJJV3Nxc3l3YjEyUW1qaTh1?=
- =?utf-8?Q?R/1+oAAeyFTi5oFTodkG7RHsC?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56ea692f-7718-4eec-3e12-08dddf41b295
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3414.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2025 16:59:02.0234
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 09nqK4Pz0qEVK8O9cP1XNYWjlUeTf4mdy4K54zbtXz+02oTMkdNbP0MwhAvyK9v+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB9107
 
-On 8/19/2025 12:08 PM, Chuck Lever wrote:
-> On 8/19/25 12:03 PM, Tom Talpey wrote:
->> On 8/11/2025 4:35 PM, Chuck Lever wrote:
->>> From: Chuck Lever <chuck.lever@oracle.com>
->>>
->>> Reduce the per-connection footprint in the host's and RNIC's memory
->>> management TLBs by combining groups of a connection's Receive
->>> buffers into fewer IOVAs.
->>
->> This is an interesting and potentially useful approach. Keeping
->> the iova count (==1) reduces the size of work requests and greatly
->> simplifies processing.
->>
->> But how large are the iova's currently? RPCRDMA_DEF_INLINE_THRESH
->> is just 4096, which would mean typically <= 2 iova's. The max is
->> arbitrarily but consistently 64KB, is this complexity worth it?
-> 
-> The pool's shard size is RPCRDMA_MAX_INLINE_THRESH, or 64KB. That's the
-> largest inline threshold this implementation allows.
-> 
-> The default inline threshold is 4KB, so one shared can hold up to
-> sixteen 4KB Receive buffers. The default credit limit is 64, plus 8
-> batch overflow, so 72 Receive buffers total per connection.
-> 
-> 
->> And, allocating large contiguous buffers would seem to shift the
->> burden to kmalloc and/or the IOMMU, so it's not free, right?
-> 
-> Can you elaborate on what you mean by "burden" ?
+On Sat, 2025-08-16 at 07:51 -0700, Trond Myklebust wrote:
+> On Sat, 2025-08-16 at 09:01 -0400, Jeff Layton wrote:
+> >=20
+> > I finally caught something concrete today. I had the attached
+> > bpftrace
+> > script running while running the reproducer on a dozen or so
+> > machines,
+> > and it detected a hole in some data being written:
+> >=20
+> > -------------8<---------------
+> > Attached 2 probes
+> > Missing nfs_page: ino=3D10122173116 idx=3D2 flags=3D0x15ffff0000000029
+> > Hole: ino=3D10122173116 idx=3D3 off=3D10026 size=3D2262
+> > Prev folio: idx=3D2 flags=3D0x15ffff0000000028 pgbase=3D0 bytes=3D4096 =
+req=3D0
+> > prevreq=3D0xffff8955b2f55980
+> > -------------8<---------------
+> >=20
+> > What this tells us is that the page at idx=3D2 got submitted to
+> > nfs_do_writepage() (so it was marked dirty in the pagecache), but
+> > when
+> > it got there, folio->private was NULL and it was ignored.
+> >=20
+> > The kernel in this case is based on v6.9, so it's (just) pre-large-
+> > folio support. It has a fair number of NFS patches, but not much to
+> > this portion of the code. Most of them are are containerization
+> > fixes.
+> >=20
+> > I'm looking askance at nfs_inode_remove_request(). It does this:
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (nfs_page_group_sync_on_b=
+it(req, PG_REMOVE)) {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 struct folio *folio =3D nfs_page_to_folio(req-
+> > > wb_head);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 struct address_space *mapping =3D folio->mapping;
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 spin_lock(&mapping->i_private_lock);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if (likely(folio)) {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 folio=
+->private =3D NULL;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 folio=
+_clear_private(folio);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear=
+_bit(PG_MAPPED, &req->wb_head-
+> > > wb_flags);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 }
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&mapping->i_private_lock);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >=20
+> > If nfs_page_group_sync_on_bit() returns true, then the nfs_page gets
+> > detached from the folio. Meanwhile, if a new write request comes in
+> > just after that, nfs_lock_and_join_requests() will call
+> > nfs_cancel_remove_inode() to try to "cancel" PG_REMOVE:
+> >=20
+> > static int
+> > nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
+> > {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!test_bit(PG_REMOVE, &re=
+q->wb_flags))
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return 0;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D nfs_page_group_lock(=
+req);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return ret;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (test_and_clear_bit(PG_RE=
+MOVE, &req->wb_flags))
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 nfs_page_set_inode_ref(req, inode);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfs_page_group_unlock(req);=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
+> > }=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
+> >=20
+> > ...but that does not reattach the nfs_page to the folio. Should it?
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+>=20
+> That's not sufficient AFAICS. Does the following patch work?
+>=20
+> 8<------------------------------------------------------------
+> From fc9690dda01f001c6cd11665701394da8ebba1ab Mon Sep 17 00:00:00 2001
+> Message-ID: <fc9690dda01f001c6cd11665701394da8ebba1ab.1755355810.git.tron=
+d.myklebust@hammerspace.com>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Sat, 16 Aug 2025 07:25:20 -0700
+> Subject: [PATCH] NFS: Fix a race when updating an existing write
+>=20
+> After nfs_lock_and_join_requests() tests for whether the request is
+> still attached to the mapping, nothing prevents a call to
+> nfs_inode_remove_request() from succeeding until we actually lock the
+> page group.
+> The reason is that whoever called nfs_inode_remove_request() doesn't
+> necessarily have a lock on the page group head.
+>=20
+> So in order to avoid races, let's take the page group lock earlier in
+> nfs_lock_and_join_requests(), and hold it across the removal of the
+> request in nfs_inode_remove_request().
+>=20
+> Reported-by: Jeff Layton <jlayton@kernel.org>
+> Fixes: c3f2235782c3 ("nfs: fold nfs_folio_find_and_lock_request into nfs_=
+lock_and_join_requests")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/pagelist.c        |  9 +++++----
+>  fs/nfs/write.c           | 29 ++++++++++-------------------
+>  include/linux/nfs_page.h |  1 +
+>  3 files changed, 16 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+> index 11968dcb7243..6e69ce43a13f 100644
+> --- a/fs/nfs/pagelist.c
+> +++ b/fs/nfs/pagelist.c
+> @@ -253,13 +253,14 @@ nfs_page_group_unlock(struct nfs_page *req)
+>  	nfs_page_clear_headlock(req);
+>  }
+> =20
+> -/*
+> - * nfs_page_group_sync_on_bit_locked
+> +/**
+> + * nfs_page_group_sync_on_bit_locked - Test if all requests have @bit se=
+t
+> + * @req: request in page group
+> + * @bit: PG_* bit that is used to sync page group
+>   *
+>   * must be called with page group lock held
+>   */
+> -static bool
+> -nfs_page_group_sync_on_bit_locked(struct nfs_page *req, unsigned int bit=
+)
+> +bool nfs_page_group_sync_on_bit_locked(struct nfs_page *req, unsigned in=
+t bit)
+>  {
+>  	struct nfs_page *head =3D req->wb_head;
+>  	struct nfs_page *tmp;
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index fa5c41d0989a..8b7c04737967 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -153,20 +153,10 @@ nfs_page_set_inode_ref(struct nfs_page *req, struct=
+ inode *inode)
+>  	}
+>  }
+> =20
+> -static int
+> -nfs_cancel_remove_inode(struct nfs_page *req, struct inode *inode)
+> +static void nfs_cancel_remove_inode(struct nfs_page *req, struct inode *=
+inode)
+>  {
+> -	int ret;
+> -
+> -	if (!test_bit(PG_REMOVE, &req->wb_flags))
+> -		return 0;
+> -	ret =3D nfs_page_group_lock(req);
+> -	if (ret)
+> -		return ret;
+>  	if (test_and_clear_bit(PG_REMOVE, &req->wb_flags))
+>  		nfs_page_set_inode_ref(req, inode);
+> -	nfs_page_group_unlock(req);
+> -	return 0;
+>  }
+> =20
+>  /**
+> @@ -585,19 +575,18 @@ static struct nfs_page *nfs_lock_and_join_requests(=
+struct folio *folio)
+>  		}
+>  	}
+> =20
+> +	ret =3D nfs_page_group_lock(head);
+> +	if (ret < 0)
+> +		goto out_unlock;
+> +
+>  	/* Ensure that nobody removed the request before we locked it */
+>  	if (head !=3D folio->private) {
+> +		nfs_page_group_unlock(head);
+>  		nfs_unlock_and_release_request(head);
+>  		goto retry;
+>  	}
+> =20
+> -	ret =3D nfs_cancel_remove_inode(head, inode);
+> -	if (ret < 0)
+> -		goto out_unlock;
+> -
+> -	ret =3D nfs_page_group_lock(head);
+> -	if (ret < 0)
+> -		goto out_unlock;
+> +	nfs_cancel_remove_inode(head, inode);
+> =20
+>  	/* lock each request in the page group */
+>  	for (subreq =3D head->wb_this_page;
+> @@ -786,7 +775,8 @@ static void nfs_inode_remove_request(struct nfs_page =
+*req)
+>  {
+>  	struct nfs_inode *nfsi =3D NFS_I(nfs_page_to_inode(req));
+> =20
+> -	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+> +	nfs_page_group_lock(req);
+> +	if (nfs_page_group_sync_on_bit_locked(req, PG_REMOVE)) {
+>  		struct folio *folio =3D nfs_page_to_folio(req->wb_head);
+>  		struct address_space *mapping =3D folio->mapping;
+> =20
+> @@ -798,6 +788,7 @@ static void nfs_inode_remove_request(struct nfs_page =
+*req)
+>  		}
+>  		spin_unlock(&mapping->i_private_lock);
+>  	}
+> +	nfs_page_group_unlock(req);
+> =20
+>  	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
+>  		atomic_long_dec(&nfsi->nrequests);
+> diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
+> index 169b4ae30ff4..9aed39abc94b 100644
+> --- a/include/linux/nfs_page.h
+> +++ b/include/linux/nfs_page.h
+> @@ -160,6 +160,7 @@ extern void nfs_join_page_group(struct nfs_page *head=
+,
+>  extern int nfs_page_group_lock(struct nfs_page *);
+>  extern void nfs_page_group_unlock(struct nfs_page *);
+>  extern bool nfs_page_group_sync_on_bit(struct nfs_page *, unsigned int);
+> +extern bool nfs_page_group_sync_on_bit_locked(struct nfs_page *, unsigne=
+d int);
+>  extern	int nfs_page_set_headlock(struct nfs_page *req);
+>  extern void nfs_page_clear_headlock(struct nfs_page *req);
+>  extern bool nfs_async_iocounter_wait(struct rpc_task *, struct nfs_lock_=
+context *);
 
-Sure, it's that somebody has to manage the iova scatter/gather
-segments.
+I backported this patch to the kernel we've been using to reproduce
+this and have had the test running for almost 24 hours now. The longest
+it's taken to reproduce on this test rig is about 12 hours. So, the
+initial signs are good.
 
-Using kmalloc or its moral equivalent offers a contract that the
-memory returned is physically contiguous, 1 segment. That's
-gonna scale badly.
+The patch also looks good to me. This one took a while to track down,
+and I needed a lot of help to set up the test rig. Can you add these?
 
-Using the IOMMU, when available, stuffs the s/g list into its
-hardware. Simple at the verb layer (again 1 segment) but uses
-the shared hardware resource to provide it.
+Tested-by: Joe Quanaim <jdq@meta.com>
+Tested-by: Andrew Steffen <aksteffen@meta.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-Another approach might be to use fast-register for the receive
-buffers, instead of ib_register_mr on the privileged lmr. This
-would be a page list with first-byte-offset and length, which
-would put it the adapter's TPT instead of the PCI-facing IOMMU.
-The fmr's would registerd only once, unlike the fmr's used for
-remote transfers, so the cost would remain low. And fmr's typically
-support 16 segments minimum, so no restriction there.
+Joe and Andrew spent a lot of time getting us a reproducer.
 
-My point is that it seems unnecessary somehow in the RPCRDMA
-layer. But, that's just my intuition. Finding some way to measure
-any benefit (performance, setup overhead, scalbility, ...) would
-be certainly be useful.
+I assume we also want to send this to stable? I'm pretty sure the
+Fixes: tag is wrong. The kernel we were using didn't have that patch. I
+took a look at some earlier releases, and AFAICT, this bug has been
+present for a long time -- at least since v6.0 and probably well
+before.
 
-Tom.
-
-
->>> I don't have a good way to measure whether this approach is
->>> effective.
->>
->> I guess I'd need to see this data to be more convinced. But it does
->> seem potentially promising, at least on some RDMA provider hardware.
->>
->> Tom.
->>
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> ---
->>>    include/linux/sunrpc/svc_rdma.h         |   3 +
->>>    include/trace/events/rpcrdma.h          |  99 +++++++++++
->>>    net/sunrpc/xprtrdma/Makefile            |   2 +-
->>>    net/sunrpc/xprtrdma/pool.c              | 223 ++++++++++++++++++++++++
->>>    net/sunrpc/xprtrdma/pool.h              |  25 +++
->>>    net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |  43 ++---
->>>    6 files changed, 370 insertions(+), 25 deletions(-)
->>>    create mode 100644 net/sunrpc/xprtrdma/pool.c
->>>    create mode 100644 net/sunrpc/xprtrdma/pool.h
->>>
->>> Changes since v1:
->>> - Rename "chunks" to "shards" -- RPC/RDMA already has chunks
->>> - Replace pool's list of shards with an xarray
->>> - Implement bitmap-based shard free space management
->>> - Implement some naive observability
->>>
->>> diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/
->>> svc_rdma.h
->>> index 22704c2e5b9b..b4f3c01f1b94 100644
->>> --- a/include/linux/sunrpc/svc_rdma.h
->>> +++ b/include/linux/sunrpc/svc_rdma.h
->>> @@ -73,6 +73,8 @@ extern struct percpu_counter svcrdma_stat_recv;
->>>    extern struct percpu_counter svcrdma_stat_sq_starve;
->>>    extern struct percpu_counter svcrdma_stat_write;
->>>    +struct rpcrdma_pool;
->>> +
->>>    struct svcxprt_rdma {
->>>        struct svc_xprt      sc_xprt;        /* SVC transport structure */
->>>        struct rdma_cm_id    *sc_cm_id;        /* RDMA connection id */
->>> @@ -112,6 +114,7 @@ struct svcxprt_rdma {
->>>        unsigned long         sc_flags;
->>>        struct work_struct   sc_work;
->>>    +    struct rpcrdma_pool  *sc_recv_pool;
->>>        struct llist_head    sc_recv_ctxts;
->>>          atomic_t         sc_completion_ids;
->>> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/
->>> rpcrdma.h
->>> index e6a72646c507..8bc713082c1a 100644
->>> --- a/include/trace/events/rpcrdma.h
->>> +++ b/include/trace/events/rpcrdma.h
->>> @@ -2336,6 +2336,105 @@
->>> DECLARE_EVENT_CLASS(rpcrdma_client_register_class,
->>>    DEFINE_CLIENT_REGISTER_EVENT(rpcrdma_client_register);
->>>    DEFINE_CLIENT_REGISTER_EVENT(rpcrdma_client_unregister);
->>>    +TRACE_EVENT(rpcrdma_pool_create,
->>> +    TP_PROTO(
->>> +        unsigned int poolid,
->>> +        size_t bufsize
->>> +    ),
->>> +
->>> +    TP_ARGS(poolid, bufsize),
->>> +
->>> +    TP_STRUCT__entry(
->>> +        __field(unsigned int, poolid)
->>> +        __field(size_t, bufsize)
->>> +    ),
->>> +
->>> +    TP_fast_assign(
->>> +        __entry->poolid = poolid;
->>> +        __entry->bufsize = bufsize;
->>> +    ),
->>> +
->>> +    TP_printk("poolid=%u bufsize=%zu bytes",
->>> +        __entry->poolid, __entry->bufsize
->>> +    )
->>> +);
->>> +
->>> +TRACE_EVENT(rpcrdma_pool_destroy,
->>> +    TP_PROTO(
->>> +        unsigned int poolid
->>> +    ),
->>> +
->>> +    TP_ARGS(poolid),
->>> +
->>> +    TP_STRUCT__entry(
->>> +        __field(unsigned int, poolid)
->>> +    ),
->>> +
->>> +    TP_fast_assign(
->>> +        __entry->poolid = poolid;),
->>> +
->>> +    TP_printk("poolid=%u",
->>> +        __entry->poolid
->>> +    )
->>> +);
->>> +
->>> +DECLARE_EVENT_CLASS(rpcrdma_pool_shard_class,
->>> +    TP_PROTO(
->>> +        unsigned int poolid,
->>> +        u32 shardid
->>> +    ),
->>> +
->>> +    TP_ARGS(poolid, shardid),
->>> +
->>> +    TP_STRUCT__entry(
->>> +        __field(unsigned int, poolid)
->>> +        __field(u32, shardid)
->>> +    ),
->>> +
->>> +    TP_fast_assign(
->>> +        __entry->poolid = poolid;
->>> +        __entry->shardid = shardid;
->>> +    ),
->>> +
->>> +    TP_printk("poolid=%u shardid=%u",
->>> +        __entry->poolid, __entry->shardid
->>> +    )
->>> +);
->>> +
->>> +#define DEFINE_RPCRDMA_POOL_SHARD_EVENT(name)                \
->>> +    DEFINE_EVENT(rpcrdma_pool_shard_class, name,            \
->>> +    TP_PROTO(                            \
->>> +        unsigned int poolid,                    \
->>> +        u32 shardid                        \
->>> +    ),                                \
->>> +    TP_ARGS(poolid, shardid))
->>> +
->>> +DEFINE_RPCRDMA_POOL_SHARD_EVENT(rpcrdma_pool_shard_new);
->>> +DEFINE_RPCRDMA_POOL_SHARD_EVENT(rpcrdma_pool_shard_free);
->>> +
->>> +TRACE_EVENT(rpcrdma_pool_buffer,
->>> +    TP_PROTO(
->>> +        unsigned int poolid,
->>> +        const void *buffer
->>> +    ),
->>> +
->>> +    TP_ARGS(poolid, buffer),
->>> +
->>> +    TP_STRUCT__entry(
->>> +        __field(unsigned int, poolid)
->>> +        __field(const void *, buffer)
->>> +    ),
->>> +
->>> +    TP_fast_assign(
->>> +        __entry->poolid = poolid;
->>> +        __entry->buffer = buffer;
->>> +    ),
->>> +
->>> +    TP_printk("poolid=%u buffer=%p",
->>> +        __entry->poolid, __entry->buffer
->>> +    )
->>> +);
->>> +
->>>    #endif /* _TRACE_RPCRDMA_H */
->>>      #include <trace/define_trace.h>
->>> diff --git a/net/sunrpc/xprtrdma/Makefile b/net/sunrpc/xprtrdma/Makefile
->>> index 3232aa23cdb4..f69456dffe87 100644
->>> --- a/net/sunrpc/xprtrdma/Makefile
->>> +++ b/net/sunrpc/xprtrdma/Makefile
->>> @@ -1,7 +1,7 @@
->>>    # SPDX-License-Identifier: GPL-2.0
->>>    obj-$(CONFIG_SUNRPC_XPRT_RDMA) += rpcrdma.o
->>>    -rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o \
->>> +rpcrdma-y := transport.o rpc_rdma.o verbs.o frwr_ops.o ib_client.o
->>> pool.o \
->>>        svc_rdma.o svc_rdma_backchannel.o svc_rdma_transport.o \
->>>        svc_rdma_sendto.o svc_rdma_recvfrom.o svc_rdma_rw.o \
->>>        svc_rdma_pcl.o module.o
->>> diff --git a/net/sunrpc/xprtrdma/pool.c b/net/sunrpc/xprtrdma/pool.c
->>> new file mode 100644
->>> index 000000000000..e285c3e9c38e
->>> --- /dev/null
->>> +++ b/net/sunrpc/xprtrdma/pool.c
->>> @@ -0,0 +1,223 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Copyright (c) 2025, Oracle and/or its affiliates.
->>> + *
->>> + * Pools for RPC-over-RDMA Receive buffers.
->>> + *
->>> + * A buffer pool attempts to conserve both the number of DMA mappings
->>> + * and the device's IOVA space by collecting small buffers together
->>> + * into a shard that has a single DMA mapping.
->>> + *
->>> + * API Contract:
->>> + *  - Buffers contained in one rpcrdma_pool instance are the same
->>> + *    size (rp_bufsize), no larger than RPCRDMA_MAX_INLINE_THRESH
->>> + *  - Buffers in one rpcrdma_pool instance are mapped using the same
->>> + *    DMA direction
->>> + *  - Buffers in one rpcrdma_pool instance are automatically released
->>> + *    when the instance is destroyed
->>> + *
->>> + * Future work:
->>> + *   - Manage pool resources by reference count
->>> + */
->>> +
->>> +#include <linux/list.h>
->>> +#include <linux/xarray.h>
->>> +#include <linux/sunrpc/svc_rdma.h>
->>> +
->>> +#include <rdma/ib_verbs.h>
->>> +
->>> +#include "xprt_rdma.h"
->>> +#include "pool.h"
->>> +
->>> +#include <trace/events/rpcrdma.h>
->>> +
->>> +/*
->>> + * An idr would give near perfect pool ID uniqueness, but for
->>> + * the moment the pool ID is used only for observability, not
->>> + * correctness.
->>> + */
->>> +static atomic_t rpcrdma_pool_id;
->>> +
->>> +struct rpcrdma_pool {
->>> +    struct xarray        rp_xa;
->>> +    struct ib_device    *rp_device;
->>> +    size_t            rp_shardsize;    // in bytes
->>> +    size_t            rp_bufsize;    // in bytes
->>> +    enum dma_data_direction    rp_direction;
->>> +    unsigned int        rp_bufs_per_shard;
->>> +    unsigned int        rp_pool_id;
->>> +};
->>> +
->>> +struct rpcrdma_pool_shard {
->>> +    u8            *pc_cpu_addr;
->>> +    u64            pc_mapped_addr;
->>> +    unsigned long        *pc_bitmap;
->>> +};
->>> +
->>> +static struct rpcrdma_pool_shard *
->>> +rpcrdma_pool_shard_alloc(struct rpcrdma_pool *pool, gfp_t flags)
->>> +{
->>> +    struct rpcrdma_pool_shard *shard;
->>> +    size_t bmap_size;
->>> +
->>> +    shard = kmalloc(sizeof(*shard), flags);
->>> +    if (!shard)
->>> +        goto fail;
->>> +
->>> +    bmap_size = BITS_TO_LONGS(pool->rp_bufs_per_shard) *
->>> sizeof(unsigned long);
->>> +    shard->pc_bitmap = kzalloc(bmap_size, flags);
->>> +    if (!shard->pc_bitmap)
->>> +        goto free_shard;
->>> +
->>> +    /*
->>> +     * For good NUMA awareness, allocate the shard's I/O buffer
->>> +     * on the NUMA node that the underlying device is affined to.
->>> +     */
->>> +    shard->pc_cpu_addr = kmalloc_node(pool->rp_shardsize, flags,
->>> +                      ibdev_to_node(pool->rp_device));
->>> +    if (!shard->pc_cpu_addr)
->>> +        goto free_bitmap;
->>> +    shard->pc_mapped_addr = ib_dma_map_single(pool->rp_device,
->>> +                          shard->pc_cpu_addr,
->>> +                          pool->rp_shardsize,
->>> +                          pool->rp_direction);
->>> +    if (ib_dma_mapping_error(pool->rp_device, shard->pc_mapped_addr))
->>> +        goto free_iobuf;
->>> +
->>> +    return shard;
->>> +
->>> +free_iobuf:
->>> +    kfree(shard->pc_cpu_addr);
->>> +free_bitmap:
->>> +    kfree(shard->pc_bitmap);
->>> +free_shard:
->>> +    kfree(shard);
->>> +fail:
->>> +    return NULL;
->>> +}
->>> +
->>> +static void
->>> +rpcrdma_pool_shard_free(struct rpcrdma_pool *pool,
->>> +            struct rpcrdma_pool_shard *shard)
->>> +{
->>> +    ib_dma_unmap_single(pool->rp_device, shard->pc_mapped_addr,
->>> +                pool->rp_shardsize, pool->rp_direction);
->>> +    kfree(shard->pc_cpu_addr);
->>> +    kfree(shard->pc_bitmap);
->>> +    kfree(shard);
->>> +}
->>> +
->>> +/**
->>> + * rpcrdma_pool_create - Allocate and initialize an rpcrdma_pool
->>> instance
->>> + * @args: pool creation arguments
->>> + * @flags: GFP flags used during pool creation
->>> + *
->>> + * Returns a pointer to an opaque rpcrdma_pool instance or
->>> + * NULL. If a pool instance is returned, caller must free the
->>> + * returned instance using rpcrdma_pool_destroy().
->>> + */
->>> +struct rpcrdma_pool *
->>> +rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags)
->>> +{
->>> +    struct rpcrdma_pool *pool;
->>> +
->>> +    pool = kmalloc(sizeof(*pool), flags);
->>> +    if (!pool)
->>> +        return NULL;
->>> +
->>> +    xa_init_flags(&pool->rp_xa, XA_FLAGS_ALLOC);
->>> +    pool->rp_device = args->pa_device;
->>> +    pool->rp_shardsize = RPCRDMA_MAX_INLINE_THRESH;
->>> +    pool->rp_bufsize = args->pa_bufsize;
->>> +    pool->rp_direction = args->pa_direction;
->>> +    pool->rp_bufs_per_shard = pool->rp_shardsize / pool->rp_bufsize;
->>> +    pool->rp_pool_id = atomic_inc_return(&rpcrdma_pool_id);
->>> +
->>> +    trace_rpcrdma_pool_create(pool->rp_pool_id, pool->rp_bufsize);
->>> +    return pool;
->>> +}
->>> +
->>> +/**
->>> + * rpcrdma_pool_destroy - Release resources owned by @pool
->>> + * @pool: buffer pool instance that will no longer be used
->>> + *
->>> + * This call releases all buffers in @pool that were allocated
->>> + * via rpcrdma_pool_buffer_alloc().
->>> + */
->>> +void
->>> +rpcrdma_pool_destroy(struct rpcrdma_pool *pool)
->>> +{
->>> +    struct rpcrdma_pool_shard *shard;
->>> +    unsigned long index;
->>> +
->>> +    trace_rpcrdma_pool_destroy(pool->rp_pool_id);
->>> +
->>> +    xa_for_each(&pool->rp_xa, index, shard) {
->>> +        trace_rpcrdma_pool_shard_free(pool->rp_pool_id, index);
->>> +        xa_erase(&pool->rp_xa, index);
->>> +        rpcrdma_pool_shard_free(pool, shard);
->>> +    }
->>> +
->>> +    xa_destroy(&pool->rp_xa);
->>> +    kfree(pool);
->>> +}
->>> +
->>> +/**
->>> + * rpcrdma_pool_buffer_alloc - Allocate a buffer from @pool
->>> + * @pool: buffer pool from which to allocate the buffer
->>> + * @flags: GFP flags used during this allocation
->>> + * @cpu_addr: CPU address of the buffer
->>> + * @mapped_addr: mapped address of the buffer
->>> + *
->>> + * Return values:
->>> + *   %true: @cpu_addr and @mapped_addr are filled in with a DMA-
->>> mapped buffer
->>> + *   %false: No buffer is available
->>> + *
->>> + * When rpcrdma_pool_buffer_alloc() is successful, the returned
->>> + * buffer is freed automatically when the buffer pool is released
->>> + * by rpcrdma_pool_destroy().
->>> + */
->>> +bool
->>> +rpcrdma_pool_buffer_alloc(struct rpcrdma_pool *pool, gfp_t flags,
->>> +              void **cpu_addr, u64 *mapped_addr)
->>> +{
->>> +    struct rpcrdma_pool_shard *shard;
->>> +    u64 returned_mapped_addr;
->>> +    void *returned_cpu_addr;
->>> +    unsigned long index;
->>> +    u32 id;
->>> +
->>> +    xa_for_each(&pool->rp_xa, index, shard) {
->>> +        unsigned int i;
->>> +
->>> +        returned_cpu_addr = shard->pc_cpu_addr;
->>> +        returned_mapped_addr = shard->pc_mapped_addr;
->>> +        for (i = 0; i < pool->rp_bufs_per_shard; i++) {
->>> +            if (!test_and_set_bit(i, shard->pc_bitmap)) {
->>> +                returned_cpu_addr += i * pool->rp_bufsize;
->>> +                returned_mapped_addr += i * pool->rp_bufsize;
->>> +                goto out;
->>> +            }
->>> +        }
->>> +    }
->>> +
->>> +    shard = rpcrdma_pool_shard_alloc(pool, flags);
->>> +    if (!shard)
->>> +        return false;
->>> +    set_bit(0, shard->pc_bitmap);
->>> +    returned_cpu_addr = shard->pc_cpu_addr;
->>> +    returned_mapped_addr = shard->pc_mapped_addr;
->>> +
->>> +    if (xa_alloc(&pool->rp_xa, &id, shard, xa_limit_16b, flags) != 0) {
->>> +        rpcrdma_pool_shard_free(pool, shard);
->>> +        return false;
->>> +    }
->>> +    trace_rpcrdma_pool_shard_new(pool->rp_pool_id, id);
->>> +
->>> +out:
->>> +    *cpu_addr = returned_cpu_addr;
->>> +    *mapped_addr = returned_mapped_addr;
->>> +
->>> +    trace_rpcrdma_pool_buffer(pool->rp_pool_id, returned_cpu_addr);
->>> +    return true;
->>> +}
->>> diff --git a/net/sunrpc/xprtrdma/pool.h b/net/sunrpc/xprtrdma/pool.h
->>> new file mode 100644
->>> index 000000000000..214f8fe78b9a
->>> --- /dev/null
->>> +++ b/net/sunrpc/xprtrdma/pool.h
->>> @@ -0,0 +1,25 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/*
->>> + * Copyright (c) 2025, Oracle and/or its affiliates.
->>> + *
->>> + * Pools for Send and Receive buffers.
->>> + */
->>> +
->>> +#ifndef RPCRDMA_POOL_H
->>> +#define RPCRDMA_POOL_H
->>> +
->>> +struct rpcrdma_pool_args {
->>> +    struct ib_device    *pa_device;
->>> +    size_t            pa_bufsize;
->>> +    enum dma_data_direction    pa_direction;
->>> +};
->>> +
->>> +struct rpcrdma_pool;
->>> +
->>> +struct rpcrdma_pool *
->>> +rpcrdma_pool_create(struct rpcrdma_pool_args *args, gfp_t flags);
->>> +void rpcrdma_pool_destroy(struct rpcrdma_pool *pool);
->>> +bool rpcrdma_pool_buffer_alloc(struct rpcrdma_pool *pool, gfp_t flags,
->>> +                   void **cpu_addr, u64 *mapped_addr);
->>> +
->>> +#endif /* RPCRDMA_POOL_H */
->>> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/
->>> xprtrdma/svc_rdma_recvfrom.c
->>> index e7e4a39ca6c6..f625f1ede434 100644
->>> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
->>> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
->>> @@ -104,9 +104,9 @@
->>>    #include <linux/sunrpc/svc_rdma.h>
->>>      #include "xprt_rdma.h"
->>> -#include <trace/events/rpcrdma.h>
->>> +#include "pool.h"
->>>    -static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
->>> +#include <trace/events/rpcrdma.h>
->>>      static inline struct svc_rdma_recv_ctxt *
->>>    svc_rdma_next_recv_ctxt(struct list_head *list)
->>> @@ -115,14 +115,14 @@ svc_rdma_next_recv_ctxt(struct list_head *list)
->>>                        rc_list);
->>>    }
->>>    +static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc);
->>> +
->>>    static struct svc_rdma_recv_ctxt *
->>>    svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
->>>    {
->>>        int node = ibdev_to_node(rdma->sc_cm_id->device);
->>>        struct svc_rdma_recv_ctxt *ctxt;
->>>        unsigned long pages;
->>> -    dma_addr_t addr;
->>> -    void *buffer;
->>>          pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
->>>        ctxt = kzalloc_node(struct_size(ctxt, rc_pages, pages),
->>> @@ -130,13 +130,11 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
->>>        if (!ctxt)
->>>            goto fail0;
->>>        ctxt->rc_maxpages = pages;
->>> -    buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
->>> -    if (!buffer)
->>> +
->>> +    if (!rpcrdma_pool_buffer_alloc(rdma->sc_recv_pool, GFP_KERNEL,
->>> +                       &ctxt->rc_recv_buf,
->>> +                       &ctxt->rc_recv_sge.addr))
->>>            goto fail1;
->>> -    addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
->>> -                 rdma->sc_max_req_size, DMA_FROM_DEVICE);
->>> -    if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
->>> -        goto fail2;
->>>          svc_rdma_recv_cid_init(rdma, &ctxt->rc_cid);
->>>        pcl_init(&ctxt->rc_call_pcl);
->>> @@ -149,30 +147,17 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
->>>        ctxt->rc_recv_wr.sg_list = &ctxt->rc_recv_sge;
->>>        ctxt->rc_recv_wr.num_sge = 1;
->>>        ctxt->rc_cqe.done = svc_rdma_wc_receive;
->>> -    ctxt->rc_recv_sge.addr = addr;
->>>        ctxt->rc_recv_sge.length = rdma->sc_max_req_size;
->>>        ctxt->rc_recv_sge.lkey = rdma->sc_pd->local_dma_lkey;
->>> -    ctxt->rc_recv_buf = buffer;
->>>        svc_rdma_cc_init(rdma, &ctxt->rc_cc);
->>>        return ctxt;
->>>    -fail2:
->>> -    kfree(buffer);
->>>    fail1:
->>>        kfree(ctxt);
->>>    fail0:
->>>        return NULL;
->>>    }
->>>    -static void svc_rdma_recv_ctxt_destroy(struct svcxprt_rdma *rdma,
->>> -                       struct svc_rdma_recv_ctxt *ctxt)
->>> -{
->>> -    ib_dma_unmap_single(rdma->sc_pd->device, ctxt->rc_recv_sge.addr,
->>> -                ctxt->rc_recv_sge.length, DMA_FROM_DEVICE);
->>> -    kfree(ctxt->rc_recv_buf);
->>> -    kfree(ctxt);
->>> -}
->>> -
->>>    /**
->>>     * svc_rdma_recv_ctxts_destroy - Release all recv_ctxt's for an xprt
->>>     * @rdma: svcxprt_rdma being torn down
->>> @@ -185,8 +170,9 @@ void svc_rdma_recv_ctxts_destroy(struct
->>> svcxprt_rdma *rdma)
->>>          while ((node = llist_del_first(&rdma->sc_recv_ctxts))) {
->>>            ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
->>> -        svc_rdma_recv_ctxt_destroy(rdma, ctxt);
->>> +        kfree(ctxt);
->>>        }
->>> +    rpcrdma_pool_destroy(rdma->sc_recv_pool);
->>>    }
->>>      /**
->>> @@ -305,8 +291,17 @@ static bool svc_rdma_refresh_recvs(struct
->>> svcxprt_rdma *rdma,
->>>     */
->>>    bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma)
->>>    {
->>> +    struct rpcrdma_pool_args args = {
->>> +        .pa_device    = rdma->sc_cm_id->device,
->>> +        .pa_bufsize    = rdma->sc_max_req_size,
->>> +        .pa_direction    = DMA_FROM_DEVICE,
->>> +    };
->>>        unsigned int total;
->>>    +    rdma->sc_recv_pool = rpcrdma_pool_create(&args, GFP_KERNEL);
->>> +    if (!rdma->sc_recv_pool)
->>> +        return false;
->>> +
->>>        /* For each credit, allocate enough recv_ctxts for one
->>>         * posted Receive and one RPC in process.
->>>         */
->>
-> 
-> 
-
+Thanks!
+--=20
+Jeff Layton <jlayton@kernel.org>
 
