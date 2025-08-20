@@ -1,154 +1,138 @@
-Return-Path: <linux-nfs+bounces-13807-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13808-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D585EB2E5EE
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 21:58:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AFC4B2E853
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 00:50:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E46C7A2296
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 19:57:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D440E683EEE
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 22:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7CC27FB3A;
-	Wed, 20 Aug 2025 19:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyGd/Ktd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76E622DC32B;
+	Wed, 20 Aug 2025 22:47:48 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC09272805;
-	Wed, 20 Aug 2025 19:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8DD2D24A8
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 22:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755719911; cv=none; b=kqC0T7k0LRdtQ42+XDOYjAqgNgcj+bMlAIrZ0W5eQH2q25olgTq5fPVJiX7GysFCyB803Cwd92ctk2056OBknuLMGmUYr4w1wvi8cGYScxsp0II33hmPdN2aRt4lt5ZN8Bu13+K//n488HfJhm6qvKNA5XMlRluoLto9SyyxCkk=
+	t=1755730068; cv=none; b=qvyF5dER+P0lUIqMf41O5b3rgMgwXtmILE1v1dCoXGKH5VMAujafagbhXpSx/RD/3zcB7I0TQJyjyW1uTMjj6o3gezcvsD8a0U+pTt2psn3ruhpZqRys2iAXB8XzgpGrJugaWtByWHZN3WLJ74/AmUZnxjZ9PRVVrcT9ERkVB4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755719911; c=relaxed/simple;
-	bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p/i28Q14d+55GD34NmxMg+ED0Qk50ZZLFWQynvdo1WyP9EB6dNXpJGkt5yo3NH0qQjLYoCgF7ywHbXmEOsYMyqDl3JOQBEOFbBpD51H8xAVC7j2nQmrYMZzAdxW478xEzG4DHCdI6Gz7fpCeAmAEYQetRpr9IMS5chx5AMNJhJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyGd/Ktd; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6188b5b11b2so355504a12.0;
-        Wed, 20 Aug 2025 12:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755719908; x=1756324708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
-        b=gyGd/KtdO1ESFbNJnRgQCItFZLsxw0BL/tc167nOlkjMnKWA43Gk7soOUzdZV2QlIc
-         D9L0NvIarW1ymCdGjaFj3mkaH1fTRwGz8JrBntCY8IL6CLbjMJMSSnq4/dj6xOluvZTr
-         5+JyE3gHNfjR3R0lvwwkYnW+0oWbWdFsIQEIsXURtj8UPNtHScKhS9R2xTzPZlswUWZl
-         LtoTJAOCsy2xqrj9/VAT4+3uQ/mluORUV7O0bPCXNbPYNYPapL7sH+5CeiCnffn73/wm
-         9vLQFt/sOU98tPOF0JLdb6QPiprh9q7z23uQS9x/p8+ggWSUMjSFQzoeONPXcMT9BPps
-         qzeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755719908; x=1756324708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
-        b=hd8DB+kVhCv5VwqmRKG7AjxJWfNoSq14p7j858tIP7tz58JVpB15vyhOgtBFAZKNbe
-         9oofS6CkLkwekrLpiBeV/aYloHJha1h4aWPgdxYrYyVEJW0661tZiFC1OVpQcbYxcLXV
-         ClahLKSG2+gjVqXmNNFD43EPrEY5ONrIDSd9d2tGohMlIvxaSFsyo4dFGmW7H0sYsOw7
-         D2MZR9gYPo8InijB8RF56J89TTN6BGGNBxjxmuQJNYbfInA+dWpCOfymDWdvSylseQYD
-         GbN8uP1wHg0NtLjCfj5nsRhaJQK1BPWG1HXqDkzGJ3rDI0ZqRWwZbeJUTp6WYkgN5eXF
-         uXBw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Wt/BUvp3PDRfVzLUxgBaSxejN0CGkBUexpV362ydYz7bPKrnpk9AMYLkNiEipsDKE2/+fwmavCxC@vger.kernel.org, AJvYcCWB02OH9vs9SzYWVvryjILino5DLU1VmKz1jzWoFLK6YABp6vvdNdDv7WpIg0A78wU87XJCs4E4yA==@vger.kernel.org, AJvYcCWYxhDU/WFK55ywJ+0NUJqDLm8im8HEN5zn4Si3N/vJ4El1u/9/oNDDhp/hoNPU3cKZiyUQptW08xsRcSNBug==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4OirzAtteHrOVlRWt5EfjDLm0jV5CyPqnGITorMpghENjp6jD
-	bs64Sn0r4Zc+b/vuEgXk1P1pGw4w2Hl368HbqH0ZzQCDrDIxnUBqazZYl7w0YxyfcZBDHssmI76
-	jw6yoH4suYv0R+TnUzlnHz2Fu6bZJrreklBekc0Y=
-X-Gm-Gg: ASbGncsnJgNWLdQZLu0jytWeZHPeB/BPpAwWzZRyTAE3yF52efa6sHAX0PI4PWgSVlZ
-	xF6q9Z3YQrE9BAYHPj0Tep/9dJrexYUTcDjVH27gMxiT/JWFPOvdzXGSJlHCJUrn+27c4+DYKPc
-	6b7/nbmwfWufCW/pJefRQOt2HzMkqx4RHF8ukhXsH4rOHZilsJxyH4r5UCZ/dXxLM8YBeLvZ1Np
-	SbbsS4=
-X-Google-Smtp-Source: AGHT+IHz3RUpxwLj7iccb8tWUFo4rVFO25gpGufkQ9Kdvzb+LHpYlkwD3M/A09Q7s7Yo0DemFLD1+3I2vSBAQhRt6P8=
-X-Received: by 2002:a05:6402:5113:b0:617:b2ab:fba2 with SMTP id
- 4fb4d7f45d1cf-61a97852204mr3668137a12.34.1755719907563; Wed, 20 Aug 2025
- 12:58:27 -0700 (PDT)
+	s=arc-20240116; t=1755730068; c=relaxed/simple;
+	bh=bFrwpmy9beLfOJYBfTtajC+ywqwXFNZPBCnoHiQcays=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Q/qg6na3tUAA8Z5DUV6si+AI4A7Y6NfmAY18RNXdEdN654IkkEyEqr1EHZLkpNCVUjS3TOjPkdtW/Sd/YDP6ZLNYyMqBV5ULL1mzkkbp+W5D1G26Hkm8DRPHaulBjI1GHHY/Ay18PgZPKogAlMJWXLz0eJSyExMF7c0lOsNn1j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uoraf-006Vq5-LY;
+	Wed, 20 Aug 2025 22:47:35 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250814235431.995876-1-tahbertschinger@gmail.com>
- <e914d653-a1b6-477d-8afa-0680a703d68f@kernel.dk> <DC6X58YNOC3F.BPB6J0245QTL@gmail.com>
- <CAOQ4uxj=XOFqHBmYY1aBFAnJtSkxzSyPu5G3xP1rx=ZfPfe-kg@mail.gmail.com> <DC7CIXI2T3FD.1I8C9PE5V0TRI@gmail.com>
-In-Reply-To: <DC7CIXI2T3FD.1I8C9PE5V0TRI@gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 20 Aug 2025 21:58:15 +0200
-X-Gm-Features: Ac12FXyBjV4DVeabWqrwgWWH8D97_E8xUqiThZ4IEFLodWZ22x2R_8SezBmTlNc
-Message-ID: <CAOQ4uximiUryMV=z_3TrEN1KCSA-2YdCt0t7v1M1gRZpnWec=Q@mail.gmail.com>
-Subject: Re: [PATCHSET RFC 0/6] add support for name_to, open_by_handle_at(2)
- to io_uring
-To: Thomas Bertschinger <tahbertschinger@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v1 1/2] NFSD: Delay adding new entries to LRU
+In-reply-to: <20250820142532.89623-2-cel@kernel.org>
+References: <20250820142532.89623-1-cel@kernel.org>,
+ <20250820142532.89623-2-cel@kernel.org>
+Date: Thu, 21 Aug 2025 08:47:35 +1000
+Message-id: <175573005510.2234665.16962394280504152867@noble.neil.brown.name>
 
-On Wed, Aug 20, 2025 at 5:00=E2=80=AFPM Thomas Bertschinger
-<tahbertschinger@gmail.com> wrote:
->
-> On Wed Aug 20, 2025 at 2:34 AM MDT, Amir Goldstein wrote:
-> > On Wed, Aug 20, 2025 at 4:57=E2=80=AFAM Thomas Bertschinger
-> > <tahbertschinger@gmail.com> wrote:
-> >> Any thoughts on that? This seemed to me like there wasn't an obvious
-> >> easy solution, hence why I just didn't attempt it at all in v1.
-> >> Maybe I'm missing something, though.
-> >>
-> >
-> > Since FILEID_IS_CONNECTABLE, we started using the high 16 bits of
-> > fh_type for FILEID_USER_FLAGS, since fs is not likely expecting a fh_ty=
-pe
-> > beyond 0xff (Documentation/filesystems/nfs/exporting.rst):
-> > "A filehandle fragment consists of an array of 1 or more 4byte words,
-> > together with a one byte "type"."
-> >
-> > The name FILEID_USER_FLAGS may be a bit misleading - it was
-> > never the intention for users to manipulate those flags, although they
-> > certainly can and there is no real harm in that.
-> >
-> > These flags are used in the syscall interface only, but
-> > ->fh_to_{dentry,parent}() function signature also take an int fh_flags
-> > argument, so we can use that to express the non-blocking request.
-> >
-> > Untested patch follows (easier than explaining):
->
-> Ah, that makes sense and makes this seem feasible. Thanks for pointing
-> that out!
->
-> It also seems that each FS could opt in to this with a new EXPORT_OP
-> flag so that the FSes that want to support this can be updated
-> individually. Then, updating most or every exportable FS isn't a
-> requirement for this.
+On Thu, 21 Aug 2025, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Neil Brown observes:
+> > I would not include RC_INPROG entries in the lru at all - they are
+> > always ignored, and will be added when they are switched to
+> > RCU_DONE.
+>=20
+> I also removed a stale comment.
+>=20
+> Suggested-by: NeilBrown <neil@brown.name>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfscache.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index ba9d326b3de6..6c06cf24b5c7 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -237,10 +237,6 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
+> =20
+>  }
+> =20
+> -/*
+> - * Move cache entry to end of LRU list, and queue the cleaner to run if it=
+'s
+> - * not already scheduled.
+> - */
+>  static void
+>  lru_put_end(struct nfsd_drc_bucket *b, struct nfsd_cacherep *rp)
+>  {
+> @@ -453,8 +449,6 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct nfs=
+d_cacherep *key,
+>  				nn->longest_chain_cachesize,
+>  				atomic_read(&nn->num_drc_entries));
+>  	}
+> -
+> -	lru_put_end(b, ret);
+>  	return ret;
 
-Makes a lot of sense. yes.
+A result of this change is that entries in the lru never have
+    ->c_state =3D=3D RC_INPROG
+They are always RC_DONE.
 
->
-> Do you have an opinion on that, versus expecting every ->fh_to_dentry()
-> implementation to respect the new flag?
+So this can be added to the patch:
 
-Technically, you do not need every fs to respect this flag, you only need t=
-hem
-to not ignore it.
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -272,12 +272,6 @@ nfsd_prune_bucket_locked(struct nfsd_net *nn, struct nfs=
+d_drc_bucket *b,
+=20
+ 	/* The bucket LRU is ordered oldest-first. */
+ 	list_for_each_entry_safe(rp, tmp, &b->lru_head, c_lru) {
+-		/*
+-		 * Don't free entries attached to calls that are still
+-		 * in-progress, but do keep scanning the list.
+-		 */
+-		if (rp->c_state =3D=3D RC_INPROG)
+-			continue;
+=20
+ 		if (atomic_read(&nn->num_drc_entries) <=3D nn->max_drc_entries &&
+ 		    time_before(expiry, rp->c_timestamp))
 
-Generally, if you pass (fileid_type | EXPORT_FH_CACHED) as the type
-argument, most filesystems will not accept this value anyway and return
-NULL or PTR_ERR(-ESTALE), so not ignoring.
 
-But I think it is much preferred to check the opt-in EXPORT_OP
-flag and return EAGAIN from generic code in the case that fs does
-not support non-blocking decode.
+With that added:
 
-And fs that do opt in should probably return PTR_ERR(-EAGAIN)
-when the file type is correct but non-blocking decode is not possible.
+Reviewed-by: NeilBrown <neil@brown.name>
 
 Thanks,
-Amir.
+NeilBrown
+
+
+>  }
+> =20
+> --=20
+> 2.50.0
+>=20
+>=20
+
 
