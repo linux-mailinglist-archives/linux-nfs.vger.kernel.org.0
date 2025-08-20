@@ -1,91 +1,154 @@
-Return-Path: <linux-nfs+bounces-13806-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13807-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49E53B2E5C3
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 21:45:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D585EB2E5EE
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 21:58:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E25E4A22AD7
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 19:45:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E46C7A2296
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 19:57:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEB92224FA;
-	Wed, 20 Aug 2025 19:45:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7CC27FB3A;
+	Wed, 20 Aug 2025 19:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJiQ67up"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyGd/Ktd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416448F49
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 19:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC09272805;
+	Wed, 20 Aug 2025 19:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755719153; cv=none; b=Y0ag7Hb7QhoXat2CdFoA7lud1ntEaA6fnCIuFbgi6zBHZ30+4slrbsKFM6vr+rTGhc0UQvfKjEUwnkShlJEAjNj6DXel1BeFJ2CXBkmBd+UhvNc+W4KJ9fqXLTUcnHs14fMy/7d2nNqOvpO6FIaL6r3PQq1/MOrWXekzik3gH3I=
+	t=1755719911; cv=none; b=kqC0T7k0LRdtQ42+XDOYjAqgNgcj+bMlAIrZ0W5eQH2q25olgTq5fPVJiX7GysFCyB803Cwd92ctk2056OBknuLMGmUYr4w1wvi8cGYScxsp0II33hmPdN2aRt4lt5ZN8Bu13+K//n488HfJhm6qvKNA5XMlRluoLto9SyyxCkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755719153; c=relaxed/simple;
-	bh=5VAwUgxdtv2NugTzC7gEWP4Iq9QnLgFtJCUpn/M3C5E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ZvWqaCfIini6fZJwMDTrVOm5k/SLKA7Ko0FEJ+7GaCPpJj+gaXZTWSSqfwaxRCxZ3rYSuW46DgkRMNfNU0GOnm+6z7MAFP642hCCBjrsnagZE6VFg2TkMidLtIbOhHeMrZEOBtZWBSLB3/Bkf9tezODt6APaI/mESt8uLUz391I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJiQ67up; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1755719911; c=relaxed/simple;
+	bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p/i28Q14d+55GD34NmxMg+ED0Qk50ZZLFWQynvdo1WyP9EB6dNXpJGkt5yo3NH0qQjLYoCgF7ywHbXmEOsYMyqDl3JOQBEOFbBpD51H8xAVC7j2nQmrYMZzAdxW478xEzG4DHCdI6Gz7fpCeAmAEYQetRpr9IMS5chx5AMNJhJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyGd/Ktd; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-333f8f22292so2212121fa.1
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 12:45:51 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6188b5b11b2so355504a12.0;
+        Wed, 20 Aug 2025 12:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755719150; x=1756323950; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=z0SpfbHK8Q1MKmQ6au0fwAwV1m56VFGkhBMLs5kLHI4=;
-        b=HJiQ67upaoJYbOawuLN4aLQQJoura44L07sirq8NJIdGd96DNBop5zY1DMJOmrixjM
-         Ict2nY4b2TF5hB7r2OBC/NmJtwUjzIAiXAokCfu21ln4codOOSUUxtVVq0SitolLUmEp
-         ck8dn/4kmc/9B7drwOWBXYeDiUUlKJyw6ng+JIc0kfBjezaQQSWZ2Sy02cUScxqHXoKq
-         QsjLl8HBuhdQ+jeC1m1QipN9j5tUj9CHX1aSEiYey9zQ7OK1KjitsLGNlcpcCXVeznn0
-         cs7JLCSBqOLBaiIHVyIKNjfV7QfgfeJD2CqbA5SOgHy4qxD2MJIR/I0isYhhfODF02iM
-         a6bg==
+        d=gmail.com; s=20230601; t=1755719908; x=1756324708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
+        b=gyGd/KtdO1ESFbNJnRgQCItFZLsxw0BL/tc167nOlkjMnKWA43Gk7soOUzdZV2QlIc
+         D9L0NvIarW1ymCdGjaFj3mkaH1fTRwGz8JrBntCY8IL6CLbjMJMSSnq4/dj6xOluvZTr
+         5+JyE3gHNfjR3R0lvwwkYnW+0oWbWdFsIQEIsXURtj8UPNtHScKhS9R2xTzPZlswUWZl
+         LtoTJAOCsy2xqrj9/VAT4+3uQ/mluORUV7O0bPCXNbPYNYPapL7sH+5CeiCnffn73/wm
+         9vLQFt/sOU98tPOF0JLdb6QPiprh9q7z23uQS9x/p8+ggWSUMjSFQzoeONPXcMT9BPps
+         qzeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755719150; x=1756323950;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z0SpfbHK8Q1MKmQ6au0fwAwV1m56VFGkhBMLs5kLHI4=;
-        b=MqrZBCkhMCFltvfAeS6IOz9eVUeDF4LhXlpmbk+ghzkZwyubBEn5ScKDSYtXYcgAd3
-         v6Ywb5lEfj/hsI/6cn1ltOoolBT7ork3pCrjlDce3fXDlNmAVyUeNQm8g07xStJiMLh6
-         8ktupJAnYmw0fVzpjQVwC1m6+v/Sal0BkqduCHD2ASqGIK9mLB7ojDIm5M+XerZCVnyo
-         wTQ1R/SJUB7S2O5duJ5bMf8VXB1AhveGuEU6uA/Wz6zqJ9xk5pzq62UBmFi7aPXCRrcf
-         QmbL/IArhe0UiUUrqdEhtFyya0tACZVjFsCfN78Dspj/PGcpcTVWnF/R46idIso4QuHc
-         85Wg==
-X-Gm-Message-State: AOJu0YwaUGw2NX6HsNxS6jo1mbGeG3Py75Yhc0juJs/tN3N9oMxA/amY
-	DgbjQCIK2MnOnmqnlIncvXZ0kpcYnl+uT66BfvO/FjQnSeSEOXFnyNmOpXkb7ryWRk0xq3B36Up
-	ikCmpD3A2yQkvjlGyxjRxFSnJ98XE/l4rHvrjS2E=
-X-Gm-Gg: ASbGncuBDlGTSnqxaCwvSQf2QBB2B1dsospisxsbDf9QRevl8PmQbyv2SOYEaHH5QWW
-	MWVd2VYyF2u0WBP5Ao25sqC3b0a9tl9WzD1ZPHwJL2mNzxu/tfTcmslH+BbHD15dv6E4tw89ZIY
-	Q+NGBv73642eoW6tUB0Bi75+EJL/ZV5s9U/NqfpOqIP8r17FsQp97mcNqnuO1Rb57BLu2C+fPkf
-	CUJe7I78uIvgQDrPQ==
-X-Google-Smtp-Source: AGHT+IGCte5Nyf4IXx/f6LZExAyYmEViU6SG0hivXRc/Pi1KxK6+4r1uvbrurjxSQYH1rBRi+MkNfQcvT+eDqFWndS4=
-X-Received: by 2002:a05:651c:2208:b0:331:ebc6:7155 with SMTP id
- 38308e7fff4ca-3353bd0a294mr13434401fa.19.1755719149882; Wed, 20 Aug 2025
- 12:45:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755719908; x=1756324708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DrCLzJGKL9IMdLrVr3WmS2MqRMf53NqUvSEUy18gl0M=;
+        b=hd8DB+kVhCv5VwqmRKG7AjxJWfNoSq14p7j858tIP7tz58JVpB15vyhOgtBFAZKNbe
+         9oofS6CkLkwekrLpiBeV/aYloHJha1h4aWPgdxYrYyVEJW0661tZiFC1OVpQcbYxcLXV
+         ClahLKSG2+gjVqXmNNFD43EPrEY5ONrIDSd9d2tGohMlIvxaSFsyo4dFGmW7H0sYsOw7
+         D2MZR9gYPo8InijB8RF56J89TTN6BGGNBxjxmuQJNYbfInA+dWpCOfymDWdvSylseQYD
+         GbN8uP1wHg0NtLjCfj5nsRhaJQK1BPWG1HXqDkzGJ3rDI0ZqRWwZbeJUTp6WYkgN5eXF
+         uXBw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1Wt/BUvp3PDRfVzLUxgBaSxejN0CGkBUexpV362ydYz7bPKrnpk9AMYLkNiEipsDKE2/+fwmavCxC@vger.kernel.org, AJvYcCWB02OH9vs9SzYWVvryjILino5DLU1VmKz1jzWoFLK6YABp6vvdNdDv7WpIg0A78wU87XJCs4E4yA==@vger.kernel.org, AJvYcCWYxhDU/WFK55ywJ+0NUJqDLm8im8HEN5zn4Si3N/vJ4El1u/9/oNDDhp/hoNPU3cKZiyUQptW08xsRcSNBug==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4OirzAtteHrOVlRWt5EfjDLm0jV5CyPqnGITorMpghENjp6jD
+	bs64Sn0r4Zc+b/vuEgXk1P1pGw4w2Hl368HbqH0ZzQCDrDIxnUBqazZYl7w0YxyfcZBDHssmI76
+	jw6yoH4suYv0R+TnUzlnHz2Fu6bZJrreklBekc0Y=
+X-Gm-Gg: ASbGncsnJgNWLdQZLu0jytWeZHPeB/BPpAwWzZRyTAE3yF52efa6sHAX0PI4PWgSVlZ
+	xF6q9Z3YQrE9BAYHPj0Tep/9dJrexYUTcDjVH27gMxiT/JWFPOvdzXGSJlHCJUrn+27c4+DYKPc
+	6b7/nbmwfWufCW/pJefRQOt2HzMkqx4RHF8ukhXsH4rOHZilsJxyH4r5UCZ/dXxLM8YBeLvZ1Np
+	SbbsS4=
+X-Google-Smtp-Source: AGHT+IHz3RUpxwLj7iccb8tWUFo4rVFO25gpGufkQ9Kdvzb+LHpYlkwD3M/A09Q7s7Yo0DemFLD1+3I2vSBAQhRt6P8=
+X-Received: by 2002:a05:6402:5113:b0:617:b2ab:fba2 with SMTP id
+ 4fb4d7f45d1cf-61a97852204mr3668137a12.34.1755719907563; Wed, 20 Aug 2025
+ 12:58:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Wed, 20 Aug 2025 21:44:00 +0200
-X-Gm-Features: Ac12FXy58Vrt0YuHVrpogGQeaTXeCCWY6d8dffLmG859Wua-7NHVfPRrBjMgKzY
-Message-ID: <CAAvCNcC2A_ShAUe2AZxvoOaS-E4=0OicvEF3b-0q9XKywUTadg@mail.gmail.com>
-Subject: Using JAVA NFSv4.1 nio client with Linux nfsd?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20250814235431.995876-1-tahbertschinger@gmail.com>
+ <e914d653-a1b6-477d-8afa-0680a703d68f@kernel.dk> <DC6X58YNOC3F.BPB6J0245QTL@gmail.com>
+ <CAOQ4uxj=XOFqHBmYY1aBFAnJtSkxzSyPu5G3xP1rx=ZfPfe-kg@mail.gmail.com> <DC7CIXI2T3FD.1I8C9PE5V0TRI@gmail.com>
+In-Reply-To: <DC7CIXI2T3FD.1I8C9PE5V0TRI@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 20 Aug 2025 21:58:15 +0200
+X-Gm-Features: Ac12FXyBjV4DVeabWqrwgWWH8D97_E8xUqiThZ4IEFLodWZ22x2R_8SezBmTlNc
+Message-ID: <CAOQ4uximiUryMV=z_3TrEN1KCSA-2YdCt0t7v1M1gRZpnWec=Q@mail.gmail.com>
+Subject: Re: [PATCHSET RFC 0/6] add support for name_to, open_by_handle_at(2)
+ to io_uring
+To: Thomas Bertschinger <tahbertschinger@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
+	linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello!
+On Wed, Aug 20, 2025 at 5:00=E2=80=AFPM Thomas Bertschinger
+<tahbertschinger@gmail.com> wrote:
+>
+> On Wed Aug 20, 2025 at 2:34 AM MDT, Amir Goldstein wrote:
+> > On Wed, Aug 20, 2025 at 4:57=E2=80=AFAM Thomas Bertschinger
+> > <tahbertschinger@gmail.com> wrote:
+> >> Any thoughts on that? This seemed to me like there wasn't an obvious
+> >> easy solution, hence why I just didn't attempt it at all in v1.
+> >> Maybe I'm missing something, though.
+> >>
+> >
+> > Since FILEID_IS_CONNECTABLE, we started using the high 16 bits of
+> > fh_type for FILEID_USER_FLAGS, since fs is not likely expecting a fh_ty=
+pe
+> > beyond 0xff (Documentation/filesystems/nfs/exporting.rst):
+> > "A filehandle fragment consists of an array of 1 or more 4byte words,
+> > together with a one byte "type"."
+> >
+> > The name FILEID_USER_FLAGS may be a bit misleading - it was
+> > never the intention for users to manipulate those flags, although they
+> > certainly can and there is no real harm in that.
+> >
+> > These flags are used in the syscall interface only, but
+> > ->fh_to_{dentry,parent}() function signature also take an int fh_flags
+> > argument, so we can use that to express the non-blocking request.
+> >
+> > Untested patch follows (easier than explaining):
+>
+> Ah, that makes sense and makes this seem feasible. Thanks for pointing
+> that out!
+>
+> It also seems that each FS could opt in to this with a new EXPORT_OP
+> flag so that the FSes that want to support this can be updated
+> individually. Then, updating most or every exportable FS isn't a
+> requirement for this.
 
-Asking here because maybe someone tried iti and knows how to use it:
-Did anyone here ever tried https://github.com/kofemann/nfs41-nio2 with
-the Linux nfsd?
+Makes a lot of sense. yes.
 
-Dan
--- 
-Dan Shelton - Cluster Specialist Win/Lin/Bsd
+>
+> Do you have an opinion on that, versus expecting every ->fh_to_dentry()
+> implementation to respect the new flag?
+
+Technically, you do not need every fs to respect this flag, you only need t=
+hem
+to not ignore it.
+
+Generally, if you pass (fileid_type | EXPORT_FH_CACHED) as the type
+argument, most filesystems will not accept this value anyway and return
+NULL or PTR_ERR(-ESTALE), so not ignoring.
+
+But I think it is much preferred to check the opt-in EXPORT_OP
+flag and return EAGAIN from generic code in the case that fs does
+not support non-blocking decode.
+
+And fs that do opt in should probably return PTR_ERR(-EAGAIN)
+when the file type is correct but non-blocking decode is not possible.
+
+Thanks,
+Amir.
 
