@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-13802-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13803-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71DFAB2DF71
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 16:34:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 395A4B2DFA9
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 16:40:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3603A161E9A
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 14:34:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB0B05A5DFE
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 14:39:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F021226CE0F;
-	Wed, 20 Aug 2025 14:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CA72848A6;
+	Wed, 20 Aug 2025 14:39:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+X0X1xH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5lEsmZu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC812459DD
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 14:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0D928136E
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 14:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755700473; cv=none; b=VD5fdINYxvUX7azj1KJ0V5OjpurAZrTavZglWDwKzqkgP4+9uRHVg4RkXVamc+mKosEmaCbvXTxTILdbwMEOWADtPC4fuFIX7/UVgf7cw2EqYb9hzfeY9YANhYOZhEvqHYEt5UiZ2TPBtkOfuA4FEJaUaLoWyDM2UYV4at6foiU=
+	t=1755700760; cv=none; b=mAY59+56+jK3jujC+hzmNALfjIw9lJWC8cFDrn9BJcjltGhKwKjT4anj22QkwQCpF2mqqo+nhkrwlw2ciB6QsfR4LFcFeE71Zn6likvUC/6du9yU5ipCsGNeox3pN2lcDcaO4qffdK74LeTo8fw/2Vsewgm6X5Uxou2xwOBE0Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755700473; c=relaxed/simple;
-	bh=052JUb5mudVqbZvK7KGFFW58G9wV4pPLTE/ID/hfJDE=;
+	s=arc-20240116; t=1755700760; c=relaxed/simple;
+	bh=aoranUhLkuOeTcOeAvddd08XNJPtfUc+ogENvGnvxQY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qics8ntvsPb3z1aAY3MjwDBL+mWvOL2g/FON69Zo7GgfFQa9hZhA9A2RkFzD62gqz5Cm0ZqOqdau6IInQRUl3/dGyFo1mnfYVGqMmV104CC87UZ91Urmb34VsWqFFw9+7UThgsorUCz1Aq89rgLbB/VHUOvnQjU+sndtdVG9D3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+X0X1xH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B864FC4CEE7;
-	Wed, 20 Aug 2025 14:34:32 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fXMb5OWAgnVTqGxZMm+OQFwfASD9FSZYAII+VEvFPGVITpsztRrn+y00+o3ZMv8NXpopLTN3vsIYKtvE1eTfsfG4dOFH1Svlkb/rsRSU6a/gqDjIXRzMhHpFKfCO3diUOPyPhJHp6GGeO8wz/IC0VBQNXPBqm0KWsWbezooUcQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5lEsmZu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D3EFC4CEE7;
+	Wed, 20 Aug 2025 14:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755700473;
-	bh=052JUb5mudVqbZvK7KGFFW58G9wV4pPLTE/ID/hfJDE=;
+	s=k20201202; t=1755700759;
+	bh=aoranUhLkuOeTcOeAvddd08XNJPtfUc+ogENvGnvxQY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=M+X0X1xHUxgHXl+6qXwf1+9PqaLuWVPhU+S+q4IqtKwxqozeu7L7MT4PyulPPKOFj
-	 5kMGNg5ZupvvHUJriR6RzkKZqewvblDkS3C5CKyvr1h3ZgspU7dx7x/jRHS9lJF4sU
-	 j7TZeRb94Ku3uoCInnkTTAHwgMnbfQ7M+s91pkQHksYpYrSZUNwpa1uAyVF6tMKfL0
-	 0g9BB2oz8bM2ABxXHD4Y0YmZhKO7VuG+NSZx4oL1050WEziaXBZKZAov+Sn+BRYNIZ
-	 mPBqzhfNXJhX26H//65LTcixJwxXdKLmiQV3MHFllMghvuwqthnPAq1+u0E4K3Zm1r
-	 HT+ThlG7NFijQ==
-Message-ID: <da93dae3e7470af9b14f86e3764ec63b898fa1b1.camel@kernel.org>
-Subject: Re: [PATCH v1 0/2] NFSD duplicate reply cache optimizations
+	b=X5lEsmZui+Ljb6THB9g9F7Ahk5QmFPLL8v9WS2K2BKP784y7K2ZNWtBHUfDo2ID8W
+	 AKObcFVE+Hq2JnB4R5KoaRwavSUVaGb+9e7AUguiDAbHQmY7NczDdrgg5OB/jPNQHb
+	 uhZaM2iMn+2G7diRLE4RV34MZGxdrFP9Ne4RHqIY9juzzM6bvKstx3mgfNr8xw8RQ9
+	 zUbFbq4ASy1eFKHMYyiokDlKXp0Om17sPFCjsatJXFwu7rfxLVKZUAZ02f8BM2RsLy
+	 UrSyEAdWZBXlLYFQyPwRmrVdNakP+1jnc9vFEbHQ+mXmmdukbQIiXOIbKqTy8o6qyk
+	 mfWCLDpImFGnA==
+Message-ID: <b715c15e6ed595ca6c6802c33499e2831dfb7797.camel@kernel.org>
+Subject: Re: [PATCH v2 1/1] nfsd: unregister with rpcbind when deleting a
+ transport
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 20 Aug 2025 10:34:31 -0400
-In-Reply-To: <20250820142532.89623-1-cel@kernel.org>
-References: <20250820142532.89623-1-cel@kernel.org>
+To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org, neil@brown.name, Dai.Ngo@oracle.com, 
+	tom@talpey.com
+Date: Wed, 20 Aug 2025 10:39:17 -0400
+In-Reply-To: <20250819180403.33090-1-okorniev@redhat.com>
+References: <20250819180403.33090-1-okorniev@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,19 +135,89 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-08-20 at 10:25 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Tue, 2025-08-19 at 14:04 -0400, Olga Kornievskaia wrote:
+> When a listener is added, a part of creation of transport also registers
+> program/port with rpcbind. However, when the listener is removed,
+> while transport goes away, rpcbind still has the entry for that
+> port/type.
 >=20
-> Two minor optimizations for the NFSD duplicate reply cache. These
-> showed slight improvement in WRITE throughput on exported fast
-> file systems.
+> When deleting the transport, unregister with rpcbind when appropriate.
 >=20
-> Chuck Lever (2):
->   NFSD: Delay adding new entries to LRU
->   NFSD: Reduce DRC bucket size
+> ---v2 created a new xpt_flag XPT_RPCB_UNREG to mark TCP and UDP
+> transport and at xprt destroy send rpcbind unregister if flag set.
 >=20
->  fs/nfsd/nfscache.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+> Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+> Fixes: d093c9089260 ("nfsd: fix management of listener transports")
+> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> ---
+>  include/linux/sunrpc/svc_xprt.h |  3 +++
+>  net/sunrpc/svc_xprt.c           | 13 +++++++++++++
+>  net/sunrpc/svcsock.c            |  2 ++
+>  3 files changed, 18 insertions(+)
+>=20
+> diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_x=
+prt.h
+> index 369a89aea186..2b886f7eb295 100644
+> --- a/include/linux/sunrpc/svc_xprt.h
+> +++ b/include/linux/sunrpc/svc_xprt.h
+> @@ -104,6 +104,9 @@ enum {
+>  				 * it has access to.  It is NOT counted
+>  				 * in ->sv_tmpcnt.
+>  				 */
+> +	XPT_RPCB_UNREG,		/* transport that needs unregistering
+> +				 * with rpcbind (TCP, UDP) on destroy
+> +				 */
+>  };
+> =20
+>  /*
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index 8b1837228799..b800d704d807 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -1014,6 +1014,19 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
+>  	struct svc_serv	*serv =3D xprt->xpt_server;
+>  	struct svc_deferred_req *dr;
+> =20
+> +	/* unregister with rpcbind for when transport type is TCP or UDP.
+> +	 */
+> +	if (test_bit(XPT_RPCB_UNREG, &xprt->xpt_flags)) {
+> +		struct svc_sock *svsk =3D container_of(xprt, struct svc_sock,
+> +						     sk_xprt);
+> +		struct socket *sock =3D svsk->sk_sock;
+> +
+> +		if (svc_register(serv, xprt->xpt_net, sock->sk->sk_family,
+> +				 sock->sk->sk_protocol, 0) < 0)
+> +			pr_warn("failed to unregister %s with rpcbind\n",
+> +				xprt->xpt_class->xcl_name);
+> +	}
+> +
+>  	if (test_and_set_bit(XPT_DEAD, &xprt->xpt_flags))
+>  		return;
+> =20
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index c0d5a27ba674..7b90abc5cf0e 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -836,6 +836,7 @@ static void svc_udp_init(struct svc_sock *svsk, struc=
+t svc_serv *serv)
+>  	/* data might have come in before data_ready set up */
+>  	set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+>  	set_bit(XPT_CHNGBUF, &svsk->sk_xprt.xpt_flags);
+> +	set_bit(XPT_RPCB_UNREG, &svsk->sk_xprt.xpt_flags);
+> =20
+>  	/* make sure we get destination address info */
+>  	switch (svsk->sk_sk->sk_family) {
+> @@ -1350,6 +1351,7 @@ static void svc_tcp_init(struct svc_sock *svsk, str=
+uct svc_serv *serv)
+>  	if (sk->sk_state =3D=3D TCP_LISTEN) {
+>  		strcpy(svsk->sk_xprt.xpt_remotebuf, "listener");
+>  		set_bit(XPT_LISTENER, &svsk->sk_xprt.xpt_flags);
+> +		set_bit(XPT_RPCB_UNREG, &svsk->sk_xprt.xpt_flags);
+>  		sk->sk_data_ready =3D svc_tcp_listen_data_ready;
+>  		set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
+>  	} else {
+
+The new flag does seem like a cleaner approach than v1.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
