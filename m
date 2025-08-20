@@ -1,117 +1,147 @@
-Return-Path: <linux-nfs+bounces-13793-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13794-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9922BB2D196
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 03:52:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C407B2D22E
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 05:00:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 478031BC7425
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 01:53:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB8B63BA85D
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Aug 2025 02:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4E4277023;
-	Wed, 20 Aug 2025 01:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE29298CBB;
+	Wed, 20 Aug 2025 02:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RGuRkmiM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9vtRJju"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CE870823
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Aug 2025 01:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E5271A7C;
+	Wed, 20 Aug 2025 02:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755654771; cv=none; b=OOYglUWLdPp20JuqrlreOQqXyy4jKv0f/fdFFcuW9pPfnKPE7m8mTq/OA0IWDgpFmQQjG0TWcmkZq8FtEqXwmVQUFJjdXvG5DZOVKVx38kZGRwrqN9f9TlhDMOjwI/Y65IULj96JvivEOIoFzYLwDbn2nPeRDcaM2AnfS/BRkME=
+	t=1755658636; cv=none; b=hWj+ngyDpnUjlw/KEFpo+i4LJE9A1j7nUBJAGagn6mE6oGpRLOjTrauc3lrhfnwiIf0TMqJLUlUo5RkPLDFPbjZeiLb2vBr1KDg+q4evCmR306WN37Z4lNJmpCiBZtx7hoCWW9RAS33CP2XBeJs14a+ykT6FtZGu/KYwU7wOWPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755654771; c=relaxed/simple;
-	bh=v8ZGXl6i7+GLgabNixEXW2doyPJq5x/LtU4JXwrlAlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQ/PD99bwyhg9CkuFwjMEF9I2otUSf/VdfTf6o5E8vEPfA0TwJ5582+6XnToy+MhL6J4HCjdUVesU9i/P5gd2h6ZiL0jxHvjPl+pOwpNnSEPSs0zmpebF8tC2ckhMviKJvhhkmQVXHdMala4NJbMvBFyj4gl0CEWx1XBjrngR5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RGuRkmiM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755654770; x=1787190770;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v8ZGXl6i7+GLgabNixEXW2doyPJq5x/LtU4JXwrlAlw=;
-  b=RGuRkmiMXWJZ82w6cHFYF+nLs1T7A2SCHVicoK5hDOb0kzoouu3kHTdB
-   4iE5wwLBwlXXq4MSvj01jOT0C575Gas8IKMBzKdiQEosyN3gn4YRtwJTy
-   ii/cXuoPI3/JQAwzCglJo4p/kD/m4pFCRAWtQbFeZ1eVT6vm/FWwUulNy
-   Ap8o6qzAgdPWTQLInsNghWnk5efr0mPUQZqq73THJp8UOOLDL46Hr+bgl
-   qULKu+vPNTPzMT0k/pFxtj58cERaz+0/e5Ry5jlmRlI4zxGxoIpz/IsWq
-   Mm0YdcyK/UKK26CQcqPcMEpfr3kLRy7daiSWE0aSi2KHIepacZwt6ND6B
-   w==;
-X-CSE-ConnectionGUID: XZcjfligQ0+aAnvstsBRsQ==
-X-CSE-MsgGUID: u1GXY6tUQYCNWYS80FsT1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="69361487"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="69361487"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 18:52:50 -0700
-X-CSE-ConnectionGUID: TkRZCz6cSDinc9d0n4cW6A==
-X-CSE-MsgGUID: VsXVtfzDTjS5afh4pXuaGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="168801216"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Aug 2025 18:52:48 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uoY0L-000Hwd-1l;
-	Wed, 20 Aug 2025 01:52:45 +0000
-Date: Wed, 20 Aug 2025 09:52:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jonathan Curley <jcurley@purestorage.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Jonathan Curley <jcurley@purestorage.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 4/9] NFSv4/flexfiles: Update low level helper functions
- to be DS stripe aware.
-Message-ID: <202508200945.mrU2bex2-lkp@intel.com>
-References: <20250818220750.47085-5-jcurley@purestorage.com>
+	s=arc-20240116; t=1755658636; c=relaxed/simple;
+	bh=TorI9HaQqMckKV/lonwDU5tXE5tcRdrNnLoPTZjhML4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
+	 References:In-Reply-To; b=gjgG8x/gVsSm1MWe5eNitBVyA6gA/Bgo0/ENWeWldOo3OZMe0EHxk2f4Z8NdQ0VMN8CHl43pihhTwhLMLwYVf7h1REcDv1bHY3e9oeJ6Zc22iYtyVuAHPEh0S/0wW0aF06WqP0Krs3ekQjH877SjX7AMtAytjN6oLsSY/s2qXO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9vtRJju; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-24456f3f669so5877675ad.1;
+        Tue, 19 Aug 2025 19:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755658634; x=1756263434; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s8a2tkZGLvlyHrPs7eC5kUrNp8IhnJHUld6MD5Lo4n8=;
+        b=i9vtRJjuYpg+rQSVJQ3hmlkKHNTDxQEL/M2hL6aOo6FghzLpFle8EH1AIVqQ5utrSp
+         7/8fzEwhBDXDsl9Fgp8gh0XhwWgwWFzUjJurAFQ5alhtNg/RneK/7rbNv92//LH+425x
+         0F9kbMd3MWFlzIy3nrbRtw7RWa1PtjLkjXee/xltnwd3XNsjT7H+Ti1zzDAt1q1Co/IF
+         sVecp/SAPa1Qah8zqUTC3pIYUTV7t7KswpDYcpnThmJG4owzNV6cnwpZdpWMjGtUmguz
+         tmCJig72jcMxwD9RnY39Ri9M9AeAo8dV7b65qDiLQiHNfM2RUgEboqMgFvsZG6/RMwGo
+         LpAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755658634; x=1756263434;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s8a2tkZGLvlyHrPs7eC5kUrNp8IhnJHUld6MD5Lo4n8=;
+        b=aRo6XmZUWv12HeBEEXjy10FRjcCaqwjOO76s2d5X2zQlnqixgKKtnPDhgbmKnWspUe
+         AIp5Aidq3XUYzLBgk4vSs7GASR7AEnBy5dqEUAlKr6Lgx2SGiguc5WBHUUiUL4GQacTx
+         oGBBnbANF+31kI3Lu7pBTo3TFFVHcDAvAnBWWcFY1N5AAHMXNDzIPi9JKK/hE/UIez3Z
+         fb5PL5UCmf6MKeG+QT5829i9xLvcLt0LRb3dWxG89eOgmwldIBtkWiTLl4I9hMyKV+TZ
+         x89sShvPJd6gyKZHqpqgxBGshHAnmGUzXJyYqIIBYY70POmmddc/hN9B9J5p+mZBMGlI
+         xk4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNKpM7FyEdmseFsjgKbBEHqYVqphEQ13oUd3NtkKvcuDN16SdeXA4LKMnx40BMJLcDIN8a7W3UdgGDyBIpUg==@vger.kernel.org, AJvYcCWibeWJomO5id64903IeSI/FpdnlsAyR/EJFSDQxDr2IC8qhnTG3zoN3dfcVtpj/AJCw2wxojM7hxwd@vger.kernel.org, AJvYcCWiylICE1SpHd4womXwUOojK47IJiLnrKUsNe9bmR0WkqUmbKtSQNZ/pcrlXuvzAxtK0/lsvqA6Ng==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBiHNVKjr6DtMMtO6C82efAcu0Bah6FsUNy6Ghhz5gg8otJ/n8
+	78NIgXHbezeKQhfUwZaYYp7Kv8a6Uum3EQxH3bZU1P2BUASRYT1F71Ow
+X-Gm-Gg: ASbGnctBY+/NdlLt2qGnlTf3E8h+AFaSbX3rV6LIe/Y7RgQ63rW654tDgPDtRHyygmu
+	aOaI4c7HgYUSfNdd9f5+yKvHd+TGnLFhV77SpfQTU+ScWENUe9IqulDkYbhEsKCqkxPcZ7zrLjv
+	kuh3Ev2+edmOp6mkJjA5DX7e2zscInt2q+mQd51od3Mz2/f1lmrpj2w5O5TGjAMIP2AKqs59+wS
+	rEhCQcc3Nr/m4RF+cf6+ejGONZ4jTxzb9DarLfBJB0z7hvg38hsMqE1HRyKHu1GwSdzkx7+FBWc
+	8MG73QP8+nXmP9xu2AzXk+m3SSArMHTeWP7WLGDS+2PRp3KGUUHGA60OQX2no1aWHcO8All5IwS
+	l049/+TT0jBu2LtsqEp/4he0U1ZzSTMGJtqrE4g==
+X-Google-Smtp-Source: AGHT+IHnXxnjaFkiSlGZNXdRxM45b1ExmP16lr8KnCvDEkGp5nBzlbRBWIrVZyuM9uJ0VQmU/dIDVw==
+X-Received: by 2002:a17:902:ea0a:b0:23f:c760:fe02 with SMTP id d9443c01a7336-245e094148emr57998035ad.9.1755658633810;
+        Tue, 19 Aug 2025 19:57:13 -0700 (PDT)
+Received: from localhost ([65.144.169.45])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245f3cada79sm698575ad.48.2025.08.19.19.57.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Aug 2025 19:57:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250818220750.47085-5-jcurley@purestorage.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 19 Aug 2025 21:01:58 -0600
+Message-Id: <DC6X58YNOC3F.BPB6J0245QTL@gmail.com>
+Subject: Re: [PATCHSET RFC 0/6] add support for name_to,
+ open_by_handle_at(2) to io_uring
+From: "Thomas Bertschinger" <tahbertschinger@gmail.com>
+To: "Jens Axboe" <axboe@kernel.dk>, <io-uring@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
+ <brauner@kernel.org>, <linux-nfs@vger.kernel.org>, <amir73il@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250814235431.995876-1-tahbertschinger@gmail.com>
+ <e914d653-a1b6-477d-8afa-0680a703d68f@kernel.dk>
+In-Reply-To: <e914d653-a1b6-477d-8afa-0680a703d68f@kernel.dk>
 
-Hi Jonathan,
+On Tue Aug 19, 2025 at 9:11 AM MDT, Jens Axboe wrote:
+> I'll take a look at this, but wanted to mention that I dabbled in this
+> too a while ago, here's what I had:
+>
+> https://git.kernel.dk/cgit/linux/log/?h=3Dio_uring-handle
 
-kernel test robot noticed the following build warnings:
+Thanks! That is helpful. Right away I see something you included that I
+missed: requiring CONFIG_FHANDLE. Missing that would explain the build
+failure emails I got on this series.
 
-[auto build test WARNING on v6.16]
-[cannot apply to trondmy-nfs/linux-next v6.17-rc2 v6.17-rc1 linus/master next-20250819]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'll include that in v2, when I get around to that--hopefully soon.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Curley/NFSv4-flexfiles-Remove-cred-local-variable-dependency/20250819-061041
-base:   v6.16
-patch link:    https://lore.kernel.org/r/20250818220750.47085-5-jcurley%40purestorage.com
-patch subject: [PATCH 4/9] NFSv4/flexfiles: Update low level helper functions to be DS stripe aware.
-config: powerpc-randconfig-002-20250820 (https://download.01.org/0day-ci/archive/20250820/202508200945.mrU2bex2-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250820/202508200945.mrU2bex2-lkp@intel.com/reproduce)
+>
+> Probably pretty incomplete, but I did try and handle some of the
+> cases that won't block to avoid spurious -EAGAIN and io-wq usage.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508200945.mrU2bex2-lkp@intel.com/
+So for the non-blocking case, what I am concerned about is code paths
+like this:
 
-All warnings (new ones prefixed by >>):
+do_handle_to_path()
+  -> exportfs_decode_fh_raw()
+    -> fh_to_dentry()
+      -> xfs_fs_fh_to_dentry()
+        ... -> xfs_iget()
+      OR
+      -> ext4_fh_to_dentry()
+        ... -> ext4_iget()
 
->> Warning: fs/nfs/flexfilelayout/flexfilelayoutdev.c:374 function parameter 'dss_id' not described in 'nfs4_ff_layout_prepare_ds'
+Where there doesn't seem to be any existing way to tell the FS
+implementation to give up and return -EAGAIN when appropriate. I wasn't
+sure how to do that without modifying the signature of fh_to_dentry()
+(and fh_to_parent()) which seems awfully invasive for this.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+(Using a flag in task_struct to signify "don't block" was previously
+discussed:
+https://lore.kernel.org/io-uring/22630618-40fc-5668-078d-6cefcb2e4962@kerne=
+l.dk/
+and that could allow not needing to pass a flag via function argument,
+but I agree with the conclusion in that email chain that it's an ugly
+solution.)
+
+Any thoughts on that? This seemed to me like there wasn't an obvious
+easy solution, hence why I just didn't attempt it at all in v1.
+Maybe I'm missing something, though.
+
+Aside from fh_to_dentry(), there is I/O that may arise from
+reconnecting the dentry, as Amir pointed out earlier (like in
+reconnect_one()). Handling that would, I think, be simpler because it
+would only require modifying the generic code under reconnect_path() and
+not each filesystem implementation.
 
