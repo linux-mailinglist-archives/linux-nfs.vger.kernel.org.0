@@ -1,187 +1,161 @@
-Return-Path: <linux-nfs+bounces-13814-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13815-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34B8DB2F4E8
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 12:14:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31A35B2F650
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 13:19:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0BAC1C27381
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 10:14:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D37DAC2706
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 11:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 475C42F0C4C;
-	Thu, 21 Aug 2025 10:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98B330E83E;
+	Thu, 21 Aug 2025 11:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWtLjEGZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2v0I8T/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22617264F99
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 10:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0204D30E846
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755771263; cv=none; b=SOYY7xLR2F7WFPi276ihEZ2n0GlgsYMhcmhEB2rlcvALPxtsuFUqE3xTf2sWWyqO569jXGJ2DIkoQDLfvleGNJRnmS86ZYdHB9X+8SXTC5wNyxRiaHOFgGIHMDq4KrYi1PgyNbJ9lcVKKOnO1I2I//D/tqaUxEcdmqtmolsdAts=
+	t=1755774934; cv=none; b=GmiHWqOvEmwHhEj9HYgdhh6Tvjk/TrtKtxZtSX2kGEUFkQsO8gnMsBLY1ZKzX7aOjlE8cruXH/+iZlQn+mxPZL8isTldOECOC1Tlfn9JBFQHqj+Dg5QgaEXwIdEtK3oMXaUV7YJu7k+g68Kok9UuEpSX+1NmlNOsu4KEttKU/UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755771263; c=relaxed/simple;
-	bh=OJUM2aoSqUCGKkXevRsWLZwKLV6ps+UXbL5gP4pjw9s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LUnuqGbIcYFptb0F0vJlNAIYnK6T+TrIj8uiAeNDsS/QaCp5igGE3hehqYoAXNWUahCA77PNWDRSy1hYLQ1/HPwXGOWQV95E5rITg06sRR6mTxhCvthgbEy7dqmmTORfQS19Tb7jixKJCoyzsGd6EC2C4EeZvGB6wcsqyF+vi6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWtLjEGZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61AD0C116D0;
-	Thu, 21 Aug 2025 10:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755771262;
-	bh=OJUM2aoSqUCGKkXevRsWLZwKLV6ps+UXbL5gP4pjw9s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OWtLjEGZnTnnKIuBuV4wTnEDGwvn1qipDvHz6n8v8HWUuYqL+Y/bhs0BHNEy3PrEc
-	 o7o9EKnfee97GyEQTogoTN0j0LlbNQkoaRyggsWn4iIFS85PtoPKlKWhGqskSu4WFc
-	 2l7gQuH1EtVu/LMVCo5LIXcmOZssuTXpH671nRAybgC5erVAY1jhaeiVlVLQ+pOp6l
-	 HsNAl9t0Z2Tq6JzTWqMF3G9iLHYpzTl+FkjtTWOuPuYp5Zao1lqOmg59E3Dl4c5LOT
-	 JknFpnJGaATFJDth75trA1hiT4NOVd8pAQQsnM0c+hQ64CamhbDG/H1dPUChVtqFT+
-	 IuJFvf+txKPVA==
-Message-ID: <5f8113f8f8a4f92d0ab0b8450ca7297b2764f491.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: discard nfserr_dropit
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org
-Date: Thu, 21 Aug 2025 06:14:21 -0400
-In-Reply-To: <175573864133.2234665.4220094746965657176@noble.neil.brown.name>
-References: <175573864133.2234665.4220094746965657176@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1755774934; c=relaxed/simple;
+	bh=ga/vKUanVg5dBxx8Xee0tIlWpfoEkOS/4u+L/O28Q/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMZWcmFveXNTs04ObojGMxp5jyAETprHmdMvKvA/gFtjag1GITT0Vr19eujwbXpEy30213yzolt6PLEzvLRIeCm9Tla3/0JChT83t7QuIGi88I4cp66VUF+bIPoC+n/cGRJHC2VTWSVR9+lTZ5Ms0ESfKvA1mwYeog2WXMIDI9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f2v0I8T/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755774931;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iE5KY/4yjIcIu0yghICx/YPOVFhKpfX9E+oT5UA9wdo=;
+	b=f2v0I8T/6WmptgTSwq8xsAMCgy4tE409BBz/UYiRm5rlORFkA1kTyUoiEx1nwHO3AK1U8D
+	FnRLfiEmNkFkFs/FtRRHzYHQ5OPsoOVQfUPk/+7qwVbMqwBar7biUuCsf++nWoEl+XC+Wp
+	Ht18qAaqG2ZYzPdzAfYkSNwuD+j45SA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-498-40IQMPG4O_ifbu0Z6kadEg-1; Thu,
+ 21 Aug 2025 07:15:28 -0400
+X-MC-Unique: 40IQMPG4O_ifbu0Z6kadEg-1
+X-Mimecast-MFC-AGG-ID: 40IQMPG4O_ifbu0Z6kadEg_1755774927
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7254519560AD;
+	Thu, 21 Aug 2025 11:15:27 +0000 (UTC)
+Received: from dobby.home.dicksonnet.net (unknown [10.22.80.72])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9C3261955F24;
+	Thu, 21 Aug 2025 11:15:26 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH 00/12] Convert old-style function definitions into modern-style definitions 
+Date: Thu, 21 Aug 2025 07:15:11 -0400
+Message-ID: <20250821111524.1379577-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 2025-08-21 at 11:10 +1000, NeilBrown wrote:
->=20
-> nfserr_dropit hasn't been used for over a decade, since rq_dropme and
-> the RQ_DROPME were introduced.
->=20
-> Time to get rid of it completely.
->=20
-> Signed-off-by: NeilBrown <neil@brown.name>
-> ---
->  fs/nfsd/lockd.c | 2 --
->  fs/nfsd/nfsd.h  | 8 +-------
->  2 files changed, 1 insertion(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-> index edc9f75dc75c..dca80f5de0ad 100644
-> --- a/fs/nfsd/lockd.c
-> +++ b/fs/nfsd/lockd.c
-> @@ -57,8 +57,6 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, str=
-uct file **filp,
->  	switch (nfserr) {
->  	case nfs_ok:
->  		return 0;
-> -	case nfserr_dropit:
-> -		return nlm_drop_reply;
->  	case nfserr_stale:
->  		return nlm_stale_fh;
->  	default:
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 1cd0bed57bc2..2c9fa884ab05 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -335,14 +335,8 @@ void		nfsd_lockd_shutdown(void);
->   * cannot conflict with any existing be32 nfserr value.
->   */
->  enum {
-> -	NFSERR_DROPIT =3D NFS4ERR_FIRST_FREE,
-> -/* if a request fails due to kmalloc failure, it gets dropped.
-> - *  Client should resend eventually
-> - */
-> -#define	nfserr_dropit		cpu_to_be32(NFSERR_DROPIT)
-> -
->  /* end-of-file indicator in readdir */
-> -	NFSERR_EOF,
-> +	NFSERR_EOF, =3D NFS4ERR_FIRST_FREE,
->  #define	nfserr_eof		cpu_to_be32(NFSERR_EOF)
-> =20
->  /* replay detected */
+This patch set converts all of the old-style function definitions
+into modern-style definitions through out the library... 
+basically touching almost every function definition.
 
-Modulo the extra comma...
+The conversion was pretty straightforward... The same 
+repetitive changes were make on all the functions
+and the compiler pointed out any declaration issue
+that came up. I'm confident the API did not change.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I test the changes by doing kernel builds over both
+secured and unsecured mounts. I also ran my Bakeathon 
+Cthon tool which mounts all versions, simultaneously, 
+and runs cthon test on them... both secured and
+insecure mounts... for over 48hrs.
+
+The one part I didn't test was the NIS support
+since I didn't have a NIS setup... I'm pretty
+confident things should work... Again the
+changes were I'm all straightforward.
+
+Reviews are welcome!
+
+Steve Dickson (12):
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+  Convert old-style function definitions into modern-style definitions
+
+ src/auth_time.c     |  42 +++---
+ src/auth_unix.c     |  29 ++---
+ src/authunix_prot.c |   4 +-
+ src/bindresvport.c  |   4 +-
+ src/clnt_bcast.c    |  46 ++++---
+ src/clnt_dg.c       |  59 ++++-----
+ src/clnt_perror.c   |  23 +---
+ src/clnt_raw.c      |  46 +++----
+ src/clnt_simple.c   |  19 +--
+ src/clnt_vc.c       |  75 +++++------
+ src/getnetconfig.c  |  24 ++--
+ src/getnetpath.c    |  12 +-
+ src/getpublickey.c  |  20 +--
+ src/getrpcport.c    |   8 +-
+ src/key_call.c      |  58 ++++-----
+ src/netname.c       |  19 ++-
+ src/netnamer.c      |  31 ++---
+ src/pmap_getmaps.c  |   3 +-
+ src/pmap_getport.c  |  10 +-
+ src/pmap_prot.c     |   4 +-
+ src/pmap_prot2.c    |   8 +-
+ src/pmap_rmt.c      |  31 +++--
+ src/rpc_callmsg.c   |   4 +-
+ src/rpc_generic.c   |  31 ++---
+ src/rpc_prot.c      |  36 ++---
+ src/rpc_soc.c       | 310 ++++++++++++++++++++++----------------------
+ src/rpcb_clnt.c     | 154 +++++++++++-----------
+ src/rpcb_prot.c     |  48 +++----
+ src/rpcb_st_xdr.c   |  42 +++---
+ src/rpcdname.c      |   3 +-
+ src/rtime.c         |  11 +-
+ src/svc.c           | 107 +++++++--------
+ src/svc_auth.c      |  14 +-
+ src/svc_auth_unix.c |  12 +-
+ src/svc_dg.c        |  75 +++++------
+ src/svc_generic.c   |  32 ++---
+ src/svc_raw.c       |  46 ++++---
+ src/svc_simple.c    |  19 ++-
+ src/svc_vc.c        | 111 ++++++++--------
+ src/xdr.c           | 224 ++++++++++++++++----------------
+ src/xdr_array.c     |  26 ++--
+ src/xdr_float.c     |  12 +-
+ src/xdr_mem.c       |  74 +++++------
+ src/xdr_rec.c       | 121 ++++++++---------
+ src/xdr_reference.c |  20 +--
+ src/xdr_sizeof.c    |  30 ++---
+ src/xdr_stdio.c     |  54 ++++----
+ 47 files changed, 1032 insertions(+), 1159 deletions(-)
+
+-- 
+2.50.1
+
 
