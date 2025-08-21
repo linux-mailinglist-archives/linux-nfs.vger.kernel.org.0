@@ -1,68 +1,68 @@
-Return-Path: <linux-nfs+bounces-13817-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13818-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15FFEB2F652
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 13:19:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91533B2F643
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 13:18:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 731B6AC29BE
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 11:16:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45A161CC72E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 11:16:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0F730E853;
-	Thu, 21 Aug 2025 11:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9AD2F0C58;
+	Thu, 21 Aug 2025 11:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LC4zSkM1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JnIW9mAr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D26130E849
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187A436CE08
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755774939; cv=none; b=i9/raOzrOgtDw5Wn2j7GcTF5BZ0QWrNL87d9NBqaWsUpRWiOsdqNJuV0l4UdxBBMSwZXPWYrF3CUbWq8cDXZiXC4FQdpQQzA0/ZccbwfRSxbeXchN8zW/lUkCf1Fh5cNBGH5nADU4N7KAerjs07ftWjBVwmP4qGeunll3clkZ6Y=
+	t=1755774940; cv=none; b=mlNmlCb4bwCTLVDV8I3y1cA67xiH8dKkbbVtl8hS4NJDhafzv5YFFzb17fkyjZjfYMUdp3SmU1h2TD+Win4+BcAdEqxYPL3jm8Kb8AhUmtTCN169tJkLOPx8Kxca2iZZ3/KjLHEzCDn/GTnFP+UblX6iY41Ko3m/bGsHG4ThgEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755774939; c=relaxed/simple;
-	bh=1JdBzv2RLX0x0GZCj/LY/ehThMMubKQgWW85FWGxydA=;
+	s=arc-20240116; t=1755774940; c=relaxed/simple;
+	bh=TMmJBgQuVOkxk5ZLpk0/ZAQBngeKQ0yTTcMBJ0DYzRs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VqyrSWgPf+m5NpX9r5LeHvkCQPEouU6ZuyQS9avTjMDcmWGNG0biNaiPAa9M7ZivqkkOLy8UNrwq2g2xUBVVbe/fGIdjbJhjXQ8kE27DgXn6XZRfqTi/rUNPZslU2vVEUdqa+F/rGNNhbZk6/hTKNcGNFLZJbUGWXnl0SQe2w84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LC4zSkM1; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=KEMVOitIKHd4KuxOACVQ7mY5XDJQmpqHzJOxEwZBJHhHlUT3SLZMVaiSL2YgntGitPTaTCxr3v523xiGy2vA76MOWiN8kqu0yyWe/CobapxgipceQZn/2NCw8Icrgrkp0eR/btLH38G4SySeMTNKcmmIphuzBe326lHSsIwXnFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JnIW9mAr; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755774934;
+	s=mimecast20190719; t=1755774936;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZcwebYsDwakXI9lM/Owj1Hc1XrR2pAJKhTuQdxhMEVM=;
-	b=LC4zSkM19+3Wg+2Hm7cfSgfVTPs62MgxN8wqKgmWJbWXY8VEc58BlpsDLLkARcZN0rncRn
-	lM8TSFmOWZU0cwhG00cOiXwRNpHsPFCen5OwjoA+7ie8ZKHp3Cz8zo6zl4n4ZzckNVyQR0
-	oKFqAxHcl62Ka3eH4A8A9ggr3E5yjMY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ES9IVglS6W2jyNbTFKZDZDtjwfneH7MfMJB17PV7pLA=;
+	b=JnIW9mArzFPs/EX0A4cXpAVxLnSTXPQRy2rL/UvsGzXQRT67ep8yXV1PxKM3AwXd8K+4vn
+	N5dG63q6Qc6wMUBuWkDiciGnIptSCxpGW7MBLOIA1SZFRp1rXa6E1P12btQliItA4RARqk
+	NpPeqI6bMepMyHhHbdc98tPzJn/JF/k=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-PJsf5kIvN3-lK8x1Y3B92g-1; Thu,
- 21 Aug 2025 07:15:30 -0400
-X-MC-Unique: PJsf5kIvN3-lK8x1Y3B92g-1
-X-Mimecast-MFC-AGG-ID: PJsf5kIvN3-lK8x1Y3B92g_1755774929
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-1_TRQp-0OzmWyeUOUWc98w-1; Thu,
+ 21 Aug 2025 07:15:32 -0400
+X-MC-Unique: 1_TRQp-0OzmWyeUOUWc98w-1
+X-Mimecast-MFC-AGG-ID: 1_TRQp-0OzmWyeUOUWc98w_1755774930
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BDED61956056;
-	Thu, 21 Aug 2025 11:15:29 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D760119560B1;
+	Thu, 21 Aug 2025 11:15:30 +0000 (UTC)
 Received: from dobby.home.dicksonnet.net (unknown [10.22.80.72])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D33AE1977692;
-	Thu, 21 Aug 2025 11:15:28 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 195461977689;
+	Thu, 21 Aug 2025 11:15:29 +0000 (UTC)
 From: Steve Dickson <steved@redhat.com>
 To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
 Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 02/12] Convert old-style function definitions into modern-style definitions
-Date: Thu, 21 Aug 2025 07:15:13 -0400
-Message-ID: <20250821111524.1379577-3-steved@redhat.com>
+Subject: [PATCH 03/12] Convert old-style function definitions into modern-style definitions
+Date: Thu, 21 Aug 2025 07:15:14 -0400
+Message-ID: <20250821111524.1379577-4-steved@redhat.com>
 In-Reply-To: <20250821111524.1379577-1-steved@redhat.com>
 References: <20250821111524.1379577-1-steved@redhat.com>
 Precedence: bulk
@@ -85,918 +85,512 @@ function definitions into modern-style definitions
 
 Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- src/svc.c           | 107 +++++++++++++++++++-----------------------
- src/svc_auth.c      |  14 +++---
- src/svc_auth_unix.c |  12 ++---
- src/svc_dg.c        |  75 ++++++++++++++----------------
- src/svc_generic.c   |  32 ++++++-------
- src/svc_raw.c       |  46 +++++++++---------
- src/svc_simple.c    |  19 ++++----
- src/svc_vc.c        | 111 +++++++++++++++++++++-----------------------
- 8 files changed, 197 insertions(+), 219 deletions(-)
+ src/rpcb_clnt.c   | 154 ++++++++++++++++++++++------------------------
+ src/rpcb_prot.c   |  48 +++++++--------
+ src/rpcb_st_xdr.c |  42 ++++++-------
+ 3 files changed, 119 insertions(+), 125 deletions(-)
 
-diff --git a/src/svc.c b/src/svc.c
-index 9b932a5..944afd5 100644
---- a/src/svc.c
-+++ b/src/svc.c
-@@ -88,8 +88,7 @@ static void __xprt_do_unregister (SVCXPRT * xprt, bool_t dolock);
-  * Activate a transport handle.
-  */
- void
--xprt_register (xprt)
--     SVCXPRT *xprt;
-+xprt_register (SVCXPRT *xprt)
- {
-   int sock;
- 
-@@ -158,9 +157,9 @@ __xprt_unregister_unlocked (SVCXPRT * xprt)
-  * De-activate a transport handle.
+diff --git a/src/rpcb_clnt.c b/src/rpcb_clnt.c
+index 32b6a47..826d685 100644
+--- a/src/rpcb_clnt.c
++++ b/src/rpcb_clnt.c
+@@ -99,8 +99,7 @@ static struct netbuf *got_entry(rpcb_entry_list_ptr, const struct netconfig *);
+  *
   */
  static void
--__xprt_do_unregister (xprt, dolock)
--     SVCXPRT *xprt;
--     bool_t dolock;
-+__xprt_do_unregister (
-+     SVCXPRT *xprt,
-+     bool_t dolock)
+-destroy_addr(addr)
+-	struct address_cache *addr;
++destroy_addr(struct address_cache *addr)
  {
-   int sock;
+ 	if (addr == NULL)
+ 		return;
+@@ -133,8 +132,7 @@ destroy_addr(addr)
+  * or the new entry cannot be allocated then NULL is returned.
+  */
+ static struct address_cache *
+-copy_addr(addr)
+-	const struct address_cache *addr;
++copy_addr(const struct address_cache *addr)
+ {
+ 	struct address_cache *copy;
  
-@@ -215,12 +214,12 @@ svc_open_fds()
-  * program number comes in.
+@@ -188,9 +186,7 @@ err:
+  * These are private routines that may not be provided in future releases.
   */
  bool_t
--svc_reg (xprt, prog, vers, dispatch, nconf)
--     SVCXPRT *xprt;
--     const rpcprog_t prog;
--     const rpcvers_t vers;
--     void (*dispatch) (struct svc_req *, SVCXPRT *);
--     const struct netconfig *nconf;
-+svc_reg (
-+     SVCXPRT *xprt,
-+     const rpcprog_t prog,
-+     const rpcvers_t vers,
-+     void (*dispatch) (struct svc_req *, SVCXPRT *),
-+     const struct netconfig *nconf)
+-__rpc_control(request, info)
+-	int	request;
+-	void	*info;
++__rpc_control(int request, void	*info)
  {
-   bool_t dummy;
-   struct svc_callout *prev;
-@@ -297,9 +296,9 @@ rpcb_it:
-  * Remove a service program from the callout list.
+ 	switch (request) {
+ 	case CLCR_GET_RPCB_TIMEOUT:
+@@ -231,9 +227,9 @@ extern pthread_mutex_t	rpcbaddr_cache_lock;
   */
- void
--svc_unreg (prog, vers)
--     const rpcprog_t prog;
--     const rpcvers_t vers;
-+svc_unreg (
-+     const rpcprog_t prog,
-+     const rpcvers_t vers)
+ 
+ static struct address_cache *
+-copy_of_cached(host, netid)
+-	const char *host; 
+-	char *netid;
++copy_of_cached(
++	const char *host, 
++	char *netid)
  {
-   struct svc_callout *prev;
-   struct svc_callout *s;
-@@ -334,12 +333,12 @@ svc_unreg (prog, vers)
-  * program number comes in.
+ 	struct address_cache *cptr, *copy = NULL;
+ 
+@@ -252,8 +248,7 @@ copy_of_cached(host, netid)
+ }
+ 
+ static void
+-delete_cache(addr)
+-	struct netbuf *addr;
++delete_cache(struct netbuf *addr)
+ {
+ 	struct address_cache *cptr = NULL, *prevptr = NULL;
+ 
+@@ -283,10 +278,11 @@ delete_cache(addr)
+ }
+ 
+ static void
+-add_cache(host, netid, taddr, uaddr)
+-	const char *host, *netid;
+-	char *uaddr;
+-	struct netbuf *taddr;
++add_cache(
++	const char *host, 
++	const char *netid,
++	struct netbuf *taddr,
++	char *uaddr)
+ {
+ 	struct address_cache  *ad_cache, *cptr, *prevptr;
+ 
+@@ -364,10 +360,10 @@ out_free:
+  * On error, returns NULL and free's everything.
+  */
+ static CLIENT *
+-getclnthandle(host, nconf, targaddr)
+-	const char *host;
+-	const struct netconfig *nconf;
+-	char **targaddr;
++getclnthandle(
++	const char *host,
++	const struct netconfig *nconf,
++	char **targaddr)
+ {
+ 	CLIENT *client;
+ 	struct netbuf taddr;
+@@ -497,10 +493,10 @@ out_err:
+  * Create a PMAP client handle.
+  */
+ static CLIENT *
+-getpmaphandle(nconf, hostname, tgtaddr)
+-	const struct netconfig *nconf;
+-	const char *hostname;
+-	char **tgtaddr;
++getpmaphandle(
++	const struct netconfig *nconf,
++	const char *hostname,
++	char **tgtaddr)
+ {
+ 	CLIENT *client = NULL;
+ 	rpcvers_t pmapvers = 2;
+@@ -537,8 +533,7 @@ getpmaphandle(nconf, hostname, tgtaddr)
+  * rpcbind. Returns NULL on error and free's everything.
+  */
+ static CLIENT *
+-local_rpcb(targaddr)
+-	char **targaddr;
++local_rpcb(char **targaddr)
+ {
+ 	CLIENT *client;
+ 	static struct netconfig *loopnconf;
+@@ -654,11 +649,11 @@ try_nconf:
+  * Calls the rpcbind service to do the mapping.
   */
  bool_t
--svc_register (xprt, prog, vers, dispatch, protocol)
--     SVCXPRT *xprt;
--     u_long prog;
--     u_long vers;
--     void (*dispatch) (struct svc_req *, SVCXPRT *);
--     int protocol;
-+svc_register (
-+     SVCXPRT *xprt,
-+     u_long prog,
-+     u_long vers,
-+     void (*dispatch) (struct svc_req *, SVCXPRT *),
-+     int protocol)
+-rpcb_set(program, version, nconf, address)
+-	rpcprog_t program;
+-	rpcvers_t version;
+-	const struct netconfig *nconf;	/* Network structure of transport */
+-	const struct netbuf *address;		/* Services netconfig address */
++rpcb_set(
++	rpcprog_t program,
++	rpcvers_t version,
++	const struct netconfig *nconf,	/* Network structure of transport */
++	const struct netbuf *address)		/* Services netconfig address */
  {
-   struct svc_callout *prev;
-   struct svc_callout *s;
-@@ -377,9 +376,9 @@ pmap_it:
-  * Remove a service program from the callout list.
-  */
- void
--svc_unregister (prog, vers)
--     u_long prog;
--     u_long vers;
-+svc_unregister (
-+     u_long prog,
-+     u_long vers)
- {
-   struct svc_callout *prev;
-   struct svc_callout *s;
-@@ -407,11 +406,11 @@ svc_unregister (prog, vers)
-  * struct.
-  */
- static struct svc_callout *
--svc_find (prog, vers, prev, netid)
--     rpcprog_t prog;
--     rpcvers_t vers;
--     struct svc_callout **prev;
--     char *netid;
-+svc_find (
-+     rpcprog_t prog,
-+     rpcvers_t vers,
-+     struct svc_callout **prev,
-+     char *netid)
- {
-   struct svc_callout *s, *p;
- 
-@@ -436,10 +435,10 @@ svc_find (prog, vers, prev, netid)
-  * Send a reply to an rpc request
+ 	CLIENT *client;
+ 	bool_t rslt = FALSE;
+@@ -715,10 +710,10 @@ rpcb_set(program, version, nconf, address)
+  * only for the given transport.
   */
  bool_t
--svc_sendreply (xprt, xdr_results, xdr_location)
--     SVCXPRT *xprt;
--     xdrproc_t xdr_results;
--     void *xdr_location;
-+svc_sendreply (
-+     SVCXPRT *xprt,
-+     xdrproc_t xdr_results,
-+     void *xdr_location)
+-rpcb_unset(program, version, nconf)
+-	rpcprog_t program;
+-	rpcvers_t version;
+-	const struct netconfig *nconf;
++rpcb_unset(
++	rpcprog_t program,
++	rpcvers_t version,
++	const struct netconfig *nconf)
  {
-   struct rpc_msg rply;
- 
-@@ -458,8 +457,7 @@ svc_sendreply (xprt, xdr_results, xdr_location)
-  * No procedure error reply
+ 	CLIENT *client;
+ 	bool_t rslt = FALSE;
+@@ -756,9 +751,9 @@ rpcb_unset(program, version, nconf)
+  * From the merged list, find the appropriate entry
   */
- void
--svcerr_noproc (xprt)
--     SVCXPRT *xprt;
-+svcerr_noproc (SVCXPRT *xprt)
+ static struct netbuf *
+-got_entry(relp, nconf)
+-	rpcb_entry_list_ptr relp;
+-	const struct netconfig *nconf;
++got_entry(
++	rpcb_entry_list_ptr relp,
++	const struct netconfig *nconf)
  {
-   struct rpc_msg rply;
+ 	struct netbuf *na = NULL;
+ 	rpcb_entry_list_ptr sp;
+@@ -829,12 +824,12 @@ __rpcbind_is_up()
  
-@@ -476,8 +474,7 @@ svcerr_noproc (xprt)
-  * Can't decode args error reply
+ #ifdef PORTMAP
+ static struct netbuf *
+-__try_protocol_version_2(program, version, nconf, host, tp)
+-	rpcprog_t program;
+-	rpcvers_t version;
+-	const struct netconfig *nconf;
+-	const char *host;
+-	struct timeval *tp;
++__try_protocol_version_2(
++	rpcprog_t program,
++	rpcvers_t version,
++	const struct netconfig *nconf,
++	const char *host,
++	struct timeval *tp)
+ {
+ 	u_short port = 0;
+ 	struct netbuf remote;
+@@ -934,13 +929,13 @@ error:
+  * starts working properly.  Also look under clnt_vc.c.
   */
- void
--svcerr_decode (xprt)
--     SVCXPRT *xprt;
-+svcerr_decode (SVCXPRT *xprt)
+ struct netbuf *
+-__rpcb_findaddr_timed(program, version, nconf, host, clpp, tp)
+-	rpcprog_t program;
+-	rpcvers_t version;
+-	const struct netconfig *nconf;
+-	const char *host;
+-	CLIENT **clpp;
+-	struct timeval *tp;
++__rpcb_findaddr_timed(
++	rpcprog_t program,
++	rpcvers_t version,
++	const struct netconfig *nconf,
++	const char *host,
++	CLIENT **clpp,
++	struct timeval *tp)
  {
-   struct rpc_msg rply;
- 
-@@ -494,8 +491,7 @@ svcerr_decode (xprt)
-  * Some system error
-  */
- void
--svcerr_systemerr (xprt)
--     SVCXPRT *xprt;
-+svcerr_systemerr (SVCXPRT *xprt)
- {
-   struct rpc_msg rply;
- 
-@@ -548,9 +544,9 @@ __svc_versquiet_get (xprt)
-  * Authentication error reply
-  */
- void
--svcerr_auth (xprt, why)
--     SVCXPRT *xprt;
--     enum auth_stat why;
-+svcerr_auth (
-+     SVCXPRT *xprt,
-+     enum auth_stat why)
- {
-   struct rpc_msg rply;
- 
-@@ -567,8 +563,7 @@ svcerr_auth (xprt, why)
-  * Auth too weak error reply
-  */
- void
--svcerr_weakauth (xprt)
--     SVCXPRT *xprt;
-+svcerr_weakauth (SVCXPRT *xprt)
- {
- 
-   assert (xprt != NULL);
-@@ -580,8 +575,7 @@ svcerr_weakauth (xprt)
-  * Program unavailable error reply
-  */
- void
--svcerr_noprog (xprt)
--     SVCXPRT *xprt;
-+svcerr_noprog (SVCXPRT *xprt)
- {
-   struct rpc_msg rply;
- 
-@@ -598,10 +592,10 @@ svcerr_noprog (xprt)
-  * Program version mismatch error reply
-  */
- void
--svcerr_progvers (xprt, low_vers, high_vers)
--     SVCXPRT *xprt;
--     rpcvers_t low_vers;
--     rpcvers_t high_vers;
-+svcerr_progvers (
-+     SVCXPRT *xprt,
-+     rpcvers_t low_vers,
-+     rpcvers_t high_vers)
- {
-   struct rpc_msg rply;
- 
-@@ -635,8 +629,7 @@ svcerr_progvers (xprt, low_vers, high_vers)
-  */
- 
- void
--svc_getreq (rdfds)
--     int rdfds;
-+svc_getreq (int rdfds)
- {
-   fd_set readfds;
- 
-@@ -646,8 +639,7 @@ svc_getreq (rdfds)
- }
- 
- void
--svc_getreqset (readfds)
--     fd_set *readfds;
-+svc_getreqset (fd_set *readfds)
- {
-   int bit, fd;
-   fd_mask mask, *maskp;
-@@ -670,8 +662,7 @@ svc_getreqset (readfds)
- }
- 
- void
--svc_getreq_common (fd)
--     int fd;
-+svc_getreq_common (int fd)
- {
-   SVCXPRT *xprt;
-   struct svc_req r;
-@@ -772,9 +763,9 @@ svc_getreq_common (fd)
- 
- 
- void
--svc_getreq_poll (pfdp, pollretval)
--     struct pollfd *pfdp;
--     int pollretval;
-+svc_getreq_poll (
-+     struct pollfd *pfdp,
-+     int pollretval)
- {
-   int fds_found, i;
- 
-diff --git a/src/svc_auth.c b/src/svc_auth.c
-index 789d6af..1b9d5e8 100644
---- a/src/svc_auth.c
-+++ b/src/svc_auth.c
-@@ -88,10 +88,10 @@ extern enum auth_stat _svcauth_des(struct svc_req *rqst, struct rpc_msg *msg);
-  * invalid.
-  */
- enum auth_stat
--_gss_authenticate(rqst, msg, no_dispatch)
--	struct svc_req *rqst;
--	struct rpc_msg *msg;
--	bool_t *no_dispatch;
-+_gss_authenticate(
-+	struct svc_req *rqst,
-+	struct rpc_msg *msg,
-+	bool_t *no_dispatch)
- {
- 	int cred_flavor;
- 	struct authsvc *asp;
-@@ -171,9 +171,9 @@ _authenticate(struct svc_req *rqst, struct rpc_msg *msg)
-  */
- 
- int
--svc_auth_reg(cred_flavor, handler)
--	int cred_flavor;
--	enum auth_stat (*handler)(struct svc_req *, struct rpc_msg *);
-+svc_auth_reg(
-+	int cred_flavor,
-+	enum auth_stat (*handler)(struct svc_req *, struct rpc_msg *))
- {
- 	struct authsvc *asp;
- 	extern mutex_t authsvc_lock;
-diff --git a/src/svc_auth_unix.c b/src/svc_auth_unix.c
-index 8f992a4..f3e9813 100644
---- a/src/svc_auth_unix.c
-+++ b/src/svc_auth_unix.c
-@@ -49,9 +49,9 @@ extern SVCAUTH svc_auth_none;
-  * Unix longhand authenticator
-  */
- enum auth_stat
--_svcauth_unix(rqst, msg)
--	struct svc_req *rqst;
--	struct rpc_msg *msg;
-+_svcauth_unix(
-+	struct svc_req *rqst,
-+	struct rpc_msg *msg)
- {
- 	enum auth_stat stat;
- 	XDR xdrs;
-@@ -140,9 +140,9 @@ done:
-  */
- /*ARGSUSED*/
- enum auth_stat 
--_svcauth_short(rqst, msg)
--	struct svc_req *rqst;
--	struct rpc_msg *msg;
-+_svcauth_short(
-+	struct svc_req *rqst,
-+	struct rpc_msg *msg)
- {
- 	return (AUTH_REJECTEDCRED);
- }
-diff --git a/src/svc_dg.c b/src/svc_dg.c
-index 7677cb3..3d42b6a 100644
---- a/src/svc_dg.c
-+++ b/src/svc_dg.c
-@@ -93,10 +93,10 @@ static const char svc_dg_err2[] = " transport does not support data transfer";
- static const char __no_mem_str[] = "out of memory";
- 
- SVCXPRT *
--svc_dg_create(fd, sendsize, recvsize)
--	int fd;
--	u_int sendsize;
--	u_int recvsize;
-+svc_dg_create(
-+	int fd,
-+	u_int sendsize,
-+	u_int recvsize)
- {
- 	SVCXPRT *xprt;
- 	SVCXPRT_EXT *ext = NULL;
-@@ -169,16 +169,15 @@ freedata:
- 
- /*ARGSUSED*/
- static enum xprt_stat
--svc_dg_stat(xprt)
--	SVCXPRT *xprt;
-+svc_dg_stat(SVCXPRT *xprt)
- {
- 	return (XPRT_IDLE);
- }
- 
- static bool_t
--svc_dg_recv(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_dg_recv(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
- {
- 	struct svc_dg_data *su = su_data(xprt);
- 	XDR *xdrs = &(su->su_xdrs);
-@@ -234,9 +233,9 @@ again:
- }
- 
- static bool_t
--svc_dg_reply(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_dg_reply(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
- {
- 	struct svc_dg_data *su = su_data(xprt);
- 	XDR *xdrs = &(su->su_xdrs);
-@@ -286,10 +285,10 @@ svc_dg_reply(xprt, msg)
- }
- 
- static bool_t
--svc_dg_getargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_dg_getargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 	if (!SVCAUTH_UNWRAP(&SVC_XP_AUTH(xprt),
- 			    &(su_data(xprt)->su_xdrs),
-@@ -300,10 +299,10 @@ svc_dg_getargs(xprt, xdr_args, args_ptr)
- }
- 
- static bool_t
--svc_dg_freeargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_dg_freeargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 	XDR *xdrs = &(su_data(xprt)->su_xdrs);
- 
-@@ -312,8 +311,7 @@ svc_dg_freeargs(xprt, xdr_args, args_ptr)
- }
- 
- static void
--svc_dg_destroy(xprt)
--	SVCXPRT *xprt;
-+svc_dg_destroy(SVCXPRT *xprt)
- {
- 	SVCXPRT_EXT *ext = SVCEXT(xprt);
- 	struct svc_dg_data *su = su_data(xprt);
-@@ -338,17 +336,16 @@ svc_dg_destroy(xprt)
- 
- static bool_t
- /*ARGSUSED*/
--svc_dg_control(xprt, rq, in)
--	SVCXPRT *xprt;
--	const u_int	rq;
--	void		*in;
-+svc_dg_control(
-+	SVCXPRT *xprt,
-+	const u_int	rq,
-+	void		*in)
- {
- 	return (FALSE);
- }
- 
- static void
--svc_dg_ops(xprt)
--	SVCXPRT *xprt;
-+svc_dg_ops(SVCXPRT *xprt)
- {
- 	static struct xp_ops ops;
- 	static struct xp_ops2 ops2;
-@@ -449,9 +446,9 @@ static const char alloc_err[] = "could not allocate cache ";
- static const char enable_err[] = "cache already enabled";
- 
- int
--svc_dg_enablecache(transp, size)
--	SVCXPRT *transp;
--	u_int size;
-+svc_dg_enablecache(
-+	SVCXPRT *transp,
-+	u_int size)
- {
- 	struct svc_dg_data *su = su_data(transp);
- 	struct cl_cache *uc;
-@@ -506,9 +503,9 @@ static const char cache_set_err2[] = "victim alloc failed";
- static const char cache_set_err3[] = "could not allocate new rpc buffer";
- 
- static void
--cache_set(xprt, replylen)
--	SVCXPRT *xprt;
--	size_t replylen;
-+cache_set(
-+	SVCXPRT *xprt,
-+	size_t replylen)
- {
- 	cache_ptr victim;
- 	cache_ptr *vicp;
-@@ -594,11 +591,11 @@ cache_set(xprt, replylen)
-  * return 1 if found, 0 if not found and set the stage for cache_set()
-  */
- static int
--cache_get(xprt, msg, replyp, replylenp)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
--	char **replyp;
--	size_t *replylenp;
-+cache_get(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg,
-+	char **replyp,
-+	size_t *replylenp)
- {
- 	u_int loc;
- 	cache_ptr ent;
-diff --git a/src/svc_generic.c b/src/svc_generic.c
-index 20abaa2..0eaa6fe 100644
---- a/src/svc_generic.c
-+++ b/src/svc_generic.c
-@@ -65,11 +65,11 @@ extern int __binddynport(int fd);
-  * created earlier instead of creating a new handle every time.
+ #ifdef NOTUSED
+ 	static bool_t check_rpcbind = TRUE;
+@@ -1116,12 +1111,12 @@ done:
+  * Assuming that the address is all properly allocated
   */
  int
--svc_create(dispatch, prognum, versnum, nettype)
--	void (*dispatch)(struct svc_req *, SVCXPRT *);
--	rpcprog_t prognum;		/* Program number */
--	rpcvers_t versnum;		/* Version number */
--	const char *nettype;		/* Networktype token */
-+svc_create(
-+	void (*dispatch)(struct svc_req *, SVCXPRT *),
-+	rpcprog_t prognum,		/* Program number */
-+	rpcvers_t versnum,		/* Version number */
-+	const char *nettype)		/* Networktype token */
+-rpcb_getaddr(program, version, nconf, address, host)
+-	rpcprog_t program;
+-	rpcvers_t version;
+-	const struct netconfig *nconf;
+-	struct netbuf *address;
+-	const char *host;
++rpcb_getaddr(
++	rpcprog_t program,
++	rpcvers_t version,
++	const struct netconfig *nconf,
++	struct netbuf *address,
++	const char *host)
  {
- 	struct xlist {
- 		SVCXPRT *xprt;		/* Server handle */
-@@ -138,11 +138,11 @@ svc_create(dispatch, prognum, versnum, nettype)
-  * with the rpcbind. It calls svc_tli_create();
+ 	struct netbuf *na;
+ 
+@@ -1152,9 +1147,9 @@ rpcb_getaddr(program, version, nconf, address, host)
+  * It returns NULL on failure.
   */
- SVCXPRT *
--svc_tp_create(dispatch, prognum, versnum, nconf)
--	void (*dispatch)(struct svc_req *, SVCXPRT *);
--	rpcprog_t prognum;		/* Program number */
--	rpcvers_t versnum;		/* Version number */
--	const struct netconfig *nconf; /* Netconfig structure for the network */
-+svc_tp_create(
-+	void (*dispatch)(struct svc_req *, SVCXPRT *),
-+	rpcprog_t prognum,		/* Program number */
-+	rpcvers_t versnum,		/* Version number */
-+	const struct netconfig *nconf) /* Netconfig structure for the network */
+ rpcblist *
+-rpcb_getmaps(nconf, host)
+-	const struct netconfig *nconf;
+-	const char *host;
++rpcb_getmaps(
++	const struct netconfig *nconf,
++	const char *host)
  {
- 	SVCXPRT *xprt;
- 
-@@ -179,12 +179,12 @@ svc_tp_create(dispatch, prognum, versnum, nconf)
-  * If sendsz or recvsz are zero, their default values are chosen.
+ 	rpcblist_ptr head = NULL;
+ 	CLIENT *client;
+@@ -1204,17 +1199,18 @@ done:
+  * programs to do a lookup and call in one step.
+ */
+ enum clnt_stat
+-rpcb_rmtcall(nconf, host, prog, vers, proc, xdrargs, argsp,
+-		xdrres, resp, tout, addr_ptr)
+-	const struct netconfig *nconf;	/* Netconfig structure */
+-	const char *host;			/* Remote host name */
+-	rpcprog_t prog;
+-	rpcvers_t vers;
+-	rpcproc_t proc;			/* Remote proc identifiers */
+-	xdrproc_t xdrargs, xdrres;	/* XDR routines */
+-	caddr_t argsp, resp;		/* Argument and Result */
+-	struct timeval tout;		/* Timeout value for this call */
+-	const struct netbuf *addr_ptr;	/* Preallocated netbuf address */
++rpcb_rmtcall(
++	const struct netconfig *nconf,	/* Netconfig structure */
++	const char *host,			/* Remote host name */
++	rpcprog_t prog,
++	rpcvers_t vers,
++	rpcproc_t proc,			/* Remote proc identifiers */
++	xdrproc_t xdrargs,      /* In XDR routines */ 
++	caddr_t argsp,			/* In Argument */
++	xdrproc_t xdrres,		/* Out XDR routines */
++	caddr_t resp,			/* out Result */
++	struct timeval tout,		/* Timeout value for this call */
++	const struct netbuf *addr_ptr)	/* Preallocated netbuf address */
+ {
+ 	CLIENT *client;
+ 	enum clnt_stat stat;
+@@ -1285,9 +1281,7 @@ error:
+  * Returns 1 if succeeds else 0.
   */
- SVCXPRT *
--svc_tli_create(fd, nconf, bindaddr, sendsz, recvsz)
--	int fd;				/* Connection end point */
--	const struct netconfig *nconf;	/* Netconfig struct for nettoken */
--	const struct t_bind *bindaddr;	/* Local bind address */
--	u_int sendsz;			/* Max sendsize */
--	u_int recvsz;			/* Max recvsize */
-+svc_tli_create(
-+	int fd,				/* Connection end point */
-+	const struct netconfig *nconf,	/* Netconfig struct for nettoken */
-+	const struct t_bind *bindaddr,	/* Local bind address */
-+	u_int sendsz,			/* Max sendsize */
-+	u_int recvsz)			/* Max recvsize */
+ bool_t
+-rpcb_gettime(host, timep)
+-	const char *host;
+-	time_t *timep;
++rpcb_gettime(const char *host, time_t *timep)
  {
- 	SVCXPRT *xprt = NULL;		/* service handle */
- 	bool_t madefd = FALSE;		/* whether fd opened here  */
-diff --git a/src/svc_raw.c b/src/svc_raw.c
-index 1f0bf97..293d3ba 100644
---- a/src/svc_raw.c
-+++ b/src/svc_raw.c
-@@ -115,17 +115,17 @@ svc_raw_create()
- 
- /*ARGSUSED*/
- static enum xprt_stat
--svc_raw_stat(xprt)
--SVCXPRT *xprt; /* args needed to satisfy ANSI-C typechecking */
-+svc_raw_stat(
-+SVCXPRT *xprt) /* args needed to satisfy ANSI-C typechecking */
+ 	CLIENT *client = NULL;
+ 	void *handle;
+@@ -1345,9 +1339,9 @@ rpcb_gettime(host, timep)
+  * really be called because local n2a libraries are always provided.
+  */
+ char *
+-rpcb_taddr2uaddr(nconf, taddr)
+-	struct netconfig *nconf;
+-	struct netbuf *taddr;
++rpcb_taddr2uaddr(
++	struct netconfig *nconf,
++	struct netbuf *taddr)
  {
- 	return (XPRT_IDLE);
- }
- 
- /*ARGSUSED*/
- static bool_t
--svc_raw_recv(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_raw_recv(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
+ 	CLIENT *client;
+ 	char *uaddr = NULL;
+@@ -1379,9 +1373,9 @@ rpcb_taddr2uaddr(nconf, taddr)
+  * really be called because local n2a libraries are always provided.
+  */
+ struct netbuf *
+-rpcb_uaddr2taddr(nconf, uaddr)
+-	struct netconfig *nconf;
+-	char *uaddr;
++rpcb_uaddr2taddr(
++	struct netconfig *nconf,
++	char *uaddr)
  {
- 	struct svc_raw_private *srp;
- 	XDR *xdrs;
-@@ -149,9 +149,9 @@ svc_raw_recv(xprt, msg)
+ 	CLIENT *client;
+ 	struct netbuf *taddr;
+diff --git a/src/rpcb_prot.c b/src/rpcb_prot.c
+index a923c8e..809feb0 100644
+--- a/src/rpcb_prot.c
++++ b/src/rpcb_prot.c
+@@ -44,9 +44,9 @@
+ #include "rpc_com.h"
  
- /*ARGSUSED*/
- static bool_t
--svc_raw_reply(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_raw_reply(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
+ bool_t
+-xdr_rpcb(xdrs, objp)
+-	XDR *xdrs;
+-	RPCB *objp;
++xdr_rpcb(
++	XDR *xdrs,
++	RPCB *objp)
  {
- 	struct svc_raw_private *srp;
- 	XDR *xdrs;
-@@ -176,10 +176,10 @@ svc_raw_reply(xprt, msg)
- 
- /*ARGSUSED*/
- static bool_t
--svc_raw_getargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_raw_getargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 	struct svc_raw_private *srp;
- 
-@@ -195,10 +195,10 @@ svc_raw_getargs(xprt, xdr_args, args_ptr)
- 
- /*ARGSUSED*/
- static bool_t
--svc_raw_freeargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_raw_freeargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 	struct svc_raw_private *srp;
- 	XDR *xdrs;
-@@ -218,24 +218,22 @@ svc_raw_freeargs(xprt, xdr_args, args_ptr)
- 
- /*ARGSUSED*/
- static void
--svc_raw_destroy(xprt)
--SVCXPRT *xprt;
-+svc_raw_destroy(SVCXPRT *xprt)
- {
- }
- 
- /*ARGSUSED*/
- static bool_t
--svc_raw_control(xprt, rq, in)
--	SVCXPRT *xprt;
--	const u_int	rq;
--	void		*in;
-+svc_raw_control(
-+	SVCXPRT *xprt,
-+	const u_int	rq,
-+	void		*in)
- {
- 	return (FALSE);
- }
- 
- static void
--svc_raw_ops(xprt)
--	SVCXPRT *xprt;
-+svc_raw_ops(SVCXPRT *xprt)
- {
- 	static struct xp_ops ops;
- 	static struct xp_ops2 ops2;
-diff --git a/src/svc_simple.c b/src/svc_simple.c
-index c32fe0a..e2ef276 100644
---- a/src/svc_simple.c
-+++ b/src/svc_simple.c
-@@ -87,13 +87,14 @@ static const char __no_mem_str[] = "out of memory";
+ 	if (!xdr_u_int32_t(xdrs, &objp->r_prog)) {
+ 		return (FALSE);
+@@ -90,9 +90,9 @@ xdr_rpcb(xdrs, objp)
   */
  
- int
--rpc_reg(prognum, versnum, procnum, progname, inproc, outproc, nettype)
--	rpcprog_t prognum;			/* program number */
--	rpcvers_t versnum;			/* version number */
--	rpcproc_t procnum;			/* procedure number */
--	char *(*progname)(char *); /* Server routine */
--	xdrproc_t inproc, outproc;	/* in/out XDR procedures */
--	char *nettype;			/* nettype */
-+rpc_reg(
-+	rpcprog_t prognum,			/* program number */
-+	rpcvers_t versnum,			/* version number */
-+	rpcproc_t procnum,			/* procedure number */
-+	char *(*progname)(char *), /* Server routine */
-+	xdrproc_t inproc, 		/* in XDR procedures */
-+	xdrproc_t outproc,		/* out XDR procedures */
-+	char *nettype)			/* nettype */
+ bool_t
+-xdr_rpcblist_ptr(xdrs, rp)
+-	XDR *xdrs;
+-	rpcblist_ptr *rp;
++xdr_rpcblist_ptr(
++	XDR *xdrs,
++	rpcblist_ptr *rp)
  {
- 	struct netconfig *nconf;
- 	int done = FALSE;
-@@ -231,9 +232,7 @@ rpc_reg(prognum, versnum, procnum, progname, inproc, outproc, nettype)
+ 	/*
+ 	 * more_elements is pre-computed in case the direction is
+@@ -144,9 +144,9 @@ xdr_rpcblist_ptr(xdrs, rp)
+  * functionality to xdr_rpcblist_ptr().
   */
- 
- static void
--universal(rqstp, transp)
--	struct svc_req *rqstp;
--	SVCXPRT *transp;
-+universal(struct svc_req *rqstp, SVCXPRT *transp)
+ bool_t
+-xdr_rpcblist(xdrs, rp)
+-	XDR *xdrs;
+-	RPCBLIST **rp;
++xdr_rpcblist(
++	XDR *xdrs,
++	RPCBLIST **rp)
  {
- 	rpcprog_t prog;
- 	rpcvers_t vers;
-diff --git a/src/svc_vc.c b/src/svc_vc.c
-index ac6cdd1..ddea947 100644
---- a/src/svc_vc.c
-+++ b/src/svc_vc.c
-@@ -145,10 +145,10 @@ __xprt_set_raddr(SVCXPRT *xprt, const struct sockaddr_storage *ss)
-  * 0 => use the system default.
+ 	bool_t	dummy;
+ 
+@@ -156,9 +156,9 @@ xdr_rpcblist(xdrs, rp)
+ 
+ 
+ bool_t
+-xdr_rpcb_entry(xdrs, objp)
+-	XDR *xdrs;
+-	rpcb_entry *objp;
++xdr_rpcb_entry(
++	XDR *xdrs,
++	rpcb_entry *objp)
+ {
+ 	if (!xdr_string(xdrs, &objp->r_maddr, RPC_MAXDATASIZE)) {
+ 		return (FALSE);
+@@ -179,9 +179,9 @@ xdr_rpcb_entry(xdrs, objp)
+ }
+ 
+ bool_t
+-xdr_rpcb_entry_list_ptr(xdrs, rp)
+-	XDR *xdrs;
+-	rpcb_entry_list_ptr *rp;
++xdr_rpcb_entry_list_ptr(
++	XDR *xdrs,
++	rpcb_entry_list_ptr *rp)
+ {
+ 	/*
+ 	 * more_elements is pre-computed in case the direction is
+@@ -234,9 +234,9 @@ xdr_rpcb_entry_list_ptr(xdrs, rp)
+  * written for XDR_ENCODE direction only
   */
- SVCXPRT *
--svc_vc_create(fd, sendsize, recvsize)
--	int fd;
--	u_int sendsize;
--	u_int recvsize;
-+svc_vc_create(
-+	int fd,
-+	u_int sendsize,
-+	u_int recvsize)
+ bool_t
+-xdr_rpcb_rmtcallargs(xdrs, p)
+-	XDR *xdrs;
+-	struct rpcb_rmtcallargs *p;
++xdr_rpcb_rmtcallargs(
++	XDR *xdrs,
++	struct rpcb_rmtcallargs *p)
  {
- 	SVCXPRT *xprt = NULL;
- 	SVCXPRT_EXT *ext = NULL;
-@@ -216,10 +216,10 @@ cleanup_svc_vc_create:
-  * descriptor as its first input.
+ 	struct r_rpcb_rmtcallargs *objp =
+ 	    (struct r_rpcb_rmtcallargs *)(void *)p;
+@@ -286,9 +286,9 @@ xdr_rpcb_rmtcallargs(xdrs, p)
+  * written for XDR_DECODE direction only
   */
- SVCXPRT *
--svc_fd_create(fd, sendsize, recvsize)
--	int fd;
--	u_int sendsize;
--	u_int recvsize;
-+svc_fd_create(
-+	int fd,
-+	u_int sendsize,
-+	u_int recvsize)
+ bool_t
+-xdr_rpcb_rmtcallres(xdrs, p)
+-	XDR *xdrs;
+-	struct rpcb_rmtcallres *p;
++xdr_rpcb_rmtcallres(
++	XDR *xdrs,
++	struct rpcb_rmtcallres *p)
  {
- 	struct sockaddr_storage ss;
- 	socklen_t slen;
-@@ -271,10 +271,10 @@ freedata:
+ 	bool_t dummy;
+ 	struct r_rpcb_rmtcallres *objp = (struct r_rpcb_rmtcallres *)(void *)p;
+@@ -304,9 +304,9 @@ xdr_rpcb_rmtcallres(xdrs, p)
  }
  
- static SVCXPRT *
--makefd_xprt(fd, sendsize, recvsize)
--	int fd;
--	u_int sendsize;
--	u_int recvsize;
-+makefd_xprt(
-+	int fd,
-+	u_int sendsize,
-+	u_int recvsize)
+ bool_t
+-xdr_netbuf(xdrs, objp)
+-	XDR *xdrs;
+-	struct netbuf *objp;
++xdr_netbuf(
++	XDR *xdrs,
++	struct netbuf *objp)
  {
- 	SVCXPRT *xprt;
- 	SVCXPRT_EXT *ext;
-@@ -326,9 +326,9 @@ done:
+ 	bool_t dummy;
  
- /*ARGSUSED*/
- static bool_t
--rendezvous_request(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+rendezvous_request(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
- {
- 	int sock, flags, nfds, cnt;
- 	struct cf_rendezvous *r;
-@@ -405,16 +405,14 @@ again:
+diff --git a/src/rpcb_st_xdr.c b/src/rpcb_st_xdr.c
+index 28e6a48..7ee23a8 100644
+--- a/src/rpcb_st_xdr.c
++++ b/src/rpcb_st_xdr.c
+@@ -42,9 +42,9 @@
+ /* Link list of all the stats about getport and getaddr */
  
- /*ARGSUSED*/
- static enum xprt_stat
--rendezvous_stat(xprt)
--	SVCXPRT *xprt;
-+rendezvous_stat(SVCXPRT *xprt)
+ bool_t
+-xdr_rpcbs_addrlist(xdrs, objp)
+-	XDR *xdrs;
+-	rpcbs_addrlist *objp;
++xdr_rpcbs_addrlist(
++	XDR *xdrs,
++	rpcbs_addrlist *objp)
  {
  
- 	return (XPRT_IDLE);
+ 	    if (!xdr_u_int32_t(xdrs, &objp->prog)) {
+@@ -75,9 +75,9 @@ xdr_rpcbs_addrlist(xdrs, objp)
+ /* Link list of all the stats about rmtcall */
+ 
+ bool_t
+-xdr_rpcbs_rmtcalllist(xdrs, objp)
+-	XDR *xdrs;
+-	rpcbs_rmtcalllist *objp;
++xdr_rpcbs_rmtcalllist(
++	XDR *xdrs,
++	rpcbs_rmtcalllist *objp)
+ {
+ 	int32_t *buf;
+ 
+@@ -188,9 +188,9 @@ xdr_rpcbs_rmtcalllist(xdrs, objp)
  }
  
- static void
--svc_vc_destroy(xprt)
--	SVCXPRT *xprt;
-+svc_vc_destroy(SVCXPRT *xprt)
+ bool_t
+-xdr_rpcbs_proc(xdrs, objp)
+-	XDR *xdrs;
+-	rpcbs_proc objp;
++xdr_rpcbs_proc(
++	XDR *xdrs,
++	rpcbs_proc objp)
  {
- 	assert(xprt != NULL);
- 	
-@@ -423,14 +421,12 @@ svc_vc_destroy(xprt)
+ 	if (!xdr_vector(xdrs, (char *)(void *)objp, RPCBSTAT_HIGHPROC,
+ 	    sizeof (int), (xdrproc_t)xdr_int)) {
+@@ -200,9 +200,9 @@ xdr_rpcbs_proc(xdrs, objp)
  }
  
- static bool_t
--__svc_rendezvous_socket(xprt)
--	SVCXPRT *xprt;
-+__svc_rendezvous_socket(SVCXPRT *xprt)
+ bool_t
+-xdr_rpcbs_addrlist_ptr(xdrs, objp)
+-	XDR *xdrs;
+-	rpcbs_addrlist_ptr *objp;
++xdr_rpcbs_addrlist_ptr(
++	XDR *xdrs,
++	rpcbs_addrlist_ptr *objp)
  {
- 	return (xprt->xp_ops->xp_recv == rendezvous_request);
- }
- static void
--__svc_vc_dodestroy(xprt)
--	SVCXPRT *xprt;
-+__svc_vc_dodestroy(SVCXPRT *xprt)
- {
- 	SVCXPRT_EXT *ext = SVCEXT(xprt);
- 	struct cf_conn *cd;
-@@ -465,19 +461,19 @@ __svc_vc_dodestroy(xprt)
- 
- /*ARGSUSED*/
- static bool_t
--svc_vc_control(xprt, rq, in)
--	SVCXPRT *xprt;
--	const u_int rq;
--	void *in;
-+svc_vc_control(
-+	SVCXPRT *xprt,
-+	const u_int rq,
-+	void *in)
- {
- 	return (FALSE);
+ 	if (!xdr_pointer(xdrs, (char **)objp, sizeof (rpcbs_addrlist),
+ 			(xdrproc_t)xdr_rpcbs_addrlist)) {
+@@ -212,9 +212,9 @@ xdr_rpcbs_addrlist_ptr(xdrs, objp)
  }
  
- static bool_t
--svc_vc_rendezvous_control(xprt, rq, in)
--	SVCXPRT *xprt;
--	const u_int rq;
--	void *in;
-+svc_vc_rendezvous_control(
-+	SVCXPRT *xprt,
-+	const u_int rq,
-+	void *in)
+ bool_t
+-xdr_rpcbs_rmtcalllist_ptr(xdrs, objp)
+-	XDR *xdrs;
+-	rpcbs_rmtcalllist_ptr *objp;
++xdr_rpcbs_rmtcalllist_ptr(
++	XDR *xdrs,
++	rpcbs_rmtcalllist_ptr *objp)
  {
- 	struct cf_rendezvous *cfp;
+ 	if (!xdr_pointer(xdrs, (char **)objp, sizeof (rpcbs_rmtcalllist),
+ 			(xdrproc_t)xdr_rpcbs_rmtcalllist)) {
+@@ -224,9 +224,9 @@ xdr_rpcbs_rmtcalllist_ptr(xdrs, objp)
+ }
  
-@@ -505,10 +501,10 @@ svc_vc_rendezvous_control(xprt, rq, in)
-  * fatal for the connection.
+ bool_t
+-xdr_rpcb_stat(xdrs, objp)
+-	XDR *xdrs;
+-	rpcb_stat *objp;
++xdr_rpcb_stat(
++	XDR *xdrs,
++	rpcb_stat *objp)
+ {
+ 
+ 	if (!xdr_rpcbs_proc(xdrs, objp->info)) {
+@@ -252,9 +252,9 @@ xdr_rpcb_stat(xdrs, objp)
+  * being monitored.
   */
- static int
--read_vc(xprtp, buf, len)
--	void *xprtp;
--	void *buf;
--	int len;
-+read_vc(
-+	void *xprtp,
-+	void *buf,
-+	int len)
+ bool_t
+-xdr_rpcb_stat_byvers(xdrs, objp)
+-    XDR *xdrs;
+-    rpcb_stat_byvers objp;
++xdr_rpcb_stat_byvers(
++    XDR *xdrs,
++    rpcb_stat_byvers objp)
  {
- 	SVCXPRT *xprt;
- 	int sock;
-@@ -573,10 +569,10 @@ fatal_err:
-  * Any error is fatal and the connection is closed.
-  */
- static int
--write_vc(xprtp, buf, len)
--	void *xprtp;
--	void *buf;
--	int len;
-+write_vc(
-+	void *xprtp,
-+	void *buf,
-+	int len)
- {
- 	SVCXPRT *xprt;
- 	int i, cnt;
-@@ -618,8 +614,7 @@ write_vc(xprtp, buf, len)
- }
- 
- static enum xprt_stat
--svc_vc_stat(xprt)
--	SVCXPRT *xprt;
-+svc_vc_stat(SVCXPRT *xprt)
- {
- 	struct cf_conn *cd;
- 
-@@ -635,9 +630,9 @@ svc_vc_stat(xprt)
- }
- 
- static bool_t
--svc_vc_recv(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_vc_recv(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
- {
- 	struct cf_conn *cd;
- 	XDR *xdrs;
-@@ -668,10 +663,10 @@ svc_vc_recv(xprt, msg)
- }
- 
- static bool_t
--svc_vc_getargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_vc_getargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 
- 	assert(xprt != NULL);
-@@ -686,10 +681,10 @@ svc_vc_getargs(xprt, xdr_args, args_ptr)
- }
- 
- static bool_t
--svc_vc_freeargs(xprt, xdr_args, args_ptr)
--	SVCXPRT *xprt;
--	xdrproc_t xdr_args;
--	void *args_ptr;
-+svc_vc_freeargs(
-+	SVCXPRT *xprt,
-+	xdrproc_t xdr_args,
-+	void *args_ptr)
- {
- 	XDR *xdrs;
- 
-@@ -703,9 +698,9 @@ svc_vc_freeargs(xprt, xdr_args, args_ptr)
- }
- 
- static bool_t
--svc_vc_reply(xprt, msg)
--	SVCXPRT *xprt;
--	struct rpc_msg *msg;
-+svc_vc_reply(
-+	SVCXPRT *xprt,
-+	struct rpc_msg *msg)
- {
- 	struct cf_conn *cd;
- 	XDR *xdrs;
-@@ -746,8 +741,7 @@ svc_vc_reply(xprt, msg)
- }
- 
- static void
--svc_vc_ops(xprt)
--	SVCXPRT *xprt;
-+svc_vc_ops(SVCXPRT *xprt)
- {
- 	static struct xp_ops ops;
- 	static struct xp_ops2 ops2;
-@@ -771,8 +765,7 @@ svc_vc_ops(xprt)
- }
- 
- static void
--svc_vc_rendezvous_ops(xprt)
--	SVCXPRT *xprt;
-+svc_vc_rendezvous_ops(SVCXPRT *xprt)
- {
- 	static struct xp_ops ops;
- 	static struct xp_ops2 ops2;
+ 	if (!xdr_vector(xdrs, (char *)(void *)objp, RPCBVERS_STAT,
+ 	    sizeof (rpcb_stat), (xdrproc_t)xdr_rpcb_stat)) {
 -- 
 2.50.1
 
