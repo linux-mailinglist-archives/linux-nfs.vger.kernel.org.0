@@ -1,117 +1,113 @@
-Return-Path: <linux-nfs+bounces-13839-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13840-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07673B300CA
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 19:14:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 568C1B300DB
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 19:19:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1163D5E70E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 17:14:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D6FF3AA638
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 17:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4172F1FF6;
-	Thu, 21 Aug 2025 17:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4BC2E3718;
+	Thu, 21 Aug 2025 17:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outspiration-net.20230601.gappssmtp.com header.i=@outspiration-net.20230601.gappssmtp.com header.b="AbyfEp61"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/UP3wml"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0743261B91
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 17:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802482D0638;
+	Thu, 21 Aug 2025 17:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755796473; cv=none; b=e3giDHL/eXXVqUKw9mQ/TKAIdspSWrwJLI2eweWFnbJAOzuKXSL0/H5Wj7AT+MSopsXV9gq2u3ybUd4fsmqaqbrzdXwwNsjCAfGJuTvuXcjiiUg3m62xsUCsde4MVERXZ/EQDZtpBDYUXwdAIo6mH6ONafGfaWPEQtk/2Vdk5iI=
+	t=1755796630; cv=none; b=FT0H8F9yRmlvYk6QetnVIXgng6rWeOZRV5VozRC+vQYxI6kFA8MLV5YxCeyuNh7C+4EWg090HkQOvQQhd2yuL3SMOt+buPP3pnk86xJD5MCPbw0+SNG7Y0wGykpi2jk5zgezzw1FnMkQ0KdmoodMIpmKr2+qO5GE61B8lhFA1tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755796473; c=relaxed/simple;
-	bh=olTufaTrfpayMWCmjjec4ckT8qJIVE2bL7O+TQjgnD0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=aKkQd2d21yiIGuhSSgrv7zpgv1hVMJdrOyNAYhhT4owl/jcdWIfcM+5j6m1wdoq35OkI6e+0gC2bSYski0zxwdQxe8/thF3KFQRJYMTPvd9g6VtP5H6pMHXOOoYi080HRtJQZuuaDeccqMSP/BNPNPe1QXSOBweriInadSSzmDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outspiration.net; spf=pass smtp.mailfrom=outspiration.net; dkim=pass (2048-bit key) header.d=outspiration-net.20230601.gappssmtp.com header.i=@outspiration-net.20230601.gappssmtp.com header.b=AbyfEp61; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outspiration.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outspiration.net
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-afcb78fb04cso169047566b.1
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 10:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=outspiration-net.20230601.gappssmtp.com; s=20230601; t=1755796470; x=1756401270; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=olTufaTrfpayMWCmjjec4ckT8qJIVE2bL7O+TQjgnD0=;
-        b=AbyfEp61BT2pxONtFyQdCJyGmShsJFyzTUWb92/FPV5vLM+szaWVB6Kggd2YkUj2pg
-         A27tvUgtW6eYGY7jaxeVzxpRt6pjD1l4GOa+r3U0Q7xJxJxeGpBCr+rp/rQ/YiCMramg
-         3NTCf2inC9T00muymH12/3cFHlE9j3a/5xCD5Y7qDNqaxVdg9r4fBdk4YgPW79hLlftm
-         5NZF7G0S12XIyrN96sKfUIL0aH30eqP3RFhL0Jvp+EzaWyor325fBtYnsPlzrICKnqVX
-         YgptN3vfpT7LsBCnhuY0GZHUeI2MCrzbyayaDJb65nxQddfeqAJl2LLUXq6s2nFFSaHG
-         31zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755796470; x=1756401270;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=olTufaTrfpayMWCmjjec4ckT8qJIVE2bL7O+TQjgnD0=;
-        b=IvIHtJGuCFNYYuHNRqv35KgK85AGSZsbpH88yQz4qpd3Ihe49FiP1YlrNWH+4XIFpN
-         NF9GBKWqUCNtAzNj9KKyUtus8B+QpdD+OYZtCitiHPjxwErMRDp95V2Yi/67+8VWHpH+
-         fggY9mrK6HtSkZj0/aSWp5BQUjxKMCnTzltP/fmQb7+EtHL11A5airIdJYKVFE4iKO29
-         A+sQykEGNIXkYT82fcl5P9ueWg1QwvkBxEWp1S23+RQwUv2d5hhkmXGYfcZhocCvJR7O
-         lAvBRPg6gVuozw9GcOSSw3HrZ8tE8Lk9V+Lp0nMUyx1xYxILRot0wjaxTNerLj2RBvgK
-         OG9Q==
-X-Gm-Message-State: AOJu0YwWV2sf/o04nnKHyDheHP8CDXo1VHosgY/s13rTde1sOFKx3MkG
-	BOx9P9VDgrCLeLeKaPp/JWJqSvOC/x8wO6DIerYZMLIMP8pmVuTVU+YkrtS9CGGt+SAR4V5QUdI
-	8B4VdzV/LWnbeH5y5O+dPTtGX8c0d9NvhYwsW8YpzNletloC9CoGA
-X-Gm-Gg: ASbGnct5G50h7ILohbqJNAHMVMQQmQbxN32S3LdwaLBJO/+J98qjUBub7M6V5QGaO3s
-	fvmixH1HYrvwqkeuC3Phfu4oBrFbbcJKVC47VaiYXUW6THyyjRpfz+0CxoLuJnZOUPqTZpT4oCD
-	GTmpqWgzghBZetE0jmKl6eP5400Ca4x3r9k5s25MLncIuTupe4F7zUk1/SnEbGKPWBSIv+n6f2Q
-	RrwzaadyGs=
-X-Google-Smtp-Source: AGHT+IEgz89vpyZ6eNvjPqcXck7AnCbxT//Z3nITTlOvIXv96xdH0vjOsA13rOr4LSTjMe7P9HUo5hxn9Gqg1zJNpIg=
-X-Received: by 2002:a17:906:4786:b0:afc:a331:a2aa with SMTP id
- a640c23a62f3a-afe0799eb05mr270716166b.7.1755796469593; Thu, 21 Aug 2025
- 10:14:29 -0700 (PDT)
-Received: from 766367193577 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 21 Aug 2025 10:14:28 -0700
-Received: from 766367193577 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 21 Aug 2025 10:14:28 -0700
+	s=arc-20240116; t=1755796630; c=relaxed/simple;
+	bh=WGhiuC8Crc/UzLl1IpIQpx1PRP3gGMcaGIqU0j6+iqo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n6+eP026O4s2OZiCa8+xg3Bbds9yGHCfCbvZr1RgYzcz4qbJRVYQ9/wyj5fQVY9xFcOPp9kSu0KF+H9DHpRHTKWG7Ns9zHz1iqRm7KX4SpyQNojnUr5BrCuYe0/BDUVSikTwcXCkD7qBf7yyhRd6XU4qj7NAZHk5XPDWwLejDnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/UP3wml; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8122BC4CEEB;
+	Thu, 21 Aug 2025 17:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755796629;
+	bh=WGhiuC8Crc/UzLl1IpIQpx1PRP3gGMcaGIqU0j6+iqo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=b/UP3wmlTwyGmPjgtngrumnazxKZvzFLjsLbn/MbGdWAxTSvzH6ak1GwheXRVmJdF
+	 ywFd6y8s5HVbqhCvWM7ragFJAzX1X36ZiXQE3NLId1lbXUeILHvoaq6ZLyCx2MIUBV
+	 CPukduAbIsYva13EgqcW/cZc9xFv4FHhssQGCGZMFf9G8U5SONK6FlEWc2WC/8WtY8
+	 V/VscZ3eAvmCTtMjDFO3lu9QKfrKaonwQWhmJFBnmjwMMiRO4TpMfMSqJH2QJVhulo
+	 PWFLGPzwHwzOCEV+Q3jHmlQ8VkPM8aTeIzhnGpaufuxhimvztGOTKcvrkoCMdNmBcF
+	 oKQUIzdk6KWSA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/2] sunrpc: allow dprintk() to go to the trace buffer
+ instead of console
+Date: Thu, 21 Aug 2025 13:16:52 -0400
+Message-Id: <20250821-nfs-testing-v1-0-f06099963eda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Julia Mitchell <julia.mitchell@outspiration.net>
-Date: Thu, 21 Aug 2025 10:14:28 -0700
-X-Gm-Features: Ac12FXyVRkstgUeUuac2MFcpx4_7qIQ87Axal9g35NCwq4Mu1hX1G2te57dztEI
-Message-ID: <CAEi2RsLX5Y4C=+TFOVEtCCQcvvkyG44OWFUNP4YVbmfzDVP4sA@mail.gmail.com>
-Subject: Get inspired with this concept
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIVUp2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDCyND3by0Yt2S1OKSzLx0XaMkI0MDcwNLU6MUEyWgjoKi1LTMCrBp0bG
+ 1tQAk/nRiXQAAAA==
+X-Change-ID: 20250821-nfs-testing-2b21070952d4
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1032; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=WGhiuC8Crc/UzLl1IpIQpx1PRP3gGMcaGIqU0j6+iqo=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBop1STSucDQuLHQTR3p5j8FuR0uQaaLs/OYO0bI
+ eNVnks+SNmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaKdUkwAKCRAADmhBGVaC
+ FQJ8D/9c68VsTp1l5hsGrGIp4c3GSzvV4OeAdWL7EjtMKPgOAGYSsCaR81G+4TkP7oVryMYv9Q7
+ lG25blljcj2p5vojF6hiMA6xjgyPzLBzs6nXPDC0ninhqKN09h7zerphnH7DGLPRzMqduSRUxNy
+ 8KbMoACnD6zfFT8xlPyXSj47qtRbyNHXc12L2kzgAE+I6w85M1EKHA78/y30+YQZ30OwB4xj+9f
+ sbQDGgCUvx9eM8J9mrgwGJ23rq/Vygpxg1qR2vxKdLGY4L5iFLTqO0CA/XMizAI6LA5NeCDXhGm
+ szR5h0aAmSYLwmkC3u+kKf8+5B12elWk/gqU8bfLATxLguKqabeKK349QOhWH55r1D/VE3DRMky
+ +FVPi4l932fIpJEJVthLcy+7JDWOhtDqFaXcbEpSFxCoQkU29ZzM10y8twMyTrS0KXdZQe8C7GI
+ 71X+KH/EJ16dvHrN6ailGwOcSJgTTf1jNhk6ko0oKWFFlSohoMsTNzYRIasGN1s0NFVnA6Jfrhq
+ rAfjefvLtTAljwjBp64tqp66CY1IJNFH1jYD3YQ/BeEXAO1xgLorvdCG9efSIKC8aJaH/wOLXp2
+ vweepTMTnuRAyWw79uNstry4I92k6elqoGmC8I8bTNgcmhP1dqT1ISmGNNe6eGey6x0AqyOoU0y
+ LcXUYMpRxFZUWgQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hi,
+While we have added a lot of static tracepoints in the last few years,
+we still have a load of dprintks in place at all levels of the
+NFS/NLM/RPC stack. At the same time, they're pretty useless under any
+significant load.
 
-Did you know that America's obesity rates have reached unprecedented
-levels, with over a third of adults and nearly one in five teens
-affected (https://www.nbcnews.com/health/health-news/america-s-obesity-epid=
-emic-hits-new-high-n587251)?
-This concerning trend has led to a surge in weight-loss products, many
-of which lack long-term effectiveness and can even be risky. Focusing
-on wellness-centered habits, however, could pave the way for
-sustainable, positive change.
+This adds a new Kconfig switch to allow those to go to the trace buffer
+instead. In addition to being more efficient, that allows us to enable
+static tracepoints alongside dprintk() and get a unified log.
 
-I=E2=80=99d love to contribute an article for your site that addresses obes=
-ity
-through a wellness approach. This piece would explore the benefits of
-chiropractic care, enjoyable exercise, quality sleep, balanced
-nutrition, and mental health support.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (2):
+      sunrpc: remove dfprintk_cont() and dfprintk_rcu_cont()
+      sunrpc: add a Kconfig option to redirect dfprintk() output to trace buffer
 
-If this sounds like a good fit for your readers, please let me know,
-and I=E2=80=99ll begin crafting the article.
+ fs/nfs/write.c               |  6 +++---
+ include/linux/sunrpc/debug.h | 30 ++++++++----------------------
+ net/sunrpc/Kconfig           | 14 ++++++++++++++
+ 3 files changed, 25 insertions(+), 25 deletions(-)
+---
+base-commit: 80a1bea0cd81de70c56b37a8292c23d57419776f
+change-id: 20250821-nfs-testing-2b21070952d4
 
-Thank you for considering this idea!
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-Julia Mitchell ~ outspiration.net
-
-
-P.S. If, by any chance, you=E2=80=99d prefer an article on a different topi=
-c,
-please send over your suggestions. However, if you'd prefer not to
-receive emails from me, please let me know!
 
