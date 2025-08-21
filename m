@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-13850-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13851-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 308CFB3024F
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 20:51:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AFC1B302B7
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 21:16:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C80201CC37EA
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 18:51:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BF131CE3779
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 19:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C31F13451C1;
-	Thu, 21 Aug 2025 18:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FA2748F;
+	Thu, 21 Aug 2025 19:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="n8nHIGaz"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="M/eU42wd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF3C343D9B
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 18:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4671BE56A
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 19:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755802281; cv=none; b=kGjz4dqyMeUUFiKdwuumh/XOUmvk/uEIyLNlCnztvrnAwe1TPLNQOMldsvB8H220LlOQc66M+VhtwEQ7pF8fC7HjtQgPWd0/0Kp5mWkZKh6sI4630HrRGxBemiwszSmztbI6kpLvC00kBTwG7NxvFTP6R4VPcUbIWM87BDHFrsA=
+	t=1755803736; cv=none; b=lxQ7sTkbD97Jcy937w4hlmJTlsTtwcl2FcsG6cQQVTq5TRgRWU96+i5vlpnpuWMX2wkt3K4QKxyGCvGuHV4NM29wK/TjD7lKCmYeMGCi430wZf9VvB7+WbCDijh4qYfI6T/seNftK9Z47fVLNec/UYLE9Sa5asIXy4+3E0LcYOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755802281; c=relaxed/simple;
-	bh=agKF78+nPxCNj9JmwED+/8SenIfOPHqhkTqM7OQ3Ejk=;
+	s=arc-20240116; t=1755803736; c=relaxed/simple;
+	bh=JEKforClnaQzH609QqGZXg5xmdKFm3NA5AZZk40esT4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NfGs4fgBaX3JHWlzL10TMzZcpMFlbA0O7W8GcQGri9sCzev6BL3viUUXFPYYFZkAhAHM2G9d2SAvz/YDfpP7e2AdZyryab17IyaljRDXRMOHvfPHXEhSYsNW7wfnXDLEtjwAeCz67guyjJ2X6lUDUqJbHw5NWLASid6fTyJBk2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=n8nHIGaz; arc=none smtp.client-ip=209.85.208.179
+	 To:Cc:Content-Type; b=jxPR2cF46yRGn7cHNPxPKdKBflbW396yAmaAySZeLCuFLmOFgWx3BHttzwdqs06IoC9MTjLugA2AfyfPiHBiBHlXII3uiXT+NAawDnV50hBYYaqnkfQ5s67288baDrFu/C1006WOaHxXIfS4SSxrLPQdCz8wwn73lbccE0VWu+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=M/eU42wd; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-333f8f0965dso11517751fa.1
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:51:19 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-333f8d1ecffso11713551fa.0
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 12:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1755802277; x=1756407077; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1755803732; x=1756408532; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ddk+wy6VK7MJEAI8GlBXfFm9yBwizBAHQQ8O2lFtND0=;
-        b=n8nHIGazoudDOYfa1fubJ13wpAP3joUSfCdrhxiZPz964kOZ5OZyOfThXcXt0tRqep
-         T6avQYNRPB17lkvah0Gtl8zMFVFfAk+JB8dO9LQUT1ZtkHirLNL7lufgYdQE8bl9RhlI
-         Dd6EaheMUbWhH42XPxpJEp0jDuQpKtOZ02F+77PRhrNJAA5Iw8hWdQJtQ5kCwNuYRgGn
-         wmWouHZhnvymeTh2nyTX5ChRR7HbAOtSDIS+xRbsiAA5xHXOAUm6icquYSOjBigcH6J4
-         b4QiGBxvkcdEagt6Xryo8pVAoUwJ2ytKo5wMJcAmE9AM93qRcaKwEHriEk+qM1qPkkgd
-         HBLw==
+        bh=g4soZWYXMEzJLctjhinKLMFmX4cP0+Sgf9Js9bIxP/0=;
+        b=M/eU42wdAsK99Ulgq42OwpZq7aB0Wryn/MRrD0GdNkL3gPjHplTXSB9IAwnnUyDjlz
+         lDmvWM2bMPbY4xwGA2tCy21GjQEcrNO5HGDGuxbmTqCCHDrRzNfclt5YkItCeNMj/AF8
+         Uv7hOn7NsH/2NDj8q43OzKouKnTdHTZg+IHIRylQSnbviadpXsoII1g/8loWhA4F3dny
+         cl/79BxYYvOOHhzFzH8pW3Rbb1hDP9nTT05e9zaWkifKPQg+QvA6j9jyyuWE9K4bF3nQ
+         hSDjv7Am9yIdFpMKv2yXiSPjN3RbQtkSZiseaB4xKhn3uL9+kwvn7jwQD4RJL7Y1qzMf
+         n89g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755802277; x=1756407077;
+        d=1e100.net; s=20230601; t=1755803732; x=1756408532;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ddk+wy6VK7MJEAI8GlBXfFm9yBwizBAHQQ8O2lFtND0=;
-        b=IasvExEtVNBS3He0L8rTwHXSO/0ryI+WggNKQ6jok4PNPN05gJXAZFbFi0pIdMLlwo
-         /VkSQA8vrPEAPGFKgDB/Vj/FVe1v9x/yO7kDX65ihPrdqrsb/mnAicYLoKFI2FjOBtLM
-         4gpOvZQjR6zCQJU1MART7OZzpdlMv0jw4bMNv/51diypICPktXtUVOsLqwcI8gmHRB4g
-         IhiQ+KjFlLO50lgZHm+3tD6dLm7sJdzaGoOhBjIsXx5ha2OENxLSOmyt7sOu6TjnxbwU
-         xIU8eLSp+I6kFWf8iZEvhP0uu/z4yb12SvWyDIPKAAyYYs3hGWD59sM+e6LChkTR4cKr
-         dJ/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTwxo9yJVPeCJZ5i8HavqYHefmLjkk/Td3hubmcxKoa5IN8XMsF0Ebl/L0QNNSlu/e0GeY83oaUo4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJXLvRhHsrnNpPMWnQ9m6llft68K5mI25faUlgHilrYr0UVXAO
-	R9q4ClygUp5Z/ejU3NJCnOLHFk+H4jI1pw8YAZESSy9p7IN7Kf18qILaGyMbtulf6Yr6Py1X3Q6
-	gaa+mCmI2aglZnLA+FhPqbtokYsQWw9w1mFTA
-X-Gm-Gg: ASbGncvkMcGvA6ELTvnflLiC7ci9UhHal2bgwkQCNYx2lAljpf/p9gzHWEoyX+G+LMi
-	sDoLIJ1ofmKR4KTXMKrMWr8mvIMfkYGKJdsCx5+stVZK984e06+UlSTIl0wfaVpZe9tPctlzvlJ
-	2POTFX3HYFXACg88DAxrILEXDjNYFp1xch0ADFzXH3xRftLzAdDiayehPkuKmH0vM/rzcdUWqaa
-	29p9N+vq8SAYsj8hf3hyuSDJppNBH4MWCAbvav1mfKd01fHLIKJ
-X-Google-Smtp-Source: AGHT+IE8ev3uWy9h/aeacniS/R4mmo6hf94yg9un4jzeDhnT2N994zqXtdO6zF/46MrQM4wdcrA//jNREPzWT/gCKo8=
-X-Received: by 2002:a2e:8a8c:0:b0:32a:8030:7004 with SMTP id
- 38308e7fff4ca-33650dd7f70mr319011fa.4.1755802277318; Thu, 21 Aug 2025
- 11:51:17 -0700 (PDT)
+        bh=g4soZWYXMEzJLctjhinKLMFmX4cP0+Sgf9Js9bIxP/0=;
+        b=Zej3DZw1m0YvoLCX3H3TYyr1V2Gm0U0BemL+ETPLAtBCyEJSQuAhg2ROdxapdO6RZl
+         2XlsEy22kj3+km7f345iPIjZ7Z6kB8NMAPrmyYu6RjazQjlG4hjU56GMjXOEGyLSqPqI
+         2bsnY4u2+2NAf8CtfyPzP5NnbgdbDDG2nnrk21FwwUmuUb7ilS1bwlvFXECcYfD17WEl
+         NkWiOb0h1MB5fRhtHmWpvVUg6xMXgEeK/WAG+FXSWWbX5kNOthH46FCj2C9YP2EhwgKD
+         9Xxvx0wSJOZnwDQ/FZ3DMuRNgVxOcdYOsl1imXnYVDwHVRRb9O9RZttkpitRJpvApHHb
+         O+WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0GBaiY52b4pnTiGyYyaw/oCvsVJFNjKP0SBn6aRWIy+BG/zcrJOQ1iSp0aR1shZMVFI3jh1jSr+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylG28VUdJpgKDXNelwMREZhjeJXJ0VK/lVxqm68jG6T6/jSF30
+	LfVrh0d9G05yyhzBRL8HMbWYaEvgFSy5ofhFE4bUMFjYXA3xlTjiBKDj0D/BrEGoTraDyma89bI
+	0LULQiMi1XGcQX9N8tBS6lnd5ThSPhJA=
+X-Gm-Gg: ASbGncth03LiUVO/8VNAv7lB3d7AOxRboJ9+mf3rshDYQHjrkPuX07ABU6IReAKEIIi
+	oa84y6iPnGeW75yj5XIXWIPPTeU8JQHCvbKooMPepnddMochqyyqTLjwXCMcFNrriCqVWUsx3tg
+	boapEpup8238OGcQru+GyuOnmd9Zx0YPrqXXOv+8mcTSNdKytOC3rL32fTLAmRJsX99UcZyoy8p
+	W2eZ6RpzDTcBLQCG+DTInKUm/P5GYEt3PJ6EUdezA==
+X-Google-Smtp-Source: AGHT+IEdmxRBikq50JGdDz9tEvPNqNpe69LXbtvCRlqB30o/C14YYmx5ZdWbLS7UFvqX1ix8lHFCw8RBBldSk5ZL/40=
+X-Received: by 2002:a05:651c:f0c:b0:32a:6aa0:2173 with SMTP id
+ 38308e7fff4ca-33650f99354mr529731fa.20.1755803731968; Thu, 21 Aug 2025
+ 12:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -83,9 +83,9 @@ References: <CAN-5tyEammkfv3QGwe5Z38q1nFAxYV=REFDN++3XrX7Lni+H0A@mail.gmail.com>
  <fc97f4d3-6f0d-4ead-adb5-68cea81bd38f@oracle.com>
 In-Reply-To: <fc97f4d3-6f0d-4ead-adb5-68cea81bd38f@oracle.com>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Thu, 21 Aug 2025 14:51:05 -0400
-X-Gm-Features: Ac12FXwuBns_p8SxnfDYkn4INkZqardaSQT0bEnY1j6Psz1ey8o6c0l1HqNaMrk
-Message-ID: <CAN-5tyHqL-AYw6RD0iFUzszKwB2Ex23weTfnVtJrwAaiiXmWYA@mail.gmail.com>
+Date: Thu, 21 Aug 2025 15:15:20 -0400
+X-Gm-Features: Ac12FXyZODZ_T1_O8cLgYMgZtDYB-scPAo2k1gLZKyy8mpaPeoEf21jSaK3TP_g
+Message-ID: <CAN-5tyEixqKLAuY=BthE=WHyZd_CQ0kLQJuUzLoeQQgCutrOxQ@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] lockd: while grace prefer to fail with nlm_lck_denied_grace_period
 To: Chuck Lever <chuck.lever@oracle.com>
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, jlayton@kernel.org, 
@@ -244,8 +244,23 @@ OX
 > client that requests a resend". You want NLM to /not send a response/,
 > and we have a specific mechanism for that.
 
-To drop a response lockd expect that it gets nlm_drop_response.
+I don't understand why the suggestion holds value.
 
+nlm_open() is going to call nfsd_open() which will return
+nfserr_jukebox (for among other conditions) when there is a
+conflicting delegation. Currently, nlm_fopen() would return nlm_failed
+(it does not recognize nfserr_jukebox error code). nlm_fopen() has to
+identify that nfserr_jukebox error as special to mean that the request
+needs to be dropped. There is already a mechanism for it and that is
+to return nlm_drop_reply.
+
+What purpose would be to set RQ_DROPME for the nfserr_jukebox in
+nlm_fopen() (note that nfserr_jukebox needs to be identified) . What
+error should one be returning instead of "nlm_drop_reply"?  Why is
+returning some other error code + setting RQ_DROPME be more "clear"?
+
+>
+>
 > >> So, if 1/2 has been tested with NFSv2 and does not cause NFSD to leak
 > >> nfserr_jukebox to NFSv2 clients, then please rebase that one on the
 > >> current nfsd-testing branch and post it again.
