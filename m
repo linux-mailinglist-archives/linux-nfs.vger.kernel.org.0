@@ -1,161 +1,244 @@
-Return-Path: <linux-nfs+bounces-13842-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13844-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEEB8B300D9
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 19:19:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75B2EB30155
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 19:46:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFF255C8EA5
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 17:17:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 302173B9277
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 17:46:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27DC3218AE;
-	Thu, 21 Aug 2025 17:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52966482FF;
+	Thu, 21 Aug 2025 17:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxJwVPBw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="h+5zVhSe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta-102a.earthlink-vadesecure.net (mta-102b.earthlink-vadesecure.net [51.81.61.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B503D31DDB7;
-	Thu, 21 Aug 2025 17:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66401EB5B
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 17:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755796632; cv=none; b=JtSzkb35HbXhi0/CSmhX9qAvAtcNCU8BCSb1Ma2KFGrA3+9aesqZ2Kwjn2XscccCqHRyCmqwaTg2RI0cJnKDP13A+SSjW+So1YsEH7NhHO0nXnn8cqah/cgVObikHKc4glVE3Xx1etrANQvHSViFP52MDUfKP5de8y76MqOzNig=
+	t=1755798358; cv=none; b=LbADZuccAQ3eKZax0h6zha7R1YhCrxtJfX//KRs373PtEZ/yPLb1oDNBmXzZgKeGXJkkPFc5xFPvJjCTfxGox5Opi14ybPZo4Z5dK83uvoFoQaICBNMb3o0hB8ovScu5MFErM5OWmoLz+rb0+olWdajLTLiUvNhpAHwQiGO9q5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755796632; c=relaxed/simple;
-	bh=IWBUsPMaovbvPzkcKpzQPxw7viJiDsYkOjxuQ6QdK3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qsaQ/ycAzy3ZKhZI9IJiqGH5MMoz7LG/9UXMKheDmzdDybBw21AcnhqE2A8i4czbXLaALB+BZeUaArGaQoRfqOwSPDqyB4W64aV3dNz9D+6C2YsbTocbHqrtOV15wXtY1c4Xkp3+Pljid72qCnrQEdeyJMWOQUmIhStMb4NVWv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxJwVPBw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6504DC116D0;
-	Thu, 21 Aug 2025 17:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755796632;
-	bh=IWBUsPMaovbvPzkcKpzQPxw7viJiDsYkOjxuQ6QdK3E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qxJwVPBwJwOp6paCOmqcfGXUBFUa+O1w4dDwzZhyX6a/Ewa1icxGMypTGA4Wjn2pM
-	 Qq+8t6d3QXmO2xj/ZWsHVFUSanIVBTM/XMnr24tSJNJ0mBFT5r/e2YiDwQi1w/E+dS
-	 +uGuVsXnfSvov+QVdZemIlW1fFziBjCf/uSZwbmsTOF8O/T0gSy0Wrjv0e+asApxqq
-	 BuxzHH3Div0IH5ayM+KvoKoylitPpOtblvKl00tCo817eWf54VDwRdNOaALwhOXSRS
-	 1DrAZezvbovb201KBDRw5nm4nB2emBI6Cb3heHMa0ygs+fWe3FkyYTPiziNF1n18lD
-	 FwR4tTjLIiezA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 21 Aug 2025 13:16:54 -0400
-Subject: [PATCH 2/2] sunrpc: add a Kconfig option to redirect dfprintk()
- output to trace buffer
+	s=arc-20240116; t=1755798358; c=relaxed/simple;
+	bh=LL7AzRdk9J0j1N9ND72k1/yxnZC5tA5+beiLE/kHY6g=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SWVa7nKlEvbNKrw69ccZXYOv7A7at9j90f19xKVv9CQKoRCmKkBaEC/XXoKU/H0EsuhPhmshFkKnt1u+2T4gK+LjiuEpXh4ELn1B7tjt07be6mB38UX70obzGfE21eOUqdcSp4bLwBVpAECB6rAx48zu4dFZ3EuiyuVJ2XDvBgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com; spf=pass smtp.mailfrom=mindspring.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=h+5zVhSe; arc=none smtp.client-ip=51.81.61.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mindspring.com
+Authentication-Results: earthlink-vadesecure.net;
+ auth=pass smtp.auth=ffilzlnx@mindspring.com smtp.mailfrom=ffilzlnx@mindspring.com;
+DKIM-Signature: v=1; a=rsa-sha256; bh=GGc6gNltF8egXcOi3vQd56Jm+0IThFClEVdMuk
+ JLz5I=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
+ date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
+ references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:
+ list-subscribe:list-post:list-owner:list-archive; q=dns/txt;
+ s=dk12062016; t=1755797438; x=1756402238; b=h+5zVhSe50Y3sDTcTFep0g/2OHw
+ gut2kBhZHMIU7PLAV5FPNb+/xsXcot3rN7TZPbB9Jg83a6Iq/FfRIv5W3MZZ3j76jOaf8oM
+ VIQELMe74HeMpuy5tgSqocOa9utbMkzFEkQlCzRk6CWpILGFQ70avHaHS5CVQvsiov4+tPL
+ ZfJQpD/G5HijzfFdZ02+vkHH8+VysU/kv5UijdYJ31mdteX8H0RAcZBXpg+vebQoamPv8OZ
+ uEX5yam4iPe4ys6bwXHm86Bx9DZgmI7t8pIWhbq31cZs7P4vxtSZMG3nhDRTiNoL6EwwA3N
+ tTU7nJSs9KPf8aYkAxbM5z6up3K6HrA==
+Received: from FRANKSTHINKPAD ([71.237.148.155])
+ by vsel1nmtao02p.internal.vadesecure.com with ngmta
+ id cc13e569-185dd8779355c456; Thu, 21 Aug 2025 17:30:38 +0000
+From: "Frank Filz" <ffilzlnx@mindspring.com>
+To: "'Calum Mackay'" <calum.mackay@oracle.com>,
+	<linux-nfs@vger.kernel.org>
+Cc: "'Ofir Vainshtein'" <ofirvins@google.com>,
+	"'Chuck Lever'" <chuck.lever@oracle.com>
+References: <01d001dc0ba9$e4cb0080$ae610180$@mindspring.com> <44d19311-7644-4f6e-8509-ff7312ba3ad9@oracle.com>
+In-Reply-To: <44d19311-7644-4f6e-8509-ff7312ba3ad9@oracle.com>
+Subject: RE: PYNFS LOCK20 Blocking Lock Test Case
+Date: Thu, 21 Aug 2025 10:30:36 -0700
+Message-ID: <009301dc12c1$4f9cb390$eed61ab0$@mindspring.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250821-nfs-testing-v1-2-f06099963eda@kernel.org>
-References: <20250821-nfs-testing-v1-0-f06099963eda@kernel.org>
-In-Reply-To: <20250821-nfs-testing-v1-0-f06099963eda@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2810; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=IWBUsPMaovbvPzkcKpzQPxw7viJiDsYkOjxuQ6QdK3E=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBop1SUmZk9LS+M8TwLsVUJeOHMCSNpNyhRLj9G2
- ug+q8odwyiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaKdUlAAKCRAADmhBGVaC
- FZyPEACK3z617R0z5DE/cZI1qGrxkauIY0eeQfj3MsvV25UN5XF6Sr6ilK0Yc+1kyScluYz9c1k
- 9QvUal/H0Tj7IZ4yl+gEut5EEQNemyWxnQqjuxzIL7Q3AzJ+YRFekXZQcEt26T0uD2pALOlxxVI
- SRPhv8x7E5K9ZKbu8bL0klUK2f+WTaZW7Oglp9bcfFbVaoG5PK6cEbtlXKV2mOABG5QuHTVSa4z
- wCfJEC9ZNnk6KI1LBFqJFO0a0z2R6fmUUz6TS22ZCbL9aAJypw4g3s3CNie6AN7ec1sCObxsBKb
- Q805K+x7QBFs2zzg0j/+EQ4e3uzWg0NCbFDQVB1xDh6pKecSy5KbhgjD8pZp77COZaECy5n07/b
- U6u0IGOEQwfbqKNSYeYJ1OnX7kJjsP1pK6YhqBdmJcz92aVcJ+U4/NAdxP7ptj96drf5IaelM7f
- TAn0KCFPQUy7EopIcbZP3YqFyy8yeZYttEFZHiD8/1BD2M6fCGr9XpQvsrK2BYBNPaa/5UP0MGy
- hww90I43IY5TDuAtpbPLjkEiZ519dIJTP2L5Guy43vrycQNG2LFftLMtES708S6mLrlf/iU0chP
- S5uuHuh7W98DTv4n6/1CbdsoRznRFaZZmPy0LF6EvDmEgmr1CpxlWCOMrQl7vNw9JikW0rxGnpn
- eWH78akbKznwTIA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQLX0cafepDmnK5On/trYyHnSs4j1gGuqD59smhofNA=
+Content-Language: en-us
 
-We have a lot of old dprintk() call sites that aren't going anywhere
-anytime soon. At the same time, turning them up is a serious burden on
-the host due to the console locking overhead.
+Ah, I see the logic the test case is expecting.
 
-Add a new Kconfig option that redirects dfprintk() output to the trace
-buffer. This is more efficient than logging to the console and allows
-for proper interleaving of dprintk and static tracepoint events.
+For Ganesha, we maintain the blocking lock so long as the clientid is =
+being renewed, so we don't start the timer for claiming the lock until =
+the lock becomes available which seems to be allowed per the RFC. Maybe =
+we just need to not run that test case.
 
-Since using trace_printk() causes scary warnings to pop at boot time,
-this new option defaults to "n".
+But it would be nice to have a similar test case that just takes too =
+long after the lock is available to retry.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- include/linux/sunrpc/debug.h | 10 ++++++++--
- net/sunrpc/Kconfig           | 14 ++++++++++++++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+Part of the challenge is we share a lot of logic between 4.0 and 4.1 and =
+with the actual callback in 4.1, there is no expectation of the client =
+polling for the lock.
 
-diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
-index 99a6fa4a1d6af0b275546a53957f07c9a509f2ac..fd9f79fa534ef001b3ec5e6d7e4b1099843b64a4 100644
---- a/include/linux/sunrpc/debug.h
-+++ b/include/linux/sunrpc/debug.h
-@@ -30,17 +30,23 @@ extern unsigned int		nlm_debug;
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- # define ifdebug(fac)		if (unlikely(rpc_debug & RPCDBG_##fac))
- 
-+# if IS_ENABLED(CONFIG_SUNRPC_DEBUG_TRACE)
-+#  define __sunrpc_printk(fmt, ...)	trace_printk(fmt, ##__VA_ARGS__)
-+# else
-+#  define __sunrpc_printk(fmt, ...)	pr_default(fmt, ##__VA_ARGS__)
-+# endif
-+
- # define dfprintk(fac, fmt, ...)					\
- do {									\
- 	ifdebug(fac)							\
--		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
-+		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
- } while (0)
- 
- # define dfprintk_rcu(fac, fmt, ...)					\
- do {									\
- 	ifdebug(fac) {							\
- 		rcu_read_lock();					\
--		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
-+		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
- 		rcu_read_unlock();					\
- 	}								\
- } while (0)
-diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
-index 2d8b67dac7b5b58a8a86c3022dd573746fb22547..a570e7adf270fb8976f751266bbffe39ef696c6a 100644
---- a/net/sunrpc/Kconfig
-+++ b/net/sunrpc/Kconfig
-@@ -101,6 +101,20 @@ config SUNRPC_DEBUG
- 
- 	  If unsure, say Y.
- 
-+config SUNRPC_DEBUG_TRACE
-+	bool "RPC: Send dfprintk() output to the trace buffer"
-+	depends on SUNRPC_DEBUG && TRACING
-+	default n
-+	help
-+          dprintk() output can be voluminous, which can overwhelm the
-+          kernel's logging facility as it must be sent to the console.
-+          This option causes dprintk() output to go to the trace buffer
-+          instead of the kernel log.
-+
-+          This will cause warnings about trace_printk() being used to be
-+          logged at boot time, so say N unless you are debugging a problem
-+          with sunrpc-based clients or services.
-+
- config SUNRPC_XPRT_RDMA
- 	tristate "RPC-over-RDMA transport"
- 	depends on SUNRPC && INFINIBAND && INFINIBAND_ADDR_TRANS
+Let me mull this one over more.
 
--- 
-2.50.1
+Thanks
+
+Frank
+
+> -----Original Message-----
+> From: Calum Mackay [mailto:calum.mackay@oracle.com]
+> Sent: Wednesday, August 13, 2025 6:30 PM
+> To: Frank Filz <ffilzlnx@mindspring.com>; linux-nfs@vger.kernel.org
+> Cc: Calum Mackay <calum.mackay@oracle.com>; 'Ofir Vainshtein'
+> <ofirvins@google.com>; Chuck Lever <chuck.lever@oracle.com>
+> Subject: Re: PYNFS LOCK20 Blocking Lock Test Case
+>=20
+> On 12/08/2025 5:55 pm, Frank Filz wrote:
+> > I believe this test case is wrong, relevant text from RFC:
+> >
+> > Some clients require the support of blocking locks. The NFSv4 =
+protocol
+> > must not rely on a callback mechanism and therefore is unable to
+> > notify a client when a previously denied lock has been granted.
+> > Clients have no choice but to continually poll for the lock. This
+> > presents a fairness problem. Two new lock types are added, READW and
+> > WRITEW, and are used to indicate to the server that the client is
+> > requesting a blocking lock. The server should maintain an ordered =
+list
+> > of pending blocking locks. When the conflicting lock is released, =
+the
+> > server may wait the lease period for the first waiting client to
+> > re-request the lock. After the lease period expires, the next =
+waiting
+> > client request is allowed the lock.
+> >
+> > Test case:
+> >
+> >      # Standard owner opens and locks a file
+> >      fh1, stateid1 =3D c.create_confirm(t.word(),
+> deny=3DOPEN4_SHARE_DENY_NONE)
+> >      res1 =3D c.lock_file(t.word(), fh1, stateid1, type=3DWRITE_LT)
+> >      check(res1, msg=3D"Locking file %s" % t.word())
+> >      # Second owner is denied a blocking lock
+> >      file =3D c.homedir + [t.word()]
+> >      fh2, stateid2 =3D c.open_confirm(b"owner2", file,
+> >                                     =
+access=3DOPEN4_SHARE_ACCESS_BOTH,
+> >                                     deny=3DOPEN4_SHARE_DENY_NONE)
+> >      res2 =3D c.lock_file(b"owner2", fh2, stateid2,
+> >                         type=3DWRITEW_LT, =
+lockowner=3Db"lockowner2_LOCK20")
+> >      check(res2, NFS4ERR_DENIED, msg=3D"Conflicting lock on %s" % =
+t.word())
+> >      sleeptime =3D c.getLeaseTime() // 2
+> >      # Wait for queued lock to timeout
+> >      for i in range(3):
+> >          env.sleep(sleeptime, "Waiting for queued blocking lock to =
+timeout")
+> >          res =3D c.compound([op.renew(c.clientid)])
+> >          check(res, [NFS4_OK, NFS4ERR_CB_PATH_DOWN])
+> >      # Standard owner releases lock
+> >      res1 =3D c.unlock_file(1, fh1, res1.lockid)
+> >      check(res1)
+> >      # Third owner tries to butt in and steal lock second owner is
+> > waiting for
+> >      # Should work, since second owner let his turn expire
+> >      file =3D c.homedir + [t.word()]
+> >      fh3, stateid3 =3D c.open_confirm(b"owner3", file,
+> >                                     =
+access=3DOPEN4_SHARE_ACCESS_BOTH,
+> >                                     deny=3DOPEN4_SHARE_DENY_NONE)
+> >      res3 =3D c.lock_file(b"owner3", fh3, stateid3,
+> >                         type=3DWRITEW_LT, =
+lockowner=3Db"lockowner3_LOCK20")
+> >      check(res3, msg=3D"Grabbing lock after another owner let his =
+'turn'
+> > expire")
+> >
+> > Note that the RFC indicated the client has one lease period AFTER =
+the
+> > conflicting lock is released to retry while the test case waits 1.5
+> > lease period after requesting the blocking lock before it releases =
+the
+> > conflicting lock...
+> >
+> > Am I reading things right?
+>=20
+> I see what you mean.
+>=20
+> But since a waiting blocking lock client obviously doesn't know when =
+the lock-
+> holding client is going to release its lock, the waiting client has to =
+start polling
+> regularly as soon as its initial blocking lock request is denied. It =
+has to poll at
+> least once per lease period.
+>=20
+> If the server notices that a waiting client hasn't polled once in a =
+lease period,
+> after its initial blocking lock request was denied, then it seems =
+reasonable for
+> the server to forget that waiting client's interest in the pending =
+lock there and
+> then. There's no need for the server to wait a further lease period =
+after the lock
+> is released.
+>=20
+>=20
+> Looking at the current Linux nfsd code, that does seem to be what it =
+does. I see
+> that when the server adds the blocking lock request to its pending =
+list, it adds the
+> current timestamp to it, i.e. the time that the blocking lock was =
+requested.
+>=20
+> The nfsd background clean-up thread (which runs at least once per =
+lease
+> period) removes any pending blocking lock requests if a lease period =
+has passed
+> since they were placed on the list (i.e. when the blocking lock was =
+requested).
+> There's a corresponding comment:
+>=20
+> 	/*
+> 	 * It's possible for a client to try and acquire an already held lock
+> 	 * that is being held for a long time, and then lose interest in it.
+> 	 * So, we clean out any un-revisited request after a lease period
+> 	 * under the assumption that the client is no longer interested.
+>=20
+> =
+https://elixir.bootlin.com/linux/v6.16/source/fs/nfsd/nfs4state.c#L6824
+>=20
+>=20
+> There's no pending locks action taken on lock release. The timing is =
+based solely
+> on when the blocking READW/WRITEW request occurred, i.e.
+> the res2 WRITEW in the pynfs test, which is before the sleep.
+>=20
+> So, whilst the RFC may seem to suggest the timer should start at lock =
+release, it
+> doesn't seem unreasonable for the NFS server to start the timer =
+earlier, at the
+> blocking lock request, to avoid an unnecessary delay upon lock release =
+if the
+> client has lost interest in the lock, i.e. it isn't polling.
+>=20
+>=20
+> Presumably, the pynfs test was originally written to match NFS server =
+behaviour,
+> rather than RFC wording. I'm not sure what other NFS servers do in =
+this case.
+> Waiting longer wouldn't change the test result in this case, I think.
+>=20
+>=20
+> Does that seem reasonable to you?
+>=20
+> thanks,
+> calum.
 
 
