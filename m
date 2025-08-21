@@ -1,295 +1,275 @@
-Return-Path: <linux-nfs+bounces-13845-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13846-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 539E1B301AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 20:03:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23214B301E1
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 20:20:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DD771CE35AA
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 18:03:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FD14AE0553
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 18:20:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FEFB1F948;
-	Thu, 21 Aug 2025 18:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340B6343D8A;
+	Thu, 21 Aug 2025 18:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b="KYN9pwWT"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="fPNOYZqi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mta-101a.earthlink-vadesecure.net (mta-101a.earthlink-vadesecure.net [51.81.61.60])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D71EB5C2
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 18:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.61.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF14C305E26
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 18:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755799398; cv=none; b=CPC4YPBoSN3Z7dlZjv/6hkRnCfqUU7f5Vr+iZxP1qyQ6/ekrmUGMEAnUuiS+r0pnS3xW5b2fnRWru/dZVO4XQVrtIia25dTe49gR+lXEkvq4vyRxhPxVfXDuN1NJAcNPAyboXsfY5UP5mjW5EF2NA0JCNbnV8i1QscbzH05Vt9A=
+	t=1755800421; cv=none; b=GXTs5ldExI5APJi7PMROz42tQRRxqIlM3IGDPEV1T7OlVdjipADYD3SMNJeIl71NPF0aS/5p2+lbG33t2HERRMUluFhnzhYUxQF0MVFCMDiW5vTFm/ifF6H6gGX0wnJDZN/btvxKH4lTWgc+nwhuVqOBF2VsGrSMVoHYkWrYnmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755799398; c=relaxed/simple;
-	bh=xWFMJjiUk3nXO8QqeaDpniI3ZC+mftG6x+XvrwnPke8=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SvDbODdxJxwbjU8f6r8+q02sH4gP4239vh3S8a0kYCNFdfQvI+XCa4iFFSNcrSBheh65uVVb5PzlPxi31jY0uYZ+cHYHTzSuX1pgfj7alDWB5tTIfpYDintMji1JGy8+8dji0lzdFgMd1dbzDj9c+P3FHjeJNHCmyUhsJevncH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com; spf=pass smtp.mailfrom=mindspring.com; dkim=pass (2048-bit key) header.d=earthlink.net header.i=@earthlink.net header.b=KYN9pwWT; arc=none smtp.client-ip=51.81.61.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mindspring.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mindspring.com
-Authentication-Results: earthlink-vadesecure.net;
- auth=pass smtp.auth=ffilzlnx@mindspring.com smtp.mailfrom=ffilzlnx@mindspring.com;
-DKIM-Signature: v=1; a=rsa-sha256; bh=b8nwJd8wdf4mpqKbD9PPnqtX5VBjOMakiGjI5j
- iqttA=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
- date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
- references:list-id:list-help:list-unsubscribe:list-unsubscribe-post:
- list-subscribe:list-post:list-owner:list-archive; q=dns/txt;
- s=dk12062016; t=1755798477; x=1756403277; b=KYN9pwWTAnVpb/yEp93cvLx4D+A
- zUo2G8nabyj5zKJHKW+oPSdTUcEM7eh/ukgJsNbhI6OiPmp5ZiXlxxPDVVXNj7daVBts5Pe
- GUymF8YM0hXrgfqicLoQ7fPduM08Y1n1wkvEPvTO4ZaHkEIZt93vckMqPFoHINNuR5HN3nj
- rSPRXprO9pMRrtm0BHQ7P9tRGvcMMI6J+BgXFmGV1k6cJe43rB7AYKxrYR0qzcvE7Nr6odf
- MBjcQec3BT1ShVUiPLPjWjzX7OHUvHCQh1Fdu+72JiTMv3iDedCnxYAFq6MEBk2hHd4z77R
- dpXmKeYQnZKgbV9/K3LFRx+Nv+tyuDA==
-Received: from FRANKSTHINKPAD ([71.237.148.155])
- by vsel1nmtao01p.internal.vadesecure.com with ngmta
- id d1acf073-185dd9695d43ab8f; Thu, 21 Aug 2025 17:47:57 +0000
-From: "Frank Filz" <ffilzlnx@mindspring.com>
-To: "'Calum Mackay'" <calum.mackay@oracle.com>,
-	<linux-nfs@vger.kernel.org>
-Cc: "'Ofir Vainshtein'" <ofirvins@google.com>,
-	"'Chuck Lever'" <chuck.lever@oracle.com>
-References: <01d001dc0ba9$e4cb0080$ae610180$@mindspring.com> <44d19311-7644-4f6e-8509-ff7312ba3ad9@oracle.com> <009301dc12c1$4f9cb390$eed61ab0$@mindspring.com> <2c52fbdc-97b3-4f61-ba59-1377eedc6f13@oracle.com>
-In-Reply-To: <2c52fbdc-97b3-4f61-ba59-1377eedc6f13@oracle.com>
-Subject: RE: PYNFS LOCK20 Blocking Lock Test Case
-Date: Thu, 21 Aug 2025 10:47:55 -0700
-Message-ID: <00a101dc12c3$babd40c0$3037c240$@mindspring.com>
+	s=arc-20240116; t=1755800421; c=relaxed/simple;
+	bh=gMNjHuExMNN+uc7lG1T/VYWkLv+oTrCvRB2IDVg2J+g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jw3ov0j6omvNj4KxK/8Pq2bTiG0vkcFkO3ScsJ/t1oFcBQA52VRpe/FIDnJlC99lJeIXBTAgWYVhyNLvn0PAI32CpS/NMu9v/x+O0fWqHsMbbqHUzUxUqAkBQY3Zc8k2ZZ9DiAAv3QAryqBCKfcl9YJztOiqj2GqzMcDpGDL/ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=fPNOYZqi; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55ce527ffbfso1202535e87.3
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1755800416; x=1756405216; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kYbxQgi7tkNZcp9G5qvmiixvl5GQdvbJ6Wy530vV8xU=;
+        b=fPNOYZqiVocU4kpQVZMO3h3UZFdCqrA3iKd7sKTSEpQ/D9JlB5kMw4Ew1gvvQkkLrm
+         iXZiaAq3bh4nsvKv4eZMeg1/3a8ohGrI7nL0tfW3e8RxrTv5mHLTMAMKzY18yAOgySpw
+         WwGyAmQbJCCVEKi79/ectrqlckfOb13kn4gNqJCqbOMOLTXXSSY9rs7QTIpEmFSkBoBc
+         stUanhb9HDDRyW/zQoXC8dn9BewiXXgR2JpgNiVAt1zRYgbCq9QkMmRQcr0HMeBCUYxY
+         pjD9zMg9YSu50U0xIv7mYUWxHRPr8fPFVsZHe9L1u8j9WQdmQ2i1YbmwojQ2H5DSq4Xt
+         gpCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755800416; x=1756405216;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kYbxQgi7tkNZcp9G5qvmiixvl5GQdvbJ6Wy530vV8xU=;
+        b=Aj2PeTfn7KhHLTLS9CbAmS2L/RNbA95A8iLS0oWJGIT/rPsLaMHO5Svv6ZYLU8r4/R
+         mKWCV5JwZXCk83dhABC2vPQU9NsOFTfFOyElttdmgNN5P9n6u69fI+pafQb/jsO+Cgzb
+         OeULytZiSpvXf5sXpqmaNFdYig8Z/4Vspe2qBieLMbSCzXJpXBU4Cvi8hqQ0xToa9z0j
+         FRV3qwWNbuvUGM0bkF6FVpaG0FLqVDBrqJo+2SpBmasx+63pE1p9HrepwEWuWUEA9DpT
+         04WcLqe9/Ko3Tb2EXs8A0EYl2NTyoHqFvXVbhD4XK0waeGKFp0e/aRpyIociSZyARmyt
+         xnPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHK+G6/vHbaY+4GVpgNGyiTVynKZwl2ZBpwzGpkR/hJo57uwpcX+l++pGYh1qMHRH1zt+dSeMsjwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5rRdcroVpYc77h6yoorm3j0qSn7rZR/uexgZPtTYJu477NaVH
+	r1MjkNILau6LLFoSYPlhfq6WsbcZYa8O4XsiXR0WHncxu+vQL1YGra+YG0JYhtSz1rSFO0WbV7a
+	8zljWSR+JiEO4Om89AHmo3zAxe/OIZj0=
+X-Gm-Gg: ASbGncu+i/W6+Vwddeqja2rxTVLDmLD1luiBsDUlr3Bxk0fZ9/az2HfesWnpsMri6Wd
+	up2QXb5jjnIDkS7Ih0mLvcr7h+Xb3B5y2pPPySODQbrkPjHkdAHAc9WkPCFhK4nxHJP8WUJNVGz
+	2eDgA72MVzlNoo1UPCnoY2cJVyLRL/4ed78RTbobkUUHZFgAoZ/5eqQNGNAVePiaoyyS+ZgKKdi
+	bcLcGPsTunZd10Y3DQwH8DwuQWtBAltgUwspO8e0g==
+X-Google-Smtp-Source: AGHT+IGoJ2m7R1LutqGC42Trqrk73R5aUmwa3b/NJMddPpMh/r5eJnziFuLU89xPZ/I0uXM44tXslh9pgnZ7AtUzUT0=
+X-Received: by 2002:a05:6512:3d87:b0:55c:d64e:f941 with SMTP id
+ 2adb3069b0e04-55f0ccefb10mr128140e87.1.1755800416197; Thu, 21 Aug 2025
+ 11:20:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
+References: <CAN-5tyEammkfv3QGwe5Z38q1nFAxYV=REFDN++3XrX7Lni+H0A@mail.gmail.com>
+ <175573171079.2234665.16260718612520667514@noble.neil.brown.name>
+ <CAN-5tyGXxzmMipt8fcdMkpSiPq8cxF5++OJcZriQbcjk9JK3GA@mail.gmail.com> <8d72170c-ac40-4652-96ef-5ca39b2cb0c6@oracle.com>
+In-Reply-To: <8d72170c-ac40-4652-96ef-5ca39b2cb0c6@oracle.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Thu, 21 Aug 2025 14:20:04 -0400
+X-Gm-Features: Ac12FXwTKDa_9RtewW-uozUHKK7ALJ7XIemb7nk8jh9I4aumYHpAHZzzFUCMBdc
+Message-ID: <CAN-5tyH4qbcxLDaEnnFABHSC3DPpHmMk8O+GEOX1BubfLS5cww@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] lockd: while grace prefer to fail with nlm_lck_denied_grace_period
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, jlayton@kernel.org, 
+	linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQLX0cafepDmnK5On/trYyHnSs4j1gGuqD59AkSnxwMB0H1XHbJHxJVg
-Content-Language: en-us
 
-Thanks
+On Thu, Aug 21, 2025 at 11:09=E2=80=AFAM Chuck Lever <chuck.lever@oracle.co=
+m> wrote:
+>
+> On 8/21/25 9:56 AM, Olga Kornievskaia wrote:
+> > On Wed, Aug 20, 2025 at 7:15=E2=80=AFPM NeilBrown <neil@brown.name> wro=
+te:
+> >>
+> >> On Thu, 14 Aug 2025, Olga Kornievskaia wrote:
+> >>> On Tue, Aug 12, 2025 at 8:05=E2=80=AFPM NeilBrown <neil@brown.name> w=
+rote:
+> >>>>
+> >>>> On Wed, 13 Aug 2025, Olga Kornievskaia wrote:
+> >>>>> When nfsd is in grace and receives an NLM LOCK request which turns
+> >>>>> out to have a conflicting delegation, return that the server is in
+> >>>>> grace.
+> >>>>>
+> >>>>> Reviewed-by: Jeff Layton <jlayton@redhat.com>
+> >>>>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> >>>>> ---
+> >>>>>  fs/lockd/svc4proc.c | 15 +++++++++++++--
+> >>>>>  1 file changed, 13 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> >>>>> index 109e5caae8c7..7ac4af5c9875 100644
+> >>>>> --- a/fs/lockd/svc4proc.c
+> >>>>> +++ b/fs/lockd/svc4proc.c
+> >>>>> @@ -141,8 +141,19 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, st=
+ruct nlm_res *resp)
+> >>>>>       resp->cookie =3D argp->cookie;
+> >>>>>
+> >>>>>       /* Obtain client and file */
+> >>>>> -     if ((resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &hos=
+t, &file)))
+> >>>>> -             return resp->status =3D=3D nlm_drop_reply ? rpc_drop_=
+reply :rpc_success;
+> >>>>> +     resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &f=
+ile);
+> >>>>> +     switch (resp->status) {
+> >>>>> +     case 0:
+> >>>>> +             break;
+> >>>>> +     case nlm_drop_reply:
+> >>>>> +             if (locks_in_grace(SVC_NET(rqstp))) {
+> >>>>> +                     resp->status =3D nlm_lck_denied_grace_period;
+> >>>>
+> >>>> I think this is wrong.  If the lock request has the "reclaim" flag s=
+et,
+> >>>> then nlm_lck_denied_grace_period is not a meaningful error.
+> >>>> nlm4svc_retrieve_args() returns nlm_drop_reply when there is a delay
+> >>>> getting a response to an upcall to mountd.  For NLM the request real=
+ly
+> >>>> must be dropped.
+> >>>
+> >>> Thank you for pointing out this case so we are suggesting to.
+> >>>
+> >>> if (locks_in_grace(SVC_NET(rqstp)) && !argp->reclaim)
+> >>>
+> >>> However, I've been looking and looking but I cannot figure out how
+> >>> nlm4svc_retrieve_args() would ever get nlm_drop_reply. You say it can
+> >>> happen during the upcall to mountd. So that happens within nfsd_open(=
+)
+> >>> call and a part of fh_verify().
+> >>> To return nlm_drop_reply, nlm_fopen() must have gotten nfserr_dropit
+> >>> from the nfsd_open().  I have searched and searched but I don't see
+> >>> anything that ever sets nfserr_dropit (NFSERR_DROPIT).
+> >>>
+> >>> I searched the logs and nfserr_dropit was an error that was EAGAIN
+> >>> translated into but then removed by the following patch.
+> >>
+> >> Oh.  I didn't know that.
+> >> We now use RQ_DROPME instead.
+> >> I guess we should remove NFSERR_DROPIT completely as it not used at al=
+l
+> >> any more.
+> >>
+> >> Though returning nfserr_jukebox to an v2 client isn't a good idea....
+> >
+> > I'll take your word for you.
+> >
+> >> So I guess my main complaint isn't valid, but I still don't like this
+> >> patch.  It seems an untidy place to put the locks_in_grace test.
+> >> Other callers of nlm4svc_retrieve_args() check locks_in_grace() before
+> >> making that call.  __nlm4svc_proc_lock probably should too.  Or is the=
+re
+> >> a reason that it is delayed until the middle of nlmsvc_lock()..
+> >
+> > I thought the same about why not adding the in_grace check and decided
+> > that it was probably because you dont want to deny a lock if there are
+> > no conflicts. If we add it, somebody might notice and will complain
+> > that they can't get their lock when there are no conflicts.
+> >
+> >> The patch is not needed and isn't clearly an improvement, so I would
+> >> rather it were dropped.
+> >
+> > I'm not against dropping this patch if the conclusion is that dropping
+> > the packet is no worse than returning in_grace error.
+>
+> I dropped both of these from nfsd-testing. If a fix is still needed,
+> let's start again with fresh patches.
 
-> -----Original Message-----
-> From: Calum Mackay [mailto:calum.mackay@oracle.com]
-> Sent: Thursday, August 21, 2025 10:41 AM
-> To: Frank Filz <ffilzlnx@mindspring.com>; linux-nfs@vger.kernel.org
-> Cc: Calum Mackay <calum.mackay@oracle.com>; 'Ofir Vainshtein'
-> <ofirvins@google.com>; 'Chuck Lever' <chuck.lever@oracle.com>
-> Subject: Re: PYNFS LOCK20 Blocking Lock Test Case
->=20
-> On 21/08/2025 6:30 pm, Frank Filz wrote:
-> > Ah, I see the logic the test case is expecting.
-> >
-> > For Ganesha, we maintain the blocking lock so long as the clientid =
-is being
-> renewed, so we don't start the timer for claiming the lock until the =
-lock becomes
-> available which seems to be allowed per the RFC. Maybe we just need to =
-not run
-> that test case.
-> >
-> > But it would be nice to have a similar test case that just takes too =
-long after
-> the lock is available to retry.
->=20
-> Thanks Frank; Chuck also made a similar suggestion to me privately. =
-I'll have a
-> look at either adjusting this test to report information that the lock =
-was
-> obtained "early", and/or a separate/optional test that more closely =
-matches the
-> RFC wording, regardless of how the server might behave.
->=20
-> Of course, the RFC wording, and lack of nominative language, suggests =
-this is an
-> implementation choice, and thus difficult for pynfs tests to =
-adjudicate on.
+Can you clarify when you said "both"?
 
-Yes, that can be tricky. I added a ganesha tag so there could be a few =
-implementation specific tests.
+What objections are there for the 1st patch in the series. It solves a
+problem and a fix is needed. This one I agree is not needed but I
+thought was an improvement.
 
-> thanks,
-> calum.
->=20
-> >
-> > Part of the challenge is we share a lot of logic between 4.0 and 4.1 =
-and with
-> the actual callback in 4.1, there is no expectation of the client =
-polling for the
-> lock.
-> >
-> > Let me mull this one over more.
-> >
-> > Thanks
-> >
-> > Frank
-> >
-> >> -----Original Message-----
-> >> From: Calum Mackay [mailto:calum.mackay@oracle.com]
-> >> Sent: Wednesday, August 13, 2025 6:30 PM
-> >> To: Frank Filz <ffilzlnx@mindspring.com>; linux-nfs@vger.kernel.org
-> >> Cc: Calum Mackay <calum.mackay@oracle.com>; 'Ofir Vainshtein'
-> >> <ofirvins@google.com>; Chuck Lever <chuck.lever@oracle.com>
-> >> Subject: Re: PYNFS LOCK20 Blocking Lock Test Case
+>
+>
+> >> Thanks,
+> >> NeilBrown
 > >>
-> >> On 12/08/2025 5:55 pm, Frank Filz wrote:
-> >>> I believe this test case is wrong, relevant text from RFC:
+> >>
 > >>>
-> >>> Some clients require the support of blocking locks. The NFSv4
-> >>> protocol must not rely on a callback mechanism and therefore is
-> >>> unable to notify a client when a previously denied lock has been =
-granted.
-> >>> Clients have no choice but to continually poll for the lock. This
-> >>> presents a fairness problem. Two new lock types are added, READW =
-and
-> >>> WRITEW, and are used to indicate to the server that the client is
-> >>> requesting a blocking lock. The server should maintain an ordered
-> >>> list of pending blocking locks. When the conflicting lock is
-> >>> released, the server may wait the lease period for the first =
-waiting
-> >>> client to re-request the lock. After the lease period expires, the
-> >>> next waiting client request is allowed the lock.
+> >>> commit 062304a815fe10068c478a4a3f28cf091c55cb82
+> >>> Author: J. Bruce Fields <bfields@fieldses.org>
+> >>> Date:   Sun Jan 2 22:05:33 2011 -0500
 > >>>
-> >>> Test case:
+> >>>     nfsd: stop translating EAGAIN to nfserr_dropit
 > >>>
-> >>>       # Standard owner opens and locks a file
-> >>>       fh1, stateid1 =3D c.create_confirm(t.word(),
-> >> deny=3DOPEN4_SHARE_DENY_NONE)
-> >>>       res1 =3D c.lock_file(t.word(), fh1, stateid1, =
-type=3DWRITE_LT)
-> >>>       check(res1, msg=3D"Locking file %s" % t.word())
-> >>>       # Second owner is denied a blocking lock
-> >>>       file =3D c.homedir + [t.word()]
-> >>>       fh2, stateid2 =3D c.open_confirm(b"owner2", file,
-> >>>                                      =
-access=3DOPEN4_SHARE_ACCESS_BOTH,
-> >>>                                      deny=3DOPEN4_SHARE_DENY_NONE)
-> >>>       res2 =3D c.lock_file(b"owner2", fh2, stateid2,
-> >>>                          type=3DWRITEW_LT, =
-lockowner=3Db"lockowner2_LOCK20")
-> >>>       check(res2, NFS4ERR_DENIED, msg=3D"Conflicting lock on %s" % =
-t.word())
-> >>>       sleeptime =3D c.getLeaseTime() // 2
-> >>>       # Wait for queued lock to timeout
-> >>>       for i in range(3):
-> >>>           env.sleep(sleeptime, "Waiting for queued blocking lock =
-to timeout")
-> >>>           res =3D c.compound([op.renew(c.clientid)])
-> >>>           check(res, [NFS4_OK, NFS4ERR_CB_PATH_DOWN])
-> >>>       # Standard owner releases lock
-> >>>       res1 =3D c.unlock_file(1, fh1, res1.lockid)
-> >>>       check(res1)
-> >>>       # Third owner tries to butt in and steal lock second owner =
-is
-> >>> waiting for
-> >>>       # Should work, since second owner let his turn expire
-> >>>       file =3D c.homedir + [t.word()]
-> >>>       fh3, stateid3 =3D c.open_confirm(b"owner3", file,
-> >>>                                      =
-access=3DOPEN4_SHARE_ACCESS_BOTH,
-> >>>                                      deny=3DOPEN4_SHARE_DENY_NONE)
-> >>>       res3 =3D c.lock_file(b"owner3", fh3, stateid3,
-> >>>                          type=3DWRITEW_LT, =
-lockowner=3Db"lockowner3_LOCK20")
-> >>>       check(res3, msg=3D"Grabbing lock after another owner let his =
-'turn'
-> >>> expire")
+> >>> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> >>> index dc9c2e3fd1b8..fd608a27a8d5 100644
+> >>> --- a/fs/nfsd/nfsproc.c
+> >>> +++ b/fs/nfsd/nfsproc.c
+> >>> @@ -735,7 +735,8 @@ nfserrno (int errno)
+> >>>                 { nfserr_stale, -ESTALE },
+> >>>                 { nfserr_jukebox, -ETIMEDOUT },
+> >>>                 { nfserr_jukebox, -ERESTARTSYS },
+> >>> -               { nfserr_dropit, -EAGAIN },
+> >>> +               { nfserr_jukebox, -EAGAIN },
+> >>> +               { nfserr_jukebox, -EWOULDBLOCK },
+> >>>                 { nfserr_jukebox, -ENOMEM },
+> >>>                 { nfserr_badname, -ESRCH },
+> >>>                 { nfserr_io, -ETXTBSY },
 > >>>
-> >>> Note that the RFC indicated the client has one lease period AFTER
-> >>> the conflicting lock is released to retry while the test case =
-waits
-> >>> 1.5 lease period after requesting the blocking lock before it
-> >>> releases the conflicting lock...
+> >>> so if fh_verify is failing whatever it is returning, it is not
+> >>> nfserr_dropit nor is it nfserr_jukebox which means nlm_fopen() would
+> >>> translate it to nlm_failed which with my patch would not trigger
+> >>> nlm_lck_denied_grace_period error but resp->status would be set to
+> >>> nlm_failed.
 > >>>
-> >>> Am I reading things right?
+> >>> So I circle back to I hope that convinces you that we don't need a
+> >>> check for the reclaim lock.
+> >>>
+> >>> I believe nlm_drop_reply is nfsd_open's jukebox error, one of which i=
+s
+> >>> delegation recall. it can be a memory failure. But I'm sure when
+> >>> EWOULDBLOCK occurs.
+> >>>
+> >>>> At the very least we need to guard against the reclaim flag being se=
+t in
+> >>>> the above test.  But I would much rather a more clear distinction we=
+re
+> >>>> made between "drop because of a conflicting delegation" and "drop
+> >>>> because of a delay getting upcall response".
+> >>>> Maybe a new "nlm_conflicting_delegtion" return from ->fopen which nl=
+m4
+> >>>> (and ideally nlm2) handles appropriately.
+> >>>
+> >>>
+> >>>> NeilBrown
+> >>>>
+> >>>>
+> >>>>> +                     return rpc_success;
+> >>>>> +             }
+> >>>>> +             return nlm_drop_reply;
+> >>>>> +     default:
+> >>>>> +             return rpc_success;
+> >>>>> +     }
+> >>>>>
+> >>>>>       /* Now try to lock the file */
+> >>>>>       resp->status =3D nlmsvc_lock(rqstp, file, host, &argp->lock,
+> >>>>> --
+> >>>>> 2.47.1
+> >>>>>
+> >>>>>
+> >>>>
+> >>>>
+> >>>
 > >>
-> >> I see what you mean.
-> >>
-> >> But since a waiting blocking lock client obviously doesn't know =
-when
-> >> the lock- holding client is going to release its lock, the waiting
-> >> client has to start polling regularly as soon as its initial =
-blocking
-> >> lock request is denied. It has to poll at least once per lease =
-period.
-> >>
-> >> If the server notices that a waiting client hasn't polled once in a
-> >> lease period, after its initial blocking lock request was denied,
-> >> then it seems reasonable for the server to forget that waiting
-> >> client's interest in the pending lock there and then. There's no =
-need
-> >> for the server to wait a further lease period after the lock is =
-released.
-> >>
-> >>
-> >> Looking at the current Linux nfsd code, that does seem to be what =
-it
-> >> does. I see that when the server adds the blocking lock request to
-> >> its pending list, it adds the current timestamp to it, i.e. the =
-time that the
-> blocking lock was requested.
-> >>
-> >> The nfsd background clean-up thread (which runs at least once per
-> >> lease
-> >> period) removes any pending blocking lock requests if a lease =
-period
-> >> has passed since they were placed on the list (i.e. when the =
-blocking lock was
-> requested).
-> >> There's a corresponding comment:
-> >>
-> >> 	/*
-> >> 	 * It's possible for a client to try and acquire an already held =
-lock
-> >> 	 * that is being held for a long time, and then lose interest in =
-it.
-> >> 	 * So, we clean out any un-revisited request after a lease period
-> >> 	 * under the assumption that the client is no longer interested.
-> >>
-> >> =
-https://elixir.bootlin.com/linux/v6.16/source/fs/nfsd/nfs4state.c#L68
-> >> 24
-> >>
-> >>
-> >> There's no pending locks action taken on lock release. The timing =
-is
-> >> based solely on when the blocking READW/WRITEW request occurred, =
-i.e.
-> >> the res2 WRITEW in the pynfs test, which is before the sleep.
-> >>
-> >> So, whilst the RFC may seem to suggest the timer should start at =
-lock
-> >> release, it doesn't seem unreasonable for the NFS server to start =
-the
-> >> timer earlier, at the blocking lock request, to avoid an =
-unnecessary
-> >> delay upon lock release if the client has lost interest in the =
-lock, i.e. it isn't
-> polling.
-> >>
-> >>
-> >> Presumably, the pynfs test was originally written to match NFS =
-server
-> >> behaviour, rather than RFC wording. I'm not sure what other NFS =
-servers do
-> in this case.
-> >> Waiting longer wouldn't change the test result in this case, I =
-think.
-> >>
-> >>
-> >> Does that seem reasonable to you?
-> >>
-> >> thanks,
-> >> calum.
-> >
->=20
+>
+>
 > --
-> Calum Mackay
-> Linux Kernel Engineering
-> Oracle Linux and Virtualisation
-
-
+> Chuck Lever
 
