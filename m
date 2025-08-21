@@ -1,68 +1,68 @@
-Return-Path: <linux-nfs+bounces-13824-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13822-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 199E2B2F642
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 13:18:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50F17B2F648
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 13:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 126A4B60EE4
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 11:15:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D74C1CC749E
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Aug 2025 11:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE37D3115B1;
-	Thu, 21 Aug 2025 11:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34D330EF7C;
+	Thu, 21 Aug 2025 11:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQtsGxe+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuXQp5i6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11848311591
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F362130EF6D
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Aug 2025 11:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755774944; cv=none; b=Ay/2ulnJ3icFqrOR2mEh/G0ot0lcpTDA4GmUlXbnPGeupjEoOyT+HJmYi1Ywny4fdoaz0qoKsrkI3sRQMmkzhqbpxGHtjsuK4gXBZynAZoUhXGS0pgMVJyGP2apq7kFcCssj5r6RQKsKKj6V4uwL9ZTm2RqSaTMLuUvmtH8p4cA=
+	t=1755774943; cv=none; b=g4G4Cun8ooUW7wFyxD7nMJw9xEVpu00uyFltbwzCCfmbuyRU1jsHn2FRF1t+uK1rcWsNhIxtcDtGWTfaJur20LXi6ELR8TZSC3xg3CUKtEFqLn5mfRzRUUDCuKZRhu2a7yN6LTd94zZuS6v9bDkbPOmz4pVVvUajhPC5+vGErJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755774944; c=relaxed/simple;
-	bh=VsXOc1S4ap0B42nAyjWEeWqOQ+Gec9oY/uBK21jhEz4=;
+	s=arc-20240116; t=1755774943; c=relaxed/simple;
+	bh=e56qtqvaKL8yAekg1GaBJuXt3qq61GZsq46u/rN8Jps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HGsKPfR3jv/Wd4T1a+ZB0tDC2LujRqYOerUjoC+sWVu+NwaSVI9UQAwildpr5SW/x6igidfDfQf5/Aw1eXnuHSSO/hTYq4TIgZB9Zo7xmmy+igw7c89XVR80sFCRUyke3ZHLOOAjY7HA8rqS8tAgub9d1b5V+Z05WHYNOH8ZJYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MQtsGxe+; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=VdlaZZMjvSQjv/OQL3o0kl8qLQyi1gBDHGLIQ7bCPqWViK5sVW9GRdiSXClSX3ZwzmQuUCtfIXHo/svDiTI0c/BRd7ynxoS7X05IGkDu6ag1o1PhvG9GCAC7kPHRqneaI+kTEANOeTFXyvLq8pri7tWVBrS9bH1lLSSyT+E45N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OuXQp5i6; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755774942;
+	s=mimecast20190719; t=1755774941;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6jKrMmmjaF5f4Ut7LCPyvP+C7XbkD8LpIfSPKWAXHuY=;
-	b=MQtsGxe+VOdcXwsJl6Y7LnW1XSPrTli7tkwkRNYBTkU0HmYZtqNapKBrO47ut2Ug9JO+vN
-	RqlLKgBhIiMryUBrRcxXOXowz7u/ms4yRYxcTVVTBMLC8WXVca3+EDfBIDosEhmD7y+VYN
-	i76kYCc5jDgVqBAhTbLUjWLlk3uAjSo=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=QoBGAZsbL3lkJ1FEOAMexwaU+uU24VZVXrNRvNYxVrw=;
+	b=OuXQp5i6Fb4I2EGMVTDENdntBy9hRNxqZJmG2SjpuwUlVpVpcAnXbNIBLOLawchNt5PIl9
+	s0Hw8p1FqfeqwA09M1Q5+UhDhzG2pfJbVQND2vLVF+I/QJdTM6jG2BcfENJa66FSeAyQGd
+	btCSVf+3b0fkA3PnnXxdb2q1Sctw9NU=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-183-cV2KJnnUPHmApk1gQlZsmA-1; Thu,
- 21 Aug 2025 07:15:40 -0400
-X-MC-Unique: cV2KJnnUPHmApk1gQlZsmA-1
-X-Mimecast-MFC-AGG-ID: cV2KJnnUPHmApk1gQlZsmA_1755774939
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-223-Bdjtc45eNGqiP_BU6VVv8A-1; Thu,
+ 21 Aug 2025 07:15:37 -0400
+X-MC-Unique: Bdjtc45eNGqiP_BU6VVv8A-1
+X-Mimecast-MFC-AGG-ID: Bdjtc45eNGqiP_BU6VVv8A_1755774937
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 345B8180888A;
-	Thu, 21 Aug 2025 11:15:36 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C4A519560B3;
+	Thu, 21 Aug 2025 11:15:37 +0000 (UTC)
 Received: from dobby.home.dicksonnet.net (unknown [10.22.80.72])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 574B01977689;
-	Thu, 21 Aug 2025 11:15:35 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 58C27197768D;
+	Thu, 21 Aug 2025 11:15:36 +0000 (UTC)
 From: Steve Dickson <steved@redhat.com>
 To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
 Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 08/12] Convert old-style function definitions into modern-style definitions
-Date: Thu, 21 Aug 2025 07:15:19 -0400
-Message-ID: <20250821111524.1379577-9-steved@redhat.com>
+Subject: [PATCH 09/12] Convert old-style function definitions into modern-style definitions
+Date: Thu, 21 Aug 2025 07:15:20 -0400
+Message-ID: <20250821111524.1379577-10-steved@redhat.com>
 In-Reply-To: <20250821111524.1379577-1-steved@redhat.com>
 References: <20250821111524.1379577-1-steved@redhat.com>
 Precedence: bulk
@@ -85,141 +85,196 @@ function definitions into modern-style definitions
 
 Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- src/key_call.c | 58 +++++++++++++++++++++++---------------------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
+ src/getnetconfig.c | 24 +++++++++---------------
+ src/getnetpath.c   | 12 +++++-------
+ src/getpublickey.c | 20 ++++++++++----------
+ src/getrpcport.c   |  8 +++++---
+ 4 files changed, 29 insertions(+), 35 deletions(-)
 
-diff --git a/src/key_call.c b/src/key_call.c
-index 43f990e..e33e444 100644
---- a/src/key_call.c
-+++ b/src/key_call.c
-@@ -79,8 +79,7 @@ des_block *(*__key_gendes_LOCAL)(uid_t, char *) = 0;
- static int key_call( u_long, xdrproc_t, void *, xdrproc_t, void *);
- 
- int
--key_setsecret(secretkey)
--	const char *secretkey;
-+key_setsecret(const char *secretkey)
- {
- 	keystatus status;
- 
-@@ -122,10 +121,10 @@ key_secretkey_is_set(void)
- }
- 
- int
--key_encryptsession_pk(remotename, remotekey, deskey)
--	char *remotename;
--	netobj *remotekey;
--	des_block *deskey;
-+key_encryptsession_pk(
-+	char *remotename,
-+	netobj *remotekey,
-+	des_block *deskey)
- {
- 	cryptkeyarg2 arg;
- 	cryptkeyres res;
-@@ -146,10 +145,10 @@ key_encryptsession_pk(remotename, remotekey, deskey)
- }
- 
- int
--key_decryptsession_pk(remotename, remotekey, deskey)
--	char *remotename;
--	netobj *remotekey;
--	des_block *deskey;
-+key_decryptsession_pk(
-+	char *remotename,
-+	netobj *remotekey,
-+	des_block *deskey)
- {
- 	cryptkeyarg2 arg;
- 	cryptkeyres res;
-@@ -170,9 +169,9 @@ key_decryptsession_pk(remotename, remotekey, deskey)
- }
- 
- int
--key_encryptsession(remotename, deskey)
--	const char *remotename;
--	des_block *deskey;
-+key_encryptsession(
-+	const char *remotename,
-+	des_block *deskey)
- {
- 	cryptkeyarg arg;
- 	cryptkeyres res;
-@@ -192,9 +191,9 @@ key_encryptsession(remotename, deskey)
- }
- 
- int
--key_decryptsession(remotename, deskey)
--	const char *remotename;
--	des_block *deskey;
-+key_decryptsession(
-+	const char *remotename,
-+	des_block *deskey)
- {
- 	cryptkeyarg arg;
- 	cryptkeyres res;
-@@ -214,8 +213,7 @@ key_decryptsession(remotename, deskey)
- }
- 
- int
--key_gendes(key)
--	des_block *key;
-+key_gendes(des_block *key)
- {
- 	if (!key_call((u_long)KEY_GEN, (xdrproc_t)xdr_void, NULL,
- 			(xdrproc_t)xdr_des_block, key)) {
-@@ -225,8 +223,7 @@ key_gendes(key)
- }
- 
- int
--key_setnet(arg)
--struct key_netstarg *arg;
-+key_setnet(struct key_netstarg *arg)
- {
- 	keystatus status;
- 
-@@ -245,9 +242,9 @@ struct key_netstarg *arg;
- 
- 
- int
--key_get_conv(pkey, deskey)
--	char *pkey;
--	des_block *deskey;
-+key_get_conv(
-+	char *pkey,
-+	des_block *deskey)
- {
- 	cryptkeyres res;
- 
-@@ -286,8 +283,7 @@ key_call_destroy(void *vp)
-  * Keep the handle cached.  This call may be made quite often.
+diff --git a/src/getnetconfig.c b/src/getnetconfig.c
+index d547dce..58c4a5c 100644
+--- a/src/getnetconfig.c
++++ b/src/getnetconfig.c
+@@ -218,8 +218,7 @@ setnetconfig()
   */
- static CLIENT *
--getkeyserv_handle(vers)
--int	vers;
-+getkeyserv_handle(int vers)
+ 
+ struct netconfig *
+-getnetconfig(handlep)
+-void *handlep;
++getnetconfig(void *handlep)
  {
- 	void *localhandle;
- 	struct netconfig *nconf;
-@@ -396,12 +392,12 @@ int	vers;
- /* returns  0 on failure, 1 on success */
+     struct netconfig_vars *ncp = (struct netconfig_vars *)handlep;
+     char *stringp;		/* tmp string pointer */
+@@ -354,8 +353,7 @@ void *handlep;
+  * previously).
+  */
+ int
+-endnetconfig(handlep)
+-void *handlep;
++endnetconfig(void *handlep)
+ {
+     struct netconfig_vars *nc_handlep = (struct netconfig_vars *)handlep;
+ 
+@@ -417,8 +415,7 @@ void *handlep;
+  */
+ 
+ struct netconfig *
+-getnetconfigent(netid)
+-	const char *netid;
++getnetconfigent(const char *netid)
+ {
+     FILE *file;		/* NETCONFIG db's file pointer */
+     char *linep;	/* holds current netconfig line */
+@@ -516,8 +513,7 @@ getnetconfigent(netid)
+  */
+ 
+ void
+-freenetconfigent(netconfigp)
+-	struct netconfig *netconfigp;
++freenetconfigent(struct netconfig *netconfigp)
+ {
+     if (netconfigp != NULL) {
+ 	free(netconfigp->nc_netid);	/* holds all netconfigp's strings */
+@@ -541,9 +537,9 @@ freenetconfigent(netconfigp)
+  */
  
  static int
--key_call(proc, xdr_arg, arg, xdr_rslt, rslt)
--	u_long proc;
--	xdrproc_t xdr_arg;
--	void *arg;
--	xdrproc_t xdr_rslt;
--	void *rslt;
-+key_call(
-+	u_long proc,
-+	xdrproc_t xdr_arg,
-+	void *arg,
-+	xdrproc_t xdr_rslt,
-+	void *rslt)
+-parse_ncp(stringp, ncp)
+-char *stringp;		/* string to parse */
+-struct netconfig *ncp;	/* where to put results */
++parse_ncp(
++char *stringp,		/* string to parse */
++struct netconfig *ncp)	/* where to put results */
  {
- 	CLIENT *clnt;
- 	struct timeval wait_time;
+     char    *tokenp;	/* for processing tokens */
+     char    *lasts;
+@@ -661,8 +657,7 @@ nc_sperror()
+  * Prints a message onto standard error describing the reason for failure.
+  */
+ void
+-nc_perror(s)
+-	const char *s;
++nc_perror(const char *s)
+ {
+     fprintf(stderr, "%s: %s\n", s, nc_sperror());
+ }
+@@ -671,8 +666,7 @@ nc_perror(s)
+  * Duplicates the matched netconfig buffer.
+  */
+ static struct netconfig *
+-dup_ncp(ncp)
+-struct netconfig	*ncp;
++dup_ncp(struct netconfig	*ncp)
+ {
+     struct netconfig	*p;
+     char	*tmp;
+diff --git a/src/getnetpath.c b/src/getnetpath.c
+index ea1a18c..795ea26 100644
+--- a/src/getnetpath.c
++++ b/src/getnetpath.c
+@@ -129,8 +129,7 @@ setnetpath()
+  */
+ 
+ struct netconfig *
+-getnetpath(handlep)
+-    void *handlep;
++getnetpath(void *handlep)
+ {
+     struct netpath_vars *np_sessionp = (struct netpath_vars *)handlep;
+     struct netconfig *ncp = NULL;   /* temp. holds a netconfig session */
+@@ -185,8 +184,7 @@ getnetpath(handlep)
+  * (e.g. if setnetpath() was not called previously.
+  */
+ int
+-endnetpath(handlep)
+-    void *handlep;
++endnetpath(void *handlep)
+ {
+     struct netpath_vars *np_sessionp = (struct netpath_vars *)handlep;
+     struct netpath_chain *chainp, *lastp;
+@@ -222,9 +220,9 @@ endnetpath(handlep)
+  */
+ 
+ char *
+-_get_next_token(npp, token)
+-char *npp;		/* string */
+-int token;		/* char to parse string for */
++_get_next_token(
++char *npp,		/* string */
++int token)		/* char to parse string for */
+ {
+     char  *cp;		/* char pointer */
+     char  *np;		/* netpath pointer */
+diff --git a/src/getpublickey.c b/src/getpublickey.c
+index 4e96c7c..9d6b58c 100644
+--- a/src/getpublickey.c
++++ b/src/getpublickey.c
+@@ -58,16 +58,16 @@ int (*__getpublickey_LOCAL)(const char *, char *) = 0;
+  * Get somebody's public key
+  */
+ int
+-__getpublickey_real(netname, publickey)
+-	char *netname;
+-	char *publickey;
++__getpublickey_real(
++	const char *netname,
++	char *publickey)
+ {
+ 	char lookup[3 * HEXKEYBYTES];
+ 	char *p;
+ 
+ 	if (publickey == NULL)
+ 		return (0);
+-	if (!getpublicandprivatekey(netname, lookup))
++	if (!getpublicandprivatekey((char *)netname, lookup))
+ 		return (0);
+ 	p = strchr(lookup, ':');
+ 	if (p == NULL) {
+@@ -85,9 +85,9 @@ __getpublickey_real(netname, publickey)
+  */
+ 
+ int
+-getpublicandprivatekey(key, ret)
+-	char *key;
+-	char *ret;
++getpublicandprivatekey(
++	char *key,
++	char *ret)
+ {
+ 	char buf[1024];	/* big enough */
+ 	char *res;
+@@ -159,9 +159,9 @@ getpublicandprivatekey(key, ret)
+ 	}
+ }
+ 
+-int getpublickey(netname, publickey)
+-	const char *netname;
+-	char *publickey;
++int getpublickey(
++	const char *netname,
++	char *publickey)
+ {
+ 	if (__getpublickey_LOCAL != NULL)
+ 		return(__getpublickey_LOCAL(netname, publickey));
+diff --git a/src/getrpcport.c b/src/getrpcport.c
+index c28cd61..497a2a2 100644
+--- a/src/getrpcport.c
++++ b/src/getrpcport.c
+@@ -43,9 +43,11 @@
+ #include <rpc/pmap_clnt.h>
+ 
+ int
+-getrpcport(host, prognum, versnum, proto)
+-	char *host;
+-	int prognum, versnum, proto;
++getrpcport(
++	char *host,
++	int prognum, 
++	int versnum, 
++	int proto)
+ {
+ 	struct sockaddr_in addr;
+ 	struct hostent *hp;
 -- 
 2.50.1
 
