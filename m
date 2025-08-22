@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-13870-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13871-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38826B31963
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 15:25:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D59AB31966
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 15:25:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68C1CAC0C1C
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 13:20:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 839A8AC21B5
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 13:20:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 609A6302759;
-	Fri, 22 Aug 2025 13:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D2B303C90;
+	Fri, 22 Aug 2025 13:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5xEh5Xh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlbNRWv2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB58302740;
-	Fri, 22 Aug 2025 13:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5771303C87;
+	Fri, 22 Aug 2025 13:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755868788; cv=none; b=LgG7bykchOXBWGorC2yjbEChNZxsDn33Jy3mtnnQrBCgLLWatx2krTC0p1qNA+MgjEQ2PuQHVNeUcL0PJMmv0X4MR07YdIXTiARvJpOtIc7HY8oNL9NbD+pj65TUJFLXafaZMkMhdYifLwvhRpnTHMuSSEWHZgC7j0tHq6BpAIA=
+	t=1755868789; cv=none; b=u+x+TEUWvbMI2H5fwv2bIu3HPRM8nGiD2xQJtICROZCKG5Z4MXjSa3taCoM2R1XPvXw5luv2lMkOvNlv6HSfvzZQfhVH5lK3EhK/40YgPg9WciCHKd3SEozIOEaaPgv8OiIbsgzzdN6AI8GbRAN6UVvsKVmXIYYYU50GiQPhUpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755868788; c=relaxed/simple;
-	bh=MIpt2BSLHopkent+Pc4BviQAh8rGZu5EaYfs2EZi8tY=;
+	s=arc-20240116; t=1755868789; c=relaxed/simple;
+	bh=AmfhC4f3gfkz5oMJ/fDs0QSwi0saBraVHHxr250eZic=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p23y47zYIf23UJOz04UHQii3mh5wOfJuUAGp9YokXrz2gQ4huIRQ8G/EJade7V1SbRMSPulDGM8pZgrbq9PGYg4kVGXqRXUwIYbMUfbBsWz9e+D453ZCsZ567tFh3DtlVBhUnXqNGWfrRRTJ87ROueOyk2SQJtqb7APRwy5sdI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5xEh5Xh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C3A1C113D0;
-	Fri, 22 Aug 2025 13:19:46 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=a+R9B+U9AOx67YERvB5j6UCsSVNcEDeG1F/ZFFOXyMjkXB7GrJxhIxofoxD7bOy5MU7e2Z4qi1RdtTuSKr0H63FSYwsatitf9ojCOqmunWUtTtbqlOtfQCMmGYEzsiIVZmw8+iZvIjzPM19TEO4UM9K4kAKNs1ZdgLNXh6zbrso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TlbNRWv2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F29E4C116B1;
+	Fri, 22 Aug 2025 13:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755868787;
-	bh=MIpt2BSLHopkent+Pc4BviQAh8rGZu5EaYfs2EZi8tY=;
+	s=k20201202; t=1755868789;
+	bh=AmfhC4f3gfkz5oMJ/fDs0QSwi0saBraVHHxr250eZic=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=h5xEh5Xh6pSnO+c5cMhTr428fs3rAJnBLZVbiffnZz2H1yV2vi04ILwD54utcgnbD
-	 B2Kfzzo3PfpqOKEwyJXhQsBwBp6rTP5OdFUOZLEDU8I4+LVCzYk4Et5VQH+4suF6mF
-	 ai52oqEaCvkHjMZ0Ncb2Q2v0MYF6eO1KKWqrg71NgQ8J6pQqQyOGj151IInRaFajPS
-	 TELM+NzRdvfVP0qpYFwnxzc0U30+13hCzhENlWJ9rXB6+KmROEB7sfe78FUnazKtnr
-	 RjKD3XYD+m2dIIBtavH7T8WJY7wetAdqc1yRGd3GD+moztCkjX067ul0F2u8bok8KH
-	 SQIZUSOjcYdfA==
+	b=TlbNRWv2xjT93EUpqH9o/BObRhdYVDvHGKKbCk8PckrA6mtkxy+IN1EOyzyt+YQlK
+	 s+BYggS9VQonnhZkU5nbvzL9+bpwPmpJjWNwQIBFRdQDAruroYiDuuLehZAX8p7WaK
+	 EVCQ2t0RD7CLifcqPfYj/17WVl9uDgLY/JbGoiJBxfgjMY7vH8DeQ+6cRxK/8VKIEO
+	 4d1RI13wxPrWz8BI8TH4nkCe/JLcyG/GsSJRNBPO8QcqHd5XlahVinqK7p2dOHJdPX
+	 myYv2u0r6SYhEuCzdqx9qp4eXkhjmnDKJu3sREMBU8Cd8B7UlJWmLZpmH4LKI1ShGD
+	 ejgRyJmYC1wtQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 22 Aug 2025 09:19:22 -0400
-Subject: [PATCH v2 1/2] sunrpc: remove dfprintk_cont() and
- dfprintk_rcu_cont()
+Date: Fri, 22 Aug 2025 09:19:23 -0400
+Subject: [PATCH v2 2/2] sunrpc: add a Kconfig option to redirect dfprintk()
+ output to trace buffer
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-nfs-testing-v2-1-5f6034b16e46@kernel.org>
+Message-Id: <20250822-nfs-testing-v2-2-5f6034b16e46@kernel.org>
 References: <20250822-nfs-testing-v2-0-5f6034b16e46@kernel.org>
 In-Reply-To: <20250822-nfs-testing-v2-0-5f6034b16e46@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -65,121 +65,95 @@ To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3432; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=MIpt2BSLHopkent+Pc4BviQAh8rGZu5EaYfs2EZi8tY=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoqG5wQmm+eq2gCW1sHmT2OgWR4YxtPZPNqL9j0
- LxgjNHTh2uJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaKhucAAKCRAADmhBGVaC
- FVyuEACEZe7fTvY29p4GSuUH4ROq9L32YKz+KJdTazg8gMbzaFgK1cbuJ8wAhD0uJobe93eqdac
- UNmV5L1Uo+AxJ1oYxs8lSh4yHyc/3FIcA18FwE8WtNHdaG/Ern9NvKQ8b7zpKvueZXqnNrKfSE2
- 1j32kD2AV85FpiPMk+Bk8I1x4weKErRBG3EmMZ+48vFZFtgD1e5bySOFA59ZkGaGJUEHZnCd3xq
- e/0elAJittGckkS20DapEpuqBF56qRZVG/6/L71L5OCL1HZ0ximyVJzfJs/5XN9iRQqqqg+8Gmb
- 3QQZf7u95bnRh7/c1UUcniLXVmwIznEuD3hlx0sIua/5dEKK3UUwF3eIC6NGH5RDsg2DD1O/gza
- htgyJL48uRmVsaMCJr/9ysLAgMZ9uG4O1+cwTd7DnSq0pOwKSG6CiH9rL0lSL8tkLzQkZrrw0MU
- MisjVaqlVG8icMTe0ZOpsCeOnX6kSIukWH5s5C5h4g0FP+bls/n4Y9m9J+RBX+/OZHc6voKFc4i
- Rmw0XITzktvyHIYlppC8lH2+PYEMZakXt1rAJH3BKG1gSVaQODl0Ld9Qwf1kRnIC7XnW50psm7l
- a8MkxgAcgJyuwZ+U9/1Sikves0T3FB7o/jhbzunLO2Im9KhaS5ca+c8eGRpJ+PFmHs5S9g0ui9n
- C1Ibg0hXWuywliQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2819; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=AmfhC4f3gfkz5oMJ/fDs0QSwi0saBraVHHxr250eZic=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoqG5wYtaTHzijD5oaj7MtUxrsCJnQcKKBm5X6o
+ s14Caekx+CJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaKhucAAKCRAADmhBGVaC
+ FRrZD/9f8TkP/JWpNJp4PYSfHUqeybIbKvgvrkxSJqfvQJm1AUdH0CHqUGvwnBSFHho2sc/SViE
+ 7Bqowurj3YMnWX1Kls+9UQ5HTJwHh37QdO/RcE1OmUwJzncomZ5HIp9Ia6iWs5qpdxFZacAgfNp
+ b/sLKznRWOtFUcOy0dCic9O34GwTPSoCS/ZoQVZyYRH1P9ynhK31bwl7m453Yfwz/6X90BHUIA5
+ 4ywCXCBjBTrVH5IzWb4tqTvBwI52IdrGCA2gdYkekSx2Akg2AvK3+xGgE9I+gAFQZ6RJqQ0gGYF
+ B9p5HprYvPIOzo8ah8UyW/AhZG/Afna6HQZoVYso7+RBd4k4IzXmf+wmfQUbIkeWSI2Q2el3p44
+ 8o2yRKjp04IbSSirWbQXFfwKRLF2DGiK4Zd/ZnUc/DBa+f5StvBrboo/DkHLqTO2W+K4ApirNjn
+ 6ifudEMj1NjcqsJWQSnYGx/JvpWMKx5Hkvqyp0VVtCaCMhNCbwDVyHHJ08nRrLGVQn0pJVVGU0Q
+ tp18vbiNbaTMCnLwqMW6AiM/qYKNdEGcgR1y5fDq8YkRHpGTwZjYRhPlOiA991ZAReiouVnNw5u
+ S2NK2nQOJNyu2lSXUXIOYFHwXTwhflFvZ1qg6XGWo9MdrupmFJH8AAR466IDvAO3LoVyyBRFUfd
+ qKq9TtDIgrud8Sg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-KERN_CONT hails from a simpler time, when SMP wasn't the norm. These
-days, it doesn't quite work right since another printk() can always race
-in between the first one and the one being "continued".
+We have a lot of old dprintk() call sites that aren't going anywhere
+anytime soon. At the same time, turning them up is a serious burden on
+the host due to the console locking overhead.
 
-Nothing calls dprintk_rcu_cont(), so just remove it. The only caller of
-dprintk_cont() is in nfs_commit_release_pages(). Just use a normal
-dprintk() there instead, since this is not SMP-safe anyway.
+Add a new Kconfig option that redirects dfprintk() output to the trace
+buffer. This is more efficient than logging to the console and allows
+for proper interleaving of dprintk and static tracepoint events.
+
+Since using trace_printk() causes scary warnings to pop at boot time,
+this new option defaults to "n".
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfs/write.c               |  6 +++---
- include/linux/sunrpc/debug.h | 24 ++----------------------
- 2 files changed, 5 insertions(+), 25 deletions(-)
+ include/linux/sunrpc/debug.h | 10 ++++++++--
+ net/sunrpc/Kconfig           | 14 ++++++++++++++
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index d881486d235ba042feedd2dd59d6a60b366b9600..4d5699b4a1fabff39e67998af40561620b532db6 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1862,7 +1862,7 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 				nfs_mapping_set_error(folio, status);
- 				nfs_inode_remove_request(req);
- 			}
--			dprintk_cont(", error = %d\n", status);
-+			dprintk(", error = %d\n", status);
- 			goto next;
- 		}
- 
-@@ -1872,11 +1872,11 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 			/* We have a match */
- 			if (folio)
- 				nfs_inode_remove_request(req);
--			dprintk_cont(" OK\n");
-+			dprintk(" OK\n");
- 			goto next;
- 		}
- 		/* We have a mismatch. Write the page again */
--		dprintk_cont(" mismatch\n");
-+		dprintk(" mismatch\n");
- 		nfs_mark_request_dirty(req);
- 		atomic_long_inc(&NFS_I(data->inode)->redirtied_pages);
- 	next:
 diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
-index f6aeed07fe04e3d51d7f9d23b10fe86d36241b45..99a6fa4a1d6af0b275546a53957f07c9a509f2ac 100644
+index 99a6fa4a1d6af0b275546a53957f07c9a509f2ac..891f6173c951a6644018237017c845d81b42aa76 100644
 --- a/include/linux/sunrpc/debug.h
 +++ b/include/linux/sunrpc/debug.h
-@@ -23,12 +23,8 @@ extern unsigned int		nlm_debug;
- 
- #define dprintk(fmt, ...)						\
- 	dfprintk(FACILITY, fmt, ##__VA_ARGS__)
--#define dprintk_cont(fmt, ...)						\
--	dfprintk_cont(FACILITY, fmt, ##__VA_ARGS__)
- #define dprintk_rcu(fmt, ...)						\
- 	dfprintk_rcu(FACILITY, fmt, ##__VA_ARGS__)
--#define dprintk_rcu_cont(fmt, ...)					\
--	dfprintk_rcu_cont(FACILITY, fmt, ##__VA_ARGS__)
- 
- #undef ifdebug
+@@ -30,17 +30,23 @@ extern unsigned int		nlm_debug;
  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-@@ -37,29 +33,14 @@ extern unsigned int		nlm_debug;
+ # define ifdebug(fac)		if (unlikely(rpc_debug & RPCDBG_##fac))
+ 
++# if IS_ENABLED(CONFIG_SUNRPC_DEBUG_TRACE)
++#  define __sunrpc_printk(fmt, ...)	trace_printk(fmt, ##__VA_ARGS__)
++# else
++#  define __sunrpc_printk(fmt, ...)	printk(KERN_DEFAULT fmt, ##__VA_ARGS__)
++# endif
++
  # define dfprintk(fac, fmt, ...)					\
  do {									\
  	ifdebug(fac)							\
--		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);		\
--} while (0)
--
--# define dfprintk_cont(fac, fmt, ...)					\
--do {									\
--	ifdebug(fac)							\
--		printk(KERN_CONT fmt, ##__VA_ARGS__);			\
-+		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
+-		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
++		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
  } while (0)
  
  # define dfprintk_rcu(fac, fmt, ...)					\
  do {									\
  	ifdebug(fac) {							\
  		rcu_read_lock();					\
--		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);		\
--		rcu_read_unlock();					\
--	}								\
--} while (0)
--
--# define dfprintk_rcu_cont(fac, fmt, ...)				\
--do {									\
--	ifdebug(fac) {							\
--		rcu_read_lock();					\
--		printk(KERN_CONT fmt, ##__VA_ARGS__);			\
-+		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
+-		printk(KERN_DEFAULT fmt, ##__VA_ARGS__);				\
++		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
  		rcu_read_unlock();					\
  	}								\
  } while (0)
-@@ -68,7 +49,6 @@ do {									\
- #else
- # define ifdebug(fac)		if (0)
- # define dfprintk(fac, fmt, ...)	do {} while (0)
--# define dfprintk_cont(fac, fmt, ...)	do {} while (0)
- # define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
- # define RPC_IFDEBUG(x)
- #endif
+diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
+index 2d8b67dac7b5b58a8a86c3022dd573746fb22547..a570e7adf270fb8976f751266bbffe39ef696c6a 100644
+--- a/net/sunrpc/Kconfig
++++ b/net/sunrpc/Kconfig
+@@ -101,6 +101,20 @@ config SUNRPC_DEBUG
+ 
+ 	  If unsure, say Y.
+ 
++config SUNRPC_DEBUG_TRACE
++	bool "RPC: Send dfprintk() output to the trace buffer"
++	depends on SUNRPC_DEBUG && TRACING
++	default n
++	help
++          dprintk() output can be voluminous, which can overwhelm the
++          kernel's logging facility as it must be sent to the console.
++          This option causes dprintk() output to go to the trace buffer
++          instead of the kernel log.
++
++          This will cause warnings about trace_printk() being used to be
++          logged at boot time, so say N unless you are debugging a problem
++          with sunrpc-based clients or services.
++
+ config SUNRPC_XPRT_RDMA
+ 	tristate "RPC-over-RDMA transport"
+ 	depends on SUNRPC && INFINIBAND && INFINIBAND_ADDR_TRANS
 
 -- 
 2.50.1
