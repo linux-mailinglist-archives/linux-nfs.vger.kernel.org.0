@@ -1,329 +1,118 @@
-Return-Path: <linux-nfs+bounces-13868-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13869-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7BB3B30ECA
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 08:22:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EB11B3195F
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 15:24:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 326841CE51DD
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 06:23:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA652A2455E
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Aug 2025 13:20:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F412E3B1D;
-	Fri, 22 Aug 2025 06:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B7F2FF14E;
+	Fri, 22 Aug 2025 13:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWh3E0gY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dzav66wS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A09C218AD2;
-	Fri, 22 Aug 2025 06:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48E22FE592;
+	Fri, 22 Aug 2025 13:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755843756; cv=none; b=IcXky6kw6UVCap1SzSTTg2IxO1LgQQ7gbmYDJ6IoEdI5EOY0PpoBEJd7xBkziZJOrx8aMnkyPmzwpF49PlmWsK5S5l6AelYZKh8/vehCDg3NhV8FISCbhZsQxH39GPb1kxEWp+uqf0+6Cbwr54WdL44ChOoq9TtXANpx0w8hj8c=
+	t=1755868786; cv=none; b=GHD+maRqsA+Qpq7sw0EQf6tjy+hJW5paXDeG/WsSZY5YXTDKiMBEymDUe0OQgYXwz1x8rcgivPSnPRIe07KzyRiY7JtNxO76f0HxeS7ujGBJD06EFCJlz3ycnzALl2DcNPhDqCFtcOXPphb+joG47f0bz/Uou3O1EoLf4z1X8gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755843756; c=relaxed/simple;
-	bh=lQF2ocuOorG+AyNCviJelZCZ4e41pFo8eQYAi3ckwLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pn9HZKz55rgJIOwqPXi9Q6TSJ1vWv6TEZ9Rw6jHJ+PzMJgdxWJKvpGF4wMSX2qk5+JV36hIzjKGT/mMr++JWRCwbCyjM8yRaEx8xLLdY0YmLm8nlWGVPhrLK1TDYtU8X/LmnO33XNqgnL5BxwFJVFEonunrb1QMXAc2+y30PQhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TWh3E0gY; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755843754; x=1787379754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lQF2ocuOorG+AyNCviJelZCZ4e41pFo8eQYAi3ckwLw=;
-  b=TWh3E0gYll9/+kVtiU04tF5QU6HYgFJnCeQZqT5TDKYOtS3jLnvrbCni
-   CkmLKetYPHLD1ZdldfXIaadES1ovG7Hv1DzAo5YpDRt5n8I2GeU4X9jvB
-   M1H/pg7Ygw8qIV2tuUSbzgsqXPN9vpSvEADJ/8AiFAtt/effFYthad65q
-   TSzfrZNsS85pxLIFDKeQshtm3/KQpoEvWgcC16OoZ8hMZBoLVcQFr0xJQ
-   dV+jgCxpX+S+j7LcnYA5iSlzsmYrYCGYwyH1G1bScW3cgkdnzIvkff7EZ
-   /1vkV8hjahNCYmLOeOo4+4+1EDTegd43OhoVrGAD0Il++Q6d6q2/kiwa9
-   w==;
-X-CSE-ConnectionGUID: EtNGsRPwT8indCbXQZp+GQ==
-X-CSE-MsgGUID: AJ3HTAMKSsqwjVM9FsOG+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="58246260"
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="58246260"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 23:22:33 -0700
-X-CSE-ConnectionGUID: kwV79w6VQVGef6mJlafI4w==
-X-CSE-MsgGUID: jiqm1GsbSPOc/uWbCND9yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168535573"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 21 Aug 2025 23:22:29 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1upLAQ-000KyF-1t;
-	Fri, 22 Aug 2025 06:22:26 +0000
-Date: Fri, 22 Aug 2025 14:22:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH 2/2] sunrpc: add a Kconfig option to redirect dfprintk()
- output to trace buffer
-Message-ID: <202508221433.vcMr9C38-lkp@intel.com>
-References: <20250821-nfs-testing-v1-2-f06099963eda@kernel.org>
+	s=arc-20240116; t=1755868786; c=relaxed/simple;
+	bh=MyNgdMxnyEB/P7oXWoztxQMr+47U1RLFpT8c8a5OKoc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SSombk1bNWZ2DDrRJG9HIbDjXXzO7U3lwCrx2GNWDPLA6R0ERezATFY5n7aj224rOLO9MN0TFiRuas88Zh0MEXwehxgdoX+ZmKMp5goojNYJJeWdGISt01thA/Xq9i2mX8E9piC24jXRfG8qNZZR0ahbTNW1he9DduvQ+j2EHsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dzav66wS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B787C4CEED;
+	Fri, 22 Aug 2025 13:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755868786;
+	bh=MyNgdMxnyEB/P7oXWoztxQMr+47U1RLFpT8c8a5OKoc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Dzav66wSYqOQh8PgImtIxM6Cwlr5krkZrJf+Uu5VPHyuhSq5Mw+zkORV28y1TFVnZ
+	 m+aPS5PjU1NFfMmbJDXcrIDDnu2cGNRbwfQubvtO81xavtkDRYx4NZrUVxBCx/NnfN
+	 ncZiOYpie5SitqOF6Eh/RvYnXXJIl/SHRaYvLld7FaYlm+uXgh1i1+4qtkIhSHweyW
+	 0YxTHB9TgUvzR6/Nubmqbzv/p/V7Ov7BY3yGpHJu1r2huyyjDxejrd49WLaZ901BkS
+	 5+vQNHMUcfmaD8nzHCkcNcwNzsc6FQQdKXSxk2Xnl9qXeu3kGv13mZXa2W4mR0mqAB
+	 8TvIttVQXfprg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/2] sunrpc: allow dprintk() to go to the trace buffer
+ instead of console
+Date: Fri, 22 Aug 2025 09:19:21 -0400
+Message-Id: <20250822-nfs-testing-v2-0-5f6034b16e46@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250821-nfs-testing-v1-2-f06099963eda@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFluqGgC/23MQQ6CMBCF4auQWVszHQWtK+9hWKAdYKIppNM0G
+ sLdraxd/i953wLKUVjhUi0QOYvKFErQroLH2IWBjfjSQEg1nsma0KtJrEnCYOhOFk/oavJHKI8
+ 5ci/vTbu1pUfRNMXPhmf7W/872Ro0PTbonGsO7Lvrk2Pg136KA7Trun4BfKlknKcAAAA=
+X-Change-ID: 20250821-nfs-testing-2b21070952d4
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1243; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=MyNgdMxnyEB/P7oXWoztxQMr+47U1RLFpT8c8a5OKoc=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoqG5nlo54B+e38yagzXYM8iUYdmSkDPT+QaAEj
+ K8b3fpOdQuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaKhuZwAKCRAADmhBGVaC
+ FfWLEACyR9DwlivE1t0R3+hiKGnmcX8Dj+dyFumcDeLRq0r6F/qFqNOPJl1U+cxvCXdt91r2tO/
+ kI6bHTnCJwFdzwhj4oySHNoYqmeDFC4ZyxrO+pKreWR2Uw9BdudISWMywMcNntIQLko48dyelUR
+ CWni6JnHsVgqEnfkhfvAdmZ2Kv2pXeKuBsI0n7YhOHVs4emAlBRieNql30ELQpzQZZFr/Gg952d
+ wonnYN8rNJuyp/0FYM3brch0ucTao9P4jHTbjvJAyMhO2uDkQUnimH8JE/DxyeRkVePy3u6NiWL
+ sjTM1gnfbfBit5XiIOyiayUqMJGbgNkR39o7bk8q4NO74cd1dU4GEInMk6F4+0H/ZGBzsHD6xQa
+ MCPjjPq3cImkmL2WDtpvveSQ22ywLA5ZUpZ0KAYcIkrLMepXjU3EhkPq7CbfyHi+ZPn7qHyqPqt
+ /s4jB/qBcDpRXqUmSGmK0vCa9YhAukKM0iWZ9SFkCC42r14upoDLAKSuy7XPgqAti/6UJ7kDHqc
+ T8suQQgq3//JmGPxXxTDmi8BmNa1bdFmXBIXRUDCNTDMzPz8IA0zwcqyPLloXBcgmi9CjzSvGiF
+ CpMD4CtMfl91IhtTQtPzoScJQUY1NUZ+K9GJb9mGeBwR3U/VweSGw7zmTSPPjVCjE6EWSjiGvd0
+ wwCaQwo2/3whrbg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hi Jeff,
+While we have added a lot of static tracepoints in the last few years,
+we still have a load of dprintks in place at all levels of the
+NFS/NLM/RPC stack. At the same time, they're pretty useless under any
+significant load due to the console overhead.
 
-kernel test robot noticed the following build errors:
+This adds a new Kconfig switch to allow those to go to the trace buffer
+instead. In addition to being more efficient, that allows us to enable
+static tracepoints alongside dprintk() and get a unified log.
 
-[auto build test ERROR on 80a1bea0cd81de70c56b37a8292c23d57419776f]
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- pr_default() doesn't exist. Use printk(KERN_DEFAULT ...) instead.
+- Link to v1: https://lore.kernel.org/r/20250821-nfs-testing-v1-0-f06099963eda@kernel.org
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jeff-Layton/sunrpc-remove-dfprintk_cont-and-dfprintk_rcu_cont/20250822-011902
-base:   80a1bea0cd81de70c56b37a8292c23d57419776f
-patch link:    https://lore.kernel.org/r/20250821-nfs-testing-v1-2-f06099963eda%40kernel.org
-patch subject: [PATCH 2/2] sunrpc: add a Kconfig option to redirect dfprintk() output to trace buffer
-config: parisc-randconfig-001-20250822 (https://download.01.org/0day-ci/archive/20250822/202508221433.vcMr9C38-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250822/202508221433.vcMr9C38-lkp@intel.com/reproduce)
+---
+Jeff Layton (2):
+      sunrpc: remove dfprintk_cont() and dfprintk_rcu_cont()
+      sunrpc: add a Kconfig option to redirect dfprintk() output to trace buffer
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508221433.vcMr9C38-lkp@intel.com/
+ fs/nfs/write.c               |  6 +++---
+ include/linux/sunrpc/debug.h | 30 ++++++++----------------------
+ net/sunrpc/Kconfig           | 14 ++++++++++++++
+ 3 files changed, 25 insertions(+), 25 deletions(-)
+---
+base-commit: 80a1bea0cd81de70c56b37a8292c23d57419776f
+change-id: 20250821-nfs-testing-2b21070952d4
 
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/proc.c:39:
-   fs/nfs/proc.c: In function 'nfs_proc_get_root':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/proc.c:66:2: note: in expansion of macro 'dprintk'
-      66 |  dprintk("%s: call getattr\n", __func__);
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/nfs2xdr.c:21:
-   fs/nfs/nfs2xdr.c: In function 'decode_nfsdata':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/nfs2xdr.c:110:2: note: in expansion of macro 'dprintk'
-     110 |  dprintk("NFS: server cheating in read result: "
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from fs/nfs/unlink.c:12:
-   fs/nfs/unlink.c: In function 'nfs_sillyrename':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   fs/nfs/unlink.c:453:2: note: in expansion of macro 'dfprintk'
-     453 |  dfprintk(VFS, "NFS: silly-rename(%pd2, ct=%d)\n",
-         |  ^~~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/nfs_fs.h:30,
-                    from fs/nfs/direct.c:52:
-   fs/nfs/direct.c: In function 'nfs_file_direct_read':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   fs/nfs/direct.c:444:2: note: in expansion of macro 'dfprintk'
-     444 |  dfprintk(FILE, "NFS: direct read(%pD2, %zd@%Ld)\n",
-         |  ^~~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/auth.h:13,
-                    from include/linux/nfs.h:12,
-                    from fs/nfs/export.c:9:
-   fs/nfs/export.c: In function 'nfs_encode_fh':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/export.c:42:2: note: in expansion of macro 'dprintk'
-      42 |  dprintk("%s: max fh len %d inode %p parent %p",
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/super.c:34:
-   fs/nfs/super.c: In function 'nfs_statfs':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/super.c:310:2: note: in expansion of macro 'dprintk'
-     310 |  dprintk("%s: statfs error = %d\n", __func__, -error);
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/inode.c:27:
-   fs/nfs/inode.c: In function 'nfs_ilookup':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/inode.c:425:2: note: in expansion of macro 'dprintk'
-     425 |  dprintk("%s: returning %p\n", __func__, inode);
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/mount_clnt.c:15:
-   fs/nfs/mount_clnt.c: In function 'nfs_mount':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/mount_clnt.c:168:2: note: in expansion of macro 'dprintk'
-     168 |  dprintk("NFS: sending MNT request for %s:%s\n",
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/nfs_fs.h:30,
-                    from fs/nfs/fs_context.c:18:
-   fs/nfs/fs_context.c: In function 'nfs_validate_transport_protocol':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/internal.h:175:5: note: in expansion of macro 'dprintk'
-     175 |  ({ dprintk(fmt "\n", ## __VA_ARGS__);  -EINVAL; }))
-         |     ^~~~~~~
-   fs/nfs/fs_context.c:388:9: note: in expansion of macro 'nfs_invalf'
-     388 |  return nfs_invalf(fc, "NFS: Unsupported transport protocol udp");
-         |         ^~~~~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/nfs_fs.h:30,
-                    from fs/nfs/file.c:26:
-   fs/nfs/file.c: In function 'nfs_file_open':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/file.c:66:2: note: in expansion of macro 'dprintk'
-      66 |  dprintk("NFS: open file(%pD2)\n", filp);
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/sunrpc/types.h:16,
-                    from include/linux/sunrpc/sched.h:15,
-                    from include/linux/sunrpc/clnt.h:20,
-                    from fs/nfs/write.c:19:
-   fs/nfs/write.c: In function 'nfs_update_folio':
->> include/linux/sunrpc/debug.h:36:37: error: implicit declaration of function 'pr_default'; did you mean 'pr_devel'? [-Werror=implicit-function-declaration]
-      36 | #  define __sunrpc_printk(fmt, ...) pr_default(fmt, ##__VA_ARGS__)
-         |                                     ^~~~~~~~~~
-   include/linux/sunrpc/debug.h:42:3: note: in expansion of macro '__sunrpc_printk'
-      42 |   __sunrpc_printk(fmt, ##__VA_ARGS__);   \
-         |   ^~~~~~~~~~~~~~~
-   include/linux/sunrpc/debug.h:25:2: note: in expansion of macro 'dfprintk'
-      25 |  dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |  ^~~~~~~~
-   fs/nfs/write.c:1348:2: note: in expansion of macro 'dprintk'
-    1348 |  dprintk("NFS:       nfs_update_folio(%pD2 %d@%lld)\n", file, count,
-         |  ^~~~~~~
-   cc1: some warnings being treated as errors
-..
-
-
-vim +36 include/linux/sunrpc/debug.h
-
-    32	
-    33	# if IS_ENABLED(CONFIG_SUNRPC_DEBUG_TRACE)
-    34	#  define __sunrpc_printk(fmt, ...)	trace_printk(fmt, ##__VA_ARGS__)
-    35	# else
-  > 36	#  define __sunrpc_printk(fmt, ...)	pr_default(fmt, ##__VA_ARGS__)
-    37	# endif
-    38	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jeff Layton <jlayton@kernel.org>
+
 
