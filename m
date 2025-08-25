@@ -1,112 +1,139 @@
-Return-Path: <linux-nfs+bounces-13880-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13881-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28A66B33122
-	for <lists+linux-nfs@lfdr.de>; Sun, 24 Aug 2025 17:21:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E976B3406A
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 15:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 200C01896CC3
-	for <lists+linux-nfs@lfdr.de>; Sun, 24 Aug 2025 15:21:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E15701A84A98
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 13:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC712A935;
-	Sun, 24 Aug 2025 15:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75AA221257E;
+	Mon, 25 Aug 2025 13:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TeKbaE21"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxXTPYAv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-10697.protonmail.ch (mail-10697.protonmail.ch [79.135.106.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAE01FB3
-	for <linux-nfs@vger.kernel.org>; Sun, 24 Aug 2025 15:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C71E267B12;
+	Mon, 25 Aug 2025 13:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756048891; cv=none; b=ptCt0eByZswzBIPUHQ1Rkusrzux1Bj0kM0sGPe3gcRJhFrobO+MXpLoE3O2Suw1KeqJ1IVo5ICPezce2c4KOTb0iq0MLBQKH/u3XIQYPVw9JnJ6tEeg7L1gTgme/S32RMGJIlHxPw4PKMt9W8HFwuyYmu8PXpcLDTDKi06Z+q+0=
+	t=1756127495; cv=none; b=eotU2m92pp/cbF+k3zuR3pl2R8QOqxYIlkpekH8osobVx1giVu5qmTSi/ogB8PO9NXmuyCOc/bALfK0S0MRtj5Hqc1ru+RrT+ALPRZjwjvYjFvBWxhI1jfr+mfUFu1P0XDqvDGqWIg00NFlsfn3qz1wbL+NwBJ7WzK8Movsxxnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756048891; c=relaxed/simple;
-	bh=idLR8m8lIuuCvDvvmHzEkoud+YvqiCcPFvbe39vhnRg=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fhQ+rcmH79wz6Iqsz+CxBiZX+AYImpFSs+K2QFHb7IuujincB+DXbu6A5HuR7Z/rvsgO6MXGREk6UP9alDo1idRrZsUMieWLF309wTbsP7b7q/n/ptYth8S/GyZmStU0RjmF0wlbF1rWjVXLaU1D//ZqujhwlCT+v4PXGtoYxoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TeKbaE21; arc=none smtp.client-ip=79.135.106.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1756048880; x=1756308080;
-	bh=uWm/pmVhm/PcQGkZn4bM6I/xxipkQHd1Qdmr7p5a0U0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=TeKbaE21MOwzQLDTJ6sf5yxK1B2pU9Eniru9MZk6Gg7C6e897Ti/FLHZrofLzMUsd
-	 UWqalvjT65IHmOxs907t1qnFKAcy+ED8CZn6gckb4+KeSyRVG9ZktBqVSgM1qqEzd2
-	 IV2xsM4pQVKthgZQySxiP0t7w9h5Njq0hXh0mtQ4OqW0dBh1ZueojRzjp607Ex4PdR
-	 HIE9ocqtPt+H+vCWfS7WIQOyTB92QQDIOsy4XMinGXWPXfXt9lLm84WBYCai+T0LbF
-	 KN0I6dtKxnWpinqlqDpXie8ZJO+9GTQkscfPiqRNJQO3OmjKUbqFIMGOPWYg6GkUEm
-	 thT8c2nNlAH8g==
-Date: Sun, 24 Aug 2025 15:21:17 +0000
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-From: John <therealgraysky@proton.me>
-Cc: "steved@redhat.com" <steved@redhat.com>
-Subject: [PATCH] fix cleanup_lockfiles function linkage in exportd
-Message-ID: <nflkbymsZf-JPtqHSc_evn9hseuYTvvgOCi606D0q7qJmzqBgiTg17wPCbWZLOnSEPoc7gftHIdaFz-bJm-5nI1-QFGSHYBe1trF6yMyAsI=@proton.me>
-Feedback-ID: 47473199:user:proton
-X-Pm-Message-ID: 6844f6be056543f63f4ef2a56cd935922758ecf3
+	s=arc-20240116; t=1756127495; c=relaxed/simple;
+	bh=WQL44nqUEkOVb7tO4wNaDm6LA85RjkoatKVjByBKDZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lmkx+tg9RX/shzQ1BBqLyEtMYmg31qnlTH+vTD1URFxSl9PsOxlFO5McPxLYi+htlE0qZNq/xGxFFQiAYlLgB5pYKbd8VsbXTyrFnzN7QmB+/kaIvXTb8RGnAVM5dOxu6QffveQlaJvEuVRkBr6H8lZBZ6IccNGHUPQP8vxEuJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TxXTPYAv; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55f474af957so679866e87.1;
+        Mon, 25 Aug 2025 06:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756127492; x=1756732292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z5fw3ZMJHDqMnjQnhOh6MuUcNCVkHnMj73CqPHZAXRk=;
+        b=TxXTPYAvNTt+3HLVVdHU5mJC7bBG5fzPzP0xxhduO0SwhniOATj99VcvrU/BwrdYE8
+         7u5q2TSSBVj5HoHY8cgo85+8L3Liz2VLt9flsDyZRMAYnlHuk9FnAoZNVtgQb0LYEbtg
+         0I+YyY96PVUYWzZA3oT43ovDrcFbxurmGJPnWHl4fY4t/9th9jeXiobOyTVpLhiM0wPK
+         9sQlY22+EjSK8W9NuhclKp6zjZno9xIF8IqWrzeKkp67oPjP5GNL4ckd5PpLLOYKQ2tD
+         koktVK3AI/ydjZLB5nchZne8Usb3dl/AtuTkTnkM/VEHSGDDU94kJI1479lg3VITNiIZ
+         Op3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756127492; x=1756732292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z5fw3ZMJHDqMnjQnhOh6MuUcNCVkHnMj73CqPHZAXRk=;
+        b=BqiYyk6VFA4t3XM8a8C5VrHdIJKOROHeI+z7qYkOpgrcNH0YOXvAQJSUYljvC/eFPH
+         B5JvMKeqQ/9x6tErD8IBoCsVcTSfESbovWUep1AHGTUbM0jJw5PeF+yEyLN55KMm0/kz
+         /fUnSeXl7MekBCizrTpJYAbxHj0pkeF3kw/RjOTfz48A6URCoc9aJClmy4zmCLurzC+l
+         UO/YL5orXF/dBC8qKMRwSeeS8XYISQp7fg0AUjeL2p8lYKK2CpK2lwfBHxTu0xWClbnz
+         16hG7CUBKGlP/hpKIXDd/lDxPkr/D8QfVEE2kJHq1vAK3ugbfaheBtHGv1omd1WfyVbj
+         DniA==
+X-Forwarded-Encrypted: i=1; AJvYcCWr1UQkFl+iMUsF2iloyfJZAqfLL8YR+h24VDYvabHRpEpGqYWfIxRf4+jue1nxRT905GBPMx7tGQeDavM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ0WyQ/tJKig4woIWK310KzVpt2j/GHzQDcm3sWD/0A1hgTMpg
+	6Po2m0kLOkzZhzmWa2nEkPPJTJGisy+nSglmWJxjbRy+8qZZy1pNAmzMWBoIRF92
+X-Gm-Gg: ASbGncvFk6b3lPU4AoEQmXF1PUOwqEEKE993qG9ObOYYPnVFe+eVvCLQApjhOXGfjmX
+	aQz25op6A+JVUMfFm1SrLf4Q4oY4ZDGc9+EEzgeeCRrspX8ZSWRrVmiaSjIWO2Vkp+HWt8rLr68
+	dt1D0tuvIVRSxIX1hydnQ3WSFhAVRSf6VTELDUR1zhX5lb6i/15LbWP0aExFVR7M3YkaKcX00Uv
+	IDnQu5/i2MCDln7Lfkzj396mviSSGFSv9MVCYkLC2upnFdp456xhhN9Rcwz3oHr19JIz3JaAXMd
+	NmpJV46pYygPZzy0GrjrNPAFbIFNG4xWzft+rekHQMRmJk97rQ8Od2VLO6doTF1OoDBkzVZ7kr1
+	yerwtY7zwX4MGCO1jDy7h8XDwZwK+WAvifxHYVQ04SVr2CZBZQXm09oolJ4FU9lk=
+X-Google-Smtp-Source: AGHT+IEhu8aaFR/Z0VBtFPeItxhOzCa+vetNd7ZA5b9sNVOYebl/5UglxJm9QDnAHDOlHqGih4v2lA==
+X-Received: by 2002:ac2:4f09:0:b0:55f:4711:cf87 with SMTP id 2adb3069b0e04-55f4711d252mr809942e87.41.1756127491260;
+        Mon, 25 Aug 2025 06:11:31 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.193.214])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55f35c12423sm1613685e87.51.2025.08.25.06.11.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Aug 2025 06:11:30 -0700 (PDT)
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Bashirov <sergeybashirov@gmail.com>,
+	Konstantin Evtushenko <koevtushenko@yandex.com>
+Subject: [PATCH] NFSD: Disallow layoutget during grace period
+Date: Mon, 25 Aug 2025 16:11:02 +0300
+Message-ID: <20250825131122.98410-1-sergeybashirov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From d18643a9fe0e612e823d07cb75d36b4641033f09 Mon Sep 17 00:00:00 2001
-From: John Audia <therealgraysky@proton.me>
-Date: Sun, 24 Aug 2025 11:00:44 -0400
-Subject: [PATCH] fix cleanup_lockfiles function linkage in exportd
+When the server is recovering from a reboot and is in a grace period,
+any operation that may result in deletion or reallocation of block
+extents should not be allowed. See RFC 8881, section 18.43.3.
 
-The cleanup_lockfiles function in utils/exportd/exportd.c was declared
-as 'inline void' without a proper function prototype, causing linker
-errors during the build process:
+If multiple clients write data to the same file, rebooting the server
+during writing may result in file corruption. In the worst case, the
+exported XFS may also become corrupted. Observed this behavior while
+testing pNFS block volume setup.
 
-  exportd.c:(.text+0x5a): undefined reference to `cleanup_lockfiles'
-  exportd.c:(.text.startup+0x317): undefined reference to `cleanup_lockfile=
-s'
-
-This occurred because:
-1. The inline keyword prevented the compiler from generating a callable
-   function symbol in some build configurations
-2. The function lacked a proper prototype declaration, triggering
-   -Werror=3Dmissing-prototypes
-
-The fix changes the function to:
-- Remove the 'inline' keyword to ensure symbol generation
-- Add a proper static function prototype
-- Make the function 'static' since it's only used within exportd.c
-
-This resolves both the linking error and the missing prototype warning,
-allowing exportd to build successfully in OpenWrt's cross-compilation
-environment.
+Co-developed-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+Signed-off-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
 ---
- utils/exportd/exportd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
-index a2e370ac506f..956e4d732f00 100644
---- a/utils/exportd/exportd.c
-+++ b/utils/exportd/exportd.c
-@@ -51,9 +51,10 @@ static char shortopts[] =3D "d:fghs:t:liT:";
- /*
-  * Signal handlers.
-  */
-+static void cleanup_lockfiles(void);
- inline static void set_signals(void);
-=20
--inline void
-+static void
- cleanup_lockfiles (void)
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index bfebe6e25638a..3000b43be9221 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2435,6 +2435,7 @@ static __be32
+ nfsd4_layoutget(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate, union nfsd4_op_u *u)
  {
- =09unlink(etab.lockfn);
---=20
-2.50.1
-
++	struct net *net = SVC_NET(rqstp);
+ 	struct nfsd4_layoutget *lgp = &u->layoutget;
+ 	struct svc_fh *current_fh = &cstate->current_fh;
+ 	const struct nfsd4_layout_ops *ops;
+@@ -2486,6 +2487,10 @@ nfsd4_layoutget(struct svc_rqst *rqstp,
+ 	if (lgp->lg_seg.length == 0)
+ 		goto out;
+ 
++	nfserr = nfserr_grace;
++	if (locks_in_grace(net))
++		goto out;
++
+ 	nfserr = nfsd4_preprocess_layout_stateid(rqstp, cstate, &lgp->lg_sid,
+ 						true, lgp->lg_layout_type, &ls);
+ 	if (nfserr) {
+-- 
+2.43.0
 
 
