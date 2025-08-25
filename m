@@ -1,86 +1,87 @@
-Return-Path: <linux-nfs+bounces-13896-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13897-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55BB9B34E0A
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:28:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC8ACB34E0B
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:28:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0ACD6486F1B
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:27:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78CF8169F47
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:28:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B06E1288C26;
-	Mon, 25 Aug 2025 21:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415B71991D2;
+	Mon, 25 Aug 2025 21:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="W/Hj2MKC"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DTCNISVS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406022882BD
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2619B28D831
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756157278; cv=none; b=UohfRco3+/hzoacKW1ftBlZPa9rSEu8Ws4+gDKfOqQjsGog3CwUOym2pyEH+mjFhn/58SgzeCISoamxP5cmy3PLjbmWEbO5LepqnQMN6Kl+G8ftpc3GlR7gzGazE8Mqa5aMkrZW903+UEkJaV92nqDLVqH3BV3w6jEy1mFMGa30=
+	t=1756157281; cv=none; b=pY0+twod2g9vherWNLmQav2e1QyYOFu3yWVCBhwRRDfuptt4vFe4TQU6f+Ysc7hp6yTrh+89JXkkvNPVRbqiLneDF9T1iykkyTffLi7LPOL6KnPcSL8wWm56oVafUNF05bpcISPDcMqo1YL8bl/qvG42g0UnR0Gn8nC255DICtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756157278; c=relaxed/simple;
-	bh=vXKOYCcktjHMiBgHU/vMJe3rs3RSG80iI1LMdRgQJvI=;
+	s=arc-20240116; t=1756157281; c=relaxed/simple;
+	bh=XGhKrop+17OYir1NqM8j5jvhaMkicQIwPnymgTbAq90=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MwXQgQgIlfEpIzVxc9XCpTSfCE68bOTrRyHL4HY7xHTawzzN0n5tmbtw26uclfQUyP+8u8hut/WTXhpoXe3re/CpjpXLaVfUar+qKyIvE+6mwyPOaJu1EC3YbyriSJwR00tgFKCx9LaAd8a22cFlgw1OpZl9sLP5cg/jMGnT/gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=W/Hj2MKC; arc=none smtp.client-ip=209.85.208.43
+	 MIME-Version; b=Fk0kJQ0+4ElddFCJR3Bd8jJXFWJ/erRZHtof+KS+mXYw+dp5sr8x0J5tnrY5mmot2glMo72LrV0nq8CqZ+kYexHaIvC7YKxB4y0kOTcp1DCbNl/695+1zQuF/YSseFOnfT3hY2brpcNsWsUpf5TYfFUTEPBbqWZkc/HIaxmiWIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DTCNISVS; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-61c3360bbaeso3014212a12.1
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:55 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-61c51f56fc7so2322070a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1756157274; x=1756762074; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1756157277; x=1756762077; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SBrLoOVXCYzQuJlhRmLOZPgUpXZi8PM7n03dePoAy1w=;
-        b=W/Hj2MKCto6o2s/xtlBQEeIxFJCcmZyBSk9z8a13h+FUpLQi3ct++VxMB2brTxbQ/b
-         yMdEaZhXonOAwAt9PpSriz4BbzwBGcTnyDxhcQfTR1KnYCQEuxb34s+fuhR5/hSRy6Cd
-         ntRFIsu0QSkc25u1j30RfCF3f2ZjBPIuFy6JTOHPmtVjxgaKfAFbDzZrXW1moERAf1qh
-         iTpBptE+sD3R8u3G2LeHF500YiQiLZZpNhP1FVAdpLuwvVFxMVY9w5r2W6fic61zmBhJ
-         L82D0gdfABaaVgS4EIJgG6DvnKxzDOWY8ZE+TtZa0vMOQ+u/0oSmdoOGLHAghxGf8N1N
-         iR1w==
+        bh=mT5O+FLfTRxCU2w0ib628Dfu2yu2/CDwalkTABmEb14=;
+        b=DTCNISVSmwQ7A0vmi1bxCvdncUGxi+X97GUbMhaXKm8VYoL6IA7xyQRSoOGP0gOvy0
+         YEBj+qtPRpZko28TYPnVdzPTIfWCh2m2Aq02iq3vsw+HLYnw3UKKmBUKldu92gxO20qJ
+         9zl95BAZcp5DWpHOnVyeWWLLc3etNHyfodd+5ZkPNDKGEwCSMmxq7io9gi8qunOZtYYx
+         NydLjbGuM4cH4Ny2crpkchBO3BYFFaCkvNxQ2hdfpbmCr5qtbITwcTG1B870iSjCTXs4
+         L4dbreZtzTMoJBSORRfMWIEGSdWWpNUAZLR6i+Ykb5esPwRLIDRD+yFA4bOlPvDmj2Yv
+         0k2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756157274; x=1756762074;
+        d=1e100.net; s=20230601; t=1756157277; x=1756762077;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SBrLoOVXCYzQuJlhRmLOZPgUpXZi8PM7n03dePoAy1w=;
-        b=qZ/blYbdJ6HRSe3+Rq1hdkSWAiBWQsEbpv/zOGl3I1drT2hjpU3RrlQ4NAa+a9G1TH
-         vhD3CKKOHpnKc+z/k8knch5pGryvrDSeLESGQZhLHsAwFKnEJ+KVFbtnCz1FCc/6j5sS
-         Ozbf1n0WhoKjWVpQY9jsHeDcXRnyirCEJ4rmOmP+ArIYLqsIZKKRte4myFfQ9tMeXdAf
-         oGW42lltT72bh8I2aGKu/Yz9PTD+8Dq5mSPFxcgz+yev8bbUS/1gnqpmElq4AD9nmQVa
-         6dRGRUtGcWWSjaYPBqffSobarf6V9OUvM1IWSXfq5FnLBhpR7ZgDFSzmHjH5SnIHTFcJ
-         0oXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDHGz+22rf7iTlcXxoYO1AgzL0KsTw/CJ+bN5p5dDDoTKyq6fTThSz1OvdK6FIiu19hKyRCsTS5lE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAuhbtJypF/ynTbs85ki75Jve5xuiLcry4yJYqPBSrgDYdN4mT
-	OSz7uDCL843gXrlRZ7GTC1np5Ym/FevpLvxOHrlyBOsoJw1pMlHCdqsmfQoKM8aHQBQ=
-X-Gm-Gg: ASbGncvaFSE/2Aw/XLcoFE/INYz8XVmURjyyEgUD/KzBpuE9m5Eo3bzuIj4uzfcmiDx
-	9A652C+TowOHp9en7RKdAZGiS+0iZQ00tx5CpohmjaIpcCenOjnuJOUJ0TM21vadMada1TdH/YN
-	J1mwwTZY2xtGM+5viJsR7BgTSe4lmr1kpZhX6gLJ72QS9BqjwdCYoacQurw1c3Sj3oK7g4mAlZL
-	DTf8nepdQK3OSMK4eYJPlrTNvtoynj2y/GkwQeTE/khL45YJtk+I4OcZssF47wKQxMN5V4PO32/
-	KLWQ/LMqBG2BsAbVvNI01w6nJY1GToJoJumYR4LAJStHQl7rz9PufiRxYHMUE8g5HQ5Dms44+0D
-	AZEILECLklPZi/ycspc0+HPqU7Yax17a+Kz0mkjszlz3w
-X-Google-Smtp-Source: AGHT+IG8yfTIwcGAzxTd9ULsS9xsZF9DpXr6qEZX8qkxUm5+w9RlQg3rjagXgtzd687it1fU/Pvr6w==
-X-Received: by 2002:a05:6402:438c:b0:61a:5a60:f020 with SMTP id 4fb4d7f45d1cf-61c1b49dd50mr11471903a12.14.1756157274431;
-        Mon, 25 Aug 2025 14:27:54 -0700 (PDT)
+        bh=mT5O+FLfTRxCU2w0ib628Dfu2yu2/CDwalkTABmEb14=;
+        b=c//L62eGjc5xQtetzpWLa7dk/thRB60JNRZAqinaNQPIcJftJmt3xAbtSy3SooG2Zb
+         xnx5m5aj5E/PaxbYjb75l0nQ3A91UeUB+5OvYkYPGiM3y3AVRVvXMhnRi753N5J5q3hA
+         5+3lE+pMSVf+EyRErd31iIrJZUc79IAOGmmh95zYTU6aEgAvZ8c9bnGJ4z2KuT80Y4Xf
+         b398ziZCo5aOkRidriEWyP6OoWWdWQ9rfpAC8KEldnzS5UqMlPqqvWbcFMsLg0rkkD2S
+         D75VBQgd7wFy4ZFHOEq7SSORzUVMcWYvNv8g2H7044rvuPt7Ob0MzGewGK4VlHJX0PrG
+         BgHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPgktQsltrHfsEmbAXMDMe0KoqFOZMBqdB+DQ+fkzbWVflNYn43ionhx3vUj1XryyFFiiDiYAgE4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMFyQZDaFClzSh6aR8BG6ZvIbJhyilY2sJGeTh0lofIKDWNq5Y
+	KF/OWSe3odLom1OFkw/73tAV/QPVtuTlmd8Qie0FPLyZLMLutT0wz7f7XHNlSo0I7MrIHbY3qTu
+	aVmSb
+X-Gm-Gg: ASbGnctkFp12QaJxSiQQtH9tIc9UBaYiW3Y2eVV/Dn9XF9tujT0PmDi/f1g8MAlzu5h
+	tkCFIAaW1PHXOUw1yg9jYpNoOFtTYWqNQel7n51iOo/FU4J01k4F+pWMmoNuQqbXfBhoAHYKLYv
+	Kg7eqF0moY369j42Plor73HmMSKaI7mLRg9uOIx0E3aje7KGSehMmjBrgMqqIOwv0noet8Rtf8k
+	4ZZfXsDg2l6kik7DNhB0xAOG0hPO3P7BIr1JAVcgdxsKT/2sZgRPWs5C6IsCbGsAOOCP7i7lm9I
+	DzXBaQgECLJhRUCdZgQvKvn2FRHqHuaYNl/e0elkYiGYePCodXISjZF69UorG0gKLkQPJyu4Cbz
+	PXOGsY7gmP+/RleaNzHOE8KQ=
+X-Google-Smtp-Source: AGHT+IHGhMCU2+vHkSnUHsL06fKZlZxLQpw3RGPfTZMK4iDlYQJM1X+IGpqDSB8LU83y5YJzSWPofg==
+X-Received: by 2002:a17:907:720d:b0:ae6:d47a:105d with SMTP id a640c23a62f3a-afe294b236fmr1307846166b.55.1756157277226;
+        Mon, 25 Aug 2025 14:27:57 -0700 (PDT)
 Received: from localhost ([208.88.158.128])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-61c316f4fc9sm5519539a12.34.2025.08.25.14.27.52
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-afe7c2c7820sm306630966b.64.2025.08.25.14.27.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 14:27:53 -0700 (PDT)
+        Mon, 25 Aug 2025 14:27:56 -0700 (PDT)
 From: Jonathan Curley <jcurley@purestorage.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: Jonathan Curley <jcurley@purestorage.com>,
 	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v1 8/9] NFSv4/flexfiles: Update layout stats & error paths for striped layouts
-Date: Mon, 25 Aug 2025 21:27:28 +0000
-Message-Id: <20250825212729.4833-9-jcurley@purestorage.com>
+Subject: [RFC PATCH v1 9/9] NFSv4/flexfiles: Add support for striped layouts
+Date: Mon, 25 Aug 2025 21:27:29 +0000
+Message-Id: <20250825212729.4833-10-jcurley@purestorage.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250825212729.4833-1-jcurley@purestorage.com>
 References: <20250825212729.4833-1-jcurley@purestorage.com>
@@ -92,607 +93,390 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Updates the layout stats logic to be stripe aware. Read and write
-stats are accumulated on a per DS stripe basis. Also updates error
-paths to use dss_id where appropraite.
+Updates lseg creation path to parse and add striped layouts. Enable
+support for striped layouts.
 
 Limitations:
 
-1. The layout stats structure is still statically sized to 4 and there
-is no deduplication logic for deviceids that may appear more than once
-in a striped layout.
+1. All mirrors must have the same number of stripes.
 
 Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 300 +++++++++++++++++--------
- 1 file changed, 201 insertions(+), 99 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 247 ++++++++++++++++---------
+ fs/nfs/flexfilelayout/flexfilelayout.h |   2 +
+ 2 files changed, 157 insertions(+), 92 deletions(-)
 
 diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 696589d191e5..24d0eef0b6a4 100644
+index 24d0eef0b6a4..444267938081 100644
 --- a/fs/nfs/flexfilelayout/flexfilelayout.c
 +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -47,7 +47,7 @@ ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
- 			       int dev_limit, enum nfs4_ff_op_type type);
- static void ff_layout_encode_ff_layoutupdate(struct xdr_stream *xdr,
- 			      const struct nfs42_layoutstat_devinfo *devinfo,
--			      struct nfs4_ff_layout_mirror *mirror);
-+			      struct nfs4_ff_layout_ds_stripe *dss_info);
- 
- static struct pnfs_layout_hdr *
- ff_layout_alloc_layout_hdr(struct inode *inode, gfp_t gfp_flags)
-@@ -657,6 +657,7 @@ nfs4_ff_end_busy_timer(struct nfs4_ff_busy_timer *timer, ktime_t now)
- 
- static bool
- nfs4_ff_layoutstat_start_io(struct nfs4_ff_layout_mirror *mirror,
-+			    u32 dss_id,
- 			    struct nfs4_ff_layoutstat *layoutstat,
- 			    ktime_t now)
- {
-@@ -664,8 +665,8 @@ nfs4_ff_layoutstat_start_io(struct nfs4_ff_layout_mirror *mirror,
- 	struct nfs4_flexfile_layout *ffl = FF_LAYOUT_FROM_HDR(mirror->layout);
- 
- 	nfs4_ff_start_busy_timer(&layoutstat->busy_timer, now);
--	if (!mirror->dss[0].start_time)
--		mirror->dss[0].start_time = now;
-+	if (!mirror->dss[dss_id].start_time)
-+		mirror->dss[dss_id].start_time = now;
- 	if (mirror->report_interval != 0)
- 		report_interval = (s64)mirror->report_interval * 1000LL;
- 	else if (layoutstats_timer != 0)
-@@ -715,13 +716,16 @@ nfs4_ff_layout_stat_io_update_completed(struct nfs4_ff_layoutstat *layoutstat,
- static void
- nfs4_ff_layout_stat_io_start_read(struct inode *inode,
- 		struct nfs4_ff_layout_mirror *mirror,
-+		u32 dss_id,
- 		__u64 requested, ktime_t now)
- {
- 	bool report;
- 
- 	spin_lock(&mirror->lock);
--	report = nfs4_ff_layoutstat_start_io(mirror, &mirror->dss[0].read_stat, now);
--	nfs4_ff_layout_stat_io_update_requested(&mirror->dss[0].read_stat, requested);
-+	report = nfs4_ff_layoutstat_start_io(
-+		mirror, dss_id, &mirror->dss[dss_id].read_stat, now);
-+	nfs4_ff_layout_stat_io_update_requested(
-+		&mirror->dss[dss_id].read_stat, requested);
- 	set_bit(NFS4_FF_MIRROR_STAT_AVAIL, &mirror->flags);
- 	spin_unlock(&mirror->lock);
- 
-@@ -732,11 +736,12 @@ nfs4_ff_layout_stat_io_start_read(struct inode *inode,
- static void
- nfs4_ff_layout_stat_io_end_read(struct rpc_task *task,
- 		struct nfs4_ff_layout_mirror *mirror,
-+		u32 dss_id,
- 		__u64 requested,
- 		__u64 completed)
- {
- 	spin_lock(&mirror->lock);
--	nfs4_ff_layout_stat_io_update_completed(&mirror->dss[0].read_stat,
-+	nfs4_ff_layout_stat_io_update_completed(&mirror->dss[dss_id].read_stat,
- 			requested, completed,
- 			ktime_get(), task->tk_start);
- 	set_bit(NFS4_FF_MIRROR_STAT_AVAIL, &mirror->flags);
-@@ -746,13 +751,20 @@ nfs4_ff_layout_stat_io_end_read(struct rpc_task *task,
- static void
- nfs4_ff_layout_stat_io_start_write(struct inode *inode,
- 		struct nfs4_ff_layout_mirror *mirror,
-+		u32 dss_id,
- 		__u64 requested, ktime_t now)
- {
- 	bool report;
- 
- 	spin_lock(&mirror->lock);
--	report = nfs4_ff_layoutstat_start_io(mirror, &mirror->dss[0].write_stat, now);
--	nfs4_ff_layout_stat_io_update_requested(&mirror->dss[0].write_stat, requested);
-+	report = nfs4_ff_layoutstat_start_io(
-+		mirror,
-+		dss_id,
-+		&mirror->dss[dss_id].write_stat,
-+		now);
-+	nfs4_ff_layout_stat_io_update_requested(
-+		&mirror->dss[dss_id].write_stat,
-+		requested);
- 	set_bit(NFS4_FF_MIRROR_STAT_AVAIL, &mirror->flags);
- 	spin_unlock(&mirror->lock);
- 
-@@ -763,6 +775,7 @@ nfs4_ff_layout_stat_io_start_write(struct inode *inode,
- static void
- nfs4_ff_layout_stat_io_end_write(struct rpc_task *task,
- 		struct nfs4_ff_layout_mirror *mirror,
-+		u32 dss_id,
- 		__u64 requested,
- 		__u64 completed,
- 		enum nfs3_stable_how committed)
-@@ -771,25 +784,25 @@ nfs4_ff_layout_stat_io_end_write(struct rpc_task *task,
- 		requested = completed = 0;
- 
- 	spin_lock(&mirror->lock);
--	nfs4_ff_layout_stat_io_update_completed(&mirror->dss[0].write_stat,
-+	nfs4_ff_layout_stat_io_update_completed(&mirror->dss[dss_id].write_stat,
- 			requested, completed, ktime_get(), task->tk_start);
- 	set_bit(NFS4_FF_MIRROR_STAT_AVAIL, &mirror->flags);
- 	spin_unlock(&mirror->lock);
+@@ -177,18 +177,19 @@ ff_local_open_fh(struct pnfs_layout_segment *lseg, u32 ds_idx, u32 dss_id,
+ #endif
  }
  
- static void
--ff_layout_mark_ds_unreachable(struct pnfs_layout_segment *lseg, u32 idx)
-+ff_layout_mark_ds_unreachable(struct pnfs_layout_segment *lseg, u32 idx, u32 dss_id)
+-static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
+-		const struct nfs4_ff_layout_mirror *m2)
++static bool ff_dss_match_fh(const struct nfs4_ff_layout_ds_stripe *dss1,
++		const struct nfs4_ff_layout_ds_stripe *dss2)
  {
--	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, 0);
-+	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, dss_id);
+ 	int i, j;
  
- 	if (devid)
- 		nfs4_mark_deviceid_unavailable(devid);
+-	if (m1->dss[0].fh_versions_cnt != m2->dss[0].fh_versions_cnt)
++	if (dss1->fh_versions_cnt != dss2->fh_versions_cnt)
+ 		return false;
+-	for (i = 0; i < m1->dss[0].fh_versions_cnt; i++) {
++
++	for (i = 0; i < dss1->fh_versions_cnt; i++) {
+ 		bool found_fh = false;
+-		for (j = 0; j < m2->dss[0].fh_versions_cnt; j++) {
+-			if (nfs_compare_fh(&m1->dss[0].fh_versions[i],
+-					&m2->dss[0].fh_versions[j]) == 0) {
++		for (j = 0; j < dss2->fh_versions_cnt; j++) {
++			if (nfs_compare_fh(&dss1->fh_versions[i],
++					&dss2->fh_versions[j]) == 0) {
+ 				found_fh = true;
+ 				break;
+ 			}
+@@ -199,6 +200,38 @@ static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
+ 	return true;
  }
  
- static void
--ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, u32 idx)
-+ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, u32 idx, u32 dss_id)
++static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
++		const struct nfs4_ff_layout_mirror *m2)
++{
++	u32 dss_id;
++
++	if (m1->dss_count != m2->dss_count)
++		return false;
++
++	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
++		if (!ff_dss_match_fh(&m1->dss[dss_id], &m2->dss[dss_id]))
++			return false;
++
++	return true;
++}
++
++static bool ff_mirror_match_devid(const struct nfs4_ff_layout_mirror *m1,
++		const struct nfs4_ff_layout_mirror *m2)
++{
++	u32 dss_id;
++
++	if (m1->dss_count != m2->dss_count)
++		return false;
++
++	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
++		if (memcmp(&m1->dss[dss_id].devid,
++			   &m2->dss[dss_id].devid,
++			   sizeof(m1->dss[dss_id].devid)) != 0)
++			return false;
++
++	return true;
++}
++
+ static struct nfs4_ff_layout_mirror *
+ ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
+ 		struct nfs4_ff_layout_mirror *mirror)
+@@ -209,8 +242,7 @@ ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
+ 
+ 	spin_lock(&inode->i_lock);
+ 	list_for_each_entry(pos, &ff_layout->mirrors, mirrors) {
+-		if (memcmp(&mirror->dss[0].devid, &pos->dss[0].devid,
+-			   sizeof(pos->dss[0].devid)) != 0)
++		if (!ff_mirror_match_devid(mirror, pos))
+ 			continue;
+ 		if (!ff_mirror_match_fh(mirror, pos))
+ 			continue;
+@@ -241,13 +273,15 @@ ff_layout_remove_mirror(struct nfs4_ff_layout_mirror *mirror)
+ static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
  {
--	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, 0);
-+	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, dss_id);
- 
- 	if (devid)
- 		nfs4_mark_deviceid_available(devid);
-@@ -1222,11 +1235,11 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
- 					   struct nfs4_state *state,
- 					   struct nfs_client *clp,
- 					   struct pnfs_layout_segment *lseg,
--					   u32 idx)
-+					   u32 idx, u32 dss_id)
- {
- 	struct pnfs_layout_hdr *lo = lseg->pls_layout;
- 	struct inode *inode = lo->plh_inode;
--	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, 0);
-+	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, dss_id);
- 	struct nfs4_slot_table *tbl = &clp->cl_session->fc_slot_table;
- 
- 	switch (op_status) {
-@@ -1323,9 +1336,9 @@ static int ff_layout_async_handle_error_v3(struct rpc_task *task,
- 					   u32 op_status,
- 					   struct nfs_client *clp,
- 					   struct pnfs_layout_segment *lseg,
--					   u32 idx)
-+					   u32 idx, u32 dss_id)
- {
--	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, 0);
-+	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx, dss_id);
- 
- 	switch (op_status) {
- 	case NFS_OK:
-@@ -1389,12 +1402,17 @@ static int ff_layout_async_handle_error(struct rpc_task *task,
- 					struct nfs4_state *state,
- 					struct nfs_client *clp,
- 					struct pnfs_layout_segment *lseg,
--					u32 idx)
-+					u32 idx, u32 offset)
- {
- 	int vers = clp->cl_nfs_mod->rpc_vers->number;
-+	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
-+	u32 dss_id = nfs4_ff_layout_calc_dss_id(
-+		flseg->stripe_unit,
-+		flseg->mirror_array[idx]->dss_count,
-+		offset);
- 
- 	if (task->tk_status >= 0) {
--		ff_layout_mark_ds_reachable(lseg, idx);
-+		ff_layout_mark_ds_reachable(lseg, idx, dss_id);
- 		return 0;
- 	}
- 
-@@ -1405,10 +1423,10 @@ static int ff_layout_async_handle_error(struct rpc_task *task,
- 	switch (vers) {
- 	case 3:
- 		return ff_layout_async_handle_error_v3(task, op_status, clp,
--						       lseg, idx);
-+						       lseg, idx, dss_id);
- 	case 4:
- 		return ff_layout_async_handle_error_v4(task, op_status, state,
--						       clp, lseg, idx);
-+						       clp, lseg, idx, dss_id);
- 	default:
- 		/* should never happen */
- 		WARN_ON_ONCE(1);
-@@ -1423,6 +1441,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
  	struct nfs4_ff_layout_mirror *mirror;
- 	u32 status = *op_status;
- 	int err;
 +	u32 dss_id;
  
- 	if (status == 0) {
- 		switch (error) {
-@@ -1454,8 +1473,11 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 	mirror = kzalloc(sizeof(*mirror), gfp_flags);
+ 	if (mirror != NULL) {
+ 		spin_lock_init(&mirror->lock);
+ 		refcount_set(&mirror->ref, 1);
+ 		INIT_LIST_HEAD(&mirror->mirrors);
+-		nfs_localio_file_init(&mirror->dss[0].nfl);
++		for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
++			nfs_localio_file_init(&mirror->dss[dss_id].nfl);
  	}
- 
- 	mirror = FF_LAYOUT_COMP(lseg, idx);
-+	dss_id = nfs4_ff_layout_calc_dss_id(FF_LAYOUT_LSEG(lseg)->stripe_unit,
-+					    mirror->dss_count,
-+					    offset);
- 	err = ff_layout_track_ds_error(FF_LAYOUT_FROM_HDR(lseg->pls_layout),
--				       mirror, 0, offset, length, status, opnum,
-+				       mirror, dss_id, offset, length, status, opnum,
- 				       nfs_io_gfp_mask());
- 
- 	switch (status) {
-@@ -1464,7 +1486,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- 	case NFS4ERR_PERM:
- 		break;
- 	case NFS4ERR_NXIO:
--		ff_layout_mark_ds_unreachable(lseg, idx);
-+		ff_layout_mark_ds_unreachable(lseg, idx, dss_id);
- 		/*
- 		 * Don't return the layout if this is a read and we still
- 		 * have layouts to try
-@@ -1497,7 +1519,8 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
- 	err = ff_layout_async_handle_error(task, hdr->res.op_status,
- 					   hdr->args.context->state,
- 					   hdr->ds_clp, hdr->lseg,
--					   hdr->pgio_mirror_idx);
-+					   hdr->pgio_mirror_idx,
-+					   hdr->args.offset);
- 
- 	trace_nfs4_pnfs_read(hdr, err);
- 	clear_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags);
-@@ -1553,23 +1576,47 @@ ff_layout_set_layoutcommit(struct inode *inode,
- static void ff_layout_read_record_layoutstats_start(struct rpc_task *task,
- 		struct nfs_pgio_header *hdr)
+ 	return mirror;
+ }
+@@ -255,17 +289,19 @@ static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
+ static void ff_layout_free_mirror(struct nfs4_ff_layout_mirror *mirror)
  {
-+	struct nfs4_ff_layout_mirror *mirror;
+ 	const struct cred	*cred;
+-	int dss_id = 0;
 +	u32 dss_id;
-+
- 	if (test_and_set_bit(NFS_IOHDR_STAT, &hdr->flags))
- 		return;
--	nfs4_ff_layout_stat_io_start_read(hdr->inode,
--			FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx),
--			hdr->args.count,
--			task->tk_start);
-+
-+	mirror = FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx);
-+	dss_id = nfs4_ff_layout_calc_dss_id(
-+		FF_LAYOUT_LSEG(hdr->lseg)->stripe_unit,
-+		mirror->dss_count,
-+		hdr->args.offset);
-+
-+	nfs4_ff_layout_stat_io_start_read(
-+		hdr->inode,
-+		mirror,
-+		dss_id,
-+		hdr->args.count,
-+		task->tk_start);
+ 
+ 	ff_layout_remove_mirror(mirror);
+ 
+-	kfree(mirror->dss[dss_id].fh_versions);
+-	nfs_close_local_fh(&mirror->dss[dss_id].nfl);
+-	cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
+-	put_cred(cred);
+-	cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
+-	put_cred(cred);
+-	nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
++	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++) {
++		kfree(mirror->dss[dss_id].fh_versions);
++		cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
++		put_cred(cred);
++		cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
++		put_cred(cred);
++		nfs_close_local_fh(&mirror->dss[dss_id].nfl);
++		nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
++	}
+ 
+ 	kfree(mirror->dss);
+ 	kfree(mirror);
+@@ -371,14 +407,24 @@ ff_layout_add_lseg(struct pnfs_layout_hdr *lo,
+ 			free_me);
  }
  
- static void ff_layout_read_record_layoutstats_done(struct rpc_task *task,
- 		struct nfs_pgio_header *hdr)
++static u32 ff_mirror_efficiency_sum(const struct nfs4_ff_layout_mirror *mirror)
++{
++	u32 dss_id, sum = 0;
++
++	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
++		sum += mirror->dss[dss_id].efficiency;
++
++	return sum;
++}
++
+ static void ff_layout_sort_mirrors(struct nfs4_ff_layout_segment *fls)
  {
-+	struct nfs4_ff_layout_mirror *mirror;
-+	u32 dss_id;
-+
- 	if (!test_and_clear_bit(NFS_IOHDR_STAT, &hdr->flags))
- 		return;
--	nfs4_ff_layout_stat_io_end_read(task,
--			FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx),
--			hdr->args.count,
--			hdr->res.count);
-+
-+	mirror = FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx);
-+	dss_id = nfs4_ff_layout_calc_dss_id(
-+		FF_LAYOUT_LSEG(hdr->lseg)->stripe_unit,
-+		mirror->dss_count,
-+		hdr->args.offset);
-+
-+	nfs4_ff_layout_stat_io_end_read(
-+		task,
-+		mirror,
-+		dss_id,
-+		hdr->args.count,
-+		hdr->res.count);
- 	set_bit(NFS_LSEG_LAYOUTRETURN, &hdr->lseg->pls_flags);
- }
+ 	int i, j;
  
-@@ -1671,7 +1718,8 @@ static int ff_layout_write_done_cb(struct rpc_task *task,
- 	err = ff_layout_async_handle_error(task, hdr->res.op_status,
- 					   hdr->args.context->state,
- 					   hdr->ds_clp, hdr->lseg,
--					   hdr->pgio_mirror_idx);
-+					   hdr->pgio_mirror_idx,
-+					   hdr->args.offset);
- 
- 	trace_nfs4_pnfs_write(hdr, err);
- 	clear_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags);
-@@ -1709,9 +1757,10 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
- 				     struct nfs_commit_data *data)
- {
- 	int err;
-+	u32 idx = calc_mirror_idx_from_commit(data->lseg, data->ds_commit_index);
- 
- 	if (task->tk_status < 0) {
--		ff_layout_io_track_ds_error(data->lseg, data->ds_commit_index,
-+		ff_layout_io_track_ds_error(data->lseg, idx,
- 					    data->args.offset, data->args.count,
- 					    &data->res.op_status, OP_COMMIT,
- 					    task->tk_status);
-@@ -1719,7 +1768,7 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
+ 	for (i = 0; i < fls->mirror_array_cnt - 1; i++) {
+ 		for (j = i + 1; j < fls->mirror_array_cnt; j++)
+-			if (fls->mirror_array[i]->dss[0].efficiency <
+-			    fls->mirror_array[j]->dss[0].efficiency)
++			if (ff_mirror_efficiency_sum(fls->mirror_array[i]) <
++			    ff_mirror_efficiency_sum(fls->mirror_array[j]))
+ 				swap(fls->mirror_array[i],
+ 				     fls->mirror_array[j]);
  	}
- 
- 	err = ff_layout_async_handle_error(task, data->res.op_status,
--					   NULL, data->ds_clp, data->lseg,
-+					   NULL, data->ds_clp, data->lseg, idx,
- 					   data->ds_commit_index);
- 
- 	trace_nfs4_pnfs_commit_ds(data, err);
-@@ -1739,30 +1788,54 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
- 	}
- 
- 	ff_layout_set_layoutcommit(data->inode, data->lseg, data->lwb);
--
- 	return 0;
- }
- 
- static void ff_layout_write_record_layoutstats_start(struct rpc_task *task,
- 		struct nfs_pgio_header *hdr)
- {
-+	struct nfs4_ff_layout_mirror *mirror;
-+	u32 dss_id;
-+
- 	if (test_and_set_bit(NFS_IOHDR_STAT, &hdr->flags))
- 		return;
--	nfs4_ff_layout_stat_io_start_write(hdr->inode,
--			FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx),
--			hdr->args.count,
--			task->tk_start);
-+
-+	mirror = FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx);
-+	dss_id = nfs4_ff_layout_calc_dss_id(
-+		FF_LAYOUT_LSEG(hdr->lseg)->stripe_unit,
-+		mirror->dss_count,
-+		hdr->args.offset);
-+
-+	nfs4_ff_layout_stat_io_start_write(
-+		hdr->inode,
-+		mirror,
-+		dss_id,
-+		hdr->args.count,
-+		task->tk_start);
- }
- 
- static void ff_layout_write_record_layoutstats_done(struct rpc_task *task,
- 		struct nfs_pgio_header *hdr)
- {
-+	struct nfs4_ff_layout_mirror *mirror;
-+	u32 dss_id;
-+
- 	if (!test_and_clear_bit(NFS_IOHDR_STAT, &hdr->flags))
- 		return;
--	nfs4_ff_layout_stat_io_end_write(task,
--			FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx),
--			hdr->args.count, hdr->res.count,
--			hdr->res.verf->committed);
-+
-+	mirror = FF_LAYOUT_COMP(hdr->lseg, hdr->pgio_mirror_idx);
-+	dss_id = nfs4_ff_layout_calc_dss_id(
-+		FF_LAYOUT_LSEG(hdr->lseg)->stripe_unit,
-+		mirror->dss_count,
-+		hdr->args.offset);
-+
-+	nfs4_ff_layout_stat_io_end_write(
-+		task,
-+		mirror,
-+		dss_id,
-+		hdr->args.count,
-+		hdr->res.count,
-+		hdr->res.verf->committed);
- 	set_bit(NFS_LSEG_LAYOUTRETURN, &hdr->lseg->pls_flags);
- }
- 
-@@ -1845,10 +1918,16 @@ static void ff_layout_write_release(void *data)
- static void ff_layout_commit_record_layoutstats_start(struct rpc_task *task,
- 		struct nfs_commit_data *cdata)
- {
-+	u32 idx, dss_id;
-+
- 	if (test_and_set_bit(NFS_IOHDR_STAT, &cdata->flags))
- 		return;
-+
-+	idx = calc_mirror_idx_from_commit(cdata->lseg, cdata->ds_commit_index);
-+	dss_id = calc_dss_id_from_commit(cdata->lseg, cdata->ds_commit_index);
- 	nfs4_ff_layout_stat_io_start_write(cdata->inode,
--			FF_LAYOUT_COMP(cdata->lseg, cdata->ds_commit_index),
-+			FF_LAYOUT_COMP(cdata->lseg, idx),
-+			dss_id,
- 			0, task->tk_start);
- }
- 
-@@ -1857,6 +1936,7 @@ static void ff_layout_commit_record_layoutstats_done(struct rpc_task *task,
- {
- 	struct nfs_page *req;
- 	__u64 count = 0;
-+	u32 idx, dss_id;
- 
- 	if (!test_and_clear_bit(NFS_IOHDR_STAT, &cdata->flags))
- 		return;
-@@ -1865,8 +1945,12 @@ static void ff_layout_commit_record_layoutstats_done(struct rpc_task *task,
- 		list_for_each_entry(req, &cdata->pages, wb_list)
- 			count += req->wb_bytes;
- 	}
-+
-+	idx = calc_mirror_idx_from_commit(cdata->lseg, cdata->ds_commit_index);
-+	dss_id = calc_dss_id_from_commit(cdata->lseg, cdata->ds_commit_index);
- 	nfs4_ff_layout_stat_io_end_write(task,
--			FF_LAYOUT_COMP(cdata->lseg, cdata->ds_commit_index),
-+			FF_LAYOUT_COMP(cdata->lseg, idx),
-+			dss_id,
- 			count, count, NFS_FILE_SYNC);
- 	set_bit(NFS_LSEG_LAYOUTRETURN, &cdata->lseg->pls_flags);
- }
-@@ -2253,25 +2337,28 @@ static void ff_layout_cancel_io(struct pnfs_layout_segment *lseg)
- 	struct nfs4_pnfs_ds *ds;
- 	struct nfs_client *ds_clp;
- 	struct rpc_clnt *clnt;
--	u32 idx;
-+	u32 idx, dss_id;
- 
- 	for (idx = 0; idx < flseg->mirror_array_cnt; idx++) {
- 		mirror = flseg->mirror_array[idx];
--		mirror_ds = mirror->dss[0].mirror_ds;
--		if (IS_ERR_OR_NULL(mirror_ds))
--			continue;
--		ds = mirror->dss[0].mirror_ds->ds;
--		if (!ds)
--			continue;
--		ds_clp = ds->ds_clp;
--		if (!ds_clp)
--			continue;
--		clnt = ds_clp->cl_rpcclient;
--		if (!clnt)
--			continue;
--		if (!rpc_cancel_tasks(clnt, -EAGAIN, ff_layout_match_io, lseg))
--			continue;
--		rpc_clnt_disconnect(clnt);
-+		for (dss_id = 0; dss_id < mirror->dss_count; dss_id++) {
-+			mirror_ds = mirror->dss[dss_id].mirror_ds;
-+			if (IS_ERR_OR_NULL(mirror_ds))
-+				continue;
-+			ds = mirror->dss[dss_id].mirror_ds->ds;
-+			if (!ds)
-+				continue;
-+			ds_clp = ds->ds_clp;
-+			if (!ds_clp)
-+				continue;
-+			clnt = ds_clp->cl_rpcclient;
-+			if (!clnt)
-+				continue;
-+			if (!rpc_cancel_tasks(clnt, -EAGAIN,
-+					      ff_layout_match_io, lseg))
-+				continue;
-+			rpc_clnt_disconnect(clnt);
-+		}
- 	}
- }
- 
-@@ -2659,11 +2746,11 @@ ff_layout_encode_io_latency(struct xdr_stream *xdr,
- static void
- ff_layout_encode_ff_layoutupdate(struct xdr_stream *xdr,
- 			      const struct nfs42_layoutstat_devinfo *devinfo,
--			      struct nfs4_ff_layout_mirror *mirror)
-+			      struct nfs4_ff_layout_ds_stripe *dss_info)
- {
- 	struct nfs4_pnfs_ds_addr *da;
--	struct nfs4_pnfs_ds *ds = mirror->dss[0].mirror_ds->ds;
--	struct nfs_fh *fh = &mirror->dss[0].fh_versions[0];
-+	struct nfs4_pnfs_ds *ds = dss_info->mirror_ds->ds;
-+	struct nfs_fh *fh = &dss_info->fh_versions[0];
+@@ -398,6 +444,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 	u32 mirror_array_cnt;
  	__be32 *p;
- 
- 	da = list_first_entry(&ds->ds_addrs, struct nfs4_pnfs_ds_addr, da_node);
-@@ -2675,13 +2762,17 @@ ff_layout_encode_ff_layoutupdate(struct xdr_stream *xdr,
- 	p = xdr_reserve_space(xdr, 4 + fh->size);
- 	xdr_encode_opaque(p, fh->data, fh->size);
- 	/* ff_io_latency4 read */
--	spin_lock(&mirror->lock);
--	ff_layout_encode_io_latency(xdr, &mirror->dss[0].read_stat.io_stat);
-+	spin_lock(&dss_info->mirror->lock);
-+	ff_layout_encode_io_latency(xdr,
-+				    &dss_info->read_stat.io_stat);
- 	/* ff_io_latency4 write */
--	ff_layout_encode_io_latency(xdr, &mirror->dss[0].write_stat.io_stat);
--	spin_unlock(&mirror->lock);
-+	ff_layout_encode_io_latency(xdr,
-+				    &dss_info->write_stat.io_stat);
-+	spin_unlock(&dss_info->mirror->lock);
- 	/* nfstime4 */
--	ff_layout_encode_nfstime(xdr, ktime_sub(ktime_get(), mirror->dss[0].start_time));
-+	ff_layout_encode_nfstime(xdr,
-+				 ktime_sub(ktime_get(),
-+					   dss_info->start_time));
- 	/* bool */
- 	p = xdr_reserve_space(xdr, 4);
- 	*p = cpu_to_be32(false);
-@@ -2705,7 +2796,8 @@ ff_layout_encode_layoutstats(struct xdr_stream *xdr, const void *args,
- static void
- ff_layout_free_layoutstats(struct nfs4_xdr_opaque_data *opaque)
- {
--	struct nfs4_ff_layout_mirror *mirror = opaque->data;
-+	struct nfs4_ff_layout_ds_stripe *dss_info = opaque->data;
-+	struct nfs4_ff_layout_mirror *mirror = dss_info->mirror;
- 
- 	ff_layout_put_mirror(mirror);
- }
-@@ -2722,37 +2814,47 @@ ff_layout_mirror_prepare_stats(struct pnfs_layout_hdr *lo,
- {
- 	struct nfs4_flexfile_layout *ff_layout = FF_LAYOUT_FROM_HDR(lo);
- 	struct nfs4_ff_layout_mirror *mirror;
+ 	int i, rc;
 +	struct nfs4_ff_layout_ds_stripe *dss_info;
- 	struct nfs4_deviceid_node *dev;
--	int i = 0;
-+	int i = 0, dss_id;
  
- 	list_for_each_entry(mirror, &ff_layout->mirrors, mirrors) {
--		if (i >= dev_limit)
--			break;
--		if (IS_ERR_OR_NULL(mirror->dss[0].mirror_ds))
--			continue;
--		if (!test_and_clear_bit(NFS4_FF_MIRROR_STAT_AVAIL,
--					&mirror->flags) &&
--		    type != NFS4_FF_OP_LAYOUTRETURN)
--			continue;
--		/* mirror refcount put in cleanup_layoutstats */
--		if (!refcount_inc_not_zero(&mirror->ref))
--			continue;
--		dev = &mirror->dss[0].mirror_ds->id_node;
--		memcpy(&devinfo->dev_id, &dev->deviceid, NFS4_DEVICEID4_SIZE);
--		devinfo->offset = 0;
--		devinfo->length = NFS4_MAX_UINT64;
--		spin_lock(&mirror->lock);
--		devinfo->read_count = mirror->dss[0].read_stat.io_stat.ops_completed;
--		devinfo->read_bytes = mirror->dss[0].read_stat.io_stat.bytes_completed;
--		devinfo->write_count = mirror->dss[0].write_stat.io_stat.ops_completed;
--		devinfo->write_bytes = mirror->dss[0].write_stat.io_stat.bytes_completed;
--		spin_unlock(&mirror->lock);
--		devinfo->layout_type = LAYOUT_FLEX_FILES;
--		devinfo->ld_private.ops = &layoutstat_ops;
--		devinfo->ld_private.data = mirror;
--
--		devinfo++;
--		i++;
-+		for (dss_id = 0; dss_id < mirror->dss_count; ++dss_id) {
-+			dss_info = &mirror->dss[dss_id];
-+			if (i >= dev_limit)
-+				break;
-+			if (IS_ERR_OR_NULL(dss_info->mirror_ds))
-+				continue;
-+			if (!test_and_clear_bit(NFS4_FF_MIRROR_STAT_AVAIL,
-+						&mirror->flags) &&
-+			    type != NFS4_FF_OP_LAYOUTRETURN)
-+				continue;
-+			/* mirror refcount put in cleanup_layoutstats */
-+			if (!refcount_inc_not_zero(&mirror->ref))
-+				continue;
-+			dev = &dss_info->mirror_ds->id_node;
-+			memcpy(&devinfo->dev_id,
-+			       &dev->deviceid,
-+			       NFS4_DEVICEID4_SIZE);
-+			devinfo->offset = 0;
-+			devinfo->length = NFS4_MAX_UINT64;
-+			spin_lock(&mirror->lock);
-+			devinfo->read_count =
-+			    dss_info->read_stat.io_stat.ops_completed;
-+			devinfo->read_bytes =
-+			    dss_info->read_stat.io_stat.bytes_completed;
-+			devinfo->write_count =
-+			    dss_info->write_stat.io_stat.ops_completed;
-+			devinfo->write_bytes =
-+			    dss_info->write_stat.io_stat.bytes_completed;
-+			spin_unlock(&mirror->lock);
-+			devinfo->layout_type = LAYOUT_FLEX_FILES;
-+			devinfo->ld_private.ops = &layoutstat_ops;
-+			devinfo->ld_private.data = &mirror->dss[dss_id];
+ 	dprintk("--> %s\n", __func__);
+ 	scratch = alloc_page(gfp_flags);
+@@ -440,17 +487,24 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 		kuid_t uid;
+ 		kgid_t gid;
+ 		u32 fh_count, id;
+-		int j, dss_id = 0;
++		int j, dss_id;
+ 
+ 		rc = -EIO;
+ 		p = xdr_inline_decode(&stream, 4);
+ 		if (!p)
+ 			goto out_err_free;
+ 
+-		dss_count = be32_to_cpup(p);
++		// Ensure all mirrors have same stripe count.
++		if (dss_count == 0)
++			dss_count = be32_to_cpup(p);
++		else if (dss_count != be32_to_cpup(p))
++			goto out_err_free;
 +
-+			devinfo++;
-+			i++;
-+		}
- 	}
- 	return i;
- }
++		if (dss_count > NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT ||
++		    dss_count == 0)
++			goto out_err_free;
+ 
+-		/* FIXME: allow for striping? */
+-		if (dss_count != 1)
++		if (dss_count > 1 && stripe_unit == 0)
+ 			goto out_err_free;
+ 
+ 		fls->mirror_array[i] = ff_layout_alloc_mirror(gfp_flags);
+@@ -464,91 +518,100 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 		    kcalloc(dss_count, sizeof(struct nfs4_ff_layout_ds_stripe),
+ 			    gfp_flags);
+ 
+-		/* deviceid */
+-		rc = decode_deviceid(&stream, &fls->mirror_array[i]->dss[dss_id].devid);
+-		if (rc)
+-			goto out_err_free;
++		for (dss_id = 0; dss_id < dss_count; dss_id++) {
++			dss_info = &fls->mirror_array[i]->dss[dss_id];
++			dss_info->mirror = fls->mirror_array[i];
+ 
+-		/* efficiency */
+-		rc = -EIO;
+-		p = xdr_inline_decode(&stream, 4);
+-		if (!p)
+-			goto out_err_free;
+-		fls->mirror_array[i]->dss[dss_id].efficiency = be32_to_cpup(p);
++			/* deviceid */
++			rc = decode_deviceid(&stream, &dss_info->devid);
++			if (rc)
++				goto out_err_free;
+ 
+-		/* stateid */
+-		rc = decode_pnfs_stateid(&stream, &fls->mirror_array[i]->dss[dss_id].stateid);
+-		if (rc)
+-			goto out_err_free;
++			/* efficiency */
++			rc = -EIO;
++			p = xdr_inline_decode(&stream, 4);
++			if (!p)
++				goto out_err_free;
++			dss_info->efficiency = be32_to_cpup(p);
+ 
+-		/* fh */
+-		rc = -EIO;
+-		p = xdr_inline_decode(&stream, 4);
+-		if (!p)
+-			goto out_err_free;
+-		fh_count = be32_to_cpup(p);
++			/* stateid */
++			rc = decode_pnfs_stateid(&stream, &dss_info->stateid);
++			if (rc)
++				goto out_err_free;
+ 
+-		fls->mirror_array[i]->dss[dss_id].fh_versions =
+-		    kcalloc(fh_count, sizeof(struct nfs_fh),
+-			    gfp_flags);
+-		if (fls->mirror_array[i]->dss[dss_id].fh_versions == NULL) {
+-			rc = -ENOMEM;
+-			goto out_err_free;
+-		}
++			/* fh */
++			rc = -EIO;
++			p = xdr_inline_decode(&stream, 4);
++			if (!p)
++				goto out_err_free;
++			fh_count = be32_to_cpup(p);
+ 
+-		for (j = 0; j < fh_count; j++) {
+-			rc = decode_nfs_fh(&stream,
+-					   &fls->mirror_array[i]->dss[dss_id].fh_versions[j]);
++			dss_info->fh_versions =
++			    kcalloc(fh_count, sizeof(struct nfs_fh),
++				    gfp_flags);
++			if (dss_info->fh_versions == NULL) {
++				rc = -ENOMEM;
++				goto out_err_free;
++			}
++
++			for (j = 0; j < fh_count; j++) {
++				rc = decode_nfs_fh(&stream,
++						   &dss_info->fh_versions[j]);
++				if (rc)
++					goto out_err_free;
++			}
++
++			dss_info->fh_versions_cnt = fh_count;
++
++			/* user */
++			rc = decode_name(&stream, &id);
+ 			if (rc)
+ 				goto out_err_free;
+-		}
+ 
+-		fls->mirror_array[i]->dss[dss_id].fh_versions_cnt = fh_count;
++			uid = make_kuid(&init_user_ns, id);
+ 
+-		/* user */
+-		rc = decode_name(&stream, &id);
+-		if (rc)
+-			goto out_err_free;
++			/* group */
++			rc = decode_name(&stream, &id);
++			if (rc)
++				goto out_err_free;
+ 
+-		uid = make_kuid(&init_user_ns, id);
++			gid = make_kgid(&init_user_ns, id);
+ 
+-		/* group */
+-		rc = decode_name(&stream, &id);
+-		if (rc)
+-			goto out_err_free;
++			if (gfp_flags & __GFP_FS)
++				kcred = prepare_kernel_cred(&init_task);
++			else {
++				unsigned int nofs_flags = memalloc_nofs_save();
+ 
+-		gid = make_kgid(&init_user_ns, id);
++				kcred = prepare_kernel_cred(&init_task);
++				memalloc_nofs_restore(nofs_flags);
++			}
++			rc = -ENOMEM;
++			if (!kcred)
++				goto out_err_free;
++			kcred->fsuid = uid;
++			kcred->fsgid = gid;
++			cred = RCU_INITIALIZER(kcred);
+ 
+-		if (gfp_flags & __GFP_FS)
+-			kcred = prepare_kernel_cred(&init_task);
+-		else {
+-			unsigned int nofs_flags = memalloc_nofs_save();
+-			kcred = prepare_kernel_cred(&init_task);
+-			memalloc_nofs_restore(nofs_flags);
++			if (lgr->range.iomode == IOMODE_READ)
++				rcu_assign_pointer(dss_info->ro_cred, cred);
++			else
++				rcu_assign_pointer(dss_info->rw_cred, cred);
+ 		}
+-		rc = -ENOMEM;
+-		if (!kcred)
+-			goto out_err_free;
+-		kcred->fsuid = uid;
+-		kcred->fsgid = gid;
+-		cred = RCU_INITIALIZER(kcred);
+-
+-		if (lgr->range.iomode == IOMODE_READ)
+-			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
+-		else
+-			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
+ 
+ 		mirror = ff_layout_add_mirror(lh, fls->mirror_array[i]);
+ 		if (mirror != fls->mirror_array[i]) {
+-			/* swap cred ptrs so free_mirror will clean up old */
+-			if (lgr->range.iomode == IOMODE_READ) {
+-				cred = xchg(&mirror->dss[dss_id].ro_cred,
+-					    fls->mirror_array[i]->dss[dss_id].ro_cred);
+-				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
+-			} else {
+-				cred = xchg(&mirror->dss[dss_id].rw_cred,
+-					    fls->mirror_array[i]->dss[dss_id].rw_cred);
+-				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
++			for (dss_id = 0; dss_id < dss_count; dss_id++) {
++				dss_info = &fls->mirror_array[i]->dss[dss_id];
++				/* swap cred ptrs so free_mirror will clean up old */
++				if (lgr->range.iomode == IOMODE_READ) {
++					cred = xchg(&mirror->dss[dss_id].ro_cred,
++						    dss_info->ro_cred);
++					rcu_assign_pointer(dss_info->ro_cred, cred);
++				} else {
++					cred = xchg(&mirror->dss[dss_id].rw_cred,
++						    dss_info->rw_cred);
++					rcu_assign_pointer(dss_info->rw_cred, cred);
++				}
+ 			}
+ 			ff_layout_free_mirror(fls->mirror_array[i]);
+ 			fls->mirror_array[i] = mirror;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
+index 142324d6d5c5..17a008c8e97c 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.h
++++ b/fs/nfs/flexfilelayout/flexfilelayout.h
+@@ -21,6 +21,8 @@
+  * due to network error etc. */
+ #define NFS4_FLEXFILE_LAYOUT_MAX_MIRROR_CNT 4096
+ 
++#define NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT 4096
++
+ /* LAYOUTSTATS report interval in ms */
+ #define FF_LAYOUTSTATS_REPORT_INTERVAL (60000L)
+ #define FF_LAYOUTSTATS_MAXDEV 4
 -- 
 2.34.1
 
