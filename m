@@ -1,85 +1,85 @@
-Return-Path: <linux-nfs+bounces-13883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03217B34527
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 17:07:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1EF4B34529
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 17:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9F102A0796
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 15:04:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CE181883C32
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 15:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6545A2FC88C;
-	Mon, 25 Aug 2025 15:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66BE1F4E57;
+	Mon, 25 Aug 2025 15:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bRhdu2RG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gj+QHbdq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA2E2F2917
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 15:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBEE2ECE8A
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 15:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756134268; cv=none; b=eB4vDGYP8QZ56ZnXl/v/UoLXGTYtF/R+B6t7uRzvGIgZFYXXVok0UMpBn/JW9U89k1zv5R/4pYlavME3eQOnmQXd2xdeRb+a7W8C7CRyWtxPMQXojTXPG12uxa87Iuuusxd6Kl596Jqghjii2rtimkXz6YIAgL/xGKXdHHsy1+Q=
+	t=1756134310; cv=none; b=uDrXmQD30NVEPq+xuF7UBF5O7cd+2IhoNHCWk/z+zuQXyhSVcBbrRawSqYC2R3/1UkdSZK7KzbUimZbaFfej4PtVmRQ0nM2ESdCWTXuPcSvbp/Od0fFCo8He/+EtHXYLwg7bUX32tDva8j2oRVfOUKN/bV+PkjMG2LFcB0TpaV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756134268; c=relaxed/simple;
-	bh=2QCbIv3AKubhWO7z3yPh1yd1n1rm6szfYbAyM1gJjRc=;
+	s=arc-20240116; t=1756134310; c=relaxed/simple;
+	bh=/m38nbAsLVY+TSqvJ1dwTBIHDl4UIFv4YSxlktQswq8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DFO6o+Z3yp3yInYlwroWjO503VL7aL7vflQZMMNTbI3x45TOCRfSwU4XkU3Os1zpJg2rdcXHuS21xPuiTAoZKeYVmR3VFHsC5zv76E5NMSoZctebOZrkv79m+872SapXr53CJbzdGKKekW/vPjqAOGfW8gUTIlDjQv5U09kykEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bRhdu2RG; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Sjs7zhwAZZwrvnQWt2D5OjEebPaQHYZfcqj7Cl8eOYvXbh3OomxNdM4ufQYq25NntXAKEzuZMGK6BxjYACmuGVgesMd/4XYdbeZh+N4gHrWIgIs4QqzOGTAa/qw/20yt4HQAAo8sYwRBXWaDGFmYlwRssgVaPfehaCAJSaD1XcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gj+QHbdq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756134265;
+	s=mimecast20190719; t=1756134307;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+4C+SBZQZvXVR6CjlNg6DWvle34y4quPoQEvTCSKjsY=;
-	b=bRhdu2RGJ+aINW+YlVCmDplfwKNQOMLACIsRMkKzBqMP7XkdpPfLAjN9En8CxTyha/f7pm
-	PbFpY3yhN2Gi5Msaj3QuBixKg9qQhwFcpCD3pZJQp0WZ5/4uUu+qV1Zww1aEUNq5ZLAN/q
-	M44liiOweEuuxsegrypCXuDDCQoXhPk=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=4xJFQFqjyH8FX9VZw1bwpHpmw0QZK+7WGumYLe+O8xY=;
+	b=Gj+QHbdqXNRi1Ll6Pu9ESMn55lH+LlxvK503EL73uX6kzLgAk4XKJEmJLF2npEp3zWqbpA
+	ZUmoVaDmBdFqOofN0iEk09qafFKbA91xzSD1bPYqkCFjcpVIfQgqPNKF9HGZPNzdllTTKk
+	1OMT5M+ATsQqXSHKx+LpUkUs3sPeGl8=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-21-XU2DrILIN6uooSl_f8TlDA-1; Mon, 25 Aug 2025 11:04:18 -0400
-X-MC-Unique: XU2DrILIN6uooSl_f8TlDA-1
-X-Mimecast-MFC-AGG-ID: XU2DrILIN6uooSl_f8TlDA_1756134258
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e953c60abd3so2437714276.0
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 08:04:18 -0700 (PDT)
+ us-mta-693-eEn9xpzcNVWJ-dqOtfzhmw-1; Mon, 25 Aug 2025 11:05:05 -0400
+X-MC-Unique: eEn9xpzcNVWJ-dqOtfzhmw-1
+X-Mimecast-MFC-AGG-ID: eEn9xpzcNVWJ-dqOtfzhmw_1756134304
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-71d605339dbso59269017b3.2
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 08:05:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756134258; x=1756739058;
+        d=1e100.net; s=20230601; t=1756134304; x=1756739104;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+4C+SBZQZvXVR6CjlNg6DWvle34y4quPoQEvTCSKjsY=;
-        b=MtvYK5h2uul55A6+InYyRf1/wcF4pcpg69iAhEDbNmA7qawLwA4cFPZWohB8Hw3YyQ
-         m69Wfk7sYG4hFY9csJxRPSJomyLRzqeGc3l4rv7x4fXrv81UgJRBazam+XPDXoO0RYMP
-         IWrjaY4QOm//aV9yvW3VQGhAHAKZki3w0a9EOzjMFsgauvBhXFylTV5fSD4gMoOsNEdV
-         saZ8f3NrL3vu7Fyr1xL9aek4OL1TmVT45bO9d80+anRXVddkN7aUVQsES7sTTS0hEjQI
-         f8TEonJPB+298xIhTIU6pWYJhM14/+483ZlBtDeZsPQJswqt6jsNcp7vv9pra5QKgFft
-         7NdQ==
-X-Gm-Message-State: AOJu0YyznICAAL8f7kkAO4vKm1zjp+1NdPz+0dqPbdjGNGwMNfQOIBeG
-	v4yzCeF6dqieLVEYgevZBFCsClvWnjjERgomOySwsXWRWsDLYUXuYFymMUoQCqiuh4spbJqTEiJ
-	ShktasacVCshhTtrLGAMrL/JW4vrLuFtfDYEKyYkj8zIn3MxXDRAMmzHO8haNJw==
-X-Gm-Gg: ASbGnctDWMP2VZ9rgPCZwJAyzyaDao1S9rYt2HCvTVrsLY0Fj+xOFzhcWZzE28Lz71U
-	dXqQyGgBZnwtB+jleUsEgYWUaNmPgTIQylX4JSiBSHWt+NJt3qPRU/lrjKSMSqT8dNxLVFDnomz
-	BHGrWy6N5fh03OkobwZ9I3+oLp9yWYwHpOG6YW6yl6nqqWA3v0O4z/aEbOcP5ACVNTBnD+0uYcm
-	JaX9uZEFcYj9OWzhDs6MfJTl+gvku8dyqLVfQ7G7ggARc5Wvco/se+5AtxIqb1Hwn5mYU5HmTle
-	RpXO5tsXjmtrL3N5BUBQaqfojkUkUQTzZae39cid
-X-Received: by 2002:a05:6902:338a:b0:e95:2eea:a25e with SMTP id 3f1490d57ef6-e952eeaa490mr7427901276.9.1756134257397;
-        Mon, 25 Aug 2025 08:04:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5Sheu8HoJ25HZSkJpqnSQCbrd4/7XA91d+R9Xz9qOgVqTyw9CXPYLz/t3RhMd8bukf9Atyg==
-X-Received: by 2002:a05:6902:338a:b0:e95:2eea:a25e with SMTP id 3f1490d57ef6-e952eeaa490mr7427835276.9.1756134256619;
-        Mon, 25 Aug 2025 08:04:16 -0700 (PDT)
+        bh=4xJFQFqjyH8FX9VZw1bwpHpmw0QZK+7WGumYLe+O8xY=;
+        b=bvRpmUArc8t9z38QYGKSM2M96NpiwVDHT3PdOCvd7wwLAnVZOGY+3Vy+nY7OveRWNS
+         50nEX9rDMCUXzMbb1iXYu4UXIqHnIpn4v+1NLhx6+0KbDRWjKke8x2fo9SWRQAqbLDLT
+         1tbuX6jrxOpeXS5uarKnoScHncxmpscCGQJXfx5KwEOe7sa9DWjjOAeofMEVHKz/b6dT
+         NH3JlBnLQpmTRz+dsKRnO2w6mHLvplQttn9eVyHMAobrQY8hpomzUFUAHBl6Z1pciHp0
+         P1nH/LyvjbjCpw/+wwdzwrNbwypSrz2WGiLmI2zGSKcQU+63qDF/dvUbqjuhZyMzOLKu
+         8iBw==
+X-Gm-Message-State: AOJu0Yyqnm1tPWZjG5Rk3u+1q4iJQAVdom2QwKUybjbykkgJNvCVCbW4
+	VlsKnr+UdCDAib7TbRt2we/ETRNUNycvnOXxLxTw+rjeRPhGLv3oB1wK1E8ZcExVKMk1rmEP+kr
+	kum8lUGjdsfZq962eOOdSF8xd5vW4HWJ20qBT1lty/87TQVwV35rjsAS11qJC2g==
+X-Gm-Gg: ASbGncvE2EwqBA06O9Pnchl+bKFnp1/vg8buL38mJLOuNnGCU6wNpXGrZSImDWawe6E
+	dQhUnD2IqmlkjgXTqOn7tow/+HF9P3EoHNZnNz+dANoAx2RRN3GkW28M0+34PnqkkHD5cABfSBJ
+	QB+aot1TwiZhthXbSfMxb8gUUnEe+FH1QSRdRXdXMFAyy2y/iZUGeLuph1z9g0UQx2VCHbPo6H5
+	RSWqwMAd2JdRZcAEJKdR5qCjYSpp55szlDJCTMkdx8ORvjtJEiZ4lbX6M8DvmG8H9IyRSgebNXz
+	PdvjyV27DETXqfOIprcVBDJDvLr4zC/s3dMF77py
+X-Received: by 2002:a05:690c:17:b0:71e:7fea:bb20 with SMTP id 00721157ae682-71fdc3cf61dmr128722737b3.32.1756134303887;
+        Mon, 25 Aug 2025 08:05:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZVc+KnKejoj1N/kvG/EK55xdNY7plcdY3mAoLGjbdJ57atzMLK4czFsgvvyRmjsOJbMhcTw==
+X-Received: by 2002:a05:690c:17:b0:71e:7fea:bb20 with SMTP id 00721157ae682-71fdc3cf61dmr128721587b3.32.1756134302673;
+        Mon, 25 Aug 2025 08:05:02 -0700 (PDT)
 Received: from [172.31.1.136] ([70.105.241.207])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e95e48d78aesm1141008276.34.2025.08.25.08.04.15
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71ff18ea7a3sm17643337b3.69.2025.08.25.08.05.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 08:04:15 -0700 (PDT)
-Message-ID: <3aecba8b-558b-44be-8763-6e5432a46cf5@redhat.com>
-Date: Mon, 25 Aug 2025 11:04:14 -0400
+        Mon, 25 Aug 2025 08:05:01 -0700 (PDT)
+Message-ID: <b8250753-049c-4141-9310-abb57980d21d@redhat.com>
+Date: Mon, 25 Aug 2025 11:05:00 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -87,327 +87,1262 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Add conditional version script support
-To: Khem Raj <raj.khem@gmail.com>, libtirpc-devel@lists.sourceforge.net
-Cc: linux-nfs@vger.kernel.org
-References: <20250812180809.2182301-1-raj.khem@gmail.com>
+Subject: Re: [Libtirpc-devel] [PATCH 01/12] Convert old-style function
+ definitions into modern-style definitions
+To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20250818150829.1044948-1-steved@redhat.com>
+ <20250818150829.1044948-2-steved@redhat.com>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250812180809.2182301-1-raj.khem@gmail.com>
+In-Reply-To: <20250818150829.1044948-2-steved@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/12/25 2:08 PM, Khem Raj wrote:
-> This patch adds conditional symbol versioning to libtirpc, allowing
-> GSS-API, DES crypto, and RPC database symbols to be conditionally
-> included in the version script based on build configuration.
+On 8/18/25 11:08 AM, Steve Dickson via Libtirpc-devel wrote:
+> With newer compilers (gcc 15.1.1) -Wold-style-definition
+> flag is set by default which causes warnings for
+> most of the functions in these files.
 > 
-> LLD is strict about undefined symbols referenced in a version script.
-> Some libtirpc symbols (rpcsec_gss, old DES helpers, rpc database
-> helpers) are optional and may not be built depending on configure
-> options or missing deps. GNU ld tolerated this; LLD errors out.
+>      warning: old-style function definition [-Wold-style-definition]
 > 
-> This change keeps the canonical symbol map in src/libtirpc.map, but
-> adds a make-time rule to generate a filtered copy
-> where names from disabled features are deleted. The lib is then linked
-> against the generated linker map file.
+> The warnings are remove by converting the old-style
+> function definitions into modern-style definitions
 > 
-> Fixes linking errors when these features are not available.
-> 
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> Signed-off-by: Steve Dickson <steved@redhat.com>
 Committed... (tag: libtirpc-1-3-7-rc4)
 
 steved.
 > ---
-> v2: Fix access to generated libtirpc.map when Srcdir != Builddir
-> v3: Fix problems where getrpcent.c was not being built with --enable-rpcdb
+>   src/xdr.c           | 224 ++++++++++++++++++++++----------------------
+>   src/xdr_array.c     |  26 ++---
+>   src/xdr_float.c     |  12 +--
+>   src/xdr_mem.c       |  74 +++++++--------
+>   src/xdr_rec.c       | 121 +++++++++++-------------
+>   src/xdr_reference.c |  20 ++--
+>   src/xdr_sizeof.c    |  30 ++----
+>   src/xdr_stdio.c     |  54 +++++------
+>   8 files changed, 270 insertions(+), 291 deletions(-)
 > 
->   configure.ac                          | 49 +++++++++++++++++++++++++++
->   src/Makefile.am                       | 30 ++++++++++++----
->   src/{libtirpc.map => libtirpc.map.in} | 48 +++++---------------------
->   3 files changed, 80 insertions(+), 47 deletions(-)
->   rename src/{libtirpc.map => libtirpc.map.in} (84%)
-> 
-> diff --git a/configure.ac b/configure.ac
-> index e813b14..e79bf59 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -77,6 +77,19 @@ if test "x$enable_ipv6" != xno; then
->   	AC_DEFINE(INET6, 1, [Define to 1 if IPv6 is available])
->   fi
+> diff --git a/src/xdr.c b/src/xdr.c
+> index 28d1382..27b5d8d 100644
+> --- a/src/xdr.c
+> +++ b/src/xdr.c
+> @@ -66,9 +66,9 @@ static const char xdr_zero[BYTES_PER_XDR_UNIT] = { 0, 0, 0, 0 };
+>    * Not a filter, but a convenient utility nonetheless
+>    */
+>   void
+> -xdr_free(proc, objp)
+> -	xdrproc_t proc;
+> -	void *objp;
+> +xdr_free(
+> +	xdrproc_t proc,
+> +	void *objp)
+>   {
+>   	XDR x;
+>   	
+> @@ -91,9 +91,9 @@ xdr_void(void)
+>    * XDR integers
+>    */
+>   bool_t
+> -xdr_int(xdrs, ip)
+> -	XDR *xdrs;
+> -	int *ip;
+> +xdr_int(
+> +	XDR *xdrs,
+> +	int *ip)
+>   {
+>   	long l;
 >   
-> +# RPC database support
-> +AC_ARG_ENABLE(rpcdb,
-> +    [AS_HELP_STRING([--enable-rpcdb], [Enable RPC Database support @<:@default=no@:>@])],
-> +    [], [enable_rpcdb=no])
-> +AM_CONDITIONAL(RPCDB, test "x$enable_rpcdb" = xyes)
-> +if test "x$enable_rpcdb" != "xno"; then
-> +    AC_CHECK_FUNCS([getrpcent getrpcbyname getrpcbynumber], [have_rpcdb=yes])
-> +
-> +    if test "x$have_rpcdb" = "xyes"; then
-> +        AC_DEFINE([RPCDB], [1], [Define if RPC database support is available])
-> +    fi
-> +fi
-> +
->   AC_ARG_ENABLE(symvers,
->   	[AS_HELP_STRING([--disable-symvers],[Disable symbol versioning @<:@default=no@:>@])],
->         [],[enable_symvers=maybe])
-> @@ -97,6 +110,33 @@ fi
+> @@ -121,9 +121,9 @@ xdr_int(xdrs, ip)
+>    * XDR unsigned integers
+>    */
+>   bool_t
+> -xdr_u_int(xdrs, up)
+> -	XDR *xdrs;
+> -	u_int *up;
+> +xdr_u_int(
+> +	XDR *xdrs,
+> +	u_int *up)
+>   {
+>   	u_long l;
 >   
->   AM_CONDITIONAL(SYMVERS, test "x$enable_symvers" = xyes)
+> @@ -153,9 +153,9 @@ xdr_u_int(xdrs, up)
+>    * same as xdr_u_long - open coded to save a proc call!
+>    */
+>   bool_t
+> -xdr_long(xdrs, lp)
+> -	XDR *xdrs;
+> -	long *lp;
+> +xdr_long(
+> +	XDR *xdrs,
+> +	long *lp)
+>   {
+>   	switch (xdrs->x_op) {
+>   	case XDR_ENCODE:
+> @@ -174,9 +174,9 @@ xdr_long(xdrs, lp)
+>    * same as xdr_long - open coded to save a proc call!
+>    */
+>   bool_t
+> -xdr_u_long(xdrs, ulp)
+> -	XDR *xdrs;
+> -	u_long *ulp;
+> +xdr_u_long(
+> +	XDR *xdrs,
+> +	u_long *ulp)
+>   {
+>   	switch (xdrs->x_op) {
+>   	case XDR_ENCODE:
+> @@ -196,9 +196,9 @@ xdr_u_long(xdrs, ulp)
+>    * same as xdr_u_int32_t - open coded to save a proc call!
+>    */
+>   bool_t
+> -xdr_int32_t(xdrs, int32_p)
+> -	XDR *xdrs;
+> -	int32_t *int32_p;
+> +xdr_int32_t(
+> +	XDR *xdrs,
+> +	int32_t *int32_p)
+>   {
+>   	long l;
 >   
-> +# Generate symbol lists for version script
-> +if test "x$enable_gssapi" = "xyes"; then
-> +    GSS_SYMBOLS="_svcauth_gss; authgss_create; authgss_create_default; authgss_free_private_data; authgss_get_private_data; authgss_service; gss_log_debug; gss_log_hexdump; gss_log_status; rpc_gss_get_error; rpc_gss_get_mech_info; rpc_gss_get_mechanisms; rpc_gss_get_principal_name; rpc_gss_get_versions; rpc_gss_qop_to_num; rpc_gss_seccreate; rpc_gss_set_callback; rpc_gss_set_defaults; rpc_gss_set_svc_name; rpc_gss_svc_max_data_length;"
-> +
-> +    GSS_SYMBOLS_031="svcauth_gss_get_principal; svcauth_gss_set_svc_name;"
-> +else
-> +    GSS_SYMBOLS=""
-> +    GSS_SYMBOLS_031=""
-> +fi
-> +
-> +if test "x$enable_authdes" = "xyes"; then
-> +    DES_SYMBOLS="cbc_crypt; ecb_crypt; xdr_authdes_cred; xdr_authdes_verf; xdr_rpc_gss_cred; xdr_rpc_gss_data; xdr_rpc_gss_init_args; xdr_rpc_gss_init_res;"
-> +else
-> +    DES_SYMBOLS=""
-> +fi
-> +
-> +if test "x$enable_rpcdb" = "xyes"; then
-> +    RPCDB_SYMBOLS="endrpcent; getrpcent; getrpcbynumber; getrpcbyname; setrpcent;"
-> +else
-> +    RPCDB_SYMBOLS=""
-> +fi
-> +
-> +AC_SUBST([GSS_SYMBOLS])
-> +AC_SUBST([GSS_SYMBOLS_031])
-> +AC_SUBST([DES_SYMBOLS])
-> +AC_SUBST([RPCDB_SYMBOLS])
-> +
->   AC_CANONICAL_BUILD
->   # Check for which host we are on and setup a few things
->   # specifically based on the host
-> @@ -167,7 +207,16 @@ AC_CHECK_FUNCS([getpeereid getrpcbyname getrpcbynumber setrpcent endrpcent getrp
->   AC_CHECK_TYPES(struct rpcent,,, [
->         #include <netdb.h>])
->   AC_CONFIG_FILES([Makefile src/Makefile man/Makefile doc/Makefile])
-> +AC_CONFIG_FILES([src/libtirpc.map])
->   AC_CONFIG_FILES([libtirpc.pc])
->   AC_OUTPUT
+> @@ -227,9 +227,9 @@ xdr_int32_t(xdrs, int32_p)
+>    * same as xdr_int32_t - open coded to save a proc call!
+>    */
+>   bool_t
+> -xdr_u_int32_t(xdrs, u_int32_p)
+> -	XDR *xdrs;
+> -	u_int32_t *u_int32_p;
+> +xdr_u_int32_t(
+> +	XDR *xdrs,
+> +	u_int32_t *u_int32_p)
+>   {
+>   	u_long l;
 >   
-> +# Configuration summary
-> +AC_MSG_NOTICE([
-> +libtirpc configuration summary:
-> +  GSS-API support: $enable_gssapi
-> +  DES crypto support: $enable_authdes
-> +  RPC database support: $enable_rpcdb
-> +  Symbol versioning: $enable_symvers
-> +])
+> @@ -258,9 +258,9 @@ xdr_u_int32_t(xdrs, u_int32_p)
+>    * XDR unsigned 32-bit integers
+>    */
+>   bool_t
+> -xdr_uint32_t(xdrs, uint32_p)
+> -	XDR *xdrs;
+> -	uint32_t *uint32_p;
+> +xdr_uint32_t(
+> +	XDR *xdrs,
+> +	uint32_t *uint32_p)
+>   {
+>   	return (xdr_u_int32_t(xdrs, (u_int32_t *)uint32_p));
+>   }
+> @@ -270,9 +270,9 @@ xdr_uint32_t(xdrs, uint32_p)
+>    * XDR short integers
+>    */
+>   bool_t
+> -xdr_short(xdrs, sp)
+> -	XDR *xdrs;
+> -	short *sp;
+> +xdr_short(
+> +	XDR *xdrs,
+> +	short *sp)
+>   {
+>   	long l;
 >   
-> diff --git a/src/Makefile.am b/src/Makefile.am
-> index 0cef093..cfda770 100644
-> --- a/src/Makefile.am
-> +++ b/src/Makefile.am
-> @@ -6,6 +6,9 @@
->   ## anything like that.
+> @@ -300,9 +300,9 @@ xdr_short(xdrs, sp)
+>    * XDR unsigned short integers
+>    */
+>   bool_t
+> -xdr_u_short(xdrs, usp)
+> -	XDR *xdrs;
+> -	u_short *usp;
+> +xdr_u_short(
+> +	XDR *xdrs,
+> +	u_short *usp)
+>   {
+>   	u_long l;
 >   
->   noinst_HEADERS = rpc_com.h debug.h
-> +EXTRA_DIST = libtirpc.map.in
-> +# Generated files
-> +BUILT_SOURCES = libtirpc.map
+> @@ -331,9 +331,9 @@ xdr_u_short(xdrs, usp)
+>    * XDR 16-bit integers
+>    */
+>   bool_t
+> -xdr_int16_t(xdrs, int16_p)
+> -	XDR *xdrs;
+> -	int16_t *int16_p;
+> +xdr_int16_t(
+> +	XDR *xdrs,
+> +	int16_t *int16_p)
+>   {
+>   	long l;
 >   
->   AM_CPPFLAGS = -I$(top_srcdir)/tirpc -include config.h -DPORTMAP -DINET6 \
->   		-D_GNU_SOURCE -Wall -pipe
-> @@ -15,10 +18,19 @@ lib_LTLIBRARIES = libtirpc.la
->   libtirpc_la_LDFLAGS = @LDFLAG_NOUNDEFINED@ -no-undefined @PTHREAD_LIBS@
->   libtirpc_la_LDFLAGS += -version-info @LT_VERSION_INFO@
+> @@ -361,9 +361,9 @@ xdr_int16_t(xdrs, int16_p)
+>    * XDR unsigned 16-bit integers
+>    */
+>   bool_t
+> -xdr_u_int16_t(xdrs, u_int16_p)
+> -	XDR *xdrs;
+> -	u_int16_t *u_int16_p;
+> +xdr_u_int16_t(
+> +	XDR *xdrs,
+> +	u_int16_t *u_int16_p)
+>   {
+>   	u_long l;
 >   
-> +# Generate version script from template
-> +libtirpc.map: $(srcdir)/libtirpc.map.in
-> +	$(AM_V_GEN)$(SED) \
-> +		-e 's|@GSS_SYMBOLS@|$(GSS_SYMBOLS)|g' \
-> +		-e 's|@GSS_SYMBOLS_031@|$(GSS_SYMBOLS_031)|g' \
-> +		-e 's|@DES_SYMBOLS@|$(DES_SYMBOLS)|g' \
-> +		-e 's|@RPCDB_SYMBOLS@|$(RPCDB_SYMBOLS)|g' \
-> +		< $(srcdir)/libtirpc.map.in > $@ || rm -f $@
-> +
->   libtirpc_la_SOURCES = auth_none.c auth_unix.c authunix_prot.c \
->           binddynport.c bindresvport.c \
->           clnt_bcast.c clnt_dg.c clnt_generic.c clnt_perror.c clnt_raw.c clnt_simple.c \
-> -        clnt_vc.c rpc_dtablesize.c getnetconfig.c getnetpath.c getrpcent.c \
-> +        clnt_vc.c rpc_dtablesize.c getnetconfig.c getnetpath.c \
->           getrpcport.c mt_misc.c pmap_clnt.c pmap_getmaps.c pmap_getport.c \
->           pmap_prot.c pmap_prot2.c pmap_rmt.c rpc_prot.c rpc_commondata.c \
->           rpc_callmsg.c rpc_generic.c rpc_soc.c rpcb_clnt.c rpcb_prot.c \
-> @@ -34,19 +46,23 @@ endif
->   libtirpc_la_SOURCES += xdr.c xdr_rec.c xdr_array.c xdr_float.c xdr_mem.c xdr_reference.c xdr_stdio.c xdr_sizeof.c
+> @@ -392,9 +392,9 @@ xdr_u_int16_t(xdrs, u_int16_p)
+>    * XDR unsigned 16-bit integers
+>    */
+>   bool_t
+> -xdr_uint16_t(xdrs, uint16_p)
+> -	XDR *xdrs;
+> -	uint16_t *uint16_p;
+> +xdr_uint16_t(
+> +	XDR *xdrs,
+> +	uint16_t *uint16_p)
+>   {
+>   	return (xdr_u_int16_t(xdrs, (u_int16_t *)uint16_p));
+>   }
+> @@ -404,9 +404,9 @@ xdr_uint16_t(xdrs, uint16_p)
+>    * XDR 8-bit integers
+>    */
+>   bool_t
+> -xdr_int8_t(xdrs, int8_p)
+> -	XDR *xdrs;
+> -	int8_t *int8_p;
+> +xdr_int8_t(
+> +	XDR *xdrs,
+> +	int8_t *int8_p)
+>   {
+>   	long l;
 >   
->   if SYMVERS
-> -    libtirpc_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libtirpc.map
-> +    libtirpc_la_LDFLAGS += -Wl,--version-script=$(builddir)/libtirpc.map
->   endif
+> @@ -435,9 +435,9 @@ xdr_int8_t(xdrs, int8_p)
+>    * XDR unsigned 8-bit integers
+>    */
+>   bool_t
+> -xdr_u_int8_t(xdrs, uint8_p)
+> -	XDR *xdrs;
+> -	uint8_t *uint8_p;
+> +xdr_u_int8_t(
+> +	XDR *xdrs,
+> +	uint8_t *uint8_p)
+>   {
+>   	u_long l;
 >   
->   ## Secure-RPC
->   if GSS
-> -    libtirpc_la_SOURCES += auth_gss.c authgss_prot.c svc_auth_gss.c \
-> -			   rpc_gss_utils.c
-> -    libtirpc_la_LIBADD = $(GSSAPI_LIBS)
-> -    libtirpc_la_CFLAGS = -DHAVE_RPCSEC_GSS $(GSSAPI_CFLAGS)
-> +libtirpc_la_SOURCES += auth_gss.c authgss_prot.c svc_auth_gss.c rpc_gss_utils.c
-> +libtirpc_la_LIBADD = $(GSSAPI_LIBS)
-> +libtirpc_la_CFLAGS = -DHAVE_RPCSEC_GSS $(GSSAPI_CFLAGS)
-> +endif
-> +
-> +# Conditionally add RPC database sources
-> +if RPCDB
-> +libtirpc_la_SOURCES += getrpcent.c
->   endif
+> @@ -466,9 +466,9 @@ xdr_u_int8_t(xdrs, uint8_p)
+>    * XDR unsigned 8-bit integers
+>    */
+>   bool_t
+> -xdr_uint8_t(xdrs, uint8_p)
+> -	XDR *xdrs;
+> -	uint8_t *uint8_p;
+> +xdr_uint8_t(
+> +	XDR *xdrs,
+> +	uint8_t *uint8_p)
+>   {
+>   	return (xdr_u_int8_t(xdrs, (uint8_t *)uint8_p));
+>   }
+> @@ -478,9 +478,9 @@ xdr_uint8_t(xdrs, uint8_p)
+>    * XDR a char
+>    */
+>   bool_t
+> -xdr_char(xdrs, cp)
+> -	XDR *xdrs;
+> -	char *cp;
+> +xdr_char(
+> +	XDR *xdrs,
+> +	char *cp)
+>   {
+>   	int i;
 >   
->   libtirpc_la_SOURCES += key_call.c key_prot_xdr.c getpublickey.c
->   libtirpc_la_SOURCES += netname.c netnamer.c rpcdname.c rtime.c
+> @@ -496,9 +496,9 @@ xdr_char(xdrs, cp)
+>    * XDR an unsigned char
+>    */
+>   bool_t
+> -xdr_u_char(xdrs, cp)
+> -	XDR *xdrs;
+> -	u_char *cp;
+> +xdr_u_char(
+> +	XDR *xdrs,
+> +	u_char *cp)
+>   {
+>   	u_int u;
 >   
-> -CLEANFILES	       = cscope.* *~
-> +CLEANFILES	       = cscope.* libtirpc.map *~
->   DISTCLEANFILES	       = Makefile.in
-> diff --git a/src/libtirpc.map b/src/libtirpc.map.in
-> similarity index 84%
-> rename from src/libtirpc.map
-> rename to src/libtirpc.map.in
-> index 21d6065..6cf563b 100644
-> --- a/src/libtirpc.map
-> +++ b/src/libtirpc.map.in
-> @@ -34,16 +34,10 @@ TIRPC_0.3.0 {
->       _svcauth_none;
->       _svcauth_short;
->       _svcauth_unix;
-> -    _svcauth_gss;
+> @@ -514,9 +514,9 @@ xdr_u_char(xdrs, cp)
+>    * XDR booleans
+>    */
+>   bool_t
+> -xdr_bool(xdrs, bp)
+> -	XDR *xdrs;
+> -	bool_t *bp;
+> +xdr_bool(
+> +	XDR *xdrs,
+> +	bool_t *bp)
+>   {
+>   	long lb;
 >   
->       # a*
->       authdes_create;
->       authdes_seccreate;
-> -    authgss_create;
-> -    authgss_create_default;
-> -    authgss_free_private_data;
-> -    authgss_get_private_data;
-> -    authgss_service;
->       authnone_create;
->       authunix_create;
->       authunix_create_default;
-> @@ -54,7 +48,6 @@ TIRPC_0.3.0 {
+> @@ -544,9 +544,9 @@ xdr_bool(xdrs, bp)
+>    * XDR enumerations
+>    */
+>   bool_t
+> -xdr_enum(xdrs, ep)
+> -	XDR *xdrs;
+> -	enum_t *ep;
+> +xdr_enum(
+> +	XDR *xdrs,
+> +	enum_t *ep)
+>   {
+>   	enum sizecheck { SIZEVAL };	/* used to find the size of an enum */
 >   
->       # c*
->       callrpc;
-> -    cbc_crypt;
->       clnt_broadcast;
->       clnt_create;
->       clnt_create_timed;
-> @@ -79,10 +72,8 @@ TIRPC_0.3.0 {
->       clntunix_create;
+> @@ -570,10 +570,10 @@ xdr_enum(xdrs, ep)
+>    * cp points to the opaque object and cnt gives the byte length.
+>    */
+>   bool_t
+> -xdr_opaque(xdrs, cp, cnt)
+> -	XDR *xdrs;
+> -	caddr_t cp;
+> -	u_int cnt;
+> +xdr_opaque(
+> +	XDR *xdrs,
+> +	caddr_t cp,
+> +	u_int cnt)
+>   {
+>   	u_int rndup;
+>   	static int crud[BYTES_PER_XDR_UNIT];
+> @@ -622,11 +622,11 @@ xdr_opaque(xdrs, cp, cnt)
+>    * If *cpp is NULL maxsize bytes are allocated
+>    */
+>   bool_t
+> -xdr_bytes(xdrs, cpp, sizep, maxsize)
+> -	XDR *xdrs;
+> -	char **cpp;
+> -	u_int *sizep;
+> -	u_int maxsize;
+> +xdr_bytes(
+> +	XDR *xdrs,
+> +	char **cpp,
+> +	u_int *sizep,
+> +	u_int maxsize)
+>   {
+>   	char *sp = *cpp;  /* sp is the actual string pointer */
+>   	u_int nodesize;
+> @@ -687,9 +687,9 @@ xdr_bytes(xdrs, cpp, sizep, maxsize)
+>    * Implemented here due to commonality of the object.
+>    */
+>   bool_t
+> -xdr_netobj(xdrs, np)
+> -	XDR *xdrs;
+> -	struct netobj *np;
+> +xdr_netobj(
+> +	XDR *xdrs,
+> +	struct netobj *np)
+>   {
 >   
->       # e*
-> -    ecb_crypt;
->       endnetconfig;
->       endnetpath;
-> -    endrpcent;
+>   	return (xdr_bytes(xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ));
+> @@ -707,12 +707,12 @@ xdr_netobj(xdrs, np)
+>    * If there is no specific or default routine an error is returned.
+>    */
+>   bool_t
+> -xdr_union(xdrs, dscmp, unp, choices, dfault)
+> -	XDR *xdrs;
+> -	enum_t *dscmp;		/* enum to decide which arm to work on */
+> -	char *unp;		/* the union itself */
+> -	const struct xdr_discrim *choices;	/* [value, xdr proc] for each arm */
+> -	xdrproc_t dfault;	/* default xdr routine */
+> +xdr_union(
+> +	XDR *xdrs,
+> +	enum_t *dscmp,		/* enum to decide which arm to work on */
+> +	char *unp,		/* the union itself */
+> +	const struct xdr_discrim *choices,	/* [value, xdr proc] for each arm */
+> +	xdrproc_t dfault)	/* default xdr routine */
+>   {
+>   	enum_t dscm;
 >   
->       # f*
->       freenetconfigent;
-> @@ -92,13 +83,7 @@ TIRPC_0.3.0 {
->       getnetconfig;
->       getnetconfigent;
->       getnetpath;
-> -    getrpcent;
-> -    getrpcbynumber;
-> -    getrpcbyname;
->       getrpcport;
-> -    gss_log_debug;
-> -    gss_log_hexdump;
-> -    gss_log_status;
+> @@ -756,10 +756,10 @@ xdr_union(xdrs, dscmp, unp, choices, dfault)
+>    * of the string as specified by a protocol.
+>    */
+>   bool_t
+> -xdr_string(xdrs, cpp, maxsize)
+> -	XDR *xdrs;
+> -	char **cpp;
+> -	u_int maxsize;
+> +xdr_string(
+> +	XDR *xdrs,
+> +	char **cpp,
+> +	u_int maxsize)
+>   {
+>   	char *sp = *cpp;  /* sp is the actual string pointer */
+>   	u_int size;
+> @@ -839,9 +839,9 @@ xdr_string(xdrs, cpp, maxsize)
+>    * routines like clnt_call
+>    */
+>   bool_t
+> -xdr_wrapstring(xdrs, cpp)
+> -	XDR *xdrs;
+> -	char **cpp;
+> +xdr_wrapstring(
+> +	XDR *xdrs,
+> +	char **cpp)
+>   {
+>   	return xdr_string(xdrs, cpp, RPC_MAXDATASIZE);
+>   }
+> @@ -858,9 +858,9 @@ xdr_wrapstring(xdrs, cpp)
+>    * XDR 64-bit integers
+>    */
+>   bool_t
+> -xdr_int64_t(xdrs, llp)
+> -	XDR *xdrs;
+> -	int64_t *llp;
+> +xdr_int64_t(
+> +	XDR *xdrs,
+> +	int64_t *llp)
+>   {
+>   	u_long ul[2];
 >   
->       # n*
->       nc_perror;
-> @@ -118,21 +103,6 @@ TIRPC_0.3.0 {
->       rpc_call;
->       rpc_control;
->       rpc_createerr;
-> -    rpc_gss_get_error;
-> -    rpc_gss_get_mech_info;
-> -    rpc_gss_get_mechanisms;
-> -    rpc_gss_get_principal_name;
-> -    rpc_gss_get_versions;
-> -    rpc_gss_getcred;
-> -    rpc_gss_is_installed;
-> -    rpc_gss_max_data_length;
-> -    rpc_gss_mech_to_oid;
-> -    rpc_gss_qop_to_num;
-> -    rpc_gss_seccreate;
-> -    rpc_gss_set_callback;
-> -    rpc_gss_set_defaults;
-> -    rpc_gss_set_svc_name;
-> -    rpc_gss_svc_max_data_length;
->       rpc_nullproc;
->       rpc_reg;
->       rpcb_getaddr;
-> @@ -147,7 +117,6 @@ TIRPC_0.3.0 {
->       # s*
->       setnetconfig;
->       setnetpath;
-> -    setrpcent;
->       svc_auth_reg;
->       svc_create;
->       svc_dg_create;
-> @@ -194,8 +163,6 @@ TIRPC_0.3.0 {
->       # x*
->       xdr_accepted_reply;
->       xdr_array;
-> -    xdr_authdes_cred;
-> -    xdr_authdes_verf;
->       xdr_authunix_parms;
->       xdr_bool;
->       xdr_bytes;
-> @@ -228,10 +195,6 @@ TIRPC_0.3.0 {
->       xdr_replymsg;
->       xdr_rmtcall_args;
->       xdr_rmtcallres;
-> -    xdr_rpc_gss_cred;
-> -    xdr_rpc_gss_data;
-> -    xdr_rpc_gss_init_args;
-> -    xdr_rpc_gss_init_res;
->       xdr_rpcb;
->       xdr_rpcb_entry;
->       xdr_rpcb_entry_list_ptr;
-> @@ -275,14 +238,20 @@ TIRPC_0.3.0 {
->       xdrstdio_create;
->       xprt_register;
->       xprt_unregister;
-> +    # GSS-API symbols (conditionally included)
-> +@GSS_SYMBOLS@
-> +    # DES crypto symbols (conditionally included)
-> +@DES_SYMBOLS@
-> +    # RPC database symbols (conditionally included)
-> +@RPCDB_SYMBOLS@
+> @@ -892,9 +892,9 @@ xdr_int64_t(xdrs, llp)
+>    * XDR unsigned 64-bit integers
+>    */
+>   bool_t
+> -xdr_u_int64_t(xdrs, ullp)
+> -	XDR *xdrs;
+> -	u_int64_t *ullp;
+> +xdr_u_int64_t(
+> +	XDR *xdrs,
+> +	u_int64_t *ullp)
+>   {
+>   	u_long ul[2];
 >   
->     local:
->       *;
->   };
+> @@ -926,9 +926,9 @@ xdr_u_int64_t(xdrs, ullp)
+>    * XDR unsigned 64-bit integers
+>    */
+>   bool_t
+> -xdr_uint64_t(xdrs, ullp)
+> -	XDR *xdrs;
+> -	uint64_t *ullp;
+> +xdr_uint64_t(
+> +	XDR *xdrs,
+> +	uint64_t *ullp)
+>   {
+>   	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
+>   }
+> @@ -938,9 +938,9 @@ xdr_uint64_t(xdrs, ullp)
+>    * XDR hypers
+>    */
+>   bool_t
+> -xdr_hyper(xdrs, llp)
+> -	XDR *xdrs;
+> -	longlong_t *llp;
+> +xdr_hyper(
+> +	XDR *xdrs,
+> +	longlong_t *llp)
+>   {
 >   
->   TIRPC_0.3.1 {
-> -    svcauth_gss_get_principal;
-> -    svcauth_gss_set_svc_name;
-> +# GSS-API symbols (conditionally included)
-> +@GSS_SYMBOLS_031@
->   } TIRPC_0.3.0;
+>   	/*
+> @@ -955,9 +955,9 @@ xdr_hyper(xdrs, llp)
+>    * XDR unsigned hypers
+>    */
+>   bool_t
+> -xdr_u_hyper(xdrs, ullp)
+> -	XDR *xdrs;
+> -	u_longlong_t *ullp;
+> +xdr_u_hyper(
+> +	XDR *xdrs,
+> +	u_longlong_t *ullp)
+>   {
 >   
->   TIRPC_0.3.2 {
-> @@ -290,7 +259,6 @@ TIRPC_0.3.2 {
->       getpublicandprivatekey;
->       getpublickey;
->       host2netname;
-> -    key_call_destroy;
->       key_decryptsession;
->       key_decryptsession_pk;
->       key_encryptsession;
-> 
+>   	/*
+> @@ -972,9 +972,9 @@ xdr_u_hyper(xdrs, ullp)
+>    * XDR longlong_t's
+>    */
+>   bool_t
+> -xdr_longlong_t(xdrs, llp)
+> -	XDR *xdrs;
+> -	longlong_t *llp;
+> +xdr_longlong_t(
+> +	XDR *xdrs,
+> +	longlong_t *llp)
+>   {
+>   
+>   	/*
+> @@ -989,9 +989,9 @@ xdr_longlong_t(xdrs, llp)
+>    * XDR u_longlong_t's
+>    */
+>   bool_t
+> -xdr_u_longlong_t(xdrs, ullp)
+> -	XDR *xdrs;
+> -	u_longlong_t *ullp;
+> +xdr_u_longlong_t(
+> +	XDR *xdrs,
+> +	u_longlong_t *ullp)
+>   {
+>   
+>   	/*
+> @@ -1005,9 +1005,9 @@ xdr_u_longlong_t(xdrs, ullp)
+>    * XDR quad_t
+>    */
+>   bool_t
+> -xdr_quad_t(xdrs, llp)
+> -	XDR *xdrs;
+> -	int64_t *llp;
+> +xdr_quad_t(
+> +	XDR *xdrs,
+> +	int64_t *llp)
+>   {
+>   	return (xdr_int64_t(xdrs, (int64_t *)llp));
+>   }
+> @@ -1017,9 +1017,9 @@ xdr_quad_t(xdrs, llp)
+>    * XDR u_quad_t
+>    */
+>   bool_t
+> -xdr_u_quad_t(xdrs, ullp)
+> -	XDR *xdrs;
+> -	u_int64_t *ullp;
+> +xdr_u_quad_t(
+> +	XDR *xdrs,
+> +	u_int64_t *ullp)
+>   {
+>   	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
+>   }
+> diff --git a/src/xdr_array.c b/src/xdr_array.c
+> index 7fc8fb8..d95512b 100644
+> --- a/src/xdr_array.c
+> +++ b/src/xdr_array.c
+> @@ -55,13 +55,13 @@
+>    * xdr procedure to call to handle each element of the array.
+>    */
+>   bool_t
+> -xdr_array(xdrs, addrp, sizep, maxsize, elsize, elproc)
+> -	XDR *xdrs;
+> -	caddr_t *addrp;		/* array pointer */
+> -	u_int *sizep;		/* number of elements */
+> -	u_int maxsize;		/* max numberof elements */
+> -	u_int elsize;		/* size in bytes of each element */
+> -	xdrproc_t elproc;	/* xdr routine to handle each element */
+> +xdr_array(
+> +	XDR *xdrs,
+> +	caddr_t *addrp,		/* array pointer */
+> +	u_int *sizep,		/* number of elements */
+> +	u_int maxsize,		/* max numberof elements */
+> +	u_int elsize,		/* size in bytes of each element */
+> +	xdrproc_t elproc)	/* xdr routine to handle each element */
+>   {
+>   	u_int i;
+>   	caddr_t target = *addrp;
+> @@ -133,12 +133,12 @@ xdr_array(xdrs, addrp, sizep, maxsize, elsize, elproc)
+>    * > xdr_elem: routine to XDR each element
+>    */
+>   bool_t
+> -xdr_vector(xdrs, basep, nelem, elemsize, xdr_elem)
+> -	XDR *xdrs;
+> -	char *basep;
+> -	u_int nelem;
+> -	u_int elemsize;
+> -	xdrproc_t xdr_elem;	
+> +xdr_vector(
+> +	XDR *xdrs,
+> +	char *basep,
+> +	u_int nelem,
+> +	u_int elemsize,
+> +	xdrproc_t xdr_elem)	
+>   {
+>   	u_int i;
+>   	char *elptr;
+> diff --git a/src/xdr_float.c b/src/xdr_float.c
+> index c86d516..280f606 100644
+> --- a/src/xdr_float.c
+> +++ b/src/xdr_float.c
+> @@ -95,9 +95,9 @@ static struct sgl_limits {
+>   #endif /* vax */
+>   
+>   bool_t
+> -xdr_float(xdrs, fp)
+> -	XDR *xdrs;
+> -	float *fp;
+> +xdr_float(
+> +	XDR *xdrs,
+> +	float *fp)
+>   {
+>   #ifndef IEEEFP
+>   	struct ieee_single is;
+> @@ -197,9 +197,9 @@ static struct dbl_limits {
+>   
+>   
+>   bool_t
+> -xdr_double(xdrs, dp)
+> -	XDR *xdrs;
+> -	double *dp;
+> +xdr_double(
+> +	XDR *xdrs,
+> +	double *dp)
+>   {
+>   #ifdef IEEEFP
+>   	int32_t *i32p;
+> diff --git a/src/xdr_mem.c b/src/xdr_mem.c
+> index ecdc932..9ece51f 100644
+> --- a/src/xdr_mem.c
+> +++ b/src/xdr_mem.c
+> @@ -88,11 +88,11 @@ static const struct	xdr_ops xdrmem_ops_unaligned = {
+>    * memory buffer.
+>    */
+>   void
+> -xdrmem_create(xdrs, addr, size, op)
+> -	XDR *xdrs;
+> -	char *addr;
+> -	u_int size;
+> -	enum xdr_op op;
+> +xdrmem_create(
+> +	XDR *xdrs,
+> +	char *addr,
+> +	u_int size,
+> +	enum xdr_op op)
+>   {
+>   
+>   	xdrs->x_op = op;
+> @@ -104,16 +104,15 @@ xdrmem_create(xdrs, addr, size, op)
+>   
+>   /*ARGSUSED*/
+>   static void
+> -xdrmem_destroy(xdrs)
+> -	XDR *xdrs;
+> +xdrmem_destroy(XDR *xdrs)
+>   {
+>   
+>   }
+>   
+>   static bool_t
+> -xdrmem_getlong_aligned(xdrs, lp)
+> -	XDR *xdrs;
+> -	long *lp;
+> +xdrmem_getlong_aligned(
+> +	XDR *xdrs,
+> +	long *lp)
+>   {
+>   
+>   	if (xdrs->x_handy < sizeof(int32_t))
+> @@ -125,9 +124,9 @@ xdrmem_getlong_aligned(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrmem_putlong_aligned(xdrs, lp)
+> -	XDR *xdrs;
+> -	const long *lp;
+> +xdrmem_putlong_aligned(
+> +	XDR *xdrs,
+> +	const long *lp)
+>   {
+>   
+>   	if (xdrs->x_handy < sizeof(int32_t))
+> @@ -139,9 +138,9 @@ xdrmem_putlong_aligned(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrmem_getlong_unaligned(xdrs, lp)
+> -	XDR *xdrs;
+> -	long *lp;
+> +xdrmem_getlong_unaligned(
+> +	XDR *xdrs,
+> +	long *lp)
+>   {
+>   	u_int32_t l;
+>   
+> @@ -155,9 +154,9 @@ xdrmem_getlong_unaligned(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrmem_putlong_unaligned(xdrs, lp)
+> -	XDR *xdrs;
+> -	const long *lp;
+> +xdrmem_putlong_unaligned(
+> +	XDR *xdrs,
+> +	const long *lp)
+>   {
+>   	u_int32_t l;
+>   
+> @@ -171,10 +170,10 @@ xdrmem_putlong_unaligned(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrmem_getbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	char *addr;
+> -	u_int len;
+> +xdrmem_getbytes(
+> +	XDR *xdrs,
+> +	char *addr,
+> +	u_int len)
+>   {
+>   
+>   	if (xdrs->x_handy < len)
+> @@ -186,10 +185,10 @@ xdrmem_getbytes(xdrs, addr, len)
+>   }
+>   
+>   static bool_t
+> -xdrmem_putbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	const char *addr;
+> -	u_int len;
+> +xdrmem_putbytes(
+> +	XDR *xdrs,
+> +	const char *addr,
+> +	u_int len)
+>   {
+>   
+>   	if (xdrs->x_handy < len)
+> @@ -201,8 +200,7 @@ xdrmem_putbytes(xdrs, addr, len)
+>   }
+>   
+>   static u_int
+> -xdrmem_getpos(xdrs)
+> -	XDR *xdrs;
+> +xdrmem_getpos(XDR *xdrs)
+>   {
+>   
+>   	/* XXX w/64-bit pointers, u_int not enough! */
+> @@ -210,9 +208,9 @@ xdrmem_getpos(xdrs)
+>   }
+>   
+>   static bool_t
+> -xdrmem_setpos(xdrs, pos)
+> -	XDR *xdrs;
+> -	u_int pos;
+> +xdrmem_setpos(
+> +	XDR *xdrs,
+> +	u_int pos)
+>   {
+>   	char *newaddr = xdrs->x_base + pos;
+>   	char *lastaddr = (char *)xdrs->x_private + xdrs->x_handy;
+> @@ -225,9 +223,9 @@ xdrmem_setpos(xdrs, pos)
+>   }
+>   
+>   static int32_t *
+> -xdrmem_inline_aligned(xdrs, len)
+> -	XDR *xdrs;
+> -	u_int len;
+> +xdrmem_inline_aligned(
+> +	XDR *xdrs,
+> +	u_int len)
+>   {
+>   	int32_t *buf = 0;
+>   
+> @@ -241,9 +239,9 @@ xdrmem_inline_aligned(xdrs, len)
+>   
+>   /* ARGSUSED */
+>   static int32_t *
+> -xdrmem_inline_unaligned(xdrs, len)
+> -	XDR *xdrs;
+> -	u_int len;
+> +xdrmem_inline_unaligned(
+> +	XDR *xdrs,
+> +	u_int len)
+>   {
+>   
+>   	return (0);
+> diff --git a/src/xdr_rec.c b/src/xdr_rec.c
+> index 676cc82..f088062 100644
+> --- a/src/xdr_rec.c
+> +++ b/src/xdr_rec.c
+> @@ -152,15 +152,15 @@ static bool_t	realloc_stream(RECSTREAM *, int);
+>    * calls expect that they take an opaque handle rather than an fd.
+>    */
+>   void
+> -xdrrec_create(xdrs, sendsize, recvsize, tcp_handle, readit, writeit)
+> -	XDR *xdrs;
+> -	u_int sendsize;
+> -	u_int recvsize;
+> -	void *tcp_handle;
+> +xdrrec_create(
+> +	XDR *xdrs,
+> +	u_int sendsize,
+> +	u_int recvsize,
+> +	void *tcp_handle,
+>   	/* like read, but pass it a tcp_handle, not sock */
+> -	int (*readit)(void *, void *, int);
+> +	int (*readit)(void *, void *, int),
+>   	/* like write, but pass it a tcp_handle, not sock */
+> -	int (*writeit)(void *, void *, int);
+> +	int (*writeit)(void *, void *, int))
+>   {
+>   	RECSTREAM *rstrm = mem_alloc(sizeof(RECSTREAM));
+>   
+> @@ -220,9 +220,9 @@ xdrrec_create(xdrs, sendsize, recvsize, tcp_handle, readit, writeit)
+>    */
+>   
+>   static bool_t
+> -xdrrec_getlong(xdrs, lp)
+> -	XDR *xdrs;
+> -	long *lp;
+> +xdrrec_getlong(
+> +	XDR *xdrs,
+> +	long *lp)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	int32_t *buflp = (int32_t *)(void *)(rstrm->in_finger);
+> @@ -244,9 +244,9 @@ xdrrec_getlong(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrrec_putlong(xdrs, lp)
+> -	XDR *xdrs;
+> -	const long *lp;
+> +xdrrec_putlong(
+> +	XDR *xdrs,
+> +	const long *lp)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	int32_t *dest_lp = ((int32_t *)(void *)(rstrm->out_finger));
+> @@ -268,10 +268,10 @@ xdrrec_putlong(xdrs, lp)
+>   }
+>   
+>   static bool_t  /* must manage buffers, fragments, and records */
+> -xdrrec_getbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	char *addr;
+> -	u_int len;
+> +xdrrec_getbytes(
+> +	XDR *xdrs,
+> +	char *addr,
+> +	u_int len)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	int current;
+> @@ -296,10 +296,10 @@ xdrrec_getbytes(xdrs, addr, len)
+>   }
+>   
+>   static bool_t
+> -xdrrec_putbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	const char *addr;
+> -	u_int len;
+> +xdrrec_putbytes(
+> +	XDR *xdrs,
+> +	const char *addr,
+> +	u_int len)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	size_t current;
+> @@ -322,8 +322,7 @@ xdrrec_putbytes(xdrs, addr, len)
+>   }
+>   
+>   static u_int
+> -xdrrec_getpos(xdrs)
+> -	XDR *xdrs;
+> +xdrrec_getpos(XDR *xdrs)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
+>   	off_t pos;
+> @@ -348,9 +347,9 @@ xdrrec_getpos(xdrs)
+>   }
+>   
+>   static bool_t
+> -xdrrec_setpos(xdrs, pos)
+> -	XDR *xdrs;
+> -	u_int pos;
+> +xdrrec_setpos(
+> +	XDR *xdrs,
+> +	u_int pos)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
+>   	u_int currpos = xdrrec_getpos(xdrs);
+> @@ -387,9 +386,9 @@ xdrrec_setpos(xdrs, pos)
+>   }
+>   
+>   static int32_t *
+> -xdrrec_inline(xdrs, len)
+> -	XDR *xdrs;
+> -	u_int len;
+> +xdrrec_inline(
+> +	XDR *xdrs,
+> +	u_int len)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
+>   	int32_t *buf = NULL;
+> @@ -419,8 +418,7 @@ xdrrec_inline(xdrs, len)
+>   }
+>   
+>   static void
+> -xdrrec_destroy(xdrs)
+> -	XDR *xdrs;
+> +xdrrec_destroy(XDR *xdrs)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
+>   
+> @@ -439,8 +437,7 @@ xdrrec_destroy(xdrs)
+>    * this procedure to guarantee proper record alignment.
+>    */
+>   bool_t
+> -xdrrec_skiprecord(xdrs)
+> -	XDR *xdrs;
+> +xdrrec_skiprecord(XDR *xdrs)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	enum xprt_stat xstat;
+> @@ -475,8 +472,7 @@ xdrrec_skiprecord(xdrs)
+>    * after consuming the rest of the current record.
+>    */
+>   bool_t
+> -xdrrec_eof(xdrs)
+> -	XDR *xdrs;
+> +xdrrec_eof(XDR *xdrs)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   
+> @@ -499,9 +495,9 @@ xdrrec_eof(xdrs)
+>    * pipelined procedure calls.)  TRUE => immmediate flush to tcp connection.
+>    */
+>   bool_t
+> -xdrrec_endofrecord(xdrs, sendnow)
+> -	XDR *xdrs;
+> -	bool_t sendnow;
+> +xdrrec_endofrecord(
+> +	XDR *xdrs,
+> +	bool_t sendnow)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	u_long len;  /* fragment length */
+> @@ -525,10 +521,10 @@ xdrrec_endofrecord(xdrs, sendnow)
+>    * Return true if a record is available in the buffer, false if not.
+>    */
+>   bool_t
+> -__xdrrec_getrec(xdrs, statp, expectdata)
+> -	XDR *xdrs;
+> -	enum xprt_stat *statp;
+> -	bool_t expectdata;
+> +__xdrrec_getrec(
+> +	XDR *xdrs,
+> +	enum xprt_stat *statp,
+> +	bool_t expectdata)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   	ssize_t n;
+> @@ -615,9 +611,9 @@ __xdrrec_getrec(xdrs, statp, expectdata)
+>   }
+>   
+>   bool_t
+> -__xdrrec_setnonblock(xdrs, maxrec)
+> -	XDR *xdrs;
+> -	int maxrec;
+> +__xdrrec_setnonblock(
+> +	XDR *xdrs,
+> +	int maxrec)
+>   {
+>   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
+>   
+> @@ -632,9 +628,9 @@ __xdrrec_setnonblock(xdrs, maxrec)
+>    * Internal useful routines
+>    */
+>   static bool_t
+> -flush_out(rstrm, eor)
+> -	RECSTREAM *rstrm;
+> -	bool_t eor;
+> +flush_out(
+> +	RECSTREAM *rstrm,
+> +	bool_t eor)
+>   {
+>   	u_int32_t eormask = (eor == TRUE) ? LAST_FRAG : 0;
+>   	u_int32_t len = (u_int32_t)((u_long)(rstrm->out_finger) -
+> @@ -652,8 +648,7 @@ flush_out(rstrm, eor)
+>   }
+>   
+>   static bool_t  /* knows nothing about records!  Only about input buffers */
+> -fill_input_buf(rstrm)
+> -	RECSTREAM *rstrm;
+> +fill_input_buf(RECSTREAM *rstrm)
+>   {
+>   	char *where;
+>   	u_int32_t i;
+> @@ -675,10 +670,10 @@ fill_input_buf(rstrm)
+>   }
+>   
+>   static bool_t  /* knows nothing about records!  Only about input buffers */
+> -get_input_bytes(rstrm, addr, len)
+> -	RECSTREAM *rstrm;
+> -	char *addr;
+> -	int len;
+> +get_input_bytes(
+> +	RECSTREAM *rstrm,
+> +	char *addr,
+> +	int len)
+>   {
+>   	size_t current;
+>   
+> @@ -708,8 +703,7 @@ get_input_bytes(rstrm, addr, len)
+>   }
+>   
+>   static bool_t  /* next two bytes of the input stream are treated as a header */
+> -set_input_fragment(rstrm)
+> -	RECSTREAM *rstrm;
+> +set_input_fragment(RECSTREAM *rstrm)
+>   {
+>   	u_int32_t header;
+>   
+> @@ -734,9 +728,9 @@ set_input_fragment(rstrm)
+>   }
+>   
+>   static bool_t  /* consumes input bytes; knows nothing about records! */
+> -skip_input_bytes(rstrm, cnt)
+> -	RECSTREAM *rstrm;
+> -	long cnt;
+> +skip_input_bytes(
+> +	RECSTREAM *rstrm,
+> +	long cnt)
+>   {
+>   	u_int32_t current;
+>   
+> @@ -756,8 +750,7 @@ skip_input_bytes(rstrm, cnt)
+>   }
+>   
+>   static u_int
+> -fix_buf_size(s)
+> -	u_int s;
+> +fix_buf_size(u_int s)
+>   {
+>   
+>   	if (s < 100)
+> @@ -769,9 +762,9 @@ fix_buf_size(s)
+>    * Reallocate the input buffer for a non-block stream.
+>    */
+>   static bool_t
+> -realloc_stream(rstrm, size)
+> -	RECSTREAM *rstrm;
+> -	int size;
+> +realloc_stream(
+> +	RECSTREAM *rstrm,
+> +	int size)
+>   {
+>   	ptrdiff_t diff;
+>   	char *buf;
+> diff --git a/src/xdr_reference.c b/src/xdr_reference.c
+> index 13f6410..9c7b24e 100644
+> --- a/src/xdr_reference.c
+> +++ b/src/xdr_reference.c
+> @@ -58,11 +58,11 @@
+>    * proc is the routine to handle the referenced structure.
+>    */
+>   bool_t
+> -xdr_reference(xdrs, pp, size, proc)
+> -	XDR *xdrs;
+> -	caddr_t *pp;		/* the pointer to work on */
+> -	u_int size;		/* size of the object pointed to */
+> -	xdrproc_t proc;		/* xdr routine to handle the object */
+> +xdr_reference(
+> +	XDR *xdrs,
+> +	caddr_t *pp,		/* the pointer to work on */
+> +	u_int size,		/* size of the object pointed to */
+> +	xdrproc_t proc)		/* xdr routine to handle the object */
+>   {
+>   	caddr_t loc = *pp;
+>   	bool_t stat;
+> @@ -115,11 +115,11 @@ xdr_reference(xdrs, pp, size, proc)
+>    *
+>    */
+>   bool_t
+> -xdr_pointer(xdrs,objpp,obj_size,xdr_obj)
+> -	XDR *xdrs;
+> -	char **objpp;
+> -	u_int obj_size;
+> -	xdrproc_t xdr_obj;
+> +xdr_pointer(
+> +	XDR *xdrs,
+> +	char **objpp,
+> +	u_int obj_size,
+> +	xdrproc_t xdr_obj)
+>   {
+>   
+>   	bool_t more_data;
+> diff --git a/src/xdr_sizeof.c b/src/xdr_sizeof.c
+> index 79d6707..af3c313 100644
+> --- a/src/xdr_sizeof.c
+> +++ b/src/xdr_sizeof.c
+> @@ -44,9 +44,7 @@
+>   
+>   /* ARGSUSED */
+>   static bool_t
+> -x_putlong(xdrs, longp)
+> -	XDR *xdrs;
+> -	long *longp;
+> +x_putlong(XDR *xdrs, const long *longp)
+>   {
+>   	xdrs->x_handy += BYTES_PER_XDR_UNIT;
+>   	return (TRUE);
+> @@ -54,36 +52,31 @@ x_putlong(xdrs, longp)
+>   
+>   /* ARGSUSED */
+>   static bool_t
+> -x_putbytes(xdrs, bp, len)
+> -	XDR *xdrs;
+> -	char  *bp;
+> -	u_int len;
+> +x_putbytes(
+> +	XDR *xdrs,
+> +	const char  *bp,
+> +	u_int len)
+>   {
+>   	xdrs->x_handy += len;
+>   	return (TRUE);
+>   }
+>   
+>   static u_int
+> -x_getpostn(xdrs)
+> -	XDR *xdrs;
+> +x_getpostn(XDR *xdrs)
+>   {
+>   	return (xdrs->x_handy);
+>   }
+>   
+>   /* ARGSUSED */
+>   static bool_t
+> -x_setpostn(xdrs, pos)
+> -	XDR *xdrs;
+> -	u_int pos;
+> +x_setpostn(XDR *xdrs, u_int pos)
+>   {
+>   	/* This is not allowed */
+>   	return (FALSE);
+>   }
+>   
+>   static int32_t *
+> -x_inline(xdrs, len)
+> -	XDR *xdrs;
+> -	u_int len;
+> +x_inline(XDR *xdrs, u_int len)
+>   {
+>   	if (len == 0) {
+>   		return (NULL);
+> @@ -117,8 +110,7 @@ harmless()
+>   }
+>   
+>   static void
+> -x_destroy(xdrs)
+> -	XDR *xdrs;
+> +x_destroy(XDR *xdrs)
+>   {
+>   	xdrs->x_handy = 0;
+>   	xdrs->x_base = 0;
+> @@ -130,9 +122,7 @@ x_destroy(xdrs)
+>   }
+>   
+>   unsigned long
+> -xdr_sizeof(func, data)
+> -	xdrproc_t func;
+> -	void *data;
+> +xdr_sizeof(xdrproc_t func, void *data)
+>   {
+>   	XDR x;
+>   	struct xdr_ops ops;
+> diff --git a/src/xdr_stdio.c b/src/xdr_stdio.c
+> index 846c7bf..699de39 100644
+> --- a/src/xdr_stdio.c
+> +++ b/src/xdr_stdio.c
+> @@ -74,10 +74,10 @@ static const struct xdr_ops	xdrstdio_ops = {
+>    * Operation flag is set to op.
+>    */
+>   void
+> -xdrstdio_create(xdrs, file, op)
+> -	XDR *xdrs;
+> -	FILE *file;
+> -	enum xdr_op op;
+> +xdrstdio_create(
+> +	XDR *xdrs,
+> +	FILE *file,
+> +	enum xdr_op op)
+>   {
+>   
+>   	xdrs->x_op = op;
+> @@ -92,17 +92,16 @@ xdrstdio_create(xdrs, file, op)
+>    * Cleans up the xdr stream handle xdrs previously set up by xdrstdio_create.
+>    */
+>   static void
+> -xdrstdio_destroy(xdrs)
+> -	XDR *xdrs;
+> +xdrstdio_destroy(XDR *xdrs)
+>   {
+>   	(void)fflush((FILE *)xdrs->x_private);
+>   		/* XXX: should we close the file ?? */
+>   }
+>   
+>   static bool_t
+> -xdrstdio_getlong(xdrs, lp)
+> -	XDR *xdrs;
+> -	long *lp;
+> +xdrstdio_getlong(
+> +	XDR *xdrs,
+> +	long *lp)
+>   {
+>   	int32_t mycopy;
+>   
+> @@ -114,9 +113,9 @@ xdrstdio_getlong(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrstdio_putlong(xdrs, lp)
+> -	XDR *xdrs;
+> -	const long *lp;
+> +xdrstdio_putlong(
+> +	XDR *xdrs,
+> +	const long *lp)
+>   {
+>   	int32_t mycopy;
+>   
+> @@ -132,10 +131,10 @@ xdrstdio_putlong(xdrs, lp)
+>   }
+>   
+>   static bool_t
+> -xdrstdio_getbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	char *addr;
+> -	u_int len;
+> +xdrstdio_getbytes(
+> +	XDR *xdrs,
+> +	char *addr,
+> +	u_int len)
+>   {
+>   
+>   	if ((len != 0) && (fread(addr, (size_t)len, 1, (FILE *)xdrs->x_private) != 1))
+> @@ -144,10 +143,10 @@ xdrstdio_getbytes(xdrs, addr, len)
+>   }
+>   
+>   static bool_t
+> -xdrstdio_putbytes(xdrs, addr, len)
+> -	XDR *xdrs;
+> -	const char *addr;
+> -	u_int len;
+> +xdrstdio_putbytes(
+> +	XDR *xdrs,
+> +	const char *addr,
+> +	u_int len)
+>   {
+>   
+>   	if ((len != 0) && (fwrite(addr, (size_t)len, 1,
+> @@ -157,17 +156,16 @@ xdrstdio_putbytes(xdrs, addr, len)
+>   }
+>   
+>   static u_int
+> -xdrstdio_getpos(xdrs)
+> -	XDR *xdrs;
+> +xdrstdio_getpos(XDR *xdrs)
+>   {
+>   
+>   	return ((u_int) ftell((FILE *)xdrs->x_private));
+>   }
+>   
+>   static bool_t
+> -xdrstdio_setpos(xdrs, pos)
+> -	XDR *xdrs;
+> -	u_int pos;
+> +xdrstdio_setpos(
+> +	XDR *xdrs,
+> +	u_int pos)
+>   {
+>   
+>   	return ((fseek((FILE *)xdrs->x_private, (long)pos, 0) < 0) ?
+> @@ -176,9 +174,9 @@ xdrstdio_setpos(xdrs, pos)
+>   
+>   /* ARGSUSED */
+>   static int32_t *
+> -xdrstdio_inline(xdrs, len)
+> -	XDR *xdrs;
+> -	u_int len;
+> +xdrstdio_inline(
+> +	XDR *xdrs,
+> +	u_int len)
+>   {
+>   
+>   	/*
 
 
