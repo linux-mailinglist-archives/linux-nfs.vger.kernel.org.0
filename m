@@ -1,1348 +1,296 @@
-Return-Path: <linux-nfs+bounces-13884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1EF4B34529
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 17:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CF9EB345A9
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 17:24:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CE181883C32
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 15:05:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0408189B368
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 15:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66BE1F4E57;
-	Mon, 25 Aug 2025 15:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDFC2FD1A0;
+	Mon, 25 Aug 2025 15:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gj+QHbdq"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="BAqD/rjD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBEE2ECE8A
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 15:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8332FC864
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 15:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756134310; cv=none; b=uDrXmQD30NVEPq+xuF7UBF5O7cd+2IhoNHCWk/z+zuQXyhSVcBbrRawSqYC2R3/1UkdSZK7KzbUimZbaFfej4PtVmRQ0nM2ESdCWTXuPcSvbp/Od0fFCo8He/+EtHXYLwg7bUX32tDva8j2oRVfOUKN/bV+PkjMG2LFcB0TpaV4=
+	t=1756135447; cv=none; b=E3cyKouq+DBQUbQnR2RGAp03xi1zG8jUxRBtlaAVZn1eAEc3XlxBye7VaYddiU/I5L+ziOTdP+I1PQgc9LxJ7J+EFZbtdv1CSLqq0AwxxsSwXLyP8TL2m2F5CEOsJLppO9nEZuR0iVeZkZa9jFQUBWAVQ8j+vBFMr+HnL4qJW3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756134310; c=relaxed/simple;
-	bh=/m38nbAsLVY+TSqvJ1dwTBIHDl4UIFv4YSxlktQswq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sjs7zhwAZZwrvnQWt2D5OjEebPaQHYZfcqj7Cl8eOYvXbh3OomxNdM4ufQYq25NntXAKEzuZMGK6BxjYACmuGVgesMd/4XYdbeZh+N4gHrWIgIs4QqzOGTAa/qw/20yt4HQAAo8sYwRBXWaDGFmYlwRssgVaPfehaCAJSaD1XcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gj+QHbdq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756134307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4xJFQFqjyH8FX9VZw1bwpHpmw0QZK+7WGumYLe+O8xY=;
-	b=Gj+QHbdqXNRi1Ll6Pu9ESMn55lH+LlxvK503EL73uX6kzLgAk4XKJEmJLF2npEp3zWqbpA
-	ZUmoVaDmBdFqOofN0iEk09qafFKbA91xzSD1bPYqkCFjcpVIfQgqPNKF9HGZPNzdllTTKk
-	1OMT5M+ATsQqXSHKx+LpUkUs3sPeGl8=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-693-eEn9xpzcNVWJ-dqOtfzhmw-1; Mon, 25 Aug 2025 11:05:05 -0400
-X-MC-Unique: eEn9xpzcNVWJ-dqOtfzhmw-1
-X-Mimecast-MFC-AGG-ID: eEn9xpzcNVWJ-dqOtfzhmw_1756134304
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-71d605339dbso59269017b3.2
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 08:05:05 -0700 (PDT)
+	s=arc-20240116; t=1756135447; c=relaxed/simple;
+	bh=Al/SdFlVdwsboKTKX9VTYI5ARDu++bODp3uWJuIq7rM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JoU+DDbYZjFdpFvRQxA3FviNpy/oojKELq2Ja02Sc92s/S2tBxu+vXfhFGdLMnF1VEDgLbDUXDeS/cLxFdqxjNm68Ibai9OwwyjUtZoCdd//wlfHM7onEvGX+EW+bFox4A1+G2IU7d0grZ/wZJ8yyGm6dlBmfW5x4nvcgS2xeWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=BAqD/rjD; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55f39c0a22dso2514911e87.1
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 08:24:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1756135444; x=1756740244; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TapsdavtgNfz8Ufj9DWudHiGzx6EpwiFuyJUyv0ekqE=;
+        b=BAqD/rjDfEEtCNQ8tZlGRNZi6IVbibIjXYN42G3nqeld0Rn42YmkKXVM/6nbnhEpD2
+         1WQPMtlcbkAn+LEx4W29/eMktnM8wcoifQPn0iYZFsQFf54oLYtfbrCOqvd6e9MbMal6
+         piJJulmeWfh9Du//QIh+75wnGiAsSYrc5Z0qEZpLZD5hTN+Q2iTqprx2/0yWaDgUUXMf
+         QRaD+4gmN7VafNDdfBK0U86jgqkCZsGYVbBnYITk8afnbytNFevghxDyBiBG4QnOAi+H
+         kdJc6yPmcnD6M8YeD7egSgEf6skni+zu25j4PAbZMieEiYcE6H0436l1ebnV/oQK+PMe
+         /a7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756134304; x=1756739104;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4xJFQFqjyH8FX9VZw1bwpHpmw0QZK+7WGumYLe+O8xY=;
-        b=bvRpmUArc8t9z38QYGKSM2M96NpiwVDHT3PdOCvd7wwLAnVZOGY+3Vy+nY7OveRWNS
-         50nEX9rDMCUXzMbb1iXYu4UXIqHnIpn4v+1NLhx6+0KbDRWjKke8x2fo9SWRQAqbLDLT
-         1tbuX6jrxOpeXS5uarKnoScHncxmpscCGQJXfx5KwEOe7sa9DWjjOAeofMEVHKz/b6dT
-         NH3JlBnLQpmTRz+dsKRnO2w6mHLvplQttn9eVyHMAobrQY8hpomzUFUAHBl6Z1pciHp0
-         P1nH/LyvjbjCpw/+wwdzwrNbwypSrz2WGiLmI2zGSKcQU+63qDF/dvUbqjuhZyMzOLKu
-         8iBw==
-X-Gm-Message-State: AOJu0Yyqnm1tPWZjG5Rk3u+1q4iJQAVdom2QwKUybjbykkgJNvCVCbW4
-	VlsKnr+UdCDAib7TbRt2we/ETRNUNycvnOXxLxTw+rjeRPhGLv3oB1wK1E8ZcExVKMk1rmEP+kr
-	kum8lUGjdsfZq962eOOdSF8xd5vW4HWJ20qBT1lty/87TQVwV35rjsAS11qJC2g==
-X-Gm-Gg: ASbGncvE2EwqBA06O9Pnchl+bKFnp1/vg8buL38mJLOuNnGCU6wNpXGrZSImDWawe6E
-	dQhUnD2IqmlkjgXTqOn7tow/+HF9P3EoHNZnNz+dANoAx2RRN3GkW28M0+34PnqkkHD5cABfSBJ
-	QB+aot1TwiZhthXbSfMxb8gUUnEe+FH1QSRdRXdXMFAyy2y/iZUGeLuph1z9g0UQx2VCHbPo6H5
-	RSWqwMAd2JdRZcAEJKdR5qCjYSpp55szlDJCTMkdx8ORvjtJEiZ4lbX6M8DvmG8H9IyRSgebNXz
-	PdvjyV27DETXqfOIprcVBDJDvLr4zC/s3dMF77py
-X-Received: by 2002:a05:690c:17:b0:71e:7fea:bb20 with SMTP id 00721157ae682-71fdc3cf61dmr128722737b3.32.1756134303887;
-        Mon, 25 Aug 2025 08:05:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZVc+KnKejoj1N/kvG/EK55xdNY7plcdY3mAoLGjbdJ57atzMLK4czFsgvvyRmjsOJbMhcTw==
-X-Received: by 2002:a05:690c:17:b0:71e:7fea:bb20 with SMTP id 00721157ae682-71fdc3cf61dmr128721587b3.32.1756134302673;
-        Mon, 25 Aug 2025 08:05:02 -0700 (PDT)
-Received: from [172.31.1.136] ([70.105.241.207])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71ff18ea7a3sm17643337b3.69.2025.08.25.08.05.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 08:05:01 -0700 (PDT)
-Message-ID: <b8250753-049c-4141-9310-abb57980d21d@redhat.com>
-Date: Mon, 25 Aug 2025 11:05:00 -0400
+        d=1e100.net; s=20230601; t=1756135444; x=1756740244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TapsdavtgNfz8Ufj9DWudHiGzx6EpwiFuyJUyv0ekqE=;
+        b=fG413T/Z3ye/2EbC+HE1JUPAzCUbWwkU59bZlmsmSXH8jAsfwn+ihx9eYMUDPaIRoV
+         /vPov6+SI0CW0k1j4PT7m5sWoPxDaDxA0CPY2yJlQoCBO2+Ff00f58HIkrXiM0KRRDTX
+         cSlQNif6QJhz2TLNVKTip1ccmCKr2YUj/ki+9qoGYgTeRiHIhb0bsb57EfezAjeBNaSS
+         +pyRM4V8tOJezhCIrB7AusyUecJifZ2EFY5bLvDfgseSZoXK4eYeI289RJ9j7vO9Vca/
+         JfercTK+Lo6iz++kD8VRIgsUg1glgE85PTt66bLh+CPUHssK7oGQ/VOBnf72kA3JTjMe
+         DYvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZxgxOgs8/Ld1rFOFMpVIDNbclqNivF635h+BAYeLmDgm/2/UYFT3LgrXjxFaqDOgPlFjxzd+u/sE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4xzzS9wbRVMPkcBVWJd+o+Ia4Wgwl65o7BgvTsWypn2+aHmfG
+	4/gOY3VNACbpchDCLySvSg4zUntaBzVG65jY0/rbUGaYjnNhubMJfY57GM1Yzj8hMxCJEvbkljw
+	WJmnmCHcnbLWL9k94n5MXN5cQ0hUqUHM=
+X-Gm-Gg: ASbGnctwwLmy2lnkHLcqQWB3SMpT1vekxZErzhIW+yksoeLv0eTD7honPiTnks+8CJh
+	tWDg/Vz8yWfQAse0vHX069aQAkyZ1aTwgu0/t/jtwzNs15ft/7rXIuayazaqBT7m4qzJxB3qOfm
+	4UoBuwxlv2nrfDLWOSfDMCmfwPDCC7eQrWkCloST7swZIDEa84Y8tYKd5sr62J9cFFgZDBUwBO4
+	Wi9Q64vsX7zlWP/Woqw1Uig3loGs28ctbffldwYOA==
+X-Google-Smtp-Source: AGHT+IHsfUqODCHvkXt9O/tYsG65yd+FzqcvP32bh3kHFg3DtPF9uxDXlTwy+hFx06btyljQS88oEwRPCTjjyM9Jxcs=
+X-Received: by 2002:a05:651c:2119:b0:336:6132:7002 with SMTP id
+ 38308e7fff4ca-336613274e1mr21131721fa.39.1756135443283; Mon, 25 Aug 2025
+ 08:24:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Libtirpc-devel] [PATCH 01/12] Convert old-style function
- definitions into modern-style definitions
-To: Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20250818150829.1044948-1-steved@redhat.com>
- <20250818150829.1044948-2-steved@redhat.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250818150829.1044948-2-steved@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CAN-5tyEammkfv3QGwe5Z38q1nFAxYV=REFDN++3XrX7Lni+H0A@mail.gmail.com>
+ <175573171079.2234665.16260718612520667514@noble.neil.brown.name> <CAN-5tyGXxzmMipt8fcdMkpSiPq8cxF5++OJcZriQbcjk9JK3GA@mail.gmail.com>
+In-Reply-To: <CAN-5tyGXxzmMipt8fcdMkpSiPq8cxF5++OJcZriQbcjk9JK3GA@mail.gmail.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Mon, 25 Aug 2025 11:23:51 -0400
+X-Gm-Features: Ac12FXxMOCQH0oOaWR5_WhUOwfxaznxkQ8Mi9RpaC_CW1SFIYZxRA8IBDAEPiDU
+Message-ID: <CAN-5tyEf2tGv=uSr+B6QRYfakUijNbenrVeDWkdyTobRjzny9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] lockd: while grace prefer to fail with nlm_lck_denied_grace_period
+To: NeilBrown <neil@brown.name>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, jlayton@kernel.org, 
+	linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com, tom@talpey.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Aug 21, 2025 at 9:56=E2=80=AFAM Olga Kornievskaia <aglo@umich.edu> =
+wrote:
+>
+> On Wed, Aug 20, 2025 at 7:15=E2=80=AFPM NeilBrown <neil@brown.name> wrote=
+:
+> >
+> > On Thu, 14 Aug 2025, Olga Kornievskaia wrote:
+> > > On Tue, Aug 12, 2025 at 8:05=E2=80=AFPM NeilBrown <neil@brown.name> w=
+rote:
+> > > >
+> > > > On Wed, 13 Aug 2025, Olga Kornievskaia wrote:
+> > > > > When nfsd is in grace and receives an NLM LOCK request which turn=
+s
+> > > > > out to have a conflicting delegation, return that the server is i=
+n
+> > > > > grace.
+
+My last attempt for restoring (prior to write delegations) behaviour
+vs what happens now (even with patch#1). I bring it up again because
+there has been misunderstanding of what the patch series is doing and
+I believe (some) technical concerns (regarding nfsv2 client) have been
+discussed and resolved.
+
+In the old code (prior to write delegations), when a v3 client sent a
+lock request (during grace period) and when a v4 client reclaimed the
+same lock after the server rebooted, the v3 client got the in_grace
+error.
+
+With patch #1 (not in question here), the code at least isn't failing
+the request with nlm_failed and instead drops the request. No lock
+failure but the overall behaviour of the nfs client is different
+(details below).
+
+> > > > > Reviewed-by: Jeff Layton <jlayton@redhat.com>
+> > > > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > > > ---
+> > > > >  fs/lockd/svc4proc.c | 15 +++++++++++++--
+> > > > >  1 file changed, 13 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> > > > > index 109e5caae8c7..7ac4af5c9875 100644
+> > > > > --- a/fs/lockd/svc4proc.c
+> > > > > +++ b/fs/lockd/svc4proc.c
+> > > > > @@ -141,8 +141,19 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, =
+struct nlm_res *resp)
+> > > > >       resp->cookie =3D argp->cookie;
+> > > > >
+> > > > >       /* Obtain client and file */
+> > > > > -     if ((resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &h=
+ost, &file)))
+> > > > > -             return resp->status =3D=3D nlm_drop_reply ? rpc_dro=
+p_reply :rpc_success;
+> > > > > +     resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, =
+&file);
+> > > > > +     switch (resp->status) {
+> > > > > +     case 0:
+> > > > > +             break;
+> > > > > +     case nlm_drop_reply:
+> > > > > +             if (locks_in_grace(SVC_NET(rqstp))) {
+> > > > > +                     resp->status =3D nlm_lck_denied_grace_perio=
+d;
+> > > >
+> > > > I think this is wrong.  If the lock request has the "reclaim" flag =
+set,
+> > > > then nlm_lck_denied_grace_period is not a meaningful error.
+> > > > nlm4svc_retrieve_args() returns nlm_drop_reply when there is a dela=
+y
+> > > > getting a response to an upcall to mountd.  For NLM the request rea=
+lly
+> > > > must be dropped.
+> > >
+> > > Thank you for pointing out this case so we are suggesting to.
+> > >
+> > > if (locks_in_grace(SVC_NET(rqstp)) && !argp->reclaim)
+> > >
+> > > However, I've been looking and looking but I cannot figure out how
+> > > nlm4svc_retrieve_args() would ever get nlm_drop_reply. You say it can
+> > > happen during the upcall to mountd. So that happens within nfsd_open(=
+)
+> > > call and a part of fh_verify().
+> > > To return nlm_drop_reply, nlm_fopen() must have gotten nfserr_dropit
+> > > from the nfsd_open().  I have searched and searched but I don't see
+> > > anything that ever sets nfserr_dropit (NFSERR_DROPIT).
+> > >
+> > > I searched the logs and nfserr_dropit was an error that was EAGAIN
+> > > translated into but then removed by the following patch.
+> >
+> > Oh.  I didn't know that.
+> > We now use RQ_DROPME instead.
+> > I guess we should remove NFSERR_DROPIT completely as it not used at all
+> > any more.
+> >
+> > Though returning nfserr_jukebox to an v2 client isn't a good idea....
+>
+> I'll take your word for you.
+
+I didn't write the correct words here. I have said the correct words
+in the other patch. v2 (or v3) client does not get an nfserr_jukebox.
+
+> > So I guess my main complaint isn't valid, but I still don't like this
+> > patch.  It seems an untidy place to put the locks_in_grace test.
+> > Other callers of nlm4svc_retrieve_args() check locks_in_grace() before
+> > making that call.  __nlm4svc_proc_lock probably should too.  Or is ther=
+e
+> > a reason that it is delayed until the middle of nlmsvc_lock()..
+>
+> I thought the same about why not adding the in_grace check and decided
+> that it was probably because you dont want to deny a lock if there are
+> no conflicts. If we add it, somebody might notice and will complain
+> that they can't get their lock when there are no conflicts.
+
+The disadvantage of unconditionally adding in_grace check() in the
+lock call is that again it would produce a difference in behaviour
+where some lock would not be granted as fast as before (ie., some
+environments might notice the change?).
+
+> > The patch is not needed and isn't clearly an improvement, so I would
+> > rather it were dropped.
+>
+> I'm not against dropping this patch if the conclusion is that dropping
+> the packet is no worse than returning in_grace error.
+
+My argument for inclusion of this patch is that it restores previous
+behaviour that the nfs client experienced before (ie., receiving
+in_grace error). When we rely on drop-retry behavior, can there be
+problems that the client runs out of re-tries and fails the request
+(nlm has a hard coded retry limit of 5 and then its own timeout
+value)?
+
+I admit my reasons are hypothetical, we can wait until somebody complains.
 
 
-
-On 8/18/25 11:08 AM, Steve Dickson via Libtirpc-devel wrote:
-> With newer compilers (gcc 15.1.1) -Wold-style-definition
-> flag is set by default which causes warnings for
-> most of the functions in these files.
-> 
->      warning: old-style function definition [-Wold-style-definition]
-> 
-> The warnings are remove by converting the old-style
-> function definitions into modern-style definitions
-> 
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... (tag: libtirpc-1-3-7-rc4)
-
-steved.
-> ---
->   src/xdr.c           | 224 ++++++++++++++++++++++----------------------
->   src/xdr_array.c     |  26 ++---
->   src/xdr_float.c     |  12 +--
->   src/xdr_mem.c       |  74 +++++++--------
->   src/xdr_rec.c       | 121 +++++++++++-------------
->   src/xdr_reference.c |  20 ++--
->   src/xdr_sizeof.c    |  30 ++----
->   src/xdr_stdio.c     |  54 +++++------
->   8 files changed, 270 insertions(+), 291 deletions(-)
-> 
-> diff --git a/src/xdr.c b/src/xdr.c
-> index 28d1382..27b5d8d 100644
-> --- a/src/xdr.c
-> +++ b/src/xdr.c
-> @@ -66,9 +66,9 @@ static const char xdr_zero[BYTES_PER_XDR_UNIT] = { 0, 0, 0, 0 };
->    * Not a filter, but a convenient utility nonetheless
->    */
->   void
-> -xdr_free(proc, objp)
-> -	xdrproc_t proc;
-> -	void *objp;
-> +xdr_free(
-> +	xdrproc_t proc,
-> +	void *objp)
->   {
->   	XDR x;
->   	
-> @@ -91,9 +91,9 @@ xdr_void(void)
->    * XDR integers
->    */
->   bool_t
-> -xdr_int(xdrs, ip)
-> -	XDR *xdrs;
-> -	int *ip;
-> +xdr_int(
-> +	XDR *xdrs,
-> +	int *ip)
->   {
->   	long l;
->   
-> @@ -121,9 +121,9 @@ xdr_int(xdrs, ip)
->    * XDR unsigned integers
->    */
->   bool_t
-> -xdr_u_int(xdrs, up)
-> -	XDR *xdrs;
-> -	u_int *up;
-> +xdr_u_int(
-> +	XDR *xdrs,
-> +	u_int *up)
->   {
->   	u_long l;
->   
-> @@ -153,9 +153,9 @@ xdr_u_int(xdrs, up)
->    * same as xdr_u_long - open coded to save a proc call!
->    */
->   bool_t
-> -xdr_long(xdrs, lp)
-> -	XDR *xdrs;
-> -	long *lp;
-> +xdr_long(
-> +	XDR *xdrs,
-> +	long *lp)
->   {
->   	switch (xdrs->x_op) {
->   	case XDR_ENCODE:
-> @@ -174,9 +174,9 @@ xdr_long(xdrs, lp)
->    * same as xdr_long - open coded to save a proc call!
->    */
->   bool_t
-> -xdr_u_long(xdrs, ulp)
-> -	XDR *xdrs;
-> -	u_long *ulp;
-> +xdr_u_long(
-> +	XDR *xdrs,
-> +	u_long *ulp)
->   {
->   	switch (xdrs->x_op) {
->   	case XDR_ENCODE:
-> @@ -196,9 +196,9 @@ xdr_u_long(xdrs, ulp)
->    * same as xdr_u_int32_t - open coded to save a proc call!
->    */
->   bool_t
-> -xdr_int32_t(xdrs, int32_p)
-> -	XDR *xdrs;
-> -	int32_t *int32_p;
-> +xdr_int32_t(
-> +	XDR *xdrs,
-> +	int32_t *int32_p)
->   {
->   	long l;
->   
-> @@ -227,9 +227,9 @@ xdr_int32_t(xdrs, int32_p)
->    * same as xdr_int32_t - open coded to save a proc call!
->    */
->   bool_t
-> -xdr_u_int32_t(xdrs, u_int32_p)
-> -	XDR *xdrs;
-> -	u_int32_t *u_int32_p;
-> +xdr_u_int32_t(
-> +	XDR *xdrs,
-> +	u_int32_t *u_int32_p)
->   {
->   	u_long l;
->   
-> @@ -258,9 +258,9 @@ xdr_u_int32_t(xdrs, u_int32_p)
->    * XDR unsigned 32-bit integers
->    */
->   bool_t
-> -xdr_uint32_t(xdrs, uint32_p)
-> -	XDR *xdrs;
-> -	uint32_t *uint32_p;
-> +xdr_uint32_t(
-> +	XDR *xdrs,
-> +	uint32_t *uint32_p)
->   {
->   	return (xdr_u_int32_t(xdrs, (u_int32_t *)uint32_p));
->   }
-> @@ -270,9 +270,9 @@ xdr_uint32_t(xdrs, uint32_p)
->    * XDR short integers
->    */
->   bool_t
-> -xdr_short(xdrs, sp)
-> -	XDR *xdrs;
-> -	short *sp;
-> +xdr_short(
-> +	XDR *xdrs,
-> +	short *sp)
->   {
->   	long l;
->   
-> @@ -300,9 +300,9 @@ xdr_short(xdrs, sp)
->    * XDR unsigned short integers
->    */
->   bool_t
-> -xdr_u_short(xdrs, usp)
-> -	XDR *xdrs;
-> -	u_short *usp;
-> +xdr_u_short(
-> +	XDR *xdrs,
-> +	u_short *usp)
->   {
->   	u_long l;
->   
-> @@ -331,9 +331,9 @@ xdr_u_short(xdrs, usp)
->    * XDR 16-bit integers
->    */
->   bool_t
-> -xdr_int16_t(xdrs, int16_p)
-> -	XDR *xdrs;
-> -	int16_t *int16_p;
-> +xdr_int16_t(
-> +	XDR *xdrs,
-> +	int16_t *int16_p)
->   {
->   	long l;
->   
-> @@ -361,9 +361,9 @@ xdr_int16_t(xdrs, int16_p)
->    * XDR unsigned 16-bit integers
->    */
->   bool_t
-> -xdr_u_int16_t(xdrs, u_int16_p)
-> -	XDR *xdrs;
-> -	u_int16_t *u_int16_p;
-> +xdr_u_int16_t(
-> +	XDR *xdrs,
-> +	u_int16_t *u_int16_p)
->   {
->   	u_long l;
->   
-> @@ -392,9 +392,9 @@ xdr_u_int16_t(xdrs, u_int16_p)
->    * XDR unsigned 16-bit integers
->    */
->   bool_t
-> -xdr_uint16_t(xdrs, uint16_p)
-> -	XDR *xdrs;
-> -	uint16_t *uint16_p;
-> +xdr_uint16_t(
-> +	XDR *xdrs,
-> +	uint16_t *uint16_p)
->   {
->   	return (xdr_u_int16_t(xdrs, (u_int16_t *)uint16_p));
->   }
-> @@ -404,9 +404,9 @@ xdr_uint16_t(xdrs, uint16_p)
->    * XDR 8-bit integers
->    */
->   bool_t
-> -xdr_int8_t(xdrs, int8_p)
-> -	XDR *xdrs;
-> -	int8_t *int8_p;
-> +xdr_int8_t(
-> +	XDR *xdrs,
-> +	int8_t *int8_p)
->   {
->   	long l;
->   
-> @@ -435,9 +435,9 @@ xdr_int8_t(xdrs, int8_p)
->    * XDR unsigned 8-bit integers
->    */
->   bool_t
-> -xdr_u_int8_t(xdrs, uint8_p)
-> -	XDR *xdrs;
-> -	uint8_t *uint8_p;
-> +xdr_u_int8_t(
-> +	XDR *xdrs,
-> +	uint8_t *uint8_p)
->   {
->   	u_long l;
->   
-> @@ -466,9 +466,9 @@ xdr_u_int8_t(xdrs, uint8_p)
->    * XDR unsigned 8-bit integers
->    */
->   bool_t
-> -xdr_uint8_t(xdrs, uint8_p)
-> -	XDR *xdrs;
-> -	uint8_t *uint8_p;
-> +xdr_uint8_t(
-> +	XDR *xdrs,
-> +	uint8_t *uint8_p)
->   {
->   	return (xdr_u_int8_t(xdrs, (uint8_t *)uint8_p));
->   }
-> @@ -478,9 +478,9 @@ xdr_uint8_t(xdrs, uint8_p)
->    * XDR a char
->    */
->   bool_t
-> -xdr_char(xdrs, cp)
-> -	XDR *xdrs;
-> -	char *cp;
-> +xdr_char(
-> +	XDR *xdrs,
-> +	char *cp)
->   {
->   	int i;
->   
-> @@ -496,9 +496,9 @@ xdr_char(xdrs, cp)
->    * XDR an unsigned char
->    */
->   bool_t
-> -xdr_u_char(xdrs, cp)
-> -	XDR *xdrs;
-> -	u_char *cp;
-> +xdr_u_char(
-> +	XDR *xdrs,
-> +	u_char *cp)
->   {
->   	u_int u;
->   
-> @@ -514,9 +514,9 @@ xdr_u_char(xdrs, cp)
->    * XDR booleans
->    */
->   bool_t
-> -xdr_bool(xdrs, bp)
-> -	XDR *xdrs;
-> -	bool_t *bp;
-> +xdr_bool(
-> +	XDR *xdrs,
-> +	bool_t *bp)
->   {
->   	long lb;
->   
-> @@ -544,9 +544,9 @@ xdr_bool(xdrs, bp)
->    * XDR enumerations
->    */
->   bool_t
-> -xdr_enum(xdrs, ep)
-> -	XDR *xdrs;
-> -	enum_t *ep;
-> +xdr_enum(
-> +	XDR *xdrs,
-> +	enum_t *ep)
->   {
->   	enum sizecheck { SIZEVAL };	/* used to find the size of an enum */
->   
-> @@ -570,10 +570,10 @@ xdr_enum(xdrs, ep)
->    * cp points to the opaque object and cnt gives the byte length.
->    */
->   bool_t
-> -xdr_opaque(xdrs, cp, cnt)
-> -	XDR *xdrs;
-> -	caddr_t cp;
-> -	u_int cnt;
-> +xdr_opaque(
-> +	XDR *xdrs,
-> +	caddr_t cp,
-> +	u_int cnt)
->   {
->   	u_int rndup;
->   	static int crud[BYTES_PER_XDR_UNIT];
-> @@ -622,11 +622,11 @@ xdr_opaque(xdrs, cp, cnt)
->    * If *cpp is NULL maxsize bytes are allocated
->    */
->   bool_t
-> -xdr_bytes(xdrs, cpp, sizep, maxsize)
-> -	XDR *xdrs;
-> -	char **cpp;
-> -	u_int *sizep;
-> -	u_int maxsize;
-> +xdr_bytes(
-> +	XDR *xdrs,
-> +	char **cpp,
-> +	u_int *sizep,
-> +	u_int maxsize)
->   {
->   	char *sp = *cpp;  /* sp is the actual string pointer */
->   	u_int nodesize;
-> @@ -687,9 +687,9 @@ xdr_bytes(xdrs, cpp, sizep, maxsize)
->    * Implemented here due to commonality of the object.
->    */
->   bool_t
-> -xdr_netobj(xdrs, np)
-> -	XDR *xdrs;
-> -	struct netobj *np;
-> +xdr_netobj(
-> +	XDR *xdrs,
-> +	struct netobj *np)
->   {
->   
->   	return (xdr_bytes(xdrs, &np->n_bytes, &np->n_len, MAX_NETOBJ_SZ));
-> @@ -707,12 +707,12 @@ xdr_netobj(xdrs, np)
->    * If there is no specific or default routine an error is returned.
->    */
->   bool_t
-> -xdr_union(xdrs, dscmp, unp, choices, dfault)
-> -	XDR *xdrs;
-> -	enum_t *dscmp;		/* enum to decide which arm to work on */
-> -	char *unp;		/* the union itself */
-> -	const struct xdr_discrim *choices;	/* [value, xdr proc] for each arm */
-> -	xdrproc_t dfault;	/* default xdr routine */
-> +xdr_union(
-> +	XDR *xdrs,
-> +	enum_t *dscmp,		/* enum to decide which arm to work on */
-> +	char *unp,		/* the union itself */
-> +	const struct xdr_discrim *choices,	/* [value, xdr proc] for each arm */
-> +	xdrproc_t dfault)	/* default xdr routine */
->   {
->   	enum_t dscm;
->   
-> @@ -756,10 +756,10 @@ xdr_union(xdrs, dscmp, unp, choices, dfault)
->    * of the string as specified by a protocol.
->    */
->   bool_t
-> -xdr_string(xdrs, cpp, maxsize)
-> -	XDR *xdrs;
-> -	char **cpp;
-> -	u_int maxsize;
-> +xdr_string(
-> +	XDR *xdrs,
-> +	char **cpp,
-> +	u_int maxsize)
->   {
->   	char *sp = *cpp;  /* sp is the actual string pointer */
->   	u_int size;
-> @@ -839,9 +839,9 @@ xdr_string(xdrs, cpp, maxsize)
->    * routines like clnt_call
->    */
->   bool_t
-> -xdr_wrapstring(xdrs, cpp)
-> -	XDR *xdrs;
-> -	char **cpp;
-> +xdr_wrapstring(
-> +	XDR *xdrs,
-> +	char **cpp)
->   {
->   	return xdr_string(xdrs, cpp, RPC_MAXDATASIZE);
->   }
-> @@ -858,9 +858,9 @@ xdr_wrapstring(xdrs, cpp)
->    * XDR 64-bit integers
->    */
->   bool_t
-> -xdr_int64_t(xdrs, llp)
-> -	XDR *xdrs;
-> -	int64_t *llp;
-> +xdr_int64_t(
-> +	XDR *xdrs,
-> +	int64_t *llp)
->   {
->   	u_long ul[2];
->   
-> @@ -892,9 +892,9 @@ xdr_int64_t(xdrs, llp)
->    * XDR unsigned 64-bit integers
->    */
->   bool_t
-> -xdr_u_int64_t(xdrs, ullp)
-> -	XDR *xdrs;
-> -	u_int64_t *ullp;
-> +xdr_u_int64_t(
-> +	XDR *xdrs,
-> +	u_int64_t *ullp)
->   {
->   	u_long ul[2];
->   
-> @@ -926,9 +926,9 @@ xdr_u_int64_t(xdrs, ullp)
->    * XDR unsigned 64-bit integers
->    */
->   bool_t
-> -xdr_uint64_t(xdrs, ullp)
-> -	XDR *xdrs;
-> -	uint64_t *ullp;
-> +xdr_uint64_t(
-> +	XDR *xdrs,
-> +	uint64_t *ullp)
->   {
->   	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
->   }
-> @@ -938,9 +938,9 @@ xdr_uint64_t(xdrs, ullp)
->    * XDR hypers
->    */
->   bool_t
-> -xdr_hyper(xdrs, llp)
-> -	XDR *xdrs;
-> -	longlong_t *llp;
-> +xdr_hyper(
-> +	XDR *xdrs,
-> +	longlong_t *llp)
->   {
->   
->   	/*
-> @@ -955,9 +955,9 @@ xdr_hyper(xdrs, llp)
->    * XDR unsigned hypers
->    */
->   bool_t
-> -xdr_u_hyper(xdrs, ullp)
-> -	XDR *xdrs;
-> -	u_longlong_t *ullp;
-> +xdr_u_hyper(
-> +	XDR *xdrs,
-> +	u_longlong_t *ullp)
->   {
->   
->   	/*
-> @@ -972,9 +972,9 @@ xdr_u_hyper(xdrs, ullp)
->    * XDR longlong_t's
->    */
->   bool_t
-> -xdr_longlong_t(xdrs, llp)
-> -	XDR *xdrs;
-> -	longlong_t *llp;
-> +xdr_longlong_t(
-> +	XDR *xdrs,
-> +	longlong_t *llp)
->   {
->   
->   	/*
-> @@ -989,9 +989,9 @@ xdr_longlong_t(xdrs, llp)
->    * XDR u_longlong_t's
->    */
->   bool_t
-> -xdr_u_longlong_t(xdrs, ullp)
-> -	XDR *xdrs;
-> -	u_longlong_t *ullp;
-> +xdr_u_longlong_t(
-> +	XDR *xdrs,
-> +	u_longlong_t *ullp)
->   {
->   
->   	/*
-> @@ -1005,9 +1005,9 @@ xdr_u_longlong_t(xdrs, ullp)
->    * XDR quad_t
->    */
->   bool_t
-> -xdr_quad_t(xdrs, llp)
-> -	XDR *xdrs;
-> -	int64_t *llp;
-> +xdr_quad_t(
-> +	XDR *xdrs,
-> +	int64_t *llp)
->   {
->   	return (xdr_int64_t(xdrs, (int64_t *)llp));
->   }
-> @@ -1017,9 +1017,9 @@ xdr_quad_t(xdrs, llp)
->    * XDR u_quad_t
->    */
->   bool_t
-> -xdr_u_quad_t(xdrs, ullp)
-> -	XDR *xdrs;
-> -	u_int64_t *ullp;
-> +xdr_u_quad_t(
-> +	XDR *xdrs,
-> +	u_int64_t *ullp)
->   {
->   	return (xdr_u_int64_t(xdrs, (u_int64_t *)ullp));
->   }
-> diff --git a/src/xdr_array.c b/src/xdr_array.c
-> index 7fc8fb8..d95512b 100644
-> --- a/src/xdr_array.c
-> +++ b/src/xdr_array.c
-> @@ -55,13 +55,13 @@
->    * xdr procedure to call to handle each element of the array.
->    */
->   bool_t
-> -xdr_array(xdrs, addrp, sizep, maxsize, elsize, elproc)
-> -	XDR *xdrs;
-> -	caddr_t *addrp;		/* array pointer */
-> -	u_int *sizep;		/* number of elements */
-> -	u_int maxsize;		/* max numberof elements */
-> -	u_int elsize;		/* size in bytes of each element */
-> -	xdrproc_t elproc;	/* xdr routine to handle each element */
-> +xdr_array(
-> +	XDR *xdrs,
-> +	caddr_t *addrp,		/* array pointer */
-> +	u_int *sizep,		/* number of elements */
-> +	u_int maxsize,		/* max numberof elements */
-> +	u_int elsize,		/* size in bytes of each element */
-> +	xdrproc_t elproc)	/* xdr routine to handle each element */
->   {
->   	u_int i;
->   	caddr_t target = *addrp;
-> @@ -133,12 +133,12 @@ xdr_array(xdrs, addrp, sizep, maxsize, elsize, elproc)
->    * > xdr_elem: routine to XDR each element
->    */
->   bool_t
-> -xdr_vector(xdrs, basep, nelem, elemsize, xdr_elem)
-> -	XDR *xdrs;
-> -	char *basep;
-> -	u_int nelem;
-> -	u_int elemsize;
-> -	xdrproc_t xdr_elem;	
-> +xdr_vector(
-> +	XDR *xdrs,
-> +	char *basep,
-> +	u_int nelem,
-> +	u_int elemsize,
-> +	xdrproc_t xdr_elem)	
->   {
->   	u_int i;
->   	char *elptr;
-> diff --git a/src/xdr_float.c b/src/xdr_float.c
-> index c86d516..280f606 100644
-> --- a/src/xdr_float.c
-> +++ b/src/xdr_float.c
-> @@ -95,9 +95,9 @@ static struct sgl_limits {
->   #endif /* vax */
->   
->   bool_t
-> -xdr_float(xdrs, fp)
-> -	XDR *xdrs;
-> -	float *fp;
-> +xdr_float(
-> +	XDR *xdrs,
-> +	float *fp)
->   {
->   #ifndef IEEEFP
->   	struct ieee_single is;
-> @@ -197,9 +197,9 @@ static struct dbl_limits {
->   
->   
->   bool_t
-> -xdr_double(xdrs, dp)
-> -	XDR *xdrs;
-> -	double *dp;
-> +xdr_double(
-> +	XDR *xdrs,
-> +	double *dp)
->   {
->   #ifdef IEEEFP
->   	int32_t *i32p;
-> diff --git a/src/xdr_mem.c b/src/xdr_mem.c
-> index ecdc932..9ece51f 100644
-> --- a/src/xdr_mem.c
-> +++ b/src/xdr_mem.c
-> @@ -88,11 +88,11 @@ static const struct	xdr_ops xdrmem_ops_unaligned = {
->    * memory buffer.
->    */
->   void
-> -xdrmem_create(xdrs, addr, size, op)
-> -	XDR *xdrs;
-> -	char *addr;
-> -	u_int size;
-> -	enum xdr_op op;
-> +xdrmem_create(
-> +	XDR *xdrs,
-> +	char *addr,
-> +	u_int size,
-> +	enum xdr_op op)
->   {
->   
->   	xdrs->x_op = op;
-> @@ -104,16 +104,15 @@ xdrmem_create(xdrs, addr, size, op)
->   
->   /*ARGSUSED*/
->   static void
-> -xdrmem_destroy(xdrs)
-> -	XDR *xdrs;
-> +xdrmem_destroy(XDR *xdrs)
->   {
->   
->   }
->   
->   static bool_t
-> -xdrmem_getlong_aligned(xdrs, lp)
-> -	XDR *xdrs;
-> -	long *lp;
-> +xdrmem_getlong_aligned(
-> +	XDR *xdrs,
-> +	long *lp)
->   {
->   
->   	if (xdrs->x_handy < sizeof(int32_t))
-> @@ -125,9 +124,9 @@ xdrmem_getlong_aligned(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrmem_putlong_aligned(xdrs, lp)
-> -	XDR *xdrs;
-> -	const long *lp;
-> +xdrmem_putlong_aligned(
-> +	XDR *xdrs,
-> +	const long *lp)
->   {
->   
->   	if (xdrs->x_handy < sizeof(int32_t))
-> @@ -139,9 +138,9 @@ xdrmem_putlong_aligned(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrmem_getlong_unaligned(xdrs, lp)
-> -	XDR *xdrs;
-> -	long *lp;
-> +xdrmem_getlong_unaligned(
-> +	XDR *xdrs,
-> +	long *lp)
->   {
->   	u_int32_t l;
->   
-> @@ -155,9 +154,9 @@ xdrmem_getlong_unaligned(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrmem_putlong_unaligned(xdrs, lp)
-> -	XDR *xdrs;
-> -	const long *lp;
-> +xdrmem_putlong_unaligned(
-> +	XDR *xdrs,
-> +	const long *lp)
->   {
->   	u_int32_t l;
->   
-> @@ -171,10 +170,10 @@ xdrmem_putlong_unaligned(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrmem_getbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	char *addr;
-> -	u_int len;
-> +xdrmem_getbytes(
-> +	XDR *xdrs,
-> +	char *addr,
-> +	u_int len)
->   {
->   
->   	if (xdrs->x_handy < len)
-> @@ -186,10 +185,10 @@ xdrmem_getbytes(xdrs, addr, len)
->   }
->   
->   static bool_t
-> -xdrmem_putbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	const char *addr;
-> -	u_int len;
-> +xdrmem_putbytes(
-> +	XDR *xdrs,
-> +	const char *addr,
-> +	u_int len)
->   {
->   
->   	if (xdrs->x_handy < len)
-> @@ -201,8 +200,7 @@ xdrmem_putbytes(xdrs, addr, len)
->   }
->   
->   static u_int
-> -xdrmem_getpos(xdrs)
-> -	XDR *xdrs;
-> +xdrmem_getpos(XDR *xdrs)
->   {
->   
->   	/* XXX w/64-bit pointers, u_int not enough! */
-> @@ -210,9 +208,9 @@ xdrmem_getpos(xdrs)
->   }
->   
->   static bool_t
-> -xdrmem_setpos(xdrs, pos)
-> -	XDR *xdrs;
-> -	u_int pos;
-> +xdrmem_setpos(
-> +	XDR *xdrs,
-> +	u_int pos)
->   {
->   	char *newaddr = xdrs->x_base + pos;
->   	char *lastaddr = (char *)xdrs->x_private + xdrs->x_handy;
-> @@ -225,9 +223,9 @@ xdrmem_setpos(xdrs, pos)
->   }
->   
->   static int32_t *
-> -xdrmem_inline_aligned(xdrs, len)
-> -	XDR *xdrs;
-> -	u_int len;
-> +xdrmem_inline_aligned(
-> +	XDR *xdrs,
-> +	u_int len)
->   {
->   	int32_t *buf = 0;
->   
-> @@ -241,9 +239,9 @@ xdrmem_inline_aligned(xdrs, len)
->   
->   /* ARGSUSED */
->   static int32_t *
-> -xdrmem_inline_unaligned(xdrs, len)
-> -	XDR *xdrs;
-> -	u_int len;
-> +xdrmem_inline_unaligned(
-> +	XDR *xdrs,
-> +	u_int len)
->   {
->   
->   	return (0);
-> diff --git a/src/xdr_rec.c b/src/xdr_rec.c
-> index 676cc82..f088062 100644
-> --- a/src/xdr_rec.c
-> +++ b/src/xdr_rec.c
-> @@ -152,15 +152,15 @@ static bool_t	realloc_stream(RECSTREAM *, int);
->    * calls expect that they take an opaque handle rather than an fd.
->    */
->   void
-> -xdrrec_create(xdrs, sendsize, recvsize, tcp_handle, readit, writeit)
-> -	XDR *xdrs;
-> -	u_int sendsize;
-> -	u_int recvsize;
-> -	void *tcp_handle;
-> +xdrrec_create(
-> +	XDR *xdrs,
-> +	u_int sendsize,
-> +	u_int recvsize,
-> +	void *tcp_handle,
->   	/* like read, but pass it a tcp_handle, not sock */
-> -	int (*readit)(void *, void *, int);
-> +	int (*readit)(void *, void *, int),
->   	/* like write, but pass it a tcp_handle, not sock */
-> -	int (*writeit)(void *, void *, int);
-> +	int (*writeit)(void *, void *, int))
->   {
->   	RECSTREAM *rstrm = mem_alloc(sizeof(RECSTREAM));
->   
-> @@ -220,9 +220,9 @@ xdrrec_create(xdrs, sendsize, recvsize, tcp_handle, readit, writeit)
->    */
->   
->   static bool_t
-> -xdrrec_getlong(xdrs, lp)
-> -	XDR *xdrs;
-> -	long *lp;
-> +xdrrec_getlong(
-> +	XDR *xdrs,
-> +	long *lp)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	int32_t *buflp = (int32_t *)(void *)(rstrm->in_finger);
-> @@ -244,9 +244,9 @@ xdrrec_getlong(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrrec_putlong(xdrs, lp)
-> -	XDR *xdrs;
-> -	const long *lp;
-> +xdrrec_putlong(
-> +	XDR *xdrs,
-> +	const long *lp)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	int32_t *dest_lp = ((int32_t *)(void *)(rstrm->out_finger));
-> @@ -268,10 +268,10 @@ xdrrec_putlong(xdrs, lp)
->   }
->   
->   static bool_t  /* must manage buffers, fragments, and records */
-> -xdrrec_getbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	char *addr;
-> -	u_int len;
-> +xdrrec_getbytes(
-> +	XDR *xdrs,
-> +	char *addr,
-> +	u_int len)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	int current;
-> @@ -296,10 +296,10 @@ xdrrec_getbytes(xdrs, addr, len)
->   }
->   
->   static bool_t
-> -xdrrec_putbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	const char *addr;
-> -	u_int len;
-> +xdrrec_putbytes(
-> +	XDR *xdrs,
-> +	const char *addr,
-> +	u_int len)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	size_t current;
-> @@ -322,8 +322,7 @@ xdrrec_putbytes(xdrs, addr, len)
->   }
->   
->   static u_int
-> -xdrrec_getpos(xdrs)
-> -	XDR *xdrs;
-> +xdrrec_getpos(XDR *xdrs)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
->   	off_t pos;
-> @@ -348,9 +347,9 @@ xdrrec_getpos(xdrs)
->   }
->   
->   static bool_t
-> -xdrrec_setpos(xdrs, pos)
-> -	XDR *xdrs;
-> -	u_int pos;
-> +xdrrec_setpos(
-> +	XDR *xdrs,
-> +	u_int pos)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
->   	u_int currpos = xdrrec_getpos(xdrs);
-> @@ -387,9 +386,9 @@ xdrrec_setpos(xdrs, pos)
->   }
->   
->   static int32_t *
-> -xdrrec_inline(xdrs, len)
-> -	XDR *xdrs;
-> -	u_int len;
-> +xdrrec_inline(
-> +	XDR *xdrs,
-> +	u_int len)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
->   	int32_t *buf = NULL;
-> @@ -419,8 +418,7 @@ xdrrec_inline(xdrs, len)
->   }
->   
->   static void
-> -xdrrec_destroy(xdrs)
-> -	XDR *xdrs;
-> +xdrrec_destroy(XDR *xdrs)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)xdrs->x_private;
->   
-> @@ -439,8 +437,7 @@ xdrrec_destroy(xdrs)
->    * this procedure to guarantee proper record alignment.
->    */
->   bool_t
-> -xdrrec_skiprecord(xdrs)
-> -	XDR *xdrs;
-> +xdrrec_skiprecord(XDR *xdrs)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	enum xprt_stat xstat;
-> @@ -475,8 +472,7 @@ xdrrec_skiprecord(xdrs)
->    * after consuming the rest of the current record.
->    */
->   bool_t
-> -xdrrec_eof(xdrs)
-> -	XDR *xdrs;
-> +xdrrec_eof(XDR *xdrs)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   
-> @@ -499,9 +495,9 @@ xdrrec_eof(xdrs)
->    * pipelined procedure calls.)  TRUE => immmediate flush to tcp connection.
->    */
->   bool_t
-> -xdrrec_endofrecord(xdrs, sendnow)
-> -	XDR *xdrs;
-> -	bool_t sendnow;
-> +xdrrec_endofrecord(
-> +	XDR *xdrs,
-> +	bool_t sendnow)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	u_long len;  /* fragment length */
-> @@ -525,10 +521,10 @@ xdrrec_endofrecord(xdrs, sendnow)
->    * Return true if a record is available in the buffer, false if not.
->    */
->   bool_t
-> -__xdrrec_getrec(xdrs, statp, expectdata)
-> -	XDR *xdrs;
-> -	enum xprt_stat *statp;
-> -	bool_t expectdata;
-> +__xdrrec_getrec(
-> +	XDR *xdrs,
-> +	enum xprt_stat *statp,
-> +	bool_t expectdata)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   	ssize_t n;
-> @@ -615,9 +611,9 @@ __xdrrec_getrec(xdrs, statp, expectdata)
->   }
->   
->   bool_t
-> -__xdrrec_setnonblock(xdrs, maxrec)
-> -	XDR *xdrs;
-> -	int maxrec;
-> +__xdrrec_setnonblock(
-> +	XDR *xdrs,
-> +	int maxrec)
->   {
->   	RECSTREAM *rstrm = (RECSTREAM *)(xdrs->x_private);
->   
-> @@ -632,9 +628,9 @@ __xdrrec_setnonblock(xdrs, maxrec)
->    * Internal useful routines
->    */
->   static bool_t
-> -flush_out(rstrm, eor)
-> -	RECSTREAM *rstrm;
-> -	bool_t eor;
-> +flush_out(
-> +	RECSTREAM *rstrm,
-> +	bool_t eor)
->   {
->   	u_int32_t eormask = (eor == TRUE) ? LAST_FRAG : 0;
->   	u_int32_t len = (u_int32_t)((u_long)(rstrm->out_finger) -
-> @@ -652,8 +648,7 @@ flush_out(rstrm, eor)
->   }
->   
->   static bool_t  /* knows nothing about records!  Only about input buffers */
-> -fill_input_buf(rstrm)
-> -	RECSTREAM *rstrm;
-> +fill_input_buf(RECSTREAM *rstrm)
->   {
->   	char *where;
->   	u_int32_t i;
-> @@ -675,10 +670,10 @@ fill_input_buf(rstrm)
->   }
->   
->   static bool_t  /* knows nothing about records!  Only about input buffers */
-> -get_input_bytes(rstrm, addr, len)
-> -	RECSTREAM *rstrm;
-> -	char *addr;
-> -	int len;
-> +get_input_bytes(
-> +	RECSTREAM *rstrm,
-> +	char *addr,
-> +	int len)
->   {
->   	size_t current;
->   
-> @@ -708,8 +703,7 @@ get_input_bytes(rstrm, addr, len)
->   }
->   
->   static bool_t  /* next two bytes of the input stream are treated as a header */
-> -set_input_fragment(rstrm)
-> -	RECSTREAM *rstrm;
-> +set_input_fragment(RECSTREAM *rstrm)
->   {
->   	u_int32_t header;
->   
-> @@ -734,9 +728,9 @@ set_input_fragment(rstrm)
->   }
->   
->   static bool_t  /* consumes input bytes; knows nothing about records! */
-> -skip_input_bytes(rstrm, cnt)
-> -	RECSTREAM *rstrm;
-> -	long cnt;
-> +skip_input_bytes(
-> +	RECSTREAM *rstrm,
-> +	long cnt)
->   {
->   	u_int32_t current;
->   
-> @@ -756,8 +750,7 @@ skip_input_bytes(rstrm, cnt)
->   }
->   
->   static u_int
-> -fix_buf_size(s)
-> -	u_int s;
-> +fix_buf_size(u_int s)
->   {
->   
->   	if (s < 100)
-> @@ -769,9 +762,9 @@ fix_buf_size(s)
->    * Reallocate the input buffer for a non-block stream.
->    */
->   static bool_t
-> -realloc_stream(rstrm, size)
-> -	RECSTREAM *rstrm;
-> -	int size;
-> +realloc_stream(
-> +	RECSTREAM *rstrm,
-> +	int size)
->   {
->   	ptrdiff_t diff;
->   	char *buf;
-> diff --git a/src/xdr_reference.c b/src/xdr_reference.c
-> index 13f6410..9c7b24e 100644
-> --- a/src/xdr_reference.c
-> +++ b/src/xdr_reference.c
-> @@ -58,11 +58,11 @@
->    * proc is the routine to handle the referenced structure.
->    */
->   bool_t
-> -xdr_reference(xdrs, pp, size, proc)
-> -	XDR *xdrs;
-> -	caddr_t *pp;		/* the pointer to work on */
-> -	u_int size;		/* size of the object pointed to */
-> -	xdrproc_t proc;		/* xdr routine to handle the object */
-> +xdr_reference(
-> +	XDR *xdrs,
-> +	caddr_t *pp,		/* the pointer to work on */
-> +	u_int size,		/* size of the object pointed to */
-> +	xdrproc_t proc)		/* xdr routine to handle the object */
->   {
->   	caddr_t loc = *pp;
->   	bool_t stat;
-> @@ -115,11 +115,11 @@ xdr_reference(xdrs, pp, size, proc)
->    *
->    */
->   bool_t
-> -xdr_pointer(xdrs,objpp,obj_size,xdr_obj)
-> -	XDR *xdrs;
-> -	char **objpp;
-> -	u_int obj_size;
-> -	xdrproc_t xdr_obj;
-> +xdr_pointer(
-> +	XDR *xdrs,
-> +	char **objpp,
-> +	u_int obj_size,
-> +	xdrproc_t xdr_obj)
->   {
->   
->   	bool_t more_data;
-> diff --git a/src/xdr_sizeof.c b/src/xdr_sizeof.c
-> index 79d6707..af3c313 100644
-> --- a/src/xdr_sizeof.c
-> +++ b/src/xdr_sizeof.c
-> @@ -44,9 +44,7 @@
->   
->   /* ARGSUSED */
->   static bool_t
-> -x_putlong(xdrs, longp)
-> -	XDR *xdrs;
-> -	long *longp;
-> +x_putlong(XDR *xdrs, const long *longp)
->   {
->   	xdrs->x_handy += BYTES_PER_XDR_UNIT;
->   	return (TRUE);
-> @@ -54,36 +52,31 @@ x_putlong(xdrs, longp)
->   
->   /* ARGSUSED */
->   static bool_t
-> -x_putbytes(xdrs, bp, len)
-> -	XDR *xdrs;
-> -	char  *bp;
-> -	u_int len;
-> +x_putbytes(
-> +	XDR *xdrs,
-> +	const char  *bp,
-> +	u_int len)
->   {
->   	xdrs->x_handy += len;
->   	return (TRUE);
->   }
->   
->   static u_int
-> -x_getpostn(xdrs)
-> -	XDR *xdrs;
-> +x_getpostn(XDR *xdrs)
->   {
->   	return (xdrs->x_handy);
->   }
->   
->   /* ARGSUSED */
->   static bool_t
-> -x_setpostn(xdrs, pos)
-> -	XDR *xdrs;
-> -	u_int pos;
-> +x_setpostn(XDR *xdrs, u_int pos)
->   {
->   	/* This is not allowed */
->   	return (FALSE);
->   }
->   
->   static int32_t *
-> -x_inline(xdrs, len)
-> -	XDR *xdrs;
-> -	u_int len;
-> +x_inline(XDR *xdrs, u_int len)
->   {
->   	if (len == 0) {
->   		return (NULL);
-> @@ -117,8 +110,7 @@ harmless()
->   }
->   
->   static void
-> -x_destroy(xdrs)
-> -	XDR *xdrs;
-> +x_destroy(XDR *xdrs)
->   {
->   	xdrs->x_handy = 0;
->   	xdrs->x_base = 0;
-> @@ -130,9 +122,7 @@ x_destroy(xdrs)
->   }
->   
->   unsigned long
-> -xdr_sizeof(func, data)
-> -	xdrproc_t func;
-> -	void *data;
-> +xdr_sizeof(xdrproc_t func, void *data)
->   {
->   	XDR x;
->   	struct xdr_ops ops;
-> diff --git a/src/xdr_stdio.c b/src/xdr_stdio.c
-> index 846c7bf..699de39 100644
-> --- a/src/xdr_stdio.c
-> +++ b/src/xdr_stdio.c
-> @@ -74,10 +74,10 @@ static const struct xdr_ops	xdrstdio_ops = {
->    * Operation flag is set to op.
->    */
->   void
-> -xdrstdio_create(xdrs, file, op)
-> -	XDR *xdrs;
-> -	FILE *file;
-> -	enum xdr_op op;
-> +xdrstdio_create(
-> +	XDR *xdrs,
-> +	FILE *file,
-> +	enum xdr_op op)
->   {
->   
->   	xdrs->x_op = op;
-> @@ -92,17 +92,16 @@ xdrstdio_create(xdrs, file, op)
->    * Cleans up the xdr stream handle xdrs previously set up by xdrstdio_create.
->    */
->   static void
-> -xdrstdio_destroy(xdrs)
-> -	XDR *xdrs;
-> +xdrstdio_destroy(XDR *xdrs)
->   {
->   	(void)fflush((FILE *)xdrs->x_private);
->   		/* XXX: should we close the file ?? */
->   }
->   
->   static bool_t
-> -xdrstdio_getlong(xdrs, lp)
-> -	XDR *xdrs;
-> -	long *lp;
-> +xdrstdio_getlong(
-> +	XDR *xdrs,
-> +	long *lp)
->   {
->   	int32_t mycopy;
->   
-> @@ -114,9 +113,9 @@ xdrstdio_getlong(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrstdio_putlong(xdrs, lp)
-> -	XDR *xdrs;
-> -	const long *lp;
-> +xdrstdio_putlong(
-> +	XDR *xdrs,
-> +	const long *lp)
->   {
->   	int32_t mycopy;
->   
-> @@ -132,10 +131,10 @@ xdrstdio_putlong(xdrs, lp)
->   }
->   
->   static bool_t
-> -xdrstdio_getbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	char *addr;
-> -	u_int len;
-> +xdrstdio_getbytes(
-> +	XDR *xdrs,
-> +	char *addr,
-> +	u_int len)
->   {
->   
->   	if ((len != 0) && (fread(addr, (size_t)len, 1, (FILE *)xdrs->x_private) != 1))
-> @@ -144,10 +143,10 @@ xdrstdio_getbytes(xdrs, addr, len)
->   }
->   
->   static bool_t
-> -xdrstdio_putbytes(xdrs, addr, len)
-> -	XDR *xdrs;
-> -	const char *addr;
-> -	u_int len;
-> +xdrstdio_putbytes(
-> +	XDR *xdrs,
-> +	const char *addr,
-> +	u_int len)
->   {
->   
->   	if ((len != 0) && (fwrite(addr, (size_t)len, 1,
-> @@ -157,17 +156,16 @@ xdrstdio_putbytes(xdrs, addr, len)
->   }
->   
->   static u_int
-> -xdrstdio_getpos(xdrs)
-> -	XDR *xdrs;
-> +xdrstdio_getpos(XDR *xdrs)
->   {
->   
->   	return ((u_int) ftell((FILE *)xdrs->x_private));
->   }
->   
->   static bool_t
-> -xdrstdio_setpos(xdrs, pos)
-> -	XDR *xdrs;
-> -	u_int pos;
-> +xdrstdio_setpos(
-> +	XDR *xdrs,
-> +	u_int pos)
->   {
->   
->   	return ((fseek((FILE *)xdrs->x_private, (long)pos, 0) < 0) ?
-> @@ -176,9 +174,9 @@ xdrstdio_setpos(xdrs, pos)
->   
->   /* ARGSUSED */
->   static int32_t *
-> -xdrstdio_inline(xdrs, len)
-> -	XDR *xdrs;
-> -	u_int len;
-> +xdrstdio_inline(
-> +	XDR *xdrs,
-> +	u_int len)
->   {
->   
->   	/*
-
+> > Thanks,
+> > NeilBrown
+> >
+> >
+> > >
+> > > commit 062304a815fe10068c478a4a3f28cf091c55cb82
+> > > Author: J. Bruce Fields <bfields@fieldses.org>
+> > > Date:   Sun Jan 2 22:05:33 2011 -0500
+> > >
+> > >     nfsd: stop translating EAGAIN to nfserr_dropit
+> > >
+> > > diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> > > index dc9c2e3fd1b8..fd608a27a8d5 100644
+> > > --- a/fs/nfsd/nfsproc.c
+> > > +++ b/fs/nfsd/nfsproc.c
+> > > @@ -735,7 +735,8 @@ nfserrno (int errno)
+> > >                 { nfserr_stale, -ESTALE },
+> > >                 { nfserr_jukebox, -ETIMEDOUT },
+> > >                 { nfserr_jukebox, -ERESTARTSYS },
+> > > -               { nfserr_dropit, -EAGAIN },
+> > > +               { nfserr_jukebox, -EAGAIN },
+> > > +               { nfserr_jukebox, -EWOULDBLOCK },
+> > >                 { nfserr_jukebox, -ENOMEM },
+> > >                 { nfserr_badname, -ESRCH },
+> > >                 { nfserr_io, -ETXTBSY },
+> > >
+> > > so if fh_verify is failing whatever it is returning, it is not
+> > > nfserr_dropit nor is it nfserr_jukebox which means nlm_fopen() would
+> > > translate it to nlm_failed which with my patch would not trigger
+> > > nlm_lck_denied_grace_period error but resp->status would be set to
+> > > nlm_failed.
+> > >
+> > > So I circle back to I hope that convinces you that we don't need a
+> > > check for the reclaim lock.
+> > >
+> > > I believe nlm_drop_reply is nfsd_open's jukebox error, one of which i=
+s
+> > > delegation recall. it can be a memory failure. But I'm sure when
+> > > EWOULDBLOCK occurs.
+> > >
+> > > > At the very least we need to guard against the reclaim flag being s=
+et in
+> > > > the above test.  But I would much rather a more clear distinction w=
+ere
+> > > > made between "drop because of a conflicting delegation" and "drop
+> > > > because of a delay getting upcall response".
+> > > > Maybe a new "nlm_conflicting_delegtion" return from ->fopen which n=
+lm4
+> > > > (and ideally nlm2) handles appropriately.
+> > >
+> > >
+> > > > NeilBrown
+> > > >
+> > > >
+> > > > > +                     return rpc_success;
+> > > > > +             }
+> > > > > +             return nlm_drop_reply;
+> > > > > +     default:
+> > > > > +             return rpc_success;
+> > > > > +     }
+> > > > >
+> > > > >       /* Now try to lock the file */
+> > > > >       resp->status =3D nlmsvc_lock(rqstp, file, host, &argp->lock=
+,
+> > > > > --
+> > > > > 2.47.1
+> > > > >
+> > > > >
+> > > >
+> > > >
+> > >
+> >
 
