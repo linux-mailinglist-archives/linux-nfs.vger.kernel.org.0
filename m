@@ -1,86 +1,87 @@
-Return-Path: <linux-nfs+bounces-13889-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30C01B34E03
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:27:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DF1AB34E04
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:27:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAB7D486CF2
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:27:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 673A21B25B50
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:28:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9B7277C8D;
-	Mon, 25 Aug 2025 21:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21B41991D2;
+	Mon, 25 Aug 2025 21:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BiNFgqTg"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bzeFCP92"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFAB1991D2
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52882882BD
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756157260; cv=none; b=bkH2NStoVZkqyvhTbDWkUMO1xs8sOZxuTtj1fyvLf42l/ilvR+65wsno9eVxn+iYH8z/0NKKYsJEmLOeFtJEz7DvHHAsuAVunRg5safY0YbP2vWW7dSBQpPop4SLgOv3WNOVMA7Y48lksqgVEvPQQx9uLwQOAcccNmssEKocy/s=
+	t=1756157261; cv=none; b=Yi55Anhw8hfyjo9Lo2Cj2FtQkFKRK90H2Lgo7OSBv7JUzg85aw+A75Fg9b12phY+tL30L0gdAxLhl45I6ZOdwx+mdWzuFjAiWC1GIZ3kmsHHnkbcF5OgpsKImuM+LUUELnkjV9YuqxFYk7hk+YxCxI4Ydu8A3BLj9eAcSGSctgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756157260; c=relaxed/simple;
-	bh=1xeGAreEi2x2Aquc/6dLVE/3TMfMr/uLa0az8bFjmD0=;
+	s=arc-20240116; t=1756157261; c=relaxed/simple;
+	bh=C6pIljQUVbXribM74eO/Yi4zDmJMVwzxtOTyMoH2G6c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sUglTlDkTI2+p5BcHWk7AsI/dxVVAS61K9qj+5HXwmJfMSJvP9g1KcmUEHnLvp0r/lCgLC0ApNCvkCHM465eT5mFzQBj7F+RVccDj6HVEScAt3pgQcai2UbwByG0E2nCdj9AAVtQGEKxsBvm31DYbCfAyN6Utx82H7jthf8PCvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BiNFgqTg; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=e8fR90WuE8Z7EGEige6hSmk/gXm4ByemjgdkosN2xZPNvXT6wIG8F4rni1QG9m7AQP3XwhHVfHEkzE4OoTXCOVFJgTnoNnqUjS3/bNLUi1XOof7JnPBLx9Fd4j7iadJga17/UjF3ttQWp5NRK+6UfcjLaRFgyz95lycTHnqv66s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bzeFCP92; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-afcb7a7bad8so674311566b.3
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:35 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61c38da68ddso5559278a12.2
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1756157254; x=1756762054; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1756157257; x=1756762057; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FTolq9FwrPuwgNkvd2mCU01hlYYpCl0W5vdd5AH8Bok=;
-        b=BiNFgqTgOpzd4tIc20HDd3WjuWDkRTe876U//vpz6S5LdpiqkW+fjRkXZ+e5omLbnu
-         zuGHx0xB2Q67vv6vWgbVvPKtHVaNhOTzSwSsAxVkJDobALiTdxVHvLkVgskq1mnwBQSh
-         66KECyT0R9Uj2F2GuYafSQiXelTYoAkE2StmKHdFOG0aojeHT02cHIZ9z7xiJoykozlM
-         CEROrvPiOwMVwozqxxplz03kEnOqh0Zk01XTyoQIycLKF1Y1CehxcR0deZtmT3gW3BMM
-         N/HXq2cHXCHx6XZLabBA/YtATtOuTzTf2TmiTd4kCc3+YyQ2xzM1cRk2Jk7qhD2+s8NB
-         c6Yg==
+        bh=J+rHpWL/Piu+edXatPGs9bVuXgKSl2HpG+xEZdZh0g8=;
+        b=bzeFCP92Qi9XXEie1uk8LgF3fQw4hWTitFrGyyhw1JtPIguGgR9BEQZ0JH5zghvYk5
+         2Yoxq50vK4V68hHXIo3beqVUxoaEWkOlRAbDNLfyHjqMnr+3468pZ3Sf7oOuNtv1VSsq
+         dlVoeJcYbafWF67EzS1Cf68A6u/3UQ0yZCLpHAfLXL49eVlLd3NnyAxr6zs78bC2tMam
+         S4Kkmc/wsRjTbtrLUwfrVpyuKg3Ck7gV6kVvm3pAPFMYxbMSh6fZBkcyHzHT6msngymS
+         bk3G0Ki+ED5gn644VL/CVOwzrrMLTSBk/q+bcZenUeqqQmIsHgNAQtrgergyhCwnJrhT
+         Cemw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756157254; x=1756762054;
+        d=1e100.net; s=20230601; t=1756157257; x=1756762057;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FTolq9FwrPuwgNkvd2mCU01hlYYpCl0W5vdd5AH8Bok=;
-        b=t/ubg35Mx9n1QVj3ZNu8+PZYNeeZCsfXGfYdRy3FUcKVrrq9HHrDPXERSS3VQhondB
-         pIUgtlupDcUBhuChECT6LId2FmtG31pHea89WQmQP7yTkvvQKdtlW29d+6iLERpQ7Gj6
-         A6fbd0qEJZ7t0gOPH8YQgvgl8y7ryaaBK+guwYMvy1NvSfp1FybcsHvRKKB05BXINOrm
-         7MuRujWziSu64Uo9GjI8B7V/S5FSx+EUQKu8Sf0xDFsC81sa0Qpi7XTge1Anq2fOmgAo
-         2C+R3PyDdPhsUO1kxGekf/tLAAx3hfj4Ge9BeZDrG90hIDKSwTfIYXNIXqjeTRyI/KE1
-         ++3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURrYDOT4IjU9dlhiR8/cstNPMr2aN8K1bmSu+0tpbpHPoCDmeuf459Jc6NiuShh7NAkKjbI9P3k1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrW+LYNSD6eCxNwfkkkNrfYQPcvc4YtsE5jhtQHcuyE04uEOyB
-	wEhPPj/+McurRQDHvWP4tV/STT2oyAOwg/K7cWTQvIiStL3jHsy1oq9dGOrFSN94WkY=
-X-Gm-Gg: ASbGncvl/NauAhpNsVMu4SNdCmc3Jx0z3k/c+Q27CHE/SEa8u1xa/1/rZnTKH/NHSRU
-	REL8ZyEQy612mGncR34BC5/zwdgQ1XTv807ClTXsVmTanMhUzr2FIZMc1Rb3Ygy66b1SQxaiSbC
-	02UZEfJj1/Cx/qBm1gOPACYMlbVoBjdrc/ZLydQZTUATd1L0XaA8ML30PPHyY3V8d/Qi1DPXYXz
-	suPUK4oGN7jtskHmaR6n9ZgLWIn4UUISaNgoRJ/k0ZP4A4j1IOYt4DH2LWXY6o8EO4R5uvz8Dct
-	YwXU/nOC7woI0jRlP5MfqFNSnzRrmNE/MDJmdtGbl6i9J/xx08OxgmcAUVhzGNS4il/rusDL5Z7
-	g8YkkZe6DsRB2MgNdFYd7zcw=
-X-Google-Smtp-Source: AGHT+IFxHO0Q93IzEhfxGk7illEZfSQE74ktfAzsEduUmTD+lgDdjoFDpFJGVu4miBHsTGT2VRg1Ew==
-X-Received: by 2002:a17:907:985:b0:afe:6648:a24c with SMTP id a640c23a62f3a-afe6648c0damr594863766b.52.1756157254377;
-        Mon, 25 Aug 2025 14:27:34 -0700 (PDT)
-Received: from localhost ([208.88.158.129])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-afe9f7a1b2fsm41066166b.38.2025.08.25.14.27.33
+        bh=J+rHpWL/Piu+edXatPGs9bVuXgKSl2HpG+xEZdZh0g8=;
+        b=IpuxhNVgRxBHQ0mjjGC5/cQ9GAwP00PzY76TEQssjtu6/CAG3/8Zq/VJUG8MtrWdxK
+         FwleimPpwOlEDcDucjUW33e2BPBJPT91OVZHNskFJwfD6BNqxLGdQH+NN+QW8aGba5w1
+         1vIW8XkcnNBo41H/BEa5CBBnD5WIJ36uukTUWC2oT/7R+nprpODd+c8pPNGidVDdgNdx
+         +niy3SSPQ8V6gwZLgyjllgrudGz5NNYHEq7DNcXuX0NxZUG+VotP22Gj/pfvAn5l3hbw
+         bUZ+rUQSPaxukeJ1mwVoGpd4dsCcJsD6bCy9D53fxEy809g3PN3iBP/MmLpeLzjrJPhB
+         QZ2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVbhQNs+pyu9goLndqmhO1lXoz9T11t9Uu4Dx7GaixC0KEJfwrnaZAI0pHw0A3e++Q8fyQVJ95yuXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCHO5MRx3PGWmw671dvDp8+SUz37coSVtOgjxM7pInFBpYbiu9
+	y5YLRAg0lETpDrnncAL879F4Dk8YBE37lfotWV7Lt84455AenDOfUFtAZT1/+IeMT2dObh3yAyD
+	axTFI
+X-Gm-Gg: ASbGncttPa1KE4sm8BUySnoHH8EX4pmlNqxJqEIkQFFgjPmtvdt97aSwAojDU0dm35P
+	WnOKOeOluI4SKvAT2I+T9LRuU8nEDUw8FFLGNAAHqwi6d6EbrTsBmbLQO4slugfgIKpQ1aaQvmL
+	d11mMxSK1IgMCpaIi0kZsrybpym1kbMQc5Wbk4PBKONwV703C2EhA5Rm/gp/IbK1JGU/jq2QBD8
+	5TB91UdjaJoQBWQ+0UI7xdhbp3kmD2DbdXSQhBQzlKzPA1wjLvZT0NP2mPrsFwevPQHyLcKKObP
+	Em/IJvXMXPgAKHGK9RIMfdgnhhD5o4reeSkb0975clD/HxhRNf7okV5EYaAvrCx3L2fL3aggGOd
+	apvKcIz/zIShjibkBk2+tHT8=
+X-Google-Smtp-Source: AGHT+IFIMq69fDW1WOZqY+dp6Dv59Bh3B3JlWQT4zs7cK1GTmp0PtSpgp5mQ/g5herG3H6ZeBfefRA==
+X-Received: by 2002:a05:6402:5256:b0:61c:71b3:74c7 with SMTP id 4fb4d7f45d1cf-61c71b37925mr3180433a12.37.1756157257167;
+        Mon, 25 Aug 2025 14:27:37 -0700 (PDT)
+Received: from localhost ([208.88.158.128])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-61c5010e151sm4028715a12.4.2025.08.25.14.27.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 14:27:34 -0700 (PDT)
+        Mon, 25 Aug 2025 14:27:36 -0700 (PDT)
 From: Jonathan Curley <jcurley@purestorage.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: Jonathan Curley <jcurley@purestorage.com>,
 	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v1 1/9] NFSv4/flexfiles: Remove cred local variable dependency
-Date: Mon, 25 Aug 2025 21:27:21 +0000
-Message-Id: <20250825212729.4833-2-jcurley@purestorage.com>
+Subject: [RFC PATCH v1 2/9] NFSv4/flexfiles: Use ds_commit_idx when marking a write commit
+Date: Mon, 25 Aug 2025 21:27:22 +0000
+Message-Id: <20250825212729.4833-3-jcurley@purestorage.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250825212729.4833-1-jcurley@purestorage.com>
 References: <20250825212729.4833-1-jcurley@purestorage.com>
@@ -92,32 +93,28 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-No-op preparation change to remove dependency on cred local
-variable. Subsequent striping diff has a cred per stripe so this local
-variable can't be trusted to be the same.
+Correct this path to use ds_commit_idx. Another noop preparation
+change. In current code commit_idx == mirror_idx but when striping is
+enabled that will not be true.
 
 Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 4bea008dbebd..a437d20ebcdf 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -532,10 +532,10 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		if (mirror != fls->mirror_array[i]) {
- 			/* swap cred ptrs so free_mirror will clean up old */
- 			if (lgr->range.iomode == IOMODE_READ) {
--				cred = xchg(&mirror->ro_cred, cred);
-+				cred = xchg(&mirror->ro_cred, fls->mirror_array[i]->ro_cred);
- 				rcu_assign_pointer(fls->mirror_array[i]->ro_cred, cred);
- 			} else {
--				cred = xchg(&mirror->rw_cred, cred);
-+				cred = xchg(&mirror->rw_cred, fls->mirror_array[i]->rw_cred);
- 				rcu_assign_pointer(fls->mirror_array[i]->rw_cred, cred);
- 			}
- 			ff_layout_free_mirror(fls->mirror_array[i]);
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 374fc6b34c79..422bb817cc85 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -977,7 +977,7 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
+ 			req->wb_nio = 0;
+ 			memcpy(&req->wb_verf, &hdr->verf.verifier, sizeof(req->wb_verf));
+ 			nfs_mark_request_commit(req, hdr->lseg, &cinfo,
+-				hdr->pgio_mirror_idx);
++				hdr->ds_commit_idx);
+ 			goto next;
+ 		}
+ remove_req:
 -- 
 2.34.1
 
