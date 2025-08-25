@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-13893-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13894-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 167FFB34E07
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:27:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA51EB34E08
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 23:27:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CD4C44E3894
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:27:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90C7E486E79
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Aug 2025 21:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB82277C8D;
-	Mon, 25 Aug 2025 21:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40167277C8D;
+	Mon, 25 Aug 2025 21:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dzqeNk2t"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="WdtMx9Wl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2928C039
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676302868A9
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 21:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756157269; cv=none; b=hZtG1FeR/MJyGP3ae61yDhmuNtDW4j9p96GuRxJu0mZVbPhxlqQiRFIRj/LoGcjxMw2lv99YLTVqoZyoIATTNw75GOFuTBGWPIezI+PTf8Mj076GmOWcyQumF4RPVOAvh2rq2S7b1Pa7+hau4pf/LKofwbkqaSqC/QtlksEVz5k=
+	t=1756157272; cv=none; b=rS9oC8Ky9GRFYghfXiA8yDfxTd6ndoNKEPmTLQE2e4840fKvZjMs1KBVFwoz53OXn3f9RR+sp0ISOUBO29JYkkR4L6++QKY9GMfQRymHPxpSV0OhWmacZV7jW6qvlI4eKyPnsagZ9TXiaApxMhltmq56q0zxOOoLQs2SulnyVOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756157269; c=relaxed/simple;
-	bh=E6toPwqmDJkpFawV1tGmdkuMJo0mNgiQ12F34q4J2aI=;
+	s=arc-20240116; t=1756157272; c=relaxed/simple;
+	bh=bVn9gQtCUqsmViWRAWsKqF5KCqll0kpd25hgS1nKvZ4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rojwKQQShFblLzyoQZ+NlkjrQ1Hbfxpcxt7IRODkEIkue9lxAUstJ//AukvY+yVBj6ysOeiX80dQV7BYy12yhaSHM7HrAsWMQmOsA21pToJLAtDR60T3Vpi78Dp8imQ5Ffqy4HlJeoAh5SN0KFPSUaoJPBppugE1kEK0MbRRQv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dzqeNk2t; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version; b=AQP5jl8LcEBxmjuir8sio+fa5KkXF4JRt6yrFSnC3Mk/voy+xSH3/PbZfNj5GOiUntRhvbFlo4FXtz1NBCMRyBwW9i4fFKCP4WnthpyM4gYQyCxah0OYms5tM+W3b+DHCJCx82wkUgp9+ilyuW/1pxMdVByhGGManMcXEt9aVGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=WdtMx9Wl; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-afcb7322da8so786480066b.0
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:47 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-61c3360bbaeso3014110a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Aug 2025 14:27:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1756157266; x=1756762066; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1756157269; x=1756762069; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/DxqhLAwCPsv2k0UdKEGAo0Up8dCDuBhVt4kaJL6RGg=;
-        b=dzqeNk2t8o8J5BqESKa0TzpTIoSwWbBYPMPsGNmjFxClJoCSQvgfRR0fDvevI+45bj
-         6y2OPofZqAYLu9KAWadGL2+W+Mt6MgTstlF73GAe1o8HBwZf76SL8KNAw/xbETC+ROp3
-         ZYY8xlsBizIkuEVlzc51cPkA7Vpg47wMMF/X3sAdDDz/uEpa65Kq2wISBxKCzRJ+JzWO
-         iZn/TOQ1n+d7WjbSXSJSWBZe+QhxN8IbhJZ+xL5HA+QvFlCIzhbuPAY+X4qxd1U/GaEl
-         Qm0o/Uk7JD+xk5WH384KWC/VcWlsFc6EkzEUzQUVsEkvkxlIOjmG0dC+gUgCfvinfo3N
-         zExg==
+        bh=GAEdUsPK+XpV1KGxoRR5Z/BdB7Xe8ZWcX7qKQ0ivh10=;
+        b=WdtMx9Wl94AnJWLl5mLYdSyUqvqieSXa3bTYZR+kk3aUfhDen7yV6hQ9HZcOl+j775
+         SfeLMT5KHiwAWJ8UIvHtPH60z09Ks4QWRnOjJxSTKX4d6uSe1fICOw9lHdZgn3wYrw4a
+         N3gFWokpiaY5gWhGO/J+G4JrApmp3mIc/4/D3v4BgxpkwCfQrKlzsoEH2j/pp4VFt8B0
+         3iKyNQUXJd1/f5zHsBDP18D3QCD+52zvrPaiCFGsoyj9wfQm6vs/eF9BXe7eXiHGDRcX
+         WmIjroIyzOwlhYWxjLbBD1RD1rz8RgDmmzya3ljYeSzw/PROHHS2ZrLr55gG4la9oZOE
+         yD9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756157266; x=1756762066;
+        d=1e100.net; s=20230601; t=1756157269; x=1756762069;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/DxqhLAwCPsv2k0UdKEGAo0Up8dCDuBhVt4kaJL6RGg=;
-        b=k08+0GYwmdT5h1bQ32qXtu05AWtJOsafnhkC8nrwb9CcnTgyCtH5r+RDQ7LprErMeG
-         lbFzdve6Ed6NN0R+t8brTb0sOlhl2wl0a3+NZ6q77XmrwGdcp3QlQ5LIPPaxajJRZtFS
-         O0+ENaYI+ewpiVNMHbOsaniE66+SZ6FKFdwlbkhhals4EQZg42h+vhC4ExNFHXfxxWLy
-         Ps0aa7PaUNrY71A5asaA4xZP2lq04LEUNwQkyAkH3qJHVj2kEIGtJtdIbHNMwgAslCaF
-         z6kMu16j6J51SIGT2wjc/rYbqN9WNEhPl6lcVhe02p8RpDJ8Kn33xmhA0A7HAmhwjoq6
-         1Lsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWegw/ffZwYBaBj/70VDlkV2NRcvy3PRHD3mANCnDf1WNZp6MHgdSksuwogQFVswjvFY/GaBf3bb4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu4qvFAikXz5zyyVz7GOBITsagZS/jtJOqZqbzFd8D0ptS7a97
-	EfQrDapiuJjzHK1Jd8QWPQat7z1N/j1YVo/NwDUAzKidNO+dn+QeTEiMizXxSqHE1+A=
-X-Gm-Gg: ASbGncvkv4j7hMln8lii1A8O/Ay+r3QNyhsZSe1W5TpVVd3jJ5pIlDsUXQFchIqFd6t
-	eqQNRYO5TTTFt3+zQpanBnuaooRtkLz3RgfXlkAVvdAqhgRYXmb6THafk+9MswyZDRPCEp0mCCk
-	fTTPzTkm3/njWMXjO/OXUO++XOOGoZ2sEZ8TBiIB6TuGQ4MGiyqjxbnZ+lzuNLzpJOVxXQbJWIQ
-	1y80uwSWbIVs//+LV9ihfcjDuWwqcmMvXroJMtpvKVVRsCndfs7hayj3x6Lfa8Svf9KSspatQvG
-	z8kxGBeDGLnREePhMDOwdkRCJhFjdlpdYMWCIir4gsfzWSYk2hKnQI3wNGew8EnkMLnba+/JAm2
-	Yc8XrmhisF4Idp8f6DhfxYD8=
-X-Google-Smtp-Source: AGHT+IF7lctSIT6i46Uhcvq8k8e8ixVQ3YZyNBP9DblLk/mvEwX2bjVoESH1EQCaRpOPwKbfQYhbxA==
-X-Received: by 2002:a17:907:6d0a:b0:af9:566c:4cba with SMTP id a640c23a62f3a-afe28ffbe48mr1151184466b.9.1756157265821;
-        Mon, 25 Aug 2025 14:27:45 -0700 (PDT)
+        bh=GAEdUsPK+XpV1KGxoRR5Z/BdB7Xe8ZWcX7qKQ0ivh10=;
+        b=l1fC4dW6xriitFFSvC+nk3glLtF3VDYeiULBTXnZS37/Z370+/5IxiELq3cksJWp2E
+         NT8OoB2aNz1UaOJuoAfkacr5KOmaVRY8J+utaxoyQ1Q3V/9B0bBFzmrFxHku3CnEVrs6
+         Or6jnORFf1+BvDqdA4M09KuElatvQTibd/4b7u6RxqAZquwpCWWxq4bZU8HW6ce5mBSm
+         LJBEK6b6PXaFEOTpbM5rlC5rxy/Hix57oluZ1EAiRZFd0HDbWXBbaJhQHvrQ9oQdCEfE
+         wd2xRc4i+MKg3SVU5BCJp5ttIDFuk1WLABtmIZQrOApzPAII/hcczBxYomaDZh6kHJKN
+         7R+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUAFLp9OzDSg6QnRsMRdWM84DDgehnKtNkteXgNNB5eMwo6S0oDnu5gXM1gm/mCposU+DF5Sj8zao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygynsgx6O9TgtdMen9yux3xUirngH9JX5aQu3I8nXwM8cwfhCZ
+	ecXlUzmJTimZ9ol4qOf5eRW7857bRjEMVmnT8QhYRODcortbPvGI5qt3dg5zIOKLwHw=
+X-Gm-Gg: ASbGncs84PIS0ozv1bIVQs3TqcWdGtEpdcWO1aoqKT+ZrklD6AgpUEa7XzvVPkAX3T4
+	LpW/0R/4JCuq98jeF8mJB/8mHUbL9WA2JYTLSO/p/lq0DCt+Gi6Fqs9+qEZdfu63tnpdb6Dmlf6
+	a9e4wMYVUWFcqQsn5DltX5S5hTOxmcgY6prii74vrfdVvR8BYINxhS2bN50FcjxMCvRBKB//kzK
+	a+LX0lFs/bprslGV0s8/XIrWPYDFFqQoN5PF0lpufNJ9uBvtVfh5VUsbGEIsxoWG70df+h56UOq
+	D7pZSEtBktc4lSsFlesC8lhTO5NSBi0pom1e0g411PKaWlmJYXkreMBaEpMfC0f5aOZd1tXP3mo
+	zt19f/tVBLFft5KMBGUKEyuc=
+X-Google-Smtp-Source: AGHT+IHEDqYH1qCbXwEo4rtYphLG5vOUucOwmRn5srU/DdgOGaTdKG4UXbdD7unBnNwPBTRVkyMpfQ==
+X-Received: by 2002:a05:6402:26c2:b0:61c:7ba4:8bce with SMTP id 4fb4d7f45d1cf-61c7ba4902bmr2711596a12.24.1756157268582;
+        Mon, 25 Aug 2025 14:27:48 -0700 (PDT)
 Received: from localhost ([208.88.158.128])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-afe70f0121bsm390307166b.55.2025.08.25.14.27.44
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-61c312aeb15sm5589042a12.19.2025.08.25.14.27.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 14:27:45 -0700 (PDT)
+        Mon, 25 Aug 2025 14:27:48 -0700 (PDT)
 From: Jonathan Curley <jcurley@purestorage.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: Jonathan Curley <jcurley@purestorage.com>,
 	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v1 5/9] NFSv4/flexfiles: Read path updates for striped layouts
-Date: Mon, 25 Aug 2025 21:27:25 +0000
-Message-Id: <20250825212729.4833-6-jcurley@purestorage.com>
+Subject: [RFC PATCH v1 6/9] NFSv4/flexfiles: Commit path updates for striped layouts
+Date: Mon, 25 Aug 2025 21:27:26 +0000
+Message-Id: <20250825212729.4833-7-jcurley@purestorage.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250825212729.4833-1-jcurley@purestorage.com>
 References: <20250825212729.4833-1-jcurley@purestorage.com>
@@ -92,274 +92,138 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Updates read path to calculate and use dss_id to direct IO to the
-appropriate stripe DS.
+Updates the commit path to be stripe aware. This required updating
+the ds_commit_idx to be stripe aware.
+
+ds_commit_idx == mirror_idx * dss_count + dss_id.
+
+Updates code paths to utilize the new ds_commit_idx and derive dss_id
+& mirror_idx where appropriate to contact the correct DS using the
+corresponding parameters.
 
 Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 122 ++++++++++++++++++++-----
- 1 file changed, 98 insertions(+), 24 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 49 +++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 16 deletions(-)
 
 diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index a2a3821f190c..79700c18762c 100644
+index 79700c18762c..b0d870359536 100644
 --- a/fs/nfs/flexfilelayout/flexfilelayout.c
 +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -770,6 +770,7 @@ ff_layout_mark_ds_reachable(struct pnfs_layout_segment *lseg, u32 idx)
- static struct nfs4_pnfs_ds *
- ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
- 			     u32 start_idx, u32 *best_idx,
-+			     u32 offset, u32 *dss_id,
- 			     bool check_device)
- {
- 	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
-@@ -780,12 +781,16 @@ ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
- 	/* mirrors are initially sorted by efficiency */
- 	for (idx = start_idx; idx < fls->mirror_array_cnt; idx++) {
- 		mirror = FF_LAYOUT_COMP(lseg, idx);
--		ds = nfs4_ff_layout_prepare_ds(lseg, mirror, 0, false);
-+		*dss_id = nfs4_ff_layout_calc_dss_id(
-+			fls->stripe_unit,
-+			fls->mirror_array[idx]->dss_count,
-+			offset);
-+		ds = nfs4_ff_layout_prepare_ds(lseg, mirror, *dss_id, false);
- 		if (!ds)
- 			continue;
- 
- 		if (check_device &&
--		    nfs4_test_deviceid_unavailable(&mirror->dss[0].mirror_ds->id_node))
-+		    nfs4_test_deviceid_unavailable(&mirror->dss[*dss_id].mirror_ds->id_node))
- 			continue;
- 
- 		*best_idx = idx;
-@@ -797,42 +802,52 @@ ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_any_ds_for_read(struct pnfs_layout_segment *lseg,
--				 u32 start_idx, u32 *best_idx)
-+				 u32 start_idx, u32 *best_idx,
-+				 u32 offset, u32 *dss_id)
- {
--	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx, false);
-+	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx,
-+					    offset, dss_id, false);
+@@ -605,6 +605,26 @@ ff_layout_free_lseg(struct pnfs_layout_segment *lseg)
+ 	_ff_layout_free_lseg(fls);
  }
  
- static struct nfs4_pnfs_ds *
- ff_layout_choose_valid_ds_for_read(struct pnfs_layout_segment *lseg,
--				   u32 start_idx, u32 *best_idx)
-+				   u32 start_idx, u32 *best_idx,
-+				   u32 offset, u32 *dss_id)
- {
--	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx, true);
-+	return ff_layout_choose_ds_for_read(lseg, start_idx, best_idx,
-+					    offset, dss_id, true);
- }
- 
- static struct nfs4_pnfs_ds *
- ff_layout_choose_best_ds_for_read(struct pnfs_layout_segment *lseg,
--				  u32 start_idx, u32 *best_idx)
-+				  u32 start_idx, u32 *best_idx,
-+				  u32 offset, u32 *dss_id)
- {
- 	struct nfs4_pnfs_ds *ds;
- 
--	ds = ff_layout_choose_valid_ds_for_read(lseg, start_idx, best_idx);
-+	ds = ff_layout_choose_valid_ds_for_read(lseg, start_idx, best_idx,
-+						offset, dss_id);
- 	if (ds)
- 		return ds;
--	return ff_layout_choose_any_ds_for_read(lseg, start_idx, best_idx);
-+	return ff_layout_choose_any_ds_for_read(lseg, start_idx, best_idx,
-+						offset, dss_id);
- }
- 
- static struct nfs4_pnfs_ds *
- ff_layout_get_ds_for_read(struct nfs_pageio_descriptor *pgio,
--			  u32 *best_idx)
-+			  u32 *best_idx,
-+			  u32 offset,
-+			  u32 *dss_id)
- {
- 	struct pnfs_layout_segment *lseg = pgio->pg_lseg;
- 	struct nfs4_pnfs_ds *ds;
- 
- 	ds = ff_layout_choose_best_ds_for_read(lseg, pgio->pg_mirror_idx,
--					       best_idx);
-+					       best_idx, offset, dss_id);
- 	if (ds || !pgio->pg_mirror_idx)
- 		return ds;
--	return ff_layout_choose_best_ds_for_read(lseg, 0, best_idx);
-+	return ff_layout_choose_best_ds_for_read(lseg, 0, best_idx,
-+						 offset, dss_id);
- }
- 
- static void
-@@ -851,6 +866,56 @@ ff_layout_pg_get_read(struct nfs_pageio_descriptor *pgio,
- 	}
- }
- 
-+static bool
-+ff_layout_lseg_is_striped(const struct nfs4_ff_layout_segment *fls)
++static u32 calc_mirror_idx_from_commit(struct pnfs_layout_segment *lseg,
++				       u32 commit_index)
 +{
-+	return fls->mirror_array[0]->dss_count > 1;
++	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
++	u32 mirror_idx = commit_index;
++
++	do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
++
++	return mirror_idx;
 +}
 +
-+/*
-+ * ff_layout_pg_test(). Called by nfs_can_coalesce_requests()
-+ *
-+ * Return 0 if @req cannot be coalesced into @pgio, otherwise return the number
-+ * of bytes (maximum @req->wb_bytes) that can be coalesced.
-+ */
-+static size_t
-+ff_layout_pg_test(struct nfs_pageio_descriptor *pgio, struct nfs_page *prev,
-+		  struct nfs_page *req)
++static u32 calc_dss_id_from_commit(struct pnfs_layout_segment *lseg,
++				   u32 commit_index)
 +{
-+	unsigned int size;
-+	u64 p_stripe, r_stripe;
-+	u32 stripe_offset;
-+	u64 segment_offset = pgio->pg_lseg->pls_range.offset;
-+	u32 stripe_unit = FF_LAYOUT_LSEG(pgio->pg_lseg)->stripe_unit;
++	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
++	u32 mirror_idx = commit_index;
 +
-+	/* calls nfs_generic_pg_test */
-+	size = pnfs_generic_pg_test(pgio, prev, req);
-+	if (!size)
-+		return 0;
-+	else if (!ff_layout_lseg_is_striped(FF_LAYOUT_LSEG(pgio->pg_lseg)))
-+		return size;
-+
-+	/* see if req and prev are in the same stripe */
-+	if (prev) {
-+		p_stripe = (u64)req_offset(prev) - segment_offset;
-+		r_stripe = (u64)req_offset(req) - segment_offset;
-+		do_div(p_stripe, stripe_unit);
-+		do_div(r_stripe, stripe_unit);
-+
-+		if (p_stripe != r_stripe)
-+			return 0;
-+	}
-+
-+	/* calculate remaining bytes in the current stripe */
-+	div_u64_rem((u64)req_offset(req) - segment_offset,
-+			stripe_unit,
-+			&stripe_offset);
-+	WARN_ON_ONCE(stripe_offset > stripe_unit);
-+	if (stripe_offset >= stripe_unit)
-+		return 0;
-+	return min(stripe_unit - (unsigned int)stripe_offset, size);
++	return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
 +}
 +
  static void
- ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 			struct nfs_page *req)
-@@ -858,7 +923,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_pgio_mirror *pgm;
+ nfs4_ff_start_busy_timer(struct nfs4_ff_busy_timer *timer, ktime_t now)
+ {
+@@ -2094,20 +2114,15 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
+ 	return PNFS_NOT_ATTEMPTED;
+ }
+ 
+-static u32 calc_ds_index_from_commit(struct pnfs_layout_segment *lseg, u32 i)
+-{
+-	return i;
+-}
+-
+ static struct nfs_fh *
+-select_ds_fh_from_commit(struct pnfs_layout_segment *lseg, u32 i)
++select_ds_fh_from_commit(struct pnfs_layout_segment *lseg, u32 i, u32 dss_id)
+ {
+ 	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+ 
+ 	/* FIXME: Assume that there is only one NFS version available
+ 	 * for the DS.
+ 	 */
+-	return &flseg->mirror_array[i]->dss[0].fh_versions[0];
++	return &flseg->mirror_array[i]->dss[dss_id].fh_versions[0];
+ }
+ 
+ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
+@@ -2118,7 +2133,7 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
+ 	struct nfsd_file *localio;
  	struct nfs4_ff_layout_mirror *mirror;
- 	struct nfs4_pnfs_ds *ds;
--	u32 ds_idx;
-+	u32 ds_idx, dss_id;
- 
- 	if (NFS_SERVER(pgio->pg_inode)->flags &
- 			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
-@@ -879,7 +944,8 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	/* Reset wb_nio, since getting layout segment was successful */
- 	req->wb_nio = 0;
- 
--	ds = ff_layout_get_ds_for_read(pgio, &ds_idx);
-+	ds = ff_layout_get_ds_for_read(pgio, &ds_idx,
-+				       req_offset(req), &dss_id);
- 	if (!ds) {
- 		if (!ff_layout_no_fallback_to_mds(pgio->pg_lseg))
- 			goto out_mds;
-@@ -891,7 +957,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 
- 	mirror = FF_LAYOUT_COMP(pgio->pg_lseg, ds_idx);
- 	pgm = &pgio->pg_mirrors[0];
--	pgm->pg_bsize = mirror->dss[0].mirror_ds->ds_versions[0].rsize;
-+	pgm->pg_bsize = mirror->dss[dss_id].mirror_ds->ds_versions[0].rsize;
- 
- 	pgio->pg_mirror_idx = ds_idx;
- 	return;
-@@ -1029,7 +1095,7 @@ ff_layout_pg_get_mirror_write(struct nfs_pageio_descriptor *desc, u32 idx)
- 
- static const struct nfs_pageio_ops ff_layout_pg_read_ops = {
- 	.pg_init = ff_layout_pg_init_read,
--	.pg_test = pnfs_generic_pg_test,
-+	.pg_test = ff_layout_pg_test,
- 	.pg_doio = pnfs_generic_pg_readpages,
- 	.pg_cleanup = pnfs_generic_pg_cleanup,
- };
-@@ -1084,8 +1150,10 @@ static void ff_layout_resend_pnfs_read(struct nfs_pgio_header *hdr)
- {
- 	u32 idx = hdr->pgio_mirror_idx + 1;
- 	u32 new_idx = 0;
-+	u32 dss_id = 0;
- 
--	if (ff_layout_choose_any_ds_for_read(hdr->lseg, idx, &new_idx))
-+	if (ff_layout_choose_any_ds_for_read(hdr->lseg, idx, &new_idx,
-+					     hdr->args.offset, &dss_id))
- 		ff_layout_send_layouterror(hdr->lseg);
- 	else
- 		pnfs_error_mark_layout_for_return(hdr->inode, hdr->lseg);
-@@ -1879,26 +1947,31 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 	u32 idx = hdr->pgio_mirror_idx;
- 	int vers;
+ 	const struct cred *ds_cred;
+-	u32 idx;
++	u32 idx, dss_id;
+ 	int vers, ret;
  	struct nfs_fh *fh;
-+	u32 dss_id;
  
- 	dprintk("--> %s ino %lu pgbase %u req %zu@%llu\n",
- 		__func__, hdr->inode->i_ino,
- 		hdr->args.pgbase, (size_t)hdr->args.count, offset);
+@@ -2126,22 +2141,23 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
+ 	    test_bit(NFS_LSEG_LAYOUTRETURN, &lseg->pls_flags)))
+ 		goto out_err;
  
+-	idx = calc_ds_index_from_commit(lseg, data->ds_commit_index);
++	idx = calc_mirror_idx_from_commit(lseg, data->ds_commit_index);
  	mirror = FF_LAYOUT_COMP(lseg, idx);
--	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, 0, false);
-+	dss_id = nfs4_ff_layout_calc_dss_id(
-+		FF_LAYOUT_LSEG(lseg)->stripe_unit,
-+		mirror->dss_count,
-+		offset);
-+	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, dss_id, false);
+-	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, 0, true);
++	dss_id = calc_dss_id_from_commit(lseg, data->ds_commit_index);
++	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, dss_id, true);
  	if (!ds)
- 		goto out_failed;
+ 		goto out_err;
  
  	ds_clnt = nfs4_ff_find_or_create_ds_client(mirror, ds->ds_clp,
--						   hdr->inode, 0);
-+						   hdr->inode, dss_id);
+-						   data->inode, 0);
++						   data->inode, dss_id);
  	if (IS_ERR(ds_clnt))
- 		goto out_failed;
+ 		goto out_err;
  
--	ds_cred = ff_layout_get_ds_cred(mirror, &lseg->pls_range, hdr->cred, 0);
-+	ds_cred = ff_layout_get_ds_cred(mirror, &lseg->pls_range, hdr->cred, dss_id);
+-	ds_cred = ff_layout_get_ds_cred(mirror, &lseg->pls_range, data->cred, 0);
++	ds_cred = ff_layout_get_ds_cred(mirror, &lseg->pls_range, data->cred, dss_id);
  	if (!ds_cred)
- 		goto out_failed;
+ 		goto out_err;
  
 -	vers = nfs4_ff_layout_ds_version(mirror, 0);
 +	vers = nfs4_ff_layout_ds_version(mirror, dss_id);
  
- 	dprintk("%s USE DS: %s cl_count %d vers %d\n", __func__,
- 		ds->ds_remotestr, refcount_read(&ds->ds_clp->cl_count), vers);
-@@ -1906,11 +1979,11 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 	hdr->pgio_done_cb = ff_layout_read_done_cb;
+ 	dprintk("%s ino %lu, how %d cl_count %d vers %d\n", __func__,
+ 		data->inode->i_ino, how, refcount_read(&ds->ds_clp->cl_count),
+@@ -2150,12 +2166,12 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
+ 	data->cred = ds_cred;
  	refcount_inc(&ds->ds_clp->cl_count);
- 	hdr->ds_clp = ds->ds_clp;
--	fh = nfs4_ff_layout_select_ds_fh(mirror, 0);
-+	fh = nfs4_ff_layout_select_ds_fh(mirror, dss_id);
+ 	data->ds_clp = ds->ds_clp;
+-	fh = select_ds_fh_from_commit(lseg, data->ds_commit_index);
++	fh = select_ds_fh_from_commit(lseg, idx, dss_id);
  	if (fh)
- 		hdr->args.fh = fh;
+ 		data->args.fh = fh;
  
--	nfs4_ff_layout_select_ds_stateid(mirror, 0, &hdr->args.stateid);
-+	nfs4_ff_layout_select_ds_stateid(mirror, dss_id, &hdr->args.stateid);
- 
- 	/*
- 	 * Note that if we ever decide to split across DSes,
-@@ -1920,7 +1993,8 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 	hdr->mds_offset = offset;
- 
- 	/* Start IO accounting for local read */
--	localio = ff_local_open_fh(lseg, idx, 0, ds->ds_clp, ds_cred, fh, FMODE_READ);
+ 	/* Start IO accounting for local commit */
+-	localio = ff_local_open_fh(lseg, idx, 0, ds->ds_clp, ds_cred, fh,
 +	localio = ff_local_open_fh(lseg, idx, dss_id, ds->ds_clp, ds_cred, fh,
-+				FMODE_READ);
+ 				   FMODE_READ|FMODE_WRITE);
  	if (localio) {
- 		hdr->task.tk_start = ktime_get();
- 		ff_layout_read_record_layoutstats_start(&hdr->task, hdr);
+ 		data->task.tk_start = ktime_get();
+@@ -2259,8 +2275,9 @@ ff_layout_setup_ds_info(struct pnfs_ds_commit_info *fl_cinfo,
+ 	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+ 	struct inode *inode = lseg->pls_layout->plh_inode;
+ 	struct pnfs_commit_array *array, *new;
++	u32 size = flseg->mirror_array_cnt * flseg->mirror_array[0]->dss_count;
+ 
+-	new = pnfs_alloc_commit_array(flseg->mirror_array_cnt,
++	new = pnfs_alloc_commit_array(size,
+ 				      nfs_io_gfp_mask());
+ 	if (new) {
+ 		spin_lock(&inode->i_lock);
 -- 
 2.34.1
 
