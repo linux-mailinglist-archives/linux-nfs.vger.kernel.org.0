@@ -1,212 +1,173 @@
-Return-Path: <linux-nfs+bounces-13919-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13920-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61215B38EFB
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 01:15:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ABAFB38F4B
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 01:33:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 194FA17060C
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Aug 2025 23:15:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19A471762E5
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Aug 2025 23:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1896B3112A1;
-	Wed, 27 Aug 2025 23:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDAC02F5316;
+	Wed, 27 Aug 2025 23:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gg2bNUva"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rb4Jawz9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B8F30F932
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Aug 2025 23:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9715E30CDA5
+	for <linux-nfs@vger.kernel.org>; Wed, 27 Aug 2025 23:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756336509; cv=none; b=CuIBVcsdZH8QKgDMb9OzVPVbeq/mP6N/SlNZJq3LlyNe/PtQaPojjMFWFqbdRETLgSMuPmSCbvEk0Xua8xhEI4AkLdFqk0oCC6Hqd+XKTwFbsnAWCqE76dl6GCZior3+i6kw87ykOybu0gWxJZ+EQBHBdwL/zo1rX9ZJOtB5S8g=
+	t=1756337588; cv=none; b=oDPM2hcQskwQFrROXlglLFMuh/ZfeEaQPFoSIeekGnFw4Ja93aMGrWDqnqSPHyC50ycJDBOgfv/wFpnTrycOhye6BjJ+aoKOQEevggeCOUsaZc1LkBAvAEY3FsGwlTd6TqhyTqiVeWU+4/SHiJeII0Bum0zqASLIqKsZX4gqk5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756336509; c=relaxed/simple;
-	bh=YQMJdgTOSQXhaaO9gtWk9Kr7XjIOdK6Ar+Im7ZOiJKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMsBSd9LFLxpN+a1D+Y9iVhzNq4jRhSHlGTBxsk2OX+91rY9oHUqPuelpzrbfPAj50x/N3iLGIDwDzvh+mYIsVeeLJF136QEzodVXCc2ZxcFxuLqM6jls6Gm39uX/Up+1OrqjOaJfHozjgpHfi2rA6kPhki6OIpsTfMH0s98Z40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gg2bNUva; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C70AC4CEEB;
-	Wed, 27 Aug 2025 23:15:07 +0000 (UTC)
+	s=arc-20240116; t=1756337588; c=relaxed/simple;
+	bh=qtHOgAWvfzEZKjjZvm5+wfbaL8S6kVJtxvcghEEzgts=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ljr8i6dsoQXLdEbuaJC3vmt9bnFsgtlyW4fpAmAkmSHJYt9t0DoAIslPZ/gwiZqcjIrvHrXOjLU2nlFWUjn7SNf3XVJLo5KVMo5T4klf3Ml66B3+quTHii2V4vF/CqpJ1CbpVH3rxjr4sCgdd7jr63gS0YYPlcXBXvNJM/kzAxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rb4Jawz9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D441C4CEEB;
+	Wed, 27 Aug 2025 23:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756336507;
-	bh=YQMJdgTOSQXhaaO9gtWk9Kr7XjIOdK6Ar+Im7ZOiJKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gg2bNUva0BSWLahdKMZrBz5V4jgIdSSaOwibNB/yurZVF7AEt9j0NwUBXT6mrjoiS
-	 IRzjFlzBVtkb8aAZAL5kmq6WKd8q6Zhv3t+wpNhvGxeA82SGx/byy2W6H0v0CCbsAZ
-	 lg++bNtr79qTX2h1YK5EEUBe1dq8w0aYchXI8/cJ9SI709ActFXxMNZ9iWMakQgI5Z
-	 dCsBi7WfFQpwCpMDwHht2tbnPJwzutTpbWHQB07ihhonvLWP1dYpOu/pVHYqSnbDFk
-	 wAzNHV57CTGPv7f9bmKfHoOduja8Vg4htkB4LMb5X+GAeSxv1IUjP0EBRpGvZFTI6N
-	 CjwqSb/ogcYxw==
-Date: Wed, 27 Aug 2025 19:15:06 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v8 5/7] NFSD: issue READs using O_DIRECT even if IO is
- misaligned
-Message-ID: <aK-Reg6g8ccscwMu@kernel.org>
-References: <20250826185718.5593-1-snitzer@kernel.org>
- <20250826185718.5593-6-snitzer@kernel.org>
- <f7aee927-e4fc-44da-a2b6-7fd90f90d90e@oracle.com>
- <aK9fZR7pQxrosEfW@kernel.org>
- <6f5516a5-1954-4f77-8a07-dacba1fb570c@oracle.com>
+	s=k20201202; t=1756337588;
+	bh=qtHOgAWvfzEZKjjZvm5+wfbaL8S6kVJtxvcghEEzgts=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Rb4Jawz9xFRg81tdiNVW5OClYJJCAqYRloQz1FDrfdvMLUaotbIKOSc7lacWaWfge
+	 fCNQWTucGWPr9a+5AVkLk8Zb16sBQsDEE1DK8svx23UMgtBgi+S0tmAkvbAhRO5dns
+	 7BAJNV9syzi3qsQPESsgr7dlms79/BErhNMDXrfQTYGKBpNQ/RoWo3ZBoGorNNJgUg
+	 RmD4gSElbiXyKdSumeMjVVKgCmMyhjDhEJHXJxRqoR7WV7pdWc9h+2DeC1HnX+0lsn
+	 TMn+WzK8D8Y8V6QpVn4MwtXtr0tNtQwCuywiuFriEvo/qbBo5DA/3RjwewRSrOZJQp
+	 H61WqN3Eg8mAw==
+Message-ID: <6813623b0780828d7e2a6dced04f74f803423f20.camel@kernel.org>
+Subject: Re: [PATCH] sunrpc: hold RPC client while gss_auth has a link to it
+From: Trond Myklebust <trondmy@kernel.org>
+To: Calum Mackay <calum.mackay@oracle.com>, anna.schumaker@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Date: Wed, 27 Aug 2025 16:33:06 -0700
+In-Reply-To: <20250827223831.47513-1-calum.mackay@oracle.com>
+References: <20250827223831.47513-1-calum.mackay@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f5516a5-1954-4f77-8a07-dacba1fb570c@oracle.com>
 
-On Wed, Aug 27, 2025 at 04:56:08PM -0400, Chuck Lever wrote:
-> On 8/27/25 3:41 PM, Mike Snitzer wrote:
-> > On Wed, Aug 27, 2025 at 11:34:03AM -0400, Chuck Lever wrote:
-> >> On 8/26/25 2:57 PM, Mike Snitzer wrote:
-> 
-> >>> +	if (WARN_ONCE(!nf->nf_dio_mem_align || !nf->nf_dio_read_offset_align,
-> >>> +		      "%s: underlying filesystem has not provided DIO alignment info\n",
-> >>> +		      __func__))
-> >>> +		return false;
-> >>> +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
-> >>> +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
-> >>> +		      __func__, dio_blocksize, PAGE_SIZE))
-> >>> +		return false;
-> >>
-> >> IMHO these checks do not warrant a WARN. Perhaps a trace event, instead?
-> > 
-> > I won't die on this hill, I just don't see the risk of these given
-> > they are highly unlikely ("famous last words").
-> > 
-> > But if they trigger we should surely be made aware immediately.  Not
-> > only if someone happens to have a trace event enabled (which would
-> > only happen with further support and engineering involvement to chase
-> > "why isn't O_DIRECT being used like NFSD was optionally configured
-> > to!?").
-> A. It seems particularly inefficient to make this check for every I/O
->    rather than once per file system
-> 
-> B. Once the warning has fired for one file, it won't fire again, making
->    it pretty useless if there are multiple similar mismatches. You still
->    end up with "No direct I/O even though I flipped the switch, and I
->    can't tell why."
+On Wed, 2025-08-27 at 23:38 +0100, Calum Mackay wrote:
+> We have seen crashes where the RPC client has been freed, while a
+> gss_auth
+> still has a pointer to it. Subsequently, GSS attempts to send a NULL
+> call,
+> resulting in a use-after-free in xprt_iter_get_next.
+>=20
+> Fix that by having GSS take a reference on the RPC client, in
+> gss_create_new, and release it in gss_free.
+>=20
+> The crashes we've seen have been on a v5.4-based kernel. They are not
+> reproducible on demand, happening once every few months under heavy
+> load.
+>=20
+> The crashing thread is an rpc_async_release worker:
+>=20
+> xprt_iter_ops (net/sunrpc/xprtmultipath.c:184:43)
+> xprt_iter_get_next (net/sunrpc/xprtmultipath.c:527:35)
+> rpc_task_get_next_xprt (net/sunrpc/clnt.c:1062:9)
+> rpc_task_set_transport (net/sunrpc/clnt.c:1073:19)
+> rpc_task_set_transport (net/sunrpc/clnt.c:1066:6)
+> rpc_task_set_client (net/sunrpc/clnt.c:1081:3)
+> rpc_run_task (net/sunrpc/clnt.c:1133:2)
+> rpc_call_null_helper (net/sunrpc/clnt.c:2766:9)
+> rpc_call_null (net/sunrpc/clnt.c:2771:9)
+> gss_send_destroy_context (net/sunrpc/auth_gss/auth_gss.c:1274:10)
+> gss_destroy_cred (net/sunrpc/auth_gss/auth_gss.c:1341:3)
+> put_rpccred (net/sunrpc/auth.c:758:2)
+> put_rpccred (net/sunrpc/auth.c:733:1)
+> __put_nfs_open_context (fs/nfs/inode.c:1010:2)
+> put_nfs_open_context (fs/nfs/inode.c:1017:2)
+> nfs_pgio_data_destroy (fs/nfs/pagelist.c:562:3)
+> nfs_pgio_header_free (fs/nfs/pagelist.c:573:2)
+> nfs_read_completion (fs/nfs/read.c:200:2)
+> nfs_pgio_release (fs/nfs/pagelist.c:699:2)
+> rpc_release_calldata (net/sunrpc/sched.c:890:3)
+> rpc_free_task (net/sunrpc/sched.c:1171:2)
+> rpc_async_release (net/sunrpc/sched.c:1183:2)
+> process_one_work (kernel/workqueue.c:2295:2)
+> worker_thread (kernel/workqueue.c:2448:4)
+> kthread (kernel/kthread.c:296:9)
+> ret_from_fork+0x2b/0x36 (arch/x86/entry/entry_64.S:358)
+>=20
+> Immediately before __put_nfs_open_context calls put_rpccred, above,
+> it calls nfs_sb_deactive, which frees the RPC client:
+>=20
+> rpc_free_client+189 [sunrpc]
+> rpc_release_client+98 [sunrpc]
+> rpc_shutdown_client+98 [sunrpc]
+> nfs_free_client+123 [nfs]
+> nfs_put_client+217 [nfs]
+> nfs_free_server+81 [nfs]
+> nfs_kill_super+49 [nfs]
+> deactivate_locked_super+58
+> deactivate_super+89
+> nfs_sb_deactive+36 [nfs]
+>=20
+> After the RPC client is freed here, __put_nfs_open_context calls
+> put_rpccred, which wants to destroy the cred, since its refcnt is now
+> zero. Since the cred is not marked as UPTODATE,
+> gss_send_destroy_context
+> needs to send a NULL call to the server, to get it to release all
+> state
+> for this context.=C2=A0 For this NULL call, we need an RPC client with an
+> associated xprt; whilst looking for one, we trip over the freed xpi,
+> that we freed earlier from nfs_sb_deactive.
+>=20
+> Ensuring that the RPC client refcnt is incremented whilst gss_auth
+> has a
+> pointer to it would ensure that the client can't be freed until
+> gss_auth
+> has been freed.
+>=20
+> Whilst the above occurred on a v5.4 kernel, I don't see anything
+> obvious
+> that would stop this happening to current code.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Calum Mackay <calum.mackay@oracle.com>
+> ---
+> =C2=A0net/sunrpc/auth_gss/auth_gss.c | 16 +++++++++++++++-
+> =C2=A01 file changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/auth_gss/auth_gss.c
+> b/net/sunrpc/auth_gss/auth_gss.c
+> index 5c095cb8cb20..8c2cc92c6cd6 100644
+> --- a/net/sunrpc/auth_gss/auth_gss.c
+> +++ b/net/sunrpc/auth_gss/auth_gss.c
+> @@ -1026,6 +1026,13 @@ gss_create_new(const struct
+> rpc_auth_create_args *args, struct rpc_clnt *clnt)
+> =C2=A0
+> =C2=A0	if (!try_module_get(THIS_MODULE))
+> =C2=A0		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure the RPC client can't be freed while gss_auth
+> has
+> +	 * a link to it
+> +	 */
+> +	refcount_inc(&clnt->cl_count);
+> +
 
-I've removed the WARN_ON_ONCEs for read and write.  These repeat
-per-IO negative checks aren't ideal but they certainly aren't costly.
+NACK. We can't have the client hold a reference to the auth_gss struct
+and then have the same auth_gss hold a reference back to the client.
+That's a guaranteed leak of both objects.
 
-> >>> +	/* Return early if IO is irreparably misaligned (len < PAGE_SIZE,
-> >>> +	 * or base not aligned).
-> >>> +	 * Ondisk alignment is implied by the following code that expands
-> >>> +	 * misaligned IO to have a DIO-aligned offset and len.
-> >>> +	 */
-> >>> +	if (unlikely(len < dio_blocksize) || ((base & (nf->nf_dio_mem_align-1)) != 0))
-> >>> +		return false;
-> >>> +
-> >>> +	init_nfsd_read_dio(read_dio);
-> >>> +
-> >>> +	read_dio->start = round_down(offset, dio_blocksize);
-> >>> +	read_dio->end = round_up(orig_end, dio_blocksize);
-> >>> +	read_dio->start_extra = offset - read_dio->start;
-> >>> +	read_dio->end_extra = read_dio->end - orig_end;
-> >>> +
-> >>> +	/*
-> >>> +	 * Any misaligned READ less than NFSD_READ_DIO_MIN_KB won't be expanded
-> >>> +	 * to be DIO-aligned (this heuristic avoids excess work, like allocating
-> >>> +	 * start_extra_page, for smaller IO that can generally already perform
-> >>> +	 * well using buffered IO).
-> >>> +	 */
-> >>> +	if ((read_dio->start_extra || read_dio->end_extra) &&
-> >>> +	    (len < NFSD_READ_DIO_MIN_KB)) {
-> >>> +		init_nfsd_read_dio(read_dio);
-> >>> +		return false;
-> >>> +	}
-> >>> +
-> >>> +	if (read_dio->start_extra) {
-> >>> +		read_dio->start_extra_page = alloc_page(GFP_KERNEL);
-> >>
-> >> This introduces a page allocation where there weren't any before. For
-> >> NFSD, I/O pages come from rqstp->rq_pages[] so that memory allocation
-> >> like this is not needed on an I/O path.
-> > 
-> > NFSD never supported DIO before. Yes, with this patch there is
-> > a single page allocation in the misaligned DIO READ path (if it
-> > requires reading extra before the client requested data starts).
-> > 
-> > I tried to succinctly explain the need for the extra page allocation
-> > for misaligned DIO READ in this patch's header (in 2nd paragraph
-> > of the above header).
-> > 
-> > I cannot see how to read extra, not requested by the client, into the
-> > head of rq_pages without causing serious problems. So that cannot be
-> > what you're saying needed.
-> > 
-> >> So I think the answer to this is that I want you to implement reading
-> >> an entire aligned range from the file and then forming the NFS READ
-> >> response with only the range of bytes that the client requested, as we
-> >> discussed before.
-> > 
-> > That is what I'm doing. But you're taking issue with my implementation
-> > that uses a single extra page.
-> > 
-> >> The use of xdr_buf and bvec should make that quite
-> >> straightforward.
-> > 
-> > Is your suggestion to, rather than allocate a disjoint single page,
-> > borrow the extra page from the end of rq_pages? Just map it into the
-> > bvec instead of my extra page?
-> 
-> Yes, the extra page needs to come from rq_pages. But I don't see why it
-> should come from the /end/ of rq_pages.
-> 
-> - Extend the start of the byte range back to make it align with the
->   file's DIO alignment constraint
-> 
-> - Extend the end of the byte range forward to make it align with the
->   file's DIO alignment constraint
 
-nfsd_analyze_read_dio() does that (start_extra and end_extra).
-
-> - Fill in the sink buffer's bvec using pages from rq_pages, as usual
-> 
-> - When the I/O is complete, adjust the offset in the first bvec entry
->   forward by setting a non-zero page offset, and adjust the returned
->   count downward to match the requested byte count from the client
-
-Tried it long ago, such bvec manipulation only works when not using
-RDMA.  When the memory is remote, twiddling a local bvec isn't going
-to ensure the correct pages have the correct data upon return to the
-client.
-
-RDMA is why the pages must be used in-place, and RDMA is also why
-the extra page needed by this patch (for use as throwaway front-pad
-for expanded misaligned DIO READ) must either be allocated _or_
-hopefully it can be from rq_pages (after the end of the client
-requested READ payload).
-
-Or am I wrong and simply need to keep learning about NFSD's IO path?
-
-> > NFSD using DIO is optional. I thought the point was to get it as an
-> > available option so that _others_ could experiment and help categorize
-> > the benefits/pitfalls further?
-> 
-> Yes, that is the point. But such experiments lose value if there is no
-> data collection plan to go with them.
-
-Each user runs something they care about performing well and they
-measure the result.
-
-Literally the same thing as has been done for anything in Linux since
-it all started.  Nothing unicorn or bespoke here.
-
-> If you would rather make this drive-by, then you'll have to realize
-> that you are requesting more than simple review from us. You'll have
-> to be content with the pace at which us overloaded maintainers can get
-> to the work.
-
-I think I just experienced the mailing-list equivalent of the Detroit
-definition of "drive-by".  Good/bad news: you're a terrible shot.
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
