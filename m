@@ -1,164 +1,120 @@
-Return-Path: <linux-nfs+bounces-13932-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13933-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 313F3B39E3B
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 15:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52B58B39F24
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 15:38:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 898D83B6C55
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 13:10:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 132553A4C8A
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 13:38:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640FD31158E;
-	Thu, 28 Aug 2025 13:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D481E25F9;
+	Thu, 28 Aug 2025 13:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUzCfSzY"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="AT6UUkrW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F30331158A
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 13:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843A51A0B0E
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 13:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756386624; cv=none; b=mG9YIwvugb1iSxViD8Nbc4vO/4ui5LJ8fTzmyYvyHpBrW/FHKD8PwPgQRF8kS8Pp6HDbZ/nXCtKOCkeYV62ojkinoyBI70pv7PS2CnDdJLRl0DHxnP1UlHwE4ITMtO6jG/llRWcWth1fPcSQ2QnvWBgZyZ7yVU9UyoCyFNGSyLw=
+	t=1756388333; cv=none; b=s9WbnQJOUW0PLzn17LB2eII9AejmGLL0NzpwV/iR3H91I/AHGUiDb4zogxJuHCCJAiAbiBc6Yzj+KMj4pa5quyzEk99n/d1iMVVq2U863zdy/kCqWqGlzgtP576PyYHOvb5zMnQjIgYBCLJx8TzmeZI4o1P95tc0aAMbD6ff0yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756386624; c=relaxed/simple;
-	bh=j/QKxJLO3HO0kTrORVGRbVEUUqat0Y64Be2dYZLSmfY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ugn3PPOuJMTQ8q76ZgQCn3wfRBsr5XCPwzSvdgWygXdZHEAbT8hvsNZ1eqgRpAg4ODJAw+75+Y3GytpbuGvHgQ4aG703Av9LScIw6ZGUGa7H8Z8fCu7yzPxudcfGGAPzPgyX+12cP2lQvGQDXKs2SAg6qBigC5sndXmy5Ol+Muk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUzCfSzY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7C9C4CEF5;
-	Thu, 28 Aug 2025 13:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756386622;
-	bh=j/QKxJLO3HO0kTrORVGRbVEUUqat0Y64Be2dYZLSmfY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gUzCfSzYYsSuDLX6gIyadJaqxrbh3uosHpJ4tbtC85j5SyJ/eg+tSs1wbcZTQ33GQ
-	 qixWrtZYeT2OIustjBVrm3DwB4G097VumqM7gnLgGmlGQAoYQpY5MfMUHYDdP394n2
-	 Sx2kt4N7SrbOnoQ0FNIZ3nDxuVckFKy+Umhi9VtcRsgYcaVAsT5rWT/bnjp1FWH4YG
-	 rAGzWgVQGICQDohqmDVoFdtlE5JngsyD6jeGAt3L9cuT0M3p61zzRxlB6RuDI9bX77
-	 SAWq0qo8MYb876cKeMAZX7kMZmRu/6uVdITAut/j3aP5Lrhzdl7mxvbj5H5Cgtg7D5
-	 Bqry0n8xJc+iw==
-Message-ID: <e954bac8c996015ce93e54731c30d20a4b9c56c7.camel@kernel.org>
-Subject: Re: [PATCH] sunrpc: don't fail immediately in
- rpc_wait_bit_killable()
-From: Trond Myklebust <trondmy@kernel.org>
-To: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>, NeilBrown
-	 <neil@brown.name>, Anna Schumaker <anna@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-nfs@vger.kernel.org
-Date: Thu, 28 Aug 2025 06:10:21 -0700
-In-Reply-To: <b409c469-260e-4bd5-9cf8-49f524f3fd5a@oracle.com>
-References: <175563952741.2234665.2783395172093985961@noble.neil.brown.name>
-	 <b409c469-260e-4bd5-9cf8-49f524f3fd5a@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1756388333; c=relaxed/simple;
+	bh=KAxHqGTUvMrl8VMtqmnOWwiFb+GhaiK+6NYek8RBnR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qgWJcSNg1og/emgsncwqR3jK1bdwf+A+ZZwHUpRUqgrOI1ZgPgXjWhW8t+0J4xhZQ6+uRbDmi00kqimNmKO3VFFq0LbeojfaRz5wYFGE22t4kL/rEQTvxCVxZnQabyEGz4pGqYMwPYaG3L/sG+BXURIZYNS46lb783ncAG6NIwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=AT6UUkrW; arc=none smtp.client-ip=131.169.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id 8A11013F651
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 15:38:47 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 8A11013F651
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1756388327; bh=7ETVXkyNIFCrKQg7HDWEotkB4Tmg8rlojqR8o2eEkBA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AT6UUkrWwcfNuvYoKoaQQczWTUJj8FMGJgzS1mza6NL5Yqw7utFlDlO//3nN27Dng
+	 qlB4xPTQCv7bYYLdJFG6h8TM0liXDkGNuyNMDZ2MY6sbewOBEQ3g38AWCdWDY/oNKd
+	 F6YM7PBOYTgcBrD7msTNHdqtHgAlyA7Zg6DyYtVA=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id 7C6F820056;
+	Thu, 28 Aug 2025 15:38:47 +0200 (CEST)
+Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [IPv6:2001:638:d:c302:acdc:1979:2:e7])
+	by smtp-m-2.desy.de (Postfix) with ESMTP id 7167416003F;
+	Thu, 28 Aug 2025 15:38:47 +0200 (CEST)
+Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [131.169.56.82])
+	by b1722.mx.srv.dfn.de (Postfix) with ESMTP id DB02C160059;
+	Thu, 28 Aug 2025 15:38:45 +0200 (CEST)
+Received: from fedora.fritz.box.de (VPN0473.desy.de [131.169.254.218])
+	by smtp-intra-1.desy.de (Postfix) with ESMTP id 8C34180046;
+	Thu, 28 Aug 2025 15:38:45 +0200 (CEST)
+From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+To: trondmy@kernel.org,
+	anna.schumaker@oracle.com
+Cc: linux-nfs@vger.kernel.org,
+	dan.carpenter@linaro.org,
+	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: [PATCH] flexfiles/pNFS: fix NULL checks on result of ff_layout_choose_ds_for_read
+Date: Thu, 28 Aug 2025 15:38:43 +0200
+Message-ID: <20250828133843.1057488-1-tigran.mkrtchyan@desy.de>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-08-28 at 18:12 +0530, Harshvardhan Jha wrote:
-> Hi there,
->=20
-> On 20/08/25 3:08 AM, NeilBrown wrote:
-> > rpc_wait_bit_killable() is called when it is appropriate for a
-> > fatal
-> > signal to abort the wait.
-> >=20
-> > If it is called late during process exit after exit_signals() is
-> > called
-> > (and when PF_EXITING is set), it cannot receive a fatal signal so
-> > waiting indefinitely is not safe.
-> >=20
-> > However aborting immediately, as it currently does, is not ideal as
-> > it
-> > mean that the related NFS request cannot succeed, even if the
-> > network
-> > and server are working properly.
-> >=20
-> > One of the causes of filesystem IO when PF_EXITING is set is
-> > acct_process() which may access the process accounting file.=C2=A0 For =
-a
-> > NFS-root configuration, this can be accessed over NFS.
-> >=20
-> > In this configuration LTP test "acct02" fails.
-> >=20
-> > Though waiting indefinitely is not appropriate, aborting
-> > immediately is
-> > also not desirable.=C2=A0 This patch aims for a middle ground of waitin=
-g
-> > at
-> > most 5 seconds.=C2=A0 This should be enough when NFS service is working=
-,
-> > but
-> > not so much as to delay process exit excessively when NFS service
-> > is not
-> > functioning.
-> >=20
-> > Reported-by: Mark Brown <broonie@kernel.org>
-> > Reported-and-tested-by: Harshvardhan Jha
-> > <harshvardhan.j.jha@oracle.com>
-> > Link:
-> > https://nam10.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Furl=
-defense.com%2Fv3%2F__https%3A%2F%2Flore.kernel.org%2Flinux-nfs%2F7d4d57b0-3=
-9a3-49f1-8ada-60364743e3b4%40sirena.org.uk%2F__%3B!!ACWV5N9M2RV99hQ!LaRJdjZ=
-ulcG71nHFWdEAszB9mJEhezxPsDxHO8xeQJ7P8a9UfYNRIm1ziuuHU5wxgEXW14vAqC1dlpSQra=
-WaxA%24&data=3D05%7C02%7Ctrondmy%40hammerspace.com%7C5463825a86c248e5766c08=
-dde6306312%7C0d4fed5c3a7046fe9430ece41741f59e%7C0%7C0%7C638919817692991630%=
-7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJ=
-XaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DGBRM89CFMk2v=
-KyeN4yKBvjiV9IrODC4tbwMfRSk4Cfc%3D&reserved=3D0
-> > =C2=A0
-> > Fixes: 14e41b16e8cb ("SUNRPC: Don't allow waiting for exiting
-> > tasks")
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> > =C2=A0net/sunrpc/sched.c | 14 +++++++++-----
-> > =C2=A01 file changed, 9 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > index 73bc39281ef5..92f39e828fbe 100644
-> > --- a/net/sunrpc/sched.c
-> > +++ b/net/sunrpc/sched.c
-> > @@ -276,11 +276,15 @@ EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
-> > =C2=A0
-> > =C2=A0static int rpc_wait_bit_killable(struct wait_bit_key *key, int
-> > mode)
-> > =C2=A0{
-> > -	if (unlikely(current->flags & PF_EXITING))
-> > -		return -EINTR;
-> > -	schedule();
-> > -	if (signal_pending_state(mode, current))
-> > -		return -ERESTARTSYS;
-> > +	if (unlikely(current->flags & PF_EXITING)) {
-> > +		/* Cannot be killed by a signal, so don't wait
-> > indefinitely */
-> > +		if (schedule_timeout(5 * HZ) =3D=3D 0)
-> > +			return -EINTR;
-> > +	} else {
-> > +		schedule();
-> > +		if (signal_pending_state(mode, current))
-> > +			return -ERESTARTSYS;
-> > +	}
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > =C2=A0
-> Is it possible to get this merged in 6.17? I have tested this and the
-> LTP tests pass
+Recent commit f06bedfa62d5 ("pNFS/flexfiles: don't attempt pnfs on fatal DS
+errors") has changed the error return type of ff_layout_choose_ds_for_read() from
+NULL to an error pointer. However, not all code paths have been updated
+to match the change. Thus, some non-NULL checks will accept error pointers
+as a valid return value.
 
-If we are in this situation, it is because some signal has already
-killed the parent task. That throws any data integrity guarantees right
-out of the window.
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Fixes: f06bedfa62d5 ("pNFS/flexfiles: don't attempt pnfs on fatal DS errors")
+Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-So what problem is this patch trying to fix?
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 8dc921d83538..258158dfd557 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -804,7 +804,7 @@ ff_layout_choose_best_ds_for_read(struct pnfs_layout_segment *lseg,
+ 	struct nfs4_pnfs_ds *ds;
+ 
+ 	ds = ff_layout_choose_valid_ds_for_read(lseg, start_idx, best_idx);
+-	if (ds)
++	if (!IS_ERR(ds))
+ 		return ds;
+ 	return ff_layout_choose_any_ds_for_read(lseg, start_idx, best_idx);
+ }
+@@ -818,7 +818,7 @@ ff_layout_get_ds_for_read(struct nfs_pageio_descriptor *pgio,
+ 
+ 	ds = ff_layout_choose_best_ds_for_read(lseg, pgio->pg_mirror_idx,
+ 					       best_idx);
+-	if (ds || !pgio->pg_mirror_idx)
++	if (!IS_ERR(ds) || !pgio->pg_mirror_idx)
+ 		return ds;
+ 	return ff_layout_choose_best_ds_for_read(lseg, 0, best_idx);
+ }
+@@ -868,7 +868,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 	req->wb_nio = 0;
+ 
+ 	ds = ff_layout_get_ds_for_read(pgio, &ds_idx);
+-	if (!ds) {
++	if (IS_ERR(ds)) {
+ 		if (!ff_layout_no_fallback_to_mds(pgio->pg_lseg))
+ 			goto out_mds;
+ 		pnfs_generic_pg_cleanup(pgio);
+-- 
+2.51.0
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
 
