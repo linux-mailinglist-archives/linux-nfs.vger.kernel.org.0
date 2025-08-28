@@ -1,62 +1,58 @@
-Return-Path: <linux-nfs+bounces-13941-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13942-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEA97B3A69A
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 18:41:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0922B3A80D
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 19:30:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D26E21884474
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 16:40:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F3145683EB
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 17:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5FF322DC9;
-	Thu, 28 Aug 2025 16:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F2F337689;
+	Thu, 28 Aug 2025 17:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEg60fZ2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVV235nb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AD5221FBB
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 16:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FEB176ADB
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 17:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756398983; cv=none; b=hr6Di91Wj8P1dsEchu237J3RAnSgjrac5Jd8wlEGR/XxGT6Wsdzc4w/18poMOyyJKs8fJrumZpH8JqmAL2n0aC91G1jibJ06+XMDDg4/bEwJqzmZacJjawPgpyNHOXSKbrerYdbSW3S6Gj37SjcmN5dipCrkh9kAwsKeR+7xJFc=
+	t=1756402180; cv=none; b=df3qjEh8eHHv3A620MLHWskYhSWC2KBtbXokIRXv6oBqvb6T9lL0EKhBKhEllIRKx5kuLpuFtmwXCfzlyg4YePyC5uBxS/YS1mFP4Z+8acaLaxSYkRReYJNFQCrCF3+qu15Z7kqwUI0RvVIPfQaQT8kVsWMB8Gu1vrWJxFJ537o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756398983; c=relaxed/simple;
-	bh=hQEp3NTqU4Sr6sX/JJj6YtJSXoTYyv01gQV8HMrpD48=;
+	s=arc-20240116; t=1756402180; c=relaxed/simple;
+	bh=ZmpaVAZc/IOxjZ0mFH917N/bvG+T9S/K17pRggdx5vs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PD22ezUqWODRS7MF3HkqrY2l8+Cwqe0MD8wbcEUfK0oRazSn+LOvIraz/Ez/iis+86aLcJG144LXdNluDCeAPHG6SxbdDHu8FyDw+5L4y2ilRAVSkwYVwTj0DgzQeLRT3+X/oXK4eG5YUyRXxww2lOrdT3ypNbZlW0qT0qDQa6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEg60fZ2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDED4C4CEEB;
-	Thu, 28 Aug 2025 16:36:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gufiHry/4NoqSE5++QTUDI9R1vyKJ/8tX46liwQZDiuyGUekfHHBcejp7VQaMlkEtKjL4q/cE5VjN/NbS2P9Ue/yTpTzBbhWzRCe98A4TbXrfyZUW18QSMbtW9E42fFvVFg0IvCb7vVfsXn1twbO+U6N/JcW30vtKf3riz+i2ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVV235nb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EADC4CEED;
+	Thu, 28 Aug 2025 17:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756398982;
-	bh=hQEp3NTqU4Sr6sX/JJj6YtJSXoTYyv01gQV8HMrpD48=;
+	s=k20201202; t=1756402180;
+	bh=ZmpaVAZc/IOxjZ0mFH917N/bvG+T9S/K17pRggdx5vs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CEg60fZ2YOErIuQkuSPaqldT+uBGK2opDkZMgXkp8Tw+8a4VrSaRzWw8sY/QjsWrI
-	 eOmiuFirjbl9ajhkdehNJIdxDU9yb9QvxFAWlL5aaWJ9o+rLVj+0cGV7LeRKnplk4K
-	 FMwPG76wrbq3L1//OCJIcr+uy+Bx/Tx/TyVs5Wu3efspkASlhN+13204bdvWH6UZky
-	 lfXV3RAqFpkGFoXH24mek6vEHBxJi9oUXWbwqFQ3lQyeuv/uR7wfoAJ1uFUfByBNlK
-	 pT5IAIFiXLXyHBEIVlwoN/wa0HmjDPCKNT8kUmd81GgQ9S0RlqT/TsmslIqhk5TB2C
-	 aZYedK7ISjjJA==
-Message-ID: <09fa0bb261508aa9da87d2e664bae064f2232eaf.camel@kernel.org>
-Subject: Re: [PATCH v8 5/7] NFSD: issue READs using O_DIRECT even if IO is
- misaligned
+	b=uVV235nbYz1uemCpBmGBWfNqUylbXcAgPn+EiVeldju4u40Nuq9Ww5SWq4uom5tDi
+	 1Ter5E+VHf2vFSqx9kW6U6lrLv9yMAvfZwi7wG2slEwxXzSqlCBT60LHyEv3QItqPc
+	 zezZoM0RjN4VBUEjV1nQDPd94hH6xkBnj/f0MVWb8OCZGrwr35D8CMJj7+YUEiHHzW
+	 zpsYZD4s2biDPOdhPEPn63F0l4KLrKKTE3Z6VnggJ0QIwTqmpCeulPrlKRcwTuejaN
+	 pk8JPUjkBTPpCoe20MTXhikyjQu2MagL3T244jQAULOHqxiYrOYQ0yoRK5BmP3L8X1
+	 KiOwbMDw0TO9Q==
+Message-ID: <e56f9194f0e65e85d92da4129f636fe40b34e54c.camel@kernel.org>
+Subject: Re: [RFC PATCH 1/1] nfsd: rework how a listener is removed
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 28 Aug 2025 12:36:20 -0400
-In-Reply-To: <aLAOsGUIvONZvfX7@kernel.org>
-References: <20250826185718.5593-1-snitzer@kernel.org>
-	 <20250826185718.5593-6-snitzer@kernel.org>
-	 <f7aee927-e4fc-44da-a2b6-7fd90f90d90e@oracle.com>
-	 <aK9fZR7pQxrosEfW@kernel.org>
-	 <6f5516a5-1954-4f77-8a07-dacba1fb570c@oracle.com>
-	 <aK-Reg6g8ccscwMu@kernel.org>
-	 <09eca412-b6e3-4011-b7dd-3a452eae6489@oracle.com>
-	 <aLAOsGUIvONZvfX7@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia
+	 <okorniev@redhat.com>
+Cc: linux-nfs@vger.kernel.org, neil@brown.name, Dai.Ngo@oracle.com, 
+	tom@talpey.com
+Date: Thu, 28 Aug 2025 13:29:38 -0400
+In-Reply-To: <a641de95-07d3-479d-be64-11d99e56e08b@oracle.com>
+References: <20250826220001.8235-1-okorniev@redhat.com>
+	 <41502e2f-0d97-48a3-876f-62c33ae6d657@oracle.com>
+	 <a641de95-07d3-479d-be64-11d99e56e08b@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,181 +137,370 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-08-28 at 04:09 -0400, Mike Snitzer wrote:
-> On Wed, Aug 27, 2025 at 09:57:39PM -0400, Chuck Lever wrote:
-> > On 8/27/25 7:15 PM, Mike Snitzer wrote:
-> > > On Wed, Aug 27, 2025 at 04:56:08PM -0400, Chuck Lever wrote:
-> > > > On 8/27/25 3:41 PM, Mike Snitzer wrote:
-> > > > > Is your suggestion to, rather than allocate a disjoint single pag=
-e,
-> > > > > borrow the extra page from the end of rq_pages? Just map it into =
-the
-> > > > > bvec instead of my extra page?
-> > > >=20
-> > > > Yes, the extra page needs to come from rq_pages. But I don't see wh=
-y it
-> > > > should come from the /end/ of rq_pages.
-> > > >=20
-> > > > - Extend the start of the byte range back to make it align with the
-> > > >   file's DIO alignment constraint
-> > > >=20
-> > > > - Extend the end of the byte range forward to make it align with th=
-e
-> > > >   file's DIO alignment constraint
+On Thu, 2025-08-28 at 11:21 -0400, Chuck Lever wrote:
+> On 8/27/25 10:21 AM, Chuck Lever wrote:
+> > On 8/26/25 6:00 PM, Olga Kornievskaia wrote:
+> > > This patch tries to address the following failure:
+> > > nfsdctl threads 0
+> > > nfsdctl listener +rdma::20049
+> > > nfsdctl listener +tcp::2049
+> > > nfsdctl listener -tcp::2049
+> > > nfsdctl: Error: Cannot assign requested address
 > > >=20
-> > > nfsd_analyze_read_dio() does that (start_extra and end_extra).
-> > >=20
-> > > > - Fill in the sink buffer's bvec using pages from rq_pages, as usua=
-l
-> > > >=20
-> > > > - When the I/O is complete, adjust the offset in the first bvec ent=
-ry
-> > > >   forward by setting a non-zero page offset, and adjust the returne=
+> > > The reason for the failure is due to the fact that socket cleanup onl=
+y
+> > > happens in __svc_rdma_free() which is a deferred work triggers when a=
+n
+> > > rdma transport is destroyed. To remove a listener nfsdctl is forced t=
+o
+> > > first remove all transports via svc_xprt_destroy_all() and then re-ad=
 d
-> > > >   count downward to match the requested byte count from the client
+> > > the ones that are left. Due to the fact that there isn't a way to
+> > > delete a particular entry from server's lwq sp_xprts that stores
+> > > transports. Going back to the deferred work done in __svc_rdma_free()=
+,
+> > > the work might not get to run before nfsd_nl_listener_set_doit() crea=
+tes
+> > > the new transports. As a result, it finds that something is still
+> > > listening of the rdma port and rdma_bind_addr() fails.
 > > >=20
-> > > Tried it long ago, such bvec manipulation only works when not using
-> > > RDMA.  When the memory is remote, twiddling a local bvec isn't going
-> > > to ensure the correct pages have the correct data upon return to the
-> > > client.
+> > > Instead of using svc_xprt_destroy_all() to manipulate the sp_xprt,
+> > > instead introduce a function that just dequeues all transports. Then,
+> > > we add non-removed transports back to the list.
 > > >=20
-> > > RDMA is why the pages must be used in-place, and RDMA is also why
-> > > the extra page needed by this patch (for use as throwaway front-pad
-> > > for expanded misaligned DIO READ) must either be allocated _or_
-> > > hopefully it can be from rq_pages (after the end of the client
-> > > requested READ payload).
+> > > Still not allowing to remove a listener while the server is active.
 > > >=20
-> > > Or am I wrong and simply need to keep learning about NFSD's IO path?
+> > > We need to make several passes over the list of existing/new list
+> > > entries. On the first pass we determined if any of the entries need
+> > > to be removed. If so, we then check if the server has no active
+> > > threads. Then we dequeue all the transports and then go over the
+> > > list and recreate both permsocks list and sp_xprts lists. Then,
+> > > for the deleted transports, the transport is closed.
 > >=20
-> > You're wrong, not to put a fine point on it.
->=20
-> You didn't even understand me.. but firmly believe I'm wrong?
->=20
-> > There's nothing I can think of in the RDMA or RPC/RDMA protocols that
-> > mandates that the first page offset must always be zero. Moving data
-> > at one address on the server to an entirely different address and
-> > alignment on the client is exactly what RDMA is supposed to do.
+> > > --- Comments:
+> > > (1) There is still a restriction on removing an active listener as
+> > > I dont know how to handle if the transport to be remove is currently
+> > > serving a request (it won't be on the sp_xprt list I believe?).
 > >=20
-> > It sounds like an implementation omission because the server's upper
-> > layers have never needed it before now. If TCP already handles it, I'm
-> > guessing it's going to be straightforward to fix.
->=20
-> I never said that first page offset must be zero.  I said that I
-> already did what you suggested and it didn't work with RDMA.  This is
-> recall of too many months ago now, but: the client will see the
-> correct READ payload _except_ IIRC it is offset by whatever front-pad
-> was added to expand the misaligned DIO; no matter whether
-> rqstp->rq_bvec updated when IO completes.
->=20
-> But I'll revisit it again.
->=20
-> > > > > NFSD using DIO is optional. I thought the point was to get it as =
-an
-> > > > > available option so that _others_ could experiment and help categ=
-orize
-> > > > > the benefits/pitfalls further?
-> > > >=20
-> > > > Yes, that is the point. But such experiments lose value if there is=
- no
-> > > > data collection plan to go with them.
-> > >=20
-> > > Each user runs something they care about performing well and they
-> > > measure the result.
+> > This is a good reason why just setting a bit in the xprt and waiting fo=
+r
+> > the close to complete is probably a better strategy than draining and
+> > refilling the permsock list.
 > >=20
-> > That assumes the user will continue to use the debug interfaces, and
-> > the particular implementation you've proposed, for the rest of time.
-> > And that's not my plan at all.
+> > The idea of setting XPT_CLOSE and enqueuing the transport ... you know,
+> > like this:
 > >=20
-> > If we, in the community, cannot reproduce that result, or cannot
-> > understand what has been measured, or the measurement misses part or
-> > most of the picture, of what value is that for us to decide whether and
-> > how to proceed with promoting the mechanism from debug feature to
-> > something with a long-term support lifetime and a documented ABI-stable
-> > user interface?
->=20
-> I'll work to put a finer point on how to reproduce and enumerate the
-> things to look for (representative flamegraphs showing the issue,
-> which I already did at last Bakeathon).
->=20
-> But I have repeatedly offered that the pathological worst case is
-> client doing sequential write IO of a file that is 3-4x larger than
-> the NFS server's system memory.
->=20
-> Large memory systems with 8 or more NVMe devices, fast networks that
-> allow for huge data ingest capabilities.  These are the platforms that
-> showcase MM's dirty writeback limitions when large sequential IO is
-> initiated from the NFS client and its able to overrun the NFS server.
->=20
-> In addition, in general DIO requires significantly less memory and
-> CPU; so platforms that have more limited resources (and may have
-> historically struggled) could have a new lease on life if they switch
-> NFSD from buffered to DIO mode.
->=20
-> > > Literally the same thing as has been done for anything in Linux since
-> > > it all started.  Nothing unicorn or bespoke here.
+> >  151 /**
 > >=20
-> > So let me ask this another way: What do we need users to measure to giv=
-e
-> > us good quality information about the page cache behavior and system
-> > thrashing behavior you reported?
->=20
-> IO throughput, CPU and memory usage should be monitored over time.
->=20
-> > For example: I can enable direct I/O on NFSD, but my workload is mostly
-> > one or two clients doing kernel builds. The latency of NFS READs goes
-> > up, but since a kernel build is not I/O bound and the client page cache=
-s
-> > hide most of the increase, there is very little to show a measured
-> > change.
+> >  152  * svc_xprt_deferred_close - Close a transport
 > >=20
-> > So how should I assess and report the impact of NFSD doing direct I/O?
+> >  153  * @xprt: transport instance
+> >=20
+> >  154  *
+> >=20
+> >  155  * Used in contexts that need to defer the work of shutting down
+> >=20
+> >  156  * the transport to an nfsd thread.
+> >=20
+> >  157  */
+> >=20
+> >  158 void svc_xprt_deferred_close(struct svc_xprt *xprt)
+> >=20
+> >  159 {
+> >=20
+> >  160         trace_svc_xprt_close(xprt);
+> >=20
+> >  161         if (!test_and_set_bit(XPT_CLOSE, &xprt->xpt_flags))
+> >=20
+> >  162                 svc_xprt_enqueue(xprt);
+> >=20
+> >  163 }
+> >=20
+> >  164 EXPORT_SYMBOL_GPL(svc_xprt_deferred_close);
+> >=20
+> > I expect that eventually the xprt will show up to svc_handle_xprt() and
+> > get deleted there. But you might still need some serialization with
+> >   ->xpo_accept ?
 >=20
-> Your underwhelming usage isn't what this patchset is meant to help.
+> It occurred to me why the deferred close mechanism doesn't work: it
+> relies on having an nfsd thread to pick up the deferred work.
 >=20
-> > See -- users are not the only ones who are involved in this experiment;
-> > and they will need guidance because we're not providing any
-> > documentation for this feature.
->=20
-> Users are not created equal.  Major companies like Oracle and Meta
-> _should_ be aware of NFSD's problems with buffered IO.  They have
-> internal and external stakeholders that are power users.
->=20
-> Jeff, does Meta ever see NFSD struggle to consistently use NVMe
-> devices?  Lumpy performance?  Full-blown IO stalls?  Lots of NFSD
-> threads hung in D state?
+> If listener removal requires all nfsd threads to be terminated, there
+> is no thread to pick up the xprt and close it.
 >=20
 
-Yes. We're particularly interested in this work for that reason. A lot
-of the workload is large, streaming writes at the application layer
-that are only rarely ever read, and quite a bit later when it does
-happen.
+Interesting. I guess that the old nfsdfs file just didn't allow you to
+get into this situation, since you couldn't remove a listener at all.
 
-This means that the pagecache is pretty useless. My _guess_ is that DIO
-will help that significantly, though I do still have some concerns
-about using buffered I/O for the edges of unaligned WRITEs.
+It really sounds like we just need a more selective version of
+svc_clean_up_xprts(). Something that can dequeue everything, close the
+ones that need to be closed (synchronously) and then requeues the rest.
 
-> > > > If you would rather make this drive-by, then you'll have to realize
-> > > > that you are requesting more than simple review from us. You'll hav=
-e
-> > > > to be content with the pace at which us overloaded maintainers can =
-get
-> > > > to the work.
+
+>=20
+> > > In general, I'm unsure if there are other things I'm not considering.
+> > > (2) I'm questioning if in svc_xprt_dequeue_all() it is correct. I
+> > > used svc_cleanup_up_xprts() as the example.
+> > > > Fixes: d093c90892607 ("nfsd: fix management of listener transports"=
+)
+> > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > ---
+> > >  fs/nfsd/nfsctl.c                | 123 +++++++++++++++++++-----------=
+--
+> > >  include/linux/sunrpc/svc_xprt.h |   1 +
+> > >  include/linux/sunrpc/svcsock.h  |   1 -
+> > >  net/sunrpc/svc_xprt.c           |  12 ++++
+> > >  4 files changed, 88 insertions(+), 49 deletions(-)
 > > >=20
-> > > I think I just experienced the mailing-list equivalent of the Detroit
-> > > definition of "drive-by".  Good/bad news: you're a terrible shot.
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index dd3267b4c203..38aaaef4734e 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+> > > @@ -1902,44 +1902,17 @@ int nfsd_nl_version_get_doit(struct sk_buff *=
+skb, struct genl_info *info)
+> > >  	return err;
+> > >  }
+> > > =20
+> > > -/**
+> > > - * nfsd_nl_listener_set_doit - set the nfs running sockets
+> > > - * @skb: reply buffer
+> > > - * @info: netlink metadata and command arguments
+> > > - *
+> > > - * Return 0 on success or a negative errno.
+> > > - */
+> > > -int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info =
+*info)
+> > > +static void _nfsd_walk_listeners(struct genl_info *info, struct svc_=
+serv *serv,
+> > > +				 struct list_head *permsocks, int modify_xprt)
 > >=20
-> > The term "drive-by contribution" has a well-understood meaning in the
-> > kernel community. If you are unfamiliar with it, I invite you to review
-> > the mailing list archives. As always, no-one is shooting at you. If
-> > anything, the drive-by contribution is aimed at me.
+> > So this function looks for the one listener we need to remove.
+> >=20
+> > Should removing a listener also close down all active temporary sockets
+> > for the service, or should it kill only the ones that were established
+> > via the listener being removed, or should it leave all active temporary
+> > sockets in place?
+> >=20
+> > Perhaps this is why /all/ permanent and temporary sockets are currently
+> > being removed. Once the target listener is gone, clients can't
+> > re-establish new connections, and the service is effectively ready to
+> > be shut down cleanly.
+> >=20
+> >=20
+> > >  {
+> > >  	struct net *net =3D genl_info_net(info);
+> > > -	struct svc_xprt *xprt, *tmp;
+> > >  	const struct nlattr *attr;
+> > > -	struct svc_serv *serv;
+> > > -	LIST_HEAD(permsocks);
+> > > -	struct nfsd_net *nn;
+> > > -	bool delete =3D false;
+> > > -	int err, rem;
+> > > -
+> > > -	mutex_lock(&nfsd_mutex);
+> > > -
+> > > -	err =3D nfsd_create_serv(net);
+> > > -	if (err) {
+> > > -		mutex_unlock(&nfsd_mutex);
+> > > -		return err;
+> > > -	}
+> > > -
+> > > -	nn =3D net_generic(net, nfsd_net_id);
+> > > -	serv =3D nn->nfsd_serv;
+> > > -
+> > > -	spin_lock_bh(&serv->sv_lock);
+> > > +	struct svc_xprt *xprt, *tmp;
+> > > +	int rem;
+> > > =20
+> > > -	/* Move all of the old listener sockets to a temp list */
+> > > -	list_splice_init(&serv->sv_permsocks, &permsocks);
+> > > +	if (modify_xprt)
+> > > +		svc_xprt_dequeue_all(serv);
+> > > =20
+> > > -	/*
+> > > -	 * Walk the list of server_socks from userland and move any that ma=
+tch
+> > > -	 * back to sv_permsocks
+> > > -	 */
+> > >  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> > >  		struct nlattr *tb[NFSD_A_SOCK_MAX + 1];
+> > >  		const char *xcl_name;
+> > > @@ -1962,7 +1935,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *s=
+kb, struct genl_info *info)
+> > >  		sa =3D nla_data(tb[NFSD_A_SOCK_ADDR]);
+> > > =20
+> > >  		/* Put back any matching sockets */
+> > > -		list_for_each_entry_safe(xprt, tmp, &permsocks, xpt_list) {
+> > > +		list_for_each_entry_safe(xprt, tmp, permsocks, xpt_list) {
+> > >  			/* This shouldn't be possible */
+> > >  			if (WARN_ON_ONCE(xprt->xpt_net !=3D net)) {
+> > >  				list_move(&xprt->xpt_list, &serv->sv_permsocks);
+> > > @@ -1971,35 +1944,89 @@ int nfsd_nl_listener_set_doit(struct sk_buff =
+*skb, struct genl_info *info)
+> > > =20
+> > >  			/* If everything matches, put it back */
+> > >  			if (!strcmp(xprt->xpt_class->xcl_name, xcl_name) &&
+> > > -			    rpc_cmp_addr_port(sa, (struct sockaddr *)&xprt->xpt_local)) {
+> > > +			    rpc_cmp_addr_port(sa,
+> > > +				    (struct sockaddr *)&xprt->xpt_local)) {
+> > >  				list_move(&xprt->xpt_list, &serv->sv_permsocks);
+> > > +				if (modify_xprt)
+> > > +					svc_xprt_enqueue(xprt);
+> > >  				break;
+> > >  			}
+> > >  		}
+> > >  	}
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_listener_set_doit - set the nfs running sockets
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info =
+*info)
+> > > +{
+> > > +	struct net *net =3D genl_info_net(info);
+> > > +	struct svc_xprt *xprt;
+> > > +	const struct nlattr *attr;
+> > > +	struct svc_serv *serv;
+> > > +	LIST_HEAD(permsocks);
+> > > +	struct nfsd_net *nn;
+> > > +	bool delete =3D false;
+> > > +	int err, rem;
+> > > +
+> > > +	mutex_lock(&nfsd_mutex);
+> > > +
+> > > +	err =3D nfsd_create_serv(net);
+> > > +	if (err) {
+> > > +		mutex_unlock(&nfsd_mutex);
+> > > +		return err;
+> > > +	}
+> > > +
+> > > +	nn =3D net_generic(net, nfsd_net_id);
+> > > +	serv =3D nn->nfsd_serv;
+> > > +
+> > > +	spin_lock_bh(&serv->sv_lock);
+> > > +
+> > > +	/* Move all of the old listener sockets to a temp list */
+> > > +	list_splice_init(&serv->sv_permsocks, &permsocks);
+> > > =20
+> > >  	/*
+> > > -	 * If there are listener transports remaining on the permsocks list=
+,
+> > > -	 * it means we were asked to remove a listener.
+> > > +	 * Walk the list of server_socks from userland and move any that ma=
+tch
+> > > +	 * back to sv_permsocks. Determine if anything needs to be removed =
+so
+> > > +	 * don't manipulate sp_xprts list.
+> > >  	 */
+> > > -	if (!list_empty(&permsocks)) {
+> > > -		list_splice_init(&permsocks, &serv->sv_permsocks);
+> > > -		delete =3D true;
+> > > -	}
+> > > -	spin_unlock_bh(&serv->sv_lock);
+> > > +	_nfsd_walk_listeners(info, serv, &permsocks, false);
+> > > =20
+> > > -	/* Do not remove listeners while there are active threads. */
+> > > -	if (serv->sv_nrthreads) {
+> > > +	/* For now, no removing old sockets while server is running */
+> > > +	if (serv->sv_nrthreads && !list_empty(&permsocks)) {
+> > > +		list_splice_init(&permsocks, &serv->sv_permsocks);
+> > > +		spin_unlock_bh(&serv->sv_lock);
+> > >  		err =3D -EBUSY;
+> > >  		goto out_unlock_mtx;
+> > >  	}
+> > > =20
+> > >  	/*
+> > > -	 * Since we can't delete an arbitrary llist entry, destroy the
+> > > -	 * remaining listeners and recreate the list.
+> > > +	 * If there are listener transports remaining on the permsocks list=
+,
+> > > +	 * it means we were asked to remove a listener. Walk the list again=
+,
+> > > +	 * but this time also manage the sp_xprts but first removing all of
+> > > +	 * them and only adding back the ones not being deleted. Then close
+> > > +	 * the ones left on the list.
+> > >  	 */
+> > > -	if (delete)
+> > > -		svc_xprt_destroy_all(serv, net, false);
+> > > +	if (!list_empty(&permsocks)) {
+> > > +		list_splice_init(&permsocks, &serv->sv_permsocks);
+> > > +		list_splice_init(&serv->sv_permsocks, &permsocks);
+> > > +		_nfsd_walk_listeners(info, serv, &permsocks, true);
+> > > +		while (!list_empty(&permsocks)) {
+> > > +			xprt =3D list_first_entry(&permsocks, struct svc_xprt, xpt_list);
+> > > +			clear_bit(XPT_BUSY, &xprt->xpt_flags);
+> > > +			set_bit(XPT_CLOSE, &xprt->xpt_flags);
+> > > +			spin_unlock_bh(&serv->sv_lock);
+> > > +			svc_xprt_close(xprt);
+> > > +			spin_lock_bh(&serv->sv_lock);
+> > > +		}
+> > > +		spin_unlock_bh(&serv->sv_lock);
+> > > +		goto out_unlock_mtx;
+> > > +	}
+> > > +	spin_unlock_bh(&serv->sv_lock);
+> > > =20
+> > >  	/* walk list of addrs again, open any that still don't exist */
+> > >  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> > > diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/s=
+vc_xprt.h
+> > > index da2a2531e110..7038fd8ef20a 100644
+> > > --- a/include/linux/sunrpc/svc_xprt.h
+> > > +++ b/include/linux/sunrpc/svc_xprt.h
+> > > @@ -186,6 +186,7 @@ int	svc_xprt_names(struct svc_serv *serv, char *b=
+uf, const int buflen);
+> > >  void	svc_add_new_perm_xprt(struct svc_serv *serv, struct svc_xprt *x=
+prt);
+> > >  void	svc_age_temp_xprts_now(struct svc_serv *, struct sockaddr *);
+> > >  void	svc_xprt_deferred_close(struct svc_xprt *xprt);
+> > > +void	svc_xprt_dequeue_all(struct svc_serv *serv);
+> > > =20
+> > >  static inline void svc_xprt_get(struct svc_xprt *xprt)
+> > >  {
+> > > diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/sv=
+csock.h
+> > > index 963bbe251e52..4c1be01afdb7 100644
+> > > --- a/include/linux/sunrpc/svcsock.h
+> > > +++ b/include/linux/sunrpc/svcsock.h
+> > > @@ -65,7 +65,6 @@ int		svc_addsock(struct svc_serv *serv, struct net =
+*net,
+> > >  			    const struct cred *cred);
+> > >  void		svc_init_xprt_sock(void);
+> > >  void		svc_cleanup_xprt_sock(void);
+> > > -
+> > >  /*
+> > >   * svc_makesock socket characteristics
+> > >   */
+> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > > index 6973184ff667..2aa46b9468d4 100644
+> > > --- a/net/sunrpc/svc_xprt.c
+> > > +++ b/net/sunrpc/svc_xprt.c
+> > > @@ -890,6 +890,18 @@ void svc_recv(struct svc_rqst *rqstp)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(svc_recv);
+> > > =20
+> > > +void svc_xprt_dequeue_all(struct svc_serv *serv)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i =3D 0; i < serv->sv_nrpools; i++) {
+> > > +		struct svc_pool *pool =3D &serv->sv_pools[i];
+> > > +
+> > > +		lwq_dequeue_all(&pool->sp_xprts);
+> > > +	}
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(svc_xprt_dequeue_all);
+> > > +
+> > >  /**
+> > >   * svc_send - Return reply to client
+> > >   * @rqstp: RPC transaction context
+> >=20
+> >=20
 >=20
-> It is a blatant miscategorization here. That you just doubled down
-> on it having relevance in this instance is flagrantly wrong.
->=20
-> Whatever compells you to belittle me and my contributions, just know
-> it is extremely hard to take. Highly unproductive and unprofessional.
->=20
-> Boom, done.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
