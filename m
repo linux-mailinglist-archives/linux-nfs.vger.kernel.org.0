@@ -1,574 +1,454 @@
-Return-Path: <linux-nfs+bounces-13943-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13944-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63AE0B3A9BC
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 20:16:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3648CB3AA55
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 20:52:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 544551C81C66
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 18:17:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCA7AA00909
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Aug 2025 18:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B1A217654;
-	Thu, 28 Aug 2025 18:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F696278E41;
+	Thu, 28 Aug 2025 18:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OJu2jR7Z";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="DzlocoWC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azwhoj1f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B99271452
-	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 18:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756404996; cv=fail; b=azWlYLCyQD3yW+26qzJCGpebohqPCTAJLwy32hHXwSPEJ8bz8SESOiAm6Su8VJJy+JLY5MJpRYYZQpAYxTqS1aKk5fYMibNd9McQiedbELPRflapoeycT/Mvk4weEJ9qnRPq92IEeGVBcKbRQzasYKqBkJaixfdmxwTQqdpyZbw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756404996; c=relaxed/simple;
-	bh=CehGx3svc26qZUde+uwR5ksQze5ss8Ci/Xn0rbMFNKw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BDHv7/8C0J2OUwM+8zxOM/capYlYNrGuL94LgdJPYRc5jAb/nFHaXV8NaXRuKJhe65ILmeY4SOzQgGpWs0SWtnelQFKJz3PzaQXebLGQPbTrI+sedxkIQSyRxAYAC1FI2nOSNBtKwqH2+HN3no0ju4GAx3JV51YVUjwukBNluLA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OJu2jR7Z; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=DzlocoWC; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57SHNRXu006087;
-	Thu, 28 Aug 2025 18:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=FO98En4w5qn9Y7xTKNIZ0mEdSL02FL+dBLYLBo/CjCQ=; b=
-	OJu2jR7Z3yfsUu8ozzFSQZk+nFmUCPvGnElO8uVjGX22sCtrxe3EmRLXuC+BdnDt
-	dix29T6USwupijdxoNfwiQJXH87miHJPsosuBTFxKqlhqJjdbY/gfjXq+KdXZX0K
-	jIMSb2NbuCIawRkgxPisxzSuOHeg3P6gTJyxoa9Px1NuRp4eUlhU362036aPMvAS
-	VmdXVHff3vxTCRxPvc9Zfd4eFJtHb5enMJ9+U84X1amxkapIi8w4gydPdIe/LaqD
-	xrSClCEFsceuZfS+c93ECRwjQ8gBDMSdJIwAkgAQ7cxMt8ImE+sT/lqi/SHOR16l
-	l8zB0JFDFH8V4zlYXfcXDw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48q67914mt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Aug 2025 18:16:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57SI1xY7027303;
-	Thu, 28 Aug 2025 18:16:28 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02on2040.outbound.protection.outlook.com [40.107.96.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48q43c3rv5-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Aug 2025 18:16:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DtAG786Ui3x5x63e2PX7Ps5R/phhIrrMyrHX6D6weJvxaotkNrJWzyZ8KwFPXWPDIxZMkFft2zK8A2CPqjzFRaYl0nvFfw+Vvyb+NjZYU78z72EKD+Iut645ZAfADbpIVFuoDIAdQ/0p/INIzF4qj9SELxZPdA1gCdNdV28wVEAMbRGZKB1Pwi1vPGHfrfhQI8CkL3duyl6WsE6L7EOkI1eqKenHUAPwiKrh1gi9BR2ZWjYabqJUPXT9Z44aaEdhq3T5oC6Mn+IVSYeKMM0IgMfUV/9rF+NB1wvKOEKNlRTeJEx/FP2R5qKFi0uikmK+0grLqwwQpnE0gH9xaH8A+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FO98En4w5qn9Y7xTKNIZ0mEdSL02FL+dBLYLBo/CjCQ=;
- b=L/lVHN8JHM/MKGvPXh4vCYlRHlgfXF0mWjYIyuTeB+qKGsBZYu2IrEnKR1L1tpAMmmu6KTtvYe/SxwMRbXh3IJ3kiN/ORDdVSAOAYF4OL0FPtIGPMS2mGTGQVfTIlzGE/tYDNSbQjdPGR2E2G2cNabxS1WNCoxeByH9uzmtRIjnMwUNyFKh3jjA/m79BjOA7duhRZI7P+rJuRm6BH114KF8LA69DgybAWHQjMExqQ2zcPCQVMGOULJvE73NPk2HC4kuV+XgtO1Glh2IUS3D3chqMPENWxsO8+woLxYD6xtJpTe4eCCeFpLTJJYHxHu34EDx6Yxyi4CjE7JLDdZZ5AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FO98En4w5qn9Y7xTKNIZ0mEdSL02FL+dBLYLBo/CjCQ=;
- b=DzlocoWCBgxIGw5zq1EHnF6ujv0BnxP1894Dv8QQtwTNZZAN0yc4yCnoWKKW8V85hHt6rX1Dv0SrPjwbxJvh6Kn2U8+fqq60hC4dx9zpjeODfQMI5nqlBnSsN4UVqqry63rgZcun38eEctsLbiD4vOgKUA8mI0SR9Fnw0jJTpuE=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MW4PR10MB6438.namprd10.prod.outlook.com (2603:10b6:303:218::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.16; Thu, 28 Aug
- 2025 18:16:20 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.9052.019; Thu, 28 Aug 2025
- 18:16:17 +0000
-Message-ID: <adddae47-63de-4e93-a53a-352ad0e5c772@oracle.com>
-Date: Thu, 28 Aug 2025 14:16:16 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] nfsd: rework how a listener is removed
-To: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>
-Cc: linux-nfs@vger.kernel.org, neil@brown.name, Dai.Ngo@oracle.com,
-        tom@talpey.com
-References: <20250826220001.8235-1-okorniev@redhat.com>
- <41502e2f-0d97-48a3-876f-62c33ae6d657@oracle.com>
- <a641de95-07d3-479d-be64-11d99e56e08b@oracle.com>
- <e56f9194f0e65e85d92da4129f636fe40b34e54c.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <e56f9194f0e65e85d92da4129f636fe40b34e54c.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH5P223CA0018.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:610:1f3::25) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF30C26B2A6
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 18:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756407156; cv=none; b=SNAmHI8yNaeZVOH7YwI1mk0+nAHsKrAWpI9bStAlax0PbVG874lbF7YRvyPlXEYCrWg/gd6o7GYuan/4pg8mztYp3G0/egcvz+08SiBkfMUxA4XIi+udi5Ps/PlAxl8MVpfzM2qEmgrFVxhN6m0cDGfCPHfl39MaTJ1yBp4HJWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756407156; c=relaxed/simple;
+	bh=yrlGmVr+cDXuc/cWnJ/KjnnuXrkT+ydo7EMWlLr6LEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pUe5axAXoU6sRICr+Zf6PsV3jFgNM3wePpHfttLQF650TjAPhSK7pzE7c6ExwhYyfOavkUDya/f8wuudKhj7dIZ4a0idwSDImtHY4HnRwt2L4TxFOSSsq8LxWK6V0dUn2XpHgNGJlRciIu+yvzTOkbP8dpF8NxXGpSNom8fLmoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azwhoj1f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366A5C4CEED;
+	Thu, 28 Aug 2025 18:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756407155;
+	bh=yrlGmVr+cDXuc/cWnJ/KjnnuXrkT+ydo7EMWlLr6LEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=azwhoj1fQR8cS5Sd1Q/zlkfD5V6bNm+dcLnpFC8wkx7FTqBpnowTAyQ8ziW47oKPd
+	 w3JDEnq8LrRZ1oyPn2sP/wIBEZun8hjqwaCchBS+IQYPQdOyFogjm99UNF6MevXhPj
+	 55bFvLuKHo19YqkhKWZgrgwMHBMjEPytwNUJ3kc19EZoKQ0OImTTatWlcijv5feFIe
+	 3C/AjgyRw0TsAncaDgl/sW8qJNAQjNNfjKl+6QwpVe49+Jqp/xoWoxEHLU9steCB82
+	 uk27BgE0ylXkVkIsdybY9KDYFyKmPO/XHQ5CcPbSObhpi6HofATKyVM0P7NuvWDRUK
+	 43vXr2XojmENw==
+Date: Thu, 28 Aug 2025 14:52:34 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v8 5/7] NFSD: issue READs using O_DIRECT even if IO is
+ misaligned
+Message-ID: <aLClcl08x4JJ1UJu@kernel.org>
+References: <20250826185718.5593-1-snitzer@kernel.org>
+ <20250826185718.5593-6-snitzer@kernel.org>
+ <f7aee927-e4fc-44da-a2b6-7fd90f90d90e@oracle.com>
+ <aK9fZR7pQxrosEfW@kernel.org>
+ <6f5516a5-1954-4f77-8a07-dacba1fb570c@oracle.com>
+ <aK-Reg6g8ccscwMu@kernel.org>
+ <09eca412-b6e3-4011-b7dd-3a452eae6489@oracle.com>
+ <aLAOsGUIvONZvfX7@kernel.org>
+ <ba414445-a31b-4f37-9520-94a0fbbbba55@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MW4PR10MB6438:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14763a49-a0e8-47a2-04c5-08dde65efb81
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?UGZ4RzVWMU1tWmN2OGs5K1psZFVwQzArdEFtVnZjN0lsMVpzTjhzK1VaK1Zw?=
- =?utf-8?B?NzZBWlN6ZUJNQWhUbUtDMjI5ZkFOQVpOdzdaZXFmWEVzbTZKMHJPQXNRNnFh?=
- =?utf-8?B?ZUVNQXBaamx4ZW9QSkhIdXRFWWtDTldKSFNaWUVBVU50dWRyTThteDRPSlkx?=
- =?utf-8?B?MTdkMGNjcVcxcFNScmtnc0VKNTNZSUdtSUVXWDB1MUxSdjBsSjZEM3E2V1hL?=
- =?utf-8?B?QkcvUDhDV3l1bUdwNkxYNW81SzJwclFXRVpEK29VVWtZQU5kcGJiOTRhUFlI?=
- =?utf-8?B?ay9UUUgrSTJ0bkx5WjNnY0l5YUowK3dweXRLVzB2bEU1Vk56ZWZVb3U0SjRC?=
- =?utf-8?B?N1BUZEtRVzB2Ymtja3IxZmpiNU9jcUFJbnM0N1Rwb3NvaDRLYnIya0ZBUXpC?=
- =?utf-8?B?dUp6Y09MdUFIZnJYcjBBcmZrMTVkOVZTZUxRU2p1S2RINXpBMTVuNGVvMjdS?=
- =?utf-8?B?cmdKNkZqamllS0d3UWV6TlA3RnBZUnJ2ZUhod0JqdnhQMzNGeDFYYVhmYkor?=
- =?utf-8?B?T1pFUi9obTc3U2NacTk4dUJqbzl1VnJRVnA3OGk0NnR3QUJ6K2hFVUpMSU9y?=
- =?utf-8?B?V0drY1pBZWdKT2dGeEdIU3kwbW5MaVlLRnZzMXh0UzZqbVE2bWpFUmRvSHVJ?=
- =?utf-8?B?dHpkL2N2WHMrV0VxcWxES2dYZHN1U21qK0pJVXpxRnBiR2crd3liaCt0ZzNM?=
- =?utf-8?B?YVRDdjdoakozTi9iaEtOTGhhYTNmVGVoMFpXcmdoRlZOQWJZZHZseDZaWHli?=
- =?utf-8?B?WEhsNWNGczgzMzJMNkl2MHR0YlFrUjNuV2dMV1ZOSkpoekk3ZElYVU1wQ1pt?=
- =?utf-8?B?N1M3VG5TamViLzd3ZVhhMm1wZTdGNEZCcUNCZHljWjNPT0w2K01nU0FGVGY3?=
- =?utf-8?B?RnBOSUpVL2UwcTBCV3k2NXdkV2tXS1lldDNqMTY1aG4vK1JlcGVqNVFKMmxl?=
- =?utf-8?B?RzVjOHRmbE1tbmRCb211WlROeWUwbnRkZHRzWTFoWjZmcU9GNzJOanluSmNX?=
- =?utf-8?B?WmNEaEpvcDJ2RnNTNlZPd1Y4UU5KM0paTStrMVNPdldVbFlGdU11SDJZdCtw?=
- =?utf-8?B?S2ltVUR2UE5MNGw3ZXMrWS8renJWcUdQMU9qcXNncU9uTFNzMkdaR1pWS2J2?=
- =?utf-8?B?ZnUvYjAxTkZsd1FOcytMbUl0bDlYeUw4cTZVeGovVkpncFRwRGZHVkJXVnN2?=
- =?utf-8?B?c3Nyc3lidEhiMDF0NjFOM25iU0VPaUZZb1ovSEJUYXZzZS9VOVFBaWwyR21v?=
- =?utf-8?B?MFVoMmZuY3k5a3RFNW1nNWI0aXdIWDZlZm90citETStzcjVqalhyQUhGR3BE?=
- =?utf-8?B?b2xMbDhOaW1MaWdhUGh5R3J1WVFoZ1RlZUp1Q2oyeUp1K0c5SkFNNDNXV0I4?=
- =?utf-8?B?VW1PTXY4M2pIZ2J6bkszQzltelV5ZFd2ZDZpS0IrSFM3QjI0VnA5NGhHQTh5?=
- =?utf-8?B?MzVMWElMOWZtNDBWeUFjbHRhaTBjVlRTelppM0IyUjNvR3NxRmN0VnpDM1ZH?=
- =?utf-8?B?OVZpRHZOc0xQRmpzeTRDamJXOFd4bUxrVjFJNkx0dzVIN2xqTmUvVmswQy9v?=
- =?utf-8?B?TVRhQVB3M3dacEZRdmtVNG10YytWVEV4Q3dwSFdldjR1M2Z1Qmh2OFh2c0dU?=
- =?utf-8?B?SGtJR0VzY2haYXdPMlJqZmlLSDVwWGdQSmU4am9JYU91eFJYRG5DdVhnQmh6?=
- =?utf-8?B?bjNudTJXeXB3YmZ5cGRLZjlJL00xZ3A4ajUxYlhKYmkraXB3TFI1UGE2MXEx?=
- =?utf-8?B?dkd5NnlxOVFtdVpjbGZtSmJXVkl4ZHdENjRZcEcyanpSWk1iNDJWempmTjFu?=
- =?utf-8?B?US9RTXVMaGZvTWJyZkRYelp4MUtXVU9NNS9yUzliUlRveEE3aU5pbitXL25S?=
- =?utf-8?B?bFlwMDVwc0xPOWlmMnBZK2JVeVRIUW9NYU9NTmtMLy9NSmRtUXFEeE80Q3JO?=
- =?utf-8?Q?bgHdA6G9Utc=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?Y05MeDI0eTNOaEtkS2w3aGJJL3RLbEZOdHdjOE15OWtZdHpmN3Q2aUQ5TUpS?=
- =?utf-8?B?R3hvZWRWdytWZEZ5c0lqcytLckhnUTkwdG0vMVRHcEpVRUFrUEhXTFA2a2g2?=
- =?utf-8?B?dk1oK2xDV2t4cm1aUVl1blpqdjFvSkFFUWlSZmdHMWdKTFlWVjVoU3Z2NkhW?=
- =?utf-8?B?RHZLZWlDdHF2S3R5WWJuL2lJZVV3Sk5MTkYzem1mZnU0NlQyZVRTdTFnUTdu?=
- =?utf-8?B?WGx5WWdKM2t1aEhreDc1Y04xRkZyWW5UbS9Xa1IrMnFIME5xU1lBVHpNcXRj?=
- =?utf-8?B?WXJQRHlveWwxc2pRTXV2SjZackRLdnV1M1lzdHp3b0JDMDdMV3FUazk3Kyt2?=
- =?utf-8?B?dTFxMlJaandkdDZJQnhHekhuOGVhaEVEaHNtSlNqeUl0K3pTYVpUaHpFTW5F?=
- =?utf-8?B?dnBXV3UrWG5zWmxWeVRmb1lDYnJzUjVrcUVmYTFFbExNU0t3OWMrVGp0UkJl?=
- =?utf-8?B?aXg4Y0J0TFpOSG8xcksraFJDRDVXSi84aW4vZVBuSGx0YWVkN0xtNjBaWXpG?=
- =?utf-8?B?T2I3bzFrTC9kZW1XSWpwQ1JhODlNTk9hN2JDOVRQSDFOSmZHK0M5dFBQb1J2?=
- =?utf-8?B?WXQ5d1dFYlpOYmQ2bnVoM0FvVzVHZlZjTFgvYkNRQzRPNE5yb01yNFN6M1ha?=
- =?utf-8?B?SkxubVIrbVJqMk9DN0NsK3M2dG5LS2FwTENGcXM4a21PaDlwOGl6L0Zsc0J2?=
- =?utf-8?B?dkVZRytrV1NmdFk2WVphUm91azQzb1gvS05FOHc3SVhOVGFsUkx5ODc4UkZQ?=
- =?utf-8?B?TzY3NHR3KzBlRTlnTloxclZEWUY4NlRGMytiejh2UE1RSEtkNnFXem5HcVlm?=
- =?utf-8?B?WU5Ycy9nNjNqTUNtSm5tVEVsSi9tWkFYMVhJWklhaW9La0xIM2E2YXdwWXl1?=
- =?utf-8?B?N1lrTmk3UUJ6bzdUNnhsTm5FNmd0VWhRNjEwOVZwQ3RNRE90TUtGa201eFR2?=
- =?utf-8?B?N2NXNmI4UXc5ZjNYQlRFK1VtT2ZJdWJvbDhOakFoaE1DWEkxdFdQa1d1NmNG?=
- =?utf-8?B?SWR3ZFVPUUZCYjI3Zm9IRDduTUhEb2lkcUF0dmJDK29uY0FjcVZOMnRTc09T?=
- =?utf-8?B?ZnNkcDJHWkpvRzZKeVRwVVUweFF1U2M1QnUyQkZjRjg0UG1rNGtqeGM5bmdT?=
- =?utf-8?B?cjNScWpVWXhZbmFRbnV6MzJFdlM4ekx1UXd0ZExvRnRQWCs0bEgxYmF5Ui9r?=
- =?utf-8?B?MGlUdGU0NUcxeUNNTzRjUDBIUWl0a0hhUTJsWlllaGNYcEQxZlNmZ1VVRXdY?=
- =?utf-8?B?MndYdnlIRkhCbWJVVHNnMENZQUREeHY1dk5iNkZZamZNYWtUY0FLU0k4ei9h?=
- =?utf-8?B?MjA3b1RoYXVnVHhLZGFLaGVMbXF5QXhxajBLaG9ReGk3Y1JVMlpITjVtOUFG?=
- =?utf-8?B?cnFCT3doVVdnc3phS1QxME9qZThrVW5qTzliWlMzdS9LM1VSSmpEOFR5UFln?=
- =?utf-8?B?VS9QbGRJL2FYWlBOcXV6TTVKWDAwQXAxdGZta3VYZVN4dWdyQk5DNlZnRHFG?=
- =?utf-8?B?V0UwYUtwZmFnU1YwWFlyenk5RFVSVUdPRjRMR2YvbEhnYTQ3cU5YOWlPcWl5?=
- =?utf-8?B?U3VoWXhEWDMxVzdHaEpBU3REejZNNk9ONHk5bTMxcUU3VG8yeXJwRmhMRlBo?=
- =?utf-8?B?NG1lN2d2UTFyQWxPV0x5ZEJOM3Q2WW9pMzFld1NtNWJKeDUydzBGTDJObTlr?=
- =?utf-8?B?UjZRU0NlNGsyYzM3dEFwSG9neHdjTnQ4aVJkZ21XTlRSNUhLc293Tks5UWR3?=
- =?utf-8?B?WnhPWWhPSnVyczV2dVdWOGliL1FGUFlJU0FWUlp1Zng2TDBWWHlzbVVVNjdn?=
- =?utf-8?B?RGQzbU40Mk5tWmgwWHZtT2NSRnBDb3h6MThObDZIY1puZzNTb0I5SXZ1Nm01?=
- =?utf-8?B?UFFPbjZWUXpxdlRHSnlBWWZ6amhoY0hIMU9NUXh6Vm9GTVViQ0x0TVFYZkdQ?=
- =?utf-8?B?QXV6ckVPNys0aDcvTFZMbmF5T2J5blUzVmkvbTRmWTl4cUtBenhwNEExT0FB?=
- =?utf-8?B?Z1VrSnRpYWFHbWdsTUdsdnFPazFlUzQ2aHFIdkxlVFA3bC9DM1h0S1BxODZt?=
- =?utf-8?B?WXBUK1dINkxvTUh0aGcxcTYrck11eUZSZ3dkUWVVSnB0T0ZjR1BMdE1XQU4z?=
- =?utf-8?B?WFZGTUgxR21Bckx0czJTVDg5NkgrK1VhRGJCOEhtb0I5ODZkU3FSUERLdzBq?=
- =?utf-8?B?emc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	KOxpbkyy89YG2BkPDgs/boFLNLXCiORi/ltPSYmu98pSaJcgAoNDR0eRJhEuHeKAi2pAUqVdUz96U8txI2oFnLUp+kGON1X2BGF6E75+UkSOLxsNVdpIvCpTMxcxK+i3/ZdiKoIVDaPTPCIqB8KyfVpLmsiCxT5wRH+bZlNu4nm9KH4K05ctw43LHFCYiGhUxYccGK+1wW9xfHXRlIHTzi720CjRPZy/eYJWZuCA9t12lx6zrFmGhrtM2oY6A5XfJQ1wLJ6yTV1TayvhzIbUIkcj+F4TgNlziUxCJpdgcyt2y0yVpgBLTroeSZsiwO2PzWPKhNPq//IzRp2TbLCWtUZCeYCkjlFB6HPiNiZ+qCBHGTh3HzRpkAllxo1rZVhydnOiHUGMq3xQHTkFJqkMUSpR//pd+Rl5XYkVqA7/RdZrP5co0J0Wm6ITmHjgKDWrbGByhAi9qvrQ0NTyKWTnnbLWN52EkUyFYnf4KOPGhEdkAbHD5hQRo5/4rDOrgFO9OTd474uvIK9BMkeYOt6mE2ln/0QvEPnL4kwLze8EZJtPaKbQKy1iSiufklzCJ8Rp/pvqUnJSVXIJ0TpIUzpBOeunRsPceUDK/RENhSlm55A=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14763a49-a0e8-47a2-04c5-08dde65efb81
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2025 18:16:17.8726
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G9wXFUAXtP8ssuVsO0dZK8R6Fbbf5TbEc7+yfZEYSYcy4Mn/V+oX3vtSjko77Hm6UxiH6sdv9a7lzTnrKGQGnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6438
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-28_04,2025-08-28_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 malwarescore=0
- adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
- definitions=main-2508280153
-X-Proofpoint-GUID: EmJaRY44oxeAM_juNGfotFMBGxgbzIRe
-X-Proofpoint-ORIG-GUID: EmJaRY44oxeAM_juNGfotFMBGxgbzIRe
-X-Authority-Analysis: v=2.4 cv=NrLRc9dJ c=1 sm=1 tr=0 ts=68b09cfc cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=wBb9nDm8n8QG723pn4QA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAzNSBTYWx0ZWRfX2LYGL0aueug1
- jSL6LUgFr8aueCeCqZl8scljt7McTG/eKdueV28OX9DhxIacIBYdM4njIdyEFAupDgV8GZBxML4
- bu9Bf04G6FZFhMZkY6xz0TBXg47wR40loW6jS8XDNbalV+KO3Uc20ZftvXaXmQZgCibNmVwWH+C
- bM3GdNAMS22XJGKU0QiHNniLu4rDthJFuYZldDRVraxtszPefXfwYJZIhbluaBt24pb8VVllC1h
- rnEV7HjW9a3na+2Bj/IHU0Uny4h//92Ezhi2aVnkWDQe3iRBnCv4s/cg0blN11emwkz/rMM3dga
- ltT33B1s6u7cLwy4UBtjek+VPYkOqzu/mxlPB47HQ/uawIi91PUlSTtsCoOznH5giBclrNAofFP
- iNaBmgVE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba414445-a31b-4f37-9520-94a0fbbbba55@oracle.com>
 
-On 8/28/25 1:29 PM, Jeff Layton wrote:
-> On Thu, 2025-08-28 at 11:21 -0400, Chuck Lever wrote:
->> On 8/27/25 10:21 AM, Chuck Lever wrote:
->>> On 8/26/25 6:00 PM, Olga Kornievskaia wrote:
->>>> This patch tries to address the following failure:
->>>> nfsdctl threads 0
->>>> nfsdctl listener +rdma::20049
->>>> nfsdctl listener +tcp::2049
->>>> nfsdctl listener -tcp::2049
->>>> nfsdctl: Error: Cannot assign requested address
->>>>
->>>> The reason for the failure is due to the fact that socket cleanup only
->>>> happens in __svc_rdma_free() which is a deferred work triggers when an
->>>> rdma transport is destroyed. To remove a listener nfsdctl is forced to
->>>> first remove all transports via svc_xprt_destroy_all() and then re-add
->>>> the ones that are left. Due to the fact that there isn't a way to
->>>> delete a particular entry from server's lwq sp_xprts that stores
->>>> transports. Going back to the deferred work done in __svc_rdma_free(),
->>>> the work might not get to run before nfsd_nl_listener_set_doit() creates
->>>> the new transports. As a result, it finds that something is still
->>>> listening of the rdma port and rdma_bind_addr() fails.
->>>>
->>>> Instead of using svc_xprt_destroy_all() to manipulate the sp_xprt,
->>>> instead introduce a function that just dequeues all transports. Then,
->>>> we add non-removed transports back to the list.
->>>>
->>>> Still not allowing to remove a listener while the server is active.
->>>>
->>>> We need to make several passes over the list of existing/new list
->>>> entries. On the first pass we determined if any of the entries need
->>>> to be removed. If so, we then check if the server has no active
->>>> threads. Then we dequeue all the transports and then go over the
->>>> list and recreate both permsocks list and sp_xprts lists. Then,
->>>> for the deleted transports, the transport is closed.
->>>
->>>> --- Comments:
->>>> (1) There is still a restriction on removing an active listener as
->>>> I dont know how to handle if the transport to be remove is currently
->>>> serving a request (it won't be on the sp_xprt list I believe?).
->>>
->>> This is a good reason why just setting a bit in the xprt and waiting for
->>> the close to complete is probably a better strategy than draining and
->>> refilling the permsock list.
->>>
->>> The idea of setting XPT_CLOSE and enqueuing the transport ... you know,
->>> like this:
->>>
->>>  151 /**
->>>
->>>  152  * svc_xprt_deferred_close - Close a transport
->>>
->>>  153  * @xprt: transport instance
->>>
->>>  154  *
->>>
->>>  155  * Used in contexts that need to defer the work of shutting down
->>>
->>>  156  * the transport to an nfsd thread.
->>>
->>>  157  */
->>>
->>>  158 void svc_xprt_deferred_close(struct svc_xprt *xprt)
->>>
->>>  159 {
->>>
->>>  160         trace_svc_xprt_close(xprt);
->>>
->>>  161         if (!test_and_set_bit(XPT_CLOSE, &xprt->xpt_flags))
->>>
->>>  162                 svc_xprt_enqueue(xprt);
->>>
->>>  163 }
->>>
->>>  164 EXPORT_SYMBOL_GPL(svc_xprt_deferred_close);
->>>
->>> I expect that eventually the xprt will show up to svc_handle_xprt() and
->>> get deleted there. But you might still need some serialization with
->>>   ->xpo_accept ?
->>
->> It occurred to me why the deferred close mechanism doesn't work: it
->> relies on having an nfsd thread to pick up the deferred work.
->>
->> If listener removal requires all nfsd threads to be terminated, there
->> is no thread to pick up the xprt and close it.
->>
+On Thu, Aug 28, 2025 at 10:53:49AM -0400, Chuck Lever wrote:
+> On 8/28/25 4:09 AM, Mike Snitzer wrote:
+> > On Wed, Aug 27, 2025 at 09:57:39PM -0400, Chuck Lever wrote:
+> >> On 8/27/25 7:15 PM, Mike Snitzer wrote:
+> >>> On Wed, Aug 27, 2025 at 04:56:08PM -0400, Chuck Lever wrote:
+> >>>> On 8/27/25 3:41 PM, Mike Snitzer wrote:
+> >>>>> Is your suggestion to, rather than allocate a disjoint single page,
+> >>>>> borrow the extra page from the end of rq_pages? Just map it into the
+> >>>>> bvec instead of my extra page?
+> >>>>
+> >>>> Yes, the extra page needs to come from rq_pages. But I don't see why it
+> >>>> should come from the /end/ of rq_pages.
+> >>>>
+> >>>> - Extend the start of the byte range back to make it align with the
+> >>>>   file's DIO alignment constraint
+> >>>>
+> >>>> - Extend the end of the byte range forward to make it align with the
+> >>>>   file's DIO alignment constraint
+> >>>
+> >>> nfsd_analyze_read_dio() does that (start_extra and end_extra).
+> >>>
+> >>>> - Fill in the sink buffer's bvec using pages from rq_pages, as usual
+> >>>>
+> >>>> - When the I/O is complete, adjust the offset in the first bvec entry
+> >>>>   forward by setting a non-zero page offset, and adjust the returned
+> >>>>   count downward to match the requested byte count from the client
+> >>>
+> >>> Tried it long ago, such bvec manipulation only works when not using
+> >>> RDMA.  When the memory is remote, twiddling a local bvec isn't going
+> >>> to ensure the correct pages have the correct data upon return to the
+> >>> client.
+> >>>
+> >>> RDMA is why the pages must be used in-place, and RDMA is also why
+> >>> the extra page needed by this patch (for use as throwaway front-pad
+> >>> for expanded misaligned DIO READ) must either be allocated _or_
+> >>> hopefully it can be from rq_pages (after the end of the client
+> >>> requested READ payload).
+> >>>
+> >>> Or am I wrong and simply need to keep learning about NFSD's IO path?
+> >>
+> >> You're wrong, not to put a fine point on it.
+> > 
+> > You didn't even understand me.. but firmly believe I'm wrong?
+> > 
+> >> There's nothing I can think of in the RDMA or RPC/RDMA protocols that
+> >> mandates that the first page offset must always be zero. Moving data
+> >> at one address on the server to an entirely different address and
+> >> alignment on the client is exactly what RDMA is supposed to do.
+> >>
+> >> It sounds like an implementation omission because the server's upper
+> >> layers have never needed it before now. If TCP already handles it, I'm
+> >> guessing it's going to be straightforward to fix.
+> > 
+> > I never said that first page offset must be zero.  I said that I
+> > already did what you suggested and it didn't work with RDMA.  This is
+> > recall of too many months ago now, but: the client will see the
+> > correct READ payload _except_ IIRC it is offset by whatever front-pad
+> > was added to expand the misaligned DIO; no matter whether
+> > rqstp->rq_bvec updated when IO completes.
+> > 
+> > But I'll revisit it again.
 > 
-> Interesting. I guess that the old nfsdfs file just didn't allow you to
-> get into this situation, since you couldn't remove a listener at all.
+> For the record, this email thread is the very first time I've heard that
+> you tried the simple approach and that it worked with TCP and not with
+> RDMA. I wish I had known that a while ago.
+
+Likewise, but the story is all in the patch header and the code tells
+the story too. Hence your finding it with closer review (thanks for
+that BTW!). I agree something is off so I'm happy to work it further.
+
+I have iterated on quite a few aspects to this patch 5. Christoph had
+suggestion for using memmove in nfsd_complete_misaligned_read_dio.
+You had the feedback that required ensuring the lightest touch
+relative to branching so that buffered IO mode remain as fast as
+possible.
+
+Looking forward to tackling this RDMA-specific weirdness now.
+
+> >>>>> NFSD using DIO is optional. I thought the point was to get it as an
+> >>>>> available option so that _others_ could experiment and help categorize
+> >>>>> the benefits/pitfalls further?
+> >>>>
+> >>>> Yes, that is the point. But such experiments lose value if there is no
+> >>>> data collection plan to go with them.
+> >>>
+> >>> Each user runs something they care about performing well and they
+> >>> measure the result.
+> >>
+> >> That assumes the user will continue to use the debug interfaces, and
+> >> the particular implementation you've proposed, for the rest of time.
+> >> And that's not my plan at all.
+> >>
+> >> If we, in the community, cannot reproduce that result, or cannot
+> >> understand what has been measured, or the measurement misses part or
+> >> most of the picture, of what value is that for us to decide whether and
+> >> how to proceed with promoting the mechanism from debug feature to
+> >> something with a long-term support lifetime and a documented ABI-stable
+> >> user interface?
+> > 
+> > I'll work to put a finer point on how to reproduce and enumerate the
+> > things to look for (representative flamegraphs showing the issue,
+> > which I already did at last Bakeathon).
+
+note ^ (referenced below)
+
+> > But I have repeatedly offered that the pathological worst case is
+> > client doing sequential write IO of a file that is 3-4x larger than
+> > the NFS server's system memory.
+> > 
+> > Large memory systems with 8 or more NVMe devices, fast networks that
+> > allow for huge data ingest capabilities.  These are the platforms that
+> > showcase MM's dirty writeback limitions when large sequential IO is
+> > initiated from the NFS client and its able to overrun the NFS server.
+> > 
+> > In addition, in general DIO requires significantly less memory and
+> > CPU; so platforms that have more limited resources (and may have
+> > historically struggled) could have a new lease on life if they switch
+> > NFSD from buffered to DIO mode.
+> > 
+> >>> Literally the same thing as has been done for anything in Linux since
+> >>> it all started.  Nothing unicorn or bespoke here.
+> >>
+> >> So let me ask this another way: What do we need users to measure to give
+> >> us good quality information about the page cache behavior and system
+> >> thrashing behavior you reported?
+> > 
+> > IO throughput, CPU and memory usage should be monitored over time.
 > 
-> It really sounds like we just need a more selective version of
-> svc_clean_up_xprts(). Something that can dequeue everything, close the
-> ones that need to be closed (synchronously) and then requeues the rest.
-
-That is roughly what Olga has done here. Now that I understand the
-problem space a little better, maybe we can iterate on this.
-
-
->>>> In general, I'm unsure if there are other things I'm not considering.
->>>> (2) I'm questioning if in svc_xprt_dequeue_all() it is correct. I
->>>> used svc_cleanup_up_xprts() as the example.
->>>>> Fixes: d093c90892607 ("nfsd: fix management of listener transports")
->>>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
->>>> ---
->>>>  fs/nfsd/nfsctl.c                | 123 +++++++++++++++++++-------------
->>>>  include/linux/sunrpc/svc_xprt.h |   1 +
->>>>  include/linux/sunrpc/svcsock.h  |   1 -
->>>>  net/sunrpc/svc_xprt.c           |  12 ++++
->>>>  4 files changed, 88 insertions(+), 49 deletions(-)
->>>>
->>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
->>>> index dd3267b4c203..38aaaef4734e 100644
->>>> --- a/fs/nfsd/nfsctl.c
->>>> +++ b/fs/nfsd/nfsctl.c
->>>> @@ -1902,44 +1902,17 @@ int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info)
->>>>  	return err;
->>>>  }
->>>>  
->>>> -/**
->>>> - * nfsd_nl_listener_set_doit - set the nfs running sockets
->>>> - * @skb: reply buffer
->>>> - * @info: netlink metadata and command arguments
->>>> - *
->>>> - * Return 0 on success or a negative errno.
->>>> - */
->>>> -int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
->>>> +static void _nfsd_walk_listeners(struct genl_info *info, struct svc_serv *serv,
->>>> +				 struct list_head *permsocks, int modify_xprt)
->>>
->>> So this function looks for the one listener we need to remove.
->>>
->>> Should removing a listener also close down all active temporary sockets
->>> for the service, or should it kill only the ones that were established
->>> via the listener being removed, or should it leave all active temporary
->>> sockets in place?
->>>
->>> Perhaps this is why /all/ permanent and temporary sockets are currently
->>> being removed. Once the target listener is gone, clients can't
->>> re-establish new connections, and the service is effectively ready to
->>> be shut down cleanly.
->>>
->>>
->>>>  {
->>>>  	struct net *net = genl_info_net(info);
->>>> -	struct svc_xprt *xprt, *tmp;
->>>>  	const struct nlattr *attr;
->>>> -	struct svc_serv *serv;
->>>> -	LIST_HEAD(permsocks);
->>>> -	struct nfsd_net *nn;
->>>> -	bool delete = false;
->>>> -	int err, rem;
->>>> -
->>>> -	mutex_lock(&nfsd_mutex);
->>>> -
->>>> -	err = nfsd_create_serv(net);
->>>> -	if (err) {
->>>> -		mutex_unlock(&nfsd_mutex);
->>>> -		return err;
->>>> -	}
->>>> -
->>>> -	nn = net_generic(net, nfsd_net_id);
->>>> -	serv = nn->nfsd_serv;
->>>> -
->>>> -	spin_lock_bh(&serv->sv_lock);
->>>> +	struct svc_xprt *xprt, *tmp;
->>>> +	int rem;
->>>>  
->>>> -	/* Move all of the old listener sockets to a temp list */
->>>> -	list_splice_init(&serv->sv_permsocks, &permsocks);
->>>> +	if (modify_xprt)
->>>> +		svc_xprt_dequeue_all(serv);
->>>>  
->>>> -	/*
->>>> -	 * Walk the list of server_socks from userland and move any that match
->>>> -	 * back to sv_permsocks
->>>> -	 */
->>>>  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
->>>>  		struct nlattr *tb[NFSD_A_SOCK_MAX + 1];
->>>>  		const char *xcl_name;
->>>> @@ -1962,7 +1935,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
->>>>  		sa = nla_data(tb[NFSD_A_SOCK_ADDR]);
->>>>  
->>>>  		/* Put back any matching sockets */
->>>> -		list_for_each_entry_safe(xprt, tmp, &permsocks, xpt_list) {
->>>> +		list_for_each_entry_safe(xprt, tmp, permsocks, xpt_list) {
->>>>  			/* This shouldn't be possible */
->>>>  			if (WARN_ON_ONCE(xprt->xpt_net != net)) {
->>>>  				list_move(&xprt->xpt_list, &serv->sv_permsocks);
->>>> @@ -1971,35 +1944,89 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
->>>>  
->>>>  			/* If everything matches, put it back */
->>>>  			if (!strcmp(xprt->xpt_class->xcl_name, xcl_name) &&
->>>> -			    rpc_cmp_addr_port(sa, (struct sockaddr *)&xprt->xpt_local)) {
->>>> +			    rpc_cmp_addr_port(sa,
->>>> +				    (struct sockaddr *)&xprt->xpt_local)) {
->>>>  				list_move(&xprt->xpt_list, &serv->sv_permsocks);
->>>> +				if (modify_xprt)
->>>> +					svc_xprt_enqueue(xprt);
->>>>  				break;
->>>>  			}
->>>>  		}
->>>>  	}
->>>> +}
->>>> +
->>>> +/**
->>>> + * nfsd_nl_listener_set_doit - set the nfs running sockets
->>>> + * @skb: reply buffer
->>>> + * @info: netlink metadata and command arguments
->>>> + *
->>>> + * Return 0 on success or a negative errno.
->>>> + */
->>>> +int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
->>>> +{
->>>> +	struct net *net = genl_info_net(info);
->>>> +	struct svc_xprt *xprt;
->>>> +	const struct nlattr *attr;
->>>> +	struct svc_serv *serv;
->>>> +	LIST_HEAD(permsocks);
->>>> +	struct nfsd_net *nn;
->>>> +	bool delete = false;
->>>> +	int err, rem;
->>>> +
->>>> +	mutex_lock(&nfsd_mutex);
->>>> +
->>>> +	err = nfsd_create_serv(net);
->>>> +	if (err) {
->>>> +		mutex_unlock(&nfsd_mutex);
->>>> +		return err;
->>>> +	}
->>>> +
->>>> +	nn = net_generic(net, nfsd_net_id);
->>>> +	serv = nn->nfsd_serv;
->>>> +
->>>> +	spin_lock_bh(&serv->sv_lock);
->>>> +
->>>> +	/* Move all of the old listener sockets to a temp list */
->>>> +	list_splice_init(&serv->sv_permsocks, &permsocks);
->>>>  
->>>>  	/*
->>>> -	 * If there are listener transports remaining on the permsocks list,
->>>> -	 * it means we were asked to remove a listener.
->>>> +	 * Walk the list of server_socks from userland and move any that match
->>>> +	 * back to sv_permsocks. Determine if anything needs to be removed so
->>>> +	 * don't manipulate sp_xprts list.
->>>>  	 */
->>>> -	if (!list_empty(&permsocks)) {
->>>> -		list_splice_init(&permsocks, &serv->sv_permsocks);
->>>> -		delete = true;
->>>> -	}
->>>> -	spin_unlock_bh(&serv->sv_lock);
->>>> +	_nfsd_walk_listeners(info, serv, &permsocks, false);
->>>>  
->>>> -	/* Do not remove listeners while there are active threads. */
->>>> -	if (serv->sv_nrthreads) {
->>>> +	/* For now, no removing old sockets while server is running */
->>>> +	if (serv->sv_nrthreads && !list_empty(&permsocks)) {
->>>> +		list_splice_init(&permsocks, &serv->sv_permsocks);
->>>> +		spin_unlock_bh(&serv->sv_lock);
->>>>  		err = -EBUSY;
->>>>  		goto out_unlock_mtx;
->>>>  	}
->>>>  
->>>>  	/*
->>>> -	 * Since we can't delete an arbitrary llist entry, destroy the
->>>> -	 * remaining listeners and recreate the list.
->>>> +	 * If there are listener transports remaining on the permsocks list,
->>>> +	 * it means we were asked to remove a listener. Walk the list again,
->>>> +	 * but this time also manage the sp_xprts but first removing all of
->>>> +	 * them and only adding back the ones not being deleted. Then close
->>>> +	 * the ones left on the list.
->>>>  	 */
->>>> -	if (delete)
->>>> -		svc_xprt_destroy_all(serv, net, false);
->>>> +	if (!list_empty(&permsocks)) {
->>>> +		list_splice_init(&permsocks, &serv->sv_permsocks);
->>>> +		list_splice_init(&serv->sv_permsocks, &permsocks);
->>>> +		_nfsd_walk_listeners(info, serv, &permsocks, true);
->>>> +		while (!list_empty(&permsocks)) {
->>>> +			xprt = list_first_entry(&permsocks, struct svc_xprt, xpt_list);
->>>> +			clear_bit(XPT_BUSY, &xprt->xpt_flags);
->>>> +			set_bit(XPT_CLOSE, &xprt->xpt_flags);
->>>> +			spin_unlock_bh(&serv->sv_lock);
->>>> +			svc_xprt_close(xprt);
->>>> +			spin_lock_bh(&serv->sv_lock);
->>>> +		}
->>>> +		spin_unlock_bh(&serv->sv_lock);
->>>> +		goto out_unlock_mtx;
->>>> +	}
->>>> +	spin_unlock_bh(&serv->sv_lock);
->>>>  
->>>>  	/* walk list of addrs again, open any that still don't exist */
->>>>  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
->>>> diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
->>>> index da2a2531e110..7038fd8ef20a 100644
->>>> --- a/include/linux/sunrpc/svc_xprt.h
->>>> +++ b/include/linux/sunrpc/svc_xprt.h
->>>> @@ -186,6 +186,7 @@ int	svc_xprt_names(struct svc_serv *serv, char *buf, const int buflen);
->>>>  void	svc_add_new_perm_xprt(struct svc_serv *serv, struct svc_xprt *xprt);
->>>>  void	svc_age_temp_xprts_now(struct svc_serv *, struct sockaddr *);
->>>>  void	svc_xprt_deferred_close(struct svc_xprt *xprt);
->>>> +void	svc_xprt_dequeue_all(struct svc_serv *serv);
->>>>  
->>>>  static inline void svc_xprt_get(struct svc_xprt *xprt)
->>>>  {
->>>> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
->>>> index 963bbe251e52..4c1be01afdb7 100644
->>>> --- a/include/linux/sunrpc/svcsock.h
->>>> +++ b/include/linux/sunrpc/svcsock.h
->>>> @@ -65,7 +65,6 @@ int		svc_addsock(struct svc_serv *serv, struct net *net,
->>>>  			    const struct cred *cred);
->>>>  void		svc_init_xprt_sock(void);
->>>>  void		svc_cleanup_xprt_sock(void);
->>>> -
->>>>  /*
->>>>   * svc_makesock socket characteristics
->>>>   */
->>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>>> index 6973184ff667..2aa46b9468d4 100644
->>>> --- a/net/sunrpc/svc_xprt.c
->>>> +++ b/net/sunrpc/svc_xprt.c
->>>> @@ -890,6 +890,18 @@ void svc_recv(struct svc_rqst *rqstp)
->>>>  }
->>>>  EXPORT_SYMBOL_GPL(svc_recv);
->>>>  
->>>> +void svc_xprt_dequeue_all(struct svc_serv *serv)
->>>> +{
->>>> +	int i;
->>>> +
->>>> +	for (i = 0; i < serv->sv_nrpools; i++) {
->>>> +		struct svc_pool *pool = &serv->sv_pools[i];
->>>> +
->>>> +		lwq_dequeue_all(&pool->sp_xprts);
->>>> +	}
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(svc_xprt_dequeue_all);
->>>> +
->>>>  /**
->>>>   * svc_send - Return reply to client
->>>>   * @rqstp: RPC transaction context
->>>
->>>
->>
+> My point is users need a recipe for what to monitor, ie clear specific
+> instructions, and that recipe needs to be applied the same way by every
+> experimenter (because, as I say below, we too are collecting data about
+> the user's experience with this feature).
 > 
+> Can you provide a few specific instructions that experimenters can
+> follow on how to monitor and report these metrics? Simply copy-paste
+> what you and your test team have been using to observe system behavior.
 
+Yes, I understood and understand. I did commit to preparing and
+providing what is needed (see "note ^" above). Not a problem.
 
--- 
-Chuck Lever
+I will be working with Hammerspace QA and other engineers as needed to
+produce as tight a reproducer as possible.
+
+> >> For example: I can enable direct I/O on NFSD, but my workload is mostly
+> >> one or two clients doing kernel builds. The latency of NFS READs goes
+> >> up, but since a kernel build is not I/O bound and the client page caches
+> >> hide most of the increase, there is very little to show a measured
+> >> change.
+> >>
+> >> So how should I assess and report the impact of NFSD doing direct I/O?
+> > 
+> > Your underwhelming usage isn't what this patchset is meant to help.
+> 
+> Again, my point is, how are users who try the debug option going to
+> know that their workload is or is not of interest? We're not
+> providing such documentation. Users are just going to turn this on and
+> try it.
+> 
+> But consider that one of our options is to make direct I/O the default.
+> We need to know how smaller workloads might be impacted by this new
+> default. The maintainers are part of this experiment as much as
+> potential users are. We need to collect data to understand how to make
+> this work part of the first world administrative API.
+
+I'm not opposed to anyone trying any workload.  You're really wanting
+to impose a structure and guidance, and I think that is a noble goal
+and will serve us well toward avoiding a myriad of issues.  If nothing
+else it should help others understand the benefits/pitfalls.
+
+To that end I'm happy to work on adding proper Documentation/
+
+> >> See -- users are not the only ones who are involved in this experiment;
+> >> and they will need guidance because we're not providing any
+> >> documentation for this feature.
+> > 
+> > Users are not created equal.  Major companies like Oracle and Meta
+> > _should_ be aware of NFSD's problems with buffered IO.  They have
+> > internal and external stakeholders that are power users.
+> > 
+> > Jeff, does Meta ever see NFSD struggle to consistently use NVMe
+> > devices?  Lumpy performance?  Full-blown IO stalls?  Lots of NFSD
+> > threads hung in D state?
+> 
+> I have no idea why you think I don't understand those facts, but you are
+> still missing my point. NFSD maintainers are part of this experimental
+> set up as much as users are. We need good information to decide how to
+> shape this feature going forward. Let's build a plan to get that
+> information.
+
+If you understand, which I have no doubt, then your repeat basic
+questions were simply trying to impress upon me the info others
+need. You need it too, but more to help mobilize and manage others'
+time and to help build a program around this feature. I mean, that's
+my understanding now. It makes sense.
+
+> >>>> If you would rather make this drive-by, then you'll have to realize
+> >>>> that you are requesting more than simple review from us. You'll have
+> >>>> to be content with the pace at which us overloaded maintainers can get
+> >>>> to the work.
+> >>>
+> >>> I think I just experienced the mailing-list equivalent of the Detroit
+> >>> definition of "drive-by".  Good/bad news: you're a terrible shot.
+> >>
+> >> The term "drive-by contribution" has a well-understood meaning in the
+> >> kernel community. If you are unfamiliar with it, I invite you to review
+> >> the mailing list archives. As always, no-one is shooting at you. If
+> >> anything, the drive-by contribution is aimed at me.
+> > 
+> > It is a blatant miscategorization here. That you just doubled down
+> > on it having relevance in this instance is flagrantly wrong.
+> 
+> First of all, "drive-by contribution" is not meant to be pejorative.
+> It is what it is: someone throws you a patch and then goes away. It is
+> a fact of life for open source maintainers.
+
+Please know I know what "drive-by contribution" is.  It isn't
+applicable here.  That I need to say that repeatedly is strange.
+I haven't gone anywhere and won't be.
+
+I have worked _hard_ on both NFSD DIRECT and NFS DIRECT. More work is
+needed on both.
+
+BREAKING NEWS:  NFSD DIRECT is my top priority, I just received
+approval from Hammerspace management for it to be my continued primary
+focus.
+
+> I'm simply trying to get a sense of your commitment to finishing this
+> work and staying with it going forward. You keep telling me "well I have
+> other things to do." What do you think that indicates to a busy
+> maintainer? That you will be around to finish the feature? Or rather
+> that your employer is going to yank you onto other projects, leaving us
+> stuck with the work of finishing it?
+
+You have my full attention and I will put my focus on:
+1) closing the initial code out strong so you and Jeff are happy to merge
+2) pushing forward wherever community feedback and desire takes us in
+   the future.
+
+I have a deep sense of drive and commitment and this line of
+development is important to me (and Hammerspace!).
+
+> You have rejected one or more reasonable review comments and maintainer
+> requests. That doesn't convince me you are willing to collaborate with
+> us on maintaining the feature.
+
+I am really not fighting/spitting at all in what follows until the end
+of this email, I'm trying to preserve what little reputation I have
+left, say my peace _but_ arrest any further strife for us both.
+
+I think if you were to review _all_ the exchanges relative to this
+NFSD DIRECT work (v1 through v8 patchset postings and associated
+review and my responses to it all) you'd find I have been nothing but
+driven to understand and then address all feedback and move the code
+forward as rapidly as possible.
+
+It has been collaborative and rewarding, and I appreciate everyone who
+has helped move this work forward.
+
+Then the wheels fell off yesterday and now some revisionist history is
+creeping in, we cannot have that.  Distracts everyone and takes away
+from all the good work we've done.
+
+We are both intense. My intensity will be spent on worthwhile efforts,
+not fighting needlessly.
+
+> My biggest concern here is how much more work maintaining NFSD will be
+> once this change goes in. It's a major feature and a significant change.
+> It will require a lot of code massage in the short- and medium-term,
+> just as a start.
+> 
+> Maybe I'm assuming that you, as a kernel maintainer yourself, already
+> understand that this mind set and this calculus is part of my email replies.
+
+It is nice that you acknowledge I am also a Linux subsystem maintainer
+(but thankfully Mikulas is able to do the heavy lifting for DM now).
+Yes, I know very well all the variables and concerns that must be
+considered and this NFSD DIRECT line of work is just one of many
+efforts for you.
+
+> So, I'm being frank. I'm not trying to offend or belittle.
+
+You can be frank without zooming out 50K feet and making general
+attacks on my work, character or aptitude/understanding.
+
+Those attacks happened in response to my asking for help, short of
+that I asked if patch 5 could be merged with future work item(s)
+attached.
+
+From https://lore.kernel.org/linux-nfs/aK9fZR7pQxrosEfW@kernel.org/
+"All said, this patchset is very important to me, I don't want it to
+miss v6.18 -- I'm still "in it to win it" but it feels like I do need
+your or others' help to pull this off.
+
+And/or is it possible to accept this initial implementation with
+mutual understanding that we must revisit your concern about my
+allocating an extra page for the misaligned DIO READ path?"
+
+I didn't say those things as some power move to push for NFSD DIRECT
+going in before "ready". But this is the second time you have reacted
+very hostile in response to merge readiness (first LOCALIO and now
+this) and that makes it a pattern. One that I have no interest in
+seeing repeat...
+
+To that end, I will refrain from raising questions about when code
+might be merged or planning around it. I'll maintain focus on doing
+the work asked for and let the rest sort itself out.
+
+My Genuine apologies that I hit a nerve yesterday. It wasn't intended,
+but I now "get it": in particular I can infer you took my "I cannot be
+a one man show on all this. I welcome more help from anyone
+interested." as me being a hostile contributor. I _had_ competing work
+and didn't account for NFSD DIRECT needing quite so much immediate
+work, so I shared how exposed I was (albeit without enough care and
+context). I certainly didn't intend to minimize yours and others'
+helpful review feedback, etc. I regret putting that email's closing
+statement like I did.
+
+> > Whatever compells you to belittle me and my contributions, just know
+> > it is extremely hard to take. Highly unproductive and unprofessional.
+>
+> I can't control how you understand my emails. If you choose to be
+> offended even though I'm trying to have an honest discussion, there's
+> nothing I can do about it.
+> 
+> I can't control /if/ you understand my emails. I'm repeating myself
+> quite a bit here because a lot of what I say sails past you. You read
+> things into what I say that I don't intend, and you miss a lot of what
+> I did intend. There's nothing I can do about that either.
+
+But you are consciously putting to words judgments that would cut any
+software engineer to their core.
+
+Stands to reason that some ownership of your condescending and
+belittling remarks is needed if you would like to avoid negative
+reactions.
+
+If you aren't even aware you are saying things that land in those
+buckets... anyway, not my place to say more.
+
+> I can't control your unproductive and unprofessional behavior. You keep
+> rejecting valid review comments and maintainer requests with comments
+> like "I don't feel like it" and "your reason for wanting this change is
+> invalid" and "you are wasting my time". Again, this suggests to me that
+> maintaining this feature will be a lot more work than it could be, and
+> that is an ongoing concern.
+
+All of what you said in this ^ above section is carry-over from when
+LOCALIO was approaching "ready".  I thought we buried those hatchets
+and "are good" but clearly what they say about first impressions is
+undeniable -- I had one chance and I left a bad one with you, all I
+can do is rectify it with my future actions.
+
+Fact is, none of your old judgments/findings from LOCALIO are
+actually applicable for this NFSD DIRECT case. That you brought them
+forward as if they are applicable now genuinely saddens me.
+
+The one thing Jeff asked for, that we all agree would be better, is
+that if the debugfs interface used string-based controls rather than
+integer.  That is quite a lift given it requires engaging gregkh and
+others, one that I don't feel I can pull off given other work items
+(especially so now with things covered as required above). But I
+didn't reject the good idea; I looked into it and found debugfs
+doesn't support strings, adding that capability cannot be a priority
+if it comes with an opportunity cost of getting NFSD DIRECT polished
+(bit of a catch-22 but alas). Not sure if that leaves you wanting, you
+may think the incremental debugfs improvement basic but it is a
+context switch I cannot afford to take. Jeff is now OK with the
+debugfs interfaces as-is, hopefully they're tolerable for you too.
+
+> If there's something that offends you, the professional response on your
+> part is to point that out to me in the moment rather than trying to spit
+> back. Because most likely, I wasn't intending to offend at all. If you
+> keep that in mind while reading my emails, you might have an easier time
+> of it.
+
+OK. This was all unfortunate, _but_ I appreciate you taking the time
+to work through it with me and provide your insights.
+
+Hopefully we have a lasting understanding now and we can get back to
+what we do best.
+
+Mike
+
+ps. sorry for the noise linux-nfs!
 
