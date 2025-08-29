@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-13952-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13953-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD14EB3C165
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 18:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 56FFEB3C166
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 18:58:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08B1F189AD85
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 16:58:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1D3C1896064
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 16:58:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB49E33EAFF;
-	Fri, 29 Aug 2025 16:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7A233EB13;
+	Fri, 29 Aug 2025 16:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL97E3q8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQoS1hH6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A11633EAF2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271F633EB0E
 	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 16:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756486665; cv=none; b=MyseCZUYauG39xqDENtaN0qHdPkdJ97YqVhmVtEzpV+M+P1hKyaGz9XdQ8WxacEbzIdx32KSMUJmKjeLMBCLBLFxonbG6VQm3ExTKo+VkoEr+u/nbHupSADPqNem6qXZcG00n84aMyBLJamfbFdgb0Ae0xYAYxN2xcKS9pNIvb8=
+	t=1756486666; cv=none; b=LsdCF/YleoWS703XH7/EY0K9D2GtVfhTtlAGjrKPo6dBGmr+Ib0vSKtGrzBTJUrxgE4vIENXu7ZNWQjk4kOYdPjiRF9L1GsRLj5qY8VObaIGZddRWmZHBvHG7c76lUJe39PpOaye0Fe3DnQNXNcNtwZLFnr+1WnuZUvwceFOieo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756486665; c=relaxed/simple;
-	bh=fGjB5VQV3eqQ31ICxyKTt5viJ/fHvQ1fIMppT4IWLoc=;
+	s=arc-20240116; t=1756486666; c=relaxed/simple;
+	bh=RDE+fANyaRiYRPEp/LLK3kFjpoqXFv3SfZQETGq0NMw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p4FtLMnI3SDYGdEvsndM10X7dix8vQfHKxt8dDHARJxH4ZgsKBj9j+9rlK20DoCJ/d7ildR0eR4GWdI9SeXt1S2WYT+AInVeo6qnlLKP3sxWPibnHSM4ROQ2aAlRFkrIsT1rOaTeG697mbe7CNhQQzZS1vtLSPanZV2G/sZb224=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VL97E3q8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5446C4CEFA;
-	Fri, 29 Aug 2025 16:57:44 +0000 (UTC)
+	 MIME-Version; b=WuwyG3tjXkv+uKhhQChSu8KukeY4uLaUT3GdEkWYe1HXQ70kAdK2mYSK/aQFaIUtubfJBg8dBXHutzLtmvbdYrymCbudh2e2cO6vTT/fBx33N3T70n1eJ27zD0kK54Wt0QfFI8q9A9pbS8tuSJ1Hy8d+xuXmSI9p+ZC4rJXnVd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQoS1hH6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63FF8C4CEF8;
+	Fri, 29 Aug 2025 16:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756486665;
-	bh=fGjB5VQV3eqQ31ICxyKTt5viJ/fHvQ1fIMppT4IWLoc=;
+	bh=RDE+fANyaRiYRPEp/LLK3kFjpoqXFv3SfZQETGq0NMw=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=VL97E3q8hcHqr+BCwrHzF2gcYPM+eMgERASq/EFQ1h6wXuZq/NTs9erQOLMDX+lzO
-	 6DujQqIncLgiaXk86+my+tPvuk4kjI48njNO5cKoM5Y0V0YVTHFsLqjit8l4V7p6Iu
-	 mNYXOjKuxFJJimVvjzyaVS6RvrGtmB9zQbTf3ua9+wga4Vr+WJQav/lLQ7IeiHGY8s
-	 qnEvWDV9k+6daa48f3K4F7FfBnY8KSpkApY0gJdk/qdl6dbP9byC4fH0seMKXXWkjD
-	 o6y2vcg3GRX+V9nDj/zbhXFT+hbm3cx0qYvtbkpxYRtW3Ll8MPct0fUtKZSGhiLWjf
-	 1QrP5c6NqCtQA==
+	b=KQoS1hH6uneeua/KwQ5knX7Pnne4jZ9BT7PgOxmtKhUmzMasNWpYB8RBqLOWT+ngi
+	 IV+++f5lOmHZLuJIzqp4MyyzmveQkJdTPf5pOsPi0BRZ68o7C62/SRIEyhYoNZfDOz
+	 pVKTc39o4oMhZYGbtPmK/nJGuwbWP6h1y7ncI1qLFNOpKgf1kYa92GrswLJIE9mnUC
+	 1vAyMr1yAU78LMMlKeoRF44VW3h+LLuyKSIz8mFuxOFpykRY4dQ94heDTafDgeSO0o
+	 ObERTB3wIcZ9lc6qlmgO6fIC8Opmm6UWsvPb0iHOAaDHllNHEqsnTYKZClQIY+Llhk
+	 O/CRta3Zw3mVw==
 From: Trond Myklebust <trondmy@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	Scott Haiden <scott.b.haiden@gmail.com>
-Subject: [PATCH 1/4] NFSv4: Don't clear capabilities that won't be reset
-Date: Fri, 29 Aug 2025 12:57:39 -0400
-Message-ID: <31f1a960ad1a14def94fa0b8c25d62b4c032813f.1756486626.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH 2/4] NFSv4: Clear the NFS_CAP_FS_LOCATIONS flag if it is not set
+Date: Fri, 29 Aug 2025 12:57:40 -0400
+Message-ID: <dd5a8621b886b02f8341c5d4ea68eb2c552ebd3e.1756486626.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1756486626.git.trond.myklebust@hammerspace.com>
 References: <528e7a88-9c63-43d4-8c67-50a36ceda8a7@gmail.com> <cover.1756486626.git.trond.myklebust@hammerspace.com>
@@ -60,28 +60,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Don't clear the capabilities that are not going to get reset by the call
-to _nfs4_server_capabilities().
+_nfs4_server_capabilities() is expected to clear any flags that are not
+supported by the server.
 
-Reported-by: Scott Haiden <scott.b.haiden@gmail.com>
-Fixes: b01f21cacde9 ("NFS: Fix the setting of capabilities when automounting a new filesystem")
+Fixes: 8a59bb93b7e3 ("NFSv4 store server support for fs_location attribute")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4proc.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfs/nfs4proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7d2b67e06cc3..5b92fcf45dd7 100644
+index 5b92fcf45dd7..d0f91d9430f6 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -4092,7 +4092,6 @@ int nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *fhandle)
- 	};
- 	int err;
- 
--	nfs_server_set_init_caps(server);
- 	do {
- 		err = nfs4_handle_exception(server,
- 				_nfs4_server_capabilities(server, fhandle),
+@@ -4013,8 +4013,9 @@ static int _nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *f
+ 				     res.attr_bitmask[2];
+ 		}
+ 		memcpy(server->attr_bitmask, res.attr_bitmask, sizeof(server->attr_bitmask));
+-		server->caps &= ~(NFS_CAP_ACLS | NFS_CAP_HARDLINKS |
+-				  NFS_CAP_SYMLINKS| NFS_CAP_SECURITY_LABEL);
++		server->caps &=
++			~(NFS_CAP_ACLS | NFS_CAP_HARDLINKS | NFS_CAP_SYMLINKS |
++			  NFS_CAP_SECURITY_LABEL | NFS_CAP_FS_LOCATIONS);
+ 		server->fattr_valid = NFS_ATTR_FATTR_V4;
+ 		if (res.attr_bitmask[0] & FATTR4_WORD0_ACL &&
+ 				res.acl_bitmask & ACL4_SUPPORT_ALLOW_ACL)
 -- 
 2.51.0
 
