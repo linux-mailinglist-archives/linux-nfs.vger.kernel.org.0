@@ -1,88 +1,102 @@
-Return-Path: <linux-nfs+bounces-13955-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13956-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37D5BB3C167
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 18:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD063B3C2F3
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 21:21:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 569CA3BF81B
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 16:58:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E7AAA277E6
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 19:21:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D73D340D91;
-	Fri, 29 Aug 2025 16:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1CC1C84C7;
+	Fri, 29 Aug 2025 19:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSXb9DTd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6ZaEMTo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36059340D8D
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 16:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBCB233134
+	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 19:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756486667; cv=none; b=pjUUmWvwunhodlLLkpRjI6s0M2ZdFWqN52AnRPpbOjOq4eLVk4kqJtA5RG8NmXuFCaKdYFelka9s4E0YO7oLCPp5JgH4QHH/F8JvSW5Qsit8vSrd+eJygZQbxPEu6+GqAjJ0JD7sMxMwLymKWkMJaIrSA93wEH4zvvnEFuysAGo=
+	t=1756495297; cv=none; b=sxAJG5CUrohfXI6CuiaTBn/IqtMu1ivupn8qp8hUCIpLMuEeeXQ1jdCHs8UgmLACmD426kKeS0aGlKyWpPBW/RzY8PCYOqbFQoBwgw2HPaNDmGAcZ+kIQ40p5HkesE38Wjf+aHj7J20zRoYJEIRPKpqncJj0uPPaqfZ8FNsaIWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756486667; c=relaxed/simple;
-	bh=7d9FovC3Kpy4hcFYzWdo3y54qz9mhFPfy6X/lwwa4UY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P8EsmF5KdmsR2fqQ8n3GxLqzxehcIi7idZ15keLb17eegIiaHp/Yb6ZiLz/qDCOZGdR4TUArnTqQW5a0Kq/QVV/P2zxchRpaQ4ELBNvgHvqEe5BjEzgiPVfVe3gh+hf1MZSDkEj5wx59oPfOw2XC5eHI7T8eNgc70fh/3P6CnZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSXb9DTd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF9CC4CEF5;
-	Fri, 29 Aug 2025 16:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756486666;
-	bh=7d9FovC3Kpy4hcFYzWdo3y54qz9mhFPfy6X/lwwa4UY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=KSXb9DTdU17XbdMrPt7sNmFgNJ0BvW6hPgSuZPxFJWLFpwtlY+WWgEsoQGbbpmH4C
-	 9+qBkRuvnTfYP326MZ/Rf4Zeom6BaUMDUEtP5dtHqKhC7L53EkE3HkEmOOuOssrLW7
-	 /yCKRFqhXC2reZJh0yjkXGKoTZSAzC28hUwqbTz/qHQpfcKRfaNTJd9Oujq4auJSiA
-	 4+7TETjVgMSsFlyL7gwEz/KhJUFqM4nTpFPmzlxCbMYXv/ex8zFHa2wLmgJtejw8J9
-	 K16+N4UN4w5tGBYf3tnWOJVKTcKqHa+2L8D/Aej5mDHH0rU2qDh9Bn7FEjIaXreANm
-	 Vs3/3dqc4ensg==
-From: Trond Myklebust <trondmy@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	Scott Haiden <scott.b.haiden@gmail.com>
-Subject: [PATCH 4/4] NFSv4: Clear the NFS_CAP_XATTR flag if not supported by the server
-Date: Fri, 29 Aug 2025 12:57:42 -0400
-Message-ID: <4fb2b677fc1f70ee642c0beecc3cabf226ef5707.1756486626.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1756486626.git.trond.myklebust@hammerspace.com>
-References: <528e7a88-9c63-43d4-8c67-50a36ceda8a7@gmail.com> <cover.1756486626.git.trond.myklebust@hammerspace.com>
+	s=arc-20240116; t=1756495297; c=relaxed/simple;
+	bh=/NTmSTZfPDXeUUDn1++L7fJ2AYXNgMPlQrCREKs1tk8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=ARvhnFTYKyG77V85B2dqN59Cb/dA4vs2d172WGVvM8xUCW1OlMXSoA+UeAOnYymhGkvKF86eDCwpzw/mXjqobj+yZlwHa0LDnrk5G61wvGYNHAU6SrFxres886xFmRkEY9hlwyXIX3FxjcdPbq8Rh20ZBwr2bsVihipnsBFiAfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6ZaEMTo; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2465cb0e81bso20226305ad.1
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 12:21:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756495295; x=1757100095; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UeRG2jIMaJlXqyftUQ7rgSf1NwIBJiuTH5C2Hy/JO+I=;
+        b=I6ZaEMToRHnNeHpEyToqQAWzlmBGprq2KC/Gtio/9zQkwRvN6jWV+z9c1ME1qAHkoE
+         TBP1xYYqQqHs//BeCNcJ5mAzsJBNDp0j1izErmX8hdc44rSa207KzrlKFT3JAigpyJ3Q
+         T3KSNwCJn88QlbHzxHj05K9hEaFpltwcgBVa/tdBpwoJK8C82nBiMx7lEgMyVxtzOLq0
+         e2maHbRYwkFT1GfvwVQz26OCFmoWUE0wFKeotqcyPIUtxZVSXf+XfuJrHmRt9Vq4dIOJ
+         x81EPtIYwJb42e1fUbsTVGDHSCf6OH+r00ipOIa+dQmxVdXZIjNhKyFHe9Eiol6cjeSQ
+         OoQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756495295; x=1757100095;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UeRG2jIMaJlXqyftUQ7rgSf1NwIBJiuTH5C2Hy/JO+I=;
+        b=vyV/1ceig5CcJOJR4mRDYu/Jest+AmAd3miynsXD4NYquUtwZWhhH4Yu0k3vjHg+cT
+         bZtYlBFcwOZBGrnANH4nGRTmXnuQ7+y88c9uUFY9pWatsaeY47RLWPrf7rGhDNiFt+gP
+         OrBucm20oT/eiKvJPo4q/P+nLlLbltG5IyrONXwFwfXCeduWTezyN7IrhsyDJlMuByAO
+         2zWFFeZwUul4GcgAnyyr3FZS9f0uXOUk/Uh9P5VXzAK+vqZAcKmdBHL+2tNsj62mEstw
+         xwW1lqmg03e9vrbkqTAAEdtSoZLIIV6AAb78XmgLtNLkjDHIKaYb+m0w+67nzdlZwnA/
+         BLHg==
+X-Gm-Message-State: AOJu0YynOHIh7TA5iD9iEYIZahiJkrTCN4z9uHoivqbgMyaJjMwQakkj
+	ODRSnpOuVZ2lZebADZNYaItRUX2pFbptHlYfDz1WLKVgAmRbi9DVT7ad
+X-Gm-Gg: ASbGncsAaFJ8Bu3EnLUnt5Yh1wUHD1bHDDX2za48uQ+IAgLW1SHUH5OYjGvdcfpmQZ5
+	ESwWnO9KOk3xTxPZ9rhErX7ana2NZfYPcE2ihehw25psaKoXQwfHaJFPPSB+0T0bFsuSihX+HB3
+	unP3g4K3dd+xiFfFVhpJ/QfaZ6CIhyW3daQHdsfzTdt/xKrFMltlvdihYSjZntHjSQSPLr6Qxd+
+	r0e5yx7KwD+3phKm+q3WRlZ4+PHG7hI0sJgKpXQFbOHH+3OfXF1P3ZmTf1DeCAiwLZNZqcoGZju
+	erzQCnyQVBzku556iEhaT2vWikGn944TnDzyXZQ2+w+bGno52BusQp5itfqslqpkHYnfo+7sBe+
+	st8rbvMT8B1iIWEkx6WgqmgjND8JAajM+Upm43A==
+X-Google-Smtp-Source: AGHT+IEEu2CEN+J8m7IRSaliLDM36gRBHZfQ6znuFzXbvXYw+WZbxK0fHdEyyzE6Wi9b2Bj9J/LY7g==
+X-Received: by 2002:a17:902:ec81:b0:246:92f5:1c07 with SMTP id d9443c01a7336-24692f51fb7mr291003005ad.51.1756495294854;
+        Fri, 29 Aug 2025 12:21:34 -0700 (PDT)
+Received: from ?IPV6:2601:647:4d82:2ae4::d83? ([2601:647:4d82:2ae4::d83])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2490648d67dsm32322695ad.108.2025.08.29.12.21.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Aug 2025 12:21:34 -0700 (PDT)
+Message-ID: <3e19b7e9-c3d2-43b5-96ea-c5cf7904e8a3@gmail.com>
+Date: Fri, 29 Aug 2025 12:21:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: trondmy@kernel.org
+Cc: linux-nfs@vger.kernel.org, scott.b.haiden@gmail.com
+References: <cover.1756486626.git.trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH 0/4] More server capability fixes
+Content-Language: en-US
+From: Scott Haiden <scott.b.haiden@gmail.com>
+In-Reply-To: <cover.1756486626.git.trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hello,
 
-nfs_server_set_fsinfo() shouldn't assume that NFS_CAP_XATTR is unset
-on entry to the function.
+I just tested 6.16.4 without these changes, which gives the same error, 
+and after applying them xattr works properly.
 
-Fixes: b78ef845c35d ("NFSv4.2: query the server for extended attribute support")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/client.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 8fb4a950dd55..4e3dcc157a83 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -888,6 +888,8 @@ static void nfs_server_set_fsinfo(struct nfs_server *server,
- 
- 	if (fsinfo->xattr_support)
- 		server->caps |= NFS_CAP_XATTR;
-+	else
-+		server->caps &= ~NFS_CAP_XATTR;
- #endif
- }
- 
--- 
-2.51.0
+Thanks,
+--Scott
 
 
