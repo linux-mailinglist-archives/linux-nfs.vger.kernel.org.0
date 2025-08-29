@@ -1,175 +1,116 @@
-Return-Path: <linux-nfs+bounces-13945-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13946-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FD01B3B038
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 03:05:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44A13B3B1C5
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 05:46:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AF23E7AD432
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 01:03:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F9271C803AB
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 03:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A4119F40B;
-	Fri, 29 Aug 2025 01:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 409775CDF1;
+	Fri, 29 Aug 2025 03:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jI/ZV+vF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2332F84F
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 01:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C956127735
+	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 03:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756429499; cv=none; b=WIttlf4Xi6ydwncVcmrs5LlLIk7BdN9Ngz76T1NRK5Vnbyf1ceJ8HsWRY1rggdaI0nJxDhhgxNQuPA9rWGql44JYJH46fFmiRx8AfgKWgQ8Yw/KncbVjhFTgjTJ9POLMXBXdaHUBpBA2JvGCo9Zqt7Jx7AV87X6ceLZmXxVGlFI=
+	t=1756439208; cv=none; b=gZaquJG6PFuD4lqbE+nlsKLgHaeoIUXw8WHfbqFouwHUC6L5M+QycP6ScyxWnsRak2BZcMw5RXpK1TAH0trW7Em0Qv62SLcFtmYOE54mvFVZUa6GNM+6cjWR7ANuSRYjFo9Mn1ARznbMS9Z8wL1A6atf0EKWWtFp7DClXFfBCkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756429499; c=relaxed/simple;
-	bh=Vlxp7/nhem4fkR2PYHBgYYSgZdrWyYH7Y6rq30+3LCI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=WDCwKcIzWC6RRdVOD7XMMQg6Hhuho/F1Y5Sixb2vKuitEulAxEeuqx+s1BDkSF5pQm7IiGI4nKK3onXiSqdlZuboGrq+P7vwhh6AtCgFgZ+T6Qwiz76+CnNvKHxvvwsD8rQzszCuAKCUlgHjg2Y51J34sWk+8YPsSmwaLejMYOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1urnXq-007XeN-LP;
-	Fri, 29 Aug 2025 01:04:48 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1756439208; c=relaxed/simple;
+	bh=iZZ11+NKgEtPfxeEMQDe8i+pxcQTi3eeL9/IVDbS4AU=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=TJ1qNutAObSlXkcOLGl3zbEVgIHkBJUq5iajGwwbz465+NyO4OB+2nUx3O7qZFLwSmBQZB6cbZUiOzjAAiUmmKS+033iGLOefr4qWgr3EMy6BKpDL7kKR3dwmpXyxqunIobiky/HmgrdWuCMqZb9im18ypARPAjN5yh167FjrlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jI/ZV+vF; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7721b8214d4so1344031b3a.2
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Aug 2025 20:46:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756439206; x=1757044006; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:content-language:to
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X0I7UfUgI24jDQzi04Iat8akQdI4ESG0uW5z5Z2tptU=;
+        b=jI/ZV+vFGgXJmxMK8qCRAvP9iwhirTm3QePJDVy2t6rHauB6i8Hgjgc2W2gOsb52Wt
+         huadjvenBeQxCQULF3KkHrJ0UuK00qtQXALjhRTCSPsOUFb5MCfJl8acQlbP9hKHXBMy
+         1S0wYmi8KRY//1BPalDCEWSoZRj27HQpppZT1Bw/yFsve3wu+JZdM5p+DNPbPYULY67i
+         eRe+VMEcfk9pMDpkcdYAzkmC851Ysudp8ua6TBg7RZ/C0XzlEIhnVRBsrT2EnjZock8S
+         zwtl1ehyjM8Vc6HoFIMH3Ibj1hjynM+Vrl+EVpDs6xwYe10LvgbPCxvMGio0tobjAaAp
+         JMjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756439206; x=1757044006;
+        h=content-transfer-encoding:subject:from:content-language:to
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=X0I7UfUgI24jDQzi04Iat8akQdI4ESG0uW5z5Z2tptU=;
+        b=GZoLSWnSTq1hI5UvBib6xhX3YHOlWbFKBtCn7wxrXU59r3beE0wwj5XGCW6sg5Lewk
+         V6yIatgfvPdDJzM7wf5mbMAp+OdGeV85NeKc+qHeOoSTHV8VSzVMZXZho6KpjGQYHvhl
+         zdjJG2r4mjAHmUhnq+fkLeGJHfnrSh6fXePKE9i4TaS7CsaLSkuec031lGsTSgKSaIux
+         yvYZyZx3FA00jkVtXKACDVhl8Q75nF+tdalgBDxB6ZIuVOqxVtLpQ764VWXygu08P4Uv
+         A/dm9Decb3gJp75qE8pWTz293kMTOd/AwLu1kLXhccd7Tb/rbQBgFyPTac1irL2bJ9Nn
+         HXPQ==
+X-Gm-Message-State: AOJu0YyAY67/CTdrzJNGc4fs0rfSiJBwN8Py/QB1h2OVd4Q6PqTshjvY
+	FMQ51pYVAjGzLxHRWadL9A41xE9fP9oTmKNl0DIOmhtpA8LklA8TPjATjsg59Q==
+X-Gm-Gg: ASbGncs+oXf6oJ1uLqtoWkoaVSip71dlCpF2eXM3IR6BWNr26Rs7e1FRVKd6tztLixT
+	BoBJ1WXgSzr2pAtHAf8cuMzb78J/ti3waQy1rv7NZfLx+8ATHiToIc/s1rq5tJRv0CF05l70fHR
+	bqqnPPyf4XfcNAmEnfnD2afT6FYBL4rkw/6ogLuh3oaEn7OGbDEi7re8sAIzv5it3L7mW6A2y7w
+	50xGWf4Ho4UpYGLJKa3qnNz9+W/0sD5+j9qTb8ijtlPfYV/jC0HTtPsa0cxhIgXg4cZJ/V6qqYr
+	V3yeeRKnprUmREQXcorDzKm2307mVGhBoA/BwMzOiK1RRyqAr01RgZJfKmKduZ6PiRhrpeH3VxO
+	zIS97zijQqOhTZ9y4VuO6UwaLBORUzx4QePUsTa66yStvEUHf
+X-Google-Smtp-Source: AGHT+IGKsXVd2xhLm57Kl0UovFf2gJTEMzj04J18ZRTugkqIZsxHoNHbuF+GhZAQIBdHyGLmsj635g==
+X-Received: by 2002:a05:6a20:4c11:b0:243:a769:4864 with SMTP id adf61e73a8af0-243a76949fcmr7764379637.10.1756439206102;
+        Thu, 28 Aug 2025 20:46:46 -0700 (PDT)
+Received: from ?IPV6:2601:647:4d82:2ae4::d83? ([2601:647:4d82:2ae4::d83])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b4cd366f95asm852681a12.51.2025.08.28.20.46.45
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Aug 2025 20:46:45 -0700 (PDT)
+Message-ID: <528e7a88-9c63-43d4-8c67-50a36ceda8a7@gmail.com>
+Date: Thu, 28 Aug 2025 20:46:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Trond Myklebust" <trondmy@kernel.org>
-Cc: "Harshvardhan Jha" <harshvardhan.j.jha@oracle.com>,
- "Anna Schumaker" <anna@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] sunrpc: don't fail immediately in rpc_wait_bit_killable()
-In-reply-to: <e954bac8c996015ce93e54731c30d20a4b9c56c7.camel@kernel.org>
-References: <>, <e954bac8c996015ce93e54731c30d20a4b9c56c7.camel@kernel.org>
-Date: Fri, 29 Aug 2025 11:04:48 +1000
-Message-id: <175642948807.2234665.11287496645872411211@noble.neil.brown.name>
+User-Agent: Mozilla Thunderbird
+To: linux-nfs@vger.kernel.org
+Content-Language: en-US
+From: Scott Haiden <scott.b.haiden@gmail.com>
+Subject: [REGRESSION]: NFS 4.2 reports "Operation Not Supported" on getxattr
+ calls
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 28 Aug 2025, Trond Myklebust wrote:
-> On Thu, 2025-08-28 at 18:12 +0530, Harshvardhan Jha wrote:
-> > Hi there,
-> >=20
-> > On 20/08/25 3:08 AM, NeilBrown wrote:
-> > > rpc_wait_bit_killable() is called when it is appropriate for a
-> > > fatal
-> > > signal to abort the wait.
-> > >=20
-> > > If it is called late during process exit after exit_signals() is
-> > > called
-> > > (and when PF_EXITING is set), it cannot receive a fatal signal so
-> > > waiting indefinitely is not safe.
-> > >=20
-> > > However aborting immediately, as it currently does, is not ideal as
-> > > it
-> > > mean that the related NFS request cannot succeed, even if the
-> > > network
-> > > and server are working properly.
-> > >=20
-> > > One of the causes of filesystem IO when PF_EXITING is set is
-> > > acct_process() which may access the process accounting file.=C2=A0 For a
-> > > NFS-root configuration, this can be accessed over NFS.
-> > >=20
-> > > In this configuration LTP test "acct02" fails.
-> > >=20
-> > > Though waiting indefinitely is not appropriate, aborting
-> > > immediately is
-> > > also not desirable.=C2=A0 This patch aims for a middle ground of waiting
-> > > at
-> > > most 5 seconds.=C2=A0 This should be enough when NFS service is working,
-> > > but
-> > > not so much as to delay process exit excessively when NFS service
-> > > is not
-> > > functioning.
-> > >=20
-> > > Reported-by: Mark Brown <broonie@kernel.org>
-> > > Reported-and-tested-by: Harshvardhan Jha
-> > > <harshvardhan.j.jha@oracle.com>
-> > > Link:
-> > > https://nam10.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Furl=
-defense.com%2Fv3%2F__https%3A%2F%2Flore.kernel.org%2Flinux-nfs%2F7d4d57b0-39a=
-3-49f1-8ada-60364743e3b4%40sirena.org.uk%2F__%3B!!ACWV5N9M2RV99hQ!LaRJdjZulcG=
-71nHFWdEAszB9mJEhezxPsDxHO8xeQJ7P8a9UfYNRIm1ziuuHU5wxgEXW14vAqC1dlpSQraWaxA%2=
-4&data=3D05%7C02%7Ctrondmy%40hammerspace.com%7C5463825a86c248e5766c08dde63063=
-12%7C0d4fed5c3a7046fe9430ece41741f59e%7C0%7C0%7C638919817692991630%7CUnknown%=
-7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkF=
-OIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DGBRM89CFMk2vKyeN4yKBvjiV9I=
-rODC4tbwMfRSk4Cfc%3D&reserved=3D0
-> > > =C2=A0
-> > > Fixes: 14e41b16e8cb ("SUNRPC: Don't allow waiting for exiting
-> > > tasks")
-> > > Signed-off-by: NeilBrown <neil@brown.name>
-> > > ---
-> > > =C2=A0net/sunrpc/sched.c | 14 +++++++++-----
-> > > =C2=A01 file changed, 9 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > > index 73bc39281ef5..92f39e828fbe 100644
-> > > --- a/net/sunrpc/sched.c
-> > > +++ b/net/sunrpc/sched.c
-> > > @@ -276,11 +276,15 @@ EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
-> > > =C2=A0
-> > > =C2=A0static int rpc_wait_bit_killable(struct wait_bit_key *key, int
-> > > mode)
-> > > =C2=A0{
-> > > -	if (unlikely(current->flags & PF_EXITING))
-> > > -		return -EINTR;
-> > > -	schedule();
-> > > -	if (signal_pending_state(mode, current))
-> > > -		return -ERESTARTSYS;
-> > > +	if (unlikely(current->flags & PF_EXITING)) {
-> > > +		/* Cannot be killed by a signal, so don't wait
-> > > indefinitely */
-> > > +		if (schedule_timeout(5 * HZ) =3D=3D 0)
-> > > +			return -EINTR;
-> > > +	} else {
-> > > +		schedule();
-> > > +		if (signal_pending_state(mode, current))
-> > > +			return -ERESTARTSYS;
-> > > +	}
-> > > =C2=A0	return 0;
-> > > =C2=A0}
-> > > =C2=A0
-> > Is it possible to get this merged in 6.17? I have tested this and the
-> > LTP tests pass
->=20
-> If we are in this situation, it is because some signal has already
-> killed the parent task. That throws any data integrity guarantees right
-> out of the window.
+Hello,
+Between version v6.16.1 and v6.16.2 on the stable tree, NFS client 
+started reporting operation not supported when I issue getxattr calls. I 
+simply see:     $ strace -e getxattr getfattr -n user.hash.sha512 
+'S01E01 - Kassa.mkv'     getxattr("S01E01 - Kassa.mkv", 
+"user.hash.sha512", NULL, 0) = -1 EOPNOTSUPP (Operation not supported)   
+   S01E01 - Kassa.mkv: user.hash.sha512: Operation not supported     +++ 
+exited with 1 +++
+Before this issue cropped up, it simply returned the xattr as expected.
 
-Or it could be because the task has exited normally.
-
->=20
-> So what problem is this patch trying to fix?
-
-Process accounting writes a record to the accounting file when a process
-exits.  It writes this record from the context of the process that is
-exiting.  It does this after signals have been disabled.
-
-So this is not related to data integrity for any data that the process
-wrote.  I believe that is all handled correctly, partly because writes
-and close are performed asynchronously and partly because nfs_wb_all()
-ultimately uses a non-killable wait.
-
-It is only related to writing to the process accounting file.
-
+I did a git bisect between those two changes on the stable tree, and
+found that the backport of this change 
+(https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b01f21cacde9f2878492cf318fee61bf4ccad323 
+<https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b01f21cacde9f2878492cf318fee61bf4ccad323>)
+onto the stable tree is what caused it to start happening. The 6.12
+longterm repo is also affected.
+I built mainline 6.17-rc3 and it was still facing the issue as of last 
+night, but if I patch a reverse diff of that change on then getxattr 
+calls work again.
+Please let me know if there's more information I should provide, or if
+I'm just doing something wrong.
 Thanks,
-NeilBrown
-
-
-
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
->=20
+--Scott
 
 
