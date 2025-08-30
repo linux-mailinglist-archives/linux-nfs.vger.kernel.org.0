@@ -1,102 +1,153 @@
-Return-Path: <linux-nfs+bounces-13956-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13957-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD063B3C2F3
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 21:21:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D011B3CE43
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Aug 2025 19:38:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E7AAA277E6
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Aug 2025 19:21:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2B953BD241
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Aug 2025 17:38:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1CC1C84C7;
-	Fri, 29 Aug 2025 19:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D7072D29B7;
+	Sat, 30 Aug 2025 17:38:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6ZaEMTo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNl0xy6Q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBCB233134
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 19:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397EB274668
+	for <linux-nfs@vger.kernel.org>; Sat, 30 Aug 2025 17:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756495297; cv=none; b=sxAJG5CUrohfXI6CuiaTBn/IqtMu1ivupn8qp8hUCIpLMuEeeXQ1jdCHs8UgmLACmD426kKeS0aGlKyWpPBW/RzY8PCYOqbFQoBwgw2HPaNDmGAcZ+kIQ40p5HkesE38Wjf+aHj7J20zRoYJEIRPKpqncJj0uPPaqfZ8FNsaIWg=
+	t=1756575534; cv=none; b=QW2QDddUyuGnmRNobIbePEk1EIf+LauNjWiOvLgjPYb1B6YY+sW1XYG1WgPxshrOubFxh2OksSI8ylqEo5eMK2jSpADG3qedvRvyJwQqBJxPm/dhFG59e/UAPgmBgfahOVNKxOPvH5xz+xvmywVhY2yEkhFiNLFSjUwXgeyC0+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756495297; c=relaxed/simple;
-	bh=/NTmSTZfPDXeUUDn1++L7fJ2AYXNgMPlQrCREKs1tk8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ARvhnFTYKyG77V85B2dqN59Cb/dA4vs2d172WGVvM8xUCW1OlMXSoA+UeAOnYymhGkvKF86eDCwpzw/mXjqobj+yZlwHa0LDnrk5G61wvGYNHAU6SrFxres886xFmRkEY9hlwyXIX3FxjcdPbq8Rh20ZBwr2bsVihipnsBFiAfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6ZaEMTo; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2465cb0e81bso20226305ad.1
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Aug 2025 12:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756495295; x=1757100095; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UeRG2jIMaJlXqyftUQ7rgSf1NwIBJiuTH5C2Hy/JO+I=;
-        b=I6ZaEMToRHnNeHpEyToqQAWzlmBGprq2KC/Gtio/9zQkwRvN6jWV+z9c1ME1qAHkoE
-         TBP1xYYqQqHs//BeCNcJ5mAzsJBNDp0j1izErmX8hdc44rSa207KzrlKFT3JAigpyJ3Q
-         T3KSNwCJn88QlbHzxHj05K9hEaFpltwcgBVa/tdBpwoJK8C82nBiMx7lEgMyVxtzOLq0
-         e2maHbRYwkFT1GfvwVQz26OCFmoWUE0wFKeotqcyPIUtxZVSXf+XfuJrHmRt9Vq4dIOJ
-         x81EPtIYwJb42e1fUbsTVGDHSCf6OH+r00ipOIa+dQmxVdXZIjNhKyFHe9Eiol6cjeSQ
-         OoQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756495295; x=1757100095;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UeRG2jIMaJlXqyftUQ7rgSf1NwIBJiuTH5C2Hy/JO+I=;
-        b=vyV/1ceig5CcJOJR4mRDYu/Jest+AmAd3miynsXD4NYquUtwZWhhH4Yu0k3vjHg+cT
-         bZtYlBFcwOZBGrnANH4nGRTmXnuQ7+y88c9uUFY9pWatsaeY47RLWPrf7rGhDNiFt+gP
-         OrBucm20oT/eiKvJPo4q/P+nLlLbltG5IyrONXwFwfXCeduWTezyN7IrhsyDJlMuByAO
-         2zWFFeZwUul4GcgAnyyr3FZS9f0uXOUk/Uh9P5VXzAK+vqZAcKmdBHL+2tNsj62mEstw
-         xwW1lqmg03e9vrbkqTAAEdtSoZLIIV6AAb78XmgLtNLkjDHIKaYb+m0w+67nzdlZwnA/
-         BLHg==
-X-Gm-Message-State: AOJu0YynOHIh7TA5iD9iEYIZahiJkrTCN4z9uHoivqbgMyaJjMwQakkj
-	ODRSnpOuVZ2lZebADZNYaItRUX2pFbptHlYfDz1WLKVgAmRbi9DVT7ad
-X-Gm-Gg: ASbGncsAaFJ8Bu3EnLUnt5Yh1wUHD1bHDDX2za48uQ+IAgLW1SHUH5OYjGvdcfpmQZ5
-	ESwWnO9KOk3xTxPZ9rhErX7ana2NZfYPcE2ihehw25psaKoXQwfHaJFPPSB+0T0bFsuSihX+HB3
-	unP3g4K3dd+xiFfFVhpJ/QfaZ6CIhyW3daQHdsfzTdt/xKrFMltlvdihYSjZntHjSQSPLr6Qxd+
-	r0e5yx7KwD+3phKm+q3WRlZ4+PHG7hI0sJgKpXQFbOHH+3OfXF1P3ZmTf1DeCAiwLZNZqcoGZju
-	erzQCnyQVBzku556iEhaT2vWikGn944TnDzyXZQ2+w+bGno52BusQp5itfqslqpkHYnfo+7sBe+
-	st8rbvMT8B1iIWEkx6WgqmgjND8JAajM+Upm43A==
-X-Google-Smtp-Source: AGHT+IEEu2CEN+J8m7IRSaliLDM36gRBHZfQ6znuFzXbvXYw+WZbxK0fHdEyyzE6Wi9b2Bj9J/LY7g==
-X-Received: by 2002:a17:902:ec81:b0:246:92f5:1c07 with SMTP id d9443c01a7336-24692f51fb7mr291003005ad.51.1756495294854;
-        Fri, 29 Aug 2025 12:21:34 -0700 (PDT)
-Received: from ?IPV6:2601:647:4d82:2ae4::d83? ([2601:647:4d82:2ae4::d83])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2490648d67dsm32322695ad.108.2025.08.29.12.21.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 12:21:34 -0700 (PDT)
-Message-ID: <3e19b7e9-c3d2-43b5-96ea-c5cf7904e8a3@gmail.com>
-Date: Fri, 29 Aug 2025 12:21:33 -0700
+	s=arc-20240116; t=1756575534; c=relaxed/simple;
+	bh=iv4do4bddqZ9KbsQl0Ahnua/OIenrRG/Fa8lq2YH84c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H7Cr2BV8mhnKOfCWPkM18qYoYWLpmtP5x5ex9zjHkGP/hcdxrtb9p6txv2qIPv96bwm/IrvC2dgb+pPhECPlTKPitlXrqhpKPEqx8joRbS07QjXXif2ixL7GDGI3rFWKp8yjTlM4S2kxIHqQVtfkm6uz3SbIl+OIK3VLyGhabiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNl0xy6Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0E4C4CEEB;
+	Sat, 30 Aug 2025 17:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756575533;
+	bh=iv4do4bddqZ9KbsQl0Ahnua/OIenrRG/Fa8lq2YH84c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lNl0xy6QFvcQljeeBsHJ66V1pGCECFII7MiClmCv5pSJnYUVd+eoIlCHg/9whDiWL
+	 1OkIY9tXePH2EioVu2AkpD0vlpCfyyd1Edw5iTrxj+H23CzFxqHntoA2ywxreK9cwX
+	 MXFrLzBtCgD3bG2+hLdd7hUATHzn/vBxhzN0cMtWX9RfJpTlGDDm6T8vmC6jqspHEs
+	 uOPlLH7ENcYT/OEBbyQ4bSn7vdoI+YIE/6WgM2K3LFJb+TaJwSK46baWPboxFruK71
+	 WyB+iYgNqUytUChxclUe5e0vcDqTId8Ct7w1o1XHKxrmCDGKxPoGbsfHXwdmF+g9Zu
+	 KpxPZjCp53f4A==
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [RFC PATCH 0/2] some progress on rpcrdma bug [was: Re: [PATCH v8 5/7] NFSD: issue READs using O_DIRECT even if IO is misaligned]
+Date: Sat, 30 Aug 2025 13:38:50 -0400
+Message-ID: <20250830173852.26953-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <aLClcl08x4JJ1UJu@kernel.org>
+References: <aLClcl08x4JJ1UJu@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: trondmy@kernel.org
-Cc: linux-nfs@vger.kernel.org, scott.b.haiden@gmail.com
-References: <cover.1756486626.git.trond.myklebust@hammerspace.com>
-Subject: Re: [PATCH 0/4] More server capability fixes
-Content-Language: en-US
-From: Scott Haiden <scott.b.haiden@gmail.com>
-In-Reply-To: <cover.1756486626.git.trond.myklebust@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Chuck,
 
-I just tested 6.16.4 without these changes, which gives the same error, 
-and after applying them xattr works properly.
+[just including context from thread in cover-letter for these 2 RFC patches]
+
+On Thu, Aug 28, 2025 at 02:52:34PM -0400, Mike Snitzer wrote:
+> On Thu, Aug 28, 2025 at 10:53:49AM -0400, Chuck Lever wrote:
+> > On 8/28/25 4:09 AM, Mike Snitzer wrote:
+> > > On Wed, Aug 27, 2025 at 09:57:39PM -0400, Chuck Lever wrote:
+> > >>>
+<snip>
+> > >>>> - When the I/O is complete, adjust the offset in the first bvec entry
+> > >>>>   forward by setting a non-zero page offset, and adjust the returned
+> > >>>>   count downward to match the requested byte count from the client
+> > >>>
+> > >>> Tried it long ago, such bvec manipulation only works when not using
+> > >>> RDMA.  When the memory is remote, twiddling a local bvec isn't going
+> > >>> to ensure the correct pages have the correct data upon return to the
+> > >>> client.
+> > >>>
+> > >>> RDMA is why the pages must be used in-place, and RDMA is also why
+> > >>> the extra page needed by this patch (for use as throwaway front-pad
+> > >>> for expanded misaligned DIO READ) must either be allocated _or_
+> > >>> hopefully it can be from rq_pages (after the end of the client
+> > >>> requested READ payload).
+<snip>
+
+> > >> There's nothing I can think of in the RDMA or RPC/RDMA protocols that
+> > >> mandates that the first page offset must always be zero. Moving data
+> > >> at one address on the server to an entirely different address and
+> > >> alignment on the client is exactly what RDMA is supposed to do.
+> > >>
+> > >> It sounds like an implementation omission because the server's upper
+> > >> layers have never needed it before now. If TCP already handles it, I'm
+> > >> guessing it's going to be straightforward to fix.
+> > > 
+> > > I never said that first page offset must be zero.  I said that I
+> > > already did what you suggested and it didn't work with RDMA.  This is
+> > > recall of too many months ago now, but: the client will see the
+> > > correct READ payload _except_ IIRC it is offset by whatever front-pad
+> > > was added to expand the misaligned DIO; no matter whether
+> > > rqstp->rq_bvec updated when IO completes.
+> > > 
+> > > But I'll revisit it again.
+> > 
+> > For the record, this email thread is the very first time I've heard that
+> > you tried the simple approach and that it worked with TCP and not with
+> > RDMA. I wish I had known that a while ago.
+> 
+> Likewise, but the story is all in the patch header and the code tells
+> the story too. Hence your finding it with closer review (thanks for
+> that BTW!). I agree something is off so I'm happy to work it further.
+> 
+> I have iterated on quite a few aspects to this patch 5. Christoph had
+> suggestion for using memmove in nfsd_complete_misaligned_read_dio.
+> You had the feedback that required ensuring the lightest touch
+> relative to branching so that buffered IO mode remain as fast as
+> possible.
+> 
+> Looking forward to tackling this RDMA-specific weirdness now.
+
+Hopeful these 2 patches more clearly demonstrate what I'm finding
+needed when using RDMA with my NFSD misaligned DIO READ patch.
+
+These patches build ontop of my v8 patchset. I've included quite a lot
+of context for the data mismatch seen by the NFS client, etc in the
+patch headers.
+
+If I'm understanding you correctly, next step is to look closer at the
+rpcrdma code that would skip the throwaway front-pad page from being
+mapped to the start of the RDMA READ payload returned to the NFS
+client?
+
+Such important adjustment code would need to know that the rq_bvec[]
+that reflects the READ payload doesn't include a bvec that points to
+the first page of rqstp->rq_pages (pointed to by rqstp->rq_next_page
+on entry to nfsd_iter_read) -- so it must skip past that memory in
+the READ payload's RDMA memory returned to NFS client?
 
 Thanks,
---Scott
+Mike
+
+Mike Snitzer (2):
+  NFSD: fix misaligned DIO READ to not use a start_extra_page, exposes rpcrdma bug?
+  NFSD: use /end/ of rq_pages for front_pad page, simpler workaround for rpcrdma bug
+
+ fs/nfsd/vfs.c | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
+
+-- 
+2.44.0
 
 
