@@ -1,62 +1,57 @@
-Return-Path: <linux-nfs+bounces-13963-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13964-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40E58B3E1DD
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 13:41:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 981B2B3E2AB
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 14:25:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23B1E7AED99
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 11:39:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08C6F189BB04
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 12:26:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C8B31DDBF;
-	Mon,  1 Sep 2025 11:40:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81E530E831;
+	Mon,  1 Sep 2025 12:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hf913tWs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6jEwB3g"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06182266560;
-	Mon,  1 Sep 2025 11:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336930F81F
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Sep 2025 12:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756726840; cv=none; b=kCqQOSp/bn+5inpKMYrpIX9WgVOYA46LHB4TgBOC01uEIQUMetPQ39Kue5Ia6tdjTVZ+EDwJGcRzvxS3Lhte6MppYoR1DfeHM1b0+5uZKkIoq3QyCyyfafcF4RN6eDCtpdARoPGZQr4H0bGI38M3sR4dRSEa9ThIhBSp1p+705o=
+	t=1756729530; cv=none; b=VEvJyArLvQreEO2E0C2/O4Dyx1yJRiiARQf2mKzydtHWCqh+kviALncnhOyJNHVpdMoVUsoIq7f96M9qLHS2urnf5y/tBtTJbsVTCnWZXrC5rV7cIOTfrHLehs90lg/xnmUeloPG/ZdUji/tjO5wxU93Ua9W4yrQxKC2Kr5yZwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756726840; c=relaxed/simple;
-	bh=npXEGBJxOhe9dMOf61TdmnMyKpImRV8CKnQho0op6UI=;
+	s=arc-20240116; t=1756729530; c=relaxed/simple;
+	bh=ut6dLzV0s23NVocktYN8sYlOrmEc8JbGnLMFodGEF5k=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LSdg7Zv0DuUFj8z9jsP90i+8DKcZinF8sJSBBFQsRHnh52UoWKzmshtwN8iLpgU5HbBLx9gZuBKefqV5ZnFPH4ZnqCqm1Utjs48rmAGfufQTAeSLzG3kMdujZ5N3kUzLtI7tZUKSn626bL+V/M0pNbVVsLOGK6C3C/aZI+iBR58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hf913tWs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E538C4CEF0;
-	Mon,  1 Sep 2025 11:40:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=NtQWqcVOaH4IhnddAAfoHBKvl3oe6gkggkAkvEVtqDL5ELKSdIIVC1XUPoB0uRYjo0220sE0HgHpXEBLHpuPQ5sC2TxnU573jwayc8tsBZd403oW3wXymiVNKMEiCKgD6aXQ8kqATiTmoiSrWLU2VjToyRLxTE34IVXW8ymPw4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6jEwB3g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E599C4CEF0;
+	Mon,  1 Sep 2025 12:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756726839;
-	bh=npXEGBJxOhe9dMOf61TdmnMyKpImRV8CKnQho0op6UI=;
+	s=k20201202; t=1756729530;
+	bh=ut6dLzV0s23NVocktYN8sYlOrmEc8JbGnLMFodGEF5k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hf913tWs/nE9twl+/PuHiYYLD632B5D3fYbOcnamDPr/ri1OioeiLSWLp1+5rCD4H
-	 6nNALQXfYG2jI4Bxd8enmtCs6l3JziM2HRDvrsE0ueeRh4H/z7HNMKUa44I53Ru0sN
-	 jLGkBiVEHxFMBpyYQRuKZMPuXZg2vawGm+ixpCC5EwxlU4unSha4sETT1spu3uXYtY
-	 nOyNR4tro1pGQatTGOKKWym1+AUBMWfhIuQNIBgWdBWwdWiF1EXdrVH6qSJ0EAiI2j
-	 7iJHUSWtQDbfDltX3r88RaT98MHjxBdGh6LLncOZpmLHxlYupi4jEHZ7Ah21km6oKW
-	 AN/CMlh8u/ZUA==
-Message-ID: <5664a9dfe03b5ed7ef496a8c03384643023bb63b.camel@kernel.org>
-Subject: Re: [Question]nfs: never returned delegation
+	b=k6jEwB3gnPx8HDtYmLtA+IDKf+WmNTEMSJ/jOJmZrpR/QHqwyDCFphz+Y4twYRFwd
+	 SWIp5ut472cMpEmZsm8Jgd9Ut1Yr9Myi/zP+3Cf0iC9a/CCoSndCEk24mnaMOBv7/Q
+	 gne9M+0aIMVc10Xlnc2rWgiRdtHVrAYZxpwKAOff7SCAH12RvWyqR+6Px8SeNfnajJ
+	 HDh+ri2ba/v95V9Ii0Tt1Z3hEMXCAb6zpGZbx/0Mi8clur0zlpWTEcE9AACel+yyv3
+	 hsshgfiQYaCP22TA/1wo2o+vYh8qlsn5K+eaBxhDLhqvdvL++g/ga06bXLpBVn5XnJ
+	 vmfeloN+KCyfg==
+Message-ID: <71fa0055f1ddd5a7f8606515579889e85390d8e9.camel@kernel.org>
+Subject: Re: Question about potential buffer issue in nfs_request_mount() -
+ seeking feedback
 From: Jeff Layton <jlayton@kernel.org>
-To: Li Lingfeng <lilingfeng3@huawei.com>, Trond Myklebust
- <trondmy@kernel.org>,  "zhangjian (CG)" <zhangjian496@huawei.com>,
- anna@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Chuck Lever	
- <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, yangerkun	
- <yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao	
- <houtao1@huawei.com>, "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>, 
- Li Lingfeng <lilingfeng@huaweicloud.com>
-Date: Mon, 01 Sep 2025 07:40:37 -0400
-In-Reply-To: <de669327-c93a-49e5-a53b-bda9e67d34a2@huawei.com>
-References: <ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com>
-	 <e539e0ed77438b4f4353a78451add2ab5e69ec38.camel@kernel.org>
-	 <de669327-c93a-49e5-a53b-bda9e67d34a2@huawei.com>
+To: SSH <originalssh@pm.me>, "linux-nfs@vger.kernel.org"
+	 <linux-nfs@vger.kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Date: Mon, 01 Sep 2025 08:25:29 -0400
+In-Reply-To: <TX-1G5eig2RBJI5kkHe2QNzRk-LQ8QOTpV3o5FQNV1Iaz2Rr-zCE69gCBA-ah22pNehg97Q-KRjiimwwrZHfgyqXg1jPYty3FoQS5Rmfkn8=@pm.me>
+References: 
+	<TX-1G5eig2RBJI5kkHe2QNzRk-LQ8QOTpV3o5FQNV1Iaz2Rr-zCE69gCBA-ah22pNehg97Q-KRjiimwwrZHfgyqXg1jPYty3FoQS5Rmfkn8=@pm.me>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,108 +136,105 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-09-01 at 17:07 +0800, Li Lingfeng wrote:
-> Hi,
+On Mon, 2025-09-01 at 01:38 +0000, SSH wrote:
+> Hi NFS maintainers,
 >=20
-> =E5=9C=A8 2025/8/11 21:03, Trond Myklebust =E5=86=99=E9=81=93:
-> > On Mon, 2025-08-11 at 20:48 +0800, zhangjian (CG) wrote:
-> > > Recently, we meet a NFS problem in 5.10. There are so many
-> > > test_state_id request after a non-privilaged request in tcpdump
-> > > result. There are 40w+ delegations in client (I read the delegation
-> > > list from /proc/kcore).
-> > > Firstly, I think state manager cost a lot in
-> > > nfs_server_reap_expired_delegations. But I see they are all in
-> > > NFS_DELEGATION_REVOKED state except 6 in NFS_DELEGATION_REFERENCED (I
-> > > read this from /proc/kcore too).
-> > > I analyze NFS code and find if NFSPROC4_CLNT_DELEGRETURN procedure
-> > > meet ETIMEOUT, delegation will be marked as NFS4ERR_DELEG_REVOKED and
-> > > never return it again. NFS server will keep the revoked delegation in
-> > > clp->cl_revoked forever. This will result in following sequence
-> > > response with RECALLABLE_STATE_REVOKED flag. Client will send
-> > > test_state_id request for all non-revoked delegation.
-> > > This can only be solved by restarting NFS server.
-> > > I think ETIMEOUT in NFSPROC4_CLNT_DELEGRETURN procedure may be not
-> > > the only case that cause lots of non-terminable test_state_id
-> > > requests after any non-privilaged request.
-> > > Wish NFS experts give some advices on this problem.
-> > >=20
-> > You have the following options:
-> >=20
-> >     1. Don't ever use "soft" or "softerr" on the NFS client.
-> >     2. Reboot your server every now and again.
-> >     3. Change the server code to not bother caching revoked state. Doin=
-g
-> >        so is rather pointless, since there is nothing a client can do
-> >        differently when presented with NFS4ERR_DELEG_REVOKED vs.
-> >        NFS4ERR_BAD_STATEID.
-> >     4. Change the server code to garbage collect revoked stateids after
-> >        a while.
-> >=20
-> I found that a server-side bug could also cause such behavior, and I've
-> reproduced the issue based on the master (commit b320789d6883).
-> nfs4_laundromat=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0nfsd4_delegreturn
-
-I think you may be right about the race. The details are a little off
-though. The important bit here is that the laundromat also calls this
-unhash_delegation_locked before doing the list_add/del.
-
->  =C2=A0list_add // add dp to reaplist
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 // by dl_recall_lru
->  =C2=A0list_del_init // delete dp from
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0// reaplist
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0destro=
-y_delegation
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 unhas=
-h_delegation_locked
-
-...which _should_ make the above unhash_delegation_locked return false,
-so that list_del_init never happens.
-
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0list_del_init
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0// dp was not added to any list
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0// via dl_recall_lru
->  =C2=A0revoke_delegation
->  =C2=A0list_add // add dp to cl_revoked
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 // by dl_recall_lru
+> I was looking at a kernel warning from 6.1-rc1 to understand it better an=
+d tried to trace through the code to understand what was happening. I think=
+ I may have found something, although now the most up-to-date kernel HEAD i=
+s August, 2025 and most of all, I'm not a kernel developer so I wanted to a=
+sk for your feedback on whether my analysis makes sense.
 >=20
-> The delegation will be left in cl_revoked.
+> ## Context
+> * This was on all NFS v3 TCP mounts
+> * The warning came from kernel's hardened memcpy detection
+> * The mount seemed to work despite the warning
 >=20
-> I agree with Trond's suggestion to change the server code to fix it.
+> ### Additional Context
+> I noticed this warning was originally reported around 6.1-rc1 timeframe (=
+~2022), but checking the current kernel source, it would appear that the sa=
+me code pattern exists.
+> I'm not sure if this was previously reported to the NFS maintainers speci=
+fically, or if there's a reason it wasn't addressed. Either way, I thought =
+it was worth bringing up again in case it got missed or deprioritized.
 >=20
+> Source: https://lkml.org/lkml/2022/10/16/461
+>=20
+> ## The Original Warning
+> I saw this warning during NFS v3 TCP mount:
+>=20
+> ```
+> [ =C2=A0 19.617475] memcpy: detected field-spanning write (size 28) of si=
+ngle field "request.sap" at fs/nfs/super.c:857 (size 18446744073709551615)
+> [ =C2=A0 19.617504] WARNING: CPU: 3 PID: 1300 at fs/nfs/super.c:857 nfs_r=
+equest_mount.constprop.0.isra.0+0x1c0/0x1f0
+> ```
+>=20
+> ## Likely Source of Failure
+>=20
+> Looking at `nfs_request_mount()` in `fs/nfs/super.c`, I see this code:
+>=20
+> ```c
+> // Around line 850
+> struct nfs_mount_request request =3D {
+> =C2=A0 =C2=A0 .sap =3D &ctx->mount_server._address,
+> =C2=A0 =C2=A0 // ... other fields
+> };
+>=20
+> // Later, around line 881
+> if (ctx->mount_server.address.sa_family =3D=3D AF_UNSPEC) {
+> =C2=A0 =C2=A0 memcpy(request.sap, &ctx->nfs_server._address, ctx->nfs_ser=
+ver.addrlen);
+> =C2=A0 =C2=A0 ctx->mount_server.addrlen =3D ctx->nfs_server.addrlen;
+> }
+> ```
+>=20
+> My understanding is:
+> 1. `request.sap` points to `ctx->mount_server._address`
+> 2. We're copying from `ctx->nfs_server._address` (which could be 28 bytes=
+ for IPv6)
+> 3. Into whatever `mount_server._address` points to (which might be smalle=
+r?)
+>=20
+> The weird size value (18446744073709551615) in the warning makes me think=
+ there might be memory corruption happening.
+>=20
+> Does this seem like a real issue? If so, would adding a size check before=
+ the memcpy make sense, something like:
+>=20
+> ```c
+> if (ctx->mount_server.address.sa_family =3D=3D AF_UNSPEC) {
+> =C2=A0 =C2=A0 if (ctx->nfs_server.addrlen <=3D sizeof(ctx->mount_server._=
+address)) {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 memcpy(request.sap, &ctx->nfs_server._address=
+, ctx->nfs_server.addrlen);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctx->mount_server.addrlen =3D ctx->nfs_server=
+.addrlen;
+> =C2=A0 =C2=A0 } else {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 // handle error case; maybe -EINVAL?
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;
+> =C2=A0 =C2=A0 }
+> }
+> ```
+>=20
+> I could easily be misunderstanding something fundamental here, so please =
+let me know if I'm off track. I just wanted to share this in case it's help=
+ful.
+>=20
+> Thanks for your time and for maintaining NFS!
 >=20
 
-...but there is at least one variation on what you wrote above where it
-could get stuck back on the cl_revoked list after the delegreturn. The
-delegreturn does set the SC_STATUS_CLOSED bit on the stateid, so
-something like this (untested) patch, perhaps?
+(cc'ing Kees, our resident hardening expert)
 
-------------8<----------
+FYI, that large size field is 0xffffffffffffffff (a 64-bit integer with
+all bits set to 1). The doc header over __fortify_memcpy_chk()
+definition is a little helpful, but the commit it refers to
+(6f7630b1b5bc) has a bit more info.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d2d5e8e397a4..e594ded49e60 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1506,7 +1506,7 @@ static void revoke_delegation(struct nfs4_delegation =
-*dp)
-        trace_nfsd_stid_revoke(&dp->dl_stid);
-=20
-        spin_lock(&clp->cl_lock);
--       if (dp->dl_stid.sc_status & SC_STATUS_FREED) {
-+       if (dp->dl_stid.sc_status & (SC_STATUS_FREED | SC_STATUS_CLOSED)) {
-                list_del_init(&dp->dl_recall_lru);
-                goto out;
-        }
+It looks like that means that the size detection was broken for this
+memcpy check? That commit mentions that this may be due to a GCC bug.
 
-
+Kees, any thoughts?
 --=20
 Jeff Layton <jlayton@kernel.org>
 
