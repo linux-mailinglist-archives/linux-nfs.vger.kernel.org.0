@@ -1,111 +1,242 @@
-Return-Path: <linux-nfs+bounces-13960-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13961-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AF10B3CEDD
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Aug 2025 20:53:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC57AB3D655
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 03:38:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 200097C0897
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Aug 2025 18:53:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E6351775A1
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Sep 2025 01:38:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9C8C2D9ED5;
-	Sat, 30 Aug 2025 18:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFDE1F4C87;
+	Mon,  1 Sep 2025 01:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGBICztY"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="CVPe2Awk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841191DE8AE
-	for <linux-nfs@vger.kernel.org>; Sat, 30 Aug 2025 18:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58D081732
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Sep 2025 01:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756579983; cv=none; b=f4wr7Z1nwSP3+dsqoj6gUbW5LoQ+xWOU2igzYX+9u6nTxhzk/bdMh8kA/2qYTiSM7vRiq30Og2CdTuiwWoz9brcD8HFXmp7o90qnqvZUoVgaTdWaFoNf7SE1Daj+UnkGGC34UHBRoLW76iawFlEiy8l0zOnc9/FuoRXEHErZKGg=
+	t=1756690711; cv=none; b=Yyvpf9YBHQoMcMUZLgeNIUBHFChdOcaBuk2NKCXdLOyDkK7juwgbsbRGJRjMEPHq/qvWWK6ppGgGsmO76OcBh+op8dp5F2AFmjPk3cMvel7l0CGb3YuDNhsvxJjOJMzumJlpbJt0Ytr1tJfP1z/ffHN7UbOl5oZc6oiRBWi84D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756579983; c=relaxed/simple;
-	bh=IvQY722kEUSjgUIrvslxkOnXffDG52zgcexjvjT9RuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cGZnx4b2pMBp2azCQzc/S4uH5q44IaXPGmEFOKKRr3a4rmIenFACyRKk36+uS6VfOtfVFqGoMxHYm/3nVF5/5D7zSRDwvTDbPcbYpLKLy7YInVa+TVh+DzXVNuxUcC1wDaQf7qwsTBQP8VO7awIltrRZmLIKLmBxq2JLwBj3Y14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGBICztY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DDEC4CEEB;
-	Sat, 30 Aug 2025 18:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756579983;
-	bh=IvQY722kEUSjgUIrvslxkOnXffDG52zgcexjvjT9RuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MGBICztYVYRFV9V4Fhfw3xBmGQ49KZq5VyFj+6DFCDs+GVKo0nzFYLiUT91NecEVG
-	 Fvo5n4RtE6IfME5aE8Ku3TlLy+YSfNk2HllvKbEbCHhZ9An9kdMv/MMMjSqO55h77Z
-	 PyRXK2fCOyevFxutPqpsAvsg+dBrBHjVR/zJMHkRJRgEFOZr+QBLmDmWhid0ju0te6
-	 FwablSm9YFFjZbgkln6D/83plJJojKFbCxA1itRZOl/v2ztoTHN9y75E3/J3LMTyQR
-	 KzmBOu9D4aEuPAnlE+vhzFFiO3RUYemlJrwGbSmsy12eiaPzinLZ6R9aBLXgOv8kVg
-	 grmpKVtjVzyWg==
-Date: Sat, 30 Aug 2025 14:53:01 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] some progress on rpcrdma bug [was: Re: [PATCH v8
- 5/7] NFSD: issue READs using O_DIRECT even if IO is misaligned]
-Message-ID: <aLNIjQHRg1Yf0Vxb@kernel.org>
-References: <aLClcl08x4JJ1UJu@kernel.org>
- <20250830173852.26953-1-snitzer@kernel.org>
+	s=arc-20240116; t=1756690711; c=relaxed/simple;
+	bh=iLB/vlji3Z0vM7O7WxqE72b4vA1+20lvPjlKJs5fVJ0=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=dXX84FGBPc6T6BSzlgcaC/z6FZz3BajlciLIi8M+c0tajFHPQ2wZG+t+zGm0mz0+aDAYIvFt09+R4jgZ/36jOu65i/fWPsY+tOQ5jF1EH1umNNykJv9QBd4rV1Qb1wZzjJ+5ZFtBermBrSh6v9XtDCNzJBu0f6o7gZLPoRTN+dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=CVPe2Awk; arc=none smtp.client-ip=85.9.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1756690690; x=1756949890;
+	bh=iLB/vlji3Z0vM7O7WxqE72b4vA1+20lvPjlKJs5fVJ0=;
+	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=CVPe2Awkw7jGf2UBIrcX2QeVS3dYBxleP94EESo3D5kWdZ2RCeAdO0lbosTrkPuN3
+	 tBSWPCWyO4fRI7zx1VqSKti3OpOKiCTA1q4AmHrIBDCSo24h5n4xw/SM+TJVaCngWN
+	 j9hk4YAJ9cev+sVVU+MZisTvOmfJGjdvAkbF9gUFoGKft8sknjK88wWMg382XXqjGa
+	 /7tMphEgMTPZxHanFvi1WRy2P5OJiEpnyR75eIlZBuqCMH/eikjPXZaLFzw6FL562K
+	 suGEuOSv+bSWHAAidgvrI6b4kTTPHaBFtltFf+V8FCxXozViwrqdDMa8EKr4SjocK/
+	 0D/SxNS6B508A==
+Date: Mon, 01 Sep 2025 01:38:05 +0000
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+From: SSH <originalssh@pm.me>
+Subject: Question about potential buffer issue in nfs_request_mount() - seeking feedback
+Message-ID: <TX-1G5eig2RBJI5kkHe2QNzRk-LQ8QOTpV3o5FQNV1Iaz2Rr-zCE69gCBA-ah22pNehg97Q-KRjiimwwrZHfgyqXg1jPYty3FoQS5Rmfkn8=@pm.me>
+Feedback-ID: 158087579:user:proton
+X-Pm-Message-ID: e6b8fffb94c506e85837f09c20ff0632371c1fde
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250830173852.26953-1-snitzer@kernel.org>
+Content-Type: multipart/mixed;
+ boundary="b1=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg"
 
-On Sat, Aug 30, 2025 at 01:38:50PM -0400, Mike Snitzer wrote:
-> Hi Chuck,
-> 
-> Hopeful these 2 patches more clearly demonstrate what I'm finding
-> needed when using RDMA with my NFSD misaligned DIO READ patch.
-> 
-> These patches build ontop of my v8 patchset. I've included quite a lot
-> of context for the data mismatch seen by the NFS client, etc in the
-> patch headers.
-> 
-> If I'm understanding you correctly, next step is to look closer at the
-> rpcrdma code that would skip the throwaway front-pad page from being
-> mapped to the start of the RDMA READ payload returned to the NFS
-> client?
-> 
-> Such important adjustment code would need to know that the rq_bvec[]
-> that reflects the READ payload doesn't include a bvec that points to
-> the first page of rqstp->rq_pages (pointed to by rqstp->rq_next_page
-> on entry to nfsd_iter_read) -- so it must skip past that memory in
-> the READ payload's RDMA memory returned to NFS client?
-> 
-> Thanks,
-> Mike
-> 
-> Mike Snitzer (2):
->   NFSD: fix misaligned DIO READ to not use a start_extra_page, exposes rpcrdma bug?
->   NFSD: use /end/ of rq_pages for front_pad page, simpler workaround for rpcrdma bug
-> 
->  fs/nfsd/vfs.c | 27 ++++++++-------------------
->  1 file changed, 8 insertions(+), 19 deletions(-)
-> 
-> -- 
-> 2.44.0
-> 
+--b1=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg
+Content-Type: multipart/alternative;
+ boundary="b2=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg"
 
-Another important detail to mention, I've been working ontop of a
-6.12.24 stable baseline that I've backported all NFS and NFSD changes
-through 6.17-rc1 + (slightly stale) nfsd-testing to, please see:
+--b2=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=kernel-6.12.24/nfsd-testing-snitm.18-testing
+SGkgTkZTIG1haW50YWluZXJzLAoKSSB3YXMgbG9va2luZyBhdCBhIGtlcm5lbCB3YXJuaW5nIGZy
+b20gNi4xLXJjMSB0byB1bmRlcnN0YW5kIGl0IGJldHRlciBhbmQgdHJpZWQgdG8gdHJhY2UgdGhy
+b3VnaCB0aGUgY29kZSB0byB1bmRlcnN0YW5kIHdoYXQgd2FzIGhhcHBlbmluZy4gSSB0aGluayBJ
+IG1heSBoYXZlIGZvdW5kIHNvbWV0aGluZywgYWx0aG91Z2ggbm93IHRoZSBtb3N0IHVwLXRvLWRh
+dGUga2VybmVsIEhFQUQgaXMgQXVndXN0LCAyMDI1IGFuZCBtb3N0IG9mIGFsbCwgSSdtIG5vdCBh
+IGtlcm5lbCBkZXZlbG9wZXIgc28gSSB3YW50ZWQgdG8gYXNrIGZvciB5b3VyIGZlZWRiYWNrIG9u
+IHdoZXRoZXIgbXkgYW5hbHlzaXMgbWFrZXMgc2Vuc2UuCgojIyBDb250ZXh0CiogVGhpcyB3YXMg
+b24gYWxsIE5GUyB2MyBUQ1AgbW91bnRzCiogVGhlIHdhcm5pbmcgY2FtZSBmcm9tIGtlcm5lbCdz
+IGhhcmRlbmVkIG1lbWNweSBkZXRlY3Rpb24KKiBUaGUgbW91bnQgc2VlbWVkIHRvIHdvcmsgZGVz
+cGl0ZSB0aGUgd2FybmluZwoKIyMjIEFkZGl0aW9uYWwgQ29udGV4dApJIG5vdGljZWQgdGhpcyB3
+YXJuaW5nIHdhcyBvcmlnaW5hbGx5IHJlcG9ydGVkIGFyb3VuZCA2LjEtcmMxIHRpbWVmcmFtZSAo
+fjIwMjIpLCBidXQgY2hlY2tpbmcgdGhlIGN1cnJlbnQga2VybmVsIHNvdXJjZSwgaXQgd291bGQg
+YXBwZWFyIHRoYXQgdGhlIHNhbWUgY29kZSBwYXR0ZXJuIGV4aXN0cy4KSSdtIG5vdCBzdXJlIGlm
+IHRoaXMgd2FzIHByZXZpb3VzbHkgcmVwb3J0ZWQgdG8gdGhlIE5GUyBtYWludGFpbmVycyBzcGVj
+aWZpY2FsbHksIG9yIGlmIHRoZXJlJ3MgYSByZWFzb24gaXQgd2Fzbid0IGFkZHJlc3NlZC4gRWl0
+aGVyIHdheSwgSSB0aG91Z2h0IGl0IHdhcyB3b3J0aCBicmluZ2luZyB1cCBhZ2FpbiBpbiBjYXNl
+IGl0IGdvdCBtaXNzZWQgb3IgZGVwcmlvcml0aXplZC4KClNvdXJjZTogaHR0cHM6Ly9sa21sLm9y
+Zy9sa21sLzIwMjIvMTAvMTYvNDYxCgojIyBUaGUgT3JpZ2luYWwgV2FybmluZwpJIHNhdyB0aGlz
+IHdhcm5pbmcgZHVyaW5nIE5GUyB2MyBUQ1AgbW91bnQ6CgpgYGAKWyAxOS42MTc0NzVdIG1lbWNw
+eTogZGV0ZWN0ZWQgZmllbGQtc3Bhbm5pbmcgd3JpdGUgKHNpemUgMjgpIG9mIHNpbmdsZSBmaWVs
+ZCAicmVxdWVzdC5zYXAiIGF0IGZzL25mcy9zdXBlci5jOjg1NyAoc2l6ZSAxODQ0Njc0NDA3Mzcw
+OTU1MTYxNSkKWyAxOS42MTc1MDRdIFdBUk5JTkc6IENQVTogMyBQSUQ6IDEzMDAgYXQgZnMvbmZz
+L3N1cGVyLmM6ODU3IG5mc19yZXF1ZXN0X21vdW50LmNvbnN0cHJvcC4wLmlzcmEuMCsweDFjMC8w
+eDFmMApgYGAKCiMjIExpa2VseSBTb3VyY2Ugb2YgRmFpbHVyZQoKTG9va2luZyBhdCBgbmZzX3Jl
+cXVlc3RfbW91bnQoKWAgaW4gYGZzL25mcy9zdXBlci5jYCwgSSBzZWUgdGhpcyBjb2RlOgoKYGBg
+YwovLyBBcm91bmQgbGluZSA4NTAKc3RydWN0IG5mc19tb3VudF9yZXF1ZXN0IHJlcXVlc3QgPSB7
+Ci5zYXAgPSAmY3R4LT5tb3VudF9zZXJ2ZXIuX2FkZHJlc3MsCi8vIC4uLiBvdGhlciBmaWVsZHMK
+fTsKCi8vIExhdGVyLCBhcm91bmQgbGluZSA4ODEKaWYgKGN0eC0+bW91bnRfc2VydmVyLmFkZHJl
+c3Muc2FfZmFtaWx5ID09IEFGX1VOU1BFQykgewptZW1jcHkocmVxdWVzdC5zYXAsICZjdHgtPm5m
+c19zZXJ2ZXIuX2FkZHJlc3MsIGN0eC0+bmZzX3NlcnZlci5hZGRybGVuKTsKY3R4LT5tb3VudF9z
+ZXJ2ZXIuYWRkcmxlbiA9IGN0eC0+bmZzX3NlcnZlci5hZGRybGVuOwp9CmBgYAoKTXkgdW5kZXJz
+dGFuZGluZyBpczoKMS4gYHJlcXVlc3Quc2FwYCBwb2ludHMgdG8gYGN0eC0+bW91bnRfc2VydmVy
+Ll9hZGRyZXNzYAoyLiBXZSdyZSBjb3B5aW5nIGZyb20gYGN0eC0+bmZzX3NlcnZlci5fYWRkcmVz
+c2AgKHdoaWNoIGNvdWxkIGJlIDI4IGJ5dGVzIGZvciBJUHY2KQozLiBJbnRvIHdoYXRldmVyIGBt
+b3VudF9zZXJ2ZXIuX2FkZHJlc3NgIHBvaW50cyB0byAod2hpY2ggbWlnaHQgYmUgc21hbGxlcj8p
+CgpUaGUgd2VpcmQgc2l6ZSB2YWx1ZSAoMTg0NDY3NDQwNzM3MDk1NTE2MTUpIGluIHRoZSB3YXJu
+aW5nIG1ha2VzIG1lIHRoaW5rIHRoZXJlIG1pZ2h0IGJlIG1lbW9yeSBjb3JydXB0aW9uIGhhcHBl
+bmluZy4KCkRvZXMgdGhpcyBzZWVtIGxpa2UgYSByZWFsIGlzc3VlPyBJZiBzbywgd291bGQgYWRk
+aW5nIGEgc2l6ZSBjaGVjayBiZWZvcmUgdGhlIG1lbWNweSBtYWtlIHNlbnNlLCBzb21ldGhpbmcg
+bGlrZToKCmBgYGMKaWYgKGN0eC0+bW91bnRfc2VydmVyLmFkZHJlc3Muc2FfZmFtaWx5ID09IEFG
+X1VOU1BFQykgewppZiAoY3R4LT5uZnNfc2VydmVyLmFkZHJsZW4gPD0gc2l6ZW9mKGN0eC0+bW91
+bnRfc2VydmVyLl9hZGRyZXNzKSkgewptZW1jcHkocmVxdWVzdC5zYXAsICZjdHgtPm5mc19zZXJ2
+ZXIuX2FkZHJlc3MsIGN0eC0+bmZzX3NlcnZlci5hZGRybGVuKTsKY3R4LT5tb3VudF9zZXJ2ZXIu
+YWRkcmxlbiA9IGN0eC0+bmZzX3NlcnZlci5hZGRybGVuOwp9IGVsc2UgewovLyBoYW5kbGUgZXJy
+b3IgY2FzZTsgbWF5YmUgLUVJTlZBTD8KcmV0dXJuIC1FSU5WQUw7Cn0KfQpgYGAKCkkgY291bGQg
+ZWFzaWx5IGJlIG1pc3VuZGVyc3RhbmRpbmcgc29tZXRoaW5nIGZ1bmRhbWVudGFsIGhlcmUsIHNv
+IHBsZWFzZSBsZXQgbWUga25vdyBpZiBJJ20gb2ZmIHRyYWNrLiBJIGp1c3Qgd2FudGVkIHRvIHNo
+YXJlIHRoaXMgaW4gY2FzZSBpdCdzIGhlbHBmdWwuCgpUaGFua3MgZm9yIHlvdXIgdGltZSBhbmQg
+Zm9yIG1haW50YWluaW5nIE5GUyEKCkJlc3QgcmVnYXJkcywgU1NI
 
-Not sure if rebasing to the latest nfsd-testing would show this
-issue... I'm thinking yes, but cannot say for sure.  Needing the
-ability to test/develop Hammerspace and pNFS stuff has prevented me
-from simply rebasing.  But it should be doable without too much
-effort.
+--b2=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
 
-Mike
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDE0
+cHg7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNp
+emU6IDE0cHg7IGxpbmUtaGVpZ2h0OiBub3JtYWw7Ij48L3NwYW4+PC9kaXY+PHNwYW4+SGkgTkZT
+IG1haW50YWluZXJzLDwvc3Bhbj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPkkgd2FzIGxvb2tp
+bmcgYXQgYSBrZXJuZWwgd2FybmluZyBmcm9tIDYuMS1yYzEgdG8gdW5kZXJzdGFuZCBpdCBiZXR0
+ZXIgYW5kIHRyaWVkIHRvIHRyYWNlIHRocm91Z2ggdGhlIGNvZGUgdG8gdW5kZXJzdGFuZCB3aGF0
+IHdhcyBoYXBwZW5pbmcuIEkgdGhpbmsgSSBtYXkgaGF2ZSBmb3VuZCBzb21ldGhpbmcsIGFsdGhv
+dWdoIG5vdyB0aGUgbW9zdCB1cC10by1kYXRlIGtlcm5lbCBIRUFEIGlzIEF1Z3VzdCwgMjAyNSBh
+bmQgbW9zdCBvZiBhbGwsIEknbSBub3QgYSBrZXJuZWwgZGV2ZWxvcGVyIHNvIEkgd2FudGVkIHRv
+IGFzayBmb3IgeW91ciBmZWVkYmFjayBvbiB3aGV0aGVyIG15IGFuYWx5c2lzIG1ha2VzIHNlbnNl
+Ljwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPiMjIENvbnRleHQ8L3NwYW4+
+PC9kaXY+PGRpdj48c3Bhbj4qIFRoaXMgd2FzIG9uIGFsbCBORlMgdjMgVENQIG1vdW50czwvc3Bh
+bj48L2Rpdj48ZGl2PjxzcGFuPiogVGhlIHdhcm5pbmcgY2FtZSBmcm9tIGtlcm5lbCdzIGhhcmRl
+bmVkIG1lbWNweSBkZXRlY3Rpb248L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4qIFRoZSBtb3VudCBz
+ZWVtZWQgdG8gd29yayBkZXNwaXRlIHRoZSB3YXJuaW5nPC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjxkaXY+PHNwYW4+IyMjIEFkZGl0aW9uYWwgQ29udGV4dDwvc3Bhbj48L2Rpdj48ZGl2Pjxz
+cGFuPkkgbm90aWNlZCB0aGlzIHdhcm5pbmcgd2FzIG9yaWdpbmFsbHkgcmVwb3J0ZWQgYXJvdW5k
+IDYuMS1yYzEgdGltZWZyYW1lICh+MjAyMiksIGJ1dCBjaGVja2luZyB0aGUgY3VycmVudCBrZXJu
+ZWwgc291cmNlLCBpdCB3b3VsZCBhcHBlYXIgdGhhdCB0aGUgc2FtZSBjb2RlIHBhdHRlcm4gZXhp
+c3RzLjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPkknbSBub3Qgc3VyZSBpZiB0aGlzIHdhcyBwcmV2
+aW91c2x5IHJlcG9ydGVkIHRvIHRoZSBORlMgbWFpbnRhaW5lcnMgc3BlY2lmaWNhbGx5LCBvciBp
+ZiB0aGVyZSdzIGEgcmVhc29uIGl0IHdhc24ndCBhZGRyZXNzZWQuIEVpdGhlciB3YXksIEkgdGhv
+dWdodCBpdCB3YXMgd29ydGggYnJpbmdpbmcgdXAgYWdhaW4gaW4gY2FzZSBpdCBnb3QgbWlzc2Vk
+IG9yIGRlcHJpb3JpdGl6ZWQuPC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4+
+U291cmNlOiA8YSB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub3JlZmVycmVyIG5vZm9sbG93IG5vb3Bl
+bmVyIiBocmVmPSJodHRwczovL2xrbWwub3JnL2xrbWwvMjAyMi8xMC8xNi80NjEiPmh0dHBzOi8v
+bGttbC5vcmcvbGttbC8yMDIyLzEwLzE2LzQ2MTwvYT48L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj48c3Bhbj4jIyBUaGUgT3JpZ2luYWwgV2FybmluZzwvc3Bhbj48L2Rpdj48ZGl2Pjxz
+cGFuPkkgc2F3IHRoaXMgd2FybmluZyBkdXJpbmcgTkZTIHYzIFRDUCBtb3VudDo8L3NwYW4+PC9k
+aXY+PGRpdj48YnI+PC9kaXY+PGRpdj48c3Bhbj5gYGA8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5b
+ICZuYnNwOyAxOS42MTc0NzVdIG1lbWNweTogZGV0ZWN0ZWQgZmllbGQtc3Bhbm5pbmcgd3JpdGUg
+KHNpemUgMjgpIG9mIHNpbmdsZSBmaWVsZCAicmVxdWVzdC5zYXAiIGF0IGZzL25mcy9zdXBlci5j
+Ojg1NyAoc2l6ZSAxODQ0Njc0NDA3MzcwOTU1MTYxNSk8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5b
+ICZuYnNwOyAxOS42MTc1MDRdIFdBUk5JTkc6IENQVTogMyBQSUQ6IDEzMDAgYXQgZnMvbmZzL3N1
+cGVyLmM6ODU3IG5mc19yZXF1ZXN0X21vdW50LmNvbnN0cHJvcC4wLmlzcmEuMCsweDFjMC8weDFm
+MDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPmBgYDwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48
+ZGl2PjxzcGFuPiMjIExpa2VseSBTb3VyY2Ugb2YgRmFpbHVyZTwvc3Bhbj48L2Rpdj48ZGl2Pjxi
+cj48L2Rpdj48ZGl2PjxzcGFuPkxvb2tpbmcgYXQgYG5mc19yZXF1ZXN0X21vdW50KClgIGluIGBm
+cy9uZnMvc3VwZXIuY2AsIEkgc2VlIHRoaXMgY29kZTo8L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj48c3Bhbj5gYGBjPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Ly8gQXJvdW5kIGxpbmUg
+ODUwPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+c3RydWN0IG5mc19tb3VudF9yZXF1ZXN0IHJlcXVl
+c3QgPSB7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Jm5ic3A7ICZuYnNwOyAuc2FwID0gJmFtcDtj
+dHgtJmd0O21vdW50X3NlcnZlci5fYWRkcmVzcyw8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4mbmJz
+cDsgJm5ic3A7IC8vIC4uLiBvdGhlciBmaWVsZHM8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj59Ozwv
+c3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPi8vIExhdGVyLCBhcm91bmQgbGlu
+ZSA4ODE8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5pZiAoY3R4LSZndDttb3VudF9zZXJ2ZXIuYWRk
+cmVzcy5zYV9mYW1pbHkgPT0gQUZfVU5TUEVDKSB7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Jm5i
+c3A7ICZuYnNwOyBtZW1jcHkocmVxdWVzdC5zYXAsICZhbXA7Y3R4LSZndDtuZnNfc2VydmVyLl9h
+ZGRyZXNzLCBjdHgtJmd0O25mc19zZXJ2ZXIuYWRkcmxlbik7PC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+Jm5ic3A7ICZuYnNwOyBjdHgtJmd0O21vdW50X3NlcnZlci5hZGRybGVuID0gY3R4LSZndDtu
+ZnNfc2VydmVyLmFkZHJsZW47PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+fTwvc3Bhbj48L2Rpdj48
+ZGl2PjxzcGFuPmBgYDwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPk15IHVu
+ZGVyc3RhbmRpbmcgaXM6PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+MS4gYHJlcXVlc3Quc2FwYCBw
+b2ludHMgdG8gYGN0eC0mZ3Q7bW91bnRfc2VydmVyLl9hZGRyZXNzYDwvc3Bhbj48L2Rpdj48ZGl2
+PjxzcGFuPjIuIFdlJ3JlIGNvcHlpbmcgZnJvbSBgY3R4LSZndDtuZnNfc2VydmVyLl9hZGRyZXNz
+YCAod2hpY2ggY291bGQgYmUgMjggYnl0ZXMgZm9yIElQdjYpPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+My4gSW50byB3aGF0ZXZlciBgbW91bnRfc2VydmVyLl9hZGRyZXNzYCBwb2ludHMgdG8gKHdo
+aWNoIG1pZ2h0IGJlIHNtYWxsZXI/KTwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxz
+cGFuPlRoZSB3ZWlyZCBzaXplIHZhbHVlICgxODQ0Njc0NDA3MzcwOTU1MTYxNSkgaW4gdGhlIHdh
+cm5pbmcgbWFrZXMgbWUgdGhpbmsgdGhlcmUgbWlnaHQgYmUgbWVtb3J5IGNvcnJ1cHRpb24gaGFw
+cGVuaW5nLjwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPkRvZXMgdGhpcyBz
+ZWVtIGxpa2UgYSByZWFsIGlzc3VlPyBJZiBzbywgd291bGQgYWRkaW5nIGEgc2l6ZSBjaGVjayBi
+ZWZvcmUgdGhlIG1lbWNweSBtYWtlIHNlbnNlLCBzb21ldGhpbmcgbGlrZTo8L3NwYW4+PC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj48c3Bhbj5gYGBjPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+aWYg
+KGN0eC0mZ3Q7bW91bnRfc2VydmVyLmFkZHJlc3Muc2FfZmFtaWx5ID09IEFGX1VOU1BFQykgezwv
+c3Bhbj48L2Rpdj48ZGl2PjxzcGFuPiZuYnNwOyAmbmJzcDsgaWYgKGN0eC0mZ3Q7bmZzX3NlcnZl
+ci5hZGRybGVuICZsdDs9IHNpemVvZihjdHgtJmd0O21vdW50X3NlcnZlci5fYWRkcmVzcykpIHs8
+L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4mbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgbWVtY3B5
+KHJlcXVlc3Quc2FwLCAmYW1wO2N0eC0mZ3Q7bmZzX3NlcnZlci5fYWRkcmVzcywgY3R4LSZndDtu
+ZnNfc2VydmVyLmFkZHJsZW4pOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPiZuYnNwOyAmbmJzcDsg
+Jm5ic3A7ICZuYnNwOyBjdHgtJmd0O21vdW50X3NlcnZlci5hZGRybGVuID0gY3R4LSZndDtuZnNf
+c2VydmVyLmFkZHJsZW47PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Jm5ic3A7ICZuYnNwOyB9IGVs
+c2Ugezwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAv
+LyBoYW5kbGUgZXJyb3IgY2FzZTsgbWF5YmUgLUVJTlZBTD88L3NwYW4+PC9kaXY+PGRpdj48c3Bh
+bj4mbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgcmV0dXJuIC1FSU5WQUw7PC9zcGFuPjwvZGl2
+PjxkaXY+PHNwYW4+Jm5ic3A7ICZuYnNwOyB9PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+fTwvc3Bh
+bj48L2Rpdj48ZGl2PjxzcGFuPmBgYDwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxz
+cGFuPkkgY291bGQgZWFzaWx5IGJlIG1pc3VuZGVyc3RhbmRpbmcgc29tZXRoaW5nIGZ1bmRhbWVu
+dGFsIGhlcmUsIHNvIHBsZWFzZSBsZXQgbWUga25vdyBpZiBJJ20gb2ZmIHRyYWNrLiBJIGp1c3Qg
+d2FudGVkIHRvIHNoYXJlIHRoaXMgaW4gY2FzZSBpdCdzIGhlbHBmdWwuPC9zcGFuPjwvZGl2Pjxk
+aXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4+VGhhbmtzIGZvciB5b3VyIHRpbWUgYW5kIGZvciBtYWlu
+dGFpbmluZyBORlMhPC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4+QmVzdCBy
+ZWdhcmRzLCAmbmJzcDs8L3NwYW4+PC9kaXY+PHNwYW4+U1NIPC9zcGFuPjxkaXYgc3R5bGU9ImZv
+bnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyI+PHA+PHNwYW4g
+c3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyBs
+aW5lLWhlaWdodDogbm9ybWFsOyI+PC9zcGFuPjwvcD48L2Rpdj4NCjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyIgY2xhc3M9InByb3Rv
+bm1haWxfc2lnbmF0dXJlX2Jsb2NrIHByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrLWVtcHR5Ij4N
+CiAgICA8ZGl2IGNsYXNzPSJwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay11c2VyIHByb3Rvbm1h
+aWxfc2lnbmF0dXJlX2Jsb2NrLWVtcHR5Ij48L2Rpdj4NCiAgICANCiAgICAgICAgICAgIDxkaXYg
+Y2xhc3M9InByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrLXByb3RvbiBwcm90b25tYWlsX3NpZ25h
+dHVyZV9ibG9jay1lbXB0eSI+DQogICAgICAgIA0KICAgICAgICAgICAgPC9kaXY+DQo8L2Rpdj4N
+Cg==
+
+
+--b2=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg--
+
+--b1=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg
+Content-Type: application/pgp-keys; name="publickey - originalssh@pm.me - 0x69004F2D.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - originalssh@pm.me - 0x69004F2D.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FYUxUZDFoWUpLd1lCQkFI
+YVJ3OEJBUWRBMmVWMzhUZ3dpN09lQlBtOTF1VmhtZ2R5MWN6aDJ6eFoKR3EyeDRBVG41a3JOSlc5
+eWFXZHBibUZzYzNOb1FIQnRMbTFsSUR4dmNtbG5hVzVoYkhOemFFQndiUzV0ClpUN0N3QkVFRXhZ
+S0FJTUZnbWkwM2RZREN3a0hDUkRHdVE3cXRqVnI2VVVVQUFBQUFBQWNBQ0J6WVd4MApRRzV2ZEdG
+MGFXOXVjeTV2Y0dWdWNHZHdhbk11YjNKblU0RVk3QjZFNURGOWE4V1JQYkhLaVhOeGY1WXcKMmJ4
+UVZFZlBmbzA5cnlFREZRb0lCQllBQWdFQ0dRRUNtd01DSGdFV0lRUnBBRTh0b2VlbFl5ZnBsUW5H
+CnVRN3F0alZyNlFBQWhtWUJBSlhybnY5Rkw4ODlFbDE0ck5XenAveGxMb1kyRkR0Y0l1bFBVRkJZ
+ZE5WbQpBUURlQkNncTNVdEFuSDE0OWdBbWZ2TUhhQTZza2M5Y0ZYM2xSeUU3QUswREFjNDRCR2kw
+M2RZU0Npc0cKQVFRQmwxVUJCUUVCQjBEaytRYWUrTXR3SU9lbkxmNzVtRUtyKzhuWXFtQVZHaVRZ
+djlQZ2d5amRCd01CCkNBZkN2Z1FZRmdvQWNBV0NhTFRkMWdrUXhya082clkxYStsRkZBQUFBQUFB
+SEFBZ2MyRnNkRUJ1YjNSaApkR2x2Ym5NdWIzQmxibkJuY0dwekxtOXlaOUs0N3R2eDBZNVhydnhD
+QVd2bGxNVDJSN3AxcTA5dld6cGIKN0IybjRJQ1ZBcHNNRmlFRWFRQlBMYUhucFdNbjZaVUp4cmtP
+NnJZMWEra0FBT1JkQVFDdzQ5MWVnVTFmCmRpWGxjSzhmQTBDK3A4NUVWQVlVSnlCdkkxUDh1Y0o5
+bndEK01QZHA3ZDFvczNmMTZzVGxLN0RQUHZxaAp1WVp6QUVPWVVhVUNFeU45QWdrPQo9Mko3Qgot
+LS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+
+--b1=_8zE7Hvyn6SvtlUnVFJ1JiyjsCWqgDXidpJeoRpXUg--
+
 
