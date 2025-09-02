@@ -1,155 +1,255 @@
-Return-Path: <linux-nfs+bounces-13987-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13988-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AB23B40F04
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 23:07:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1408AB40F0C
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 23:09:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 002CE7B2F2D
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 21:05:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D133C16707A
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 21:09:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7143AC39;
-	Tue,  2 Sep 2025 21:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272EA347C7;
+	Tue,  2 Sep 2025 21:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI46/C8I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPf5rRxL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497152253EB
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Sep 2025 21:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020AA345757
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Sep 2025 21:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756847216; cv=none; b=uM1hq6JCD5Dijdn0aLE7W0z3Sh6hP2K2/8PVOqiXcBiSr80CTUrAleKoLL2wwp9q+aSVqJLXKH8Gyz01Jui+QWEYlVwyj9mv+1bNsXa3wLNRv9viusePgqLLmOK12HJOruSr3hQNuTdiQYdRJ5xdUnKhs85d19VEknpCJUKRVUE=
+	t=1756847392; cv=none; b=M2iNck+wcAF2d/uI120yPxGgVhMZvRjMrxFQ0Dfk3uxikqblnjcR/C64ZhB/ODoHEhcU8SBNeVqXwDCromdVED9jttrB2A7R8BnTlFySDYwbu0p0iLG7Ya2I2dv2kjBAF1NwbZpq8lYjQ3uMOklNxhPHGbBPc4NajGcE+OxOChA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756847216; c=relaxed/simple;
-	bh=nsIzL4IkJQNGKAlzxoktTu61Wt2Ql2JHnAwSy7Ypblc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EH9N/08MC44gfUKHUXc3Bv4w/TB/SvYGGkBMfabdGvkiH5nThZcvCZ6JjHHTEtZw5fYTZ2gb1nIXFBBCFR0KSbwVA4zWTWMBkON3xaxosbrOY+T6lVxuSacb+mpBV3D7nne2iPQungqR84q+OeC+ygY3vgTMhJZLDOoji6olSiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI46/C8I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C90CC4CEED;
-	Tue,  2 Sep 2025 21:06:55 +0000 (UTC)
+	s=arc-20240116; t=1756847392; c=relaxed/simple;
+	bh=wrVDJXauN0SJRL3xG9+3MNsjbfaEluUykFzdVC71hvg=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KtxcVbkJyeHb3YMp3tY1QIa38nQxv8kyUU6SP1dxRoqearSXekaoodNtDAWcuKP3a4NEoNGB47oNRyviP7ELy9dDhlOGwOjjTRbiHYtIrX5esU1XrFbpqs/yrOZPu1bUKR1RG545lN61cgSoK6faALlf+b58nFlRkzqBMf6UWmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPf5rRxL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361D3C4CEED;
+	Tue,  2 Sep 2025 21:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756847215;
-	bh=nsIzL4IkJQNGKAlzxoktTu61Wt2Ql2JHnAwSy7Ypblc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uI46/C8IdTlOCMVTFCHmabOU+HjSISqH8GGpxhDDWsPB4WB4d3p2c24bA1o2270Wj
-	 xkbCZsEpItipLZiaM/SqFGGTtQNTRXCnlbRN1eTAuCYOa13PjdD2Xp2Er5FufX1Kw6
-	 d1/QMgHR53ImMbmXZ0bVYNNi/dP26l6OvQoAucztAjt5q0douh64gsJveGgccGZyL0
-	 EXlHSbcDXh2pOflt8S3LbD/k0FjBPsxa7iKAaIbFvAhAuelk4mZTLgZR159FgfpS0G
-	 7112xg4ISTqvKnsLFlA25KK/X7iFyDkq4smeFTfUonwLz0B+A9YqJOj+VE5Sf1JXZl
-	 MtHxnLg1t67rQ==
-Date: Tue, 2 Sep 2025 17:06:54 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-Subject: Re: [RFC PATCH 1/2] NFSD: fix misaligned DIO READ to not use a
- start_extra_page, exposes rpcrdma bug?
-Message-ID: <aLdcbnELMGHB-B_E@kernel.org>
-References: <aLClcl08x4JJ1UJu@kernel.org>
- <20250830173852.26953-1-snitzer@kernel.org>
- <20250830173852.26953-2-snitzer@kernel.org>
- <2559f795-bdc9-4d39-aa03-e6a6d89e9f84@oracle.com>
- <92908105-9261-42f9-a0fd-ebfaf3e2f564@oracle.com>
+	s=k20201202; t=1756847391;
+	bh=wrVDJXauN0SJRL3xG9+3MNsjbfaEluUykFzdVC71hvg=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=kPf5rRxLZiwXbzk0lbU8hOkuvRRgONrggPXQxUwbq7stW9hOnQWKN3JUjtzrFb4nx
+	 dbXpAOoUTJSZZin5VJDjoxRQXcmm7yfAAT/3mHkA7yRzvYWN/y356cRlWV0QWEQFrG
+	 aO9uP+CXU2TD2Ds7025INfraB9YQ4RrsY+6We5kduTPd+aYAOta9Unpkwf7ny/llhV
+	 wVw9uYs2qN5pbjGOQVbAqC6Dz22/T51ivFO7Y6Ma8NEHxCi1xmlREddpqvVXqlhyal
+	 cjn4l3k+JATWx36IS08ugRJYw5xz+Xx3IPdmdpwCr7ty0ZTStTtSkZUfITpT36cTWB
+	 ZAXTkPAzWJyYw==
+Message-ID: <536a67e83ef5b89217c9eaf315e5f24eb6a8b59e.camel@kernel.org>
+Subject: Re: [PATCH] draft patches to fixes LAYOUTCOMMIT related issues
+From: Trond Myklebust <trondmy@kernel.org>
+To: Haihua Yang <yanghh@gmail.com>, linux-nfs@vger.kernel.org
+Date: Tue, 02 Sep 2025 17:09:50 -0400
+In-Reply-To: <20250902183035.2059893-1-yanghh@gmail.com>
+References: <20250902183035.2059893-1-yanghh@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92908105-9261-42f9-a0fd-ebfaf3e2f564@oracle.com>
 
-On Tue, Sep 02, 2025 at 01:59:12PM -0400, Chuck Lever wrote:
-> On 9/2/25 11:56 AM, Chuck Lever wrote:
-> > On 8/30/25 1:38 PM, Mike Snitzer wrote:
-> 
-> >> dt (j:1 t:1): File System Information:
-> >> dt (j:1 t:1):            Mounted from device: 192.168.0.105:/hs_test
-> >> dt (j:1 t:1):           Mounted on directory: /mnt/hs_test
-> >> dt (j:1 t:1):                Filesystem type: nfs4
-> >> dt (j:1 t:1):             Filesystem options: rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,nconnect=16,port=20491,timeo=600,retrans=2,sec=sys,clientaddr=192.168.0.106,local_lock=none,addr=192.168.0.105
-> > 
-> > I haven't been able to reproduce a similar failure in my lab with
-> > NFSv4.2 over RDMA with FDR InfiniBand. I've run dt 6-7 times, all
-> > successful. Also, for shit giggles, I tried the fsx-based subtests in
-> > fstests, no new failures there either. The export is xfs on an NVMe
-> > add-on card; server uses direct I/O for READ and page cache for WRITE.
-> > 
-> > Notice the mount options for your test run: "proto=tcp" and
-> > "nconnect=16". Even if your network fabric is RoCE, "proto=tcp" will
-> > not use RDMA at all; it will use bog standard TCP/IP on your ultra
-> > fast Ethernet network.
-> > 
-> > What should I try next? I can apply 2/2 or add "nconnect" or move the
-> > testing to my RoCE fabric after lunch and keep poking at it.
+T24gVHVlLCAyMDI1LTA5LTAyIGF0IDE4OjMwICswMDAwLCBIYWlodWEgWWFuZyB3cm90ZToKPiBb
+WW91IGRvbid0IG9mdGVuIGdldCBlbWFpbCBmcm9tIHlhbmdoaEBnbWFpbC5jb20uIExlYXJuIHdo
+eSB0aGlzIGlzCj4gaW1wb3J0YW50IGF0IGh0dHBzOi8vYWthLm1zL0xlYXJuQWJvdXRTZW5kZXJJ
+ZGVudGlmaWNhdGlvbsKgXQo+IAo+IDEsIGZpeCBhbiBpc3N1ZSB0aGF0IGNsaWVudCBtYXkgc2Vu
+ZCBMQVlPVVRSRVRVUk4gYmVmb3JlIExBWU9VVENPTU1JVAo+IDIsIHVwZGF0ZSBsYXlvdXQgc3Rh
+dGVpZCB3aGVuIGxheW91dGNvbW1pdCByZWNlaXZpbmcKPiBORlM0RVJSX09MRF9TVEFURUlECgpQ
+bGVhc2UgcmVhZCBEb2N1bWVudGF0aW9uL3Byb2Nlc3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdApT
+cGVjaWZpY2FsbHksIHBsZWFzZSByZWFkIHRoZSBzZWN0aW9uICJEZXNjcmliZSB5b3VyIGNoYW5n
+ZXMiCmNhcmVmdWxseS4KCj4gLS0tCj4gwqBmcy9uZnMvY2FsbGJhY2tfcHJvYy5jIHzCoCAyICst
+Cj4gwqBmcy9uZnMvbmZzNHByb2MuY8KgwqDCoMKgwqAgfCAxMCArKysrKysrKystCj4gwqBmcy9u
+ZnMvcG5mcy5jwqDCoMKgwqDCoMKgwqDCoMKgIHwgMjggKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tLQo+IMKgZnMvbmZzL3BuZnMuaMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMiArLQo+IMKgNCBm
+aWxlcyBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZm
+IC0tZ2l0IGEvZnMvbmZzL2NhbGxiYWNrX3Byb2MuYyBiL2ZzL25mcy9jYWxsYmFja19wcm9jLmMK
+PiBpbmRleCA4Mzk3YzQzMzU4YmQuLjFlNmU0YTdhM2YxNSAxMDA2NDQKPiAtLS0gYS9mcy9uZnMv
+Y2FsbGJhY2tfcHJvYy5jCj4gKysrIGIvZnMvbmZzL2NhbGxiYWNrX3Byb2MuYwo+IEBAIC0yODcs
+NyArMjg3LDcgQEAgc3RhdGljIHUzMiBpbml0aWF0ZV9maWxlX2RyYWluaW5nKHN0cnVjdAo+IG5m
+c19jbGllbnQgKmNscCwKPiDCoMKgwqDCoMKgwqDCoCBwbmZzX3NldF9sYXlvdXRfc3RhdGVpZChs
+bywgJmFyZ3MtPmNibF9zdGF0ZWlkLCBOVUxMLCB0cnVlKTsKPiDCoMKgwqDCoMKgwqDCoCBzd2l0
+Y2ggKHBuZnNfbWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4obG8sICZmcmVlX21lX2xpc3QsCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgJmFyZ3MtPmNibF9yYW5nZSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJlMzJfdG9fY3B1KGFyZ3MtCj4gPmNibF9z
+dGF0ZWlkLnNlcWlkKSkpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJlMzJfdG9fY3B1KGFyZ3MtPmNibF9zdGF0ZWlkLnNl
+cWlkKSwKPiB0cnVlKSkgewo+IMKgwqDCoMKgwqDCoMKgIGNhc2UgMDoKPiDCoMKgwqDCoMKgwqDC
+oCBjYXNlIC1FQlVTWToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogVGhlcmUg
+YXJlIGxheW91dCBzZWdtZW50cyB0aGF0IG5lZWQgdG8gYmUgcmV0dXJuZWQKPiAqLwo+IGRpZmYg
+LS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jCj4gaW5kZXggN2Qy
+YjY3ZTA2Y2MzLi40NmExYmMxZjMxZWUgMTAwNjQ0Cj4gLS0tIGEvZnMvbmZzL25mczRwcm9jLmMK
+PiArKysgYi9mcy9uZnMvbmZzNHByb2MuYwo+IEBAIC0xMDI1NSw2ICsxMDI1NSw3IEBAIG5mczRf
+bGF5b3V0Y29tbWl0X2RvbmUoc3RydWN0IHJwY190YXNrICp0YXNrLAo+IHZvaWQgKmNhbGxkYXRh
+KQo+IMKgewo+IMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBuZnM0X2xheW91dGNvbW1pdF9kYXRhICpk
+YXRhID0gY2FsbGRhdGE7Cj4gwqDCoMKgwqDCoMKgwqAgc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZl
+ciA9IE5GU19TRVJWRVIoZGF0YS0+YXJncy5pbm9kZSk7Cj4gK8KgwqDCoMKgwqDCoCBzdHJ1Y3Qg
+cG5mc19sYXlvdXRfcmFuZ2UgZHN0X3JhbmdlOwo+IAo+IMKgwqDCoMKgwqDCoMKgIGlmICghbmZz
+NDFfc2VxdWVuY2VfZG9uZSh0YXNrLCAmZGF0YS0+cmVzLnNlcV9yZXMpKQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gQEAgLTEwMjY4LDYgKzEwMjY5LDEzIEBAIG5m
+czRfbGF5b3V0Y29tbWl0X2RvbmUoc3RydWN0IHJwY190YXNrCj4gKnRhc2ssIHZvaWQgKmNhbGxk
+YXRhKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhazsKPiDCoMKgwqDCoMKg
+wqDCoCBjYXNlIDA6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFrOwo+ICvC
+oMKgwqDCoMKgwqAgY2FzZSAtTkZTNEVSUl9PTERfU1RBVEVJRDoKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBpZiAoZGF0YS0+aW5vZGUpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmZzNF9sYXlvdXRfcmVmcmVzaF9vbGRfc3RhdGVpZCgm
+ZGF0YS0KPiA+YXJncy5zdGF0ZWlkLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZkc3RfcmFuZ2Us
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGF0YS0+aW5vZGUpOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIH0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmYWxsdGhyb3Vn
+aDsKPiDCoMKgwqDCoMKgwqDCoCBkZWZhdWx0Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpZiAobmZzNF9hc3luY19oYW5kbGVfZXJyb3IodGFzaywgc2VydmVyLCBOVUxMLCBOVUxM
+KQo+ID09IC1FQUdBSU4pIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHJwY19yZXN0YXJ0X2NhbGxfcHJlcGFyZSh0YXNrKTsKPiBAQCAtMTAzMTksOCAr
+MTAzMjcsOCBAQCBuZnM0X3Byb2NfbGF5b3V0Y29tbWl0KHN0cnVjdAo+IG5mczRfbGF5b3V0Y29t
+bWl0X2RhdGEgKmRhdGEsIGJvb2wgc3luYykKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZGF0YS0+YXJncy5sYXN0Ynl0ZXdyaXR0ZW4sCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGRhdGEtPmFyZ3MuaW5vZGUtPmlfaW5vKTsKPiAKPiArwqDCoMKgwqDCoMKgIGRhdGEt
+Pmlub2RlID0gbmZzX2lncmFiX2FuZF9hY3RpdmUoZGF0YS0+YXJncy5pbm9kZSk7Cj4gwqDCoMKg
+wqDCoMKgwqAgaWYgKCFzeW5jKSB7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGF0
+YS0+aW5vZGUgPSBuZnNfaWdyYWJfYW5kX2FjdGl2ZShkYXRhLT5hcmdzLmlub2RlKTsKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKGRhdGEtPmlub2RlID09IE5VTEwpIHsKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5mczRfbGF5b3V0
+Y29tbWl0X3JlbGVhc2UoZGF0YSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCByZXR1cm4gLUVBR0FJTjsKPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL3BuZnMu
+YyBiL2ZzL25mcy9wbmZzLmMKPiBpbmRleCBhMzEzNWI1YWY3ZWUuLmFhYTM3MTliMTk1NyAxMDA2
+NDQKPiAtLS0gYS9mcy9uZnMvcG5mcy5jCj4gKysrIGIvZnMvbmZzL3BuZnMuYwo+IEBAIC00MzIs
+NyArNDMyLDcgQEAgYm9vbCBuZnM0X2xheW91dF9yZWZyZXNoX29sZF9zdGF0ZWlkKG5mczRfc3Rh
+dGVpZAo+ICpkc3QsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBnb3RvIG91dDsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBUcnkgdG8gdXBkYXRlIHRoZSBzZXFpZCB0byB0
+aGUgbW9zdCByZWNlbnQgKi8KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlcnIgPSBw
+bmZzX21hcmtfbWF0Y2hpbmdfbHNlZ3NfcmV0dXJuKGxvLCAmaGVhZCwKPiAmcmFuZ2UsIDApOwo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVyciA9IHBuZnNfbWFya19tYXRjaGluZ19s
+c2Vnc19yZXR1cm4obG8sICZoZWFkLAo+ICZyYW5nZSwgMCwgdHJ1ZSk7Cj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGlmIChlcnIgIT0gLUVCVVNZKSB7Cj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkc3QtPnNlcWlkID0gbG8tPnBsaF9zdGF0
+ZWlkLnNlcWlkOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgKmRzdF9yYW5nZSA9IHJhbmdlOwo+IEBAIC00ODQsNyArNDg0LDcgQEAgc3RhdGljIGludCBw
+bmZzX21hcmtfbGF5b3V0X3N0YXRlaWRfcmV0dXJuKHN0cnVjdAo+IHBuZnNfbGF5b3V0X2hkciAq
+bG8sCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5sZW5ndGggPSBORlM0X01BWF9V
+SU5UNjQsCj4gwqDCoMKgwqDCoMKgwqAgfTsKPiAKPiAtwqDCoMKgwqDCoMKgIHJldHVybiBwbmZz
+X21hcmtfbWF0Y2hpbmdfbHNlZ3NfcmV0dXJuKGxvLCBsc2VnX2xpc3QsICZyYW5nZSwKPiBzZXEp
+Owo+ICvCoMKgwqDCoMKgwqAgcmV0dXJuIHBuZnNfbWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4o
+bG8sIGxzZWdfbGlzdCwgJnJhbmdlLAo+IHNlcSwgZmFsc2UpOwo+IMKgfQo+IAo+IMKgc3RhdGlj
+IGludAo+IEBAIC01MjIsNyArNTIyLDcgQEAgcG5mc19sYXlvdXRfaW9fc2V0X2ZhaWxlZChzdHJ1
+Y3QgcG5mc19sYXlvdXRfaGRyCj4gKmxvLCB1MzIgaW9tb2RlKQo+IAo+IMKgwqDCoMKgwqDCoMKg
+IHNwaW5fbG9jaygmaW5vZGUtPmlfbG9jayk7Cj4gwqDCoMKgwqDCoMKgwqAgcG5mc19sYXlvdXRf
+c2V0X2ZhaWxfYml0KGxvLAo+IHBuZnNfaW9tb2RlX3RvX2ZhaWxfYml0KGlvbW9kZSkpOwo+IC3C
+oMKgwqDCoMKgwqAgcG5mc19tYXJrX21hdGNoaW5nX2xzZWdzX3JldHVybihsbywgJmhlYWQsICZy
+YW5nZSwgMCk7Cj4gK8KgwqDCoMKgwqDCoCBwbmZzX21hcmtfbWF0Y2hpbmdfbHNlZ3NfcmV0dXJu
+KGxvLCAmaGVhZCwgJnJhbmdlLCAwLCBmYWxzZSk7Cj4gwqDCoMKgwqDCoMKgwqAgc3Bpbl91bmxv
+Y2soJmlub2RlLT5pX2xvY2spOwo+IMKgwqDCoMKgwqDCoMKgIHBuZnNfZnJlZV9sc2VnX2xpc3Qo
+JmhlYWQpOwo+IMKgwqDCoMKgwqDCoMKgIGRwcmludGsoIiVzIFNldHRpbmcgbGF5b3V0IElPTU9E
+RV8lcyBmYWlsIGJpdFxuIiwgX19mdW5jX18sCj4gQEAgLTE0NTksNyArMTQ1OSw3IEBAIF9wbmZz
+X3JldHVybl9sYXlvdXQoc3RydWN0IGlub2RlICppbm8pCj4gwqDCoMKgwqDCoMKgwqAgfQo+IMKg
+wqDCoMKgwqDCoMKgIHZhbGlkX2xheW91dCA9IHBuZnNfbGF5b3V0X2lzX3ZhbGlkKGxvKTsKPiDC
+oMKgwqDCoMKgwqDCoCBwbmZzX2NsZWFyX2xheW91dGNvbW1pdChpbm8sICZ0bXBfbGlzdCk7Cj4g
+LcKgwqDCoMKgwqDCoCBwbmZzX21hcmtfbWF0Y2hpbmdfbHNlZ3NfcmV0dXJuKGxvLCAmdG1wX2xp
+c3QsICZyYW5nZSwgMCk7Cj4gK8KgwqDCoMKgwqDCoCBwbmZzX21hcmtfbWF0Y2hpbmdfbHNlZ3Nf
+cmV0dXJuKGxvLCAmdG1wX2xpc3QsICZyYW5nZSwgMCwKPiBmYWxzZSk7Cj4gCj4gwqDCoMKgwqDC
+oMKgwqAgaWYgKE5GU19TRVJWRVIoaW5vKS0+cG5mc19jdXJyX2xkLT5yZXR1cm5fcmFuZ2UpCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIE5GU19TRVJWRVIoaW5vKS0+cG5mc19jdXJy
+X2xkLT5yZXR1cm5fcmFuZ2UobG8sCj4gJnJhbmdlKTsKPiBAQCAtMjU4Myw3ICsyNTgzLDcgQEAg
+cG5mc19sYXlvdXRfcHJvY2VzcyhzdHJ1Y3QgbmZzNF9sYXlvdXRnZXQgKmxncCkKPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5pb21vZGUgPSBJT01PREVf
+QU5ZLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLmxl
+bmd0aCA9IE5GUzRfTUFYX1VJTlQ2NCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fTsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwbmZzX21hcmtfbWF0Y2hpbmdfbHNl
+Z3NfcmV0dXJuKGxvLCAmZnJlZV9tZSwgJnJhbmdlLAo+IDApOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHBuZnNfbWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4obG8sICZmcmVlX21l
+LCAmcmFuZ2UsCj4gMCwgZmFsc2UpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBn
+b3RvIG91dF9mb3JnZXQ7Cj4gwqDCoMKgwqDCoMKgwqAgfSBlbHNlIHsKPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgLyogV2UgaGF2ZSBhIGNvbXBsZXRlbHkgbmV3IGxheW91dCAqLwo+
+IEBAIC0yNjI4LDcgKzI2MjgsNyBAQCBpbnQKPiDCoHBuZnNfbWFya19tYXRjaGluZ19sc2Vnc19y
+ZXR1cm4oc3RydWN0IHBuZnNfbGF5b3V0X2hkciAqbG8sCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGxpc3RfaGVh
+ZCAqdG1wX2xpc3QsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgY29uc3Qgc3RydWN0IHBuZnNfbGF5b3V0X3JhbmdlCj4gKnJl
+dHVybl9yYW5nZSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHUzMiBzZXEpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1MzIgc2VxLCBib29sIGNvbW1pdHRp
+bmcpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqAgc3RydWN0IHBuZnNfbGF5b3V0X3NlZ21lbnQgKmxz
+ZWcsICpuZXh0Owo+IMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBuZnNfc2VydmVyICpzZXJ2ZXIgPSBO
+RlNfU0VSVkVSKGxvLT5wbGhfaW5vZGUpOwo+IEBAIC0yNjU4LDEyICsyNjU4LDE4IEBAIHBuZnNf
+bWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4oc3RydWN0Cj4gcG5mc19sYXlvdXRfaGRyICpsbywK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+IAo+IMKgwqDCoMKgwqDCoMKgIGlm
+IChyZW1haW5pbmcpIHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwbmZzX3NldF9w
+bGhfcmV0dXJuX2luZm8obG8sIHJldHVybl9yYW5nZS0+aW9tb2RlLAo+IHNlcSk7Cj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FQlVTWTsKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBpZiAoIWNvbW1pdHRpbmcpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcG5mc19zZXRfcGxoX3JldHVybl9pbmZvKGxvLCByZXR1
+cm5fcmFuZ2UtCj4gPmlvbW9kZSwgc2VxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FQlVTWTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB9IGVsc2Ugewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCByZXR1cm4gMDsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9CgpOQUNL
+LgoKVGhpcyBjaGFuZ2Ugd291bGQgbWVhbiB0aGF0IHdlIGNhbiBoYXZlIGxheW91dCBzZWdtZW50
+cyBvbiB0aGUgbGlzdCBsby0KPnBsaF9yZXR1cm5fc2VncyB3aXRob3V0IGV2ZW4gdGhlIE5GU19M
+QVlPVVRfUkVUVVJOX1JFUVVFU1RFRCBmbGFnCmJlaW5nIHNldC4KCkl0IGFsc28gYmFkbHkgYnJl
+YWtzIHBuZnNfbGF5b3V0X25lZWRfcmV0dXJuKCkuCgpJIHNlZSBubyByZWFzb24gd2h5IHdlIHNo
+b3VsZCBuZWVkIHRvIGFkZCB0aGlzICdjb21taXR0aW5nJyBmbGFnCmFyZ3VtZW50IHRvIHBuZnNf
+bWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4oKS4gSSBzdWdnZXN0IHJhdGhlcgptb2RpZnlpbmcg
+cG5mc19wcmVwYXJlX2xheW91dHJldHVybigpIHRvIGNoZWNrIGZvcgpwbmZzX2xheW91dGNvbW1p
+dF9vdXRzdGFuZGluZygpLgoKPiDCoMKgwqDCoMKgwqDCoCB9Cj4gCj4gwqDCoMKgwqDCoMKgwqAg
+aWYgKCFsaXN0X2VtcHR5KCZsby0+cGxoX3JldHVybl9zZWdzKSkgewo+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHBuZnNfc2V0X3BsaF9yZXR1cm5faW5mbyhsbywgcmV0dXJuX3Jhbmdl
+LT5pb21vZGUsCj4gc2VxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIWNv
+bW1pdHRpbmcpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcG5mc19zZXRfcGxoX3JldHVybl9pbmZvKGxvLCByZXR1cm5fcmFuZ2UtCj4gPmlvbW9kZSwg
+c2VxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Cj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJldHVybiAwOwo+IMKgwqDCoMKgwqDCoMKgIH0KPiAKPiBAQCAtMjY4
+OSw3ICsyNjk1LDcgQEAgcG5mc19tYXJrX2xheW91dF9mb3JfcmV0dXJuKHN0cnVjdCBpbm9kZQo+
+ICppbm9kZSwKPiDCoMKgwqDCoMKgwqDCoMKgICogc2VnbWVudHMgYXQgaGFuZCB3aGVuIHNlbmRp
+bmcgbGF5b3V0cmV0dXJuLiBTZWUKPiBwbmZzX3B1dF9sc2VnKCkKPiDCoMKgwqDCoMKgwqDCoMKg
+ICogZm9yIGhvdyBpdCB3b3Jrcy4KPiDCoMKgwqDCoMKgwqDCoMKgICovCj4gLcKgwqDCoMKgwqDC
+oCBpZiAocG5mc19tYXJrX21hdGNoaW5nX2xzZWdzX3JldHVybihsbywgJmxvLT5wbGhfcmV0dXJu
+X3NlZ3MsCj4gcmFuZ2UsIDApICE9IC1FQlVTWSkgewo+ICvCoMKgwqDCoMKgwqAgaWYgKHBuZnNf
+bWFya19tYXRjaGluZ19sc2Vnc19yZXR1cm4obG8sICZsby0+cGxoX3JldHVybl9zZWdzLAo+IHJh
+bmdlLCAwLCBmYWxzZSkgIT0gLUVCVVNZKSB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGNvbnN0IHN0cnVjdCBjcmVkICpjcmVkOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBuZnM0X3N0YXRlaWQgc3RhdGVpZDsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZW51bSBwbmZzX2lvbW9kZSBpb21vZGU7Cj4gQEAgLTI4MDQsNyArMjgxMCw3IEBAIHN0YXRp
+YyBpbnQKPiBwbmZzX2xheW91dF9yZXR1cm5fdW51c2VkX2J5c2VydmVyKHN0cnVjdCBuZnNfc2Vy
+dmVyICpzZXJ2ZXIsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBuZnNfZ2V0X2xh
+eW91dF9oZHIobG8pOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwbmZzX3NldF9w
+bGhfcmV0dXJuX2luZm8obG8sIHJhbmdlLT5pb21vZGUsIDApOwo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBpZiAocG5mc19tYXJrX21hdGNoaW5nX2xzZWdzX3JldHVybihsbywgJmxv
+LQo+ID5wbGhfcmV0dXJuX3NlZ3MsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgcmFuZ2UsIDApICE9IDAgfHwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCByYW5nZSwgMCwgZmFsc2UpCj4gIT0gMCB8fAo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICFwbmZzX3ByZXBhcmVfbGF5b3V0cmV0dXJu
+KGxvLCAmc3RhdGVpZCwgJmNyZWQsCj4gJmlvbW9kZSkpIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNwaW5fdW5sb2NrKCZpbm9kZS0+aV9sb2NrKTsK
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJjdV9yZWFk
+X3VubG9jaygpOwo+IGRpZmYgLS1naXQgYS9mcy9uZnMvcG5mcy5oIGIvZnMvbmZzL3BuZnMuaAo+
+IGluZGV4IDkxZmY4NzcxODVjOC4uMzNhN2EwOTQ3N2IyIDEwMDY0NAo+IC0tLSBhL2ZzL25mcy9w
+bmZzLmgKPiArKysgYi9mcy9uZnMvcG5mcy5oCj4gQEAgLTMwMCw3ICszMDAsNyBAQCBpbnQgcG5m
+c19tYXJrX21hdGNoaW5nX2xzZWdzX2ludmFsaWQoc3RydWN0Cj4gcG5mc19sYXlvdXRfaGRyICps
+bywKPiDCoGludCBwbmZzX21hcmtfbWF0Y2hpbmdfbHNlZ3NfcmV0dXJuKHN0cnVjdCBwbmZzX2xh
+eW91dF9oZHIgKmxvLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBsaXN0X2hlYWQgKnRtcF9saXN0LAo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGNvbnN0IHN0cnVjdCBwbmZzX2xheW91dF9yYW5nZQo+ICpyZWNhbGxfcmFuZ2UsCj4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1
+MzIgc2VxKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHUzMiBzZXEsIGJvb2wgY29tbWl0dGluZyk7Cj4gwqBpbnQgcG5mc19t
+YXJrX2xheW91dF9zdGF0ZWlkX2ludmFsaWQoc3RydWN0IHBuZnNfbGF5b3V0X2hkciAqbG8sCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBsaXN0X2hlYWQgKmxzZWdfbGlz
+dCk7Cj4gwqBib29sIHBuZnNfcm9jKHN0cnVjdCBpbm9kZSAqaW5vLAo+IC0tCj4gMi41MS4wLjg3
+LmcxZmE2ODk0OGMzLmRpcnR5Cj4gCiAgIEEuIAotLSAKVHJvbmQgTXlrbGVidXN0IExpbnV4IE5G
+UyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UKdHJvbmRteUBrZXJuZWwub3JnLCB0cm9u
+ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tCg==
 
-Hmm, I'll have to check with the Hammerspace performance team to
-understand how RDMA used if the client mount has proto=tcp.
-
-Certainly surprising, thanks for noticing/reporting this aspect.
-
-I also cannot reproduce on a normal tcp mount and testbed.  This
-frankenbeast of a fast "RDMA" network that is misconfigured to use
-proto=tcp is the only testbed where I've seen this dt data mismatch.
-
-> > Or, I could switch to TCP. Suggestions welcome.
-> 
-> The client is not sending any READ procedures/operations to the server.
-> The following is NFSv3 for clarity, but NFSv4.x results are similar:
-> 
->             nfsd-1669  [003]  1466.634816: svc_process:
-> addr=192.168.2.67 xid=0x7b2a6274 service=nfsd vers=3 proc=NULL
->             nfsd-1669  [003]  1466.635389: svc_process:
-> addr=192.168.2.67 xid=0x7d2a6274 service=nfsd vers=3 proc=FSINFO
->             nfsd-1669  [003]  1466.635420: svc_process:
-> addr=192.168.2.67 xid=0x7e2a6274 service=nfsd vers=3 proc=PATHCONF
->             nfsd-1669  [003]  1466.635451: svc_process:
-> addr=192.168.2.67 xid=0x7f2a6274 service=nfsd vers=3 proc=GETATTR
->             nfsd-1669  [003]  1466.635486: svc_process:
-> addr=192.168.2.67 xid=0x802a6274 service=nfsacl vers=3 proc=NULL
->             nfsd-1669  [003]  1466.635558: svc_process:
-> addr=192.168.2.67 xid=0x812a6274 service=nfsd vers=3 proc=FSINFO
->             nfsd-1669  [003]  1466.635585: svc_process:
-> addr=192.168.2.67 xid=0x822a6274 service=nfsd vers=3 proc=GETATTR
->             nfsd-1669  [003]  1470.029208: svc_process:
-> addr=192.168.2.67 xid=0x832a6274 service=nfsd vers=3 proc=ACCESS
->             nfsd-1669  [003]  1470.029255: svc_process:
-> addr=192.168.2.67 xid=0x842a6274 service=nfsd vers=3 proc=LOOKUP
->             nfsd-1669  [003]  1470.029296: svc_process:
-> addr=192.168.2.67 xid=0x852a6274 service=nfsd vers=3 proc=FSSTAT
->             nfsd-1669  [003]  1470.039715: svc_process:
-> addr=192.168.2.67 xid=0x862a6274 service=nfsacl vers=3 proc=GETACL
->             nfsd-1669  [003]  1470.039758: svc_process:
-> addr=192.168.2.67 xid=0x872a6274 service=nfsd vers=3 proc=CREATE
->             nfsd-1669  [003]  1470.040091: svc_process:
-> addr=192.168.2.67 xid=0x882a6274 service=nfsd vers=3 proc=WRITE
->             nfsd-1669  [003]  1470.040469: svc_process:
-> addr=192.168.2.67 xid=0x892a6274 service=nfsd vers=3 proc=GETATTR
->             nfsd-1669  [003]  1470.040503: svc_process:
-> addr=192.168.2.67 xid=0x8a2a6274 service=nfsd vers=3 proc=ACCESS
->             nfsd-1669  [003]  1470.041867: svc_process:
-> addr=192.168.2.67 xid=0x8b2a6274 service=nfsd vers=3 proc=FSSTAT
->             nfsd-1669  [003]  1470.042109: svc_process:
-> addr=192.168.2.67 xid=0x8c2a6274 service=nfsd vers=3 proc=REMOVE
-> 
-> So I'm probably missing some setting on the reproducer/client.
-> 
-> /mnt from klimt.ib.1015granger.net:/export/fast
->  Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,
->   fatal_neterrors=none,proto=rdma,port=20049,timeo=600,retrans=2,
->   sec=sys,mountaddr=192.168.2.55,mountvers=3,mountproto=tcp,
->   local_lock=none,addr=192.168.2.55
-> 
-> Linux morisot.1015granger.net 6.15.10-100.fc41.x86_64 #1 SMP
->  PREEMPT_DYNAMIC Fri Aug 15 14:55:12 UTC 2025 x86_64 GNU/Linux
-
-If you're using LOCALIO (client on server) that'd explain your not
-seeing any READs coming over the wire to NFSD.
-
-I've made sure to disable LOCALIO on my client, with:
-echo N > /sys/module/nfs/parameters/localio_enabled
 
