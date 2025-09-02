@@ -1,146 +1,155 @@
-Return-Path: <linux-nfs+bounces-13986-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13987-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C864B40EBC
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 22:47:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AB23B40F04
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 23:07:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83F285615C6
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 20:47:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 002CE7B2F2D
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Sep 2025 21:05:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191CC2E7F1D;
-	Tue,  2 Sep 2025 20:46:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7143AC39;
+	Tue,  2 Sep 2025 21:06:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKl5jy57"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI46/C8I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A512DECB4
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Sep 2025 20:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497152253EB
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Sep 2025 21:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756845999; cv=none; b=ZG6MZ+hSWyF1kzrwku/CNjr/T/BLV5g7aKCF5YmPf1SHZ/d5rieoBLtSWPxv95XByfgea1iA6WDprzl1ss4tbcRq6dE+XwErrEae3c1CaZgoCpeOeO+oHF7e8p/OsZtXswc6F86iHzYbfmz45JvFfqWazfd9sGPintB1hN/2dI4=
+	t=1756847216; cv=none; b=uM1hq6JCD5Dijdn0aLE7W0z3Sh6hP2K2/8PVOqiXcBiSr80CTUrAleKoLL2wwp9q+aSVqJLXKH8Gyz01Jui+QWEYlVwyj9mv+1bNsXa3wLNRv9viusePgqLLmOK12HJOruSr3hQNuTdiQYdRJ5xdUnKhs85d19VEknpCJUKRVUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756845999; c=relaxed/simple;
-	bh=OhR35b7EL7boJMTg3Cwi69gv16+KmUKiIRyyy74Kn8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mXt0WPwOKQncp9ccJviB4y0N3+OckBOOF2K9kMGYlPq3s4Zy5sXOgGlbMfzwEPxrM8RDCIW25WntfHyFC6MdSiI39LrKdTZFp+EBnqIn+gxT0rXkBS4Ajd2DkgA2Gf6V6GwmFOxNZu7MRm0PP/KOVu3qXnmXgQEjd2DgL4jpOow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PKl5jy57; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-723c971b63bso315596d6.1
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Sep 2025 13:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756845996; x=1757450796; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hIRMAQXzXrnjd83lIH5i6gNnDlI2tsS9k74/yCIeL7E=;
-        b=PKl5jy57U2ZMTWEHp6sD6huNEhVBv8ehHILog1NFXBTNC8mvWhDszYm4aVBwsagiib
-         B02INgUyqV3PSroYKsFDDMfm25yJwgSmoWLPOy+OrVaGRufqp0oJahjD/QF0VbBzV2ZI
-         pI8cclppZKICbmnjxP9JyCWPe6AkD3fqs25PipY6IivaTGZVHEmKOs0kcvO+osOJDfHx
-         x0epJPTsqnJWE82e+eogfhjGsZpD33hDq3DZ7Ix70K6hfIax4J4XSQoLoZ6Gh11TM1qB
-         k4zEsDgVCH1KYVZMVuW2Vam9OSDliJ3artfDXtSh1jiENiDTBDWCAXQWcxMSoj6glir6
-         M7ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756845996; x=1757450796;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hIRMAQXzXrnjd83lIH5i6gNnDlI2tsS9k74/yCIeL7E=;
-        b=BNTBimnjaM4Oj4ecgEa+m2Q5zI1Nu4aDsDSgYrhWEkmkAonMPRcXAzbWtXTaOssz5K
-         LbDVTG6BBWC7hmq+zaebLiMmJLNkVP4K0TwVT3tHZwqWA/hhRIBJJsoGTekkN/B9PXVQ
-         JxMDXIj6Io4yB1n0lAhizbIrA/SxBYaKUubpw68XUAyxfojUC5Kb9E5QxmO9R4eiN3dc
-         LT10kUdQPytihTNNz6ZnObJcs3IaQMvli9qWI3KmT5iMb7CpRhcJHPtzRtmDTi+e24jN
-         JA4iXHqDUgtQt9mQAxcYakE0HlFVCftAGDofGyvDC4MJ/bCdCNUgQP87yWouuCQCmgxX
-         4rLA==
-X-Gm-Message-State: AOJu0Yw82FgH8dVcs/KLxNiG2FNNszmIxKmuG5r2+zYs00/xUlcCrdtF
-	UEY828WI+Nto9A8qBjYeSU/hKmb2WQvMqjhuzXrcK1YMn7P8+dK4t3jB
-X-Gm-Gg: ASbGnct4Ti6rG6fK9Tuh9UxN1Z6YhBo+4Ks++txcrzkZ22gQ18L0Dm+flkhgVu63TpY
-	srThgXLu3cACuIFfUjVIyVSOIH4voPDHJRgXGKWOoR7Ri8Tp5VJEKIlhWk9MjFARiRHuCdTPPq9
-	09j1ssislxKJjd2RzWIvzUofl1yzCX8nshci5cuZRKniAYAjJ6Wp4np/znyBuhkBjZop+IrXvyl
-	7XiWzSAvxokzLdpwekoJe1oCHAF+9QvFCQzwGdFdxRLTLD1SE1A435P9J0RkJT/mr843BEP3b2T
-	7AjV7ylIB57NdznwpV6X+k9TJHA2JYP7ICmfsygmNQPu4RBIOLklTNbVc4aBncdcV+fT+Pu8b24
-	VJkohGVhoIdjJFe62NBY=
-X-Google-Smtp-Source: AGHT+IGGBt6gEQxBv41os9h76XJNYE1PlHrAuljhbNiTjp0yhqiyc2LV1PexI3a2RhnPuEUfICFsOw==
-X-Received: by 2002:a05:6214:c67:b0:714:87d7:4c8a with SMTP id 6a1803df08f44-71487d7580emr107728096d6.8.1756845996065;
-        Tue, 02 Sep 2025 13:46:36 -0700 (PDT)
-Received: from [10.1.16.8] ([104.222.93.83])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-720ac262a5asm18014156d6.2.2025.09.02.13.46.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Sep 2025 13:46:35 -0700 (PDT)
-Message-ID: <851ebd04-8f9c-4a17-aa55-654c021f07a5@gmail.com>
-Date: Tue, 2 Sep 2025 15:46:33 -0500
+	s=arc-20240116; t=1756847216; c=relaxed/simple;
+	bh=nsIzL4IkJQNGKAlzxoktTu61Wt2Ql2JHnAwSy7Ypblc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EH9N/08MC44gfUKHUXc3Bv4w/TB/SvYGGkBMfabdGvkiH5nThZcvCZ6JjHHTEtZw5fYTZ2gb1nIXFBBCFR0KSbwVA4zWTWMBkON3xaxosbrOY+T6lVxuSacb+mpBV3D7nne2iPQungqR84q+OeC+ygY3vgTMhJZLDOoji6olSiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI46/C8I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C90CC4CEED;
+	Tue,  2 Sep 2025 21:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756847215;
+	bh=nsIzL4IkJQNGKAlzxoktTu61Wt2Ql2JHnAwSy7Ypblc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uI46/C8IdTlOCMVTFCHmabOU+HjSISqH8GGpxhDDWsPB4WB4d3p2c24bA1o2270Wj
+	 xkbCZsEpItipLZiaM/SqFGGTtQNTRXCnlbRN1eTAuCYOa13PjdD2Xp2Er5FufX1Kw6
+	 d1/QMgHR53ImMbmXZ0bVYNNi/dP26l6OvQoAucztAjt5q0douh64gsJveGgccGZyL0
+	 EXlHSbcDXh2pOflt8S3LbD/k0FjBPsxa7iKAaIbFvAhAuelk4mZTLgZR159FgfpS0G
+	 7112xg4ISTqvKnsLFlA25KK/X7iFyDkq4smeFTfUonwLz0B+A9YqJOj+VE5Sf1JXZl
+	 MtHxnLg1t67rQ==
+Date: Tue, 2 Sep 2025 17:06:54 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [RFC PATCH 1/2] NFSD: fix misaligned DIO READ to not use a
+ start_extra_page, exposes rpcrdma bug?
+Message-ID: <aLdcbnELMGHB-B_E@kernel.org>
+References: <aLClcl08x4JJ1UJu@kernel.org>
+ <20250830173852.26953-1-snitzer@kernel.org>
+ <20250830173852.26953-2-snitzer@kernel.org>
+ <2559f795-bdc9-4d39-aa03-e6a6d89e9f84@oracle.com>
+ <92908105-9261-42f9-a0fd-ebfaf3e2f564@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xs_sock_recv_cmsg failing to call xs_sock_process_cmsg
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: linux-nfs@vger.kernel.org, smayhew@redhat.com, trondmy@hammerspace.com,
- okorniev@redhat.com
-References: <966f4d30-16f6-4a11-8d6c-1d6102781e71@gmail.com>
- <CAN-5tyGHKCt0KhTt2jKNdx77H3RcgY-xPKwkL4udvciR99=rrw@mail.gmail.com>
-Content-Language: en-US
-From: Justin Worrell <jworrell@gmail.com>
-In-Reply-To: <CAN-5tyGHKCt0KhTt2jKNdx77H3RcgY-xPKwkL4udvciR99=rrw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92908105-9261-42f9-a0fd-ebfaf3e2f564@oracle.com>
 
-
-
-On 9/2/25 11:21 AM, Olga Kornievskaia wrote:
-> On Tue, Sep 2, 2025 at 8:27 AM Justin Worrell <jworrell@gmail.com> wrote:
->>
->> xs_sock_recv_cmsg was failing to call xs_sock_process_cmsg for any cmsg
->> type other than TLS_RECORD_TYPE_ALERT (TLS_RECORD_TYPE_DATA, and other
->> values not handled.) Based on my reading of the previous commit
->> (cc5d5908: sunrpc: fix client side handling of tls alerts), it looks
->> like only iov_iter_revert should be conditional on TLS_RECORD_TYPE_ALERT
->> (but that other cmsg types should still call xs_sock_process_cmsg). On
->> my machine, I was unable to connect (over mtls) to an NFS share hosted
->> on FreeBSD. With this patch applied, I am able to mount the share again.
+On Tue, Sep 02, 2025 at 01:59:12PM -0400, Chuck Lever wrote:
+> On 9/2/25 11:56 AM, Chuck Lever wrote:
+> > On 8/30/25 1:38 PM, Mike Snitzer wrote:
 > 
-> Thanks for the catch Justin. Indeed, the client fails to return an
-> error in case it receives anything other than TLS DATA or TLS ALERT.
-> Could you tell what kind of TLS message the FreeBSD server is sending?
-> Either a network trace or turning on tls_contentype tracepoint should
-> show what type the client has been receiving.
+> >> dt (j:1 t:1): File System Information:
+> >> dt (j:1 t:1):            Mounted from device: 192.168.0.105:/hs_test
+> >> dt (j:1 t:1):           Mounted on directory: /mnt/hs_test
+> >> dt (j:1 t:1):                Filesystem type: nfs4
+> >> dt (j:1 t:1):             Filesystem options: rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,nconnect=16,port=20491,timeo=600,retrans=2,sec=sys,clientaddr=192.168.0.106,local_lock=none,addr=192.168.0.105
+> > 
+> > I haven't been able to reproduce a similar failure in my lab with
+> > NFSv4.2 over RDMA with FDR InfiniBand. I've run dt 6-7 times, all
+> > successful. Also, for shit giggles, I tried the fsx-based subtests in
+> > fstests, no new failures there either. The export is xfs on an NVMe
+> > add-on card; server uses direct I/O for READ and page cache for WRITE.
+> > 
+> > Notice the mount options for your test run: "proto=tcp" and
+> > "nconnect=16". Even if your network fabric is RoCE, "proto=tcp" will
+> > not use RDMA at all; it will use bog standard TCP/IP on your ultra
+> > fast Ethernet network.
+> > 
+> > What should I try next? I can apply 2/2 or add "nconnect" or move the
+> > testing to my RoCE fabric after lunch and keep poking at it.
 
-Hi Olga,
+Hmm, I'll have to check with the Hammerspace performance team to
+understand how RDMA used if the client mount has proto=tcp.
 
-Unfortunately, I don't know much (anything, really) about Kernel 
-debugging or the SSL protocol. I do have root on both boxes and am happy 
-to provide whatever information would help with better understanding the 
-issue. Could you provide some guidance (even if just where to go to 
-rtfm) to fetch the requested info? I don't imagine just a tcpdump of the 
-ciphertext is sufficient. If providing this assistance is too spammy for 
-the list, it is okay to reach out off-list.
+Certainly surprising, thanks for noticing/reporting this aspect.
 
->> ---
->> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
->> --- a/net/sunrpc/xprtsock.c     (revision
->> b320789d6883cc00ac78ce83bccbfe7ed58afcf0)
->> +++ b/net/sunrpc/xprtsock.c     (date 1756813457481)
->> @@ -407,9 +407,9 @@
->>          iov_iter_kvec(&msg.msg_iter, ITER_DEST, &alert_kvec, 1,
->>                        alert_kvec.iov_len);
->>          ret = sock_recvmsg(sock, &msg, flags);
->> -       if (ret > 0 &&
->> -           tls_get_record_type(sock->sk, &u.cmsg) == TLS_RECORD_TYPE_ALERT) {
->> -               iov_iter_revert(&msg.msg_iter, ret);
->> +       if (ret > 0) {
->> +               if (tls_get_record_type(sock->sk, &u.cmsg) == TLS_RECORD_TYPE_ALERT)
->> +                       iov_iter_revert(&msg.msg_iter, ret);
->>                  ret = xs_sock_process_cmsg(sock, &msg, msg_flags, &u.cmsg,
->>                                             -EAGAIN);
->>          }
->>
+I also cannot reproduce on a normal tcp mount and testbed.  This
+frankenbeast of a fast "RDMA" network that is misconfigured to use
+proto=tcp is the only testbed where I've seen this dt data mismatch.
 
+> > Or, I could switch to TCP. Suggestions welcome.
+> 
+> The client is not sending any READ procedures/operations to the server.
+> The following is NFSv3 for clarity, but NFSv4.x results are similar:
+> 
+>             nfsd-1669  [003]  1466.634816: svc_process:
+> addr=192.168.2.67 xid=0x7b2a6274 service=nfsd vers=3 proc=NULL
+>             nfsd-1669  [003]  1466.635389: svc_process:
+> addr=192.168.2.67 xid=0x7d2a6274 service=nfsd vers=3 proc=FSINFO
+>             nfsd-1669  [003]  1466.635420: svc_process:
+> addr=192.168.2.67 xid=0x7e2a6274 service=nfsd vers=3 proc=PATHCONF
+>             nfsd-1669  [003]  1466.635451: svc_process:
+> addr=192.168.2.67 xid=0x7f2a6274 service=nfsd vers=3 proc=GETATTR
+>             nfsd-1669  [003]  1466.635486: svc_process:
+> addr=192.168.2.67 xid=0x802a6274 service=nfsacl vers=3 proc=NULL
+>             nfsd-1669  [003]  1466.635558: svc_process:
+> addr=192.168.2.67 xid=0x812a6274 service=nfsd vers=3 proc=FSINFO
+>             nfsd-1669  [003]  1466.635585: svc_process:
+> addr=192.168.2.67 xid=0x822a6274 service=nfsd vers=3 proc=GETATTR
+>             nfsd-1669  [003]  1470.029208: svc_process:
+> addr=192.168.2.67 xid=0x832a6274 service=nfsd vers=3 proc=ACCESS
+>             nfsd-1669  [003]  1470.029255: svc_process:
+> addr=192.168.2.67 xid=0x842a6274 service=nfsd vers=3 proc=LOOKUP
+>             nfsd-1669  [003]  1470.029296: svc_process:
+> addr=192.168.2.67 xid=0x852a6274 service=nfsd vers=3 proc=FSSTAT
+>             nfsd-1669  [003]  1470.039715: svc_process:
+> addr=192.168.2.67 xid=0x862a6274 service=nfsacl vers=3 proc=GETACL
+>             nfsd-1669  [003]  1470.039758: svc_process:
+> addr=192.168.2.67 xid=0x872a6274 service=nfsd vers=3 proc=CREATE
+>             nfsd-1669  [003]  1470.040091: svc_process:
+> addr=192.168.2.67 xid=0x882a6274 service=nfsd vers=3 proc=WRITE
+>             nfsd-1669  [003]  1470.040469: svc_process:
+> addr=192.168.2.67 xid=0x892a6274 service=nfsd vers=3 proc=GETATTR
+>             nfsd-1669  [003]  1470.040503: svc_process:
+> addr=192.168.2.67 xid=0x8a2a6274 service=nfsd vers=3 proc=ACCESS
+>             nfsd-1669  [003]  1470.041867: svc_process:
+> addr=192.168.2.67 xid=0x8b2a6274 service=nfsd vers=3 proc=FSSTAT
+>             nfsd-1669  [003]  1470.042109: svc_process:
+> addr=192.168.2.67 xid=0x8c2a6274 service=nfsd vers=3 proc=REMOVE
+> 
+> So I'm probably missing some setting on the reproducer/client.
+> 
+> /mnt from klimt.ib.1015granger.net:/export/fast
+>  Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,
+>   fatal_neterrors=none,proto=rdma,port=20049,timeo=600,retrans=2,
+>   sec=sys,mountaddr=192.168.2.55,mountvers=3,mountproto=tcp,
+>   local_lock=none,addr=192.168.2.55
+> 
+> Linux morisot.1015granger.net 6.15.10-100.fc41.x86_64 #1 SMP
+>  PREEMPT_DYNAMIC Fri Aug 15 14:55:12 UTC 2025 x86_64 GNU/Linux
+
+If you're using LOCALIO (client on server) that'd explain your not
+seeing any READs coming over the wire to NFSD.
+
+I've made sure to disable LOCALIO on my client, with:
+echo N > /sys/module/nfs/parameters/localio_enabled
 
