@@ -1,54 +1,76 @@
-Return-Path: <linux-nfs+bounces-14002-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14003-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0210FB41E1E
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 14:01:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4310DB41E33
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 14:03:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87EAC1887263
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 12:01:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBB2D3B4D0F
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 12:02:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6BE27EC80;
-	Wed,  3 Sep 2025 12:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7BDE28467D;
+	Wed,  3 Sep 2025 12:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7wtxjQw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F072FD7A7;
-	Wed,  3 Sep 2025 12:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32352820AC
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Sep 2025 12:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756900808; cv=none; b=k2XB12I3KmVpiCe5eEhFoNaB1O3CF6f1ziTh+fJO89jtS1UbIsEpVQABlijkvY9jVO2CuADPOgAuxvGh994lgNIzbSZ2gttKgmsxjwCb+K842zoO4MrtHUhrcBPewuF1rW4iG0UtLyxpacWX7RiOxN7na7ixA4yzRH2R2NYugCY=
+	t=1756900932; cv=none; b=gANCvYyc3tmUqxkz4rX+1bvooVSas2rzoRXNZrlk0CkbmHy4EHI73ZO+55bSQrNE5UTc5/F5QoXp2khnaTLufzDMLOoewqXajfz/p3TV9UeMqWHlT+4JzFmxvWTeSAth2BqAp1KBJXYFpqHV0wOcqkqDE1zIhdE+etTOo/Z8JAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756900808; c=relaxed/simple;
-	bh=45SFBCX7ymFr1NNsVrJRsAAdN4WtgrdDrn+YDV+in/E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S3kxRrq1HBhKEL/Ao4GDJ2weicY88KBdyDzdRAbu0n3ZG/E29xistbzKSgzcHKRsbf6WkMTp8rs43V0/XevRv8cH7DsUNnj6WVHT2HXhCLspCFMOB/WTRqUQLOljpfTJSb6LMFSlVWMPguCGH5EgCRWDom8zdUOJMFHI32oh4GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4cH1RB5cs9z2wB80;
-	Wed,  3 Sep 2025 20:01:10 +0800 (CST)
-Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF8DC140155;
-	Wed,  3 Sep 2025 20:00:02 +0800 (CST)
-Received: from huawei.com (10.50.85.155) by kwepemj200013.china.huawei.com
- (7.202.194.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 3 Sep
- 2025 20:00:02 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neil@brown.name>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>, <zhangjian496@huawei.com>, <bcodding@redhat.com>
-Subject: [PATCH v2] nfsd: remove long-standing revoked delegations by force
-Date: Wed, 3 Sep 2025 19:59:18 +0800
-Message-ID: <20250903115918.788159-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1756900932; c=relaxed/simple;
+	bh=lgkHpwlpSJLJmES/dXoWXanhZTG+O6JwBTaZVF77ZIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aLP37URHBdmHlfkaTuNuaKCZ+5Ov7TPDbi7bJymV1gDVlykU6Bku/+WFruT4gsY0g8Yk7GDBv2AUxJzwT+tI4/BGHjrEyGsLwXFLwpxY1oHYjykdbP6aHYuORAjxi0OdTc/qSWOWZQQErcPY/eozyOhtltNHaMlaUK0HuoVtnVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G7wtxjQw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756900930;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CatxfhLxYasU2u6fzfcnGLX+yDMii7A5Aq7MzACcHMo=;
+	b=G7wtxjQwQGzcVvdtkSb/cf5jhibDXusGqivHporOTb/c65JHQKbV6iLYJQ1Y5S/AlYuABU
+	nhdZExtMVvygch9zzWV9oBDW3uvJ5aCTIAIEZU93UWCnkUKz66+4iIiueURow9ioy4clpd
+	MzWvk8itBo0KuHGMGC+z4rhlK6D8HiQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-489-Rjl-21kLP2KelauHP009Zg-1; Wed,
+ 03 Sep 2025 08:02:06 -0400
+X-MC-Unique: Rjl-21kLP2KelauHP009Zg-1
+X-Mimecast-MFC-AGG-ID: Rjl-21kLP2KelauHP009Zg_1756900924
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE81A19560A0;
+	Wed,  3 Sep 2025 12:02:03 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.6])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 85EBD3000198;
+	Wed,  3 Sep 2025 12:02:00 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jeffrey Altman <jaltman@auristor.com>,
+	Steve French <sfrench@samba.org>,
+	linux-afs@lists.infradead.org,
+	openafs-devel@openafs.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] vfs, afs, bash: Fix miscomparison of foreign user IDs in the VFS
+Date: Wed,  3 Sep 2025 13:01:52 +0100
+Message-ID: <20250903120157.899182-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,104 +78,86 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemj200013.china.huawei.com (7.202.194.25)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-When file access conflicts occur between clients, the server recalls
-delegations. If the client holding delegation fails to return it after
-a recall, nfs4_laundromat adds the delegation to cl_revoked list.
-This causes subsequent SEQUENCE operations to set the
-SEQ4_STATUS_RECALLABLE_STATE_REVOKED flag, forcing the client to
-validate all delegations and return the revoked one.
+Hi Al, Christian,
 
-However, if the client fails to return the delegation like this:
-nfs4_laundromat                       nfsd4_delegreturn
- unhash_delegation_locked
- list_add // add dp to reaplist
-          // by dl_recall_lru
- list_del_init // delete dp from
-               // reaplist
-                                       destroy_delegation
-                                        unhash_delegation_locked
-                                         // do nothing but return false
- revoke_delegation
- list_add // add dp to cl_revoked
-          // by dl_recall_lru
+Here's a pair of fixes that deal with some places the VFS mishandles
+foreign user ID checks.  By "foreign" I mean that the user IDs from the
+filesystem do not belong in the same number space as the system's user IDs.
+Network filesystems are prime examples of this, but it may also impact
+things like USB drives or cdroms.
 
-The delegation will remain in the server's cl_revoked list while the
-client marks it revoked and won't find it upon detecting
-SEQ4_STATUS_RECALLABLE_STATE_REVOKED.
-This leads to a loop:
-the server persistently sets SEQ4_STATUS_RECALLABLE_STATE_REVOKED, and the
-client repeatedly tests all delegations, severely impacting performance
-when numerous delegations exist.
+Take AFS as example: Whilst each file does have a numeric user ID, the file
+may be accessed from a world-accessible public-facing server from some
+other organisation with its own idea of what that user ID refers to.  IDs
+from AFS may also collide with the system's own set of IDs and may also be
+unrepresentable as a 32-bit UID (in the case of AuriStor servers).
 
-Since abnormal delegations are removed from flc_lease via nfs4_laundromat
---> revoke_delegation --> destroy_unhashed_deleg -->
-nfs4_unlock_deleg_lease --> kernel_setlease, and do not block new open
-requests indefinitely, retaining such a delegation on the server is
-unnecessary.
+Further, kAFS uses a key containing an authentication token to specify the
+subject doing an RPC operation to the server - and, as such, this needs to
+be used instead of current_fsuid() in determining whether the current user
+has ownership rights over a file.
 
-Reported-by: Zhang Jian <zhangjian496@huawei.com>
-Fixes: 3bd64a5ba171 ("nfsd4: implement SEQ4_STATUS_RECALLABLE_STATE_REVOKED")
-Closes: https://lore.kernel.org/all/ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com/
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
-  Changes in v2:
-  1) Set SC_STATUS_CLOSED unconditionally in destroy_delegation();
-  2) Determine whether to remove the delegation based on SC_STATUS_CLOSED,
-     rather than by timeout;
-  3) Modify the commit message.
- fs/nfsd/nfs4state.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Additionally, filesystems (CIFS being a notable example) may also have user
+identifiers that aren't simple integers.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 88c347957da5..bb9e1df4e41f 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1336,6 +1336,11 @@ static void destroy_delegation(struct nfs4_delegation *dp)
- 
- 	spin_lock(&state_lock);
- 	unhashed = unhash_delegation_locked(dp, SC_STATUS_CLOSED);
-+	/*
-+	 * Unconditionally set SC_STATUS_CLOSED, regardless of whether the
-+	 * delegation is hashed, to mark the current delegation as invalid.
-+	 */
-+	dp->dl_stid.sc_status |= SC_STATUS_CLOSED;
- 	spin_unlock(&state_lock);
- 	if (unhashed)
- 		destroy_unhashed_deleg(dp);
-@@ -4326,6 +4331,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	int buflen;
- 	struct net *net = SVC_NET(rqstp);
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct list_head *pos, *next;
-+	struct nfs4_delegation *dp;
- 
- 	if (resp->opcnt != 1)
- 		return nfserr_sequence_pos;
-@@ -4470,6 +4477,19 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	default:
- 		seq->status_flags = 0;
- 	}
-+	if (!list_empty(&clp->cl_revoked)) {
-+		spin_lock(&clp->cl_lock);
-+		list_for_each_safe(pos, next, &clp->cl_revoked) {
-+			dp = list_entry(pos, struct nfs4_delegation, dl_recall_lru);
-+			if (dp->dl_stid.sc_status & SC_STATUS_CLOSED) {
-+				list_del_init(&dp->dl_recall_lru);
-+				spin_unlock(&clp->cl_lock);
-+				nfs4_put_stid(&dp->dl_stid);
-+				spin_lock(&clp->cl_lock);
-+			}
-+		}
-+		spin_unlock(&clp->cl_lock);
-+	}
- 	if (!list_empty(&clp->cl_revoked))
- 		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
- 	if (atomic_read(&clp->cl_admin_revoked))
--- 
-2.46.1
+Now the problem in the VFS is that there are a number of places where it
+assumes it can directly compare i_uid (possibly id-mapped) to either than
+on another inode or a UID drawn from elsewhere (e.g. current_uid()) - but
+this doesn't work right.
+
+This causes the write-to-sticky check to work incorrectly for AFS (though
+this is currently masked by a workaround in bash that is slated to be
+removed) whereby open(O_CREAT) of such a file will fail when it shouldn't.
+
+Two patches are provided:
+
+ (1) Add a pair of inode operations, one to compare the ownership of a pair
+     of inodes and the other to see if the current process has ownership
+     rights over an inode.  Usage of this is then extended out into the
+     VFS, replacing comparisons between i_uid and i_uid and between i_uid
+     and current_fsuid().  The default, it the inode ops are unimplemented,
+     is to do those direct i_uid comparisons.
+
+ (2) Fixes the bash workaround issue with regard to AFS, overriding the
+     checks as to whether two inodes have the same owner and the check as
+     to whether the current user owns an inode to work within the AFS
+     model.
+
+kAFS uses the result of a status-fetch with a suitable key to determine
+file ownership (if the ADMINISTER bit is set) and just compares the 64-bit
+owner IDs to determine if two inodes have the same ownership.
+
+Note that chown may also need modifying in some way - but that can't
+necessarily supply the information required (for instance, an AuriStor YFS ID
+is 64 bits, but chown can only handle a 32-bit integer; CIFS might use a
+GUID).
+
+The patches can be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=afs-sticky-2
+
+Thanks,
+David
+
+David Howells (2):
+  vfs: Allow filesystems with foreign owner IDs to override UID checks
+  afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+
+ Documentation/filesystems/vfs.rst |  21 ++++
+ fs/afs/dir.c                      |   2 +
+ fs/afs/file.c                     |   2 +
+ fs/afs/internal.h                 |   3 +
+ fs/afs/security.c                 |  46 +++++++++
+ fs/attr.c                         |  58 ++++++-----
+ fs/coredump.c                     |   2 +-
+ fs/inode.c                        |  11 +-
+ fs/internal.h                     |   1 +
+ fs/locks.c                        |   7 +-
+ fs/namei.c                        | 161 ++++++++++++++++++++++++------
+ fs/remap_range.c                  |  20 ++--
+ include/linux/fs.h                |   6 +-
+ 13 files changed, 269 insertions(+), 71 deletions(-)
 
 
