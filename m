@@ -1,225 +1,217 @@
-Return-Path: <linux-nfs+bounces-14012-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14013-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDE1FB4270D
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 18:39:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC356B42745
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 18:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B86447ABDC6
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 16:38:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9D561BC2E13
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 16:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD9F2BE7B4;
-	Wed,  3 Sep 2025 16:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D012D47E5;
+	Wed,  3 Sep 2025 16:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="Pe1S+R/q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEVykv4P"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5540F29827E
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Sep 2025 16:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C15928EA56
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Sep 2025 16:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756917578; cv=none; b=T45YEfer44N8IWuphw6we8JImcylX+h2QKhhoTN+P8UXsk78TbRdqp6fHMlzTl7u9sG7KDWB3HlTcmU/YQyQI+EK59lpE0+kByclh/0QwI2MN+ea8AcE39Tb+upn+iqSt+uhkMG7ghpLs7kteXuFk2BBE+T+sI1B7qXNAqrKp/A=
+	t=1756918243; cv=none; b=RQ5yjoIMdpfYuvVxiMjiNwGl987gZB98N33kz82UtLfafMIfMlwYMJyLsTgal3LzawcjS8I9oAGwgZKULLXo94740xpag0E5AaXq6VIBeKVaZFCYlygQCb1sHPed5QtOOpj/8eEOxdvTSPCxLnQN+1QJReLxHP2qDVx2rP0eMrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756917578; c=relaxed/simple;
-	bh=bIAP1VNyzmZj7pIjVilrHBRdarIpGo7CoKzRu+3WgNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RfhA9iI1sf+2rMbI0ZdkYQY6gAsF0jbqJ8u/nVRM/2dClH/InxtsGKRyE2z4DFHefO4s7CJYA1Rxd+QinCwF4VY4UUoqRJXMMG98FAdlvdfLcEXcXJdOyt5SPuS8GiH8ZoWJotchzQRUi2g1PzsSRR5knw9V1CjEI00h/gg2Wmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=Pe1S+R/q; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-333f901b2d2so503911fa.2
-        for <linux-nfs@vger.kernel.org>; Wed, 03 Sep 2025 09:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1756917574; x=1757522374; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SoceAUNVNtJENaw7MXRirluImj5CElTHazOJW4wFJQs=;
-        b=Pe1S+R/qBu/DcFbA8aTvgm5+4TzPomSLW5ookmJ6MU5M3FMw2bukRtIITjMPI/vH2Q
-         4JP2O8mtM/fAU7mQJbEiW5GiYWkHV9FhjuI96wuIMPHYL3b+RpQEvIjHPR3RRVC7T2Ud
-         63VU//EyhDVp88yJKxWRLeAAzer7sl/8lpW1ZpZfukRSwIazoVADuHJg3Ty12TNXFq6M
-         gOeguA7x2d3bCGS1Lex6f6YF5JwVDy2mO1YkKrrKHAO7zQFQ3cma/+MucXa9Yw4Evbcb
-         Zky3fI/vlYxUyeMolfmpBaylkbizkGwHOVjWk9GfmnJTXBiC8f/KZCnNGuNiGUAUILZ6
-         Yl8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756917574; x=1757522374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SoceAUNVNtJENaw7MXRirluImj5CElTHazOJW4wFJQs=;
-        b=t06A71f7aqyoCkXYUdKpcoP2uKt91/EvtvDO8M0MfxLYuz2bF+S5loUfVW0DQp7gyo
-         0Gsp+W/jsryTbcBBwPccNQRdovpNtjJv8zPrG1QVJaGJQYIiH1HHISaUAAj8WSlI4KcU
-         fLSHtKmOHLwScWowx0sam8jYfyOLgqjWcGPfL4S1DJnjPBG9LLj+0D8HhX7Y6kWecSUi
-         CH2q/lmNNbCwNEcajKRcnryMf+DNfhpwNPg0iJKuLYcsxJt2lfxiFIMl+BWtAt8FKkLZ
-         dcgl+Ou8Tj7ekXtH7BzBh5wbo6EiuQlgQZ9W66RRk2q2TpxmkNpMeKAnfaMzJOQqCylh
-         1JSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzlh4DY0SG6BGThP6D+3DmV3pNJ2V1ARlE4qMFYYC3Wdn0HqAlId6ZxQ4cyO4yuRsTq3M+/gbIewo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHeZKRtd2fv8mfV+9cXswQZRqOOY/BYhwnU6E5bvy8rx0xJaiR
-	sfip55f0LLlGM65V4H6YS1ir5IF5hwxU4zJdiPs17r8woForgC4Tyep45U6sxAqldizHxyop6+r
-	tvHzTr2i49xIBpMrF5Vc2ZLNpR8vUFse1FA==
-X-Gm-Gg: ASbGnctj8BNp10yTd5NEzL+2VvbH5dEtB9vAB+EJSsvXjc6IveYR2wR5NAW3RQINoMh
-	yATQWTWiHiO02e1VPOEBlrNrp0Js3+y8nSwqGeUjJAK0HcJvDOwe4qVjmRjaSkxcFk2K6iINMzK
-	MLTAMwmCkwQZzG4Fnw70Fu1B8yreAZW31i0wM3F90OpzlO2rUBplARjsgzKNgsaFVIiap8rm643
-	0F/bv/lEVel62z3mG4O0OjkVqJ9dWTLJv3qD3dLK+Xi2RwajAh0
-X-Google-Smtp-Source: AGHT+IFgYYIP92d0stSKZZ+ddhbUhCuesniTZDgrqHi+gIVCPdWEPjmKJ1swlez5AI7YXsmi4FeUH8Msv4hZHqp3Kuw=
-X-Received: by 2002:a2e:a545:0:b0:336:b387:6fb0 with SMTP id
- 38308e7fff4ca-336cab18873mr40135751fa.30.1756917574035; Wed, 03 Sep 2025
- 09:39:34 -0700 (PDT)
+	s=arc-20240116; t=1756918243; c=relaxed/simple;
+	bh=/nsmOGsanQI7k2Q0QfUZGLSnf9MK/mDKyhlk6eSQDPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j5Nai7xB8XJTl+/8LlKYtNwoo6OZzi+Yet/i0X3pRnjvBAhoTyBSZ4KXlp8EwWfyzjYdV+rtoHEwU0cM/upApNwrZI7yzDOMscPglwtp4fZih1ltWlQcV3BxkoBYtYoMcJAjCV8nCiGQa8tMd7uj5Hm6xgR2kH0Ksy6RjuLQx80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEVykv4P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6709C4CEE7;
+	Wed,  3 Sep 2025 16:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756918242;
+	bh=/nsmOGsanQI7k2Q0QfUZGLSnf9MK/mDKyhlk6eSQDPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OEVykv4P00XVfaF/9tnzyXN6AiypeEe3RtuxdaCZYvInCAPV9cT17HcSEYm8VCG/M
+	 HJzXbGI54SwE5+vuU4KrDxtr0ayGRnTvCXxBJD66/oiHjbHBeP1AnKIDgfN4kNreSC
+	 2fgul4PDob1U0H5jOiO8U7nFkc5PX3qlaBfcVz2z9utg55LVKOkdlcR5ghZ3zJoi/w
+	 3qWWInod/KyGYSJ9P7tVwpmLQlQoYtZxFJN6ZUMDT/T+A9ZZ9R+wboKsG1voRgy98z
+	 tdvZ7QwkPC3IK5vHRF42U1ZzYEFVUpb1NDTC1mutuB6xhyulfw/Ph6YIiE+glvTLwK
+	 xUa42abSeO3cQ==
+Date: Wed, 3 Sep 2025 12:50:41 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v8 3/7] NFSD: add io_cache_read controls to debugfs
+ interface
+Message-ID: <aLhx4ZTOQqRetoH7@kernel.org>
+References: <20250826185718.5593-1-snitzer@kernel.org>
+ <20250826185718.5593-4-snitzer@kernel.org>
+ <1c69b5dd-ec65-438f-9b9c-af8013619afa@oracle.com>
+ <aLhZsfJMwsGu1eu3@kernel.org>
+ <aLhmnwNasNnZIew1@kernel.org>
+ <b514a3b1-ae0e-4803-81e3-ef2d1de18a6d@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <966f4d30-16f6-4a11-8d6c-1d6102781e71@gmail.com>
- <CAN-5tyGHKCt0KhTt2jKNdx77H3RcgY-xPKwkL4udvciR99=rrw@mail.gmail.com>
- <851ebd04-8f9c-4a17-aa55-654c021f07a5@gmail.com> <CACSpFtDcD7KHTPJjQUOAxyioBwWYhco-xxYD3wHCRohq9C5BQw@mail.gmail.com>
- <39155a1f-0ea8-4498-8601-7dcfc13d09fe@gmail.com>
-In-Reply-To: <39155a1f-0ea8-4498-8601-7dcfc13d09fe@gmail.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 3 Sep 2025 12:39:22 -0400
-X-Gm-Features: Ac12FXy3Y84YR0DtrH6iYPrl45cqjgcOuPeH_hMshWxYKhoIN0vwXuiaT9M6yas
-Message-ID: <CAN-5tyFVSMqgZ=2n+Y4t5oL=Ypz7gaZ=QFOHC_iTd1NU7qnbeg@mail.gmail.com>
-Subject: Re: [PATCH] xs_sock_recv_cmsg failing to call xs_sock_process_cmsg
-To: Justin Worrell <jworrell@gmail.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org, smayhew@redhat.com, 
-	trondmy@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b514a3b1-ae0e-4803-81e3-ef2d1de18a6d@oracle.com>
 
-On Tue, Sep 2, 2025 at 7:06=E2=80=AFPM Justin Worrell <jworrell@gmail.com> =
-wrote:
->
->
->
-> On 9/2/25 4:11 PM, Olga Kornievskaia wrote:
-> > On Tue, Sep 2, 2025 at 4:46=E2=80=AFPM Justin Worrell <jworrell@gmail.c=
-om> wrote:
-> >>
-> >>
-> >>
-> >> On 9/2/25 11:21 AM, Olga Kornievskaia wrote:
-> >>> On Tue, Sep 2, 2025 at 8:27=E2=80=AFAM Justin Worrell <jworrell@gmail=
-.com> wrote:
-> >>>>
-> >>>> xs_sock_recv_cmsg was failing to call xs_sock_process_cmsg for any c=
-msg
-> >>>> type other than TLS_RECORD_TYPE_ALERT (TLS_RECORD_TYPE_DATA, and oth=
-er
-> >>>> values not handled.) Based on my reading of the previous commit
-> >>>> (cc5d5908: sunrpc: fix client side handling of tls alerts), it looks
-> >>>> like only iov_iter_revert should be conditional on TLS_RECORD_TYPE_A=
-LERT
-> >>>> (but that other cmsg types should still call xs_sock_process_cmsg). =
-On
-> >>>> my machine, I was unable to connect (over mtls) to an NFS share host=
-ed
-> >>>> on FreeBSD. With this patch applied, I am able to mount the share ag=
-ain.
+On Wed, Sep 03, 2025 at 12:12:10PM -0400, Chuck Lever wrote:
+> On 9/3/25 12:02 PM, Mike Snitzer wrote:
+> > On Wed, Sep 03, 2025 at 11:07:29AM -0400, Mike Snitzer wrote:
+> >> On Wed, Sep 03, 2025 at 10:38:45AM -0400, Chuck Lever wrote:
+> > 
+> >>>> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> >>>> index 1cd0bed57bc2f..6ef799405145f 100644
+> >>>> --- a/fs/nfsd/nfsd.h
+> >>>> +++ b/fs/nfsd/nfsd.h
+> >>>> @@ -153,6 +153,15 @@ static inline void nfsd_debugfs_exit(void) {}
+> >>>>  
+> >>>>  extern bool nfsd_disable_splice_read __read_mostly;
+> >>>>  
+> >>>> +enum {
+> >>>> +	NFSD_IO_UNSPECIFIED = 0,
+> >>>> +	NFSD_IO_BUFFERED,
+> >>>> +	NFSD_IO_DONTCACHE,
+> >>>> +	NFSD_IO_DIRECT,
+> >>>> +};
+> >>>> +
+> >>>> +extern u64 nfsd_io_cache_read __read_mostly;
 > >>>
-> >>> Thanks for the catch Justin. Indeed, the client fails to return an
-> >>> error in case it receives anything other than TLS DATA or TLS ALERT.
-> >>> Could you tell what kind of TLS message the FreeBSD server is sending=
-?
-> >>> Either a network trace or turning on tls_contentype tracepoint should
-> >>> show what type the client has been receiving.
+> >>> And then here, initialize nfsd_io_cache_read to reflect the default
+> >>> behavior. That would be NFSD_IO_BUFFERED for now... then later we might
+> >>> want to change it to NFSD_IO_DIRECT, for instance.
+> >>>
+> >>> Same suggestion for 4/7.
 > >>
-> >> Hi Olga,
+> >> Ah ok, I can see the way forward to default to NFSD_IO_BUFFERED but
+> >> _not_ default to it when erroring (if the user specified some unknown
+> >> value).
 > >>
-> >> Unfortunately, I don't know much (anything, really) about Kernel
-> >> debugging or the SSL protocol. I do have root on both boxes and am hap=
-py
-> >> to provide whatever information would help with better understanding t=
-he
-> >> issue. Could you provide some guidance (even if just where to go to
-> >> rtfm) to fetch the requested info? I don't imagine just a tcpdump of t=
-he
-> >> ciphertext is sufficient. If providing this assistance is too spammy f=
-or
-> >> the list, it is okay to reach out off-list.
-> >
-> > Hi Justin,
-> >
-> > If you can do either of the 2 below that should capture the needed info=
-rmation.
-> >
-> > For tracepoints (the following is easiest for me, others might prefer
-> > usage of trace-cmd), as root, prior to executing the mount common
-> > which I believe was shows (demonstrates the problem),
-> > echo 1 > /sys/kernel/debug/tracing/events/handshake/tls_contenttype/ena=
-ble
-> > cat /sys/kernel/debug/tracing/trace_pipe (this can be redirected to a
-> > file if desired)
-> > do the mount with TLS
-> > ctrl-c the cat. Provide output of cat command. I hope that should show
-> > the types of control messages the client received.
-> >
-> > Tcpdump is useful if there is a corresponding TLS session key
-> > included. Tlshd (the user level daemon that handles the TLS handshake
-> > for the kernel NFS) will dump session key material to the location of
-> > the SSLKEYLOGFILE environmental variable. So easiest (for me), set an
-> > environment variable on the command line. SSLKEYLOGFILE=3Dssl.log, then
-> > on the same shell run manually /usr/sbin/tlshd -s (assuming you
-> > stopped the system's tlshd that was running before). Start tcpdump to
-> > capture a network trace. Do the mount. Stop the network trace. Provide
-> > ssl.log file and network trace (wireshark can decode TLS traffic
-> > provided that log file). If it's not appropriate stopping tlshd and
-> > running it by hand, then turning on tracepoints might be the way to
-> > go.
-> >
-> > Thank you for your help.
-> >
->
-> Hi Olga,
->
-> I'm not sure if attachments are allowed on this list, will be stripped,
-> or if this email will be rejected. Fingers crossed.
+> >> I'll run with that (despite just asking Jeff's opinion above, I'm the
+> >> one who came up with the awkward UNSPECIFIED state when honoring
+> >> Jeff's early feedback).
+> > 
+> > Here is the incremental diff (these changes will be folded into
+> > appropriate patches in v9):
+> > 
+> > diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> > index 8878c3519b30c..173032a04cdec 100644
+> > --- a/fs/nfsd/debugfs.c
+> > +++ b/fs/nfsd/debugfs.c
+> > @@ -43,11 +43,10 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%llu\n");
+> >   * /sys/kernel/debug/nfsd/io_cache_read
+> >   *
+> >   * Contents:
+> > - *   %1: NFS READ will use buffered IO
+> > - *   %2: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> > - *   %3: NFS READ will use direct IO
+> > + *   %0: NFS READ will use buffered IO
+> > + *   %1: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> > + *   %2: NFS READ will use direct IO
+> >   *
+> > - * The default value of this setting is zero (UNSPECIFIED).
+> >   * This setting takes immediate effect for all NFS versions,
+> >   * all exports, and in all NFSD net namespaces.
+> >   */
+> > @@ -90,11 +89,10 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_io_cache_read_fops, nfsd_io_cache_read_get,
+> >   * /sys/kernel/debug/nfsd/io_cache_write
+> >   *
+> >   * Contents:
+> > - *   %1: NFS WRITE will use buffered IO
+> > - *   %2: NFS WRITE will use dontcache (buffered IO w/ dropbehind)
+> > - *   %3: NFS WRITE will use direct IO
+> > + *   %0: NFS WRITE will use buffered IO
+> > + *   %1: NFS WRITE will use dontcache (buffered IO w/ dropbehind)
+> > + *   %2: NFS WRITE will use direct IO
+> >   *
+> > - * The default value of this setting is zero (UNSPECIFIED).
+> >   * This setting takes immediate effect for all NFS versions,
+> >   * all exports, and in all NFSD net namespaces.
+> >   */
+> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > index fe935b4cda538..412a1e9a2a876 100644
+> > --- a/fs/nfsd/nfsd.h
+> > +++ b/fs/nfsd/nfsd.h
+> > @@ -154,8 +154,7 @@ static inline void nfsd_debugfs_exit(void) {}
+> >  extern bool nfsd_disable_splice_read __read_mostly;
+> >  
+> >  enum {
+> > -	NFSD_IO_UNSPECIFIED = 0,
+> > -	NFSD_IO_BUFFERED,
+> > +	NFSD_IO_BUFFERED = 0,
+> 
+> Thanks, this LGTM. Two additional remarks:
+> 
+> 1. I think that the "= 0" is unneeded here because C enumerators always
+> start at 0.
 
-Thank you for all the info. It was very useful.
+It does, I flip-flopped on removing the "= 0" and left it (thinking
+was it'd help dissuade others from inserting new enum values at the
+beginning).  But rather than do that I can just add a comment.
+ 
+> 2. I'm wondering if this enum definition should be moved to a uapi
+> header. Thoughts? This is experimental, and not a fixed API. So maybe
+> it needs to stay in fs/nfsd/nfsd.h.
+> 
+> (I'm probably going over ground that has already been covered.)
 
-> The tracepoint option produces the following line (sometimes with .l...,
-> sometimes with .....) ~3400 times, which was unexpected to me:
-> kworker/u40:2-712     [007] .l...   203.225007: tls_contenttype:
-> src=3D192.168.124.204:896 dest=3D10.1.2.9:2049 HANDSHAKE
+Don't think this aspect was covered, yes my thinking was this is an
+experimental interface that wasn't appropriate to expose in a uapi
+header.
 
-This is indeed interesting and pointing that something is looping over
-'receiving' TLS HANDSHAKE type record past when handshake is done..
-Something isn't right with the code (still) possibly.
+> 
+> >  	NFSD_IO_DONTCACHE,
+> >  	NFSD_IO_DIRECT,
+> >  };
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index 5e700a0d6b12e..403076443573f 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -50,8 +50,8 @@
+> >  #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
+> >  
+> >  bool nfsd_disable_splice_read __read_mostly;
+> > -u64 nfsd_io_cache_read __read_mostly;
+> > -u64 nfsd_io_cache_write __read_mostly;
+> > +u64 nfsd_io_cache_read __read_mostly = NFSD_IO_BUFFERED;
+> > +u64 nfsd_io_cache_write __read_mostly = NFSD_IO_BUFFERED;
+> >  
+> >  /**
+> >   * nfserrno - Map Linux errnos to NFS errnos
+> > @@ -1272,8 +1272,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  		break;
+> >  	case NFSD_IO_DONTCACHE:
+> >  		kiocb.ki_flags = IOCB_DONTCACHE;
+> > -		fallthrough;
+> > -	case NFSD_IO_UNSPECIFIED:
+> > +		break;
+> >  	case NFSD_IO_BUFFERED:
+> >  		break;
+> >  	}
+> > @@ -1605,8 +1604,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >  		break;
+> >  	case NFSD_IO_DONTCACHE:
+> >  		kiocb.ki_flags |= IOCB_DONTCACHE;
+> > -		fallthrough;
+> > -	case NFSD_IO_UNSPECIFIED:
+> > +		fallthrough; /* must call nfsd_issue_write_buffered */
+> 
+> Right. In this case, the NFSD_IO_BUFFERED arm is more than just a
+> "break;" so, not as brittle as the nfsd_iter_read() switch statement.
+> The comment is helpful, though; I'm not suggesting a change, just
+> observing.
 
-> I have attached the output from cat'ing tracepoints as well as the
-> tcpdump pcap file and tlshd ssl.log.
->
-> All of this is from the VM where I have applied my patch (and the mount
-> works). I can provide output for a stock kernel (where the mount command
-> hangs) as well if required.
->
-> >>
-> >>>> ---
-> >>>> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> >>>> --- a/net/sunrpc/xprtsock.c     (revision
-> >>>> b320789d6883cc00ac78ce83bccbfe7ed58afcf0)
-> >>>> +++ b/net/sunrpc/xprtsock.c     (date 1756813457481)
-> >>>> @@ -407,9 +407,9 @@
-> >>>>           iov_iter_kvec(&msg.msg_iter, ITER_DEST, &alert_kvec, 1,
-> >>>>                         alert_kvec.iov_len);
-> >>>>           ret =3D sock_recvmsg(sock, &msg, flags);
-> >>>> -       if (ret > 0 &&
-> >>>> -           tls_get_record_type(sock->sk, &u.cmsg) =3D=3D TLS_RECORD=
-_TYPE_ALERT) {
-> >>>> -               iov_iter_revert(&msg.msg_iter, ret);
-> >>>> +       if (ret > 0) {
-> >>>> +               if (tls_get_record_type(sock->sk, &u.cmsg) =3D=3D TL=
-S_RECORD_TYPE_ALERT)
-> >>>> +                       iov_iter_revert(&msg.msg_iter, ret);
-> >>>>                   ret =3D xs_sock_process_cmsg(sock, &msg, msg_flags=
-, &u.cmsg,
-> >>>>                                              -EAGAIN);
-> >>>>           }
-> >>>>
-> >>
-> >
+Sure.
+
+Thanks,
+Mike
 
