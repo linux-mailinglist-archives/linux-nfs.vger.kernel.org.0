@@ -1,120 +1,127 @@
-Return-Path: <linux-nfs+bounces-14024-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14025-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E12AB42B56
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 22:51:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7AF6B42B65
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 22:54:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8476174D07
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 20:51:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 975DD3A1B94
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Sep 2025 20:54:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6DE2E92C5;
-	Wed,  3 Sep 2025 20:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1AB2E040D;
+	Wed,  3 Sep 2025 20:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4yXvwow"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Up6FqFuH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7CD2E0927
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Sep 2025 20:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E572292B44
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Sep 2025 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756932694; cv=none; b=NUeA5FAxb/6zXrIpPPTqBZttdie80Dni3oT7CSRmPnPSldo1uByrCK1GQOBuSM7Q4c1iLBMF2pRyp/9iURj0EHAS5dx3A5mmdsHL8Cy5G9/HS3wGnkpuknCYvA91MUbvl5TZzFTbwo4vNsvnmL5xOLgkPIxdjZPEjII5rwoFXdU=
+	t=1756932895; cv=none; b=rnfucwkOLYIkwc2OGamDAitVng/yaMPoH1ggQ4yhq1ULP2HKcOnRrtbBrzQAN6sCnwFXwuIqcCalxEwc7PuYEFKLFoOWpRrHen6RcGypaKAdFNQ0jqG2j/cf11CatNiAm60zLwExVPWS+pwrvxv4raJ6E2mrKfmNzFSIX6WSxI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756932694; c=relaxed/simple;
-	bh=SGERbahJAImAx+dav2H8ZhiXDkNAQAvTXs8dacIU9N4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WXTH0869pzJrmoBn38FnsjUrW8l2by7a0emhYTe3TVyb8p1UTNQmseCoGFKhJnGtAR+cio+/eneM2kdb/OOddXuQUadQDUfGeAv+jZSl8v8G/ZmpI5KydAr2+R3P1Ae/h+Z7vwhx4XfbUU2Gkgb0SVDJ9nf0fiPNRMDGho8DFcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4yXvwow; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F97C4CEE7;
-	Wed,  3 Sep 2025 20:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756932694;
-	bh=SGERbahJAImAx+dav2H8ZhiXDkNAQAvTXs8dacIU9N4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P4yXvwowdnex2TdGlcyW+YyEPP3OpelJZKv+nLn7ysAbm48UfqvNE6q70BRYaQuT+
-	 hJueIIVI/Hg6rwYth/bK1uM4yPMLnLT+QngnupkQju3RoQtIEDp04fBQ1wJDvc0d3V
-	 JP2/ljldq0O8AREMELBTOhknUKaVe368uHBLhgHpZxrKDulPQk2hZtlWkYCKIIOlOs
-	 jkYlqRzd87qcNp+2624yTNvJsip+MqcJWLfGs64te05KQT2MivunEoZWSzD4843w/t
-	 K5iLNAyTm1OgCoWu8ESfjlZtale9Xic/Ej+7x3hyiSsYz6tTdi4enEOj7zXvAzHP1Z
-	 8jIN9Rh0mtOsw==
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v9 9/9] NFSD: use /end/ of rq_pages for misaligned DIO READ's start_extra page
-Date: Wed,  3 Sep 2025 16:51:21 -0400
-Message-ID: <20250903205121.41380-10-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250903205121.41380-1-snitzer@kernel.org>
-References: <20250903205121.41380-1-snitzer@kernel.org>
+	s=arc-20240116; t=1756932895; c=relaxed/simple;
+	bh=6gdHjIdCeZuKoaFm8QoKpV2dKwe6wOCKeK3GVzKWpMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLHgSr4mr/Ud+Ujr8yQZ88j0IWo6vVc4FDk9vE0b9PJZ3hGzYsoLIZOSgH44oMhI3fPYh7Z8n61TCKN7K+GkEzZUZUKmK4hzA5HKfTPAmx9WhLQy8OmFBbmmIUT7Q8mjB6kTLHK0Si/k9Fn5UfYXixrgJJh5oXUQvFan1q/e3kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Up6FqFuH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756932892;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fiEAoKaeIVrjIZgukoqoXBxhf/xOXx2/1Q06rZBCRzA=;
+	b=Up6FqFuHqSW4ELtZLmvAfMkA5wKaN1cLqdO73VjctvcdOoLDqhz2osIROblkDN3m6QBJt0
+	QO3MTCzRxVN0jHYjEQ83VAdoqCbJWcTZjlBd8OKXgAa22SrVlXpWRRVs7VvnrcXMTgUmCb
+	qG/2Wctu6wsoaMYjFcFQ9RykVZ6HbXI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-AqFrnI52MvKYVBlTdSgJSA-1; Wed,
+ 03 Sep 2025 16:54:51 -0400
+X-MC-Unique: AqFrnI52MvKYVBlTdSgJSA-1
+X-Mimecast-MFC-AGG-ID: AqFrnI52MvKYVBlTdSgJSA_1756932890
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 107C11956089;
+	Wed,  3 Sep 2025 20:54:50 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.88.117])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B1BB0195608E;
+	Wed,  3 Sep 2025 20:54:49 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id D808642EBA7; Wed, 03 Sep 2025 16:54:47 -0400 (EDT)
+Date: Wed, 3 Sep 2025 16:54:47 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: Justin Worrell <jworrell@gmail.com>
+Cc: linux-nfs@vger.kernel.org, trondmy@hammerspace.com, okorniev@redhat.com
+Subject: Re: [PATCH] xs_sock_recv_cmsg failing to call xs_sock_process_cmsg
+Message-ID: <aLirFyirQpRRW3qr@aion>
+References: <966f4d30-16f6-4a11-8d6c-1d6102781e71@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <966f4d30-16f6-4a11-8d6c-1d6102781e71@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-This commit works around what seems like a flexfiles+rpcrdma bug, and
-Chuck Lever clarified that this shouldn't be needed:
+Hi Justin,
 
-    "Yes, the extra page needs to come from rq_pages. But I don't see
-    why it should come from the /end/ of rq_pages."
+On Tue, 02 Sep 2025, Justin Worrell wrote:
 
-However, when using NFSD DIRECT for READ and NFS 4.2 client with pNFS
-flexfiles (and client gets a layout to use a v3 DS) over RDMA it is
-easy to see data mismatch when NFSD handles a misaligned DIO READ. If
-the same misaligned DIO READ is issued directly to the v3 DS over RDMA
-(so flexfiles is _not_ used) then no data mismatch occurs.
+> xs_sock_recv_cmsg was failing to call xs_sock_process_cmsg for any cmsg type
+> other than TLS_RECORD_TYPE_ALERT (TLS_RECORD_TYPE_DATA, and other values not
+> handled.) Based on my reading of the previous commit (cc5d5908: sunrpc: fix
+> client side handling of tls alerts), it looks like only iov_iter_revert
+> should be conditional on TLS_RECORD_TYPE_ALERT (but that other cmsg types
+> should still call xs_sock_process_cmsg). On my machine, I was unable to
+> connect (over mtls) to an NFS share hosted on FreeBSD. With this patch
+> applied, I am able to mount the share again.
+> 
+> ---
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> --- a/net/sunrpc/xprtsock.c	(revision
+> b320789d6883cc00ac78ce83bccbfe7ed58afcf0)
+> +++ b/net/sunrpc/xprtsock.c	(date 1756813457481)
+> @@ -407,9 +407,9 @@
+>  	iov_iter_kvec(&msg.msg_iter, ITER_DEST, &alert_kvec, 1,
+>  		      alert_kvec.iov_len);
+>  	ret = sock_recvmsg(sock, &msg, flags);
+> -	if (ret > 0 &&
+> -	    tls_get_record_type(sock->sk, &u.cmsg) == TLS_RECORD_TYPE_ALERT) {
+> -		iov_iter_revert(&msg.msg_iter, ret);
+> +	if (ret > 0) {
+> +		if (tls_get_record_type(sock->sk, &u.cmsg) == TLS_RECORD_TYPE_ALERT)
+> +			iov_iter_revert(&msg.msg_iter, ret);
+>  		ret = xs_sock_process_cmsg(sock, &msg, msg_flags, &u.cmsg,
+>  					   -EAGAIN);
+>  	}
+> 
 
-Therefore, until this bug can be found, must use a 'start_extra' page
-from rq_pages that follows the NFS client requested READ payload (RDMA
-memory) if/when expanding the misaligned READ requires reading an
-extra partial page at the start of the READ so that its DIO-aligned.
+I set up a freebsd server and can reproduce the mount failure from a
+linux client (both with xprtsec=tls and xprtsec=mtls). 
 
-Otherwise if the 'start_extra' page is taken from the beginning of
-rq_pages the pNFS flexfiles client will see data mismatch corruption.
-As found, and then this fix of using the end of rq_pages verified,
-using the 'dt' utility:
-      dt of=/mnt/share1/dt_a.test passes=1 bs=47008 count=2 \
-         iotype=sequential pattern=iot onerr=abort oncerr=abort
-    see: https://github.com/RobinTMiller/dt.git
+Your changes look alright to me, but I can't actually apply your patch.
+How was the patch generated?  There's a line break in the middle of
+the from-file line (plus I've never seen the "revision" and "date" text
+in the from-file and to-file lines in the patch header before... but
+maybe I haven't paid enough attention).  Finally, every context line
+seems to have an extra space or two.
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfsd/vfs.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+If I make your changes manually, it fixes mounting with both xprtsec=tls
+and xprtsec=mtls.
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 5b3c6072b6f5c..e9ddeec3c9a32 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1263,7 +1263,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 			if (read_dio.start_extra) {
- 				len = read_dio.start_extra;
- 				bvec_set_page(&rqstp->rq_bvec[v],
--					      *(rqstp->rq_next_page++),
-+					      NULL, /* set below */
- 					      len, PAGE_SIZE - len);
- 				total -= len;
- 				++v;
-@@ -1288,6 +1288,11 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		base = 0;
- 	}
- 	WARN_ON_ONCE(v > rqstp->rq_maxpages);
-+	/* FIXME: having the start_extra page come from the end of
-+	 * rq_pages[] works around what seems to be a flexfiles+rpcrdma bug.
-+	 */
-+	if ((kiocb.ki_flags & IOCB_DIRECT) && read_dio.start_extra)
-+		rqstp->rq_bvec[0].bv_page = *(rqstp->rq_next_page++);
- 
- 	trace_nfsd_read_vector(rqstp, fhp, offset, in_count);
- 	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, in_count);
--- 
-2.44.0
+-Scott
 
 
