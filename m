@@ -1,181 +1,194 @@
-Return-Path: <linux-nfs+bounces-14038-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14037-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4CFCB440FF
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Sep 2025 17:49:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91607B440F5
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Sep 2025 17:48:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54D9117555E
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Sep 2025 15:49:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EDED7A8BC6
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Sep 2025 15:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2813C23A98E;
-	Thu,  4 Sep 2025 15:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAAFA21ADCB;
+	Thu,  4 Sep 2025 15:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btuAo3nA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0k9kCVu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD2B21ADCB;
-	Thu,  4 Sep 2025 15:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680B212574
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Sep 2025 15:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757000976; cv=none; b=doRT2UCnyg0gUQBGmcQbFpWtVmYQ/W2vlzIXmwQs6en0W9camj9zP0nXaPo8zA5JNzNec+ee/CtPf2IsrfYW3lsEUQoNGbBrVMDUjwCRVaEs5Z4dTzTEm6vISujcrN8OAPy6qx6KWghyKOXGoHL7bFw0Ff22mQ+MUS7O/Yr7StY=
+	t=1757000931; cv=none; b=C3vuCKNNTtz5SmG8Z2K4Gjloi+pBs7NTyXOTO+FRJcapnf4xv1xo63lZvFqJjyPkIYMnCZ6FqqhKJTM6QQbi0kKquNgAiIL8WSewJejXsG3ylexfiUolfRf4R1DAH/i2H1mVYZh5B/MnObQ6+BMaT9RJ8bHbwjs0qHVAFzD027Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757000976; c=relaxed/simple;
-	bh=MytMC1CKRzPQkIlpFn+db2F8wIniGQDwwNJdrVc5ieI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TLFByheagOZ59UzWnJkfGoDAsnjUS0jHfcUKh0XhrER2ky4r6PxPQuDBjCvD2z1E8wkdkPonzU+roPESkHN1M7+jghYP3dsS0Ynx99F+ef8oLU2djY0ADGt1zlaBgbXjTFyYoQw8O9uFewSKVleD0cRZH8gAPl5AVoCIom3gGHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=btuAo3nA; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5608bfae95eso1233224e87.1;
-        Thu, 04 Sep 2025 08:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757000972; x=1757605772; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hl32CMOyalPP84O10i7P9BktOBLROK3GUuKYU9rJEoY=;
-        b=btuAo3nAjDGtswbiVQUWc5SfjnW2FxFK5Ls7iuMwmxci7BXBSp9lBSiQbcktC8rBh9
-         rQb/HAPKI2O52O8OArIj/Tt9pIP5/oOEbGGHHi5AxjGauV8kxrAjOPLUUaVnCLNTCSTg
-         jSYs5GZ7OQqlDVjCZI4Z0z6rVx5mbf+ekwE9n7xnfN5BVk0OZNjhWGUnkzVFv9mVBP6l
-         axtMm4QFKPdhN4pUX8VSc3YtfybbWNLQ5JgVGxyMVd7ZcX9BS15HBOOurdv85jAKtE7z
-         bNE44qSdqA1JVWLGf6SCZIbrvtfyp7A0IpAKG4lTDk3YTuo+rih0dvDj18IU1y7J682H
-         /BVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757000972; x=1757605772;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hl32CMOyalPP84O10i7P9BktOBLROK3GUuKYU9rJEoY=;
-        b=RHKMpi0AFGjKkmL0CCLak2T2m21E76pPXXf3IwmPDosbXthoD5470Q3LJJhw5affZ6
-         36jhFEyXqPo2vhvz8VECeDmEd3blDUmf7/MnxJ+Sw56XR/dh82VWULVWyfs482CUxlBx
-         j+r5aT4ydaQa4xdBZFNzi0wzPefd8pGEKcCo/A1XutijL05+0Zkm9fsuD144bBjeuL61
-         +wvGD5CBuat30n8hqvXYicHEeN8z4rZszZM5ZnEY7caSjj7pVEkKYxFPO8pWdLTx3Grm
-         nnqRrqVOqMo1sndAOt9ElrRMZwnKcjXQ3bC8Sijm+XudJLWrPU+MtxI//9rU/DpgpiQ/
-         GhBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ0SKosgQpIpMlzJGK5KImByLBE9c2shX8lPwD65edsQUkaKFJwI/0RUjcXEr5P6p3cjxrqmJnrxXt1BQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8vpgvCKcUXc2c82Ppo2cdmvZQyY3S+sEGCetwONuWSpL6gplb
-	e7/9jH93320FEoOAbUBp6KWBiTZo8O8prgcYFRamfzTu37xlMoVWUfLT
-X-Gm-Gg: ASbGnctNyPpFARkCJKw5NI3e+4Ese1+rdQi6FK1MdgBzC4ePyePUqZmFSzPG2PVe4cK
-	ycS01Cksw8mjS7DVZFadBJAuMqwkPmOuIm5YhciSB3uZo/NFVjFrhneSd7RUeoqonualW3PfJ16
-	NkOJInjyEjaXDYBTvyUfzLwYGhL7ZpIMixP/XUQ6jUFFn2bdmebeSgpZHU4jNSJc6nLwUFsznwi
-	5b57kft4oswbAgmkArgjuiJwTNmkOatcqNGMNTAY5nSsP3YCcXjO6nr2MgSG8Tf/PEEkcM85y0H
-	qn7zJFzmwtRzp7S+uH+60qbYqn5wndC/U7Vao1MBD8QWSqJVOoERfzIR5/uViqIuVrZpXAsnwAB
-	VNZkETBs4FWlFRvciJLiMQbQWKGIuaS05jPn7DwIp99Td+xGNRbgfUT9E/jdYTg==
-X-Google-Smtp-Source: AGHT+IGwio7Qszgytr0z4tQ3qThIPgSJ7fl8kclW4JdrMbPzL5/4GJjPdTI36rNUHrCwqKb6AC5aPw==
-X-Received: by 2002:a05:6512:6410:b0:55f:6d38:cc9f with SMTP id 2adb3069b0e04-55f708b6b7cmr6449495e87.17.1757000971832;
-        Thu, 04 Sep 2025 08:49:31 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([88.218.65.129])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5608ace9fa6sm1248765e87.70.2025.09.04.08.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 08:49:31 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Bashirov <sergeybashirov@gmail.com>,
-	Konstantin Evtushenko <koevtushenko@yandex.com>
-Subject: [PATCH] NFSD: Allow layoutcommit during grace period
-Date: Thu,  4 Sep 2025 18:48:44 +0300
-Message-ID: <20250904154927.3278-1-sergeybashirov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1757000931; c=relaxed/simple;
+	bh=ENooL2OkVILF35RWwSSyWg+hNg39tYRWzgazZe2shsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lKNZVRZ3v3v3iOQtOo44U1Y1blthjJUXqvhRfo98dM5VyL1OKJCJ54nYi5r3cVh3/WnKYKQgFGEVoSj4tcyvM1RVq7wdX7tS+6S68cFjMPVkTmRJifi1czzjzt0xAcypmhG8jpl/rdgFAslxvmP9Pj47/Shz+PdXaWusg7+fFhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0k9kCVu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC84C4CEF0;
+	Thu,  4 Sep 2025 15:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757000931;
+	bh=ENooL2OkVILF35RWwSSyWg+hNg39tYRWzgazZe2shsw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d0k9kCVus8Y31wttXynaJ0Zjkvlr/EyuAybYRzOGs4bGZWNWHiGzaNMiAx2xKrX9/
+	 S++q4O2NVBzndYhkcqNyVvZzykAYgJtu7i4Lse4eW+Pu26Bqyy/yT+1Za1Y1Lyz8cS
+	 /A1g8sbVUmHbB1gOl7JFE/PJLav+Bsi56VHBmdg2+DHU9qNG6BHoO0l0r+cHtC/NAy
+	 n5oHKTiAJCSsrQ9W7JAyoMUIonl34OLp1s6pZ18G8Pq6XTCsI7yEPlua4vlEAtTaoo
+	 6LAmo+JTEifYAasEwvfY7AQ0qetwukW6SF8ZRHqjyH0JMKNswv+0GH2u3A61ICX/Gd
+	 mkTvqAN9I3jdA==
+Message-ID: <5a1f9a16-2373-4e30-b356-42e3af047126@kernel.org>
+Date: Thu, 4 Sep 2025 11:48:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1] svcrdma: Release transport resources synchronously
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20250903155335.1558-1-cel@kernel.org>
+ <CACSpFtB7CSkakYL5FZj_6L4dgj2ybBMVzgqX8kWhZrGBW0GT7Q@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <CACSpFtB7CSkakYL5FZj_6L4dgj2ybBMVzgqX8kWhZrGBW0GT7Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If the loca_reclaim field is set to TRUE, this indicates that the client
-is attempting to commit changes to a layout after the restart of the
-metadata server during the metadata server's recovery grace period. This
-type of request may be necessary when the client has uncommitted writes
-to provisionally allocated byte-ranges of a file that were sent to the
-storage devices before the restart of the metadata server. See RFC 8881,
-section 18.42.3.
+On 9/4/25 11:43 AM, Olga Kornievskaia wrote:
+> On Wed, Sep 3, 2025 at 11:53 AM Chuck Lever <cel@kernel.org> wrote:
+>>
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> NFSD has always supported added network listeners. The new netlink
+>> protocol now enables the removal of listeners.
+>>
+>> Olga noticed that if an RDMA listener is removed and immediately
+>> re-added, the deferred __svc_rdma_free() function might not have
+>> run yet, so some or all of the old listener's RDMA resources
+>> linger, which prevents a new listener on the same address from
+>> being created.
+> 
+> Does this mean that you prefer to go the way of rdma synchronous
+> release vs the patch I posted?
 
-Without this, the client is not able to increase the file size and commit
-preallocated extents when the block/scsi layout server is restarted
-during a write and is in a grace period. And when the grace period ends,
-the client also cannot perform layoutcommit because the old layout state
-becomes invalid, resulting in file corruption.
+We could do both. IMO we need to make "remove listener" work while
+there are still nfsd threads running, and this RFC patch does
+nothing about that.
 
-Co-developed-by: Konstantin Evtushenko <koevtushenko@yandex.com>
-Signed-off-by: Konstantin Evtushenko <koevtushenko@yandex.com>
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
----
- fs/nfsd/nfs4proc.c | 38 +++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+But as noted below, it looks like the svc_xprt_free() code path assumes
+that ->xpo_free releases all transport resources synchronously, and
+there can be consequences if that does not happen. That needs to be
+addressed somehow.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index d7c58aa64f06..f9d1548db000 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2521,6 +2521,7 @@ static __be32
- nfsd4_layoutcommit(struct svc_rqst *rqstp,
- 		struct nfsd4_compound_state *cstate, union nfsd4_op_u *u)
- {
-+	struct net *net = SVC_NET(rqstp);
- 	struct nfsd4_layoutcommit *lcp = &u->layoutcommit;
- 	const struct nfsd4_layout_seg *seg = &lcp->lc_seg;
- 	struct svc_fh *current_fh = &cstate->current_fh;
-@@ -2556,23 +2557,34 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
- 		}
- 	}
- 
--	nfserr = nfsd4_preprocess_layout_stateid(rqstp, cstate, &lcp->lc_sid,
--						false, lcp->lc_layout_type,
--						&ls);
--	if (nfserr) {
--		trace_nfsd_layout_commit_lookup_fail(&lcp->lc_sid);
--		/* fixup error code as per RFC5661 */
--		if (nfserr == nfserr_bad_stateid)
--			nfserr = nfserr_badlayout;
-+	nfserr = nfserr_grace;
-+	if (locks_in_grace(net) && !lcp->lc_reclaim)
-+		goto out;
-+	nfserr = nfserr_no_grace;
-+	if (!locks_in_grace(net) && lcp->lc_reclaim)
- 		goto out;
--	}
- 
--	/* LAYOUTCOMMIT does not require any serialization */
--	mutex_unlock(&ls->ls_mutex);
-+	if (!lcp->lc_reclaim) {
-+		nfserr = nfsd4_preprocess_layout_stateid(rqstp, cstate,
-+				&lcp->lc_sid, false, lcp->lc_layout_type, &ls);
-+		if (nfserr) {
-+			trace_nfsd_layout_commit_lookup_fail(&lcp->lc_sid);
-+			/* fixup error code as per RFC5661 */
-+			if (nfserr == nfserr_bad_stateid)
-+				nfserr = nfserr_badlayout;
-+			goto out;
-+		}
-+
-+		/* LAYOUTCOMMIT does not require any serialization */
-+		mutex_unlock(&ls->ls_mutex);
-+	}
- 
- 	nfserr = ops->proc_layoutcommit(inode, rqstp, lcp);
--	nfsd4_file_mark_deleg_written(ls->ls_stid.sc_file);
--	nfs4_put_stid(&ls->ls_stid);
-+
-+	if (!lcp->lc_reclaim) {
-+		nfsd4_file_mark_deleg_written(ls->ls_stid.sc_file);
-+		nfs4_put_stid(&ls->ls_stid);
-+	}
- out:
- 	return nfserr;
- }
+
+> I'm not against the approach as I have previously noted it as an
+> alternative which I tested and it also solves the problem. But I still
+> dont grasp the consequence of making svc_rdma_free() synchronous,
+> especially for active transports (not listening sockets).
+
+I've tested the synchronous approach a little, there didn't seem to
+be a problem with it. But I agree, the certainty level is not as
+high as it ought to be.
+
+
+>> Also, svc_xprt_free() does a module_put() just after calling
+>> ->xpo_free(). That means if there is deferred work going on, the
+>> module could be unloaded before that work is even started,
+>> resulting in a UAF.
+>>
+>> Neil asks:
+>>> What particular part of __svc_rdma_free() needs to run in order for a
+>>> subsequent registration to succeed?
+>>> Can that bit be run directory from svc_rdma_free() rather than be
+>>> delayed?
+>>> (I know almost nothing about rdma so forgive me if the answers to these
+>>> questions seems obvious)
+>>
+>> The reasons I can recall are:
+>>
+>>  - Some of the transport tear-down work can sleep
+>>  - Releasing a cm_id is tricky and can deadlock
+>>
+>> We might be able to mitigate the second issue with judicious
+>> application of transport reference counting.
+>>
+>> Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+>> Suggested-by: NeilBrown <neil@brown.name>
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>>  net/sunrpc/svc_xprt.c                    |  1 +
+>>  net/sunrpc/xprtrdma/svc_rdma_transport.c | 19 ++++++++-----------
+>>  2 files changed, 9 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>> index 8b1837228799..8526bfc3ab20 100644
+>> --- a/net/sunrpc/svc_xprt.c
+>> +++ b/net/sunrpc/svc_xprt.c
+>> @@ -168,6 +168,7 @@ static void svc_xprt_free(struct kref *kref)
+>>         struct svc_xprt *xprt =
+>>                 container_of(kref, struct svc_xprt, xpt_ref);
+>>         struct module *owner = xprt->xpt_class->xcl_owner;
+>> +
+>>         if (test_bit(XPT_CACHE_AUTH, &xprt->xpt_flags))
+>>                 svcauth_unix_info_release(xprt);
+>>         put_cred(xprt->xpt_cred);
+>> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+>> index 3d7f1413df02..b7b318ad25c4 100644
+>> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+>> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+>> @@ -591,12 +591,18 @@ static void svc_rdma_detach(struct svc_xprt *xprt)
+>>         rdma_disconnect(rdma->sc_cm_id);
+>>  }
+>>
+>> -static void __svc_rdma_free(struct work_struct *work)
+>> +/**
+>> + * svc_rdma_free - Release class-specific transport resources
+>> + * @xprt: Generic svc transport object
+>> + */
+>> +static void svc_rdma_free(struct svc_xprt *xprt)
+>>  {
+>>         struct svcxprt_rdma *rdma =
+>> -               container_of(work, struct svcxprt_rdma, sc_work);
+>> +               container_of(xprt, struct svcxprt_rdma, sc_xprt);
+>>         struct ib_device *device = rdma->sc_cm_id->device;
+>>
+>> +       might_sleep();
+>> +
+>>         /* This blocks until the Completion Queues are empty */
+>>         if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
+>>                 ib_drain_qp(rdma->sc_qp);
+>> @@ -629,15 +635,6 @@ static void __svc_rdma_free(struct work_struct *work)
+>>         kfree(rdma);
+>>  }
+>>
+>> -static void svc_rdma_free(struct svc_xprt *xprt)
+>> -{
+>> -       struct svcxprt_rdma *rdma =
+>> -               container_of(xprt, struct svcxprt_rdma, sc_xprt);
+>> -
+>> -       INIT_WORK(&rdma->sc_work, __svc_rdma_free);
+>> -       schedule_work(&rdma->sc_work);
+>> -}
+>> -
+>>  static int svc_rdma_has_wspace(struct svc_xprt *xprt)
+>>  {
+>>         struct svcxprt_rdma *rdma =
+>> --
+>> 2.50.0
+>>
+> 
+
+
 -- 
-2.43.0
-
+Chuck Lever
 
