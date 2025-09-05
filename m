@@ -1,54 +1,51 @@
-Return-Path: <linux-nfs+bounces-14087-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14088-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B74E7B463BD
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 21:35:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EAEAB463C0
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 21:36:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A3765C3A1D
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 19:35:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20B4D165DD5
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 19:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F91C28137D;
-	Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30226272E51;
+	Fri,  5 Sep 2025 19:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAwHASMD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSFGlnFE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDBD280CC8
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC05271468
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757100924; cv=none; b=atLG14Twsb19sMpJdkmeMy/c5NVGxeLKYunafcplkn9WSjgQYhlJRtAjBgC1xUNDJDCK5gnsdH3bh/zN9LuSmDLd31D87KH/8PQqnWENZ3hcq/4LTZ31suV2JlBQh5TKHd5QqYMvnSp0CCDeF7uXB2/ZYo9g46rT3fjkPmug0dw=
+	t=1757100978; cv=none; b=H/pbLznOCV46pwOgNtFWXxDqpPLhxtqLcu8A+uR+4WKGpJnNzoeStzpCfX7Y0qfVsEWX3z4CPvd+Bk4vT4Z5ki4uBJL9IAI9bx+B5EfWEYEBPV0csfEGGEwVyiwVqUIoG8IlA3yzvnTTH0f5B6xTI7aHBC0LM9wAlSb9XHgmkXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757100924; c=relaxed/simple;
-	bh=PK7UwfVVXeYl3TjSc6icWEgyv+pcG8uxPjXju/Q1w7o=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CeyzCiJAozc9yRHIbfuhUjyuqsLSqK0CWUX6V9fDlBOBWBFj/cboThZZYPRuiuhtpnV6Qi7Gm13u/gDATL43jJqljSRmLWfIShTTPHrCu63uzWq0qiPgbOd0/d7gGsxCUNPfxLQEv6nGHKVkyLCxAQLypldZpT2X/PeDWvn5Gko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAwHASMD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EC4C4CEF1
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
+	s=arc-20240116; t=1757100978; c=relaxed/simple;
+	bh=kU8dTtEzDljzx0AAdyexknRz7Tm2f8O8nKjlmqOWOF8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=PXXEVmEa/ucOISHk5wDJJVEOIuu3lHMydm+oCTxF4ZbLZ+zTCetveakjDtClVGwDjI4GGjWdw0LwRjKTI8a6nnlXmaKmGO2OJIdwQ1tJxDqmxePUAmSf955KAuEVx1kHIj+1Iqi2vg/z1uAhXUaK6WIvuRGifnOWELkUelOWk3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSFGlnFE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D89C4CEF1
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757100924;
-	bh=PK7UwfVVXeYl3TjSc6icWEgyv+pcG8uxPjXju/Q1w7o=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=lAwHASMDM2LPENU5Px0i06oCg2ZW5kpbGOZ9gM+3Wb3Pv56tTlTP24N9CG9qIusX8
-	 5S+vZfjvCkVZzQ50us8L+LG3s+Ph3PbwZTj4DYFgToBR2Xx20eT7y09pT5BRtjGYu2
-	 z0Mud17WBALu7gUKdzyNy9CScpU6l+Mng1UriruUxIiaZRsUyAUwpOVgwZwCdKGg35
-	 e5y7ia7aQT+2kvdgoDZhNAWskNESa0Wurz7GtN6R3HvVGva6QHG0iNc+nNaPgdaPwn
-	 7NOPXYeCzMPQXr8h0uaTtuoxl6jSYiEgm39z3KAiIXZMmKpp4iFWqBQyt2d7XX0aDd
-	 IBxfX1dJCvUSw==
+	s=k20201202; t=1757100977;
+	bh=kU8dTtEzDljzx0AAdyexknRz7Tm2f8O8nKjlmqOWOF8=;
+	h=From:To:Subject:Date:From;
+	b=FSFGlnFEyVl0X3owMZ8o0DK15pWhc4DEAgscyH8i2p0iD8emrAICR3CLr5ImDXF6+
+	 VhNBWKu9g2cQ0VhKpsies6Pjfja1nt5uPmsRnAWGgs1bkxmKVLWalc4464ZTD7cTuR
+	 FISSmbYe1z+T7m5XktgOXsxqDEywHWGfOYghHLnmq4RJojWe57V5K/hR0kiKDpuHiy
+	 Hdc7LmodoozEHolc+gXIyywg0WH2iRBesevDKKSotk5RuSxMIcZuURPw/OdfywOzZt
+	 5+bdSrZNSla+cI8gDV4vPh3y6dUFyZBRaxl2RDNud+vcLIY4j7rzwd5ACNLHCPYM8A
+	 1+y88blSK6U/Q==
 From: Trond Myklebust <trondmy@kernel.org>
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH 5/5] NFS: Fix the marking of the folio as up to date
-Date: Fri,  5 Sep 2025 15:35:20 -0400
-Message-ID: <9acf55d1551908b9bc19ec207b846af496290ef7.1757100278.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH] Revert "SUNRPC: Don't allow waiting for exiting tasks"
+Date: Fri,  5 Sep 2025 15:36:16 -0400
+Message-ID: <03d73fa2736e18d2a8697dad6654bec99ee94572.1757100947.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1757100278.git.trond.myklebust@hammerspace.com>
-References: <cover.1757100278.git.trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,84 +56,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Since all callers of nfs_page_group_covers_page() have already ensured
-that there is only one group member, all that is required is to check
-that the entire folio contains dirty data.
+This reverts commit 14e41b16e8cb677bb440dca2edba8b041646c742.
 
+This patch breaks the LTP acct02 test, so let's revert and look for a
+better solution.
+
+Reported-by: Mark Brown <broonie@kernel.org>
+Reported-by: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>
+Link: https://lore.kernel.org/linux-nfs/7d4d57b0-39a3-49f1-8ada-60364743e3b4@sirena.org.uk/
+Cc: stable@vger.kernel.org # 6.15.x
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/write.c | 52 +++++---------------------------------------------
- 1 file changed, 5 insertions(+), 47 deletions(-)
+ net/sunrpc/sched.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index e359fbcdc8a0..647c53d1418a 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -237,59 +237,17 @@ static void nfs_mapping_set_error(struct folio *folio, int error)
- }
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 73bc39281ef5..9b45fbdc90ca 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -276,8 +276,6 @@ EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
  
- /*
-- * nfs_page_group_search_locked
-- * @head - head request of page group
-- * @page_offset - offset into page
-+ * nfs_page_covers_folio
-+ * @req: struct nfs_page
-  *
-- * Search page group with head @head to find a request that contains the
-- * page offset @page_offset.
-- *
-- * Returns a pointer to the first matching nfs request, or NULL if no
-- * match is found.
-- *
-- * Must be called with the page group lock held
-- */
--static struct nfs_page *
--nfs_page_group_search_locked(struct nfs_page *head, unsigned int page_offset)
--{
--	struct nfs_page *req;
--
--	req = head;
--	do {
--		if (page_offset >= req->wb_pgbase &&
--		    page_offset < (req->wb_pgbase + req->wb_bytes))
--			return req;
--
--		req = req->wb_this_page;
--	} while (req != head);
--
--	return NULL;
--}
--
--/*
-- * nfs_page_group_covers_page
-- * @head - head request of page group
-- *
-- * Return true if the page group with head @head covers the whole page,
-- * returns false otherwise
-+ * Return true if the request covers the whole folio.
-+ * Note that the caller should ensure all subrequests have been joined
-  */
- static bool nfs_page_group_covers_page(struct nfs_page *req)
+ static int rpc_wait_bit_killable(struct wait_bit_key *key, int mode)
  {
- 	unsigned int len = nfs_folio_length(nfs_page_to_folio(req));
--	struct nfs_page *tmp;
--	unsigned int pos = 0;
--
--	nfs_page_group_lock(req);
- 
--	for (;;) {
--		tmp = nfs_page_group_search_locked(req->wb_head, pos);
--		if (!tmp)
--			break;
--		pos = tmp->wb_pgbase + tmp->wb_bytes;
--	}
--
--	nfs_page_group_unlock(req);
--	return pos >= len;
-+	return req->wb_pgbase == 0 && req->wb_bytes == len;
- }
- 
- /* We can set the PG_uptodate flag if we see that a write request
+-	if (unlikely(current->flags & PF_EXITING))
+-		return -EINTR;
+ 	schedule();
+ 	if (signal_pending_state(mode, current))
+ 		return -ERESTARTSYS;
 -- 
 2.51.0
 
