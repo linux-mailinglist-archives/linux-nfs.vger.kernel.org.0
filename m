@@ -1,159 +1,114 @@
-Return-Path: <linux-nfs+bounces-14062-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14063-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2CEEB44DDF
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 08:19:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 323EEB456DB
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 13:50:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97DBB5A0575
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 06:19:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E29523BC54A
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 11:50:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E00238C10;
-	Fri,  5 Sep 2025 06:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1321D6DA9;
+	Fri,  5 Sep 2025 11:50:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
+Received: from cirse-smtp-out.extra.cea.fr (cirse-smtp-out.extra.cea.fr [132.167.192.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4052AD2F;
-	Fri,  5 Sep 2025 06:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7004C32275E
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 11:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=132.167.192.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757053173; cv=none; b=FHRJiEng2ZI4ncvHsZwYz2Wo/iHDxWAXRTt7kBTkTehlr1YXphG+TFo1QILGV85vWpDl0gXmjSu7kgKbKxISUef8mq4/jIfTKPEoy7kJlTP9AyZYashgl3/q6yepTho/5YTy+GOlJp6EVcVc0v44XXsE8TV9rub68tEIxCx2Whk=
+	t=1757073049; cv=none; b=jfilB7POs/XCs7Wa04FZdX6j5I+gPZCFqK9EGJDEdpGNO7AK3JAx1mMhe4GtJ3TujGMhRuTRIo+iXZgJABWGE21vKfl3uB1nXGquM2eIy0/0ECB6o2c6Pp4nGwFE8di15MfAXjZOzJ40rpP4Xs38aFbdzSirpklj6dZAv+oBawU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757053173; c=relaxed/simple;
-	bh=NhlN6InMMn588qcAitktClqWH4WsbE2cjvjyyXVGWpU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Lq/TVbymN3ZSHQXPvt/+v1kjREH8VTdFIlZDqs+ufiTPrKgOsesti15Atj8XGdHDJ+g3WPBT/nWmc0RFIjT7/0UTEN0NBhjyatyS8o2XBiBnHddQvkWi6qSl2z9h6CkAEP1Z680VXXjvi3GWgQ2GW5D8inO+lsqpr8XHnAbKREk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
-Received: from localhost (128-116-240-228.dyn.eolo.it [128.116.240.228])
-	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id cf8a8994 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Fri, 5 Sep 2025 07:52:41 +0200 (CEST)
+	s=arc-20240116; t=1757073049; c=relaxed/simple;
+	bh=Gu6fBoko4TI5xEnz9JaxBrLASebYj3HgzPu83iBG40Q=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=kL9SPuODM5lcLjxjTaTcwcK4J13Xo1bHkCHD/spxo8S7G1tPMiao9ojV1iy4gKNAhN/eUTQ3FSVmzQXWSeRc8HEKpXcUuNObmP/Q76v5ZegHKuH3Q42a8BWdL3Qf00SAll6k28n7dyiOmwgyKIm3J9VOrRj0pZCZhUM+KXjj3v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cea.fr; spf=pass smtp.mailfrom=cea.fr; arc=none smtp.client-ip=132.167.192.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cea.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cea.fr
+Received: from e-emp-b0.extra.cea.fr (e-emp-b0.extra.cea.fr [132.167.198.36])
+	by cirse-sys.extra.cea.fr (8.14.7/8.14.7/CEAnet-Internet-out-4.0) with ESMTP id 585BiYfq018963
+	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
+Received: from pps.filterd (e-emp-b0.extra.cea.fr [127.0.0.1])
+	by e-emp-b0.extra.cea.fr (8.18.1.2/8.18.1.2) with ESMTP id 5858YPQa014412
+	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
+Received: from muguet1-smtp-out.intra.cea.fr (muguet1-smtp-out.intra.cea.fr [132.166.192.12])
+	by e-emp-b0.extra.cea.fr (PPS) with ESMTP id 48yc2gvxp7-1
+	for <linux-nfs@vger.kernel.org>; Fri, 05 Sep 2025 13:44:34 +0200 (MEST)
+Received: from I-EXCH-A0.intra.cea.fr (i-exch-a0.intra.cea.fr [132.166.88.224])
+	by muguet1-sys.intra.cea.fr (8.14.7/8.14.7/CEAnet-Internet-out-4.0) with ESMTP id 585BiY0m024323
+	(version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
+Received: from I-EXCH-B5.intra.cea.fr (132.166.88.239) by
+ I-EXCH-A0.intra.cea.fr (132.166.88.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 5 Sep 2025 13:44:33 +0200
+Received: from I-EXCH-B5.intra.cea.fr ([132.166.88.239]) by
+ I-EXCH-B5.intra.cea.fr ([132.166.88.239]) with mapi id 15.01.2507.044; Fri, 5
+ Sep 2025 13:44:33 +0200
+From: BURLOT Alan <Alan.BURLOT@cea.fr>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: nfs4_getfacl error code when directory is not managed by nfs4 acl
+Thread-Topic: nfs4_getfacl error code when directory is not managed by nfs4
+ acl
+Thread-Index: AQHcHlpyV8sTbwU1zUSfDmUeeLyfxQ==
+Date: Fri, 5 Sep 2025 11:44:33 +0000
+Message-ID: <9b184eb27d7a817a5744c281d00bf61126fb3f05.camel@cea.fr>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-as-product-ver: SMEX-14.0.0.3239-9.1.2019-28344.000
+x-tm-as-result: No-10--7.588300-8.000000
+x-tmase-matchedrid: 53GNlzVSQfQtC1eAkW8MEi0rAbu/h0p4zWee1Tq8TTScU9LnAKOkdsvl
+	XMsLszNRV/PvpAMTDp+I47i1GQb7nRj1uEat0f0Xhi2C7dlNKWo6Cu19Vtgyg1neta0u1SLmKWT
+	y9F4rvtarIlKVCUxgvN5pHhRZTbY0swRgP3pwMhKgv0YmK8fzs1hyKam0/n7NMLjTaDguNi8cRW
+	BUt01WAdD6xLvX4M4IufbuusDOL+I0zI7+eiZZ8AeaHjl8u7Jkdi8q9VnfX1WZKY7DwlCIgt6Kv
+	NQiJN/3MnVa/9k0lMA=
+x-tm-as-user-approved-sender: Yes
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--7.588300-8.000000
+x-tmase-version: SMEX-14.0.0.3239-9.1.2019-28344.000
+x-tm-snts-smtp: 1C68E7363D33B61E42E6ADEFB8D1DF1538F14BCB819FC178C255D24F76AF45A02000:8
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FC4E8AD19102A947BFD50DFF248E4612@cea.fr>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 05 Sep 2025 07:52:41 +0200
-Message-Id: <DCKMSNY3N59V.3KQCDWA1VJQNQ@bsdbackstore.eu>
-Cc: <kbusch@kernel.org>, <axboe@kernel.dk>, <hch@lst.de>,
- <sagi@grimberg.me>, <kch@nvidia.com>, "Alistair Francis"
- <alistair.francis@wdc.com>
-Subject: Re: [PATCH v2 7/7] nvmet-tcp: Support KeyUpdate
-From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-To: <alistair23@gmail.com>, <chuck.lever@oracle.com>, <hare@kernel.org>,
- <kernel-tls-handshake@lists.linux.dev>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-nvme@lists.infradead.org>, <linux-nfs@vger.kernel.org>
-X-Mailer: aerc
-References: <20250905024659.811386-1-alistair.francis@wdc.com>
- <20250905024659.811386-8-alistair.francis@wdc.com>
-In-Reply-To: <20250905024659.811386-8-alistair.francis@wdc.com>
+MIME-Version: 1.0
+X-Proofpoint-GUID: y-macjVSluwgM-b7wAgRZjSsC_oAaEDf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA1MDExNSBTYWx0ZWRfX057jXwNk6Ig1 wtMm2BhdImT+j2z35V4SsMsIjVMAJRaRr8hKahFwg5qgGr6t6IOugWMPjaOSQtUdIsSsRelaH8u yiSIrYHBK2uiOpwwYcx3Orb4pEuHhcg2rxaoIpTnSBNeazzRznVDOjFAItV8iIYykv44RkC5xFR
+ 5RAV51BvxDnIco/7tuxjLj42XpfsR/XlJxt/x/0Pr4SdyJLzPv40pYf6qjziI7PshNXA+7MHoMU MV4eFkrElO2PhE3++nDW3ak1+SEZ6GiCF+sFzR0MrVTDpLniM7b79qSbh7z8M6CpUVB6DdHwD4h 7HAKiYKPPMmUFjuZGBNeFyAoeev7DIu+HqW5QzF9kPiAED3qDI9eNYpQE/XH2+fjP9Jw20kbdzd qLX2wiXp
+X-Proofpoint-ORIG-GUID: y-macjVSluwgM-b7wAgRZjSsC_oAaEDf
 
-On Fri Sep 5, 2025 at 4:46 AM CEST, alistair23 wrote:
-> From: Alistair Francis <alistair.francis@wdc.com>
->
-> If the nvmet_tcp_try_recv() function return EKEYEXPIRED or if we receive
-> a KeyUpdate handshake type then the underlying TLS keys need to be
-> updated.
->
-> If the NVMe Host (TLS client) initiates a KeyUpdate this patch will
-> allow the NVMe layer to process the KeyUpdate request and forward the
-> request to userspace. Userspace must then update the key to keep the
-> connection alive.
->
-> This patch allows us to handle the NVMe host sending a KeyUpdate
-> request without aborting the connection. At this time we don't support
-> initiating a KeyUpdate.
->
-> Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> v2:
->  - Use a helper function for KeyUpdates
->  - Ensure keep alive timer is stopped
->  - Wait for TLS KeyUpdate to complete
->
->  drivers/nvme/target/tcp.c | 90 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 84 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-> index bee0355195f5..dd09940e9635 100644
-> --- a/drivers/nvme/target/tcp.c
-> +++ b/drivers/nvme/target/tcp.c
-> @@ -175,6 +175,7 @@ struct nvmet_tcp_queue {
-> =20
->  	/* TLS state */
->  	key_serial_t		tls_pskid;
-> +	key_serial_t		user_session_id;
->  	struct delayed_work	tls_handshake_tmo_work;
-> =20
->  	unsigned long           poll_end;
-> @@ -186,6 +187,8 @@ struct nvmet_tcp_queue {
->  	struct sockaddr_storage	sockaddr_peer;
->  	struct work_struct	release_work;
-> =20
-> +	struct completion       tls_complete;
-> +
->  	int			idx;
->  	struct list_head	queue_list;
-> =20
-> @@ -836,6 +839,11 @@ static int nvmet_tcp_try_send_one(struct nvmet_tcp_q=
-ueue *queue,
->  	return 1;
->  }
-> =20
-> +#ifdef CONFIG_NVME_TARGET_TCP_TLS
-> +static int nvmet_tcp_try_peek_pdu(struct nvmet_tcp_queue *queue);
-> +static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w);
-> +#endif
-> +
->  static int nvmet_tcp_try_send(struct nvmet_tcp_queue *queue,
->  		int budget, int *sends)
->  {
-> @@ -844,6 +852,13 @@ static int nvmet_tcp_try_send(struct nvmet_tcp_queue=
- *queue,
->  	for (i =3D 0; i < budget; i++) {
->  		ret =3D nvmet_tcp_try_send_one(queue, i =3D=3D budget - 1);
->  		if (unlikely(ret < 0)) {
-> +#ifdef CONFIG_NVME_TARGET_TCP_TLS
-> +			if (ret =3D=3D -EKEYEXPIRED &&
-> +				queue->state !=3D NVMET_TCP_Q_DISCONNECTING &&
-> +				queue->state !=3D NVMET_TCP_Q_TLS_HANDSHAKE) {
-> +					goto done;
-> +			}
-> +#endif
->  			nvmet_tcp_socket_error(queue, ret);
->  			goto done;
->  		} else if (ret =3D=3D 0) {
-> @@ -1110,11 +1125,52 @@ static inline bool nvmet_tcp_pdu_valid(u8 type)
->  	return false;
->  }
-> =20
-> +#ifdef CONFIG_NVME_TARGET_TCP_TLS
-> +static int update_tls_keys(struct nvmet_tcp_queue *queue)
-> +{
-> +	int ret;
-> +
-> +	cancel_work(&queue->io_work);
-> +	handshake_req_cancel(queue->sock->sk);
-> +	handshake_sk_destruct_req(queue->sock->sk);
-> +	queue->state =3D NVMET_TCP_Q_TLS_HANDSHAKE;
-> +
-> +	/* Restore the default callbacks before starting upcall */
-> +	read_lock_bh(&queue->sock->sk->sk_callback_lock);
-> +	queue->sock->sk->sk_data_ready =3D  queue->data_ready;
-> +	queue->sock->sk->sk_state_change =3D queue->state_change;
-> +	queue->sock->sk->sk_write_space =3D queue->write_space;
-> +	queue->sock->sk->sk_user_data =3D NULL;
-
-Shouldn't "sk_user_data =3D NULL" be protected by a write lock?
-
-Maurizio
+SGVsbG8sDQoNCkkgYW0gdHJ5aW5nIHRvIGFkZCBhIHNtYWxsIHRlc3QgaW4gYSBzY3JpcHQgdG8g
+Y2hlY2sgaWYgYSBkaXJlY3RvcnkgaXMNCm1hbmFnZWQgYnkgbmZzNF9zZXRmYWNsIG9yIG5vdC4g
+VGhlIHN5c3RlbSBJIHdvcmsgd2l0aCB1c2Ugc29tZXRpbWVzDQpuZnM0X3NldGZhY2wgYW5kIHNv
+bWV0aW1lcyBzZXRmYWNsLiBJIHdhbnRlZCB0byB0cnkgYSBxdWlldA0KYG5mczRfZ2V0ZmFjbCAu
+YCB0byBjaGVjayBpdC4gQnV0IHdoZW4gSSBkbyANCiAgICA+IGlmIG5mczRfZ2V0ZmFjbCAuID4v
+ZGV2L251bGwgMj4mMTsgdGhlbiBlY2hvICJ5ZXAgbmZzNCI7IGVsc2UNCmVjaG8gIm5vIjsgZmkN
+Cg0KSSBvYnRhaW4NCiAgICB5ZXAgbmZzNA0KDQpXaXRob3V0IHRoZSAyPiYxLCBJIGhhdmUNCiAg
+ICA+IGlmIG5mczRfZ2V0ZmFjbCAuID4vZGV2L251bGw7IHRoZW4gZWNobyAieWVwIG5mczQiOyBl
+bHNlIGVjaG8NCiJubyI7IGZpDQogICAgT3BlcmF0aW9uIHRvIHJlcXVlc3QgYXR0cmlidXRlIG5v
+dCBzdXBwb3J0ZWQ6IC4NCiAgICB5ZXAgbmZzNA0KDQpXaGVuIEkgdHJ5IHRvIGdyZXAgaXQsIGl0
+IGRvZXMgbm90IHdvcmsNCiAgICA+IG5mczRfZ2V0ZmFjbCAuID4vZGV2L251bGwgfCBncmVwIC1x
+ICJub3Qgc3VwcG9ydGVkIg0KICAgIE9wZXJhdGlvbiB0byByZXF1ZXN0IGF0dHJpYnV0ZSBub3Qg
+c3VwcG9ydGVkOiAuDQoNClRoZSByZXR1cm4gY29kZSBpcyBhbHdheXMgemVybw0KICAgID4gbmZz
+NF9nZXRmYWNsIC4gOyBlY2hvICQ/DQogICAgT3BlcmF0aW9uIHRvIHJlcXVlc3QgYXR0cmlidXRl
+IG5vdCBzdXBwb3J0ZWQ6IC4NCiAgICAwDQoNCkkgd2FudCBpdCB0byBiZSBxdWlldCB0byBhdm9p
+ZCBzaG93aW5nIHNvbWV0aGluZyBpbiB0aGUgdGVybWluYWwuIEkgYW0NCmRvaW5nIGEgc2NyaXB0
+IHRvIGVhc2lseSBzZXQgQUNMcyBmb3Igbm9uZSBiYXNoIHBvd2VyIHVzZXIgYW5kIEkgZG8gbm90
+DQp3YW50IHRvIHNjYXJlIHRoZW0gd2l0aCBlcnJvciBtZXNzYWdlLg0KDQpBbSBJIG1pc3Npbmcg
+c29tZXRoaW5nIGFib3V0IHRoZSByZXR1cm4gY29kZT8gV291bGQgaXQgYmUgcG9zc2libGUgdG8N
+CmFkZCBhIC0tdGVzdCBvciAtLWNoZWNrIG9wdGlvbiB0byB0ZXN0IGlmIG5mczQtYWNsIGFyZSBh
+Y3R1YWxseSB1c2VkIGluDQp0aGUgZGlyZWN0b3J5Pw0KDQpJIGNhbiBkbyB0ZXN0IGlmIHlvdSB3
+YW50LiBEbyB5b3Uga25vdyB3aGljaCByZXBvIGhhcyB0aGUgbGF0ZXN0IHNvdXJjZQ0KY29kZSBp
+ZiBJIHdhbnQgdG8gdHJ5IHNvbWV0aGluZyBteXNlbGY/DQoNCkJlc3QgcmVnYXJkcywNCkFsYW4N
+Ci0tIA0KQWxhbiBCdXJsb3QsIFBoRA0KQ0VBIFBhcmlzLVNhY2xheQ0KL0NFQS9ERVMvSVNBUy9E
+TTJTL1NUTUYvTERFTA0K
 
