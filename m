@@ -1,64 +1,63 @@
-Return-Path: <linux-nfs+bounces-14073-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14074-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3A77B45A65
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 16:27:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D827DB45A75
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 16:28:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BED557C15A5
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 14:27:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96F89583B60
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 14:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0C0636CE14;
-	Fri,  5 Sep 2025 14:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982EB36CE1B;
+	Fri,  5 Sep 2025 14:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKCmQXYV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvDyeDpZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF9A36CE0B;
-	Fri,  5 Sep 2025 14:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C8E36CDE5;
+	Fri,  5 Sep 2025 14:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757082413; cv=none; b=lZdqJIXIRH2Ooxyl1Y2okeVm+xlPPJF/gYjTIuVhPyzFqEjhPIa9e4mlzy+sLC91ncF3qO+GdFQF2lgfnqJmRFVVkov0IPAY8TozW+bg3ouKFSgKy8qecsg+AvTwTsnBoPx5D7FCGePVLhpryh0veZaOCQFmG/i0u7YLi9Rnkvs=
+	t=1757082452; cv=none; b=VUef1eQKuv4JKU/kwg1jhtsXQRzM0vusfKFZbYhk/642wSZD8HRQOsf6VAS4KHBy5yEaucptjD6zbTgZgg9zZpMVqsU7vUZte1flFx3/N1b68x9KujKoUO4rtSNCEMTD8KqP3fGUE7Rm4eRb/cGekAda6eVJEgENTN5J/YM2nxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757082413; c=relaxed/simple;
-	bh=LV0JBUG2SwgOJZFlcn56mSQ+ApkXiLxAyOWpCxVcuxo=;
+	s=arc-20240116; t=1757082452; c=relaxed/simple;
+	bh=oXt0M68MsYn7KCvHrkIrG8J8CrRu4xOlhmFDU6mb7pg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WPkh4O8+9dxyBR26aQfiRnJtCcVU3dRW9t/MterDODPgOJeifeKVkUP/hl+o93sfmGUYoViiiP5klb29hIYtz07j8zDWi5AblEV7GiEv6QncYHlRSX5n+obnzCbnnzKYevvi0aZ2RLHg3/bmkMpLM5ie2SkPezza+XhECjg+b3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKCmQXYV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F61C4CEF1;
-	Fri,  5 Sep 2025 14:26:52 +0000 (UTC)
+	 MIME-Version:Content-Type; b=kkLOJdFTiDkYlFIcT4fiwy+3Jc7DTykPtidMVaqfZl5miAl+hp975un4LmUcnonq9nBhzIdp9wQkiQ1d46p/Lx+SQ9SaGdyC2L+AFgrcsvDwluSYP3QpP3lS/F+c3gtlKgvQ+mT89nN7a0v6fCmhFTXJT4AaXbVXuL16ugIJqus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvDyeDpZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461ABC4CEF1;
+	Fri,  5 Sep 2025 14:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757082412;
-	bh=LV0JBUG2SwgOJZFlcn56mSQ+ApkXiLxAyOWpCxVcuxo=;
+	s=k20201202; t=1757082452;
+	bh=oXt0M68MsYn7KCvHrkIrG8J8CrRu4xOlhmFDU6mb7pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cKCmQXYVQ4epAASaItp7eI7RtUBWzQTJfFME6Ib9VIZwF5cBdWRtEVBXbxlaug3g7
-	 qRcP4WU7Sv4zq4nFXZLUd5WbFSvKvjBT0a1U2wY/dTX3Zz1PmRkhu/AalFf3JIDssg
-	 8Qo5A3jVWCgOnKAr1H1yQ2P4qooroBy5uW5UVDvKZ5vdwP8LsXAadWny/Zn5+EzoI7
-	 EzIW9lKREY2NSsGCMMIM2geZA7jFpVLAIx0LLdY5UaWVKKCqwcgClXG4PpPf3dLyTE
-	 BeeMnR1qPap8s/g/qGu6GbXYKA6eDz/C+SVmlofo/zsLTTOANcBVqe6DbNpLaybyDw
-	 WjSmbC/XbfYwA==
+	b=mvDyeDpZEYWgmyB1PlfnXK0h8h2bpepfTcwrXkq+fU0jh4UggSPu5p1AR9qsjCW5U
+	 f8LLH5rqGqNo5d0NiIme/nLvLZX8yzv4iPfVjIT6RXo21RtK1CVdRmeuwEkQZ57PuA
+	 fkOqHsQucjcmhx3KQAjWb6vFqDd+Zrk0l4Mm5myBfPnLkRXGI6LqWM9z96Fo+YfnAv
+	 ZVucA0o49zzBz7CV1pPaGARjP7nidr43F1KuJgsh84ACC3MDiOYs9tKbaGHoOkwUED
+	 XQKI3N9TKOyjM4+9iSsMSP1hXHRyqwOTN/tW+91ZD8Cyp8g/xCAhzchY4BB7O70pOJ
+	 f8x35tTcatVGw==
 From: Chuck Lever <cel@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
+To: Jeff Layton <jlayton@kernel.org>,
 	NeilBrown <neil@brown.name>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] nfsd: delete unnecessary NULL check in __fh_verify()
-Date: Fri,  5 Sep 2025 10:26:49 -0400
-Message-ID: <175708239501.6078.12054846313340172657.b4-ty@oracle.com>
+	Konstantin Evtushenko <koevtushenko@yandex.com>
+Subject: Re: [PATCH] NFSD: Disallow layoutget during grace period
+Date: Fri,  5 Sep 2025 10:27:28 -0400
+Message-ID: <175708243820.6199.8033490028281613257.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.50.0
-In-Reply-To: <aLnhkm7q1Di0IiIu@stanley.mountain>
-References: <aLnhkm7q1Di0IiIu@stanley.mountain>
+In-Reply-To: <20250825131122.98410-1-sergeybashirov@gmail.com>
+References: <20250825131122.98410-1-sergeybashirov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,17 +69,22 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Thu, 04 Sep 2025 21:59:30 +0300, Dan Carpenter wrote:
-> In commit 4a0de50a44bb ("nfsd: decouple the xprtsec policy check from
-> check_nfsd_access()") we added a NULL check on "rqstp" to earlier in
-> the function.  This check is no longer required so delete it.
+On Mon, 25 Aug 2025 16:11:02 +0300, Sergey Bashirov wrote:
+> When the server is recovering from a reboot and is in a grace period,
+> any operation that may result in deletion or reallocation of block
+> extents should not be allowed. See RFC 8881, section 18.43.3.
 > 
+> If multiple clients write data to the same file, rebooting the server
+> during writing may result in file corruption. In the worst case, the
+> exported XFS may also become corrupted. Observed this behavior while
+> testing pNFS block volume setup.
 > 
+> [...]
 
 Applied to nfsd-testing, thanks!
 
-[1/1] nfsd: delete unnecessary NULL check in __fh_verify()
-      commit: ec3d9745c6a3f41658d17873e4890b56cc27f9c8
+[1/1] NFSD: Disallow layoutget during grace period
+      commit: c4df20612a34b4713e81e0b3612a84481f6ae82e
 
 --
 Chuck Lever
