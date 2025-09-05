@@ -1,102 +1,54 @@
-Return-Path: <linux-nfs+bounces-14060-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14061-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2838B44BDB
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 04:50:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04442B44BDA
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 04:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BB9A3A1DC1
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 02:50:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BBCB5A1693
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 02:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A972798ED;
-	Fri,  5 Sep 2025 02:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Onht9wzt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80ED225761;
+	Fri,  5 Sep 2025 02:49:19 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D68127A452;
-	Fri,  5 Sep 2025 02:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C93156C6A;
+	Fri,  5 Sep 2025 02:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757040484; cv=none; b=OlhMzZWhEUU/i8lOm21ASO02tk2d24UrUc1CjDTj9Fh+Wd8WXOyGpm05qbh/6lnvT86FGZ2uN8aNOp0v3CHm9WkN7qK9QGzpZ6Q7QsNKZLOyqed8fTyORzNT0V7cULxR5tnnsGOXAoetC4qPXbVD5E7GTif/HgTtDmc28xnZOVE=
+	t=1757040559; cv=none; b=EXWXIkhuX88r+4tkhSy2yIkMNVgK/bAqKxHUvznZu/k8gzf7S7XDOB1eFFrHtOMJvcu6pn5EJq9ODmX8+ZxiINZzoRbuhbKTUDegacq/R5lYuQhGO+I56Mm0K0NInT3RC++7Hhkuqz8UGS69dvwsrmvPHoXRX32Czq1wGUUUdS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757040484; c=relaxed/simple;
-	bh=4UK7rmAawgGhsA0773xymZJziO6ODcvic3H/BSJy6es=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QG01pxF/wS0sYqASlH+8kwx7l7ETcE7Nlx7HyNTh/r5SS6oGabORQxFp+apkpQVCRSReR5Oqm+IlxgBodPiKStoLbwNTlZkELjzCxwDc7MU7p+SFEj0otwuZTCClJk8edKB5LrPx3S5DqJzzJY/iw7pBVtUV9tsekdrn8LeDVsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Onht9wzt; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7723bf02181so1335629b3a.1;
-        Thu, 04 Sep 2025 19:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757040481; x=1757645281; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S5nwaGiejZsttf0FEnMcnunXH9MjlWaby5e6Q0AV81Y=;
-        b=Onht9wztxgsmN1hmdmx7c6PzyspzNzy+hj+PYDcE7Z1iDp+U2Wp5x+AQ2IyQUzVxyV
-         1nNTCWmj+GDxFzyq1P+nO9TSgsSm23nkelWkZftHJwudJlNqIhp3gIz+uM5eHtmmPONw
-         hTAcJXiDRGQOuvdGsotDLpD+HsrmrNZ1QV/oPSQN3cGLvO4Rs1G4WWhLkz82HVcCwqMR
-         w2HNtd9cemjZtgn2pMxe7mmo7ejX3A5a1npnGIYcUcsJOZ2BFxf2pgE7VTa6t3LHmNii
-         d8GVHBhJzEd2bLKcfXekvAdI5B7RhtcV5Sto6xUFmLhiSZBqALhzjJBZVZvMJ6t206uT
-         MSBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757040481; x=1757645281;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S5nwaGiejZsttf0FEnMcnunXH9MjlWaby5e6Q0AV81Y=;
-        b=G5iO5YAVAflj/6fne1FV2cjhSQbWAYrXwl7ROL9rKtuQ7OU6M9lpIiLNyorfhqf1BR
-         QiAkCTS23J+E3bH3AYtJ4uxyMzISQLz8xgXYy48N0upzUSkl5JtlkHcgHKEpfrRSbYZY
-         IM8nit6izSDLJYV7H7IvEZgbxv+w1C+YBw/TgTIyBSAMcaYVk6odBmbYAqz9c1nTaoUU
-         8YvK8mQx7gUnyujnzBCOhdcmfxNW/Jivkf/UjgzjBjB9pGQczEh95viHICAeanAOHuwd
-         iCniPsQlEY/arAxNXoCRqdto7IXw32Di7xjNpAht6ItxI0S5Fu4jL1D4NJ55guHhO+Rg
-         izZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Dp0aMKGD2aqrZxpMgTOPSU2b1EXeAwvRiC86l5OceBjknXdpUTmKOcy5TyCfn0Jp9MfXkehd@vger.kernel.org, AJvYcCVA0CF8dYJGn4n2jjghZn43pbxsVvNs2h/oi0qfo2tjNqdfo5vL2woUEN23z265lZxoH/gAP/AgxS3hVdTW@vger.kernel.org, AJvYcCWAI7WCh3dnr2RZnz9BYoVc8k6Ga5RQ2ilZhprwA7bDlfGRTyQ2TUxulvggVK+1HQdDVF1QTxvguuI=@vger.kernel.org, AJvYcCXiqHGfU3HwuGVANijNio417k9u2XZL6HkXQQAvGc/7In96TJQXfVP+xeTEAGJuYsX5SN336QS7Qs6S@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGJfsym8ZEzzIgJ3AcBdNdoQ/yAVRy7bgEe2hqj5BlZanp3Dbn
-	tirj59NeIGcWI457t19nVKR4ylDEU8XCqPjzo8XOXxnXSHxtH415llOV
-X-Gm-Gg: ASbGncugZ/4C7hw45Msre4uLEqjZmsvBsubhXHy0hlIchfTd9d43Rg4HkmCQfA2I/Xk
-	kWzfBpxlIhgx/jBhYU1YrvOgNFDN2szOSSnBnacOYSFo6k5kIrRX+jfMRGeTFjS3VsDe2pMERpr
-	+1sWb3P9+hRRdwJQpPTdi3ns49q7D+XdP159R9FfPN+tjgraS0WfGz/q8cddUFrFHZu0qfDVUHF
-	+bgD15up5/JCrQOHy6Kf5/SAIkm+XVfkd1yLFXOdoUdwIzNo7iMOUMdjOe8vmJy/29CzVOfkO9o
-	iNuTGdGjNYT+zX+huHgMheV9r8inTZVqHDxvZ5/Hc/8wtKfWMPC8E/3oxWbCXeSoeHEOLX2I7uU
-	Lt1BRHr5bi5ZwGwQ3XyBDW6Bg16eXXi4ekcmBnFnvu2H7UVy6/1vtdud54BaIk0CIuBgv/wrfcO
-	mxl5A9UOdRM8+J+czIXqq75ppQ5i0=
-X-Google-Smtp-Source: AGHT+IFw5bdrv/yE14vwPnoYgwhMXZlYXMIsK0giGOwHSUwOupBk+Zwq5d32aYQQabxamDe4WIODOA==
-X-Received: by 2002:a05:6a00:1956:b0:736:3ea8:4805 with SMTP id d2e1a72fcca58-7723e1f4f4cmr23642414b3a.7.1757040481393;
-        Thu, 04 Sep 2025 19:48:01 -0700 (PDT)
-Received: from toolbx.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-772590e0519sm12991858b3a.84.2025.09.04.19.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 19:48:00 -0700 (PDT)
-From: alistair23@gmail.com
-X-Google-Original-From: alistair.francis@wdc.com
-To: chuck.lever@oracle.com,
-	hare@kernel.org,
-	kernel-tls-handshake@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-nfs@vger.kernel.org
-Cc: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	alistair23@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v2 7/7] nvmet-tcp: Support KeyUpdate
-Date: Fri,  5 Sep 2025 12:46:59 +1000
-Message-ID: <20250905024659.811386-8-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250905024659.811386-1-alistair.francis@wdc.com>
-References: <20250905024659.811386-1-alistair.francis@wdc.com>
+	s=arc-20240116; t=1757040559; c=relaxed/simple;
+	bh=EnQY57ZddTsQf+MPN8Pnv9AZ+cNzvl1957Tk/4TJJ54=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DzoVPiZuU2XCc4uvrxOKF3CFWV9uIIIv7gK/QoBvQtGam2CE6NotRLL9yuG2clcqdc4UWF5rSIfDmT1rDmOd2THmRKVVw0PVPMcBJlpmLJiI0zZgWTr6OJwUSTjUyeDc8sS/fNWgMqxGTVAzhn7UP1fyPVg5sKwIx5DJiBM5+VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4cJ11x4Z0qz1R96s;
+	Fri,  5 Sep 2025 10:46:13 +0800 (CST)
+Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id BCD08140279;
+	Fri,  5 Sep 2025 10:49:13 +0800 (CST)
+Received: from huawei.com (10.50.85.155) by kwepemj200013.china.huawei.com
+ (7.202.194.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 5 Sep
+ 2025 10:49:12 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neil@brown.name>,
+	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
+	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>, <zhangjian496@huawei.com>, <bcodding@redhat.com>
+Subject: [PATCH v3] nfsd: remove long-standing revoked delegations by force
+Date: Fri, 5 Sep 2025 10:48:23 +0800
+Message-ID: <20250905024823.3626685-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -104,221 +56,119 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemj200013.china.huawei.com (7.202.194.25)
 
-From: Alistair Francis <alistair.francis@wdc.com>
+When file access conflicts occur between clients, the server recalls
+delegations. If the client holding delegation fails to return it after
+a recall, nfs4_laundromat adds the delegation to cl_revoked list.
+This causes subsequent SEQUENCE operations to set the
+SEQ4_STATUS_RECALLABLE_STATE_REVOKED flag, forcing the client to
+validate all delegations and return the revoked one.
 
-If the nvmet_tcp_try_recv() function return EKEYEXPIRED or if we receive
-a KeyUpdate handshake type then the underlying TLS keys need to be
-updated.
+However, if the client fails to return the delegation like this:
+nfs4_laundromat                       nfsd4_delegreturn
+ unhash_delegation_locked
+ list_add // add dp to reaplist
+          // by dl_recall_lru
+ list_del_init // delete dp from
+               // reaplist
+                                       destroy_delegation
+                                        unhash_delegation_locked
+                                         // do nothing but return false
+ revoke_delegation
+ list_add // add dp to cl_revoked
+          // by dl_recall_lru
 
-If the NVMe Host (TLS client) initiates a KeyUpdate this patch will
-allow the NVMe layer to process the KeyUpdate request and forward the
-request to userspace. Userspace must then update the key to keep the
-connection alive.
+The delegation will remain in the server's cl_revoked list while the
+client marks it revoked and won't find it upon detecting
+SEQ4_STATUS_RECALLABLE_STATE_REVOKED.
+This leads to a loop:
+the server persistently sets SEQ4_STATUS_RECALLABLE_STATE_REVOKED, and the
+client repeatedly tests all delegations, severely impacting performance
+when numerous delegations exist.
 
-This patch allows us to handle the NVMe host sending a KeyUpdate
-request without aborting the connection. At this time we don't support
-initiating a KeyUpdate.
+Since abnormal delegations are removed from flc_lease via nfs4_laundromat
+--> revoke_delegation --> destroy_unhashed_deleg -->
+nfs4_unlock_deleg_lease --> kernel_setlease, and do not block new open
+requests indefinitely, retaining such a delegation on the server is
+unnecessary.
 
-Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Fixes: 3bd64a5ba171 ("nfsd4: implement SEQ4_STATUS_RECALLABLE_STATE_REVOKED")
+Reported-by: Zhang Jian <zhangjian496@huawei.com>
+Closes: https://lore.kernel.org/all/ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com/
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
-v2:
- - Use a helper function for KeyUpdates
- - Ensure keep alive timer is stopped
- - Wait for TLS KeyUpdate to complete
+  Changes in v2:
+  1) Set SC_STATUS_CLOSED unconditionally in destroy_delegation();
+  2) Determine whether to remove the delegation based on SC_STATUS_CLOSED,
+     rather than by timeout;
+  3) Modify the commit message.
 
- drivers/nvme/target/tcp.c | 90 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 84 insertions(+), 6 deletions(-)
+  Changes in v3:
+  1) Move variables used for traversal inside the if statement;
+  2) Add a comment to explain why we have to do this;
+  3) Move the second check of cl_revoked inside the if statement of
+     the first check.
+ fs/nfsd/nfs4state.c | 35 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index bee0355195f5..dd09940e9635 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -175,6 +175,7 @@ struct nvmet_tcp_queue {
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 88c347957da5..20fae3449af6 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1336,6 +1336,11 @@ static void destroy_delegation(struct nfs4_delegation *dp)
  
- 	/* TLS state */
- 	key_serial_t		tls_pskid;
-+	key_serial_t		user_session_id;
- 	struct delayed_work	tls_handshake_tmo_work;
- 
- 	unsigned long           poll_end;
-@@ -186,6 +187,8 @@ struct nvmet_tcp_queue {
- 	struct sockaddr_storage	sockaddr_peer;
- 	struct work_struct	release_work;
- 
-+	struct completion       tls_complete;
-+
- 	int			idx;
- 	struct list_head	queue_list;
- 
-@@ -836,6 +839,11 @@ static int nvmet_tcp_try_send_one(struct nvmet_tcp_queue *queue,
- 	return 1;
- }
- 
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+static int nvmet_tcp_try_peek_pdu(struct nvmet_tcp_queue *queue);
-+static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w);
-+#endif
-+
- static int nvmet_tcp_try_send(struct nvmet_tcp_queue *queue,
- 		int budget, int *sends)
- {
-@@ -844,6 +852,13 @@ static int nvmet_tcp_try_send(struct nvmet_tcp_queue *queue,
- 	for (i = 0; i < budget; i++) {
- 		ret = nvmet_tcp_try_send_one(queue, i == budget - 1);
- 		if (unlikely(ret < 0)) {
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+			if (ret == -EKEYEXPIRED &&
-+				queue->state != NVMET_TCP_Q_DISCONNECTING &&
-+				queue->state != NVMET_TCP_Q_TLS_HANDSHAKE) {
-+					goto done;
-+			}
-+#endif
- 			nvmet_tcp_socket_error(queue, ret);
- 			goto done;
- 		} else if (ret == 0) {
-@@ -1110,11 +1125,52 @@ static inline bool nvmet_tcp_pdu_valid(u8 type)
- 	return false;
- }
- 
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+static int update_tls_keys(struct nvmet_tcp_queue *queue)
-+{
-+	int ret;
-+
-+	cancel_work(&queue->io_work);
-+	handshake_req_cancel(queue->sock->sk);
-+	handshake_sk_destruct_req(queue->sock->sk);
-+	queue->state = NVMET_TCP_Q_TLS_HANDSHAKE;
-+
-+	/* Restore the default callbacks before starting upcall */
-+	read_lock_bh(&queue->sock->sk->sk_callback_lock);
-+	queue->sock->sk->sk_data_ready =  queue->data_ready;
-+	queue->sock->sk->sk_state_change = queue->state_change;
-+	queue->sock->sk->sk_write_space = queue->write_space;
-+	queue->sock->sk->sk_user_data = NULL;
-+	read_unlock_bh(&queue->sock->sk->sk_callback_lock);
-+
-+	nvmet_stop_keep_alive_timer(queue->nvme_sq.ctrl);
-+
-+	INIT_DELAYED_WORK(&queue->tls_handshake_tmo_work,
-+			  nvmet_tcp_tls_handshake_timeout);
-+
-+	ret = nvmet_tcp_tls_handshake(queue, HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = wait_for_completion_interruptible_timeout(&queue->tls_complete, 10 * HZ);
-+
-+	if (ret <= 0) {
-+		tls_handshake_cancel(queue->sock->sk);
-+		return ret;
-+	}
-+
-+	queue->state = NVMET_TCP_Q_LIVE;
-+
-+	return ret;
-+}
-+#endif
-+
- static int nvmet_tcp_tls_record_ok(struct nvmet_tcp_queue *queue,
- 		struct msghdr *msg, char *cbuf)
- {
- 	struct cmsghdr *cmsg = (struct cmsghdr *)cbuf;
--	u8 ctype, level, description;
-+	u8 ctype, htype, level, description;
- 	int ret = 0;
- 
- 	ctype = tls_get_record_type(queue->sock->sk, cmsg);
-@@ -1135,6 +1191,9 @@ static int nvmet_tcp_tls_record_ok(struct nvmet_tcp_queue *queue,
- 			ret = -EAGAIN;
- 		}
- 		break;
-+	case TLS_RECORD_TYPE_HANDSHAKE:
-+		ret = -EAGAIN;
-+		break;
+ 	spin_lock(&state_lock);
+ 	unhashed = unhash_delegation_locked(dp, SC_STATUS_CLOSED);
++	/*
++	 * Unconditionally set SC_STATUS_CLOSED, regardless of whether the
++	 * delegation is hashed, to mark the current delegation as invalid.
++	 */
++	dp->dl_stid.sc_status |= SC_STATUS_CLOSED;
+ 	spin_unlock(&state_lock);
+ 	if (unhashed)
+ 		destroy_unhashed_deleg(dp);
+@@ -4470,8 +4475,34 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  	default:
- 		/* discard this record type */
- 		pr_err("queue %d: TLS record %d unhandled\n",
-@@ -1344,6 +1403,13 @@ static int nvmet_tcp_try_recv(struct nvmet_tcp_queue *queue,
- 	for (i = 0; i < budget; i++) {
- 		ret = nvmet_tcp_try_recv_one(queue);
- 		if (unlikely(ret < 0)) {
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+			if (ret == -EKEYEXPIRED &&
-+				queue->state != NVMET_TCP_Q_DISCONNECTING &&
-+				queue->state != NVMET_TCP_Q_TLS_HANDSHAKE) {
-+					goto done;
+ 		seq->status_flags = 0;
+ 	}
+-	if (!list_empty(&clp->cl_revoked))
+-		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
++	if (!list_empty(&clp->cl_revoked)) {
++		struct list_head *pos, *next;
++		struct nfs4_delegation *dp;
++
++		/*
++		 * Concurrent nfs4_laundromat() and nfsd4_delegreturn()
++		 * may add a delegation to cl_revoked even after the
++		 * client has returned it, causing persistent
++		 * SEQ4_STATUS_RECALLABLE_STATE_REVOKED, disrupting normal
++		 * operations.
++		 * Remove delegations with SC_STATUS_CLOSED from cl_revoked
++		 * to resolve.
++		 */
++		spin_lock(&clp->cl_lock);
++		list_for_each_safe(pos, next, &clp->cl_revoked) {
++			dp = list_entry(pos, struct nfs4_delegation, dl_recall_lru);
++			if (dp->dl_stid.sc_status & SC_STATUS_CLOSED) {
++				list_del_init(&dp->dl_recall_lru);
++				spin_unlock(&clp->cl_lock);
++				nfs4_put_stid(&dp->dl_stid);
++				spin_lock(&clp->cl_lock);
 +			}
-+#endif
- 			nvmet_tcp_socket_error(queue, ret);
- 			goto done;
- 		} else if (ret == 0) {
-@@ -1408,14 +1474,22 @@ static void nvmet_tcp_io_work(struct work_struct *w)
- 		ret = nvmet_tcp_try_recv(queue, NVMET_TCP_RECV_BUDGET, &ops);
- 		if (ret > 0)
- 			pending = true;
--		else if (ret < 0)
--			return;
-+		else if (ret < 0) {
-+			if (ret == -EKEYEXPIRED)
-+				update_tls_keys(queue);
-+			else
-+				return;
 +		}
- 
- 		ret = nvmet_tcp_try_send(queue, NVMET_TCP_SEND_BUDGET, &ops);
- 		if (ret > 0)
- 			pending = true;
--		else if (ret < 0)
--			return;
-+		else if (ret < 0) {
-+			if (ret == -EKEYEXPIRED)
-+				update_tls_keys(queue);
-+			else
-+				return;
-+		}
- 
- 	} while (pending && ops < NVMET_TCP_IO_WORK_BUDGET);
- 
-@@ -1798,6 +1872,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
- 	}
- 	if (!status) {
- 		queue->tls_pskid = peerid;
-+		queue->user_session_id = user_session_id;
- 		queue->state = NVMET_TCP_Q_CONNECTING;
- 	} else
- 		queue->state = NVMET_TCP_Q_FAILED;
-@@ -1813,6 +1888,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
- 	else
- 		nvmet_tcp_set_queue_sock(queue);
- 	kref_put(&queue->kref, nvmet_tcp_release_queue);
-+	complete(&queue->tls_complete);
- }
- 
- static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w)
-@@ -1843,7 +1919,7 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
- 	int ret = -EOPNOTSUPP;
- 	struct tls_handshake_args args;
- 
--	if (queue->state != NVMET_TCP_Q_TLS_HANDSHAKE) {
-+	if (queue->state != NVMET_TCP_Q_TLS_HANDSHAKE && !keyupdate) {
- 		pr_warn("cannot start TLS in state %d\n", queue->state);
- 		return -EINVAL;
- 	}
-@@ -1856,7 +1932,9 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
- 	args.ta_data = queue;
- 	args.ta_keyring = key_serial(queue->port->nport->keyring);
- 	args.ta_timeout_ms = tls_handshake_timeout * 1000;
-+	args.user_session_id = queue->user_session_id;
- 
-+	init_completion(&queue->tls_complete);
- 	ret = tls_server_hello_psk(&args, GFP_KERNEL, keyupdate);
- 	if (ret) {
- 		kref_put(&queue->kref, nvmet_tcp_release_queue);
++		spin_unlock(&clp->cl_lock);
++
++		if (!list_empty(&clp->cl_revoked))
++			seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
++	}
+ 	if (atomic_read(&clp->cl_admin_revoked))
+ 		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
+ 	trace_nfsd_seq4_status(rqstp, seq);
 -- 
-2.50.1
+2.46.1
 
 
