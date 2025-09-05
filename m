@@ -1,114 +1,136 @@
-Return-Path: <linux-nfs+bounces-14063-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14064-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 323EEB456DB
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 13:50:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3C27B45897
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 15:18:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E29523BC54A
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 11:50:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D0E67B4FEB
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 13:17:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1321D6DA9;
-	Fri,  5 Sep 2025 11:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B970F283FE1;
+	Fri,  5 Sep 2025 13:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfalbbc0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from cirse-smtp-out.extra.cea.fr (cirse-smtp-out.extra.cea.fr [132.167.192.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7004C32275E
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 11:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=132.167.192.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E501D5CC9;
+	Fri,  5 Sep 2025 13:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757073049; cv=none; b=jfilB7POs/XCs7Wa04FZdX6j5I+gPZCFqK9EGJDEdpGNO7AK3JAx1mMhe4GtJ3TujGMhRuTRIo+iXZgJABWGE21vKfl3uB1nXGquM2eIy0/0ECB6o2c6Pp4nGwFE8di15MfAXjZOzJ40rpP4Xs38aFbdzSirpklj6dZAv+oBawU=
+	t=1757078309; cv=none; b=Rdi0ie+AO9nB+XQiiy+Wu80dLMuf4mrZkR9ZYU0bnr7rvEcnOG3wdz4iSSLVgmfcfTAzjClH57Dv4T0S+3Jo/8M57rmn3gpKr3T0lDRauyO+sWwzfsUN3I4+Ua9KbzNc6KJuUvLGSGGE6RLeGV4uYBCvcyqMq6gcf9enhREmMDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757073049; c=relaxed/simple;
-	bh=Gu6fBoko4TI5xEnz9JaxBrLASebYj3HgzPu83iBG40Q=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=kL9SPuODM5lcLjxjTaTcwcK4J13Xo1bHkCHD/spxo8S7G1tPMiao9ojV1iy4gKNAhN/eUTQ3FSVmzQXWSeRc8HEKpXcUuNObmP/Q76v5ZegHKuH3Q42a8BWdL3Qf00SAll6k28n7dyiOmwgyKIm3J9VOrRj0pZCZhUM+KXjj3v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cea.fr; spf=pass smtp.mailfrom=cea.fr; arc=none smtp.client-ip=132.167.192.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cea.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cea.fr
-Received: from e-emp-b0.extra.cea.fr (e-emp-b0.extra.cea.fr [132.167.198.36])
-	by cirse-sys.extra.cea.fr (8.14.7/8.14.7/CEAnet-Internet-out-4.0) with ESMTP id 585BiYfq018963
-	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
-Received: from pps.filterd (e-emp-b0.extra.cea.fr [127.0.0.1])
-	by e-emp-b0.extra.cea.fr (8.18.1.2/8.18.1.2) with ESMTP id 5858YPQa014412
-	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
-Received: from muguet1-smtp-out.intra.cea.fr (muguet1-smtp-out.intra.cea.fr [132.166.192.12])
-	by e-emp-b0.extra.cea.fr (PPS) with ESMTP id 48yc2gvxp7-1
-	for <linux-nfs@vger.kernel.org>; Fri, 05 Sep 2025 13:44:34 +0200 (MEST)
-Received: from I-EXCH-A0.intra.cea.fr (i-exch-a0.intra.cea.fr [132.166.88.224])
-	by muguet1-sys.intra.cea.fr (8.14.7/8.14.7/CEAnet-Internet-out-4.0) with ESMTP id 585BiY0m024323
-	(version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-nfs@vger.kernel.org>; Fri, 5 Sep 2025 13:44:34 +0200
-Received: from I-EXCH-B5.intra.cea.fr (132.166.88.239) by
- I-EXCH-A0.intra.cea.fr (132.166.88.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 5 Sep 2025 13:44:33 +0200
-Received: from I-EXCH-B5.intra.cea.fr ([132.166.88.239]) by
- I-EXCH-B5.intra.cea.fr ([132.166.88.239]) with mapi id 15.01.2507.044; Fri, 5
- Sep 2025 13:44:33 +0200
-From: BURLOT Alan <Alan.BURLOT@cea.fr>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: nfs4_getfacl error code when directory is not managed by nfs4 acl
-Thread-Topic: nfs4_getfacl error code when directory is not managed by nfs4
- acl
-Thread-Index: AQHcHlpyV8sTbwU1zUSfDmUeeLyfxQ==
-Date: Fri, 5 Sep 2025 11:44:33 +0000
-Message-ID: <9b184eb27d7a817a5744c281d00bf61126fb3f05.camel@cea.fr>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: SMEX-14.0.0.3239-9.1.2019-28344.000
-x-tm-as-result: No-10--7.588300-8.000000
-x-tmase-matchedrid: 53GNlzVSQfQtC1eAkW8MEi0rAbu/h0p4zWee1Tq8TTScU9LnAKOkdsvl
-	XMsLszNRV/PvpAMTDp+I47i1GQb7nRj1uEat0f0Xhi2C7dlNKWo6Cu19Vtgyg1neta0u1SLmKWT
-	y9F4rvtarIlKVCUxgvN5pHhRZTbY0swRgP3pwMhKgv0YmK8fzs1hyKam0/n7NMLjTaDguNi8cRW
-	BUt01WAdD6xLvX4M4IufbuusDOL+I0zI7+eiZZ8AeaHjl8u7Jkdi8q9VnfX1WZKY7DwlCIgt6Kv
-	NQiJN/3MnVa/9k0lMA=
-x-tm-as-user-approved-sender: Yes
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--7.588300-8.000000
-x-tmase-version: SMEX-14.0.0.3239-9.1.2019-28344.000
-x-tm-snts-smtp: 1C68E7363D33B61E42E6ADEFB8D1DF1538F14BCB819FC178C255D24F76AF45A02000:8
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FC4E8AD19102A947BFD50DFF248E4612@cea.fr>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1757078309; c=relaxed/simple;
+	bh=RAA4rrJfeN8TQeFhBzYY5lBVITfb6FXS1EgUHDAhgbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QEdf3NXVlK4c2k+dSnG32oVIeJ4EGmbvR0p2ocHjU9UEoCbeoHGtqHnbWyVo14yFRwMAhf86E7HyGMojFpTQh3dJDgdqMRTY3euG3HLmen1QRdiq2BsJuzRFYituiKKkrUQSugIRUvQwNWj8GxGN2sCJ6BevJIXo+jajA72fWP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfalbbc0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A15DC4CEF1;
+	Fri,  5 Sep 2025 13:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757078309;
+	bh=RAA4rrJfeN8TQeFhBzYY5lBVITfb6FXS1EgUHDAhgbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sfalbbc0wK3mEOrEVsTZbNdHh1qtaNoFYkoXswu86BJXqgZtkB2p7ll0PmNFm+UF+
+	 gROQHu45kiB2fB6zc9OocpeaCAl/VSUHMQTcK5dzzrBgfqKjEqoouiaYe0mVXn3hhP
+	 2kpcsQKNAXGCMaKeCuDHKvZBNbFWuLrnetV5rnBM+Lul+hxu1a3YiWmsb1sWrI+HmF
+	 8pxiMX2HVdqmxtozF5RFbwrNM7Av4MtV5kA9VGPoVeyr66E1EOBfErHIwl+nZDi9gV
+	 BRPm5dt9TEUB/FB/dwkJLJ+Ks+3zD13gCA3XbAUMRYXVgNRQ6rjKqP7qlrGvZJFGPw
+	 1nGF+gV/jf+bw==
+Date: Fri, 5 Sep 2025 14:18:23 +0100
+From: Simon Horman <horms@kernel.org>
+To: alistair23@gmail.com
+Cc: chuck.lever@oracle.com, hare@kernel.org,
+	kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
+	kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+	kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v2 1/7] net/handshake: Store the key serial number on
+ completion
+Message-ID: <20250905131823.GE553991@horms.kernel.org>
+References: <20250905024659.811386-1-alistair.francis@wdc.com>
+ <20250905024659.811386-2-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-GUID: y-macjVSluwgM-b7wAgRZjSsC_oAaEDf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA1MDExNSBTYWx0ZWRfX057jXwNk6Ig1 wtMm2BhdImT+j2z35V4SsMsIjVMAJRaRr8hKahFwg5qgGr6t6IOugWMPjaOSQtUdIsSsRelaH8u yiSIrYHBK2uiOpwwYcx3Orb4pEuHhcg2rxaoIpTnSBNeazzRznVDOjFAItV8iIYykv44RkC5xFR
- 5RAV51BvxDnIco/7tuxjLj42XpfsR/XlJxt/x/0Pr4SdyJLzPv40pYf6qjziI7PshNXA+7MHoMU MV4eFkrElO2PhE3++nDW3ak1+SEZ6GiCF+sFzR0MrVTDpLniM7b79qSbh7z8M6CpUVB6DdHwD4h 7HAKiYKPPMmUFjuZGBNeFyAoeev7DIu+HqW5QzF9kPiAED3qDI9eNYpQE/XH2+fjP9Jw20kbdzd qLX2wiXp
-X-Proofpoint-ORIG-GUID: y-macjVSluwgM-b7wAgRZjSsC_oAaEDf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250905024659.811386-2-alistair.francis@wdc.com>
 
-SGVsbG8sDQoNCkkgYW0gdHJ5aW5nIHRvIGFkZCBhIHNtYWxsIHRlc3QgaW4gYSBzY3JpcHQgdG8g
-Y2hlY2sgaWYgYSBkaXJlY3RvcnkgaXMNCm1hbmFnZWQgYnkgbmZzNF9zZXRmYWNsIG9yIG5vdC4g
-VGhlIHN5c3RlbSBJIHdvcmsgd2l0aCB1c2Ugc29tZXRpbWVzDQpuZnM0X3NldGZhY2wgYW5kIHNv
-bWV0aW1lcyBzZXRmYWNsLiBJIHdhbnRlZCB0byB0cnkgYSBxdWlldA0KYG5mczRfZ2V0ZmFjbCAu
-YCB0byBjaGVjayBpdC4gQnV0IHdoZW4gSSBkbyANCiAgICA+IGlmIG5mczRfZ2V0ZmFjbCAuID4v
-ZGV2L251bGwgMj4mMTsgdGhlbiBlY2hvICJ5ZXAgbmZzNCI7IGVsc2UNCmVjaG8gIm5vIjsgZmkN
-Cg0KSSBvYnRhaW4NCiAgICB5ZXAgbmZzNA0KDQpXaXRob3V0IHRoZSAyPiYxLCBJIGhhdmUNCiAg
-ICA+IGlmIG5mczRfZ2V0ZmFjbCAuID4vZGV2L251bGw7IHRoZW4gZWNobyAieWVwIG5mczQiOyBl
-bHNlIGVjaG8NCiJubyI7IGZpDQogICAgT3BlcmF0aW9uIHRvIHJlcXVlc3QgYXR0cmlidXRlIG5v
-dCBzdXBwb3J0ZWQ6IC4NCiAgICB5ZXAgbmZzNA0KDQpXaGVuIEkgdHJ5IHRvIGdyZXAgaXQsIGl0
-IGRvZXMgbm90IHdvcmsNCiAgICA+IG5mczRfZ2V0ZmFjbCAuID4vZGV2L251bGwgfCBncmVwIC1x
-ICJub3Qgc3VwcG9ydGVkIg0KICAgIE9wZXJhdGlvbiB0byByZXF1ZXN0IGF0dHJpYnV0ZSBub3Qg
-c3VwcG9ydGVkOiAuDQoNClRoZSByZXR1cm4gY29kZSBpcyBhbHdheXMgemVybw0KICAgID4gbmZz
-NF9nZXRmYWNsIC4gOyBlY2hvICQ/DQogICAgT3BlcmF0aW9uIHRvIHJlcXVlc3QgYXR0cmlidXRl
-IG5vdCBzdXBwb3J0ZWQ6IC4NCiAgICAwDQoNCkkgd2FudCBpdCB0byBiZSBxdWlldCB0byBhdm9p
-ZCBzaG93aW5nIHNvbWV0aGluZyBpbiB0aGUgdGVybWluYWwuIEkgYW0NCmRvaW5nIGEgc2NyaXB0
-IHRvIGVhc2lseSBzZXQgQUNMcyBmb3Igbm9uZSBiYXNoIHBvd2VyIHVzZXIgYW5kIEkgZG8gbm90
-DQp3YW50IHRvIHNjYXJlIHRoZW0gd2l0aCBlcnJvciBtZXNzYWdlLg0KDQpBbSBJIG1pc3Npbmcg
-c29tZXRoaW5nIGFib3V0IHRoZSByZXR1cm4gY29kZT8gV291bGQgaXQgYmUgcG9zc2libGUgdG8N
-CmFkZCBhIC0tdGVzdCBvciAtLWNoZWNrIG9wdGlvbiB0byB0ZXN0IGlmIG5mczQtYWNsIGFyZSBh
-Y3R1YWxseSB1c2VkIGluDQp0aGUgZGlyZWN0b3J5Pw0KDQpJIGNhbiBkbyB0ZXN0IGlmIHlvdSB3
-YW50LiBEbyB5b3Uga25vdyB3aGljaCByZXBvIGhhcyB0aGUgbGF0ZXN0IHNvdXJjZQ0KY29kZSBp
-ZiBJIHdhbnQgdG8gdHJ5IHNvbWV0aGluZyBteXNlbGY/DQoNCkJlc3QgcmVnYXJkcywNCkFsYW4N
-Ci0tIA0KQWxhbiBCdXJsb3QsIFBoRA0KQ0VBIFBhcmlzLVNhY2xheQ0KL0NFQS9ERVMvSVNBUy9E
-TTJTL1NUTUYvTERFTA0K
+On Fri, Sep 05, 2025 at 12:46:53PM +1000, alistair23@gmail.com wrote:
+
+...
+
+> diff --git a/net/handshake/tlshd.c b/net/handshake/tlshd.c
+
+...
+
+> @@ -83,6 +87,13 @@ static void tls_handshake_remote_peerids(struct tls_handshake_req *treq,
+>  		if (i >= treq->th_num_peerids)
+>  			break;
+>  	}
+> +
+> +	nla_for_each_attr(nla, head, len, rem) {
+> +		if (nla_type(nla) == HANDSHAKE_A_DONE_SESSION_ID) {
+> +			treq->user_session_id = nla_get_u32(nla);
+
+Hi Alistair,
+
+This appears to be addressed by patch 5/7 of this series.
+But struct tls_handshake_req does not have a user_session_id member
+with (only) this patch applied on top of net-next.
+
+This breaks bisection and should be addressed: when each patch is applied
+in turn the resulting source tree should compile.
+
+...
+
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index e2c5e0e626f9..1d5829aecf45 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -450,7 +450,8 @@ static void svc_tcp_kill_temp_xprt(struct svc_xprt *xprt)
+>   * is present" flag on the xprt and let an upper layer enforce local
+>   * security policy.
+>   */
+
+Please also add user_session_id to the kernel doc for this function (above).
+
+Flagged by W=1 builds and ./scripts/kernel-doc -none 
+
+> -static void svc_tcp_handshake_done(void *data, int status, key_serial_t peerid)
+> +static void svc_tcp_handshake_done(void *data, int status, key_serial_t peerid,
+> +				   key_serial_t user_session_id)
+>  {
+>  	struct svc_xprt *xprt = data;
+>  	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index c5f7bbf5775f..3489c4693ff4 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -2591,7 +2591,8 @@ static int xs_tcp_tls_finish_connecting(struct rpc_xprt *lower_xprt,
+>   * @peerid: serial number of key containing the remote's identity
+>   *
+>   */
+> -static void xs_tls_handshake_done(void *data, int status, key_serial_t peerid)
+> +static void xs_tls_handshake_done(void *data, int status, key_serial_t peerid,
+> +				  key_serial_t user_session_id)
+
+Ditto.
+
+>  {
+>  	struct rpc_xprt *lower_xprt = data;
+>  	struct sock_xprt *lower_transport =
+> -- 
+> 2.50.1
+> 
+> 
 
