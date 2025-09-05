@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-14086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D231B463BE
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 21:35:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B74E7B463BD
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 21:35:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1392188148C
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 19:35:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A3765C3A1D
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Sep 2025 19:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA03280330;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F91C28137D;
 	Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fa7Pv5C4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAwHASMD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF45F27F732
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDBD280CC8
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757100924; cv=none; b=lo+kadP7eeUNaUG4wnLTh0ud4+1R5UDHhwTzAAdvd0ieTlfmAEnDFydwtvp9076J+YcGSLQUwBAuUnJYA7mxNd70JQfZs37taFd6p/Onz8rvA/NMnkP3QSghq11nZy73o3pfNjr3nrWtZH7JRg35k0QnJCLAdr42is3spcC8tIo=
+	t=1757100924; cv=none; b=atLG14Twsb19sMpJdkmeMy/c5NVGxeLKYunafcplkn9WSjgQYhlJRtAjBgC1xUNDJDCK5gnsdH3bh/zN9LuSmDLd31D87KH/8PQqnWENZ3hcq/4LTZ31suV2JlBQh5TKHd5QqYMvnSp0CCDeF7uXB2/ZYo9g46rT3fjkPmug0dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757100924; c=relaxed/simple;
-	bh=InGWnPVVL1r+8auW3ba3qwk3An5cdaHB49BXdGBWsQQ=;
+	bh=PK7UwfVVXeYl3TjSc6icWEgyv+pcG8uxPjXju/Q1w7o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zpe97klY4RHLfjoRnOhxK7gXpNunWPYxZax3gHDGmFxXpqbdgTYC8tPayxl+5gIwdTozZ3kyJF0vs8nKMBqBlht0W+MB4tV6lKBVcJpwI4EEWju+ilq44l1bqJ5qI4QNEkG7MVhN3QBPglnf2+lLQeL4XFu7C1V15gRMpgJZ4bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fa7Pv5C4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB56C4CEF7
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:23 +0000 (UTC)
+	 MIME-Version; b=CeyzCiJAozc9yRHIbfuhUjyuqsLSqK0CWUX6V9fDlBOBWBFj/cboThZZYPRuiuhtpnV6Qi7Gm13u/gDATL43jJqljSRmLWfIShTTPHrCu63uzWq0qiPgbOd0/d7gGsxCUNPfxLQEv6nGHKVkyLCxAQLypldZpT2X/PeDWvn5Gko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAwHASMD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EC4C4CEF1
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Sep 2025 19:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757100923;
-	bh=InGWnPVVL1r+8auW3ba3qwk3An5cdaHB49BXdGBWsQQ=;
+	s=k20201202; t=1757100924;
+	bh=PK7UwfVVXeYl3TjSc6icWEgyv+pcG8uxPjXju/Q1w7o=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Fa7Pv5C4AZy0XbmJR9nvFjYCmbLNmcS6gHp8PQXNiGrykU7v0+7qAeuHRxro84Xu2
-	 an3ZbU4p4ouNtNbd6EOlEgjviMQ3r75noHMDrWk/jk0DXDeDzMjVcPeEDS4Dx3yr8Y
-	 HdxA+bo8ppRmzp4XzWxoyJkcI6ZQ/hlAWDAmMWY9GFlhkQmoHweNpTUiBUspm3tbz3
-	 OD82OA+IyR08NawyYOiVrcte31sZUDydJX2+iQ2fg5hiXv4M/uGTtI9y6dcw0goMx8
-	 pEabLok8ymhgFE6ehKcFA4erW1S7YkFEmAhPEEp3mpE6tDJ69Tsgm4yQhREyZTvm7n
-	 oqYGg45Inxo6g==
+	b=lAwHASMDM2LPENU5Px0i06oCg2ZW5kpbGOZ9gM+3Wb3Pv56tTlTP24N9CG9qIusX8
+	 5S+vZfjvCkVZzQ50us8L+LG3s+Ph3PbwZTj4DYFgToBR2Xx20eT7y09pT5BRtjGYu2
+	 z0Mud17WBALu7gUKdzyNy9CScpU6l+Mng1UriruUxIiaZRsUyAUwpOVgwZwCdKGg35
+	 e5y7ia7aQT+2kvdgoDZhNAWskNESa0Wurz7GtN6R3HvVGva6QHG0iNc+nNaPgdaPwn
+	 7NOPXYeCzMPQXr8h0uaTtuoxl6jSYiEgm39z3KAiIXZMmKpp4iFWqBQyt2d7XX0aDd
+	 IBxfX1dJCvUSw==
 From: Trond Myklebust <trondmy@kernel.org>
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH 4/5] NFS: nfs_invalidate_folio() must observe the offset and size arguments
-Date: Fri,  5 Sep 2025 15:35:19 -0400
-Message-ID: <8fe478b0d9bfcfa1bda39442d1c702d8c5a32560.1757100278.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH 5/5] NFS: Fix the marking of the folio as up to date
+Date: Fri,  5 Sep 2025 15:35:20 -0400
+Message-ID: <9acf55d1551908b9bc19ec207b846af496290ef7.1757100278.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1757100278.git.trond.myklebust@hammerspace.com>
 References: <cover.1757100278.git.trond.myklebust@hammerspace.com>
@@ -59,47 +59,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If we're truncating part of the folio, then we need to write out the
-data on the part that is not covered by the cancellation.
+Since all callers of nfs_page_group_covers_page() have already ensured
+that there is only one group member, all that is required is to check
+that the entire folio contains dirty data.
 
-Fixes: d47992f86b30 ("mm: change invalidatepage prototype to accept length")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/file.c  | 7 ++++---
- fs/nfs/write.c | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ fs/nfs/write.c | 52 +++++---------------------------------------------
+ 1 file changed, 5 insertions(+), 47 deletions(-)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index af2fdbfcbbf6..7fa56af4d2cd 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -475,10 +475,11 @@ static void nfs_invalidate_folio(struct folio *folio, size_t offset,
- 	dfprintk(PAGECACHE, "NFS: invalidate_folio(%lu, %zu, %zu)\n",
- 		 folio->index, offset, length);
- 
--	if (offset != 0 || length < folio_size(folio))
--		return;
- 	/* Cancel any unstarted writes on this page */
--	nfs_wb_folio_cancel(inode, folio);
-+	if (offset != 0 || length < folio_size(folio))
-+		nfs_wb_folio(inode, folio);
-+	else
-+		nfs_wb_folio_cancel(inode, folio);
- 	folio_wait_private_2(folio); /* [DEPRECATED] */
- 	trace_nfs_invalidate_folio(inode, folio_pos(folio) + offset, length);
- }
 diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 8b7c04737967..e359fbcdc8a0 100644
+index e359fbcdc8a0..647c53d1418a 100644
 --- a/fs/nfs/write.c
 +++ b/fs/nfs/write.c
-@@ -2045,6 +2045,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
- 		 * release it */
- 		nfs_inode_remove_request(req);
- 		nfs_unlock_and_release_request(req);
-+		folio_cancel_dirty(folio);
- 	}
+@@ -237,59 +237,17 @@ static void nfs_mapping_set_error(struct folio *folio, int error)
+ }
  
- 	return ret;
+ /*
+- * nfs_page_group_search_locked
+- * @head - head request of page group
+- * @page_offset - offset into page
++ * nfs_page_covers_folio
++ * @req: struct nfs_page
+  *
+- * Search page group with head @head to find a request that contains the
+- * page offset @page_offset.
+- *
+- * Returns a pointer to the first matching nfs request, or NULL if no
+- * match is found.
+- *
+- * Must be called with the page group lock held
+- */
+-static struct nfs_page *
+-nfs_page_group_search_locked(struct nfs_page *head, unsigned int page_offset)
+-{
+-	struct nfs_page *req;
+-
+-	req = head;
+-	do {
+-		if (page_offset >= req->wb_pgbase &&
+-		    page_offset < (req->wb_pgbase + req->wb_bytes))
+-			return req;
+-
+-		req = req->wb_this_page;
+-	} while (req != head);
+-
+-	return NULL;
+-}
+-
+-/*
+- * nfs_page_group_covers_page
+- * @head - head request of page group
+- *
+- * Return true if the page group with head @head covers the whole page,
+- * returns false otherwise
++ * Return true if the request covers the whole folio.
++ * Note that the caller should ensure all subrequests have been joined
+  */
+ static bool nfs_page_group_covers_page(struct nfs_page *req)
+ {
+ 	unsigned int len = nfs_folio_length(nfs_page_to_folio(req));
+-	struct nfs_page *tmp;
+-	unsigned int pos = 0;
+-
+-	nfs_page_group_lock(req);
+ 
+-	for (;;) {
+-		tmp = nfs_page_group_search_locked(req->wb_head, pos);
+-		if (!tmp)
+-			break;
+-		pos = tmp->wb_pgbase + tmp->wb_bytes;
+-	}
+-
+-	nfs_page_group_unlock(req);
+-	return pos >= len;
++	return req->wb_pgbase == 0 && req->wb_bytes == len;
+ }
+ 
+ /* We can set the PG_uptodate flag if we see that a write request
 -- 
 2.51.0
 
