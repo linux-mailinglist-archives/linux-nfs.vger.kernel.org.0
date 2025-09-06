@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-14100-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14102-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FA21B474E5
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Sep 2025 18:42:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A98B9B474E7
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Sep 2025 18:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 534ED1BC3E49
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Sep 2025 16:42:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7F76584A55
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Sep 2025 16:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B60225784B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 911F6257831;
 	Sat,  6 Sep 2025 16:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDNVRAOU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TL9drtYw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077D9257837
-	for <linux-nfs@vger.kernel.org>; Sat,  6 Sep 2025 16:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4BF2580CB
+	for <linux-nfs@vger.kernel.org>; Sat,  6 Sep 2025 16:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757176941; cv=none; b=Buv6N4irY31IuoGv1AeQ1dKZA0blwe1fZvKnKCsN/cpicvlicaMEQkfgI5ht8j/yTvkOIoYZzZp5715l2ckAwpi6jBdaCgPpYCeE1DUIPy7fULVjjL1KLymnAi6apCaKdg5SDlzUNkfj5hQt6prOMN/qzBwEScgNR9uQwYXEw20=
+	t=1757176941; cv=none; b=VLKz3HlthQon1I5DjW1Rbo/PoP57TBcDmXbSEx5LM1Smkus3qJpWF0DYp2scsqNUpwnL5/85oAFfr4REk+ferDdjR2wgqeFY8RDX5jQgAIZxDisYdipl+7a9IbG/vyFqtaaM8OacPUuoJovz1M6ipO+glvOCDUIU1GQLnNo+D1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757176941; c=relaxed/simple;
-	bh=36OU2ow5ZVHW/uxyF9K0UCX8insygABB50j7pai09OU=;
+	bh=CMGXWG+sZhSmZsAqoDTFnyzeO7lsKn7E6kOWxA3FOvI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CPJwJUAQwYIYELPEm4AIdUbyZqQfhEc7qLowMGeKAuQkKHZyNxBq42G8231jpnGQ6JuxxzdPFvBLtvu3h4tnnOHjbILgs727AM3RdAyj8kIaV6meP4Yhw6trc0fDsvACpOPHlpZgL8E8XJujq9pUdQsmEAuxJjEsM1f6qHwPp0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDNVRAOU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B25C4CEF7
+	 MIME-Version; b=dewfRMxjHMmCzie4hJuxS6ssjwGOoHG8ar70GIbYHe2T3411pAPH3DZoeisLzPN0yLC2yNdDqdv4XqtVjlLdj+ijU9+q1liwYCsT9Bxjaymlc5sdnE0h0Rcte/nqRzD/8ZU+sA5sCxBsiUfppaH31QAfuf+Dtma4/19zNWiOkcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TL9drtYw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD3AEC4CEE7
 	for <linux-nfs@vger.kernel.org>; Sat,  6 Sep 2025 16:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757176939;
-	bh=36OU2ow5ZVHW/uxyF9K0UCX8insygABB50j7pai09OU=;
+	s=k20201202; t=1757176940;
+	bh=CMGXWG+sZhSmZsAqoDTFnyzeO7lsKn7E6kOWxA3FOvI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=bDNVRAOUDep8XSoZEQBtMPA+HDtN84vOlFduual5Owq32pFTEyj3r5XuFt5SN+RSb
-	 DwRH/6Ljl95TQUGT/4CUUz2gpEhL/m7LM/Vax4caRBn3HMhAeMPYqmjYKwwAMgi08J
-	 Pe+jHqWTyEAyNOcODBlrNJrJ9iMwWD1fpOPvjxWltX6OZrruHuItwNwpSvS0Yhvgno
-	 3KRE9SEdcxthiam5F40Df+AJb51hGPGTkgL2LiSjxYAPvc7pjDPBuEATEiqb4sadbi
-	 8qb4KnyEkWjJ+ZGd6QOGAOkHMuxRVx3/7ybXvgsBYWqiHteqXkza1bxHfns7eHgQ8V
-	 GzFrd7QCLPbzQ==
+	b=TL9drtYw9e0iukls2QdPZmZQ3FWXd0Lv+kpNwQE6jpNWE4t/tWkYsUQNjgHurxjjc
+	 jDPPqEpiZL9ov/CSDgNR2IukFyQmJmxTJfMX0jaQ6YGcx3IB5sRgmfQ8/ilc/FwVA4
+	 /JIge5CvI/FprPWps6Hd8cDDrvZxnRioQUheWjHP6mP2bXWbrVY915LnehIMTa1agy
+	 i4EWBMShDA4jPu/Mn8ce45KbSlGUDhtTZReBXwt6RYZ8QQZFVVutRGN1J8Sf79FgKT
+	 cQdklaUG3kj2/QwBstXukIK/Y1Iogp5hshbfDRlq2YF6AOSJ8AKaGnuyYZDN33qiyd
+	 bShk2VxLAf7Jg==
 From: Trond Myklebust <trondmy@kernel.org>
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/8] NFSv4.2: Protect copy offload and clone against 'eof page pollution'
-Date: Sat,  6 Sep 2025 12:42:10 -0400
-Message-ID: <24f906a2f9b8858f30cc1796906e7bc3e1a2ca9c.1757176392.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH v2 3/8] NFS: Serialise O_DIRECT i/o and truncate()
+Date: Sat,  6 Sep 2025 12:42:11 -0400
+Message-ID: <aa8323e3e1b83094bb05100af030488a44276604.1757176392.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1757176392.git.trond.myklebust@hammerspace.com>
 References: <cover.1757100278.git.trond.myklebust@hammerspace.com> <cover.1757176392.git.trond.myklebust@hammerspace.com>
@@ -59,85 +59,92 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The NFSv4.2 copy offload and clone functions can also end up extending
-the size of the destination file, so they too need to call
-nfs_truncate_last_folio().
+Ensure that all O_DIRECT reads and writes are complete, and prevent the
+initiation of new i/o until the setattr operation that will truncate the
+file is complete.
 
-Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+Fixes: a5864c999de6 ("NFS: Do not serialise O_DIRECT reads and writes")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs42proc.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ fs/nfs/inode.c    |  4 +++-
+ fs/nfs/internal.h | 10 ++++++++++
+ fs/nfs/io.c       | 13 ++-----------
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 4420b8740e2f..e2fea37c5348 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -362,22 +362,27 @@ static int process_copy_commit(struct file *dst, loff_t pos_dst,
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 0b141feacc52..49df9debb1a6 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -768,8 +768,10 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	trace_nfs_setattr_enter(inode);
  
+ 	/* Write all dirty data */
+-	if (S_ISREG(inode->i_mode))
++	if (S_ISREG(inode->i_mode)) {
++		nfs_file_block_o_direct(NFS_I(inode));
+ 		nfs_sync_inode(inode);
++	}
+ 
+ 	fattr = nfs_alloc_fattr_with_label(NFS_SERVER(inode));
+ 	if (fattr == NULL) {
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 1433ae13dba0..c0a44f389f8f 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -532,6 +532,16 @@ static inline bool nfs_file_io_is_buffered(struct nfs_inode *nfsi)
+ 	return test_bit(NFS_INO_ODIRECT, &nfsi->flags) == 0;
+ }
+ 
++/* Must be called with exclusively locked inode->i_rwsem */
++static inline void nfs_file_block_o_direct(struct nfs_inode *nfsi)
++{
++	if (test_bit(NFS_INO_ODIRECT, &nfsi->flags)) {
++		clear_bit(NFS_INO_ODIRECT, &nfsi->flags);
++		inode_dio_wait(&nfsi->vfs_inode);
++	}
++}
++
++
+ /* namespace.c */
+ #define NFS_PATH_CANONICAL 1
+ extern char *nfs_path(char **p, struct dentry *dentry,
+diff --git a/fs/nfs/io.c b/fs/nfs/io.c
+index 3388faf2acb9..d275b0a250bf 100644
+--- a/fs/nfs/io.c
++++ b/fs/nfs/io.c
+@@ -14,15 +14,6 @@
+ 
+ #include "internal.h"
+ 
+-/* Call with exclusively locked inode->i_rwsem */
+-static void nfs_block_o_direct(struct nfs_inode *nfsi, struct inode *inode)
+-{
+-	if (test_bit(NFS_INO_ODIRECT, &nfsi->flags)) {
+-		clear_bit(NFS_INO_ODIRECT, &nfsi->flags);
+-		inode_dio_wait(inode);
+-	}
+-}
+-
  /**
-  * nfs42_copy_dest_done - perform inode cache updates after clone/copy offload
-- * @inode: pointer to destination inode
-+ * @file: pointer to destination file
-  * @pos: destination offset
-  * @len: copy length
-+ * @oldsize: length of the file prior to clone/copy
-  *
-  * Punch a hole in the inode page cache, so that the NFS client will
-  * know to retrieve new data.
-  * Update the file size if necessary, and then mark the inode as having
-  * invalid cached values for change attribute, ctime, mtime and space used.
-  */
--static void nfs42_copy_dest_done(struct inode *inode, loff_t pos, loff_t len)
-+static void nfs42_copy_dest_done(struct file *file, loff_t pos, loff_t len,
-+				 loff_t oldsize)
- {
-+	struct inode *inode = file_inode(file);
-+	struct address_space *mapping = file->f_mapping;
- 	loff_t newsize = pos + len;
- 	loff_t end = newsize - 1;
+  * nfs_start_io_read - declare the file is being used for buffered reads
+  * @inode: file inode
+@@ -57,7 +48,7 @@ nfs_start_io_read(struct inode *inode)
+ 	err = down_write_killable(&inode->i_rwsem);
+ 	if (err)
+ 		return err;
+-	nfs_block_o_direct(nfsi, inode);
++	nfs_file_block_o_direct(nfsi);
+ 	downgrade_write(&inode->i_rwsem);
  
--	WARN_ON_ONCE(invalidate_inode_pages2_range(inode->i_mapping,
--				pos >> PAGE_SHIFT, end >> PAGE_SHIFT));
-+	nfs_truncate_last_folio(mapping, oldsize, pos);
-+	WARN_ON_ONCE(invalidate_inode_pages2_range(mapping, pos >> PAGE_SHIFT,
-+						   end >> PAGE_SHIFT));
+ 	return 0;
+@@ -90,7 +81,7 @@ nfs_start_io_write(struct inode *inode)
  
- 	spin_lock(&inode->i_lock);
- 	if (newsize > i_size_read(inode))
-@@ -410,6 +415,7 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 	struct nfs_server *src_server = NFS_SERVER(src_inode);
- 	loff_t pos_src = args->src_pos;
- 	loff_t pos_dst = args->dst_pos;
-+	loff_t oldsize_dst = i_size_read(dst_inode);
- 	size_t count = args->count;
- 	ssize_t status;
- 
-@@ -483,7 +489,7 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 			goto out;
- 	}
- 
--	nfs42_copy_dest_done(dst_inode, pos_dst, res->write_res.count);
-+	nfs42_copy_dest_done(dst, pos_dst, res->write_res.count, oldsize_dst);
- 	nfs_invalidate_atime(src_inode);
- 	status = res->write_res.count;
- out:
-@@ -1250,6 +1256,7 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
- 	struct nfs42_clone_res res = {
- 		.server	= server,
- 	};
-+	loff_t oldsize_dst = i_size_read(dst_inode);
- 	int status;
- 
- 	msg->rpc_argp = &args;
-@@ -1284,7 +1291,7 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
- 		/* a zero-length count means clone to EOF in src */
- 		if (count == 0 && res.dst_fattr->valid & NFS_ATTR_FATTR_SIZE)
- 			count = nfs_size_to_loff_t(res.dst_fattr->size) - dst_offset;
--		nfs42_copy_dest_done(dst_inode, dst_offset, count);
-+		nfs42_copy_dest_done(dst_f, dst_offset, count, oldsize_dst);
- 		status = nfs_post_op_update_inode(dst_inode, res.dst_fattr);
- 	}
+ 	err = down_write_killable(&inode->i_rwsem);
+ 	if (!err)
+-		nfs_block_o_direct(NFS_I(inode), inode);
++		nfs_file_block_o_direct(NFS_I(inode));
+ 	return err;
+ }
  
 -- 
 2.51.0
