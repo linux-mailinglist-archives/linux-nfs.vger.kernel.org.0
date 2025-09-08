@@ -1,111 +1,306 @@
-Return-Path: <linux-nfs+bounces-14130-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14131-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA65B49868
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 20:37:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56C49B49965
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 21:07:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB51217AAAF
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 18:36:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE5EF162611
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 19:07:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95110315793;
-	Mon,  8 Sep 2025 18:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92045188CB1;
+	Mon,  8 Sep 2025 19:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQTYCF8c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIMV2ejh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF7B314B75
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 18:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BB0230274
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 19:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757356616; cv=none; b=Dxu5VbmHs0kvqNoI+J40DWU3mvrsIOXm75WStmmxe6GtRAFtH6oTjAilXCMrPvGXFOqbkgtgp1vQpGb39aU2WubhGpSpUTgC29dbJowdOGqvOqbSbBNa2IXbP+fCH2whYR8gfbky7ci8fLtEJIe2drs4PK3rpKeEt5E/7yFMNmM=
+	t=1757358450; cv=none; b=FzALAImr7ecGgHYNmbBVm1R4aiPWRTpthhWiexVKx/hDaLmVgW8rShm+A8e2UgHvcqbzQ/l0KR4EQioPekxLzeu8sRNuyQBudr3M7ZBoESVxwql3KwdMOONFzgPVvqzyoDIqkm8b4rUhI0SmRa+F0PblDe4LI7HbarBnT7FIghI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757356616; c=relaxed/simple;
-	bh=CCCNPFmUlCpoSJCkut0CSBxC70qmpo6aKYKju1PhwXs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qzE2hEHTsGKXoW668xqbG0EdybDB1d5azqHS4enS/NToQLgcoGt3lOcV4v2yxjNIg5vqzvQo7SFo0dZzFkmI8olbHoH7sH0XFnPFF3Ulz0c2qjRahTCul82yy+L+ehjj1JmiEPal4hekm6qP9VCRx8pkfyFKWjbP8kitGM49GEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQTYCF8c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C3FDC4CEF1;
-	Mon,  8 Sep 2025 18:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757356615;
-	bh=CCCNPFmUlCpoSJCkut0CSBxC70qmpo6aKYKju1PhwXs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HQTYCF8crZlGrxmBegQcXDWCMaEkBs5GdKpcJvFPn7sdhPJoWyMzMlJm5QiyOOqya
-	 9KXqvOUKFb4hdGxRj8iabixx/NL7HgOfCe9ZvFf0yBzbywfP93QmorixmqLC7CdIjc
-	 QwhgP/7OW1Ilb6Ga3113IA+XmmaMooG5jHnSzpKZUwh+KZmxsZtu09XsOu2CShbdA9
-	 1N2uaaIO7ivSEKmtjCyx5h294nhFwskw1ymZ7EgqHOqF7qL246ugjpCjg9FMDPZ3ZV
-	 dUSUdI1snfwqe+dQdtjRbHcsEFPVUAuLkMSURtZtvXOUvNF4bnG0I3rl+MNTB6ESz4
-	 U5gYRE0HPVivA==
-Message-ID: <7f02383974ed3342c7a7df34b3044820145ff679.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSv4/flexfiles: Fix layout merge mirror check.
-From: Trond Myklebust <trondmy@kernel.org>
-To: Jonathan Curley <jcurley@purestorage.com>, Anna Schumaker
- <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 08 Sep 2025 14:36:54 -0400
-In-Reply-To: <20250908173516.1178411-2-jcurley@purestorage.com>
-References: <20250908173516.1178411-1-jcurley@purestorage.com>
-	 <20250908173516.1178411-2-jcurley@purestorage.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1757358450; c=relaxed/simple;
+	bh=Oms5m8oBOtdiW6DN0n9SVW4BokMsopFGy5DLEkGQ1Ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cqj/Zm20JwEtc7po+pfmUGBDWDL1GQ0an+saR4kDgs80sViA4Kddlvzzti53F9HjBonmmzbYUMFrIaQ+yfON/GyOoWCSE6rOc57OvWgWPcP44/ud/WY7XJj8FESF+XSB2eKQJuyefyUDwzRXLseb+iBx/FpvWFdXS0AGgSyqTtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VIMV2ejh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757358447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bp+X6u6e3BCEUK1/nb8Dy/AZJ7jajzdp6vMPZgsULU8=;
+	b=VIMV2ejhuop2nG78O6+ZTd9YnxU1a2EGDB83ux4AMY60Rk99icKyh6zvES+aFm2OwQJGtd
+	vzw9nzsp3OEbJF3ggtQ1CcApVbN/YgGgeoHgfgZeF8R90UF9EdXb5TY3lyYwZCsOmzhRUx
+	CvapmYZq/IY3PJVfMJ4qrkxsfVmFsFI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-iA2giy02O568vo2wmKzd8Q-1; Mon,
+ 08 Sep 2025 15:07:24 -0400
+X-MC-Unique: iA2giy02O568vo2wmKzd8Q-1
+X-Mimecast-MFC-AGG-ID: iA2giy02O568vo2wmKzd8Q_1757358443
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A843D19560B1;
+	Mon,  8 Sep 2025 19:07:23 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.45.226.162])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D55D41955F24;
+	Mon,  8 Sep 2025 19:07:22 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id 8712C42F81A; Mon, 08 Sep 2025 15:07:18 -0400 (EDT)
+Date: Mon, 8 Sep 2025 15:07:18 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: NeilBrown <neilb@ownmail.net>
+Cc: steved@redhat.com, bcodding@redhat.com, yoyang@redhat.com,
+	linux-nfs@vger.kernel.org
+Subject: Re: [nfs-utils PATCH] rpc-statd.service: weaken the dependency on
+ rpcbind.socket
+Message-ID: <aL8pZlSMHQBZdL3k@aion>
+References: <20250905223544.1229104-1-smayhew@redhat.com>
+ <175711562246.2850467.6098728603666668070@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <175711562246.2850467.6098728603666668070@noble.neil.brown.name>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Mon, 2025-09-08 at 17:35 +0000, Jonathan Curley wrote:
-> Typo in ff_lseg_match_mirrors makes the diff ineffective. This
-> results
-> in merge happening all the time. Merge happening all the time is
-> problematic because it marks lsegs invalid. Marking lsegs invalid
-> causes all outstanding IO to get restarted with EAGAIN and
-> connections
-> to get closed.
+On Sat, 06 Sep 2025, NeilBrown wrote:
+
+> On Sat, 06 Sep 2025, Scott Mayhew wrote:
+> > In 91da135f ("systemd unit files: fix up dependencies on rpcbind"),
+> > Neil laid out the rationale for how the nfs services should define their
+> > dependencies on rpcbind.  In a nutshell:
+> >=20
+> > 1. Dependencies should only be defined using rpcbind.socket
+> > 2. Ordering for dependencies should only be defined usint "After=3D"
+> > 3. nfs-server.service should use "Wants=3Drpcbind.socket", to allow
+> >    rpcbind.socket to be masked in NFSv4-only setups.
+> > 4. rpc-statd.service should use "Requires=3Drpcbind.socket", as rpc.sta=
+td
+> >    is useless if it can't register with rpcbind.
+> >=20
+> > Then in https://bugzilla.redhat.com/show_bug.cgi?id=3D2100395, Ben noted
+> > that due to the way the dependencies are ordered, when 'systemctl stop
+> > rpcbind.socket' is run, systemd first sends SIGTERM to rpcbind, then
+> > SIGTERM to rpc.statd.  On SIGTERM, rpcbind tears down /var/run/rpcbind.=
+sock.
+> > However, rpc-statd on SIGTERM attempts to unregister from rpcbind.  This
+> > results in a long delay:
+> >=20
+> > [root@rawhide ~]# time systemctl restart rpcbind.socket
+> >=20
+> > real	1m0.147s
+> > user	0m0.004s
+> > sys	0m0.003s
+> >=20
+> > 8a835ceb ("rpc-statd.service: Stop rpcbind and rpc.stat in an exit race=
+")
+> > fixed this by changing the dependency in rpc-statd.service to use
+> > "After=3Drpcbind.service", bending rule #1 from above.
 >=20
-> Closing connections constantly triggers race conditions in the RDMA
-> implementation...
+> Thanks for the thorough and detailed explanation.
 >=20
-> Fixes: 660d1eb22301c ("pNFS/flexfile: Don't merge layout segments if
-> the mirrors don't match")
-> Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
-> ---
-> =C2=A0fs/nfs/flexfilelayout/flexfilelayout.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> I'd like to suggest a different fix.  Change rpc-statd.service to
+> declare:
 >=20
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c
-> b/fs/nfs/flexfilelayout/flexfilelayout.c
-> index 6d9aea16ef44..addf4357610e 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-> @@ -334,7 +334,7 @@ ff_lseg_match_mirrors(struct pnfs_layout_segment
-> *l1,
-> =C2=A0		struct pnfs_layout_segment *l2)
-> =C2=A0{
-> =C2=A0	const struct nfs4_ff_layout_segment *fl1 =3D
-> FF_LAYOUT_LSEG(l1);
-> -	const struct nfs4_ff_layout_segment *fl2 =3D
-> FF_LAYOUT_LSEG(l1);
-> +	const struct nfs4_ff_layout_segment *fl2 =3D
-> FF_LAYOUT_LSEG(l2);
-> =C2=A0	u32 i;
-> =C2=A0
-> =C2=A0	if (fl1->mirror_array_cnt !=3D fl2->mirror_array_cnt)
+> After=3Dnetwork-online.target nss-lookup.target rpcbind.socket rpcbind.se=
+rvice
+>=20
+> i.e. it is declared to be After both the socket and the service.
+>=20
+> "After" declarations only have effect if the units are in the same
+> transaction.  If the Unit is not being started or stopped, the After
+> declaration has no effect.
+>=20
+> So on startup, this will ensure rpcbind.socket is started before
+> rpc-statd.service.
+> On shutdown in a transaction that stops both rpc-statd.service and
+> rpcbind.service, rpcbind.service won't be stopped until after
+> rpc-statd.service is stopped.
 
-D'oh! Well spotted... That definitely deserves a fixes tag.
+That works too.
 
-Thanks!
-  Trond
+>=20
+> I agree that it isn't necessary to restart rpc-statd when rpcbind is
+> restarted.
+> Maybe that is a justification to use Wants instead of Requires.
+> Or maybe Upholds would be even better.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+I think Upholds is confusing.... especially since there aren't any
+existing unit files using it, at least on a stock Fedora Rawhide
+system.  I don't see it being used on OpenSUSE Tumbleweed or Debian
+Trixie either.  I think it's going to confuse users if they try to stop
+rpcbind.socket and then find that it's still running.  Finally, when I test=
+ed
+it, it prevented me from stopping rpc-statd.  Eventually the shutdown
+timer hit and systemd sent rpc-statd a SIGABRT, which in turned
+triggered the systemd-coredump handler.  That's a whole mess of syslog
+entries that's going to more bug reports.  I'd rather stick with Wants.
+=20
+>=20
+> I wonder if putting
+>=20
+>  ConditionPathIsSymbolisLink !/etc/systemd/system/rpcbind.socket
+
+I'm lost.  What what cause the rpcbind.socket symlink to be created
+directly in /etc/systemd/system?  I've seen it get created in
+/etc/systemd/system/sockets.target.wants or
+/etc/systemd/system/multi-user.target.wants, but never directly in
+/etc/systemd/system.
+
+-Scott
+>=20
+> in rpc-statd.service would be a suitable way to stop rpc-statd from
+> starting if rpcbind.socket is masked.
+>=20
+> In any case I think there are two separate issues here which deserve two
+> separate patch.
+> 1/ shutdown ordering isn't handled correctly.  Adding the extra After
+>    directive should fix that
+> 2/ rpc.statd is restarted unnecessarily.  Wants or Upholds might be part
+>    of the solution.
+>=20
+> Thanks,
+> NeilBrown
+>=20
+>   =20
+>=20
+> >=20
+> > Yongcheng recently noted that when runnnig the following test:
+> >=20
+> > [root@rawhide ~]# for i in `seq 10`; do systemctl reset-failed; \
+> > 	systemctl stop rpcbind rpcbind.socket ; systemctl restart nfs-server ;=
+ \
+> > 	systemctl status rpc-statd; done
+> >=20
+> > rpc-statd.service would often fail to start:
+> >=20
+> > =C3=97 rpc-statd.service - NFS status monitor for NFSv2/3 locking.
+> >      Loaded: loaded (/usr/lib/systemd/system/rpc-statd.service; enabled=
+-runtime; preset: disabled)
+> >     Drop-In: /usr/lib/systemd/system/service.d
+> >              =E2=94=94=E2=94=8010-timeout-abort.conf
+> >      Active: failed (Result: exit-code) since Fri 2025-09-05 18:01:15 E=
+DT; 229ms ago
+> >    Duration: 228ms
+> >  Invocation: bafb2bb00761439ebc348000704e8fbb
+> >        Docs: man:rpc.statd(8)
+> >     Process: 29937 ExecStart=3D/usr/sbin/rpc.statd (code=3Dexited, stat=
+us=3D1/FAILURE)
+> >    Mem peak: 1.5M
+> >         CPU: 7ms
+> >=20
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Version 2.8.2 st=
+arting
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Flags: TI-RPC
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to regist=
+er (statd, 1, udp): svc_reg() err: RPC: Remote system error - Connection re=
+fused
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to regist=
+er (statd, 1, tcp): svc_reg() err: RPC: Success
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to regist=
+er (statd, 1, udp6): svc_reg() err: RPC: Success
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to regist=
+er (statd, 1, tcp6): svc_reg() err: RPC: Success
+> > Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: failed to create=
+ RPC listeners, exiting
+> > Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: rpc-statd.service: Con=
+trol process exited, code=3Dexited, status=3D1/FAILURE
+> > Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: rpc-statd.service: Fai=
+led with result 'exit-code'.
+> > Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: Failed to start rpc-st=
+atd.service - NFS status monitor for NFSv2/3 locking..
+> >=20
+> > I propose we revert the change from 8a835ceb and instead turn the
+> > dependency into a weak dependency by using "Wants=3Drpcbind.socket"
+> > instead of "Requires=3Drpcbind.socket".  This bends rule #4 above and w=
+ill
+> > make it so that systemd will try to start rpcbind.socket if it isn't
+> > already running when rpc-statd.service starts, but it won't restart
+> > rpc-statd.service whenever rpcbind is restarted.  Frankly, we shouldn't
+> > need to restart services whenever rpcbind is restarted (thats why
+> > rpcbind has the warmstart feature).  The only drawback is that now if an
+> > admin wants to set up an NFSv4-only server by masking rpcbind.socket,
+> > they'll need to mask rpc-statd.service as well.  I don't think that's
+> > too much to ask, so the nfs.systemd man page has been updated
+> > accordingly.
+> >=20
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  systemd/nfs.systemd.man   | 10 +++++++---
+> >  systemd/rpc-statd.service |  5 +++--
+> >  2 files changed, 10 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/systemd/nfs.systemd.man b/systemd/nfs.systemd.man
+> > index a8476038..93fb87cd 100644
+> > --- a/systemd/nfs.systemd.man
+> > +++ b/systemd/nfs.systemd.man
+> > @@ -137,7 +137,9 @@ NFSv2) and does not want
+> >  .I rpcbind
+> >  to be running, the correct approach is to run
+> >  .RS
+> > -.B systemctl mask rpcbind
+> > +.B systemctl mask rpcbind.socket
+> > +.br
+> > +.B systemctl mask rpc-statd.service
+> >  .RE
+> >  This will disable
+> >  .IR rpcbind ,
+> > @@ -145,9 +147,11 @@ and the various NFS services which depend on it (a=
+nd are only needed
+> >  for NFSv3) will refuse to start, without interfering with the
+> >  operation of NFSv4 services.  In particular,
+> >  .I rpc.statd
+> > -will not run when
+> > +will fail to start when
+> >  .I rpcbind
+> > -is masked.
+> > +is masked, so
+> > +.I rpc-statd.service
+> > +should be masked as well.
+> >  .PP
+> >  .I idmapd
+> >  is only needed for NFSv4, and even then is not needed when the client
+> > diff --git a/systemd/rpc-statd.service b/systemd/rpc-statd.service
+> > index 660ed861..4e138f69 100644
+> > --- a/systemd/rpc-statd.service
+> > +++ b/systemd/rpc-statd.service
+> > @@ -3,10 +3,11 @@ Description=3DNFS status monitor for NFSv2/3 locking.
+> >  Documentation=3Dman:rpc.statd(8)
+> >  DefaultDependencies=3Dno
+> >  Conflicts=3Dumount.target
+> > -Requires=3Dnss-lookup.target rpcbind.socket
+> > +Requires=3Dnss-lookup.target
+> > +Wants=3Drpcbind.socket
+> >  Wants=3Dnetwork-online.target
+> >  Wants=3Drpc-statd-notify.service
+> > -After=3Dnetwork-online.target nss-lookup.target rpcbind.service
+> > +After=3Dnetwork-online.target nss-lookup.target rpcbind.socket
+> > =20
+> >  PartOf=3Dnfs-utils.service
+> >  IgnoreOnIsolate=3Dyes
+> > --=20
+> > 2.50.1
+> >=20
+> >=20
+>=20
+>=20
+
 
