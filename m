@@ -1,74 +1,73 @@
-Return-Path: <linux-nfs+bounces-14119-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14120-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C6F7B4823D
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 03:37:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20B8BB4823E
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 03:44:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00D1B3A1BDC
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 01:37:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 144AE189AFC9
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 01:44:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E0D1A3167;
-	Mon,  8 Sep 2025 01:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA59185E4A;
+	Mon,  8 Sep 2025 01:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="djJiYl0v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Msrn4TOm"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="unXxRJx0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T5RsVSIc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFA615667D
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 01:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1E32AE99
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 01:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757295459; cv=none; b=SwoluYdkueYSaZyYK5opcOPjJW67hpNnM1D+ZAFnoSujWDS5VLQfZM2eoQoNE7hkkf3NmMDhNne1MadnyzCSSfJb2MEC91SaBheuRsGeRFLjtjuCM0iW25YtFJ4Ob3wOtSvMcrYlbT/vi8xMDCXVN5zbEKkGWb+ek4er8CPfWVE=
+	t=1757295853; cv=none; b=qDLGk66EXSrZEziRHwJRXBXEw1QGh0DnoviXq0VAYNC+FAxgLjFYbf31XdGAzcvPMsSrQVmbeiOXZt2QvJC/ePk1kgcJL6UgimSSgS2/OIEczKR/xrncycX1oqvHLm07y4WK2lhiaJ/ZM1fj/buV60/8pn3zQNcaSgqPCy7G7OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757295459; c=relaxed/simple;
-	bh=o1rX0RHanDoUdxievtqHKdJlXK0U9vej9tCHjeNLLpA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=g2GcfMTj2S5WDFAeFL6Y/nRhFHeWPUgYa/11wZk4VuYQOflFsDicpTtJYV3C/WmW2IRGWGU3YLRsXxnZZk3XARzKXjdzBG0UMjVUwLtN84zZ+LsAkNUzXr3TMVJldFJ+xXQAMV8V1ZvZH6ovZXQDBRBzUxti/hkaRyALomVZ9tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=djJiYl0v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Msrn4TOm; arc=none smtp.client-ip=103.168.172.153
+	s=arc-20240116; t=1757295853; c=relaxed/simple;
+	bh=no7c8Yfqn2ef2s2RmHc014BRv7O5ctPs9Bnz9Zs8LfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r0Q60TRBUfITiXjkpry7Hb7+VcdlbDNWugWelikoZl0DtHcAeC7i3fgxqzuKyTEkLC6Fak7m50Ef0k3I4sdT3xxGmtoRqcmEc4EHqKm8Z3cX8Yr+kSEUpA8NlC2ia9w3XISlzJr2ncO7vNOOCIaJY4d6CBNka8MQsaOOPX7bK10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=unXxRJx0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=T5RsVSIc; arc=none smtp.client-ip=103.168.172.146
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0123F14000C8;
-	Sun,  7 Sep 2025 21:37:36 -0400 (EDT)
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id CAE2BEC00C7;
+	Sun,  7 Sep 2025 21:44:10 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Sun, 07 Sep 2025 21:37:36 -0400
+  by phl-compute-02.internal (MEProxy); Sun, 07 Sep 2025 21:44:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1757295455; x=1757381855; bh=SR
-	zhswgRwDZnnlqx367qlIO9ygY+0q2SZghVWNWG40M=; b=djJiYl0vyRwSXGheKc
-	OPRqAwl0hGa1m0jBpLxRU5xxZU7JpweiAV63Jp9f4cTsixjqiRlxqSE/vu2bkQsd
-	lfL5vZTm9R+sImYaQfJxPPGAdcEO4p2kFR519hTdIUwi0NmozIIIA1K37siQSLkA
-	x+Yp181iTki3pIaD1aIrTHvQiQrC1OfkKrqmOHy/W30J6N1pjenE+GAuugl9enYV
-	8PpQ3kBVfTkfXI1wZOpDR49cfULCph+65hrKdV0MB423amyBGIGVpbKMD2jtnn0Y
-	FNYzgdrFVy1LFWW0zjQbtsB+ChlvEExbxo5iGYxW57PYB/1xlu0y+r+Obyclb0/8
-	Qu2Q==
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm1; t=1757295850; x=1757382250; bh=nG3RqZgB9VDBUPcGze+7L
+	8ZpwOOvtHENOj6YBeuG6+s=; b=unXxRJx0uQvsWAWP9KebZYh7Mt241VV9IH1Wg
+	rzmKrwzLG97iZlmxvYaBmEBYmqK/YLysEqChdU+YaFwkJowYcWntPwUYvFaM3c0A
+	2tU0F4TPmDr7ulguHsojgQ2Wbd7dYHUvLPAiu6pWztSiNYti3yPlcWHh6QomFtr7
+	P6rG9ILQuwJSjzu6SwSttwEbf63nvXbO1gyYch2UrusBKZj30MpnbixCzCWX7uMO
+	oEi2Plihid5PTXYTfpkeZKpNG1ebLuP2LjL5mP8m59tTlQamAyN/QVADvcBXJZAQ
+	kbq8GUhQxQPwR3SpWkCuQLFzr4JzUdTbyVo8PszoY94xcr69A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1757295455; x=1757381855; bh=SRzhswgRwDZnnlqx367qlIO9ygY+
-	0q2SZghVWNWG40M=; b=Msrn4TOmUHfWEVPI9+vv4CNYauaKbJLWW9Zc0S3aPRRS
-	BJAI3XggCw8j8bCisMF3JLy3QtyoZuzNwePVN8GAjsG92pD+l1tI8DEwvfdcVGjg
-	8YEOc3yobfiPibp0jXgmskTj+A3EP2jBM6C0WbeafEPGpvLVeJjvBp2Xsd0oHbqe
-	spIY9lA1mmxrGXIm0KwSqeg8uODgI/iss1UstAF5Z7k3tRdfn39P5/efqYAztHSN
-	RMxUom/NPP1OBMTurIDXVXTgz9Wul4B/JxkX0eqyEKSTxH60hAYr2PeX3LLNAMLJ
-	DUQ4FhdKAMgoWG/tUXnPa/mb7OnOaR2VVLclONadMA==
-X-ME-Sender: <xms:XzO-aGOtbhRci1GbTmfhassmK5vBu-EhNBgSMWbGffHa9lT4z8z2aw>
-    <xme:XzO-aNYf7hxHl7Ddfy35NglRuqGc6HnX-0nD_fzK22WwCQ1g04Zp3y435TvaqaI9z
-    K9pflzY5q3DbQ>
-X-ME-Received: <xmr:XzO-aNtBMxPljWLzHt8EDG1FsyjHVRg3SsDoGWmt6eR0evDl22pEFOgVmmkBnPfnBGSvlLFVA3HqM5ugdVUZOQr8pDdeCUy5sWggGKwj2Cb8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduiedvvdcutefuodetggdotefrod
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1757295850; x=1757382250; bh=nG3RqZgB9VDBUPcGze+7L8ZpwOOvtHENOj6
+	YBeuG6+s=; b=T5RsVSIczFl2f/jEtgDmmN5Ol8mqndQWZBMxWTEyz1fmlyt0EIB
+	9DLagueQ4SBp3CFr8xJDmwGooPo0jn5TmZqVtJ7vPols/BD+luusnj+AabhH69c+
+	Zt2vjZXvsNMMIpGl76qn4/MRt324J7p1xWguKmYf7pn7bnC9fy18B6ZdlW2SsmSZ
+	3zO/JgvuYUMIQ2S7E1VBl30A4e5qbAn75yHpeFb8STlk+2XP1M/4VhwXEfuKIWIz
+	Uh0zqBgiJK1Z2ShI6ho+9ARczeEv2MCmznLVIL62G+I2x9DyNTO2YHtdZf4e4gDq
+	7sjr2cgcfhNI1u2KRu7sAuUjnCQUZTR4NMg==
+X-ME-Sender: <xms:6jS-aCQ8gmf10hO0KFU8hhOXHtMxlexkf6xNftQvCFkjo0LpxYP2jQ>
+    <xme:6jS-aANObwZCoFWbZ_n95FvrN7jcDw9CiaWPomb15ygF5n-KQbVggPtCJk-VWx3ZZ
+    C1zrzgmG5-tTg>
+X-ME-Received: <xmr:6jS-aARZLCaGmjMoH7M1vGlu47zhxzeugFnsXjPryQiXb9Nud1VRvUGwIf1mFeASfFiA7r6seewMOUSLP7Tqj4kpsBNxE8dmLLihRLzflr0n>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduiedvgecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefufffksehtqhertddttdejnecuhfhrohhmpefpvghilheurhhofihn
-    uceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepieeiud
-    ffheejkeetleefkeevfeejgfdugfdttdeljeelgeegheduudegteekieeunecuvehluhhs
+    hrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheurhhofihn
+    uceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepteeiff
+    ehledthffgieeuveetffegteeigeetfeffueekvefhgfdthfeugedtteehnecuvehluhhs
     thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnh
     hmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhr
     tghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
@@ -76,84 +75,53 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduiedvvdcutefuodetgg
     rhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlh
     gvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghp
     thhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:XzO-aHObV0B4CTeC62nk1ylAsCpKyG1rG9HmL-nBYFS_agbkObglZw>
-    <xmx:XzO-aM6gKrJVIWsx8SvQlh73nM-uA4DMfkXemGjL3ZbkCzL4e4rcRQ>
-    <xmx:XzO-aFQCkBhRczoRw3c-P4_wGtmdq3BImOAXfnpF4ekWDrh_I_AioQ>
-    <xmx:XzO-aBB6ptMe1r3Kr6_yLOOlEO60E7xKFjUIFsKSdWjFmFjsfuP9LQ>
-    <xmx:XzO-aHaaxsRfDvX7UTXXoJ1rlfw-y4fzGZoojHphICwQ84P-fhCLPuoq>
+X-ME-Proxy: <xmx:6jS-aOhNAQe7PtVNx_wOcN2pIEJW2kHnsjqsifVSkOO5wxhDQFX3gA>
+    <xmx:6jS-aJ-6nLhydkGbP0lQmkq4ZTGcsdXrquPPYg4KMFnlK6T2rIS-uQ>
+    <xmx:6jS-aFHGAmUEz-dFAMymSfcRXND4hvSyzyrUCz2P5YC5nV69WCoz_A>
+    <xmx:6jS-aMk61Y826kmVmNMD1J7Iz8jvzerD2BPVuVQllLNvH-nYU_87Uw>
+    <xmx:6jS-aHfE9rQQ0o9THKIg9EnD4sDUQh3zmM2n-J-KOnZhSpprvm6FFbZU>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 7 Sep 2025 21:37:33 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+ 7 Sep 2025 21:44:08 -0400 (EDT)
+From: NeilBrown <neilb@ownmail.net>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2] cleanups in nfs4reovery.c
+Date: Mon,  8 Sep 2025 11:38:31 +1000
+Message-ID: <20250908014348.329348-1-neilb@ownmail.net>
+X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2] nfsd: discard nfserr_dropit
-Date: Mon, 08 Sep 2025 11:37:25 +1000
-Message-id: <175729544562.2850467.751680410529802310@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+
+This first of these patchs is part of my work to change how directory
+locking is managed.  That will involve moving the lock as close as possible
+to the operation being locked, and using some standard interfaces 
+which combine the lock and the lookup.  Then changing the mechanics of
+taking a lock.
+
+nfsd4_list_rec_dir() currenty locks a direct and performs a lookup
+in a different function to where the lock and lookup results are needed,
+and does it even when those are not needed at all.  So the first
+patch moves the lock and lookup to where it is needed.
+
+The second patch (arguably) improves the calling protocol for
+nfs4_client_to_reclaim().  If people don't like this second patch I'm
+happy for it to be dropped.  It is the first patch which is particularly
+important to me.
+
+Thanks,
+NeilBrown
 
 
-From: NeilBrown <neil@brown.name>
-
-nfserr_dropit hasn't been used for over a decade, since rq_dropme and
-the RQ_DROPME were introduced.
-
-Time to get rid of it completely.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
-
-This version updated fo recent changes to fs/nfsd/lockd.c
-
- fs/nfsd/lockd.c | 2 --
- fs/nfsd/nfsd.h  | 8 +-------
- 2 files changed, 1 insertion(+), 9 deletions(-)
-
-diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-index 6b042218668b..c774ce9aa296 100644
---- a/fs/nfsd/lockd.c
-+++ b/fs/nfsd/lockd.c
-@@ -71,8 +71,6 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct =
-file **filp,
- 		 * to callback when the delegation is returned but might
- 		 * not have a proper lock request to block on.
- 		 */
--		fallthrough;
--	case nfserr_dropit:
- 		return nlm_drop_reply;
- 	case nfserr_stale:
- 		return nlm_stale_fh;
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 1cd0bed57bc2..06e8327255f8 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -335,14 +335,8 @@ void		nfsd_lockd_shutdown(void);
-  * cannot conflict with any existing be32 nfserr value.
-  */
- enum {
--	NFSERR_DROPIT =3D NFS4ERR_FIRST_FREE,
--/* if a request fails due to kmalloc failure, it gets dropped.
-- *  Client should resend eventually
-- */
--#define	nfserr_dropit		cpu_to_be32(NFSERR_DROPIT)
--
- /* end-of-file indicator in readdir */
--	NFSERR_EOF,
-+	NFSERR_EOF =3D NFS4ERR_FIRST_FREE,
- #define	nfserr_eof		cpu_to_be32(NFSERR_EOF)
-=20
- /* replay detected */
-
-base-commit: b8cf39957931982091e6446a98f151a79aeea07b
---=20
-2.50.0.107.gf914562f5916.dirty
-
+ [PATCH 1/2] nfsd: move name lookup out of nfsd4_list_rec_dir()
+ [PATCH 2/2] nfsd: change nfs4_client_to_reclaim() to allocate data
 
