@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-14132-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14133-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A530B49A07
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 21:33:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 319E8B49A3E
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 21:41:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5157A1624B0
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 19:33:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16E0A1BC38AA
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Sep 2025 19:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47B512CDA5;
-	Mon,  8 Sep 2025 19:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F642D3A60;
+	Mon,  8 Sep 2025 19:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYZZhaGJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDQnf9i6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E37B1E25EB
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 19:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA912D24B0
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Sep 2025 19:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757360027; cv=none; b=H/UC3ldGhCwlYEsDejT0w6P/Z88WdfwfypTeHvh9lR/l/AmGVo6EI7pwIKG8TxB3vhqQ54ZBfm+t4wZSEMI1EqHBWGKtPXWrA4je7FKBYPJJDuIV0fmofFI26x0wyHgOdpyMxHN3yzNbai3tbMh9YGNWIUIPhigRe8bsjSNY+T4=
+	t=1757360447; cv=none; b=aqHFFiRDj+X6rTyYMYERhWnpe6B0M4x7YLLGiC7EsSfurpjqj2BBNshLIdSVSgk561aIuguW3u5fikJzQKLQ5fDpO34ddTxYL1r0tE/qwM0LqPsInwC6PyuLcsrF/wbJzwwibd80Tmx4E+GF2Y6mqdofGPYHYMTkIXhXqzs8gdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757360027; c=relaxed/simple;
-	bh=MhNDtjWvDoa7J3Yep0Mdo+1vtrVolggdK+ZvHLMGgFQ=;
+	s=arc-20240116; t=1757360447; c=relaxed/simple;
+	bh=wjhCRMCOJUDzxMqcotsLGOyKlQmJTciT4rATczNnwVk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MLsDDGfQ5puoDPDy+5ZxqTlP0KjleGNq68/1B/BMkYnhZUQZxiMsh28COyfjfr7VUa3XEqzl+aov+mNmxv615Kjlpo4RSsSCbzA/nJ0LEFejHC/gzikcjZP6uqvg2UhW6ak0QfZxgqlSCYxIN71IAQRM59ZErDjpbXItmQ0mSEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYZZhaGJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7112CC4CEF1;
-	Mon,  8 Sep 2025 19:33:46 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Wj3z2sk3qkbStCdUCUR6p4EgZfiNwuVg9yH5Q69KT4+jSf7hv4BWSNcVbAhcwDRrE5oN3KJ1Cp8ri1MMB6uMC7zXMjD5hFl9vijUNhbPWagJmIPvKoitAY3d+yB/RNVbcZKRyHZ7E1SuOAJv6XKNcpVwBljqITO+Cxw0UvCOTNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDQnf9i6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A5DC4CEF1;
+	Mon,  8 Sep 2025 19:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757360027;
-	bh=MhNDtjWvDoa7J3Yep0Mdo+1vtrVolggdK+ZvHLMGgFQ=;
+	s=k20201202; t=1757360447;
+	bh=wjhCRMCOJUDzxMqcotsLGOyKlQmJTciT4rATczNnwVk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EYZZhaGJ6jSEJzpSspQKgaCjUnPwL6nuYLWs/zNNhmN/mUhRxqAi7eZzfX3Ne176G
-	 N5sQLWpYOjYKq8xAlfwGNrB7CreAagWNDMvj/T7Kk5tJgkEmvjz7dUQm70kIb7wBLO
-	 kEBo6HbOjGJeI+vPZ7ttBLGClp0xl0zQ3t5iDaR8S16NrpYLq/PEaOv+3F/D9bkXKg
-	 NfKSJOF9vO5QdgdAEmMbMsfdXP690sQ1LM3lmadjPGqaqmCoWIDv8TvIuzGC0FYx2d
-	 DGKyJl/y09z8Qs2kSJWu8O++l92HO9COY8G3pVEs2KXt6TZeaAifyqMTPbcVkNTL3r
-	 hkHHDt59iFaeQ==
-Message-ID: <569dc9ebd82418e77bf27762b1170fa7de1b2f5d.camel@kernel.org>
-Subject: Re: [PATCH v2] nfsd: discard nfserr_dropit
+	b=tDQnf9i6ccjIvQ1t/4drzG2da7/Q5zWW5H3lCjoes5+TheiKZwc4sB5TLxPCJRRw+
+	 L4/Q/CF/HS+T4aWacVJCaTSBvTcfh07BGhTq9BBEOTEAsyoz8tV+UxoOaKC+H33Gxb
+	 YBm2p1A4w7pX6Mv/o33gOzC7JhzSkEGvwxBNeVCOPTR/hFUuDjWlCzvMcY56OTFvat
+	 NXGbG+GUYHEGfXk7rr+jCP+Iemq9xc7p3NZChDQtJ77QBZoxrnHDTvM/Q8qkNAn8Up
+	 NLYwSlzYOTv2KP1I+lVWrhPb3d6+MvtQpFtWfgSFbKh7yYD8n6w/QrwTLWhWdSAitM
+	 sdHClUvLpknOw==
+Message-ID: <4af61e35dc3a3af9bd25e10c1c02d9d4f43f5db7.camel@kernel.org>
+Subject: Re: [PATCH 0/2] cleanups in nfs4reovery.c
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@ownmail.net>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 08 Sep 2025 15:33:45 -0400
-In-Reply-To: <175729544562.2850467.751680410529802310@noble.neil.brown.name>
-References: <175729544562.2850467.751680410529802310@noble.neil.brown.name>
+Date: Mon, 08 Sep 2025 15:40:45 -0400
+In-Reply-To: <20250908014348.329348-1-neilb@ownmail.net>
+References: <20250908014348.329348-1-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,59 +134,38 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-09-08 at 11:37 +1000, NeilBrown wrote:
-> From: NeilBrown <neil@brown.name>
+On Mon, 2025-09-08 at 11:38 +1000, NeilBrown wrote:
+> This first of these patchs is part of my work to change how directory
+> locking is managed.  That will involve moving the lock as close as possib=
+le
+> to the operation being locked, and using some standard interfaces=20
+> which combine the lock and the lookup.  Then changing the mechanics of
+> taking a lock.
 >=20
-> nfserr_dropit hasn't been used for over a decade, since rq_dropme and
-> the RQ_DROPME were introduced.
+> nfsd4_list_rec_dir() currenty locks a direct and performs a lookup
+> in a different function to where the lock and lookup results are needed,
+> and does it even when those are not needed at all.  So the first
+> patch moves the lock and lookup to where it is needed.
 >=20
-> Time to get rid of it completely.
+> The second patch (arguably) improves the calling protocol for
+> nfs4_client_to_reclaim().  If people don't like this second patch I'm
+> happy for it to be dropped.  It is the first patch which is particularly
+> important to me.
 >=20
-> Signed-off-by: NeilBrown <neil@brown.name>
-> ---
+> Thanks,
+> NeilBrown
 >=20
-> This version updated fo recent changes to fs/nfsd/lockd.c
 >=20
->  fs/nfsd/lockd.c | 2 --
->  fs/nfsd/nfsd.h  | 8 +-------
->  2 files changed, 1 insertion(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-> index 6b042218668b..c774ce9aa296 100644
-> --- a/fs/nfsd/lockd.c
-> +++ b/fs/nfsd/lockd.c
-> @@ -71,8 +71,6 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, str=
-uct file **filp,
->  		 * to callback when the delegation is returned but might
->  		 * not have a proper lock request to block on.
->  		 */
-> -		fallthrough;
-> -	case nfserr_dropit:
->  		return nlm_drop_reply;
->  	case nfserr_stale:
->  		return nlm_stale_fh;
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 1cd0bed57bc2..06e8327255f8 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -335,14 +335,8 @@ void		nfsd_lockd_shutdown(void);
->   * cannot conflict with any existing be32 nfserr value.
->   */
->  enum {
-> -	NFSERR_DROPIT =3D NFS4ERR_FIRST_FREE,
-> -/* if a request fails due to kmalloc failure, it gets dropped.
-> - *  Client should resend eventually
-> - */
-> -#define	nfserr_dropit		cpu_to_be32(NFSERR_DROPIT)
-> -
->  /* end-of-file indicator in readdir */
-> -	NFSERR_EOF,
-> +	NFSERR_EOF =3D NFS4ERR_FIRST_FREE,
->  #define	nfserr_eof		cpu_to_be32(NFSERR_EOF)
-> =20
->  /* replay detected */
->=20
-> base-commit: b8cf39957931982091e6446a98f151a79aeea07b
+>  [PATCH 1/2] nfsd: move name lookup out of nfsd4_list_rec_dir()
+>  [PATCH 2/2] nfsd: change nfs4_client_to_reclaim() to allocate data
+
+I'm fine with both of these, so:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+...this does remind me though:
+
+Is it time to switch the default for CONFIG_NFSD_LEGACY_CLIENT_TRACKING
+to N? It has been a little over a year since we added the Kconfig
+option (and had it default to Y).
 
