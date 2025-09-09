@@ -1,128 +1,112 @@
-Return-Path: <linux-nfs+bounces-14144-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14145-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A565B502C5
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Sep 2025 18:35:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 969CDB505D9
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Sep 2025 21:05:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82DA2169194
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Sep 2025 16:34:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B16C167D7A
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Sep 2025 19:05:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB28450F2;
-	Tue,  9 Sep 2025 16:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF01238C0A;
+	Tue,  9 Sep 2025 19:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDkkaKHa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uApB2Hh8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156F425D1F5
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Sep 2025 16:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA47225A24
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Sep 2025 19:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757435678; cv=none; b=H4WxA2orE7k3POWObwubIgRJZuyJfj0YN4fn0x4xBhxdzQVPSxCBzm3ZmmugC0s1XxZmq03kLrzF9nC0QwnNxtY4zSdyir7lTABve68/Inho5AX52Ddu+I8cjA6Cxwk1qWFRnuqDvf37VRy9YY/8Jp0uw2pOMiltWem7UAb+aJI=
+	t=1757444728; cv=none; b=ZRfXf4KBpzkKNtVoKtM7ObfFOUkdG6lATpmCvaempIBvlUHJvT7CjnXJYXEhUf/r2XkHB41WlkwBBqXKryZlZkJVBHilpKJo0CphV6FqnhHlHUPHKay37wY+wNRpEbt5mN96dLF9+5GSb7uz4u0uiP4jwkeYX/UAvEcY+Bj6+pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757435678; c=relaxed/simple;
-	bh=lA8s6t9HOiBQdDuKb6zNLDpNnljx8itOeiGroYksHhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=mtmmoHcm3Cr1Q56mjjkvakCWd2kt9jkbRItkI1fg4ytE15PgUBAC5YUjQuewt2A2CTK6fqk04abaKrsfEajNWEu7t6jIzCQnZ1kXiT75DpJ4rFLdshbzGVLIIxt7xclp+pCYCdUlleUiIbSESMlX98aDAICnh60eWn/Hk83B4hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDkkaKHa; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6205e2b7a8fso1972943eaf.0
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Sep 2025 09:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757435676; x=1758040476; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KEjAcB9Qu+OXbnub5YLZ7li7S5r42VgcPpOdc64aBEQ=;
-        b=lDkkaKHazi+dL3AnkxPgt6XGE8hWujOj6Af4IaaTy1is1FMIU7Lf8plILNkXw3KenK
-         84GF34ijSIdyeB4xqRlZEgTs3eG7QusmiIlYKZsVF8cO8zJYmM0TF0yuhwvsCGxNFrVW
-         zwu//RNJW2XB1CTvIbH5x9T4ZishDmSfYov+8Uf0uE3GdhczTgqkbX3AYiA18WSNYgXH
-         I9WxO9yktl1bWRkSng2IWDtxH+Pnilw4S6Tzur9z/FujU/vWZkWsbniaVMrzUSDhw09J
-         mL7Y52Mug3922fkZKmNIEXCp6nxiywPiuK0dbBNh7KI1lFA44gDCS9S9bnjz98kvFcD1
-         IbWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757435676; x=1758040476;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KEjAcB9Qu+OXbnub5YLZ7li7S5r42VgcPpOdc64aBEQ=;
-        b=N5dobhBXyik93s7DEcdYLjjqsPvtqB8VnafinwCc5+4LOY9whHSGYMUG7csz9jccHn
-         k+cKwyUa9WwRdiHui1cVulLC9lfGFeni4bG3QkuBTkl1uP04seZVU/e5ii3LrSxKKtKe
-         iZMmgts/TcG5Pcx1ifxgRiqEudIm2IwWcvbaycelyPkSV2AgUEs4F2SZAJTguIhDAgKX
-         tOZIgn67wTK+IamK6gZ7/5ODS4kBojxQxt4ip7jv4KQ0x4/HEQLOfV6dBJ0IAnvIAW9a
-         BLmzMwRSBwLy3OESzT3ZOMRSykHkfk6BOsxBxTMTGtQQmT1albxRiNdG59OGw8jZNPSm
-         cB9A==
-X-Forwarded-Encrypted: i=1; AJvYcCU81+koPvhwtb2GQLk+mgGNrzN73pQdgJFlQhWDCAGokCrtL7hnbuymWTxgt39ZtHQTfZiKu55hQSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyYiDj1nPneo0VfZWcCIAHe5FeLBo73RO8ii4LSbrV1a/gbKdn
-	mwuqw2ayfjscbcHyfrPp3bayvIQp5Y4L41xFWyhX8hquWuXC4SWSRoPsxWVzkv4VrTcExT4QiAN
-	Vpe0JavjcyCZi5o1KqM6OM9Tf7wdWeILbQV4g
-X-Gm-Gg: ASbGnctLegkhoX/40iHWDKC8X0P9FHWJCy/nisxGXYaOvTKCLa7rZe77Zqk4JOt2iMY
-	bvPFtEgv9AxrhlJA6XLt4WAb5Gt7Yj35ZrYraORKCnrl7pHD7YYR2Sz/o20XDJWnjcB46QeP/F/
-	ECJLFyZ/ZvH7nrMmdalxPFrZuLAT1VlhwxgPCLuJ+UfvHPd2eHXfGwvQR17ifWwT/zTy+m6aFB8
-	IY0yyw=
-X-Google-Smtp-Source: AGHT+IHaFag27p8U/7gscmibSnO1PlecAy3FJaa/rHW0FHKW994nM5DQz6H8aSJd2KEWNPQ1JkfqS3KxUbGqKpDJBpY=
-X-Received: by 2002:a05:6870:b4ab:b0:315:c1c9:a5be with SMTP id
- 586e51a60fabf-32262648406mr4912629fac.9.1757435676093; Tue, 09 Sep 2025
- 09:34:36 -0700 (PDT)
+	s=arc-20240116; t=1757444728; c=relaxed/simple;
+	bh=OLQwAE8DTOJRcHiRarW7yEAjtwQqPNcxybneaiuqrCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nlgXuW0Fn8MeFtcWF8GwCyV7Re/3NHN8PrhkjpP7hhSOM7KGu/iLTpSyg88T96xxTdHxhgKejaBOi9vC0+xF/AL5cvM7RPH7tiDxwy/8jAUO5d9c1ZNTwo5s8VL2Yd9Bq/YxLYdmsO4bAlE+h0TB+o/SC6wV4e2+5DziVXjAG2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uApB2Hh8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204A3C4CEF4;
+	Tue,  9 Sep 2025 19:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757444727;
+	bh=OLQwAE8DTOJRcHiRarW7yEAjtwQqPNcxybneaiuqrCE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uApB2Hh8cfBmbYfYBUAGW3c8zFtWUKcnF5PrM8KxO8cGyinACGhgN7iwTGPlLA7Ba
+	 ONdln0wjzZW7d6YeTvyGkcI1TLZCAj8KVW9yJpGiHgVkpT6TZTwDn0ClVvxXmAjeTp
+	 1+ARswNZGTSVL6WROQ6pEVnxINz5rhgsrlOj7ZJgO2s0ddHHXhKNuzy/C4ItwGNm/p
+	 Jr+9QbBvzXaucsTrig8lnr1LEjaRTxOG0nw4lvYFG+iBqeQm61gTyTGiqRbBZSGeVi
+	 QT7MZ8r7MtMdOuJvINDEtN2rp6WhhEdFgSSnANJoJ2hs6aJsH8NQgHs2ggipAJBHQn
+	 eJ+rH2oSYAWNQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v1 0/3] NFSD direct I/O read
+Date: Tue,  9 Sep 2025 15:05:22 -0400
+Message-ID: <20250909190525.7214-1-cel@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0Ufzm66Ors3aBBrua0-8bvwqo-=RCmiK1yof9mMUxyEmCQ@mail.gmail.com>
- <CALXu0Ufgv7RK7gDOK53MJsD+7x4f0+BYYwo2xNXidigxLDeuMg@mail.gmail.com>
- <44250631-2b70-4ce8-b513-a632e70704ed@oracle.com> <aEZ3zza0AsDgjUKq@infradead.org>
- <e5e385fd-d58a-41c7-93d9-95ff727425dd@oracle.com> <aEfD3Gd0E8ykYNlL@infradead.org>
- <CALXu0UfgvZdrotUnyeS6F6qYSOspLg_xwVab8BBO6N3c9SFGfA@mail.gmail.com> <e1ca19a0-ab61-453f-9aea-ede6537ce9da@oracle.com>
-In-Reply-To: <e1ca19a0-ab61-453f-9aea-ede6537ce9da@oracle.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Tue, 9 Sep 2025 18:33:59 +0200
-X-Gm-Features: Ac12FXy3sHHh8H3-76FUylUsxwCyfmz6CIQhKzrWD-jbZqvQEUwlALfNSyCS5D4
-Message-ID: <CALXu0Uc9WGU8QfKwuLHMvNrq3oAftV+41K5vbGSkDrbXJftbPw@mail.gmail.com>
-Subject: Re: NFSv4.x export options to mark export as case-insensitive,
- case-preserving? Re: LInux NFSv4.1 client and server- case insensitive
- filesystems supported?
-To: linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 9 Sept 2025 at 18:12, Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> On 9/9/25 12:06 PM, Cedric Blancher wrote:
-> > Due lack of a VFS interface and the urgend use case of needing to
-> > export a case-insensitive filesystem via NFSv4.x, could we please get
-> > two /etc/exports options, one setting the case-insensitive boolean
-> > (true, false, get-default-from-fs) and one for case-preserving (true,
-> > false, get-default-from-fs)?
-> >
-> > So far LInux nfsd does the WRONG thing here, and exports even
-> > case-insensitive filesystems as case-sensitive. The Windows NFSv4.1
-> > server does it correctly.
->
-> Hi Cedric,
->
-> Can you send a pointer to some documentation for the Windows NFSv4.1
-> implementation of this feature?
+From: Chuck Lever <chuck.lever@oracle.com>
 
-That is just ON by default for the Windows NFSv4.1 server if you
-export NTFS, and OFF by default for DVDs.
-We never had to change it.
+This series replaces patches 1, 2, and 5 in Mike's v9 series:
 
-https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/nfsadmin
-explains a bit of it, but for Windows Server 2022 and 2025 it's a bit
-different. Part of the more interesting docs are behind a
-paywall/Microsoft login.
+https://lore.kernel.org/linux-nfs/20250903205121.41380-1-snitzer@kernel.org/T/#t
 
-FYI like NTFS, you can pass a translation file, which can be used to
-do the codepoint mappings between uppercase and lowercase.
+Changes from Mike's v9:
+* The LOC introduced by the feature has been reduced considerably.
+* A new trace point in nfsd_file_getattr reports each file's dio
+  alignment parameters when it is opened.
+* The direct I/O path has been taken out-of-line so that it may
+  continue to be modified and optimized without perturbing the more
+  commonly used I/O paths.
+* When an exported file system does not implement direct I/O, more
+  commonly used modes are employed instead to avoid returning
+  EOPNOTSUPP unexpectedly.
+* When NFSD_IO_DIRECT is selected, NFS READs of all sizes use direct
+  I/O to provide better experimental data about small I/O workloads.
 
-Ced
+I haven't found any issues with NFSv3, NFSv4.0, and NFSv4.1 tested
+on TCP and RDMA while /sys/kernel/debug/nfsd/io_cache_read is set
+to 2. Trace points confirm that NFSD is using direct I/O.
+
+The goal is to get the experimental read-side direct I/O
+implementation merged sooner, as the write side has a few gray areas
+that still need discussion and resolution.
+
+Chuck Lever (1):
+  NFSD: Implement NFSD_IO_DIRECT for NFS READ
+
+Mike Snitzer (2):
+  NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+  NFSD: pass nfsd_file to nfsd_iter_read()
+
+ fs/nfsd/debugfs.c       |  2 +
+ fs/nfsd/filecache.c     | 34 +++++++++++++++++
+ fs/nfsd/filecache.h     |  4 ++
+ fs/nfsd/nfs4xdr.c       |  8 ++--
+ fs/nfsd/nfsd.h          |  1 +
+ fs/nfsd/nfsfh.c         |  4 ++
+ fs/nfsd/trace.h         | 28 ++++++++++++++
+ fs/nfsd/vfs.c           | 85 +++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/vfs.h           |  2 +-
+ include/trace/misc/fs.h | 22 +++++++++++
+ 10 files changed, 182 insertions(+), 8 deletions(-)
+
 -- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+2.50.0
+
 
