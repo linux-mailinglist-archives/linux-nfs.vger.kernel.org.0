@@ -1,181 +1,201 @@
-Return-Path: <linux-nfs+bounces-14243-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14244-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01D85B51E78
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 19:01:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A4C9B51E94
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 19:07:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19FDC480E5D
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 17:01:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 473DF4E2632
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 17:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF68275B16;
-	Wed, 10 Sep 2025 17:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D897630F7F6;
+	Wed, 10 Sep 2025 17:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCGgG5QX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR3Hcz44"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6608026B777
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 17:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027622C11C0;
+	Wed, 10 Sep 2025 17:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757523679; cv=none; b=FQ3RdC18sA2BixpqDAB5LR8SCTSVv3RgLgUZ1lnVapVh+FhGqubCx8X9plgm0014Vdkc+0Bp5kxvln6sPMbN2axEiw+Wn0uu3ftJKEEYP4RYpzjlYiaw5jgdSfU/ufAofxXACrsnwwkR0eDalP/g7b+P48IbSFCaOPEGiTLjjTc=
+	t=1757524057; cv=none; b=AplV0hNH5v0bUfQWnNuVbNfzOOjzjBXJsUth1yhBejw831Y2Yk72fmtb+4gZ0Nbb27+DOarjyaiA49w46irne+I00GXlUfQ1TzdTATxIJAF6XWMcOWRlNu51gKeXD+kj9CMb1Fp75W3E4AnZAVM4vI+Pg9M1MIRNHvCHzmMyHgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757523679; c=relaxed/simple;
-	bh=LrY7dww6BhKju9WKLd8acm9fRqfNvLjsVMHraKtRMJ8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nupP4oLJr62tcFuj7oyY1pjcffZmz7oPhb7GJ8eqEhFIUbZHRwFy1qqMPEunKzBV8nERNNPM/WSsS+/w/XPF6/87TZKqVUaSOGM9qVVtiHWTqzAGRKIF9hQ6H2a/bj0MhvYF9qkm0vSgGK+G/sQLpob5cu0P25rlMfK36t8cfEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCGgG5QX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65FCC4CEEB;
-	Wed, 10 Sep 2025 17:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757523677;
-	bh=LrY7dww6BhKju9WKLd8acm9fRqfNvLjsVMHraKtRMJ8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cCGgG5QXk+KTnPrFqYNMZjI4ys4rBOSRnjdLzOiPK7mf6hw1xv2Cep2IhwwE8qURU
-	 X9aX+je9zZJhuF9AAQLb/PrOU8QSS3ZDd+7Q88iX4YQl97rVRG43c16yWUjai2aI9K
-	 kpvOSOkls5a8B1hP1tbLOpBLGxCn/onZn0A8m0L1sQJRfSLPMnLRrzaV597r93iCxI
-	 QRfksn0J1KQKZE1gFFGqQbCliZaOLqtk2e27F1NbI0gYoxp33s14yjennnI0gqn7aX
-	 zXUN1qpOB8vjc9ApawOYq5ztTW9fsIuKtd/bSvXhYzHqE1xh5+7EQwORT1c5YqqrUD
-	 PphJjTbFeoUIg==
-Message-ID: <83659b3c615168942acb3dea9504dff759573974.camel@kernel.org>
-Subject: Re: [PATCH v1] NFSD: Define actions for the new time_deleg FATTR4
- attributes
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
-	rtm@csail.mit.edu
-Date: Wed, 10 Sep 2025 13:01:15 -0400
-In-Reply-To: <20250910152936.12198-1-cel@kernel.org>
-References: <20250910152936.12198-1-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1757524057; c=relaxed/simple;
+	bh=YWoom1+054/5jRVYGHQmXa1uDmT0Iy5UzJhbzNTORGs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOMIecLfBnSHL8R8p6U05uWe0f7QkyTtqtj2uDSo7rCCsYh4z1JMlhuCChhZc/edZ33MxNK+TjSFxGc73ZQjc8kJFegi0umJiWy5dWXgIspoJInGPt33J6cU6uXFC5bU+9yv+ESwkL9VCWjgIf/x4rjrhKi219SGR74nV09eu0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lR3Hcz44; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-61d143aa4acso10884000a12.2;
+        Wed, 10 Sep 2025 10:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757524054; x=1758128854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y9gl8boVwEXv9hUGRSaYumN8gHsUo/khQdpwWdU60yA=;
+        b=lR3Hcz447JfhXZt0JNjxxrJ/wMmL3Y32G662iXWHTyanLuo5HaGAqhSk/7ys0FGZfg
+         usMpBt+3jTbv4/GAq0mVUfm6SrO6Et4dSRc355e4J6cDEq5TU3MeQqfNZMWDxDnSogYM
+         fcAWNegdC11bJc2baYCpu6iDuzA3TNZhHY+25R+COj1InANm02vlLjLhHWYEdRoEAGqQ
+         CNCL+kY71F5+4Vj3z0wpqbF9hQBGAotwq5WplKoSLYoVN3jUZu4AcipLgOJyS/++oC56
+         FfmymWPYd6G4cNMx6S+tSvmFOUSTg/q4gTzKQ+nRTC+nCv5PG5mo8khnMkmfK1kKffoi
+         gWJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757524054; x=1758128854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y9gl8boVwEXv9hUGRSaYumN8gHsUo/khQdpwWdU60yA=;
+        b=eqRC7Wqt1CQaajHDoafcbq97JuTQoQO97HPcB8lRoC+nMPhGb6xVbXb0VoEtH/1te/
+         O+rCruln96rJPx0vAWrOalL0/bUk8bu7hKnG4RQoSU6jaSCiwgTtGfOdjhOAaeqfKFHY
+         sxfBmRxMw/ymOk4Jo7CVOvkyGW+3J2BEHr4zNk+yQT+0DrlZRosn1Py+98++/q6SvHdL
+         upcr0iBuDV036vFH8KyDlHWpm8AGa+IxYP08IV7v3m3jeJ4bSwEM2QI7WtS+JseQcJ+c
+         ZqlDk1tnZ0DoCOLhajQFBK5Dw/khyZE4h6aJCVcky/VHyOZUQLRd4I0pInUtxeiomunc
+         Go1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU5ek3kac5JTGWzKxDthpRP1E/7Nz13xUxeYKJ2SE0jYchtks1noXNt3AJqyr53XeIJ6qvYUgnd@vger.kernel.org, AJvYcCURZpeBs6qIbnk8rkOkC4b3BpqDoudBoflQwlJRoIZyh6IVprF0gBdRCubkEfrh/hZjnjPK5mLKpt3+@vger.kernel.org, AJvYcCVWbjlD5SRwaCfNySsRvdj21Skrudhpxop8cuINJZ+RnPTRyzU9ds+xIoWCJti8/RTjkSDYtkUs@vger.kernel.org, AJvYcCVwBX4i/LxUwtp5rHOadlK1rDLAUdjVLsj1gMLV6H57DoGYJVL89B7uUOnzMDQG6JISh5R6Xmj9MXgjdPwBrQm3@vger.kernel.org, AJvYcCWFCNLIyn8jsLNrpoloVSawZSgluF9q5p+aEHmWBn6mVYEXJXYpsnaO+aWeqZEweRhZvBSrgVh5X6+E07n3@vger.kernel.org, AJvYcCX++mhZUzYecYB0ftX6drn7IxiL5hJblf9feqSppkCKIQvy7+c7Gda2p3IAKzGZKso0D+shX/8/UMXb9Gcc7Q==@vger.kernel.org, AJvYcCXSGmZ1WLRBuUPMgrcT83G1pFodlTsIU6vwDPE8g74tTlCbJ8S42JOY5WeTTMxm/FV1kwWgqFHKmydZfSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVVs9vRiMieIiN5VuLc8G82aEbsPhq0ynGSMWRE33BI+6+wvmk
+	2B8ClwCyCCOBFBY/hR49IukpxABv+mUB0Jo7RjvWOxHklqYvBrrHHBO7M4eES8+kfP5Dph46Z1O
+	kdOIs8sYMRWzh5kz8FrOz9zfl0sB4cGM=
+X-Gm-Gg: ASbGncvFPAJzcaCdsKT/2Fk3O9ATD3z5tHA/8pbUIekcC3OSuGd7K1BIMQnY6ajzGTh
+	xQ4nHsurC7xCMrt22uVPx+Z2PZKmvyq1DfhDIVQF8xiE3vc7muuNYM4vikHJc8zYofloi2xZ2+s
+	Cm9BoAhNP4Q3bYOYkY0vL1ciM/9V1PnLXDRcNOBwfo/BcvUa3bKFfp20R0Xk7T0fx67651aBtbM
+	lE0wQl7t007XgHVaQ==
+X-Google-Smtp-Source: AGHT+IE+nh79NH7zsv87bURibrjZT5O0XqDSpQb84PYB+QCmTYKzJRYwXTG9gMJk9B2cZF1lqAXBrfmoiCdYZWxLuaU=
+X-Received: by 2002:a05:6402:d0d:b0:628:79f4:b050 with SMTP id
+ 4fb4d7f45d1cf-62879f4b986mr9593215a12.30.1757524053896; Wed, 10 Sep 2025
+ 10:07:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org> <20250910-work-namespace-v1-28-4dd56e7359d8@kernel.org>
+In-Reply-To: <20250910-work-namespace-v1-28-4dd56e7359d8@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 10 Sep 2025 19:07:22 +0200
+X-Gm-Features: AS18NWDTXEcgCcD0eE9xaVZPBsGH-OZUi00zWx07R9YiNMR1y39U0KxcJZGX6E4
+Message-ID: <CAOQ4uxhW-pfC8+FSZfvA63mM+Kv1oYOvtzV+KxLycrie1sqdXA@mail.gmail.com>
+Subject: Re: [PATCH 28/32] nsfs: support exhaustive file handles
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-09-10 at 11:29 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> NFSv4 clients won't send legitimate GETATTR requests for these new
-> attributes because they are intended to be used only with CB_GETATTR.
-> But NFSD has to do something besides crashing if it ever sees such
-> a request. The correct thing to do is ignore them.
->=20
-> Reported-by: rtm@csail.mit.edu
-> Closes: https://lore.kernel.org/linux-nfs/7819419cf0cb50d8130dc6b747765d2=
-b8febc88a.camel@kernel.org/T/#t
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> Pidfd file handles are exhaustive meaning they don't require a handle on
+> another pidfd to pass to open_by_handle_at() so it can derive the
+> filesystem to decode in. Instead it can be derived from the file
+> handle itself. The same is possible for namespace file handles.
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Maybe also this?
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-Fixes: 51c0d4f7e317 ("nfsd: add support for FATTR4_OPEN_ARGUMENTS")
 
 > ---
->  fs/nfsd/nfs4xdr.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> Compile-tested only.
->=20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index c0a3c6a7c8bb..97e9e9afa80a 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -3560,6 +3560,8 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode=
-_ops[] =3D {
-> =20
->  	[FATTR4_MODE_UMASK]		=3D nfsd4_encode_fattr4__noop,
->  	[FATTR4_XATTR_SUPPORT]		=3D nfsd4_encode_fattr4_xattr_support,
-> +	[FATTR4_TIME_DELEG_ACCESS]	=3D nfsd4_encode_fattr4__noop,
-> +	[FATTR4_TIME_DELEG_MODIFY]	=3D nfsd4_encode_fattr4__noop,
->  	[FATTR4_OPEN_ARGUMENTS]		=3D nfsd4_encode_fattr4_open_arguments,
->  };
-> =20
-
-Thanks for fixing this!
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>  fs/fhandle.c               |  6 ++++++
+>  fs/internal.h              |  1 +
+>  fs/nsfs.c                  | 10 ++++++++++
+>  include/uapi/linux/fcntl.h |  1 +
+>  4 files changed, 18 insertions(+)
+>
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 7c236f64cdea..f18c855bb0c2 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/personality.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/compat.h>
+> +#include <linux/nsfs.h>
+>  #include "internal.h"
+>  #include "mount.h"
+>
+> @@ -189,6 +190,11 @@ static int get_path_anchor(int fd, struct path *root=
+)
+>                 return 0;
+>         }
+>
+> +       if (fd =3D=3D FD_NSFS_ROOT) {
+> +               nsfs_get_root(root);
+> +               return 0;
+> +       }
+> +
+>         return -EBADF;
+>  }
+>
+> diff --git a/fs/internal.h b/fs/internal.h
+> index 38e8aab27bbd..a33d18ee5b74 100644
+> --- a/fs/internal.h
+> +++ b/fs/internal.h
+> @@ -355,3 +355,4 @@ int anon_inode_getattr(struct mnt_idmap *idmap, const=
+ struct path *path,
+>  int anon_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>                        struct iattr *attr);
+>  void pidfs_get_root(struct path *path);
+> +void nsfs_get_root(struct path *path);
+> diff --git a/fs/nsfs.c b/fs/nsfs.c
+> index a1585a2f4f03..3c6fcf652633 100644
+> --- a/fs/nsfs.c
+> +++ b/fs/nsfs.c
+> @@ -25,6 +25,14 @@
+>
+>  static struct vfsmount *nsfs_mnt;
+>
+> +static struct path nsfs_root_path =3D {};
+> +
+> +void nsfs_get_root(struct path *path)
+> +{
+> +       *path =3D nsfs_root_path;
+> +       path_get(path);
+> +}
+> +
+>  static long ns_ioctl(struct file *filp, unsigned int ioctl,
+>                         unsigned long arg);
+>  static const struct file_operations ns_file_operations =3D {
+> @@ -616,4 +624,6 @@ void __init nsfs_init(void)
+>         if (IS_ERR(nsfs_mnt))
+>                 panic("can't set nsfs up\n");
+>         nsfs_mnt->mnt_sb->s_flags &=3D ~SB_NOUSER;
+> +       nsfs_root_path.mnt =3D nsfs_mnt;
+> +       nsfs_root_path.dentry =3D nsfs_mnt->mnt_root;
+>  }
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index f291ab4f94eb..3741ea1b73d8 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -111,6 +111,7 @@
+>  #define PIDFD_SELF_THREAD_GROUP                -10001 /* Current thread =
+group leader. */
+>
+>  #define FD_PIDFS_ROOT                  -10002 /* Root of the pidfs files=
+ystem */
+> +#define FD_NSFS_ROOT                   -10003 /* Root of the nsfs filesy=
+stem */
+>  #define FD_INVALID                     -10009 /* Invalid file descriptor=
+: -10000 - EBADF =3D -10009 */
+>
+>  /* Generic flags for the *at(2) family of syscalls. */
+>
+> --
+> 2.47.3
+>
 
