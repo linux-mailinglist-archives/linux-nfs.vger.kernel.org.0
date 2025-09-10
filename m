@@ -1,79 +1,182 @@
-Return-Path: <linux-nfs+bounces-14251-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14252-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 811BCB5214A
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 21:42:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0AE2B52304
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 22:54:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4EB7E7AE716
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 19:41:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4A655842D1
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 20:53:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56A2B2D9EC8;
-	Wed, 10 Sep 2025 19:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8wpkL3y"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA241798F;
+	Wed, 10 Sep 2025 20:53:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8182D979D;
-	Wed, 10 Sep 2025 19:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F284D20E702
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 20:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757533356; cv=none; b=iIOvjGRxqy1vgGl5UjYwXW9avnydhzfpoNoi8qnyCILdhqsOvwIPse6MXEHb949d84NlZ4xV42nonhjo8vGI9u/fZ1yPtG4FuV9Wzqn2TQBYwmiDja4BQBA6vPD76MK+ib14hIkltu4pfut1keik+Zwv/3IAAUSrFozvPlpKFjA=
+	t=1757537608; cv=none; b=OCnxiCNU536q9GuWqKdGXxOUzzRE98sPKGhTxD5RqvMkqC+eogcQP2G52fhxXW1hM0e3gKcbCetdCXqNw1vxI/72yNMpr3hQHm8+ZdKQY9R0V2T9dKNqPm2aeqGDPV/NKv6bqD/MjH4M89H4aB6FMF2530ARITIo3eA6O+s4n1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757533356; c=relaxed/simple;
-	bh=QdMP7bEv90DQoZ+hHUZEhbxHn7B4NjBaKlJgJ5QiUUw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kVpBSbrEo9Z83vkEP1fO0krJ4TeyvB+w2FQcVafxM+ckErfstf+h+DJrp1zSHR0sVYtEfO4kZt02VSHhtq8KJF80mXligpffm2aPjFopZrF8UKDVoRws9UGnaavu1HllmV/ki4ML9iP4pEC1EwxW7XYeOor/Zr/8HgDsidQOzCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8wpkL3y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B30C4CEF0;
-	Wed, 10 Sep 2025 19:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757533356;
-	bh=QdMP7bEv90DQoZ+hHUZEhbxHn7B4NjBaKlJgJ5QiUUw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=D8wpkL3y5idQx9YWTWz/BOgw2MpvfBa6XIW1tZTkC2QdSHbpmWJMyaAnOuGCl51Dw
-	 E4b5rUQqePR0YihblZRgN+f3bhgKgxyhM5WMjDemLgrgc1WEwXKaSOr+lj7XbmUfPy
-	 74DHXGA0JzkxkztR0aOkhmqBVrQ72ufaow4ChPRm3+k+lo5IiCmCV3Qh2naG+a4zAA
-	 ZSbmRg3VWx95Je2jvDyTieUZ7BysWHHo4Xili8uMSD7aXLkclbbrwTAUeRLbQ4Lo6H
-	 cOhKp/o1GZzjkgE2Dysu1fUfKTwuuZEah9XhnyqFjgmNFztGjy64SSo2JRHmDTQnBS
-	 KPPWfxQEngvGQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C2C383BF69;
-	Wed, 10 Sep 2025 19:42:40 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull NFS client bugfixes for 6.17
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <150cb132accb448dd29e30af08394548b26524d5.camel@kernel.org>
-References: <150cb132accb448dd29e30af08394548b26524d5.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <150cb132accb448dd29e30af08394548b26524d5.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.17-3
-X-PR-Tracked-Commit-Id: dd2fa82473453661d12723c46c9f43d9876a7efd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7aac71907bdea16e2754a782b9d9155449a9d49d
-Message-Id: <175753335865.1546567.12052545947146428602.pr-tracker-bot@kernel.org>
-Date: Wed, 10 Sep 2025 19:42:38 +0000
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+	s=arc-20240116; t=1757537608; c=relaxed/simple;
+	bh=z+SSr5e4raDynlSrCzw4DbMZwm/elGSHp/acpNaX/IA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=EerWZ9nKVMUN2WHPGCajBtOy9k/gFS+L94N+ujP6KdwemOkySFe51I9OUMjPjtvUjvSS+zknr4AWtudh7mFbOq+JtnqbZhTd63ATib5GhQO+6Y+t/SUh1xX3aVOX/IrCk9oYOIqWD2BxC0SpeNKilyd8WP8LOq7P5K9pot8IOrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3f668635b63so251175ab.1
+        for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 13:53:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757537605; x=1758142405;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORHDDrKhvA3/qUkPzDVcq1X/g8kCw2zy04ZymDlu2HE=;
+        b=O/HzhjdnV1iQOsILR4pjabI8xWnA435gkZmGfNFlb/LPTgP/cWOFEXIqnboGB9kdxH
+         z89x8fw4JCPiiTUC6vYuoyQDMh3bQYkwBCvVV6PMhNJieLdrL+EFo/NCjRlUMASRy71c
+         KAGxMeATFZl/OsRQNuF1gxQXVfEF096rrKLnzaLOdcyxpkBHkh9N+3Irvn29i2VJ3yy/
+         5fctbdwgEF4gTw5/YlIM0KusLYCqoHa+yf0+dMFbDxghUhgLudCyCh8VmRBTc6OFi+eD
+         fx1+ojQZTVjr3sgkxxINfPW52P/EfWG6cdtw2BtrHfXVVP42T0Ls93DrKNIdpM51e9+i
+         YiJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWm7lwsjsYvsjrJPI1bBK4LrCfJ3Q2b3hBSaLZs0LGSnQx1qHm78g9SEpaO9h6Q0UmeAdq0sYR6rdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8VngUnyFx/DkAcmMPkyNFoHOHZhX8lEpKbSRw8kB6AGdHqdeS
+	qKRzr1ksE64y1WT/4sThrL8IAOYevxMRh+JMCOsk3QuDme6kbjYqmERVBHHkZ+fsSh9i6xsTXeL
+	EqOZwadyM/ij+rD3lCM3XtEuCFCfSFzieBTBlht7bdCCPTzJEo7vUFfq4olw=
+X-Google-Smtp-Source: AGHT+IELNcieJyO3PScSY3ls43ocO856dpwKju7gM2D1Vty+fwi/cTBoqQMfNRZ1V0PBBKdy5zAPf22QzDDN/RUdRFlpuS0plJbP
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a92:ca46:0:b0:410:cae9:a07c with SMTP id
+ e9e14a558f8ab-410cae9a261mr93638345ab.5.1757537605114; Wed, 10 Sep 2025
+ 13:53:25 -0700 (PDT)
+Date: Wed, 10 Sep 2025 13:53:25 -0700
+In-Reply-To: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68c1e545.050a0220.3c6139.002b.GAE@google.com>
+Subject: [syzbot ci] Re: ns: support file handles
+From: syzbot ci <syzbot+cic2a3475eff9e1ea7@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, axboe@kernel.dk, brauner@kernel.org, 
+	cgroups@vger.kernel.org, chuck.lever@oracle.com, cyphar@cyphar.com, 
+	daan.j.demeyer@gmail.com, edumazet@google.com, hannes@cmpxchg.org, 
+	horms@kernel.org, jack@suse.cz, jlayton@kernel.org, josef@toxicpanda.com, 
+	kuba@kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, me@yhndnzj.com, mkoutny@suse.com, 
+	mzxreary@0pointer.de, netdev@vger.kernel.org, pabeni@redhat.com, 
+	tj@kernel.org, viro@zeniv.linux.org.uk, zbyszek@in.waw.pl
+Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Wed, 10 Sep 2025 14:34:55 -0400:
+syzbot ci has tested the following series
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.17-3
+[v1] ns: support file handles
+https://lore.kernel.org/all/20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org
+* [PATCH 01/32] pidfs: validate extensible ioctls
+* [PATCH 02/32] nsfs: validate extensible ioctls
+* [PATCH 03/32] block: use extensible_ioctl_valid()
+* [PATCH 04/32] ns: move to_ns_common() to ns_common.h
+* [PATCH 05/32] nsfs: add nsfs.h header
+* [PATCH 06/32] ns: uniformly initialize ns_common
+* [PATCH 07/32] mnt: use ns_common_init()
+* [PATCH 08/32] ipc: use ns_common_init()
+* [PATCH 09/32] cgroup: use ns_common_init()
+* [PATCH 10/32] pid: use ns_common_init()
+* [PATCH 11/32] time: use ns_common_init()
+* [PATCH 12/32] uts: use ns_common_init()
+* [PATCH 13/32] user: use ns_common_init()
+* [PATCH 14/32] net: use ns_common_init()
+* [PATCH 15/32] ns: remove ns_alloc_inum()
+* [PATCH 16/32] nstree: make iterator generic
+* [PATCH 17/32] mnt: support iterator
+* [PATCH 18/32] cgroup: support iterator
+* [PATCH 19/32] ipc: support iterator
+* [PATCH 20/32] net: support iterator
+* [PATCH 21/32] pid: support iterator
+* [PATCH 22/32] time: support iterator
+* [PATCH 23/32] userns: support iterator
+* [PATCH 24/32] uts: support iterator
+* [PATCH 25/32] ns: add to_<type>_ns() to respective headers
+* [PATCH 26/32] nsfs: add current_in_namespace()
+* [PATCH 27/32] nsfs: support file handles
+* [PATCH 28/32] nsfs: support exhaustive file handles
+* [PATCH 29/32] nsfs: add missing id retrieval support
+* [PATCH 30/32] tools: update nsfs.h uapi header
+* [PATCH 31/32] selftests/namespaces: add identifier selftests
+* [PATCH 32/32] selftests/namespaces: add file handle selftests
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7aac71907bdea16e2754a782b9d9155449a9d49d
+and found the following issue:
+WARNING in copy_net_ns
 
-Thank you!
+Full report is available here:
+https://ci.syzbot.org/series/bc3dfd83-98cc-488c-b046-f849c79a6a41
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+***
+
+WARNING in copy_net_ns
+
+tree:      net-next
+URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/netdev/net-next.git
+base:      deb105f49879dd50d595f7f55207d6e74dec34e6
+arch:      amd64
+compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
+config:    https://ci.syzbot.org/builds/a560fd28-b788-4442-a7c8-10c6240b4dbf/config
+syz repro: https://ci.syzbot.org/findings/18e91b10-567e-4cae-a279-8a5f2f2cde80/syz_repro
+
+------------[ cut here ]------------
+ida_free called for id=1326 which is not allocated.
+WARNING: CPU: 0 PID: 6146 at lib/idr.c:592 ida_free+0x280/0x310 lib/idr.c:592
+Modules linked in:
+CPU: 0 UID: 0 PID: 6146 Comm: syz.1.60 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:ida_free+0x280/0x310 lib/idr.c:592
+Code: 00 00 00 00 fc ff df 48 8b 5c 24 10 48 8b 7c 24 40 48 89 de e8 d1 8a 0c 00 90 48 c7 c7 80 ee ba 8c 44 89 fe e8 11 87 12 f6 90 <0f> 0b 90 90 eb 34 e8 95 02 4f f6 49 bd 00 00 00 00 00 fc ff df eb
+RSP: 0018:ffffc9000302fba0 EFLAGS: 00010246
+RAX: c838d58ce4bb0000 RBX: 0000000000000a06 RCX: ffff88801eac0000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
+RBP: ffffc9000302fca0 R08: ffff88804b024293 R09: 1ffff11009604852
+R10: dffffc0000000000 R11: ffffed1009604853 R12: 1ffff92000605f78
+R13: dffffc0000000000 R14: ffff888026c1fd00 R15: 000000000000052e
+FS:  00007f6d7aab16c0(0000) GS:ffff8880b8613000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000004000 CR3: 000000002726e000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ copy_net_ns+0x37a/0x510 net/core/net_namespace.c:593
+ create_new_namespaces+0x3f3/0x720 kernel/nsproxy.c:110
+ unshare_nsproxy_namespaces+0x11c/0x170 kernel/nsproxy.c:218
+ ksys_unshare+0x4c8/0x8c0 kernel/fork.c:3127
+ __do_sys_unshare kernel/fork.c:3198 [inline]
+ __se_sys_unshare kernel/fork.c:3196 [inline]
+ __x64_sys_unshare+0x38/0x50 kernel/fork.c:3196
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6d79b8eba9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6d7aab1038 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+RAX: ffffffffffffffda RBX: 00007f6d79dd5fa0 RCX: 00007f6d79b8eba9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000062040200
+RBP: 00007f6d79c11e19 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f6d79dd6038 R14: 00007f6d79dd5fa0 R15: 00007ffd5ab830f8
+ </TASK>
+
+
+***
+
+If these findings have caused you to resend the series or submit a
+separate fix, please add the following tag to your commit message:
+  Tested-by: syzbot@syzkaller.appspotmail.com
+
+---
+This report is generated by a bot. It may contain errors.
+syzbot ci engineers can be reached at syzkaller@googlegroups.com.
 
