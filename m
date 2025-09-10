@@ -1,236 +1,373 @@
-Return-Path: <linux-nfs+bounces-14245-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14246-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BA5DB51EAF
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 19:15:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04E58B51EC5
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 19:21:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD7EF566E11
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 17:15:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D6721C86DFD
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Sep 2025 17:22:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 174982DECBC;
-	Wed, 10 Sep 2025 17:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3552D7DFF;
+	Wed, 10 Sep 2025 17:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="emehGzOu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6x5avp9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36BF329F0B
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 17:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567B726D4F9;
+	Wed, 10 Sep 2025 17:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757524498; cv=none; b=RjPVQRUAyQxOSWSmHrxBL/SZtmErKB0fSQInAMayHFNCxpcrdPQItJokylzcuwiUP8ihahtu8rRmpUKSNGj5Cp1T4WfJHeZln62e5HdD0Il8dYXP7byUxQVOiT2XuFhJfvFcD5uGDPqvjWttTQrYCusv9j2ksgh7/IxHy1n8JYg=
+	t=1757524898; cv=none; b=Jnzi2axwgKU8Q3YbX2FNUqztm7Kidly18c9WtNTedRPk3yUZMF/gqqkzvkW4tr+3usZXk4EDfbMoAvkoieYI82J6mVI6rjkW/dp+BEVl6QIyafUcC7bRgrhJzCaJrERrEhG/h1dqyb2cLERTTgvQlIYy0yIr1mwq3Jc/XBlixhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757524498; c=relaxed/simple;
-	bh=h31ESta0f6zzcpV695KuRl2Ejd+Ty6eHvUeaEkUD39A=;
+	s=arc-20240116; t=1757524898; c=relaxed/simple;
+	bh=RhMZzzYltdKFB5qM+3pAwKbhueJllywcPAsvUkS/hCI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRV4DGqLKgLHVpdNEkRqTcgFiOAADTAsvC4M/jPUq48VTFfD2avr8OMF+ELIqKerh3lCOmMEifopWH9BJ7LSHOmhiVEMk1rtUKaO+k67XQmnv6o7+84kmdQ0sgO5XftAXVBLUWmXXHv1hpw1bbVss+OqavJy+d7ix6e0Hm/iswk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=emehGzOu; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+	 To:Cc:Content-Type; b=akGIxro7HwaWy4yjEuvxobpRZGn1S7juBGSXtT2pyr8gbFAHqJlf5oenjC3TzM2BeAuZMgBJ8XZq9NRp5NwLAaBkyA6/REzRvESZfMN0wQmNuzeRLTuQpN1D57M/O5HoQWDNUkHdgaZefjIiTkzBUQIaUMNPU6AqhGdExzipxh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6x5avp9; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55f72452a8eso8496938e87.3
-        for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 10:14:55 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6237202020bso7979723a12.3;
+        Wed, 10 Sep 2025 10:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1757524494; x=1758129294; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757524894; x=1758129694; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OfGKj30Zn3smuGczTnygXMmhWUjtpgNty6xpswLaGTc=;
-        b=emehGzOu40+Hjb9TQWLeJgHeq80N9N0mupe03N2ASkRuVOO7Kh8SxgRp8YPxtGExRW
-         +9a8axIYF+WgM+dAFVNNm+CiLp3LMoV/sOaHsIM8XII53qD41ciUe6FvRv758vBcqp9w
-         Q6BcyrR481UtlENgpfg3PrIEKwS3RKmwXkLNRidSrxgIZChwjCjUKff45NQeK43sUQP8
-         t4BGNWUpOLtPEAnHRMlTur97Dqn9SVdJoqeiTcQ6O/qZ9NA2tRXMvi7BQemx2etcLP8s
-         AckJ00P4SkZcHt10UqznXXhXiHpwunmUTVfj202rfKKj2tJG63rmoYM7Y/5A3vV63uog
-         uU/Q==
+        bh=fawpfDcReCPiexHLQmJUihCOqOpAI9vERWwTnUBX3Jg=;
+        b=b6x5avp9Psa1GISFy/Yic0ReQ1j+h1XuFtuwU5HBnVN2wEAtes0BTjOwXN1/GS5aQB
+         GOFGL65syg8O5oEoLkZuuv5mBsesF5zk1pChzCy01jGVccx8Ay7wsjrlfqSCfPE79ONM
+         w4pAsdmuPz37Q2Zec9sDTx2DVGiuDMvtk9kYHMZxQXSeyZtG+I81xZ3Ah5wB+nmbwM7H
+         8esfGHEjZLKIrOiBHx8DmgkGJjnZvqWzsDWPoonFQ1d5esLXeFXZ3sEdnCwvttwJKh4d
+         vkp1a1uqf+dR7nS/OOMApHO+4KynDKgt50TUv1gnowLDOs7PK0ZCcM2bzz1D5WATj/mm
+         eFJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757524494; x=1758129294;
+        d=1e100.net; s=20230601; t=1757524894; x=1758129694;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OfGKj30Zn3smuGczTnygXMmhWUjtpgNty6xpswLaGTc=;
-        b=vUkjhpvqN5QNdMDvFqNhNMbwfwe0YgblEp/E40JpXerNMZr/dug2QcJDP16tQmnmdf
-         lTtfx1GA4Th3u5gEQ7cYZDLsvkC5AmQSnicsnbau1aCN99Y0Uq0kULDzs7WJKiE794TW
-         jkt2rUBWAXt2Gc7Mmttt8XC7W+U69BDdSz/LWoxJnX+RvoaUfSR/h3sQZfjBIAsPkQw6
-         gAIPeaJEwh4GPD8XlsOwQ9boe8hBJzc9sJEuKA5bZLYrci1bW6eRP8aMUziG0mK5emiJ
-         HqoGgmi3jm1ehnFKeFx5QTKRhIsTyWfi0fMq0MwOWm5FuOMcQ6lZba9a/w9zCLjNFS+/
-         L/Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBX7OIqXzKkBroRWNhljiiL1dSrVNiTQD+TwR0F5rt3Av7LOht2Mb0qCTPsODXeSgMg7CPSbS99hU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxjio7jsz7YXRuf0W44f7M5dYdfznPQFvNpIxCce7uNIplxosyc
-	NrOZvq5ch7pmpJ5ZBLPvPQbdHB8ydXpT9ZNJOLrsO+LIIdpvae/g+/C6MjKud/dnyAnYtn7Ahjg
-	387n2GltSAWz0OtqHj+8Wkay/1QpTj/0=
-X-Gm-Gg: ASbGncvIlR1KF/5WIyU7YH+Jk8ZsflIUcfy5SNBXadpKrJ2NYr+DyBmS4AIwz+mWxlc
-	ya8H6TM58tiAvltcYs5dlafJIk8lp0r/bCrs137XDx/8bTeWaUdGAlq+Kih1ievSAjLTGAoz/hk
-	dG6dvJNb35rpBh1K62SCA4s/DkVYV3C5Tae5XXgJhmXsgPt6V0PelcgWIY70PKhDOMdkBaTOczg
-	J1Q2gA/hhlILi9AmQ==
-X-Google-Smtp-Source: AGHT+IG+hSFAoXVZS/N8MeX34W3YHGDhZutoginVtuGNRKgjHYXPk6POWzoDLrMV+bxpM6OD77TrYx0u8YybeWqy384=
-X-Received: by 2002:a05:6512:b12:b0:55f:6d6e:1e97 with SMTP id
- 2adb3069b0e04-56264a0f596mr5553255e87.52.1757524493584; Wed, 10 Sep 2025
- 10:14:53 -0700 (PDT)
+        bh=fawpfDcReCPiexHLQmJUihCOqOpAI9vERWwTnUBX3Jg=;
+        b=v7VOmT3fq0o2zi1eR+CkbX+YuSnmR2JhXhhLD/lkYHaojSx7p7M21DXGqq+vhk1bEY
+         yz7K+G+OXIDC4C6COzsenXbZg+vUnp4qYSsc57s9P0cfvPgY8wlOQI4ftfB+3oNfO7oO
+         4jF8Y8j50gSLjcsBUCIR12dLe1udNdbEshEX/uQhDvo8agsmf+di3mlS2v4PLZMAiBxj
+         bfhS1jg73NHpGc5oxaqluemuV17QQnWmK/IvCLornlQugxQ+gnS6wLaK7L1sBHCj8V8z
+         W8C2xXlqVTOJSfUJmm12cejjjKnjHXSO9k3YB9U49Wc7cZSZCacMIrp/3KVEUFg4u8OH
+         RuFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFWXuVbccaeOlf4+mxSRXMfBjSnbgmfv4nEDjw6ptP2h+FP5A0VoC29eCtjskoqq9ZXhuDuZkX@vger.kernel.org, AJvYcCVdJHHwEulZsOk0kyoPWGF55+RIwsbBA9l7x1lMd/BhfNZj47otHv23FvxpHkbgsm9TLySjmVjqlz5nGhbxoQ==@vger.kernel.org, AJvYcCVh22BPo8cd59RgomHdKhV/0CUsQvZ/cTkHRXs6RJ3fhoMr1boQoyo5ZY2kM2NZaRHqa0Klr8bFY04MXgU=@vger.kernel.org, AJvYcCWPVKtnqjfoZFmqxsdxHbQu9UfCj1Oo+hdk6Npmm7D9+tZqBLP5knmrUK0pNDEsbI2UmcO5D+F86LMz@vger.kernel.org, AJvYcCWnE9use5+QoCtAmLcddJ+UqH/FSQa/MtIfzGTuezdqMvFm/9Xa+5Fc1u5QCnhLq3C87UJr7DPEG8WnEz7f@vger.kernel.org, AJvYcCWs1QPegX1U68dgqCOYQ6zxTaq+QAlIQZDnvGFAGnwd504mG66YbEuI5FWeKovX4vI0afV30Q8p@vger.kernel.org, AJvYcCXa4VI2CrsPkxMyRz05prIClTqxdZ8bOC7vd94kEQIWrXNDIlhpySoOsHG4tkRm6N7w7PnZlyFa83sa4gEsu82J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt4rPXv7QZqlGoQizoDGKf4bmrojBig6063g6wjQ0HKErV1P+b
+	j2zGZGY276GFTCAf+UOsnlUFiuyyje+yU4hvKc7rdNJNQUgYDLmHiDFjM5SQZrf7nZ8XObIaZD0
+	G5v+BzSjaCaOdQWuAri8ueHpaS4cf6hQ=
+X-Gm-Gg: ASbGncv0pjY4m4Z3wPCkPMFByCIMKjKXwM4gyj6OrSMa9+UYknGB2RYnPekqRhOvoAt
+	bzIQ6D5RhLKy+UfcjAxq4rjEL5J9gluQy02qSK7jnXSgtEGKtCtRZKW7SmvU/UDhKhulurbXbLe
+	JRgovQZKjseuNVPwUq/M2wo4APNWD979GTdWDjmXTiYpLBcfvVYjEzRFclUs45gwi9SNKHMv8ch
+	sjuaEs81P66xfLf0g==
+X-Google-Smtp-Source: AGHT+IGzSM48OmUPGzUeRKEcJYruA5utreW1EjHGV7gmdERENFp7O15TXDw7VLk6zyBAsqAOGPzeKl/ZVy5+N52X/B4=
+X-Received: by 2002:a05:6402:24c9:b0:61d:3bca:f2fc with SMTP id
+ 4fb4d7f45d1cf-62378366920mr12218960a12.31.1757524894224; Wed, 10 Sep 2025
+ 10:21:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250903155335.1558-1-cel@kernel.org> <CACSpFtB7CSkakYL5FZj_6L4dgj2ybBMVzgqX8kWhZrGBW0GT7Q@mail.gmail.com>
- <5a1f9a16-2373-4e30-b356-42e3af047126@kernel.org>
-In-Reply-To: <5a1f9a16-2373-4e30-b356-42e3af047126@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 10 Sep 2025 13:14:42 -0400
-X-Gm-Features: Ac12FXwB8ByMNYhPpze7qn0baB0qShw9MdUUcOCfqr58KZwVI506HQpeEN0aGYg
-Message-ID: <CAN-5tyFXySFeOcDorhDcD+oAzBFq_G-48mmxFSQMEik8rEcd8w@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] svcrdma: Release transport resources synchronously
-To: Chuck Lever <cel@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, NeilBrown <neil@brown.name>, 
-	Jeff Layton <jlayton@kernel.org>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org> <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org>
+In-Reply-To: <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 10 Sep 2025 19:21:22 +0200
+X-Gm-Features: AS18NWAeQzw8A2L3MeKKv5VLNvqBS6WiA4GMVCa0r-bsvToYY4x-puEFtCSLPAg
+Message-ID: <CAOQ4uxgtQQa-jzsnTBxgUTPzgtCiAaH8X6ffMqd+1Y5Jjy0dmQ@mail.gmail.com>
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 4, 2025 at 11:48=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
 >
-> On 9/4/25 11:43 AM, Olga Kornievskaia wrote:
-> > On Wed, Sep 3, 2025 at 11:53=E2=80=AFAM Chuck Lever <cel@kernel.org> wr=
-ote:
-> >>
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> NFSD has always supported added network listeners. The new netlink
-> >> protocol now enables the removal of listeners.
-> >>
-> >> Olga noticed that if an RDMA listener is removed and immediately
-> >> re-added, the deferred __svc_rdma_free() function might not have
-> >> run yet, so some or all of the old listener's RDMA resources
-> >> linger, which prevents a new listener on the same address from
-> >> being created.
-> >
-> > Does this mean that you prefer to go the way of rdma synchronous
-> > release vs the patch I posted?
->
-> We could do both. IMO we need to make "remove listener" work while
-> there are still nfsd threads running, and this RFC patch does
-> nothing about that.
->
-> But as noted below, it looks like the svc_xprt_free() code path assumes
-> that ->xpo_free releases all transport resources synchronously, and
-> there can be consequences if that does not happen. That needs to be
-> addressed somehow.
->
->
-> > I'm not against the approach as I have previously noted it as an
-> > alternative which I tested and it also solves the problem. But I still
-> > dont grasp the consequence of making svc_rdma_free() synchronous,
-> > especially for active transports (not listening sockets).
->
-> I've tested the synchronous approach a little, there didn't seem to
-> be a problem with it. But I agree, the certainty level is not as
-> high as it ought to be.
+> A while ago we added support for file handles to pidfs so pidfds can be
+> encoded and decoded as file handles. Userspace has adopted this quickly
+> and it's proven very useful.
 
-So what do you think about including this patch? I don't see it in
-your nfsd-testing branch.
-
-Either this patch or my patch fix an existing problem and I believe
-would be beneficial to include now (and backport). A solution for
-removal of listeners on an active server can be worked on top of that.
-
-
-
-> >> Also, svc_xprt_free() does a module_put() just after calling
-> >> ->xpo_free(). That means if there is deferred work going on, the
-> >> module could be unloaded before that work is even started,
-> >> resulting in a UAF.
-> >>
-> >> Neil asks:
-> >>> What particular part of __svc_rdma_free() needs to run in order for a
-> >>> subsequent registration to succeed?
-> >>> Can that bit be run directory from svc_rdma_free() rather than be
-> >>> delayed?
-> >>> (I know almost nothing about rdma so forgive me if the answers to the=
-se
-> >>> questions seems obvious)
-> >>
-> >> The reasons I can recall are:
-> >>
-> >>  - Some of the transport tear-down work can sleep
-> >>  - Releasing a cm_id is tricky and can deadlock
-> >>
-> >> We might be able to mitigate the second issue with judicious
-> >> application of transport reference counting.
-> >>
-> >> Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-> >> Suggested-by: NeilBrown <neil@brown.name>
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >>  net/sunrpc/svc_xprt.c                    |  1 +
-> >>  net/sunrpc/xprtrdma/svc_rdma_transport.c | 19 ++++++++-----------
-> >>  2 files changed, 9 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> >> index 8b1837228799..8526bfc3ab20 100644
-> >> --- a/net/sunrpc/svc_xprt.c
-> >> +++ b/net/sunrpc/svc_xprt.c
-> >> @@ -168,6 +168,7 @@ static void svc_xprt_free(struct kref *kref)
-> >>         struct svc_xprt *xprt =3D
-> >>                 container_of(kref, struct svc_xprt, xpt_ref);
-> >>         struct module *owner =3D xprt->xpt_class->xcl_owner;
-> >> +
-> >>         if (test_bit(XPT_CACHE_AUTH, &xprt->xpt_flags))
-> >>                 svcauth_unix_info_release(xprt);
-> >>         put_cred(xprt->xpt_cred);
-> >> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xpr=
-trdma/svc_rdma_transport.c
-> >> index 3d7f1413df02..b7b318ad25c4 100644
-> >> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> >> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> >> @@ -591,12 +591,18 @@ static void svc_rdma_detach(struct svc_xprt *xpr=
-t)
-> >>         rdma_disconnect(rdma->sc_cm_id);
-> >>  }
-> >>
-> >> -static void __svc_rdma_free(struct work_struct *work)
-> >> +/**
-> >> + * svc_rdma_free - Release class-specific transport resources
-> >> + * @xprt: Generic svc transport object
-> >> + */
-> >> +static void svc_rdma_free(struct svc_xprt *xprt)
-> >>  {
-> >>         struct svcxprt_rdma *rdma =3D
-> >> -               container_of(work, struct svcxprt_rdma, sc_work);
-> >> +               container_of(xprt, struct svcxprt_rdma, sc_xprt);
-> >>         struct ib_device *device =3D rdma->sc_cm_id->device;
-> >>
-> >> +       might_sleep();
-> >> +
-> >>         /* This blocks until the Completion Queues are empty */
-> >>         if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
-> >>                 ib_drain_qp(rdma->sc_qp);
-> >> @@ -629,15 +635,6 @@ static void __svc_rdma_free(struct work_struct *w=
-ork)
-> >>         kfree(rdma);
-> >>  }
-> >>
-> >> -static void svc_rdma_free(struct svc_xprt *xprt)
-> >> -{
-> >> -       struct svcxprt_rdma *rdma =3D
-> >> -               container_of(xprt, struct svcxprt_rdma, sc_xprt);
-> >> -
-> >> -       INIT_WORK(&rdma->sc_work, __svc_rdma_free);
-> >> -       schedule_work(&rdma->sc_work);
-> >> -}
-> >> -
-> >>  static int svc_rdma_has_wspace(struct svc_xprt *xprt)
-> >>  {
-> >>         struct svcxprt_rdma *rdma =3D
-> >> --
-> >> 2.50.0
-> >>
-> >
+> Pidfd file handles are exhaustive meaning
+> they don't require a handle on another pidfd to pass to
+> open_by_handle_at() so it can derive the filesystem to decode in.
 >
+> Implement the exhaustive file handles for namespaces as well.
+
+I think you decide to split the "exhaustive" part to another patch,
+so better drop this paragraph?
+
+I am missing an explanation about the permissions for
+opening these file handles.
+
+My understanding of the code is that the opener needs to meet one of
+the conditions:
+1. user has CAP_SYS_ADMIN in the userns owning the opened namespace
+2. current task is in the opened namespace
+
+But I do not fully understand the rationale behind the 2nd condition,
+that is, when is it useful?
+And as far as I can tell, your selftest does not cover this condition
+(only both true or both false)?
+
+I suggest to start with allowing only the useful and important
+cases, so if cond #1 is useful enough, drop cond #2 and we can add
+it later if needed and then your selftests already cover cond #1 true and f=
+alse.
+
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+After documenting the permissions, with ot without dropping cond #2
+feel free to add:
+
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+
+> ---
+>  fs/nsfs.c                | 176 +++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/exportfs.h |   6 ++
+>  2 files changed, 182 insertions(+)
+>
+> diff --git a/fs/nsfs.c b/fs/nsfs.c
+> index 6f8008177133..a1585a2f4f03 100644
+> --- a/fs/nsfs.c
+> +++ b/fs/nsfs.c
+> @@ -13,6 +13,12 @@
+>  #include <linux/nsfs.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/mnt_namespace.h>
+> +#include <linux/ipc_namespace.h>
+> +#include <linux/time_namespace.h>
+> +#include <linux/utsname.h>
+> +#include <linux/exportfs.h>
+> +#include <linux/nstree.h>
+> +#include <net/net_namespace.h>
+>
+>  #include "mount.h"
+>  #include "internal.h"
+> @@ -417,12 +423,182 @@ static const struct stashed_operations nsfs_stashe=
+d_ops =3D {
+>         .put_data =3D nsfs_put_data,
+>  };
+>
+> +struct nsfs_fid {
+> +       u64 ns_id;
+> +       u32 ns_type;
+> +       u32 ns_inum;
+> +} __attribute__ ((packed));
+> +
+> +#define NSFS_FID_SIZE (sizeof(struct nsfs_fid) / sizeof(u32))
+> +
+> +static int nsfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+> +                         struct inode *parent)
+> +{
+> +       struct nsfs_fid *fid =3D (struct nsfs_fid *)fh;
+> +       struct ns_common *ns =3D inode->i_private;
+> +       int len =3D *max_len;
+> +
+> +       /*
+> +        * TODO:
+> +        * For hierarchical namespaces we should start to encode the
+> +        * parent namespace. Then userspace can walk a namespace
+> +        * hierarchy purely based on file handles.
+> +        */
+> +       if (parent)
+> +               return FILEID_INVALID;
+> +
+> +       if (len < NSFS_FID_SIZE) {
+> +               *max_len =3D NSFS_FID_SIZE;
+> +               return FILEID_INVALID;
+> +       }
+> +
+> +       len  =3D NSFS_FID_SIZE;
+> +
+> +       fid->ns_id =3D ns->ns_id;
+> +       fid->ns_type =3D ns->ops->type;
+> +       fid->ns_inum =3D inode->i_ino;
+> +       *max_len =3D len;
+> +       return FILEID_NSFS;
+> +}
+> +
+> +static struct dentry *nsfs_fh_to_dentry(struct super_block *sb, struct f=
+id *fh,
+> +                                       int fh_len, int fh_type)
+> +{
+> +       struct path path __free(path_put) =3D {};
+> +       struct nsfs_fid *fid =3D (struct nsfs_fid *)fh;
+> +       struct user_namespace *owning_ns =3D NULL;
+> +       struct ns_common *ns;
+> +       int ret;
+> +
+> +       if (fh_len < NSFS_FID_SIZE)
+> +               return NULL;
+> +
+> +       switch (fh_type) {
+> +       case FILEID_NSFS:
+> +               break;
+> +       default:
+> +               return NULL;
+> +       }
+> +
+> +       scoped_guard(rcu) {
+> +               ns =3D ns_tree_lookup_rcu(fid->ns_id, fid->ns_type);
+> +               if (!ns)
+> +                       return NULL;
+> +
+> +               VFS_WARN_ON_ONCE(ns->ns_id !=3D fid->ns_id);
+> +               VFS_WARN_ON_ONCE(ns->ops->type !=3D fid->ns_type);
+> +               VFS_WARN_ON_ONCE(ns->inum !=3D fid->ns_inum);
+> +
+> +               if (!refcount_inc_not_zero(&ns->count))
+> +                       return NULL;
+> +       }
+> +
+> +       switch (ns->ops->type) {
+> +#ifdef CONFIG_CGROUPS
+> +       case CLONE_NEWCGROUP:
+> +               if (!current_in_namespace(to_cg_ns(ns)))
+> +                       owning_ns =3D to_cg_ns(ns)->user_ns;
+> +               break;
+> +#endif
+> +#ifdef CONFIG_IPC_NS
+> +       case CLONE_NEWIPC:
+> +               if (!current_in_namespace(to_ipc_ns(ns)))
+> +                       owning_ns =3D to_ipc_ns(ns)->user_ns;
+> +               break;
+> +#endif
+> +       case CLONE_NEWNS:
+> +               if (!current_in_namespace(to_mnt_ns(ns)))
+> +                       owning_ns =3D to_mnt_ns(ns)->user_ns;
+> +               break;
+> +#ifdef CONFIG_NET_NS
+> +       case CLONE_NEWNET:
+> +               if (!current_in_namespace(to_net_ns(ns)))
+> +                       owning_ns =3D to_net_ns(ns)->user_ns;
+> +               break;
+> +#endif
+> +#ifdef CONFIG_PID_NS
+> +       case CLONE_NEWPID:
+> +               if (!current_in_namespace(to_pid_ns(ns))) {
+> +                       owning_ns =3D to_pid_ns(ns)->user_ns;
+> +               } else if (!READ_ONCE(to_pid_ns(ns)->child_reaper)) {
+> +                       ns->ops->put(ns);
+> +                       return ERR_PTR(-EPERM);
+> +               }
+> +               break;
+> +#endif
+> +#ifdef CONFIG_TIME_NS
+> +       case CLONE_NEWTIME:
+> +               if (!current_in_namespace(to_time_ns(ns)))
+> +                       owning_ns =3D to_time_ns(ns)->user_ns;
+> +               break;
+> +#endif
+> +#ifdef CONFIG_USER_NS
+> +       case CLONE_NEWUSER:
+> +               if (!current_in_namespace(to_user_ns(ns)))
+> +                       owning_ns =3D to_user_ns(ns);
+> +               break;
+> +#endif
+> +#ifdef CONFIG_UTS_NS
+> +       case CLONE_NEWUTS:
+> +               if (!current_in_namespace(to_uts_ns(ns)))
+> +                       owning_ns =3D to_uts_ns(ns)->user_ns;
+> +               break;
+> +#endif
+> +       default:
+> +               return ERR_PTR(-EOPNOTSUPP);
+> +       }
+> +
+> +       if (owning_ns && !ns_capable(owning_ns, CAP_SYS_ADMIN)) {
+> +               ns->ops->put(ns);
+> +               return ERR_PTR(-EPERM);
+> +       }
+> +
+> +       /* path_from_stashed() unconditionally consumes the reference. */
+> +       ret =3D path_from_stashed(&ns->stashed, nsfs_mnt, ns, &path);
+> +       if (ret)
+> +               return ERR_PTR(ret);
+> +
+> +       return no_free_ptr(path.dentry);
+> +}
+> +
+> +/*
+> + * Make sure that we reject any nonsensical flags that users pass via
+> + * open_by_handle_at().
+> + */
+> +#define VALID_FILE_HANDLE_OPEN_FLAGS \
+> +       (O_RDONLY | O_WRONLY | O_RDWR | O_NONBLOCK | O_CLOEXEC | O_EXCL)
+> +
+> +static int nsfs_export_permission(struct handle_to_path_ctx *ctx,
+> +                                  unsigned int oflags)
+> +{
+> +       if (oflags & ~(VALID_FILE_HANDLE_OPEN_FLAGS | O_LARGEFILE))
+> +               return -EINVAL;
+> +
+> +       /* nsfs_fh_to_dentry() is performs further permission checks. */
+> +       return 0;
+> +}
+> +
+> +static struct file *nsfs_export_open(struct path *path, unsigned int ofl=
+ags)
+> +{
+> +       /* Clear O_LARGEFILE as open_by_handle_at() forces it. */
+> +       oflags &=3D ~O_LARGEFILE;
+> +       return file_open_root(path, "", oflags, 0);
+> +}
+> +
+> +static const struct export_operations nsfs_export_operations =3D {
+> +       .encode_fh      =3D nsfs_encode_fh,
+> +       .fh_to_dentry   =3D nsfs_fh_to_dentry,
+> +       .open           =3D nsfs_export_open,
+> +       .permission     =3D nsfs_export_permission,
+> +};
+> +
+>  static int nsfs_init_fs_context(struct fs_context *fc)
+>  {
+>         struct pseudo_fs_context *ctx =3D init_pseudo(fc, NSFS_MAGIC);
+>         if (!ctx)
+>                 return -ENOMEM;
+>         ctx->ops =3D &nsfs_ops;
+> +       ctx->eops =3D &nsfs_export_operations;
+>         ctx->dops =3D &ns_dentry_operations;
+>         fc->s_fs_info =3D (void *)&nsfs_stashed_ops;
+>         return 0;
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index cfb0dd1ea49c..3aac58a520c7 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -122,6 +122,12 @@ enum fid_type {
+>         FILEID_BCACHEFS_WITHOUT_PARENT =3D 0xb1,
+>         FILEID_BCACHEFS_WITH_PARENT =3D 0xb2,
+>
+> +       /*
+> +        *
+> +        * 64 bit namespace identifier, 32 bit namespace type, 32 bit ino=
+de number.
+> +        */
+> +       FILEID_NSFS =3D 0xf1,
+> +
+>         /*
+>          * 64 bit unique kernfs id
+>          */
 >
 > --
-> Chuck Lever
+> 2.47.3
 >
 
