@@ -1,406 +1,310 @@
-Return-Path: <linux-nfs+bounces-14303-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14304-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0F0AB538AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 18:05:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87172B538C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 18:09:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C686E7AB7C1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 16:00:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E6DE188B865
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 16:09:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EE11A83F9;
-	Thu, 11 Sep 2025 16:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6CC352FC2;
+	Thu, 11 Sep 2025 16:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fO0ruPj5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/qmrX0z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B0B38DD3
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 16:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC753126D3
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 16:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757606539; cv=none; b=dr9HtV3DHRapRnbbLo8YjRP2G+KzFnMvQZxegcJer6Az3FQHMTniHHDCTuNV5aInPofWudcY/dpc/vk2LskMJFl26jgLhxaPcJymmKjrJO8Nb7nrgj4UeQK+9A2OKJG0v0XhgKKN0mR+6+rQR7mlCNbgBzxsVHgYpApAo8gC0rU=
+	t=1757606967; cv=none; b=T/8ocvgsWEjFa3o6n+6OhY+DzFsVY5eIluW+QuegkanAvjos4zf2TaYHng0VhiwE3Nb3FmU43gwypOpdqdextjbMkSO+4Aaze3NK4usS4qHjd3xRosThT7unO0de58/mv8DBMWIk2kSoPysIqusyjkC+mnni2+Wad3DX913zUJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757606539; c=relaxed/simple;
-	bh=ja4l6tQHfNpkMCIta8k4I1ropneqlWhPUSRbmS5G/VY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Svn/c/dbVDQAo1yqNGHFAD5M9g1SDeQMw8eiI98pTIJROv0xM+yHzilew/u8rUxyOWfh5feQsUWKeoQvsz29PT5/lkT94KVXsIuXi25v2/sjnoMk27gjNKnT84bJ/Uhzz94fS0HrzVdaSkXsuMgiLnSkla8cyucMBr5sYveTtz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fO0ruPj5; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1757606967; c=relaxed/simple;
+	bh=CBqNgo4KH+p9fH6qjtSCtI69mHPwAHipthlnWRYs8dQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=RFAFEeA5FKDB9yLcxeAAfdpTU3odJy1scCZLGkOYi49kU0cKbrQIG643DMNbBvx90lKWFlu8xPDnIELC2D1TqZuiAL2MOgcXjK4ctM0A4WwD4MvwhGQqHxdwWwmN5vLtA151iYxQVekno2A5GctIUYuJGIcz9jKV1PEvTZjH3p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a/qmrX0z; arc=none smtp.client-ip=209.85.160.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-336ce4a894cso7588701fa.1
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 09:02:16 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-30cceb3be82so691619fac.2
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 09:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757606535; x=1758211335; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oQ80rsevTEAVCbWvfZ4aYNxV0MEBLVr92nhBL/c8nOE=;
-        b=fO0ruPj5eWk9Oknl7XtM+NmN6HbLHuWwgnJXXHO63rrHfcRlkgWaQaRkEuWmyYXv9+
-         ELIbtKc5noQKZYf9mD46OIRB80013VYbZmHi+G1b3a+QGCj4sWeZI9mfbsgpcZKjIPQC
-         rA3Iq/IYMGIEnTp5UFYY5wpF9oGQLvGJsn7JZ7LB9MrDoaeSEcwouglnQ0Y2KQkN3LE2
-         1IACzvPFuh43dpax9PAaA72J/nSgawOMOkxdeXaA+SsmMBr8O3+5eT7B1bx+wPa7syK9
-         Gg+DMbirt+wIpFzolDGNbOkVTiu1eSLBiRyA1KeATqSV3uYCvUS0CODmfa1dzcFXHODm
-         ++Rw==
+        d=gmail.com; s=20230601; t=1757606965; x=1758211765; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DzFC/Ho3mFCRQiv8Fb7T80A5TSv6mikU2Z99IvPwzIQ=;
+        b=a/qmrX0zgdbCWdCkS3POCCDfHubaltryaQx+PbKQPH8HNlXvHHhugVnVC8xUG5fPQo
+         sBucvh7eZxUWROMLleUHs2dnRT8eNTXetWkDnovkS36Cp4hjGUoPF4ihoYaOZ3HE4rgl
+         1aBUmgSiMxWMOavXY6jyaDfb7BAiLy995oyc3DV0vXRfxHZPUd1FBxJOvQ5BrKMJF38R
+         nJ16zC4Ifmcsiwlfy38BwbDjiYrnjMZk4t2O1N0Oem3OOV/L6uXDa8NZBtipFEk+6U26
+         9sYBXlHOlPkLIrjQGrH86BtG4Zh4hwzV3ZqpgPWFKLK0EH3bCA3oTg8Hfq7+yu4ngFal
+         5JOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757606535; x=1758211335;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oQ80rsevTEAVCbWvfZ4aYNxV0MEBLVr92nhBL/c8nOE=;
-        b=O1ajwRbY3kkOj7naGHf/+SUKEwoU8fGAWwFi+OOV2QxW3Ux590B6rObifbsay+ilDo
-         3e3/EbCV73vzySRfK8nbfRnd6iU7kF2sOIHvVeodZX2bAfiDudh7QAo3cqcjpst+wkdv
-         Nk66Hd9tGgzCiOclNPFlekffkjdnm7wDpLo4XNUFQJ+94lg6Z2uw2XSXqWwTt0Tw0xut
-         wyJze3fD8L8ijYTe035ao6oWCTOzll8pzKOECLDA+o2Bb5iBbGuWvv/Q8OjUEr69BoOC
-         vBmrYqScIo8dPR7oWWsSfZd9SGE0N0x731sGr3yIBLOEhSCuuYxVjFeZ44qPDTnEEoON
-         15DQ==
-X-Gm-Message-State: AOJu0YzMDcaSar85N7PNnYxzOywA9gQ8owUg2LfFkD1un4oGIDxblbVu
-	hr8g+33Z2ywDCckMZ3KAxuPoSAX3vZPpUSD0S2I0T4NcPBfYNFFWXEiy
-X-Gm-Gg: ASbGncv5xxxa85rXJWy2D4pwpAOTguwym7b1UR5BpLo7hQFe5tZq47FZCoWERfUDaKU
-	ihUDly7vcGpx5Hi7o0JIlqhuTf7r43GJqmX56U09PT3xods6cx69EzFN/22N8ijvAy1yWvSSQOm
-	+1ABEMXPkPZSf1fSOporih5Zh0QAqqBWPVek3u1+uO5IBJv8eVLIYZJ3mk9kV7vcPkZE18bhHrt
-	kI9aEXrL2rpcguacaIIyK8H5SzVKIfijipjazH/tkOxpvApbPBZ8aEA5RL5ESVUEoNhd2W6D9zf
-	wrpgAD8D+MhuJZI9jlW74QUsK9EpzIHXj3d0o7Kf2lyGXNGgTBOh3rdW+2jAx+C14TZchCL1DS1
-	P96KRFUbxmX0feEUtI2PkEWdkcRWGDfse1UobldFRxF7axTohW5D3uKAUU4GsHA==
-X-Google-Smtp-Source: AGHT+IHYvj7C7RKH/yw36gpiv3e48n0trxYj+pXjOfSK/8iAC0HvWSRW3yA1g5uSHLrEwZ5uSoRcKQ==
-X-Received: by 2002:a05:651c:221a:b0:350:adaa:6b93 with SMTP id 38308e7fff4ca-350adaa6d49mr1966491fa.6.1757606534880;
-        Thu, 11 Sep 2025 09:02:14 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.148.183])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-34f1a820665sm3381581fa.33.2025.09.11.09.02.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Sep 2025 09:02:14 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH] NFSD: Impl multiple extents in block/scsi layoutget
-Date: Thu, 11 Sep 2025 19:02:03 +0300
-Message-ID: <20250911160208.69086-1-sergeybashirov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1757606965; x=1758211765;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DzFC/Ho3mFCRQiv8Fb7T80A5TSv6mikU2Z99IvPwzIQ=;
+        b=vkVfMJLEKME70DYA2u3BzVcI3rohUNtv6i1hC3Gdn5d3sLYnMFGotOy+KWpqPiKZXp
+         xv83jrO0TbHfUMfCw/TAoPzyYhGbiCftbYTeEiAlXFgAgX6SvhAM7CFwuLXhqJOyLllZ
+         U/j8Zwc0YhLgwqZDFltnr6Hf0JbKaqK8azRF1aPEbvbjcOmabv+g++tmNk2U0uL9w1Kw
+         Cm0xg9L5PBm/Q6pVsGTtDDaGDNTNnFLLEKE/I4ou2JYYRRUC6guy6mmzOhONNVc1wkNS
+         tr/fUgO7WncLpKdC2nFPaaoJBTRYHHtJkjpX3Gohm26F6WKn+jpzqTD3s+ItzFZhwv9T
+         MTzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvjJu6pisPUsHEcrVGCavw/p5ezo2YBTl6oVHOTZ03I5FArUQFz/BkMEKoWTlaoui+IGBF5yCsKuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO8vHLy3QtGWv1tDv7fwZ8xTWVTPVbn5urcRsGKbNetqqVlFeI
+	ZRHRTs9isoP01EtDTHe9XaxuEQenN1KOmSgLfjrjdyKsMp+WS8DZ9s1znVudo5C4yVk6FRV3zlU
+	AoOsVKzGjIVEKBNXO1tfTikVf95T0KPE=
+X-Gm-Gg: ASbGncuMYhTt73LA400PbUptbBsB9QO/4HbueoP7lrBt+CNw9nDsdS6tu1Mar4EtVJe
+	ViR1eSWO8N3X0mk68Fw9+mU8xiVC+HboB+/KcsXrlxuwf1PF7pMaV5PewPcphYYHUpyuwi+N1Po
+	upzG9sNjnft/30+rxiHN111hWQTTtM1AiYWXlIMyg2oYN5VTWSDWzSmIs+Gw+a4OzsOlRAesv9m
+	1ct2aKHb//g/A6vog==
+X-Google-Smtp-Source: AGHT+IHxyYwQh6GNytxL/VxJaCTBR3HMatdZ4Skd7lB1DkWR8Jik/BZGjYPAOkZT52KK+0UPUyYoyaZvVPD0MFlZeRw=
+X-Received: by 2002:a05:6870:2e09:b0:314:9683:3759 with SMTP id
+ 586e51a60fabf-32265437abcmr9350132fac.50.1757606964792; Thu, 11 Sep 2025
+ 09:09:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALXu0Ufzm66Ors3aBBrua0-8bvwqo-=RCmiK1yof9mMUxyEmCQ@mail.gmail.com>
+ <CALXu0Ufgv7RK7gDOK53MJsD+7x4f0+BYYwo2xNXidigxLDeuMg@mail.gmail.com>
+ <44250631-2b70-4ce8-b513-a632e70704ed@oracle.com> <aEZ3zza0AsDgjUKq@infradead.org>
+ <e5e385fd-d58a-41c7-93d9-95ff727425dd@oracle.com> <aEfD3Gd0E8ykYNlL@infradead.org>
+ <CALXu0UfgvZdrotUnyeS6F6qYSOspLg_xwVab8BBO6N3c9SFGfA@mail.gmail.com>
+ <e1ca19a0-ab61-453f-9aea-ede6537ce9da@oracle.com> <CALXu0Uc9WGU8QfKwuLHMvNrq3oAftV+41K5vbGSkDrbXJftbPw@mail.gmail.com>
+ <47ece316-6ca6-4d5d-9826-08bb793a7361@oracle.com> <CAKAoaQ=RNxx4RpjdjTVUKOa+mg-=bJqb3d1wtLKMFL-dDaXgCA@mail.gmail.com>
+ <CAM5tNy7w71r6WgWOz4tXtLi=yvw55t_5dFe_x-13Thy5NgjEGA@mail.gmail.com>
+ <CALXu0Uep=q9mu1suZ0r04MGJn-xRn2twiRtQbGgtr1eZ7D_6sg@mail.gmail.com>
+ <CAM5tNy5=k9_5GsZkbV225ZmMw7S38o30Zt3RDoBC8UKcoxYGbg@mail.gmail.com>
+ <e0da383964e9f398854e70c51e15c02faaf009b9.camel@kernel.org>
+ <CALXu0UcT1USQinz4qxDwhETdxRLJ1zCMRjw1iPExYES+qdJROA@mail.gmail.com> <CALXu0UchAhzimREouJpGoP9=3zKghb-WVuvFTX7Vj8J5Uj2o8Q@mail.gmail.com>
+In-Reply-To: <CALXu0UchAhzimREouJpGoP9=3zKghb-WVuvFTX7Vj8J5Uj2o8Q@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Thu, 11 Sep 2025 18:08:48 +0200
+X-Gm-Features: Ac12FXzh86WkM6XJmKMmOrQDU_Lwo8_aWjI91TM0DB92WnfXTpBOMiicGAVfwPg
+Message-ID: <CALXu0UcBNgPrazhqOxqHA0WjQyx7jWa09k=rvnMBJM1ot1iHmg@mail.gmail.com>
+Subject: Re: fattr4_archive "deprecated" ? Re: NFSv4.x export options to mark
+ export as case-insensitive, case-preserving? Re: LInux NFSv4.1 client and
+ server- case insensitive filesystems supported?
+To: linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch allows the pNFS server to respond with multiple extents
-in a layoutget request. As a result, the number of layoutget requests
-is significantly reduced for various file access patterns, including
-random and parallel writes, avoiding unnecessary load to the server.
-On the client side, this improves the performance of writing large
-files and allows requesting layouts with minimum length greater than
-PAGE_SIZE.
+On Thu, 11 Sept 2025 at 17:36, Cedric Blancher
+<cedric.blancher@gmail.com> wrote:
+>
+> On Thu, 11 Sept 2025 at 17:33, Cedric Blancher
+> <cedric.blancher@gmail.com> wrote:
+> >
+> > On Thu, 11 Sept 2025 at 17:26, Trond Myklebust <trondmy@kernel.org> wro=
+te:
+> > >
+> > > On Thu, 2025-09-11 at 08:01 -0700, Rick Macklem wrote:
+> > > > On Thu, Sep 11, 2025 at 1:08=E2=80=AFAM Cedric Blancher
+> > > > <cedric.blancher@gmail.com> wrote:
+> > > > >
+> > > > > CAUTION: This email originated from outside of the University of
+> > > > > Guelph. Do not click links or open attachments unless you recogni=
+ze
+> > > > > the sender and know the content is safe. If in doubt, forward
+> > > > > suspicious emails to IThelp@uoguelph.ca.
+> > > > >
+> > > > > On Wed, 10 Sept 2025 at 15:38, Rick Macklem
+> > > > > <rick.macklem@gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, Sep 10, 2025 at 3:47=E2=80=AFAM Roland Mainz
+> > > > > > <roland.mainz@nrubsig.org> wrote:
+> > > > > > >
+> > > > > > > On Tue, Sep 9, 2025 at 9:32=E2=80=AFPM Chuck Lever
+> > > > > > > <chuck.lever@oracle.com> wrote:
+> > > > > > > >
+> > > > > > > > On 9/9/25 12:33 PM, Cedric Blancher wrote:
+> > > > > > > > > On Tue, 9 Sept 2025 at 18:12, Chuck Lever
+> > > > > > > > > <chuck.lever@oracle.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On 9/9/25 12:06 PM, Cedric Blancher wrote:
+> > > > > > > > > > > Due lack of a VFS interface and the urgend use case o=
+f
+> > > > > > > > > > > needing to
+> > > > > > > > > > > export a case-insensitive filesystem via NFSv4.x, cou=
+ld
+> > > > > > > > > > > we please get
+> > > > > > > > > > > two /etc/exports options, one setting the case-
+> > > > > > > > > > > insensitive boolean
+> > > > > > > > > > > (true, false, get-default-from-fs) and one for case-
+> > > > > > > > > > > preserving (true,
+> > > > > > > > > > > false, get-default-from-fs)?
+> > > > > > > > > > >
+> > > > > > > > > > > So far LInux nfsd does the WRONG thing here, and
+> > > > > > > > > > > exports even
+> > > > > > > > > > > case-insensitive filesystems as case-sensitive. The
+> > > > > > > > > > > Windows NFSv4.1
+> > > > > > > > > > > server does it correctly.
+> > > > > > > >
+> > > > > > > > As always, I encourage you to, first, prototype in NFSD the
+> > > > > > > > hard-coding
+> > > > > > > > of these settings as returned to NFS clients to see if that
+> > > > > > > > does what
+> > > > > > > > you really need with Linux-native file systems.
+> > > > > > >
+> > > > > > > If Cedric wants just case-insensitive mounts for a Windows
+> > > > > > > NFSv4
+> > > > > > > (Exceed, OpenText, ms-nfs41-client, ms-nfs42-client, ...), th=
+en
+> > > > > > > the
+> > > > > > > only thing needed is ext4fs or NTFS in case-insensitive mode,
+> > > > > > > and that
+> > > > > > > the Linux NFSv4.1 server sets
+> > > > > > > FATTR4_WORD0_CASE_INSENSITIVE=3D=3Dtrue and
+> > > > > > > FATTR4_WORD0_CASE_PRESERVING=3D=3Dtrue (for FAT
+> > > > > > > FATTR4_WORD0_CASE_PRESERVING=3D=3Dfalse). Only applications u=
+sing
+> > > > > > > ADS
+> > > > > > > (Alternate Data Streams) will not work, because the Linux NFS
+> > > > > > > server
+> > > > > > > does not support "OPENATTR"&co ops.
+> > > > > > >
+> > > > > > > If Cedric wants Windows home dirs:
+> > > > > > > This is not working with the Linux NFSv4.1 server, because it
+> > > > > > > must support:
+> > > > > > > - FATTR4_WORD1_SYSTEM
+> > > > > > > - FATTR4_WORD0_ARCHIVE
+> > > > > > > - FATTR4_WORD0_HIDDEN
+> > > > > > > - Full ACL support, the current draft POSIX-ACLs in Linux
+> > > > > > > NFSv4.1
+> > > > > > > server&&{ ext4fs, btrfs, xfs etc. } causes malfunctions in th=
+e
+> > > > > > > Windows
+> > > > > > > "New User" profile setup (and gets you a temporary profile in
+> > > > > > > C:\Users\*.temp+lots of warnings and a note to log out
+> > > > > > > immediately
+> > > > > > > because your user profile dir has been "corrupted")
+> > > > > > >
+> > > > > > > Windows home dirs with NFSv4 only work so far with the
+> > > > > > > Solaris&&Illumos NFS servers, and maybe the FreeBSD >=3D 14 N=
+FS
+> > > > > > > server
+> > > > > > > (not tested yet).
+> > > > > > I'll just note that the named attribute support (the windows
+> > > > > > client
+> > > > > > folk like the name)
+> > > > > > along with Hidden and System are in 15 only.
+> > > > > > And Archive is not supported because it is listed as "deprecate=
+d"
+> > > > > > in the RFC.
+> > > > > > (If this case really needs it, someone should try to get it
+> > > > > > "undeprecated" on
+> > > > > > nfsv4@ietf.org. I could add Archive easily. All of these are fo=
+r
+> > > > > > ZFS only.
+> > > > > > ZFS also knows case insensitive, although I have not tried it.)
+> > > > >
+> > > > > Who (name!) had the idea to declare fattr4_archive as "deprecated=
+"?
+> > > > > It
+> > > > > was explicitly added for Windows and DOS compatibility in NFSv4,
+> > > > > and
+> > > > > unlike Windows EAs (which are depreciated, and were superseded by
+> > > > > "named streams") the "archive" attribute is still in use.
+> > > > I have no idea who would have done this, but here is the snippet fr=
+om
+> > > > RFC5661 (which started being edited in 2005 and was published in
+> > > > 2010,
+> > > > so it has been like this for a long time). The same words are in
+> > > > RFC8881
+> > > > and currently in the RFC8881bis draft. Can this be changed?
+> > > > I'd say yes, but it will take time and effort on someone's part.
+> > > > Posting to nfsv4@ietf.org, noting that this attribute is needed
+> > > > by the Windows client (and at least a suggestion that time_backup
+> > > > is not a satisfactory replacement) would be a good start.
+> > > >
+> > > > 5.8.2.1.  Attribute 14: archive
+> > > >
+> > > >    TRUE, if this file has been archived since the time of last
+> > > >    modification (deprecated in favor of time_backup).
+> > > >
+> > > > The problem has been a serious lack of Windows expertise in the NFS=
+v4
+> > > > working group. Long ago (20+ years) the Hummingbird developers were
+> > > > actively involved (Hummingbird became Open Network Solutions, which
+> > > > became a division of OpenText, if I recall it correctly).
+> > > >
+> > > > But there has been no one with Windows expertise involved more
+> > > > recently.
+> > > >
+> > > > My suggestion (I'll repeat it) is to have someone participate in th=
+e
+> > > > Bakeathon
+> > > > testing events (the next one is in about one month and can be
+> > > > attended
+> > > > remotely using a tailscale VPN). When someone tests at the event an=
+d
+> > > > finds an issue, the server developers are there and can discussion
+> > > > what
+> > > > it takes to fix it.
+> > > >
+> > > > Also, participation on the nfsv4@ietf.org mailing list (some workin=
+g
+> > > > group
+> > > > members will not be reading this Linux list) and attendance at
+> > > > working
+> > > > group meetings would help. (The working group meetings can
+> > > > also be attended remotely and there is an automatic fee waiver for
+> > > > remote attendance if you, like me, are not funded to do the work.)
+> > > >
+> > > > With no involvement from people with Windows expertise, the testing
+> > > > has become basically a bunch of servers being tested against by
+> > > > various versions of the Linux client (with me being at outlier,
+> > > > testing
+> > > > the FreeBSD client).
+> > >
+> > > As stated in the line you quote, it is listed as being deprecated in
+> > > favour of the backup time because the latter provides a superset of t=
+he
+> > > same functionality: by comparing the value of the backup time to the
+> > > value of the mtime, you can determine the value of the archive bit (i=
+t
+> > > is set if the backup time is newer than the mtime).
+> > >
+> > > In addition, the backup time also tells you exactly when the file was
+> > > last backed up.
+> > >
+> > > So no, this is not about people who don't understand Windows. It's
+> > > about repackaging the same functionality in a way that is more useful
+> > > to people who understand backups.
+> >
+> > fattr4_archive was added long ago by SUN and CITI for NFS4, for
+> > feature parity with SMB, and to accurately map Windows and DOS
+> > features (the "A" flag). It cannot be replaced by a timestamp, because
+> > neither Windows nor DOS have a "backup timestamp", except in
+> > specialised software.
+> > It might have made sense from a Linux point of view, but that
+> > literally disables the "archive" flag for Windows and DOS, with
+> > chaotic consequences. An additional "backup timestamp" is nice, but in
+> > this specific case it damages a platform.
+>
+> I hit <SEND> too early. The backup timestamp is fine, just declaring
+> "fattr4_archive"
 
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
----
-Checked with smatch, tested on pNFS block volume setup.
+...as obsolete...
 
- fs/nfsd/blocklayout.c    | 167 +++++++++++++++++++++++++++++----------
- fs/nfsd/blocklayoutxdr.c |  36 ++++++---
- fs/nfsd/blocklayoutxdr.h |   5 ++
- 3 files changed, 157 insertions(+), 51 deletions(-)
+> is premature, unless Windows as a platform is
+> considered no longer supported by IETF. But then NFS should be renamed
+> to LFS (linux file system)
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index fde5539cf6a6..d53f3ec8823a 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -17,48 +17,39 @@
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
- 
- 
-+/**
-+ * nfsd4_block_map_extent - get extent that covers the start of segment
-+ * @inode: inode of the file requested by the client
-+ * @fhp: handle of the file requested by the client
-+ * @seg: layout subrange requested by the client
-+ * @minlength: layout min length requested by the client
-+ * @bex: output block extent structure
-+ *
-+ * Get an extent from the file system that starts at @seg->offset or below,
-+ * but may be shorter than @seg->length.
-+ *
-+ * Return values:
-+ *   %nfs_ok: Success, @bex is initialized and valid
-+ *   %nfserr_layoutunavailable: Failed to get extent for requested @seg
-+ *   OS errors converted to NFS errors
-+ */
- static __be32
--nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
--		const struct svc_fh *fhp, struct nfsd4_layoutget *args)
-+nfsd4_block_map_extent(struct inode *inode, const struct svc_fh *fhp,
-+		const struct nfsd4_layout_seg *seg, u64 minlength,
-+		struct pnfs_block_extent *bex)
- {
--	struct nfsd4_layout_seg *seg = &args->lg_seg;
- 	struct super_block *sb = inode->i_sb;
--	u32 block_size = i_blocksize(inode);
--	struct pnfs_block_extent *bex;
- 	struct iomap iomap;
- 	u32 device_generation = 0;
- 	int error;
- 
--	if (locks_in_grace(SVC_NET(rqstp)))
--		return nfserr_grace;
--
--	if (seg->offset & (block_size - 1)) {
--		dprintk("pnfsd: I/O misaligned\n");
--		goto out_layoutunavailable;
--	}
--
--	/*
--	 * Some clients barf on non-zero block numbers for NONE or INVALID
--	 * layouts, so make sure to zero the whole structure.
--	 */
--	error = -ENOMEM;
--	bex = kzalloc(sizeof(*bex), GFP_KERNEL);
--	if (!bex)
--		goto out_error;
--	args->lg_content = bex;
--
- 	error = sb->s_export_op->map_blocks(inode, seg->offset, seg->length,
- 					    &iomap, seg->iomode != IOMODE_READ,
- 					    &device_generation);
- 	if (error) {
- 		if (error == -ENXIO)
--			goto out_layoutunavailable;
--		goto out_error;
--	}
--
--	if (iomap.length < args->lg_minlength) {
--		dprintk("pnfsd: extent smaller than minlength\n");
--		goto out_layoutunavailable;
-+			return nfserr_layoutunavailable;
-+		return nfserrno(error);
- 	}
- 
- 	switch (iomap.type) {
-@@ -74,9 +65,9 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
- 			/*
- 			 * Crack monkey special case from section 2.3.1.
- 			 */
--			if (args->lg_minlength == 0) {
-+			if (minlength == 0) {
- 				dprintk("pnfsd: no soup for you!\n");
--				goto out_layoutunavailable;
-+				return nfserr_layoutunavailable;
- 			}
- 
- 			bex->es = PNFS_BLOCK_INVALID_DATA;
-@@ -93,27 +84,119 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
- 	case IOMAP_DELALLOC:
- 	default:
- 		WARN(1, "pnfsd: filesystem returned %d extent\n", iomap.type);
--		goto out_layoutunavailable;
-+		return nfserr_layoutunavailable;
- 	}
- 
- 	error = nfsd4_set_deviceid(&bex->vol_id, fhp, device_generation);
- 	if (error)
--		goto out_error;
-+		return nfserrno(error);
-+
- 	bex->foff = iomap.offset;
- 	bex->len = iomap.length;
-+	return nfs_ok;
-+}
- 
--	seg->offset = iomap.offset;
--	seg->length = iomap.length;
-+/**
-+ * nfsd4_block_map_segment - get extent array for the requested layout
-+ * @inode: inode of the file requested by the client
-+ * @fhp: handle of the file requested by the client
-+ * @seg: layout range requested by the client
-+ * @minlength: layout min length requested by the client
-+ * @bl: output array of block extents
-+ *
-+ * Get an array of consecutive block extents that span the requested
-+ * layout range. The resulting range may be shorter than requested if
-+ * all preallocated block extents are used.
-+ *
-+ * Return values:
-+ *   %nfs_ok: Success, @bl initialized and valid
-+ *   %nfserr_layoutunavailable: Failed to get extents for requested @seg
-+ *   OS errors converted to NFS errors
-+ */
-+static __be32
-+nfsd4_block_map_segment(struct inode *inode, const struct svc_fh *fhp,
-+		const struct nfsd4_layout_seg *seg, u64 minlength,
-+		struct pnfs_block_layout *bl)
-+{
-+	struct nfsd4_layout_seg subseg = *seg;
-+	u32 i;
-+	__be32 nfserr;
- 
--	dprintk("GET: 0x%llx:0x%llx %d\n", bex->foff, bex->len, bex->es);
--	return 0;
-+	for (i = 0; i < bl->nr_extents; i++) {
-+		struct pnfs_block_extent *extent = bl->extents + i;
-+		u64 extent_len;
-+
-+		nfserr = nfsd4_block_map_extent(inode, fhp, &subseg,
-+				minlength, extent);
-+		if (nfserr != nfs_ok)
-+			return nfserr;
-+
-+		extent_len = extent->len - (subseg.offset - extent->foff);
-+		if (extent_len >= subseg.length) {
-+			bl->nr_extents = i + 1;
-+			return nfs_ok;
-+		}
-+
-+		subseg.offset = extent->foff + extent->len;
-+		subseg.length -= extent_len;
-+	}
-+
-+	return nfs_ok;
-+}
-+
-+static __be32
-+nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
-+		const struct svc_fh *fhp, struct nfsd4_layoutget *args)
-+{
-+	struct nfsd4_layout_seg *seg = &args->lg_seg;
-+	u64 seg_length;
-+	struct pnfs_block_extent *first_bex, *last_bex;
-+	struct pnfs_block_layout *bl;
-+	u32 nr_extents_max = PAGE_SIZE / sizeof(bl->extents[0]) - 1;
-+	u32 block_size = i_blocksize(inode);
-+	__be32 nfserr;
-+
-+	if (locks_in_grace(SVC_NET(rqstp)))
-+		return nfserr_grace;
-+
-+	nfserr = nfserr_layoutunavailable;
-+	if (seg->offset & (block_size - 1)) {
-+		dprintk("pnfsd: I/O misaligned\n");
-+		goto out_error;
-+	}
-+
-+	/*
-+	 * Some clients barf on non-zero block numbers for NONE or INVALID
-+	 * layouts, so make sure to zero the whole structure.
-+	 */
-+	nfserr = nfserrno(-ENOMEM);
-+	bl = kzalloc(struct_size(bl, extents, nr_extents_max), GFP_KERNEL);
-+	if (!bl)
-+		goto out_error;
-+	bl->nr_extents = nr_extents_max;
-+	args->lg_content = bl;
-+
-+	nfserr = nfsd4_block_map_segment(inode, fhp, seg,
-+			args->lg_minlength, bl);
-+	if (nfserr != nfs_ok)
-+		goto out_error;
-+	first_bex = bl->extents;
-+	last_bex = bl->extents + bl->nr_extents - 1;
-+
-+	nfserr = nfserr_layoutunavailable;
-+	seg_length = last_bex->foff + last_bex->len - seg->offset;
-+	if (seg_length < args->lg_minlength) {
-+		dprintk("pnfsd: extent smaller than minlength\n");
-+		goto out_error;
-+	}
-+
-+	seg->offset = first_bex->foff;
-+	seg->length = last_bex->foff - first_bex->foff + last_bex->len;
-+	return nfs_ok;
- 
- out_error:
- 	seg->length = 0;
--	return nfserrno(error);
--out_layoutunavailable:
--	seg->length = 0;
--	return nfserr_layoutunavailable;
-+	return nfserr;
- }
- 
- static __be32
-diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
-index e50afe340737..68c112d47cee 100644
---- a/fs/nfsd/blocklayoutxdr.c
-+++ b/fs/nfsd/blocklayoutxdr.c
-@@ -14,12 +14,25 @@
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
- 
- 
-+/**
-+ * nfsd4_block_encode_layoutget - encode block/scsi layout extent array
-+ * @xdr: stream for data encoding
-+ * @lgp: layoutget content, actually an array of extents to encode
-+ *
-+ * This function encodes the opaque loc_body field in the layoutget response.
-+ * Since the pnfs_block_layout4 and pnfs_scsi_layout4 structures on the wire
-+ * are the same, this function is used by both layout drivers.
-+ *
-+ * Return values:
-+ *   %nfs_ok: Success, all extents encoded into @xdr
-+ *   %nfserr_toosmall: Not enough space in @xdr to encode all the data
-+ */
- __be32
- nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
- 		const struct nfsd4_layoutget *lgp)
- {
--	const struct pnfs_block_extent *b = lgp->lg_content;
--	int len = sizeof(__be32) + 5 * sizeof(__be64) + sizeof(__be32);
-+	const struct pnfs_block_layout *bl = lgp->lg_content;
-+	u32 i, len = sizeof(__be32) + bl->nr_extents * PNFS_BLOCK_EXTENT_SIZE;
- 	__be32 *p;
- 
- 	p = xdr_reserve_space(xdr, sizeof(__be32) + len);
-@@ -27,14 +40,19 @@ nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
- 		return nfserr_toosmall;
- 
- 	*p++ = cpu_to_be32(len);
--	*p++ = cpu_to_be32(1);		/* we always return a single extent */
-+	*p++ = cpu_to_be32(bl->nr_extents);
- 
--	p = svcxdr_encode_deviceid4(p, &b->vol_id);
--	p = xdr_encode_hyper(p, b->foff);
--	p = xdr_encode_hyper(p, b->len);
--	p = xdr_encode_hyper(p, b->soff);
--	*p++ = cpu_to_be32(b->es);
--	return 0;
-+	for (i = 0; i < bl->nr_extents; i++) {
-+		const struct pnfs_block_extent *bex = bl->extents + i;
-+
-+		p = svcxdr_encode_deviceid4(p, &bex->vol_id);
-+		p = xdr_encode_hyper(p, bex->foff);
-+		p = xdr_encode_hyper(p, bex->len);
-+		p = xdr_encode_hyper(p, bex->soff);
-+		*p++ = cpu_to_be32(bex->es);
-+	}
-+
-+	return nfs_ok;
- }
- 
- static int
-diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
-index 7d25ef689671..54fe7f517a94 100644
---- a/fs/nfsd/blocklayoutxdr.h
-+++ b/fs/nfsd/blocklayoutxdr.h
-@@ -21,6 +21,11 @@ struct pnfs_block_range {
- 	u64				len;
- };
- 
-+struct pnfs_block_layout {
-+	u32				nr_extents;
-+	struct pnfs_block_extent	extents[] __counted_by(nr_extents);
-+};
-+
- /*
-  * Random upper cap for the uuid length to avoid unbounded allocation.
-  * Not actually limited by the protocol.
--- 
-2.43.0
-
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
