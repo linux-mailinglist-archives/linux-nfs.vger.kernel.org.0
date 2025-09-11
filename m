@@ -1,131 +1,119 @@
-Return-Path: <linux-nfs+bounces-14312-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14314-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A522B53EC9
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 00:46:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AB4EB53F05
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 01:20:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 541684E05CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 22:46:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B45667ABABA
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 23:18:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5457C2F49FF;
-	Thu, 11 Sep 2025 22:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD35B26F2B9;
+	Thu, 11 Sep 2025 23:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="d6rCc6Is"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="eTgmkfYc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XFxinI8P"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F3B23BD02;
-	Thu, 11 Sep 2025 22:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3405156F45;
+	Thu, 11 Sep 2025 23:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757630793; cv=none; b=ELOL0ajP1GJ5ZskrlXykAboyB49UuukODVNAzG+mKKU4NAJxkojvEOgC2IOKK5TUlfu/FidS7/eiURBiWBVGIgj5nAy0p2cqUu3+dHN8KXqsoc8b17A0hTIRefPMq4FgbI7cpXNLAqfZphul41Er92fT42vkTx9uOOwxYo/e6h0=
+	t=1757632831; cv=none; b=YHu0ESGmbaV/1ke9mhGKFcCewjyPXfBrjn4E8EZQ54SzU/AwDhTYGt66Nt3F0dlO4Jk9p3TLbJHZI2SnrVOPN9NxHk4AN1k7ZjPsJBYjazF6voirqjOSnDw4T7hv9jv7TxxdX85F12bjbGWRMBlkts1ivXRHRXmiK/AUL0c0byY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757630793; c=relaxed/simple;
-	bh=L1ijgZIWyS3JyuRzSU931ad2FvK2A1V1AUrD5GsJjZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TuVbXOsQerAJ9FYnrZe5VeUtp72bHXmHQtnDzO3fmYSAslgB0N72xzPPVr/5ekpw7Vt/EPsT4ItXGPir59uDp/ubaeRVw87BoPaqh7cgv4/2ixzOOCGEORC8Kqq6vTbR8bDAelghR+qKlRsWaLsdPkT/an2nAhSbenicaAGiGNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=d6rCc6Is; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=7FH3XVCFHeGOZjm2Sy0EqJnWmvpOd8X9pa6ceHadPCs=; b=d6rCc6Isu6tdUGUacIbXT6LkGY
-	hRIsqM8pfwIgIm/CrEOCLGARSI8vAfugZkXziCDhnnq5URpkQhdGynFO45WAKCfapG7u3zH9PPk3D
-	oeUz1mkCKxIr2wPNgnKa1TUXtT1fsICOjKAbDsFMnzNaT4oZfNzzNLvtwRn5lkYHsuo03/VtDiRDh
-	5nwDuoD/CCWza3ASX52P1ApM2vftOaoxqf4t9rLNInSSlr9Wcbk9jwcSuf2nawEc2JFUkLkovFebn
-	5lD0ycK/4ZxGERlQmq+ChbFScwvILOK5DUBYH771QSX2KlP1KPfCVn3uCHIc0EdSVW5FFPHIaTUQl
-	AheZqVVg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uwq3h-00000006g3C-0hOb;
-	Thu, 11 Sep 2025 22:46:29 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	jlayton@kernel.org,
-	neil@brown.name
-Subject: [PATCH 5/5] nfsd_get_inode(): lift setting ->i_{,f}op to callers.
-Date: Thu, 11 Sep 2025 23:46:28 +0100
-Message-ID: <20250911224628.1591565-5-viro@zeniv.linux.org.uk>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250911224628.1591565-1-viro@zeniv.linux.org.uk>
-References: <20250911224429.GX39973@ZenIV>
- <20250911224628.1591565-1-viro@zeniv.linux.org.uk>
+	s=arc-20240116; t=1757632831; c=relaxed/simple;
+	bh=L/CC5PB/WDUGIpDRa6XS5CxyC+16IinvkD2by2YsX1s=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=mPTGZO7sdtQ6BaDnmxyToHlvh/LrtFCeTGOScFjPr4v0ErcLPiGSCUIEJQvqVl7xJcNVkX64T/qtpna24KilyZbFQDdcyfFqim4xrj+BO5q8cm/xVMKgi0/EnwlAHbYNDv3Oxxnu1OrcNwHgk6bKfcTwyjpu8f+TKp2l+wseiPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=eTgmkfYc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XFxinI8P; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id B4B0114003EB;
+	Thu, 11 Sep 2025 19:20:28 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-10.internal (MEProxy); Thu, 11 Sep 2025 19:20:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1757632828; x=1757719228; bh=95RnDNWVInCD+CQpxhoLEm5Qb+SCmpzq6Nn
+	d6FPeMPM=; b=eTgmkfYcTSmoJcbG9Kr0MzLpIr0glR57+BikfiKfP9/zl/KPY86
+	uBNjUconTL2KVRSVl3/gnM1gv195Zy/tFjKYiEOLV4y8vK8A9iDevn8pDNX48txT
+	rwXwFb8pLBiALxMoQYHMoi/5shYqayJB1umV5Y9Z+k1m1+Q4hbdiy2IoZHJ70a3F
+	dKhMviFUk9i4ouA0GPSULQLaNbGqj8Dv3gbsg3O96Nk24b4xDVPAbPlPuTDNIQUJ
+	z+4Oy8GOV1Rmbo2FWWNc0Kb45owBQOemJhh5zK2T9ygEK8TwfjlJ9MPNxnk45+5f
+	xUF8Otj7MbnrNLIZCFxhtLKj3geQUlAMqGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757632828; x=
+	1757719228; bh=95RnDNWVInCD+CQpxhoLEm5Qb+SCmpzq6Nnd6FPeMPM=; b=X
+	FxinI8PhCMOEgI6Ahg92gGPTbbn55a83t7jRGDTvwZMaL/r91kLMP/MZPBIBmlyP
+	x1BTAnHZEeIrCJ59eQFTVgrCCH/wQfdy9WTF9e1vUhJW7NQ1Qd4VWE7kmVm67QrQ
+	6wCEnLIhQDeiz11mX+SncAWLrELm9kgbBipWonLzmzC/7LKGimhpw4yQuEILJpHt
+	fi1szh05VlDAi6s0s2KiJ+gnKPWFlcs8KsdGU62BL2tSQAXvGfqrfQQ+hkpC87WK
+	XcP7oLISuPnxNKOf0oxlqManfyZbuy5JsneqPzHlemn4p6V23fpmmNcseCBmI/Ff
+	/ipSZTZ08F21B8Jo0OQeA==
+X-ME-Sender: <xms:PFnDaBmJgoXQWV9VFUwbT2BETOJDg2qO0qlNwp3glf65e0vnPz5CmQ>
+    <xme:PFnDaIVo39M_mmMtDjmIzGbn014q2_rx5aOnAtKrlkYfSSO-_FHIUl1tTETu9e4vo
+    DKcmYMBWfsoEA>
+X-ME-Received: <xmr:PFnDaOEoRCTCqiNZbkeSYCrSUJOsOTmVVGg3EsAmXn8O8R8aiWYeMmmtSRNxGzzsl1A71vNRcsG4TMjoMGAlXYKbJcp4Ib5NtTxeo7k0HSso>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvjeegjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghfhrvfevufgjfhffkfesthejredttddtjeenucfhrhhomhepfdfpvghilheu
+    rhhofihnfdcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrh
+    hnpeetieelgfekgfeigfegleejtddthedvjeettedvgfegheekkeeiuefhtdfggffgveen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilh
+    gssehofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:PFnDaMdKQbC119F7mOL3y2C2ZacSCIRZziuXp--d6LhhXr8EtvFazA>
+    <xmx:PFnDaHL6azr-mcAmSOumzCukDRrLLmOPQhtbNsPq5ECXLcBtJtu2Mw>
+    <xmx:PFnDaJFWTfag18ifO1fJMcMwYRXDBL8ZHZEREgjldUfeTx3jSdPzBA>
+    <xmx:PFnDaCBj0d0-H5RC2viS5m_kW0yzbOkF0DQzwDNaSALz6krUjaxtFQ>
+    <xmx:PFnDaOUXTyMAEIYPilLpuBpj0m57GmFU1a1me5EUYJ9lKesFMla4I6My>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 11 Sep 2025 19:20:26 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Al Viro <viro@ftp.linux.org.uk>
+From: "NeilBrown" <neilb@ownmail.net>
+Reply-To: neil@brown.name
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc:
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, jlayton@kernel.org
+Subject:
+ Re: [PATCH 4/5] nfsdfs_create_files(): switch to simple_start_creating()
+In-reply-to: <20250911224628.1591565-4-viro@zeniv.linux.org.uk>
+References: <>, <20250911224628.1591565-4-viro@zeniv.linux.org.uk>
+Date: Fri, 12 Sep 2025 09:20:25 +1000
+Message-id: <175763282518.1430411.16686769143755274607@noble.neil.brown.name>
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfsd/nfsctl.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+>  		inode->i_private = ncl;
+> -		d_add(dentry, inode);
+> +		d_instantiate(dentry, inode);
+>  		fsnotify_create(dir, dentry);
+>  		if (fdentries)
+>  			fdentries[i] = dentry;
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 6deabe359a80..c19a74a36c45 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1103,27 +1103,14 @@ static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t size)
-  *	populating the filesystem.
-  */
- 
--/* Basically copying rpc_get_inode. */
- static struct inode *nfsd_get_inode(struct super_block *sb, umode_t mode)
- {
- 	struct inode *inode = new_inode(sb);
--	if (!inode)
--		return NULL;
--	/* Following advice from simple_fill_super documentation: */
--	inode->i_ino = iunique(sb, NFSD_MaxReserved);
--	inode->i_mode = mode;
--	simple_inode_init_ts(inode);
--	switch (mode & S_IFMT) {
--	case S_IFDIR:
--		inode->i_fop = &simple_dir_operations;
--		inode->i_op = &simple_dir_inode_operations;
--		inc_nlink(inode);
--		break;
--	case S_IFLNK:
--		inode->i_op = &simple_symlink_inode_operations;
--		break;
--	default:
--		break;
-+	if (inode) {
-+		/* Following advice from simple_fill_super documentation: */
-+		inode->i_ino = iunique(sb, NFSD_MaxReserved);
-+		inode->i_mode = mode;
-+		simple_inode_init_ts(inode);
- 	}
- 	return inode;
- }
-@@ -1143,6 +1130,9 @@ static struct dentry *nfsd_mkdir(struct dentry *parent, struct nfsdfs_client *nc
- 		iput(inode);
- 		return dentry;
- 	}
-+	inode->i_fop = &simple_dir_operations;
-+	inode->i_op = &simple_dir_inode_operations;
-+	inc_nlink(inode);
- 	if (ncl) {
- 		inode->i_private = ncl;
- 		kref_get(&ncl->cl_ref);
-@@ -1176,6 +1166,7 @@ static void _nfsd_symlink(struct dentry *parent, const char *name,
- 		return;
- 	}
- 
-+	inode->i_op = &simple_symlink_inode_operations;
- 	inode->i_link = (char *)content;
- 	inode->i_size = strlen(content);
- 
--- 
-2.47.2
+I wonder if we should get rid of that if (fdentries) test one day.
+fdentries is never NULL.
 
+NeilBrown
 
