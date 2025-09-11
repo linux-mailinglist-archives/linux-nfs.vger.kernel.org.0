@@ -1,97 +1,180 @@
-Return-Path: <linux-nfs+bounces-14269-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14270-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B64B52678
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 04:30:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BCFB5293A
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 08:49:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67C021C27944
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 02:30:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D8DF561849
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 06:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFC7E2940D;
-	Thu, 11 Sep 2025 02:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5331A9B24;
+	Thu, 11 Sep 2025 06:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avq8eo7b"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1563F33D8
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 02:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899AA145A05
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 06:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757557830; cv=none; b=rhG4npa/GyQFwpNCUH1U8DDD4CxguZootzj8ib29mNAJO8UfjIWyc80zpx6Akl1Q5zhlfKiLI1QpbYk/x1oCQIELtCWqMd7sV3p1ZaLgKGVXCx0OrMmeqkhoVTtpYXAyyv6s3IH0RXRS/sUBWI8ozTQ/RR/1T+gNZZ0gkTiAq6E=
+	t=1757573355; cv=none; b=IozrlzUFy2smVwKD1edQPFa8xyUHExYUooTnNeKOyT1NwkoXiukWTJ/h/uV0vble7GUYT5G1IO7JlWZ0lD0IVtO4Nuue8L4iIhzfXxowS9SHfrA0WRbROCXHfH8ASfM0f9pspXLPVXrq/2AOcMOqJNGjXESPI73jGpXuB3gRA8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757557830; c=relaxed/simple;
-	bh=UFC2Re50m1ANGP34952odKp8nRLRRTJ8RnDl71LkSmU=;
-	h=From:To:Subject:Mime-Version:Content-Type:Date:Message-ID; b=X0uO2sakp5mNsv/JSJXfU3s3nyuqhw/ZcsV1asisGY/Lpr2UuGPgJMPrmvCrY2Aw7idyIJBIMiGZOnj8trTiFVZzU7P8KEqJ/nEz8gJPAbnKVL/OxFiJh0RxlUmtTT+zhSCRtr3XyBY8hOJC4vq+P9JTB87zLQTVbSlZImaIP/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=pass smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=114.132.67.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
-EX-QQ-RecipientCnt: 1
-X-QQ-GoodBg: 2
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqT0lIevWKG+BWOIYOYYzrVdtBspb4IB9XY=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: rXElhl60/8THmCcKXtoFHbwQfS75qOoUqb1grc+j3IM=
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-2t1757557802tb2d32d35
-From: "=?utf-8?B?WmhvdSBKaWZlbmc=?=" <zhoujifeng@kylinsec.com.cn>
-To: "=?utf-8?B?bGludXgtbmZz?=" <linux-nfs@vger.kernel.org>
-Subject: Where Is Dirty Data Flushed During NFSv4 Delegation Recall?
+	s=arc-20240116; t=1757573355; c=relaxed/simple;
+	bh=yDdSLJUdDVHxAsMMzTxLQxzZ40RaFNEHOB49Hw4kkxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=dxbuDFu2Du6xBaRNNpLWfk1I17vRoRe2Q/KlN89VzYw5efOEn05ehAH//UnxVSxEggB9H+FZ7qwSsxGi6eIdXy2nmskDjn3AMHu8lHEAnIoGjkI8EuK9syICY4fdGd1z8N/fw9COERQv1pP3fTJH7uSnORQ8E7l3ErzyjY8GR6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avq8eo7b; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-322695f899aso298929fac.1
+        for <linux-nfs@vger.kernel.org>; Wed, 10 Sep 2025 23:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757573352; x=1758178152; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hek5xLo9Ad3Ih9RRUrNGxqtHJl+e2/o7G5OUyKypt1k=;
+        b=avq8eo7b1EmXljIgmRWm3K8s/A8vWbXV47Cv7qyS08mpETaSCZpT6zqv+cCplFZH8L
+         VxtBNEy9p3o38RVg77sepPuQuapxppJEz8wYXvgGOKtxCR+OYWrYB/vY6ZKWTJOhcgO2
+         lpShi6sj/t1npyKhqfImKJqLUe6ZvMwZGSXirnmPCiC06HNbccxj2LCd0rX6d3dZtzvI
+         Je4QTEYXPSQ6XPXc29vi9vaU/j4sIrAifbvsQhlYHMRjJtJ1QhnNHjjA5xj1ZNUYh1s9
+         PxIRljG6C8j0zf5jHEzD/dxE9EyaeV5fC5Xi/kVIo70duMM635d4iNLChk8nrUmCPRuZ
+         QosQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757573352; x=1758178152;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hek5xLo9Ad3Ih9RRUrNGxqtHJl+e2/o7G5OUyKypt1k=;
+        b=B5cjnqekFYNJmSjKoZAsg2YmvRSX2qGm3fzuE/Tk+uBc4Oj7+SSMky2yGjzahb2oBw
+         tkB8ltK9hn8LavLO0Yl/gmbCMk1PF7N5T1uKvNt0jiJM4IyqLel0aSKJWQf9Q+IMTgXA
+         TimD2+xA8I1FRk+XpWNBZwdhO1Eql3IiYV/2Znq8gDLGqfm+d55USvCNbxsL47+iTiqS
+         zmAEBss0dkAfenyzp6XBeEBqBXQRg2bHEZ9h2nUo/oLlrQfWj9Ty6unM4BIdLhSQCLT0
+         /BCOu9b3fdtdJOgAeK0JrlKHjWSVDgNVCt36CNSlKlfK3SYL8IrcXXyBH9tumGCaQmU6
+         aK9Q==
+X-Gm-Message-State: AOJu0Ywv/t7U+OnUfTczhmWZP3RCh0Pm4KqeSKO4LdVbAhDb9zGRc6Lh
+	onHjMCs86v0V1t3x14cLoAro3bh9QCC5YjVDCiUs4cLqY38iXaHhdANa1neTVvxVgowXCpQC1Xd
+	qvEhKgAcfRWULRXJAU9f0GunC9/lbvQs49Sxv
+X-Gm-Gg: ASbGncsqOauXcgCwSbfKExJOiuXplN4+y5fuE4CZNzxtkQAhvouIZt4+Dgc64/ywZIx
+	M2ENo/q0rqimQSCAIaTVcM4qqemw6vrJePHLa1NpjCvwHcic/1uQ/9J2mvCgSDRbZrjhQHP12k3
+	td8Ml3SIEIxdLNgndUKBXam7J2gHv9ybwzoi26mpFDEN9q30tsZ2qLPlnaMTDbcY8buRHdff612
+	VMl5g6txOjffpUTxMfXWec2sfAN
+X-Google-Smtp-Source: AGHT+IEHOYGcOyWu3hwUEy/AfhyZEI5EDu0uVuC7K4Mms2ye9CmG4VcR0zrZF8fe9H8WwzqtKDzp2Cj2C+YInDulRhA=
+X-Received: by 2002:a05:6870:2e09:b0:314:9683:3759 with SMTP id
+ 586e51a60fabf-32265437abcmr8609310fac.50.1757573352167; Wed, 10 Sep 2025
+ 23:49:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Thu, 11 Sep 2025 10:30:02 +0800
-X-Priority: 3
-Message-ID: <tencent_6A84D2E177043C91217A1CF6@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-BIZMAIL-ID: 5251748727380581884
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Thu, 11 Sep 2025 10:30:03 +0800 (CST)
-Feedback-ID: lv:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: M/NR0wiIuy70vfWZUUG3KWIaloiYrvUFFz6w0JRfVK2P9HoIWGg3luyl
-	+CC/ot0uq4Ja/73WlyBUz7Q9+0qlbJNqVgX76GEN1alpTbmx3ml2QInB0MeTzN1U1805O62
-	umUXchddwzHucVmu2mpo6WYJknin0a8Rch0MT/DRzyvxnTwgN0+SVUokMVJ3lMGh59Aeksr
-	DzYqAMlnVyOWIU5OV6Wv+KszhSncWJdr1lsSKEPkL5SHkAGYPF5R84ZnvfIS0c///ShtSLA
-	1raVmiq2jR2fc5UCBmQYxRinlzrYlN20Ml4AaUZ0t6BY347bpTj7Nr9MjZOMf7UHgBa9fX3
-	V0gLRBFAVGJZnOLLrDankh+5VZ0aVfSqhkMk92FczhIxLyeqQw1RkSBV/GNkKV8nDPbC9og
-	ejDcmTaE71z/MBfhpi6s3+kOMjFhGJLwbGsMpOb1EYhNXJqT3UW97QfXRBSwON81VOFEcSA
-	h38wVvjo+HZRNujZ78fmqcQlJB6NBglwHvBdhJ2GsO9oUlzWhqk2zMLRuMEZtlR52d/Yzgx
-	FY5YJW92g63gEwSMkXblKuKBzui5GGyGQZ11ShnANNBxSZvs/L+d6yrtjHb+msN9hw7AG/o
-	DQzvpjinXUarbTJks2pSO2IrpziajzS92jtsw/MTzAuIZO9qg3/LOl8jC4WLmnt6PcVBEGF
-	hNp23SH7R1E8pZF60RpdVWwzGH6O5g0nIfQWZganRc4YWIjMt2C0qy4bCsdw1wrrq7j5ugu
-	CxOInYuBn4fTKHGdOjw91QrrY3LvJ0TQ6U2Y1pMJ+8qjyIfFnIuln7M1Zgtle5Ebb1iSNgA
-	0749wjg/btaI88F9ep/9tod0bImAxlX+99dDxcs6Ggv5z8Xy6fH8K7vere3e1jNS86a+xkB
-	iv2FQd3FECvb287LE2aV0MAQyGE7goVz6G9NCMHuypJK9XF7D8wie2eBxj3AHzDzwRnUXDv
-	Z1MiWhMSzERHszEaEDberg6B674rz473pHODQX/K87h/TQtJLEKmA2cDxSP39Kjf+KVg9R+
-	fXRBVWbA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+References: <CALXu0Ufzm66Ors3aBBrua0-8bvwqo-=RCmiK1yof9mMUxyEmCQ@mail.gmail.com>
+ <CALXu0Ufgv7RK7gDOK53MJsD+7x4f0+BYYwo2xNXidigxLDeuMg@mail.gmail.com>
+ <44250631-2b70-4ce8-b513-a632e70704ed@oracle.com> <aEZ3zza0AsDgjUKq@infradead.org>
+ <e5e385fd-d58a-41c7-93d9-95ff727425dd@oracle.com> <aEfD3Gd0E8ykYNlL@infradead.org>
+ <CALXu0UfgvZdrotUnyeS6F6qYSOspLg_xwVab8BBO6N3c9SFGfA@mail.gmail.com> <236e7b3e86423b6cdacbce9a83d7a00e496e020a.camel@kernel.org>
+In-Reply-To: <236e7b3e86423b6cdacbce9a83d7a00e496e020a.camel@kernel.org>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Thu, 11 Sep 2025 08:49:00 +0200
+X-Gm-Features: Ac12FXxapantSV9qhlkkBY3Sx68Tp1FP2Wf87_uR6-_v-lISBbyrLOKR8dUp6io
+Message-ID: <CALXu0UeSJbNeZ_TqSxu84ZPJ6FK7PiF7qcgMsGtvHY_URFL3SQ@mail.gmail.com>
+Subject: Re: NFSv4.x export options to mark export as case-insensitive,
+ case-preserving? Re: LInux NFSv4.1 client and server- case insensitive
+ filesystems supported?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-SGVsbG8gZXZlcnlvbmUsIEkgaGF2ZSBhIHF1ZXN0aW9uIHRoYXQgaGFzIGJlZW4gYm90aGVy
-aW5nIG1lIGZvciBhIGxvbmcNCiB0aW1lLiBJIHdvdWxkIGxpa2UgdG8gYXNrIGEgZmFtaWxp
-YXIgZnJpZW5kIHRvIGhlbHAgZXhwbGFpbiBpdC4gSW4gdGhlIE5GU3Y0DQogcHJvdG9jb2ws
-IGl0IGlzIGNsZWFybHkgZGVmaW5lZCB0aGF0IGR1cmluZyB0aGUgZGVsZWdhdGlvbiBSRUNB
-TEwgDQpwcm9jZXNzaW5nLCB0aGUgY2xpZW50IG5lZWRzIHRvIHdyaXRlIHRoZSBtb2RpZmll
-ZCBjYWNoZSB0byB0aGUgc2VydmVyDQpzaWRlLiBIb3dldmVyLCB0aHJvdWdob3V0IHRoZSBw
-cm9jZXNzLCBJIGhhdmUgbm90IGZvdW5kIHRoZSBjb2RlIGZvcg0KZmx1c2hpbmcgZGlydHkg
-ZGF0YSBpbiB0aGUga2VybmVsIE5GUyBjbGllbnQuIEkgaGF2ZSByZXBlYXRlZGx5IHJldmll
-d2VkDQp0aGUgY29kZSBsb2dpYyBvZiBuZnM0X2NhbGxiYWNrX3JlY2FsbCBhbmQgbmZzNF9z
-dGF0ZV9tYW5hZ2VyLCBidXQgc3RpbGwNCmNhbm5vdCB1bmRlcnN0YW5kIHdoZXJlIHRoZSBk
-aXJ0eSBkYXRhIGlzIGZsdXNoZWQuDQoNCk15IHF1ZXN0aW9uIGlzOiBXaGVuIHRoZSBjbGll
-bnQgaXMgaGFuZGxpbmcgdGhlIFJFQ0FMTCBvcGVyYXRpb24sIHdoZXJlDQpkb2VzIHRoZSBw
-cm9jZXNzIG9mIGZsdXNoaW5nIHRoZSBkaXJ0eSBkYXRhIHRha2UgcGxhY2U/DQoNCkJlc3Qg
-cmVnYXJkcw==
+On Wed, 10 Sept 2025 at 13:10, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Tue, 2025-09-09 at 18:06 +0200, Cedric Blancher wrote:
+> > On Tue, 10 Jun 2025 at 07:34, Christoph Hellwig <hch@infradead.org> wrote:
+> > >
+> > > On Mon, Jun 09, 2025 at 10:16:24AM -0400, Chuck Lever wrote:
+> > > > > Date:   Wed May 21 16:50:46 2008 +1000
+> > > > >
+> > > > >     dcache: Add case-insensitive support d_ci_add() routine
+> > > >
+> > > > My memory must be quite faulty then. I remember there being significant
+> > > > controversy at the Park City LSF around some patches adding support for
+> > > > case insensitivity. But so be it -- I must not have paid terribly close
+> > > > attention due to lack of oxygen.
+> > >
+> > > Well, that is when the ext4 CI code landed, which added the unicode
+> > > normalization, and with that another whole bunch of issues.
+> >
+> > Well, no one likes the Han unification, and the mess the Unicode
+> > consortium made from that,
+> > But the Chinese are working on a replacement standard for Unicode, so
+> > that will be a lot of FUN =:-)
+> >
+> > > > > That being said no one ever intended any of these to be exported over
+> > > > > NFS, and I also question the sanity of anyone wanting to use case
+> > > > > insensitive file systems over NFS.
+> > > >
+> > > > My sense is that case insensitivity for NFS exports is for Windows-based
+> > > > clients
+> > >
+> > > I still question the sanity of anyone using a Windows NFS client in
+> > > general, but even more so on a case insensitive file system :)
+> >
+> > Well, if you want one and the same homedir on both Linux and Windows,
+> > then you have the option between the SMB/CIFS and the Windows NFSv4.2
+> > driver (I'm not counting the Windows NFSv3 driver due lack of ACL
+> > support).
+> > Both, as of September 2025, work fine for us for production usage.
+> >
+> > > > Does it, for example, make sense for NFSD to query the file system
+> > > > on its case sensitivity when it prepares an NFSv3 PATHCONF response?
+> > > > Or perhaps only for NFSv4, since NFSv4 pretends to have some recognition
+> > > > of internationalized file names?
+> > >
+> > > Linus hates pathconf any anything like it with passion.  Altough we
+> > > basically got it now with statx by tacking it onto a fast path
+> > > interface instead, which he now obviously also hates.  But yes, nfsd
+> > > not beeing able to query lots of attributes, including actual important
+> > > ones is largely due to the lack of proper VFS interfaces.
+> >
+> > What does Linus recommend as an alternative to pathconf()?
+> >
+> > Also, AGAIN the question:
+> > Due lack of a VFS interface and the urgend use case of needing to
+> > export a case-insensitive filesystem via NFSv4.x, could we please get
+> > two /etc/exports options, one setting the case-insensitive boolean
+> > (true, false, get-default-from-fs) and one for case-preserving (true,
+> > false, get-default-from-fs)?
+> >
+> > So far LInux nfsd does the WRONG thing here, and exports even
+> > case-insensitive filesystems as case-sensitive. The Windows NFSv4.1
+> > server does it correctly.
+> >
+> > Ced
+>
+> I think you don't want an export option for this.
+>
+> It sounds like what we really need is a mechanism to determine whether
+> the inode the client is doing a GETATTR against lies on a case-
+> insensitive mount.
 
+<rant>
+It might sound rude, but after reading that I had to empty my bottle
+of bromhydrate de scopolamine renaudin.
+The topic of returning the correct booleans for fattr_case_insensitive
+and fattr_case_preserving in Linux has been running in circles since
+(at least) 2008, covering all kinds of bug reports (CITI, Suse, RH,
+....) and mailing lists.
+So far NOTHING ever happened, except "more research", "no time" and so
+on, while other platforms like the Windows Server 2019 platform and
+the Exceed/OpenText NFS4 server just did it correctly.
+Exceed NFS client handles it correctly.
+</rant>
+
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
