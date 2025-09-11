@@ -1,200 +1,165 @@
-Return-Path: <linux-nfs+bounces-14280-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14281-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08171B5306B
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 13:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53F8FB530D7
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 13:38:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A7A11883B6C
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 11:29:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 693121BC59EA
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 11:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E97DC317712;
-	Thu, 11 Sep 2025 11:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1751A31DD92;
+	Thu, 11 Sep 2025 11:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b609dir5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbgcjOFd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D2B158874
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 11:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFA031C59F
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 11:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757590159; cv=none; b=tfC5Q7vFliDHT1QXRGTILeXn6ESVzmeNvKdu2zepzKrJeXoXF+7VMpxTBgz7g/6jcwoSrF9ydt0o+dh881bhqoczLCTB9mzfQd5WE2+gk6ICeBEH4SFE5ne5E8m/HFnWcVC6SfNZjywCDo9rgo9uumkZM+Z+/LgCPDE0S2QwwGc=
+	t=1757590605; cv=none; b=YLBpzLaJHDcy7SUXwsGba2oScr3c1aNz5Zipi3GD8GVBnvh6lNEuLNEiJYEVWynWY7uldh9SfTOiUibVpgFl37hjjl+vU6QF/qP3BS3hDb0Y9sVCnySoercksCaE3yqZRFfEULjV9qJkOSmCn+aHQxeuOHoBsOAF3dhSUZG71HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757590159; c=relaxed/simple;
-	bh=UyYelvn5cHI48pfiQ+KMdw5CZW1xU+XHv5zoAOe+QUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VelfCww5dMZA3vUbCwuwx4i14tGbNdDpHnCN0fwQGVjcJFGEb65njKap3ULm2xPyATh1wJ6F+STmcbnm5/Hxowgl88RIiw54DAdFeZi+XsBibso/pPZV2Au5w3HLiJk2nvXcoXhRTqhgysV4D6O0TdWlM/r2jdIiOP/z/M/xOVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b609dir5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757590155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FsgNUkgFRWDjfVc9J41AHdACumz0XSlwUcnAF9QWYBY=;
-	b=b609dir5DmyYZ+VlIx9LGVwEcnsR/bwGu5v9uXSgTIw9h04zoOvdOhgnQ9xhnBsseIpEhY
-	1/c9dVqKzEfw2h5MZ4Tr7N3OUbC3yp8k5lSREA3X5btTRMbQVkbQzaePMvKyb50U7PE/tl
-	AobHz2ORAR34O3/njY7bVX/NjFlg7bo=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-118-VoMF__X4NK-HOiOqNZrLMw-1; Thu, 11 Sep 2025 07:29:14 -0400
-X-MC-Unique: VoMF__X4NK-HOiOqNZrLMw-1
-X-Mimecast-MFC-AGG-ID: VoMF__X4NK-HOiOqNZrLMw_1757590154
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4b5f6eeb20eso24923321cf.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 04:29:14 -0700 (PDT)
+	s=arc-20240116; t=1757590605; c=relaxed/simple;
+	bh=l3WS5mh3b7m+0CGnd7HwPGEX6fOXJSXSic0gzbaETOY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jC1QXjYO3YI0ocoN41PCc7GPOMnrPhmFaXpnH6pu7phL8ow8J2ZZ6am5cWNSaWhb+wLdFDWoZl4T5z2NrThcQeiBtd86AFWUflvOEzP+mE8WjVTZ6NzW9iAuhDb8ensTDDpPArliLD4tZjexks6sM3ivx2l725iVYv5Tg14ItlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbgcjOFd; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-624fdf51b44so759703a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 04:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757590601; x=1758195401; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3WS5mh3b7m+0CGnd7HwPGEX6fOXJSXSic0gzbaETOY=;
+        b=QbgcjOFdQCEX77z/FdlRwnzEmGsALvq3U9SOMI0CS5/Coz9cwTG3pr8H10coBpZ0ZT
+         ALfxzqhBFvmTlunvaBg5eojquIU2M0Jaj6+Hd0e8iXqgKuOZqpt4Pv6GARREjVuH73n6
+         hdS/4L12c0LlPui/1Ra+uKktXYpezhtgeFeBAindj/qegG++n014aPkSXSpYqw+JJt2x
+         5d9AacMrKkjsMmKaZ0myeESD6BMVT92frcJGeyabQR1LDI54v2GGB/cQhRWnOlA2P3pb
+         1nosawlRTBFeGlzHK360D6IZGmPAf3T+Q0SiPG4HX3udF0VqG3qAdTsBxdNsQnMuetky
+         AnCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757590153; x=1758194953;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsgNUkgFRWDjfVc9J41AHdACumz0XSlwUcnAF9QWYBY=;
-        b=ZRab5fNFsCIMLW1ejNYyS8W5EqsdRjQtCfUabxfB5imgv8EPcU+3mgYKwbMDTWuDw4
-         bGV1XT4f3wGn4McshnQtmVwhrVgLeVuhHhsOjl6WHNJjAlGYMGGDuphWo5Zn+JTU1Cp0
-         u2BCKL0JQrjt4hEe2Xa4i/BX2kxa4Sziqfd2ZNu1OkTsaOY3OiZbbPANzG7Cj0kRWIxT
-         hVz0d/+tpz8QgNWHzcbh9ANYIat4t4EDmAm6mLgfauzUIS2LhzqycUa0ZBLVgoLmZGRE
-         kJtZ22qg9Qk+sdRxYBIPTS3HHoxbyXB375ZbgdZxZ+leZIK0A6ZY0Ef7cL78rKtcXkzZ
-         CDMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDY/YQoMcuTp/Nkw2FABlWPk0pMVDfcvaaviU2//gg2bqcShDzYXOtS8AvRnCKaxTm2L5jc23g0B0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn7Bx2MNaazIWevJPiWSnJz5AYXRfCz9LY5gH5AhAHbTNicIAN
-	LD1aU4ErpXJ3DNxWnzDkj6sxatS4b8RjLFaDnZmpgQFW+uVurHo3auU4J2bjPbDcc9O8D/D2Mr0
-	tUHDzUzS2bIpeO1sUzhi31mjAwx9nso6xqOxFy0zvMWSve9M3jnJhes5X5NEdnkBP3Zvajg==
-X-Gm-Gg: ASbGncu4j07nCmfhSuX0uj4xUuAtQ9st/JYv+o6gdaeA085XqJxD/uQZn2DsyjcCNkf
-	42xaDA06/uiYCG4/dTvwvPBcIsQ5IpF/UskwdSjyG6fVq7vgybaCtwyIipV0ORpnU5U/P8NT3n2
-	lL2kifED0eLY3F0HYgIEMAmE2PY+ayR3kOXOM5Xb8Yw/4IQaK2XhIZGa/iW1yoLQu+dx6svRBRW
-	pU3Fa5zvYv9JMU6zz0gml6nj5wL/GIUMwbFc1hw9q2sGlHF9MTm8TOQdCbXHjPGrR9cLhkuQS3Y
-	c7yEVPPhmPZNNXjnqJoTRdKKg9078GiIFIQDax1wWgvgl83wDYhEfkSMiaJSB0hQhPrlG80kV/8
-	A4GQjd1SbeQGm
-X-Received: by 2002:ac8:59c8:0:b0:4b5:de78:dc0c with SMTP id d75a77b69052e-4b5f8446155mr228562751cf.39.1757590152745;
-        Thu, 11 Sep 2025 04:29:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYmH2W67tmWpccoH+p5bjPSRxa1bnUgfe9LmsSE8Nry84ap0v74aXnEURtp2RnIpj0w+RXzA==
-X-Received: by 2002:ac8:59c8:0:b0:4b5:de78:dc0c with SMTP id d75a77b69052e-4b5f8446155mr228562421cf.39.1757590152216;
-        Thu, 11 Sep 2025 04:29:12 -0700 (PDT)
-Received: from ?IPV6:2603:6000:d605:db00:e99e:d1e3:b6a2:36ac? ([2603:6000:d605:db00:e99e:d1e3:b6a2:36ac])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-820c8ac44efsm88559385a.13.2025.09.11.04.29.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Sep 2025 04:29:11 -0700 (PDT)
-Message-ID: <5522b8df-668d-4b55-9117-3c0b70a1dd2d@redhat.com>
-Date: Thu, 11 Sep 2025 07:29:10 -0400
+        d=1e100.net; s=20230601; t=1757590601; x=1758195401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l3WS5mh3b7m+0CGnd7HwPGEX6fOXJSXSic0gzbaETOY=;
+        b=P2B2/jcxOZ6ki74q7cnKJcuTR14R/wfaRu+s5ZcXBQUxwvhEb6xtowdyqL49NqCVWB
+         vzbHrSlTHrDtU8eN+fXifpescJ2wdu1zDiiughyPmBuaEdZZD2WcUoTqL9t9gusXAFoE
+         ePV+YxTN2h9GbcWOvRs5ea0TUk0CvzEDEE8NaT1Ibfn3Ihzx2GxTv/zokBECTpjFefLS
+         3Z2MHg16SCtY9LXHQMTWg+33jdaFEikXMHrx3DYMquqNRfOqLXxxsIpIZYkY7mDg/N9m
+         2Ixh5whbXwC4mrxkuRAUmOhqS36O280FC7Ba9go2z7g+QV/ZjctsZUGrr7ZbdoASTGmB
+         SoEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ48AgWD8AKC4gBw6dfnvuXDr+PR3f0NVsQX5n1Abznzf8clQwRszPJszUJDAcecWv31TukFR4OoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMUOUdreozert8aux7xWkz2sWKw51q+EU19t6eM1e7vjFJD5Va
+	RmgIwgGcOoBZ4+I2AXKi5FIg4j+7YCjWS7s+MjiLFpkP0HA5eLh1+D6Y7aKY9nHtlhKi8YUviPy
+	EHA4Q8ncyewFlTxrdafndt78naX/nLt8=
+X-Gm-Gg: ASbGncufEAq/CyrpxUyRnw/Iw8M7buwyTg1276wBk7JPgWYZqEzNKgdrj1emq5YlWhf
+	eJbxoS/EWpt2s5JO3uVrb9/MRurHKWENc6n31+DpbQMY0eXWolvInq5MHR/7RmFV62IryeB0PjQ
+	edA/79QPzh2Y3rZUcNGWhKntx2QX3xTBJ7uK2HrHQZk7srkqeePlCPIxlmJ9IQ83ZAlOWArbshd
+	UPDZfaaWNtzUOoj0g==
+X-Google-Smtp-Source: AGHT+IFTNKY6jjRUaK+95vjWoIXWhr+sTjejTLV8OOCQsfjrobYVHw8JMmZi1nhLUH2mOW0HugLlXyiAfLiI1n/62Pg=
+X-Received: by 2002:a05:6402:2685:b0:61d:dd9:20db with SMTP id
+ 4fb4d7f45d1cf-6237c048793mr16217741a12.31.1757590600743; Thu, 11 Sep 2025
+ 04:36:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH v2] rpc-statd.service: define dependency on both
- rpcbind.service and rpcbind.socket
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: neil@brown.name, bcodding@redhat.com, yoyang@redhat.com,
- linux-nfs@vger.kernel.org
-References: <20250909131752.1310595-1-smayhew@redhat.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250909131752.1310595-1-smayhew@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org> <CAOQ4uxgtQQa-jzsnTBxgUTPzgtCiAaH8X6ffMqd+1Y5Jjy0dmQ@mail.gmail.com>
+ <20250911-werken-raubzug-64735473739c@brauner>
+In-Reply-To: <20250911-werken-raubzug-64735473739c@brauner>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 11 Sep 2025 13:36:28 +0200
+X-Gm-Features: Ac12FXxRFt9Ctd5Cl_pR-FdI4tarLWVQlbT7aCbaq2ftodBoMLqTaIDo5wMZnik
+Message-ID: <CAOQ4uxgMgzOjz4E-4kJFJAz3Dpd=Q6vXoGrhz9F0=mb=4XKZqA@mail.gmail.com>
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 11, 2025 at 11:31=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+>
+> On Wed, Sep 10, 2025 at 07:21:22PM +0200, Amir Goldstein wrote:
+> > On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@kern=
+el.org> wrote:
+> > >
+> > > A while ago we added support for file handles to pidfs so pidfds can =
+be
+> > > encoded and decoded as file handles. Userspace has adopted this quick=
+ly
+> > > and it's proven very useful.
+> >
+> > > Pidfd file handles are exhaustive meaning
+> > > they don't require a handle on another pidfd to pass to
+> > > open_by_handle_at() so it can derive the filesystem to decode in.
+> > >
+> > > Implement the exhaustive file handles for namespaces as well.
+> >
+> > I think you decide to split the "exhaustive" part to another patch,
+> > so better drop this paragraph?
+>
+> Yes, good point. I've dont that.
+>
+> > I am missing an explanation about the permissions for
+> > opening these file handles.
+> >
+> > My understanding of the code is that the opener needs to meet one of
+> > the conditions:
+> > 1. user has CAP_SYS_ADMIN in the userns owning the opened namespace
+> > 2. current task is in the opened namespace
+>
+> Yes.
+>
+> >
+> > But I do not fully understand the rationale behind the 2nd condition,
+> > that is, when is it useful?
+>
+> A caller is always able to open a file descriptor to it's own set of
+> namespaces. File handles will behave the same way.
+>
 
+I understand why it's safe, and I do not object to it at all,
+I just feel that I do not fully understand the use case of how ns file hand=
+les
+are expected to be used.
+A process can always open /proc/self/ns/mnt
+What's the use case where a process may need to open its own ns by handle?
 
-On 9/9/25 9:17 AM, Scott Mayhew wrote:
-> In 91da135f ("systemd unit files: fix up dependencies on rpcbind"),
-> Neil laid out the rationale for how the nfs services should define their
-> dependencies on rpcbind.  In a nutshell:
-> 
-> 1. Dependencies should only be defined using rpcbind.socket
-> 2. Ordering for dependencies should only be defined usint "After="
-> 3. nfs-server.service should use "Wants=rpcbind.socket", to allow
->     rpcbind.socket to be masked in NFSv4-only setups.
-> 4. rpc-statd.service should use "Requires=rpcbind.socket", as rpc.statd
->     is useless if it can't register with rpcbind.
-> 
-> Then in https://bugzilla.redhat.com/show_bug.cgi?id=2100395, Ben noted
-> that due to the way the dependencies are ordered, when 'systemctl stop
-> rpcbind.socket' is run, systemd first sends SIGTERM to rpcbind, then
-> SIGTERM to rpc.statd.  On SIGTERM, rpcbind tears down /var/run/rpcbind.sock.
-> However, rpc-statd on SIGTERM attempts to unregister from rpcbind.  This
-> results in a long delay:
-> 
-> [root@rawhide ~]# time systemctl restart rpcbind.socket
-> 
-> real	1m0.147s
-> user	0m0.004s
-> sys	0m0.003s
-> 
-> 8a835ceb ("rpc-statd.service: Stop rpcbind and rpc.stat in an exit race")
-> fixed this by changing the dependency in rpc-statd.service to use
-> "After=rpcbind.service", bending rule #1 from above.
-> 
-> Yongcheng recently noted that when runnnig the following test:
-> 
-> [root@rawhide ~]# for i in `seq 10`; do systemctl reset-failed; \
-> 	systemctl stop rpcbind rpcbind.socket ; systemctl restart nfs-server ; \
-> 	systemctl status rpc-statd; done
-> 
-> rpc-statd.service would often fail to start:
-> 
-> × rpc-statd.service - NFS status monitor for NFSv2/3 locking.
->       Loaded: loaded (/usr/lib/systemd/system/rpc-statd.service; enabled-runtime; preset: disabled)
->      Drop-In: /usr/lib/systemd/system/service.d
->               └─10-timeout-abort.conf
->       Active: failed (Result: exit-code) since Fri 2025-09-05 18:01:15 EDT; 229ms ago
->     Duration: 228ms
->   Invocation: bafb2bb00761439ebc348000704e8fbb
->         Docs: man:rpc.statd(8)
->      Process: 29937 ExecStart=/usr/sbin/rpc.statd (code=exited, status=1/FAILURE)
->     Mem peak: 1.5M
->          CPU: 7ms
-> 
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Version 2.8.2 starting
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Flags: TI-RPC
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to register (statd, 1, udp): svc_reg() err: RPC: Remote system error - Connection refused
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to register (statd, 1, tcp): svc_reg() err: RPC: Success
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to register (statd, 1, udp6): svc_reg() err: RPC: Success
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: Failed to register (statd, 1, tcp6): svc_reg() err: RPC: Success
-> Sep 05 18:01:15 rawhide.smayhew.test rpc.statd[29938]: failed to create RPC listeners, exiting
-> Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: rpc-statd.service: Control process exited, code=exited, status=1/FAILURE
-> Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: rpc-statd.service: Failed with result 'exit-code'.
-> Sep 05 18:01:15 rawhide.smayhew.test systemd[1]: Failed to start rpc-statd.service - NFS status monitor for NFSv2/3 locking..
-> 
-> Define the dependency on both rpcbind.service and rpcbind.socket.  As
-> Neil explains:
-> 
-> "After" declarations only have effect if the units are in the same
-> transaction.  If the Unit is not being started or stopped, the After
-> declaration has no effect.
-> 
-> So on startup, this will ensure rpcbind.socket is started before
-> rpc-statd.service.  On shutdown in a transaction that stops both
-> rpc-statd.service and rpcbind.service, rpcbind.service won't be
-> stopped until after rpc-statd.service is stopped.
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed... (tag: nfs-utils-2-8-4-rc4)
+I will explain. For CAP_SYS_ADMIN I can see why keeping handles that
+do not keep an elevated refcount of ns object could be useful in the same
+way that an NFS client keeps file handles without keeping the file object a=
+live.
 
-steved.
-> ---
->   systemd/rpc-statd.service | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/systemd/rpc-statd.service b/systemd/rpc-statd.service
-> index 660ed861..96fd500d 100644
-> --- a/systemd/rpc-statd.service
-> +++ b/systemd/rpc-statd.service
-> @@ -6,7 +6,7 @@ Conflicts=umount.target
->   Requires=nss-lookup.target rpcbind.socket
->   Wants=network-online.target
->   Wants=rpc-statd-notify.service
-> -After=network-online.target nss-lookup.target rpcbind.service
-> +After=network-online.target nss-lookup.target rpcbind.service rpcbind.socket
->   
->   PartOf=nfs-utils.service
->   IgnoreOnIsolate=yes
+But if you do not have CAP_SYS_ADMIN and can only open your own ns
+by handle, what is the application that could make use of this?
+and what's the benefit of such application keeping a file handle instead of
+ns fd?
 
+Sorry. I feel that I may be missing something in the big picture.
+
+Thanks,
+Amir.
 
