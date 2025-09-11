@@ -1,160 +1,254 @@
-Return-Path: <linux-nfs+bounces-14282-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14283-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B83FB5315A
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 13:48:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BC81B531BA
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 14:07:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D750F163274
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 11:48:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D156F165A3D
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Sep 2025 12:07:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9593E25A35E;
-	Thu, 11 Sep 2025 11:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05852E9EAD;
+	Thu, 11 Sep 2025 12:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnPnn9lN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9G6EcfC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1583B3148BA
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 11:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21B61A2387;
+	Thu, 11 Sep 2025 12:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757591308; cv=none; b=sbQEAgnFmKk7OD5161RD8hmtyPhnF88LAbXO+xCBfPOsUEvDxNiWHnj4uQl14QwtDKIiOmFKZDzdehsBYOrtetq9FE+tJxYSfV30JMHHjmvaVooo5I8XGcp60MzxzUS0UdXtT+hSa5BxZ77v0YSZcX2sob4jvgMxaLFvVCSNe18=
+	t=1757592431; cv=none; b=pPDo+nq01KaFCaQU7CAzugrilJpfalb7dJHqMCQb2+mtOKhB1bGxwMQfn+De/Vzf5qFSNiqhRIf2N+0NmIagYkHn+pODugU1qTvzuNY3PiivNkkO1tnFO7L0IRA8/kUdk69FgpsbVj8VkvagkNjxW64u+x6QoxysikVhBh5shho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757591308; c=relaxed/simple;
-	bh=EkTK2XTSrHY3G5pm+FqDACFPq7N6pH7nHaRPNHNccS8=;
+	s=arc-20240116; t=1757592431; c=relaxed/simple;
+	bh=CWtgdGZKGiV6C2LAqDBOWl4B+CogxkQkccfpg7R1L7I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fb8qt/z4+NdPF/45cVfZAuOW/KxjaP7AcZr2RpfK00aTdXv5KwwCAKBrmyl8S5cHEC5I7ipSutYCFNWNThlhqpDPhEpRuC3uI2DWIKj/8PwI2giFlAcvyDB6NyB0CDkG37i7GS9eApIsDjlv9/mQAXHuu/gB2NiMz9anGpAibHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WnPnn9lN; arc=none smtp.client-ip=209.85.218.47
+	 To:Cc:Content-Type; b=KdPvN0RHRjj2Y1f1HYznu47vxHZkjAKl+wcpc5LRtoZzr3DYvYEIMSYFsX/NWnr6PxnXUfurb6YwTN1K52TjGTtgLUQcbDuMehDND8xFzedrwmWtDtHd4Of1IVo0NMTQnVKWeM4FB2dSxZCz4YdTYkvkJEbX7E0t8CKxivw7Fes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9G6EcfC; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b042eb09948so126582366b.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Sep 2025 04:48:25 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b0473327e70so102318066b.3;
+        Thu, 11 Sep 2025 05:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757591304; x=1758196104; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757592428; x=1758197228; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EkTK2XTSrHY3G5pm+FqDACFPq7N6pH7nHaRPNHNccS8=;
-        b=WnPnn9lN6UEVALTkokHcSJwnGGCtTn2FndHOFVjUteY97stitD0fRCzqDQ0CuW0suu
-         bnab8Xl22IG1J3rTS3LjYh4TPcO8KG1xSKh401ZBxtn4pCMI3lZe6+B1taDKxNGzcLBU
-         jdm7/TkBM+ZobyrdQ+l0lyNwolYvSD7eJi2IPKaA04QjUkJyViB/DExHxD2KrQEdEQsm
-         TEo8FTuZhY+yvchYdh4Okg+H4kyievNtVumu8rfeBJPqWTy9wzV05JJL+95FY1OZupxC
-         /72RUfh7HZADmoAg7W3eUYtIWh0hDSxfCYwKn9xbZ84gSR0mMuf9XGAGnVZT3/zzB0gD
-         gmKw==
+        bh=MlXq62wKeHqg0gd09zghwHhFaAtZDnEewIqOdMn/A2I=;
+        b=Z9G6EcfCqUI4Yn+03tzsObmBUSmPVQHMQfDCpu3cs0nGAwp5if+NO1EePp7G8vxJsI
+         lfsbMGMD7CLj309oU9Y2kqEc/bxN8+x/wN8Hi8h2W3auSOahC1xhY/Ih2M9nA1gvZ5J6
+         haCNViHzZrqde7pGvkuM1Bkq1dObL9aAl7EJM1kOajpgMZdHzyGM1gIO8ueiS7fvcFBU
+         e6S5slrN9YPGMYKQ/WB3hwvmVcrNqbG1JM9A/paHz+06SvUkqSsSpL7rHdRKkS8ClfOM
+         bHY0n3yneYH9/UchX1hYhGZOuNMcLbkcmcTnK656mZ40YtiEI6I7rCmhCsGrUtKpbiTW
+         cEug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757591304; x=1758196104;
+        d=1e100.net; s=20230601; t=1757592428; x=1758197228;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EkTK2XTSrHY3G5pm+FqDACFPq7N6pH7nHaRPNHNccS8=;
-        b=Jkk06JQxWPyH1ieQiesBUYVIW2Sf8Z/Sj1u3B6qw6om5BL2787Am/YSDMshiHnTgYC
-         33LsTUx1j9ZH/dzkYkzChMsRKAU0V7ldnSNqLViESw5ZhKfnGsOIKigWwTJuov/Fq1qY
-         kxRFphomnE/fjm78L/lvRg4dKGwjGZhXSb/QmAZff1rlpA66uD88bM4+WC6t3aVOST9M
-         MabEeKfywoM3TZELZtdNnAOVvMKikrFTfvqyn+9nA+IGSSsMwxFC28n1imdtcBdWlrY0
-         RnSVgSf8RUqAPeSiIRGQ+uTVM2NwWAypNvpl3NFcpT8liVOtyiR8S9w7bJVYFYQw78RH
-         kMCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvEJGqu0RpHSYFwcIitiBQ7zHu8/1mBZw98R+XfFYjrzo1QRui7lnrVJDHn4MaUzfzV6oieegZSfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvOftRTN0y61JyvMxz6lu+Tylmh8NLgOa9ijaNFfqUxsNt8Zzs
-	Zj4L6FKNKCRdOGsOsHWwaccc2m8NUT8aA8MMaHGdr80Jr1F+50fXDHcf32GMtvbGMmbqWySi0SD
-	RCpdNGQb16JT3xTIS+O/QKuGD0eaTcqY=
-X-Gm-Gg: ASbGncuMD608ZeSHR5JOlZsBzvjWeuZi+TtTQ9XYzNNf4SwlUAnNQ3KAnyyqN7lyhne
-	gxxMZCAgr0L5DwKp2FC9MuAMkB8ISQbZTv+C1DPuXFApgsSlwlQIOq5ElsywSoKcYcnHGPbW1Kc
-	UHS4t/Sj9YXAEtSs4f4KqWlMqvZMnUQbzeQ905AO7N7Q/uhRoEZgvt3LH95xOuta1jjNRLreV7m
-	D578X4kdxpPCGR9Mw==
-X-Google-Smtp-Source: AGHT+IFo70V+ej40+aX5Z/eRHJRCaW/Iqhahk/Ha781IK84/veOVnzt9N3EBI1U+cUalJ9ig/yIFZ2KLCeQ+wQEV8Cg=
-X-Received: by 2002:a17:907:e98b:b0:b04:85bc:a926 with SMTP id
- a640c23a62f3a-b04b13fe4efmr1871379366b.11.1757591304254; Thu, 11 Sep 2025
- 04:48:24 -0700 (PDT)
+        bh=MlXq62wKeHqg0gd09zghwHhFaAtZDnEewIqOdMn/A2I=;
+        b=rSIpOo3HxvAlceqqhDeQceMs9yNb0EwwO7TiJ1EcBFsYq4wYP8ODoXZeUe4cY1wlnx
+         Bz+wwmHjRdhoq6YZoiSH14wyjeieErMNHwatNeKrSpacYU09iYCDLCpR53TZ4SOCDVFm
+         /TgFQ29tSAr2VTim2/U6JnXTQinKfnMscFKYRVuwErocjPF2FL9z7IiTvkzk6WTTbUau
+         YbMQUs5ZyBvlTq9Axu7wDkhsR65TDAlibVqLQ3/gxega2tPj5Tbm7tCeQDNF1vYZzxKq
+         Ac+REQ2JAMkk6N3qLjZ1l6xEsJ1qGCbFCguCGNykzBzs38syvUyLFn0Q3HdvXWZyikeF
+         hicw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdwN9yNX8iLXvcdqNW0OabX2u8NFEPBI6qtb7tKvvgpYRfRKCVBZuDD2iS3u0EYWDcYmS6oBWtfJ034+Bv@vger.kernel.org, AJvYcCVlLYgCfwNyIny5sp43riaM5o2FyzHwgjYP15LL7u+HiQUA6AYaF06eMNJBwc1x4HtiwXnb2IQrja3Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY+OB29i8pRLwKhdVX81tWvaISwBZzTD3wbIxA48ubrMDrK2ay
+	XYEnvAf3aoDseQ9OFlJUep8K7yoNCr8GygWBEF7WPozCyFIM+6epLOKvVXE3ZBHmj+NOGQN7/4R
+	JLhItjhMSNqGkuoFXfZtuvOr5GaitEyI=
+X-Gm-Gg: ASbGncuCOqPrZGt2PJ8a1jSMoi/EltC5SBS5L5JmqIMviZSkQmER5hKXY3VK9M9cU6s
+	NqGkarYgkqttw4abwyYTrtHIwQFi9hLpkVyPJyiyl5IdSq9cJRHCVGWR8Qi9JoCFYEXtkhqwBm8
+	k/FXiRtnFylLYMv6/zbDlvATg0hUO9Z8+rNL9Sj6KL2mmlVpH4ZKfLQZf/hU4Xq4VbBl+ocFPSu
+	u66bkA=
+X-Google-Smtp-Source: AGHT+IHuO4Y18/ms8HXtfsVzkykLOgDmAzsniOj5IhMIMaxBgw7OSG4cIU3ZypSMTOIG9T8PMAClxQPupp2Q4vvNwf4=
+X-Received: by 2002:a17:907:1c93:b0:b04:58f8:16e3 with SMTP id
+ a640c23a62f3a-b04b1458ca9mr1835311266b.24.1757592427535; Thu, 11 Sep 2025
+ 05:07:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
- <20250910-work-namespace-v1-32-4dd56e7359d8@kernel.org> <CAOQ4uxhwJBLCzfKs0dVFOpcgP=LQU5hkRxVeLLR6g-qOxb9ocQ@mail.gmail.com>
- <20250911-ergriffen-autopilot-7e0488c135c7@brauner>
-In-Reply-To: <20250911-ergriffen-autopilot-7e0488c135c7@brauner>
+References: <20250910214927.480316-1-tahbertschinger@gmail.com> <20250910214927.480316-2-tahbertschinger@gmail.com>
+In-Reply-To: <20250910214927.480316-2-tahbertschinger@gmail.com>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 11 Sep 2025 13:48:12 +0200
-X-Gm-Features: Ac12FXzjtgrAdVd9rTS0ov85U74TI4ZgGunYM07J1bauwFv-Hur8qy96NfA8slA
-Message-ID: <CAOQ4uxh9mWHYtP6JdvW6HEPgCqe4=3pcJ0V4SVa__8i_EFxUmw@mail.gmail.com>
-Subject: Re: [PATCH 32/32] selftests/namespaces: add file handle selftests
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
+Date: Thu, 11 Sep 2025 14:06:56 +0200
+X-Gm-Features: Ac12FXwE8Bj9dGWGo-5zJ_H-d4HpOgV3sKUQE4ulZ5dVMB7X5gawDwPRuEUsYDQ
+Message-ID: <CAOQ4uxhFXaqxy2tDvFpw1MpX8ierbiXL4kXq0rLL22X3h=_UXA@mail.gmail.com>
+Subject: Re: [PATCH 01/10] fhandle: create helper for name_to_handle_at(2)
+To: Thomas Bertschinger <tahbertschinger@gmail.com>
+Cc: io-uring@vger.kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 11, 2025 at 11:15=E2=80=AFAM Christian Brauner <brauner@kernel.=
-org> wrote:
+On Wed, Sep 10, 2025 at 11:47=E2=80=AFPM Thomas Bertschinger
+<tahbertschinger@gmail.com> wrote:
 >
-> On Wed, Sep 10, 2025 at 07:30:03PM +0200, Amir Goldstein wrote:
-> > On Wed, Sep 10, 2025 at 4:40=E2=80=AFPM Christian Brauner <brauner@kern=
-el.org> wrote:
-> > >
-> > > Add a bunch of selftests for namespace file handles.
-> > >
-> > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> >
-> > Obviously, I did not go over every single line, but for the general
-> > test template and test coverage you may add:
-> >
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> >
-> > However, see my comment on file handle support patch.
-> > The test matrix is incomplete.
+> Create a helper do_sys_name_to_handle_at() that takes an additional
+> argument, lookup_flags, beyond the syscall arguments.
 >
-> I mean, I'll just drop to non-root in the non-cross ns tests:
+> Because name_to_handle_at(2) doesn't take any lookup flags, it always
+> passes 0 for this argument.
 >
-> /* Drop to unprivileged uid/gid */
-> ASSERT_EQ(setresgid(65534, 65534, 65534), 0); /* nogroup */
-> ASSERT_EQ(setresuid(65534, 65534, 65534), 0); /* nobody */
+> Future callers like io_uring may pass LOOKUP_CACHED in order to request
+> a non-blocking lookup.
 >
+> This helper's name is confusingly similar to do_sys_name_to_handle()
+> which takes care of returning the file handle, once the filename has
+> been turned into a struct path. To distinguish the names more clearly,
+> rename the latter to do_path_to_handle().
+>
+> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
 
-That would be good I think.
+Thomas,
 
-> > Maybe it would be complete if test is run as root and then
-> > as non root, but then I think the test needs some changes
-> > for running as root and opening non-self ns.
-> >
-> > I am not sure what the standard is wrt running the selftests
-> > as root /non-root.
-> >
-> > I see that the userns isolation tests do:
-> > /* Map current uid/gid to root in the new namespace */
-> >
-> > Are you assuming that non root is running this test
-> > or am I missing something?
->
-> No, I'm not assuming that. I just need a new user namespace and become
-> root in it to assume privilege over it so I can test that decoding
-> doesn't work from an ancestor userns owned namespace.
->
+If you post another patch set please use git-format -v3 to add v3
+to all patch subjects (not only to cover letter subject).
 
-With dropping to unprivileged uid/gid in parent, I understand it should wor=
-k.
-I guess I wasn't sure if dropping to unprivileged uid/gid was required for =
-the
-test to pass when the test is run as root user, but with the addition of
-dropping to unprivileged uid/gid - feel free to add:
+Feel free to add:
 
 Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-
 Thanks,
 Amir.
+
+> ---
+>  fs/fhandle.c  | 61 ++++++++++++++++++++++++++++-----------------------
+>  fs/internal.h |  9 ++++++++
+>  2 files changed, 43 insertions(+), 27 deletions(-)
+>
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 68a7d2861c58..605ad8e7d93d 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -14,10 +14,10 @@
+>  #include "internal.h"
+>  #include "mount.h"
+>
+> -static long do_sys_name_to_handle(const struct path *path,
+> -                                 struct file_handle __user *ufh,
+> -                                 void __user *mnt_id, bool unique_mntid,
+> -                                 int fh_flags)
+> +static long do_path_to_handle(const struct path *path,
+> +                             struct file_handle __user *ufh,
+> +                             void __user *mnt_id, bool unique_mntid,
+> +                             int fh_flags)
+>  {
+>         long retval;
+>         struct file_handle f_handle;
+> @@ -111,27 +111,11 @@ static long do_sys_name_to_handle(const struct path=
+ *path,
+>         return retval;
+>  }
+>
+> -/**
+> - * sys_name_to_handle_at: convert name to handle
+> - * @dfd: directory relative to which name is interpreted if not absolute
+> - * @name: name that should be converted to handle.
+> - * @handle: resulting file handle
+> - * @mnt_id: mount id of the file system containing the file
+> - *          (u64 if AT_HANDLE_MNT_ID_UNIQUE, otherwise int)
+> - * @flag: flag value to indicate whether to follow symlink or not
+> - *        and whether a decodable file handle is required.
+> - *
+> - * @handle->handle_size indicate the space available to store the
+> - * variable part of the file handle in bytes. If there is not
+> - * enough space, the field is updated to return the minimum
+> - * value required.
+> - */
+> -SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
+> -               struct file_handle __user *, handle, void __user *, mnt_i=
+d,
+> -               int, flag)
+> +long do_sys_name_to_handle_at(int dfd, const char __user *name,
+> +                             struct file_handle __user *handle,
+> +                             void __user *mnt_id, int flag, int lookup_f=
+lags)
+>  {
+>         struct path path;
+> -       int lookup_flags;
+>         int fh_flags =3D 0;
+>         int err;
+>
+> @@ -155,19 +139,42 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const =
+char __user *, name,
+>         else if (flag & AT_HANDLE_CONNECTABLE)
+>                 fh_flags |=3D EXPORT_FH_CONNECTABLE;
+>
+> -       lookup_flags =3D (flag & AT_SYMLINK_FOLLOW) ? LOOKUP_FOLLOW : 0;
+> +       if (flag & AT_SYMLINK_FOLLOW)
+> +               lookup_flags |=3D LOOKUP_FOLLOW;
+>         if (flag & AT_EMPTY_PATH)
+>                 lookup_flags |=3D LOOKUP_EMPTY;
+>         err =3D user_path_at(dfd, name, lookup_flags, &path);
+>         if (!err) {
+> -               err =3D do_sys_name_to_handle(&path, handle, mnt_id,
+> -                                           flag & AT_HANDLE_MNT_ID_UNIQU=
+E,
+> -                                           fh_flags);
+> +               err =3D do_path_to_handle(&path, handle, mnt_id,
+> +                                       flag & AT_HANDLE_MNT_ID_UNIQUE,
+> +                                       fh_flags);
+>                 path_put(&path);
+>         }
+>         return err;
+>  }
+>
+> +/**
+> + * sys_name_to_handle_at: convert name to handle
+> + * @dfd: directory relative to which name is interpreted if not absolute
+> + * @name: name that should be converted to handle.
+> + * @handle: resulting file handle
+> + * @mnt_id: mount id of the file system containing the file
+> + *          (u64 if AT_HANDLE_MNT_ID_UNIQUE, otherwise int)
+> + * @flag: flag value to indicate whether to follow symlink or not
+> + *        and whether a decodable file handle is required.
+> + *
+> + * @handle->handle_size indicate the space available to store the
+> + * variable part of the file handle in bytes. If there is not
+> + * enough space, the field is updated to return the minimum
+> + * value required.
+> + */
+> +SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
+> +               struct file_handle __user *, handle, void __user *, mnt_i=
+d,
+> +               int, flag)
+> +{
+> +       return do_sys_name_to_handle_at(dfd, name, handle, mnt_id, flag, =
+0);
+> +}
+> +
+>  static int get_path_anchor(int fd, struct path *root)
+>  {
+>         if (fd >=3D 0) {
+> diff --git a/fs/internal.h b/fs/internal.h
+> index 38e8aab27bbd..c972f8ade52d 100644
+> --- a/fs/internal.h
+> +++ b/fs/internal.h
+> @@ -355,3 +355,12 @@ int anon_inode_getattr(struct mnt_idmap *idmap, cons=
+t struct path *path,
+>  int anon_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>                        struct iattr *attr);
+>  void pidfs_get_root(struct path *path);
+> +
+> +/*
+> + * fs/fhandle.c
+> + */
+> +#ifdef CONFIG_FHANDLE
+> +long do_sys_name_to_handle_at(int dfd, const char __user *name,
+> +                             struct file_handle __user *handle,
+> +                             void __user *mnt_id, int flag, int lookup_f=
+lags);
+> +#endif /* CONFIG_FHANDLE */
+> --
+> 2.51.0
+>
+>
 
