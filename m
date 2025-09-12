@@ -1,135 +1,103 @@
-Return-Path: <linux-nfs+bounces-14390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A5F9B55830
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 23:13:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54604B55837
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 23:14:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30C8A7B892B
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 21:11:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4EB863B0517
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 21:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4383375B3;
-	Fri, 12 Sep 2025 21:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7624532BF49;
+	Fri, 12 Sep 2025 21:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfYhH89O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsUBPayi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E459632F770
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 21:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5097032A83C
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 21:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757711596; cv=none; b=D0iLMMUeS4uquL7d2R0I1QAjNRFg5jE6Mpktff//yZzkIf+UQy87268/nii9WE/PwqUXbUL5JCP5X8JoaCM0dtkYVCNSVcGdsk3bJq5DVyMLLEsjH7HywmwaRbI8rGwkjD8KHBkndad1a7TMYAwhoJ1IIXaTl19S1boHi4+IbEU=
+	t=1757711652; cv=none; b=Ui/kf/f4G6TeXCWjTZTi0EFlDZCfFGS7t20ItGOO/c7ha0ZxnQDJWfVZXMjaqr83FjKrZt+ULHEIGJp0t6R17E8/SN+cRc308kq7ByIyVaAMnrQptUFdZTe+qV1iXFpgvNXCu/gWXJio/KTPnHMIPHr3m2EoGz2BIf2v1eRq7/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757711596; c=relaxed/simple;
-	bh=gcaCtOTSXV2XbJKiE3q73MLyt7PVw58fJiPF6uaIJog=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gfMTKtoQoRzbI9iAWDitA1V1QITu3t9NEib2Sbh81eR1iRIWM6cvmwuWUXMdD7XpCpC1GkV/1Sn68VprBmsNNXF3s9T3uaUc95JeQcNVrmOj4N9CpRiPOhL+lffiwOuBHppa9iDMTaqfqoDlBWLKJ9WSydSTgPeSHbAAJR/jsTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NfYhH89O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757711593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=puZ5qQZ4d8umwYGFpsrfF5AtoSoF7QsuDi9Z2wL5SwM=;
-	b=NfYhH89OCJJ9xV3YK+X0hGStcpwCW6dgEx1kbuEcNjmMn5RA/OA7mGH8ML5bCINl2kfysG
-	Lk4h4sXEg3CO36ZiT3Tgw/m8GHKWbNU/OVyoCj3XD2EH0wDn7i7M3gyYzfInuL1rgLFwo9
-	YhK01U54ABsgadSsPFOnWArTY1bAsfI=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-oDsUXtAnN0qe_6Qfjzs3dA-1; Fri, 12 Sep 2025 17:13:12 -0400
-X-MC-Unique: oDsUXtAnN0qe_6Qfjzs3dA-1
-X-Mimecast-MFC-AGG-ID: oDsUXtAnN0qe_6Qfjzs3dA_1757711592
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b60dd9634dso58720381cf.2
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 14:13:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757711592; x=1758316392;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=puZ5qQZ4d8umwYGFpsrfF5AtoSoF7QsuDi9Z2wL5SwM=;
-        b=o4kgsfSfA/j5eNgjQFLqvaEc2V8Nx8jZKip39vbLrE3GjsB++VoPKYMZJ6nAJ2yFU4
-         ydnvXWXWZjw8+U9xfjkKywiLlQRwRrSHaMCYFd/VzD0JsTFH4B2rqfgKbNS1eWuAcXcU
-         TJHj8C5XdSgNqH0tO8NGzxuiaH3p0meRb143Gf/Ghyz7KBd+GqMlTCJ/SgPXB+FWFrMX
-         p8VvbMzHMDXN25hVbemqlDuJeP55FtcmMyT2NSARGc++qePdavMebxVDdJ87uZC5WURj
-         1g8J23QmH60vhQfbga2jXa9+RMPUWwNtL7ave43yh5pEjMT7PTQbYe2xbbkc48P98q+u
-         OjIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVASZojhb3diPQlVmwtNcjLQrEoFzLTv55HnpByl6mORM/sQC114fN3sxnFwBA5qT4RxnSm2l8pGhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr4vQxQawbh5GVJuW7VnRgLOJTuDIVqEsIvJkeUYgKQqhXFIAQ
-	ALLdJn8/wJEFCEqWX0XA8154q6jP/rWC5DFnawL15jdZTFOLxboqVAmC+RPbpMFy5TZbq4kZWPe
-	srG3CdJ+Lzxp2khBuiiUdRSY9qSMi3KlryaT+EHpV0YzS/QsAWZBhNyOnJn3uNQ==
-X-Gm-Gg: ASbGncvFvxeuxdVhL4CWs1LXCr9O0cT+vOFma5LqZyoEX6ptgvrGJElN7aYsuuKTshL
-	1fDmnlsMwceXD5aOSeQN07BRbQF3hNYOCsXQstnosweKOLxAiEB1TBOoCSs2KvGAdAyhrKkO+6V
-	BgJgZm/dG+Gq7eW2t9fip7r53+8qLVTdEHDVAmwYExZsngMAKmA1a8hDA/AUtIL2540HV7vlWMd
-	0m0nwXsJ4HWbOQb6k+J7zU7fxxpAt4E9RR2go4L9Vmrwt96DZOK/QX8DIVIJx1b8WWUMBVrIonm
-	YfB/vAVGueaaL/Xk6hshHeZjRMe7KH7cx48ZQUjgvKycOOOL7tU0R2leSl65dgsSIRF9ZRNhsoR
-	7VUywX6LM4g==
-X-Received: by 2002:a05:622a:59c7:b0:4b5:6f4e:e37 with SMTP id d75a77b69052e-4b77d0a6081mr68549551cf.25.1757711592216;
-        Fri, 12 Sep 2025 14:13:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFMw9fpUjKztDhFj7vngF7IcasgotLQXC7Sz/FG+fDJqIxlNqO5vbKN00AADMBFHKIX07xTcQ==
-X-Received: by 2002:a05:622a:59c7:b0:4b5:6f4e:e37 with SMTP id d75a77b69052e-4b77d0a6081mr68549191cf.25.1757711591843;
-        Fri, 12 Sep 2025 14:13:11 -0700 (PDT)
-Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b639dab102sm29277371cf.33.2025.09.12.14.13.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 14:13:11 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <6831b9fe-402f-40a6-84e6-b723dd006b90@redhat.com>
-Date: Fri, 12 Sep 2025 17:13:09 -0400
+	s=arc-20240116; t=1757711652; c=relaxed/simple;
+	bh=gsXe4OT5E9GcuJIR0E9v3ll3paEpYIHbNtqvm6J0lbQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H7H7HHzjY81L/3pkrsqE0tJG5MW+FPmgmau4un44MajhaPf7bkjEGF/d9yRgegv0P03WVgotr6isXG1Y2PidfL4odmesVRLrZ0xSzBz5G3Xp0FBALl53nutY876bDJnPGxEWf8u7En0BtVwdB7Zf+m3yMn6XAjm90n1VTCB/yR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsUBPayi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877C0C4CEF1;
+	Fri, 12 Sep 2025 21:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757711651;
+	bh=gsXe4OT5E9GcuJIR0E9v3ll3paEpYIHbNtqvm6J0lbQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YsUBPayiylXmW6ZxHDIJC3btxygnAh8tvOtYJ1ND9DmwHs1bVipxeErXK2OTcgqE7
+	 722xkhf8YIx2+QYuC7PLeQf3icXzDBJn1lf2oyHc4nNW5Sn7demQzThItNgDnIEFLb
+	 ehpQB1E+Oie3p3b9a7bC9cdt5mwZIRoY5U1GTQJZqLBF1+BDJe06tGgWgWOPgoMTkk
+	 GdVFBrwXgGu2cne1lv3MVuLKFGud+q+G9G/JKrN2KJTk7VKEiBNUgNe3EdZNIE50AH
+	 gaTKnauM3sHravWVEzfH1C/Rs6uto5nK3JmlNb43lw1f9BUgxs7vw2vfyoPoI7/AIv
+	 ACnjsaMivGSlw==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	trond.myklebust@hammerspace.com
+Cc: anna@kernel.org
+Subject: [PATCH v1 0/9] SUNRPC: Convert the scratch page into a scratch folio
+Date: Fri, 12 Sep 2025 17:14:00 -0400
+Message-ID: <20250912211410.837006-1-anna@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcu: Remove redundant rcu_read_lock/unlock() in spin_lock
- critical sections
-To: pengdonglin <dolinux.peng@gmail.com>, tj@kernel.org, tony.luck@intel.com,
- jani.nikula@linux.intel.com, ap420073@gmail.com, jv@jvosburgh.net,
- freude@linux.ibm.com, bcrl@kvack.org, trondmy@kernel.org, kees@kernel.org
-Cc: bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, linux-nfs@vger.kernel.org,
- linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, linux-acpi@vger.kernel.org,
- linux-s390@vger.kernel.org, cgroups@vger.kernel.org,
- pengdonglin <pengdonglin@xiaomi.com>, "Paul E . McKenney"
- <paulmck@kernel.org>
-References: <20250912065050.460718-1-dolinux.peng@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250912065050.460718-1-dolinux.peng@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/12/25 2:50 AM, pengdonglin wrote:
-> From: pengdonglin <pengdonglin@xiaomi.com>
->
-> When CONFIG_PREEMPT_RT is disabled, spin_lock*() operations implicitly
-> disable preemption, which provides RCU read-side protection. When
-> CONFIG_PREEMPT_RT is enabled, spin_lock*() implementations internally
-> manage RCU read-side critical sections.
+From: Anna Schumaker <anna.schumaker@oracle.com>
 
-I have some doubt about your claim that disabling preemption provides 
-RCU read-side protection. It is true for some flavors but probably not 
-all. I do know that disabling interrupt will provide RCU read-side 
-protection. So for spin_lock_irq*() calls, that is valid. I am not sure 
-about spin_lock_bh(), maybe it applies there too. we need some RCU 
-people to confirm.
+This is the first of a handful of patchsets I've been working on to
+convert our usage of 'struct page's into 'struct folio's. I figured I
+would start things off easy with converting the scratch page set to the
+xdr_buf before I dive into converting over the page array.
 
-When CONFIG_PREEMPT_RT is enabled, rt_spin_lock/unlock() will call 
-rcu_read_lock/_unlock() internally. So eliminating explicit 
-rcu_read_lock/unlock() in critical sections should be fine.
+What do you all think?
+Anna
 
-Cheers,
-Longman
+
+Anna Schumaker (9):
+  SUNRPC: Introduce xdr_set_scratch_folio()
+  NFS: Update readdir to use a scratch folio
+  NFS: Update getacl to use xdr_set_scratch_folio()
+  NFS: Update listxattr to use xdr_set_scratch_folio()
+  NFS: Update the blocklayout to use xdr_set_scratch_folio()
+  NFS: Update the filelayout to use xdr_set_scratch_folio()
+  NFS: Update the flexfilelayout driver to use xdr_set_scratch_folio()
+  SUNRPC: Update svcxdr_init_decode() to call xdr_set_scratch_folio()
+  SUNRPC: Update gssx_accept_sec_context() to use
+    xdr_set_scratch_folio()
+
+ fs/nfs/blocklayout/blocklayout.c          |  8 ++++----
+ fs/nfs/blocklayout/dev.c                  |  8 ++++----
+ fs/nfs/dir.c                              |  8 ++++----
+ fs/nfs/filelayout/filelayout.c            | 10 +++++-----
+ fs/nfs/filelayout/filelayoutdev.c         | 10 +++++-----
+ fs/nfs/flexfilelayout/flexfilelayout.c    |  8 ++++----
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 10 +++++-----
+ fs/nfs/nfs42proc.c                        |  4 ++--
+ fs/nfs/nfs42xdr.c                         |  2 +-
+ fs/nfs/nfs4proc.c                         |  4 ++--
+ fs/nfs/nfs4xdr.c                          |  2 +-
+ include/linux/nfs_xdr.h                   |  4 ++--
+ include/linux/sunrpc/svc.h                |  4 ++--
+ include/linux/sunrpc/xdr.h                |  8 ++++----
+ net/sunrpc/auth_gss/gss_rpc_xdr.c         |  8 ++++----
+ net/sunrpc/svc.c                          | 10 +++++-----
+ 16 files changed, 54 insertions(+), 54 deletions(-)
+
+-- 
+2.51.0
 
 
