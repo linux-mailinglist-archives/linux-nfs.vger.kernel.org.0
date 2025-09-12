@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-14399-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14400-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33D13B5583B
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 23:14:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6EC0B5583D
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 23:14:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80E7D1C258AE
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 21:14:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A3675C0988
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 21:14:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 326903375CD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3DBE3376A9;
 	Fri, 12 Sep 2025 21:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhrWIxzw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqFtK6Pj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC39337688
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 21:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B036D337688
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 21:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757711656; cv=none; b=YpjWepoEQCTGU111BpznC0QwFNwdgohZTBXV1leVkv04Bo/0hGkXyZXv5t1bkSSRYb+Pw2XFx80LtOVyNEWtyEDkMlAPsRDg/7l22RMleYuKr50mchqpI7slRMT7I6NfV/RXcmslMJkqF1WHZRMIoVdq+M6MJJZyHhR4LqF134o=
+	t=1757711656; cv=none; b=NnnbdNQ1+rw4xHrWjn4tSALL68ix7rZ6Mlsi/X5MJKG69REoYcf0GAsompDCZ0wxihkmVgS21r92GOg/RhpHuW1yRXFAMM6nO8KtOlK1iCKT670ehLL1xSl4Z2WBk5mxZMIpjEHfPYPDdEQwjjFVNy1z555sIoAov4N55uadojc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757711656; c=relaxed/simple;
-	bh=B6032mzFfOnrM0wq6xePd9smBwEhDvJ6aKjMaMwJtZs=;
+	bh=nuguKdehxnZOZZT0e/o+mCRAE84CwqrPUUAYfyhzlL0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tQVX2DDRWy6S1A/R5CxydEaOUms5hdGv8Ibgc+MCAIZwlISEMyuRc3LFxJSILHKGyKmiP7O4hdEFSDfMIoCYsrjw1i6aTBJiftHgJoOmJyzzj5hY15mzL6PV3kWfCG6ihXf6T2NdrX27Gm5EYTZTmsOYgSdjlrPOCaDOoptAw9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhrWIxzw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEEFC4CEF5;
+	 MIME-Version; b=TXv/cxyUqW+EneEQvl3/eG1pfam6CN/J42finWTm0rW4uMeFJkWWKTQ2zATaxj20dmj5+4/Fyn5yuSGEy0ZOBQ+1asKG9Z4CR1Lef9rtKEo5tefuS5T/jDSqBw0ziaxpTOMVU/ZUYGVxgHRBtthiDmPdfPUvN5y298XcDAA+ZFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqFtK6Pj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CBCC4CEF8;
 	Fri, 12 Sep 2025 21:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757711655;
-	bh=B6032mzFfOnrM0wq6xePd9smBwEhDvJ6aKjMaMwJtZs=;
+	s=k20201202; t=1757711656;
+	bh=nuguKdehxnZOZZT0e/o+mCRAE84CwqrPUUAYfyhzlL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HhrWIxzwH+29FApcNWSQyaLAiBgYXsuzUKI1i4JriJLMhyT61qWb4TI9wJsm6yQiL
-	 ZOuQYKkP5a2tv/elIN1FRlcZpGW2aP3FepWzE8m+b6yv2WK+1Mor+kx66B3+FMBJZb
-	 PEwaJ6J3zy29Y1Ujb9F3suNdgUNUesdWYT+GIye/3JvU9HXsbrfSndhHadD/zbA+4Z
-	 qIc8li9sbz4Th8ss9Hwx2hBObOse9J2rGlDKcMYaZkSTFXZOzIEWf+YwfbflIDEwju
-	 edoiHLE7p0z+QcMY3/SwisJ9JCjWyhxJ36AQYqykx79zeJTJDarSUJXl9G4fZiMhoY
-	 fm4GhSB0FycUQ==
+	b=gqFtK6Pjqbw1vE94l0gpSaN2/kwB27AGfFRmeGEZwBuiQg1dzDvWgwXszEeGks9rn
+	 7U6Dm9tHgv4Xt50qBNVJCrqs20cfmVXgiFQzC3BG++RdPyjm+ughzRAVwOfMqQwyN7
+	 UyqosDtkexhv4gVetaZSbOKuFZ3gS7RbYK38VmGnqA1zOiTBv3v2B6k44Xu9eeZMlj
+	 vAKzxHed1t+3PU0fAB7YQEWnL4TvPV7XPduKgILIZpCC8niozL6ZMK7kLxnfhsiRGX
+	 YyHn+/8eaIoesHONifLNx6R4nZ9lOKBHvRw/IUoRboRysUVxvDRXAEIxAu/poab4Xb
+	 yjF1f7qwBpUdg==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	trond.myklebust@hammerspace.com
 Cc: anna@kernel.org
-Subject: [PATCH v1 7/9] NFS: Update the flexfilelayout driver to use xdr_set_scratch_folio()
-Date: Fri, 12 Sep 2025 17:14:08 -0400
-Message-ID: <20250912211410.837006-9-anna@kernel.org>
+Subject: [PATCH v1 8/9] SUNRPC: Update svcxdr_init_decode() to call xdr_set_scratch_folio()
+Date: Fri, 12 Sep 2025 17:14:09 -0400
+Message-ID: <20250912211410.837006-10-anna@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250912211410.837006-1-anna@kernel.org>
 References: <20250912211410.837006-1-anna@kernel.org>
@@ -61,99 +61,74 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
+The only snag here is that __folio_alloc_node() doesn't handle
+NUMA_NO_NODE, so I also need to update svc_pool_map_get_node() to return
+numa_mem_id() instead. I arrived at this approach by  looking at what
+other users of __folio_alloc_node() do for this case.
+
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c    |  8 ++++----
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 10 +++++-----
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ include/linux/sunrpc/svc.h |  4 ++--
+ net/sunrpc/svc.c           | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 04a6dded8a13..d29d2a2dfc2a 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -439,7 +439,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 	struct nfs4_ff_layout_segment *fls = NULL;
- 	struct xdr_stream stream;
- 	struct xdr_buf buf;
--	struct page *scratch;
-+	struct folio *scratch;
- 	u64 stripe_unit;
- 	u32 mirror_array_cnt;
- 	__be32 *p;
-@@ -447,13 +447,13 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 	struct nfs4_ff_layout_ds_stripe *dss_info;
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 40cbe81360ed..5506d20857c3 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -196,7 +196,7 @@ struct svc_rqst {
+ 	struct xdr_buf		rq_arg;
+ 	struct xdr_stream	rq_arg_stream;
+ 	struct xdr_stream	rq_res_stream;
+-	struct page		*rq_scratch_page;
++	struct folio		*rq_scratch_folio;
+ 	struct xdr_buf		rq_res;
+ 	unsigned long		rq_maxpages;	/* num of entries in rq_pages */
+ 	struct page *		*rq_pages;
+@@ -503,7 +503,7 @@ static inline void svcxdr_init_decode(struct svc_rqst *rqstp)
+ 	buf->len = buf->head->iov_len + buf->page_len + buf->tail->iov_len;
  
- 	dprintk("--> %s\n", __func__);
--	scratch = alloc_page(gfp_flags);
-+	scratch = folio_alloc(gfp_flags, 0);
- 	if (!scratch)
- 		return ERR_PTR(-ENOMEM);
+ 	xdr_init_decode(xdr, buf, argv->iov_base, NULL);
+-	xdr_set_scratch_page(xdr, rqstp->rq_scratch_page);
++	xdr_set_scratch_folio(xdr, rqstp->rq_scratch_folio);
+ }
  
- 	xdr_init_decode_pages(&stream, &buf, lgr->layoutp->pages,
- 			      lgr->layoutp->len);
--	xdr_set_scratch_page(&stream, scratch);
-+	xdr_set_scratch_folio(&stream, scratch);
- 
- 	/* stripe unit and mirror_array_cnt */
- 	rc = -EIO;
-@@ -639,7 +639,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 	ret = &fls->generic_hdr;
- 	dprintk("<-- %s (success)\n", __func__);
- out_free_page:
--	__free_page(scratch);
-+	folio_put(scratch);
- 	return ret;
- out_err_free:
- 	_ff_layout_free_lseg(fls);
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index 9ab1555b45c8..d06a3f619fa7 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -44,7 +44,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- {
- 	struct xdr_stream stream;
- 	struct xdr_buf buf;
--	struct page *scratch;
-+	struct folio *scratch;
- 	struct list_head dsaddrs;
- 	struct nfs4_pnfs_ds_addr *da;
- 	struct nfs4_ff_layout_ds *new_ds = NULL;
-@@ -56,7 +56,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	int i, ret = -ENOMEM;
- 
- 	/* set up xdr stream */
--	scratch = alloc_page(gfp_flags);
-+	scratch = folio_alloc(gfp_flags, 0);
- 	if (!scratch)
- 		goto out_err;
- 
-@@ -70,7 +70,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	INIT_LIST_HEAD(&dsaddrs);
- 
- 	xdr_init_decode_pages(&stream, &buf, pdev->pages, pdev->pglen);
--	xdr_set_scratch_page(&stream, scratch);
-+	xdr_set_scratch_folio(&stream, scratch);
- 
- 	/* multipath count */
- 	p = xdr_inline_decode(&stream, 4);
-@@ -163,7 +163,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 		kfree(da);
+ /**
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 9c7245d811eb..de05ef637bdc 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -352,7 +352,7 @@ static int svc_pool_map_get_node(unsigned int pidx)
+ 		if (m->mode == SVC_POOL_PERNODE)
+ 			return m->pool_to[pidx];
  	}
+-	return NUMA_NO_NODE;
++	return numa_mem_id();
+ }
+ /*
+  * Set the given thread's cpus_allowed mask so that it
+@@ -669,8 +669,8 @@ svc_rqst_free(struct svc_rqst *rqstp)
+ 	folio_batch_release(&rqstp->rq_fbatch);
+ 	kfree(rqstp->rq_bvec);
+ 	svc_release_buffer(rqstp);
+-	if (rqstp->rq_scratch_page)
+-		put_page(rqstp->rq_scratch_page);
++	if (rqstp->rq_scratch_folio)
++		folio_put(rqstp->rq_scratch_folio);
+ 	kfree(rqstp->rq_resp);
+ 	kfree(rqstp->rq_argp);
+ 	kfree(rqstp->rq_auth_data);
+@@ -691,8 +691,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	rqstp->rq_server = serv;
+ 	rqstp->rq_pool = pool;
  
--	__free_page(scratch);
-+	folio_put(scratch);
- 	return new_ds;
+-	rqstp->rq_scratch_page = alloc_pages_node(node, GFP_KERNEL, 0);
+-	if (!rqstp->rq_scratch_page)
++	rqstp->rq_scratch_folio = __folio_alloc_node(GFP_KERNEL, 0, node);
++	if (!rqstp->rq_scratch_folio)
+ 		goto out_enomem;
  
- out_err_drain_dsaddrs:
-@@ -177,7 +177,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 
- 	kfree(ds_versions);
- out_scratch:
--	__free_page(scratch);
-+	folio_put(scratch);
- out_err:
- 	kfree(new_ds);
- 
+ 	rqstp->rq_argp = kmalloc_node(serv->sv_xdrsize, GFP_KERNEL, node);
 -- 
 2.51.0
 
