@@ -1,78 +1,78 @@
-Return-Path: <linux-nfs+bounces-14381-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14382-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02BE1B5536F
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 17:28:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73545B55372
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 17:28:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D82D85C5DE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 15:27:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B73E7AA66B2
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 15:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 418AF230BDF;
-	Fri, 12 Sep 2025 15:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2F82253EB;
+	Fri, 12 Sep 2025 15:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gEDig6fp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFsWz68d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B562B223DF0
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42635309DB5
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 15:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757690871; cv=none; b=fICuRZFSkhSJMkpP+HOrLKkay+IR/XeCkx2F5ZSpmcDwxHUBFwUZRUdf8ImAX72AYFSvygoF763SyDI22T9wyhB67yHQJnvE98028gFLl4u7NwkhD8Ee871YaxxhqMIZE6tOAmNKYbv4KsQSaA96e2gCoLl7qzZpd3BvZ5JaaQo=
+	t=1757690875; cv=none; b=T/0W0YNu/L6IWr9Wq08ydpgZCbQ7mQzOY0yiDl9l4F6aomhmnYnPonCVS5R1LMvwzNwM65aQMLvO1wtI7WDiT4yRQs77Y/kfTz/K5ilZ54mwtvFd3SNSJGw8MeTVFmj+/Ct9qRRD/hvM9MQeeWoidHF4O5AXaQIr6Q2W4oMCw3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757690871; c=relaxed/simple;
-	bh=pmMDoEW+oO6NL2w9YRn5t+RQpBgWvTuhGRDXZtqEIwk=;
+	s=arc-20240116; t=1757690875; c=relaxed/simple;
+	bh=XsFT/IwIeCNwjH7INLvGpvbx+PBWYaIu3SRJqPiVCuk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sDnUMFXIPaQKdagFz7yR1DYksViETpt4qV5zrJQT/aEIQrqrhtPR9EAsBILHOE00LFwCksu1tbKZomzzl1VOOpssUsqT4xxJqyvhHP2G6HqPChLGXhD3bcN5SugJ5NaxON+MWA0S5RC7fhWTbj680HdVQjE2TGHARa4NUBccbZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gEDig6fp; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=GVrnqwOFzys81t+RBNStbPiuKChaGtAd35p8Cez0bwW3VlXeKCZmk4gi/z+MtzaJb9dtYCZHUS0leRsb/6Mq3X9gHpqKvKosy6pq4j14/tgeI3RJw6hdkYzUt68tnkgEe1cMaa+WI9yysOi9A6GRojxLS6iOJTYEgTCIwKOXuwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dFsWz68d; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-77287fb79d3so1816700b3a.1
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 08:27:49 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-32dd532b585so1508275a91.0
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 08:27:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757690869; x=1758295669; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757690873; x=1758295673; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p/p4DhcfzaoqYKW7NX5I6Kjl5Br0oWLxcOQkA5oMQX0=;
-        b=gEDig6fpjxxEdIXJ9Fk4lTh9w4ldfhj/ZgU6M7Kp/b/gvE3JZENNaj1pUTNgt7xY3t
-         U5MpTD3H9E6KNWvlZaq8Ms7679rMtVZMqH06nNcil7zSKka86VqrlsmRlqmMvYfuFKAh
-         KoIznQx//xaUtpY3ch9jUpo2LwvW0cXckT6KPyNDIvJUH13Rp9aSTuLDIjMnyOZ5i/19
-         LlJ3tXuXr0+GQu3DckvzrLULQqO/rzd99YyPj2M3CCtTqgxb+AOIXyPj00B5dfCWculu
-         86TPXlSeE0oOwmiyHyinRDt+Kxxiy/AZWook+xmM8ReDUl3ZbT4iQ1HmzIYTYbUHgDsA
-         J2gA==
+        bh=1KQqfXYDSkx+KIBX1m2qzvvqxw26HH8BbdvvTnVzTEI=;
+        b=dFsWz68dPPCRIP1jZs+OtCrgkFKL8nkG43kCPpQVv4fWjYL29Qx4J5Cl3KnubLi8yl
+         wBR98SEKlyWKDHT1dWtnmTHhfKtQImzspjcNpBH1xj+chHgkU6CkW2gwWUJAynz/8SgW
+         A3vwdAhujDnSWbrsC2QLegahiafzA2LNxRsjBWIP0XVMCCmCU3O71eBCDd1gBrwiw/NR
+         WAxCNjxxrrAJ329rsHIiJjBKhpYSdZMcNfPCFar8MssRMti7uLys6OcBKeNgJSxdhhFC
+         oXhOsDz/H9sDTkqbQQHmvcIlPK+Cm1Gwh0rVhPD5AmeLzajF/KGAEOClbtvjjItlqXhF
+         H0LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757690869; x=1758295669;
+        d=1e100.net; s=20230601; t=1757690874; x=1758295674;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p/p4DhcfzaoqYKW7NX5I6Kjl5Br0oWLxcOQkA5oMQX0=;
-        b=Q/LWsmdVNIRVxyp65nooh3DA016Ok0cuqszvfwp0GGTaN0gCg1Jcm3w+OATM4r5sxr
-         lIIdnzAKClqh9E3kg2C34IFGiTQU7Hf3uYwNx0QZy6LBvMYcPTUPPmIpUeQjbuPUZCk4
-         xJV/XLY1XN0tYjxkHQETXhYCT6xHJ+bTBXYfHgt+PPT1Pm+AXcpXVxkYmXT/4hh+nGZZ
-         UPG54CS8S0bXIpHjjLwwpqC7OYzZe6NkBnvDur3CDIC/Uuhc7sPomnRgO4p7td4Lzmzi
-         LYWtWrIVsyTjzFCRfsrQfdiSADcqI/+/Jwv48uYojcUrROtzBUY+v4KeKrHsrtNb+OeY
-         bL7A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8AQ9mkG56p7p9k88BTwLQ9Qa1K/Ro6nxxc1oBrmFD8kOIUGAR06fj+mosx+rxXESTvbXbkCQogqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvxLuev511Iw9EEwHowcj3AEjI67nDuh6HLslRIemIID6qdbJN
-	kk5VNTYzOQefnM1SU89+/RQU2CKhEMiEX6ElRgNUzPUlSxHtbcoPakLK
-X-Gm-Gg: ASbGncuNu6w87VDs3BCQX4uTltqHvO24nDJS9lRA839thlm7za5IopjElB0hT0SJtUc
-	l+EeizOnIc8j9LYMBxcPfvacYWn9Em3ZXLHr4GSb4JYiNAjO46Qr2CkGrSV6cEuoW44VFBOUv20
-	ADTKPk9qngLMI2lboWTUIyJGxa97bClvyPCami6BC63tJdhy4lchaHT5yq/GPFeaqzGC7W0Lnl+
-	Cp+3AiSwnmlJXCdZnitivLE657Gtj5yUI4ueekrhl8Cb7U2KARSBHhJH6iXYvTArZxwHdfvdvZg
-	dkALDotMJy8PQNblQsCGBv47QvN5/AyQHbTy8WlYbC9F0b5avDTbJO3JpowpvPK838JctE57O7K
-	zyhfy7cpD/iRGCyovuAZbdLYzloEskA/K/xCS
-X-Google-Smtp-Source: AGHT+IGs3yIVWaat/rUFcK1EaLvHFVa8kOg9uz8wfMp0/qrqY/TeqHTSh3FvdzrPbbu2Kju5zfv5ug==
-X-Received: by 2002:a05:6a20:7d9d:b0:249:467e:ba6d with SMTP id adf61e73a8af0-26029fa1cb8mr4339715637.6.1757690868839;
-        Fri, 12 Sep 2025 08:27:48 -0700 (PDT)
+        bh=1KQqfXYDSkx+KIBX1m2qzvvqxw26HH8BbdvvTnVzTEI=;
+        b=d5QRtB5+UqYg7eWyyWBkWpUNvs6o+EkVd2j+glxUJuYzz9yBinVXcetfZSUelQCazG
+         RGgJYxOkOsbiMVryh0Uy9Po3yufjdbzSOqL0lA5cV3NhQhIubLyVWWcphjNj3W2jJ15l
+         k8hGt5Ivn6Je+QoCyplXjq1OHKUCBUBoWABsSl6GExmh1t5rSJ/whEZ+JZBzgnNIDBAM
+         Y1OcBoPhAgzr+GurgbWBP4oer+HFxgDTMsftdnvZf6qRT0SvDGkyKdIAMYWGlE4hsYL1
+         I/xSACBMX8hF0jt9nlIxHj9y6sK/b3dXtiSrHa7UzPaP2JPWZ+lG8glmaE3o4HnWvYkh
+         NrNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEhIiP5xOmNR14GaJItyrOBFlsqlQveUtkN5U3KVmgowhZ3NsR6iHuH0ByvRSmd+G+3N66GzU06qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfMpRLl1hVK03FP584CqeWM5Z4uuvlXNVRUTVKi0Qjnpdd6TNS
+	2kINjHbTYE9+cQxRB0AZQQe5cQWyKJ1KRRjGxJ56P4wCUHjIY8+MDmQv
+X-Gm-Gg: ASbGncvbf2h3xTyiu3B4aPvimN3ykoBjIGBViVIcaHZ2AnmPjBTTGtESjURxfm5dwZn
+	7cY7o9Eko/ybzvMvA1r0l+cKLdHsqAAq/+ffn6QsFDiI+vRu6KlIHRr/395Nu7QUhfvb7LLktNZ
+	ZIIs+bS3iplojF1rEdFeSi7SMtVM6mbJdAjgY3QIP6A3vOuyUCDx4tLDfAW2jBJuqskzZc1aQ3Q
+	lD2Qjs/sz9NCgvnFL5sChlvWLZqGCoJdJtUvrcp1kJ/0tEhdglPZB13QdBvsG9Qfa2rJowKcqoc
+	NuT6f1sMbynzot4bmQP1TQiDNT4VyoosmDojnryxKfUbGRCSpdHLS6o7ePWtUCBrWauMHIeHMxx
+	y1ptu1Cm8c0cR5GhjlpqyP68/D46WsIYIGBUJPXuxWBYl9Qk=
+X-Google-Smtp-Source: AGHT+IGnJ9VsaACt1AKMpATeUxCkpqJjFHaj0qnzXlJqT//M/R/kbT4Nqz/SiCiV3gK94hMaThYifg==
+X-Received: by 2002:a17:90b:2787:b0:32d:f315:7b59 with SMTP id 98e67ed59e1d1-32df3157cb2mr1737440a91.21.1757690873540;
+        Fri, 12 Sep 2025 08:27:53 -0700 (PDT)
 Received: from jicarita ([65.144.169.45])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7760944a9a9sm5436846b3a.78.2025.09.12.08.27.47
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7760944a9a9sm5436846b3a.78.2025.09.12.08.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 08:27:48 -0700 (PDT)
+        Fri, 12 Sep 2025 08:27:53 -0700 (PDT)
 From: Thomas Bertschinger <tahbertschinger@gmail.com>
 To: io-uring@vger.kernel.org,
 	axboe@kernel.dk,
@@ -86,9 +86,9 @@ To: io-uring@vger.kernel.org,
 	jlayton@kernel.org,
 	amir73il@gmail.com
 Cc: Thomas Bertschinger <tahbertschinger@gmail.com>
-Subject: [PATCH v3 05/10] fhandle: make do_file_handle_open() take struct open_flags
-Date: Fri, 12 Sep 2025 09:28:50 -0600
-Message-ID: <20250912152855.689917-6-tahbertschinger@gmail.com>
+Subject: [PATCH v3 06/10] exportfs: allow VFS flags in struct file_handle
+Date: Fri, 12 Sep 2025 09:28:51 -0600
+Message-ID: <20250912152855.689917-7-tahbertschinger@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250912152855.689917-1-tahbertschinger@gmail.com>
 References: <20250912152855.689917-1-tahbertschinger@gmail.com>
@@ -100,75 +100,96 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This allows the caller to pass additional flags, such as lookup flags,
-if desired.
+The handle_type field of struct file_handle is already being used to
+pass "user" flags to open_by_handle_at() in the upper 16 bits.
 
-This will be used by io_uring to support non-blocking
-open_by_handle_at(2).
+Bits 8..15 are still unused, as FS implementations are expected to only
+set the lower 8 bits.
 
+This change prepares the VFS to pass flags to FS implementations of
+fh_to_{dentry,parent}() using the previously unused bits 8..15 of
+handle_type.
+
+The user is prevented from setting VFS flags in a file handle--such a
+handle will be rejected by open_by_handle_at(2). Only the VFS can set
+those flags before passing the handle to the FS.
+
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/fhandle.c  | 14 ++++++++++----
- fs/internal.h |  2 +-
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ fs/exportfs/expfs.c      |  2 +-
+ fs/fhandle.c             |  2 +-
+ include/linux/exportfs.h | 29 ++++++++++++++++++++++++++---
+ 3 files changed, 28 insertions(+), 5 deletions(-)
 
+diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+index d3e55de4a2a2..949ce6ef6c4e 100644
+--- a/fs/exportfs/expfs.c
++++ b/fs/exportfs/expfs.c
+@@ -391,7 +391,7 @@ int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
+ 	else
+ 		type = nop->encode_fh(inode, fid->raw, max_len, parent);
+ 
+-	if (type > 0 && FILEID_USER_FLAGS(type)) {
++	if (type > 0 && (type & ~FILEID_HANDLE_TYPE_MASK)) {
+ 		pr_warn_once("%s: unexpected fh type value 0x%x from fstype %s.\n",
+ 			     __func__, type, inode->i_sb->s_type->name);
+ 		return -EINVAL;
 diff --git a/fs/fhandle.c b/fs/fhandle.c
-index b018fa482b03..7cc17e03e632 100644
+index 7cc17e03e632..2dc669aeb520 100644
 --- a/fs/fhandle.c
 +++ b/fs/fhandle.c
-@@ -401,16 +401,16 @@ int handle_to_path(int mountdirfd, struct file_handle *handle,
- 	return retval;
- }
+@@ -342,7 +342,7 @@ struct file_handle *get_user_handle(struct file_handle __user *ufh)
+ 	    (f_handle.handle_bytes == 0))
+ 		return ERR_PTR(-EINVAL);
  
--struct file *do_file_handle_open(struct path *path, int open_flag)
-+struct file *do_file_handle_open(struct path *path, struct open_flags *op)
- {
- 	const struct export_operations *eops;
- 	struct file *file;
+-	if (f_handle.handle_type < 0 ||
++	if (f_handle.handle_type < 0 || FILEID_FS_FLAGS(f_handle.handle_type) ||
+ 	    FILEID_USER_FLAGS(f_handle.handle_type) & ~FILEID_VALID_USER_FLAGS)
+ 		return ERR_PTR(-EINVAL);
  
- 	eops = path->mnt->mnt_sb->s_export_op;
- 	if (eops->open)
--		file = eops->open(path, open_flag);
-+		file = eops->open(path, op->open_flag);
- 	else
--		file = file_open_root(path, "", open_flag, 0);
-+		file = do_file_open_root(path, "", op);
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index cfb0dd1ea49c..30a9791d88e0 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -173,10 +173,33 @@ struct handle_to_path_ctx {
+ #define EXPORT_FH_DIR_ONLY	0x4 /* Only decode file handle for a directory */
  
- 	return file;
- }
-@@ -422,6 +422,8 @@ static long do_handle_open(int mountdirfd, struct file_handle __user *ufh,
- 	long retval = 0;
- 	struct path path __free(path_put) = {};
- 	struct file *file;
-+	struct open_flags op;
-+	struct open_how how;
+ /*
+- * Filesystems use only lower 8 bits of file_handle type for fid_type.
+- * name_to_handle_at() uses upper 16 bits of type as user flags to be
+- * interpreted by open_by_handle_at().
++ * The 32 bits of the handle_type field of struct file_handle are used for a few
++ * different purposes:
++ *
++ *   Filesystems use only lower 8 bits of file_handle type for fid_type.
++ *
++ *   VFS uses bits 8..15 of the handle_type to pass flags to the FS
++ *   implementation of fh_to_{dentry,parent}().
++ *
++ *   name_to_handle_at() uses upper 16 bits of type as user flags to be
++ *   interpreted by open_by_handle_at().
++ *
++ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++ *  |           user flags          |   VFS flags   |   fid_type    |
++ *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++ *  (MSB)                                                       (LSB)
++ *
++ * Filesystems are expected not to fill in any bits outside of fid_type in
++ * their encode_fh() implementation.
+  */
++#define FILEID_HANDLE_TYPE_MASK	0xff
++#define FILEID_TYPE(type)	((type) & FILEID_HANDLE_TYPE_MASK)
++
++/* VFS flags: */
++#define FILEID_FS_FLAGS_MASK	0xff00
++#define FILEID_FS_FLAGS(flags)	((flags) & FILEID_FS_FLAGS_MASK)
++
++/* User flags: */
+ #define FILEID_USER_FLAGS_MASK	0xffff0000
+ #define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
  
- 	handle = get_user_handle(ufh);
- 	if (IS_ERR(handle))
-@@ -435,7 +437,11 @@ static long do_handle_open(int mountdirfd, struct file_handle __user *ufh,
- 	if (fd < 0)
- 		return fd;
- 
--	file = do_file_handle_open(&path, open_flag);
-+	how = build_open_how(open_flag, 0);
-+	retval = build_open_flags(&how, &op);
-+	if (retval)
-+		return retval;
-+	file = do_file_handle_open(&path, &op);
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
-diff --git a/fs/internal.h b/fs/internal.h
-index 0a3d90d30d96..2d107383a534 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -366,5 +366,5 @@ long do_sys_name_to_handle_at(int dfd, const char __user *name,
- struct file_handle *get_user_handle(struct file_handle __user *ufh);
- int handle_to_path(int mountdirfd, struct file_handle *handle,
- 		   struct path *path, unsigned int o_flags);
--struct file *do_file_handle_open(struct path *path, int open_flag);
-+struct file *do_file_handle_open(struct path *path, struct open_flags *op);
- #endif /* CONFIG_FHANDLE */
 -- 
 2.51.0
 
