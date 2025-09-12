@@ -1,247 +1,135 @@
-Return-Path: <linux-nfs+bounces-14389-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14390-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEF3EB554A7
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 18:28:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A5F9B55830
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 23:13:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D58E81D633AD
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 16:29:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30C8A7B892B
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 21:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0485631A57C;
-	Fri, 12 Sep 2025 16:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4383375B3;
+	Fri, 12 Sep 2025 21:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLhNDUu7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfYhH89O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2480D28DC4
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 16:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E459632F770
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 21:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757694518; cv=none; b=IS0W3AujY2ryahwuwtJfHCbL3GK/Q6Lp8gFg1vsdW29cYhla5VLtd/yOaQIk9DejfcWgD1bbkQtLIY1gSEOgfqXudGevi9+t0CI7k26MxK6q3lqpHPBx1En6gWYvS43qgHitusP67XfE0jeUDQK/i3Y6FwGSYJPP7wdxTTtoeZY=
+	t=1757711596; cv=none; b=D0iLMMUeS4uquL7d2R0I1QAjNRFg5jE6Mpktff//yZzkIf+UQy87268/nii9WE/PwqUXbUL5JCP5X8JoaCM0dtkYVCNSVcGdsk3bJq5DVyMLLEsjH7HywmwaRbI8rGwkjD8KHBkndad1a7TMYAwhoJ1IIXaTl19S1boHi4+IbEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757694518; c=relaxed/simple;
-	bh=sfOjqy5Hmnq/IKULzCIl01+HRUC2yrcuDNx1K4f5Qg4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W9M9V9RZDtJfgQgeNWnZmroGhoyIQX/aChC6FAg2z3Zikg1EoF9UboFKov+Qk+DVn9FNUwbjJkwiswqcLb00avvZmaDQmcqwctG2gV4dhwn6JxmaReb7nM/iYmt3a8Z+bPwBnnmtj78HYIfeXpPPUdFIaUarC6ybzD5aliU05Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLhNDUu7; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-62ee438dc1bso1155370a12.1
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 09:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757694515; x=1758299315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bCLfdduUpvZu4Yibc21wcUORVmaWAAbs5DHC/ImGBY=;
-        b=XLhNDUu7k1hhreFP7iLBRa3n2nljhGEha8gWbtlmhNASrLUkaIRZ5RCVe6YGkMC5WT
-         kL4m2ScOjm7hwFJEBeiDNzwi6zkI6l2wPwFunRc9Mv4kQft48IKEAhmnhe8Afar58cfV
-         Yl7wgEDvtPcnxHxVrhMVaiEdJU0c87e/SLWrzhvzg9HD+wI314Cd0xD0UlMCE04TzV0o
-         MY2AZfu4BNKuUrxawgIa+ldR5oC4rcPgBbstdIUBDyDPh4zbTg3/fOWBajLGqEvGeeRd
-         H//EKVsXW/KE+bJkms9VCjroMCXnCskvBLOjgYLq5w/A5I6Cp4Hts4tgqWElIpiTCsSf
-         iVZQ==
+	s=arc-20240116; t=1757711596; c=relaxed/simple;
+	bh=gcaCtOTSXV2XbJKiE3q73MLyt7PVw58fJiPF6uaIJog=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gfMTKtoQoRzbI9iAWDitA1V1QITu3t9NEib2Sbh81eR1iRIWM6cvmwuWUXMdD7XpCpC1GkV/1Sn68VprBmsNNXF3s9T3uaUc95JeQcNVrmOj4N9CpRiPOhL+lffiwOuBHppa9iDMTaqfqoDlBWLKJ9WSydSTgPeSHbAAJR/jsTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NfYhH89O; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757711593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=puZ5qQZ4d8umwYGFpsrfF5AtoSoF7QsuDi9Z2wL5SwM=;
+	b=NfYhH89OCJJ9xV3YK+X0hGStcpwCW6dgEx1kbuEcNjmMn5RA/OA7mGH8ML5bCINl2kfysG
+	Lk4h4sXEg3CO36ZiT3Tgw/m8GHKWbNU/OVyoCj3XD2EH0wDn7i7M3gyYzfInuL1rgLFwo9
+	YhK01U54ABsgadSsPFOnWArTY1bAsfI=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-678-oDsUXtAnN0qe_6Qfjzs3dA-1; Fri, 12 Sep 2025 17:13:12 -0400
+X-MC-Unique: oDsUXtAnN0qe_6Qfjzs3dA-1
+X-Mimecast-MFC-AGG-ID: oDsUXtAnN0qe_6Qfjzs3dA_1757711592
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b60dd9634dso58720381cf.2
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 14:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757694515; x=1758299315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5bCLfdduUpvZu4Yibc21wcUORVmaWAAbs5DHC/ImGBY=;
-        b=bxMF+z2miyY9QFLVoRLyjChjn5X9q2E6qm5Uq1BnvZufPLV8fRHYxYIMDyKSiMMgbO
-         LxioJjNtr3o5lssnemIA6D4X4I0IbCj2PYlT9o5kHKa7CfQUjRhPz4ZlYAH1L1Z8aMlo
-         TVXqJA5YKTIN2seV0PYXz/mZhEAsUyyeiaDSqcwsKGHE2CuE4dv/ThhMkf+ilBrtmNeM
-         NvsgtymbQEiGt/0m2MQ53q+j8APATydSxURi9xo16RM+nwdk104ZLjwZUgr/+exvWyzE
-         sSpVD5sI4endoUdQpxZU6QEC9H5AyuVA5rv4JFKefvnrsgyRI+mXySkKn4wA7/xTwnWP
-         uNtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn/KSo00hA2DjA0RGXt82sGSwAkF3t8dh1EQpiYH2AsT8Qe0KqsbXI9jbVHQLolRFYa43yUjOVkLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyungfp2ctQQ0bpWbPW1agrRSYmiUJYmcGxoxtDZJ1v1tvbbYZv
-	l90/+gjJIz0nUoZRv3U38u1OjIfpG0clJZHG9LTVICksDbahgtu5qMiwp7wNTA5eDLCtRTTHQ8V
-	wMjEL4F/YmjrXg9uAIBofagIMzL8CO5w=
-X-Gm-Gg: ASbGnctxDfLdWlSQHCqCcIghKeQINXepx3/hFPWiCi0G8S/kCHHs5hYmja/wCaR2vLW
-	m8tvegWdKbxSrhO2rOhdtFj7iR+SlcBgy7po+vvTNGuOj/8CHpLFNTktjtYlHDkwwi+H5JHCYna
-	nRYKZQDqLjhWgs2hmB/FvB7kR9Eig/HhAtftPutoGiefWYV30lVusQwxC1fLoWUWzOBSQEir+HT
-	Ckg6zRFEu4B5vhHEg==
-X-Google-Smtp-Source: AGHT+IFxDXD9UC5TygRPl8WtGCb5YNCX87Wur2PfXYtTjzcTqAYPz4r4TKpRuMfc3CdtuJG+VeCu/l1dEmF5bBkQd0Q=
-X-Received: by 2002:a05:6402:5109:b0:62e:c6b8:6071 with SMTP id
- 4fb4d7f45d1cf-62ed97da5b0mr3759364a12.4.1757694515190; Fri, 12 Sep 2025
- 09:28:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757711592; x=1758316392;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=puZ5qQZ4d8umwYGFpsrfF5AtoSoF7QsuDi9Z2wL5SwM=;
+        b=o4kgsfSfA/j5eNgjQFLqvaEc2V8Nx8jZKip39vbLrE3GjsB++VoPKYMZJ6nAJ2yFU4
+         ydnvXWXWZjw8+U9xfjkKywiLlQRwRrSHaMCYFd/VzD0JsTFH4B2rqfgKbNS1eWuAcXcU
+         TJHj8C5XdSgNqH0tO8NGzxuiaH3p0meRb143Gf/Ghyz7KBd+GqMlTCJ/SgPXB+FWFrMX
+         p8VvbMzHMDXN25hVbemqlDuJeP55FtcmMyT2NSARGc++qePdavMebxVDdJ87uZC5WURj
+         1g8J23QmH60vhQfbga2jXa9+RMPUWwNtL7ave43yh5pEjMT7PTQbYe2xbbkc48P98q+u
+         OjIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVASZojhb3diPQlVmwtNcjLQrEoFzLTv55HnpByl6mORM/sQC114fN3sxnFwBA5qT4RxnSm2l8pGhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr4vQxQawbh5GVJuW7VnRgLOJTuDIVqEsIvJkeUYgKQqhXFIAQ
+	ALLdJn8/wJEFCEqWX0XA8154q6jP/rWC5DFnawL15jdZTFOLxboqVAmC+RPbpMFy5TZbq4kZWPe
+	srG3CdJ+Lzxp2khBuiiUdRSY9qSMi3KlryaT+EHpV0YzS/QsAWZBhNyOnJn3uNQ==
+X-Gm-Gg: ASbGncvFvxeuxdVhL4CWs1LXCr9O0cT+vOFma5LqZyoEX6ptgvrGJElN7aYsuuKTshL
+	1fDmnlsMwceXD5aOSeQN07BRbQF3hNYOCsXQstnosweKOLxAiEB1TBOoCSs2KvGAdAyhrKkO+6V
+	BgJgZm/dG+Gq7eW2t9fip7r53+8qLVTdEHDVAmwYExZsngMAKmA1a8hDA/AUtIL2540HV7vlWMd
+	0m0nwXsJ4HWbOQb6k+J7zU7fxxpAt4E9RR2go4L9Vmrwt96DZOK/QX8DIVIJx1b8WWUMBVrIonm
+	YfB/vAVGueaaL/Xk6hshHeZjRMe7KH7cx48ZQUjgvKycOOOL7tU0R2leSl65dgsSIRF9ZRNhsoR
+	7VUywX6LM4g==
+X-Received: by 2002:a05:622a:59c7:b0:4b5:6f4e:e37 with SMTP id d75a77b69052e-4b77d0a6081mr68549551cf.25.1757711592216;
+        Fri, 12 Sep 2025 14:13:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFMw9fpUjKztDhFj7vngF7IcasgotLQXC7Sz/FG+fDJqIxlNqO5vbKN00AADMBFHKIX07xTcQ==
+X-Received: by 2002:a05:622a:59c7:b0:4b5:6f4e:e37 with SMTP id d75a77b69052e-4b77d0a6081mr68549191cf.25.1757711591843;
+        Fri, 12 Sep 2025 14:13:11 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b639dab102sm29277371cf.33.2025.09.12.14.13.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Sep 2025 14:13:11 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <6831b9fe-402f-40a6-84e6-b723dd006b90@redhat.com>
+Date: Fri, 12 Sep 2025 17:13:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912152855.689917-1-tahbertschinger@gmail.com> <20250912152855.689917-8-tahbertschinger@gmail.com>
-In-Reply-To: <20250912152855.689917-8-tahbertschinger@gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 12 Sep 2025 18:28:21 +0200
-X-Gm-Features: AS18NWCSzfK3NoifN2tzIKAg6Q8TBBOoqWssuUVqrGMtiJ6gMp_y-P_PmkEK_Gk
-Message-ID: <CAOQ4uxgFXfASm_Barwy=62oQT1FXF+mvGvt82qwwLdmhBhBGgA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/10] exportfs: new FILEID_CACHED flag for
- non-blocking fh lookup
-To: Thomas Bertschinger <tahbertschinger@gmail.com>
-Cc: io-uring@vger.kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, linux-nfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, cem@kernel.org, chuck.lever@oracle.com, 
-	jlayton@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rcu: Remove redundant rcu_read_lock/unlock() in spin_lock
+ critical sections
+To: pengdonglin <dolinux.peng@gmail.com>, tj@kernel.org, tony.luck@intel.com,
+ jani.nikula@linux.intel.com, ap420073@gmail.com, jv@jvosburgh.net,
+ freude@linux.ibm.com, bcrl@kvack.org, trondmy@kernel.org, kees@kernel.org
+Cc: bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-nfs@vger.kernel.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+ linux-s390@vger.kernel.org, cgroups@vger.kernel.org,
+ pengdonglin <pengdonglin@xiaomi.com>, "Paul E . McKenney"
+ <paulmck@kernel.org>
+References: <20250912065050.460718-1-dolinux.peng@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250912065050.460718-1-dolinux.peng@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 5:27=E2=80=AFPM Thomas Bertschinger
-<tahbertschinger@gmail.com> wrote:
+On 9/12/25 2:50 AM, pengdonglin wrote:
+> From: pengdonglin <pengdonglin@xiaomi.com>
 >
-> This defines a new flag FILEID_CACHED that the VFS can set in the
-> handle_type field of struct file_handle to request that the FS
-> implementations of fh_to_{dentry,parent}() only complete if they can
-> satisfy the request with cached data.
->
-> Because not every FS implementation will recognize this new flag, those
-> that do recognize the flag can indicate their support using a new
-> export flag, EXPORT_OP_NONBLOCK.
->
-> If FILEID_CACHED is set in a file handle, but the filesystem does not
-> set EXPORT_OP_NONBLOCK, then the VFS will return -EAGAIN without
-> attempting to call into the filesystem code.
->
-> exportfs_decode_fh_raw() is updated to respect the new flag by returning
-> -EAGAIN when it would need to do an operation that may not be possible
-> with only cached data.
->
-> Suggested-by: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
-> ---
-> I didn't apply Amir's Reviewed-by for this patch because I added the
-> Documenation section, which was not reviewed in v2.
+> When CONFIG_PREEMPT_RT is disabled, spin_lock*() operations implicitly
+> disable preemption, which provides RCU read-side protection. When
+> CONFIG_PREEMPT_RT is enabled, spin_lock*() implementations internally
+> manage RCU read-side critical sections.
 
-Documentation looks good.
+I have some doubt about your claim that disabling preemption provides 
+RCU read-side protection. It is true for some flavors but probably not 
+all. I do know that disabling interrupt will provide RCU read-side 
+protection. So for spin_lock_irq*() calls, that is valid. I am not sure 
+about spin_lock_bh(), maybe it applies there too. we need some RCU 
+people to confirm.
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+When CONFIG_PREEMPT_RT is enabled, rt_spin_lock/unlock() will call 
+rcu_read_lock/_unlock() internally. So eliminating explicit 
+rcu_read_lock/unlock() in critical sections should be fine.
 
-Thanks,
-Amir.
+Cheers,
+Longman
 
->
->  Documentation/filesystems/nfs/exporting.rst |  6 ++++++
->  fs/exportfs/expfs.c                         | 12 ++++++++++++
->  fs/fhandle.c                                |  2 ++
->  include/linux/exportfs.h                    |  5 +++++
->  4 files changed, 25 insertions(+)
->
-> diff --git a/Documentation/filesystems/nfs/exporting.rst b/Documentation/=
-filesystems/nfs/exporting.rst
-> index de64d2d002a2..70f46eaeb0d4 100644
-> --- a/Documentation/filesystems/nfs/exporting.rst
-> +++ b/Documentation/filesystems/nfs/exporting.rst
-> @@ -238,3 +238,9 @@ following flags are defined:
->      all of an inode's dirty data on last close. Exports that behave this
->      way should set EXPORT_OP_FLUSH_ON_CLOSE so that NFSD knows to skip
->      waiting for writeback when closing such files.
-> +
-> +  EXPORT_OP_NONBLOCK - FS supports fh_to_{dentry,parent}() using cached =
-data
-> +    When performing open_by_handle_at(2) using io_uring, it is useful to
-> +    complete the file open using only cached data when possible, otherwi=
-se
-> +    failing with -EAGAIN.  This flag indicates that the filesystem suppo=
-rts this
-> +    mode of operation.
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 949ce6ef6c4e..e2cfdd9d6392 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -441,6 +441,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct f=
-id *fid, int fh_len,
->                        void *context)
->  {
->         const struct export_operations *nop =3D mnt->mnt_sb->s_export_op;
-> +       bool decode_cached =3D fileid_type & FILEID_CACHED;
->         struct dentry *result, *alias;
->         char nbuf[NAME_MAX+1];
->         int err;
-> @@ -453,6 +454,10 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct =
-fid *fid, int fh_len,
->          */
->         if (!exportfs_can_decode_fh(nop))
->                 return ERR_PTR(-ESTALE);
-> +
-> +       if (decode_cached && !(nop->flags & EXPORT_OP_NONBLOCK))
-> +               return ERR_PTR(-EAGAIN);
-> +
->         result =3D nop->fh_to_dentry(mnt->mnt_sb, fid, fh_len, fileid_typ=
-e);
->         if (IS_ERR_OR_NULL(result))
->                 return result;
-> @@ -481,6 +486,10 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct =
-fid *fid, int fh_len,
->                  * filesystem root.
->                  */
->                 if (result->d_flags & DCACHE_DISCONNECTED) {
-> +                       err =3D -EAGAIN;
-> +                       if (decode_cached)
-> +                               goto err_result;
-> +
->                         err =3D reconnect_path(mnt, result, nbuf);
->                         if (err)
->                                 goto err_result;
-> @@ -526,6 +535,9 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct f=
-id *fid, int fh_len,
->                 err =3D PTR_ERR(target_dir);
->                 if (IS_ERR(target_dir))
->                         goto err_result;
-> +               err =3D -EAGAIN;
-> +               if (decode_cached && (target_dir->d_flags & DCACHE_DISCON=
-NECTED))
-> +                       goto err_result;
->
->                 /*
->                  * And as usual we need to make sure the parent directory=
- is
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 2dc669aeb520..509ff8983f94 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -273,6 +273,8 @@ static int do_handle_to_path(struct file_handle *hand=
-le, struct path *path,
->         if (IS_ERR_OR_NULL(dentry)) {
->                 if (dentry =3D=3D ERR_PTR(-ENOMEM))
->                         return -ENOMEM;
-> +               if (dentry =3D=3D ERR_PTR(-EAGAIN))
-> +                       return -EAGAIN;
->                 return -ESTALE;
->         }
->         path->dentry =3D dentry;
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 30a9791d88e0..8238b6f67956 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -199,6 +199,8 @@ struct handle_to_path_ctx {
->  #define FILEID_FS_FLAGS_MASK   0xff00
->  #define FILEID_FS_FLAGS(flags) ((flags) & FILEID_FS_FLAGS_MASK)
->
-> +#define FILEID_CACHED          0x100 /* Use only cached data when decodi=
-ng handle */
-> +
->  /* User flags: */
->  #define FILEID_USER_FLAGS_MASK 0xffff0000
->  #define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
-> @@ -303,6 +305,9 @@ struct export_operations {
->                                                 */
->  #define EXPORT_OP_FLUSH_ON_CLOSE       (0x20) /* fs flushes file data on=
- close */
->  #define EXPORT_OP_NOLOCKS              (0x40) /* no file locking support=
- */
-> +#define EXPORT_OP_NONBLOCK             (0x80) /* Filesystem supports non=
--
-> +                                                 blocking fh_to_dentry()
-> +                                               */
->         unsigned long   flags;
->  };
->
-> --
-> 2.51.0
->
 
