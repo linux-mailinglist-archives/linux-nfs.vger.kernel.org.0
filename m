@@ -1,294 +1,202 @@
-Return-Path: <linux-nfs+bounces-14318-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14319-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06057B54523
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 10:22:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FDD5B54688
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 11:12:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 582D3462DF6
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 08:21:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B10AC5610BF
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 09:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7582D4B55;
-	Fri, 12 Sep 2025 08:21:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF4627602A;
+	Fri, 12 Sep 2025 09:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOy0T8LO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aploMs7w"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9AF2D3ED2
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 08:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B512DC79E
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 09:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757665312; cv=none; b=mICefVFm+Ot9gAWbq9/uPnlw1XnRLvXivamnEqliWuydU09XeeSJ/W4L7LscbsgZx+sjuSlPLowSP51insN3DyGW1EQIrIXe3JVtiYlJniDlBhYi5qvGzZ+dOZHM49DEu16QTrHoGk+P0bGRkyt8slYvr4/7TcVPVMfYYfPz31A=
+	t=1757668344; cv=none; b=bEirELRPdqE77D81lbUONJO3bwzzkyMbguZOIv7KRjvbvjZXh1irXM9q85H2OslZzc4KAdwhju0Sw9qCbZCL0Tx3ApRSwq+g7p2aHag1Le9g01oUIFX4czL5MlICFtdSfykIAA54fy03o59tCPfUu212edYkcFbuLGlwBRdS+Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757665312; c=relaxed/simple;
-	bh=qZUNdYRrarMZrx/I2jScYFyIRFcUWFIjiLtabn+O6tY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=aZxSV9k/uVtZ1/7NESsKm7Qh7NT8G4CayTcHrNsoZmXs3ehcIhx2jlHcPd3HufvG6N89tkbN3kccUYstjYNftanW5udlMHIJAa7wZWoObLCohsQQIsm7DGtK61JzpVnS2hB5QrCqDw6/+UyEyFoblZKe/Btfj0FypS4qOV3zGoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pOy0T8LO; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45dfb8e986aso16783785e9.0
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 01:21:49 -0700 (PDT)
+	s=arc-20240116; t=1757668344; c=relaxed/simple;
+	bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FO3PUiGAIFdfPzxEx3TyIpJVDAP9BjgDwnav4G7Uu5qQxzKK+Fa07gZHJ67hbAb7Y89T2VzhYy4OMeRtmLGDqPxYQKPTCtU25FupqjC9xJOSs9GUosydG04pf0Q3JfPXIA7p7WBq8nOGwm2SajaXrIswHvJAf2r3C1C5UC5PqQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aploMs7w; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b0785be64f5so460913466b.1
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 02:12:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757665308; x=1758270108; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W60sZMoMdyLE26ZTuIL3nBsOV3BIJdUY+5uCUKpKW8g=;
-        b=pOy0T8LOPFZS1yge92aUJTTE0o6l3ZtyjzkU65rqMvb9mOKr2XET5fFRBBqM0jWpW7
-         35c6VpFSW5MtGwuGMkKM0aFz0/YFpFdKm0LCzZhu3AauGPjZheuWk/RYdmgaVUONamCN
-         esV1ODGysUs9RQ8AW3xCcrHtOP0WlEUOycVKkWOmhq+W0/AOPTCoEa8G8+EFL1Vyb4ls
-         b1guk54JiA5s1rB53cO0gyso4ylW73ccitKA2eEecYxkknjUDRifQYMtMMXIG84W/Bir
-         Wv7dXOBGT7wOI4tylsrJ8C0L0uL3mFM818yC6IzZsEVC/LrDb9mHZ7i1iJyjgR6Sb9ON
-         D7DQ==
+        d=gmail.com; s=20230601; t=1757668341; x=1758273141; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+        b=aploMs7whY/LgaXCAuOUQbkHlH9PozV3z9HFoHHh4tp/dJFhM6pt21fAvHgYgjlN8M
+         rmpVcHSueNagemUBdQowpA6BdoN7gqqaLplS1v3ScHX+yKhTwev5VBs4Bed/9bkH4dLN
+         4rfLLpcIvHJONxgYVXSLM7qEor3rn+MmXCTKDCzXypEm5HHBP38sGD0OFUOjAm326bQ+
+         1r2w7gh4g7621FkXF6rJzjHEIMZg4g13DDPyWgPK4mWuR3T6PMXO71Jvdha7GKG/r6lh
+         avbJhFNvPx4G+gPZm0XJKYAQwKp/BQENGe5DK6uHxVZst/QOlcM6CwamdS6qIfXycNC8
+         TKgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757665308; x=1758270108;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W60sZMoMdyLE26ZTuIL3nBsOV3BIJdUY+5uCUKpKW8g=;
-        b=pPHiT4cAGMNfhrHsySWkUGiLmU6sqOwmiIimUwNTnQ7cRHH9Q03rtzMBMQWuL3dWob
-         3M9y+PHJEUtej9885UTtTAyhrKlQ7lnSX2QrePGVZEuRJtWZuFyXE6j2J+gBsOzTpHL4
-         mfrVri4RoK4jExTs+hQI56COIAIN4nD1Ko/AVw8thQ6A/qFfDKN50HjMjR4Y4Thq6oe5
-         bQDBCDBJOzpAKi9yBrEWcxaGfQ3xzn4wV+hXr/Buxe0CJwfrV1GJaDTMOhF3ybTvRooa
-         OD8xPxg08W9wjxf3Cf79b0ztfF9BC2vrQfr4G/oI+YENVinzne4ofy0XvuRI5e9/cRs5
-         eqHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUATS86NGZy23V+IhxnzKr5ugET0lJy+R8F1XQMJ9RSdCx9uUjcza0fuqnQ7Ah4iRe4A5ZLTjUN+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0n4akgeGdGtBaeWIssmFlbiyOSNNByXSi0j0OGL8dBHVc4B2d
-	or0y3tECjDjf4Dbkdk8BSgyqA/AXnGT5ZS5yAdxXCET/q07oIs8/Ugl4BMIGcVbQifA=
-X-Gm-Gg: ASbGnct6maHb22NUhNVHjzwHbMOeXoNipzn9wswLYS8392Pyi61AC0TTobxi92vfel/
-	FwMnIv2iQ2i3rUedj++8QEP2LsKndHUgi6LjE2qNawgAoUuQq0b4U3RIWelV8gK3aolAjNxTzxe
-	D0QGlk6vfgK40iI5eYKlCYC7a5/J4vQGcSCtVF3+5UmTl38Sl75ODKWe3kneVprt2Me+fGXI7mQ
-	3dSMzT0M5Mkapf9Rbz5kOgiBuKvzjU3ozW9joCPlENPlLmx7bFYrUkrwcv+y+W3fHT8NBmxcRDc
-	W2DY5Wr2f4gIXIfBvuUFoq6FkFI/mo9yu7JYgtVcwuLiVCLimjjsBwei67qoFGaAxZ0jOUrn2i3
-	Mt/xGxLLERrNtsmNraaSjpPxV9LkRmuZ+Mk+TXA==
-X-Google-Smtp-Source: AGHT+IFTVzbYTElrhk+3fv8FZJj0pkcZ0zRcQ2nWpXCv1OCHxc8/2XmvcN8Ey7vGOZneILg1INJRRw==
-X-Received: by 2002:a7b:c006:0:b0:45a:236a:23ba with SMTP id 5b1f17b1804b1-45f211f6b92mr13416655e9.22.1757665307562;
-        Fri, 12 Sep 2025 01:21:47 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45e016b5cbcsm56441345e9.11.2025.09.12.01.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 01:21:47 -0700 (PDT)
-Date: Fri, 12 Sep 2025 11:21:44 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Thomas Bertschinger <tahbertschinger@gmail.com>,
-	io-uring@vger.kernel.org, axboe@kernel.dk,
-	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, linux-nfs@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	Thomas Bertschinger <tahbertschinger@gmail.com>,
-	Amir Goldstein <amir73il@gmail.com>, chuck.lever@oracle.com,
-	jlayton@kernel.org
-Subject: Re: [PATCH 07/10] exportfs: new FILEID_CACHED flag for non-blocking
- fh lookup
-Message-ID: <202509120423.cZlR8oLY-lkp@intel.com>
+        d=1e100.net; s=20230601; t=1757668341; x=1758273141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ioIOH2p5Blrv6vNOqNmSCymoSvN1zmkkAsnVeBc1SMY=;
+        b=LDPEfHyc7B8/w8jvDlfeykZ9kd0mDMQcqu1ToiDN+J1zkMZyzbPRkWN+AMuDo4iNS1
+         62QAtRaXj0DtJmHJ/RoO8YVVnzpbT39UL1UIgWaO/6FFTCD1bw+//FKgdaI2oIXqkXP7
+         kHIoqOkBBzSFW84PbQCo1pg3X/KMUe9U+NzNjkBoTnEH1HIXXWFObUj2Pu7+JWDf29Su
+         zXsVf7Hb5ikln+xUP7bz40oNJWRijFgbgM6WZox2V4MVRraOtN6v3rW0DwK0cLQz5bZJ
+         RWcqy9+YXdIyg464l+2EXdymiIrW0tM8a0P9IWMEihGb3Ilo8ih2ObaHQznuk07pxpvU
+         Ho4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXi7Pf3ASPlTBTPdY1C53U102g1u9lc2vqo8632doKK+R8vmro+eXjLwN/bpckNCEWgyPvSjdX1nCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywXweYdVumqOz47n5kCJEH7m0UDpyT3q8XpAlyQMTDo1FeEk2J
+	NsQVprWO42ihH8RqRaddzI40MjLx+cqggPSVOQ34PPFQ8RxxVm3flyj6ZHwaUcBQ7jrDQOoQlS6
+	hoKaWVLM2yeHqSWXmbdT/5PyJUdcwJks=
+X-Gm-Gg: ASbGncsV6t7MGCj3+lYT8nABH652BC11D9ZsH6c9ulh7YvyIudlDX+/r4wtQ+JyL0Rl
+	fcVfhBtFRNkYnVXCey03Et1gQcIWWBF2rre63SwbakPh9m0JfwfYnMGMj2pafVroN6ZekUk45WE
+	NJFyGtv5ajd8nLHREMoookbpZdlhs5h88rZzQl2zodVjR7sU5YUOq2nwIVWVCDsrDRn2bZtJnMb
+	V8rCcw=
+X-Google-Smtp-Source: AGHT+IECQ2FSxCpELdyt8w8+Ta17OX81olY1L21qGnLXRiiNiAsbzwmD/JJZPTQJsBBXBb5BWfCf5Q2bF6gDjvOJbJk=
+X-Received: by 2002:a17:907:3e9f:b0:b04:3402:391c with SMTP id
+ a640c23a62f3a-b07a68bddd8mr590036766b.24.1757668340932; Fri, 12 Sep 2025
+ 02:12:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250910214927.480316-8-tahbertschinger@gmail.com>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-27-4dd56e7359d8@kernel.org> <CAOQ4uxgtQQa-jzsnTBxgUTPzgtCiAaH8X6ffMqd+1Y5Jjy0dmQ@mail.gmail.com>
+ <20250911-werken-raubzug-64735473739c@brauner> <CAOQ4uxgMgzOjz4E-4kJFJAz3Dpd=Q6vXoGrhz9F0=mb=4XKZqA@mail.gmail.com>
+ <20250912-wirsing-karibus-7f6a98621dd1@brauner>
+In-Reply-To: <20250912-wirsing-karibus-7f6a98621dd1@brauner>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 12 Sep 2025 11:12:09 +0200
+X-Gm-Features: Ac12FXzXlVrWyNxThzcVLm8bWdnJouio3PTW50wsmgaWY6Ne9FaEF2yc3iNy4og
+Message-ID: <CAOQ4uxgGpdQ42d-QRuHbvdrvZWrS9qz9=A2GRa2Bq-sMcK6w4w@mail.gmail.com>
+Subject: Re: [PATCH 27/32] nsfs: support file handles
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+On Fri, Sep 12, 2025 at 10:20=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+>
+> On Thu, Sep 11, 2025 at 01:36:28PM +0200, Amir Goldstein wrote:
+> > On Thu, Sep 11, 2025 at 11:31=E2=80=AFAM Christian Brauner <brauner@ker=
+nel.org> wrote:
+> > >
+> > > On Wed, Sep 10, 2025 at 07:21:22PM +0200, Amir Goldstein wrote:
+> > > > On Wed, Sep 10, 2025 at 4:39=E2=80=AFPM Christian Brauner <brauner@=
+kernel.org> wrote:
+> > > > >
+> > > > > A while ago we added support for file handles to pidfs so pidfds =
+can be
+> > > > > encoded and decoded as file handles. Userspace has adopted this q=
+uickly
+> > > > > and it's proven very useful.
+> > > >
+> > > > > Pidfd file handles are exhaustive meaning
+> > > > > they don't require a handle on another pidfd to pass to
+> > > > > open_by_handle_at() so it can derive the filesystem to decode in.
+> > > > >
+> > > > > Implement the exhaustive file handles for namespaces as well.
+> > > >
+> > > > I think you decide to split the "exhaustive" part to another patch,
+> > > > so better drop this paragraph?
+> > >
+> > > Yes, good point. I've dont that.
+> > >
+> > > > I am missing an explanation about the permissions for
+> > > > opening these file handles.
+> > > >
+> > > > My understanding of the code is that the opener needs to meet one o=
+f
+> > > > the conditions:
+> > > > 1. user has CAP_SYS_ADMIN in the userns owning the opened namespace
+> > > > 2. current task is in the opened namespace
+> > >
+> > > Yes.
+> > >
+> > > >
+> > > > But I do not fully understand the rationale behind the 2nd conditio=
+n,
+> > > > that is, when is it useful?
+> > >
+> > > A caller is always able to open a file descriptor to it's own set of
+> > > namespaces. File handles will behave the same way.
+> > >
+> >
+> > I understand why it's safe, and I do not object to it at all,
+> > I just feel that I do not fully understand the use case of how ns file =
+handles
+> > are expected to be used.
+> > A process can always open /proc/self/ns/mnt
+> > What's the use case where a process may need to open its own ns by hand=
+le?
+> >
+> > I will explain. For CAP_SYS_ADMIN I can see why keeping handles that
+> > do not keep an elevated refcount of ns object could be useful in the sa=
+me
+> > way that an NFS client keeps file handles without keeping the file obje=
+ct alive.
+> >
+> > But if you do not have CAP_SYS_ADMIN and can only open your own ns
+> > by handle, what is the application that could make use of this?
+> > and what's the benefit of such application keeping a file handle instea=
+d of
+> > ns fd?
+>
+> A process is not always able to open /proc/self/ns/. That requires
+> procfs to be mounted and for /proc/self/ or /proc/self/ns/ to not be
+> overmounted. However, they can derive a namespace fd from their own
+> pidfd. And that also always works if it's their own namespace.
+>
+> There's no need to introduce unnecessary behavioral differences between
+> /proc/self/ns/, pidfd-derived namespace fs, and file-handle-derived
+> namespace fds. That's just going to be confusing.
+>
+> The other thing is that there are legitimate use-case for encoding your
+> own namespace. For example, you might store file handles to your set of
+> namespaces in a file on-disk so you can verify when you get rexeced that
+> they're still valid and so on. This is akin to the pidfd use-case.
+>
+> Or just plainly for namespace comparison reasons where you keep a file
+> handle to your own namespaces and can then easily check against others.
 
-kernel test robot noticed the following build warnings:
+OK. As I said no objections I was just curious about this use case.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Bertschinger/fhandle-create-helper-for-name_to_handle_at-2/20250911-054830
-base:   76eeb9b8de9880ca38696b2fb56ac45ac0a25c6c
-patch link:    https://lore.kernel.org/r/20250910214927.480316-8-tahbertschinger%40gmail.com
-patch subject: [PATCH 07/10] exportfs: new FILEID_CACHED flag for non-blocking fh lookup
-config: arm-randconfig-r071-20250911 (https://download.01.org/0day-ci/archive/20250912/202509120423.cZlR8oLY-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 21857ae337e0892a5522b6e7337899caa61de2a6)
+FWIW, comparing current ns to a stored file handle does not really require
+permission to open_by_handle_at(). name_to_handle_at() the current ns
+and binary compare to the stored file handle should be a viable option.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202509120423.cZlR8oLY-lkp@intel.com/
+This was exactly the reason for introducing AT_HANDLE_FID, so that fanotify
+unprivileged watcher with no permission to open_by_handle_at() could compar=
+e
+an fid reported in an event with another fid they obtained earlier with
+name_to_handle_at() and kept in a map.
 
-smatch warnings:
-fs/exportfs/expfs.c:539 exportfs_decode_fh_raw() warn: maybe use && instead of &
-
-vim +539 fs/exportfs/expfs.c
-
-d045465fc6cbfa4 Trond Myklebust     2020-11-30  437  struct dentry *
-d045465fc6cbfa4 Trond Myklebust     2020-11-30  438  exportfs_decode_fh_raw(struct vfsmount *mnt, struct fid *fid, int fh_len,
-620c266f394932e Christian Brauner   2024-05-24  439  		       int fileid_type, unsigned int flags,
-d045465fc6cbfa4 Trond Myklebust     2020-11-30  440  		       int (*acceptable)(void *, struct dentry *),
-d045465fc6cbfa4 Trond Myklebust     2020-11-30  441  		       void *context)
-d37065cd6d6bbe9 Christoph Hellwig   2007-07-17  442  {
-39655164405940d Christoph Hellwig   2007-10-21  443  	const struct export_operations *nop = mnt->mnt_sb->s_export_op;
-638205375afdc8a Thomas Bertschinger 2025-09-10  444  	bool decode_cached = fileid_type & FILEID_CACHED;
-2596110a3994593 Christoph Hellwig   2007-10-21  445  	struct dentry *result, *alias;
-f3f8e17571934ea Al Viro             2008-08-11  446  	char nbuf[NAME_MAX+1];
-2596110a3994593 Christoph Hellwig   2007-10-21  447  	int err;
-d37065cd6d6bbe9 Christoph Hellwig   2007-07-17  448  
-4a530a7c751d27f Amir Goldstein      2024-10-11  449  	if (fileid_type < 0 || FILEID_USER_FLAGS(fileid_type))
-4a530a7c751d27f Amir Goldstein      2024-10-11  450  		return ERR_PTR(-EINVAL);
-4a530a7c751d27f Amir Goldstein      2024-10-11  451  
-2596110a3994593 Christoph Hellwig   2007-10-21  452  	/*
-2596110a3994593 Christoph Hellwig   2007-10-21  453  	 * Try to get any dentry for the given file handle from the filesystem.
-2596110a3994593 Christoph Hellwig   2007-10-21  454  	 */
-66c62769bcf6aa1 Amir Goldstein      2023-10-23  455  	if (!exportfs_can_decode_fh(nop))
-becfd1f37544798 Aneesh Kumar K.V    2011-01-29  456  		return ERR_PTR(-ESTALE);
-638205375afdc8a Thomas Bertschinger 2025-09-10  457  
-638205375afdc8a Thomas Bertschinger 2025-09-10  458  	if (decode_cached && !(nop->flags & EXPORT_OP_NONBLOCK))
-638205375afdc8a Thomas Bertschinger 2025-09-10  459  		return ERR_PTR(-EAGAIN);
-638205375afdc8a Thomas Bertschinger 2025-09-10  460  
-2596110a3994593 Christoph Hellwig   2007-10-21  461  	result = nop->fh_to_dentry(mnt->mnt_sb, fid, fh_len, fileid_type);
-09bb8bfffd29c3d NeilBrown           2016-08-04  462  	if (IS_ERR_OR_NULL(result))
-d045465fc6cbfa4 Trond Myklebust     2020-11-30  463  		return result;
-2596110a3994593 Christoph Hellwig   2007-10-21  464  
-620c266f394932e Christian Brauner   2024-05-24  465  	if ((flags & EXPORT_FH_DIR_ONLY) && !d_is_dir(result)) {
-620c266f394932e Christian Brauner   2024-05-24  466  		err = -ENOTDIR;
-620c266f394932e Christian Brauner   2024-05-24  467  		goto err_result;
-620c266f394932e Christian Brauner   2024-05-24  468  	}
-620c266f394932e Christian Brauner   2024-05-24  469  
-8a22efa15b46d52 Amir Goldstein      2018-03-09  470  	/*
-8a22efa15b46d52 Amir Goldstein      2018-03-09  471  	 * If no acceptance criteria was specified by caller, a disconnected
-8a22efa15b46d52 Amir Goldstein      2018-03-09  472  	 * dentry is also accepatable. Callers may use this mode to query if
-8a22efa15b46d52 Amir Goldstein      2018-03-09  473  	 * file handle is stale or to get a reference to an inode without
-8a22efa15b46d52 Amir Goldstein      2018-03-09  474  	 * risking the high overhead caused by directory reconnect.
-8a22efa15b46d52 Amir Goldstein      2018-03-09  475  	 */
-8a22efa15b46d52 Amir Goldstein      2018-03-09  476  	if (!acceptable)
-8a22efa15b46d52 Amir Goldstein      2018-03-09  477  		return result;
-8a22efa15b46d52 Amir Goldstein      2018-03-09  478  
-e36cb0b89ce20b4 David Howells       2015-01-29  479  	if (d_is_dir(result)) {
-2596110a3994593 Christoph Hellwig   2007-10-21  480  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  481  		 * This request is for a directory.
-2596110a3994593 Christoph Hellwig   2007-10-21  482  		 *
-2596110a3994593 Christoph Hellwig   2007-10-21  483  		 * On the positive side there is only one dentry for each
-2596110a3994593 Christoph Hellwig   2007-10-21  484  		 * directory inode.  On the negative side this implies that we
-2596110a3994593 Christoph Hellwig   2007-10-21  485  		 * to ensure our dentry is connected all the way up to the
-2596110a3994593 Christoph Hellwig   2007-10-21  486  		 * filesystem root.
-2596110a3994593 Christoph Hellwig   2007-10-21  487  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  488  		if (result->d_flags & DCACHE_DISCONNECTED) {
-638205375afdc8a Thomas Bertschinger 2025-09-10  489  			err = -EAGAIN;
-638205375afdc8a Thomas Bertschinger 2025-09-10  490  			if (decode_cached)
-638205375afdc8a Thomas Bertschinger 2025-09-10  491  				goto err_result;
-638205375afdc8a Thomas Bertschinger 2025-09-10  492  
-f3f8e17571934ea Al Viro             2008-08-11  493  			err = reconnect_path(mnt, result, nbuf);
-2596110a3994593 Christoph Hellwig   2007-10-21  494  			if (err)
-2596110a3994593 Christoph Hellwig   2007-10-21  495  				goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  496  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  497  
-2596110a3994593 Christoph Hellwig   2007-10-21  498  		if (!acceptable(context, result)) {
-2596110a3994593 Christoph Hellwig   2007-10-21  499  			err = -EACCES;
-2596110a3994593 Christoph Hellwig   2007-10-21  500  			goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  501  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  502  
-2596110a3994593 Christoph Hellwig   2007-10-21  503  		return result;
-2596110a3994593 Christoph Hellwig   2007-10-21  504  	} else {
-2596110a3994593 Christoph Hellwig   2007-10-21  505  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  506  		 * It's not a directory.  Life is a little more complicated.
-2596110a3994593 Christoph Hellwig   2007-10-21  507  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  508  		struct dentry *target_dir, *nresult;
-2596110a3994593 Christoph Hellwig   2007-10-21  509  
-2596110a3994593 Christoph Hellwig   2007-10-21  510  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  511  		 * See if either the dentry we just got from the filesystem
-2596110a3994593 Christoph Hellwig   2007-10-21  512  		 * or any alias for it is acceptable.  This is always true
-2596110a3994593 Christoph Hellwig   2007-10-21  513  		 * if this filesystem is exported without the subtreecheck
-2596110a3994593 Christoph Hellwig   2007-10-21  514  		 * option.  If the filesystem is exported with the subtree
-2596110a3994593 Christoph Hellwig   2007-10-21  515  		 * check option there's a fair chance we need to look at
-2596110a3994593 Christoph Hellwig   2007-10-21  516  		 * the parent directory in the file handle and make sure
-2596110a3994593 Christoph Hellwig   2007-10-21  517  		 * it's connected to the filesystem root.
-2596110a3994593 Christoph Hellwig   2007-10-21  518  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  519  		alias = find_acceptable_alias(result, acceptable, context);
-2596110a3994593 Christoph Hellwig   2007-10-21  520  		if (alias)
-2596110a3994593 Christoph Hellwig   2007-10-21  521  			return alias;
-2596110a3994593 Christoph Hellwig   2007-10-21  522  
-2596110a3994593 Christoph Hellwig   2007-10-21  523  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  524  		 * Try to extract a dentry for the parent directory from the
-2596110a3994593 Christoph Hellwig   2007-10-21  525  		 * file handle.  If this fails we'll have to give up.
-2596110a3994593 Christoph Hellwig   2007-10-21  526  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  527  		err = -ESTALE;
-2596110a3994593 Christoph Hellwig   2007-10-21  528  		if (!nop->fh_to_parent)
-2596110a3994593 Christoph Hellwig   2007-10-21  529  			goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  530  
-2596110a3994593 Christoph Hellwig   2007-10-21  531  		target_dir = nop->fh_to_parent(mnt->mnt_sb, fid,
-2596110a3994593 Christoph Hellwig   2007-10-21  532  				fh_len, fileid_type);
-a4f4d6df5373682 J. Bruce Fields     2008-12-08  533  		if (!target_dir)
-a4f4d6df5373682 J. Bruce Fields     2008-12-08  534  			goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  535  		err = PTR_ERR(target_dir);
-2596110a3994593 Christoph Hellwig   2007-10-21  536  		if (IS_ERR(target_dir))
-2596110a3994593 Christoph Hellwig   2007-10-21  537  			goto err_result;
-638205375afdc8a Thomas Bertschinger 2025-09-10  538  		err = -EAGAIN;
-638205375afdc8a Thomas Bertschinger 2025-09-10 @539  		if (decode_cached & (target_dir->d_flags & DCACHE_DISCONNECTED)) {
-
-It needs to be &&.  DCACHE_DISCONNECTED is BIT(5).
-
-638205375afdc8a Thomas Bertschinger 2025-09-10  540  			goto err_result;
-638205375afdc8a Thomas Bertschinger 2025-09-10  541  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  542  
-2596110a3994593 Christoph Hellwig   2007-10-21  543  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  544  		 * And as usual we need to make sure the parent directory is
-2596110a3994593 Christoph Hellwig   2007-10-21  545  		 * connected to the filesystem root.  The VFS really doesn't
-2596110a3994593 Christoph Hellwig   2007-10-21  546  		 * like disconnected directories..
-2596110a3994593 Christoph Hellwig   2007-10-21  547  		 */
-f3f8e17571934ea Al Viro             2008-08-11  548  		err = reconnect_path(mnt, target_dir, nbuf);
-2596110a3994593 Christoph Hellwig   2007-10-21  549  		if (err) {
-2596110a3994593 Christoph Hellwig   2007-10-21  550  			dput(target_dir);
-2596110a3994593 Christoph Hellwig   2007-10-21  551  			goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  552  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  553  
-2596110a3994593 Christoph Hellwig   2007-10-21  554  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  555  		 * Now that we've got both a well-connected parent and a
-2596110a3994593 Christoph Hellwig   2007-10-21  556  		 * dentry for the inode we're after, make sure that our
-2596110a3994593 Christoph Hellwig   2007-10-21  557  		 * inode is actually connected to the parent.
-2596110a3994593 Christoph Hellwig   2007-10-21  558  		 */
-e38f981758118d8 Christoph Hellwig   2007-10-21  559  		err = exportfs_get_name(mnt, target_dir, nbuf, result);
-a2ece088882666e Al Viro             2019-11-08  560  		if (err) {
-a2ece088882666e Al Viro             2019-11-08  561  			dput(target_dir);
-a2ece088882666e Al Viro             2019-11-08  562  			goto err_result;
-a2ece088882666e Al Viro             2019-11-08  563  		}
-a2ece088882666e Al Viro             2019-11-08  564  
-ce3490038971a20 NeilBrown           2025-06-09  565  		nresult = lookup_one_unlocked(mnt_idmap(mnt), &QSTR(nbuf), target_dir);
-2596110a3994593 Christoph Hellwig   2007-10-21  566  		if (!IS_ERR(nresult)) {
-a2ece088882666e Al Viro             2019-11-08  567  			if (unlikely(nresult->d_inode != result->d_inode)) {
-2596110a3994593 Christoph Hellwig   2007-10-21  568  				dput(nresult);
-a2ece088882666e Al Viro             2019-11-08  569  				nresult = ERR_PTR(-ESTALE);
-2596110a3994593 Christoph Hellwig   2007-10-21  570  			}
-2596110a3994593 Christoph Hellwig   2007-10-21  571  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  572  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  573  		 * At this point we are done with the parent, but it's pinned
-2596110a3994593 Christoph Hellwig   2007-10-21  574  		 * by the child dentry anyway.
-2596110a3994593 Christoph Hellwig   2007-10-21  575  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  576  		dput(target_dir);
-2596110a3994593 Christoph Hellwig   2007-10-21  577  
-a2ece088882666e Al Viro             2019-11-08  578  		if (IS_ERR(nresult)) {
-a2ece088882666e Al Viro             2019-11-08  579  			err = PTR_ERR(nresult);
-a2ece088882666e Al Viro             2019-11-08  580  			goto err_result;
-a2ece088882666e Al Viro             2019-11-08  581  		}
-a2ece088882666e Al Viro             2019-11-08  582  		dput(result);
-a2ece088882666e Al Viro             2019-11-08  583  		result = nresult;
-a2ece088882666e Al Viro             2019-11-08  584  
-2596110a3994593 Christoph Hellwig   2007-10-21  585  		/*
-2596110a3994593 Christoph Hellwig   2007-10-21  586  		 * And finally make sure the dentry is actually acceptable
-2596110a3994593 Christoph Hellwig   2007-10-21  587  		 * to NFSD.
-2596110a3994593 Christoph Hellwig   2007-10-21  588  		 */
-2596110a3994593 Christoph Hellwig   2007-10-21  589  		alias = find_acceptable_alias(result, acceptable, context);
-2596110a3994593 Christoph Hellwig   2007-10-21  590  		if (!alias) {
-2596110a3994593 Christoph Hellwig   2007-10-21  591  			err = -EACCES;
-2596110a3994593 Christoph Hellwig   2007-10-21  592  			goto err_result;
-2596110a3994593 Christoph Hellwig   2007-10-21  593  		}
-2596110a3994593 Christoph Hellwig   2007-10-21  594  
-2596110a3994593 Christoph Hellwig   2007-10-21  595  		return alias;
-2596110a3994593 Christoph Hellwig   2007-10-21  596  	}
-2596110a3994593 Christoph Hellwig   2007-10-21  597  
-2596110a3994593 Christoph Hellwig   2007-10-21  598   err_result:
-2596110a3994593 Christoph Hellwig   2007-10-21  599  	dput(result);
-2596110a3994593 Christoph Hellwig   2007-10-21  600  	return ERR_PTR(err);
-10f11c341da8c0e Christoph Hellwig   2007-07-17  601  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Thanks for the explanation!
+Amir.
 
