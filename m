@@ -1,212 +1,247 @@
-Return-Path: <linux-nfs+bounces-14388-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14389-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF0D0B55468
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 18:04:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEF3EB554A7
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 18:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5EC6166BC1
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 16:04:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D58E81D633AD
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 16:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2196924BCF5;
-	Fri, 12 Sep 2025 16:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0485631A57C;
+	Fri, 12 Sep 2025 16:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M3Z1Yf4r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLhNDUu7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673330E83D
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 16:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2480D28DC4
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 16:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757693077; cv=none; b=mzgk1gUNcODlifjrwQoE4UFpVIUUMZ/pFW4CNRuPxXcIotdUqXljW+fRCgJm0J6zTu1wLqyUpFnIp6mohFBvU2OXdD3i3JYojs1lq9uA6HIpx2TFQGS5e8VgNAB4Jefkm3HYuCbU/TQuBqmZo04h3tLuOtVNmHyzvXdk6mVNsmI=
+	t=1757694518; cv=none; b=IS0W3AujY2ryahwuwtJfHCbL3GK/Q6Lp8gFg1vsdW29cYhla5VLtd/yOaQIk9DejfcWgD1bbkQtLIY1gSEOgfqXudGevi9+t0CI7k26MxK6q3lqpHPBx1En6gWYvS43qgHitusP67XfE0jeUDQK/i3Y6FwGSYJPP7wdxTTtoeZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757693077; c=relaxed/simple;
-	bh=WsS72Wv4jhtJw72PS/PT2NESDXPRAcwT5FcMmlYX78A=;
+	s=arc-20240116; t=1757694518; c=relaxed/simple;
+	bh=sfOjqy5Hmnq/IKULzCIl01+HRUC2yrcuDNx1K4f5Qg4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AfanQc9ujrdOUyL6WFtG6pliDYmT6RHiEKn4UC7g/RtGl29Ol9RIYb2aR/TiRofVBtzcAzIMSzShrRa+78IxDwoGi9ahG+JAi+7uisOG735ocFlgt7fdDb1cwdcTdGaYPQazmdlMl4F7V5OQsj0hTUZ439FsbslHfctCEA/wR28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M3Z1Yf4r; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757693074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mm4VeDBPiCIKqpL0vROry5Hbz6tm2LhDfOLPdtkPPPQ=;
-	b=M3Z1Yf4rAGyB76e7xP8dRnWVq69FvubRGe2MzPRkRoZy0UuQbVnpC66jEkaGs69kseaYs9
-	6/elXASysp/5Ym+5RRBoyoIEkitSTDiNKzYUL65k/8DF9WgA2wRLbL6ay/eYmjsWEDrJV/
-	n46ZYJMt9J2WT2F3pSR7P8MhTKFl+Ks=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-135-JBGnsEUPMdiG3tw9SF45JA-1; Fri, 12 Sep 2025 12:04:32 -0400
-X-MC-Unique: JBGnsEUPMdiG3tw9SF45JA-1
-X-Mimecast-MFC-AGG-ID: JBGnsEUPMdiG3tw9SF45JA_1757693072
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-62b77ca3f64so1978380a12.3
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 09:04:32 -0700 (PDT)
+	 To:Cc:Content-Type; b=W9M9V9RZDtJfgQgeNWnZmroGhoyIQX/aChC6FAg2z3Zikg1EoF9UboFKov+Qk+DVn9FNUwbjJkwiswqcLb00avvZmaDQmcqwctG2gV4dhwn6JxmaReb7nM/iYmt3a8Z+bPwBnnmtj78HYIfeXpPPUdFIaUarC6ybzD5aliU05Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLhNDUu7; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-62ee438dc1bso1155370a12.1
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 09:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757694515; x=1758299315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bCLfdduUpvZu4Yibc21wcUORVmaWAAbs5DHC/ImGBY=;
+        b=XLhNDUu7k1hhreFP7iLBRa3n2nljhGEha8gWbtlmhNASrLUkaIRZ5RCVe6YGkMC5WT
+         kL4m2ScOjm7hwFJEBeiDNzwi6zkI6l2wPwFunRc9Mv4kQft48IKEAhmnhe8Afar58cfV
+         Yl7wgEDvtPcnxHxVrhMVaiEdJU0c87e/SLWrzhvzg9HD+wI314Cd0xD0UlMCE04TzV0o
+         MY2AZfu4BNKuUrxawgIa+ldR5oC4rcPgBbstdIUBDyDPh4zbTg3/fOWBajLGqEvGeeRd
+         H//EKVsXW/KE+bJkms9VCjroMCXnCskvBLOjgYLq5w/A5I6Cp4Hts4tgqWElIpiTCsSf
+         iVZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757693071; x=1758297871;
+        d=1e100.net; s=20230601; t=1757694515; x=1758299315;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mm4VeDBPiCIKqpL0vROry5Hbz6tm2LhDfOLPdtkPPPQ=;
-        b=T4Jq1bO9Z0Cw3TTr9tvwAkzIrQ52lyoY1wX588a0QnJMCYDxRTRdk9DJE2L/wPaZY6
-         1vtQKVAHH7HiZKzivq9lw2ag1mj0drtos84f5GtqLHaRopVmtwG8DcPZw/rI0280fK6p
-         D8Im5Nv1JYUpo3cREPJlVBGvrVV9zGG4enVvHmoMwFSxsA9SL1nI690i9Keq/+VnWGTw
-         TFk8Cl1hNInt1DEYPMT0trnU2lJExxwejOGfZcuc+4aT2S9yliuWZC7O48QbfNL7e3bi
-         NHgBsxjrCB6MwphvdasnwN71RP9OIgyibgDU7cbGlgomQKDu7oMcxpV0td9zSikHx1+5
-         w+mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKG10bzEURTnnZ1YtTnF3Qz4g/1GjPSEHmylLfQzPuBfN2vQFwKKJbyvxG4EItiD+bljZb8p89olg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC0nnb3qSmSAosJDsaqlz0+zmKrRdo5v9qWp9bqrONSB9+/S/k
-	2+HJmKz526BhujyueFuXvW8PWeOC6jt8WYk167dumkkaJQvmjAExYigEjw3+zLa167umoQvgfzN
-	WxzEjGqOyQqpe2FtFQFMmhEDk1YapxpGHT/H+iO2KXmv8YiGpU6tQfWYZkQbxED90GlV4F+AWSl
-	ZkYF56eNdnAgw6Lwpc+6mzom3WNkSJxAma4cbD
-X-Gm-Gg: ASbGncuw9QUVI+XHxcyJDGzru9GDbp4e73/5l3ts7FJsmbY01dze2KgRIlt5Nw3Bbjt
-	o9+dl5qCFEwiLmt55NYzX0SDXZPswzNiveL645Z5sBii4h2/RmknRyJ2ppmEVaXReFlGhQP0cEY
-	v0AlwrXQn6lO7U4MwKcqXxvTGUjGn3Q/b/WXQGA/jYYu3YfXibvxWR1dw=
-X-Received: by 2002:a05:6402:24da:b0:61a:9385:c78b with SMTP id 4fb4d7f45d1cf-62ed82e079fmr2625149a12.38.1757693071511;
-        Fri, 12 Sep 2025 09:04:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmkQK3SANqddWtFDGpRQqr5l5jKFUnI5oEywyJUmT2k9t0eTg89BxdManmtZ2iy4RbCF4w6G1y8Htvn0o9gI0=
-X-Received: by 2002:a05:6402:24da:b0:61a:9385:c78b with SMTP id
- 4fb4d7f45d1cf-62ed82e079fmr2625121a12.38.1757693071049; Fri, 12 Sep 2025
- 09:04:31 -0700 (PDT)
+        bh=5bCLfdduUpvZu4Yibc21wcUORVmaWAAbs5DHC/ImGBY=;
+        b=bxMF+z2miyY9QFLVoRLyjChjn5X9q2E6qm5Uq1BnvZufPLV8fRHYxYIMDyKSiMMgbO
+         LxioJjNtr3o5lssnemIA6D4X4I0IbCj2PYlT9o5kHKa7CfQUjRhPz4ZlYAH1L1Z8aMlo
+         TVXqJA5YKTIN2seV0PYXz/mZhEAsUyyeiaDSqcwsKGHE2CuE4dv/ThhMkf+ilBrtmNeM
+         NvsgtymbQEiGt/0m2MQ53q+j8APATydSxURi9xo16RM+nwdk104ZLjwZUgr/+exvWyzE
+         sSpVD5sI4endoUdQpxZU6QEC9H5AyuVA5rv4JFKefvnrsgyRI+mXySkKn4wA7/xTwnWP
+         uNtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVn/KSo00hA2DjA0RGXt82sGSwAkF3t8dh1EQpiYH2AsT8Qe0KqsbXI9jbVHQLolRFYa43yUjOVkLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyungfp2ctQQ0bpWbPW1agrRSYmiUJYmcGxoxtDZJ1v1tvbbYZv
+	l90/+gjJIz0nUoZRv3U38u1OjIfpG0clJZHG9LTVICksDbahgtu5qMiwp7wNTA5eDLCtRTTHQ8V
+	wMjEL4F/YmjrXg9uAIBofagIMzL8CO5w=
+X-Gm-Gg: ASbGnctxDfLdWlSQHCqCcIghKeQINXepx3/hFPWiCi0G8S/kCHHs5hYmja/wCaR2vLW
+	m8tvegWdKbxSrhO2rOhdtFj7iR+SlcBgy7po+vvTNGuOj/8CHpLFNTktjtYlHDkwwi+H5JHCYna
+	nRYKZQDqLjhWgs2hmB/FvB7kR9Eig/HhAtftPutoGiefWYV30lVusQwxC1fLoWUWzOBSQEir+HT
+	Ckg6zRFEu4B5vhHEg==
+X-Google-Smtp-Source: AGHT+IFxDXD9UC5TygRPl8WtGCb5YNCX87Wur2PfXYtTjzcTqAYPz4r4TKpRuMfc3CdtuJG+VeCu/l1dEmF5bBkQd0Q=
+X-Received: by 2002:a05:6402:5109:b0:62e:c6b8:6071 with SMTP id
+ 4fb4d7f45d1cf-62ed97da5b0mr3759364a12.4.1757694515190; Fri, 12 Sep 2025
+ 09:28:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250811181848.99275-1-okorniev@redhat.com> <CAN-5tyEmf9HHMuXHDU86Y5FWYZz+ZYFKctmoLaCAB+DZ1zcXSQ@mail.gmail.com>
- <2b87402379d4c88545dabce30d2877722940f483.camel@kernel.org>
- <CACSpFtC3FbdGS6W6yKKwn+JcFmkSKE8yZRkQzuEWwRjAsZYkWQ@mail.gmail.com> <831f2ac457624092dcfadcf8b290fc65dc10e563.camel@kernel.org>
-In-Reply-To: <831f2ac457624092dcfadcf8b290fc65dc10e563.camel@kernel.org>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Fri, 12 Sep 2025 12:04:20 -0400
-X-Gm-Features: AS18NWB14IZMmfzXUSGi80OXk8RbaucxyAgUfSLCTbLyLsZbp1FCcRMLSwrQ1vA
-Message-ID: <CACSpFtAqWdPPCbHLnXKGOmn7bR0fBjS9fj_J=i4aNnL+=8t1zA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4: handle ERR_GRACE on delegation recalls
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Olga Kornievskaia <aglo@umich.edu>, anna.schumaker@oracle.com, linux-nfs@vger.kernel.org
+References: <20250912152855.689917-1-tahbertschinger@gmail.com> <20250912152855.689917-8-tahbertschinger@gmail.com>
+In-Reply-To: <20250912152855.689917-8-tahbertschinger@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 12 Sep 2025 18:28:21 +0200
+X-Gm-Features: AS18NWCSzfK3NoifN2tzIKAg6Q8TBBOoqWssuUVqrGMtiJ6gMp_y-P_PmkEK_Gk
+Message-ID: <CAOQ4uxgFXfASm_Barwy=62oQT1FXF+mvGvt82qwwLdmhBhBGgA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] exportfs: new FILEID_CACHED flag for
+ non-blocking fh lookup
+To: Thomas Bertschinger <tahbertschinger@gmail.com>
+Cc: io-uring@vger.kernel.org, axboe@kernel.dk, linux-fsdevel@vger.kernel.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, linux-nfs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, cem@kernel.org, chuck.lever@oracle.com, 
+	jlayton@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 12, 2025 at 11:11=E2=80=AFAM Trond Myklebust <trondmy@kernel.or=
-g> wrote:
+On Fri, Sep 12, 2025 at 5:27=E2=80=AFPM Thomas Bertschinger
+<tahbertschinger@gmail.com> wrote:
 >
-> On Fri, 2025-09-12 at 10:41 -0400, Olga Kornievskaia wrote:
-> > On Fri, Sep 12, 2025 at 10:29=E2=80=AFAM Trond Myklebust <trondmy@kerne=
-l.org>
-> > wrote:
-> > >
-> > > On Fri, 2025-09-12 at 10:21 -0400, Olga Kornievskaia wrote:
-> > > > Any comments on or objections to this patch? It does lead to
-> > > > possible
-> > > > data corruption.
-> > > >
-> > >
-> > > Sorry, I think was travelling when you originally sent this patch.
-> > >
-> > > > On Mon, Aug 11, 2025 at 2:25=E2=80=AFPM Olga Kornievskaia
-> > > > <okorniev@redhat.com> wrote:
-> > > > >
-> > > > > RFC7530 states that clients should be prepared for the return
-> > > > > of
-> > > > > NFS4ERR_GRACE errors for non-reclaim lock and I/O requests.
-> > > > >
-> > > > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > > > ---
-> > > > >  fs/nfs/nfs4proc.c | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > > > > index 341740fa293d..fa9b81300604 100644
-> > > > > --- a/fs/nfs/nfs4proc.c
-> > > > > +++ b/fs/nfs/nfs4proc.c
-> > > > > @@ -7867,10 +7867,10 @@ int nfs4_lock_delegation_recall(struct
-> > > > > file_lock *fl, struct nfs4_state *state,
-> > > > >                 return err;
-> > > > >         do {
-> > > > >                 err =3D _nfs4_do_setlk(state, F_SETLK, fl,
-> > > > > NFS_LOCK_NEW);
-> > > > > -               if (err !=3D -NFS4ERR_DELAY)
-> > > > > +               if (err !=3D -NFS4ERR_DELAY && err !=3D -
-> > > > > NFS4ERR_GRACE)
-> > > > >                         break;
-> > > > >                 ssleep(1);
-> > > > > -       } while (err =3D=3D -NFS4ERR_DELAY);
-> > > > > +       } while (err =3D=3D -NFS4ERR_DELAY || err =3D=3D -
-> > > > > NFSERR_GRACE);
-> > > > >         return nfs4_handle_delegation_recall_error(server,
-> > > > > state,
-> > > > > stateid, fl, err);
-> > > > >  }
-> > > > >
-> > > > > --
-> > > > > 2.47.1
-> > > > >
-> > > > >
-> > >
-> > > Should the server be sending NFS4ERR_GRACE in this case, though?
-> > > The
-> > > client already holds a delegation, so it is clear that other
-> > > clients
-> > > cannot reclaim any locks that would conflict.
-> > >
-> > > ..or is the issue that this could happen before the client has a
-> > > chance
-> > > to reclaim the delegation after a reboot?
-> >
-> To answer my own question here: in that case the server would return
-> NFS4ERR_BAD_STATEID, and not NFS4ERR_GRACE.
+> This defines a new flag FILEID_CACHED that the VFS can set in the
+> handle_type field of struct file_handle to request that the FS
+> implementations of fh_to_{dentry,parent}() only complete if they can
+> satisfy the request with cached data.
 >
-> > The scenario was, v4 client had an open file and a lock and upon
-> > server reboot (during grace) sends the reclaim open, to which the
-> > server replies with a delegation. How a v3 client comes in and
-> > requests the same lock. The linux server at this point sends a
-> > delegation recall to v4 client, the client sends its local lock
-> > request and gets ERR_GRACE.
-> >
-> > And the spec explicitly notes as I mention in the commit comment that
-> > the client is supposed to handle ERR_GRACE for non-reclaim locks.
-> > Thus
-> > this patch.
-> >
+> Because not every FS implementation will recognize this new flag, those
+> that do recognize the flag can indicate their support using a new
+> export flag, EXPORT_OP_NONBLOCK.
 >
-> Sure, however the same spec also says (Section 9.6.2.):
+> If FILEID_CACHED is set in a file handle, but the filesystem does not
+> set EXPORT_OP_NONBLOCK, then the VFS will return -EAGAIN without
+> attempting to call into the filesystem code.
 >
->    If the server can reliably determine that granting a non-reclaim
->    request will not conflict with reclamation of locks by other clients,
->    the NFS4ERR_GRACE error does not have to be returned and the
->    non-reclaim client request can be serviced.
+> exportfs_decode_fh_raw() is updated to respect the new flag by returning
+> -EAGAIN when it would need to do an operation that may not be possible
+> with only cached data.
 >
-> The server can definitely reliably determine that is the case here,
-> since it already granted the delegation to the client.
+> Suggested-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
+> ---
+> I didn't apply Amir's Reviewed-by for this patch because I added the
+> Documenation section, which was not reviewed in v2.
 
-I'll take your word for it as I'm not that versed in the server code.
-But it's an optimization and hard to argue that a server must do it
-and thus the client really should handle the case that actually
-happens in practice now?
+Documentation looks good.
 
-> I'm not saying that the client shouldn't also handle NFS4ERR_GRACE, but
-> I am stating that the server shouldn't really be putting us in this
-> situation in the first place.
-> I'm also saying that if we're going to handle NFS4ERR_GRACE, then we
-> also need to handle all the other possible errors under a reboot
-> scenario.
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-I don't see how the "if" and "then" are combined. I think if there are
-other errors we don't handle in reclaim then we should but I don't see
-it's conditional on handling ERR_GRACE error.
+Thanks,
+Amir.
 
+>
+>  Documentation/filesystems/nfs/exporting.rst |  6 ++++++
+>  fs/exportfs/expfs.c                         | 12 ++++++++++++
+>  fs/fhandle.c                                |  2 ++
+>  include/linux/exportfs.h                    |  5 +++++
+>  4 files changed, 25 insertions(+)
+>
+> diff --git a/Documentation/filesystems/nfs/exporting.rst b/Documentation/=
+filesystems/nfs/exporting.rst
+> index de64d2d002a2..70f46eaeb0d4 100644
+> --- a/Documentation/filesystems/nfs/exporting.rst
+> +++ b/Documentation/filesystems/nfs/exporting.rst
+> @@ -238,3 +238,9 @@ following flags are defined:
+>      all of an inode's dirty data on last close. Exports that behave this
+>      way should set EXPORT_OP_FLUSH_ON_CLOSE so that NFSD knows to skip
+>      waiting for writeback when closing such files.
+> +
+> +  EXPORT_OP_NONBLOCK - FS supports fh_to_{dentry,parent}() using cached =
+data
+> +    When performing open_by_handle_at(2) using io_uring, it is useful to
+> +    complete the file open using only cached data when possible, otherwi=
+se
+> +    failing with -EAGAIN.  This flag indicates that the filesystem suppo=
+rts this
+> +    mode of operation.
+> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> index 949ce6ef6c4e..e2cfdd9d6392 100644
+> --- a/fs/exportfs/expfs.c
+> +++ b/fs/exportfs/expfs.c
+> @@ -441,6 +441,7 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct f=
+id *fid, int fh_len,
+>                        void *context)
+>  {
+>         const struct export_operations *nop =3D mnt->mnt_sb->s_export_op;
+> +       bool decode_cached =3D fileid_type & FILEID_CACHED;
+>         struct dentry *result, *alias;
+>         char nbuf[NAME_MAX+1];
+>         int err;
+> @@ -453,6 +454,10 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct =
+fid *fid, int fh_len,
+>          */
+>         if (!exportfs_can_decode_fh(nop))
+>                 return ERR_PTR(-ESTALE);
+> +
+> +       if (decode_cached && !(nop->flags & EXPORT_OP_NONBLOCK))
+> +               return ERR_PTR(-EAGAIN);
+> +
+>         result =3D nop->fh_to_dentry(mnt->mnt_sb, fid, fh_len, fileid_typ=
+e);
+>         if (IS_ERR_OR_NULL(result))
+>                 return result;
+> @@ -481,6 +486,10 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct =
+fid *fid, int fh_len,
+>                  * filesystem root.
+>                  */
+>                 if (result->d_flags & DCACHE_DISCONNECTED) {
+> +                       err =3D -EAGAIN;
+> +                       if (decode_cached)
+> +                               goto err_result;
+> +
+>                         err =3D reconnect_path(mnt, result, nbuf);
+>                         if (err)
+>                                 goto err_result;
+> @@ -526,6 +535,9 @@ exportfs_decode_fh_raw(struct vfsmount *mnt, struct f=
+id *fid, int fh_len,
+>                 err =3D PTR_ERR(target_dir);
+>                 if (IS_ERR(target_dir))
+>                         goto err_result;
+> +               err =3D -EAGAIN;
+> +               if (decode_cached && (target_dir->d_flags & DCACHE_DISCON=
+NECTED))
+> +                       goto err_result;
+>
+>                 /*
+>                  * And as usual we need to make sure the parent directory=
+ is
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 2dc669aeb520..509ff8983f94 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -273,6 +273,8 @@ static int do_handle_to_path(struct file_handle *hand=
+le, struct path *path,
+>         if (IS_ERR_OR_NULL(dentry)) {
+>                 if (dentry =3D=3D ERR_PTR(-ENOMEM))
+>                         return -ENOMEM;
+> +               if (dentry =3D=3D ERR_PTR(-EAGAIN))
+> +                       return -EAGAIN;
+>                 return -ESTALE;
+>         }
+>         path->dentry =3D dentry;
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 30a9791d88e0..8238b6f67956 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -199,6 +199,8 @@ struct handle_to_path_ctx {
+>  #define FILEID_FS_FLAGS_MASK   0xff00
+>  #define FILEID_FS_FLAGS(flags) ((flags) & FILEID_FS_FLAGS_MASK)
+>
+> +#define FILEID_CACHED          0x100 /* Use only cached data when decodi=
+ng handle */
+> +
+>  /* User flags: */
+>  #define FILEID_USER_FLAGS_MASK 0xffff0000
+>  #define FILEID_USER_FLAGS(type) ((type) & FILEID_USER_FLAGS_MASK)
+> @@ -303,6 +305,9 @@ struct export_operations {
+>                                                 */
+>  #define EXPORT_OP_FLUSH_ON_CLOSE       (0x20) /* fs flushes file data on=
+ close */
+>  #define EXPORT_OP_NOLOCKS              (0x40) /* no file locking support=
+ */
+> +#define EXPORT_OP_NONBLOCK             (0x80) /* Filesystem supports non=
+-
+> +                                                 blocking fh_to_dentry()
+> +                                               */
+>         unsigned long   flags;
+>  };
+>
 > --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
+> 2.51.0
 >
-
 
