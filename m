@@ -1,222 +1,146 @@
-Return-Path: <linux-nfs+bounces-14403-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14404-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D923B559B9
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Sep 2025 00:51:13 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04BA0B55ABB
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Sep 2025 02:33:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6D32AA50EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Sep 2025 22:51:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A79B54E18AB
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Sep 2025 00:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A74248F48;
-	Fri, 12 Sep 2025 22:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2094F33997;
+	Sat, 13 Sep 2025 00:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="xdTHJ/FW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EX2o/wIe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5DA1DF736
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 22:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891382BAF7
+	for <linux-nfs@vger.kernel.org>; Sat, 13 Sep 2025 00:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757717468; cv=none; b=sSSy7S3VCf6h63q/tBozFuJn5+zo1gBZb0XX4L3HAKLzbqxmdUXzApLQMhHcMKbNidXulrFmVsVHyb8iZvHipee67YMSe+aOxe/hUQCFKmueF3bOnvkGYT//LK314eDyewAzoRCwVgFXwl+Y8wRbfBpJDvqipyzFx90UlZECo3g=
+	t=1757723619; cv=none; b=YvC8olMSUVgmsHkqaw9GBAhISGtL9cjrQM8ffjfYYvoh9MTvHT6wVUJTutEnReytk3qaHBZIhGpbGfXoRNjpgo3IYcxF+nJEkjD/mHV2b1n70N9JAmAj/JOTWd37aFRFWHNIyTB5su/Ey96FOe0VfMUR/wRYQHZu1JID3bxfZzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757717468; c=relaxed/simple;
-	bh=YOXcGHfg2mf4W3/s6seV2E8GnSQ53UsIc+2kJtFCJdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUDetAgfcxVUc+Ceii5w8PSbChEfMmX0APdQ4GSe+7eMVTi7T3buD1RqzWj9o/PqDHQqoqrpcHzDcsOxVTqz4n9WcZiFA0bxcCfeeI2chzDRR7SIpZnh3rqpOZ+2g9e0zZxP+wKSLlxG1FC3ikbH+bX/iEtd0SPfQKnvgKOCX0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=xdTHJ/FW; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7722c8d2694so2460428b3a.3
-        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 15:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1757717465; x=1758322265; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wA+M8hQ1q9cqIOe9bR5VV7iDvsTvhsx295cm0pL5JYQ=;
-        b=xdTHJ/FWK5bDHUhULoHRw2ysK+jsIpnSQGK/wNSSPCAv8hrQeqEhlh+meor4HHqlki
-         4ZUchM1WaFDtQA1VQ+NrAUK07Sv5rfBtQOA1aJOo8oxRybCq9Xr/EavGYvfRxZmGLIRJ
-         V4CeAcdkR67z5HXhFqFBMTvDCr4vw4eTTQJF7oS0MFsdK7RPgFV6Jo9C+r8lymDl/56s
-         zCnp+6rQqMZFNWhZ6qh/q0G3hF8hLVnjgVuoY5Sg+/nBk40tLpPyWJBir4Aff0LKOwKx
-         N01kXNNOEM3DYMXwft93TQyL5wAsrYY0Iw9YmdEeHYaYfF31LpX6nXcjOhvPiQDAslaY
-         6Asg==
+	s=arc-20240116; t=1757723619; c=relaxed/simple;
+	bh=6ixjMQGo+mF9rxxhZunX9VzR5bs0JXrtOuI72NkTM98=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pK1cJ/5JfVQRg6pbM4YgfdSB2/rtDgBcZUARPx3JUQvcVQWYy2RVHeRURf/ENkckfH3KTjp/Kn/4cqaeGkRSvfSQ20bWw2LfjZcDGsjQdqlujIktjT4uBuUXSSDl89t5gtCoWnIEwP43xAC/FknPm8ez0QDHr2G8B5qQnfcYZ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EX2o/wIe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757723616;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ncBfGy8EE17qYCVshxa8cc5ygoQQollWUOgPghVnN+8=;
+	b=EX2o/wIeA6yu+Srg3Sxs2Y8vBkgsMaktHFj5GL3p7M1mFpdOiBZpNaSq1GHJqpr5Ku8IFz
+	lAykwWGVWFypGy+7l551HJ7+pyYsrdoHcuyxDYZcMY0fB0/XeWe5V8A0sHe6tyX/kROj8d
+	nEPzfWQqiGv/dpeyzGGCpxH9ALjz82c=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-684-9kO9DFLFN6qg--1wgl8Wlg-1; Fri, 12 Sep 2025 20:33:35 -0400
+X-MC-Unique: 9kO9DFLFN6qg--1wgl8Wlg-1
+X-Mimecast-MFC-AGG-ID: 9kO9DFLFN6qg--1wgl8Wlg_1757723614
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4b5ee6cd9a3so53727881cf.2
+        for <linux-nfs@vger.kernel.org>; Fri, 12 Sep 2025 17:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757717465; x=1758322265;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wA+M8hQ1q9cqIOe9bR5VV7iDvsTvhsx295cm0pL5JYQ=;
-        b=GDxLqlQ68z5XAA0g7o2jgOjyZQ6euhnNCouAV6lUO1+is0OU9DQt3kDb4ifBZ/bqru
-         uENtSEzozPYgcGyXXJBqTGFxuW4YSrhWamapJeQw6kxeumGCknH8i1Kp6AVJ/ednDYf1
-         5ycnsCCwracRC58ElS/MWaK9GFz31HWW6TLWbmobmz+ndw7IyvH/f4oh2GR1v2a9FdZa
-         zzoWLf567ZV1Jx2GfBKXtTj2oUfiDmJ1U8eN2ka0ftbWJcIWhzFPZKoRWdnrjs8JbKso
-         TgRnc5n2RiNFm77LM2XIUuspzG1JYjn+Ld+Y85DfakUaum7f5QCgTX8bjigntM9Se876
-         323Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUga3eAdhHCGcw2doPHRFqUObF9FFsApGCqnLv5gkshuWu6JYCJ71tdiWsJAuZXarXicfvojpdpo9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT74GMi3Xj3vdQwBPYWNFWOo1VDv2gNSFBgm2rbJrd83j6cu2m
-	Sr+18vi4nDtnVIlVqhHbBrNTedxWfzFAuDAPD29rHE+M1wfvdgIYgNrIj6U7VeVoQu4=
-X-Gm-Gg: ASbGncu6PDXCrcT7pICohPbVhW38lWBa8eFjck+8lnyjNrBiH0//HHLB8ehm8axmTsf
-	ds3gOoXKaQSkxB/6OSeCnw3KGwe23nquU9SNYfqKf/B+wqoFUzV32wZHZhHsWNs5ril186f7FyZ
-	8pTAswZB3ZFX4+JPBAFdsuGgu7Tum4MwoMdnVaSvW4yf3DxbQlldZI8sE8d8IJwu7etzKjr1TuE
-	hsfFSt4HbpxNygnn8VTZBSLbEcPnLooXbxWRqkdWX5yv3D+6nUNwwi/9SFPiH/OPxeiiml4lPki
-	tVj8IWHEYx5aodACmeViZREeC6ghV2rr1uSmJt1UyEsBBTe4kXiZDtmAPhALUexXRtMk+eXBt4+
-	+5yCmPal8HH6T03K/qAVr9X74u/kLyijC69rKjndDeJ0IxK8ZbPHCkS9qSaTIvjmCmf9lbUkc13
-	/kBy0IdZyg
-X-Google-Smtp-Source: AGHT+IFo1lDPGPa9ujzGqWPBkLJtotrvuieRUCiBB83GkElVpJ3pJIT5oPAa+9yUOLlt5ADMfKXopA==
-X-Received: by 2002:a05:6a21:32aa:b0:243:a251:cf51 with SMTP id adf61e73a8af0-2602c71d334mr6093077637.54.1757717465166;
-        Fri, 12 Sep 2025 15:51:05 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-91-142.pa.nsw.optusnet.com.au. [49.180.91.142])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7760793b6b1sm6487510b3a.20.2025.09.12.15.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 15:51:04 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98.2)
-	(envelope-from <david@fromorbit.com>)
-	id 1uxCbe-000000019Z1-08rs;
-	Sat, 13 Sep 2025 08:51:02 +1000
-Date: Sat, 13 Sep 2025 08:51:02 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Thomas Bertschinger <tahbertschinger@gmail.com>
-Cc: io-uring@vger.kernel.org, axboe@kernel.dk,
-	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, linux-nfs@vger.kernel.org,
-	linux-xfs@vger.kernel.org, cem@kernel.org, chuck.lever@oracle.com,
-	jlayton@kernel.org, amir73il@gmail.com
-Subject: Re: [PATCH v3 10/10] xfs: add support for non-blocking fh_to_dentry()
-Message-ID: <aMSj1kiRMfP8fZD4@dread.disaster.area>
-References: <20250912152855.689917-1-tahbertschinger@gmail.com>
- <20250912152855.689917-11-tahbertschinger@gmail.com>
+        d=1e100.net; s=20230601; t=1757723614; x=1758328414;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ncBfGy8EE17qYCVshxa8cc5ygoQQollWUOgPghVnN+8=;
+        b=o1NAwonLl9aiXHoGxQ4TpLWgJXa/ocLK59FuliMOLFU+uQGW1KJfTh317pIswmTx5x
+         jKJuSXO9pwtjibH30glYqTZpnJNh/pn6XO3+TPryZRwB5aJUDb23fSwmmuoOoPEojnYf
+         47zp3AesipcUum6PJvYQ83/D/oU3sm/MfcYKuqGQM9hJgobTBQHzPs1lOgSDNizBJhNL
+         BB14xytL4gKNidbgIddh8YrgyWqrZ3Jph+VUn/YhtSHmMJzjizhlKQad438n/9xkUqUU
+         rdXFSggERofYSO5NYI4XPo8MvpW4wNMCQko88xUVpNGl1HvFsP4lxo6ayG3eg723o4Ee
+         /jnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+QihbSADME8XWZmFnN69Mf9eOPzBtltoIGYccXM/iNSkU0FH9agoLGNbHXeVrxGSpKTtFoXJPtME=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl5zQUlJ7q4gecfdkQ5Z3FHbmVbPW37akE27awBrgdp4m0ZPCB
+	nrVwpsEQ3tquDcn99/a4Wh7wCvLNGMFuTN0k7J5xmA4Pu140fooEHwHZMuopKd/bHyxm3fS+2fC
+	ysCM/rOV/OufJaToiaH4VvAi8yBzqqV596R/W89FZOBa8JIN+lmKKY8GHqfJ0oQ==
+X-Gm-Gg: ASbGncvR36CiZXv8It+M4eoGF/dtzdnJ44USmgvJ4TmoMZ/zaYmj8aRDOxs3m9QyPfy
+	z1K3lx0FeBsPjC+/8aFy3ik/jHSzH2IwpEeJTNdk+yywYMuAdJRaTEeQQu3wgvvGrBRkdDfs0JK
+	qiUBDNq7yEkpo3I8rbQEa+e+zbvZguT267eLQY8eC8xnNdnhGyE++7RpjD3iZ94g1V9mqYrFDkm
+	aqoC/RHLjUfMFHL9rOhITz8EsS6KOdgXWyjHGSK0NmGUR2iCPNn+nET2GJSwlFy98vBY/6vnHeE
+	8/iuSOnF+hyK2GXWYGZwEniYCIFCqih5MDc3gJD8H5wcapMe2ztWpLpGbf1p+op4elk8lAtaQuJ
+	Hn8whLMBWpw==
+X-Received: by 2002:a05:622a:1a05:b0:4b6:2f52:5342 with SMTP id d75a77b69052e-4b77d1ab3a1mr68076431cf.79.1757723614318;
+        Fri, 12 Sep 2025 17:33:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRq8wbBNQnbSCZtG/tvewoa9dvMcBJkb7MXthP0yviRVZ6G/ctSPGgxUCMnelFEMNwo4BLAw==
+X-Received: by 2002:a05:622a:1a05:b0:4b6:2f52:5342 with SMTP id d75a77b69052e-4b77d1ab3a1mr68076091cf.79.1757723613947;
+        Fri, 12 Sep 2025 17:33:33 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b639b99de1sm31462791cf.8.2025.09.12.17.33.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Sep 2025 17:33:33 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <9d06c0d5-e20c-4069-adca-68a2c4cf6f4f@redhat.com>
+Date: Fri, 12 Sep 2025 20:33:31 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912152855.689917-11-tahbertschinger@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rcu: Remove redundant rcu_read_lock/unlock() in spin_lock
+ critical sections
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Waiman Long <llong@redhat.com>
+Cc: pengdonglin <dolinux.peng@gmail.com>, tj@kernel.org, tony.luck@intel.com,
+ jani.nikula@linux.intel.com, ap420073@gmail.com, jv@jvosburgh.net,
+ freude@linux.ibm.com, bcrl@kvack.org, trondmy@kernel.org, kees@kernel.org,
+ linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ linux-nfs@vger.kernel.org, linux-aio@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ netdev@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ linux-acpi@vger.kernel.org, linux-s390@vger.kernel.org,
+ cgroups@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>,
+ "Paul E . McKenney" <paulmck@kernel.org>
+References: <20250912065050.460718-1-dolinux.peng@gmail.com>
+ <6831b9fe-402f-40a6-84e6-b723dd006b90@redhat.com>
+ <20250912213531.7-YeRBeD@linutronix.de>
+Content-Language: en-US
+In-Reply-To: <20250912213531.7-YeRBeD@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 09:28:55AM -0600, Thomas Bertschinger wrote:
-> This is to support using open_by_handle_at(2) via io_uring. It is useful
-> for io_uring to request that opening a file via handle be completed
-> using only cached data, or fail with -EAGAIN if that is not possible.
-> 
-> The signature of xfs_nfs_get_inode() is extended with a new flags
-> argument that allows callers to specify XFS_IGET_INCORE.
-> 
-> That flag is set when the VFS passes the FILEID_CACHED flag via the
-> fileid_type argument.
-> 
-> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
-> Acked-by: Amir Goldstein <amir73il@gmail.com>
-> ---
->  fs/xfs/xfs_export.c | 34 ++++++++++++++++++++++++++--------
->  fs/xfs/xfs_export.h |  3 ++-
->  fs/xfs/xfs_handle.c |  2 +-
->  3 files changed, 29 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_export.c b/fs/xfs/xfs_export.c
-> index 201489d3de08..6a57ed8fd9b7 100644
-> --- a/fs/xfs/xfs_export.c
-> +++ b/fs/xfs/xfs_export.c
-> @@ -106,7 +106,8 @@ struct inode *
->  xfs_nfs_get_inode(
->  	struct super_block	*sb,
->  	u64			ino,
-> -	u32			generation)
-> +	u32			generation,
-> +	uint			flags)
->  {
->   	xfs_mount_t		*mp = XFS_M(sb);
->  	xfs_inode_t		*ip;
-> @@ -123,7 +124,9 @@ xfs_nfs_get_inode(
->  	 * fine and not an indication of a corrupted filesystem as clients can
->  	 * send invalid file handles and we have to handle it gracefully..
->  	 */
-> -	error = xfs_iget(mp, NULL, ino, XFS_IGET_UNTRUSTED, 0, &ip);
-> +	flags |= XFS_IGET_UNTRUSTED;
-> +
-> +	error = xfs_iget(mp, NULL, ino, flags, 0, &ip);
->  	if (error) {
->  
->  		/*
-> @@ -140,6 +143,10 @@ xfs_nfs_get_inode(
->  		case -EFSCORRUPTED:
->  			error = -ESTALE;
->  			break;
-> +		case -ENODATA:
-> +			if (flags & XFS_IGET_INCORE)
-> +				error = -EAGAIN;
-> +			break;
->  		default:
->  			break;
->  		}
-> @@ -170,10 +177,15 @@ xfs_nfs_get_inode(
->  
->  STATIC struct dentry *
->  xfs_fs_fh_to_dentry(struct super_block *sb, struct fid *fid,
-> -		 int fh_len, int fileid_type)
-> +		 int fh_len, int fileid_type_flags)
->  {
-> +	int			fileid_type = FILEID_TYPE(fileid_type_flags);
->  	struct xfs_fid64	*fid64 = (struct xfs_fid64 *)fid;
->  	struct inode		*inode = NULL;
-> +	uint			flags = 0;
-> +
-> +	if (fileid_type_flags & FILEID_CACHED)
-> +		flags = XFS_IGET_INCORE;
+On 9/12/25 5:35 PM, Sebastian Andrzej Siewior wrote:
+> On 2025-09-12 17:13:09 [-0400], Waiman Long wrote:
+>> On 9/12/25 2:50 AM, pengdonglin wrote:
+>>> From: pengdonglin <pengdonglin@xiaomi.com>
+>>>
+>>> When CONFIG_PREEMPT_RT is disabled, spin_lock*() operations implicitly
+>>> disable preemption, which provides RCU read-side protection. When
+>>> CONFIG_PREEMPT_RT is enabled, spin_lock*() implementations internally
+>>> manage RCU read-side critical sections.
+>> I have some doubt about your claim that disabling preemption provides RCU
+>> read-side protection. It is true for some flavors but probably not all. I do
+>> know that disabling interrupt will provide RCU read-side protection. So for
+>> spin_lock_irq*() calls, that is valid. I am not sure about spin_lock_bh(),
+>> maybe it applies there too. we need some RCU people to confirm.
+> The claim is valid since Paul merged the three flavours we had. Before
+> that preempt_disable() (and disabling irqs) would match
+> rcu_read_lock_sched(). rcu_read_lock() and rcu_read_lock_bh() were
+> different in terms of grace period and clean up.
+> So _now_ we could remove it if it makes things easier.
 
-XFS_IGET_INCORE doesn't guarantee non-blocking lookup behaviour. It
-never has and it never will. It simply means we return inodes that
-are already full instantiated or it fails with either EAGAIN or
-ENODATA.
+Thanks for the clarification.
 
-IOWs, XFS_IGET_INCORE exploits the internal XFS inode cache
-architecture (cache lookups are done under RCU locks, so cannot
-block). The resultant cleanup that needs to be done once a ilookup
-fails before another attempt can be made is done outside RCU, and
-the lookup is most definitely allowed to block in those paths before
-it returns -EAGAIN to the outer lookup loop. It is mostly pure luck
-that we don't have any sleeping locks in various internal "need to
-retry the lookup" paths right now.
+In this case, I think the patch description should mention the commit 
+that unify the 3 RCU flavors to make sure that this patch won't be 
+accidentally backport'ed to an older kernel without the necessary 
+prerequisite commit(s).
 
-Exposing XFS_IGET_INCORE functionality to the outside world does not
-fill me with joy, especially to a userspace ABI.  i.e. this takes a
-rarely used, niche internal filesystem behaviour, redefines how it
-is supposed to behave and what it guarantees to callers without
-actually defining those semantics, and then requires the filesystem
-to support it forever more (because io_uring is kernel/userspace
-ABI).
+Cheers,
+Longman
 
-IOWs, this is a NACK on using XFS_IGET_INCORE for FILEID_CACHED. The
-semantics that are required bu io_uring are non-blocking lookups,
-and that should be defined by a new flag (say XFS_IGET_NONBLOCK)
-with clearly defined and agreed upon semantics.
-
-Indeed, this shows the semantic problem with defining the generic
-filehandle behaviour as FILEID_CACHED. io_ uring does not want
--cached- inode lookups, it wants *non-blocking* inode lookups.
-These are *not* equivalent lookup semantics.
-
-e.g. find_inode_fast() has FILEID_CACHED compatible semantics - it
-will return either a referenced, fully instantiated cached inode or
-null.
-
-However, find_inode_fast() does *not have non-blocking behaviour*.
-If it finds an inode being freed, it will block until that inode has
-been removed from the cache, then it will retry the lookup and
-return NULL because the inode is no longer found in the cache.
-
-IOWs, "only return in-cache inodes" is fundamentally the wrong
-semantic to implement for non-blocking filehandle decoding. The API
-needs to ask for non-blocking lookup semantics, not "in-cache"
-lookup semantics.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
 
