@@ -1,182 +1,114 @@
-Return-Path: <linux-nfs+bounces-14413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EC1AB577A8
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:07:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA7A5B57800
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:24:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4C0A3B32F8
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 11:07:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70CA81A24A9E
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 11:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7B42FE042;
-	Mon, 15 Sep 2025 11:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KflZ5prr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2HNRZWLu";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KflZ5prr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2HNRZWLu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696DC2727F5;
+	Mon, 15 Sep 2025 11:24:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ABD2FD7A3
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 11:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE672309B2
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 11:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757934435; cv=none; b=FGA7VIPX0WfayaW+fYJ4F8jORKs8dzpaHaI2tiTuZpUICuxQKdV1AnDqZlHghNRv3drd9X08zmhDlT4FqjNIwMxqWPrspZwQ6BIPtkIMewzTd1KDCFds6PWdjznnRAMSfX21bOMDzNVBAZZH0020Vt2vHXisqtm1QStvYgh1fDk=
+	t=1757935442; cv=none; b=SmaNHTvVSMGxgzmDD3j7aYhopW7oQNcmSgs7wZqQvWb1z4BcX9NTFmmuO5mAE5W2bShpDzVf2EDYD6FztHHhn0mggrhYmEEB8NN+647tkLoql5QSgxRQG6qracnePOMSXO/RIbx0LDtlnIKCzn63rdTzDNTLTSF0zqREXrSeHvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757934435; c=relaxed/simple;
-	bh=2rTj9y3vFl3DSsUtFge7HoysdKEspuu1+SWZm5XQOXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyivyiDJ6vrbweqBSbPma1a3SCC3uVzLaTaau7426P2/2wICTAjVAgPt5FNBvfF81HRF112AgJkeHksAw0z9j1FGDZgua+I6kgTDdeq52SD74GPcH0/0Ojb2JWuu3WTL9w2wHeN7vyGJODjXDOVZmUhTHRtWib8K1n92OKts9sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KflZ5prr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2HNRZWLu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KflZ5prr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2HNRZWLu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2539C1F8B0;
-	Mon, 15 Sep 2025 11:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757934431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
-	b=KflZ5prrtYNzVmL8k1x+IKinkh2EqpPUsKcKlQe2o8DkEj6UfckRnBAk7AQddMPpFg1KZz
-	Nd+4bkps7q0UZs9OuwrdlssIryLTv8Y3wgxHvXfbIu8Lj1zwXIFvFdBrl932x6iguGkm1D
-	s58C3CgZrMGFdfwdGBXfunliqX/vuh8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757934431;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
-	b=2HNRZWLurYY2wsfcOlxWXzeiYIF0ycKfGboF0uoy5qGjuFJKKtuPZ9TwlvrzDkd7wEl8mJ
-	IXL9absr8FMy3lCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KflZ5prr;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2HNRZWLu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757934431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
-	b=KflZ5prrtYNzVmL8k1x+IKinkh2EqpPUsKcKlQe2o8DkEj6UfckRnBAk7AQddMPpFg1KZz
-	Nd+4bkps7q0UZs9OuwrdlssIryLTv8Y3wgxHvXfbIu8Lj1zwXIFvFdBrl932x6iguGkm1D
-	s58C3CgZrMGFdfwdGBXfunliqX/vuh8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757934431;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
-	b=2HNRZWLurYY2wsfcOlxWXzeiYIF0ycKfGboF0uoy5qGjuFJKKtuPZ9TwlvrzDkd7wEl8mJ
-	IXL9absr8FMy3lCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDC961372E;
-	Mon, 15 Sep 2025 11:07:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rqYHOl7zx2jFHQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 15 Sep 2025 11:07:10 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 9A844A09B1; Mon, 15 Sep 2025 13:07:06 +0200 (CEST)
-Date: Mon, 15 Sep 2025 13:07:06 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2 11/33] net: use ns_common_init()
-Message-ID: <ucldl3baqsuuiwzmubrkloblxfjvcecfhjd2nyvl6boccc3qlh@bumwo2wjyvgr>
-References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
- <20250912-work-namespace-v2-11-1a247645cef5@kernel.org>
+	s=arc-20240116; t=1757935442; c=relaxed/simple;
+	bh=BcINFPRy603dJTm2E3pz5Gn4YM9OqnpLRT8nDKRJvbU=;
+	h=From:To:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=knSI3RphsKrbICvoTIvIyomnk5s+BOhBjpa5ZfaqG33ndNTXIV+P/OPQ+V0qhtUXCvUp0YD8JBQiN0Clqw7m5zzRXNjspocYoOkSvs4m0OOf9IfrtZFYpp0e2fkrc45AfUwTogjfocp9DUDK3iZb8eumjjnk8swmpeKqXw6eqdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=pass smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinsec.com.cn
+EX-QQ-RecipientCnt: 2
+X-QQ-GoodBg: 2
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqT0lIevWKG+BVnbhYYmM7POEhOP+T0DEcs=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: f/E7t24yPFWFi23BRFFzZXVhY9pdZ1ROFvbqHx1/gQY=
+X-QQ-STYLE: 
+X-QQ-mid: lv3sz3a-2t1757935417t9b3709db
+From: "=?utf-8?B?WmhvdSBKaWZlbmc=?=" <zhoujifeng@kylinsec.com.cn>
+To: "=?utf-8?B?VHJvbmQgTXlrbGVidXN0?=" <trondmy@kernel.org>, "=?utf-8?B?bGludXgtbmZz?=" <linux-nfs@vger.kernel.org>
+Subject: Re: Where Is Dirty Data Flushed During NFSv4 Delegation Recall?
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912-work-namespace-v2-11-1a247645cef5@kernel.org>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 2539C1F8B0
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TAGGED_RCPT(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL9r1cnt7e4118fjryeg1c95sa)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org,toxicpanda.com,kernel.org,yhndnzj.com,in.waw.pl,0pointer.de,cyphar.com,zeniv.linux.org.uk,kernel.dk,cmpxchg.org,suse.com,google.com,redhat.com,oracle.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.com:email]
-X-Spam-Score: -2.51
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Mon, 15 Sep 2025 19:23:37 +0800
+X-Priority: 3
+Message-ID: <tencent_5E75DDE36B411AAC6D6C761D@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <tencent_6A84D2E177043C91217A1CF6@qq.com>
+	<3729660588543ff1d8c0b3c014948559b158cdad.camel@kernel.org>
+In-Reply-To: <3729660588543ff1d8c0b3c014948559b158cdad.camel@kernel.org>
+X-QQ-ReplyHash: 1121162023
+X-BIZMAIL-ID: 6278790173318563069
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Mon, 15 Sep 2025 19:23:38 +0800 (CST)
+Feedback-ID: lv:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: M9MQJ5rX40WKfUSZ44A/r6r4ZTQDbg8OuT+nQeOuwVGpjcFLnS7e4yRz
+	NFJPmGnI5H5JNFfvIEzFtAirwao+fRSThY0+p+fScjub/NgLOXFRYpENNSpxPTMuwdSjZrb
+	/5UibiYPjGJ0mI8Mu/sG6Y5ZbX6TdLymNoxRLbUjuJf8Q2awSIQP6pnxRjzKrMPfNxzv6Oi
+	cMYq9DN1lPlnscj9ALurqeRFXF+JpS6mdKuqd4bbWIosW3ExaVdLYEdRRA4H3wnePnIQbzB
+	WKIyYEjnpVFYELFaywrwV3z5IY5CRmngz1DYX5wWwVlqzprFVZBm4v/uuqu9zc4ZRCd8BMK
+	goIH5A3xYbXsAuNxbdZIox6NXt9z4NpVkaq7wjAGWn3V+m0L0uLdvewGqJXcsLchvykJWrS
+	w83bRvGxrSwQYB1Ly6bgiY+s/QzZq2+8VUZQHeaZhd4WwnLwe2AGBG6GSFSWu/Ya6Gb1v+G
+	6xMeBedLhO0/3A783TY03F2f0aS6taby8Mqhyc8iQROUrdFLBCBjdfGr9saejbqseoGLnWQ
+	fjw8YyrLhQPU+F2gfTTB+vlwsYuWjcnGxEYepcvO18ctadusd0FgY5FJ6dUvADseqyeUo5e
+	CQgJ4j3EJyYxQIMGEOhJCtwL6nHuaqMwnKOXa3wqO9N03bN3aI9EhWaBfLomY1DGOIgnHIQ
+	mt9bXVWtYxJKPdAMJL95F6xMdBsQMPytwhbf2ANMlCQIoQgI5lKu7Y0ShNqfHbdfzMkyGNO
+	T3qMbvdF09UiV4MGwg6KWdxlVYEb5/N0LezJEYjwFxeLoQ6OzE/Qq7ILAdlkNhkQ7eYiAI0
+	wF0drMZo+nbkqnVKEkew+jqopjPGTgE5jU1E/txcBYCTXIqKniXE30/revw6An131UUJ1dY
+	4okJv0nCls80pzNzvwSQYBCYar77oY2tbsUECqv6BC+IcWDjTqm2bI53Bkj3e38uOR7iQ3L
+	R3gfYwH/qWmCJZX+gZQdt54+/MkdDDKhyPP0iCiSGm6vKtqbrO3eqnm8EgUmniuvnFXz93p
+	+mLU8gFW5zEEEIke4BK8DAWGHaQ85s5iy/lvQ/zQ==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Fri 12-09-25 13:52:34, Christian Brauner wrote:
-> Don't cargo-cult the same thing over and over.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+PiA+IE9uIFRodSwgMjAyNS0wOS0xMSBhdCAxMDozMCArMDgwMCwgWmhvdSBKaWZlbmcgd3Jv
+dGU6DQo+ID4gSGVsbG8gZXZlcnlvbmUsIEkgaGF2ZSBhIHF1ZXN0aW9uIHRoYXQgaGFzIGJl
+ZW4gYm90aGVyaW5nIG1lIGZvciBhDQo+ID4gbG9uZw0KPiA+ICB0aW1lLiBJIHdvdWxkIGxp
+a2UgdG8gYXNrIGEgZmFtaWxpYXIgZnJpZW5kIHRvIGhlbHAgZXhwbGFpbiBpdC4gSW4NCj4g
+PiB0aGUgTkZTdjQNCj4gPiAgcHJvdG9jb2wsIGl0IGlzIGNsZWFybHkgZGVmaW5lZCB0aGF0
+IGR1cmluZyB0aGUgZGVsZWdhdGlvbiBSRUNBTEwNCj4gPiBwcm9jZXNzaW5nLCB0aGUgY2xp
+ZW50IG5lZWRzIHRvIHdyaXRlIHRoZSBtb2RpZmllZCBjYWNoZSB0byB0aGUNCj4gPiBzZXJ2
+ZXINCj4gPiBzaWRlLiBIb3dldmVyLCB0aHJvdWdob3V0IHRoZSBwcm9jZXNzLCBJIGhhdmUg
+bm90IGZvdW5kIHRoZSBjb2RlIGZvcg0KPiA+IGZsdXNoaW5nIGRpcnR5IGRhdGEgaW4gdGhl
+IGtlcm5lbCBORlMgY2xpZW50LiBJIGhhdmUgcmVwZWF0ZWRseQ0KPiA+IHJldmlld2VkDQo+
+ID4gdGhlIGNvZGUgbG9naWMgb2YgbmZzNF9jYWxsYmFja19yZWNhbGwgYW5kIG5mczRfc3Rh
+dGVfbWFuYWdlciwgYnV0DQo+ID4gc3RpbGwNCj4gPiBjYW5ub3QgdW5kZXJzdGFuZCB3aGVy
+ZSB0aGUgZGlydHkgZGF0YSBpcyBmbHVzaGVkLg0KPiA+DQo+ID4gTXkgcXVlc3Rpb24gaXM6
+IFdoZW4gdGhlIGNsaWVudCBpcyBoYW5kbGluZyB0aGUgUkVDQUxMIG9wZXJhdGlvbiwNCj4g
+PiB3aGVyZQ0KPiA+IGRvZXMgdGhlIHByb2Nlc3Mgb2YgZmx1c2hpbmcgdGhlIGRpcnR5IGRh
+dGEgdGFrZSBwbGFjZT8NCj4gPg0KPiANCj4gVGhlIHF1ZXN0aW9uIG9mIHdoZW4gdG8gZmx1
+c2ggZGlydHkgZGF0YSBpc24ndCBkZXRlcm1pbmVkIGJ5IHRoZSBORlN2NA0KPiBSRUNBTEwg
+b3BlcmF0aW9uIHNwZWMuIEl0IGlzIGRlY2lkZWQgYnkgdGhlIGNsaWVudCBjYWNoaW5nIG1v
+ZGVsIGFuZCBieQ0KPiBQT1NJWC4NCj4gUGxlYXNlIHJlYWQgdGhlICJuZnMoNSkiIG1hbnBh
+Z2UgYW5kIHRoZSBzZWN0aW9uIG9uIGNsb3NlLXRvLW9wZW4gY2FjaGUNCj4gY29uc2lzdGVu
+Y3kuDQo+IA0KLT4gLQ0KPiBUcm9uZCBNeWtsZWJ1c3QNCj4gTGludXggTkZTIGNsaWVudCBt
+YWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KPiB0cm9uZG15QGtlcm5lbC5vcmcsIHRyb25kLm15
+a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KSGkgVHJvbmQsDQoNClRoZSBuZnMoNSkgbWFu
+dWFsIHBhZ2UgYW5kIHRoZSBjbG9zZS10by1vcGVuIGNvbnNpc3RlbmN5IHlvdSBtZW50aW9u
+ZWQNCmhhdmUgYmVlbiBvZiBncmVhdCBoZWxwIHRvIG15IHVuZGVyc3RhbmRpbmcuIFRoYW5r
+IHlvdSB2ZXJ5IG11Y2guDQoNCkJlc3QgcmVnYXJkcw0KWmhvdSBKaWZlbmc=
 
-...
-
-> @@ -559,7 +572,9 @@ struct net *copy_net_ns(unsigned long flags,
->  		goto dec_ucounts;
->  	}
->  
-> -	preinit_net(net, user_ns);
-> +	rv = preinit_net(net, user_ns);
-> +	if (rv < 0)
-> +		goto dec_ucounts;
-
-Umm, this seems to be leaking 'net' on error exit.
-
->  	net->ucounts = ucounts;
->  	get_user_ns(user_ns);
->  
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
 
