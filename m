@@ -1,200 +1,125 @@
-Return-Path: <linux-nfs+bounces-14439-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14440-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA63DB57E9C
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 16:16:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C1F5B57F48
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 16:41:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CE7820675F
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 14:15:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E906B177029
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 14:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E095531D734;
-	Mon, 15 Sep 2025 14:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AFDC329F36;
+	Mon, 15 Sep 2025 14:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ou3VryN3";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2mzOUJQM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZpPwxUC3";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vLnaHrLV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kJqEilup";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u+YNkMxE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DCE31C572
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 14:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CC627461;
+	Mon, 15 Sep 2025 14:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757945694; cv=none; b=S8cJ2t3T64mDQJtxdnkP+AS/Jzihetkgu88xU/QGuvBandcuk9EbzZpG3wiLO0zZQMN37Hl5SxqNpRos9xzj2iysGVYdR2X7ocCS8m0ghbRB8kHOKYEWDB3Wb/A8SNAM3TCqb+hhjtKGFD25BRj+3jA9l3m5td0K6vBdiWASrGc=
+	t=1757947257; cv=none; b=o893vUd9mG6COsQA2Z7Fd2JfzT28j/C+IMllAxh72F+t0ozY+f3mQ7VgjDIMBNKiH+DSUGBM2sr7IRX9dkdZQAGNKPCCRa91e4Xxb4gcY0TNTjsgzEr2sy4yNlAg2DBO4rrXJZ93mumpMXoixPU3StwnRtP9WyDvBJ1tDdXZZKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757945694; c=relaxed/simple;
-	bh=kDdiKvRzZs74joM2c+r6TWVCJFJiOkwsvb50nM/IAIM=;
+	s=arc-20240116; t=1757947257; c=relaxed/simple;
+	bh=x67mCxmqkj9+e9pzvDN8Tta0qPHWFpvcCgabamG1AWc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMrig/+/BYQCaMAZ0PUydVeGfF+/UnBsLiR8VfpANR05UFmqKKLrO3/HtJoDXYa1Qz/j/DMiRipIKLUbAOxvOOuYPUj6lr8/+xhWW2T9/RN3F5g9KfP6HCsfXmyrd52pAFYT1KPYiHg5C5gRz6TZYnrVrcN2T9QtW1NygZode90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ou3VryN3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2mzOUJQM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZpPwxUC3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vLnaHrLV; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C2AF5336A2;
-	Mon, 15 Sep 2025 14:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757945691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M1YuLDuFYnYMhKhOW8vvPXidTn8COjP8bDvsfMC+QEtemcSZ0Cpr0juo862/4ivYAUuliSMHrUp/eOXoV05rwK+8lWnM6CF5/DpSaNl+B3B/h2h5wjc5z8Edo02Ty9tOkUaRDpKyteObeYuWE8zUZmOT6ZvE0N0Qrbg07b/AxAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kJqEilup; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u+YNkMxE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Mon, 15 Sep 2025 16:40:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1757947254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GVDIBoXI5PkmR2yBJg4qG4wQKyhaIJX7uV/hEXmMXs8=;
-	b=ou3VryN3TJFt4FY4IY62tzlkNxzTk2nIt77lDQi6F8qdKmm8KfDz2oMzo5KiJNvbZu0BCP
-	xorF3RuI3QF6U2drqTeovq5cluMcOsI7T3au2RWRaK6202Lg/jibiwudC6KVnIvLe78UEA
-	sXJMER7C4B6Snsz5tDTBr+ZM9XfSEL0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757945691;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=lni+I3buozORHBU99Fb6S2L5ArlJnPvanU1k2nG+bqs=;
+	b=kJqEilupnjshBEyflsSxaQ1cYXo1HmvwEGZxE5Hry+3tMhFnVh3frgVMySXIVU3YA7sr/P
+	ZmzsU0E7Km8Wp9l5bZDkkyDgnPFZnbLtBPRK/3LI31uDYiDIGpPjLv9wsR2eeUTNRRAX//
+	dmNhtGH6hrZaFy0o25aqc/JiLREHt/y5ZcTdXzlyLdSjRzpWF1ajC/tWXeGrJKOz1r4JdJ
+	O+HZHd0cB6caRbdRPYpFuFCDeIfE27yuCYcWeSk2ELWrhiOAF7HeL/2G+EZODCQqXklj6A
+	WbRdcD38CnfevP/TM/aX4fpES3ouPOth51eerceMkkYhcApyFTE2c/6EC96NyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1757947254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GVDIBoXI5PkmR2yBJg4qG4wQKyhaIJX7uV/hEXmMXs8=;
-	b=2mzOUJQM/311vHeI5LDaUx9gyVESMhWzGcoYTZ+ZitJz7aR2ydDyGQWIVXx8wMOKq4cLrj
-	qFz6iELOKzW25VBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757945690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GVDIBoXI5PkmR2yBJg4qG4wQKyhaIJX7uV/hEXmMXs8=;
-	b=ZpPwxUC3V8kU2mcYC0gzYq7KKGCV1/PHMiIpnC9eTP0qmLFdu9+nA2wft1zHj2tdpEnH12
-	98/FlZ/gi4pwS/3BwFGalgSWPaz3DMnWGUyjZU0Z9kx9/Wj06w704rgpcKG7XiVb/1XrtC
-	HssWZ0C4yLW1PvPT7CrVKgBus9gf/8o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757945690;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GVDIBoXI5PkmR2yBJg4qG4wQKyhaIJX7uV/hEXmMXs8=;
-	b=vLnaHrLVPwh55KlAopRuS/32SIQqCJl+i+CPJCbsLR4gkvDVX3q13yii0LLUNbF6FADxnX
-	jcTo6AJvypkuDbCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0A121368D;
-	Mon, 15 Sep 2025 14:14:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gOGwKlofyGiBXAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 15 Sep 2025 14:14:50 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5B07CA0A06; Mon, 15 Sep 2025 16:14:50 +0200 (CEST)
-Date: Mon, 15 Sep 2025 16:14:50 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2 24/33] user: support ns lookup
-Message-ID: <aqu3yraxpt7h7rxjzzwvelcwvn7ehzufydhye57w6c6n2spddp@5pdsdhgfbxy5>
-References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
- <20250912-work-namespace-v2-24-1a247645cef5@kernel.org>
- <bh6wllwygal6hfdjbv3amgok2yxzjgmemyvzriqf2wos6b3plp@tvhvgz47mll3>
- <20250915-faken-rufen-db3c29188501@brauner>
+	bh=lni+I3buozORHBU99Fb6S2L5ArlJnPvanU1k2nG+bqs=;
+	b=u+YNkMxEXUeLN4I2gvc5y9anOucA/bETagP+D7VWVq55ed12wCZJ5YaxLNDq/vrnZRM5c4
+	1K1FhWVW76s3WjAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: pengdonglin <dolinux.peng@gmail.com>
+Cc: tj@kernel.org, tony.luck@intel.com, jani.nikula@linux.intel.com,
+	ap420073@gmail.com, jv@jvosburgh.net, freude@linux.ibm.com,
+	bcrl@kvack.org, trondmy@kernel.org, longman@redhat.com,
+	kees@kernel.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-nfs@vger.kernel.org,
+	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+	linux-s390@vger.kernel.org, cgroups@vger.kernel.org,
+	Hillf Danton <hdanton@sina.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: Re: [PATCH v2] rcu: Remove redundant rcu_read_lock/unlock() in
+ spin_lock critical sections
+Message-ID: <20250915144052.VHYlgilw@linutronix.de>
+References: <20250915134729.1801557-1-dolinux.peng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250915-faken-rufen-db3c29188501@brauner>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	R_RATELIMIT(0.00)[to_ip_from(RLbyy5b47ky7xssyr143sji8pp)];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org,toxicpanda.com,kernel.org,yhndnzj.com,in.waw.pl,0pointer.de,cyphar.com,zeniv.linux.org.uk,kernel.dk,cmpxchg.org,suse.com,google.com,redhat.com,oracle.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -2.30
+In-Reply-To: <20250915134729.1801557-1-dolinux.peng@gmail.com>
 
-On Mon 15-09-25 15:54:26, Christian Brauner wrote:
-> On Mon, Sep 15, 2025 at 02:11:55PM +0200, Jan Kara wrote:
-> > On Fri 12-09-25 13:52:47, Christian Brauner wrote:
-> > > Support the generic ns lookup infrastructure to support file handles for
-> > > namespaces.
-> > > 
-> > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > ...
-> > > @@ -200,6 +202,7 @@ static void free_user_ns(struct work_struct *work)
-> > >  	do {
-> > >  		struct ucounts *ucounts = ns->ucounts;
-> > >  		parent = ns->parent;
-> > > +		ns_tree_remove(ns);
-> > >  		if (ns->gid_map.nr_extents > UID_GID_MAP_MAX_BASE_EXTENTS) {
-> > >  			kfree(ns->gid_map.forward);
-> > >  			kfree(ns->gid_map.reverse);
-> > > @@ -218,7 +221,8 @@ static void free_user_ns(struct work_struct *work)
-> > >  		retire_userns_sysctls(ns);
-> > >  		key_free_user_ns(ns);
-> > >  		ns_free_inum(&ns->ns);
-> > > -		kmem_cache_free(user_ns_cachep, ns);
-> > > +		/* Concurrent nstree traversal depends on a grace period. */
-> > > +		kfree_rcu(ns, ns.ns_rcu);
-> > 
-> > So this is correct for now but it's a bit of a landmine. A lot of stuff
-> > that ns references is kfreed before the RCU expires. Thus if you lookup ns
-> > using id, then even if you're under RCU protection you have to be very
-> > careful about what you can and cannot dereference. IMHO this deserves a
-> > careful documentation at least or, preferably, split free_user_ns() into
-> > pre and post-RCU period parts...
+On 2025-09-15 21:47:29 [+0800], pengdonglin wrote:
+> From: pengdonglin <pengdonglin@xiaomi.com>
 > 
-> Right, the thing is that you cannot touch anything in any namespace
-> structure without having an actual reference to it. IOW, the only thing
-> that's valid under rcu is to access the reference count. That's the only
-> guarantee that the _generic_ infrastructure gives _and_ expects. IOW, if
-> one can get a live reference (inc_not_zero) that thing better be valid.
+> Per Documentation/RCU/rcu_dereference.rst [1], since Linux 4.20's RCU
+> consolidation [2][3], RCU read-side critical sections include:
+>   - Explicit rcu_read_lock()
+>   - BH/interrupt/preemption-disabling regions
+>   - Spinlock critical sections (including CONFIG_PREEMPT_RT kernels [4])
 > 
-> Individual namespace implementers may ofc provide additional guarantees
-> but they are not transparent to the generic infrastructure.
+> Thus, explicit rcu_read_lock()/unlock() calls within spin_lock*() regions are redundant.
+> This patch removes them, simplifying locking semantics while preserving RCU protection.
 > 
-> Otherwise I fully agree.
+> [1] https://elixir.bootlin.com/linux/v6.17-rc5/source/Documentation/RCU/rcu_dereference.rst#L407
+> [2] https://lore.kernel.org/lkml/20180829222021.GA29944@linux.vnet.ibm.com/
+> [3] https://lwn.net/Articles/777036/
+> [4] https://lore.kernel.org/lkml/6435833a-bdcb-4114-b29d-28b7f436d47d@paulmck-laptop/
 
-I guess fair enough for this patch set so feel free to add:
+What about something like this:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+  Since commit a8bb74acd8efe ("rcu: Consolidate RCU-sched update-side
+  function definitions") there is no difference between rcu_read_lock(),
+  rcu_read_lock_bh() and rcu_read_lock_sched() in terms of RCU read
+  section and the relevant grace period. That means that spin_lock(),
+  which implies rcu_read_lock_sched(), also implies rcu_read_lock().
 
-but longer term we might need to revisit this.
+  There is no need no explicitly start a RCU read section if one has
+  already been started implicitly by spin_lock().
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+  Simplify the code and remove the inner rcu_read_lock() invocation.
+
+
+The description above should make it clear what:
+- the intention is
+- the proposed solution to it and why it is correct.
+
+You can't send a patch like this. You need to split it at the very least
+by subsystem. The networking bits need to follow to follow for instance
+   Documentation/process/maintainer-netdev.rst
+
+and so on.
+
+Sebastian
 
