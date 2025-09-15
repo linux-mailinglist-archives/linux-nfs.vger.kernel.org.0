@@ -1,187 +1,216 @@
-Return-Path: <linux-nfs+bounces-14437-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14438-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B4ABB57E33
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 15:59:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6B54B57E95
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 16:15:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E30033B1ABB
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:55:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5E44206667
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 14:14:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE6C3191DC;
-	Mon, 15 Sep 2025 13:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B226B31D364;
+	Mon, 15 Sep 2025 14:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtxXaOW3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AFKmwGy9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A8313276;
-	Mon, 15 Sep 2025 13:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF31331CA6B
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 14:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757944514; cv=none; b=qX4nQjBIXCLTrgie6eFbOo4HhHp1CRWtFNaZbh2CrRBqyt+bEU63i+rEJ9V6rwJvHrTVYPDNkFhQ+2fDdRLAlBsUANMfIqpGpmf3rG7Huxyoe8ZXwfOBwzGy/mgWKvJHU7jjK3w5doa/+298TyB2YX/8k8DA9g7QppvDh0+RE0o=
+	t=1757945616; cv=none; b=RkZBlaWbUelGBThqzwY+V23K5XQWsWZlaeaH0/RW+tvhmgNA3h1eUqX1XskGMR32YprRdhS2T1PbdBCT/f9AtQZIa+8JMKXPHmZflA3AH64ToD7mrmV2bMz/fiADLklANwI6F37QCH9Usb6jG2+vzktrsOwuC6/mfN56np41Kj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757944514; c=relaxed/simple;
-	bh=SqkBMfDzVgXsgPROtjP+BoCmQJ8xB5+m7QOWTr9D1IQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l87rp3QpNUf+7IyHImgWKlYyxLCN6kcF9YWEkcLeaWIRYmXQDaOsP+XNHWsalrRSNvR88JLfzcNl/g2lD02QoBzHdyNa6DFP9Mlv+ULLTJuiHBdln/u4ehKeucjDxE48x7CcEEkcRSzGXwXB94JGuI37xGQUgLjcZ4CAk2cgvn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtxXaOW3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA9CC4CEF7;
-	Mon, 15 Sep 2025 13:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757944513;
-	bh=SqkBMfDzVgXsgPROtjP+BoCmQJ8xB5+m7QOWTr9D1IQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dtxXaOW30CbEBJCeNCrF087li2ViBB91z3Iv3OlXdKAAXsPKWRRzBTV1C85Ye2DuE
-	 Lngh7cH6caGrMdf/5g/YzGIqc+/+nl/jWZpBvnpdaJAcqXQ62f7yfNdFCBPCknwLcf
-	 OgnQzOrteFXDU9ikNGVgU9mfbkdyw2iF5uhRSFGYcRZKP/0RqdQhBt2w5aaW5E/geV
-	 jgfQBKkEBBGW23B7cGTwGAAb0Qj5f63sQSqALt/AhYFHWPhBhNCLnPqJEgLkr/AK3e
-	 kprRZBMe8dGrF5rVt4+Lw55KXT4ooQhxTMwkuRwARu2/fpq5KdTIJ0mPMM/veMhmHl
-	 ViCGIwt59Z5/Q==
-Date: Mon, 15 Sep 2025 15:55:05 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2 28/33] nsfs: support file handles
-Message-ID: <20250915-laufpass-anraten-b250875c462a@brauner>
-References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
- <20250912-work-namespace-v2-28-1a247645cef5@kernel.org>
- <4gsrbaiqrt3ymcze7rm6ec2oy25ernllidg2i3rkrsqh6q5deu@7bozrym7omj4>
+	s=arc-20240116; t=1757945616; c=relaxed/simple;
+	bh=mkgMTmzYeY0rzm54yxUzf2TFAaH/EdGznSYD6F61wO0=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SzXCaW+AcmrmCD/b4iNIu/e6arfQzi9A9ey7fELTZqfRiACg8BuQBgq5q0ZQn7WEAIoDwAMaRgtgm5o1mjuPj9kMSR7F1a+BFHBJiEmy2IBF581P8bzgpPas5FZ3b99gNVh/+OPNrbVjQnyafa+2A4x7rAuy2V9Dal8EDPkbefE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AFKmwGy9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757945614;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wVdn0DPWHUbkLEPLdY+zWqs5jFzexOcoSsUmWxZ7iDA=;
+	b=AFKmwGy9MGqyvWVfdyQP97nNq5SaVCbNidSBvlUl2HgTsqC1URpUDgqbGajo+dkAZ7onm8
+	iXj/AbG9XEsOvvEKZGUfEQWinRZ2PT40jPxXoQXcyKOjst7wWRKpYsCMUNz8L2eTxL9i+0
+	lzduTMtPMNN1JwuOBlacm60TlaLSVVY=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-471-53lBGaWWMH-S1EkjnxLRzQ-1; Mon, 15 Sep 2025 10:13:32 -0400
+X-MC-Unique: 53lBGaWWMH-S1EkjnxLRzQ-1
+X-Mimecast-MFC-AGG-ID: 53lBGaWWMH-S1EkjnxLRzQ_1757945610
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-77a517cbfa2so30258376d6.0
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 07:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757945610; x=1758550410;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wVdn0DPWHUbkLEPLdY+zWqs5jFzexOcoSsUmWxZ7iDA=;
+        b=jeqE3jupbnLT9HLTpk5hcezXLc6SsbKzF5PsBG9b0TuCgEAxIKGX2OovQxhEji+h36
+         7GJaQf8eSnBO82wdkVWOaNbPj+q/VnilZM3yJT1OHBVkdc4Ss6FLufUcyVWFLyeeCWef
+         YRbDYTffo+xDS+NYWT7gOavkDcxwsY5QlTJDZXuKcw8/1CzksiReA1ZojXw9Lu+YM6LV
+         QXEH7w5rDhOTm2e4ULljv+4g6q9Noye86aXJApNQ4Gbmbpj723OL366nhOgId85ocSvL
+         sqN1CtvivgSQZvpeJJNcOeqcJ+zwfC7qhizAHKVyb5S4s/3FZkES2DUGZKwzJAC7IaF0
+         TPOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVQ3NFbJuRCgPROKbHnHsJNYBZecFWlGikLYcvtk6GaXUUoIFjnZgDbJ7AHGK24ZoSf+DNAXg8knM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxF+9AuUwUw1DZC1omnNB1ss5d/aeljABd8gT/SPCR0Jp5cGUn
+	fzp4elvnsBg7DtmKW3gYhg3/nOCkEw5gVwDavucxURAxOjFXXA5IXmQgtGkZEva56nQbjBJw/G2
+	iZF7j5F1QlTKI08nT2GBe0sVZ0WYPjG2qEcK7iuEaR/Pf3SZjNe+SkgIqdvQhGw==
+X-Gm-Gg: ASbGncuQMODl9P8lA8FtWydzY7IgcQW9bgoVkoxcmk47Z0t55fvOYDp8IRAH1SZjeGq
+	G/GHX3D80AvQ3oObrg6kLx9fcxlHY9ec3aPXmXUFS6T4EcdYmnnU1rIyx1G3kTjM3m7p0ghj0jW
+	J8Tr7iKJlcEzj4xARrgJvZWGjrBSf3SmGU9kzl5PqDJDtu9rdm072fbKBNLCWsgfw7pPYAAS5Rf
+	UahfzQmHwKVTgloc5uu4CZIoi486jQI1f8dI8j5BIdm6PGYBHfQNmTKDJC+k/ZDBR2Iq/cAaOEN
+	MhwS7fhRys3TxMurxJoXWgnMEvSXVcTTnXs7BYzd415fd77usvSdeVobkzyFxiXFn2ymjj+16Cp
+	VSFtR4vr1IA==
+X-Received: by 2002:a05:6214:1c48:b0:783:aeed:f585 with SMTP id 6a1803df08f44-783aeedf838mr35484336d6.14.1757945610086;
+        Mon, 15 Sep 2025 07:13:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHTppRgm9Zr+i6yKV7XaF5zz8E26tx9E9U11cHDaiNozJpKImHlUxPb0H8lw3W3qvOa9oFD+g==
+X-Received: by 2002:a05:6214:1c48:b0:783:aeed:f585 with SMTP id 6a1803df08f44-783aeedf838mr35483486d6.14.1757945609106;
+        Mon, 15 Sep 2025 07:13:29 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-78903aec245sm7995186d6.23.2025.09.15.07.13.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Sep 2025 07:13:27 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <69af79b6-a4f2-4007-aef4-fcaeeadd3f99@redhat.com>
+Date: Mon, 15 Sep 2025 10:13:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4gsrbaiqrt3ymcze7rm6ec2oy25ernllidg2i3rkrsqh6q5deu@7bozrym7omj4>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] rcu: Remove redundant rcu_read_lock/unlock() in
+ spin_lock critical sections
+To: pengdonglin <dolinux.peng@gmail.com>, tj@kernel.org, tony.luck@intel.com,
+ jani.nikula@linux.intel.com, ap420073@gmail.com, jv@jvosburgh.net,
+ freude@linux.ibm.com, bcrl@kvack.org, trondmy@kernel.org, kees@kernel.org
+Cc: bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-nfs@vger.kernel.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+ linux-s390@vger.kernel.org, cgroups@vger.kernel.org,
+ Hillf Danton <hdanton@sina.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ pengdonglin <pengdonglin@xiaomi.com>
+References: <20250915134729.1801557-1-dolinux.peng@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250915134729.1801557-1-dolinux.peng@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 15, 2025 at 03:25:20PM +0200, Jan Kara wrote:
-> On Fri 12-09-25 13:52:51, Christian Brauner wrote:
-> > A while ago we added support for file handles to pidfs so pidfds can be
-> > encoded and decoded as file handles. Userspace has adopted this quickly
-> > and it's proven very useful. Implement file handles for namespaces as
-> > well.
-> > 
-> > A process is not always able to open /proc/self/ns/. That requires
-> > procfs to be mounted and for /proc/self/ or /proc/self/ns/ to not be
-> > overmounted. However, userspace can always derive a namespace fd from
-> > a pidfd. And that always works for a task's own namespace.
-> > 
-> > There's no need to introduce unnecessary behavioral differences between
-> > /proc/self/ns/ fds, pidfd-derived namespace fds, and file-handle-derived
-> > namespace fds. So namespace file handles are always decodable if the
-> > caller is located in the namespace the file handle refers to.
-> > 
-> > This also allows a task to e.g., store a set of file handles to its
-> > namespaces in a file on-disk so it can verify when it gets rexeced that
-> > they're still valid and so on. This is akin to the pidfd use-case.
-> > 
-> > Or just plainly for namespace comparison reasons where a file handle to
-> > the task's own namespace can be easily compared against others.
-> > 
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> ...
-> 
-> > +	switch (ns->ops->type) {
-> > +#ifdef CONFIG_CGROUPS
-> > +	case CLONE_NEWCGROUP:
-> > +		if (!current_in_namespace(to_cg_ns(ns)))
-> > +			owning_ns = to_cg_ns(ns)->user_ns;
-> > +		break;
-> > +#endif
-> > +#ifdef CONFIG_IPC_NS
-> > +	case CLONE_NEWIPC:
-> > +		if (!current_in_namespace(to_ipc_ns(ns)))
-> > +			owning_ns = to_ipc_ns(ns)->user_ns;
-> > +		break;
-> > +#endif
-> > +	case CLONE_NEWNS:
-> > +		if (!current_in_namespace(to_mnt_ns(ns)))
-> > +			owning_ns = to_mnt_ns(ns)->user_ns;
-> > +		break;
-> > +#ifdef CONFIG_NET_NS
-> > +	case CLONE_NEWNET:
-> > +		if (!current_in_namespace(to_net_ns(ns)))
-> > +			owning_ns = to_net_ns(ns)->user_ns;
-> > +		break;
-> > +#endif
-> > +#ifdef CONFIG_PID_NS
-> > +	case CLONE_NEWPID:
-> > +		if (!current_in_namespace(to_pid_ns(ns))) {
-> > +			owning_ns = to_pid_ns(ns)->user_ns;
-> > +		} else if (!READ_ONCE(to_pid_ns(ns)->child_reaper)) {
-> > +			ns->ops->put(ns);
-> > +			return ERR_PTR(-EPERM);
-> > +		}
-> > +		break;
-> > +#endif
-> > +#ifdef CONFIG_TIME_NS
-> > +	case CLONE_NEWTIME:
-> > +		if (!current_in_namespace(to_time_ns(ns)))
-> > +			owning_ns = to_time_ns(ns)->user_ns;
-> > +		break;
-> > +#endif
-> > +#ifdef CONFIG_USER_NS
-> > +	case CLONE_NEWUSER:
-> > +		if (!current_in_namespace(to_user_ns(ns)))
-> > +			owning_ns = to_user_ns(ns);
-> > +		break;
-> > +#endif
-> > +#ifdef CONFIG_UTS_NS
-> > +	case CLONE_NEWUTS:
-> > +		if (!current_in_namespace(to_uts_ns(ns)))
-> > +			owning_ns = to_uts_ns(ns)->user_ns;
-> > +		break;
-> > +#endif
-> 
-> Frankly, switches like these are asking for more Generic usage ;) But ok
-> for now.
-> 
-> > +	default:
-> > +		return ERR_PTR(-EOPNOTSUPP);
-> > +	}
-> > +
-> > +	if (owning_ns && !ns_capable(owning_ns, CAP_SYS_ADMIN)) {
-> > +		ns->ops->put(ns);
-> > +		return ERR_PTR(-EPERM);
-> > +	}
-> > +
-> > +	/* path_from_stashed() unconditionally consumes the reference. */
-> > +	ret = path_from_stashed(&ns->stashed, nsfs_mnt, ns, &path);
-> > +	if (ret)
-> > +		return ERR_PTR(ret);
-> > +
-> > +	return no_free_ptr(path.dentry);
-> 
-> Ugh, so IMO this is very subtle because we declare
-> 
-> 	struct path path __free(path_put)
-> 
-> but then do no_free_ptr(path.dentry). I really had to lookup implementation
-> of no_free_ptr() to check whether we are leaking mnt reference here or not
-> (we are not). But that seems as an implementation detail we shouldn't
-> better rely on? Wouldn't be:
-> 
-> 	return dget(path.dentry);
-> 
-> much clearer (and sligthly less efficient, I know, but who cares)?
 
-Fine by me as well!
+On 9/15/25 9:47 AM, pengdonglin wrote:
+> From: pengdonglin <pengdonglin@xiaomi.com>
+>
+> Per Documentation/RCU/rcu_dereference.rst [1], since Linux 4.20's RCU
+> consolidation [2][3], RCU read-side critical sections include:
+>    - Explicit rcu_read_lock()
+>    - BH/interrupt/preemption-disabling regions
+>    - Spinlock critical sections (including CONFIG_PREEMPT_RT kernels [4])
+>
+> Thus, explicit rcu_read_lock()/unlock() calls within spin_lock*() regions are redundant.
+> This patch removes them, simplifying locking semantics while preserving RCU protection.
+>
+> [1] https://elixir.bootlin.com/linux/v6.17-rc5/source/Documentation/RCU/rcu_dereference.rst#L407
+> [2] https://lore.kernel.org/lkml/20180829222021.GA29944@linux.vnet.ibm.com/
+> [3] https://lwn.net/Articles/777036/
+> [4] https://lore.kernel.org/lkml/6435833a-bdcb-4114-b29d-28b7f436d47d@paulmck-laptop/
+>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Hillf Danton <hdanton@sina.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+> ---
+> Changes in v2:
+>    - Clarified commit message to prevent accidental backport to older kernels
+>    - Added lockdep_is_held() to avoid false positives
+> ---
+>   drivers/acpi/apei/ghes.c                        | 2 --
+>   drivers/gpu/drm/i915/gt/intel_ring_submission.c | 2 --
+>   drivers/net/amt.c                               | 8 --------
+>   drivers/net/bonding/bond_3ad.c                  | 2 --
+>   drivers/net/wireless/ath/ath9k/xmit.c           | 2 --
+>   drivers/s390/crypto/pkey_base.c                 | 3 ---
+>   fs/aio.c                                        | 6 ++----
+>   fs/nfs/callback_proc.c                          | 2 --
+>   fs/nfs/nfs4state.c                              | 2 --
+>   fs/nfs/pnfs.c                                   | 9 ---------
+>   fs/nfs/pnfs_dev.c                               | 4 ----
+>   ipc/msg.c                                       | 1 -
+>   ipc/sem.c                                       | 1 -
+>   ipc/shm.c                                       | 1 -
+>   ipc/util.c                                      | 2 --
+>   kernel/cgroup/cgroup.c                          | 2 --
+>   kernel/cgroup/cpuset.c                          | 6 ------
+>   kernel/cgroup/debug.c                           | 4 ----
+>   net/mac80211/cfg.c                              | 2 --
+>   net/mac80211/debugfs.c                          | 2 --
+>   net/mac80211/debugfs_netdev.c                   | 2 --
+>   net/mac80211/debugfs_sta.c                      | 2 --
+>   net/mac80211/sta_info.c                         | 2 --
+>   net/ncsi/ncsi-manage.c                          | 2 --
+>   security/yama/yama_lsm.c                        | 4 ----
+>   25 files changed, 2 insertions(+), 73 deletions(-)
+>
+  ...
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 27adb04df675..9b7e8e8e9411 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -4073,7 +4073,6 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+>   	struct cpuset *cs;
+>   
+>   	spin_lock_irqsave(&callback_lock, flags);
+> -	rcu_read_lock();
+>   
+>   	cs = task_cs(tsk);
+>   	if (cs != &top_cpuset)
+> @@ -4095,7 +4094,6 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+>   			cpumask_copy(pmask, possible_mask);
+>   	}
+>   
+> -	rcu_read_unlock();
+>   	spin_unlock_irqrestore(&callback_lock, flags);
+>   }
+>   
+> @@ -4168,9 +4166,7 @@ nodemask_t cpuset_mems_allowed(struct task_struct *tsk)
+>   	unsigned long flags;
+>   
+>   	spin_lock_irqsave(&callback_lock, flags);
+> -	rcu_read_lock();
+>   	guarantee_online_mems(task_cs(tsk), &mask);
+> -	rcu_read_unlock();
+>   	spin_unlock_irqrestore(&callback_lock, flags);
+>   
+>   	return mask;
+> @@ -4265,10 +4261,8 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
+>   	/* Not hardwall and node outside mems_allowed: scan up cpusets */
+>   	spin_lock_irqsave(&callback_lock, flags);
+>   
+> -	rcu_read_lock();
+>   	cs = nearest_hardwall_ancestor(task_cs(current));
+>   	allowed = node_isset(node, cs->mems_allowed);
+> -	rcu_read_unlock();
+>   
+>   	spin_unlock_irqrestore(&callback_lock, flags);
+>   	return allowed;
+
+For cpuset,
+
+Acked-by: Waiman Long <longman@redhat.com>
+
 
