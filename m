@@ -1,193 +1,182 @@
-Return-Path: <linux-nfs+bounces-14412-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14413-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C563B56EBF
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 05:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EC1AB577A8
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F3133AEAFB
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 03:12:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4C0A3B32F8
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 11:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E0526D4EE;
-	Mon, 15 Sep 2025 03:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7B42FE042;
+	Mon, 15 Sep 2025 11:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="er589QUE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hs2g5Evz"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KflZ5prr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2HNRZWLu";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KflZ5prr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2HNRZWLu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE6125D917;
-	Mon, 15 Sep 2025 03:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ABD2FD7A3
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 11:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757905974; cv=none; b=NpQIEbJrYbvQLpWy897jpWXQnLSkR6FR9Na931sF5O3MB3MWtXHmNRhtjKquS1RWQxMo5jBczjNjw037QnOv/LVJF7UvHr8rU9OkzE+pX2PHoG8UVHSYIt3bMzdfcKz7nQBc3v2KqHep9GaBMjthPlZ8BEe1aMJxCC4kXpgUoqc=
+	t=1757934435; cv=none; b=FGA7VIPX0WfayaW+fYJ4F8jORKs8dzpaHaI2tiTuZpUICuxQKdV1AnDqZlHghNRv3drd9X08zmhDlT4FqjNIwMxqWPrspZwQ6BIPtkIMewzTd1KDCFds6PWdjznnRAMSfX21bOMDzNVBAZZH0020Vt2vHXisqtm1QStvYgh1fDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757905974; c=relaxed/simple;
-	bh=gpP1dOjqRCJ3gNH8Nc/Z2rZu+rLGsW4zNgFN9hiHySQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TRr/+lVde8mqSjQhIrf0/MDWAE3qOv6fkjbFhEEDTy7OGSnqBMKqbfwuxeJ/xy4k/r31wVTXWPEcK/ywKqo7GPQYIbUID+OMp7EHhd3SP/IPp0jRbzqskVGpRdIV6knSeGFnQf9TH1YCFqobCsH5XJhZFufDaZEXzs31iQIXEzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=er589QUE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Hs2g5Evz; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 97DB77A007A;
-	Sun, 14 Sep 2025 23:12:51 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Sun, 14 Sep 2025 23:12:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1757905971;
-	 x=1757992371; bh=kcU83f9/sJFSLx41D45jjxkDKrjkZppB/H54vBPyma0=; b=
-	er589QUEYbZ2Kbwp+GDvwAL0RApDLQk5nM1UF19lFH/qoFiJZJYuTYQ8kK7HOVbH
-	hwCnpG5DJ1E58OfP8PfuyQS8FoVTv+leUoZMlFw8ZuJ6/LQHk0NBhkaoPMai1E+y
-	96DoBiEQB42aTctVhVv/PG0NYqN5ij+Z0l5sYq4dZZ4QZJE9Yc8rtV9fcuoF71/8
-	HKeSEQb+i0VgNiJtfeXCeWdhHTjj+cykgGKkYYtpkCL5lqkOlgtBG0E36jGvStoM
-	D6BjdjKO60xtJ5c42smIA1MjOf28AJUIVwosoJE0AsRhaOHlzbXqYtJHZWLL0n6E
-	UYlKTlQnlLW7zc2ywdxf/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1757905971; x=1757992371; bh=k
-	cU83f9/sJFSLx41D45jjxkDKrjkZppB/H54vBPyma0=; b=Hs2g5EvzkOUHHRpFS
-	ZVIM486xmBOPb+FW0nLiKhuXJBp1UMDWSFsdBJWmK8bhwBEgW26lVxfajd5+S3wj
-	bst+B7HaH/0wZgntVVI9uSV8UpYHi7Ms3x7jxdnf6PKrl48YRX7mVMDPpDzDHqHD
-	lo7nkTLO7gNhovdk8URMvoxYycii4/kqpYcy+R+2vdpQEH1LP+DehtPneh61KdSp
-	+s3p6bGZ+cVVSGVgJSOxx4w4bYTegUWeaPkQcVBFNnpPBedOA240TRdIiLk01KxG
-	3QtJwmHNp+aJGhq6TWnLR3PuHcfc3GHC0UVGzBWwTyhSky8Zwqnu/fEY6WY54sv2
-	0tAsA==
-X-ME-Sender: <xms:M4THaJBdb7aEtW_TWkKWIZGQyppbv__hVcUGIcOn8nKAVOzWbE_2hw>
-    <xme:M4THaDNv4E9CgZRdYytUuMqW5mm4-EDUUfvY76avfeNe9fwuWr-Emg-1JqhuZnRhd
-    it2w-DR67v9JQ>
-X-ME-Received: <xmr:M4THaBAs8JO5p1ItAFXKSY-8w-cY1rq5Ms1WVwvFfw9q7Nxx6zhZgaWkd8XhykzFyckYBsYFtNg4DnX6mFJWrb05FGodfQYg5vInD3yejhP1>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdefieehkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevufffkffojghfrhgggfestdekredtredttdenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    evveekffduueevhfeigefhgfdukedtleekjeeitdejudfgueekvdekffdvfedvudenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtg
-    hpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepjhgrtghksehsuhhsvgdrtgiipdhrtghpthhtohepthhrohhnughmhieskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghn
-    nhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrmhhirhejfehilhesghhmrghilh
-    drtghomh
-X-ME-Proxy: <xmx:M4THaM76tp_IJO02Tp2R5YMmjFTMCOtm1LiGJ9Bht4YMzRgLVQKgIQ>
-    <xmx:M4THaD5VKBnPZl-jyvMXobQhdlrQuA6FsQNNiRlCIPYIteFvSQrHog>
-    <xmx:M4THaGRoqt_Eo31g5WTi8VvtS8qGFRTUZNwHjsfyR6HKm3XU4s3VNg>
-    <xmx:M4THaD9b-gv60BKfz0Dhmv2t-yvOhx3LWsfkc_XETAkcSHcIYjxUKw>
-    <xmx:M4THaJogzLE0n9MPp2ovZJiEvRNwc7rUHaXhe7k9ZLDzbiC8xxXcwAoa>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 14 Sep 2025 23:12:48 -0400 (EDT)
-From: NeilBrown <neilb@ownmail.net>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	"Amir Goldstein" <amir73il@gmail.com>,
-	"Jan Kara" <jack@suse.cz>
-Subject: [PATCH 2/2] VFS: don't call ->atomic_open on cached negative without O_CREAT
-Date: Mon, 15 Sep 2025 13:01:08 +1000
-Message-ID: <20250915031134.2671907-3-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20250915031134.2671907-1-neilb@ownmail.net>
-References: <20250915031134.2671907-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+	s=arc-20240116; t=1757934435; c=relaxed/simple;
+	bh=2rTj9y3vFl3DSsUtFge7HoysdKEspuu1+SWZm5XQOXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyivyiDJ6vrbweqBSbPma1a3SCC3uVzLaTaau7426P2/2wICTAjVAgPt5FNBvfF81HRF112AgJkeHksAw0z9j1FGDZgua+I6kgTDdeq52SD74GPcH0/0Ojb2JWuu3WTL9w2wHeN7vyGJODjXDOVZmUhTHRtWib8K1n92OKts9sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KflZ5prr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2HNRZWLu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KflZ5prr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2HNRZWLu; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2539C1F8B0;
+	Mon, 15 Sep 2025 11:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1757934431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
+	b=KflZ5prrtYNzVmL8k1x+IKinkh2EqpPUsKcKlQe2o8DkEj6UfckRnBAk7AQddMPpFg1KZz
+	Nd+4bkps7q0UZs9OuwrdlssIryLTv8Y3wgxHvXfbIu8Lj1zwXIFvFdBrl932x6iguGkm1D
+	s58C3CgZrMGFdfwdGBXfunliqX/vuh8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1757934431;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
+	b=2HNRZWLurYY2wsfcOlxWXzeiYIF0ycKfGboF0uoy5qGjuFJKKtuPZ9TwlvrzDkd7wEl8mJ
+	IXL9absr8FMy3lCw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KflZ5prr;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=2HNRZWLu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1757934431; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
+	b=KflZ5prrtYNzVmL8k1x+IKinkh2EqpPUsKcKlQe2o8DkEj6UfckRnBAk7AQddMPpFg1KZz
+	Nd+4bkps7q0UZs9OuwrdlssIryLTv8Y3wgxHvXfbIu8Lj1zwXIFvFdBrl932x6iguGkm1D
+	s58C3CgZrMGFdfwdGBXfunliqX/vuh8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1757934431;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpKepJH4yP8uSf3BpFDlyGc+QODtbZz7D8+877HUnZQ=;
+	b=2HNRZWLurYY2wsfcOlxWXzeiYIF0ycKfGboF0uoy5qGjuFJKKtuPZ9TwlvrzDkd7wEl8mJ
+	IXL9absr8FMy3lCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDC961372E;
+	Mon, 15 Sep 2025 11:07:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rqYHOl7zx2jFHQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 15 Sep 2025 11:07:10 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 9A844A09B1; Mon, 15 Sep 2025 13:07:06 +0200 (CEST)
+Date: Mon, 15 Sep 2025 13:07:06 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2 11/33] net: use ns_common_init()
+Message-ID: <ucldl3baqsuuiwzmubrkloblxfjvcecfhjd2nyvl6boccc3qlh@bumwo2wjyvgr>
+References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
+ <20250912-work-namespace-v2-11-1a247645cef5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250912-work-namespace-v2-11-1a247645cef5@kernel.org>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 2539C1F8B0
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL9r1cnt7e4118fjryeg1c95sa)];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org,toxicpanda.com,kernel.org,yhndnzj.com,in.waw.pl,0pointer.de,cyphar.com,zeniv.linux.org.uk,kernel.dk,cmpxchg.org,suse.com,google.com,redhat.com,oracle.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.com:email]
+X-Spam-Score: -2.51
 
-From: NeilBrown <neil@brown.name>
+On Fri 12-09-25 13:52:34, Christian Brauner wrote:
+> Don't cargo-cult the same thing over and over.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-If the dentry is found to be negative (not d_in_lookup() and not
-positive) and if O_CREATE wasn't requested then we do not have exclusive
-access the dentry.
+...
 
-If we pass it to ->atomic_open() the filesystem will need to ensure any
-lookup+open operations are serialised so that two threads don't both try
-to instantiate the dentry.  This is an unnecessary burden to put on the
-filesystem.
+> @@ -559,7 +572,9 @@ struct net *copy_net_ns(unsigned long flags,
+>  		goto dec_ucounts;
+>  	}
+>  
+> -	preinit_net(net, user_ns);
+> +	rv = preinit_net(net, user_ns);
+> +	if (rv < 0)
+> +		goto dec_ucounts;
 
-If the filesystem wants to perform such a lookup+open operation when a
-negative dentry is found, it should return 0 from ->d_revalidate in that
-case (when LOOKUP_OPEN) so that the calls serialise in
-d_alloc_parallel().
+Umm, this seems to be leaking 'net' on error exit.
 
-All filesystems with ->atomic_open() currently handle the case of a
-negative dentry without O_CREAT either by returning -ENOENT or by
-calling finish_no_open(), either with NULL or with the negative dentry.
-All of these have the same effect.
+>  	net->ucounts = ucounts;
+>  	get_user_ns(user_ns);
+>  
 
-For filesystems without ->atomic_open(), lookup_open() will, in this
-case, also call finish_no_open().
-
-So this patch removes the burden from filesystems by calling
-finish_no_open() early on a negative cached dentry when O_CREAT isn't
-requested.
-
-With this change any ->atomic_open() function can be certain that it has
-exclusive access to the dentry, either because an exclusive lock is held
-on the parent directory or because DCACHE_PAR_LOOKUP is set implying an
-exclusive lock on the dentry itself.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- Documentation/filesystems/vfs.rst | 4 ++++
- fs/namei.c                        | 8 ++++++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 486a91633474..be7dd654f5fd 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -678,6 +678,10 @@ otherwise noted.
- 	flag should be set in file->f_mode.  In case of O_EXCL the
- 	method must only succeed if the file didn't exist and hence
- 	FMODE_CREATED shall always be set on success.
-+	atomic_open() will always have exclusive access to the dentry
-+	as if O_CREAT hasn't caused the directory to be locked exclusively,
-+	then the dentry will have DCACHE_PAR_LOOKUP will also
-+	provides exclusivity.
- 
- ``tmpfile``
- 	called in the end of O_TMPFILE open().  Optional, equivalent to
-diff --git a/fs/namei.c b/fs/namei.c
-index ba8bf73d2f9c..5f732b9cd2db 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3647,6 +3647,14 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
- 		/* Cached positive dentry: will open in f_op->open */
- 		return dentry;
- 	}
-+	if ((open_flag & O_CREAT) == 0 && !d_in_lookup(dentry)) {
-+		/* Cached negative dentry and no create requested.
-+		 * If a filesystem wants to be called in this case
-+		 * it should trigger dentry invalidation in
-+		 * ->d_revalidate.
-+		 */
-+		return dentry;
-+	}
- 
- 	if (open_flag & O_CREAT)
- 		audit_inode(nd->name, dir, AUDIT_INODE_PARENT);
+								Honza
 -- 
-2.50.0.107.gf914562f5916.dirty
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
