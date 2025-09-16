@@ -1,56 +1,66 @@
-Return-Path: <linux-nfs+bounces-14493-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14494-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFB36B59D72
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 18:23:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A71FEB5A09C
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 20:37:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92BD6176753
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 16:22:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44B641C05849
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 18:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A46E368094;
-	Tue, 16 Sep 2025 16:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA3C92D63F2;
+	Tue, 16 Sep 2025 18:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jlQuqEVk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2ep6gSM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF2D317708;
-	Tue, 16 Sep 2025 16:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95710246783;
+	Tue, 16 Sep 2025 18:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758039770; cv=none; b=g3JrvHy36Kitm0r5eF7+0GyOIs6j34sqgxDZF36kTNGDEsViDvPpdU0EwuYBD4va6U3qg9B6bWCqHgIh4HSzyAqdg32mTl/ulTJ/Q/EeYlYvR5O+ceCQoJwJc6KKF/tdS6vY9FJnhby0WgRroCDxVIbtuBdrfYlb/wGJWrwNM2E=
+	t=1758047824; cv=none; b=QIBcOqFdSiSE4lL4gg/grwqz0VsGkse9YGTVuc83QdMZGcRFkTTTrAeSAQ9qGuOfEsHiAM82/SS45L5ob2GAnwFilqltcBK90hbBUtPxyDJ1Pmm4Y+Yt/uKBBTCXpSLJz76GzYl3hAkB89APTcVMf2hitTkL/1WMPSPDWNIg5Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758039770; c=relaxed/simple;
-	bh=7LsBV4e3Rnk8wom29SyP++Te8FODni9lRbmx/oTx8tg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NGCtJOCvJeQdRCl5UWt/OFNR8x2AJwj3vTL1PXa5+wRzu7mr9+O41mgOFBUIOwQMeQiPN4Gt/yZBr6UyQ1b4//svzH8LgwEI2/AHvzeiXXDksdx64bYjxNXkLxiQuvn2g3ta//dDUC/nAUD4tYdoalw46CmF3RD3awhkGawW8Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jlQuqEVk; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=nxevTbftj4dI8i0qJa3Ef5NsErX7ynlC5NtJtiuvFWs=; b=jlQuqEVk1YvmsLuFVKjm1wVW1c
-	oNebOqc2almtek0xtxPr9AsDkiA9n3930DlRaxy/hJYDD+Q2u4XKzqdjrwr7qvoRe/qtamT/RAtPf
-	ujqrOBF/t/S7eJBmifgcSZFmxy5C04mDFU96hHwxX7WarNxB/ddrSpHPQYqrS9hX8MplBbKx4S6y+
-	529qszd1BbR6ChXLl2F3O0nMGMSFRwKFGetBiHdSBqeoADhv8IhzWoM3h7lkCE12udC7cUSaYp/6P
-	lrgnilMkpLF+PnxJyBYNjQoD8whpE+RJ6I36B/EqRsHX8YIyg6/eOFXkQUOI76wQ7g0sDQq0mJX7Q
-	txK21XFA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyYS5-0000000FAKd-0DSq;
-	Tue, 16 Sep 2025 16:22:45 +0000
-Date: Tue, 16 Sep 2025 17:22:45 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: linux-nfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>
-Subject: [PATCH] nfs4_setup_readdir(): insufficient locking for
- ->d_parent->d_inode dereferencing
-Message-ID: <20250916162245.GR39973@ZenIV>
+	s=arc-20240116; t=1758047824; c=relaxed/simple;
+	bh=jnE3T/TrSxsfQhYKHHZkySdj6XnCpKLKkcg0Jk32Y6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhqA7IKeND8GINKHhpZh2sZeohxYNzsEW8xSQd+OUwhTMoXALhNpb5OLAUrCukl94C7+UiE47Mi8pTomM+BC8VU2uZ9ef9xAPObn+yzTcsqOGq17FDs9h+PBhcv5cJzVFvO0/0aVdg9Xz2oODyG1OsFOjHJzjRGMB1GKTagpVNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2ep6gSM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F45C4CEEB;
+	Tue, 16 Sep 2025 18:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758047822;
+	bh=jnE3T/TrSxsfQhYKHHZkySdj6XnCpKLKkcg0Jk32Y6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d2ep6gSMpdFnttghY+ZQDHb/uKNh+aQyvx1yPRjPflTZYBy+I0m9GICWEC3pl6D5l
+	 A7KYUBEoyGG0LaIlpwgEtS1y438lnBM2Keo7Dh4eMrcmYp3BsuQ55zp1qTmqtOXJRs
+	 wjEnNkw1308B6wqeofWDMH2XkhB2krw0z5woQZWEZzIBQY0jFyHHIaKUdX8iHgnNWk
+	 VXmXEZmnvyR4DtzMz9hDRUUKrg7q8pVqM7UcnRJSeI62VFtb4NdnL8KB3JqN+YTLaT
+	 VfcNwEURuquG6ungOU6gMBnq84GmJgN8vp1SUb2pcs/GDlCL1EOMR4XvIkPhFmbjC7
+	 mQsnS8YiqJHNg==
+Date: Tue, 16 Sep 2025 08:37:01 -1000
+From: Tejun Heo <tj@kernel.org>
+To: pengdonglin <dolinux.peng@gmail.com>
+Cc: tony.luck@intel.com, jani.nikula@linux.intel.com, ap420073@gmail.com,
+	jv@jvosburgh.net, freude@linux.ibm.com, bcrl@kvack.org,
+	trondmy@kernel.org, longman@redhat.com, kees@kernel.org,
+	bigeasy@linutronix.de, hdanton@sina.com, paulmck@kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-nfs@vger.kernel.org, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-s390@vger.kernel.org,
+	cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: Re: [PATCH v3 08/14] cgroup: Remove redundant rcu_read_lock/unlock()
+ in spin_lock
+Message-ID: <aMmuTXNPY_9Fp_WQ@slm.duckdns.org>
+References: <20250916044735.2316171-1-dolinux.peng@gmail.com>
+ <20250916044735.2316171-9-dolinux.peng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,29 +69,32 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20250916044735.2316171-9-dolinux.peng@gmail.com>
 
-Theoretically it's an oopsable race, but I don't believe one can manage
-to hit it on real hardware; might become doable on a KVM, but it still
-won't be easy to attack.
+On Tue, Sep 16, 2025 at 12:47:29PM +0800, pengdonglin wrote:
+> From: pengdonglin <pengdonglin@xiaomi.com>
+> 
+> Since commit a8bb74acd8efe ("rcu: Consolidate RCU-sched update-side function definitions")
+> there is no difference between rcu_read_lock(), rcu_read_lock_bh() and
+> rcu_read_lock_sched() in terms of RCU read section and the relevant grace
+> period. That means that spin_lock(), which implies rcu_read_lock_sched(),
+> also implies rcu_read_lock().
+> 
+> There is no need no explicitly start a RCU read section if one has already
+> been started implicitly by spin_lock().
+> 
+> Simplify the code and remove the inner rcu_read_lock() invocation.
+> 
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
 
-Anyway, it's easy to deal with - since xdr_encode_hyper() is just a call of
-put_unaligned_be64(), we can put that under ->d_lock and be done with that.
+Applied to cgroup/for-6.18.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ce61253efd45..eaa1416e0e32 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -391,7 +391,9 @@ static void nfs4_setup_readdir(u64 cookie, __be32 *verifier, struct dentry *dent
- 	*p++ = htonl(attrs);                           /* bitmap */
- 	*p++ = htonl(12);             /* attribute buffer length */
- 	*p++ = htonl(NF4DIR);
-+	spin_lock(&dentry->d_lock);
- 	p = xdr_encode_hyper(p, NFS_FILEID(d_inode(dentry->d_parent)));
-+	spin_unlock(&dentry->d_lock);
- 
- 	readdir->pgbase = (char *)p - (char *)start;
- 	readdir->count -= readdir->pgbase;
+Thanks.
+
+-- 
+tejun
 
