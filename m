@@ -1,78 +1,78 @@
-Return-Path: <linux-nfs+bounces-14472-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14473-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226A6B58D58
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 06:53:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A7C1B58D73
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 06:55:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B40581BC61CB
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 04:53:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4028648319C
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Sep 2025 04:53:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7F02E5412;
-	Tue, 16 Sep 2025 04:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D4682E7BCF;
+	Tue, 16 Sep 2025 04:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCefdEHH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4Xjumc0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AA72E425F
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Sep 2025 04:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E052C2E7162
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Sep 2025 04:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757998143; cv=none; b=ApmAcNcNTs/zdrylCAYiQ3S4m4+fY5yjUOjuA5JCMwsbsVbmK+4AAWT53Qu4gVoIouyK67hkRx2yd+P2rNHP4JFAhApVSptSffbgdGOpEurJstnXP3ljgGRLjrnzAKupEtdjjiSNmrx2VQmFK+bPL5LqB7P/RAg7PrKEu2nP1Xc=
+	t=1757998151; cv=none; b=UEKhPqqPUU6kR/zWlxbnMmE9U0Gh96i/4LcRAKy49TdJk6xeir1fLe3r3Yua9OVoj+LlAI61CL4JgWJZvf06E/znrMySciifZTuxCWQUQLXyfvteM3cvCeYchSoupYiU7kja7y66VTtbCHAdY01hmbOxBZgA8/WPWNl8PG8WdTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757998143; c=relaxed/simple;
-	bh=HguuC3cJW9LHrBXuF3iFTqdhADSKZ6I2ZWC/adsG6L4=;
+	s=arc-20240116; t=1757998151; c=relaxed/simple;
+	bh=A1DaGpRAAYNdE/JnkBcpbGGz1TWyQSRA1+c5fRETaCo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YNEeYEq9mLLH8zRN+uBii1JNm2wnjSEh0M3DFFpUO+f9Y3/FNbGD3KJvrvya1r5V1N5NHuUZBOwTxF/Cb7TfkmWGRr8xEkh/IZcPAIp8x7gwQ5R8yLw+IFlkGKPE0iVSSIyzZT/wb/5BKbktiSf2xWz5FAraw7Yayxoq1k1r1Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SCefdEHH; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=q9DmOHhQMEVGANZzuBnsusYAa6+0b2TnwpiKTsLSO1vnhvFxctJX4+a3GVs4vF/7FqzEdTyLcMLLbfT+m5WCWQCDiQfAK/0jkR8m+qhlBNWuyZB3aweeb5jPfTjP5DOPx3EkNN5+QfOkExrOvvQawURpN+dKEBt2UAy2/cnMgvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K4Xjumc0; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-244580523a0so50862765ad.1
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 21:49:01 -0700 (PDT)
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b54acc8c96eso3347757a12.0
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 21:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757998141; x=1758602941; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757998147; x=1758602947; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y26N2MyOP2FIPMMMBT4JTn6kc4P01rdpdKyvYPEfOYc=;
-        b=SCefdEHHiZ8jZW6xYxJti7tA2y6Bt/GimNvdDYVlgmt2cdNVo7OAJcSr5LXKXEOZbf
-         UGGGRX1bIlzd25p9XFG3/AuL4AFo52i36GuOp66KC85Uy/XbHwdetBCk4RfB+CQtV8gG
-         bGB3fSsvylkjw0Qw4Syn2pjMO2oaoTpIVOMeW4ync7cEGsK5I0d5n9YApMb74KRv+vYB
-         BDsg0UVn1UNIr5Bvs8KUVv/ud5TILGiBsHgcv/yWZ1/CxUmiVCACSIprr/HVidhnRt5o
-         0KUolDW/QN7el5Pxc8O7RQcX/fWH9lLT4zQlNsvIDmOvD+BeCZn4n36z8iFAwSLI9O/A
-         kioQ==
+        bh=Gp+N7RFYdL+M8U5Aod5ZJl4PoDAFL89oD30EaW4MsNY=;
+        b=K4Xjumc0nBcco5KyK7TayYg1GVB3J8fMW7YfmCjhgTTUc/fPIDKia1bI2dpOo4Dlpx
+         o0oYiCFoIl/qnLukCt0JaKCTycIs9+9f38sOAgldyz8tQIGpDGM4I5xSF1yz9foe5Y+0
+         2p4TuTz/xI8E76jU6e6NUTzqr4tF4KFkj0cyt03nQJvtbqEvTMv5/6XrYgnXmNQLeb+O
+         sDFNMQP/6B3RWiK8Q1KWu4oWPdcxqbwd7gQ0AyvjLj19qMjmrrjdeeVtI4h+aCXWk442
+         XnCfLw3QPsQeRmrhv0yiLaCyo05omJolYFv4x6BgsEMJUeoyH1rHSkFxKz1mCDro3W3Y
+         TL4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757998141; x=1758602941;
+        d=1e100.net; s=20230601; t=1757998147; x=1758602947;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y26N2MyOP2FIPMMMBT4JTn6kc4P01rdpdKyvYPEfOYc=;
-        b=P3ilwGIk3K9BRz6bxmWRmeLV45wfC64SdZxFLwmZhdhTz9nY1GwU+deVIry1EdjxHd
-         TywMwu6hPuUbScnmsLbkinvNMhg2zwW6RNerRExi40qIsf40l/1sXeRe83rOwra+waxD
-         SVMilFekjPZ3bcc3PVkus0QrKYnsmt6SR9PAVx6GzxGYIGxcKFBGPBwFiYVzQFVSsX/W
-         baVnyV5uCQFjchPcjtmUzl7/nrAq8v2iT6RJaiuB6QV7FRNp0QhbtBArB/vsT85CuQpa
-         OOTi7coKKBWp2ISo5XJv+ETcHTdFw22NYANGmAIcsqLk9zU/uz31vb3WVdVt9J6/Lr/g
-         FBcw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5QmonMJtdfoTO6EP/G6XbKwIiLFvJcZXrBPhg4xYPVebuVKFNbI0kIUQ9o4FrJuIn2dhxD9TWTng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1xUhaOYP2TliQhBM2VutTxI7FIq1PTgD8XHooZ+V1Dmdfn44/
-	iWcr/TAVan6iuwRs/GzQspUps4oFaIkx375SVfiWznnqI4qJfLyQbBeF
-X-Gm-Gg: ASbGnctxnF8X2u7SnZpJDpvoGB9OxNa495VaEKOAMNULyADtqszTT2i3+c6q7XlaXH2
-	S2psJVwQyhwawcjBinx6Y5iBttWlwDXI1LldPnimU2YPy8U301VRz3fx8QO1bk+TlpS51UMcYDi
-	+OULkhwWpQDzkCZstKDQCqINDuv5EnLQD5LPGULddtCDJMJ0+07llqtb5gfm2CTf/DW4LGpiqE8
-	mM+wtfSnsIjkofHef8MdXZseEUFauVY+Yw8QF5HOWRYoEJsV/xTeLA6OFQbwNO5cslEQvc524qG
-	Nwowwd+q3JwiAaqyHZlyW9aTJq2CjVYvpR2UkZUXhT9y2sE98BP2KqSoxMP/PMk8T2jMq/gmFex
-	ceWshdad+OTkDK8APmF5DD7J4IjihUJPpal1stoc=
-X-Google-Smtp-Source: AGHT+IEF8hyGYSwfpfRfNi45Ml5S5Z1xWLwd/+S+vouYcjrRAMMRr1JH2N5TAK8bBOVvYAZpMt3b8w==
-X-Received: by 2002:a17:903:ac3:b0:267:d772:f845 with SMTP id d9443c01a7336-267d772fcf1mr8896415ad.52.1757998140582;
-        Mon, 15 Sep 2025 21:49:00 -0700 (PDT)
+        bh=Gp+N7RFYdL+M8U5Aod5ZJl4PoDAFL89oD30EaW4MsNY=;
+        b=ssaygIQrBKe3qdD4i/ICNtWYNyfG+WAHq0LQ+1GzoOaaA9d6FayFGKYGsjB6ECzt+F
+         AsMHbivZlr8eBJsUKahm3VLYDtwGJ8eWyEvyGF0XPKaxUZ8VMd6YUKMGFKWhO0Rq5B0N
+         Fis50THonUXV5flXJqXexWI1s/dixOD/RYF09dg+dXRw5xY089Ok7hSVdMAamn3AVaGA
+         JH5MEv0iURLrqs4mdH9Cb/m2ClMVhTnbpQbOB5ZFT6mD+oU8ZU3upBvSJF1LyFUR5rY2
+         d22ay9lA/ShenQF2SN8oamnFlS1iTTp1AFD6vtv7TIyR+sO8FrF0UjAGC+BYBbL3j0gP
+         rVsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZmdwvsOWhTb6eHwuFOuAcvHnxlTTrf4nHtotOSlalOtuO6fJFZU4jt1Pe/LMc6Dz8nMbkZpVz1Rc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3M6IKTQhW+JilKiIFyRrNQShSoLHow7OCNmUvoSIsTZrNqUOl
+	lFBdajGccC0qLayJA9N7qHmEkEQEJ6fM3vln9KuFTOxJOGPQx9bnj7qD
+X-Gm-Gg: ASbGnct9s9cJH52MMwezSk4wSsElhu3dvsX/PMhNm37r/mtsSoSVp1YIYsFxHcx5OV4
+	2vEvaGL+qM+KHW27wxG5RB8QU39c2UVyp7yh9eNbXUEMdx4SWPFiI9hIm+OH4h8qOS9IKEp+BvW
+	eeeWjZW6GpEcnbeXpLNfpTjhVY+qjdpzxJtlPluSHyiFGvhhlZbtSnhNMqBvbcH23ISBc3mFMLR
+	rvpItZtJwTuMPGgRW+qRJTMCGjxHGhhthij5waxc2AEszvJivOGgBGqdBkL/WA/Nlx3goIzG1PG
+	k8Xms+20RU6L5JW10Nt3ZSlc4wrlaKAQWr3XMRM5w44Y3Htc/wVCYPDgJG9zH9Wwj1lcY9JV4W7
+	t9NrmSrQlJrxd+10S9+9DSagtDzNL9uEzx3xJyuA=
+X-Google-Smtp-Source: AGHT+IFqD7sgMgos1nHHN1tffY5PC8RBagTW/SlAHYpHIH6iPNz9WSa7pJxkI6T7wvTsG+plknRS6A==
+X-Received: by 2002:a17:902:f70e:b0:266:120a:29c7 with SMTP id d9443c01a7336-266120a3078mr75581275ad.6.1757998147150;
+        Mon, 15 Sep 2025 21:49:07 -0700 (PDT)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-25ef09c77f8sm104600605ad.15.2025.09.15.21.48.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-25ef09c77f8sm104600605ad.15.2025.09.15.21.49.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Sep 2025 21:49:00 -0700 (PDT)
+        Mon, 15 Sep 2025 21:49:06 -0700 (PDT)
 From: pengdonglin <dolinux.peng@gmail.com>
 To: tj@kernel.org,
 	tony.luck@intel.com,
@@ -100,12 +100,11 @@ Cc: bigeasy@linutronix.de,
 	linux-s390@vger.kernel.org,
 	cgroups@vger.kernel.org,
 	pengdonglin <dolinux.peng@gmail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	pengdonglin <pengdonglin@xiaomi.com>
-Subject: [PATCH v3 07/14] yama: Remove redundant rcu_read_lock/unlock() in spin_lock
-Date: Tue, 16 Sep 2025 12:47:28 +0800
-Message-Id: <20250916044735.2316171-8-dolinux.peng@gmail.com>
+Subject: [PATCH v3 08/14] cgroup: Remove redundant rcu_read_lock/unlock() in spin_lock
+Date: Tue, 16 Sep 2025 12:47:29 +0800
+Message-Id: <20250916044735.2316171-9-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250916044735.2316171-1-dolinux.peng@gmail.com>
 References: <20250916044735.2316171-1-dolinux.peng@gmail.com>
@@ -130,50 +129,71 @@ been started implicitly by spin_lock().
 
 Simplify the code and remove the inner rcu_read_lock() invocation.
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Waiman Long <longman@redhat.com>
 Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
 Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
 ---
- security/yama/yama_lsm.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/cgroup/cgroup.c | 2 --
+ kernel/cgroup/debug.c  | 4 ----
+ 2 files changed, 6 deletions(-)
 
-diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-index 3d064dd4e03f..60d38deb181b 100644
---- a/security/yama/yama_lsm.c
-+++ b/security/yama/yama_lsm.c
-@@ -117,14 +117,12 @@ static void yama_relation_cleanup(struct work_struct *work)
- 	struct ptrace_relation *relation;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 312c6a8b55bb..db9e00a559df 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -2944,14 +2944,12 @@ int cgroup_attach_task(struct cgroup *dst_cgrp, struct task_struct *leader,
  
- 	spin_lock(&ptracer_relations_lock);
+ 	/* look up all src csets */
+ 	spin_lock_irq(&css_set_lock);
 -	rcu_read_lock();
- 	list_for_each_entry_rcu(relation, &ptracer_relations, node) {
- 		if (relation->invalid) {
- 			list_del_rcu(&relation->node);
- 			kfree_rcu(relation, rcu);
- 		}
+ 	task = leader;
+ 	do {
+ 		cgroup_migrate_add_src(task_css_set(task), dst_cgrp, &mgctx);
+ 		if (!threadgroup)
+ 			break;
+ 	} while_each_thread(leader, task);
+-	rcu_read_unlock();
+ 	spin_unlock_irq(&css_set_lock);
+ 
+ 	/* prepare dst csets and commit */
+diff --git a/kernel/cgroup/debug.c b/kernel/cgroup/debug.c
+index 80aa3f027ac3..81ea38dd6f9d 100644
+--- a/kernel/cgroup/debug.c
++++ b/kernel/cgroup/debug.c
+@@ -49,7 +49,6 @@ static int current_css_set_read(struct seq_file *seq, void *v)
+ 		return -ENODEV;
+ 
+ 	spin_lock_irq(&css_set_lock);
+-	rcu_read_lock();
+ 	cset = task_css_set(current);
+ 	refcnt = refcount_read(&cset->refcount);
+ 	seq_printf(seq, "css_set %pK %d", cset, refcnt);
+@@ -67,7 +66,6 @@ static int current_css_set_read(struct seq_file *seq, void *v)
+ 		seq_printf(seq, "%2d: %-4s\t- %p[%d]\n", ss->id, ss->name,
+ 			  css, css->id);
  	}
 -	rcu_read_unlock();
- 	spin_unlock(&ptracer_relations_lock);
- }
- 
-@@ -152,7 +150,6 @@ static int yama_ptracer_add(struct task_struct *tracer,
- 	added->invalid = false;
- 
- 	spin_lock(&ptracer_relations_lock);
--	rcu_read_lock();
- 	list_for_each_entry_rcu(relation, &ptracer_relations, node) {
- 		if (relation->invalid)
- 			continue;
-@@ -166,7 +163,6 @@ static int yama_ptracer_add(struct task_struct *tracer,
- 	list_add_rcu(&added->node, &ptracer_relations);
- 
- out:
--	rcu_read_unlock();
- 	spin_unlock(&ptracer_relations_lock);
+ 	spin_unlock_irq(&css_set_lock);
+ 	cgroup_kn_unlock(of->kn);
  	return 0;
- }
+@@ -95,7 +93,6 @@ static int current_css_set_cg_links_read(struct seq_file *seq, void *v)
+ 		return -ENOMEM;
+ 
+ 	spin_lock_irq(&css_set_lock);
+-	rcu_read_lock();
+ 	cset = task_css_set(current);
+ 	list_for_each_entry(link, &cset->cgrp_links, cgrp_link) {
+ 		struct cgroup *c = link->cgrp;
+@@ -104,7 +101,6 @@ static int current_css_set_cg_links_read(struct seq_file *seq, void *v)
+ 		seq_printf(seq, "Root %d group %s\n",
+ 			   c->root->hierarchy_id, name_buf);
+ 	}
+-	rcu_read_unlock();
+ 	spin_unlock_irq(&css_set_lock);
+ 	kfree(name_buf);
+ 	return 0;
 -- 
 2.34.1
 
