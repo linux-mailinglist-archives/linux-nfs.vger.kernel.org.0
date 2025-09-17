@@ -1,174 +1,121 @@
-Return-Path: <linux-nfs+bounces-14501-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14502-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF9C3B7DB1E
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 14:33:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41616B7D2F6
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 14:21:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3F9F16FC09
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 07:37:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0977A3BB477
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 09:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 224642D59EF;
-	Wed, 17 Sep 2025 07:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EAF343D91;
+	Wed, 17 Sep 2025 09:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="WHn1EZQB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lSg9XMDV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSuYhjIB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4009D2F291B;
-	Wed, 17 Sep 2025 07:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1598884A3E;
+	Wed, 17 Sep 2025 09:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758094622; cv=none; b=TQ7L/kjiUhaT7Siqvm+xt+olmJdATBZ9MLx8xCdc14EA+kS3aVVFtRdV2wSTfK/j/la04GX1qFkYSB2vk65p3WeddpPxB8xAFf5ow5JjAWglLLyecknNp2gCZBV1ELmfSvA/wme2U01V8U/UygejbY1xeDyuAbadx941Iyj5Az0=
+	t=1758102638; cv=none; b=IhFJoLDj3Abj7EB6k8YepCEXmLpc7sP2caWygZWllac7LIBvT64ff8qLdXPIB+RJnfWNtMdwMgSfwc4QTc7yaz9Yk8ht6gfgMDbtNBR74V/3IJF6fNRHUJURpI0iOibNHjtzjjp9fdC7bL4QHSPbjeQwN2zES9S7CmFdI4wdhUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758094622; c=relaxed/simple;
-	bh=/a4SbsVzqO1jNQ82naGvBj0LOt0lvz/CD/bjLWnkpF8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ACvou4k/kgU3Lk9Z7mld0S+vxsQZI3SoEln2dgd1PIHYNqKhcMlvxG0D9wldT1QAEKfhXH4gjGXIASdznDu3eggsphHjf0LuEcj7h4VlBdTiGi+DZZlg2FmemrG3GZT8AVM+flkvfTp2Wz10fP4nnytzebxDwXqXvCQewo4P5LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=WHn1EZQB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lSg9XMDV; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4B14A14000EC;
-	Wed, 17 Sep 2025 03:36:59 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Wed, 17 Sep 2025 03:36:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1758094619; x=1758181019; bh=9WYxe3ScZzspcMiOBOj1l0vTDzVUROKuguU
-	p/Md8T9M=; b=WHn1EZQBN4Gv8PcS2306IUOkEI1G1yYPUg7vzrYtwkZrbet25Ey
-	sEB8x11fTj5+ntxmrD4fyTkLgZr6uot9GEAxtqB2sJBmxOZJmPQrQcOza0SoXej+
-	tAJ/QvNnRzyjtOlfMAeAhpRpH/qsAAk/kZfPqfD6PTkHQRlIm2ipWhzMZ125jWds
-	rLfOMOWLwJMVm6ixM7AepUK5s9ukvTfLA9+9LJgl4qwq8/JExclZQ58ESoQ0LImo
-	x37b6a71zQmlA9cdUdO5Gv+hjnaKfMcq415YHAWg4f7BLKHdG5fARwuShXLJ5WxT
-	ncJFJUmTyuHMPJrslt8g9BXguQTaPP76O6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758094619; x=
-	1758181019; bh=9WYxe3ScZzspcMiOBOj1l0vTDzVUROKuguUp/Md8T9M=; b=l
-	Sg9XMDVHk2tLClpo2YJlnhtwKGs7OGu9n5WowubzjEA9Sjbdgor0chcqUTFOtz3k
-	aSp53BWVB/mxbj1l+FjRXXkOKr4CaWh0zj50mVb7lc0duiixHp7B5eyqykkOvBtN
-	pTNR+Ir7dufPOUxkd1EgA+FlQNAVTyQOmqbqQdjpNn55qbZ5XrYirOh34czpAR/7
-	uE1XsgVOgwhLAcQYVXwKnCDZpG/IKYjPTjsWVWcDgQgs/mNzuJplB2oM6Tm5DLo+
-	jxJdtd6mf1wNpfTXzCZ9HGPWW331IkgmW4z+6zGQUonczDkYyBwsF/gx/EaqiDpr
-	9ZfuhruPAXXM+1JuDt+OQ==
-X-ME-Sender: <xms:GmXKaGrn6A9GEYKPybXPjIttYfPGAmSPtCJeBWoHTN5TM6Ztz26ZwA>
-    <xme:GmXKaAX9cbtMiAMmpBduVxzepulWpd0jkIwFTCR0qPdkn_qj4OLkFNQFaK7HXCKk4
-    9st8K3xNLolwg>
-X-ME-Received: <xmr:GmXKaHo67P-p9du6Ge_80bZcWEsum5qDMYb7pFR4tPIdfORm13RdbPk4jlaE-o5v0T-e_cEXSGZozlwHVfwvH1Tc99i6xlKdpeLXMgfqRQZf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdegvdekjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtg
-    hpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepjhgrtghksehsuhhsvgdrtgiipdhrtghpthhtohepthhrohhnughmhieskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghn
-    nhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrmhhirhejfehilhesghhmrghilh
-    drtghomh
-X-ME-Proxy: <xmx:GmXKaPBZtEQRrrWbhPB8LFq12WQKF_QkHpHa8C2-MHw-SOgnOpaK2Q>
-    <xmx:GmXKaLhi2isTeWPH9w0G2HbJaQH0x97QHLeV6gfN6RsDo8npKKRdOA>
-    <xmx:GmXKaFbBDQbPXnZy_qtPCPi45Ha_DtWQcPX4mhGK9QMEM66Uiltj5g>
-    <xmx:GmXKaEmmSIHUpwNa9339RrmDgHRMOh0BQ3NsJxBI9pku7PTP7WFo8Q>
-    <xmx:G2XKaFKcsaIm6yCJzQ3hRyHQv2NU0I16xclk5R5aAWhTxwtdwPI6xewm>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 17 Sep 2025 03:36:56 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1758102638; c=relaxed/simple;
+	bh=R8bBc8E+Z3IqtxfpLmr+7QmObySQ+mWruEPNJ7MrlFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nRMeF4W6ekx/PijDAcV0ISs+X7z2Fnxendp9khd5uOsLWypBXhciz274l4BSp27TOccjsthLtGBKGdXbtUbQpBt4ZhXoZWDFW7PZMzNRCyQgyMu5o0nZVERtxsGUdLsE+Nb0tDKvBgLzt4dp7fsb1xF3BMA8dCjUzHOmtm07ie4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSuYhjIB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A16DC4CEF0;
+	Wed, 17 Sep 2025 09:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758102637;
+	bh=R8bBc8E+Z3IqtxfpLmr+7QmObySQ+mWruEPNJ7MrlFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fSuYhjIBPQXozMo1k0MYS23BlFjFflyKzb9M1olal1DqbotYr5zJO8l0sSMemANvr
+	 JIZm0E5KcqWHVcq+UJR7QNrEUu2z+Rqrfyhj932a9O2x1WDTMZMU4LHeGU+0J4eyuJ
+	 K4kixSlqEBJGjJYTr3gob3XKckJSRylgsFH58XOdeqYKnyayTN6YBRMdf+fctC4SK3
+	 AWzPoJBDk4fWUyo6RG6EQbGarou/c5TaQLpI7f38fr8zD+Df32I8yfBtDATeVEFvmA
+	 MZx+1PLSxEuhCwUODD21YBZbHLhi2AHw+SNDcQEVNHcWpClXy2uRenMP8fORyCC7zI
+	 kZFU+jQ0ZIGfA==
+Date: Wed, 17 Sep 2025 11:50:29 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+	Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, Jens Axboe <axboe@kernel.dk>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2 18/33] mnt: support ns lookup
+Message-ID: <20250917-garten-nirgendwo-f65f951a9268@brauner>
+References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
+ <20250912-work-namespace-v2-18-1a247645cef5@kernel.org>
+ <20250916035633.GM39973@ZenIV>
+ <20250916035949.GO39973@ZenIV>
+ <20250916044648.GP39973@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>, "Amir Goldstein" <amir73il@gmail.com>,
- "Jan Kara" <jack@suse.cz>
-Subject: Re: [PATCH 2/2] VFS: don't call ->atomic_open on cached negative
- without O_CREAT
-In-reply-to: <20250917042348.GS39973@ZenIV>
-References: <20250915031134.2671907-1-neilb@ownmail.net>,
- <20250915031134.2671907-3-neilb@ownmail.net>, <20250917042348.GS39973@ZenIV>
-Date: Wed, 17 Sep 2025 17:36:54 +1000
-Message-id: <175809461430.1696783.8945122470534240428@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250916044648.GP39973@ZenIV>
 
-On Wed, 17 Sep 2025, Al Viro wrote:
-> On Mon, Sep 15, 2025 at 01:01:08PM +1000, NeilBrown wrote:
->=20
-> > All filesystems with ->atomic_open() currently handle the case of a
-> > negative dentry without O_CREAT either by returning -ENOENT or by
-> > calling finish_no_open(), either with NULL or with the negative dentry.
->=20
-> Wait a sec...  Just who is passing finish_no_open() a negative dentry?
-> Any such is very likely to be a bug...
+On Tue, Sep 16, 2025 at 05:46:48AM +0100, Al Viro wrote:
+> On Tue, Sep 16, 2025 at 04:59:49AM +0100, Al Viro wrote:
+> > On Tue, Sep 16, 2025 at 04:56:33AM +0100, Al Viro wrote:
+> > > 	if (!RB_EMPTY_NODE(to_ns_common(ns)->ns_tree_node))
+> > 
+> >  	if (!RB_EMPTY_NODE(&to_ns_common(ns)->ns_tree_node))
+> > 
+> > obviously...
+> 
+> FWIW, how about the following - I put the commit below into never-rebased
+> branch, pull it into #work.mount and you do the same to your branch
+> just prior to 18/33?  The difference from one in #work.mount is that
+> this variant checks RB_EMPTY_NODE(&ns->mnt_ns_tree_node) instead of
+> list_empty(&ns->mnt_ns_list).  The reasons why it's safe lockless are
+> pretty much the same...
+> 
+> Objections?  Does vfs/vfs.git #no-rebases-mnt_ns_tree_remove look sane
+> for you?
 
-You're right, that never happens.  It always NULL being passed or
--ENOENT being returned in the cases I was considering.
+Perfect, thank you!
 
->=20
-> > All of these have the same effect.
-> >=20
-> > For filesystems without ->atomic_open(), lookup_open() will, in this
-> > case, also call finish_no_open().
-> >=20
-> > So this patch removes the burden from filesystems by calling
-> > finish_no_open() early on a negative cached dentry when O_CREAT isn't
-> > requested.
->=20
-> Re "removing the burden" - it still can be called with negative cached with=
-out
-> O_CREAT.
-
-You, but it will also have exclusive access to the dentry - either an
-exclusive lock on the parent, or DCACHE_PAR_LOOKUP.  That is the
-important outcome that I wanted to achieve.
-
->=20
-> O_CREAT in open(2) arguments might not survive to the call of atomic_open()=
- -
-> in case when you don't have write permissions on parent.  In that case
-> we strip O_CREAT and call into atomic_open() (if the method is there).
-> In that case -ENOENT from atomic_open() is translated into -EACCES or -EROF=
-S:
->                 dentry =3D atomic_open(nd, dentry, file, open_flag, mode);
-> 		if (unlikely(create_error) && dentry =3D=3D ERR_PTR(-ENOENT))
-> 			dentry =3D ERR_PTR(create_error);
-> 		return dentry;
-> In case when no ->atomic_open() is there the same logics is
->         if (unlikely(create_error) && !dentry->d_inode) {
-> 		error =3D create_error;
-> 		goto out_dput;
-> 	}
-> in the very end of lookup_open().  The point is, you might have had a call
-> of ->d_revalidate() with LOOKUP_CREATE|LOOKUP_OPEN and then have the damn
-> thing passed to ->atomic_open() with no O_CREAT in flags.
->=20
-
-That inconsistency could be confusing for the filesystem.  It would be
-hard to make it consistent through.
-
-Thanks,
-NeilBrown
-
+> 
+> mnt_ns_tree_remove(): DTRT if mnt_ns had never been added to mnt_ns_list
+>     
+> Actual removal is done under the lock, but for checking if need to bother
+> the lockless RB_EMPTY_NODE() is safe - either that namespace had never
+> been added to mnt_ns_tree, in which case the the node will stay empty, or
+> whoever had allocated it has called mnt_ns_tree_add() and it has already
+> run to completion.  After that point RB_EMPTY_NODE() will become false and
+> will remain false, no matter what we do with other nodes in the tree.
+>     
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index ae6d1312b184..39afeb521a80 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -187,7 +187,7 @@ static void mnt_ns_release_rcu(struct rcu_head *rcu)
+>  static void mnt_ns_tree_remove(struct mnt_namespace *ns)
+>  {
+>  	/* remove from global mount namespace list */
+> -	if (!is_anon_ns(ns)) {
+> +	if (!RB_EMPTY_NODE(&ns->mnt_ns_tree_node)) {
+>  		mnt_ns_tree_write_lock();
+>  		rb_erase(&ns->mnt_ns_tree_node, &mnt_ns_tree);
+>  		list_bidir_del_rcu(&ns->mnt_ns_list);
 
