@@ -1,482 +1,308 @@
-Return-Path: <linux-nfs+bounces-14534-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14535-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAAAEB81D58
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 22:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B82D8B823E6
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 01:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EB0258132B
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 20:49:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D7F03B7162
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 23:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC489478;
-	Wed, 17 Sep 2025 20:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6DE2F3C36;
+	Wed, 17 Sep 2025 23:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="RvO6nGjp"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="bEaorG0l";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gRI7Zcgb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32A293C44
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 20:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A4820370B
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 23:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758142138; cv=none; b=Hbx/iZ+YpjKqhPgtWp/3C9NWaUYk+fB71ooY5AbyFT/TSQnlJ+vQAZC8I0RkYjnkT9A/h1a1pZAHgSRRIKrAJoS2MITNWIh6XiqpohcqcqdXpQ1pYNssLJfxeiUaZKY3xILxouPQIbm6t5xxZC8fcRDH0siipgGOQmVn1Dofbtk=
+	t=1758150644; cv=none; b=jwCaEv7yn1y9IalazzyY6ZKWtwxInQP+hl9sMCE1TNnYLF3XOFkUeovckZwQyPpWM9etTbuW/BUQOg9TQnqu6BGWwEXPFHOTHZRYFl+/lQjaLXub4LABrnk+FkQ2qFj1rKHLgk4RBL0MDpFge4TpNT3ltuXFiqCEp5sRv3x1ZgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758142138; c=relaxed/simple;
-	bh=x/vz0Nx5gBL4sXPQw2SYjQuhf82Hq1P+ENsktJ+pVnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CySqQ+Ylih4OSdLlinHraUcTiqAGVhyEiyg9lY12n0AVwIi2jrgeh1WPL4fWo/W05sQvVxAqDWNEg97hZLAgrdDfsuyPgUjMAKjSFUCJj2LhUDk7IkT+Q1SqU5Cc5/DzcMGEuvkRVoscQ7WM10XyTxtvOeGysrnaXD8fOD5Wdps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=RvO6nGjp; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-62fa062a1abso281649a12.2
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 13:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1758142135; x=1758746935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7PcLJQ3J8u6QJ1Ai+SfXJtHdzwyNhLeepz8mGsqkdJ0=;
-        b=RvO6nGjpd56GhnF1yRLMQuWZdXnfK8n6CzqntWD3rE4NPxeYOuq2DFjsl6vi2ATWl0
-         yna0BftjKPLD2yPhAwRuh9Bqx05uw1vlrbDxFlzxMxRaUTsoXr8noDj1R6LPRhf5DkFX
-         HD5U8Tx434HApsWI9gYStFlFQTq7NKgqEax3f9RlOYdyAAAlwKhYJnbjTDybQic7zPpR
-         PmfiEM00syeNxEXnSyfaCaid1u1d9pEPvBAe+ONSX9jSXN0Q9nwmee4BJTDXCf+t60uH
-         IHnibWIPYRLtmAgouYRwGfUYTa2BGPFiwIPLIBtG3AJRnJRoSGk/7GNYxH+d6EzHYEad
-         MroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758142135; x=1758746935;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7PcLJQ3J8u6QJ1Ai+SfXJtHdzwyNhLeepz8mGsqkdJ0=;
-        b=HN3nTdZRhX1IA3syPNcJRZIWCBz+QvBrXcydHNko9Uagq1n5rDNTRwa6LtdPSobfHe
-         qkKTaQaRE3tDJu8g6YKNuKWeWYoGxV/0vOeOTdvdU72uDxEDoDstoplCfpVc3a7sCF0T
-         yPEoTK8zz4zzvpeV6hvIJ57xIDJ+kFXtBuKtG5sj/JqX53egN2B8+/VPCsNyxcHmei0T
-         8uB8Vy+ZJIFEtFZVmce6uN104JmaIHKFQNrTwThaCoszTmGc3Dt76Zf/AK8vnPUwI/Hz
-         j7sAmKFDYTYlqlm8JUy2KDIOAtqcOsBgvzn8IpBftzJ1pQIoktZvf9BaJL7SZS4kItW4
-         h/bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpUYQ0jYBu4f3/yMggmfNi/bHpTZUnzRWflXp0eEtUfyf7zcXPbglNeJSQYXFFYCcMD1kxgL/IL7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPLRjVJQiv3rbLm5yTZPTPTHCm8I9xWxCVtO3hM9a/26I70QbS
-	TaTNACeCF0N99hEiawVrVzkO7xLcN9NXg0rsSIwbkOg8b+iekrT4GOCrAOf2bZvCNlg=
-X-Gm-Gg: ASbGncvH9ksqvykWI3eMM1ArIVVK/hq7snatcOsYeK/UN0NJuBBIZLNZmuw1Grf5sP3
-	dmuZnAFuwocX5bom2sHJCraz1sAYy3cieseNCojmdy7h4xxsZOd/wQLTjf4V52XcFm0LWcyZeLu
-	gqs6KTEjIBuLLChjIs+aHeJ5DZw6jAh2GtfacDd2E0TeNhCe94mKG5eDAyfQ/1BakVLKNbTMccG
-	b/SJJVVGK8ON9L1OISZHvkb14e8bn3aE8Wz/e1GNmfDRERskSyvL6r4gpV+vLpsO4FJtmTeZJVl
-	Dxts3e3MXuj5+vbgtwmH1VYQQMMCJfgL29w31FV/jMGC3rgszuRPtQiQd3bED8M5lFTJmDk1VFS
-	d0l+qYe5u9SXr38QvHNOZ0cH/S/3GScU8Pw==
-X-Google-Smtp-Source: AGHT+IHMIJGrcnj7hCGFkTxq2lLUwfLf6dcg7PUhi+cA5VOuPUgnPvcC0PjWTgNQ6eeJ3ioWvJzBcg==
-X-Received: by 2002:a17:907:1c94:b0:b04:708e:7348 with SMTP id a640c23a62f3a-b1bc02f8ab6mr382386066b.30.1758142134934;
-        Wed, 17 Sep 2025 13:48:54 -0700 (PDT)
-Received: from localhost ([208.88.158.129])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b1fcfe88d97sm43090066b.58.2025.09.17.13.48.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 13:48:54 -0700 (PDT)
-From: Jonathan Curley <jcurley@purestorage.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Jonathan Curley <jcurley@purestorage.com>,
-	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v2 9/9] NFSv4/flexfiles: Add support for striped layouts
-Date: Wed, 17 Sep 2025 20:48:27 +0000
-Message-Id: <20250917204827.495253-10-jcurley@purestorage.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250917204827.495253-1-jcurley@purestorage.com>
-References: <20250917204827.495253-1-jcurley@purestorage.com>
+	s=arc-20240116; t=1758150644; c=relaxed/simple;
+	bh=yK4n9RQBAdlHhekUIO+sXjaLJqZwVq3njGnV/2gnM44=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ZDUg8TJs+4XuPtzovlNAZ8xD8MTn8gI8KooxF2vqdqeBZFtw52dC0qi/oM9CDmo78VnBgZNOmunlX1xZLmmLYutZ+lr4AvukUawxvTTGFGiIkoAhHjIRauAsGaxcW/LSkquIgHkg5dT08oELqlj+rxW9+oS6j/GiIBs1AuiOggE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=bEaorG0l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gRI7Zcgb; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 25562EC02C1;
+	Wed, 17 Sep 2025 19:10:40 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 17 Sep 2025 19:10:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1758150640; x=1758237040; bh=ih9j2xMqcFZUVxBbsO+nOBLIPSEIvWig9IP
+	V46xA4QM=; b=bEaorG0lNG0idbLkxO1V1BRJaD1Z+Af6eCFmoXRlPMZurSqxgHl
+	1Kb6+E4IlOhp4xBroYGuBVmbyaKNPrlE8oUiNMdihY+iVBPaH2StMrsuyiCAMLH8
+	xcvuJ0NjojQtuwocgckTpb3bJx5jVBvQRQ9dK4vtwqVScgFboZXx1Ds5IeiAk0fB
+	4Ton0xYO/9DIlq2LiFdqIPLDeI2C+ezVJffFC1zRDzALujjSnFkMZBwrF42LUhLQ
+	JwrGlUFVCnMUWobYABEU8SPAxkFt14VCS3p3iimTv4ULn72x1JbsbL7do3aJOCPB
+	kiF26bdoCd1nih/3VKK/gn3bLJT1xhXXBSw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758150640; x=
+	1758237040; bh=ih9j2xMqcFZUVxBbsO+nOBLIPSEIvWig9IPV46xA4QM=; b=g
+	RI7ZcgbOx7DHlIzcv1dLQlSat7rwp1TCwvBQn6rx+dWNl2AxXZTtw7ZdbIWE+/PK
+	r/GiClJvbQCnedHso7t47i3XMMqun370KzL8Rtqj8Olzcg9VEihyT8CFFd/1qgYu
+	sMBaPHNybNi+Ra6scS/L5dSKywhT1ycddN6Od21jTGs7VAg2hT7fN5t9jJld41Ib
+	Y+pHrPK/CfFIZc1/0E6/WRO2Au/+5+M8kgIdk1FO0DhcE52u1x72fROuaBv3lKvI
+	Bp540GaW9tcZzzlzDP1hnInkKCssCYh1+m0flXObqg2qzvcZOz2gQXkZeoM78zu8
+	xVYq9zEEVWhb9l7lKMuzg==
+X-ME-Sender: <xms:7z_LaL7WyyAtO8WJyMFKei0NdF0VAKyMSmj6BFGj-xjIwprbr9YloA>
+    <xme:7z_LaJV9pB0BWRfGJpD3U7GWedD9mHht7j5WG2M5Q1ZRttuXHZvxPI0MBirEbosuq
+    NiWh2uBYXiQUw>
+X-ME-Received: <xmr:7z_LaC7GJkd-yXP6JoImG0lQDgQxskXGbgwsbJNyW4CPQ54AQzeAA040ikLdBAkyZ478Om7UucbUdl3zoJ1-ZmEOuN-pow9HeemC-VNlhzjy>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeggeejfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurheptgfgggfhvfevufgjfhffkfhrsehtqhertd
+    dttdejnecuhfhrohhmpefpvghilheurhhofihnuceonhgvihhlsgesohifnhhmrghilhdr
+    nhgvtheqnecuggftrfgrthhtvghrnhepleejtdefgeeukeeiteduveehudevfeffvedute
+    fgteduhfegvdfgtdeigeeuudejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepnhgvihhlsgesohifnhhmrghilhdrnhgvthdpnhgspghrtghpth
+    htohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqnhhfshes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhmsehtrghlphgvhidrtg
+    homhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthht
+    ohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:7z_LaMqEbR4aage95WVK96oJBP2h2UYYqOetLF4Drz9hHp-kSn6w5w>
+    <xmx:7z_LaNkkV39s0gUACnF7n3RteI0EHyhaI9NerRAky0ajq3EBHO9e6Q>
+    <xmx:7z_LaAMdSrcAXdSyeVTjsMp81Hl493QNqBSFxJTq4e2wFbhCDSgQTA>
+    <xmx:7z_LaJMQMfhD725Ke-QyJ4756vHzFf5bQ0d0Yo3vm_SqKh2YX7_bEw>
+    <xmx:8D_LaJHjdyHXeXaEhnBeIi6MJLgmyFeHz-3MKlH4laN0yf5ioSKNBYqk>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 17 Sep 2025 19:10:37 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: jlayton@kernel.org, okorniev@redhat.com, dai.ngo@oracle.com,
+ tom@talpey.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] NFSD: filecache: add STATX_DIOALIGN and
+ STATX_DIO_READ_ALIGN support
+In-reply-to: =?utf-8?q?=3C175811950708=2E19474=2E3966708920934397510=2Estgit?=
+ =?utf-8?q?=4091=2E116=2E238=2E104=2Ehost=2Esecureserver=2Enet=3E?=
+References: =?utf-8?q?=3C175811882632=2E19474=2E8126763744508709520=2Estgit?=
+ =?utf-8?b?QDkxLjExNi4yMzguMTA0Lmhvc3Quc2VjdXJlc2VydmVyLm5ldD4sIDwxNzU4?=
+ =?utf-8?q?11950708=2E19474=2E3966708920934397510=2Estgit=4091=2E116=2E238?=
+ =?utf-8?q?=2E104=2Ehost=2Esecureserver=2Enet=3E?=
+Date: Thu, 18 Sep 2025 09:10:34 +1000
+Message-id: <175815063429.1696783.10619003048352606681@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-Updates lseg creation path to parse and add striped layouts. Enable
-support for striped layouts.
+On Thu, 18 Sep 2025, Chuck Lever wrote:
+> From: Mike Snitzer <snitzer@kernel.org>
+>=20
+> Use STATX_DIOALIGN and STATX_DIO_READ_ALIGN to get DIO alignment
+> attributes from the underlying filesystem and store them in the
+> associated nfsd_file. This is done when the nfsd_file is first
+> opened for each regular file.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/filecache.c     |   34 ++++++++++++++++++++++++++++++++++
+>  fs/nfsd/filecache.h     |    4 ++++
+>  fs/nfsd/nfsfh.c         |    4 ++++
+>  fs/nfsd/trace.h         |   27 +++++++++++++++++++++++++++
+>  include/trace/misc/fs.h |   22 ++++++++++++++++++++++
+>  5 files changed, 91 insertions(+)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 75bc48031c07..78cca0d751ac 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -231,6 +231,9 @@ nfsd_file_alloc(struct net *net, struct inode *inode, u=
+nsigned char need,
+>  	refcount_set(&nf->nf_ref, 1);
+>  	nf->nf_may =3D need;
+>  	nf->nf_mark =3D NULL;
+> +	nf->nf_dio_mem_align =3D 0;
+> +	nf->nf_dio_offset_align =3D 0;
+> +	nf->nf_dio_read_offset_align =3D 0;
+>  	return nf;
+>  }
+> =20
+> @@ -1048,6 +1051,35 @@ nfsd_file_is_cached(struct inode *inode)
+>  	return ret;
+>  }
+> =20
+> +static __be32
+> +nfsd_file_get_dio_attrs(const struct svc_fh *fhp, struct nfsd_file *nf)
+> +{
+> +	struct inode *inode =3D file_inode(nf->nf_file);
+> +	struct kstat stat;
+> +	__be32 status;
+> +
+> +	/* Currently only need to get DIO alignment info for regular files */
+> +	if (!S_ISREG(inode->i_mode))
+> +		return nfs_ok;
+> +
+> +	status =3D fh_getattr(fhp, &stat);
+> +	if (status !=3D nfs_ok)
+> +		return status;
+> +
+> +	trace_nfsd_file_get_dio_attrs(inode, &stat);
+> +
+> +	if (stat.result_mask & STATX_DIOALIGN) {
+> +		nf->nf_dio_mem_align =3D stat.dio_mem_align;
+> +		nf->nf_dio_offset_align =3D stat.dio_offset_align;
+> +	}
+> +	if (stat.result_mask & STATX_DIO_READ_ALIGN)
+> +		nf->nf_dio_read_offset_align =3D stat.dio_read_offset_align;
+> +	else
+> +		nf->nf_dio_read_offset_align =3D nf->nf_dio_offset_align;
+> +
+> +	return nfs_ok;
+> +}
+> +
+>  static __be32
+>  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
+>  		     struct svc_cred *cred,
+> @@ -1166,6 +1198,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct n=
+et *net,
+>  			}
+>  			status =3D nfserrno(ret);
+>  			trace_nfsd_file_open(nf, status);
+> +			if (status =3D=3D nfs_ok)
+> +				status =3D nfsd_file_get_dio_attrs(fhp, nf);
+>  		}
+>  	} else
+>  		status =3D nfserr_jukebox;
+> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> index 24ddf60e8434..e3d6ca2b6030 100644
+> --- a/fs/nfsd/filecache.h
+> +++ b/fs/nfsd/filecache.h
+> @@ -54,6 +54,10 @@ struct nfsd_file {
+>  	struct list_head	nf_gc;
+>  	struct rcu_head		nf_rcu;
+>  	ktime_t			nf_birthtime;
+> +
+> +	u32			nf_dio_mem_align;
+> +	u32			nf_dio_offset_align;
+> +	u32			nf_dio_read_offset_align;
+>  };
+> =20
+>  int nfsd_file_cache_init(void);
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 3edccc38db42..3eb724ec9566 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -696,8 +696,12 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct kst=
+at *stat)
+>  		.mnt		=3D fhp->fh_export->ex_path.mnt,
+>  		.dentry		=3D fhp->fh_dentry,
+>  	};
+> +	struct inode *inode =3D d_inode(p.dentry);
+>  	u32 request_mask =3D STATX_BASIC_STATS;
+> =20
+> +	if (S_ISREG(inode->i_mode))
+> +		request_mask |=3D (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
 
-Limitations:
+As an aside - you could use "d_is_reg(p.dentry)" and not need the inode.
+It's not worth changing though.
 
-1. All mirrors must have the same number of stripes.
+Reviewed-by: NeilBrown <neil@brown.name>
 
-Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 247 ++++++++++++++++---------
- fs/nfs/flexfilelayout/flexfilelayout.h |   2 +
- 2 files changed, 157 insertions(+), 92 deletions(-)
+Thanks,
+NeilBrown
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 28d982af4450..6d9aea16ef44 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -177,18 +177,19 @@ ff_local_open_fh(struct pnfs_layout_segment *lseg, u32 ds_idx, u32 dss_id,
- #endif
- }
- 
--static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
--		const struct nfs4_ff_layout_mirror *m2)
-+static bool ff_dss_match_fh(const struct nfs4_ff_layout_ds_stripe *dss1,
-+		const struct nfs4_ff_layout_ds_stripe *dss2)
- {
- 	int i, j;
- 
--	if (m1->dss[0].fh_versions_cnt != m2->dss[0].fh_versions_cnt)
-+	if (dss1->fh_versions_cnt != dss2->fh_versions_cnt)
- 		return false;
--	for (i = 0; i < m1->dss[0].fh_versions_cnt; i++) {
-+
-+	for (i = 0; i < dss1->fh_versions_cnt; i++) {
- 		bool found_fh = false;
--		for (j = 0; j < m2->dss[0].fh_versions_cnt; j++) {
--			if (nfs_compare_fh(&m1->dss[0].fh_versions[i],
--					&m2->dss[0].fh_versions[j]) == 0) {
-+		for (j = 0; j < dss2->fh_versions_cnt; j++) {
-+			if (nfs_compare_fh(&dss1->fh_versions[i],
-+					&dss2->fh_versions[j]) == 0) {
- 				found_fh = true;
- 				break;
- 			}
-@@ -199,6 +200,38 @@ static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
- 	return true;
- }
- 
-+static bool ff_mirror_match_fh(const struct nfs4_ff_layout_mirror *m1,
-+		const struct nfs4_ff_layout_mirror *m2)
-+{
-+	u32 dss_id;
-+
-+	if (m1->dss_count != m2->dss_count)
-+		return false;
-+
-+	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
-+		if (!ff_dss_match_fh(&m1->dss[dss_id], &m2->dss[dss_id]))
-+			return false;
-+
-+	return true;
-+}
-+
-+static bool ff_mirror_match_devid(const struct nfs4_ff_layout_mirror *m1,
-+		const struct nfs4_ff_layout_mirror *m2)
-+{
-+	u32 dss_id;
-+
-+	if (m1->dss_count != m2->dss_count)
-+		return false;
-+
-+	for (dss_id = 0; dss_id < m1->dss_count; dss_id++)
-+		if (memcmp(&m1->dss[dss_id].devid,
-+			   &m2->dss[dss_id].devid,
-+			   sizeof(m1->dss[dss_id].devid)) != 0)
-+			return false;
-+
-+	return true;
-+}
-+
- static struct nfs4_ff_layout_mirror *
- ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
- 		struct nfs4_ff_layout_mirror *mirror)
-@@ -209,8 +242,7 @@ ff_layout_add_mirror(struct pnfs_layout_hdr *lo,
- 
- 	spin_lock(&inode->i_lock);
- 	list_for_each_entry(pos, &ff_layout->mirrors, mirrors) {
--		if (memcmp(&mirror->dss[0].devid, &pos->dss[0].devid,
--			   sizeof(pos->dss[0].devid)) != 0)
-+		if (!ff_mirror_match_devid(mirror, pos))
- 			continue;
- 		if (!ff_mirror_match_fh(mirror, pos))
- 			continue;
-@@ -241,13 +273,15 @@ ff_layout_remove_mirror(struct nfs4_ff_layout_mirror *mirror)
- static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
- {
- 	struct nfs4_ff_layout_mirror *mirror;
-+	u32 dss_id;
- 
- 	mirror = kzalloc(sizeof(*mirror), gfp_flags);
- 	if (mirror != NULL) {
- 		spin_lock_init(&mirror->lock);
- 		refcount_set(&mirror->ref, 1);
- 		INIT_LIST_HEAD(&mirror->mirrors);
--		nfs_localio_file_init(&mirror->dss[0].nfl);
-+		for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
-+			nfs_localio_file_init(&mirror->dss[dss_id].nfl);
- 	}
- 	return mirror;
- }
-@@ -255,17 +289,19 @@ static struct nfs4_ff_layout_mirror *ff_layout_alloc_mirror(gfp_t gfp_flags)
- static void ff_layout_free_mirror(struct nfs4_ff_layout_mirror *mirror)
- {
- 	const struct cred	*cred;
--	int dss_id = 0;
-+	u32 dss_id;
- 
- 	ff_layout_remove_mirror(mirror);
- 
--	kfree(mirror->dss[dss_id].fh_versions);
--	nfs_close_local_fh(&mirror->dss[dss_id].nfl);
--	cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
--	put_cred(cred);
--	cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
--	put_cred(cred);
--	nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
-+	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++) {
-+		kfree(mirror->dss[dss_id].fh_versions);
-+		cred = rcu_access_pointer(mirror->dss[dss_id].ro_cred);
-+		put_cred(cred);
-+		cred = rcu_access_pointer(mirror->dss[dss_id].rw_cred);
-+		put_cred(cred);
-+		nfs_close_local_fh(&mirror->dss[dss_id].nfl);
-+		nfs4_ff_layout_put_deviceid(mirror->dss[dss_id].mirror_ds);
-+	}
- 
- 	kfree(mirror->dss);
- 	kfree(mirror);
-@@ -371,14 +407,24 @@ ff_layout_add_lseg(struct pnfs_layout_hdr *lo,
- 			free_me);
- }
- 
-+static u32 ff_mirror_efficiency_sum(const struct nfs4_ff_layout_mirror *mirror)
-+{
-+	u32 dss_id, sum = 0;
-+
-+	for (dss_id = 0; dss_id < mirror->dss_count; dss_id++)
-+		sum += mirror->dss[dss_id].efficiency;
-+
-+	return sum;
-+}
-+
- static void ff_layout_sort_mirrors(struct nfs4_ff_layout_segment *fls)
- {
- 	int i, j;
- 
- 	for (i = 0; i < fls->mirror_array_cnt - 1; i++) {
- 		for (j = i + 1; j < fls->mirror_array_cnt; j++)
--			if (fls->mirror_array[i]->dss[0].efficiency <
--			    fls->mirror_array[j]->dss[0].efficiency)
-+			if (ff_mirror_efficiency_sum(fls->mirror_array[i]) <
-+			    ff_mirror_efficiency_sum(fls->mirror_array[j]))
- 				swap(fls->mirror_array[i],
- 				     fls->mirror_array[j]);
- 	}
-@@ -398,6 +444,7 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 	u32 mirror_array_cnt;
- 	__be32 *p;
- 	int i, rc;
-+	struct nfs4_ff_layout_ds_stripe *dss_info;
- 
- 	dprintk("--> %s\n", __func__);
- 	scratch = alloc_page(gfp_flags);
-@@ -440,17 +487,24 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		kuid_t uid;
- 		kgid_t gid;
- 		u32 fh_count, id;
--		int j, dss_id = 0;
-+		int j, dss_id;
- 
- 		rc = -EIO;
- 		p = xdr_inline_decode(&stream, 4);
- 		if (!p)
- 			goto out_err_free;
- 
--		dss_count = be32_to_cpup(p);
-+		// Ensure all mirrors have same stripe count.
-+		if (dss_count == 0)
-+			dss_count = be32_to_cpup(p);
-+		else if (dss_count != be32_to_cpup(p))
-+			goto out_err_free;
-+
-+		if (dss_count > NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT ||
-+		    dss_count == 0)
-+			goto out_err_free;
- 
--		/* FIXME: allow for striping? */
--		if (dss_count != 1)
-+		if (dss_count > 1 && stripe_unit == 0)
- 			goto out_err_free;
- 
- 		fls->mirror_array[i] = ff_layout_alloc_mirror(gfp_flags);
-@@ -464,91 +518,100 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
- 		    kcalloc(dss_count, sizeof(struct nfs4_ff_layout_ds_stripe),
- 			    gfp_flags);
- 
--		/* deviceid */
--		rc = decode_deviceid(&stream, &fls->mirror_array[i]->dss[dss_id].devid);
--		if (rc)
--			goto out_err_free;
-+		for (dss_id = 0; dss_id < dss_count; dss_id++) {
-+			dss_info = &fls->mirror_array[i]->dss[dss_id];
-+			dss_info->mirror = fls->mirror_array[i];
- 
--		/* efficiency */
--		rc = -EIO;
--		p = xdr_inline_decode(&stream, 4);
--		if (!p)
--			goto out_err_free;
--		fls->mirror_array[i]->dss[dss_id].efficiency = be32_to_cpup(p);
-+			/* deviceid */
-+			rc = decode_deviceid(&stream, &dss_info->devid);
-+			if (rc)
-+				goto out_err_free;
- 
--		/* stateid */
--		rc = decode_pnfs_stateid(&stream, &fls->mirror_array[i]->dss[dss_id].stateid);
--		if (rc)
--			goto out_err_free;
-+			/* efficiency */
-+			rc = -EIO;
-+			p = xdr_inline_decode(&stream, 4);
-+			if (!p)
-+				goto out_err_free;
-+			dss_info->efficiency = be32_to_cpup(p);
- 
--		/* fh */
--		rc = -EIO;
--		p = xdr_inline_decode(&stream, 4);
--		if (!p)
--			goto out_err_free;
--		fh_count = be32_to_cpup(p);
-+			/* stateid */
-+			rc = decode_pnfs_stateid(&stream, &dss_info->stateid);
-+			if (rc)
-+				goto out_err_free;
- 
--		fls->mirror_array[i]->dss[dss_id].fh_versions =
--		    kcalloc(fh_count, sizeof(struct nfs_fh),
--			    gfp_flags);
--		if (fls->mirror_array[i]->dss[dss_id].fh_versions == NULL) {
--			rc = -ENOMEM;
--			goto out_err_free;
--		}
-+			/* fh */
-+			rc = -EIO;
-+			p = xdr_inline_decode(&stream, 4);
-+			if (!p)
-+				goto out_err_free;
-+			fh_count = be32_to_cpup(p);
- 
--		for (j = 0; j < fh_count; j++) {
--			rc = decode_nfs_fh(&stream,
--					   &fls->mirror_array[i]->dss[dss_id].fh_versions[j]);
-+			dss_info->fh_versions =
-+			    kcalloc(fh_count, sizeof(struct nfs_fh),
-+				    gfp_flags);
-+			if (dss_info->fh_versions == NULL) {
-+				rc = -ENOMEM;
-+				goto out_err_free;
-+			}
-+
-+			for (j = 0; j < fh_count; j++) {
-+				rc = decode_nfs_fh(&stream,
-+						   &dss_info->fh_versions[j]);
-+				if (rc)
-+					goto out_err_free;
-+			}
-+
-+			dss_info->fh_versions_cnt = fh_count;
-+
-+			/* user */
-+			rc = decode_name(&stream, &id);
- 			if (rc)
- 				goto out_err_free;
--		}
- 
--		fls->mirror_array[i]->dss[dss_id].fh_versions_cnt = fh_count;
-+			uid = make_kuid(&init_user_ns, id);
- 
--		/* user */
--		rc = decode_name(&stream, &id);
--		if (rc)
--			goto out_err_free;
-+			/* group */
-+			rc = decode_name(&stream, &id);
-+			if (rc)
-+				goto out_err_free;
- 
--		uid = make_kuid(&init_user_ns, id);
-+			gid = make_kgid(&init_user_ns, id);
- 
--		/* group */
--		rc = decode_name(&stream, &id);
--		if (rc)
--			goto out_err_free;
-+			if (gfp_flags & __GFP_FS)
-+				kcred = prepare_kernel_cred(&init_task);
-+			else {
-+				unsigned int nofs_flags = memalloc_nofs_save();
- 
--		gid = make_kgid(&init_user_ns, id);
-+				kcred = prepare_kernel_cred(&init_task);
-+				memalloc_nofs_restore(nofs_flags);
-+			}
-+			rc = -ENOMEM;
-+			if (!kcred)
-+				goto out_err_free;
-+			kcred->fsuid = uid;
-+			kcred->fsgid = gid;
-+			cred = RCU_INITIALIZER(kcred);
- 
--		if (gfp_flags & __GFP_FS)
--			kcred = prepare_kernel_cred(&init_task);
--		else {
--			unsigned int nofs_flags = memalloc_nofs_save();
--			kcred = prepare_kernel_cred(&init_task);
--			memalloc_nofs_restore(nofs_flags);
-+			if (lgr->range.iomode == IOMODE_READ)
-+				rcu_assign_pointer(dss_info->ro_cred, cred);
-+			else
-+				rcu_assign_pointer(dss_info->rw_cred, cred);
- 		}
--		rc = -ENOMEM;
--		if (!kcred)
--			goto out_err_free;
--		kcred->fsuid = uid;
--		kcred->fsgid = gid;
--		cred = RCU_INITIALIZER(kcred);
--
--		if (lgr->range.iomode == IOMODE_READ)
--			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
--		else
--			rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
- 
- 		mirror = ff_layout_add_mirror(lh, fls->mirror_array[i]);
- 		if (mirror != fls->mirror_array[i]) {
--			/* swap cred ptrs so free_mirror will clean up old */
--			if (lgr->range.iomode == IOMODE_READ) {
--				cred = xchg(&mirror->dss[dss_id].ro_cred,
--					    fls->mirror_array[i]->dss[dss_id].ro_cred);
--				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].ro_cred, cred);
--			} else {
--				cred = xchg(&mirror->dss[dss_id].rw_cred,
--					    fls->mirror_array[i]->dss[dss_id].rw_cred);
--				rcu_assign_pointer(fls->mirror_array[i]->dss[dss_id].rw_cred, cred);
-+			for (dss_id = 0; dss_id < dss_count; dss_id++) {
-+				dss_info = &fls->mirror_array[i]->dss[dss_id];
-+				/* swap cred ptrs so free_mirror will clean up old */
-+				if (lgr->range.iomode == IOMODE_READ) {
-+					cred = xchg(&mirror->dss[dss_id].ro_cred,
-+						    dss_info->ro_cred);
-+					rcu_assign_pointer(dss_info->ro_cred, cred);
-+				} else {
-+					cred = xchg(&mirror->dss[dss_id].rw_cred,
-+						    dss_info->rw_cred);
-+					rcu_assign_pointer(dss_info->rw_cred, cred);
-+				}
- 			}
- 			ff_layout_free_mirror(fls->mirror_array[i]);
- 			fls->mirror_array[i] = mirror;
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
-index 142324d6d5c5..17a008c8e97c 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.h
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.h
-@@ -21,6 +21,8 @@
-  * due to network error etc. */
- #define NFS4_FLEXFILE_LAYOUT_MAX_MIRROR_CNT 4096
- 
-+#define NFS4_FLEXFILE_LAYOUT_MAX_STRIPE_CNT 4096
-+
- /* LAYOUTSTATS report interval in ms */
- #define FF_LAYOUTSTATS_REPORT_INTERVAL (60000L)
- #define FF_LAYOUTSTATS_MAXDEV 4
--- 
-2.34.1
+
+> +
+>  	if (fhp->fh_maxsize =3D=3D NFS4_FHSIZE)
+>  		request_mask |=3D (STATX_BTIME | STATX_CHANGE_COOKIE);
+> =20
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index a664fdf1161e..6e2c8e2aab10 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -1133,6 +1133,33 @@ TRACE_EVENT(nfsd_file_alloc,
+>  	)
+>  );
+> =20
+> +TRACE_EVENT(nfsd_file_get_dio_attrs,
+> +	TP_PROTO(
+> +		const struct inode *inode,
+> +		const struct kstat *stat
+> +	),
+> +	TP_ARGS(inode, stat),
+> +	TP_STRUCT__entry(
+> +		__field(const void *, inode)
+> +		__field(unsigned long, mask)
+> +		__field(u32, mem_align)
+> +		__field(u32, offset_align)
+> +		__field(u32, read_offset_align)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->inode =3D inode;
+> +		__entry->mask =3D stat->result_mask;
+> +		__entry->mem_align =3D stat->dio_mem_align;
+> +		__entry->offset_align =3D stat->dio_offset_align;
+> +		__entry->read_offset_align =3D stat->dio_read_offset_align;
+> +	),
+> +	TP_printk("inode=3D%p flags=3D%s mem_align=3D%u offset_align=3D%u read_of=
+fset_align=3D%u",
+> +		__entry->inode, show_statx_mask(__entry->mask),
+> +		__entry->mem_align, __entry->offset_align,
+> +		__entry->read_offset_align
+> +	)
+> +);
+> +
+>  TRACE_EVENT(nfsd_file_acquire,
+>  	TP_PROTO(
+>  		const struct svc_rqst *rqstp,
+> diff --git a/include/trace/misc/fs.h b/include/trace/misc/fs.h
+> index 0406ebe2a80a..7ead1c61f0cb 100644
+> --- a/include/trace/misc/fs.h
+> +++ b/include/trace/misc/fs.h
+> @@ -141,3 +141,25 @@
+>  		{ ATTR_TIMES_SET,	"TIMES_SET" },	\
+>  		{ ATTR_TOUCH,		"TOUCH"},	\
+>  		{ ATTR_DELEG,		"DELEG"})
+> +
+> +#define show_statx_mask(flags)					\
+> +	__print_flags(flags, "|",				\
+> +		{ STATX_TYPE,		"TYPE" },		\
+> +		{ STATX_MODE,		"MODE" },		\
+> +		{ STATX_NLINK,		"NLINK" },		\
+> +		{ STATX_UID,		"UID" },		\
+> +		{ STATX_GID,		"GID" },		\
+> +		{ STATX_ATIME,		"ATIME" },		\
+> +		{ STATX_MTIME,		"MTIME" },		\
+> +		{ STATX_CTIME,		"CTIME" },		\
+> +		{ STATX_INO,		"INO" },		\
+> +		{ STATX_SIZE,		"SIZE" },		\
+> +		{ STATX_BLOCKS,		"BLOCKS" },		\
+> +		{ STATX_BASIC_STATS,	"BASIC_STATS" },	\
+> +		{ STATX_BTIME,		"BTIME" },		\
+> +		{ STATX_MNT_ID,		"MNT_ID" },		\
+> +		{ STATX_DIOALIGN,	"DIOALIGN" },		\
+> +		{ STATX_MNT_ID_UNIQUE,	"MNT_ID_UNIQUE" },	\
+> +		{ STATX_SUBVOL,		"SUBVOL" },		\
+> +		{ STATX_WRITE_ATOMIC,	"WRITE_ATOMIC" },	\
+> +		{ STATX_DIO_READ_ALIGN,	"DIO_READ_ALIGN" })
+>=20
+>=20
+>=20
 
 
