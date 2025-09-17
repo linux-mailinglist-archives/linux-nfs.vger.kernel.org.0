@@ -1,336 +1,126 @@
-Return-Path: <linux-nfs+bounces-14515-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14516-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC161B80454
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 16:53:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93F56B813A9
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 19:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCEB1542803
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 14:53:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 427561B248BD
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 17:51:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3730F332A2F;
-	Wed, 17 Sep 2025 14:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E9012FE048;
+	Wed, 17 Sep 2025 17:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5HKCiYJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sgcyxd4G"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6FD330D4E
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 14:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392892FE045
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 17:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758120773; cv=none; b=hEQHPKt7wXA2N5l2NneIBZubv4QwPa/NwybalxcZE5jEOfMkIV7cRM5W9tKuOyj4iuaCvDMknCGeZyziLNkdxPPoc1Ojupfj+QMZcstHMFy/68Ka12Ax1dWmY1C04ZYCWieSCCTRT2tSaq5AhBiHoylfKBnLTZXvFpX7K3slWQc=
+	t=1758131465; cv=none; b=mrkOTcfDEPrBNuxYjvQgi0QO1NDNwpvribroFHnKjmYrhGlDPhQBlFF6K0Qjd4LBazyJqtvQ7hzmLhr+GqfoKCY46FpgPXcV+rSgRfbLXU4iwV7zwpk/Bi+75ykYOWtmlfJJZZiG5G3Dcqehd6/BdgGlHdyH1IX8lFzWM0vop+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758120773; c=relaxed/simple;
-	bh=5epPT/yF5ySKt5yJiiDB0pyPwiJwOtudKK0nsTblkcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A8HlJuhhhlqTqTYBBatvzaWeN5ZdiW4vCr+wJb+mOUgn34A/ZOlNcRyXNDmYfgaZTws7GSSuRbkfA7YquF4i7zEioCjdSPA2o/C1hJBBOpnqY/axEYAe2w0gotro/4wzLhnKrSrCHAUe2Uyyu2rR9/ZSsMVXKVVdd1r5hQvFm7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5HKCiYJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758120769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gDs3CUgjimStalCZ6Y06kSWDcmRW5MkZeDVBa3itpks=;
-	b=Y5HKCiYJkMelEBHm798LQBOLQFsyQ4blYDc14lDVhJ/bHYjdvQbuCv7/jO/47JDBWlsqO/
-	tEGGpzgemCnl/U0UimZ7TU43h178Eiq8aSCF2Er8+oFp51VBlUkq3KaUuSXvDq0L3o+kTU
-	Mj18HYK7ipfmA0ng1MjSJLfEzVKerwM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-8sRHj74TP46rb_xnALz56g-1; Wed, 17 Sep 2025 10:52:48 -0400
-X-MC-Unique: 8sRHj74TP46rb_xnALz56g-1
-X-Mimecast-MFC-AGG-ID: 8sRHj74TP46rb_xnALz56g_1758120767
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45e05ff0b36so4834415e9.0
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 07:52:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758120767; x=1758725567;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gDs3CUgjimStalCZ6Y06kSWDcmRW5MkZeDVBa3itpks=;
-        b=LwfiJIrvrMJP9q6Ze7GIOoksAcvjW3IQRVGfaoitDiMasWj+trcQuP8Wm2UQoORbwr
-         IWBA7r/IGB8OOB2uMcP/HQvBeLNqM+KhsouGkly6ft+2DgriLqJzPyeeKQmh5T1ORKLP
-         gy0zo1VphRkDbgL2nYPt+8l1FlDmfaaslkepzamtcm9lv/doFnALNyh8kol+3oSi5sLJ
-         Scpb4+RoBtIoUgtWH98bSh2lnZJ4YzH//BSDLdFPVjLhs3k/rPL4iEIauKOgWgUC3gXp
-         hPL0xWEsMJPeQdzR3WwJmLyh0wAk905YdyOtbKw1tcfBr+X+xRsnhy7yL/DHjYnufQ3i
-         ulnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwzebXw7u8xhv8dKA3RiU268v/iqM/A3cH5cuoFxNpjFB2qLgZep9ivwMYMxyaK78EUoFwVu1b6O8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBMqqgv5Yl2aQ5sQMwvjbVNIlGJwYk6y8p2j3JFUfXyOZ5eacp
-	l/OHdvWlZAaRVgHgj8Sk3ldOyWo+QeUuBDUGleA3oiEXs0q9L3b9x64c6QHn5zWGg9wpiU/Ncw6
-	rV82gx5vLVV8UPODQsdbak4gMOgBMpeosPdcLrpwrOdpqt6XzFiByWaU0AZLrJg==
-X-Gm-Gg: ASbGncv8w24DwbEjHXhVZydwvlNgnxKJjzz4c8eoWxNOPrHFDY5NDoNQl43WRSKsy9O
-	/5w03piy9Xd3sSYIVVnS1TgmzF0bm0BSK8EwWUskFVlSjMh2S+OTGnwwa1xhwPEiSSuXvfKjjYS
-	cE+E/GIpfT67rbHYzBYfE5NwObCtQp8DPDsxHTyji4suJ6G8cLZZiYr+3mobA0xebHlI+jVwGHz
-	hyz93Kkht4gA+/QzhXx9ePQ+kT0wYcO0bNbQjpVrCqsIMvoac/p4dXkF2qXRs8V3BdpzaNpzKCf
-	xdK9K0PThdZL/2KrDKj2Wp0zRBaD9+l434DC54lShChjTd9ZMg0SLjWWAS21lD51XMCHmg6A19A
-	oWSSPpLtE+GzQtouOyrhjBmFafB2CqAvIjXENq6iV3NdSLK5VXBpYeXp4id0A5Z4v
-X-Received: by 2002:a5d:584d:0:b0:3ea:d634:1493 with SMTP id ffacd0b85a97d-3ec9d70e1aemr6331309f8f.3.1758120767090;
-        Wed, 17 Sep 2025 07:52:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCVwA2whdJvJ6k0SNSXVgRVBCXXeS7K5H+4SZxMmaPtCI7Uv2obWcxbuvE8IbcU5jjC+Gugg==
-X-Received: by 2002:a5d:584d:0:b0:3ea:d634:1493 with SMTP id ffacd0b85a97d-3ec9d70e1aemr6331269f8f.3.1758120766367;
-        Wed, 17 Sep 2025 07:52:46 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4613f3c69d5sm39701795e9.24.2025.09.17.07.52.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 07:52:45 -0700 (PDT)
-Message-ID: <e30627e5-f30f-4494-934c-58e4a427a476@redhat.com>
-Date: Wed, 17 Sep 2025 16:52:40 +0200
+	s=arc-20240116; t=1758131465; c=relaxed/simple;
+	bh=uDlP9HZsURHmu52s/C9GDd5jADfJhLAIn3fYDRyKGR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtFhBxDayXrdNSqzwc6H72iP00ow/vnn4SJIfzi+q9QqB/pRUHdKqqkRNEKYJslDqtrQkpioj4Vh7IGAU6YYUlyOFY+ClLniSeCLMzy9/mBT1LgD6jPaTp85lXCqK+8buuSoFP7Aezpkp4jGA+SpsVPH6Sc8BaBneXXOIVG50KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sgcyxd4G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823EAC4CEF7;
+	Wed, 17 Sep 2025 17:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758131464;
+	bh=uDlP9HZsURHmu52s/C9GDd5jADfJhLAIn3fYDRyKGR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sgcyxd4G8/NdWYBV23pyFx0mVU5ATkWapkrdeuMgQ151WwXHaJlCs3w2pfbB3vCx6
+	 uQaTfve1yIW4Wueb/B9AWFBcpEIff5HfhXgxZl0ZB8nR+uD0lGpwvZXp0T5UXh0WW5
+	 a78VLt+a29fGEBg4zPpwltxXJSHAZPCfcUKaIK1BIeFFFSeWG38OW+T0uRT05VB1p+
+	 I94RsXWC3NsSi6sTPsZ19jgrPMM+AhGLkwhy3TApOrknXhrQOdwU/hEtgv4WZj+Pxe
+	 tHXtXfwn4bktbJ0n4uzrBktFDAyB4mtaH+rYOSwFHBCdrJsathL+o0v+W0ilimq8QR
+	 tBcQ8hB49f1Iw==
+Date: Wed, 17 Sep 2025 13:51:03 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: neil@brown.name, jlayton@kernel.org, okorniev@redhat.com,
+	dai.ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] NFSD: Add array bounds-checking in
+ nfsd_iter_read()
+Message-ID: <aMr1BxbTbN6dYRyp@kernel.org>
+References: <175811882632.19474.8126763744508709520.stgit@91.116.238.104.host.secureserver.net>
+ <175811950060.19474.9133241842109562565.stgit@91.116.238.104.host.secureserver.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/11] filemap: Pass address_space mapping to
- ->free_folio()
-To: Hugh Dickins <hughd@google.com>, "Roy, Patrick" <roypat@amazon.co.uk>
-Cc: "Thomson, Jack" <jackabt@amazon.co.uk>,
- "Kalyazin, Nikita" <kalyazin@amazon.co.uk>,
- "Cali, Marco" <xmarcalx@amazon.co.uk>,
- "derekmn@amazon.co.uk" <derekmn@amazon.co.uk>,
- Elliot Berman <quic_eberman@quicinc.com>,
- "willy@infradead.org" <willy@infradead.org>, "corbet@lwn.net"
- <corbet@lwn.net>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "maz@kernel.org" <maz@kernel.org>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>,
- "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
- "kernel@xen0n.name" <kernel@xen0n.name>,
- "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
- "palmer@dabbelt.com" <palmer@dabbelt.com>,
- "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
- "alex@ghiti.fr" <alex@ghiti.fr>,
- "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
- "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
- "hca@linux.ibm.com" <hca@linux.ibm.com>,
- "gor@linux.ibm.com" <gor@linux.ibm.com>,
- "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
- "svens@linux.ibm.com" <svens@linux.ibm.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "luto@kernel.org" <luto@kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "trondmy@kernel.org" <trondmy@kernel.org>, "anna@kernel.org"
- <anna@kernel.org>, "hubcap@omnibond.com" <hubcap@omnibond.com>,
- "martin@omnibond.com" <martin@omnibond.com>,
- "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
- "brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
- "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
- "vbabka@suse.cz" <vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>,
- "surenb@google.com" <surenb@google.com>, "mhocko@suse.com"
- <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
- "daniel@iogearbox.net" <daniel@iogearbox.net>,
- "andrii@kernel.org" <andrii@kernel.org>,
- "martin.lau@linux.dev" <martin.lau@linux.dev>,
- "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
- <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
- "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
- "kpsingh@kernel.org" <kpsingh@kernel.org>, "sdf@fomichev.me"
- <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
- "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
- "peterx@redhat.com" <peterx@redhat.com>, "jannh@google.com"
- <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>,
- "axelrasmussen@google.com" <axelrasmussen@google.com>,
- "yuanchu@google.com" <yuanchu@google.com>,
- "weixugc@google.com" <weixugc@google.com>,
- "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
- "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
- "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
- "shuah@kernel.org" <shuah@kernel.org>, "seanjc@google.com"
- <seanjc@google.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "devel@lists.orangefs.org" <devel@lists.orangefs.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20250912091708.17502-1-roypat@amazon.co.uk>
- <20250912091708.17502-2-roypat@amazon.co.uk>
- <7c2677e1-daf7-3b49-0a04-1efdf451379a@google.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <7c2677e1-daf7-3b49-0a04-1efdf451379a@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175811950060.19474.9133241842109562565.stgit@91.116.238.104.host.secureserver.net>
 
-On 16.09.25 08:23, Hugh Dickins wrote:
-> On Fri, 12 Sep 2025, Roy, Patrick wrote:
+On Wed, Sep 17, 2025 at 10:31:40AM -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
->> From: Elliot Berman <quic_eberman@quicinc.com>
->>
->> When guest_memfd removes memory from the host kernel's direct map,
->> direct map entries must be restored before the memory is freed again. To
->> do so, ->free_folio() needs to know whether a gmem folio was direct map
->> removed in the first place though. While possible to keep track of this
->> information on each individual folio (e.g. via page flags), direct map
->> removal is an all-or-nothing property of the entire guest_memfd, so it
->> is less error prone to just check the flag stored in the gmem inode's
->> private data.  However, by the time ->free_folio() is called,
->> folio->mapping might be cleared. To still allow access to the address
->> space from which the folio was just removed, pass it in as an additional
->> argument to ->free_folio, as the mapping is well-known to all callers.
->>
->> Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
->> Suggested-by: David Hildenbrand <david@redhat.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
->> [patrick: rewrite shortlog for new usecase]
->> Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
->> ---
->>   Documentation/filesystems/locking.rst |  2 +-
->>   fs/nfs/dir.c                          | 11 ++++++-----
->>   fs/orangefs/inode.c                   |  3 ++-
->>   include/linux/fs.h                    |  2 +-
->>   mm/filemap.c                          |  9 +++++----
->>   mm/secretmem.c                        |  3 ++-
->>   mm/vmscan.c                           |  4 ++--
->>   virt/kvm/guest_memfd.c                |  3 ++-
->>   8 files changed, 21 insertions(+), 16 deletions(-)
->>
->> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
->> index aa287ccdac2f..74c97287ec40 100644
->> --- a/Documentation/filesystems/locking.rst
->> +++ b/Documentation/filesystems/locking.rst
->> @@ -262,7 +262,7 @@ prototypes::
->>   	sector_t (*bmap)(struct address_space *, sector_t);
->>   	void (*invalidate_folio) (struct folio *, size_t start, size_t len);
->>   	bool (*release_folio)(struct folio *, gfp_t);
->> -	void (*free_folio)(struct folio *);
->> +	void (*free_folio)(struct address_space *, struct folio *);
->>   	int (*direct_IO)(struct kiocb *, struct iov_iter *iter);
->>   	int (*migrate_folio)(struct address_space *, struct folio *dst,
->>   			struct folio *src, enum migrate_mode);
+> The *count parameter does not appear to be explicitly restricted
+> to being smaller than rsize, so it might be possible to overrun
+> the rq_bvec or rq_pages arrays.
 > 
-> Beware, that is against the intent of free_folio().
+> Rather than overrunning these arrays (damage done!) and then WARNING
+> once, let's harden the loop so that it terminates before the end of
+> the arrays are reached. This should result in a short read, which is
+> OK -- clients recover by sending additional READ requests for the
+> remaining unread bytes.
 > 
-> Since its 2.6.37 origin in 6072d13c4293 ("Call the filesystem back
-> whenever a page is removed from the page cache"), freepage() or
-> free_folio() has intentionally NOT taken a struct address_space *mapping,
-> because that structure may already be freed by the time free_folio() is
-> called, if the last folio holding it has now been freed.
+> Reported-by: NeilBrown <neil@brown.name>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-Thanks for noticing that Hugh, very good point!
+Neil and I both gave our Reviewed-by on this one yesterday (when you
+posted it on its own), but for good measure:
 
+Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+
+Thanks.
+
+
+> ---
+>  fs/nfsd/vfs.c |   12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 > 
-> Maybe something has changed since then, or maybe it happens to be safe
-> just in the context in which you want to use it; but it is against the
-> principle of free_folio().  (Maybe an rcu_read_lock() could be added
-> in __remove_mapping() to make it safe nowadays? maybe not welcome.)
-
-Let me dig into the callers:
-
-
-1) filemap_free_folio()
-
-filemap_free_folio() looks up the callback through 
-mapping->a_ops->free_folio. Nothing happens in-between that lookup and 
-the callback so we should be good.
-
-
-2) replace_page_cache_folio()
-
-replace_page_cache_folio() similarly looks up the callback through
-mapping->a_ops->free_folio. We do some operations afterwards, but 
-essentially store the new folio in the page cache and remove the old one.
-
-The only caller is fuse_try_move_folio(), and IIUC both folios are 
-locked, preventing concurrent truncation and the mapping going away.
-
-
-3) __remove_mapping()
-
-__remove_mapping() also looks up the callback through 
-mapping->a_ops->free_folio.
-
-Before we call free_folio() we remove the folio from the pagecache 
-(__filemap_remove_folio) to then drop locks and call free_folio().
-
-We're only holding the folio lock at that point.
-
-So yes I agree, truncate_inode_pages_final() could be racing with
-__remove_mapping().c That's probably exactly what the docs describe 
-regarding reclaim.
-
-
-rcu_read_lock() should indeed work, or some other mechanism that keeps 
-truncate_inode_pages_final() from succeeding in this racy situation.
-
-Alternatively I guess we would have to use another callback.
-
--- 
-Cheers
-
-David / dhildenb
-
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 714777c221ed..2026431500ec 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1115,18 +1115,20 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  
+>  	v = 0;
+>  	total = *count;
+> -	while (total) {
+> +	while (total && v < rqstp->rq_maxpages &&
+> +	       rqstp->rq_next_page < rqstp->rq_page_end) {
+>  		len = min_t(size_t, total, PAGE_SIZE - base);
+> -		bvec_set_page(&rqstp->rq_bvec[v], *(rqstp->rq_next_page++),
+> +		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
+>  			      len, base);
+> +
+>  		total -= len;
+> +		++rqstp->rq_next_page;
+>  		++v;
+>  		base = 0;
+>  	}
+> -	WARN_ON_ONCE(v > rqstp->rq_maxpages);
+>  
+> -	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+> -	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
+> +	trace_nfsd_read_vector(rqstp, fhp, offset, *count - total);
+> +	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count - total);
+>  	host_err = vfs_iocb_iter_read(file, &kiocb, &iter);
+>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+>  }
+> 
+> 
+> 
 
