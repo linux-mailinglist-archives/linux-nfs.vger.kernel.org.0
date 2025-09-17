@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-14523-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14524-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A539B8152C
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 20:18:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9CBCB8152F
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 20:19:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D32491888280
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 18:19:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AB093A494F
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Sep 2025 18:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77A92FC00C;
-	Wed, 17 Sep 2025 18:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10C5F2FF66E;
+	Wed, 17 Sep 2025 18:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozbSNaV4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7FRg4dH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C2D2BE655
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 18:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16102FF164
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Sep 2025 18:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758133134; cv=none; b=ZHCSxQI/R3Hp3SI5N58On29PEz56MjzSk+Jfvn1Mvbz0jZaqXsaEB4CB47rFLtDsXYy2Bs3+YTFTMNQWJEToVd5e1Mkvqu054BwAPHkru/RwUn6JVFcchuFFwMMBmjpS2cwWIQp48g9RvPjKzapUWu7gyvtr78HC1wemJ8GRKrI=
+	t=1758133135; cv=none; b=m1Zv8BR4mq7rywPXgLro4nVJmsXaZK6Vga6xQQYzU0jGVPioqWfX5AlELMYs55S9/SREeuerNzy8os0AH6veSNY8rCTFSE8oRrw6AB66HyFXkkdzB3o+gczZeqZkCCp7kKTsExaBsjZoMihb4l+09OCelfzHCm386VpGJ56KgE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758133134; c=relaxed/simple;
-	bh=2OiuDv9l3vjHMK+akDaOTgRXBSMA/4RIVH2Z6JeMeZs=;
+	s=arc-20240116; t=1758133135; c=relaxed/simple;
+	bh=/1Vw5YoQjOKjMuhpjdlLUjh/2t/6sgQX6HCxbk+GB2w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lFjVjlZoD3IGrSjhNzwWsKLuIE41o9EovzsWjt6y6GygPkoK6msTuiXQMd2H0DhPYPixIzvVi9oq+xcpF/veL1iEBeJFxYSepCKd4H4zw2uNEpZMYHUOu3q7vzSAM1yE2KxKfoHtpHRCLXJs6vqNavn2Kf7qew8hV6cKtZCf8MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozbSNaV4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE68C4CEE7;
-	Wed, 17 Sep 2025 18:18:52 +0000 (UTC)
+	 MIME-Version; b=cSa+EMETXeuPSmbagUXnl2j6f4LUOVFKp9QvauVAGw/GMAKhpL/iL/wfUAuxaFtNpZ1b6ZAoS0+Nt8FvHQZsV2YGe7Px6hVaARLimxM1WQ6+6L3SmflXfgo50fbb07uuy0afk0sMF2sSy3/ypnuaG3yFZaEivf1hLG0d6rSPQjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7FRg4dH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F8CC4CEF7;
+	Wed, 17 Sep 2025 18:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758133133;
-	bh=2OiuDv9l3vjHMK+akDaOTgRXBSMA/4RIVH2Z6JeMeZs=;
+	s=k20201202; t=1758133134;
+	bh=/1Vw5YoQjOKjMuhpjdlLUjh/2t/6sgQX6HCxbk+GB2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ozbSNaV4uq3bH1+asG3d690rm6vCHytq0MFvwlHD6YtsJbf9h304OaqCefGgskJxx
-	 SsEH1DMDNcVnNl1rY1zIayJuPInnpHwS5eZbbG1rxDZRxBkCZRZ1E/hm4mJ35kqCIh
-	 +yIhGYxwuVfqfVaxCKkiamswUllHxQ9/hTi+pkxq3DepDEUNYJqNMRtbL+RAGTcxcT
-	 tmloJ7wlrRQ9kD5/tyg5dceIYgSHq2o6C69nsYQBKFWb3pSWa2ILUTW0mYCMVtqjpi
-	 vP41FOTzdJL+WZA8vNxw7fQV+l+zadWlAVQM+3t8poILPBwbfZYMBnkIvRmtXjwAdB
-	 7XVWGe+t2H5Qw==
+	b=A7FRg4dH63H5DSdJjXMQNemoIRP3QjI82kaWLhjYXf3Fr+iZQAwTwv4YC6BuV5wn+
+	 mJtgw/XZEvdI87NTAXu+snnMwNk2f8R8B16sMRZTVVpQJc43a1lpMjl9EQS/wgAQ4n
+	 2nTJVyPkAcaCTvG8BM+7aGjB2oAJLRAjIWpzPRFuz/JqVEdATPV5jrvtNxMm8YvlR+
+	 cls4Dric46C0OpoPiSOcA/S0VnjoaTH6zuEZO4kqEDyUuIbpEUbTTdYlTKJ6gBlv+S
+	 AH2A/YVnEIFzYv9OrPkyzxFQZD6E5aPQSj5zfnviBM8a1CRXfn1xjnlnLAj2fR8sW1
+	 Nqj+yHp/RYaKA==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Anna Schumaker <anna@kernel.org>
 Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v10 6/7] nfs/localio: add tracepoints for misaligned DIO READ and WRITE support
-Date: Wed, 17 Sep 2025 14:18:42 -0400
-Message-ID: <20250917181843.33865-7-snitzer@kernel.org>
+Subject: [PATCH v10 7/7] NFS: add basic STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+Date: Wed, 17 Sep 2025 14:18:43 -0400
+Message-ID: <20250917181843.33865-8-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250917181843.33865-1-snitzer@kernel.org>
 References: <20250917181843.33865-1-snitzer@kernel.org>
@@ -59,199 +59,48 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add nfs_local_dio_class and use it to create nfs_local_dio_read,
-nfs_local_dio_write and nfs_local_dio_misaligned trace events.
+NFS doesn't have DIO alignment constraints, so have NFS respond with
+accommodating DIO alignment attributes (rather than plumb in GETATTR
+support for STATX_DIOALIGN and STATX_DIO_READ_ALIGN).
 
-These trace events show how NFS LOCALIO splits a given misaligned
-IO into a mix of misaligned head and/or tail extents and a DIO-aligned
-middle extent.  The misaligned head and/or tail extents are issued
-using buffered IO and the DIO-aligned middle is issued using O_DIRECT.
+The most coarse-grained dio_offset_align is the most accommodating
+(e.g. PAGE_SIZE, in future larger may be supported).
 
-This combination of trace events is useful for LOCALIO DIO READs:
-
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_local_dio_read/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_local_dio_misaligned/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_initiate_read/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_readpage_done/enable
-  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
-
-This combination of trace events is useful for LOCALIO DIO WRITEs:
-
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_local_dio_write/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_local_dio_misaligned/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_initiate_write/enable
-  echo 1 > /sys/kernel/tracing/events/nfs/nfs_writeback_done/enable
-  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
+Now that NFS has support, NFS reexport will now handle unaligned DIO
+(NFSD's NFSD_IO_DIRECT support requires the underlying filesystem
+support STATX_DIOALIGN and/or STATX_DIO_READ_ALIGN).
 
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfs/internal.h | 10 +++++++
- fs/nfs/localio.c  | 19 ++++++-------
- fs/nfs/nfs3xdr.c  |  2 +-
- fs/nfs/nfstrace.h | 70 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 89 insertions(+), 12 deletions(-)
+ fs/nfs/inode.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index d44233cfd7949..3d380c45b5ef3 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -456,6 +456,16 @@ extern int nfs_wait_bit_killable(struct wait_bit_key *key, int mode);
- 
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- /* localio.c */
-+struct nfs_local_dio {
-+	u32 mem_align;
-+	u32 offset_align;
-+	loff_t middle_offset;
-+	loff_t end_offset;
-+	ssize_t	start_len;	/* Length for misaligned first extent */
-+	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
-+	ssize_t	end_len;	/* Length for misaligned last extent */
-+};
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 49df9debb1a69..84bf3d21c25cc 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1073,6 +1073,21 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 	if (S_ISDIR(inode->i_mode))
+ 		stat->blksize = NFS_SERVER(inode)->dtsize;
+ 	stat->btime = NFS_I(inode)->btime;
 +
- extern void nfs_local_probe_async(struct nfs_client *);
- extern void nfs_local_probe_async_work(struct work_struct *);
- extern struct nfsd_file *nfs_local_open_fh(struct nfs_client *,
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index 768af570183af..cf1533759646e 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -322,16 +322,6 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
- 	return iocb;
- }
- 
--struct nfs_local_dio {
--	u32 mem_align;
--	u32 offset_align;
--	loff_t middle_offset;
--	loff_t end_offset;
--	ssize_t	start_len;	/* Length for misaligned first extent */
--	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
--	ssize_t	end_len;	/* Length for misaligned last extent */
--};
--
- static bool
- nfs_is_local_dio_possible(struct nfs_local_kiocb *iocb, int rw,
- 			  size_t len, struct nfs_local_dio *local_dio)
-@@ -367,6 +357,10 @@ nfs_is_local_dio_possible(struct nfs_local_kiocb *iocb, int rw,
- 	local_dio->middle_len = middle_end - start_end;
- 	local_dio->end_len = orig_end - middle_end;
- 
-+	if (rw == ITER_DEST)
-+		trace_nfs_local_dio_read(hdr->inode, offset, len, local_dio);
-+	else
-+		trace_nfs_local_dio_write(hdr->inode, offset, len, local_dio);
- 	return true;
- }
- 
-@@ -446,8 +440,11 @@ nfs_local_iters_setup_dio(struct nfs_local_kiocb *iocb, int rw,
- 		nfs_iov_iter_aligned_bvec(&iters[n_iters],
- 			local_dio->mem_align-1, local_dio->offset_align-1);
- 
--	if (unlikely(!iocb->iter_is_dio_aligned[n_iters]))
-+	if (unlikely(!iocb->iter_is_dio_aligned[n_iters])) {
-+		trace_nfs_local_dio_misaligned(iocb->hdr->inode,
-+			iocb->hdr->args.offset, len, local_dio);
- 		return 0; /* no DIO-aligned IO possible */
++	/* Special handling for STATX_DIOALIGN and STATX_DIO_READ_ALIGN
++	 * - NFS doesn't have DIO alignment constraints, avoid getting
++	 *   these DIO attrs from remote and just respond with most
++	 *   accommodating limits (so client will issue supported DIO).
++	 * - this is unintuitive, but the most coarse-grained
++	 *   dio_offset_align is the most accommodating.
++	 */
++	if ((request_mask & (STATX_DIOALIGN | STATX_DIO_READ_ALIGN)) &&
++	    S_ISREG(inode->i_mode)) {
++		stat->result_mask |= STATX_DIOALIGN | STATX_DIO_READ_ALIGN;
++		stat->dio_mem_align = 4; /* 4-byte alignment */
++		stat->dio_offset_align = PAGE_SIZE;
++		stat->dio_read_offset_align = stat->dio_offset_align;
 +	}
- 	++n_iters;
- 
- 	iocb->n_iters = n_iters;
-diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-index 4ae01c10b7e28..e17d729084125 100644
---- a/fs/nfs/nfs3xdr.c
-+++ b/fs/nfs/nfs3xdr.c
-@@ -23,8 +23,8 @@
- #include <linux/nfsacl.h>
- #include <linux/nfs_common.h>
- 
--#include "nfstrace.h"
- #include "internal.h"
-+#include "nfstrace.h"
- 
- #define NFSDBG_FACILITY		NFSDBG_XDR
- 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index d5949da8c2e5d..132c1b87fa3eb 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -1599,6 +1599,76 @@ DEFINE_NFS_DIRECT_REQ_EVENT(nfs_direct_write_completion);
- DEFINE_NFS_DIRECT_REQ_EVENT(nfs_direct_write_schedule_iovec);
- DEFINE_NFS_DIRECT_REQ_EVENT(nfs_direct_write_reschedule_io);
- 
-+#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-+
-+DECLARE_EVENT_CLASS(nfs_local_dio_class,
-+	TP_PROTO(
-+		const struct inode *inode,
-+		loff_t offset,
-+		ssize_t count,
-+		const struct nfs_local_dio *local_dio
-+	),
-+	TP_ARGS(inode, offset, count, local_dio),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(u64, fileid)
-+		__field(u32, fhandle)
-+		__field(loff_t, offset)
-+		__field(ssize_t, count)
-+		__field(u32, mem_align)
-+		__field(u32, offset_align)
-+		__field(loff_t, start)
-+		__field(ssize_t, start_len)
-+		__field(loff_t, middle)
-+		__field(ssize_t, middle_len)
-+		__field(loff_t, end)
-+		__field(ssize_t, end_len)
-+	),
-+	TP_fast_assign(
-+		const struct nfs_inode *nfsi = NFS_I(inode);
-+		const struct nfs_fh *fh = &nfsi->fh;
-+
-+		__entry->dev = inode->i_sb->s_dev;
-+		__entry->fileid = nfsi->fileid;
-+		__entry->fhandle = nfs_fhandle_hash(fh);
-+		__entry->offset = offset;
-+		__entry->count = count;
-+		__entry->mem_align = local_dio->mem_align;
-+		__entry->offset_align = local_dio->offset_align;
-+		__entry->start = offset;
-+		__entry->start_len = local_dio->start_len;
-+		__entry->middle = local_dio->middle_offset;
-+		__entry->middle_len = local_dio->middle_len;
-+		__entry->end = local_dio->end_offset;
-+		__entry->end_len = local_dio->end_len;
-+	),
-+	TP_printk("fileid=%02x:%02x:%llu fhandle=0x%08x "
-+		  "offset=%lld count=%zd "
-+		  "mem_align=%u offset_align=%u "
-+		  "start=%llu+%zd middle=%llu+%zd end=%llu+%zd",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  (unsigned long long)__entry->fileid,
-+		  __entry->fhandle, __entry->offset, __entry->count,
-+		  __entry->mem_align, __entry->offset_align,
-+		  __entry->start, __entry->start_len,
-+		  __entry->middle, __entry->middle_len,
-+		  __entry->end, __entry->end_len)
-+)
-+
-+#define DEFINE_NFS_LOCAL_DIO_EVENT(name)		\
-+DEFINE_EVENT(nfs_local_dio_class, nfs_local_dio_##name,	\
-+	TP_PROTO(const struct inode *inode,		\
-+		 loff_t offset,				\
-+		 ssize_t count,				\
-+		 const struct nfs_local_dio *local_dio),\
-+	TP_ARGS(inode, offset, count, local_dio))
-+
-+DEFINE_NFS_LOCAL_DIO_EVENT(read);
-+DEFINE_NFS_LOCAL_DIO_EVENT(write);
-+DEFINE_NFS_LOCAL_DIO_EVENT(misaligned);
-+
-+#endif /* CONFIG_NFS_LOCALIO */
-+
- TRACE_EVENT(nfs_fh_to_dentry,
- 		TP_PROTO(
- 			const struct super_block *sb,
+ out:
+ 	trace_nfs_getattr_exit(inode, err);
+ 	return err;
 -- 
 2.44.0
 
