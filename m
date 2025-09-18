@@ -1,85 +1,89 @@
-Return-Path: <linux-nfs+bounces-14556-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14557-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A93E6B84DAB
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 15:34:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A09BB84DF3
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 15:37:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48E524A1A79
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 13:33:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBE1A7BFE9D
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 13:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DC7A31;
-	Thu, 18 Sep 2025 13:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90FA02628C;
+	Thu, 18 Sep 2025 13:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="C9NEbTna"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="MyfZiwFU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172E72628C
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 13:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9629B2D3752
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 13:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758202397; cv=none; b=TnwHQ9UXywOg1LyV8wveU4WmSlY9yKulYjDb7IBUUNfGiRY/RbgyGNtAR3qT0eMRjNHvifMNf9kKWRG1J7Ib8gtE8IZrY8mNq2S2JLZqnkoZirEMLttLDny+w3wPwAfNqnfVu8z6gKrW6pY5grql0piP/FZ8V5T6FGCA3plysBQ=
+	t=1758202400; cv=none; b=Aaq0Uzh6c0A8Eqp1mh9PCrjJJFFlWkeGm4eijgjWPz/N5IuE7haX3+R3sMNRltaenWPTYpJXnSn0BJH8Z+fcDAi4qAzm9IYEg/9KshlCjp9cCM0aDdUmRjXaxGoXTSCeEr3gJ6qMLOWHwYr6+rD5rBLw2/dvXh8qo+4JJM5vkJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758202397; c=relaxed/simple;
-	bh=49YPrQWLSwV6byblfvieGpG8FdEBtSIXJTpSl+zcFho=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AUa/NZB3EZjfH6uo2WAIVkgFPzVtF9it8ji/7wsRiQCHB6pqyyjmDMaiquAOJv2t4udzn8yBlppobgHH67Pe7Xhf+ptJR4ZAiRAvSeTRaGgs2O7omU3fimwKf5Pbtl2lKoBvCWAqqFwXJm/N6VZYrzoPfk/5r9ik+t0ZBiYc1vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=C9NEbTna; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1758202400; c=relaxed/simple;
+	bh=1xeGAreEi2x2Aquc/6dLVE/3TMfMr/uLa0az8bFjmD0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YqDmmgl9TA7cPSVYKL2I1yTzq63wMaUy/5GT1fdp6mJXFAIL8hSbZxVNuMaGbYy3wb2UlrMgxa274Awd5cGU+ewhFrYygjM8Q1vq4uCxgVeyq68BjgnkX+C0MOP0Okxgy7O2tMrkTCCD0Vh5yDV5I4yF2jXwGoA++d2pAfiXR10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=MyfZiwFU; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b07dac96d1eso312094266b.1
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 06:33:14 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-62f4273a404so3993468a12.0
+        for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 06:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1758202393; x=1758807193; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ca3WMICiY5snQqpqZHx+J71YherCM5+J+jUfTHJLSAM=;
-        b=C9NEbTnamx4TD1eupWtxY/uuUJaX4PUl9wF1fL5JXHi7Cxcd9ORWqg1yyjSyzYK2RZ
-         e7Mr7+8QgiVlucEfWSCAqutJq9nurRSp/wzfIwF3NO2KsumVcwOPJZ6/EO8pLpYeUiB8
-         tRc1q/Q9NAZJCzeFB5hsgxH6PlQjBl08daJxwU0MIQ1ipfhtudKe6B+EQi6ClaqL9Xuf
-         b2aojkZ5nBmnlO7VAHedmbpr3gquqQZ1bmWyCPcKuA8xKJb51f6H+3mV3XdDkcaSERfO
-         QZKl40pFfxt/KI5AcgC5n+O8AwZ4SEIj+/qZWTtU/r+weUvWqpkN5JAa9tAGcvnLuZhv
-         QLzQ==
+        d=purestorage.com; s=google2022; t=1758202397; x=1758807197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FTolq9FwrPuwgNkvd2mCU01hlYYpCl0W5vdd5AH8Bok=;
+        b=MyfZiwFUm1wFE01V4YnfDBk776nkvAtjh8NZEQRv5qIUr/Y2Lfsc8d36mWFPmzJGaW
+         Ux29+vUiSQ+Jvhrm7M5ZIzIhCzYzSeevOoaNO0eo6Oxc2IZYi8iuBKRRdsb+n+hAQSHJ
+         NxD3bE4NgWPkr0bQVqvtxm2ztKtNiM0Kr+1BS22Cm++8rztvDIQX9aMjaKXRJJtCU9/r
+         xkZ3jYlDZ+i1UWDfLw74IAQtl1CUVP52+w2X0zG9EVKbJoa0QS/7FQBfFBW92Ee6qkz/
+         0Zaa07rTCiPJWP3VZa3+Z6EE6u9V4BfdmMS5i0T4vSd47BNNR9gT9xjUWU5DcdFEE8tj
+         22SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758202393; x=1758807193;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ca3WMICiY5snQqpqZHx+J71YherCM5+J+jUfTHJLSAM=;
-        b=vpRvox5SrsIs0AkbLo2cFaPAdK4i76FrdvuDc06rC4am9bdue7r7352uLWJFfRSibg
-         uibTt+EMdn91I/53KrODjq5GSJJuxUMi3+RPuN3xHy4xZHnv8Eckt0+OGycw6+5cYxfn
-         NfXVl6rLNquCzyghdNFc2mxz7RC43PzG5VywrmoYo9NX3HauuJmL713unWMxpyAjX8VQ
-         Uy98vQbF0k78AKn19+EZqVcYp5143qjlPNeZCPZJHMpwAViiCUBGUhxhnQvVvVpVQf2S
-         D/zUvDgT+pFCsjZA45fXZgpOORqjE+k/wqkW/CDCFN0ACNnlkbWHrmJVitNL7U2K/R33
-         SN3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTkKtY7wQV6U/ghysiUMITW18RUfV+5tk+/ShJIvLouYy/h/rgSwdCsLI9bUNIxPsfvtgMCgEN3wY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUA0XXbC+82I0C+UTt1MKiLjAQA5j1KpV6H29w7IPV7zWOVoVT
-	5AgxU9dWmBWTU5Slp+l3l3YWf+xVd7WybZ+LWK8EwL53jnzLFxRxDpbmyZeuAoKfil8=
-X-Gm-Gg: ASbGncvNjp7QHvVeEGn4x8UyW02pVroOcXZ4x/HDmekHuYS85HBYPcZ2fMU8EzMdAIV
-	ESCpWB7FVLvQ0/eWLz54N7Cy+++ra5k1WTX+Urt5WtXt+mVkj7aQdrMSMXXeFCRnhNaC6dEnfuu
-	QqOJOG1LPfcEJP6gPFkan4MXeIG3nO74M/sFjWYqTeW4OsmESNT0RlSEYaRXnsmyrH9aBmCK+T7
-	0vgdRXKzFIhegSDzzyY4FqmSKLcBDgTpslpQcx0UCytFrd8SJg/XRT+xqZ8BsUETmkkJ/oy5pmW
-	tZa0xRrB6bLjH+zterjcu+tLR7ynh4IOJFaBe8bCMs8bJ6aSA6TRxsGtinRoTSmqY3IPzjDZf6h
-	fXciWUyEli8YaWErYlHiuzBRQEXKFlLJLEKE6RTIi0A==
-X-Google-Smtp-Source: AGHT+IHe/qbkRtWhaNpKzQie7KRy7kbsHGmDxkzatWAUzjH1yMj4LeW4r7Cqg/WC9KsZYjoGBr5iIg==
-X-Received: by 2002:a17:907:d02:b0:b11:ce93:4388 with SMTP id a640c23a62f3a-b1facbb6f98mr357525166b.25.1758202393374;
-        Thu, 18 Sep 2025 06:33:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758202397; x=1758807197;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FTolq9FwrPuwgNkvd2mCU01hlYYpCl0W5vdd5AH8Bok=;
+        b=kqcgYBlD6io+tbPHFNhU+sFB5FRaDY85NqGiiMZ7roOTNvn8nNkWABKBQ4/zH9rhEG
+         KzsYM13814TrpvK9qSFuR7voj1X7DGNEqcc6aw51tB1sE2flpKkMs+YLH2wc4LxBS8dZ
+         EzEKht977gZC1awD+Zg8YjRsMwoVML39Cq0jwvQu3LKCnZ5l1Al4alBpL0uNbMpM05Mq
+         gBq/uQ8UwpSyQB8UMeN4/Mbqnb+8Gq0id6vAg0jSZou2hhz3xgTq3XcoB6/ZKxevpz95
+         hLYTl5VGfMdsgaYssTrozJfT17ks6gKV5hRwQsZY7hvitVp3DsWnWDPXGlV9F4R7hzWP
+         IFZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqzaON42aMXp7M7boRsQGH4eDerYiato2oX6WXt7XGi7LCziPSmL02d1vBgwOlIHocnQEMvzsNQWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3WbYJ6W9uenDbM+Wra+WfJuEcv4QXBYNAKlNWV+zKyvguEn9I
+	wyxHcUq/wqOXoGh3I69MiiXZNK/J0PbMsYIed32FOuCp/69/HhtdqC3soxO9knvtL1Q=
+X-Gm-Gg: ASbGncvOBP4Wyj+YAsyNsls7StWAFicwjDIAVsOrAaLRhxGqNmCYma3tAMMuvOnGaLF
+	emo1ZzTRTCZvxeNeDZ4nF7AlZZFMa87IAjQdJCGug8BcJWS2aYZ1apSXTTpCrBMIEuFM+R48BRp
+	x2A89VF/55B+mm3DTeHbLgp3I95D9MvvnudkuCBL4SnD2XCLDLCYyZtm0sbgXC8dh0+O6DwWCGM
+	1gmJ+TUrwfMKtIcse0vS0L6ZcXT5IugHuFZeFKMwwSqidem1r4rke+ctHWAxblMDw+rZCvoo+a0
+	oRxm4dJ4CEW/wZJQ++pzEodYRPwQT0BISXGlTlxV5BwQJS179WuqZDDpbSIwD0bf4pzY9APrZW/
+	ChLbIcstADW7SynN/YIm1LFslbgmTTpjZz7rxtEQyzQ==
+X-Google-Smtp-Source: AGHT+IHapcjnJqZQEJ5zgf2QPkBkjhfVjVzdsPt8O5L2ufRNc5AZ452E4Q9Qc9jP/0b8uz6LTTVbkQ==
+X-Received: by 2002:a17:907:d02:b0:b11:ce93:4388 with SMTP id a640c23a62f3a-b1facbb6f98mr357559766b.25.1758202396604;
+        Thu, 18 Sep 2025 06:33:16 -0700 (PDT)
 Received: from localhost ([208.88.158.128])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b1fd1102093sm196483966b.83.2025.09.18.06.33.12
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b1fc5f382b0sm203700366b.2.2025.09.18.06.33.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 06:33:13 -0700 (PDT)
+        Thu, 18 Sep 2025 06:33:16 -0700 (PDT)
 From: Jonathan Curley <jcurley@purestorage.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: Jonathan Curley <jcurley@purestorage.com>,
 	linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v3 0/9] NFSv4/flexfiles: Add support for striped layouts
-Date: Thu, 18 Sep 2025 13:33:01 +0000
-Message-Id: <20250918133310.508943-1-jcurley@purestorage.com>
+Subject: [RFC PATCH v3 1/9] NFSv4/flexfiles: Remove cred local variable dependency
+Date: Thu, 18 Sep 2025 13:33:02 +0000
+Message-Id: <20250918133310.508943-2-jcurley@purestorage.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250918133310.508943-1-jcurley@purestorage.com>
+References: <20250918133310.508943-1-jcurley@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,53 +92,32 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series introduces support for striped layouts:
+No-op preparation change to remove dependency on cred local
+variable. Subsequent striping diff has a cred per stripe so this local
+variable can't be trusted to be the same.
 
-The first 2 patches are simple preparation changes. There should be
-no logical impact to the code.
+Signed-off-by: Jonathan Curley <jcurley@purestorage.com>
+---
+ fs/nfs/flexfilelayout/flexfilelayout.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The 3rd patch refactors the nfs4_ff_layout_mirror struct to have an
-array of a new nfs4_ff_layout_ds_stripe type. The
-nfs4_ff_layout_ds_stripe has all the contents of ff_data_server4 per
-the flexfile rfc. I called it ds_stripe because ds was already taken
-by the deviceid side of the code.
-
-The patches 4-8 update various paths to be dss_id aware. Most of this
-consists of either adding a new parameter to the function or adding a
-loop. Depending on which is appropriate.
-
-The final patch 9 updates the layout creation path to populate the
-array and turns the feature on.
-
-v1:
- - Fixes function parameter 'dss_id' not described in
-   'nfs4_ff_layout_prepare_ds'
-
-v2:
- - Fixes layout stat error reporting path for commit to properly
-   calculate dss_id.
-
-v3:
- - Fixes do_div dividend to be u64.
-
-Jonathan Curley (9):
-  NFSv4/flexfiles: Remove cred local variable dependency
-  NFSv4/flexfiles: Use ds_commit_idx when marking a write commit
-  NFSv4/flexfiles: Add data structure support for striped layouts
-  NFSv4/flexfiles: Update low level helper functions to be DS stripe
-    aware.
-  NFSv4/flexfiles: Read path updates for striped layouts
-  NFSv4/flexfiles: Commit path updates for striped layouts
-  NFSv4/flexfiles: Write path updates for striped layouts
-  NFSv4/flexfiles: Update layout stats & error paths for striped layouts
-  NFSv4/flexfiles: Add support for striped layouts
-
- fs/nfs/flexfilelayout/flexfilelayout.c    | 786 +++++++++++++++-------
- fs/nfs/flexfilelayout/flexfilelayout.h    |  64 +-
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 111 +--
- fs/nfs/write.c                            |   2 +-
- 4 files changed, 645 insertions(+), 318 deletions(-)
-
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 4bea008dbebd..a437d20ebcdf 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -532,10 +532,10 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 		if (mirror != fls->mirror_array[i]) {
+ 			/* swap cred ptrs so free_mirror will clean up old */
+ 			if (lgr->range.iomode == IOMODE_READ) {
+-				cred = xchg(&mirror->ro_cred, cred);
++				cred = xchg(&mirror->ro_cred, fls->mirror_array[i]->ro_cred);
+ 				rcu_assign_pointer(fls->mirror_array[i]->ro_cred, cred);
+ 			} else {
+-				cred = xchg(&mirror->rw_cred, cred);
++				cred = xchg(&mirror->rw_cred, fls->mirror_array[i]->rw_cred);
+ 				rcu_assign_pointer(fls->mirror_array[i]->rw_cred, cred);
+ 			}
+ 			ff_layout_free_mirror(fls->mirror_array[i]);
 -- 
 2.34.1
 
