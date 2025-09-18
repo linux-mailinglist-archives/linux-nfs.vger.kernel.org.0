@@ -1,309 +1,264 @@
-Return-Path: <linux-nfs+bounces-14569-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14570-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AA79B859A5
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 17:30:28 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7B17B86089
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 18:29:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 543EA3A69CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 15:27:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 98B334E1ADE
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 16:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9742330DD0A;
-	Thu, 18 Sep 2025 15:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECA5311C01;
+	Thu, 18 Sep 2025 16:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4yU9S5m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B7F243951;
-	Thu, 18 Sep 2025 15:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A57B2F5A08
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 16:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758209201; cv=none; b=ksJcEEZIC41k5jAWrkZDAz4TL2fQShqk0CNw4nejgmovZiBp/ZiBmlhi+TTUsutqlHe7KrD6WSQ+rszxn65HATjVh1WSeiBVkC3c6h0s3F3uk5KK4AgVS8LM9ZpmebQ0SrSEohvKjmxr3mxKWAOEvUF6RUW7YfGl7j5hqiwHGW8=
+	t=1758212949; cv=none; b=l2ppLaM6d9hInWs3LnkluiLIlGi+5uA7N7M7PmdBz7D4y37HbV0O+fOAFoBCglHXuzOMd6YwhLf6VVIoewU5EHdrvpaUe7PoakZczf4Nev50sCWfeTedHxfcaUKWE+rQCLkqOIQaM3waqX53SSJCIvq+63mhf68OJ+dqavUFEFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758209201; c=relaxed/simple;
-	bh=VKAYKLQrxUsJo0+Ph4IN0UIq4I25sBDCBgS1MW9feCM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=jQ5S5tOApxQUiF8xrgjpzNAEzn1ehN6vRNMnaA6WmHN4h0gIlXhb8+gezzVDdoagXQI2eInubPDSCySa/GqLUDmbyFf4jPCD9qEVt+ui6iVrLRpUkqaFJmlykFeFwXw0xuDj+0qfcn9vmrcxtAtkokJa7UeoTprQukh16xC00Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4cSKHJ6lp3zYQvSJ;
-	Thu, 18 Sep 2025 23:26:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 8E3131A07BB;
-	Thu, 18 Sep 2025 23:26:35 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with SMTP id _Ch0CgCXMUCoJMxoqFUQAA--.34287S2;
-	Thu, 18 Sep 2025 23:26:33 +0800 (CST)
-Message-ID: <e27254b5-22cf-4578-9623-d2d8de54aeca@huaweicloud.com>
-Date: Thu, 18 Sep 2025 23:26:31 +0800
+	s=arc-20240116; t=1758212949; c=relaxed/simple;
+	bh=cq+OFhox+1LrUWNAQDhNWj0ccq7969zcxIIjv/N4cW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GXxkIg63U8P/uCMBzB+fpykmEDTfHeUjcmjuuzX8eF0gDqN7qfaTDdDc2wRbJ6EnAc0oOH2NaeZ+RtpTEVtZ+8PigypkK2gB1AFgw7X6huLUygUe7+yKG47J6IMGANpXOE2V4aJhLMM9Dqj9mqAXmEvyd+/vDVDULD4tud0d4yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4yU9S5m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664FEC4CEE7;
+	Thu, 18 Sep 2025 16:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758212948;
+	bh=cq+OFhox+1LrUWNAQDhNWj0ccq7969zcxIIjv/N4cW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s4yU9S5mfmGNwtN+SXQCJq1EJ1wc6cixtHTysdT7Rn2Of+xcYxy+KacUO0xxjNSVH
+	 r1Ler5Muamyvmg/42BoSx98487dvyKVePs5glR0WSbJLhnA8a4TsdP5rqTBpA1N54B
+	 rnhpwQeK0t2knCmVp6xecE/SM3nl57JnqbFH1fCVF1IbvkE57HMQ2DG3pxhEUTqgi+
+	 wcBPQVHup81tyF/OBvyc71IrCLFYsACB5Es5fdDlzh5YqqdV4dDTq2jXxjRFIi6Od2
+	 GCf4WHfyukMsA8icw7uv5iD6VaavbJlnHKTqQ/IBrP1wecqHlmSf2fwyw43ORhrQSK
+	 80nPj42FkQBIA==
+Date: Thu, 18 Sep 2025 12:29:07 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: neil@brown.name, jlayton@kernel.org, okorniev@redhat.com,
+	dai.ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] NFSD: Implement NFSD_IO_DIRECT for NFS READ
+Message-ID: <aMwzU50fiZSN00JP@kernel.org>
+References: <175811882632.19474.8126763744508709520.stgit@91.116.238.104.host.secureserver.net>
+ <175811952039.19474.5813875056701985362.stgit@91.116.238.104.host.secureserver.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Li Lingfeng <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Tom Talpey <tom@talpey.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- yangerkun <yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>,
- Hou Tao <houtao1@huawei.com>,
- "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
- "yukuai (C)" <yukuai3@huawei.com>, leo.lilong@huawei.com
-Reply-To: 34bd5595-8f3f-4c52-a1d5-d782fc99efb9@huawei.com
-From: Tengda Wu <wutengda@huaweicloud.com>
-Subject: Re: [Question] nfsd: possible reordering between nf->nf_file
- assignment and NFSD_FILE_PENDING clearing?
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgCXMUCoJMxoqFUQAA--.34287S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw47Aw4xtrWDXFy7Kry8Zrb_yoWxWr13pr
-	WYgFyUGrW8J3ykAwnFka1Dur1Y9r4xuF4aqr9Ygws3JryjgrZYvFW8KFyUZFWrGrWkAFyr
-	Zr4YgrZrXa1vy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUrP
-	EfUUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175811952039.19474.5813875056701985362.stgit@91.116.238.104.host.secureserver.net>
 
-Hi,
-
-On 2025/9/18 21:57, Li Lingfeng wrote:
-> Recently, we encountered a null pointer dereference on a relatively old
-> 5.10 kernel that does not include commit c4c649ab413ba ("NFSD: Convert
-> filecache to rhltable"), which exhibited the same behavior as described
-> in [1]. I was wondering if it might be caused by the reordering between
-> the assignment of nf->nf_file and the clearing of NFSD_FILE_PENDING.
+On Wed, Sep 17, 2025 at 10:32:00AM -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Just to mention, I don't believe the analysis in [1] is entirely accurate,
-> since hlist_add_head_rcu includes a write barrier.
+> Add an experimental option that forces NFS READ operations to use
+> direct I/O instead of reading through the NFS server's page cache.
 > 
-> We haven't encountered this issue on newer kernel versions, but the
-> assignment of nf->nf_file and the clearing of NFSD_FILE_PENDING appear
-> consistent across different versions.
+> There are already other layers of caching:
+>  - The page cache on NFS clients
+>  - The block device underlying the exported file system
 > 
-> Our expected outcome should be like this:
->                 T1                                    T2
-> nfsd_read
->  nfsd_file_acquire_gc
->   nfsd_file_do_acquire
->    nfsd_file_lookup_locked
->     // get nfsd_file from nfsd_file_rhltable
->                                         nfsd_read
->                                          nfsd_file_acquire_gc
->                                           nfsd_file_do_acquire
->                                            nfsd_file_alloc
->                                             nf->nf_flags // set NFSD_FILE_PENDING
->                                            rhltable_insert // insert to nfsd_file_rhltable
->                                            nf->nf_file = file // set nf_file
->    wait_on_bit
->    // wait NFSD_FILE_PENDING to be cleared
->                                            clear_and_wake_up_bit // clear NFSD_FILE_PENDING
->    // get file after being awakened
->  file = nf->nf_file
+> The server's page cache, in many cases, is unlikely to provide
+> additional benefit. Some benchmarks have demonstrated that the
+> server's page cache is actively detrimental for workloads whose
+> working set is larger than the server's available physical memory.
 > 
-> Or like this:
->                 T1                                    T2
-> nfsd_read
->  nfsd_file_acquire_gc
->   nfsd_file_do_acquire
->    nfsd_file_lookup_locked
->     // get nfsd_file from nfsd_file_rhltable
->                                         nfsd_read
->                                          nfsd_file_acquire_gc
->                                           nfsd_file_do_acquire
->                                            nfsd_file_alloc
->                                             nf->nf_flags // set NFSD_FILE_PENDING
->                                            rhltable_insert // insert to nfsd_file_rhltable
->                                            nf->nf_file = file // set nf_file
->                                            clear_and_wake_up_bit // clear NFSD_FILE_PENDING
->    // get file directly
->  file = nf->nf_file
+> For instance, on small NFS servers, cached NFS file content can
+> squeeze out local memory consumers. For large sequential workloads,
+> an enormous amount of data flows into and out of the page cache
+> and is consumed by NFS clients exactly once -- caching that data
+> is expensive to do and totally valueless.
 > 
-> But is it possible that due to reordering, it ends up like this:
->                 T1                                    T2
-> nfsd_read
->  nfsd_file_acquire_gc
->   nfsd_file_do_acquire
->    nfsd_file_lookup_locked
->     // get nfsd_file from nfsd_file_rhltable
->                                         nfsd_read
->                                          nfsd_file_acquire_gc
->                                           nfsd_file_do_acquire
->                                            nfsd_file_alloc
->                                             nf->nf_flags // set NFSD_FILE_PENDING
->                                            rhltable_insert // insert to nfsd_file_rhltable
->                                            clear_and_wake_up_bit // clear NFSD_FILE_PENDING
->    // get file directly
->  file = nf->nf_file
->                                            nf->nf_file = file // set nf_file
->  // Null dereference due to uninitialized file pointer.
+> For now this is a hidden option that can be enabled on test
+> systems for benchmarking. In the longer term, this option might
+> be enabled persistently or per-export. When the exported file
+> system does not support direct I/O, NFSD falls back to using
+> either DONTCACHE or buffered I/O to fulfill NFS READ requests.
 > 
-> [1]: https://lore.kernel.org/all/20230818065507.1280625-1-haydenw.kernel@gmail.com/
+> Suggested-by: Mike Snitzer <snitzer@kernel.org>
+> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/debugfs.c |    2 +
+>  fs/nfsd/nfsd.h    |    1 +
+>  fs/nfsd/trace.h   |    1 +
+>  fs/nfsd/vfs.c     |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 85 insertions(+)
 > 
-> Any suggestion will be appreciated.
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index ed2b9e066206..00eb1ecef6ac 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -44,6 +44,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%llu\n");
+>   * Contents:
+>   *   %0: NFS READ will use buffered IO
+>   *   %1: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> + *   %2: NFS READ will use direct IO
+>   *
+>   * This setting takes immediate effect for all NFS versions,
+>   * all exports, and in all NFSD net namespaces.
+> @@ -64,6 +65,7 @@ static int nfsd_io_cache_read_set(void *data, u64 val)
+>  		nfsd_io_cache_read = NFSD_IO_BUFFERED;
+>  		break;
+>  	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+>  		/*
+>  		 * Must disable splice_read when enabling
+>  		 * NFSD_IO_DONTCACHE.
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index ea87b42894dd..bdb60ee1f1a4 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -157,6 +157,7 @@ enum {
+>  	/* Any new NFSD_IO enum value must be added at the end */
+>  	NFSD_IO_BUFFERED,
+>  	NFSD_IO_DONTCACHE,
+> +	NFSD_IO_DIRECT,
+>  };
+>  
+>  extern u64 nfsd_io_cache_read __read_mostly;
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 6e2c8e2aab10..bfd41236aff2 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -464,6 +464,7 @@ DEFINE_EVENT(nfsd_io_class, nfsd_##name,	\
+>  DEFINE_NFSD_IO_EVENT(read_start);
+>  DEFINE_NFSD_IO_EVENT(read_splice);
+>  DEFINE_NFSD_IO_EVENT(read_vector);
+> +DEFINE_NFSD_IO_EVENT(read_direct);
+>  DEFINE_NFSD_IO_EVENT(read_io_done);
+>  DEFINE_NFSD_IO_EVENT(read_done);
+>  DEFINE_NFSD_IO_EVENT(write_start);
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 35880d3f1326..5cd970c1089b 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1074,6 +1074,82 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+>  }
+>  
+> +/*
+> + * The byte range of the client's READ request is expanded on both
+> + * ends until it meets the underlying file system's direct I/O
+> + * alignment requirements. After the internal read is complete, the
+> + * byte range of the NFS READ payload is reduced to the byte range
+> + * that was originally requested.
+> + *
+> + * Note that a direct read can be done only when the xdr_buf
+> + * containing the NFS READ reply does not already have contents in
+> + * its .pages array. This is due to potentially restrictive
+> + * alignment requirements on the read buffer. When .page_len and
+> + * @base are zero, the .pages array is guaranteed to be page-
+> + * aligned.
+> + */
+> +static noinline_for_stack __be32
+> +nfsd_direct_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		 struct nfsd_file *nf, loff_t offset, unsigned long *count,
+> +		 u32 *eof)
+> +{
+> +	loff_t dio_start, dio_end;
+> +	unsigned long v, total;
+> +	struct iov_iter iter;
+> +	struct kiocb kiocb;
+> +	ssize_t host_err;
+> +	size_t len;
+> +
+> +	init_sync_kiocb(&kiocb, nf->nf_file);
+> +	kiocb.ki_flags |= IOCB_DIRECT;
+> +
+> +	/* Read a properly-aligned region of bytes into rq_bvec */
+> +	dio_start = round_down(offset, nf->nf_dio_read_offset_align);
+> +	dio_end = round_up(offset + *count, nf->nf_dio_read_offset_align);
+> +
+> +	kiocb.ki_pos = dio_start;
+> +
+> +	v = 0;
+> +	total = *count;
+
+Hi Chuck,
+
+Looks like you introduced a copy-n-paste bug when updating
+nfsd_direct_read's while loop to follow nfsd_iter_read's lead.
+
+Should be:
+	total = dio_end - dio_start;
+
+[NOTE: this was the reason I saw a crash with my incremental patch
+that handled 'base', see:
+https://lore.kernel.org/linux-nfs/aMwcUdWdey69k2iK@kernel.org/
+]
+
+Thanks,
+Mike
+
+> +	while (total && v < rqstp->rq_maxpages &&
+> +	       rqstp->rq_next_page < rqstp->rq_page_end) {
+> +		len = min_t(size_t, total, PAGE_SIZE);
+> +		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
+> +			      len, 0);
+> +
+> +		total -= len;
+> +		++rqstp->rq_next_page;
+> +		++v;
+> +	}
+> +
+> +	trace_nfsd_read_direct(rqstp, fhp, offset, *count - total);
+> +	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v,
+> +		      dio_end - dio_start - total);
+> +
+> +	host_err = vfs_iocb_iter_read(nf->nf_file, &kiocb, &iter);
+> +	if (host_err >= 0) {
+> +		unsigned int pad = offset - dio_start;
+> +
+> +		/* The returned payload starts after the pad */
+> +		rqstp->rq_res.page_base = pad;
+> +
+> +		/* Compute the count of bytes to be returned */
+> +		if (host_err > pad + *count) {
+> +			host_err = *count;
+> +		} else if (host_err > pad) {
+> +			host_err -= pad;
+> +		} else {
+> +			host_err = 0;
+> +		}
+> +	} else if (unlikely(host_err == -EINVAL)) {
+> +		pr_info_ratelimited("nfsd: Unexpected direct I/O alignment failure\n");
+> +		host_err = -ESERVERFAULT;
+> +	}
+> +
+> +	return nfsd_finish_read(rqstp, fhp, nf->nf_file, offset, count,
+> +				eof, host_err);
+> +}
+> +
+>  /**
+>   * nfsd_iter_read - Perform a VFS read using an iterator
+>   * @rqstp: RPC transaction context
+> @@ -1106,6 +1182,11 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	switch (nfsd_io_cache_read) {
+>  	case NFSD_IO_BUFFERED:
+>  		break;
+> +	case NFSD_IO_DIRECT:
+> +		if (nf->nf_dio_read_offset_align && !base)
+> +			return nfsd_direct_read(rqstp, fhp, nf, offset,
+> +						count, eof);
+> +		fallthrough;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+>  			kiocb.ki_flags = IOCB_DONTCACHE;
 > 
-> Thanks,
-> Lingfeng.
 > 
-
-I would like to provide a reproducible test case, though it might not be
-entirely precise.
-
-The test case mimics the nfsd_file_acquire workflow and consists of three
-threads: main thread, thread1, and thread2, where:
-
-* Thread1 acts as the writer, simulating the open_file workflow.
-* Thread2 acts as the reader, simulating the wait_for_construction workflow.
-* The main thread runs multiple iterations to ensure that thread1 and thread2
-  can execute concurrently in each round.
-
-The test case is as follows:
-
-
-// writer
-static int thread_func1(void *data)
-{
-	struct foo *nf;
-	void *file;
-
-	nf = &global_nf;
-
-	while (!kthread_should_stop()) {
-		wait_for_completion(&comp_start1);
-		if (kthread_should_stop()) break;
-
-		/* Simulate the open_file process in nfsd_file_acquire() */
-		__set_bit(FOO_PENDING, &nf->nf_flags);
-		hlist_add_head_rcu(&nf->nf_node, &foo_hashtbl[ghashval].nfb_head);
-		file = foo_filp_open();
-
-		/* Test whether the following two lines of code will cause memory reordering */
-		nf->nf_file = file;
-		clear_bit_unlock(FOO_PENDING, &nf->nf_flags);
-
-		smp_mb__after_atomic();
-		wake_up_bit(&nf->nf_flags, FOO_PENDING);
-
-		complete(&comp_end1);
-	}
-	if (file)
-		kfree(file);
-	pr_info("thread_func1: exit\n");
-	return 0;
-}
-
-// reader
-static int thread_func2(void *data)
-{
-	void *file;
-	struct foo *nf;
-
-	nf = &global_nf;
-
-	while (!kthread_should_stop()) {
-		wait_for_completion(&comp_start2);
-		if (kthread_should_stop()) break;
-
-		/* Simulate the wait_for_construction process in nfsd_file_acquire() */
-retry:
-		rcu_read_lock();
-		nf = foo_find_locked(ghashval);
-		rcu_read_unlock();
-		if (!nf)
-			goto retry;
-
-		wait_on_bit(&nf->nf_flags, FOO_PENDING, TASK_UNINTERRUPTIBLE);
-		file = nf->nf_file;
-		if (!file)
-			WARN_ON(1);
-		else
-			kfree(file);
-
-		complete(&comp_end2);
-	}
-	pr_info("thread_func2: exit\n");
-	return 0;
-}
-
-static int main_thread_func(void *data)
-{
-	u64 iters = 0;
-
-	while (!kthread_should_stop()) {
-		iters++;
-		if (iters % 1000000 == 0)
-			pr_info("main_thread_func: started %llu iterations\n", iters);
-
-		/* Start both threads */
-		complete(&comp_start1);
-		complete(&comp_start2);
-		/* wait for both to finish */
-		wait_for_completion(&comp_end1);
-		wait_for_completion(&comp_end2);
-
-		/* Reset completions */
-		reinit_completion(&comp_end1);
-		reinit_completion(&comp_end2);
-		reinit_completion(&comp_start1);
-        	reinit_completion(&comp_start2);
-
-		hlist_del_rcu(&global_nf.nf_node);
-                global_nf.nf_file = 0;
-                global_nf.nf_flags = 0;
-	}
-
-	pr_info("main_thread_func: exit\n");
-
-	return 0;
-}
-
-
-I compiled and executed this test case on ARM64. The experimental results show that
-after approximately 6,000,000 rounds, the "file is null" warning in thread2 was
-triggered, indicating that reordering occurred between the file assignment and flag
-clearance operations in thread1.
-
-
-[107632.795543] My module is being loaded
-[107632.800255] Threads started successfully
-[107637.656469] main_thread_func: started 1000000 iterations
-[107642.520876] main_thread_func: started 2000000 iterations
-[107646.919550] main_thread_func: started 3000000 iterations
-[107651.545742] main_thread_func: started 4000000 iterations
-[107655.577054] main_thread_func: started 5000000 iterations
-[107660.507772] main_thread_func: started 6000000 iterations
-[107663.212711] ------------[ cut here ]------------
-[107663.218265] WARNING: CPU: 26 PID: 10603 at /path/to/nfsd/mod3/order_test.c:142 thread_func2+0xa0/0xe0 [order_test]
-
-
-When I placed an smp_mb() between 'wait_on_bit' and 'file = nf->nf_file' in thread2,
-the warning *no longer* occurred.
-
-		wait_on_bit(&nf->nf_flags, FOO_PENDING, TASK_UNINTERRUPTIBLE);
-+		smp_mb();
-		file = nf->nf_file;
-
-I hope this test case proves helpful for investigating the aforementioned memory
-reordering issue.
-
-Best regards,
-Tengda
-
+> 
 
