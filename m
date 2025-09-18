@@ -1,162 +1,179 @@
-Return-Path: <linux-nfs+bounces-14554-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14555-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC16FB849AB
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 14:35:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2050AB84C66
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 15:18:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 955861C823CC
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 12:36:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C415F7C234A
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 13:18:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BB8B2D3225;
-	Thu, 18 Sep 2025 12:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10DA3090D5;
+	Thu, 18 Sep 2025 13:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TamGKSEj"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Sq0OZ9C7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3Xtdmabv";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Sq0OZ9C7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3Xtdmabv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD87257853;
-	Thu, 18 Sep 2025 12:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A432D7DFC
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 13:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758198947; cv=none; b=ZIkdO6BbiKSsJPIcoz5ARNKLu6Z834Tg1JHi4+36GWCCh7m9KsYEM6iNNgrmc0eYza7IAppS9vgaTn1r4kwlqgaNS3oX8HcW6wQK4NMT+NAoPktq14dvbAnXKNW0RsqvWod1pRiTgsNx58w6Bmx2F3TytbWQIYonzjptIfH2d3Y=
+	t=1758201486; cv=none; b=ri7Pjw6sdutobgDTwCG5IFrFFZ7Q8ZFzRwa8chbEjbnQrTC4D6fkL+99EWJn3+ICkrkjpUiDze+jlcRzUMc0efCn7FUOD4zSYQLR5lPbCiyAdi6GCuj80oYZS5bCPRqiNXc8lCqcEXOloxzVHMeGKqDxbu79yc7rEPU/vSijGyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758198947; c=relaxed/simple;
-	bh=XMABYdCsaZ05yg+jZdDt4/GbQBY/OYuDjEEyFUkd+xo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LBeTjXUzNrtXiyXQWSSyDxQtokN0tD78lOCLcJwS3mb5fttvDBWonGR9ilkH4MGIjcINZBqEmxhSF+IVblclGgHoIL9IDvZbZNTX9b7dXfI8v0oA8N1w8WP+kUeoA5jTNT6jfcYjj2/XnemfhOjC/Ty5a0ms8FKyHY922c+Q9d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TamGKSEj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8E55C4CEE7;
-	Thu, 18 Sep 2025 12:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758198946;
-	bh=XMABYdCsaZ05yg+jZdDt4/GbQBY/OYuDjEEyFUkd+xo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TamGKSEjbwZ7Cb6Qm9GkiTVILpAmcpN2rCR2GU1wEmIyvYjIXWMiUE3N87WSppu0R
-	 +Rksr2shogCBMqzbtWcQ1Jrnay6hnQf0KkunRVO2T+qXEukrBWyVuR+3KGUqXuheXy
-	 aP4eUWKzzblXCTV6N9t24LGpV/4D0EyDNdSLbVZU6+GQV+osBUYUtIFLxv9cJhEHKs
-	 YxWyqmi64m+FeNJ6LqNoGnBCRw2g3ytu3RrCbAvrv/3CPUIjU9U+uvRAnkrPz5dKx5
-	 Giy+9PKfGg+lwkUa3lxjTnPpsyw5CBQQzghZy4q1ycP9Gy4Qy8ypPEpxqVdXlAP+wc
-	 lzWpTszerB8Ag==
-Date: Thu, 18 Sep 2025 13:35:41 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>,
-	NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Jonathan Curley <jcurley@purestorage.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the nfs-anna tree
-Message-ID: <aMv8ncNIMJw58v4O@sirena.org.uk>
+	s=arc-20240116; t=1758201486; c=relaxed/simple;
+	bh=Ur3gRiy1j/DCQASrWQRFq7NUf3cAF+cMtkmd/6TnNCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oBiwOgcgJ/HJQiFci7Nj7KLFpxIDnzfT0gUdmXMUsQW2+N4eXkqez3cSGXd1i0vvn4qjyPw4EHOAWdey2LRrqn1L5CKZJYtIBon2yJT/P5xq+h5v1d35Yu9o+ar7lW2OZGvjqTPHnve/nrv3MAu8p9QZOsBdBudCZmmI3Zuhvuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Sq0OZ9C7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3Xtdmabv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Sq0OZ9C7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3Xtdmabv; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 058C01FB4E;
+	Thu, 18 Sep 2025 13:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1758201483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81F1VhD1BCWbjrcHGBn6mjVM/rtHwBcVTNIVqbPn+9c=;
+	b=Sq0OZ9C7BfGy2gCccawpG99U1hWrAqWYGg/7R5ZWVqnAp6k9WMTW0/wEPoxpeRR/Gpi1Va
+	AhhiBLcO8BMsUsJCL5U4/Yrpv5FOmisSaSNOEaKrrw3OcCa0Sh0jEkf3E+9w5NK23BTXlf
+	9Q+kiaWdiuGy6TG5bjlIVvixTWF8wig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1758201483;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81F1VhD1BCWbjrcHGBn6mjVM/rtHwBcVTNIVqbPn+9c=;
+	b=3Xtdmabv45CD1bZaaxb7uvoZSjJ7kWVA7J5rS+Fz9DGG3aTYho6itZACIzsKOO08Jt6Qtr
+	HVsPw3xdkc8nkjBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Sq0OZ9C7;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=3Xtdmabv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1758201483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81F1VhD1BCWbjrcHGBn6mjVM/rtHwBcVTNIVqbPn+9c=;
+	b=Sq0OZ9C7BfGy2gCccawpG99U1hWrAqWYGg/7R5ZWVqnAp6k9WMTW0/wEPoxpeRR/Gpi1Va
+	AhhiBLcO8BMsUsJCL5U4/Yrpv5FOmisSaSNOEaKrrw3OcCa0Sh0jEkf3E+9w5NK23BTXlf
+	9Q+kiaWdiuGy6TG5bjlIVvixTWF8wig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1758201483;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=81F1VhD1BCWbjrcHGBn6mjVM/rtHwBcVTNIVqbPn+9c=;
+	b=3Xtdmabv45CD1bZaaxb7uvoZSjJ7kWVA7J5rS+Fz9DGG3aTYho6itZACIzsKOO08Jt6Qtr
+	HVsPw3xdkc8nkjBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E94CF13A39;
+	Thu, 18 Sep 2025 13:18:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XuTwOIoGzGgWLAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 18 Sep 2025 13:18:02 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8DF1CA09B1; Thu, 18 Sep 2025 15:17:54 +0200 (CEST)
+Date: Thu, 18 Sep 2025 15:17:54 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v2 04/33] block: use extensible_ioctl_valid()
+Message-ID: <dg5xugicejwym44ibxl24st3xgicga6dzryoxvklqoix3an6js@qkcpc5ig7n56>
+References: <20250912-work-namespace-v2-0-1a247645cef5@kernel.org>
+ <20250912-work-namespace-v2-4-1a247645cef5@kernel.org>
+ <02da33e3-6583-4344-892f-a9784b9c5b1b@sirena.org.uk>
+ <aMlouk_55OXZv8w5@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fY1yt8U20mIVi2nD"
-Content-Disposition: inline
-
-
---fY1yt8U20mIVi2nD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aMlouk_55OXZv8w5@stanley.mountain>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 058C01FB4E
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,suse.cz,gmail.com,vger.kernel.org,toxicpanda.com,yhndnzj.com,in.waw.pl,0pointer.de,cyphar.com,zeniv.linux.org.uk,kernel.dk,cmpxchg.org,suse.com,google.com,redhat.com,oracle.com,linaro.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RL9r1cnt7e4118fjryeg1c95sa)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim]
+X-Spam-Score: -2.51
 
-Hi all,
+Christian, this bug still seems to be present in your vfs.all branch. Can
+you please fix it up? Thanks!
 
-After merging the nfs-anna tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+								Honza
 
-In file included from /tmp/next/build/arch/arm/include/asm/div64.h:114,
-                 from /tmp/next/build/include/linux/math.h:6,
-                 from /tmp/next/build/include/linux/kernel.h:27,
-                 from /tmp/next/build/include/linux/uio.h:8,
-                 from /tmp/next/build/include/linux/socket.h:8,
-                 from /tmp/next/build/include/uapi/linux/in.h:25,
-                 from /tmp/next/build/include/linux/in.h:19,
-                 from /tmp/next/build/include/linux/nfs_fs.h:22,
-                 from /tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:10:
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c: In function 'calc_mirror_idx_from_commit':
-/tmp/next/build/include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
-  183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-      |                                   ^~
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~
-In file included from /tmp/next/build/include/linux/array_size.h:5,
-                 from /tmp/next/build/include/linux/kernel.h:16:
-/tmp/next/build/include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-  195 |         } else if (likely(((n) >> 32) == 0)) {          \
-      |                                ^~
-/tmp/next/build/include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-   76 | # define likely(x)      __builtin_expect(!!(x), 1)
-      |                                             ^
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~
-/tmp/next/build/include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
-  199 |                 __rem = __div64_32(&(n), __base);       \
-      |                                    ^~~~
-      |                                    |
-      |                                    u32 * {aka unsigned int *}
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~
-/tmp/next/build/arch/arm/include/asm/div64.h:24:45: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
-   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                   ~~~~~~~~~~^
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c: In function 'calc_dss_id_from_commit':
-/tmp/next/build/include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
-  183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-      |                                   ^~
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
-  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~
-/tmp/next/build/include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
-  195 |         } else if (likely(((n) >> 32) == 0)) {          \
-      |                                ^~
-/tmp/next/build/include/linux/compiler.h:76:45: note: in definition of macro 'likely'
-   76 | # define likely(x)      __builtin_expect(!!(x), 1)
-      |                                             ^
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
-  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~
-/tmp/next/build/include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
-  199 |                 __rem = __div64_32(&(n), __base);       \
-      |                                    ^~~~
-      |                                    |
-      |                                    u32 * {aka unsigned int *}
-/tmp/next/build/fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
-  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~
-/tmp/next/build/arch/arm/include/asm/div64.h:24:45: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
-   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                   ~~~~~~~~~~^
-make[6]: *** [/tmp/next/build/scripts/Makefile.build:287: fs/nfs/flexfilelayout/flexfilelayout.o] Error 1
-
-Caused by commit
-
-   67ee714244dfb ("NFSv4/flexfiles: Commit path updates for striped layouts")
-
-I have used the tree from yesterday instead.
-
---fY1yt8U20mIVi2nD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjL/J0ACgkQJNaLcl1U
-h9C/igf/Z9g54/pzM3yurEyLhVZb5OvGo/HZ/WrqTgSBzQaHKxxddNDVin/XYfZ8
-ZlqDqIPfIBUe9XAjskU1meGI1KHZJYxTxLdwHX6QrcQuA5+azBUB5PAX/Xbombqp
-jQAfP0aA9lJ7ggOQmqD8JZhUlRH7K76BIrkaQzGr9u2g+fAaa3Oa7TKpR0cuQRzQ
-Gcy3J56So1QfC/hcdGBEBZUmsO08sRsyYbP5ZBH7g43OI7F+5GyFHC0dJwbbAw2V
-3pvJBfennJkJK9VWwLuyGSyc+9YnktlvBb7B0qaXbCATnYuPGrMnFSt80DgiKABn
-tjm6K2GxT3cMJ3p+fVsxwLjLj1cKEw==
-=KaX4
------END PGP SIGNATURE-----
-
---fY1yt8U20mIVi2nD--
+On Tue 16-09-25 16:40:10, Dan Carpenter wrote:
+> Yeah, the:
+> 
+> 	if (extensible_ioctl_valid(cmd, FS_IOC_GETLBMD_CAP, LBMD_SIZE_VER0))
+> 		return -ENOIOCTLCMD;
+> 
+> test is inverted...  It should be if (!valid) return instead of if (valid)
+> return;
+> 
+> regards,
+> dan carpenter
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
