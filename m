@@ -1,57 +1,60 @@
-Return-Path: <linux-nfs+bounces-14579-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14580-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03848B869B4
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 21:01:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2522B86A68
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 21:17:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C139F1C86E61
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 19:02:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 823257C4D36
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Sep 2025 19:17:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31BFD15853B;
-	Thu, 18 Sep 2025 19:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE6027F759;
+	Thu, 18 Sep 2025 19:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy41kApT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UK2cwURD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D38D60DCF
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 19:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262812571BE
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Sep 2025 19:17:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758222103; cv=none; b=AQrxpbXSCFg4yWSaQJYICm7WCIz6JtedPV5fxAqqmnzmamVR7fRxgQNrhOfdslqa1694OaUhN/BAl5mFQd/xjxFR0oXrioR5hWvN21gSz4yJTy15sOJNlLJu1Rst0hczULDEaGFNQ0JjGZ2B9QOm4lBcXSNldyVQM3wNDZdM+/Q=
+	t=1758223049; cv=none; b=GlenWDLHonFBFc9NFd02ZbpauUksm31Ma3s54fHg63wp13MKLi5by3iafalCHguwObT/E6Oj3LN3kCvxNx5kfIyLacA58JV2v2m6XFdNgBOzV6QOTimqcHgXF+BOjdNDQIzxYroZn/l26Q7SwJS5RY1NfGKEYFR4hyQ3d4UEXuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758222103; c=relaxed/simple;
-	bh=+ESVb4jmyCzpLiW7gx640EQnRqFnUZVFevwy/myerKM=;
+	s=arc-20240116; t=1758223049; c=relaxed/simple;
+	bh=lwwVscgQoXHpXC+tr+0qNLB9CddR8mqskirSRouh5l8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMCCJdBefLYvSq4pVt5uX3iffdW8hFzysXVEkC4tcjXBA1bta/FGFc4g7ItqmCGLa4piVZ2xW1kNJypviwzY7DXmicsajWERr1Dk6+j0D6R3gK2ykPXpquHIGA5hUJjY/rilAgCYvA9OpNGIJFSYiw3qTeUzv/D51N53Pg9Utu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy41kApT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE18C4CEE7;
-	Thu, 18 Sep 2025 19:01:42 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4o37Zt0FrIV1FHcMiWmDNjIkuAC+PoWkvSB52OuwDibWyGUvxgZhGJpZfyD1baF0utk02VFnBpb3LqfVHMIOHox/yACS41qTu/Dd4vKY8N+WssMMW7/w8V63DtnqG6lRAGtVg6Ho6q2s5g6aHISPBjtLL1hYHZF/Ks/OFCYNT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UK2cwURD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE72C4CEE7;
+	Thu, 18 Sep 2025 19:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758222102;
-	bh=+ESVb4jmyCzpLiW7gx640EQnRqFnUZVFevwy/myerKM=;
+	s=k20201202; t=1758223048;
+	bh=lwwVscgQoXHpXC+tr+0qNLB9CddR8mqskirSRouh5l8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cy41kApTqWn6VIUqppUgXpWs/ksin04cBM5a+19DwMvI6CdnnZ+QYeYZR9kF2QE6M
-	 5Ty7nZnoHlVUegpj2H/xxnrV/npBCYxPulux77brMQJseaFwk1bs9KTv+EAZrOg2+H
-	 yo2aDuD5ii71xXbXhB69sHzYL+ZOrf409ilAjhoOZaIcMXqhUz1aE4e3qstiF81+Wb
-	 Nm+I0zgZcvI9rR8EpPgW+5JIiNOyrHucZlV12yFuoL8/A6RhzxYr4daV1H/e8fLio4
-	 vD91eHJieExAMWO8jBppo2AUlEnIug3X1ffWRPfpnyvMbggB3mWxG3X1anpxXpepym
-	 f2gvAUvG0+SvQ==
-Date: Thu, 18 Sep 2025 15:01:41 -0400
+	b=UK2cwURDa5WeYcoC4psZnzOBaXb6euP/pSgplaDp5OJBqUTfeJjJKEwjDRdt1NjNd
+	 /HFhh+1f6Q0BZtQcU4AY9gExOSML14jxitZ8u//CzogwXPB3ERLlbbdYunW0Pvgsj/
+	 BpejEk1nfI05iW+584D7p9YGduOJzrfBA9uwMqdxrMUXpqYjpyA3DXoBpV4DiXZb1L
+	 iHA2vvz9Kt3tbHZRxT7Vseyj//yMcXk3IYiEycxMOHk8NdainHF6DllUz5RWDxQT65
+	 BauBa+sgSYxCN+uV3rPFpwb+HPF2N6wk4u0egKbfkNa5qR21Sq4+Y9QPZ3DYf1hVIy
+	 NoidWGUSF0e5g==
+Date: Thu, 18 Sep 2025 15:17:27 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, jlayton@kernel.org, okorniev@redhat.com,
-	dai.ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] NFSD: Implement NFSD_IO_DIRECT for NFS READ
-Message-ID: <aMxXFcJuTKYbixFB@kernel.org>
-References: <175811882632.19474.8126763744508709520.stgit@91.116.238.104.host.secureserver.net>
- <175811952039.19474.5813875056701985362.stgit@91.116.238.104.host.secureserver.net>
- <175815178827.1696783.10535533600809037950@noble.neil.brown.name>
- <0ab1138f-9085-444a-9e8a-822c29e404bd@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Anna Schumaker <anna.schumaker@oracle.com>
+Cc: Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v10 2/7] nfs/localio: avoid issuing misaligned IO using
+ O_DIRECT
+Message-ID: <aMxax9SBQLML8_Se@kernel.org>
+References: <20250917181843.33865-1-snitzer@kernel.org>
+ <20250917181843.33865-3-snitzer@kernel.org>
+ <404a4c49-9e16-46d1-8901-f7a8a6a9701b@oracle.com>
+ <1f740990-edac-4c41-9572-4397c138e0f3@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,61 +63,83 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0ab1138f-9085-444a-9e8a-822c29e404bd@kernel.org>
+In-Reply-To: <1f740990-edac-4c41-9572-4397c138e0f3@oracle.com>
 
-On Thu, Sep 18, 2025 at 11:42:03AM -0700, Chuck Lever wrote:
-> On 9/17/25 4:29 PM, NeilBrown wrote:
-> >> +/*
-> >> + * The byte range of the client's READ request is expanded on both
-> >> + * ends until it meets the underlying file system's direct I/O
-> >> + * alignment requirements. After the internal read is complete, the
-> >> + * byte range of the NFS READ payload is reduced to the byte range
-> >> + * that was originally requested.
-> >> + *
-> >> + * Note that a direct read can be done only when the xdr_buf
-> >> + * containing the NFS READ reply does not already have contents in
-> >> + * its .pages array. This is due to potentially restrictive
-> >> + * alignment requirements on the read buffer. When .page_len and
-> >> + * @base are zero, the .pages array is guaranteed to be page-
-> >> + * aligned.
-> > This para is confusing.
-> > It starts talking about the xdr_buf not having any contents.  Then it
-> > transitions to a guarantee of page alignment.
-> > 
-> > If the start of the read requests isn't sufficiently aligned then a gap
-> > will be created in the xdr_buf and that can only be handled at the start
-> > (using page_base).
-> > 
-> > So as you say we need page_len to be zero.  But nowhere in the code is
-> > this condition tested.
+On Thu, Sep 18, 2025 at 11:55:59AM -0700, Chuck Lever wrote:
+> On 9/18/25 10:15 AM, Anna Schumaker wrote:
+> >> diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+> >> index 269fa9391dc46..be710d809a3ba 100644
+> >> --- a/fs/nfsd/localio.c
+> >> +++ b/fs/nfsd/localio.c
+> > I'll need an acked-by from Chuck or Jeff for the NFSD portions of this patch.
 > 
-> Despite what the comment claims, I had thought that things would work if
-> the payload started at a page boundary in xdr_buf.pages. But I can see
-> that page_offset applies only to the first entry in xdr_buf.pages.
+> Doesn't this series need
 > 
-> So xdr_buf.page_len does need to be zero. That check can be added in
-> nfsd_iter_read().
+> https://lore.kernel.org/linux-nfs/175811950708.19474.3966708920934397510.stgit@91.116.238.104.host.secureserver.net/T/#u
+> 
+> as a prerequisite?
 
-I had a look at trying to do that, it wasn't obvious given
-fs/nfsd/vfs.c doesn't have any direct access or need for xdr_buf.
+Correct, that one is needed (along with its prereqs).  Here is a git
+branch I just pushed (because I'm chasing a nfstrace.h compiler issue
+with/for Anna):
 
-But I agree just adding that is ideal at this point.
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=anna-linux-next-6.18
 
-> I prefer this approach over more elaborate checking against the
-> dio_mem_alignment parameter because for the overwhelmingly common cases
-> of both NFSv3 READ and NFSv4 COMPOUND with one READ operation, page_len
-> will be zero. The extra complication is hard to unit-test and will
-> almost never be used.
-
-Extra checking might be interesting so nfsd_iov_iter_aligned_bvec()
-is used (I've found its needed for the WRITE support).  Maybe an
-additional CONFIG_NFSD_DIRECT_VERIFY_DIO_ALIGNMENT option? -- might
-seem overkill but I've found the iov_iter checking to really save me.
-One of those things that you really only need during development, to
-verify you didn't somehow miss something. But for release we don't
-need/want it.
-
-Anyway, just a "futures" tangent.. nothing actionable for this patch ;)
+It has the 4 NFSD prereq commits Anna needs to apply this NFS client
+series (which will be going through your NFSD tree if you decide the
+NFSD Direct READ support is ready).
 
 Mike
+
+
+> 
+> 
+> > Thanks,
+> > Anna
+> > 
+> >> @@ -117,12 +117,23 @@ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
+> >>  	return localio;
+> >>  }
+> >>  
+> >> +static void nfsd_file_dio_alignment(struct nfsd_file *nf,
+> >> +				    u32 *nf_dio_mem_align,
+> >> +				    u32 *nf_dio_offset_align,
+> >> +				    u32 *nf_dio_read_offset_align)
+> >> +{
+> >> +	*nf_dio_mem_align = nf->nf_dio_mem_align;
+> >> +	*nf_dio_offset_align = nf->nf_dio_offset_align;
+> >> +	*nf_dio_read_offset_align = nf->nf_dio_read_offset_align;
+> >> +}
+> >> +
+> >>  static const struct nfsd_localio_operations nfsd_localio_ops = {
+> >>  	.nfsd_net_try_get  = nfsd_net_try_get,
+> >>  	.nfsd_net_put  = nfsd_net_put,
+> >>  	.nfsd_open_local_fh = nfsd_open_local_fh,
+> >>  	.nfsd_file_put_local = nfsd_file_put_local,
+> >>  	.nfsd_file_file = nfsd_file_file,
+> >> +	.nfsd_file_dio_alignment = nfsd_file_dio_alignment,
+> >>  };
+> >>  
+> >>  void nfsd_localio_ops_init(void)
+> >> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+> >> index 59ea90bd136b6..3d91043254e64 100644
+> >> --- a/include/linux/nfslocalio.h
+> >> +++ b/include/linux/nfslocalio.h
+> >> @@ -64,6 +64,8 @@ struct nfsd_localio_operations {
+> >>  						const fmode_t);
+> >>  	struct net *(*nfsd_file_put_local)(struct nfsd_file __rcu **);
+> >>  	struct file *(*nfsd_file_file)(struct nfsd_file *);
+> >> +	void (*nfsd_file_dio_alignment)(struct nfsd_file *,
+> >> +					u32 *, u32 *, u32 *);
+> >>  } ____cacheline_aligned;
+> >>  
+> >>  extern void nfsd_localio_ops_init(void);
+> 
+> For the above hunks:
+> 
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> 
+> 
+> -- 
+> Chuck Lever
 
