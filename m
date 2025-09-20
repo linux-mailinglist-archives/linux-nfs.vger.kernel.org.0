@@ -1,150 +1,253 @@
-Return-Path: <linux-nfs+bounces-14607-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14608-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1524B8BAD6
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 02:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F84DB8BCB2
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 03:19:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 831FA1C03E6F
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 00:14:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD4871C0221E
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 01:19:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B96748F;
-	Sat, 20 Sep 2025 00:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B11156F45;
+	Sat, 20 Sep 2025 01:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cif2Rh1p"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531064A32
-	for <linux-nfs@vger.kernel.org>; Sat, 20 Sep 2025 00:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DD2D7BF
+	for <linux-nfs@vger.kernel.org>; Sat, 20 Sep 2025 01:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758327217; cv=none; b=Dnk5nC9Qjtn6y/rJZeir1OMWLiXTbeIl7F9aP8CDcUP+Hm/TvBFIlqy5ZkvVyCp4dk7dLrlfPtUT2EHFjZarSQsgmGbAv9ErZ+LAgVpqIuTlzLt/URd8fCHDbMWaKd3cybR7V1rq2ldiUCXu2XKh/k8VxgGVLet2pJKwyb2fRGc=
+	t=1758331137; cv=none; b=UT2fYbMNB+OC0h2LaQFxTJ6+FKc2mflPzFJ32NAvu02vV9ZCgdAHXd4Hbs6Kau1Ogos8Govl8J4eePwxLD9Usantb6kF1Kd6hflFCe00kix9CAla3Ze/l4GWQI3cn86Tjl7ll6jxL76gbdmsw4Iu5lPOTL8IdojWsYtIj0DGKKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758327217; c=relaxed/simple;
-	bh=9oer6FIxhSftD1QvS4tyhBH63lOL8najkhKV35ZC9Ag=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Fulc3DxWjgIEftcfrgP3iPkW2wFMZQZAbFIX5JHdxsTtTIv8ZVige3WQgn4o+I/ThARwo6KQr2Wm7L7tB1sRRFD6PYGCkWIs3zwTmvsuFYNDQhSo5aMuH1as6URB1eRCkPQx5tt5yNrGJeZ+XnsGaqWrTSbtfqc3qfZI7lhzgZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-4247f4fda63so26372245ab.2
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Sep 2025 17:13:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758327214; x=1758932014;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0KSXfD8WagrlJub7GjFFRPCZmKQD/bTAa2q7egn9kCU=;
-        b=ldQMzuIoOKERnZDlrGIOmOhSemxNXDlzSP6U+w2GdOYC/+oYBBSSXvPlVTb/8qpS73
-         lpkMlimXYGHT9VQ6I1w1OSydENLo51HKW4ecbl5jp5FY/2JioztCF7ACysBPeN0qdmRZ
-         VF5Ej9QtilwKcD9v2oBCnuFm5HDEF24SMLjob85r1d+3aY0sQz/7kG7FFTLGPSCPZX7x
-         iLQlCnNtKcyKihblip6ApquGxcom3g/O3g835rogKvW4CxzmJhWMoXKQ2rOJiA2M7Vdq
-         blTP9FjTlDV2r4Z08NpFf20tgrolQO0YcR4riFjlomggAbfO7S7e6UXFE88HEboV8oi7
-         3XnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRG7f3swnX4lFwAAWdPUq0YoGnNJXOR8PX/S3B2sjgzTaeb3Ad6B36uYBMzqaJl9YioFHaMMm3Klg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtBpI4TxbAhxIo0JDYexq9w0kNKgW2yFoVV4E4TcxD+3hW34/z
-	FyNzkYE6fgezxgmMEUaFk6GGIGrLMw2oLCeqhtlP5lGHVouBswwWBIfbiacfTij3BUpACMMHGGO
-	zh5SNmyAmbQT02NFCQbXb+4+cxJcZoKwAoew512eYDj6RifGdEmWwRyUxAys=
-X-Google-Smtp-Source: AGHT+IEONtvsqEyT9Cy/dVpWDrwJVGJAQsAH+BirtcW0EGh8mtcHkqDGk5tj5hD9ivfUGYWOKYcwm3AYaVL/wJPdVXWCWTyCEkqY
+	s=arc-20240116; t=1758331137; c=relaxed/simple;
+	bh=fKV6cfgnGCWUqgj7HP9Xn0U9eB7bWi+n9Z7eQeMKuE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DTQXNDmqMt6W2WK1aJY3WfxhUjMatVnmNMXiTUegh14FY4R6q71QO9z/y1nmI0xR/WKlP16ywtzQR796H0l1YtfwNoVn/A4IEf0Qu02mUapF1nBL2AI8z0MBYDHbeyx5maAW8m2fUoe/TqV9r4fvXNlWmFwvtSZh5Nd2zwCUMQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cif2Rh1p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29128C4CEF0;
+	Sat, 20 Sep 2025 01:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758331137;
+	bh=fKV6cfgnGCWUqgj7HP9Xn0U9eB7bWi+n9Z7eQeMKuE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cif2Rh1pBy6TrlWP4CluS2n28XbwTYwh0EIaLJPlBhMw6rSdVKbQIFzPILVc0yNFK
+	 bWGi9yRIqXoBbNhxEBXbOklPFR8VpTjWr2GxzgLRvD3f5JXdqerNB+kEioTMo7VDwg
+	 yLM9BGPYzTwerJKEwHdiWFHRG99yWByovFHNOjwwSwAnZb6J/Li0s3YPnzrX5WA+h5
+	 Uz5nVsR7Q/8b+N3jUbAE5RMYzyw/Qki8h4WqgqzYopE3roNU/9rth5vB0mEr5JoHng
+	 /UH5/Hi42p3wB9B7wBSiFisJw7AUriHMzR6b1XPMudfeLykjq1gPWVlerl0/I/4685
+	 f1TeZEqOrirKg==
+Date: Fri, 19 Sep 2025 21:18:55 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v11b 2/7] nfs/localio: avoid issuing misaligned IO using
+ O_DIRECT
+Message-ID: <aM4A_wAoxv4LNlAx@kernel.org>
+References: <20250919143631.44851-1-snitzer@kernel.org>
+ <20250919143631.44851-3-snitzer@kernel.org>
+ <2416a8b9683a37eeb7b29a6c0fb32b5cded4fe64.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3782:b0:412:c994:db15 with SMTP id
- e9e14a558f8ab-42481947474mr87183285ab.14.1758327214465; Fri, 19 Sep 2025
- 17:13:34 -0700 (PDT)
-Date: Fri, 19 Sep 2025 17:13:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68cdf1ae.a00a0220.37dadf.0021.GAE@google.com>
-Subject: [syzbot] [nfs?] WARNING in nsfs_fh_to_dentry
-From: syzbot <syzbot+9eefe09bedd093f156c2@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2416a8b9683a37eeb7b29a6c0fb32b5cded4fe64.camel@kernel.org>
 
-Hello,
+[this will be posted as patch 2/7 in v12 if needed]
 
-syzbot found the following issue on:
+Add nfsd_file_dio_alignment and use it to avoid issuing misaligned IO
+using O_DIRECT. Any misaligned DIO falls back to using buffered IO.
 
-HEAD commit:    846bd2225ec3 Add linux-next specific files for 20250919
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=144b8d04580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=135377594f35b576
-dashboard link: https://syzkaller.appspot.com/bug?extid=9eefe09bedd093f156c2
-compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1724be42580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12fc2712580000
+Because misaligned DIO is now handled safely, disable the nfs modparam
+'localio_O_DIRECT_semantics' that was added to require users opt-in to
+the requirement that all O_DIRECT be properly DIO-aligned. The
+modparam is only left in place for compatibility purposes.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c53d48022f8a/disk-846bd222.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/483534e784c8/vmlinux-846bd222.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/721b36eec9b3/bzImage-846bd222.xz
+Also, introduce nfs_iov_iter_aligned_bvec() which is a variant of
+iov_iter_aligned_bvec() that also verifies the offset associated with
+an iov_iter is DIO-aligned.  NOTE: in a parallel effort,
+iov_iter_aligned_bvec() is being removed along with
+iov_iter_is_aligned().
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9eefe09bedd093f156c2@syzkaller.appspotmail.com
+Lastly, add pr_info_ratelimited if underlying filesystem returns
+-EINVAL because it was made to try O_DIRECT for IO that is not
+DIO-aligned (shouldn't happen, so its best to be louder if it does).
 
-------------[ cut here ]------------
-WARNING: fs/nsfs.c:493 at nsfs_fh_to_dentry+0xcc5/0xdc0 fs/nsfs.c:493, CPU#1: syz.0.17/6050
-Modules linked in:
-CPU: 1 UID: 0 PID: 6050 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/18/2025
-RIP: 0010:nsfs_fh_to_dentry+0xcc5/0xdc0 fs/nsfs.c:493
-Code: 7c 24 60 e9 10 f8 ff ff e8 48 01 79 ff 90 0f 0b 90 e9 09 f6 ff ff e8 3a 01 79 ff 90 0f 0b 90 e9 81 f6 ff ff e8 2c 01 79 ff 90 <0f> 0b 90 e9 d0 f6 ff ff e8 1e 01 79 ff 45 31 ff e9 d9 f7 ff ff e8
-RSP: 0018:ffffc90002f97a20 EFLAGS: 00010293
-RAX: ffffffff824717f4 RBX: 00000000effffffd RCX: ffff888031990000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000effffffd
-RBP: ffffc90002f97b10 R08: ffffffff8fe4db77 R09: 1ffffffff1fc9b6e
-R10: dffffc0000000000 R11: fffffbfff1fc9b6f R12: 1ffff920005f2f4c
-R13: ffff888028d74894 R14: dffffc0000000000 R15: 0000000000000000
-FS:  0000555569cd2500(0000) GS:ffff8881258a2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32363fff CR3: 0000000028a1e000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- exportfs_decode_fh_raw+0x178/0x6e0 fs/exportfs/expfs.c:456
- do_handle_to_path+0xa4/0x1a0 fs/fhandle.c:276
- handle_to_path fs/fhandle.c:400 [inline]
- do_handle_open+0x6b4/0x8f0 fs/fhandle.c:415
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1a5d78ec29
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffff390c9e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000130
-RAX: ffffffffffffffda RBX: 00007f1a5d9d5fa0 RCX: 00007f1a5d78ec29
-RDX: 0000000000400040 RSI: 0000200000000000 RDI: 0000000000000003
-RBP: 00007f1a5d811e41 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f1a5d9d5fa0 R14: 00007f1a5d9d5fa0 R15: 0000000000000003
- </TASK>
-
-
+Fixes: 3feec68563d ("nfs/localio: add direct IO enablement with sync and async IO support")
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/nfs/localio.c           | 64 +++++++++++++++++++++++++++++++++-----
+ fs/nfsd/localio.c          | 11 +++++++
+ include/linux/nfslocalio.h |  2 ++
+ 3 files changed, 70 insertions(+), 7 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+[changes from v11 to v11b: keep but disable localio_O_DIRECT_semantics modparam]
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index 42ea50d42c995..9ea830d144818 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -49,10 +49,10 @@ struct nfs_local_fsync_ctx {
+ static bool localio_enabled __read_mostly = true;
+ module_param(localio_enabled, bool, 0644);
+ 
+-static bool localio_O_DIRECT_semantics __read_mostly = false;
++static bool localio_O_DIRECT_semantics __read_mostly = true;
+ module_param(localio_O_DIRECT_semantics, bool, 0644);
+ MODULE_PARM_DESC(localio_O_DIRECT_semantics,
+-		 "LOCALIO will use O_DIRECT semantics to filesystem.");
++		 "Deprecated, does nothing, LOCALIO handles misaligned DIO.");
+ 
+ static inline bool nfs_client_is_local(const struct nfs_client *clp)
+ {
+@@ -322,12 +322,9 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
+ 		return NULL;
+ 	}
+ 
+-	if (localio_O_DIRECT_semantics &&
+-	    test_bit(NFS_IOHDR_ODIRECT, &hdr->flags)) {
+-		iocb->kiocb.ki_filp = file;
++	init_sync_kiocb(&iocb->kiocb, file);
++	if (test_bit(NFS_IOHDR_ODIRECT, &hdr->flags))
+ 		iocb->kiocb.ki_flags = IOCB_DIRECT;
+-	} else
+-		init_sync_kiocb(&iocb->kiocb, file);
+ 
+ 	iocb->kiocb.ki_pos = hdr->args.offset;
+ 	iocb->hdr = hdr;
+@@ -337,6 +334,30 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
+ 	return iocb;
+ }
+ 
++static bool nfs_iov_iter_aligned_bvec(const struct iov_iter *i,
++		loff_t offset, unsigned int addr_mask, unsigned int len_mask)
++{
++	const struct bio_vec *bvec = i->bvec;
++	size_t skip = i->iov_offset;
++	size_t size = i->count;
++
++	if ((offset | size) & len_mask)
++		return false;
++	do {
++		size_t len = bvec->bv_len;
++
++		if (len > size)
++			len = size;
++		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
++			return false;
++		bvec++;
++		size -= len;
++		skip = 0;
++	} while (size);
++
++	return true;
++}
++
+ static void
+ nfs_local_iter_init(struct iov_iter *i, struct nfs_local_kiocb *iocb, int dir)
+ {
+@@ -346,6 +367,25 @@ nfs_local_iter_init(struct iov_iter *i, struct nfs_local_kiocb *iocb, int dir)
+ 		      hdr->args.count + hdr->args.pgbase);
+ 	if (hdr->args.pgbase != 0)
+ 		iov_iter_advance(i, hdr->args.pgbase);
++
++	if (iocb->kiocb.ki_flags & IOCB_DIRECT) {
++		u32 nf_dio_mem_align, nf_dio_offset_align, nf_dio_read_offset_align;
++		/* Verify the IO is DIO-aligned as required */
++		nfs_to->nfsd_file_dio_alignment(iocb->localio, &nf_dio_mem_align,
++						&nf_dio_offset_align,
++						&nf_dio_read_offset_align);
++		if (dir == READ)
++			nf_dio_offset_align = nf_dio_read_offset_align;
++
++		if (nf_dio_mem_align && nf_dio_offset_align &&
++		    nfs_iov_iter_aligned_bvec(i, hdr->args.offset,
++					      nf_dio_mem_align - 1,
++					      nf_dio_offset_align - 1))
++			return; /* is DIO-aligned */
++
++		/* Fallback to using buffered for this misaligned IO */
++		iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
++	}
+ }
+ 
+ static void
+@@ -406,6 +446,11 @@ nfs_local_read_done(struct nfs_local_kiocb *iocb, long status)
+ 	struct nfs_pgio_header *hdr = iocb->hdr;
+ 	struct file *filp = iocb->kiocb.ki_filp;
+ 
++	if ((iocb->kiocb.ki_flags & IOCB_DIRECT) && status == -EINVAL) {
++		/* Underlying FS will return -EINVAL if misaligned DIO is attempted. */
++		pr_info_ratelimited("nfs: Unexpected direct I/O read alignment failure\n");
++	}
++
+ 	nfs_local_pgio_done(hdr, status);
+ 
+ 	/*
+@@ -598,6 +643,11 @@ nfs_local_write_done(struct nfs_local_kiocb *iocb, long status)
+ 
+ 	dprintk("%s: wrote %ld bytes.\n", __func__, status > 0 ? status : 0);
+ 
++	if ((iocb->kiocb.ki_flags & IOCB_DIRECT) && status == -EINVAL) {
++		/* Underlying FS will return -EINVAL if misaligned DIO is attempted. */
++		pr_info_ratelimited("nfs: Unexpected direct I/O write alignment failure\n");
++	}
++
+ 	/* Handle short writes as if they are ENOSPC */
+ 	if (status > 0 && status < hdr->args.count) {
+ 		hdr->mds_offset += status;
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index 269fa9391dc46..be710d809a3ba 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -117,12 +117,23 @@ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
+ 	return localio;
+ }
+ 
++static void nfsd_file_dio_alignment(struct nfsd_file *nf,
++				    u32 *nf_dio_mem_align,
++				    u32 *nf_dio_offset_align,
++				    u32 *nf_dio_read_offset_align)
++{
++	*nf_dio_mem_align = nf->nf_dio_mem_align;
++	*nf_dio_offset_align = nf->nf_dio_offset_align;
++	*nf_dio_read_offset_align = nf->nf_dio_read_offset_align;
++}
++
+ static const struct nfsd_localio_operations nfsd_localio_ops = {
+ 	.nfsd_net_try_get  = nfsd_net_try_get,
+ 	.nfsd_net_put  = nfsd_net_put,
+ 	.nfsd_open_local_fh = nfsd_open_local_fh,
+ 	.nfsd_file_put_local = nfsd_file_put_local,
+ 	.nfsd_file_file = nfsd_file_file,
++	.nfsd_file_dio_alignment = nfsd_file_dio_alignment,
+ };
+ 
+ void nfsd_localio_ops_init(void)
+diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+index 59ea90bd136b6..3d91043254e64 100644
+--- a/include/linux/nfslocalio.h
++++ b/include/linux/nfslocalio.h
+@@ -64,6 +64,8 @@ struct nfsd_localio_operations {
+ 						const fmode_t);
+ 	struct net *(*nfsd_file_put_local)(struct nfsd_file __rcu **);
+ 	struct file *(*nfsd_file_file)(struct nfsd_file *);
++	void (*nfsd_file_dio_alignment)(struct nfsd_file *,
++					u32 *, u32 *, u32 *);
+ } ____cacheline_aligned;
+ 
+ extern void nfsd_localio_ops_init(void);
+-- 
+2.44.0
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
 
