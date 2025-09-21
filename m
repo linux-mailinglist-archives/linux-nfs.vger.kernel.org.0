@@ -1,123 +1,95 @@
-Return-Path: <linux-nfs+bounces-14609-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14610-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF395B8C930
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 15:35:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 009B1B8D6BA
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Sep 2025 09:35:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 958F2582E1E
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Sep 2025 13:35:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0EC5189E23E
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Sep 2025 07:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6887B1DDC2C;
-	Sat, 20 Sep 2025 13:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC68C299AB5;
+	Sun, 21 Sep 2025 07:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/9O5isu"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s8xfNzYh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AS9a2xMg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40570469D;
-	Sat, 20 Sep 2025 13:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D9C3FB31;
+	Sun, 21 Sep 2025 07:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758375317; cv=none; b=kUHjd2Qj4MS6g2ucsascrljZIQObKMLQlz0dm/qiyhWDKajfFu+Q2JA+4oZCuxyybeezsqnbcEIIbVg4wVh3dHFF+hw+FhU3ePl//XLOVXPMCYhonV0+VeaiHXtkYeZ3OLHuvZpKynZ0X8+81tNmk/oTP7qX/phOKjvOPLri6Ig=
+	t=1758440132; cv=none; b=AIQNkvTsaScYHVuwVLfQXBq/N2+u/djHgrHMdixIbPfMbHf6RuSJrVa6+gX2aEyl7XmzAX6E4grQPDLPfdd0yriWPBrbs6h/6aMHe5QWV5uEwC1bTgF0q5dzRG0jltIZ3gF0rJDS/dfCDplIMGCihaLRmGsvqEwQmToXnRgI3Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758375317; c=relaxed/simple;
-	bh=FYRJBro9n8sWkCcQhf2Cg/y8rCXU0K49WJHoCnVZiCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABxBEhDR2pDP/6mvUDtRdf/W1knItKU7t7vgSxeo0Zjz7nFRfObM/6cU39PCi3D1cZn93GVnRTv79IsSge+yPRblqFIgEwcSmlXC62ZUjB76CfjUzp9WWPAho/UT3Idgw86l4QsmCdO6Yz+XibPL0C0okf4AIyRCFukPsgxJQQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/9O5isu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F228C4CEEB;
-	Sat, 20 Sep 2025 13:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758375315;
-	bh=FYRJBro9n8sWkCcQhf2Cg/y8rCXU0K49WJHoCnVZiCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k/9O5isuZ83vvwc+8qWBFKKwM2ivB8fhNviHsQan9/9MjCg/ycvO0awkFD8k9Rb4S
-	 aG65EQFK9V/QgR+TI9j0mDbCOi0x3x9Z3oES+S+iJtfZ4nPfiFWGBmtASO5CHF+hes
-	 XT60UYyhHEf7Db7f7Q3erZgsqn3/rrIlSIsUiHDj0+VrZq0dzM1jo5m/3dPtdtSoJU
-	 KB5y3NGQDDkPIGzF7hHZXQXj/CAgWpceskWO2jmb/RdoFcDbqIZF182E5Q+oclN8Q+
-	 uxCaQPboVnNCCi+36Z1dAkFJHPHC2FMep4y1pQ8q2TAUJo2KhpOCjVxjOzz4Bcspqs
-	 bfqnhXjLEpY/g==
-Received: by pali.im (Postfix)
-	id 0368E7C5; Sat, 20 Sep 2025 15:35:11 +0200 (CEST)
-Date: Sat, 20 Sep 2025 15:35:11 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] nfs: Fix mounting NFS3 AUTH_NULL exports
-Message-ID: <20250920133511.qq4jpakh4nlmej4f@pali>
-References: <20240912130220.17032-1-pali@kernel.org>
+	s=arc-20240116; t=1758440132; c=relaxed/simple;
+	bh=EmA9cyLn6JpB80qurGIMgtPXn3G6/Q7d0X60oqLWfyE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ea80Lix5aZseoowY/bM5FICMpsMsrjxAUkAg+AYY8lozaZEEPz0gJfMysVs4jftSe5yoeR9nLfNX46ZipWpzOeZu5VkuZrNDu7/d+1UYlmZC2qdCXGQ9hTNjQZa+yX746JmxZdMPapRAjoED6y+VHc4Td/Dq5ceOr1E6wW68IIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s8xfNzYh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AS9a2xMg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758440128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmA9cyLn6JpB80qurGIMgtPXn3G6/Q7d0X60oqLWfyE=;
+	b=s8xfNzYh9AgO9lSPgbgFQ6ca+OEaYCiBIDdJf/EK9QvMohMPIiorMCsN4JE08KM8y6H779
+	Ti66eXS1ItZU0zG1uwrCZkLSnPQwCwQDpHWLe6zd48LqgFbw1b/q6R5+xnG+Q0fkwTo+Yo
+	Wxp1K4RZyB1irx5cKu9KTv8gyZArpW6NE0acWcmn001IexSls563KmI/GRTkAmf4parvZP
+	gKUNNJnfgLvfVvNKwBGboe7oji330sQA9PpWXkyIRh86AmCN/ddUgBsjMumsD2m2hOHWvh
+	ZCBpCVM2pHooqeQ7o3MQUAen+nuxzhQz6ad1tE1yPPGTwvx3ac9QtaT0ZuXKnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758440128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmA9cyLn6JpB80qurGIMgtPXn3G6/Q7d0X60oqLWfyE=;
+	b=AS9a2xMgqLDVQd3A3D00GnEOeyHRoQrVATav/kQ0dwvDjZMq1s1O84ZaoWt/ml602RKgjn
+	sz240l5hlgsd5dCA==
+To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Amir
+ Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org
+Cc: Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>,
+ Mike Yuan <me@yhndnzj.com>, Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?=
+ <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, Daan De
+ Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal
+ =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Eric Dumazet
+ <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, netdev@vger.kernel.org, Christian Brauner
+ <brauner@kernel.org>
+Subject: Re: [PATCH 25/32] ns: add to_<type>_ns() to respective headers
+In-Reply-To: <20250910-work-namespace-v1-25-4dd56e7359d8@kernel.org>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-25-4dd56e7359d8@kernel.org>
+Date: Sun, 21 Sep 2025 09:35:27 +0200
+Message-ID: <87zfao6yww.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240912130220.17032-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 
-Hello, I would like to remind this patch series from the previous year. Any comments?
+On Wed, Sep 10 2025 at 16:37, Christian Brauner wrote:
 
-On Thursday 12 September 2024 15:02:15 Pali Rohár wrote:
-> Linux NFS3 kernel client currently has broken support for NFS3
-> AUTH_NULL-only exports and also broken mount option -o sec=none
-> (which explicitly specifies that mount should use AUTH_NULL).
-> 
-> For AUTH_NULL-only server exports, Linux NFS3 kernel client mounts such
-> export with AUTH_UNIX authentication which results in unusable mount
-> point (any operation on it fails with error because server rejects
-> AUTH_UNIX authentication).
-> 
-> Half of the problem is with MNTv3 servers, as some of them (e.g. Linux
-> one) never announce AUTH_NULL authentication for any export. Linux MNTv3
-> server does not announce it even when the export has the only AUTH_NULL
-> auth method allowed, instead it announce AUTH_UNIX (even when AUTH_UNIX
-> is disabled for that export in Linux NFS3 knfsd server). So MNTv3 server
-> for AUTH_NONE-only exports instruct Linux NFS3 kernel client to use
-> AUTH_UNIX and then NFS3 server refuse access to files with AUTH_UNIX.
-> 
-> Main problem on the client side is that mount option -o sec=none for
-> NFS3 client is not processed and Linux NFS kernel client always skips
-> AUTH_NULL (even when server announce it, and also even when user
-> specifies -o sec=none on mount command line).
-> 
-> This patch series address these issues in NFS3 client code.
-> 
-> Add a workaround for buggy MNTv3 servers which do not announce AUTH_NULL,
-> by trying AUTH_NULL authentication as an absolutely last chance when
-> everything else fails. And honors user choice of AUTH_NULL if user
-> explicitly specified -o sec=none as mount option.
-> 
-> AUTH_NULL authentication is useful for read-only exports, including
-> public exports. As authentication for these types of exports do not have
-> to be required.
-> 
-> Patch series was tested with AUTH_NULL-only, AUTH_UNIX-only and combined
-> AUTH_NULL+AUTH_UNIX exports from Linux knfsd NFS3 server + default Linux
-> MNTv3 userspace server. And also tested with exports from modified MNTv3
-> server to properly return AUTH_NULL support in response list.
-> 
-> Patch series is based on the latest upstream tag v6.11-rc7.
-> 
-> Pali Rohár (5):
->   nfs: Fix support for NFS3 mount with -o sec=none from Linux MNTv3
->     server
->   nfs: Propagate AUTH_NULL/AUTH_UNIX PATHCONF NFS3ERR_ACCESS failures
->   nfs: Try to use AUTH_NULL for NFS3 mount when no -o sec was given
->   nfs: Fix -o sec=none output in /proc/mounts
->   nfs: Remove duplicate debug message 'using auth flavor'
-> 
->  fs/nfs/client.c | 14 ++++++++++-
->  fs/nfs/super.c  | 64 +++++++++++++++++++++++++++++++++++++++----------
->  2 files changed, 65 insertions(+), 13 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+> Every namespace type has a container_of(ns, <ns_type>, ns) static inline
+> function that is currently not exposed in the header. So we have a bunch
+> of places that open-code it via container_of(). Move it to the headers
+> so we can use it directly.
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
