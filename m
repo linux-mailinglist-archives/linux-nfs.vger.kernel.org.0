@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-14615-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14616-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9847B919B4
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 16:11:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2A13B919B7
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 16:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C6DD16ED0A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 14:11:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8542C3A6421
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 14:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E70A541C62;
-	Mon, 22 Sep 2025 14:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2B9019AD70;
+	Mon, 22 Sep 2025 14:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyL99oBk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1t0TwnF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27801DA23
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Sep 2025 14:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0981DA23
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Sep 2025 14:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758550299; cv=none; b=NfnQcWMNOtKuAflQtl+tAXQoiV1O5SeY5tZWREgcNU77Hm2rPBe9U7LeNzRp50RkqLZusexzuJI/ayjs1bxhkiNyKiEVAYW/sOMacEI1rMMrp/e4n5BDxJ63kG8pWXoUoNiGEoc3y7Bdxadnmd1QBavslfainMvniVF7XsBrY3M=
+	t=1758550300; cv=none; b=sfz40EFIluFxtU5qwIePsn/jjO8mSSZJH9WntNyptJF4+XYaqpwouBaLVyjHnMxg0Lpml9g+rvMvunjAp3Nxtgub9cD9vh0/SGAqJEgSN+j+jYnNuySKw9aw2cyRK4bwgJDiucQrTf5+3/kqzT3M0nJWobBF75scgFBK+O0CAwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758550299; c=relaxed/simple;
-	bh=dUtBdo31UUo2cYNOpcbQdcqJfKuwf0+bCntPYsY1m/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbkG8LtvGw7iNXc/nnEuQ0WTupeyi1s4DATYXapaX7yrxn0TDs/HzzXMsXD8HVbuh+NxAl7J8PSjl1AWEtgYGb3RUOnzpmqtY4AzJaJDqUKRiU2kQ+pfJJq+qYBiQzSP1hL1z387fwdpD6QhhGVx6p29rDL18KBUnpIesXigxTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyL99oBk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF706C4CEF0;
-	Mon, 22 Sep 2025 14:11:38 +0000 (UTC)
+	s=arc-20240116; t=1758550300; c=relaxed/simple;
+	bh=LANABlTnGvtSQMdfLifPa6msSdOJeS+f8p93gXjHafg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ftwdDmgO55+bkyQjha0+F2LeF00zyOFEmnxHqLdEk9zMAVm5HYj/1XVgriVmJppmJED3sWcM6Gt+op8sNctbcMilSo4WmytLHlm0GOb2yNBlAWNduTDY1cNQOfowXXDF4Dq+p+GyaarYwhUUwT/ENXPJ+ws0cxsznIJVPFs5J9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1t0TwnF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E90CC113D0;
+	Mon, 22 Sep 2025 14:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758550299;
-	bh=dUtBdo31UUo2cYNOpcbQdcqJfKuwf0+bCntPYsY1m/0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KyL99oBkcraaHkGpGGfUeuhsnvUHx2hv0QWKRdHYwZns6JFQXimK0X1DFSh5OPjK+
-	 b7MKZU2UtyJGT6lMluCy1YVZ9p0Gy/lu/F/+CcKFZ6tlMB6lUWRVVVo2a5muQjdIkq
-	 BJGA13hGdcDVdtZ1uxQsd9WFBlAK6EO78CUgnyGY6/4v5dgl8q/ZjPRRPoyVZ/Q8wm
-	 ZeGvWrAV0VfJCIvnHQQzIOGrLR0nnjtNMNUbMyPbD/F3+LUk8GvEoGK5Ax0WB/T6Gy
-	 eKQbG3+PQFLLA5fKgjgbKsRBSL/vpvJdBfFZm0KRwivYuaYp6NBBGh0bO+vTO8Hb6Z
-	 UyEQsDFEeInHg==
+	s=k20201202; t=1758550300;
+	bh=LANABlTnGvtSQMdfLifPa6msSdOJeS+f8p93gXjHafg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=d1t0TwnFx3HYlf8UrRu8O8MTReGj+6otGU7z3LH5sCS1glGpS6JiVCG2j2GbV2Kep
+	 rCpQcO0nUSL4dDCMagFL2dKt+AE+7ZIhrAA95l1jjmSwE1bpL1Np7mBTXQ05MfcrYW
+	 XzNkG1BYAV9KhhJSTjJ3PA0jloNyE2yh7NWCDJSPpCIimON8ih/SXuc++bRk/lwi3M
+	 A8JsBQ0upKABtRt84tsRNR/jo6ZKAHha/DyIR3E6wdk46Aj6Y3LLpsdRunw61MvdTx
+	 1JJ9zkhyeXQOp/FRk9+J1LbiwdJ8CGTTeO+Cbkff9HKUX8SqIjo85bkTkmUuZiWmsx
+	 NMhPSOaWmFRPg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,11 +48,13 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 0/3] NFSD direct I/O read
-Date: Mon, 22 Sep 2025 10:11:34 -0400
-Message-ID: <20250922141137.632525-1-cel@kernel.org>
+	Mike Snitzer <snitzer@kernel.org>
+Subject: [PATCH v3 1/3] NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+Date: Mon, 22 Sep 2025 10:11:35 -0400
+Message-ID: <20250922141137.632525-2-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250922141137.632525-1-cel@kernel.org>
+References: <20250922141137.632525-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,53 +63,184 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Mike Snitzer <snitzer@kernel.org>
 
-The goal is to get the experimental read-side direct I/O
-implementation merged sooner. We are still thinking through the
-implications of mixing direct and buffered I/O when handling an
-NFS WRITE that does not meet the dio alignment requirements.
+Use STATX_DIOALIGN and STATX_DIO_READ_ALIGN to get DIO alignment
+attributes from the underlying filesystem and store them in the
+associated nfsd_file. This is done when the nfsd_file is first
+opened for each regular file.
 
-Changes since v2:
-* "Add array bounds-checking..." has been applied to nfsd-testing
-* Add a page_len check before committing to use direct I/O
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: NeilBrown <neil@brown.name>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/filecache.c     | 34 ++++++++++++++++++++++++++++++++++
+ fs/nfsd/filecache.h     |  4 ++++
+ fs/nfsd/nfsfh.c         |  4 ++++
+ fs/nfsd/trace.h         | 27 +++++++++++++++++++++++++++
+ include/trace/misc/fs.h | 22 ++++++++++++++++++++++
+ 5 files changed, 91 insertions(+)
 
-Changes since v1:
-* Harden the loop that constructs the I/O bvec
-* Address review comments
-
-Changes from Mike's v9:
-* The LOC introduced by the feature has been reduced considerably.
-* A new trace point in nfsd_file_getattr reports each file's dio
-  alignment parameters when it is opened.
-* The direct I/O path has been taken out-of-line so that it may
-  continue to be modified and optimized without perturbing the more
-  commonly-used I/O paths.
-* When an exported file system does not implement direct I/O, more
-  commonly-used modes are employed instead to avoid returning
-  EOPNOTSUPP unexpectedly.
-* When NFSD_IO_DIRECT is selected, NFS READs of all sizes use direct
-  I/O to provide better experimental data about small I/O workloads.
-
-Chuck Lever (1):
-  NFSD: Implement NFSD_IO_DIRECT for NFS READ
-
-Mike Snitzer (2):
-  NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
-  NFSD: pass nfsd_file to nfsd_iter_read()
-
- fs/nfsd/debugfs.c       |  2 +
- fs/nfsd/filecache.c     | 34 ++++++++++++++++
- fs/nfsd/filecache.h     |  4 ++
- fs/nfsd/nfs4xdr.c       |  8 ++--
- fs/nfsd/nfsd.h          |  1 +
- fs/nfsd/nfsfh.c         |  4 ++
- fs/nfsd/trace.h         | 28 +++++++++++++
- fs/nfsd/vfs.c           | 89 +++++++++++++++++++++++++++++++++++++++--
- fs/nfsd/vfs.h           |  2 +-
- include/trace/misc/fs.h | 22 ++++++++++
- 10 files changed, 186 insertions(+), 8 deletions(-)
-
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 75bc48031c07..78cca0d751ac 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -231,6 +231,9 @@ nfsd_file_alloc(struct net *net, struct inode *inode, unsigned char need,
+ 	refcount_set(&nf->nf_ref, 1);
+ 	nf->nf_may = need;
+ 	nf->nf_mark = NULL;
++	nf->nf_dio_mem_align = 0;
++	nf->nf_dio_offset_align = 0;
++	nf->nf_dio_read_offset_align = 0;
+ 	return nf;
+ }
+ 
+@@ -1048,6 +1051,35 @@ nfsd_file_is_cached(struct inode *inode)
+ 	return ret;
+ }
+ 
++static __be32
++nfsd_file_get_dio_attrs(const struct svc_fh *fhp, struct nfsd_file *nf)
++{
++	struct inode *inode = file_inode(nf->nf_file);
++	struct kstat stat;
++	__be32 status;
++
++	/* Currently only need to get DIO alignment info for regular files */
++	if (!S_ISREG(inode->i_mode))
++		return nfs_ok;
++
++	status = fh_getattr(fhp, &stat);
++	if (status != nfs_ok)
++		return status;
++
++	trace_nfsd_file_get_dio_attrs(inode, &stat);
++
++	if (stat.result_mask & STATX_DIOALIGN) {
++		nf->nf_dio_mem_align = stat.dio_mem_align;
++		nf->nf_dio_offset_align = stat.dio_offset_align;
++	}
++	if (stat.result_mask & STATX_DIO_READ_ALIGN)
++		nf->nf_dio_read_offset_align = stat.dio_read_offset_align;
++	else
++		nf->nf_dio_read_offset_align = nf->nf_dio_offset_align;
++
++	return nfs_ok;
++}
++
+ static __be32
+ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
+ 		     struct svc_cred *cred,
+@@ -1166,6 +1198,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
+ 			}
+ 			status = nfserrno(ret);
+ 			trace_nfsd_file_open(nf, status);
++			if (status == nfs_ok)
++				status = nfsd_file_get_dio_attrs(fhp, nf);
+ 		}
+ 	} else
+ 		status = nfserr_jukebox;
+diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+index 24ddf60e8434..e3d6ca2b6030 100644
+--- a/fs/nfsd/filecache.h
++++ b/fs/nfsd/filecache.h
+@@ -54,6 +54,10 @@ struct nfsd_file {
+ 	struct list_head	nf_gc;
+ 	struct rcu_head		nf_rcu;
+ 	ktime_t			nf_birthtime;
++
++	u32			nf_dio_mem_align;
++	u32			nf_dio_offset_align;
++	u32			nf_dio_read_offset_align;
+ };
+ 
+ int nfsd_file_cache_init(void);
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 3edccc38db42..3eb724ec9566 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -696,8 +696,12 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct kstat *stat)
+ 		.mnt		= fhp->fh_export->ex_path.mnt,
+ 		.dentry		= fhp->fh_dentry,
+ 	};
++	struct inode *inode = d_inode(p.dentry);
+ 	u32 request_mask = STATX_BASIC_STATS;
+ 
++	if (S_ISREG(inode->i_mode))
++		request_mask |= (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
++
+ 	if (fhp->fh_maxsize == NFS4_FHSIZE)
+ 		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
+ 
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index a664fdf1161e..6e2c8e2aab10 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -1133,6 +1133,33 @@ TRACE_EVENT(nfsd_file_alloc,
+ 	)
+ );
+ 
++TRACE_EVENT(nfsd_file_get_dio_attrs,
++	TP_PROTO(
++		const struct inode *inode,
++		const struct kstat *stat
++	),
++	TP_ARGS(inode, stat),
++	TP_STRUCT__entry(
++		__field(const void *, inode)
++		__field(unsigned long, mask)
++		__field(u32, mem_align)
++		__field(u32, offset_align)
++		__field(u32, read_offset_align)
++	),
++	TP_fast_assign(
++		__entry->inode = inode;
++		__entry->mask = stat->result_mask;
++		__entry->mem_align = stat->dio_mem_align;
++		__entry->offset_align = stat->dio_offset_align;
++		__entry->read_offset_align = stat->dio_read_offset_align;
++	),
++	TP_printk("inode=%p flags=%s mem_align=%u offset_align=%u read_offset_align=%u",
++		__entry->inode, show_statx_mask(__entry->mask),
++		__entry->mem_align, __entry->offset_align,
++		__entry->read_offset_align
++	)
++);
++
+ TRACE_EVENT(nfsd_file_acquire,
+ 	TP_PROTO(
+ 		const struct svc_rqst *rqstp,
+diff --git a/include/trace/misc/fs.h b/include/trace/misc/fs.h
+index 0406ebe2a80a..7ead1c61f0cb 100644
+--- a/include/trace/misc/fs.h
++++ b/include/trace/misc/fs.h
+@@ -141,3 +141,25 @@
+ 		{ ATTR_TIMES_SET,	"TIMES_SET" },	\
+ 		{ ATTR_TOUCH,		"TOUCH"},	\
+ 		{ ATTR_DELEG,		"DELEG"})
++
++#define show_statx_mask(flags)					\
++	__print_flags(flags, "|",				\
++		{ STATX_TYPE,		"TYPE" },		\
++		{ STATX_MODE,		"MODE" },		\
++		{ STATX_NLINK,		"NLINK" },		\
++		{ STATX_UID,		"UID" },		\
++		{ STATX_GID,		"GID" },		\
++		{ STATX_ATIME,		"ATIME" },		\
++		{ STATX_MTIME,		"MTIME" },		\
++		{ STATX_CTIME,		"CTIME" },		\
++		{ STATX_INO,		"INO" },		\
++		{ STATX_SIZE,		"SIZE" },		\
++		{ STATX_BLOCKS,		"BLOCKS" },		\
++		{ STATX_BASIC_STATS,	"BASIC_STATS" },	\
++		{ STATX_BTIME,		"BTIME" },		\
++		{ STATX_MNT_ID,		"MNT_ID" },		\
++		{ STATX_DIOALIGN,	"DIOALIGN" },		\
++		{ STATX_MNT_ID_UNIQUE,	"MNT_ID_UNIQUE" },	\
++		{ STATX_SUBVOL,		"SUBVOL" },		\
++		{ STATX_WRITE_ATOMIC,	"WRITE_ATOMIC" },	\
++		{ STATX_DIO_READ_ALIGN,	"DIO_READ_ALIGN" })
 -- 
 2.51.0
 
