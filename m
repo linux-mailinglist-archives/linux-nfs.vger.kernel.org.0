@@ -1,142 +1,206 @@
-Return-Path: <linux-nfs+bounces-14620-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14621-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F2DBB92878
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 20:00:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB04BB933DD
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 22:34:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE65E3A5BF1
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 18:00:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9257A7A84DD
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Sep 2025 20:32:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 344C43191C5;
-	Mon, 22 Sep 2025 18:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105C825F975;
+	Mon, 22 Sep 2025 20:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejNO6fyM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dz9sxOtF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DF530DEB0
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Sep 2025 18:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBDB25F7A5
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Sep 2025 20:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564010; cv=none; b=obviVQtjYRdX76F335OhZLUDdfQeuI6tK+1ZT4mgoU//QEqp+LPOZYkVs+2Kx3mrIBQ/V2NhBYpcTs3sumGFew+4almd5SyReypFV5O1CEFMMZ7KNk6109sh2qBgBBOP+GhK2WkQgAsLsTG0CZJlyPCqTYIyg2fl8hRTn/9eFWQ=
+	t=1758573260; cv=none; b=qXaUklpv+abe6JsjeAUqhKTVuZs+sX3Et0Fy1EVEvkUorEB0WkI2YxQi3nS7eTYrR5BGTa6QUBqfe5Rx19YGsKIgoiUfp8qQyYooCXErL4lONPp9m88UerR8wkqw1DYh4VFyhkbjk1H7CwoZbDUsD+iCknc+rIFpUpXQLvPJ1WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564010; c=relaxed/simple;
-	bh=LyFQcvfyyUbzuum2T68G+X8Y3wIlSo94RVd3tQx/fGM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LhbBlbfhOCWdDZm0zO7vFOvFmn63uylfb1zf/9tlY6RmL1DqrQB4PqHzgKeGV0VGOOaWcTeAzV2UKM+2eZyypiLegk+c4l02sQUFIHFkjk28z6gFhIsBzWnS0cxhd9N9NtEY6QVfSTq72B6+fjISbc/RMSavRxDenPz8FxbOmhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ejNO6fyM; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2697899a202so32140865ad.0
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Sep 2025 11:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758564007; x=1759168807; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3tEHA5BGFi0qZLtSrmyzVuEmtCHCJP0b4IMQl2NugYg=;
-        b=ejNO6fyMG1TefMeW+Yk1y+DvbznEVcCymeueZji9FlK//DthB9ujzXgA+iPi1G4zdg
-         prasP8NzIOUOuLryCki+rKXTfGP9rnPYSM9pDsDM8qunf+6pgj2+QW83unbHsXapYzO1
-         CqV68znemYb75p5ZOzSlZgM/L/4BL0IR9AC54zD3i82fCN/OOOHIQy2amNLgsp7N4ipZ
-         WLPoDVgBXTt3fP0PB+aENNdpCoADQa9GIjl3yrl1w2sj3jwHWRoMU94jYRu3yZ0DXa1D
-         brARYu2ZumvGb7WG42R8VF1UufuaUxnaz7UGJl49fFR/Na/pgXHCpP6Y7qmvASz49Eb5
-         mt2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758564007; x=1759168807;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3tEHA5BGFi0qZLtSrmyzVuEmtCHCJP0b4IMQl2NugYg=;
-        b=asYZEMTYQo+gZ5OpcqPY/o95qgMvdKOWgjZVXJq19xJLAnRLCsY9sTG1rzYcrPTjgo
-         EvKKJaXyqvfhEcPbFgVngCahz6GBzeqaWfi7Fa7b+Z1DzUgryVyW9zPnQC1CNbrK6BuA
-         /dlqs9EXPT9+r/AvRRwsv4ZH0pWa7u9Q6KPyLu9Tf3309vP1BXq+Jc0t0hlrBY6rk9A7
-         OFulZFPNw7VffsmeY/KgvEzBpvJ7qQCtr69IPWd5fHO18GHaOPoKYjJyxMnMQplGQV7k
-         Zjbxojfl2gUGavdXypuiFkLOYXCJHhFSLXGJ/wpCwrpbV46e/hD0C5zErz3Qj1zKyp6P
-         XAjA==
-X-Gm-Message-State: AOJu0YzP7Bwo1NFiYePl7tDOrMfRLLbW1x1FlhmbdB7toGwtG1Akn4eh
-	GWiY0Br+aLhOqSoqHWXhAy0G5wOOsEbNwqLisiZjY6EPoHIzOCEblsC+veeeAtyGI2zABpFMSgY
-	kjg8KV4lhColC9bdqehtlC7AlgS6SJAh3uoZKKFRRHQVPgp8QSlY4iiOwVg==
-X-Gm-Gg: ASbGncsFWkn/2Y73r/wjzD2t8mCPdZ060xH5TF1HmvpnHeIMyJzTiC2hgdiVkHLDB7g
-	xaTc75dlHKnWCV9cvxTBs+oKKdb1Uo73Qfp+PfI/rQYbGG+Y/noA6GsIos2qaQb6q5Xl5fjwXLW
-	oJ7kymBBqQQNkP540UcXMOaIWixvCrsxNyLz0RVy4GHwLYAbNiWROItBOdNCuahfc46HI8/bRKO
-	zQvqtnnL25ioh1tzvOY8Rnn3Ay1QiFiUzqxC5Yw
-X-Google-Smtp-Source: AGHT+IHnq0rLb8m5TMIAGXGLN0gHFwtTPEoJOMo0Qxa07UPXisa8PfZthBdHiar633sbMLp+TiDunSqrb9HsyhZzMag=
-X-Received: by 2002:a17:903:98d:b0:272:a227:245b with SMTP id
- d9443c01a7336-272a2274fc9mr102985765ad.17.1758564006785; Mon, 22 Sep 2025
- 11:00:06 -0700 (PDT)
+	s=arc-20240116; t=1758573260; c=relaxed/simple;
+	bh=VdgYDkWF9ZTTQ3v5i1Vu72+WHiBaB7IsFtCSx35WV5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LR6D8G3n6x/zOEmixF0rdOwOwZPgw5y/PV7BHGzpIJfihp8aM3yIiUFEhlKpNlXerST/+DPdRKPA+sqABWc37kVEmQIk01TYI53lhlRZBeXxmz1uHav19ScJyolMPlBK3rUO7GiFCPSIWIigtEv4wxxpuuES8kvfd2Dr+npmn40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dz9sxOtF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E559C4CEF0;
+	Mon, 22 Sep 2025 20:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758573259;
+	bh=VdgYDkWF9ZTTQ3v5i1Vu72+WHiBaB7IsFtCSx35WV5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dz9sxOtF8i7gVufqOrDa8ohwLXb3hcFEYNgVevNqmpO4ZSa6mcbfHPki9CP5FFJSx
+	 jkBGdsZrpvEQJORiR5X2Z1sKLHPom2+0yxfGlsQb1gOJ4DJFSHM2ssDuDzkxMd4EvD
+	 Sul4DQcFxa8yIM6YEgqg37KZGAN8G1gx5ThFyhQpjDH+XR2d9EBYiIrbpPC+ZQhm1B
+	 yRXmLF5tZw9Uto5Pr9dkfewxPMWNn+yeDkypTUyQBuxEJRwcqVEKUq4+GEi/S/WJEO
+	 sfxe5a7zOr7ufIXT3mpDtgH8gMXoVugj+kjpSLUrY6PxglPXVy+Rl4YJlkRvtHAhtZ
+	 XHwUa5qHPbmcw==
+Date: Mon, 22 Sep 2025 13:34:15 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jonathan Curley <jcurley@purestorage.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [RFC PATCH v3 6/9] NFSv4/flexfiles: Commit path updates for
+ striped layouts
+Message-ID: <20250922203415.GA2873812@ax162>
+References: <20250918133310.508943-1-jcurley@purestorage.com>
+ <20250918133310.508943-7-jcurley@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 22 Sep 2025 23:29:53 +0530
-X-Gm-Features: AS18NWDZwi1AO6kqN91ksL9x8G8Q2hcf5hfKdURyXPsi-NfZZp3RQHelXSAMyc8
-Message-ID: <CA+G9fYvq732po6A=X=1Bm_zLZMAK50y+8sEToWVm38uQfOke1Q@mail.gmail.com>
-Subject: next-20250922: arm riscv32 flexfilelayout.c:685:2: error:
- incompatible pointer types passing 'u32 *'
-To: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Anna Schumaker <anna.schumaker@oracle.com>, Jonathan Curley <jcurley@purestorage.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918133310.508943-7-jcurley@purestorage.com>
 
-The arm and riscv32 builds failed on the Linux next-20250922 tag build due
-to following build warnings / errors with clang toolchain.
+Hi Jonathan,
 
-First seen on next-20250922
-Good: next-20250919
-Bad: next-20250922
+On Thu, Sep 18, 2025 at 01:33:07PM +0000, Jonathan Curley wrote:
+...
+> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+> index 79700c18762c..b061e7a576cf 100644
+> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
+> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+> @@ -605,6 +605,26 @@ ff_layout_free_lseg(struct pnfs_layout_segment *lseg)
+>  	_ff_layout_free_lseg(fls);
+>  }
+>  
+> +static u32 calc_mirror_idx_from_commit(struct pnfs_layout_segment *lseg,
+> +				       u32 commit_index)
+> +{
+> +	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+> +	u64 mirror_idx = commit_index;
+> +
+> +	do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+> +
+> +	return mirror_idx;
+> +}
+> +
+> +static u32 calc_dss_id_from_commit(struct pnfs_layout_segment *lseg,
+> +				   u32 commit_index)
+> +{
+> +	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+> +	u64 mirror_idx = commit_index;
+> +
+> +	return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+> +}
+> +
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+This change is in -next as commit 67ee714244df ("NFSv4/flexfiles: Commit
+path updates for striped layouts"), where it causes warnings for 32-bit
+platforms:
 
-Test regression: next-20250922: arm riscv32 flexfilelayout.c:685:2:
-error: incompatible pointer types passing 'u32 *'
+  In file included from arch/arm/include/asm/div64.h:114,
+                   from include/linux/math.h:6,
+                   from include/linux/kernel.h:27,
+                   from include/linux/uio.h:8,
+                   from include/linux/socket.h:8,
+                   from include/uapi/linux/in.h:25,
+                   from include/linux/in.h:19,
+                   from include/linux/nfs_fs.h:22,
+                   from fs/nfs/flexfilelayout/flexfilelayout.c:10:
+  fs/nfs/flexfilelayout/flexfilelayout.c: In function 'calc_mirror_idx_from_commit':
+  include/asm-generic/div64.h:183:35: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+    183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+        |                                   ^~
+  fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
+    685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |         ^~~~~~
+  In file included from include/linux/array_size.h:5,
+                   from include/linux/kernel.h:16:
+  include/asm-generic/div64.h:195:32: error: right shift count >= width of type [-Werror=shift-count-overflow]
+    195 |         } else if (likely(((n) >> 32) == 0)) {          \
+        |                                ^~
+  include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+     76 | # define likely(x)      __builtin_expect(!!(x), 1)
+        |                                             ^
+  fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
+    685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |         ^~~~~~
+  include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+    199 |                 __rem = __div64_32(&(n), __base);       \
+        |                                    ^~~~
+        |                                    |
+        |                                    u32 * {aka unsigned int *}
+  fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro 'do_div'
+    685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |         ^~~~~~
+  arch/arm/include/asm/div64.h:24:45: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+        |                                   ~~~~~~~~~~^
+  fs/nfs/flexfilelayout/flexfilelayout.c: In function 'calc_dss_id_from_commit':
+  include/asm-generic/div64.h:183:35: error: comparison of distinct pointer types lacks a cast [-Werror=compare-distinct-pointer-types]
+    183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+        |                                   ^~
+  fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
+    696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |                ^~~~~~
+  include/asm-generic/div64.h:195:32: error: right shift count >= width of type [-Werror=shift-count-overflow]
+    195 |         } else if (likely(((n) >> 32) == 0)) {          \
+        |                                ^~
+  include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+     76 | # define likely(x)      __builtin_expect(!!(x), 1)
+        |                                             ^
+  fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
+    696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |                ^~~~~~
+  include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+    199 |                 __rem = __div64_32(&(n), __base);       \
+        |                                    ^~~~
+        |                                    |
+        |                                    u32 * {aka unsigned int *}
+  fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro 'do_div'
+    696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+        |                ^~~~~~
+  arch/arm/include/asm/div64.h:24:45: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+        |                                   ~~~~~~~~~~^
+  cc1: all warnings being treated as errors
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+do_div() should only be called with a 64-bit dividend. I don't see why
+this needs a division helper because mirror_idx and ->dss_count are both
+u32?
 
-## Build error
+It seems like the following diff would be sufficient to resolve this if
+I am understanding correctly but I am not familiar with this code. Could
+even eliminate *flseg as well, it would fit within 80 characters.
 
-fs/nfs/flexfilelayout/flexfilelayout.c:685:2: error: incompatible
-pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of
-type 'uint64_t *' (aka 'unsigned long long *')
-[-Wincompatible-pointer-types]
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/asm-generic/div64.h:199:22: note: expanded from macro 'do_div'
-  199 |                 __rem = __div64_32(&(n), __base);       \
-      |                                    ^~~~
-arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                             ^
+Cheers,
+Nathan
 
-
-## Source
-* Kernel version: 6.17.0-rc7
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: 6.17.0-rc6-next-20250922
-* Git commit: bf2602a3cb2381fb1a04bf1c39a290518d2538d1
-* Architectures: arm riscv32
-* Toolchains: Debian clang version 20.1.8
-* Kconfigs: lkftconfigs
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29967175/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250922/log-parser-build-clang/clang-compiler-fs_nfs_flexfilelayout_flexfilelayout_c-error-incompatible-pointer-types-passing-u-aka-unsigned-int-to-parameter-of-type-uint_t-aka-unsigned-long-long/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs/config
-
---
-Linaro LKFT
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 0eca9367b610..c726309bfbe1 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -680,20 +680,16 @@ static u32 calc_mirror_idx_from_commit(struct pnfs_layout_segment *lseg,
+ 				       u32 commit_index)
+ {
+ 	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+-	u32 mirror_idx = commit_index;
+ 
+-	do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+-
+-	return mirror_idx;
++	return commit_index / flseg->mirror_array[0]->dss_count;
+ }
+ 
+ static u32 calc_dss_id_from_commit(struct pnfs_layout_segment *lseg,
+ 				   u32 commit_index)
+ {
+ 	struct nfs4_ff_layout_segment *flseg = FF_LAYOUT_LSEG(lseg);
+-	u32 mirror_idx = commit_index;
+ 
+-	return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
++	return commit_index % flseg->mirror_array[0]->dss_count;
+ }
+ 
+ static void
 
