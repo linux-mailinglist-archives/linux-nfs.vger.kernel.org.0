@@ -1,70 +1,117 @@
-Return-Path: <linux-nfs+bounces-14632-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14633-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863ADB97CD6
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 01:31:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0867B97D1E
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 01:48:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 044597AC0B3
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Sep 2025 23:30:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79A7F4A83FC
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Sep 2025 23:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164EA283C8E;
-	Tue, 23 Sep 2025 23:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92C52FD7BD;
+	Tue, 23 Sep 2025 23:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6F9RiO6"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="G4MsTvCy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O5In4GZQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63AF27F73A
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Sep 2025 23:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE92F657A
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Sep 2025 23:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758670305; cv=none; b=cN7BiYT+pIng9r0b7x17QHaV6DSLN7o9EKlqZg8Gn8bu47b4ySQg5JCmlk9Z+YLQDEYJNo6YJ4fpQnzizlMJGH+nIlUxjmdv+7yyn3DiCSTtbqdertoBm7714VVh4YdPuXexYoxP/9ub85S8iywo6ajcBLp77xalO3BPM7krC58=
+	t=1758671332; cv=none; b=eXJVTCFanMlfc2aKfZaP6XDq+0Z+kfKceMA7AEUBseQ9uV52jUh1qhn6OWisL+nDjcnEJEYO/B+exfxlgg9+5LHjK8YQQl05UChKaBlU+8a/erulztH63vvqRGGwsYODtXBC0u9gcekC3iOe5F2leYba+7cak5GdjUsGCTlQ8bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758670305; c=relaxed/simple;
-	bh=EnhA3YIhMPIy6ezu9zVEYBHoCnvP20L+Boi7dfaN0yA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KSHY41rHxhQ3uC6HArY4XAzIEy1tTAJBWkBUgdZqFfODvNtG4jsd36iR8kcRSd6TLPAaRkqX1kq4r3wzr5QJS39vxSLUAmUYC6NWsrL+0VLSkl9UmYnlZs6OmoSbugGjZNN4H/Jg/BautugNybFql/UJusSDfXmZFASrTU8Bwdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6F9RiO6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2931EC4CEF5;
-	Tue, 23 Sep 2025 23:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758670304;
-	bh=EnhA3YIhMPIy6ezu9zVEYBHoCnvP20L+Boi7dfaN0yA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L6F9RiO65F2/v8fzOqEOyhJAK4yMsiY6Z9ixzwdNzGGnvqQhkDuUcyXklcTqIzh4Z
-	 v0oig4hmHmc5xE6qlTwWAOVOPM4Do19G+N9gxunRV2jAvmwmeiuK1by/2+nyaH7Gm2
-	 PN7j+MBNdECwY6z2OfJ3ZMh3g705Xz9bI9cX2GZNb+jah6+m1mrGisyPbOULGIt1t1
-	 JuA7rpmjSxlidGKrlrtyz3VnsYBcfspPe+LVUi4mPJ93ePW0diXt+ei3URPB/IOKsT
-	 Wd49wJtZ6Iityvlvuh5Ua42qW6AJ3xd8kStHrdlZZh8OTy1NlgXbUDkq6EOP1retdU
-	 p7aViFwMB0HUQ==
-Date: Tue, 23 Sep 2025 19:31:43 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3 3/3] NFSD: Implement NFSD_IO_DIRECT for NFS READ
-Message-ID: <aNMt3-4kgpiE_ZlQ@kernel.org>
-References: <20250922141137.632525-1-cel@kernel.org>
- <20250922141137.632525-4-cel@kernel.org>
- <aNMei7Ax5CbsR_Qz@kernel.org>
- <19eef754-57d9-4fe4-a6e6-a481dcec470e@kernel.org>
+	s=arc-20240116; t=1758671332; c=relaxed/simple;
+	bh=Klipm6fJuj76VDVGc+fU2mQ3pVNxNQQ5X/tZ8kTxUMg=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=b1crl7ZfRJrP9SsnY+i6Ay1APvis/SMJ2z5CtWUfTRN33FUU2xdkUyYBbfmJiWd3NnAgo0aV1I/b/FESRVvml1t3/4REm7t7m4xYoXAw2P0k4QdlFwltya5SO7odfZkS20SzPWOhhFrAosGmF6KGicf/45UchhQHt7VmDUZk+Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=G4MsTvCy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=O5In4GZQ; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1E2471400082;
+	Tue, 23 Sep 2025 19:48:49 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Tue, 23 Sep 2025 19:48:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1758671329; x=1758757729; bh=fWEzUUWuswmL/LjVfBJZnfY6KBkaHZdWM4A
+	k5zYM/jU=; b=G4MsTvCy0H470sOgVfxUmo52gavqKKRN6K3yeU0yZ0LucXO+7lF
+	Kf58ZjJWz6F7Fpo9q12qBBR0tUb40F/SCX5I3nEu5X6qpkfZg37zTgogKH16Bp3E
+	ckjhyIt/fN02lS3vNINjOxHhg7kzMH6sty1KgtGqnXlFUCxK5xhc0qoUtoE+R1sa
+	8AiKjG5eb3MEQQh/e6Gw5sJM7xV/Hh/okGw3+9FZbsKhTixheA2n2aCWfMC5rnoR
+	FQMDsfmMZjTbgE4Ek4emrDBGQoCUmFSa+7SJE/D8cYPbtFKD1bsBhHZcYScDecgP
+	TRNMTrwEuqsr6l3tQ1z7cprYHpVRj7vd0GQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758671329; x=
+	1758757729; bh=fWEzUUWuswmL/LjVfBJZnfY6KBkaHZdWM4Ak5zYM/jU=; b=O
+	5In4GZQlr08wkNhYtWy09pCvVO16mQ5URzYQbhbkQyrNW/S4dd2edmJijSyf1Eke
+	Us/Z+uGmxinfVk31nmuz8JmFWhY/Pg2C7HG7QyxjiUnrGVAe62i2ATHVljJJ/GPm
+	Rrnp+OHLrEfj9gG8SyrRh7Pe+ygm+NQ5mYZX4/pe4+mTqgsaupQoCGiMCkJf+r9Q
+	8nrezpeES/2zLY1TGg37BDZZbQ4iy5MHYkaTlcAZsULwZP5nVnTutzXiGJGLgGpk
+	xKHuDr9zmEcXRfH62W+usQKst9Mce238MoPSLC7X3fC4lw9hez/V2KFzoCrgpwxL
+	vUNyuxdVozK2uqL+aKLfw==
+X-ME-Sender: <xms:4DHTaN2JQLzqncajMKBg54-Z2-ag45dM5Z3SofyFH22-mQnuVCLlew>
+    <xme:4DHTaDI8fG_rXDo3I2yOd5Rk6fl3_gliJSI2_HumUrY2OODLU24k6m8cY7D_jnZr6
+    ikABgCt9rxT5V4p_8SxB6U4Rt6ibNVjw4wD5Jn3utzsk1iUdWk>
+X-ME-Received: <xmr:4DHTaEFLn4PiSR5NEdB6eBPYiXw-FZffXr-KQbK2yzBOszMEfCkbXBt8gedL6DW3V1SSKyv4aOTFqxVhEg7PItDddAAA-kMhfUFdaQ_2gDKb>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeivddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhi
+    vghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvg
+    drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopehsnhhithiivghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlh
+    grhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvghlsehkvghrnhgvlhdr
+    ohhrgh
+X-ME-Proxy: <xmx:4DHTaHWORFuNj1UCeWXtowOIERg6SfpVRo3604nGNFESPNO2xYmklQ>
+    <xmx:4DHTaExUSGamKJ1WF2vjeREwKlH1wM7kL-J9DUFYtljyXIi7fgaldg>
+    <xmx:4DHTaEQqUAdRP5k7l1l3gW-_HHfoBKBE02_WO0opAvKYRppPv09vQQ>
+    <xmx:4DHTaIhnjpQpIoVFafPnfdfHa7IJzHsUKcMwEdCrws_IYQXZG2CJPQ>
+    <xmx:4THTaIb0PDALRdcEIxOotxgdLBUbW0_YucjdxINV5rPeCq9xPNSaq31L>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 23 Sep 2025 19:48:46 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19eef754-57d9-4fe4-a6e6-a481dcec470e@kernel.org>
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Mike Snitzer" <snitzer@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 3/3] NFSD: Implement NFSD_IO_DIRECT for NFS READ
+In-reply-to: <19eef754-57d9-4fe4-a6e6-a481dcec470e@kernel.org>
+References: <20250922141137.632525-1-cel@kernel.org>,
+ <20250922141137.632525-4-cel@kernel.org>, <aNMei7Ax5CbsR_Qz@kernel.org>,
+ <19eef754-57d9-4fe4-a6e6-a481dcec470e@kernel.org>
+Date: Wed, 24 Sep 2025 09:48:42 +1000
+Message-id: <175867132212.1696783.15488731457039328170@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
+On Wed, 24 Sep 2025, Chuck Lever wrote:
 > On 9/23/25 3:26 PM, Mike Snitzer wrote:
 > > On Mon, Sep 22, 2025 at 10:11:37AM -0400, Chuck Lever wrote:
 > >> From: Chuck Lever <chuck.lever@oracle.com>
@@ -108,7 +155,8 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >> index ed2b9e066206..00eb1ecef6ac 100644
 > >> --- a/fs/nfsd/debugfs.c
 > >> +++ b/fs/nfsd/debugfs.c
-> >> @@ -44,6 +44,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%llu\n");
+> >> @@ -44,6 +44,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, =
+nfsd_dsr_set, "%llu\n");
 > >>   * Contents:
 > >>   *   %0: NFS READ will use buffered IO
 > >>   *   %1: NFS READ will use dontcache (buffered IO w/ dropbehind)
@@ -117,7 +165,7 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >>   * This setting takes immediate effect for all NFS versions,
 > >>   * all exports, and in all NFSD net namespaces.
 > >> @@ -64,6 +65,7 @@ static int nfsd_io_cache_read_set(void *data, u64 val)
-> >>  		nfsd_io_cache_read = NFSD_IO_BUFFERED;
+> >>  		nfsd_io_cache_read =3D NFSD_IO_BUFFERED;
 > >>  		break;
 > >>  	case NFSD_IO_DONTCACHE:
 > >> +	case NFSD_IO_DIRECT:
@@ -134,7 +182,7 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >>  	NFSD_IO_DONTCACHE,
 > >> +	NFSD_IO_DIRECT,
 > >>  };
-> >>  
+> >> =20
 > >>  extern u64 nfsd_io_cache_read __read_mostly;
 > >> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
 > >> index 6e2c8e2aab10..bfd41236aff2 100644
@@ -152,10 +200,12 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >> index 35880d3f1326..ddcd812f0761 100644
 > >> --- a/fs/nfsd/vfs.c
 > >> +++ b/fs/nfsd/vfs.c
-> >> @@ -1074,6 +1074,82 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> >>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+> >> @@ -1074,6 +1074,82 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, s=
+truct svc_fh *fhp,
+> >>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err=
+);
 > >>  }
-> >>  
+> >> =20
 > >> +/*
 > >> + * The byte range of the client's READ request is expanded on both
 > >> + * ends until it meets the underlying file system's direct I/O
@@ -170,12 +220,13 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >> + * @base are zero, the .pages array is guaranteed to be page-
 > >> + * aligned.
 > >> + */
-> > 
+> >=20
 > > So this ^ comment (and the related conversation with Neil in a
 > > different thread) says page_len should be 0 on entry to
 > > nfsd_direct_read.
-> > 
-> >> @@ -1106,6 +1182,12 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> >=20
+> >> @@ -1106,6 +1182,12 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, str=
+uct svc_fh *fhp,
 > >>  	switch (nfsd_io_cache_read) {
 > >>  	case NFSD_IO_BUFFERED:
 > >>  		break;
@@ -185,23 +236,27 @@ On Tue, Sep 23, 2025 at 06:49:35PM -0400, Chuck Lever wrote:
 > >> +			return nfsd_direct_read(rqstp, fhp, nf, offset,
 > >> +						count, eof);
 > >> +		fallthrough;
-> > 
+> >=20
 > > Yet the nfsd_iter_read is only calling nfsd_direct_read() if
 > > rqstp->rq_res.page_len is not zero, shouldn't it be
 > > !rqstp->rq_res.page_len ?
-> 
+>=20
 > Oops, yes. I did this work last week, while out of range of my lab.
-
-Sure.
-
-> 
+>=20
+>=20
 > > (testing confirms it should be !rqstp->rq_res.page_len)
-> > 
+> >=20
 > > Hopefully with this fix you can have more confidence in staging this
 > > in your nfsd-testing?
 > I'm waiting only for Neil to send an R-b.
 
-OK, makes sense.  For some reaosn I thought you had that for patch 3.
+After noticing, like Mike, that the page_len test was inverted I went
+looking to see where page_len was updated, to be sure that a second READ
+request would not try to use DIRECT IO.
+I can see that nfsd_splice_actor() updates page_len, but I cannot see
+where it is updated when nfsd_iter_read() is used.
 
-Mike
+What am I missing?
+
+NeilBrown
 
