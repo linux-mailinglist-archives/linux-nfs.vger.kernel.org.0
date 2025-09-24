@@ -1,89 +1,156 @@
-Return-Path: <linux-nfs+bounces-14635-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14636-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D29ADB97E7C
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 02:35:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BEE9B97EFD
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 02:45:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F41781896CB3
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 00:35:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C66E31894BC7
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Sep 2025 00:45:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B0618C034;
-	Wed, 24 Sep 2025 00:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1EB1B4231;
+	Wed, 24 Sep 2025 00:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b="YxczO3LO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUi+JMJb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sender4-g3-154.zohomail360.com (sender4-g3-154.zohomail360.com [136.143.188.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CE13BC0C
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Sep 2025 00:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.154
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758674102; cv=pass; b=KX7MOuo5bGXO25jtdH/bGTAiC37y9oicqZUJwETgjmYga6G+3UrzaabHo5OFt2JW6+xxH+Jj06Mkk1ozoYmdhwakdkuDnKwj1by2C6jSn9RNmqORil7kE5IjZOR/WmHlYcxzN2PuW0Fiie6sr+22q8F1E3vaeSe/67Y8tzXcFNI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758674102; c=relaxed/simple;
-	bh=cJW0iBbr/0MXGc5IGU7W6QHljNMT9IlVEmEIdyqwsk8=;
-	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=nqeLMa2IdefT7e5PKmIjG51rHQLcfOFxQIxSF8kCVw0oIMG64o3xWrd+yj+vfKZHX5ewHFIEEELUHyxVFPYwIQ7NTiFQz6EZ5LDGqQmTEQa+gmYcAB7u6FfhFu7TDIx5lWY+iJSCsky+X64QYpgoAayglIjp6Cu9pX/0Nr6rSR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx; dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b=YxczO3LO; arc=pass smtp.client-ip=136.143.188.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx
-ARC-Seal: i=1; a=rsa-sha256; t=1758674100; cv=none; 
-	d=us.zohomail360.com; s=zohoarc; 
-	b=RcoCtDLhAZKDl+Flyvnu7IvdnN9kL/lq766AdVHCeX2g6YmBRxEuQKWwGt1hwsBUcp6r8hXCns8qISW/dSGlK2t4ZXA/bB35Sk5GYp7nnmBkMXuRkxjuWTF5sZ/WESF7xrkwcJXEag24XiU6g/TMxkNr4HuQS+3e/0G3iYQ98IE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=us.zohomail360.com; s=zohoarc; 
-	t=1758674100; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
-	bh=cJW0iBbr/0MXGc5IGU7W6QHljNMT9IlVEmEIdyqwsk8=; 
-	b=jRlyPTEaAlSU92elLXhBpo9DzhOR5Ttmi7DRUcduHJ20kqlR4hL5SfLUm9KLul3hd2ej37uYl2MQrhMUSZxc6dtTMN+sgftQ0QzSlmdnpX5kLfEIk55eV9WoNxsoJq+urgP2LkJJzVX8WrR9fC4MCdqHAPPMCqBVCqcvFQkFPR0=
-ARC-Authentication-Results: i=1; mx.us.zohomail360.com;
-	dkim=pass  header.i=maguitec.com.mx;
-	spf=pass  smtp.mailfrom=investorrelations+9aa248d0-98d8-11f0-8217-5254007ea3ec_vt1@bounce-zem.maguitec.com.mx;
-	dmarc=pass header.from=<investorrelations@maguitec.com.mx>
-Received: by mx.zohomail.com with SMTPS id 1758671652887462.7463906648046;
-	Tue, 23 Sep 2025 16:54:12 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; b=YxczO3LOC3oeLZTGJM4KX8ZZFrL3D89OrUKz0LXES2b8nIRm3zE51P5AxXhzKfqZURxbMeV/gkUvXdmh9ggrE/1fVtYHEnOQqMaYEU19G5wg9IQa4YP/AdbqAKie72MbaK4v6KvBIyjOQ77euGDG5ekkpgsJRs/PNqOEFLLSjnc=; c=relaxed/relaxed; s=15205840; d=maguitec.com.mx; v=1; bh=cJW0iBbr/0MXGc5IGU7W6QHljNMT9IlVEmEIdyqwsk8=; h=date:from:reply-to:to:message-id:subject:mime-version:content-type:content-transfer-encoding:date:from:reply-to:to:message-id:subject;
-Date: Tue, 23 Sep 2025 16:54:12 -0700 (PDT)
-From: Al Sayyid Sultan <investorrelations@maguitec.com.mx>
-Reply-To: investorrelations@alhaitham-investment.ae
-To: linux-nfs@vger.kernel.org
-Message-ID: <2d6f.1aedd99b146bc1ac.m1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd@bounce-zem.maguitec.com.mx>
-Subject: Thematic Funds Letter Of Intent
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1845A18B0A
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Sep 2025 00:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758674691; cv=none; b=Y7d38Zru2hz2JNUYDYtdrXXUXdmOnEa2qyorjxG9OlttjfL7I/LI1ocp5xkCvGtgd5N983N4qLt/7z21VVd1m4xmeWdmK92I1xIi5q7wvcQaBpXskt2LBeM/wYviatE8VvIIVo3yob9uGBCuX8zyUPpscOt5dl30ukxhNo4P+HE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758674691; c=relaxed/simple;
+	bh=0ZSyyoYApH8/Z0IZeHIxEyfX2B+LTjQ2+CUXOOs/5Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=npSQkCFGbvWZ84a4j7u0WKMYY6lrshg2/yh7jXHGT9Sd1z9rg0Uw2OkC3SoDgiUdZNYwYJM/q10ZARxF+MHVwOZLpt7yBK/V7R2AW8ad0v7hzomQpYtrGyJax4uZD4CR2KYeV4OuaGpNQ/dCTI4m6oqLtsK3LHLgARM8gEKOsaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUi+JMJb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BA1C4CEF5;
+	Wed, 24 Sep 2025 00:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758674690;
+	bh=0ZSyyoYApH8/Z0IZeHIxEyfX2B+LTjQ2+CUXOOs/5Qc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tUi+JMJbcrqTRo2mAAo8cnw8dLwuTJVqmzq2wp4b5vk3/eNskgMKakzfcLse6sifo
+	 4zLaE5ZqsPQ9d28sC2xU4kMq88y+bvwO27UjKllgj2xeUT7PbR+rXHb1KWMXn/Gjla
+	 tp3dyX0kpVUvVi7BrZ1cLP+r4rkEuLl4wIdepufBcJIh91gV9pQxE6BQuFJgQEpi5V
+	 OXB2wcLEN1Vsb1EVxjiowCS+QkzIKpsUI4L7A4kMF1XzgNc527m8baR/degv4ij1am
+	 AkmBXB/uVQcxtzRA0YKIQ3a2eb06e7ZsVttjG+OIuG+jYPyd5H0GDPwz0nJ8F2mpVI
+	 T2b5JM5SvZ2kQ==
+Date: Tue, 23 Sep 2025 17:44:50 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [RFC PATCH] NFSD: Add a subsystem policy document
+Message-ID: <20250924004450.GK8117@frogsfrogsfrogs>
+References: <20250921194353.66095-1-cel@kernel.org>
+ <cde46e50575ba2e7578d3cb25d77bb7bb3405405.camel@kernel.org>
+ <499430de-c15a-480c-a946-84cbf21d4682@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-content-transfer-encoding-Orig: quoted-printable
-content-type-Orig: text/plain;\r\n\tcharset="utf-8"
-Original-Envelope-Id: 2d6f.1aedd99b146bc1ac.m1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd
-X-JID: 2d6f.1aedd99b146bc1ac.s1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd
-TM-MAIL-JID: 2d6f.1aedd99b146bc1ac.m1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd
-X-App-Message-ID: 2d6f.1aedd99b146bc1ac.m1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd
-X-Report-Abuse: <abuse+2d6f.1aedd99b146bc1ac.m1.9aa248d0-98d8-11f0-8217-5254007ea3ec.19978ffc5dd@zeptomail.com>
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <499430de-c15a-480c-a946-84cbf21d4682@kernel.org>
 
-To: linux-nfs@vger.kernel.org
-Date: 24-09-2025
-Thematic Funds Letter Of Intent
+On Mon, Sep 22, 2025 at 09:56:25AM -0400, Chuck Lever wrote:
+> On 9/22/25 3:25 AM, Jeff Layton wrote:
+> >> +Community roles and their authority
+> >> +-----------------------------------
+> >> +The purpose of Linux subsystem communities is to provide active
+> >> +stewardship of a narrow set of source files in the Linux kernel.
+> >> +This can include managing user space tooling as well.
+> >> +
+> >> +To contextualize the structure of the Linux NFS community that
+> >> +is responsible for stewardship of the NFS server code base, we
+> >> +define the community roles here.
+> >> +
+> >> +One person often takes on more than one of these roles. One role
+> >> +can be filled by multiple people. The roles and the people filling
+> >> +them are often fluid. Sometimes a person will say "Wearing my XYZ
+> >> +hat" -- which means, roughly, "speaking as the person filling the
+> >> +XYZ role."
+> >> +
+> > For completeness, I'd add a "**Maintainer**" section below too.
+> 
+> Thanks for your comments.
+> 
+> The role list below actually contains all of the maintainer's tasks,
+> so IMHO the list isn't lacking completeness. The list could include a
+> "Maintainer" role in the list simply because it's a term we refer
+> to in every day conversation... or... I could add a paragraph up front
+> that explains that the term "Maintainer" is a combination of these
+> roles.
 
-It's a pleasure to connect with you
+I'm not an nfsd person, but speaking as an ex-maintainer who wrote a
+maintainer entry profile doc for xfs, I think what Chuck is trying to do
+here is to break up the maintainer duties into well defined roles and
+then to encourage *separate* people to own these roles.  Ideally this
+will give nfsd participants a sense of shared ownership of the whole
+project, and solve some scaling/burnout problems.
 
-Having been referred to your investment by my team, we would be=20
-honored to review your available investment projects for onward=20
-referral to my principal investors who can allocate capital for=20
-the financing of it.
+The hard part ofc is actually getting companies to encourage their
+people to step up, and making it stick.
 
-kindly advise at your convenience
+> (And above, snipped out, the "Key Cycle Dates" section title comes
+> from Documentation/maintainer/maintainer-entry-profile.rst. I'll
+> think of a more accurate section title).
 
-Best Regards,
+<shrug> Or you could define some key cycle dates.  Do you want to
+require that new feature patchsets must be in the review pipeline before
+-rc2 so that you can put whatever passes review into for-next just after
+-rc4?  Or specify that bugfixes completing review after -rc6 will just
+get rolled into the next merge window?
 
-Respectfully,
-Al Sayyid Sultan Yarub Al Busaidi
-Director
+> >> +- **Contributor** : Anyone who submits a code change, bug fix,
+> >> +  recommendation, documentation fix, and so on. A contributor can
+> >> +  submit regularly or infrequently.
+> >> +
+> >> +- **Outside Contributor** : A contributor who is not a regular actor
+> >> +  in the Linux NFS community. This can mean someone who contributes
+> >> +  to other parts of the kernel, or someone who just noticed a
+> >> +  mis-spelling in a comment and sent a patch.
+> >> +
+> >> +- **Reviewer** : Someone who is named in the MAINTAINERS file as a
+> >> +  reviewer is an area expert who can request changes to contributed
+> >> +  code, and expects that contributors will address the request.
+> >> +
+> >> +- **Upstream Release Manager** : This role is responsible for
+> >> +  curating contributions into a branch, reviewing test results, and
+> >> +  then sending a pull request during merge windows. There is a
+> >> +  trust relationship between the release manager and Linus.
+> >> +
+> >> +- **Bug Triager** : Someone who is a first responder to bug reports
+> >> +  submitted to the linux-nfs mailing list or the bugzilla and helps
+> >> +  troubleshoot and identify next steps.
+> >> +
+> >> +- **Testing Lead** : The testing lead builds and runs the test
+> >> +  infrastructure for the subsystem. The testing lead can ask for
+> >> +  patches to be dropped because of ongoing high defect rates.
+> >> +
+> >> +- **LTS Maintainer** : The LTS maintainer is responsible for managing
+> >> +  the Fixes: and Cc: stable annotations on patches, and seeing that
+> >> +  patches that cannot be automatically applied to LTS kernels get
+> >> +  proper backports as necessary.
+> >> +
+> >> +- **Community Manager** : This umpire role can be asked to call balls
+> >> +  and strikes during conflicts, but is also responsible for ensuring
+> >> +  the health of the relationships within the community and
+> >> +  facilitating discussions on long-term topics such as how to manage
+> >> +  growing technical debt.
+> 
+> 
+> -- 
+> Chuck Lever
 
