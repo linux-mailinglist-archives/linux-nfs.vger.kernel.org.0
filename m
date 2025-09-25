@@ -1,61 +1,76 @@
-Return-Path: <linux-nfs+bounces-14718-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14719-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE6EBA0B38
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 18:52:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC899BA0BF5
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 19:08:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B28783A418C
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 16:52:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77F3C627089
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 17:08:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C3D2C032C;
-	Thu, 25 Sep 2025 16:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D30C309EE7;
+	Thu, 25 Sep 2025 17:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHK0pqRB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+JoObfz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A498D19F40B;
-	Thu, 25 Sep 2025 16:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F67277C8F;
+	Thu, 25 Sep 2025 17:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758819132; cv=none; b=Qe3wW5vAAbJn2ldHZhVtLpxTzlO7HrskDHKOHToiGaT7aqTrqQFxTx0ZjyPoGwes+9LnKTsZWqgJy6jfN6aH7AWnKWUpnmOHnmfh/f19fuCJhxCDEXOYMKCRTJsx+7XSEw9k9YxAlAfT8nNeSAzJK7B8u6ifh+p9AMJFxy0ZLjs=
+	t=1758820095; cv=none; b=UF5pS/hbCvtcrOk9hNH6ZpEv90vusX3LqOJqwq+uZlh2W76LGV9cKgcpdAkKCHDFQ1RPCpa6oMjZsZQxHvrHD3x3zRYj9tmGjT6dIROMVAJkDRbmYSbhciMNOWA74ogxvM5RLOzZw3DD8zOVDRQ0ieTyUHVmGeURICh4Cu9eAA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758819132; c=relaxed/simple;
-	bh=VkJA++MO/cZGItX7FAQtyoD0VrKTxRbiiUCRw5W5bec=;
+	s=arc-20240116; t=1758820095; c=relaxed/simple;
+	bh=6HwOUkB0yToBaYa1glGfR0wga34tK3y6ETCOnEezSa4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=udWRhUfGAEgf2LXJ8MrNkwDIFOwdPtQkofT6pifC5yuwuzNlQiMrU6axxn4I4msxh2wLxaPgoRYNZwLEUpFSqcOPC6m344lEvDk/NARQjWk3FQKQJs+HDju6FG1jRwBKDoDzWz+blROLsSxSVf0pabuc7FT0egGhMY06Q9UQwNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHK0pqRB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF82C4CEF0;
-	Thu, 25 Sep 2025 16:52:11 +0000 (UTC)
+	 Content-Type:MIME-Version; b=YuDTLprrU4VAV+yy6Z+gy8VMPjTSlXKYeYFwIEvBuwJUtkRWEeKKxyjGPK5KfDJjwdaqnbAduzaamTxy/AC5jxbRseSMu1+hucQEsEAvihO5z7tqDt8vyBvWRUPa1+MO3KSzVLKdKfzqSxHwsHVuNNJdriQWIGUpnSYE49TgdbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+JoObfz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E60C4CEF0;
+	Thu, 25 Sep 2025 17:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758819132;
-	bh=VkJA++MO/cZGItX7FAQtyoD0VrKTxRbiiUCRw5W5bec=;
+	s=k20201202; t=1758820094;
+	bh=6HwOUkB0yToBaYa1glGfR0wga34tK3y6ETCOnEezSa4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XHK0pqRBbcCdeeCP+D2GZMyB8Idz0LNryHQqiYlLwoYGdv7hTe/moyeXBGEQxOUYA
-	 lHIJriNv8hRJQqJ5ZfFTNgyUPtvv3gdMFyg6YVG8rtid35fS2lEKymWmyH0UM9PqnT
-	 1Rm9eFSrkFE6aEBR/WO0I1xXU+FSAOm66dlrHObxuwLJdmu9t+A4qL+80at6OYn2br
-	 2scDoTNQ8lQpLnELxg6nZH6G/52++ly6I78d/lanAllSQV1r7zJtTyITSVEBCJ368j
-	 xQrwyWhfLiO1pan4g/nyxxszjkepbCxf1zrhFSUDlMryjjf480+g8WMo9cM0Kll+18
-	 gywA4ayX7fGrQ==
-Message-ID: <27d0b9176a444dcf87ecd40c17b6ed1865c1b789.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Move strlen declaration in
- nfsd4_encode_components_esc()
+	b=Y+JoObfzDbCmu9AkTyqHCIH8JTaAPFRuffUKiUBZa4ged8sp7zN40k6ugKI9mdPK5
+	 zz6cv7UJ805SecPvfXUvMtwegfc1QjzvrbWO1FDMynHdxfDGdz+6uhKiRCQ8pEQ+6a
+	 X3O8M7oQ7gy6cWZsG8YSvtBwgDMDoeqvB1iut916uwhbbzNque5a4FV6/r3VmIxM1i
+	 4uhGmy09P4zEmg8fLbWHLZJRcziVdHttOF/7GcVcre4N/3seyM6WqiZy1YweFX9To2
+	 DhDHbB2mLSZQbeZNMH/8jQFQOwBl7T88eF6uxTym0+/Qa2X3Kz6P/Ustve/9+NWRcE
+	 mQJfgXXslcR2w==
+Message-ID: <77d7000f15341c20d254a7804e08b3b252cc4e52.camel@kernel.org>
+Subject: Re: [PATCH v3 00/38] vfs, nfsd: implement directory delegations
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Nathan Chancellor
- <nathan@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Simon Horman
- <horms@kernel.org>, 	linux-nfs@vger.kernel.org, patches@lists.linux.dev,
- Anna Schumaker	 <anna.schumaker@oracle.com>
-Date: Thu, 25 Sep 2025 12:52:10 -0400
-In-Reply-To: <6669bd1e-ba37-433a-8f8c-5cd9787b846f@oracle.com>
-References: 
-	<20250925-nfsd-fix-trace-printk-strlen-error-v1-1-1360530e4c6b@kernel.org>
-	 <6669bd1e-ba37-433a-8f8c-5cd9787b846f@oracle.com>
+To: Chuck Lever <chuck.lever@oracle.com>, Alexander Viro	
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	 <jack@suse.cz>, Alexander Aring <alex.aring@gmail.com>, Trond Myklebust	
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Steve French	
+ <sfrench@samba.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam
+ Prasad N	 <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Bharath SM	
+ <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Jonathan Corbet	
+ <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi	
+ <miklos@szeredi.hu>, Paulo Alcantara <pc@manguebit.org>, Greg Kroah-Hartman
+	 <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Danilo Krummrich	 <dakr@kernel.org>, David Howells <dhowells@redhat.com>,
+ Tyler Hicks	 <code@tyhicks.com>, Namjae Jeon <linkinjeon@kernel.org>, Steve
+ French	 <smfrench@gmail.com>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu	 <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Rick Macklem <rick.macklem@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-doc@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
+ 	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Date: Thu, 25 Sep 2025 13:08:10 -0400
+In-Reply-To: <e8889519-ca38-430f-b79c-790dabacafac@oracle.com>
+References: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
+	 <e8889519-ca38-430f-b79c-790dabacafac@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,111 +155,188 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-09-25 at 09:43 -0400, Chuck Lever wrote:
-> On 9/25/25 5:14 AM, Nathan Chancellor wrote:
-> > There is an error building nfs4xdr.c with CONFIG_SUNRPC_DEBUG_TRACE=3Dy
-> > and CONFIG_FORTIFY_SOURCE=3Dn due to the local variable strlen conflict=
-ing
-> > with the function strlen():
+On Thu, 2025-09-25 at 09:39 -0400, Chuck Lever wrote:
+> On 9/24/25 11:05 AM, Jeff Layton wrote:
+> > This patchset is an update to a patchset that I posted in early June
+> > this year [1]. This version should be basically feature-complete, with =
+a
+> > few caveats.
 > >=20
-> >   In file included from include/linux/cpumask.h:11,
-> >                    from arch/x86/include/asm/paravirt.h:21,
-> >                    from arch/x86/include/asm/irqflags.h:102,
-> >                    from include/linux/irqflags.h:18,
-> >                    from include/linux/spinlock.h:59,
-> >                    from include/linux/mmzone.h:8,
-> >                    from include/linux/gfp.h:7,
-> >                    from include/linux/slab.h:16,
-> >                    from fs/nfsd/nfs4xdr.c:37:
-> >   fs/nfsd/nfs4xdr.c: In function 'nfsd4_encode_components_esc':
-> >   include/linux/kernel.h:321:46: error: called object 'strlen' is not a=
- function or function pointer
-> >     321 |                 __trace_puts(_THIS_IP_, str, strlen(str));   =
-           \
-> >         |                                              ^~~~~~
-> >   include/linux/kernel.h:265:17: note: in expansion of macro 'trace_put=
-s'
-> >     265 |                 trace_puts(fmt);                        \
-> >         |                 ^~~~~~~~~~
-> >   include/linux/sunrpc/debug.h:34:41: note: in expansion of macro 'trac=
-e_printk'
-> >      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##_=
-_VA_ARGS__)
-> >         |                                         ^~~~~~~~~~~~
-> >   include/linux/sunrpc/debug.h:42:17: note: in expansion of macro '__su=
-nrpc_printk'
-> >      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);         =
-           \
-> >         |                 ^~~~~~~~~~~~~~~
-> >   include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfpri=
-ntk'
-> >      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-> >         |         ^~~~~~~~
-> >   fs/nfsd/nfs4xdr.c:2646:9: note: in expansion of macro 'dprintk'
-> >    2646 |         dprintk("nfsd4_encode_components(%s)\n", components);
-> >         |         ^~~~~~~
-> >   fs/nfsd/nfs4xdr.c:2643:13: note: declared here
-> >    2643 |         int strlen, count=3D0;
-> >         |             ^~~~~~
+> > NFSv4.1 adds a GET_DIR_DELEGATION operation, to allow clients
+> > to request a delegation on a directory. If the client holds a directory
+> > delegation, then it knows that nothing will change the dentries in it
+> > until it has been recalled (modulo the case where the client requests
+> > notifications of directory changes).
 > >=20
-> > Move the declaration of strlen into the while loop (as that is the only
-> > place where it is used), which is after the call to dprintk, to clear u=
-p
-> > the error.
+> > In 2023, Rick Macklem gave a talk at the NFS Bakeathon on his
+> > implementation of directory delegations for FreeBSD [2], and showed tha=
+t
+> > it can greatly improve LOOKUP-heavy workloads. There is also some
+> > earlier work by CITI [3] that showed similar results. The SMB protocol
+> > also has a similar sort of construct, and they have also seen large
+> > performance improvements on certain workloads.
 > >=20
-> > Fixes: ec7d8e68ef0e ("sunrpc: add a Kconfig option to redirect dfprintk=
-() output to trace buffer")
-> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > This version also starts with support for trivial directory delegations
+> > that support no notifications.  From there it adds VFS support for
+> > ignoring certain break_lease() events in directories. It then adds
+> > support for basic CB_NOTIFY calls (with names only). Next, support for
+> > sending attributes in the notifications is added.
+> >=20
+> > I think that this version should be getting close to merge ready. Anna
+> > has graciously agreed to work on the client-side pieces for this. I've
+> > mostly been testing using pynfs tests (which I will submit soon).
+> >=20
+> > The main limitation at this point is that callback requests are
+> > currently limited to a single page, so we can't send very many in a
+> > single CB_NOTIFY call. This will make it easy to "get into the weeds" i=
+f
+> > you're changing a directory quickly. The server will just recall the
+> > delegation in that case, so it's harmless even though it's not ideal.
+> >=20
+> > If this approach looks acceptable I'll see if we can increase that
+> > limitation (it seems doable).
+> >=20
+> > If anyone wishes to try this out, it's in the "dir-deleg" branch in my
+> > tree at kernel.org [4].
+> >=20
+> > [1]: https://lore.kernel.org/linux-nfs/20250602-dir-deleg-v2-0-a7919700=
+de86@kernel.org/
+> > [2]: https://www.youtube.com/watch?v=3DDdFyH3BN5pI
+> > [3]: https://linux-nfs.org/wiki/index.php/CITI_Experience_with_Director=
+y_Delegations
+> > [4]: https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> > This solution may be too subtle but given that dprintk() seems to be on
-> > its way out, maybe it is fine. An alternative would be a rename such as
-> > str_len but there is some symmetry with pathlen so I opted for this one
-> > up front.
-> > ---
-> >  fs/nfsd/nfs4xdr.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > Changes in v3:
+> > - Rework to do minimal work in fsnotify callbacks
+> > - Add support for sending attributes in CB_NOTIFY calls
+> > - Add support for dir attr change notifications
+> > - Link to v2: https://lore.kernel.org/r/20250602-dir-deleg-v2-0-a791970=
+0de86@kernel.org
 > >=20
-> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > index ea91bad4eee2..580bfa8011c7 100644
-> > --- a/fs/nfsd/nfs4xdr.c
-> > +++ b/fs/nfsd/nfs4xdr.c
-> > @@ -2640,7 +2640,7 @@ static __be32 nfsd4_encode_components_esc(struct =
-xdr_stream *xdr, char sep,
-> >  	__be32 *p;
-> >  	__be32 pathlen;
-> >  	int pathlen_offset;
-> > -	int strlen, count=3D0;
-> > +	int count=3D0;
-> >  	char *str, *end, *next;
-> > =20
-> >  	dprintk("nfsd4_encode_components(%s)\n", components);
-> > @@ -2654,6 +2654,7 @@ static __be32 nfsd4_encode_components_esc(struct =
-xdr_stream *xdr, char sep,
-> >  	end =3D str =3D components;
-> >  	while (*end) {
-> >  		bool found_esc =3D false;
-> > +		int strlen;
-> > =20
-> >  		/* try to parse as esc_start, ..., esc_end, sep */
-> >  		if (*str =3D=3D esc_enter) {
+> > Changes in v2:
+> > - add support for ignoring certain break_lease() events
+> > - basic support for CB_NOTIFY
+> > - Link to v1: https://lore.kernel.org/r/20240315-dir-deleg-v1-0-a1d6209=
+a3654@kernel.org
 > >=20
 > > ---
-> > base-commit: 3fadfaec904dffab02ebf63dd9c2ae8fa15c6d32
-> > change-id: 20250925-nfsd-fix-trace-printk-strlen-error-2a24413eb186
+> > Jeff Layton (38):
+> >       filelock: push the S_ISREG check down to ->setlease handlers
+> >       filelock: add a lm_may_setlease lease_manager callback
+> >       vfs: add try_break_deleg calls for parents to vfs_{link,rename,un=
+link}
+> >       vfs: allow mkdir to wait for delegation break on parent
+> >       vfs: allow rmdir to wait for delegation break on parent
+> >       vfs: break parent dir delegations in open(..., O_CREAT) codepath
+> >       vfs: make vfs_create break delegations on parent directory
+> >       vfs: make vfs_mknod break delegations on parent directory
+> >       filelock: lift the ban on directory leases in generic_setlease
+> >       nfsd: allow filecache to hold S_IFDIR files
+> >       nfsd: allow DELEGRETURN on directories
+> >       nfsd: check for delegation conflicts vs. the same client
+> >       nfsd: wire up GET_DIR_DELEGATION handling
+> >       filelock: rework the __break_lease API to use flags
+> >       filelock: add struct delegated_inode
+> >       filelock: add support for ignoring deleg breaks for dir change ev=
+ents
+> >       filelock: add a tracepoint to start of break_lease()
+> >       filelock: add an inode_lease_ignore_mask helper
+> >       nfsd: add protocol support for CB_NOTIFY
+> >       nfs_common: add new NOTIFY4_* flags proposed in RFC8881bis
+> >       nfsd: allow nfsd to get a dir lease with an ignore mask
+> >       vfs: add fsnotify_modify_mark_mask()
+> >       nfsd: update the fsnotify mark when setting or removing a dir del=
+egation
+> >       nfsd: make nfsd4_callback_ops->prepare operation bool return
+> >       nfsd: add callback encoding and decoding linkages for CB_NOTIFY
+> >       nfsd: add data structures for handling CB_NOTIFY to directory del=
+egation
+> >       nfsd: add notification handlers for dir events
+> >       nfsd: add tracepoint to dir_event handler
+> >       nfsd: apply the notify mask to the delegation when requested
+> >       nfsd: add helper to marshal a fattr4 from completed args
+> >       nfsd: allow nfsd4_encode_fattr4_change() to work with no export
+> >       nfsd: send basic file attributes in CB_NOTIFY
+> >       nfsd: allow encoding a filehandle into fattr4 without a svc_fh
+> >       nfsd: add a fi_connectable flag to struct nfs4_file
+> >       nfsd: add the filehandle to returned attributes in CB_NOTIFY
+> >       nfsd: properly track requested child attributes
+> >       nfsd: track requested dir attributes
+> >       nfsd: add support to CB_NOTIFY for dir attribute changes
+> >=20
+> >  Documentation/sunrpc/xdr/nfs4_1.x    | 267 +++++++++++++++++-
+> >  drivers/base/devtmpfs.c              |   2 +-
+> >  fs/attr.c                            |   4 +-
+> >  fs/cachefiles/namei.c                |   2 +-
+> >  fs/ecryptfs/inode.c                  |   2 +-
+> >  fs/fuse/dir.c                        |   1 +
+> >  fs/init.c                            |   2 +-
+> >  fs/locks.c                           | 122 ++++++--
+> >  fs/namei.c                           | 253 +++++++++++------
+> >  fs/nfs/nfs4file.c                    |   2 +
+> >  fs/nfsd/filecache.c                  | 101 +++++--
+> >  fs/nfsd/filecache.h                  |   2 +
+> >  fs/nfsd/nfs4callback.c               |  60 +++-
+> >  fs/nfsd/nfs4layouts.c                |   3 +-
+> >  fs/nfsd/nfs4proc.c                   |  36 ++-
+> >  fs/nfsd/nfs4recover.c                |   2 +-
+> >  fs/nfsd/nfs4state.c                  | 531 +++++++++++++++++++++++++++=
+++++++--
+> >  fs/nfsd/nfs4xdr.c                    | 298 +++++++++++++++++---
+> >  fs/nfsd/nfs4xdr_gen.c                | 506 +++++++++++++++++++++++++++=
++++++-
+> >  fs/nfsd/nfs4xdr_gen.h                |  20 +-
+> >  fs/nfsd/state.h                      |  73 ++++-
+> >  fs/nfsd/trace.h                      |  21 ++
+> >  fs/nfsd/vfs.c                        |   7 +-
+> >  fs/nfsd/vfs.h                        |   2 +-
+> >  fs/nfsd/xdr4.h                       |   3 +
+> >  fs/nfsd/xdr4cb.h                     |  12 +
+> >  fs/notify/mark.c                     |  29 ++
+> >  fs/open.c                            |   8 +-
+> >  fs/overlayfs/overlayfs.h             |   2 +-
+> >  fs/posix_acl.c                       |  12 +-
+> >  fs/smb/client/cifsfs.c               |   3 +
+> >  fs/smb/server/vfs.c                  |   2 +-
+> >  fs/utimes.c                          |   4 +-
+> >  fs/xattr.c                           |  16 +-
+> >  fs/xfs/scrub/orphanage.c             |   2 +-
+> >  include/linux/filelock.h             | 143 +++++++---
+> >  include/linux/fs.h                   |  11 +-
+> >  include/linux/fsnotify_backend.h     |   1 +
+> >  include/linux/nfs4.h                 | 127 ---------
+> >  include/linux/sunrpc/xdrgen/nfs4_1.h | 304 +++++++++++++++++++-
+> >  include/linux/xattr.h                |   4 +-
+> >  include/trace/events/filelock.h      |  38 ++-
+> >  include/uapi/linux/nfs4.h            |   2 -
+> >  43 files changed, 2636 insertions(+), 406 deletions(-)
+> > ---
+> > base-commit: 36c204d169319562eed170f266c58460d5dad635
+> > change-id: 20240215-dir-deleg-e212210ba9d4
 > >=20
 > > Best regards,
-> > -- =20
-> > Nathan Chancellor <nathan@kernel.org>
-> >=20
 >=20
-> Would anyone be heartbroken if this patch removed the dprintk call site?
+> Series is clean and easy to read, thanks for your hard work! I agree
+> that the NFSD portions appear to be complete and ready to accept.
 >=20
-> I think renaming the strlen variable to a name with a lower collision
-> risk would be sensible as well.
+> Because the series is cross-subsystem, we will need to discuss a merge
+> plan. So I'll hold off on R-b or Acked until that is nailed down.
 >=20
 
-Fine with me on both counts. No point in overloading a well known
-function name here.
+Thanks. It's sensible to hold off for a bit. There is at least one leak
+that I found earlier today, and a few cleanups that I have queued up.
+
+We also have a bake-a-thon in another couple of weeks where I hope to
+test this more extensively. After that, I'm hoping we'll be in
+reasonable shape to take it into linux-next.
+
+What I may do is reorder the vfs patches to the front of the queue and
+plead to Christian and Al to take them into a branch that feeds into
+linux-next. That way we can at least get some feedback and testing with
+those bits in place, and a foundation on which we can merge the nfsd
+bits.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
