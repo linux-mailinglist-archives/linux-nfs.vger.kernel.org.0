@@ -1,174 +1,201 @@
-Return-Path: <linux-nfs+bounces-14704-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14705-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64CD2B9E8DE
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 12:05:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 287F4B9E9BC
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 12:21:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E42A642001F
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 10:05:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C574F1698B7
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 10:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56B462EA15E;
-	Thu, 25 Sep 2025 10:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9580E55A;
+	Thu, 25 Sep 2025 10:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="ulPPfapw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVB/f0fT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWXfikuu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127D92E9ECD;
-	Thu, 25 Sep 2025 10:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B7C27FD5B
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 10:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758794682; cv=none; b=o/8XGgANvHprAWIhUXqkShbR8+su7+IUiBVQDbf3Y4e4zm1Fbn4lFCn5PUcrtO7yFPzD/eLmXVi1aOrUzKt1KcAfrlUZ3Qqa4sR/ifdq/oU2NxJTUA1nciG7bDhjH2JwroNUjmeH6w8p2PzhCxv27GnKOC00oc+OiPiA2n2epZ0=
+	t=1758795701; cv=none; b=LQk1H/ex6KS13JnIpcZF4C4/sPm6KBPUfWBg0cytU+uQJWzlV6zXHigLroUga5duVRXlHxS22mfZa8JJzNS02vXGWTs0/zNSuL8p95EEx88UHnEdVg6oymYIheBFNSyn68W8KPaGlTppOUgqz4sVNU+jfXipSoNddgpAF43Lhm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758794682; c=relaxed/simple;
-	bh=GDPy6tLI6bEpxVDkQBmNqso1NUEL9cwfZb3pOkWJe/w=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=DBVYVjtiOB/vOSaHK+tideUclLnrkd0EZBNG8qwTlhBA/EgwEjzP7n4IRiDXqqFQVW9klfk9bX1Wx+2fOL3EV2AfrioTB633pdEeqc9Iea9lEdKlo4QZhmf0sGwON6BEUauGayJ0uY0i3TYKmOkTX6vcUoFIs7vigPg4+GplhRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=ulPPfapw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QVB/f0fT; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.stl.internal (Postfix) with ESMTP id DDB571D001AB;
-	Thu, 25 Sep 2025 06:04:38 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Thu, 25 Sep 2025 06:04:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1758794678; x=1758881078; bh=OoNqSHIfiv5TvI1BH6rd89bwjr3x3HSaZHW
-	bibzT0jY=; b=ulPPfapwje2HVcacmxrRfQDDNVNnarffCifSAUsM86mZa/8trim
-	7mW0WZnhivvvwU6nfQbBKLdDdslPQAmQ+HaFiG3ikDQvwyN+4LwIll4pYJGSVSV7
-	mUc0UBTWLouBTWF75Dvb5yzSKWEaqeyhEYWPiRcnQN79jFDL2hOx3KoC5Q+vwFua
-	Q10STFXKJJk617r6JAvvmKHx2dDnD9bw8c+F09+9hnoER1qhJLU/gEIgpW+SrdUG
-	L/vpV5A7HUiXz6iiSH90o7gHc4n1myscEImNDPNkWG5fmLn30xkPR19S0lR1+/BC
-	Tayk5b+ayC3mleIm4c7Y215bFME6YfX4cRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758794678; x=
-	1758881078; bh=OoNqSHIfiv5TvI1BH6rd89bwjr3x3HSaZHWbibzT0jY=; b=Q
-	VB/f0fTeWg4v2opfBPCR6pNI6tzFGydbjHYEvG0T33XLWrzKLx7qJhCdQ15ny1FV
-	qR1nu0YHX9DAD+DnbT129zb4XSMEwp8XWRMBIlyZBVbEUQUcc3INj1i8LM4bklsN
-	eCgv7EY5kV/KeR2XA5+eaDoeLO4ZVjkdFb/zU8yX5hz+t6FrMpdWx5d1oYQhZsxa
-	rXv+i0x6mEl3Yzt4oKIP7WGdIBqr2RCvDVRBldoc4rk0/QdoByQaSryR63EIRiWe
-	ss6KQQhNDt7/wWaWpl/bkPtZxU0kaCKmml4IBGCnhgjiwPEAJyt+y48GnVhrC8Ms
-	OjyRaPmcu3QaE1WUHPZ2w==
-X-ME-Sender: <xms:thPVaG-v7B5PX4WjieK1rvltexyfwLtE7u-xwZtUdRPCP8qFKURQYA>
-    <xme:thPVaLohRdqbmG3_lsBNiFkJZs9zjT_K82neMj56txw6SLGMWgcCEB1NQkb463aHH
-    0VIdikc2mMGTaP0vfQFC1NvD7zv0zuZeti2479sZuSAw631>
-X-ME-Received: <xmr:thPVaASotPCVq2V0RbJGUqOTKMGo-puGOBmjzMJK_axsVb9O2xh8RoeYrV60K4OTkenPSuCiZEo4jz0T4AD3HpsHONYzESzY3FQwbOS1JDyp>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeiiedvtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoheptghhuhgtkh
-    drlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhr
-    rggtlhgvrdgtohhmpdhrtghpthhtohepkhholhhgrgesnhgvthgrphhprdgtohhmpdhrtg
-    hpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgpdhr
-    tghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlsh
-    hpjedtheesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:thPVaOPXMDnf2DYfhWTlGbTdBdpT26Dbq7srYWbkMcrWjD4X4whvvw>
-    <xmx:thPVaOjZDOQrYLrkLeNhMct7dyiW51HQX7WEF5EbnR5G1qXM_t38Ng>
-    <xmx:thPVaLke6y7ywYLUmAy7FAnDCyGtF0aU0RJmbWTVLiMSuNRZhgwUYw>
-    <xmx:thPVaKiD6GvvU2mOMj4HaZngtE2U7gcNtEKqwuKZbOdnANy0p38vLQ>
-    <xmx:thPVaCIGfPpKOsstIpRQIXBsro3q2dVSIwGaC6lWWWyz4htHRkdUIOTV>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Sep 2025 06:04:35 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1758795701; c=relaxed/simple;
+	bh=6Y5Y8HU1w0XVtq/eSD315am8XmFzfR+ACj92GXApcXE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=arreMnq7rGaeF5rOtIO2YaJFrZBUJuvY1S7XeW+MNHEOpJsdfIi5Yf2F3OmVtTDNRzv6Jl1n12IOzu//SNDwZ5zovmNt8DOcisMOJIybgzSU7dKBlzZHolLA8FdNIlAE79w9HL1GuuNXG6JUDRydjRu8nR4PCwO2+dXyYPT/F/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWXfikuu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA744C4CEF0;
+	Thu, 25 Sep 2025 10:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758795701;
+	bh=6Y5Y8HU1w0XVtq/eSD315am8XmFzfR+ACj92GXApcXE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lWXfikuud3ylVxUq+8fxJ/nFpp1kWjUWO6ydU8Ln237XjXczj0mFQ+uQiCSqUhGov
+	 Paq/oQXrIz3c4uIje2q0uCTi52InNHHia5t0NxJufK5aJScnGfn7a3YP5VY5d4ttE9
+	 Wqs4kAL7YQfQ+/1SQRaP3tbKwxmNkl4kqv/ztYvTj4jQJA9JW8xghAvrIDqDuXoRvM
+	 iEwZ6tTYNtbJhv/T8lxhXNCJmfCXVUZP7TT1hZ+Uh2qfwPPKLP/UphQOY8utndmJRi
+	 DM8ztyahbf0eLOJneMWPazr1y9OffAf9zMMooUjEMYJyc5OcDCIDC5GNWmCg/uoled
+	 EbTS5wDVZCx4w==
+Message-ID: <70eb775e0a8d45f0997b9c99790f8b9aa46f2ef4.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: fix refcount leak in nfsd_set_fh_dentry()
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>, 
+ tianshuo han <hantianshuo233@gmail.com>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Tom
+ Talpey <tom@talpey.com>, Dai Ngo <Dai.Ngo@oracle.com>
+Date: Thu, 25 Sep 2025 06:21:39 -0400
+In-Reply-To: <175876366905.1696783.15284382788363472723@noble.neil.brown.name>
+References: 
+	<175876366905.1696783.15284382788363472723@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Alexandr Sapozhnkiov" <alsp705@gmail.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Alexandr Sapozhnikov" <alsp705@gmail.com>,
- lvc-project@linuxtesting.org
-Subject:
- Re: [PATCH] nfsd: fix arithmetic expression overflow in decode_saddr()
-In-reply-to: <20250925075653.11-1-alsp705@gmail.com>
-References: <20250925075653.11-1-alsp705@gmail.com>
-Date: Thu, 25 Sep 2025 20:04:31 +1000
-Message-id: <175879467124.1696783.15457248781908326257@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
 
-On Thu, 25 Sep 2025, Alexandr Sapozhnkiov wrote:
-> From: Alexandr Sapozhnikov <alsp705@gmail.com>
+On Thu, 2025-09-25 at 11:27 +1000, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
 >=20
-> The value of an arithmetic expression 'tmp1 * NSEC_PER_USEC'=20
-> is a subject to overflow because its operands are not cast=20
-> to a larger data type before performing arithmetic
+> nfsd exports a "pseudo root filesystem" which is used by NFSv4 to find
+> the various exported filesystems using LOOKUP requests from a known root
+> filehandle.  NFSv3 uses the MOUNT protocol to find those exported
+> filesystems and so is not given access to the pseudo root filesystem.
 >=20
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Does this matter?  What will break if tv_nsec is greater than
-999,999,999 ??
-
+> If a v3 (or v2) client uses a filehandle from that filesystem,
+> nfsd_set_fh_dentry() will report an error, but still stores the export
+> in "struct svc_fh" even though it also drops the reference (exp_put()).
+> This means that when fh_put() is called an extra reference will be droppe=
+d
+> which can lead to use-after-free and possible denial of service.
 >=20
-> Signed-off-by: Alexandr Sapozhnikov <alsp705@gmail.com>
+> Normal NFS usage will not provide a pseudo-root filehandle to a v3
+> client.  This bug can only be triggered by the client synthesising an
+> incorrect filehandle.
+>=20
+> To fix this we move the assignments to the svc_fh later, after all
+> possible error cases have been detected.
+>=20
+> Reported-and-tested-by: tianshuo han <hantianshuo233@gmail.com>
+> Fixes: ef7f6c4904d0 ("nfsd: move V4ROOT version check to nfsd_set_fh_dent=
+ry()")
+> Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfsxdr.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  fs/nfsd/nfsfh.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-> index 5777f40c7353..df62ed5099de 100644
-> --- a/fs/nfsd/nfsxdr.c
-> +++ b/fs/nfsd/nfsxdr.c
-> @@ -172,6 +172,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
-stream *xdr,
->  	tmp1 =3D be32_to_cpup(p++);
->  	tmp2 =3D be32_to_cpup(p++);
->  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
-> +		if (tmp2 > 1000000)
-> +			tmp2 =3D 1000000;
-
-1000000 isn't a valud value is it?
-
->  		iap->ia_valid |=3D ATTR_ATIME | ATTR_ATIME_SET;
->  		iap->ia_atime.tv_sec =3D tmp1;
->  		iap->ia_atime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
-> @@ -180,6 +182,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
-stream *xdr,
->  	tmp1 =3D be32_to_cpup(p++);
->  	tmp2 =3D be32_to_cpup(p++);
->  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
-> +		if (tmp2 > 1000000)
-> +			tmp2 =3D 999999;
-
-This is even more weird.  1000001 will become 999999, but 1000000 will
-stay as it is.
-Why is it even different?
-
-NeilBrown
-
-
->  		iap->ia_valid |=3D ATTR_MTIME | ATTR_MTIME_SET;
->  		iap->ia_mtime.tv_sec =3D tmp1;
->  		iap->ia_mtime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
-> --=20
-> 2.43.0
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 74cf1f4de174..ed94abdf4f84 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -269,9 +269,6 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
+tp, struct net *net,
+>  				dentry);
+>  	}
+> =20
+> -	fhp->fh_dentry =3D dentry;
+> -	fhp->fh_export =3D exp;
+> -
+>  	switch (fhp->fh_maxsize) {
+>  	case NFS4_FHSIZE:
+>  		if (dentry->d_sb->s_export_op->flags & EXPORT_OP_NOATOMIC_ATTR)
+> @@ -293,6 +290,9 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
+tp, struct net *net,
+>  			goto out;
+>  	}
+> =20
+> +	fhp->fh_dentry =3D dentry;
+> +	fhp->fh_export =3D exp;
+> +
+>  	return 0;
+>  out:
+>  	exp_put(exp);
 >=20
->=20
->=20
+> base-commit: d0ca0df179c4b21e2a6c4a4fb637aa8fa14575cb
 
+Nice catch.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
