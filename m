@@ -1,136 +1,174 @@
-Return-Path: <linux-nfs+bounces-14703-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14704-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71703B9DEFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 09:57:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64CD2B9E8DE
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 12:05:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5C311B27167
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 07:57:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E42A642001F
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 10:05:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 435EE26E704;
-	Thu, 25 Sep 2025 07:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56B462EA15E;
+	Thu, 25 Sep 2025 10:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjPBJr07"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="ulPPfapw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QVB/f0fT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AE52750F3
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 07:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127D92E9ECD;
+	Thu, 25 Sep 2025 10:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758787022; cv=none; b=uZ61INVi5fQMjLvst+WL3y7BXfV468RyhlsnbRgxoMfh20YFwv8EXbVv1IlF3Bc3g7E0Ml5nYgl/oBYFEqRqY2q1A4LjqSF2QYIiZYW07dOQyBpIzSqiC9855NVU4zjuWI7uqyqNUqJ/8XZD9shPcDnt4qudTOL+GOmavGyFh68=
+	t=1758794682; cv=none; b=o/8XGgANvHprAWIhUXqkShbR8+su7+IUiBVQDbf3Y4e4zm1Fbn4lFCn5PUcrtO7yFPzD/eLmXVi1aOrUzKt1KcAfrlUZ3Qqa4sR/ifdq/oU2NxJTUA1nciG7bDhjH2JwroNUjmeH6w8p2PzhCxv27GnKOC00oc+OiPiA2n2epZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758787022; c=relaxed/simple;
-	bh=G3X0HulBzhqLQGcKTKzDjrZkNM1oOZyyGOHbwlQdB3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t/RduxWKAN2ZP7tE7ACD4oLmTbq/CJMoF940MeSE4X0vOdQlDB+DEj3CHpgkdEFFpzEZmeBlCOeCGuVJ5i0JU6K0jFo3fIHRPGvkAZ0xFvG4fP00m3zwzIdhetBW+rEFUw4oqApTq8lafLKEtUiP9ruxoduMIvddExBX8p20cHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjPBJr07; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3515a0bca13so20274871fa.1
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 00:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758787019; x=1759391819; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/LvC+F24rOHUo0H6x23FHMGYpNv9JEWx6/Wh3pzddxk=;
-        b=WjPBJr07U738o2LPgmOsSeMxBhhUyCH7VOUPfIG+MnO/4czlpFW8oD3qqOv6S6vEkg
-         i15mP1HiaieUtfp67i++xk3hHD47Z7axmvkGRJEAokPg4bf/+iy8OQ2I10zJmrlICe87
-         aZJE31AM7jjo6vT/49HlZ/nMt+4U4CFmbML63fLVMhUNARrgKvjmu8B3SgSO4CoLNUJW
-         FmaXrahc5j0HAHqsexNbN/VohBRgdMvPewNUwylfQWxdtaOJYA+83nDVNxgKqI5mTgtA
-         GghUx7D0ze/xL4Ge6XVlx9bVjkF7ChnA20TdcPxaqFgndBxHX83X2/7mkGvRyWJGyaJ8
-         bhNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758787019; x=1759391819;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/LvC+F24rOHUo0H6x23FHMGYpNv9JEWx6/Wh3pzddxk=;
-        b=KQvr/d2RExfE0YenliwdGCnt/3/F/FCnruXLglmQlm8mw5s5rflAHhjEKJstDXYDoY
-         qzMu5W8H4jJ+F7gIUJaPKqLrb/q5BXhG2B1FjY2v5nWCvzQ22SztgIO3IBhLPGQswZGy
-         Q4H12nV+ko6/Sz4vyOGmJXsPfAH0i9QgeNBfRpG6ZmZ8sxzeZsBCanIbHqZ4hDF6gySX
-         MlNHlqcKTgQObbifIKvg3rsFe8ZGKbrMy99Yq6LIWgC6QHjggNPH2qyJ4f6bv17i6Rzc
-         NGZQ5ZO81mc1IRHEqriHGFCZMecbu0GfQGhWmMsfRTPU3P56TjbxGInh/8HHpW1tuFNI
-         pD/g==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ATdBCbn5y+PIg7YqydgSOai+M36rC56WTacCv7ukNPyEZlzZxSh6MQS4zKtqeGAC5LntALgMwG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRGsu/TlQaRBHjL1VWVpShd5ykRHfhlm+rDtKLEa7PRL5HYyLy
-	xul71HfoL5GNJWAh5//UFbS41tCVzIvIuPQKZNpz5dt5Ls8/FWwCh0+6
-X-Gm-Gg: ASbGncsPHx0PvGxhUGqoYlBf/P/S440/CtBEaq8dZF1eUeUS/hQye3iPV9C2XHgcnF+
-	ogJWfzaD3R8w3D8GTySLIO7vpc4BPLDqsapuS6ju2v92nO7ScuFcRjFL3evCs+GKnRpyGm1ET6k
-	rF8HsVmL2fEUnh8JCTuDcJ4AvsFtOvQGvrz+pfAmiel9iHkCulVqkVEVbPPeXcRuupVryuQ/jFq
-	vR9YO5nVZKRCvZ9fqHaIxE//BJJkANamb2lKiw2gwYRodiBfpEYwL28M9BAEnKHjo7bsPpyib4g
-	ENOLZR9mfu2sOwAYAUDT5i3aOVX+iFG8lirKtuynScGC/g+CKQshAVd+7Ii8ITbBPgIQ0Zeeu1C
-	WeTaurXKcKKkFi+3KONOfOA5fHbdBfmc5H+Xt82v7kiC08AhkeoQXzUIkhYgkV6suq/dWX/dhyE
-	ghp+1hpH2jmcpnbh/s
-X-Google-Smtp-Source: AGHT+IEy5RHEB8Y3WCb1UHovAH+ye8tCG6UXPpK5piKqgeIHHYdFqZmWGJZvP6OP/JMTKg1WVGuJeg==
-X-Received: by 2002:a2e:bc19:0:b0:36b:2fab:fa6f with SMTP id 38308e7fff4ca-36fb03a3834mr5397971fa.3.1758787018322;
-        Thu, 25 Sep 2025 00:56:58 -0700 (PDT)
-Received: from localhost.localdomain (broadband-109-173-93-221.ip.moscow.rt.ru. [109.173.93.221])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-36fb4772ca2sm3867031fa.12.2025.09.25.00.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 00:56:58 -0700 (PDT)
-From: Alexandr Sapozhnkiov <alsp705@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandr Sapozhnikov <alsp705@gmail.com>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] nfsd: fix arithmetic expression overflow in decode_saddr()
-Date: Thu, 25 Sep 2025 10:56:52 +0300
-Message-ID: <20250925075653.11-1-alsp705@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1758794682; c=relaxed/simple;
+	bh=GDPy6tLI6bEpxVDkQBmNqso1NUEL9cwfZb3pOkWJe/w=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=DBVYVjtiOB/vOSaHK+tideUclLnrkd0EZBNG8qwTlhBA/EgwEjzP7n4IRiDXqqFQVW9klfk9bX1Wx+2fOL3EV2AfrioTB633pdEeqc9Iea9lEdKlo4QZhmf0sGwON6BEUauGayJ0uY0i3TYKmOkTX6vcUoFIs7vigPg4+GplhRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=ulPPfapw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QVB/f0fT; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id DDB571D001AB;
+	Thu, 25 Sep 2025 06:04:38 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 25 Sep 2025 06:04:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1758794678; x=1758881078; bh=OoNqSHIfiv5TvI1BH6rd89bwjr3x3HSaZHW
+	bibzT0jY=; b=ulPPfapwje2HVcacmxrRfQDDNVNnarffCifSAUsM86mZa/8trim
+	7mW0WZnhivvvwU6nfQbBKLdDdslPQAmQ+HaFiG3ikDQvwyN+4LwIll4pYJGSVSV7
+	mUc0UBTWLouBTWF75Dvb5yzSKWEaqeyhEYWPiRcnQN79jFDL2hOx3KoC5Q+vwFua
+	Q10STFXKJJk617r6JAvvmKHx2dDnD9bw8c+F09+9hnoER1qhJLU/gEIgpW+SrdUG
+	L/vpV5A7HUiXz6iiSH90o7gHc4n1myscEImNDPNkWG5fmLn30xkPR19S0lR1+/BC
+	Tayk5b+ayC3mleIm4c7Y215bFME6YfX4cRQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758794678; x=
+	1758881078; bh=OoNqSHIfiv5TvI1BH6rd89bwjr3x3HSaZHWbibzT0jY=; b=Q
+	VB/f0fTeWg4v2opfBPCR6pNI6tzFGydbjHYEvG0T33XLWrzKLx7qJhCdQ15ny1FV
+	qR1nu0YHX9DAD+DnbT129zb4XSMEwp8XWRMBIlyZBVbEUQUcc3INj1i8LM4bklsN
+	eCgv7EY5kV/KeR2XA5+eaDoeLO4ZVjkdFb/zU8yX5hz+t6FrMpdWx5d1oYQhZsxa
+	rXv+i0x6mEl3Yzt4oKIP7WGdIBqr2RCvDVRBldoc4rk0/QdoByQaSryR63EIRiWe
+	ss6KQQhNDt7/wWaWpl/bkPtZxU0kaCKmml4IBGCnhgjiwPEAJyt+y48GnVhrC8Ms
+	OjyRaPmcu3QaE1WUHPZ2w==
+X-ME-Sender: <xms:thPVaG-v7B5PX4WjieK1rvltexyfwLtE7u-xwZtUdRPCP8qFKURQYA>
+    <xme:thPVaLohRdqbmG3_lsBNiFkJZs9zjT_K82neMj56txw6SLGMWgcCEB1NQkb463aHH
+    0VIdikc2mMGTaP0vfQFC1NvD7zv0zuZeti2479sZuSAw631>
+X-ME-Received: <xmr:thPVaASotPCVq2V0RbJGUqOTKMGo-puGOBmjzMJK_axsVb9O2xh8RoeYrV60K4OTkenPSuCiZEo4jz0T4AD3HpsHONYzESzY3FQwbOS1JDyp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeiiedvtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoheptghhuhgtkh
+    drlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhr
+    rggtlhgvrdgtohhmpdhrtghpthhtohepkhholhhgrgesnhgvthgrphhprdgtohhmpdhrtg
+    hpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgpdhr
+    tghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlsh
+    hpjedtheesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:thPVaOPXMDnf2DYfhWTlGbTdBdpT26Dbq7srYWbkMcrWjD4X4whvvw>
+    <xmx:thPVaOjZDOQrYLrkLeNhMct7dyiW51HQX7WEF5EbnR5G1qXM_t38Ng>
+    <xmx:thPVaLke6y7ywYLUmAy7FAnDCyGtF0aU0RJmbWTVLiMSuNRZhgwUYw>
+    <xmx:thPVaKiD6GvvU2mOMj4HaZngtE2U7gcNtEKqwuKZbOdnANy0p38vLQ>
+    <xmx:thPVaCIGfPpKOsstIpRQIXBsro3q2dVSIwGaC6lWWWyz4htHRkdUIOTV>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 Sep 2025 06:04:35 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Alexandr Sapozhnkiov" <alsp705@gmail.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Alexandr Sapozhnikov" <alsp705@gmail.com>,
+ lvc-project@linuxtesting.org
+Subject:
+ Re: [PATCH] nfsd: fix arithmetic expression overflow in decode_saddr()
+In-reply-to: <20250925075653.11-1-alsp705@gmail.com>
+References: <20250925075653.11-1-alsp705@gmail.com>
+Date: Thu, 25 Sep 2025 20:04:31 +1000
+Message-id: <175879467124.1696783.15457248781908326257@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: Alexandr Sapozhnikov <alsp705@gmail.com>
+On Thu, 25 Sep 2025, Alexandr Sapozhnkiov wrote:
+> From: Alexandr Sapozhnikov <alsp705@gmail.com>
+>=20
+> The value of an arithmetic expression 'tmp1 * NSEC_PER_USEC'=20
+> is a subject to overflow because its operands are not cast=20
+> to a larger data type before performing arithmetic
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-The value of an arithmetic expression 'tmp1 * NSEC_PER_USEC' 
-is a subject to overflow because its operands are not cast 
-to a larger data type before performing arithmetic
+Does this matter?  What will break if tv_nsec is greater than
+999,999,999 ??
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Signed-off-by: Alexandr Sapozhnikov <alsp705@gmail.com>
+> ---
+>  fs/nfsd/nfsxdr.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+> index 5777f40c7353..df62ed5099de 100644
+> --- a/fs/nfsd/nfsxdr.c
+> +++ b/fs/nfsd/nfsxdr.c
+> @@ -172,6 +172,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
+stream *xdr,
+>  	tmp1 =3D be32_to_cpup(p++);
+>  	tmp2 =3D be32_to_cpup(p++);
+>  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
+> +		if (tmp2 > 1000000)
+> +			tmp2 =3D 1000000;
 
-Signed-off-by: Alexandr Sapozhnikov <alsp705@gmail.com>
----
- fs/nfsd/nfsxdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+1000000 isn't a valud value is it?
 
-diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-index 5777f40c7353..df62ed5099de 100644
---- a/fs/nfsd/nfsxdr.c
-+++ b/fs/nfsd/nfsxdr.c
-@@ -172,6 +172,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	tmp1 = be32_to_cpup(p++);
- 	tmp2 = be32_to_cpup(p++);
- 	if (tmp1 != (u32)-1 && tmp2 != (u32)-1) {
-+		if (tmp2 > 1000000)
-+			tmp2 = 1000000;
- 		iap->ia_valid |= ATTR_ATIME | ATTR_ATIME_SET;
- 		iap->ia_atime.tv_sec = tmp1;
- 		iap->ia_atime.tv_nsec = tmp2 * NSEC_PER_USEC;
-@@ -180,6 +182,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	tmp1 = be32_to_cpup(p++);
- 	tmp2 = be32_to_cpup(p++);
- 	if (tmp1 != (u32)-1 && tmp2 != (u32)-1) {
-+		if (tmp2 > 1000000)
-+			tmp2 = 999999;
- 		iap->ia_valid |= ATTR_MTIME | ATTR_MTIME_SET;
- 		iap->ia_mtime.tv_sec = tmp1;
- 		iap->ia_mtime.tv_nsec = tmp2 * NSEC_PER_USEC;
--- 
-2.43.0
+>  		iap->ia_valid |=3D ATTR_ATIME | ATTR_ATIME_SET;
+>  		iap->ia_atime.tv_sec =3D tmp1;
+>  		iap->ia_atime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
+> @@ -180,6 +182,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
+stream *xdr,
+>  	tmp1 =3D be32_to_cpup(p++);
+>  	tmp2 =3D be32_to_cpup(p++);
+>  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
+> +		if (tmp2 > 1000000)
+> +			tmp2 =3D 999999;
+
+This is even more weird.  1000001 will become 999999, but 1000000 will
+stay as it is.
+Why is it even different?
+
+NeilBrown
+
+
+>  		iap->ia_valid |=3D ATTR_MTIME | ATTR_MTIME_SET;
+>  		iap->ia_mtime.tv_sec =3D tmp1;
+>  		iap->ia_mtime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
+> --=20
+> 2.43.0
+>=20
+>=20
+>=20
 
 
