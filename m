@@ -1,56 +1,57 @@
-Return-Path: <linux-nfs+bounces-14725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B13EBA1738
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 23:02:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98420BA1898
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 23:31:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15FA13B886A
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 21:02:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D4967ABC05
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 21:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920E5271454;
-	Thu, 25 Sep 2025 21:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7D62E7F3F;
+	Thu, 25 Sep 2025 21:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4WtbUlG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtOtQt6s"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6FC26C3B6
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 21:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84382E62A6
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 21:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758834133; cv=none; b=tYWXKe6KT23tFAscVleijM5jJ99OOqujuTH2NbfRhqgDqOyQeV7227L3TZpxhjDIDv6AlzMne6l6QBV5HzN5w96vTTmKaZ4PKtB0HyyXFA9J24vAwfuLLIVCwPpmohoDS6dIDQoLclbkvuDqCXSs1KGDkusjf17JVG1jEAXGqyA=
+	t=1758835864; cv=none; b=hy7Ci1enJHaiEOtj9kRHPdWrTGS+BXBkRgpK1JM/fqfTjP4L9Y26dBtzgiTdN5fHH2mQc5E8BQNbNcD8ntpLSbZ5ytj5TkU66N0HnTOivUyIRVkAdUEBCJYJ/imbYowTdRrYpFbNqPUsSlqnfPGqnpM8vBCa27Q5TRu2jzW9ZSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758834133; c=relaxed/simple;
-	bh=NP087fGQxBLpbj+8sgJEXj+QviU9eybSjhcQDIYO2VA=;
+	s=arc-20240116; t=1758835864; c=relaxed/simple;
+	bh=crzBGNgoMv2bHdID2eNRMiF0xLJzPpWkeYDAgs+NDd8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R2sFfb8u19rmXOccX5IxXkhZxgNzmQjqLbLGjtYCcXAmcRpjY8LTyoFssL774JXSbs0qsUB/sPxhYxqRp2r7mO8omdTElsK37K1DiJFfC7J/Uqi7iGe57fbme0c3oYRqlJb8JPxpXQnVgBX7tMBA+obOqYIYat8fsqQIrkO/SjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4WtbUlG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B206AC4CEF0;
-	Thu, 25 Sep 2025 21:02:12 +0000 (UTC)
+	 Content-Type:MIME-Version; b=kXMFy05GRwN/+HArS5tRLmEmpzT0cbso/+0zrrDGX+X8bT/9TOcIihcYHfyn3Ul8PRlrDB/yzJ2Ziiw8AVDQdvwnW1QBQbhJOeQqYOyI3GmCB/RF99kf3+5kDhRzlFeo5O/uboVghoTTx8sdf+WZQhGlGrTi6tLmkY1omZ4vbpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtOtQt6s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D52C4CEF0;
+	Thu, 25 Sep 2025 21:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758834133;
-	bh=NP087fGQxBLpbj+8sgJEXj+QviU9eybSjhcQDIYO2VA=;
+	s=k20201202; t=1758835864;
+	bh=crzBGNgoMv2bHdID2eNRMiF0xLJzPpWkeYDAgs+NDd8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=W4WtbUlGQbMjpjALNn3QVSqc9dNXGbyTruu+IP6/AtH4U/IT9yOs5mm9BTFLRJeqJ
-	 APwAr8oaFiIyaAl1rLjWgrJoPac//dL2z7zwUzndUtGTbSbBd8MCUZpwPsTyegzuxJ
-	 75KVo6XcewyuWYaU30PNUzAZl/8zlQw/MpPN4FSmKgPYQgDf826vwyI3IVB5KU6MaR
-	 hLSkXIOONme/T6omLFV7ZAKgJVXc4vu1tl59bL7VQOt6Rm6UAc1jlgiKqcHX9rtpyd
-	 boC7OWb3fOS0O29X3U4lFoiJx1E5N6M3Hi/FOa/zRhiJee+uKzQ2r0fzpm4UIXWh8C
-	 x9M03HbaDBeog==
-Message-ID: <e5d134e7cc21bc5cdb2e33ec9ad72f3d21ff6841.camel@kernel.org>
+	b=FtOtQt6sWm29DrMATREiQOT5RtLVg85B29k1+pcheVITnTZofo2c4sitQmdyn1GaO
+	 cZf1DMH+8lKGXLshx1Yplhppj8dQo7aWWSr7qJOnMrs2mqmwMG0ICOv4KICnfaJTbW
+	 vNy4tUmOEGIyeT91YX2K4ks+myVYBh6oliN+vWuCFaa+jiiIcYSZ5uU3LIeFI5PwpQ
+	 rli1ZrySSLjDQE9WBNen56vMovPnRWffctzIa3nnPWYlfjmglGj1O3djMzNdmL7ppt
+	 3zvx9vfWZl/f0RJMIJ3VKw32MKFm43Dl52Rp1RqihPJtPnIch6deaNKfLhmL4bP1z8
+	 MFxwAGy8QegUQ==
+Message-ID: <b87a9432fb9dedbd96e58753c43fb047b9046720.camel@kernel.org>
 Subject: Re: [PATCH v3 00/38] vfs, nfsd: implement directory delegations
 From: Jeff Layton <jlayton@kernel.org>
 To: Anna Schumaker <anna.schumaker@oracle.com>, Anna Schumaker
  <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 25 Sep 2025 17:02:11 -0400
-In-Reply-To: <414c0a7b-e767-4061-acd6-bfe8dbff39a1@oracle.com>
+Date: Thu, 25 Sep 2025 17:31:03 -0400
+In-Reply-To: <e5d134e7cc21bc5cdb2e33ec9ad72f3d21ff6841.camel@kernel.org>
 References: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
-	 <414c0a7b-e767-4061-acd6-bfe8dbff39a1@oracle.com>
+		 <414c0a7b-e767-4061-acd6-bfe8dbff39a1@oracle.com>
+	 <e5d134e7cc21bc5cdb2e33ec9ad72f3d21ff6841.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,116 +136,122 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-09-25 at 16:45 -0400, Anna Schumaker wrote:
-> Hi Jeff,
->=20
-> (I trimmed off most of the extra people CC-ed, since this appears to most=
-ly be an
-> NFS issue)
->=20
-> I hit this crash while stepping through my client side code and fixing it=
- up against
-> your latest branch. I'm at a point where the client only requests the del=
-egation, but
-> without any requested notifications, if that helps:
->
->=20
-> [  643.888646] BUG: kernel NULL pointer dereference, address: 00000000000=
-00168
-> [  643.889045] #PF: supervisor read access in kernel mode
-> [  643.889314] #PF: error_code(0x0000) - not-present page
-> [  643.889591] PGD 0 P4D 0=20
-> [  643.889733] Oops: Oops: 0000 [#1] SMP NOPTI
-> [  643.889960] CPU: 3 UID: 0 PID: 1003 Comm: nfsd Not tainted 6.17.0-rc7-=
-00095-gf6fa32f97c33 #47188 PREEMPT(full)  b859994234adae648e07409684697d13c=
-51d22ee
-> [  643.890665] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS u=
-nknown 02/02/2022
-> [  643.891076] RIP: 0010:nfsd_handle_dir_event+0x49/0x2c0 [nfsd]
-> [  643.891490] Code: 24 04 83 f9 01 74 11 83 f9 04 74 19 83 f9 02 75 11 4=
-d 8b 64 24 08 eb 0d 49 8b 04 24 4c 8b 60 08 eb 03 45 31 e4 0f 1f 44 00 00 <=
-4c> 8b b6 68 01 00 00 4d 85 f6 0f 84 dc 01 00 00 49 8d 5e 28 49 8b
-> [  643.892432] RSP: 0018:ffffd0d202333a80 EFLAGS: 00010246
-> [  643.892711] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000=
-0000004
-> [  643.893076] RDX: ffff8e3b55ad4480 RSI: 0000000000000000 RDI: 000000004=
-0000004
-> [  643.893441] RBP: 0000000040000004 R08: 0000000000000000 R09: 000000000=
-0000000
-> [  643.893816] R10: fffffffffffffffb R11: ffffffffc0a80500 R12: ffff8e3b5=
-5ad4480
-> [  643.894183] R13: 0000000000000000 R14: 0000000000000004 R15: 000000000=
-0000004
-> [  643.894554] FS:  0000000000000000(0000) GS:ffff8e3f10206000(0000) knlG=
-S:0000000000000000
-> [  643.894961] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  643.895258] CR2: 0000000000000168 CR3: 0000000112571002 CR4: 000000000=
-0772ef0
-> [  643.895644] PKRU: 55555554
-> [  643.895792] Call Trace:
-> [  643.895931]  <TASK>
-> [  643.896050]  fsnotify+0x69a/0x9a0
-> [  643.896233]  fsnotify_change+0xad/0xc0
-> [  643.896431]  notify_change+0x34f/0x380
-> [  643.896633]  nfsd_setattr+0x314/0x6f0 [nfsd 0b3fc8b3981bb65e36d518f9ed=
+On Thu, 2025-09-25 at 17:02 -0400, Jeff Layton wrote:
+> On Thu, 2025-09-25 at 16:45 -0400, Anna Schumaker wrote:
+> > Hi Jeff,
+> >=20
+> > (I trimmed off most of the extra people CC-ed, since this appears to mo=
+stly be an
+> > NFS issue)
+> >=20
+> > I hit this crash while stepping through my client side code and fixing =
+it up against
+> > your latest branch. I'm at a point where the client only requests the d=
+elegation, but
+> > without any requested notifications, if that helps:
+> >=20
+> >=20
+> > [  643.888646] BUG: kernel NULL pointer dereference, address: 000000000=
+0000168
+> > [  643.889045] #PF: supervisor read access in kernel mode
+> > [  643.889314] #PF: error_code(0x0000) - not-present page
+> > [  643.889591] PGD 0 P4D 0=20
+> > [  643.889733] Oops: Oops: 0000 [#1] SMP NOPTI
+> > [  643.889960] CPU: 3 UID: 0 PID: 1003 Comm: nfsd Not tainted 6.17.0-rc=
+7-00095-gf6fa32f97c33 #47188 PREEMPT(full)  b859994234adae648e07409684697d1=
+3c51d22ee
+> > [  643.890665] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS=
+ unknown 02/02/2022
+> > [  643.891076] RIP: 0010:nfsd_handle_dir_event+0x49/0x2c0 [nfsd]
+> > [  643.891490] Code: 24 04 83 f9 01 74 11 83 f9 04 74 19 83 f9 02 75 11=
+ 4d 8b 64 24 08 eb 0d 49 8b 04 24 4c 8b 60 08 eb 03 45 31 e4 0f 1f 44 00 00=
+ <4c> 8b b6 68 01 00 00 4d 85 f6 0f 84 dc 01 00 00 49 8d 5e 28 49 8b
+> > [  643.892432] RSP: 0018:ffffd0d202333a80 EFLAGS: 00010246
+> > [  643.892711] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000=
+000000004
+> > [  643.893076] RDX: ffff8e3b55ad4480 RSI: 0000000000000000 RDI: 0000000=
+040000004
+> > [  643.893441] RBP: 0000000040000004 R08: 0000000000000000 R09: 0000000=
+000000000
+> > [  643.893816] R10: fffffffffffffffb R11: ffffffffc0a80500 R12: ffff8e3=
+b55ad4480
+> > [  643.894183] R13: 0000000000000000 R14: 0000000000000004 R15: 0000000=
+000000004
+> > [  643.894554] FS:  0000000000000000(0000) GS:ffff8e3f10206000(0000) kn=
+lGS:0000000000000000
+> > [  643.894961] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  643.895258] CR2: 0000000000000168 CR3: 0000000112571002 CR4: 0000000=
+000772ef0
+> > [  643.895644] PKRU: 55555554
+> > [  643.895792] Call Trace:
+> > [  643.895931]  <TASK>
+> > [  643.896050]  fsnotify+0x69a/0x9a0
+> > [  643.896233]  fsnotify_change+0xad/0xc0
+> > [  643.896431]  notify_change+0x34f/0x380
+> > [  643.896633]  nfsd_setattr+0x314/0x6f0 [nfsd 0b3fc8b3981bb65e36d518f9=
+edccb6d9f216a09a]
+> > [  643.897073]  ? nfsd_setuser_and_check_port+0xdd/0x120 [nfsd 0b3fc8b3=
+981bb65e36d518f9edccb6d9f216a09a]
+> > [  643.897576]  nfsd4_setattr+0x254/0x370 [nfsd 0b3fc8b3981bb65e36d518f=
+9edccb6d9f216a09a]
+> > [  643.898014]  ? nfsd4_encode_operation+0x207/0x2b0 [nfsd 0b3fc8b3981b=
+b65e36d518f9edccb6d9f216a09a]
+> > [  643.898502]  nfsd4_proc_compound+0x337/0x600 [nfsd 0b3fc8b3981bb65e3=
+6d518f9edccb6d9f216a09a]
+> > [  643.898964]  nfsd_dispatch+0xc1/0x210 [nfsd 0b3fc8b3981bb65e36d518f9=
+edccb6d9f216a09a]
+> > [  643.899390]  svc_process_common+0x567/0x6a0 [sunrpc c8ffd8e151f2f4e7=
+c45ca22edc099dc57603df52]
+> > [  643.899881]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd 0b3fc8b3981bb65e3=
+6d518f9edccb6d9f216a09a]
+> > [  643.900341]  svc_process+0x117/0x200 [sunrpc c8ffd8e151f2f4e7c45ca22=
+edc099dc57603df52]
+> > [  643.900790]  svc_recv+0xa7d/0xbc0 [sunrpc c8ffd8e151f2f4e7c45ca22edc=
+099dc57603df52]
+> > [  643.901208]  nfsd+0xb6/0xf0 [nfsd 0b3fc8b3981bb65e36d518f9edccb6d9f2=
+16a09a]
+> > [  643.901598]  ? __pfx_nfsd+0x10/0x10 [nfsd 0b3fc8b3981bb65e36d518f9ed=
 ccb6d9f216a09a]
-> [  643.897073]  ? nfsd_setuser_and_check_port+0xdd/0x120 [nfsd 0b3fc8b398=
-1bb65e36d518f9edccb6d9f216a09a]
-> [  643.897576]  nfsd4_setattr+0x254/0x370 [nfsd 0b3fc8b3981bb65e36d518f9e=
-dccb6d9f216a09a]
-> [  643.898014]  ? nfsd4_encode_operation+0x207/0x2b0 [nfsd 0b3fc8b3981bb6=
-5e36d518f9edccb6d9f216a09a]
-> [  643.898502]  nfsd4_proc_compound+0x337/0x600 [nfsd 0b3fc8b3981bb65e36d=
-518f9edccb6d9f216a09a]
-> [  643.898964]  nfsd_dispatch+0xc1/0x210 [nfsd 0b3fc8b3981bb65e36d518f9ed=
-ccb6d9f216a09a]
-> [  643.899390]  svc_process_common+0x567/0x6a0 [sunrpc c8ffd8e151f2f4e7c4=
-5ca22edc099dc57603df52]
-> [  643.899881]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd 0b3fc8b3981bb65e36d=
-518f9edccb6d9f216a09a]
-> [  643.900341]  svc_process+0x117/0x200 [sunrpc c8ffd8e151f2f4e7c45ca22ed=
-c099dc57603df52]
-> [  643.900790]  svc_recv+0xa7d/0xbc0 [sunrpc c8ffd8e151f2f4e7c45ca22edc09=
-9dc57603df52]
-> [  643.901208]  nfsd+0xb6/0xf0 [nfsd 0b3fc8b3981bb65e36d518f9edccb6d9f216=
-a09a]
-> [  643.901598]  ? __pfx_nfsd+0x10/0x10 [nfsd 0b3fc8b3981bb65e36d518f9edcc=
-b6d9f216a09a]
-> [  643.902024]  kthread+0x215/0x250
-> [  643.902201]  ? __pfx_kthread+0x10/0x10
-> [  643.902394]  ret_from_fork+0x106/0x1d0
-> [  643.902606]  ? __pfx_kthread+0x10/0x10
-> [  643.902800]  ret_from_fork_asm+0x1a/0x30
-> [  643.903013]  </TASK>
-> [  643.903133] Modules linked in: rpcsec_gss_krb5 rpcrdma rdma_cm ib_cm i=
-w_cm ib_core cfg80211 rfkill 8021q mrp garp stp llc ext4 mbcache crc16 jbd2=
- vfat fat intel_rapl_msr intel_rapl_common intel_uncore_frequency_common in=
-tel_pmc_core intel_pmc_ssram_telemetry pmt_telemetry snd_hda_codec_generic =
-pmt_discovery pmt_class intel_vsec snd_hda_intel snd_intel_dspcfg kvm_intel=
- snd_hda_codec snd_hwdep kvm snd_hda_core irqbypass snd_pcm polyval_clmulni=
- iTCO_wdt ghash_clmulni_intel intel_pmc_bxt iTCO_vendor_support aesni_intel=
- snd_timer psmouse rapl i2c_i801 pcspkr snd lpc_ich i2c_smbus soundcore joy=
-dev mousedev mac_hid btrfs raid6_pq xor nfsd nfs_acl lockd grace nfs_locali=
-o auth_rpcgss usbip_host usbip_core dm_mod loop sunrpc nfnetlink vsock_loop=
-back vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock vmw_v=
-mci qemu_fw_cfg xfs serio_raw virtio_gpu virtio_dma_buf virtio_rng virtio_s=
-csi virtio_balloon virtio_net intel_agp net_failover failover intel_gtt
-> [  643.909087] CR2: 0000000000000168
-> [  643.909503] ---[ end trace 0000000000000000 ]---
+> > [  643.902024]  kthread+0x215/0x250
+> > [  643.902201]  ? __pfx_kthread+0x10/0x10
+> > [  643.902394]  ret_from_fork+0x106/0x1d0
+> > [  643.902606]  ? __pfx_kthread+0x10/0x10
+> > [  643.902800]  ret_from_fork_asm+0x1a/0x30
+> > [  643.903013]  </TASK>
+> > [  643.903133] Modules linked in: rpcsec_gss_krb5 rpcrdma rdma_cm ib_cm=
+ iw_cm ib_core cfg80211 rfkill 8021q mrp garp stp llc ext4 mbcache crc16 jb=
+d2 vfat fat intel_rapl_msr intel_rapl_common intel_uncore_frequency_common =
+intel_pmc_core intel_pmc_ssram_telemetry pmt_telemetry snd_hda_codec_generi=
+c pmt_discovery pmt_class intel_vsec snd_hda_intel snd_intel_dspcfg kvm_int=
+el snd_hda_codec snd_hwdep kvm snd_hda_core irqbypass snd_pcm polyval_clmul=
+ni iTCO_wdt ghash_clmulni_intel intel_pmc_bxt iTCO_vendor_support aesni_int=
+el snd_timer psmouse rapl i2c_i801 pcspkr snd lpc_ich i2c_smbus soundcore j=
+oydev mousedev mac_hid btrfs raid6_pq xor nfsd nfs_acl lockd grace nfs_loca=
+lio auth_rpcgss usbip_host usbip_core dm_mod loop sunrpc nfnetlink vsock_lo=
+opback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock vmw=
+_vmci qemu_fw_cfg xfs serio_raw virtio_gpu virtio_dma_buf virtio_rng virtio=
+_scsi virtio_balloon virtio_net intel_agp net_failover failover intel_gtt
+> > [  643.909087] CR2: 0000000000000168
+> > [  643.909503] ---[ end trace 0000000000000000 ]---
+> >=20
+> >=20
+> > Any guesses for what could be causing this?
+> > Anna
+> >=20
 >=20
+> Yes. It happened in a SETATTR and I forgot to handle that case in
+> nfsd_handle_dir_event(). Will fix.
 >=20
-> Any guesses for what could be causing this?
-> Anna
->=20
+> I suspect that we probably just want to just recall the delegation in
+> this case. Another option would be to send a DIR_ATTRS update to the
+> client, but it's possible that the dir_delegation isn't set up to send
+> the attrs that changed, and trying to sort that out sounds like a mess.
 
-Yes. It happened in a SETATTR and I forgot to handle that case in
-nfsd_handle_dir_event(). Will fix.
+Actually, the delegation should have been recalled. We just want to
+ignore the update in this case. The latest patches in my dir-deleg
+branch should have a fix.
 
-I suspect that we probably just want to just recall the delegation in
-this case. Another option would be to send a DIR_ATTRS update to the
-client, but it's possible that the dir_delegation isn't set up to send
-the attrs that changed, and trying to sort that out sounds like a mess.
-
+Thanks for helping test!
 --=20
 Jeff Layton <jlayton@kernel.org>
 
