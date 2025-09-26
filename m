@@ -1,205 +1,292 @@
-Return-Path: <linux-nfs+bounces-14729-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14730-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6B21BA2202
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 03:13:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA862BA225F
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 03:30:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E5283881A9
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 01:13:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7749716CDF8
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 01:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B9D158535;
-	Fri, 26 Sep 2025 01:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A58919F43A;
+	Fri, 26 Sep 2025 01:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="OwybXz+/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k3/OYIVG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvk5Vim/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A993210E0
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Sep 2025 01:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BE9126BF7
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Sep 2025 01:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758849231; cv=none; b=I447ZhqudYXVwYZdldXj8KWBScjLZDa9WsH63FvA8ttqaUxDZZPpFO/NXbn44F54EIfyBaPmE78gQjL13nQLVBPdfJPtj6apEVucfNfdUAzul7NXw55vvqI1XjVQnv5pWiwod/CO9Fs4KidOW8LwUZ8JaWbmNDdEblTbzxngSlI=
+	t=1758850225; cv=none; b=lXh5zQuaQ4tb3fTjBUETu+3A5TwEMnqjQtEzCXUbJvk7OtE4iOelLs2iZefjRfebWHXo9FahdJ3xiMjSEF+bfbGL71+bpR3Jo8hnnivy7XoGrVVxxhVa2JdswPLoMaUk1f0oshAB3B49KIUxPIP4AKLcW2nXSGySCdJ2S0gqDNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758849231; c=relaxed/simple;
-	bh=9/kEhkAltOtaFuG7h/qxrMtZLivsTMXOoW1PdyweRU0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=kWM1sjoxMJTwJ10jnarsdjAZeIWPpMSCZhyMoR5W00B2hGHRJTbcSEKrf2Og20MgnWGvQK3mLDy7yLdzSYZ6Yp1LeSQTtlpUyy8/BdlIemryMYnSeW/uRa4Ln/vagJywzq5+RjUQKXTivhJdrNItdU801JuLnPdZs1VhWhSymng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=OwybXz+/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k3/OYIVG; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id C2214EC00B0;
-	Thu, 25 Sep 2025 21:13:47 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Thu, 25 Sep 2025 21:13:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1758849227; x=1758935627; bh=dI91TKnILTub+iSRQNFi+HMUvMhtYzZEtuz
-	DLdoOTUE=; b=OwybXz+/agzrjx+wjBGFYsQUbdzcS2h0QAIqrxhRQjiDs6tNztX
-	MtQGOuRfWPZwSWZ7WmT9teHPhITBV+qcf/MkcRsPBIfxzjWzjtmxhTtTIkFMn5r0
-	D5B7x5FV7UV7Ogov7bhjrqfEv45RbLNFgJMmTLGwjf+VuvqSJnXJicHVfJWwCNqt
-	TKcddnwJ09XWA0KuDAX6LNlbA3JQKsi7pfKJnBtnQ2kU1NDycRh0vWfyIx6b3CKy
-	k4brkw14aD59ukmi7vKjMneZAj17+mmi87HRXk0fCFrehO0lU76ZnIdKZnJfEHPe
-	DEBZK5TnZfkRC3HvEqYjviPy6aVVZluS1EQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758849227; x=
-	1758935627; bh=dI91TKnILTub+iSRQNFi+HMUvMhtYzZEtuzDLdoOTUE=; b=k
-	3/OYIVG0gNb+/E0x9JuluNxox+yt9xrIuqgZacZ5B766jsqwd7nqW9WCtY+7UXe6
-	MtgPJ9nqfByJdCxw8DJ580zgJMuVy1n6SMm3HsM01z4KnmwY9zXNDGTZaL75c/b4
-	BqWcv+jaOvZWtxsyePGtHeSf+3pFmgb7mMcF8/BUR9dXhLTCeLJDsgZMzo07hQeP
-	UsmKw3l68yCc99KRz+TqbNhNgJqpkQPnZLOY94yb/icm6CiaDDh3D+hLNBghO8OX
-	hr0lJ0NuCPy7tGKlnHVxpopQaR7KqIKHYd8g+UFHfovy1CZap/H8q47gesdReETL
-	fvZ/BtS/Bwsd990TWwPaw==
-X-ME-Sender: <xms:y-jVaOWYDOE7z58eySQAoFFgto9qlqK63GyjYo9YxdP8Ns-28tJkJQ>
-    <xme:y-jVaCDPqF7wP2j60eMaGI9HbG7GaqMgayBiUdytavsFC-zzTrSd5qENvNKntedPl
-    2xbhCBz7BL4UJc2ltFcH3sJnontCGYw58gppZJvkaofNztycA>
-X-ME-Received: <xmr:y-jVaPz49N0iNerzL-ilNS45s4r56hRIRL2hXjwHk-QqQm_urFycjhYGXcEekHSN5LiGjv0l-nu7lkxVAZBcl1eR0ZlQsITckFPHiArLF1sx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeikedtvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthht
-    oheptggvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:y-jVaPDuGpLYM__Q7lH7qYGAKwtdajeG73guP5r3-e4uaD-ZwxzS5g>
-    <xmx:y-jVaMbXxDdwEVIKgA_ds_-yWdo-TL7eRfil2cAEJ9fdKTpfel5Wdg>
-    <xmx:y-jVaHhExUG1OT0g3h5Ae3jqP6N90J3C5eGg3DkLip1WnMVZAddM7Q>
-    <xmx:y-jVaO4A9diI57UYyaq1W6XfSdcm8dXAvOpYj8Oyybh9Tp0oWSqs1g>
-    <xmx:y-jVaEaf9fMVYNxXfwcqtCSA7-5C5XClLW52OuF29EIVBuSYvJMZpjtL>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Sep 2025 21:13:46 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1758850225; c=relaxed/simple;
+	bh=XuMWOCf/fHvlovMPzvFLxwEIQkNCBHxlZc+3npiD6WA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gmwvwXRYhhDN5c17g7KlZrPNJCTXl8XHc1ob6XTROICpwLcYXt7Zc36pJqlP73g+sCjZnqAlxIJh+IFPnxKn7NsXcbrW71PMe+TJQLsK83djz5EUIFTcylF5rT1CSjy6BDjuO34uVPgcqNUdJwWZ4C/TYTsq6X6blSiYRJ1er88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvk5Vim/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B93C4CEF0;
+	Fri, 26 Sep 2025 01:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758850224;
+	bh=XuMWOCf/fHvlovMPzvFLxwEIQkNCBHxlZc+3npiD6WA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bvk5Vim/RRlQhFaqU3tJSNL629aKYEjA4vdIUKxGnEyBh7typ7jl68DgTkse8WBfx
+	 7xOSlswQ95CDGU3mFSfCwgAsGBoJgVLK0vynkeUsnRk0jYeRABjZx40VK+EeDexiWo
+	 GkLDULmGrPabq1X++TwEOcIvm9m+v1P+96ydPjX4ORzaYBBxF3Vsccv3MfGJCnrxT2
+	 1JqIdAhJIgahdstGbsFad67qeZevGS7bmf3C57+E8vtSq7SBmHf8TFs6uScOIsO5X4
+	 qoCS6kVx7DhWG/V3SRWiEP42Jx4+h/Pnmr/1BPnirQtOX1RtJwJXynnmEBIVGk6uPc
+	 d1UKFcr3EQ8kg==
+Date: Thu, 25 Sep 2025 21:30:20 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neilb@ownmail.net>
+Cc: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 3/3] NFSD: Implement NFSD_IO_DIRECT for NFS READ
+Message-ID: <aNXsrPTVHA1sRbXQ@kernel.org>
+References: <20250922141137.632525-1-cel@kernel.org>
+ <20250922141137.632525-4-cel@kernel.org>
+ <aNMei7Ax5CbsR_Qz@kernel.org>
+ <19eef754-57d9-4fe4-a6e6-a481dcec470e@kernel.org>
+ <175867132212.1696783.15488731457039328170@noble.neil.brown.name>
+ <60960803-80b3-4ca1-9fd3-16bc1bd1dbd4@kernel.org>
+ <175869903827.1696783.17181184352630252525@noble.neil.brown.name>
+ <aNP8U48TjSFmRhbD@kernel.org>
+ <175884592062.1696783.9463281013443874072@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH] NFSD: Relocate the xdr_reserve_space_vec() call site
-In-reply-to: <20250924195128.2002-1-cel@kernel.org>
-References: <20250924195128.2002-1-cel@kernel.org>
-Date: Fri, 26 Sep 2025 11:13:39 +1000
-Message-id: <175884921980.1696783.4211256086968875624@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-
-On Thu, 25 Sep 2025, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> In order to detect when a direct READ is possible, we need the send
-> buffer's .page_len to be zero when there is nothing in the buffer's
-> .pages array yet.
->=20
-> However, when xdr_reserve_space_vec() extends the size of the
-> xdr_stream to accommodate a READ payload, it adds to the send
-> buffer's .page_len.
->=20
-> It should be safe to reserve the stream space /after/ the VFS read
-> operation completes. This is, for example, how an NFSv3 READ works:
-> the VFS read goes into the rq_bvec, and is then added to the send
-> xdr_stream later by svcxdr_encode_opaque_pages().
-
-"This is .. how an NFSv3 READ works" is the part of this that stands out
-for me.  Increasing the consistence between v3 and v4 must be good.
-
-v2 and v3 readlink, readdir, read; and v4 splice_read
-all use svcxdr_encode_opaque_pages().
-
-These are precisely the operations where there is precisely one
-page-like component of the reply.  For other v4 operations there are a
-mix of page-like and non-pagelike elements.  They use the more
-traditional xdr_reserve_space() and xdr_truncate_encode.
-
-direct_read is more like splice_read than it is like iter_read.
-This is because there can be only one page-like element.
-So it isn't clear to me that it should be integrated with
-nfsd_iter_read().  It is quite different from splice_read too.
-
-However I think for the v4 case, direct read fits better in
-nsfd4_encode_splice_read() than it does in nfsd4_encode_readv().
-In both cases the READ is the only OP that can used the page vec - all
-other replies have to fit in the header page.
-
-NeilBrown
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175884592062.1696783.9463281013443874072@noble.neil.brown.name>
 
 
->=20
-> Nit: we could probably get rid of the xdr_truncate_encode(), now
-> that maxcount reflects the actual count of bytes returned by the
-> file system.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4xdr.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
->=20
-> Here's a brain-dead idea.
->=20
->=20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 41f0d54d6e1b..e3efc7d24aa5 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4475,19 +4475,32 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compo=
-undres *resp,
->  	__be32 zero =3D xdr_zero;
->  	__be32 nfserr;
-> =20
-> -	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
-> -		return nfserr_resource;
-> -
->  	nfserr =3D nfsd_iter_read(resp->rqstp, read->rd_fhp, read->rd_nf,
->  				read->rd_offset, &maxcount, base,
->  				&read->rd_eof);
->  	read->rd_length =3D maxcount;
->  	if (nfserr)
->  		return nfserr;
-> +
-> +	/*
-> +	 * svcxdr_encode_opaque_pages() is not used here because
-> +	 * we don't want to encode subsequent results in this
-> +	 * COMPOUND into the xdr->buf's tail, but rather those
-> +	 * results should follow the NFS READ payload in the
-> +	 * buf's pages.
-> +	 */
-> +	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
-> +		return nfserr_resource;
-> +
-> +	/*
-> +	 * Mark the buffer location of the NFS READ payload so that
-> +	 * direct placement-capable transports send only the
-> +	 * payload bytes out-of-band.
-> +	 */
->  	if (svc_encode_result_payload(resp->rqstp, starting_len, maxcount))
->  		return nfserr_io;
-> -	xdr_truncate_encode(xdr, starting_len + xdr_align_size(maxcount));
-> =20
-> +	xdr_truncate_encode(xdr, starting_len + xdr_align_size(maxcount));
->  	write_bytes_to_xdr_buf(xdr->buf, starting_len + maxcount, &zero,
->  			       xdr_pad_size(maxcount));
->  	return nfs_ok;
-> --=20
-> 2.51.0
->=20
->=20
 
+On Fri, Sep 26, 2025 at 10:18:40AM +1000, NeilBrown wrote:
+> On Thu, 25 Sep 2025, Mike Snitzer wrote:
+> > On Wed, Sep 24, 2025 at 05:30:38PM +1000, NeilBrown wrote:
+> > > On Wed, 24 Sep 2025, Chuck Lever wrote:
+> > > > On 9/23/25 4:48 PM, NeilBrown wrote:
+> > > > > On Wed, 24 Sep 2025, Chuck Lever wrote:
+> > > > >> On 9/23/25 3:26 PM, Mike Snitzer wrote:
+> > > > >>> On Mon, Sep 22, 2025 at 10:11:37AM -0400, Chuck Lever wrote:
+> > > > >>>> From: Chuck Lever <chuck.lever@oracle.com>
+> > > > >>>>
+> > > > >>>> Add an experimental option that forces NFS READ operations to use
+> > > > >>>> direct I/O instead of reading through the NFS server's page cache.
+> > > > >>>>
+> > > > >>>> There are already other layers of caching:
+> > > > >>>>  - The page cache on NFS clients
+> > > > >>>>  - The block device underlying the exported file system
+> > > > >>>>
+> > > > >>>> The server's page cache, in many cases, is unlikely to provide
+> > > > >>>> additional benefit. Some benchmarks have demonstrated that the
+> > > > >>>> server's page cache is actively detrimental for workloads whose
+> > > > >>>> working set is larger than the server's available physical memory.
+> > > > >>>>
+> > > > >>>> For instance, on small NFS servers, cached NFS file content can
+> > > > >>>> squeeze out local memory consumers. For large sequential workloads,
+> > > > >>>> an enormous amount of data flows into and out of the page cache
+> > > > >>>> and is consumed by NFS clients exactly once -- caching that data
+> > > > >>>> is expensive to do and totally valueless.
+> > > > >>>>
+> > > > >>>> For now this is a hidden option that can be enabled on test
+> > > > >>>> systems for benchmarking. In the longer term, this option might
+> > > > >>>> be enabled persistently or per-export. When the exported file
+> > > > >>>> system does not support direct I/O, NFSD falls back to using
+> > > > >>>> either DONTCACHE or buffered I/O to fulfill NFS READ requests.
+> > > > >>>>
+> > > > >>>> Suggested-by: Mike Snitzer <snitzer@kernel.org>
+> > > > >>>> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+> > > > >>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > > > >>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > >>>> ---
+> > > > >>>>  fs/nfsd/debugfs.c |  2 ++
+> > > > >>>>  fs/nfsd/nfsd.h    |  1 +
+> > > > >>>>  fs/nfsd/trace.h   |  1 +
+> > > > >>>>  fs/nfsd/vfs.c     | 82 +++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >>>>  4 files changed, 86 insertions(+)
+> > > > >>>>
+> > > > >>>> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> > > > >>>> index ed2b9e066206..00eb1ecef6ac 100644
+> > > > >>>> --- a/fs/nfsd/debugfs.c
+> > > > >>>> +++ b/fs/nfsd/debugfs.c
+> > > > >>>> @@ -44,6 +44,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%llu\n");
+> > > > >>>>   * Contents:
+> > > > >>>>   *   %0: NFS READ will use buffered IO
+> > > > >>>>   *   %1: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> > > > >>>> + *   %2: NFS READ will use direct IO
+> > > > >>>>   *
+> > > > >>>>   * This setting takes immediate effect for all NFS versions,
+> > > > >>>>   * all exports, and in all NFSD net namespaces.
+> > > > >>>> @@ -64,6 +65,7 @@ static int nfsd_io_cache_read_set(void *data, u64 val)
+> > > > >>>>  		nfsd_io_cache_read = NFSD_IO_BUFFERED;
+> > > > >>>>  		break;
+> > > > >>>>  	case NFSD_IO_DONTCACHE:
+> > > > >>>> +	case NFSD_IO_DIRECT:
+> > > > >>>>  		/*
+> > > > >>>>  		 * Must disable splice_read when enabling
+> > > > >>>>  		 * NFSD_IO_DONTCACHE.
+> > > > >>>> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > > > >>>> index ea87b42894dd..bdb60ee1f1a4 100644
+> > > > >>>> --- a/fs/nfsd/nfsd.h
+> > > > >>>> +++ b/fs/nfsd/nfsd.h
+> > > > >>>> @@ -157,6 +157,7 @@ enum {
+> > > > >>>>  	/* Any new NFSD_IO enum value must be added at the end */
+> > > > >>>>  	NFSD_IO_BUFFERED,
+> > > > >>>>  	NFSD_IO_DONTCACHE,
+> > > > >>>> +	NFSD_IO_DIRECT,
+> > > > >>>>  };
+> > > > >>>>  
+> > > > >>>>  extern u64 nfsd_io_cache_read __read_mostly;
+> > > > >>>> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > > > >>>> index 6e2c8e2aab10..bfd41236aff2 100644
+> > > > >>>> --- a/fs/nfsd/trace.h
+> > > > >>>> +++ b/fs/nfsd/trace.h
+> > > > >>>> @@ -464,6 +464,7 @@ DEFINE_EVENT(nfsd_io_class, nfsd_##name,	\
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(read_start);
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(read_splice);
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(read_vector);
+> > > > >>>> +DEFINE_NFSD_IO_EVENT(read_direct);
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(read_io_done);
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(read_done);
+> > > > >>>>  DEFINE_NFSD_IO_EVENT(write_start);
+> > > > >>>> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > > > >>>> index 35880d3f1326..ddcd812f0761 100644
+> > > > >>>> --- a/fs/nfsd/vfs.c
+> > > > >>>> +++ b/fs/nfsd/vfs.c
+> > > > >>>> @@ -1074,6 +1074,82 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> > > > >>>>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+> > > > >>>>  }
+> > > > >>>>  
+> > > > >>>> +/*
+> > > > >>>> + * The byte range of the client's READ request is expanded on both
+> > > > >>>> + * ends until it meets the underlying file system's direct I/O
+> > > > >>>> + * alignment requirements. After the internal read is complete, the
+> > > > >>>> + * byte range of the NFS READ payload is reduced to the byte range
+> > > > >>>> + * that was originally requested.
+> > > > >>>> + *
+> > > > >>>> + * Note that a direct read can be done only when the xdr_buf
+> > > > >>>> + * containing the NFS READ reply does not already have contents in
+> > > > >>>> + * its .pages array. This is due to potentially restrictive
+> > > > >>>> + * alignment requirements on the read buffer. When .page_len and
+> > > > >>>> + * @base are zero, the .pages array is guaranteed to be page-
+> > > > >>>> + * aligned.
+> > > > >>>> + */
+> > > > >>>
+> > > > >>> So this ^ comment (and the related conversation with Neil in a
+> > > > >>> different thread) says page_len should be 0 on entry to
+> > > > >>> nfsd_direct_read.
+> > > > >>>
+> > > > >>>> @@ -1106,6 +1182,12 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> > > > >>>>  	switch (nfsd_io_cache_read) {
+> > > > >>>>  	case NFSD_IO_BUFFERED:
+> > > > >>>>  		break;
+> > > > >>>> +	case NFSD_IO_DIRECT:
+> > > > >>>> +		if (nf->nf_dio_read_offset_align &&
+> > > > >>>> +		    rqstp->rq_res.page_len && !base)
+> > > > >>>> +			return nfsd_direct_read(rqstp, fhp, nf, offset,
+> > > > >>>> +						count, eof);
+> > > > >>>> +		fallthrough;
+> > > > >>>
+> > > > >>> Yet the nfsd_iter_read is only calling nfsd_direct_read() if
+> > > > >>> rqstp->rq_res.page_len is not zero, shouldn't it be
+> > > > >>> !rqstp->rq_res.page_len ?
+> > > > >>
+> > > > >> Oops, yes. I did this work last week, while out of range of my lab.
+> > > > >>
+> > > > >>
+> > > > >>> (testing confirms it should be !rqstp->rq_res.page_len)
+> > > > >>>
+> > > > >>> Hopefully with this fix you can have more confidence in staging this
+> > > > >>> in your nfsd-testing?
+> > > > >> I'm waiting only for Neil to send an R-b.
+> > > > > 
+> > > > > After noticing, like Mike, that the page_len test was inverted I went
+> > > > > looking to see where page_len was updated, to be sure that a second READ
+> > > > > request would not try to use DIRECT IO.
+> > > > > I can see that nfsd_splice_actor() updates page_len, but I cannot see
+> > > > > where it is updated when nfsd_iter_read() is used.
+> > > > > 
+> > > > > What am I missing?
+> > > > 
+> > > > It might be updated while the NFSv4 reply encoder is encoding a
+> > > > COMPOUND. If the size of the RPC reply so far is larger than the
+> > > > xdr_buf's .head, the xdr_stream will be positioned somewhere in the
+> > > > xdr_buf's .pages array.
+> > > > 
+> > > > This is precisely why splice READ can be used only for the first
+> > > > NFSv4 READ operation in a COMPOUND. Subsequent READ operations
+> > > > must use nfsd_iter_read().
+> > 
+> > Hi Neil,
+> >  
+> > > Hmmmm...
+> > > 
+> > > nfsd4_encode_readv() calls xdr_reserve_space_vec() passing maxcount from
+> > > the READ request.  The maxcount is passed to xdr_reserve_space()
+> > > repeatedly (one page at a time) where it is added to xdr->buf->page_len
+> > > (where xdr is ->rq_res_stream and xdr->buf is rq_res).
+> > > 
+> > > So the result is often that rq_res.page_len will be maxcount.
+> > > 
+> > > Then nfsd4_encode_readv() calls nfsd_iter_read() which, with this patch,
+> > > will test rq_res.page_len, which will always be non-zero.
+> > > So that isn't what we want.
+> > 
+> > Not true. (And code inspection only review like this, that then makes
+> > incorrect yet strong assertions, is pretty disruptive).
+> 
+> What am I disrupting exactly?
+> 
+> I'm (implicitly?) asked to review the patch.  I do that by inspecting
+> the code.  I'm not NAKing the code, I'm saying that I cannot see how it
+> could work.  I'd be very happy for someone to explain how it does work. 
+> We could then put that text in the commit message.
+
+Your review found that verifying page_len to be 0 is inadequate for NFS v4+.
+I had been testing/using NFS v3.
+
+Your review is always helpful! (I held it to be less than that in the
+moment because it had to be missing something.. that something was v3
+vs v4 usage. We both had partial info that left us each confused).
+
+Anyway, apologies.
+
+> > That said, I did follow along with your code inspection, I see your
+> > concern (but you do gloss over some code in xdr_get_next_encode_buffer
+> > that would be cause for avoidng page_len += nbytes).
+> > 
+> > I'll add some tracing to pin this down.
+> > 
+> > > (after the read, nfsd4_encode_readv() will call xdr_truncate_encode()
+> > >  which will reduce ->page_len based on how much was read).
+> > > 
+> > > Then nfsd4_encode_readv() calls nfsd_iter_read().
+> > > 
+> > > I don't think we can use ->page_len to determine if it is safe to use
+> > > nfsd_direct_read().  The conditions where nfsd_direct_read() is safe are
+> > > similar to the conditions where nfsd_splice_read() is safe.  Maybe we
+> > > should use similar code.
+> > 
+> > Your takeaway from code inspection is clearly missing something
+> > because page_len is 0 on entry to nfsd_iter_read for both TCP and RDMA
+> > during my READ testing.
+> 
+> Great.  I'm glad it works.  But without understanding why it works, I
+> cannot give a Reviewed-By.  Maybe it just works by accident (I've seen
+> that happen before).  And if you or Chuck cannot explain why it works
+> then we clearly have work to do.
+
+My follow-up replies clarified it worked because I was using NFSv3:
+https://lore.kernel.org/linux-nfs/aNQ-1OSG9Ti5XbUm@kernel.org/
 
