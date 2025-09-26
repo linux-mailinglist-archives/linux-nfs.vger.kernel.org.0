@@ -1,131 +1,119 @@
-Return-Path: <linux-nfs+bounces-14737-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14738-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0262BBA4383
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 16:34:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA3BBBA44B0
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 16:51:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2471562DBF
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 14:34:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 644333A28E1
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 14:51:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790B21C32FF;
-	Fri, 26 Sep 2025 14:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE1FF1E25EB;
+	Fri, 26 Sep 2025 14:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLVCAGRo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBAt+53w"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5483114B953
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Sep 2025 14:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C0A19E992
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Sep 2025 14:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758897103; cv=none; b=LI5kZEIe60+TR6bg8vAlaszHgmcrQvVMu5uoWvzczPPypwDvXclzXLVun6+Zn4Jq1nluA7+yZl28FD93QJzyE8DfZhCO7YCQ25qQhmNcRqrpAxeSEQKi+HsQFTI1e6EyYqLNxcERaY7McOfPTuNRHnziBH8lETnHuJzpTFYMtz0=
+	t=1758898313; cv=none; b=e1RqQzvu7Xxss/USzlVXHKT5eNQmD8mw1r3nT8PFI78OHqY/eH4/pGauJUMTxxK3FjVQy0QgcpmGj7K3SVX8bMDe5/FhCrSwluhizm7i7s7tyaiRJxGDyDnMMQErbNEFGtz/NH0xjTyOsbM+UcrJq5nrZwncEqV2VpvnLBs+b/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758897103; c=relaxed/simple;
-	bh=M/OKHEo9nyDbCu2zayCEyyDkt+4ZgvAkFrIr/d92wDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iK8uwiv05e1iHBRUuJwqJbyJ1HrOck4WNCxSVUURKsbEA7xLXg2YkzhIh8NpadnapStucM00McNxAYrY4ZAZ1b1hN0RTWfphIWmWYY/YvAB5Zb8dCSJhRtgSFtgatOXUDP3sqsXwyoBJgC/4ds921NV0ShsT2Yngq2YlRRRCOF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLVCAGRo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3EF9C4CEF4;
-	Fri, 26 Sep 2025 14:31:41 +0000 (UTC)
+	s=arc-20240116; t=1758898313; c=relaxed/simple;
+	bh=kSENoX7a2YxxPMg1a9fn23SWD66H5TCmrPluuJoB2qM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QAx52TC1WfTC8UaEwohXo3i8RQ7u8REUBxdxkTlgoJeVkmraPHSB7NFXl05NqpvJUDFIlWl4E5LPUfiX999tgRd/WnKv2RIVmgM+YYgZnr8POVgMenuOwm+irfi9Ryo/MtYG6GyGcNGSiA+s4NpJxCqvPcAln1S4xjafltOdkGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBAt+53w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3582C4CEF7;
+	Fri, 26 Sep 2025 14:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758897102;
-	bh=M/OKHEo9nyDbCu2zayCEyyDkt+4ZgvAkFrIr/d92wDc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JLVCAGRoFoyVdiaLmBOPlDRueV06Mnoft0CRCXypyuwwmSf87YuZRDMtpa5FZB7J5
-	 caq2ArEZucVZlKRH+3oux34qeu8NMrlI6FWw/40uJJ9JemA4zVVflsB8q5PJo4AnYO
-	 Wp1NfvIaa10LbLzCjnAGgTCLHpihP705kEHyC5tJgyDm6mANRKOU8uFS6hGARbobPL
-	 ZVCOhZy09wyux4ugZyV0SNCrKRWDUKb7B/9nWBOT3zYdhJ4Q/SKcY0b2eCkkB4pvPZ
-	 jjLNoMGvhVrhTwBplQmilL4+nl1eVEhazF4+yv27weqNlTDbrPobAO746qvVL6/5fP
-	 lQDEszcvwH4uQ==
-Message-ID: <b77e3e52-0259-4c45-84d8-5f5ad017b8c1@kernel.org>
-Date: Fri, 26 Sep 2025 10:31:40 -0400
+	s=k20201202; t=1758898313;
+	bh=kSENoX7a2YxxPMg1a9fn23SWD66H5TCmrPluuJoB2qM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OBAt+53wA9x3CKWNCI4ebT23m94KX/qo60X48ZFjWZNAKx2it4pQUfiazvHXfh0vk
+	 ICP2+0J1J/ys0ZfGXmZz6Guxfpcee+XrZOLK0QpIJU3cZ0gwQPqHY1gMGzNgOLV+MB
+	 xlCGOaXuEoIo1hcxcJVHxVQ8fj/Rm6zlltYTQ3NB3MZCWFcjsyZMdcxZ+xo9FA/x/z
+	 NAkbPmCBLDq3ZBLnr5au0UApMvafq5RAkm2pGiUrj7pmIGjzLXoXuEDAkqqXcEYkMX
+	 Ud3AoeTj1+XpBAjUXcLXSd7cyInxZcoXlj3hLe8+JRdfjgdEVAOGrXZS0JZ3WHAUJS
+	 7R79rBkp/jjvQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v4 0/4] NFSD direct I/O read
+Date: Fri, 26 Sep 2025 10:51:47 -0400
+Message-ID: <20250926145151.59941-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] NFSD: Relocate the xdr_reserve_space_vec() call site
-To: NeilBrown <neil@brown.name>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <20250924195128.2002-1-cel@kernel.org>
- <175884921980.1696783.4211256086968875624@noble.neil.brown.name>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <175884921980.1696783.4211256086968875624@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 9/25/25 6:13 PM, NeilBrown wrote:
-> On Thu, 25 Sep 2025, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> In order to detect when a direct READ is possible, we need the send
->> buffer's .page_len to be zero when there is nothing in the buffer's
->> .pages array yet.
->>
->> However, when xdr_reserve_space_vec() extends the size of the
->> xdr_stream to accommodate a READ payload, it adds to the send
->> buffer's .page_len.
->>
->> It should be safe to reserve the stream space /after/ the VFS read
->> operation completes. This is, for example, how an NFSv3 READ works:
->> the VFS read goes into the rq_bvec, and is then added to the send
->> xdr_stream later by svcxdr_encode_opaque_pages().
-> "This is .. how an NFSv3 READ works" is the part of this that stands out
-> for me.  Increasing the consistence between v3 and v4 must be good.
-> 
-> v2 and v3 readlink, readdir, read; and v4 splice_read
-> all use svcxdr_encode_opaque_pages().
-> 
-> These are precisely the operations where there is precisely one
-> page-like component of the reply.  For other v4 operations there are a
-> mix of page-like and non-pagelike elements.  They use the more
-> traditional xdr_reserve_space() and xdr_truncate_encode.
-> 
-> direct_read is more like splice_read than it is like iter_read.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-But only in the NFSv4 case, and only in the sense of /when/ it may be
-used, and the similarities are not exact (see below).
+The goal is to get the experimental read-side direct I/O
+implementation merged sooner. We are still thinking through the
+implications of mixing direct and buffered I/O when handling an
+NFS WRITE that does not meet the dio alignment requirements.
 
-The logic of a direct read is identical to vectored and dontcache
-reads in all cases -- build a bvec and call vfs_iocb_iter_read(). The
-only reason it is split out today is because I want to get the direct
-I/O implementation nailed down before de-duplicating the code.
+Changes since v3:
+* Move xdr_reserve_space_vec() call to preserve the page_len value
+* Note that "add STATX_DIOALIGN and STATX_DIO_READ_ALIGN ..."
+  remains exactly the same as it was in the v3 series
 
-And, we have the nice fallback behavior, currently, where NFSD tries
-direct I/O; if that isn't possible, dontcache; and if that isn't
-possible, vectored read, which is always possible. I believe there is
-still situations where per-I/O fallback is reasonable.
+Changes since v2:
+* "Add array bounds-checking..." has been applied to nfsd-testing
+* Add a page_len check before committing to use direct I/O
 
+Changes since v1:
+* Harden the loop that constructs the I/O bvec
+* Address review comments
 
-> This is because there can be only one page-like element.
-> So it isn't clear to me that it should be integrated with
-> nfsd_iter_read().  It is quite different from splice_read too.
-> 
-> However I think for the v4 case, direct read fits better in
-> nsfd4_encode_splice_read() than it does in nfsd4_encode_readv().
-> In both cases the READ is the only OP that can used the page vec - all
-> other replies have to fit in the header page.
+Changes from Mike's v9:
+* The LOC introduced by the feature has been reduced considerably.
+* A new trace point in nfsd_file_getattr reports each file's dio
+  alignment parameters when it is opened.
+* The direct I/O path has been taken out-of-line so that it may
+  continue to be modified and optimized without perturbing the more
+  commonly-used I/O paths.
+* When an exported file system does not implement direct I/O, more
+  commonly-used modes are employed instead to avoid returning
+  EOPNOTSUPP unexpectedly.
+* When NFSD_IO_DIRECT is selected, NFS READs of all sizes use direct
+  I/O to provide better experimental data about small I/O workloads.
 
-There is the sticky part of this where GSS forbids the use of splice
-read. In that case, all NFSv4 READ operations use nfsd4_encode_readv().
-The first READ operation in a COMPOUND may still use direct I/O even
-though NFSv4 READs do not use nfsd4_encode_splice_read() when krb5i or
-krb5p is in use.
+Chuck Lever (2):
+  NFSD: Relocate the xdr_reserve_space_vec() call site
+  NFSD: Implement NFSD_IO_DIRECT for NFS READ
 
-IMHO the direct read path still fits best (though I agree, not yet
-perfectly) in nfsd_iter_read().
+Mike Snitzer (2):
+  NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+  NFSD: pass nfsd_file to nfsd_iter_read()
 
-I'll post another revision of the series to continue the discussion.
-
+ fs/nfsd/debugfs.c       |  2 +
+ fs/nfsd/filecache.c     | 34 ++++++++++++++++
+ fs/nfsd/filecache.h     |  4 ++
+ fs/nfsd/nfs4xdr.c       | 28 +++++++++----
+ fs/nfsd/nfsd.h          |  1 +
+ fs/nfsd/nfsfh.c         |  4 ++
+ fs/nfsd/trace.h         | 28 +++++++++++++
+ fs/nfsd/vfs.c           | 89 +++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/vfs.h           |  2 +-
+ include/trace/misc/fs.h | 22 ++++++++++
+ 10 files changed, 202 insertions(+), 12 deletions(-)
 
 -- 
-Chuck Lever
+2.51.0
+
 
