@@ -1,257 +1,179 @@
-Return-Path: <linux-nfs+bounces-14726-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14727-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98420BA1898
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 23:31:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2988BA2068
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 02:09:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D4967ABC05
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Sep 2025 21:29:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E37D1BC4289
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 00:10:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7D62E7F3F;
-	Thu, 25 Sep 2025 21:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F051388;
+	Fri, 26 Sep 2025 00:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtOtQt6s"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="mFiALfgb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nCf3TWm4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84382E62A6
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Sep 2025 21:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3589634;
+	Fri, 26 Sep 2025 00:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758835864; cv=none; b=hy7Ci1enJHaiEOtj9kRHPdWrTGS+BXBkRgpK1JM/fqfTjP4L9Y26dBtzgiTdN5fHH2mQc5E8BQNbNcD8ntpLSbZ5ytj5TkU66N0HnTOivUyIRVkAdUEBCJYJ/imbYowTdRrYpFbNqPUsSlqnfPGqnpM8vBCa27Q5TRu2jzW9ZSA=
+	t=1758845384; cv=none; b=iUPI6dAlWjULjptp0gKp+UJMsPUXROw13meYy2EytC1Z8p6Mr4FHDFqepiyfj1qq0NXW9XRTX1ZsX4JEnj8phB33g3ifzIUZsV9vdVwbdwhlbO5StL6aKK6EPZ19CRI2mieiSUa1xs93tI+XwSAFA879ZjZrSWLPHvmQnJEXSCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758835864; c=relaxed/simple;
-	bh=crzBGNgoMv2bHdID2eNRMiF0xLJzPpWkeYDAgs+NDd8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kXMFy05GRwN/+HArS5tRLmEmpzT0cbso/+0zrrDGX+X8bT/9TOcIihcYHfyn3Ul8PRlrDB/yzJ2Ziiw8AVDQdvwnW1QBQbhJOeQqYOyI3GmCB/RF99kf3+5kDhRzlFeo5O/uboVghoTTx8sdf+WZQhGlGrTi6tLmkY1omZ4vbpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtOtQt6s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D52C4CEF0;
-	Thu, 25 Sep 2025 21:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758835864;
-	bh=crzBGNgoMv2bHdID2eNRMiF0xLJzPpWkeYDAgs+NDd8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FtOtQt6sWm29DrMATREiQOT5RtLVg85B29k1+pcheVITnTZofo2c4sitQmdyn1GaO
-	 cZf1DMH+8lKGXLshx1Yplhppj8dQo7aWWSr7qJOnMrs2mqmwMG0ICOv4KICnfaJTbW
-	 vNy4tUmOEGIyeT91YX2K4ks+myVYBh6oliN+vWuCFaa+jiiIcYSZ5uU3LIeFI5PwpQ
-	 rli1ZrySSLjDQE9WBNen56vMovPnRWffctzIa3nnPWYlfjmglGj1O3djMzNdmL7ppt
-	 3zvx9vfWZl/f0RJMIJ3VKw32MKFm43Dl52Rp1RqihPJtPnIch6deaNKfLhmL4bP1z8
-	 MFxwAGy8QegUQ==
-Message-ID: <b87a9432fb9dedbd96e58753c43fb047b9046720.camel@kernel.org>
-Subject: Re: [PATCH v3 00/38] vfs, nfsd: implement directory delegations
-From: Jeff Layton <jlayton@kernel.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>, Anna Schumaker
- <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 25 Sep 2025 17:31:03 -0400
-In-Reply-To: <e5d134e7cc21bc5cdb2e33ec9ad72f3d21ff6841.camel@kernel.org>
-References: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
-		 <414c0a7b-e767-4061-acd6-bfe8dbff39a1@oracle.com>
-	 <e5d134e7cc21bc5cdb2e33ec9ad72f3d21ff6841.camel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
+	s=arc-20240116; t=1758845384; c=relaxed/simple;
+	bh=9/8sCI2153nJeyn4IUo6fUwEgJeZDHuCqm1VoJgIXDA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=uIStoHU1Ic8/6PAe5cke/kLyda4J2aE0j1Eq5XKlOm8CLmzzmhFYgmihJ1M8bB73D71mKmAJCf54hiWWwARPRn3/5UNq+2f5PRZrX07AxuViIqlihMfA4JTFdrNlzfi9FM1tWVMZCgbuJbp1d5er/jjbtbGLb7Os/EdO1uh4le4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=mFiALfgb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nCf3TWm4; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CE3971400160;
+	Thu, 25 Sep 2025 20:09:40 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 25 Sep 2025 20:09:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1758845380; x=1758931780; bh=o+VU/S3EXIHtWNj19MpfZBUY/JHX3mo9zyC
+	te/hn2e8=; b=mFiALfgby59gEpjWQRTPDu7tJlZ535BooJYDadCWrW4+kYSz4+W
+	Acokz36lwMgmA/LstmBvMBcL089l+l6iC8svDEoG+BGqwG7jUu1uL8gkqANOyyUC
+	pR0Ck6/r0bO0TXuQq4NAhxe6Tu8HFusYYohcigsct+P6Lj1tDnfyz2VsEfndgMzE
+	i4P3yd7UXrQFbvr5dVxatlCOj6RUq5bDo0KuaG1zilAfgGswqBKL3i7MCdZsBC6I
+	1tZD4fD3hmJreXfTQI7Hof1Q6f7ik72Dg095NDGxIqqefbte2FE+U98mJ7ZEWx1w
+	SaIKTeiAz7x0yNGADIxMBH2kKxulExCCamA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758845380; x=
+	1758931780; bh=o+VU/S3EXIHtWNj19MpfZBUY/JHX3mo9zyCte/hn2e8=; b=n
+	Cf3TWm4tcOxsYO+IngE8y1YbxO8eXJHV8qNeJYS1M55799wFVC8MnkZc8gCnjDUH
+	Z6OlfrSm0jnrmMkhKbLJcvV4lVJrCsz7BOAHH7+jqbBZ9wc34tQ0NfWfYN6jrV8m
+	BkDomg4mX1ui9yE2BMitb/ZiPjZ6EI32uioC94uWhJ9/ynT3bwQovpWHzZFiYL91
+	CONzXF2tRtGTtwTNCg7j56oXyP7SyVSweu+DvHtDbBXbeLflpaXqe8cxu/A9MGDi
+	F/TKBy/2qlk7F4V1B+IVAOcS4M8GfGW/E0P/9eAj8SRmlLRBBn2V/IxYiRxMisOl
+	P3LcBKBR4H/zypqKNG7Rw==
+X-ME-Sender: <xms:w9nVaGBwEsyGDizkE_Uozuz5zenLdmCuF_42alUKjxesYo_v0dFwOw>
+    <xme:w9nVaFfO3FrIH-qjOhmcfRQJFT8n-k-NJ5SKYRq1EBd931D1EFSuJ2rfKRcNiSRWg
+    ymZyl6_vq74Ru7ZZw78j2xNY6-PL9ktuQOoe8qBV7nCEfJkle0>
+X-ME-Received: <xmr:w9nVaN00Gj0Tr8nSlA5SJlsGtkH9P6feeskU7xhZZzEbk-F3sUmbM7ErLsAbaBBHsGePqRobosV5fLt_0XnfwAtr_Llz2Lk_XCF5TMRN6HBT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeijeeklecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoheptghhuhgtkh
+    drlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhr
+    rggtlhgvrdgtohhmpdhrtghpthhtohepkhholhhgrgesnhgvthgrphhprdgtohhmpdhrtg
+    hpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhgpdhr
+    tghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlsh
+    hpjedtheesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:w9nVaEjGBAMrZ0dTb-ciDb_bXdtda5JHNawWP9rr-8d56zaKDz9_9Q>
+    <xmx:w9nVaOkYlJZHZn6dzRejwm5rbLU83WlGsESNTdMPLufMyJS3iRgrWg>
+    <xmx:w9nVaCbYB6hVkjH1k9DyF1QR-QWaJ8fNBmbQrnaWyM58cVdzRPn8bw>
+    <xmx:w9nVaBFlN0J5hyuO6qIoOj6vfJcn35IOU5vac2wKRoLuPzvIbtmflA>
+    <xmx:xNnVaC9KI83PBctZbzqPsCJAlipFSVztF-C9F3cX1o7ez4njtshCP4Kt>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 Sep 2025 20:09:37 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: NeilBrown <neilb@ownmail.net>
+To: "Alexandr Sapozhnkiov" <alsp705@gmail.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Alexandr Sapozhnikov" <alsp705@gmail.com>,
+ lvc-project@linuxtesting.org
+Subject:
+ Re: [PATCH] nfsd: fix arithmetic expression overflow in decode_saddr()
+In-reply-to: <20250925162848.11-1-alsp705@gmail.com>
+References: <20250925162848.11-1-alsp705@gmail.com>
+Date: Fri, 26 Sep 2025 10:09:30 +1000
+Message-id: <175884537000.1696783.18278273149263057351@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Thu, 2025-09-25 at 17:02 -0400, Jeff Layton wrote:
-> On Thu, 2025-09-25 at 16:45 -0400, Anna Schumaker wrote:
-> > Hi Jeff,
-> >=20
-> > (I trimmed off most of the extra people CC-ed, since this appears to mo=
-stly be an
-> > NFS issue)
-> >=20
-> > I hit this crash while stepping through my client side code and fixing =
-it up against
-> > your latest branch. I'm at a point where the client only requests the d=
-elegation, but
-> > without any requested notifications, if that helps:
-> >=20
-> >=20
-> > [  643.888646] BUG: kernel NULL pointer dereference, address: 000000000=
-0000168
-> > [  643.889045] #PF: supervisor read access in kernel mode
-> > [  643.889314] #PF: error_code(0x0000) - not-present page
-> > [  643.889591] PGD 0 P4D 0=20
-> > [  643.889733] Oops: Oops: 0000 [#1] SMP NOPTI
-> > [  643.889960] CPU: 3 UID: 0 PID: 1003 Comm: nfsd Not tainted 6.17.0-rc=
-7-00095-gf6fa32f97c33 #47188 PREEMPT(full)  b859994234adae648e07409684697d1=
-3c51d22ee
-> > [  643.890665] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS=
- unknown 02/02/2022
-> > [  643.891076] RIP: 0010:nfsd_handle_dir_event+0x49/0x2c0 [nfsd]
-> > [  643.891490] Code: 24 04 83 f9 01 74 11 83 f9 04 74 19 83 f9 02 75 11=
- 4d 8b 64 24 08 eb 0d 49 8b 04 24 4c 8b 60 08 eb 03 45 31 e4 0f 1f 44 00 00=
- <4c> 8b b6 68 01 00 00 4d 85 f6 0f 84 dc 01 00 00 49 8d 5e 28 49 8b
-> > [  643.892432] RSP: 0018:ffffd0d202333a80 EFLAGS: 00010246
-> > [  643.892711] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000=
-000000004
-> > [  643.893076] RDX: ffff8e3b55ad4480 RSI: 0000000000000000 RDI: 0000000=
-040000004
-> > [  643.893441] RBP: 0000000040000004 R08: 0000000000000000 R09: 0000000=
-000000000
-> > [  643.893816] R10: fffffffffffffffb R11: ffffffffc0a80500 R12: ffff8e3=
-b55ad4480
-> > [  643.894183] R13: 0000000000000000 R14: 0000000000000004 R15: 0000000=
-000000004
-> > [  643.894554] FS:  0000000000000000(0000) GS:ffff8e3f10206000(0000) kn=
-lGS:0000000000000000
-> > [  643.894961] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  643.895258] CR2: 0000000000000168 CR3: 0000000112571002 CR4: 0000000=
-000772ef0
-> > [  643.895644] PKRU: 55555554
-> > [  643.895792] Call Trace:
-> > [  643.895931]  <TASK>
-> > [  643.896050]  fsnotify+0x69a/0x9a0
-> > [  643.896233]  fsnotify_change+0xad/0xc0
-> > [  643.896431]  notify_change+0x34f/0x380
-> > [  643.896633]  nfsd_setattr+0x314/0x6f0 [nfsd 0b3fc8b3981bb65e36d518f9=
-edccb6d9f216a09a]
-> > [  643.897073]  ? nfsd_setuser_and_check_port+0xdd/0x120 [nfsd 0b3fc8b3=
-981bb65e36d518f9edccb6d9f216a09a]
-> > [  643.897576]  nfsd4_setattr+0x254/0x370 [nfsd 0b3fc8b3981bb65e36d518f=
-9edccb6d9f216a09a]
-> > [  643.898014]  ? nfsd4_encode_operation+0x207/0x2b0 [nfsd 0b3fc8b3981b=
-b65e36d518f9edccb6d9f216a09a]
-> > [  643.898502]  nfsd4_proc_compound+0x337/0x600 [nfsd 0b3fc8b3981bb65e3=
-6d518f9edccb6d9f216a09a]
-> > [  643.898964]  nfsd_dispatch+0xc1/0x210 [nfsd 0b3fc8b3981bb65e36d518f9=
-edccb6d9f216a09a]
-> > [  643.899390]  svc_process_common+0x567/0x6a0 [sunrpc c8ffd8e151f2f4e7=
-c45ca22edc099dc57603df52]
-> > [  643.899881]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd 0b3fc8b3981bb65e3=
-6d518f9edccb6d9f216a09a]
-> > [  643.900341]  svc_process+0x117/0x200 [sunrpc c8ffd8e151f2f4e7c45ca22=
-edc099dc57603df52]
-> > [  643.900790]  svc_recv+0xa7d/0xbc0 [sunrpc c8ffd8e151f2f4e7c45ca22edc=
-099dc57603df52]
-> > [  643.901208]  nfsd+0xb6/0xf0 [nfsd 0b3fc8b3981bb65e36d518f9edccb6d9f2=
-16a09a]
-> > [  643.901598]  ? __pfx_nfsd+0x10/0x10 [nfsd 0b3fc8b3981bb65e36d518f9ed=
-ccb6d9f216a09a]
-> > [  643.902024]  kthread+0x215/0x250
-> > [  643.902201]  ? __pfx_kthread+0x10/0x10
-> > [  643.902394]  ret_from_fork+0x106/0x1d0
-> > [  643.902606]  ? __pfx_kthread+0x10/0x10
-> > [  643.902800]  ret_from_fork_asm+0x1a/0x30
-> > [  643.903013]  </TASK>
-> > [  643.903133] Modules linked in: rpcsec_gss_krb5 rpcrdma rdma_cm ib_cm=
- iw_cm ib_core cfg80211 rfkill 8021q mrp garp stp llc ext4 mbcache crc16 jb=
-d2 vfat fat intel_rapl_msr intel_rapl_common intel_uncore_frequency_common =
-intel_pmc_core intel_pmc_ssram_telemetry pmt_telemetry snd_hda_codec_generi=
-c pmt_discovery pmt_class intel_vsec snd_hda_intel snd_intel_dspcfg kvm_int=
-el snd_hda_codec snd_hwdep kvm snd_hda_core irqbypass snd_pcm polyval_clmul=
-ni iTCO_wdt ghash_clmulni_intel intel_pmc_bxt iTCO_vendor_support aesni_int=
-el snd_timer psmouse rapl i2c_i801 pcspkr snd lpc_ich i2c_smbus soundcore j=
-oydev mousedev mac_hid btrfs raid6_pq xor nfsd nfs_acl lockd grace nfs_loca=
-lio auth_rpcgss usbip_host usbip_core dm_mod loop sunrpc nfnetlink vsock_lo=
-opback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock vmw=
-_vmci qemu_fw_cfg xfs serio_raw virtio_gpu virtio_dma_buf virtio_rng virtio=
-_scsi virtio_balloon virtio_net intel_agp net_failover failover intel_gtt
-> > [  643.909087] CR2: 0000000000000168
-> > [  643.909503] ---[ end trace 0000000000000000 ]---
-> >=20
-> >=20
-> > Any guesses for what could be causing this?
-> > Anna
-> >=20
+On Fri, 26 Sep 2025, Alexandr Sapozhnkiov wrote:
+> From: Alexandr Sapozhnikov <alsp705@gmail.com>
 >=20
-> Yes. It happened in a SETATTR and I forgot to handle that case in
-> nfsd_handle_dir_event(). Will fix.
+> The value of an arithmetic expression tmp2 * NSEC_PER_USEC=20
+> is a subject to overflow because its operands are not cast=20
+> to a larger data type before performing arithmetic.
+> If tmp2 =3D=3D 17,000,000 then the expression tmp2 * NSEC_PER_USEC
+> will overflow because expression is of type u32.
+> If tmp2 > 1,000,000 then tv_nsec will give be greater=20
+> than 1 second.
+
+You didn't answer my question: why should we be bothered by an over
+flow? What harm does it cause?
+
+If we are going to bother detecting an incorrect value, we should
+respond to it by returning false.  That would tell the client that the
+numbers it provided weren't a valid time.
+
+
+
 >=20
-> I suspect that we probably just want to just recall the delegation in
-> this case. Another option would be to send a DIR_ATTRS update to the
-> client, but it's possible that the dir_delegation isn't set up to send
-> the attrs that changed, and trying to sort that out sounds like a mess.
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Signed-off-by: Alexandr Sapozhnikov <alsp705@gmail.com>
+> ---
+>  fs/nfsd/nfsxdr.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+> index 5777f40c7353..df62ed5099de 100644
+> --- a/fs/nfsd/nfsxdr.c
+> +++ b/fs/nfsd/nfsxdr.c
+> @@ -172,6 +172,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
+stream *xdr,
+>  	tmp1 =3D be32_to_cpup(p++);
+>  	tmp2 =3D be32_to_cpup(p++);
+>  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
+> +		if (tmp2 > 999999)
+> +			tmp2 =3D 999999;
+>  		iap->ia_valid |=3D ATTR_ATIME | ATTR_ATIME_SET;
+>  		iap->ia_atime.tv_sec =3D tmp1;
+>  		iap->ia_atime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
+> @@ -180,6 +182,8 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_=
+stream *xdr,
+>  	tmp1 =3D be32_to_cpup(p++);
+>  	tmp2 =3D be32_to_cpup(p++);
+>  	if (tmp1 !=3D (u32)-1 && tmp2 !=3D (u32)-1) {
+> +		if (tmp2 > 1000000)
+> +			tmp2 =3D 999999;
 
-Actually, the delegation should have been recalled. We just want to
-ignore the update in this case. The latest patches in my dir-deleg
-branch should have a fix.
+Why are the two code fragments different?  This isn't an AI writing the
+patch is it?
 
-Thanks for helping test!
---=20
-Jeff Layton <jlayton@kernel.org>
+NeilBrown
+
+>  		iap->ia_valid |=3D ATTR_MTIME | ATTR_MTIME_SET;
+>  		iap->ia_mtime.tv_sec =3D tmp1;
+>  		iap->ia_mtime.tv_nsec =3D tmp2 * NSEC_PER_USEC;
+> --=20
+> 2.43.0
+>=20
+>=20
+>=20
+
 
