@@ -1,299 +1,121 @@
-Return-Path: <linux-nfs+bounces-14749-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14750-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52596BA49C6
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 18:27:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD9A7BA587C
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Sep 2025 05:23:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 919B81BC4E2B
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Sep 2025 16:27:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61EB1623E5B
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Sep 2025 03:23:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 050D725FA13;
-	Fri, 26 Sep 2025 16:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8PH/vX8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42F31ADC97;
+	Sat, 27 Sep 2025 03:23:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89644C9F;
-	Fri, 26 Sep 2025 16:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2D519047A;
+	Sat, 27 Sep 2025 03:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758904033; cv=none; b=pnmpYZIMPxN0obz7KXtDKoNo5K0RHZMiRE87tbSgTtQkqSQGE0ejRzSOUCzK28bZmKBm+/m92wI+0HYTVy2cDmMKulKrb+y9zUOu3OfEqzcg29/+pt6DFThhU+iiWXaf1uj/N+XRWcTwc0+x3IHjDya8K5n/5cD5pRYksEm6D04=
+	t=1758943381; cv=none; b=bbsJZIneZc0nX9xgxtF56HG8K0zjSCNcJUNCzTkntuo+xXOvJDqWKuSzJ1wmAy4KU1qGPkKPqqpFv4IHnLnqTMZiqrAdGk7no2ch/s2s7GanwE1SSrdncMqLnXHS+mMuKipQ9smwU1/xfgqq0rljzcKMmRAE9klASIWNzZu9m+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758904033; c=relaxed/simple;
-	bh=ky6CZf9ZflX9MtZEDtfZTEh1xsbZA4KMveJMCDkg6R8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t20JBpcqz0CiYlhhnOafEF1QYCgo+n5GUecRzwzP3i2tg3FwnsrNYpGgV5MJuaoPoRLuBqUfFM8STE1qLILnpT547EvDV1/SiSjDuYlcesKblwLRw3Ue+vGcKW1I1LJ9SnGeq1uI6bcXQZC1//m/5kJMnOXCGMlAugfMpgkViYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8PH/vX8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBA1C4CEF4;
-	Fri, 26 Sep 2025 16:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758904032;
-	bh=ky6CZf9ZflX9MtZEDtfZTEh1xsbZA4KMveJMCDkg6R8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=U8PH/vX8Jyonu5oIw3G72uLsjnLABhJOhpBTU0V2Aq+fW4W9h5xi5k5724LWSVCIx
-	 HCPyWiOUvbwswQktPj63IH5yqX1CL8IqgJroPhnXz+EokfUELvEYrLWPd+AuXESRWc
-	 kL7Y0YnnyytzpFXMw13GFRTitXxcN8BzbrCG/yGKNVmGxkvipuLv93gXz1z/KkkJlA
-	 JxbrK5Ah2oH8zInfxYXr7o0eANCf48kVHYkE+Qyn6yfClN960sj8rhZVnpvwv22tQE
-	 1Vp0iJ/5Wzai1aCATlF5lsz5GftLLHZ9jB5L6nnpDyPO6jC4W6tJrlFOnvG5LV1SGI
-	 GV2QAWI2mQuRg==
-Message-ID: <e08f4e061a9bff08066c7a255d8f9277add272f6.camel@kernel.org>
-Subject: Re: [PATCH v3 08/38] vfs: make vfs_mknod break delegations on
- parent directory
-From: Jeff Layton <jlayton@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Alexander Aring
-	 <alex.aring@gmail.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker	 <anna@kernel.org>, Steve French <sfrench@samba.org>, Ronnie
- Sahlberg	 <ronniesahlberg@gmail.com>, Shyam Prasad N
- <sprasad@microsoft.com>, Tom Talpey	 <tom@talpey.com>, Bharath SM
- <bharathsm@microsoft.com>, NeilBrown	 <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Jonathan Corbet
- <corbet@lwn.net>, Amir Goldstein	 <amir73il@gmail.com>, Miklos Szeredi
- <miklos@szeredi.hu>, Paulo Alcantara	 <pc@manguebit.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, David Howells
- <dhowells@redhat.com>,  Tyler Hicks <code@tyhicks.com>, Namjae Jeon
- <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>,  Sergey
- Senozhatsky <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Rick Macklem	 <rick.macklem@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	linux-doc@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
- 	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Date: Fri, 26 Sep 2025 12:27:07 -0400
-In-Reply-To: <ke7z7ptll7svm4ygbtbmv7ezv7rox75ct6mv5sn73lrnqp6g2r@ju2aolr2n5n7>
-References: <20250924-dir-deleg-v3-0-9f3af8bc5c40@kernel.org>
-	 <20250924-dir-deleg-v3-8-9f3af8bc5c40@kernel.org>
-	 <ke7z7ptll7svm4ygbtbmv7ezv7rox75ct6mv5sn73lrnqp6g2r@ju2aolr2n5n7>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1758943381; c=relaxed/simple;
+	bh=kg1d0MTY71zfQLb6meJ6ncRhMBIMtCldbRRgQF/Fyog=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hKCfXvO/QbMa2/4kVmXDV6NFMRBkKIxy07MeLSFwpJYgtT+cynHE0Z9sWoyt6C4ce7Rf+gTt3x1ge3Ig5Na4Tb+cr6rNA8cxA6wor+XEbEnfItlr/TochBhXdikUI8TcZzhm4zuuu3ZtOuEs8y7D/yIjvZxbR23uaAwaUmtufmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4cYXn04fPVztTZc;
+	Sat, 27 Sep 2025 11:21:56 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id EE906140121;
+	Sat, 27 Sep 2025 11:22:48 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 27 Sep 2025 11:22:47 +0800
+Subject: Re: [PATCH v3 01/14] ACPI: APEI: Remove redundant
+ rcu_read_lock/unlock() in spin_lock
+To: pengdonglin <dolinux.peng@gmail.com>, <tj@kernel.org>,
+	<tony.luck@intel.com>, <jani.nikula@linux.intel.com>, <ap420073@gmail.com>,
+	<jv@jvosburgh.net>, <freude@linux.ibm.com>, <bcrl@kvack.org>,
+	<trondmy@kernel.org>, <longman@redhat.com>, <kees@kernel.org>
+CC: <bigeasy@linutronix.de>, <hdanton@sina.com>, <paulmck@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-rt-devel@lists.linux.dev>,
+	<linux-nfs@vger.kernel.org>, <linux-aio@kvack.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <intel-gfx@lists.freedesktop.org>,
+	<linux-wireless@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <cgroups@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, pengdonglin <pengdonglin@xiaomi.com>
+References: <20250916044735.2316171-1-dolinux.peng@gmail.com>
+ <20250916044735.2316171-2-dolinux.peng@gmail.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <03ad08d9-4510-19fb-bbad-652159308119@huawei.com>
+Date: Sat, 27 Sep 2025 11:22:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20250916044735.2316171-2-dolinux.peng@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Fri, 2025-09-26 at 17:32 +0200, Jan Kara wrote:
-> On Wed 24-09-25 14:05:54, Jeff Layton wrote:
-> > In order to add directory delegation support, we need to break
-> > delegations on the parent whenever there is going to be a change in the
-> > directory.
-> >=20
-> > Rename vfs_mknod as __vfs_mknod, make it static, and add a new
-> > delegated_inode parameter.  Make do_mknodat call __vfs_mknod and wait
-> > synchronously for delegation breaks to complete. Add a new exported
-> > vfs_mknod wrapper that calls __vfs_mknod with a NULL delegated_inode
-> > pointer.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> Looks good. Feel free to add:
->=20
-> Reviewed-by: Jan Kara <jack@suse.cz>
->=20
+On 2025/9/16 12:47, pengdonglin wrote:
+> From: pengdonglin <pengdonglin@xiaomi.com>
+> 
+> Since commit a8bb74acd8efe ("rcu: Consolidate RCU-sched update-side function definitions")
+> there is no difference between rcu_read_lock(), rcu_read_lock_bh() and
+> rcu_read_lock_sched() in terms of RCU read section and the relevant grace
+> period. That means that spin_lock(), which implies rcu_read_lock_sched(),
+> also implies rcu_read_lock().
+> 
+> There is no need no explicitly start a RCU read section if one has already
+> been started implicitly by spin_lock().
+> 
+> Simplify the code and remove the inner rcu_read_lock() invocation.
+> 
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+> ---
+>   drivers/acpi/apei/ghes.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index a0d54993edb3..97ee19f2cae0 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -1207,12 +1207,10 @@ static int ghes_notify_hed(struct notifier_block *this, unsigned long event,
+>   	int ret = NOTIFY_DONE;
+>   
+>   	spin_lock_irqsave(&ghes_notify_lock_irq, flags);
+> -	rcu_read_lock();
+>   	list_for_each_entry_rcu(ghes, &ghes_hed, list) {
+>   		if (!ghes_proc(ghes))
+>   			ret = NOTIFY_OK;
+>   	}
+> -	rcu_read_unlock();
+>   	spin_unlock_irqrestore(&ghes_notify_lock_irq, flags);
+>   
+>   	return ret;
 
-Thanks.
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 
-FYI, I've revised this and the rmdir patches to get rid of the wrapper,
-and just have the callers pass in NULL directly. I think that's more
-along the lines of what Christian preferred.
-
-
->=20
-> > ---
-> >  fs/namei.c | 57 +++++++++++++++++++++++++++++++++++-------------------=
----
-> >  1 file changed, 35 insertions(+), 22 deletions(-)
-> >=20
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index d4b8330a3eb97e205dc2e71766fed1e45503323b..7bcd898c84138061030f1f8=
-b91273261cdf2a9b4 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -4215,24 +4215,9 @@ inline struct dentry *user_path_create(int dfd, =
-const char __user *pathname,
-> >  }
-> >  EXPORT_SYMBOL(user_path_create);
-> > =20
-> > -/**
-> > - * vfs_mknod - create device node or file
-> > - * @idmap:	idmap of the mount the inode was found from
-> > - * @dir:	inode of the parent directory
-> > - * @dentry:	dentry of the child device node
-> > - * @mode:	mode of the child device node
-> > - * @dev:	device number of device to create
-> > - *
-> > - * Create a device node or file.
-> > - *
-> > - * If the inode has been found through an idmapped mount the idmap of
-> > - * the vfsmount must be passed through @idmap. This function will then=
- take
-> > - * care to map the inode according to @idmap before checking permissio=
-ns.
-> > - * On non-idmapped mounts or if permission checking is to be performed=
- on the
-> > - * raw inode simply pass @nop_mnt_idmap.
-> > - */
-> > -int vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
-> > -	      struct dentry *dentry, umode_t mode, dev_t dev)
-> > +static int __vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
-> > +		       struct dentry *dentry, umode_t mode, dev_t dev,
-> > +		       struct inode **delegated_inode)
-> >  {
-> >  	bool is_whiteout =3D S_ISCHR(mode) && dev =3D=3D WHITEOUT_DEV;
-> >  	int error =3D may_create(idmap, dir, dentry);
-> > @@ -4256,11 +4241,37 @@ int vfs_mknod(struct mnt_idmap *idmap, struct i=
-node *dir,
-> >  	if (error)
-> >  		return error;
-> > =20
-> > +	error =3D try_break_deleg(dir, delegated_inode);
-> > +	if (error)
-> > +		return error;
-> > +
-> >  	error =3D dir->i_op->mknod(idmap, dir, dentry, mode, dev);
-> >  	if (!error)
-> >  		fsnotify_create(dir, dentry);
-> >  	return error;
-> >  }
-> > +
-> > +/**
-> > + * vfs_mknod - create device node or file
-> > + * @idmap:	idmap of the mount the inode was found from
-> > + * @dir:	inode of the parent directory
-> > + * @dentry:	dentry of the child device node
-> > + * @mode:	mode of the child device node
-> > + * @dev:	device number of device to create
-> > + *
-> > + * Create a device node or file.
-> > + *
-> > + * If the inode has been found through an idmapped mount the idmap of
-> > + * the vfsmount must be passed through @idmap. This function will then=
- take
-> > + * care to map the inode according to @idmap before checking permissio=
-ns.
-> > + * On non-idmapped mounts or if permission checking is to be performed=
- on the
-> > + * raw inode simply pass @nop_mnt_idmap.
-> > + */
-> > +int vfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
-> > +	      struct dentry *dentry, umode_t mode, dev_t dev)
-> > +{
-> > +	return __vfs_mknod(idmap, dir, dentry, mode, dev, NULL);
-> > +}
-> >  EXPORT_SYMBOL(vfs_mknod);
-> > =20
-> >  static int may_mknod(umode_t mode)
-> > @@ -4314,12 +4325,14 @@ static int do_mknodat(int dfd, struct filename =
-*name, umode_t mode,
-> >  				security_path_post_mknod(idmap, dentry);
-> >  			break;
-> >  		case S_IFCHR: case S_IFBLK:
-> > -			error =3D vfs_mknod(idmap, path.dentry->d_inode,
-> > -					  dentry, mode, new_decode_dev(dev));
-> > +			error =3D __vfs_mknod(idmap, path.dentry->d_inode,
-> > +					    dentry, mode, new_decode_dev(dev),
-> > +					    &delegated_inode);
-> >  			break;
-> >  		case S_IFIFO: case S_IFSOCK:
-> > -			error =3D vfs_mknod(idmap, path.dentry->d_inode,
-> > -					  dentry, mode, 0);
-> > +			error =3D __vfs_mknod(idmap, path.dentry->d_inode,
-> > +					    dentry, mode, 0,
-> > +					    &delegated_inode);
-> >  			break;
-> >  	}
-> >  out2:
-> >=20
-> > --=20
-> > 2.51.0
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Thanks
+Hanjun
 
