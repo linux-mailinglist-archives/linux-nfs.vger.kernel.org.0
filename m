@@ -1,62 +1,58 @@
-Return-Path: <linux-nfs+bounces-14779-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14780-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6F73BAA07E
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 18:43:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FB72BAA0A5
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 18:51:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 581B93B01F9
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 16:43:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4666174D60
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 16:51:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EBA3002D4;
-	Mon, 29 Sep 2025 16:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9AFB3064A4;
+	Mon, 29 Sep 2025 16:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYnMYBLF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emV7TW0A"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DB2523A
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Sep 2025 16:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C422BCA52
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Sep 2025 16:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759164188; cv=none; b=uvNptprloLGOgWtIgSAM1SF2IAqFwAx2hUQ4nzyRN6N6Mzn0UMMnItSKE+23DM8u7neo5m68NXBBoNqiKdtxGjRwkwNLs7Jed1CQjenhPrFyFenOADV+bL2j36cUApn2dS+MnI0MdunhAnymYTi8iqpJvoNwcYwVgCms44GFXvI=
+	t=1759164677; cv=none; b=n+6hpTXYM6TXq+zLQ4WSJtH5bilZpP23KBnmagDq2wQPOlvLX05iuct0ZQhRfdeKnbP2Lru9uvgbU/BAIFvg1jUZ/yOS275QfruVDoQT7EWh+kULNLWPwkCJRR76PUe4rqOuNRvvKurWU291traE0UcCvIutx/+VhUwEbWftbQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759164188; c=relaxed/simple;
-	bh=QXytGbNHf6ME7YxBlnvF7Ot3aJxNEce8k8ruCm7QA9E=;
+	s=arc-20240116; t=1759164677; c=relaxed/simple;
+	bh=gZoGmvSWt3W0gCFK8zbVsvqQ31TGyR66XhQWIKk53Co=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e5vVINiPxyYEjwUbexL6ldfp120UYjLk1BCGsuRqVdWQIxRl0pd3YoXrcHy2tGMLkZiFUNtXuc4/lECQuPol0l1waxWS+A1+uP4VyA35THkMIvHNbG4MVzBnsTuB12tJO9uzQlnyhZxtMeMMJwRsJYMXpTqqbst33K0Ps9o1eB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYnMYBLF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58B7C4CEF4;
-	Mon, 29 Sep 2025 16:43:06 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ZxQUh39GM7fGraCivCUkySFV2U5IRXKz96IGf0BJloBBNB+7fOYIRnNnPwcuF0R2NLr9g3EXmU8A8ljFmeqFv2Y8HpXN2mmV2XCIb4EcTr1N2igXq3432/j4vX9zMCyj0UBKZOSBZV/+ofQvL2hYjZmSS0h9G8cOFcqyENglqIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emV7TW0A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14AB7C4CEF7;
+	Mon, 29 Sep 2025 16:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759164187;
-	bh=QXytGbNHf6ME7YxBlnvF7Ot3aJxNEce8k8ruCm7QA9E=;
+	s=k20201202; t=1759164677;
+	bh=gZoGmvSWt3W0gCFK8zbVsvqQ31TGyR66XhQWIKk53Co=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CYnMYBLFHmRSWh5M75xE/6fKLSS9GBp3GE+4vJyMYp1+R6jVJkZiF5kBsNVQBerz4
-	 +AJr8/gsE7zlHZmOn4PQx305B2TCVyqdhaF2kmWCns3Eu6keG41CuDl6I7AGQFeqyD
-	 aZlBeK+Q38EqV3weqZBHHdjKKs/BjzbdN0CNPaaHneaNAgWAo5Z6iB3R5qRHaW7/Gn
-	 9phOzHjSqi4wGEav5lqkClLOsq2JqAuTwhPp/zr1RqimN4yuCe74LnMPxoUMqdfBFZ
-	 qNnm+KKEi/CavqV7981Jhj/YHcbLzX4DTBN2MjEKNWwyyVqsOxDsFrzX6ele5CbAz6
-	 WEe8go8DW80qg==
-Message-ID: <ef9b60fdec69b27e19dbae6d67350b80f992ab84.camel@kernel.org>
-Subject: Re: [PATCH v1] NFSD: Define actions for the new time_deleg FATTR4
- attributes
+	b=emV7TW0ATNvC6nzwGTb3J2XYlthTf8bB3SOY1117VGd9ZyoHFQEAvhb3XOgOs8hgj
+	 kZ9k3qxuQEWtSzs8LQDT/QVrsm04WrexIOf+o0W6Ocq/S7BLREMwOWqu0763kB4YcY
+	 nqjAktvtCimS1paav0hAquiWAkcb0LjrGPsWDipDf3is8V1LPfccdpTCC7ckolmdBs
+	 IkSg4tqh1pdV8lsMhvzdZ+Ylao6+/26LKXkpOIOWLNuNdbZNEK67asxgnc+qH7LONi
+	 9G70xQkWEz6OkQgkKwf5VPYdr+ykGZUDNds+LGHE//EzxrEJfXfTdIfVgJpHfSv75+
+	 xAvMYgwXY2Akg==
+Message-ID: <7e1d03ee35e6948908e70001ade6e45491193bd1.camel@kernel.org>
+Subject: Re: [PATCH v5 6/6] NFSD: Ignore vfs_getattr() failure in
+ nfsd_file_get_dio_attrs()
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Chuck Lever <cel@kernel.org>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <dai.ngo@oracle.com>,  Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, rtm@csail.mit.edu
-Date: Mon, 29 Sep 2025 12:43:05 -0400
-In-Reply-To: <55b3a52e-3ff3-4547-bbbb-61731132baf8@oracle.com>
-References: <20250910152936.12198-1-cel@kernel.org>
-	 <ec936c41-0047-4998-9e94-1998780ad1ea@oracle.com>
-	 <9257ac997712ecd141608d4814697c8c4fbec7a7.camel@kernel.org>
-	 <73257f96-8961-4667-8ae9-a1d0594bdecf@oracle.com>
-	 <728efd15288cfc84b19f4798a725b909757b3fe9.camel@kernel.org>
-	 <55b3a52e-3ff3-4547-bbbb-61731132baf8@oracle.com>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 29 Sep 2025 12:51:16 -0400
+In-Reply-To: <20250929155646.4818-7-cel@kernel.org>
+References: <20250929155646.4818-1-cel@kernel.org>
+	 <20250929155646.4818-7-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,61 +137,77 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-09-29 at 12:37 -0400, Chuck Lever wrote:
-> On 9/29/25 6:39 AM, Jeff Layton wrote:
-> > > Do clients query SUPPORTED_ATTRS and look for these two bits to
-> > > know whether to expect attribute delegation?
-> > >=20
-> > The Linux client does:
-> >=20
-> > static bool nfs4_server_delegtime_capable(struct nfs4_server_caps_res *=
-res)
-> > {
-> >         u32 share_access_want =3D res->open_caps.oa_share_access_want[0=
-];
-> >         u32 attr_bitmask =3D res->attr_bitmask[2];
-> >=20
-> >         return (share_access_want & NFS4_SHARE_WANT_DELEG_TIMESTAMPS) &=
-&
-> >                ((attr_bitmask & FATTR4_WORD2_NFS42_TIME_DELEG_MASK) =3D=
-=3D
-> >                                         FATTR4_WORD2_NFS42_TIME_DELEG_M=
-ASK);
-> > }
-> >=20
-> >=20
-> > ...so I guess we can't report them as unsupported. They do still need
-> > to be supported for SETATTR. Still, we should just mask them off if
-> > someone tries to query for them.
+On Mon, 2025-09-29 at 11:56 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> There appears to be a bit of a gray area here. RFC 8881 Section 18.7.3
-> states:
+> A vfs_getattr() failure is rare but not totally impossible.
 >=20
-> > The server MUST return a value for each attribute that the client
-> > requests if the attribute is supported by the server for the target
-> > file system. If the server does not support a particular attribute on
-> > the target file system, then it MUST NOT return the attribute value
-> > and MUST NOT set the attribute bit in the result bitmap. The server
-> > MUST return an error if it supports an attribute on the target but
-> > cannot obtain its value. In that case, no attribute values will be
-> > returned.
+> There's no recovery logic in that case; nfsd_do_file_acquire()'s
+> caller will fail but the wonky nfsd_file is left in the file cache.
 >=20
-> RFC 9754 Section 5 states:
->=20
-> > These new attributes are invalid to be used with GETATTR, VERIFY, and
-> > NVERIFY, and they can only be used with CB_GETATTR and SETATTR by a
-> > client holding an appropriate delegation.
->=20
-> This text does not prescribe a specific server response if it should be
-> presented with a GETATTR operation (or a READDIR, one assumes) that
-> queries delegated time stamps.
->=20
-> Perhaps, rather than clearing the result bitmask, NFS4ERR_INVAL is the
-> mandated server response.
+> It doesn't seem necessary for nfsd_file_do_acquire() to fail
+> outright if it successfully opened the file but some problem
+> prevented the collection of the dio alignment parameters.
 >=20
 
-It would be very strange for a legit client to request this, so a hard
-error would be fine too.
---=20
-Jeff Layton <jlayton@kernel.org>
+Agreed
+
+> Fixes: bc70aaeba7df ("NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_R=
+EAD_ALIGN support")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/filecache.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 78cca0d751ac..b34cc8d2cb5e 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1051,7 +1051,7 @@ nfsd_file_is_cached(struct inode *inode)
+>  	return ret;
+>  }
+> =20
+> -static __be32
+> +static void
+>  nfsd_file_get_dio_attrs(const struct svc_fh *fhp, struct nfsd_file *nf)
+>  {
+>  	struct inode *inode =3D file_inode(nf->nf_file);
+> @@ -1060,11 +1060,12 @@ nfsd_file_get_dio_attrs(const struct svc_fh *fhp,=
+ struct nfsd_file *nf)
+> =20
+>  	/* Currently only need to get DIO alignment info for regular files */
+>  	if (!S_ISREG(inode->i_mode))
+> -		return nfs_ok;
+> +		return;
+> =20
+>  	status =3D fh_getattr(fhp, &stat);
+>  	if (status !=3D nfs_ok)
+> -		return status;
+> +		/* Use default dio alignment parameters (all zero) */
+> +		return;
+> =20
+>  	trace_nfsd_file_get_dio_attrs(inode, &stat);
+> =20
+> @@ -1076,8 +1077,6 @@ nfsd_file_get_dio_attrs(const struct svc_fh *fhp, s=
+truct nfsd_file *nf)
+>  		nf->nf_dio_read_offset_align =3D stat.dio_read_offset_align;
+>  	else
+>  		nf->nf_dio_read_offset_align =3D nf->nf_dio_offset_align;
+> -
+> -	return nfs_ok;
+>  }
+> =20
+>  static __be32
+> @@ -1199,7 +1198,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ net *net,
+>  			status =3D nfserrno(ret);
+>  			trace_nfsd_file_open(nf, status);
+>  			if (status =3D=3D nfs_ok)
+> -				status =3D nfsd_file_get_dio_attrs(fhp, nf);
+> +				nfsd_file_get_dio_attrs(fhp, nf);
+>  		}
+>  	} else
+>  		status =3D nfserr_jukebox;
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
