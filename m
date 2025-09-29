@@ -1,104 +1,105 @@
-Return-Path: <linux-nfs+bounces-14783-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14784-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 629BCBAA305
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 19:36:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A770DBAA320
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 19:39:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2308F3C1992
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 17:36:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23B951894039
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 17:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC70621257F;
-	Mon, 29 Sep 2025 17:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D39D2144CF;
+	Mon, 29 Sep 2025 17:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="EESAdVIs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvPIc/bS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E505D1F1538;
-	Mon, 29 Sep 2025 17:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F9205ABA
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Sep 2025 17:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759167366; cv=none; b=ti0w3GH/MIkyqCA+3nQ3t+TEtEaWIk+rQY3wM+MXeLvTFALacJ+haGk+y8dOLlua9iAax50NLZdyRD8ruwspw1jLG6fSITh6Jh9Tz8GWwwodFtKFaWugxI1hAwNomTE+EzEGpm1s+RkLkEBhh/hdK1qP0AORBxzVzAZH1y+Napo=
+	t=1759167563; cv=none; b=Bl3osMRTqi+rZAeTtpTLOWVDjxXLQG4q+pT0RMJ47RiCQRaopvVP6Yns+XOeprjW7rJR+9lkLbokPfhHnrI2E7kCofsXOI9vCG5KmeeQLeWEshvnYjd3FhLJD/uUH3DCe2IhBpr2zE2wdIdymyoYi0XjRItFV8fnBmf4SPM/lAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759167366; c=relaxed/simple;
-	bh=Pm1a2seXkwxTGCna9n1tinZLtyvkNstoAoQWdxwmx1w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L4OHBGIwRA9rvSdbiSJ6W4A+5POhwdqvVcbu3lfTv8KM19tLCUiXYrS+8VzW02t0FdnOxZpfRVixFzzuRTf+y0evjdD8RXoYQ5qpdkVmULUi3KrhPzk1WfeYVted3D9NeCVcmBdTHoE4sId12lzNBHfbJ05LsRYxspnpNAlR6C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=EESAdVIs; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
-Received: from localhost.localdomain (unknown [95.53.218.11])
-	by mail.ispras.ru (Postfix) with ESMTPSA id C563940643C7;
-	Mon, 29 Sep 2025 17:35:56 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru C563940643C7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1759167357;
-	bh=GVZcB8dx3E5VhDaGE+aEXR/ox8lMIhL41EQg4m2QIjs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EESAdVIsmpp4XbxjT1DeL2gnCMDzJhVN6wcBj+p1gnq3ynwB/3rncd3/ciHo1SYCk
-	 5ISfNbAhtSioqWWyzjfZpD+apRUcNIcGeOmgboBE80Q5o1a++kTS4zdHgkib6rr1O/
-	 1TujdhKrL45Icj//k4U7J4LnnDuivnU23I77MKDg=
-From: Matvey Kovalev <matvey.kovalev@ispras.ru>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Matvey Kovalev <matvey.kovalev@ispras.ru>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
+	s=arc-20240116; t=1759167563; c=relaxed/simple;
+	bh=/IZvAAZ+Vojcj/uxScKX3xbsyX09gmQvRpCR1HtcppM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmxKR7TQs5hB7Olgkx+h7QGf+YOnvHbDVquIwTRGlnuuvo9hwTJ4QfSkbc3or0eL95n/dXxGUKfV8VWtUTYRKQCSh09WZwJr+5/3cVOkrRRJ/TV6YJaz+gQmCT5/fa49hL5b4OmDyKZEbR/ql3FIcMh2glgRz3B8Qyqgf5chkao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvPIc/bS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7F3C4CEF4;
+	Mon, 29 Sep 2025 17:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759167560;
+	bh=/IZvAAZ+Vojcj/uxScKX3xbsyX09gmQvRpCR1HtcppM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mvPIc/bSvXQ5dJEHgXu8lNZCWmkkWMrKWmGXhnY5f5WYGvk5SWsMZJ3CW4ufRPWT6
+	 kn9wO2FZZv9Es6VruZZfoqMHg766dOR/7ooraXbLHi1AYh3J8JWGklIWPUrZgjrJon
+	 X7fViafp5JgNl8VvARwOmqTcZwD/5yMORYkWi23DYmEKDObtrgN3n6Ko8oMYZ9t5N0
+	 Oy9DUCZ37eAx9DIghsuGbCF78NqbHR4whjbnDAJFURlBqz0Yr95jcmU+h0/lhxpHmJ
+	 vRAit2/9+K8vCKtM3sZ0GM8cax587NUddx6egqc8t/n/JJrpW64J+kPgnh0CGFaHs5
+	 MpACX5pakk+rQ==
+Date: Mon, 29 Sep 2025 13:39:19 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] nfsd: delete unreachable confusing code in nfs4_open_delegation()
-Date: Mon, 29 Sep 2025 20:35:20 +0300
-Message-ID: <20250929173522.935-1-matvey.kovalev@ispras.ru>
-X-Mailer: git-send-email 2.43.0.windows.1
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v5 5/6] NFSD: Prevent a NULL pointer dereference in
+ fh_getattr()
+Message-ID: <aNrERzXvdy2Sx19l@kernel.org>
+References: <20250929155646.4818-1-cel@kernel.org>
+ <20250929155646.4818-6-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250929155646.4818-6-cel@kernel.org>
 
-op_delegate_type is assigned OPEN_DELEGATE_NONE just before the if-block
-where condition specifies it not be equal to OPEN_DELEGATE_NONE. Compiler
-treats the block as unreachable and optimizes it out from the resulting
-executable.
+On Mon, Sep 29, 2025 at 11:56:45AM -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> In general, fh_getattr() can be called after the target dentry has
+> gone negative. For a negative dentry, d_inode(p.dentry) will return
+> NULL. S_ISREG() will dereference that pointer.
+> 
+> Avoid this potential regression by using the d_is_reg() helper
+> instead.
+> 
+> Suggested-by: NeilBrown <neil@brown.name>
+> Fixes: bc70aaeba7df ("NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfsfh.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index ed85dd43da18..16182936828f 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -696,10 +696,9 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct kstat *stat)
+>  		.mnt		= fhp->fh_export->ex_path.mnt,
+>  		.dentry		= fhp->fh_dentry,
+>  	};
+> -	struct inode *inode = d_inode(p.dentry);
+>  	u32 request_mask = STATX_BASIC_STATS;
+>  
+> -	if (S_ISREG(inode->i_mode))
+> +	if (d_is_reg(p.dentry))
+>  		request_mask |= (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
+>  
+>  	if (fhp->fh_maxsize == NFS4_FHSIZE)
+> -- 
+> 2.51.0
+> 
+> 
 
-In that aspect commit d08d32e6e5c0 ("nfsd4: return delegation immediately
-if lease fails") notably makes no difference.
-
-Seems it's better to just drop this code instead of fiddling with memory
-barriers or atomics.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Matvey Kovalev <matvey.kovalev@ispras.ru>
----
- fs/nfsd/nfs4state.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 88c347957da5b..debc6c8fef956 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6284,11 +6284,6 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 	return;
- out_no_deleg:
- 	open->op_delegate_type = OPEN_DELEGATE_NONE;
--	if (open->op_claim_type == NFS4_OPEN_CLAIM_PREVIOUS &&
--	    open->op_delegate_type != OPEN_DELEGATE_NONE) {
--		dprintk("NFSD: WARNING: refusing delegation reclaim\n");
--		open->op_recall = true;
--	}
- 
- 	/* 4.1 client asking for a delegation? */
- 	if (open->op_deleg_want)
--- 
-2.43.0.windows.1
-
+Reviewed-by: Mike Snitzer <snitzer@kernel.org>
 
