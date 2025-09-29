@@ -1,177 +1,354 @@
-Return-Path: <linux-nfs+bounces-14790-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14791-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB35BAA6FB
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 21:13:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C8A7BAA7CA
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 21:41:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B15271C55B0
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 19:13:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3F501923E2C
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Sep 2025 19:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97BB2225403;
-	Mon, 29 Sep 2025 19:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB6723BD13;
+	Mon, 29 Sep 2025 19:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieOPG71m"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HrMUlyxY";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OgKilOs5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5D41F63D9
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Sep 2025 19:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759173210; cv=none; b=C8cR3AEYRlLlIaKxw3kE2ZEn2hN/71bbmShuyLkb89RSzb95EYA8v14eNYUgKHU6PyRu21+2sEUdmAat8/1ru0Mq8usaZ10pJlidZJt9ryOMKPcMFtbGPYZHu7ydhL9EiK+fKUG29fbXgm2AFipeOFXM9/Jf9VxQCv7IciSBBgU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759173210; c=relaxed/simple;
-	bh=P9Y1j6zDFm6VNI5Ni4uPj/s+D1Z6aovIAiLNcjmEWq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l8Qrhz+u7hbwHYt/NO9EZ5/I+moJgYGQ8gN9W5cKuVkhW5mwczdkSy6caofc9PU7tvf0tv4OsBVrJNU4CLtargY9QQmYtMiefO24rjuJjMz+s0TSaOU4784T+RicOSzBsmowMkOMWH9/8RKWWVlk2/EcuaHsS4qaYXmn6bh6psc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ieOPG71m; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-57a59124323so5201620e87.2
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Sep 2025 12:13:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E0B1F1932;
+	Mon, 29 Sep 2025 19:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759174884; cv=fail; b=PFXESah65TF9Y9BYhtKeXu0k6cc54lTSwfceblifm81To3vGMq0mZE7t2PYdLdciz3f3Rl+FmcwFXXCew+FlV1g1nH7VLZqYsDmsHmZUrjMF8HUCTjmaWpBnmUDHQVHNYcuCjeROJLs89zNN0m27P/pXFu9XFtAB+49uBF15lAU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759174884; c=relaxed/simple;
+	bh=5Lqz5W+TN8qsFLVmLFfwEmTfwSqlJHjJn4VIy1l52VQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rueHJmesJ1KsCIiPXlcE7wGYrGo8inHu8vnRSVEm9OoM0wVdXhj7/LnKUxkWQufQRvf37r/2LOKcuuFfQXDGEMdqSsq2bFMTjG+NDyAfLwJDib7MjkUz2ozkadSr57hY+hdWIT/o8d4hWcSS6cKpGR+uf5MFi+Bd2danIZjs2zc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HrMUlyxY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OgKilOs5; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58TJEhcc028491;
+	Mon, 29 Sep 2025 19:40:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=HyR07XPM53OdR1iLIuq6BocEF2gZ1NV2qZgEkrwn8T8=; b=
+	HrMUlyxYgBz11RnsS3K8T991QwYoW0XbYdt25dwbpCNzyzE8PymH9LlEpAe6IXI6
+	uNclAIiroDo+ImDtEfb3ZlWTDL6Jyb1i8ZnmfYMJllgCjMhC5K8km2CshP/VFXre
+	u005WZFNO1vkStHg8NOtHs5Fk7W9PQ9Z2vVMw2hfznzf4hK4lPqx/Gi1PA5yYlKv
+	aUE8+uFwcVhNzJUL+DOdqPaJza2bOlIC10hLull2l/bVIDoiAkR5oq6rOn8lx1oE
+	2dEmvBgAmvJvAvZC8q7Q3rj3nZMvYbFK0/eTJwC9UrLdsBt3UaccJevp+obYWIUU
+	gaKVV6bX7ANA4P9Z+NdiEQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49g03hg1dc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Sep 2025 19:40:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58TIINCt036461;
+	Mon, 29 Sep 2025 19:40:55 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011064.outbound.protection.outlook.com [52.101.52.64])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49e6c74qj7-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Sep 2025 19:40:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OWkiha36ZAq6zxOIT4APT6uOWXXSVtXz6SLv5quH4UPzY0O5+e/GXLfZ3K6mqgBUMnoHozzLXVnJyH4DVEuWqv859vkqbisg89aiFfzmd/ZbOrJQ6+VmwTu49RhKLfne/ls8Z989L+Ese51Pt/p7c9jIICjkQSaa1FQ6rfC8a7Nv5jcRYngs6+FKnmIDcZbtg08hnpF8+ZLUBA2BgmHn5mk5m8IAaL9onc8G3dTB0AMmkWtrD7f9zuVCVeDKgtt411C7IZ63KEP44d43XUzDfSYmOpVTaXJ0TC0+oAcfBJV9GnATAs8g9TCyQjUm94TL3OtjPHLeqH3bntF38Uj+6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HyR07XPM53OdR1iLIuq6BocEF2gZ1NV2qZgEkrwn8T8=;
+ b=oSQDY3c08stCtVHM9U2WyH0HE2z58NogqLphbMF2/SeMxEDr/L0VhtN+M/2AIxj9j04OxeH+wxlWaJpNHdJK3JeLWlGpiCJR4pgXUflPYijoqC5PJZqrSFCjKTzVz28a24uMLkByWeM7TpDvDeGXKCQlOsDBFcZuy1dsMvtyjAHAMJcg27miHEEyUbMHbF3Kr16uPrlgJa6i1pXlQgMO7MD818k8XKAy58b9VG6njY6U8LDv3iji4m54isRBN4C1JCq8NI7EJ+2ni0OltrN+MJINyov+/j6WHE4jnmbkulY4y6hMLFljdiWKAczDQBX/SufMeqcwhnSFaaGYpt035A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759173207; x=1759778007; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uhqVWTFayCZqdCtpHugU4/RlDPGuDMr9RSGzGhiO5nM=;
-        b=ieOPG71mbFeI+xG4E2vS2frHAA4tOjc1rJc3uMqGWVUhjDtpz+mq3P45S4dmq6Qe/w
-         8j3w7v9z336ktyQf1PV+2nTrazFd8/DvCcUPnNtikkL6eQAESQQDrO1nHREdjKWjny5g
-         6OGi6ZgZK8tKE20Fy3+VAqVAUK4OVElrqlbI8U33/IzC9VDb9Jvp4EzHde11QdvBB3As
-         8Dhn9LELFc4S0aT2s/CHZRoh++QXJ9vGmo5xgoRTR92d+nB6VXc+Dk1UvRfTDDdlXQeu
-         s45zrnQxC7mpSR61gXpeFxjnj2590qZMY057JOc7gsSro92FPo8DbrCCbWMqRyfTzc1f
-         4WvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759173207; x=1759778007;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uhqVWTFayCZqdCtpHugU4/RlDPGuDMr9RSGzGhiO5nM=;
-        b=FgcwUUO/NrUHLp5w3dhgvlfIDpXe339wV35F/GF3VIkSObk4erbOEY9JYCp0TTgT51
-         0wkrLYEVQAO94vU6Oj3R0hgEaABtrtSfvE670pCvNIhJMVz8UawQHZgkOnEHWKMaLE1i
-         pallz82o1FPVJxsrEue5iT4EwMeNFwyl5klcMRMNkosUPn5ev5AUDi1dl9V2LW6h1tXt
-         Q4aMO07DZdNh3S+sGfLghkt/lnsX/vhDJKrEuas9Zyg9KJcqbQ+iTWlLss7PqIuhql2x
-         9ueCoUTQL87mpOzjD+TlTILzxzK+TwWrC71tangPx57Iq++bascNNhlBMI1NZBsY3xdp
-         YFqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtCvGaT3eKoQl0UgBxi6RHm5nMArqxRaSRFIaBYYT5qqpKaGEGSnWf6XDjrUFMXQ7cPFCtjHa06rM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjbA9KabZ+rENCjUYUTKTcoMTi0GrCUCIPDI9p3Ew6YCk81qIy
-	+l56Hq2eExvk2aLrmxyLUuCtFBvOGP4OHBoE4s++xDURN6GMNNtGs899
-X-Gm-Gg: ASbGncs34x53ljuLLuGudf01iJxLRqd1B1NKRdgkOaIy2a46ROxAcVt04yXFlWGagI7
-	AyF3Ggwx8/afSCdcwnQsVfA7HG+F3oF9tONDJkTsPl85El57cmqK3S/o9XoYbG0MN46p6VkGYnV
-	spiMQb2ERG7bS9/W6OICwrnauS79oMxvY18QleWsOw9pEZO9AR+n9kPxxq0yo9JIM2xOWRUm3SS
-	GAIU4nLGC4YtbqOT3uvcHK61OOO2D1/jZGIlUj+N/oiGs/kqW0xNMkwNsRyuIQNiijX2NjHNfXl
-	VHS93h9/B68pHS70OHGYTlfRzvKwVeilugeUeVgrEeuOi+9BkR+Ph3aOWjZGHy9PMs7ia0vRD0m
-	Sbt67+IJVg7WC57SVzqKzMCViIpHDNPCF6eY6IdmGz8QxlzsXHA==
-X-Google-Smtp-Source: AGHT+IEL0DvGvJFTjcXFtSLUYDkcvWLmwEDINloNMRh76KrCro7nYZP3SSYe4SN1qOLDLjMmnPhzfw==
-X-Received: by 2002:a05:6512:681:b0:579:8bbb:d61b with SMTP id 2adb3069b0e04-582d3ba1b83mr5213106e87.46.1759173206578;
-        Mon, 29 Sep 2025 12:13:26 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.147.37])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58567242ef3sm2473234e87.19.2025.09.29.12.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Sep 2025 12:13:26 -0700 (PDT)
-Date: Mon, 29 Sep 2025 22:13:24 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Christoph Hellwig <hch@infradead.org>, 
-	Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] NFSD: Impl multiple extents in block/scsi layoutget
-Message-ID: <qddd2ydxgzhx72ybsxt2o3o2x73wkntqsfpg57fsbw5qlfgm4l@yzan3q4ybywx>
-References: <20250911160208.69086-1-sergeybashirov@gmail.com>
- <aNo0BCzVQxR60qeT@infradead.org>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HyR07XPM53OdR1iLIuq6BocEF2gZ1NV2qZgEkrwn8T8=;
+ b=OgKilOs5rUI/VuoWIcHDWssWZ6HPHwmdLW5VZOzXxSf6A9eiV3hAs9ZaGNs9o0Qlpht0zZdFs599IO4npdsi23ZvxN+1bS/ENplmuGIsuXOO+/XBcXc1EZFe7oct6UyfWsR7vSwhJP5KVvJSLClEnqwWVnSZ9V/vUfa/gm6MvKY=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CYYPR10MB7606.namprd10.prod.outlook.com (2603:10b6:930:c4::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.16; Mon, 29 Sep
+ 2025 19:40:50 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9160.014; Mon, 29 Sep 2025
+ 19:40:49 +0000
+Message-ID: <8646ca56-a1ef-403a-85ce-18b90235ab99@oracle.com>
+Date: Mon, 29 Sep 2025 15:40:45 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] nfsd: remove long-standing revoked delegations by
+ force
+To: Li Lingfeng <lilingfeng3@huawei.com>
+Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com, lilingfeng@huaweicloud.com,
+        zhangjian496@huawei.com, bcodding@redhat.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tom@talpey.com, Dai.Ngo@oracle.com, neil@brown.name,
+        jlayton@kernel.org, okorniev@redhat.com
+References: <20250905024823.3626685-1-lilingfeng3@huawei.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20250905024823.3626685-1-lilingfeng3@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH5PR02CA0013.namprd02.prod.outlook.com
+ (2603:10b6:610:1ed::27) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aNo0BCzVQxR60qeT@infradead.org>
-User-Agent: NeoMutt/20231103
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CYYPR10MB7606:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32d93c18-494f-47dd-50bd-08ddff901791
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?RkhZenZXUXZ3bkMrTFlvbk5Pc0lacXZHK05TRHRnRXJhYVFiSWM2MkROS2dj?=
+ =?utf-8?B?T2duckYyVkZGZmZPOEhQcGV3aGFLMXZteUNXY3JOSFQxaWdZWVpLd1loZ1lN?=
+ =?utf-8?B?bFFwcjRKODhqSE9uOWRtRDlHc3FHT2pmRTlvVC84aWxYdlJDcGllVHMzWkdD?=
+ =?utf-8?B?bmJzTzh0ZnpXY0VUNWdOaHRlS29jeDVkY3BlZHNEQjFiS3l6NnFlYnE2aHVO?=
+ =?utf-8?B?VGlPNVN2K094KzgxMk1iaXg4SHRyeThxcVByTHZteHF4MTMxUHZFK3RZTWcw?=
+ =?utf-8?B?c1J4a2pkbzBmUTBSR2swT1RjelhxM3ZoZVIwWWVVRWYyU1VjaStwMUhWTlAy?=
+ =?utf-8?B?bVZHbXlCRGh2L0FjTlg4cmVlMVFQYW9Xcjc4VDhTbmcraEJSYjErTzVVSzdh?=
+ =?utf-8?B?aHVzclV5UHFFUHNJREZ2OTU3dkFtcStWY1J3a1RxR0FqbEdFbkx2VzN1R1hz?=
+ =?utf-8?B?UG5qcTV6MDFVNVllbnlZeVl3dERxcHg2Z2hINDJJSkJqTmlrVVdRbzdoSncv?=
+ =?utf-8?B?K2VtVW92amEyY3RENUNFcHNHeG9mOUh0d2pGYTR5S21kM3I4Z3BkV0RRVDVt?=
+ =?utf-8?B?TU9RcWY3T2RkMkFNS3NaV21sN0RnYmJlMS85K3QxcGtpVFBxeE84eXBGVnYw?=
+ =?utf-8?B?b01YbFlPcjY4SjRReEV3c1dSS0o2Mys4SFBwOEVlVDRUS3NZck56SlZpZ2pr?=
+ =?utf-8?B?a003b2wraGZhR2VQdC9oakJWV3BNVThNb0poN2VETWhvL0NUbmtqam0wTTZp?=
+ =?utf-8?B?UlI2NG9mUURURlhqaHd1dWN2d1NjMm9WM05yTmpPbUNBQ2NLWXNpdVVZblRC?=
+ =?utf-8?B?VUxVNGU4cUEvY2Zqb1NPWit2YTJYbC9rb3FoRWRnUWEzMVRLRUpaemFFYm02?=
+ =?utf-8?B?VVE1S0dwWi9aRzBnT1VDUjIzMXVTbVlKNFlyR1RueGRvc2FwRExWbVlObnY1?=
+ =?utf-8?B?S3Yrb3JJVTNqdFJkVDdkWnpjMURJelVnTEszWFU3UCt1SnRMaDBJZWF2aTVt?=
+ =?utf-8?B?Mmpyb0hGMHduTGtuN1ZXQVhlVjN1RTVMRzBUcHV1a3RaOURPS0RSdWFpa2RC?=
+ =?utf-8?B?VkF5d2REdFVLckxoSVN4V0FQVjlXakFRdXJPVE9lVzJoZnRjOWdSQit1a09T?=
+ =?utf-8?B?Vm1UMW5xV3graURYaUpQUEU1OThGR1htRGhYU3RCNldmNnUyMEFkTVptYzFo?=
+ =?utf-8?B?YmNwMlViWm1LdmpwRjErZzZkbTB3ZlF0aVkzUGd4cFB6SW1Ub0c5WUpXM0lU?=
+ =?utf-8?B?dWhNNFFUVWFqNUJUM1BjSGV3K1pGWkZKV2xLVm4wclY1a1JJUW9xZzUrc3JR?=
+ =?utf-8?B?NzZDSDBCVW12SzI0NHYxN0dSdWQyT2Y1SGxkSU1iNkdSNVd4ekwrV2JKUW03?=
+ =?utf-8?B?bkJEaTRPU0NKZ2Q5dzhmNXJJTXcvYWpZQ2x3S2I0VjNXMFptem1TK3JxUnR1?=
+ =?utf-8?B?eE1rRDJFSzVYRlVvclo0NUREVk9qbHlBM25xUkxXNVdsVFB1QVEyMFZtYUda?=
+ =?utf-8?B?NjN1R2tIb3FjWVVRQUluYjZwTHpMRVdhTkxtMVgwQTYyazZDYnRTUC8yelV6?=
+ =?utf-8?B?Vnp4WjdpbDN4anRxMzF4OGh1QUZPNUN5Znp5blZWbUhXWXg2MWZWeXg4UDIv?=
+ =?utf-8?B?T3NubWtmaFdZc2xEemxMeDVhMEJmWVcrM21pbEpRb1dlOC9TQmVTR2prOVA2?=
+ =?utf-8?B?OW1nN3dFMVFtRThCNWtoK2k1blRyWHZDRjl6OVlzUzRKVFBINGZEc3dGNEJN?=
+ =?utf-8?B?eE0wVUlHOWlFKzRIK3hWLzIrT3RHQnRpWVVkWjdjbHF4TU9lRlozbnd4d3Qx?=
+ =?utf-8?B?YWNRYitHZDZyY3F3aGJuK3pCelRtSjBTbjRGY0JZajk0MG5RdkV2TVF5L2w2?=
+ =?utf-8?B?VUd5TGxpNmdlVUVzM1FyQWxMdlJ6cUQ1c3VHNUg5b2oxdnU1Y3FXT1ZxM0hI?=
+ =?utf-8?Q?Z0mMxec6RNeL+lzPWsBDuFWqeyFYlRxS?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?NFhqbE9sbXRnZEV4clh4YlZURmpXbVJUZDZaekV5dzdBbXdPa2VUbTRmMEpx?=
+ =?utf-8?B?OEZBOGdyK2ovZ05iOVI3L3RvK2gyTHhJRklqd21NcDcxTW1zUDA2UDVnaFln?=
+ =?utf-8?B?elRLeUNzTzl3NFFDZGtOSU5oZlh2emMxK1hwaksyWVpnUGZjSWpIdkpVS09E?=
+ =?utf-8?B?Tlp5d3JYbWNlOER2NG1FNzNOcVU4YWNrSFhOWllTQkk2UE5DWUJheitobGhO?=
+ =?utf-8?B?SGxlU1ROSy9NWFZKSVJoOEpCdzhKZDBoTFFYRkJ6elJIWVZNYVJvVENuSUdt?=
+ =?utf-8?B?RTFBTE16MWo1THkvSEEzaXIvNCtXV3llRVRWSWpLOVIvYi8vQnhYb25QSGlF?=
+ =?utf-8?B?TGtXbm9YdjVpRG5TenQ1dUpybE5XMWZURHM2NGc5T0UwWm43ZzUyRkJHeXU3?=
+ =?utf-8?B?bGIyVUZxbHpwQllJbzBWVXJkUjN2MlJFK1lOZG9pWnVYdkozVnI0aExMQUNv?=
+ =?utf-8?B?NjVObHR3eGVJRm9JcEZxL2FnUmFEMzYxNkJsZ0V0Y0pkK1NtVFlQaFZrNU91?=
+ =?utf-8?B?VnBQaGlWK3VGUnlvb2YzeUNiejRzVmcxVFhSWHBlaEJOVnAxMjlnUDg3TFZy?=
+ =?utf-8?B?ek1rVjhkL3RMdnpNNUNkYkdaVTZEWWRsdGFuOS9RaW01Q05sUkVwa0NmMk9s?=
+ =?utf-8?B?ai93VVdMTlFaaGN4RE9BeHl2QVZsbFQ1U3dIQW8vN3E0UlVYUVZwajIwellT?=
+ =?utf-8?B?azBEVG0zejByK0FBTDBEV2ZPRUM5UHJ5RDVGUnVxOVNrWnJkMTVGVEt6TTFy?=
+ =?utf-8?B?c2JtbHE1T3NLL3dHL01yNTFZRVdJaVFJSGNCU3hVb3dVNWJySlJjM2hMR2Ew?=
+ =?utf-8?B?UjBlMEVySUVqZFd5akV5U0JOZUl3M08wSWtoVTVPVmVDOWUzNlpIMjhZSFJN?=
+ =?utf-8?B?TldkUzhQWGRzU2dHQ3pFNEpmMWM0dXZtMHFpYTdiUWNyTkhySTRiOHlNVmh1?=
+ =?utf-8?B?c21ZWUNCNFZzdjczWVl3Y2ptSzFvSld5RGZmTnJrRndhd1dVdTIyQ3JUSmFI?=
+ =?utf-8?B?cHRsSDRzaW93QWxCT0NOSURnNDVQS3ZldDlhamdEZ1Y2NzlzRGJCK1oveHVW?=
+ =?utf-8?B?aktpd0d2YmppTHUzZ3I4Wjl1UDRyTWFMS2h3VWFvNFo5bFZNZFJpRVhid28v?=
+ =?utf-8?B?ak5PbGc4MFcrV1BvZ3JRV0l0eUc4RTduS2VtdHZFTEhjYUxwb3k3TzRyWG1T?=
+ =?utf-8?B?UmMwVFg5U0ZlMkxRT01uQ0Z1ZDJVKzVneThBZDRPeEhQcER0Y2FNMXRpWWlD?=
+ =?utf-8?B?T052WGpORWliUFhWZ3c3a1A4SDNkdXZGeTZHdWp4SThaa3U0a093Wldybmll?=
+ =?utf-8?B?YWNqR096aDU0MlZFdzNSMnVNMUtxSFUzOHJ1WVZlVWhVaHUvR3UrTlp1eEIw?=
+ =?utf-8?B?V1VDa3djTFpra3YwUkRhZEpneUlpV0pWN1RUQUF3ME5vVzdWWFhtc0V4Y0JY?=
+ =?utf-8?B?RG9mSWpFOVFid293UzBKeVlxQldQa1dQYmx1b05BNzN4Syt2aWlRRHV3amJF?=
+ =?utf-8?B?OTVNTWNkOEtVVjBFMXpMTTcvZy81NHgxMHJScmVNc3JaM05IbW1ibUoyQTBQ?=
+ =?utf-8?B?R3JmZGpvcnZKblhVNXRHU1BHZlNRZll6SXl4NVpqTzRoN0VPV3NmcWRzOWx2?=
+ =?utf-8?B?aFlDQW1seDFXVzVzbTU4bVpJTUJtMUZqMloxNUdxdGtXTUgyWVJpUU5EUmts?=
+ =?utf-8?B?ODhwaHNPdVVmN0FPaERBeDRRUzAvRDNzVDQrV0JxbVBCeVVWcDJCRWZGK1ZW?=
+ =?utf-8?B?dXpzdHRHYTdaL0IzYU1xTjVnRHRIVVdvMm1EYkQvcFJuL1JMeHpDenM0ZElj?=
+ =?utf-8?B?b3IwM2hnaGNHZEcxeThCd0ZodFBnZFdXZ3hGVmx4MzluUEpYM0F6WkRvYnly?=
+ =?utf-8?B?bjhuYU5Ta2hjQkZHL1dsajVIeFBqTWI1amt2eHQyQVc5SElRQnZGQTFxTlZh?=
+ =?utf-8?B?bTAzZlFza0ZTQjhScnozbnM4NjFxdzdkeVdNNkFuV21WQzdUc0tyM1QxR3VG?=
+ =?utf-8?B?UEVOalhTamYvbXNUSmFaTVpNYVkvKzZ2NWpPQ1o5MElKaGQ0dW02bmJjclpL?=
+ =?utf-8?B?L0ltaXVlWlF4T2gwQ09KNlJNMFFlSk9GbHZXbm5rc0QvWi9ic2F3aHA5Nk1M?=
+ =?utf-8?B?aDhBWmVvMWg2aHI3eHNMNlRhQTRRTjBlZWxKcGNzcUQrMjRWMGJBZlYzcDE4?=
+ =?utf-8?B?Tmc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	O++1wrAB60viLkyi59QbnJ8d73MbfO4gZtgb91nZkRIWeNYWDCdl6mVUXtpceOGzUzqSnOo4RBea/8fxyUN4ka2cFNpl9YfkvUCoPV7Wxzf8RC0FwFLDQ8ykosaurjLjhqniRe6z+aOGsLMAV4NDAjJL21IkU+fWRWw/VFMu/0A2yptG3ZYNsJwjrQzjyZ0arTD0v3h/esyzZotyWs/KRne0Vt/+D8/rxJatT/zMmfIlaJQ2+V59pKg8Qk1T3IBuO2k1PS7p7j75Qrm458RVMGUZe1yTX8O16iQHF6ucspkksaFK8jauIVQzma/QQ++Nzf8VijDd1REyJXDG880ZfFJRHy1FU2/buw+rbHBPU+LtS7L12IrrTRbPSWs59Xacua1iOBbDjZ11fjlCUXpZdQE5ecWuJOaEctamDUCxNnHiSmuaSaE2goxmQ8Rn04ltdSwgDiVrZ158IcyxjsEjZespwuGWi7YAMf5qeJ6rt2fBWDfh472WFKiki4qtkxpZ38Ded7uR+oYTh17ilQdA//rjWCgEPsKCygqSDCwEj+Qpi2WhugGi7lUNztHb8AAczFIx3BV4cOROC43GyT7BpfS+fPJULcLSOAhCln2tYsQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32d93c18-494f-47dd-50bd-08ddff901791
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2025 19:40:49.3790
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YGSmKQKRYDf6BdCwH4X8HHeyA/cDSQk07FDzHinyB/W1cxb15hdQrM/4OxSQr52/yrPYGkSLFv4kj08D0VrZpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7606
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-29_06,2025-09-29_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2509150000 definitions=main-2509290182
+X-Authority-Analysis: v=2.4 cv=EtvfbCcA c=1 sm=1 tr=0 ts=68dae0c8 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=yJojWOMRYYMA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=i0EeH86SAAAA:8
+ a=a4wTRwnHMjmUIoW935EA:9 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: VEP3XHrw2Ai6xX5Dpqln5CiUv5SteCP0
+X-Proofpoint-ORIG-GUID: VEP3XHrw2Ai6xX5Dpqln5CiUv5SteCP0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI5MDE3OCBTYWx0ZWRfX8SGMXUzLghP0
+ EKC8Upgl4ihTZUnmYNVIXCYW2omzmTZ4ydL+dmheX4zBsSDTpH2phCwX3R137p/LZnNTfTR1hIF
+ CckDUMBShilXUalnJFCIRGXobG2yXBHccBrKqKi0ul5Q9GCHrW8cHbFBRL4eEn3ydrfqTxyQ8so
+ bUTm8wh6Qr32vxh9OPbi/ZuscjhhrlMpWMZQNA1A4OFNagdhH97A/AlY2R0pGFoqnOnbUpBsFOK
+ V+hiMdLI9AsVL0n1sTGfUgQwZbP4qo9Ak5SuZbNbrqaQZu2UBufi/6Ip73osF9noMCqGi0zAv3f
+ wnUjRXJ3MYUCPSYnjsaJU3ucsBoJz2vDiA9iAq06P/6+hA2Z2WH31L+RHqdn0rzUZQ6aDQLf69F
+ jGQJEwf0f9M5cwOTu7U4qK/fKHZqLw==
 
-On Mon, Sep 29, 2025 at 12:23:48AM -0700, Christoph Hellwig wrote:
-> The subject line is odd.  What is impl supposed to mean?
+On 9/4/25 7:48 PM, Li Lingfeng wrote:
+> When file access conflicts occur between clients, the server recalls
+> delegations. If the client holding delegation fails to return it after
+> a recall, nfs4_laundromat adds the delegation to cl_revoked list.
+> This causes subsequent SEQUENCE operations to set the
+> SEQ4_STATUS_RECALLABLE_STATE_REVOKED flag, forcing the client to
+> validate all delegations and return the revoked one.
 > 
-> I'd say something like:
+> However, if the client fails to return the delegation like this:
+> nfs4_laundromat                       nfsd4_delegreturn
+>  unhash_delegation_locked
+>  list_add // add dp to reaplist
+>           // by dl_recall_lru
+>  list_del_init // delete dp from
+>                // reaplist
+>                                        destroy_delegation
+>                                         unhash_delegation_locked
+>                                          // do nothing but return false
+>  revoke_delegation
+>  list_add // add dp to cl_revoked
+>           // by dl_recall_lru
 > 
-> nfsd/blocklayout: support multiple extent per LAYOUTGET
-
-Impl is short for implement. But let's rephrase that if it looks odd.
-
-> On Thu, Sep 11, 2025 at 07:02:03PM +0300, Sergey Bashirov wrote:
-> > Checked with smatch, tested on pNFS block volume setup.
+> The delegation will remain in the server's cl_revoked list while the
+> client marks it revoked and won't find it upon detecting
+> SEQ4_STATUS_RECALLABLE_STATE_REVOKED.
+> This leads to a loop:
+> the server persistently sets SEQ4_STATUS_RECALLABLE_STATE_REVOKED, and the
+> client repeatedly tests all delegations, severely impacting performance
+> when numerous delegations exist.
 > 
-> Any chance we could get testing for this added to pynfs?
-
-Thanks for pointing out pynfs! I'm not familiar with it yet, but adding
-tests is a good idea. Will take a look on it.
-
-> Also what is this patch against?  If fails to apply to linux-next for
-> me.
-
-At the time of submission, the patch was made on top of nfsd-testing.
-
-> There is a lot of code movement here mixed with functional changes,
-> which makes it very hard to follow.  Any chance you could first
-> split the functions, then introduce the new pnfs_block_layout structure
-> and only then actually add multiple extents per layoutget?  That'll
-> make it a lot easier there are no unintended changes.
-
-Agree. I will try to refactor or split the patch to reduce unnecessary
-code movement produced by diff tool.
-
-> I struggle to see what the point of the nfsd4_block_map_segment helpers
-> is, as it seems to add no real value while making the code harder to
-> follow
-
-The main idea of nfsd4_block_map_segment is to logically separate work with
-XFS, handling single extent, from the loop through the pnfs_block_layout
-structure across all extents. If we combine nfsd4_block_map_segment and
-nfsd4_block_map_extent, the switch statement will end up inside the for
-loop, which will result in a large code movement in diff due to the right
-shifts and line breaks.
-
-> The subextent handling confuses me a bit - there is no such thing
-> as a subsegment in NFS.  I'd pass a never changing end of layout,
-> a moving offset, and a constant iomode directly, which should simply
-> the code quite a bit, i.e. something like:
-
-You are right, subsegment here simply means a smaller portion of the
-original requested segment and is not related to NFS structures or
-specification. Actually, I first made a version with three separate
-arguments. But then reworked it to reduce the number of arguments in the
-nfsd4_block_map_extent function. I am ok with any option, let's pass
-three variables without using structure.
-
-> > +nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
-> > +		const struct svc_fh *fhp, struct nfsd4_layoutget *args)
-> > +{
-> > +	struct nfsd4_layout_seg *seg = &args->lg_seg;
-> > +	u64 seg_length;
-> > +	struct pnfs_block_extent *first_bex, *last_bex;
-> > +	struct pnfs_block_layout *bl;
-> > +	u32 nr_extents_max = PAGE_SIZE / sizeof(bl->extents[0]) - 1;
+> Since abnormal delegations are removed from flc_lease via nfs4_laundromat
+> --> revoke_delegation --> destroy_unhashed_deleg -->
+> nfs4_unlock_deleg_lease --> kernel_setlease, and do not block new open
+> requests indefinitely, retaining such a delegation on the server is
+> unnecessary.
 > 
-> Where is that -1 coming from?  Or the magic PAGE_SIZE?
+> Fixes: 3bd64a5ba171 ("nfsd4: implement SEQ4_STATUS_RECALLABLE_STATE_REVOKED")
+> Reported-by: Zhang Jian <zhangjian496@huawei.com>
+> Closes: https://lore.kernel.org/all/ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com/
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   Changes in v2:
+>   1) Set SC_STATUS_CLOSED unconditionally in destroy_delegation();
+>   2) Determine whether to remove the delegation based on SC_STATUS_CLOSED,
+>      rather than by timeout;
+>   3) Modify the commit message.
+> 
+>   Changes in v3:
+>   1) Move variables used for traversal inside the if statement;
+>   2) Add a comment to explain why we have to do this;
+>   3) Move the second check of cl_revoked inside the if statement of
+>      the first check.
+>  fs/nfsd/nfs4state.c | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 88c347957da5..20fae3449af6 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1336,6 +1336,11 @@ static void destroy_delegation(struct nfs4_delegation *dp)
+>  
+>  	spin_lock(&state_lock);
+>  	unhashed = unhash_delegation_locked(dp, SC_STATUS_CLOSED);
+> +	/*
+> +	 * Unconditionally set SC_STATUS_CLOSED, regardless of whether the
+> +	 * delegation is hashed, to mark the current delegation as invalid.
+> +	 */
+> +	dp->dl_stid.sc_status |= SC_STATUS_CLOSED;
+>  	spin_unlock(&state_lock);
+>  	if (unhashed)
+>  		destroy_unhashed_deleg(dp);
+> @@ -4470,8 +4475,34 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	default:
+>  		seq->status_flags = 0;
+>  	}
+> -	if (!list_empty(&clp->cl_revoked))
+> -		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
+> +	if (!list_empty(&clp->cl_revoked)) {
+> +		struct list_head *pos, *next;
+> +		struct nfs4_delegation *dp;
+> +
+> +		/*
+> +		 * Concurrent nfs4_laundromat() and nfsd4_delegreturn()
+> +		 * may add a delegation to cl_revoked even after the
+> +		 * client has returned it, causing persistent
+> +		 * SEQ4_STATUS_RECALLABLE_STATE_REVOKED, disrupting normal
+> +		 * operations.
+> +		 * Remove delegations with SC_STATUS_CLOSED from cl_revoked
+> +		 * to resolve.
+> +		 */
+> +		spin_lock(&clp->cl_lock);
+> +		list_for_each_safe(pos, next, &clp->cl_revoked) {
+> +			dp = list_entry(pos, struct nfs4_delegation, dl_recall_lru);
+> +			if (dp->dl_stid.sc_status & SC_STATUS_CLOSED) {
+> +				list_del_init(&dp->dl_recall_lru);
+> +				spin_unlock(&clp->cl_lock);
 
-PAGE_SIZE is the maximum possible size of the pnfs_block_layout
-structure in the server's memory that we would like to have. And -1
-ensures that the nr_extents field will also fit in it
-if PAGE_SIZE % sizeof(struct pnfs_block_extent) == 0.
+Does unlocking cl_lock here allow another CPU to free the object
+that @next is pointing to? That pointer address would then be
+dereferenced on the next loop iteration.
 
-Yes, it would be nice to add a comment in the code, or even better,
-an inline function that calculates the number of extents in a given
-memory limit for the pnfs_block_layout structure.
+Might be better to stuff dp onto a local list, then "put" all
+the items on that list once this loop has terminated and cl_lock
+has been released.
 
 
-I will prepare new patch(es).
+> +				nfs4_put_stid(&dp->dl_stid);
+> +				spin_lock(&clp->cl_lock);
+> +			}
+> +		}
+> +		spin_unlock(&clp->cl_lock);
+> +
+> +		if (!list_empty(&clp->cl_revoked))
+> +			seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
+> +	}
+>  	if (atomic_read(&clp->cl_admin_revoked))
+>  		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
+>  	trace_nfsd_seq4_status(rqstp, seq);
 
---
-Sergey Bashirov
+
+-- 
+Chuck Lever
 
