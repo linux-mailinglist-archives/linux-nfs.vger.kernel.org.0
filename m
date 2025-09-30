@@ -1,99 +1,143 @@
-Return-Path: <linux-nfs+bounces-14825-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14826-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226DBBAE6AC
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Sep 2025 21:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B77DEBAE728
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Sep 2025 21:32:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1FDF3AFB28
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Sep 2025 19:15:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77A6A4A1D92
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Sep 2025 19:32:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2511735940;
-	Tue, 30 Sep 2025 19:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31F8F19F40B;
+	Tue, 30 Sep 2025 19:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="anNgBkZi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPDHpxa5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1E74C81
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Sep 2025 19:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6AC1C862D
+	for <linux-nfs@vger.kernel.org>; Tue, 30 Sep 2025 19:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759259737; cv=none; b=aBFQPnQ+opOqXzfCeZdaNESBtKNqALaoKUnBKI09dbKqxCf1C3xaKXyAp9hpScIj+pX8GF+jLWefvZdS+MxfHIfrwS/5rvLwqY0TT2N1bEN5bvxilkVK+xb4h/cRiaJOp+X6g3jaXz8qytqNJeWIZkgXQYLygDt1alfggPxA+xs=
+	t=1759260732; cv=none; b=s1IL5Lb5iPMgSUgBLy2QVNMpbWaaOAaEt9OwdxBKYIX3LbC+TFpzmj78WpcHJouqCcK7qcN4RLCg9uk37QBVfbFqbZxnGpsbLC0W3k1j1tEobOTm06HZBwledcM7Xvbq9B4zgTRsyQMj8AnTP/TNnM+7EF5Rzp+DWC9O6YLHILw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759259737; c=relaxed/simple;
-	bh=jmwYCx4D2znpM/ZbXmfKmzxp9x7Avot9sMF0jxtI+V0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMLY0pHdXLbY6eqkBudfE83wqZ1se89n/rZGh6iIkmPu5Wwoe05e+tvGWds+f2MM87p+X2miezQNFYeBdK//s7lDSnj7GX+mHoXtJboiWf1ee2TH9DZqzKhDMIKQyVlEzBTB6EhhFw1bxEQUDIan84yGEXJVtSaRucKkiNR1sTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=anNgBkZi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759259734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZGW972IkPXx3ISwmYPHeoMj5udj0pJXSYNRbr9U5t5I=;
-	b=anNgBkZiSxyuJfD8tOx1NfFWGa8xEdfkMrrnmJxd+fpmStDsEVlPV+V68G+XiS1sUU2nbO
-	sfVQX7uN8j4xSr2L8iiiIu5uNqqoVn3cQ+xuiJB+CPSJZLh0FPWVUBOSKyNV23brPu0KLo
-	6l1A2GTIkIaikIucu/hwY01shrskB1g=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-lBdf3nCzPmC12LqIKjBkXw-1; Tue,
- 30 Sep 2025 15:15:30 -0400
-X-MC-Unique: lBdf3nCzPmC12LqIKjBkXw-1
-X-Mimecast-MFC-AGG-ID: lBdf3nCzPmC12LqIKjBkXw_1759259729
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A52E619560AB;
-	Tue, 30 Sep 2025 19:15:28 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.74.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B2D319560B4;
-	Tue, 30 Sep 2025 19:15:25 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
- okorniev@redhat.com, tom@talpey.com, hch@infradead.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] NFSD: Fix SCSI reservation conflict causing pNFS
- client to revert I/O to MDS
-Date: Tue, 30 Sep 2025 15:15:23 -0400
-Message-ID: <475D1227-CB10-461D-9EC1-A303B74A701E@redhat.com>
-In-Reply-To: <1759249728-29182-1-git-send-email-dai.ngo@oracle.com>
-References: <1759249728-29182-1-git-send-email-dai.ngo@oracle.com>
+	s=arc-20240116; t=1759260732; c=relaxed/simple;
+	bh=K+kBbMWpq3LbNmdjHSGVR/1f4ihwHikgcIzyRgG9/N0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qfzhgKHnDLdfq5yiV1LZe0BowJpyjyE2uQQZoQyAqytnlAeKR2cDXvoutEleoFkV5fmX0JwhhSBBNhKzXQsEVONA3wgFJYJRWdP0hYgz+5vA/ZohwrqG26+bLnulsF30CKe3skZ3vDywzoUxxk/tf7WN7Y9guqC3qpl/1bs3A5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPDHpxa5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55110C4CEF0;
+	Tue, 30 Sep 2025 19:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759260731;
+	bh=K+kBbMWpq3LbNmdjHSGVR/1f4ihwHikgcIzyRgG9/N0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HPDHpxa5iHOcmVj75ezh1W1BVT/iNsLEWUz+rQUfe86Ogx404LObcgeaGImMFo/G0
+	 Ji5g54D0DXIB9NO3fQgrsn9Jo5KMsS5mr6+qL+2dQAU522InJHpcWuxEcUG+LB3pbi
+	 HBZQ7ytZYxADindNsryyiRwW+amqDUceCJD42STgX5iS59A3Cn4K/Akwsg7GaUdn6A
+	 A9hjIKR+/XoZGEKzwysJAzk1azkl+MELSM4JOOlXal1IhHLLfXLz2mBqoHte1TA+pf
+	 9z+5X2ZUWMODPu/BG017rBn+mWCIRReWQQr4kl+HhY/9m6hlg/9qn54g/GXY8xGu3s
+	 9AM6LkD6s5crg==
+Date: Tue, 30 Sep 2025 15:32:10 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Anna Schumaker <anna@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: [GIT PULL v2] NFS LOCALIO O_DIRECT changes for Linux 6.18
+Message-ID: <aNwwOvAZh5VAliWW@kernel.org>
+References: <20250915154115.19579-1-snitzer@kernel.org>
+ <aMiMpYAcHV8bYU4W@kernel.org>
+ <aNLfroQ8Ti1Vh5wh@kernel.org>
+ <aNQqUprZ3DuJhMe4@kernel.org>
+ <aNgSOM9EzMS_Q6bR@kernel.org>
+ <aNwEo7wOMrwcmq9b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNwEo7wOMrwcmq9b@kernel.org>
 
-Hi Dai,
+Hi Anna,
 
-On 30 Sep 2025, at 12:28, Dai Ngo wrote:
+Given that my NFS LOCALIO O_DIRECT changes depend on NFSD changes
+which will be included in the NFSD pull request for 6.18, I figured it
+worth proposing a post-NFSD-merge pull request for your consideration
+as the best way forward logistically (to ensure linux-next coverage,
+you could pull this in _before_ Chuck sends his pull to Linus).
 
-> When servicing the GETDEVICEINFO call from an NFS client, the NFS server
-> creates a SCSI persistent reservation on the target device using the
-> reservation type PR_EXCLUSIVE_ACCESS_REG_ONLY. This setting restricts
-> device access so that only hosts registered with a reservation key can
-> perform read or write operations. Any unregistered initiator is completely
-> blocked, including standard SCSI commands such as READCAPACITY.
+If you were to pull this into your NFS tree it'd bring with it Chuck's
+nfsd-next (commit db155b7c7c85b5 as of now) followed by my dependant
+NFS LOCALIO O_DIRECT changes.
 
-SBC-4, table 13 shows that READ CAPACITY should be allowed from any I_T
-nexus, no matter the state of the reservation on the LU.
+The following changes since commit db155b7c7c85b5f14edec21e164001a168581ffb:
 
-Is it possible that your SCSI implementation might be out of the spec?  Also
-possible that SBC-4 has been updated, I haven't been following the SCSI
-specification updates..
+  NFSD: Disallow layoutget during grace period (2025-09-25 10:01:24 -0400)
 
-Ben
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git tags/for-6.18/NFS-LOCALIO-DIO-post-NFSD-merge
+
+for you to fetch changes up to cd784fe2704a1c90ef3a1a116aacdb08a9d594e3:
+
+  NFS: add basic STATX_DIOALIGN and STATX_DIO_READ_ALIGN support (2025-09-30 15:23:35 -0400)
+
+Please pull if you think this makes sense, thanks.
+Mike
+
+ps. I know you've been looking at all this, but it is late, 6.18 merge 
+window is open, etc. Just being pragmatic by acknowledging the awkward
+sequence needed to get these NFS LOCALIO changes to land. If you'd
+like to skin the cat a different way, that's fine.
+
+v2: dropped Chuck's 2 "Fixes" that I had folded into the NFSD patch
+
+----------------------------------------------------------------
+NFS LOCALIO O_DIRECT changes that depend on various 6.18 NFSD changes,
+culminating with: "NFSD: filecache: add STATX_DIOALIGN and
+STATX_DIO_READ_ALIGN support".
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJfWUX4UqZ4x1O2wixSPxCi2dA1oFAmjcLkYACgkQxSPxCi2d
+A1o0BwgAnOhyvsON+TFdIL8opb2IYIsFxKQ9pakKUm38NSMe4fm4DRl7V6+Co0AZ
+kYWWSQEkq7CSLgJ99L8DDhcDo32L5AJyGpCp1zydhipGLu5lJ04ANfTsPOQjVYrQ
+jA+a5mCaLxx3X2Je8LgVo3PelalmpsRsAwwOjAFg6wpay+VtiDYtR/jQqeT89l4K
+euUC8aKSjM1XPIA84vjN0m+yrs6RTvzLFUS7dpE3JibL9L2eunS2m2d4wTlLky34
+vxqRHwe3FaSqO1r/JdS6jMqTrlrPJsEgyri+DGBwPzeBH4Lu/lAp9NXp2LE57Eyr
+tMOmTnmi4OMVlC6YAVwFq+RuiuSpOg==
+=5fHh
+-----END PGP SIGNATURE-----
+
+----------------------------------------------------------------
+Mike Snitzer (8):
+      NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+      nfs/localio: make trace_nfs_local_open_fh more useful
+      nfs/localio: avoid issuing misaligned IO using O_DIRECT
+      nfs/localio: refactor iocb and iov_iter_bvec initialization
+      nfs/localio: refactor iocb initialization
+      nfs/localio: add proper O_DIRECT support for READ and WRITE
+      nfs/localio: add tracepoints for misaligned DIO READ and WRITE support
+      NFS: add basic STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+
+ fs/nfs/inode.c             |  15 ++
+ fs/nfs/internal.h          |  10 ++
+ fs/nfs/localio.c           | 404 ++++++++++++++++++++++++++++++++++-----------
+ fs/nfs/nfs2xdr.c           |   2 +-
+ fs/nfs/nfs3xdr.c           |   2 +-
+ fs/nfs/nfstrace.h          |  76 ++++++++-
+ fs/nfsd/filecache.c        |  34 ++++
+ fs/nfsd/filecache.h        |   4 +
+ fs/nfsd/localio.c          |  11 ++
+ fs/nfsd/nfsfh.c            |   4 +
+ fs/nfsd/trace.h            |  27 +++
+ include/linux/nfslocalio.h |   2 +
+ include/trace/misc/fs.h    |  22 +++
+ 13 files changed, 514 insertions(+), 99 deletions(-)
 
