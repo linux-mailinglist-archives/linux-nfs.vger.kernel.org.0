@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-14838-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14839-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABC9ABB0971
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Oct 2025 16:00:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65F1FBB0976
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Oct 2025 16:00:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 592702A500F
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Oct 2025 14:00:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13256171AC0
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Oct 2025 14:00:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C5DA2FE568;
-	Wed,  1 Oct 2025 14:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21002FFF9A;
+	Wed,  1 Oct 2025 14:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKPha+AY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPPDvu2i"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436782FF14F
-	for <linux-nfs@vger.kernel.org>; Wed,  1 Oct 2025 14:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6C72FFFA7
+	for <linux-nfs@vger.kernel.org>; Wed,  1 Oct 2025 14:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759327222; cv=none; b=YtgZ0rgvMACr7G4ANAzYzTTggsPZTevLrNWNve2Ax8VZWwIVBGSBPKyTT5mw8SkbWX3RYefDiIPfvq2wlbNnTX/gUXaV5bUy59lumZzpFmIcdR6P3TNLfK7Oz+c4/ndfWeDKRjJS1IKKMtQT17VfZd5DjDTeDvf5G9/ZNxFU0q8=
+	t=1759327234; cv=none; b=RDD5HCLGorYi82hvWueBKImaL7iqIdxlcyKaW7JK9Qkf5y4bBAgXamS/+acx2FyTQwc8s/MClV0+okfT4lXXa2OPZEC00KqeMJ01cw2hCszwL4aixVJectgPZOSOpWJ/BMHG/aQHQyCMggRm2d86pu/V6z0i2+tk64O0QdxLKjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759327222; c=relaxed/simple;
-	bh=bPX5lLZvFVld8+1zaKWSatfgVzJ6IwkgLUWKt6Sab/c=;
+	s=arc-20240116; t=1759327234; c=relaxed/simple;
+	bh=DYbzldy05tTjh/tG0iurj3snbNHY4je8Ma3DsC/Qxas=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KonYpOyZIGY/E3MPG6dTXT9VIaq0m3rFw9pOgH5R5icJCGfyCm/cyhkZlbikUI10lBhzckbGw1F7BcdGYeQMw1Thvz3EY5BIZ/xhSqpBPZgqirtqV7+bLcyYPSMVWBdlQfGSrrHp5LSHcqEoXTRye7MzKk6ylM/3VB6vorM0HKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKPha+AY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C29C4CEF1;
-	Wed,  1 Oct 2025 14:00:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=uaWW0U3N/MMMiCkEAtAaf3+XFlfJk+Vguat9QrRJK8Fz/lTuJAt9vg0n0lAdJ53O5Dbv/sneCeI+GGKITiGskda4Ce2geIS3f2rWgqvuYqtBf7RRk5B4WHsU9GbNffhG43q+uzoP4+fCIox6O6ljqtPCLknu49IYkOr72xBEeD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPPDvu2i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF4EEC4CEF1;
+	Wed,  1 Oct 2025 14:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759327221;
-	bh=bPX5lLZvFVld8+1zaKWSatfgVzJ6IwkgLUWKt6Sab/c=;
+	s=k20201202; t=1759327234;
+	bh=DYbzldy05tTjh/tG0iurj3snbNHY4je8Ma3DsC/Qxas=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EKPha+AYsK9z5PquIFIm/uALVzpPNABo/iBjvlLyfVTadnMSTHAyLEnfhN4J48uQu
-	 Z8hYBBwKtMHHAJvBDGkPkPu7wnyNAZfUTqhThejT+pf2VrXeV3o57yRlRv5dTm7o1U
-	 xbgUPVCIZFD4lol9YIh5Phg43ZoEoYATXndcfUTz3kikT+lHn2ElJBX2zUXi/DXY/J
-	 GK+US+aR6EGwFnK5R4adFkpISAYlyEAumC0hf45M5ybRAeZJ2bApLi630jcTpJzLbe
-	 FRTfbbl5JpSt7ntkRi4kgC3bEwpdWvl6kRv7e7vVvLFM3RhkJcotJZV7HzTsmKb0BQ
-	 SwqnOCm8D+eCw==
-Message-ID: <82c084341e0638b353f3f10a8a532f667f86a749.camel@kernel.org>
-Subject: Re: [PATCH v1] Revert "NFSD: Remove the cap on number of operations
- per NFSv4 COMPOUND"
+	b=WPPDvu2iKf6G4SNSkfx8qNgnEN6bbzdTS+7jnWnOg0PsHGAAhcUqCrFbI7ezCN4ux
+	 CVHYJfdneW6X5xPHN5WfAxqWyP1BbDndPmCnFw09/ZZSlUCnTbBLEAE2cIaz7n+wCV
+	 +v77a1Fwmzq9erAmlp6WV46oJyOMB6J6Ajas16drPmpFZt51vA5SR+6rGMW2k6a1b6
+	 H0r5TZCwa473vQM4J4W329CSbR6Hl8Qu6DYna95HHacO9FnHqCr4jIlVVpXJ1tDewb
+	 m5h1I2OHmOCDo6UPI+VGdW+7BstFduIpH+jSGh2TkSNmiX7eleKtZERehNfhkHaZBS
+	 Gnzt+ZkJQTd0w==
+Message-ID: <224f73ab69718644c67700bed579d48e5331b81f.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Update comment documenting unsupported fattr4
+ attributes
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 01 Oct 2025 10:00:20 -0400
-In-Reply-To: <20251001132832.9990-1-cel@kernel.org>
-References: <20251001132832.9990-1-cel@kernel.org>
+Date: Wed, 01 Oct 2025 10:00:32 -0400
+In-Reply-To: <20251001132431.9882-1-cel@kernel.org>
+References: <20251001132431.9882-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,120 +136,40 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-10-01 at 09:28 -0400, Chuck Lever wrote:
+On Wed, 2025-10-01 at 09:24 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> I've found that pynfs COMP6 leaves the connection or lease in a
-> strange state, which causes CLOSE9 to hang indefinitely. I've dug
-> into it a little, but I haven't been able to root-cause it yet.
->=20
-> Let's restore a 200 operation-per-COMPOUND limit. NFSD CI will pass,
-> and I can continue debugging.
+> TIME_CREATE has been supported since commit e377a3e698fb ("nfsd: Add
+> support for the birth time attribute").
 >=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4proc.c  | 14 ++++++++++++--
->  fs/nfsd/nfs4state.c |  1 +
->  fs/nfsd/nfs4xdr.c   |  4 +++-
->  fs/nfsd/nfsd.h      |  3 +++
->  fs/nfsd/xdr4.h      |  1 +
->  5 files changed, 20 insertions(+), 3 deletions(-)
+>  fs/nfsd/nfsd.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index f9aeefc0da73..7f7e6bb23a90 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -2893,10 +2893,20 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
-> =20
->  	rqstp->rq_lease_breaker =3D (void **)&cstate->clp;
-> =20
-> -	trace_nfsd_compound(rqstp, args->tag, args->taglen, args->opcnt);
-> +	trace_nfsd_compound(rqstp, args->tag, args->taglen, args->client_opcnt)=
-;
->  	while (!status && resp->opcnt < args->opcnt) {
->  		op =3D &args->ops[resp->opcnt++];
-> =20
-> +		if (unlikely(resp->opcnt =3D=3D NFSD_MAX_OPS_PER_COMPOUND)) {
-> +			/* If there are still more operations to process,
-> +			 * stop here and report NFS4ERR_RESOURCE. */
-> +			if (cstate->minorversion =3D=3D 0 &&
-> +			    args->client_opcnt > resp->opcnt) {
-> +				op->status =3D nfserr_resource;
-> +				goto encode_op;
-> +			}
-> +		}
-> +
->  		/*
->  		 * The XDR decode routines may have pre-set op->status;
->  		 * for example, if there is a miscellaneous XDR error
-> @@ -2973,7 +2983,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  			status =3D op->status;
->  		}
-> =20
-> -		trace_nfsd_compound_status(args->opcnt, resp->opcnt,
-> +		trace_nfsd_compound_status(args->client_opcnt, resp->opcnt,
->  					   status, nfsd4_op_name(op->opnum));
-> =20
->  		nfsd4_cstate_clear_replay(cstate);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7c60d2ffe21c..0de9ee8df7ce 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -3907,6 +3907,7 @@ static __be32 check_forechannel_attrs(struct nfsd4_=
-channel_attrs *ca, struct nfs
->  	ca->headerpadsz =3D 0;
->  	ca->maxreq_sz =3D min_t(u32, ca->maxreq_sz, maxrpc);
->  	ca->maxresp_sz =3D min_t(u32, ca->maxresp_sz, maxrpc);
-> +	ca->maxops =3D min_t(u32, ca->maxops, NFSD_MAX_OPS_PER_COMPOUND);
->  	ca->maxresp_cached =3D min_t(u32, ca->maxresp_cached,
->  			NFSD_SLOT_CACHE_SIZE + NFSD_MIN_HDR_SEQ_SZ);
->  	ca->maxreqs =3D min_t(u32, ca->maxreqs, NFSD_MAX_SLOTS_PER_SESSION);
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 6a56dca6fb04..230bf53e39f7 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2488,8 +2488,10 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *a=
-rgp)
-> =20
->  	if (xdr_stream_decode_u32(argp->xdr, &argp->minorversion) < 0)
->  		return false;
-> -	if (xdr_stream_decode_u32(argp->xdr, &argp->opcnt) < 0)
-> +	if (xdr_stream_decode_u32(argp->xdr, &argp->client_opcnt) < 0)
->  		return false;
-> +	argp->opcnt =3D min_t(u32, argp->client_opcnt,
-> +			    NFSD_MAX_OPS_PER_COMPOUND);
-> =20
->  	if (argp->opcnt > ARRAY_SIZE(argp->iops)) {
->  		argp->ops =3D vcalloc(argp->opcnt, sizeof(*argp->ops));
 > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 6812cd231b1d..8ffed4f0b95f 100644
+> index bdb60ee1f1a4..6812cd231b1d 100644
 > --- a/fs/nfsd/nfsd.h
 > +++ b/fs/nfsd/nfsd.h
-> @@ -57,6 +57,9 @@ struct readdir_cd {
->  	__be32			err;	/* 0, nfserr, or nfserr_eof */
->  };
+> @@ -395,14 +395,13 @@ enum {
+>  #define	NFSD_CB_GETATTR_TIMEOUT		NFSD_DELEGRETURN_TIMEOUT
 > =20
-> +/* Maximum number of operations per session compound */
-> +#define NFSD_MAX_OPS_PER_COMPOUND	200
-> +
->  struct nfsd_genl_rqstp {
->  	struct sockaddr		rq_daddr;
->  	struct sockaddr		rq_saddr;
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index d4b48602b2b0..ee0570cbdd9e 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -903,6 +903,7 @@ struct nfsd4_compoundargs {
->  	char *				tag;
->  	u32				taglen;
->  	u32				minorversion;
-> +	u32				client_opcnt;
->  	u32				opcnt;
->  	bool				splice_ok;
->  	struct nfsd4_op			*ops;
-
-Seems like a reasonable stopgap fix until we can figure out why it's
-hanging in the first place.
+>  /*
+> - * The following attributes are currently not supported by the NFSv4 ser=
+ver:
+> + * The following attributes are not implemented by NFSD:
+>   *    ARCHIVE       (deprecated anyway)
+>   *    HIDDEN        (unlikely to be supported any time soon)
+>   *    MIMETYPE      (unlikely to be supported any time soon)
+>   *    QUOTA_*       (will be supported in a forthcoming patch)
+>   *    SYSTEM        (unlikely to be supported any time soon)
+>   *    TIME_BACKUP   (unlikely to be supported any time soon)
+> - *    TIME_CREATE   (unlikely to be supported any time soon)
+>   */
+>  #define NFSD4_SUPPORTED_ATTRS_WORD0                                     =
+                    \
+>  (FATTR4_WORD0_SUPPORTED_ATTRS   | FATTR4_WORD0_TYPE         | FATTR4_WOR=
+D0_FH_EXPIRE_TYPE   \
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
