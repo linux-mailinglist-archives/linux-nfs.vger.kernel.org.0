@@ -1,96 +1,128 @@
-Return-Path: <linux-nfs+bounces-14849-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14850-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9DE9BB203A
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 00:45:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAD93BB216A
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 01:53:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ED311899C8E
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Oct 2025 22:45:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68A534C1ECA
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Oct 2025 23:53:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E535311C14;
-	Wed,  1 Oct 2025 22:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2374B27B4EB;
+	Wed,  1 Oct 2025 23:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmUejYhc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HwptBxr/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0271E2FE072;
-	Wed,  1 Oct 2025 22:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E032222B4
+	for <linux-nfs@vger.kernel.org>; Wed,  1 Oct 2025 23:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759358700; cv=none; b=GkY/G4X54wf2idlnJWHsNe53FRicO1b9yCYZuuASRYpGx7wHpxD1t+LFL9ptQsTUU+mlgaIZEz+nOV7nrwnU4LumhHMmUz7Kjk3a34unvfXRSbj3KNwyPlzj594m1lIcwEwqn9nrgbU2bkHtkQqDiyAVo3XSyTMh9MY6tSaqG6k=
+	t=1759362831; cv=none; b=SukwvTA7H2svwbzM10TIUm/hV0F1N46srIGduuRSFXN208zVzSMDOg7E7yUdzHE18Rol5eVcOl4jSrESJ1EpYGNEylqGMfg/7vytr91OIjxxFM8fSiBcBMwJJFQFMyGs6iMcRdtXgkvymStHATGv/E+yKHsFX68Pc+8wAfDZ9Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759358700; c=relaxed/simple;
-	bh=q0gcSaQKbrhUmp/AVOV9rmKhndELotdpu/zySyS644A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AwuezaJCHiG+dlg6N+9bFJMi6uWYf9PGSmKLTaO1B7oOl90LO9pc9ibxS3D0lj8DmMoL9hRl+yVDLkIIZudF8T9qbyWcxIPXZECu7LzzEkWrg9n50a1WgpMK/fFasPtUw8CCo2i2ua1tzJ0Mm1i2pgb3vZwvIBpT8Z7LcK8DjJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmUejYhc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C60BC4CEF1;
-	Wed,  1 Oct 2025 22:44:59 +0000 (UTC)
+	s=arc-20240116; t=1759362831; c=relaxed/simple;
+	bh=PRhqt2vi0XEqnf5bmVuE1gUTXDsaeNedYJSsd5qFvmo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=j9kUnoEAnhC+Niouf58bzDgIfIO/6ePW68C+HoFNaU6AvIXLbP1wO4+CjesefPRFxy58jTJqop5WhaaMJk97hE/tOShQYnv4Zx4AQf+7T2Kl+xo4m6ZaxsZNeLyeDpZwwuWVfsNzVePqbj7bTxCZYQMb/zFtvZ0lUeDmugrpXo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HwptBxr/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90186C4CEF1;
+	Wed,  1 Oct 2025 23:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759358699;
-	bh=q0gcSaQKbrhUmp/AVOV9rmKhndELotdpu/zySyS644A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VmUejYhcWmcwu6DX3jvTXoLlHnNuJPUQ5F37WO2wvl2dZ03IfRGXHD+vaS5RLeJ+p
-	 oGqSfWJRiRT0AtMaOH1K/deoa5o4F9pCA6RHhKaDjQD6akYwYQq9IkxVa4a1sS0TzG
-	 bhq4Fa2P6qMdw+kS/HqsZNeG/6nJZaD6i5dBQsaFhvRDkq+ZKS82WxVvuKS7489tCP
-	 Gn1z8oDzwXhCXw4RX8eCBhvzMtdfkYLpVAU9znlpnel2eEeKzyuEdWvS4e7vZ6vZwL
-	 8krFGQOzt60rN9PewWcOk5KdwZcHqbcAr+n+Mupjhabsr4V/wobxG1PsMP1cVELHJv
-	 Iw7BRzy8UBk1A==
-Date: Wed, 1 Oct 2025 18:44:58 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v1] svcrdma: Increase the server's default RPC/RDMA
- credit grant
-Message-ID: <aN2u6tt39GCNXRHO@kernel.org>
-References: <20250926155235.60924-1-cel@kernel.org>
- <aN2Cnz1TrdOO74vb@kernel.org>
- <2cfc0bf3-e1ee-46ab-9fa5-de6d0e39a3db@kernel.org>
+	s=k20201202; t=1759362830;
+	bh=PRhqt2vi0XEqnf5bmVuE1gUTXDsaeNedYJSsd5qFvmo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=HwptBxr/4nyshqn+TX9Ia0BhYyJHwTdXJh3ZaZ1CbXMsSVBR1ODMLnbMdsRBatHW8
+	 9fIiDTvIw2OJuFq53FuOsPPZ0aX99qJacS8M6z07z0XsLhsxvfC159MSCurfkM2xDh
+	 COjkUqIDuaOc3sU0NQPuYTycoblmeGIQTSEWbtLL8L/ZzgLQJI+LFeJ1s36fCdbLy3
+	 myStWk67mILeWZmwjZ45XsrXTCy0CyWyFsUTQupn/QRY1n5UxRGAJRLjGrpJig9HvF
+	 D4g0Li//NeJU6LZ8k8gZKBlzlqtiMBquueprHSDdygk0gm97x8XhcfCvKQYQL71KVj
+	 kqc6NiYbE+D3A==
+Message-ID: <80f31f25d97a2942f7b4e47729e8333af8913663.camel@kernel.org>
+Subject: Re: [PATCH 1/1] DIO: add NFSv4.2 READ_PLUS support for nfstest_dio
+From: Trond Myklebust <trondmy@kernel.org>
+To: Dai Ngo <dai.ngo@oracle.com>, Jorge.Mora@netapp.com
+Cc: linux-nfs@vger.kernel.org
+Date: Wed, 01 Oct 2025 19:53:49 -0400
+In-Reply-To: <1759357733-64526-1-git-send-email-dai.ngo@oracle.com>
+References: <1759357733-64526-1-git-send-email-dai.ngo@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cfc0bf3-e1ee-46ab-9fa5-de6d0e39a3db@kernel.org>
 
-On Wed, Oct 01, 2025 at 04:18:10PM -0400, Chuck Lever wrote:
-> On 10/1/25 3:35 PM, Mike Snitzer wrote:
-> > On Fri, Sep 26, 2025 at 11:52:35AM -0400, Chuck Lever wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> Now that the nfsd thread count can scale to more threads, permit
-> > 
-> > Just trying to appreciate which change(s) paved the way for this
-> > RPCRDMA_MAX_REQUESTS change.
-> > 
-> > Are you referring to the netlink interface changes Jeff did earlier
-> > this year or something else? (thinking "something else" but...)
-> > 
-> > Might be useful to update the header to convey which specific
-> > commit(s) made this change possible.
-> 
-> The svc thread scaling change refers to the commits from
-> 
-> e3274026e2ec ("SUNRPC: move all of xprt handling into svc_xprt_handle()")
-> 
-> to
-> 
-> 15d39883ee7d ("SUNRPC: change the back-channel queue to lwq")
-> 
-> all dated about two years ago, merged in v6.7. Just checking,
-> should the updated description provide more detail than that?
+T24gV2VkLCAyMDI1LTEwLTAxIGF0IDE1OjI4IC0wNzAwLCBEYWkgTmdvIHdyb3RlOgo+IEZyb206
+IE9yYWNsZSBQdWJsaWMgQ2xvdWQgVXNlcgo+IDxvcGNAZG5nby1uZnN0ZXN0LWNsaWVudC5hbGxy
+ZWdpb25hbGlhZHMub3NkZXZlbG9wbWVuaWFkLm9yYWNsZXZjbi5jbwo+IG0+Cj4gCj4gQ2hlY2sg
+Zm9yIG5mc192ZXJzaW9uID49IDQuMiBhbmQgdXNlIFJFQURfUExVUyBpbnN0ZWFkIG9mIFJFQUQu
+CgpIcm1tLi4uIFJFQURfUExVUyBpcyAobGlrZSBhbGwgTkZTdjQuMiBmZWF0dXJlcykgb3B0aW9u
+YWwgdG8gaW1wbGVtZW50LgpBcyBzdWNoLCB5b3UgcmVhbGx5IHNob3VsZCBleHBlY3QgdGhhdCBh
+IHNlcnZlciBpbXBsZW1lbnRhdGlvbiBpcwpwZXJmZWN0bHkgd2l0aGluIGl0cyByaWdodHMgdG8g
+cmV0dXJuIE5GUzRFUlJfTk9UU1VQUCwgaW4gd2hpY2ggY2FzZQp0aGUgY2xpZW50IHNob3VsZCBm
+YWxsIGJhY2sgdG8gdXNpbmcgUkVBRC4KCj4gCj4gU2lnbmVkLW9mZi1ieTogRGFpIE5nbyA8ZGFp
+Lm5nb0BvcmFjbGUuY29tPgo+IC0tLQo+IMKgdGVzdC9uZnN0ZXN0X2RpbyB8IDE2ICsrKysrKysr
+KysrKysrLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9u
+cygtKQo+IAo+IGRpZmYgLS1naXQgYS90ZXN0L25mc3Rlc3RfZGlvIGIvdGVzdC9uZnN0ZXN0X2Rp
+bwo+IGluZGV4IDA5M2U1NTIuLjY1M2E4NDIgMTAwNzU1Cj4gLS0tIGEvdGVzdC9uZnN0ZXN0X2Rp
+bwo+ICsrKyBiL3Rlc3QvbmZzdGVzdF9kaW8KPiBAQCAtNjE3LDYgKzYxNyw4IEBAIGNsYXNzIERp
+b1Rlc3QoVGVzdFV0aWwpOgo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIG5mc192
+ZXJzaW9uIDwgNDoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtYXRjaF9zdHIg
+PSAiTkZTLmFyZ29wID09ICVkIGFuZCBORlMuZmggPT0gYiclcyciICUKPiAoTkZTUFJPQzNfUkVB
+RCwgc2VsZi5wa3R0LmVzY2FwZShmaWxlaGFuZGxlKSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBlbGlmIG5mc192ZXJzaW9uID49IDQuMjoKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIG1hdGNoX3N0ciA9ICJORlMuYXJnb3AgPT0gJWQgYW5kIE5GUy5zdGF0ZWlkLm90aGVyCj4g
+PT0gYiclcyciICUgKE9QX1JFQURfUExVUywgc2VsZi5wa3R0LmVzY2FwZShzdGF0ZWlkKSkKPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBtYXRjaF9zdHIgPSAiTkZTLmFyZ29wID09ICVkIGFuZCBORlMuc3RhdGVpZC5vdGhl
+cgo+ID09IGInJXMnIiAlIChPUF9SRUFELCBzZWxmLnBrdHQuZXNjYXBlKHN0YXRlaWQpKQo+IMKg
+Cj4gQEAgLTc0NCw5ICs3NDYsMTMgQEAgY2xhc3MgRGlvVGVzdChUZXN0VXRpbCk6Cj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGZkID0gTm9uZQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBi
+ZmQgPSBOb25lCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9mZCA9IE5vbmUKPiAtwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBpb19zdHLCoCA9ICJXUklURSIgaWYgd3JpdGUgZWxzZSAiUkVBRCIK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLm5mc192ZXJzaW9uID49IDQuMjoKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvX3N0csKgID0gIldSSVRFIiBpZiB3cml0
+ZSBlbHNlICJSRUFEX1BMVVMiCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiaW9f
+c3RywqAgPSAiV1JJVEUiIGlmIGJ1ZmZlcmVkX3dyaXRlIGVsc2UKPiAiUkVBRF9QTFVTIgo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVsc2U6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpb19zdHLCoCA9ICJXUklURSIgaWYgd3JpdGUgZWxzZSAiUkVBRCIKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJpb19zdHLCoCA9ICJXUklURSIgaWYgYnVmZmVyZWRfd3Jp
+dGUgZWxzZSAiUkVBRCIKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW9fbW9kZSA9IHBvc2l4
+Lk9fV1JPTkxZfHBvc2l4Lk9fQ1JFQVQgaWYgd3JpdGUgZWxzZQo+IHBvc2l4Lk9fUkRPTkxZCj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYmlvX3N0csKgID0gIldSSVRFIiBpZiBidWZmZXJlZF93
+cml0ZSBlbHNlICJSRUFEIgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBiaW9fbW9kZSA9IG9z
+Lk9fV1JPTkxZfG9zLk9fQ1JFQVQgaWYgYnVmZmVyZWRfd3JpdGUgZWxzZQo+IG9zLk9fUkRPTkxZ
+Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IGJzaXplOgo+IEBAIC04NjEs
+NiArODY3LDggQEAgY2xhc3MgRGlvVGVzdChUZXN0VXRpbCk6Cj4gwqAKPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgaWYgbmZzX3ZlcnNpb24gPCA0Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGlvX29wwqAgPSBORlNQUk9DM19XUklURSBpZiB3cml0ZSBlbHNlIE5GU1BST0Mz
+X1JFQUQKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbGlmIG5mc192ZXJzaW9uID49IDQuMjoK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvX29wwqAgPSBPUF9XUklURSBpZiB3
+cml0ZSBlbHNlIE9QX1JFQURfUExVUwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvX29wwqAgPSBPUF9XUklURSBpZiB3
+cml0ZSBlbHNlIE9QX1JFQUQKPiDCoAo+IEBAIC05ODUsNiArOTkzLDggQEAgY2xhc3MgRGlvVGVz
+dChUZXN0VXRpbCk6Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBu
+ZnNfdmVyc2lvbiA8IDQ6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBiaW9fb3AgPSBORlNQUk9DM19XUklURSBpZiBidWZmZXJlZF93cml0ZSBlbHNlCj4gTkZTUFJP
+QzNfUkVBRAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxpZiBuZnNfdmVyc2lv
+biA+PSA0LjI6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJpb19v
+cCA9IE9QX1dSSVRFIGlmIGJ1ZmZlcmVkX3dyaXRlIGVsc2UKPiBPUF9SRUFEX1BMVVMKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgYmlvX29wID0gT1BfV1JJVEUgaWYgYnVmZmVyZWRfd3JpdGUg
+ZWxzZSBPUF9SRUFECj4gwqAKPiBAQCAtMTI3MCw2ICsxMjgwLDggQEAgY2xhc3MgRGlvVGVzdChU
+ZXN0VXRpbCk6Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgbmZzX3ZlcnNpb24g
+PCA0Ogo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvX29wID0gTkZTUFJPQzNf
+V1JJVEUgaWYgd3JpdGUgZWxzZSBORlNQUk9DM19SRUFECj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZWxpZiBuZnNfdmVyc2lvbiA+PSA0LjI6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpb19vcMKgID0gT1BfV1JJVEUgaWYgd3JpdGUgZWxzZSBPUF9SRUFEX1BMVVMKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpb19vcCA9IE9QX1dSSVRFIGlmIHdyaXRlIGVsc2UgT1BfUkVBRAo+IMKgCg==
 
-No, that's perfect. Thanks
 
