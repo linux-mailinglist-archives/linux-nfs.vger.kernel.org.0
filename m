@@ -1,313 +1,696 @@
-Return-Path: <linux-nfs+bounces-14851-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14853-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 762A2BB2756
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 06:00:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD983BB2CE3
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 10:13:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A956326729
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 04:00:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 917ED160534
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 08:13:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1EE18C31;
-	Thu,  2 Oct 2025 04:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Or7DW/Q3";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xG4WhOJr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30942DBF47;
+	Thu,  2 Oct 2025 08:13:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C30F29A1
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Oct 2025 04:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759377629; cv=fail; b=RKKtPcJhtQ3ircaNlPCmJqsV+oLKFLRXqCls59U6rM0axOkUtM6AX2oM0xoSOJwI88/YVQz2G8sq72b39Ns6Lbj/mQsf4OKYl8ScLNDutNApSnOxrNGgt7hCkwsvjZwyKX9GT4aKUNhvCkzB9iapdFANHZnqdg7Sb04Zzgf5syU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759377629; c=relaxed/simple;
-	bh=FhY+FgZMymAlyBXxtlBdmIfmI792WJD4ZG+H0k7cf7U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vg/945fgyZ8XWegbcQ3LrLyo4MpDbfWI33KcBcUVUNR45CT/taqkyT/aKYXrUAwc8LNej3pkmqeyAmdgLLlSE//QBHnz4xQbwhMUVmt6XFYyNh7/No+Ws9q7YlJ0ZkPwgPMaxK8a/KxDFXboQXim3AIpWa2olXpwFNetd4QB0ys=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Or7DW/Q3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xG4WhOJr; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5922MvqE028539;
-	Thu, 2 Oct 2025 04:00:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=281goQrbfS2HM7D0jEPqI34/hUikpuvniBIkllfq7Qs=; b=
-	Or7DW/Q3FNbrHGhpypWArOLVilXPjeNB2pyNdLt8FI0LF/0ypPwelVT2EVBVEacy
-	9uCAHls5+Mz6hTNEJf6eSe80Ir5VkrrhFXgj9dTLY0GvrsXPefdZxU5qHAnPSX06
-	reNuyFaoloGvGIzG+qRsI1NSjhNSf6sR8uqlc4nywc8pMoSnxKJtHOPO5sUtQYC5
-	dwZBT9rpwehYVGt5dtXyJp2tDVAbJqFoCaF6JEsYladiB8EJAyUaCVZa+CnzR9S5
-	Fkey8tHrhF37ZPe5c7cOj5ObmxlJG7/KJj+sN4wHlqcfp/dCYECNpinZNGNgfb7o
-	qTRuvV97Vk9Xjeu98z1aFQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49gm3bjps5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 02 Oct 2025 04:00:23 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5920LvZS012263;
-	Thu, 2 Oct 2025 04:00:21 GMT
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012028.outbound.protection.outlook.com [40.107.200.28])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49e6ca09ma-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 02 Oct 2025 04:00:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DOhMD076DDgJsWMORlR1RNM8xixSLDJ5oTtN5Zf/sYlYbBIaYcINcg+J0e8NcFFTSunNUDGeXd9aeN2oGB1rF0uPWVpqiE8nV2WK4G439A4zRuqErkQiViQ4EVe5C+MvPqsZnCYrnjGrdDtIo8yqPX3EJznL+b1kS5IrclrKHjV7/9A1yT6w32Ve49R9o/tT/+UNb1KvEg+E9EBfNoLsLBp1m7oyY/pwQkqnsjv2Of/mpQgQllwtggzZxHyouLNme7BYPugR68uOlPolfJQ9IsWpot18DCZ78LRDc1phEaeISKpmuksIBS1b0bZF3iDguN4uSGhm6i9Iz6jvDeiwSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=281goQrbfS2HM7D0jEPqI34/hUikpuvniBIkllfq7Qs=;
- b=MiuO/n7Jd45peJ2tH/AHlMDpNZL7kFZaeFwnFuAD6ym9gtM9vmpatTFuomqUZud4TK2uyIW8cQhdzbUcCIyH1Fvxxtc7lhxP+E/rxGXHMfoniiJwvg6E6eyS+mTu9AsznhSw6hRHhckF1esZ5/fCqnNQ39WOkz+qPaJHK/gnH49Xxf7iC3NAcqTaeDoffkM06hhqF/30BK/wS2khOgn5ha9n2uprDkqG1/4oPG3tjHHchccAsaKkB0xh4pvatSG2CRnTazk7dBy4uzf0uE7mgmBJRNtOD/o3JV/H3GnGSfgHLJXxCccAgBruNsantS/27EoHqXQb1vPLpInPYteP8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=281goQrbfS2HM7D0jEPqI34/hUikpuvniBIkllfq7Qs=;
- b=xG4WhOJrH+/ZTLqHffEiFTX5baqWPK74V+gOTkky08xgXTkH1qfOXUjfuDnTbgEkErpY5ymDYjFvi4z3/BQ19R8mbmm2+AhB5790jVS9nOnCKQ1haEobfP0we/q/QpW6EBpgl3KzpxBl32mEFIG3g9pkZJWUqylxJJ+1oNu9FPI=
-Received: from MW6PR10MB7639.namprd10.prod.outlook.com (2603:10b6:303:244::14)
- by BN0PR10MB5191.namprd10.prod.outlook.com (2603:10b6:408:116::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.18; Thu, 2 Oct
- 2025 04:00:19 +0000
-Received: from MW6PR10MB7639.namprd10.prod.outlook.com
- ([fe80::69ee:3509:9565:9cd6]) by MW6PR10MB7639.namprd10.prod.outlook.com
- ([fe80::69ee:3509:9565:9cd6%4]) with mapi id 15.20.9160.017; Thu, 2 Oct 2025
- 04:00:18 +0000
-Message-ID: <abb85f05-49fc-4d5b-bdfd-608425c52e5f@oracle.com>
-Date: Wed, 1 Oct 2025 21:00:17 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] DIO: add NFSv4.2 READ_PLUS support for nfstest_dio
-To: Trond Myklebust <trondmy@kernel.org>, Jorge.Mora@netapp.com
-Cc: linux-nfs@vger.kernel.org
-References: <1759357733-64526-1-git-send-email-dai.ngo@oracle.com>
- <80f31f25d97a2942f7b4e47729e8333af8913663.camel@kernel.org>
-Content-Language: en-US
-From: Dai Ngo <dai.ngo@oracle.com>
-In-Reply-To: <80f31f25d97a2942f7b4e47729e8333af8913663.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0265.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::30) To MW6PR10MB7639.namprd10.prod.outlook.com
- (2603:10b6:303:244::14)
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9D912D239B;
+	Thu,  2 Oct 2025 08:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759392792; cv=none; b=d6dgPFYbnbW2SO5PkC16LKa9F+ASgYq1sufVfE7Ea0warELYU+GJqIdnZy+agZP9lH6FkLXlGck5/EX/HQz6W63kweCBH6OqFWUFLmdyF9VmUuwibLpXLuSFpT2CH6Ky0w83p/QWyIaOUZO1OQLkexPXvrls3Lt2+4T7VkezOIs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759392792; c=relaxed/simple;
+	bh=8opNft806bn0BC/O71uXTdkgWwuSY6TOrolnSlvGhRQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=mUgr8+GwgvfOEfBnSUJCe43IQ/Dldrmb2lmA0p+9WXbQRydv7l3nOIYFT/WZGh2qIhdhUucR6HPSn2q4NSq5Fg62Ji5Hi7TnQM+qyD+7H/fTkqb0+NSfoMaY5MUi2X6UVTGncWIA+MkiLtbEW8ToDQmdhpbi3V/xtAjIAJCGvNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c2dff70000001609-22-68de340a996c
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	harry.yoo@oracle.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	yunseong.kim@ericsson.com,
+	ysk@kzalloc.com,
+	yeoreum.yun@arm.com,
+	netdev@vger.kernel.org,
+	matthew.brost@intel.com,
+	her0gyugyu@gmail.com,
+	corbet@lwn.net,
+	catalin.marinas@arm.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	luto@kernel.org,
+	sumit.semwal@linaro.org,
+	gustavo@padovan.org,
+	christian.koenig@amd.com,
+	andi.shyti@kernel.org,
+	arnd@arndb.de,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	rppt@kernel.org,
+	surenb@google.com,
+	mcgrof@kernel.org,
+	petr.pavlu@suse.com,
+	da.gomez@kernel.org,
+	samitolvanen@google.com,
+	paulmck@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	chuck.lever@oracle.com,
+	neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	kees@kernel.org,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	mark.rutland@arm.com,
+	ada.coupriediaz@arm.com,
+	kristina.martsenko@arm.com,
+	wangkefeng.wang@huawei.com,
+	broonie@kernel.org,
+	kevin.brodsky@arm.com,
+	dwmw@amazon.co.uk,
+	shakeel.butt@linux.dev,
+	ast@kernel.org,
+	ziy@nvidia.com,
+	yuzhao@google.com,
+	baolin.wang@linux.alibaba.com,
+	usamaarif642@gmail.com,
+	joel.granados@kernel.org,
+	richard.weiyang@gmail.com,
+	geert+renesas@glider.be,
+	tim.c.chen@linux.intel.com,
+	linux@treblig.org,
+	alexander.shishkin@linux.intel.com,
+	lillian@star-ark.net,
+	chenhuacai@kernel.org,
+	francesco@valla.it,
+	guoweikang.kernel@gmail.com,
+	link@vivo.com,
+	jpoimboe@kernel.org,
+	masahiroy@kernel.org,
+	brauner@kernel.org,
+	thomas.weissschuh@linutronix.de,
+	oleg@redhat.com,
+	mjguzik@gmail.com,
+	andrii@kernel.org,
+	wangfushuai@baidu.com,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-i2c@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH v17 00/47] DEPT(DEPendency Tracker)
+Date: Thu,  2 Oct 2025 17:12:00 +0900
+Message-Id: <20251002081247.51255-1-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0hTcRTH+937u/fO1eK2gm4qZosVVPY0OERIJMGFMoJIqP6okZc28sWm
+	Kwtr5SN70VrMYjNRy2U60TY1H71cNTQr1Fotc9rCZjJXGTrRMptF/xw+5/s5nPPPEZHSVipc
+	pErNENSpimQZLcbiwJzSmNmxfcq1xUYKxkYLMBTVWGnoHytAMP7TTMKUwcnA6MQHBqYfOBFY
+	604T4H/yA4HRO0DDtaHTGEw+MwOB/hYKpj2DBLwLDiOwDPwmYKrwCHypPYugztmH4LO+noTX
+	A3Oh3XiBhkBXEQE3zAYEOTdraCi8YcPQ9LGZgd5CAwFVtgTot/gwdOjLiNAVGszXcohQ+UKA
+	sbqFgAlLJQMWnRw+VZgY+OVdB9MlaeCsGmTAc9mIwe8z0GB7/wzB6BsvAdaLPhIKmscwPOhZ
+	CaX5tzC8bi6i4WJtPQV91mkKdOZxCjofd1BQM+gmoMPZhqHddAdD+bsuArwf3SF75RIFbv1n
+	BNVfy2i4+tWHwB+0kFuS+Ep7A8HndU/RvLXYivifkwbEj5bnkHyePtQ+Gf5G8rn2o/zkmIvm
+	n5dx/JWXMXyTycPwuQ97GL7ElsnnPg1QvL1ixa6V+8Sbk4RklVZQr4k7KFb6HH4iveQ2OpYT
+	dFE6lH/yPAoTcWwsZ3L0kf/Z2FBNzzDNLufc7om/+QI2mrNf8lEzTLIdkdzbrlUzPJ/dwAWN
+	I3iGMSvn2qdcf+cl7Ebuuv0Z/W/nYq6q9nEoF4f4bBj33d6D/olFXGuFG+vR7BI0qxJJVana
+	FIUqOXa1MitVdWz1obQUGwo9liX71/5G9KNztwOxIiSbI+mUe5RSSqHVZKU4ECciZQskByt6
+	lVJJkiLruKBOO6DOTBY0DhQhwrKFkvXBo0lS9rAiQzgiCOmC+r8lRGHhOoQrHdmSC1UZCZqW
+	ybsPl3X7921ubsTjCa3FkYGtUd7G8Oi2iFNLzt0ztJ5xvdr+YnhuTO1I3lCm/MP6E/eWbooa
+	+u6Kb1iVv9bAP4oIlsrid0ZuaPKVJ96/c84UVcxQvVlx2+aZ4z1qbaZnj25yxNXEZWvjdHvt
+	8vTopTu62xIJGdYoFetWkGqN4g/p34+3VAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0hTcRjG+//PbY0WJ7M83WMh0cWuRi8ldoM8FUlBFPQlRx7acGpsZRpd
+	psuSsrLRtFzmsjZNp01XksXKFi7KTKdZUU5TbJq6pLyUeWsr+vLye3keHp4Pj4gIyKVmihRx
+	RwRVnEwppcWkOHK9NkQc2ixfUXVhOrxLriRhoD+NhBv3LDSklV2noK6kCEHLQBqCn8MGAlIr
+	xkkY1TkZ6B/6xMC43Ykg06UjwHI/GUOfdYyG7uc/EOhb22nI+ppMQq85HUG2x8DA16oI8LY8
+	pmDc3YHh/WAPAnP7GIb2ynMIRjNjIDfPRsNwTS0BWfo6BLda3QR0Wn3ifWczAntBCg1fMh4Q
+	0NA+Gd4O9NLwUn+BBq/rBoZvVhqMKXYKcgw6BNrb92jIzCkjoeLzIwZc3SMYmjJ1GIrKdkKL
+	2UNCdUYe9vXzuUqDwJClxb7TiUFf/BjDkLmQgde3m0gwa4LBUNNAQVtBNgMjrSth3BgPzqIO
+	BtyX9SSUeGupjXrE/0y9RPKFtnLMp9aP0rzlpgXxw791iO83aQk+NcP3Pu/pJfgztmO8qbqH
+	5n8PNNK8fdBI8q/yOP5KTQhfke1m+DNPPjK71u0Xh0ULSkWCoFoeHiWWexzd+LAxHyVqBxsp
+	DTp76jyaKOLYUE5fXkz7mWYXch8+DBF+DmTnc7aLHsrPBFs9m3vnWurnqexqblD/nfQzyQZz
+	L0cb//ol7Brumq2K/pc5jyuyVhIZSGREEwpRoCIuIVamUK5Zpo6RJ8UpEpcdjI8tQ77ZmE+O
+	XHmI+hsiHIgVIekkiSvYLQ+gZAnqpFgH4kSENFASVdAkD5BEy5KOC6r4A6qjSkHtQLNEpDRI
+	sn2fEBXAHpIdEWIE4bCg+q9i0cSZGrRq3dUT0TO2Bh1M3BH2bCmeNc2kbDu9oVg1p66epcIX
+	LYhPr78ZgZYMT1mvDvVs27xpU9/cLBze4SnFpd80pjcpXdj7Kj/atMV5fbn6Tfndj96Ha4/+
+	evHILt8dwnftzgnba1nQqXFk35ky1LzihXXPU65rbEeJcLGtb2pkrZCey0pJtVy2cjGhUsv+
+	AAFAkRoyAwAA
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW6PR10MB7639:EE_|BN0PR10MB5191:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a1b3dbf-a60d-4590-5e98-08de0168339b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T015cUpqSVVSQm1wSy9mQkdBdnJCOUQvMVAvK2psb1Bqd0RHMW5QbGcwdTla?=
- =?utf-8?B?bW9CaG9scjFVVmtPVW04TjZkaks3ck1BbzQ5R2xMNXpoWUpzbWdtVHcxaU5D?=
- =?utf-8?B?NVRma2puTG90MFRkQWlic2kydyszeFU1cHhFNlJYaE5ZSG5HUFA2dHI0Wkoz?=
- =?utf-8?B?R2lpeDl3RWNTWnhzcU5tL3d0ek9iSUxFdGpuMkhSNVF1SXhFM0ZTTTJsckl3?=
- =?utf-8?B?RjdPeTRYVyt4OTJWZ0NzRHNqcVhTR0VpZDlnUitiTDZTaFhtZ2h2VkZHQVdY?=
- =?utf-8?B?NkN2OVVHYUVITnhmdStuRTJuTHhENXdGL1Z4UzA4d2FWOVFzdXFqdW5YS09i?=
- =?utf-8?B?UkxudkttYkxrZFU4cnZJMXlkdkxKSjBlY1ppdVcrRHUyQ0hzSFI2Sm1IUkFi?=
- =?utf-8?B?a0ZrblFVcHBiM1RYLzNIZWQyQXFuUWlWRVVWYUxNZU10WFhGaGJzU3dkcTE5?=
- =?utf-8?B?SG82enlwb2NmZ3ZwVTNJRmRJSTZlbVRjUmJIeDVmSHJLVTNObUFScnE4NjBE?=
- =?utf-8?B?NG9oLzZBMThUTHpvem5rbjV2SGZETlU4MGYrNERQMjhJSWpaVStYeVlrQjYy?=
- =?utf-8?B?MzRRZHFHaGZ0VkJjWS9DemRabldRU3krSWxPWUtXeUdhWnZwWDlaVEJxTmxh?=
- =?utf-8?B?aURNSGVrT1FHcnZTeUVFQVlxcXdHRjF6RGVLaTBnaWlxQ3JwcmhDZkE3VVFl?=
- =?utf-8?B?cGpPaHRaTlh5bTk5bURjNXVCWUlMZDBPcTVWZHBrRUxML2w1aEo1YXBxclFC?=
- =?utf-8?B?VWUyTGtVV3V4UXJuL09Hb2ZhNURwRjNja0l2WFhvdUVRTGJ3SjZ6TzdZWmxN?=
- =?utf-8?B?YUpyNndrVDFXZWppWHQxblk1UE1ob2dhN0JCU2hZVll4Uy9acEhsYzNsWlNn?=
- =?utf-8?B?TERGMDR6QVNlN0pGUzNrS2VHcGVEVTY1Vk0vV0RGbVNTWDFvWTZMamxWOE9W?=
- =?utf-8?B?SjlDNmtPb3FteWc4Z3JOUjZ0ZmZwYnNKUWpBNmVSTmFGNmNnRXBtdlZkT0hk?=
- =?utf-8?B?QXB0bG1iWXhWVWdSZW54bXpyVW1vNHlYdUhzNDh6NlkvWHowRGVXSVNLaGZj?=
- =?utf-8?B?RERaekJzcC82eFEwdFBPL1pDTnhlbGx4c0c5b2E3bnFEdjFxRTZkNnl5TDR4?=
- =?utf-8?B?bG5KRVFNamtFQ21leWNnK1QvWkFOcC9ReXkxWHNnZmtUR0gya280QTd0RnND?=
- =?utf-8?B?WVppUnlrT3A3THgyOWF1K3doRE96alpWMU1FSW1RMGJ2RnZBT1R1QUcyVm03?=
- =?utf-8?B?MEMxK090N1Z2WkVSU0hzSDJzK1NNbXhHT3FMREd2NWR4TldPUlBCamFYN2Zu?=
- =?utf-8?B?di9rOWdoYXBzcEFvZlk3QTZ5OWVjMzFmMUg0cmZpdktkcmtNREcxOUQwYmJF?=
- =?utf-8?B?OW8zaHpKb1g1VmlER1p2N2l5d2VkTnNuQ3Fia0JXV2FHcXZxWGJpQmlpeVk5?=
- =?utf-8?B?TjJ3NDNxNmdZbDhCbXM4WXRobWthUDVqeHdYMXBTTmRmcitiZzd2UisyMGxL?=
- =?utf-8?B?RzBVMjVMNFo2TTQzY0VBLytGaE5YQXdycUhUSE84bnU0RGpwcUIzaUZQZEFw?=
- =?utf-8?B?SERRd25RS3FFODZ4Y0NMOUJta2djS3lJZC9NRHdPaVVudy9Bb29qSWJBY0F1?=
- =?utf-8?B?L3lvODlqL2orcksrc05EM0RjVk5TTkhYWkJuY3d6TkZIdU5jM3lkNVkxemJ4?=
- =?utf-8?B?bm5JdEFsYzN2c3E1Z1FWaDAwTVJmRUVsRkViYlJMMlYzYnl4WkRRS1MvTVd4?=
- =?utf-8?B?a3hIT3hxRkU4TnpSUEE5bStEejdFckk3WE92Tnk5V0RSOXl3UkQ3eUtCRVg2?=
- =?utf-8?B?TTI3dXNmcE1QNVc5Vi9IWmUxNjBaS2p3dUkxZkdaeUJPeSs1Zk5EVjRrYkkw?=
- =?utf-8?B?ekVJeVBXRkw1L1NTenkzekdjTFdlYWN2MkZ0bUpPaTZ0NWpDTWliOXhZaFQ5?=
- =?utf-8?Q?Dd5EyvD37sAOtt2Afb8K6GP9LSG3G1PC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR10MB7639.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MXRPUko5MENjOWc2RDZqUEhzMVZIZktPOHR3RXpUUUNXTytCaktSL29XYU1B?=
- =?utf-8?B?WmpJb3FWVi9ZNWZjTFNLMk80QjNyd3JmNDRoS3VzYktLUVJsdkw5YzlGOHR1?=
- =?utf-8?B?aEVtTTdHcTloeXJEM2FRNzZwaWpCSVJMUzMyNE1RTFA1QzdLY3NCZkdxT09x?=
- =?utf-8?B?anZKeW5JbWN6WWkxZzhPZ3kzTTd4WjNuRWxnRkZKaW83QnVuSGtycS9Ud0o4?=
- =?utf-8?B?WkgvZnQvNXBlWlNUalZRa2grT0wrUkF2R3pyelJSalh1Vzc3dEFDN2dwUVEr?=
- =?utf-8?B?ZGJsZnJLTkQxaW5qbERkZE5zNnhuampOUCtDelppL3BuOTJCektHWEcyWldH?=
- =?utf-8?B?TzUwTk56MDQ1b21GSUxlQUc0b2dNc29lbGRNSytENWZmTVIzeFg3NS9aWWdN?=
- =?utf-8?B?NzJoZnM3Y21GeTFqNjBodkxNL0d4QldzK2tDSVhMY2g5ZDRRY1JLQ0dpSyt4?=
- =?utf-8?B?c3FuM2k0RXZYWnhNUFRkR1BzMjdCeTV5SVNSODdyY0hDT1Z3UkxiWmRENzc4?=
- =?utf-8?B?amtuS1c4bjVqOVRzYllHMno0ZDZVK29jOHB3NXJMbHpscXEvT0txUmFRdDJK?=
- =?utf-8?B?Uko0L3FueVQwajFXY1E4ZFlmSjZQanA5N29FOExTL0JPMUZ3Y2hPV0xxRHVl?=
- =?utf-8?B?NHJGR3dadWRYVy83cldtUUt3dlQ5dE0zZ3FFY1NOTFlIUFQzc0NhcUlJZ284?=
- =?utf-8?B?ODYzUHJWK3h6eUxtaEJ6Wi9ab1FxcmN3TEh0d1UybnRjL3VRdFpDYXIzckU5?=
- =?utf-8?B?ZW5ENzZsamU5cFFBamVRSjZKNEJqWjBxSUgzeHd1V2hXTThrU2o2ekszbGhv?=
- =?utf-8?B?L1R5UkFDRDZtRnA5anE0YThlNW5RT2ttdXRIOXBTMTRJakwzZlBpaTV3S2w2?=
- =?utf-8?B?c1krQWN0S1VIV25CWlZVSm05RmZ5dWZBVlhyVFhrZGFEMXFGUTVtc01vM0Iy?=
- =?utf-8?B?am5FVWR3ZU5zNnNaWmlIcmpITzNncmtnQkZvdjVLK2xXWVY0VU9hNWVWZ0Ez?=
- =?utf-8?B?MUhBK1RGK25GSE1rc3pJRWw0K0tjb2VEN1V4ZFZHTzNPVzU1V3JhUllnRStn?=
- =?utf-8?B?LzQzZHBkN1BHRHZNZStGbjlaVlE4ZG5ZUWtWU0swRUt0UFFUOXZJNVZERyta?=
- =?utf-8?B?VlVJNytTeERNck1LRk5lajhkS2VhNzJhQU81a1p0RlN6U1U1akdpT0pyRHY1?=
- =?utf-8?B?by81aU9uTGswc1pBSFYrRDcxWXYvQ2pXUis0RXFxTG1CbURkbUxGanhBRldj?=
- =?utf-8?B?b1N5dHBEb3hYYkg0WjJ4MnNKa3R2bk1JeS9tcmw3eEkzbG8zbTFxaGMwR3l3?=
- =?utf-8?B?WWpReEpNam90MmdJaEZtUFllTm10Y2sxZmlqUFBvOGc2WTE1NXh6WEtHNWNo?=
- =?utf-8?B?Y2lrRnZsWVNUT2ROcitxaTdheVgwVU5PQXhWempMNDQ3ajlqcVJjdG0yd0F3?=
- =?utf-8?B?dWJkVktpMFVnZGFpVVpsbnIvaGVsUDk3NEtuSmx6MzdSSHl2MThCR3RLSjFM?=
- =?utf-8?B?ZENWZXB0RXJlaERDRE1oWENEVVdJb2t2clBSdkhDQ3VOK2tsS2NxbDREYXNm?=
- =?utf-8?B?ZkdVRk1GRDRPSnplZjFtRWJueEtYQ2VJc0YzZmtZTy9pbzJxMk0wZFpZcU85?=
- =?utf-8?B?R3VYdFZTSzZOZUpLVUdzY0RYYlFnVk1KRUF1NXlqaktobjBicit3Sjk1bzlN?=
- =?utf-8?B?WlgvZnUzYVpSdnFMVzBWSDNFSlpnam5aNEhXRnhTZkdDdjFudjR5MVdIdGh4?=
- =?utf-8?B?UVRFa083SGV4cUR1K2t1VWdhZWpVNTl3UVdLRC83QkZXY2NtR0RjRzZWanBW?=
- =?utf-8?B?K2RnTCtLU0M3R3RNMDk5c01GVTBXWjk5d2N5SGFhTEZVWDBhby9GM1JmVXVT?=
- =?utf-8?B?Ui8yUEU1bVUzVDdob0R5RmkrU0xFOXJSVVhtemtDNmxZdExrQ0I0dlhIWmJn?=
- =?utf-8?B?YUk4Q00wUUljL3FGMXo3MThjSTM1RDhJUnl3NldRSjFKN0k2VVhISEl1bVZw?=
- =?utf-8?B?bGN3d0ZwaVNpMmJUZFZSZjhobzNSSW40eTBGakVmMklVb2w3MWtSSzdxYita?=
- =?utf-8?B?SVgzWVgvZUt0bGVtS21GYlhrbmpxMVRmcXMvaGloTzBOUitGYmZMNlhZR0gx?=
- =?utf-8?Q?WWyM48vsFdc3QXJmwjmOefkqK?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	sEKgnPVIpEE42MuFrYC9U/ItypZORc6iDKAIE/5iCn/OdA2H10D4z1uxL/0KDj230KAvNVArb3Kch33fz2MWkgS6BP/Kyne4xywkVVGTOy7JajXAQ4c0Szyl1JdUTmserDT6lAqlnRzL7kQkfHoBaujj0omMMkHaQsXxzQHhWdCur5/YT4DE1Y1Uu0/lmLSW2m5apvt5tXPoL7QKDOYEKuSHC8tJ0zbl+TuC5++7+vl2Wr63CVcpopJDN4FhWraSQR67HNsHy734wJQq1aLNh6EaUS+dIWlXU3dub47Kh3EEobhg0w0I4Z9nI2sr2hQKq5p7gXYB6EsIB45iEbdgF5rJ3xIU6Fidpsr3bu0tBDTGaFRVIKPDK8HFXhFwugbi/BbBPYHZKXSuE1N+jzC68abbXwgalVX/YGioVyH1plUJxfMlb1KJTP7txqs7BHKj9sC8urOxXa8tFsXLVyZ34C/gfXi31WUeg1G13OqgRkzoQ1OdM91mBxeouBTomoES6YVQbyoZghybJsmKgxpP927ysYrQt+JZ+1KwUNf4n/lDUeafRuFSndJMhRx4Qkc123Jvjf8o4lXhL40nbnYnSi+3uzdN6gh/06sgZj5se2U=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a1b3dbf-a60d-4590-5e98-08de0168339b
-X-MS-Exchange-CrossTenant-AuthSource: MW6PR10MB7639.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2025 04:00:18.8461
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8sEkh1nMf7SO0c9/d9LgLxrzX6r4c836l4KtmDL5j9lxA9Orwjjc0vUQg+dZ5nCNwV5NLPXBbCycRKsFaFaFUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5191
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-02_02,2025-09-29_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2509150000 definitions=main-2510020032
-X-Proofpoint-GUID: MVnOi3CqrZJ4PrCG0REHztNudjm99YCD
-X-Authority-Analysis: v=2.4 cv=GsJPO01C c=1 sm=1 tr=0 ts=68ddf8d7 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=HWsUtvSUUlqsDhaAbZsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12090
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTMwMDE2MiBTYWx0ZWRfXz3lUU34RwdYL
- uGKO28MwI0N6orrrUh1SMykxrCejGezMGN4OcJT1IMZNX2YEPRJy/vzobDVPkyjSJ2R+mFLrqTG
- EP04Kpix86u8gan1/1t52cvx4j7owwkv6PDq6POmt2xmCNuLcBoLibDSPw8cwqg/6uvheWf4ydw
- A++CnokzfcqEwT0xbcV4Ahu51/pLeOz0enAHcaYgR/3GwOmyJms+L8vIz5DrSyNT4ch7wBDZPWh
- LMBUVjNPQR+6wxQ3xwoyPmf8Gy3hMiMi0rgknGIskRPAdrK02t1Y6z38NtsaBmS+qfwu3SlXhYJ
- wyZHVZCvipaL4ebH7nStbOV1P6LsYsRArwyOXL2SlXPD5LDVyEVajHXH3s8595herzb1W0Q+ZsE
- OpGEi+CNDQ7cWvi+sWIUL8x4h6XTSLL2MmMShpqI8WP9ej1zIVc=
-X-Proofpoint-ORIG-GUID: MVnOi3CqrZJ4PrCG0REHztNudjm99YCD
+
+Found out a recent deadlock issue can be reported by dept.  The issue is:
+
+   https://lore.kernel.org/all/20250513093448.592150-1-gavinguo@igalia.com/
+
+I'm happy to see that dept reported real problems in practice.  See:
+
+   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/
+   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
+   https://lore.kernel.org/all/b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com/
+
+I added documents describing dept, that would help you understand what
+dept is and how dept works.  You can use dept just with CONFIG_DEPT on
+and checking dmesg at runtime.
+
+There are still false positives and some of them are already in progress
+to suppress and the efforts need to be kept for a while as lockdep
+experienced.  Especially, since dept tracks PG_locked but folios have
+never been split in class - which needs help from maybe fs guys tho.. -
+we should put up with the AA report of PG_locked for a while, for
+instance, any nested folio_lock()s will give the dept splat for now :(
+
+It's worth noting that *EXPERIMENTAL* in Kconfig is tagged, which means
+dept is not proper for an automation tool yet.
+
+Thanks for the support and contribution, to:
+
+   Harry Yoo <harry.yoo@oracle.com>
+   Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+   Yunseong Kim <ysk@kzalloc.com>
+   Yeoreum Yun <yeoreum.yun@arm.com>
+
+---
+
+Hi Linus and folks,
+
+I've been developing a tool for detecting deadlock possibilities by
+tracking wait/event rather than lock acquisition order to try to cover
+all synchonization machanisms.
+
+Benefits:
+
+	0. Works with all lock primitives.
+	1. Works with wait_for_completion()/complete().
+	2. Works with PG_locked.
+	3. Works with swait/wakeup.
+	4. Works with waitqueue.
+	5. Works with wait_bit.
+	6. Multiple reports are allowed.
+	7. Deduplication control on multiple reports.
+	8. Withstand false positives thanks to 7.
+	9. Easy to annotate on waits/events.
+
+Future works after getting merged:
+
+	0. To separates dept from lockdep.
+	1. To use dept as a dependency engine for lockdep.
+	2. To add missing annotations on waits/events.
+
+How to interpret reports:
+(See the document in this patchset for more detail.)
+
+	[S] the start of the event context
+	[W] the wait disturbing the event from being triggered
+	[E] the event that cannot be reachable
+
+Thanks.
+
+	Byungchul
+
+---
+
+Changes from v16:
+	1. Rebase on v6.17.
+	2. Fix a false positive from rcu (by Yunseong Kim)
+	3. Introduce APIs to set page's usage, dept_set_page_usage() and
+	   dept_reset_page_usage() to avoid false positives.
+	4. Consider lock_page() as a potential wait unconditionally.
+	5. Consider folio_lock_killable() as a potential wait
+	   unconditionally.
+	6. Add support for tracking PG_writeback waits and events.
+	7. Fix two build errors due to the additional debug information
+	   added by dept. (by Yunseong Kim)
+
+Changes from v15:
+	1. Fix typo and improve comments and commit messages (feedbacked
+	   by ALOK TIWARI, Waiman Long, and kernel test robot).
+	2. Do not stop dept on detection of cicular dependency of
+	   recover event, allowing to keep reporting.
+	3. Add SK hynix to copyright.
+	4. Consider folio_lock() as a potential wait unconditionally.
+	5. Fix Kconfig dependency bug (feedbacked by kernel test rebot).
+	6. Do not suppress reports that involve classes even that have
+	   already involved in other reports, allowing to keep
+	   reporting.
+
+Changes from v14:
+	1. Rebase on the current latest, v6.15-rc6.
+	2. Refactor dept code.
+	3. With multi event sites for a single wait, even if an event
+	   forms a circular dependency, the event can be recovered by
+	   other event(or wake up) paths.  Even though informing the
+	   circular dependency is worthy but it should be suppressed
+	   once informing it, if it doesn't lead an actual deadlock.  So
+	   introduce APIs to annotate the relationship between event
+	   site and recover site, that are, event_site() and
+	   dept_recover_event().
+	4. wait_for_completion() worked with dept map embedded in struct
+	   completion.  However, it generates a few false positves since
+	   all the waits using the instance of struct completion, share
+	   the map and key.  To avoid the false positves, make it not to
+	   share the map and key but each wait_for_completion() caller
+	   have its own key by default.  Of course, external maps also
+	   can be used if needed.
+	5. Fix a bug about hardirq on/off tracing.
+	6. Implement basic unit test for dept.
+	7. Add more supports for dma fence synchronization.
+	8. Add emergency stop of dept e.g. on panic().
+	9. Fix false positives by mmu_notifier_invalidate_*().
+	10. Fix recursive call bug by DEPT_WARN_*() and DEPT_STOP().
+	11. Fix trivial bugs in DEPT_WARN_*() and DEPT_STOP().
+	12. Fix a bug that a spin lock, dept_pool_spin, is used in
+	    both contexts of irq disabled and enabled without irq
+	    disabled.
+	13. Suppress reports with classes, any of that already have
+	    been reported, even though they have different chains but
+	    being barely meaningful.
+	14. Print stacktrace of the wait that an event is now waking up,
+	    not only stacktrace of the event.
+	15. Make dept aware of lockdep_cmp_fn() that is used to avoid
+	    false positives in lockdep so that dept can also avoid them.
+	16. Do do_event() only if there are no ecxts have been
+	    delimited.
+	17. Fix a bug that was not synchronized for stage_m in struct
+	    dept_task, using a spin lock, dept_task()->stage_lock.
+	18. Fix a bug that dept didn't handle the case that multiple
+	    ttwus for a single waiter can be called at the same time
+	    e.i. a race issue.
+	19. Distinguish each kernel context from others, not only by
+	    system call but also by user oriented fault so that dept can
+	    work with more accuracy information about kernel context.
+	    That helps to avoid a few false positives.
+	20. Limit dept's working to x86_64 and arm64.
+
+Changes from v13:
+
+	1. Rebase on the current latest version, v6.9-rc7.
+	2. Add 'dept' documentation describing dept APIs.
+
+Changes from v12:
+
+	1. Refine the whole document for dept.
+	2. Add 'Interpret dept report' section in the document, using a
+	   deadlock report obtained in practice. Hope this version of
+	   document helps guys understand dept better.
+
+	   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/#t
+	   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
+
+Changes from v11:
+
+	1. Add 'dept' documentation describing the concept of dept.
+	2. Rewrite the commit messages of the following commits for
+	   using weaker lockdep annotation, for better description.
+
+	   fs/jbd2: Use a weaker annotation in journal handling
+	   cpu/hotplug: Use a weaker annotation in AP thread
+
+	   (feedbacked by Thomas Gleixner)
+
+Changes from v10:
+
+	1. Fix noinstr warning when building kernel source.
+	2. dept has been reporting some false positives due to the folio
+	   lock's unfairness. Reflect it and make dept work based on
+	   dept annotaions instead of just wait and wake up primitives.
+	3. Remove the support for PG_writeback while working on 2. I
+	   will add the support later if needed.
+	4. dept didn't print stacktrace for [S] if the participant of a
+	   deadlock is not lock mechanism but general wait and event.
+	   However, it made hard to interpret the report in that case.
+	   So add support to print stacktrace of the requestor who asked
+	   the event context to run - usually a waiter of the event does
+	   it just before going to wait state.
+	5. Give up tracking raw_local_irq_{disable,enable}() since it
+	   totally messed up dept's irq tracking. So make it work in the
+	   same way as lockdep does. I will consider it once any false
+	   positives by those are observed again.
+	6. Change the manual rwsem_acquire_read(->j_trans_commit_map)
+	   annotation in fs/jbd2/transaction.c to the try version so
+	   that it works as much as it exactly needs.
+	7. Remove unnecessary 'inline' keyword in dept.c and add
+	   '__maybe_unused' to a needed place.
+
+Changes from v9:
+
+	1. Fix a bug. SDT tracking didn't work well because of my big
+	   mistake that I should've used waiter's map to indentify its
+	   class but it had been working with waker's one. FYI,
+	   PG_locked and PG_writeback weren't affected. They still
+	   worked well. (reported by YoungJun)
+	
+Changes from v8:
+
+	1. Fix build error by adding EXPORT_SYMBOL(PG_locked_map) and
+	   EXPORT_SYMBOL(PG_writeback_map) for kernel module build -
+	   appologize for that. (reported by kernel test robot)
+	2. Fix build error by removing header file's circular dependency
+	   that was caused by "atomic.h", "kernel.h" and "irqflags.h",
+	   which I introduced - appolgize for that. (reported by kernel
+	   test robot)
+
+Changes from v7:
+
+	1. Fix a bug that cannot track rwlock dependency properly,
+	   introduced in v7. (reported by Boqun and lockdep selftest)
+	2. Track wait/event of PG_{locked,writeback} more aggressively
+	   assuming that when a bit of PG_{locked,writeback} is cleared
+	   there might be waits on the bit. (reported by Linus, Hillf
+	   and syzbot)
+	3. Fix and clean bad style code e.i. unnecessarily introduced
+	   a randome pattern and so on. (pointed out by Linux)
+	4. Clean code for applying dept to wait_for_completion().
+
+Changes from v6:
+
+	1. Tie to task scheduler code to track sleep and try_to_wake_up()
+	   assuming sleeps cause waits, try_to_wake_up()s would be the
+	   events that those are waiting for, of course with proper dept
+	   annotations, sdt_might_sleep_weak(), sdt_might_sleep_strong()
+	   and so on. For these cases, class is classified at sleep
+	   entrance rather than the synchronization initialization code.
+	   Which would extremely reduce false alarms.
+	2. Remove the dept associated instance in each page struct for
+	   tracking dependencies by PG_locked and PG_writeback thanks to
+	   the 1. work above.
+	3. Introduce CONFIG_dept_AGGRESIVE_TIMEOUT_WAIT to suppress
+	   reports that waits with timeout set are involved, for those
+	   who don't like verbose reporting.
+	4. Add a mechanism to refill the internal memory pools on
+	   running out so that dept could keep working as long as free
+	   memory is available in the system.
+	5. Re-enable tracking hashed-waitqueue wait. That's going to no
+	   longer generate false positives because class is classified
+	   at sleep entrance rather than the waitqueue initailization.
+	6. Refactor to make it easier to port onto each new version of
+	   the kernel.
+	7. Apply dept to dma fence.
+	8. Do trivial optimizaitions.
+
+Changes from v5:
+
+	1. Use just pr_warn_once() rather than WARN_ONCE() on the lack
+	   of internal resources because WARN_*() printing stacktrace is
+	   too much for informing the lack. (feedback from Ted, Hyeonggon)
+	2. Fix trivial bugs like missing initializing a struct before
+	   using it.
+	3. Assign a different class per task when handling onstack
+	   variables for waitqueue or the like. Which makes dept
+	   distinguish between onstack variables of different tasks so
+	   as to prevent false positives. (reported by Hyeonggon)
+	4. Make dept aware of even raw_local_irq_*() to prevent false
+	   positives. (reported by Hyeonggon)
+	5. Don't consider dependencies between the events that might be
+	   triggered within __schedule() and the waits that requires
+	    __schedule(), real ones. (reported by Hyeonggon)
+	6. Unstage the staged wait that has prepare_to_wait_event()'ed
+	   *and* yet to get to __schedule(), if we encounter __schedule()
+	   in-between for another sleep, which is possible if e.g. a
+	   mutex_lock() exists in 'condition' of ___wait_event().
+	7. Turn on CONFIG_PROVE_LOCKING when CONFIG_DEPT is on, to rely
+	   on the hardirq and softirq entrance tracing to make dept more
+	   portable for now.
+
+Changes from v4:
+
+	1. Fix some bugs that produce false alarms.
+	2. Distinguish each syscall context from another *for arm64*.
+	3. Make it not warn it but just print it in case dept ring
+	   buffer gets exhausted. (feedback from Hyeonggon)
+	4. Explicitely describe "EXPERIMENTAL" and "dept might produce
+	   false positive reports" in Kconfig. (feedback from Ted)
+
+Changes from v3:
+
+	1. dept shouldn't create dependencies between different depths
+	   of a class that were indicated by *_lock_nested(). dept
+	   normally doesn't but it does once another lock class comes
+	   in. So fixed it. (feedback from Hyeonggon)
+	2. dept considered a wait as a real wait once getting to
+	   __schedule() even if it has been set to TASK_RUNNING by wake
+	   up sources in advance. Fixed it so that dept doesn't consider
+	   the case as a real wait. (feedback from Jan Kara)
+	3. Stop tracking dependencies with a map once the event
+	   associated with the map has been handled. dept will start to
+	   work with the map again, on the next sleep.
+
+Changes from v2:
+
+	1. Disable dept on bit_wait_table[] in sched/wait_bit.c
+	   reporting a lot of false positives, which is my fault.
+	   Wait/event for bit_wait_table[] should've been tagged in a
+	   higher layer for better work, which is a future work.
+	   (feedback from Jan Kara)
+	2. Disable dept on crypto_larval's completion to prevent a false
+	   positive.
+
+Changes from v1:
+
+	1. Fix coding style and typo. (feedback from Steven)
+	2. Distinguish each work context from another in workqueue.
+	3. Skip checking lock acquisition with nest_lock, which is about
+	   correct lock usage that should be checked by lockdep.
+
+Changes from RFC(v0):
+
+	1. Prevent adding a wait tag at prepare_to_wait() but __schedule().
+	   (feedback from Linus and Matthew)
+	2. Use try version at lockdep_acquire_cpus_lock() annotation.
+	3. Distinguish each syscall context from another.
+
+Byungchul Park (47):
+  llist: move llist_{head,node} definition to types.h
+  dept: implement DEPT(DEPendency Tracker)
+  dept: add single event dependency tracker APIs
+  dept: add lock dependency tracker APIs
+  dept: tie to lockdep and IRQ tracing
+  dept: add proc knobs to show stats and dependency graph
+  dept: distinguish each kernel context from another
+  x86_64, dept: add support CONFIG_ARCH_HAS_DEPT_SUPPORT to x86_64
+  arm64, dept: add support CONFIG_ARCH_HAS_DEPT_SUPPORT to arm64
+  dept: distinguish each work from another
+  dept: add a mechanism to refill the internal memory pools on running
+    out
+  dept: record the latest one out of consecutive waits of the same class
+  dept: apply sdt_might_sleep_{start,end}() to
+    wait_for_completion()/complete()
+  dept: apply sdt_might_sleep_{start,end}() to swait
+  dept: apply sdt_might_sleep_{start,end}() to waitqueue wait
+  dept: apply sdt_might_sleep_{start,end}() to hashed-waitqueue wait
+  dept: apply sdt_might_sleep_{start,end}() to dma fence
+  dept: track timeout waits separately with a new Kconfig
+  dept: apply timeout consideration to wait_for_completion()/complete()
+  dept: apply timeout consideration to swait
+  dept: apply timeout consideration to waitqueue wait
+  dept: apply timeout consideration to hashed-waitqueue wait
+  dept: apply timeout consideration to dma fence wait
+  dept: make dept able to work with an external wgen
+  dept: track PG_locked with dept
+  dept: print staged wait's stacktrace on report
+  locking/lockdep: prevent various lockdep assertions when
+    lockdep_off()'ed
+  dept: add documentation for dept
+  cpu/hotplug: use a weaker annotation in AP thread
+  fs/jbd2: use a weaker annotation in journal handling
+  dept: assign dept map to mmu notifier invalidation synchronization
+  dept: assign unique dept_key to each distinct dma fence caller
+  dept: make dept aware of lockdep_set_lock_cmp_fn() annotation
+  dept: make dept stop from working on debug_locks_off()
+  i2c: rename wait_for_completion callback to wait_for_completion_cb
+  dept: assign unique dept_key to each distinct wait_for_completion()
+    caller
+  completion, dept: introduce init_completion_dmap() API
+  dept: introduce a new type of dependency tracking between multi event
+    sites
+  dept: add module support for struct dept_event_site and
+    dept_event_site_dep
+  dept: introduce event_site() to disable event tracking if it's
+    recoverable
+  dept: implement a basic unit test for dept
+  dept: call dept_hardirqs_off() in local_irq_*() regardless of irq
+    state
+  rcu/update: fix same dept key collision between various types of RCU
+  dept: introduce APIs to set page usage and use subclasses_evt for the
+    usage
+  dept: track PG_writeback with dept
+  SUNRPC: relocate struct rcu_head to the first field of struct rpc_xprt
+  mm: percpu: increase PERCPU_DYNAMIC_SIZE_SHIFT on DEPT and large
+    PAGE_SIZE
+
+ Documentation/dependency/dept.txt     |  735 ++++++
+ Documentation/dependency/dept_api.txt |  117 +
+ arch/arm64/Kconfig                    |    1 +
+ arch/arm64/kernel/syscall.c           |    7 +
+ arch/arm64/mm/fault.c                 |    7 +
+ arch/x86/Kconfig                      |    1 +
+ arch/x86/entry/syscall_64.c           |    7 +
+ arch/x86/mm/fault.c                   |    7 +
+ drivers/dma-buf/dma-fence.c           |   23 +-
+ drivers/i2c/algos/i2c-algo-pca.c      |    2 +-
+ drivers/i2c/busses/i2c-pca-isa.c      |    2 +-
+ drivers/i2c/busses/i2c-pca-platform.c |    2 +-
+ fs/jbd2/transaction.c                 |    2 +-
+ include/asm-generic/vmlinux.lds.h     |   13 +-
+ include/linux/completion.h            |  124 +-
+ include/linux/dept.h                  |  647 +++++
+ include/linux/dept_ldt.h              |   78 +
+ include/linux/dept_sdt.h              |   68 +
+ include/linux/dept_unit_test.h        |   67 +
+ include/linux/dma-fence.h             |   74 +-
+ include/linux/hardirq.h               |    3 +
+ include/linux/i2c-algo-pca.h          |    2 +-
+ include/linux/irqflags.h              |   21 +-
+ include/linux/llist.h                 |    8 -
+ include/linux/local_lock_internal.h   |    1 +
+ include/linux/lockdep.h               |  105 +-
+ include/linux/lockdep_types.h         |    3 +
+ include/linux/mm_types.h              |    4 +
+ include/linux/mmu_notifier.h          |   26 +
+ include/linux/module.h                |    5 +
+ include/linux/mutex.h                 |    1 +
+ include/linux/page-flags.h            |  204 +-
+ include/linux/pagemap.h               |   37 +-
+ include/linux/percpu-rwsem.h          |    2 +-
+ include/linux/percpu.h                |    4 +
+ include/linux/rcupdate_wait.h         |   13 +-
+ include/linux/rtmutex.h               |    1 +
+ include/linux/rwlock_types.h          |    1 +
+ include/linux/rwsem.h                 |    1 +
+ include/linux/sched.h                 |  118 +
+ include/linux/seqlock.h               |    2 +-
+ include/linux/spinlock_types_raw.h    |    3 +
+ include/linux/srcu.h                  |    2 +-
+ include/linux/sunrpc/xprt.h           |    9 +-
+ include/linux/swait.h                 |    3 +
+ include/linux/types.h                 |    8 +
+ include/linux/wait.h                  |    3 +
+ include/linux/wait_bit.h              |    3 +
+ init/init_task.c                      |    2 +
+ init/main.c                           |    2 +
+ kernel/Makefile                       |    1 +
+ kernel/cpu.c                          |    2 +-
+ kernel/dependency/Makefile            |    5 +
+ kernel/dependency/dept.c              | 3499 +++++++++++++++++++++++++
+ kernel/dependency/dept_hash.h         |   10 +
+ kernel/dependency/dept_internal.h     |   65 +
+ kernel/dependency/dept_object.h       |   13 +
+ kernel/dependency/dept_proc.c         |   94 +
+ kernel/dependency/dept_unit_test.c    |  173 ++
+ kernel/exit.c                         |    1 +
+ kernel/fork.c                         |    2 +
+ kernel/locking/lockdep.c              |   33 +
+ kernel/module/main.c                  |   19 +
+ kernel/rcu/rcu.h                      |    1 +
+ kernel/rcu/update.c                   |    5 +-
+ kernel/sched/completion.c             |   62 +-
+ kernel/sched/core.c                   |    9 +
+ kernel/workqueue.c                    |    3 +
+ lib/Kconfig.debug                     |   51 +
+ lib/debug_locks.c                     |    2 +
+ lib/locking-selftest.c                |    2 +
+ mm/filemap.c                          |   37 +
+ mm/mm_init.c                          |    3 +
+ mm/mmu_notifier.c                     |   31 +-
+ 74 files changed, 6570 insertions(+), 134 deletions(-)
+ create mode 100644 Documentation/dependency/dept.txt
+ create mode 100644 Documentation/dependency/dept_api.txt
+ create mode 100644 include/linux/dept.h
+ create mode 100644 include/linux/dept_ldt.h
+ create mode 100644 include/linux/dept_sdt.h
+ create mode 100644 include/linux/dept_unit_test.h
+ create mode 100644 kernel/dependency/Makefile
+ create mode 100644 kernel/dependency/dept.c
+ create mode 100644 kernel/dependency/dept_hash.h
+ create mode 100644 kernel/dependency/dept_internal.h
+ create mode 100644 kernel/dependency/dept_object.h
+ create mode 100644 kernel/dependency/dept_proc.c
+ create mode 100644 kernel/dependency/dept_unit_test.c
 
 
-On 10/1/25 4:53 PM, Trond Myklebust wrote:
-> On Wed, 2025-10-01 at 15:28 -0700, Dai Ngo wrote:
->> From: Oracle Public Cloud User
->> <opc@dngo-nfstest-client.allregionaliads.osdevelopmeniad.oraclevcn.co
->> m>
->>
->> Check for nfs_version >= 4.2 and use READ_PLUS instead of READ.
-> Hrmm... READ_PLUS is (like all NFSv4.2 features) optional to implement.
-> As such, you really should expect that a server implementation is
-> perfectly within its rights to return NFS4ERR_NOTSUPP, in which case
-> the client should fall back to using READ.
+base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+-- 
+2.17.1
 
-Thank you for your comments Trond. I'll submit another patch, if Jorge has done
-it yet, that probes the server's support for 4.2 reads and use it appropriately
-in the test.
-
-My initial patch was written with only the Linux NFSD in mind.
-
--Dai
-
->
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->>   test/nfstest_dio | 16 ++++++++++++++--
->>   1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/test/nfstest_dio b/test/nfstest_dio
->> index 093e552..653a842 100755
->> --- a/test/nfstest_dio
->> +++ b/test/nfstest_dio
->> @@ -617,6 +617,8 @@ class DioTest(TestUtil):
->>   
->>               if nfs_version < 4:
->>                   match_str = "NFS.argop == %d and NFS.fh == b'%s'" %
->> (NFSPROC3_READ, self.pktt.escape(filehandle))
->> +            elif nfs_version >= 4.2:
->> +                match_str = "NFS.argop == %d and NFS.stateid.other
->> == b'%s'" % (OP_READ_PLUS, self.pktt.escape(stateid))
->>               else:
->>                   match_str = "NFS.argop == %d and NFS.stateid.other
->> == b'%s'" % (OP_READ, self.pktt.escape(stateid))
->>   
->> @@ -744,9 +746,13 @@ class DioTest(TestUtil):
->>               fd = None
->>               bfd = None
->>               ofd = None
->> -            io_str  = "WRITE" if write else "READ"
->> +            if self.nfs_version >= 4.2:
->> +                io_str  = "WRITE" if write else "READ_PLUS"
->> +                bio_str  = "WRITE" if buffered_write else
->> "READ_PLUS"
->> +            else:
->> +                io_str  = "WRITE" if write else "READ"
->> +                bio_str  = "WRITE" if buffered_write else "READ"
->>               io_mode = posix.O_WRONLY|posix.O_CREAT if write else
->> posix.O_RDONLY
->> -            bio_str  = "WRITE" if buffered_write else "READ"
->>               bio_mode = os.O_WRONLY|os.O_CREAT if buffered_write else
->> os.O_RDONLY
->>   
->>               if not bsize:
->> @@ -861,6 +867,8 @@ class DioTest(TestUtil):
->>   
->>               if nfs_version < 4:
->>                   io_op  = NFSPROC3_WRITE if write else NFSPROC3_READ
->> +            elif nfs_version >= 4.2:
->> +                io_op  = OP_WRITE if write else OP_READ_PLUS
->>               else:
->>                   io_op  = OP_WRITE if write else OP_READ
->>   
->> @@ -985,6 +993,8 @@ class DioTest(TestUtil):
->>   
->>                   if nfs_version < 4:
->>                       bio_op = NFSPROC3_WRITE if buffered_write else
->> NFSPROC3_READ
->> +                elif nfs_version >= 4.2:
->> +                    bio_op = OP_WRITE if buffered_write else
->> OP_READ_PLUS
->>                   else:
->>                       bio_op = OP_WRITE if buffered_write else OP_READ
->>   
->> @@ -1270,6 +1280,8 @@ class DioTest(TestUtil):
->>   
->>               if nfs_version < 4:
->>                   io_op = NFSPROC3_WRITE if write else NFSPROC3_READ
->> +            elif nfs_version >= 4.2:
->> +                io_op  = OP_WRITE if write else OP_READ_PLUS
->>               else:
->>                   io_op = OP_WRITE if write else OP_READ
->>   
 
