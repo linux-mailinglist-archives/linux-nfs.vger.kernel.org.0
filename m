@@ -1,76 +1,78 @@
-Return-Path: <linux-nfs+bounces-14916-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14917-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B16BB51FB
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 22:31:33 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE1A7BB5201
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 22:31:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E40B19C621B
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 20:31:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C4D764E6AF7
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 20:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB28148830;
-	Thu,  2 Oct 2025 20:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11123274FF1;
+	Thu,  2 Oct 2025 20:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZcBZQjN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfaWl1J/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033E134CB
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Oct 2025 20:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1D7246BD8
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Oct 2025 20:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759437090; cv=none; b=iXQf5CMs1AERzps4NUGWwpXCli3FWOA3W+NlHHNJMpTJMQMgc049y8RgqYOiX19wO0R+baLIakx3wD1ekprjfd7tpx7OdeWsPlzbWAwne+ZW8GFm00qLTK5qnuRsz8PC6WiYEP+13EUe2XLNRerTD7vDdemg9bGUKgqHPSS97IE=
+	t=1759437093; cv=none; b=PvCAFHSeAtSAtP3CMbbTn8XySxbHfPvrfV71SIYnvhAK5ASEsj9/S7TZzQRv5TbgxkU8gO7kt8nGMccPmb+PptE8eMf2ypgJ7/JDBjCyFhBYr1p/NNmWJFOQKGvsDQDQCdQmXinQTxrd3GOqw5Gp9zqu4VlwFMv97pC0LMvBqfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759437090; c=relaxed/simple;
-	bh=6N63wn6e70V3PTLkkgJt8OJ0tYwmpFIiBABIS2bT6SQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZkcwQ4FbeuuKSySdIvlrPWO1htJLAv7zGnMX9q8gwz1ZjEsOzP91ON8hbMJWqxQQ3u3gQ3sdE5p9TzdiOBIaH/z7X9/ncyyfDGj4nxjv/ZEzlAhMWQcB+XyVSRACDVP+CxUJr3NQ6+sVTPQ8rRrJ2XeJqBWPoiKgc79kIG8R5yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZcBZQjN; arc=none smtp.client-ip=209.85.167.48
+	s=arc-20240116; t=1759437093; c=relaxed/simple;
+	bh=FAGQoyCRso2DpNbErMRrpyTp/YXHTvsHFqKt1MWxd0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dV7+eE19752yrFo/ZCurAaelqZ60D9LsEZyUsdDT8Kqg6ffhVgkrqJHlvwWYnQ4MkMtdhVLuee80xEvgl6EQhF2lLoDJuOraDXvGXWObNdi/9Hi1j3TPNin2b9tE3J0XmCqHUcfpF8Tt3vDjur0huTDTyFI6W8FhG7uJlQMHUW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfaWl1J/; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57e03279bfeso1917317e87.0
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Oct 2025 13:31:28 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57f1b88354eso1387282e87.1
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Oct 2025 13:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759437087; x=1760041887; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HdvDy+jE9pUEVDpBETUNShqkuR03kLijcUSoRDrSlI8=;
-        b=VZcBZQjN11PLgl8xxEAuRXgedSeFUz2OJtXwq+BgzETfP2xOhoGPLXP96+obeM3LJc
-         UiWxpdrt75UhumVnNZJi46NjOZFsEQCISFbpue9v3QHePu5audI6vOREfcYvP6+Sgh7m
-         zp+YcRKv5G+rElr4dMSOBZSZzAn5ur+ATFTQ1BJMdt/4xtCfVJvB0ZrgJjtWWSxkX8x6
-         B2RGUo+731zLRE2mE+OE1KSS7zgYueTjYQ5yenpYNqVp23DVDk2IRfHX6/Mv04bpr4Nj
-         /WI53PCXexClDtxwtCNDyGNAdBwu7OklP6HS4PHtPuUl2tkBGnXO3uA6fXdbCNyiQJEj
-         5tsQ==
+        d=gmail.com; s=20230601; t=1759437089; x=1760041889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q+Kz42OrzHLhFdDtoqoAsqRj8EeTAJG1g9F7w1OSmto=;
+        b=HfaWl1J/3LHl3n21iBkO39j821AbCpxIAyIAcxgA3dW49C0+VJgRPXEP36NNrm3Fu7
+         hCkGJJ6QI3GzNFgL2rcb1c3YQS9FC98QDiOZos19D4LJd3WeAFdj/uyQJa2CEXMOC0ot
+         sV2SEU5YTxZhAHWmvku8K2R+aKdbKxZKvtvaoncDbxjuJShDYP1QpynL4jOkOpAGklG2
+         ak0V3E4WTYgOmqDFbiau1wmY8JXkoFfgEa7vKFBglhKRj5Z20WNHdqarbuWgqgNgZI5i
+         lihPZus5R4/NmYS/a1Awz4QgFiD35ZUdMXeSRSXWVBz+RDiA3xrfTMLLj/S2m0Ra4/Fa
+         VQcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759437087; x=1760041887;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HdvDy+jE9pUEVDpBETUNShqkuR03kLijcUSoRDrSlI8=;
-        b=SpImyTxeq5gWoq74R7d3eUCMmVtTqWGn4FHo8xKMwModGZaPZqsAhqlFu2lkTsFtpD
-         rK1UrfoJNWsq+sC0vc7qBNTCEwFYEcTNr3olNYcScyWyLTzTlDx7ofcrK5aBTRGpi01Z
-         p4dXoia4Sj+K7dzFws7VDg9gXfo971r2A5xXiJSt4OE4E/UXivuLT4oBlUvyTRmX9lec
-         IUebtEfeD9qXSWUo2X75TZms8yJJiD9RmkwN9sGAUz3WTKjdEIU5lWimT5xYoY6+CF6V
-         /yHcv3X/ll+MVoe6FgXwmBRzT6TFfs5Hm5DFMdCML61LxOadyZx/cipFGNQe5KF2CO4y
-         xMuw==
-X-Gm-Message-State: AOJu0Yz10yz7LNeikaAcgeR7DcwP9lpR0zPqdQNhdh67znRr1gF7EZtS
-	3NiXiLzPluDfK0+d+wnLuV/Rw77bC6q6s7Aw5GY5/Gwj49xmtS8ZNm6J
-X-Gm-Gg: ASbGncvQpXCOBQjMhWthTva4DnZarMbOwtmJQINxXBRLJUTycx8KKqXvG0KUg/9NJh5
-	aNXE4GOLzkZikaCOyFm10XHXBiSvpr8SOq1VJ+zCPCQS/IflbIBQwKizfZpFgyMaaxgfFkhY+oJ
-	4Jgo03DgOq5+rcqWj8PsjOZAZvG+XcqzFaR2SPz/7mN8xCdm0P4K0W+NEKC2MonxLDDxPLaWQau
-	hiCU7EmPpnSy3tv86jc3bMa/5XTvARfUmq5dCeAPITIIFCq2FcO5pPzQpEIEk6JC7DDw61KMwIb
-	6/8ucbz23WxNm0EOcYWkZEiNl5o6rdwkUjJpjM07fBiJQqTrC12z3J8fxT6BMKHHJ5aPfflzCKP
-	TAz+QUnC+bVU06L0bFDiXCegh2IWJFbhu52i4nvOu8rQEqner4WwLTlUi0NtMUFtZ6tBRKTuLRb
-	U0
-X-Google-Smtp-Source: AGHT+IF2b51SMZxRUPUPUFa256VtMpMUsH9rtl897bcO+/0ikiOpQMBUMwns5t1Wl68GpHWNFThBMg==
-X-Received: by 2002:a05:6512:2397:b0:581:bdb8:6df9 with SMTP id 2adb3069b0e04-58b00b5eb3emr1513310e87.10.1759437086196;
-        Thu, 02 Oct 2025 13:31:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759437089; x=1760041889;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q+Kz42OrzHLhFdDtoqoAsqRj8EeTAJG1g9F7w1OSmto=;
+        b=merR+xVfmCv/jsJrFmZ8/by0cLvG19Sv+/13rf+eAAe14XZQhC+PHJ5hdwX+WngEpJ
+         ddXH/xIKXNYJ+WC4YdrJ+DXnfwsztvdW/5ajYe4b9hKY279ZUyuZjpHXZv3Nz6iog84Y
+         RJDmZ6tZnU/nrzTs72yNScIdYWsM/drbUwJMZQU3X+092nSinHG4gknLSpzbybqju1Qu
+         fNlbA49SKhyJypMn8b1SslmQijnsDHH9uCOKqKuFHTNvnfBW63yz6EB75t0ySNo6TOnq
+         /xvU9OKm3c8zXM7dRxMiwKV54IXwGMfKcN5J6/kh0o6MjPyGSAQ5FxBhNbEoe33YyLoi
+         ZcPA==
+X-Gm-Message-State: AOJu0YyQaQ9n4gd2P4GkDllnEN6e2HbS5GM8Vqxnr9lr412PUspBZAQW
+	mCaFOmdIk+sWwS1zdFVO3cmjccYf2I9TgkFbGLm736mILHx3kVg6dWj/
+X-Gm-Gg: ASbGncuP9gP55SfJd1pn2cyasx/bkQ4ZiLlGxCk1CpF2egOC4KXr0r6OOgODJOumRUP
+	C5noHlLA0x5K3iI3Viv5zBuNeHswfmDxe7KQDkJ+fppweS0zf7iT9TZjpgImX2lYOFLr07CZhhO
+	VOX1mytQvGk70HkLMdZ079kqILBJAcY//a8nTBzMyulGnXhET/MLOa1oD6un5/deLbXDxBiqobN
+	JfQ2NtIpRrhsnB4ZZ2KYXrAnrFA5K5RjmwEwgFUWrnmhpjVZ9wvDdntqQ9RliBVjzrDj67tQ4fp
+	6kPFdhIq152YVvJWWt2KlJ0LTQ79iMYukLJlYPhgoczXmCpOwcxcgUVpTx7KEDhBwxhqTPifwuo
+	R7eDAGpJLWboV1xEN8unKr9X49nqsonK4+EmOXUOpHre5RHm7kMe0GTHBYOJSxLHSiN3LwtzLzD
+	c8
+X-Google-Smtp-Source: AGHT+IFsWi8xckIBDYjvJqMEjC+9e2bI4bSFpyTa6nMpxw3Xh7pt1ip35GMgbuqSHivjUBFyez5+Dw==
+X-Received: by 2002:a05:6512:2391:b0:577:3ccf:cdee with SMTP id 2adb3069b0e04-58cbc2a512cmr147438e87.41.1759437089052;
+        Thu, 02 Oct 2025 13:31:29 -0700 (PDT)
 Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.163.120])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0113f3ddsm1127316e87.52.2025.10.02.13.31.24
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0113f3ddsm1127316e87.52.2025.10.02.13.31.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 13:31:25 -0700 (PDT)
+        Thu, 02 Oct 2025 13:31:28 -0700 (PDT)
 From: Sergey Bashirov <sergeybashirov@gmail.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Christoph Hellwig <hch@infradead.org>,
@@ -82,10 +84,12 @@ To: Chuck Lever <chuck.lever@oracle.com>,
 Cc: linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH v2 0/4] NFSD: Impl multiple extents in block/scsi layoutget
-Date: Thu,  2 Oct 2025 23:31:10 +0300
-Message-ID: <20251002203121.182395-1-sergeybashirov@gmail.com>
+Subject: [PATCH v2 1/4] NFSD/blocklayout: Fix minlength check in proc_layoutget
+Date: Thu,  2 Oct 2025 23:31:11 +0300
+Message-ID: <20251002203121.182395-2-sergeybashirov@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251002203121.182395-1-sergeybashirov@gmail.com>
+References: <20251002203121.182395-1-sergeybashirov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -94,96 +98,39 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement support for multiple extents in the LAYOUTGET response
-for two main reasons.
-
-First, it avoids unnecessary RPC calls. For files consisting of many
-extents, especially large ones, too many LAYOUTGET requests are observed
-in Wireshark traces.
-
-Second, due to the current limitation on returning a single extent,
-the client can only reliably request layouts with minimum length set
-to 4K. Otherwise, NFS4ERR_LAYOUTUNAVAILABLE may be returned if XFS
-allocated a 4K extent within the requested range.
-
-We are using the ability to request layouts with a minimum length
-greater than 4K to fix/workaround a bug in the client. I will prepare
-the client's patch for review too.
-
-Below is an example of multiple extents in the LAYOUTGET response
-captured using Wireshark.
-
-Network File System, Ops(3): SEQUENCE, PUTFH, LAYOUTGET
-    [Program Version: 4]
-    [V4 Procedure: COMPOUND (1)]
-    Tag: <EMPTY>
-        length: 0
-        contents: <EMPTY>
-    minorversion: 2
-    Operations (count: 3): SEQUENCE, PUTFH, LAYOUTGET
-        Opcode: SEQUENCE (53)
-        Opcode: PUTFH (22)
-        Opcode: LAYOUTGET (50)
-            layout available?: No
-            layout type: LAYOUT4_BLOCK_VOLUME (3)
-            IO mode: IOMODE_RW (2)
-            offset: 0
-            length: 10485760
-            min length: 16384
-            StateID
-            maxcount: 4096
-    [Main Opcode: LAYOUTGET (50)]
-
-Network File System, Ops(3): SEQUENCE PUTFH LAYOUTGET
-    [Program Version: 4]
-    [V4 Procedure: COMPOUND (1)]
-    Status: NFS4_OK (0)
-    Tag: <EMPTY>
-        length: 0
-        contents: <EMPTY>
-    Operations (count: 3)
-        Opcode: SEQUENCE (53)
-        Opcode: PUTFH (22)
-        Opcode: LAYOUTGET (50)
-            Status: NFS4_OK (0)
-            return on close?: Yes
-            StateID
-            Layout Segment (count: 1)
-                offset: 0
-                length: 385024
-                IO mode: IOMODE_RW (2)
-                layout type: LAYOUT4_BLOCK_VOLUME (3)
-                layout: <DATA>
-                    length: 4052
-                    contents: <DATA>
-    [Main Opcode: LAYOUTGET (50)]
-pNFS Block Layout Extents
-    bex_count: 92
-    BEX[0]
-    BEX[1]
-    BEX[2]
-    ...
+Minor fix as part of the functional changes. The extent returned by
+the file system may have a smaller offset than the segment offset
+requested by the client. In this case, the minimum segment length
+must be checked against the requested range. Otherwise, the client
+may not be able to continue the read/write operation.
 
 Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
 ---
-Changes in v2:
- - Reworded subject and description
- - Split the v1 patch into successive small changes
- - Removed kdoc comments for static functions
- - Removed subsegment and magic numbers
- - Patches are made on top of nfsd-testing
+ fs/nfsd/blocklayout.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Sergey Bashirov (4):
-  NFSD/blocklayout: Fix minlength check in proc_layoutget
-  NFSD/blocklayout: Extract extent mapping from proc_layoutget
-  NFSD/blocklayout: Introduce layout content structure
-  NFSD/blocklayout: Support multiple extents per LAYOUTGET
-
- fs/nfsd/blocklayout.c    | 154 +++++++++++++++++++++++++++------------
- fs/nfsd/blocklayoutxdr.c |  36 ++++++---
- fs/nfsd/blocklayoutxdr.h |  14 ++++
- 3 files changed, 147 insertions(+), 57 deletions(-)
-
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index fde5539cf6a6..425648565ab2 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -23,6 +23,7 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
+ {
+ 	struct nfsd4_layout_seg *seg = &args->lg_seg;
+ 	struct super_block *sb = inode->i_sb;
++	u64 length;
+ 	u32 block_size = i_blocksize(inode);
+ 	struct pnfs_block_extent *bex;
+ 	struct iomap iomap;
+@@ -56,7 +57,8 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
+ 		goto out_error;
+ 	}
+ 
+-	if (iomap.length < args->lg_minlength) {
++	length = iomap.offset + iomap.length - seg->offset;
++	if (length < args->lg_minlength) {
+ 		dprintk("pnfsd: extent smaller than minlength\n");
+ 		goto out_layoutunavailable;
+ 	}
 -- 
 2.43.0
 
