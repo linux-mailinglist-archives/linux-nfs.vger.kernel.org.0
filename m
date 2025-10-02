@@ -1,133 +1,111 @@
-Return-Path: <linux-nfs+bounces-14901-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14903-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2336BB343D
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 10:45:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A083ABB3464
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 10:45:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07BBF56191C
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 08:40:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEBAB542940
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 08:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B0962FC880;
-	Thu,  2 Oct 2025 08:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1873B2E0B5F;
+	Thu,  2 Oct 2025 08:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="i5+HKGpb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrgtw7Be"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC45E2D46DA;
-	Thu,  2 Oct 2025 08:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA6F2F83AC
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Oct 2025 08:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759393492; cv=none; b=FG1uUYWxwWOE7JW2qXI15uYPFlyk5sJSGrH/xeRv2OHpGlMr7pP2QvAJDDyzNGqY201GlFTYT5qadDXvWWY9b6tGE+E+LBX0reL5Nej40d+pC35prINKj8SClq2ert5OG1/3EAg1wkWkithQdrTyGhPh5es0vjmF1gBc5k7SwwQ=
+	t=1759393571; cv=none; b=heIPC1wX+/ydrnvt3cY+SqbaqRd4mR7q50WWNRzYCUph9vXZLjzre7t3wxQvSJMdPoR5Z89Flw4MZcZHEsiZo1p0aIlRWLQDANBOHcPRexAsDJD2VdpAhhlbmVn8D9xTQuZ1sLeEpHFkqjWpI8GV4rZ4UA8hk72djUB0Yl8uqoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759393492; c=relaxed/simple;
-	bh=EGta/OBizNM09PGf6rEuH2ZEVwPb5dGKC+KMXznpC2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qkgpazbu6iD0LhzA4OXGZZtmgo2tseuTqBGzg5oTt1DpZH1n91jz8DTZcQqc4Wro+jXKxQogwoVReuBrz1gHMkzhqOsj+gnMHzJwHu0k8BsfkQvvEtJUHNl7kirmz1rpMm+9va4RiM2wdcrw29UlOlBTfurF4r81lk+lAjj6THE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=i5+HKGpb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A32C4CEF4;
-	Thu,  2 Oct 2025 08:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759393491;
-	bh=EGta/OBizNM09PGf6rEuH2ZEVwPb5dGKC+KMXznpC2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i5+HKGpbYKH37uF6UEmHuZtFQv6O5ZG1HxMQr8kvde7omSAD+zel/Z4+s6JwdJrZv
-	 Ur3S6DldaheLi+GEdKKHX1ZJ+iRyil+oU4pwd+w36q87VybbM/v+qrAgAFV69+RNbv
-	 WsN8AOHH246elLsfI0Z+lVr0mIU6QpnW71c2yL1s=
-Date: Thu, 2 Oct 2025 10:24:41 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Byungchul Park <byungchul@sk.com>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, kernel-team@lge.com, linux-mm@kvack.org,
-	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
-	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
-	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 01/47] llist: move llist_{head,node} definition to
- types.h
-Message-ID: <2025100230-grafted-alias-22a2@gregkh>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-2-byungchul@sk.com>
+	s=arc-20240116; t=1759393571; c=relaxed/simple;
+	bh=T7kgcZjxtnlk74NBZ+bGpRlFIPd/zBehpPlFs5I+wwQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=CQZe8KNarD6UH1V4FRhJqYGuiMsdzX1fW0SLUWNgt4Pxpi1/xPVG6h9eGb0+QhmqjJVDe+PZfYnuZJFh64g5TtCUN+Idqon9qwmeDonieuXJuaEAa+ssVIHgHnt2Mp1T1fN5xUrNWpGeXURMKJ75vYg5TYhAvlD47JGd3unoMAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrgtw7Be; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-62fc89cd68bso1287450a12.0
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Oct 2025 01:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759393567; x=1759998367; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T7kgcZjxtnlk74NBZ+bGpRlFIPd/zBehpPlFs5I+wwQ=;
+        b=jrgtw7BefpiLqCWQjjiT7KiAr9/qnSgM79Ikz7L5WUQEjICpH1NFiFxVlw4Cf6VC2/
+         0rkrhMvu1euTAYfOpa5NaNTyi4aZ45j5WPUN1jBEUSvcEXJV2mpk95ChO+ObP9WLqPDi
+         JENouMrEen+05l3D/zE2S9nGgnhMRvmgndf3IDww1hvsQK4bXGSuJCAoXskPd6qlEoM2
+         FCp3kVikq22krAJFuh6VDgERt+gHMAt5Px6DpZBOoBh55lY6ZP7pqGHi+oaw4wT+ILD5
+         XZWyfctjmQRNfJzdmDIO8OM6RdeJj3TtzkGc0hSBItOPSCirCfIAHqNDlWshTfkL6ssq
+         N9uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759393567; x=1759998367;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T7kgcZjxtnlk74NBZ+bGpRlFIPd/zBehpPlFs5I+wwQ=;
+        b=GXaV6OziM7lh0gX9vnvP3jZv5Wz5wJd7WoHIBLw9BlNFWSCWQ0QqQ4wtiEdLV0nwlS
+         46jYoze8GktBhR/hvyiHLsw7nUUjIgem5eMX1NUjcwSr1lL0FE3Awn/6Mex6nVOQy3EA
+         mq0Df+tmy23Q2TTIJvl8Wtq/6SfTttiVQLjzqLanfOWXeHlwrPvV/HG5z1olQ4bfJUny
+         g1v2Ac5GyayWwET0r/4eTgA86Gp0kDAZ7N2Nl79b3tXo+dZa4Xk7MULDR4SWm32JpqMQ
+         puwkyFKOKzggq/vzYkWg8A1PQokCRhtzO3pz9bbTZDWj/yfpv5gQSNikRjb8Rm3yLeLQ
+         g30w==
+X-Gm-Message-State: AOJu0YwK7V93TeBKEAgj1xyjJDHEo3LwqlGU/pqX3Or1SQm9RctUOSis
+	40WsCuz9OTp7xnHnqq4dp7ZAw3XNm36h201SRebu9Y6RTPdQ5W9a3cv5Ix1P924tUp2LB1rVvfq
+	8ThhfB0ri8z0ftDjIRCyCJQ9uJR80lbo0Bw==
+X-Gm-Gg: ASbGncujIKIfdGmqASetupoGzAkg2tWwMv87lds8cQo0dUXuaDF2/IY8SUKvEwdJM9J
+	yQpBjm8RxRDbOO+BHBpM8H3Au13aX6dOf1RztfR5elOsyB2C9FxtqRwD5espoKwaANHOo3rCqdB
+	CVUpuxJIfd9sYE6lshlCFUQaIYOaNFKPejNMu8sdbO4f/LVhRWbYCf/nGYWi0q1gb8mlGStMvRS
+	b/zjG6REROJQhXw/WN43kNU+oypQKk=
+X-Google-Smtp-Source: AGHT+IE8/LX/gv9wXjott91OHYV2+XgDg64SlLZjYbXiYxvT07NYvKopRcM/sw6LFFKE2T7FWqLjC7hsZjvd7+Gnfzw=
+X-Received: by 2002:a05:6402:2744:b0:634:ab0a:254e with SMTP id
+ 4fb4d7f45d1cf-63678cb3f7emr7610245a12.24.1759393567298; Thu, 02 Oct 2025
+ 01:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251002081247.51255-2-byungchul@sk.com>
+References: <1759357733-64526-1-git-send-email-dai.ngo@oracle.com> <80f31f25d97a2942f7b4e47729e8333af8913663.camel@kernel.org>
+In-Reply-To: <80f31f25d97a2942f7b4e47729e8333af8913663.camel@kernel.org>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Thu, 2 Oct 2025 10:25:31 +0200
+X-Gm-Features: AS18NWB8mNoSoGsfmMZR1AZk9HdlT5zBiAT7vcTIMv35kbh2ZQGKtdYmmA9vQQo
+Message-ID: <CA+1jF5qRPBAfBuh4dMNJV5rFZb=gO=rbQ4s_wMqeAYz5MKr01g@mail.gmail.com>
+Subject: pahtconf() api to test for sparse file support? Re: [PATCH 1/1] DIO:
+ add NFSv4.2 READ_PLUS support for nfstest_dio
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 02, 2025 at 05:12:01PM +0900, Byungchul Park wrote:
-> llist_head and llist_node can be used by some other header files.  For
-> example, dept for tracking dependencies uses llist in its header.  To
-> avoid header dependency, move them to types.h.
+On Thu, Oct 2, 2025 at 1:53=E2=80=AFAM Trond Myklebust <trondmy@kernel.org>=
+ wrote:
+>
+> On Wed, 2025-10-01 at 15:28 -0700, Dai Ngo wrote:
+> > From: Oracle Public Cloud User
+> > <opc@dngo-nfstest-client.allregionaliads.osdevelopmeniad.oraclevcn.co
+> > m>
+> >
+> > Check for nfs_version >=3D 4.2 and use READ_PLUS instead of READ.
+>
+> Hrmm... READ_PLUS is (like all NFSv4.2 features) optional to implement.
 
-If you need llist in your code, then include llist.h.  Don't force all
-types.h users to do so as there is not a dependency in types.h for
-llist.h.
+READ_PLUS is needed for sparse file support.
 
-This patch shouldn't be needed as you are hiding "header dependency" for
-other files.
+I am really starting to wonder whether there should be a pathconf()
+api to check whether sparse files are supported, i.e. NFSv4.2 SEEK and
+NFSv4.2 READ_PLUS are possible for a file.
 
-thanks,
-
-greg k-h
+Aur=C3=A9lien
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
