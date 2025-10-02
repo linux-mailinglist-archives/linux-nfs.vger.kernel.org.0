@@ -1,198 +1,248 @@
-Return-Path: <linux-nfs+bounces-14920-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14921-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C81FBB5213
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Oct 2025 22:32:25 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F133BB598E
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 01:20:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 480A4482B56
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 20:32:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 32FC64E5CC0
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Oct 2025 23:20:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 626DA2BDC34;
-	Thu,  2 Oct 2025 20:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7822298CBE;
+	Thu,  2 Oct 2025 23:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfhsP7Vz"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="UlZXQBIH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UPWCT2uX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b1-smtp.messagingengine.com (flow-b1-smtp.messagingengine.com [202.12.124.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799D029BDBC
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Oct 2025 20:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD99288530;
+	Thu,  2 Oct 2025 23:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759437100; cv=none; b=k2WNTfby1kS1O5Qbn9oZCqlrM5zz+FODKTNeUg9Mr3NT6taK1BZboe0wbFjybQHREv7JcK7pkFEFnYRgC6i139lU3VBLkG+qNHs/2+0DjWykZF2t2/iv9q8jk9kqGO2htQGEXZf332yPAHD2g3ecl4QwlkQDLMxDdzHF0jGanFk=
+	t=1759447213; cv=none; b=p2bQPuwC/u9KevDZ3EAXC4W+J4uwW1Jb3j8nFmg1oV0NH5+wpRUJZ1kRHKR00OTa1w3a6IccgPOevQafD6J8mDa+Z5vuFdXSukCrzfYZrogWsqj4OC1+EUHZNDzCEiVNQyhjy7m+18AwkLyQaGkwOzcP1I5o84PonqJlhpM1IvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759437100; c=relaxed/simple;
-	bh=Xz/6eqYYcI2AeHdk/uSMvcnM84/4fheOZAIWCeZxUfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lOykAmtd/nlEYCVG2qdVeQ0Yi9q6Jh0n3hDLNdJ/AbcQFPbwZ089mgGBl57hkDNYVLSvpwQbd3WnG05VekWK06HhTPQCqlC9Ch0WOlqEzMrCJuYXYGAWec9aLQ2d/p2LKfFRNSEzYIJk3Bn21pdEK4LKvuaRvUrVYB0IXqsBUn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfhsP7Vz; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57b8fc6097fso1983682e87.1
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Oct 2025 13:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759437097; x=1760041897; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6mwD1k8tJtPn/oG49qeOmgMB45GcYhaofTWn8l5t9A=;
-        b=hfhsP7VzIrcad/G4SP2x+lSEDvZr4ZGvgbDyfQoJsmNCygESjPFW8vS/haOVuc+UGK
-         iNv6IDj9f9ZlawTFwsIkgR487iOs/0iOp3MLrd2nWagFsJWqUsCZrv2huOVvF27Rb6B6
-         kEEpqkJf3KH5yQbNaC1/u2Ref/eIpls38Frdr8VxlAKc21P7i3j3lVltFxstyFWYanB7
-         r6bDVyKctgXJ0gf7dtwxKWGYNY31VB8+CwwHH/YMxqQfdhgRRIUOEA7n1EHt4VRDUc+9
-         FTK2qSs9SWSfXbePVwlX+QN5QYChMvqKdV8NXMGhBMmsg0cK0HExYyowVras8jO+TbbU
-         Dsyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759437097; x=1760041897;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6mwD1k8tJtPn/oG49qeOmgMB45GcYhaofTWn8l5t9A=;
-        b=F6hr+q22Ql89QT2k/cZOygAL8az1DUMP1QU7jDsomHh5fsoJquE9Ff3pj0cjVz7hyQ
-         qSbElBLbCGUrft1M62qT+WsnOy795QM4nbpA+iivOth3k0MZel7gq9tv+L1YwiRNMrTp
-         ZsLsfvB38h+C+x59trSt5p5OzdfD8VQEQf1pIdKnvoIUb7YUxbq2jAX6uWAYq3+JN7F7
-         P/pIC0U32C/aRb65aDGNM0qpL3MKllOGRFsXmYKqsKgpmwZO+I4ByOiQVBmVy5Oyupxd
-         xgvM2MV1Bxb3AlKyiDAY2NY9pzcZdju8w/EGf1q9DMUyKHuVXHi+xDjD1Hjm77cDfHNH
-         hRkg==
-X-Gm-Message-State: AOJu0YwIn7xpKLFz+817Gk59541CnpwprV/r5Ql/MLt1MRAhc9dXjGC1
-	84WyQM1fMCT8sRA1xkXpLNn3gbdsjEzbPCrdl4Q+nJybKlLIwf7b/kDuWevR4X33
-X-Gm-Gg: ASbGnctgDlxrJnEiDIoMsz+IMqRTEianTxE4B3hCVntSR2DRMit4mhw+SKha4duDBOw
-	Kn8tDMfpWlcqPzYkO3uja+vW+ja20KwJk/au3omkr/Zinnv9QBzp1JFbAabTM6XP9jacfAsay/1
-	WfuXymvH6gqXmtGVmPiA2gFAQalA2c9535AuvVWmNy3sCjTzDSRERZEv96bUghIMIVbhxbASusX
-	QKojkm98BC8IK7eFKXZj3H5in6WvuCy+S8B+yJRpvS09+gCFJ6/vBnjhEBzp+DOBL0nUxX5nJT8
-	S0krryv8QTBsO0uwhwbEzHlVcVzbPZmzRetNOJwGXKsIPOqPRsZi2NxtuHJYa1Y26mrwuqz6Jlt
-	Yh/+tatQM98cocEyfQd8IU3ZU+rvkYBSh3DwimHFfMX6TeEDuix/bFl7YDSyC+1rjHJXncEuZhH
-	/WOSFE94NL4jc=
-X-Google-Smtp-Source: AGHT+IENhMFofFuRpfmNhDfNDvAuH5eKkEts3QazVzdgUeI7rcIWdGPMuHSPpz9M6PfoWCIBMKvLsw==
-X-Received: by 2002:a05:6512:2396:b0:55f:6f5b:8e65 with SMTP id 2adb3069b0e04-58cbb4416c2mr109330e87.30.1759437096449;
-        Thu, 02 Oct 2025 13:31:36 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.163.120])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0113f3ddsm1127316e87.52.2025.10.02.13.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 13:31:35 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH v2 4/4] NFSD/blocklayout: Support multiple extents per LAYOUTGET
-Date: Thu,  2 Oct 2025 23:31:14 +0300
-Message-ID: <20251002203121.182395-5-sergeybashirov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251002203121.182395-1-sergeybashirov@gmail.com>
-References: <20251002203121.182395-1-sergeybashirov@gmail.com>
+	s=arc-20240116; t=1759447213; c=relaxed/simple;
+	bh=BR/jqWo92itmdMH1ocfUuKDAP7WulChibnIwAiSXhT4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=As55O0BgHHu7XadPt6rE8gWYgT1KYrbqPzeVZGWgC5JFMIasraf95uQ+Xd16EXZcK4J5Z1KOPYSUcJZhHASyGrDj5IfenDbmLy4YpVNuJ7mk1Frg/O0JkIGOztW6eK+6l2sWg+PLUHk+LTAtWw4lg/mSmQe2zIAawEffjygT5Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=UlZXQBIH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UPWCT2uX; arc=none smtp.client-ip=202.12.124.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id DB1F41300343;
+	Thu,  2 Oct 2025 19:20:09 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Thu, 02 Oct 2025 19:20:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1759447209;
+	 x=1759454409; bh=8eLJoj9XRO384G/VvXT2HeFOAWEdoc6vPNt14uKR73A=; b=
+	UlZXQBIHPI3UaJe+qvjb/0azu1Oe5qtfVSOgfR9F74ejhfdVcoLT5yCscAFxGXg8
+	pwym4mpSChHvERlZa3eyvyx08BV44zMw3YGN0tM+vPnhSUz76Sq/1sLgdMvN//1t
+	MgHWqimhr0AzYrwUzdnliiWe0Dm9Z34Ogn+/sldz60VOggZ3d7nAO9W0sjAS+ODa
+	YJDWUIJqUD3rBGsCWCRyC9s7i9AA9pS/qByHexvhH8G1gQsu2dD8k1LeI24HGUWh
+	/03Dje8K6N7L4VyDIt3NIojzwr6tdgIOBwfeBK5umF7roU56mWwwY3FulE7R0j2n
+	QUpOkKf5lBp7bdgkzhLbPw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1759447209; x=
+	1759454409; bh=8eLJoj9XRO384G/VvXT2HeFOAWEdoc6vPNt14uKR73A=; b=U
+	PWCT2uXT/GxiygPtmHbccRddiUfCEYjhtJdXJccb/5YerEHrZjTt4d9N2RDQu1Wk
+	qyOu+HowFfq+mSzSu4jBKZpxK4j61odikvauJS62BQvPo05HzMc2V0Q02lDG/KuV
+	xFOFsUSRnUOVxEuk/jp9b7DJX/6hFCwfMhDmrQ+Gjgp+bzUnTy9kM9MFcHK3eQR5
+	T9dRhCCh7CnFM2shDd7H9AIA40TS7O85KP3muQgcpbkTId7BGzFMnUMJQzEW6cKC
+	RXT0xfdCbnheksb/9HE80aFjG/+J9g7pqLK4D083rrfitbbZ+Xq2jg/7x8JM1H12
+	rJ7EgoklB90Zb+f1OtOPw==
+X-ME-Sender: <xms:pwjfaGV4JN0Ma44cNnMBrUtL97DgMZmD0pMjmYN8l-menv5GZtsfLg>
+    <xme:pwjfaNbUXFszpshl1sBUhW_dmCbyy6ss_a2I-2pSkgussU5ZHyuAg_MFZejD8O402
+    j78984Anpb1DwJaQlM1svAPgMii0eUG1MbwQfJ4GQa5C5t5JGIzwDY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekjeefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeegledpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhoph
+    drohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdr
+    ihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnrghrohdqmhhmqdhsihhgse
+    hlihhsthhsrdhlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhrthdquggv
+    vhgvlheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegtohhrsggvtheslh
+    ifnhdrnhgvthdprhgtphhtthhopehthihtshhosehmihhtrdgvughupdhrtghpthhtohep
+    jhhovghlrghgnhgvlhhfsehnvhhiughirgdrtghomhdprhgtphhtthhopeiiihihsehnvh
+    hiughirgdrtghomhdprhgtphhtthhopegurghmihgvnhdrlhgvmhhorghlsehophgvnhhs
+    ohhurhgtvgdrfigutgdrtghomh
+X-ME-Proxy: <xmx:pwjfaJ2BSQWnOhQ8IplrbbGK-gyE5_grSXYP3j9439lOC_jvlo5zZA>
+    <xmx:pwjfaGp-w5NGLIBr_AoLUes9YDJp8xiczs-IYhNS4F_HgHxvLrrzZA>
+    <xmx:pwjfaHE7EXWw8nb_0yF2EO6HFQilk8UVSNu6kLKe14icznmhBIcCwA>
+    <xmx:pwjfaI62HivFrwmWVnm93cq4CY8LYM9QpIUA5yL17t5fpoJyAMu_1w>
+    <xmx:qQjfaCYKV7n5Om4PDcHknSXz-bYbngxY5RgrPIa40VVrCIhGD4C03q0Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 38369700065; Thu,  2 Oct 2025 19:20:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Aghr8S2aY07B
+Date: Fri, 03 Oct 2025 01:19:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Byungchul Park" <byungchul@sk.com>
+Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+ linux-ide@vger.kernel.org, "Andreas Dilger" <adilger.kernel@dilger.ca>,
+ linux-ext4@vger.kernel.org, "Ingo Molnar" <mingo@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Will Deacon" <will@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Joel Fernandes" <joel@joelfernandes.org>,
+ "Sasha Levin" <sashal@kernel.org>,
+ "Daniel Vetter" <daniel.vetter@ffwll.ch>, duyuyang@gmail.com,
+ "Johannes Berg" <johannes.berg@intel.com>, "Tejun Heo" <tj@kernel.org>,
+ "Theodore Ts'o" <tytso@mit.edu>, "Matthew Wilcox" <willy@infradead.org>,
+ "Dave Chinner" <david@fromorbit.com>,
+ "Amir Goldstein" <amir73il@gmail.com>, kernel-team@lge.com,
+ linux-mm@kvack.org, "Andrew Morton" <akpm@linux-foundation.org>,
+ "Michal Hocko" <mhocko@kernel.org>, "Minchan Kim" <minchan@kernel.org>,
+ "Johannes Weiner" <hannes@cmpxchg.org>, vdavydov.dev@gmail.com,
+ "SeongJae Park" <sj@kernel.org>, jglisse@redhat.com,
+ "Dennis Zhou" <dennis@kernel.org>, "Christoph Lameter" <cl@linux.com>,
+ "Pekka Enberg" <penberg@kernel.org>,
+ "David Rientjes" <rientjes@google.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, ngupta@vflare.org,
+ linux-block@vger.kernel.org, "Josef Bacik" <josef@toxicpanda.com>,
+ linux-fsdevel@vger.kernel.org, "Jan Kara" <jack@suse.cz>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Christoph Hellwig" <hch@infradead.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, dri-devel@lists.freedesktop.org,
+ rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+ hamohammed.sa@gmail.com, harry.yoo@oracle.com, chris.p.wilson@intel.com,
+ "Gwan-gyeong Mun" <gwan-gyeong.mun@intel.com>,
+ max.byungchul.park@gmail.com, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Waiman Long" <longman@redhat.com>, yunseong.kim@ericsson.com,
+ ysk@kzalloc.com, "Yeoreum Yun" <yeoreum.yun@arm.com>,
+ Netdev <netdev@vger.kernel.org>,
+ "Matthew Brost" <matthew.brost@intel.com>, her0gyugyu@gmail.com,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Andy Lutomirski" <luto@kernel.org>,
+ "Sumit Semwal" <sumit.semwal@linaro.org>, gustavo@padovan.org,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Mike Rapoport" <rppt@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Luis Chamberlain" <mcgrof@kernel.org>,
+ "Petr Pavlu" <petr.pavlu@suse.com>, da.gomez@kernel.org,
+ "Sami Tolvanen" <samitolvanen@google.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Frederic Weisbecker" <frederic@kernel.org>, neeraj.upadhyay@kernel.org,
+ joelagnelf@nvidia.com, "Josh Triplett" <josh@joshtriplett.org>,
+ "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+ "Lai Jiangshan" <jiangshanlai@gmail.com>, qiang.zhang@linux.dev,
+ "Juri Lelli" <juri.lelli@redhat.com>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
+ "Benjamin Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
+ "Valentin Schneider" <vschneid@redhat.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, neil@brown.name,
+ okorniev@redhat.com, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, trondmy@kernel.org,
+ "Anna Schumaker" <anna@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
+ "Clark Williams" <clrkwllms@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, ada.coupriediaz@arm.com,
+ kristina.martsenko@arm.com, "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+ "Mark Brown" <broonie@kernel.org>,
+ "Kevin Brodsky" <kevin.brodsky@arm.com>,
+ "David Woodhouse" <dwmw@amazon.co.uk>,
+ "Shakeel Butt" <shakeel.butt@linux.dev>,
+ "Alexei Starovoitov" <ast@kernel.org>, "Zi Yan" <ziy@nvidia.com>,
+ "Yu Zhao" <yuzhao@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>, usamaarif642@gmail.com,
+ joel.granados@kernel.org, "Wei Yang" <richard.weiyang@gmail.com>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ tim.c.chen@linux.intel.com, linux <linux@treblig.org>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ lillian@star-ark.net, "Huacai Chen" <chenhuacai@kernel.org>,
+ francesco@valla.it, guoweikang.kernel@gmail.com, link@vivo.com,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Christian Brauner" <brauner@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Mateusz Guzik" <mjguzik@gmail.com>,
+ "Andrii Nakryiko" <andrii@kernel.org>, wangfushuai@baidu.com,
+ linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ linux-i2c@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-modules@vger.kernel.org, rcu <rcu@vger.kernel.org>,
+ linux-nfs@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Message-Id: <3bbe14af-ccdc-4c78-a7ca-d4ed39fa6b5d@app.fastmail.com>
+In-Reply-To: <63034035-03e4-4184-afce-7e1a897a90e9@efficios.com>
+References: <20251002081247.51255-1-byungchul@sk.com>
+ <20251002081247.51255-2-byungchul@sk.com>
+ <2025100230-grafted-alias-22a2@gregkh>
+ <63034035-03e4-4184-afce-7e1a897a90e9@efficios.com>
+Subject: Re: [PATCH v17 01/47] llist: move llist_{head,node} definition to types.h
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Allow the pNFS server to respond with multiple extents to a LAYOUTGET
-request, thereby avoiding unnecessary load on the server and improving
-performance for the client. The number of LAYOUTGET requests is
-significantly reduced for various file access patterns, including
-random and parallel writes.
+On Thu, Oct 2, 2025, at 15:53, Mathieu Desnoyers wrote:
+> On 2025-10-02 04:24, Greg KH wrote:
+>> On Thu, Oct 02, 2025 at 05:12:01PM +0900, Byungchul Park wrote:
+>>> llist_head and llist_node can be used by some other header files.  For
+>>> example, dept for tracking dependencies uses llist in its header.  To
+>>> avoid header dependency, move them to types.h.
+>> 
+>> If you need llist in your code, then include llist.h.  Don't force all
+>> types.h users to do so as there is not a dependency in types.h for
+>> llist.h.
+>> 
+>> This patch shouldn't be needed as you are hiding "header dependency" for
+>> other files.
+>
+> I agree that moving this into a catch-all types.h is not what we should
+> aim for.
+>
+> However, it's a good practice to move the type declarations to a
+> separate header file, so code that only cares about type and not
+> implementation of static inline functions can include just that.
+>
+> Perhaps we can move struct llist_head and struct llist_node to a new
+> include/linux/llist_types.h instead ?
 
-Additionally, this change allows the client to request layouts with the
-loga_minlength value greater than the minimum possible length of a single
-extent in XFS. We use this functionality to fix a livelock in the client.
+We have around a dozen types of linked lists, and the most common
+two of them are currently defined in linux/types.h, while the
+rest of them are each defined in the same header as the inteface
+definition.
 
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
----
- fs/nfsd/blocklayout.c | 47 +++++++++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 13 deletions(-)
+Duplicating each of those headers by splitting out the trivial
+type definition doesn't quite seem right either, as we'd end
+up with even more headers that have to be included indirectly
+in each compilation unit.
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index 6d29ea5e8623..101cccbee4a3 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -89,9 +89,9 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
- {
- 	struct nfsd4_layout_seg *seg = &args->lg_seg;
- 	struct pnfs_block_layout *bl;
--	struct pnfs_block_extent *bex;
--	u64 length;
--	u32 nr_extents_max = 1, block_size = i_blocksize(inode);
-+	struct pnfs_block_extent *first_bex, *last_bex;
-+	u64 offset = seg->offset, length = seg->length;
-+	u32 i, nr_extents_max, block_size = i_blocksize(inode);
- 	__be32 nfserr;
- 
- 	if (locks_in_grace(SVC_NET(rqstp)))
-@@ -118,6 +118,13 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
- 				PNFS_BLOCK_EXTENT_SIZE)
- 		goto out_error;
- 
-+	/*
-+	 * Limit the maximum layout size to avoid allocating
-+	 * a large buffer on the server for each layout request.
-+	 */
-+	nr_extents_max = (min(args->lg_maxcount, PAGE_SIZE) -
-+			  PNFS_BLOCK_LAYOUT4_SIZE) / PNFS_BLOCK_EXTENT_SIZE;
-+
- 	/*
- 	 * Some clients barf on non-zero block numbers for NONE or INVALID
- 	 * layouts, so make sure to zero the whole structure.
-@@ -129,23 +136,37 @@ nfsd4_block_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
- 	bl->nr_extents = nr_extents_max;
- 	args->lg_content = bl;
- 
--	bex = &bl->extents[0];
--	nfserr = nfsd4_block_map_extent(inode, fhp, seg->offset, seg->length,
--			seg->iomode, args->lg_minlength, bex);
--	if (nfserr != nfs_ok)
--		goto out_error;
-+	for (i = 0; i < bl->nr_extents; i++) {
-+		struct pnfs_block_extent *bex = bl->extents + i;
-+		u64 bex_length;
-+
-+		nfserr = nfsd4_block_map_extent(inode, fhp, offset, length,
-+				seg->iomode, args->lg_minlength, bex);
-+		if (nfserr != nfs_ok)
-+			goto out_error;
-+
-+		bex_length = bex->len - (offset - bex->foff);
-+		if (bex_length >= length) {
-+			bl->nr_extents = i + 1;
-+			break;
-+		}
-+
-+		offset = bex->foff + bex->len;
-+		length -= bex_length;
-+	}
-+
-+	first_bex = bl->extents;
-+	last_bex = bl->extents + bl->nr_extents - 1;
- 
- 	nfserr = nfserr_layoutunavailable;
--	length = bex->foff + bex->len - seg->offset;
-+	length = last_bex->foff + last_bex->len - seg->offset;
- 	if (length < args->lg_minlength) {
- 		dprintk("pnfsd: extent smaller than minlength\n");
- 		goto out_error;
- 	}
- 
--	seg->offset = bex->foff;
--	seg->length = bex->len;
--
--	dprintk("GET: 0x%llx:0x%llx %d\n", bex->foff, bex->len, bex->es);
-+	seg->offset = first_bex->foff;
-+	seg->length = last_bex->foff - first_bex->foff + last_bex->len;
- 	return nfs_ok;
- 
- out_error:
--- 
-2.43.0
+Maybe a shared linux/list_types.h would work, to specifically
+contain all the list_head variants that are meant to be included
+in larger structures?
 
+    Arnd
 
