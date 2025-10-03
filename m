@@ -1,159 +1,243 @@
-Return-Path: <linux-nfs+bounces-14968-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14969-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD691BB81FC
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 22:43:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46177BB828C
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 23:01:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BDEA44EEB8D
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 20:43:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0A643C31ED
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 21:01:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4212451F0;
-	Fri,  3 Oct 2025 20:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E90E22E3E9;
+	Fri,  3 Oct 2025 21:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b="Mv3BaZi3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dc4GwVzW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2653F23DEB6;
-	Fri,  3 Oct 2025 20:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A26A228CBC
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Oct 2025 21:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759524192; cv=none; b=fqPepTgJPr+SfQb8Cun2TcNqAhk3f+dFmUcreizJrw9yIjJ3bpXoZxWd6m024TkfQ4szBgKIni1zdNZ36H1SjxxO8u0oHhMJHF0QAYDtVAdpHWhPlriUylVnwlfjaV1RNNprPvNsmxX5cFasn4T6dHCEuYUyYV8SDwJ6dFfrh9A=
+	t=1759525270; cv=none; b=YNDzfJ1sjLlIYd6SvieV/J5I6/dV2uPG561c2+bHZbwY2JmXV/a8lK0yzmTbw1q5L2yBOdSdDCywHcRku9jbXt+4cVNT93r84zmEQxgPiEFYG+y30eP79oA57zmrHycfXOjK3Bk7yXpcD5uoQaElUTYxOYBKMhesieSR22P2i2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759524192; c=relaxed/simple;
-	bh=S7eeOUP8hojOSwjYJPXhtFUuFl1sdjUrAVkWs0duBs8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RyjzdUzd3GryI00GMZdufy+o05IhT3soSFYWw/lOKhdnC5cLcrj9cuo/C4cdjEjUsfYvBNZCsz1vKi8vexNsgQRMao+DJtPCaZX+lGAybMoFyfp1q4WF7GD7AWgiXmge5p72l8Go4vFaTpaKX/NXu4jZbSYf5rkOMf0WWHe+0hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be; spf=pass smtp.mailfrom=krisman.be; dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b=Mv3BaZi3; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=krisman.be
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1AD9220638;
-	Fri,  3 Oct 2025 20:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=krisman.be; s=gm1;
-	t=1759524187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vZk79knIUqstMJyW/Ap35pdPR5P6bmETvfUIwAz64E4=;
-	b=Mv3BaZi3XTx6k8D0riMN2OxjRYoRHoKWaef/0CrMuDdVDNe7KtG1yn5qWhXOnP1NyhEJa3
-	HwoTF98ZlPfZm5+p9ZaAwoTaSJBIVntHav4zjycLMpOw9K0ZRbiXpNJ36VFl0JYqzwIlf0
-	IFMtRbyyaIBSOYMDHxtibQ5JOs+yYpBW2udiHHbOZ5F0M/0DdLFbkdF8EILqk1kNvX5rYd
-	jSuGV6o8AvCU/D7ChSk7RZ1/g99RK/GTNonRCXXCMmgu4TQEuEmhQVaC02nBh9h+EBaCm7
-	fkvaUIIXlNmcQk8aYT3nuVV53IdCuRTJ+QOz+z2oRmChpx2YgXB2NiD0EuloGQ==
-From: Gabriel Krisman Bertazi <gabriel@krisman.be>
-To: Chuck Lever <cel@kernel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>,  linux-fsdevel@vger.kernel.org,
-  linux-nfs@vger.kernel.org,  Chuck Lever <chuck.lever@oracle.com>,  Jeff
- Layton <jlayton@kernel.org>,  Volker Lendecke <Volker.Lendecke@sernet.de>,
-  CIFS <linux-cifs@vger.kernel.org>
-Subject: Re: [RFC PATCH] fs: Plumb case sensitivity bits into statx
-In-Reply-To: <28ffeb31-beec-4c7a-ad41-696d0fd54afe@kernel.org> (Chuck Lever's
-	message of "Fri, 3 Oct 2025 11:34:17 -0400")
-References: <20250925151140.57548-1-cel@kernel.org>
-	<CAOQ4uxj-d87B+L+WgbFgmBQqdrYzrPStyfOKtVfcQ19bOEV6CQ@mail.gmail.com>
-	<87tt0gqa8f.fsf@mailhost.krisman.be>
-	<28ffeb31-beec-4c7a-ad41-696d0fd54afe@kernel.org>
-Date: Fri, 03 Oct 2025 16:43:04 -0400
-Message-ID: <87plb3ra1z.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1759525270; c=relaxed/simple;
+	bh=bA4gkp0aEj3L7ntxRrtvdZ+BO3Uu/dLayDimue3dIzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XtDKezjZGgn2y8urA8D3IyBdJQkBXLM78R9dHPGpkTQPbv3VxnDb3VpqAfrrpifXkSDRfr2I/McWLUcRLNnyyX7xX8n3+B772rsCw1kd27O/Tw5GnmqL4mDx0oUBnrWRkRI75oOWLAfoTy6F5M9fqlH+de/3qxFqrgVR/ihbVE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dc4GwVzW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43E26C4CEF5;
+	Fri,  3 Oct 2025 21:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759525268;
+	bh=bA4gkp0aEj3L7ntxRrtvdZ+BO3Uu/dLayDimue3dIzM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dc4GwVzWkVMvEo4feu6+358QUUymLqmAspjEnkN3pLDQpXWiq8V30oUWAr9CO2ic7
+	 9mPnMav4pQvEjCTYenJtIIuv96usIzEfYR5CdyaWxmmbvNmSAUSFMFFYnkCGuLXLaQ
+	 wDa/BF5pMISxnesP+U6pQqtAao2MhcVVPihd4JO/gllrSwFPcmempxOgdbA3w7CYbx
+	 wfMkHPsKqypDcYe13YdeRQHEYjnNhyJsQJULrb2N71LSNBDMpOXTWekceS/SBRmfze
+	 WEwAX+k4tbfb413+Vk+gJofj8k1SGvuAGi9CbeFEtnnmtz+aYyR83ORmmPgi9yI71U
+	 ZISfw20z4recg==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	trond.myklebust@hammerspace.com
+Cc: anna@kernel.org
+Subject: [GIT PULL] <INSERT SUBJECT HERE>
+Date: Fri,  3 Oct 2025 17:01:07 -0400
+Message-ID: <20251003210107.683479-1-anna@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: gabriel@krisman.be
+Content-Transfer-Encoding: 8bit
 
-Chuck Lever <cel@kernel.org> writes:
+Hi Linus,
 
-> On 10/3/25 11:24 AM, Gabriel Krisman Bertazi wrote:
->> Amir Goldstein <amir73il@gmail.com> writes:
->>=20
->>> On Thu, Sep 25, 2025 at 5:21=E2=80=AFPM Chuck Lever <cel@kernel.org> wr=
-ote:
->
->>>> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
->>>> index 1686861aae20..e929b30d64b6 100644
->>>> --- a/include/uapi/linux/stat.h
->>>> +++ b/include/uapi/linux/stat.h
->>>> @@ -219,6 +219,7 @@ struct statx {
->>>>  #define STATX_SUBVOL           0x00008000U     /* Want/got stx_subvol=
- */
->>>>  #define STATX_WRITE_ATOMIC     0x00010000U     /* Want/got atomic_wri=
-te_* fields */
->>>>  #define STATX_DIO_READ_ALIGN   0x00020000U     /* Want/got dio read a=
-lignment info */
->>>> +#define STATX_CASE_INFO                0x00040000U     /* Want/got ca=
-se folding info */
->>>>
->>>>  #define STATX__RESERVED                0x80000000U     /* Reserved fo=
-r future struct statx expansion */
->>>>
->>>> @@ -257,4 +258,18 @@ struct statx {
->>>>  #define STATX_ATTR_WRITE_ATOMIC                0x00400000 /* File sup=
-ports atomic write operations */
->>>>
->>>>
->>>> +/*
->>>> + * File system support for case folding is available via a bitmap.
->>>> + */
->>>> +#define STATX_CASE_PRESERVING          0x80000000 /* File name case i=
-s preserved */
->>>> +
->>>> +/* Values stored in the low-order byte of .case_info */
->>>> +enum {
->>>> +       statx_case_sensitive =3D 0,
->>>> +       statx_case_ascii,
->>>> +       statx_case_utf8,
->>>> +       statx_case_utf16,
->>>> +};
->>>> +#define STATX_CASE_FOLDING_TYPE                0x000000ff
->>=20
->> Does the protocol care about unicode version?  For userspace, it would
->> be very relevant to expose it, as well as other details such as
->> decomposition type.
->
-> For the purposes of indicating case sensitivity and preservation, the
-> NFS protocol does not currently care about unicode version.
->
-> But this is a very flexible proposal right now. Please recommend what
-> you'd like to see here. I hope I've given enough leeway that a unicode
-> version could be provided for other API consumers.
+The following changes since commit 07e27ad16399afcd693be20211b0dfae63e0615f:
 
-But also, encoding version information is filesystem-wide, so it would
-fit statfs.
+  Linux 6.17-rc7 (2025-09-21 15:08:52 -0700)
 
-For filesystems using fs/unicode/, we'd want to expose the unicode
-version, from sb->s_encoding->version and the sb->s_encoding_flags.
-The tuple (version,flags)  defines the casefolding behavior.
+are available in the Git repository at:
 
-Currently, it is written to the kernel log at mount-time, but that is
-easily lost/wrapped.
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.18-1
 
-> (As I mentioned to Jeff, there is no user space statx component in the
-> current proposal, but it should get one if it is agreed that's useful to
-> include).
+for you to fetch changes up to 1f0d4ab0f5326ab6f940482b1941d2209d61285a:
 
-I believe it is useful to expose it to userspace, simply because it
-modifies the behavior of the filesystem.  An application like Steam can
-poke it to decide whether it needs to enable compatibility alternatives
-to in-kernel case-folding, instead of assuming the encoding and testing
-if "chattr +F" works.
+  NFS: add basic STATX_DIOALIGN and STATX_DIO_READ_ALIGN support (2025-09-30 16:10:30 -0400)
 
-It is not a critical feature, because mkfs for all case-insensitive
-filesystems only ever supported one unicode version and strict mode is
-rarely used. But if we ever update unicode or provide more flavors of
-casefolding for compatibility with other filesystems, which was
-requested in the past, userspace would need to have a way to retrieve
-that information.
+----------------------------------------------------------------
+NFS Client Updates for Linux 6.18
 
---=20
-Gabriel Krisman Bertazi
+New Features:
+ * Add a Kconfig option to redirect dfprintk() to the trace buffer
+ * Enable use of the RWF_DONTCACHE flag on the NFS client
+ * Add striped layout handling to pNFS flexfiles
+ * Add proper localio handling for READ and WRITE O_DIRECT
+
+Bugfixes:
+ * Handle NFS4ERR_GRACE errors during delegation recall
+ * Fix NFSv4.1 backchannel max_resp_sz verification check
+ * Fix mount hang after CREATE_SESSION failure
+ * Fix d_parent->d_inode locking in nfs4_setup_readdir()
+
+Other Cleanups and Improvements:
+ * Improvements to write handling tracepoints
+ * Fix a few trivial spelling mistakes
+ * Cleanups to the rpcbind cleanup call sites
+ * Convert the SUNRPC xdr_buf to use a scratch folio instead of scratch page
+ * Remove unused NFS_WBACK_BUSY() macro
+ * Remove __GFP_NOWARN flags
+ * Unexport rpc_malloc() and rpc_free()
+
+
+There is a conflict with the nfsd tree due to the localio changes. It should
+be resolved through this fix:
+
+
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 3edccc38db42e..e70bc699e9a51 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -697,6 +697,10 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct kstat *stat)
+ 		.dentry		= fhp->fh_dentry,
+ 	};
+ 	u32 request_mask = STATX_BASIC_STATS;
++	struct inode *inode = d_inode(p.dentry);
++
++	if (S_ISREG(inode->i_mode))
++		request_mask |= (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
+ 
+ 	if (fhp->fh_maxsize == NFS4_FHSIZE)
+ 		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
+
+
+Thanks,
+Anna
+
+----------------------------------------------------------------
+Al Viro (1):
+      nfs4_setup_readdir(): insufficient locking for ->d_parent->d_inode dereferencing
+
+Anna Schumaker (9):
+      SUNRPC: Introduce xdr_set_scratch_folio()
+      NFS: Update readdir to use a scratch folio
+      NFS: Update getacl to use xdr_set_scratch_folio()
+      NFS: Update listxattr to use xdr_set_scratch_folio()
+      NFS: Update the blocklayout to use xdr_set_scratch_folio()
+      NFS: Update the filelayout to use xdr_set_scratch_folio()
+      NFS: Update the flexfilelayout driver to use xdr_set_scratch_folio()
+      SUNRPC: Update svcxdr_init_decode() to call xdr_set_scratch_folio()
+      SUNRPC: Update gssx_accept_sec_context() to use xdr_set_scratch_folio()
+
+Anthony Iliopoulos (2):
+      NFSv4.1: fix backchannel max_resp_sz verification check
+      NFSv4.1: fix mount hang after CREATE_SESSION failure
+
+Chuck Lever (2):
+      NFS: Remove rpcbind cleanup for NFSv4.0 callback
+      SUNRPC: Move the svc_rpcb_cleanup() call sites
+
+Jeff Layton (8):
+      nfs: add tracepoints to nfs_file_read() and nfs_file_write()
+      nfs: new tracepoints around write handling
+      nfs: more in-depth tracing of writepage events
+      nfs: add tracepoints to nfs_writepages()
+      sunrpc: remove dfprintk_cont() and dfprintk_rcu_cont()
+      sunrpc: add a Kconfig option to redirect dfprintk() output to trace buffer
+      nfs: remove NFS_WBACK_BUSY()
+      sunrpc: unexport rpc_malloc() and rpc_free()
+
+Jonathan Curley (9):
+      NFSv4/flexfiles: Remove cred local variable dependency
+      NFSv4/flexfiles: Use ds_commit_idx when marking a write commit
+      NFSv4/flexfiles: Add data structure support for striped layouts
+      NFSv4/flexfiles: Update low level helper functions to be DS stripe aware.
+      NFSv4/flexfiles: Read path updates for striped layouts
+      NFSv4/flexfiles: Commit path updates for striped layouts
+      NFSv4/flexfiles: Write path updates for striped layouts
+      NFSv4/flexfiles: Update layout stats & error paths for striped layouts
+      NFSv4/flexfiles: Add support for striped layouts
+
+Leo Martins (1):
+      nfs: cleanup tracepoint declarations
+
+Mike Snitzer (8):
+      NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+      nfs/localio: make trace_nfs_local_open_fh more useful
+      nfs/localio: avoid issuing misaligned IO using O_DIRECT
+      nfs/localio: refactor iocb and iov_iter_bvec initialization
+      nfs/localio: refactor iocb initialization
+      nfs/localio: add proper O_DIRECT support for READ and WRITE
+      nfs/localio: add tracepoints for misaligned DIO READ and WRITE support
+      NFS: add basic STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
+
+Olga Kornievskaia (1):
+      NFSv4: handle ERR_GRACE on delegation recalls
+
+Qianfeng Rong (1):
+      SUNRPC: Remove redundant __GFP_NOWARN
+
+Trond Myklebust (3):
+      filemap: Add a helper for filesystems implementing dropbehind
+      filemap: Add a version of folio_end_writeback that ignores dropbehind
+      NFS: Enable use of the RWF_DONTCACHE flag on the NFS client
+
+Xichao Zhao (1):
+      NFSv4: fix "prefered"->"preferred"
+
+ fs/lockd/svc.c                            |   6 +-
+ fs/nfs/blocklayout/blocklayout.c          |   8 +-
+ fs/nfs/blocklayout/dev.c                  |   8 +-
+ fs/nfs/callback.c                         |  10 +-
+ fs/nfs/dir.c                              |   8 +-
+ fs/nfs/file.c                             |  29 +-
+ fs/nfs/filelayout/filelayout.c            |  10 +-
+ fs/nfs/filelayout/filelayoutdev.c         |  10 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 808 ++++++++++++++++++++----------
+ fs/nfs/flexfilelayout/flexfilelayout.h    |  64 ++-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 115 +++--
+ fs/nfs/inode.c                            |  15 +
+ fs/nfs/internal.h                         |  10 +
+ fs/nfs/localio.c                          | 405 +++++++++++----
+ fs/nfs/nfs2xdr.c                          |   2 +-
+ fs/nfs/nfs3xdr.c                          |   2 +-
+ fs/nfs/nfs42proc.c                        |   4 +-
+ fs/nfs/nfs42xdr.c                         |   2 +-
+ fs/nfs/nfs4file.c                         |   1 +
+ fs/nfs/nfs4proc.c                         |  12 +-
+ fs/nfs/nfs4state.c                        |   3 +
+ fs/nfs/nfs4xdr.c                          |   4 +-
+ fs/nfs/nfstrace.h                         | 215 +++++++-
+ fs/nfs/write.c                            |  34 +-
+ fs/nfsd/filecache.c                       |  34 ++
+ fs/nfsd/filecache.h                       |   4 +
+ fs/nfsd/localio.c                         |  11 +
+ fs/nfsd/nfsctl.c                          |   2 +-
+ fs/nfsd/nfssvc.c                          |   7 +-
+ fs/nfsd/trace.h                           |  27 +
+ fs/nfsd/vfs.h                             |   4 +
+ include/linux/nfs_page.h                  |   2 -
+ include/linux/nfs_xdr.h                   |   4 +-
+ include/linux/nfslocalio.h                |   2 +
+ include/linux/pagemap.h                   |   2 +
+ include/linux/sunrpc/debug.h              |  30 +-
+ include/linux/sunrpc/svc.h                |   4 +-
+ include/linux/sunrpc/svc_xprt.h           |   3 +-
+ include/linux/sunrpc/xdr.h                |   8 +-
+ include/trace/misc/fs.h                   |  22 +
+ mm/filemap.c                              |  34 +-
+ net/sunrpc/Kconfig                        |  14 +
+ net/sunrpc/auth_gss/gss_rpc_xdr.c         |   8 +-
+ net/sunrpc/sched.c                        |   2 -
+ net/sunrpc/socklib.c                      |   2 +-
+ net/sunrpc/svc.c                          |  11 +-
+ net/sunrpc/svc_xprt.c                     |   7 +-
+ net/sunrpc/xprtrdma/rpc_rdma.c            |   2 +-
+ 48 files changed, 1472 insertions(+), 559 deletions(-)
 
