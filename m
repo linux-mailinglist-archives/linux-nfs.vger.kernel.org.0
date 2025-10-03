@@ -1,137 +1,78 @@
-Return-Path: <linux-nfs+bounces-14935-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14936-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31094BB5F3F
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 07:36:42 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4BD5BB5FE9
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 08:45:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC8DC423C02
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 05:36:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9DCF44E30C7
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 06:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395741F5858;
-	Fri,  3 Oct 2025 05:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6233E1F4E59;
+	Fri,  3 Oct 2025 06:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="DJJvW5PE"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NkSVxHrd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95E1A5BA2;
-	Fri,  3 Oct 2025 05:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493E4128819
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Oct 2025 06:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759469793; cv=none; b=rtNKLmSypczk0h9djJUz7lt3Qra6ECXkQk+nw2WXqUaLPBP0AUVnhy5IRD2E3gNXdjF6LkfkdTT+xQ+5UDqWkKvPPIbOw50ZQhU0hq2gcB5OFWSaLY28xZ+jwdcZhJs3dWNQvhe3n/oHeOhyKc9LgghuomyYty/6Ib3/fruuqNU=
+	t=1759473953; cv=none; b=pS7sLkbNahtj/wZpWvqFPuPL8Mos96qQAuI9PfdNQWmeKKWqmP3Qohag0I7hNk3nCrCbo9xpvnb87wsQC4F+sFBLC9EOGDYxKHDdH/tQQz3WQrITgh+XGKYiYNwml7oNKPcoHZoHiR2ugIfCGto6e7W3bw1UlAVtBsINm1QJq2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759469793; c=relaxed/simple;
-	bh=a8KKfmO7Q1+fCiH5/Q5b5jERee1SMGRdbVJvu3pT/CM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LizQXEAxEkp1Ul2PtZiiPzjdMfp0Pssni7P7o/Cuw95NH8ZfDlderSdWQQ/l7/D/vUqQRzyvfDUKA7Oz4KwhuwyjRPWGE4KfHLPE46f+BR0weyfy0DucIha8mEbcyb21Jl/EpHSSqhS3WRBLjuWqLQN2mn9esiBzesbl7UbPCqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=DJJvW5PE; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8220940B15
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1759469781; bh=JviM4x86VTg42/9SFICWditZ8FIZ0/vFiF+DDrtEZ08=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=DJJvW5PEMB1qs5Mtek/16g/JnmPt9CmJjE7Uu3yDxuMEd8dQGsOFFsNLXsMYe/EdC
-	 iqEOpfl74zoy2btKntuyskCwXHqb1QziA6gqsLHxEos6514SBiNUgTVTh6gAssbIFt
-	 mX0BfVGqYx99AlSQq50SEso4ByHi4Wl2mDMA1817AOvP7lbGnzuly4lQeWJfoyqsoJ
-	 fHAPdXQvq24AdjQRv5e/AHScCdcLFYjnzQVUHebL1fqlqYQpg1LU1Hw/wr1mqYSMiH
-	 4CDJUKP9Sf0cYHlz89pRZA5pRuDslmiTfDPZXkFMif3dyV2LD6r3xNxo4MP4lnuwWu
-	 2OkTVnFdIVO3g==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8220940B15;
-	Fri,  3 Oct 2025 05:36:19 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com, torvalds@linux-foundation.org,
- damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
- adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, mingo@redhat.com,
- peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
- rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
- daniel.vetter@ffwll.ch, duyuyang@gmail.com, johannes.berg@intel.com,
- tj@kernel.org, tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
- amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
- linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
- minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
- sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
- penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
- ngupta@vflare.org, linux-block@vger.kernel.org, josef@toxicpanda.com,
- linux-fsdevel@vger.kernel.org, jack@suse.cz, jlayton@kernel.org,
- dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
- dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
- melissa.srw@gmail.com, hamohammed.sa@gmail.com, harry.yoo@oracle.com,
- chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
- max.byungchul.park@gmail.com, boqun.feng@gmail.com, longman@redhat.com,
- yunseong.kim@ericsson.com, ysk@kzalloc.com, yeoreum.yun@arm.com,
- netdev@vger.kernel.org, matthew.brost@intel.com, her0gyugyu@gmail.com,
- catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, luto@kernel.org, sumit.semwal@linaro.org,
- gustavo@padovan.org, christian.koenig@amd.com, andi.shyti@kernel.org,
- arnd@arndb.de, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
- petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
- paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
- joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
- mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
- qiang.zhang@linux.dev, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, chuck.lever@oracle.com, neil@brown.name,
- okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- trondmy@kernel.org, anna@kernel.org, kees@kernel.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, mark.rutland@arm.com,
- ada.coupriediaz@arm.com, kristina.martsenko@arm.com,
- wangkefeng.wang@huawei.com, broonie@kernel.org, kevin.brodsky@arm.com,
- dwmw@amazon.co.uk, shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
- yuzhao@google.com, baolin.wang@linux.alibaba.com, usamaarif642@gmail.com,
- joel.granados@kernel.org, richard.weiyang@gmail.com,
- geert+renesas@glider.be, tim.c.chen@linux.intel.com, linux@treblig.org,
- alexander.shishkin@linux.intel.com, lillian@star-ark.net,
- chenhuacai@kernel.org, francesco@valla.it, guoweikang.kernel@gmail.com,
- link@vivo.com, jpoimboe@kernel.org, masahiroy@kernel.org,
- brauner@kernel.org, thomas.weissschuh@linutronix.de, oleg@redhat.com,
- mjguzik@gmail.com, andrii@kernel.org, wangfushuai@baidu.com,
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-i2c@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-modules@vger.kernel.org, rcu@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 28/47] dept: add documentation for dept
-In-Reply-To: <20251002081247.51255-29-byungchul@sk.com>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-29-byungchul@sk.com>
-Date: Thu, 02 Oct 2025 23:36:16 -0600
-Message-ID: <87ldlssg1b.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1759473953; c=relaxed/simple;
+	bh=wyjfDWs5ir3+MAuLNl+mgP+V9vMuPv+9fXeyLsTrSHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WB5tSV4dE8HDdt76kg9xshBbwk4l/g70XZck2JQczp8Hh7tjbeGllruC+yAVNkBjhtsteY636HuoVQUG3E83AiFnYstK+YVNGfM8Luv4rHn6Xd/3LjPg+Ze1BfQQLoufX51B1O/bSXSQB76BXQVh6Rg6N/vKqUHPSYtmdhNzwM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NkSVxHrd; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wyjfDWs5ir3+MAuLNl+mgP+V9vMuPv+9fXeyLsTrSHU=; b=NkSVxHrdQZfG+8JhmAu9hELDiK
+	bfGOxETG/R86xyezSNBTnDBEiPhNKdJV/p5mFODFY2cIHPsq/wdQt9pJZx00CHWjr72AwBK2Lrwm3
+	XOCa4gcpWpKOBTYM/gwikU4OStNXvCjUemTqG71qtpCqF5SEiZolM3Nxvtz8is5TXDsHQVOSBFfYC
+	dvdN63IQNtNJTAk8kBgNyUhDEKUcDmFU2qSnTpdbfBqXi/b8t9SzyOfG1JZY6pgW/zaxcG0MFKu1/
+	zj+NgtF6b4DgmQmr0uqKtKdKqoLKZI/W7g23EulmoTA7ODtrzG7z5ampZSzO56+pDYe7lv4vhFiyw
+	3mRCqSKA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v4ZXy-0000000BkpQ-2e6n;
+	Fri, 03 Oct 2025 06:45:42 +0000
+Date: Thu, 2 Oct 2025 23:45:42 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: Benjamin Coddington <bcodding@redhat.com>, chuck.lever@oracle.com,
+	jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com,
+	tom@talpey.com, hch@infradead.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] NFSD: Fix SCSI reservation conflict causing pNFS
+ client to revert I/O to MDS
+Message-ID: <aN9xFsouIH6jlqv4@infradead.org>
+References: <1759249728-29182-1-git-send-email-dai.ngo@oracle.com>
+ <475D1227-CB10-461D-9EC1-A303B74A701E@redhat.com>
+ <ddcea773-3d9a-47d0-b857-087655b2ec13@oracle.com>
+ <AFF0E6AD-F593-4CCE-89E3-AA72E1650D99@redhat.com>
+ <c0dced8a-29d1-4b5c-9fe6-47d065aa7255@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0dced8a-29d1-4b5c-9fe6-47d065aa7255@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Byungchul Park <byungchul@sk.com> writes:
+On Wed, Oct 01, 2025 at 10:36:47AM -0700, Dai Ngo wrote:
+> Thank you Ben, I'll get the spec from the ANSI webstore.
 
-> This document describes the concept and APIs of dept.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  Documentation/dependency/dept.txt     | 735 ++++++++++++++++++++++++++
->  Documentation/dependency/dept_api.txt | 117 ++++
->  2 files changed, 852 insertions(+)
->  create mode 100644 Documentation/dependency/dept.txt
->  create mode 100644 Documentation/dependency/dept_api.txt
+You can also downloaded the last draft form t10.org, which is always
+technical identication, but does not have the official blessing.
 
-As already suggested, this should be in RST; you're already 95% of the
-way there.  Also, please put it under Documentation/dev-tools; we don't
-need another top-level directory for this.
-
-Thanks,
-
-jon
 
