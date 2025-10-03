@@ -1,192 +1,145 @@
-Return-Path: <linux-nfs+bounces-14956-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14957-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5AA1BB689C
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 13:33:49 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A556BB6ACC
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 14:40:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5369D19C4543
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 11:34:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 902964E736F
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 12:40:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8D012EBDC4;
-	Fri,  3 Oct 2025 11:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA7BB2ECD22;
+	Fri,  3 Oct 2025 12:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFzKRkRA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="RhdzKmb2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F32527EC99;
-	Fri,  3 Oct 2025 11:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C2224AF2
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Oct 2025 12:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759491220; cv=none; b=PCztNRJGzLy2NUIwoOLg01XTAv1rbIGtDCFvul92yK6tjt/e/7ISwWFbyIuZ3Hm2wbhaLHb4iw/iUSAM6+dpiBgDy4/XAtwTu8xB/TlXnVZBpBKAwnt1Kdqvyfom2wYNdRZVmJjtYGLM+T/nqwiCbvLWc9L2FDYE5CZ4QcU8ZWM=
+	t=1759495207; cv=none; b=DeHyOx/2MkODNcbhcumdUbuAMo9LGXsxLCQtbgXQ6jSVfW8by8BQ4o1xdMdsmg7ADgcupUudN4X4pBaZlCk9/qcbZIGUtnVJ6Csma194RIleywB3rtx0i8U6ZEnTPUGRHQR56+6svQpuI0HIoQyvpNBTAx8gBgo158+Fw739O0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759491220; c=relaxed/simple;
-	bh=8JvzZz+MrzjUmB/qmn12k1T1z8wI8NEqkWeYCArS4nA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnZaFvAfyHdSfOhsi4zZO7HXEiqZ2z5JEhvwYIXKpeLTEPPEEXgkjdhswYZbOoRbbG0vI7lh5oUb3Wn3ol2puwzP7WwkfmmBQ7/Z9owv59PQsYgiqxh96PhXpd/qfsP+fv5K7qaVIPp8zPLV9dnq3BdpJfG1p+aibtaQLoNdFwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFzKRkRA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B48C4CEF5;
-	Fri,  3 Oct 2025 11:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759491219;
-	bh=8JvzZz+MrzjUmB/qmn12k1T1z8wI8NEqkWeYCArS4nA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lFzKRkRAagp0TVhUdTwIsW0EPgf7xwe5vUnZsgItAsbqWLbYcv7v2Q3oCdo6pdbpH
-	 TxK4cHFxGzDDbQDQTmmTAALXtRce7awXslf/w51ZRllOlHQfykkv/S85tSAEJm9jFJ
-	 GYwvA6uugwAlC/eFWM7ehADw13/t37TYV5luOUQD7lDrfqGG54YTKnaTyEWvTdRb0c
-	 orc+Nn8y24EKqDs+XjojdkthXLkOB/CpwUkMKq+3hkvcz1Knd27dZO22vw3HIZH/oz
-	 KeJJqGDMye/t+diEqfyZzsugo6eKkklnr+1Zd5LuUfHG/pa69kR/h1070kPLMeXwGn
-	 kaCdIbmTIMmYw==
-Date: Fri, 3 Oct 2025 12:33:03 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Byungchul Park <byungchul@sk.com>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	kevin.brodsky@arm.com, dwmw@amazon.co.uk, shakeel.butt@linux.dev,
-	ast@kernel.org, ziy@nvidia.com, yuzhao@google.com,
-	baolin.wang@linux.alibaba.com, usamaarif642@gmail.com,
-	joel.granados@kernel.org, richard.weiyang@gmail.com,
-	geert+renesas@glider.be, tim.c.chen@linux.intel.com,
-	linux@treblig.org, alexander.shishkin@linux.intel.com,
-	lillian@star-ark.net, chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 09/47] arm64, dept: add support
- CONFIG_ARCH_HAS_DEPT_SUPPORT to arm64
-Message-ID: <b69ab7d0-ba5e-4d22-88ef-53e0ebf07869@sirena.org.uk>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-10-byungchul@sk.com>
- <a7f41101-d80a-4cee-ada5-9c591321b1d7@sirena.org.uk>
- <20251003014641.GF75385@system.software.com>
+	s=arc-20240116; t=1759495207; c=relaxed/simple;
+	bh=H+I1V5mfQOYPwoPDsbMmhSRKZV+49SQXmWoIqFtRNoY=;
+	h=To:cc:From:Subject:Date:Message-ID; b=iDnlQf33s8mZBVrXhh9IkG6+VTg4MVUpURD6MXFwfUIE2MtGA9QKE+sW6vQdXVAgjw/xUjKjq53l+8HJstbxbkCZX57158urgDMtQzNyEp7eWimH2ouK+YzTz6F//tjTBRcFkHwjXNN13wPiMpc+vKG5qiSNODvgzsnbREkOT5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=RhdzKmb2; arc=none smtp.client-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=Message-ID:Date:Subject:Reply-To:
+	From:cc:To:Sender:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nVlee3PjW8NQQNCPbSt6Xd4aw47PDG6z5G5TGA+XaQw=; t=1759495205; x=1760359205; 
+	b=RhdzKmb2x9W9WTV9rGeDT5qtvMjI9t5km7i0Lsi4HgUCG7DZ/aNPuZImfun233WZX59OX0de4l4
+	JBNW3Q24+LDXlOH3BuMFmiYzG2dvHKoEbKOc+3Ut05yPb0drZpR4dRIwjQireaEbvvT+/cQ1sRije
+	CjzWHPPg1olENZPapKnrtycxavLFZ+CiwSIBKJ3uJMGQBJ+oNIz72LlkqCikrIZ50MUuo3VLXzUTZ
+	Hn7OrCwLXf1Ux/+wGnZ5ny+oXVg502GXPOtb7Q00e8vFmYecvr6DoJC11y+0Wl7B9NPcXb9k2xwos
+	H/IbRiw7qZRF1Iw7itwlg1tPOQuv+BjSI3fA==;
+Received: from [24.147.175.133] (helo=crash.local)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <rtm@csail.mit.edu>)
+	id 1v4ezS-002cW8-5W;
+	Fri, 03 Oct 2025 08:34:26 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by crash.local (Postfix) with ESMTP id 3517129E339A;
+	Fri, 03 Oct 2025 08:34:25 -0400 (EDT)
+To: Chuck Lever <chuck.lever@oracle.com>,
+    Jeff Layton <jlayton@kernel.org>
+cc: linux-nfs@vger.kernel.org
+From: rtm@csail.mit.edu
+Reply-To: rtm@csail.mit.edu
+Subject: use-after-free in nfs4stat.c _free_cpntf_state_locked()
+Date: Fri, 03 Oct 2025 08:34:25 -0400
+Message-ID: <83337.1759494865@localhost>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CPEOfhRT6FsWLRqF"
-Content-Disposition: inline
-In-Reply-To: <20251003014641.GF75385@system.software.com>
-X-Cookie: hangover, n.:
 
+If an NFS 4.2 client has a COPY_NOTIFY registered, and then
+re-establishes its session with EXCHANGE_ID with a new verifier and
+CREATE_SESSION, nfsd4_create_session() calls expire_client() for the
+old session, which frees the nfs4_stid associated with the
+COPY_NOTIFY. But the COPY_NOTIFY's nfs4_cpntf_state still exists; when
+nfs4_laundromat() expires it, _free_cpntf_state_locked()'s
+list_del(&cps->cp_list) uses the freed memory of the nfs4_stid.
 
---CPEOfhRT6FsWLRqF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A demo:
 
-On Fri, Oct 03, 2025 at 10:46:41AM +0900, Byungchul Park wrote:
-> On Thu, Oct 02, 2025 at 12:39:31PM +0100, Mark Brown wrote:
-> > On Thu, Oct 02, 2025 at 05:12:09PM +0900, Byungchul Park wrote:
-> > > dept needs to notice every entrance from user to kernel mode to treat
-> > > every kernel context independently when tracking wait-event dependenc=
-ies.
-> > > Roughly, system call and user oriented fault are the cases.
+# uname -r
+6.17.0-01737-g50c19e20ed2e-dirty
+# cat /etc/exports
+/tmp 127.0.0.1(rw,subtree_check,pnfs)
+# wget http://www.rtmrtm.org/rtm/nfsd185b.c
+# cc nfsd185b.c
+# ./a.out
+(wait 10 or 20 seconds for nfs4_laundromat())
+(you may have to run a.out more than once)
+list_del corruption. prev->next should be ffff8881068669d8, but was 6b6b6b6b6b6b6b6b. (prev=ffff888105190010)
+kernel BUG at lib/list_debug.c:62!
+Oops: invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+CPU: 2 UID: 0 PID: 268 Comm: kworker/u51:2 Tainted: G        W           6.17.0-01737-g50c19e20ed2e-dirty #33 PREEMPT(voluntary) 
+Workqueue: nfsd4 laundromat_main
+RIP: 0010:__list_del_entry_valid_or_report+0xdd/0x110
+Call Trace:
+ _free_cpntf_state_locked+0x40/0xb0
+ laundromat_main+0x5ec/0xaf0
 
-> > > Make dept aware of the entrances of arm64 and add support
-> > > CONFIG_ARCH_HAS_DEPT_SUPPORT to arm64.
+The nfs4_cpntf_state is allocated and linked into the
+nfs4_stid.sc_cp_list here:
 
-> > The description of what needs to be tracked probably needs some
-> > tightening up here, it's not clear to me for example why exceptions for
-> > mops or the vector extensions aren't included here, or what the
-> > distinction is with error faults like BTI or GCS not being tracked?
+#0  list_add (head=<optimized out>, new=<optimized out>)
+    at fs/nfsd/nfs4state.c:985
+#1  nfs4_alloc_init_cpntf_state (nn=nn@entry=0xffffffd602d82000, 
+    p_stid=0xffffffd606858008) at fs/nfsd/nfs4state.c:985
+#2  0xffffffff804b04e0 in nfsd4_copy_notify (rqstp=0xffffffd6040fb800, 
+    cstate=<optimized out>, u=0xffffffd6052e2720) at fs/nfsd/nfs4proc.c:2078
+(gdb) print cps
+$1 = (struct nfs4_cpntf_state *) 0xffffffd603fe9020
+(gdb) print p_stid
+$2 = (struct nfs4_stid *) 0xffffffd606858008
 
-> Thanks for the feedback but I'm afraid I don't get you.  Can you explain
-> in more detail with example?
+The nfs4_stid is freed here:
 
-Your commit log says we need to track every entrance from user mode to
-kernel mode but the code only adds tracking to syscalls and some memory
-faults.  The exception types listed above (and some others) also result
-in entries to the kernel from userspace.
+#0  nfs4_free_ol_stateid (stid=0xffffffd606858008) at fs/nfsd/nfs4state.c:1502
+#1  0xffffffff804c3ed2 in free_ol_stateid_reaplist (
+    reaplist=reaplist@entry=0xffffffc60031baf8) at fs/nfsd/nfs4state.c:1602
+#2  0xffffffff804c46fa in release_openowner (oo=0xffffffd606857008)
+    at fs/nfsd/nfs4state.c:1696
+#3  0xffffffff804c4898 in __destroy_client (clp=clp@entry=0xffffffd605308008)
+    at fs/nfsd/nfs4state.c:2483
+#4  0xffffffff804c49fa in expire_client (clp=0xffffffd605308008)
+    at fs/nfsd/nfs4state.c:2533
+#5  0xffffffff804c7a26 in nfsd4_create_session (rqstp=0xffffffd6040fb800, 
+    cstate=<optimized out>, u=0xffffffd6052e2060) at fs/nfsd/nfs4state.c:4041
+(gdb) print stid
+$3 = (struct nfs4_stid *) 0xffffffd606858008
+(gdb) print stid->sc_cp_list
+$4 = {next = 0xffffffd603fe9038, prev = 0xffffffd603fe9038}
 
-> JFYI, pairs of wait and its event need to be tracked to see if each
-> event can be prevented from being reachable by other waits like:
+Freeing the nfs4_cpntf_state trips over the free nfs4_stid here:
 
->    context X				context Y
->=20
->    lock L
->    ...
->    initiate event A context		start toward event A
->    ...					...
->    wait A // wait for event A and	lock L // wait for unlock L and
->           // prevent unlock L		       // prevent event A
->    ...					...
->    unlock L				unlock L
-> 					...
-> 					event A
+#0  _free_cpntf_state_locked (nn=nn@entry=0xffffffd602d82000, 
+    cps=0xffffffd603fe9020) at fs/nfsd/nfs4state.c:7226
+#1  0xffffffff804c6210 in nfs4_laundromat (nn=0xffffffd602d82000)
+    at fs/nfsd/nfs4state.c:6836
+#2  laundromat_main (laundry=0xffffffd602d820d0) at fs/nfsd/nfs4state.c:6926
+(gdb) print cps
+$5 = (struct nfs4_cpntf_state *) 0xffffffd603fe9020
+(gdb) print cps->cp_list
+$6 = {next = 0xffffffd606858010, prev = 0xffffffd606858010}
+(gdb) print cps->cp_list.next.prev
+$7 = (struct list_head *) 0x6b6b6b6b6b6b6b6b
 
-> I meant things like this need to be tracked.
-
-I don't think that's at all clear from the above context, and the
-handling for some of the above exception types (eg, the vector
-extensions) includes taking locks.
-
---CPEOfhRT6FsWLRqF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjftG4ACgkQJNaLcl1U
-h9AJAwf9GUZ8nquWa7D1no47c5NWSm5cMwwvmTjDaPtYC52seNgxT47rqiAa032b
-rbQuOcdIvbMOoRrk3oOjch4rbo2VSgw1bzxKncoUyWrQ1rw9rhdfmdQpZZSbT1XQ
-ZE3VcLNDV3bfjO2GU8cTjiUDwM29qIeTSzCIn9ubfHcuEvoaYes1/BrQYAwB6ghQ
-7LjwZANFGJdatftOLPlVL8kKM/B5H6eSUlr8bUS9hlZE2g39/1LLb9UexVvnMj8u
-6gPRXHiHF5Vzad2FqVmWKt4F1F39CJ4g1c624zJiIGAWP9iBONB8dIyQPlTmK4U7
-mnXQy7USXtlxU+Xw5RCO9fy5x0Ahxw==
-=LMdg
------END PGP SIGNATURE-----
-
---CPEOfhRT6FsWLRqF--
+Robert Morris
+rtm@mit.edu
 
