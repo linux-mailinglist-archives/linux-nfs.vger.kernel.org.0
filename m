@@ -1,38 +1,48 @@
-Return-Path: <linux-nfs+bounces-14953-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14954-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 612C2BB6661
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 11:51:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A341ABB666C
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 11:51:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0203A344D2D
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 09:51:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C28319E0F7C
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 09:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B84B32DEA6B;
-	Fri,  3 Oct 2025 09:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611392DEA93;
+	Fri,  3 Oct 2025 09:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcXqUEWf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D536125E824;
-	Fri,  3 Oct 2025 09:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C275288522;
+	Fri,  3 Oct 2025 09:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759485079; cv=none; b=msrjsDXbmag13Qk3wCletymRWP0Mn66r+ysLPDQ05jNSV82527M7JfcUW7yYdXceaUjvSygwDokHLq80ucoZzy6dBDI1ulBTnejM8oOh6ARwCH1/56POjvEz7QUyIKnavc8yH35oPfJ7K7V7+VjK8h04ct+iiveXNR+guYy635A=
+	t=1759485094; cv=none; b=LyXaixXfU64TxBF9Ph04hWUooBOt8BX1t5T61ZGwFSOkbjM74NwHwSf7O4LrY9cwVaG+WiB75sBD6PC4Li0z6E6pb0AbMrmEwSUlf+pTOoPm8aMLky5urTn32VMYbMQKESDFmqyD4T1DvdvL+qB5xHs5dad9hQXnT7DThAb/164=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759485079; c=relaxed/simple;
-	bh=917LLIJAnoM6rzDtwvOKgObE0IYuweiOP89/WHFyWAY=;
+	s=arc-20240116; t=1759485094; c=relaxed/simple;
+	bh=WfLYqcOX9sMYZKj4wlYxcoZbm5OgeeZwYCvrlL3mENw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gIPUhq1UOwHdavGx/CV4ggOLbbf9eOXU98s0Cot/8wPqsYC1i6LQx7SVyAfVT4r4HSfllYLP0Z6C41xZ7n1PVmjHsxd/xJh+2fvH/0c6viYAiocUYAIPXnNKM1nAq5FaWXOn/Q0XhuUplORLDjeuzCkthg5T/DPqih87EPklFiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A042E227AAC; Fri,  3 Oct 2025 11:51:11 +0200 (CEST)
-Date: Fri, 3 Oct 2025 11:51:11 +0200
-From: Christoph Hellwig <hch@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qonRAoApFmb1kmz1InECAcvCE/tXrIUDP0SBcSysG4SK0iACRVJCC5jU1Og8Kg223VXEcBixbGqQud6Rl3dUYf3lxkqQ/6MJmmFV2uM7u14BpP+Ar2F8mgrbj01rIchn0uQwwg5LIqPvXqA8Pxb9et6w4Pn6Acpb9sKUZmx/Gg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcXqUEWf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0531CC4CEF9;
+	Fri,  3 Oct 2025 09:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759485094;
+	bh=WfLYqcOX9sMYZKj4wlYxcoZbm5OgeeZwYCvrlL3mENw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dcXqUEWfJ0IiMLVaZtd6pUxE4O/0uoOsxh3H211dEstLJpAFvkOtBNIpUxteL2aI1
+	 8AaH40SjPRGeNBKJEoRDFxa8iKd/gVFAiPe9Fby25bUYuqEJ8eeSgs4ekHkdeMGbws
+	 KXt1pkuppx59pH0cKSFfbeOV3YqAPZ0jS0avN2iNwP6qmCnpGAjmaR6aiWs/3KjoOR
+	 WxtkgzG7XpVSyn2YdqNWPyZKzJPQH9ZyBtZ6OgAGI1SgoXlxEQ6ucGlC+G8Arstk2x
+	 YHifqR7C4foIwGfJw8FjId0SRo+NWovjyeVk9BwLUMz93dNUwBcFuqkRfkw48gpU/7
+	 wOaS8NN/1l0tQ==
+Date: Fri, 3 Oct 2025 10:51:28 +0100
+From: Simon Horman <horms@kernel.org>
 To: alistair23@gmail.com
 Cc: chuck.lever@oracle.com, hare@kernel.org,
 	kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
@@ -41,10 +51,10 @@ Cc: chuck.lever@oracle.com, hare@kernel.org,
 	kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
 	kch@nvidia.com, hare@suse.de,
 	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v3 4/8] nvmet: Expose nvmet_stop_keep_alive_timer
- publically
-Message-ID: <20251003095111.GA15497@lst.de>
-References: <20251003043140.1341958-1-alistair.francis@wdc.com> <20251003043140.1341958-5-alistair.francis@wdc.com>
+Subject: Re: [PATCH v3 2/8] net/handshake: Define handshake_sk_destruct_req
+Message-ID: <20251003095128.GG2878334@horms.kernel.org>
+References: <20251003043140.1341958-1-alistair.francis@wdc.com>
+ <20251003043140.1341958-3-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,15 +63,33 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251003043140.1341958-5-alistair.francis@wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20251003043140.1341958-3-alistair.francis@wdc.com>
 
-On Fri, Oct 03, 2025 at 02:31:35PM +1000, alistair23@gmail.com wrote:
+On Fri, Oct 03, 2025 at 02:31:33PM +1000, alistair23@gmail.com wrote:
 > From: Alistair Francis <alistair.francis@wdc.com>
 > 
+> Define a `handshake_sk_destruct_req()` function to allow the destruction
+> of the handshake req.
+> 
+> This is required to avoid hash conflicts when handshake_req_hash_add()
+> is called as part of submitting the KeyUpdate request.
+> 
 > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+> v3:
+>  - New patch
 
-Please explain why making it available is a good idea.  Because it
-feels a bit sketchy as-is.
+Hi Alistair,
 
+This is a not a proper review: I'll leave that to others.
+But I notice that both Clang 21.1.1 and GCC 15.2.0, when run with
+-Wunused-function, flag handshake_sk_descruct_req() as unused.
+Which is the case until the following patch.
+
+As both this and the following patch are small, and touch the same file,
+I'm wondering if a simple approach is to squash the two patches into one.
+
+Or perhaps no one cares. If so, sorry for the noise.
+
+...
 
