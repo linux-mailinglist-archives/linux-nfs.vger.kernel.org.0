@@ -1,104 +1,172 @@
-Return-Path: <linux-nfs+bounces-14961-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14962-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4621BB72C0
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 16:23:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F7F5BB7347
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 16:37:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9A7A3B6D6E
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 14:23:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 419FC18961A5
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 14:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB4E23BF91;
-	Fri,  3 Oct 2025 14:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5X9D0rd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A8523D7E0;
+	Fri,  3 Oct 2025 14:37:15 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F3223B618
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Oct 2025 14:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8396139E;
+	Fri,  3 Oct 2025 14:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759501399; cv=none; b=AG+H1lSZxqgBJUX+Y1r/ePva7jmykRECnn4m3bYZzNhghKLualb860oRu8a8Km2kDepajDp3Ygk5sOskdRaOtq8LcwhAh44Fb48zOTGzUD0IY+Y6XJ9+q7RpSpek7AEmJVrlpreBfeKVy4JLwD3UD0XgtatKwPBI8bi4GdHjSK0=
+	t=1759502235; cv=none; b=D25l0+KTvICCJwZbCyV10c5Guqp9obZqZxtoAUTm32L3Fc6cPiY7wUspKmW8nRXHssjNpZVrs8+d86fPEo7KYY07ioRQa8UkJ6bnEoWG9tofdcUdWcHotaZ2WfDfxbcG4FA22Bbfo4eb9p7DcGdK0Yi5LBjjdd75CfNwjIFNXCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759501399; c=relaxed/simple;
-	bh=tIg9LHbw8McRD9wFZZuh+YfGl9vb61ZHla2VkicxlQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ASIRs/JoD/6NGlEpU/cbNkOzjoejevaqaga8FUWSItiQIBP1OBhlzAtYR+JjTpeGhez6bWjMuztx6QPioDK0QCkiZDv1vcmHZ/ksKMhjNrVJ1em2iVdMgw4Ev9LUHxzn12a/ZDjwfYLX95HFnNLqQcNBpngkewhDxBQgyiPNejc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5X9D0rd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9A4C4CEF5;
-	Fri,  3 Oct 2025 14:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759501399;
-	bh=tIg9LHbw8McRD9wFZZuh+YfGl9vb61ZHla2VkicxlQ8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k5X9D0rdyz7ZxytXPZXwtsHbKH/AuQrsQMv83vtnP9thOA0VqMQ4uwn6JJX8fB0ZM
-	 /ksvc7bN+tXKajZqyp4mpcjqf6Pybuj2BCcPnnF8j17PQzSko5Z+leEr0OEZyuZjH3
-	 00OREj4l++f3PRjO7ct0ruEXfZA7wMN3pUhVPg7raBLoOnaXVhg03IM/JfFXDKtdyF
-	 EwCnneez5mtgYQZFttsNnAUDPLOzdQryvUI1mf7uamw8fBUoFNtloZWrROuvlCcOsN
-	 BjQwJVF7QqrDUE6N8DC07IxSJZy/7voihs9w3qivwaVUGpZLkBhOqzj4aZW/O2g4Q0
-	 Q638O1EjScBaQ==
-Message-ID: <56c040fc-d303-4368-9850-de9b52851466@kernel.org>
-Date: Fri, 3 Oct 2025 10:23:17 -0400
+	s=arc-20240116; t=1759502235; c=relaxed/simple;
+	bh=ify0TfiFKa3Hes8KZtJjaG2GeXYqffaYoF8Y5oCDXXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6cE2diKRDWdmOgbZp5W0Q018xpyzLFAzYyIbMQ/ZEyxi2OrmtuIgrcpmDS1WC4dIZ0EcSNlZhka4rqrK/hq8gdn21NR1WGbNKUeXG6kAXxetZi8vqANffhmh6hqZZA5Of4sQnEwaQT26qoqUf1ika7R7wrW2QvHdd6TilZUPwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09D741A9A;
+	Fri,  3 Oct 2025 07:37:04 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8693C3F5A1;
+	Fri,  3 Oct 2025 07:36:47 -0700 (PDT)
+Date: Fri, 3 Oct 2025 15:36:42 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
+	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
+	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
+	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
+	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
+	ngupta@vflare.org, linux-block@vger.kernel.org,
+	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
+	djwong@kernel.org, dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
+	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
+	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
+	yeoreum.yun@arm.com, netdev@vger.kernel.org,
+	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
+	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
+	sumit.semwal@linaro.org, gustavo@padovan.org,
+	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
+	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
+	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
+	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
+	clrkwllms@kernel.org, ada.coupriediaz@arm.com,
+	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
+	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
+	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
+	yuzhao@google.com, baolin.wang@linux.alibaba.com,
+	usamaarif642@gmail.com, joel.granados@kernel.org,
+	richard.weiyang@gmail.com, geert+renesas@glider.be,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
+	chenhuacai@kernel.org, francesco@valla.it,
+	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
+	masahiroy@kernel.org, brauner@kernel.org,
+	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
+	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v17 09/47] arm64, dept: add support
+ CONFIG_ARCH_HAS_DEPT_SUPPORT to arm64
+Message-ID: <aN_fel4Rpqz6TPsD@J2N7QTR9R3>
+References: <20251002081247.51255-1-byungchul@sk.com>
+ <20251002081247.51255-10-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/6] NFSD: Ignore vfs_getattr() failure in
- nfsd_file_get_dio_attrs()
-To: Christoph Hellwig <hch@infradead.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- Chuck Lever <chuck.lever@oracle.com>
-References: <20250929155646.4818-1-cel@kernel.org>
- <20250929155646.4818-7-cel@kernel.org> <aN93he8osC9r6oKR@infradead.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aN93he8osC9r6oKR@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251002081247.51255-10-byungchul@sk.com>
 
-On 10/3/25 3:13 AM, Christoph Hellwig wrote:
-> On Mon, Sep 29, 2025 at 11:56:46AM -0400, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> A vfs_getattr() failure is rare but not totally impossible.
->>
->> There's no recovery logic in that case; nfsd_do_file_acquire()'s
->> caller will fail but the wonky nfsd_file is left in the file cache.
->>
->> It doesn't seem necessary for nfsd_file_do_acquire() to fail
->> outright if it successfully opened the file but some problem
->> prevented the collection of the dio alignment parameters.
+On Thu, Oct 02, 2025 at 05:12:09PM +0900, Byungchul Park wrote:
+> dept needs to notice every entrance from user to kernel mode to treat
+> every kernel context independently when tracking wait-event dependencies.
+> Roughly, system call and user oriented fault are the cases.
 > 
-> The only remotely likely case for this is a file system shutdown.
-> There's no real way it could fail but I/O later on will work.
+> Make dept aware of the entrances of arm64 and add support
+> CONFIG_ARCH_HAS_DEPT_SUPPORT to arm64.
 > 
-> I think just failing serves everyone here much better than try to
-> keep going.
-
-Got it.
-
-IMO then more recovery logic is needed in do_file_acquire. We can't then
-just leave the moribund nfsd_file in the filecache unless there is some
-guarantee that it will not be leaked.
-
-
->> Fixes: bc70aaeba7df ("NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support")
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  arch/arm64/Kconfig          | 1 +
+>  arch/arm64/kernel/syscall.c | 7 +++++++
+>  arch/arm64/mm/fault.c       | 7 +++++++
+>  3 files changed, 15 insertions(+)
 > 
-> Same comment about fixes being first/separate as for the previous
-> patch.
-> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e9bbfacc35a6..a8fab2c052dc 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -281,6 +281,7 @@ config ARM64
+>  	select USER_STACKTRACE_SUPPORT
+>  	select VDSO_GETRANDOM
+>  	select VMAP_STACK
+> +	select ARCH_HAS_DEPT_SUPPORT
+>  	help
+>  	  ARM 64-bit (AArch64) Linux support.
+>  
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index c442fcec6b9e..bbd306335179 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/ptrace.h>
+>  #include <linux/randomize_kstack.h>
+>  #include <linux/syscalls.h>
+> +#include <linux/dept.h>
+>  
+>  #include <asm/debug-monitors.h>
+>  #include <asm/exception.h>
+> @@ -96,6 +97,12 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
+>  	 * (Similarly for HVC and SMC elsewhere.)
+>  	 */
+>  
+> +	/*
+> +	 * This is a system call from user mode.  Make dept work with a
+> +	 * new kernel mode context.
+> +	 */
+> +	dept_update_cxt();
 
+As Mark Brown pointed out in his replies, this patch is missing a whole
+bunch of cases and does not work correctly as-is.
 
--- 
-Chuck Lever
+As Dave Hansen pointed out on the x86 patch, you shouldn't do this
+piecemeal in architecture code, and should instead work with the
+existing context tracking, e.g. by adding logic to
+enter_from_user_mode() and exit_to_user_mode(), or by reusing some
+existing context tracking logic that's called there.
+
+Mark.
 
