@@ -1,79 +1,80 @@
-Return-Path: <linux-nfs+bounces-14975-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14976-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71A43BB8305
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Oct 2025 23:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7BDFBB895B
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Oct 2025 06:22:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1FAD44EDE42
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Oct 2025 21:31:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7773F4E227B
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Oct 2025 04:22:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44E32472AA;
-	Fri,  3 Oct 2025 21:31:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31009D2FB;
+	Sat,  4 Oct 2025 04:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLxILo6C"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tUTFtmyQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF4C264A86
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Oct 2025 21:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CE6C2E0
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Oct 2025 04:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759527069; cv=none; b=VxinhPHIdZ2Lcmpas1riI3bKFJ5dn1uGsxFRmw1OCke21u4GbVvIDsC1YTAfyz9EI/Tgjqd+tyuKCzOAvP8j8g8f9vY1O92NR/SWwIzNkJx3e1f4wsKFDLgqn3ba5kjVRcCeunWx2PBRZ+lZstSyH8QtWsGsp7wkIaGiR+ZoI5w=
+	t=1759551742; cv=none; b=s982W6D3Y7TCocGqe6NSpWzskm/f2TohS2jz9evzSC78a8aFWN/xhJdWzh0Y/gYqkWHVT/7/xGdz3wIdDX5V9pDn1GiD3LsOyVrxQWXukCBv9hqWV9kbEcXDiGPdUrqObZw2n7dhaMrZbijKJtCm3WFw4yjJpqoY4I9pJVxK3/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759527069; c=relaxed/simple;
-	bh=0PJVszA6jnzcHqKAxsh+bsmFFtyk252WJ4lQ3msC4pw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=esXkchO6Z3T0jw+ezodOX64C39ltYg7WYqGFb8P91zI9Mh1fveVzG1miYeWG7+mEPukbZrAxPnB98FnG4MU2EDVqBYehFB1yiH2JWo/mavEGqTp3F+w/mt82BdGoQyK1UhWR/50SS3LaRmns018shVlTobZ6zcK8HxSQnnJZvJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLxILo6C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E9D1C4CEFA;
-	Fri,  3 Oct 2025 21:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759527069;
-	bh=0PJVszA6jnzcHqKAxsh+bsmFFtyk252WJ4lQ3msC4pw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JLxILo6CasTEQeXDg1AY1NdR+QIwoiw+/JMnV8iLt1gskhshG2OXD9oUETDjCcU9P
-	 8CVnfq7sRkTP3DSU1BFYBD+BbPl5vjMDN/syWC/R+ZLi0BGr8KcRNpo38H6BOuOpO3
-	 h/G0UyZyUdS6+oE8TJyA9u+2NmqMwqyzXHvFxDtB6oOz/LZl2BgtsfF5EH/AV9JGt/
-	 BAQxqdbniYQRnoGbCW68ZF/ipZ/ZoFFFXiv8lZxhceIgGoQjzfYqJaNAzOS7MA4avC
-	 UA5EQFHzsonM/zS0ZEU+C3dC0HSV2creH4Jo82hfA202YkqUCFDpO1JE1h+bD+lA7T
-	 G3XIbr2IklwLQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB18B39D0CA0;
-	Fri,  3 Oct 2025 21:31:01 +0000 (UTC)
-Subject: Re: [GIT PULL] <INSERT SUBJECT HERE>
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251003210107.683479-1-anna@kernel.org>
-References: <20251003210107.683479-1-anna@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20251003210107.683479-1-anna@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.18-1
-X-PR-Tracked-Commit-Id: 1f0d4ab0f5326ab6f940482b1941d2209d61285a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 070a542f08acb7e8cf197287f5c44658c715d2d1
-Message-Id: <175952706059.82231.16303084259238920364.pr-tracker-bot@kernel.org>
-Date: Fri, 03 Oct 2025 21:31:00 +0000
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, torvalds@linux-foundation.org, trond.myklebust@hammerspace.com, anna@kernel.org
+	s=arc-20240116; t=1759551742; c=relaxed/simple;
+	bh=P06AOqxexWba71kxGWu7zCw8/yeihjU4sn+zzDmWsFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RENSSfpyNiiF3uGlxRdJfjk7MprmfuEfUqcYfWuUQ+JTDrM9RLbGe8OUh31s4AMgGKvC1jDx4qJdIO6WB195svCmF+lU1/zBAklTf1+n8kvmbBy+VxRKCLMN1BB6Ctma964YSZf+w9d/TZadV3e6wl6RvjKEuVLY35m1P8BAYJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tUTFtmyQ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=P06AOqxexWba71kxGWu7zCw8/yeihjU4sn+zzDmWsFw=; b=tUTFtmyQDwm++56zobi+8pHdXd
+	eVh0jw84lQEkva2gBFgYXvDE2JSN0Tet+L37HUjYx5qubvkeUTiyRspR1iBURlNJq7T6pQeqTM69s
+	Ytq856mXeqmx45Q81BVazPtOF+dz+J48EmVlmmeX+vgHTsFmKrZCrVBm3fRKptHnvXn8ZfayTpNi0
+	Nj/AD3X8gWLsXJU09FpNvOq1QR0BuT7bziurPMxdEbmsOFs7Dq0ckQuksdUfruV02y/xo8QTQzaU1
+	hZj5MocQUuMsAAJSHE+RSCvXSUz+4MzZNkrl6Jyh4gcmnTkbGeFTej1D8tUCZaOvRRsob8wwGG5LD
+	WO76UCsQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v4tmj-0000000DRks-27jL;
+	Sat, 04 Oct 2025 04:22:17 +0000
+Date: Fri, 3 Oct 2025 21:22:17 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] NFSD/blocklayout: Fix minlength check in
+ proc_layoutget
+Message-ID: <aOCg-YF0v_soB2zS@infradead.org>
+References: <20251002203121.182395-1-sergeybashirov@gmail.com>
+ <20251002203121.182395-2-sergeybashirov@gmail.com>
+ <aN9zNZ7n4KwhIZrJ@infradead.org>
+ <3137a3d5-1377-49e3-a86e-e41c1afc9666@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3137a3d5-1377-49e3-a86e-e41c1afc9666@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The pull request you sent on Fri,  3 Oct 2025 17:01:07 -0400:
+On Fri, Oct 03, 2025 at 10:11:15AM -0400, Chuck Lever wrote:
+> As author of the pNFS block layout code and the related specifications,
+> and a frequent reviewer, would you be interested in being added as an
+> official NFSD subsystem reviewer? If so, please post a patch that
+> updates MAINTAINERS as you would like it to appear.
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.18-1
+Will do.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/070a542f08acb7e8cf197287f5c44658c715d2d1
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
 
