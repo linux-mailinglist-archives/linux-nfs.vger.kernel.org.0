@@ -1,143 +1,95 @@
-Return-Path: <linux-nfs+bounces-14982-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14983-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7584BBB8FF8
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Oct 2025 18:40:27 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B85A9BB907C
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Oct 2025 19:20:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39560189C698
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Oct 2025 16:40:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4C3154E1E2F
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Oct 2025 17:20:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EFDF14F70;
-	Sat,  4 Oct 2025 16:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1712620FA9C;
+	Sat,  4 Oct 2025 17:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PNedKPiX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euvQYLXH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB09827F16C
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Oct 2025 16:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1009946C;
+	Sat,  4 Oct 2025 17:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759596010; cv=none; b=EtS34FacpPNvm03SDt2L0UttYabb3mKjnMeOrHIZ1DzZIDqbfMgLcDs2JoFxnd2plpWkEM9yqWOavs4zq6fFY9dtF2NgYL606z3gms0eh2gUtOh4DrdcG739DaWVU4hHIVLOK+wER2ZX8J+i6XErZ53i8xnk7qr/NLTJtCP+NNo=
+	t=1759598417; cv=none; b=RHwiUPzPIpfd+tjFG7xzXvs0pVeh3N02AzR94K0x4gaX7IAqClu/DRlmAPJsCFhz/nPXiqhAlwCZUnbBCm6VpWc4VcZTKrQ3qEZplRbu2Nhwzta45jVkr7vqRQ65cTD8crJgpYAj1ggZlIBf8C8fk/GJTZoVOYzCpkjOQi9lVco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759596010; c=relaxed/simple;
-	bh=RpD4KNUBmJSgm0bHWcZ0DvqxhqkKLHESkzxfIrCF35M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EezbDpg1wCeSNcbGv0KAX+9/tINWK8yfHDCuqEhy3oMMGW34JC5CDrz58tUqb63jkoM+5CGWBj/arqkQW7DiVCseCHKK5JZf1DxTHsFttizxy7tiQ/5Tji/o/7lJEiM4kjFrUhUBhW6gSCZQ3ZPfKbQFXXU3tplkh/gLBVAM+hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PNedKPiX; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=oYWX
-	AVcToZjL216N14wevIUTr5XEGs+BI72TKUQOPN8=; b=PNedKPiX4oCj4bpedhVz
-	E+/1zG4RS6etGvHx7daU2DUWMNccTF0z1BMx94C/uGTZ5muouJ1sCi+Rrrn+I0yb
-	QX0tCQTPUifcb+5NvLnilNYtzPuaMC9afpJzRPyfpW8YSMz2Kk2sAGveGofpt2/U
-	FgjEfDef1ztsgRt/i/fhnznfm7TM0Tf+A/tZDrAPd+4jSPssQfBLtqCfRE58HIfm
-	D8PcLW9fA6b0Ln4SDcQwSOwdrXhoroqBaJXPWi2lQd/dVTkvYzyJpOcaiTLwaahq
-	J+U+4x2W131yohhie5t+CaEw/7wpjC2Zja7YEDIcma8nk3Y5vfr5rBO/vRmlQllV
-	Rw==
-Received: (qmail 1087916 invoked from network); 4 Oct 2025 18:39:44 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Oct 2025 18:39:44 +0200
-X-UD-Smtp-Session: l3s3148p1@ZNCL3VdA3IqSRnW9
-Date: Sat, 4 Oct 2025 18:39:43 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Byungchul Park <byungchul@sk.com>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 35/47] i2c: rename wait_for_completion callback to
- wait_for_completion_cb
-Message-ID: <aOFNz2mKXCXUImwO@shikoro>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-36-byungchul@sk.com>
+	s=arc-20240116; t=1759598417; c=relaxed/simple;
+	bh=ooHxtQpn2p7lAP3q3VjQtLAaxo4LSQa7M6HpyUFRWjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HuZoEZLaedglN5L4DieqWhh+UIpY2EKY+CGSARi9Iop9NvgNfqgkPEbjJSQOWpKKCaU9qkk7h9MCVo6JZIzcpYAWBJIwiSlbRm5aaA9kKCO3FibQ+qK1bh553SIQLs3unlMVqII1IpeulNb4uNzHjpLuLoow1evIMItSJkx1mUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euvQYLXH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BEF8C4CEF1;
+	Sat,  4 Oct 2025 17:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759598416;
+	bh=ooHxtQpn2p7lAP3q3VjQtLAaxo4LSQa7M6HpyUFRWjI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=euvQYLXHs901J1JJQZtQZHFzuceOmcph7u9MRcJWlK4TOhYzbtu1dXXbjaYLnM/SW
+	 vM+nWhSLPx/WBipCrXqMayxOugUQM/yspTaX8GXL7LJ4bT1YMXsH+PomRDkVkVnsXU
+	 cnhEh5GAP6hbDWQBYVZ/Kzu7RNbIv3afLBGFu/buTvVyYdA9ZXv5tLNx48/cYV7iaU
+	 hqjICrGuPVquRdkdxXdMLS2qqwG7oqbh1IIGZlNCukuHh6gIyARbcddQK8OuyFDZ0B
+	 PoIeCWGCCA6qHcQbOHlkPWpeYXbp5UvUajM3b7wmsen8Y8ssITpXn7Ykv8pAUVkA6G
+	 hGH6DgODElZ7g==
+From: Chuck Lever <cel@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Tom Talpey <tom@talpey.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] NFSD: Impl multiple extents in block/scsi layoutget
+Date: Sat,  4 Oct 2025 13:20:12 -0400
+Message-ID: <175959837985.2025.4024778494628599093.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251003091115.184075-1-sergeybashirov@gmail.com>
+References: <20251003091115.184075-1-sergeybashirov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251002081247.51255-36-byungchul@sk.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 02, 2025 at 05:12:35PM +0900, Byungchul Park wrote:
-> Functionally no change.  This patch is a preparation for DEPT(DEPendency
-> Tracker) to track dependencies related to a scheduler API,
-> wait_for_completion().
+From: Chuck Lever <chuck.lever@oracle.com>
+
+On Fri, 03 Oct 2025 12:11:02 +0300, Sergey Bashirov wrote:
+> Implement support for multiple extents in the LAYOUTGET response
+> for two main reasons.
 > 
-> Unfortunately, struct i2c_algo_pca_data has a callback member named
-> wait_for_completion, that is the same as the scheduler API, which makes
-> it hard to change the scheduler API to a macro form because of the
-> ambiguity.
+> First, it avoids unnecessary RPC calls. For files consisting of many
+> extents, especially large ones, too many LAYOUTGET requests are observed
+> in Wireshark traces.
 > 
-> Add a postfix _cb to the callback member to remove the ambiguity.
-> 
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> [...]
 
-This patch seems reasonable in any case. I'll pick it, so you have one
-dependency less. Good luck with the series!
+Applied to nfsd-testing, thanks!
 
-Applied to for-next, thanks!
+[1/4] NFSD/blocklayout: Fix minlength check in proc_layoutget
+      commit: b94708d49420881366669b7010269f159a6e1b70
+[2/4] NFSD/blocklayout: Extract extent mapping from proc_layoutget
+      commit: 88f8b3f8c4fc8c351aaae49d0fec4e7b5e6ad0db
+[3/4] NFSD/blocklayout: Introduce layout content structure
+      commit: 76fc273123889e9b1629fc9f1ec40465dbda1a73
+[4/4] NFSD/blocklayout: Support multiple extents per LAYOUTGET
+      commit: 8a3c46f07fb5c3cd6c1cc807d9a22e1531100625
 
+--
+Chuck Lever <chuck.lever@oracle.com>
 
