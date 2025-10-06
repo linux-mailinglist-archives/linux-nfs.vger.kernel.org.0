@@ -1,48 +1,95 @@
-Return-Path: <linux-nfs+bounces-14984-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14985-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53D04BB9085
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Oct 2025 19:27:34 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03B17BBD199
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Oct 2025 08:15:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AD2D189E17F
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Oct 2025 17:27:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 85A134E2A21
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Oct 2025 06:15:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC855239567;
-	Sat,  4 Oct 2025 17:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AB3199385;
+	Mon,  6 Oct 2025 06:15:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9lhms3/"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TZgcYD2z";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SLBev+Rb";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TZgcYD2z";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SLBev+Rb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFE813A3ED;
-	Sat,  4 Oct 2025 17:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8724044C63
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Oct 2025 06:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759598848; cv=none; b=Zj91Bz52UTIE6jx8sQJCJDQtZyQDat79Db/yMnd+C7usxp4HZ7+jkOaM2vBkGywgEAeq2v1L6ElYSEazl+00a38f4aHIm6CnmUMIlFnA9JJOsIuaCKoMsC6NuxLA32IEzGcU5R4uEBPSN8Y5+H5IxSWAmLq3UtG3kDtkjPhltck=
+	t=1759731326; cv=none; b=Jl9cI2/R7ngl0k7UZk+5cU/MCGF9kt5rUMpc6mIRKFOanP9Lg2oX4XCvxVfXjx8AwVIVXhBnPs00sKXvHDHbljh1fK2tvN/2qL3h3ny3sumnPpl57pt9i63jfjQuZ4u374oW4XL1cgerkCIYbAJos+6IcF2qFYN/+mYkI8ApHIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759598848; c=relaxed/simple;
-	bh=uu7HOOFyGfgn7/79Ck9Jdp8RAV01CwyMxkrU7USL9Zc=;
+	s=arc-20240116; t=1759731326; c=relaxed/simple;
+	bh=yVu2SOAYlPnr2E4sdrADEHEI3U4ZpmjLLq5uFm4gF94=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h3oEJl2l+4e9VBpJELEwmmrHgQUiQNh7ZswJq3fxbNr6FpssrGFKBFVzNEyccu8XhQ9Tr6dxrO4JCbod80y63jijn4EUTEZw+D9kRrVDEztiKehFwbjoYVZ9CGdkMsnQEgTzFyndGkVwqXcyeGQaQbOSo7RUo21fg4kpGVMGOZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9lhms3/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7725EC4CEF1;
-	Sat,  4 Oct 2025 17:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759598848;
-	bh=uu7HOOFyGfgn7/79Ck9Jdp8RAV01CwyMxkrU7USL9Zc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I9lhms3/42LXr3Rt51KchF2ZIJhunQIA54dRMkkPjDnz2gwa83F2Vxcx5HbANUH+8
-	 tUYaI7zFKK+J2l8/WjiR2eWhh+qUkNzxT05H6qg56FtCcH3fgkUZ9qULPV4SVt35us
-	 6qI3x2IzPEmnx2LJ0gi215ZaDu3e+sSMZ6cEP70ELlmiZkvXk0RnqK9f6l+3mtY0IU
-	 tV+FusQYVNrkYKEVjPqNwcHPFiQosKDnESupiqT4iK16p30mVrv+rA1UrjTqANW9zY
-	 1qei6hAjkKr+BaTNipbo11X1M6Z9y5M7XY7ND/2b0Ov913wFYS3lio5T7A8ExtS4Wd
-	 CbzWVfo0oiKbw==
-Message-ID: <afda62fa-d39a-4487-9c25-c409369bd667@kernel.org>
-Date: Sat, 4 Oct 2025 13:27:26 -0400
+	 In-Reply-To:Content-Type; b=r9qV5lAzAF0WFIrQDw4JLgw4vawl4V/7ojaXy0H2T0TtxQ2Jwe/fda5HlDalISEZpX2j1uDbbLDq7xSaRWj9o004H7O6Fd9XN3q3jdlc5b9ovdBn1vDYeINn+b0ge50/iwCIeShNxnXfBpvZN84/sSmF6BjPbJhWCOa1WLaYhkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TZgcYD2z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SLBev+Rb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TZgcYD2z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SLBev+Rb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A8A6B1F452;
+	Mon,  6 Oct 2025 06:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759731321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dtN03SWtvHP2PaiHHeWb9a07OuwWXQWMK4GvOQt/zzg=;
+	b=TZgcYD2zbKeudvYjzIWWb2TaJH1647vI0Qpjf4TZlMy+9VVrNEu5CYjQJpnKMdctJ1Eqg8
+	y4vLfCsHMXEGXc+6a6A10M8PgNIQLKnWxvs2FVZUeiuXe+e0z6pGHt2Chq0TU6Ev/QTH/N
+	+kdjFrYqYY2EbO28U780pituPwnysOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759731321;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dtN03SWtvHP2PaiHHeWb9a07OuwWXQWMK4GvOQt/zzg=;
+	b=SLBev+Rb43dpmfGv2sVQ4GskBKql8w/H2i+Abfzn2bm0Jcex8kJdwIb7TjPhIPfJc6RTi9
+	qe2WEx8vkEizPwBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759731321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dtN03SWtvHP2PaiHHeWb9a07OuwWXQWMK4GvOQt/zzg=;
+	b=TZgcYD2zbKeudvYjzIWWb2TaJH1647vI0Qpjf4TZlMy+9VVrNEu5CYjQJpnKMdctJ1Eqg8
+	y4vLfCsHMXEGXc+6a6A10M8PgNIQLKnWxvs2FVZUeiuXe+e0z6pGHt2Chq0TU6Ev/QTH/N
+	+kdjFrYqYY2EbO28U780pituPwnysOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759731321;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dtN03SWtvHP2PaiHHeWb9a07OuwWXQWMK4GvOQt/zzg=;
+	b=SLBev+Rb43dpmfGv2sVQ4GskBKql8w/H2i+Abfzn2bm0Jcex8kJdwIb7TjPhIPfJc6RTi9
+	qe2WEx8vkEizPwBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19D8C13995;
+	Mon,  6 Oct 2025 06:15:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QHrGBHle42iqBgAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 06 Oct 2025 06:15:21 +0000
+Message-ID: <35c2e995-2c54-4272-b731-9d1fd12ae0cb@suse.de>
+Date: Mon, 6 Oct 2025 08:15:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,62 +97,75 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] fs: Plumb case sensitivity bits into statx
-To: Gabriel Krisman Bertazi <gabriel@krisman.be>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Volker Lendecke
- <Volker.Lendecke@sernet.de>, CIFS <linux-cifs@vger.kernel.org>
-References: <20250925151140.57548-1-cel@kernel.org>
- <CAOQ4uxj-d87B+L+WgbFgmBQqdrYzrPStyfOKtVfcQ19bOEV6CQ@mail.gmail.com>
- <87tt0gqa8f.fsf@mailhost.krisman.be>
- <28ffeb31-beec-4c7a-ad41-696d0fd54afe@kernel.org>
- <87plb3ra1z.fsf@mailhost.krisman.be>
- <4a31ae5c-ddb2-40ae-ae8d-747479da69e3@kernel.org>
- <87ldlrr8k3.fsf@mailhost.krisman.be>
+Subject: Re: [PATCH v3 1/8] net/handshake: Store the key serial number on
+ completion
+To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
+ kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
+References: <20251003043140.1341958-1-alistair.francis@wdc.com>
+ <20251003043140.1341958-2-alistair.francis@wdc.com>
 Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <87ldlrr8k3.fsf@mailhost.krisman.be>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20251003043140.1341958-2-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	URIBL_BLOCKED(0.00)[suse.de:email,suse.de:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On 10/3/25 5:15 PM, Gabriel Krisman Bertazi wrote:
-> Chuck Lever <cel@kernel.org> writes:
+On 10/3/25 06:31, alistair23@gmail.com wrote:
+> From: Alistair Francis <alistair.francis@wdc.com>
 > 
->> On 10/3/25 4:43 PM, Gabriel Krisman Bertazi wrote:
->>> Chuck Lever <cel@kernel.org> writes:
->>>
->>>> On 10/3/25 11:24 AM, Gabriel Krisman Bertazi wrote:
->>
->>>>> Does the protocol care about unicode version?  For userspace, it would
->>>>> be very relevant to expose it, as well as other details such as
->>>>> decomposition type.
->>>>
->>>> For the purposes of indicating case sensitivity and preservation, the
->>>> NFS protocol does not currently care about unicode version.
->>>>
->>>> But this is a very flexible proposal right now. Please recommend what
->>>> you'd like to see here. I hope I've given enough leeway that a unicode
->>>> version could be provided for other API consumers.
->>>
->>> But also, encoding version information is filesystem-wide, so it would
->>> fit statfs.
->>
->> ext4 appears to have the ability to set the case folding behavior
->> on each directory, that's why I started with statx.
+> Allow userspace to include a key serial number when completing a
+> handshake with the HANDSHAKE_CMD_DONE command.
 > 
-> Yes. casefold is set per directory, but the unicode version and
-> casefolding semantics used by those casefolded directories are defined
-> for the entire filesystem.
+> We then store this serial number and will provide it back to userspace
+> in the future. This allows userspace to save data to the keyring and
+> then restore that data later.
 > 
+> This will be used to support the TLS KeyUpdate operation, as now
+> userspace can resume information about a established session.
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+> v3:
+>   - No change
+> v2:
+>   - Change "key-serial" to "session-id"
+> 
+Reviewed-by: Hannes Reincke <hare@suse.de>
 
-Got it. That keeps the proposed statx changes simple. Let me look at how
-extensible the statfs API is. Actually that falls a little outside of
-the mission to support NFS's needs, so perhaps that should be a separate
-effort? Let me know what you think.
+Cheers,
 
-
+Hannes
 -- 
-Chuck Lever
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
