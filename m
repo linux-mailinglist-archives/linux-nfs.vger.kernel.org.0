@@ -1,80 +1,48 @@
-Return-Path: <linux-nfs+bounces-15013-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15014-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E332FBC1673
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 14:47:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2625BC175E
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 15:17:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BE94A4F5E4C
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 12:47:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF581189D87F
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 13:17:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3032DC32A;
-	Tue,  7 Oct 2025 12:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4322DF15B;
+	Tue,  7 Oct 2025 13:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="QokZM0qJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5CHOMis"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D7B2D9EC2
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 12:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC091DF982
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 13:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759841245; cv=none; b=k29dRK3Su3aK+v59i8rrZmmAcr9VoKllTV5U5kL7RSQLDpcTDXgiTKuHns1nyNqSwE5RyyuDna9T0+tmlYJk16d+ZHe/EbVqZLzC/exVE80Gj4zL4B+h3fBOhNbQhuAkSq3u7ZO84jU+qsYucXXX2rTGfaTdFuw034cC61WJFiM=
+	t=1759843022; cv=none; b=XbSOAhrU9TP7v/8yH6iDQQun6+bye8eFdHCX61wgBRgPJLYrMXRLMqCJhdxHY8DKyZLeommd5p18kvL4vFG6zOR53oLjAhgFQ5D0HFrUToesWNkGMnzeDxzXqzFUb/asHUpVObium6brESpcijPv6Kwk8Gc1yeU4RtmVKqx/cPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759841245; c=relaxed/simple;
-	bh=RQN/2lDlhzCHpCJtTDLlN1RlhI45f3qz73uJwycfNyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EQDvZ+qXwzKcLN/2Cjjccb54Zx6PxiIXeKQ6RY1asQagVWPklId54CfGQ8yBPLDOJWHWGHM7vfxfoEzMgvRYx+w9Fm5SiPGAv1GvH6AQnhf73QhsX0HZNRQ/Rmcmp0swjcY64iD7dX7uZrR7Si+tB9h+gK2toP45Q1fHb/NLlpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=QokZM0qJ; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-938de0df471so504532239f.2
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Oct 2025 05:47:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1759841242; x=1760446042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CJuDLqWRo4Zntrd7FLhRCTIWZVZXh1mD+BCXSb25DVE=;
-        b=QokZM0qJdV5QIxYrua/bpJ22oY2BnV9GPTZEEql/b5va0Gh3BNTQKKYGIREgbV1d/B
-         oWHbaZCunLe5AfACdWoBEyXaOFa0kGEj+H8qKVzVinuTg0UKhMOsRNUlbEOiVmwLuCYs
-         CPvoDpyfM69NZG+gkOI/1Kdiqh31iDopmAC40VYjY/D2bG1jUCFVKpgMakYSzMJQP8LZ
-         cs75sNpUE8wnYZk9sUO50MgN6C71GNoxnYomQA08wxhBItUeDBENOF/g4jVCo4+SAjKe
-         zXPb/E5HhRG73yC/NzhchCsPrXJb9rpFRXOLjbEWD+gm1KJjC4hQ47+CNciyEWYE2iKi
-         Q4nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759841242; x=1760446042;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CJuDLqWRo4Zntrd7FLhRCTIWZVZXh1mD+BCXSb25DVE=;
-        b=S/WeKGvIGHKN8D+jkaIdVL/DMlXfFkXTayz5bKYAM1Xk0kBaHOcbH+apV/LPW1SmqG
-         wDEytqCtz9EZa5oVVt8fQZxesa6bMBXG5UB0ikVTCAD7FvPdeldMZ1m84yDZ/RcY3Rbm
-         EMJIwTj3Tsd2NESGzjPhJwuN5MihmM1vOt3XnC1pqkAR7UTK3xqcMe7U6riK/Q0In5+o
-         c82/Qnus9n9KcDz0Ov0PfwI4G4i0ViMDMmvIiUU1lXgBVhncqU2ZT3kfu/g+3MYTFb9E
-         sGFH/n6BNykasovC6AFKrsBiUucSi0BpUwVEuU2S2qN2rqRLBtT67StPzYZSZznVpicf
-         MFzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVDDVAnJgpdCnazbhaThb9E1izLjWRXNR4RSlkgPdANmNzYvB3h/ZOHSNzr/YdSuuL+bFdBAE/X90=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysluZp8xFBM71c6vUOhVjKumI8xOFoIGZ5yjLnglebRi2LlTsg
-	D/FA0q+vvFFCZb2hU3PPCTqbZxZGXrPjbfZrgxg7FSLC8PaQPju6seZpJ53g0+8LpeA=
-X-Gm-Gg: ASbGncsN/LE7YMLd9FEwIUUGUOTQ98U2kiNdCemFwSLFYoHLOBNF71QF9XUYdmv1Lt2
-	Z/1vZkt37hz8i7eU206s8GZ5QpWsFy8j4TL3ClkPzisK6c2GskA9Gqy/hEt/Xu/n4TDmyBnnr9d
-	f6pVBrym1CvbvrdwSHnCRi0dGpFuEStruBBvkPk7nUuC5H+1ZMC1AAN5zvt+HvzcDhCdWeOR7AI
-	KvwAlWxUIMOw5ubsc8B5PkGWlyKtaabdD7Q2uCOXcjHfliKKWLi+fixl1he4CgSYnXij+Sku1zZ
-	bbVNlMGG6/Vcy+d6KHP3gEDy7gig1u0nPmecp7M6yvHVxuDSh/GL3247t/O/aQkpUJYNDyDT31E
-	yuj1fvwsKUBl0L1F72Bb8vyMKesTG39eRAxY3UjsQzpc2ufxl93189GU=
-X-Google-Smtp-Source: AGHT+IEhjV+rQNakagoyRfFs8Cw5QyuLbDFd/MmJxW09tmaws68gZlvukb/j2kPTZy0RgCpUbBD3iQ==
-X-Received: by 2002:a05:6e02:1d89:b0:42e:38d1:7c61 with SMTP id e9e14a558f8ab-42e7ad8447dmr208356865ab.22.1759841242260;
-        Tue, 07 Oct 2025 05:47:22 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ea3a5basm6128505173.23.2025.10.07.05.47.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Oct 2025 05:47:21 -0700 (PDT)
-Message-ID: <a2cb114a-e31a-46d3-8c27-35149bed668f@kernel.dk>
-Date: Tue, 7 Oct 2025 06:47:20 -0600
+	s=arc-20240116; t=1759843022; c=relaxed/simple;
+	bh=+UJkT+stGGBAmt0+WskkBRCocYkm0fZzhGdP1EJC+pM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GQQeRWnBAEsC0NCTRcaIpDIB1EWUt4lQdFEHiXCPV/FKYN+h0V+F49kduOdLNxpDYiSsp1vJlIg84i70P7MYs5ldzoP7tdbDYA+WiUCxmrw5snLzkqZnCcp25KIgjX3jtgb7gzpCEKJ2veIST1jj++HO9r7JX8llt0HT8CGk4sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5CHOMis; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D434EC4CEF1;
+	Tue,  7 Oct 2025 13:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759843021;
+	bh=+UJkT+stGGBAmt0+WskkBRCocYkm0fZzhGdP1EJC+pM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M5CHOMissmjCHI0dk8ldptLkBBJBwQ9Y3IP+jA82yZ4tAxr8bweF6Epm2sRkL/i+X
+	 wix3Qc46Qlmx58eRhrpwowe0zMnz7XxQZw98JHQ90/P838YI2mkmNcj/YDFGkM7uOP
+	 W+sIZUVsx/ySs6TS7Dxm4PeJVX6JOsO1TcF6qylH5Uhu/QTuelK1HR38p5R5dvPUU8
+	 mgygByYgmEJWDYsfhXMWF/+JNRvPENX1rKUu+W4qToBM0n/RU6O9IGpWT/aTyxM6pM
+	 GYmyxfTYfq1i1ZglmA8EZxl7XJP1pFVU/iOw52+vHJj6oLnD8QY2aRrap0Avq2sAKD
+	 vxWhbeEuwg4mQ==
+Message-ID: <c6844b75-7875-4741-a8fd-fd807c086736@kernel.org>
+Date: Tue, 7 Oct 2025 09:16:57 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,23 +50,77 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [nfs?] [io-uring?] WARNING in nfsd_file_cache_init
-To: syzbot <syzbot+a6f4d69b9b23404bbabf@syzkaller.appspotmail.com>,
- Dai.Ngo@oracle.com, chuck.lever@oracle.com, io-uring@vger.kernel.org,
- jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- neil@brown.name, okorniev@redhat.com, syzkaller-bugs@googlegroups.com,
- tom@talpey.com
-References: <68e4a3d1.a00a0220.298cc0.0471.GAE@google.com>
-From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v1 0/2] Fix unwanted memory overwrites
+To: Tom Talpey <tom@talpey.com>, NeilBrown <neil@brown.name>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <dai.ngo@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20251006184502.1414-1-cel@kernel.org>
+ <f0b5acc6-0e67-4736-833c-4af16c05ef74@talpey.com>
 Content-Language: en-US
-In-Reply-To: <68e4a3d1.a00a0220.298cc0.0471.GAE@google.com>
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <f0b5acc6-0e67-4736-833c-4af16c05ef74@talpey.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Doesn't look like it's io_uring related:
+On 10/7/25 8:45 AM, Tom Talpey wrote:
+> On 10/6/2025 2:45 PM, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> <rtm@csail.mit.edu> reported some memory overwrites that can be
+>> triggered by NFS client input. I was able to observe overwrites
+>> by enabling KASAN and running his reproducer [1].
+>>
+>> NFSD caches COMPOUNDs containing only a single SEQUENCE operation
+>> whether the client requests it to or not, in order to work around a
+>> deficiency in the NFSv4.1 protocol. However, the predicate that
+>> identifies solo SEQUENCE operations was incorrect.
+> 
+> I'm not sure why a SEQUENCE should be ever be cached, apart from
+> recognizing it as one of the operations in a prior request. The
+> idea from a protocol perspective is that the sequence is just a
+> ind of clock that ticks once per time it's executed, and it only
+> ticks when the sender sends something new.
+> 
+> IOW from a responder (server) perspective, caching it seems wrong.
+> Can you elaborate on your interpretation of RFC8881?
+I'm basing my remarks about the protocol on this old comment that is
+near the code repaired by this series.
 
-#syz set subsystems: nfs
+/*
+ * The session reply cache only needs to cache replies that the client
+ * actually asked us to.  But it's almost free for us to cache compounds
+ * consisting of only a SEQUENCE op, so we may as well cache those too.
+ * Also, the protocol doesn't give us a convenient response in the case
+ * of a replay of a solo SEQUENCE op that wasn't cached
+ * (RETRY_UNCACHED_REP can only be returned in the second op of a
+ * compound).
+ */
+
+
+>> (Based on my reading of RFC 8881, I'm not sure NFSD should cache
+>> solo SEQUENCE operations that fail, but that is perhaps for a
+>> different day). 
+
+The 2009 commit that broke this removed the logic that prevented caching
+failed solo SEQUENCE operations. It might be more sensible to simply
+revert that commit entirely.
+
+Or, further, if it seems utterly broken to cache even successful solo
+SEQUENCE operations, then I would consider removing the solo SEQUENCE
+caching logic.
+
+RFC 8881 Section 2.10.6.1.3 opens with:
+
+> On a per-request basis, the requester can choose to direct the replier
+> to cache the reply to all operations after the first operation
+> (SEQUENCE or CB_SEQUENCE) via the sa_cachethis or csa_cachethis fields
+> of the arguments to SEQUENCE or CB_SEQUENCE.
+That suggests the spec authors expected servers not to cache a
+COMPOUND's SEQUENCE result at all.
+
 
 -- 
-Jens Axboe
+Chuck Lever
 
