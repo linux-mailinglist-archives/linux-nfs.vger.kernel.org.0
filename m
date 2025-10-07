@@ -1,172 +1,120 @@
-Return-Path: <linux-nfs+bounces-15008-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15009-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C67F6BC0310
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 07:23:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 657A7BC1336
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 13:26:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 12DBA34C00D
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 05:23:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0847C3AFD21
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 11:26:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31CD71DE8B3;
-	Tue,  7 Oct 2025 05:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70FA2D7DE1;
+	Tue,  7 Oct 2025 11:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcKHKTjF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7553B1DDA1E
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 05:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E18D823DD;
+	Tue,  7 Oct 2025 11:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759814612; cv=none; b=qaPz4ce/liQftXB0rKdmz/njF0vvpvGLJVUeIzWba7sBb6KrcTRivTYj7lfg5v1R2/jU93m2VYFAe2BbxfRUSOkw5pRSUKzzdo2u9MyAbRsUJvPOpsIyezL/2/MrhaWlvqGum9e/CgQXrUmOQvyy0s19cHuTtHqzbeih/NqmkvQ=
+	t=1759836366; cv=none; b=Pkr9CkQk+5WEiHWeVQ2ZExpMQ5MD+jQM6YEiIC2QKNzZTjelS6+2JOVy+PICUA57DkMKRbIyreB0ZPf26tFPyi1yrWHc5KP5iJK80v19EN0obIUmzMOXbGxW+Ww8w57rzVATnZNaxwmJ7bSVn7scVgxFj9GiUutNTg7+kmdBYRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759814612; c=relaxed/simple;
-	bh=hF/RTtCsIXYJfva7IJoml8ntiMvzO1XyrjLgq49Rz+A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=b0oatfaXM2KOGQ+/yaiTq6lSuotskKacoaFtzit4Fd69oS5MU50eb9//9nxbGD8fLJ/e648At+Kd3wvs8tmxi5MOtSyamwAsSOVV/i7jLN2UxQw17T0PD9ZQ9zEnb/GtFpMispYqCBMqWobZ6sd0ef0bW6mQkH+7WRl2AnOHrWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-91b3cc5aa6aso1363052139f.3
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Oct 2025 22:23:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759814609; x=1760419409;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nVHfrhw8p9Pa8xYIGQ9EljBv3N3ecAdNVnBD/usVWZs=;
-        b=K9JnCblHtKJJtgq0P/rieCaOZm323JDVWnLtcS9WRUYz8gBwpaGUepTFRs7foHqzDC
-         zhhBisY8ICtaslptpxJzGkX4zFTULnAt0/avU1qlzzV9yyu3zx2yVu7ctenu+MdMD+Gq
-         YuENisG/ddro3skyvRPwoOC/d30b3C4x2Df8CNaFIf/je4O6tN2QQjXG/XXmaFDMA+ri
-         uN/pBWJoia0zjGH1K1ovkO2Dew8wXYLGPATbX5WxWiJJ0j/VAlmmfm0s1/rM0EZZm4R6
-         JvYqtRQy1WgcRCi2hq+Ki1+2hyJtwKSer2r7WJZBHNusUjHMbHM0QrH1C5eSswBdxprE
-         ShfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCLVSnQYFyh495tLSG39YHfTG0wAfmKDIT+4LE9uzRNVeT5Hvc8KLgLHWNw6yj4N60hqDsssHZ7Bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjJ2kLSx3Vm1QlhgSQ+sgpISTzzJIYyLjeE/uT+ldyzfr2iZAu
-	BOaaRjMzt2I9QB2aIJ/DGxJw9mVWYc8HW0d7Zfbwq5A/itCOVxG5CSzEwg5vILBgT7S6ufyb1fx
-	7RUYTY1YvEWztGtbd5qWPsr+qjuZYvyEMQSiBUXSpcI1lKc3Sn0N8rbjjDMI=
-X-Google-Smtp-Source: AGHT+IFQohCLUW9JVi6BCN8/njSlnTUl1RB9nqXey9XZZdZkOqOrsSglfemmEdZpzp1F1yCF8Ho8lPXmjcLO8SMiMpD1aLXZC5zs
+	s=arc-20240116; t=1759836366; c=relaxed/simple;
+	bh=q9pv4C4FRTY6WhDpMUIPdlbgJVU3rkCad+bKpkYtuco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hVGwGWSmR1Heyl8idR8bh9Gfefr7GA6tf4tJ5M/gXeI9sK5WY5Ryqf1ZsJyzuPsUzBKb8hF9XMroRc1TzhSHzvA6qrqH+HHq1zvcT8mQsHV4Bwpj7vqe7Br7IInJ/ol8mIan0d/cn63RU9FdVSq1Js1CLQmVd0DyON8BI++3Vw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcKHKTjF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6873CC4CEF1;
+	Tue,  7 Oct 2025 11:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759836365;
+	bh=q9pv4C4FRTY6WhDpMUIPdlbgJVU3rkCad+bKpkYtuco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dcKHKTjF7tkdUSoPpG6wqySRz90fWZMlvOjG1hRVG9VzzSWHoFeUkPpf/2kGax7nP
+	 kv9pnNQmi3JUGK4iPq2y+QVQ3psB9Qjy49TgfzcQVTKOES8ATidcAUmAHFWd5ZyccZ
+	 ozKOZKOtp1uo+WpU2tHg0rWo1XVWqOwJVC+6pwdNsWgYgIJ/ylR92HTHb3zH1+Hptu
+	 4edSGFb26JWfv2zQ2UxD6ChRtXrtB1P1AQt2TVhldCsC8c4ILaC3Z6xoTgyhSzh9Fk
+	 QhyrFHIaMN8rOt0jMp2NglpqnAycX9LeBBlosKV/PmptH7fXUukdSRxRCILzORHLyk
+	 uDMAZQsegzGrw==
+Date: Tue, 7 Oct 2025 13:26:02 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	Jeff Layton <jlayton@kernel.org>
+Subject: Re: [GIT PULL] NFSD changes for v6.18
+Message-ID: <20251007-zoodirektor-widder-27776d2e7228@brauner>
+References: <20251006135010.2165-1-cel@kernel.org>
+ <CAHk-=wiH4-v3YxzN9_obL8Z_d9+TiFOdXwiDAauHqO-1vymY-w@mail.gmail.com>
+ <26c34ef2-8309-4625-9bee-bb3e5c056568@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:168e:b0:424:14a4:5064 with SMTP id
- e9e14a558f8ab-42e7ac437a1mr189297915ab.0.1759814609600; Mon, 06 Oct 2025
- 22:23:29 -0700 (PDT)
-Date: Mon, 06 Oct 2025 22:23:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68e4a3d1.a00a0220.298cc0.0471.GAE@google.com>
-Subject: [syzbot] [nfs?] [io-uring?] WARNING in nfsd_file_cache_init
-From: syzbot <syzbot+a6f4d69b9b23404bbabf@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, axboe@kernel.dk, chuck.lever@oracle.com, 
-	io-uring@vger.kernel.org, jlayton@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, neil@brown.name, okorniev@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <26c34ef2-8309-4625-9bee-bb3e5c056568@kernel.org>
 
-Hello,
+On Mon, Oct 06, 2025 at 04:58:22PM -0400, Chuck Lever wrote:
+> On 10/6/25 4:51 PM, Linus Torvalds wrote:
+> > On Mon, 6 Oct 2025 at 06:50, Chuck Lever <cel@kernel.org> wrote:
+> >>
+> >> One potential merge conflict has been reported for nfsd-6.18.
+> > 
+> > No problem, this is the simple kind of explicit conflict (famous last
+> > words before I mess one of those things up).
+> > 
+> > Anyway, the reason I'm replying is actually that I notice that you
+> > added that ATTR_CTIME_SET flag in <linux/fs.h> in commit afc5b36e29b9
+> > ("vfs: add ATTR_CTIME_SET flag").
+> > 
+> > No complaints about it, but it looks a bit odd with ATTR_{A,M}TIME_SET
+> > in bits 7 and 8, and then the new ATTR_CTIME_SET is in bit 10 with the
+> > entirely unrelated ATTR_FORCE in between them all.
+> 
+> Oof. We should have gotten Acks for "vfs: add ATTR_CTIME_SET flag". My
+> bad.
 
-syzbot found the following issue on:
+Yes, indeed. I wondered why I hadn't seen this patch.
 
-HEAD commit:    d104e3d17f7b Merge tag 'cxl-for-6.18' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=116bb942580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccc18dddafa95b97
-dashboard link: https://syzkaller.appspot.com/bug?extid=a6f4d69b9b23404bbabf
-compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1573b214580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b515cd980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/335d7c35cbbe/disk-d104e3d1.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/72dbd901415b/vmlinux-d104e3d1.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3ff1353d0870/bzImage-d104e3d1.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a6f4d69b9b23404bbabf@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6128 at kernel/locking/lockdep.c:6606 lockdep_unregister_key+0x2ca/0x310 kernel/locking/lockdep.c:6606
-Modules linked in:
-CPU: 1 UID: 0 PID: 6128 Comm: syz.4.21 Not tainted syzkaller #0 PREEMPT_{RT,(full)} 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/18/2025
-RIP: 0010:lockdep_unregister_key+0x2ca/0x310 kernel/locking/lockdep.c:6606
-Code: 50 e4 0f 48 3b 44 24 10 0f 84 26 fe ff ff e8 bd cd 17 09 e8 e8 ce 17 09 41 f7 c7 00 02 00 00 74 bd fb 40 84 ed 75 bc eb cd 90 <0f> 0b 90 e9 19 ff ff ff 90 0f 0b 90 e9 2a ff ff ff 48 c7 c7 d0 ac
-RSP: 0018:ffffc90003e870d0 EFLAGS: 00010002
-RAX: eb1525397f5bdf00 RBX: ffff88803c121148 RCX: 1ffff920007d0dfc
-RDX: 0000000000000000 RSI: ffffffff8acb1500 RDI: ffffffff8b1dd0e0
-RBP: 00000000ffffffea R08: ffffffff8eb5aa37 R09: 1ffffffff1d6b546
-R10: dffffc0000000000 R11: fffffbfff1d6b547 R12: 0000000000000000
-R13: ffff88814d1b8900 R14: 0000000000000000 R15: 0000000000000203
-FS:  00007f773f75e6c0(0000) GS:ffff88812712f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffdaea3af52 CR3: 000000003a5ca000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- __kmem_cache_release+0xe3/0x1e0 mm/slub.c:7696
- do_kmem_cache_create+0x74e/0x790 mm/slub.c:8575
- create_cache mm/slab_common.c:242 [inline]
- __kmem_cache_create_args+0x1ce/0x330 mm/slab_common.c:340
- nfsd_file_cache_init+0x1d6/0x530 fs/nfsd/filecache.c:816
- nfsd_startup_generic fs/nfsd/nfssvc.c:282 [inline]
- nfsd_startup_net fs/nfsd/nfssvc.c:377 [inline]
- nfsd_svc+0x393/0x900 fs/nfsd/nfssvc.c:786
- nfsd_nl_threads_set_doit+0x84a/0x960 fs/nfsd/nfsctl.c:1639
- genl_family_rcv_msg_doit+0x212/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2552
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1320 [inline]
- netlink_unicast+0x846/0xa10 net/netlink/af_netlink.c:1346
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1896
- sock_sendmsg_nosec net/socket.c:727 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:742
- ____sys_sendmsg+0x508/0x820 net/socket.c:2630
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2684
- __sys_sendmsg net/socket.c:2716 [inline]
- __do_sys_sendmsg net/socket.c:2721 [inline]
- __se_sys_sendmsg net/socket.c:2719 [inline]
- __x64_sys_sendmsg+0x1a1/0x260 net/socket.c:2719
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f77400eeec9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f773f75e038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f7740345fa0 RCX: 00007f77400eeec9
-RDX: 0000000000008004 RSI: 0000200000000180 RDI: 0000000000000006
-RBP: 00007f7740171f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f7740346038 R14: 00007f7740345fa0 R15: 00007ffce616f8d8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> 
+> > So I'm thinking it would look cleaner if we just swapped
+> > ATTR_CTIME_SET and ATTR_FORCE around - these are all just our own
+> > kernel-internal bits (and the reason bit 10 was unused is that it used
+> > to contain the odd ATTR_ATTR_FLAG that was never used).
+> > 
+> > Danger Will Robinson: hostfs has odd duplicate copies of all these, including a
+> > 
+> >    #define HOSTFS_ATTR_ATTR_FLAG   1024
+> > 
+> > of that no-longer existing flag.
+> > 
+> > But hostfs doesn't use ATTR_FORCE (aka HOSTFS_ATTR_FORCE), so
+> > switching those two bits around wouldn't affect it either, even if you
+> > were to have a version mismatch between the client and host when doing
+> > UML (which I don't know
+> > 
+> > Adding Christian to the participants list, because I did *not* do that
+> > cleanup thing myself, because I'm slightly worried that I'm missing
+> > something. But it would seem to be a good thing to do just to have the
+> > numbering make more sense, and Christian is probably the right person.
+> > 
+> > And adding Johannes Berg due to the UML connection, just to see that I
+> > haven't misread that odd hostfs situation.
+> > 
+> > Comments?
+> > 
+> >             Linus
+> 
+> 
+> -- 
+> Chuck Lever
 
