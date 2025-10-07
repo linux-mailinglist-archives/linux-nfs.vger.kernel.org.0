@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-15032-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15033-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21B41BC23D0
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 19:18:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCCF7BC23D3
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 19:19:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 78538344DE0
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 17:18:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B95E3AC912
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 17:19:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D47834BA34;
-	Tue,  7 Oct 2025 17:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 546CB2DFA40;
+	Tue,  7 Oct 2025 17:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgOBLRUH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG/7OOjj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3756F209F43
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 17:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3D72DEA90
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 17:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759857535; cv=none; b=erdOxIUopdeM333NlNWTn5AUKKEYVKmml+lnZ0nr+3ywxVNszey0R6WP+d3XPFhV40VC647xRvzowhUcw8g9qo5DkDEtSZHIvCuSgfVjX66EbCh4WWLtWgFNZHs8i6dEEYhYiwi2KzFhjKL+sRXSF7ZkYKC4pWuLBN65bSBMoqY=
+	t=1759857583; cv=none; b=VyJgX06eHK8khiV3JDHWmEilK6/jmnuuewJlgF57c5a9QSzKJptQ6xBu37sNLCDBrf1uGIMFrD3DWsUfslRspcZ1kUKbRTBMM6T6+7BqMk+SJV0Xyj6SWrHCKEAFcNK3C7QOVd8pdPJA7D6j1bJUFqAgwz08nJTf+WamugwMchA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759857535; c=relaxed/simple;
-	bh=53hHydjml0MRyHjZn9FTh8oBgFSW6Pt0wbwdstv0k9c=;
+	s=arc-20240116; t=1759857583; c=relaxed/simple;
+	bh=jo2nG6Co7g2zG4lGRfzS6pft8+sLsyZQvIln/peQKMM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nUm+c8pnczgR23sXf8/iy8pJBQ7xzACk3mrcp+aNEzp4iJonphemj9EMDnGVoxET2VCQDWv9GM9ODlWy5jnKdt7MslMPhCB3NgT8rudaliSlbV6E99g7uvVUL/6GP8JXUmWCWjRW/fQBIyI0J91KUn5EiuCfVeyddHNU6fRLrfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgOBLRUH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 158A7C4CEF1;
-	Tue,  7 Oct 2025 17:18:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=s11i3i6xvwnwnneMFoHMN1rX1ZbCZS0OTi7QCaXDegyMGhJ9BFljWxPN9MmnzHD+Atg1m8nvssTApzhW8++tVgzBS5NCwjnc9n2qqlgZmw7lg8B0x4wQiFm7LJwvP+rsDMBPmV3vmJD1qi1MaaBwkyapt+SuERlT9ugvtEaEdzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG/7OOjj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB81C4CEF1;
+	Tue,  7 Oct 2025 17:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759857535;
-	bh=53hHydjml0MRyHjZn9FTh8oBgFSW6Pt0wbwdstv0k9c=;
+	s=k20201202; t=1759857582;
+	bh=jo2nG6Co7g2zG4lGRfzS6pft8+sLsyZQvIln/peQKMM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qgOBLRUHdGhH6zXwWi3CdT2SdY/C8cqi5Eq1Ct30/6maOrixokzDoTGdbjbckCe1W
-	 Tgi2vQAwcGFaahhVA4m4IDGZpjo9JjXis8YdDMEdxVlOVvPaLzaxIIvzJMYA7nyl3Y
-	 8ftTF/EIuZrF/kSyYAJ41wwYnpUeU8YK6k54t9vHvQov+Kst+6y+Myl9b7aEkpPSvm
-	 id54GL3Nhy6godIl5h4hidahSAvJ6ocZqU49MklhpdoGdsWWZvltEGIrQEX0Jxvc87
-	 3ptYDI3hh/aiMq2Q7AoFCqS/Tl7eym2vYENf2jTT00HGzubJ+l8Fx9dltPOPeEKByQ
-	 vsPb8rk+Rwqrg==
-Message-ID: <93989083bae9163b2af3ed84d6a9010f338fc8cd.camel@kernel.org>
-Subject: Re: [PATCH v2 2/4] NFSD: Fix the "is this a solo SEQUENCE" predicate
+	b=MG/7OOjjqSy3JBxuR4diVt7P/QW/LHW8RfJ/4nIc1AKRZOlA0/ZVAXi2fqNeR/C5d
+	 L+VB+sha26ot1um4dqM1JbkwxSAooBbx8O8Uzc3e3YmE1IKJu1IfsnhIsy8jDHvqQh
+	 8Zd0U69g0Lk5moj4VdHVH/YmyOLfuDESUjr7/sRAaBi1YXWWfMdXE5dGeWq/XrkH+H
+	 O+T40blcRhbzyGlervScGskOdQ4RXf9xY81nZiOGkRcrmYiVAuRSYyFuSfAish3ky2
+	 zbPjxN0Z34wh1anmOncv8VBfsz2esQTCIrxIWfAK+h72wD01cDg8WQRPqZNyh9dFyd
+	 WXwAp1625JioA==
+Message-ID: <f2d22f545e8199a0b86f4b631f3be893ebbc947e.camel@kernel.org>
+Subject: Re: [PATCH v2 3/4] NFSD: Do not cache solo SEQUENCE operations
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
-	rtm@csail.mit.edu
-Date: Tue, 07 Oct 2025 13:18:52 -0400
-In-Reply-To: <20251007160413.4953-3-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 07 Oct 2025 13:19:40 -0400
+In-Reply-To: <20251007160413.4953-4-cel@kernel.org>
 References: <20251007160413.4953-1-cel@kernel.org>
-	 <20251007160413.4953-3-cel@kernel.org>
+	 <20251007160413.4953-4-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,55 +139,77 @@ MIME-Version: 1.0
 On Tue, 2025-10-07 at 12:04 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> RFC 8881 Section 2.10.6.4 says:
+>  RFC 8881 Section 2.10.6.1.3 says:
+>=20
+> > On a per-request basis, the requester can choose to direct the
+> > replier to cache the reply to all operations after the first
+> > operation (SEQUENCE or CB_SEQUENCE) via the sa_cachethis or
+> > csa_cachethis fields of the arguments to SEQUENCE or CB_SEQUENCE.
+>=20
+> RFC 8881 Section 2.10.6.4 further says:
 >=20
 > > If sa_cachethis or csa_cachethis is TRUE, then the replier MUST
 > > cache a reply except if an error is returned by the SEQUENCE or
 > > CB_SEQUENCE operation (see Section 2.10.6.1.2).
 >=20
-> This text also appears in RFC 5661. Further, Section 2.10.6.1.2
-> says:
+> This suggests to me that the spec authors do not expect an NFSv4.1
+> server implementation to ever cache the result of a SEQUENCE
+> operation (except perhaps as part of a successful multi-operation
+> COMPOUND).
 >=20
-> > Any time SEQUENCE or CB_SEQUENCE returns an error, the sequence ID
-> > of the slot MUST NOT change. The replier MUST NOT modify the reply
-> > cache entry for the slot whenever an error is returned from
-> > SEQUENCE or CB_SEQUENCE.
+> NFSD attempts to cache the result of solo SEQUENCE operations,
+> however. This is because the protocol does not permit servers to
+> respond to a SEQUENCE with NFS4ERR_RETRY_UNCACHED_REP. If the server
+> always caches solo SEQUENCE operations, then it never has occasion
+> to return that status code.
 >=20
-> NFSD caches the result of solo SEQUENCE operations, but rtm's
-> reproducer sends two operations in the failing COMPOUND. NFSD should
-> not attempt to cache the reply.
+> However, clients use solo SEQUENCE to query the current status of a
+> session slot. A cached reply will return stale information to the
+> client, and could result in an infinite loop.
 >=20
-> The logic in nfsd4_is_solo_sequence() is incorrect: it checks the
-> current operation index, not the total count of operations in the
-> COMPOUND. If the SEQUENCE operation, which is always operation 1,
-> fails in a multi-operation compound, resp->opcnt is always 1. Thus
-> when a SEQUENCE operation fails, nfsd4_is_solo_sequence() always
-> returns true.
+> Change the check in nfsd4_
 >=20
-> Reported-by: <rtm@csail.mit.edu>
-> Closes: https://lore.kernel.org/linux-nfs/c3628d57-94ae-48cf-8c9e-49087a2=
-8cec9@oracle.com/T/#t
-> Fixes: 468de9e54a90 ("nfsd41: expand solo sequence check")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/xdr4.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  fs/nfsd/xdr4.h | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index ee0570cbdd9e..d1837a10b0c2 100644
+> index d1837a10b0c2..9619e78f0ed2 100644
 > --- a/fs/nfsd/xdr4.h
 > +++ b/fs/nfsd/xdr4.h
-> @@ -926,7 +926,8 @@ struct nfsd4_compoundres {
->  static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp=
-)
->  {
->  	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
-> -	return resp->opcnt =3D=3D 1 && args->ops[0].opnum =3D=3D OP_SEQUENCE;
-> +
-> +	return args->opcnt =3D=3D 1 && args->ops[0].opnum =3D=3D OP_SEQUENCE;
+> @@ -931,18 +931,19 @@ static inline bool nfsd4_is_solo_sequence(struct nf=
+sd4_compoundres *resp)
 >  }
 > =20
 >  /*
+> - * The session reply cache only needs to cache replies that the client
+> - * actually asked us to.  But it's almost free for us to cache compounds
+> - * consisting of only a SEQUENCE op, so we may as well cache those too.
+> - * Also, the protocol doesn't give us a convenient response in the case
+> - * of a replay of a solo SEQUENCE op that wasn't cached
+> - * (RETRY_UNCACHED_REP can only be returned in the second op of a
+> - * compound).
+> + * Solo SEQUENCE operations are not supposed respect the setting in the
+> + * sa_cachethis field, since that field controls whether the operations
+> + * /after/ the SEQUENCE are preserved in the slot reply cache. Because
+> + * clients might use a solo SEQUENCE to query the current state of the
+> + * session or slot, a cached reply would return stale data to the client=
+.
+> + *
+> + * Therefore NFSD treats solo SEQUENCE as an uncached operation no matte=
+r
+> + * how the sa_cachethis field is set.
+>   */
+>  static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
+>  {
+> -	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
+> -		|| nfsd4_is_solo_sequence(resp);
+> +	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS) &&
+> +		!nfsd4_is_solo_sequence(resp);
+>  }
+> =20
+>  static inline bool nfsd4_last_compound_op(struct svc_rqst *rqstp)
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
