@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-15015-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15016-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 950C2BC18BD
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 15:42:40 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3294ABC19E1
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 16:00:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 697A51888B68
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 13:43:03 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E604F4F639C
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 14:00:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2482E0B58;
-	Tue,  7 Oct 2025 13:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2574170A11;
+	Tue,  7 Oct 2025 14:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjjYNRaD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taKlBB8l"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB432E03EF;
-	Tue,  7 Oct 2025 13:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C365AE573;
+	Tue,  7 Oct 2025 14:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759844554; cv=none; b=R1mSAZyibuIgMi+mzjLNpFmrxzJl7hInkuzule3akc4Z5kreboTj7Rl9LFjg7E+i3vvM9q3Bc1aDtpkcJh+kBINNxLB+CuMjfZcamfiWI2Z/r7GtIP5S5BnEblj//0bwLm+OfWzQgW/v+9Eh1pY+WvIeLy83YR2mrAY8xlkxg3g=
+	t=1759845642; cv=none; b=R4chTZ13mvbCw3kxvYrzWCpVe3yt1fgUxEGmyPOxl7eRuSTiIxa3XZ1T+8yinAj19/3J9IP/NaJN5NeNL3aEHYnw6MgiL4ZAWVUjxP8L4f9g52Gu8pgMSOTm/j7oGn23Rp6m5/3hu1SwpBrQQtIrqWunk/TJQ9+yqZvIhhmcjl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759844554; c=relaxed/simple;
-	bh=YglmNLG9so1bTPsyxotMfL2Qw5hHoTH9HvOhn6Arfic=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rXaO/az1eWNvo2FZ5xdqbY7x9y3XK9beRuvo87Nm6tGj0x+G1ys5c+SRHyzKxdtfFnYjBe8kJMZo4PP91cpbsAo7tRXbPb5aBri06poouPBY0dR/3bqG6sRyouC1RwuFiz53QX+7qxyKUd2ZsxsNYrAZ7AwInpCCSG9cW/rzPNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjjYNRaD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17FCC4CEF1;
-	Tue,  7 Oct 2025 13:42:32 +0000 (UTC)
+	s=arc-20240116; t=1759845642; c=relaxed/simple;
+	bh=6TM8y8s++zm/NBteJon6LP4TsPN46XJYEZfmHV+UdFA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qnjkxeqYAnpXlCd2s6lETCWcnFym5R76/HMaXWgk7O2Hq0eFqZdqE7R3IzloOKZfvNk5lC5TqfQIVEoFbV317Ig3rM9t1inJ3+c+W/XQ5PycL0kqykqc4/lYmRfeIKjwUHtGk7yRV7I8uTUylwHbOIWh8w2qSJI6Y073HHdENn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taKlBB8l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A1FC4CEFE;
+	Tue,  7 Oct 2025 14:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759844554;
-	bh=YglmNLG9so1bTPsyxotMfL2Qw5hHoTH9HvOhn6Arfic=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=TjjYNRaDx42dllMuZ259ntYfzVVcmLiXg1eWKLtm+ID5zABsj49fETGleOa0xeEFO
-	 2FgvvklFPGMkdgoxQrvu1g/Ssx64Rbsw/NsUB1QRaIjgS+Y9HKUuzqdC82cxpqonOF
-	 9Cfu5B56e84IQI2+zelwL1mqNMi2rEV2l+jTJxySYn30DtUMcbtm69R4whRh8et/vH
-	 6ML4TFRH0ugfuwgaVtifPohdLLNDKMstksc1VEsMkNDdaC3/Q3wiI7S2rOwfXqaZ3l
-	 QtrZ2kELgRxOdR6DZ+QNjuWd5S2+DWopkbD5uitYvxZBsaqkcXy7BK9FQ3F8Ej4RpB
-	 xeS2inUVnXzag==
-Message-ID: <9a0401faa598ddaaf43312008469129fc66776f1.camel@kernel.org>
+	s=k20201202; t=1759845642;
+	bh=6TM8y8s++zm/NBteJon6LP4TsPN46XJYEZfmHV+UdFA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=taKlBB8lY7GUUCc8rqR5xrDVCo/xBt/zwTH4Kki5CMxaSQGoZ8kaowT0wW1YcYaQg
+	 QulrJfJxDj4dh2kVbpAnuEFDpbtPiRpdEotL1LpXumiFP/2XDK7i2nYhR1T7f07f+w
+	 9RJMv+75Ymg7QGJ3irwv12dH1fZo/GVxI9SPZ3VV2y4p0fGfFmlDKpCgGeWVy0+yaK
+	 Pa5S8tMT/43nMdYTIffA4wrtlT8mU/Oiwu6vsC5TyVV805NjrmKQuMgx9ATjkrq69l
+	 NEpFLtvX+nvaB6FrPyxdkCqYOJw8zPi5+/qYKMVHL+bYTup1E62tpwt8B1A3WrTkqN
+	 SD4e+n4XtSQ+w==
+Message-ID: <c9c65caaf4d9503b28d4314c479ef75cefa58312.camel@kernel.org>
 Subject: Re: [syzbot] [nfs?] [io-uring?] WARNING in nfsd_file_cache_init
 From: Jeff Layton <jlayton@kernel.org>
 To: syzbot <syzbot+a6f4d69b9b23404bbabf@syzkaller.appspotmail.com>, 
@@ -49,7 +49,8 @@ To: syzbot <syzbot+a6f4d69b9b23404bbabf@syzkaller.appspotmail.com>,
 	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-nfs@vger.kernel.org, neil@brown.name, okorniev@redhat.com, 
 	syzkaller-bugs@googlegroups.com, tom@talpey.com
-Date: Tue, 07 Oct 2025 09:42:31 -0400
+Cc: ast@kernel.org
+Date: Tue, 07 Oct 2025 10:00:39 -0400
 In-Reply-To: <68e4a3d1.a00a0220.298cc0.0471.GAE@google.com>
 References: <68e4a3d1.a00a0220.298cc0.0471.GAE@google.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
@@ -260,28 +261,17 @@ oogle 08/18/2025
 > If you want to undo deduplication, reply with:
 > #syz undup
 
+Pretty sure that this patch broke it:
 
-This happened in the context of userland calling the (privileged)
-netlink operation to start the threads in the server. As part of that,
-the server allocates a slabcache for struct nfsd_file_mark:
+commit 83382af9ddc3cb0ef43f67d049b461720ad785e6
+Author: Alexei Starovoitov <ast@kernel.org>
+Date:   Mon Sep 8 18:00:05 2025 -0700
 
-        nfsd_file_mark_slab =3D KMEM_CACHE(nfsd_file_mark, 0);
-        if (!nfsd_file_mark_slab) {
-                pr_err("nfsd: unable to create nfsd_file_mark_slab\n");
-                goto out_err;
-        }
+    slab: Make slub local_(try)lock more precise for LOCKDEP
 
-Allocating that slabcache failed, so do_kmem_cache_create() called
-__kmem_cache_release() on the way out. That triggered the lockdep
-warning which is this in lockdep_unregister_key():
-
-        WARN_ON_ONCE(!found && debug_locks);
-
-So it tried to tear down a lockdep key, but it didn't exist?
-
-This doesn't seem to be nfsd related either. I'll hand off to mm.
-
-#syz set subsystems: mm
+The new lock_key is initialized late in do_kmem_cache_create(), and it
+can end up calling __kmem_cache_release() before the lock_key is ever
+registered.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
