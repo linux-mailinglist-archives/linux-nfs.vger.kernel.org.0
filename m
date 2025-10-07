@@ -1,228 +1,172 @@
-Return-Path: <linux-nfs+bounces-15040-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15041-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6439BC2BDD
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Oct 2025 23:25:43 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B515DBC2D34
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 00:13:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F14C3AC230
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 21:25:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A920E4E5FDB
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Oct 2025 22:13:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6D02441A6;
-	Tue,  7 Oct 2025 21:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B32220010A;
+	Tue,  7 Oct 2025 22:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5xn7euk"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="YwnEatUv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="epdCswYo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9A7242D99
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 21:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D181922FB
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Oct 2025 22:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759872338; cv=none; b=sCv9Grw+oWwL45I0HW/CPvvjomNSUrI9BgH9qeXO6wO4fdpWfgz5Wm8C3sE2CoYSTCnC6biPPLyA10aD4xb/h8rBtF3/RL8VfMWQv/FO0NzhDnzaYgFIrYnuwWB0nxvOl2UXuUKUlVEVuTME3R4EDG/AqEAF6J6DAW+NdgfKZNM=
+	t=1759875187; cv=none; b=mqjAcOA/wLrqk+sJnfdLTp9dToOtPx+Ym/j3vRSBuUDf+dSnd8uII5E+BKmu0FX76CWadjA6axB/fHswUte4M9aTZIyiixM2TfAcRQc8I9aKy43Qu04SCzbnRAdS5zGzqGdM7AuQxmq7pgWDpE0Nfkfdtv5orTWmt7QBEurKi/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759872338; c=relaxed/simple;
-	bh=S1FEgML9qPG5AM0qstopvJ3G1GMqfZsPQL9p0u+C8Ig=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9YUiBp1ebSfF9OgwsBUqtWA7QHsurwdyunZTGMqHsn5vBdTilfFwmCJYBoyaUVHV9t5gEvKkQDBPOJ3/Bhykx/h6ZF9ncEXN+Gvem9q0FfRVMYis9dxd97gUK7wF1HWwrYR3o4e9gG9rYv0RwvwZx0b8l/bE0VsxN8gQ4TqPxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C5xn7euk; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7a9a2b27c44so202088a34.0
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Oct 2025 14:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759872336; x=1760477136; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kUquPAxZ7RNpS7S7i2SrAQtXSPkHjUEz/KSOyJfe4qQ=;
-        b=C5xn7eukzcwq8GdNRDdcFZSJR8b56CV1c3zSdTiTkmHFCLKxi6hJmMHKG/1wV02sDS
-         68j9bvXHrIvgzEsltBxTiBiaxk5Evkf6l6igFLOanMdM3KHqMwR0K6WMLs1EYx9t+B11
-         d2kKBjUwxMP8FGDcPWHZvj8M/87GB9SP8EW1upGkuM2cwFKon1jLStFNBls6Fkt1BUhE
-         +bcbP0VHxL/wFzRYCrKg0jL9JaI1b85Ph+MUtpb0XwY6+1qWNZW+mugTgxyQ3mpvHVpE
-         vcdyrWb4z+uOZRv9IzZye6RvbFQsFxTfi1bumYkzGfOYJUuHV9hUJU7IQLXwxdsZd0WN
-         d0qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759872336; x=1760477136;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kUquPAxZ7RNpS7S7i2SrAQtXSPkHjUEz/KSOyJfe4qQ=;
-        b=LZjD19DQ02DyCEth0NUApXhVJqnq6HzBrWNMlgVgBM/4Hc9+E+cEUFkhm0Cug9BiB7
-         4ENqrS527qr0qzTqKl9F1Hn5isTgaqkHL6VnaL0yGEA/GTawzKgrtz7KxYRpFgEtkn0+
-         Go6g4SUcMLrgx3Aw0qn3ONLmLotANciC0ZymBreHuQmSgDwYjt44M4bByxneMeNSReAl
-         lwcjVF6Mij7KQCi7syYMlmx32ym8fBhDJgla4xJDz/MxDGCxz0mts8aRwK9ylkm4MU2t
-         RVeBg3a3hbqQe/716nVkRP55nXHMo0jQsySb3xTO8/1nGKkW9Acfxd2Z9NL+ht77apWo
-         A9ew==
-X-Gm-Message-State: AOJu0YyaJkvcWHvWGmi1w4Td2/B34It+NTqgLx78QhR3x07ghWrLfsD6
-	nyF4K1lit67V/GY03iSEaxK0aWJowvZePF0lxpv8L5ZaymGV0D6AHI4AjMjY0LJc
-X-Gm-Gg: ASbGnct3HpJnK9qPiWqSBwZ9iCxua+oQHIwOpN3bIbgSLj4J0zaIIjMlJCLO0gczpCl
-	kds8zAeIXj8f45i030P/KFGdaFimV6yYdTQRSoykE+gtCx0MoqBOauI0/HbzZA5XEuxDCIxUBgc
-	sMukWmIotft/XmWaiRsSqv2Z1uMlErDhVE2D5PUCQsWd8zf3kY4454kvsAXO0smWuzIwT19JLUF
-	BaRKKpxGmC6FyvpPeP1XqENIQcPqXgLlsHlIe1yGln/Wj9rmTz1Mqy2M1SAv4tHSqRW09eRDspd
-	FofudY/RYSQy2yNEfzNR9dUdI11xpMGAahgIL73JBTnDvI86HyW/IPZQEQTnk8aQMhhbva2u4SG
-	VnMewIWIdRDlzprjpFBcCbrYdme3FkXqFyQeHN43kAIzA
-X-Google-Smtp-Source: AGHT+IGVpQmalLijAGU5vOAIIlvZRuDDP7hjcIQHqTx9MN+lNXCJVCuW2MsRZQXaL66/QVvXSBusuw==
-X-Received: by 2002:a05:6830:7188:b0:797:97d1:de29 with SMTP id 46e09a7af769-7c0dfef9314mr520698a34.13.1759872335719;
-        Tue, 07 Oct 2025 14:25:35 -0700 (PDT)
-Received: from localhost.localdomain ([2601:282:4300:19e0::7bc8])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7bf439d2aadsm5134465a34.36.2025.10.07.14.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Oct 2025 14:25:35 -0700 (PDT)
-From: Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Joshua Watt <jpewhacker@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Subject: [PATCH] NFS4: Apply delay_retrans to async operations
-Date: Tue,  7 Oct 2025 15:22:58 -0600
-Message-ID: <20251007212452.599683-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1759875187; c=relaxed/simple;
+	bh=A6WTMomYRYyCNmQM0v7a9m0zkw0F7cWzZlSFoafAGbY=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=vFCQA3GmaunM7oCcrBkQhxmdikAB/N7ora+7IfoH77bYUL/Q1MuQI+iSWe5xHU4zLtxJJFyihE9m/c33aLReIOxe2bfv8ynP4djN22u/Y2uPF3SS8E6q7C7K1ajAjvMRao/CsoeJMTu6Zw/cPtLJfxRhnqbubzy257/wKuPEXfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=YwnEatUv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=epdCswYo; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CDFC714000FE;
+	Tue,  7 Oct 2025 18:13:03 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Tue, 07 Oct 2025 18:13:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1759875183; x=1759961583; bh=AMZokNPRoZ7ycmlziGgZ9LqFfoPkN5NkF0u
+	IpAhrpi0=; b=YwnEatUvQfalgr9ZV7roXE3ON5GgfTnQolKgdVXdCpeFkim+/wn
+	5da0bTjTMhGsU4yFXWZWrzQjwHZ8rwUTpTLgzW8PXnVOMkUHNskhqy+/nRY2WaGy
+	bLfgL8HeXC2zbRJhE5DvKCmssH5aMkncHFtjVev3Zuo5FvlR0lEqTrQxiYQUQ/Zs
+	I74gmqtC+RkjHF5hK9R8UtKRT26yBBAfpbNmxaYBPCgEqM862Ti+Z9OsR9ePFSA3
+	dm/aKbrP4lMXVPFSeU5/6WRuzAfNU4B4EFKB7JBc5B6O/p5YjgpB4bnjjrhYB/Mi
+	Dzm7sqP7NR2Ubp8GbywZamPMoJZvoiGLkVg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1759875183; x=
+	1759961583; bh=AMZokNPRoZ7ycmlziGgZ9LqFfoPkN5NkF0uIpAhrpi0=; b=e
+	pdCswYoS6gJkZGEv6fE23IJXXAciPI3xTNwCsBikLL7h/I4Z+wGGgv5LR/8S9Czp
+	T1PrbbBByQHSg3IROOGvqfSLqvj4TFs1l+HR3lAisZB9AqbMZN4RpMrk7UjDehTr
+	CxH5evqMmFOAIq+qXyRZ75kvC7RV8LlPc88Tf84ro8WruTxE61WN+shk9c4sSJ6n
+	+P94GFmxxgN9YPaydmOHcYZ6anVs5pbI1D3XnyYEWdeQjYdZrO3zYMbyi+7zJuRM
+	auEvkezcKTM7LsLIQXHFD3fEI/Jh8r64gek1edzmMIGp1Y/75OI540gNPlGCixcu
+	TlW8pJlAWXHWHgctrXZYQ==
+X-ME-Sender: <xms:b5DlaJBTNIAw_EvR7o8UXO7MkZLDo9zzLoHY9hC0Ya-U9PUiW8tPog>
+    <xme:b5DlaFHQXm2tE46dbw97rDmhb_mUBDuvdEgMkenjiXKv1OGO0bn9pK_LfKcX1bfxu
+    qFJrNU5Bk2r8NBQHG9DsPP_G1SqsT9vijNfE2_b3Lni_6GGSw>
+X-ME-Received: <xmr:b5DlaLDm4pcu2ylwja9NrL0rNHgz-nMt9E9nJeIXLz4BkPsmM7hxOGCpBNf4DxyQWyYWooX0fDphdClvyLqJP9q7WjwQ67vaVWhS4A0e40bk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddutdduheelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
+    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptg
+    gvlheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:b5DlaFUt0xjXEEh-NI4PXGEuwUNPKVPRMwP_wlAyPveFfr538sdRQw>
+    <xmx:b5DlaPoKTh8Yc92HFvfWO1rVJhqSsAx-GjiQZuhFR-WSFomyYHPhVg>
+    <xmx:b5DlaBSkadA_yk_UMPKR03kMqLNLPS_7TTBo3lT8Ei_9eZZf5xnbkg>
+    <xmx:b5DlaJ3PPc8Pwcahv6fFxEGTBp6ZctHDiCSGfDayXO9fvINWg5PFmw>
+    <xmx:b5DlaGm_xskLgfIdCt36zo64tdKNjDPM7Kfier3HM2bD0fFS-Dy6yeBX>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 7 Oct 2025 18:13:01 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] NFSD: Do not cache solo SEQUENCE operations
+In-reply-to: <98277504-3d4b-4aff-9810-1847e6bf4030@oracle.com>
+References: <20251007160413.4953-1-cel@kernel.org>,
+ <20251007160413.4953-4-cel@kernel.org>,
+ <98277504-3d4b-4aff-9810-1847e6bf4030@oracle.com>
+Date: Wed, 08 Oct 2025 09:12:53 +1100
+Message-id: <175987517335.1793333.17851849438303159693@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: Joshua Watt <jpewhacker@gmail.com>
+On Wed, 08 Oct 2025, Chuck Lever wrote:
+> On 10/7/25 12:04 PM, Chuck Lever wrote:
+> >  RFC 8881 Section 2.10.6.1.3 says:
+> > 
+> >> On a per-request basis, the requester can choose to direct the
+> >> replier to cache the reply to all operations after the first
+> >> operation (SEQUENCE or CB_SEQUENCE) via the sa_cachethis or
+> >> csa_cachethis fields of the arguments to SEQUENCE or CB_SEQUENCE.
+> > RFC 8881 Section 2.10.6.4 further says:
+> > 
+> >> If sa_cachethis or csa_cachethis is TRUE, then the replier MUST
+> >> cache a reply except if an error is returned by the SEQUENCE or
+> >> CB_SEQUENCE operation (see Section 2.10.6.1.2).
+> > This suggests to me that the spec authors do not expect an NFSv4.1
+> > server implementation to ever cache the result of a SEQUENCE
+> > operation (except perhaps as part of a successful multi-operation
+> > COMPOUND).
+> > 
+> > NFSD attempts to cache the result of solo SEQUENCE operations,
+> > however. This is because the protocol does not permit servers to
+> > respond to a SEQUENCE with NFS4ERR_RETRY_UNCACHED_REP. If the server
+> > always caches solo SEQUENCE operations, then it never has occasion
+> > to return that status code.
+> > 
+> > However, clients use solo SEQUENCE to query the current status of a
+> > session slot. A cached reply will return stale information to the
+> > client, and could result in an infinite loop.
+> 
+> The pynfs SEQ9f test is now failing with this change. This test:
+> 
+> - Sends a CREATE_SESSION
+> - Sends a solo SEQUENCE with sa_cachethis set
+> - Sends the same operation without changing the slot sequence number
+> 
+> The test expects the server's response to be NFS4_OK. NFSD now returns
+> NFS4ERR_SEQ_FALSE_RETRY instead.
+> 
+> It's possible the test is wrong, but how should it be fixed?
+> 
+> Is it compliant for an NFSv4.1 server to ignore sa_cachethis for a
+> COMPOUND containing a solo SEQUENCE?
+> 
+> When reporting a retransmitted solo SEQUENCE, what is the correct status
+> code?
 
-The setting of delay_retrans is applied to synchronous RPC operations
-because the retransmit count is stored in same struct nfs4_exception
-that is passed each time an error is checked. However, for asynchronous
-operations (READ, WRITE, LOCKU, CLOSE, DELEGRETURN), a new struct
-nfs4_exception is made on the stack each time the task callback is
-invoked. This means that the retransmit count is always zero and thus
-delay_retrans never takes effect.
+Interesting question....
+To help with context: you wrote:
 
-Apply delay_retrans to these operations by tracking and updating their
-retransmit count.
+   However, clients use solo SEQUENCE to query the current status of a
+   session slot.  A cached reply will return stale information to the
+   client, and could result in an infinite loop.
 
-Change-Id: Ieb33e046c2b277cb979caa3faca7f52faf0568c9
-Signed-off-by: Joshua Watt <jpewhacker@gmail.com>
----
- fs/nfs/nfs4proc.c       | 13 +++++++++++++
- include/linux/nfs_xdr.h |  1 +
- 2 files changed, 14 insertions(+)
+Could you please expand on that?  What in the reply might be stale, and
+how might that result in an infinite loop?
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index f58098417142..411776718494 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3636,6 +3636,7 @@ struct nfs4_closedata {
- 	} lr;
- 	struct nfs_fattr fattr;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- };
- 
- static void nfs4_free_closedata(void *data)
-@@ -3664,6 +3665,7 @@ static void nfs4_close_done(struct rpc_task *task, void *data)
- 		.state = state,
- 		.inode = calldata->inode,
- 		.stateid = &calldata->arg.stateid,
-+		.retrans = calldata->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
-@@ -3711,6 +3713,7 @@ static void nfs4_close_done(struct rpc_task *task, void *data)
- 		default:
- 			task->tk_status = nfs4_async_handle_exception(task,
- 					server, task->tk_status, &exception);
-+			calldata->retrans = exception.retrans;
- 			if (exception.retry)
- 				goto out_restart;
- 	}
-@@ -5593,9 +5596,11 @@ static int nfs4_read_done_cb(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 			.inode = hdr->inode,
- 			.state = hdr->args.context->state,
- 			.stateid = &hdr->args.stateid,
-+			.retrans = hdr->retrans,
- 		};
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				server, task->tk_status, &exception);
-+		hdr->retrans = exception.retrans;
- 		if (exception.retry) {
- 			rpc_restart_call_prepare(task);
- 			return -EAGAIN;
-@@ -5709,10 +5714,12 @@ static int nfs4_write_done_cb(struct rpc_task *task,
- 			.inode = hdr->inode,
- 			.state = hdr->args.context->state,
- 			.stateid = &hdr->args.stateid,
-+			.retrans = hdr->retrans,
- 		};
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				NFS_SERVER(inode), task->tk_status,
- 				&exception);
-+		hdr->retrans = exception.retrans;
- 		if (exception.retry) {
- 			rpc_restart_call_prepare(task);
- 			return -EAGAIN;
-@@ -6726,6 +6733,7 @@ struct nfs4_delegreturndata {
- 	struct nfs_fh fh;
- 	nfs4_stateid stateid;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- 	struct {
- 		struct nfs4_layoutreturn_args arg;
- 		struct nfs4_layoutreturn_res res;
-@@ -6746,6 +6754,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
- 		.inode = data->inode,
- 		.stateid = &data->stateid,
- 		.task_is_privileged = data->args.seq_args.sa_privileged,
-+		.retrans = data->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &data->res.seq_res))
-@@ -6817,6 +6826,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				data->res.server, task->tk_status,
- 				&exception);
-+		data->retrans = exception.retrans;
- 		if (exception.retry)
- 			goto out_restart;
- 	}
-@@ -7093,6 +7103,7 @@ struct nfs4_unlockdata {
- 	struct file_lock fl;
- 	struct nfs_server *server;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- };
- 
- static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
-@@ -7147,6 +7158,7 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
- 	struct nfs4_exception exception = {
- 		.inode = calldata->lsp->ls_state->inode,
- 		.stateid = &calldata->arg.stateid,
-+		.retrans = calldata->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
-@@ -7180,6 +7192,7 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
- 			task->tk_status = nfs4_async_handle_exception(task,
- 					calldata->server, task->tk_status,
- 					&exception);
-+			calldata->retrans = exception.retrans;
- 			if (exception.retry)
- 				rpc_restart_call_prepare(task);
- 	}
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index d56583572c98..31463286402f 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1659,6 +1659,7 @@ struct nfs_pgio_header {
- 	void			*netfs;
- #endif
- 
-+	unsigned short		retrans;
- 	int			pnfs_error;
- 	int			error;		/* merge with pnfs_error */
- 	unsigned int		good_bytes;	/* boundary of good data */
--- 
-2.51.0
+Could a reply to a replayed singleton SEQUENCE simple always return the
+current info, rather than cached info?
 
+Thanks,
+NeilBrown
 
