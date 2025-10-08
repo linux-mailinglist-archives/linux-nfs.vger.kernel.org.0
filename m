@@ -1,177 +1,181 @@
-Return-Path: <linux-nfs+bounces-15053-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6AD8BC57AB
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 16:49:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD9D8BC5818
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 17:03:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0A9319E1309
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 14:50:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E57F189FD8C
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 15:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5ABC2EC562;
-	Wed,  8 Oct 2025 14:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B25920B81B;
+	Wed,  8 Oct 2025 15:03:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqCOyJXR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skzBgPik"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8A32EC09A
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 14:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FD81AA1D2
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 15:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759934975; cv=none; b=RIQZaCLpmnmvITtu0frwkeejUd2PaUfGixCr+dhmycQDMyEAMv6sE2BHECYXkJBylrFmYfr3uLUHUgwrx6EJn9TkzaYy/vcqxwwpkrMfv5PmHG88YQvBDN0UBxqqJYp4998xbT3dTPsa09sKtY9X0JPwYtI/17Bdz4hn8gFjX9Q=
+	t=1759935817; cv=none; b=J7Lo+2N2kAvDV5xE6m/legKUdW4o6T7sNJuE3oWAcsI/Kk3a82ypfx6GmtRnrATKFru8ezEUjorXv9IeDuEA3LyZsXwohuB3xR4hviid0ly8jwJmMQvrgBNd0AljTzSOwxkpLR32VUtaeHEtpPPNYNlkqU5K4/pSBpAl5JTDUu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759934975; c=relaxed/simple;
-	bh=2oz4055tSs+ZLXmvAtmckJ9z5uGepgRmiB+RNzcDoZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jXuNOb02ctI4fSvwPBOLmR0E/KMfo6hk6SZHgF353n3u0DzDw6Adu8H6KKO335mz/ZxaJ/KtoOnhsnqAxKNVf3nR5YnTsqbHvqgF7upvUtS+H5LWC9luejHFehrQu3mMUcitpqE6Xf0g9uE5UmYpo3EJmT/bR7hr9ljw7XlB66Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqCOyJXR; arc=none smtp.client-ip=74.125.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-633be3be1e6so1539666d50.1
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Oct 2025 07:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759934972; x=1760539772; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lcyaXLUPShgmIDCl33cHm/vwKuNgk2xrFWZ6LINoljM=;
-        b=fqCOyJXR+xxnYM34HBhJfbxalqBTWYYIDFA+INmQykJpkFZ2+KiTrqJ/37pyAP1FTx
-         QlJx8tvA647GFwCJ67FOKkbmfKemsC7wvb6Mmeyc7WAg7lwbLD4APo0QhX+thwdZfO15
-         vjpKl+7JkxbvcXHcuKjd3OSbPi2Oexpgf2EyGluNjgcYIe9TF3PbszAWxOUjXjF61PUb
-         7YWOA+Dt8NK3nhuUHwe6P5K3tduixazIORhkGl7qptxKpKMxXOxPhY945iLxMuzptFeT
-         +d/K6kG8Ejda4+Z1AoA7rJhTpUmbsgbhaHv5ss7JpcVxm4Qc6gyOuVff8xPtMDsKLEn4
-         /TZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759934972; x=1760539772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lcyaXLUPShgmIDCl33cHm/vwKuNgk2xrFWZ6LINoljM=;
-        b=TG8ButDxKojqBVBuz3Sfn85VHL8uQ/sPYesNQybG6oH+MBwTyHsDQpc4R6sPOErj5I
-         mLGB62lm48GN1NY5bcyBw1UZpi3HoEneEhSGJ0wKMHcWZy3laGyhiWd8txwEZKe3tqkJ
-         LWjoLVw8BKBpLEAwxQP56R+02UdDbbxequCGP3uvTK0grZr1SQmxiOO/BWSkW+GzwOk/
-         ZiVJJSKyu0OIrnJEWwZyAWYWdaEb2GswJCVgugRmqECwz5VP3pei1vyzwdRyio/IBrpz
-         LoUGLnp5yjzbj98djJtmEb/ZSRBbHRxF6YMUrZ34HwBX/pLAa3vsXqhwnLoHr8+ypi67
-         md2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXIVJeJcvQq4e9fQwHsj6ha/cMDKC5mssX7QW/9tVsN3ItRyeVLBwjawSJ7MBYF/pniurLsHOzw6nY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBUQpLQ6AV1zRw6KHUAHvZ7zQSmYmmA6Cl2Il4udxxUP1/2/P0
-	8i83zU0q5rOkPK3MvqZkT9vHnmPtbzpFfnieaOU21OGZaGAN+cGdrXHm44T0Q8su3B6M+WDwVlV
-	TKKF6WzRChAQqFi4YHOTK+tYC3BnQObw=
-X-Gm-Gg: ASbGncvpvEdT/4puc9yIVnz6BQZbq+bp9H1rp4cr9loZo7TP/4VX6t6DBuxFbZ80tRs
-	JSUd9Eykp20PGs/0U8odFVJI9cZ372rp97usYtn6L92TqiSZw8v7B8vK0ME/1iMP4zwCJztN0Cm
-	Ef/bA54xbrOpocNu1Nm6rTIluljQKxFxfXMAz10qEe3NTGFqszr8zyKXaApa3UAiMtrjZdKQ1UK
-	NfI8QK1H6Qwo0q20owCnds0JcM2lFKH4iJRRMsaK3okbQ==
-X-Google-Smtp-Source: AGHT+IEEvRqkuJ82Z/1uDguuR+kVgtpAwObB6vWeI3q8N/eP1FxDL09AonZPB36dClmDoJcAb7GULptIPduQRTZOjdw=
-X-Received: by 2002:a53:b847:0:b0:635:4ecf:f0ce with SMTP id
- 956f58d0204a3-63cbe14cc08mr6282876d50.26.1759934971823; Wed, 08 Oct 2025
- 07:49:31 -0700 (PDT)
+	s=arc-20240116; t=1759935817; c=relaxed/simple;
+	bh=Bwiyt4SZ8XEeqO9Ev6yZUqdWT5jsI5Vg51ez/Wzkfz4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XESKZQMSVBhGxPciEqqnkBX/Mo5sYXt7DTzrxflqO3EpAo5c47rEjqsRB3WVOREKYvWREjI7fRj1nsXNlDqTNhjyXwkFCmeVTSXiEt97qhJdHu073xsx3/NP5j/VxOYqI+W1KSLIuW/UOiTunO7ATnyJu+BJ/CMAXfgZu9szc+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skzBgPik; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4BAAC4CEE7;
+	Wed,  8 Oct 2025 15:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759935816;
+	bh=Bwiyt4SZ8XEeqO9Ev6yZUqdWT5jsI5Vg51ez/Wzkfz4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=skzBgPikr279U3MmulucCxmsBGpPQrdm5dqnjAM8JmsDAdv6wZU1nZOLcU6beaV7N
+	 fXj1kmVO3iSQIefFl/Gqzpovej4tz7VcdiDEbK6L3BZvxtR+plauGWv+KRC5wB+iJ+
+	 Z7FZxBnsfr/N1C9n9IACC8CVUp9t/s7/mr9ikJDmud6H73cdiQc7Si5g0pniWPrm7Q
+	 FmErdH6cEasHbarSUCWWI+7KUEldHWcXHJ+Wp62hEy+oHmosAIsTn7su1HQO3874Zz
+	 xL0HcUwH+JGlK+Do2HpJEmBLBNdTVqJ8IJt1Gw3wiem0ypaWljDAv0BrlG3HuEQkyY
+	 AO3mTuQBzZxCQ==
+Message-ID: <c8ad0a617abedab46e2ca369cddaa1823a439d33.camel@kernel.org>
+Subject: Re: [PATCH v6 3/6] NFSD: Recover from vfs_getattr() failure in
+ nfsd_file_get_dio_attrs()
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Wed, 08 Oct 2025 11:03:34 -0400
+In-Reply-To: <20251008135230.2629-4-cel@kernel.org>
+References: <20251008135230.2629-1-cel@kernel.org>
+	 <20251008135230.2629-4-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241121100539.605818-1-jimzhao.ai@gmail.com> <20251007161711.468149-1-JPEWhacker@gmail.com>
- <ywwhwyc4el6vikghnd5yoejteld6dudemta7lsrtacvecshst5@avvpac27felp>
-In-Reply-To: <ywwhwyc4el6vikghnd5yoejteld6dudemta7lsrtacvecshst5@avvpac27felp>
-From: Joshua Watt <jpewhacker@gmail.com>
-Date: Wed, 8 Oct 2025 08:49:20 -0600
-X-Gm-Features: AS18NWCpKHFseMz7HnNNaZWGPOtA5ZcFiGPgcQxn7wnVm-h7S75ViS7O41MSTZM
-Message-ID: <CAJdd5GY1mmi83V8DyiUJSZoLRVhUz_hY=qR-SjZ8Ss9bxQ002w@mail.gmail.com>
-Subject: Re: [PATCH] mm/page-writeback: Consolidate wb_thresh bumping logic
- into __wb_calc_thresh
-To: Jan Kara <jack@suse.cz>
-Cc: jimzhao.ai@gmail.com, akpm@linux-foundation.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 8, 2025 at 5:14=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
->
-> Hello!
->
-> On Tue 07-10-25 10:17:11, Joshua Watt wrote:
-> > From: Joshua Watt <jpewhacker@gmail.com>
-> >
-> > This patch strangely breaks NFS 4 clients for me. The behavior is that =
-a
-> > client will start getting an I/O error which in turn is caused by the c=
-lient
-> > getting a NFS3ERR_BADSESSION when attempting to write data to the serve=
-r. I
-> > bisected the kernel from the latest master
-> > (9029dc666353504ea7c1ebfdf09bc1aab40f6147) to this commit (log below). =
-Also,
-> > when I revert this commit on master the bug disappears.
-> >
-> > The server is running kernel 5.4.161, and the client that exhibits the
-> > behavior is running in qemux86, and has mounted the server with the opt=
-ions
-> > rw,relatime,vers=3D4.1,rsize=3D1048576,wsize=3D1048576,namlen=3D255,sof=
-t,proto=3Dtcp,port=3D52049,timeo=3D600,retrans=3D2,sec=3Dnull,clientaddr=3D=
-172.16.6.90,local_lock=3Dnone,addr=3D172.16.6.0
-> >
-> > The program that I wrote to reproduce this is pretty simple; it does a =
-file
-> > lock over NFS, then writes data to the file once per second. After abou=
-t 32
-> > seconds, it receives the I/O error, and this reproduced every time. I c=
-an
-> > provide the sample program if necessary.
->
-> This is indeed rather curious.
->
-> > I also captured the NFS traffic both in the passing case and the failur=
-e case,
-> > and can provide them if useful.
-> >
-> > I did look at the two dumps and I'm not exactly sure what the differenc=
-e is,
-> > other than with this patch the client tries to write every 30 seconds (=
-and
-> > fails), where as without it attempts to write back every 5 seconds. I h=
-ave no
-> > idea why this patch would cause this problem.
->
-> So the change in writeback behavior is not surprising. The commit does
-> modify the logic computing dirty limits in some corner cases and your
-> description matches the fact that previously the computed limits were low=
-er
-> so we've started writeback after 5s (dirty_writeback_interval) while with
-> the patch we didn't cross the threshold and thus started writeback only
-> once the dirty data was old enough, which is 30s (dirty_expire_interval).
->
-> But that's all, you should be able to observe exactly the same writeback
-> behavior if you write less even without this patch. So I suspect that the
-> different writeback behavior is just triggering some bug in the NFS (eith=
-er
-> on the client or the server side). The NFS3ERR_BADSESSION error you're
-> getting back sounds like something times out somewhere, falls out of cach=
-e
-> and reports this error (which doesn't happen if we writeback after 5s
-> instead of 30s). NFS guys maybe have better idea what's going on here.
->
-> You could possibly workaround this problem (and verify my theory) by tuni=
-ng
-> /proc/sys/vm/dirty_expire_centisecs to a lower value (say 500). This will
-> make inode writeback start earlier and thus should effectively mask the
-> problem again.
+On Wed, 2025-10-08 at 09:52 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> A vfs_getattr() failure is rare but not totally impossible. It
+> typically means nfsd_do_file_acquire() raced with the file system
+> being shut down. Ensure the nfsd_file is not leaked in this case.
+>=20
 
-Changing /proc/sys/vm/dirty_expire_centisecs did indeed prevent the
-issue from occurring. As an experiment, I tried to see what the lowest
-value I could use that worked, and it was also 500. Even setting it to
-600 would cause it to error out eventually. This would indicate to me
-a server problem (which is unfortunate because that's much harder for
-me to debug), but perhaps the NFS folks could weigh in.
+nit: I'm not sure we can say what typically causes vfs_getattr() to
+fail. It really depends on the fs.
 
->
->                                                                 Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> Fixes: d11f6cd1bb4a ("NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_R=
+EAD_ALIGN support")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/filecache.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index a238b6725008..482feb0b55ad 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1198,8 +1198,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
+t net *net,
+>  			}
+>  			status =3D nfserrno(ret);
+>  			trace_nfsd_file_open(nf, status);
+> -			if (status =3D=3D nfs_ok)
+> +			if (status =3D=3D nfs_ok) {
+>  				status =3D nfsd_file_get_dio_attrs(fhp, nf);
+> +				if (status !=3D nfs_ok)
+> +					goto construction_err;
+> +			}
+>  		}
+>  	} else
+>  		status =3D nfserr_jukebox;
+
+Is there really a leak here? It looks to me that when status !=3D nfs_ok,
+it's going to fall through to construction_err anyway. What this does
+do is cause nfsd_file_unhash() to not be called. Do we want to leave
+the file hashed in this case?
 
