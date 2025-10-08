@@ -1,172 +1,366 @@
-Return-Path: <linux-nfs+bounces-15062-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15063-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C48FBC6661
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 21:01:26 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2502BC6652
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 20:59:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3386D3BD253
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 18:59:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B37BC4E846D
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 18:59:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F74E2C21E1;
-	Wed,  8 Oct 2025 18:59:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4942C15AC;
+	Wed,  8 Oct 2025 18:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV0EupLV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZUcE4ie"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70692C21DA;
-	Wed,  8 Oct 2025 18:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FDD2C15A6
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 18:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759949953; cv=none; b=Tl+omA48Idh+eqbje94QMNqKQN6za2a4ri8GHzJ1smDlS3mEl+A5yhwBMLMXOCp152Mb2mZwF4dQjGcDUeJjqKQYZdpd0oY8omKLGU1gx5x4ZGmJWWxjS3d6CPL7k5h+dtWedP9ibmFCc0oJA0I2CmdrFxB180pZQtzY7nUpH7M=
+	t=1759949966; cv=none; b=f/T8Cha786WF7GXy4Z42HLbQljONRiIJ71yTZkAm8N9RVe0hMQfUL/4bYhFTZI3z7u7GyjF0deZFmCBVnU/4nAP7CLxYkLgbfj2Wbw/59LlU5UeGZe0nSAPBRLqcStpS/rGr+SOHArXmwtNKRBx7KTto3UzwKl9KVDip32EEdp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759949953; c=relaxed/simple;
-	bh=UiVGnSi7V58UwvWYVwmNngyeBVLlQrbzs8iMIl+lk7U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UfuRq91ii8OVXGE8KFUvasF94lV1GrLKkLXwFwU0EaMe2F/6+OM51ffQDIYtpX1gFkzZ2ZCcYV2UMS2D3gFMA3vPOOBYu+LGVg2lFpbiZBVmDQ4dGPi7grVFrRsr3gYocd2qKR84nW5ZjYIFUmpMMthuoMxRXWiOsL3QqEaoq5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV0EupLV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE9FC4CEF4;
-	Wed,  8 Oct 2025 18:59:10 +0000 (UTC)
+	s=arc-20240116; t=1759949966; c=relaxed/simple;
+	bh=sJCbO7qegs/POeQDNhNBKSWUrhvztOZ3c+Tvc/NtwWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QXSWr/ikjx1n5dstjXYBTGcXQoy7Nk0PsO+uZq/ScOpxA3IYTLZFYE4OojA6XhaYKD5LKdhHUL8S2K2rrCV6ze7z8sPj/wvth5woPn959fOLNokuZ7DiiH0VZBlAPnzUVNlKG4cM7mO2dfH9brAMlCzexHqIvYv1fngV5cDuuZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZUcE4ie; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02158C4CEE7;
+	Wed,  8 Oct 2025 18:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759949952;
-	bh=UiVGnSi7V58UwvWYVwmNngyeBVLlQrbzs8iMIl+lk7U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WV0EupLV8NGMMmqprWMPf7WDJtFoCP8mFFeGCh3VEVW36C2XsQw28Pn502HLgofog
-	 AodP0oTYDP+3V3qeMislpdw79CcSVz9QxyDMZmSWvZr3DHyotfU52sDMFE5cd9O+EJ
-	 WwBnycJufiAE3kGwtj19UXam04bwQFiWQs0BPB2O7p0tisbgxrGjhEXhmPQ2l+eGDt
-	 v0LmvYDtlrp0XJTE/SXD6Bru0KMy8D+tirnRYdDbAYoG/V6Ee9I68fUVWYDSrlVeFG
-	 wGqyHgC3NRzMyZUMQ601ujfnURsYRlODyRvvi31C68QQ29AE51O/qk+QWimiMtCLAC
-	 8prGWOYirsTww==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 08 Oct 2025 14:58:53 -0400
-Subject: [PATCH 2/2] sunrpc: add a slot to rqstp->rq_bvec for TCP record
- marker
+	s=k20201202; t=1759949964;
+	bh=sJCbO7qegs/POeQDNhNBKSWUrhvztOZ3c+Tvc/NtwWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HZUcE4ie1bDV2l3+5HfPwRk+qG8KrFC5roC091jClU5wbNQGZJBL7EBfxdO14EFO3
+	 cq5t8bKY3HlpdNDwau7QEh4fzXc9gJY0RFr9FbA6BN7zccgZma03gao6us7owyzQTe
+	 16hK5CCCh8t1F5k1+Kj5OTMAXgou8BlB0AicMqUr2x6bs/teoC3x2GrgPdVNYs8Lcx
+	 qG/+WvS90vJDVVHg7Vm6oasZpQA8lO014cpsnz7T8fV8lZ9oy0pARJzvCx5NZMzhex
+	 C/ryM1caTI+moRMOPPrX957zpvg9RZSNBvOCkq8dfYCzQtLDzBEt1FH0Wf4ECtaRdG
+	 8u5f41wKen9nw==
+Date: Wed, 8 Oct 2025 14:59:22 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aOa0ijW1h-1tynWD@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251008-rq_bvec-v1-2-7f23d32d75e5@kernel.org>
-References: <20251008-rq_bvec-v1-0-7f23d32d75e5@kernel.org>
-In-Reply-To: <20251008-rq_bvec-v1-0-7f23d32d75e5@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- David Howells <dhowells@redhat.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3543; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=UiVGnSi7V58UwvWYVwmNngyeBVLlQrbzs8iMIl+lk7U=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo5rR5tQ0FvTVZCbZfd0an2dxVjsmqXo5gRpOMP
- 5txDP3gnmuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaOa0eQAKCRAADmhBGVaC
- FTJoEADGiBU2q9VGU1AXdgokO8glagusbBXI/NLtYb3MNyAK0KrtjnBtjAj+5G/fm+5pgVZhnEh
- +U6dal1ux6vlGXoEq5wMq8t/1NXkhHV2BULWKd5fOGZddPHb2jR5Q5qW4i6D9BH7aO1r2iCk9uZ
- ODktXhoqZoGj5DZ/dCveubpWE+7J0z6SccZQI+4Y1ym8Kgw2rsWgL9ENM/D6MRZt4MCw8O9i7+u
- +yPdFPBGqzf4sZz1vhb3V6Zca/Ntk3jnourKvN9ZRUUjg1+OdBXVvPjI8+leOpgkApKfF4lDK+N
- vhXztVG4wgmMsZr1Hv3axRnOEpTevbOq0eeRSKbHf4VLGTKQk0IKbfY+lXOf28cZFwCEpePSkIK
- Sl+C76b0d27BSXIFMu83g1g+Sjr38I76EQYB+FkO9J6GFduXCMkFEkcFYVH5aDlY0nL2vJoicdM
- KtBxn3PlbffXh+KVQ8ao6qJBChDiQUbOL29BpNi2Eqb1X1Br2nVi7qzL51Mhz04WxiSAK5n4KKY
- ANk/Y+YDwYaTG7Kk/qs7g/ULonQSXLNxK+8iaX64gisAslxbk1yobGQgGEWTtwsDIRdsKrR9hVN
- o35IVJT26MbCFAuzUPWf7N/7N4SR5eT0jIkqyvgjcB5gw5X9STbh0GVU9EYvFLubblR0VuKD/GU
- uDODuWnKbUND8nA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909233315.80318-3-snitzer@kernel.org>
 
-svc_tcp_sendmsg steals a slot in the rq_bvec array for the TCP record
-marker. If the send is an unaligned READ call though, then there may not
-be enough slots in the rq_bvec array.
+If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+middle and end as needed. The large middle extent is DIO-aligned and
+the start and/or end are misaligned. Buffered IO (with preference
+towards using DONTCACHE) is used for the misaligned extents and
+O_DIRECT is used for the middle DIO-aligned extent.
 
-Add a slot to the rq_bvec array, and fix up the array length
-calculations.
+If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+invalidate the page cache on behalf of the DIO WRITE, then
+nfsd_issue_write_dio() will fall back to using buffered IO.
 
-Fixes: e18e157bb5c8 ("SUNRPC: Send RPC message on TCP with a single sock_sendmsg() call")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+These changes served as the original starting point for the NFS
+client's misaligned O_DIRECT support that landed with commit
+c817248fc831 ("nfs/localio: add proper O_DIRECT support for READ and
+WRITE"). But NFSD's support is simpler because it currently doesn't
+use AIO completion.
+
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/vfs.c        | 6 +++---
- net/sunrpc/svc.c     | 3 ++-
- net/sunrpc/svcsock.c | 4 ++--
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ fs/nfsd/debugfs.c |   1 +
+ fs/nfsd/trace.h   |   1 +
+ fs/nfsd/vfs.c     | 210 ++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 207 insertions(+), 5 deletions(-)
 
+changes in v2:
+- add improved -EINVAL logging that matches latest DIO READ support
+- update patch header
+
+diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+index 00eb1ecef6ac..7f44689e0a53 100644
+--- a/fs/nfsd/debugfs.c
++++ b/fs/nfsd/debugfs.c
+@@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
+ 	switch (val) {
+ 	case NFSD_IO_BUFFERED:
+ 	case NFSD_IO_DONTCACHE:
++	case NFSD_IO_DIRECT:
+ 		nfsd_io_cache_write = val;
+ 		break;
+ 	default:
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index bfd41236aff2..ad74439d0105 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
+ DEFINE_NFSD_IO_EVENT(read_done);
+ DEFINE_NFSD_IO_EVENT(write_start);
+ DEFINE_NFSD_IO_EVENT(write_opened);
++DEFINE_NFSD_IO_EVENT(write_direct);
+ DEFINE_NFSD_IO_EVENT(write_io_done);
+ DEFINE_NFSD_IO_EVENT(write_done);
+ DEFINE_NFSD_IO_EVENT(commit_start);
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 77f6879c2e063fa79865100bbc2d1e64eb332f42..c4e9300d657cf7fdba23f2f4e4bdaad9cd99d1a3 100644
+index 4ae08065debf..2420f568b378 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1111,7 +1111,7 @@ nfsd_direct_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+@@ -1254,6 +1254,203 @@ static int wait_for_concurrent_writes(struct file *file)
+ 	return err;
+ }
  
- 	v = 0;
- 	total = dio_end - dio_start;
--	while (total && v < rqstp->rq_maxpages &&
-+	while (total && v < rqstp->rq_maxpages + 1 &&
- 	       rqstp->rq_next_page < rqstp->rq_page_end) {
- 		len = min_t(size_t, total, PAGE_SIZE);
- 		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
-@@ -1200,7 +1200,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	v = 0;
- 	total = *count;
--	while (total && v < rqstp->rq_maxpages &&
-+	while (total && v < rqstp->rq_maxpages + 1 &&
- 	       rqstp->rq_next_page < rqstp->rq_page_end) {
- 		len = min_t(size_t, total, PAGE_SIZE - base);
- 		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
-@@ -1318,7 +1318,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (stable && !fhp->fh_use_wgather)
++struct nfsd_write_dio {
++	ssize_t	start_len;	/* Length for misaligned first extent */
++	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
++	ssize_t	end_len;	/* Length for misaligned last extent */
++};
++
++static bool
++nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
++		       struct nfsd_file *nf, struct nfsd_write_dio *write_dio)
++{
++	const u32 dio_blocksize = nf->nf_dio_offset_align;
++	loff_t start_end, orig_end, middle_end;
++
++	if (unlikely(!nf->nf_dio_mem_align || !dio_blocksize))
++		return false;
++	if (unlikely(dio_blocksize > PAGE_SIZE))
++		return false;
++	if (unlikely(len < dio_blocksize))
++		return false;
++
++	start_end = round_up(offset, dio_blocksize);
++	orig_end = offset + len;
++	middle_end = round_down(orig_end, dio_blocksize);
++
++	write_dio->start_len = start_end - offset;
++	write_dio->middle_len = middle_end - start_end;
++	write_dio->end_len = orig_end - middle_end;
++
++	return true;
++}
++
++static bool nfsd_iov_iter_aligned_bvec(const struct iov_iter *i,
++		unsigned int addr_mask, unsigned int len_mask)
++{
++	const struct bio_vec *bvec = i->bvec;
++	size_t skip = i->iov_offset;
++	size_t size = i->count;
++
++	if (size & len_mask)
++		return false;
++	do {
++		size_t len = bvec->bv_len;
++
++		if (len > size)
++			len = size;
++		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
++			return false;
++		bvec++;
++		size -= len;
++		skip = 0;
++	} while (size);
++
++	return true;
++}
++
++/*
++ * Setup as many as 3 iov_iter based on extents described by @write_dio.
++ * Returns the number of iov_iter that were setup.
++ */
++static int
++nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
++			   struct bio_vec *rq_bvec, unsigned int nvecs,
++			   unsigned long cnt, struct nfsd_write_dio *write_dio,
++			   struct nfsd_file *nf)
++{
++	int n_iters = 0;
++	struct iov_iter *iters = *iterp;
++
++	/* Setup misaligned start? */
++	if (write_dio->start_len) {
++		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++		iters[n_iters].count = write_dio->start_len;
++		iter_is_dio_aligned[n_iters] = false;
++		++n_iters;
++	}
++
++	/* Setup DIO-aligned middle */
++	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++	if (write_dio->start_len)
++		iov_iter_advance(&iters[n_iters], write_dio->start_len);
++	iters[n_iters].count -= write_dio->end_len;
++	iter_is_dio_aligned[n_iters] =
++		nfsd_iov_iter_aligned_bvec(&iters[n_iters],
++				nf->nf_dio_mem_align-1, nf->nf_dio_offset_align-1);
++	if (unlikely(!iter_is_dio_aligned[n_iters]))
++		return 0; /* no DIO-aligned IO possible */
++	++n_iters;
++
++	/* Setup misaligned end? */
++	if (write_dio->end_len) {
++		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
++		iov_iter_advance(&iters[n_iters],
++				 write_dio->start_len + write_dio->middle_len);
++		iter_is_dio_aligned[n_iters] = false;
++		++n_iters;
++	}
++
++	return n_iters;
++}
++
++static int
++nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
++		    unsigned int nvecs, unsigned long *cnt,
++		    struct kiocb *kiocb)
++{
++	struct iov_iter iter;
++	int host_err;
++
++	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
++	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
++	if (host_err < 0)
++		return host_err;
++	*cnt = host_err;
++
++	return 0;
++}
++
++static int
++nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
++		     loff_t offset, unsigned int nvecs, unsigned long *cnt,
++		     struct kiocb *kiocb, struct nfsd_write_dio *write_dio)
++{
++	struct file *file = nf->nf_file;
++	bool iter_is_dio_aligned[3];
++	struct iov_iter iter_stack[3];
++	struct iov_iter *iter = iter_stack;
++	unsigned int n_iters = 0;
++	unsigned long in_count = *cnt;
++	loff_t in_offset = kiocb->ki_pos;
++	ssize_t host_err;
++
++	n_iters = nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
++				rqstp->rq_bvec, nvecs, *cnt, write_dio, nf);
++	if (unlikely(!n_iters))
++		return nfsd_buffered_write(rqstp, file, nvecs, cnt, kiocb);
++
++	*cnt = 0;
++	for (int i = 0; i < n_iters; i++) {
++		if (iter_is_dio_aligned[i])
++			kiocb->ki_flags |= IOCB_DIRECT;
++		else
++			kiocb->ki_flags &= ~IOCB_DIRECT;
++
++		host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
++		if (host_err < 0) {
++			/* VFS will return -ENOTBLK if DIO WRITE fails to
++			 * invalidate the page cache. Retry using buffered IO.
++			 */
++			if (unlikely(host_err == -ENOTBLK)) {
++				kiocb->ki_flags &= ~IOCB_DIRECT;
++				*cnt = in_count;
++				kiocb->ki_pos = in_offset;
++				return nfsd_buffered_write(rqstp, file,
++							   nvecs, cnt, kiocb);
++			} else if (unlikely(host_err == -EINVAL)) {
++				struct inode *inode = d_inode(fhp->fh_dentry);
++
++				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n",
++						    inode->i_sb->s_id, inode->i_ino);
++				host_err = -ESERVERFAULT;
++			}
++			return host_err;
++		}
++		*cnt += host_err;
++		if (host_err < iter[i].count) /* partial write? */
++			break;
++	}
++
++	return 0;
++}
++
++static noinline_for_stack int
++nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
++		  struct nfsd_file *nf, loff_t offset, unsigned int nvecs,
++		  unsigned long *cnt, struct kiocb *kiocb)
++{
++	struct nfsd_write_dio write_dio;
++
++	/* Any buffered IO issued here will be misaligned, use
++	 * IOCB_SYNC to ensure it has completed before returning.
++	 */
++	kiocb->ki_flags |= IOCB_SYNC;
++	/* Check if IOCB_DONTCACHE should be used when issuing buffered IO;
++	 * if so, it will be ignored for any DIO issued here.
++	 */
++	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
++		kiocb->ki_flags |= IOCB_DONTCACHE;
++
++	if (nfsd_is_write_dio_possible(offset, *cnt, nf, &write_dio)) {
++		trace_nfsd_write_direct(rqstp, fhp, offset, *cnt);
++		return nfsd_issue_write_dio(rqstp, fhp, nf, offset, nvecs,
++					    cnt, kiocb, &write_dio);
++	}
++
++	return nfsd_buffered_write(rqstp, nf->nf_file, nvecs, cnt, kiocb);
++}
++
+ /**
+  * nfsd_vfs_write - write data to an already-open file
+  * @rqstp: RPC execution context
+@@ -1281,7 +1478,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct super_block	*sb = file_inode(file)->i_sb;
+ 	struct kiocb		kiocb;
+ 	struct svc_export	*exp;
+-	struct iov_iter		iter;
+ 	errseq_t		since;
+ 	__be32			nfserr;
+ 	int			host_err;
+@@ -1318,25 +1514,29 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
  		kiocb.ki_flags |= IOCB_DSYNC;
  
--	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-+	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages + 1, payload);
- 	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+ 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+-	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
++
  	since = READ_ONCE(file->f_wb_err);
  	if (verf)
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 4704dce7284eccc9e2bc64cf22947666facfa86a..919263a0c04e3f1afa607414bc1893ba02206e38 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -706,7 +706,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	if (!svc_init_buffer(rqstp, serv, node))
- 		goto out_enomem;
+ 		nfsd_copy_write_verifier(verf, nn);
  
--	rqstp->rq_bvec = kcalloc_node(rqstp->rq_maxpages,
-+	/* +1 for the TCP record marker */
-+	rqstp->rq_bvec = kcalloc_node(rqstp->rq_maxpages + 1,
- 				      sizeof(struct bio_vec),
- 				      GFP_KERNEL, node);
- 	if (!rqstp->rq_bvec)
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 377fcaaaa061463fc5c85fc09c7a8eab5e06af77..5f8bb11b686bcd7302b94476490ba9b1b9ddc06a 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -740,7 +740,7 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 	if (svc_xprt_is_dead(xprt))
- 		goto out_notconn;
- 
--	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, xdr);
-+	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages + 1, xdr);
- 
- 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
- 		      count, rqstp->rq_res.len);
-@@ -1244,7 +1244,7 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
- 	memcpy(buf, &marker, sizeof(marker));
- 	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
- 
--	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages - 1,
-+	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages,
- 				&rqstp->rq_res);
- 
- 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
-
+ 	switch (nfsd_io_cache_write) {
+-	case NFSD_IO_BUFFERED:
++	case NFSD_IO_DIRECT:
++		host_err = nfsd_direct_write(rqstp, fhp, nf, offset,
++					     nvecs, cnt, &kiocb);
+ 		break;
+ 	case NFSD_IO_DONTCACHE:
+ 		if (file->f_op->fop_flags & FOP_DONTCACHE)
+ 			kiocb.ki_flags |= IOCB_DONTCACHE;
++		fallthrough; /* must call nfsd_buffered_write */
++	case NFSD_IO_BUFFERED:
++		host_err = nfsd_buffered_write(rqstp, file,
++					       nvecs, cnt, &kiocb);
+ 		break;
+ 	}
+-	host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
+ 	if (host_err < 0) {
+ 		commit_reset_write_verifier(nn, rqstp, host_err);
+ 		goto out_nfserr;
+ 	}
+-	*cnt = host_err;
+ 	nfsd_stats_io_write_add(nn, exp, *cnt);
+ 	fsnotify_modify(file);
+ 	host_err = filemap_check_wb_err(file->f_mapping, since);
 -- 
-2.51.0
+2.44.0
 
 
