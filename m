@@ -1,195 +1,124 @@
-Return-Path: <linux-nfs+bounces-15076-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15077-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1041BC6BB2
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 00:03:30 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102F1BC6D61
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 01:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B352B4E376C
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 22:03:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9ACE04E38C7
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 23:09:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A0A23312D;
-	Wed,  8 Oct 2025 22:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE81B2C031E;
+	Wed,  8 Oct 2025 23:09:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="DtUxzgnd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eG21fxe+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKAg/AxV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2995274668
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 22:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBEA277C9B
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 23:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759961006; cv=none; b=VBhmFVcAV3J9WGdROPywh5GHdgqCPZwg6nWDuCigENMpi9mYUVf5kGgtQXhQ1xiW3bDN88A3r4QCnyA+jeyl+vP2okckMSaAdxzu58IZGsOUuFcDCTPjM+xKKYJoySLwOaeim2yzA4zxjcKVjUoN1bYXTRCfQOxoFl3LnOgH/Ts=
+	t=1759964987; cv=none; b=PwcfJaSZG1whSH9FulfvlJY7tHxea+HwrLSdSr3esHTyG+yHK4rrfjoreRrvlYJlw0h4UKGSP29tV05IeJUhTWvobfJsn3Ect64BtEfLc+XcODx6njRyD2jLpbX/Jbksfx7e4+ybeNVJk2KJZ8Jh7IEAWS3mqcR9ylvFuB6zJko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759961006; c=relaxed/simple;
-	bh=gDlRj+GjfKphmzLOh6MGOR3eUI+2DawEXintQxAMI/Q=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=jQO2D+IRZRHDfo+sD5kNgqId0H6O8DsiFHttoefk5QIfZ6kmqie2Ht++nFVt1OzihAh7OswxlvHFeklHlZKdubOhtwRsfYLv2WvL0cDFtqdxYil2vAD0b6y7Q/AwRqrLSG4fEnZOkmwXX3EvuTng3Q5ljDcv8eJ4GDFyBn8hh5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=DtUxzgnd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eG21fxe+; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id C9C0FEC01E1;
-	Wed,  8 Oct 2025 18:03:21 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Wed, 08 Oct 2025 18:03:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1759961001; x=1760047401; bh=AcgwONb+FSoURxSzBXQ/JmL/nCyJ66Btrt+
-	GcScF9i0=; b=DtUxzgnddhWcq+OJkqTAs0mrea0K/l0NUYE98TQeO/QWs+unWtR
-	Nc9GCZuoOEC/qIRCHNBxpLzJ5qxJI7VSbpYKnownnn+kGhJwsqUr/F6Owq7y1CWV
-	tg14g7ApHUweqa5abmf9aKZjzZynpbhejSUZ4QdByHMq8zZKKfejKf+7/Lz3uOHe
-	Q4vhgm7lvGzt/A3ENs+TsO1j27Bf3DDQQNOTZzaQcekiYiu5BKR3cZ+JROsjUGFh
-	oS+FwtFzTQ8XqCPNuF8NDkad0vrGZDO6m2jL9PWqXVQxLeiiFCUBgTNcyuS+3jYx
-	XIKTocBPvDzJSA1RLtAFn+AI0mL07HquQ0A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1759961001; x=
-	1760047401; bh=AcgwONb+FSoURxSzBXQ/JmL/nCyJ66Btrt+GcScF9i0=; b=e
-	G21fxe+NUP8yRjGPSeBVwLoaPPY7D0ZcARtnECBdRGeLGTbf0CIGCpIP1bVfx5mi
-	5baoZ3k8IqG0lzVglyJJi99L3P5OMOUQhUIzAFWPCOwmfjbd87OZLZwMInWnPTeh
-	RVK/3m63yXUocd4S511ixYzi0seOTnCUjj6p0IolobyDZK/7pLibSGsH05/7W4h7
-	sPcX5KC2DbJ+ZdmL2Rfaz245/Sk5x8NRgsTd6UTdTy169Ejsvax0TH6dFJmX67Tl
-	gX4T/pxLuPtP7jTCFRqFEPYj/jK0C7UUIGkUdkPrKgNNJiGjvxxTPicEbEWcvM2+
-	qSfYVkX6aWWdp4TFYcXaQ==
-X-ME-Sender: <xms:qd_maOLgiCQOklqPe37TXNwMxdva105rEiB_Ch34IKSGnvEobpy1ig>
-    <xme:qd_maIbQeNMAHu6l9xVC4gCgaHC5_TiwfGTPgX-w31gY2edd9HlgHXzWknWpzXJO0
-    dqyVhHkZ0lpWueZA1D4jBikK41P_KVsdHvXmraybbNPpnzpmEc>
-X-ME-Received: <xmr:qd_maA8JlfDnJADCTmE5bjc71M3ItDpaW22diUsJ2FZqlnMAxymyp963m5OlB-nSyVc71AClOR5X-LdPUUFz4FncXyTnzcFqw9JsWa0bu3QF>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddutdeggeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
-    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptg
-    gvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:qd_maJbDG0DQUwf1Pgt6scrTgMDf_MtjeYR_-cfsQR_AX4tSOD16Dg>
-    <xmx:qd_maEPfh-chpITrtNL-kCZuMt-j42ZhBs40rhYEdI5k6n6ggGY1YQ>
-    <xmx:qd_maFChgeWWq_wS40yVHitVUj5w0haOTJ2nYUbP2Cpe82CVaGHrIg>
-    <xmx:qd_maLLqubikGD61vl_mtJ1oJEW0-XTGYjuEPcb6rq3b9FTIn9DYdg>
-    <xmx:qd_maMHZt2ysSOKStJT88PQ_OwFcl7U_jKfhIvkUhlWgGb-QMvngUkTR>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 8 Oct 2025 18:03:19 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1759964987; c=relaxed/simple;
+	bh=FhRAN7vu1DLulCz3OzV9i06+tfU1UMryaWd3DwW2cjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aO9jVaZ4YrL1c7QKk0ZeFgdcPslcbKm+u/DSmrc8i42wlVot5E3GDAbp1ZPTxCuogYb0SB/ecv8cwqzGu3SH7eyTTm+BkRdx22wkdf3T7z64SOYUnlrlwaIKrlSe613vv9BdfPXJT25HUW864DJ4GAYxFWxtS7M9uY/I67CvlmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKAg/AxV; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7a9a2b27c44so335840a34.0
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Oct 2025 16:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759964985; x=1760569785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2T2bFk4SSl7P/0ekUqn9nNLfjSUxmhesNwRFAlv+rls=;
+        b=YKAg/AxV2WYAczW/G5JvqtS0MnDUvhMRHqC1QzqpNR0DGzf+Sv7HcgxE/4VMQb+Y6F
+         y0W60WGiZ6OD1kcwGW4v2CY2Aa1RQpmeWFgpMvz6uMxc0/T0N4JLGiLmcE4iOr6047T3
+         KenOO+jSpCrwpwqOdvJu2mMhLHCMZEL7J7b+qocZUjZY3PupZ2HvfX0/27cZOygZ/2vS
+         hyY7qgcbozlKG+KWsNJaTlGRchb6y29HUtg45eSCgwcE/3W0ioKb8CyJyzC/KyUz04EA
+         ahm70wLLpwbU80psru7sTzk6ih6WVYz+rPuIBKEVwvacclKk1H4Sbcw5kmjwxmAABUzC
+         F8dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759964985; x=1760569785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2T2bFk4SSl7P/0ekUqn9nNLfjSUxmhesNwRFAlv+rls=;
+        b=jdlUrBj+zVIV3M26CnFBtASOattoP49hnGDdYX0izWtdHkbzYZnCM/Jhk9Nc/yXEcA
+         hFjE47Z/enT/U5YbdHuWjZVnxWXa79gvaGnW4hLYg5mUYF4YEpkPHZmpItH2XNTcW7qN
+         497Ron6iQTVWKy1flvMGCStl/Zg6TOdxnAG6Y5u+V3SgnlY6YpD4Hi+Yx5fdg9ixyPQw
+         QU3wTXd/ZqQKm4jT4i/YVEEsY9s7FlnjfTQL1Ax3nJJg9E1/MoSrfz/6dDIanX+Wq54s
+         gKpKe1GTu+C8WZNRfniv1EdadQA/0IMq8uoNY5iuj91ksiyWxSAlNh5aOGfSpH9WfL0e
+         QFbQ==
+X-Gm-Message-State: AOJu0Yz6pyXVtjUJp1ORKnwI8QXngMBKnUDD33AQQjDDEPgRHqZxLRx8
+	/+0ZhqVHShJnVqUs30y9aXVfNcPcBbI8074d2a8m2XZ1vCBffDsca9zexrhjWA==
+X-Gm-Gg: ASbGncuFA7gPYYVpOGHnprg2at+z3cm9Ln67gxgEWxGEMMFL6+JbPvEeoDH2/+4d+7O
+	GhXno5NWpiBvGOVZuRUd6gGDDFNyjjoX+ZeASRTuU087o+MG6ML5NDgBCZJjshA7Ocqb83WuvcV
+	EoLHwXvqyXGEXVb+eLC/QOGQ/HkjrKEIm8+wUqF4GjYIzmc6ewnTNaRgAQR5QNyuXVG6/9Qkdy6
+	H9kbEEWBpc4NnM+OM3b2Bik2yCf+Tovzo929cyhoo3/6dKQsNBRY/brdVCiwPtNHabSuDuQ5AUC
+	LlQNcM8Wx2B2xRsgs/39XNuB4YKsDYBpD7N36zVgaXEzMY83Bq6BBTV5rLH40kTh307waFyHFng
+	kw6vnTVVwcaDS4qMwiTWP2svnNLyTH47Fs+hmKV9A8E/oqMfvzKKug1+r5JYR0ig4kg==
+X-Google-Smtp-Source: AGHT+IGuTD1Noi9gIw4Wpud6moX/5kvZZcFur+/n3JxzjhZHmEaAEI6X9bG5JPTdzLylCvnEazTFyQ==
+X-Received: by 2002:a05:6830:6103:b0:799:bdea:348e with SMTP id 46e09a7af769-7c0dfefa6c4mr2850635a34.16.1759964985123;
+        Wed, 08 Oct 2025 16:09:45 -0700 (PDT)
+Received: from localhost.localdomain ([2601:282:4300:19e0::5dba])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7bf3fdcf8f1sm6141426a34.11.2025.10.08.16.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 16:09:44 -0700 (PDT)
+From: Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Joshua Watt <jpewhacker@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Subject: [PATCH] NFS: Fix state renewals missing after boot
+Date: Wed,  8 Oct 2025 17:09:22 -0600
+Message-ID: <20251008230935.738405-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] NFSD: Do not cache solo SEQUENCE operations
-In-reply-to: <711bd35a-78b3-4309-9cb7-9e2c7a83a87e@oracle.com>
-References: <20251007160413.4953-1-cel@kernel.org>,
- <20251007160413.4953-4-cel@kernel.org>,
- <98277504-3d4b-4aff-9810-1847e6bf4030@oracle.com>,
- <175987517335.1793333.17851849438303159693@noble.neil.brown.name>,
- <711bd35a-78b3-4309-9cb7-9e2c7a83a87e@oracle.com>
-Date: Thu, 09 Oct 2025 09:03:17 +1100
-Message-id: <175996099762.1793333.16836310191716279044@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Thu, 09 Oct 2025, Chuck Lever wrote:
-> On 10/7/25 6:12 PM, NeilBrown wrote:
-> > On Wed, 08 Oct 2025, Chuck Lever wrote:
-> >> On 10/7/25 12:04 PM, Chuck Lever wrote:
-> >>>  RFC 8881 Section 2.10.6.1.3 says:
-> >>>
-> >>>> On a per-request basis, the requester can choose to direct the
-> >>>> replier to cache the reply to all operations after the first
-> >>>> operation (SEQUENCE or CB_SEQUENCE) via the sa_cachethis or
-> >>>> csa_cachethis fields of the arguments to SEQUENCE or CB_SEQUENCE.
-> >>> RFC 8881 Section 2.10.6.4 further says:
-> >>>
-> >>>> If sa_cachethis or csa_cachethis is TRUE, then the replier MUST
-> >>>> cache a reply except if an error is returned by the SEQUENCE or
-> >>>> CB_SEQUENCE operation (see Section 2.10.6.1.2).
-> >>> This suggests to me that the spec authors do not expect an NFSv4.1
-> >>> server implementation to ever cache the result of a SEQUENCE
-> >>> operation (except perhaps as part of a successful multi-operation
-> >>> COMPOUND).
-> >>>
-> >>> NFSD attempts to cache the result of solo SEQUENCE operations,
-> >>> however. This is because the protocol does not permit servers to
-> >>> respond to a SEQUENCE with NFS4ERR_RETRY_UNCACHED_REP. If the server
-> >>> always caches solo SEQUENCE operations, then it never has occasion
-> >>> to return that status code.
-> >>>
-> >>> However, clients use solo SEQUENCE to query the current status of a
-> >>> session slot. A cached reply will return stale information to the
-> >>> client, and could result in an infinite loop.
-> >>
-> >> The pynfs SEQ9f test is now failing with this change. This test:
-> >>
-> >> - Sends a CREATE_SESSION
-> >> - Sends a solo SEQUENCE with sa_cachethis set
-> >> - Sends the same operation without changing the slot sequence number
-> >>
-> >> The test expects the server's response to be NFS4_OK. NFSD now returns
-> >> NFS4ERR_SEQ_FALSE_RETRY instead.
-> >>
-> >> It's possible the test is wrong, but how should it be fixed?
-> >>
-> >> Is it compliant for an NFSv4.1 server to ignore sa_cachethis for a
-> >> COMPOUND containing a solo SEQUENCE?
-> >>
-> >> When reporting a retransmitted solo SEQUENCE, what is the correct status
-> >> code?
-> > 
-> > Interesting question....
-> > To help with context: you wrote:
-> > 
-> >    However, clients use solo SEQUENCE to query the current status of a
-> >    session slot.  A cached reply will return stale information to the
-> >    client, and could result in an infinite loop.
-> > 
-> > Could you please expand on that?  What in the reply might be stale, and
-> > how might that result in an infinite loop?
-> > 
-> > Could a reply to a replayed singleton SEQUENCE simple always return the
-> > current info, rather than cached info?
-> 
-> If a cached reply is returned to the client, the slot sequence number
-> doesn't change, and neither do the SEQ4_STATUS flags.
+From: Joshua Watt <jpewhacker@gmail.com>
 
-Why is that a problem?  And importantly: how can it result in an
-infinite loop?
+Since the last renewal time was initialized to 0 and jiffies start
+counting at -5 minutes, any clients connected in the first 5 minutes
+after a reboot would have their renewal timer set to a very long
+interval. If the connection was idle, this would result in the client
+state timing out on the server and the next call to the server would
+return NFS4ERR_BADSESSION.
 
-> 
-> The only real recovery in this case is to destroy the session, which
-> will remove the cached reply.
+Fix this by initializing the last renewal time to the current jiffies
+instead of 0.
 
-What "case" that needs to be recovered from?
+Signed-off-by: Joshua Watt <jpewhacker@gmail.com>
+---
+ fs/nfs/client.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> We've determined that the Linux NFS client never asserts sa_cachethis
-> when sending a solo SEQUENCE, so the questions above might be academic.
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 4e3dcc157a83..96cdfeb26a90 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -181,6 +181,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	clp->cl_nconnect = cl_init->nconnect;
+ 	clp->cl_max_connect = cl_init->max_connect ? cl_init->max_connect : 1;
+ 	clp->cl_net = get_net_track(cl_init->net, &clp->cl_ns_tracker, GFP_KERNEL);
++	clp->cl_last_renewal = jiffies;
+ 
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ 	seqlock_init(&clp->cl_boot_lock);
+-- 
+2.51.0
 
-It would still be nice to have clear agreement on what the spec allows
-and expects.
-
-Thanks,
-NeilBrown
 
