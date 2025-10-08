@@ -1,144 +1,160 @@
-Return-Path: <linux-nfs+bounces-15057-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15058-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 291A7BC61F7
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 19:09:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFF84BC63B4
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 20:02:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 630414EBD90
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 17:09:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7EEB405965
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 18:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C8D246782;
-	Wed,  8 Oct 2025 17:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB5119E7F7;
+	Wed,  8 Oct 2025 18:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b="lWAWhSpi"
+	dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b="Jk2gPL9s"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021122.outbound.protection.outlook.com [40.93.194.122])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022118.outbound.protection.outlook.com [40.107.200.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD5E20E030
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 17:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A5F34BA3B
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 18:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.118
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759943390; cv=fail; b=ui20xQt0a6qDxZC8WhxrVJT2fSaOZhalJqASTbSUAOc3lQUgIwTjHLKKgiEIex/fc2FjQ2ZpiVWbm2mHh99C88JlU0cgVk8gDEPx8ydUEyLB4dpBMllOIeV6y+fwuxqzgNupbtNpQcNpXt8axJSSqPVFnVOP3mzLKXXH0453T3A=
+	t=1759946560; cv=fail; b=JSaVFS5w4uuAflapyAm8JNxgzonP6GyUezbmIOySNJIV5pZjhpbCaLYOOR9N9O+L0QnnseJrl86BDmTnNwW1UjmYxe07d2GOphjDrYifO7GZpW/zArDJXqmmi0Fd1wrWEpDywhZCtOllBJn1WkZyG4ZFDc0pOFPRYuVMQZ0UFrA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759943390; c=relaxed/simple;
-	bh=iSRXgDG0qUDSsbneUDC4XIm9LIqNoHionolsaqQUDPE=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pX/J7FDCfAJPsW/CS9toAz3wpVc5appM/mfe9DvCKME3WctufdGPGuZ4hlabbr2aUkqYZJr7oG7v0U/MoVQAeZSv0ehDmggmmXuyjgdjHRIq14MG/F/9tfV7hChtm1LQxwlaMaQrGlVPyIG8DIvmNW+4A02SSEnTMTgNupf2Haw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu; spf=none smtp.mailfrom=rutgers.edu; dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b=lWAWhSpi; arc=fail smtp.client-ip=40.93.194.122
+	s=arc-20240116; t=1759946560; c=relaxed/simple;
+	bh=xhasbNOI8HvBu38BkIjdme7WfBlsE0wRjFW9PVGNQCA=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=E0kIdUGAzGUDQvqZY1pNv30lKai96N6WY58MS493dC744uhPvhb2kDV0jn60ezG382aQvwbS2G2LQqLYgcjHR+uYHviUtdaVqWbQqNY1EHztTJk1lXsWslGfNJo+5Qsx8IfxeI6WUgb7CeBJCVQML97fBG89WlT7nxAFiWxdv/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu; spf=none smtp.mailfrom=rutgers.edu; dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b=Jk2gPL9s; arc=fail smtp.client-ip=40.107.200.118
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rutgers.edu
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lPIIoyMxA5dhqIpYLVFlX71JvH5s86jMRtJQoX70oNUh1Sr/Rvd65EEn0es5VA84bWH/vEOFkzr8HgPWGweNtmlusZfE9b9tP0wDvtA2SpEfnU5tgiFIMnV0Wv5gf1IcmcIzcwT4dii2Srfd0eREciX9PNRWpWelkPI2mSjY8ohLYc732Q4n6dUR3fzKm+ZmQbIcpg4ZfMEDMyY/bhDQ9Gw3/r3EP7TtseuyXTAfMOom87Bitnd2hwo7prnfn6H2x1wedhh+WgWOtuVzTQmmLx8yuvIQA6psj4UKVUYKXONic1Y7AV5LnHwROCbk/b7P2EA8mC2WyDr7kfzbPNINlQ==
+ b=ULMmx4PgFRWUFHm0uXKWLjNMtUKCiIx28L4eDuDXfr/RBOHlN4oPt/TtZPOS0sq++/5kK2cr5a+OM87IqpXXYvTk0HChnZS0NQ0vWg+QYj/t3Rf1DqsmtJuYy15wcZ29tiD+CnWSS8kVQRhcY257J4m6tRhYmue79Q/HGRnjEjDRCbVCFXYo/UfS7UMnEat5oklZ8FyQs/jjiLJm4KJmOfCIlo+4DHFdi5MRisBj5tLaiq/w33KUnWlZ/mrXTHjXdonNl2kHKsqBy7uuDqLUmH93kiYHtId+G4DinykbSuhX48wUrQvFRX4n0fxNzLGcAqHbtHxShTR++UKxPVip3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iSRXgDG0qUDSsbneUDC4XIm9LIqNoHionolsaqQUDPE=;
- b=hbQYXp4OsZpuwzb8O157dNVH7BBtC03OF7McIcW0BoVwI7ey9+bAJHTGWiinHAyPZOoFfAgPuJh/tQCLcIpuucOa9dA3Ji5yz+pyzerqQXHSgzy8GbpLmhxgvbb2ztUAoW5h4h9jptWl4JT20AmNrbT1iprm/rvqL0KXvsXPnkTvKnZdrT0lwwfQTWy+vOprlqawU5vz8p5oKl4F31AvsO+zS61HDjff7UwTdzBgV+PORm+FFYuDk0eygwukZbKcX5gAqqFlCUS4Ngmayl/CLQDc43zL5EDEi6KsKcRtiTaAnEckV3+kkabXJ6LcXswB0tHnHY2RWU9A5jypyZ/ZAw==
+ bh=xhasbNOI8HvBu38BkIjdme7WfBlsE0wRjFW9PVGNQCA=;
+ b=I0o7BM7DAFDm4QUJ/PN2eI7KqkB4C8agQ09K0IiIL26Nr6IWSQUrz7OVQsp8hzRyAMi0WMmbWkwHv4mHaEz+JWWXqaqk/lLF+1iscapXE2RoB0pTdY9dsSQCsIFFXtNTieL81yETWShOlLNyigX1QI6eDcWgaqonFP4O/6e73MtLz/ZZyixQd9YD4WzLNgkZSN1Li/Nmlq23Q5kd3As4AD1LgbBZEL6ogb85XaowZ+iqFDd666a+vUNxiU0EN+QHPWmFikF4yU2KGF5fdmL2zPBjpHC+OZHdrnQrM8iiI5QDlSxHJhDnP65NdlrOU/y4BnBjBFY2m8JNQ3Mpr1azHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
  dkim=pass header.d=rutgers.edu; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iSRXgDG0qUDSsbneUDC4XIm9LIqNoHionolsaqQUDPE=;
- b=lWAWhSpiucyBfqhTiyVC2ToRy60pXtcGZAK7a/nCpLgNSv0Q37qljXelFZNB2hYkaEjcKq9W8csqKmPCHk6ZdoIgcXWVHdM7CdGIDk+cMcXe8tIHoQrZ5RY390fFYJtFHk19gW7qA8LUYtwsw/6JCGZ+utE8MJmKVUNZkF+1F/bye53zzTdWJtjy6Wn11dCBtwFbgJ6KAI/e3Y3sq4szwaCzcEz1dlMbhRal02zXwyq7bvjYWb8JCO1RDt0wHaTxP21DjJH3zBxUtfHtXllDhzD9daBRo5P9FSzTaYzcA285PTniX0n211Q+y/ZVHhWrOnE6tQSBBHE6eKpZxBfcWQ==
+ bh=xhasbNOI8HvBu38BkIjdme7WfBlsE0wRjFW9PVGNQCA=;
+ b=Jk2gPL9sUNkJuy7K4BQ47SBDfN+ktbCIlDM6VN8NUiXBYJg+qnnnGVzh3WBRfMyqODSEjVfTH6yozYpeO7SUrmSWKjqcS+P+Bj3pSVN3RyHIg/HvA6FrR0JQV0EzproSgQzagBpgQOt3tB1C2FDAXXw1oU3ZyZvJKwxRaz+Uym4tZdXUvZniIwQQoSuVeXAwl6GDY6v3YUfk1emEIAhgBDViCdfuLqcdArUuBtWOJCpKRR3ASCNafi0Ss+lRgL5kzkvZRQNLrka8wVJC3BIRfbLocN2Mse+NiMzZ5oRmy9QouISpElULSm+DXjW/oEKKk8BBkdiMhtfVRaSCqFl2pw==
 Received: from PH0PR14MB5493.namprd14.prod.outlook.com (2603:10b6:510:12a::11)
- by BN8PR14MB3267.namprd14.prod.outlook.com (2603:10b6:408:79::8) with
+ by DS0PR14MB6757.namprd14.prod.outlook.com (2603:10b6:8:f1::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.20; Wed, 8 Oct
- 2025 17:09:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Wed, 8 Oct
+ 2025 18:02:35 +0000
 Received: from PH0PR14MB5493.namprd14.prod.outlook.com
  ([fe80::c4e6:a77b:bbcc:efd4]) by PH0PR14MB5493.namprd14.prod.outlook.com
  ([fe80::c4e6:a77b:bbcc:efd4%4]) with mapi id 15.20.9182.017; Wed, 8 Oct 2025
- 17:09:42 +0000
+ 18:02:34 +0000
 From: Charles Hedrick <hedrick@rutgers.edu>
-To: Linux Nfs <linux-nfs@vger.kernel.org>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: can gssproxy be used for both cron jobs and normal users?
 Thread-Topic: can gssproxy be used for both cron jobs and normal users?
-Thread-Index: AQHcOHSp2bRH/rxeCU6w9gGA3nGp6w==
-Date: Wed, 8 Oct 2025 17:09:42 +0000
-Message-ID:
- <PH0PR14MB5493C920FE1A01075DC59CC8AAE1A@PH0PR14MB5493.namprd14.prod.outlook.com>
+Thread-Index: AQHcOH25NeU8Ty0LC0K93JLD8RtBxg==
+Date: Wed, 8 Oct 2025 18:02:34 +0000
+Message-ID: <a4a13129-a50c-4ecd-b323-dfcb4066af5c@cs.rutgers.edu>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
+user-agent: Mozilla Thunderbird
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=rutgers.edu;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR14MB5493:EE_|BN8PR14MB3267:EE_
-x-ms-office365-filtering-correlation-id: d29fc6c6-6e34-4cdc-b1df-08de068d78eb
+x-ms-traffictypediagnostic: PH0PR14MB5493:EE_|DS0PR14MB6757:EE_
+x-ms-office365-filtering-correlation-id: e5e7a396-0418-46f3-741c-08de0694dc06
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|376014|366016|1800799024|38070700021;
+ BCL:0;ARA:13230040|376014|366016|10070799003|1800799024|38070700021;
 x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?RET2frQOieUB/bLbDY0ysDDBmlkRSmpK2YrcnW5R7uj7k63Wjn4o7pmhpv?=
- =?iso-8859-1?Q?8nv7VStkk8epuVup+kSRzbqKHWS+Xkn1pBbewMwZfHGXp96gpt4eUzTfW7?=
- =?iso-8859-1?Q?hPzKm95JC4zM946Tal8DvSPQ/eb84QEomDGvHKgPczgXluHN23M3MYZrMU?=
- =?iso-8859-1?Q?KwrVmSapNCmb0WaRPCEseSngWZF28LzWYs4Bnv3qbdcP3twXVanV8+sL1D?=
- =?iso-8859-1?Q?2SrERUhCyauB4jRDoZBJaJS6zJsIUgZKdpWurUxSxIVPOQNPM7Jc5DTAdV?=
- =?iso-8859-1?Q?Be2AxkrnOOI5xSPrdUIJVoGK8cn3cI4J1kNyVysfbp5tQ1CpAZwbWyzn5q?=
- =?iso-8859-1?Q?corzROCFg4HmY2VlRMfRa0lKxxqvXtLu+i/qQ21SNRaUgT4rNRQg8uROZl?=
- =?iso-8859-1?Q?F9XqQ6BaiP7N4dDD2yLEVDXrPDY0QrKuSHrchsVVpw3iTaJr3m9bo14BKQ?=
- =?iso-8859-1?Q?BQYEd7k1m82ZDrte4QgabOm5Uu25JI3aRyvDJ8Tv1SHrtOOp/nIU2BNu1E?=
- =?iso-8859-1?Q?zRYLnGCJZDQ/yGjwDc0BYLk8TSO7TvXX8iPrXmUzowM433XhmKxqoqSG+p?=
- =?iso-8859-1?Q?oJyW784GRcZm/7v84BYzAaxggLWHBKfhqT6qMPe4YsFWy39DSfCashBWjh?=
- =?iso-8859-1?Q?HSJ+gyaAEoENndBH8B4bXWNgwJPtYwVRtgTk20aGC73cpQleJ3LtgivBsU?=
- =?iso-8859-1?Q?DLq9mLCCiOwf/QUbOTWVz+Pj9SMo3B0b9jgO72o/18n8ypfnDcDfaZr34e?=
- =?iso-8859-1?Q?JFoxopesIYZa27HCtafVm/XpV99TfCWIWQ5IVAm0ONP0nXDb3uwF8h9Tpq?=
- =?iso-8859-1?Q?EvdSCaTWKiWyCWx3MTHsqEZ3nfpVjN7csfgdQSmjKq4c7UL9vf9JqyZhrH?=
- =?iso-8859-1?Q?B84+wAT76XtLMlD/0KYKRxf1MJ3H1g/cZITQvxu3ZyjR8M0DKD5eQG32/L?=
- =?iso-8859-1?Q?APqOoy8pAmeV+6y8Vpi1AdZweUtj2A50NUaKLXzazSMelO8I0RE27wxk0h?=
- =?iso-8859-1?Q?oRcl3BBx8y/DrROnEFIMRXJao1N1o84Vfuk2stTUfdAs4xSJ1e13JPGTiI?=
- =?iso-8859-1?Q?hlrkiQjRUb3jPe5uPyOcxJjkqKXV5fxfbP2xzcCXYi3eJ1d5IDOyyak9uC?=
- =?iso-8859-1?Q?4XCIN4cvwg6RNIOQkBk8A65xuBHrYs6Ft0eoPtKhSLMNQelrAwceNXT9ON?=
- =?iso-8859-1?Q?dEohUACUD223HW64M9cqRzLtS/YHwggSyF4cp4H9A3YnL/eO59+fGC32Z1?=
- =?iso-8859-1?Q?G4clWbOMe00/0ZQEiIpmo65F250jusETkQwGlu1Y19q3wsEevtrVAs6wKD?=
- =?iso-8859-1?Q?ijm9W1rJ4VR/a3DyvTMjmTyY9gSuYWAhT+cUan6jQhNZ9zfuM24cTGJvIH?=
- =?iso-8859-1?Q?6J5PIfeVV2PnorRajQoaeazAXw7RhNtvLBuIXhhLUrhLuuy8cenDJWKmC7?=
- =?iso-8859-1?Q?Da2ashxRq7ZzEx5d236da+YYatb0pGy9EbkAlj6FRCmel6Yr23mWy1CndT?=
- =?iso-8859-1?Q?MK0HQEtekAp3DdwNVX1sdVq0kUzGG9kp9fL42VWqRBvu9GCuGvIXTQ9bmD?=
- =?iso-8859-1?Q?QTYr8DXFF+hRgrTY69qOkGAT3Rqv?=
+ =?utf-8?B?dFg3Q3VoVGNoR3pOaUk3S0pFSDhheHdrMTBOcTJCQXVzU3gvUmo1MWVYQldW?=
+ =?utf-8?B?ajY3VEU0dTdTS3oyK3NaNlFRVkhVZDVoV2VVeFRmK01IT0RTOUY1ZW9xeExD?=
+ =?utf-8?B?RlQvdEgwOHYvS0s1aWF2UndkTVpJaGNnNWwyUzNsMk1lZkt1bkJ5aXBDMGNE?=
+ =?utf-8?B?angrREZNdlZmUGVIV29KS2RUT1NYNkVJdXZGS3BZd0REbzlENFp0a2hTbEt5?=
+ =?utf-8?B?TUY4VnRmMVVBTElzV2pXV1dzU1o2a0hyK2RpY2xMb0JGSHN6dTI0Qldmb1l3?=
+ =?utf-8?B?SnNPbGl0NElUUk41cHp3MzNpeG9DcW1zRStvUDNPdFRtVUZVSFhRbC83bTlW?=
+ =?utf-8?B?Z0tQNWlpUS85MkVtaGc5eGdSU3hoQVlGdEpWdTRkWWpKYVVSV3JjMnFna1FT?=
+ =?utf-8?B?MmFsdmtTUndVejk0cDBTeVd6RG9rdTlndDVickJUQXJON1Z3bVpYaWFSbDN0?=
+ =?utf-8?B?bitUMU4yVlVhK0VwMmsxT0pkODFabnlrZ0M1alp0RVkxMFZjZzBhQUJva0lP?=
+ =?utf-8?B?bkx0RG1UcVdlZHp2SE04Z08xYmtBSS94SnZqNGN3QysrZnkvMGdzaFB3WUtN?=
+ =?utf-8?B?aTdOeXBKaEROZUsvVkcxYTh4NE9aRW1mRTJyVEwxS2lhb1pJalg1V2FXK2Ur?=
+ =?utf-8?B?dGdSV2VnWExBamxzdWt1MkltNDBpMitsQlA2b1BqSVRtMWtuQ0JvOXBPUEZp?=
+ =?utf-8?B?Y1FaRVQ0OU8xL2pmRjJCMDV1czQ5QWsxNnp6Q0xuaVdFZ0l2U2VjQWtzKzBF?=
+ =?utf-8?B?bUhqY2ttNmxXQVdlV2xhQlh0dTZDclZGM3FEWGNDYm5vcFJ0cXdIOUgwMS8r?=
+ =?utf-8?B?TmhYN25VQmM4NE9zbnI4cndaRjhwQjNFNmRJdGxucmxoMkkzZFdOWUJYS1hr?=
+ =?utf-8?B?dlRGTXRqYVhtaVd4azBSWHNYR3ZXTnJMQlhNVGd0YnppWVhrdm5RWDg2eU05?=
+ =?utf-8?B?eHBiYlVrcTRCL21jZnY1NXRVNGhrYkJMMXU2cFpOOUJUaXJZeVY0S0JNSy84?=
+ =?utf-8?B?OUJHNkt0NWFWM2FXMUMxc0VBeE9wMExHZ0Y2RVRoc1ptNnZGeElVUTNWaXpD?=
+ =?utf-8?B?MTg5UnV2NXhyOHJPVm9JMnpEbktUNzhmb1BNTTRjaEVNRjVGY21oeDdSWlpp?=
+ =?utf-8?B?dlliaTdEVWUwdHJ4OGllTjBzdTVBaE1UN2pXNEZubGpibWhsc0I3RENzQUsr?=
+ =?utf-8?B?aSs3TXFFNVM3WVZpZ1RWRDY0TzRlRVdhN1F0Q3ZsMHM0dG9EMUZRM3dYWWtP?=
+ =?utf-8?B?N2pwOGQ3Z21Hcm5zdTkxT016cVdyK3A4dmV2aTJlQjhGejFZQ0VJaUpmY3ht?=
+ =?utf-8?B?a2sxamJMd3VSRkZQN2o4NzZYbXB5NEFsQ0g4UHJiTUswTUR3VzlqRzVJbXRY?=
+ =?utf-8?B?STg3MTZxektnVWJ0aElBNUJham05UGVZVkxLRi8reXpBK3VWLzVpZkdlaDVK?=
+ =?utf-8?B?Q2VtQXhnVUJWaWdhazFLMGhWamJhVFBGZTFGNmorZlYyQjJIQWpNTWNTVHFX?=
+ =?utf-8?B?aDVJOXBVL2hlUjNzdlQrUmNIUndsK3REYnB3cDhqaE1XV25TYVFrTHVCMUdw?=
+ =?utf-8?B?cW4ybGMrMUYxYWJuSjNPWHhFNG5xWHJkcW8rRThGdDdTWjMxTUx6bW16ckZw?=
+ =?utf-8?B?S2RnMWRid3k2ZnRaMUE3YWVzN3ZkRnE3ZDUvOWdudGpTTk9SbmZrMGdvcVVa?=
+ =?utf-8?B?UjJOODkrOG9zb3VJNzlYcWdnVFViUkRPN1BWOVVzVFNJS1RIV000RG1MVXNS?=
+ =?utf-8?B?aW5qZER4SmVqMUF5NXlISHcvSlZvdUVmcTdTSUtIZ0VDMkFwUGNZaG1QYXRk?=
+ =?utf-8?B?bFU3WjkxOVcvNVN4emg4L1kyRUMrVE1wZU5seWR0cWdGbnU3OTg1OU9QYnZi?=
+ =?utf-8?B?TndlR2s3NWVZdTYrUkpKL2V6Q25Xek1VeG1kTnhuVDduNzl5ZzFpMlFDWFda?=
+ =?utf-8?B?YnlEYlFnY3hEYjcrQWo5YkUyMFZrVlZ1Q3pIZzRja29mSldnTEVpS1lRYVJx?=
+ =?utf-8?B?Wlo5NTBTQmczRVArditLZ1V4UUE2bU91VUx3RFhnOTZhK2xnMXhrdlBSMkZ4?=
+ =?utf-8?Q?Jft03r?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB5493.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB5493.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(10070799003)(1800799024)(38070700021);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?KyfNfti8Ih6rKnms+4HBqWnOhXYkSjNCLVZBWidNqu7wgLLu1z6mjnHG2t?=
- =?iso-8859-1?Q?MKS+Bmd9WnWeJteRgIIuXAHX10pWC1adPI2c3K/rbaJHT77jtOP2phItWA?=
- =?iso-8859-1?Q?2gsJQ0km54SQYuZLHhtpd7Tc5D9ciJHeGt0BzcwTwMq/2IalJrUF0tG+2n?=
- =?iso-8859-1?Q?8Z3fOuqkLMEsabs3RQOc2kCHLenU7YRszh15FAcxrK1MuEZ4YOjSGnNiIV?=
- =?iso-8859-1?Q?kMralq5SqVWyLkXsvNV6vJU9YiM2RSjMOq5ubA7Od7Sf1BuSJZ13r5OCxv?=
- =?iso-8859-1?Q?f06Pt5hbl/n6paD+/jENTuT07Zf7mo4DFmwOGHC+zRwNXyxl7wampT+GaL?=
- =?iso-8859-1?Q?xEWnMKmiLYimeC0jYoBBkXcpDQzvAMMOGjElpHkhtpn6mSclxIBAhS5FfB?=
- =?iso-8859-1?Q?5fqUiBNcI2AhzGK1Xfrk2WM/DxIicbdXZz97zJXXOuYGkR2ZJQWXfCsXG3?=
- =?iso-8859-1?Q?RVNSGyCTDY0bU5gCDKTtWGmFKh0Aw1sCeYCxFye3SXkyhRo5vYUX60mWUS?=
- =?iso-8859-1?Q?/B1Phm1d159T8dIyy3L6LUEXB8Llf07JVqNXPXj10VVC7rbcKBXsys+ibC?=
- =?iso-8859-1?Q?u7FxKcuY6vL59N2TLhQL5+XkwT/1Iug0SVuLCLSJ/pUBGJbXyxNBpafcEA?=
- =?iso-8859-1?Q?ShsSbrwYWYlBPDhd0qOrVETGBGfyC+IYPOLSLWjuUHip+N9xrNnvoLnnPR?=
- =?iso-8859-1?Q?Og6fjeDzMihK71YXik2aYZ5hOZ8IvqbKbvISpFD+3u9FufyztD74Gn5ZGb?=
- =?iso-8859-1?Q?D9EesQDPca2C1jdpskRz64USQRDUsUfmMhUbasLcfuDGeBXWDY2o/Uxf9m?=
- =?iso-8859-1?Q?AJayThS4GyMsWYF1p2jVJWKm7rWTJH4jyecVXw27sKA7FCRddnLacPY/lR?=
- =?iso-8859-1?Q?XeIpyWOp8Pua5CPhPsVaZxsW0iYIbcEV95WgqEqpaOGr5L2EFlkepxtSyI?=
- =?iso-8859-1?Q?Kp+7r2Fg90csEOE/pwrn8CF6LUcec0solZm9Y1J0oqpGfLka0TGhx5+nz/?=
- =?iso-8859-1?Q?ZkMhNvwb0QkvodEN4LCEakzp7MDOgcrTVvgSJD+6vRZf7gMrv0ILCLRZsS?=
- =?iso-8859-1?Q?UAQbJgEwUCw0LPVZNgIGzZ+Nexfbhw1CejDFvFFGhR5gZT+fAd4PhKsorq?=
- =?iso-8859-1?Q?0G6newKuGkj+fgcp2ZAs2fvoF49ACh9x3zNrTal9PigZ4mQJ2ko5xOroDv?=
- =?iso-8859-1?Q?p9nh9xR3z778JuPEGZoLvRtbhXwBqHwyE7ptIe3reVa6PPiPMWkXgC03jm?=
- =?iso-8859-1?Q?McZ09aV1sQlHIpJConc3e8TDGpL8985mo2H2Dd4G2vUZ+XkvYEPsZAp+lx?=
- =?iso-8859-1?Q?KX8BrdXC0hBCi9B4aa6O8LqUosOylioffnaITH0NXb400reUEqzsz4O6Cr?=
- =?iso-8859-1?Q?cYoYKAtW6i7DkiZLLVyvbKhJlg/r/awRFqzEvfuqNaEqvqtg0z+DzrOgSw?=
- =?iso-8859-1?Q?l+kTy3ZyQ2jK5rgj+k1olEFJkirtXtjHNtb3hgJirpz4V1kf6rMAEtFeDd?=
- =?iso-8859-1?Q?YI/42oiY1wuVE0FHgeeDONOugQHJkb9lVo8UM3OuaVhG8mx2InWecj5NmJ?=
- =?iso-8859-1?Q?ONsa/l/Ltn3SI3JwMU16ab4QxXZU4WvEjZtwW+thscsSND/eECwJLIUe8c?=
- =?iso-8859-1?Q?NaunEfl3HHUuQO1Lz4RSfYuKo450SZMSA6ix/7dzWQtJGC9v8NtA6FBQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ =?utf-8?B?MERIcGEyM0JpbEFuQ0p5bllwcDBYODNlS1BlL21TVVIrejBKb0xoR0NTS280?=
+ =?utf-8?B?a0hTSnBxSzFTc0QxUmJiejlob2F2dzFWZUc0cFRHSHFBTGl5ZzdrNkN3cGZp?=
+ =?utf-8?B?dXQxd1V6S1lZeFBlVisrbDlRSlBrNEVoY1hPU2w2RVpLdC9IOW4yb0Y4UXF5?=
+ =?utf-8?B?QTQvZTdtbitKUXZmbDNuQWd2eHR3bkREeWMrUE1QcE1hTkhpWmZVdU55bGYz?=
+ =?utf-8?B?cVVvYklnQXk3UGgxcEVpZGpXOUlDa3RiZkJEQlpjL1JhR3ljRHJZWmxUbkcy?=
+ =?utf-8?B?QzF2UTZPaFlSZW1CN2RZRjBQNCt0TksyeTBFN280b3FrZi9TSyt1WjRjN0hx?=
+ =?utf-8?B?MnB6RTVLUFpsR2VHZ1k0UURoY09RMVQrd3o1VHBUTk5xSDMxSW5XTnVSaHZD?=
+ =?utf-8?B?WWdPbGJGNkNPZWxLQXc3cnNESW1uSEhmallqZjJuV0o3cjAwT3NrVEd6SkVF?=
+ =?utf-8?B?b1dOamJDK1FsNmRnaGRtNnpURlRSZE9oampzYWVUVzY1bUk4cnZzU1cvT1h6?=
+ =?utf-8?B?NDRyZWZMZUhBNXhhM0hiZ3FYMXRHSUs1TFBpUkdkWEwxV21QYmMvMHpBL01M?=
+ =?utf-8?B?OEJ4ZTN6WXRsR3RrSFJMOVBnTDBiUjdkaHVwTXl6VFl1bjhiS2VIdThxODI3?=
+ =?utf-8?B?NHM5QlUvYm1MdUxkOFFSeE1LbDRHYlBSZmtMY1M2UHNwcnViN0RLUDh0RHI1?=
+ =?utf-8?B?QmIvSUJFZW9GZlZNTWl2NnRqUHlRenFqL0l1VWVBcWJRRkg1TVFka1FMYjFB?=
+ =?utf-8?B?bDZoU2tRT2k3blhPSS9WN0ZrVURIKzVheXN6bkdCWklieTdoaFQzUFJZWWJ6?=
+ =?utf-8?B?MXFzRk5pbFhMWm9rdHJ1Z0JXN3VtLzZ0S1hUbkxmaXBCUndMYnRlSTl2VGpD?=
+ =?utf-8?B?YXJETXZzNEJ0OVVVY3c0Nm1zalJvand2Z3B3Z01ZU2g4aGVIM3pFR3JsdHdN?=
+ =?utf-8?B?NTVOS3AwT1Z2OFpzSGVLUWYvYTFXaHhBZ1NCT0kxSE9RWjY2aVpoK0o4WXE3?=
+ =?utf-8?B?YUJ1NUpNcVYxTmtFaDhZRDM1MGxmR050UkxCVzdaWG5kTTRWQmR0YVY0MVZm?=
+ =?utf-8?B?R1FkaXlQa3N6RHF5K2hCaU9JcnFHK3ZLT05aSTVrdzd0L3k4N1lQY0E2cDRy?=
+ =?utf-8?B?YTgwME5ITDBiUmY0K0hrUnFNT01vNmRGRTNFeUpmSDZEbjZKdGI2N09GRDcr?=
+ =?utf-8?B?S0NZWEtsRFQ0bG5GcENhRHZOVUZkODU4dEF4bEMvV25rR1FMOE9pMXpBRE00?=
+ =?utf-8?B?N3Nza2lvamtSV0lKRnBZTlZzYy81NFVhK0JwZHF5ZXJSRHZrTlhDcDh2Y255?=
+ =?utf-8?B?UHB0ck9zUTdQK1lpcGVqWjFySFkzYXFESVMzUHVjd3I2YWNaRTB5REwya0Vr?=
+ =?utf-8?B?OVZaT1pqTE5FN1FwTWlDSkFLaVhUcWNJNzZsZUJmMmRWdVNDQmVyWHFMdVhT?=
+ =?utf-8?B?ZUc1dGxXSVBHZW5kZVVZcHdkRUQxeHFzRWp4MmFzbG9vbnBnZW5jaVpZNTFH?=
+ =?utf-8?B?NWRjR3F3WWZWRWRISXk5OFdFaGpyVWZVTEcvTnlNSEs3cC80Ym9uRTlDWmgr?=
+ =?utf-8?B?NlhldTkzVEljMTB3TDVGeCtnWTVDWkNhTEdCOUJGcis0c2pYckpINkZPVW93?=
+ =?utf-8?B?bmo4akhIbTJld1NGYm1OM0tEaEhHYWRURkF1eGRoZFFtK040M2dwYjlESndy?=
+ =?utf-8?B?ZzlFSytvN29FK1RnNTFseERwSmNDN1ZhUm5kK2x3L1BQSjBIMHRRaVRzbWtK?=
+ =?utf-8?B?Y2c2d0ZQS0Z2RWF0cTJrUXIzdjk5TlVMeHk4QnRWVXlsVkh4UkFWMVUyQlV2?=
+ =?utf-8?B?eVdkc3NHVWpFU242cVdwc1FFMGpqK0dYd0pMeHR0NFZOZnp3UEtNK2RjcmlN?=
+ =?utf-8?B?TDVqTEJ1YkxLRHRFVXQ3QTRCK2xFNXRubkpGc1cwTW9QdE5od1lYSktUa2pm?=
+ =?utf-8?B?c2hYWGo3bml3RVgrY1hCRTJuZ0NHMXRSRitPZEVqUFNYbjB2VW5MdlZXVDFF?=
+ =?utf-8?B?R1JBdS9BNXBWVFNULytuU2pYdXcrK0Z3MjFhVys5WHpRTmp1NHN3VkFhWTBn?=
+ =?utf-8?B?SWFQcFpjeEpEQnZ0blowVGwySWtoZytkek9MS2RxTDFUYkVkWkRaV3JFelg0?=
+ =?utf-8?B?QTVsRWJlRUJNTElFLzY5VzJmYkp0Qzc0bFY5MDlTNEx2WnIyekk4UWU2ZWRV?=
+ =?utf-8?B?Wmc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4A72A46F0DE4CE4EA832102E53DFCE89@namprd14.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -148,37 +164,26 @@ MIME-Version: 1.0
 X-OriginatorOrg: rutgers.edu
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB5493.namprd14.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d29fc6c6-6e34-4cdc-b1df-08de068d78eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2025 17:09:42.1463
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5e7a396-0418-46f3-741c-08de0694dc06
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2025 18:02:34.9062
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: b92d2b23-4d35-4470-93ff-69aca6632ffe
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dhAFg71CF4qEckkMjrlHwKk5vB4n1IaaX9xGlTYfaHF9peoAD8Tz1aa659WjatiUMly8JyF3vNbWrON6KZ3Agw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR14MB3267
+X-MS-Exchange-CrossTenant-userprincipalname: sN7mzVhFU0ilWubxPL/j5UvTDpDU63OvI6Kqeh0wWAtACyEndYAoNC2V4Djmm3ehFdsYlTqPdexDX7WG7OA3xA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR14MB6757
 
-<div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFo=
-nt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=
-olor: rgb(0, 0, 0);">About a month ago there was discussion about gssproxy,=
- including use for cron jobs.</div><div class=3D"elementToProof" style=3D"f=
-ont-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Calibri, Helvet=
-ica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><br></div><div clas=
-s=3D"elementToProof" style=3D"font-family: Aptos, Aptos_EmbeddedFont, Aptos=
-_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; color: rgb=
-(0, 0, 0);">I just did some testing. With constrained delegation I can make=
- cron jobs work. However when I do, normal users can no longer use NFS. It =
-appears that when rpc.gssd has GSS_USE_PROXY set, it always uses the proxy.=
- So normal Kerberos tickets from login or ssh don't work. I looked at the s=
-ource for gssproxy. It appears that when impersonation is turned on, it alw=
-ays tries to impersonate.&nbsp;It doesn't check if there's a TGT that would=
- allow it to get a normal service ticket.</div><div class=3D"elementToProof=
-" style=3D"font-family: Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, Cal=
-ibri, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><br></d=
-iv><div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_Embedde=
-dFont, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt=
-; color: rgb(0, 0, 0);">Unless I'm missing something we can't actually use =
-this for cron job, since the system couldn't be used for anything else.</di=
-v><div class=3D"elementToProof" style=3D"font-family: Aptos, Aptos_Embedded=
-Font, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt;=
- color: rgb(0, 0, 0);"><br></div>=
+TXkgYXBvbG9naWVzIGZvciB0aGUgcHJldmlvdXMgY29weS4gVGhhdCB3YXMgTWljcm9zb2Z0J3Mg
+aWRlYSBvZiBwbGFpbiANCnRleHQuIFRoaXMgaXMgVGh1bmRlcmJpcmQncy4NCg0KLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KQWJvdXQgYSBtb250aCBhZ28gdGhlcmUgd2FzIGRpc2N1
+c3Npb24gYWJvdXQgZ3NzcHJveHksIGluY2x1ZGluZyB1c2UgZm9yIA0KY3JvbiBqb2JzLg0KDQpJ
+IGp1c3QgZGlkIHNvbWUgdGVzdGluZy4gV2l0aCBjb25zdHJhaW5lZCBkZWxlZ2F0aW9uIEkgY2Fu
+IG1ha2UgY3JvbiANCmpvYnMgd29yay4gSG93ZXZlciB3aGVuIEkgZG8sIG5vcm1hbCB1c2VycyBj
+YW4gbm8gbG9uZ2VyIHVzZSBORlMuIEl0IA0KYXBwZWFycyB0aGF0IHdoZW4gcnBjLmdzc2QgaGFz
+IEdTU19VU0VfUFJPWFkgc2V0LCBpdCBhbHdheXMgdXNlcyB0aGUgDQpwcm94eS4gU28gbm9ybWFs
+IEtlcmJlcm9zIHRpY2tldHMgZnJvbSBsb2dpbiBvciBzc2ggZG9uJ3Qgd29yay4gSSBsb29rZWQg
+DQphdCB0aGUgc291cmNlIGZvciBnc3Nwcm94eS4gSXQgYXBwZWFycyB0aGF0IHdoZW4gaW1wZXJz
+b25hdGlvbiBpcyB0dXJuZWQgDQpvbiwgaXQgYWx3YXlzIHRyaWVzIHRvIGltcGVyc29uYXRlLiZu
+YnNwO0l0IGRvZXNuJ3QgY2hlY2sgaWYgdGhlcmUncyBhIA0KVEdUIHRoYXQgd291bGQgYWxsb3cg
+aXQgdG8gZ2V0IGEgbm9ybWFsIHNlcnZpY2UgdGlja2V0Lg0KDQo=
 
