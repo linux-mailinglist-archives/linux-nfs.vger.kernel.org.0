@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-15049-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15050-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40165BC54EB
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 15:52:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D40EBC5524
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Oct 2025 15:54:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8FBAA342C2D
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8533D3E2E73
 	for <lists+linux-nfs@lfdr.de>; Wed,  8 Oct 2025 13:52:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D43C2882D0;
-	Wed,  8 Oct 2025 13:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D07288500;
+	Wed,  8 Oct 2025 13:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJrR2ig3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuXxL565"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DE92882C5
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 13:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6B02874F1
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Oct 2025 13:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759931559; cv=none; b=RfSwFRw++aUnm7oGwSYxXhb4gizry7i50wjz4zrZVxI2ASvJRaxSIVomWLQOgdvev1ycW46jxpHW9Jm564WuppHsKdny+mEW1npMoj+iUXD51QG4M9NVLYmpkj/91DcESIdLCCKmgcxwgc3e8AW4F10mwQzMDsz+UIwGtfeGmhs=
+	t=1759931560; cv=none; b=eQTgwCapgqMXqIogYLUtLYaoErHlpzsb+Umtj51k8Sx8QuedXUzJINgwECLFYtTRDSliH+7ZmjStkmWUEjgwws7FmALtvwZq3quczAS0e7dYM6LksaDH2dc5U+70rAIVGoNsuA2F7TrD2DI8/HjRTxFSxIr9PHuYOfVOxiMa8vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759931559; c=relaxed/simple;
-	bh=nUmIEHkTO/pehuTiZXrilQGhCcwgn8yq45uHZRreBuU=;
+	s=arc-20240116; t=1759931560; c=relaxed/simple;
+	bh=afdZz1ccrPGArylvdqUNMBewJVhta++3rUO5gJ7ErXY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jwGPfWdHleKhGY1CKZuz/DcpqUMoW4J8ddP5L6Zq5yzcOJkUNyTghKTWkLIu3LWu2StCK6F6L8qhCrrkQiuLKk0qFMwlo1uQrCHfW2I977iU4G7+upY7pXmAWwJKOAYgjX9JVb9ctuNudFRYLBMHp/MZb/+9BrNsDfZBvU/ZYYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJrR2ig3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA9BC4CEF5;
-	Wed,  8 Oct 2025 13:52:38 +0000 (UTC)
+	 MIME-Version; b=PEOEaBjQHyL8yXG2e+vTHUAf8jBo6oZ8o8ea8IGQ7x+HtPH4OfgE8P8O6wuGIC4rks806dY+wbG6IC0KbeoKd7DeMQc9Br5tSPhBj32O0cPLH/FQdA/HP2t8piFPsGg05CSr7SFWttDWA3qWzwfhHrhVTRe0W2xnLLbwvH2YGb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuXxL565; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE43C4CEF4;
+	Wed,  8 Oct 2025 13:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759931559;
-	bh=nUmIEHkTO/pehuTiZXrilQGhCcwgn8yq45uHZRreBuU=;
+	s=k20201202; t=1759931560;
+	bh=afdZz1ccrPGArylvdqUNMBewJVhta++3rUO5gJ7ErXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dJrR2ig3SH1NDDHlDc9V5CmBjAGSe8gmWziTgzi7DIsbEIDNYHHUuIfFzJOvFWWfa
-	 jhcx0gGPueWxLb7tx4V+2ckfMXs4ByoFWM0osD787nIT4F4KO0G1rLHy9HDrTREBVQ
-	 B0pLFE/43LdCV6gzjCEEhtg/6fPnFfabxtuVFd5aC65jkwTmq8NeszVD+D2ggaDYED
-	 DQICc+kBClJAXMob0PxG1e1m7/Q7G0w6xdhddTZgAOzkcUNoElYSNLWHI3vpNFWN1S
-	 oWtLzEINPo2aVAR3PrZEWQhI/WHpsAax8yhLB3a9kIPaEIUKAjupnVDQkEVWi299iw
-	 y0uZBfUBPAD6Q==
+	b=TuXxL565kLvBdjMbD4gbmbdGzKwOgOQhi+bVN0Yc20zLc2NyquF4037XumFLm4fW8
+	 wx3moqU7+aSyVOZXO9rK8UDo3oAs7iv8XIwUvoZI/6NKKlKZ4fjtF+0YqAaThGSwM2
+	 4PchAw0GQfzVRLY6h7MThCBiSoiLE4vV2UlOJ2VBjK5ef227hoWlrr0o7ZbKDAxavy
+	 C+CsyiBk8tvQOBveD5I0BUPIGCYFu5moeQnJUmW8+9eRJU5rWzJtMPLJbAv6DpNncC
+	 J4mY5yamVRqj/ioNxZTQAYoSE3JR0yM+cy0duOdiGYfOZoi01eYR6MvglJF/3QY8To
+	 xvvxoNmbUwU0Q==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +48,10 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v6 4/6] NFSD: pass nfsd_file to nfsd_iter_read()
-Date: Wed,  8 Oct 2025 09:52:28 -0400
-Message-ID: <20251008135230.2629-5-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v6 5/6] NFSD: Relocate the xdr_reserve_space_vec() call site
+Date: Wed,  8 Oct 2025 09:52:29 -0400
+Message-ID: <20251008135230.2629-6-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251008135230.2629-1-cel@kernel.org>
 References: <20251008135230.2629-1-cel@kernel.org>
@@ -64,115 +63,70 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mike Snitzer <snitzer@kernel.org>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Prepare for nfsd_iter_read() to use the DIO alignment stored in
-nfsd_file by passing the nfsd_file to nfsd_iter_read() rather than
-just the file which is associaed with the nfsd_file.
+In order to detect when a direct READ is possible, we need the send
+buffer's .page_len to be zero when there is nothing in the buffer's
+.pages array yet.
 
-This means nfsd4_encode_readv() now also needs the nfsd_file rather
-than the file.  Instead of changing the file arg to be the nfsd_file,
-we discard the file arg as the nfsd_file (and indeed the file) is
-already available via the "read" argument.
+However, when xdr_reserve_space_vec() extends the size of the
+xdr_stream to accommodate a READ payload, it adds to the send
+buffer's .page_len.
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+It should be safe to reserve the stream space /after/ the VFS read
+operation completes. This is, for example, how an NFSv3 READ works:
+the VFS read goes into the rq_bvec, and is then added to the send
+xdr_stream later by svcxdr_encode_opaque_pages().
+
+Now that xdr_reserve_space_vec() uses the number of bytes actually
+read, the xdr_truncate_encode() call is no longer necessary.
+
 Reviewed-by: NeilBrown <neil@brown.name>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c | 8 ++++----
- fs/nfsd/vfs.c     | 7 ++++---
- fs/nfsd/vfs.h     | 2 +-
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ fs/nfsd/nfs4xdr.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index c0a3c6a7c8bb..cd3251340b5c 100644
+index cd3251340b5c..f4a5e102b63a 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -4465,7 +4465,7 @@ static __be32 nfsd4_encode_splice_read(
+@@ -4473,18 +4473,30 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 	__be32 zero = xdr_zero;
+ 	__be32 nfserr;
  
- static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 				 struct nfsd4_read *read,
--				 struct file *file, unsigned long maxcount)
-+				 unsigned long maxcount)
- {
- 	struct xdr_stream *xdr = resp->xdr;
- 	unsigned int base = xdr->buf->page_len & ~PAGE_MASK;
-@@ -4476,7 +4476,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
- 		return nfserr_resource;
- 
--	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, file,
-+	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, read->rd_nf,
+-	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
+-		return nfserr_resource;
+-
+ 	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, read->rd_nf,
  				read->rd_offset, &maxcount, base,
  				&read->rd_eof);
  	read->rd_length = maxcount;
-@@ -4523,7 +4523,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	if (file->f_op->splice_read && splice_ok)
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
- 	else
--		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_readv(resp, read, maxcount);
- 	if (nfserr) {
- 		xdr_truncate_encode(xdr, eof_offset);
- 		return nfserr;
-@@ -5419,7 +5419,7 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 	if (file->f_op->splice_read && splice_ok)
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
- 	else
--		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
-+		nfserr = nfsd4_encode_readv(resp, read, maxcount);
  	if (nfserr)
  		return nfserr;
++
++	/*
++	 * svcxdr_encode_opaque_pages() is not used here because
++	 * we don't want to encode subsequent results in this
++	 * COMPOUND into the xdr->buf's tail, but rather those
++	 * results should follow the NFS READ payload in the
++	 * buf's pages.
++	 */
++	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
++		return nfserr_resource;
++
++	/*
++	 * Mark the buffer location of the NFS READ payload so that
++	 * direct placement-capable transports send only the
++	 * payload bytes out-of-band.
++	 */
+ 	if (svc_encode_result_payload(resp->rqstp, starting_len, maxcount))
+ 		return nfserr_io;
+-	xdr_truncate_encode(xdr, starting_len + xdr_align_size(maxcount));
  
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index ea9c2de70429..406fe62de219 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1078,7 +1078,7 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * nfsd_iter_read - Perform a VFS read using an iterator
-  * @rqstp: RPC transaction context
-  * @fhp: file handle of file to be read
-- * @file: opened struct file of file to be read
-+ * @nf: opened struct nfsd_file of file to be read
-  * @offset: starting byte offset
-  * @count: IN: requested number of bytes; OUT: number of bytes read
-  * @base: offset in first page of read buffer
-@@ -1091,9 +1091,10 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * returned.
-  */
- __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		      struct file *file, loff_t offset, unsigned long *count,
-+		      struct nfsd_file *nf, loff_t offset, unsigned long *count,
- 		      unsigned int base, u32 *eof)
- {
-+	struct file *file = nf->nf_file;
- 	unsigned long v, total;
- 	struct iov_iter iter;
- 	struct kiocb kiocb;
-@@ -1336,7 +1337,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (file->f_op->splice_read && nfsd_read_splice_ok(rqstp))
- 		err = nfsd_splice_read(rqstp, fhp, file, offset, count, eof);
- 	else
--		err = nfsd_iter_read(rqstp, fhp, file, offset, count, 0, eof);
-+		err = nfsd_iter_read(rqstp, fhp, nf, offset, count, 0, eof);
- 
- 	nfsd_file_put(nf);
- 	trace_nfsd_read_done(rqstp, fhp, offset, *count);
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 0c0292611c6d..fa46f8b5f132 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -121,7 +121,7 @@ __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				unsigned long *count,
- 				u32 *eof);
- __be32		nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
--				struct file *file, loff_t offset,
-+				struct nfsd_file *nf, loff_t offset,
- 				unsigned long *count, unsigned int base,
- 				u32 *eof);
- bool		nfsd_read_splice_ok(struct svc_rqst *rqstp);
+ 	write_bytes_to_xdr_buf(xdr->buf, starting_len + maxcount, &zero,
+ 			       xdr_pad_size(maxcount));
 -- 
 2.51.0
 
