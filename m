@@ -1,362 +1,452 @@
-Return-Path: <linux-nfs+bounces-15092-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15093-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9017ABC9AE2
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 17:04:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15A89BC9AFA
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 17:05:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 726454E42FC
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 15:04:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78DF81A61647
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 15:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1CA2EBBAD;
-	Thu,  9 Oct 2025 15:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8BE22EBDDE;
+	Thu,  9 Oct 2025 15:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Sd0ktzYF";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EKcHcX5W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkOC9MPc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF242E8DF0;
-	Thu,  9 Oct 2025 15:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760022257; cv=fail; b=MZZnx3Z+ubs7xcNpvKT4SW4ONm1R/WZd4nx1brBU37PgZjK5XOTqt0PiAe5xQZGcwZ9xczN6h+sutAcX22gnLBgcgXvF6UMvQBa9L3mlhLpkDmH/vzs+PlrszEKKO0HdtnGgJQ451dhsoHCg1lQ0pmhaWWfNvZ9lJPPVW7pTmZA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760022257; c=relaxed/simple;
-	bh=dEoxsF3F5r78lNNFUuz2Ptw4Lrj2yICFBXewPPoaBwg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QnkwJJqTiJX6ABNZEGggU6nftXTdITMrI82Q4KzVPIi+rvmaHwc4I/3mf5qsdPCP2hP+FZM60WrwXr044LFnbVdG/AimJYUQnoBmtlai1njzoX0kpvQvPFoFco8ZQ7r4ZEmy8M2DU1+KhHcCrTQsbWYJEoa/7HAcT0gTBI12/YY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Sd0ktzYF; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EKcHcX5W; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 599EtlSk007039;
-	Thu, 9 Oct 2025 15:04:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=9hNgi2jb5c1VsW7Vk7AGr6/YEIgbScrK3W5V2dagkNU=; b=
-	Sd0ktzYF9Zh73x9a3nE+WFX7vOkkKcfld6cd8DNh34CpQvoAU920KhlvC71UtXfM
-	j1lxeY+7n3RH3nCA2QquMbeyFAc7YboGQwodu3DpU1dt5E5SV97pB05o2nbkb3VK
-	StBDOer8+afWMV0uyF9JykbMrGlalZ4CArmRKMPibNJcsHQ/DkqrzHSnFpaoNJU6
-	RHOkpQFUyVQflIn7Iq+Q7JEw0E7VWgO6aEbIHPhsfi7WH36EOddMNKd1C+P9EmE5
-	Gjw10FF8vYpCXEwP780BV7Tgwsu3ndzhblnESGoVNZwVcX/C7Yy1sXLIR6rHnEdi
-	AcKXAxRLrLrLYJJ0N+0Xmg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49nv69stn8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 09 Oct 2025 15:04:01 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 599DgM1L037136;
-	Thu, 9 Oct 2025 15:04:00 GMT
-Received: from sn4pr0501cu005.outbound.protection.outlook.com (mail-southcentralusazon11011059.outbound.protection.outlook.com [40.93.194.59])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49nv641rjv-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 09 Oct 2025 15:04:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CtfNa0X5OIHKc8iTgbzmzgZh0D87hQBn7B3UVVu1SbmoumsEE3mwspnWq65/a3fPn1jg3xBY5iwyZKEuBCOFp30uS++rgizhalMSpBcqLWVNRPai+4KQ4xJiddS9oOtXJhA6tWZhTq7maCwGbgacgVo81lyN9eCt8aWe9rUR9TFMN7+RBfbUXejLlpE6uqD1XbS12mMvVh2sDeCPUogib3degWTz105KUFWWuuBuS3QBDdX/jAkCLptasSb5rTiQprWFbasQQdFi40hwutYMusY+MdbCFj42Ey01vK6NuVI/RIzaumkrsFwNHohxQG81rmCoZaGz86fI8BlF9j7EBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9hNgi2jb5c1VsW7Vk7AGr6/YEIgbScrK3W5V2dagkNU=;
- b=kaxC4eRgD3D0JrIHspW6jT5Fd2K2TcP9ZjqzxFcrheWhIx4Mlmcx2HKThaWOuFZj7GApARvapKSGmg0TxDto5pGhlXQpKb4kg0ktbwBESR/v8z/KqtETNOxI5+JMOBKTmgZ5YIhfh7RZGdsFgWx6DpYawqtSIe1pl8okm3AWlqC8GgBvP9rkOvKp9irATHq+uxnHiC9PBKevYEuhjkAeb5BDidjaoWr47FWhNbyTuqFBMov7IFy7mdl02eatFKw00DPXUA0VlOSB1Gq+Dn+lL96LcVsnq078B/fvW7XC3uDOrm/aorLTsoJeLo+4tiUkbc4Vf6H+8QA+F14Cfc9OBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hNgi2jb5c1VsW7Vk7AGr6/YEIgbScrK3W5V2dagkNU=;
- b=EKcHcX5W8QbC9/JEltuixaimNR061AntdPwZIdphDaq/aIbePKqT+320sC+57djjxHp24IZchzlX1mH3vFfu1wWWi/158JxeFOBBQwkgVqek5Yt4OkRXRsuevoWBtBxl8n0SdqD3K56kyXZW4tuev28x2nqmu2obFdFzwrxVwPM=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM4PR10MB8220.namprd10.prod.outlook.com (2603:10b6:8:1cc::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Thu, 9 Oct
- 2025 15:03:57 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9203.007; Thu, 9 Oct 2025
- 15:03:57 +0000
-Message-ID: <56718ad5-fdb3-4588-bab9-7b9a1879cad0@oracle.com>
-Date: Thu, 9 Oct 2025 11:03:55 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] sunrpc: add a slot to rqstp->rq_bvec for TCP
- record marker
-To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        David Howells <dhowells@redhat.com>
-Cc: Brandon Adams <brandona@meta.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251009-rq_bvec-v3-0-57181360b9cb@kernel.org>
- <20251009-rq_bvec-v3-2-57181360b9cb@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251009-rq_bvec-v3-2-57181360b9cb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0360.namprd03.prod.outlook.com
- (2603:10b6:408:f6::35) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751222EBB86
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 15:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760022290; cv=none; b=g2f9B5gvZZxn8wJUTFtaxx/268BKtiXqfP1I3C+5/G0BDuj4x68Hso0oI2fULNyOB0eyM2TUxXMtLLeYiNeKrdEC+/RKHAG2hlZsBajBANvRVFMQPTCaKd6Knsj2TKio9hED7CeXdw9SLi66ZnZkAYnK4zHqFfRsvoj30VVU7P0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760022290; c=relaxed/simple;
+	bh=tDsavHVIWkGycmVHssHyMvC1fvaFN9JZC/nI7JEnAts=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LA2TA07tZOu+s/mPTsXlbLZh6wuHyWfTSsVkuqnzpQPWsqsRCdhtIebvOZpFpEmsR8krBin5OzjpmWjZBvFfgKovINnsxyxiw9vYalwfEn8a4A9Jh8WkfKx9sH/uTxBqRlRbRuOnrIVU46XcQgrlz+kWJho7UpyrJg1GYnlmZ5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkOC9MPc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE00FC4CEE7;
+	Thu,  9 Oct 2025 15:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760022288;
+	bh=tDsavHVIWkGycmVHssHyMvC1fvaFN9JZC/nI7JEnAts=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hkOC9MPcsFSA3GiZMZ1jGT0Z8XvbWAVCFGKUGZtq/DS2mgR7wG8tqZj5YCuDyQtOS
+	 DPPnfE/Sjww1NfWd920KKNXmOgwX7u/1bFzzprhlgrvNNbfwVQhGn4nJj4FB6/r930
+	 Z3sZXswcqj6o/Kj7MLFBeg+bvWA2XdX8txBBX6j+36J+qW+rZK84gll56kvTc2LSZe
+	 28b/tUHrOUuJkeISvUcMR8+dkwlcjw0B7YBu6W2pKzv8P/pDy73pJb5HCgqMgEKX+T
+	 AGR3DHSkaonWSBDMjKo4uQiZ59XMFk70PsRfrbDDA07rwKOFzHChsV1hZm/qBDHoXd
+	 I3M2eZZv/Z15Q==
+Message-ID: <d8d9f049ded0514e0433c53aeabfa47c20cdd8bf.camel@kernel.org>
+Subject: Re: [PATCH v2] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <cel@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, Chuck Lever	 <chuck.lever@oracle.com>
+Date: Thu, 09 Oct 2025 11:04:46 -0400
+In-Reply-To: <aOa0ijW1h-1tynWD@kernel.org>
+References: <aOa0ijW1h-1tynWD@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB8220:EE_
-X-MS-Office365-Filtering-Correlation-Id: c31c6cb8-0a27-4f4b-0c1d-08de074511de
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|7416014|1800799024|376014|366016|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?b3FVQjVOUXlYQTBqVDludlppS1JlOVpUV0U0SkgzRkVBblM0YUYvN3g3NCtn?=
- =?utf-8?B?eUJaWXB3RWVGc2RzYm5HZERMMWhyNmN1bmphSGZST1FiQjdIdXJQUzdWNlRT?=
- =?utf-8?B?dmRKZE1IaXZGcTRMWnVvS3MxME4zVEhIYzR1bzFodUtQRjFjQzdZVzJjSmRl?=
- =?utf-8?B?V3IwN2tESDltNVRwYlVXdFR6bGxSTDRxNStESGZzcFg0SkpJL2RSTUEraFJW?=
- =?utf-8?B?Tm9GYW94bWwrZnI0RCtpOG1iNWJXckRiT3lqWTBkdlNpNkEvb1F6KzF6TFU0?=
- =?utf-8?B?aHZscm15dDVWV0QzeHU4SmNYSGV3NDI4WG45OUZrNHdXaCttYjBLWlB6ZEc3?=
- =?utf-8?B?aWJtd25tbkgrdkJvOWlnNmQvYjZyVGtYU2QzRXJmNkxhb3ZSSkxPVDZvZVZx?=
- =?utf-8?B?OEJpQzVpVFl3LzdsMjcwc0JuQmtNcmU2RmdIVjl6Q2xOb2lIMm02dkJEaldR?=
- =?utf-8?B?RjQ5djJBKzBValFoSnRCVHFSbTBFVFZrbFJzU2hDZmJOUEdsNWFOalZYc3dk?=
- =?utf-8?B?SldsUlNEU0hqckI2TFRFZi95aGhyWGRta1FmWTVnZU1vVkNWalE1WjNDV3FY?=
- =?utf-8?B?c2g0Q2IyTlNkNXNNbzhmdGFMYmw3OWJHbGREeVpuTFpLdFB2Q29hcjdOeFVB?=
- =?utf-8?B?d0Z1M0N6TStIMUxqTjdObklGb1lKZ3JCY0J3SU9wWHc4S0lQSUZUNWlEVmVj?=
- =?utf-8?B?K09WQTNBdW84TVZ0eElrYXpIdlR5dTdncTNML2tSN0xOQ3ZQYWE0UnBHTDdK?=
- =?utf-8?B?ZVN0NUN5aTVRa0JsdEN6Wk1qMU1GZDIxL0pTV1RYRTl2cEtzNzJaTVpBZDlx?=
- =?utf-8?B?TlhyUHZsRWdBV2FmWjFKeW0wQkN0WXF4Um5wNmQyM0xobTFEaFZrMTl4QXFM?=
- =?utf-8?B?a3VpVVMyV3ppcDRNV2FneGtVNHNvbHJTcm9ZYWFtTXZ5ZThsS3N2TWwwdUZ5?=
- =?utf-8?B?T0pJUEJ1cDVMdk1adTN5VjJveXZHY0VQd1FUOUt6VGZUNHhGU0VCZU9Bak1E?=
- =?utf-8?B?OHRnczNKUFZLMlU4dFFFWHVIbENBNmpvVnNubmtHQVBTL1pneUN6b0FxRnZ1?=
- =?utf-8?B?YXgzTkt2TWhZcHZNWXY4STJvakhPN1oyaFJqSW5UaWFVWlBnN2lDelRJRit2?=
- =?utf-8?B?blc3TFJyd09IK0dueDFRa1h1a3FWUHVjbnZUQy91WnBqVG9QUXYzNEllZDJx?=
- =?utf-8?B?WHFMWnh2MktZSjZXaWMrRGFCb2tQTFpHMFBhNkNRYmswcmtLb1N6QkNpSGh1?=
- =?utf-8?B?UFBjSVZsZjFTejNDZkdqeGRkK0Z0anNFb0NkWnVWOFZwNGtLRDV4YkplODVn?=
- =?utf-8?B?aVhEb0Z3VUE2K29NRlJGd2M3aWptY0xNRlJROWx4Z0lHSzVlQlM1V0g3Smkz?=
- =?utf-8?B?a1RlbXp2cGgzdG5MSEJ3UHk2enQrSU1IbGg0MFd6YUZlYUtMR2RGRjJEVzlO?=
- =?utf-8?B?Rktaem5HM010elJIZmNZbVV2WEhucE9wSlJOcW1PRHh2MGdnbUtqM3VZbHRR?=
- =?utf-8?B?bUl1RFFLT2RCdWUwSlZOYlNuODBYM3dpNkVtMTBHbTBRdzE0SUpJR1htQmg1?=
- =?utf-8?B?VDVFOW1CcFQrL3l5K1BUUTBLTmdlaUYxZ0IwSWw3L0lBNFRpUkZsSk9peDZU?=
- =?utf-8?B?VHZoTlllSXpOQU1xNmtCTUlURG1OS2xIM3IrNVQ0aGJrNlpyM3UzdEpmc0Zi?=
- =?utf-8?B?Q1kvOHllNDZDOTQwRFpzakMwL3dpa2FFM0Z3VWJmWmZXdTdQU2ZRMFRUS1pu?=
- =?utf-8?B?QXg3RCtpOGcrOHFqRTV1dDdmV09wWVg5amlvR0RUNllVSkU3Z2VwbzN5eVNR?=
- =?utf-8?B?a1RCZk8xeTJoUHFPZitvM2VJSmpsd3crMFpuZVdBeVh5VmoySysxR1RrWjZU?=
- =?utf-8?B?WTl4TXU1MGlodVJGaTEyRW1LZ3pXT0k4N0JoZEl6SncyTnoxb0doMURESjlM?=
- =?utf-8?B?TkdZY3VENmtXYzNEUytXS3FEOWpmbzA2OURib3k4VmMrUi9vL0xhRElXRnp4?=
- =?utf-8?Q?VKJLJi2yX0J1UNDXxG4cpxBuDrCOHU=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?czhuWUVpeS93WGM4WEpDTi9UbVprM0poalljQXBlNnFFeUgwcEwyTHRZY3Bx?=
- =?utf-8?B?KzB5WkRua2krckd1TDhCM3NPc0puUlh3aGJTWjBBUjJkckxkYytCQmVzbHFm?=
- =?utf-8?B?eDZwSG5JQ1RiRWwrRW5Db3h4SUsrSkF4ZUNxTkR2R1RKTXRndDl5T3ZVeXkw?=
- =?utf-8?B?U0JlTEpQaEoxemxDTDB1WWVWQlFCenNxWTJaOGY1NFlVaWcwSjJrcTFKSHRZ?=
- =?utf-8?B?THhRWnNQbXF0eVQ2R3FEczU0d0hBQXpDajlHUTRFNUQwbFc1Q3grSUR6NG5k?=
- =?utf-8?B?b1ovT1dXZDF2OWwvV3puZlhEZG9HUXVWV1pCNUkySjRpRWNKVlFCeDNQRW0y?=
- =?utf-8?B?cEVvQ25OUGZyYUt6MDNBWTYxck9RY3lJeXkyNDZYR29EVFFUUFVkUlE5ekRP?=
- =?utf-8?B?ViswQjQ5UWxUVVBHNiszUG9FTllKWFZTMytUN21pU0JoU2RZNWhYUFZPYTla?=
- =?utf-8?B?YStCL3JMak9yUXpqbTBzL0xIQkVLU2pIMVltZm54aUYyaXY5RzZpcDJUZWc4?=
- =?utf-8?B?TmVpSnU3YUIvdW52azhBOXFYUHdNcW1FRklTajNSMldRY0xyZzBQUVJCOU54?=
- =?utf-8?B?TEIwQnlXZkRCWkxUbXRmbnQ1NVJwdEVGbGRVUjF4NE1Wd2FKZXBWTVNZK3E0?=
- =?utf-8?B?Z2l0MHhyZmozRW5QbzNSMnRLeG01eDAyemlNNkkrYlNHV28wN2xZaTNka0k3?=
- =?utf-8?B?ekU2TTRCTDRDZzdCcy9IQzdSVlZLemJPam5yeVJpNTBZTnljOVo0bHVHOGJI?=
- =?utf-8?B?aDhtcE5MZWRPN0tKNjlDcUpkTFBDZUI1Vzl6dnVNUG84MWJJOXh3OGxCN0lK?=
- =?utf-8?B?b3ZLWURFcFYwWEYrcUYzMUtJV1poaWhsU1NpSExGWG1SUVRLUzgrZFBQNlpZ?=
- =?utf-8?B?dWxJQ1RQUDVWc3dIL1ZpZUExVldVTDJLVms5cmp5UjdjQTRka256K1NOelJw?=
- =?utf-8?B?WFBjME5FOWhKUjBiNjMreFFxSFZ5VVp0NnZBWThMVWRzMGZGMVI0L2ZtalA3?=
- =?utf-8?B?MkNpMTByTjRESHFBYVJvUFBmK0d1WFpXcHoycjlwNloreHJUejgvaGF3aElT?=
- =?utf-8?B?RU0xbXFFWEQ3UnJYcmcxWnMra0E1QUNBenNuMkpEUmdIR2NGc3hVOW5Eandp?=
- =?utf-8?B?ekt6MElYYXZIVDlLaEhiQ0g2L0F4eUZiZXVha2w3NmUzRmdqR2NoUVpaWHBy?=
- =?utf-8?B?aGk2RzJCaDJUWmhKejlvZmozZlo5VlFQRkNvN1o2NnF3UkIvbjRQbzduVXAr?=
- =?utf-8?B?UDYwcEFia25ROVhTQllkMUpoVlN2dW84MWZoUWVGU1FHRFVjZDVVVXNxRENM?=
- =?utf-8?B?cE8wQzUzcVAvUVord1paQVYzZmEwZUgzM24wVE12TS9CRWZFRHl6ZHA3RWhx?=
- =?utf-8?B?dGRLbkNkRXJlb3ovUHZmcDlSUmZ2dks1emRxakVCNWNYb21ZU3UwakpkeDly?=
- =?utf-8?B?UTJtNWFFNHlEN0JoVzdzNm14d0xna1FCSzR1Q0RiajhidkcvbHJxMWJIL1M2?=
- =?utf-8?B?NnpXSlpnQk94R1VWTDJZVS9FdTNocUZHR011NXNrOFcrK3NRUTZYNThYL3ZN?=
- =?utf-8?B?NVUvOWUycytjOTVsMXNJNndJWHVkNytYaGFrd3ZPK2xmdXJyRzRVV1ZpS0VH?=
- =?utf-8?B?WHVMbHN2WEIvcFd0RnBvK29HOUlKeURTMmdIMElZbmhmUUFKZmNrbGliUG1I?=
- =?utf-8?B?dHMwM2dTaDUyWitsMWhYKytOeUMyN1BYMk9ndFY5citvbVd3cllpL25MSXdW?=
- =?utf-8?B?ajR0WTl6eXJxNG5VVlAyRnBsKzBRL21qNkJTOUNhTFhVSUF0NlRtM2cwbi9u?=
- =?utf-8?B?ZFRtQmVjbytDVGc1eWpRUG5mVkhhSzFpL2dCVDdGbmFwMlRWR1IwcDlOYU8z?=
- =?utf-8?B?MHhCc1F4YkVMOTlEVFNEa0MrdFZoZ3ljY0ppVUN1TjdWZWVhYUpVZTFzVHRt?=
- =?utf-8?B?OHl6TEx1bjhsWkRpK01Lb1JKcWRjb3dTUElyc2NMM1dqTnFBY3lWSHlUUGl0?=
- =?utf-8?B?K29XSGlqaTE3TU9Cbi8rSEdDZTFhT2R4dmdMVG5OQ0VLUTRGd1lGWlU1SDVp?=
- =?utf-8?B?bTRjSzhNK2VzUndFSTBjcHZBZTZTd01VaEtvd1dLNEE4S0tLMVNUWXdOQ0dC?=
- =?utf-8?B?anQxVFIxYnFuYzNOWEpTNXVvNzZlcWFTNW02NDgrK293RlBGd2Z6Y0UyNFVo?=
- =?utf-8?B?K2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	EqqvMME9iw8aFVeXboxxToXau5Ptyq3pCA4o4XWNaFurJieZKanfx0urYNFyTrBo1185qKBEJVIRI6vN4OtYz/+9B6kqi8wAyD/a9ADarN6kLdVUNm7BiQtPwk2bol9zTeRSlhB0mOTV2IyDALAMESKzlMkLH53q1Au37gnYqyxk3NeN7GQnEd/Is2CR70MZY9uPDPThCaIwxVn36q5YerdWsVLpQFJCvo6jqc3Qxg/Di8V84PO/Cvfg7iI2g0wUQ7zDqz3vCaLT6/AH8x4f5eJb3K33WTBNc1BYs2272DzL79sWzpDGoW9LWz77sBAZ1v+tThp2pJAUz1SdPnLrbVc2iGt8UuKyADequiGiy6s9RwuNHBYFMTBJF8s5xLIP/WlIQLYlQ88B010V8PbR/0kz6S9gd5qYCCvDbfiw81WXic1xmZ/26T+LAqEj2YQVOqS7XmZOcZajKSoVqH0/9KXlR6ONHbpZUxbALf5PcadHts5G3Yhe9xBG8r8aN5Oz2EBNrvmVsnxBt67qOt5ZE3ro8x4+Hg22YE8xI7fwamjAeWZOOiwRIbyravmgFZQ1by7TOhpljPLEan8JBr9xnOTJt2AKWTgPxXER0dq3khc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c31c6cb8-0a27-4f4b-0c1d-08de074511de
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2025 15:03:57.0026
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xnWZrXCiGgnNGLA9ze3ePIl/KpcbiiE0UnGU/KDMDKvCGZGHAL5OfenLLvV9qTW+zEfewrBAq+IN9kwTTWKYpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB8220
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-09_05,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
- definitions=main-2510090090
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX6PeYy8cAnHvN
- 5MWG6KX4CVRtR8FN4q8yHrjQJrXrBGLfcBnjbo7sSdKF2vtrKm0I5iBbyFJjDKFAJkEFMC/kCkV
- NHKzCKIvDjTwfIiK3pZORjFsmDuHN7fw7dtltkY1H9T6ddnPuEfBn2ijdNB5F6VJGuLme+DMJQ1
- eb9c0JEKVIo6vpTJy92Kl8gBZUxJ9yJDSKEPu5OyswOQCkjDbqxKAbOz+p/cM+xaX0j3ooxiEV3
- 6DugEI6nWAH+iIAS0CYsqm6RwH+mXH1TM+wQKibhA51uo6w3eCrNLfya3r2P3ju1d9EpXsJKka4
- R4HksuSLqn310JhJok7tYQdGI2DM/gdsWQCOhc2xuAd9NBuZyJS2aBhOP5GG8RXGN4BviiKGjEl
- ILbrpPJNMibE10wp/b0RBryygR2OdOKmPPkonbrXNn/ZRo7yaTc=
-X-Authority-Analysis: v=2.4 cv=dtrWylg4 c=1 sm=1 tr=0 ts=68e7cee1 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VabnemYjAAAA:8 a=VwQbUJbxAAAA:8
- a=QeqP6Tv5zezTxy5z2j0A:9 a=QEXdDO2ut3YA:10 a=gKebqoRLp9LExxC7YDUY:22 cc=ntf
- awl=host:13624
-X-Proofpoint-GUID: BHMKBgDCyMWXqxSEV4awAfclnpdpuab0
-X-Proofpoint-ORIG-GUID: BHMKBgDCyMWXqxSEV4awAfclnpdpuab0
 
-On 10/9/25 10:40 AM, Jeff Layton wrote:
-> We've seen some occurrences of messages like this in dmesg on some knfsd
-> servers:
-> 
->     xdr_buf_to_bvec: bio_vec array overflow
-> 
-> Usually followed by messages like this that indicate a short send (note
-> that this message is from an older kernel and the amount that it reports
-> attempting to send is short by 4 bytes):
-> 
->     rpc-srv/tcp: nfsd: sent 1048155 when sending 1048152 bytes - shutting down socket
-> 
-> svc_tcp_sendmsg() steals a slot in the rq_bvec array for the TCP record
-> marker. If the send is an unaligned READ call though, then there may not
-> be enough slots in the rq_bvec array in some cases.
-> 
-> Add a rqstp->rq_bvec_len field and use that to keep track of the length
-> of rq_bvec. Use that in place of rq_maxpages where it's iterating over
-> the bvec.
-
-Granted that the number of items in rq_pages and in rq_bvec don't have
-to coincide, they just happen to be the same, historically. And, each
-bvec in rq_bvec doesn't necessarily have to be a page.
-
-
-> Fixes: e18e157bb5c8 ("SUNRPC: Send RPC message on TCP with a single sock_sendmsg() call")
-> Tested-by: Brandon Adams <brandona@meta.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Wed, 2025-10-08 at 14:59 -0400, Mike Snitzer wrote:
+> If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+> middle and end as needed. The large middle extent is DIO-aligned and
+> the start and/or end are misaligned. Buffered IO (with preference
+> towards using DONTCACHE) is used for the misaligned extents and
+> O_DIRECT is used for the middle DIO-aligned extent.
+>=20
+> If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+> invalidate the page cache on behalf of the DIO WRITE, then
+> nfsd_issue_write_dio() will fall back to using buffered IO.
+>=20
+> These changes served as the original starting point for the NFS
+> client's misaligned O_DIRECT support that landed with commit
+> c817248fc831 ("nfs/localio: add proper O_DIRECT support for READ and
+> WRITE"). But NFSD's support is simpler because it currently doesn't
+> use AIO completion.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/vfs.c              | 6 +++---
->  include/linux/sunrpc/svc.h | 1 +
->  net/sunrpc/svc.c           | 4 +++-
->  net/sunrpc/svcsock.c       | 4 ++--
->  4 files changed, 9 insertions(+), 6 deletions(-)
-> 
+>  fs/nfsd/debugfs.c |   1 +
+>  fs/nfsd/trace.h   |   1 +
+>  fs/nfsd/vfs.c     | 210 ++++++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 207 insertions(+), 5 deletions(-)
+>=20
+> changes in v2:
+> - add improved -EINVAL logging that matches latest DIO READ support
+> - update patch header
+>=20
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 00eb1ecef6ac..7f44689e0a53 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 va=
+l)
+>  	switch (val) {
+>  	case NFSD_IO_BUFFERED:
+>  	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+>  		nfsd_io_cache_write =3D val;
+>  		break;
+>  	default:
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index bfd41236aff2..ad74439d0105 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
+>  DEFINE_NFSD_IO_EVENT(read_done);
+>  DEFINE_NFSD_IO_EVENT(write_start);
+>  DEFINE_NFSD_IO_EVENT(write_opened);
+> +DEFINE_NFSD_IO_EVENT(write_direct);
+>  DEFINE_NFSD_IO_EVENT(write_io_done);
+>  DEFINE_NFSD_IO_EVENT(write_done);
+>  DEFINE_NFSD_IO_EVENT(commit_start);
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 77f6879c2e063fa79865100bbc2d1e64eb332f42..6c7224570d2dadae21876e0069e0b2e0551af0fa 100644
+> index 4ae08065debf..2420f568b378 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1111,7 +1111,7 @@ nfsd_direct_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  
->  	v = 0;
->  	total = dio_end - dio_start;
-> -	while (total && v < rqstp->rq_maxpages &&
-> +	while (total && v < rqstp->rq_bvec_len &&
->  	       rqstp->rq_next_page < rqstp->rq_page_end) {
->  		len = min_t(size_t, total, PAGE_SIZE);
->  		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
-> @@ -1200,7 +1200,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  
->  	v = 0;
->  	total = *count;
-> -	while (total && v < rqstp->rq_maxpages &&
-> +	while (total && v < rqstp->rq_bvec_len &&
->  	       rqstp->rq_next_page < rqstp->rq_page_end) {
->  		len = min_t(size_t, total, PAGE_SIZE - base);
->  		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
-> @@ -1318,7 +1318,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  	if (stable && !fhp->fh_use_wgather)
->  		kiocb.ki_flags |= IOCB_DSYNC;
->  
-> -	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> +	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_bvec_len, payload);
->  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
->  	since = READ_ONCE(file->f_wb_err);
+> @@ -1254,6 +1254,203 @@ static int wait_for_concurrent_writes(struct file=
+ *file)
+>  	return err;
+>  }
+> =20
+> +struct nfsd_write_dio {
+> +	ssize_t	start_len;	/* Length for misaligned first extent */
+> +	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
+> +	ssize_t	end_len;	/* Length for misaligned last extent */
+> +};
+> +
+> +static bool
+> +nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
+> +		       struct nfsd_file *nf, struct nfsd_write_dio *write_dio)
+> +{
+> +	const u32 dio_blocksize =3D nf->nf_dio_offset_align;
+> +	loff_t start_end, orig_end, middle_end;
+> +
+> +	if (unlikely(!nf->nf_dio_mem_align || !dio_blocksize))
+> +		return false;
+> +	if (unlikely(dio_blocksize > PAGE_SIZE))
+> +		return false;
+> +	if (unlikely(len < dio_blocksize))
+> +		return false;
+> +
+> +	start_end =3D round_up(offset, dio_blocksize);
+> +	orig_end =3D offset + len;
+> +	middle_end =3D round_down(orig_end, dio_blocksize);
+> +
+> +	write_dio->start_len =3D start_end - offset;
+> +	write_dio->middle_len =3D middle_end - start_end;
+> +	write_dio->end_len =3D orig_end - middle_end;
+> +
+> +	return true;
+> +}
+> +
+> +static bool nfsd_iov_iter_aligned_bvec(const struct iov_iter *i,
+> +		unsigned int addr_mask, unsigned int len_mask)
+> +{
+> +	const struct bio_vec *bvec =3D i->bvec;
+> +	size_t skip =3D i->iov_offset;
+> +	size_t size =3D i->count;
+> +
+> +	if (size & len_mask)
+> +		return false;
+> +	do {
+> +		size_t len =3D bvec->bv_len;
+> +
+> +		if (len > size)
+> +			len =3D size;
+> +		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
+> +			return false;
+> +		bvec++;
+> +		size -=3D len;
+> +		skip =3D 0;
+> +	} while (size);
+> +
+> +	return true;
+> +}
+> +
+> +/*
+> + * Setup as many as 3 iov_iter based on extents described by @write_dio.
+> + * Returns the number of iov_iter that were setup.
+> + */
+> +static int
+> +nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_al=
+igned,
+> +			   struct bio_vec *rq_bvec, unsigned int nvecs,
+> +			   unsigned long cnt, struct nfsd_write_dio *write_dio,
+> +			   struct nfsd_file *nf)
+> +{
+> +	int n_iters =3D 0;
+> +	struct iov_iter *iters =3D *iterp;
+> +
+> +	/* Setup misaligned start? */
+> +	if (write_dio->start_len) {
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iters[n_iters].count =3D write_dio->start_len;
+> +		iter_is_dio_aligned[n_iters] =3D false;
+> +		++n_iters;
+> +	}
+> +
+> +	/* Setup DIO-aligned middle */
+> +	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +	if (write_dio->start_len)
+> +		iov_iter_advance(&iters[n_iters], write_dio->start_len);
+> +	iters[n_iters].count -=3D write_dio->end_len;
+> +	iter_is_dio_aligned[n_iters] =3D
+> +		nfsd_iov_iter_aligned_bvec(&iters[n_iters],
+> +				nf->nf_dio_mem_align-1, nf->nf_dio_offset_align-1);
+> +	if (unlikely(!iter_is_dio_aligned[n_iters]))
+> +		return 0; /* no DIO-aligned IO possible */
+> +	++n_iters;
+> +
+> +	/* Setup misaligned end? */
+> +	if (write_dio->end_len) {
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iov_iter_advance(&iters[n_iters],
+> +				 write_dio->start_len + write_dio->middle_len);
+> +		iter_is_dio_aligned[n_iters] =3D false;
+> +		++n_iters;
+> +	}
+> +
+> +	return n_iters;
+> +}
+> +
+> +static int
+> +nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
+> +		    unsigned int nvecs, unsigned long *cnt,
+> +		    struct kiocb *kiocb)
+> +{
+> +	struct iov_iter iter;
+> +	int host_err;
+> +
+> +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +	host_err =3D vfs_iocb_iter_write(file, kiocb, &iter);
+> +	if (host_err < 0)
+> +		return host_err;
+> +	*cnt =3D host_err;
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp, struct =
+nfsd_file *nf,
+> +		     loff_t offset, unsigned int nvecs, unsigned long *cnt,
+> +		     struct kiocb *kiocb, struct nfsd_write_dio *write_dio)
+> +{
+> +	struct file *file =3D nf->nf_file;
+> +	bool iter_is_dio_aligned[3];
+> +	struct iov_iter iter_stack[3];
+> +	struct iov_iter *iter =3D iter_stack;
+> +	unsigned int n_iters =3D 0;
+> +	unsigned long in_count =3D *cnt;
+> +	loff_t in_offset =3D kiocb->ki_pos;
+> +	ssize_t host_err;
+> +
+> +	n_iters =3D nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
+> +				rqstp->rq_bvec, nvecs, *cnt, write_dio, nf);
+> +	if (unlikely(!n_iters))
+> +		return nfsd_buffered_write(rqstp, file, nvecs, cnt, kiocb);
+> +
+> +	*cnt =3D 0;
+> +	for (int i =3D 0; i < n_iters; i++) {
+> +		if (iter_is_dio_aligned[i])
+> +			kiocb->ki_flags |=3D IOCB_DIRECT;
+> +		else
+> +			kiocb->ki_flags &=3D ~IOCB_DIRECT;
+> +
+> +		host_err =3D vfs_iocb_iter_write(file, kiocb, &iter[i]);
+> +		if (host_err < 0) {
+> +			/* VFS will return -ENOTBLK if DIO WRITE fails to
+> +			 * invalidate the page cache. Retry using buffered IO.
+> +			 */
+> +			if (unlikely(host_err =3D=3D -ENOTBLK)) {
+> +				kiocb->ki_flags &=3D ~IOCB_DIRECT;
+> +				*cnt =3D in_count;
+> +				kiocb->ki_pos =3D in_offset;
+> +				return nfsd_buffered_write(rqstp, file,
+> +							   nvecs, cnt, kiocb);
+> +			} else if (unlikely(host_err =3D=3D -EINVAL)) {
+> +				struct inode *inode =3D d_inode(fhp->fh_dentry);
+> +
+> +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n"=
+,
+> +						    inode->i_sb->s_id, inode->i_ino);
+> +				host_err =3D -ESERVERFAULT;
+> +			}
+> +			return host_err;
+> +		}
+> +		*cnt +=3D host_err;
+> +		if (host_err < iter[i].count) /* partial write? */
+> +			break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static noinline_for_stack int
+> +nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		  struct nfsd_file *nf, loff_t offset, unsigned int nvecs,
+> +		  unsigned long *cnt, struct kiocb *kiocb)
+> +{
+> +	struct nfsd_write_dio write_dio;
+> +
+> +	/* Any buffered IO issued here will be misaligned, use
+> +	 * IOCB_SYNC to ensure it has completed before returning.
+> +	 */
+> +	kiocb->ki_flags |=3D IOCB_SYNC;
+> +	/* Check if IOCB_DONTCACHE should be used when issuing buffered IO;
+> +	 * if so, it will be ignored for any DIO issued here.
+> +	 */
+> +	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> +		kiocb->ki_flags |=3D IOCB_DONTCACHE;
+> +
+> +	if (nfsd_is_write_dio_possible(offset, *cnt, nf, &write_dio)) {
+> +		trace_nfsd_write_direct(rqstp, fhp, offset, *cnt);
+> +		return nfsd_issue_write_dio(rqstp, fhp, nf, offset, nvecs,
+> +					    cnt, kiocb, &write_dio);
+> +	}
+> +
+> +	return nfsd_buffered_write(rqstp, nf->nf_file, nvecs, cnt, kiocb);
+> +}
+> +
+>  /**
+>   * nfsd_vfs_write - write data to an already-open file
+>   * @rqstp: RPC execution context
+> @@ -1281,7 +1478,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	struct super_block	*sb =3D file_inode(file)->i_sb;
+>  	struct kiocb		kiocb;
+>  	struct svc_export	*exp;
+> -	struct iov_iter		iter;
+>  	errseq_t		since;
+>  	__be32			nfserr;
+>  	int			host_err;
+> @@ -1318,25 +1514,29 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  		kiocb.ki_flags |=3D IOCB_DSYNC;
+> =20
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +
+>  	since =3D READ_ONCE(file->f_wb_err);
 >  	if (verf)
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 5506d20857c318774cd223272d4b0022cc19ffb8..0ee1f411860e55d5e0131c29766540f673193d5f 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -206,6 +206,7 @@ struct svc_rqst {
->  
->  	struct folio_batch	rq_fbatch;
->  	struct bio_vec		*rq_bvec;
-> +	u32			rq_bvec_len;
->  
->  	__be32			rq_xid;		/* transmission id */
->  	u32			rq_prog;	/* program number */
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 4704dce7284eccc9e2bc64cf22947666facfa86a..a6bdd83fba77b13f973da66a1bac00050ae922fe 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -706,7 +706,9 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
->  	if (!svc_init_buffer(rqstp, serv, node))
->  		goto out_enomem;
->  
-> -	rqstp->rq_bvec = kcalloc_node(rqstp->rq_maxpages,
-> +	/* +1 for the TCP record marker */
-> +	rqstp->rq_bvec_len = rqstp->rq_maxpages + 1;
-
-What bugs me about this is that svc_prepare_thread() shouldn't have
-specific knowledge about the needs of transports. But I don't have a
-better idea...
-
-
-> +	rqstp->rq_bvec = kcalloc_node(rqstp->rq_bvec_len,
->  				      sizeof(struct bio_vec),
->  				      GFP_KERNEL, node);
->  	if (!rqstp->rq_bvec)
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 377fcaaaa061463fc5c85fc09c7a8eab5e06af77..2075ddec250b3fdb36becca4a53f1c0536f8634a 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -740,7 +740,7 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
->  	if (svc_xprt_is_dead(xprt))
->  		goto out_notconn;
->  
-> -	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, xdr);
-> +	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_bvec_len, xdr);
->  
->  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
->  		      count, rqstp->rq_res.len);
-> @@ -1244,7 +1244,7 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
->  	memcpy(buf, &marker, sizeof(marker));
->  	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
->  
-> -	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages - 1,
-> +	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_bvec_len - 1,
->  				&rqstp->rq_res);
->  
->  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
-> 
+>  		nfsd_copy_write_verifier(verf, nn);
+> =20
+>  	switch (nfsd_io_cache_write) {
+> -	case NFSD_IO_BUFFERED:
+> +	case NFSD_IO_DIRECT:
+> +		host_err =3D nfsd_direct_write(rqstp, fhp, nf, offset,
+> +					     nvecs, cnt, &kiocb);
+>  		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+>  			kiocb.ki_flags |=3D IOCB_DONTCACHE;
+> +		fallthrough; /* must call nfsd_buffered_write */
+> +	case NFSD_IO_BUFFERED:
+> +		host_err =3D nfsd_buffered_write(rqstp, file,
+> +					       nvecs, cnt, &kiocb);
+>  		break;
+>  	}
+> -	host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
+>  	if (host_err < 0) {
+>  		commit_reset_write_verifier(nn, rqstp, host_err);
+>  		goto out_nfserr;
+>  	}
+> -	*cnt =3D host_err;
+>  	nfsd_stats_io_write_add(nn, exp, *cnt);
+>  	fsnotify_modify(file);
+>  	host_err =3D filemap_check_wb_err(file->f_mapping, since);
 
 
--- 
-Chuck Lever
+Nice work, Mike!
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
