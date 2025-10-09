@@ -1,55 +1,65 @@
-Return-Path: <linux-nfs+bounces-15085-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15086-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74719BC8E58
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 13:50:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03235BC8FC4
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 14:22:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 726121A61E6F
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 11:50:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6403D3C7BAE
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 12:22:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5306A2E0939;
-	Thu,  9 Oct 2025 11:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6CE2C21FA;
+	Thu,  9 Oct 2025 12:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nN4TGy6A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHMYu9eH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283DC2E0927;
-	Thu,  9 Oct 2025 11:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CC725A659;
+	Thu,  9 Oct 2025 12:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760010614; cv=none; b=IS29mA9Xmz4h2wE3xEVVwjiLUfm6s/vd9jpiw9uzWfzBALUqb1K0/ZEI+ylTEWbqTo3VHl5l4oDGqbGvQWfOKPCOUEmoKjIGUqvt56UdhK7L8vf6kePdkCRzbj3qsx0JZCoMLCoNSYRGMThHvLTrx9+VoALWG/gtnQglwGoVpK8=
+	t=1760012556; cv=none; b=WPgIRm5rCmC5jyG2/nWx2O8dNPL43mh7PIh3Nx96O/a/hYUo+tK5L3jKvHO0d7ODVeq7UTQoSgnTvo0skLJ+v6VLpxvFI2t5dNCbRE/iQZtiwATf3BRO9K6GgvQqRZ7fDvsF4Ef5IMCFL1yOinmvBNZTT04IIKF5EMcz3r92XNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760010614; c=relaxed/simple;
-	bh=+bjQqsZ5QydD/NwPJJa+wQd8fTNUcLtZYfuwXmlMKRk=;
+	s=arc-20240116; t=1760012556; c=relaxed/simple;
+	bh=aah+6/bsNlVBqVpS6fQlXLjGlySjDM3Q1Kw6QKjebLM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JUiYEPF0Q4NHoabHbp4eVUt80BtksQ3ZO3un5tH2sNzA3IBTNUQpUYCChNk3KwMLU7UojNqUpzh0QXujxn1MCze626DPA4SQhQ8ge2U8637JBQFzNgOD3jsPLTioWXkOhx7bHDvcHTS94jCCQrjxofeSaUsZa+3tSP8vg+obDlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nN4TGy6A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E77C4CEE7;
-	Thu,  9 Oct 2025 11:50:12 +0000 (UTC)
+	 Content-Type:MIME-Version; b=sE39+Gi/3w8OY+zPb+SbC/yVsCmyj33YGJ+MWQaBbl8/FTalQ2xVmxWYgnJlkUL1JLXobIjU8PcFuGdYWsfjyXkHQz9Mx5H+kmeFAoTQAhV6+o4koa/vsz5cMp6x1THa7A2nwxQRf4WQoVku/i5YHDDSlfSa5ooy66mu/Qn9M5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHMYu9eH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C5E6C4CEE7;
+	Thu,  9 Oct 2025 12:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760010613;
-	bh=+bjQqsZ5QydD/NwPJJa+wQd8fTNUcLtZYfuwXmlMKRk=;
+	s=k20201202; t=1760012555;
+	bh=aah+6/bsNlVBqVpS6fQlXLjGlySjDM3Q1Kw6QKjebLM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nN4TGy6AHptPep+ABAzi7VZnMniGOckhgJCX87M8sZvRiFnap9YMbTXBhnQs0Qpds
-	 aLO/kM0uMmGoc8F5XVs0HUHk0HOYpou4Sk6h47C69dCCdWax97ixd5Nq9JR0u0gBtk
-	 Jw7E2GsxalLfqlnhEXaLlZA0SkwEoyGWd/v6F/Zne3+AC8svWzV284GSNbhpbEzJ7a
-	 5ndRsDD1cM/Kx1GBsYl+gMx++inA4CwyFIxZbd1DR4+XeMxYQUI6wtUUCmUiDGL7Oa
-	 5VPuTl14sW0DuZ+FZdjSa1SKfnUFeceeU8KPID27CfXOa9Pejeck2qLsUV4dbiH94E
-	 sHi9nvQBHETKQ==
-Message-ID: <eb9a246727a9c9bfdc497b41ae2056c29df20349.camel@kernel.org>
-Subject: Re: [PATCH] NFS: Fix state renewals missing after boot
+	b=XHMYu9eHzbJETBVdjGe/S53qRUh7qx3hh2aguGeZzOp/MbKFccgGxMMXbxF5yeaHJ
+	 mAnX++LNeV4V//eQaAJqCo24TETt9Wwv1lbeuCyxpCjx9sMa0NB5VAVwYOFN4INGd4
+	 BQCvhEV86hnYSe5TgtjMLCf+8iO5ksng3fbh1feKIkrOxcMsNC+ZqRkhu1AzecuTyo
+	 pfmsCJRiLtvwvtm6hFbSBzkxPjePNXKUXNwanIxSiUGfspK4NWa89F4o/qVhXVWzy0
+	 dc5botkhgPTNTn8Kk8K24ataJioyJ5pIVKygieIh+qTjg1/xuuvasQ91B8jx6wQEds
+	 5lSlUVFWFViuQ==
+Message-ID: <74e20200de3d113c0bced1380c0ce99a569c2892.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] sunrpc: add a slot to rqstp->rq_bvec for TCP
+ record marker
 From: Jeff Layton <jlayton@kernel.org>
-To: Joshua Watt <jpewhacker@gmail.com>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Date: Thu, 09 Oct 2025 07:50:12 -0400
-In-Reply-To: <20251008230935.738405-1-JPEWhacker@gmail.com>
-References: <20251008230935.738405-1-JPEWhacker@gmail.com>
+To: NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+ <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>, David Howells
+ <dhowells@redhat.com>, Brandon Adams <brandona@meta.com>, 
+	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Thu, 09 Oct 2025 08:22:33 -0400
+In-Reply-To: <175996028564.1793333.11431539077389693375@noble.neil.brown.name>
+References: <20251008-rq_bvec-v2-0-823c0a85a27c@kernel.org>
+	, <20251008-rq_bvec-v2-2-823c0a85a27c@kernel.org>
+	 <175996028564.1793333.11431539077389693375@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,41 +144,193 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-10-08 at 17:09 -0600, Joshua Watt wrote:
-> From: Joshua Watt <jpewhacker@gmail.com>
+On Thu, 2025-10-09 at 08:51 +1100, NeilBrown wrote:
+> On Thu, 09 Oct 2025, Jeff Layton wrote:
+> > We've seen some occurrences of messages like this in dmesg on some knfs=
+d
+> > servers:
+> >=20
+> >     xdr_buf_to_bvec: bio_vec array overflow
+> >=20
+> > Usually followed by messages like this that indicate a short send (note
+> > that this message is from an older kernel and the amount that it report=
+s
+> > attempting to send is short by 4 bytes):
+> >=20
+> >     rpc-srv/tcp: nfsd: sent 1048155 when sending 1048152 bytes - shutti=
+ng down socket
+> >=20
+> > svc_tcp_sendmsg() steals a slot in the rq_bvec array for the TCP record
+> > marker. If the send is an unaligned READ call though, then there may no=
+t
+> > be enough slots in the rq_bvec array in some cases.
+> >=20
+> > Add a slot to the rq_bvec array, and fix up the array lengths in the
+> > callers that care.
+> >=20
+> > Fixes: e18e157bb5c8 ("SUNRPC: Send RPC message on TCP with a single soc=
+k_sendmsg() call")
+> > Tested-by: Brandon Adams <brandona@meta.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfsd/vfs.c        | 6 +++---
+> >  net/sunrpc/svc.c     | 3 ++-
+> >  net/sunrpc/svcsock.c | 4 ++--
+> >  3 files changed, 7 insertions(+), 6 deletions(-)
 >=20
-> Since the last renewal time was initialized to 0 and jiffies start
-> counting at -5 minutes, any clients connected in the first 5 minutes
-> after a reboot would have their renewal timer set to a very long
-> interval. If the connection was idle, this would result in the client
-> state timing out on the server and the next call to the server would
-> return NFS4ERR_BADSESSION.
+> I can't say that I'm liking this patch.
 >=20
-> Fix this by initializing the last renewal time to the current jiffies
-> instead of 0.
+> There are 11 place where (in nfsd-testing recently) where
+> rq_maxpages is used (as opposed to declared or assigned).
 >=20
-> Signed-off-by: Joshua Watt <jpewhacker@gmail.com>
-> ---
->  fs/nfs/client.c | 1 +
->  1 file changed, 1 insertion(+)
+> 3 in nfsd/vfs.c
+> 4 in sunrpc/svc.c
+> 1 in sunrpc/svc_xprt.c
+> 2 in sunrpc/svcsock.c
+> 1 in xprtrdma/svc_rdma_rc.c
 >=20
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index 4e3dcc157a83..96cdfeb26a90 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -181,6 +181,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_=
-client_initdata *cl_init)
->  	clp->cl_nconnect =3D cl_init->nconnect;
->  	clp->cl_max_connect =3D cl_init->max_connect ? cl_init->max_connect : 1=
-;
->  	clp->cl_net =3D get_net_track(cl_init->net, &clp->cl_ns_tracker, GFP_KE=
-RNEL);
-> +	clp->cl_last_renewal =3D jiffies;
-> =20
->  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
->  	seqlock_init(&clp->cl_boot_lock);
+> Your patch changes six of those to add 1.  I guess the others aren't
+> "callers that care".  It would help to have it clearly stated why, or
+> why not, a caller might care.
+>=20
+> But also, what does "rq_maxpages" even mean now?
+> The comment in svc.h still says "num of entries in rq_pages"
+> which is certainly no longer the case.
+> But if it was the case, we should have called it "rq_numpages"
+> or similar.
+> But maybe it wasn't meant to be the number of pages in the array,
+> maybe it was meant to be the maximum number of pages is a request
+> or a reply.....
+> No - that is sv_max_mesg, to which we add 2 and 1.
+> So I could ask "why not just add another 1 in svc_serv_maxpages()?"
+> Would the callers that might not care be harmed if rq_maxpages were
+> one larger than it is?
+>=20
+> It seems to me that rq_maxpages is rather confused and the bug you have
+> found which requires this patch is some evidence to that confusion.  We
+> should fix the confusion, not just the bug.
+>=20
+> So simple question to cut through my waffle:
+> Would this:
+> -	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1;
+> +	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1 + 1;
+>=20
+> fix the problem.  If not, why not?  If so, can we just do this?
+> then look at renaming rq_maxpages to rq_numpages and audit all the uses
+> (and maybe you have already audited...).
+>=20
 
-Nice catch!
+I get the objection. I'm not crazy about all of the adjustments either.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+rq_maxpages is used to size two fields in the rqstp: rq_pages and
+rq_bvec. It turns out that they both want rq_maxpages + 1 slots. The
+rq_pages array needs the extra slot for a NULL terminator, and rq_bvec
+needs it for the TCP record marker.
+
+The RPC code mostly ignores the last slot in rq_pages array after it's
+allocated, but we need rq_bvec to treat it like any other slot, hence
+the adjustment here.
+
+I looked at just doing what you suggest first. It would fix it, but at
+the expense of keeping an extra page per nfsd thread. We could couple
+your suggested fix with just not allocating that last rq_pages slot,
+but we end up having to adjust more places than this change does. Also,
+at that point, rq_maxpages is not _really_ the max number of pages.
+
+Maybe what we need to do is move to a separate length field for
+rq_bvec? We have some existing holes in svc_rqst that could hold one
+and that would make the code more clear. I'll respin this and see how
+that looks.
+
+Thanks for the review!
+
+>=20
+>=20
+> >=20
+> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > index 77f6879c2e063fa79865100bbc2d1e64eb332f42..c4e9300d657cf7fdba23f2f=
+4e4bdaad9cd99d1a3 100644
+> > --- a/fs/nfsd/vfs.c
+> > +++ b/fs/nfsd/vfs.c
+> > @@ -1111,7 +1111,7 @@ nfsd_direct_read(struct svc_rqst *rqstp, struct s=
+vc_fh *fhp,
+> > =20
+> >  	v =3D 0;
+> >  	total =3D dio_end - dio_start;
+> > -	while (total && v < rqstp->rq_maxpages &&
+> > +	while (total && v < rqstp->rq_maxpages + 1 &&
+> >  	       rqstp->rq_next_page < rqstp->rq_page_end) {
+> >  		len =3D min_t(size_t, total, PAGE_SIZE);
+> >  		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
+> > @@ -1200,7 +1200,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, str=
+uct svc_fh *fhp,
+> > =20
+> >  	v =3D 0;
+> >  	total =3D *count;
+> > -	while (total && v < rqstp->rq_maxpages &&
+> > +	while (total && v < rqstp->rq_maxpages + 1 &&
+> >  	       rqstp->rq_next_page < rqstp->rq_page_end) {
+> >  		len =3D min_t(size_t, total, PAGE_SIZE - base);
+> >  		bvec_set_page(&rqstp->rq_bvec[v], *rqstp->rq_next_page,
+> > @@ -1318,7 +1318,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+> >  	if (stable && !fhp->fh_use_wgather)
+> >  		kiocb.ki_flags |=3D IOCB_DSYNC;
+> > =20
+> > -	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload=
+);
+> > +	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages + 1, pay=
+load);
+> >  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> >  	since =3D READ_ONCE(file->f_wb_err);
+> >  	if (verf)
+> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > index 4704dce7284eccc9e2bc64cf22947666facfa86a..919263a0c04e3f1afa60741=
+4bc1893ba02206e38 100644
+> > --- a/net/sunrpc/svc.c
+> > +++ b/net/sunrpc/svc.c
+> > @@ -706,7 +706,8 @@ svc_prepare_thread(struct svc_serv *serv, struct sv=
+c_pool *pool, int node)
+> >  	if (!svc_init_buffer(rqstp, serv, node))
+> >  		goto out_enomem;
+> > =20
+> > -	rqstp->rq_bvec =3D kcalloc_node(rqstp->rq_maxpages,
+> > +	/* +1 for the TCP record marker */
+> > +	rqstp->rq_bvec =3D kcalloc_node(rqstp->rq_maxpages + 1,
+> >  				      sizeof(struct bio_vec),
+> >  				      GFP_KERNEL, node);
+> >  	if (!rqstp->rq_bvec)
+> > diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> > index 377fcaaaa061463fc5c85fc09c7a8eab5e06af77..5f8bb11b686bcd7302b9447=
+6490ba9b1b9ddc06a 100644
+> > --- a/net/sunrpc/svcsock.c
+> > +++ b/net/sunrpc/svcsock.c
+> > @@ -740,7 +740,7 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+> >  	if (svc_xprt_is_dead(xprt))
+> >  		goto out_notconn;
+> > =20
+> > -	count =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, xdr);
+> > +	count =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages + 1, xdr=
+);
+> > =20
+> >  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
+> >  		      count, rqstp->rq_res.len);
+> > @@ -1244,7 +1244,7 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk,=
+ struct svc_rqst *rqstp,
+> >  	memcpy(buf, &marker, sizeof(marker));
+> >  	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
+> > =20
+> > -	count =3D xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages - 1,
+> > +	count =3D xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages,
+> >  				&rqstp->rq_res);
+> > =20
+> >  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
+> >=20
+> > --=20
+> > 2.51.0
+> >=20
+> >=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
