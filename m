@@ -1,234 +1,219 @@
-Return-Path: <linux-nfs+bounces-15081-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15082-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBF83BC812A
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 10:39:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2FBCBC8AFB
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 13:05:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C80244E12FB
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 08:39:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE0D51A6019E
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 11:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C14FE298991;
-	Thu,  9 Oct 2025 08:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF9E24634F;
+	Thu,  9 Oct 2025 11:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LPpzFfMn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lrMgh0IH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vZGttwaT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="enFzO5An"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="gbFGywhM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6E2285052
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 08:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A882D876C
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 11:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759999138; cv=none; b=gJRsDQRMxH3PfRVnrF0f+Nty+b9aonZUYYuPxh7pQjxvqSROYz5cWeQweR8mh8pXEMERGC2BGlOHLGvKJ0RuWyb0DQG72BY81DdU5kc0YQGhOCb31PfhJmJeCA6UyZvQAwb3k+089CiNNtH66nJXKPlCLpUfb0TmxziJT1Mmp80=
+	t=1760007917; cv=none; b=VnCxoDXMzuoiVHW5VZkKTKTl5uf1C05K5B74m+qST1MQphzMGtzr+Bxf43LK/GYcns1vMk3jorznkGjDqQj5XUtx1OiMF3OASnp2nP+HFRyebLX0imzxFZkpsNZgbfpwvN2S2LOKYTAlWIGa7zMX7eyrRMmnZxHX+EgPRSTUpvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759999138; c=relaxed/simple;
-	bh=P/49DWQvaRKreHMlwC13bf/kIQMSa9M93SImmymHGSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n3ddPB/oGWScwMwABlmZwDzrbCEWg86HjvZIpGFMgVV8V+2IdU7Fi+Le1aczE3AwN0IicQdf/NAZuc/BKYdj600N2O6JSTV3lFyO3bIeyn/+U3jG4vCoMtNJEo2dvz97bKjuweyWbtUbj9qM4FYo1mzfKHrlnc/9WivpzIhWAO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LPpzFfMn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lrMgh0IH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vZGttwaT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=enFzO5An; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DCD661F83F;
-	Thu,  9 Oct 2025 08:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1759999135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vO/c3Nr9/ShdfTU0FdyXLRof5Q362KAvhqM2kcVybQ=;
-	b=LPpzFfMn2Xc71sBNf7SHexb1rKX0SVND+Q7PZQeo2IX+0BPQMjLDBri25PD1hGXJvpQVRF
-	kgWBMnlJF6rOoGtt2vcjPVx+DgJUAC1N2pvkrYM3367uBoh3RCPs2X2EBg1M27qqoSDke0
-	4m50eZ8aoL/h6/QgBMjEW63ON1d8Q0Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1759999135;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vO/c3Nr9/ShdfTU0FdyXLRof5Q362KAvhqM2kcVybQ=;
-	b=lrMgh0IHrMQO2D7tnVV5rWkYXCzXd4D5juj1ccLQrfCjRtHjP74J8zRcedThxGGlHyGvex
-	ImalzjldK6elkhAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vZGttwaT;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=enFzO5An
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1759999133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vO/c3Nr9/ShdfTU0FdyXLRof5Q362KAvhqM2kcVybQ=;
-	b=vZGttwaTa//klyZ7MbT0oDXWp1XVPaQbWw3RWYxBhQtq/mT0p3183aWIZxPQB9OmeYWdGM
-	GmO54daV2M7UHn2g/5oD7Jz5mrm2QE+/rzbqZOiXRH7MV+i45yEQ4AtHgl5mS+KV99udbu
-	ryptJE0bLS8aEaPjtSpbD9turPVobBQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1759999133;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vO/c3Nr9/ShdfTU0FdyXLRof5Q362KAvhqM2kcVybQ=;
-	b=enFzO5AnfFeyCw2dgPggX6k6B7lky/cHhoVPVq1whs5XDCVALJbRn0cAEijZxY9GGivRWM
-	1TUzIetlNiJ/wNAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C676B13AAC;
-	Thu,  9 Oct 2025 08:38:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id d8dvMJ1052gEGwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 09 Oct 2025 08:38:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 50ADAA0A71; Thu,  9 Oct 2025 10:38:53 +0200 (CEST)
-Date: Thu, 9 Oct 2025 10:38:53 +0200
-From: Jan Kara <jack@suse.cz>
-To: Joshua Watt <jpewhacker@gmail.com>
-Cc: Jan Kara <jack@suse.cz>, jimzhao.ai@gmail.com, 
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] mm/page-writeback: Consolidate wb_thresh bumping logic
- into __wb_calc_thresh
-Message-ID: <47nzppimqdsltrtjb2qz4ztgtxq73rpugagronbeiod5v6ygzp@nl4lwvjk44lp>
-References: <20241121100539.605818-1-jimzhao.ai@gmail.com>
- <20251007161711.468149-1-JPEWhacker@gmail.com>
- <ywwhwyc4el6vikghnd5yoejteld6dudemta7lsrtacvecshst5@avvpac27felp>
- <CAJdd5GY1mmi83V8DyiUJSZoLRVhUz_hY=qR-SjZ8Ss9bxQ002w@mail.gmail.com>
- <CAJdd5GaQ1LdS=n52AWQwZ=Q9woSjFYiVD9E_1SkEeDPoT=bmjw@mail.gmail.com>
+	s=arc-20240116; t=1760007917; c=relaxed/simple;
+	bh=9sUYd0lZ4pMnziOYqVz7uhSVGlkmxAbmoJmqOKkNleQ=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=hjLymSSW9fkKV1ny0jEOlv9r/U0+CQZVf07z9fiUKrjajPkgRQTQ9HQBwcanAQJiDwmR6BH8oBgFIo9nqaWBiqwQ4hPcQO8z0OYKX3Uc1Mv2B8bW5RV4Jg5k1wcFi+pHjPgq4aWnZUJZOKzZ2/8A7JEBwi2rTuuqydQFIlJI89E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=gbFGywhM; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id 86CDE11F926
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:19 +0200 (CEST)
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id DD1DF13F647
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:11 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de DD1DF13F647
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1760007431; bh=m+TxiddGd7vSqYTFrGw5ym0ERZvCDrwPNBvERDqfTfQ=;
+	h=Date:From:To:Subject:From;
+	b=gbFGywhMAbVJnNbkGv/Rvkx4hOGBe+ZYuetTXO5nR723TvAiBiF4M/lsjjbJhKS3S
+	 cj4Ij2xatikKMv8HDRkRTcq0GL3oblJIuCjV13KbQXm0COQnUp/hdUFkeMtkz3c2Pd
+	 5nl83mZvV7ag9Psf3yRZ7WJWAgmgoYuArAj7j12I=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id D26C720056
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:11 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [IPv6:2001:638:d:c301:acdc:1979:2:e7])
+	by smtp-m-2.desy.de (Postfix) with ESMTP id CAFD916003F
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:11 +0200 (CEST)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
+	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id 47A98320093
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:11 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-2.desy.de (Postfix) with ESMTP id 19D7820044
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 12:57:11 +0200 (CEST)
+Date: Thu, 9 Oct 2025 12:57:11 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1050158977.25165493.1760007431022.JavaMail.zimbra@desy.de>
+Subject: Blocking stat calls during (p)NFS write
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_25165494_177293694.1760007431029"
+X-Mailer: Zimbra 10.1.10_GA_4785 (ZimbraWebClient - FF143 (Linux)/10.1.10_GA_4785)
+Thread-Index: R20qYTEhaGg4t2HbXBErNbJgfEDfHg==
+Thread-Topic: Blocking stat calls during (p)NFS write
+
+------=_Part_25165494_177293694.1760007431029
+Date: Thu, 9 Oct 2025 12:57:11 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1050158977.25165493.1760007431022.JavaMail.zimbra@desy.de>
+Subject: Blocking stat calls during (p)NFS write
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJdd5GaQ1LdS=n52AWQwZ=Q9woSjFYiVD9E_1SkEeDPoT=bmjw@mail.gmail.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: DCD661F83F
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,linux-foundation.org,vger.kernel.org,kvack.org,infradead.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -2.51
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.1.10_GA_4785 (ZimbraWebClient - FF143 (Linux)/10.1.10_GA_4785)
+Thread-Index: R20qYTEhaGg4t2HbXBErNbJgfEDfHg==
+Thread-Topic: Blocking stat calls during (p)NFS write
 
-On Wed 08-10-25 17:14:31, Joshua Watt wrote:
-> On Wed, Oct 8, 2025 at 8:49 AM Joshua Watt <jpewhacker@gmail.com> wrote:
-> > On Wed, Oct 8, 2025 at 5:14 AM Jan Kara <jack@suse.cz> wrote:
-> > > Hello!
-> > >
-> > > On Tue 07-10-25 10:17:11, Joshua Watt wrote:
-> > > > From: Joshua Watt <jpewhacker@gmail.com>
-> > > >
-> > > > This patch strangely breaks NFS 4 clients for me. The behavior is that a
-> > > > client will start getting an I/O error which in turn is caused by the client
-> > > > getting a NFS3ERR_BADSESSION when attempting to write data to the server. I
-> > > > bisected the kernel from the latest master
-> > > > (9029dc666353504ea7c1ebfdf09bc1aab40f6147) to this commit (log below). Also,
-> > > > when I revert this commit on master the bug disappears.
-> > > >
-> > > > The server is running kernel 5.4.161, and the client that exhibits the
-> > > > behavior is running in qemux86, and has mounted the server with the options
-> > > > rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,soft,proto=tcp,port=52049,timeo=600,retrans=2,sec=null,clientaddr=172.16.6.90,local_lock=none,addr=172.16.6.0
-> > > >
-> > > > The program that I wrote to reproduce this is pretty simple; it does a file
-> > > > lock over NFS, then writes data to the file once per second. After about 32
-> > > > seconds, it receives the I/O error, and this reproduced every time. I can
-> > > > provide the sample program if necessary.
-> > >
-> > > This is indeed rather curious.
-> > >
-> > > > I also captured the NFS traffic both in the passing case and the failure case,
-> > > > and can provide them if useful.
-> > > >
-> > > > I did look at the two dumps and I'm not exactly sure what the difference is,
-> > > > other than with this patch the client tries to write every 30 seconds (and
-> > > > fails), where as without it attempts to write back every 5 seconds. I have no
-> > > > idea why this patch would cause this problem.
-> > >
-> > > So the change in writeback behavior is not surprising. The commit does
-> > > modify the logic computing dirty limits in some corner cases and your
-> > > description matches the fact that previously the computed limits were lower
-> > > so we've started writeback after 5s (dirty_writeback_interval) while with
-> > > the patch we didn't cross the threshold and thus started writeback only
-> > > once the dirty data was old enough, which is 30s (dirty_expire_interval).
-> > >
-> > > But that's all, you should be able to observe exactly the same writeback
-> > > behavior if you write less even without this patch. So I suspect that the
-> > > different writeback behavior is just triggering some bug in the NFS (either
-> > > on the client or the server side). The NFS3ERR_BADSESSION error you're
-> > > getting back sounds like something times out somewhere, falls out of cache
-> > > and reports this error (which doesn't happen if we writeback after 5s
-> > > instead of 30s). NFS guys maybe have better idea what's going on here.
-> > >
-> > > You could possibly workaround this problem (and verify my theory) by tuning
-> > > /proc/sys/vm/dirty_expire_centisecs to a lower value (say 500). This will
-> > > make inode writeback start earlier and thus should effectively mask the
-> > > problem again.
-> >
-> > Changing /proc/sys/vm/dirty_expire_centisecs did indeed prevent the
-> > issue from occurring. As an experiment, I tried to see what the lowest
-> > value I could use that worked, and it was also 500. Even setting it to
-> > 600 would cause it to error out eventually. This would indicate to me
-> > a server problem (which is unfortunate because that's much harder for
-> > me to debug), but perhaps the NFS folks could weigh in.
-> 
-> I figured out the problem. There was a bug in the NFS client where it
-> would not send state renewals within the first 5 minutes after
-> booting; prior to this change, that was masked in my test case because
-> the 5 second dirty writeback interval would keep the connection alive
-> without needing the state renewals (and my test always did a reboot).
-> I've submitted a patch to fix the NFS client to the mailing list [1].
 
-Cool that you've nailed it down :).
+Dear NFS fellows,
 
-> Sorry for the noise, and thanks for your help.
+We have noticed that when data is written into a large file, a stat call on that file blocks.
+This is quite simple to reproduce. Open two terminals, in one copy a 4GB file into NFS NFS-mounted
+directory, in another window run `stat /path/to/file`.
 
-You're welcome.
+By looking at the perf output, I can see:
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+stat  301583 [007] 265242.393512:      sched:sched_wake_idle_without_ipi: cpu=2
+        ffffffffb5e0cfa0 call_function_single_prep_ipi+0x90 ([kernel.kallsyms])
+        ffffffffb5e0cfa0 call_function_single_prep_ipi+0x90 ([kernel.kallsyms])
+        ffffffffb5ef176b __smp_call_single_queue+0xdb ([kernel.kallsyms])
+        ffffffffb5ef1866 generic_exec_single+0x36 ([kernel.kallsyms])
+        ffffffffb5ef1bf2 smp_call_function_single_async+0x22 ([kernel.kallsyms])
+        ffffffffb5ec97f4 update_process_times+0xa4 ([kernel.kallsyms])
+        ffffffffb5ee279f tick_nohz_handler+0x8f ([kernel.kallsyms])
+        ffffffffb5eca7c0 __hrtimer_run_queues+0x110 ([kernel.kallsyms])
+        ffffffffb5ecb62c hrtimer_interrupt+0xfc ([kernel.kallsyms])
+        ffffffffb5d5deb5 __sysvec_apic_timer_interrupt+0x55 ([kernel.kallsyms])
+        ffffffffb6f6364c sysvec_apic_timer_interrupt+0x6c ([kernel.kallsyms])
+        ffffffffb5a0160a asm_sysvec_apic_timer_interrupt+0x1a ([kernel.kallsyms])
+        ffffffffb5e07b8f finish_task_switch.isra.0+0x9f ([kernel.kallsyms])
+        ffffffffb6f6ad91 __schedule+0x301 ([kernel.kallsyms])
+        ffffffffb6f6b277 schedule+0x27 ([kernel.kallsyms])
+        ffffffffb6f6b326 io_schedule+0x46 ([kernel.kallsyms])
+        ffffffffb608fddf folio_wait_bit+0xef ([kernel.kallsyms])
+        ffffffffb609c95e folio_wait_writeback+0x2e ([kernel.kallsyms])
+        ffffffffb608f0ff __filemap_fdatawait_range+0x7f ([kernel.kallsyms])
+        ffffffffb6091bc8 filemap_write_and_wait_range+0xc8 ([kernel.kallsyms])
+        ffffffffc1fc5cc7 nfs_getattr+0x567 ([kernel.kallsyms])
+        ffffffffb61eb3fe vfs_getattr_nosec+0xbe ([kernel.kallsyms])
+        ffffffffb61eb673 vfs_statx+0xa3 ([kernel.kallsyms])
+        ffffffffb61ec363 do_statx+0x63 ([kernel.kallsyms])
+        ffffffffb61ec5c0 __x64_sys_statx+0x90 ([kernel.kallsyms])
+        ffffffffb6f5e5ae do_syscall_64+0x7e ([kernel.kallsyms])
+        ffffffffb5a0012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
+            7f17c3b1fb6e statx+0xe (/usr/lib64/libc.so.6)
+            55b6106f684f main+0x45f (/usr/bin/stat)
+            7f17c3a3a5b5 __libc_start_call_main+0x75 (/usr/lib64/libc.so.6)
+            7f17c3a3a668 __libc_start_main@@GLIBC_2.34+0x88 (/usr/lib64/libc.so.6)
+            55b6106f6bb5 _start+0x25 (/usr/bin/stat)
+
+
+So I assume that blocking comes from inode invalidation in inode.c#nfs_getattr call:
+
+1003         /* Flush out writes to the server in order to update c/mtime/version.  */
+1004         if ((request_mask & (STATX_CTIME | STATX_MTIME | STATX_CHANGE_COOKIE)) &&
+1005             S_ISREG(inode->i_mode)) {
+1006                 if (nfs_have_delegated_mtime(inode))
+1007                         filemap_fdatawrite(inode->i_mapping);
+1008                 else
+1009                         filemap_write_and_wait(inode->i_mapping);
+1010         }
+
+
+The packets look as follows:
+
+No.     Time           Rpc Time   Source                Destination           Protocol Info
+     16 21.114244808              10.1.0.71       10.1.0.34         NFS      V4 Call (Reply In 18) OPEN DH: 0xf359c2c5/f42.iso | LAYOUTGET
+     18 21.158017758   0.043772950 10.1.0.34         10.1.0.71       NFS      V4 Reply (Call In 16) OPEN StateID: 0x7ca4 | LAYOUTGET
+     29 42.354912088              10.1.0.71       10.1.0.34         NFS      V4 Call (Reply In 30) LAYOUTCOMMIT
+     30 42.357843007   0.002930919 10.1.0.34         10.1.0.71       NFS      V4 Reply (Call In 29) LAYOUTCOMMIT
+     32 42.357993362              10.1.0.71       10.1.0.34         NFS      V4 Call (Reply In 35) GETATTR FH: 0x7d6441d9
+     33 42.358016100              10.1.0.71       10.1.0.34         NFS      V4 Call (Reply In 36) LAYOUTRETURN
+     35 42.359324091   0.001330729 10.1.0.34         10.1.0.71       NFS      V4 Reply (Call In 32) GETATTR
+     36 42.378923839   0.020907739 10.1.0.34         10.1.0.71       NFS      V4 Reply (Call In 33) LAYOUTRETURN
+     38 42.379133795              10.1.0.71       10.1.0.34         NFS      V4 Call (Reply In 39) CLOSE StateID: 0x7ca4
+     39 42.380213999   0.001080204 10.1.0.34         10.1.0.71       NFS      V4 Reply (Call In 38) CLOSE 
+
+So, GETATTR is sent after LAYOUTCOMMIT.
+This behavior is observed with 6.17 and RHEL kernels.
+
+
+------=_Part_25165494_177293694.1760007431029
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
+UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
+jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
+yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
+FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
+ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
+59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
+UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
+IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
+IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
+DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
+yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
+zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
+37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
+76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
+BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
+lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
+bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
+vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
+nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
+0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNTEwMDkxMDU3MTFaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEII4CxC1/2RttAlxC8s35ZcVtNNdP
+G2B88n/XAtqp5EccMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAE9bVAQLalPkN+RcdW3eegcyKqSkex+LqV/X/EGo
+sxs1VmqMhBLmYZQKa8+OUUgK2vhK6fzIDOLDgN6G3htDIEnBSAtE4wm8+tfAq+r7RLhhVCC8cAJe
+Bpc664DzN50PFjeGxbkBklyHDjIiAoK8PTxAgoMuTwwRBxaqJ7cvX+luTx40gn+xEvflLkiXVU6c
+BiWpzMXOgI746cjqc/fgO05AyCm1PpQdsa0SjONhcxDclMYJPG6O2731AORbCGiBcy3/pExYbPU1
+Aoc2KD7PZ1MBZbdYaioKfzAue43CZfy9Fw7nqgLjwr2yEkGbOyp/g34cAEgS3e/SjHMHE3N13HRg
+WlrryoeqlEzoEIQkVkseXbB9kPAmgs7oDq/Z2J8HgqcNGgTz3kgpNZ+wCLFIu3iOs9JjIyCA+rNn
+g6TzU8WnqkQmcd1Rmk4cKZPmG2u7kBdxoPwQfqyvpCZF36PvIUlVznA8xJg65uqXk1FP4YN/lfdG
+vY937CVFvSrg4VlPTu1vBAz36MbC4ILivlB1p9W1/0OyM5urhiffbWY9HJWYJtulwoRNphrGIE9U
++bpORfgaobV2stZt86UHa9XDDXnusgCCzzYduM/KDfrPxiPKIAM2ghYq1PllWp6xHzdmPMpPOZX+
+342+U/J2uKvDirtYygB4XI5xSW9rhmwIR9x0AAAAAAAA
+------=_Part_25165494_177293694.1760007431029--
 
