@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-15084-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15085-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4508ABC8E46
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 13:49:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74719BC8E58
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 13:50:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2E9ED4E3A26
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 11:49:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 726121A61E6F
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 11:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC5A2D6400;
-	Thu,  9 Oct 2025 11:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5306A2E0939;
+	Thu,  9 Oct 2025 11:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igBA1lio"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nN4TGy6A"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CAC2C21F3
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 11:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283DC2E0927;
+	Thu,  9 Oct 2025 11:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760010539; cv=none; b=YzInzyfqzAu+N8VWLvuBJs0I9jDlbZUpfHIDUViWn0zdVoBI5gksu9wPPuzEpfbm39hN7osIF48KYaOv7MuRcPkXQI3DPOCXpOHhd2r6sq9kd6XgXkrjRB13kFF6qK1WWMpLGU2KTdPo1KhJ233t2Y5+MDggLmFHm1vlN8IYmIs=
+	t=1760010614; cv=none; b=IS29mA9Xmz4h2wE3xEVVwjiLUfm6s/vd9jpiw9uzWfzBALUqb1K0/ZEI+ylTEWbqTo3VHl5l4oDGqbGvQWfOKPCOUEmoKjIGUqvt56UdhK7L8vf6kePdkCRzbj3qsx0JZCoMLCoNSYRGMThHvLTrx9+VoALWG/gtnQglwGoVpK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760010539; c=relaxed/simple;
-	bh=+AD52FanNe2vHnTBMUW4VH8gBs4XGoTsDPDAmYFiM+M=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uqgLD8HJuA0jcTRM+F7L8zA1dIP/0/B2n7iq5gfZNQrWzAOIzzM7Vbh4FhPwRogfWndqIqAUTVmwKPRoIEj9Hslc25ek1MtBSKQvg1/vmRVxARfiS3lc51WNMbLKMsd0B7mIaSWoigjCiZrVkX7adGvRK+L6DpMKu11ZJOLuA0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igBA1lio; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D2AC4CEE7;
-	Thu,  9 Oct 2025 11:48:58 +0000 (UTC)
+	s=arc-20240116; t=1760010614; c=relaxed/simple;
+	bh=+bjQqsZ5QydD/NwPJJa+wQd8fTNUcLtZYfuwXmlMKRk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JUiYEPF0Q4NHoabHbp4eVUt80BtksQ3ZO3un5tH2sNzA3IBTNUQpUYCChNk3KwMLU7UojNqUpzh0QXujxn1MCze626DPA4SQhQ8ge2U8637JBQFzNgOD3jsPLTioWXkOhx7bHDvcHTS94jCCQrjxofeSaUsZa+3tSP8vg+obDlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nN4TGy6A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E77C4CEE7;
+	Thu,  9 Oct 2025 11:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760010538;
-	bh=+AD52FanNe2vHnTBMUW4VH8gBs4XGoTsDPDAmYFiM+M=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=igBA1lioCt8vxsUQpijKslZastyGSeWcfWa85irNHHDQnijctdbPAUm9JW6kHOlJm
-	 DyA5r+lrmhZ2lBhX0Hoy6FZF+AaLMQnDMh2r1XzI8KjItYFlNTO6KIp76++6TWW6f5
-	 Zd/SJBrjGoq+KviQSgsVJMgQ520yZfJJfpS0z1D24ZiaKg1WtOafkBylYlssBo8+Qc
-	 rV93LRcSTN/rH+XBenWaBiQHIqVpAYxKpuJEVnWiA5SdiQlvYoqT4EvBKVjCcW4Wh5
-	 fWJFI1soCt5adHNGcSXNRxJjT3o55NQRKPsmCSejc/s2kgRwlxJfV9MUX7phi/vSMG
-	 X9+9LyAUOIWJA==
-Message-ID: <3302602f30bb95a69af97b3adada8da0147f3781.camel@kernel.org>
-Subject: Re: Blocking stat calls during (p)NFS write
+	s=k20201202; t=1760010613;
+	bh=+bjQqsZ5QydD/NwPJJa+wQd8fTNUcLtZYfuwXmlMKRk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=nN4TGy6AHptPep+ABAzi7VZnMniGOckhgJCX87M8sZvRiFnap9YMbTXBhnQs0Qpds
+	 aLO/kM0uMmGoc8F5XVs0HUHk0HOYpou4Sk6h47C69dCCdWax97ixd5Nq9JR0u0gBtk
+	 Jw7E2GsxalLfqlnhEXaLlZA0SkwEoyGWd/v6F/Zne3+AC8svWzV284GSNbhpbEzJ7a
+	 5ndRsDD1cM/Kx1GBsYl+gMx++inA4CwyFIxZbd1DR4+XeMxYQUI6wtUUCmUiDGL7Oa
+	 5VPuTl14sW0DuZ+FZdjSa1SKfnUFeceeU8KPID27CfXOa9Pejeck2qLsUV4dbiH94E
+	 sHi9nvQBHETKQ==
+Message-ID: <eb9a246727a9c9bfdc497b41ae2056c29df20349.camel@kernel.org>
+Subject: Re: [PATCH] NFS: Fix state renewals missing after boot
 From: Jeff Layton <jlayton@kernel.org>
-To: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>, linux-nfs
-	 <linux-nfs@vger.kernel.org>
-Date: Thu, 09 Oct 2025 07:48:57 -0400
-In-Reply-To: <1050158977.25165493.1760007431022.JavaMail.zimbra@desy.de>
-References: <1050158977.25165493.1760007431022.JavaMail.zimbra@desy.de>
+To: Joshua Watt <jpewhacker@gmail.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Date: Thu, 09 Oct 2025 07:50:12 -0400
+In-Reply-To: <20251008230935.738405-1-JPEWhacker@gmail.com>
+References: <20251008230935.738405-1-JPEWhacker@gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,115 +134,41 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-10-09 at 12:57 +0200, Mkrtchyan, Tigran wrote:
-> Dear NFS fellows,
+On Wed, 2025-10-08 at 17:09 -0600, Joshua Watt wrote:
+> From: Joshua Watt <jpewhacker@gmail.com>
 >=20
-> We have noticed that when data is written into a large file, a stat call =
-on that file blocks.
-> This is quite simple to reproduce. Open two terminals, in one copy a 4GB =
-file into NFS NFS-mounted
-> directory, in another window run `stat /path/to/file`.
+> Since the last renewal time was initialized to 0 and jiffies start
+> counting at -5 minutes, any clients connected in the first 5 minutes
+> after a reboot would have their renewal timer set to a very long
+> interval. If the connection was idle, this would result in the client
+> state timing out on the server and the next call to the server would
+> return NFS4ERR_BADSESSION.
 >=20
-> By looking at the perf output, I can see:
+> Fix this by initializing the last renewal time to the current jiffies
+> instead of 0.
 >=20
-> stat  301583 [007] 265242.393512:      sched:sched_wake_idle_without_ipi:=
- cpu=3D2
->         ffffffffb5e0cfa0 call_function_single_prep_ipi+0x90 ([kernel.kall=
-syms])
->         ffffffffb5e0cfa0 call_function_single_prep_ipi+0x90 ([kernel.kall=
-syms])
->         ffffffffb5ef176b __smp_call_single_queue+0xdb ([kernel.kallsyms])
->         ffffffffb5ef1866 generic_exec_single+0x36 ([kernel.kallsyms])
->         ffffffffb5ef1bf2 smp_call_function_single_async+0x22 ([kernel.kal=
-lsyms])
->         ffffffffb5ec97f4 update_process_times+0xa4 ([kernel.kallsyms])
->         ffffffffb5ee279f tick_nohz_handler+0x8f ([kernel.kallsyms])
->         ffffffffb5eca7c0 __hrtimer_run_queues+0x110 ([kernel.kallsyms])
->         ffffffffb5ecb62c hrtimer_interrupt+0xfc ([kernel.kallsyms])
->         ffffffffb5d5deb5 __sysvec_apic_timer_interrupt+0x55 ([kernel.kall=
-syms])
->         ffffffffb6f6364c sysvec_apic_timer_interrupt+0x6c ([kernel.kallsy=
-ms])
->         ffffffffb5a0160a asm_sysvec_apic_timer_interrupt+0x1a ([kernel.ka=
-llsyms])
->         ffffffffb5e07b8f finish_task_switch.isra.0+0x9f ([kernel.kallsyms=
-])
->         ffffffffb6f6ad91 __schedule+0x301 ([kernel.kallsyms])
->         ffffffffb6f6b277 schedule+0x27 ([kernel.kallsyms])
->         ffffffffb6f6b326 io_schedule+0x46 ([kernel.kallsyms])
->         ffffffffb608fddf folio_wait_bit+0xef ([kernel.kallsyms])
->         ffffffffb609c95e folio_wait_writeback+0x2e ([kernel.kallsyms])
->         ffffffffb608f0ff __filemap_fdatawait_range+0x7f ([kernel.kallsyms=
-])
->         ffffffffb6091bc8 filemap_write_and_wait_range+0xc8 ([kernel.kalls=
-yms])
->         ffffffffc1fc5cc7 nfs_getattr+0x567 ([kernel.kallsyms])
->         ffffffffb61eb3fe vfs_getattr_nosec+0xbe ([kernel.kallsyms])
->         ffffffffb61eb673 vfs_statx+0xa3 ([kernel.kallsyms])
->         ffffffffb61ec363 do_statx+0x63 ([kernel.kallsyms])
->         ffffffffb61ec5c0 __x64_sys_statx+0x90 ([kernel.kallsyms])
->         ffffffffb6f5e5ae do_syscall_64+0x7e ([kernel.kallsyms])
->         ffffffffb5a0012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kal=
-lsyms])
->             7f17c3b1fb6e statx+0xe (/usr/lib64/libc.so.6)
->             55b6106f684f main+0x45f (/usr/bin/stat)
->             7f17c3a3a5b5 __libc_start_call_main+0x75 (/usr/lib64/libc.so.=
-6)
->             7f17c3a3a668 __libc_start_main@@GLIBC_2.34+0x88 (/usr/lib64/l=
-ibc.so.6)
->             55b6106f6bb5 _start+0x25 (/usr/bin/stat)
+> Signed-off-by: Joshua Watt <jpewhacker@gmail.com>
+> ---
+>  fs/nfs/client.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
->=20
-> So I assume that blocking comes from inode invalidation in inode.c#nfs_ge=
-tattr call:
->=20
-> 1003         /* Flush out writes to the server in order to update c/mtime=
-/version.  */
-> 1004         if ((request_mask & (STATX_CTIME | STATX_MTIME | STATX_CHANG=
-E_COOKIE)) &&
-> 1005             S_ISREG(inode->i_mode)) {
-> 1006                 if (nfs_have_delegated_mtime(inode))
-> 1007                         filemap_fdatawrite(inode->i_mapping);
-> 1008                 else
-> 1009                         filemap_write_and_wait(inode->i_mapping);
-> 1010         }
->=20
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 4e3dcc157a83..96cdfeb26a90 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -181,6 +181,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_=
+client_initdata *cl_init)
+>  	clp->cl_nconnect =3D cl_init->nconnect;
+>  	clp->cl_max_connect =3D cl_init->max_connect ? cl_init->max_connect : 1=
+;
+>  	clp->cl_net =3D get_net_track(cl_init->net, &clp->cl_ns_tracker, GFP_KE=
+RNEL);
+> +	clp->cl_last_renewal =3D jiffies;
+> =20
+>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>  	seqlock_init(&clp->cl_boot_lock);
 
-stat() requires updated mtime and ctime. The client must write any
-dirty data back before it can report those accurately since the server
-is authoritative for those attributes. If the server supports delegated
-timestamps however, then you don't need to wait for writeback to
-finish.
+Nice catch!
 
->=20
-> The packets look as follows:
->=20
-> No.     Time           Rpc Time   Source                Destination      =
-     Protocol Info
->      16 21.114244808              10.1.0.71       10.1.0.34         NFS  =
-    V4 Call (Reply In 18) OPEN DH: 0xf359c2c5/f42.iso | LAYOUTGET
->      18 21.158017758   0.043772950 10.1.0.34         10.1.0.71       NFS =
-     V4 Reply (Call In 16) OPEN StateID: 0x7ca4 | LAYOUTGET
->      29 42.354912088              10.1.0.71       10.1.0.34         NFS  =
-    V4 Call (Reply In 30) LAYOUTCOMMIT
->      30 42.357843007   0.002930919 10.1.0.34         10.1.0.71       NFS =
-     V4 Reply (Call In 29) LAYOUTCOMMIT
->      32 42.357993362              10.1.0.71       10.1.0.34         NFS  =
-    V4 Call (Reply In 35) GETATTR FH: 0x7d6441d9
->      33 42.358016100              10.1.0.71       10.1.0.34         NFS  =
-    V4 Call (Reply In 36) LAYOUTRETURN
->      35 42.359324091   0.001330729 10.1.0.34         10.1.0.71       NFS =
-     V4 Reply (Call In 32) GETATTR
->      36 42.378923839   0.020907739 10.1.0.34         10.1.0.71       NFS =
-     V4 Reply (Call In 33) LAYOUTRETURN
->      38 42.379133795              10.1.0.71       10.1.0.34         NFS  =
-    V4 Call (Reply In 39) CLOSE StateID: 0x7ca4
->      39 42.380213999   0.001080204 10.1.0.34         10.1.0.71       NFS =
-     V4 Reply (Call In 38) CLOSE=20
->=20
-> So, GETATTR is sent after LAYOUTCOMMIT.
-> This behavior is observed with 6.17 and RHEL kernels.
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
