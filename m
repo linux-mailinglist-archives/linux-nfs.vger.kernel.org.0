@@ -1,97 +1,120 @@
-Return-Path: <linux-nfs+bounces-15088-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15089-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFBB1BC933E
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 15:08:52 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C75BC990B
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 16:41:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2946E1A611D5
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 13:09:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DAAE24FB5FB
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 14:40:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB3A2E6CB3;
-	Thu,  9 Oct 2025 13:08:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1F072EAD0D;
+	Thu,  9 Oct 2025 14:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QuPlbxBP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2URae3k"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D8E2E6CD4
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 13:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F660246774;
+	Thu,  9 Oct 2025 14:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015318; cv=none; b=abXk32Yxcb7jsNFGrfKcZpuroXV1nDZAK3w1u4FzwqeuBVtpXNrsJEuFAQKYU/RQFcQ0f2BqHORbF9njldjwPrvC5oIFfoOQ5nSSxYpaF+OcZSOTQSoR9qXSjElN4ldF64WUiBMCLTMcoM7hDMTIZPNfX14jGx/8GFLWs/MLE3Y=
+	t=1760020824; cv=none; b=lbe7XAAcrKEvxU9dcCcLDR2u8Ot1YOmiQZxa44STGX5bOmeBJbSRyyFYbUeXpeyp/btkOBLNlSyq+u3UiASsiUr+2TTsTPaMyPYhUS6Jww/6hV5tYQPMQbn37tyZIHBXTv3fAXm1mzRlRPxozFR6eIKaMI4qwHc8R606pnSXjzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015318; c=relaxed/simple;
-	bh=rUkS3yXKvfDwJdUzxCwWtkn8sd+Phy3S5Y9RNIHuL4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LUDOorBho+wJwnya/+P7m+Qizo31plsrwoCv2aFeoyiNJnqD9cJTEEfCULspIHwXsg2dInIStFml6EWLV4Q9O5av8fB+W0WDUtT8c3L9ZquavV9Y//2D0qi3XjcW9jHxFw373loTgehXSAk2vOnMqJAOb/nbbSd/hbYmXqw5nwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QuPlbxBP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760015315;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rUkS3yXKvfDwJdUzxCwWtkn8sd+Phy3S5Y9RNIHuL4A=;
-	b=QuPlbxBPvlbY4MuP6d87mqODCU9TzDn86vzTQM3LON6POSMfO9G/J3fAYPrNdClgTpwU13
-	TDb16vSPSUNlkY/+Gu/d42fJTmkipysYXp0Nfq5l7WkuchrawH6Bj8E+rnT6YQrT+wqSuz
-	5Jf/QSO+ZsYXCqwke5WJxmsqRH91f3c=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-662-qBtNHbKhOXW7bnhxxDOkjg-1; Thu,
- 09 Oct 2025 09:08:33 -0400
-X-MC-Unique: qBtNHbKhOXW7bnhxxDOkjg-1
-X-Mimecast-MFC-AGG-ID: qBtNHbKhOXW7bnhxxDOkjg_1760015312
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4974E195609E;
-	Thu,  9 Oct 2025 13:08:32 +0000 (UTC)
-Received: from [10.22.65.202] (unknown [10.22.65.202])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DEF31180035E;
-	Thu,  9 Oct 2025 13:08:31 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Martin Wege <martin.l.wege@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1 filesystem
- client Windows driver binaries for Windows 10/11+WindowsServer 2019/2022 for
- testing, 2025-10-09 ...
-Date: Thu, 09 Oct 2025 09:07:15 -0400
-Message-ID: <C18594B1-E057-4A86-AC26-478A29EA5388@redhat.com>
-In-Reply-To: <CANH4o6Nf8=THbEKsmfATJS5Mk=7iP31WoW8sDhfm==MqeaXx0w@mail.gmail.com>
-References: <CAKAoaQnWu8pcvEtRahV+Tvr5XxWpsBEOgWCSjn4ppnsJWGNr0A@mail.gmail.com>
- <CANH4o6Nf8=THbEKsmfATJS5Mk=7iP31WoW8sDhfm==MqeaXx0w@mail.gmail.com>
+	s=arc-20240116; t=1760020824; c=relaxed/simple;
+	bh=0YWfCUOzoKqIDrZJK6AE+oAiXVaz5LG+BF6wErhSLHM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tCSZrhLsFvB3fnAF0q6/FQb/XVtKVnyFC8zX+o4r1jhqV7PP3y4dhGogOfcdhM3hcAnsMAxBqrnaz1aKTveUamHTviQVNcrgJ0wDTRH2A9MUtGsgigNLc9A/6jYvBrEpulob0YfvYEMFf/zwIs2g8L2HVtY+wK+5GKQwHBIYw7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2URae3k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1ECC4CEE7;
+	Thu,  9 Oct 2025 14:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760020824;
+	bh=0YWfCUOzoKqIDrZJK6AE+oAiXVaz5LG+BF6wErhSLHM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=n2URae3kJvFnwVxQvynVIVknYXWCmwCpleHZ1Tlj6dO/AyJZQzCn4UALHGs3Xybee
+	 sgDFJjcrCxTIFJVap5/Zh+kG74B8w/EUsBZ46hq2yZuV+7tuMtxvS/Tlvva35SeW7K
+	 zN1DjU71OL93yvqpnSoDby24qCnLlDbXrofiHHBPXU6zddYjLAeL8QkByTLsyNUFoM
+	 IdUGtvuS5cLV6Yct0UAh7IPIA+FeAyTxf7SwKhkYMVWU92AsG4RDQbSU0+A4tTggZ2
+	 J4akRukA5Nftx0POIz9vwn7tnNIiwJ7m0wk7joQNgeaGrVd+EKi1qhwUdR05I2tFrN
+	 1hVnaZpwF0/sQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 0/2] sunrpc: fix handling of rq_bvec array in svc_rqst
+Date: Thu, 09 Oct 2025 10:40:09 -0400
+Message-Id: <20251009-rq_bvec-v3-0-57181360b9cb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEnJ52gC/3WMywrCMBBFf6XM2kg6IW1x5X+ISB6TNiitTiQop
+ f9u2p2Iy3O558yQiCMlOFQzMOWY4jQWULsK3GDGnkT0hQEl6lrKTvDjYjM5YZvGBC+Dt9ZCed+
+ ZQnxtpdO58BDTc+L3Fs71uv42ci2kaAMqr9C3mvTxSjzSbT9xD2sk4x8Ri9ihctJ02mDrvsRlW
+ T546oEk2AAAAA==
+X-Change-ID: 20251008-rq_bvec-b66afd0fdbbb
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ David Howells <dhowells@redhat.com>
+Cc: Brandon Adams <brandona@meta.com>, linux-nfs@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1063; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=0YWfCUOzoKqIDrZJK6AE+oAiXVaz5LG+BF6wErhSLHM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo58lQ5n7a4yBH4qeooGEJWqwQLNqX5+hy3yUUO
+ u+zMkoFCSaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaOfJUAAKCRAADmhBGVaC
+ FUlPD/0bOIgV1vW6mNIxP1ZZTHF6Mol+vbQ4AvF5ewS9/2TnkHgs+8bHwIj0w1Vbuk0LiECxohF
+ XEcfMaJ0qxbLfNcUnEo6w9VUFavc5eu5gttlqTsIX8pFvDb4xlYjR6Ek08zamSTO70KR3xPz+Sg
+ 7KdIjuBN3au6VaDzuoszoWbfFqj4/WOaOcgFDUchy2sYAfmqCR3FVmlvsSUJg3gDu932vL97N1d
+ yB+Rj1Q6vHiGtFWeqErfw+KVmnLTWcgUAwCtktg4mF73QSiQ5Dy44jSdKoi9R7Ncp4nBqzD7FFM
+ ZGB4fZREtE8sq6JV8AOnSFrRMln2c2Xz39Au19Rs6Fr1YkM6LWfdLFngeXizLvNXN7znFbrhhp1
+ AQe/vnw3t9OUcgbukrk44LHwBZjF5d6AwHPbhYn4WaZ3uSdweFe+6oOn32FdBwrzR3fm3yAz5dw
+ WB0sSh5JmQ8A9WeP0X3HzLELKbjsJOrpdiaWBSNvV3tZ8JAOujrymZuA2gbon3Joc2w4HzvsjU0
+ NoDfTmC6uzA8lVMlVkObcsIzjqKJJgXqRfjWfh4g8rLzujoxzXbt/92LLAZNbI+W/fNa3wvhLNS
+ JHWHdKO93nXZWMoCMp+MCgq2RdhZ4c8G5UMV1Ir/3KuLloPD+4wkR49vLTmT8tr+4uDfTt2WzBN
+ oQzH807R8lL0NwQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On 9 Oct 2025, at 7:19, Martin Wege wrote:
+This version of the series just changes the second patch to use a
+separate rq_bvec_len field instead of rq_maxpages at the places where
+it's iterating over the rq_bvec.
 
-> Hello,
->
-> Please test the binaries. The NFSv4.2/4.1 client is for Windows 10/11
-> ARM64+AMD64+x86 and Windows Server 2019+2022/AMD64, but
-> interoperability feedback with NFSv4.1/NFSv4.2 servers based on Linux
-> 6.6+ LTS and
-> 6.17+ would be great.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- Add rq_bvec_len field and use it in appropriate places
+- Link to v2: https://lore.kernel.org/r/20251008-rq_bvec-v2-0-823c0a85a27c@kernel.org
 
-Hey Martin, we're in the middle of bakeathon[1] this week, so there's a
-bunch of server implementations online _right now_ that you can test
-against, even remotely via our tailscale network.
+Changes in v2:
+- Better changelog message for patch #2
+- Link to v1: https://lore.kernel.org/r/20251008-rq_bvec-v1-0-7f23d32d75e5@kernel.org
 
-Ben
+---
+Jeff Layton (2):
+      sunrpc: account for TCP record marker in rq_bvec array when sending
+      sunrpc: add a slot to rqstp->rq_bvec for TCP record marker
 
-[1]: http://www.nfsv4bat.org/Events/2025/Oct/BAT/index.html
+ fs/nfsd/vfs.c              | 6 +++---
+ include/linux/sunrpc/svc.h | 1 +
+ net/sunrpc/svc.c           | 4 +++-
+ net/sunrpc/svcsock.c       | 4 ++--
+ 4 files changed, 9 insertions(+), 6 deletions(-)
+---
+base-commit: 177818f176ef904fb18d237d1dbba00c2643aaf2
+change-id: 20251008-rq_bvec-b66afd0fdbbb
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
