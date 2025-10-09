@@ -1,113 +1,82 @@
-Return-Path: <linux-nfs+bounces-15102-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15103-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E64CABCA6AE
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 19:46:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D18A1BCA84D
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Oct 2025 20:06:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC93E480EFE
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 17:46:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97AC91888726
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Oct 2025 18:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CA32367CF;
-	Thu,  9 Oct 2025 17:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6470524678D;
+	Thu,  9 Oct 2025 17:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHIVEewt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VWGR9gSW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD092227BB5
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 17:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F3924DCF7
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Oct 2025 17:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760031996; cv=none; b=GRAZGUMbAxLY9ubP3k08Q/e3Jieawht5uXYNLeF3/Rgo60PNJNkOeh2LmYikRIDjfcAjl8OgAhLZEBs1WwNMklVq03eYfJXTIRBZU8b96dpVu6g+qaXMruBhWR8HtKCjOBVGq0ksSYXumGE6r4f5ilLlybQ4y8byZezc2XrKXm8=
+	t=1760032790; cv=none; b=f8fsuxXqwOCnI/0hw+KPDwTfyIkjwonHR0Jn3FMJCPJuZsXiPBWc+NhTbJuns3090n8ejhTsxlOvrY5YLZwWgU81gy5ljVOPYpqE4hbJA324Cmv6SoDO1Gk4g/g8G6pLwoSVFMKq/5LZsrHtFEv0IvcR2qm26r92p3IRGxACPVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760031996; c=relaxed/simple;
-	bh=NDjGZzVJklLAvxR2AvMGLoSW+BQEZcXv8fGDGk6MPXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cxopXaBXTRnGtjZckCb46VIVEPf+C/KwRH7PiGjYoegw2Yy/TAsefbs9diiHZA+H6wIA9o0JklPtT5PX7fIDhJtGDBUuwQFQYpJB1dYs2w44eb8HqsydloRoBQUrA4Lia53nyGEihnDRCeKsOD3DDQ7hRCKw6bB6KYO8iS2p2Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHIVEewt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6984FC4CEE7;
-	Thu,  9 Oct 2025 17:46:35 +0000 (UTC)
+	s=arc-20240116; t=1760032790; c=relaxed/simple;
+	bh=wSwGSUrFwyYyy9nZD7yVBO/zbid6FmOKIBRMlNbrmuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sdaaCQ7kz9xe/cnDfP93TZ9LwOOuvZPiUVVdxBM11UrhceKLYfNW+mHfmvxJpr767mDALfidH2drP1NBXA6dt9rI+zVnFn5P4hHXOLsiaxCC1xfhgw0+F9BhMYp1wG0Uv9DUvwHgfW4HkhA5Z9eD/HjT+SfsxvxLaKaQuIPUBF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VWGR9gSW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FDAC4CEE7;
+	Thu,  9 Oct 2025 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760031996;
-	bh=NDjGZzVJklLAvxR2AvMGLoSW+BQEZcXv8fGDGk6MPXk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vHIVEewtUnDqTG1q7UjFZUZ0cztJJjKA7ekgDzmDi5ulDB2cZbfbCQseQ53FZlllJ
-	 nVbIU+kb/ubCL2Xb/eYfvySjroMtk3Ko96QijqWSt2MLEusaPjcb4x5TP9ipk5NIZ/
-	 wcKwCTteaoGACVcBWzbSMAD8JlWdSPDt/YLiGCoTRs2t4c/XEPsWsw/vQfPiX6lpAM
-	 FGw1cr2A+kgdSGT5Ru7sQzDgU1bMzXjymZt7aQUJ25UiopQpKuVHaPMaiRG1tmNUde
-	 P2k212IBEu1pNn9j7LTlkmmMj0MHaav7pxpt152WZJMSdesKXxVJYCdsp9TWyJMRAa
-	 vLKFmGWEDYZlQ==
-Message-ID: <338ffe90-19ee-4185-9668-41e3a79d8851@kernel.org>
-Date: Thu, 9 Oct 2025 13:46:34 -0400
+	s=k20201202; t=1760032789;
+	bh=wSwGSUrFwyYyy9nZD7yVBO/zbid6FmOKIBRMlNbrmuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VWGR9gSW7SDjPHNZ12pSVzcKLrJOL0jry+zpuckfquc+esowk+cgZBHrqMFtnu2UK
+	 Rb1wa+7cFCbNv/yq0kS4G4c23OpXV3GN1hVmlEyttHLkXHw7HkksErOVmMw40xV+EC
+	 /u/80fXq2EiFvx+qtzK6HQM0WaWtttVX7MimDMJmPUXQf3AQIq0QbTaUtG9SmMxWam
+	 sOE/jxF0MrEyRkRmanvWQR973xKF3pk9tz+PLU8c1bidOjsidENleoGxmu4+lchdfJ
+	 +LWmmWHh6UgbDFFdwgN4zyBasszqeFpSqHi4UNQgvK7UVlEJ8oERhx/JedgjKS+Ooj
+	 kx5UXF/z92azg==
+From: Chuck Lever <cel@kernel.org>
+To: jlayton@kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	NeilBrown <neil@brown.name>
+Subject: Re: [PATCH v2] nfsd: add missing FATTR4_WORD2_CLONE_BLKSIZE from supported attributes
+Date: Thu,  9 Oct 2025 13:59:44 -0400
+Message-ID: <176003277769.4149.545859393892148978.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251009173835.83690-1-okorniev@redhat.com>
+References: <20251009173835.83690-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-To: Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <aOa0ijW1h-1tynWD@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aOa0ijW1h-1tynWD@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 10/8/25 2:59 PM, Mike Snitzer wrote:
-> +
-> +static noinline_for_stack int
-> +nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> +		  struct nfsd_file *nf, loff_t offset, unsigned int nvecs,
-> +		  unsigned long *cnt, struct kiocb *kiocb)
-> +{
-> +	struct nfsd_write_dio write_dio;
-> +
-> +	/* Any buffered IO issued here will be misaligned, use
-> +	 * IOCB_SYNC to ensure it has completed before returning.
-> +	 */
-> +	kiocb->ki_flags |= IOCB_SYNC;
-> +	/* Check if IOCB_DONTCACHE should be used when issuing buffered IO;
-> +	 * if so, it will be ignored for any DIO issued here.
-> +	 */
-> +	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
-> +		kiocb->ki_flags |= IOCB_DONTCACHE;
-> +
-> +	if (nfsd_is_write_dio_possible(offset, *cnt, nf, &write_dio)) {
-> +		trace_nfsd_write_direct(rqstp, fhp, offset, *cnt);
-> +		return nfsd_issue_write_dio(rqstp, fhp, nf, offset, nvecs,
-> +					    cnt, kiocb, &write_dio);
-> +	}
-> +
-> +	return nfsd_buffered_write(rqstp, nf->nf_file, nvecs, cnt, kiocb);
-> +}
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Handful of initial comments:
+On Thu, 09 Oct 2025 13:38:35 -0400, Olga Kornievskaia wrote:
+> RFC 7862 Section 4.1.2 says that if the server supports CLONE it MUST
+> support clone_blksize attribute.
+> 
+> 
 
-The current NFSv3 code path, and perhaps NFSv4 too, doesn't support
-changing a WRITE marked as UNSTABLE to FILE_SYNC. I'm not seeing that
-rectified in this patch. I have a patch that enables changing the
-"stable_how" setting, but it's on a system at home. I'll post it in
-a couple of days and we can build on that.
+Applied to nfsd-testing, thanks!
 
-In nfsd_direct_write we're setting IOCB_SYNC early. When falling back to
-BUFFERED_IO, that setting is preserved, and the fallback buffered path
-is now always FILE_SYNC. We should discuss whether the fallback in this
-case should be always FILE_SYNC or should allow UNSTABLE.
+[1/1] nfsd: add missing FATTR4_WORD2_CLONE_BLKSIZE from supported attributes
+      commit: fcc43f116744ac6d34f2bd77c1be34e8171d3d3c
 
-Nit: I'd rather use the normal kernel comment style here, where an
-initial "/*" appears on a line by itself.
-
-
--- 
-Chuck Lever
+--
+Chuck Lever <chuck.lever@oracle.com>
 
