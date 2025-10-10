@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-15132-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15133-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17043BCDC8E
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 17:24:06 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71F46BCDC76
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 17:22:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FDFB3A9E21
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 15:19:37 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E5670355FE1
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 15:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17E6A26E16A;
-	Fri, 10 Oct 2025 15:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8CEB2F9985;
+	Fri, 10 Oct 2025 15:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvzW+e6b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWC40fkg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E662121A95D
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Oct 2025 15:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934322F9982
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Oct 2025 15:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760109575; cv=none; b=U5fVLiHF09ZYyNVo3sd35xHwq8NxGkfVd+XJO+95HgZ2h83DuWNyEKqk3lf8uxHLswuwdrRWSYHaZ/mckZ3j0FrpnKZH4eY8bxEyTzd4X/CupKJayc0H8l5STMgi1J9dm/MTrMCqlm39XC+Qm+eAHrPklFP726E0Xdmuuhso6RU=
+	t=1760109735; cv=none; b=MOY2vk7tRHhs9/bzt9d2DXT02gOjTZ1BF4vAaw7kK/Dv5Go+QlAdHFkHKzdoa9L2uK9lZDYjtpyNM/2TEO71Nncui08Ay02pPV4RSHpGsS0sfTWsUVK6/3Q1u9xvdqvg/OFx3pQxauwSVpIrQ4/8N0lgzTENGRIGp8WOIbd2vAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760109575; c=relaxed/simple;
-	bh=ytk6niDFL9tFmVuB/ZbxQ0cvG0XHqE01TAuTGAMQfTk=;
+	s=arc-20240116; t=1760109735; c=relaxed/simple;
+	bh=cGa2YU8l/3e7JDGLlT0iQdz4FLzydHOHe/LFjhZF2Hs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bZh32Q8NVtuKQVGdl5V2hzToZtnB3ComWSjU/uRrUeijaPsGZrDksxY6nS/jE25IJbrsdlnrW/uv56PscpYUjVqODcWSXRTn+XX/dUIttGapKZpvFhhFhrBc4kWkuJ/PruVQvThfjnrviZDIC9qV6oeoao/aAtgxN6QiKWQEaK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvzW+e6b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83146C4CEF1;
-	Fri, 10 Oct 2025 15:19:33 +0000 (UTC)
+	 Content-Type:MIME-Version; b=klDEPxbLyZYlZJg0qjbwnrykzQlNH2HhP00FbVeTMx4S9/OaUFO9O8Tq13vvvS5mJ8Ux45cKwDKJEoQuXOW8BYsOEGzu2MDDt4OaIvjGgZErwcZRTQE3ZhAWFxPSEEJWJr0aQuVgJYA6mqCw2QPpN6CclwI75bM0ILuT2Q3vCKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWC40fkg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C000C4CEF1;
+	Fri, 10 Oct 2025 15:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760109574;
-	bh=ytk6niDFL9tFmVuB/ZbxQ0cvG0XHqE01TAuTGAMQfTk=;
+	s=k20201202; t=1760109735;
+	bh=cGa2YU8l/3e7JDGLlT0iQdz4FLzydHOHe/LFjhZF2Hs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gvzW+e6bqnPZRqv3Q36h2+JAFMwgVKnkGEEVExkCnRK8Hn66y3FWPpPzVjajRl2oN
-	 5IDM9ERa+BaBjv+i5ninQCYy6MSprh142Hjm0A2Nq1hK8NZxk94kMBNcXAdVlUsbSa
-	 HG1m3ZOVNRAPtRBehVFFT1oHdOJtqWqWJ2mzH4pUw4UVqJ0KvlcX2YXwwedju4SSEe
-	 H1VJBC1OJOmmhKC1DO3VySCcIA3nw3Kw2z5SFqyxk+udeCub2Y0uMmY6fXMIW0/oAC
-	 MPPt90ZjIquMGD/y56CaTo5WwMu07AEdyJai/hUFqbGupB+MqJZmF842UQcugBodp1
-	 Wr3fJqFAYpxoA==
-Message-ID: <ed0ed6db6b276f1a002e79e1cdde975fe77c56a7.camel@kernel.org>
-Subject: Re: [PATCH v3 3/5] nfsd: Never cache a COMPOUND when the SEQUENCE
- operation fails
+	b=CWC40fkgHbNrI4ZYet23wrOM3rmRrPOO2zRIVG/RLL+5x+ERUetH9ObMP5n5/YppJ
+	 iQkpwWvkZwwizPlllqEQnUNP2xZcGZTNwZG81J17tK4T2E4XWsvx2xNYcFybeVjWpq
+	 3x3/UqxiT1NVtAjuMA5ZpOtPWImBi3e+6YM2SfBx48lWwUryFZxAnFUcqe0myDo9Is
+	 1n0Q3CUoXL+NEY82sURTH+EAiu7d/3X06N1q2A8BHA7xVlRrqW4E1mW/GiMoOh1sUX
+	 PS10tF4Dnifd/frbgcuIdON3ae1vfcL55xRwO0vHPy73XStVmIZAVVyobiqf7uNPi1
+	 vdKDWghyvuWRA==
+Message-ID: <ff604d86fa8edbb2bd64dd6c00cbb98666406d92.camel@kernel.org>
+Subject: Re: [PATCH v3 4/5] NFSD: Increase minimum size of slot replay cache
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 10 Oct 2025 11:19:32 -0400
-In-Reply-To: <20251010135623.1723-4-cel@kernel.org>
+Date: Fri, 10 Oct 2025 11:22:13 -0400
+In-Reply-To: <20251010135623.1723-5-cel@kernel.org>
 References: <20251010135623.1723-1-cel@kernel.org>
-	 <20251010135623.1723-4-cel@kernel.org>
+	 <20251010135623.1723-5-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,54 +139,36 @@ MIME-Version: 1.0
 On Fri, 2025-10-10 at 09:56 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> RFC 8881 normatively mandates that operations where the initial
-> SEQUENCE operation in a compound fails must not modify the slot's
-> replay cache.
+> NFSD caches solo SEQUENCE even when sa_cachethis is false. Ensure
+> there is enough space in each slot replay cache, even when the
+> client requested a zero ca_maxresponsesize_cached.
 >=20
-> nfsd4_cache_this() doesn't prevent such caching.
->=20
-> Fixes: 468de9e54a90 ("nfsd41: expand solo sequence check")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4state.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>  fs/nfsd/nfs4state.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index c9053ef4d79f..7b80f00fb32c 100644
+> index 7b80f00fb32c..7d297ac2bf2b 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -3477,16 +3477,26 @@ gen_callback(struct nfs4_client *clp, struct nfsd=
-4_setclientid *se, struct svc_r
->  }
+> @@ -2024,11 +2024,12 @@ static struct nfsd4_slot *nfsd4_alloc_slot(struct=
+ nfsd4_channel_attrs *fattrs,
+>  	size_t size;
 > =20
->  /*
-> - * Cache a reply. nfsd4_check_resp_size() has bounded the cache size.
-> + * Maybe cache a reply. nfsd4_check_resp_size() has bounded the cache si=
-ze.
->   */
->  static void
->  nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
->  {
-> -	struct xdr_buf *buf =3D resp->xdr->buf;
-> +	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
->  	struct nfsd4_slot *slot =3D resp->cstate.slot;
-> +	struct xdr_buf *buf =3D resp->xdr->buf;
->  	unsigned int base;
+>  	/*
+> -	 * The RPC and NFS session headers are never saved in
+> -	 * the slot reply cache buffer.
+> +	 * Reserve enough space to handle solo SEQUENCE operations,
+> +	 * which are always cached.
+>  	 */
+>  	size =3D fattrs->maxresp_cached < NFSD_MIN_HDR_SEQ_SZ ?
+> -		0 : fattrs->maxresp_cached - NFSD_MIN_HDR_SEQ_SZ;
+> +		NFSD_MIN_HDR_SEQ_SZ :
+> +		fattrs->maxresp_cached - NFSD_MIN_HDR_SEQ_SZ;
 > =20
-> -	dprintk("--> %s slot %p\n", __func__, slot);
-> +	/*
-> +	 * RFC 5661 Section 2.10.6.1.2:
-> +	 *
-> +	 * Any time SEQUENCE ... returns an error ... [t]he replier MUST NOT
-> +	 * modify the reply cache entry for the slot whenever an error is
-> +	 * returned from SEQUENCE ...
-> +	 */
-> +	if (resp->opcnt =3D=3D 1 && args->ops[0].opnum =3D=3D OP_SEQUENCE &&
-> +	    resp->cstate.status !=3D nfs_ok)
-> +		return;
-> =20
->  	slot->sl_flags |=3D NFSD4_SLOT_INITIALIZED;
->  	slot->sl_opcnt =3D resp->opcnt;
+>  	slot =3D kzalloc(struct_size(slot, sl_data, size), gfp);
+>  	if (!slot)
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
