@@ -1,231 +1,103 @@
-Return-Path: <linux-nfs+bounces-15137-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15138-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5322ABCE3EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 20:29:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8525CBCE62F
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 21:28:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 009D9403196
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 18:28:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A539019A3529
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 19:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1D72FF664;
-	Fri, 10 Oct 2025 18:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F01D2FD1C2;
+	Fri, 10 Oct 2025 19:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2jFgeA3"
+	dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b="AW+nKmSB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E6D2FFDC0;
-	Fri, 10 Oct 2025 18:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA10C214A97;
+	Fri, 10 Oct 2025 19:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760120855; cv=none; b=QsTTmC4kSpCYyNejb0sE5WATtvWD/7URMC6ji1BaGv3bU3Mi5z1INTcrH02z3oL1uUkws9ul5HSIUPJtyB4curK7rObTeiUPgx0P6eXIax8zV1r1/B3q7vxMGWKphfeqTUZOCSHp9O/FWkEZDL4fiCkbHcsbYkE4c6859421DRo=
+	t=1760124480; cv=none; b=E0tkFTBASlmIL2lPgB8JX/9jYJTcfsTplqzakFKUUjaNt7ZS+ZZlnB/zlcREBiK/Csd6g7km6sRmCqPvbRZrfZ+IeE5yLSh4rOCOT3qvZbxcIjAbYJWgcUtImvZzLpWUe9QamH6VZvbHcXN0+PIjXSdjA/sFdhUvvtEreHz27s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760120855; c=relaxed/simple;
-	bh=eLy5f8BYq1FZ75LlTMzJvXsfCy88if544RCMW6Jg9FM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=O7vgedinTj9JedMzX5H2MRnTmSNUQlKRnOGSvLa8fpC/g2OBjLfGVZfMQ54evZlzv1tNNRQyCFfN7T/TXE5TdNYG3FcZVHxUzkkmLIFoXHEGMQAXopk8J/deRPvY5gXWgycArGygRb/hNOQOvMC/LgIroDuN3kwbuo6ZaSiFgvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2jFgeA3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3E0C4CEF5;
-	Fri, 10 Oct 2025 18:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760120853;
-	bh=eLy5f8BYq1FZ75LlTMzJvXsfCy88if544RCMW6Jg9FM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Z2jFgeA3HOvCBv9HW0qSykSn5u+tXiXUOxQctdezWagjGCbHS5j+9vC8Cso8BGBAY
-	 i+A7R1yrViLxfBfYCyDRztU3Fw324cq94aBY3bI6lBuyDdSIw19Pz4IJn5js3SUlEx
-	 hztQJG2yEJIQIu1WqM+hcmoUvAfhYhrFoGtoc92HYsIO3UwIp+3JgQP4RO+Rpx9Vjp
-	 sp7J/c3v8hQsg5cYmUbq3dIGNEV1W/3INFAEL0VlOaKwDosNRLlPP04AB94mspPPAz
-	 vwnyMVV+p18peibko9X6g2ETn73yQvxpHKXQ9xj3x2FKgTlnFCaeRXDdSHTM7fQsZk
-	 yn1IyLL0lEQ1Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 10 Oct 2025 14:27:22 -0400
-Subject: [PATCH v5] sunrpc: allocate a separate bvec array for socket sends
+	s=arc-20240116; t=1760124480; c=relaxed/simple;
+	bh=BKU1mOrngwnrQel8ySNAeHt9ItbwwpG5di7ynGcs5zY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mZYXReZd0Y+oVtlDv4ZadjDJdTiY3AFCe4uK1b8S/GvMorhPuywRKElelU+YIruHjYa3o9zAyMMhlvqsql1kD5V8kDB1Zr3r8pX85u3hRLjyLEiIOg7R72zJB4BiUhuZOYDYkaoRpvuNv2HcI4STAVYWKWouXV5mxfpFiAgpkrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be; spf=pass smtp.mailfrom=krisman.be; dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b=AW+nKmSB; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=krisman.be
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 37A075816E6;
+	Fri, 10 Oct 2025 19:06:17 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2408B443A9;
+	Fri, 10 Oct 2025 19:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=krisman.be; s=gm1;
+	t=1760123169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RT3I+Aw6mgBFFUKrYHKkLH1uNNtDDVJOkY8Er1mJ2dI=;
+	b=AW+nKmSBAg080I8SZECBBCTIBOkqgAFBpREokJPVqstRKpIW+knsCVD9nu6uniokQzWgGF
+	o0hAkuWwvRMxPqP4A+nnDOWM/2msG7BhAsb90F2iYDdDjwUYNdJJxkHmolCXAq2o5JF7Wu
+	0DuSSQ08noPa0G3Dz55RmYrdWQ26tejzJTnPdW9eVkA0iuFK4dxv4V28U095zOSGok/W7U
+	SCaZ9xux0jKZyXizY3kizbhd9PtuUpkHHGAZn/bYoQsfdsfZoNXcaEfJ+fH2ro0SGz/nmc
+	yLG24GDHZVP/F43zva06E2bvJ3utY9suU80qNSMzlLPzlAhICtP2j2AqRt5vNg==
+From: Gabriel Krisman Bertazi <gabriel@krisman.be>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,  Chuck Lever <cel@kernel.org>,
+  Amir Goldstein <amir73il@gmail.com>,  linux-fsdevel@vger.kernel.org,
+  linux-nfs@vger.kernel.org,  Chuck Lever <chuck.lever@oracle.com>,  Jeff
+ Layton <jlayton@kernel.org>,  Volker Lendecke <Volker.Lendecke@sernet.de>,
+  CIFS <linux-cifs@vger.kernel.org>
+Subject: Re: [RFC PATCH] fs: Plumb case sensitivity bits into statx
+In-Reply-To: <20251010144938.GB6174@frogsfrogsfrogs> (Darrick J. Wong's
+	message of "Fri, 10 Oct 2025 07:49:38 -0700")
+References: <20250925151140.57548-1-cel@kernel.org>
+	<CAOQ4uxj-d87B+L+WgbFgmBQqdrYzrPStyfOKtVfcQ19bOEV6CQ@mail.gmail.com>
+	<87tt0gqa8f.fsf@mailhost.krisman.be>
+	<28ffeb31-beec-4c7a-ad41-696d0fd54afe@kernel.org>
+	<87plb3ra1z.fsf@mailhost.krisman.be>
+	<4a31ae5c-ddb2-40ae-ae8d-747479da69e3@kernel.org>
+	<87ldlrr8k3.fsf@mailhost.krisman.be>
+	<20251006-zypressen-paarmal-4167375db973@brauner>
+	<87zfa2pr4n.fsf@mailhost.krisman.be>
+	<20251010-rodeln-meilenstein-0ebf47663d35@brauner>
+	<20251010144938.GB6174@frogsfrogsfrogs>
+Date: Fri, 10 Oct 2025 15:06:05 -0400
+Message-ID: <87v7kmziea.fsf@mailhost.krisman.be>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251010-rq_bvec-v5-1-44976250199d@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAApQ6WgC/3XMQQ7CIBCF4asY1mKYQaB15T2MMQUGJZpWqSEa0
- 7uLblrTuHyT+f4X6ylF6tlm8WKJcuxj15ahlgvmTk17JB592QwFKhCi4ul2sJkct1o3wYvgrbW
- sfF8Thfj4lnb7sk+xv3fp+Q1n+FznjQxccBNQeoneKFLbM6WWLqsuHdknkvEPxAIrlE40lWrQu
- BmUU1iPUBaoDFQgtbC1szO4nkAQI1xz4BqN0iaAoxp+4DAMbw0sK5BKAQAA
-X-Change-ID: 20251008-rq_bvec-b66afd0fdbbb
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- David Howells <dhowells@redhat.com>
-Cc: Brandon Adams <brandona@meta.com>, linux-nfs@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5335; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=eLy5f8BYq1FZ75LlTMzJvXsfCy88if544RCMW6Jg9FM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo6VAPtUGvoIwWqqz/lc5Ho7U9WvDl3ATC9mU2v
- a2ELpDKYGGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaOlQDwAKCRAADmhBGVaC
- Ff4oD/0S5lUBbOdg04YMWA9mXPWwc1H071gKHk//J9K9bFDXtpPt6gaGqwyS4eCs6XoURn/VX5T
- AntwsbiBmm5WFbstLEhvRiHVTaLQrhDQ0ojN4AlOjOj2OA/nft8ZFxBdSJJXKV14cI/w4IMuLTH
- VQp4WnMpNVgb2nLpvTE8D1q2tlHghhj9xdcouhytxjkALj1uBvbiECnXbR6rBI81aS6SVUTaNZA
- gRY6/uOMFb6brNKovczfOTlRUFGOPoX77J7QvIoZo9N6o/SWb0nInbPE4uyMCLUOKx4bBcpy4lw
- fZTIym6TnDPVravIv1OIgLa7OBEjDBR0N36NiEKjBE+dT1LtV7cN2FMInU3olVkTzCDc523E9Z5
- +7V9bWBwPAQez7kqDOreJVnZiota0Eyg56LxbJkJKI4ptsLy97fvpuQN+QhYJLOotzkBYLOnneR
- Yg56qonIq7ffIxUXa8FxBbHCaWv8VsJgVGRYarqSklNUaLSd/g8qExL52Sh9M+ECglaJ2aw1URi
- UJT3EmR7WsnooAjHKN8E9XCIjPeZrap+nYqUiehJtWT4CbJOke35bOlx0iavEas+PHq0Gcv+QrF
- +AOI96dJO/bDOK7D23K3huuVnkFS3NqvsracLnfSvbyBR0znsCliRFDoRqPhOmsygx2c+32UOcq
- G70fwp3kxPk9wyg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain
+X-GND-Sasl: gabriel@krisman.be
 
-svc_tcp_sendmsg() calls xdr_buf_to_bvec() with the second slot of
-rq_bvec as the start, but doesn't reduce the array length by one, which
-could lead to an array overrun. Also, rq_bvec is always rq_maxpages in
-length, which can be too short in some cases, since the TCP record
-marker consumes a slot.
+"Darrick J. Wong" <djwong@kernel.org> writes:
 
-Fix both problems by adding a separate bvec array to the svc_sock that
-is specifically for sending. Allocate it when doing the first send on
-the socket, to avoid allocating the array for listener sockets.
+> n00b question here: Can you enable (or disable) casefolding and the
+> folding scheme used?  My guess is that one ought to be able to do that
+> either (a) on an empty directory or (b) by reindexing the entire
+> directory if the filesystem supports that kind of thing?  But hey, it's
+> not like xfs supports any of that. ;)
 
-For TCP, make this array one slot longer than rq_maxpages, to account
-for the record marker. For UDP only allocate as large an array as we
-need since frames are limited to 64k anyway.
+We only support enabling/disabling on an empty directory.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Minor update to the last patch to reduce the size of the array on UDP
-sockets since that transport doesn't need rq_maxpages.
----
-Changes in v5:
-- reduce the size of sk_bvec on UDP sockets
-- Link to v4: https://lore.kernel.org/r/20251010-rq_bvec-v4-1-627567f1ce91@kernel.org
+Disabling casefolding on an already populated directory would be easier
+to do - just re-index, as you said.  But to enable it, you'd need to
+handle cases where you have two different files that now have the "same"
+name (differing only by case). Then, which one you'll get is quite
+unpredictable (perhaps, the order the dirent appears on-disk, etc).
 
-Changes in v4:
-- switch to allocating a separate bvec for sends in the svc_sock
-- Link to v3: https://lore.kernel.org/r/20251009-rq_bvec-v3-0-57181360b9cb@kernel.org
+So we just don't allow it.
 
-Changes in v3:
-- Add rq_bvec_len field and use it in appropriate places
-- Link to v2: https://lore.kernel.org/r/20251008-rq_bvec-v2-0-823c0a85a27c@kernel.org
-
-Changes in v2:
-- Better changelog message for patch #2
-- Link to v1: https://lore.kernel.org/r/20251008-rq_bvec-v1-0-7f23d32d75e5@kernel.org
----
- include/linux/sunrpc/svcsock.h |  3 +++
- net/sunrpc/svcsock.c           | 29 ++++++++++++++++++++++-------
- 2 files changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
-index 963bbe251e52109a902f6b9097b6e9c3c23b1fd8..a80a05aba75410b3c4cd7ba19181ead7d40e1fdf 100644
---- a/include/linux/sunrpc/svcsock.h
-+++ b/include/linux/sunrpc/svcsock.h
-@@ -26,6 +26,9 @@ struct svc_sock {
- 	void			(*sk_odata)(struct sock *);
- 	void			(*sk_owspace)(struct sock *);
- 
-+	/* For sends */
-+	struct bio_vec		*sk_bvec;
-+
- 	/* private TCP part */
- 	/* On-the-wire fragment header: */
- 	__be32			sk_marker;
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 7b90abc5cf0ee1520796b2f38fcb977417009830..0ec1131ffade8d0c66099bfb1fb141b22c6e411b 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -730,6 +730,13 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 	unsigned int count;
- 	int err;
- 
-+	count = DIV_ROUND_UP(RPC_MAX_REPHEADER_WITH_AUTH + RPCSVC_MAXPAYLOAD_UDP, PAGE_SIZE);
-+	if (!svsk->sk_bvec) {
-+		svsk->sk_bvec = kcalloc(count, sizeof(*svsk->sk_bvec), GFP_KERNEL);
-+		if (!svsk->sk_bvec)
-+			return -ENOMEM;
-+	}
-+
- 	svc_udp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
- 	rqstp->rq_xprt_ctxt = NULL;
- 
-@@ -740,14 +747,14 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 	if (svc_xprt_is_dead(xprt))
- 		goto out_notconn;
- 
--	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, xdr);
-+	count = xdr_buf_to_bvec(svsk->sk_bvec, rqstp->rq_maxpages, xdr);
- 
--	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
-+	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
- 		      count, rqstp->rq_res.len);
- 	err = sock_sendmsg(svsk->sk_sock, &msg);
- 	if (err == -ECONNREFUSED) {
- 		/* ICMP error on earlier request. */
--		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
-+		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
- 			      count, rqstp->rq_res.len);
- 		err = sock_sendmsg(svsk->sk_sock, &msg);
- 	}
-@@ -1235,19 +1242,19 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
- 	int ret;
- 
- 	/* The stream record marker is copied into a temporary page
--	 * fragment buffer so that it can be included in rq_bvec.
-+	 * fragment buffer so that it can be included in sk_bvec.
- 	 */
- 	buf = page_frag_alloc(&svsk->sk_frag_cache, sizeof(marker),
- 			      GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 	memcpy(buf, &marker, sizeof(marker));
--	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
-+	bvec_set_virt(svsk->sk_bvec, buf, sizeof(marker));
- 
--	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages,
-+	count = xdr_buf_to_bvec(svsk->sk_bvec + 1, rqstp->rq_maxpages,
- 				&rqstp->rq_res);
- 
--	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
-+	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
- 		      1 + count, sizeof(marker) + rqstp->rq_res.len);
- 	ret = sock_sendmsg(svsk->sk_sock, &msg);
- 	page_frag_free(buf);
-@@ -1272,6 +1279,13 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 					 (u32)xdr->len);
- 	int sent;
- 
-+	if (!svsk->sk_bvec) {
-+		/* +1 for TCP record marker */
-+		svsk->sk_bvec = kcalloc(rqstp->rq_maxpages + 1, sizeof(*svsk->sk_bvec), GFP_KERNEL);
-+		if (!svsk->sk_bvec)
-+			return -ENOMEM;
-+	}
-+
- 	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
- 	rqstp->rq_xprt_ctxt = NULL;
- 
-@@ -1636,5 +1650,6 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sock_release(sock);
- 
- 	page_frag_cache_drain(&svsk->sk_frag_cache);
-+	kfree(svsk->sk_bvec);
- 	kfree(svsk);
- }
-
----
-base-commit: 177818f176ef904fb18d237d1dbba00c2643aaf2
-change-id: 20251008-rq_bvec-b66afd0fdbbb
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Gabriel Krisman Bertazi
 
