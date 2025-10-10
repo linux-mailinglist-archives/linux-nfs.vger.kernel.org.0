@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-15127-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15128-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EF2ABCD5D7
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76354BCD5D8
 	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 15:56:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31D54189205D
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 13:56:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6F5DA4E2A01
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 13:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 319E52F39C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE1E2F3C3B;
 	Fri, 10 Oct 2025 13:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpRHwNYz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBux4V0e"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE072F1FFE
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Oct 2025 13:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93492F1FFE
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Oct 2025 13:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760104591; cv=none; b=be6xUKzSoOw6q0vRPu8RT0pudUPB/hKoxHU5RVNfy9qVPS7vnkcNT93At6ec3ldXNNCrEExeZiNJUcW1E4KDUMhDPiprTbibObN/FQYltYTUterDQYRaAH8fqRjfPH+HrO/uClziRGrDoZ+saTX+rf4Fe+4F959ltI2Ar69QjwQ=
+	t=1760104591; cv=none; b=cPDTR+vIWRQR4ivDnLNhnHTA8tcoVWqY+8VkZLMB6yeXRubMUdeczN+WK63eyVEIXsj2/Bo5ODmydyyhBXKcH4+UMUB8rHr+tmQvq/rYyqVu2e/E9zGk/XlUKg8LgOtJyIsIiLa0bK2uMJV8VbV6enGPKRpGPXk6ZyRsDNWuJLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760104591; c=relaxed/simple;
-	bh=a9A41uN7jOQ2VvBfex844BcEbxJqR7N0HGWaUJgpLg4=;
+	bh=z+NMsp/xGawEnLlY4qoG+nqDJMsW9ocapuCNp1rSaNY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H0xM+gvVfVpK3M0WciwmQ4+Ozn6cYuZHtw+rcOJ7uzCkoa2GvmOMfNe6vvb8+BqGURVSkny7XOtQH/otfcZ6Bkgm2g5W555S4kYpx13I5kdWDXF01l/m3CR+fCDD+mSsaCoUbY7d3mhzNAx96Q/Lw7cbNLq3pvHO56utA9mYQKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpRHwNYz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F512C4CEF1;
-	Fri, 10 Oct 2025 13:56:28 +0000 (UTC)
+	 MIME-Version; b=QxOoBGuzgAWB4bWiSltN2v4nHrzehyuwqiOGDaUNJ/M++E3xTdPw+DsGnei4d/LeAmRjxGOuAuHJju+pDOmUBCY7WrbpYnOlqh8hAzAdLR2pv92J9YEEpJOTjGQAgkCS+P3XCPdKzep1utEpg+UNHAQshHRdnCBtFmHGl+rG8lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBux4V0e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63493C4CEF9;
+	Fri, 10 Oct 2025 13:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760104590;
-	bh=a9A41uN7jOQ2VvBfex844BcEbxJqR7N0HGWaUJgpLg4=;
+	s=k20201202; t=1760104591;
+	bh=z+NMsp/xGawEnLlY4qoG+nqDJMsW9ocapuCNp1rSaNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RpRHwNYzSICa0j08kAGXfuKBL8zJSfk6gNSZedVB/RQzpFtNQRKimvTSRME5fvFNq
-	 iZgS0/FFg4wFT1a9PHRgB1oDZwj2prASSSKrEyfkhLLzJ7/5/FnJhj/vsKJG7T7gGk
-	 1E01WEOAPUEYEkJbybq/pFIA03fRjw+zHNQxZDxEdrC0FBSVHh0PteveL00DEtVyjL
-	 gw6iX0jLHQdLWRncEaHHiuunBP8DwFYOXP1UxGTldNtqYnTQHT1SOhjRhONyY/xftD
-	 6d7MaKk3Fjy88XtlEkBeyJKXKrVKdh5/fExIz1PPVGwdqu150lH+qeewObV0uMy0eY
-	 Jt5u/ePbU5jrg==
+	b=lBux4V0e5K74jxHcuoIoTt2KcUoW7s2YYjBixUGAAYwzeoGw2KXYzyOILo45duyX+
+	 e6DMud8kbqAcLaTmpqw8+HxtxbJKUIAd9/ZSyMJgpd/5wYiY6leQqSw0ZPwgHPWnT2
+	 TZBF17lLsAVOtvaqkz+IBTqWoBN83AKjd+hUgegfNskO2sRWwYhKRoETRjKTs88JZX
+	 km4LwohWpPO6OxpRX1WDpLn0eaA0Qh5+pJsPc5mVo6J3eX9kFiliskAfngDu//m2HJ
+	 D7fgBx/6mKZGroM+pCigeNG2sSiKT3aSXRqkb2kRAhxq3787q3WauGQyVIrKhK/t8z
+	 HqS4NXLzgc1iw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +48,10 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	rtm@csail.mit.edu
-Subject: [PATCH v3 2/5] NFSD: Fix the "is this a solo SEQUENCE" predicate
-Date: Fri, 10 Oct 2025 09:56:20 -0400
-Message-ID: <20251010135623.1723-3-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v3 3/5] nfsd: Never cache a COMPOUND when the SEQUENCE operation fails
+Date: Fri, 10 Oct 2025 09:56:21 -0400
+Message-ID: <20251010135623.1723-4-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251010135623.1723-1-cel@kernel.org>
 References: <20251010135623.1723-1-cel@kernel.org>
@@ -66,54 +65,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-RFC 8881 Section 2.10.6.4 says:
+RFC 8881 normatively mandates that operations where the initial
+SEQUENCE operation in a compound fails must not modify the slot's
+replay cache.
 
-> If sa_cachethis or csa_cachethis is TRUE, then the replier MUST
-> cache a reply except if an error is returned by the SEQUENCE or
-> CB_SEQUENCE operation (see Section 2.10.6.1.2).
+nfsd4_cache_this() doesn't prevent such caching.
 
-This text also appears in RFC 5661. Further, Section 2.10.6.1.2
-says:
-
-> Any time SEQUENCE or CB_SEQUENCE returns an error, the sequence ID
-> of the slot MUST NOT change. The replier MUST NOT modify the reply
-> cache entry for the slot whenever an error is returned from
-> SEQUENCE or CB_SEQUENCE.
-
-NFSD caches the result of solo SEQUENCE operations, but rtm's
-reproducer sends two operations in the failing COMPOUND. NFSD should
-not attempt to cache the reply.
-
-The logic in nfsd4_is_solo_sequence() is incorrect: it checks the
-current operation index, not the total count of operations in the
-COMPOUND. If the SEQUENCE operation, which is always operation 1,
-fails in a multi-operation compound, resp->opcnt is always 1. Thus
-when a SEQUENCE operation fails, nfsd4_is_solo_sequence() always
-returns true.
-
-Reported-by: <rtm@csail.mit.edu>
-Closes: https://lore.kernel.org/linux-nfs/c3628d57-94ae-48cf-8c9e-49087a28cec9@oracle.com/T/#t
 Fixes: 468de9e54a90 ("nfsd41: expand solo sequence check")
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/xdr4.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index ee0570cbdd9e..d1837a10b0c2 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -926,7 +926,8 @@ struct nfsd4_compoundres {
- static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
- {
- 	struct nfsd4_compoundargs *args = resp->rqstp->rq_argp;
--	return resp->opcnt == 1 && args->ops[0].opnum == OP_SEQUENCE;
-+
-+	return args->opcnt == 1 && args->ops[0].opnum == OP_SEQUENCE;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c9053ef4d79f..7b80f00fb32c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3477,16 +3477,26 @@ gen_callback(struct nfs4_client *clp, struct nfsd4_setclientid *se, struct svc_r
  }
  
  /*
+- * Cache a reply. nfsd4_check_resp_size() has bounded the cache size.
++ * Maybe cache a reply. nfsd4_check_resp_size() has bounded the cache size.
+  */
+ static void
+ nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
+ {
+-	struct xdr_buf *buf = resp->xdr->buf;
++	struct nfsd4_compoundargs *args = resp->rqstp->rq_argp;
+ 	struct nfsd4_slot *slot = resp->cstate.slot;
++	struct xdr_buf *buf = resp->xdr->buf;
+ 	unsigned int base;
+ 
+-	dprintk("--> %s slot %p\n", __func__, slot);
++	/*
++	 * RFC 5661 Section 2.10.6.1.2:
++	 *
++	 * Any time SEQUENCE ... returns an error ... [t]he replier MUST NOT
++	 * modify the reply cache entry for the slot whenever an error is
++	 * returned from SEQUENCE ...
++	 */
++	if (resp->opcnt == 1 && args->ops[0].opnum == OP_SEQUENCE &&
++	    resp->cstate.status != nfs_ok)
++		return;
+ 
+ 	slot->sl_flags |= NFSD4_SLOT_INITIALIZED;
+ 	slot->sl_opcnt = resp->opcnt;
 -- 
 2.51.0
 
