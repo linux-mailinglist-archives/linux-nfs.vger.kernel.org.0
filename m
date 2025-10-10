@@ -1,174 +1,225 @@
-Return-Path: <linux-nfs+bounces-15133-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15134-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71F46BCDC76
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 17:22:20 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC789BCDF60
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 18:28:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E5670355FE1
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 15:22:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B5F0A4E9567
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Oct 2025 16:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8CEB2F9985;
-	Fri, 10 Oct 2025 15:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9791E2FBE08;
+	Fri, 10 Oct 2025 16:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWC40fkg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYX3urCU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934322F9982
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Oct 2025 15:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6818B4A02;
+	Fri, 10 Oct 2025 16:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760109735; cv=none; b=MOY2vk7tRHhs9/bzt9d2DXT02gOjTZ1BF4vAaw7kK/Dv5Go+QlAdHFkHKzdoa9L2uK9lZDYjtpyNM/2TEO71Nncui08Ay02pPV4RSHpGsS0sfTWsUVK6/3Q1u9xvdqvg/OFx3pQxauwSVpIrQ4/8N0lgzTENGRIGp8WOIbd2vAM=
+	t=1760113689; cv=none; b=EFDLcLUgrRyMbSwJ30qHe7CdjsK4xkKlxMUD6RpBa9bystvh+DEUhQ3Mv/DIahLdzgMtJ/vrl4Ju9c7aRIGuHs5Py7CQK8stCfE8aMB1xy+Wkg6jLUpohSWJesH/au9YzXNdHqFo5j2nxzgq6be5iKl8bIdFY8hhZ6F66FAJ0mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760109735; c=relaxed/simple;
-	bh=cGa2YU8l/3e7JDGLlT0iQdz4FLzydHOHe/LFjhZF2Hs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=klDEPxbLyZYlZJg0qjbwnrykzQlNH2HhP00FbVeTMx4S9/OaUFO9O8Tq13vvvS5mJ8Ux45cKwDKJEoQuXOW8BYsOEGzu2MDDt4OaIvjGgZErwcZRTQE3ZhAWFxPSEEJWJr0aQuVgJYA6mqCw2QPpN6CclwI75bM0ILuT2Q3vCKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWC40fkg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C000C4CEF1;
-	Fri, 10 Oct 2025 15:22:14 +0000 (UTC)
+	s=arc-20240116; t=1760113689; c=relaxed/simple;
+	bh=ul0WhsI1/S/s1VuIA53kCuhvAfuZ5mveHzB8QuQ0UJU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KfnMN/215slTuKSFFpIme5ZAkylv4LucQ624bNJNETOTo+H7TN6stMKD42t6WyeXxHU0MBSzXtZbmpiBqwDb10e+oFcATFVwexvzBqkwfU79oMESDz1DkiNp5Z8kj7dtDXNTbvqEHw0Iz6/yG9yOElImV7LJX9YyuJdKqLH5IlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYX3urCU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA1CC4CEF1;
+	Fri, 10 Oct 2025 16:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760109735;
-	bh=cGa2YU8l/3e7JDGLlT0iQdz4FLzydHOHe/LFjhZF2Hs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CWC40fkgHbNrI4ZYet23wrOM3rmRrPOO2zRIVG/RLL+5x+ERUetH9ObMP5n5/YppJ
-	 iQkpwWvkZwwizPlllqEQnUNP2xZcGZTNwZG81J17tK4T2E4XWsvx2xNYcFybeVjWpq
-	 3x3/UqxiT1NVtAjuMA5ZpOtPWImBi3e+6YM2SfBx48lWwUryFZxAnFUcqe0myDo9Is
-	 1n0Q3CUoXL+NEY82sURTH+EAiu7d/3X06N1q2A8BHA7xVlRrqW4E1mW/GiMoOh1sUX
-	 PS10tF4Dnifd/frbgcuIdON3ae1vfcL55xRwO0vHPy73XStVmIZAVVyobiqf7uNPi1
-	 vdKDWghyvuWRA==
-Message-ID: <ff604d86fa8edbb2bd64dd6c00cbb98666406d92.camel@kernel.org>
-Subject: Re: [PATCH v3 4/5] NFSD: Increase minimum size of slot replay cache
+	s=k20201202; t=1760113688;
+	bh=ul0WhsI1/S/s1VuIA53kCuhvAfuZ5mveHzB8QuQ0UJU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=rYX3urCU8TISIqtEkj5mxobKUDaiZRYTRSrsbBC9qPGdcCYN07X8QHcqroNaXdtc3
+	 DlV3FF94K/Z6KzkbZEhDTUsNbljVzF1MbUIpt/9CWiopy0Wyj4Q4Ok7LA6RtebXwar
+	 OBeDB6i2huV8XumssoV8waCkxZRnPkyEAFIEMKQcQfpmIZ19G7QK2FnUFEHbkuDTkM
+	 xqC/7qTTE2bPPraKoiExK6jwiLffKMcYWhovuP7gUtitIWdoHSHVOQgNlAQ89hs2sk
+	 SwzI0kr6/4Qo0798RypCTiMDeVowMOox9xm7H2y5NlUgySGZWb2Dkr9miHSQkciaMh
+	 QkB5lzZ4GIGdg==
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 10 Oct 2025 11:22:13 -0400
-In-Reply-To: <20251010135623.1723-5-cel@kernel.org>
-References: <20251010135623.1723-1-cel@kernel.org>
-	 <20251010135623.1723-5-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+Date: Fri, 10 Oct 2025 12:27:56 -0400
+Subject: [PATCH v4] sunrpc: allocate a separate bvec array for socket sends
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251010-rq_bvec-v4-1-627567f1ce91@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAs06WgC/3XMSwrCMBSF4a2UjI3kYZrUkfsQkTxu2qC0mkhQS
+ vdu2olKcXgu9/tHlCAGSGhfjShCDikMfRm7TYVsp/sWcHBlI0aYoIQoHO9nk8FiU9faO+KdMQa
+ V71sEH55L6XgquwvpMcTXEs50vq4bmWKCpWfcceakAHG4QOzhuh1ii+ZIZn8gK1AxbolWQjNpV
+ 5B/w+YDeYFCUkV5TUxjzQ+cpukN0txJLREBAAA=
+X-Change-ID: 20251008-rq_bvec-b66afd0fdbbb
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ David Howells <dhowells@redhat.com>
+Cc: Brandon Adams <brandona@meta.com>, linux-nfs@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5016; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ul0WhsI1/S/s1VuIA53kCuhvAfuZ5mveHzB8QuQ0UJU=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo6TQWlU2sYUUxkyJz5mMC2jAG0H66eSMFq3DJX
+ w75JbfPFs+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaOk0FgAKCRAADmhBGVaC
+ FQJ0D/9WNWPmLLO4vdQY5NoKnFwwhm0u6ltrQnhgYZdT2y67ARPfeTHGXMvia7cous5RuacocaJ
+ aeWQrZjmxt9YVGKFaKIAnpJrdVVcwgFKfnuYB8jXpIO+gZk/4XDxBSBHiUYrI6q+HdykpSg3xRy
+ 8YNmMu1AcUwOOtZ00ZNY/7Y5lnYcSiLFbWz5Lv68ZQcuzXRFH1UPwJAHsEIpUNeBkConZ/ceiZ8
+ /ZCpDAtHMtTxSktJKA+77TTa/LSz78Ty0hwy3V2GPBEL/qlwthezvMEMh2JFmx3EoVXpYqZhxmt
+ Fjw7SYeutAqgQY7Wbl/sDYmCazuJQz98UIgbNe4ri69YncoD/RTcDfStD0rusqUMjLV5ZYCCRYQ
+ RNCB80Ox5aw1bgTbpDHp+talACtar6dzw/P+CUxz4VDM5bVvxGwQLRKRNW8gWFRS0Y9zDHP+JkF
+ N6IEYYWQuZkZhBV+LgSNMQ9+eA1Wqf8nSL+TLzzhc9VgZN6dYmIeuxmnjaBcO5xq8dtucOuZ+bM
+ BqCNMXZHRQQZDIQA4CREugSfxnQpyDDZaMgBGNroDTSItJps67WzkS98YLWCa2Mt5QHHx6bzSKT
+ 4qMNaybGEmsnN5yPdmiLtXUcCLTMRpRRJvbJWglOgrfyA6GU5F8Xiwpv/0oNrmnDTwupxUJJpCx
+ hLR9jbRykOo4kTA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Fri, 2025-10-10 at 09:56 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> NFSD caches solo SEQUENCE even when sa_cachethis is false. Ensure
-> there is enough space in each slot replay cache, even when the
-> client requested a zero ca_maxresponsesize_cached.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 7b80f00fb32c..7d297ac2bf2b 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2024,11 +2024,12 @@ static struct nfsd4_slot *nfsd4_alloc_slot(struct=
- nfsd4_channel_attrs *fattrs,
->  	size_t size;
-> =20
->  	/*
-> -	 * The RPC and NFS session headers are never saved in
-> -	 * the slot reply cache buffer.
-> +	 * Reserve enough space to handle solo SEQUENCE operations,
-> +	 * which are always cached.
->  	 */
->  	size =3D fattrs->maxresp_cached < NFSD_MIN_HDR_SEQ_SZ ?
-> -		0 : fattrs->maxresp_cached - NFSD_MIN_HDR_SEQ_SZ;
-> +		NFSD_MIN_HDR_SEQ_SZ :
-> +		fattrs->maxresp_cached - NFSD_MIN_HDR_SEQ_SZ;
-> =20
->  	slot =3D kzalloc(struct_size(slot, sl_data, size), gfp);
->  	if (!slot)
+svc_tcp_sendmsg() calls xdr_buf_to_bvec() with the second slot of
+rq_bvec as the start, but doesn't reduce the array length by one, which
+could lead to an array overrun. Also, rq_bvec is always rq_maxpages in
+length, which can be too short in some cases, since the TCP record
+marker consumes a slot.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Fix both problems by adding a separate bvec array to the svc_sock that
+is specifically for sending. Allocate it when doing the first send on
+the socket, to avoid allocating the array for listener sockets.
+
+For TCP, make this array one slot longer than rq_maxpages, to account
+for the record marker.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+This fixes the same problem in an alternate way -- by adding a separate
+new bvec array to the svc_sock for sending purposes.
+---
+Changes in v4:
+- switch to allocating a separate bvec for sends in the svc_sock
+- Link to v3: https://lore.kernel.org/r/20251009-rq_bvec-v3-0-57181360b9cb@kernel.org
+
+Changes in v3:
+- Add rq_bvec_len field and use it in appropriate places
+- Link to v2: https://lore.kernel.org/r/20251008-rq_bvec-v2-0-823c0a85a27c@kernel.org
+
+Changes in v2:
+- Better changelog message for patch #2
+- Link to v1: https://lore.kernel.org/r/20251008-rq_bvec-v1-0-7f23d32d75e5@kernel.org
+---
+ include/linux/sunrpc/svcsock.h |  3 +++
+ net/sunrpc/svcsock.c           | 28 +++++++++++++++++++++-------
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
+index 963bbe251e52109a902f6b9097b6e9c3c23b1fd8..a80a05aba75410b3c4cd7ba19181ead7d40e1fdf 100644
+--- a/include/linux/sunrpc/svcsock.h
++++ b/include/linux/sunrpc/svcsock.h
+@@ -26,6 +26,9 @@ struct svc_sock {
+ 	void			(*sk_odata)(struct sock *);
+ 	void			(*sk_owspace)(struct sock *);
+ 
++	/* For sends */
++	struct bio_vec		*sk_bvec;
++
+ 	/* private TCP part */
+ 	/* On-the-wire fragment header: */
+ 	__be32			sk_marker;
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 7b90abc5cf0ee1520796b2f38fcb977417009830..09ba65ba2e805b20044a7c27ee028bbeeaf5e44b 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -730,6 +730,12 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+ 	unsigned int count;
+ 	int err;
+ 
++	if (!svsk->sk_bvec) {
++		svsk->sk_bvec = kcalloc(rqstp->rq_maxpages, sizeof(*svsk->sk_bvec), GFP_KERNEL);
++		if (!svsk->sk_bvec)
++			return -ENOMEM;
++	}
++
+ 	svc_udp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
+ 	rqstp->rq_xprt_ctxt = NULL;
+ 
+@@ -740,14 +746,14 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+ 	if (svc_xprt_is_dead(xprt))
+ 		goto out_notconn;
+ 
+-	count = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, xdr);
++	count = xdr_buf_to_bvec(svsk->sk_bvec, rqstp->rq_maxpages, xdr);
+ 
+-	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
++	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
+ 		      count, rqstp->rq_res.len);
+ 	err = sock_sendmsg(svsk->sk_sock, &msg);
+ 	if (err == -ECONNREFUSED) {
+ 		/* ICMP error on earlier request. */
+-		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
++		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
+ 			      count, rqstp->rq_res.len);
+ 		err = sock_sendmsg(svsk->sk_sock, &msg);
+ 	}
+@@ -1235,19 +1241,19 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
+ 	int ret;
+ 
+ 	/* The stream record marker is copied into a temporary page
+-	 * fragment buffer so that it can be included in rq_bvec.
++	 * fragment buffer so that it can be included in sk_bvec.
+ 	 */
+ 	buf = page_frag_alloc(&svsk->sk_frag_cache, sizeof(marker),
+ 			      GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 	memcpy(buf, &marker, sizeof(marker));
+-	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
++	bvec_set_virt(svsk->sk_bvec, buf, sizeof(marker));
+ 
+-	count = xdr_buf_to_bvec(rqstp->rq_bvec + 1, rqstp->rq_maxpages,
++	count = xdr_buf_to_bvec(svsk->sk_bvec + 1, rqstp->rq_maxpages,
+ 				&rqstp->rq_res);
+ 
+-	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
++	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
+ 		      1 + count, sizeof(marker) + rqstp->rq_res.len);
+ 	ret = sock_sendmsg(svsk->sk_sock, &msg);
+ 	page_frag_free(buf);
+@@ -1272,6 +1278,13 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
+ 					 (u32)xdr->len);
+ 	int sent;
+ 
++	if (!svsk->sk_bvec) {
++		/* +1 for TCP record marker */
++		svsk->sk_bvec = kcalloc(rqstp->rq_maxpages + 1, sizeof(*svsk->sk_bvec), GFP_KERNEL);
++		if (!svsk->sk_bvec)
++			return -ENOMEM;
++	}
++
+ 	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
+ 	rqstp->rq_xprt_ctxt = NULL;
+ 
+@@ -1636,5 +1649,6 @@ static void svc_sock_free(struct svc_xprt *xprt)
+ 		sock_release(sock);
+ 
+ 	page_frag_cache_drain(&svsk->sk_frag_cache);
++	kfree(svsk->sk_bvec);
+ 	kfree(svsk);
+ }
+
+---
+base-commit: 177818f176ef904fb18d237d1dbba00c2643aaf2
+change-id: 20251008-rq_bvec-b66afd0fdbbb
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
