@@ -1,76 +1,76 @@
-Return-Path: <linux-nfs+bounces-15169-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15170-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF017BD1638
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 06:43:44 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F381BD163B
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 06:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E56CC1890EBD
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 04:44:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7F497344FB1
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 04:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2832727E0;
-	Mon, 13 Oct 2025 04:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662002727E0;
+	Mon, 13 Oct 2025 04:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="lwejfeKH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iIrFfdyh"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="BeV1aHx+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a/LW8De/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D2D221739
-	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 04:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91389221739
+	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 04:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760330621; cv=none; b=UXAF36LftyPGdnLi0Ala+GV6+9C5fq+XOGLBreATRPQSzM4asEtxiOzV3Iog+/WfKEg7nhCIVSFumx5S4L8TIb4bAaGeTF/je8KIQR8jUl9nxE6Qgqo0H7J2VoiWIJC1lzk5HMUyuXAN/XaIN1DQ+t3Kx9B6zqUtBkONLVf4Pj4=
+	t=1760330692; cv=none; b=Y1i7rXyT9o73v0ILbPr92YNm4NTRTnhTM7bK2SmjuhzRsCuatOVwBFnE8oG/uSqcEIgV1l1fyLkdoR7HUGcWTTjKb3PlOCVhqbRNJ+drdk2HQ4zHM4GdKEM4OsXAI5ByzcuPkNXv0wIPDHqMczugMvAQBE0htnoQLtmTgZuizag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760330621; c=relaxed/simple;
-	bh=ykUlMNh3bh8fYWZl34rlpF4UVu8DUMRwA+gZmQsYkxU=;
+	s=arc-20240116; t=1760330692; c=relaxed/simple;
+	bh=tLuawrI+wsVSjMj+zP3HhHxj+H1r6Bx6Kipw/YmqrO0=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=d1DIPSib+cNlqOZ/BoOb9byWWRCoHFem4iAKJCLTtwJaBONHuYMw8rCua6cuq5NiO1vlCMqQjfv+1ZaH5yyXd7Fpld1SrQuOYVlo5e5wPNOH7KHZGgOxftx5s2RviD4UaqUT8YX4yeLo3N5CQG6bV7UDcE86kTCLA7RWOQVORlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=lwejfeKH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iIrFfdyh; arc=none smtp.client-ip=202.12.124.155
+	 References:Date:Message-id; b=IdCC+/mIedwAklyt0tN8piMdNlYkbtnfA9k/U8lnrAH6rZN3wY3uMPaqJ7iEqdpWdAP6U1zHp6v357JRCEhEiisSJWaCyMAOFHhBSvBlcqGiILvTchh0IzU0IMg3sQh4mw23oRpbE/bxAolP02nesgeBgxs9CQ4uD0J7rvuJuhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=BeV1aHx+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a/LW8De/; arc=none smtp.client-ip=202.12.124.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id AC1957A0059;
-	Mon, 13 Oct 2025 00:43:38 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 13 Oct 2025 00:43:38 -0400
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id C71BC7A0059;
+	Mon, 13 Oct 2025 00:44:49 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Mon, 13 Oct 2025 00:44:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1760330618; x=1760417018; bh=Ri4rRhCdhng2Ujw+yyiO/nAD6ndlZ/RfP5y
-	ahHKASy0=; b=lwejfeKHUG0pCQ+e8HxIXsw2i52xQovSMKZFM2tPxace+yoScLw
-	elNdk7THNaW2qsQILCcMv7JEF7rgZr1Gafqdfu5fcik0qjuq2skCuBPo8OmzmHAZ
-	aUxjPOsnykSOdzPoIi/459wUfLaz2KS2ubMKBar0emxY8+DcYcdIShTeTRfwvw/8
-	Ahb7wl+FwQBAG48XTD7DenMX8/LuvrnXymjRRqPX/z21Eho5G1JIAkCC8BRfLCVv
-	Ur/xuKF0q2hP796zWsO1TGlmlSLeAS2JraZG8zxPp5GJTcma3v3B5ZF2BCyBgw0o
-	BsBfY94BOI+BbEwuTEteJIdeb9TwuXyHOSg==
+	1760330689; x=1760417089; bh=3pE8elymTjIpPF0cS8D0/jG5LBRSS0BazEo
+	dl04E+PI=; b=BeV1aHx+ypHZ580RpIP032UHCooywSDo883fEa4ACmB5UKzvNvU
+	AbmQuAgyXUhZyRSh+r9lG2ikD1fAiHqm5mTMISuQ271/k43dcSZzLG0Mj3M7FAuy
+	ghSn6ZL2LXsR1lSDqWr5pXmVbrwZ98EeuH7b4bZoBVJjvS/gNJOMXX1mol10tNee
+	GDHVAVzzsUrlJOXan1dkEIwfqnLtd0hhcj6atBJXeGBJ8EFYH15+3LFH3kuyuR+6
+	XNBLbT3uHswEVrP+p5XdaY1zByvygoIG4ZOzlVmH8Z/Vmp/kF/F8vRGv2ROMOrAJ
+	6YetQYUxjoRjyJAuApSyxqB+uk58pshugsA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760330618; x=
-	1760417018; bh=Ri4rRhCdhng2Ujw+yyiO/nAD6ndlZ/RfP5yahHKASy0=; b=i
-	IrFfdyhFQCfN08ZCJtANWIeOyBeif0Ju8ZRaPVNsabGmJrJPk0F6mFHZ7MpPQDPV
-	wgF0XdtZ3j+7mPZaNDOimBorFeqtl08xSVcx9R8goF+qAFdsP9VXY/lJAxVTh716
-	uuNODC0r/D/6lu9/J8edGQE1ncC7wQzMxp3OBIbClrTpHCPs8xmjicQF5zbtJQ28
-	jzwjTGbq9mAVhgh9AhEqOXGkuDS7hYEtNeQNiUrlBkQol7xAxdx57wfp8gfOkj1Q
-	M/64zlBTdcxp/iOOvmx3QHdr+7IS53/7orRBPza0ZtH5PavAbKKKhFxt15hN8H/Q
-	XKT6JgMY3jSOBEvRqNW2g==
-X-ME-Sender: <xms:eoPsaLoLQGPpKr9e_OXK08F1FXIKnel9Faj890poNTLhzUzzvN3Kww>
-    <xme:eoPsaH4eFOdbHIxRinYv7jg1yfK-eKwLtRDOqocCE3DaUM7dJTykUBeL1jR_nGdIU
-    _jkxBEXoC1mhFfbK6sR6tqIbv4PelWXS4pXKtMwnu32smrFdw>
-X-ME-Received: <xmr:eoPsaKcLYsLDK2MeYs4F4R3pqq_Jt73nkwKzd9wU1RHueDiXbgw9mq2Y_t_iMLns8G42vGGoK7msY6VIxh_rZ50eZoUeE7VUMEmORgkK0wIy>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduudeijedvucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760330689; x=
+	1760417089; bh=3pE8elymTjIpPF0cS8D0/jG5LBRSS0BazEodl04E+PI=; b=a
+	/LW8De/lWspW05WTXmGHYeUtBfrgVAp3jA84AzCn9CiZ9JwcAkGodRyD+eVWXcPz
+	kX2UzfNrfMQuPXGJmQt1plEIlSZQ2dnL81A3Ptw/FBY2lb4AuHY2TbiB4mjAwlrL
+	755OG8iE2xCIXTZPolfkW2CefOMSi1UuEIsbF2N/xodNtamS5NhyTHzNuhGbh4kL
+	oU6oldLU4xeLnnye9+rPHu9S/r8rqbRmFBTCfc+TF+pP1Z9clZ/8s1U8a/kQCeYH
+	kIctGqCdf3qcVcyDwDuipijFIavVW8o8+4hIilU/CVaFF2M5X8hk9xbUNxiqzh/T
+	4qUC7vCZiZmV6f4itynOw==
+X-ME-Sender: <xms:wYPsaGsW6ta6i6Vcs3iIWJ9BV-D-7OfYWNHWW-e5eU8MGnVgi5T5QA>
+    <xme:wYPsaNuxQUWS3XGzMh9TT98mWLFZGsru_J4bGKBAsF8RyZEWPnM-R-55F0E5_cKWw
+    lpdcxdFuVr9U6uj8iUdBEn2z0YNZNqE0JjAAqY2ckJeLPMQcw>
+X-ME-Received: <xmr:wYPsaEBY600JeDQLDV9HRdOiItS-LkoaG_gZfZVx_kBmVlv64YrZV9800BLyaGFcExuqFlpcUdKYt1L_Zs2URB5SejjzPusdrFo0fb-3ea24>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduudeijeefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
     vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
     esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
     uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
@@ -79,16 +79,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduudeijedvucetufdote
     gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
     pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptg
     gvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:eoPsaE5u2vjeaNhmahaNFy_dfZmMvgB5Tl9MSGMyZMzD8GxNZOPFfg>
-    <xmx:eoPsaJvft8_YNY6SJ3miV8Xmx3Mnhs4Ri_R-jkm_SCltL0MZ8Dt9Fw>
-    <xmx:eoPsaMjWYIPTZpcDMNghUJ3-DBw5HnY5pNL9L264z2Gou4tveRazlw>
-    <xmx:eoPsaMp-bdXGceYj6FVVnsTnddG-COozvcdxWazNt4f6jJ5f3Ik22A>
-    <xmx:eoPsaLlNS91SpX6q6u2MqM7-6TyEz0LRYBjy_2PJZpTqA0UbetU1EN8L>
+X-ME-Proxy: <xmx:wYPsaHOBLQhJmyIvLahPcu4-Wc90fNt60mhxIJggBKLg9JJk8zL-iw>
+    <xmx:wYPsaFxEZrW4RN9ZfIGGbUudXg2nCG2o21bnBnJKDIyKzdLHuV0Mfg>
+    <xmx:wYPsaPUiEz2KuAauuxmuOdlXqAjPNt0XQ3zMcECV9Dld3vP_KEKmAg>
+    <xmx:wYPsaPNbRFZAVXhz0jIFg_1Mo0qk3j0szS27lhst-m5N_yxIsPysoQ>
+    <xmx:wYPsaFbXcl2vnrJ7547YivU-F_mKTK8u78mss7ah4MnxNOPSMHwwSUJw>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 13 Oct 2025 00:43:35 -0400 (EDT)
+ 13 Oct 2025 00:44:47 -0400 (EDT)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -101,71 +101,109 @@ Cc: "Jeff Layton" <jlayton@kernel.org>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
  "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 3/4] NFSD: Fix the "is this a solo SEQUENCE" predicate
-In-reply-to: <20251012170746.9381-4-cel@kernel.org>
+Subject: Re: [PATCH v4 4/4] NFSD: Move nfsd4_cache_this()
+In-reply-to: <20251012170746.9381-5-cel@kernel.org>
 References: <20251012170746.9381-1-cel@kernel.org>,
- <20251012170746.9381-4-cel@kernel.org>
-Date: Mon, 13 Oct 2025 15:43:33 +1100
-Message-id: <176033061350.1793333.14824740301723157290@noble.neil.brown.name>
+ <20251012170746.9381-5-cel@kernel.org>
+Date: Mon, 13 Oct 2025 15:44:45 +1100
+Message-id: <176033068550.1793333.1118224453685885375@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
 On Mon, 13 Oct 2025, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> The logic in nfsd4_is_solo_sequence() is incorrect: it checks the
-> current operation index, not the total count of operations in the
-> COMPOUND. If the SEQUENCE operation, which is always operation 1,
-> fails in a multi-operation compound, resp->opcnt is always 1. Thus
-> when a SEQUENCE operation fails, nfsd4_is_solo_sequence() always
-> returns true.
-> 
-> Note that, because nfsd4_is_solo_sequence() is called only by
-> nfsd4_store_cache_entry(), it is assured that the first operation
-> in the COMPOUND being checked is a SEQUENCE op. Thus the opnum
-> check is redundant.
-
-It is also assured that the SEQUENCE op didn't fail, so the distinction
-between resp->opcnt and args->opcnt is moot.
-
-I don't think nfsd4_is_solo_sequence() serves any useful purpose.
-The only case were the result has any effect, the effect is to set
-NFSD4_SLOT_CACHED, and to set sl_datalen to zero.
-
-I would prefer that the code didn't pretend that solo sequence requests
-were cached - they aren't.  They are simply performed again when needed.
-But that can be for another day.
-
-I don't think this patch achieves anything useful, but I don't object to
-it.
-
-NeilBrowjn
-
-
-
-> 
+>=20
+> nfsd4_cache_this() has one call site, and is not related to XDR at
+> all. It doesn't belong in fs/nfsd/xdr4.h.
+>=20
+> As a clean-up, move this function (and its helper) to nfs4state.c,
+> next to its only caller.
+>=20
 > Reviewed-by: Jeff Layton <jlayton@kernel.org>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+
+Reviewed-by: NeilBrown <neil@brown.name>
+
+Definitely better having the code local when possible.
+
+Thanks,
+NeilBrown
+
+
 > ---
->  fs/nfsd/xdr4.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+>  fs/nfsd/nfs4state.c | 22 ++++++++++++++++++++++
+>  fs/nfsd/xdr4.h      | 22 ----------------------
+>  2 files changed, 22 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 4b4467e54ec9..5fd2138cb074 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -3476,6 +3476,28 @@ gen_callback(struct nfs4_client *clp, struct nfsd4_s=
+etclientid *se, struct svc_r
+>  	return;
+>  }
+> =20
+> +static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
+> +{
+> +	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
+> +
+> +	return args->opcnt =3D=3D 1;
+> +}
+> +
+> +/*
+> + * The session reply cache only needs to cache replies that the client
+> + * actually asked us to.  But it's almost free for us to cache compounds
+> + * consisting of only a SEQUENCE op, so we may as well cache those too.
+> + * Also, the protocol doesn't give us a convenient response in the case
+> + * of a replay of a solo SEQUENCE op that wasn't cached
+> + * (RETRY_UNCACHED_REP can only be returned in the second op of a
+> + * compound).
+> + */
+> +static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
+> +{
+> +	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
+> +		|| nfsd4_is_solo_sequence(resp);
+> +}
+> +
+>  /*
+>   * Cache a reply. nfsd4_check_resp_size() has bounded the cache size.
+>   */
 > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index ee0570cbdd9e..d4548a16a36e 100644
+> index d4548a16a36e..6f0129ea754d 100644
 > --- a/fs/nfsd/xdr4.h
 > +++ b/fs/nfsd/xdr4.h
-> @@ -926,7 +926,8 @@ struct nfsd4_compoundres {
->  static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
+> @@ -923,28 +923,6 @@ struct nfsd4_compoundres {
+>  	struct nfsd4_compound_state	cstate;
+>  };
+> =20
+> -static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
+> -{
+> -	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
+> -
+> -	return args->opcnt =3D=3D 1;
+> -}
+> -
+> -/*
+> - * The session reply cache only needs to cache replies that the client
+> - * actually asked us to.  But it's almost free for us to cache compounds
+> - * consisting of only a SEQUENCE op, so we may as well cache those too.
+> - * Also, the protocol doesn't give us a convenient response in the case
+> - * of a replay of a solo SEQUENCE op that wasn't cached
+> - * (RETRY_UNCACHED_REP can only be returned in the second op of a
+> - * compound).
+> - */
+> -static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
+> -{
+> -	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
+> -		|| nfsd4_is_solo_sequence(resp);
+> -}
+> -
+>  static inline bool nfsd4_last_compound_op(struct svc_rqst *rqstp)
 >  {
->  	struct nfsd4_compoundargs *args = resp->rqstp->rq_argp;
-> -	return resp->opcnt == 1 && args->ops[0].opnum == OP_SEQUENCE;
-> +
-> +	return args->opcnt == 1;
->  }
->  
->  /*
-> -- 
+>  	struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
+> --=20
 > 2.51.0
-> 
-> 
+>=20
+>=20
 
 
