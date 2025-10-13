@@ -1,209 +1,110 @@
-Return-Path: <linux-nfs+bounces-15170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F381BD163B
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 06:44:56 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 105D9BD1647
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 06:48:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7F497344FB1
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 04:44:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D07534E461D
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 04:48:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662002727E0;
-	Mon, 13 Oct 2025 04:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677AB2BE7B6;
+	Mon, 13 Oct 2025 04:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="BeV1aHx+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a/LW8De/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R669l89S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91389221739
-	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 04:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A97923AB8D;
+	Mon, 13 Oct 2025 04:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760330692; cv=none; b=Y1i7rXyT9o73v0ILbPr92YNm4NTRTnhTM7bK2SmjuhzRsCuatOVwBFnE8oG/uSqcEIgV1l1fyLkdoR7HUGcWTTjKb3PlOCVhqbRNJ+drdk2HQ4zHM4GdKEM4OsXAI5ByzcuPkNXv0wIPDHqMczugMvAQBE0htnoQLtmTgZuizag=
+	t=1760330903; cv=none; b=OslAzPMtZLc6NCe7mLoiqvjQjAT+G3iSf5GgkZy3XWACr5Rx8k16SlzsoirnvINaikUX37ZSKyjopT1OgrOAbpFnae4/4PWRUJUg9jvdOkd+dUuBRbb1HZf99WNjEiu/Hg7p0Bn6wZ6+GWLOh2Cl75nrvlEdIvQVwRveU87bKdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760330692; c=relaxed/simple;
-	bh=tLuawrI+wsVSjMj+zP3HhHxj+H1r6Bx6Kipw/YmqrO0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=IdCC+/mIedwAklyt0tN8piMdNlYkbtnfA9k/U8lnrAH6rZN3wY3uMPaqJ7iEqdpWdAP6U1zHp6v357JRCEhEiisSJWaCyMAOFHhBSvBlcqGiILvTchh0IzU0IMg3sQh4mw23oRpbE/bxAolP02nesgeBgxs9CQ4uD0J7rvuJuhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=BeV1aHx+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a/LW8De/; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C71BC7A0059;
-	Mon, 13 Oct 2025 00:44:49 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Mon, 13 Oct 2025 00:44:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1760330689; x=1760417089; bh=3pE8elymTjIpPF0cS8D0/jG5LBRSS0BazEo
-	dl04E+PI=; b=BeV1aHx+ypHZ580RpIP032UHCooywSDo883fEa4ACmB5UKzvNvU
-	AbmQuAgyXUhZyRSh+r9lG2ikD1fAiHqm5mTMISuQ271/k43dcSZzLG0Mj3M7FAuy
-	ghSn6ZL2LXsR1lSDqWr5pXmVbrwZ98EeuH7b4bZoBVJjvS/gNJOMXX1mol10tNee
-	GDHVAVzzsUrlJOXan1dkEIwfqnLtd0hhcj6atBJXeGBJ8EFYH15+3LFH3kuyuR+6
-	XNBLbT3uHswEVrP+p5XdaY1zByvygoIG4ZOzlVmH8Z/Vmp/kF/F8vRGv2ROMOrAJ
-	6YetQYUxjoRjyJAuApSyxqB+uk58pshugsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760330689; x=
-	1760417089; bh=3pE8elymTjIpPF0cS8D0/jG5LBRSS0BazEodl04E+PI=; b=a
-	/LW8De/lWspW05WTXmGHYeUtBfrgVAp3jA84AzCn9CiZ9JwcAkGodRyD+eVWXcPz
-	kX2UzfNrfMQuPXGJmQt1plEIlSZQ2dnL81A3Ptw/FBY2lb4AuHY2TbiB4mjAwlrL
-	755OG8iE2xCIXTZPolfkW2CefOMSi1UuEIsbF2N/xodNtamS5NhyTHzNuhGbh4kL
-	oU6oldLU4xeLnnye9+rPHu9S/r8rqbRmFBTCfc+TF+pP1Z9clZ/8s1U8a/kQCeYH
-	kIctGqCdf3qcVcyDwDuipijFIavVW8o8+4hIilU/CVaFF2M5X8hk9xbUNxiqzh/T
-	4qUC7vCZiZmV6f4itynOw==
-X-ME-Sender: <xms:wYPsaGsW6ta6i6Vcs3iIWJ9BV-D-7OfYWNHWW-e5eU8MGnVgi5T5QA>
-    <xme:wYPsaNuxQUWS3XGzMh9TT98mWLFZGsru_J4bGKBAsF8RyZEWPnM-R-55F0E5_cKWw
-    lpdcxdFuVr9U6uj8iUdBEn2z0YNZNqE0JjAAqY2ckJeLPMQcw>
-X-ME-Received: <xmr:wYPsaEBY600JeDQLDV9HRdOiItS-LkoaG_gZfZVx_kBmVlv64YrZV9800BLyaGFcExuqFlpcUdKYt1L_Zs2URB5SejjzPusdrFo0fb-3ea24>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduudeijeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
-    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptg
-    gvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:wYPsaHOBLQhJmyIvLahPcu4-Wc90fNt60mhxIJggBKLg9JJk8zL-iw>
-    <xmx:wYPsaFxEZrW4RN9ZfIGGbUudXg2nCG2o21bnBnJKDIyKzdLHuV0Mfg>
-    <xmx:wYPsaPUiEz2KuAauuxmuOdlXqAjPNt0XQ3zMcECV9Dld3vP_KEKmAg>
-    <xmx:wYPsaPNbRFZAVXhz0jIFg_1Mo0qk3j0szS27lhst-m5N_yxIsPysoQ>
-    <xmx:wYPsaFbXcl2vnrJ7547YivU-F_mKTK8u78mss7ah4MnxNOPSMHwwSUJw>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 13 Oct 2025 00:44:47 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1760330903; c=relaxed/simple;
+	bh=68weAbINkre/gflG8W+Yo864+useY00FA5wzAqe5OUs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZbMYadvS3UkXixifreT9u1kBlZGuQ1zDaBfFQxQ8j3jRqfqWqN8m6zye8xXI4vJxO0L1P6oNlJa7Zs8dzAO42SadTvi/VEJ/XiTWarWVGgFbM7X3bIci9TxQT7hGkBwFEezuejLSSfogYgqNT4D+wnbioXfZBN7CG3q5HfFERaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R669l89S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274ECC4CEE7;
+	Mon, 13 Oct 2025 04:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760330902;
+	bh=68weAbINkre/gflG8W+Yo864+useY00FA5wzAqe5OUs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=R669l89S0KcR8LtD6yUXy9YsELcoNpL4mmJZhw/n9RRI6/fiG3zdu+/2ZgSSEIkgY
+	 1hyj1Zr42otTUnWQsTSmpov7ZLgFXT6LGC7xuI2M3+1S5VV1g8+p3FJNZmakqH/Krv
+	 0M4TpLnsKiyX66JuQYNw0ojzVyvUo6km1YoY/75VQVzVbdJL7mShSE9zvf1dsaikCW
+	 88xHpO1zAUz7Ro0j6NDo9GAwAC/f2C76QRZv5PkGIWVSl3bu7NaZpLXRD3XDaKEws3
+	 JHtPo5+yAXoaWjPJ3QojeRHl0aOAmMSnrW8qSgSzhT9/KQ1au/JcOQdATAfjFLIKuo
+	 fAMo+hHpS28zA==
+Message-ID: <5f1eb044728420769c5482ea95240717c0748f46.camel@kernel.org>
+Subject: Re: [PATCH v1] NFS: Fix possible NULL pointer dereference in
+ nfs_inode_remove_request()
+From: Trond Myklebust <trondmy@kernel.org>
+To: Baolin Liu <liubaolin12138@163.com>, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Baolin Liu
+	 <liubaolin@kylinos.cn>
+Date: Mon, 13 Oct 2025 00:47:54 -0400
+In-Reply-To: <20251012083957.532330-1-liubaolin12138@163.com>
+References: <20251012083957.532330-1-liubaolin12138@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 4/4] NFSD: Move nfsd4_cache_this()
-In-reply-to: <20251012170746.9381-5-cel@kernel.org>
-References: <20251012170746.9381-1-cel@kernel.org>,
- <20251012170746.9381-5-cel@kernel.org>
-Date: Mon, 13 Oct 2025 15:44:45 +1100
-Message-id: <176033068550.1793333.1118224453685885375@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
 
-On Mon, 13 Oct 2025, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> nfsd4_cache_this() has one call site, and is not related to XDR at
-> all. It doesn't belong in fs/nfsd/xdr4.h.
->=20
-> As a clean-up, move this function (and its helper) to nfs4state.c,
-> next to its only caller.
->=20
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-
-Reviewed-by: NeilBrown <neil@brown.name>
-
-Definitely better having the code local when possible.
-
-Thanks,
-NeilBrown
-
-
-> ---
->  fs/nfsd/nfs4state.c | 22 ++++++++++++++++++++++
->  fs/nfsd/xdr4.h      | 22 ----------------------
->  2 files changed, 22 insertions(+), 22 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 4b4467e54ec9..5fd2138cb074 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -3476,6 +3476,28 @@ gen_callback(struct nfs4_client *clp, struct nfsd4_s=
-etclientid *se, struct svc_r
->  	return;
->  }
-> =20
-> +static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
-> +{
-> +	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
-> +
-> +	return args->opcnt =3D=3D 1;
-> +}
-> +
-> +/*
-> + * The session reply cache only needs to cache replies that the client
-> + * actually asked us to.  But it's almost free for us to cache compounds
-> + * consisting of only a SEQUENCE op, so we may as well cache those too.
-> + * Also, the protocol doesn't give us a convenient response in the case
-> + * of a replay of a solo SEQUENCE op that wasn't cached
-> + * (RETRY_UNCACHED_REP can only be returned in the second op of a
-> + * compound).
-> + */
-> +static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
-> +{
-> +	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
-> +		|| nfsd4_is_solo_sequence(resp);
-> +}
-> +
->  /*
->   * Cache a reply. nfsd4_check_resp_size() has bounded the cache size.
->   */
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index d4548a16a36e..6f0129ea754d 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -923,28 +923,6 @@ struct nfsd4_compoundres {
->  	struct nfsd4_compound_state	cstate;
->  };
-> =20
-> -static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
-> -{
-> -	struct nfsd4_compoundargs *args =3D resp->rqstp->rq_argp;
-> -
-> -	return args->opcnt =3D=3D 1;
-> -}
-> -
-> -/*
-> - * The session reply cache only needs to cache replies that the client
-> - * actually asked us to.  But it's almost free for us to cache compounds
-> - * consisting of only a SEQUENCE op, so we may as well cache those too.
-> - * Also, the protocol doesn't give us a convenient response in the case
-> - * of a replay of a solo SEQUENCE op that wasn't cached
-> - * (RETRY_UNCACHED_REP can only be returned in the second op of a
-> - * compound).
-> - */
-> -static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
-> -{
-> -	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
-> -		|| nfsd4_is_solo_sequence(resp);
-> -}
-> -
->  static inline bool nfsd4_last_compound_op(struct svc_rqst *rqstp)
->  {
->  	struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
-> --=20
-> 2.51.0
->=20
->=20
+T24gU3VuLCAyMDI1LTEwLTEyIGF0IDE2OjM5ICswODAwLCBCYW9saW4gTGl1IHdyb3RlOgo+IFtZ
+b3UgZG9uJ3Qgb2Z0ZW4gZ2V0IGVtYWlsIGZyb20gbGl1YmFvbGluMTIxMzhAMTYzLmNvbS4gTGVh
+cm4gd2h5Cj4gdGhpcyBpcyBpbXBvcnRhbnQgYXQgaHR0cHM6Ly9ha2EubXMvTGVhcm5BYm91dFNl
+bmRlcklkZW50aWZpY2F0aW9uwqBdCj4gCj4gRnJvbTogQmFvbGluIExpdSA8bGl1YmFvbGluQGt5
+bGlub3MuY24+Cj4gCj4gbmZzX3BhZ2VfdG9fZm9saW8ocmVxLT53Yl9oZWFkKSBtYXkgcmV0dXJu
+IE5VTEwgaW4gY2VydGFpbgo+IGNvbmRpdGlvbnMsCj4gYnV0IHRoZSBmdW5jdGlvbiBkZXJlZmVy
+ZW5jZXMgZm9saW8tPm1hcHBpbmcgYW5kIGNhbGxzCj4gZm9saW9fZW5kX2Ryb3BiZWhpbmQoZm9s
+aW8pIHVuY29uZGl0aW9uYWxseS4gVGhpcyBtYXkgY2F1c2UgYSBOVUxMCj4gcG9pbnRlciBkZXJl
+ZmVyZW5jZSBjcmFzaC4KPiAKPiBGaXggdGhpcyBieSBjaGVja2luZyBmb2xpbyBiZWZvcmUgdXNp
+bmcgaXQgb3IgY2FsbGluZwo+IGZvbGlvX2VuZF9kcm9wYmVoaW5kKCkuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogQmFvbGluIExpdSA8bGl1YmFvbGluQGt5bGlub3MuY24+Cj4gLS0tCj4gwqBmcy9uZnMv
+d3JpdGUuYyB8IDExICsrKysrKy0tLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25z
+KCspLCA1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9mcy9uZnMvd3JpdGUuYyBiL2Zz
+L25mcy93cml0ZS5jCj4gaW5kZXggMGZiNjkwNTczNmQ1Li5lMTQ4MzA4YzE5MjMgMTAwNjQ0Cj4g
+LS0tIGEvZnMvbmZzL3dyaXRlLmMKPiArKysgYi9mcy9uZnMvd3JpdGUuYwo+IEBAIC03MzksMTcg
+KzczOSwxOCBAQCBzdGF0aWMgdm9pZCBuZnNfaW5vZGVfcmVtb3ZlX3JlcXVlc3Qoc3RydWN0Cj4g
+bmZzX3BhZ2UgKnJlcSkKPiDCoMKgwqDCoMKgwqDCoCBuZnNfcGFnZV9ncm91cF9sb2NrKHJlcSk7
+Cj4gwqDCoMKgwqDCoMKgwqAgaWYgKG5mc19wYWdlX2dyb3VwX3N5bmNfb25fYml0X2xvY2tlZChy
+ZXEsIFBHX1JFTU9WRSkpIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0
+IGZvbGlvICpmb2xpbyA9IG5mc19wYWdlX3RvX2ZvbGlvKHJlcS0KPiA+d2JfaGVhZCk7Cj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGFkZHJlc3Nfc3BhY2UgKm1hcHBpbmcg
+PSBmb2xpby0+bWFwcGluZzsKPiAKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzcGlu
+X2xvY2soJm1hcHBpbmctPmlfcHJpdmF0ZV9sb2NrKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgaWYgKGxpa2VseShmb2xpbykpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGFkZHJlc3Nfc3BhY2UgKm1hcHBpbmcgPSBmb2xp
+by0KPiA+bWFwcGluZzsKPiArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHNwaW5fbG9jaygmbWFwcGluZy0+aV9wcml2YXRlX2xvY2spOwo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9saW8tPnByaXZhdGUgPSBO
+VUxMOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZm9s
+aW9fY2xlYXJfcHJpdmF0ZShmb2xpbyk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBjbGVhcl9iaXQoUEdfTUFQUEVELCAmcmVxLT53Yl9oZWFkLQo+ID53
+Yl9mbGFncyk7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHNwaW5fdW5sb2NrKCZtYXBwaW5nLT5pX3ByaXZhdGVfbG9jayk7
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNwaW5fdW5s
+b2NrKCZtYXBwaW5nLT5pX3ByaXZhdGVfbG9jayk7Cj4gCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgZm9saW9fZW5kX2Ryb3BiZWhpbmQoZm9saW8pOwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb2xpb19lbmRfZHJvcGJlaGluZChmb2xpbyk7
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+IMKgwqDCoMKgwqDCoMKgIH0KPiDC
+oMKgwqDCoMKgwqDCoCBuZnNfcGFnZV9ncm91cF91bmxvY2socmVxKTsKPiAKPiAtLQo+IDIuMzku
+Mgo+IAoKV2hhdCByZWFzb24gaXMgdGhlcmUgdG8gYmVsaWV2ZSB0aGF0IHdlIGNhbiBldmVyIGNh
+bGwKbmZzX2lub2RlX3JlbW92ZV9yZXF1ZXN0KCkgd2l0aCBhIE5VTEwgdmFsdWUgZm9yIHJlcS0+
+d2JfaGVhZC0KPndiX2ZvbGlvLCBvciBldmVuIHdpdGggYSBOVUxMIHZhbHVlIGZvciByZXEtPndi
+X2hlYWQtPndiX2ZvbGlvLQo+bWFwcGluZz8KCgotLSAKVHJvbmQgTXlrbGVidXN0CkxpbnV4IE5G
+UyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UKdHJvbmRteUBrZXJuZWwub3JnLCB0cm9u
+ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tCg==
 
 
