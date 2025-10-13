@@ -1,168 +1,110 @@
-Return-Path: <linux-nfs+bounces-15173-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15174-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA3DDBD1737
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 07:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9477BD27F1
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 12:16:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ED5E3BAB0F
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 05:27:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E49103B7641
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 10:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E3C2D2488;
-	Mon, 13 Oct 2025 05:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43F72EB865;
+	Mon, 13 Oct 2025 10:16:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D322D12F3;
-	Mon, 13 Oct 2025 05:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344F92E2EF3
+	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 10:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760333254; cv=none; b=ipYCUmYbOI87Q5gWA5fXtd8GlDagmNqhOO5Cz5rY+ddUkb4+nC5+28B8AMuItzZ5yzMUkIMkknjULjIQkhrhX13qB7Mnog8L0tFKcY35OZGtPWIvNjD/JGwC+r7pEqltaRA8vZlD7+K3MBETtVvCAX2FStiW1iyl3Cb/Xj0Itfg=
+	t=1760350569; cv=none; b=uOz892prKqhGYRZFlFiCsX1m7PdiK9aRGSZ3WWJu3Zj9XCMYY68W0Fus64FPjamN4t5r72svNpdsU2uLJ3EyTkQKSfg0KBS5tU6RQ5VFQBDC/CyBXdcT5Tpubiz3zo+d4EkH8Wxl1MxXUU+SQp67QGBuHBuWF138K07xi6nF2RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760333254; c=relaxed/simple;
-	bh=ndYgSHNbLnvyYLEcoIN3mUPNVlCWqqRkCrrregrceHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QSoCN5bu9Q9sohdNSGFeRMpqBGlJiJVL6aVKZJoaEvwc3hXiPfIai9/91MgkZnQRIqoxIz+7h0L8GetNG0V5tu2LiycvOHOAbdaA3Nb5l3IMzQ3amatlSmRjys69o4+kexIt307PFQy894gO9cQWrAfyKthENAyGSBQDODI0LZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-4e-68ec8dc17dc6
-Date: Mon, 13 Oct 2025 14:27:24 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 35/47] i2c: rename wait_for_completion callback to
- wait_for_completion_cb
-Message-ID: <20251013052724.GA9169@system.software.com>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-36-byungchul@sk.com>
- <aOFNz2mKXCXUImwO@shikoro>
+	s=arc-20240116; t=1760350569; c=relaxed/simple;
+	bh=/dclAOZ1wcO3wJHRWYPxOk55bJ0h4fFw7TEM3TxPSYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B1QYn5hnYPzWiLss68fjbwIl7DXQtxbch2xUrtP7+687bPO/62xMZmwScFVeVv9y6bXmNB4FV5nbjuDxWIV1a4rhc6LvX7bVXyadu3m2Eabo2Ca6oLLcxh1VEyPF1JZZ6cNmf1wxUgEjgjEwNcb+nCCEsn+xzN6xRfCFguzauBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-551b9d94603so1180277e0c.1
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 03:16:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760350565; x=1760955365;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XxBrW+9YUunZwvYGyVKGYyAsVgwAT/0jNiWc372U3Fg=;
+        b=YbEr3gkr/+ZlAtZLK+c7tSV3p3b6AcEB/zlaNJF9CDbH9/XGrszgC5Ix7h80sMtc6F
+         0t3oh6iWotCfwGYjzVA6h8s+swXIetehNv9V/Il44XnJAzTyYMrSan9+rq5g9qfToVfx
+         bnofFfoCeBkmUu+l5cbjAP5utVNW9Ez0MlttzCV8iohE/jrV21/Tv9173G4uE3GoviVZ
+         yu79Aiw1PZUtcNu5u3x5fejkReu5yO2BXJSAacz8a+UoeMinbQ26kXLzgwxm4G+eLdkX
+         SktTRXP6wmtvtAaw5spZkxLk/H8kRwtspSWe3jjB7Uh4O1Br5qI79pRJoCo8z4PXyVcR
+         8cug==
+X-Forwarded-Encrypted: i=1; AJvYcCXltpnF+/mKs/zP4Xezlj0KzHKhEYkqy21AHltQVaVAUw20MUU6iASXOsHO/TQZ/Yk/UILGXDZDuM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtvWe04vGdg83Dp9X7biTlEhnziDLaTpxdD3pzdcoQl0De3Rfz
+	pCfm9wz6BjQ5YsycRnX18SzlXQMGARzWZjXT7CLRm/tYJMGOqr9onceIXU/Swcvd
+X-Gm-Gg: ASbGnctbS3e5RflmvQQma25897yNme1ptpn2bUuF9jh/9avBGJsuWFM0tR4i8KWaion
+	oAz9sY2eVdqT9dGBBxMfk/bxt/W5iSq5vp86sVSECGTQ0BFCk9dsopd/hgquaJ7fPSknc6ZcZOb
+	BF63MUaGiYYhtqrS3M17v4Q4uxcMu0+nuJ5Xrl/acozCLXZCMU/3a19yxmorlMe0KANiuOww8EG
+	UfTi3HR+tCKWsrrer456AFHSosvQ8L/Asim0NOcGfoSB6A9ycOrNdLeuLf/9G0N6L+TAwmDm7hG
+	jPlLP5Kd3QivDZ0SHytk5/57jyPWdEklL/m5rwkRvzy9V0FGwWyp86ql/Y6lu8SY8UqlsO/kyaM
+	gMzV8aPwHzkl6gkI54Nj4rZSJVHllYVtAVJS18WTW0iP7WMIhzCDiHFHYgqlqpXB96IyjD8WkbP
+	g0Z+UJhdiyFQTBnSkOYQ==
+X-Google-Smtp-Source: AGHT+IHWBEntVq4fYPPrn6PosxENovLu+AMS5fJyGAP5cdCtxL0ssKLUqPCiTXkfzV7wl0IW64oWkQ==
+X-Received: by 2002:a05:6122:32d0:b0:53f:7828:16c7 with SMTP id 71dfb90a1353d-554b8cfacefmr6818977e0c.15.1760350564544;
+        Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-554d80aab53sm2951729e0c.15.2025.10.13.03.16.04
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-905b08b09f5so866719241.3
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9xUXpmGYaWL6XBT/ckgAMKZnnd+PAgYTWX+zKw8yyTDKQVvB279+YBqgxfG88oL9UPjOsM/iudbk=@vger.kernel.org
+X-Received: by 2002:a05:6102:4bc8:b0:51b:fe23:f4c with SMTP id
+ ada2fe7eead31-5d5e236b19cmr7934369137.22.1760350564013; Mon, 13 Oct 2025
+ 03:16:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aOFNz2mKXCXUImwO@shikoro>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTdxjG8z93KiVnHYsHSObSjS3CdDcy3uxC2BLnyZLFLVuMww+usWc7
-	DZeSokzmHIVOIE4d69KqLWq5FYQKtWUIYpNSR5UhsbVOu621EgpK1obEgJsXYD0sy/z2y/s+
-	z/M+H14GV7RQ2YymYpegq1CVKSkZIUumt23wHUqILxvd6+B6nZeAln4HBYG+XgSxxSYES0Y/
-	DSsePwJz0IiDY6AOA9NUnIJ5+0EEllkrDXNjmyEZGyFhJXobA3t8GYO4tzFlNZfCyTY3BQ8n
-	r+BwxBRA0DoVxeGOM7Uc8N9E4Omup2Cm+SccQvEMGDd9R0Ey2IKBrd5DwnGrEYGhvZ8C83EX
-	AcO3ztEQMRsx6HV9AOYza8F6xJDqcnoEg/v2Hhout0cIsOtzwToZSnWxacHfe5uG6PcmAvqS
-	V0iIXWwg4az+Fg2u38YQLFybwsBxcBaHpnOLBHh+z4fWhg4Cjp2IUHDeM05A09ICAr31LxIC
-	3gkSJvyXCBi3nCKg80YQA/fkZRzCzTOoWM33uAcxfv/VJYp3nHAg/uEDI+IXOg04fyExj/Od
-	EwmKf7D4K8V77tkI/pc2jv9hcgM/bInSvM21m3d35/Ht5+cwvvXuIvlhfonsLbVQpqkWdC8V
-	fSYTTV25lQlqT0ekhdajYfIASmM4toDTt4ZSzKxy/dUsaUywuVyj14kkptgXuHD4Pi5xJvsa
-	5zBY6QNIxuDs2RwuODCNS94n2Z1c/7fPSShnC7lLoU2SXMHWcvM+26pVzj7BjR+LExLjbB4X
-	Xp7DJDnO5nBdy4w0TktdejRzeLXYU+yznHfwIiZd4tibadyNyDT1b+MsbrQ7TDQj1vJYrOWx
-	WMv/sTaE9yCFpqK6XKUpK9go1lRo9mzcqS13odTP2vc92j6E7gY+9iGWQcp0uTjyp6ggVdVV
-	NeU+xDG4MlNeuDchKuRqVc1Xgk67Q7e7TKjyoRyGUK6Vv3rvS7WC/UK1SygVhEpB998WY9Ky
-	9ah4bN03/cqC9w4XfRrrQxf+2LTlZM9pcfro0WtDSFQF3in+eqU5GXt9c3Ar8ebTzzjmMobw
-	bV2fvLumoQTedv64Xxtqn21M3/bGmp8/qswYfT7TIA58vtdZV7tefNHaa3j/1J2/neFDwSxd
-	4ai6dCsDWktUN7WvdLAjv+S6o7YoG6xKokpUvZKH66pU/wDSCxH1rwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTZxTH89znvtGs89JBeJTsS5FoNKAGDWdDDXGZ3G3ZwjeWfZmd3tgG
-	KNpKJy7bgFJguDmoaYktzgpaGK3Q8aIWU9ZhYAISBWQjG8iYRSWWNZmgqbytd8kyv5z8zjn/
-	X87z4eGxKsps4nX6E5JBrylQswpa8UGWOe2nb8Lanb7O7fBLWZCGpcVqGhravSxUd5xj4G6b
-	B8HMUjWC58tODBb/Og2r1gEOFqO/c7AeGEBgH7Vi8HaVUfDUt8bCk5t/I7DNhliony+jIeL+
-	GoHjoZOD+f4cWJi5wcD69CMKfn0WRuAOrVEQClYhWLXnw4XGThaWR+5gqLfdRXBxdhrDY19s
-	2TVwH0GgpZyFudpuDOOhV+HeUoSFQdtpFhZGGyj4y8eCqzzAwHmnFYG5qZ0F+/kOGvx/9HAw
-	+mSFgim7lQJPx/sw435Iw3BtIxV7Xyz1QxI4681UrDymwHblBgVRdysHt5umaHCXpoJzZJyB
-	P1scHKzM7oJ1VxEMeB5xMP2tjYa2hTtMth2Jzy1naLG18yolWsZWWdH7nReJyy+sSFy8bMai
-	pTbW3gxHsFjR+al4eTjMii+WJlgx8MxFi0ONRKwbSRP9jmlOrOj9jcvN+kix94hUoDNJhh37
-	Dym0tubUY2H25KWpBq4U+ZkaxPNE2E3KxzbWoDieFlJJVdCHZGaFLWRyMoplThAyiNfs5GqQ
-	gsfCtWQy2vUAy+5rwmHSXrFZRqWQSW6Nvy3HVcKXJNLn+ldVCvFk8FyIlhkL28jk2jwlx7GQ
-	TJrXeHkcF7u0MneGkTlRSCHBqz9TtUjpeMl2vGQ7/rddCLeiBJ3eVKjRFexJN+ZrS/S6k+mH
-	iwo7UOxDuj9fqbuOFsdz+pDAI/UrytyqsFbFaEzGksI+RHisTlBmfhYbKY9oSk5JhqKPDcUF
-	krEPJfO0Okn5bp50SCUc1ZyQ8iXpmGT4b0vxcZtKkSQMx4ey2lN+zNqcGRlqPb0n+72pW/2J
-	xWQuafmTia3piYO2poPJxyubo13dljfeDGrKh/QT+9LrXw9kzHyP83pRWPB9mLHwjidt0BPd
-	kNvWk6ItrlN9sXMj17/Bn5BUme09W7y1J4dqOdv9YP9YnektYpltO8D64xsOMr2myq/UtFGr
-	2bUNG4yafwCIKJ+/jAMAAA==
-X-CFilter-Loop: Reflected
+References: <20251006135010.2165-1-cel@kernel.org>
+In-Reply-To: <20251006135010.2165-1-cel@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 13 Oct 2025 12:15:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVYNUBH11trBr2Mo3i_fDh5sw5AzqYbPwO7_m4H6Y3sfA@mail.gmail.com>
+X-Gm-Features: AS18NWC70YQ25pmV_8TDIyg3Sza9lycmcIj-QBQA-wQOcH5zOHgpO6WjHd-A4TQ
+Message-ID: <CAMuHMdVYNUBH11trBr2Mo3i_fDh5sw5AzqYbPwO7_m4H6Y3sfA@mail.gmail.com>
+Subject: Re: [GIT PULL] NFSD changes for v6.18
+To: Chuck Lever <cel@kernel.org>, Eric Biggers <ebiggers@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Oct 04, 2025 at 06:39:43PM +0200, Wolfram Sang wrote:
-> On Thu, Oct 02, 2025 at 05:12:35PM +0900, Byungchul Park wrote:
-> > Functionally no change.  This patch is a preparation for DEPT(DEPendency
-> > Tracker) to track dependencies related to a scheduler API,
-> > wait_for_completion().
-> >
-> > Unfortunately, struct i2c_algo_pca_data has a callback member named
-> > wait_for_completion, that is the same as the scheduler API, which makes
-> > it hard to change the scheduler API to a macro form because of the
-> > ambiguity.
-> >
-> > Add a postfix _cb to the callback member to remove the ambiguity.
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> 
-> This patch seems reasonable in any case. I'll pick it, so you have one
-> dependency less. Good luck with the series!
+Hi Chuck, Eric,
 
-Thanks, Wolfram Sang!
+On Wed, 8 Oct 2025 at 00:05, Chuck Lever <cel@kernel.org> wrote:
+> Eric Biggers (4):
+>       SUNRPC: Make RPCSEC_GSS_KRB5 select CRYPTO instead of depending on it
 
-	Byungchul
+This is now commit d8e97cc476e33037 ("SUNRPC: Make RPCSEC_GSS_KRB5
+select CRYPTO instead of depending on it") in v6.18-rc1.
+As RPCSEC_GSS_KRB5 defaults to "y", CRYPTO is now auto-enabled in
+defconfigs that didn't enable it before.
 
-> Applied to for-next, thanks!
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
