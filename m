@@ -1,110 +1,380 @@
-Return-Path: <linux-nfs+bounces-15174-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9477BD27F1
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 12:16:16 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A2E6BD29C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 12:47:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E49103B7641
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 10:16:10 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1114F341A6D
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Oct 2025 10:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43F72EB865;
-	Mon, 13 Oct 2025 10:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B3B302746;
+	Mon, 13 Oct 2025 10:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYr6Vd18"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344F92E2EF3
-	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 10:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAD8302CB5
+	for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 10:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760350569; cv=none; b=uOz892prKqhGYRZFlFiCsX1m7PdiK9aRGSZ3WWJu3Zj9XCMYY68W0Fus64FPjamN4t5r72svNpdsU2uLJ3EyTkQKSfg0KBS5tU6RQ5VFQBDC/CyBXdcT5Tpubiz3zo+d4EkH8Wxl1MxXUU+SQp67QGBuHBuWF138K07xi6nF2RU=
+	t=1760352439; cv=none; b=lqfWwxQYjZvEc7p8GQZznK8RV7BAIMUfWApIH3eA70rFX0QpLD0EgTTTmB0s+aSml0YsWRfITIIw7yQhEDHn72S4b0VJMH754lZ/+6CYz6mvB2d51Y66K97uXRNoZ3AnJmJjWA2GTG5LcDxPmpsBmBxn0hQQ+Obv3Z7IwCWznww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760350569; c=relaxed/simple;
-	bh=/dclAOZ1wcO3wJHRWYPxOk55bJ0h4fFw7TEM3TxPSYQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B1QYn5hnYPzWiLss68fjbwIl7DXQtxbch2xUrtP7+687bPO/62xMZmwScFVeVv9y6bXmNB4FV5nbjuDxWIV1a4rhc6LvX7bVXyadu3m2Eabo2Ca6oLLcxh1VEyPF1JZZ6cNmf1wxUgEjgjEwNcb+nCCEsn+xzN6xRfCFguzauBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-551b9d94603so1180277e0c.1
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 03:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760350565; x=1760955365;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XxBrW+9YUunZwvYGyVKGYyAsVgwAT/0jNiWc372U3Fg=;
-        b=YbEr3gkr/+ZlAtZLK+c7tSV3p3b6AcEB/zlaNJF9CDbH9/XGrszgC5Ix7h80sMtc6F
-         0t3oh6iWotCfwGYjzVA6h8s+swXIetehNv9V/Il44XnJAzTyYMrSan9+rq5g9qfToVfx
-         bnofFfoCeBkmUu+l5cbjAP5utVNW9Ez0MlttzCV8iohE/jrV21/Tv9173G4uE3GoviVZ
-         yu79Aiw1PZUtcNu5u3x5fejkReu5yO2BXJSAacz8a+UoeMinbQ26kXLzgwxm4G+eLdkX
-         SktTRXP6wmtvtAaw5spZkxLk/H8kRwtspSWe3jjB7Uh4O1Br5qI79pRJoCo8z4PXyVcR
-         8cug==
-X-Forwarded-Encrypted: i=1; AJvYcCXltpnF+/mKs/zP4Xezlj0KzHKhEYkqy21AHltQVaVAUw20MUU6iASXOsHO/TQZ/Yk/UILGXDZDuM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtvWe04vGdg83Dp9X7biTlEhnziDLaTpxdD3pzdcoQl0De3Rfz
-	pCfm9wz6BjQ5YsycRnX18SzlXQMGARzWZjXT7CLRm/tYJMGOqr9onceIXU/Swcvd
-X-Gm-Gg: ASbGnctbS3e5RflmvQQma25897yNme1ptpn2bUuF9jh/9avBGJsuWFM0tR4i8KWaion
-	oAz9sY2eVdqT9dGBBxMfk/bxt/W5iSq5vp86sVSECGTQ0BFCk9dsopd/hgquaJ7fPSknc6ZcZOb
-	BF63MUaGiYYhtqrS3M17v4Q4uxcMu0+nuJ5Xrl/acozCLXZCMU/3a19yxmorlMe0KANiuOww8EG
-	UfTi3HR+tCKWsrrer456AFHSosvQ8L/Asim0NOcGfoSB6A9ycOrNdLeuLf/9G0N6L+TAwmDm7hG
-	jPlLP5Kd3QivDZ0SHytk5/57jyPWdEklL/m5rwkRvzy9V0FGwWyp86ql/Y6lu8SY8UqlsO/kyaM
-	gMzV8aPwHzkl6gkI54Nj4rZSJVHllYVtAVJS18WTW0iP7WMIhzCDiHFHYgqlqpXB96IyjD8WkbP
-	g0Z+UJhdiyFQTBnSkOYQ==
-X-Google-Smtp-Source: AGHT+IHWBEntVq4fYPPrn6PosxENovLu+AMS5fJyGAP5cdCtxL0ssKLUqPCiTXkfzV7wl0IW64oWkQ==
-X-Received: by 2002:a05:6122:32d0:b0:53f:7828:16c7 with SMTP id 71dfb90a1353d-554b8cfacefmr6818977e0c.15.1760350564544;
-        Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-554d80aab53sm2951729e0c.15.2025.10.13.03.16.04
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-905b08b09f5so866719241.3
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Oct 2025 03:16:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9xUXpmGYaWL6XBT/ckgAMKZnnd+PAgYTWX+zKw8yyTDKQVvB279+YBqgxfG88oL9UPjOsM/iudbk=@vger.kernel.org
-X-Received: by 2002:a05:6102:4bc8:b0:51b:fe23:f4c with SMTP id
- ada2fe7eead31-5d5e236b19cmr7934369137.22.1760350564013; Mon, 13 Oct 2025
- 03:16:04 -0700 (PDT)
+	s=arc-20240116; t=1760352439; c=relaxed/simple;
+	bh=gA8bxpzXimzb54QzB2Y7mbFZjhMeRaVdNxwhzfiamcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ln6ileADBjQvRHZgBSvMtv2Nbau7xhZjqnf7djHXYWIguMuSr6ZQUTq6FeHOQ7X4l1Ug+ICAJ8IMXudEj35IzUvHXVdpOLyTs9hxMuTuceZmjntfywSad8IreAKuDssHb6G0bhzlEJDC7i7RqWbrfN2ovlHOCxbJqQL6d0p5dq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYr6Vd18; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760352425;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QdhIzPNclHC5KxVipZI/m9MoIOqoEgSAZQcCWFA6mvM=;
+	b=RYr6Vd18sd4f/w6vwAOmLvl0v/LcSRQEgfFLAtQHbzBOMruhdDBtPa5MAaE8/0StLVOfH3
+	7afRe/ABTBa69lj3p6gIxGCpR14EjsWIT1LbEJcQnSszjZuJRFcbAA7yRi2QB9nAbe9UZ3
+	Sy7NHxYuYyraq2CFiioSgsEEa2RU7Wk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-68-DWM-IO-2P4mVBgX2LZtp4w-1; Mon,
+ 13 Oct 2025 06:47:02 -0400
+X-MC-Unique: DWM-IO-2P4mVBgX2LZtp4w-1
+X-Mimecast-MFC-AGG-ID: DWM-IO-2P4mVBgX2LZtp4w_1760352421
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB5941800372;
+	Mon, 13 Oct 2025 10:47:00 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.80.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AB6E180141C;
+	Mon, 13 Oct 2025 10:47:00 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id 586194B1B7D; Mon, 13 Oct 2025 06:46:58 -0400 (EDT)
+Date: Mon, 13 Oct 2025 06:46:58 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Use MD5 library instead of crypto_shash
+Message-ID: <aOzYoh6hgXRGvTWV@aion>
+References: <20251011185225.155625-1-ebiggers@kernel.org>
+ <5f405581-e7e2-4e77-8044-0496db85aa27@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251006135010.2165-1-cel@kernel.org>
-In-Reply-To: <20251006135010.2165-1-cel@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 13 Oct 2025 12:15:52 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVYNUBH11trBr2Mo3i_fDh5sw5AzqYbPwO7_m4H6Y3sfA@mail.gmail.com>
-X-Gm-Features: AS18NWC70YQ25pmV_8TDIyg3Sza9lycmcIj-QBQA-wQOcH5zOHgpO6WjHd-A4TQ
-Message-ID: <CAMuHMdVYNUBH11trBr2Mo3i_fDh5sw5AzqYbPwO7_m4H6Y3sfA@mail.gmail.com>
-Subject: Re: [GIT PULL] NFSD changes for v6.18
-To: Chuck Lever <cel@kernel.org>, Eric Biggers <ebiggers@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f405581-e7e2-4e77-8044-0496db85aa27@oracle.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Chuck, Eric,
+On Sun, 12 Oct 2025, Chuck Lever wrote:
 
-On Wed, 8 Oct 2025 at 00:05, Chuck Lever <cel@kernel.org> wrote:
-> Eric Biggers (4):
->       SUNRPC: Make RPCSEC_GSS_KRB5 select CRYPTO instead of depending on it
+> On 10/11/25 2:52 PM, Eric Biggers wrote:
+> > Update NFSD's support for "legacy client tracking" (which uses MD5) to
+> > use the MD5 library instead of crypto_shash.  This has several benefits:
+> > 
+> > - Simpler code.  Notably, much of the error-handling code is no longer
+> >   needed, since the library functions can't fail.
+> > 
+> > - Improved performance due to reduced overhead.  A microbenchmark of
+> >   nfs4_make_rec_clidname() shows a speedup from 1455 cycles to 425.
+> > 
+> > - The MD5 code can now safely be built as a loadable module when nfsd is
+> >   built as a loadable module.  (Previously, nfsd forced the MD5 code to
+> >   built-in, presumably to work around the unreliablity of the name-based
+> >   loading.)  Thus, select MD5 from the tristate option NFSD if
+> >   NFSD_LEGACY_CLIENT_TRACKING, instead of from the bool option NFSD_V4.
+> > 
+> > To preserve the existing behavior of legacy client tracking support
+> > being disabled when the kernel is booted with "fips=1", make
+> > nfsd4_legacy_tracking_init() return an error if fips_enabled.  I don't
+> > know if this is truly needed, but it preserves the existing behavior.
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> 
+> No objection, but let's cross our t's and dot our i's. Scott, when you
+> have recovered from bake-a-thon, can you have a look at this one?
+> 
+> Thanks!
 
-This is now commit d8e97cc476e33037 ("SUNRPC: Make RPCSEC_GSS_KRB5
-select CRYPTO instead of depending on it") in v6.18-rc1.
-As RPCSEC_GSS_KRB5 defaults to "y", CRYPTO is now auto-enabled in
-defconfigs that didn't enable it before.
+Looks fine to me.
 
-Gr{oetje,eeting}s,
+Reviewed-by: Scott Mayhew <smayhew@redhat.com>
 
-                        Geert
+I agree with Jeff - it would be nice to just remove the legacy tracking.
+I'm guessing it's still used in smaller/embedded setups?  RHEL and Fedora
+haven't had it enabled for years.  Looking at a few other distros... it's
+not enabled in OpenSUSE Leap or Tumbleweed.  It's not enabled in Debian
+Sid (but it is enabled in Trixie).
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-Scott
+> 
+> 
+> > ---
+> >  fs/nfsd/Kconfig       |  3 +-
+> >  fs/nfsd/nfs4recover.c | 82 ++++++++-----------------------------------
+> >  2 files changed, 16 insertions(+), 69 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> > index e134dce45e350..380a4caa33a73 100644
+> > --- a/fs/nfsd/Kconfig
+> > +++ b/fs/nfsd/Kconfig
+> > @@ -3,10 +3,11 @@ config NFSD
+> >  	tristate "NFS server support"
+> >  	depends on INET
+> >  	depends on FILE_LOCKING
+> >  	depends on FSNOTIFY
+> >  	select CRC32
+> > +	select CRYPTO_LIB_MD5 if NFSD_LEGACY_CLIENT_TRACKING
+> >  	select CRYPTO_LIB_SHA256 if NFSD_V4
+> >  	select LOCKD
+> >  	select SUNRPC
+> >  	select EXPORTFS
+> >  	select NFS_COMMON
+> > @@ -75,12 +76,10 @@ config NFSD_V3_ACL
+> >  config NFSD_V4
+> >  	bool "NFS server support for NFS version 4"
+> >  	depends on NFSD && PROC_FS
+> >  	select FS_POSIX_ACL
+> >  	select RPCSEC_GSS_KRB5
+> > -	select CRYPTO
+> > -	select CRYPTO_MD5
+> >  	select GRACE_PERIOD
+> >  	select NFS_V4_2_SSC_HELPER if NFS_V4_2
+> >  	help
+> >  	  This option enables support in your system's NFS server for
+> >  	  version 4 of the NFS protocol (RFC 3530).
+> > diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> > index e2b9472e5c78c..dbc0aecef95e3 100644
+> > --- a/fs/nfsd/nfs4recover.c
+> > +++ b/fs/nfsd/nfs4recover.c
+> > @@ -30,13 +30,14 @@
+> >  *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> >  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> >  *
+> >  */
+> >  
+> > -#include <crypto/hash.h>
+> > +#include <crypto/md5.h>
+> >  #include <crypto/sha2.h>
+> >  #include <linux/file.h>
+> > +#include <linux/fips.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/namei.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/module.h>
+> > @@ -90,61 +91,22 @@ static void
+> >  nfs4_reset_creds(const struct cred *original)
+> >  {
+> >  	put_cred(revert_creds(original));
+> >  }
+> >  
+> > -static int
+> > +static void
+> >  nfs4_make_rec_clidname(char dname[HEXDIR_LEN], const struct xdr_netobj *clname)
+> >  {
+> >  	u8 digest[MD5_DIGEST_SIZE];
+> > -	struct crypto_shash *tfm;
+> > -	int status;
+> >  
+> >  	dprintk("NFSD: nfs4_make_rec_clidname for %.*s\n",
+> >  			clname->len, clname->data);
+> > -	tfm = crypto_alloc_shash("md5", 0, 0);
+> > -	if (IS_ERR(tfm)) {
+> > -		status = PTR_ERR(tfm);
+> > -		goto out_no_tfm;
+> > -	}
+> >  
+> > -	status = crypto_shash_tfm_digest(tfm, clname->data, clname->len,
+> > -					 digest);
+> > -	if (status)
+> > -		goto out;
+> > +	md5(clname->data, clname->len, digest);
+> >  
+> >  	static_assert(HEXDIR_LEN == 2 * MD5_DIGEST_SIZE + 1);
+> >  	sprintf(dname, "%*phN", MD5_DIGEST_SIZE, digest);
+> > -
+> > -	status = 0;
+> > -out:
+> > -	crypto_free_shash(tfm);
+> > -out_no_tfm:
+> > -	return status;
+> > -}
+> > -
+> > -/*
+> > - * If we had an error generating the recdir name for the legacy tracker
+> > - * then warn the admin. If the error doesn't appear to be transient,
+> > - * then disable recovery tracking.
+> > - */
+> > -static void
+> > -legacy_recdir_name_error(struct nfs4_client *clp, int error)
+> > -{
+> > -	printk(KERN_ERR "NFSD: unable to generate recoverydir "
+> > -			"name (%d).\n", error);
+> > -
+> > -	/*
+> > -	 * if the algorithm just doesn't exist, then disable the recovery
+> > -	 * tracker altogether. The crypto libs will generally return this if
+> > -	 * FIPS is enabled as well.
+> > -	 */
+> > -	if (error == -ENOENT) {
+> > -		printk(KERN_ERR "NFSD: disabling legacy clientid tracking. "
+> > -			"Reboot recovery will not function correctly!\n");
+> > -		nfsd4_client_tracking_exit(clp->net);
+> > -	}
+> >  }
+> >  
+> >  static void
+> >  __nfsd4_create_reclaim_record_grace(struct nfs4_client *clp,
+> >  		const char *dname, int len, struct nfsd_net *nn)
+> > @@ -180,13 +142,11 @@ nfsd4_create_clid_dir(struct nfs4_client *clp)
+> >  	if (test_and_set_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags))
+> >  		return;
+> >  	if (!nn->rec_file)
+> >  		return;
+> >  
+> > -	status = nfs4_make_rec_clidname(dname, &clp->cl_name);
+> > -	if (status)
+> > -		return legacy_recdir_name_error(clp, status);
+> > +	nfs4_make_rec_clidname(dname, &clp->cl_name);
+> >  
+> >  	status = nfs4_save_creds(&original_cred);
+> >  	if (status < 0)
+> >  		return;
+> >  
+> > @@ -374,13 +334,11 @@ nfsd4_remove_clid_dir(struct nfs4_client *clp)
+> >  	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+> >  
+> >  	if (!nn->rec_file || !test_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags))
+> >  		return;
+> >  
+> > -	status = nfs4_make_rec_clidname(dname, &clp->cl_name);
+> > -	if (status)
+> > -		return legacy_recdir_name_error(clp, status);
+> > +	nfs4_make_rec_clidname(dname, &clp->cl_name);
+> >  
+> >  	status = mnt_want_write_file(nn->rec_file);
+> >  	if (status)
+> >  		goto out;
+> >  	clear_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags);
+> > @@ -601,10 +559,15 @@ nfsd4_legacy_tracking_init(struct net *net)
+> >  	if (net != &init_net) {
+> >  		pr_warn("NFSD: attempt to initialize legacy client tracking in a container ignored.\n");
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > +	if (fips_enabled) {
+> > +		pr_warn("NFSD: legacy client tracking is disabled due to FIPS\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	status = nfs4_legacy_state_init(net);
+> >  	if (status)
+> >  		return status;
+> >  
+> >  	status = nfsd4_load_reboot_recovery_data(net);
+> > @@ -657,25 +620,20 @@ nfs4_recoverydir(void)
+> >  }
+> >  
+> >  static int
+> >  nfsd4_check_legacy_client(struct nfs4_client *clp)
+> >  {
+> > -	int status;
+> >  	char dname[HEXDIR_LEN];
+> >  	struct nfs4_client_reclaim *crp;
+> >  	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+> >  	struct xdr_netobj name;
+> >  
+> >  	/* did we already find that this client is stable? */
+> >  	if (test_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags))
+> >  		return 0;
+> >  
+> > -	status = nfs4_make_rec_clidname(dname, &clp->cl_name);
+> > -	if (status) {
+> > -		legacy_recdir_name_error(clp, status);
+> > -		return status;
+> > -	}
+> > +	nfs4_make_rec_clidname(dname, &clp->cl_name);
+> >  
+> >  	/* look for it in the reclaim hashtable otherwise */
+> >  	name.data = kmemdup(dname, HEXDIR_LEN, GFP_KERNEL);
+> >  	if (!name.data) {
+> >  		dprintk("%s: failed to allocate memory for name.data!\n",
+> > @@ -1264,17 +1222,14 @@ nfsd4_cld_check(struct nfs4_client *clp)
+> >  	if (crp)
+> >  		goto found;
+> >  
+> >  #ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
+> >  	if (nn->cld_net->cn_has_legacy) {
+> > -		int status;
+> >  		char dname[HEXDIR_LEN];
+> >  		struct xdr_netobj name;
+> >  
+> > -		status = nfs4_make_rec_clidname(dname, &clp->cl_name);
+> > -		if (status)
+> > -			return -ENOENT;
+> > +		nfs4_make_rec_clidname(dname, &clp->cl_name);
+> >  
+> >  		name.data = kmemdup(dname, HEXDIR_LEN, GFP_KERNEL);
+> >  		if (!name.data) {
+> >  			dprintk("%s: failed to allocate memory for name.data!\n",
+> >  				__func__);
+> > @@ -1315,15 +1270,12 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
+> >  
+> >  #ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
+> >  	if (cn->cn_has_legacy) {
+> >  		struct xdr_netobj name;
+> >  		char dname[HEXDIR_LEN];
+> > -		int status;
+> >  
+> > -		status = nfs4_make_rec_clidname(dname, &clp->cl_name);
+> > -		if (status)
+> > -			return -ENOENT;
+> > +		nfs4_make_rec_clidname(dname, &clp->cl_name);
+> >  
+> >  		name.data = kmemdup(dname, HEXDIR_LEN, GFP_KERNEL);
+> >  		if (!name.data) {
+> >  			dprintk("%s: failed to allocate memory for name.data\n",
+> >  					__func__);
+> > @@ -1692,15 +1644,11 @@ nfsd4_cltrack_legacy_recdir(const struct xdr_netobj *name)
+> >  		/* just return nothing if output will be truncated */
+> >  		kfree(result);
+> >  		return NULL;
+> >  	}
+> >  
+> > -	copied = nfs4_make_rec_clidname(result + copied, name);
+> > -	if (copied) {
+> > -		kfree(result);
+> > -		return NULL;
+> > -	}
+> > +	nfs4_make_rec_clidname(result + copied, name);
+> >  
+> >  	return result;
+> >  }
+> >  
+> >  static char *
+> > 
+> > base-commit: 0739473694c4878513031006829f1030ec850bc2
+> 
+> 
+> -- 
+> Chuck Lever
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
