@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-15263-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15264-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D627CBDD1B1
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Oct 2025 09:35:07 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEDACBDD295
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Oct 2025 09:40:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3316A188B481
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Oct 2025 07:32:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D2196508898
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Oct 2025 07:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D30233009EE;
-	Wed, 15 Oct 2025 07:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6D02BCF41;
+	Wed, 15 Oct 2025 07:31:57 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B6A21B9E0;
-	Wed, 15 Oct 2025 07:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCAD139D0A;
+	Wed, 15 Oct 2025 07:31:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760513424; cv=none; b=jOOe93+ZiYO67f7XXZLSauZzQ8ugYXC9mapEQsfaloM9/rVFPm4OvHwjgaGd8617I6a7Oo7X4p6cyoRYu4rj9Igb10YSoNREzQgZ77MD9cAcvPIm04D3DQVvK+jFUCWms6iZRE2QQAed2NkRL7pAT01DxTkS0nf3PGnO8oJGTtk=
+	t=1760513517; cv=none; b=Mge4Xv8Aa0R7bRD8N1zdl3TEUSfu+4a4xNgYuETCun99ZutLFoIc1jJAaaOuuSHhn9Hao0vniE6pdT1/p6pqcE/LKJTqKGzSqkG1hiivJYyCRAif9ay3furC7wuF0OYXNqGXpBmpGmYg0WVSjxm1ztfiE3QhCnEPNhRfyF+E38M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760513424; c=relaxed/simple;
-	bh=wwsMcO8kxKDe39xAaR0wfWWvJXHr4ArjIXG9EGSFt8A=;
+	s=arc-20240116; t=1760513517; c=relaxed/simple;
+	bh=BFtmtogbr8F3hzECrfBCZ5C/O63CcbwPceVL8TI4rYE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qaBfMQU13uj3cMyLf1sigcWROviSGKnQVgL75UBCihF+pntD2HYGJT5CztfM8yJP4GhY6KsTdUvViOhTq1bIa/G1bTxdrFwmJTVZxqUGcMDqM5ur1SNVMPoEvCQwCQZjTNfVR7OuQmqkEo/83uYTcz1ZYDSCqSb8ArVxA5v97Q0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJHJc67ci/ZauVgWwoHcp3OgLyzjljp/xCD8HlwB1aObDidRsx9wXrwC+gdDI7UsYC2HK2VZI6FChdWZNLmRC4VloKyryoF7ej4uGjPhqnlbijAXsefe5/E5kYonYXuK2ZLODu4QfdbgaBvM6DLX28y3hKUlFWQIQHChk69tEEI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7A8E9227A8E; Wed, 15 Oct 2025 09:30:18 +0200 (CEST)
-Date: Wed, 15 Oct 2025 09:30:17 +0200
+	id E48B7227AA8; Wed, 15 Oct 2025 09:31:51 +0200 (CEST)
+Date: Wed, 15 Oct 2025 09:31:51 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Kundan Kumar <kundan.kumar@samsung.com>
 Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
@@ -45,10 +45,9 @@ Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
 	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
 	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com,
 	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com
-Subject: Re: [PATCH v2 16/16] writeback: added XFS support for matching
- writeback count to allocation group count
-Message-ID: <20251015073017.GB11294@lst.de>
-References: <20251014120845.2361-1-kundan.kumar@samsung.com> <CGME20251014121135epcas5p2aa801677c0561db10291c51d669873e2@epcas5p2.samsung.com> <20251014120845.2361-17-kundan.kumar@samsung.com>
+Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
+Message-ID: <20251015073151.GC11294@lst.de>
+References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com> <20251014120845.2361-1-kundan.kumar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,10 +56,11 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251014120845.2361-17-kundan.kumar@samsung.com>
+In-Reply-To: <20251014120845.2361-1-kundan.kumar@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Please split this into the writeback infrastructure and an XFS patch.
-Adding infrastructure and the user in the same patch is really annoying
-for bisecting, reverting or even just reading commit logs.
+This still allows the file system to override a bdi paramter while
+the bdi is shared by all file systems on a single block device.  As
+said before that really needs untangling first.
+
 
