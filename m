@@ -1,382 +1,194 @@
-Return-Path: <linux-nfs+bounces-15277-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15278-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 963B1BE0E91
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 00:13:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15F62BE1168
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 02:20:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D786A1A22016
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Oct 2025 22:14:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C09875825DC
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 00:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 503CE274FD0;
-	Wed, 15 Oct 2025 22:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160D335962;
+	Thu, 16 Oct 2025 00:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXQKuvGj"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="br7bploB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XJZvjoHr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B98025CC42
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Oct 2025 22:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B157F1C69D
+	for <linux-nfs@vger.kernel.org>; Thu, 16 Oct 2025 00:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760566413; cv=none; b=NgH9Q7o62qPWEkFBj/w3OUpUAN6vUQ9H0Zf93s2vvrBKa90M+G4HvaTH2eIE7NGQyZyo/YvJIFpYXK475SAO/mtTTTEALEaP1OUPBrF8PfHcEVc/Mcc+zZVsWxYK/nUjwU9/8NFYVmfA9YsWaP6TvuXzbPmI+b+Uz47BGWIFDFw=
+	t=1760574009; cv=none; b=X2AMYYeooDZ6ItWW8JC/xoXa8KMAdBrCgMzJR+QoSy3yQAtzLwPwmqx5kZqVcsWF1iJbgyEHLPwXOPz12sTVMffXyZYOAb1Rjbo0iql2/SZjhRwFvDGLcjjPSZE1A4ZgeSAfOQmbRMzrshOG00/qVlkdv4ljuobFw3M3zMIkF8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760566413; c=relaxed/simple;
-	bh=0yZd22a13R0nS3tEnQz+mrCIMPdIWvNg+CBJAGlwvXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RYIRpcoOW4Nc5wlrvIc1neYSOB8RUQNGDPMmElYHVkX4oT+lD5Y62cbFgQjEbMrDp8db2Dek1nAoMUFwg7Pp7hF738QWMrNXkDveUpxs5H53i/3LZLc5dLOs8XKCKYRZVmhOnYI4S4ZavVTM9/9wam1MI0gXghJGBjAk+ISxRUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXQKuvGj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F20C4CEF8;
-	Wed, 15 Oct 2025 22:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760566412;
-	bh=0yZd22a13R0nS3tEnQz+mrCIMPdIWvNg+CBJAGlwvXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BXQKuvGjdt8pN3Wy8M0qJ7tUCB0vgyxe53E5wKtBTI2fSMMllg0RVhdcygUkPQ+bh
-	 Y1NS7yVC4e8Oc5jKs2ZGqKi3Vfaugtw3FcD5cDRorVLNMePd/jufvVVd9qKGM/e4H/
-	 vHCd0NKHBbUuX6u5FeLh6nyc85lu/85IwiTAVOyWvI51Ckx5BdPoiba1zaTdK8+OK1
-	 V6vTMSnlbM4IwC6YtQ0JBtOWND1FJMcjiDDLtx2UGKjHqp2FzCwFDH+bGDx4/mL/8n
-	 /BKOCaJq7Iaf9yM1hd8TgKbQG3yggtl+mRvOW5wIIrqHrjl6aweaMSlCo62krlLIzG
-	 RFgO6SbEzxoew==
-Date: Wed, 15 Oct 2025 18:13:31 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPAci7O_XK1ljaum@kernel.org>
-References: <20251013190113.252097-1-cel@kernel.org>
+	s=arc-20240116; t=1760574009; c=relaxed/simple;
+	bh=ZI6/16EljdB03zsXK6AuC4OyesbQtRG/C/QK8LVIHzk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=bnOcntitjh6JeeSX1OhNbOlGgzrtZ6yf4T3bEkunCvpscRYDJaq5R9hSwBdziGgMzObKsD3QEFGr5B6lwyOciLnC8rN2m+3JEe3zsnwHUpoEML0/o+cdD9Xz5Ic3OXnmjtYUmP1RyNKKpRROZY+1BpCAOOBQ2heBPA6beFjX9gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=br7bploB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XJZvjoHr; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id AD24C7A0126;
+	Wed, 15 Oct 2025 20:20:05 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Wed, 15 Oct 2025 20:20:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1760574005; x=1760660405; bh=yZO/IISzhO2XG2i6ct4jw+NYPI8vXe7xdId
+	QWDfMFgQ=; b=br7bploBZo13CvJWuMxTOzLR//2M2K8ljO8dlDlvOuv4H96ByWX
+	IjrqX+M7BwBEbqHJDVhDFFYN9SUVnea3vrGr+ahaNdLi56YDiZzWLcTx+nXpRg9V
+	DN9yCax473gAIGiXzCXUdMD5lhZ732XAlyb1jv2iJRLrQFACO4xJB4uGJjoFGqiG
+	bd8tH+9ijYApy9KaBTbMM8VzCyGjHTrEgsxz32NW526ispYQ+1qipPaHy9S8DNkg
+	hU+NQ6J3Oz/OqqRvVOgMU1HQ9WTol2RQpD7n2Eb4cOv6FczIk/MrmMvlaEKXloGv
+	pP6lfsgO4jvaNyUJH8QZZZjRLldg+4Ce7zw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760574005; x=
+	1760660405; bh=yZO/IISzhO2XG2i6ct4jw+NYPI8vXe7xdIdQWDfMFgQ=; b=X
+	JZvjoHr5r4jcICLIp52hO6Y1ycpQIym64g+Ort0oNZ46gVE0qQcD/YJM3sD4zi2b
+	dVLwlN3dqPk+Vn0HamqjyWC39fTpsdlCC3spmcVOKN98LXciP/D1vbUiqmINqRY5
+	p9/DnJVFc5ibvb1/TX+o5vG+umAwgfOuV4BptEa/GTunSwTTEJ0bgl3FV14G7ivs
+	V4Ca0f+TuAGXYZWJM+8KI6p/yATG/ndlLjpt2VAsu9ashD1v4B77CvhZVZ+KgMt4
+	dg6c4qWOKfYUyRJf5Vz1bcUWAEYrKZPd8MAZcaoS4ZYoTnhhuVjUaNxOyhS7ZI/B
+	es5iIHE9Gi2IOMtb4M3ng==
+X-ME-Sender: <xms:NTrwaBx2Op1kCsxFZHReHOGE7K7pwFcCJbYTTE0yi_fXc03tMDunuA>
+    <xme:NTrwaE-zQpmBB5Olwydmr4xWR21L4nBdjB6S9hUiCuM45oUDslpeja67UlOvOF3pd
+    zhr6hMbT5l3JIFuQO80juZ7ejpw-i6FQlsfkVYe8Ler6GLUOQ>
+X-ME-Received: <xmr:NTrwaFKtFkYRdIO8ryRGAAUKDYdz_QLN6O0UV5uZD8r3Nyof3ul7pSIEVjBRxGFmjqKIZy8B7PN-MT8vDSziDn59Sk9mIFrm7GGIm3LQPL83>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduvdegkeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtkeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epieekudethffgtdejudffieetvedtudffvdegveffvddtfeevveetveetgeduueffnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqd
+    hnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhomhesthgrlhhp
+    vgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthho
+    pegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehjlhgrhihtohhnse
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:NTrwaKfn5P5Dz9S7prqKPEQO74xkLb9ckjT8VZ97QXeCZ-PB1j0lyA>
+    <xmx:NTrwaE97APbn6YVhhLINQkWtJaZj0346Qn-RMhdfK4S7JuWhAv7Oyg>
+    <xmx:NTrwaHqZAevM9aEt5XXlkgTMewU62T3tTdvXVcBGazy7D_ZpTa4wZg>
+    <xmx:NTrwaJBrEtZdwpk9MiYf5FQyw_wY1OlF4w6DQvhsSDe-f8eJBWNAPw>
+    <xmx:NTrwaDSCbALPn27EIh_aNndNmGXN4RE1kPKXkjhm4abuj-cW5q9Mrvhe>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 15 Oct 2025 20:20:03 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251013190113.252097-1-cel@kernel.org>
+From: NeilBrown <neilb@ownmail.net>
+To: "Olga Kornievskaia" <okorniev@redhat.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] nfsd: ensure SEQUENCE replay sends a valid reply.
+In-reply-to:
+ <CACSpFtC7CZGZ1ezGqKmg_7qkffqr5EaZTqfk390WkatBt4Va+w@mail.gmail.com>
+References: <20251014233659.1980566-1-neilb@ownmail.net>,
+ <20251014233659.1980566-2-neilb@ownmail.net>,
+ <176052583604.1793333.11667202487074445027@noble.neil.brown.name>,
+ <a2ecf4da-8b28-4902-906e-773346e8c283@oracle.com>,
+ <CACSpFtC7CZGZ1ezGqKmg_7qkffqr5EaZTqfk390WkatBt4Va+w@mail.gmail.com>
+Date: Thu, 16 Oct 2025 11:19:58 +1100
+Message-id: <176057399817.1793333.2292345386923906210@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-middle and end as needed. The large middle extent is DIO-aligned and
-the start and/or end are misaligned. Synchronous buffered IO (with
-preference towards using DONTCACHE) is used for the misaligned extents
-and O_DIRECT is used for the middle DIO-aligned extent.
+On Thu, 16 Oct 2025, Olga Kornievskaia wrote:
+> 
+> 
+> On Wed, Oct 15, 2025 at 12:02 PM Chuck Lever <chuck.lever@oracle.com>
+> wrote:
+> 
+>     On 10/15/25 6:57 AM, NeilBrown wrote:
+>     > On Wed, 15 Oct 2025, NeilBrown wrote:
+>     >> From: NeilBrown <neil@brown.name>
+>     >>
+>     >> nfsd4_enc_sequence_replay() uses nfsd4_encode_operation() to
+>     encode a
+>     >> new SEQUENCE reply when replaying a request from the slot cache
+>     - only
+>     >> ops after the SEQUENCE are replayed from the cache in ->sl_data.
+>     >>
+>     >> However it does this in nfsd4_replay_cache_entry() which is
+>     called
+>     >> *before* nfsd4_sequence() has filled in reply fields.
+>     >>
+>     >> This means that in the replayed SEQUENCE reply:
+>     >>  maxslots will be whatever the client sent
+>     >>  target_maxslots will be -1 (assuming init to zero, and
+>     >>       nfsd4_encode_sequence() subtracts 1)
+>     >>  status_flags will be zero
+>     >>
+>     >> The incorrect maxslots value, in particular, can cause the
+>     client to
+>     >> think the slot table has been reduced in size so it can discard
+>     its
+>     >> knowledge of current sequence number of the later slots, though
+>     the
+>     >> server has not discarded those slots.  When the client later
+>     wants to
+>     >> use a later slot, it can get NFS4ERR_SEQ_MISORDERED from the
+>     server.
+>     >>
+>     >> This patch moves the setup of the reply into a new helper
+>     function and
+>     >> call it *before* nfsd4_replay_cache_entry() is called.  Only one
+>     of the
+>     >> updated fields was used after this point - maxslots.  So the
+>     >> nfsd4_sequence struct has been extended to have separate
+>     maxslots for
+>     >> the request and the response.
+>     >>
+>     >> Closes: https://lore.kernel.org/linux-nfs/
+>     20251010194449.10281-1-okorniev@redhat.com/
+> 
+> 
+> Is it just me or is this link broken?
+>  
 
-nfsd_issue_write_dio() promotes @stable_how to NFS_FILE_SYNC, which
-allows the client to drop its dirty data and avoid needing an extra
-COMMIT operation.
+When I created the link and tested it, after the Anubis dance it told me
+"service temporarily unavailable" or similar.  When I refreshed it
+worked.
+So it might not just be you.
 
-If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
-invalidate the page cache on behalf of the DIO WRITE, then
-nfsd_issue_write_dio() will fall back to using buffered IO.
+> 
+>    
+>     >> Reported-and-tested-by: Olga Kornievskaia <okorniev@redhat.com>
+>    
+>     Very tiny nit, on behalf of scripts that might complain:
+>    
+>     Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+>     Closes:
+>     https://lore.kernel.org/linux-nfs/
+>     20251010194449.10281-1-okorniev@redhat.com/
+>     Tested-by: Olga Kornievskaia <okorniev@redhat.com>
 
-These changes served as the original starting point for the NFS
-client's misaligned O_DIRECT support that landed with commit
-c817248fc831 ("nfs/localio: add proper O_DIRECT support for READ and
-WRITE"). But NFSD's support is simpler because it currently doesn't
-use AIO completion.
+I wasn't aware that Report-and-tested-by was no longer wanted (but golly
+- is it really that hard to parse?  Do we aim to make life easier for
+humans or for tools?).  I see maintainer-tip.rst got that advice 4
+years ago.
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfsd/debugfs.c |   1 +
- fs/nfsd/trace.h   |   1 +
- fs/nfsd/vfs.c     | 218 ++++++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 215 insertions(+), 5 deletions(-)
+I'll bow to the needs of the mindless tools.
 
-Changes since v2:
-- rebased ontop of "[PATCH v1] NFSD: Enable return of an updated stable_how to NFS clients"
-- set both IOCB_DSYNC and IOCB_SYNC (rather than just IOCB_SYNC) in nfsd_issue_write_dio()
-- update nfsd_issue_write_dio() to promote @stable_how to NFS_FILE_SYNC
-- push call to trace_nfsd_write_direct down from nfsd_direct_write to nfsd_issue_write_dio 
-- fix comment block style to have naked '/*' on first line
-
-diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
-index 00eb1ecef6ac..7f44689e0a53 100644
---- a/fs/nfsd/debugfs.c
-+++ b/fs/nfsd/debugfs.c
-@@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
- 	switch (val) {
- 	case NFSD_IO_BUFFERED:
- 	case NFSD_IO_DONTCACHE:
-+	case NFSD_IO_DIRECT:
- 		nfsd_io_cache_write = val;
- 		break;
- 	default:
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index bfd41236aff2..ad74439d0105 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
- DEFINE_NFSD_IO_EVENT(read_done);
- DEFINE_NFSD_IO_EVENT(write_start);
- DEFINE_NFSD_IO_EVENT(write_opened);
-+DEFINE_NFSD_IO_EVENT(write_direct);
- DEFINE_NFSD_IO_EVENT(write_io_done);
- DEFINE_NFSD_IO_EVENT(write_done);
- DEFINE_NFSD_IO_EVENT(commit_start);
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index a3dee33a7233..ba7cb698ac68 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1253,6 +1253,210 @@ static int wait_for_concurrent_writes(struct file *file)
- 	return err;
- }
- 
-+struct nfsd_write_dio {
-+	ssize_t	start_len;	/* Length for misaligned first extent */
-+	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
-+	ssize_t	end_len;	/* Length for misaligned last extent */
-+};
-+
-+static bool
-+nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
-+		       struct nfsd_file *nf, struct nfsd_write_dio *write_dio)
-+{
-+	const u32 dio_blocksize = nf->nf_dio_offset_align;
-+	loff_t start_end, orig_end, middle_end;
-+
-+	if (unlikely(!nf->nf_dio_mem_align || !dio_blocksize))
-+		return false;
-+	if (unlikely(dio_blocksize > PAGE_SIZE))
-+		return false;
-+	if (unlikely(len < dio_blocksize))
-+		return false;
-+
-+	start_end = round_up(offset, dio_blocksize);
-+	orig_end = offset + len;
-+	middle_end = round_down(orig_end, dio_blocksize);
-+
-+	write_dio->start_len = start_end - offset;
-+	write_dio->middle_len = middle_end - start_end;
-+	write_dio->end_len = orig_end - middle_end;
-+
-+	return true;
-+}
-+
-+static bool nfsd_iov_iter_aligned_bvec(const struct iov_iter *i,
-+		unsigned int addr_mask, unsigned int len_mask)
-+{
-+	const struct bio_vec *bvec = i->bvec;
-+	size_t skip = i->iov_offset;
-+	size_t size = i->count;
-+
-+	if (size & len_mask)
-+		return false;
-+	do {
-+		size_t len = bvec->bv_len;
-+
-+		if (len > size)
-+			len = size;
-+		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
-+			return false;
-+		bvec++;
-+		size -= len;
-+		skip = 0;
-+	} while (size);
-+
-+	return true;
-+}
-+
-+/*
-+ * Setup as many as 3 iov_iter based on extents described by @write_dio.
-+ * Returns the number of iov_iter that were setup.
-+ */
-+static int
-+nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
-+			   struct bio_vec *rq_bvec, unsigned int nvecs,
-+			   unsigned long cnt, struct nfsd_write_dio *write_dio,
-+			   struct nfsd_file *nf)
-+{
-+	int n_iters = 0;
-+	struct iov_iter *iters = *iterp;
-+
-+	/* Setup misaligned start? */
-+	if (write_dio->start_len) {
-+		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-+		iters[n_iters].count = write_dio->start_len;
-+		iter_is_dio_aligned[n_iters] = false;
-+		++n_iters;
-+	}
-+
-+	/* Setup DIO-aligned middle */
-+	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-+	if (write_dio->start_len)
-+		iov_iter_advance(&iters[n_iters], write_dio->start_len);
-+	iters[n_iters].count -= write_dio->end_len;
-+	iter_is_dio_aligned[n_iters] =
-+		nfsd_iov_iter_aligned_bvec(&iters[n_iters],
-+				nf->nf_dio_mem_align-1, nf->nf_dio_offset_align-1);
-+	if (unlikely(!iter_is_dio_aligned[n_iters]))
-+		return 0; /* no DIO-aligned IO possible */
-+	++n_iters;
-+
-+	/* Setup misaligned end? */
-+	if (write_dio->end_len) {
-+		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-+		iov_iter_advance(&iters[n_iters],
-+				 write_dio->start_len + write_dio->middle_len);
-+		iter_is_dio_aligned[n_iters] = false;
-+		++n_iters;
-+	}
-+
-+	return n_iters;
-+}
-+
-+static int
-+nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
-+		    unsigned int nvecs, unsigned long *cnt,
-+		    struct kiocb *kiocb)
-+{
-+	struct iov_iter iter;
-+	int host_err;
-+
-+	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-+	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
-+	if (host_err < 0)
-+		return host_err;
-+	*cnt = host_err;
-+
-+	return 0;
-+}
-+
-+static int
-+nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
-+		     u32 *stable_how, unsigned int nvecs, unsigned long *cnt,
-+		     struct kiocb *kiocb, struct nfsd_write_dio *write_dio)
-+{
-+	struct file *file = nf->nf_file;
-+	bool iter_is_dio_aligned[3];
-+	struct iov_iter iter_stack[3];
-+	struct iov_iter *iter = iter_stack;
-+	unsigned int n_iters = 0;
-+	unsigned long in_count = *cnt;
-+	loff_t in_offset = kiocb->ki_pos;
-+	ssize_t host_err;
-+
-+	n_iters = nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
-+				rqstp->rq_bvec, nvecs, *cnt, write_dio, nf);
-+	if (unlikely(!n_iters))
-+		return nfsd_buffered_write(rqstp, file, nvecs, cnt, kiocb);
-+
-+	trace_nfsd_write_direct(rqstp, fhp, in_offset, in_count);
-+
-+	/*
-+	 * Any buffered IO issued here will be misaligned, use
-+	 * sync IO to ensure it has completed before returning.
-+	 * Also update @stable_how to avoid need for COMMIT.
-+	 */
-+	kiocb->ki_flags |= (IOCB_DSYNC|IOCB_SYNC);
-+	*stable_how = NFS_FILE_SYNC;
-+
-+	*cnt = 0;
-+	for (int i = 0; i < n_iters; i++) {
-+		if (iter_is_dio_aligned[i])
-+			kiocb->ki_flags |= IOCB_DIRECT;
-+		else
-+			kiocb->ki_flags &= ~IOCB_DIRECT;
-+
-+		host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
-+		if (host_err < 0) {
-+			/*
-+			 * VFS will return -ENOTBLK if DIO WRITE fails to
-+			 * invalidate the page cache. Retry using buffered IO.
-+			 */
-+			if (unlikely(host_err == -ENOTBLK)) {
-+				kiocb->ki_flags &= ~IOCB_DIRECT;
-+				*cnt = in_count;
-+				kiocb->ki_pos = in_offset;
-+				return nfsd_buffered_write(rqstp, file,
-+							   nvecs, cnt, kiocb);
-+			} else if (unlikely(host_err == -EINVAL)) {
-+				struct inode *inode = d_inode(fhp->fh_dentry);
-+
-+				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n",
-+						    inode->i_sb->s_id, inode->i_ino);
-+				host_err = -ESERVERFAULT;
-+			}
-+			return host_err;
-+		}
-+		*cnt += host_err;
-+		if (host_err < iter[i].count) /* partial write? */
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
-+static noinline_for_stack int
-+nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		  struct nfsd_file *nf, u32 *stable_how, unsigned int nvecs,
-+		  unsigned long *cnt, struct kiocb *kiocb)
-+{
-+	struct nfsd_write_dio write_dio;
-+
-+	/*
-+	 * Check if IOCB_DONTCACHE can be used when issuing buffered IO;
-+	 * if so, set it to preserve intent of NFSD_IO_DIRECT (it will
-+	 * be ignored for any DIO issued here).
-+	 */
-+	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
-+		kiocb->ki_flags |= IOCB_DONTCACHE;
-+
-+	if (nfsd_is_write_dio_possible(kiocb->ki_pos, *cnt, nf, &write_dio))
-+		return nfsd_issue_write_dio(rqstp, fhp, nf, stable_how, nvecs,
-+					    cnt, kiocb, &write_dio);
-+
-+	return nfsd_buffered_write(rqstp, nf->nf_file, nvecs, cnt, kiocb);
-+}
-+
- /**
-  * nfsd_vfs_write - write data to an already-open file
-  * @rqstp: RPC execution context
-@@ -1281,7 +1485,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	u32			stable = *stable_how;
- 	struct kiocb		kiocb;
- 	struct svc_export	*exp;
--	struct iov_iter		iter;
- 	errseq_t		since;
- 	__be32			nfserr;
- 	int			host_err;
-@@ -1318,25 +1521,30 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		kiocb.ki_flags |= IOCB_DSYNC;
- 
- 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
--	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-+
- 	since = READ_ONCE(file->f_wb_err);
- 	if (verf)
- 		nfsd_copy_write_verifier(verf, nn);
- 
- 	switch (nfsd_io_cache_write) {
--	case NFSD_IO_BUFFERED:
-+	case NFSD_IO_DIRECT:
-+		host_err = nfsd_direct_write(rqstp, fhp, nf, stable_how,
-+					     nvecs, cnt, &kiocb);
-+		stable = *stable_how;
- 		break;
- 	case NFSD_IO_DONTCACHE:
- 		if (file->f_op->fop_flags & FOP_DONTCACHE)
- 			kiocb.ki_flags |= IOCB_DONTCACHE;
-+		fallthrough; /* must call nfsd_buffered_write */
-+	case NFSD_IO_BUFFERED:
-+		host_err = nfsd_buffered_write(rqstp, file,
-+					       nvecs, cnt, &kiocb);
- 		break;
- 	}
--	host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
- 	if (host_err < 0) {
- 		commit_reset_write_verifier(nn, rqstp, host_err);
- 		goto out_nfserr;
- 	}
--	*cnt = host_err;
- 	nfsd_stats_io_write_add(nn, exp, *cnt);
- 	fsnotify_modify(file);
- 	host_err = filemap_check_wb_err(file->f_mapping, since);
--- 
-2.44.0
-
+Thanks,
+NeilBrown
 
