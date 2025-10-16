@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-15291-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15292-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A41ACBE3CD5
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 15:50:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76AE8BE3CD2
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 15:50:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BA69E4FD6C3
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 13:50:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48D81883416
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Oct 2025 13:50:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 609AF33CE89;
-	Thu, 16 Oct 2025 13:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 688582E2EE5;
+	Thu, 16 Oct 2025 13:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URsGkZpj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRNCWTXq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7BC442C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B0C442C
 	for <linux-nfs@vger.kernel.org>; Thu, 16 Oct 2025 13:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760622603; cv=none; b=p5S50XUp7E6OGXD73kuhIGDs9BN9wWJGBBulSBtCeN8ynC6+Vw+kMISgHyWuRAouJvgPmy4Ykn8lScEM+oeNaYaQBdFRYpDEgUqJflaRxrQ/e9qOGg1fDY9bvzyR6FyFtZwWNyLoybI5uw4enPZkH20f+0mqMq78A8pXRtDJYr4=
+	t=1760622606; cv=none; b=hnNJNrZmgi3b8kvEiwqvuFgn1tUXAlV/av9FLkwvthF88EtjJa/dE3ctHxHQ3KKvnTqS8IIdr8AUZG0z3ij6aSGcT8xlODoPVbm9vnHlfNgzMfnFTAwvHntnDZatKy5mB8Wt6yOTQ0X6r6XbcwRO5ztFlx9g2zbP0QJ7VzJlRSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760622603; c=relaxed/simple;
-	bh=Ve89rL1gluaFx19L1QgjbZSMVAJ8F5rBvw7nHTtPsO4=;
+	s=arc-20240116; t=1760622606; c=relaxed/simple;
+	bh=t76Of3ecS/+lWA0irLVPCJQWxF0XzgQbj8AyG2wC08o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HQYhixHbZLuiaaHH7tXCQWCwMgJjiIm1YLnZWpz4bViI4alX4Slk6Ma7eHaqmb2J8A9WABUHzkq/7cjfuAGIffyDImNnVlq4gCoy/xqr9a7NBo2lsNjc6iqu5kUeZOhZFzjNxkEVEKZlr8lTKOvp5gQrRF5q8xCt/4ITtQ65pbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URsGkZpj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97322C4CEF1;
-	Thu, 16 Oct 2025 13:50:02 +0000 (UTC)
+	 MIME-Version; b=pc2gJLHvMcXxnGO+Pf5/QNl8tvCfioCLz915HNH4xHQNL/AuZdi3a4ZABJ8+FJUT1rEVUdKhm+QxVTsMPzD9NDGv/vgf93uXGYok7XI64CXC1EUNctsRBCdERbi6bKYQXwgpMKJVCCmtTH3ql7ODDvK1BxiiMAnUbahxMo04GYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRNCWTXq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51AF3C4CEFE;
+	Thu, 16 Oct 2025 13:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1760622603;
-	bh=Ve89rL1gluaFx19L1QgjbZSMVAJ8F5rBvw7nHTtPsO4=;
+	bh=t76Of3ecS/+lWA0irLVPCJQWxF0XzgQbj8AyG2wC08o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=URsGkZpj/jdIP/PbbP4AtgvAH44T8rDE/rumOKrLD1ylMLavfEigS4lV+BYnpvaBI
-	 4Cu1U+N0LwDFJSIKnW0HnVv/+dR9fUzj2QdyLellBIVOpSsOQHtRpEhhz3bRfK5UDm
-	 N0v2BM2st6EMTR6OKfI8JhOuXcN4hbrmkDw2EoO3bwIa1A3ka4oEBMNRvDnSMT7v95
-	 WgLov4HJQ/qZjYB/hj9CnPCass7pIGGZgOn4WreV+MLuQ4At7G5kBomjCPtiZX5H0I
-	 1SIzrAdBZFueYCnxFLFydWlhutj5LXoeOQwx7CuvqJtolm/EqFXjYni4yDsFCieJMm
-	 gYJSWwwNtqnvQ==
+	b=YRNCWTXqu+8nQHsPjeVaPZD555vw/HExETh9Cb59Wb6IrQh+TQDOk1I9CFKp9WBIH
+	 mAnG6Ml4vLROdCr1sRYJkxJlpDe/r19tbiYV4xUMS6NEFZ4s3Qpo6XdjoyUyjKFwY7
+	 QvsVF/GWm6EuWROFo9SQwuX6nwOt+BNmngsSEcretMzj0ezFTZuCxeqIr+0uTSummA
+	 F7XGGQCGP4XwFP2Qu0ZJezmB49r+BSuxf6WP6kckkhucv/LZ20GwGiSKMW55vR0KSm
+	 rUxWgWMQxJwhbpvsI/g4Hgkofot/dHtFXOAXiVqE8jyjhFXbR8dXkwBaqKFLbNH7PB
+	 YN6hv0O9/xLWg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,9 +48,9 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH v5 3/4] nfsd: ensure SEQUENCE replay sends a valid reply.
-Date: Thu, 16 Oct 2025 09:49:57 -0400
-Message-ID: <20251016134958.14050-4-cel@kernel.org>
+Subject: [PATCH v5 4/4] nfsd: stop pretending that we cache the SEQUENCE reply.
+Date: Thu, 16 Oct 2025 09:49:58 -0400
+Message-ID: <20251016134958.14050-5-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251016134958.14050-1-cel@kernel.org>
 References: <20251016134958.14050-1-cel@kernel.org>
@@ -64,146 +64,164 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neil@brown.name>
 
-nfsd4_enc_sequence_replay() uses nfsd4_encode_operation() to encode a
-new SEQUENCE reply when replaying a request from the slot cache - only
-ops after the SEQUENCE are replayed from the cache in ->sl_data.
+nfsd does not cache the reply to a SEQUENCE.  As the comment above
+nfsd4_replay_cache_entry() says:
 
-However it does this in nfsd4_replay_cache_entry() which is called
-*before* nfsd4_sequence() has filled in reply fields.
+ * The sequence operation is not cached because we can use the slot and
+ * session values.
 
-This means that in the replayed SEQUENCE reply:
- maxslots will be whatever the client sent
- target_maxslots will be -1 (assuming init to zero, and
-      nfsd4_encode_sequence() subtracts 1)
- status_flags will be zero
+The comment above nfsd4_cache_this() suggests otherwise.
 
-The incorrect maxslots value, in particular, can cause the client to
-think the slot table has been reduced in size so it can discard its
-knowledge of current sequence number of the later slots, though the
-server has not discarded those slots.  When the client later wants to
-use a later slot, it can get NFS4ERR_SEQ_MISORDERED from the server.
+ * The session reply cache only needs to cache replies that the client
+ * actually asked us to.  But it's almost free for us to cache compounds
+ * consisting of only a SEQUENCE op, so we may as well cache those too.
+ * Also, the protocol doesn't give us a convenient response in the case
+ * of a replay of a solo SEQUENCE op that wasn't cached
 
-This patch moves the setup of the reply into a new helper function and
-call it *before* nfsd4_replay_cache_entry() is called.  Only one of the
-updated fields was used after this point - maxslots.  So the
-nfsd4_sequence struct has been extended to have separate maxslots for
-the request and the response.
+The code in nfsd4_store_cache_entry() makes it clear that only responses
+beyond 'cstate.data_offset' are actually cached, and data_offset is set
+at the end of nfsd4_encode_sequence() *after* the sequence response has
+been encoded.
 
-Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-Closes: https://lore.kernel.org/linux-nfs/20251010194449.10281-1-okorniev@redhat.com/
-Tested-by: Olga Kornievskaia <okorniev@redhat.com>
+This patch simplifies code and removes the confusing comments.
+
+- nfsd4_is_solo_sequence() is discarded as not-useful.
+- nfsd4_cache_this() is now trivial so it too is discarded with the
+  code placed in-line at the one call-site in nfsd4_store_cache_entry().
+- nfsd4_enc_sequence_replay() is open-coded in to
+  nfsd4_replay_cache_entry(), and then simplified to (hopefully) make
+  the process of replaying a reply clearer.
+
 Signed-off-by: NeilBrown <neil@brown.name>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4state.c | 50 ++++++++++++++++++++++++++++++---------------
- fs/nfsd/nfs4xdr.c   |  2 +-
- fs/nfsd/xdr4.h      |  3 ++-
- 3 files changed, 36 insertions(+), 19 deletions(-)
+ fs/nfsd/nfs4state.c | 58 ++++++++++++++-------------------------------
+ fs/nfsd/xdr4.h      | 21 ----------------
+ 2 files changed, 18 insertions(+), 61 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 4b4467e54ec9..28a79d23dd77 100644
+index 28a79d23dd77..8ff7429ba060 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -4362,6 +4362,36 @@ static bool replay_matches_cache(struct svc_rqst *rqstp,
- 	return true;
+@@ -3507,7 +3507,7 @@ nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
+ 	free_svc_cred(&slot->sl_cred);
+ 	copy_cred(&slot->sl_cred, &resp->rqstp->rq_cred);
+ 
+-	if (!nfsd4_cache_this(resp)) {
++	if (!(resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)) {
+ 		slot->sl_flags &= ~NFSD4_SLOT_CACHED;
+ 		return;
+ 	}
+@@ -3521,41 +3521,6 @@ nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
+ 	return;
  }
  
-+/*
-+ * Note that the response is constructed here both for the case
-+ * of a new SEQUENCE request and for a replayed SEQUENCE request.
-+ * We do not cache SEQUENCE responses as SEQUENCE is idempotent.
-+ */
-+static void nfsd4_construct_sequence_response(struct nfsd4_session *session,
-+					      struct nfsd4_sequence *seq)
-+{
-+	struct nfs4_client *clp = session->se_client;
-+
-+	seq->maxslots_response = max(session->se_target_maxslots,
-+				     seq->maxslots);
-+	seq->target_maxslots = session->se_target_maxslots;
-+
-+	switch (clp->cl_cb_state) {
-+	case NFSD4_CB_DOWN:
-+		seq->status_flags = SEQ4_STATUS_CB_PATH_DOWN;
-+		break;
-+	case NFSD4_CB_FAULT:
-+		seq->status_flags = SEQ4_STATUS_BACKCHANNEL_FAULT;
-+		break;
-+	default:
-+		seq->status_flags = 0;
-+	}
-+	if (!list_empty(&clp->cl_revoked))
-+		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-+	if (atomic_read(&clp->cl_admin_revoked))
-+		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
-+}
-+
- __be32
- nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		union nfsd4_op_u *u)
-@@ -4411,6 +4441,9 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	dprintk("%s: slotid %d\n", __func__, seq->slotid);
- 
- 	trace_nfsd_slot_seqid_sequence(clp, seq, slot);
-+
-+	nfsd4_construct_sequence_response(session, seq);
-+
- 	status = check_slot_seqid(seq->seqid, slot->sl_seqid, slot->sl_flags);
- 	if (status == nfserr_replay_cache) {
- 		status = nfserr_seq_misordered;
-@@ -4508,23 +4541,6 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	}
- 
- out:
--	seq->maxslots = max(session->se_target_maxslots, seq->maxslots);
--	seq->target_maxslots = session->se_target_maxslots;
+-/*
+- * Encode the replay sequence operation from the slot values.
+- * If cachethis is FALSE encode the uncached rep error on the next
+- * operation which sets resp->p and increments resp->opcnt for
+- * nfs4svc_encode_compoundres.
+- *
+- */
+-static __be32
+-nfsd4_enc_sequence_replay(struct nfsd4_compoundargs *args,
+-			  struct nfsd4_compoundres *resp)
+-{
+-	struct nfsd4_op *op;
+-	struct nfsd4_slot *slot = resp->cstate.slot;
 -
--	switch (clp->cl_cb_state) {
--	case NFSD4_CB_DOWN:
--		seq->status_flags = SEQ4_STATUS_CB_PATH_DOWN;
--		break;
--	case NFSD4_CB_FAULT:
--		seq->status_flags = SEQ4_STATUS_BACKCHANNEL_FAULT;
--		break;
--	default:
--		seq->status_flags = 0;
+-	/* Encode the replayed sequence operation */
+-	op = &args->ops[resp->opcnt - 1];
+-	nfsd4_encode_operation(resp, op);
+-
+-	if (slot->sl_flags & NFSD4_SLOT_CACHED)
+-		return op->status;
+-	if (args->opcnt == 1) {
+-		/*
+-		 * The original operation wasn't a solo sequence--we
+-		 * always cache those--so this retry must not match the
+-		 * original:
+-		 */
+-		op->status = nfserr_seq_false_retry;
+-	} else {
+-		op = &args->ops[resp->opcnt++];
+-		op->status = nfserr_retry_uncached_rep;
+-		nfsd4_encode_operation(resp, op);
 -	}
--	if (!list_empty(&clp->cl_revoked))
--		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
--	if (atomic_read(&clp->cl_admin_revoked))
--		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
- 	trace_nfsd_seq4_status(rqstp, seq);
- out_no_session:
- 	if (conn)
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 85b773a65670..30ce5851fe4c 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -5085,7 +5085,7 @@ nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		return nfserr;
- 	/* Note slotid's are numbered from zero: */
- 	/* sr_highest_slotid */
--	nfserr = nfsd4_encode_slotid4(xdr, seq->maxslots - 1);
-+	nfserr = nfsd4_encode_slotid4(xdr, seq->maxslots_response - 1);
- 	if (nfserr != nfs_ok)
- 		return nfserr;
- 	/* sr_target_highest_slotid */
+-	return op->status;
+-}
+-
+ /*
+  * The sequence operation is not cached because we can use the slot and
+  * session values.
+@@ -3564,17 +3529,30 @@ static __be32
+ nfsd4_replay_cache_entry(struct nfsd4_compoundres *resp,
+ 			 struct nfsd4_sequence *seq)
+ {
++	struct nfsd4_compoundargs *args = resp->rqstp->rq_argp;
+ 	struct nfsd4_slot *slot = resp->cstate.slot;
+ 	struct xdr_stream *xdr = resp->xdr;
+ 	__be32 *p;
+-	__be32 status;
+ 
+ 	dprintk("--> %s slot %p\n", __func__, slot);
+ 
+-	status = nfsd4_enc_sequence_replay(resp->rqstp->rq_argp, resp);
+-	if (status)
+-		return status;
++	/* Always encode the SEQUENCE response. */
++	nfsd4_encode_operation(resp, &args->ops[0]);
++	if (args->opcnt == 1)
++		/* A solo SEQUENCE - nothing was cached */
++		return args->ops[0].status;
+ 
++	if (!(slot->sl_flags & NFSD4_SLOT_CACHED)) {
++		/* We weren't asked to cache this. */
++		struct nfsd4_op *op;
++
++		op = &args->ops[resp->opcnt++];
++		op->status = nfserr_retry_uncached_rep;
++		nfsd4_encode_operation(resp, op);
++		return op->status;
++	}
++
++	/* return reply from cache */
+ 	p = xdr_reserve_space(xdr, slot->sl_datalen);
+ 	if (!p) {
+ 		WARN_ON_ONCE(1);
 diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index ee0570cbdd9e..1ce8e12ae335 100644
+index 1ce8e12ae335..ae75846b3cd7 100644
 --- a/fs/nfsd/xdr4.h
 +++ b/fs/nfsd/xdr4.h
-@@ -574,8 +574,9 @@ struct nfsd4_sequence {
- 	struct nfs4_sessionid	sessionid;		/* request/response */
- 	u32			seqid;			/* request/response */
- 	u32			slotid;			/* request/response */
--	u32			maxslots;		/* request/response */
-+	u32			maxslots;		/* request */
- 	u32			cachethis;		/* request */
-+	u32			maxslots_response;	/* response */
- 	u32			target_maxslots;	/* response */
- 	u32			status_flags;		/* response */
+@@ -924,27 +924,6 @@ struct nfsd4_compoundres {
+ 	struct nfsd4_compound_state	cstate;
  };
+ 
+-static inline bool nfsd4_is_solo_sequence(struct nfsd4_compoundres *resp)
+-{
+-	struct nfsd4_compoundargs *args = resp->rqstp->rq_argp;
+-	return resp->opcnt == 1 && args->ops[0].opnum == OP_SEQUENCE;
+-}
+-
+-/*
+- * The session reply cache only needs to cache replies that the client
+- * actually asked us to.  But it's almost free for us to cache compounds
+- * consisting of only a SEQUENCE op, so we may as well cache those too.
+- * Also, the protocol doesn't give us a convenient response in the case
+- * of a replay of a solo SEQUENCE op that wasn't cached
+- * (RETRY_UNCACHED_REP can only be returned in the second op of a
+- * compound).
+- */
+-static inline bool nfsd4_cache_this(struct nfsd4_compoundres *resp)
+-{
+-	return (resp->cstate.slot->sl_flags & NFSD4_SLOT_CACHETHIS)
+-		|| nfsd4_is_solo_sequence(resp);
+-}
+-
+ static inline bool nfsd4_last_compound_op(struct svc_rqst *rqstp)
+ {
+ 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
 -- 
 2.51.0
 
