@@ -1,283 +1,91 @@
-Return-Path: <linux-nfs+bounces-15336-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15337-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1EC3BE8697
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 13:38:22 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFDD1BE8D6A
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 15:27:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEA003ACD5F
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 11:37:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 35FE95661EB
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 13:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2B1331A70;
-	Fri, 17 Oct 2025 11:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D8E43570CA;
+	Fri, 17 Oct 2025 13:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W16aB5Ac"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ruuc4GAw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0042B331A66;
-	Fri, 17 Oct 2025 11:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7A3570C4
+	for <linux-nfs@vger.kernel.org>; Fri, 17 Oct 2025 13:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760700780; cv=none; b=ImPOsq8BHpWb2hgypCtycBGeVhjjLZJUzlBLLzEZOEUN97PYUAT2E8qTjjKCFmWmJ/C7b12TaMF0sQUYTeBZ9OoOTPyCJf0Rj3H8xlCRR8Dx0X8Aw4jcr4UbDU8mfS3YhuhMfc70nXe80CXK2kxG0pr5IUsnaQzejh/9h2/vZ48=
+	t=1760707625; cv=none; b=gWMZDLdQk2DzcNHpEJdc9eUkpFGrD3z+KTNkqhLdIOVFdO1dphMF6nVrVXAFH9BPkQAv20/aAXqSYLy0m46eWUlO2z7tvesstZuZJf9E0sjyd5EaVEQaXjHaiFRn4Yo5WnkVRbn5vBzCcVW2K+fUlQ9lhouJnko5WD6wsDonh4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760700780; c=relaxed/simple;
-	bh=8yVl2NH8wCRWT0BWB4xJxse7JadeLBTgspo6OepmR18=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J3Xkq9jw7Av4ShijT7rJ02wlnYlGF5pR3SJxnCDIIPGi1/9kUBRzF20BdNZRHJcB/ozEjmEOMyK3wl98hlHlhjIy2XexL2RKfEKOQ0BuU2TxDjYaYSaJwh5rHP7bLmIrH6QKTs0HpS3Sd40P/bQoCRyBVjLNqPMkQ6nbSBCHkSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W16aB5Ac; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA284C4CEFB;
-	Fri, 17 Oct 2025 11:32:56 +0000 (UTC)
+	s=arc-20240116; t=1760707625; c=relaxed/simple;
+	bh=ck7Fz/ddG6W65aSodIrt7cbdwDG5hTHBkxRx5OJ+ok4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dl+F/wARrp2I1SPlsEsBMB2VqhYaIZkMKAumTx0Uk4yXJeZ98QuecysyTXyCjFoceccfXqIf0uqYbuXpFNuXrMWHUlZCcyoagZ/ChmJBbD0ENZ4BcKfaJZn2S9Eaqfq40diggxM9r90xyFfDPm8VjRumpEOy5kugSgWEJunPHqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ruuc4GAw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D37C4CEE7;
+	Fri, 17 Oct 2025 13:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760700779;
-	bh=8yVl2NH8wCRWT0BWB4xJxse7JadeLBTgspo6OepmR18=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=W16aB5AchRRIDFkXWh+tG5tlaQdVC1I34WsnKRmiAAJAWSmro3WLSZmQJse1q4OCj
-	 +aZNpXcLflrNtR0mCD36w96dlD4PZUDDMqhNxDoALx9q1i5CTP6ESbJCpuzkXqWNmU
-	 L5/JFM5WTwtg4Q5N2sVlbZvu986nCzrY8XWnP1Y+lDtNYQYyHS0qb2zFQQDA1Ply5B
-	 sO4pLudramXjUFoh37oPEH0lA3uHBbSJyWTjfE0c8Cuoj91WUTkugWUXADQe96AfMA
-	 eHaFNitHGpSoHvJrQr9vwfo/qrGD6nwLD8uFIqM96xSIPEi6YzY1g5ynHCKqdJbW9D
-	 jI8BfyxirEgeA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 17 Oct 2025 07:32:03 -0400
-Subject: [PATCH v2 11/11] nfsd: wire up GET_DIR_DELEGATION handling
+	s=k20201202; t=1760707625;
+	bh=ck7Fz/ddG6W65aSodIrt7cbdwDG5hTHBkxRx5OJ+ok4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ruuc4GAwceqHDdI0IUbh7aAlkh90YPSOuPHi+N+/K6jzoGwqBjjbHpQttmy0Lgxjo
+	 f3Cubd1BRHk0gziaq4wIkiCwA2paAHoSbvaQ6dtBsdEVy929RkCOA+RWrTA4bfzJuT
+	 MieiuiHvbWvOjWMjHu/Shm/2F1+ttrXZnwb9TCR1SpdbwI5sHzEL2+8jeb7J1raFY2
+	 vATNdLuAqVyWYtK2zIVlkdTMO0PTUcc0icc7BKqLbCZUN0yB1q+5Bj9l3yzIplc0e4
+	 WS6wF+ENlznn2XC4vXpEMw/0mtnoj5/Ca7U2NxlByDBxUhyTQ+/JtZWTjD9PCVgSmX
+	 xbARF0Zux/UhA==
+Message-ID: <86a22a17-e12f-4f08-8d9d-89b1b97ae2af@kernel.org>
+Date: Fri, 17 Oct 2025 09:27:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] NFSD: Enable return of an updated stable_how to NFS
+ clients
+To: Christoph Hellwig <hch@infradead.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+References: <20251013190113.252097-1-cel@kernel.org>
+ <aPHBLFrRXwPaasdb@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <aPHBLFrRXwPaasdb@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-dir-deleg-ro-v2-11-8c8f6dd23c8b@kernel.org>
-References: <20251017-dir-deleg-ro-v2-0-8c8f6dd23c8b@kernel.org>
-In-Reply-To: <20251017-dir-deleg-ro-v2-0-8c8f6dd23c8b@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
- Bharath SM <bharathsm@microsoft.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Amir Goldstein <amir73il@gmail.com>, 
- Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Carlos Maiolino <cem@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, netfs@lists.linux.dev, 
- ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
- linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5443; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=8yVl2NH8wCRWT0BWB4xJxse7JadeLBTgspo6OepmR18=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBo8ilCIHz7Y0CKC7YnK6gfkIqnxpWome0thgPpR
- +g2yqAYRpCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaPIpQgAKCRAADmhBGVaC
- FTAaEAC+dHlJR18HGmzM64QSsr15Nzgmjhjn3B4u34VdeVcki8Z0M1Ia7NY+zBx2Mk+BlcfuhGh
- Du2a9DTnQHF+2TtGb71pGXempYuWufDsfnjvgtez9bbdvWgi2+owN3X1s9x55akZ83ymiItyl6y
- EthK4NbcNEaPSo0QQ3gEmkT3ZdS3ZTlg56NgRAkvLbVGAu6wNLHXMxMxPqht583P5mwLLcNoAHL
- 6WSQQjaxSg2K/tOOe/daEzD+Ip7I7QzrTTmqhYReiFc2r4qfv8/ZFlR7KHDYifTwKqOVJRJqbbL
- QZLjAvFOd01wTr/avX5rzPmDSlRrzlb107pBBh4VVVhdZgnFhg5fnM1P42OkpfcBYmrCDZgL/xo
- +70YWd7yaitvOg1ZTSQKqslBYMJ6hr/8xlOcNvuHXvhZ8ZR+LjFPP7X7Qhy7Z1z1jqrU7m3E09b
- GnT9b11qbWeu9a6Abuml6pf65yauM6Md2eQTfuaext5+hYSlc0qlwn5Wpp0dvxKjwjdyx5YsyFA
- RdZQzWOqkEgv0UwB5/P9ypSeSdMmi4FDDAMOT56+mJNBnkTHUFrcF+XYks+xlyUZVHwTh/Gi8F4
- vRdvqGFLDThioSiuu1KtPF111VJG5853+p2RXcd3rvh/q5WS/CX12iya21b+CcLZvToFG6lIuy2
- bsS1IsMN5vPKs0g==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Add a new routine for acquiring a read delegation on a directory. These
-are recallable-only delegations with no support for CB_NOTIFY. That will
-be added in a later phase.
+On 10/17/25 12:08 AM, Christoph Hellwig wrote:
+> On Mon, Oct 13, 2025 at 03:01:13PM -0400, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> In a subsequent patch, nfsd_vfs_write() will promote an UNSTABLE
+>> WRITE to be a FILE_SYNC WRITE. This indicates that the client does
+>> not need a subsequent COMMIT operation, saving a round trip and
+>> allowing the client to dispense with cached dirty data as soon as
+>> it receives the server's WRITE response.
+> 
+> What's the subsequent patch doing?  Having the actual behavior change
+> in the same series would really help to understand what is going on
+> here.
+The subsequent patch is:
 
-Since the same CB_RECALL/DELEGRETURN infrastrure is used for regular and
-directory delegations, a normal nfs4_delegation is used to represent a
-directory delegation.
+  https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c  |  21 ++++++++++-
- fs/nfsd/nfs4state.c | 100 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/state.h     |   5 +++
- 3 files changed, 125 insertions(+), 1 deletion(-)
+We haven't put the two together yet.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 7f7e6bb23a90d9a1cafd154c0f09e236df75b083..527f8dc52159803770964700170473509ec328ed 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2342,6 +2342,13 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
- 			 union nfsd4_op_u *u)
- {
- 	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
-+	struct nfs4_delegation *dd;
-+	struct nfsd_file *nf;
-+	__be32 status;
-+
-+	status = nfsd_file_acquire_dir(rqstp, &cstate->current_fh, &nf);
-+	if (status != nfs_ok)
-+		return status;
- 
- 	/*
- 	 * RFC 8881, section 18.39.3 says:
-@@ -2355,7 +2362,19 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
- 	 * return NFS4_OK with a non-fatal status of GDD4_UNAVAIL in this
- 	 * situation.
- 	 */
--	gdd->gddrnf_status = GDD4_UNAVAIL;
-+	dd = nfsd_get_dir_deleg(cstate, gdd, nf);
-+	if (IS_ERR(dd)) {
-+		int err = PTR_ERR(dd);
-+
-+		if (err != -EAGAIN)
-+			return nfserrno(err);
-+		gdd->gddrnf_status = GDD4_UNAVAIL;
-+		return nfs_ok;
-+	}
-+
-+	gdd->gddrnf_status = GDD4_OK;
-+	memcpy(&gdd->gddr_stateid, &dd->dl_stid.sc_stateid, sizeof(gdd->gddr_stateid));
-+	nfs4_put_stid(&dd->dl_stid);
- 	return nfs_ok;
- }
- 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b06591f154aa372db710e071c69260f4639956d7..a63e8c885291fc377163f3255f26f5f693704437 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -9359,3 +9359,103 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
- 	nfs4_put_stid(&dp->dl_stid);
- 	return status;
- }
-+
-+/**
-+ * nfsd_get_dir_deleg - attempt to get a directory delegation
-+ * @cstate: compound state
-+ * @gdd: GET_DIR_DELEGATION arg/resp structure
-+ * @nf: nfsd_file opened on the directory
-+ *
-+ * Given a GET_DIR_DELEGATION request @gdd, attempt to acquire a delegation
-+ * on the directory to which @nf refers. Note that this does not set up any
-+ * sort of async notifications for the delegation.
-+ */
-+struct nfs4_delegation *
-+nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
-+		   struct nfsd4_get_dir_delegation *gdd,
-+		   struct nfsd_file *nf)
-+{
-+	struct nfs4_client *clp = cstate->clp;
-+	struct nfs4_delegation *dp;
-+	struct file_lease *fl;
-+	struct nfs4_file *fp, *rfp;
-+	int status = 0;
-+
-+	fp = nfsd4_alloc_file();
-+	if (!fp)
-+		return ERR_PTR(-ENOMEM);
-+
-+	nfsd4_file_init(&cstate->current_fh, fp);
-+
-+	rfp = nfsd4_file_hash_insert(fp, &cstate->current_fh);
-+	if (unlikely(!rfp)) {
-+		put_nfs4_file(fp);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (rfp != fp) {
-+		put_nfs4_file(fp);
-+		fp = rfp;
-+	}
-+
-+	/* if this client already has one, return that it's unavailable */
-+	spin_lock(&state_lock);
-+	spin_lock(&fp->fi_lock);
-+	/* existing delegation? */
-+	if (nfs4_delegation_exists(clp, fp)) {
-+		status = -EAGAIN;
-+	} else if (!fp->fi_deleg_file) {
-+		fp->fi_deleg_file = nf;
-+		fp->fi_delegees = 1;
-+	} else {
-+		++fp->fi_delegees;
-+	}
-+	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&state_lock);
-+
-+	if (status) {
-+		put_nfs4_file(fp);
-+		return ERR_PTR(status);
-+	}
-+
-+	/* Try to set up the lease */
-+	status = -ENOMEM;
-+	dp = alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ);
-+	if (!dp)
-+		goto out_delegees;
-+
-+	fl = nfs4_alloc_init_lease(dp);
-+	if (!fl)
-+		goto out_put_stid;
-+
-+	status = kernel_setlease(nf->nf_file,
-+				 fl->c.flc_type, &fl, NULL);
-+	if (fl)
-+		locks_free_lease(fl);
-+	if (status)
-+		goto out_put_stid;
-+
-+	/*
-+	 * Now, try to hash it. This can fail if we race another nfsd task
-+	 * trying to set a delegation on the same file. If that happens,
-+	 * then just say UNAVAIL.
-+	 */
-+	spin_lock(&state_lock);
-+	spin_lock(&clp->cl_lock);
-+	spin_lock(&fp->fi_lock);
-+	status = hash_delegation_locked(dp, fp);
-+	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&clp->cl_lock);
-+	spin_unlock(&state_lock);
-+
-+	if (!status)
-+		return dp;
-+
-+	/* Something failed. Drop the lease and clean up the stid */
-+	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
-+out_put_stid:
-+	nfs4_put_stid(&dp->dl_stid);
-+out_delegees:
-+	put_deleg_file(fp);
-+	return ERR_PTR(status);
-+}
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 1e736f4024263ffa9c93bcc9ec48f44566a8cc77..b052c1effdc5356487c610db9728df8ecfe851d4 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -867,4 +867,9 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
- 
- extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
- 		struct dentry *dentry, struct nfs4_delegation **pdp);
-+
-+struct nfsd4_get_dir_delegation;
-+struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
-+						struct nfsd4_get_dir_delegation *gdd,
-+						struct nfsd_file *nf);
- #endif   /* NFSD4_STATE_H */
 
 -- 
-2.51.0
-
+Chuck Lever
 
