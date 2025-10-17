@@ -1,120 +1,192 @@
-Return-Path: <linux-nfs+bounces-15345-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15346-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD4F7BEBF18
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 00:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD5BCBEBFA5
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 01:15:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5C1ED3567CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 22:49:50 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 01BD8353609
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 23:15:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47AA52D7803;
-	Fri, 17 Oct 2025 22:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90C0199931;
+	Fri, 17 Oct 2025 23:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvtMbox+"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="QMZIap1T";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oruqB2Bd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F332D739F
-	for <linux-nfs@vger.kernel.org>; Fri, 17 Oct 2025 22:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60850354AFE
+	for <linux-nfs@vger.kernel.org>; Fri, 17 Oct 2025 23:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760741387; cv=none; b=oi7WUS4glRsCa0cAqXZ5jh2X2AKPkVCjeIN2Q0e9iVsbQNs03SVk0Wwi4DHPYd69bvRS3X7UGM2NQw3mImFa9UAKoWmlEolpkfzyhTndJ+tEY4O4y5/mT3ytb5MSJVMw9Ctxj+YHaR6n/CyFIYg/w0UrMjN5bYkodNuPGzD1CTY=
+	t=1760742929; cv=none; b=Rlz8J75sLrVWy9WZkj8ZXeefrVKZbCuNxlQLe2H4nyA39pB29AIt8+OwxLToqJUjS2B6PZgYOrJSeaubN9krx4gwJBVvl39+GAM4srans/qMZOve/4Wn1YaOpmwuHG8YmdbhdYvGfewk0+kzZc9Kfxw/ksIN9F+8rYB6JMaC/5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760741387; c=relaxed/simple;
-	bh=S/M3LdyAaPxr053xuE52QlA84N1NHRBmDzqwY30KeuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IM040h1WrV5S+wj5PaHQHyXF6FPr6R/86fmDHIKPVk0B+r+Jx3s6KgGvf7Bv6j4Fg8P5rvrFTiaOeIHSvXBOyYAh8sfNOlcNvvQww8XsqOst1ZuOAnynACTd1ZiMqfkz/TGL9GvGq7so/pJXPLrRVGzkEvYXiyka6yHy3z1p628=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvtMbox+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AED8C4CEE7;
-	Fri, 17 Oct 2025 22:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760741386;
-	bh=S/M3LdyAaPxr053xuE52QlA84N1NHRBmDzqwY30KeuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VvtMbox+fkkayu2cRk73+kDlZfD+ifsC6wHP0snr8aMtuB5uzyutH3EXe65krAHa7
-	 30FcQ9g/lJI2EpTrmqvPEmBsi0Sm0m8U3afCumQa96C3dewsLQCR8aVTTdfZlM34zH
-	 hqvW1twFRKT05H7wLkQnTtCsa4X/1/u1Irc6kU7uzO9v9ywehJMfuIInDnxUwOviWK
-	 aIybHeh/m07pW58Gu/O4/iyxJziNFyKs+A1PwX97r2U86YuEALryZ7ySjM3xD8fsZF
-	 UF8CUjxjmlHTYI7ZNhI2PBYbxoC6eJRE7RKfD+T6S6zIVbM44lK3KJ+VJ32wjgQoml
-	 L3EI2QDdoa/Lg==
-Date: Fri, 17 Oct 2025 18:49:45 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPLICbfqb3AHAKEy@kernel.org>
-References: <20251013190113.252097-1-cel@kernel.org>
- <aPAci7O_XK1ljaum@kernel.org>
- <2e353615-bb40-437b-83ea-e541493f026c@kernel.org>
- <aPKvGynfz0n84Ldm@kernel.org>
- <5bf67a27-8a1c-4771-aeba-625bb20ec45f@kernel.org>
+	s=arc-20240116; t=1760742929; c=relaxed/simple;
+	bh=TqpHNaFG7mnzXuNLgVURK++edqitCQj3JV5D7bruuXU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=kA9t/xCC7Jqixy/9E2Xt4S+dzoYnGZWQ1nS+wq7yeDO4MPkWXuXgXqDr7MJ5WcLDsC/80jF6Biqc0q5fXvLbnATXFHoW9Rque7e+WViUEA51QvG7OkL+fIAZsK8X2qSK4jp3Kh+to3+mXWl+PCA6eU0t2KWmb07B9/ZbKvVx2jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=QMZIap1T; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oruqB2Bd; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 60744EC027B;
+	Fri, 17 Oct 2025 19:15:26 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 17 Oct 2025 19:15:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1760742926; x=1760829326; bh=mGmjrD5Yl3oXA454TJIltp7D1JbD1O/SI8s
+	+oyXZdHU=; b=QMZIap1TGa2i18hu8Nlkp4in5kLKEXxc9XaJyqv4lHL6oRoXHzz
+	8LstOAIRLw1M4129qXiTGrV5pikcL8BXY6PnyUbCJB7KynprE8AbMB0m/Xu0hKL7
+	oiNvoZJ+0BDshdDHQBLqC5RiFrm/F8R67dMnM+85EOKqL2w4E8phoIdiovdYmV77
+	L2BTRiIVafSdbM6cWZHjd0e1+Zuh7UMFuyOavlfjlM38aFW4lbNH18T8C/dWvf1i
+	xRvEUQ4UumMTtd34sTkw1aUbwAodqAhmE9x0ywTgJizb99kmLSh6TcC5rTmOE913
+	jsgpgKHqCQykp1BJvRvElnQJNwGZNSR47Jg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760742926; x=
+	1760829326; bh=mGmjrD5Yl3oXA454TJIltp7D1JbD1O/SI8s+oyXZdHU=; b=o
+	ruqB2BdqZWGjRjEga8YVkwSrVPypIlQRshYVWMMjoCKzFBo0oapdOSG7FhebQXvk
+	7wzuN8HwHRAHCK/nwat92uKn4KBG4limJfUf9YTx8yhh4NnO9R7nFwb71RCnOu4E
+	9z7IdFciyhXHHmuqyFbGky9YqlJYtAMuYxakrAQW8vwYQhBix+X/rwxxR6X4oX8L
+	mCqqaJBgjl1FWu7bfogyYZKGDiMnqku0GckrWMegP4zzIRaK37/lK6i7cJzPPi8d
+	9EqnLHjunsnrgI4Scbeo/xZmqWy1EUkWnRhz4HFZEnGPJHENbzyWJzIxjKFZuJ00
+	VVF2ZhemDRvSUG4lkjLdQ==
+X-ME-Sender: <xms:Ds7yaN-u_ACc02JGFJx2--NfdeLxeff7dzn6zlY08kzR210J_GrQOg>
+    <xme:Ds7yaAzKr5Ysg-MeoBP7QxLPBk_MS38SjK8VMqis-FgUO2bql022s7akzx4r-37YH
+    4G2gwTmvMCk8sCpGkezX8arnBfns3PO9qQ23f_39-3w8KHFTg>
+X-ME-Received: <xmr:Ds7yaBON_FZ6Ko0u0ee2BJDjqMOsmSqdm0itq75pp8UkJ6EDPYwoMYI0icCjuEGE7K1rXxgb4aV96tjXvPZM6f8lwt8-Akkto5a6Nh6adm39>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddufedtgeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
+    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepshhnihhtiigvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjh
+    hlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:Ds7yaN9AtOzZqrsxR_d2iZZ8drjypda9Lss4Fix6HtsUvPlmhRVGAQ>
+    <xmx:Ds7yaG6H2hLEI4xS4R64aG6DbUe3bnL1irRnfsr8tN5JfJONTZPdBw>
+    <xmx:Ds7yaL572HpSCX0Oa1mdh6z_3nat8fWrw6Oyt1vHoNmAUTmUPwdtOA>
+    <xmx:Ds7yaHq0RCdCKKG0qHZIfFxFNX3NjRNQtuOpPiFYZoYCCA708GyU3g>
+    <xmx:Ds7yaNjw_RoytXD9yfII8ErC90HNoHJjaPnO28m_VC7R797V-RwGgUUO>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 Oct 2025 19:15:23 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5bf67a27-8a1c-4771-aeba-625bb20ec45f@kernel.org>
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <cel@kernel.org>, "Mike Snitzer" <snitzer@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Subject:
+ Re: [PATCH v1] NFSD: Enable return of an updated stable_how to NFS clients
+In-reply-to: <9cb044ec5e03730c445f424d53afb3dbe51733d6.camel@kernel.org>
+References: <>, <9cb044ec5e03730c445f424d53afb3dbe51733d6.camel@kernel.org>
+Date: Sat, 18 Oct 2025 10:15:16 +1100
+Message-id: <176074291626.1793333.10920318695776387234@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Fri, Oct 17, 2025 at 05:54:00PM -0400, Chuck Lever wrote:
-> On 10/17/25 5:03 PM, Mike Snitzer wrote:
-> > On Fri, Oct 17, 2025 at 10:13:14AM -0400, Chuck Lever wrote:
-> >> On 10/15/25 6:13 PM, Mike Snitzer wrote:
-> 
-> >>> +	*cnt = 0;
-> >>> +	for (int i = 0; i < n_iters; i++) {
-> >>> +		if (iter_is_dio_aligned[i])
-> >>> +			kiocb->ki_flags |= IOCB_DIRECT;
-> >>> +		else
-> >>> +			kiocb->ki_flags &= ~IOCB_DIRECT;
-> >>> +
-> >>> +		host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
-> >>> +		if (host_err < 0) {
-> >>> +			/*
-> >>> +			 * VFS will return -ENOTBLK if DIO WRITE fails to
-> >>> +			 * invalidate the page cache. Retry using buffered IO.
-> >>> +			 */
-> >>
-> >> I'm debating with myself whether, now that NFSD is using DIO, nfserrno
-> >> should get a mapping from ENOTBLK to nfserr_serverfault or nfserr_io,
-> >> simply as a defensive measure.
-> >>
-> >> I kind of like the idea that we get a warning in nfserrno: "hey, I
-> >> didn't expect ENOTBLK here" so I'm leaning towards leaving it as is
-> >> for now.
+On Fri, 17 Oct 2025, Jeff Layton wrote:
+> On Fri, 2025-10-17 at 17:22 +1100, NeilBrown wrote:
+> > On Thu, 16 Oct 2025, Jeff Layton wrote:
+> > > 
+> > > Somewhat related question:
+> > > 
+> > > Since we're on track to deprecate NFSv2 support soon, should we be
+> > > looking at deprecating the "async" export option too? v2 was the main
+> > > reason for it in the first place, after all.
 > > 
-> > While ENOTBLK isn't expected, it is a real possibility from the MM
-> > subsystem's inability invalidate the page cache ("for reasons").
+> > Are we?  Is that justified?
 > > 
-> > So it isn't that NFSD would've done anything wrong.. it just needs to
-> > deal with the possibility (as should any other DIO write in kernel).
->
-> Well my point is that if the MM/VFS can return this on a buffered write,
-> should NFSD be prepared to deal with it in other places besides this
-> path? I think it's handling ENOTBLK correctly here. Just wondering about
-> elsewhere.
+> > We at SUSE had a customer who had some old but still perfectly
+> > functional industrial equipment which wrote logs using NFSv2.
+> > So we had to revert the nfs-utils changes which disabled NFSv2.
+> > It would be nice if we/they didn't have to do that to the kernel was
+> > well.
+> > 
+> > What is the down-side of continuing v2 support?  The test matrix isn't
+> > that big.  Of course we need to revert the nfs-utils changes to continue
+> > testing.  I'd be in favour of that anyway.
+> > 
+> > And async can still have a place for the hobbyist.  If a human is
+> > overseeing a process and is prepared to deal with a server crash if it
+> > happens, but doesn't want to be slowed down by the cost of being careful
+> > just-in-case, then async is a perfectly rational choice.
+> > 
+> > I'm not in favour of deprecating things that work.
+> > 
+> > NeilBrown
 > 
-> This is something we can set aside and worry about after merge. It
-> actually has more to do with the existing parts of NFSD, not the new
-> direct write code path.
+> I think we should. We deprecate obsolete drivers and (even CPU
+> architectures!) all the time. Arnd has even started discussing
+> deprecating 32-bit CPU support in the kernel altogether. Why would we
+> not deprecate obsolete protocols too? The handful of people that still
+> need v2 support can boot to an old kernel.
 
-I'm only aware of MM returning ENOTBLK in response to a DIO write that
-it couldn't invalidate the page cache for.
+Protocols support interoperability.
+I might want to run new software on new hardware while being able to
+talk to old software running on old hardware.
 
-So existing NFSD code shouldn't be exposed AFAIK.  But yeah, worth
-another look.
+So I think deprecating protocols requires more justification than
+deprecating drivers or architectures.
 
-> I'll repost the "stable_how" patch and this one together in a new
-> series, for Christoph, and pull that series into nfsd-testing.
+> 
+> Supporting NFSv2 is a maintenance burden (albeit a mostly minor one at
+> this point). If we want to properly support it, it has to be tested,
+> which I don't think anyone is doing currently. I only have so much time
+> to spend on upstream maintenance, and I don't care to spend it
+> supporting v2.
+> 
+> SuSE's customer using ancient equipment is an exception here, but I
+> don't think that's enough to justify all of us spending time keeping v2
+> limping along.
 
-Awesome, thanks.
+How much time do we spend?  128 patches in 10 years.
+
+(and BTW it hasn't been SuSE for a long time - it is SUSE :-)
+
+> 
+> Do you have the same attachment to NFSv4.0? We had a discussion around
+> starting to deprecate it as well. Having to support v4.0 _is_ a
+> significant maintenance burden, IMO.
+
+Good question.  My perception is that it is still used but it's use is
+decreasing.  As it is so much more complex than v3, I'd be surprised if
+there was any use in "industrial" space where long lifetimes are needed.
+
+I agree that v4.0 is a greater support burden than v2, and that is a
+significant consideration.  I think it is good that v2 has a config
+option that defaults to 'n'.  I think a similar option for v4.0 would be
+good.  That would also give a clearer picture of how intrusive v4.0
+support is.
+
+If supporting v2 really is, or becomes, a burden then removing it should
+be considered.  But if it isn't a measurable burden, then I would be in
+favour of keeping it.
+
+NeilBrown
 
