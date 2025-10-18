@@ -1,199 +1,122 @@
-Return-Path: <linux-nfs+bounces-15349-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15350-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A859DBEC093
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 01:44:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F6F9BEC13C
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 02:06:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1156B188D11B
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Oct 2025 23:45:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF185741F42
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 00:06:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F312F12CC;
-	Fri, 17 Oct 2025 23:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B58941805E;
+	Sat, 18 Oct 2025 00:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="PpCfbnCi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JID8YgBs"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="cIbB/pjh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yUJ0+Lg4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266682629F;
-	Fri, 17 Oct 2025 23:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7547DEAF9
+	for <linux-nfs@vger.kernel.org>; Sat, 18 Oct 2025 00:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760744682; cv=none; b=iGza4fGallriRrHqko60yzsIsNB6VFmM8Kp8wnXaY4OOWm+/pDvOUtXIYJUn2ebCRto8QwGgGry2aRudE7YizfCf8qkDZNffUbSvon1wuwYTThdtCAekq/ipyO36Ka1/2U+Cz+N8N3u0GwBM/D1WvjsZH0QD0YtwdPJ7tn0wjfo=
+	t=1760745965; cv=none; b=ssN0L3SKevKvSqE6fo1OXDncu1NlvnvohwyntIgoGBAMfxkNa1udIYbbaJxyXk+DBsfRy5BrmoQaFY2vI2Pg5rNYtALaDcsm2xwEcGUwXiphfyDJrCJVoTSxTcahCCn+bmH2hHFSWo2wm4TqJjiuHdOscYN91RadvFyC6epCpMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760744682; c=relaxed/simple;
-	bh=u0MZX99m7tsyAu2FbX/wO754TpewlSzO9tI9LAlI5Rg=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=AP9KAcbwU2ctK6Wy9HWLAHi+2SUARKLnJpmNeK3yov0z+NMRVzniD2RCfMOxYkN3r+0VMlpDC2AnE6JaS/6dwWO/QyClXdlodX3Mt/M8suBEWiuFdLVucP4NdqXhkFDWYQyNlvsiqAzK/TyzMpUVA//eonIxnOo9M3k+ZBn7kkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=PpCfbnCi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JID8YgBs; arc=none smtp.client-ip=103.168.172.139
+	s=arc-20240116; t=1760745965; c=relaxed/simple;
+	bh=J6+z5JJEnKE2ZkR0Fl11rw5jfgEqou9g33rEaqDDMvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kXtB29DcvJLmE47MbY2rLIVqVS1wG8nfxd+2/sYevgxFremwXJdYXHdWJXkjcEqQTIEEg3hrwpRBjqvBomZ7/witn9rzPsU1q27eMz7o1KpuOuRMx2FlbWdT0NUgxGbDiJS0Zi1rxs889ioieow5jqRlLqpxt5qL073+FV6RSZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=cIbB/pjh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yUJ0+Lg4; arc=none smtp.client-ip=202.12.124.153
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailflow.phl.internal (Postfix) with ESMTP id 3FD3F1380634;
-	Fri, 17 Oct 2025 19:44:38 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 17 Oct 2025 19:44:38 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 599C27A00EC;
+	Fri, 17 Oct 2025 20:06:00 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 17 Oct 2025 20:06:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1760744678; x=1760751878; bh=fsRJNHgf5wp6dMPZl2BHgqJB2Mn3uMg+ds8
-	+N/kIR6M=; b=PpCfbnCi5m2pJlypffNagOwQ1jiOv1FqH42riPH7kB2SKsP0X2V
-	JviiDDVWBhLadufIpgRZA4P+tAAmkEsTeo2iw5bey8/quk1S/nIzAKWSl//Jtsp4
-	R3E1xHCnM5I7fPHqvY6xxYUEXnWFdcGsqnFOg0iZbW7nYad4O3m6AecmLEfa4wgm
-	053figuFB9afPvzZisE9w9ZWy5lbX+Uk1XdACK4r2jD7lufSEfaQejMOYY7HCag4
-	/kmwTf4NmJrnK3e2GrZQ4jz/u3/0aqPDdnu7qobIRo8P0z1Ge9t+sDHMSPF8/wrE
-	2qptYIed9mahk/9p0SuwjIvpgwq2Shl/jVA==
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
+	:subject:to:to; s=fm2; t=1760745960; x=1760832360; bh=xCSy6NqPOM
+	9xGvqMBx36nwt+OOZh7OBBub5sANQZi8E=; b=cIbB/pjhcC8OZhGFtVKqMLIEEY
+	iqmDCe2MOYD7Kt7lvPOmlBNKuJHdFnJf1OF6mO6YskponzLox02VOeuF4Y2fEk2w
+	NtAtEBiRXdWT+7hLXIlZZH3wSE78udUUobaKx/B+qn2LITZp8gc9s+cK3WsIIV/u
+	FqHon3IrROjNMeUDe2M7Me4qFlj5AE8XGU+Cd/TT8//ITMZtPPNDU8aOZ4rjcURz
+	L3KJfICSHqxO9421fR6PsZMD6Wecx4dIa9p59oSJW7xo46goklRGJGCFpVGSss+V
+	jTzJA29/8tbvbmMYSwgz6aTjrpIvPtzE0FrEkzYEJAPLhjJq6KoPUX0Zu4fg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1760744678; x=
-	1760751878; bh=fsRJNHgf5wp6dMPZl2BHgqJB2Mn3uMg+ds8+N/kIR6M=; b=J
-	ID8YgBsC0Zlq97uy28rnGxEniUfQ+yFOuU+ciiPl7K8wlO2e0nT3BEBmW2cl49h2
-	NVHwoyX8FgY6wxmkjhwXjEbepDeRRrrd/2KynnCpsuVJkb6n05xksyt2Xf3l0rDJ
-	zd5ryMoClAGFXxjnEvTtfNMFw6fJnOnGXBgXoIGUBsBczWbW0b5xo3c/PSoixbVd
-	Vflnp8GoiiBmQ1lmJSzWS0ndraz6I0xBTcvVrs5JN+3Mp24jmfR4zysroUEK2JjJ
-	/0j5o9flRWFIhIiCNmd2yAgkAA2DrIMqqLqIZfQi/VnGrg/hZ/EHEC5BgmjW66pn
-	JnLifN/o/tGIonbXG5hCQ==
-X-ME-Sender: <xms:5NTyaOorzpQDJMLlg9LI8TKz0YXzq0nDnVMeovAsKg6SBFO3UN3wUg>
-    <xme:5NTyaLpPfn_QQB80N2_qjcaF0vOjVu5Y_NBqzmwm73Inj29zE7g-_wUZlXG-Kyviw
-    _A2Y_hxNHVlcFb2oV9AQCjzAaIPG8LxGekke4oYziF4OhuaMIc>
-X-ME-Received: <xmr:5NTyaLelh78ONagQhOl9SGV7AW4KVMmR6XnSnOyV0_u5_PpC99rpXmUMadzBckTIuya7bDQbfLWn8qJiAezszE_hu4hrpmd1QqEZX-8_2U1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddufedtheefucetufdoteggodetrf
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1760745960; x=1760832360; bh=xCSy6NqPOM9xGvqMBx36nwt+OOZh
+	7OBBub5sANQZi8E=; b=yUJ0+Lg4sy4DRSGxG5rt9T6GaNMHIKCZqcN6gI9a9ciV
+	ucpeCCyLFiFJ0WewHs6rs6jQfLDThq0O8Xd53DW1giKuZozj/3u53Zmp6svxxqis
+	BVZw79YMU72JBUNo6cWNIgcRznSmyfCZsZK7ZGTfe3iQ9kxHcVgw67SlyeX9RplC
+	sRBbSHVOSybb+Wd6isDOob12Hnw8/FisMaWOOrxl6680U++8mteAj5lrL3lpN6ch
+	AcZel2VaEgnuIV422QIvSvAGmv/X/WarpZ5p6FcdMwoX4lNClHrk0UXA6Aid+Hcl
+	FqsX+3uJh0eqlKmvA4uAni6NYsz12ugw1S1/1AgVYg==
+X-ME-Sender: <xms:59nyaMw1i9zGn7K-jJQA00jQaMaPsWTEEGAdjUJ1dQ0MloVcVw5F-Q>
+    <xme:59nyaD9xHHF-WKKtTaVIecCNzx_JvaYwEmuPeGnAZhEphbkG37q1ruqCGZcT6gbOt
+    I_mocg8oVvSj7SCw_qMiVtmrZDe5Lzt1fXuMQE_8w1xOapw4A>
+X-ME-Received: <xmr:59nyaIIssgenKChb3fgFp2tDm1QsAy1qF6PDxCG1UFexWoTU1DIk7xHO7HiJ6hxLSBCecCtaK8hxR-HSKvUf84cCDnPJH5FP9oDg_Vsdo0KJ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddufedtheejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeegfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhirhhose
-    iivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehnvghtuggvvhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidquhhnihhonhhfshesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtihhfshesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvtghrhihpthhfshesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:5NTyaKQOygeT-WDC4EpGdB9UxeBX1x1b0QQARdMw78hJaUuGw16Bpg>
-    <xmx:5NTyaHeqAIRulsREZCjlE_C8s0Is771XsTmonG6WXx4qb74PiaFT_w>
-    <xmx:5NTyaKCO0YfW6-IqqtOcltxObTrHKpPry1oAkKr1FbLeSlCFfCsvXg>
-    <xmx:5NTyaEv_hh5zLWLwI9GLd5aEfHsL025i_s7LtxBypvsPVX3tUGd22A>
-    <xmx:5tTyaCiEjulIfLatm6Wk-Qg3CpixYcKoLl74c5ZXFD26oqjV2H5JH3BJ>
+    gurhephffvvefufffkofhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheurhho
+    fihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepge
+    etfeegtddtvdeigfegueevfeelleelgfejueefueektdelieeikeevtdelveelnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesoh
+    ifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhnihgv
+    vhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrg
+    gtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhr
+    tghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:59nyaBcvnwJ3SqL2S0QGQEh1LAklp1RuG6uV50juzoMRZ1FsvzLHBg>
+    <xmx:59nyaP-Fv-N3525bGhExsDQx2ixWm1_02UZPeR5vlOCREJCmi3Dafg>
+    <xmx:59nyaGpGM0Mhi8xu8qE0pW5qZvFjCBGeBfCcrBDpaeW9deaInYKSeg>
+    <xmx:59nyaMCt2JE1ppXmVA6H1qHVxDqmY38E0bEZbodajSJlPhs0XXSGDQ>
+    <xmx:6NnyaOS9l1jMj9954HEHfzH4zMivpkYGGC3silmox0RC88Ul3sKxxy5m>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 Oct 2025 19:44:25 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+ 17 Oct 2025 20:05:57 -0400 (EDT)
+From: NeilBrown <neilb@ownmail.net>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/7] nfsd: assorted cleanup
+Date: Sat, 18 Oct 2025 11:02:20 +1100
+Message-ID: <20251018000553.3256253-1-neilb@ownmail.net>
+X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
+Reply-To: NeilBrown <neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Miklos Szeredi" <miklos@szeredi.hu>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
- "Bharath SM" <bharathsm@microsoft.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>,
- "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Amir Goldstein" <amir73il@gmail.com>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Steve French" <smfrench@gmail.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Carlos Maiolino" <cem@kernel.org>,
- "Kuniyuki Iwashima" <kuniyu@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, netfs@lists.linux.dev,
- ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
- linux-xfs@vger.kernel.org, netdev@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v2 00/11] vfs: recall-only directory delegations for knfsd
-In-reply-to: <20251017-dir-deleg-ro-v2-0-8c8f6dd23c8b@kernel.org>
-References: <20251017-dir-deleg-ro-v2-0-8c8f6dd23c8b@kernel.org>
-Date: Sat, 18 Oct 2025 10:44:23 +1100
-Message-id: <176074466364.1793333.7771684363912648120@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 Oct 2025, Jeff Layton wrote:
-> A smaller variation of the v1 patchset that I posted earlier this week.
-> Neil's review inspired me to get rid of the lm_may_setlease operation
-> and to do the conflict resolution internally inside of nfsd. That means
-> a smaller VFS-layer change, and an overall reduction in code.
->=20
-> This patchset adds support for directory delegations to nfsd. This
-> version only supports recallable delegations. There is no CB_NOTIFY
-> support yet. I have patches for those, but we've decided to add that
-> support in a later kernel once we get some experience with this part.
-> Anna is working on the client-side pieces.
->=20
-> It would be great if we could get into linux-next soon so that it can be
-> merged for v6.19. Christian, could you pick up the vfs/filelock patches,
-> and Chuck pick up the nfsd patches?
->=20
-> Thanks!
-> Jeff
->=20
-> [1]: https://lore.kernel.org/all/20240315-dir-deleg-v1-0-a1d6209a3654@kerne=
-l.org/
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> Changes in v2:
-> - handle lease conflict resolution inside of nfsd
-> - drop the lm_may_setlease lock_manager operation
-> - just add extra argument to vfs_create() instead of creating wrapper
-> - don't allocate fsnotify_mark for open directories
-> - Link to v1: https://lore.kernel.org/r/20251013-dir-deleg-ro-v1-0-406780a7=
-0e5e@kernel.org
->=20
-> ---
-> Jeff Layton (11):
->       filelock: push the S_ISREG check down to ->setlease handlers
->       vfs: add try_break_deleg calls for parents to vfs_{link,rename,unlink}
->       vfs: allow mkdir to wait for delegation break on parent
->       vfs: allow rmdir to wait for delegation break on parent
->       vfs: break parent dir delegations in open(..., O_CREAT) codepath
->       vfs: make vfs_create break delegations on parent directory
->       vfs: make vfs_mknod break delegations on parent directory
->       filelock: lift the ban on directory leases in generic_setlease
->       nfsd: allow filecache to hold S_IFDIR files
->       nfsd: allow DELEGRETURN on directories
->       nfsd: wire up GET_DIR_DELEGATION handling
+These patches remove various indirections in nfsd code which, I think,
+improves clarity.  I was motivated to look at this by a recent buglet
+with traceing called from nfsd4_read_release().
 
-vfs_symlink() is missing from the updated APIs.  Surely that needs to be
-able to wait for a delegation to break.
-
-vfs_mkobj() maybe does too, but I could easily turn a blind eye to that.
-
-I haven't looked properly at the last patch but all the other could have
- Reviewed-by: NeilBrown <neil@brown.name>
-
-once the vfs_symlink() omission is fixed.
+Apart from a slight change in when trace_nfsd_read_done() is called, no
+change in behaviour is expected.
 
 NeilBrown
+
+ [PATCH 1/7] nfsd: discard ->op_release() for v4 operations
+ [PATCH 2/7] nfsd: discard v4 ->op_get_currentstateid() function
+ [PATCH 3/7] nfsd: discard ->op_set_currentstateid()
+ [PATCH 4/7] nfsd: discard OP_CLEAR_STATEID
+ [PATCH 5/7] nfsd: replace sid_flags with two bools.
+ [PATCH 6/7] nfsd: discard current_stateid.h
+ [PATCH 7/7] nfsd: use a bool instead of NFSD4_FH_FOREIGN
 
