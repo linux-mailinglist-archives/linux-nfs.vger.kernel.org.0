@@ -1,100 +1,100 @@
-Return-Path: <linux-nfs+bounces-15365-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15366-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99A33BED7FD
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 20:56:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 686FEBED806
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 20:59:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93DE94E519B
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 18:56:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10B735845DB
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 18:59:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC9A27F016;
-	Sat, 18 Oct 2025 18:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EEA0243387;
+	Sat, 18 Oct 2025 18:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hl8u0YQp";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="l2PSEXok"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AdalYD20";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Ijamxk+n"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67182798FA
-	for <linux-nfs@vger.kernel.org>; Sat, 18 Oct 2025 18:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C24924293C
+	for <linux-nfs@vger.kernel.org>; Sat, 18 Oct 2025 18:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760813753; cv=fail; b=bubbgCyhDm5misE861W48mvaPIbes7EvKQF5rb75wgSUNOt2JJuc44Cm2VdV7ItPNxKWXmTHEXAISRK4WTwCco2tR9tWNGS1IHD0/E11mDSQqtDJWrt2Q9aPBng7304M0Bf6puwNdsUDVy1vyXgrm/PlTmGkbwyPHVJdTjjg+II=
+	t=1760813952; cv=fail; b=E6anPu7AjDSGwegO0LdTqMrizJtR9WL46vpq1U1H/armaDphxMvpYTsTEqU52gpl780Rd+QXOErWyOcKEP0kKp0ApYca4k6wVKMS1E9KifNmNqA7NzYIA06WcxDztW5VKJDXa6C2fhGXwlj81b3CGij8NWM4FHDOJEXDyBUG7MU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760813753; c=relaxed/simple;
-	bh=xBkMvRCtSsWawLPp6r3pFCRiOd9R1fDw6Wk/cS0XwUU=;
+	s=arc-20240116; t=1760813952; c=relaxed/simple;
+	bh=VnlKjsE+Fk+CvyI8O2PwH2q/A0WWmbssGlLeMqdziZ8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lvA5GdeHbeOp2oh7M7N3VNnytIOj6gFjPedN9pp9rEgXolOaYhhlcZbBvy2CM7zEchMyQ0GgJKDo2twxFUNA95SAXFnlvGjLY7voRbd22VuiSsjmVJ4v+lfyBARxLyAanTVLQYFHh5/d7a3Fn4pOkLZ/dzczU0yjIF/GvnfL4yE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hl8u0YQp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=l2PSEXok; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=PcU9Xrr/nZ/uCpGevy4Xeu0HXgisPhrEV4bCJ85q19BZ+8uW6yXZRxgI/NqQVS3cYcR8aZOzHF6G64vof51pgbks3xShL5X8y878PwoSfyCo0RILQ9ZMevzKKhaMrORkSRTxUFcbIotmuNF+sKx97dgKjuxPrO9qMSEFCh7LR9o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AdalYD20; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Ijamxk+n; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59IFdj51024245;
-	Sat, 18 Oct 2025 18:55:45 GMT
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59IFdhNp023365;
+	Sat, 18 Oct 2025 18:59:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=; b=
-	hl8u0YQp5f6gLPKHRhkSIMrltNmHHWEtUlOBcVnnFMEcfJqKKC8seb2mQpiPV67Y
-	E+Rz6NnQjVjfjg8EaTdILnJ/UsqKVx3VR3GmZB8f8F7J1ZRaTsGB5MVxMO8DDSBD
-	v/pX55EYlnD/qxBtDRCzHy61580zL2Sa7k4xq9LEsS+lS6IRiiG8tgLqKxFrK82d
-	NwbHurp4IUe2kH6gDnXV7tEDLBGohwqFZxWU9ABhdgYDc+k7iJBphNxyfUaabM2h
-	GlkmtjLulDARrClGgGcvtINf12m/N5bb5eQi1UftlItUik6mz80AMaqSqoNiVn+Z
-	Mf4O++DYOFq4B1jNH7lIgg==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49v301rfdn-1
+	corp-2025-04-25; bh=3pBxCzDpxS/JvH6skmiWL79u3MHHNbwi/vyLJMchtK8=; b=
+	AdalYD20DpA0LjDAo6uSSE/h6aYu+OZzA8aeiUVT73rkkz9FUu361nLCvycJKzZq
+	nK+7+Kis4zYoIFR2FWJULbHbFCkAIE3IY3SThNVg91AJKrCT3ORivzP3EpzJNqUa
+	IXilKH8kl5hqzn99KcvdT4htRYWarSHFNcyOTYJgSImYOFonRO5rQIbCwHeYbgmi
+	wl5/2zzy4OexK9q8OSwKKoYQfX8VjUss0ndUJ2Y5NudOCNs29/qVZWJgiYS2ojWD
+	YKR7xy6eo6od/L2tHNQj9oQIR/xD6aQZpegD1i0SrYJhmDxbfsfq8V4MuAdKMf0Q
+	3Sg8WDDeYyK8LfuK7x4JKg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49v31d0fmd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 18 Oct 2025 18:55:45 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59IDHZOc009516;
-	Sat, 18 Oct 2025 18:55:44 GMT
-Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azon11011014.outbound.protection.outlook.com [52.101.57.14])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49v1baq5n8-2
+	Sat, 18 Oct 2025 18:59:05 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59IIGlqb035288;
+	Sat, 18 Oct 2025 18:59:04 GMT
+Received: from ph7pr06cu001.outbound.protection.outlook.com (mail-westus3azon11010015.outbound.protection.outlook.com [52.101.201.15])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49v1bafcyv-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 18 Oct 2025 18:55:44 +0000
+	Sat, 18 Oct 2025 18:59:04 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cxz6z2GlOwvSn44ylv4Tz8DvhYRMW6xUf6Dbf6GTPNtY9Rml50+QM8pI8LYlOFLddCWntv1RDpvX2hle5Mp34JTguTYTjOHHmgo3XR1Pfyupc5JPVTNfeoI17ZL6P9IjIPdjRPhVMS34v7s7XkDQ0XNVa4FSd5PNzV36OUdH5qm0IiE4CkDi0U1bPxvFEppdC/u9PGnrNUZtNUlxBgVs++bh6yg9xXRnL8ePD8Vn9dGkXfVB1U0JxD3iDA9y4KdBdJVQwuafD3Zro9QhoA2UY2dOxBuw2Mv6QrLq9O2avIJ+AbGg2B5FiSPLR1R1WcoVEdPGhA6JzPhlW3zfTl43nw==
+ b=uVukIeXxUTDkYJ6y8omPbg6obB+rSWOSt31WN76ChUpJWtFtOh0Hg+ZqiJPJKod4gUwDzJvcU3vAPmlWt1iFD0bvUupHb2Nt8BGhU7cqAiecVIZSCKgfHCyorTQ9cS74ZjfnBtoEkHdnKj9tG0ZNlBLtGZaEe84f9EFCRDA17w2tSu326MTWQP2gyEWNK/aYf1qzq+IK0MUfZAKB/lOlmp5OB1ePccMkViIdNahYZR37v/dAjbuJ1PIG0+kvenkki2h3kbwq4vR4uiZcVJ1y+KXCf4sUxfcHu1/b1Z5Yd+PUcX1hIn4WzE7X9iiRHeAcsSJxDzJU7y5l27ZRO+KUbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=;
- b=UwEHVuygSLBAz6zFeaNZoi75nVtWI6oy9Ue6L+8n/vso/A/zS2s5ET6jjjFkVSuNTModh64TbVnhlv9LnWwRlGaT76W9rQmcNCFRSdcbOaH36aqlcLeDD61mcaChRi/ixQW1nMyVzPbxwlTDalOlyzMXVlmLBcfYHHVZHm1zr1gjEMp2ZS1lQPBBQFusg/u0l3yPgMPSEol6FQ00tbwZ9lorFE98ItkT30M+WMpUXG/CTOFQUubyKPc9rqSZVhStw9uFJAaHnQKZyMUuL8otHlF8zeSNa9nYyyjBViZBTuyqcTzqgFH6K2v0JXxvtDyPEnLlpF4wGQiP2+M6WsXh1w==
+ bh=3pBxCzDpxS/JvH6skmiWL79u3MHHNbwi/vyLJMchtK8=;
+ b=q6XTBSQ8Ipv47R+MyHgyILSKRE66vRHCbmzXcT1fGIvJPnag1YdRoovEvb/H/t/XAonhoViWz9XSGMblFX4DgqpZe7EpCcJyQUOgPW6qJUcEysHx9kwuVXmqjiTnHzLAE8ffqTudAscQ6HciqooUn6FIh8PobzdjU2kIJBrq2B4Rv50psWSKl7w6H1RYdHpbSCcn7M1kboRAgd/Ge4CsJPb/FPzxtiDTp46VKXfF6OJkYZ9L/cnYNi07D2xhsQniyinkYJJVZrYRm9jUAndMWYQhFgVkVw4+YXtCSuAkdrH1rmLGcbH2XRyxR+XU3AxAxIE2InfahXZWrzx2gQJ8eg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=;
- b=l2PSEXok0ZjO4ODCXF+OP6/RhLg1VwLKGqxsGnb4O13XF0ZHecgapRqogOURV3lqbAaWm0jR4ryqiUyI9+ifbppHcO+HL/ZHh8PySSTkwSwA+OwVD8xrFqeLPhoIcJro51ZvfTCe7yMMXRr9Cu7Bz4OuLi5d/UnH+05vsByiWWs=
+ bh=3pBxCzDpxS/JvH6skmiWL79u3MHHNbwi/vyLJMchtK8=;
+ b=Ijamxk+nxAruyQGMDqusx+5ttsKBsM1iNzt8CS8uEjWdsqeu3CtobKsFMoplq1rECwgsfjtsiBwZxe0O5n2H7GnRgS29VHUd5CJdHmKGF2yUIE1Zl4lK7Cr2MLpgacrh59qvaIMzu0TxLLdtpzlTd7Q6lgZsO3HOM9XcsRO920U=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
  by DS7PR10MB7299.namprd10.prod.outlook.com (2603:10b6:8:ea::6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.14; Sat, 18 Oct 2025 18:55:42 +0000
+ 15.20.9228.14; Sat, 18 Oct 2025 18:58:59 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9228.012; Sat, 18 Oct 2025
- 18:55:41 +0000
-Message-ID: <83dfd9ac-912a-4254-ae5d-25536a8e79ac@oracle.com>
-Date: Sat, 18 Oct 2025 14:55:39 -0400
+ 18:58:59 +0000
+Message-ID: <88778ac6-b616-4a1b-9607-4112a059bf1e@oracle.com>
+Date: Sat, 18 Oct 2025 14:58:58 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] nfsd: discard v4 ->op_get_currentstateid() function
+Subject: Re: [PATCH 3/7] nfsd: discard ->op_set_currentstateid()
 To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
         Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
 References: <20251018000553.3256253-1-neilb@ownmail.net>
- <20251018000553.3256253-3-neilb@ownmail.net>
+ <20251018000553.3256253-4-neilb@ownmail.net>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251018000553.3256253-3-neilb@ownmail.net>
+In-Reply-To: <20251018000553.3256253-4-neilb@ownmail.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR03CA0028.namprd03.prod.outlook.com
- (2603:10b6:610:59::38) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR11CA0011.namprd11.prod.outlook.com
+ (2603:10b6:610:54::21) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -104,434 +104,336 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB7299:EE_
-X-MS-Office365-Filtering-Correlation-Id: ecb3588d-e50e-4441-b5e0-08de0e77ef68
+X-MS-Office365-Filtering-Correlation-Id: 9d2eb556-c7f7-4b19-c6db-08de0e78659a
 X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?QjJtcnlsdVJCR2ViS1cxaTJ1NGpkQTN5eDI1VGNVc05kZytxZXNzTkUvV1F1?=
- =?utf-8?B?Mjc2THpWNm4yRFR0ZnV2eGY4MDN0M3FPNEpLd1oyWW0vTE1mZURxY25Jb3d3?=
- =?utf-8?B?Sm1Id01zelN4QXUzR3F6RGNDVGcyUEhNb2xGeThueFk3dXo5NkN6bWI3WHJD?=
- =?utf-8?B?VUtBQVd0aFJIc0hTN1FsTjlKU1V3TEhuM2JrTTUxeE9DaWJXS1hOcWJRa3dn?=
- =?utf-8?B?dE9qeGV0YkRtZXVpeFBOaW8rUU9HYWFCSjlUQTNoZEFPWXdRZlhwelFqc1V3?=
- =?utf-8?B?cndRcFI1MTRmdXd0bmtmY0h4NlowaXBrU3hOM0JNM1Q4bDZmYlVWLzZVRjlw?=
- =?utf-8?B?Tk5NamJKTDhCMWt2am51WTV1dmg5aC9ONWZHZ0VpeHVwYTUvUnZhRGpoSU11?=
- =?utf-8?B?NENBTVdWcjZtVUFsemk1b2JpY3l4ajY5dmw1UUtieUVXNFV3Q0ZFK0J3bW5m?=
- =?utf-8?B?VEJRdTUzZlBuTDU0T09mZzNhTjFHQUhOcXAvTFU1WXNqYXUxczRDbmI2djE5?=
- =?utf-8?B?UVRsQjBjRDJjNlRqMXkzaGtXcnE5L25YTjh0cEdOdGYvTEUwZEVlNVZDajVp?=
- =?utf-8?B?ZkZVUnl3MmZXTys3Qmd3QXVXRUZuQkRlQ2V2bGZnZmRJWUE4Q1NkN3RwNWpt?=
- =?utf-8?B?VUd2QkFTNUZJaXdOc3RLbnFJcGJUTmdmWXB3aS9LWG5IdFRBZW52Z1IzeHR0?=
- =?utf-8?B?aWRla1VmdmF4c1UxTDhlc28wblozVFpvSTRnY3duWWkwRThER3NFOW9naG94?=
- =?utf-8?B?a3BoWWNTQ0VHSVN2T3RUcGlRWWZrZ2R2SXFZRFc2aE5qV05MazZzVnJhRGRF?=
- =?utf-8?B?YnpKdEtlVVhlckxyaXJpNkF4SWZTcnR2WHpSN01sNSt6a3FxbUhpZWw2NDNO?=
- =?utf-8?B?Ti9wQXBDampCcFMwdjNibG1XdDUrS0IvTWhRZ0dSS21HWmRIdVFQanJHVmFt?=
- =?utf-8?B?NzhTUmhMZW1jTlg4Nkp0ZmFwMTQyeVgxSXlrQjh5OUZOd1ZMUVhVazkrZHpK?=
- =?utf-8?B?V1dxQk1GNURCdXE3TzZqK0YzTitOYkZKRnZIZGVMaWlmdVd3cnI4WHdyMUZX?=
- =?utf-8?B?WVY0Y0Njb2RCWXBXdnlWS2ZESWoxWTY1VFJwWm1XY0RVWGd1LzRlRlNvQi9N?=
- =?utf-8?B?Qm9XNjkvL2VraVlIUXVscFgvRDJPUjNMUzV0K0FmbDR5d2VyV1RjTFQ2U3po?=
- =?utf-8?B?SWd2eEtBSklQa0lSUnR0R0VublhuakpPY0p6SmdjeTl2N1pUdVhSN2JVRGhP?=
- =?utf-8?B?U0ZaU2ZRTzRuaU9jbnJQMVpIYVN0QlFURHNtN0FKNnF1WHk0QzljRTFDUTNj?=
- =?utf-8?B?YWZtRmljVVBCcGdWS2dIZW5WbGFKVEV3U0VCd3FQMUpRS3oydi9HdVh2TnBB?=
- =?utf-8?B?YkpLTytGWHFlL2pqSmJBNUVNcmYvYmxnRVBqU0hMRGI4RkZhWE1hdWE4WFRu?=
- =?utf-8?B?bUNGck9HNVZBbHMvUGtIdEtlamVuZk01emJKekI4VWxzeER1OUlrd3MvUnZF?=
- =?utf-8?B?V2N5akJ5WTA2YVlJYUFtUTdockwyRnQwb0Z2NndHMlNZMDJxcFVIZTBFWEJB?=
- =?utf-8?B?TStuTEwrcnAyZi85VmJaVVpjMlRDRjJtU3R2ZHN2OU9aRXJBdldmdVhDUjVE?=
- =?utf-8?B?dWJQREZRTmdoY0VFSlR0NFcrblVwZGNIOHZ1dUhSVTZ3Sy9lRnlDMXozd0V6?=
- =?utf-8?B?Nmova0RVYXlVSnNyYVFMNUh4eVZxRXhFSS9XUkgyNi95TUNKUzg1OU45SUZ3?=
- =?utf-8?B?anNWNStQcnhrM2E3bUZJTDQvcU1oTXpNajV6bXBna0h5WXZETGIzTGNJUXBj?=
- =?utf-8?B?MHkrb3B5THVKVXhXN2lCRDRHNk9OVndudkVxbmZlZk5yWEtwVzYveUNNOVZm?=
- =?utf-8?B?dU8yWWNBS3VaaHkzZVM4dng0MEVKR0ZZRVN5QW9XK3NvSzl2QXFxbWNxOVZJ?=
- =?utf-8?Q?k6iLb9FmTqMmcRz2YAeXoM46hX7hoqKw?=
+ =?utf-8?B?a2Y1MHFKYzA1L0RxTTNZUmUwWXlzcFBLVElhL1E1cktxUTFLTFZIN0psN1NL?=
+ =?utf-8?B?RlVEbjM0SXlLWWF5ZUlrTzZxeWx2cmkyWnJkQzB3aFBQOGEzSGg0cUtJLzBz?=
+ =?utf-8?B?bEpuak9pbTZQb0ZXVG9iRjVvN0dFRTJFSEphdGErZFVkTENBY2d2WUF3emgw?=
+ =?utf-8?B?UG9HVlBjdzJkVzdNcnBKakNKSVFsYU9pTGRsNmVEdEVPRUxKdG1TU3BLVFEx?=
+ =?utf-8?B?cWxjY3pneCtxU0czejltN1FnYjdSU2JlOGJqQmRxZEFsaXRZYklKVUdvNjEx?=
+ =?utf-8?B?eWtrWlkxRlFyeTZIVWhlUkljN0tZdU9wY2NOZzA5WmlNdmlYRTNwcWViUUh6?=
+ =?utf-8?B?S1ZzWXdRVUxwN0tFQzM4ZXIvaWZkcHc5dXByM0h3U2pCU0hVZVMwMWpJS1lh?=
+ =?utf-8?B?RmxtbEsreGpzWEg4VTRhRk5GVGV5VDFFdHRUbWQ5MGpYSXMwUThIYUx1aEN6?=
+ =?utf-8?B?YnNNa2t1QVBMait6QVpBM1dJQko0b2MzQm9uUXdaTXlwMkVIbU5oRFpMTnBB?=
+ =?utf-8?B?QVJOMHlRZXBYNXVKb21HT3IrTDd2UVJnQ2dnYll1Q1NaSmxkeDNkbVVqRXl3?=
+ =?utf-8?B?QjV4ZWtYTlRBYUJjVmdkRFdVM0dFYk5HZ25EQzNoZUdjcTE4dWJUT211a2VE?=
+ =?utf-8?B?SW14cEFYVmEyWXpraGFMb3EzM1M5dE1DTlRPZVBpZXhKSCtsUmZNQ0R5V1pD?=
+ =?utf-8?B?bHpTai9rSHd5bU85S1dWNnRTQk1wWkc2MzFYR1NMWEVjUy8zWjl3REdzNzZ3?=
+ =?utf-8?B?clVHUVVjRERzRVZUMWw0d1pvam1CR0VQeUxGTjhUYStnLzZpRjJ2emlGQmNi?=
+ =?utf-8?B?MmVta05qS25EdVpwdEt3cC9Cd05mNHR4aHozSlhmVXY3RUd6ejU1ejBhdnls?=
+ =?utf-8?B?aGNtMDkxQ3VHdndpcXdzWC9kMjFWTGxlYktlOGxlTEpOZ29IVFEyK2RQaW91?=
+ =?utf-8?B?VHQ2akJxd1NLeThFdmlsUS81SVZWMExla0loRTdMaHR3T09jWTY2QlNNZzBv?=
+ =?utf-8?B?SGVxOHUzRGI2cC95L1BLSWQ5UXN1L09NU3lkMWMvK3NrMWVEQlBwWWQrWkYy?=
+ =?utf-8?B?MitGVlpmOG9rTURpeHowam9XSy9tSmVVRFVPQldmOURwVk9FM1Y4eDRCdi9o?=
+ =?utf-8?B?Tm5KMmtxTENlQ1dYN05hc2Zqd1puSGg1dGEyb2x1V254QktOZU1GNko3TVVs?=
+ =?utf-8?B?RFJnNVQwRUVRWm0vUklDcDNCWGxEYTdkZDdCamllM3VjNWZ0anYrL09kcW0x?=
+ =?utf-8?B?SlZ0QzhKSlZtZDFSaE8wYm9zZlZVOGhtYnZraDU5cUlTVEJQd3drVVJyUVpW?=
+ =?utf-8?B?V3JrU3VpUWw3cUY5R1lsUytXT0RDa3NPK0RIczhxZjhaN2YwdWYrNmxmY2k4?=
+ =?utf-8?B?SVB3UWtsamx1SDQ3SmdjV0x1MzVkTklxMVE3aGgxek5lOFZCb0prZmFndFpE?=
+ =?utf-8?B?ZlVDZUhHVGR6V1RRbXFiU2NYQ3Bjbms2QlYydXFlbWNvaDd5UHN0ZkY0M3Fk?=
+ =?utf-8?B?ZUNYRmZYeURyZWVlR1Jiekd1UHd2VHNvTDM2SFpGbmFNL01NUlFNclFGb0Qx?=
+ =?utf-8?B?K1NBTEJnMmZYdEFQNXdlQU5JRVhSWlJ2em5rTjl4RGl2WlNXZzd6eVdScXc5?=
+ =?utf-8?B?dlgvd29pdGlwQ01QSWJGZkY0TEdxa1NWY2Jzdjk0YnhybGJWeUZ6eVJ5NURB?=
+ =?utf-8?B?NTZ1WUFPZXlOTXFHdVg0cmYwZHU1RktOWEZIaUF1QmpuOWRYekdlMzdWeVUx?=
+ =?utf-8?B?aFdyU2ZhOVYvYXhaczZGM2xZQWR2MmR1UDNkRTVKT3g1OXh5ZmgzNXA3TVFn?=
+ =?utf-8?B?SkVQUm9kMHRlcGRiZVhySTBacjBIc3J4WWx2bkNId205djk3ZmNKdFZsOVhL?=
+ =?utf-8?B?TGtDVFJrUWNEdUY5aVk2Q3UzRG4veDE2WHErYllOKysvSXBVdHJJQVhEaEFm?=
+ =?utf-8?Q?amJbaorfWZTpL50GviFJUfGJ7O0pERAM?=
 X-Forefront-Antispam-Report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?a2xqMDYvL2daNllXZng2ZER0WHdaUllQeHJEbkV0elZlVVkzdXRiV3JGTVpW?=
- =?utf-8?B?ZHl2MEVIdEI0SUdrSWFHVU42WitBT0lmZWphdy9TMVlIR2xPZ0pEeExoZTlD?=
- =?utf-8?B?SGZVTk11TnA1a2RrNnFXTmMwSndtWTYrR3N1M1hjdjlkaVFvS1I5cTlKc0lW?=
- =?utf-8?B?bnlFU1J0a3NNc3FrT1phK0gxbFA1NVdQUmw1S3pnb1I3RGtLT1g5SW5NV2VB?=
- =?utf-8?B?VzYxWWFIZ2tCcG1GbnpVbytqeUdjUitjV055dCtrU1J4M3V4NXVaSzdxOTFG?=
- =?utf-8?B?ZXo1cWUyaGJ2Q0pNVXdKOFRpSU1FKzZ5N29QS1BraUk1eGZqZGtRUzA0dEVR?=
- =?utf-8?B?UjRFejc2VnpXbVNLOVRXaCtBNVZxU1dqd3RaL243eSs2d04zbzIzeEdiMVpI?=
- =?utf-8?B?eDVjalFjMjlvY1p0Nll4QWVtSmkxdDVjZXp6U0c4UnNZc3ZwbFVXZEFyRm5X?=
- =?utf-8?B?MlR3ZU1HYnpRa0RPUnFBNXB5VzlHbERJOGQ2V3h4RHl6STJMUnV1cUNLY3Zn?=
- =?utf-8?B?d0ZzN0hSYkI0SlVlVnlsTWt4K01aMmFHcUZKb3U0bmUwcDRlSVh6TnRiQzVX?=
- =?utf-8?B?YXBRcVEzWTBRWGdLc0t6WHA3OVBVYm1pY3MxNEtkVmlPM2NDSWk1ZnlXOGlV?=
- =?utf-8?B?TGlpcnRhZmsrMXljT1RRK1Qrb09mR3VLS2hYeUFMMk55V1VMSklvQlFrL0NC?=
- =?utf-8?B?Z2NEaVlEaVgrcHEyZzRrd1Q0aFdnSDNvU1UrRVQ5Z0VGaWJ3Z0w5ZmdQU09K?=
- =?utf-8?B?VTNYc0piVk1lOXNZWGZsS3pMQW42Zy94Ymo2aCs0bUU2dkNoQzd6VnlmM01T?=
- =?utf-8?B?WnRpWjQ5Y0xjbjNpVDc4dzJPem84LzFPc25yQVlLNSswWDN1WEpmR0pMV0JH?=
- =?utf-8?B?bUVwa3hwalhacWRFbVNSMnE5cVBrMitvVjJnV2tMNmxDSUhWRmZLbFJwVVBv?=
- =?utf-8?B?K1dRZUhYZFRNTk5YbllmYVRDeGlUSGtVVHFKZm4vOTVSWFkzdjNZRXZmNVI0?=
- =?utf-8?B?a2pROVRQRUdjMDRYL1JXbnpFMUVHeTZUdGZjUkhZQkZEUUlPNEd5blpQcm5E?=
- =?utf-8?B?SVREQm4xWTBFQ1BqbWQwemEzL1VNd0VodndGVlk2MU9Fb1J3ek03WFhXeWpp?=
- =?utf-8?B?Wk5uS1FkYVJUOFFWVnpzbVp3OW5YaGJJcDQxWWwwYS9aMkV2WWk1Q25KQnZ1?=
- =?utf-8?B?UGdVRFZIWnpBRitZY3hLZ1BYem1VVk13OVZQQjEyUDhXcTFlcmJTdGlYMkNU?=
- =?utf-8?B?SDFCbm9DcDg5SFdUbHdDTXUrUk43SktxZjJoS1Bka01GS1JEaHBUV3EyQW9Q?=
- =?utf-8?B?ZVpqemlEc2dzNTJyRFNnb1d0aTdJd29RSDdCZ1RvdVAwU3prdCtrSWZ6ck9I?=
- =?utf-8?B?eEI1ZzIvY1FORi9UbWNqcGIxQVRaVTR4UHhQRytyUTI2cjU0VlZnUTZkOXhM?=
- =?utf-8?B?YVI0MzkxWXdNUDBVMThEZEdCMnFKMHhaZGVzUmttOE1iMXhQVURiV0MrNk9E?=
- =?utf-8?B?V0o3Zkh0cjlXRDlnRnRMa1hUb25YeEYwckY5cE0xejFwcWhVV2YxbndqSkpV?=
- =?utf-8?B?ZFJuUm1XWVJaV1VuZStHVzhBM1Jlak1ldEk2R0Zpdi95RjFkOFpwYzdibGVk?=
- =?utf-8?B?SVVhNVZwd21OWkFQMGFBb1RZMm9vTTIzQjRzdHJzV3NLcGJ3YnJwZDdqVk9V?=
- =?utf-8?B?SVpETk5ZZEFUekt3RWdYN1JXNitoQ0IxSGxrV1ZrVTZ5MUp4a2RBZzJmTmR1?=
- =?utf-8?B?QmVta2ZTczdRTlVGc2w1RUtuTzYxcmhJRHhXMWplWWVOQm5oUWZPU1k0WHRT?=
- =?utf-8?B?SkE4VER6RmR2QUkwZlRwSzZodTRaWnBHbDBhSGR3eG1GSHFjS2dLZHZ0aGpv?=
- =?utf-8?B?TmJDTGRaTVEzKzJvRmRzMEFQSHB1MHJPZXJya0plZXU0SC9qVEVFTXY2MXdk?=
- =?utf-8?B?anRBU3NDZGQ5NzYyV2NiWC9rMVFOanJZQTJNSzl4R2haQnZyMGRnYTRSSkRX?=
- =?utf-8?B?L3A4TW81SlZraEpGUkw2VWJqSHYrQkNMWDdJcUkwNytHc2x0cTA4RFBYdlpI?=
- =?utf-8?B?ckhIMU9XQllrWXZadVZzL3ZZM3lESTcrQVBLelQzWTlrUEgweGFFd1dTeDFY?=
- =?utf-8?B?NlZTd2kwQmRodCsrblVhNGRGSjkwcUl4Y2V0dlFid1lESy9reGNGSmVERkp4?=
- =?utf-8?B?SEE9PQ==?=
+ =?utf-8?B?b1hDbHM3ZHVEckg2OGFJMHNhR0h0WjdtbGFobzFjRm5FZkszMmU3NTIyb2dL?=
+ =?utf-8?B?UUFvbWRMNms4d2F4c0UwL0xGNE5wUHE2aVEwV2pCUnJHdklldXp3MjV2b2VG?=
+ =?utf-8?B?Tk9SUE5idGw5ZWNhcTlCYzJRL1YvanliRnpmSlRqQUFRVndHNlBScWNpdVpj?=
+ =?utf-8?B?Q0Zjb2V3SzdkZUYrWGZrN3FWNXV1MXRkMkUzRmVxN0plb0pXaGRvRXcwTHpk?=
+ =?utf-8?B?OFo3WW54dlRoRlpBTTJTN3lDS0ExM2ZoMzE4OWJQUmRWblhMTWYrYTg1bXhT?=
+ =?utf-8?B?MjN5cWtMck9pd0dCLzlmdVI2dDNJZHc2c05ScVNPM24zdlZENnNYN295Y3Ev?=
+ =?utf-8?B?UjQrUW5pRUp2VXJMa3V0dU95L08xYkRnWWRXOGZxd1pYeW9zMlM5Y21MVkVE?=
+ =?utf-8?B?OExzUVM4RVJrcENJZHhJdFY2N0pVMXNLOGd5ekxzQXZXdGU4MUVaOXR4cTZt?=
+ =?utf-8?B?LzdNRTIwanV4MSt4NFE1cjNndXhOWHhnNTErL0ZJdnNFZXdyY2NjaXVZeGQ2?=
+ =?utf-8?B?U1kwZDZkNk9Qb0c2WjFsbm4weCtuMEtCa1BiUEw4UGROT0ZKYTRndHNhcnEr?=
+ =?utf-8?B?Z1BrU3BSaEh0YW5EQmE5Q2craWE1dFpVMTcrbWpROFFacTJuQmY1ZFUyUnI3?=
+ =?utf-8?B?clIzNGhlUU9JREZ4SW9xSGlYOUhmVnRDS3JZZnNYSVFsREZ5K2FNaXBQSi9K?=
+ =?utf-8?B?ZnF6TUVhbnJPWTFtL3k2eGMzY3dURkNBaDNDOFFQQmxIWTZJbWVTTjU1NjdI?=
+ =?utf-8?B?UzVTaGgwcitMbXFjRmVYWFgyd0JTbWdYQnJoZnhURGxsT1NHYnd6cFBteUd6?=
+ =?utf-8?B?eG1mOEJFTFZIUkFTOWtBeVZ1dmVCamo3TkZma0Z2aWVobCtPdXRVRFpYaW1a?=
+ =?utf-8?B?R2FzbDFjSVd5bzBtaTNxN292VlcybDRnMnlpKzFGRnVkc3g2YVA0NzRScTN3?=
+ =?utf-8?B?bGs2SElKOUJwNjN3Q3c0K1h2OUFNT3cyQ05OaGUzN1A3T1RmNFhub2tXOGFT?=
+ =?utf-8?B?RzNpdFRGTmttaC85dU9zdXBjQ2owUGorZHFwRUplSzlKQlh3OFpnQXQ1QmEx?=
+ =?utf-8?B?TllKNXJnZk9IM1lmTDZ0VUlnb3FuaHZmcm5pNURWdFQ3MnFReGdWalNYcjZC?=
+ =?utf-8?B?VGNYVnJ4ako5ajFvaHRBNisrUTQ1M0N0VHN3THNidVNnRnU3dWQwOWM4bkRj?=
+ =?utf-8?B?Z1FqZ0plZHZDbk1qbVQybkpVeEdqaVhxTVlzT0hrcWJnUWRDNTFzV2xyWnBj?=
+ =?utf-8?B?R3ZpM1RDUzVEemQ1ZkZqLzh5SjNEWFk2a2VrNG5uUGRmSi9sR1RScUI1cG1P?=
+ =?utf-8?B?dkJKdlo3dkp1ejg1d004dGhQRkpjeCthMldwWjY3NmM2cUNRa2NLV2J3TWNI?=
+ =?utf-8?B?Nld6ZEpyeHpsY1JMeWt4a29rSnV1NitnTlZBcUNBaWR5d0p0S2RPSmltUmlk?=
+ =?utf-8?B?VUVHSjRWR2pCZGhiRVhaTUdxRWpQYkYvdTRVeVdEanh5L3pZa1FhaXE1Mk1Q?=
+ =?utf-8?B?MHQzUHh5cGo4VWJIZ1kzV0ZzZ25vWEhmUFZXbWJpc1NvR3ZKVk1jbnhWV0g3?=
+ =?utf-8?B?aXpYMDBhRUxiVCs0d2tPUTk5Vi9FSkFRZTAvbDRINzJodzR1N3pIOFMxUlZD?=
+ =?utf-8?B?ditDNk9BcXZBUjdnQzYvbGZJczBxd050aWhmV3ZLWUpvaVRyMFF4czBFVkJr?=
+ =?utf-8?B?K1o3Z0V6emJvcFFXTHNRd2d0MVh6RisvVFhiMjNyZHYwZnBCUXBETlgzUWxF?=
+ =?utf-8?B?dHNaUG02R1NobWhBQUVSbVlrWkhFL2lkRlR1bnJuSGJIc0dRVnpOemttMWxT?=
+ =?utf-8?B?WitrWTF3WEJVT3d1cTlyQ24ybkxaem4rMWszSGFCNGx0dTd0d1R0aGFvcWl6?=
+ =?utf-8?B?MXZRczBFNVAzY1BrZEhWUWk0TFRQMStaQ3d1VkRDMlQ5bzJXSkg0UmNIYU41?=
+ =?utf-8?B?OG5qeWk0WE8vYTFkS2NtcldrWjRFLzFWdnRrYUNYSS9GTmdIdVhQNGRTT1lj?=
+ =?utf-8?B?VlU2bG44TTI4TnV5S0pYUHhEVXQrZ3diVDMyT0RhdGhwT1JzUk84VitlV0ZL?=
+ =?utf-8?B?TmZUU2FhRTNaZ2dNRHp3SmVIQWZUVVNlVTgxNjZVbkpjYTlpNWcyQnltOGVJ?=
+ =?utf-8?Q?BSQkXg3fNvVOwOBuCZsSsnK/H?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Tgpjjuxebt9n0+GM25H45Ion0Hp1Whd1unzLJVYfnchSGjQkzzaz3RihwqxKFbIVl1nEe+jwsrokjaa/zQ/yV/DEP7Y8FETuzV8LZjfzf4kmMnXZTzACg+8ZgK1VlXyFx9zp3OAHxTg5Pei0aN64bXanczJBmuFREdbuD+SddARkwZPL9soxt4sT/sh5NgKBtoHaG/OTk+xnNFaJmqcDDfVohtPMV0n+YDo/aj2OVrD1e6TL+ytt7pksbZpNKuFfBM6cuwxVgV7KkuwGtJUlS1xpVnGa50bMYNgC+LZTYTlb26Ib6UUb+S/aCUvN/UIGER0Wyg/ky5Z3G3osk2u/W8CHsCj7w9BneqODC+c3ri31vzbiUbiNTvDh1g0xj3kNwNqxJSQLRevWcwwxpOzQojP/OriaCLwrfZfyEjntoA4hW1VAU68VxqrrZBRmnSHvRjpnD1SPyMFmleMFtmrCElELrE+WoBr0GEJDk/arQHGINqWjPPLlBwh3E51/qmMRjlHjY4fD5zLwtc9lvzposzmGTihLnGKUkJIsZhsHBhps0Vu9qEJsRxikuIcm1t32tqfroCULVNwSIZewrGS3kFAksZbgWS6+xsp3rSthbM8=
+	HvVllPJac8Q5L8yIJIqRbpVL3Cp0cg/QOUAoQsjY+FRbbqtAmlVHVTT1NGgAuWRtxq/BtIMxCErv12Mfv7uYmx+ELYMRN6ypvIi6UI19kw9AAkJgFz/YAv1EtXFS+RXncz4t7xWkltVTVKcoT24AKElfUvORbcfuf4mkVTur39PxNrJsSLEXf8kb7JyKtavTugMJP7JT7GcyY45ERTC5dvZ1OBMe5XI1JGCdsXonTQg2lFa8gwbcS0oF2LV4UtneU7xOSh1PBlqO7xVP4Hw2mLEaRd3cLPsOscXOMZGiOEViabu9aewemDzPGBJ0lII+v1wiYvOi2AuQHraJXW+jP6C0zovA1mK0XbHqJ+Cqycu6lU+uKytXd1+H3SDq+Tlg4S+wQhSj7SJLj7+2gK5oLMEVpznUGTbppaZAonY9mXyJNApC8WHN7C0mPEWs3ycc4HqChag1djMpyTLC53LY+f6qgA3k7EH7oNoMkhQBelVNoqSkhrm1K1W/5eCG5pP5KzOZcFkOXj1pfA7GPnZK2dOqKQLVPMJO10aKwz+ckSDLyq6uk/nx05VumGMZ9G8P8rt/t8wxW0ka+XX5ByeGSgG0uqxG59HdhrAm1Wh/T0U=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecb3588d-e50e-4441-b5e0-08de0e77ef68
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2eb556-c7f7-4b19-c6db-08de0e78659a
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2025 18:55:41.4761
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2025 18:58:59.8445
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hj95PPjoQ4YWRUkIF8fST6w+1JWJqN5vMf0vcNyPhMJ5QgZkyUbTac9GNpEM+sViqZyJ76VASHWeaBKykfRSqw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6NewARswKKf3pbEaRVHcsDfS5h4gMMI9as/GQZERxw9nrEohKnjgoDC9sSFO0IdbclB4kk0nFyhGSBc8+Vt8pg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7299
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-18_06,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- mlxlogscore=848 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2510020000 definitions=main-2510180137
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMSBTYWx0ZWRfX1gFwaZAQ5UAf
- /Jmi7o48cTeNA6aFtm2jet6zaqjRiiT8VFCP1CIWZVI7QOgqAKU7OlV83lwS5BIX5JI98FNXXrp
- DhAAFzy56QJtUOHS4FpRZ/cAX1b5uo++V/+KOcgBpwMSmm0OUmpo9vaU78ifmXR2EHP76DOKC8Y
- WsaGGc1rcKTm5g4jhcnGbJk8+w3bpqHDvTC6XoIK6d8mXaeAld0cP4yMlkkv8t2kvlmgI0fhIlI
- dPn/xnAx+Vm7QeKbdkUhs+u/TSw89s6a95IKRAQ87pkfIdpOVfPm+Ax0JMNxkUoJwfyFaXFggU/
- regRE1Au5MnQvuPZEpatjX3z04ezR0A5KqReFfogW/VBXUQ+FHPUiToJcbNpJwV9apnGyaWgLHn
- 1v7Sr4sc4wm7wnxXWUQcftX//gW62kjrtxBRCGWoilvbd2pEQUg=
-X-Authority-Analysis: v=2.4 cv=Gb4aXAXL c=1 sm=1 tr=0 ts=68f3e2b1 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMyBTYWx0ZWRfXzbuLhOaYUgGn
+ Kc4LKHuUlQeFngEMhWQGoRb9nF272gquJrfbe2UXDHd0m5l1hDUNOCLuCd8++Y6xVF0y0fSmwlf
+ bYXLov5fonv37V4e+jY0+nRHlhKNt+Kn/90CJ5vDgD5nJBwDyVj2SbrEIcT3hsFBwCOFWErcVAT
+ pcXb6AzCt52N6GHStHv0IfnKhn3x7PknIbTYx1odLDBRsoSE0E79zUJ80P76uCAi3wGYJQZLECc
+ /jHqaihJWmf3mJnN0nttljZIkUWnjvaHnqhEG2Kfj14VICMQxJ1Nyxe6STWd/EUSk3SVJzBz/bi
+ TKKJFM9pJnT1sZZlWeYGWgtT+BWHOb1bYrQzTeqMqh5NM/rff57+mdByONG4h8JB64KuuiFj6q9
+ gO29mx/fZa1RslJgpGLDminBASml6FCND5kCH+CkUH1PgpI2Ys8=
+X-Proofpoint-GUID: DwDmvhMxNYZhacHbNJS8dNLqW9ckaZf4
+X-Authority-Analysis: v=2.4 cv=KoZAGGWN c=1 sm=1 tr=0 ts=68f3e379 b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Xd7o2BhvfMY1-3peyX4A:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12092
-X-Proofpoint-GUID: 6KZlBJORnkfw6WCcelrpMWW7jBdCCHgq
-X-Proofpoint-ORIG-GUID: 6KZlBJORnkfw6WCcelrpMWW7jBdCCHgq
+ a=AAPDuCGAUpwqD5ExMoIA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12091
+X-Proofpoint-ORIG-GUID: DwDmvhMxNYZhacHbNJS8dNLqW9ckaZf4
 
 On 10/17/25 8:02 PM, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 > 
-> It isn't clear to me that the indirection involved in
-> op_get_currentstateid() serves any purpose.
-
-Introduced by commit 8b70484c67cf ("nfsd41: handle current stateid in
-open and close"), looks like op_get_currentstateid is meant to bookend
-op_set_current_stateid, which is removed in the next patch.
-
-LGTM.
-
-
-> op_get_currentstateid() is only called immediately before the only place
-> op_func is called, so the former can easily be folded into the latter.
-> The functions themselves are trivial, each a single line.  Including
-> these in the relevant op_func functions works well.
+> It is not clear that the indirection provided by op_set_currentstateid()
+> adds any value.
+> It is only called immediately after the only call to ->op_func() if that
+> function call returned 0.
 > 
+> This patch discards op_set_currentstateid() and instead interpolates the
+> contents (each a single call to put_stateid()) into each relevant op_func()
+> 
+> Previously the put_stateid() call was only made on success.  While it is
+> only needed on success it is not harmful do make the call in the error
+> code.  It simply copies a stateid (which could be invalid) into a place
+> from where it will never be used, as after and error, no further ops are
+> attempted.
+> 
+> So the new code calls put_state() without checking 'status'.
+
+What kind of testing can be done to ensure this part of the refactoring
+is safe to do?
+
+One more comment below.
+
+
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/current_stateid.h | 23 ++-----------
->  fs/nfsd/nfs4proc.c        | 15 +++------
->  fs/nfsd/nfs4state.c       | 70 +++++----------------------------------
+>  fs/nfsd/current_stateid.h | 12 +----------
+>  fs/nfsd/nfs4proc.c        |  8 +-------
+>  fs/nfsd/nfs4state.c       | 43 +++++++--------------------------------
 >  fs/nfsd/xdr4.h            |  2 --
->  4 files changed, 15 insertions(+), 95 deletions(-)
+>  4 files changed, 9 insertions(+), 56 deletions(-)
 > 
 > diff --git a/fs/nfsd/current_stateid.h b/fs/nfsd/current_stateid.h
-> index c28540d86742..7c6dfd6c88e7 100644
+> index 7c6dfd6c88e7..8eb0f689b3e3 100644
 > --- a/fs/nfsd/current_stateid.h
 > +++ b/fs/nfsd/current_stateid.h
-> @@ -5,7 +5,8 @@
->  #include "state.h"
->  #include "xdr4.h"
+> @@ -7,16 +7,6 @@
 >  
-> -extern void clear_current_stateid(struct nfsd4_compound_state *cstate);
-> +void clear_current_stateid(struct nfsd4_compound_state *cstate);
-> +void get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid);
->  /*
->   * functions to set current state id
->   */
-> @@ -18,24 +19,4 @@ extern void nfsd4_set_lockstateid(struct nfsd4_compound_state *,
->  extern void nfsd4_set_closestateid(struct nfsd4_compound_state *,
->  		union nfsd4_op_u *);
->  
+>  void clear_current_stateid(struct nfsd4_compound_state *cstate);
+>  void get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid);
 > -/*
-> - * functions to consume current state id
+> - * functions to set current state id
 > - */
-> -extern void nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *,
+> -extern void nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *,
 > -		union nfsd4_op_u *);
-> -extern void nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *,
+> -extern void nfsd4_set_openstateid(struct nfsd4_compound_state *,
 > -		union nfsd4_op_u *);
-> -extern void nfsd4_get_freestateid(struct nfsd4_compound_state *,
+> -extern void nfsd4_set_lockstateid(struct nfsd4_compound_state *,
 > -		union nfsd4_op_u *);
-> -extern void nfsd4_get_setattrstateid(struct nfsd4_compound_state *,
+> -extern void nfsd4_set_closestateid(struct nfsd4_compound_state *,
 > -		union nfsd4_op_u *);
-> -extern void nfsd4_get_closestateid(struct nfsd4_compound_state *,
-> -		union nfsd4_op_u *);
-> -extern void nfsd4_get_lockustateid(struct nfsd4_compound_state *,
-> -		union nfsd4_op_u *);
-> -extern void nfsd4_get_readstateid(struct nfsd4_compound_state *,
-> -		union nfsd4_op_u *);
-> -extern void nfsd4_get_writestateid(struct nfsd4_compound_state *,
-> -		union nfsd4_op_u *);
-> -
+> +void put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid);
+>  
 >  #endif   /* _NFSD4_CURRENT_STATE_H */
 > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 9d53ea289bf3..41a8db955aa3 100644
+> index 41a8db955aa3..5b41a5cf548b 100644
 > --- a/fs/nfsd/nfs4proc.c
 > +++ b/fs/nfsd/nfs4proc.c
-> @@ -949,6 +949,7 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	struct nfsd4_read *read = &u->read;
->  	__be32 status;
+> @@ -644,6 +644,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	}
+>  	nfsd4_cleanup_open_state(cstate, open);
+>  	nfsd4_bump_seqid(cstate, status);
+> +	put_stateid(cstate, &u->open.op_stateid);
+>  	return status;
+>  }
 >  
-> +	get_stateid(cstate, &read->rd_stateid);
->  	read->rd_nf = NULL;
+> @@ -2928,9 +2929,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  			goto out;
+>  		}
+>  		if (!op->status) {
+> -			if (op->opdesc->op_set_currentstateid)
+> -				op->opdesc->op_set_currentstateid(cstate, &op->u);
+> -
+>  			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+>  				clear_current_stateid(cstate);
 >  
->  	trace_nfsd_read_start(rqstp, &cstate->current_fh,
-> @@ -1153,6 +1154,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	__be32 status = nfs_ok;
->  	int err;
->  
-> +	get_stateid(cstate, &setattr->sa_stateid);
->  	deleg_attrs = setattr->sa_bmval[2] & (FATTR4_WORD2_TIME_DELEG_ACCESS |
->  					      FATTR4_WORD2_TIME_DELEG_MODIFY);
->  
-> @@ -1240,6 +1242,8 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	__be32 status = nfs_ok;
->  	unsigned long cnt;
->  
-> +	get_stateid(cstate, &write->wr_stateid);
-> +
->  	if (write->wr_offset > (u64)OFFSET_MAX ||
->  	    write->wr_offset + write->wr_buflen > (u64)OFFSET_MAX)
->  		return nfserr_fbig;
-> @@ -2914,8 +2918,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  		if (op->status)
->  			goto encode_op;
->  
-> -		if (op->opdesc->op_get_currentstateid)
-> -			op->opdesc->op_get_currentstateid(cstate, &op->u);
->  		op->status = op->opdesc->op_func(rqstp, cstate, &op->u);
->  		trace_nfsd_compound_op_err(rqstp, op->opnum, op->status);
->  
-> @@ -3365,7 +3367,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+> @@ -3367,7 +3365,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
 >  		.op_flags = OP_MODIFIES_SOMETHING,
 >  		.op_name = "OP_CLOSE",
 >  		.op_rsize_bop = nfsd4_status_stateid_rsize,
-> -		.op_get_currentstateid = nfsd4_get_closestateid,
->  		.op_set_currentstateid = nfsd4_set_closestateid,
+> -		.op_set_currentstateid = nfsd4_set_closestateid,
 >  	},
 >  	[OP_COMMIT] = {
-> @@ -3385,7 +3386,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_flags = OP_MODIFIES_SOMETHING,
->  		.op_name = "OP_DELEGRETURN",
->  		.op_rsize_bop = nfsd4_only_status_rsize,
-> -		.op_get_currentstateid = nfsd4_get_delegreturnstateid,
+>  		.op_func = nfsd4_commit,
+> @@ -3411,7 +3408,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  				OP_NONTRIVIAL_ERROR_ENCODE,
+>  		.op_name = "OP_LOCK",
+>  		.op_rsize_bop = nfsd4_lock_rsize,
+> -		.op_set_currentstateid = nfsd4_set_lockstateid,
 >  	},
->  	[OP_GETATTR] = {
->  		.op_func = nfsd4_getattr,
-> @@ -3424,7 +3424,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_flags = OP_MODIFIES_SOMETHING,
->  		.op_name = "OP_LOCKU",
->  		.op_rsize_bop = nfsd4_status_stateid_rsize,
-> -		.op_get_currentstateid = nfsd4_get_lockustateid,
+>  	[OP_LOCKT] = {
+>  		.op_func = nfsd4_lockt,
+> @@ -3447,7 +3443,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_HANDLES_WRONGSEC | OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_OPEN",
+>  		.op_rsize_bop = nfsd4_open_rsize,
+> -		.op_set_currentstateid = nfsd4_set_openstateid,
 >  	},
->  	[OP_LOOKUP] = {
->  		.op_func = nfsd4_lookup,
-> @@ -3461,7 +3460,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  	[OP_OPEN_CONFIRM] = {
+>  		.op_func = nfsd4_open_confirm,
+> @@ -3460,7 +3455,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
 >  		.op_flags = OP_MODIFIES_SOMETHING,
 >  		.op_name = "OP_OPEN_DOWNGRADE",
 >  		.op_rsize_bop = nfsd4_status_stateid_rsize,
-> -		.op_get_currentstateid = nfsd4_get_opendowngradestateid,
->  		.op_set_currentstateid = nfsd4_set_opendowngradestateid,
+> -		.op_set_currentstateid = nfsd4_set_opendowngradestateid,
 >  	},
 >  	[OP_PUTFH] = {
-> @@ -3489,7 +3487,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_func = nfsd4_read,
->  		.op_name = "OP_READ",
->  		.op_rsize_bop = nfsd4_read_rsize,
-> -		.op_get_currentstateid = nfsd4_get_readstateid,
->  	},
->  	[OP_READDIR] = {
->  		.op_func = nfsd4_readdir,
-> @@ -3546,7 +3543,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME
->  				| OP_NONTRIVIAL_ERROR_ENCODE,
->  		.op_rsize_bop = nfsd4_setattr_rsize,
-> -		.op_get_currentstateid = nfsd4_get_setattrstateid,
->  	},
->  	[OP_SETCLIENTID] = {
->  		.op_func = nfsd4_setclientid,
-> @@ -3573,7 +3569,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME,
->  		.op_name = "OP_WRITE",
->  		.op_rsize_bop = nfsd4_write_rsize,
-> -		.op_get_currentstateid = nfsd4_get_writestateid,
->  	},
->  	[OP_RELEASE_LOCKOWNER] = {
->  		.op_func = nfsd4_release_lockowner,
-> @@ -3653,7 +3648,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_func = nfsd4_free_stateid,
->  		.op_flags = ALLOWED_WITHOUT_FH | OP_MODIFIES_SOMETHING,
->  		.op_name = "OP_FREE_STATEID",
-> -		.op_get_currentstateid = nfsd4_get_freestateid,
->  		.op_rsize_bop = nfsd4_only_status_rsize,
->  	},
->  	[OP_GET_DIR_DELEGATION] = {
-> @@ -3718,7 +3712,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  		.op_func = nfsd4_read,
->  		.op_name = "OP_READ_PLUS",
->  		.op_rsize_bop = nfsd4_read_plus_rsize,
-> -		.op_get_currentstateid = nfsd4_get_readstateid,
->  	},
->  	[OP_SEEK] = {
->  		.op_func = nfsd4_seek,
+>  		.op_func = nfsd4_putfh,
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 1e821f5d09a3..18c8d3529d55 100644
+> index 18c8d3529d55..59abe1ab490d 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -7487,6 +7487,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	struct nfs4_client *cl = cstate->clp;
->  	__be32 ret = nfserr_bad_stateid;
+> @@ -7738,6 +7738,7 @@ nfsd4_open_downgrade(struct svc_rqst *rqstp,
+>  	nfs4_put_stid(&stp->st_stid);
+>  out:
+>  	nfsd4_bump_seqid(cstate, status);
+> +	put_stateid(cstate, &u->open_downgrade.od_stateid);
+>  	return status;
+>  }
 >  
-> +	get_stateid(cstate, &free_stateid->fr_stateid);
->  	spin_lock(&cl->cl_lock);
->  	s = find_stateid_locked(cl, stateid);
->  	if (!s || s->sc_status & SC_STATUS_CLOSED)
-> @@ -7707,6 +7708,7 @@ nfsd4_open_downgrade(struct svc_rqst *rqstp,
->  	dprintk("NFSD: nfsd4_open_downgrade on file %pd\n", 
->  			cstate->current_fh.fh_dentry);
+> @@ -7822,6 +7823,7 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	/* put reference from nfs4_preprocess_seqid_op */
+>  	nfs4_put_stid(&stp->st_stid);
+>  out:
+> +	put_stateid(cstate, &close->cl_stateid);
+>  	return status;
+>  }
 >  
-> +	get_stateid(cstate, &od->od_stateid);
->  	/* We don't yet support WANT bits: */
->  	if (od->od_deleg_want)
->  		dprintk("NFSD: %s: od_deleg_want=0x%x ignored\n", __func__,
-> @@ -7781,6 +7783,8 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	dprintk("NFSD: nfsd4_close on file %pd\n",
->  			cstate->current_fh.fh_dentry);
->  
-> +	get_stateid(cstate, &close->cl_stateid);
+> @@ -8457,6 +8459,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	nfsd4_bump_seqid(cstate, status);
+>  	if (conflock)
+>  		locks_free_lock(conflock);
+> +	put_stateid(cstate, &lock->lk_resp_stateid);
 > +
->  	status = nfs4_preprocess_seqid_op(cstate, close->cl_seqid,
->  					  &close->cl_stateid,
->  					  SC_TYPE_OPEN, SC_STATUS_CLOSED,
-> @@ -7832,6 +7836,8 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	__be32 status;
->  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+>  	return status;
+>  }
 >  
-> +	get_stateid(cstate, &dr->dr_stateid);
-> +
->  	if ((status = fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
->  		return status;
->  
-> @@ -8575,6 +8581,8 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  		(long long) locku->lu_offset,
->  		(long long) locku->lu_length);
->  
-> +	get_stateid(cstate, &locku->lu_stateid);
-> +
->  	if (check_lock_length(locku->lu_offset, locku->lu_length))
->  		 return nfserr_inval;
->  
-> @@ -9066,7 +9074,7 @@ nfs4_state_shutdown(void)
->  	shrinker_free(nfsd_slot_shrinker);
+> @@ -9082,13 +9086,11 @@ get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
+>  		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
 >  }
 >  
 > -static void
 > +void
->  get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
+>  put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
 >  {
->  	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
-> @@ -9120,66 +9128,6 @@ nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
->  	put_stateid(cstate, &u->lock.lk_resp_stateid);
+> -	if (cstate->minorversion) {
+> -		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+> -		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
+> -	}
+> +	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+> +	SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
+
+I'm not following why the above change is needed or safe ?
+
+I'm OK with removing op_set_currentstateid, but let's dig into these
+two issues to ensure that this patch handles all the corner cases
+properly.
+
+
+>  }
+>  
+>  void
+> @@ -9097,37 +9099,6 @@ clear_current_stateid(struct nfsd4_compound_state *cstate)
+>  	CLEAR_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
 >  }
 >  
 > -/*
-> - * functions to consume current state id
+> - * functions to set current state id
 > - */
-> -
 > -void
-> -nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *cstate,
+> -nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *cstate,
 > -		union nfsd4_op_u *u)
 > -{
-> -	get_stateid(cstate, &u->open_downgrade.od_stateid);
+> -	put_stateid(cstate, &u->open_downgrade.od_stateid);
 > -}
 > -
 > -void
-> -nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *cstate,
+> -nfsd4_set_openstateid(struct nfsd4_compound_state *cstate,
 > -		union nfsd4_op_u *u)
 > -{
-> -	get_stateid(cstate, &u->delegreturn.dr_stateid);
+> -	put_stateid(cstate, &u->open.op_stateid);
 > -}
 > -
 > -void
-> -nfsd4_get_freestateid(struct nfsd4_compound_state *cstate,
+> -nfsd4_set_closestateid(struct nfsd4_compound_state *cstate,
 > -		union nfsd4_op_u *u)
 > -{
-> -	get_stateid(cstate, &u->free_stateid.fr_stateid);
+> -	put_stateid(cstate, &u->close.cl_stateid);
 > -}
 > -
 > -void
-> -nfsd4_get_setattrstateid(struct nfsd4_compound_state *cstate,
+> -nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
 > -		union nfsd4_op_u *u)
 > -{
-> -	get_stateid(cstate, &u->setattr.sa_stateid);
-> -}
-> -
-> -void
-> -nfsd4_get_closestateid(struct nfsd4_compound_state *cstate,
-> -		union nfsd4_op_u *u)
-> -{
-> -	get_stateid(cstate, &u->close.cl_stateid);
-> -}
-> -
-> -void
-> -nfsd4_get_lockustateid(struct nfsd4_compound_state *cstate,
-> -		union nfsd4_op_u *u)
-> -{
-> -	get_stateid(cstate, &u->locku.lu_stateid);
-> -}
-> -
-> -void
-> -nfsd4_get_readstateid(struct nfsd4_compound_state *cstate,
-> -		union nfsd4_op_u *u)
-> -{
-> -	get_stateid(cstate, &u->read.rd_stateid);
-> -}
-> -
-> -void
-> -nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
-> -		union nfsd4_op_u *u)
-> -{
-> -	get_stateid(cstate, &u->write.wr_stateid);
+> -	put_stateid(cstate, &u->lock.lk_resp_stateid);
 > -}
 > -
 >  /**
 >   * nfsd4_vet_deleg_time - vet and set the timespec for a delegated timestamp update
 >   * @req: timestamp from the client
 > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index 2a347c1bc3e7..b94408601203 100644
+> index b94408601203..368bad2c7efe 100644
 > --- a/fs/nfsd/xdr4.h
 > +++ b/fs/nfsd/xdr4.h
 > @@ -1043,8 +1043,6 @@ struct nfsd4_operation {
 >  	/* Try to get response size before operation */
 >  	u32 (*op_rsize_bop)(const struct svc_rqst *rqstp,
 >  			const struct nfsd4_op *op);
-> -	void (*op_get_currentstateid)(struct nfsd4_compound_state *,
+> -	void (*op_set_currentstateid)(struct nfsd4_compound_state *,
 > -			union nfsd4_op_u *);
->  	void (*op_set_currentstateid)(struct nfsd4_compound_state *,
->  			union nfsd4_op_u *);
 >  };
+>  
+>  struct nfsd4_cb_recall_any {
 
 
 -- 
