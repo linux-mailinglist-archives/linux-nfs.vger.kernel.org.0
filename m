@@ -1,101 +1,100 @@
-Return-Path: <linux-nfs+bounces-15364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C97EBED7E8
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 20:45:20 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99A33BED7FD
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 20:56:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D673319C0797
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 18:45:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93DE94E519B
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Oct 2025 18:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E657623F42D;
-	Sat, 18 Oct 2025 18:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC9A27F016;
+	Sat, 18 Oct 2025 18:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eDBkT4da";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="lJUZXKdD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hl8u0YQp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="l2PSEXok"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A037DA66
-	for <linux-nfs@vger.kernel.org>; Sat, 18 Oct 2025 18:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67182798FA
+	for <linux-nfs@vger.kernel.org>; Sat, 18 Oct 2025 18:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760813116; cv=fail; b=D/6y5u8qSeN+P1qYDOkFCxbPu/sPtPpXEHhZJ1BprrPRALQZVXDZgqPqpHmKe5TiMvk05CTJivdMaLvgwMoUAn0yfbgu3xET/FA2XJIUQuNXMnW4/S0BewFFoF5CjQT0gWtKjFnw+l3yp3PE04dzn08bmIVMa/PD+TNMUaSySVY=
+	t=1760813753; cv=fail; b=bubbgCyhDm5misE861W48mvaPIbes7EvKQF5rb75wgSUNOt2JJuc44Cm2VdV7ItPNxKWXmTHEXAISRK4WTwCco2tR9tWNGS1IHD0/E11mDSQqtDJWrt2Q9aPBng7304M0Bf6puwNdsUDVy1vyXgrm/PlTmGkbwyPHVJdTjjg+II=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760813116; c=relaxed/simple;
-	bh=vOpUkjSf+7kuuahz9DmUHvNAiVykQ/2jUfZduthXSAI=;
+	s=arc-20240116; t=1760813753; c=relaxed/simple;
+	bh=xBkMvRCtSsWawLPp6r3pFCRiOd9R1fDw6Wk/cS0XwUU=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uLnLuHM74FVRFIlLMjtRz+D8cRdUJOlwnv748Lsry4nkoG9+u0zDC9t7wFyatVHULiDMO3IiEwYowcaLa34iqG1SgtwHmMzJSKssGRchKTWyFv33+wusKozsd/tLJCeObkwPCw7bhwOES30A5wNej2fE1tNaNFAaLhv2ykAPUgQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eDBkT4da; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=lJUZXKdD; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=lvA5GdeHbeOp2oh7M7N3VNnytIOj6gFjPedN9pp9rEgXolOaYhhlcZbBvy2CM7zEchMyQ0GgJKDo2twxFUNA95SAXFnlvGjLY7voRbd22VuiSsjmVJ4v+lfyBARxLyAanTVLQYFHh5/d7a3Fn4pOkLZ/dzczU0yjIF/GvnfL4yE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hl8u0YQp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=l2PSEXok; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59IBfwGM015122;
-	Sat, 18 Oct 2025 18:45:02 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59IFdj51024245;
+	Sat, 18 Oct 2025 18:55:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=ypRwEIH1Pcc8mb7s9/xFRwH8idXX+o2+/M0IPUvkuxE=; b=
-	eDBkT4da/T133FB1zeTU4HtyzR80KE8+YdD2WdbXFZyJX/7Klyhs9HAlyprtJR/4
-	w7k+JZoP5mF7XtN+JuV6MFnbwv9r6ZNwYn4rwD95Vb/aw+UdM6k6MZCG0P7cI1Zp
-	tuIrigS4ESULS4+tUGrRUflHA3RXT2tF2GJuyu0rDLah7pA6R1nMlXvKIV4ls09P
-	RaGQX0IYuN+kL61E21Wpe6+tjv0KFNgg29MQqsy6iA7JzewNK9sJ1w6DC6n0Zy0r
-	GH27kguwkJaITIrfjoMsjPAtx565nNUt/AFvqe8GnT6geCLB/Xop76GQUqiDZfMa
-	M5WK/qZWR0Bcobb+oVNR+A==
+	corp-2025-04-25; bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=; b=
+	hl8u0YQp5f6gLPKHRhkSIMrltNmHHWEtUlOBcVnnFMEcfJqKKC8seb2mQpiPV67Y
+	E+Rz6NnQjVjfjg8EaTdILnJ/UsqKVx3VR3GmZB8f8F7J1ZRaTsGB5MVxMO8DDSBD
+	v/pX55EYlnD/qxBtDRCzHy61580zL2Sa7k4xq9LEsS+lS6IRiiG8tgLqKxFrK82d
+	NwbHurp4IUe2kH6gDnXV7tEDLBGohwqFZxWU9ABhdgYDc+k7iJBphNxyfUaabM2h
+	GlkmtjLulDARrClGgGcvtINf12m/N5bb5eQi1UftlItUik6mz80AMaqSqoNiVn+Z
+	Mf4O++DYOFq4B1jNH7lIgg==
 Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49v31d0fbt-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49v301rfdn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 18 Oct 2025 18:45:01 +0000 (GMT)
+	Sat, 18 Oct 2025 18:55:45 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59IDY8cg009770;
-	Sat, 18 Oct 2025 18:45:00 GMT
-Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010059.outbound.protection.outlook.com [52.101.61.59])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49v1baq1bn-2
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59IDHZOc009516;
+	Sat, 18 Oct 2025 18:55:44 GMT
+Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azon11011014.outbound.protection.outlook.com [52.101.57.14])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49v1baq5n8-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 18 Oct 2025 18:45:00 +0000
+	Sat, 18 Oct 2025 18:55:44 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=izMlLJtt+J/Oxd5WAT+uBBvw0MldU/RGy3w2/KCsyBvTsRFTfDNtNT/5biw6DgphZkR5SXgofXBJLNU1E6livxRKamQyJT5MN22ib6D/x1dQOl8gjs5MlO7jTLYJHBpa+MeQWLU7dN8r9HBW3vSnd/s7A+CxUblArNbtmyt/+2G963OB6EiQ/G+7ukE3+tQN+2ZLySibk3V1/es7qOlZ/OrKmmQPrNtUlPVHB7UREZG/VdlS9B7DtG+9mgiPwJsxPjj54dNO/dz2ga9NJkn5MMeTZE4ILqeUSCrG7lNSd55eJCX8Y/zH4F6ITOpH38P2DNETScUNn5RYmlRUscQ1pg==
+ b=cxz6z2GlOwvSn44ylv4Tz8DvhYRMW6xUf6Dbf6GTPNtY9Rml50+QM8pI8LYlOFLddCWntv1RDpvX2hle5Mp34JTguTYTjOHHmgo3XR1Pfyupc5JPVTNfeoI17ZL6P9IjIPdjRPhVMS34v7s7XkDQ0XNVa4FSd5PNzV36OUdH5qm0IiE4CkDi0U1bPxvFEppdC/u9PGnrNUZtNUlxBgVs++bh6yg9xXRnL8ePD8Vn9dGkXfVB1U0JxD3iDA9y4KdBdJVQwuafD3Zro9QhoA2UY2dOxBuw2Mv6QrLq9O2avIJ+AbGg2B5FiSPLR1R1WcoVEdPGhA6JzPhlW3zfTl43nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ypRwEIH1Pcc8mb7s9/xFRwH8idXX+o2+/M0IPUvkuxE=;
- b=JrPPK3dn7fUiTOnQKY6bSE5gu47MfcJjDfr4Pc6ySPnzQS95HwJDV+4WNEn0t9YPz7FbIA1myuB4GF0eoA/tA7udvGSlm2mXsAmkq6t6zLgq2ccEeaqFLPJMT0gDH1t2Fo4TDMPTztC2a0MtU28Tf+o4AAu7zUqAv/ZC9CjcUxQNMBQfUV6jeZzKeg5UFXAuFiACAgR7v+9CYcUHEqyA+Zi0Q6InKb3mUWMiWN32S1ASiWuTVLexG4ZS6RYG8QDAw2gGGV/V9D3m+kroaHwPsbEOO/qv7pQ7bdjxcgJcbSJsB7My2y9UzJ+x/75gO8PPivVgNRLtlX/4Q06BofHHDQ==
+ bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=;
+ b=UwEHVuygSLBAz6zFeaNZoi75nVtWI6oy9Ue6L+8n/vso/A/zS2s5ET6jjjFkVSuNTModh64TbVnhlv9LnWwRlGaT76W9rQmcNCFRSdcbOaH36aqlcLeDD61mcaChRi/ixQW1nMyVzPbxwlTDalOlyzMXVlmLBcfYHHVZHm1zr1gjEMp2ZS1lQPBBQFusg/u0l3yPgMPSEol6FQ00tbwZ9lorFE98ItkT30M+WMpUXG/CTOFQUubyKPc9rqSZVhStw9uFJAaHnQKZyMUuL8otHlF8zeSNa9nYyyjBViZBTuyqcTzqgFH6K2v0JXxvtDyPEnLlpF4wGQiP2+M6WsXh1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypRwEIH1Pcc8mb7s9/xFRwH8idXX+o2+/M0IPUvkuxE=;
- b=lJUZXKdDGpUERxIDiBvvOiAzXqLR7dQc1NDr2ZIqSFQcRFZZuR3ZrIl1Vw0JKL4zRWwGN5jMP1PiQlwo+ye4cX0g6Hr6BCwF9qbtLhqZ1lzk5RsIVb7An7IzEP+wQzxM8SGcXCEV7g37s7MB6NLSjdA1UNiKbHGVnn0U3vNucQk=
+ bh=MdNigY7W5KBNq64xr5nHd5Ei1DS1+q/UgLTYyi1OII4=;
+ b=l2PSEXok0ZjO4ODCXF+OP6/RhLg1VwLKGqxsGnb4O13XF0ZHecgapRqogOURV3lqbAaWm0jR4ryqiUyI9+ifbppHcO+HL/ZHh8PySSTkwSwA+OwVD8xrFqeLPhoIcJro51ZvfTCe7yMMXRr9Cu7Bz4OuLi5d/UnH+05vsByiWWs=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN7PR10MB7074.namprd10.prod.outlook.com (2603:10b6:806:34c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.13; Sat, 18 Oct
- 2025 18:44:57 +0000
+ by DS7PR10MB7299.namprd10.prod.outlook.com (2603:10b6:8:ea::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9228.14; Sat, 18 Oct 2025 18:55:42 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9228.012; Sat, 18 Oct 2025
- 18:44:57 +0000
-Message-ID: <3c41883e-dac0-4b80-8ec3-d627936cd574@oracle.com>
-Date: Sat, 18 Oct 2025 14:44:55 -0400
+ 18:55:41 +0000
+Message-ID: <83dfd9ac-912a-4254-ae5d-25536a8e79ac@oracle.com>
+Date: Sat, 18 Oct 2025 14:55:39 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] nfsd: discard ->op_release() for v4 operations
+Subject: Re: [PATCH 2/7] nfsd: discard v4 ->op_get_currentstateid() function
 To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
         Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
 References: <20251018000553.3256253-1-neilb@ownmail.net>
- <20251018000553.3256253-2-neilb@ownmail.net>
+ <20251018000553.3256253-3-neilb@ownmail.net>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251018000553.3256253-2-neilb@ownmail.net>
+In-Reply-To: <20251018000553.3256253-3-neilb@ownmail.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR15CA0004.namprd15.prod.outlook.com
- (2603:10b6:610:51::14) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR03CA0028.namprd03.prod.outlook.com
+ (2603:10b6:610:59::38) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -104,529 +103,435 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SN7PR10MB7074:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84da3e00-caa7-4930-2ae7-08de0e766f7f
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB7299:EE_
+X-MS-Office365-Filtering-Correlation-Id: ecb3588d-e50e-4441-b5e0-08de0e77ef68
 X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?QWhyT1hoZmZyMStwNDhJQ2ZFMHZaZjVqVjFsQWhLallJMVhMS0NFTm9SV1lz?=
- =?utf-8?B?VWE5ZU4xWEFZTmpGVWRFUi81bTVUbkorRkpPemV3OUlwZ2JaTVhFMWp2aitI?=
- =?utf-8?B?RTl0Q2pZU2RZalRUUHZ4MFRuYVBDYnNZTjg5MGp2UDdzNmNacStuN1QyVzky?=
- =?utf-8?B?OVM0NlIyYlZHUFRxRHQ0NS8xa2xhby9tWEZZZ1NqUXhHZDFZYUJ4bWtwYXhq?=
- =?utf-8?B?SkV4VjgycC80S1d2OHlTNU0vbWxJdnlTaFpGQlhTSjl0Z1YwbmM4NzdzYWJv?=
- =?utf-8?B?N25DQS9VTnR0WGZDS3BlSHAyeG9tcEFGWUlHSzQyZVNmSnZsZUxnOHVRVldt?=
- =?utf-8?B?bUgvVzYrWXY5STcrTGhyYm9PNkNxRUNwZkFjVzZZVndxNUR1Y0lBZGZrKzlr?=
- =?utf-8?B?RmljcWlUMTlCVW9QYnJ4OUVVOVdrZG1GRTNEUnhrWTRWQ2dpVHNacENiU0Nm?=
- =?utf-8?B?SjZZUzUwdjlFQk5DWDB4c2hMS1Y5eHlIM0kxV2pBdk1tNE9EK2NsN1p5M1Ur?=
- =?utf-8?B?MERhY0QyZkZtM2I3NnpOQktyNG92OUJYaUdTSUdOejJ2RFo5dVhBNHMzNFZ1?=
- =?utf-8?B?RFlSRFNHUDA1OGNlSDN6MUYzclc0dE4zVWdtUWVQa3QyUTdOdHkycFNBblI0?=
- =?utf-8?B?bzRkanphYmpTNTNBdkl3VGhqRTJlTEpwazZEWDE4cVJEYW5XWVRGOGl3bndI?=
- =?utf-8?B?Q0NkcEhyNEM1YmRJRVR6ZS9nT2twUVhmMEZoOWRIbUxaRFZnY1VaZG9yREJK?=
- =?utf-8?B?cjkzd1JPVCs2L1k2Nk9UbEp0ODlYdTh1MnlHTU5MQ2FMQmdOYVVKbUdOS2tH?=
- =?utf-8?B?d2Zub3o1UU1TaDc3bmhUY2NObG5vbURFSmF3WUNySlhzbGl3ODZsem5uU05s?=
- =?utf-8?B?dGNmU2tuTDEydmlZTkFVS05Da1BnQXE2WHQzK3dMdGdNZnBFMmtpVzY1eVZE?=
- =?utf-8?B?WFU1NDJ3UUFmSHNTZ1VNRkpNOHZSMGp6WG40WHIrcTh1R2NMK1l1Sy94U2dY?=
- =?utf-8?B?eS9nMzhwZFRMUVhjQXJvN044ZWRlOWxnMmE3eG9RSkVsK0pPK1cyNWcvSDJC?=
- =?utf-8?B?NCtqd0hGVGNiRkN1QUhXaFEyTGJ1RGlmcmxRbzFRaEhIbldzMzhteWp6eVgw?=
- =?utf-8?B?c09LRmtnMG5GbjRISkpvKzVLaWQrUzRkRzBjQmt3ejZ2YllKL2ZpNGV4elZH?=
- =?utf-8?B?TzdZSlNQaFVKT2w5cEJYQkZNbU9NQy9DL21xcjNQNnhwQmdXWTBQVWVJVE9L?=
- =?utf-8?B?MjdSTCtXUCs1T2VlZTZ1Z0w4cCtJTi90eDVzLzhCTmQxbENRYUFuaDFMMEJs?=
- =?utf-8?B?UGRlRC83djFtZkNIbXV6RDl6V2NscDNCd0pWMFFIcU03Z0d1Y1hZTEJkVjNu?=
- =?utf-8?B?VUVYRHIrdnRkZnp0MHNNTU1haDZyNVM5c0tsclN0cEhZb3ZudjFrQkZyR05K?=
- =?utf-8?B?VzVLbmNONnE2TW9oZFFMa0dlL2tvZ0c5R3ZyUk9YTy9naFZDbHBUMExwT2FB?=
- =?utf-8?B?YUovZ05TR09HbkJBaFZMTUdsU2czWWRBVzZramo2RHR4MHJBS29nQ1VqSGI2?=
- =?utf-8?B?RWwzNlVnTEFRTFVYNnM1VDd4aXJJUnVpNjllNmdNVms4VUxnUXJBWnlhWjd6?=
- =?utf-8?B?N3QzMlpyTWlCL0JWeEp6RVBqS1NjazdzNEFaMEJnNjRLTncwU0ZEYnZBV0Er?=
- =?utf-8?B?OHZCOE10WE9KZ21FMFpMbW56eXhFYUN6VTg0emIrdXpNbzF2RFRXcXV6ZTRu?=
- =?utf-8?B?OTFSSjVzV0NiR2k5MlU0MWlZSjZ5czlkd3luTGdlWnFUYlZnclJObDlQb01C?=
- =?utf-8?B?cTd0eWJnNmlVdWQyREY2Z0RVVUNCZUpMYURpSjM4VHA3TnVwMUVJTll0ZUZT?=
- =?utf-8?B?bG01NzdrRHhCeVRmL3lQcXpRanUwQlEzTWs1RG4wTnY4cEZrT0tlV3ROY0t2?=
- =?utf-8?Q?vkTTysEEWihChF3P4OBgZL2Bft6bXgeX?=
+ =?utf-8?B?QjJtcnlsdVJCR2ViS1cxaTJ1NGpkQTN5eDI1VGNVc05kZytxZXNzTkUvV1F1?=
+ =?utf-8?B?Mjc2THpWNm4yRFR0ZnV2eGY4MDN0M3FPNEpLd1oyWW0vTE1mZURxY25Jb3d3?=
+ =?utf-8?B?Sm1Id01zelN4QXUzR3F6RGNDVGcyUEhNb2xGeThueFk3dXo5NkN6bWI3WHJD?=
+ =?utf-8?B?VUtBQVd0aFJIc0hTN1FsTjlKU1V3TEhuM2JrTTUxeE9DaWJXS1hOcWJRa3dn?=
+ =?utf-8?B?dE9qeGV0YkRtZXVpeFBOaW8rUU9HYWFCSjlUQTNoZEFPWXdRZlhwelFqc1V3?=
+ =?utf-8?B?cndRcFI1MTRmdXd0bmtmY0h4NlowaXBrU3hOM0JNM1Q4bDZmYlVWLzZVRjlw?=
+ =?utf-8?B?Tk5NamJKTDhCMWt2am51WTV1dmg5aC9ONWZHZ0VpeHVwYTUvUnZhRGpoSU11?=
+ =?utf-8?B?NENBTVdWcjZtVUFsemk1b2JpY3l4ajY5dmw1UUtieUVXNFV3Q0ZFK0J3bW5m?=
+ =?utf-8?B?VEJRdTUzZlBuTDU0T09mZzNhTjFHQUhOcXAvTFU1WXNqYXUxczRDbmI2djE5?=
+ =?utf-8?B?UVRsQjBjRDJjNlRqMXkzaGtXcnE5L25YTjh0cEdOdGYvTEUwZEVlNVZDajVp?=
+ =?utf-8?B?ZkZVUnl3MmZXTys3Qmd3QXVXRUZuQkRlQ2V2bGZnZmRJWUE4Q1NkN3RwNWpt?=
+ =?utf-8?B?VUd2QkFTNUZJaXdOc3RLbnFJcGJUTmdmWXB3aS9LWG5IdFRBZW52Z1IzeHR0?=
+ =?utf-8?B?aWRla1VmdmF4c1UxTDhlc28wblozVFpvSTRnY3duWWkwRThER3NFOW9naG94?=
+ =?utf-8?B?a3BoWWNTQ0VHSVN2T3RUcGlRWWZrZ2R2SXFZRFc2aE5qV05MazZzVnJhRGRF?=
+ =?utf-8?B?YnpKdEtlVVhlckxyaXJpNkF4SWZTcnR2WHpSN01sNSt6a3FxbUhpZWw2NDNO?=
+ =?utf-8?B?Ti9wQXBDampCcFMwdjNibG1XdDUrS0IvTWhRZ0dSS21HWmRIdVFQanJHVmFt?=
+ =?utf-8?B?NzhTUmhMZW1jTlg4Nkp0ZmFwMTQyeVgxSXlrQjh5OUZOd1ZMUVhVazkrZHpK?=
+ =?utf-8?B?V1dxQk1GNURCdXE3TzZqK0YzTitOYkZKRnZIZGVMaWlmdVd3cnI4WHdyMUZX?=
+ =?utf-8?B?WVY0Y0Njb2RCWXBXdnlWS2ZESWoxWTY1VFJwWm1XY0RVWGd1LzRlRlNvQi9N?=
+ =?utf-8?B?Qm9XNjkvL2VraVlIUXVscFgvRDJPUjNMUzV0K0FmbDR5d2VyV1RjTFQ2U3po?=
+ =?utf-8?B?SWd2eEtBSklQa0lSUnR0R0VublhuakpPY0p6SmdjeTl2N1pUdVhSN2JVRGhP?=
+ =?utf-8?B?U0ZaU2ZRTzRuaU9jbnJQMVpIYVN0QlFURHNtN0FKNnF1WHk0QzljRTFDUTNj?=
+ =?utf-8?B?YWZtRmljVVBCcGdWS2dIZW5WbGFKVEV3U0VCd3FQMUpRS3oydi9HdVh2TnBB?=
+ =?utf-8?B?YkpLTytGWHFlL2pqSmJBNUVNcmYvYmxnRVBqU0hMRGI4RkZhWE1hdWE4WFRu?=
+ =?utf-8?B?bUNGck9HNVZBbHMvUGtIdEtlamVuZk01emJKekI4VWxzeER1OUlrd3MvUnZF?=
+ =?utf-8?B?V2N5akJ5WTA2YVlJYUFtUTdockwyRnQwb0Z2NndHMlNZMDJxcFVIZTBFWEJB?=
+ =?utf-8?B?TStuTEwrcnAyZi85VmJaVVpjMlRDRjJtU3R2ZHN2OU9aRXJBdldmdVhDUjVE?=
+ =?utf-8?B?dWJQREZRTmdoY0VFSlR0NFcrblVwZGNIOHZ1dUhSVTZ3Sy9lRnlDMXozd0V6?=
+ =?utf-8?B?Nmova0RVYXlVSnNyYVFMNUh4eVZxRXhFSS9XUkgyNi95TUNKUzg1OU45SUZ3?=
+ =?utf-8?B?anNWNStQcnhrM2E3bUZJTDQvcU1oTXpNajV6bXBna0h5WXZETGIzTGNJUXBj?=
+ =?utf-8?B?MHkrb3B5THVKVXhXN2lCRDRHNk9OVndudkVxbmZlZk5yWEtwVzYveUNNOVZm?=
+ =?utf-8?B?dU8yWWNBS3VaaHkzZVM4dng0MEVKR0ZZRVN5QW9XK3NvSzl2QXFxbWNxOVZJ?=
+ =?utf-8?Q?k6iLb9FmTqMmcRz2YAeXoM46hX7hoqKw?=
 X-Forefront-Antispam-Report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?M250N2tkVlJjU2Zsdmh0RmcvNlpQMnZxTDQzSyt1Wm1HOUlXNkRlQ1Z6UDYx?=
- =?utf-8?B?SzhTckhxRkE5VVlIQXRkSS9zVFhzSG0rZjNOYnZiSElvZDRkc25EcHlkWHdk?=
- =?utf-8?B?dS94aWRFM2NmYWFZZjBEWDgrMXFqRHZsUjFmVEo1SlhYVWVZYjBOZ1pVVGhQ?=
- =?utf-8?B?MksyZlQzVmdPZVJQMmhXZ1RUOTdvSzF5b1B0UklzUDROeHZ5ZkI5RVRtVEg3?=
- =?utf-8?B?WE9nVTUzcHZhcHFOSnJBKy9UTnN1RGplcCtRSTZXcG9VcW1YU2JzVW1yNFZR?=
- =?utf-8?B?VkFLQkVtWHFrT20yZ29VZDFpZENBQ2wxUHBRaWRudjBnc280dWI1OUlXUnA3?=
- =?utf-8?B?OGJFU2ZTR1UzbnNLbEZ2dHJIT1pOL2JaYm5DaE1vMXd6RDhWME5DVVJXZXJL?=
- =?utf-8?B?bmJzbkZsSXFHelp5bFNLY0t3M2pYVG80Q3RJYjErbFFPYTgwSlZMTzlqazU3?=
- =?utf-8?B?U0xnL25la0hyeVJLUnZ6ZVJrT1JqdjJDeGM2NXgvL0JXNEpOMFRrN0RoL1lG?=
- =?utf-8?B?dk4zc2tsUGVIUjFjdEJjUnQxMDB2Uy9od1RmWmVXV1VZZ3RXL0tPMVdHQ1g2?=
- =?utf-8?B?ODRxYkJLK0x3R2RLMVJsWDlFWXF6cGJka2RzVyt4ZjJJdFl4WmVUM094YWx2?=
- =?utf-8?B?anlyYkxTT2xTeHdXZXBBbWwrR1V5eTZUUWRMWmRFT2lLWG1kT28vREhSZG9G?=
- =?utf-8?B?d2F5OUZqS1FhTG1rNWdtTC9tcDNnZnZLOXlWMkF2QzI4amxtZGE3cU9DWjh2?=
- =?utf-8?B?TG8rVll5ZUk3enRhNk5lNFMxdTV3TC8xSVdaYlZuZXU3MWdRY1liRzFNeWJE?=
- =?utf-8?B?NEJqY3BhRTBjOUJ4YmxWczYxSXFQaysyV2pRODZ1bUZZNTlGSCsvOS9rOFZM?=
- =?utf-8?B?YzJyMUlNeEZrSzd3dUtBdDdvd0ZrYkVFVFR4UWphWjFLUzdtSHVqdDI4OEdL?=
- =?utf-8?B?ODl5NUI5eDBDU1oyU3A4VktpUEdLNnlhRjlOUVJzcU4wZ21zRXFyakpuSzNE?=
- =?utf-8?B?ZGcvRFBlSlQ3cEg1eS9ha0luT20rM2k3ZnFqMG1vSWZuN1NwcHVkNlgvU1JG?=
- =?utf-8?B?Sm9BZ3F5cDlMQktwWmNLV010bEQ0VElLUnFxd0lvalB1TWZteTZXakJ6TXU3?=
- =?utf-8?B?NmpvNlZlVmhvd21wK24wRmIwazhKWFJoNzF1UTQ1MlNPZTA3MGZhWGFXN0ln?=
- =?utf-8?B?d2JJV3VRMWVha2d5amhUeVk0UGFxZ2JwcE13d3FtbG9IUGlnRFpTSW4wRkxE?=
- =?utf-8?B?RWZQeDJHNVJKWEhiRFFvVmU4ZmVtZVRtaWU1QTFjaGhrQ1ZuYjVsQkRWR0ZJ?=
- =?utf-8?B?UStCcDN0OVdZdDV4Q3p2c0tGdFFLNk00QkswZ2lVUDltZWxSenVoMUJiRlJy?=
- =?utf-8?B?dDIxMmExU3VGd0d0WW1XaENSQWhCME83ZGo2M0JJRlMvZjE1b0JYQ25MRUZi?=
- =?utf-8?B?Mm8zRVZRRzZMNUVEZ0lQNkdNN3FtWFdoUFczZG53MTBicEJQUWNBSDh0aHIr?=
- =?utf-8?B?eDZDMXNhZHlwK3J1YUtvdm5xU3daUUZOZUtRMklWYml2ejJXK1FhZlhzdjdw?=
- =?utf-8?B?aVA5YW1UWUx6aGlQQ2lab1JvT0NYZUdsR3l5Yll2TVN0ODlwNWhTVDRRMDZD?=
- =?utf-8?B?MGppTGpzRGM4TG9TNlU4ckZkVmhjaDIzdS9vV28rRzBPT21HNGF2SmRjNllY?=
- =?utf-8?B?OURGcGVzanRkcXR3NzhPZmxaVXhwTk44ZjNhM29OSW5rV1YwcVRhS1lOYWRR?=
- =?utf-8?B?SXYrak0vQjhHVVgxMWFWRVU2WEZncjJFODgxSlFKcEJkZ2R0UFRsV2xsTjRC?=
- =?utf-8?B?dTduV1Ixc3dFeDd4NzdCL3ZpU0Z5d1BJUHdqSUZSZkUxd292aFN3blhvN1Vy?=
- =?utf-8?B?OUl6cGlMZnd5bitlVHNjYnBGL1ROcGl2TmVlYVF4cmQzdDFIcnQxcFhDcmpX?=
- =?utf-8?B?V1plTjdaMzFXM25sdHdyNkFlTTFIS3FkajMzVWtJajByZ0J3VHcwRXNNMFhW?=
- =?utf-8?B?N1UzSUF5M3F2Z2J0clNvSnFzaDB4dEVHNUpWQ2xJdzREd2FlaElRNjgwZVhW?=
- =?utf-8?B?bElTYUNNMlN2U1lub0dZWnZteUc5VkErWTR1bmFtQ3IvdFVEMTN4NkxnS3Jl?=
- =?utf-8?Q?Sxawa1SE+hc280qq8wFcGzFGS?=
+ =?utf-8?B?a2xqMDYvL2daNllXZng2ZER0WHdaUllQeHJEbkV0elZlVVkzdXRiV3JGTVpW?=
+ =?utf-8?B?ZHl2MEVIdEI0SUdrSWFHVU42WitBT0lmZWphdy9TMVlIR2xPZ0pEeExoZTlD?=
+ =?utf-8?B?SGZVTk11TnA1a2RrNnFXTmMwSndtWTYrR3N1M1hjdjlkaVFvS1I5cTlKc0lW?=
+ =?utf-8?B?bnlFU1J0a3NNc3FrT1phK0gxbFA1NVdQUmw1S3pnb1I3RGtLT1g5SW5NV2VB?=
+ =?utf-8?B?VzYxWWFIZ2tCcG1GbnpVbytqeUdjUitjV055dCtrU1J4M3V4NXVaSzdxOTFG?=
+ =?utf-8?B?ZXo1cWUyaGJ2Q0pNVXdKOFRpSU1FKzZ5N29QS1BraUk1eGZqZGtRUzA0dEVR?=
+ =?utf-8?B?UjRFejc2VnpXbVNLOVRXaCtBNVZxU1dqd3RaL243eSs2d04zbzIzeEdiMVpI?=
+ =?utf-8?B?eDVjalFjMjlvY1p0Nll4QWVtSmkxdDVjZXp6U0c4UnNZc3ZwbFVXZEFyRm5X?=
+ =?utf-8?B?MlR3ZU1HYnpRa0RPUnFBNXB5VzlHbERJOGQ2V3h4RHl6STJMUnV1cUNLY3Zn?=
+ =?utf-8?B?d0ZzN0hSYkI0SlVlVnlsTWt4K01aMmFHcUZKb3U0bmUwcDRlSVh6TnRiQzVX?=
+ =?utf-8?B?YXBRcVEzWTBRWGdLc0t6WHA3OVBVYm1pY3MxNEtkVmlPM2NDSWk1ZnlXOGlV?=
+ =?utf-8?B?TGlpcnRhZmsrMXljT1RRK1Qrb09mR3VLS2hYeUFMMk55V1VMSklvQlFrL0NC?=
+ =?utf-8?B?Z2NEaVlEaVgrcHEyZzRrd1Q0aFdnSDNvU1UrRVQ5Z0VGaWJ3Z0w5ZmdQU09K?=
+ =?utf-8?B?VTNYc0piVk1lOXNZWGZsS3pMQW42Zy94Ymo2aCs0bUU2dkNoQzd6VnlmM01T?=
+ =?utf-8?B?WnRpWjQ5Y0xjbjNpVDc4dzJPem84LzFPc25yQVlLNSswWDN1WEpmR0pMV0JH?=
+ =?utf-8?B?bUVwa3hwalhacWRFbVNSMnE5cVBrMitvVjJnV2tMNmxDSUhWRmZLbFJwVVBv?=
+ =?utf-8?B?K1dRZUhYZFRNTk5YbllmYVRDeGlUSGtVVHFKZm4vOTVSWFkzdjNZRXZmNVI0?=
+ =?utf-8?B?a2pROVRQRUdjMDRYL1JXbnpFMUVHeTZUdGZjUkhZQkZEUUlPNEd5blpQcm5E?=
+ =?utf-8?B?SVREQm4xWTBFQ1BqbWQwemEzL1VNd0VodndGVlk2MU9Fb1J3ek03WFhXeWpp?=
+ =?utf-8?B?Wk5uS1FkYVJUOFFWVnpzbVp3OW5YaGJJcDQxWWwwYS9aMkV2WWk1Q25KQnZ1?=
+ =?utf-8?B?UGdVRFZIWnpBRitZY3hLZ1BYem1VVk13OVZQQjEyUDhXcTFlcmJTdGlYMkNU?=
+ =?utf-8?B?SDFCbm9DcDg5SFdUbHdDTXUrUk43SktxZjJoS1Bka01GS1JEaHBUV3EyQW9Q?=
+ =?utf-8?B?ZVpqemlEc2dzNTJyRFNnb1d0aTdJd29RSDdCZ1RvdVAwU3prdCtrSWZ6ck9I?=
+ =?utf-8?B?eEI1ZzIvY1FORi9UbWNqcGIxQVRaVTR4UHhQRytyUTI2cjU0VlZnUTZkOXhM?=
+ =?utf-8?B?YVI0MzkxWXdNUDBVMThEZEdCMnFKMHhaZGVzUmttOE1iMXhQVURiV0MrNk9E?=
+ =?utf-8?B?V0o3Zkh0cjlXRDlnRnRMa1hUb25YeEYwckY5cE0xejFwcWhVV2YxbndqSkpV?=
+ =?utf-8?B?ZFJuUm1XWVJaV1VuZStHVzhBM1Jlak1ldEk2R0Zpdi95RjFkOFpwYzdibGVk?=
+ =?utf-8?B?SVVhNVZwd21OWkFQMGFBb1RZMm9vTTIzQjRzdHJzV3NLcGJ3YnJwZDdqVk9V?=
+ =?utf-8?B?SVpETk5ZZEFUekt3RWdYN1JXNitoQ0IxSGxrV1ZrVTZ5MUp4a2RBZzJmTmR1?=
+ =?utf-8?B?QmVta2ZTczdRTlVGc2w1RUtuTzYxcmhJRHhXMWplWWVOQm5oUWZPU1k0WHRT?=
+ =?utf-8?B?SkE4VER6RmR2QUkwZlRwSzZodTRaWnBHbDBhSGR3eG1GSHFjS2dLZHZ0aGpv?=
+ =?utf-8?B?TmJDTGRaTVEzKzJvRmRzMEFQSHB1MHJPZXJya0plZXU0SC9qVEVFTXY2MXdk?=
+ =?utf-8?B?anRBU3NDZGQ5NzYyV2NiWC9rMVFOanJZQTJNSzl4R2haQnZyMGRnYTRSSkRX?=
+ =?utf-8?B?L3A4TW81SlZraEpGUkw2VWJqSHYrQkNMWDdJcUkwNytHc2x0cTA4RFBYdlpI?=
+ =?utf-8?B?ckhIMU9XQllrWXZadVZzL3ZZM3lESTcrQVBLelQzWTlrUEgweGFFd1dTeDFY?=
+ =?utf-8?B?NlZTd2kwQmRodCsrblVhNGRGSjkwcUl4Y2V0dlFid1lESy9reGNGSmVERkp4?=
+ =?utf-8?B?SEE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	CnQkGldFM8h89lmVc0RM1Do/zS8okZEcFDUNB/VjXKYdkZ7Vx9Ts+FSsU4zLziWHCOrhMOBsEqkmfnY/LWqubyoZxyjnBxUYmy6tjGAxwlcIJXojlBov3Vegy0JMohGbccuFBHCEHviPvSvkcZMLXxEVs0zOJ5ozAqbhaCXEBFdZVWPQi8AYVAXwaFsk7dzVOtooZZeUMdAZ9Vd+TNJmcXw4LeAEl6M1IhCnSJWFmJIi7HuGvNaeaka8Dcmfq61wrIVZTywqo6SvqMpocwpGQd9LpIMC258adwm3iqspZKVd86UGWumoLIUJvJet+YkMVC5MlGpovEdntu8xPira6Uyv0p3eRxHL9mqrWxWvwqEaR0WwEcffCtZW/d8hz4x29LFRu3UYwnaeYnqpgnA483j4/b1VEKjr3ekUJVU4qJZzDSJOi/c3t1yJhRDsD5e9jTTO4Ex9bN5pdRmKfxI3AwdL43/jKaVL4NnjCx9H1NF6lUsv5fTGBwI0z5uAVvoVEnW+2qvL5TGRwVHz5vhi6a7nsGkV3fQpWlOUnTczXTLY9/mR1FZxeQYl6O6MyIZdSITyrg3RiRQlWT0T9qs+u4XJReEMoT92Wk3aVw12Pag=
+	Tgpjjuxebt9n0+GM25H45Ion0Hp1Whd1unzLJVYfnchSGjQkzzaz3RihwqxKFbIVl1nEe+jwsrokjaa/zQ/yV/DEP7Y8FETuzV8LZjfzf4kmMnXZTzACg+8ZgK1VlXyFx9zp3OAHxTg5Pei0aN64bXanczJBmuFREdbuD+SddARkwZPL9soxt4sT/sh5NgKBtoHaG/OTk+xnNFaJmqcDDfVohtPMV0n+YDo/aj2OVrD1e6TL+ytt7pksbZpNKuFfBM6cuwxVgV7KkuwGtJUlS1xpVnGa50bMYNgC+LZTYTlb26Ib6UUb+S/aCUvN/UIGER0Wyg/ky5Z3G3osk2u/W8CHsCj7w9BneqODC+c3ri31vzbiUbiNTvDh1g0xj3kNwNqxJSQLRevWcwwxpOzQojP/OriaCLwrfZfyEjntoA4hW1VAU68VxqrrZBRmnSHvRjpnD1SPyMFmleMFtmrCElELrE+WoBr0GEJDk/arQHGINqWjPPLlBwh3E51/qmMRjlHjY4fD5zLwtc9lvzposzmGTihLnGKUkJIsZhsHBhps0Vu9qEJsRxikuIcm1t32tqfroCULVNwSIZewrGS3kFAksZbgWS6+xsp3rSthbM8=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84da3e00-caa7-4930-2ae7-08de0e766f7f
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecb3588d-e50e-4441-b5e0-08de0e77ef68
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2025 18:44:57.3990
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2025 18:55:41.4761
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uo1T/JJh3UGovxGGWBL/NFZGPGfBM0S3WAUne6mhlqUjIGewc9oVl1Dw6RNJ9qbUWFocA70v6EOY3udwOJnmDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB7074
+X-MS-Exchange-CrossTenant-UserPrincipalName: hj95PPjoQ4YWRUkIF8fST6w+1JWJqN5vMf0vcNyPhMJ5QgZkyUbTac9GNpEM+sViqZyJ76VASHWeaBKykfRSqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7299
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-18_06,2025-10-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ mlxlogscore=848 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2510020000 definitions=main-2510180135
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMyBTYWx0ZWRfX/Knq4i22aJXh
- KHMIYL3TPxsOZQrjYHlw4jh9DKxjCcMnEMG8lMdyMXeGShCNx0F6TjnJvHF7SKHuIcXPGjcHMIQ
- uwygjGmwDKuWMZLQVysus7Gl60wa0GsbjmQoqNaX1qCyrKDBwvMncvkamMxin5pEWgRQnR5gti0
- 1I/Q4IYrTOZubTbpkDxulP9AKfZb1qwy9Smp62s3lmlpygI/FrZNxEYsoeNo6uuzpYPoiSobV3m
- FEAjzgzLQ5JLOX2aA8ulcTf4pKbdWcqblt0oki/AvnC4UFuuB7B7SXaAWhPRRSDWmrrqAHQ4TJJ
- stW+498MBSllL2huHC/4M7De1jqUJZObeyjq8zTREtTE1q9skoAK+Z/r99ygjAED+Xviu+B8Lrb
- /XsSeEccSUedSoP8IHjPcno9PvHtX/sQ/gF0Z62+eq7vkJCK+ws=
-X-Proofpoint-GUID: __Z3QmmRV3B2JuVnq6hM9BhteitcbzPS
-X-Authority-Analysis: v=2.4 cv=KoZAGGWN c=1 sm=1 tr=0 ts=68f3e02e b=1 cx=c_pps
+ engine=8.12.0-2510020000 definitions=main-2510180137
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMSBTYWx0ZWRfX1gFwaZAQ5UAf
+ /Jmi7o48cTeNA6aFtm2jet6zaqjRiiT8VFCP1CIWZVI7QOgqAKU7OlV83lwS5BIX5JI98FNXXrp
+ DhAAFzy56QJtUOHS4FpRZ/cAX1b5uo++V/+KOcgBpwMSmm0OUmpo9vaU78ifmXR2EHP76DOKC8Y
+ WsaGGc1rcKTm5g4jhcnGbJk8+w3bpqHDvTC6XoIK6d8mXaeAld0cP4yMlkkv8t2kvlmgI0fhIlI
+ dPn/xnAx+Vm7QeKbdkUhs+u/TSw89s6a95IKRAQ87pkfIdpOVfPm+Ax0JMNxkUoJwfyFaXFggU/
+ regRE1Au5MnQvuPZEpatjX3z04ezR0A5KqReFfogW/VBXUQ+FHPUiToJcbNpJwV9apnGyaWgLHn
+ 1v7Sr4sc4wm7wnxXWUQcftX//gW62kjrtxBRCGWoilvbd2pEQUg=
+X-Authority-Analysis: v=2.4 cv=Gb4aXAXL c=1 sm=1 tr=0 ts=68f3e2b1 b=1 cx=c_pps
  a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Sw8EjBeDRSPCqO2ek1QA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12092
-X-Proofpoint-ORIG-GUID: __Z3QmmRV3B2JuVnq6hM9BhteitcbzPS
+ a=Xd7o2BhvfMY1-3peyX4A:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12092
+X-Proofpoint-GUID: 6KZlBJORnkfw6WCcelrpMWW7jBdCCHgq
+X-Proofpoint-ORIG-GUID: 6KZlBJORnkfw6WCcelrpMWW7jBdCCHgq
 
 On 10/17/25 8:02 PM, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 > 
-> Instead of having a separate ->op_release() function, change to
-> releasing any resources immediately after they have been encoded into
-> the reply or, in one case, if processing the op resulted in an error.
-> 
-> There have been two bugs recently which were (arguably) caused by having
-> the ->op_release code quite separate from the other code.  I think it
-> makes more sense to keep it all together.  Any resources that ->op_func()
-> allocates are now freed after the op reply has been encoded.  The encode
-> function easily knows when the resource is present and so needs to be
-> freed.
-> 
-> One effect of this is that the trace_nfsd_read_done() tracepoint is no
-> longer considered to be part of "releasing" anything, and is now only
-> called when the read is done successfully.  It is also now *before*
-> generic errors are traced, rather than after.
+> It isn't clear to me that the indirection involved in
+> op_get_currentstateid() serves any purpose.
+
+Introduced by commit 8b70484c67cf ("nfsd41: handle current stateid in
+open and close"), looks like op_get_currentstateid is meant to bookend
+op_set_current_stateid, which is removed in the next patch.
+
+LGTM.
+
+
+> op_get_currentstateid() is only called immediately before the only place
+> op_func is called, so the former can easily be folded into the latter.
+> The functions themselves are trivial, each a single line.  Including
+> these in the relevant op_func functions works well.
 > 
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/blocklayout.c | 10 ++++++++--
->  fs/nfsd/nfs4proc.c    | 46 -------------------------------------------
->  fs/nfsd/nfs4state.c   | 16 ---------------
->  fs/nfsd/nfs4xdr.c     | 28 ++++++++++++++++++++------
->  fs/nfsd/xdr4.h        |  3 ---
->  5 files changed, 30 insertions(+), 73 deletions(-)
+>  fs/nfsd/current_stateid.h | 23 ++-----------
+>  fs/nfsd/nfs4proc.c        | 15 +++------
+>  fs/nfsd/nfs4state.c       | 70 +++++----------------------------------
+>  fs/nfsd/xdr4.h            |  2 --
+>  4 files changed, 15 insertions(+), 95 deletions(-)
 > 
-> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index 101cccbee4a3..cd38c7f9d806 100644
-> --- a/fs/nfsd/blocklayout.c
-> +++ b/fs/nfsd/blocklayout.c
-> @@ -206,6 +206,7 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
->  {
->  	struct pnfs_block_deviceaddr *dev;
->  	struct pnfs_block_volume *b;
-> +	int status;
+> diff --git a/fs/nfsd/current_stateid.h b/fs/nfsd/current_stateid.h
+> index c28540d86742..7c6dfd6c88e7 100644
+> --- a/fs/nfsd/current_stateid.h
+> +++ b/fs/nfsd/current_stateid.h
+> @@ -5,7 +5,8 @@
+>  #include "state.h"
+>  #include "xdr4.h"
 >  
->  	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
->  	if (!dev)
-> @@ -217,8 +218,13 @@ nfsd4_block_get_device_info_simple(struct super_block *sb,
+> -extern void clear_current_stateid(struct nfsd4_compound_state *cstate);
+> +void clear_current_stateid(struct nfsd4_compound_state *cstate);
+> +void get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid);
+>  /*
+>   * functions to set current state id
+>   */
+> @@ -18,24 +19,4 @@ extern void nfsd4_set_lockstateid(struct nfsd4_compound_state *,
+>  extern void nfsd4_set_closestateid(struct nfsd4_compound_state *,
+>  		union nfsd4_op_u *);
 >  
->  	b->type = PNFS_BLOCK_VOLUME_SIMPLE;
->  	b->simple.sig_len = PNFS_BLOCK_UUID_LEN;
-> -	return sb->s_export_op->get_uuid(sb, b->simple.sig, &b->simple.sig_len,
-> -			&b->simple.offset);
-> +	status = sb->s_export_op->get_uuid(sb, b->simple.sig, &b->simple.sig_len,
-> +					   &b->simple.offset);
-> +	if (status) {
-> +		kfree(dev);
-> +		gdp->gd_device = NULL;
-> +	}
-> +	return status;
->  }
->  
->  static __be32
+> -/*
+> - * functions to consume current state id
+> - */
+> -extern void nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_freestateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_setattrstateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_closestateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_lockustateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_readstateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -extern void nfsd4_get_writestateid(struct nfsd4_compound_state *,
+> -		union nfsd4_op_u *);
+> -
+>  #endif   /* _NFSD4_CURRENT_STATE_H */
 > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 2222bb283baf..9d53ea289bf3 100644
+> index 9d53ea289bf3..41a8db955aa3 100644
 > --- a/fs/nfsd/nfs4proc.c
 > +++ b/fs/nfsd/nfs4proc.c
-> @@ -984,17 +984,6 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	return status;
->  }
+> @@ -949,6 +949,7 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	struct nfsd4_read *read = &u->read;
+>  	__be32 status;
 >  
-> -
-> -static void
-> -nfsd4_read_release(union nfsd4_op_u *u)
-> -{
-> -	if (u->read.rd_nf) {
-> -		trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
-> -				     u->read.rd_offset, u->read.rd_length);
-> -		nfsd_file_put(u->read.rd_nf);
-> -	}
-> -}
-> -
->  static __be32
->  nfsd4_readdir(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	      union nfsd4_op_u *u)
-> @@ -1120,20 +1109,6 @@ nfsd4_secinfo_no_name(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstat
->  	return nfs_ok;
->  }
+> +	get_stateid(cstate, &read->rd_stateid);
+>  	read->rd_nf = NULL;
 >  
-> -static void
-> -nfsd4_secinfo_release(union nfsd4_op_u *u)
-> -{
-> -	if (u->secinfo.si_exp)
-> -		exp_put(u->secinfo.si_exp);
-> -}
-> -
-> -static void
-> -nfsd4_secinfo_no_name_release(union nfsd4_op_u *u)
-> -{
-> -	if (u->secinfo_no_name.sin_exp)
-> -		exp_put(u->secinfo_no_name.sin_exp);
-> -}
-> -
->  /*
->   * Validate that the requested timestamps are within the acceptable range. If
->   * timestamp appears to be in the future, then it will be clamped to
-> @@ -2426,12 +2401,6 @@ nfsd4_getdeviceinfo(struct svc_rqst *rqstp,
->  	return nfserr;
->  }
+>  	trace_nfsd_read_start(rqstp, &cstate->current_fh,
+> @@ -1153,6 +1154,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	__be32 status = nfs_ok;
+>  	int err;
 >  
-> -static void
-> -nfsd4_getdeviceinfo_release(union nfsd4_op_u *u)
-> -{
-> -	kfree(u->getdeviceinfo.gd_device);
-> -}
-> -
->  static __be32
->  nfsd4_layoutget(struct svc_rqst *rqstp,
->  		struct nfsd4_compound_state *cstate, union nfsd4_op_u *u)
-> @@ -2512,12 +2481,6 @@ nfsd4_layoutget(struct svc_rqst *rqstp,
->  	return nfserr;
->  }
+> +	get_stateid(cstate, &setattr->sa_stateid);
+>  	deleg_attrs = setattr->sa_bmval[2] & (FATTR4_WORD2_TIME_DELEG_ACCESS |
+>  					      FATTR4_WORD2_TIME_DELEG_MODIFY);
 >  
-> -static void
-> -nfsd4_layoutget_release(union nfsd4_op_u *u)
-> -{
-> -	kfree(u->layoutget.lg_content);
-> -}
-> -
->  static __be32
->  nfsd4_layoutcommit(struct svc_rqst *rqstp,
->  		struct nfsd4_compound_state *cstate, union nfsd4_op_u *u)
-> @@ -3444,7 +3407,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+> @@ -1240,6 +1242,8 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	__be32 status = nfs_ok;
+>  	unsigned long cnt;
+>  
+> +	get_stateid(cstate, &write->wr_stateid);
+> +
+>  	if (write->wr_offset > (u64)OFFSET_MAX ||
+>  	    write->wr_offset + write->wr_buflen > (u64)OFFSET_MAX)
+>  		return nfserr_fbig;
+> @@ -2914,8 +2918,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  		if (op->status)
+>  			goto encode_op;
+>  
+> -		if (op->opdesc->op_get_currentstateid)
+> -			op->opdesc->op_get_currentstateid(cstate, &op->u);
+>  		op->status = op->opdesc->op_func(rqstp, cstate, &op->u);
+>  		trace_nfsd_compound_op_err(rqstp, op->opnum, op->status);
+>  
+> @@ -3365,7 +3367,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_CLOSE",
+>  		.op_rsize_bop = nfsd4_status_stateid_rsize,
+> -		.op_get_currentstateid = nfsd4_get_closestateid,
+>  		.op_set_currentstateid = nfsd4_set_closestateid,
 >  	},
->  	[OP_LOCK] = {
->  		.op_func = nfsd4_lock,
-> -		.op_release = nfsd4_lock_release,
->  		.op_flags = OP_MODIFIES_SOMETHING |
->  				OP_NONTRIVIAL_ERROR_ENCODE,
->  		.op_name = "OP_LOCK",
-> @@ -3453,7 +3415,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  	[OP_COMMIT] = {
+> @@ -3385,7 +3386,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_DELEGRETURN",
+>  		.op_rsize_bop = nfsd4_only_status_rsize,
+> -		.op_get_currentstateid = nfsd4_get_delegreturnstateid,
 >  	},
->  	[OP_LOCKT] = {
->  		.op_func = nfsd4_lockt,
-> -		.op_release = nfsd4_lockt_release,
->  		.op_flags = OP_NONTRIVIAL_ERROR_ENCODE,
->  		.op_name = "OP_LOCKT",
->  		.op_rsize_bop = nfsd4_lock_rsize,
-> @@ -3526,7 +3487,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  	[OP_GETATTR] = {
+>  		.op_func = nfsd4_getattr,
+> @@ -3424,7 +3424,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_LOCKU",
+>  		.op_rsize_bop = nfsd4_status_stateid_rsize,
+> -		.op_get_currentstateid = nfsd4_get_lockustateid,
 >  	},
->  	[OP_READ] = {
+>  	[OP_LOOKUP] = {
+>  		.op_func = nfsd4_lookup,
+> @@ -3461,7 +3460,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_OPEN_DOWNGRADE",
+>  		.op_rsize_bop = nfsd4_status_stateid_rsize,
+> -		.op_get_currentstateid = nfsd4_get_opendowngradestateid,
+>  		.op_set_currentstateid = nfsd4_set_opendowngradestateid,
+>  	},
+>  	[OP_PUTFH] = {
+> @@ -3489,7 +3487,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
 >  		.op_func = nfsd4_read,
-> -		.op_release = nfsd4_read_release,
 >  		.op_name = "OP_READ",
 >  		.op_rsize_bop = nfsd4_read_rsize,
->  		.op_get_currentstateid = nfsd4_get_readstateid,
-> @@ -3576,7 +3536,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+> -		.op_get_currentstateid = nfsd4_get_readstateid,
 >  	},
->  	[OP_SECINFO] = {
->  		.op_func = nfsd4_secinfo,
-> -		.op_release = nfsd4_secinfo_release,
->  		.op_flags = OP_HANDLES_WRONGSEC,
->  		.op_name = "OP_SECINFO",
->  		.op_rsize_bop = nfsd4_secinfo_rsize,
-> @@ -3627,7 +3586,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  	/* NFSv4.1 operations */
->  	[OP_EXCHANGE_ID] = {
->  		.op_func = nfsd4_exchange_id,
-> -		.op_release = nfsd4_exchange_id_release,
->  		.op_flags = ALLOWED_WITHOUT_FH | ALLOWED_AS_FIRST_OP
->  				| OP_MODIFIES_SOMETHING,
->  		.op_name = "OP_EXCHANGE_ID",
-> @@ -3681,7 +3639,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  	[OP_READDIR] = {
+>  		.op_func = nfsd4_readdir,
+> @@ -3546,7 +3543,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME
+>  				| OP_NONTRIVIAL_ERROR_ENCODE,
+>  		.op_rsize_bop = nfsd4_setattr_rsize,
+> -		.op_get_currentstateid = nfsd4_get_setattrstateid,
 >  	},
->  	[OP_SECINFO_NO_NAME] = {
->  		.op_func = nfsd4_secinfo_no_name,
-> -		.op_release = nfsd4_secinfo_no_name_release,
->  		.op_flags = OP_HANDLES_WRONGSEC,
->  		.op_name = "OP_SECINFO_NO_NAME",
->  		.op_rsize_bop = nfsd4_secinfo_rsize,
-> @@ -3708,14 +3665,12 @@ static const struct nfsd4_operation nfsd4_ops[] = {
->  #ifdef CONFIG_NFSD_PNFS
->  	[OP_GETDEVICEINFO] = {
->  		.op_func = nfsd4_getdeviceinfo,
-> -		.op_release = nfsd4_getdeviceinfo_release,
->  		.op_flags = ALLOWED_WITHOUT_FH,
->  		.op_name = "OP_GETDEVICEINFO",
->  		.op_rsize_bop = nfsd4_getdeviceinfo_rsize,
+>  	[OP_SETCLIENTID] = {
+>  		.op_func = nfsd4_setclientid,
+> @@ -3573,7 +3569,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME,
+>  		.op_name = "OP_WRITE",
+>  		.op_rsize_bop = nfsd4_write_rsize,
+> -		.op_get_currentstateid = nfsd4_get_writestateid,
 >  	},
->  	[OP_LAYOUTGET] = {
->  		.op_func = nfsd4_layoutget,
-> -		.op_release = nfsd4_layoutget_release,
->  		.op_flags = OP_MODIFIES_SOMETHING,
->  		.op_name = "OP_LAYOUTGET",
->  		.op_rsize_bop = nfsd4_layoutget_rsize,
-> @@ -3761,7 +3716,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  	[OP_RELEASE_LOCKOWNER] = {
+>  		.op_func = nfsd4_release_lockowner,
+> @@ -3653,7 +3648,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+>  		.op_func = nfsd4_free_stateid,
+>  		.op_flags = ALLOWED_WITHOUT_FH | OP_MODIFIES_SOMETHING,
+>  		.op_name = "OP_FREE_STATEID",
+> -		.op_get_currentstateid = nfsd4_get_freestateid,
+>  		.op_rsize_bop = nfsd4_only_status_rsize,
 >  	},
->  	[OP_READ_PLUS] = {
+>  	[OP_GET_DIR_DELEGATION] = {
+> @@ -3718,7 +3712,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
 >  		.op_func = nfsd4_read,
-> -		.op_release = nfsd4_read_release,
 >  		.op_name = "OP_READ_PLUS",
 >  		.op_rsize_bop = nfsd4_read_plus_rsize,
->  		.op_get_currentstateid = nfsd4_get_readstateid,
+> -		.op_get_currentstateid = nfsd4_get_readstateid,
+>  	},
+>  	[OP_SEEK] = {
+>  		.op_func = nfsd4_seek,
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 35004568d43e..1e821f5d09a3 100644
+> index 1e821f5d09a3..18c8d3529d55 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -8454,14 +8454,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	return status;
+> @@ -7487,6 +7487,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	struct nfs4_client *cl = cstate->clp;
+>  	__be32 ret = nfserr_bad_stateid;
+>  
+> +	get_stateid(cstate, &free_stateid->fr_stateid);
+>  	spin_lock(&cl->cl_lock);
+>  	s = find_stateid_locked(cl, stateid);
+>  	if (!s || s->sc_status & SC_STATUS_CLOSED)
+> @@ -7707,6 +7708,7 @@ nfsd4_open_downgrade(struct svc_rqst *rqstp,
+>  	dprintk("NFSD: nfsd4_open_downgrade on file %pd\n", 
+>  			cstate->current_fh.fh_dentry);
+>  
+> +	get_stateid(cstate, &od->od_stateid);
+>  	/* We don't yet support WANT bits: */
+>  	if (od->od_deleg_want)
+>  		dprintk("NFSD: %s: od_deleg_want=0x%x ignored\n", __func__,
+> @@ -7781,6 +7783,8 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	dprintk("NFSD: nfsd4_close on file %pd\n",
+>  			cstate->current_fh.fh_dentry);
+>  
+> +	get_stateid(cstate, &close->cl_stateid);
+> +
+>  	status = nfs4_preprocess_seqid_op(cstate, close->cl_seqid,
+>  					  &close->cl_stateid,
+>  					  SC_TYPE_OPEN, SC_STATUS_CLOSED,
+> @@ -7832,6 +7836,8 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	__be32 status;
+>  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+>  
+> +	get_stateid(cstate, &dr->dr_stateid);
+> +
+>  	if ((status = fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
+>  		return status;
+>  
+> @@ -8575,6 +8581,8 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  		(long long) locku->lu_offset,
+>  		(long long) locku->lu_length);
+>  
+> +	get_stateid(cstate, &locku->lu_stateid);
+> +
+>  	if (check_lock_length(locku->lu_offset, locku->lu_length))
+>  		 return nfserr_inval;
+>  
+> @@ -9066,7 +9074,7 @@ nfs4_state_shutdown(void)
+>  	shrinker_free(nfsd_slot_shrinker);
 >  }
 >  
-> -void nfsd4_lock_release(union nfsd4_op_u *u)
-> -{
-> -	struct nfsd4_lock *lock = &u->lock;
-> -	struct nfsd4_lock_denied *deny = &lock->lk_denied;
+> -static void
+> +void
+>  get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
+>  {
+>  	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
+> @@ -9120,66 +9128,6 @@ nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
+>  	put_stateid(cstate, &u->lock.lk_resp_stateid);
+>  }
+>  
+> -/*
+> - * functions to consume current state id
+> - */
 > -
-> -	kfree(deny->ld_owner.data);
+> -void
+> -nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->open_downgrade.od_stateid);
 > -}
 > -
->  /*
->   * The NFSv4 spec allows a client to do a LOCKT without holding an OPEN,
->   * so we do a temporary open here just to get an open file to pass to
-> @@ -8567,14 +8559,6 @@ nfsd4_lockt(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	return status;
->  }
->  
-> -void nfsd4_lockt_release(union nfsd4_op_u *u)
+> -void
+> -nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
 > -{
-> -	struct nfsd4_lockt *lockt = &u->lockt;
-> -	struct nfsd4_lock_denied *deny = &lockt->lt_denied;
-> -
-> -	kfree(deny->ld_owner.data);
+> -	get_stateid(cstate, &u->delegreturn.dr_stateid);
 > -}
 > -
->  __be32
->  nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	    union nfsd4_op_u *u)
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 30ce5851fe4c..1ffe8ddc1215 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4174,6 +4174,7 @@ nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	case nfserr_denied:
->  		/* denied */
->  		status = nfsd4_encode_lock4denied(xdr, &lock->lk_denied);
-> +		kfree(lock->lk_denied.ld_owner.data);
->  		break;
->  	default:
->  		return nfserr;
-> @@ -4192,6 +4193,7 @@ nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	if (nfserr == nfserr_denied) {
->  		/* denied */
->  		status = nfsd4_encode_lock4denied(xdr, &lockt->lt_denied);
-> +		kfree(lockt->lt_denied.ld_owner.data);
->  		if (status != nfs_ok)
->  			return status;
->  	}
-> @@ -4532,6 +4534,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	/* Reserve space for the eof flag and byte count */
->  	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT * 2))) {
->  		WARN_ON_ONCE(splice_ok);
-> +		nfsd_file_put(read->rd_nf);
->  		return nfserr_resource;
->  	}
->  	xdr_commit_encode(xdr);
-> @@ -4543,6 +4546,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
->  		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
->  	else
->  		nfserr = nfsd4_encode_readv(resp, read, maxcount);
-> +	nfsd_file_put(read->rd_nf);
->  	if (nfserr) {
->  		xdr_truncate_encode(xdr, eof_offset);
->  		return nfserr;
-> @@ -4551,6 +4555,8 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	wire_data[0] = read->rd_eof ? xdr_one : xdr_zero;
->  	wire_data[1] = cpu_to_be32(read->rd_length);
->  	write_bytes_to_xdr_buf(xdr->buf, eof_offset, &wire_data, XDR_UNIT * 2);
-> +	trace_nfsd_read_done(read->rd_rqstp, read->rd_fhp,
-> +			     read->rd_offset, read->rd_length);
->  	return nfs_ok;
->  }
->  
-> @@ -4803,8 +4809,11 @@ nfsd4_encode_secinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
->  {
->  	struct nfsd4_secinfo *secinfo = &u->secinfo;
->  	struct xdr_stream *xdr = resp->xdr;
-> +	__be32 status;
->  
-> -	return nfsd4_encode_SECINFO4resok(xdr, secinfo->si_exp);
-> +	status = nfsd4_encode_SECINFO4resok(xdr, secinfo->si_exp);
-> +	exp_put(secinfo->si_exp);
-> +	return status;
->  }
-
-Unfortunately this goes in exactly the opposite direction that xdrgen
-is taking us. I don't want to add anything not related to XDR to the
-encoder functions. The encoder functions for individual operations
-will someday be all machine generated.
-
-
->  static __be32
-> @@ -4813,8 +4822,11 @@ nfsd4_encode_secinfo_no_name(struct nfsd4_compoundres *resp, __be32 nfserr,
->  {
->  	struct nfsd4_secinfo_no_name *secinfo = &u->secinfo_no_name;
->  	struct xdr_stream *xdr = resp->xdr;
-> +	__be32 status;
->  
-> -	return nfsd4_encode_SECINFO4resok(xdr, secinfo->sin_exp);
-> +	status = nfsd4_encode_SECINFO4resok(xdr, secinfo->sin_exp);
-> +	exp_put(secinfo->sin_exp);
-> +	return status;
->  }
-
-Ditto.
-
-
->  static __be32
-> @@ -4963,6 +4975,8 @@ nfsd4_encode_exchange_id(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	struct nfsd_net *nn = net_generic(SVC_NET(resp->rqstp), nfsd_net_id);
->  	struct nfsd4_exchange_id *exid = &u->exchange_id;
->  	struct xdr_stream *xdr = resp->xdr;
-> +	/* impl_name is encoded in nii_name.data */
-> +	char *impl_name __free(kfree) = exid->server_impl_name;
-
-Ditto.
-
-
->  	/* eir_clientid */
->  	nfserr = nfsd4_encode_clientid4(xdr, &exid->clientid);
-> @@ -5210,6 +5224,7 @@ nfsd4_encode_getdeviceinfo(struct nfsd4_compoundres *resp, __be32 nfserr,
->  
->  	/* gdir_device_addr */
->  	nfserr = nfsd4_encode_device_addr4(xdr, gdev);
-> +	kfree(gdev->gd_device);
-
-Ditto.
-
-
->  	if (nfserr)
->  		return nfserr;
->  	/* gdir_notification */
-> @@ -5245,6 +5260,7 @@ nfsd4_encode_layoutget(struct nfsd4_compoundres *resp, __be32 nfserr,
->  {
->  	struct nfsd4_layoutget *lgp = &u->layoutget;
->  	struct xdr_stream *xdr = resp->xdr;
-> +	const struct pnfs_ff_layout *fl __free(kfree) = lgp->lg_content;
-
-Ditto.
-
-
->  	/* logr_return_on_close */
->  	nfserr = nfsd4_encode_bool(xdr, true);
-> @@ -5468,8 +5484,10 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
->  	eof_offset = xdr->buf->len;
->  
->  	/* Reserve space for the eof flag and segment count */
-> -	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT * 2)))
-> +	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT * 2))) {
-> +		nfsd_file_put(read->rd_nf);
-
-Ditto.
-
-
->  		return nfserr_io;
-> +	}
->  	xdr_commit_encode(xdr);
->  
->  	read->rd_eof = read->rd_offset >= i_size_read(file_inode(file));
-> @@ -5477,6 +5495,7 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
->  		goto out;
->  
->  	nfserr = nfsd4_encode_read_plus_data(resp, read);
-> +	nfsd_file_put(read->rd_nf);
-
-Ditto.
-
-
->  	if (nfserr) {
->  		xdr_truncate_encode(xdr, eof_offset);
->  		return nfserr;
-> @@ -5951,9 +5970,6 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
->  	write_bytes_to_xdr_buf(xdr->buf, op_status_offset,
->  			       &op->status, XDR_UNIT);
->  release:
-> -	if (opdesc && opdesc->op_release)
-> -		opdesc->op_release(&op->u);
+> -void
+> -nfsd4_get_freestateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->free_stateid.fr_stateid);
+> -}
 > -
->  	/*
->  	 * Account for pages consumed while encoding this operation.
->  	 * The xdr_stream primitives don't manage rq_next_page.
+> -void
+> -nfsd4_get_setattrstateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->setattr.sa_stateid);
+> -}
+> -
+> -void
+> -nfsd4_get_closestateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->close.cl_stateid);
+> -}
+> -
+> -void
+> -nfsd4_get_lockustateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->locku.lu_stateid);
+> -}
+> -
+> -void
+> -nfsd4_get_readstateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->read.rd_stateid);
+> -}
+> -
+> -void
+> -nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+> -		union nfsd4_op_u *u)
+> -{
+> -	get_stateid(cstate, &u->write.wr_stateid);
+> -}
+> -
+>  /**
+>   * nfsd4_vet_deleg_time - vet and set the timespec for a delegated timestamp update
+>   * @req: timestamp from the client
 > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index ae75846b3cd7..2a347c1bc3e7 100644
+> index 2a347c1bc3e7..b94408601203 100644
 > --- a/fs/nfsd/xdr4.h
 > +++ b/fs/nfsd/xdr4.h
-> @@ -985,10 +985,8 @@ extern __be32 nfsd4_open_downgrade(struct svc_rqst *rqstp,
->  		struct nfsd4_compound_state *, union nfsd4_op_u *u);
->  extern __be32 nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *,
->  		union nfsd4_op_u *u);
-> -extern void nfsd4_lock_release(union nfsd4_op_u *u);
->  extern __be32 nfsd4_lockt(struct svc_rqst *rqstp, struct nfsd4_compound_state *,
->  		union nfsd4_op_u *u);
-> -extern void nfsd4_lockt_release(union nfsd4_op_u *u);
->  extern __be32 nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *,
->  		union nfsd4_op_u *u);
->  extern __be32
-> @@ -1040,7 +1038,6 @@ enum nfsd4_op_flags {
->  struct nfsd4_operation {
->  	__be32 (*op_func)(struct svc_rqst *, struct nfsd4_compound_state *,
->  			union nfsd4_op_u *);
-> -	void (*op_release)(union nfsd4_op_u *);
->  	u32 op_flags;
->  	char *op_name;
+> @@ -1043,8 +1043,6 @@ struct nfsd4_operation {
 >  	/* Try to get response size before operation */
+>  	u32 (*op_rsize_bop)(const struct svc_rqst *rqstp,
+>  			const struct nfsd4_op *op);
+> -	void (*op_get_currentstateid)(struct nfsd4_compound_state *,
+> -			union nfsd4_op_u *);
+>  	void (*op_set_currentstateid)(struct nfsd4_compound_state *,
+>  			union nfsd4_op_u *);
+>  };
 
 
 -- 
