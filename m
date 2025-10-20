@@ -1,112 +1,80 @@
-Return-Path: <linux-nfs+bounces-15407-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15408-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9B1DBF1AA8
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 15:56:12 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4F43BF1B6C
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 16:05:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2EA8189F42B
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 13:56:35 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2AEBC34CEF3
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 14:05:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9283031E0EF;
-	Mon, 20 Oct 2025 13:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AE83191DA;
+	Mon, 20 Oct 2025 14:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk2j/2KV"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LNh7/lT6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9693164DC
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 13:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB4A2F6563
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 14:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760968565; cv=none; b=PXNAKQa6OGfvUEnTAHB9h+2EUxh+G73Y48RA5Gy/6Y0pG4MlMDkHd7jk/fEKvwWqfYw2TiS6TkTa67j4BJZT8e13+L/V8SLnUmGxpzgx1FljPFSDl1REnKYSiKx26uxJQFrRp7s/2W9GhzZUT6/B9QkAfaAuTkU2MIjOPjMQkN8=
+	t=1760969118; cv=none; b=pCzqeEu3Po/xDjD7qLIh04xom9tIcfBF3SmrqEGL4hQbDyRbZac6B+6Ex4jnPV4KPdcw7VVVZsd1DV8tc9FnOZxdomMDkSClH7ipSn2CbNP9Z3gRgKlQ/VqcX9m/rB53ZQjJRZdYGpZreG+sYgncZ8mAxp0laLwZEcc8RJGQqww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760968565; c=relaxed/simple;
-	bh=Q3utQyW/9W64IGo8ZE/0OLSZpMpSjhH6ayaNzEI8yNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q8mY2kOyxmgglkOD168rhWGj9miJisB3KlS4/KEsbnahEZ6JQlcjXP+jzn9WxrYP4LrspDqDJEfbsmdMk9B5nFg/PFUzakClK5imXqOMbBPjsPkG56A4+XO5UAB29zHwNZEXG96W7TnQSbuLkaHe+/kv2Tuq9ryzrXYOpNFjzio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qk2j/2KV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE86C113D0;
-	Mon, 20 Oct 2025 13:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760968563;
-	bh=Q3utQyW/9W64IGo8ZE/0OLSZpMpSjhH6ayaNzEI8yNc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Qk2j/2KVHRBD1mT3rmjMUkRHFIWe0vP22FImPtHsgsX2JXyDXSv3frIwNH9b8ND1X
-	 0Wi5+IZgAPVkiuE630FbO9QOGMjvsfGt5eecirG/RxTaSV2NkYQNRncmrYhYIl0Il3
-	 Plz040bcCSxggGn+9oKzHmaDXlfDcFkDCXEc5h3Y6eNuSX5oPBvTNZdsx3a6diOLlc
-	 j0W4MkHbWUcmaVG/gtgoH8EVWshOXVsSXjnlQoqlFqJesQ8fjm5iYi0RZEqtxbWsw2
-	 arbr5+ce1m5PK5fpiefOUfF3UVwo8IR+wPP8ZeGzE0m4IUC84wsoL/RiMY76A7umQP
-	 6ol+UvvmBUBJA==
-Message-ID: <67e3763c-d20c-4e1c-b7ff-62b59c385210@kernel.org>
-Date: Mon, 20 Oct 2025 09:56:02 -0400
+	s=arc-20240116; t=1760969118; c=relaxed/simple;
+	bh=ulEIJE9PdmsAbbnVqTB1cQDBXy3HikqUS+1TgXZnXUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ncZ60zIjvEK7VSh7JhtudKLS6U8S+N/TymGful45Nm+6F/CzwT3TdWyCcM1CfgmfY3Iy7MlXFuXX6HcedqbPzTwmeTAHT0xpWo5J85xVo4qwSkRc/RcZXV+b/w8zDP6LUkECw8Nv729NtH9Nryawy86HHf0hg8Q3s4T9l5JY9nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LNh7/lT6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Te78FUGl5HLZxGutkZroe+MntakvvlwKzFpAP++OYmw=; b=LNh7/lT6+Jl4L14lMHxxWfNyjm
+	7faLF3RnPCt7n5L8QNVvEwxWUKhVr0uwYhxcUyRnM1tvAwMzEMAbGmLkUYGTMr5ODy9KSIEIx876Y
+	4YsoVpD6L/qijFAWDD6p5WgovtS97ifF1dYYgm/ovdzrsiN7X2FPVA7XQQigqBQfQLKhzjHvJn99A
+	WDJGBCkAK4doCfOo61WDey18DHBF4BoDmmr7KTrckjHozjjWkjZPIHQEDp4+zpUdRas/UOwff9U/K
+	t3b45bTezM8pGvsA+vk/wbDrfKOhbdBWvjPhtE+2JGVEg61W+Tpz+8ZBey38ms22jdggKsmiUqu74
+	daoxeU+w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vAqVa-0000000DtWy-2YdQ;
+	Mon, 20 Oct 2025 14:05:10 +0000
+Date: Mon, 20 Oct 2025 07:05:10 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Mike Snitzer <snitzer@kernel.org>, NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aPZBlgnhlocDA6Ps@infradead.org>
+References: <20251018005431.3403-1-cel@kernel.org>
+ <20251018005431.3403-3-cel@kernel.org>
+ <aPXihwGTiA7bqTsN@infradead.org>
+ <67e3763c-d20c-4e1c-b7ff-62b59c385210@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-To: Christoph Hellwig <hch@infradead.org>, Mike Snitzer <snitzer@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-References: <20251018005431.3403-1-cel@kernel.org>
- <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aPXihwGTiA7bqTsN@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67e3763c-d20c-4e1c-b7ff-62b59c385210@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 10/20/25 3:19 AM, Christoph Hellwig wrote:
-> On Fri, Oct 17, 2025 at 08:54:30PM -0400, Chuck Lever wrote:
->> From: Mike Snitzer <snitzer@kernel.org>
+On Mon, Oct 20, 2025 at 09:56:02AM -0400, Chuck Lever wrote:
+> I tend to agree that I expect an alignment failure will rarely if ever
+> happen if we've done our job well.
 
->> +static int
->> +nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
->> +		    unsigned int nvecs, unsigned long *cnt,
->> +		    struct kiocb *kiocb)
->> +{
->> +	struct iov_iter iter;
->> +	int host_err;
->> +
->> +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
->> +	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
->> +	if (host_err < 0)
->> +		return host_err;
->> +	*cnt = host_err;
->> +
->> +	return 0;
-> 
-> 
-> Nothing really buffered here per se, it's just a small wrapper
-> around vfs_iocb_iter_write.
+It should never happen if the job was done properly.  But when -EINVAL
+happens it can be just as likely any other mismatched condition.
 
-This is the original NFSD_IO_BUFFERED code, refactored out of
-nfsd_vfs_write(). IMO it might be more clear what's going on if the
-refactoring was done in a separate prerequisite patch.
-
-
->> +			} else if (unlikely(host_err == -EINVAL)) {
->> +				struct inode *inode = d_inode(fhp->fh_dentry);
->> +
->> +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n",
->> +						    inode->i_sb->s_id, inode->i_ino);
->> +				host_err = -ESERVERFAULT;
-> 
-> -EINVAL can be lot more things than alignment failure.   And more
-> importantly alignment failures should not happen with the proper
-> checks in place.
-I tend to agree that I expect an alignment failure will rarely if ever
-happen if we've done our job well.
-
-
--- 
-Chuck Lever
 
