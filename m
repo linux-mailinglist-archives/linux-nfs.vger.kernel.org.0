@@ -1,60 +1,119 @@
-Return-Path: <linux-nfs+bounces-15399-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15400-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AC93BEFA58
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 09:19:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D933BF039D
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 11:39:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D0EE189C471
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 07:20:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A3043E73AC
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 09:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522213C17;
-	Mon, 20 Oct 2025 07:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B06F52F5306;
+	Mon, 20 Oct 2025 09:38:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xg8ncWp8"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zxouHgNg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5lzRlQJq";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zxouHgNg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5lzRlQJq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3243A8F7
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 07:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5342F6162
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 09:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760944779; cv=none; b=esue0tbjrk4WNoBRDM2ytVDY5VU6DXkxjD8v7WrPHhk03OBifLu7uBSZqbD0QJpCi8quoIouJIrhGBRkP0DA9GMXwNxD2jS24yKrqCJNQnXBgfcemW4oUJGCPOMClog5Hw2wq0z7ghOf7oddgMHys9VdKn/9Xnhl/3fFLlmdB1s=
+	t=1760953105; cv=none; b=olV2Zi0msm+uX1BI0byC+Nn7LDeKmCad5mJ+t5V6UWMDwh9exjeYQfljxSMOVBo99DNEr6BHAZKWONA57cmBtNHS1xqVDHIJNBokt51I2Pnjn0sCGPwuQq4vUBxKaVghYe9stHeTCdlkyQFMRvL50VBcKPa8ZTtYE1B+h72Mpbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760944779; c=relaxed/simple;
-	bh=lQfmTnEMS3B7BlbaVb6IOWiT2nLJivaYquet7YDvzv4=;
+	s=arc-20240116; t=1760953105; c=relaxed/simple;
+	bh=h6eHIKNIKxvv7MntNZ2NPluU3sYBXbkxa/iV1J5GD+E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/K+4+uKQrkZLoOtfu18nWggyf3Mq7stJBUtGbQ19HbcgG3tBbu247jcAT8ZIbEklK/kwbtsGpqzCOkkxexN24bZRqyuQnlllxIDXrbJxvxnZPkv/C/grGWoArVEkRDqDGxBVUCQzXhGNXev2UFDaW4wxC1IHUJaj66WIytmtus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xg8ncWp8; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2UU1Wdc225U2NjK2nJ+rCNKYVkTib5DVnPVsOVHj6hg=; b=xg8ncWp83orxqkKJiDkjsF3Pth
-	SP+mBCPh5AaZbKcre89hCNyQYurNV1PESPDehrJDCGyr0OA+JziQEpwE4Dkh0Bvxcz/fAT6V/TByp
-	BfPB0Z6foYvSGeeY1EHQHCEZry4BgTAUtImlY23OgP89V3TJ/K1hJqZJOw3n6qXqxt8VptCEhck3c
-	EMDWBPKIr2LtC2pA8ERDPi7LMb+jWMtbk/LEp3CcVBW4dFTevVHr3pgGnaZfdtS5c0RSO2lR7et+z
-	T8uT08qzMsLWYyFhuFB7CH0OsmtxGkYGoDBLm0D/yohqM2/OZ4XtTXt6vFIrrA7QmPINX2yyEcXRZ
-	BG0Q7hoQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAkB5-0000000CBja-0DEX;
-	Mon, 20 Oct 2025 07:19:35 +0000
-Date: Mon, 20 Oct 2025 00:19:35 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPXihwGTiA7bqTsN@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
- <20251018005431.3403-3-cel@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iP9NCPVuKapGb6T1e+gI5qd27wexajG+7s/VLvBfCToVCEf1SFWhqQlS5CPXDIA9TCxuECbqYmI/WL3/m8bPIvM+xmM7UZYHOP1bEq+wKZi/KvXHjFbrm0gvkAbku0HbCvibhBVjJOM3FeJiVdq8kak/bIiHlHAhbrhME1h+3eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zxouHgNg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5lzRlQJq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zxouHgNg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5lzRlQJq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B602B21182;
+	Mon, 20 Oct 2025 09:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1760953094; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3Kd6mbbrPRG0zwXHtLEs9ID63+xl85WNbtfLvd00nw=;
+	b=zxouHgNgKUzdOarvvgPHxxhBWfS94a/uSkfjawCnhR8cbzz69iJLdEIMLj+zu50BZJJba5
+	bUTYv7oaSLn8CNysGSrIzr02b4aqBS2pxKu3DHfqFRoON9pn+7ej6fZrScypIZq2azmnM9
+	x+TSTCq6IzdNyUQ8GrWILzHPDDFkhg0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1760953094;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3Kd6mbbrPRG0zwXHtLEs9ID63+xl85WNbtfLvd00nw=;
+	b=5lzRlQJqx8tIyzMXiqieG4GgqzCjJXMTESHJy83TMpTfVtscp3W2GniczNdnyGo/OW71MN
+	UX0rYu63KQ2G2IBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1760953094; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3Kd6mbbrPRG0zwXHtLEs9ID63+xl85WNbtfLvd00nw=;
+	b=zxouHgNgKUzdOarvvgPHxxhBWfS94a/uSkfjawCnhR8cbzz69iJLdEIMLj+zu50BZJJba5
+	bUTYv7oaSLn8CNysGSrIzr02b4aqBS2pxKu3DHfqFRoON9pn+7ej6fZrScypIZq2azmnM9
+	x+TSTCq6IzdNyUQ8GrWILzHPDDFkhg0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1760953094;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z3Kd6mbbrPRG0zwXHtLEs9ID63+xl85WNbtfLvd00nw=;
+	b=5lzRlQJqx8tIyzMXiqieG4GgqzCjJXMTESHJy83TMpTfVtscp3W2GniczNdnyGo/OW71MN
+	UX0rYu63KQ2G2IBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A767513AAC;
+	Mon, 20 Oct 2025 09:38:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id urrbKAYD9mgtDwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 20 Oct 2025 09:38:14 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 55C9AA0856; Mon, 20 Oct 2025 11:38:14 +0200 (CEST)
+Date: Mon, 20 Oct 2025 11:38:14 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, David Howells <dhowells@redhat.com>, 
+	Tyler Hicks <code@tyhicks.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Carlos Maiolino <cem@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, netfs@lists.linux.dev, 
+	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 03/13] vfs: add try_break_deleg calls for parents to
+ vfs_{link,rename,unlink}
+Message-ID: <n5ihwvsits3u7fwvzuk42vmqdv45ap6u4gh77diegtxik42emp@whyfqmynxnl2>
+References: <20251013-dir-deleg-ro-v1-0-406780a70e5e@kernel.org>
+ <20251013-dir-deleg-ro-v1-3-406780a70e5e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -63,129 +122,101 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251018005431.3403-3-cel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20251013-dir-deleg-ro-v1-3-406780a70e5e@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	R_RATELIMIT(0.00)[to_ip_from(RL63fqwwx8ot6gmekemcs76f9d)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[szeredi.hu,zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,samba.org,manguebit.org,microsoft.com,talpey.com,linuxfoundation.org,redhat.com,tyhicks.com,brown.name,chromium.org,google.com,davemloft.net,vger.kernel.org,lists.samba.org,lists.linux.dev];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -2.30
 
-On Fri, Oct 17, 2025 at 08:54:30PM -0400, Chuck Lever wrote:
-> From: Mike Snitzer <snitzer@kernel.org>
+On Mon 13-10-25 10:48:01, Jeff Layton wrote:
+> In order to add directory delegation support, we need to break
+> delegations on the parent whenever there is going to be a change in the
+> directory.
 > 
-> If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-> middle and end as needed. The large middle extent is DIO-aligned and
-> the start and/or end are misaligned. Synchronous buffered IO (with
-> preference towards using DONTCACHE) is used for the misaligned extents
-> and O_DIRECT is used for the middle DIO-aligned extent.
+> vfs_link, vfs_unlink, and vfs_rename all have existing delegation break
+> handling for the children in the rename. Add the necessary calls for
+> breaking delegations in the parent(s) as well.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Can you define synchronous better here?  The term is unfortunately
-overloaded between synchronous syscalls vs aio/io_uring and O_(D)SYNC
-style I/O.  As of now I don't understand which one you mean, especially
-with the DONTCACHE reference thrown in, but I guess I'll figure it out
-reading the patch.
+Looks good. Feel free to add:
 
-> If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
-> invalidate the page cache on behalf of the DIO WRITE, then
-> nfsd_issue_write_dio() will fall back to using buffered IO.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Did you see -ENOTBLK leaking out of the file systems?  Because at
-least for iomap it is supposed to be an indication that the
-file system ->write_iter handler needs to retry using buffered
-I/O and never leak to the caller.
+								Honza
 
-> These changes served as the original starting point for the NFS
-> client's misaligned O_DIRECT support that landed with
-> commit c817248fc831 ("nfs/localio: add proper O_DIRECT support for
-> READ and WRITE"). But NFSD's support is simpler because it currently
-> doesn't use AIO completion.
-
-I don't understand this paragraph.  What does starting point mean
-here?  How does it matter for the patch description?
-
-> +struct nfsd_write_dio {
-> +     ssize_t start_len;      /* Length for misaligned first extent */
-> +     ssize_t middle_len;     /* Length for DIO-aligned middle extent */
-> +     ssize_t end_len;        /* Length for misaligned last extent */
-> +};
-
-Looking at how the code is structured later on, it seems like it would
-work much better if each of these sections had it's own object with
-the len, iov_iter, flag if it's aligned, etc.  Otherwise we have this
-structure and lots of arrays of three items passed around.
-
-> +static bool
-> +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask,
-> +                        unsigned int len_mask)
-
-Wouldn't it make sense to track the alignment when building the bio_vec
-array instead of doing another walk here touching all cache lines?
-
-> +	if (unlikely(dio_blocksize > PAGE_SIZE))
-> +		return false;
-
-Why does this matter?  Can you add a comment explaining it?
-
-> +static int
-> +nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
-> +		    unsigned int nvecs, unsigned long *cnt,
-> +		    struct kiocb *kiocb)
-> +{
-> +	struct iov_iter iter;
-> +	int host_err;
-> +
-> +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> +	host_err = vfs_iocb_iter_write(file, kiocb, &iter);
-> +	if (host_err < 0)
-> +		return host_err;
-> +	*cnt = host_err;
-> +
-> +	return 0;
-
-
-Nothing really buffered here per se, it's just a small wrapper
-around vfs_iocb_iter_write.
-
-> +	/*
-> +	 * Any buffered IO issued here will be misaligned, use
-> +	 * sync IO to ensure it has completed before returning.
-> +	 * Also update @stable_how to avoid need for COMMIT.
-> +	 */
-> +	kiocb->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-
-What do you mean with completed before returning?  I guess you
-mean writeback actually happening, right?  Why do you need that,
-why do you also force it for the direct I/O?
-
-Also IOCB_SYNC is wrong here, as the only thing it does over
-IOCB_DSYNC is also forcing back of metadata not needed to find
-data (aka timestamps), which I can't see any need for here.
-
-> +	*stable_how = NFS_FILE_SYNC;
-> +
-> +	*cnt = 0;
-> +	for (int i = 0; i < n_iters; i++) {
-> +		if (iter_is_dio_aligned[i])
-> +			kiocb->ki_flags |= IOCB_DIRECT;
-> +		else
-> +			kiocb->ki_flags &= ~IOCB_DIRECT;
-> +
-> +		host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
-> +		if (host_err < 0) {
-> +			/*
-> +			 * VFS will return -ENOTBLK if DIO WRITE fails to
-> +			 * invalidate the page cache. Retry using buffered IO.
-> +			 */
-> +			if (unlikely(host_err == -ENOTBLK)) {
-
-The VFS certainly does not, and if it leaks out of a specific file
-system we need to fix that.
-
-> +			} else if (unlikely(host_err == -EINVAL)) {
-> +				struct inode *inode = d_inode(fhp->fh_dentry);
-> +
-> +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n",
-> +						    inode->i_sb->s_id, inode->i_ino);
-> +				host_err = -ESERVERFAULT;
-
--EINVAL can be lot more things than alignment failure.   And more
-importantly alignment failures should not happen with the proper
-checks in place.
-
+> ---
+>  fs/namei.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 7377020a2cba02501483020e0fc93c279fb38d3e..6e61e0215b34134b1690f864e2719e3f82cf71a8 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -4667,6 +4667,9 @@ int vfs_unlink(struct mnt_idmap *idmap, struct inode *dir,
+>  	else {
+>  		error = security_inode_unlink(dir, dentry);
+>  		if (!error) {
+> +			error = try_break_deleg(dir, delegated_inode);
+> +			if (error)
+> +				goto out;
+>  			error = try_break_deleg(target, delegated_inode);
+>  			if (error)
+>  				goto out;
+> @@ -4936,7 +4939,9 @@ int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
+>  	else if (max_links && inode->i_nlink >= max_links)
+>  		error = -EMLINK;
+>  	else {
+> -		error = try_break_deleg(inode, delegated_inode);
+> +		error = try_break_deleg(dir, delegated_inode);
+> +		if (!error)
+> +			error = try_break_deleg(inode, delegated_inode);
+>  		if (!error)
+>  			error = dir->i_op->link(old_dentry, dir, new_dentry);
+>  	}
+> @@ -5203,6 +5208,14 @@ int vfs_rename(struct renamedata *rd)
+>  		    old_dir->i_nlink >= max_links)
+>  			goto out;
+>  	}
+> +	error = try_break_deleg(old_dir, delegated_inode);
+> +	if (error)
+> +		goto out;
+> +	if (new_dir != old_dir) {
+> +		error = try_break_deleg(new_dir, delegated_inode);
+> +		if (error)
+> +			goto out;
+> +	}
+>  	if (!is_dir) {
+>  		error = try_break_deleg(source, delegated_inode);
+>  		if (error)
+> 
+> -- 
+> 2.51.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
