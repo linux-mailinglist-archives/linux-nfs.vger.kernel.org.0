@@ -1,80 +1,103 @@
-Return-Path: <linux-nfs+bounces-15408-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15409-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4F43BF1B6C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 16:05:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84579BF268A
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 18:27:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2AEBC34CEF3
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 14:05:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13B8A18A807C
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 16:26:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AE83191DA;
-	Mon, 20 Oct 2025 14:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD48286422;
+	Mon, 20 Oct 2025 16:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LNh7/lT6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnSMlkaI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB4A2F6563
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 14:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD1928504F
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 16:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760969118; cv=none; b=pCzqeEu3Po/xDjD7qLIh04xom9tIcfBF3SmrqEGL4hQbDyRbZac6B+6Ex4jnPV4KPdcw7VVVZsd1DV8tc9FnOZxdomMDkSClH7ipSn2CbNP9Z3gRgKlQ/VqcX9m/rB53ZQjJRZdYGpZreG+sYgncZ8mAxp0laLwZEcc8RJGQqww=
+	t=1760977550; cv=none; b=AW6RKow+Gsl9cVB2yYfkJAbYGZDAQApVqXsA4ZnFzaQ17+zSDcOOYnYLTd4KOl2k9zKop7pmcivtked42DamaHxeECRSQfUTwmjT8YQc4Yh/rZwJzpVN13UF+7LzNEqHHS9S2FKjimLchIhvvmJp+gKw2Xd+OWKGFLlKjS58o/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760969118; c=relaxed/simple;
-	bh=ulEIJE9PdmsAbbnVqTB1cQDBXy3HikqUS+1TgXZnXUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ncZ60zIjvEK7VSh7JhtudKLS6U8S+N/TymGful45Nm+6F/CzwT3TdWyCcM1CfgmfY3Iy7MlXFuXX6HcedqbPzTwmeTAHT0xpWo5J85xVo4qwSkRc/RcZXV+b/w8zDP6LUkECw8Nv729NtH9Nryawy86HHf0hg8Q3s4T9l5JY9nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LNh7/lT6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Te78FUGl5HLZxGutkZroe+MntakvvlwKzFpAP++OYmw=; b=LNh7/lT6+Jl4L14lMHxxWfNyjm
-	7faLF3RnPCt7n5L8QNVvEwxWUKhVr0uwYhxcUyRnM1tvAwMzEMAbGmLkUYGTMr5ODy9KSIEIx876Y
-	4YsoVpD6L/qijFAWDD6p5WgovtS97ifF1dYYgm/ovdzrsiN7X2FPVA7XQQigqBQfQLKhzjHvJn99A
-	WDJGBCkAK4doCfOo61WDey18DHBF4BoDmmr7KTrckjHozjjWkjZPIHQEDp4+zpUdRas/UOwff9U/K
-	t3b45bTezM8pGvsA+vk/wbDrfKOhbdBWvjPhtE+2JGVEg61W+Tpz+8ZBey38ms22jdggKsmiUqu74
-	daoxeU+w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAqVa-0000000DtWy-2YdQ;
-	Mon, 20 Oct 2025 14:05:10 +0000
-Date: Mon, 20 Oct 2025 07:05:10 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Mike Snitzer <snitzer@kernel.org>, NeilBrown <neil@brown.name>,
+	s=arc-20240116; t=1760977550; c=relaxed/simple;
+	bh=eCCCw02MfuHoH+LsVDr7VOq1zJ4jlVxEYfPD09HPAqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JIClqHtDGYauNtdKyrHjEgVSzBSys8S9Mq2C3kYQvsxKlDFfwIHj8+NZNQVDki9OiqOD+I5JoMlfhLEfezbACPmWa61QalWan6fUnC9wjMGNCOE7VuPsw6hIIPDD5JgXKyZlDPmk9RWjmNgdRihWhXSHVy63++YcAy97dFl+sDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnSMlkaI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A72C4CEF9;
+	Mon, 20 Oct 2025 16:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760977550;
+	bh=eCCCw02MfuHoH+LsVDr7VOq1zJ4jlVxEYfPD09HPAqE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CnSMlkaIvzOmbbw9NhyS1ZByte8GNry442VW6qZx8H0MSllx2wuEgKoEoPR3Cz6HL
+	 xC9cGuOl3A5RiJnV6zyFos1TNmZtYOUcs7B2VymZZOoWsE6+fhVzYksYFOxel7ehEI
+	 wX8KmgwSSFG6s205msnZPQUehBsLyzxxnuiU2G5jCRntpiESUzxqMB70nGx5nb51yS
+	 MWr1arqmxBlS/MC9RvULnl8Bl9uKtd7V75smZoqCHadU4k7O80vG9xCQQKck/AUdJc
+	 m0llbVppPdQjgkb/6YL37hX3+2nQ7DWYUPRblHa08DypKVAARLgpnagpulK0GOYuu9
+	 2AgRCjOFz082g==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPZBlgnhlocDA6Ps@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
- <20251018005431.3403-3-cel@kernel.org>
- <aPXihwGTiA7bqTsN@infradead.org>
- <67e3763c-d20c-4e1c-b7ff-62b59c385210@kernel.org>
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v5 0/4] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Date: Mon, 20 Oct 2025 12:25:42 -0400
+Message-ID: <20251020162546.5066-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67e3763c-d20c-4e1c-b7ff-62b59c385210@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 20, 2025 at 09:56:02AM -0400, Chuck Lever wrote:
-> I tend to agree that I expect an alignment failure will rarely if ever
-> happen if we've done our job well.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-It should never happen if the job was done properly.  But when -EINVAL
-happens it can be just as likely any other mismatched condition.
+Following on https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
+this series includes all patches needed to make NFSD Direct WRITE
+work, plus an experimental follow-on patch.
+
+Mike, just send along any responses to review comments as patch
+snippets and I will apply them as needed.
+
+Changes since v4:
+* Split out refactoring nfsd_buffered_write() into a separate patch
+* Expand patch description of 1/4
+* Don't set IOCB_SYNC flag
+
+Changes since v3:
+* Address checkpatch.pl nits in 2/3
+* Add an untested patch to mark ingress RDMA Read chunks
+
+Chuck Lever (3):
+  NFSD: Enable return of an updated stable_how to NFS clients
+  NFSD: Refactor nfsd_vfs_write()
+  svcrdma: Mark Read chunks
+
+Mike Snitzer (1):
+  NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+
+ fs/nfsd/debugfs.c                       |   1 +
+ fs/nfsd/nfs3proc.c                      |   2 +-
+ fs/nfsd/nfs4proc.c                      |   2 +-
+ fs/nfsd/nfsproc.c                       |   3 +-
+ fs/nfsd/trace.h                         |   1 +
+ fs/nfsd/vfs.c                           | 231 +++++++++++++++++++++++-
+ fs/nfsd/vfs.h                           |   6 +-
+ fs/nfsd/xdr3.h                          |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   5 +
+ 9 files changed, 237 insertions(+), 16 deletions(-)
+
+-- 
+2.51.0
 
 
