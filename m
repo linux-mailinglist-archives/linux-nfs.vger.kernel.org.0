@@ -1,190 +1,174 @@
-Return-Path: <linux-nfs+bounces-15418-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15419-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 447D7BF2CAA
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 19:46:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DB36BF2D80
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 20:00:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BF07434E21B
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 17:46:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAF0A423228
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Oct 2025 18:00:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E824E310771;
-	Mon, 20 Oct 2025 17:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED8A2C0F7A;
+	Mon, 20 Oct 2025 18:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X7CIZep0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qXRrHP9/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cFlQUpox";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GvU0/T3L"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="Aah9i52M"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A15214A6A
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 17:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98532C0F7F
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 18:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760982389; cv=none; b=hyQgelES/laUlEmKgHgXBci086N/MtOCFKMjVJiOpN9cIutSBiF02Dj0HCMTNMZ4rCb1B0rWCX4gZdEPTIHczUN+kk63QjLb7kCevskc3ebhbJZEOI1r9rOJWDwx62P6XuggZbS0bihg4WZiMTNzHOVVQPRVUtl/A0WVSIa8fZQ=
+	t=1760983218; cv=none; b=oUBuHajQP2LyhyHSrJ9bIkJsAysF4cqGh+9Ge9hb0AJVH/S4if3YWRNguvPyohjOql9M6CS4CVnPrlIvb65MWxzhEKp2/J+mdvIMs0MnZ9mOHJqRkOgqH3nYBztjWnIJ2/fBDPjFK/jRf8i5N4MK5GJJNj8yW6lOx5BloKAGOeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760982389; c=relaxed/simple;
-	bh=N29IVl+IuQAk4lSla/1emfsV/ce30+oUFNIq43T2TT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QANDhWepD12yfWOxFqTXTpqQHfwMhgIxOh9yW/0+6Fdu/Iq0LXI1gsTpeLK/Hq4+/9kKZ36OAdE28tNXEOt8sEO5sW4Ecu76+u+oL2SVigAoWSystRoTu6KD2eEMFHCIDCScZssejeme5lkyWYUfhoXEp2JecdGJHilEjOUUGiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X7CIZep0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qXRrHP9/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cFlQUpox; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GvU0/T3L; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1EB91211D5;
-	Mon, 20 Oct 2025 17:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760982382; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+ReULqjpAVMXEkNnUbtKvkOe8jwFMdF26ovOchyM94=;
-	b=X7CIZep02xnw5H2mr1TMZX2InlPRfMDbyix7t54Tsb8aX6zvTF99w7HscBE0pWXK9Dz8o6
-	3Awek7SwoOLnoSZ+hNTEZXSUKCLwVHPCMTHInMWpiWmHP8S9q8ZF70t5G9NMDB6XJBvfXG
-	vlwIVIs0LU1grHUAt+v6CS7F6/bQcYU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760982382;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+ReULqjpAVMXEkNnUbtKvkOe8jwFMdF26ovOchyM94=;
-	b=qXRrHP9/4ljBb9JJXOQ2dIgfPTJuHyKNwgal9jBU2SC8iGaLf9ou68IIz/cagUHlJmHPIU
-	1MVFh8k7DKhzmMDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cFlQUpox;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="GvU0/T3L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760982378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+ReULqjpAVMXEkNnUbtKvkOe8jwFMdF26ovOchyM94=;
-	b=cFlQUpoxARZE1s5rFceWfdhzhzIFdAlC68RDNOc+39F0RDOItBobvY/aYf9LKni773PSrC
-	7pqty0gFrByxtamMC4zF3PZQlrR0hJ/u1IyYAMe/+JxfEKNuKKK5jMBjQo11bpp2GrRe0Q
-	CvU+i6Pu8qnvhHT19w8QJF+FqhnPBFc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760982378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+ReULqjpAVMXEkNnUbtKvkOe8jwFMdF26ovOchyM94=;
-	b=GvU0/T3Lhg3R39M49vOqoruvYcuYCDbPjgAHyHu15GvX+oQYie45hx7DgKH3+8B+uu1/I7
-	/RQCYaN8xheMZ4AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B0F213AAC;
-	Mon, 20 Oct 2025 17:46:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +OxhD2l19mgWXQAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 20 Oct 2025 17:46:17 +0000
-Message-ID: <fe16288e-e3f2-4de3-838e-181bbb0ce3ee@suse.de>
-Date: Mon, 20 Oct 2025 19:46:16 +0200
+	s=arc-20240116; t=1760983218; c=relaxed/simple;
+	bh=JSEhntGZPRORcwVtx9zTmPcfFjUk/EBm0a5XmA59JU8=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=MUm092zD9IdakXtsXLzrAlpdry/6nnBc9ugEjUj/6+cpGadOvbPfb8uRfVaTStU/AWT7pv8jlJwy5mce1Sayp6FEio1LOsDdlTNRxe1+jKuowYV1TiMgTIIG2IgfO5WMLbb4NgmWAGdoWD1MvKZkWgFzd2oCGCghjx9Vi3KLWag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=Aah9i52M; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id 07F6311F833
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:46 +0200 (CEST)
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id 7D85713F647
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:38 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 7D85713F647
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1760982878; bh=EPT+yESiiyiyGYUzO/HvEzns2/0POux9DtTb56JTB8w=;
+	h=Date:From:To:Subject:From;
+	b=Aah9i52M1H3a9uWB1JDAUhR8xeZWmW7lZeUrgs461dlw9Btz+QM7pJjVSZOQwQKtW
+	 XuyvtolZ3kZDZjAPPGkN4+bdnq+OFcstVbpa7qp+HuDc2RaLOZiA4zXBqmcbBZcEWZ
+	 mV5QRZjKxTW+i7MCWaaCEKxFWPS9u5eeIfiB6F/A=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id 746BB20056
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:38 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [194.95.233.47])
+	by smtp-m-2.desy.de (Postfix) with ESMTP id 6C98416003F
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:38 +0200 (CEST)
+Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
+	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id EAB85320093
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:37 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-3.desy.de (Postfix) with ESMTP id CE3C21A0048
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 19:54:37 +0200 (CEST)
+Date: Mon, 20 Oct 2025 19:54:37 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <707767179.31268962.1760982877695.JavaMail.zimbra@desy.de>
+Subject: internal error code leakage into user space
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] nvme-tcp: Support receiving KeyUpdate requests
-To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
- kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
-References: <20251017042312.1271322-1-alistair.francis@wdc.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20251017042312.1271322-1-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 1EB91211D5
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_31268963_793322388.1760982877742"
+X-Mailer: Zimbra 10.1.10_GA_4785 (ZimbraWebClient - FF143 (Linux)/10.1.10_GA_4785)
+Thread-Index: 5RhIDJgur5ByhiZjSIOLkN6C/rlSIw==
+Thread-Topic: internal error code leakage into user space
 
-On 10/17/25 06:23, alistair23@gmail.com wrote:
-> From: Alistair Francis <alistair.francis@wdc.com>
-> 
-> The TLS 1.3 specification allows the TLS client or server to send a
-> KeyUpdate. This is generally used when the sequence is about to
-> overflow or after a certain amount of bytes have been encrypted.
-> 
-> The TLS spec doesn't mandate the conditions though, so a KeyUpdate
-> can be sent by the TLS client or server at any time. This includes
-> when running NVMe-OF over a TLS 1.3 connection.
-> 
-> As such Linux should be able to handle a KeyUpdate event, as the
-> other NVMe side could initiate a KeyUpdate.
-> 
-> Upcoming WD NVMe-TCP hardware controllers implement TLS support
-> and send KeyUpdate requests.
-> 
-> This series builds on top of the existing TLS EKEYEXPIRED work,
-> which already detects a KeyUpdate request. We can now pass that
-> information up to the NVMe layer (target and host) and then pass
-> it up to userspace.
-> 
-> Userspace (ktls-utils) will need to save the connection state
-> in the keyring during the initial handshake. The kernel then
-> provides the key serial back to userspace when handling a
-> KeyUpdate. Userspace can use this to restore the connection
-> information and then update the keys, this final process
-> is similar to the initial handshake.
-> 
+------=_Part_31268963_793322388.1760982877742
+Date: Mon, 20 Oct 2025 19:54:37 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <707767179.31268962.1760982877695.JavaMail.zimbra@desy.de>
+Subject: internal error code leakage into user space
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.1.10_GA_4785 (ZimbraWebClient - FF143 (Linux)/10.1.10_GA_4785)
+Thread-Index: 5RhIDJgur5ByhiZjSIOLkN6C/rlSIw==
+Thread-Topic: internal error code leakage into user space
 
-I am rather sceptical at the current tlshd implementation.
-At which place do you update the sending keys?
-I'm only seeing a call to 'gnutls_handhake_update_receiving_key()'.
 
-But I haven't found the matching function 
-'gnutls_handshake_update_sending_key()' in current gnutls.
-So how does updating of the sending keys work?
+Hi NFS-people,
 
-Cheers,
+In f06bedfa62d5 I update updated the client to breaks the retry loop when application is interrupted.
+Lately we have noticed, that on unmount during write, client leaks internal error code to the application,
+for example:
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+`dd: failed to open 'file.1': Unknown error 512`
+
+I think nfs4_map_errors function should map ERESTARTSYS to something that user-space is aware of. What should
+be the appropriate error code, EIO? This is the fix that I am thinking of:
+
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 411776718494..031881172a4b 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -197,6 +197,7 @@ static int nfs4_map_errors(int err)
+                return -ENOTSYNC;
+        case -ENETDOWN:
+        case -ENETUNREACH:
++       case -ERESTARTSYS:
+                break;
+        default:
+                dprintk("%s could not handle NFSv4 error %d\n",
+
+
+Best regards,
+  Tigran.
+------=_Part_31268963_793322388.1760982877742
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
+UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
+jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
+yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
+FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
+ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
+59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
+UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
+IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
+IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
+DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
+yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
+zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
+37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
+76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
+BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
+lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
+bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
+vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
+nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
+0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNTEwMjAxNzU0MzdaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIC+7cDsOZiaEIadP74wJ8OWyGOM4
++t964NfZry7yyoppMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAAXHwKB9ofcI3ga9vNDO+W9P+QyNYgqzJOL5Hbb6
+oKQ8n0E11V2MnfiU+mKF3oZCsBqODBlxuo05ouDFuvZNl/26C/gdGhBGlVIKTHRIOCeBqkCuURO7
+U9Ipt1wkFjGRWggtAbhl+waUTe8Y8LRhpj5Ioj8DfM7a4vUmqdRfJxUSi8oLWPPygxyS/WnOPGUl
+TwXfbxKrD0d55dSgax++YYb0MxtbXZsZEtx1kRPuEQz6IsQt6lUoIrCNyjJRkE5WUtUL4loUwmII
+qlmchVUwqMd6oSutuMUEvkfWto788L3AfqwTVM8Jl63AZkZnAhM06YXLyyiGFhSk18PMZpXhIPf7
+/giGjT8cH2b7pGj9ukY9DaCFk/yK2is9nLAsMUTBVOIKgmG95rDN0lYl6kzObJ60fCahwIF35BqN
+vgX8OqkiO6LGIl8dsqSMza/MGwMfyNCIXPMt6IYs2t/EydT7hAHE7Vc0ijo2MoN6iSr+XAr29mAN
+PlKngGGFmZywU0vBfwW6diJLIj44oSbnIjCR9RlC87mJ6icZoAaPVu1yEaLLUnAZWuJ/JbSh90aJ
+co0T0sfBXDO14H6SpwKeCiJyj7Fz8lmt9dnjSMDQ/iEzYwRtdadWmrxTnuKwyAFdTOusYfBy7xxC
+8UKHFNM4HJLNcb0S1Bb484HgqYKHOBZ4WeMDAAAAAAAA
+------=_Part_31268963_793322388.1760982877742--
 
