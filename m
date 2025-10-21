@@ -1,400 +1,159 @@
-Return-Path: <linux-nfs+bounces-15443-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15444-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91F6CBF5D08
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 12:38:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EADB7BF5DB3
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 12:42:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58395188C1C4
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 10:38:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 616A718A6933
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 10:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4698932D44F;
-	Tue, 21 Oct 2025 10:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C71421578D;
+	Tue, 21 Oct 2025 10:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lqVTJzji"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcrTBbuJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1A6354AEB
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 10:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3CC226D16
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 10:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761043001; cv=none; b=B9K1/jPlElhZv84a8YqXSmUzfd32Ufjo2wNlWOT8NV2KGpLnaSjnelOFbxhNVCRHkDyJQUJv9u3D6PZKvo5rCzMGitaucqKHocy+53z6E1z68iHKZ5RMMS3wwW6WBd6+OWtCdDiSAW7pnXd+uXWjN/xWckM8pvsi7p1+SoNbzaE=
+	t=1761043328; cv=none; b=HLp7Y1qO1yhov7tg+zSzKFbm7Bz60cLoPrRs3130cPJMwn9+br8IECKhVKGjOkFU4cCVBlXwGgRE8iUm+W4dU2/Kz+ER2tAQWO9U+lvC4Df5xnIphq7x/v4fVOpgzlX/PAZe9KXLnhKISYJb7h3/7Hjmf8FfYrTfjq/DFrfidhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761043001; c=relaxed/simple;
-	bh=DNpYwAp+f4lJCVNX+9JaWzhgieBbwXspIdN+eczHcCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=tcOey4FIILEuY24Zxp2ggVGa1i2HjoQntoNVMW0s7xS5kXiyEpd8JfuaJPz37dGto53kjzHEMxu83GcsKH+rBShLwK1ficeleIGAq6TaXnYXS6gFd09HBTvq0j9jRc+vkTqwdtcpji91/6XCXKeo3+tLytlQirbC0bqwCfsT6tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lqVTJzji; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20251021103631epoutp01e07e3cf71fc6fe9d6e4e6a2a80e7597f~we0U0H7ei1325913259epoutp01l
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 10:36:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20251021103631epoutp01e07e3cf71fc6fe9d6e4e6a2a80e7597f~we0U0H7ei1325913259epoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1761042991;
-	bh=HsQCI8iew+pHyZGlqcgByv/CbFDTHT7k4bxRlb4DRbo=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=lqVTJzjiViwLvtPEinPu/Xjuq/K9X0k8qNsAWIo0X0IBiUFYLsSClONg3/gM5D7eB
-	 UvdqM5ywKtjfZfUzKdqaaOkEXaKVNl85+7TelDN5CE+TOP+mioideD3b04/1hfy+mg
-	 KW7BTGGy19cfbK0DtBSrmoropHMgbDFIea4xhdDU=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20251021103630epcas5p435dae0ee9578598211e7066cedc621c2~we0TrEpWD0288102881epcas5p47;
-	Tue, 21 Oct 2025 10:36:30 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.89]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4crTHK1zMHz6B9m7; Tue, 21 Oct
-	2025 10:36:29 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20251021103628epcas5p1b7baecd88baf9cf66127e17613f268e4~we0RnAWVC2779827798epcas5p1e;
-	Tue, 21 Oct 2025 10:36:28 +0000 (GMT)
-Received: from [107.111.86.57] (unknown [107.111.86.57]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20251021103622epsmtip11f8ba67056c7c576fea39dc357410495~we0M5IZcp2042120421epsmtip1P;
-	Tue, 21 Oct 2025 10:36:22 +0000 (GMT)
-Message-ID: <6fe26b74-beb9-4a6a-93af-86edcbde7b68@samsung.com>
-Date: Tue, 21 Oct 2025 16:06:22 +0530
+	s=arc-20240116; t=1761043328; c=relaxed/simple;
+	bh=a9GtadoC9y++2IbYAuhjWXQM4jj+jScK32cHI/l3YoA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SMT5q2hRJlBjupYB0CY1pwlNcRT1eaTZdaGkEj1aEnYM9FMOE+07uSw1b7doQYPlS9shDBrQ2arWj41Tg4Gb34qQG8RFq2YKb84ZH+6Sk37B8oL9tk24E2ovySR+0kp162yh+Vg9g9ncnizNush72jUypH+QiTgtzmOCzIP6Q2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcrTBbuJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486F5C4CEF1;
+	Tue, 21 Oct 2025 10:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761043328;
+	bh=a9GtadoC9y++2IbYAuhjWXQM4jj+jScK32cHI/l3YoA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LcrTBbuJONJTeUDtQ2orRDzy2n9/uzZzLGgbnn2yasu59ey6mJUkQuISPoUwfTunr
+	 qpqu47SkVdHjUN9LAOjS/nBOIowBSPS9vmXhZ3AM81TujikJE0/HK9XFEZUDUMFo69
+	 rBGCwZI1YwPyhxcqb+6C8Y49kW50ozmnsxeBuw/nkbgSh9KdL/zWPJKv/1Bh/6fdop
+	 2cpbrn0suH+kbtwXafQ9zlVWRaOaCUF0DeUtvFSjvenolp1D1pPL17qCTb3TJg/xSl
+	 W2HYjacM53RaZsYnU1ASltKHFKfmdg83exvldoTbDXDtT+y8d/BfNFZUbgF3OdbIc9
+	 2joxZ28YHVYOw==
+Message-ID: <11998b27098bacd34d99fcaf52cd23e7e0337ee1.camel@kernel.org>
+Subject: Re: [PATCH 0/7] nfsd: assorted cleanup
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Date: Tue, 21 Oct 2025 06:42:07 -0400
+In-Reply-To: <20251018000553.3256253-1-neilb@ownmail.net>
+References: <20251018000553.3256253-1-neilb@ownmail.net>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
-Content-Language: en-US
-To: Dave Chinner <david@fromorbit.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com,
-	trondmy@kernel.org, anna@kernel.org, akpm@linux-foundation.org,
-	willy@infradead.org, mcgrof@kernel.org, clm@meta.com, amir73il@gmail.com,
-	axboe@kernel.dk, hch@lst.de, ritesh.list@gmail.com, djwong@kernel.org,
-	dave@stgolabs.net, wangyufei@vivo.com,
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, anuj20.g@samsung.com, vishak.g@samsung.com,
-	joshi.k@samsung.com
-From: Kundan Kumar <kundan.kumar@samsung.com>
-In-Reply-To: <aPa7xozr7YbZX0W4@dread.disaster.area>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20251021103628epcas5p1b7baecd88baf9cf66127e17613f268e4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9
-References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com>
-	<20251014120845.2361-1-kundan.kumar@samsung.com>
-	<aPa7xozr7YbZX0W4@dread.disaster.area>
 
-On 10/21/2025 4:16 AM, Dave Chinner wrote:
+On Sat, 2025-10-18 at 11:02 +1100, NeilBrown wrote:
+> These patches remove various indirections in nfsd code which, I think,
+> improves clarity.  I was motivated to look at this by a recent buglet
+> with traceing called from nfsd4_read_release().
+>=20
+> Apart from a slight change in when trace_nfsd_read_done() is called, no
+> change in behaviour is expected.
+>=20
+> NeilBrown
+>=20
+>  [PATCH 1/7] nfsd: discard ->op_release() for v4 operations
+>  [PATCH 2/7] nfsd: discard v4 ->op_get_currentstateid() function
+>  [PATCH 3/7] nfsd: discard ->op_set_currentstateid()
+>  [PATCH 4/7] nfsd: discard OP_CLEAR_STATEID
+>  [PATCH 5/7] nfsd: replace sid_flags with two bools.
+>  [PATCH 6/7] nfsd: discard current_stateid.h
+>  [PATCH 7/7] nfsd: use a bool instead of NFSD4_FH_FOREIGN
 
-Thanks Dave for the detailed feedback.
+These all look good to me (modulo the nits that Chuck already pointed
+out).
 
-> On Tue, Oct 14, 2025 at 05:38:29PM +0530, Kundan Kumar wrote:
->> Number of writeback contexts
->> ============================
->> We've implemented two interfaces to manage the number of writeback
->> contexts:
->> 1) Sysfs Interface: As suggested by Christoph, we've added a sysfs
->>     interface to allow users to adjust the number of writeback contexts
->>     dynamically.
->> 2) Filesystem Superblock Interface: We've also introduced a filesystem
->>     superblock interface to retrieve the filesystem-specific number of
->>     writeback contexts. For XFS, this count is set equal to the
->>     allocation group count. When mounting a filesystem, we automatically
->>     increase the number of writeback threads to match this count.
-> 
-> This is dangerous. What happens when we mount a filesystem with
-> millions of AGs?
-> 
-
-Good point. How about adding an upper bound e.g. limiting the number
-of writeback contexts to something like nr_cpus * k and mapping AGs
-dynamically to that bounded pool.
-
-> 
->> Resolving the Issue with Multiple Writebacks
->> ============================================
->> For XFS, affining inodes to writeback threads resulted in a decline
->> in IOPS for certain devices. The issue was caused by AG lock contention
->> in xfs_end_io, where multiple writeback threads competed for the same
->> AG lock.
->> To address this, we now affine writeback threads to the allocation
->> group, resolving the contention issue. In best case allocation happens
->> from the same AG where inode metadata resides, avoiding lock contention.
-> 
-> Not necessarily. The allocator can (and will) select different AGs
-> for an inode as the file grows and the AGs run low on space. Once
-> they select a different AG for an inode, they don't tend to return
-> to the original AG because allocation targets are based on
-> contiguous allocation w.r.t. existing adjacent extents, not the AG
-> the inode is located in.
-> 
-
-The tests were conducted under ideal conditions, where the Allocation
-Groups (AGs) had sufficient space. The design for affining writeback
-threads to AGs is based on the assumption that allocations typically
-occur within the same AG, unless it's low on space. To predict the AG
-from which the allocation will happen, additional logic would be
-required. This enhancement can be considered for a future phase, with
-the get_inode_wb_ctx() function being the suitable location for
-implementation.
-
-> Indeed, if a user selects the inode32 mount option, there is
-> absolutely no relationship between the AG the inode is located in
-> and the AG it's data extents are allocated in. In these cases,
-> using the inode resident AG is guaranteed to end up with a random
-> mix of target AGs for the inodes queued in that AG.  Worse yet,
-> there may only be one AG that can have inodes allocated in it, so
-> all the writeback contexts for the other hundreds of AGs in the
-> filesystem go completely unused...
-> 
-For inode32 mounts, does it make sense to restricting to single-threaded
-writeback, or you have other thoughts for same ?
-
->> Similar IOPS decline was observed with other filesystems under different
->> workloads. To avoid similar issues, we have decided to limit
->> parallelism to XFS only. Other filesystems can introduce parallelism
->> and distribute inodes as per their geometry.
-> 
-> I suspect that the issues with XFS lock contention are related to
-> the fragmentation behaviour observed (see below) massively
-> increasing the frequency of allocation work for a given amount of
-> data being written rather than increasing writeback concurrency...
-> 
->>
->> IOPS and throughput
->> ===================
->> With the affinity to allocation group we see significant improvement in
->> XFS when we write to multiple files in different directories(AGs).
->>
->> Performance gains:
->>    A) Workload 12 files each of 1G in 12 directories(AGs) - numjobs = 12
->>      - NVMe device BM1743 SSD
-> 
-> So, 80-100k random 4kB write IOPS, ~2GB/s write bandwidth.
-> 
->>          Base XFS                : 243 MiB/s
->>          Parallel Writeback XFS  : 759 MiB/s  (+212%)
-> 
-> As such, the baseline result doesn't feel right - it doesn't match
-> my experience with concurrent sequential buffered write workloads on
-> SSDs. My expectation is that they'd get close to device bandwidth or
-> run out of copy-in CPU at somewhere over 3GB/s.
-> 
-> So what are you actually doing to get these numbers? What is the
-> benchmark (CLI and conf files details, please!), what is the
-> mkfs.xfs output, and how many CPUs/RAM do you have on the machines
-> you are testing?  i.e. please document them sufficiently so that
-> other people can verify your results.
-> 
-
-All tests were done with random writes. I am sharing complete test
-script and config details.
-
-mkfs output
-===========
-meta-data=/dev/nvme2n1           isize=512    agcount=128, 
-agsize=117188604 blks
-          =                       sectsz=4096  attr=2, projid32bit=1
-          =                       crc=1        finobt=1, sparse=1, rmapbt=1
-          =                       reflink=1    bigtime=1 inobtcount=1 
-nrext64=1
-          =                       exchange=0   metadir=0
-data     =                       bsize=4096   blocks=15000141312, imaxpct=1
-          =                       sunit=4      swidth=32 blks
-naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
-log      =internal log           bsize=4096   blocks=521728, version=2
-          =                       sectsz=4096  sunit=1 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-          =                       rgcount=0    rgsize=0 extents
-          =                       zoned=0      start=0 reserved=0
-
-Script to issue the IO
-======================
-mkfs.xfs -f /dev/nvme2n1
-mount /dev/nvme2n1 /mnt
-
-sync
-echo 3 > /proc/sys/vm/drop_caches
-
-for i in {1..12}; do
-         mkdir -p /mnt/dir$i
-done
-
-fio job_nvme.fio
-
-umount /mnt
-echo 3 > /proc/sys/vm/drop_caches
-sync
-
-File job_nvme.fio
-=================
-[global]
-bs=4k
-iodepth=32
-rw=randwrite
-ioengine=io_uring
-nrfiles=12
-numjobs=1                # Each job writes to a different file
-size=12g
-direct=0                 # Buffered I/O to trigger writeback
-group_reporting=1
-create_on_open=1
-name=test
-
-[job1]
-directory=/mnt/dir1
-
-[job2]
-directory=/mnt/dir2
-
-...
-...
-
-[job12]
-directory=/mnt/dir12
-
-Number of CPUs = 128
-System RAM = 128G
-
-> Also, what is the raw device performance and how close to that are
-> we getting through the filesystem?
->
-
-Raw IO performance BM1743 SSD
-fio -iodepth=32 --rw=randwrite -direct=1 -ioengine=io_uring -bs=4K 
--numjobs=1 -size=100G -group_reporting -filename=/dev/nvme2n1 
--name=direct_test
-write: IOPS=117k, BW=457MiB/s (479MB/s)(100GiB/224303msec)
-
-Raw IO performance PM9A3 SSD
-write: IOPS=546k, BW=2132MiB/s (2235MB/s)(100GiB/48036msec)
-
->>      - NVMe device PM9A3 SSD
-> 
-> 130-180k random 4kB write IOPS, ~4GB/s write bandwidth. So roughly
-> double the physical throughput of the BM1743, and ....
-> 
->>          Base XFS                : 368 MiB/s
->>          Parallel Writeback XFS  : 1634 MiB/s  (+344%)
-> 
-> .... it gets roughly double the physical throughput of the BM1743.
-> 
-
-BM1743 is a large IU device with a 16K IU size, which is not optimized
-for my 4K IO operations, resulting in lower throughput. In contrast,
-PM9A3 is a faster device that handles IO operations more efficiently.
-
-> This doesn't feel like a writeback concurrency limited workload -
-> this feels more like a device IOPS and IO depth limited workload.
-> 
->>    B) Workload 6 files each of 20G in 6 directories(AGs)  - numjobs = 6
->>      - NVMe device BM1743 SSD
->>          Base XFS                : 305 MiB/s
->>          Parallel Writeback XFS  : 706 MiB/s  (+131%)
->>
->>      - NVMe device PM9A3 SSD
->>          Base XFS                : 315 MiB/s
->>          Parallel Writeback XFS  : 990 MiB/s  (+214%)
->>
->> Filesystem fragmentation
->> ========================
->> We also see that there is no increase in filesystem fragmentation
->> Number of extents per file:
-> 
-> Are these from running the workload on a freshly made (i.e. just run
-> mkfs.xfs, mount and run benchmark) filesystem, or do you reuse the
-> same fs for all tests?
-
-I create a new file system for each test run.
-
-> 
->>    A) Workload 6 files each 1G in single directory(AG)   - numjobs = 1
->>          Base XFS                : 17
->>          Parallel Writeback XFS  : 17
-> 
-> Yup, this implies a sequential write workload....
-> 
-
-This is random IO. As the workload is small the extents merge more.
-
->>    B) Workload 12 files each of 1G to 12 directories(AGs)- numjobs = 12
->>          Base XFS                : 166593
->>          Parallel Writeback XFS  : 161554
-> 
-> which implies 144 files, and so over 1000 extents per file. Which
-> means about 1MB per extent and is way, way worse than it should be
-> for sequential write workloads.
-> 
-
-Previous results of fragmentation were taken with randwrite. I took
-fresh data for sequential IO and here are the results.
-number of extents reduces a lot for seq IO:
-   A) Workload 6 files each 1G in single directory(AG)   - numjobs = 1
-         Base XFS                : 1
-         Parallel Writeback XFS  : 1
-
-   B) Workload 12 files each of 1G to 12 directories(AGs)- numjobs = 12
-         Base XFS                : 4
-         Parallel Writeback XFS  : 3
-
-   C) Workload 6 files each of 20G to 6 directories(AGs) - numjobs = 6
-         Base XFS                : 4
-         Parallel Writeback XFS  : 4
-
->>
->>    C) Workload 6 files each of 20G to 6 directories(AGs) - numjobs = 6
->>          Base XFS                : 3173716
->>          Parallel Writeback XFS  : 3364984
-> 
-> 36 files, 720GB and 3.3m extents, which is about 100k extents per
-> file for an average extent size of 200kB. That would explain why it
-> performed roughly the same on both devices - they both have similar
-> random 128kB write IO performance...
-> 
-> But that fragmentation pattern is bad and shouldn't be occurring fro
-> sequential writes. Speculative EOF preallocation should be almost
-> entirely preventing this sort of fragmentation for concurrent
-> sequential write IO and so we should be seeing extent sizes of at
-> least hundreds of MBs for these file sizes.
-> 
-> i.e. this feels to me like you test is triggering some underlying
-> delayed allocation defeat mechanism that is causing physical
-> writeback IO sizes to collapse. This turns what should be a
-> bandwitdh limited workload running at full device bandwidth into an
-> IOPS and IO depth limited workload.
-> 
-> In adding writeback concurrency to this situation, it enables
-> writeback to drive deeper IO queues and so extract more small IO
-> performance from the device, thereby showing better performance for
-> the wrokload. The issue is that baseline writeback performance is
-> way below where I think it should be for the given IO workload (IIUC
-> the workload being run, hence questions about benchmarks, filesystem
-> configs and test hardware).
-> 
-
-I have tried to share config, benchmarking script and data,
-if you feel some details are missing please let me know.
-
-> Hence while I certainly agree that writeback concurrency is
-> definitely needed, I think that the results you are getting here are
-> a result of some other issue that writeback concurrency is
-> mitigating. The underlying fragmentation issue needs to be
-> understood (and probably solved) before we can draw any conclusions
-> about the performance gains that concurrent writeback actually
-> provides on these workloads and devices...
-> 
-
-In these tests we've observed that fragmentation remains consistent 
-across sequential and random IO workloads. Your feedback on this would 
-be valuable.
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
