@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-15446-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15447-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6A44BF5F28
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:07:20 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0675BF5F8B
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:13:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8473319A0446
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 11:07:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9B4304E3157
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 11:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DED22F360B;
-	Tue, 21 Oct 2025 11:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874A82C376B;
+	Tue, 21 Oct 2025 11:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr289Mwg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9qNjCG5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9A92F2911
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:07:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B13134AB
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761044837; cv=none; b=MZ46TCKm12O0q18+G0YBdbEJu1VD1zDWRf21++AD3NPmCyTeKNkAwqpqhibrv0mgST8SijkRNZ7EOQhc01xHDBrz4e2yH/t1+3PHGYpvLS/7qxZEYi4aRzjo43vAZ0kxJxD/6EugcZOJYD1sdW/xk+RwQeq7SSVa5TO2z2r68Ds=
+	t=1761045181; cv=none; b=GtaruvAXoywNPdAz0jnkU+x5I9ELldV8F7OUNmWDOLL5JMhgmKriQg8bVvZPO8wRhGqa0IQmKL43f/tHE6FpfSOFl0Mkhtm0jxF76TSprpBAKbTLaCK7yzPCsK1z9mD2hvIN1PG4LMyR3cK/dr627qzWaAyFUAASggdIrkEs+/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761044837; c=relaxed/simple;
-	bh=31p2+rj277+bILKQhdpU7WTCyayqm9rEYQ5asF6liBk=;
+	s=arc-20240116; t=1761045181; c=relaxed/simple;
+	bh=5KfYAz7xfbIKgCsRzHkfKJk1+khsXC9KFI76OgUkrX0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pPBCxHk0kXLeRQJSDP+R++i5akx2ArEUwKIEzgWfpjSUmBbpoDJs2fLcPRVe3rfW8MbFz3Wcqm50W/9xqHa1fczJN2YPQTwqKONuGI5fiWwNygxhxTF9ALlwg9bcQY77Ay+95mevzBXYowiu1bLXBROGztO4ia8MOsnIg0/n/co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr289Mwg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 312BDC4CEF1;
-	Tue, 21 Oct 2025 11:07:15 +0000 (UTC)
+	 Content-Type:MIME-Version; b=U8zeccLGqScjcSseH3wkVpDDmBNfInZkICP50/Ha0wdRK8bwBb8uXMzznsXFy4ahmFx3P8cv5daGhaqiqXsVmPXgyoYEgyhiPukLBg7zEQIZd67zNYn3f4jSmnAoxUw+4awLvc2qm1WcmfWgkC5zq8GL2tD78+OhLzRKdWvrhEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9qNjCG5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51447C4CEF1;
+	Tue, 21 Oct 2025 11:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761044835;
-	bh=31p2+rj277+bILKQhdpU7WTCyayqm9rEYQ5asF6liBk=;
+	s=k20201202; t=1761045181;
+	bh=5KfYAz7xfbIKgCsRzHkfKJk1+khsXC9KFI76OgUkrX0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Wr289MwgzU6RKwWYVIjTTCw4QYFn0QyUwxYIPqq8SQOu3TZ3TmsYmgJYYj/k+hTDV
-	 1GuvdRCItBCX5X1rET/0ZwdCZ88oqmAQ++1BN40LURAEigQX3Ws8/vJZgoGzX3d/Js
-	 YzRAl/mzNb2EmklxcMXhg0HjBo+YJTWNay7yctfZbWFSEoP3m2anyfCWq42glNk0BG
-	 mzUId5GKH9jDVhHqZWdnvr3CSWNMEE0Y6JC7/g9fbzZ+doA9aIu+m/m59ZneI8kl16
-	 PpIQ7hSeYvkVSxkvQbsX26bg0rxviNpKjxaFoTBbJOsXzOQ6LGE3IN86zZmOO13tR+
-	 O9/mFZZGLUkpA==
-Message-ID: <4c531e88bc5780346e5547be9d534dc026ed104e.camel@kernel.org>
-Subject: Re: [PATCH v5 4/4] svcrdma: Mark Read chunks
+	b=Q9qNjCG5sQrKUMDjvfw4bvIkHGCom0QZkjYr280yHu/PsE+hPamen7Hww1IIG5O2U
+	 2ILCyASdrSkZoOOjcr35/8gSc4h5O7gxX9SziaP9Z0EtqJs9Wwa12YXSZdTMGd967r
+	 liLwhYs4ilFFrPnBoCHGeZjydQh1fNWVzPl1mjQQ8x/uW/Bz7SX3nQZ/L0zL5u5vE1
+	 dXJiRmEK7P8Z4LGp/Xru7OU8Kqp7nMSLcJRQHJp0ww2+L+grmj2jgGLAbxp5xHn5Dq
+	 7kWbgNxr/3G8nEoABxWVcnMZPZ3QQdvp7l5wdonmjBq5spWB4LDCFYGMV07pFgljA/
+	 nbiLif2YP0Jog==
+Message-ID: <1ddb2a85a04320f6b8db6b2436ff63852dcfbbc9.camel@kernel.org>
+Subject: Re: [PATCH v5 0/4] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 21 Oct 2025 07:07:13 -0400
-In-Reply-To: <20251020162546.5066-5-cel@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, Chuck Lever	 <chuck.lever@oracle.com>
+Date: Tue, 21 Oct 2025 07:12:59 -0400
+In-Reply-To: <c5e0409a-5fce-4adc-bdd4-584a7c384c95@kernel.org>
 References: <20251020162546.5066-1-cel@kernel.org>
-	 <20251020162546.5066-5-cel@kernel.org>
+	 <aPZkYqyFZ4SGnMbF@kernel.org>
+	 <c5e0409a-5fce-4adc-bdd4-584a7c384c95@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,39 +137,37 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-10-20 at 12:25 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2025-10-20 at 12:44 -0400, Chuck Lever wrote:
+> On 10/20/25 12:33 PM, Mike Snitzer wrote:
+> > On Mon, Oct 20, 2025 at 12:25:42PM -0400, Chuck Lever wrote:
+> > Just a bit concerned about removing IOCB_SYNC in that
+> > we're altering stable_how to be NFS_FILE_SYNC.
+> Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") introduces
+> the first use of IOCB_ flags in NFSD's write path, and it uses
+> IOCB_DSYNC. The patch has Reviewed-by's from Christoph, Neil, and
+> Jeff.
 >=20
-> The upper layer may want to know when the receive buffer's .pages
-> array is guaranteed to contain only an opaque payload. This permits
-> the upper layer to optimize its buffer handling.
+> Should we be concerned that IOCB_DSYNC does not persist time stamp
+> changes that might be lost during an unplanned server boot?
 >=20
-> NB: Since svc_rdma_recvfrom.c is under net/, we use the comment
-> style that is preferred in the networking layer.
+> As a reminder to the thread, Section 3.3.7 of RFC 1813 says:
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>          If stable is FILE_SYNC, the server must commit the data
+>          written plus all file system metadata to stable storage
+>          before returning results.
 >=20
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdm=
-a/svc_rdma_recvfrom.c
-> index e7e4a39ca6c6..b1a0c72f73de 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-> @@ -815,6 +815,11 @@ static void svc_rdma_read_complete_one(struct svc_rq=
-st *rqstp,
->  	buf->page_len =3D length;
->  	buf->len +=3D length;
->  	buf->buflen +=3D length;
-> +
-> +	/* Transport guarantees that only the chunk payload
-> +	 * appears in buf->pages.
-> +	 */
-> +	buf->flags |=3D XDRBUF_READ;
->  }
-> =20
->  /* Finish constructing the RPC Call message in rqstp::rq_arg.
+> The text is a bit blurry about whether "file system metadata" means
+> all of the outstanding metadata changes for every file, or just the
+> metadata changes for the target file handle.
+>=20
+> NFSD has historically treated DATA_SYNC and FILE_SYNC identically,
+> as the Linux NFS client does not use DATA_SYNC (IIRC).
+>=20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Surely it just meant for the one file. FILE_SYNC is only applicable to
+WRITE/COMMIT operations and those only deal with a single file at a
+time. If the client gets back FILE_SYNC on a write, it should _not_
+assume that all outstanding dirty data to all files has been sync'ed.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
