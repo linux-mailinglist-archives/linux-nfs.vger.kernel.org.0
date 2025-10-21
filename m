@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-15447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0675BF5F8B
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:13:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDFE1BF6028
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:24:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9B4304E3157
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 11:13:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B92E3A2F15
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 11:24:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874A82C376B;
-	Tue, 21 Oct 2025 11:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12CCF2F7467;
+	Tue, 21 Oct 2025 11:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9qNjCG5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U058MkHL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B13134AB
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B142F549B
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761045181; cv=none; b=GtaruvAXoywNPdAz0jnkU+x5I9ELldV8F7OUNmWDOLL5JMhgmKriQg8bVvZPO8wRhGqa0IQmKL43f/tHE6FpfSOFl0Mkhtm0jxF76TSprpBAKbTLaCK7yzPCsK1z9mD2hvIN1PG4LMyR3cK/dr627qzWaAyFUAASggdIrkEs+/o=
+	t=1761045885; cv=none; b=bUyTiXYDLBio1/UzTNarhNZUMkgHRPxBo2qVIkuNa9HTZjSaO3j4ErF/5ZEi9V+tjA2v6Wtf1oMYQ1+kul/KaDPc2+OdrBZTZ+ry+xApZZcm40NTdn+9bdu4VI5lYV5emsluCvnZXgQuAfPnNfUsZmHcGD6yPUp1xScN22CEdBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761045181; c=relaxed/simple;
-	bh=5KfYAz7xfbIKgCsRzHkfKJk1+khsXC9KFI76OgUkrX0=;
+	s=arc-20240116; t=1761045885; c=relaxed/simple;
+	bh=VpMPfzKLpW3/HM1ZlgN4q2Uli7kAn8mYCKhvfTB7mno=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U8zeccLGqScjcSseH3wkVpDDmBNfInZkICP50/Ha0wdRK8bwBb8uXMzznsXFy4ahmFx3P8cv5daGhaqiqXsVmPXgyoYEgyhiPukLBg7zEQIZd67zNYn3f4jSmnAoxUw+4awLvc2qm1WcmfWgkC5zq8GL2tD78+OhLzRKdWvrhEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9qNjCG5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51447C4CEF1;
-	Tue, 21 Oct 2025 11:12:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=jH/dApKH2B9xMaS2turw3Zj4iltFvzdq/k5467H8Rmkarrh8+toEHlLqpcAJkBZ3pD+fyxD2TPc3etaEO+8tedwSP6pjmQK3Lur5+R74hFGwKrNpgcUmjGUQ0pyVKmNcB/0GXEb7KXZ3tTQesHb8+X03A8DS23w/slN2G/JW4X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U058MkHL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C35C4CEF5;
+	Tue, 21 Oct 2025 11:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761045181;
-	bh=5KfYAz7xfbIKgCsRzHkfKJk1+khsXC9KFI76OgUkrX0=;
+	s=k20201202; t=1761045884;
+	bh=VpMPfzKLpW3/HM1ZlgN4q2Uli7kAn8mYCKhvfTB7mno=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q9qNjCG5sQrKUMDjvfw4bvIkHGCom0QZkjYr280yHu/PsE+hPamen7Hww1IIG5O2U
-	 2ILCyASdrSkZoOOjcr35/8gSc4h5O7gxX9SziaP9Z0EtqJs9Wwa12YXSZdTMGd967r
-	 liLwhYs4ilFFrPnBoCHGeZjydQh1fNWVzPl1mjQQ8x/uW/Bz7SX3nQZ/L0zL5u5vE1
-	 dXJiRmEK7P8Z4LGp/Xru7OU8Kqp7nMSLcJRQHJp0ww2+L+grmj2jgGLAbxp5xHn5Dq
-	 7kWbgNxr/3G8nEoABxWVcnMZPZ3QQdvp7l5wdonmjBq5spWB4LDCFYGMV07pFgljA/
-	 nbiLif2YP0Jog==
-Message-ID: <1ddb2a85a04320f6b8db6b2436ff63852dcfbbc9.camel@kernel.org>
-Subject: Re: [PATCH v5 0/4] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+	b=U058MkHLXNE+uyxNxu/jBLLVT6rWD2waQ3YIC/fdUEZv54RCg86OZTlxU9CoJ1pKx
+	 NwyRcWmlrwYX/EC2Z+eGXKuCWeLMOO7Al8uO6X285TQIbCOOMAXMUrpSPuVfAuudxj
+	 kYUkOEJWGOgCRWvNDlRpRO7DvCLoBjYzMZQ3GOTs8gtNHCAYxN6711slDG9s9h633/
+	 AXpqNtK0+wf1bC11c1ntoIcnOrlIEdc6u0Sc/62/WE64kV+nbDuDKw/fLbjYC3gH87
+	 bF8J0pQoznG4ezbRG6BALECCXEMwDgQgjJ66MBvq/44uajoSu/wthkY2Zp6s2E++/l
+	 +5xmkFly3bx4Q==
+Message-ID: <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
+Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Mike Snitzer <snitzer@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>, Chuck Lever <cel@kernel.org>
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org, Chuck Lever	 <chuck.lever@oracle.com>
-Date: Tue, 21 Oct 2025 07:12:59 -0400
-In-Reply-To: <c5e0409a-5fce-4adc-bdd4-584a7c384c95@kernel.org>
-References: <20251020162546.5066-1-cel@kernel.org>
-	 <aPZkYqyFZ4SGnMbF@kernel.org>
-	 <c5e0409a-5fce-4adc-bdd4-584a7c384c95@kernel.org>
+ linux-nfs@vger.kernel.org, Mike Snitzer	 <snitzer@kernel.org>
+Date: Tue, 21 Oct 2025 07:24:42 -0400
+In-Reply-To: <aPXihwGTiA7bqTsN@infradead.org>
+References: <20251018005431.3403-1-cel@kernel.org>
+	 <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,37 +136,146 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-10-20 at 12:44 -0400, Chuck Lever wrote:
-> On 10/20/25 12:33 PM, Mike Snitzer wrote:
-> > On Mon, Oct 20, 2025 at 12:25:42PM -0400, Chuck Lever wrote:
-> > Just a bit concerned about removing IOCB_SYNC in that
-> > we're altering stable_how to be NFS_FILE_SYNC.
-> Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") introduces
-> the first use of IOCB_ flags in NFSD's write path, and it uses
-> IOCB_DSYNC. The patch has Reviewed-by's from Christoph, Neil, and
-> Jeff.
+On Mon, 2025-10-20 at 00:19 -0700, Christoph Hellwig wrote:
+> On Fri, Oct 17, 2025 at 08:54:30PM -0400, Chuck Lever wrote:
+> > From: Mike Snitzer <snitzer@kernel.org>
+> >=20
+> > If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+> > middle and end as needed. The large middle extent is DIO-aligned and
+> > the start and/or end are misaligned. Synchronous buffered IO (with
+> > preference towards using DONTCACHE) is used for the misaligned extents
+> > and O_DIRECT is used for the middle DIO-aligned extent.
 >=20
-> Should we be concerned that IOCB_DSYNC does not persist time stamp
-> changes that might be lost during an unplanned server boot?
+> Can you define synchronous better here?  The term is unfortunately
+> overloaded between synchronous syscalls vs aio/io_uring and O_(D)SYNC
+> style I/O.  As of now I don't understand which one you mean, especially
+> with the DONTCACHE reference thrown in, but I guess I'll figure it out
+> reading the patch.
 >=20
-> As a reminder to the thread, Section 3.3.7 of RFC 1813 says:
+> > If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+> > invalidate the page cache on behalf of the DIO WRITE, then
+> > nfsd_issue_write_dio() will fall back to using buffered IO.
 >=20
->          If stable is FILE_SYNC, the server must commit the data
->          written plus all file system metadata to stable storage
->          before returning results.
+> Did you see -ENOTBLK leaking out of the file systems?  Because at
+> least for iomap it is supposed to be an indication that the
+> file system ->write_iter handler needs to retry using buffered
+> I/O and never leak to the caller.
 >=20
-> The text is a bit blurry about whether "file system metadata" means
-> all of the outstanding metadata changes for every file, or just the
-> metadata changes for the target file handle.
+> > These changes served as the original starting point for the NFS
+> > client's misaligned O_DIRECT support that landed with
+> > commit c817248fc831 ("nfs/localio: add proper O_DIRECT support for
+> > READ and WRITE"). But NFSD's support is simpler because it currently
+> > doesn't use AIO completion.
 >=20
-> NFSD has historically treated DATA_SYNC and FILE_SYNC identically,
-> as the Linux NFS client does not use DATA_SYNC (IIRC).
+> I don't understand this paragraph.  What does starting point mean
+> here?  How does it matter for the patch description?
+>=20
+> > +struct nfsd_write_dio {
+> > +     ssize_t start_len;      /* Length for misaligned first extent */
+> > +     ssize_t middle_len;     /* Length for DIO-aligned middle extent *=
+/
+> > +     ssize_t end_len;        /* Length for misaligned last extent */
+> > +};
+>=20
+> Looking at how the code is structured later on, it seems like it would
+> work much better if each of these sections had it's own object with
+> the len, iov_iter, flag if it's aligned, etc.  Otherwise we have this
+> structure and lots of arrays of three items passed around.
+>=20
+> > +static bool
+> > +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr=
+_mask,
+> > +                        unsigned int len_mask)
+>=20
+> Wouldn't it make sense to track the alignment when building the bio_vec
+> array instead of doing another walk here touching all cache lines?
+>=20
+> > +	if (unlikely(dio_blocksize > PAGE_SIZE))
+> > +		return false;
+>=20
+> Why does this matter?  Can you add a comment explaining it?
+>=20
+> > +static int
+> > +nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
+> > +		    unsigned int nvecs, unsigned long *cnt,
+> > +		    struct kiocb *kiocb)
+> > +{
+> > +	struct iov_iter iter;
+> > +	int host_err;
+> > +
+> > +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> > +	host_err =3D vfs_iocb_iter_write(file, kiocb, &iter);
+> > +	if (host_err < 0)
+> > +		return host_err;
+> > +	*cnt =3D host_err;
+> > +
+> > +	return 0;
+>=20
+>=20
+> Nothing really buffered here per se, it's just a small wrapper
+> around vfs_iocb_iter_write.
+>=20
+> > +	/*
+> > +	 * Any buffered IO issued here will be misaligned, use
+> > +	 * sync IO to ensure it has completed before returning.
+> > +	 * Also update @stable_how to avoid need for COMMIT.
+> > +	 */
+> > +	kiocb->ki_flags |=3D (IOCB_DSYNC | IOCB_SYNC);
+>=20
+> What do you mean with completed before returning?  I guess you
+> mean writeback actually happening, right?  Why do you need that,
+> why do you also force it for the direct I/O?
+>=20
+> Also IOCB_SYNC is wrong here, as the only thing it does over
+> IOCB_DSYNC is also forcing back of metadata not needed to find
+> data (aka timestamps), which I can't see any need for here.
 >=20
 
-Surely it just meant for the one file. FILE_SYNC is only applicable to
-WRITE/COMMIT operations and those only deal with a single file at a
-time. If the client gets back FILE_SYNC on a write, it should _not_
-assume that all outstanding dirty data to all files has been sync'ed.
+Responding to a WRITE with NFS_FILE_SYNC flag set means that the data
+the client wrote is now on stable storage (and hence the client doesn't
+need to follow up with a COMMIT). This patch is using DIO for the
+aligned middle section but any unaligned ends use buffered I/O. If we
+want to return NFS_FILE_SYNC here then all of the data and metadata
+need to be on disk when the reply goes out.
+
+Don't we need IOCB_SYNC here in this case? Otherwise, the server could
+crash while the metadata is still in memory. When it comes back up, the
+client could see stale timestamps. Maybe that's not fatal, but it seems
+pretty sketchy.
+
+
+> > +	*stable_how =3D NFS_FILE_SYNC;
+> > +
+> > +	*cnt =3D 0;
+> > +	for (int i =3D 0; i < n_iters; i++) {
+> > +		if (iter_is_dio_aligned[i])
+> > +			kiocb->ki_flags |=3D IOCB_DIRECT;
+> > +		else
+> > +			kiocb->ki_flags &=3D ~IOCB_DIRECT;
+> > +
+> > +		host_err =3D vfs_iocb_iter_write(file, kiocb, &iter[i]);
+> > +		if (host_err < 0) {
+> > +			/*
+> > +			 * VFS will return -ENOTBLK if DIO WRITE fails to
+> > +			 * invalidate the page cache. Retry using buffered IO.
+> > +			 */
+> > +			if (unlikely(host_err =3D=3D -ENOTBLK)) {
+>=20
+> The VFS certainly does not, and if it leaks out of a specific file
+> system we need to fix that.
+>=20
+> > +			} else if (unlikely(host_err =3D=3D -EINVAL)) {
+> > +				struct inode *inode =3D d_inode(fhp->fh_dentry);
+> > +
+> > +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\=
+n",
+> > +						    inode->i_sb->s_id, inode->i_ino);
+> > +				host_err =3D -ESERVERFAULT;
+>=20
+> -EINVAL can be lot more things than alignment failure.   And more
+> importantly alignment failures should not happen with the proper
+> checks in place.
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
