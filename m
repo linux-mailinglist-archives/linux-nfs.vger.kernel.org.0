@@ -1,56 +1,60 @@
-Return-Path: <linux-nfs+bounces-15459-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15460-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08049BF6D34
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 15:38:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5DC4BF6DA9
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 15:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E061219A3A23
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:38:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95A743AE6AF
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404102DC353;
-	Tue, 21 Oct 2025 13:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5AB2741D1;
+	Tue, 21 Oct 2025 13:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HkLef7bc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWubOkVe"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A61722B8CB
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 13:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EC013E02A
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 13:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761053871; cv=none; b=O1WG4Y9kpNnhmTgLgo5xu7JPWiybZEHLUmRT67bcqdqzgPtTZtYu5KNZbVQWkl8SPPW//Sz6SgVm/ua2mdc/mvAJs3H4Rr1Nj41+HV9fyf6ZXbdep3ir/aJW220mgigUQi49WrmgBqUduIpBWf2HBVYk7cnTGt2eQaEgyVmbtWc=
+	t=1761054346; cv=none; b=rLWxPsicTq2Iz0ohNVGS4EbrfQ+3+m2Q8ddfVYICCACrERHICwpcTTOnRNZY5+3umuLeH6nLvUXI+xuVyTG/BmZq01zdypu98ODRrN/1ZwRhrQ9g7M0mzEa1fc6lSpoM6mPRnUBBXzpeBhOKz63eNva59m+yasxKkMJL576C+hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761053871; c=relaxed/simple;
-	bh=xGtGtYt3UyFLF2IUEOYCpm1ZnIEgMcHm7YLu1vdGp5E=;
+	s=arc-20240116; t=1761054346; c=relaxed/simple;
+	bh=6z7n4KuqrhQPbBAKYglQk0SQzzh7907XwN4euGR3gv4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sXYHLau/9UJkQG2XSvoAhRs5Wzdc5JCjNXbr+9Ifgr+3la2nVCwmRVxOAc/5RolGK+hEtd0bo95u20O5UPtuqhedv5f04qWhYjnrY1CvXG5HdpxyvJ0mA5RS0AKN+SkOirLMID/dDnGNogyPBUfdvyZF+xaQqXxRM66rSLPTO2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HkLef7bc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE95C4CEF1;
-	Tue, 21 Oct 2025 13:37:50 +0000 (UTC)
+	 Content-Type:MIME-Version; b=NosQFFWmCZAFXy0FvNg9xh2LDUBS22bpmr/zB/U+UnN3dhW57H2rBAUJQeYYtQb/+QA9KIfvYD6AiIHKaje2dpuHZ0PVPBT5ShHeLb9BteN2e92i55PYsk1oi/HQGKDRd1DJMdp7yoWcusS+mM/i8dztqppfFjSSvgeqTBDJnGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWubOkVe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E00C4CEF1;
+	Tue, 21 Oct 2025 13:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761053870;
-	bh=xGtGtYt3UyFLF2IUEOYCpm1ZnIEgMcHm7YLu1vdGp5E=;
+	s=k20201202; t=1761054346;
+	bh=6z7n4KuqrhQPbBAKYglQk0SQzzh7907XwN4euGR3gv4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HkLef7bcqn3ZeJ+L+RSn17hEd31TQQW2TH4hxJwwsprOvJb0WDMbSQKFOkU+/+Z63
-	 zlZWGdlakO/BHqCTULWGMHhotO1TcqIU+yT8zrZg0ToKTQmHaa6NgGsQe9kVWTYu3Y
-	 H0Bipv6vIbhOjEgiAd12x3gNSaKNeH/WVpaFKR/KVwa9iofeA6/YGPdbFhpONWoF6J
-	 V8p6+lMkw03Vjsl4sldFDEE+T9I9YYymqFNcqIwjut7T2a+Cf/JgTo5BzCEt3krvCy
-	 jkFaPOZ/5cqxl4xxVWIbPndekraOmul24ZktJzRnqQ9vsBaPdK+rB5ErZZNu4ELM4E
-	 swMqZwFi1au9g==
-Message-ID: <33ba39d2ff01eb0e52c80aa7015d27e34dde7fd2.camel@kernel.org>
-Subject: Re: [RFC PATCH 1/1] lockd: prevent UAF in nlm4svc_proc_test in
- reexport NLM
+	b=JWubOkVeOffpkVA8gJRcbc7J77wcMWS6EWMWCYVl+qFZAtuldmAOcxW61q0/7VFp2
+	 yMUDWSVXQPkEtXh6063KazXpvLJvtRX6QJHxaqAiKO2AetQOn3NGNRgd6fniHxjnT5
+	 F1iDW6nASXp85mCsw7615LlTrEKc4VFCx28pf/64dakCSrCYRtZCX8aBRVq4aKSr/6
+	 L6CuI98El6CNLssX3wwbmhfgE/o9y/lfjJM0aNXdOz+//FZeaYV8widyqAcclp3CWv
+	 rws8brx5jCsSWqHzoakukX8m5oqS49hSrexkYOxIXCgmgXT576Wb9RG+7Ip6A25k+U
+	 YvEGjMsOxNRSA==
+Message-ID: <69a5c24ebe6ce9eab9fb5f6f3a6b4d74fc6597d1.camel@kernel.org>
+Subject: Re: [PATCH v5 0/4] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com, 
-	tom@talpey.com
-Date: Tue, 21 Oct 2025 09:37:49 -0400
-In-Reply-To: <20251021130506.45065-1-okorniev@redhat.com>
-References: <20251021130506.45065-1-okorniev@redhat.com>
+To: Chuck Lever <cel@kernel.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, Chuck Lever	 <chuck.lever@oracle.com>
+Date: Tue, 21 Oct 2025 09:45:44 -0400
+In-Reply-To: <4a2ab6a7-9af5-4d86-9b54-34a4f4a9682d@kernel.org>
+References: <20251020162546.5066-1-cel@kernel.org>
+	 <aPZkYqyFZ4SGnMbF@kernel.org>
+	 <c5e0409a-5fce-4adc-bdd4-584a7c384c95@kernel.org>
+	 <1ddb2a85a04320f6b8db6b2436ff63852dcfbbc9.camel@kernel.org>
+	 <4a2ab6a7-9af5-4d86-9b54-34a4f4a9682d@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,229 +139,110 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-10-21 at 09:05 -0400, Olga Kornievskaia wrote:
-> When knfsd is a reexport nfs server, it nlm4svc_proc_test() in
-> calling nlmsvc_testlock() with a lock conflict lock_release_private()
-> call would end up calling nlmsvc_put_lockowner() and then back in
-> nlm4svc_proc_test() function there will be another call to
-> nlmsvc_put_lockowner() for the same owner leading to use-after-free
-> violation (below).
+On Tue, 2025-10-21 at 09:35 -0400, Chuck Lever wrote:
+> On 10/21/25 7:12 AM, Jeff Layton wrote:
+> > On Mon, 2025-10-20 at 12:44 -0400, Chuck Lever wrote:
+> > > On 10/20/25 12:33 PM, Mike Snitzer wrote:
+> > > > On Mon, Oct 20, 2025 at 12:25:42PM -0400, Chuck Lever wrote:
+> > > > Just a bit concerned about removing IOCB_SYNC in that
+> > > > we're altering stable_how to be NFS_FILE_SYNC.
+> > > Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") introduces
+> > > the first use of IOCB_ flags in NFSD's write path, and it uses
+> > > IOCB_DSYNC. The patch has Reviewed-by's from Christoph, Neil, and
+> > > Jeff.
+> > >=20
+> > > Should we be concerned that IOCB_DSYNC does not persist time stamp
+> > > changes that might be lost during an unplanned server boot?
+> > >=20
+> > > As a reminder to the thread, Section 3.3.7 of RFC 1813 says:
+> > >=20
+> > >          If stable is FILE_SYNC, the server must commit the data
+> > >          written plus all file system metadata to stable storage
+> > >          before returning results.
+> > >=20
+> > > The text is a bit blurry about whether "file system metadata" means
+> > > all of the outstanding metadata changes for every file, or just the
+> > > metadata changes for the target file handle.
+> > >=20
+> > > NFSD has historically treated DATA_SYNC and FILE_SYNC identically,
+> > > as the Linux NFS client does not use DATA_SYNC (IIRC).
+> > >=20
+> >=20
+> > Surely it just meant for the one file.
 >=20
-> The problem only arises when the underlying file system has been
-> re-exported as different paths are taken in vfs_test_lock().
-> When it's reexport, filp->f_op->lock is set and when vfs_test_lock()
-> is done fl_lmops pointer is non-null. When it's regular export,
-> vfs_test_lock() calls posix_test_lock() which ends up calling
-> locks_copy_conflock() and it copies NULL into fl_lmops and then
-> calling into lock_release_private() does not call
-> nlmsvc_put_lockowner().
+> Well yes that is the traditional understanding. I'm merely pointing out
+> that the actual text is not quite as specific as what we've come to
+> understand.
 >=20
-> The proposed solution is to intentionally clear fl_lmops pointer to
-> make sure that if there is a conflict (be it a local file system
-> or reexport), lock_release_private() would not call
-> nlmsvc_put_lockowner().
 >=20
-> kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> kernel: BUG: KASAN: slab-use-after-free in nlmsvc_put_lockowner+0x30/0x25=
-0 [lockd]
-> kernel: Read of size 4 at addr ffff0000bf3bca10 by task lockd/6092
-> kernel:
-> kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Not tainted 6.1=
-8.0-rc1+ #23 PREEMPT(voluntary)
-> kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.2400=
-6586.BA64.2406042154 06/04/2024
-> kernel: Call trace:
-> kernel:  show_stack+0x34/0x98 (C)
-> kernel:  dump_stack_lvl+0x80/0xa8
-> kernel:  print_address_description.constprop.0+0x90/0x310
-> kernel:  print_report+0x108/0x1f8
-> kernel:  kasan_report+0xc8/0x120
-> kernel:  kasan_check_range+0xe8/0x190
-> kernel:  __kasan_check_read+0x20/0x30
-> kernel:  nlmsvc_put_lockowner+0x30/0x250 [lockd]
-> kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
-> kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
-> kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
-> kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
-> kernel:  svc_process+0x414/0x900 [sunrpc]
-> kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
-> kernel:  svc_recv+0x1a4/0x520 [sunrpc]
-> kernel:  lockd+0x154/0x298 [lockd]
-> kernel:  kthread+0x2f8/0x398
-> kernel:  ret_from_fork+0x10/0x20
-> kernel:
-> kernel: Allocated by task 6092:
-> kernel:  kasan_save_stack+0x3c/0x70
-> kernel:  kasan_save_track+0x20/0x40
-> kernel:  kasan_save_alloc_info+0x40/0x58
-> kernel:  __kasan_kmalloc+0xd4/0xd8
-> kernel:  __kmalloc_cache_noprof+0x1a8/0x5c0
-> kernel:  nlmsvc_locks_init_private+0xe4/0x520 [lockd]
-> kernel:  nlm4svc_retrieve_args+0x38c/0x530 [lockd]
-> kernel:  __nlm4svc_proc_test+0x194/0x318 [lockd]
-> kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
-> kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
-> kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
-> kernel:  svc_process+0x414/0x900 [sunrpc]
-> kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
-> kernel:  svc_recv+0x1a4/0x520 [sunrpc]
-> kernel:  lockd+0x154/0x298 [lockd]
-> kernel:  kthread+0x2f8/0x398
-> kernel:  ret_from_fork+0x10/0x20
-> kernel:
-> kernel: Freed by task 6092:
-> kernel:  kasan_save_stack+0x3c/0x70
-> kernel:  kasan_save_track+0x20/0x40
-> kernel:  __kasan_save_free_info+0x4c/0x80
-> kernel:  __kasan_slab_free+0x88/0xc0
-> kernel:  kfree+0x110/0x480
-> kernel:  nlmsvc_put_lockowner+0x1b4/0x250 [lockd]
-> kernel:  nlmsvc_put_owner+0x18/0x30 [lockd]
-> kernel:  locks_release_private+0x190/0x2a8
-> kernel:  nlmsvc_testlock+0x2e0/0x648 [lockd]
-> kernel:  __nlm4svc_proc_test+0x244/0x318 [lockd]
-> kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
-> kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
-> kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
-> kernel:  svc_process+0x414/0x900 [sunrpc]
-> kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
-> kernel:  svc_recv+0x1a4/0x520 [sunrpc]
-> kernel:  lockd+0x154/0x298 [lockd]
-> kernel:  kthread+0x2f8/0x398
-> kernel:  ret_from_fork+0x10/0x20
-> kernel:
-> kernel: The buggy address belongs to the object at ffff0000bf3bca00
->         which belongs to the cache kmalloc-64 of size 64
-> kernel: The buggy address is located 16 bytes inside of
->         freed 64-byte region [ffff0000bf3bca00, ffff0000bf3bca40)
-> kernel:
-> kernel: The buggy address belongs to the physical page:
-> kernel: page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pf=
-n:0x13f3bc
-> kernel: flags: 0x2fffff00000000(node=3D0|zone=3D2|lastcpupid=3D0xfffff)
-> kernel: page_type: f5(slab)
-> kernel: raw: 002fffff00000000 ffff0000800028c0 dead000000000122 000000000=
-0000000
-> kernel: raw: 0000000000000000 0000000080200020 00000000f5000000 000000000=
-0000000
-> kernel: page dumped because: kasan: bad access detected
-> kernel:
-> kernel: Memory state around the buggy address:
-> kernel:  ffff0000bf3bc900: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc f=
-c
-> kernel:  ffff0000bf3bc980: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc f=
-c
-> kernel: >ffff0000bf3bca00: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc f=
-c
-> kernel:                          ^
-> kernel:  ffff0000bf3bca80: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc f=
-c
-> kernel:  ffff0000bf3bcb00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
-c
-> kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> kernel: Disabling lock debugging due to kernel taint
-> kernel: AGLO: nlmsvc_put_lockowner 00000000028055fb count=3D0
-> kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Tainted: G    B=
-               6.18.0-rc1+ #23 PREEMPT(voluntary)
-> kernel: Tainted: [B]=3DBAD_PAGE
-> kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.2400=
-6586.BA64.2406042154 06/04/2024
-> kernel: Call trace:
-> kernel:  show_stack+0x34/0x98 (C)
-> kernel:  dump_stack_lvl+0x80/0xa8
-> kernel:  dump_stack+0x1c/0x30
-> kernel:  nlmsvc_put_lockowner+0x7c/0x250 [lockd]
-> kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
-> kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
-> kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
-> kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
-> kernel:  svc_process+0x414/0x900 [sunrpc]
-> kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
-> kernel:  svc_recv+0x1a4/0x520 [sunrpc]
-> kernel:  lockd+0x154/0x298 [lockd]
-> kernel:  kthread+0x2f8/0x398
-> kernel:  ret_from_fork+0x10/0x20
-> kernel: ------------[ cut here ]------------
-> kernel: refcount_t: underflow; use-after-free.
-> kernel: WARNING: CPU: 0 PID: 6092 at lib/refcount.c:87 refcount_dec_not_o=
-ne+0x198/0x1b0
-> kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd nfsv3=
- nfs_acl nfs lockd grace nfs_localio netfs ext4 crc16 mbcache jbd2 overlay =
-uinput snd_seq_dummy snd_hrtimer qrtr rfkill vfat fat uvcvideo snd_hda_code=
-c_generic videobuf2_vmalloc videobuf2_memops uvc snd_hda_intel videobuf2_v4=
-l2 videobuf2_common snd_intel_dspcfg videodev snd_hda_codec snd_hda_core mc=
- snd_hwdep snd_seq snd_seq_device snd_pcm snd_timer snd soundcore sg loop a=
-uth_rpcgss vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_=
-transport vmw_vmci vsock xfs 8021q garp stp llc mrp nvme nvme_core nvme_key=
-ring nvme_auth ghash_ce hkdf e1000e sr_mod cdrom vmwgfx drm_ttm_helper ttm =
-sunrpc dm_mirror dm_region_hash dm_log iscsi_tcp libiscsi_tcp libiscsi scsi=
-_transport_iscsi fuse dm_multipath dm_mod nfnetlink
-> kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Tainted: G    B=
-               6.18.0-rc1+ #23 PREEMPT(voluntary)
-> kernel: Tainted: [B]=3DBAD_PAGE
-> kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.2400=
-6586.BA64.2406042154 06/04/2024
-> kernel: pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=3D--)
-> kernel: pc : refcount_dec_not_one+0x198/0x1b0
-> kernel: lr : refcount_dec_not_one+0x198/0x1b0
-> kernel: sp : ffff80008a627930
-> kernel: x29: ffff80008a627990 x28: ffff0000bf3bca00 x27: ffff0000ba5c7000
-> kernel: x26: 1fffe000191eeb84 x25: 1ffff000114c4f48 x24: ffff0000c8f75c24
-> kernel: x23: 0000000000000007 x22: ffff80008a627950 x21: 1ffff000114c4f26
-> kernel: x20: 00000000ffffffff x19: ffff0000bf3bca10 x18: 0000000000000310
-> kernel: x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> kernel: x14: 0000000000000000 x13: 0000000000000001 x12: ffff60004fd90aa3
-> kernel: x11: 1fffe0004fd90aa2 x10: ffff60004fd90aa2 x9 : dfff800000000000
-> kernel: x8 : 00009fffb026f55e x7 : ffff00027ec85513 x6 : 0000000000000001
-> kernel: x5 : ffff00027ec85510 x4 : ffff60004fd90aa3 x3 : ffff800080787bc0
-> kernel: x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000a75a8000
-> kernel: Call trace:
-> kernel:  refcount_dec_not_one+0x198/0x1b0 (P)
-> kernel:  refcount_dec_and_lock+0x1c/0xb8
-> kernel:  nlmsvc_put_lockowner+0x9c/0x250 [lockd]
-> kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
-> kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
-> kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
-> kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
-> kernel:  svc_process+0x414/0x900 [sunrpc]
-> kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
-> kernel:  svc_recv+0x1a4/0x520 [sunrpc]
-> kernel:  lockd+0x154/0x298 [lockd]
-> kernel:  kthread+0x2f8/0x398
-> kernel:  ret_from_fork+0x10/0x20
-> kernel: ---[ end trace 0000000000000000 ]---
+> > FILE_SYNC is only applicable to
+> > WRITE/COMMIT operations and those only deal with a single file at a
+> > time.
 >=20
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> ---
->  fs/lockd/svclock.c | 1 +
->  1 file changed, 1 insertion(+)
+> True but you may recall that NFSD's COMMIT used to ignore the range
+> arguments and flush the whole file. Some file systems used to flush
+> all dirty data in this case, IIRC.
 >=20
-> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> index a31dc9588eb8..1dd0fec186de 100644
-> --- a/fs/lockd/svclock.c
-> +++ b/fs/lockd/svclock.c
-> @@ -652,6 +652,7 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_fi=
-le *file,
->  	conflock->fl.c.flc_type =3D lock->fl.c.flc_type;
->  	conflock->fl.fl_start =3D lock->fl.fl_start;
->  	conflock->fl.fl_end =3D lock->fl.fl_end;
-> +	conflock->fl.fl_lmops =3D NULL;
->  	locks_release_private(&lock->fl);
-> =20
->  	ret =3D nlm_lck_denied;
+> There's always been a bit of a mismatch between the spec and what NFSD
+> has implemented.
+>=20
+>=20
+> > If the client gets back FILE_SYNC on a write, it should _not_
+> > assume that all outstanding dirty data to all files has been sync'ed.
+>=20
+> Agreed.
+>=20
+> But back to Mike's point.
+>=20
+> - The spec says NFS_DATA_SYNC means persist file data.
+>=20
+> - The spec says NFS_FILE_SYNC means persist file data and file
+>   attributes.
+>=20
+> - After consulting with the section describing COMMIT, I think that
+>   COMMIT is supposed to persist both file data and attributes.
+>=20
+> And my reading of the code in fs/nfsd/vfs.c is that NFSD does the
+> equivalent of NFS_DATA_SYNC in all of these cases, and has done for
+> as long as I cared to chase the commit log.
+>=20
+> Moveover, commit 3f3503adb332 did not introduce this behavior.
+>=20
+> Previous to that commit, nfsd_vfs_write() passed RWF_SYNC to
+> vfs_iter_write(). This API uses kiocb_set_rw_flags() to convert the RWF
+> flag into an IOCB flag. kiocb_set_rw_flags does this:
+>=20
+>         kiocb_flags |=3D (__force int) (flags & RWF_SUPPORTED);
+>         if (flags & RWF_SYNC)
+>                 kiocb_flags |=3D IOCB_DSYNC;
+>=20
+> And that's where I copied IOCB_DSYNC from. The use of RWF_SYNC was
+> introduced in 2016 by commit 24368aad47dc ("nfsd: use RWF_SYNC").
+>=20
+> So we've tacitly agreed to let NFSD fall short of the specs in this
+> regard for some time. However I don't believe this is documented
+> anywhere.
+>=20
+> Based on this reasoning, IOCB_DSYNC is historically correct for the
+> DIRECT WRITE path and its fallbacks. I'm guessing that an O_DIRECT WRITE
+> is going to persist the written data but won't persist file attribute
+> changes either.
+>=20
 
-The problem sounds real, but I'm not sure I like this solution.
+I think that's the case, generally.
 
-It seems like this is gaming the refcounting such that we take a
-reference in locks_copy_conflock() but then you zero out fl_lmops
-before that reference can be put.
+> I'm open to making NFSD adhere more strictly to the spec language, but
+> I bet there will be a performance impact. Maybe that impact will be
+> unnoticeable on modern storage devices.
+>=20
 
-Doesn't that mean that the real bug is that we're missing taking an
-owner reference in some case?
+Ok, I had missed the context that we had been doing this all along
+anyway. In that case, IOCB_DSYNC seems like it's probably acceptable.
+We likely have bigger cache coherency problems outstanding than
+potential timestamp rollbacks anyway.
+
+Alternately, we could just return NFS_DATA_SYNC, but then we'd have to
+deal with follow-on commits.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
