@@ -1,554 +1,961 @@
-Return-Path: <linux-nfs+bounces-15427-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15428-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74C37BF47EA
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 05:20:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08723BF49FB
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 07:14:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B3D814EA25D
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 03:20:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4473618A7F6D
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 05:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF1C223707;
-	Tue, 21 Oct 2025 03:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F6563D994;
+	Tue, 21 Oct 2025 05:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLAZkkV8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fdSEKF4K"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E56136351
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 03:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D016C2556E
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 05:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761016824; cv=none; b=tCZHkNrlhrMK6pTAJBtiEm9SHN5wBv02I9Zffy3KsMhXE9uiUfmsyvn/6oyacFPSNseQPZaDQObccec1LVnLgT58f6K9Um+WLnb3QF/VvvwYU0VtxPR6cZ24E5OJPSuD2z6s7zFxW1UI87LlLg0k1B9EojwaqypoDd2sU9aXAz8=
+	t=1761023663; cv=none; b=uI570hoIiQCTaYiMDUmmh42s8sBPKNiUFPy6vQvKBuTrYZlivi7KNA0yaFv/KVQ67FDPLc+sORLcsw763xBTSrUZo6Euh/vjMucx5woRJfDNySNDJABi5n/JJ1cuHKSoDWpbGuh+svKcaS0/lzstVCASyigmF089HWqWZ8w2olo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761016824; c=relaxed/simple;
-	bh=DxUQv/9ds5xNkXtmgS/LZl6/6F3j7jAb05ovJhOTnLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V0e9X/fYVZn08NHm45bV2Ok2lsQZVro9iypBmV0fcqgXJe3yYgXMi6Nw7gJIXp4RtccAWRd+ZgAkd8T51MUpeNECSVYxdFynWcgkw1YYfAdFdJ48ohCU42KWMGy1MRqrpA4mXpwDa4wcQDUyyHaIiOHrSmwsLYByjWsCno7TxnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLAZkkV8; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-63c3c7d3d53so5628365a12.2
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 20:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761016820; x=1761621620; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CCNvyw8m2QX1VIGFb99RS6GnyHPuBwl16dP0YQiFQRk=;
-        b=ZLAZkkV8V0F9GNY4jxS6Npn80vMvGNe3mUTl6uXiDIeHJggoGmb1zb8c1/ZI8BD/VP
-         7q5ykB5GPnjcmvja9SRcGdffgZFTBBqZAueOr18vY8PcKngi6qmwcG2ThiPFcpw3uyl1
-         0xjg/CBn5UQfjVQE9L6S2/pJtLAL76BWCzFxf989gQgAkmba/3iZMpy81fO5iT5UAigM
-         UCXIjFstQ15eADwGj7fFxBWxJ8GQn4ERDKjn8WGiKFGh6MG4MGB8NmC2dw4C4wYz2Yc4
-         CW4+X1uyNEBYdT/33S4HJUd1tDzlGQrF5XtcjzaD2bfJkDWg4e4H2U2ooOil0QAv7UjJ
-         KUEg==
+	s=arc-20240116; t=1761023663; c=relaxed/simple;
+	bh=P26tmNIyhLTJj2WjsRIo4H1pdZYxGc9P1B7PVu+hJ3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=muwyJ9RbwGB1CU4E2H9hdsWiaiBjPYOtFI33GPcMyahFzJ/6jEFx8KYmQhsufCqOZ5BggcKdoIdVoGrAq73xRUd0y8GCSSpvN+26CdmWpHIB/7B0LbJopefLZFEJXP0jPFoQYzGNllPbfJCpaYM20FGcgTBRfCJKHBdW1bKQrOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fdSEKF4K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761023658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=/GNufL/iv227GCXYMT45Yee3o+crF7z2SUMI71qmNww=;
+	b=fdSEKF4KJrseOQ4OOWgIu/wwmbzESE0gnDeQWmr3940LtYSR6u9u19Hrk0TUtk30YGt68t
+	MkmRXsBkse4FFMpkaiVLq5s6T4qJ69+HJp8xlLYPELYwSHfa03jOVK4Kcq4d1Kax/0r9Ie
+	btTujqeizwFZf8fER1bhTk0YujK3hTM=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-84-l_UV3w5nNte-I_7lIjVQ5w-1; Tue, 21 Oct 2025 01:14:16 -0400
+X-MC-Unique: l_UV3w5nNte-I_7lIjVQ5w-1
+X-Mimecast-MFC-AGG-ID: l_UV3w5nNte-I_7lIjVQ5w_1761023656
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b5535902495so2990959a12.0
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Oct 2025 22:14:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761016820; x=1761621620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CCNvyw8m2QX1VIGFb99RS6GnyHPuBwl16dP0YQiFQRk=;
-        b=E8APAryPqznkWRVdpZaicYevlS50i93xbc07w73uXmHhtoTcur+ZuP5//7aJlG1sas
-         7+nxY4Scko78w6r/V1mGuq7JVj+fABIagg49cE6Ow+I/zu2YemQ2yCenyhdtgnDaP0fm
-         tGqnVXMSG/1uWsdheDLKN7HM19ZVR8Pz+lDA9C0STc0vCvttEllQYHlG8Y5Zyfp+Bx8v
-         jqBnsquJAh7Jy/ltjXp7DvSJFZyfg5iiQsuqhe4HfurWVd75cuHas+ZseGYgAhEBb1gt
-         fTycGZlcjoozixbmA6YWa2CwYW5N7LP+yW3G9YmNUlhKc6679bwNk26hfLtC0YPD+5My
-         rhkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXx3UlMbSyw3561n4PIIKYKgD0gyQAGLehJaOCQQPGm39PlH7vVUcR4gGskraK1gGkJmOewUZ5IQ5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTp2eScdS4cF/bNpEVGm1cEe1h8ZczoYMhIZ+CYdlpV+Ygh3gm
-	PONwrhCPShSNMBapgdXBR8hTaDc56DdSk/89uwXSeV/5H3dGstRg3ieg3BHKPGDzhFMUEsz+N3K
-	7MC45+1wyQABKTq7bypW03GSEODlelHc=
-X-Gm-Gg: ASbGnctJa+xd0Z0vPK0S9tnvs5ZopPDp02qCerEGPZYWc+KhPN/nMgrGO0vbbGQEeeT
-	ffW9u71VX09mVwZxnsk47uWuseQLbQ4Y2oUXDabPQ7pGH+l6EBho1tYK4S5VMjsiU0Vew1GLvfX
-	GXwLLDI/EP3fewUdEMx6QLCvmb5SMGYRdQt1e078zP1utgiqVFAYjmTOLFzfaTefNUQ61YYHz8G
-	XY8sWwhServv5b2a3eZfLmLSATCRgIKC+m2az2t1KRPOK2jG8bAwIEpx3ZUpO4gjt2iwfcP5kWa
-	AfERjEjD2UJ3tQ8fp0poKY2pcQ==
-X-Google-Smtp-Source: AGHT+IEsnmHK88912XQyF+ULc5HjsHFjFCxHsTm5vWc53Obeo6iDSP0Fs5p3c4KR3eNywOjh1EZStCqv8ly1yB9KL/k=
-X-Received: by 2002:a05:6402:354f:b0:63c:6537:43d2 with SMTP id
- 4fb4d7f45d1cf-63c65374608mr7802783a12.38.1761016819680; Mon, 20 Oct 2025
- 20:20:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761023655; x=1761628455;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GNufL/iv227GCXYMT45Yee3o+crF7z2SUMI71qmNww=;
+        b=geynfG5sVhEfF6XzndCJXEhvcxRXcf6r4MoVTc7v/jFkGkvm5sMci//9gEPfZNVXUo
+         KvUcrhHxGzSBx/lKyPjHzvYo1bbyKNg0siUoyz3aShhtV1DUqYcCyqYw8aphZPIv/EwA
+         4SyV9ESz+qcJNVyu7E+w/K+rjQZN6Oqj3yvKNlu8x26ECbSGvoUcyPYRA62B+XnJfsVa
+         X43+KOOHerEM6EVoSsDFl9v8hijcWIDkYqv4JgNoFYDII+y+h8PpJa497WFRnbMf8nJ0
+         QL0WhEgTJhph6WaK7qs8eXg/5z3OctlrNePqbAKGdgzlw1eqSyxGRO6Z2QWfZABTcPgl
+         Ghzg==
+X-Gm-Message-State: AOJu0Yyz9TQEUFWSFChaj7/2dbmcG+1mAwsfUWV/2suQLUCFyiIDLRb8
+	wlttjuF0JjYl0VU5z8zfMcU8K+n2H1dzu1MKrcax8xys0rHdgAT2yDQLdXnU+5t3UxPCFqslTNd
+	XBTRMLciGNr83w0UzJghQa12nxFOYulN9sYRgUByYqff4BpLHnXGnNu/KjWM6rLMfGsv0NRcnW/
+	xhVFkWtxD6SwLEMXlW3bK0KwLz9J8FJbbBhLW3WJyZW3kb
+X-Gm-Gg: ASbGncvDa1IYwpClIumf2IXFYBn9GOkCiJlV9lglJf2RXPq6r2kV8bSgmOoz1R9RlrC
+	SwF3gpb0QGWk2QtjMuYPAnyFRVovukmrSkXzKc51yNstkMhmwCv0QNNW4ZTvpWl8XPW0safKAlZ
+	LHoKUt17pla6fqxrfmxkqqVPPkmZeeGdb4UKhGPJHS6L9qFVx0KS44pPRY6szccgg80lUFbV2pA
+	UlFlqy1EVUkkJv4yF6wbZ5MlTeZmsUPCSg9KVRnKOJpn+0y75gSJ8uE89YqBnx2bHwdhTZg6Olt
+	f1qjeJP8OSW1Weg41m+Zl69il3VKov/7mh/EdnGR9DFoM4TgtI7k4xEtlMshVC2eRQCdJ6EV2Zc
+	oz6iVeaRwr8sB9qkJV7FpULrDYzrkU/mXgIHN42Y=
+X-Received: by 2002:a17:902:e944:b0:290:b14c:4f36 with SMTP id d9443c01a7336-290cba4edaemr178932555ad.31.1761023654218;
+        Mon, 20 Oct 2025 22:14:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IETHgi5IoFWAuUiIvtpv/cL6l7l1xkUYnxJCQTaZG3P0fIUbGA0WZV7sqrrz/qBQtmLgfX1Wg==
+X-Received: by 2002:a17:902:e944:b0:290:b14c:4f36 with SMTP id d9443c01a7336-290cba4edaemr178932005ad.31.1761023652985;
+        Mon, 20 Oct 2025 22:14:12 -0700 (PDT)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33dfb55fda8sm478224a91.1.2025.10.20.22.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Oct 2025 22:14:12 -0700 (PDT)
+Date: Tue, 21 Oct 2025 13:14:08 +0800
+From: Zorro Lang <zlang@redhat.com>
+To: linux-nfs@vger.kernel.org
+Cc: linux-mm@kvack.org
+Subject: [Bug report][xfstests generic/751] hang on nfs writeback
+Message-ID: <20251021051408.lv7dye5wywxhl3dg@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251017042312.1271322-1-alistair.francis@wdc.com>
- <20251017042312.1271322-5-alistair.francis@wdc.com> <e7d46c17-5ffd-4816-acd2-2125ca259d20@suse.de>
-In-Reply-To: <e7d46c17-5ffd-4816-acd2-2125ca259d20@suse.de>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 21 Oct 2025 13:19:53 +1000
-X-Gm-Features: AS18NWAyhNaTenQO2sZ2HNxBD0TNSlf23hB-sIzI2xuCGrNnY_zE8OZIe2AJIGI
-Message-ID: <CAKmqyKMsYUPLz9hVmM_rjXKSo52cMEtn8qVwbSs=UknxRWaQUw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] net/handshake: Support KeyUpdate message types
-To: Hannes Reinecke <hare@suse.de>
-Cc: chuck.lever@oracle.com, hare@kernel.org, 
-	kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org, kbusch@kernel.org, 
-	axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, kch@nvidia.com, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Oct 20, 2025 at 4:09=E2=80=AFPM Hannes Reinecke <hare@suse.de> wrot=
-e:
->
-> On 10/17/25 06:23, alistair23@gmail.com wrote:
-> > From: Alistair Francis <alistair.francis@wdc.com>
-> >
-> > When reporting the msg-type to userspace let's also support reporting
-> > KeyUpdate events. This supports reporting a client/server event and if
-> > the other side requested a KeyUpdateRequest.
-> >
-> > Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > ---
-> > v4:
-> >   - Don't overload existing functions, instead create new ones
-> > v3:
-> >   - Fixup yamllint and kernel-doc failures
-> >
-> >   Documentation/netlink/specs/handshake.yaml | 16 ++++-
-> >   drivers/nvme/host/tcp.c                    | 15 +++-
-> >   drivers/nvme/target/tcp.c                  | 10 ++-
-> >   include/net/handshake.h                    |  8 +++
-> >   include/uapi/linux/handshake.h             | 13 ++++
-> >   net/handshake/tlshd.c                      | 83 +++++++++++++++++++++=
--
-> >   6 files changed, 137 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/Documentation/netlink/specs/handshake.yaml b/Documentation=
-/netlink/specs/handshake.yaml
-> > index a273bc74d26f..c72ec8fa7d7a 100644
-> > --- a/Documentation/netlink/specs/handshake.yaml
-> > +++ b/Documentation/netlink/specs/handshake.yaml
-> > @@ -21,12 +21,18 @@ definitions:
-> >       type: enum
-> >       name: msg-type
-> >       value-start: 0
-> > -    entries: [unspec, clienthello, serverhello]
-> > +    entries: [unspec, clienthello, serverhello, clientkeyupdate,
-> > +              clientkeyupdaterequest, serverkeyupdate, serverkeyupdate=
-request]
-> >     -
->
-> Why do we need the 'keyupdate' and 'keyupdaterequest' types?
+Hi,
 
-msg-type indicates if it's a client or server and hello or keyupdate,
-the idea being
+When I did xfstests regression test on nfs, it hang on generic/751 many times,
+refer to [1](on x86_64) and [2](on aarch64). I've hit it 8 times until now.
 
-client:
- - Hello
- - KeyUpdate
+I tested on latest linux v6.18-rc2. My underlying test device isn't loopback device,
+it's general disk, and make xfs on it:
+  meta-data=/dev/sda5              isize=512    agcount=4, agsize=983040 blks
+           =                       sectsz=4096  attr=2, projid32bit=1
+           =                       crc=1        finobt=1, sparse=1, rmapbt=1
+           =                       reflink=1    bigtime=1 inobtcount=1 nrext64=1
+           =                       exchange=0   metadir=0
+  data     =                       bsize=4096   blocks=3932160, imaxpct=25
+           =                       sunit=0      swidth=0 blks
+  naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
+  log      =internal log           bsize=4096   blocks=54324, version=2
+           =                       sectsz=4096  sunit=1 blks, lazy-count=1
+  realtime =none                   extsz=4096   blocks=0, rtextents=0
+           =                       rgcount=0    rgsize=0 extents
+           =                       zoned=0      start=0 reserved=0
 
-server:
- - Hello
- - KeyUpdate
+Two xfs are mounted on /mnt/xfstests/test and /mnt/xfstests/scratch seperately,
+then export as:
+  # cat /etc/exports
+  /mnt/xfstests/test/nfs-server *(rw,insecure,no_root_squash)
+  /mnt/xfstests/scratch/nfs-server *(rw,insecure,no_root_squash)
 
-I'll drop clientkeyupdaterequest and serverkeyupdaterequest
+The nfs mount option is only "-o vers=4.2". BTW, nfs server and client are
+in same machine/system.
 
-> Isn't the 'keyupdate' type enough, and can we specify anything
-> else via the update type?
+# cat local.config
+export FSTYP=nfs
+export TEST_DEV=xxxx-xxx-xxxx.xxxx.xxx.xxx:/mnt/xfstests/test/nfs-server
+export TEST_DIR=/mnt/xfstests/test/nfs-client
+export SCRATCH_DEV=xxxx-xxx-xxxx.xxxx.xxx.xxx:/mnt/xfstests/scratch/nfs-server
+export SCRATCH_MNT=/mnt/xfstests/scratch/nfs-client
+export MOUNT_OPTIONS="-o vers=4.2"
+export TEST_FS_MOUNT_OPTS="-o vers=4.2"
 
-Once we know if it's a client or server KeyUpdate we need to know if
-we are receiving one, sending one or receiving one with the
-request_update flag set, hence key-update-type
 
->
-> >       type: enum
-> >       name: auth
-> >       value-start: 0
-> >       entries: [unspec, unauth, psk, x509]
-> > +  -
-> > +    type: enum
-> > +    name: key-update-type
-> > +    value-start: 0
-> > +    entries: [unspec, send, received, received_request_update]
->
-> See above.
->
-> >
-> >   attribute-sets:
-> >     -
-> > @@ -74,6 +80,13 @@ attribute-sets:
-> >         -
-> >           name: keyring
-> >           type: u32
-> > +      -
-> > +        name: key-update-request
-> > +        type: u32
-> > +        enum: key-update-type
-> > +      -
-> > +        name: key-serial
-> > +        type: u32
->
-> Not sure if I like key-serial. Yes, it is a key serial number,
-> but it's not the serial number of the updated key (rather the serial
-> number of the key holding the session information).
-> Maybe 'key-update-serial' ?
->
-> >     -
-> >       name: done
-> >       attributes:
-> > @@ -116,6 +129,7 @@ operations:
-> >               - certificate
-> >               - peername
-> >               - keyring
-> > +            - key-serial
-> >       -
-> >         name: done
-> >         doc: Handler reports handshake completion
-> > diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-> > index 611be56f8013..2696bf97dfac 100644
-> > --- a/drivers/nvme/host/tcp.c
-> > +++ b/drivers/nvme/host/tcp.c
-> > @@ -20,6 +20,7 @@
-> >   #include <linux/iov_iter.h>
-> >   #include <net/busy_poll.h>
-> >   #include <trace/events/sock.h>
-> > +#include <uapi/linux/handshake.h>
-> >
-> >   #include "nvme.h"
-> >   #include "fabrics.h"
-> > @@ -206,6 +207,10 @@ static struct workqueue_struct *nvme_tcp_wq;
-> >   static const struct blk_mq_ops nvme_tcp_mq_ops;
-> >   static const struct blk_mq_ops nvme_tcp_admin_mq_ops;
-> >   static int nvme_tcp_try_send(struct nvme_tcp_queue *queue);
-> > +static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
-> > +                           struct nvme_tcp_queue *queue,
-> > +                           key_serial_t pskid,
-> > +                           handshake_key_update_type keyupdate);
-> >
-> >   static inline struct nvme_tcp_ctrl *to_tcp_ctrl(struct nvme_ctrl *ctr=
-l)
-> >   {
-> > @@ -1726,7 +1731,8 @@ static void nvme_tcp_tls_done(void *data, int sta=
-tus, key_serial_t pskid,
-> >
-> >   static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
-> >                             struct nvme_tcp_queue *queue,
-> > -                           key_serial_t pskid)
-> > +                           key_serial_t pskid,
-> > +                           handshake_key_update_type keyupdate)
-> >   {
-> >       int qid =3D nvme_tcp_queue_id(queue);
-> >       int ret;
-> > @@ -1748,7 +1754,10 @@ static int nvme_tcp_start_tls(struct nvme_ctrl *=
-nctrl,
-> >       args.ta_timeout_ms =3D tls_handshake_timeout * 1000;
-> >       queue->tls_err =3D -EOPNOTSUPP;
-> >       init_completion(&queue->tls_complete);
-> > -     ret =3D tls_client_hello_psk(&args, GFP_KERNEL);
-> > +     if (keyupdate =3D=3D HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
-> > +             ret =3D tls_client_hello_psk(&args, GFP_KERNEL);
-> > +     else
-> > +             ret =3D tls_client_keyupdate_psk(&args, GFP_KERNEL, keyup=
-date);
-> >       if (ret) {
-> >               dev_err(nctrl->device, "queue %d: failed to start TLS: %d=
-\n",
-> >                       qid, ret);
-> > @@ -1898,7 +1907,7 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl =
-*nctrl, int qid,
-> >
-> >       /* If PSKs are configured try to start TLS */
-> >       if (nvme_tcp_tls_configured(nctrl) && pskid) {
-> > -             ret =3D nvme_tcp_start_tls(nctrl, queue, pskid);
-> > +             ret =3D nvme_tcp_start_tls(nctrl, queue, pskid, HANDSHAKE=
-_KEY_UPDATE_TYPE_UNSPEC);
-> >               if (ret)
-> >                       goto err_init_connect;
-> >       }
-> > diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-> > index 4ef4dd140ada..8aeec4a7f136 100644
-> > --- a/drivers/nvme/target/tcp.c
-> > +++ b/drivers/nvme/target/tcp.c
-> > @@ -1833,7 +1833,8 @@ static void nvmet_tcp_tls_handshake_timeout(struc=
-t work_struct *w)
-> >       kref_put(&queue->kref, nvmet_tcp_release_queue);
-> >   }
-> >
-> > -static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue)
-> > +static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
-> > +     handshake_key_update_type keyupdate)
-> >   {
-> >       int ret =3D -EOPNOTSUPP;
-> >       struct tls_handshake_args args;
-> > @@ -1852,7 +1853,10 @@ static int nvmet_tcp_tls_handshake(struct nvmet_=
-tcp_queue *queue)
-> >       args.ta_keyring =3D key_serial(queue->port->nport->keyring);
-> >       args.ta_timeout_ms =3D tls_handshake_timeout * 1000;
-> >
-> > -     ret =3D tls_server_hello_psk(&args, GFP_KERNEL);
-> > +     if (keyupdate =3D=3D HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
-> > +             ret =3D tls_server_hello_psk(&args, GFP_KERNEL);
-> > +     else
-> > +             ret =3D tls_server_keyupdate_psk(&args, GFP_KERNEL, keyup=
-date);
-> >       if (ret) {
-> >               kref_put(&queue->kref, nvmet_tcp_release_queue);
-> >               pr_err("failed to start TLS, err=3D%d\n", ret);
-> > @@ -1934,7 +1938,7 @@ static void nvmet_tcp_alloc_queue(struct nvmet_tc=
-p_port *port,
-> >               sk->sk_data_ready =3D port->data_ready;
-> >               write_unlock_bh(&sk->sk_callback_lock);
-> >               if (!nvmet_tcp_try_peek_pdu(queue)) {
-> > -                     if (!nvmet_tcp_tls_handshake(queue))
-> > +                     if (!nvmet_tcp_tls_handshake(queue, HANDSHAKE_KEY=
-_UPDATE_TYPE_UNSPEC))
-> >                               return;
-> >                       /* TLS handshake failed, terminate the connection=
- */
-> >                       goto out_destroy_sq;
-> > diff --git a/include/net/handshake.h b/include/net/handshake.h
-> > index dc2222fd6d99..084c92a20b68 100644
-> > --- a/include/net/handshake.h
-> > +++ b/include/net/handshake.h
-> > @@ -10,6 +10,10 @@
-> >   #ifndef _NET_HANDSHAKE_H
-> >   #define _NET_HANDSHAKE_H
-> >
-> > +#include <uapi/linux/handshake.h>
-> > +
-> > +#define handshake_key_update_type u32
-> > +
-> Huh?
-> You define it as 'u32' here
->
-> >   enum {
-> >       TLS_NO_KEYRING =3D 0,
-> >       TLS_NO_PEERID =3D 0,
-> > @@ -38,8 +42,12 @@ struct tls_handshake_args {
-> >   int tls_client_hello_anon(const struct tls_handshake_args *args, gfp_=
-t flags);
-> >   int tls_client_hello_x509(const struct tls_handshake_args *args, gfp_=
-t flags);
-> >   int tls_client_hello_psk(const struct tls_handshake_args *args, gfp_t=
- flags);
-> > +int tls_client_keyupdate_psk(const struct tls_handshake_args *args, gf=
-p_t flags,
-> > +                          handshake_key_update_type keyupdate);
-> >   int tls_server_hello_x509(const struct tls_handshake_args *args, gfp_=
-t flags);
-> >   int tls_server_hello_psk(const struct tls_handshake_args *args, gfp_t=
- flags);
-> > +int tls_server_keyupdate_psk(const struct tls_handshake_args *args, gf=
-p_t flags,
-> > +                          handshake_key_update_type keyupdate);
-> >
-> >   bool tls_handshake_cancel(struct sock *sk);
-> >   void tls_handshake_close(struct socket *sock);
-> > diff --git a/include/uapi/linux/handshake.h b/include/uapi/linux/handsh=
-ake.h
-> > index b68ffbaa5f31..b691530073c6 100644
-> > --- a/include/uapi/linux/handshake.h
-> > +++ b/include/uapi/linux/handshake.h
-> > @@ -19,6 +19,10 @@ enum handshake_msg_type {
-> >       HANDSHAKE_MSG_TYPE_UNSPEC,
-> >       HANDSHAKE_MSG_TYPE_CLIENTHELLO,
-> >       HANDSHAKE_MSG_TYPE_SERVERHELLO,
-> > +     HANDSHAKE_MSG_TYPE_CLIENTKEYUPDATE,
-> > +     HANDSHAKE_MSG_TYPE_CLIENTKEYUPDATEREQUEST,
-> > +     HANDSHAKE_MSG_TYPE_SERVERKEYUPDATE,
-> > +     HANDSHAKE_MSG_TYPE_SERVERKEYUPDATEREQUEST,
-> >   };
-> >
-> >   enum handshake_auth {
-> > @@ -28,6 +32,13 @@ enum handshake_auth {
-> >       HANDSHAKE_AUTH_X509,
-> >   };
-> >
-> > +enum handshake_key_update_type {
-> > +     HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC,
-> > +     HANDSHAKE_KEY_UPDATE_TYPE_SEND,
-> > +     HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED,
-> > +     HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED_REQUEST_UPDATE,
-> > +};
-> > +
->
-> and here it's an enum. Please kill the first declaration.
->
-> >   enum {
-> >       HANDSHAKE_A_X509_CERT =3D 1,
-> >       HANDSHAKE_A_X509_PRIVKEY,
-> > @@ -46,6 +57,8 @@ enum {
-> >       HANDSHAKE_A_ACCEPT_CERTIFICATE,
-> >       HANDSHAKE_A_ACCEPT_PEERNAME,
-> >       HANDSHAKE_A_ACCEPT_KEYRING,
-> > +     HANDSHAKE_A_ACCEPT_KEY_UPDATE_REQUEST,
-> > +     HANDSHAKE_A_ACCEPT_KEY_SERIAL,
-> >
-> >       __HANDSHAKE_A_ACCEPT_MAX,
-> >       HANDSHAKE_A_ACCEPT_MAX =3D (__HANDSHAKE_A_ACCEPT_MAX - 1)
-> > diff --git a/net/handshake/tlshd.c b/net/handshake/tlshd.c
-> > index 2549c5dbccd8..c40839977ab9 100644
-> > --- a/net/handshake/tlshd.c
-> > +++ b/net/handshake/tlshd.c
-> > @@ -41,6 +41,7 @@ struct tls_handshake_req {
-> >       unsigned int            th_num_peerids;
-> >       key_serial_t            th_peerid[5];
-> >
-> > +     int                     th_key_update_request;
-> >       key_serial_t            user_session_id;
-> >   };
-> >
-> Why 'int' ? Can it be negative?
-> If not please make it an 'unsigned int'
->
-> > @@ -58,7 +59,8 @@ tls_handshake_req_init(struct handshake_req *req,
-> >       treq->th_num_peerids =3D 0;
-> >       treq->th_certificate =3D TLS_NO_CERT;
-> >       treq->th_privkey =3D TLS_NO_PRIVKEY;
-> > -     treq->user_session_id =3D TLS_NO_PRIVKEY;
-> > +     treq->user_session_id =3D args->user_session_id;
-> > +
-> >       return treq;
-> >   }
-> >
-> > @@ -265,6 +267,16 @@ static int tls_handshake_accept(struct handshake_r=
-eq *req,
-> >               break;
-> >       }
-> >
-> > +     ret =3D nla_put_u32(msg, HANDSHAKE_A_ACCEPT_KEY_SERIAL,
-> > +                       treq->user_session_id);
-> > +     if (ret < 0)
-> > +             goto out_cancel;
-> > +
-> > +     ret =3D nla_put_u32(msg, HANDSHAKE_A_ACCEPT_KEY_UPDATE_REQUEST,
-> > +                       treq->th_key_update_request);
-> > +     if (ret < 0)
-> > +             goto out_cancel;
-> > +
-> >       genlmsg_end(msg, hdr);
-> >       return genlmsg_reply(msg, info);
-> >
-> > @@ -372,6 +384,44 @@ int tls_client_hello_psk(const struct tls_handshak=
-e_args *args, gfp_t flags)
-> >   }
-> >   EXPORT_SYMBOL(tls_client_hello_psk);
-> >
-> > +/**
-> > + * tls_client_keyupdate_psk - request a PSK-based TLS handshake on a s=
-ocket
-> > + * @args: socket and handshake parameters for this request
-> > + * @flags: memory allocation control flags
-> > + * @keyupdate: specifies the type of KeyUpdate operation
-> > + *
-> > + * Return values:
-> > + *   %0: Handshake request enqueue; ->done will be called when complet=
-e
-> > + *   %-EINVAL: Wrong number of local peer IDs
-> > + *   %-ESRCH: No user agent is available
-> > + *   %-ENOMEM: Memory allocation failed
-> > + */
-> > +int tls_client_keyupdate_psk(const struct tls_handshake_args *args, gf=
-p_t flags,
-> > +                          handshake_key_update_type keyupdate)
-> > +{
-> > +     struct tls_handshake_req *treq;
-> > +     struct handshake_req *req;
-> > +     unsigned int i;
-> > +
-> > +     if (!args->ta_num_peerids ||
-> > +         args->ta_num_peerids > ARRAY_SIZE(treq->th_peerid))
-> > +             return -EINVAL;
-> > +
-> > +     req =3D handshake_req_alloc(&tls_handshake_proto, flags);
-> > +     if (!req)
-> > +             return -ENOMEM;
-> > +     treq =3D tls_handshake_req_init(req, args);
-> > +     treq->th_type =3D HANDSHAKE_MSG_TYPE_CLIENTKEYUPDATE;
-> > +     treq->th_key_update_request =3D keyupdate;
-> > +     treq->th_auth_mode =3D HANDSHAKE_AUTH_PSK;
-> > +     treq->th_num_peerids =3D args->ta_num_peerids;
-> > +     for (i =3D 0; i < args->ta_num_peerids; i++)
-> > +             treq->th_peerid[i] =3D args->ta_my_peerids[i];
-> Hmm?
-> Do we use the 'peerids'?
+[1]
+[23369.572660] run fstests generic/751 at 2025-10-20 23:15:24 
+[-- MARK -- Tue Oct 21 03:20:00 2025] 
+[-- MARK -- Tue Oct 21 03:25:00 2025] 
+[-- MARK -- Tue Oct 21 03:30:00 2025] 
+[-- MARK -- Tue Oct 21 03:35:00 2025] 
+[-- MARK -- Tue Oct 21 03:40:00 2025] 
+[25069.500900] INFO: task kworker/u9:73:825900 blocked for more than 122 seconds. 
+[25069.501484]       Not tainted 6.18.0-rc2 #1 
+[25069.501822] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25069.502385] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25069.503258] Workqueue: writeback wb_workfn (flush-0:48) 
+[25069.782725] Call Trace: 
+[25069.787191]  <TASK> 
+[25069.787368]  __schedule+0x838/0x1890 
+[25069.799533]  ? __pfx___schedule+0x10/0x10 
+[25069.799852]  ? __blk_flush_plug+0x27b/0x4d0 
+[25069.800617]  ? find_held_lock+0x32/0x90 
+[25069.801292]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25069.801639]  schedule+0xd4/0x260 
+[25069.801902]  io_schedule+0x8f/0xf0 
+[25069.802162]  folio_wait_bit_common+0x2d9/0x780 
+[25069.802919]  ? folio_wait_bit_common+0x1dd/0x780 
+[25069.803324]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25069.803684]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25069.804254]  ? __pfx_wake_page_function+0x10/0x10 
+[25069.804602]  ? __pfx___might_resched+0x10/0x10 
+[25069.805160]  writeback_get_folio+0x3f9/0x500 
+[25069.806221]  writeback_iter+0x136/0x720 
+[25069.806628]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25069.807100]  ? mark_held_locks+0x40/0x70 
+[25069.807403]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25069.807846]  ? virtqueue_notify+0x68/0xc0 
+[25069.808346]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25069.808925]  ? __lock_acquire+0x57c/0xbd0 
+[25069.809295]  do_writepages+0x21f/0x560 
+[25069.809576]  ? __pfx_do_writepages+0x10/0x10 
+[25069.809953]  ? rcu_is_watching+0x15/0xb0 
+[25069.810587]  __writeback_single_inode+0xe2/0x5f0 
+[25069.810982]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25069.811373]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25069.811815]  ? writeback_sb_inodes+0x416/0xd00 
+[25069.812194]  writeback_sb_inodes+0x535/0xd00 
+[25069.812533]  ? __pfx_stack_trace_save+0x10/0x10 
+[25069.814193]  ? local_clock_noinstr+0xd/0xe0 
+[25069.814506]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25069.814910]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25069.815407]  ? lock_acquire+0x10b/0x150 
+[25069.815703]  ? down_read_trylock+0x4b/0x60 
+[25069.816077]  __writeback_inodes_wb+0xf4/0x270 
+[25069.816441]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25069.816864]  ? queue_io+0x329/0x510 
+[25069.817148]  wb_writeback+0x70a/0x9c0 
+[25069.817448]  ? __pfx_wb_writeback+0x10/0x10 
+[25069.817831]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25069.818264]  wb_do_writeback+0x5d4/0x8e0 
+[25069.818575]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25069.818975]  ? set_worker_desc+0x16e/0x190 
+[25069.819313]  ? __pfx_set_worker_desc+0x10/0x10 
+[25069.819669]  wb_workfn+0x7c/0x200 
+[25069.819997]  process_one_work+0xd8b/0x1320 
+[25069.820342]  ? __pfx_process_one_work+0x10/0x10 
+[25069.820694]  ? assign_work+0x16c/0x240 
+[25069.821053]  worker_thread+0x5f3/0xfe0 
+[25069.821364]  ? __pfx_worker_thread+0x10/0x10 
+[25069.821697]  kthread+0x3b4/0x770 
+[25069.822122]  ? kvm_sched_clock_read+0x11/0x20 
+[25069.822457]  ? local_clock_noinstr+0xd/0xe0 
+[25069.822790]  ? __pfx_kthread+0x10/0x10 
+[25069.823079]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25069.823430]  ? rcu_is_watching+0x15/0xb0 
+[25069.823729]  ? __pfx_kthread+0x10/0x10 
+[25069.824035]  ret_from_fork+0x393/0x480 
+[25069.864794]  ? __pfx_kthread+0x10/0x10 
+[25069.865076]  ? __pfx_kthread+0x10/0x10 
+[25069.865371]  ret_from_fork_asm+0x1a/0x30 
+[25069.879905]  </TASK> 
+[25069.880145]  
+[25069.880145] Showing all locks held in the system: 
+[25069.889550] 1 lock held by khungtaskd/37: 
+[25069.889886]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25069.890603] 2 locks held by 751/825733: 
+[25069.890942]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25069.891589]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25069.892449] 3 locks held by kworker/u9:73/825900: 
+[25069.892818]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25069.893530]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25069.894333]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25069.895056] 2 locks held by kworker/u10:2/826054: 
+[25069.895418]  #0: ffff888103ec2158 ((wq_completion)nfsiod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25069.896123]  #1: ffffc90001e1fd10 ((work_completion)(&ctx->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25069.896952]  
+[25069.897085] ============================================= 
+[25069.897085]  
+[-- MARK -- Tue Oct 21 03:45:00 2025] 
+[25192.380157] INFO: task kworker/u9:73:825900 blocked for more than 245 seconds. 
+[25192.380707]       Not tainted 6.18.0-rc2 #1 
+[25192.381042] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25192.381605] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25192.382516] Workqueue: writeback wb_workfn (flush-0:48) 
+[25192.382914] Call Trace: 
+[25192.383126]  <TASK> 
+[25192.383304]  __schedule+0x838/0x1890 
+[25192.383586]  ? __pfx___schedule+0x10/0x10 
+[25192.383888]  ? __blk_flush_plug+0x27b/0x4d0 
+[25192.384228]  ? find_held_lock+0x32/0x90 
+[25192.384527]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25192.384880]  schedule+0xd4/0x260 
+[25192.385150]  io_schedule+0x8f/0xf0 
+[25192.385416]  folio_wait_bit_common+0x2d9/0x780 
+[25192.385816]  ? folio_wait_bit_common+0x1dd/0x780 
+[25192.386196]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25192.386572]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25192.387045]  ? __pfx_wake_page_function+0x10/0x10 
+[25192.387400]  ? __pfx___might_resched+0x10/0x10 
+[25192.387742]  writeback_get_folio+0x3f9/0x500 
+[25192.388092]  writeback_iter+0x136/0x720 
+[25192.388389]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25192.388788]  ? mark_held_locks+0x40/0x70 
+[25192.389102]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25192.389530]  ? virtqueue_notify+0x68/0xc0 
+[25192.389831]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25192.390255]  ? __lock_acquire+0x57c/0xbd0 
+[25192.390574]  do_writepages+0x21f/0x560 
+[25192.390861]  ? __pfx_do_writepages+0x10/0x10 
+[25192.391200]  ? rcu_is_watching+0x15/0xb0 
+[25192.391502]  __writeback_single_inode+0xe2/0x5f0 
+[25192.391848]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25192.392210]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25192.392596]  ? writeback_sb_inodes+0x416/0xd00 
+[25192.392935]  writeback_sb_inodes+0x535/0xd00 
+[25192.393286]  ? __pfx_stack_trace_save+0x10/0x10 
+[25192.393628]  ? local_clock_noinstr+0xd/0xe0 
+[25192.393940]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25192.394310]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25192.394731]  ? lock_acquire+0x10b/0x150 
+[25192.395048]  ? down_read_trylock+0x4b/0x60 
+[25192.395360]  __writeback_inodes_wb+0xf4/0x270 
+[25192.395698]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25192.396081]  ? queue_io+0x329/0x510 
+[25192.396355]  wb_writeback+0x70a/0x9c0 
+[25192.396645]  ? __pfx_wb_writeback+0x10/0x10 
+[25192.396963]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25192.397314]  wb_do_writeback+0x5d4/0x8e0 
+[25192.397622]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25192.397950]  ? set_worker_desc+0x16e/0x190 
+[25192.398272]  ? __pfx_set_worker_desc+0x10/0x10 
+[25192.398628]  wb_workfn+0x7c/0x200 
+[25192.398886]  process_one_work+0xd8b/0x1320 
+[25192.399222]  ? __pfx_process_one_work+0x10/0x10 
+[25192.399574]  ? assign_work+0x16c/0x240 
+[25192.399861]  worker_thread+0x5f3/0xfe0 
+[25192.400176]  ? __pfx_worker_thread+0x10/0x10 
+[25192.400497]  kthread+0x3b4/0x770 
+[25192.400747]  ? kvm_sched_clock_read+0x11/0x20 
+[25192.401089]  ? local_clock_noinstr+0xd/0xe0 
+[25192.401401]  ? __pfx_kthread+0x10/0x10 
+[25192.401684]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25192.402046]  ? rcu_is_watching+0x15/0xb0 
+[25192.402343]  ? __pfx_kthread+0x10/0x10 
+[25192.402629]  ret_from_fork+0x393/0x480 
+[25192.402910]  ? __pfx_kthread+0x10/0x10 
+[25192.403208]  ? __pfx_kthread+0x10/0x10 
+[25192.403493]  ret_from_fork_asm+0x1a/0x30 
+[25192.403808]  </TASK> 
+[25192.403994]  
+[25192.403994] Showing all locks held in the system: 
+[25192.404474] 1 lock held by khungtaskd/37: 
+[25192.404774]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25192.405487] 2 locks held by 751/825733: 
+[25192.405779]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25192.406385]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25192.407092] 4 locks held by kworker/u10:40/825850: 
+[25192.407443]  #0: ffff888103ec5158 ((wq_completion)nfslocaliod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25192.408175]  #1: ffffc9000b0cfd10 ((work_completion)(&iocb->work)#2){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25192.408924]  #2: ffff88815c2c2440 (sb_writers#13){++++}-{0:0}, at: process_one_work+0xd8b/0x1320 
+[25192.409579]  #3: ffff8881a1324b58 (&sb->s_type->i_mutex_key#13){++++}-{4:4}, at: xfs_ilock+0x360/0x460 [xfs] 
+[25192.410660] 3 locks held by kworker/u9:73/825900: 
+[25192.411026]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25192.411724]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25192.412518]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25192.413237] 4 locks held by kworker/1:1/826103: 
+[25192.413576]  
+[25192.413706] ============================================= 
+[25192.413706]  
+[25315.259312] INFO: task kworker/u9:73:825900 blocked for more than 368 seconds. 
+[25315.259973]       Not tainted 6.18.0-rc2 #1 
+[25315.260324] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25315.260894] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25315.261752] Workqueue: writeback wb_workfn (flush-0:48) 
+[25315.262153] Call Trace: 
+[25315.262369]  <TASK> 
+[25315.262551]  __schedule+0x838/0x1890 
+[25315.262840]  ? __pfx___schedule+0x10/0x10 
+[25315.263150]  ? __blk_flush_plug+0x27b/0x4d0 
+[25315.263493]  ? find_held_lock+0x32/0x90 
+[25315.263794]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25315.264151]  schedule+0xd4/0x260 
+[25315.264425]  io_schedule+0x8f/0xf0 
+[25315.264694]  folio_wait_bit_common+0x2d9/0x780 
+[25315.265100]  ? folio_wait_bit_common+0x1dd/0x780 
+[25315.265473]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25315.265856]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25315.266332]  ? __pfx_wake_page_function+0x10/0x10 
+[25315.266692]  ? __pfx___might_resched+0x10/0x10 
+[25315.267040]  writeback_get_folio+0x3f9/0x500 
+[25315.267393]  writeback_iter+0x136/0x720 
+[25315.267693]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25315.268106]  ? mark_held_locks+0x40/0x70 
+[25315.268425]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25315.268861]  ? virtqueue_notify+0x68/0xc0 
+[25315.269168]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25315.269597]  ? __lock_acquire+0x57c/0xbd0 
+[25315.269921]  do_writepages+0x21f/0x560 
+[25315.270212]  ? __pfx_do_writepages+0x10/0x10 
+[25315.270555]  ? rcu_is_watching+0x15/0xb0 
+[25315.270864]  __writeback_single_inode+0xe2/0x5f0 
+[25315.271212]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25315.271584]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25315.271975]  ? writeback_sb_inodes+0x416/0xd00 
+[25315.272336]  writeback_sb_inodes+0x535/0xd00 
+[25315.272675]  ? __pfx_stack_trace_save+0x10/0x10 
+[25315.273018]  ? local_clock_noinstr+0xd/0xe0 
+[25315.273354]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25315.273713]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25315.274107]  ? lock_acquire+0x10b/0x150 
+[25315.274426]  ? down_read_trylock+0x4b/0x60 
+[25315.274743]  __writeback_inodes_wb+0xf4/0x270 
+[25315.275083]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25315.275470]  ? queue_io+0x329/0x510 
+[25315.275749]  wb_writeback+0x70a/0x9c0 
+[25315.276046]  ? __pfx_wb_writeback+0x10/0x10 
+[25315.276389]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25315.276729]  wb_do_writeback+0x5d4/0x8e0 
+[25315.277042]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25315.277401]  ? set_worker_desc+0x16e/0x190 
+[25315.277713]  ? __pfx_set_worker_desc+0x10/0x10 
+[25315.278072]  wb_workfn+0x7c/0x200 
+[25315.278352]  process_one_work+0xd8b/0x1320 
+[25315.278678]  ? __pfx_process_one_work+0x10/0x10 
+[25315.279034]  ? assign_work+0x16c/0x240 
+[25315.279346]  worker_thread+0x5f3/0xfe0 
+[25315.279650]  ? __pfx_worker_thread+0x10/0x10 
+[25315.279980]  kthread+0x3b4/0x770 
+[25315.280229]  ? kvm_sched_clock_read+0x11/0x20 
+[25315.280577]  ? local_clock_noinstr+0xd/0xe0 
+[25315.280899]  ? __pfx_kthread+0x10/0x10 
+[25315.281183]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25315.281551]  ? rcu_is_watching+0x15/0xb0 
+[25315.281886]  ? __pfx_kthread+0x10/0x10 
+[25315.282176]  ret_from_fork+0x393/0x480 
+[25315.282480]  ? __pfx_kthread+0x10/0x10 
+[25315.282770]  ? __pfx_kthread+0x10/0x10 
+[25315.283058]  ret_from_fork_asm+0x1a/0x30 
+[25315.283401]  </TASK> 
+[25315.283585]  
+[25315.283585] Showing all locks held in the system: 
+[25315.284041] 1 lock held by khungtaskd/37: 
+[25315.284360]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25315.285066] 2 locks held by 751/825733: 
+[25315.285370]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25315.285974]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25315.286683] 3 locks held by kworker/u9:73/825900: 
+[25315.287039]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25315.287744]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25315.288534]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25315.289261] 2 locks held by kworker/u10:2/826054: 
+[25315.289612]  #0: ffff888103ec2158 ((wq_completion)nfsiod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25315.290324]  #1: ffffc90001e1fd10 ((work_completion)(&ctx->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25315.291064]  
+[25315.291199] ============================================= 
+[25315.291199]  
+[25438.138585] INFO: task kworker/u9:73:825900 blocked for more than 491 seconds. 
+[25438.139167]       Not tainted 6.18.0-rc2 #1 
+[25438.139486] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25438.140085] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25438.140963] Workqueue: writeback wb_workfn (flush-0:48) 
+[25438.141360] Call Trace: 
+[25438.141576]  <TASK> 
+[25438.141757]  __schedule+0x838/0x1890 
+[25438.142043]  ? __pfx___schedule+0x10/0x10 
+[25438.142347]  ? __blk_flush_plug+0x27b/0x4d0 
+[25438.142689]  ? find_held_lock+0x32/0x90 
+[25438.142987]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25438.143349]  schedule+0xd4/0x260 
+[25438.143622]  io_schedule+0x8f/0xf0 
+[25438.143891]  folio_wait_bit_common+0x2d9/0x780 
+[25438.144263]  ? folio_wait_bit_common+0x1dd/0x780 
+[25438.144639]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25438.145021]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25438.145479]  ? __pfx_wake_page_function+0x10/0x10 
+[25438.145854]  ? __pfx___might_resched+0x10/0x10 
+[25438.146205]  writeback_get_folio+0x3f9/0x500 
+[25438.146561]  writeback_iter+0x136/0x720 
+[25438.146860]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25438.147265]  ? mark_held_locks+0x40/0x70 
+[25438.147582]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25438.148015]  ? virtqueue_notify+0x68/0xc0 
+[25438.148319]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25438.148749]  ? __lock_acquire+0x57c/0xbd0 
+[25438.149072]  do_writepages+0x21f/0x560 
+[25438.149364]  ? __pfx_do_writepages+0x10/0x10 
+[25438.149705]  ? rcu_is_watching+0x15/0xb0 
+[25438.150014]  __writeback_single_inode+0xe2/0x5f0 
+[25438.150362]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25438.150731]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25438.151123]  ? writeback_sb_inodes+0x416/0xd00 
+[25438.151466]  writeback_sb_inodes+0x535/0xd00 
+[25438.151825]  ? __pfx_stack_trace_save+0x10/0x10 
+[25438.152171]  ? local_clock_noinstr+0xd/0xe0 
+[25438.152504]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25438.152864]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25438.153262]  ? lock_acquire+0x10b/0x150 
+[25438.153577]  ? down_read_trylock+0x4b/0x60 
+[25438.153894]  __writeback_inodes_wb+0xf4/0x270 
+[25438.154231]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25438.154622]  ? queue_io+0x329/0x510 
+[25438.154899]  wb_writeback+0x70a/0x9c0 
+[25438.155193]  ? __pfx_wb_writeback+0x10/0x10 
+[25438.155536]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25438.155877]  wb_do_writeback+0x5d4/0x8e0 
+[25438.156190]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25438.156554]  ? set_worker_desc+0x16e/0x190 
+[25438.156865]  ? __pfx_set_worker_desc+0x10/0x10 
+[25438.157225]  wb_workfn+0x7c/0x200 
+[25438.157486]  process_one_work+0xd8b/0x1320 
+[25438.157830]  ? __pfx_process_one_work+0x10/0x10 
+[25438.158185]  ? assign_work+0x16c/0x240 
+[25438.158478]  worker_thread+0x5f3/0xfe0 
+[25438.158800]  ? __pfx_worker_thread+0x10/0x10 
+[25438.159129]  kthread+0x3b4/0x770 
+[25438.159382]  ? kvm_sched_clock_read+0x11/0x20 
+[25438.159730]  ? local_clock_noinstr+0xd/0xe0 
+[25438.160049]  ? __pfx_kthread+0x10/0x10 
+[25438.160335]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25438.160703]  ? rcu_is_watching+0x15/0xb0 
+[25438.161010]  ? __pfx_kthread+0x10/0x10 
+[25438.161303]  ret_from_fork+0x393/0x480 
+[25438.161605]  ? __pfx_kthread+0x10/0x10 
+[25438.161892]  ? __pfx_kthread+0x10/0x10 
+[25438.162184]  ret_from_fork_asm+0x1a/0x30 
+[25438.162521]  </TASK> 
+[25438.162705]  
+[25438.162705] Showing all locks held in the system: 
+[25438.163161] 1 lock held by khungtaskd/37: 
+[25438.163461]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25438.164190] 2 locks held by 751/825733: 
+[25438.164483]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25438.165101]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25438.165820] 3 locks held by kworker/u9:73/825900: 
+[25438.166177]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25438.166895]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25438.167703]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25438.168412] 2 locks held by kworker/u10:2/826054: 
+[25438.168783]  #0: ffff888103ec2158 ((wq_completion)nfsiod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25438.169473]  #1: ffffc90001e1fd10 ((work_completion)(&ctx->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25438.170230]  
+[25438.170364] ============================================= 
+[25438.170364]  
+[-- MARK -- Tue Oct 21 03:50:00 2025] 
+[25561.017812] INFO: task kworker/u9:73:825900 blocked for more than 614 seconds. 
+[25561.018375]       Not tainted 6.18.0-rc2 #1 
+[25561.018694] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25561.019310] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25561.020172] Workqueue: writeback wb_workfn (flush-0:48) 
+[25561.020573] Call Trace: 
+[25561.020786]  <TASK> 
+[25561.020966]  __schedule+0x838/0x1890 
+[25561.021254]  ? __pfx___schedule+0x10/0x10 
+[25561.021560]  ? __blk_flush_plug+0x27b/0x4d0 
+[25561.021906]  ? find_held_lock+0x32/0x90 
+[25561.022200]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25561.022560]  schedule+0xd4/0x260 
+[25561.022833]  io_schedule+0x8f/0xf0 
+[25561.023102]  folio_wait_bit_common+0x2d9/0x780 
+[25561.023475]  ? folio_wait_bit_common+0x1dd/0x780 
+[25561.023844]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25561.024216]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25561.024686]  ? __pfx_wake_page_function+0x10/0x10 
+[25561.025050]  ? __pfx___might_resched+0x10/0x10 
+[25561.025389]  writeback_get_folio+0x3f9/0x500 
+[25561.025711]  writeback_iter+0x136/0x720 
+[25561.026014]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25561.026402]  ? mark_held_locks+0x40/0x70 
+[25561.026698]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25561.027155]  ? virtqueue_notify+0x68/0xc0 
+[25561.027462]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25561.027894]  ? __lock_acquire+0x57c/0xbd0 
+[25561.028213]  do_writepages+0x21f/0x560 
+[25561.028507]  ? __pfx_do_writepages+0x10/0x10 
+[25561.028849]  ? rcu_is_watching+0x15/0xb0 
+[25561.029154]  __writeback_single_inode+0xe2/0x5f0 
+[25561.029608]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25561.029982]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25561.030374]  ? writeback_sb_inodes+0x416/0xd00 
+[25561.030715]  writeback_sb_inodes+0x535/0xd00 
+[25561.031072]  ? __pfx_stack_trace_save+0x10/0x10 
+[25561.031420]  ? local_clock_noinstr+0xd/0xe0 
+[25561.031761]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25561.032121]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25561.032516]  ? lock_acquire+0x10b/0x150 
+[25561.032832]  ? down_read_trylock+0x4b/0x60 
+[25561.033149]  __writeback_inodes_wb+0xf4/0x270 
+[25561.033487]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25561.033881]  ? queue_io+0x329/0x510 
+[25561.034157]  wb_writeback+0x70a/0x9c0 
+[25561.034452]  ? __pfx_wb_writeback+0x10/0x10 
+[25561.034794]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25561.035134]  wb_do_writeback+0x5d4/0x8e0 
+[25561.035443]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25561.035796]  ? set_worker_desc+0x16e/0x190 
+[25561.036105]  ? __pfx_set_worker_desc+0x10/0x10 
+[25561.036463]  wb_workfn+0x7c/0x200 
+[25561.036724]  process_one_work+0xd8b/0x1320 
+[25561.037065]  ? __pfx_process_one_work+0x10/0x10 
+[25561.037422]  ? assign_work+0x16c/0x240 
+[25561.037718]  worker_thread+0x5f3/0xfe0 
+[25561.038035]  ? __pfx_worker_thread+0x10/0x10 
+[25561.038355]  kthread+0x3b4/0x770 
+[25561.038603]  ? kvm_sched_clock_read+0x11/0x20 
+[25561.038951]  ? local_clock_noinstr+0xd/0xe0 
+[25561.039272]  ? __pfx_kthread+0x10/0x10 
+[25561.039555]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25561.039921]  ? rcu_is_watching+0x15/0xb0 
+[25561.040221]  ? __pfx_kthread+0x10/0x10 
+[25561.040511]  ret_from_fork+0x393/0x480 
+[25561.040813]  ? __pfx_kthread+0x10/0x10 
+[25561.041101]  ? __pfx_kthread+0x10/0x10 
+[25561.041392]  ret_from_fork_asm+0x1a/0x30 
+[25561.041707]  </TASK> 
+[25561.041908]  
+[25561.041908] Showing all locks held in the system: 
+[25561.042365] 1 lock held by khungtaskd/37: 
+[25561.042662]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25561.043384] 2 locks held by 751/825733: 
+[25561.043677]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25561.044296]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25561.045009] 3 locks held by kworker/u9:73/825900: 
+[25561.045362]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25561.046085]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25561.046895]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25561.047600] 2 locks held by kworker/u10:13/826064: 
+[25561.047970]  #0: ffff888103ec2158 ((wq_completion)nfsiod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25561.048657]  #1: ffffc90001e9fd10 ((work_completion)(&ctx->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25561.049410]  
+[25561.049538] ============================================= 
+[25561.049538]  
+[25683.897277] INFO: task kworker/u9:73:825900 blocked for more than 737 seconds. 
+[25683.897831]       Not tainted 6.18.0-rc2 #1 
+[25683.898182] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[25683.898754] task:kworker/u9:73   state:D stack:24712 pid:825900 tgid:825900 ppid:2      task_flags:0x4208060 flags:0x00080000 
+[25683.899587] Workqueue: writeback wb_workfn (flush-0:48) 
+[25683.900001] Call Trace: 
+[25683.900200]  <TASK> 
+[25683.900379]  __schedule+0x838/0x1890 
+[25683.900663]  ? __pfx___schedule+0x10/0x10 
+[25683.900967]  ? __blk_flush_plug+0x27b/0x4d0 
+[25683.901308]  ? find_held_lock+0x32/0x90 
+[25683.901609]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25683.901964]  schedule+0xd4/0x260 
+[25683.902235]  io_schedule+0x8f/0xf0 
+[25683.902507]  folio_wait_bit_common+0x2d9/0x780 
+[25683.902874]  ? folio_wait_bit_common+0x1dd/0x780 
+[25683.903256]  ? __pfx_folio_wait_bit_common+0x10/0x10 
+[25683.903636]  ? nfs_page_clear_headlock+0x31/0x80 [nfs] 
+[25683.904111]  ? __pfx_wake_page_function+0x10/0x10 
+[25683.904469]  ? __pfx___might_resched+0x10/0x10 
+[25683.904819]  writeback_get_folio+0x3f9/0x500 
+[25683.905170]  writeback_iter+0x136/0x720 
+[25683.905469]  nfs_writepages+0x4f8/0x9b0 [nfs] 
+[25683.905878]  ? mark_held_locks+0x40/0x70 
+[25683.906194]  ? __pfx_nfs_writepages+0x10/0x10 [nfs] 
+[25683.906631]  ? virtqueue_notify+0x68/0xc0 
+[25683.906936]  ? virtio_queue_rq+0x2b1/0x650 [virtio_blk] 
+[25683.907368]  ? __lock_acquire+0x57c/0xbd0 
+[25683.907691]  do_writepages+0x21f/0x560 
+[25683.907999]  ? __pfx_do_writepages+0x10/0x10 
+[25683.908325]  ? rcu_is_watching+0x15/0xb0 
+[25683.908635]  __writeback_single_inode+0xe2/0x5f0 
+[25683.909013]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25683.909368]  ? __pfx___writeback_single_inode+0x10/0x10 
+[25683.909756]  ? writeback_sb_inodes+0x416/0xd00 
+[25683.910118]  writeback_sb_inodes+0x535/0xd00 
+[25683.910459]  ? __pfx_stack_trace_save+0x10/0x10 
+[25683.910807]  ? local_clock_noinstr+0xd/0xe0 
+[25683.911138]  ? __pfx_writeback_sb_inodes+0x10/0x10 
+[25683.911500]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25683.911896]  ? lock_acquire+0x10b/0x150 
+[25683.912211]  ? down_read_trylock+0x4b/0x60 
+[25683.912532]  __writeback_inodes_wb+0xf4/0x270 
+[25683.912869]  ? __pfx___writeback_inodes_wb+0x10/0x10 
+[25683.913259]  ? queue_io+0x329/0x510 
+[25683.913540]  wb_writeback+0x70a/0x9c0 
+[25683.913832]  ? __pfx_wb_writeback+0x10/0x10 
+[25683.914174]  ? get_nr_dirty_inodes+0xcb/0x180 
+[25683.914516]  wb_do_writeback+0x5d4/0x8e0 
+[25683.914831]  ? __pfx_wb_do_writeback+0x10/0x10 
+[25683.915185]  ? set_worker_desc+0x16e/0x190 
+[25683.915501]  ? __pfx_set_worker_desc+0x10/0x10 
+[25683.915860]  wb_workfn+0x7c/0x200 
+[25683.916139]  process_one_work+0xd8b/0x1320 
+[25683.916465]  ? __pfx_process_one_work+0x10/0x10 
+[25683.916822]  ? assign_work+0x16c/0x240 
+[25683.917133]  worker_thread+0x5f3/0xfe0 
+[25683.917437]  ? __pfx_worker_thread+0x10/0x10 
+[25683.917767]  kthread+0x3b4/0x770 
+[25683.918037]  ? kvm_sched_clock_read+0x11/0x20 
+[25683.918368]  ? local_clock_noinstr+0xd/0xe0 
+[25683.918687]  ? __pfx_kthread+0x10/0x10 
+[25683.918969]  ? __lock_release.isra.0+0x1a4/0x2c0 
+[25683.919334]  ? rcu_is_watching+0x15/0xb0 
+[25683.919640]  ? __pfx_kthread+0x10/0x10 
+[25683.919929]  ret_from_fork+0x393/0x480 
+[25683.920234]  ? __pfx_kthread+0x10/0x10 
+[25683.920523]  ? __pfx_kthread+0x10/0x10 
+[25683.920815]  ret_from_fork_asm+0x1a/0x30 
+[25683.921152]  </TASK> 
+[25683.921333] Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings 
+[25683.921921]  
+[25683.921921] Showing all locks held in the system: 
+[25683.922392] 1 lock held by khungtaskd/37: 
+[25683.922698]  #0: ffffffffa29309e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30 
+[25683.923423] 2 locks held by 751/825733: 
+[25683.923720]  #0: ffff888101e36440 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[25683.924331]  #1: ffffffffa2b97fd0 (split_debug_mutex){+.+.}-{4:4}, at: split_huge_pages_write+0x124/0x430 
+[25683.925045] 3 locks held by kworker/u9:73/825900: 
+[25683.925398]  #0: ffff8881029df958 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25683.926121]  #1: ffffc9000ad9fd10 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25683.926918]  #2: ffff88810b1480e8 (&type->s_umount_key#68){++++}-{4:4}, at: super_trylock_shared+0x1c/0xa0 
+[25683.927641] 4 locks held by kworker/u9:143/826036: 
+[25683.928022]  #0: ffff888103ec5158 ((wq_completion)nfslocaliod){+.+.}-{0:0}, at: process_one_work+0x7f5/0x1320 
+[25683.928743]  #1: ffffc90001cc7d10 ((work_completion)(&iocb->work)#2){+.+.}-{0:0}, at: process_one_work+0xd3f/0x1320 
+[25683.929514]  #2: ffff88815c2c2440 (sb_writers#13){++++}-{0:0}, at: process_one_work+0xd8b/0x1320 
+[25683.930175]  #3: ffff8881a1324b58 (&sb->s_type->i_mutex_key#13){++++}-{4:4}, at: xfs_ilock+0x360/0x460 [xfs] 
+[25683.931255]  
+[25683.931391] ============================================= 
+[25683.931391]  
+[-- MARK -- Tue Oct 21 03:55:00 2025] 
+[-- MARK -- Tue Oct 21 04:00:00 2025] 
+[-- MARK -- Tue Oct 21 04:05:00 2025] 
 
-We don't, this is just copied from the
-tls_client_hello_psk()/tls_server_hello_psk() to provide the same
-information to keep things more consistent.
 
-I can remove setting these
+[2]
+[12082.409406] run fstests generic/751 at 2025-10-20 19:04:12 
+[-- MARK -- Mon Oct 20 23:05:00 2025] 
+[-- MARK -- Mon Oct 20 23:10:00 2025] 
+[-- MARK -- Mon Oct 20 23:15:00 2025] 
+[13023.321998] INFO: task kworker/u17:206:858774 blocked for more than 122 seconds. 
+[13023.322058]       Tainted: G    B               6.18.0-rc2 #1 
+[13023.322062] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13023.322064] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13023.322077] Workqueue: writeback wb_workfn (flush-0:56) 
+[13023.322089] Call trace: 
+[13023.322091]  __switch_to+0x1e0/0x488 (T) 
+[13023.322098]  __schedule+0x748/0x1430 
+[13023.322103]  schedule+0xd0/0x240 
+[13023.322107]  io_schedule+0xb4/0x120 
+[13023.322112]  folio_wait_bit_common+0x2c4/0x708 
+[13023.322117]  __folio_lock+0x24/0x38 
+[13023.322120]  writeback_get_folio+0x37c/0x480 
+[13023.322125]  writeback_iter+0x128/0x6d0 
+[13023.322130]  nfs_writepages+0x504/0x930 [nfs] 
+[13023.322194]  do_writepages+0x204/0x4c0 
+[13023.322198]  __writeback_single_inode+0xec/0x4f8 
+[13023.322204]  writeback_sb_inodes+0x4a4/0xab8 
+[13023.322296]  __writeback_inodes_wb+0x104/0x260 
+[13023.322301]  wb_writeback+0x840/0xce0 
+[13023.322305]  wb_do_writeback+0x69c/0x940 
+[13023.322308]  wb_workfn+0x80/0x1c0 
+[13023.322312]  process_one_work+0x774/0x12d0 
+[13023.322318]  worker_thread+0x434/0xca0 
+[13023.322322]  kthread+0x2ec/0x390 
+[13023.322326]  ret_from_fork+0x10/0x20 
+[13023.322409] INFO: lockdep is turned off. 
+[-- MARK -- Mon Oct 20 23:20:00 2025] 
+[13146.212082] INFO: task kworker/u17:206:858774 blocked for more than 245 seconds. 
+[13146.212109]       Tainted: G    B               6.18.0-rc2 #1 
+[13146.212120] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13146.212125] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13146.212141] Workqueue: writeback wb_workfn (flush-0:56) 
+[13146.212160] Call trace: 
+[13146.212165]  __switch_to+0x1e0/0x488 (T) 
+[13146.212175]  __schedule+0x748/0x1430 
+[13146.212182]  schedule+0xd0/0x240 
+[13146.212189]  io_schedule+0xb4/0x120 
+[13146.212196]  folio_wait_bit_common+0x2c4/0x708 
+[13146.212203]  __folio_lock+0x24/0x38 
+[13146.212209]  writeback_get_folio+0x37c/0x480 
+[13146.212217]  writeback_iter+0x128/0x6d0 
+[13146.212222]  nfs_writepages+0x504/0x930 [nfs] 
+[13146.212287]  do_writepages+0x204/0x4c0 
+[13146.212291]  __writeback_single_inode+0xec/0x4f8 
+[13146.212294]  writeback_sb_inodes+0x4a4/0xab8 
+[13146.212298]  __writeback_inodes_wb+0x104/0x260 
+[13146.212302]  wb_writeback+0x840/0xce0 
+[13146.212306]  wb_do_writeback+0x69c/0x940 
+[13146.212309]  wb_workfn+0x80/0x1c0 
+[13146.212313]  process_one_work+0x774/0x12d0 
+[13146.212318]  worker_thread+0x434/0xca0 
+[13146.212321]  kthread+0x2ec/0x390 
+[13146.212325]  ret_from_fork+0x10/0x20 
+[13146.212360] INFO: lockdep is turned off. 
+[13269.082400] INFO: task kworker/u17:206:858774 blocked for more than 368 seconds. 
+[13269.082553]       Tainted: G    B               6.18.0-rc2 #1 
+[13269.082557] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13269.082559] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13269.082570] Workqueue: writeback wb_workfn (flush-0:56) 
+[13269.082581] Call trace: 
+[13269.082583]  __switch_to+0x1e0/0x488 (T) 
+[13269.082591]  __schedule+0x748/0x1430 
+[13269.082596]  schedule+0xd0/0x240 
+[13269.082600]  io_schedule+0xb4/0x120 
+[13269.082604]  folio_wait_bit_common+0x2c4/0x708 
+[13269.082610]  __folio_lock+0x24/0x38 
+[13269.082613]  writeback_get_folio+0x37c/0x480 
+[13269.082618]  writeback_iter+0x128/0x6d0 
+[13269.082622]  nfs_writepages+0x504/0x930 [nfs] 
+[13269.082749]  do_writepages+0x204/0x4c0 
+[13269.082754]  __writeback_single_inode+0xec/0x4f8 
+[13269.082758]  writeback_sb_inodes+0x4a4/0xab8 
+[13269.082762]  __writeback_inodes_wb+0x104/0x260 
+[13269.082766]  wb_writeback+0x840/0xce0 
+[13269.082769]  wb_do_writeback+0x69c/0x940 
+[13269.082773]  wb_workfn+0x80/0x1c0 
+[13269.082777]  process_one_work+0x774/0x12d0 
+[13269.082782]  worker_thread+0x434/0xca0 
+[13269.082785]  kthread+0x2ec/0x390 
+[13269.082789]  ret_from_fork+0x10/0x20 
+[13269.082805] INFO: lockdep is turned off. 
+[-- MARK -- Mon Oct 20 23:25:00 2025] 
+[13391.972505] INFO: task kworker/u17:206:858774 blocked for more than 491 seconds. 
+[13391.972535]       Tainted: G    B               6.18.0-rc2 #1 
+[13391.972549] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13391.972555] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13391.972571] Workqueue: writeback wb_workfn (flush-0:56) 
+[13391.972585] Call trace: 
+[13391.972587]  __switch_to+0x1e0/0x488 (T) 
+[13391.972595]  __schedule+0x748/0x1430 
+[13391.972600]  schedule+0xd0/0x240 
+[13391.972605]  io_schedule+0xb4/0x120 
+[13391.972609]  folio_wait_bit_common+0x2c4/0x708 
+[13391.972614]  __folio_lock+0x24/0x38 
+[13391.972618]  writeback_get_folio+0x37c/0x480 
+[13391.972624]  writeback_iter+0x128/0x6d0 
+[13391.972628]  nfs_writepages+0x504/0x930 [nfs] 
+[13391.972700]  do_writepages+0x204/0x4c0 
+[13391.972704]  __writeback_single_inode+0xec/0x4f8 
+[13391.972708]  writeback_sb_inodes+0x4a4/0xab8 
+[13391.972712]  __writeback_inodes_wb+0x104/0x260 
+[13391.972716]  wb_writeback+0x840/0xce0 
+[13391.972720]  wb_do_writeback+0x69c/0x940 
+[13391.972724]  wb_workfn+0x80/0x1c0 
+[13391.972727]  process_one_work+0x774/0x12d0 
+[13391.972733]  worker_thread+0x434/0xca0 
+[13391.972736]  kthread+0x2ec/0x390 
+[13391.972740]  ret_from_fork+0x10/0x20 
+[13391.972761] INFO: lockdep is turned off. 
+[13514.852712] INFO: task kworker/u17:206:858774 blocked for more than 614 seconds. 
+[13514.852737]       Tainted: G    B               6.18.0-rc2 #1 
+[13514.852749] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13514.852756] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13514.852768] Workqueue: writeback wb_workfn (flush-0:56) 
+[13514.852779] Call trace: 
+[13514.852781]  __switch_to+0x1e0/0x488 (T) 
+[13514.852790]  __schedule+0x748/0x1430 
+[13514.852795]  schedule+0xd0/0x240 
+[13514.852808]  io_schedule+0xb4/0x120 
+[13514.852812]  folio_wait_bit_common+0x2c4/0x708 
+[13514.852818]  __folio_lock+0x24/0x38 
+[13514.852822]  writeback_get_folio+0x37c/0x480 
+[13514.852827]  writeback_iter+0x128/0x6d0 
+[13514.852831]  nfs_writepages+0x504/0x930 [nfs] 
+[13514.852897]  do_writepages+0x204/0x4c0 
+[13514.852901]  __writeback_single_inode+0xec/0x4f8 
+[13514.852905]  writeback_sb_inodes+0x4a4/0xab8 
+[13514.852908]  __writeback_inodes_wb+0x104/0x260 
+[13514.852912]  wb_writeback+0x840/0xce0 
+[13514.852916]  wb_do_writeback+0x69c/0x940 
+[13514.852919]  wb_workfn+0x80/0x1c0 
+[13514.852923]  process_one_work+0x774/0x12d0 
+[13514.852928]  worker_thread+0x434/0xca0 
+[13514.852932]  kthread+0x2ec/0x390 
+[13514.852936]  ret_from_fork+0x10/0x20 
+[13514.852955] INFO: lockdep is turned off. 
+[-- MARK -- Mon Oct 20 23:30:00 2025] 
+[13637.723028] INFO: task kworker/u17:206:858774 blocked for more than 737 seconds. 
+[13637.723055]       Tainted: G    B               6.18.0-rc2 #1 
+[13637.723067] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13637.723072] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13637.723086] Workqueue: writeback wb_workfn (flush-0:56) 
+[13637.723099] Call trace: 
+[13637.723101]  __switch_to+0x1e0/0x488 (T) 
+[13637.723110]  __schedule+0x748/0x1430 
+[13637.723115]  schedule+0xd0/0x240 
+[13637.723119]  io_schedule+0xb4/0x120 
+[13637.723124]  folio_wait_bit_common+0x2c4/0x708 
+[13637.723129]  __folio_lock+0x24/0x38 
+[13637.723133]  writeback_get_folio+0x37c/0x480 
+[13637.723138]  writeback_iter+0x128/0x6d0 
+[13637.723142]  nfs_writepages+0x504/0x930 [nfs] 
+[13637.723210]  do_writepages+0x204/0x4c0 
+[13637.723213]  __writeback_single_inode+0xec/0x4f8 
+[13637.723217]  writeback_sb_inodes+0x4a4/0xab8 
+[13637.723221]  __writeback_inodes_wb+0x104/0x260 
+[13637.723225]  wb_writeback+0x840/0xce0 
+[13637.723229]  wb_do_writeback+0x69c/0x940 
+[13637.723232]  wb_workfn+0x80/0x1c0 
+[13637.723237]  process_one_work+0x774/0x12d0 
+[13637.723242]  worker_thread+0x434/0xca0 
+[13637.723246]  kthread+0x2ec/0x390 
+[13637.723250]  ret_from_fork+0x10/0x20 
+[13637.723271] INFO: lockdep is turned off. 
+[13760.603116] INFO: task kworker/u17:206:858774 blocked for more than 860 seconds. 
+[13760.603144]       Tainted: G    B               6.18.0-rc2 #1 
+[13760.603158] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13760.603163] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13760.603180] Workqueue: writeback wb_workfn (flush-0:56) 
+[13760.603199] Call trace: 
+[13760.603203]  __switch_to+0x1e0/0x488 (T) 
+[13760.603214]  __schedule+0x748/0x1430 
+[13760.603221]  schedule+0xd0/0x240 
+[13760.603228]  io_schedule+0xb4/0x120 
+[13760.603234]  folio_wait_bit_common+0x2c4/0x708 
+[13760.603242]  __folio_lock+0x24/0x38 
+[13760.603248]  writeback_get_folio+0x37c/0x480 
+[13760.603341]  writeback_iter+0x128/0x6d0 
+[13760.603349]  nfs_writepages+0x504/0x930 [nfs] 
+[13760.603421]  do_writepages+0x204/0x4c0 
+[13760.603427]  __writeback_single_inode+0xec/0x4f8 
+[13760.603434]  writeback_sb_inodes+0x4a4/0xab8 
+[13760.603440]  __writeback_inodes_wb+0x104/0x260 
+[13760.603447]  wb_writeback+0x840/0xce0 
+[13760.603453]  wb_do_writeback+0x69c/0x940 
+[13760.603459]  wb_workfn+0x80/0x1c0 
+[13760.603465]  process_one_work+0x774/0x12d0 
+[13760.603472]  worker_thread+0x434/0xca0 
+[13760.603478]  kthread+0x2ec/0x390 
+[13760.603485]  ret_from_fork+0x10/0x20 
+[13760.603507] INFO: lockdep is turned off. 
+[13883.483295] INFO: task kworker/u17:206:858774 blocked for more than 983 seconds. 
+[13883.483320]       Tainted: G    B               6.18.0-rc2 #1 
+[13883.483340] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[13883.483343] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[13883.483356] Workqueue: writeback wb_workfn (flush-0:56) 
+[13883.483368] Call trace: 
+[13883.483371]  __switch_to+0x1e0/0x488 (T) 
+[13883.483379]  __schedule+0x748/0x1430 
+[13883.483384]  schedule+0xd0/0x240 
+[13883.483388]  io_schedule+0xb4/0x120 
+[13883.483392]  folio_wait_bit_common+0x2c4/0x708 
+[13883.483397]  __folio_lock+0x24/0x38 
+[13883.483401]  writeback_get_folio+0x37c/0x480 
+[13883.483406]  writeback_iter+0x128/0x6d0 
+[13883.483411]  nfs_writepages+0x504/0x930 [nfs] 
+[13883.483477]  do_writepages+0x204/0x4c0 
+[13883.483481]  __writeback_single_inode+0xec/0x4f8 
+[13883.483485]  writeback_sb_inodes+0x4a4/0xab8 
+[13883.483489]  __writeback_inodes_wb+0x104/0x260 
+[13883.483493]  wb_writeback+0x840/0xce0 
+[13883.483496]  wb_do_writeback+0x69c/0x940 
+[13883.483500]  wb_workfn+0x80/0x1c0 
+[13883.483504]  process_one_work+0x774/0x12d0 
+[13883.483509]  worker_thread+0x434/0xca0 
+[13883.483512]  kthread+0x2ec/0x390 
+[13883.483517]  ret_from_fork+0x10/0x20 
+[13883.483538] INFO: lockdep is turned off. 
+[-- MARK -- Mon Oct 20 23:35:00 2025] 
+[14006.363497] INFO: task kworker/u17:206:858774 blocked for more than 1105 seconds. 
+[14006.363521]       Tainted: G    B               6.18.0-rc2 #1 
+[14006.363542] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[14006.363545] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[14006.363557] Workqueue: writeback wb_workfn (flush-0:56) 
+[14006.363569] Call trace: 
+[14006.363571]  __switch_to+0x1e0/0x488 (T) 
+[14006.363579]  __schedule+0x748/0x1430 
+[14006.363584]  schedule+0xd0/0x240 
+[14006.363588]  io_schedule+0xb4/0x120 
+[14006.363592]  folio_wait_bit_common+0x2c4/0x708 
+[14006.363597]  __folio_lock+0x24/0x38 
+[14006.363601]  writeback_get_folio+0x37c/0x480 
+[14006.363606]  writeback_iter+0x128/0x6d0 
+[14006.363610]  nfs_writepages+0x504/0x930 [nfs] 
+[14006.363676]  do_writepages+0x204/0x4c0 
+[14006.363680]  __writeback_single_inode+0xec/0x4f8 
+[14006.363684]  writeback_sb_inodes+0x4a4/0xab8 
+[14006.363687]  __writeback_inodes_wb+0x104/0x260 
+[14006.363691]  wb_writeback+0x840/0xce0 
+[14006.363695]  wb_do_writeback+0x69c/0x940 
+[14006.363699]  wb_workfn+0x80/0x1c0 
+[14006.363702]  process_one_work+0x774/0x12d0 
+[14006.363707]  worker_thread+0x434/0xca0 
+[14006.363711]  kthread+0x2ec/0x390 
+[14006.363715]  ret_from_fork+0x10/0x20 
+[14006.363735] INFO: lockdep is turned off. 
+[14129.243869] INFO: task kworker/u17:206:858774 blocked for more than 1228 seconds. 
+[14129.244026]       Tainted: G    B               6.18.0-rc2 #1 
+[14129.244030] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message. 
+[14129.244033] task:kworker/u17:206 state:D stack:23184 pid:858774 tgid:858774 ppid:2      task_flags:0x4208060 flags:0x00000210 
+[14129.244045] Workqueue: writeback wb_workfn (flush-0:56) 
+[14129.244059] Call trace: 
+[14129.244061]  __switch_to+0x1e0/0x488 (T) 
+[14129.244070]  __schedule+0x748/0x1430 
+[14129.244075]  schedule+0xd0/0x240 
+[14129.244079]  io_schedule+0xb4/0x120 
+[14129.244084]  folio_wait_bit_common+0x2c4/0x708 
+[14129.244089]  __folio_lock+0x24/0x38 
+[14129.244092]  writeback_get_folio+0x37c/0x480 
+[14129.244097]  writeback_iter+0x128/0x6d0 
+[14129.244102]  nfs_writepages+0x504/0x930 [nfs] 
+[14129.244173]  do_writepages+0x204/0x4c0 
+[14129.244176]  __writeback_single_inode+0xec/0x4f8 
+[14129.244180]  writeback_sb_inodes+0x4a4/0xab8 
+[14129.244184]  __writeback_inodes_wb+0x104/0x260 
+[14129.244188]  wb_writeback+0x840/0xce0 
+[14129.244192]  wb_do_writeback+0x69c/0x940 
+[14129.244195]  wb_workfn+0x80/0x1c0 
+[14129.244199]  process_one_work+0x774/0x12d0 
+[14129.244205]  worker_thread+0x434/0xca0 
+[14129.244209]  kthread+0x2ec/0x390 
+[14129.244213]  ret_from_fork+0x10/0x20 
+[14129.244217] Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings 
+[14129.244242] INFO: lockdep is turned off. 
+[-- MARK -- Mon Oct 20 23:40:00 2025] 
+[-- MARK -- Mon Oct 20 23:45:00 2025] 
+[-- MARK -- Mon Oct 20 23:50:00 2025]
 
-> I thought that the information was encoded in the session, ie
-> the 'user_session_id' ?
->
-> > +
-> > +     return handshake_req_submit(args->ta_sock, req, flags);
-> > +}
-> > +EXPORT_SYMBOL(tls_client_keyupdate_psk);
-> > +
-> >   /**
-> >    * tls_server_hello_x509 - request a server TLS handshake on a socket
-> >    * @args: socket and handshake parameters for this request
-> > @@ -428,6 +478,37 @@ int tls_server_hello_psk(const struct tls_handshak=
-e_args *args, gfp_t flags)
-> >   }
-> >   EXPORT_SYMBOL(tls_server_hello_psk);
-> >
-> > +/**
-> > + * tls_server_keyupdate_psk - request a server TLS KeyUpdate on a sock=
-et
-> > + * @args: socket and handshake parameters for this request
-> > + * @flags: memory allocation control flags
-> > + * @keyupdate: specifies the type of KeyUpdate operation
-> > + *
-> > + * Return values:
-> > + *   %0: Handshake request enqueue; ->done will be called when complet=
-e
-> > + *   %-ESRCH: No user agent is available
-> > + *   %-ENOMEM: Memory allocation failed
-> > + */
-> > +int tls_server_keyupdate_psk(const struct tls_handshake_args *args, gf=
-p_t flags,
-> > +                          handshake_key_update_type keyupdate)
-> > +{
-> > +     struct tls_handshake_req *treq;
-> > +     struct handshake_req *req;
-> > +
-> > +     req =3D handshake_req_alloc(&tls_handshake_proto, flags);
-> > +     if (!req)
-> > +             return -ENOMEM;
-> > +     treq =3D tls_handshake_req_init(req, args);
-> > +     treq->th_type =3D HANDSHAKE_MSG_TYPE_SERVERKEYUPDATE;
-> > +     treq->th_key_update_request =3D keyupdate;
-> > +     treq->th_auth_mode =3D HANDSHAKE_AUTH_PSK;
-> > +     treq->th_num_peerids =3D 1;
-> > +     treq->th_peerid[0] =3D args->ta_my_peerids[0];
->
-> Same here. Why do we need to set 'peerid'?
->
-> > +
-> > +     return handshake_req_submit(args->ta_sock, req, flags);
-> > +}
-> > +EXPORT_SYMBOL(tls_server_keyupdate_psk);
-> > +
-> >   /**
-> >    * tls_handshake_cancel - cancel a pending handshake
-> >    * @sk: socket on which there is an ongoing handshake
-> Nit: we _could_ overload 'peerid' with the user_session_id,then we
-> wouldn't need to specify a new field in the handshake
-> request.
-> But that's arguably quite hackish.
-
-Oh no! Let's not do that. That just seems prone to confusion
-
-Alistair
-
->
-> Cheers,
->
-> Hannes
-> --
-> Dr. Hannes Reinecke                  Kernel Storage Architect
-> hare@suse.de                                +49 911 74053 688
-> SUSE Software Solutions GmbH, Frankenstr. 146, 90461 N=C3=BCrnberg
-> HRB 36809 (AG N=C3=BCrnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
