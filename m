@@ -1,55 +1,57 @@
-Return-Path: <linux-nfs+bounces-15444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EADB7BF5DB3
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 12:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B0C2BF5E46
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 12:53:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 616A718A6933
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 10:42:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D086188F722
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 10:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C71421578D;
-	Tue, 21 Oct 2025 10:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1F032D0C7;
+	Tue, 21 Oct 2025 10:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcrTBbuJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5YcPCkb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3CC226D16
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 10:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2829E32C949
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 10:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761043328; cv=none; b=HLp7Y1qO1yhov7tg+zSzKFbm7Bz60cLoPrRs3130cPJMwn9+br8IECKhVKGjOkFU4cCVBlXwGgRE8iUm+W4dU2/Kz+ER2tAQWO9U+lvC4Df5xnIphq7x/v4fVOpgzlX/PAZe9KXLnhKISYJb7h3/7Hjmf8FfYrTfjq/DFrfidhI=
+	t=1761043902; cv=none; b=unJmg8LoWVi4ZYXXxMjl4M8L63LRZdzmLMKxslhW5xSZYF1hWyMOSsaxChV6S0jd6ImNv+oX6W1eHJU1Rap1AxG0KYftxrrlu8Vr6DQ4DfZ8FK6zcypAXIRuY48D/3xMds+uJeIhRZu3AxFc9OEHAZ0lT3rGNK5F5WDa4kQbF0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761043328; c=relaxed/simple;
-	bh=a9GtadoC9y++2IbYAuhjWXQM4jj+jScK32cHI/l3YoA=;
+	s=arc-20240116; t=1761043902; c=relaxed/simple;
+	bh=LI8YuHQJgH9g2sjgg3bwzNUDLAQASEoPTgQSH8iZazU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SMT5q2hRJlBjupYB0CY1pwlNcRT1eaTZdaGkEj1aEnYM9FMOE+07uSw1b7doQYPlS9shDBrQ2arWj41Tg4Gb34qQG8RFq2YKb84ZH+6Sk37B8oL9tk24E2ovySR+0kp162yh+Vg9g9ncnizNush72jUypH+QiTgtzmOCzIP6Q2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcrTBbuJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486F5C4CEF1;
-	Tue, 21 Oct 2025 10:42:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HzEECn0KzzO4XjJs6Y6207fbWtDOUElm9GTyLEhKzwTf6oKBl8ODQydqJLzxWbEo3x3PigigeEYnSTGeCYteRww474PbX7RTaO55IfA4sF3wrVx22kZ9skCn0k1+tx6sfRT33kGl0VJ0L0ElvwKvgO0seofuJ+aeOZ7f6gy82kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5YcPCkb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34241C4CEF1;
+	Tue, 21 Oct 2025 10:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761043328;
-	bh=a9GtadoC9y++2IbYAuhjWXQM4jj+jScK32cHI/l3YoA=;
+	s=k20201202; t=1761043901;
+	bh=LI8YuHQJgH9g2sjgg3bwzNUDLAQASEoPTgQSH8iZazU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LcrTBbuJONJTeUDtQ2orRDzy2n9/uzZzLGgbnn2yasu59ey6mJUkQuISPoUwfTunr
-	 qpqu47SkVdHjUN9LAOjS/nBOIowBSPS9vmXhZ3AM81TujikJE0/HK9XFEZUDUMFo69
-	 rBGCwZI1YwPyhxcqb+6C8Y49kW50ozmnsxeBuw/nkbgSh9KdL/zWPJKv/1Bh/6fdop
-	 2cpbrn0suH+kbtwXafQ9zlVWRaOaCUF0DeUtvFSjvenolp1D1pPL17qCTb3TJg/xSl
-	 W2HYjacM53RaZsYnU1ASltKHFKfmdg83exvldoTbDXDtT+y8d/BfNFZUbgF3OdbIc9
-	 2joxZ28YHVYOw==
-Message-ID: <11998b27098bacd34d99fcaf52cd23e7e0337ee1.camel@kernel.org>
-Subject: Re: [PATCH 0/7] nfsd: assorted cleanup
+	b=X5YcPCkb5qlNdqpyPDXqGmXQSJwLOWThHZZZlxGU7QjiPUxyPj/by2OPZpt7/xQhY
+	 BbM3tA0nxnp/hAe63qqsp1gTj1X0AdKYtU99hEDO7ndEdunlpEsl4cZ14dBIKXqXRH
+	 YDeoOJz0TDin+cSdBPvNNJ4blOwUJmvX+DIOjVeUtEz1lQolX7uu9DZJ0W2JlzHaY7
+	 9PEMeKja7bV31wl7ohgItUqznFfWgbv1uJQu0e6chQ0iB0Lf7NwSw/5A9dwlPbIu5n
+	 CHp4EXweINNoJIHsU0wgEDqcZkTJvydmp/a3g015WxcxAqXl4qsoMzj+ga8QNDlfar
+	 e7F0Uj564tJ1Q==
+Message-ID: <5fb878df5114e07b71256771d1dd42c92bffd0fe.camel@kernel.org>
+Subject: Re: [PATCH v5 2/4] NFSD: Refactor nfsd_vfs_write()
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Tue, 21 Oct 2025 06:42:07 -0400
-In-Reply-To: <20251018000553.3256253-1-neilb@ownmail.net>
-References: <20251018000553.3256253-1-neilb@ownmail.net>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 21 Oct 2025 06:51:40 -0400
+In-Reply-To: <20251020162546.5066-3-cel@kernel.org>
+References: <20251020162546.5066-1-cel@kernel.org>
+	 <20251020162546.5066-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,26 +136,87 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-10-18 at 11:02 +1100, NeilBrown wrote:
-> These patches remove various indirections in nfsd code which, I think,
-> improves clarity.  I was motivated to look at this by a recent buglet
-> with traceing called from nfsd4_read_release().
+On Mon, 2025-10-20 at 12:25 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Apart from a slight change in when trace_nfsd_read_done() is called, no
-> change in behaviour is expected.
+> Extract the common code that is to be used in the buffered and
+> dontcache I/O modes. This common code will also be used as the
+> fallback when direct I/O is requested but cannot be used.
 >=20
-> NeilBrown
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
 >=20
->  [PATCH 1/7] nfsd: discard ->op_release() for v4 operations
->  [PATCH 2/7] nfsd: discard v4 ->op_get_currentstateid() function
->  [PATCH 3/7] nfsd: discard ->op_set_currentstateid()
->  [PATCH 4/7] nfsd: discard OP_CLEAR_STATEID
->  [PATCH 5/7] nfsd: replace sid_flags with two bools.
->  [PATCH 6/7] nfsd: discard current_stateid.h
->  [PATCH 7/7] nfsd: use a bool instead of NFSD4_FH_FOREIGN
-
-These all look good to me (modulo the nits that Chuck already pointed
-out).
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 8b2dc7a88aab..ae9c41f7374e 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1254,6 +1254,22 @@ static int wait_for_concurrent_writes(struct file =
+*file)
+>  	return err;
+>  }
+> =20
+> +static int
+> +nfsd_iocb_write(struct svc_rqst *rqstp, struct file *file, unsigned int =
+nvecs,
+> +		unsigned long *cnt, struct kiocb *kiocb)
+> +{
+> +	struct iov_iter iter;
+> +	int host_err;
+> +
+> +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +	host_err =3D vfs_iocb_iter_write(file, kiocb, &iter);
+> +	if (host_err < 0)
+> +		return host_err;
+> +	*cnt =3D host_err;
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * nfsd_vfs_write - write data to an already-open file
+>   * @rqstp: RPC execution context
+> @@ -1282,7 +1298,6 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	u32			stable =3D *stable_how;
+>  	struct kiocb		kiocb;
+>  	struct svc_export	*exp;
+> -	struct iov_iter		iter;
+>  	errseq_t		since;
+>  	__be32			nfserr;
+>  	int			host_err;
+> @@ -1319,25 +1334,24 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  		kiocb.ki_flags |=3D IOCB_DSYNC;
+> =20
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +
+>  	since =3D READ_ONCE(file->f_wb_err);
+>  	if (verf)
+>  		nfsd_copy_write_verifier(verf, nn);
+> =20
+>  	switch (nfsd_io_cache_write) {
+> -	case NFSD_IO_BUFFERED:
+> -		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+>  			kiocb.ki_flags |=3D IOCB_DONTCACHE;
+> +		fallthrough;
+> +	case NFSD_IO_BUFFERED:
+> +		host_err =3D nfsd_iocb_write(rqstp, file, nvecs, cnt, &kiocb);
+>  		break;
+>  	}
+> -	host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
+>  	if (host_err < 0) {
+>  		commit_reset_write_verifier(nn, rqstp, host_err);
+>  		goto out_nfserr;
+>  	}
+> -	*cnt =3D host_err;
+>  	nfsd_stats_io_write_add(nn, exp, *cnt);
+>  	fsnotify_modify(file);
+>  	host_err =3D filemap_check_wb_err(file->f_mapping, since);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
