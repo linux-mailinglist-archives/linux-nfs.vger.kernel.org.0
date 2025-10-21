@@ -1,281 +1,571 @@
-Return-Path: <linux-nfs+bounces-15448-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15449-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDFE1BF6028
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 13:24:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E056DBF6522
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 14:07:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B92E3A2F15
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 11:24:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8BEEC18C2041
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Oct 2025 12:07:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12CCF2F7467;
-	Tue, 21 Oct 2025 11:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B600338903;
+	Tue, 21 Oct 2025 11:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U058MkHL"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1TTkiGPk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BuV2xgvQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mPcYAdGf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1+8SUplI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B142F549B
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996423396E5
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Oct 2025 11:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761045885; cv=none; b=bUyTiXYDLBio1/UzTNarhNZUMkgHRPxBo2qVIkuNa9HTZjSaO3j4ErF/5ZEi9V+tjA2v6Wtf1oMYQ1+kul/KaDPc2+OdrBZTZ+ry+xApZZcm40NTdn+9bdu4VI5lYV5emsluCvnZXgQuAfPnNfUsZmHcGD6yPUp1xScN22CEdBQ=
+	t=1761047593; cv=none; b=L4RYsmPKR1rsuEhi7Zf3rjijt/iACx7TGr86J2RInjOy8YKo53WXqFCm/pQsPfx5Y8bX5j/NLtORKNatAQkVA+lnxxZE4540a9Xxt3IM5OAoUxFTPSwJpG1KcKyHAxjaD+X222FPsWiWlvd7Ei8sGTrAIpk5e/LaNkp2sdMUmw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761045885; c=relaxed/simple;
-	bh=VpMPfzKLpW3/HM1ZlgN4q2Uli7kAn8mYCKhvfTB7mno=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jH/dApKH2B9xMaS2turw3Zj4iltFvzdq/k5467H8Rmkarrh8+toEHlLqpcAJkBZ3pD+fyxD2TPc3etaEO+8tedwSP6pjmQK3Lur5+R74hFGwKrNpgcUmjGUQ0pyVKmNcB/0GXEb7KXZ3tTQesHb8+X03A8DS23w/slN2G/JW4X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U058MkHL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C35C4CEF5;
-	Tue, 21 Oct 2025 11:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761045884;
-	bh=VpMPfzKLpW3/HM1ZlgN4q2Uli7kAn8mYCKhvfTB7mno=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=U058MkHLXNE+uyxNxu/jBLLVT6rWD2waQ3YIC/fdUEZv54RCg86OZTlxU9CoJ1pKx
-	 NwyRcWmlrwYX/EC2Z+eGXKuCWeLMOO7Al8uO6X285TQIbCOOMAXMUrpSPuVfAuudxj
-	 kYUkOEJWGOgCRWvNDlRpRO7DvCLoBjYzMZQ3GOTs8gtNHCAYxN6711slDG9s9h633/
-	 AXpqNtK0+wf1bC11c1ntoIcnOrlIEdc6u0Sc/62/WE64kV+nbDuDKw/fLbjYC3gH87
-	 bF8J0pQoznG4ezbRG6BALECCXEMwDgQgjJ66MBvq/44uajoSu/wthkY2Zp6s2E++/l
-	 +5xmkFly3bx4Q==
-Message-ID: <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>, Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org, Mike Snitzer	 <snitzer@kernel.org>
-Date: Tue, 21 Oct 2025 07:24:42 -0400
-In-Reply-To: <aPXihwGTiA7bqTsN@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
-	 <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1761047593; c=relaxed/simple;
+	bh=8RTjJ7zh972v8WRy3c/aLWajZxbkAEI23M926Bbl+ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HjwAtJ7XnTd53u5NxlgwhRDCvBdtqJWF/Wt1BpkF0ed2abx4r1KOpk6apdTp8fD2jA0/pcB8JRz/d3Dy67rQTz2kbKo6I5u0UzNdB8VXaMmy8a7EWWd/pLYFR9/AC99LgfA3PEl+Zr21Q+yNLB9iMlmlgL6ov5A+bgmaG1AYP1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1TTkiGPk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=BuV2xgvQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mPcYAdGf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1+8SUplI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6BECE1F7BD;
+	Tue, 21 Oct 2025 11:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761047583; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uorp+kk4hmsZbpZpm5Gun01lSMtY2PtNzIQ7LvYx/w=;
+	b=1TTkiGPkzFlXtwxDEYw356BP9xhGDO5Phqb57mvhJKszoz9QmdQb2A5TTN5MKGjBdS/Kh/
+	fFs3OwV4J2tE7J0ZuzUu1QJr1atyBrylovTHFzBh0STAXYpC96e5fQjr7IVcuJkXm1o8+0
+	KyIOCBaz43F8+NRSIIQ+WzrM7em2uZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761047583;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uorp+kk4hmsZbpZpm5Gun01lSMtY2PtNzIQ7LvYx/w=;
+	b=BuV2xgvQE2Iib51rzP7AyujX1mAs98KsVZJJic6827wuj/OWy49BLKF8TZWsof8P1/vm6u
+	qkZH7vIfBLrWrRBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=mPcYAdGf;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=1+8SUplI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761047579; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uorp+kk4hmsZbpZpm5Gun01lSMtY2PtNzIQ7LvYx/w=;
+	b=mPcYAdGf2omVYbSV3sB9WE0ve2pyTWILXTwCYQDE+iEmiku2Zdi9/XhapA5CIYIHUzepBh
+	cLHBgu8ROr3vkCN0eEvdTXKn8ppe5SB+NsOmxch3UBGDPpy9fdfTr6tuMxL42kst71l3oY
+	oZwgaFdhYv2leSdox7oD3tPYj9jt/OU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761047579;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uorp+kk4hmsZbpZpm5Gun01lSMtY2PtNzIQ7LvYx/w=;
+	b=1+8SUplIr545q5gZVapwStOD5xK3D4DwPy15AmyIF1656N/dDWe5pYkDp+rqjMfjaMn6It
+	1vBH3ehUKa/BPOCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 59B92139B1;
+	Tue, 21 Oct 2025 11:52:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id etngFRt092ibVgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 21 Oct 2025 11:52:59 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E705AA0990; Tue, 21 Oct 2025 13:52:54 +0200 (CEST)
+Date: Tue, 21 Oct 2025 13:52:54 +0200
+From: Jan Kara <jack@suse.cz>
+To: Kundan Kumar <kundan.kumar@samsung.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com, 
+	trondmy@kernel.org, anna@kernel.org, akpm@linux-foundation.org, willy@infradead.org, 
+	mcgrof@kernel.org, clm@meta.com, david@fromorbit.com, amir73il@gmail.com, 
+	axboe@kernel.dk, hch@lst.de, ritesh.list@gmail.com, djwong@kernel.org, 
+	dave@stgolabs.net, wangyufei@vivo.com, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
+	linux-mm@kvack.org, gost.dev@samsung.com, anuj20.g@samsung.com, vishak.g@samsung.com, 
+	joshi.k@samsung.com
+Subject: Re: [PATCH v2 01/16] writeback: add infra for parallel writeback
+Message-ID: <25h6rdu2pweg6wwrfvw3n5bu34vnknqqfpotpfm47uxg267hp5@wo637wyeaxvh>
+References: <20251014120845.2361-1-kundan.kumar@samsung.com>
+ <CGME20251014121014epcas5p11d254fd09fcc157ea69c39bd9c5984ed@epcas5p1.samsung.com>
+ <20251014120845.2361-2-kundan.kumar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014120845.2361-2-kundan.kumar@samsung.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 6BECE1F7BD
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLhzk8m8dynxu9bgo74bfqqdh9)];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,szeredi.hu,redhat.com,linux-foundation.org,infradead.org,meta.com,fromorbit.com,gmail.com,kernel.dk,lst.de,stgolabs.net,vivo.com,lists.sourceforge.net,vger.kernel.org,lists.linux.dev,kvack.org,samsung.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:dkim,suse.cz:email]
+X-Spam-Score: -2.51
 
-On Mon, 2025-10-20 at 00:19 -0700, Christoph Hellwig wrote:
-> On Fri, Oct 17, 2025 at 08:54:30PM -0400, Chuck Lever wrote:
-> > From: Mike Snitzer <snitzer@kernel.org>
-> >=20
-> > If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-> > middle and end as needed. The large middle extent is DIO-aligned and
-> > the start and/or end are misaligned. Synchronous buffered IO (with
-> > preference towards using DONTCACHE) is used for the misaligned extents
-> > and O_DIRECT is used for the middle DIO-aligned extent.
->=20
-> Can you define synchronous better here?  The term is unfortunately
-> overloaded between synchronous syscalls vs aio/io_uring and O_(D)SYNC
-> style I/O.  As of now I don't understand which one you mean, especially
-> with the DONTCACHE reference thrown in, but I guess I'll figure it out
-> reading the patch.
->=20
-> > If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
-> > invalidate the page cache on behalf of the DIO WRITE, then
-> > nfsd_issue_write_dio() will fall back to using buffered IO.
->=20
-> Did you see -ENOTBLK leaking out of the file systems?  Because at
-> least for iomap it is supposed to be an indication that the
-> file system ->write_iter handler needs to retry using buffered
-> I/O and never leak to the caller.
->=20
-> > These changes served as the original starting point for the NFS
-> > client's misaligned O_DIRECT support that landed with
-> > commit c817248fc831 ("nfs/localio: add proper O_DIRECT support for
-> > READ and WRITE"). But NFSD's support is simpler because it currently
-> > doesn't use AIO completion.
->=20
-> I don't understand this paragraph.  What does starting point mean
-> here?  How does it matter for the patch description?
->=20
-> > +struct nfsd_write_dio {
-> > +     ssize_t start_len;      /* Length for misaligned first extent */
-> > +     ssize_t middle_len;     /* Length for DIO-aligned middle extent *=
-/
-> > +     ssize_t end_len;        /* Length for misaligned last extent */
-> > +};
->=20
-> Looking at how the code is structured later on, it seems like it would
-> work much better if each of these sections had it's own object with
-> the len, iov_iter, flag if it's aligned, etc.  Otherwise we have this
-> structure and lots of arrays of three items passed around.
->=20
-> > +static bool
-> > +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr=
-_mask,
-> > +                        unsigned int len_mask)
->=20
-> Wouldn't it make sense to track the alignment when building the bio_vec
-> array instead of doing another walk here touching all cache lines?
->=20
-> > +	if (unlikely(dio_blocksize > PAGE_SIZE))
-> > +		return false;
->=20
-> Why does this matter?  Can you add a comment explaining it?
->=20
-> > +static int
-> > +nfsd_buffered_write(struct svc_rqst *rqstp, struct file *file,
-> > +		    unsigned int nvecs, unsigned long *cnt,
-> > +		    struct kiocb *kiocb)
-> > +{
-> > +	struct iov_iter iter;
-> > +	int host_err;
-> > +
-> > +	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> > +	host_err =3D vfs_iocb_iter_write(file, kiocb, &iter);
-> > +	if (host_err < 0)
-> > +		return host_err;
-> > +	*cnt =3D host_err;
-> > +
-> > +	return 0;
->=20
->=20
-> Nothing really buffered here per se, it's just a small wrapper
-> around vfs_iocb_iter_write.
->=20
-> > +	/*
-> > +	 * Any buffered IO issued here will be misaligned, use
-> > +	 * sync IO to ensure it has completed before returning.
-> > +	 * Also update @stable_how to avoid need for COMMIT.
-> > +	 */
-> > +	kiocb->ki_flags |=3D (IOCB_DSYNC | IOCB_SYNC);
->=20
-> What do you mean with completed before returning?  I guess you
-> mean writeback actually happening, right?  Why do you need that,
-> why do you also force it for the direct I/O?
->=20
-> Also IOCB_SYNC is wrong here, as the only thing it does over
-> IOCB_DSYNC is also forcing back of metadata not needed to find
-> data (aka timestamps), which I can't see any need for here.
->=20
+On Tue 14-10-25 17:38:30, Kundan Kumar wrote:
+> This is a prep patch which introduces a new bdi_writeback_ctx structure
+> that enables us to have multiple writeback contexts for parallel
+> writeback. Each bdi now can have multiple writeback contexts, with each
+> writeback context having has its own cgwb tree.
+> 
+> Modify all the functions/places that operate on bdi's wb, wb_list,
+> cgwb_tree, wb_switch_rwsem, wb_waitq as these fields have now been moved
+> to bdi_writeback_ctx.
+> 
+> This patch mechanically replaces bdi->wb to bdi->wb_ctx[0]->wb and there
+> is no functional change.
+> 
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+> Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
+> ---
+>  fs/f2fs/node.c                   |   4 +-
+>  fs/f2fs/segment.h                |   2 +-
+>  fs/fs-writeback.c                |  78 +++++++++++++--------
+>  fs/fuse/file.c                   |   6 +-
+>  fs/gfs2/super.c                  |   2 +-
+>  fs/nfs/internal.h                |   3 +-
+>  fs/nfs/write.c                   |   3 +-
+>  include/linux/backing-dev-defs.h |  32 +++++----
+>  include/linux/backing-dev.h      |  41 +++++++----
+>  include/linux/fs.h               |   1 -
+>  mm/backing-dev.c                 | 113 +++++++++++++++++++------------
+>  mm/page-writeback.c              |   5 +-
+>  12 files changed, 179 insertions(+), 111 deletions(-)
+> 
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index 27743b93e186..1693da9417f9 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -73,7 +73,7 @@ bool f2fs_available_free_memory(struct f2fs_sb_info *sbi, int type)
+>  		if (excess_cached_nats(sbi))
+>  			res = false;
+>  	} else if (type == DIRTY_DENTS) {
+> -		if (sbi->sb->s_bdi->wb.dirty_exceeded)
+> +		if (sbi->sb->s_bdi->wb_ctx[0]->wb.dirty_exceeded)
 
-Responding to a WRITE with NFS_FILE_SYNC flag set means that the data
-the client wrote is now on stable storage (and hence the client doesn't
-need to follow up with a COMMIT). This patch is using DIO for the
-aligned middle section but any unaligned ends use buffered I/O. If we
-want to return NFS_FILE_SYNC here then all of the data and metadata
-need to be on disk when the reply goes out.
+I think this needs to be abstracted to proper helper like
+bdi_dirty_exceeded() as a preparatory patch. We don't want filesystems to
+mess with wb internals like this...
 
-Don't we need IOCB_SYNC here in this case? Otherwise, the server could
-crash while the metadata is still in memory. When it comes back up, the
-client could see stale timestamps. Maybe that's not fatal, but it seems
-pretty sketchy.
+...
 
+> @@ -994,18 +1003,19 @@ static long wb_split_bdi_pages(struct bdi_writeback *wb, long nr_pages)
+>   * total active write bandwidth of @bdi.
+>   */
+>  static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
+> +				  struct bdi_writeback_ctx *bdi_wb_ctx,
+>  				  struct wb_writeback_work *base_work,
+>  				  bool skip_if_busy)
+>  {
+>  	struct bdi_writeback *last_wb = NULL;
+> -	struct bdi_writeback *wb = list_entry(&bdi->wb_list,
+> +	struct bdi_writeback *wb = list_entry(&bdi_wb_ctx->wb_list,
+>  					      struct bdi_writeback, bdi_node);
+>  
+>  	might_sleep();
+>  restart:
+>  	rcu_read_lock();
+> -	list_for_each_entry_continue_rcu(wb, &bdi->wb_list, bdi_node) {
+> -		DEFINE_WB_COMPLETION(fallback_work_done, bdi);
+> +	list_for_each_entry_continue_rcu(wb, &bdi_wb_ctx->wb_list, bdi_node) {
+> +		DEFINE_WB_COMPLETION(fallback_work_done, bdi_wb_ctx);
+>  		struct wb_writeback_work fallback_work;
+>  		struct wb_writeback_work *work;
+>  		long nr_pages;
 
-> > +	*stable_how =3D NFS_FILE_SYNC;
-> > +
-> > +	*cnt =3D 0;
-> > +	for (int i =3D 0; i < n_iters; i++) {
-> > +		if (iter_is_dio_aligned[i])
-> > +			kiocb->ki_flags |=3D IOCB_DIRECT;
-> > +		else
-> > +			kiocb->ki_flags &=3D ~IOCB_DIRECT;
-> > +
-> > +		host_err =3D vfs_iocb_iter_write(file, kiocb, &iter[i]);
-> > +		if (host_err < 0) {
-> > +			/*
-> > +			 * VFS will return -ENOTBLK if DIO WRITE fails to
-> > +			 * invalidate the page cache. Retry using buffered IO.
-> > +			 */
-> > +			if (unlikely(host_err =3D=3D -ENOTBLK)) {
->=20
-> The VFS certainly does not, and if it leaks out of a specific file
-> system we need to fix that.
->=20
-> > +			} else if (unlikely(host_err =3D=3D -EINVAL)) {
-> > +				struct inode *inode =3D d_inode(fhp->fh_dentry);
-> > +
-> > +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\=
-n",
-> > +						    inode->i_sb->s_id, inode->i_ino);
-> > +				host_err =3D -ESERVERFAULT;
->=20
-> -EINVAL can be lot more things than alignment failure.   And more
-> importantly alignment failures should not happen with the proper
-> checks in place.
+I think bdi_split_work_to_wbs() should stay as is (i.e., no additional
+bdi_writeback_ctx) and instead it should iterate over all writeback
+contexts and split work among them as well.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+> @@ -2371,7 +2387,7 @@ static void __wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
+>  	if (!bdi_has_dirty_io(bdi))
+>  		return;
+>  
+> -	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
+> +	list_for_each_entry_rcu(wb, &bdi->wb_ctx[0]->wb_list, bdi_node)
+>  		wb_start_writeback(wb, reason);
+>  }
+>  
+> @@ -2427,7 +2443,8 @@ static void wakeup_dirtytime_writeback(struct work_struct *w)
+>  	list_for_each_entry_rcu(bdi, &bdi_list, bdi_list) {
+>  		struct bdi_writeback *wb;
+>  
+> -		list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
+> +		list_for_each_entry_rcu(wb, &bdi->wb_ctx[0]->wb_list,
+> +					bdi_node)
+>  			if (!list_empty(&wb->b_dirty_time))
+>  				wb_wakeup(wb);
+>  	}
+> @@ -2730,7 +2747,7 @@ static void __writeback_inodes_sb_nr(struct super_block *sb, unsigned long nr,
+>  				     enum wb_reason reason, bool skip_if_busy)
+>  {
+>  	struct backing_dev_info *bdi = sb->s_bdi;
+> -	DEFINE_WB_COMPLETION(done, bdi);
+> +	DEFINE_WB_COMPLETION(done, bdi->wb_ctx[0]);
+>  	struct wb_writeback_work work = {
+>  		.sb			= sb,
+>  		.sync_mode		= WB_SYNC_NONE,
+> @@ -2744,7 +2761,8 @@ static void __writeback_inodes_sb_nr(struct super_block *sb, unsigned long nr,
+>  		return;
+>  	WARN_ON(!rwsem_is_locked(&sb->s_umount));
+>  
+> -	bdi_split_work_to_wbs(sb->s_bdi, &work, skip_if_busy);
+> +	bdi_split_work_to_wbs(sb->s_bdi, bdi->wb_ctx[0], &work,
+> +			      skip_if_busy);
+>  	wb_wait_for_completion(&done);
+>  }
+>  
+> @@ -2808,7 +2826,7 @@ EXPORT_SYMBOL(try_to_writeback_inodes_sb);
+>  void sync_inodes_sb(struct super_block *sb)
+>  {
+>  	struct backing_dev_info *bdi = sb->s_bdi;
+> -	DEFINE_WB_COMPLETION(done, bdi);
+> +	DEFINE_WB_COMPLETION(done, bdi->wb_ctx[0]);
+>  	struct wb_writeback_work work = {
+>  		.sb		= sb,
+>  		.sync_mode	= WB_SYNC_ALL,
+
+Above places will clearly need more adaptation to work with multiple
+writeback contexts (and several places below as well). That can happen in
+later patches but it would be good to have some FIXME comments before them
+to make it easy to verify we don't miss some place. In fact, I think it
+might be easier to review if you just introduced for_each_bdi_wb_context()
+macro with trivial implementation in this patch and used it where
+appropriate instead of hardcoding wb_ctx[0] in places where we actually
+need to iterate over all contexts. At least in the places where we don't
+really need anything fancier than "call this for all writeback contexts in
+the bdi" which seems to be a vast majority of cases. The complex cases can
+be handled with FIXME comments and dealt with in later patches.
+
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 4adcf09d4b01..8c823a661139 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -1833,8 +1833,8 @@ static void fuse_writepage_finish(struct fuse_writepage_args *wpa)
+>  		 * contention and noticeably improves performance.
+>  		 */
+>  		iomap_finish_folio_write(inode, ap->folios[i], 1);
+> -		dec_wb_stat(&bdi->wb, WB_WRITEBACK);
+> -		wb_writeout_inc(&bdi->wb);
+> +		dec_wb_stat(&bdi->wb_ctx[0]->wb, WB_WRITEBACK);
+> +		wb_writeout_inc(&bdi->wb_ctx[0]->wb);
+>  	}
+>  
+>  	wake_up(&fi->page_waitq);
+> @@ -2017,7 +2017,7 @@ static void fuse_writepage_args_page_fill(struct fuse_writepage_args *wpa, struc
+>  	ap->descs[folio_index].offset = offset;
+>  	ap->descs[folio_index].length = len;
+>  
+> -	inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
+> +	inc_wb_stat(&inode_to_bdi(inode)->wb_ctx[0]->wb, WB_WRITEBACK);
+>  }
+>  
+
+These seem to be gone in current upstream kernel.
+
+> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+> index c0a44f389f8f..5b3c84104b5b 100644
+> --- a/fs/nfs/internal.h
+> +++ b/fs/nfs/internal.h
+> @@ -857,7 +857,8 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
+>  		 * writeback is happening on the server now.
+>  		 */
+>  		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
+> -		wb_stat_mod(&inode_to_bdi(inode)->wb, WB_WRITEBACK, nr);
+> +		wb_stat_mod(&inode_to_bdi(inode)->wb_ctx[0]->wb,
+> +			    WB_WRITEBACK, nr);
+>  		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
+>  	}
+>  }
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index 647c53d1418a..4317b93bc2af 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -865,9 +865,10 @@ static void nfs_folio_clear_commit(struct folio *folio)
+>  {
+>  	if (folio) {
+>  		long nr = folio_nr_pages(folio);
+> +		struct inode *inode = folio->mapping->host;
+>  
+>  		node_stat_mod_folio(folio, NR_WRITEBACK, -nr);
+> -		wb_stat_mod(&inode_to_bdi(folio->mapping->host)->wb,
+> +		wb_stat_mod(&inode_to_bdi(inode)->wb_ctx[0]->wb,
+>  			    WB_WRITEBACK, -nr);
+>  	}
+>  }
+
+Above two hunks need some helper as well so that we don't leak internal wb
+details into filesystems. I think you should use fetch_bdi_writeback_ctx()
+here?
+
+> @@ -104,6 +105,7 @@ struct wb_completion {
+>   */
+>  struct bdi_writeback {
+>  	struct backing_dev_info *bdi;	/* our parent bdi */
+> +	struct bdi_writeback_ctx *bdi_wb_ctx;
+>  
+>  	unsigned long state;		/* Always use atomic bitops on this */
+>  	unsigned long last_old_flush;	/* last old data flush */
+> @@ -160,6 +162,16 @@ struct bdi_writeback {
+>  #endif
+>  };
+>  
+> +struct bdi_writeback_ctx {
+> +	struct bdi_writeback wb;  /* the root writeback info for this bdi */
+> +	struct list_head wb_list; /* list of all wbs */
+> +#ifdef CONFIG_CGROUP_WRITEBACK
+> +	struct radix_tree_root cgwb_tree; /* radix tree of active cgroup wbs */
+> +	struct rw_semaphore wb_switch_rwsem; /* no cgwb switch while syncing */
+> +#endif
+> +	wait_queue_head_t wb_waitq;
+> +};
+> +
+>
+>  struct backing_dev_info {
+>  	u64 id;
+>  	struct rb_node rb_node; /* keyed by ->id */
+> @@ -183,15 +195,11 @@ struct backing_dev_info {
+>  	 */
+>  	unsigned long last_bdp_sleep;
+>  
+> -	struct bdi_writeback wb;  /* the root writeback info for this bdi */
+> -	struct list_head wb_list; /* list of all wbs */
+> +	int nr_wb_ctx;
+> +	struct bdi_writeback_ctx **wb_ctx;
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+> -	struct radix_tree_root cgwb_tree; /* radix tree of active cgroup wbs */
+>  	struct mutex cgwb_release_mutex;  /* protect shutdown of wb structs */
+> -	struct rw_semaphore wb_switch_rwsem; /* no cgwb switch while syncing */
+>  #endif
+> -	wait_queue_head_t wb_waitq;
+> -
+>  	struct device *dev;
+>  	char dev_name[64];
+>  	struct device *owner;
+...
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index e721148c95d0..92674543ac8a 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -148,11 +148,20 @@ static inline bool mapping_can_writeback(struct address_space *mapping)
+>  	return inode_to_bdi(mapping->host)->capabilities & BDI_CAP_WRITEBACK;
+>  }
+>  
+> +static inline struct bdi_writeback_ctx *
+> +fetch_bdi_writeback_ctx(struct inode *inode)
+> +{
+> +	struct backing_dev_info *bdi = inode_to_bdi(inode);
+> +
+> +	return bdi->wb_ctx[0];
+> +}
+
+I think a better name for this function would be inode_writeback_ctx().
+
+> @@ -187,16 +196,18 @@ static inline bool inode_cgwb_enabled(struct inode *inode)
+>   * Must be called under rcu_read_lock() which protects the returend wb.
+>   * NULL if not found.
+>   */
+> -static inline struct bdi_writeback *wb_find_current(struct backing_dev_info *bdi)
+> +static inline struct bdi_writeback *
+> +wb_find_current(struct backing_dev_info *bdi,
+> +		struct bdi_writeback_ctx *bdi_wb_ctx)
+
+This function doesn't need bdi anymore so why do you keep passing it?
+
+>  {
+>  	struct cgroup_subsys_state *memcg_css;
+>  	struct bdi_writeback *wb;
+>  
+>  	memcg_css = task_css(current, memory_cgrp_id);
+>  	if (!memcg_css->parent)
+> -		return &bdi->wb;
+> +		return &bdi_wb_ctx->wb;
+>  
+> -	wb = radix_tree_lookup(&bdi->cgwb_tree, memcg_css->id);
+> +	wb = radix_tree_lookup(&bdi_wb_ctx->cgwb_tree, memcg_css->id);
+>  
+>  	/*
+>  	 * %current's blkcg equals the effective blkcg of its memcg.  No
+> @@ -217,12 +228,13 @@ static inline struct bdi_writeback *wb_find_current(struct backing_dev_info *bdi
+>   * wb_find_current().
+>   */
+>  static inline struct bdi_writeback *
+> -wb_get_create_current(struct backing_dev_info *bdi, gfp_t gfp)
+> +wb_get_create_current(struct backing_dev_info *bdi,
+> +		      struct bdi_writeback_ctx *bdi_wb_ctx, gfp_t gfp)
+
+I think functions like wb_get_create_current(), wb_get_create() etc. should
+all be getting just struct bdi_writeback_ctx as argument because that
+really specifies where we want the wb to be created. In some cases we do
+need to get up to the struct backing_dev_info so you'll need to add struct
+backing_dev_info pointer to bdi_writeback_ctx but I think that's fine.
+
+> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+> index 783904d8c5ef..8b7125349f6c 100644
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -84,13 +84,14 @@ static void collect_wb_stats(struct wb_stats *stats,
+>  }
+>  
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+> +
+>  static void bdi_collect_stats(struct backing_dev_info *bdi,
+>  			      struct wb_stats *stats)
+>  {
+>  	struct bdi_writeback *wb;
+>  
+>  	rcu_read_lock();
+> -	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node) {
+> +	list_for_each_entry_rcu(wb, &bdi->wb_ctx[0]->wb_list, bdi_node) {
+>  		if (!wb_tryget(wb))
+>  			continue;
+>  
+> @@ -103,7 +104,7 @@ static void bdi_collect_stats(struct backing_dev_info *bdi,
+>  static void bdi_collect_stats(struct backing_dev_info *bdi,
+>  			      struct wb_stats *stats)
+>  {
+> -	collect_wb_stats(stats, &bdi->wb);
+> +	collect_wb_stats(stats, &bdi->wb_ctx[0]->wb);
+>  }
+>  #endif
+>  
+> @@ -149,7 +150,7 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
+>  		   stats.nr_io,
+>  		   stats.nr_more_io,
+>  		   stats.nr_dirty_time,
+> -		   !list_empty(&bdi->bdi_list), bdi->wb.state);
+> +		   !list_empty(&bdi->bdi_list), bdi->wb_ctx[0]->wb.state);
+>  
+>  	return 0;
+>  }
+> @@ -193,14 +194,14 @@ static void wb_stats_show(struct seq_file *m, struct bdi_writeback *wb,
+>  static int cgwb_debug_stats_show(struct seq_file *m, void *v)
+>  {
+>  	struct backing_dev_info *bdi = m->private;
+> +	struct bdi_writeback *wb;
+>  	unsigned long background_thresh;
+>  	unsigned long dirty_thresh;
+> -	struct bdi_writeback *wb;
+>  
+>  	global_dirty_limits(&background_thresh, &dirty_thresh);
+>  
+>  	rcu_read_lock();
+> -	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node) {
+> +	list_for_each_entry_rcu(wb, &bdi->wb_ctx[0]->wb_list, bdi_node) {
+>  		struct wb_stats stats = { .dirty_thresh = dirty_thresh };
+>  
+>  		if (!wb_tryget(wb))
+> @@ -520,6 +521,7 @@ static int wb_init(struct bdi_writeback *wb, struct backing_dev_info *bdi,
+>  	memset(wb, 0, sizeof(*wb));
+>  
+>  	wb->bdi = bdi;
+> +	wb->bdi_wb_ctx = bdi->wb_ctx[0];
+>  	wb->last_old_flush = jiffies;
+>  	INIT_LIST_HEAD(&wb->b_dirty);
+>  	INIT_LIST_HEAD(&wb->b_io);
+> @@ -643,11 +645,12 @@ static void cgwb_release(struct percpu_ref *refcnt)
+>  	queue_work(cgwb_release_wq, &wb->release_work);
+>  }
+>  
+> -static void cgwb_kill(struct bdi_writeback *wb)
+> +static void cgwb_kill(struct bdi_writeback *wb,
+> +		      struct bdi_writeback_ctx *bdi_wb_ctx)
+>  {
+>  	lockdep_assert_held(&cgwb_lock);
+>  
+> -	WARN_ON(!radix_tree_delete(&wb->bdi->cgwb_tree, wb->memcg_css->id));
+> +	WARN_ON(!radix_tree_delete(&bdi_wb_ctx->cgwb_tree, wb->memcg_css->id));
+
+Why don't you use wb->bdi_wb_ctx instead of passing bdi_wb_ctx as a
+function argument?
+
+> @@ -662,6 +665,7 @@ static void cgwb_remove_from_bdi_list(struct bdi_writeback *wb)
+>  }
+>  
+>  static int cgwb_create(struct backing_dev_info *bdi,
+> +		       struct bdi_writeback_ctx *bdi_wb_ctx,
+>  		       struct cgroup_subsys_state *memcg_css, gfp_t gfp)
+>  {
+
+I'd pass *only* bdi_writeback_ctx here.
+
+> @@ -813,6 +818,7 @@ struct bdi_writeback *wb_get_lookup(struct backing_dev_info *bdi,
+>   * create one.  See wb_get_lookup() for more details.
+>   */
+>  struct bdi_writeback *wb_get_create(struct backing_dev_info *bdi,
+> +				    struct bdi_writeback_ctx *bdi_wb_ctx,
+>  				    struct cgroup_subsys_state *memcg_css,
+>  				    gfp_t gfp)
+>  {
+
+And here as well.
+
+> -static void cgwb_bdi_register(struct backing_dev_info *bdi)
+> +static void cgwb_bdi_register(struct backing_dev_info *bdi,
+> +		struct bdi_writeback_ctx *bdi_wb_ctx)
+
+Again no need for bdi here...
+
+>  {
+>  	spin_lock_irq(&cgwb_lock);
+> -	list_add_tail_rcu(&bdi->wb.bdi_node, &bdi->wb_list);
+> +	list_add_tail_rcu(&bdi_wb_ctx->wb.bdi_node, &bdi_wb_ctx->wb_list);
+>  	spin_unlock_irq(&cgwb_lock);
+>  }
+>  
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
