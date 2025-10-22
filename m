@@ -1,62 +1,59 @@
-Return-Path: <linux-nfs+bounces-15509-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15510-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E04CBFBA50
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 13:30:08 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17E15BFBAE6
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 13:41:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBFED18C22C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 11:30:31 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 91604350031
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 11:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E86A233893F;
-	Wed, 22 Oct 2025 11:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC9633F8BD;
+	Wed, 22 Oct 2025 11:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQxK2tmO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzkLsB3o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C1233893B
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 11:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE7F32AAC8
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 11:41:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761132604; cv=none; b=S4WkeMd4iz5+VSZCXYMteu70jAHnB/iwVpGdj9CH5F6q25KXKCPI1ZByiarXxQ1AF9HT8QRWu2MaDXSgrkQNVNKc/Por7/juAqBjGlKz4ntE3sbE9/z3MPwJ3IMuAMSc+v0p1jgnal0GUgFifsO4fkXSkruoiEPj0Secrn6/DLw=
+	t=1761133300; cv=none; b=pOkLTR33b95VL9XXb+qX8AdqpvyAg1NyhvQpDj7sbjJHck/FmwCeL0WNJ8fcHJqGVABF14B5mQEkekBpX0e+mkZ7GPH+lVw0GzZ9t+rRZX8rlebSAnoubht4pmFvg4nMbQF6X05LjBGk02vcU9qC4c7fj6qh0HL0rrMoy141vyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761132604; c=relaxed/simple;
-	bh=8JROkn/VWILYWSOrDhYZdj/D1eL8hJCoka6Yt6Msw7I=;
+	s=arc-20240116; t=1761133300; c=relaxed/simple;
+	bh=NbBoxewm44Y259DKEvdMzPIdztOf/7+Oim/xwOb/rzM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mGvFpVTS7ISZlISk3vBX+CVXniuQBgv4zQE3GVpgbX+DtuMXmtYjNMOXnVK3RQ0QylmrAg+0YQL8aYTAiDqBJkLRKyPWh1CWH9NMDgU+EAqLwS6B8aD6WCySmG6W7h24RO1o7EYd2CNyOIdovc048ttCaH2QZhdvCmjY/ljlUJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQxK2tmO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8306CC4CEE7;
-	Wed, 22 Oct 2025 11:30:02 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gJWqQDvhgHkbfDANsVIvSehP4muEntQ7PQSTeYI4RpVXDYm8scARu2k2mNbKSE3EVRcTqgO4uxQlIFrO0Z+I9VOta9N+YF19hKZsznOcq/+IUDR0BXo6EHRns1zi16lloxxIwRGesTOUEPwDqOxc4uDZ0SVOmo/AMUrtcJ1Vwo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzkLsB3o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB974C4CEE7;
+	Wed, 22 Oct 2025 11:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761132603;
-	bh=8JROkn/VWILYWSOrDhYZdj/D1eL8hJCoka6Yt6Msw7I=;
+	s=k20201202; t=1761133300;
+	bh=NbBoxewm44Y259DKEvdMzPIdztOf/7+Oim/xwOb/rzM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MQxK2tmO1lHsoHeQ6QJe4ZXvzHhpOEDMdnxnNK13lONgJoJA0pB1gRF7ZilH0o3l5
-	 0nIbWCYSJY9mpE3hkLJrSZcQ9ni+ixoSAraNQs6K84xB2ZOX5KicQMhD7NqCxVm/Ww
-	 VkK1A2Epuk1auhLD43qxPo6ovdhmYpxjSC8aLCkRbXhR8ZXpasZKbGJNz+4mF3odQT
-	 ci9cyAHGFZIZoyNGLfuzS46bXXmZrfZAtpQ7lgzAVZT6ioiNA0mDTr3k+1yLsEbMez
-	 Rd3iVXzeYppHn22i9Q5tuEIlobylSWAHCBXJa84NvYSEh42xQeqnwdiK6nyR07CTZA
-	 d4kLxcXppIlKw==
-Message-ID: <2de003a62b52b775362dad51f5e8ca93d9ee2f24.camel@kernel.org>
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+	b=RzkLsB3oEVp1reKEEkZLKsACXSFs3TqnWd+1FQowiQEGso8JxtjvXHecJrMpB7u/2
+	 umDqKhDZiarkcJsYjCA5ZeszX2Ifl9mybI/++UfjcEKLg+dhaKIC7/lwVa+F4bP/M/
+	 fXmae6ImpSfLUOhHnBzC4yoY4LHoBH0Piuwe8uUrWdMxOlTHb8y4m/Gpovb1aE5ncC
+	 txlfPnstZQKnBVqwTOJZv/FKVgjK79CK/aFr1QiUTgSFKSzBG8B0B4VWcPULd44zbe
+	 FKwHSUGjgP1kedaQOzXUlBckVNTh7VhGnsaGnY5aZ+8WMfn7rlSqME8zihS8KzcF+v
+	 Bf1tn56YwZyXA==
+Message-ID: <fee56e44076f9ad2e129e648c54ff6d44efa0f24.camel@kernel.org>
+Subject: Re: [RFC PATCH 1/1] lockd: prevent UAF in nlm4svc_proc_test in
+ reexport NLM
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org, Mike Snitzer
- <snitzer@kernel.org>
-Date: Wed, 22 Oct 2025 07:30:01 -0400
-In-Reply-To: <aPi9ZE96CYQFk5qC@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
-	 <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
-	 <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
-	 <aPhoow9Z-r94b5AL@infradead.org>
-	 <63a440d869e3f8a9ecf13537e2da6c6439933ed1.camel@kernel.org>
-	 <aPi9ZE96CYQFk5qC@infradead.org>
+To: NeilBrown <neil@brown.name>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, 
+	linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com,
+ tom@talpey.com
+Date: Wed, 22 Oct 2025 07:41:38 -0400
+In-Reply-To: <176110806382.1793333.17114849187803749121@noble.neil.brown.name>
+References: <20251021130506.45065-1-okorniev@redhat.com>
+	, <33ba39d2ff01eb0e52c80aa7015d27e34dde7fd2.camel@kernel.org>
+	 <176110806382.1793333.17114849187803749121@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,21 +138,275 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-10-22 at 04:17 -0700, Christoph Hellwig wrote:
-> On Wed, Oct 22, 2025 at 06:15:44AM -0400, Jeff Layton wrote:
-> > Cache coherency. If the timestamps roll back, some clients may not
-> > notice that data has changed after a write.
+On Wed, 2025-10-22 at 15:41 +1100, NeilBrown wrote:
+> On Wed, 22 Oct 2025, Jeff Layton wrote:
+> > On Tue, 2025-10-21 at 09:05 -0400, Olga Kornievskaia wrote:
+> > > When knfsd is a reexport nfs server, it nlm4svc_proc_test() in
+> > > calling nlmsvc_testlock() with a lock conflict lock_release_private()
+> > > call would end up calling nlmsvc_put_lockowner() and then back in
+> > > nlm4svc_proc_test() function there will be another call to
+> > > nlmsvc_put_lockowner() for the same owner leading to use-after-free
+> > > violation (below).
+> > >=20
+> > > The problem only arises when the underlying file system has been
+> > > re-exported as different paths are taken in vfs_test_lock().
+> > > When it's reexport, filp->f_op->lock is set and when vfs_test_lock()
+> > > is done fl_lmops pointer is non-null. When it's regular export,
+> > > vfs_test_lock() calls posix_test_lock() which ends up calling
+> > > locks_copy_conflock() and it copies NULL into fl_lmops and then
+> > > calling into lock_release_private() does not call
+> > > nlmsvc_put_lockowner().
+> > >=20
+> > > The proposed solution is to intentionally clear fl_lmops pointer to
+> > > make sure that if there is a conflict (be it a local file system
+> > > or reexport), lock_release_private() would not call
+> > > nlmsvc_put_lockowner().
+> > >=20
+> > > kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > kernel: BUG: KASAN: slab-use-after-free in nlmsvc_put_lockowner+0x30/=
+0x250 [lockd]
+> > > kernel: Read of size 4 at addr ffff0000bf3bca10 by task lockd/6092
+> > > kernel:
+> > > kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Not tainted=
+ 6.18.0-rc1+ #23 PREEMPT(voluntary)
+> > > kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.=
+24006586.BA64.2406042154 06/04/2024
+> > > kernel: Call trace:
+> > > kernel:  show_stack+0x34/0x98 (C)
+> > > kernel:  dump_stack_lvl+0x80/0xa8
+> > > kernel:  print_address_description.constprop.0+0x90/0x310
+> > > kernel:  print_report+0x108/0x1f8
+> > > kernel:  kasan_report+0xc8/0x120
+> > > kernel:  kasan_check_range+0xe8/0x190
+> > > kernel:  __kasan_check_read+0x20/0x30
+> > > kernel:  nlmsvc_put_lockowner+0x30/0x250 [lockd]
+> > > kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
+> > > kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
+> > > kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
+> > > kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
+> > > kernel:  svc_process+0x414/0x900 [sunrpc]
+> > > kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
+> > > kernel:  svc_recv+0x1a4/0x520 [sunrpc]
+> > > kernel:  lockd+0x154/0x298 [lockd]
+> > > kernel:  kthread+0x2f8/0x398
+> > > kernel:  ret_from_fork+0x10/0x20
+> > > kernel:
+> > > kernel: Allocated by task 6092:
+> > > kernel:  kasan_save_stack+0x3c/0x70
+> > > kernel:  kasan_save_track+0x20/0x40
+> > > kernel:  kasan_save_alloc_info+0x40/0x58
+> > > kernel:  __kasan_kmalloc+0xd4/0xd8
+> > > kernel:  __kmalloc_cache_noprof+0x1a8/0x5c0
+> > > kernel:  nlmsvc_locks_init_private+0xe4/0x520 [lockd]
+> > > kernel:  nlm4svc_retrieve_args+0x38c/0x530 [lockd]
+> > > kernel:  __nlm4svc_proc_test+0x194/0x318 [lockd]
+> > > kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
+> > > kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
+> > > kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
+> > > kernel:  svc_process+0x414/0x900 [sunrpc]
+> > > kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
+> > > kernel:  svc_recv+0x1a4/0x520 [sunrpc]
+> > > kernel:  lockd+0x154/0x298 [lockd]
+> > > kernel:  kthread+0x2f8/0x398
+> > > kernel:  ret_from_fork+0x10/0x20
+> > > kernel:
+> > > kernel: Freed by task 6092:
+> > > kernel:  kasan_save_stack+0x3c/0x70
+> > > kernel:  kasan_save_track+0x20/0x40
+> > > kernel:  __kasan_save_free_info+0x4c/0x80
+> > > kernel:  __kasan_slab_free+0x88/0xc0
+> > > kernel:  kfree+0x110/0x480
+> > > kernel:  nlmsvc_put_lockowner+0x1b4/0x250 [lockd]
+> > > kernel:  nlmsvc_put_owner+0x18/0x30 [lockd]
+> > > kernel:  locks_release_private+0x190/0x2a8
+> > > kernel:  nlmsvc_testlock+0x2e0/0x648 [lockd]
+> > > kernel:  __nlm4svc_proc_test+0x244/0x318 [lockd]
+> > > kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
+> > > kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
+> > > kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
+> > > kernel:  svc_process+0x414/0x900 [sunrpc]
+> > > kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
+> > > kernel:  svc_recv+0x1a4/0x520 [sunrpc]
+> > > kernel:  lockd+0x154/0x298 [lockd]
+> > > kernel:  kthread+0x2f8/0x398
+> > > kernel:  ret_from_fork+0x10/0x20
+> > > kernel:
+> > > kernel: The buggy address belongs to the object at ffff0000bf3bca00
+> > >         which belongs to the cache kmalloc-64 of size 64
+> > > kernel: The buggy address is located 16 bytes inside of
+> > >         freed 64-byte region [ffff0000bf3bca00, ffff0000bf3bca40)
+> > > kernel:
+> > > kernel: The buggy address belongs to the physical page:
+> > > kernel: page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x=
+0 pfn:0x13f3bc
+> > > kernel: flags: 0x2fffff00000000(node=3D0|zone=3D2|lastcpupid=3D0xffff=
+f)
+> > > kernel: page_type: f5(slab)
+> > > kernel: raw: 002fffff00000000 ffff0000800028c0 dead000000000122 00000=
+00000000000
+> > > kernel: raw: 0000000000000000 0000000080200020 00000000f5000000 00000=
+00000000000
+> > > kernel: page dumped because: kasan: bad access detected
+> > > kernel:
+> > > kernel: Memory state around the buggy address:
+> > > kernel:  ffff0000bf3bc900: fa fb fb fb fb fb fb fb fc fc fc fc fc fc =
+fc fc
+> > > kernel:  ffff0000bf3bc980: fa fb fb fb fb fb fb fb fc fc fc fc fc fc =
+fc fc
+> > > kernel: >ffff0000bf3bca00: fa fb fb fb fb fb fb fb fc fc fc fc fc fc =
+fc fc
+> > > kernel:                          ^
+> > > kernel:  ffff0000bf3bca80: fa fb fb fb fb fb fb fb fc fc fc fc fc fc =
+fc fc
+> > > kernel:  ffff0000bf3bcb00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc
+> > > kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > kernel: Disabling lock debugging due to kernel taint
+> > > kernel: AGLO: nlmsvc_put_lockowner 00000000028055fb count=3D0
+> > > kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Tainted: G =
+   B               6.18.0-rc1+ #23 PREEMPT(voluntary)
+> > > kernel: Tainted: [B]=3DBAD_PAGE
+> > > kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.=
+24006586.BA64.2406042154 06/04/2024
+> > > kernel: Call trace:
+> > > kernel:  show_stack+0x34/0x98 (C)
+> > > kernel:  dump_stack_lvl+0x80/0xa8
+> > > kernel:  dump_stack+0x1c/0x30
+> > > kernel:  nlmsvc_put_lockowner+0x7c/0x250 [lockd]
+> > > kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
+> > > kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
+> > > kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
+> > > kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
+> > > kernel:  svc_process+0x414/0x900 [sunrpc]
+> > > kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
+> > > kernel:  svc_recv+0x1a4/0x520 [sunrpc]
+> > > kernel:  lockd+0x154/0x298 [lockd]
+> > > kernel:  kthread+0x2f8/0x398
+> > > kernel:  ret_from_fork+0x10/0x20
+> > > kernel: ------------[ cut here ]------------
+> > > kernel: refcount_t: underflow; use-after-free.
+> > > kernel: WARNING: CPU: 0 PID: 6092 at lib/refcount.c:87 refcount_dec_n=
+ot_one+0x198/0x1b0
+> > > kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd n=
+fsv3 nfs_acl nfs lockd grace nfs_localio netfs ext4 crc16 mbcache jbd2 over=
+lay uinput snd_seq_dummy snd_hrtimer qrtr rfkill vfat fat uvcvideo snd_hda_=
+codec_generic videobuf2_vmalloc videobuf2_memops uvc snd_hda_intel videobuf=
+2_v4l2 videobuf2_common snd_intel_dspcfg videodev snd_hda_codec snd_hda_cor=
+e mc snd_hwdep snd_seq snd_seq_device snd_pcm snd_timer snd soundcore sg lo=
+op auth_rpcgss vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_v=
+mci_transport vmw_vmci vsock xfs 8021q garp stp llc mrp nvme nvme_core nvme=
+_keyring nvme_auth ghash_ce hkdf e1000e sr_mod cdrom vmwgfx drm_ttm_helper =
+ttm sunrpc dm_mirror dm_region_hash dm_log iscsi_tcp libiscsi_tcp libiscsi =
+scsi_transport_iscsi fuse dm_multipath dm_mod nfnetlink
+> > > kernel: CPU: 0 UID: 0 PID: 6092 Comm: lockd Kdump: loaded Tainted: G =
+   B               6.18.0-rc1+ #23 PREEMPT(voluntary)
+> > > kernel: Tainted: [B]=3DBAD_PAGE
+> > > kernel: Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.=
+24006586.BA64.2406042154 06/04/2024
+> > > kernel: pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=
+=3D--)
+> > > kernel: pc : refcount_dec_not_one+0x198/0x1b0
+> > > kernel: lr : refcount_dec_not_one+0x198/0x1b0
+> > > kernel: sp : ffff80008a627930
+> > > kernel: x29: ffff80008a627990 x28: ffff0000bf3bca00 x27: ffff0000ba5c=
+7000
+> > > kernel: x26: 1fffe000191eeb84 x25: 1ffff000114c4f48 x24: ffff0000c8f7=
+5c24
+> > > kernel: x23: 0000000000000007 x22: ffff80008a627950 x21: 1ffff000114c=
+4f26
+> > > kernel: x20: 00000000ffffffff x19: ffff0000bf3bca10 x18: 000000000000=
+0310
+> > > kernel: x17: 0000000000000000 x16: 0000000000000000 x15: 000000000000=
+0000
+> > > kernel: x14: 0000000000000000 x13: 0000000000000001 x12: ffff60004fd9=
+0aa3
+> > > kernel: x11: 1fffe0004fd90aa2 x10: ffff60004fd90aa2 x9 : dfff80000000=
+0000
+> > > kernel: x8 : 00009fffb026f55e x7 : ffff00027ec85513 x6 : 000000000000=
+0001
+> > > kernel: x5 : ffff00027ec85510 x4 : ffff60004fd90aa3 x3 : ffff80008078=
+7bc0
+> > > kernel: x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000a75a=
+8000
+> > > kernel: Call trace:
+> > > kernel:  refcount_dec_not_one+0x198/0x1b0 (P)
+> > > kernel:  refcount_dec_and_lock+0x1c/0xb8
+> > > kernel:  nlmsvc_put_lockowner+0x9c/0x250 [lockd]
+> > > kernel:  __nlm4svc_proc_test+0x2a8/0x318 [lockd]
+> > > kernel:  nlm4svc_proc_test+0x44/0xb78 [lockd]
+> > > kernel:  nlmsvc_dispatch+0xb0/0x200 [lockd]
+> > > kernel:  svc_process_common+0xb20/0x17b0 [sunrpc]
+> > > kernel:  svc_process+0x414/0x900 [sunrpc]
+> > > kernel:  svc_handle_xprt+0x5c8/0xd60 [sunrpc]
+> > > kernel:  svc_recv+0x1a4/0x520 [sunrpc]
+> > > kernel:  lockd+0x154/0x298 [lockd]
+> > > kernel:  kthread+0x2f8/0x398
+> > > kernel:  ret_from_fork+0x10/0x20
+> > > kernel: ---[ end trace 0000000000000000 ]---
+> > >=20
+> > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > ---
+> > >  fs/lockd/svclock.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >=20
+> > > diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> > > index a31dc9588eb8..1dd0fec186de 100644
+> > > --- a/fs/lockd/svclock.c
+> > > +++ b/fs/lockd/svclock.c
+> > > @@ -652,6 +652,7 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nl=
+m_file *file,
+> > >  	conflock->fl.c.flc_type =3D lock->fl.c.flc_type;
+> > >  	conflock->fl.fl_start =3D lock->fl.fl_start;
+> > >  	conflock->fl.fl_end =3D lock->fl.fl_end;
+> > > +	conflock->fl.fl_lmops =3D NULL;
+> > >  	locks_release_private(&lock->fl);
+> > > =20
+> > >  	ret =3D nlm_lck_denied;
 > >=20
-> > It's not the end of the world -- non-evident timestamp changes were
-> > typical prior to the multigrain timestamp patches going in, but it's
-> > not ideal.
+> > The problem sounds real, but I'm not sure I like this solution.
+> >=20
+> > It seems like this is gaming the refcounting such that we take a
+> > reference in locks_copy_conflock() but then you zero out fl_lmops
+> > before that reference can be put.
+> >=20
+> > Doesn't that mean that the real bug is that we're missing taking an
+> > owner reference in some case?
 >=20
-> Well, in that case nfsd_vfs_write needs to use IOCB_SYNC as well.
-> And both that and this code need a big fat comment about it.
+> I had a bit of a look and ....  and first it looked really strange that
+> vfs_test_lock() uses the "fl" arg as both an "in" and an "out" - that is
+> bound to cause refcounting issues.
+>=20
+> But then I thought ...  "no, wait" As an "in" parameter, "fl" is just a
+> byte-range.  fl_start and fl_end are all that matter.  locks_overlap()
+> uses these and nothing else of significance matters.  In particular
+> fl_owner doesn't and can't matter.
+>=20
 
-That was my thinking too, but Chuck pointed out that nfsd has been
-violating this basically since forever. Given that, I think using
-IOCB_DSYNC is probably fine, and it would certainly be less costly.=20
+I think flc_owner does matter here. This is a TESTLCK operation. The
+entity requesting it is relevant.
+=20
+> So why, e.g., does nfsd4_lockt() set file_lock->c.flc_owner at all?
+>=20
+> And nlm4svc_retrieve_args() shouldn't be setting up "the missing parts
+> of the file_lock structure" for TEST_LOCK - should it?
+>=20
+> I think we need to treat get-lock quite differently from set-lock.
+> After all vfs_lock_file() does have a separate "conf" arg, while
+> vfs_test_lock() doesn't.  That is an important difference.
+>=20
+> Maybe we should change vfs_test_lock() to be passed
+>    filp, start, len, *conf
+>=20
+> and not pretend that we are passing in a lock description??
+>=20
+
+I had the same thought. I think that we should aim to fix this with a
+small patch that can be easily backported first however, and then do
+that sort of cleanup on top.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
