@@ -1,80 +1,80 @@
-Return-Path: <linux-nfs+bounces-15499-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15500-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B59F4BFA975
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 09:35:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A811ABFA9A5
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 09:37:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 94CC34F9BAD
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 07:35:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57F633B27B1
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 07:37:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75D6A2F83C4;
-	Wed, 22 Oct 2025 07:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44F0D2FB09A;
+	Wed, 22 Oct 2025 07:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pzij3IWx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eph8PPfN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4382F8BF7
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 07:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F2A2F616F
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 07:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761118504; cv=none; b=kRDsjg/HwyA8IfMpFjBy63w3c7oP1zBW32+eYux+SzSn39am32rrfHTcoBMssX04geBXJWpHL1Fa38GpWSsUaDt4AM5oB0BACgE6fP43Mm6kZISt7OSxZYbvPGIrSeZH+LlYdFCieQ0SFWdejTPDC5a1KYi0Rbf7aF6+tgMipOI=
+	t=1761118618; cv=none; b=tVyayIUXyUKjnJRf04wvYp+nTMy5234hjzlwiZ3Qfoaw68+6YrDql7VGYCSNwqlx601m5owVuDdkQGuEb9tsppjkuKaiXnNTK1PqNiAPwvZkscwNJM8mq6B39tGOLwgaIiUFR1Z+b729AgZENUC7w5oWBGG9o8LUwe5UxvcimPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761118504; c=relaxed/simple;
-	bh=SlcFPlyQIZqcDfdEv0M940luyabCGCNmZmiXFsHVTQ0=;
+	s=arc-20240116; t=1761118618; c=relaxed/simple;
+	bh=4tO1WXj6WgZlOPA0xz+u1lIl6OAiRpneHrXjRc8x+ac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqBmjmUoaB7sbgkKItQUyGuM1PyvfKogefSKHylW51RBww8O9YTgnW7y4uUPy0rEcqOPVCWYqOZe/a1wBNGzNjptPOCqqTdMJY+7GpcGiN51pCziCK23PcSuBNptSq9rvx7RhM3Hs8gkY25AiuFYYf6KDHZ8VVH6RxpGsaTh4e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pzij3IWx; arc=none smtp.client-ip=209.85.221.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=ErDYr3tDPlNsioIU1Mul/PsNw4k0tA7PYr/CPn8L9iQF2a3UEGqyUCsiIHVYUrInxW1c5M3y4PbI68+NU5LUZvUXr6B3UNa0zcHX8d+MJCVpFcSFsbnPyjWwcP9b/wwp3PRWpQ7nviMLig8NevN0NstizCVFhYLx4iSXxDgi77Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eph8PPfN; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42421b1514fso4041072f8f.2
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 00:35:02 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-426ff4f3ad4so3514664f8f.0
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 00:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761118501; x=1761723301; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1761118614; x=1761723414; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=uP02OIrJH+GYWmHdxnfvCH1j0VnGSf6v21IKCVsSCEg=;
-        b=Pzij3IWxRhA24XBSi9m5gesmByMHLg3V6qiOGxj+mSDogGAWUFiVGlwa4QCVM6zQmz
-         SIAsAl6CplGS9mqhr1cYlL6Ztaw3RqRMBPWEIp+yrcCbZjUo4qv6qiBEXwQr/NxkJU/X
-         9EHg8BkYNFiBnsQD0/N42a7UCQrBWCLZ90ZX5DYGMI1+lp5s0Ui7+s9R0A+NOT2vBd+/
-         Ka4Wmn6u271QlVnISsZSQ9JtbUBEWlH9mh3GQySk77BNnJK7nN0OCKuye/Svxar8blVX
-         O+w6sfhw792w+c8oBIyHyJQ3Blm56pW8aXNkMcTkyeFf33VC7za+bjcnqeJsoJVHWkuT
-         6LaA==
+        bh=mYRODrAioifNQsfmynSYmORQ4CX7Cpc9gXZU06Vn+0w=;
+        b=eph8PPfNeP3TLxPQyS9dvxqx1NtpioA81JfW9GOlmGQZtEjmY1MhTH2Q3y4AHMxZV7
+         gv2rwEJmvEc7LSqMpQkLlZb0pjHPpTGx0nrOKIVErKQ7XJ8fBybgNsbxUOx5G41ZeZVV
+         YjxHF6+BuwqW++pCMKwHY8SXA7ODHgGtssdaabiv9KybiOjbcoMdB4cg7RnpFMcNgl09
+         mrrGmfZBKwLE3NOcWIp+rHe+H9XcFQE+aTUGL6WLFE6dG2D7WsQLq0KdhEjWubNkhyeW
+         M8cmMSopQHziDbpgP8y+ayPyz+V6gMPPCQv14bbF4MJLy6PnX+rQXF0k2ahDkjmax9AC
+         YUfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761118501; x=1761723301;
+        d=1e100.net; s=20230601; t=1761118614; x=1761723414;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uP02OIrJH+GYWmHdxnfvCH1j0VnGSf6v21IKCVsSCEg=;
-        b=lHn8tIPzbn5sx6T8YmPZ5Pyg+BlfahYagZbMbv/XGnEQFK2E0mHXv/8IlRMimYCz0V
-         ftUcTJ3RowsldCrOput7KZOdur8ZhyPqTyiOO+4BnIXGzTGrdHnG0jQ+rVpIVSERTfY+
-         FTpIZ4cEmGa3WTy4UILxj5kGjws2+J5f8UiXNu3RwJORU9JgODXfmjOGFUIFZQf12+B2
-         Fy1KdvxFl015xhEsRZaPwXxghEKzpNw4aNqwgZV0EdrKGhy1BQUSNjDXt2ZBFu3ya9r/
-         I6PHpRllhIs1Hvzb6TKmfALzFpB0rHk1wPz9/zkXA2aCfPgi4XTdTwn30UARbN/fphKZ
-         YUBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJVI/M+oE3Ruq0zchQlhcYW1HMncy4qk8UgArBgLPa86eTEJZLQmxTXFhMBLiokMtG26CCmwxNVX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR7RKi8bpl7FdD69UIreZSock+UfytiUMn2qjmLVqq+lefLuOQ
-	m4v913d0ca7eqZLPl4L61HnAMZGIExuWkI60mfuTYbG/mb4GTShuIlTRKIKtLGtITI4=
-X-Gm-Gg: ASbGncsUH7JP9wdOSkgwDMxlUBk+mDsXJmTTYEM4NbjPqUUWHJ7HEP1MY1pjNs016vn
-	Y082XEXyaTuE3WU/L1vF8FohOnU4dfiljEiqVU0Q5VOM8VT3LPxoNL+q1kh2MwmY9lPgQErkBaz
-	3osJ7ixkjdZehe9c6y+ypFhYwN9B0SXgG/fQxVvlrmqXz9/rVneB51yg5lYazqRUPdK/S7xQOzI
-	4EDOIBXbsJRmF7yMf2c6tnd/ZHq5kYcW+eiqgU2+K38UXjC3PtTh3yTZC2Ctr3T/tpGj/2IDhYq
-	/iXYTdFFWNd8bpmA/nDqyIg9J2qH6QppkDre2Fmet0PGAQ5qR7VnvWjOEGZxznhbE050kFZaRpZ
-	JiI2kmVWAZq3aIEw04TXQxavk+ruuiS3XtbFA2BLcMhfVl9gscUBxfErQgDGJauk1kAUUJpliKM
-	+gDR1qnHCC2SFk0evi
-X-Google-Smtp-Source: AGHT+IH83IpMhv1bnH3yQPXC59KdR/tClyfPU3iIa804OIH9TrWa56iWXz5kfq2XOFx8/cvVKF4gdA==
-X-Received: by 2002:a05:6000:220c:b0:3de:b99d:d43 with SMTP id ffacd0b85a97d-42704da613emr12551093f8f.19.1761118500607;
-        Wed, 22 Oct 2025 00:35:00 -0700 (PDT)
+        bh=mYRODrAioifNQsfmynSYmORQ4CX7Cpc9gXZU06Vn+0w=;
+        b=ihxChNMHjDkE8nybWrEtT8MqUpUHAWpJ83SZVApBtYyOkdSZdYFIZ4Zu4IY9whOp4x
+         w+SZsk1/hUFuInFF+4Z5fEwdt4kDzaZZGERg06fnh+RwxVo7NH4trQ2vfiQP3mYfpPBb
+         mNnq+qMv4Iz7Le46z5F3DRIxkjXgtFJkb9QDmXb8DKmFdN0t1sE8gK9mfa4i2E6sPyPb
+         tVT8yBvAynAxFIklP/Mvk0kGbkEdpuCc+DMJrgrOHnmMays/tVRvq3WWNO5ObEIBHZ+o
+         o6MUC9doY7hGZ/o6knhwny5nfPHrB3uFwOF3nEWaWHltMqG9TOc2sQD9QU4spPDsn4pr
+         meJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWK+IoEVqoXye5C4+OpatpxLYKy/N9kCZ84ftRfnrhKW669LORf6HL31klzBUA9eKX42gNHSsbeCxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA7dv6LB5GuSxlUThJ9rPYwyr6YK+Gy9kPVg4mTfyr9uFxZkUq
+	AAUL1kfcBfMbN3OW0afO63Uioc7GDDcoQclnJp+Bokj/4Lee9kOuWUmlRH28Mmy9pto=
+X-Gm-Gg: ASbGncs+W7IgXDiI3VSfp+u20L6vPd2psNoCs+ZoiY6NS3/jUo/oZs6koBzrHtSpdU8
+	7iPBH6C3vcFHgr8011LXCwgWOOEjTkQ7oGMSC4hgK061jRGTj7C5yV0d68+2vdmCKALIbNjWwe5
+	LeAaiJl0eAg2QwfZz0T1qdpfB9zKiShOaoVB2cjcYgtof/7LjjI51fCPyICpCmiKrEA/ouQ3Z08
+	xdqe0GeQdMkPxt/+VH43xNNFNpNTtT3eRDGWLLaV4mrHkXY0QpHZVintYD8fu+nga535intmcUU
+	gdmKjAIydauomDG2vQZYlCsPC8rJWTpWsqGkInFPMhCoqb3+8t3ZECMWXZCRNplNd0l488TzQRa
+	gDRp2ltCUS+FSxmZXGeRKqm0ssqsfBz+Djbyx05RA9NFSQDIvtePb67ArrGc8zQ5W+9yCw5Y1AZ
+	nlEAob6/ljDpUFn3CX
+X-Google-Smtp-Source: AGHT+IF6JCuxEZc9y0QYtoe+lnLLK/6b+Owh6L1ix6z7q6TGMdRyMUdjp+zdpzoyT5DFMBxv/91G6Q==
+X-Received: by 2002:a05:6000:2485:b0:426:f40a:7179 with SMTP id ffacd0b85a97d-42704d8f12emr14823720f8f.26.1761118614244;
+        Wed, 22 Oct 2025 00:36:54 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-427ea5b3d4csm23271367f8f.19.2025.10.22.00.34.59
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-427e1be5d6csm23610769f8f.0.2025.10.22.00.36.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 00:35:00 -0700 (PDT)
-Date: Wed, 22 Oct 2025 10:34:56 +0300
+        Wed, 22 Oct 2025 00:36:53 -0700 (PDT)
+Date: Wed, 22 Oct 2025 10:36:50 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Trond Myklebust <trondmy@kernel.org>
 Cc: liubaolin <liubaolin12138@163.com>, anna@kernel.org,
@@ -82,13 +82,14 @@ Cc: liubaolin <liubaolin12138@163.com>, anna@kernel.org,
 	Baolin Liu <liubaolin@kylinos.cn>
 Subject: Re: [PATCH v1] NFS: Fix possible NULL pointer dereference in
  nfs_inode_remove_request()
-Message-ID: <aPiJIBTsQit5jyUg@stanley.mountain>
+Message-ID: <aPiJkhNJ4dgOlMIj@stanley.mountain>
 References: <20251012083957.532330-1-liubaolin12138@163.com>
  <5f1eb044728420769c5482ea95240717c0748f46.camel@kernel.org>
  <9243fe19-8e38-43e4-8ea4-077fa4512395@163.com>
  <a0accbb0e4ea7ad101dcaecf6ded576fc0c43a56.camel@kernel.org>
  <b928fe1b-77ba-4189-8f75-56106e9fac19@163.com>
  <ee0bb5eec4b43328749735150c5505f02e7a1842.camel@kernel.org>
+ <aPiJIBTsQit5jyUg@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -98,61 +99,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee0bb5eec4b43328749735150c5505f02e7a1842.camel@kernel.org>
+In-Reply-To: <aPiJIBTsQit5jyUg@stanley.mountain>
 
-On Tue, Oct 21, 2025 at 11:15:21PM -0400, Trond Myklebust wrote:
-> On Wed, 2025-10-22 at 10:44 +0800, liubaolin wrote:
-> > > Sorry, I didn’t actually see any case where req->wb_head == NULL. 
-> > > I found this through a smatch warning that pointed out a potential
-> > > null pointer dereference. 
-> > > Instead of removing the NULL folio check, I prefer to keep it to
-> > > prevent this potential issue. Checking pointer validity before use
-> > > is a good practice. 
-> > > From a maintenance perspective, we can’t rule out the possibility
-> > > that future changes might introduce a req->wb_head == NULL case, so
-> > > I suggest keeping the NULL folio check.
+On Wed, Oct 22, 2025 at 10:34:56AM +0300, Dan Carpenter wrote:
+> On Tue, Oct 21, 2025 at 11:15:21PM -0400, Trond Myklebust wrote:
+> > On Wed, 2025-10-22 at 10:44 +0800, liubaolin wrote:
+> > > > Sorry, I didn’t actually see any case where req->wb_head == NULL. 
+> > > > I found this through a smatch warning that pointed out a potential
+> > > > null pointer dereference. 
+> > > > Instead of removing the NULL folio check, I prefer to keep it to
+> > > > prevent this potential issue. Checking pointer validity before use
+> > > > is a good practice. 
+> > > > From a maintenance perspective, we can’t rule out the possibility
+> > > > that future changes might introduce a req->wb_head == NULL case, so
+> > > > I suggest keeping the NULL folio check.
+> > > 
 > > 
+> > I think you need to look at how smatch works in these situations. It is
+> > not looking at the call chain, but is rather looking at how the
+> > function is structured.
+> > Specifically, as I understand it, smatch looks at whether a test for a
+> > NULL pointer exists, and whether it is placed before or after the
+> > pointer is dereferenced. So it has nothing to say about whether the
+> > check is needed; all it says is that *if* the check is needed, then it
+> > should be placed differently.
+> > Dan Carpenter, please correct me if my information above is outdated...
 > 
-> I think you need to look at how smatch works in these situations. It is
-> not looking at the call chain, but is rather looking at how the
-> function is structured.
-> Specifically, as I understand it, smatch looks at whether a test for a
-> NULL pointer exists, and whether it is placed before or after the
-> pointer is dereferenced. So it has nothing to say about whether the
-> check is needed; all it says is that *if* the check is needed, then it
-> should be placed differently.
-> Dan Carpenter, please correct me if my information above is outdated...
-
-Yes.  That's the gist of it.
-
-However Smatch can tell that the check is not needed then the warning
-won't be printed.  In this case, Smatch breaks the return values from
-nfs_page_to_folio() down like this, and it thinks folio can be NULL.
-
-fs/nfs/write.c | nfs_page_to_folio | 340 |      0-u64max|        INTERNAL | -1 |                  175 | struct folio*(*)(struct nfs_page*) |
-fs/nfs/write.c | nfs_page_to_folio | 340 |      0-u64max|     PARAM_LIMIT |  0 |                    $ |         4096-ptr_max |
-fs/nfs/write.c | nfs_page_to_folio | 340 |      0-u64max|   PARAM_COMPARE | -1 |                    $ |      == $0->wb_folio |
-fs/nfs/write.c | nfs_page_to_folio | 340 |      0-u64max|        STMT_CNT | -1 |                      |                   22 |
-fs/nfs/write.c | nfs_page_to_folio | 341 |  4096-ptr_max|        INTERNAL | -1 |                  175 | struct folio*(*)(struct nfs_page*) |
-fs/nfs/write.c | nfs_page_to_folio | 341 |  4096-ptr_max|     PARAM_LIMIT |  0 |                    $ |         4096-ptr_max |
-fs/nfs/write.c | nfs_page_to_folio | 341 |  4096-ptr_max|     PARAM_LIMIT |  0 |          $->wb_folio |         4096-ptr_max |
-fs/nfs/write.c | nfs_page_to_folio | 341 |  4096-ptr_max|   PARAM_COMPARE | -1 |                    $ |      == $0->wb_folio |
-fs/nfs/write.c | nfs_page_to_folio | 341 |  4096-ptr_max|        STMT_CNT | -1 |                      |                   22 |
-fs/nfs/write.c | nfs_page_to_folio | 342 |             0|        INTERNAL | -1 |                  176 | struct folio*(*)(struct nfs_page*) |
-fs/nfs/write.c | nfs_page_to_folio | 342 |             0|     PARAM_LIMIT |  0 |                    $ |         4096-ptr_max |
-fs/nfs/write.c | nfs_page_to_folio | 342 |             0|        STMT_CNT | -1 |                      |                   22 |
-
-But Smatch is taking short cuts in its analysis and it doesn't track
-bit tests so it's going to be wrong sometimes.
-
+> Yes.  That's the gist of it.
 > 
-> So in this case, since we've never seen a case where the NULL check is
-> violated, and an analysis of the call chain doesn't show up any
-> (remaining) cases where that NULL pointer test is needed, my
-> recommendation is that we just remove the test going forward.
+> However Smatch can tell that the check is not needed then the warning
+> won't be printed.
 
-Removing the check is probably the correct response to these warnings
-more often than not.
+However IF Smatch...
+
+Gar.
 
 regards,
 dan carpenter
