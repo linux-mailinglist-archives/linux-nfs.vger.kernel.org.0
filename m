@@ -1,186 +1,162 @@
-Return-Path: <linux-nfs+bounces-15544-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD032BFE5B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 23:56:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66319BFE5F5
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 00:07:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 970A03A3E51
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 21:56:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E02213A8274
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 22:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB08303A03;
-	Wed, 22 Oct 2025 21:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4549430595A;
+	Wed, 22 Oct 2025 22:07:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyUyoXTh"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="rltFbIAm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wxf+kp9I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F4530148B
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 21:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1CC2D0601
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 22:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761170217; cv=none; b=uC00zIQ6s10nz6b5OTB+AFw8LtZAncZftmTNpZsLf5//ouDA/+AjSTCKUqTqVY4tYifGv1CKe68UYF68ansxJMnHRZQtuSyhrrK11FHCFyAS9tg2kXWGPa2gtzQg/RLLTSSV/1R11GWppTr/66XGavBUR9OUHS/JAQu17llHTR4=
+	t=1761170830; cv=none; b=lLp7nF/gUeSibBHHAHCumHDHv9XiHNdMirYN659APxhDPWVLEeonBnTOtNZ8bBq3WYAa5exBf6Mb/ZbzH8jykGjPgtS5hMSDruY6TC6dwIkENXUoWOcKwoqq+F//p3w3392F6wGXVx3bfWpKLTqB4YGO3ZaohTmbGnWaUVr5Oww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761170217; c=relaxed/simple;
-	bh=ssKjokxumyrG1d80FCdlLy6Q8MPxY39u0Dz5BFiCWf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UtxyNU80tr+tIcIM3huvrcAPvPS7nvRlGEH7GTnTp7myZGRJqpoKVF9T/k69omXj3z4wqcxpd9UAdLVRoUuLXHk2H5DhkWZkx/uj1bLWxJUO75FGz7R6F6FmGs/JsmDJIcPFHuyfu1WzTgn2hsjpoxSS2l1iXtBPYwvoqAKCuwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyUyoXTh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B5AC4CEE7;
-	Wed, 22 Oct 2025 21:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761170216;
-	bh=ssKjokxumyrG1d80FCdlLy6Q8MPxY39u0Dz5BFiCWf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GyUyoXThhdagMUZfSlyD6za/fZstjBfmduQjLnLE0G8naFHr0FkdJPtvZS3IZOrRp
-	 BP2+95X+S6tgVbUz7TZED5fjPY/4DKkOqDcPueQp2aZsalPpALPa6Njnj101Gp+f5n
-	 HU8nX7rOU66J2nywL25h26AKwgrh7G2hemMwVXqrksTmheS2DRjbSS/JQSUJzcq3c4
-	 5Kojw9O+9NfILCW0g6ah/mPJ0Nz707GBNBcQaG4Xw7FatysJLlwzbA6npJyc7yQz6Q
-	 pSs0wFMS6A0lUL2sagoNlXRJwgiNJdVZa5zYW5KIiRWIE4FlS/qu7oCXVXpwvhpmS6
-	 86/YJW+M0uQWg==
-Date: Wed, 22 Oct 2025 17:56:55 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v6 0/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPlTJ6oxreVOihPc@kernel.org>
-References: <20251022192208.1682-1-cel@kernel.org>
+	s=arc-20240116; t=1761170830; c=relaxed/simple;
+	bh=7iDaYVh/4vb3nl6I+l/Y2Vhv9qEQWW+FRAy/1zYeStg=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=jmY7VQrUKoD/jdcclMEPK38qYI0PV4nNbzMADGW8IuJP4m35JJOvSz90+aR8712KryrPa2PeqbMbjY1fHwQ4yTaESGaMBvqVNH1imsWlmHdz1h59TZUdqXAr7WBaDs2Mz9UZQrrD92044zGuvawBn+CeAh4KAOvSx9+a8qat/no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=rltFbIAm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Wxf+kp9I; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 3ED48EC01F4;
+	Wed, 22 Oct 2025 18:07:07 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 22 Oct 2025 18:07:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1761170827; x=1761257227; bh=uwSyQGFZkJVUZtGxRIUh4iVPLbJ6JTOoPkG
+	igsBxWfo=; b=rltFbIAmHxTeSYJW1QfkxPaVl9KongKwUquMsO8d6yJaedSnKjh
+	a/OqHlBtvPX0NMqZo1zy9TKYxp5PfcRfFW75Pf+X+93tXBU7xNiI5Bj/NjRW04W6
+	eRi3fR4i3Cndxo64UO2SaO0IuNh5IvW8V1rBn2DHGBLrdaWmboza0ZWheHHZQoPR
+	LLEKByQMXrx+L6+fsC+cekChn5+IZdx7U0YnFi7VQJCICI0YreYpAcv7ILfzjSId
+	pWy0tp8mHi8jHPID7hsNoPURRD6W2Ye/GT4/mH2SkMCg2+WzkO4tzfyvVtESrvdu
+	7G+s3zaJv3yqyqYx9kyQaLMGjv/FhFFYh9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1761170827; x=
+	1761257227; bh=uwSyQGFZkJVUZtGxRIUh4iVPLbJ6JTOoPkGigsBxWfo=; b=W
+	xf+kp9IXqlHiNKtT7jjzcPtHoQySUrp55J1H4XOrLfaBkBAHAVd8LbXJMYfx6SmT
+	WoyRd2angFX3fmYU7S+jPrgfA+peIwgnOqGNaPTPV3bVnLg5B3KkAwXjMcmNdQGM
+	Q0rHggIQzUgC7qXM/pUMCMvEPTr+vo5Bocj5gvx7LWWKioxpoNY+a9FtNfk9DKzU
+	9qvz8z2wBWx85JZiD7XCbycgV4mfeeAxJBXBgoxSVR4f9bvTrD85NlazamRyAUtZ
+	IG7r+1h5sM5EQ2uUF51ufGe0pYB9sWQrwPir9zRbJa8pTgOcFyMnQkzXs5RP5IMu
+	RW78x/KLMcqZG3XQzPm6g==
+X-ME-Sender: <xms:ilX5aIzueLAcHkmIKYZ3oyeKrVEyRTUtDneWyWp18xyVnGs-cQhzNA>
+    <xme:ilX5aLVUSKkhfhl92841885fj4Km6qw1NEmyibmzf57w6QygwkFyLcctrEKNFAXdG
+    acfn51S3UXabkObthuskKLdbTnY4jI2bmmpKRk7I4pk0kn-Jw>
+X-ME-Received: <xmr:ilX5aAhtT7AKVLF2uGCA-rqbj_qZgmpXEa_FExuy5HE8SeEAP90ItZTP4V333a7pKo4Z22x5sONbZpMcNuM_WynLkCvBbjul-oZp1vahmz5i>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddugeegjeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopegrghhlohesuhhmihgthhdrvgguuhdprhgtphhtthhopehtohhmseht
+    rghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghp
+    thhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihth
+    honheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvihhlsgessghrohifnhdrnhgr
+    mhgv
+X-ME-Proxy: <xmx:ilX5aDC6D1YjsqTk1fdZYAPLDZrlCJQdSpb7wjOdCh4-FyEpHYb37g>
+    <xmx:ilX5aOv0dzKmQgxd61DYr1iAWe2nZlB1HhAIPR7QeHfm2IyyHneBAw>
+    <xmx:ilX5aPdnerYIxr2Djhu6SEbSzOTNRXv3BDWhS0y-ud2bsbbn2Xdqpg>
+    <xmx:ilX5aL9-_TdT7u0zlXhAwGagyYeHknJIwtZopY7apqzwL9r5LhPPgQ>
+    <xmx:i1X5aPjuK5rn2PVNvvb8pK9RYSHerlL-pgKgpmkTd3cVfUv5uhln6Fl6>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Oct 2025 18:07:04 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022192208.1682-1-cel@kernel.org>
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Olga Kornievskaia" <aglo@umich.edu>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, chuck.lever@oracle.com,
+ linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com,
+ tom@talpey.com
+Subject:
+ Re: [RFC PATCH 1/1] lockd: prevent UAF in nlm4svc_proc_test in reexport NLM
+In-reply-to: <176116947850.1793333.1787478761707441526@noble.neil.brown.name>
+References: <20251021130506.45065-1-okorniev@redhat.com>, <>,
+ <33ba39d2ff01eb0e52c80aa7015d27e34dde7fd2.camel@kernel.org>, <>,
+ <CAN-5tyEuV2UO17w97b8weJUQR7hgqX=jz-kvGR9Sr_m3NZp8ww@mail.gmail.com>, <>,
+ <d0a1a1ccec73ee56e614b91c4a75941f557398b8.camel@kernel.org>, <>,
+ <CAN-5tyGK4MHgYaN1SqpygtvWM8BFrapT-rXY_y9msVfnRjN1Jw@mail.gmail.com>, <>,
+ <ff353db93ca47b8fae530695ea44c0a34cd40af8.camel@kernel.org>, <>,
+ <fe1489b3c55bdb32cd7ad460a2403bc23abdde81.camel@kernel.org>, <>,
+ <f61025a96df19c64ba372cdcab8b12f3fa2fff9e.camel@kernel.org>, <>,
+ <CAN-5tyFWvP2ZTeYFN6ybGoxvsAw=TKFJAo0dVLU_=s_5t=LCGg@mail.gmail.com>, <>,
+ <f5073caf3e3db05702ed196042053fc864645750.camel@kernel.org>,
+ <176116947850.1793333.1787478761707441526@noble.neil.brown.name>
+Date: Thu, 23 Oct 2025 09:07:02 +1100
+Message-id: <176117082245.1793333.17674071855376444924@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Wed, Oct 22, 2025 at 03:22:03PM -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Following on https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
-> this series includes the patches needed to make NFSD Direct WRITE
-> work.
-> 
-> The "large" piece of work left to do:
-> > > > Wouldn't it make sense to track the alignment when building the bio_vec
-> > > > array instead of doing another walk here touching all cache lines?
-> > > 
-> > > Yes, that is the conventional wisdom that justified Keith removing
-> > > iov_iter_aligned.  But for NFSD's WRITE payload the bio_vec is built
-> > > outside of the fs/nfsd/vfs.c code.  Could be there is a natural way to
-> > > clean this up (to make the sunrpc layer to conditionally care about
-> > > alignment) but I didn't confront that yet.
-> > 
-> > Well, for the block code it's also build outside the layer consuming it.
-> > But Keith showed that you can easily communicate that information and
-> > avoid extra loops touching the cache lines.
+On Thu, 23 Oct 2025, NeilBrown wrote:
+> On Thu, 23 Oct 2025, Jeff Layton wrote:
+> >=20
+> > Longer term, I think Neil is right and we probably need to fix
+> > vfs_test_lock and the lock inode_operation to take a separate conflock
+> > for testlock purposes. That's a bigger change though (particularly the
+> > ->lock operations).
+>=20
+> Thanks.  But in the shorter term I'd like to suggest this.
 
-I had started to reply to the other thread relative to this point, but
-I'll cherry pick it here:
+Then again ..  I'm less convinced about the separate conflock for
+vfs_test_lock() and friends.  However adding this to my previous patch
+would be good I think.
 
-On Wed, Oct 22, 2025 at 10:37:35AM -0400, Chuck Lever wrote:
-> Again, is there a reason to push this suggestion out to a later merge
-> window? It seems reasonable to tackle it now.
+diff --git a/fs/locks.c b/fs/locks.c
+index 04a3f0e20724..200a31e3c4b8 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -2188,10 +2188,12 @@ SYSCALL_DEFINE2(flock, unsigned int, fd, unsigned int=
+, cmd)
+  * @fl: The lock to test; also used to hold result
+  *
+  * Returns -ERRNO on failure.  Indicates presence of conflicting lock by
+- * setting conf->fl_type to something other than F_UNLCK.
++ * setting fl->fl_type to something other than F_UNLCK.
++ * Both fl_lmops and fl_ops in @fl must be NULL.
+  */
+ int vfs_test_lock(struct file *filp, struct file_lock *fl)
+ {
++	WARN_ON_ONCE(fl->fl_ops || fl->fl_lmops);
+ 	WARN_ON_ONCE(filp !=3D fl->c.flc_file);
+ 	if (filp->f_op->lock)
+ 		return filp->f_op->lock(filp, F_GETLK, fl);
 
-If you'd be OK with us tackling it as an incremental change attributed
-to whoever takes the lead, then it can happen now or whenever someone
-can get to it.
+Also I think it would clean code a lot if we splice the "lock"
+file_operation into set_lock, get_lock, and remove_lock (or similar).
+It would make grepping easier too.
 
-IMO it is worthy of incremental effort because it is genuinely
-destabilizing line of development -- any -EINVAL that could result
-from misaligned DIO being issued to the underlying filesystem can
-cause serious problems with IO retry stalls.. at least in my
-experience with pNFS flexfiles (as implemented by Hammerspace).
-And that is why I was logging -EINVAL is important; now removed in
-this v6. So you've removed checking that'd save us from bugs growing
-to be way more painful _before_ optimization work that might expose us
-to -EINVAL. To be clear: I am perfectly fine with removing that
-seemingly heavy -EINVAL handling from nfsd_issue_write_dio like you
-did _because_ nfsd_iov_iter_aligned_bvec() does a comprehensive job of
-avoiding the possibility of misaligned DIO being issued to underlying
-filesystem.
-
-As cliche as "perfection is the enemy of good" is, it does genuinely
-govern how I engineer solutions.
-
-That doesn't mean I'm not seeking perfection, but for me: perfection
-is accomplished iteratively by honing good to great to perfect.
-
-Bounding each step towards perfection helps reach it.
-
-Apologies if all that caused your eyes to roll into the back of your
-head.  I have this additional optimization work on my TODO, I just
-haven't been able to circle back to it.
-
-> (Perhaps to get us started, Christoph, do you know of specific code that
-> shows how this code could be reorganized?)
-
-It is at the time of the write payload's bvec creation where alignment
-would need to be assessed.
-
-Keith's changes in these commits provide context (albeit opaque):
-
-fec2e705729d block: check for valid bio while splitting
-743bf2e0c49c block: add size alignment to bio_iov_iter_get_pages
-20a0e6276edb block: align the bio after building it
-5ff3f74e145a block: simplify direct io validity check
-7eac33186957 iomap: simplify direct io validity check
-9eab1d4e0d15 block: remove bdev_iter_is_aligned
-69d7ed5b9ef6 blk-integrity: use simpler alignment check
-b475272f03ca iov_iter: remove iov_iter_is_aligned
-
-If you look at the entirety of those commits' changes with:
-git diff fec2e705729d^..b475272f03ca
-
-You can see that Keith removed calls to iov_iter_is_aligned and
-bdev_iter_is_aligned by doing checking earlier at the time of creation
-of "the thing" (for our case that'd be the bio_vec entries sunrpc adds
-to the iov_iter that gets passed as write payload to vfs.c?).
-
-Mike
-
-> Changes since v5:
-> * Add a patch to make FILE_SYNC WRITEs persist timestamps
-> * Address some of Christoph's review comments
-> 
-> Changes since v4:
-> * Split out refactoring nfsd_buffered_write() into a separate patch
-> * Expand patch description of 1/4
-> * Don't set IOCB_SYNC flag
-> 
-> Changes since v3:
-> * Address checkpatch.pl nits in 2/3
-> * Add an untested patch to mark ingress RDMA Read chunks
-> 
-> Chuck Lever (3):
->   NFSD: Make FILE_SYNC WRITEs comply with spec
->   NFSD: Enable return of an updated stable_how to NFS clients
->   svcrdma: Mark Read chunks
-> 
-> Mike Snitzer (2):
->   NFSD: Refactor nfsd_vfs_write()
->   NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-> 
->  fs/nfsd/debugfs.c                       |   1 +
->  fs/nfsd/nfs3proc.c                      |   2 +-
->  fs/nfsd/nfs4proc.c                      |   2 +-
->  fs/nfsd/nfsproc.c                       |   3 +-
->  fs/nfsd/trace.h                         |   1 +
->  fs/nfsd/vfs.c                           | 219 ++++++++++++++++++++++--
->  fs/nfsd/vfs.h                           |   6 +-
->  fs/nfsd/xdr3.h                          |   2 +-
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   5 +
->  9 files changed, 224 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.51.0
-> 
-> 
+NeilBrown
 
