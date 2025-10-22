@@ -1,88 +1,188 @@
-Return-Path: <linux-nfs+bounces-15496-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15497-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E3DDBFA092
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 07:16:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BFD2BFA5F6
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 08:57:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D5E94E03AB
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 05:16:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26DBE3B30F9
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 06:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A37272D7DD5;
-	Wed, 22 Oct 2025 05:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6136A2F39A1;
+	Wed, 22 Oct 2025 06:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OWbM6yvM"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Hm85UpzW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2TBdz6Nv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MlixlT1K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4Jp/cJAb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD16F19F41C
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 05:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B8A2D0601
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 06:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761110185; cv=none; b=XnyBat2K8Jcs8vVDD1vPjM3AabOhfHVjhDW2xV2VThTGI90tiv17OfrL1jTNsxqbwWWCX8brIXLF/VFuDMc2JDw9iB78sc2L6DVkoFBFvXfKSpiv4ELO/eWmNeRZXx8WMZdjJH9V9awIaFk7GqBIwAch2IiTg09lz3TKwAlZG+4=
+	t=1761116223; cv=none; b=bP7sWGzpx1XjN9CVeYFQliHHtUwNJofntQL/sf43FGue/LCxhTiQ/r+qosFvSkApmI/LnYrqbxdkR8VpnjcZtpWoVvEIUwZXD4k8WjA+dK3kqfCCUKIvszLJI+IPOyFmx1Q2qTdGqI3KytxrJ2Lg94S8OOXFTeBZowwdAYuKPqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761110185; c=relaxed/simple;
-	bh=SjSNUZ0BClGduBwZuVoqxRoL4qjczQb+dsw4SC4V5Yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IleqjryBKzidWyCUqhVhXGbezVkqYTDCeOr8JIeuyKUQpqdq8zwqZFX7l45jUW0jRvfh5P2op16YttsEweycYc41VSJG0L73pTa50/ebSiqmofmWK2i9Kips01HAVJRXWw7V98hUMs6uL5bahf0r1HzDelocfhJkqiEXk9zGEks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OWbM6yvM; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6GVdD8XGxu3MZ0jWaF4CePfiqSeyzsuggFNpUQNzcg0=; b=OWbM6yvMYr3Cuh4KM1e9CqMPUb
-	xFnn2+JL1pTxSVocvpf97L5hf27X3PNDUE+/zlpMvdCoO+SaKymViU5Bq5gGYQYbARMrpfTxwyrVx
-	Yj2CghweF7Be2vLPYXNyZ2eLj8zYiYI8k2qiSvgdRZKZr5ItMvXM07SB0buOI8H7M01IT5kAPEO/D
-	hqluQQPzmHbPEdGkGTpYkOpNS8ZOJp2LF97fEn6B09zd9OWC8ZLDTW/Tvnj8rTBYRBCXAVJkdm4Jq
-	GRy2XDnF/4CCpq5ohZK9EHopNSl/3+x8zL2Y8WzNok6kayMCD2vSSPa8uNgEhT+dpsC6BLExmYr+G
-	Yl5vxHug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBRCt-00000001Vn6-3zmm;
-	Wed, 22 Oct 2025 05:16:20 +0000
-Date: Tue, 21 Oct 2025 22:16:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Chuck Lever <cel@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aPhoow9Z-r94b5AL@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
- <20251018005431.3403-3-cel@kernel.org>
- <aPXihwGTiA7bqTsN@infradead.org>
- <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
+	s=arc-20240116; t=1761116223; c=relaxed/simple;
+	bh=WBEULDsMmUTL94Xw0iQEoIsxKU2u4+yiggkBAlUOqOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dCbB9mjat7N3zonk7c+QRM2L8rnaACZJX9CnVYMob7WtvSURbvLX4dvVFNPmLrNGKt8BGbFMe5cwGENn8dutHoK6lfRCFp611sZuhluBri1j2VR7HoZ52/Vw+4NwBGLWprSS7sEjzcOIHabCuEUwXB7sNLrAbibTKcodx+7xe24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Hm85UpzW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2TBdz6Nv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MlixlT1K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4Jp/cJAb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A5ED11F38D;
+	Wed, 22 Oct 2025 06:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761116214; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rx8DJYuxgTbtWD3EG43xudBz/lgkdwbOWUShBy3f9Jc=;
+	b=Hm85UpzWcum4e7txV0UEEFJ29U/jlHgtQ4qH6RuCV7kLNTJYIA+EGW0j2JsnMPMwERZ+Wl
+	puRK81INf5XX0jKtSeIDrXAD8UlMpTGi8Fy3TtoZ2RPkOx5IPEhRV5C3f2rax9FUL+dZzu
+	+wIVEOo1E5wg7ZI+YU0Layjh0aD4LmI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761116214;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rx8DJYuxgTbtWD3EG43xudBz/lgkdwbOWUShBy3f9Jc=;
+	b=2TBdz6NviOX+2CBmad8Y4BSxo+23Z259FmCmu4SjFfLwbqJZvE0S2FtSQ6Z8TY9hZpz7l5
+	wWBef15x0fh/rOAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MlixlT1K;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="4Jp/cJAb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761116210; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rx8DJYuxgTbtWD3EG43xudBz/lgkdwbOWUShBy3f9Jc=;
+	b=MlixlT1K5vWDod5mnzmjrqH+zeoRq9vUCRLedWmAH0n67PWykXMi7akbK6/mg5piPZeDHt
+	ss425rLTZoaCh65HOpLS2yTME3Q3xa/P814heROGqUll+WdZSfnDRY3CgPhN4W7wBq5LIV
+	izCqyDjhPyPES/qmxuIYZRPS7w/Q7Ec=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761116210;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rx8DJYuxgTbtWD3EG43xudBz/lgkdwbOWUShBy3f9Jc=;
+	b=4Jp/cJAbhag3/g8ao1mWaHUrIxz65ak2h7nqE/i/yKW47JTRuHLyCw2JKrgS4w0/BwpodA
+	sfLPLNMexXtGn+Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B020713A29;
+	Wed, 22 Oct 2025 06:56:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wfoeKDGA+GhVdQAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 22 Oct 2025 06:56:49 +0000
+Message-ID: <4b2e5998-a646-4f99-8c87-95975ff8fe66@suse.de>
+Date: Wed, 22 Oct 2025 08:56:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/7] nvme-tcp: Support KeyUpdate
+To: Alistair Francis <alistair23@gmail.com>
+Cc: chuck.lever@oracle.com, hare@kernel.org,
+ kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
+ kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
+References: <20251017042312.1271322-1-alistair.francis@wdc.com>
+ <20251017042312.1271322-6-alistair.francis@wdc.com>
+ <dc19d073-0266-4143-9c74-08e30a90b875@suse.de>
+ <CAKmqyKNBN7QmpC8Lb=0xKJ7u9Vru2mfTktwKgtyQURGmq4gUtg@mail.gmail.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <CAKmqyKNBN7QmpC8Lb=0xKJ7u9Vru2mfTktwKgtyQURGmq4gUtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A5ED11F38D
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	URIBL_BLOCKED(0.00)[wdc.com:email,suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Tue, Oct 21, 2025 at 07:24:42AM -0400, Jeff Layton wrote:
-> Responding to a WRITE with NFS_FILE_SYNC flag set means that the data
-> the client wrote is now on stable storage (and hence the client doesn't
-> need to follow up with a COMMIT). This patch is using DIO for the
-> aligned middle section but any unaligned ends use buffered I/O. If we
-> want to return NFS_FILE_SYNC here then all of the data and metadata
-> need to be on disk when the reply goes out.
+On 10/22/25 06:35, Alistair Francis wrote:
+> On Mon, Oct 20, 2025 at 4:22 PM Hannes Reinecke <hare@suse.de> wrote:
+>>
+>> On 10/17/25 06:23, alistair23@gmail.com wrote:
+>>> From: Alistair Francis <alistair.francis@wdc.com>
+>>>
+[ .. ]>>> @@ -1723,6 +1763,7 @@ static void nvme_tcp_tls_done(void 
+*data, int status, key_serial_t pskid,
+>>>                        ctrl->ctrl.tls_pskid = key_serial(tls_key);
+>>>                key_put(tls_key);
+>>>                queue->tls_err = 0;
+>>> +             queue->user_session_id = user_session_id;
+>>
+>> Hmm. I wonder, do we need to store the generation number somewhere?
+>> Currently the sysfs interface is completely oblivious that a key update
+>> has happened. I really would like to have _some_ indicator there telling
+>> us that a key update had happened, and the generation number would be
+>> ideal here.
 > 
-> Don't we need IOCB_SYNC here in this case? Otherwise, the server could
-> crash while the metadata is still in memory. When it comes back up, the
-> client could see stale timestamps. Maybe that's not fatal, but it seems
-> pretty sketchy.
-
-Why do you care about the timestamps which in NFS AFAIK aren't tied
-to the data writeback in any way?
-
+> I don't follow.
+> 
+> The TLS layer will report the number of KeyUpdates that have been
+> received. Userspace also knows that a KeyUpdate happened as we call to
+> userspace to handle updating the keys.
+> 
+Oh, the tlshd will know that (somehow). But everyone else will not; the
+'tls_pskid' contents will stay the the same.
+Can we have a sysfs attribute reporting the sequence number of the most
+recent KeyUpdate?
+Cheers,
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
