@@ -1,254 +1,243 @@
-Return-Path: <linux-nfs+bounces-15515-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15516-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 843F7BFC33F
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 15:37:55 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C9F9BFC981
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 16:39:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CC7EE54261B
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 13:34:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3EF464F70A0
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 14:38:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E223F2FD1D9;
-	Wed, 22 Oct 2025 13:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5378C35BDCF;
+	Wed, 22 Oct 2025 14:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DnoO9eB1";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WTEfUb1X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0KfhrU7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFCF26ED33
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 13:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761140065; cv=fail; b=l7Hiy12dAqrRHkYt9D9GO2ForWiSD8LHJJ3lVipMDP7JAD+TWu1JhveO5i6QXv53DTMkV/hCXIGUiQe3uodWCY+3kbGIu0TieKlUbTtCOm+SosW3Lpr/RrmvzcyzSgw39YwacW96hsRCOGbXY1jqv8x1ipzqHZD5aNNt9KNngVU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761140065; c=relaxed/simple;
-	bh=VWgWpNmC5TeOZ44BRQvKl5ji2q7VTaeCNwy/lwHOpp4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DCrL8kpF/JaeTW9IFHTPeHtalk9E3M2P1hsSU9Cx0kVsmP2ejAUr6pZDDXMNQK5ErzhB/4z6Zp9ubNwpozFMeGJqkXcK9uMSqiIb1gNN8lZHdWMAcA3toGsls5pl2908satWXPHe9n9YZnl9N8VcEB9BdUnk0SpJLuUard7VWBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DnoO9eB1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WTEfUb1X; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59MCehDT006133;
-	Wed, 22 Oct 2025 13:34:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=MGfovvRAMZVAZ4E+nOxznePzKSZBP6AGDglSXwsQIcM=; b=
-	DnoO9eB1kSOZKeVwWs/i2f+flSxy9XBaDXTfy8q4JVCJ3PSgt9JfzPYcEQ8tdDnj
-	9VHq56AZ5sYaFwr2Eo/PSbPicRXnscuIyNKBvWjRtQbT4pq49DDqtd6MP73ks3PI
-	yMMaaRZO2PVZedywwv9AqQwI/OG9f7us3g4gsIFTfoRJ/NGdS2LH75G9xCqsv3L6
-	RoFNaCjKc1PwDRg9mrngZ8CFP91zhtMZVIV5An6R47HLFaUnjcv2JyEPp4+4nqO/
-	c+zP/on2uryK+QxdZPcJH6GegziFrtZg84CuQnrlLUYtZGGqKDkopFHYViiBCThR
-	L6oROXB+tdusOBefgbSH6A==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49xvcy8dya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Oct 2025 13:34:12 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59MCcmQA012175;
-	Wed, 22 Oct 2025 13:34:11 GMT
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013028.outbound.protection.outlook.com [40.107.201.28])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49v1bde4e7-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Oct 2025 13:34:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w0BId+vbzQP8/ad8wkJJ8Y6EHunoo+LU7IwVgRx2RQzzamJO9osnVKqDnNMuc6RNIaMcsU5ez2J5txYS9RMuOK3tmF+TF6lvd1DwyksGwSI5UIDNvyGYjOZ5oX4d7cTSG8epfYWkCWo9TSQZgPwxFtvLGCXeYyXXsU7GdP7ooeRPP5JqlVxCNgyJOawjyZLYj2CmOJxrAFTooxlSfQ0Gi6eJIhVh/bs3vHdfZ3cIHgmWYxMETX0c2umvmuQW+13Hk/WSNXIpGgNKBMYKQ6pTwhxtOwle+rMj9RAUyzaS7QSmKfPJQkDy1bYAjYWk56z1rFslyGmtyNw+pwRAaN1ctA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MGfovvRAMZVAZ4E+nOxznePzKSZBP6AGDglSXwsQIcM=;
- b=a6L+P7vrgH5Nu0EQ5orMnPjRf5Ii5FEJwxFrcHcYBJRuKF239PiKtPGjqORtdBxXBv6RO/gUBPTFvcr01xm62b8KnJDlvSyBGmnVHJXojKNs0z4dkB19eOpNapdrKNdWmSQdIZMd56lgtAFp9Qbr57QVzq5MmRI+seJOp5JFwbfbufXCXOnWYtg9UgDh2DGctMXh7ChePMl4QxpKNNfvTV19qnRVo74kZ81sTPvhVjjETAL3SHehtVx8cGiUPouFonZhxt1XdtZUOhDPtIvVeeTH2aEtAFlrI9VgkPz6MbcEh9I3fXjcFoUch7drScrvx9KVaCFqe+o7atws1/No9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MGfovvRAMZVAZ4E+nOxznePzKSZBP6AGDglSXwsQIcM=;
- b=WTEfUb1X37ieFZlerzfjtjjS0VNM++0/XFQ/7a2pXypWajmQq9o/fgXKjMWGo3o8kb9ncfq+Vzn76/ZyDH+OJP9mBNj1rkQIDPyrKKVy6hF1rWKcaQ0bjofa6ETZjo5gu0Rwi3gFjFNtsIth9ysjpiXzqeV7w5zJw074BaMKm3M=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SJ2PR10MB7825.namprd10.prod.outlook.com (2603:10b6:a03:56e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Wed, 22 Oct
- 2025 13:34:08 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9228.012; Wed, 22 Oct 2025
- 13:34:08 +0000
-Message-ID: <953be593-41aa-4d4a-809e-7614150ee778@oracle.com>
-Date: Wed, 22 Oct 2025 09:34:06 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add a nfsd blocklayout reviewer
-To: Christoph Hellwig <hch@lst.de>, jlayton@kernel.org
-Cc: linux-nfs@vger.kernel.org
-References: <20251022114533.2181580-1-hch@lst.de>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251022114533.2181580-1-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR18CA0016.namprd18.prod.outlook.com
- (2603:10b6:610:4f::26) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F25D35BDC1
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 14:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761143857; cv=none; b=ttRhzxY7W4Yzyd/ysBq09u0RxdXontE33FM1prWAmI7R+wkk6L/b0BBMJ6BuOlNmubQ2Zp2BbRxnF8+TsE4RTxJyEUhuKnb0TO0mcq1jB/ZJVoedTDjAF2CsD2A9ifRNs4RM0dfIJ1gNgwA/ZAhWAUN2v5RblBeXaYHHCANAyz4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761143857; c=relaxed/simple;
+	bh=Q8dGzKkAEEQHzU1kCpB+USiR+ZALqgqVGA9zzKZf6Nw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lN83YRv4l7txQCJcJLxGoMeWraWOsEZIVzFyvjzznPzUEFKQX0zvhdPVbtSHsz2tDXksU6kU/AXImRTJn6PslGMqZyS9XlZOo47gcjb1lx0CriAROVfdtjBShorZ73OyozNb5q08Qc1t0APndyohejQyzF1vEW/kKjq1jS3PAUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0KfhrU7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D876C4CEE7;
+	Wed, 22 Oct 2025 14:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761143856;
+	bh=Q8dGzKkAEEQHzU1kCpB+USiR+ZALqgqVGA9zzKZf6Nw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a0KfhrU7zVrL/XpcMOXCVe+ZAUU0AzZOH80Mw8DWzEJFp6InNfTMjfMTKsoyQpi6K
+	 2jHM0wC3XA+9x+qgODHk7SWFji2Qb4rBckKZuXU4oVTNRBqthZpOzz7Ei8AtVfqgwp
+	 kqgNLU1hUtwq0CL00d3aHk5/yaurGlGKLSV/rC51QmhYIRAIfRJXE5hdmlSbH5RdR+
+	 iFVN1gup0yxF2fBewtKl88Nb/GWICz86qsZKmoWoSNv14Q0gnYGM9LR59htoYOqjg1
+	 +EX6CvUUasHVcvRoEFF5TGtK+qTk7rE+kpck3PQjAEs8yIsqNcEMiKAi9N453lFC5g
+	 9vbbvzynwp+xQ==
+Message-ID: <ee1eba86-a5ce-4cb8-9124-78a53eae6fc8@kernel.org>
+Date: Wed, 22 Oct 2025 10:37:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SJ2PR10MB7825:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0128c29a-65c7-448f-904e-08de116fad81
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?RkdJUFBJVjBDVkkvVGh1d0laeTdVTFZpWTdWSXh2N3JIRzVwVjRlRnN0WVM5?=
- =?utf-8?B?SWtnU2JNd3YrL01naXB6ZU9peG55WjBkeUdMczUwNzJDQ2x6NDZJMUdodnMx?=
- =?utf-8?B?T1NPNE02TmVWVGRtZS9DWEc5YzdBcXMva2tkSkpWeUY4dUdOQ0lHZjBDbkEv?=
- =?utf-8?B?cXIzUU84L0doQm1aMkhwVXA4ZENKb25BcENsaXJpd205SnhPWGtpZ3dEc0pq?=
- =?utf-8?B?TmMyYU1kTkRxK0pFMS9ra3hLV0FBTEh4Z2FVNkR0d2ljVHdXeXdvRFVwWDJF?=
- =?utf-8?B?SGl0Tm92QWdvREphNmptQjVrcVZaay80cjh1Y1M5MzJ4NVNPYnVOLzE5NDQy?=
- =?utf-8?B?VkFMVHhxNXlaTytwMlU5U1lTWHhyVTc4a0hqVWpLUFJ4VmZBTk54YTRMeEFp?=
- =?utf-8?B?cjNRNDVkMExwNVF1Wm5NNFpkNlltTFM4Z2RxN0xJb3AzdUlhMWgyZWRGV0VJ?=
- =?utf-8?B?NU5CNEFGWHMwMVVQZWZ0bWI4V21EajRxM1p0K3pvYVYwWjZRNUhYSmpISEw1?=
- =?utf-8?B?UXVMRVd3TjlyeUJtQnNzRVNydlAyaUdVb0NQSG9hcUY4VStMTUlOeXdMZ3RQ?=
- =?utf-8?B?MExjYjNhRUxJN3NSamxZWVZHYWVkUzJqdkhGMjNpQ2xxZUplOGE0NlA1ZkZt?=
- =?utf-8?B?WnExMHhMcFZTTUNja0dWVUdOQUlLNFJ2N3J3ZDZkTDBROWJSdFdjMXF0bHJ2?=
- =?utf-8?B?Zmw5N0tTTjJHUk1RQnNWRXc1ejQwUzBoMElHcGRmMnllRDJhdzkrM1BKOUtS?=
- =?utf-8?B?SzcxNDRvS25GQm13NGR6eU04SGJrdG4rNk9wWUdoZkJtdk84ZXZsRzJFVk4x?=
- =?utf-8?B?T1pTRC83NlBJS0RidSszcHVRdURxWHFsTmNoNzRwQUluUWNUZWp2ZW96blVJ?=
- =?utf-8?B?ZjZiV1JXSTcwVTI0OFhCMHRxTk42SnV4NzlEM2pIemVrd29lUi9UcEZodENi?=
- =?utf-8?B?anRYZE9iaW1ja0pVU0RlOEdFakNDdTE1eFJCUkFOS1B2Zm9GRjkrQ2djaExz?=
- =?utf-8?B?UjRidTJSUzdnOG1RdGlGekplTzBrMnFOWjhaaytkM1VtaUlaRGwrNGwyZkdn?=
- =?utf-8?B?RXFLd01zUTlPbU5LNnRKT0s3Q1hRRGhiK083aENWRXN4dEh1UlVFbko3REtt?=
- =?utf-8?B?Vks0eVlPazRsZ0JVK0FMQjFETnFrTHFIMEJKN0d1NkJmMlNFWTdNVzZHSCtq?=
- =?utf-8?B?RGtkWGdKTVZrNEg3cnN3c2FOZmxzUnJzcG03Vy9hb1o1akxBdkxTaitNV0dH?=
- =?utf-8?B?alV3NUNRa0JEMXZHbnlCaG9jU3BhUXZMbWlOY3ZJelRNcC91Z0JNRWhmaFpv?=
- =?utf-8?B?dU5VaEpCVVhlMFZGbUx1NHRQS0tCeXA5eVN5RHFQTlFxVVpUWE9IclIrNjBr?=
- =?utf-8?B?eWljazhsKzZOUFlscTFrbi9nbEJMeFpvNW5rMWx2N3gzRXJIRTJySnQzaEhQ?=
- =?utf-8?B?VEZUV0Jnb1JkSmYyUjlzSC9YQlVwVTUvZ0p6cmZhUXZrZzhMNUpSL3BXZnBu?=
- =?utf-8?B?djd4Nlp2MUNMRStkUjlsV3lkUkNOZy9yRXFEZjk1dndVQjdUM0R3YnNYRDFU?=
- =?utf-8?B?eW5kTmtJemUzUXc5dUJIekx6cUpMTlFvTlhaTThMSUdNTTluSlVUUURrNmRi?=
- =?utf-8?B?cXhUcnRYNmdnRjl3Ti8veEZ5MVQ2OFFtWGN2TExqbTRrK0xKek4zcjY3OU5s?=
- =?utf-8?B?NjJRREZzdzc0bVhCM01wNVpDRVVXMyttWGNYMEhTU3Q1S1kzZGpHdDY3bjVS?=
- =?utf-8?B?MDNES1pSQ0J4YlRIZlFNTy9zcWdnTjh5d2xiM2FWNUREYkZSR3V4cGN5RHhm?=
- =?utf-8?B?TkRtdDI4Sm1EM3k1VmJRWTVJVlN6dHJHRyt3U1FZWkJIVC8rTzRaT0Y5OEFv?=
- =?utf-8?B?aXp6THBFZmNRMkdUTk95dUpxRitnU1FkRGVsRUFNRHNLVlR4TkxpSGJ4a1JD?=
- =?utf-8?Q?eOCdYMyr7dLoCvvbTsCzTMIMW90dd4pa?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?RUZpNTVScUF0cXV1enkvTkRDSjI1QkhHT085YzhXQnRwemJHKzRFeHNldkxI?=
- =?utf-8?B?eTNyWDAvYWlHcHNwOXZIVTNGalJPUnl1MHlicXQrZ3ZkOHFGek9CcjU0V2dR?=
- =?utf-8?B?bndHaEtBb1BhOFNiYkdSTnlOMWhtMm80Vk5SWUNXZ2xFMW0vbis4eWZEWUZI?=
- =?utf-8?B?am1haFR4MEQzVGJRNGZGZFlCUWNZYmwxajVBQklaREJFT1haOG5rWTZHbGs5?=
- =?utf-8?B?RVpSd1pBbFJJOGJLZWg4N1Y2WDVIMkQrMUEycHRjTVpqaHNQK1VJSmpqcGdz?=
- =?utf-8?B?dHdYQkJ0WElFMEJGTVhsQVN6MWlDcG5GQUFpWlFDSXFPREJjRStlUXBSL214?=
- =?utf-8?B?VTZlbHBCekE3a3lzT0c5SFRGYS9ZWHM0UkJoT3E5UGpRVGdVZ3E0Z010YmI4?=
- =?utf-8?B?Z3FhWlZXeERrVmlSRzFvdHhDQURsZ1lKQzhEazRVbVJDOUR1R2xPSnFBbzl2?=
- =?utf-8?B?VmNxKzNIeEFWWFRmeUdXU21zbytxUGx5ZDdoQTArcThKcElzK0l1RTJRMFBs?=
- =?utf-8?B?dndoamZhOFN1TDdCOGs4Z1BLZ1BEZ1hoVTZ3RkFVbTRvZS9OWVBxTTJCZU5p?=
- =?utf-8?B?aGh6Z0xsSlVYcjV2NjlUMmxNUFdTSTBlOWQvUjBiVnhyVDg3MjZNU3Q5S0xO?=
- =?utf-8?B?eGtnaGxSMEhHYXlvTW5NeDFwNzBENllEL3JxaEFJQzdTcXNKOFprci9PbDU4?=
- =?utf-8?B?SklVc2hPZ3BOOFhwcXUrM0NOaWF6WEpvbVNhZmw3Sko1enhoRThNZXU3RDV1?=
- =?utf-8?B?YjdkMWVFUUpYbm4vTHdaeFg5TjJTT0tuV2F4aDBnVlpwQnJNcERsaFFhRGtP?=
- =?utf-8?B?enRxVTNpc2ZwUVp3ZlRJYks2S3VBUkdYRGNyYXBWZ0ZLYzNyZEtCRXRYNXVI?=
- =?utf-8?B?L1RQL1R1by80elJEZWUwN3hMMHVpd1NWRE5rVFUvdWJTN2p2UXhmbGhTZWxj?=
- =?utf-8?B?VldwcElwOExnQkx0OW82am4yWHVLKzQ5R2c1T2krZWh0eEpMeUJvc2lEdjM5?=
- =?utf-8?B?YWtvaVpIQkZDRlBJT0lrQ0xYalhEaEVIOXZvOWtaSTRrWnhYMjkvL2lYVVNH?=
- =?utf-8?B?Ykp6aTBBeDBtdUU5TStRQnAvR1RhTVY2elJSWVpTNHNhL2grTklQS051cHRI?=
- =?utf-8?B?ZnRRYlZvbVFHVVJ0MWgzNHVmYjZvMWdGM2RFKzUzZVVkb0NZbTVxbkJTN2Uz?=
- =?utf-8?B?SHFSWjVHVi91d3cvNGxVRTZvREUvanhZTHlMd0E0L28rV25OUmFIRmFmUWpo?=
- =?utf-8?B?VWl2ampaMnJTL0xoMDdqRWg4RWZGdEo2YS9mL3Q1SWc1VHJjWkZpbk5jaE9V?=
- =?utf-8?B?OEoxUkRUWkN3MUJieWZibTR6RmxWU1dlUUtXMnlYYWtQUTIxVmNXYlVTYWVJ?=
- =?utf-8?B?endNM1kyN2FDSi9VT0hIZ2VnOTl1RjJDOGYyVTExMEY2U1luVkxyMG43NEdi?=
- =?utf-8?B?d2FFdjdsb2MxQUVNL2hqRGZCejRURU5BWmJOYlJnTE1xWXRlekN4MzNRMTFs?=
- =?utf-8?B?K3EwM0kyWXB1YTh6UFNMRzc4QVF6MmUrNFFFL05NMExBZVgxOHF2ZjdmeXN2?=
- =?utf-8?B?N2dnSGcvdGxZU25OQStNUDJuNVhpL2k2V0dKSTFXS2JSWnN4SVMwd3Bta0tZ?=
- =?utf-8?B?dUFLQ1cwRlhoWkJyemM0c3I3dzljOW1xY1lySFJzcVRXdUpqcnJXSjhIcXNo?=
- =?utf-8?B?bUxsc1pzQWJZTVJkTWZWejlhSTVrdWVYaXA0SVdzQkNSNzR2ODJ1OEhzeXo5?=
- =?utf-8?B?c1RzT2FHMUlqNFkrdHNhamFIUHJCZGFZekM3cGIzRWpRdFlETkNma29QL243?=
- =?utf-8?B?eXdFMDV1L2h6ektJRzNoR0ZLZ2ZNL2gzWW9aRFA1OXo0QldPTkVWZjBNNC9N?=
- =?utf-8?B?SHAyVDZwTU1TcWZ4ZDNFbnBjNkluZERHd0YrV2VtZ0pERC9OVkFwNnFEL3Iw?=
- =?utf-8?B?RFpJSGFnMzlUVTJhZWUrOWxJQ1VvZXFQZVRFQ25HSi9vY2tORDJEYkFtemUw?=
- =?utf-8?B?OVFuZmdMUzJwN0dQaS9GWEtjT0JQcWpqT0RxUHNMZjdqbFF5NmlhdkJOVUVR?=
- =?utf-8?B?Qm4yMHpwZkwrRFNrZVAzMW9iUFJzSGlmUG01MkYxcndUNnZGZE9mN0NneENS?=
- =?utf-8?Q?7Gich5b0Tq2c3JO2vBBLvIBYA?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	P/ju0qnJW90Bf1CEqF2HpChK0iUrT2Q+OaREQlb0BUHgSWEYlwwGQ4CbDY0kYBT0gpV29xgrRys0X+YQcWGK+KcDkQPEm0q1kIBOolN9rbhhCFEqUSHtQ6GKzxuiOaamSOkZIeldKWPTasZ4O/1B79I5ebyccH+V/Pm0qG+kTeKt2p+5tZ+edVPoztZdlGADwP/vlQXLQFyXxBhL6/K7FYg7T6SpV3v0Ilj6b6Zzlu8cvpE2r3eePyaOiXXv1oH0pZnJ4InOchPvXWjMthVBIdt27Xn4WQKGDKC/L9nb/NdbCUdL95+FHyWJ8SpDDIq+HErT/FEAerqcXNQmJNuljBGw0GFjpB2rzkxGOwAUn5ZVAjmn0tE1di5ELVR8nkYOGEnkY4xKvHcFYPCgKbOHBeKT1hh4GfqvjWn/x3g88LBUrItoOyMyOsedjDFMl7GtPP9LNWhZtOMuZ9gFsBjmJYjAPdoCT0D3+Mdo650N+aBfyBjGb3j9+/KUQZl1SLeVuQzTcwwgwIadOw1Cm5t8IwUqv5WEn+O/fUTkRPIQJcgFUW+R3McbMFseJmyLMe9L/ZYOmV64HeEDKmKi5p5qwIyRsObNsWFTO7kPMgjisCk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0128c29a-65c7-448f-904e-08de116fad81
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2025 13:34:08.4438
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iHvP4HWgQG9cIJmn50kv07XpcbmYUNlbZ38k0THmvt8+q2y0F4PX6X4nIF5y5aUAdjt8CZ2DKWBslp5/fT/fQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR10MB7825
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-22_05,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
- definitions=main-2510220111
-X-Authority-Analysis: v=2.4 cv=GqlPO01C c=1 sm=1 tr=0 ts=68f8dd54 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VTue-mJiAAAA:8 a=qmU6OyjKAAAA:8 a=S3e0d6BWkA9axjcLr_sA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=S9YjYK_EKPFYWS37g-LV:22 a=iNQtemt1gxbOOLyaF_ST:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDIyMDA3MyBTYWx0ZWRfX/mJV++iY18+5
- 4721s2NddCLuif5taU+p+spjQVVrS65lsaqjzkzqxDkpbfyU/+SFv+2dz8V28asBdujMbUEtEgy
- yFzCxe2hw4YG2tOKDlosej+WFMn/hxQU+xlw7etxq9Pv6Jaro1jC633INeDfgh9mu8LUNuTk5I/
- 7HjNSG4qHNfxWg8XGl2aT3TQ7U8S2yFCH9FRw+I3Ro3FJMMAnOQukJr0+iHRAK71IDgFVH85zyR
- Lmqo0k+issWyVW2BhNu7DmxO9z+LTHyIb/J8aCpLHaFHHyF6jpQFMTHy1VbvFYs+EzF78EA5BkL
- rikVOcCvDy6PhI5VKaSQ3LJU4xezTVGeX753QGoNsGXIDXsTfOFgwwLrGFpUcp29o/fKHr9pnhi
- jB7zLZELvgWrlbqWO3F1qbKtgWxv2w==
-X-Proofpoint-GUID: GD5BeSBIEf5oXpmV2HslD9d-c2d7mc5F
-X-Proofpoint-ORIG-GUID: GD5BeSBIEf5oXpmV2HslD9d-c2d7mc5F
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+To: Christoph Hellwig <hch@infradead.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+References: <20251018005431.3403-1-cel@kernel.org>
+ <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
+ <aPZi2DXtdELwjTu2@kernel.org> <aPhoQtHH8iscmmKJ@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <aPhoQtHH8iscmmKJ@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 10/22/25 7:45 AM, Christoph Hellwig wrote:
-> Add a minimal entry for the block layout driver to make sure Christoph
-> who wrote the code gets Cced on all patches.  The actual maintenance
-> stays with the nfsd maintainer team.
+On 10/22/25 1:14 AM, Christoph Hellwig wrote:
+> On Mon, Oct 20, 2025 at 12:27:04PM -0400, Mike Snitzer wrote:
+>>> Can you define synchronous better here?  The term is unfortunately
+>>> overloaded between synchronous syscalls vs aio/io_uring and O_(D)SYNC
+>>> style I/O.  As of now I don't understand which one you mean, especially
+>>> with the DONTCACHE reference thrown in, but I guess I'll figure it out
+>>> reading the patch.
+>>
+>> It clearly talks about synchronous IO.  DONTCACHE just happens to be
+>> the buffered IO that'll be used if supported.
+>>
+>> I don't see anything that needs changing here.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  MAINTAINERS | 4 ++++
->  1 file changed, 4 insertions(+)
+> Again, what synchronous?  O_(D)SYNC, or !async?
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f2bc6c6a214e..1dbdf64bc362 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13586,6 +13586,10 @@ F:	include/uapi/linux/sunrpc/
->  F:	net/sunrpc/
->  F:	tools/net/sunrpc/
->  
-> +KERNEL NFSD BLOCK and SCSI LAYOUT DRIVER
-> +R:	Christoph Hellwig <hch@lst.de>
-> +F:	fs/nfsd/blocklayout*
-> +
+>>
+>>>> If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+>>>> invalidate the page cache on behalf of the DIO WRITE, then
+>>>> nfsd_issue_write_dio() will fall back to using buffered IO.
+>>>
+>>> Did you see -ENOTBLK leaking out of the file systems?  Because at
+>>> least for iomap it is supposed to be an indication that the
+>>> file system ->write_iter handler needs to retry using buffered
+>>> I/O and never leak to the caller.
+>>
+>> fs/iomap/direct-io.c:__iomap_dio_rw() will return -ENOTBLK on its own.
+> 
+> Yes, and the callers in the file system methods are supposed to handle
+> that and fall back to buffered I/O.  Take a look at xfs_file_write_iter.
+> 
+> If this leaks out of ->write_iter we have a problem that needs fixing
+> in the affected file system.
 
-It would be sensible to copy the other fields from NFSD for this, yes?
+What I'm hearing is that nfsd_vfs_write() should never see -ENOTBLK, so
+this check is essentially dead code.
 
 
->  KERNEL PACMAN PACKAGING (in addition to generic KERNEL BUILD)
->  M:	Thomas Weißschuh <linux@weissschuh.net>
->  R:	Christian Heusel <christian@heusel.eu>
+>>>> These changes served as the original starting point for the NFS
+>>>> client's misaligned O_DIRECT support that landed with
+>>>> commit c817248fc831 ("nfs/localio: add proper O_DIRECT support for
+>>>> READ and WRITE"). But NFSD's support is simpler because it currently
+>>>> doesn't use AIO completion.
+>>>
+>>> I don't understand this paragraph.  What does starting point mean
+>>> here?  How does it matter for the patch description?
+>>
+>> This patch's NFSD changes were starting point for NFS commit
+>> c817248fc831
+> 
+> But that commit is already in?  This sentence really confuses me.
+
+I'm not convinced this paragraph in the patch description is needed.
+Can it be removed?
+
+
+>> Would prefer that cleanup, if done, to happen with an incremental
+>> follow-up patch.
+
+I'm not following. What clean-up? And why push it out to a later
+merge?
+
+
+> Starting out with well structured code is generally a good idea :(
+
+That is my preference as well, though I recognize that some subsystems
+do not mind merging incomplete features and moving forward from there.
+
+Let's remember, upstream does not target specific kernel releases when
+developing new features. You might want your feature to hit the next LTS
+kernel, and even that is frowned upon. Let's focus on getting this as
+right as we know how to, rather than hitting a delivery date.
+
+
+>>>> +static bool
+>>>> +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask,
+>>>> +                        unsigned int len_mask)
+>>>
+>>> Wouldn't it make sense to track the alignment when building the bio_vec
+>>> array instead of doing another walk here touching all cache lines?
+>>
+>> Yes, that is the conventional wisdom that justified Keith removing
+>> iov_iter_aligned.  But for NFSD's WRITE payload the bio_vec is built
+>> outside of the fs/nfsd/vfs.c code.  Could be there is a natural way to
+>> clean this up (to make the sunrpc layer to conditionally care about
+>> alignment) but I didn't confront that yet.
+> 
+> Well, for the block code it's also build outside the layer consuming it.
+> But Keith showed that you can easily communicate that information and
+> avoid extra loops touching the cache lines.
+
+Again, is there a reason to push this suggestion out to a later merge
+window? It seems reasonable to tackle it now.
+
+(Perhaps to get us started, Christoph, do you know of specific code that
+shows how this code could be reorganized?)
+
+
+>> Room for follow-on improvement to be sure.
+>>
+>>>> +	if (unlikely(dio_blocksize > PAGE_SIZE))
+>>>> +		return false;
+>>>
+>>> Why does this matter?  Can you add a comment explaining it?
+>>
+>> I did/do have concerns that a bug in the storage driver could expose
+>> dio_offset_align that is far too large and so bounded dio_blocksize to
+>> a conservative size.  What is a better constant to check?
+> 
+> I don't think there is a good upper limit, we not do supper LBA sizes
+> larger than PAGE_SIZE, although I don't think there's any shipping
+> devices that do that.  But the most important thing is to always add
+> a comment with the rationale for such non-obvious checks so that someone
+> who has to lift it later can understand why it is done.
+> 
+>>>> +	 * Also update @stable_how to avoid need for COMMIT.
+>>>> +	 */
+>>>> +	kiocb->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>>>
+>>> What do you mean with completed before returning?  I guess you
+>>> mean writeback actually happening, right?  Why do you need that,
+>>> why do you also force it for the direct I/O?
+>>
+>> The IO needs to have reached stable storage.
+> 
+> Please spell that out.  Because that's different from how completed
+> is generally used in file systems and storage protocols.
+
+It's sensible to add a comment that cites the NFS protocol compliance
+mandate that states a data durability requirement.
+
+
+>>> Also IOCB_SYNC is wrong here, as the only thing it does over
+>>> IOCB_DSYNC is also forcing back of metadata not needed to find
+>>> data (aka timestamps), which I can't see any need for here.
+>>
+>> Well, we're eliding any followup SYNC from the NFS client by setting
+>> stable_how to NFS_FILE_SYNC, so I made sure to use SYNC:
+> 
+> Why do you care about timestamps reaching stable storage?  Which is the
+> only practical extra thing IOCB_SYNC will give you.  If there is a good
+> reason for that, add a comment because that's a bit unexpected (and
+> in general IOCB_SYNC / O_SYNC is just a sign that someone does not know
+> about SYNC vs DSYNC semantics).
+
+If NFSD responds with NFS_FILE_SYNC here, then timestamps need to be
+persisted as well as data. As discussed in other threads, currently
+nfsd_vfs_write() seems to miss that mark.
+
+So either: return NFS_DATA_SYNC (which means we've persisted only the
+data) or make this path persist the timestamps too.
+
+I haven't seen any existing code that convinces me that setting both
+IOCB_SYNC and IOCB_DSYNC is necessary.
+
+
+>>> The VFS certainly does not, and if it leaks out of a specific file
+>>> system we need to fix that.
+>>
+>> As I said above, fs/iomap/direct-io.c:__iomap_dio_rw() does.
+> 
+> As stated above that's an internal helper and the code is supposed to
+> be handled by the file system and never leak out.
+> 
+>> Regardless, the most likely outcome from issing what should be aligned
+>> DIO only to get -EINVAL is exactly what is addressed with this
+>> _unlikely_ error handling: misaligned IO..
+> 
+> No.  There is no reason why this is any more likely than any of the
+> other -EINVAL cases.
+
+Agreed, the likelihood of getting an -EINVAL here due to a block
+alignment issue is much lower than getting -EINVAL due to other
+problems.
 
 
 -- 
