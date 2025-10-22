@@ -1,60 +1,55 @@
-Return-Path: <linux-nfs+bounces-15505-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15506-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 424FABFB5C4
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 12:15:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F04ABFB5CA
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 12:17:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D245C580B0F
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 10:15:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A436219C11B3
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Oct 2025 10:17:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41E33320A0B;
-	Wed, 22 Oct 2025 10:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DAFF30F7FA;
+	Wed, 22 Oct 2025 10:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzHesvpS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoLwvyZI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB9E288C24
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Oct 2025 10:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43854DF59;
+	Wed, 22 Oct 2025 10:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761128146; cv=none; b=IY+DPDCKdK3zAJHHp12QJNl3SvWyzHXUh8Z8wKNygy9ZhHM8aBAIj+0ch6Wr/CFd87kgwj7NRaazuq8I3oVU2qsQ7OM9A/9tocdhpUeCjCCc3xIyMEJMa1RzkDiVJU7xwNvut3oFqlmcS4ATdZn5Nv/iCaPw7tYIPVe5D9kOiM0=
+	t=1761128217; cv=none; b=V/PoMmcq6kV97kmFGK0YXW3w10BUWmXxykJXFvj3zcnRioEU5KJiQ2PQFGWfch+/zOMN7rft8KHtVgbGZ0pBFKxxTqGQMyrUmVTxBtCJtrYExbFLHIOUPWqhOjQwRnYkgs2TbeH3SyvZhICsaoW1Qokjhjcd517SI5R2TJRHqEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761128146; c=relaxed/simple;
-	bh=D8WZtCoj8HmgS4O4hYnb4aVzOgAl9NqBNJhdI8P6v+8=;
+	s=arc-20240116; t=1761128217; c=relaxed/simple;
+	bh=ASljoI6RlOZFKah3hE5ZjjsizLnskFRWTFPUgS3RSs8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QXksGbjllSZ8jtk6bgIdA/jYJJr+Fz4DNbn1RJz9wuuwXR+hKdDfXdNIlNfpHjSsAzRK1fuBSwdQ3vLB0eEKMl9WvoTkCfiwSPfft6FLMWe57WaiIvPe50jj486ToYqvLHACu7KckueNbVavS9gwQpqFndy3CHyB1Iipv3hLUrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzHesvpS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E64C4CEE7;
-	Wed, 22 Oct 2025 10:15:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=tUsYkGhhfNQBzU7T8ea17IBX7XFAFrn8R7O12FJz8jMUbyeUSzBw11UNjmN7jpK6zr3YQEn5c1cT4S5uHNaA/l2i8r83UiNUN/X1UqtmSds7HDfLVNmfmJND5RKSpTXy3m/RXI67Y1euWQPZgk4/9kCdvicN3+CwbeoD1ghDwDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoLwvyZI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47579C4CEE7;
+	Wed, 22 Oct 2025 10:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761128145;
-	bh=D8WZtCoj8HmgS4O4hYnb4aVzOgAl9NqBNJhdI8P6v+8=;
+	s=k20201202; t=1761128216;
+	bh=ASljoI6RlOZFKah3hE5ZjjsizLnskFRWTFPUgS3RSs8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rzHesvpS0Q/ZYwUQkwpVQRPcA53AwkiTAFX3l7fw9j9dfKFBqQIfINDi3vzLMbhGR
-	 1CnWyyNX8SvDIZlTG7zes3rjCdw0OgZ3KjhRjBdD/V24CEMmhtMZ/+eeEP9zEDdMsz
-	 +vyt/WRK77EU4JTMlTRdhnXuAiN3sn1cPUQGNPSjDFvTDo7MZrzSLPR2YVubwy5q/y
-	 RYWPKhjUENlmUVj8nsFwFjOmUPJcEHv7eFP1+SPyoNd+e4WRefF/wBGCtvJIVpn7lJ
-	 yLOyPfrUED8PzHpPupji7szzLYwdHsAU8L428NEhFW1rY68F9UK2wg4Jx1tkwXcRNu
-	 iquYPRoS3pFXQ==
-Message-ID: <63a440d869e3f8a9ecf13537e2da6c6439933ed1.camel@kernel.org>
-Subject: Re: [PATCH v4 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+	b=ZoLwvyZIR3wkGWsSSJ01nMy3gKSQBaekRNoa1WnK450nvy1u9zM1K8PGdmwrgk+JI
+	 LyBCdTigR+N0A4dJFNfWwsvQKZakO4ltLsP6r2uOFzlaKV3VTOnsimfmgViqgNY+Z3
+	 cuX6a96V8HnPksNz84QeVJ5SdezQQWc8oM1VpX8ffXtXzVWmw/o8ATzAkOD+7Au354
+	 P6tXjQnsj1zkApt3CBmPBMNWLJ/6vZnjtwqN9sittQ64Xu2p0DfXKq5S53+fZVaME+
+	 QNwO9yLDgbB12MXZ+++weokDtMAGHmjPoSDX3W3USXPxT85cP85M0a5Nt/1YVUBJWc
+	 O2lI5ZvoEyIlw==
+Message-ID: <f2b76db28f459720ccbb7fb584e530b31485de3f.camel@kernel.org>
+Subject: Re: Where can I find nfs-utils?
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org, Mike Snitzer
- <snitzer@kernel.org>
-Date: Wed, 22 Oct 2025 06:15:44 -0400
-In-Reply-To: <aPhoow9Z-r94b5AL@infradead.org>
-References: <20251018005431.3403-1-cel@kernel.org>
-	 <20251018005431.3403-3-cel@kernel.org> <aPXihwGTiA7bqTsN@infradead.org>
-	 <a5f3911ae6b65c70e1fd897bdd4f3e651decb196.camel@kernel.org>
-	 <aPhoow9Z-r94b5AL@infradead.org>
+To: ChenXiaoSong <chenxiaosong.chenxiaosong@linux.dev>, 
+	chuck.lever@oracle.com, trondmy@kernel.org, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 22 Oct 2025 06:16:55 -0400
+In-Reply-To: <39c67bcd-5369-44e7-9c7e-e9702ff95d53@linux.dev>
+References: <39c67bcd-5369-44e7-9c7e-e9702ff95d53@linux.dev>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,29 +134,19 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-10-21 at 22:16 -0700, Christoph Hellwig wrote:
-> On Tue, Oct 21, 2025 at 07:24:42AM -0400, Jeff Layton wrote:
-> > Responding to a WRITE with NFS_FILE_SYNC flag set means that the data
-> > the client wrote is now on stable storage (and hence the client doesn't
-> > need to follow up with a COMMIT). This patch is using DIO for the
-> > aligned middle section but any unaligned ends use buffered I/O. If we
-> > want to return NFS_FILE_SYNC here then all of the data and metadata
-> > need to be on disk when the reply goes out.
-> >=20
-> > Don't we need IOCB_SYNC here in this case? Otherwise, the server could
-> > crash while the metadata is still in memory. When it comes back up, the
-> > client could see stale timestamps. Maybe that's not fatal, but it seems
-> > pretty sketchy.
+On Wed, 2025-10-22 at 15:51 +0800, ChenXiaoSong wrote:
+> Greetings,
 >=20
-> Why do you care about the timestamps which in NFS AFAIK aren't tied
-> to the data writeback in any way?
+> Previously, the nfs-utils repository could be found at=20
+> https://web.git.kernel.org/ , but it can no longer be found there. Where=
+=20
+> can I find the nfs-utils repository now?
 
-Cache coherency. If the timestamps roll back, some clients may not
-notice that data has changed after a write.
+The canonical repo is here:
 
-It's not the end of the world -- non-evident timestamp changes were
-typical prior to the multigrain timestamp patches going in, but it's
-not ideal.
+http://git.linux-nfs.org/?p=3Dsteved/nfs-utils.git
+
+Cheers,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
