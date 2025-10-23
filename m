@@ -1,48 +1,64 @@
-Return-Path: <linux-nfs+bounces-15564-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15565-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBA13C00906
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 12:46:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A78EC00DDD
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 13:48:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99A8019A0F24
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 10:47:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4611B3ADFEB
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 11:42:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A2D309EF4;
-	Thu, 23 Oct 2025 10:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025C230274F;
+	Thu, 23 Oct 2025 11:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLokn6j7"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CQZ66iSY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622622765DC;
-	Thu, 23 Oct 2025 10:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5C1302747
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 11:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761216413; cv=none; b=J7acZ53Z08PuI0EZ94hojatEirftDrp9WXg5qkcBAkfJI3/SU8yJrIKpyeY84JfavYr9Pt7eA0VXrrfIZwTupibz/vbKJo1ZYsX43B99IwVxUTGis1V6vBqP55s2JalCr2mzwYIvKwLJIlZ/fojSOYLZjU0FUWhvb267sYP92JA=
+	t=1761219709; cv=none; b=ZEgL2cjylR7CLmB1mAgc7WSWTeTFrR4QKDRTRlUTdCl+sNtZexTR+gdcuVI2OAUEFKGMh1y7cArKy9CiaTYGXh9iAe4ZofK1HeuLON1h1869Q+SVz+R/DcCmu1X9VHSJicmBfGXpNqYKRLwwP7gbdAwDcTQ8eMUehsiEi1LZaSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761216413; c=relaxed/simple;
-	bh=4Nycx1ORZclwlAUuSrDPm+Q6EH8JvLo9+c1zBeefgcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CbHMTTQpLwl2OGBKFVjSqqSs5a7Kl03vI7CkwY/b+MOtlAdKnt80XVYlnIPw9fy+aqVGiGgUv0Eo8R0gZ4Ef4lHRZpI4TgpCPRs7CkHjpL98MI/jN8P97crQHkOOD1X62f310tNVtCXmzuyO8cpNGs/fohkpICcaRYMV4zVVX9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLokn6j7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9B7C4CEE7;
-	Thu, 23 Oct 2025 10:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761216412;
-	bh=4Nycx1ORZclwlAUuSrDPm+Q6EH8JvLo9+c1zBeefgcA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MLokn6j7bsPTtDKzR8pqjp2OIR+OMKA1rj3J/6jxNvlhgcsOoQ+moyQ5GdMJY0dDs
-	 Znmt5H3FHjRCN/E5Q2OiSn3Lge5IHCXD/l7T7/WJ6bkLphXMC2HXV8rhysZfDX6Sr+
-	 rNUl8sN5/1gEAa9ysrMEafdWcYQ0VQhevGk1H7BhaFT8iiTd5n9BTY4verf1aGvcpu
-	 2n7qQ7sTY81LVQ1UhGF1Gtff22NCJXEfiZHTApKvHY7cQr6tmKVbYlAGr+xV9kWFbP
-	 87li730Z1OQYtoHcpFjViMqnavqolBedQ+OYK4M6H1LebiK34NEzwo7Gy1V6/AuNf7
-	 96d0cS8eISSpA==
-Message-ID: <5b287ec6-72ff-4707-9040-3c84efc58b94@kernel.org>
-Date: Thu, 23 Oct 2025 12:46:45 +0200
+	s=arc-20240116; t=1761219709; c=relaxed/simple;
+	bh=yAU8SANMviwuHmsErc/rikdhHx00oY4QFmNUYec28q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=CrqvwDJ4dVGSZ7YjCktiP66y/SHIqM2Q+5UOYnAzt7mCx/YE1uCceGEodzbv6h3y2iNQenxshJcn0AXbL6p3uK6t/NYahpq+Wt0lEyU2Mv1eE7syi0y8Qa+loA3jucI1ay4cWBiBJ0d3TsOI4Fh8jo786qYKyGocCNol7NkjGOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CQZ66iSY; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20251023114145epoutp036684c1912f192829e2d6250e25c957ec~xG-2pFZw52055020550epoutp03B
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 11:41:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20251023114145epoutp036684c1912f192829e2d6250e25c957ec~xG-2pFZw52055020550epoutp03B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1761219705;
+	bh=N+oN6QIkhg+yxG+jofXiwToGHW0SdPwLgjc3KiwgdQg=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=CQZ66iSYqNmHIJkk+0ZfYZ6mI08ULjkdlQ2Gb9uroSSh4A/ksYaZoznFo38EuldpN
+	 Pmev3HPm6H3BdGroe6RJS8mWtP3FGeyhi9EH8wCaMFqggcHAjUosc196egoDvoXfOW
+	 1d/8tMTtEuQQIK5VON5bdvQ9G1SER5CLfXjMrlvI=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20251023114144epcas5p4915a81068b8c2110682c4ce6ea36272e~xG-157QXg0607706077epcas5p41;
+	Thu, 23 Oct 2025 11:41:44 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.88]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4cskdg5VR5z2SSKZ; Thu, 23 Oct
+	2025 11:41:43 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251023114142epcas5p10a1abeff9e1326fc9c846001906c9986~xG-0B0nat0254002540epcas5p1U;
+	Thu, 23 Oct 2025 11:41:42 +0000 (GMT)
+Received: from [107.111.86.57] (unknown [107.111.86.57]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20251023114136epsmtip1a3b96a88ae62950abac3f8a8a7dd3abc~xG-uRBGdX1343713437epsmtip1Q;
+	Thu, 23 Oct 2025 11:41:36 +0000 (GMT)
+Message-ID: <81330754-1aee-4807-a982-1fed37c016af@samsung.com>
+Date: Thu, 23 Oct 2025 17:11:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,135 +66,79 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/32] pidfs: validate extensible ioctls
-To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org
-Cc: Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>,
- Mike Yuan <me@yhndnzj.com>, =?UTF-8?Q?Zbigniew_J=C4=99drzejewski-Szmek?=
- <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>,
- Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>,
- Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, netdev@vger.kernel.org
-References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
- <20250910-work-namespace-v1-1-4dd56e7359d8@kernel.org>
+Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250910-work-namespace-v1-1-4dd56e7359d8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Jan Kara <jack@suse.cz>
+Cc: Dave Chinner <david@fromorbit.com>, jaegeuk@kernel.org, chao@kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, miklos@szeredi.hu,
+	agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org,
+	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
+	clm@meta.com, amir73il@gmail.com, axboe@kernel.dk, hch@lst.de,
+	ritesh.list@gmail.com, djwong@kernel.org, dave@stgolabs.net,
+	wangyufei@vivo.com, linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com,
+	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com
+From: Kundan Kumar <kundan.kumar@samsung.com>
+In-Reply-To: <bfpv6jrjo4avzk76ex77dwpzaejglu5gsf2pqpmmgwrmqdkkk3@imsbtnrcelee>
 Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20251023114142epcas5p10a1abeff9e1326fc9c846001906c9986
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9
+References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com>
+	<20251014120845.2361-1-kundan.kumar@samsung.com>
+	<aPa7xozr7YbZX0W4@dread.disaster.area>
+	<6fe26b74-beb9-4a6a-93af-86edcbde7b68@samsung.com>
+	<bfpv6jrjo4avzk76ex77dwpzaejglu5gsf2pqpmmgwrmqdkkk3@imsbtnrcelee>
 
-On 10. 09. 25, 16:36, Christian Brauner wrote:
-> Validate extensible ioctls stricter than we do now.
+On 10/21/2025 5:41 PM, Jan Kara wrote:
+> On Tue 21-10-25 16:06:22, Kundan Kumar wrote:
+>> Previous results of fragmentation were taken with randwrite. I took
+>> fresh data for sequential IO and here are the results.
+>> number of extents reduces a lot for seq IO:
+>>     A) Workload 6 files each 1G in single directory(AG)   - numjobs = 1
+>>           Base XFS                : 1
+>>           Parallel Writeback XFS  : 1
+>>
+>>     B) Workload 12 files each of 1G to 12 directories(AGs)- numjobs = 12
+>>           Base XFS                : 4
+>>           Parallel Writeback XFS  : 3
+>>
+>>     C) Workload 6 files each of 20G to 6 directories(AGs) - numjobs = 6
+>>           Base XFS                : 4
+>>           Parallel Writeback XFS  : 4
 > 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->   fs/pidfs.c         |  2 +-
->   include/linux/fs.h | 14 ++++++++++++++
->   2 files changed, 15 insertions(+), 1 deletion(-)
+> Thanks for sharing details! I'm curious: how big differences in throughput
+> did you see between normal and parallel writeback with sequential writes?
 > 
-> diff --git a/fs/pidfs.c b/fs/pidfs.c
-> index edc35522d75c..0a5083b9cce5 100644
-> --- a/fs/pidfs.c
-> +++ b/fs/pidfs.c
-> @@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
->   		 * erronously mistook the file descriptor for a pidfd.
->   		 * This is not perfect but will catch most cases.
->   		 */
-> -		return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
-> +		return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
+> 								Honza
 
-Hi,
+Thank you for the review, Jan.
 
-this turned EINVAL (from pidfd_info()) into ENOTTY (from pidfd_ioctl()) 
-for at least LTP's:
-struct pidfd_info_invalid {
-	uint32_t dummy;
-};
+I found that the IOPS for sequential writes on NVMe SSD were similar
+for both normal and parallel writeback. This is because the normal
+writeback already maxes out the device's capacity. To observe the
+impact of parallel writeback on IOPS with sequential writes, I
+conducted additional tests using a PMEM device. The results, including
+IOPS and fragmentation data, are as follows:
 
-#define PIDFD_GET_INFO_SHORT _IOWR(PIDFS_IOCTL_MAGIC, 11, struct 
-pidfd_info_invalid)
+A) Workload 6 files each 1G in single directory(AG)      - numjobs = 1
+     Base XFS           : num extents : 1 : 6606 MiB/s
+     Parallel writeback : num extents : 1 : 6729 MiB/s - No change
 
-ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid) == EINVAL
+B) Workload 12 directories(AGs) each with 12 files of 1G - numjobs = 12
+     Base XFS           : num extents : 4 : 4486 MiB/s
+     Parallel writeback : num extents : 5 : 12.9 GiB/s - +187%
 
-at:
-https://github.com/linux-test-project/ltp/blob/9bb94efa39bb1b08f37e56c7437db5fa13ddcae2/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c#L46
+C) Workload 6 directories(AGs) each with one 20G file    - numjobs = 6
+     Base XFS           : num extents : 7 : 3518 MiB/s
+     Parallel writeback : num extents : 6 : 6448 MiB/s - +83%
 
-Is this expected?
-
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -4023,4 +4023,18 @@ static inline bool vfs_empty_path(int dfd, const char __user *path)
->   
->   int generic_atomic_write_valid(struct kiocb *iocb, struct iov_iter *iter);
->   
-> +static inline bool extensible_ioctl_valid(unsigned int cmd_a,
-> +					  unsigned int cmd_b, size_t min_size)
-> +{
-> +	if (_IOC_DIR(cmd_a) != _IOC_DIR(cmd_b))
-> +		return false;
-> +	if (_IOC_TYPE(cmd_a) != _IOC_TYPE(cmd_b))
-> +		return false;
-> +	if (_IOC_NR(cmd_a) != _IOC_NR(cmd_b))
-> +		return false;
-> +	if (_IOC_SIZE(cmd_a) < min_size)
-> +		return false;
-> +	return true;
-> +}
-> +
->   #endif /* _LINUX_FS_H */
-> 
-
-thanks,
--- 
-js
-suse labs
-
+Number of CPUs = 128
+System RAM = 128G
+PMEM device size = 170G
 
