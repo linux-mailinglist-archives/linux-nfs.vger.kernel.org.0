@@ -1,283 +1,283 @@
-Return-Path: <linux-nfs+bounces-15570-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15571-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 100F8C0181C
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 15:44:17 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05955C0180A
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 15:43:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71D3D188D5FE
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 13:40:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 122C54FC2BB
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 13:41:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A24E328B6A;
-	Thu, 23 Oct 2025 13:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBBEF31280B;
+	Thu, 23 Oct 2025 13:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gF6HiA3P";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rrT9nRb2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TE8PlGse"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897803321A3
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 13:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761226578; cv=fail; b=mi4CV6YfkKFVMM/Yj5uJktxyxyN5KqQQNwjvwhttCcAMM4biGB75U1UUoFjiS9vrYhlZCqPSPctWBlf1UKf6x8ibNLj4tE4hOYTlAwPAhPK41oHZ/xRtoVyJ4HlUw+5FZthqjpcEEBdI5URjyno5F4eTSjOs3D83/hVJ3gx1eK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761226578; c=relaxed/simple;
-	bh=UsEYPV2MExoegtVttcRkvBQyLr+d5BiCaghU0BCmlac=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NHYIGIRqwEkdK3tlYISl9l2Da07sECiO/+tmKs0kSoCTl/v5tW6dQuBQTYTQ0tRk3xC3lI/EM2ksiQoZYchMY0a4/oDH1TvhsFDO95hhebVQwFW3Ny7rfQum3SNXE0XTZC2ZNzNwV2PGfvVuD25oN5pBYQnir3Vjsv7sTHAWe84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gF6HiA3P; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rrT9nRb2; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59NBELgU002429;
-	Thu, 23 Oct 2025 13:36:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=8ZDdQoq8rhV3dhS+ULE9v7a1vfsYoXCfrPx7ccdzPGo=; b=
-	gF6HiA3PPAhlQk3gD0b4t6URp0fEfb0z+E5Xv5yaCETbtFb5HQtDsqE5JW1FI2EO
-	tFP8d2eIr9Fz7Bvkx3d6cI0/HcGYLvH5AQnImauYb3tz+52AYKc9nUxBLiZmrsHn
-	uj2RzsTZrJD4Qj7FNVNfPbvu54CFwKwO74QAt/t+YmpCIONj8zlxSLaK3xjfBQns
-	R6PUFgy98KTcNxZO/MSedVykiYUID/ZK1oqtbW2vVnWCjgAyDFaQyIGo3BfUOPPT
-	PsRkUCHcH/sdwOYTC/bydMQXmI3VEl9FJxbacvHCPQe/44Qpz15SJL5fOTr01UjH
-	0Mrv3n3uSz1bsLG7eCdrKg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49ykah07vu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Oct 2025 13:36:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59NCH6pK022350;
-	Thu, 23 Oct 2025 13:36:03 GMT
-Received: from ph0pr06cu001.outbound.protection.outlook.com (mail-westus3azon11011063.outbound.protection.outlook.com [40.107.208.63])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 49v1bfm6cq-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Oct 2025 13:36:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yeuKJMTZIMusI0toob53yLnwOBjbA0S4S90rnDzEZt7dLRlQjakugyjxAZ42hLuyj2X0Pi1J8sOmMc0T6vu6pXS4/FkIXTQXAc/z/L1/AZMKIqCwbgSeDggelDtPjKPmZBPKz/7mogvlH3x5g485ogE+g7yOgrMEE12o12TOg5HD8VAt/rRZmqVDaUcNO2GrXXMMAiFvfD1Jc4BhRvJ5mUFlUVhVeSK8WFUmm5RSWlwIsRFWSpvbXh+NnLGGYrcZXAkRHFl5DcHsy+oqWJ5klskVzfrtxC1crxL48lbs/OS768XMlDPO2fWKuIDvJvfBCS18yVhDb3rAej8LsoDa/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8ZDdQoq8rhV3dhS+ULE9v7a1vfsYoXCfrPx7ccdzPGo=;
- b=UWH8LCcTzI3YrCkMDJXkGQdLdv6qQRBz5VkSkc2jQP0GeZVy3zmhtuDT7VW3H4GKP5p1JZ0iDqOlaQRZcQ4re21411HYNyV8bcfFxZQI036wCFmi8TOfIjU+5sVfNuGdbVi+lHGrt9n12QW4UHhWnyrrTOMyxchfOJCwNwtLWHTcvGdgtXtFWW3UUts5NjNfN5gZYzlOKSkKzcPcpEHVaJg5sk8gYfWYyGEvYY/I5QsvhBEsTbYNzIm2rPPS9IlVAqYPp+vO3/q1oafBsg7IdQdWwCLWKWMWewFLvlO3Zv2q1wBHQO+lTQ8BVcVSKJpiLGGDRsjm1KOk9uTMj2+9Rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ZDdQoq8rhV3dhS+ULE9v7a1vfsYoXCfrPx7ccdzPGo=;
- b=rrT9nRb20JGJk2QQYnzXEyyRBUaCgOwYw/twAZHFuMnES6ULOQ2ULhEddkkbXzuG+F6Gb4wPJ0ROKQQwGnAKxVcFPRyjPMGLJuiiYPHhZXBkfWERhdnWnTdFMM4mv8++AMji8ibS56lM30+JYXSKJus5vMmug62nGZF5woR2Z6o=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MN2PR10MB4142.namprd10.prod.outlook.com (2603:10b6:208:1d2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Thu, 23 Oct
- 2025 13:36:00 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9228.012; Thu, 23 Oct 2025
- 13:36:00 +0000
-Message-ID: <fe0c00c8-88aa-445d-a13d-9d41e69e8362@oracle.com>
-Date: Thu, 23 Oct 2025 09:35:58 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] nfsd: revise names of special stateid, and
- predicate functions.
-To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-References: <20251022223713.1217694-1-neilb@ownmail.net>
- <20251022223713.1217694-2-neilb@ownmail.net>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251022223713.1217694-2-neilb@ownmail.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR14CA0014.namprd14.prod.outlook.com
- (2603:10b6:610:60::24) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51A93148CB
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 13:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761226852; cv=none; b=JFWR8tidiqTALRDMmL/JRb0yMmM+w6ALEV4XYehWl/wr94E3vYkz/GH3uYk8C4Iv4cBwu/4jPO6UdWLRWkVDhOXTYovBgXTKu/qpL+q5++cX8g8pmtp4cIoImyLEL75cL8Gtj5yrmly1ZyhhtxCeKKZkAFhcJt/TuxVDxZp5+vk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761226852; c=relaxed/simple;
+	bh=tXHhffhMXF+bHLRAiYRCAFZ436/FYLKJlslKVYWcEvM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PXBJvO07xGAnA3oitrsTRURiAqU5nzL2cYNGQsIkXk/7pWqJgsg9mJMjGfi2Gty0UxYmjxgyQIA7xC1ZR420vPd0RVmfdIJv/4NU5WkA4OOUzC9XXyfsTT8SEWuSSGMf//QrbE+btF55nXWIbWn6+QrKmRoyIV8/1cfqv24frW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TE8PlGse; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92705C4CEFB;
+	Thu, 23 Oct 2025 13:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761226852;
+	bh=tXHhffhMXF+bHLRAiYRCAFZ436/FYLKJlslKVYWcEvM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TE8PlGseF2l2T5mi+jiz3TTEEx2kUyUw59JLyYxlhPCUu8UmfAYT3cBJxgONLMw02
+	 vJwmymGgevqTucnsNZi5vLzfZpao8w+lzWEZvg2XkZmpiTyJxsjkA2jp51Lby8zmT1
+	 aSCaR5JxJLURfYdGUiiyLiLhgVpXO+KUM3uJ9HUQ9KHnEECbp+nZDXs7X2vZS6IU3b
+	 SJxRUO8NHj6Yw9Ih3jipxibn+sAaU4JJWEYtsZMzKNSUq7ZVLaCdQF7OoLndIEIDqH
+	 7L89HeQoeBLAY5w/CpKGDFfxrmkSpHNVspd2TWiMqMwtpaSw7QnK3loBKSgRTXCAnq
+	 mLyiZyEs0+q0w==
+Message-ID: <866d16d748b3ee91ab91be4c5488032556045260.camel@kernel.org>
+Subject: Re: [RFC PATCH 1/1] lockd: prevent UAF in nlm4svc_proc_test in
+ reexport NLM
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Olga Kornievskaia <aglo@umich.edu>, Olga Kornievskaia
+ <okorniev@redhat.com>, 	chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+ neilb@brown.name, 	Dai.Ngo@oracle.com, tom@talpey.com
+Date: Thu, 23 Oct 2025 09:40:50 -0400
+In-Reply-To: <176116947850.1793333.1787478761707441526@noble.neil.brown.name>
+References: <20251021130506.45065-1-okorniev@redhat.com>
+	, <33ba39d2ff01eb0e52c80aa7015d27e34dde7fd2.camel@kernel.org>
+	, <CAN-5tyEuV2UO17w97b8weJUQR7hgqX=jz-kvGR9Sr_m3NZp8ww@mail.gmail.com>
+	, <d0a1a1ccec73ee56e614b91c4a75941f557398b8.camel@kernel.org>
+	, <CAN-5tyGK4MHgYaN1SqpygtvWM8BFrapT-rXY_y9msVfnRjN1Jw@mail.gmail.com>
+	, <ff353db93ca47b8fae530695ea44c0a34cd40af8.camel@kernel.org>
+	, <fe1489b3c55bdb32cd7ad460a2403bc23abdde81.camel@kernel.org>
+	, <f61025a96df19c64ba372cdcab8b12f3fa2fff9e.camel@kernel.org>
+	, <CAN-5tyFWvP2ZTeYFN6ybGoxvsAw=TKFJAo0dVLU_=s_5t=LCGg@mail.gmail.com>
+	, <f5073caf3e3db05702ed196042053fc864645750.camel@kernel.org>
+	 <176116947850.1793333.1787478761707441526@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN2PR10MB4142:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3db05b9e-d02e-4409-ce1f-08de12391a99
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?alFFSXdseWxtZmF6VHRUSE9yM2dSMlFxSU5mMTNGdk1DVTlqN0RrZnQ0b3JD?=
- =?utf-8?B?RjJGa3k5VDJkL1l3dVJSa0lFYXNhMzkydnBmNU1QU0xYcXYxdCszbVdodzN0?=
- =?utf-8?B?TFBRSkVxR0RGdGR2TC8vRXk0Ti92OFBiNXBoZXN1bG56czdjampBbGFJbTFv?=
- =?utf-8?B?aTVUTVNKbzFGbE41OGRmTmVXV2RkQVQzQWhNWE90R2VZMUNNbXV5bG90Sld4?=
- =?utf-8?B?cGpRTWtHdjN4bk5XakNMZzV5UVZsbURVS1ZCVUpvRnNCUmFHb0RlN2IxOXZq?=
- =?utf-8?B?dW83WjRVd3N5MitxcjRsZ21wd3VJeDdXZjgvV2Nia21YdDdSVDNSd3NNM3hu?=
- =?utf-8?B?Mzl0cVF3eGxhS3hkR2dxRkJ2aSt1TS9jdlROdHorU0NXZVZQTm9NTVRLdTBm?=
- =?utf-8?B?bzdweUgwUzRlalZOcitjajFQV1RPWEZYaTZic1lpTlNuYjFLaFZENjdVTWpz?=
- =?utf-8?B?Z2FsNDBld2p3bTRDbWxkUUZWMkVpTXJlNmhFdm9GRWd5dVBxTjRiNkVXdTNu?=
- =?utf-8?B?dzVUS0R4Y1BIeXRGaDVoaXMvMmZZVlZmOUFiQ1VaS21hTzcyZWNoOEJmWGdp?=
- =?utf-8?B?blhvY0NYcHJjRnl2aDRvbkVOT0doeGtzV00rMFRpVTdnS1M1WHM0Um1nZ1RR?=
- =?utf-8?B?Wm1ja1lxaWRnNHdEN3d1MUt4cVMzaldpencwUmhZeWVJTGNFajNZYzAzTU9G?=
- =?utf-8?B?YkFUaUoxZ0FlMlVhZFBzaytla0hYRy8zUXNTcHFlUFM5cklZT0g0QTY2bFAw?=
- =?utf-8?B?bVN5QnR1L1ZobDhrYUlSNnBWVm8zN3VreXlQNWFsUFk3RmoxWkVYa1pJREdw?=
- =?utf-8?B?Y3NxL1NiRnNhTTZkdEZuL2tFS0lhaENnb0t2SExPOE9raTQ5eGljamUycG4r?=
- =?utf-8?B?TkZ6cHZZR0JRblVoUmY5RFJBVmtwcjdHWHpwMkwwVzExcmhxbVNjek1LZWk1?=
- =?utf-8?B?WXdUZHlJSHRJaE1sYWg3YUd0NGpPcVZyQjZ3U0hUZTZocW8rOTJvemlXdGZW?=
- =?utf-8?B?dUxpWjBueWhha0hEMlFYTkFIU1FON0svUXpwMjdLMStUVStWcytxSThNa1Iy?=
- =?utf-8?B?MENYR1Jqa1UzRkN1ZkpJSmx6c29ZVWpHdFozTERaeE14OWEyc3daRG4relg4?=
- =?utf-8?B?aUIzeUdFMkM4RlFQVmZid3lZb3FZV1QrNXFYY20rRWJDUnVIYzNEUzBkWW9X?=
- =?utf-8?B?NUltZm9YWVIrNXhjZDV1cmdjaDZNWlZYcXc4am5oaGhzUkFnSTlXMVdRemZy?=
- =?utf-8?B?OXQzV0d4UkFEOUVURWVwamcyV05ZazJMQ1pqL3NtZTBiZ21XMHNzTXZlbmFM?=
- =?utf-8?B?U3RRcTIxWDJjWFdjRXJrV2NSVyt0V2R3cDFmUUVVNDdibHcyRHF5Y0RqUWwx?=
- =?utf-8?B?RGthUzRwYXYzR1pGdEE3ejFFZG1BRkNpdmxPVUFOOWhqU2M3U2NZVmNKclRC?=
- =?utf-8?B?citDUHhTd0NpMEpQWHB2QjEwL0lIMkZWT2VrK2dqLzhUS2tqbWpWL2NMZmQ0?=
- =?utf-8?B?SmplbFI4WVBkYjd0L3FCbm9ENWpzc0x5SWxvYVpDYUlUbmVRbTZlZjJ5dUp2?=
- =?utf-8?B?UlZLZ1JXenQ0R0VFMElDSzdqUm9wclpNRVJXYlUveUIzN3NaaSsrZGdOL20y?=
- =?utf-8?B?RCt1U3J1R0M2dU1nZk9VY2g4YmFwaFBRa09iYnhDQjluSmlFbkdidkFJMURx?=
- =?utf-8?B?eG9YM3BxSFJtR25MaWNmVDJzRkNWOVlGWWYxM2hVa3dOYjRkYVhGRGdqS0ND?=
- =?utf-8?B?bDljSHA1dm9NMHI5c2FlVTN3Y2ZZbzRCazJQNERSQ3Bwb1FMUno3Q09jaVJW?=
- =?utf-8?B?SGxwcEZ3amZ4REsrK2drODJsdnA1SWVLb1RZTFRWaFB2emtuekNIQTA3emR4?=
- =?utf-8?B?OTgvVXFyMEh4U2VQK0JjRnl2eGg4d3B1WnV6MW4yOHFDUWxuN0l4Kzc1bVF5?=
- =?utf-8?Q?WtAfJot/z2hbfR9B7/ydg/JkV63CBnok?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?Yy9wL01xdkFreUtPUExlZi9VdXd6blo1WGwxZlJZZGRIWDNKTFVrRGRpU0ds?=
- =?utf-8?B?RDhhRnkySDM5R2dRbk1VUnRaUGt1azlYdVlFVkhSOUFOT0o4aTY5N3dra0Ux?=
- =?utf-8?B?RUFqZlQxaDhWcmpWRndyVytFa09nZDZUMkFBR2NuM1I2UldsRWt2NTZMRUZk?=
- =?utf-8?B?N1BIVVRuYTVtQ2tiS29TeEYwQWVPQkUyU20xcHBxalp4MnBpRHNLeGRmQk1Z?=
- =?utf-8?B?eHp2aVpXVXBvOG9wS2dDK1ZQaXJRaFVzVU5MQkZGanBHbHRNSHBnQkJDNW40?=
- =?utf-8?B?Wm1pSjRYZVErOFljR3NwRk9tQlBLanBCSjlXdmpLdDRRR1hHaDJQby9wZE1i?=
- =?utf-8?B?ZCtGTVp5OHViSCtrN2pXOXI5akJ2cTg1UXZrVnI1R3NkQWdqL2pwRktEbHFU?=
- =?utf-8?B?T25pTlZBWUtjdmt0U1FnVS9RT2VTcUZKSnhGY2VIeFprV00yRHhmVWJQV0lj?=
- =?utf-8?B?cTF3akNqWWdmQ216eWRyVGZpYnAxdFlWMFpsVkdrUHhoQzJ6L2Vuait6cndW?=
- =?utf-8?B?WGNHNWJhRFJPVTlFb0wvUndCUGFtV3h6MDB5MThTcEdOdGt0UHp6cnJhVDVq?=
- =?utf-8?B?QUI5dkIyOFF6Snd2STkyTWVjZkVJT1B0Wm5jQlZ3cHpCYnJXZUNpODZpcE55?=
- =?utf-8?B?WVBFWHRyTEdDb0tTUEltWkpwVUpNZDBLTEkrbGlrUVlIbXVveEpuaTZXY0hO?=
- =?utf-8?B?cmRGRVJaOXNrdUxtUnh5enZnNVBUd2kxOFVpR3JEcTVweW93alZwV2pLdzAz?=
- =?utf-8?B?VWFwdXBQMXBvdDBsT3E0M29oR3lqaGZkM2pUZjEySEdXdjBRRmhraEdrMmtK?=
- =?utf-8?B?T0lyZVZoM3RBOUxyVG0zSTRrOGhyVzhJMnBzVWl5RkZ0YkNuaUcvSzVHTzJV?=
- =?utf-8?B?THNZUm81bW9mT3RyRVFjSkNNY2VLRHdjdUdOQ2RYaFRDdGhWT0NHeStRZHJF?=
- =?utf-8?B?MW5JODdRWTdkN0F3QVRrOTJqTUhCZ0JGanp4QkE5MTNtTGFIRXZ3cllLcWFT?=
- =?utf-8?B?QVA0RlZwUXhPL3hhd1RSMTFSSnFlenorQ2d6enAxc0RHTmp6QzloZXZhdklB?=
- =?utf-8?B?d3VrUGVZYWNvWWxXSG9heHh3QVFjbmpUM3I3bWd5M083dEJ5azFOSW1Nd3RX?=
- =?utf-8?B?S1UxYVJHaFRQSEU3MnZVdXkrdWV3elZQV0VvdEdScnc5VFNsMERNMWtmbzYv?=
- =?utf-8?B?NGx2L2R3YWoyaVVaZnd3ZGdidk01SnFEU1QrclFXL28vSCt2ZTliMjVqWWR1?=
- =?utf-8?B?Ym1XZm1YUGNhSGFlWHczNEc4VzZhQWdseDA4MWJYanY0dS9CMVdQc0RtNVFp?=
- =?utf-8?B?dXVuVUJGakZmd09xdEEzbXM3cUdIWEs2bCtOalljazRnYlNnMDkwQWE0OTVG?=
- =?utf-8?B?RXp5UTkxNk94c296UzNCalJyVzRORUljTVpidlRqYUR4ZjJRMHVGaTlQbGUv?=
- =?utf-8?B?ZW9BY29MdmVTMTJNa1c0QWFnVnNHM01ua3FPQ3A3c01OczlmUFByYXgrQzQ0?=
- =?utf-8?B?QlBsK2M3OGpIeFVrMDdUcEw3NVJPbWlzanhRSDZlMUMxaEZ6ZGtlQ2FSRlgv?=
- =?utf-8?B?UEJFOTBFNWQ4dzdZWm5HQmRKZ1ZyRnlkeUdpL01XYUJDUGE5bXQvM045bkxE?=
- =?utf-8?B?Rkh4TERkMGRxVTlNMVVqcS95b2tXSkNXc0ltamlVNmdRcDZYdlhUQzQyVWhi?=
- =?utf-8?B?TFBIalVpQlhUMC9oaGcwQlhyRmJUTUpzd2o5Q3FCd1BScWpUZlBBMlhvbVNR?=
- =?utf-8?B?Mk9nWkNEME1HMVREa0dYZjNSRmIvTUZCOFpBOFVxYmMyczg5OEY2MzlXRi81?=
- =?utf-8?B?bkk2TjA3TXo4RmxXMjRqWWZIQVBvc2xxUzJ4Y252QURkcUNSbjZYalRTcXM3?=
- =?utf-8?B?TmtLYnZEZFF0UUpkYmFMQ2Z3MmhDNG1KcHFUd0tJaHJ0UHRZWnpnaUFEck1x?=
- =?utf-8?B?enc3blhOdTZVRzA4TTBVaUNyb3h6aWNxbU9kU3c0RHBGTFVpWHcva29XS1da?=
- =?utf-8?B?cVZSU3U1VVQ2S0xWMkFPVm5DdUovNEhyVGpabE1MSUNUL1hObWNjY1NJdGZW?=
- =?utf-8?B?UytNZWtlamxJMCtzcVdDTmxoMlZTdlZuL01TbXZDQ2VqNWFBTDM3dEcyUWtY?=
- =?utf-8?Q?6aIxNQR1CA/V8KddafrrdCNC/?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	GtkpA2x0pAXgSbUShtJqroIgryQAW5tJYCyDJ5+iYMW9VnyMgC8Kev82NWFy1xtT5oPWY25/WLBIckLaU7/Qhj4TAmGXZnY0ecrdLcmjted3P+be27kdCenU0MulDsuDL8s5SYD08SMGe3B6WdJRo+zYnTvKhfrzEcTL4sYinBg9ceaorSPq0ZNqJDJ+i1jpx1T8l6gH8u41h37K3tV6zahMZAOKxPWFyZokcP6SwQjfs3PhSJTPLh6FkwRpz54aDOx9LvAwF/7HICEO8c2q/0rNcti7URMS/vmJ8t8FDwhjJnNFdkopYuXO6jg4jmvjYQlJjz3C4bFabKUzU5O2ebULzgeaZ5Ndpl0oWZ4vTkme3O93R1tocaSbTOoNe6PdHggwdKDsMU/jJJ2+/1bpqbY2lo1razxrY5/TjhivaSetQpsmXGlRRDoA+kt9QJNCd+OC8Yp5NdkRvPJ0b9rNN6wO298PCHP9u3tmqWL6nKlIg78VsR+kkxlVnpFKwzl5hCtyTBWWcb0v5Y2q8c+agmOWQ5e4vOZjlfZVau+E92mBZPNvc0afnWEQ6zKO9Pj8TuJdGt/KIQ5kJTu7J/mFhBWEJ+XAiYUHzPFrHr8FAyo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3db05b9e-d02e-4409-ce1f-08de12391a99
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 13:36:00.3071
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s0KtSdl7r8ZOjyWo4bWzywiPs/ix14ndc2FRG9E2x3Qpjt5VY6WNcdpEpYDrE6XmJpRwjnLRrpIfcKVWoGtYhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4142
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-23_01,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=880
- phishscore=0 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2510020000 definitions=main-2510230124
-X-Proofpoint-ORIG-GUID: ZPwPpKASMfcECiljg2SvXdb2rsI9dEX_
-X-Authority-Analysis: v=2.4 cv=XJc9iAhE c=1 sm=1 tr=0 ts=68fa2f45 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=x6icFKpwvdMA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=zzLD-v2X0-J3c8VzWaoA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13624
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDIzMDEwMiBTYWx0ZWRfX1QL6oWKqvbv5
- xPNRKqihB+J5f/qSJMiyOjI1oUIHGxs1PtLxyhDfbkGU9EKr06IhnDO4QRzv19ICqNWHgbQBkV2
- +bzaLlxARp7lXx8TSEXQhK32Pc8YSk+oAKJJbgb8+5f72zZGuIAIAWNuapvi+Q6njn+KKStuUqB
- Fr9lpQnIvGUnTD9m9Jt6ghUn28IJDVWZ8aoOqzLPK+Nu5tJOgA7Wz87Cpizl2pZPnSvGwTTg9NF
- XqsF+K4JJnRCwRenuNdp4Rv81sHVOWiYV+aP8/cjCU/dk9+V99YRx7nQ1MpyWFbYFYxrR8Jm9Bj
- W+CvIoKmD53dDQ8p5icFJWGKOrHsEKZwcGeyxEuQSn951udz89xWq7vunsuxrlJT7XitOZZnwxf
- fhj62BpVgaaQSdhUbs40KWEjO6WG383TYVLSGGj1tPtw/kyZOsc=
-X-Proofpoint-GUID: ZPwPpKASMfcECiljg2SvXdb2rsI9dEX_
 
-On 10/22/25 6:34 PM, NeilBrown wrote:
-> When I see "CURRENT_STATEID(foo)" in the code it is not clear that this
-> is testing the stateid to see if it is a special stateid.  I find that
-> IS_CURRENT_STATEID(foo) is clearer.
-> 
-> There are other special stateid which are described in RFC 8881 Section
-> 8.2.3 as "anonymous", "READ bypass", and "invalid".  The nfsd code
-> currently names them "zero", "one" and "close" which doesn't help with
-> comparing the code to the RFC.
-> 
-> So this patch changes the names of those special stateids, adds "IS_" to
-> the front of the predicates, and introduces IS_SPECIAL_STATEID() which
-> tests if a given stateid is any of those listed in 8.2.3.
-> 
-> I felt that IS_READ_BYPASS_STATEID() was a little too verbose, so I made
-> it IS_READ_STATEID().
+On Thu, 2025-10-23 at 08:44 +1100, NeilBrown wrote:
+> On Thu, 23 Oct 2025, Jeff Layton wrote:
+> >=20
+> > Longer term, I think Neil is right and we probably need to fix
+> > vfs_test_lock and the lock inode_operation to take a separate conflock
+> > for testlock purposes. That's a bigger change though (particularly the
+> > ->lock operations).
+>=20
+> Thanks.  But in the shorter term I'd like to suggest this.
+> I haven't tested, but I think it should fix the lockd issue and make the
+> code cleaner too.
+> Sorry - I haven't written a commit description yet :-(
+> As nlmsvc_testlock() is being passed a conflock, use that directly to
+> hold the found lock, and initialise it from 'lock' before, rather than
+> copying results the from lock after.
+>=20
+> NeilBrown
+>=20
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 109e5caae8c7..4b6f18d97734 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -97,7 +97,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_=
+res *resp)
+>  	struct nlm_args *argp =3D rqstp->rq_argp;
+>  	struct nlm_host	*host;
+>  	struct nlm_file	*file;
+> -	struct nlm_lockowner *test_owner;
+>  	__be32 rc =3D rpc_success;
+> =20
+>  	dprintk("lockd: TEST4        called\n");
+> @@ -107,7 +106,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nl=
+m_res *resp)
+>  	if ((resp->status =3D nlm4svc_retrieve_args(rqstp, argp, &host, &file))=
+)
+>  		return resp->status =3D=3D nlm_drop_reply ? rpc_drop_reply :rpc_succes=
+s;
+> =20
+> -	test_owner =3D argp->lock.fl.c.flc_owner;
+>  	/* Now check for conflicting locks */
+>  	resp->status =3D nlmsvc_testlock(rqstp, file, host, &argp->lock,
+>  				       &resp->lock);
+> @@ -116,7 +114,7 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nl=
+m_res *resp)
+>  	else
+>  		dprintk("lockd: TEST4        status %d\n", ntohl(resp->status));
+> =20
+> -	nlmsvc_put_lockowner(test_owner);
+> +	nlmsvc_release_lockowner(&argp->lock);
+>  	nlmsvc_release_host(host);
+>  	nlm_release_file(file);
+>  	return rc;
+> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> index a31dc9588eb8..381b837a8c18 100644
+> --- a/fs/lockd/svclock.c
+> +++ b/fs/lockd/svclock.c
+> @@ -627,7 +627,13 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_f=
+ile *file,
+>  	}
+> =20
+>  	mode =3D lock_to_openmode(&lock->fl);
+> -	error =3D vfs_test_lock(file->f_file[mode], &lock->fl);
+> +	locks_init_lock(&conflock->fl);
+> +	/* vfs_test_lock only uses start, end, and owner, but tests flc_file */
+> +	conflock->fl.c.flc_file =3D lock->fl.c.flc_file;
+> +	conflock->fl.fl_start =3D lock->fl.fl_start;
+> +	conflock->fl.fl_end =3D lock->fl.fl_end;
+> +	conflock->fl.c.flc_owner =3D lock->fl.c.flc_owner;
 
-IMHO IS_BYPASS_STATEID would be a more purpose-specific name.
+This is basically the same approach that Olga took. This leaves the
+fl_lmops field unset, and so we will just not do the refcounting in
+this case.
 
+I'm starting to be convinced of that approach -- the exported
+filesystem's ->lock operation should just treat flc_owner as opaque.
+We'll need a comment around this though, since setting fl_lmops to NULL
+for this reason isn't intuitive.
 
-> Places where we now use IS_SPECIAL_STATEID() didn't previously check for
-> "current_stateid", but I think they should.  I don't think that change
-> actually affects behaviour.
+> +	error =3D vfs_test_lock(file->f_file[mode], &conflock->fl);
+>  	if (error) {
+>  		/* We can't currently deal with deferred test requests */
+>  		if (error =3D=3D FILE_LOCK_DEFERRED)
+> @@ -648,11 +654,8 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_f=
+ile *file,
+>  	conflock->caller =3D "somehost";	/* FIXME */
+>  	conflock->len =3D strlen(conflock->caller);
+>  	conflock->oh.len =3D 0;		/* don't return OH info */
+> -	conflock->svid =3D lock->fl.c.flc_pid;
+> -	conflock->fl.c.flc_type =3D lock->fl.c.flc_type;
+> -	conflock->fl.fl_start =3D lock->fl.fl_start;
+> -	conflock->fl.fl_end =3D lock->fl.fl_end;
+> -	locks_release_private(&lock->fl);
+> +	conflock->svid =3D conflock->fl.c.flc_pid;
+> +	locks_release_private(&conflock->fl);
+> =20
+>  	ret =3D nlm_lck_denied;
+>  out:
+> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+> index f53d5177f267..5817ef272332 100644
+> --- a/fs/lockd/svcproc.c
+> +++ b/fs/lockd/svcproc.c
+> @@ -117,7 +117,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm=
+_res *resp)
+>  	struct nlm_args *argp =3D rqstp->rq_argp;
+>  	struct nlm_host	*host;
+>  	struct nlm_file	*file;
+> -	struct nlm_lockowner *test_owner;
+>  	__be32 rc =3D rpc_success;
+> =20
+>  	dprintk("lockd: TEST          called\n");
+> @@ -127,8 +126,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm=
+_res *resp)
+>  	if ((resp->status =3D nlmsvc_retrieve_args(rqstp, argp, &host, &file)))
+>  		return resp->status =3D=3D nlm_drop_reply ? rpc_drop_reply :rpc_succes=
+s;
+> =20
+> -	test_owner =3D argp->lock.fl.c.flc_owner;
+> -
+>  	/* Now check for conflicting locks */
+>  	resp->status =3D cast_status(nlmsvc_testlock(rqstp, file, host,
+>  						   &argp->lock, &resp->lock));
+> @@ -138,7 +135,7 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm=
+_res *resp)
+>  		dprintk("lockd: TEST          status %d vers %d\n",
+>  			ntohl(resp->status), rqstp->rq_vers);
+> =20
+> -	nlmsvc_put_lockowner(test_owner);
+> +	nlmsvc_release_lockowner(&argp->lock);
+>  	nlmsvc_release_host(host);
+>  	nlm_release_file(file);
+>  	return rc;
 
-This needs expansion, it's a little hand-wavy. How are you certain that
-including IS_CURRENT_STATEID in some of these checks is OK?
-
-
-> -#define ZERO_STATEID(stateid) (!memcmp((stateid), &zero_stateid, sizeof(stateid_t)))
-> -#define ONE_STATEID(stateid)  (!memcmp((stateid), &one_stateid, sizeof(stateid_t)))
-> -#define CURRENT_STATEID(stateid) (!memcmp((stateid), &currentstateid, sizeof(stateid_t)))
-> -#define CLOSE_STATEID(stateid)  (!memcmp((stateid), &close_stateid, sizeof(stateid_t)))
-
-A comment here that directs the reader to Section 8.2.3 of RFC 8881
-would be nice.
-
-
-> +#define IS_ANON_STATEID(stateid) (!memcmp((stateid), &anon_stateid, sizeof(stateid_t)))
-> +#define IS_READ_STATEID(stateid)  (!memcmp((stateid), &read_bypass_stateid, sizeof(stateid_t)))
-> +#define IS_CURRENT_STATEID(stateid) (!memcmp((stateid), &current_stateid, sizeof(stateid_t)))
-> +#define IS_INVALID_STATEID(stateid)  (!memcmp((stateid), &invalid_stateid, sizeof(stateid_t)))
-> +
-> +static inline bool IS_SPECIAL_STATEID(stateid_t *stateid)
-> +{
-> +	return IS_ANON_STATEID(stateid) ||
-> +		IS_READ_STATEID(stateid) ||
-> +		IS_CURRENT_STATEID(stateid) ||
-> +		IS_INVALID_STATEID(stateid);
-> +}
-
-Might be nicer overall if these were static inline functions rather than
-pre-processor macros.
-
-The other patches in the series LGTM.
-
-
--- 
-Chuck Lever
+--=20
+Jeff Layton <jlayton@kernel.org>
 
