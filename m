@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-15566-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15567-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49237C01335
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 14:46:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED63C013F4
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 15:00:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 311FF4E51DD
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 12:46:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48DBB1A04B68
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Oct 2025 13:01:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 381A2219E8;
-	Thu, 23 Oct 2025 12:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A504313E1E;
+	Thu, 23 Oct 2025 13:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGBMDCNe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOiv2QIm"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1402CDF76
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 12:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4468231076C
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Oct 2025 13:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761223565; cv=none; b=kgqaamCRl0ZEWtNPNzx+fSwsXh/jyZPit5v37e818PE200X2C8/7OuCoDDEAhK6Fhp9BXTNwTO/5/0N2d6jjKBMD9glwKnABRRjCtjJrVl29ofldZqCsxX7b6Og6Rjl/qCndjzPD28yjPHJCe4k2coM7zr4fc2gdTM8HL5fBX4E=
+	t=1761224446; cv=none; b=WwVUyVucWf+Ds6AGhTTgTAbRzoF7gpdkHqi8JqfMK83HEmfHvbKXMPkf4L+6Y85/oM/mFt+Q8kN0lfF0k6+bXxicCLwimLV94KguqWe9k9MU4RCuvhKN8IFskQqU+gPOJhtgfMn49XNSBuxmswHIrwkdC1F8VMLkeKqZvDsGF1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761223565; c=relaxed/simple;
-	bh=EJ5Lz6onz47/eyzUTFabrhxDRQOGLqtxG2DqkbPA5lw=;
+	s=arc-20240116; t=1761224446; c=relaxed/simple;
+	bh=ob0uRCH2kARCn32MdbNk9uQi7RwM0zTkL4k8xAG1QYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FqpLXWkFYvoKGZcFPFgINZFEVYy6GXh6HSzov2NZeELzLklxArQXdkEtRv1nmD17ohZLLmdXYuqHlUXS9+FGdmBh/w4OlaZ54Jm8uMTarjY2zKHj7f0bt9USQJjYM8rbE3CYuwrwQj+1yxiQ2LtIQMlJP/HwJQSxG8p7+H624Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGBMDCNe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95397C4CEF7;
-	Thu, 23 Oct 2025 12:46:03 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=SJyLEdnNLkc3QuxX4h9Be9emtMGFOyuYIYDY+pRSSZaQUznEv08fsX0wKwmO5SvNPJ3LSYo1c5uvROzdlaVfp8AH0Y5ZdMilMPjsqBWfeuKPBX6v2mXnrrclkFdOV/xQneWDXP3Rwv6xy4E+j0VkG3jsPFWA/v/dMs/h/PTk6RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOiv2QIm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F5AC4CEE7;
+	Thu, 23 Oct 2025 13:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761223564;
-	bh=EJ5Lz6onz47/eyzUTFabrhxDRQOGLqtxG2DqkbPA5lw=;
+	s=k20201202; t=1761224445;
+	bh=ob0uRCH2kARCn32MdbNk9uQi7RwM0zTkL4k8xAG1QYs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VGBMDCNea4MqCwKHNcI6SY8S7F9rpAjbb6FdNO+T7RWVtZj+MQFSwcbj+N6EoAS6C
-	 ChOHTwtJeEF+ZtaVMpIsiWBgjJFfsVR7PBtigtZtwnXMnnl8fkjaOvOv8rtGZoQjKg
-	 4AEFSbqQBu4JbAHZBv92mwcPSLja+9kBp+dEbe67X/O1Prc5NQ8v07E0sjehc/+e9H
-	 B4j/LjkOC9soKk2Fp4R1H5F5VH8qo+9leyRjeDhFigTXP050XqsAYDTEXSpvofgiuZ
-	 TDSCMPABkSFnQoqkCv5jFj15DGBQudOa1h44/GOjVN9QNk+GCi718CWtVwH80PTE3h
-	 6mlKiQ4+/E1fw==
-Message-ID: <4a5f32c7-7369-414e-b93f-70804aecc157@kernel.org>
-Date: Thu, 23 Oct 2025 08:46:02 -0400
+	b=NOiv2QIm8ZKEMREqj6czy97kLfTmGzWGrcezt445wuEHtnCDDT67oMh5AWCTt+Lbk
+	 tfXdHst12IHWJTeLDbd2kqCJZvO0ACfHUPJNdh4s06sM0TCdSdw94fTQZzGO0zeTTR
+	 Iwpk2MGevguQIRI/CNM6zov6JvzftA20VqSQaBdP+knUaxx11b77mv/qwDc3Nlmvr+
+	 dQzIDU7SVmvMq89m9fgPYx0G55xSmmmIFlvNvfTQymMjIZW5bcD7BegHoezdrUsz61
+	 Q1ovD9f56VY6jk7DsE1T6DUof0OUfAHyazOYZMGZlF4jjZX7s1ROta0Rx1P9MzjCJo
+	 gucJ99n0Whk4A==
+Message-ID: <27e75634-03ba-4cfd-b6cc-2b5b903ed3d6@kernel.org>
+Date: Thu, 23 Oct 2025 09:00:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,36 +50,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] NFSD: Make FILE_SYNC WRITEs comply with spec
-To: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v6 5/5] svcrdma: Mark Read chunks
+To: Mike Snitzer <snitzer@kernel.org>
 Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- Chuck Lever <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>
-References: <20251022162237.26727-1-cel@kernel.org>
- <aPnNdLg-tSIH0r5E@infradead.org>
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20251022192208.1682-1-cel@kernel.org>
+ <20251022192208.1682-6-cel@kernel.org> <aPlL0_fIfGwNbZBF@kernel.org>
 Content-Language: en-US
 From: Chuck Lever <cel@kernel.org>
 Organization: kernel.org
-In-Reply-To: <aPnNdLg-tSIH0r5E@infradead.org>
+In-Reply-To: <aPlL0_fIfGwNbZBF@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/23/25 2:38 AM, Christoph Hellwig wrote:
-> On Wed, Oct 22, 2025 at 12:22:37PM -0400, Chuck Lever wrote:
->> -		kiocb.ki_flags |= IOCB_DSYNC;
->> +		kiocb.ki_flags |=
->> +			(stable == NFS_FILE_SYNC ? IOCB_SYNC : IOCB_DSYNC);
+On 10/22/25 5:25 PM, Mike Snitzer wrote:
+> On Wed, Oct 22, 2025 at 03:22:08PM -0400, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> The upper layer may want to know when the receive buffer's .pages
+>> array is guaranteed to contain only an opaque payload. This permits
+>> the upper layer to optimize its buffer handling.
+>>
+>> NB: Since svc_rdma_recvfrom.c is under net/, we use the comment
+>> style that is preferred in the networking layer.
+>>
+>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+>> index e7e4a39ca6c6..b1a0c72f73de 100644
+>> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+>> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+>> @@ -815,6 +815,11 @@ static void svc_rdma_read_complete_one(struct svc_rqst *rqstp,
+>>  	buf->page_len = length;
+>>  	buf->len += length;
+>>  	buf->buflen += length;
+>> +
+>> +	/* Transport guarantees that only the chunk payload
+>> +	 * appears in buf->pages.
+>> +	 */
+>> +	buf->flags |= XDRBUF_READ;
+>>  }
+>>  
+>>  /* Finish constructing the RPC Call message in rqstp::rq_arg.
+>> -- 
+>> 2.51.0
+>>
+>>
 > 
-> IOCB_SYNC without IOCB_DSYNC is always wrong, see my reply to the
-> previous thread.
+> This patch header leaves me unclear on your thinking for upper layer
+> optimization that would look for XDRBUF_READ.
 > 
+> I see rpcrdma_marshal_req() is checking XDRBUF_READ but...
+> 
+> I'm left hoping for a clearer payoff on this change's benefit (and
+> relation to the rest of the patchset).
 
-I see only one API consumer that sets both: NFS LOCALIO. There are not
-enough examples for me to draw any kind of conclusion, and I haven't
-found documentation for these flags, fwiw.
+There's no pay-off yet. You asked me to provide a mechanism that
+indicates when the transport is certain that buf.pages contains /only/
+the write payload.
 
-But I'll fix this up in the next revision.
+That's all that's happening here -- it paves the way for you to
+construct the optimization in nfsd_vfs_write(). We don't have to commit
+this change until you have a patch that can take advantage of it.
+
+It could be that I misunderstood your request.
 
 
 -- 
