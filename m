@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-15599-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15600-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99400C06EF1
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:21:21 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41380C06F03
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:22:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3D9C14E25CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:21:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 06DE84E6893
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE842E62D8;
-	Fri, 24 Oct 2025 15:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C3D321441;
+	Fri, 24 Oct 2025 15:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpRYwe8X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bvx7ul8U"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9A22494FF
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AF32D94A8
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:22:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761319265; cv=none; b=KekoNdKcnaRjrUNTHrzzmECtjmPbZw0j/jfs1nnJMf6gsRnTSYFI4bzdvXK+jFasljBDpg+ftSNPZZ1f8oZtAs4JH+YKfT1bCvxGOFIRNOpTZJr95WTb7L37n1N07Y3aKtHji/LOwOnaupr3HhRTtOWJWJ2Cb3fZQGq22BaFdnY=
+	t=1761319324; cv=none; b=DQNGfX6TcZuKhFD1gnWPkXvzQMKIeSXaqa6znBLS/YRtTCNhdZ7ZUn+nVNkOfrNcI7aAwlQ8HhYN75vlmuT0H4dm3tNRDa6qOr/rWAIM+m0DAhG+qBWt/HmrGU1j51kiB5ixIiYO81Q61Cj4pLNdUedi7tV0R+WMEziue4UeRdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761319265; c=relaxed/simple;
-	bh=dyyPs2NqVyTrBKhcq2NCvghVOPiDwpJBAqYwXrQGKto=;
+	s=arc-20240116; t=1761319324; c=relaxed/simple;
+	bh=dZj4eH/BAwEVJFqtg1fBscO49zIFt/IdckbTjIEyFt8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FSI2gZJg918wPwG4unBE2i9s9b55GtbhicUCS6eBTqdR3YaTmrIOO4vK0vRsJIVAMo9XXnywJ+vmdT3z//7b6IHvwUBd2JRL8gVxmKC31JwNDP4Q34CNV4S6Ow+/Pm+/ZDMzcM1l54jboBsT4M3OBy8Xm/OE0UsrVjU6Rk5mVOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpRYwe8X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BA2C4CEF1;
-	Fri, 24 Oct 2025 15:21:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Jeh8qdm2PgyeZBW4QvN+v9W8m3qTcjqExGvo8DLgBWQWEaav6C4+vT5ZSjQ8+VkKzI/bfg9QyDfukAZBHAeGNLgiHXSYofSDIa++c3RbOcnZXvoF/NXwWvWFWvam3D8WNcdIc6R2uyovW+HB3hKJVL+L4a7C+2i7kjXWsHkYY10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bvx7ul8U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6860C4CEF1;
+	Fri, 24 Oct 2025 15:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761319265;
-	bh=dyyPs2NqVyTrBKhcq2NCvghVOPiDwpJBAqYwXrQGKto=;
+	s=k20201202; t=1761319323;
+	bh=dZj4eH/BAwEVJFqtg1fBscO49zIFt/IdckbTjIEyFt8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rpRYwe8XRB5oNuW4WAgSpgG6ws4u3r9HycDl4TmHnDXellNbA/TMQx2TUvVKR3Hyo
-	 nz9bV/3YcWITvnpxNLGqp2lencHSgR4uHjX5ao7a1lBvoSfdbWKoV4QXrs8r1LF6Xr
-	 SfXTKcwcGnBN7gDIrZMJ3oM/4XeGBQpZ3qfQlqRqzTA8vgJbbuNKeEZCC437eYUDpW
-	 8S2HuEQixvHhCcfGKjEzckM6PepgovcZFDtFXO7SanijzvHpgffmdjOt+2i5YxLNI3
-	 AdyEC+4yJ/LZbGIIR0oAQzoryX7SzCJ3Ao01ZKIQaz64FnjiYlYEYMNym+XWOEVTNY
-	 ROb1JhcINDh2A==
-Message-ID: <965d07b73a0c7d691ec431479723b346bf89c6df.camel@kernel.org>
-Subject: Re: [PATCH v7 01/14] NFSD: Make FILE_SYNC WRITEs comply with spec
+	b=Bvx7ul8UGki3PxoY4AWqJ2oELH1mj6mREZqcOumUCIMYGb0U0C72BzMc1XH1wE6Ze
+	 iF3M3h5z8jBOKLogiQ2iiiqLlpGw91qqCD9EixLFK5CdmVGojspFka38scyqEcP4A8
+	 5AMTgl/22zSug4U+QtmLKJwL03dbf5JbEUhWm/Q4m988FTrl5U13vWJxj0Dk/UGxfR
+	 iZKxYN5tJijyiqAaBUrp3j0c4TzmFfjmkfCv7MsHLfj5gu5yqCvVPRnkOZyftZH3Kb
+	 ezP9U+hF9jdMrLPm1iFyiCbzOztS4f+lOrzRQ2+SHsC+CEBLMgV0UM95uEkZrAQEiK
+	 sAmRK3RTxAN/w==
+Message-ID: <00759cf60e8549aa882968f83aa2885e69b44664.camel@kernel.org>
+Subject: Re: [PATCH v7 05/14] NFSD: @stable for direct writes is always
+ NFS_FILE_SYNC
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Mike
- Snitzer <snitzer@kernel.org>
-Date: Fri, 24 Oct 2025 11:21:03 -0400
-In-Reply-To: <20251024144306.35652-2-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Fri, 24 Oct 2025 11:22:01 -0400
+In-Reply-To: <20251024144306.35652-6-cel@kernel.org>
 References: <20251024144306.35652-1-cel@kernel.org>
-	 <20251024144306.35652-2-cel@kernel.org>
+	 <20251024144306.35652-6-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,64 +140,89 @@ MIME-Version: 1.0
 On Fri, 2025-10-24 at 10:42 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Mike noted that when NFSD responds to an NFS_FILE_SYNC WRITE, it
-> does not also persist file time stamps. To wit, Section 18.32.3
-> of RFC 8881 mandates:
+> Clean up: The helpers in the nfsd_direct_write() code path don't set
+> stable_how to anything else but NFS_FILE_SYNC. All data writes in
+> this code path result in immediately durability.
 >=20
-> > The client specifies with the stable parameter the method of how
-> > the data is to be processed by the server. If stable is
-> > FILE_SYNC4, the server MUST commit the data written plus all file
-> > system metadata to stable storage before returning results. This
-> > corresponds to the NFSv2 protocol semantics. Any other behavior
-> > constitutes a protocol violation. If stable is DATA_SYNC4, then
-> > the server MUST commit all of the data to stable storage and
-> > enough of the metadata to retrieve the data before returning.
+> Instead of passing it through the stack of functions, just set it
+> after the call is done.
 >=20
-> For many years, NFSD has used a "data sync only" optimization for
-> FILE_SYNC WRITEs, in violation of the above text (and previous
-> incarnations of the NFS standard). File time stamps haven't been
-> persisted as the mandate above requires.
->=20
-> The purpose of this behavior is that, back in the day, file systems
-> on rotational media were too slow to handle writes with time stamp
-> updates. With the advent of UNSTABLE WRITE, the time stamp update is
-> done by the COMMIT, which amortizes the cost of one time stamp
-> update over possibly many WRITE requests.
->=20
-> The impact of this change will be felt only when a client explicitly
-> requests a FILE_SYNC WRITE on a shared file system backed by slow
-> storage. UNSTABLE and DATA_SYNC WRITEs should not be affected.
->=20
-> Reported-by: Mike Snitzer <snitzer@kernel.org>
-> Closes: https://lore.kernel.org/linux-nfs/20251018005431.3403-1-cel@kerne=
-l.org/T/#t
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/vfs.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  fs/nfsd/vfs.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
 >=20
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index f537a7b4ee01..5a9a2a69bc08 100644
+> index 2832a66cda5b..cd2c99e450fb 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1314,8 +1314,14 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
->  		stable =3D NFS_UNSTABLE;
->  	init_sync_kiocb(&kiocb, file);
->  	kiocb.ki_pos =3D offset;
-> -	if (stable && !fhp->fh_use_wgather)
-> -		kiocb.ki_flags |=3D IOCB_DSYNC;
-> +	if (stable && !fhp->fh_use_wgather) {
-> +		if (stable =3D=3D NFS_FILE_SYNC)
-> +			/* persist data and timestamps */
-> +			kiocb.ki_flags |=3D IOCB_DSYNC | IOCB_SYNC;
-> +		else
-> +			/* persist data only */
-> +			kiocb.ki_flags |=3D IOCB_DSYNC;
-> +	}
+> @@ -1374,9 +1374,10 @@ nfsd_iocb_write(struct file *file, struct bio_vec =
+*bvec, unsigned int nvecs,
+>  }
 > =20
->  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
->  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+>  static int
+> -nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp, struct =
+nfsd_file *nf,
+> -		     u32 *stable_how, unsigned int nvecs, unsigned long *cnt,
+> -		     struct kiocb *kiocb, struct nfsd_write_dio *write_dio)
+> +nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		     struct nfsd_file *nf, unsigned int nvecs,
+> +		     unsigned long *cnt, struct kiocb *kiocb,
+> +		     struct nfsd_write_dio *write_dio)
+>  {
+>  	struct file *file =3D nf->nf_file;
+>  	bool iter_is_dio_aligned[3];
+> @@ -1399,10 +1400,8 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struc=
+t svc_fh *fhp, struct nfsd_fil
+>  	/*
+>  	 * Any buffered IO issued here will be misaligned, use
+>  	 * sync IO to ensure it has completed before returning.
+> -	 * Also update @stable_how to avoid need for COMMIT.
+>  	 */
+>  	kiocb->ki_flags |=3D IOCB_DSYNC;
+> -	*stable_how =3D NFS_FILE_SYNC;
+> =20
+>  	*cnt =3D 0;
+>  	for (int i =3D 0; i < n_iters; i++) {
+> @@ -1442,7 +1441,7 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp, struct nfsd_fil
+> =20
+>  static noinline_for_stack int
+>  nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> -		  struct nfsd_file *nf, u32 *stable_how, unsigned int nvecs,
+> +		  struct nfsd_file *nf, unsigned int nvecs,
+>  		  unsigned long *cnt, struct kiocb *kiocb)
+>  {
+>  	struct nfsd_write_dio write_dio;
+> @@ -1456,8 +1455,8 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>  		kiocb->ki_flags |=3D IOCB_DONTCACHE;
+> =20
+>  	if (nfsd_is_write_dio_possible(kiocb->ki_pos, *cnt, nf, &write_dio))
+> -		return nfsd_issue_write_dio(rqstp, fhp, nf, stable_how, nvecs,
+> -					    cnt, kiocb, &write_dio);
+> +		return nfsd_issue_write_dio(rqstp, fhp, nf, nvecs, cnt, kiocb,
+> +					    &write_dio);
+> =20
+>  	return nfsd_iocb_write(nf->nf_file, rqstp->rq_bvec, nvecs, cnt, kiocb);
+>  }
+> @@ -1539,9 +1538,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+> =20
+>  	switch (nfsd_io_cache_write) {
+>  	case NFSD_IO_DIRECT:
+> -		host_err =3D nfsd_direct_write(rqstp, fhp, nf, stable_how,
+> -					     nvecs, cnt, &kiocb);
+> -		stable =3D *stable_how;
+> +		host_err =3D nfsd_direct_write(rqstp, fhp, nf, nvecs, cnt,
+> +					     &kiocb);
+> +		stable =3D *stable_how =3D NFS_FILE_SYNC;
+>  		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+
+I assume you're going to squash some of these changes into the original
+patches?
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
