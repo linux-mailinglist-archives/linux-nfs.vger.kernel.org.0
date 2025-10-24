@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-15592-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15594-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA9E2C06C14
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 16:44:16 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 170F2C06C02
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 16:43:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7C813B3C10
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 14:43:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EAFA94EC609
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 14:43:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E0CB31C58E;
-	Fri, 24 Oct 2025 14:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5224831CA4E;
+	Fri, 24 Oct 2025 14:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2KqgEFQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GViSMq9i"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C6531B823
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E50231B823
 	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 14:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761316996; cv=none; b=ZOssMuXRmvb/M5uqxOkG3gCxU4jH8bAgYvNp6bF+og98+p9c11vEuHKabjULr/szmIiLQfs7B0VZoBnZUXDcGfz1+bvaAsrQFyE80mItTl6aCDmSyBT+KAJINi3NdkfslZbp8YHcHjhj4vFaNSlGYBrtYlsT8Q+092j2TxtyoDU=
+	t=1761316997; cv=none; b=f0kHtwoNnDYzS5Ayf3uztepJEiSGHiGj9ja4beB1DcVWqftL++XBWnv66oCk3Irx4obGUwN9bgFEyUmazBZ3tD6ML9Vf6h1cMINon3IkR/9gIfwDhJ3ftUw4CW91VZjrL0baA9PpytsQoXpICIWTMjVYzarRN8DVj1apnjazIgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761316996; c=relaxed/simple;
-	bh=csC0DDYfVUi6q+ZU1n0urF1q6sXZZ+KzS0pbP9KoUm4=;
+	s=arc-20240116; t=1761316997; c=relaxed/simple;
+	bh=XcCxOhbQuP5Q7R4rOpgIw1/ty72tnpNjzShHR8nwm+w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cS4AYnpGEXu5/+p34E2w4Ob87UvTNFeqQorbEusAuZXvbv10IQKI5X3Ku3HQJ19i7JOXodOlrIMQQKiGQsS0f7G1vs6s+hUNHh1eWkCvHmVtvnQ6nxovhAVusvUj1b86f33JP2leGcHFi/S4AczJG911CSI5YL1c8L0JaxESbys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2KqgEFQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F2DC4CEF1;
-	Fri, 24 Oct 2025 14:43:15 +0000 (UTC)
+	 MIME-Version; b=qbKLveNDV1BcwkHxvZoPEz4hfRsnzovpaanveY4OaPlbpNrelWEGvC8qEcxazJQvLJmWE2oM0yNMzKl4YUPWNyFRmP4KQAnmLJS7KQ2+ZKvxsZlE+GnlsS8JjOr7d26RS2OD+fpkOVOiDwhDie24CKzXVQtNwn1VVNeZaDdO2Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GViSMq9i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46413C116B1;
+	Fri, 24 Oct 2025 14:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1761316996;
-	bh=csC0DDYfVUi6q+ZU1n0urF1q6sXZZ+KzS0pbP9KoUm4=;
+	bh=XcCxOhbQuP5Q7R4rOpgIw1/ty72tnpNjzShHR8nwm+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n2KqgEFQ5ILchjJI7KApiNN14Qz173IgMshCVJhnz5pPBq+zg+LlVDOvEPDhnjgmB
-	 HPgW7eUJ4NGtUs/LV0Rz3PAgzdaF9ZLNktRZEa699Flo5hno0X6N6dFETNt68OI/qO
-	 RAZ1F6XU9UDrJhvGUeOIhp1kvcOIj64TKRUDUKqeyw4HEUB4GjtAaDi9JZO07L2sqJ
-	 AZ4LZgyb6iLMmcR0VvuO7dewssys/eTAj30sMEhAkVryXSJeDCmb5NeKT/Ju6+Bj49
-	 3BjF0n7YAXBokcgd2QpxLqLw/bu8sbqrXxXfEWOeo7F3LwPGak/rYyLdaXq0XuuyCh
-	 htayh4khnOJuw==
+	b=GViSMq9iXuq4Tdle0RLmFWscfRTONO4TTN1gCudJzcgS433zt6nLpuThyPNHMRvFs
+	 m83xXUDOFaJG4iB6ZgM3MIIaJiYHLMPmW9u6miNHqHbpFCufykzPttg+FczgpIeQrC
+	 WPmNpgi1XOYOkmd0QpT3jRqkGajkPrZad7SusEpAoWVB5RZHUUFHxOXKPtoWrdr29T
+	 2vnQzQLotBQ8OWQYz616vDInRO5TSVynSBEki1c4VUn6cI+uzPOge4xxv+vsQ5EvqE
+	 8VXZgtn4cC9EuA4lSfglm1vj5YjaPOK5OFVkymQ6WjjfZxHvEIO68Y2jRJBFf8+ytc
+	 0acxJex150g4g==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +48,10 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: [PATCH v7 09/14] NFSD: Remove the len_mask check
-Date: Fri, 24 Oct 2025 10:43:01 -0400
-Message-ID: <20251024144306.35652-10-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v7 10/14] NFSD: Clean up synopsis of nfsd_iov_iter_aligned_bvec()
+Date: Fri, 24 Oct 2025 10:43:02 -0400
+Message-ID: <20251024144306.35652-11-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251024144306.35652-1-cel@kernel.org>
 References: <20251024144306.35652-1-cel@kernel.org>
@@ -66,44 +65,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Mike says:
-> > Hey Mike, I'm trying to understand when nfsd_is_write_dio_possible()
-> > would return true but nfsd_iov_iter_aligned_bvec() on the middle segment
-> > would return false.
->
-> It is always due to memory alignment (addr_mask check), never due to
-> logical alignment (len_mask check).
->
-> So we could remove the len_mask arg and the 'if (size & len_mask)'
-> check from nfsd_iov_iter_aligned_bvec
+Clean up: Keep the specifics of the alignment checking inside of
+nfsd_iov_iter_aligned_bvec(). Move the calculations of the alignment
+parameters into the function.
 
-Suggested-by: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/vfs.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ fs/nfsd/vfs.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 465d4d091f3d..f6810630bb65 100644
+index f6810630bb65..e7c3458bd178 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1285,15 +1285,12 @@ nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
+@@ -1285,8 +1285,9 @@ nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
  }
  
  static bool
--nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask,
--			   unsigned int len_mask)
-+nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask)
+-nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask)
++nfsd_iov_iter_aligned_bvec(const struct nfsd_file *nf, const struct iov_iter *i)
  {
++	unsigned int addr_mask = nf->nf_dio_mem_align - 1;
  	const struct bio_vec *bvec = i->bvec;
  	size_t skip = i->iov_offset;
  	size_t size = i->count;
- 
--	if (size & len_mask)
--		return false;
- 	do {
- 		size_t len = bvec->bv_len;
- 
+@@ -1333,9 +1334,7 @@ nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
+ 		iov_iter_advance(&iters[n_iters], write_dio->start_len);
+ 	iters[n_iters].count -= write_dio->end_len;
+ 	iter_is_dio_aligned[n_iters] =
+-		nfsd_iov_iter_aligned_bvec(&iters[n_iters],
+-					   nf->nf_dio_mem_align - 1,
+-					   nf->nf_dio_offset_align - 1);
++		nfsd_iov_iter_aligned_bvec(nf, &iters[n_iters]);
+ 	if (unlikely(!iter_is_dio_aligned[n_iters]))
+ 		return 0; /* no DIO-aligned IO possible */
+ 	++n_iters;
 -- 
 2.51.0
 
