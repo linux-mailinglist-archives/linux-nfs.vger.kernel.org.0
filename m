@@ -1,59 +1,58 @@
-Return-Path: <linux-nfs+bounces-15608-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15609-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3924C06F9F
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:30:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 192A9C06FC3
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:32:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 952494E1EF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:30:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0F7E19A1835
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:33:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D61326D4F;
-	Fri, 24 Oct 2025 15:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F3F2DC776;
+	Fri, 24 Oct 2025 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAJ6ATNf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHN8Le17"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7AF32A3E5
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3148B254AFF
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:32:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761319809; cv=none; b=DnZZEI5EnJjXiMXGizX8I7VPhDsaXVoIxDHO04+1FzH5MGSIf1/dPxGN0n64zdjzE4acI6+MtaGI2GpgYehPX/haJjTXOdpcoeZrvs4DlQjuQQoaUqpJzvT/t/lITqpSXX5f8liJgtgZWiy804upi9Lh4fxHhTt6Huhh/0CTfKI=
+	t=1761319965; cv=none; b=PWzLRe40Vc5O06TNZgOqlZ0WBB10F2JX2NVTfHHTsqjTn26U8kT5OEes3r4SRKz+/Uzuz6yYQ8J1JeB6fpZtv65y+kIv3LOsiEXGF4kxcoe/8T1t64isyZYFaGsm1X/VkIhZmS0MUz/3afB/S7+wvZ69+Jifzv5N0wXCCCm/2Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761319809; c=relaxed/simple;
-	bh=4Qh10+ymvis9vUdTigHL8JWSBEvdwMy5YJqu9f4SMa0=;
+	s=arc-20240116; t=1761319965; c=relaxed/simple;
+	bh=F8m9j5uMTBi8sIB6tqRB1ZHlOBgVPmOpz4/hm6OESd4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=P2r9bw9a80PNFdqeXrL2Ty/WZSTSXDTaKRSqR0QNTkPUypGpS56NIhotTA/uhyveZEhPKzY6JDn4HGuHNOqatjPei85//KFwB29C23pQdgBudpt4nGI84DMjKJepcQ7RXf5OedhsUp95MWaFcGGwU1sxpkIRUWm4sTnOMIg7dxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAJ6ATNf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252B2C4CEF1;
-	Fri, 24 Oct 2025 15:30:06 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ekYinp9pOPEKg2e6SpORwpWlOO9ud9fifDOFdZlAcVL6xIdI1j2jWnupop0Vz4eaKcXOzCXM4TGp89D5Bv02yJnVCYHHXKLioanNK9MAzwG9Gwr7Y6S/CVGMJiUtdWqI4h5skiLso6BzCMs7aBuHPPNvmOcOoYE13X1gdZrVXEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHN8Le17; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F38C4CEF1;
+	Fri, 24 Oct 2025 15:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761319806;
-	bh=4Qh10+ymvis9vUdTigHL8JWSBEvdwMy5YJqu9f4SMa0=;
+	s=k20201202; t=1761319964;
+	bh=F8m9j5uMTBi8sIB6tqRB1ZHlOBgVPmOpz4/hm6OESd4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LAJ6ATNfZrNX90rT0Z/izqXPw0xLBV7Vjftrdz4riw4BZezqTuq/Ginb/2tpxdIeX
-	 hDuVjQqspGctNV/6uiuLca/e5Z3UeiU6JmsiwZ1zs7Ss1B0mRsmw3B/SLdBV1O4e8a
-	 hVCsOdnTzBiXTw8p1NzP8YsK6x1ImAF2LFepqur1MOsLi6dcjKGF9sgqZGCVRwICFo
-	 0C/DK7dB28r4pat3jp/Haa1Sek87GLSJ+oVGsKgD8ZK+2AjXfN4HUN2uYjY+GEJX8Y
-	 RdPC7gJwDSzckOZtguMifGS+GELwuSv2zksyaKtCT0+vSk5dOVsoq2BZJRmijWmfN6
-	 jSg1bxNuk9UlQ==
-Message-ID: <4777b7bbc2e2da0add9e1a3e58af87498613b198.camel@kernel.org>
-Subject: Re: [PATCH v7 12/14] NFSD: Introduce struct nfsd_write_dio_seg
+	b=nHN8Le17zxaZlVe3B3Q8QWvFz/8k+gWZGDFm/wBB2YMRkkJuDx7EoU6Vkmmie7dMz
+	 LSOB6SX4KxMQMpe9Hf+CXgKAQ0rb7GWZyJ4IjxY3+9Jwl0Y80YXf4gg8CN8yQW7HPo
+	 zRtS+k/W1b0rvpDddLHQGpioFbUEVnXjaeaiOg5rrAos82Qx8qbHmjjux05JHu3y+5
+	 q2mTt0NCYgZM2asO5OgXSVO0E4Zvsn3n4F7NLKGmIRbESKtzCYIo9jtwH/+LtNE7Zk
+	 RNLgph+JiJprZ9kzUfGRo20/rR+1CmhMtjrUvJgsgdM2Ev33DNkuL9gy3+jp4WU9dp
+	 6ZbP5eK/Ymi0Q==
+Message-ID: <71fbd428b21dd3195afb8fb74730e1692a769c3c.camel@kernel.org>
+Subject: Re: [PATCH v7 13/14] NFSD: Clean up direct write fall back error
+ flow
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
- Christoph Hellwig
-	 <hch@lst.de>
-Date: Fri, 24 Oct 2025 11:30:05 -0400
-In-Reply-To: <20251024144306.35652-13-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Fri, 24 Oct 2025 11:32:43 -0400
+In-Reply-To: <20251024144306.35652-14-cel@kernel.org>
 References: <20251024144306.35652-1-cel@kernel.org>
-	 <20251024144306.35652-13-cel@kernel.org>
+	 <20251024144306.35652-14-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,221 +140,66 @@ MIME-Version: 1.0
 On Fri, 2025-10-24 at 10:43 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Passing iter arrays by reference is a little risky. Instead, pass a
-> struct with a fixed-size array so bounds checking can be done.
+> Clean up: Use the usual error flow form:
 >=20
-> Name each item in the array a "segment", as the term "extent"
-> generally refers to a set of blocks on storage, not to a buffer.
-> Each segment is processed via a single vfs_iocb_iter_write() call,
-> and is either IOCB_DIRECT or buffered.
+> 	if (uncommon condition) {
+> 		handle it;
+> 		return;
+> 	}
+> 	do common thing;
 >=20
-> Introduce a segment constructor function so each segment is
-> initialized identically.
+> in nfsd_direct_write(). Now there is a single place where the direct
+> write path falls back to a single cached write.
 >=20
-> Each segment has its own length. The loop that iterates over the
-> segment array can simply skip over the segments of zero length.
-> A count of segments is not needed.
->=20
-
-True, but it's easy to get that sort of accounting wrong, and if we do
-we're looking at a buffer overrun. Maybe it'd be reasonable to keep a
-number of segments in this struct too, if only for defensive coding
-reasons, and to enable proper bounds checking?
-
-
-> Suggested-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/vfs.c | 121 ++++++++++++++++++++++++--------------------------
->  1 file changed, 57 insertions(+), 64 deletions(-)
+>  fs/nfsd/vfs.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 429f5fc61ead..b7f217aa4994 100644
+> index b7f217aa4994..b0e4105e0075 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1254,12 +1254,15 @@ static int wait_for_concurrent_writes(struct file=
- *file)
->  	return err;
->  }
-> =20
-> +struct nfsd_write_dio_seg {
-> +	struct iov_iter			iter;
-> +	size_t				len;
-> +	bool				use_dio;
-> +};
-> +
->  struct nfsd_write_dio_args {
->  	struct nfsd_file		*nf;
-> -
-> -	ssize_t	start_len;	/* Length for misaligned first extent */
-> -	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
-> -	ssize_t	end_len;	/* Length for misaligned last extent */
-> +	struct nfsd_write_dio_seg	segment[3];
->  };
-> =20
->  static bool
-> @@ -1267,21 +1270,19 @@ nfsd_is_write_dio_possible(struct nfsd_write_dio_=
-args *args, loff_t offset,
->  			   unsigned long len)
->  {
->  	const u32 dio_blocksize =3D args->nf->nf_dio_offset_align;
-> -	loff_t start_end, orig_end, middle_end;
-> +	loff_t first_end, orig_end, middle_end;
-> =20
->  	if (unlikely(!args->nf->nf_dio_mem_align || !dio_blocksize))
->  		return false;
->  	if (unlikely(len < dio_blocksize))
->  		return false;
-> =20
-> -	start_end =3D round_up(offset, dio_blocksize);
-> +	first_end =3D round_up(offset, dio_blocksize);
->  	orig_end =3D offset + len;
->  	middle_end =3D round_down(orig_end, dio_blocksize);
-> -
-> -	args->start_len =3D start_end - offset;
-> -	args->middle_len =3D middle_end - start_end;
-> -	args->end_len =3D orig_end - middle_end;
-> -
-> +	args->segment[0].len =3D first_end - offset;	/* first segment */
-> +	args->segment[1].len =3D middle_end - first_end;	/* middle segment */
-> +	args->segment[2].len =3D orig_end - middle_end;	/* last segment */
->  	return true;
->  }
-> =20
-> @@ -1308,47 +1309,42 @@ nfsd_iov_iter_aligned_bvec(const struct nfsd_file=
- *nf, const struct iov_iter *i)
->  	return true;
->  }
-> =20
-> -/*
-> - * Setup as many as 3 iov_iter based on extents described by @write_dio.
-> - * Returns the number of iov_iter that were setup.
-> - */
-> -static int
-> -nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_al=
-igned,
-> -			   struct bio_vec *rq_bvec, unsigned int nvecs,
-> -			   unsigned long cnt, struct nfsd_write_dio_args *args)
-> +static void
-> +nfsd_setup_write_dio_seg(struct nfsd_write_dio_seg *segment,
-> +			 struct bio_vec *bvec, unsigned int nvecs,
-> +			 unsigned long total, size_t start)
->  {
-> -	int n_iters =3D 0;
-> -	struct iov_iter *iters =3D *iterp;
-> +	iov_iter_bvec(&segment->iter, ITER_SOURCE, bvec, nvecs, total);
-> +	if (start)
-> +		iov_iter_advance(&segment->iter, start);
-> +	iov_iter_truncate(&segment->iter, segment->len);
-> +	segment->use_dio =3D false;
-> +}
-> =20
-> -	/* Setup misaligned start? */
-> -	if (args->start_len) {
-> -		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> -		iters[n_iters].count =3D args->start_len;
-> -		iter_is_dio_aligned[n_iters] =3D false;
-> -		++n_iters;
-> -	}
-> +static bool
-> +nfsd_setup_write_dio_iters(struct nfsd_write_dio_args *args,
-> +			   struct bio_vec *bvec, unsigned int nvecs,
-> +			   unsigned long total)
-> +{
-> +	/* first segment */
-> +	if (args->segment[0].len)
-> +		nfsd_setup_write_dio_seg(&args->segment[0],
-> +					 bvec, nvecs, total, 0);
-> =20
-> -	/* Setup DIO-aligned middle */
-> -	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> -	if (args->start_len)
-> -		iov_iter_advance(&iters[n_iters], args->start_len);
-> -	iters[n_iters].count -=3D args->end_len;
-> -	iter_is_dio_aligned[n_iters] =3D
-> -		nfsd_iov_iter_aligned_bvec(args->nf, &iters[n_iters]);
-> -	if (unlikely(!iter_is_dio_aligned[n_iters]))
-> -		return 0; /* no DIO-aligned IO possible */
-> -	++n_iters;
-> +	/* middle segment */
-> +	nfsd_setup_write_dio_seg(&args->segment[1], bvec, nvecs, total,
-> +				 args->segment[0].len);
-> +	if (!nfsd_iov_iter_aligned_bvec(args->nf, &args->segment[1].iter))
-> +		return false; /* no DIO-aligned IO possible */
-> +	args->segment[1].use_dio =3D true;
-> =20
-> -	/* Setup misaligned end? */
-> -	if (args->end_len) {
-> -		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
-> -		iov_iter_advance(&iters[n_iters],
-> -				 args->start_len + args->middle_len);
-> -		iter_is_dio_aligned[n_iters] =3D false;
-> -		++n_iters;
-> -	}
-> +	/* last segment */
-> +	if (args->segment[2].len)
-> +		nfsd_setup_write_dio_seg(&args->segment[2], bvec, nvecs,
-> +					 total, args->segment[0].len +
-> +					 args->segment[1].len);
-> =20
-> -	return n_iters;
-> +	return true;
->  }
-> =20
->  static int
-> @@ -1373,36 +1369,33 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->  		     unsigned int nvecs, unsigned long *cnt)
->  {
->  	struct file *file =3D args->nf->nf_file;
-> -	bool iter_is_dio_aligned[3];
-> -	struct iov_iter iter_stack[3];
-> -	struct iov_iter *iter =3D iter_stack;
-> -	unsigned int n_iters =3D 0;
-> -	unsigned long in_count =3D *cnt;
-> -	loff_t in_offset =3D kiocb->ki_pos;
-> +	struct nfsd_write_dio_seg *segment;
+> @@ -1373,10 +1373,6 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struc=
+t svc_fh *fhp,
 >  	ssize_t host_err;
-> +	size_t i;
+>  	size_t i;
 > =20
-> -	n_iters =3D nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
-> -					     rqstp->rq_bvec, nvecs, *cnt,
-> -					     args);
-> -	if (unlikely(!n_iters))
-> +	if (!nfsd_setup_write_dio_iters(args, rqstp->rq_bvec, nvecs, *cnt))
->  		return nfsd_iocb_write(file, rqstp->rq_bvec, nvecs,
->  				       cnt, kiocb);
-> =20
-> -	trace_nfsd_write_direct(rqstp, fhp, in_offset, in_count);
+> -	if (!nfsd_setup_write_dio_iters(args, rqstp->rq_bvec, nvecs, *cnt))
+> -		return nfsd_iocb_write(file, rqstp->rq_bvec, nvecs,
+> -				       cnt, kiocb);
 > -
 >  	*cnt =3D 0;
-> -	for (int i =3D 0; i < n_iters; i++) {
-> -		if (iter_is_dio_aligned[i])
-> +	segment =3D args->segment;
-> +	for (i =3D 0; i < ARRAY_SIZE(args->segment); i++) {
-> +		if (segment->len =3D=3D 0)
-> +			continue;
-> +		if (segment->use_dio) {
->  			kiocb->ki_flags |=3D IOCB_DIRECT;
-> -		else
-> +			trace_nfsd_write_direct(rqstp, fhp, kiocb->ki_pos,
-> +						segment->len);
-> +		} else
+>  	segment =3D args->segment;
+>  	for (i =3D 0; i < ARRAY_SIZE(args->segment); i++) {
+> @@ -1388,7 +1384,6 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  						segment->len);
+>  		} else
 >  			kiocb->ki_flags &=3D ~IOCB_DIRECT;
-> =20
-> -		host_err =3D vfs_iocb_iter_write(file, kiocb, &iter[i]);
-> +		host_err =3D vfs_iocb_iter_write(file, kiocb, &segment->iter);
+> -
+>  		host_err =3D vfs_iocb_iter_write(file, kiocb, &segment->iter);
 >  		if (host_err < 0)
 >  			return host_err;
->  		*cnt +=3D host_err;
-> -		if (host_err < iter[i].count) /* partial write? */
-> +		if (host_err < segment->iter.count)
->  			break;
-> +		++segment;
->  	}
+> @@ -1429,11 +1424,13 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+>  	kiocb->ki_flags |=3D IOCB_SYNC | IOCB_DSYNC;
 > =20
->  	return 0;
+>  	args.nf =3D nf;
+> -	if (nfsd_is_write_dio_possible(&args, kiocb->ki_pos, *cnt))
+> -		return nfsd_issue_write_dio(rqstp, fhp, &args, kiocb,
+> -					    nvecs, cnt);
+> +	if (!nfsd_is_write_dio_possible(&args, kiocb->ki_pos, *cnt) ||
+> +	    !nfsd_setup_write_dio_iters(&args, rqstp->rq_bvec, nvecs, *cnt))
+> +		/* fall back to writing through the page cache */
+> +		return nfsd_iocb_write(file, rqstp->rq_bvec, nvecs,
+> +				       cnt, kiocb);
+> =20
+> -	return nfsd_iocb_write(file, rqstp->rq_bvec, nvecs, cnt, kiocb);
+> +	return nfsd_issue_write_dio(rqstp, fhp, &args, kiocb, nvecs, cnt);
+>  }
+> =20
+>  /**
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
