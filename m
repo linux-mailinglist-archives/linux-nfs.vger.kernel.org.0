@@ -1,318 +1,359 @@
-Return-Path: <linux-nfs+bounces-15612-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15613-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D514C07733
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 19:04:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06C0FC0782C
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 19:16:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A166B35CEF7
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:04:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 045103A6FA4
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D94331A70;
-	Fri, 24 Oct 2025 17:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65ECA21D3F3;
+	Fri, 24 Oct 2025 17:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UpglEzIA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SniU0pJL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XE2a/q4S";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TXQkz3+U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6KE4TIO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A25342C93
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 17:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AA082899
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 17:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761325430; cv=none; b=jUthWBaI70OmQqap8N3pOwE+fw+SY0TQpwLlyRw0yqVTIMQmO028BJS8F/dCIa81pTsW0dMPo6L7e3akfN1aupVx0UspKGUDIu+ihDuhhmJWWLcnVbErRX2JflV2D3Icy/31SPOAmD5YOzS9RaBukyINCl39RsxcETnHQQ3Gh9k=
+	t=1761325971; cv=none; b=kQ8rBahcNWRyQZw3ejpMV9VSL6DGSen1EkGP1+FBXMQK5xlkUOi6RULHb54qBPwcS3GNVZM8xqZmDI6PiH962gFVQzMQnbtllRxpdb10q0gafer6UUGhaH72X++s2f63n4vB7En0PrCEu+ZNu+xUq7AjRBBzMbBNLY2wiN7e3XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761325430; c=relaxed/simple;
-	bh=kOeZy4XrxX/OQF/NYiLWwv4j3bKFa4VTbOwUAfntGVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nZ4RfpOeNABByYpRuFAPd3E7TRANnUG/THhwT3jA/F8YuJ6xovSZWyqc4BKxxQ3E45k4Zm+97Vab7/5dCOtcnGFTjCwNM3YMCGFtV7fWaVrIq7/6IiRFBQGc9ilN+KF34RR28IxTURz+Mz945BWvRSte7who+olXcfsfwez9ETo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UpglEzIA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SniU0pJL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XE2a/q4S; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TXQkz3+U; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F84C1F456;
-	Fri, 24 Oct 2025 17:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761325424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bT/u/s2WzIK0gsvAlZVPPRNwD/KklBMJ7unEXy2mjSw=;
-	b=UpglEzIAstFP2sz0UFRm9e7M322wvvuIy4Tvz0MxXiPot/69ZQ2j7oU2u3BrGk1WtF3vEz
-	WjFcwf5PN5csC/0tFCHhO5APz2t3uKMws1Y3OZF8QEIdW3SnCz+Xx/PLm4rMjf9Y7fbdUL
-	LQOeffDzO/nQFutHFz1kY/f20bZPKg4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761325424;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bT/u/s2WzIK0gsvAlZVPPRNwD/KklBMJ7unEXy2mjSw=;
-	b=SniU0pJLp/er/QixnefFQewIleAkWAfcRUMQg2kFR5CZJNJCC1YjM/3mz0JOn8ssCaGlhd
-	oFx374BfM0+m7rBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="XE2a/q4S";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TXQkz3+U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761325423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bT/u/s2WzIK0gsvAlZVPPRNwD/KklBMJ7unEXy2mjSw=;
-	b=XE2a/q4S5DnUNUU3NhBIguz2qCuD4PxqmkXDt/AktD4lrlIYPc1j0INDbkQx15OWxDma28
-	mxVmDN0BbxpQg0uh8Z8a6eTIFwXgfoYk2NABHsYsK6dfBW8CgY5qjvCqnSJFLg3GhHOQFK
-	mZ/93mHLOmgqkPSJs6d4NYotJbxq2zg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761325423;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bT/u/s2WzIK0gsvAlZVPPRNwD/KklBMJ7unEXy2mjSw=;
-	b=TXQkz3+U2mgVeKt3Hw3yZmmy1Ov25tyXZFrDypRChUUhDw8pgvO8GAucP3F9v91ZMwZrb1
-	tPIhfYBfbdNgqCBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 42CA613693;
-	Fri, 24 Oct 2025 17:03:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id n7dZD2+x+2iMWAAAD6G6ig
-	(envelope-from <akumar@suse.de>); Fri, 24 Oct 2025 17:03:43 +0000
-From: Avinesh Kumar <akumar@suse.de>
-To: ltp@lists.linux.it
-Cc: ailiopoulos@suse.com,
-	pvorel@suse.cz,
-	steved@redhat.com,
+	s=arc-20240116; t=1761325971; c=relaxed/simple;
+	bh=NGIQOFquY+BHJ7gOUChFpCmnpLl+PIUP4dn0oKPbkS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a3/tnAnFpsjKtHXlgdIcMtMjxIhFAcKuW31NI8gpSjxrDoXPNKuwMHxZ3HxCOMwf128u26iTdiBVVxLEof6Q41Zxb3bWmSR9LPWrTDtG0SpOgBQ+/7qUA1J8JYftpud4JmBE4SuNvIYNYukT3HRl7GaQOKRWOyWoymateA84OWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6KE4TIO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B75FC4CEF1;
+	Fri, 24 Oct 2025 17:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761325970;
+	bh=NGIQOFquY+BHJ7gOUChFpCmnpLl+PIUP4dn0oKPbkS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n6KE4TIOuOXHdR5k/6SD2wTmPh45ekTHwuLTcZQ8jwZYXYKpsR/A/U09NnbExQHGP
+	 EGbAz2CZkC1bdDHRmOsnwt50B01n3/+aHyXoaRA3A/A0oRB3eTOQS7ikLAF7qAclvE
+	 uGqWV7hUZsbw2APOVvc0n4vitp/H2LD/4vlOJonDk/YcxdY7tLbloybLmhEAr5FhM5
+	 eNuwZjXIxqIcBgo9YhZVI6lqDuMQ5gUUQZ8TiMzxKOeQK7qrddFgiEVMmsuMYtod60
+	 OQmMI+JLfm5F3hOCx0Njb4wpXV732GDk1Eo5OrkxkO1fujd8rOymJISGKT8RCgyraO
+	 552RIqtPAaDzw==
+Date: Fri, 24 Oct 2025 13:12:49 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH] nfs: use nfs version 4.0, including the minorversion
-Date: Fri, 24 Oct 2025 19:03:41 +0200
-Message-ID: <20251024170342.21084-1-akumar@suse.de>
-X-Mailer: git-send-email 2.51.0
+Subject: Re: [PATCH v7 04/14] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aPuzke8ZSpJxHm3v@kernel.org>
+References: <20251024144306.35652-1-cel@kernel.org>
+ <20251024144306.35652-5-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 4F84C1F456
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251024144306.35652-5-cel@kernel.org>
 
-If no specific minorversion is specified, it autonegotiates to highest available
-version and test end up executing on v4.2 [1]
+On Fri, Oct 24, 2025 at 10:42:56AM -0400, Chuck Lever wrote:
+> From: Mike Snitzer <snitzer@kernel.org>
+> 
+> If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+> middle and end as needed. The large middle extent is DIO-aligned and
+> the start and/or end are misaligned. Synchronous buffered IO (with
+> preference towards using DONTCACHE) is used for the misaligned extents
+> and O_DIRECT is used for the middle DIO-aligned extent.
+> 
+> nfsd_issue_write_dio() promotes @stable_how to NFS_FILE_SYNC, which
+> allows the client to drop its dirty data and avoid needing an extra
+> COMMIT operation.
+> 
+> If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+> invalidate the page cache on behalf of the DIO WRITE, then
+> nfsd_issue_write_dio() will fall back to using buffered IO.
+> 
+> These changes served as the original starting point for the NFS
+> client's misaligned O_DIRECT support that landed with
+> commit c817248fc831 ("nfs/localio: add proper O_DIRECT support for
+> READ and WRITE"). But NFSD's support is simpler because it currently
+> doesn't use AIO completion.
+> 
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/debugfs.c |   1 +
+>  fs/nfsd/trace.h   |   1 +
+>  fs/nfsd/vfs.c     | 197 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 199 insertions(+)
+> 
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 00eb1ecef6ac..7f44689e0a53 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
+>  	switch (val) {
+>  	case NFSD_IO_BUFFERED:
+>  	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+>  		nfsd_io_cache_write = val;
+>  		break;
+>  	default:
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index bfd41236aff2..ad74439d0105 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
+>  DEFINE_NFSD_IO_EVENT(read_done);
+>  DEFINE_NFSD_IO_EVENT(write_start);
+>  DEFINE_NFSD_IO_EVENT(write_opened);
+> +DEFINE_NFSD_IO_EVENT(write_direct);
+>  DEFINE_NFSD_IO_EVENT(write_io_done);
+>  DEFINE_NFSD_IO_EVENT(write_done);
+>  DEFINE_NFSD_IO_EVENT(commit_start);
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 6076821bb541..2832a66cda5b 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1254,6 +1254,109 @@ static int wait_for_concurrent_writes(struct file *file)
+>  	return err;
+>  }
+>  
+> +struct nfsd_write_dio {
+> +	ssize_t	start_len;	/* Length for misaligned first extent */
+> +	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
+> +	ssize_t	end_len;	/* Length for misaligned last extent */
+> +};
+> +
+> +static bool
+> +nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
+> +			   struct nfsd_file *nf,
+> +			   struct nfsd_write_dio *write_dio)
+> +{
+> +	const u32 dio_blocksize = nf->nf_dio_offset_align;
+> +	loff_t start_end, orig_end, middle_end;
+> +
+> +	if (unlikely(!nf->nf_dio_mem_align || !dio_blocksize))
+> +		return false;
+> +	if (unlikely(dio_blocksize > PAGE_SIZE))
+> +		return false;
+> +	if (unlikely(len < dio_blocksize))
+> +		return false;
+> +
+> +	start_end = round_up(offset, dio_blocksize);
+> +	orig_end = offset + len;
+> +	middle_end = round_down(orig_end, dio_blocksize);
+> +
+> +	write_dio->start_len = start_end - offset;
+> +	write_dio->middle_len = middle_end - start_end;
+> +	write_dio->end_len = orig_end - middle_end;
+> +
+> +	return true;
+> +}
+> +
+> +static bool
+> +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask,
+> +			   unsigned int len_mask)
+> +{
+> +	const struct bio_vec *bvec = i->bvec;
+> +	size_t skip = i->iov_offset;
+> +	size_t size = i->count;
+> +
+> +	if (size & len_mask)
+> +		return false;
+> +	do {
+> +		size_t len = bvec->bv_len;
+> +
+> +		if (len > size)
+> +			len = size;
+> +		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
+> +			return false;
+> +		bvec++;
+> +		size -= len;
+> +		skip = 0;
+> +	} while (size);
+> +
+> +	return true;
+> +}
+> +
+> +/*
+> + * Setup as many as 3 iov_iter based on extents described by @write_dio.
+> + * Returns the number of iov_iter that were setup.
+> + */
+> +static int
+> +nfsd_setup_write_dio_iters(struct iov_iter **iterp, bool *iter_is_dio_aligned,
+> +			   struct bio_vec *rq_bvec, unsigned int nvecs,
+> +			   unsigned long cnt, struct nfsd_write_dio *write_dio,
+> +			   struct nfsd_file *nf)
+> +{
+> +	int n_iters = 0;
+> +	struct iov_iter *iters = *iterp;
+> +
+> +	/* Setup misaligned start? */
+> +	if (write_dio->start_len) {
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iters[n_iters].count = write_dio->start_len;
+> +		iter_is_dio_aligned[n_iters] = false;
+> +		++n_iters;
+> +	}
+> +
+> +	/* Setup DIO-aligned middle */
+> +	iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +	if (write_dio->start_len)
+> +		iov_iter_advance(&iters[n_iters], write_dio->start_len);
+> +	iters[n_iters].count -= write_dio->end_len;
+> +	iter_is_dio_aligned[n_iters] =
+> +		nfsd_iov_iter_aligned_bvec(&iters[n_iters],
+> +					   nf->nf_dio_mem_align - 1,
+> +					   nf->nf_dio_offset_align - 1);
+> +	if (unlikely(!iter_is_dio_aligned[n_iters]))
+> +		return 0; /* no DIO-aligned IO possible */
+> +	++n_iters;
+> +
+> +	/* Setup misaligned end? */
+> +	if (write_dio->end_len) {
+> +		iov_iter_bvec(&iters[n_iters], ITER_SOURCE, rq_bvec, nvecs, cnt);
+> +		iov_iter_advance(&iters[n_iters],
+> +				 write_dio->start_len + write_dio->middle_len);
+> +		iter_is_dio_aligned[n_iters] = false;
+> +		++n_iters;
+> +	}
+> +
+> +	return n_iters;
+> +}
+> +
+>  static int
+>  nfsd_iocb_write(struct file *file, struct bio_vec *bvec, unsigned int nvecs,
+>  		unsigned long *cnt, struct kiocb *kiocb)
+> @@ -1270,6 +1373,95 @@ nfsd_iocb_write(struct file *file, struct bio_vec *bvec, unsigned int nvecs,
+>  	return 0;
+>  }
+>  
+> +static int
+> +nfsd_issue_write_dio(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+> +		     u32 *stable_how, unsigned int nvecs, unsigned long *cnt,
+> +		     struct kiocb *kiocb, struct nfsd_write_dio *write_dio)
+> +{
+> +	struct file *file = nf->nf_file;
+> +	bool iter_is_dio_aligned[3];
+> +	struct iov_iter iter_stack[3];
+> +	struct iov_iter *iter = iter_stack;
+> +	unsigned int n_iters = 0;
+> +	unsigned long in_count = *cnt;
+> +	loff_t in_offset = kiocb->ki_pos;
+> +	ssize_t host_err;
+> +
+> +	n_iters = nfsd_setup_write_dio_iters(&iter, iter_is_dio_aligned,
+> +					     rqstp->rq_bvec, nvecs, *cnt,
+> +					     write_dio, nf);
+> +	if (unlikely(!n_iters))
+> +		return nfsd_iocb_write(file, rqstp->rq_bvec, nvecs,
+> +				       cnt, kiocb);
+> +
+> +	trace_nfsd_write_direct(rqstp, fhp, in_offset, in_count);
+> +
+> +	/*
+> +	 * Any buffered IO issued here will be misaligned, use
+> +	 * sync IO to ensure it has completed before returning.
+> +	 * Also update @stable_how to avoid need for COMMIT.
+> +	 */
+> +	kiocb->ki_flags |= IOCB_DSYNC;
+> +	*stable_how = NFS_FILE_SYNC;
 
-$ nfslock01.sh -v 4 -t tcp
-results in
+Patch 6 really should be folded into this patch, I originally
+submitted my v3 (and you carried it in v4) with both
+IOCB_DSYNC|IOCB_SSYNC being set, see:
+https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
 
-/dev/loop2 /tmp/LTP_nfslock01.8VNHIljpxG/mntpoint ext4 rw,seclabel,relatime 0 0
-10.0.0.2:/tmp/LTP_nfslock01.8VNHIljpxG/mntpoint/4/tcp /tmp/LTP_nfslock01.8VNHIljpxG/4/0 nfs4 rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,fatal_neterrors=ENETDOWN:ENETUNREACH,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.0.0.1,local_lock=none,addr=10.0.0.2 0 0
+If you'd like your comment change and removal of parenthesis factored
+out (to patch 6 or whatever) that's up to you.
 
-[1] https://git.linux-nfs.org/?p=steved/nfs-utils.git;a=blob;f=utils/mount/stropts.c;h=23f0a8c0e6f277440bae51f9c7b62900d9bdc76c;hb=HEAD#l127
+Thanks,
+Mike
 
-Signed-off-by: Avinesh Kumar <akumar@suse.de>
----
- runtest/net.nfs | 50 ++++++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/runtest/net.nfs b/runtest/net.nfs
-index fef993da8..5d6adaa70 100644
---- a/runtest/net.nfs
-+++ b/runtest/net.nfs
-@@ -4,126 +4,126 @@
- #
- nfs01_v30_ip4u nfs01.sh -v 3 -t udp
- nfs01_v30_ip4t nfs01.sh -v 3 -t tcp
--nfs01_v40_ip4t nfs01.sh -v 4 -t tcp
-+nfs01_v40_ip4t nfs01.sh -v 4.0 -t tcp
- nfs01_v41_ip4t nfs01.sh -v 4.1 -t tcp
- nfs01_v42_ip4t nfs01.sh -v 4.2 -t tcp
- nfs01_v30_ip6u nfs01.sh -6 -v 3 -t udp
- nfs01_v30_ip6t nfs01.sh -6 -v 3 -t tcp
--nfs01_v40_ip6t nfs01.sh -6 -v 4 -t tcp
-+nfs01_v40_ip6t nfs01.sh -6 -v 4.0 -t tcp
- nfs01_v41_ip6t nfs01.sh -6 -v 4.1 -t tcp
- nfs01_v42_ip6t nfs01.sh -6 -v 4.2 -t tcp
- 
- nfs02_v30_ip4u nfs02.sh -v 3 -t udp
- nfs02_v30_ip4t nfs02.sh -v 3 -t tcp
--nfs02_v40_ip4t nfs02.sh -v 4 -t tcp
-+nfs02_v40_ip4t nfs02.sh -v 4.0 -t tcp
- nfs02_v41_ip4t nfs02.sh -v 4.1 -t tcp
- nfs02_v42_ip4t nfs02.sh -v 4.2 -t tcp
- nfs02_v30_ip6u nfs02.sh -6 -v 3 -t udp
- nfs02_v30_ip6t nfs02.sh -6 -v 3 -t tcp
--nfs02_v40_ip6t nfs02.sh -6 -v 4 -t tcp
-+nfs02_v40_ip6t nfs02.sh -6 -v 4.0 -t tcp
- nfs02_v41_ip6t nfs02.sh -6 -v 4.1 -t tcp
- nfs02_v42_ip6t nfs02.sh -6 -v 4.2 -t tcp
- 
- nfs03_v30_ip4u nfs03.sh -v 3 -t udp
- nfs03_v30_ip4t nfs03.sh -v 3 -t tcp
--nfs03_v40_ip4t nfs03.sh -v 4 -t tcp
-+nfs03_v40_ip4t nfs03.sh -v 4.0 -t tcp
- nfs03_v41_ip4t nfs03.sh -v 4.1 -t tcp
- nfs03_v42_ip4t nfs03.sh -v 4.2 -t tcp
- nfs03_v30_ip6u nfs03.sh -6 -v 3 -t udp
- nfs03_v30_ip6t nfs03.sh -6 -v 3 -t tcp
--nfs03_v40_ip6t nfs03.sh -6 -v 4 -t tcp
-+nfs03_v40_ip6t nfs03.sh -6 -v 4.0 -t tcp
- nfs03_v41_ip6t nfs03.sh -6 -v 4.1 -t tcp
- nfs03_v42_ip6t nfs03.sh -6 -v 4.2 -t tcp
- 
- nfs04_v30_ip4u nfs04.sh -v 3 -t udp
- nfs04_v30_ip4t nfs04.sh -v 3 -t tcp
--nfs04_v40_ip4t nfs04.sh -v 4 -t tcp
-+nfs04_v40_ip4t nfs04.sh -v 4.0 -t tcp
- nfs04_v41_ip4t nfs04.sh -v 4.1 -t tcp
- nfs04_v42_ip4t nfs04.sh -v 4.2 -t tcp
- nfs04_v30_ip6u nfs04.sh -6 -v 3 -t udp
- nfs04_v30_ip6t nfs04.sh -6 -v 3 -t tcp
--nfs04_v40_ip6t nfs04.sh -6 -v 4 -t tcp
-+nfs04_v40_ip6t nfs04.sh -6 -v 4.0 -t tcp
- nfs04_v41_ip6t nfs04.sh -6 -v 4.1 -t tcp
- nfs04_v42_ip6t nfs04.sh -6 -v 4.2 -t tcp
- 
- nfs05_v30_ip4u nfs05.sh -v 3 -t udp
- nfs05_v30_ip4t nfs05.sh -v 3 -t tcp
--nfs05_v40_ip4t nfs05.sh -v 4 -t tcp
-+nfs05_v40_ip4t nfs05.sh -v 4.0 -t tcp
- nfs05_v41_ip4t nfs05.sh -v 4.1 -t tcp
- nfs05_v42_ip4t nfs05.sh -v 4.2 -t tcp
- nfs05_v30_ip6u nfs05.sh -6 -v 3 -t udp
- nfs05_v30_ip6t nfs05.sh -6 -v 3 -t tcp
--nfs05_v40_ip6t nfs05.sh -6 -v 4 -t tcp
-+nfs05_v40_ip6t nfs05.sh -6 -v 4.0 -t tcp
- nfs05_v41_ip6t nfs05.sh -6 -v 4.1 -t tcp
- nfs05_v42_ip6t nfs05.sh -6 -v 4.2 -t tcp
- 
--nfs06_v30_v40_ip4  nfs06.sh -v "3,3,3,4,4,4" -t "udp,udp,tcp,tcp,tcp,tcp"
-+nfs06_v30_v40_ip4  nfs06.sh -v "3,3,3,4.0,4.0,4.0" -t "udp,udp,tcp,tcp,tcp,tcp"
- nfs06_vall_ip4t nfs06.sh -v "3,4,4.1,4.2,4.2,4.2" -t "tcp,tcp,tcp,tcp,tcp,tcp"
- nfs06_v4x_ip6t nfs06.sh -6 -v "4,4.1,4.1,4.2,4.2,4.2" -t "tcp,tcp,tcp,tcp,tcp,tcp"
- 
- nfs07_v30_ip4u nfs07.sh -v 3 -t udp
- nfs07_v30_ip4t nfs07.sh -v 3 -t tcp
--nfs07_v40_ip4t nfs07.sh -v 4 -t tcp
-+nfs07_v40_ip4t nfs07.sh -v 4.0 -t tcp
- nfs07_v41_ip4t nfs07.sh -v 4.1 -t tcp
- nfs07_v42_ip4t nfs07.sh -v 4.2 -t tcp
- nfs07_v30_ip6u nfs07.sh -6 -v 3 -t udp
- nfs07_v30_ip6t nfs07.sh -6 -v 3 -t tcp
--nfs07_v40_ip6t nfs07.sh -6 -v 4 -t tcp
-+nfs07_v40_ip6t nfs07.sh -6 -v 4.0 -t tcp
- nfs07_v41_ip6t nfs07.sh -6 -v 4.1 -t tcp
- nfs07_v42_ip6t nfs07.sh -6 -v 4.2 -t tcp
- 
- nfs08_v30_ip4u nfs08.sh -v 3 -t udp
- nfs08_v30_ip4t nfs08.sh -v 3 -t tcp
--nfs08_v40_ip4t nfs08.sh -v 4 -t tcp
-+nfs08_v40_ip4t nfs08.sh -v 4.0 -t tcp
- nfs08_v41_ip4t nfs08.sh -v 4.1 -t tcp
- nfs08_v42_ip4t nfs08.sh -v 4.2 -t tcp
- nfs08_v30_ip6u nfs08.sh -6 -v 3 -t udp
- nfs08_v30_ip6t nfs08.sh -6 -v 3 -t tcp
--nfs08_v40_ip6t nfs08.sh -6 -v 4 -t tcp
-+nfs08_v40_ip6t nfs08.sh -6 -v 4.0 -t tcp
- nfs08_v41_ip6t nfs08.sh -6 -v 4.1 -t tcp
- nfs08_v42_ip6t nfs08.sh -6 -v 4.2 -t tcp
- 
- nfs09_v30_ip4u nfs09.sh -v 3 -t udp
- nfs09_v30_ip4t nfs09.sh -v 3 -t tcp
--nfs09_v40_ip4t nfs09.sh -v 4 -t tcp
-+nfs09_v40_ip4t nfs09.sh -v 4.0 -t tcp
- nfs09_v41_ip4t nfs09.sh -v 4.1 -t tcp
- nfs09_v42_ip4t nfs09.sh -v 4.2 -t tcp
- nfs09_v30_ip6u nfs09.sh -6 -v 3 -t udp
- nfs09_v30_ip6t nfs09.sh -6 -v 3 -t tcp
--nfs09_v40_ip6t nfs09.sh -6 -v 4 -t tcp
-+nfs09_v40_ip6t nfs09.sh -6 -v 4.0 -t tcp
- nfs09_v41_ip6t nfs09.sh -6 -v 4.1 -t tcp
- nfs09_v42_ip6t nfs09.sh -6 -v 4.2 -t tcp
- 
- nfs10_v30_ip4u nfs10.sh -v 3 -t udp
- nfs10_v30_ip4t nfs10.sh -v 3 -t tcp
--nfs10_v40_ip4t nfs10.sh -v 4 -t tcp
-+nfs10_v40_ip4t nfs10.sh -v 4.0 -t tcp
- nfs10_v41_ip4t nfs10.sh -v 4.1 -t tcp
- nfs10_v42_ip4t nfs10.sh -v 4.2 -t tcp
- nfs10_v30_ip6u nfs10.sh -6 -v 3 -t udp
- nfs10_v30_ip6t nfs10.sh -6 -v 3 -t tcp
--nfs10_v40_ip6t nfs10.sh -6 -v 4 -t tcp
-+nfs10_v40_ip6t nfs10.sh -6 -v 4.0 -t tcp
- nfs10_v41_ip6t nfs10.sh -6 -v 4.1 -t tcp
- nfs10_v42_ip6t nfs10.sh -6 -v 4.2 -t tcp
- 
- nfslock01_v30_ip4u nfslock01.sh -v 3 -t udp
- nfslock01_v30_ip4t nfslock01.sh -v 3 -t tcp
--nfslock01_v40_ip4t nfslock01.sh -v 4 -t tcp
-+nfslock01_v40_ip4t nfslock01.sh -v 4.0 -t tcp
- nfslock01_v41_ip4t nfslock01.sh -v 4.1 -t tcp
- nfslock01_v42_ip4t nfslock01.sh -v 4.2 -t tcp
- nfslock01_v30_ip6u nfslock01.sh -6 -v 3 -t udp
- nfslock01_v30_ip6t nfslock01.sh -6 -v 3 -t tcp
--nfslock01_v40_ip6t nfslock01.sh -6 -v 4 -t tcp
-+nfslock01_v40_ip6t nfslock01.sh -6 -v 4.0 -t tcp
- nfslock01_v41_ip6t nfslock01.sh -6 -v 4.1 -t tcp
- nfslock01_v42_ip6t nfslock01.sh -6 -v 4.2 -t tcp
- 
- nfsstat01_v30_ip4u nfsstat01.sh -v 3 -t udp
- nfsstat01_v30_ip4t nfsstat01.sh -v 3 -t tcp
--nfsstat01_v40_ip4t nfsstat01.sh -v 4 -t tcp
-+nfsstat01_v40_ip4t nfsstat01.sh -v 4.0 -t tcp
- nfsstat01_v41_ip4t nfsstat01.sh -v 4.1 -t tcp
- nfsstat01_v42_ip4t nfsstat01.sh -v 4.2 -t tcp
- nfsstat01_v30_ip6u nfsstat01.sh -6 -v 3 -t udp
- nfsstat01_v30_ip6t nfsstat01.sh -6 -v 3 -t tcp
--nfsstat01_v40_ip6t nfsstat01.sh -6 -v 4 -t tcp
-+nfsstat01_v40_ip6t nfsstat01.sh -6 -v 4.0 -t tcp
- nfsstat01_v41_ip6t nfsstat01.sh -6 -v 4.1 -t tcp
- nfsstat01_v42_ip6t nfsstat01.sh -6 -v 4.2 -t tcp
- 
-@@ -131,11 +131,11 @@ nfsstat02 nfsstat02.sh
- 
- fsx_v30_ip4u fsx.sh -v 3 -t udp
- fsx_v30_ip4t fsx.sh -v 3 -t tcp
--fsx_v40_ip4t fsx.sh -v 4 -t tcp
-+fsx_v40_ip4t fsx.sh -v 4.0 -t tcp
- fsx_v41_ip4t fsx.sh -v 4.1 -t tcp
- fsx_v42_ip4t fsx.sh -v 4.2 -t tcp
- fsx_v30_ip6u fsx.sh -6 -v 3 -t udp
- fsx_v30_ip6t fsx.sh -6 -v 3 -t tcp
--fsx_v40_ip6t fsx.sh -6 -v 4 -t tcp
-+fsx_v40_ip6t fsx.sh -6 -v 4.0 -t tcp
- fsx_v41_ip6t fsx.sh -6 -v 4.1 -t tcp
- fsx_v42_ip6t fsx.sh -6 -v 4.2 -t tcp
--- 
-2.51.0
-
+> +
+> +	*cnt = 0;
+> +	for (int i = 0; i < n_iters; i++) {
+> +		if (iter_is_dio_aligned[i])
+> +			kiocb->ki_flags |= IOCB_DIRECT;
+> +		else
+> +			kiocb->ki_flags &= ~IOCB_DIRECT;
+> +
+> +		host_err = vfs_iocb_iter_write(file, kiocb, &iter[i]);
+> +		if (host_err < 0) {
+> +			/*
+> +			 * VFS will return -ENOTBLK if DIO WRITE fails to
+> +			 * invalidate the page cache. Retry using buffered IO.
+> +			 */
+> +			if (unlikely(host_err == -ENOTBLK)) {
+> +				kiocb->ki_flags &= ~IOCB_DIRECT;
+> +				*cnt = in_count;
+> +				kiocb->ki_pos = in_offset;
+> +				return nfsd_iocb_write(file, rqstp->rq_bvec,
+> +						       nvecs, cnt, kiocb);
+> +			} else if (unlikely(host_err == -EINVAL)) {
+> +				struct inode *inode = d_inode(fhp->fh_dentry);
+> +
+> +				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n",
+> +						    inode->i_sb->s_id, inode->i_ino);
+> +				host_err = -ESERVERFAULT;
+> +			}
+> +			return host_err;
+> +		}
+> +		*cnt += host_err;
+> +		if (host_err < iter[i].count) /* partial write? */
+> +			break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static noinline_for_stack int
+> +nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		  struct nfsd_file *nf, u32 *stable_how, unsigned int nvecs,
+> +		  unsigned long *cnt, struct kiocb *kiocb)
+> +{
+> +	struct nfsd_write_dio write_dio;
+> +
+> +	/*
+> +	 * Check if IOCB_DONTCACHE can be used when issuing buffered IO;
+> +	 * if so, set it to preserve intent of NFSD_IO_DIRECT (it will
+> +	 * be ignored for any DIO issued here).
+> +	 */
+> +	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> +		kiocb->ki_flags |= IOCB_DONTCACHE;
+> +
+> +	if (nfsd_is_write_dio_possible(kiocb->ki_pos, *cnt, nf, &write_dio))
+> +		return nfsd_issue_write_dio(rqstp, fhp, nf, stable_how, nvecs,
+> +					    cnt, kiocb, &write_dio);
+> +
+> +	return nfsd_iocb_write(nf->nf_file, rqstp->rq_bvec, nvecs, cnt, kiocb);
+> +}
+> +
+>  /**
+>   * nfsd_vfs_write - write data to an already-open file
+>   * @rqstp: RPC execution context
+> @@ -1346,6 +1538,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		nfsd_copy_write_verifier(verf, nn);
+>  
+>  	switch (nfsd_io_cache_write) {
+> +	case NFSD_IO_DIRECT:
+> +		host_err = nfsd_direct_write(rqstp, fhp, nf, stable_how,
+> +					     nvecs, cnt, &kiocb);
+> +		stable = *stable_how;
+> +		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+>  			kiocb.ki_flags |= IOCB_DONTCACHE;
+> -- 
+> 2.51.0
+> 
 
