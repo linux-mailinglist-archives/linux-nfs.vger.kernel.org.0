@@ -1,59 +1,58 @@
-Return-Path: <linux-nfs+bounces-15603-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15604-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 079B2C06F2A
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:23:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72450C06F1E
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:23:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D2A9D4F77B9
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:23:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 992B41C08673
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F8B31D75E;
-	Fri, 24 Oct 2025 15:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD1F7317710;
+	Fri, 24 Oct 2025 15:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeWuFhbv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVA04nVn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4200127147D
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D7A2DF13D
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761319381; cv=none; b=AMdMtTtbVHMRSdv122gZlBfFJcqlNBPn+K4hxdXKXtZUbRSWS0RPsMafIHm/qn/oGLzXnopySGtO7+x7ipJewprzOJegNo8S2abIt5tu5xWndU31HgfL0mE6mqOZLJbkQk15l3lXRmpuhI1twicSVkm5gWqmDcXAGSEx/xEt9FU=
+	t=1761319397; cv=none; b=ZFFbghctSINQvCUR/xgf5LpUoU72L8/lmq67au22AQvhU6cybxrHQzMDok/cAIgaz3/MibBAiSVzHff7QWwcail4BN7v7SyxICwVoQxQtEtBflVCRa1JoGgS8gysRVP947gj/+H9d313lbK0dcAlxPOgoLTDkK2eDSGtHzuivms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761319381; c=relaxed/simple;
-	bh=y6Xh7e69CpPKAztd8b8FrQt4I2IVVLiDf9zZj7LiR/c=;
+	s=arc-20240116; t=1761319397; c=relaxed/simple;
+	bh=reW1eCg4A6GxTXfRM8nKSOUl6jlvx4JtYWT0acBwvDc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QgG56iPGFF+45Qc0pXbeZvotlltbLxZe3vuWMrhyRlXBm/MWflLdLCZMqP0B+9cJl4CcUCIczO2KQMD99EsIKbjUSTgaBkyeVm3fQaruhUOG00B0x62wsoqt8dn3R9BJzjyCe8JkQSC4w74QjweUqiVX6jVDH12Jtml8NK8hZGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeWuFhbv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F07C4CEF1;
-	Fri, 24 Oct 2025 15:22:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=EwOoEcB9o7+VM3YVDGcND6mIBmdP5ByhfWPlvFKJ0etw37gCbtocvHRkjY2AWLOsCoWtx6PJpYCFWC492qWBA31+jcZkfYgDe80Rw/CCLCqvVJoWWHB295WVOwIKy9g78igI/YqKkbLISAkmAs2JjH6cauD+1c0dprpZX5NCMno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVA04nVn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0100C4CEF1;
+	Fri, 24 Oct 2025 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761319380;
-	bh=y6Xh7e69CpPKAztd8b8FrQt4I2IVVLiDf9zZj7LiR/c=;
+	s=k20201202; t=1761319397;
+	bh=reW1eCg4A6GxTXfRM8nKSOUl6jlvx4JtYWT0acBwvDc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oeWuFhbvhhiF+3rj+r9EQYG24YbQDjv5OgGQgyZSJ1iRUHLfaRuE3r0DU+MEdePsC
-	 5SPGDdhbAZcYfNzLuSo4pbHd8jqQWfDDMTG1j+eI0Ar4eg6CxINs4egh6sVnNPWX7h
-	 ZsZh+6xFF8tORmYGDXVskJlFpj0iXWu+8NEoHIZKSQL/DwePNegPBy4voXWHPRYxEJ
-	 4xwOZKH2dtMR65g3me6K+L3A2yDKKfbanFYH09tQBwvyTZ/vBA+HfhY5RcJ4YU3ujt
-	 frsggLNXBmdfy+WUe4PzsfrLVPgfgwz87KB0XnXXaeIyU76tUFYe//hW4UZmMpw6nq
-	 qG3WmjYrejC8g==
-Message-ID: <689df3309cf7dad6f1f436e3a7ec6ec3c93f96f6.camel@kernel.org>
-Subject: Re: [PATCH v7 08/14] NFSD: Remove alignment size checking
+	b=IVA04nVnctnhEaxlEcTIKzh1x7KUE8h75A3VGZZardaKufX5Gl4GuVSyUC4PSOE/k
+	 8m93jrJK6dvUmohvr2NWfQAdlqZVLPO1bohjvi1QNmxN7ERV1ucDmEFSQX8JpJfygP
+	 neuveBajwqGta0xDtPMaXr2oEXXUYJVFoSbK4fCYcARhR27pO2X0z9gi9HLQDFO27n
+	 MV5Ewx61vGO2CHCUcqEQScYo+bFRJeAXcKe6/PV9/qbYwkqle+xQYBGFZaI7KDxm/R
+	 cnPGdhZoRh85Zit6N3Pvl/p256tL/WOk1OYp6od8UZFQ7Wf7cdhI9+hyRpoJz76Vvc
+	 ZTRZjEPoNuf4w==
+Message-ID: <254da18d93a88540d8b9c4d93b2ae86b26f798c4.camel@kernel.org>
+Subject: Re: [PATCH v7 09/14] NFSD: Remove the len_mask check
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
- Christoph Hellwig
-	 <hch@lst.de>
-Date: Fri, 24 Oct 2025 11:22:58 -0400
-In-Reply-To: <20251024144306.35652-9-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Mike
+ Snitzer <snitzer@kernel.org>
+Date: Fri, 24 Oct 2025 11:23:15 -0400
+In-Reply-To: <20251024144306.35652-10-cel@kernel.org>
 References: <20251024144306.35652-1-cel@kernel.org>
-	 <20251024144306.35652-9-cel@kernel.org>
+	 <20251024144306.35652-10-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,28 +140,47 @@ MIME-Version: 1.0
 On Fri, 2025-10-24 at 10:43 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> The current set of in-tree file systems do not support alignments
-> larger than a PAGE, so this check is unnecessary.
+> Mike says:
+> > > Hey Mike, I'm trying to understand when nfsd_is_write_dio_possible()
+> > > would return true but nfsd_iov_iter_aligned_bvec() on the middle segm=
+ent
+> > > would return false.
+> >=20
+> > It is always due to memory alignment (addr_mask check), never due to
+> > logical alignment (len_mask check).
+> >=20
+> > So we could remove the len_mask arg and the 'if (size & len_mask)'
+> > check from nfsd_iov_iter_aligned_bvec
 >=20
-> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Suggested-by: Mike Snitzer <snitzer@kernel.org>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/vfs.c | 2 --
->  1 file changed, 2 deletions(-)
+>  fs/nfsd/vfs.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 >=20
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index b50be92343e3..465d4d091f3d 100644
+> index 465d4d091f3d..f6810630bb65 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1270,8 +1270,6 @@ nfsd_is_write_dio_possible(loff_t offset, unsigned =
-long len,
+> @@ -1285,15 +1285,12 @@ nfsd_is_write_dio_possible(loff_t offset, unsigne=
+d long len,
+>  }
 > =20
->  	if (unlikely(!nf->nf_dio_mem_align || !dio_blocksize))
->  		return false;
-> -	if (unlikely(dio_blocksize > PAGE_SIZE))
+>  static bool
+> -nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_m=
+ask,
+> -			   unsigned int len_mask)
+> +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_m=
+ask)
+>  {
+>  	const struct bio_vec *bvec =3D i->bvec;
+>  	size_t skip =3D i->iov_offset;
+>  	size_t size =3D i->count;
+> =20
+> -	if (size & len_mask)
 > -		return false;
->  	if (unlikely(len < dio_blocksize))
->  		return false;
+>  	do {
+>  		size_t len =3D bvec->bv_len;
 > =20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
