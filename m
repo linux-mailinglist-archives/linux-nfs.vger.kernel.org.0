@@ -1,152 +1,197 @@
-Return-Path: <linux-nfs+bounces-15624-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15625-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18CC0C082A3
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 23:17:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55671C083DB
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 00:31:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3850118892FB
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 21:17:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C1AA188F595
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 22:31:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B002E2EF1;
-	Fri, 24 Oct 2025 21:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 266E92F9D82;
+	Fri, 24 Oct 2025 22:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPaCzFBd"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WTTwjRCx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zPY0qqdk";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WTTwjRCx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zPY0qqdk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A38C2FFF8F
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 21:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ADA37160
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 22:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761340614; cv=none; b=jYPN9KbMEaoFrMwqqyPz408u1f4IUlI1iq0sYjBIv2wR5q2aes7xjmdBE1gOuTa8dW2xscBoQBdsh4aTnBtn7c6xBXQ03TOWgDcFg75Ff335Rune41Dsq5uz7qFq66NSCPZ+9dOMyHZFjJ+aMaVEujLz9RwKTltG/ECypqADVnM=
+	t=1761345071; cv=none; b=fXPnn4WhTaGqd76IsQviWTDBdm8/o9isgYhjWq5qN+i+Yt3J8NgPsXoqYhBVmU6XFA5kEvMHVmBuj+Ih2Fy+Xu5iui2yseRkxN0Kf/0HmKx99B6/IpTbPsZiArtM/r0nftkITPj7cJZ8IBDNmitL5hVrWLliIkyMl+8xJdkmpx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761340614; c=relaxed/simple;
-	bh=fWeP0j+4NvhyGLOn7NdgR+4f8iGsfeivB+R0agBfXWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JxuUYxi+C8YNkkD9OJ+3fc/i5+tBjXQnJY4aB2BSX4B4axNjA6zwtqknYcySXRki4FHuIU+I1BTxDBufSpZ/kCIyuli4dHnG0uBj/nlBrtK5ZSnaurNeRQY88YteAPOqOU3ta9FAXGZsFkURY3RnyToG3m4su3yX7u4vFhxkN54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPaCzFBd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6ECC4CEF1;
-	Fri, 24 Oct 2025 21:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761340613;
-	bh=fWeP0j+4NvhyGLOn7NdgR+4f8iGsfeivB+R0agBfXWU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DPaCzFBdv6NyE6zbg46EC1xEFQbU5xDFouj55eMlWykoQsLt1XLCvuu9tUuwWSA2w
-	 0rsbYbhkN4EJKb6NuCdZ0imgKi8viQOzwGrKrafxlhoV3erYYtAvsBlO4M5HkPOVS/
-	 TtcRza1Dn5DzZqnNv8w3f788m3H6r9JE9rQeAdZt2F+L/X3lyJh4Dd4o80MDxWGpd9
-	 H3zuquH3l1oapnbSqpe+S1cDYO5E9skDR8oWPIBXJHgZkbfs2n9TsLuzB8St6aCGjP
-	 Eu03EpTy1uSkH9Vd4bbUbfmy6tccYQv/Cs+8f478O53CjyZKiFou0zwAE5uCQuOs00
-	 eA8GYpBc18NUA==
-Message-ID: <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
-Date: Fri, 24 Oct 2025 17:16:52 -0400
+	s=arc-20240116; t=1761345071; c=relaxed/simple;
+	bh=TdtvSFhVumAdCHdZdAGKLPPL1lptHcjWodC1ykDPzY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbUZJ463jhZfoT7RdmaBsaa5StEFphKgCKhn9B4W45ullX0nonFcFg1tzbJ3PqWr7O+ubCS1ISzhgiR3TlchynUxw2wKaffpRShY/O6SzBnh4er8nYIyX1QwqbinWecqLfj0VuNBtV+/ZYceBnSH/WHkn/uw6R3OBv/m7Dr5LSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WTTwjRCx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zPY0qqdk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WTTwjRCx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zPY0qqdk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 47D59211E8;
+	Fri, 24 Oct 2025 22:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761345066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XaDkQXEDq3kiZtr1ll+BBk3Dg0qixXh2ek2kyEyFBLo=;
+	b=WTTwjRCxGB26PULa/ak6Okz4dsHb+N43kdKOP+ED1wRE0ANRFxocl1iqwChFEy2qFVB/t6
+	HnEQ3y1qKQv843HJdWRHWuu4eFa4nPQefDPcdaBUEglKWx/SC6JaFoKeiEMw+zjey+sGE2
+	6Dj8XTGGp0WYBlgpxYMuJIB1ygGaM+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761345066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XaDkQXEDq3kiZtr1ll+BBk3Dg0qixXh2ek2kyEyFBLo=;
+	b=zPY0qqdke3Lu6ES/8PPTBWAO0LRSuqxdR+K2yGNe1/3Z3gdUGnz7iONCHFZFcx+3YtYOC6
+	dAYr1MrZU4+GekDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761345066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XaDkQXEDq3kiZtr1ll+BBk3Dg0qixXh2ek2kyEyFBLo=;
+	b=WTTwjRCxGB26PULa/ak6Okz4dsHb+N43kdKOP+ED1wRE0ANRFxocl1iqwChFEy2qFVB/t6
+	HnEQ3y1qKQv843HJdWRHWuu4eFa4nPQefDPcdaBUEglKWx/SC6JaFoKeiEMw+zjey+sGE2
+	6Dj8XTGGp0WYBlgpxYMuJIB1ygGaM+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761345066;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XaDkQXEDq3kiZtr1ll+BBk3Dg0qixXh2ek2kyEyFBLo=;
+	b=zPY0qqdke3Lu6ES/8PPTBWAO0LRSuqxdR+K2yGNe1/3Z3gdUGnz7iONCHFZFcx+3YtYOC6
+	dAYr1MrZU4+GekDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 25DF813693;
+	Fri, 24 Oct 2025 22:31:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JqLLCCr++2gdDAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 24 Oct 2025 22:31:06 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 80A6CA280E; Sat, 25 Oct 2025 00:31:05 +0200 (CEST)
+Date: Sat, 25 Oct 2025 00:31:05 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	Josef Bacik <josef@toxicpanda.com>, Jeff Layton <jlayton@kernel.org>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 01/32] pidfs: validate extensible ioctls
+Message-ID: <s57bjg2caxa5zhsamkll7b637omcszkammckb56pexs5m3uu4s@fyqo2js5flrk>
+References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
+ <20250910-work-namespace-v1-1-4dd56e7359d8@kernel.org>
+ <5b287ec6-72ff-4707-9040-3c84efc58b94@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- Chuck Lever <chuck.lever@oracle.com>, Christoph Hellwig <hch@lst.de>
-References: <20251024144306.35652-1-cel@kernel.org>
- <20251024144306.35652-15-cel@kernel.org> <aPvBtWOIe9hJBrKC@kernel.org>
- <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
- <aPvjiwF9vcawuHzi@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aPvjiwF9vcawuHzi@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b287ec6-72ff-4707-9040-3c84efc58b94@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLbyy5b47ky7xssyr143sji8pp)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,suse.cz,gmail.com,vger.kernel.org,toxicpanda.com,yhndnzj.com,in.waw.pl,0pointer.de,cyphar.com,zeniv.linux.org.uk,kernel.dk,cmpxchg.org,suse.com,google.com,redhat.com,oracle.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -2.30
 
-On 10/24/25 4:37 PM, Mike Snitzer wrote:
-> On Fri, Oct 24, 2025 at 03:34:00PM -0400, Chuck Lever wrote:
->> On 10/24/25 2:13 PM, Mike Snitzer wrote:
->>>>  	/*
->>>> -	 * IOCB_SYNC + IOCB_DIRECT requests that iter_write should persist
->>>> -	 * both written data and dirty time stamps.
->>>> -	 *
->>>> -	 * When falling back to buffered I/O or handling the unaligned
->>>> -	 * first and last segments, the data and time stamps must be
->>>> -	 * durable before nfsd_vfs_write() returns to its caller, matching
->>>> -	 * the behavior of direct I/O.
->>>> +	 * IOCB_SYNC + IOCB_DIRECT requests that iter_write should
->>>> +	 * persist both written data and dirty time stamps.
->>>>  	 */
->>>> -	kiocb->ki_flags |= IOCB_SYNC | IOCB_DSYNC;
->>>> +	args.flags_direct = kiocb->ki_flags | IOCB_SYNC | IOCB_DIRECT;
->>> AFAIK we still need: IOCB_DIRECT | IOCB_DSYNC | IOCB_SYNC
->>>
->>> IOCB_DIRECT | IOCB_DSYNC was recently put under a microscope relative
->>> to XFS performance and the resulting improvement was merged for 6.18
->>> with commit c91d38b57f ("xfs: rework datasync tracking and execution")
->>
->> This looks like an xfs-specific fix. I'm reluctant to apply a fix for
->> a specific file system implementation in what's supposed to be generic
->> code.
->>
->> If (IOCB_DIRECT | IOCB_DSYNC | IOCB_SYNC) /is/ correct for all file
->> systems, then it needs an explanatory code comment, which I'm not yet
->> qualified to write. I don't see any textual material in previous
->> incarnations of this code that might help get me started.
+On Thu 23-10-25 12:46:45, Jiri Slaby wrote:
+> On 10. 09. 25, 16:36, Christian Brauner wrote:
+> > Validate extensible ioctls stricter than we do now.
+> > 
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> > ---
+> >   fs/pidfs.c         |  2 +-
+> >   include/linux/fs.h | 14 ++++++++++++++
+> >   2 files changed, 15 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/pidfs.c b/fs/pidfs.c
+> > index edc35522d75c..0a5083b9cce5 100644
+> > --- a/fs/pidfs.c
+> > +++ b/fs/pidfs.c
+> > @@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
+> >   		 * erronously mistook the file descriptor for a pidfd.
+> >   		 * This is not perfect but will catch most cases.
+> >   		 */
+> > -		return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
+> > +		return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
 > 
-> The XFS specific performance improvement isn't the point.  The point
-> is that applications (like I think DB2 is what started all this with
-> Jan Kara and the XFS filesystem) results in the use of
-> O_DIRECT+O_DSYNC.
+> Hi,
 > 
-> It is a clear reality that other filesystems are catering to
-> O_DIRECT+O_DSYNC. And given our findings with Christoph that buffered
-> IO needs O_DSYNC+O_SYNC, I'd rather we not expose ourselves to not
-> having O_DSYNC set.
+> this turned EINVAL (from pidfd_info()) into ENOTTY (from pidfd_ioctl()) for
+> at least LTP's:
+> struct pidfd_info_invalid {
+> 	uint32_t dummy;
+> };
 > 
-> Particularly because any filesystem NFSD is writing to _can_ also
-> fallback to using buffered IO if O_DIRECT set (NFSD is doing exactly
-> that). Which we _know_ (from Christoph) that having O_DSYNC set is
-> important when we fallback to using buffered IO (like we do for the
-> misaligned head and/or tail).
+> #define PIDFD_GET_INFO_SHORT _IOWR(PIDFS_IOCTL_MAGIC, 11, struct
+> pidfd_info_invalid)
 > 
-> Please let's not make the same mistake twice.
+> ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid) == EINVAL
+> 
+> at:
+> https://github.com/linux-test-project/ltp/blob/9bb94efa39bb1b08f37e56c7437db5fa13ddcae2/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c#L46
+> 
+> Is this expected?
 
-To be clear, I'm not refusing to add IOCB_DSYNC with IOCB_DIRECT, I'm
-just confused about why it is necessary.
+We already discussed this internally but for others the problem was
+discussed here [1] and we decided the new errno value is OK and LTP test is
+being fixed up.
 
-Direct and buffered I/O in the direct write path now each have their own
-set of ki_flags. The ki_flags used for buffered writes has SYNC and
-DSYNC set. So, for fallback I/O and for the unaligned segments of the
-buffer, both flags are set. I think we are in agreement on that.
+								Honza
 
-You might be referring above to this email from Christoph:
-
-> > I think IOCB_SYNC would be needed with O_DIRECT to force timestamp
-> > updates. Otherwise, IOCB_SYNC is relevant only when the function is
-> > forced to fall back to some form of write through the page cache.
->
-> Well, IOCB_SYNC is only needed to commit timestamps.  O_DSYNC is
-> always required if you want to commit to stable storage.  As said
-> above I don't really understand from the patch why we want to do
-> that, but IFF we want to do that, we need IOCB_DSYNC bother for
-> direct and buffered I/O.
-
-He says "we need IOCB_DSYNC both... for direct and buffered I/O". Fair
-enough, but why does IOCB_DIRECT, which is essentially a synchronous
-write already, need to explicitly set IOCB_DSYNC? All I want is
-something I can distill into a code comment. "Force a FUA after each
-direct write" or something like that.
-
-I'm really surprised that IOCB_DIRECT does not imply IOCB_DSYNC, and
-there doesn't seem to be any clear documentation about the semantics
-of these flags. Thus I believe a code comment here is warranted.
-
+[1] https://lore.kernel.org/all/aPIPGeWo8gtxVxQX@yuki.lan/
 
 -- 
-Chuck Lever
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
