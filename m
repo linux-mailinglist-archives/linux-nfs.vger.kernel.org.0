@@ -1,150 +1,127 @@
-Return-Path: <linux-nfs+bounces-15583-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15584-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7373BC06B03
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 16:24:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23BF5C06BF9
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 16:43:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC7131B83265
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 14:25:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3DF33ABE7C
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 14:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD79D202C5C;
-	Fri, 24 Oct 2025 14:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB71319615;
+	Fri, 24 Oct 2025 14:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOaAWSGP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCayal0q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84731A9FAC
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 14:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B74C1E0083
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 14:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761315883; cv=none; b=pXHp4IMpmkF2YO113JNuKLsCPs1FZszllmaUNTD/iClz+bqRJECIbVz0x0OfBm1z5c6prk6GxRWN04O89En3lxUUsaBbsRFTMDMBZKEcuHhLEQxCIOtkjHe8cxYYSSRFZ+pArJ65kKTV4IQ28F/fOe98KVJXyr+3zgbHro+wANE=
+	t=1761316990; cv=none; b=mB5dyg+B6CEdXlh6Iu7A+M6NFaRn68hmAYzj0k20NsyVKr3hJ8SOUaPjrGP2tDBOJgMMqd+x90UTD9KHAyO9OHNsPlmYsstQ18ICVAqMjpsj+ywdV1cDIG1rIpEXsRLmnanLCF+BLk8VHad7ZxSnF0M0s65Gnnnkh63Be597HPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761315883; c=relaxed/simple;
-	bh=qEXicKXqTf1BirUKFzcb7O5qyJcjIZtC832cSUhNl64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMCQBlEAg3KbqklrWsKu2XoWC0DpVqgl8vRg7T2fKGi9PbFPIeEsNrdbGwhVTsDGnSiIgBx8h4yxyLSwSaYaGKhQDeXiCytBFQCyKz5JW0r2sDsc40DmiAiELVLAgomOwSq755zLlQUldvuaTQP7tkgBl4ZNT9NN2ijl+EX75Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOaAWSGP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC35FC4CEF1;
-	Fri, 24 Oct 2025 14:24:42 +0000 (UTC)
+	s=arc-20240116; t=1761316990; c=relaxed/simple;
+	bh=4PCrh4E2nyax8paCAUJBnkVAXD2JgmvKlmSmEFx2WYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eIYtd69KF/VLmjOiZUtv0E0lLkzMkMVXC9pNAEzcSxKffUauCuptVG90+q0hj/QedvkQWMcdKrvmxtwjR2MpfD6vMeuGFF1r1/+o9+440TAczHRj/WaheQRQxu4I3sHRIGXs83VaJUEe/9PHZMzfGeQCdD37VCNuUDKuLZMgRy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCayal0q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695B0C4CEF1;
+	Fri, 24 Oct 2025 14:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761315883;
-	bh=qEXicKXqTf1BirUKFzcb7O5qyJcjIZtC832cSUhNl64=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HOaAWSGPjP6B6CZBxFk7WewIc5A7RGcaILSJAFY6YV8kR69F14KrZHx4QVHJbTsfy
-	 65kZ6T5pAnvd/+vm91K0tsyAxXFVyrugFDzvR/gWAaPy6Xgm6Cz53LQk/Fqpb2wbP5
-	 LrIpTAoz8Tkyp7faid6Teca+Z247IE5MRYtJscZSNMRFIynDycE9LpthV35B2JONM1
-	 2Ek4n/wtirkcWN0xbgkab0jkSscipGSKzaTvTDL7+p7yBG0w5a6lqXXLchHMZeUlBG
-	 LLvXqbWEz8rUzYLidOGOQMV1+lxysvv91M2PAmAlW/kKnCZLKCVi00CiKljQUuPzSV
-	 fNYde+BIwvZDg==
-Message-ID: <d23cf628-50f4-441b-af65-1553e09ba153@kernel.org>
-Date: Fri, 24 Oct 2025 10:24:41 -0400
+	s=k20201202; t=1761316989;
+	bh=4PCrh4E2nyax8paCAUJBnkVAXD2JgmvKlmSmEFx2WYo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cCayal0qqZmiJt5olD/7QP21+h6e6gsANEbAlJVQH/Fpdm9CtOcqyJdKd/Tl32aaR
+	 pNHQqGzPvC1jLWLkoRTJVR0s7JBWyP4RgOj7jFC8sT8xwhwHE/Vdy/Ezp35Jah7grK
+	 N8f4ueUurOd7MXIAoxqNibXqGu9vch3tdqqmVC2i2XVoiRDyUR7lP1W5KPj/gbVybH
+	 Tm8RPq+B7Q4C0eFWxexX27W6O2X/PpXT3fjkzf5G7smu95KsNTqzJ9KksQXZm4expM
+	 4DQcaBkPpyG2Tda1p4OagrBdo6ZGvF3WgZqT5MoyTnixEnXFZaiMFaD3kwL1KGwXxp
+	 QX1Z+UGcAbj/w==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v7 00/14] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Date: Fri, 24 Oct 2025 10:42:52 -0400
+Message-ID: <20251024144306.35652-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Tom Talpey <tom@talpey.com>,
- NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>
-References: <20251022192208.1682-1-cel@kernel.org>
- <20251022192208.1682-5-cel@kernel.org>
- <33ee6dda-6b10-4a85-9346-5fc1bc6f2731@kernel.org>
- <aPqc0TPxVHRwq3og@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <aPqc0TPxVHRwq3og@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/23/25 5:23 PM, Mike Snitzer wrote:
-> On Thu, Oct 23, 2025 at 03:37:36PM -0400, Chuck Lever wrote:
->> On 10/22/25 3:22 PM, Chuck Lever wrote:
->>> +struct nfsd_write_dio {
->>> +	ssize_t	start_len;	/* Length for misaligned first extent */
->>> +	ssize_t	middle_len;	/* Length for DIO-aligned middle extent */
->>> +	ssize_t	end_len;	/* Length for misaligned last extent */
->>> +};
->>> +
->>> +static bool
->>> +nfsd_is_write_dio_possible(loff_t offset, unsigned long len,
->>> +			   struct nfsd_file *nf,
->>> +			   struct nfsd_write_dio *write_dio)
->>> +{
->>> +	const u32 dio_blocksize = nf->nf_dio_offset_align;
->>> +	loff_t start_end, orig_end, middle_end;
->>> +
->>> +	if (unlikely(dio_blocksize > PAGE_SIZE || len < dio_blocksize))
->>> +		return false;
->>> +
->>> +	start_end = round_up(offset, dio_blocksize);
->>> +	orig_end = offset + len;
->>> +	middle_end = round_down(orig_end, dio_blocksize);
->>> +
->>> +	write_dio->start_len = start_end - offset;
->>> +	write_dio->middle_len = middle_end - start_end;
->>> +	write_dio->end_len = orig_end - middle_end;
->>> +
->>> +	return true;
->>> +}
->>> +
->>> +static bool
->>> +nfsd_iov_iter_aligned_bvec(const struct iov_iter *i, unsigned int addr_mask,
->>> +			   unsigned int len_mask)
->>> +{
->>> +	const struct bio_vec *bvec = i->bvec;
->>> +	size_t skip = i->iov_offset;
->>> +	size_t size = i->count;
->>> +
->>> +	if (size & len_mask)
->>> +		return false;
->>> +	do {
->>> +		size_t len = bvec->bv_len;
->>> +
->>> +		if (len > size)
->>> +			len = size;
->>> +		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
->>> +			return false;
->>> +		bvec++;
->>> +		size -= len;
->>> +		skip = 0;
->>> +	} while (size);
->>> +
->>> +	return true;
->>> +}
->>> +
->>
->> Hey Mike, I'm trying to understand when nfsd_is_write_dio_possible()
->> would return true but nfsd_iov_iter_aligned_bvec() on the middle segment
->> would return false.
-> 
-> It is always due to memory alignment (addr_mask check), never due to
-> logical alignment (len_mask check).
-> 
-> So we could remove the len_mask arg and the 'if (size & len_mask)'
-> check from nfsd_iov_iter_aligned_bvec
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Fair enough.
+Following on https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
+this series includes the patches needed to make NFSD Direct WRITE
+work.
 
-Another question: why does nfsd_iov_iter_aligned_bvec need to walk the
-entire bvec? For current NFSD and SunRPC, the elements of the bvec
-array will be contiguous pages. After nfsd_is_write_dio_possible says
-"OK", seems like you need to check only the first element in the bvec?
+Since the review comments have resulted in many changes, I've split
+out these modifications into individual patches so that everyone can
+easily follow my work. They can then be rejected, modified again,
+squashed, or retained as separate patches, as we see fit.
 
-Or, maybe the check isn't necessary at all? I'm just wondering why
-nfsd_is_write_dio_possible by itself isn't sufficient. Our network
-transports aren't going to hand us arbitrary blobs in the bvec elements.
+I'm thinking that an additional simplification could be done if fall
+back was handled completely inline: just never set the "use_dio"
+boolean on any of the request's buffer segments.
 
+Changes since v6:
+* Patches to address review comments have been split out
+* Refactored the iter initialization code
+
+Changes since v5:
+* Add a patch to make FILE_SYNC WRITEs persist timestamps
+* Address some of Christoph's review comments
+* The svcrdma patch has been dropped until we actually need it
+
+Changes since v4:
+* Split out refactoring nfsd_buffered_write() into a separate patch
+* Expand patch description of 1/4
+* Don't set IOCB_SYNC flag
+
+Changes since v3:
+* Address checkpatch.pl nits in 2/3
+* Add an untested patch to mark ingress RDMA Read chunks
+
+Chuck Lever (12):
+  NFSD: Make FILE_SYNC WRITEs comply with spec
+  NFSD: Enable return of an updated stable_how to NFS clients
+  NFSD: @stable for direct writes is always NFS_FILE_SYNC
+  NFSD: Always set IOCB_SYNC in direct write path
+  NFSD: Remove specific error handling
+  NFSD: Remove alignment size checking
+  NFSD: Remove the len_mask check
+  NFSD: Clean up synopsis of nfsd_iov_iter_aligned_bvec()
+  NFSD: Clean up struct nfsd_write_dio
+  NFSD: Introduce struct nfsd_write_dio_seg
+  NFSD: Clean up direct write fall back error flow
+  NFSD: Initialize separate ki_flags
+
+Mike Snitzer (2):
+  NFSD: Refactor nfsd_vfs_write()
+  NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+
+ fs/nfsd/debugfs.c  |   1 +
+ fs/nfsd/nfs3proc.c |   2 +-
+ fs/nfsd/nfs4proc.c |   2 +-
+ fs/nfsd/nfsproc.c  |   3 +-
+ fs/nfsd/trace.h    |   1 +
+ fs/nfsd/vfs.c      | 213 ++++++++++++++++++++++++++++++++++++++++++---
+ fs/nfsd/vfs.h      |   6 +-
+ fs/nfsd/xdr3.h     |   2 +-
+ 8 files changed, 212 insertions(+), 18 deletions(-)
 
 -- 
-Chuck Lever
+2.51.0
+
 
