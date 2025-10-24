@@ -1,57 +1,59 @@
-Return-Path: <linux-nfs+bounces-15601-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15602-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63D5FC06F27
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:23:42 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFA81C06F12
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 17:22:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D78325637DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:22:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D1EB3344A30
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Oct 2025 15:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A970324B2C;
-	Fri, 24 Oct 2025 15:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28F4E322C99;
+	Fri, 24 Oct 2025 15:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/LVzfzs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y10pzWyq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0511E322C99
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017D031B818
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Oct 2025 15:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761319351; cv=none; b=Kz0IUqMbMKHVTwtTpr8Vr4J8szhOYBwtxrTAda+VTgHEvflrTzumj0ctwcUUoVNosQy22LGKIRBAs5jtxIk5ArCo7aQ25HuiNCA01goWBRR6e6+iGjfuqbaon8aC2YM15EsVLfyWoy3bFWaJhUchCs5YOB2xeORjfDQdPt+pUN4=
+	t=1761319369; cv=none; b=K7scR8ljF7e9Kw91rzmRmHp6An/1uAFfPRYFEK2Geb2+Q99cbc07IgUm9YW2K0viZlpDivn7yCEb/jhQfY0TJnH93rXTN2ZIjKqNa0yzRhInRQ262LN1RxXrB2iPoTBMViPoo0p3sGVg2BD0DfPXpamg86BtmD2pPMOS5ndVvkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761319351; c=relaxed/simple;
-	bh=68tJ3KNjf/SDXXf2jlr27rmK7G0dg6ZIOrsIGE7l2B0=;
+	s=arc-20240116; t=1761319369; c=relaxed/simple;
+	bh=2p2wVvP/O3VHtATx1lgs4lU7DU/YtIFroFCFcUcW2zM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kC9zOQ4fZ9GwRPF2MJQOfWRyumhS0ZwX31V0SoUNdO5MQ+752cbxFOzsQy1abxQ/L9AhImScDnyAibrmwmZ4cit6IfTwfIdorPS7Ox+wZSx5kAthhk0jPjX7fA30WPNU4sYebhh3qDfswOG497JI26okUrgSHB937CwcExUnnbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/LVzfzs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DE6C4CEF1;
-	Fri, 24 Oct 2025 15:22:29 +0000 (UTC)
+	 Content-Type:MIME-Version; b=kgAJSqzQEKbeFG/DegO6f3C0C6+H/NANCTyf/fwIE0xveolcqAn1CltYmzIaDbFQBDthGRkR4SGkVEMUQdClf1K9vfZf+iQlts846vEBO1SMrlAuQ36b6A815/uDd00STFuN91vegeewlFmaA2x/KAurOelA8BUYyZIXtD015EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y10pzWyq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E588C4CEF1;
+	Fri, 24 Oct 2025 15:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761319350;
-	bh=68tJ3KNjf/SDXXf2jlr27rmK7G0dg6ZIOrsIGE7l2B0=;
+	s=k20201202; t=1761319368;
+	bh=2p2wVvP/O3VHtATx1lgs4lU7DU/YtIFroFCFcUcW2zM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=B/LVzfzsrsLcXmOkgqubaw+RNLHB9UMv0TGJq0yW1KaBowLvu6rgAa3WoH82Hj8lJ
-	 jtTTBrqxHPrPIj4Ok8jhNfb4f+QaxsegOdjVDWvtqSjfMpeji332ErlvHytupV0mDA
-	 fZK+VsREFSOVXmqmKJ5dXf0jZJPTuL0zoRUoWo+7kWwLK3wQQQrsYz18BxKoEtpbD9
-	 sojL1zUJ5Uwp2a2nWT0C6Dr13yHfvGixBbz6QkZvCe/XecX4M3y1kNjgsBhYX6hKuv
-	 QVdap2jRGEJXq3RmGkdSXbuRg9KmUADtjqAOpeNt7im8YOBXykOtvoiuKlp7U44sUI
-	 MaJxWLEar9L3Q==
-Message-ID: <ce9b8e919f6ba6ddfacbac51ce30e2d78742bfa6.camel@kernel.org>
-Subject: Re: [PATCH v7 06/14] NFSD: Always set IOCB_SYNC in direct write path
+	b=Y10pzWyq/I1ou+UaUqk28QIySpPAglez0d52vA++WbssSSj/IOxdsedGP8zxYlIg8
+	 J9Qdgwq1rJZqXsqdN5grEJ6X0CTm+S7zg4wWjmEhvU1ri1Ocd5sqmbu1H3j26/ZSD/
+	 1q1iuHuFGr9aisjrroFuygCd24CyIEygVh9R6WHTaO+HYcYU+R4UFmJo7/i6I3t88Y
+	 pXvy/sbw12oUSfqMhtt2042hAErR4CHFihnEkzxBZub2PGq0lBYSddtMFzytF9cWDP
+	 5dBgW5B6czzF7qNvQsHinGDzo8kPO0PIUYJXmXOL/iMZeJWMwLgXqUaqYLNqTuNu5W
+	 lSNhqLD7NzJCQ==
+Message-ID: <5f81a4c87c24f573c57421990c1ebc9f0146c3c9.camel@kernel.org>
+Subject: Re: [PATCH v7 07/14] NFSD: Remove specific error handling
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 24 Oct 2025 11:22:29 -0400
-In-Reply-To: <20251024144306.35652-7-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
+ Christoph Hellwig
+	 <hch@lst.de>
+Date: Fri, 24 Oct 2025 11:22:47 -0400
+In-Reply-To: <20251024144306.35652-8-cel@kernel.org>
 References: <20251024144306.35652-1-cel@kernel.org>
-	 <20251024144306.35652-7-cel@kernel.org>
+	 <20251024144306.35652-8-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,52 +141,59 @@ MIME-Version: 1.0
 On Fri, 2025-10-24 at 10:42 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> The NFS specs mandate that an NFS_FILE_SYNC write means that file
-> metadata (eg time stamps) are durable before the server sends the
-> response.
+> 1. Christoph notes that ENOTBLK is not supposed to leak out of
+>    file systems, so it's unlikely or impossible to see that error
+>    code here.
 >=20
+> 2. There are several ways to get EINVAL on a write, and the least
+>    likely of those is a dio alignment problem. The warning here
+>    would be misleading in those more common cases.
+>=20
+> It's unlikely that an administrator can do anything about either
+> of these cases, should they appear on a production system.
+>=20
+> The trace_nfsd_write_done event will be able to record these errnos.
+>=20
+> Suggested-by: Christoph Hellwig <hch@lst.de>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/vfs.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+>  fs/nfsd/vfs.c | 20 +-------------------
+>  1 file changed, 1 insertion(+), 19 deletions(-)
 >=20
 > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index cd2c99e450fb..74fcb12bf19c 100644
+> index 74fcb12bf19c..b50be92343e3 100644
 > --- a/fs/nfsd/vfs.c
 > +++ b/fs/nfsd/vfs.c
-> @@ -1397,12 +1397,6 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struc=
+> @@ -1405,26 +1405,8 @@ nfsd_issue_write_dio(struct svc_rqst *rqstp, struc=
 t svc_fh *fhp,
+>  			kiocb->ki_flags &=3D ~IOCB_DIRECT;
 > =20
->  	trace_nfsd_write_direct(rqstp, fhp, in_offset, in_count);
-> =20
-> -	/*
-> -	 * Any buffered IO issued here will be misaligned, use
-> -	 * sync IO to ensure it has completed before returning.
-> -	 */
-> -	kiocb->ki_flags |=3D IOCB_DSYNC;
+>  		host_err =3D vfs_iocb_iter_write(file, kiocb, &iter[i]);
+> -		if (host_err < 0) {
+> -			/*
+> -			 * VFS will return -ENOTBLK if DIO WRITE fails to
+> -			 * invalidate the page cache. Retry using buffered IO.
+> -			 */
+> -			if (unlikely(host_err =3D=3D -ENOTBLK)) {
+> -				kiocb->ki_flags &=3D ~IOCB_DIRECT;
+> -				*cnt =3D in_count;
+> -				kiocb->ki_pos =3D in_offset;
+> -				return nfsd_iocb_write(file, rqstp->rq_bvec,
+> -						       nvecs, cnt, kiocb);
+> -			} else if (unlikely(host_err =3D=3D -EINVAL)) {
+> -				struct inode *inode =3D d_inode(fhp->fh_dentry);
 > -
->  	*cnt =3D 0;
->  	for (int i =3D 0; i < n_iters; i++) {
->  		if (iter_is_dio_aligned[i])
-> @@ -1454,6 +1448,17 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct s=
-vc_fh *fhp,
->  	if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
->  		kiocb->ki_flags |=3D IOCB_DONTCACHE;
-> =20
-> +	/*
-> +	 * IOCB_SYNC + IOCB_DIRECT requests that iter_write should persist
-> +	 * both written data and dirty time stamps.
-> +	 *
-> +	 * When falling back to buffered I/O or handling the unaligned
-> +	 * first and last segments, the data and time stamps must be
-> +	 * durable before nfsd_vfs_write() returns to its caller, matching
-> +	 * the behavior of direct I/O.
-> +	 */
-> +	kiocb->ki_flags |=3D IOCB_SYNC | IOCB_DSYNC;
-> +
->  	if (nfsd_is_write_dio_possible(kiocb->ki_pos, *cnt, nf, &write_dio))
->  		return nfsd_issue_write_dio(rqstp, fhp, nf, nvecs, cnt, kiocb,
->  					    &write_dio);
+> -				pr_info_ratelimited("nfsd: Direct I/O alignment failure on %s/%ld\n"=
+,
+> -						    inode->i_sb->s_id, inode->i_ino);
+> -				host_err =3D -ESERVERFAULT;
+> -			}
+> +		if (host_err < 0)
+>  			return host_err;
+> -		}
+>  		*cnt +=3D host_err;
+>  		if (host_err < iter[i].count) /* partial write? */
+>  			break;
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
