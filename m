@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-15627-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15628-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5093EC094E7
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 18:19:16 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA02C0960C
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 18:23:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0080F1898F59
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 16:15:57 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9320034671C
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 16:23:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B3D3064B8;
-	Sat, 25 Oct 2025 16:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F243830DD39;
+	Sat, 25 Oct 2025 16:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyUcnZNc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk9hxmBr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07264303CB4;
-	Sat, 25 Oct 2025 16:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D6930DD36;
+	Sat, 25 Oct 2025 16:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761408856; cv=none; b=jIIdcDyNEbJKKQrMSTszkSn/u2jDkrpNcm3rNA4FkEp5qrtQ9M5OglIo69CUguRFcSYaN2CUqMf/5SOBxmLABGrvD6oXD2FkC+UyNgWXipux4btRGQJR7yUFxpBm1lpQvS8fr4kT2s9yxjLHvfKCEU5dErbURgDGBS47s3ajYTI=
+	t=1761409156; cv=none; b=O02X9s1mZzJVCTloUwiklIlyuuQxHUznuhfPEMUQZ8W8Tv0aiaKhAm9bGt/T860tJUPopwi6wME3mgTcFxZJyeKf41H10AgTXsxXDNc5wmQ7oVCfFAzQPFicyHYZW8kOCTO5F9xapOIDIrm1QbcD8M+QjWFHRzivRhC2cRVZv1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761408856; c=relaxed/simple;
-	bh=kLmRAElkRwYw/pJGMsqaBVHCR/RytNuBvo5W5c1nDJM=;
+	s=arc-20240116; t=1761409156; c=relaxed/simple;
+	bh=VLdLtuyN9J/eVRK6iiEAMD7yIBkR2JsLYXA2NVdJ7t0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCUmSjQFHc8TWvyDZeQRcVhER0pF3zDqT0TggMv5zSDjhXmaz0upz+cr4JJwEC+M2Ae5s6vzM3VDV65mWzdyjRos1BRQiXR/w5lbLp9AOdUiZVLoOQu1yoL/FPdG2x/Nh3Dl8C0fOcYP55MpUoLt0z4tEJthDffZJB3073oyoC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyUcnZNc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE14AC4CEF5;
-	Sat, 25 Oct 2025 16:14:14 +0000 (UTC)
+	 MIME-Version:Content-Type; b=VUSRZKejQfy0yPC1ZqVVydkDGJmT9cheoMtaRA0SuXrNqZlzygUUf187kNb/SHt9k9vHt1Nk0whKtI/G/8FZlMb8kyNY0+YX9OBtP59q7QyzQ/pQfSN9PA6lwEmmdspIbquWkXhKlyzxLKPvbF1qh4UHhuVW+5Wc79jiJzI3QZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk9hxmBr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAA4C4CEF5;
+	Sat, 25 Oct 2025 16:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761408855;
-	bh=kLmRAElkRwYw/pJGMsqaBVHCR/RytNuBvo5W5c1nDJM=;
+	s=k20201202; t=1761409156;
+	bh=VLdLtuyN9J/eVRK6iiEAMD7yIBkR2JsLYXA2NVdJ7t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eyUcnZNcK4bqHh+vXZ5VnYaewrQgbnWJxY9Ec1b79SX63RvwauQ+iKYSgXb548TJc
-	 MwpEbroRZo0On9jpxihKWBFhWVpwb6a5d13TwZnJcRmnlvCXIbfj4vyrLyGemlCOdX
-	 HGlkIa3PyYGKzuanySXzT1geSdDL0q2Fd8Eb3GHQ7suYc8m4oq7e89NDa6HgmlYtyk
-	 baiUFrs/p/i+DAMG3RcdCqebVfZSoJukGGyc1pIX4iJMjvigCIDjhfGAbskwYs6rRx
-	 fKfGovnYLw+++If0Gt3djSQlxUUu+A9ac5PK4kPe99XU2b6N+FhiQgcJNexTbeRN1i
-	 8jnM/1ns5d0tA==
+	b=pk9hxmBrepn/tWhel4qnBLd8/jTxh11/DjaKNVC17oiU52dWb01Aqid068v2ZRoiW
+	 yVrhJLjvQfXp1Cnwqoza810SfkFj75yDR/X/A1QamUaJuoR5etkpTCcwXIzZEAhxRD
+	 yZzkbn5Yy8Uc4RyoRlCxQuRq4JqQRqekIDwh7Bt9O8rhAo3oCq+LtHfwhraEkHxBE2
+	 tvR+CKNT12rbJRbTntfTLTNoQy1KGTf97MBFkwvY6NQ/bNxOtOVRBKJVqSr2WiUyHI
+	 rF2OLCfNEzYe9g9Ks8HjO3flbnwQU82kpcwqvGL7LxNAYILAh2q50wIB9jekHpPRze
+	 w8TvC65YWYHUA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
+Cc: Anthony Iliopoulos <ailiop@suse.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
 	trondmy@kernel.org,
 	anna@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.4] nfs4_setup_readdir(): insufficient locking for ->d_parent->d_inode dereferencing
-Date: Sat, 25 Oct 2025 11:55:33 -0400
-Message-ID: <20251025160905.3857885-102-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.17-5.4] NFSv4.1: fix mount hang after CREATE_SESSION failure
+Date: Sat, 25 Oct 2025 11:57:32 -0400
+Message-ID: <20251025160905.3857885-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -68,18 +68,27 @@ X-stable-base: Linux 6.17.5
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Anthony Iliopoulos <ailiop@suse.com>
 
-[ Upstream commit a890a2e339b929dbd843328f9a92a1625404fe63 ]
+[ Upstream commit bf75ad096820fee5da40e671ebb32de725a1c417 ]
 
-Theoretically it's an oopsable race, but I don't believe one can manage
-to hit it on real hardware; might become doable on a KVM, but it still
-won't be easy to attack.
+When client initialization goes through server trunking discovery, it
+schedules the state manager and then sleeps waiting for nfs_client
+initialization completion.
 
-Anyway, it's easy to deal with - since xdr_encode_hyper() is just a call of
-put_unaligned_be64(), we can put that under ->d_lock and be done with that.
+The state manager can fail during state recovery, and specifically in
+lease establishment as nfs41_init_clientid() will bail out in case of
+errors returned from nfs4_proc_create_session(), without ever marking
+the client ready. The session creation can fail for a variety of reasons
+e.g. during backchannel parameter negotiation, with status -EINVAL.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+The error status will propagate all the way to the nfs4_state_manager
+but the client status will not be marked, and thus the mount process
+will remain blocked waiting.
+
+Fix it by adding -EINVAL error handling to nfs4_state_manager().
+
+Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -87,43 +96,49 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 LLM Generated explanations, may be completely bogus:
 
 YES
-- The race is in `fs/nfs/nfs4proc.c:395`, where
-  `NFS_FILEID(d_inode(dentry->d_parent))` relied on `d_parent` staying
-  stable while another thread might be executing `__d_move`/rename and
-  mutating that field under `dentry->d_lock`. Without taking that lock
-  we can observe a transient or freed `d_parent`, leading to an oops
-  while synthesising the “..” entry during readdir.
-- The fix simply wraps the dereference in `spin_lock(&dentry->d_lock)` /
-  `spin_unlock(&dentry->d_lock)` (`fs/nfs/nfs4proc.c:394-396`), matching
-  dcache locking rules so we never race with rename/unhash. The critical
-  section only covers `xdr_encode_hyper` (a `put_unaligned_be64`), so
-  there is virtually no new latency or deadlock risk.
-- No behavioural changes beyond closing this bug: the rest of
-  `nfs4_setup_readdir()` is untouched, there are no dependency patches
-  required, and this aligns with the long-standing expectation that
-  anyone walking `d_parent` holds the dentry lock.
-- Because the bug can crash clients performing `readdir()` while
-  directories are being renamed/unlinked—even if the window is
-  narrow—this is a correctness fix with minimal risk and well within the
-  stable backport guidelines.
+- Trunking discovery marks the client as `NFS_CS_SESSION_INITING`
+  (`fs/nfs/nfs4client.c:391`) and the mount thread waits for
+  `nfs_mark_client_ready()` to transition the state
+  (`fs/nfs/client.c:376`). When `nfs4_proc_create_session()` aborts with
+  `-EINVAL`—for example because the server rejects backchannel
+  parameters in `nfs4_verify_back_channel_attrs()`
+  (`fs/nfs/nfs4proc.c:9438`)—`nfs41_init_clientid()` returns before the
+  ready-state update (`fs/nfs/nfs4state.c:332`), leaving the waiter
+  blocked forever.
+- The patch adds a dedicated `case -EINVAL` that forwards the failure to
+  `nfs_mark_client_ready(clp, status)` (`fs/nfs/nfs4state.c:2747`,
+  `fs/nfs/nfs4state.c:2748`), matching the existing handling of fatal
+  network errors at `fs/nfs/nfs4state.c:2743`. This immediately wakes
+  waiters so the mount fails cleanly instead of hanging.
+- The bug is high-impact: affected clients hang indefinitely after
+  CREATE_SESSION negotiation failures, preventing mount completion.
+  Delivering the real error to user space satisfies the stable tree goal
+  of fixing serious user-visible regressions.
+- Risk is low: the change is limited to a single switch arm, introduces
+  no new code paths on success, and relies on long-standing semantics
+  that allow marking the client ready with negative states
+  (`fs/nfs/client.c:458`).
 
- fs/nfs/nfs4proc.c | 2 ++
- 1 file changed, 2 insertions(+)
+- Next step: queue this fix for all supported stable NFSv4.1 branches so
+  mounts no longer stall on CREATE_SESSION negotiation failures.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 4de3e4bd724b7..b76da06864e53 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -391,7 +391,9 @@ static void nfs4_setup_readdir(u64 cookie, __be32 *verifier, struct dentry *dent
- 	*p++ = htonl(attrs);                           /* bitmap */
- 	*p++ = htonl(12);             /* attribute buffer length */
- 	*p++ = htonl(NF4DIR);
-+	spin_lock(&dentry->d_lock);
- 	p = xdr_encode_hyper(p, NFS_FILEID(d_inode(dentry->d_parent)));
-+	spin_unlock(&dentry->d_lock);
- 
- 	readdir->pgbase = (char *)p - (char *)start;
- 	readdir->count -= readdir->pgbase;
+ fs/nfs/nfs4state.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 7612e977e80b5..01179f7de3225 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2744,6 +2744,9 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 	case -ENETUNREACH:
+ 		nfs_mark_client_ready(clp, -EIO);
+ 		break;
++	case -EINVAL:
++		nfs_mark_client_ready(clp, status);
++		break;
+ 	default:
+ 		ssleep(1);
+ 		break;
 -- 
 2.51.0
 
