@@ -1,254 +1,187 @@
-Return-Path: <linux-nfs+bounces-15641-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15642-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFF87C0B5DD
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 23:28:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8FF8C0B67A
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 00:01:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4583F34A6F7
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 22:28:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 991FD4E1343
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 23:01:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5902BEFE5;
-	Sun, 26 Oct 2025 22:28:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF2BA4502F;
+	Sun, 26 Oct 2025 23:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="m4FBC1Te";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X8Nehzg3"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="XgtjPS1Y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YAwUikuL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36191F30C3
-	for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 22:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD45EEAB
+	for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 23:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761517684; cv=none; b=qNIk0vd2iyz1v57ip4ufBoyUXb0lpZfCJ702oW/qvEyy33+a1UN8b77PG2yC99umSkYzHnOn5Uyh5NWL0UHBqith0/WAb2Cav4RtHjfDLEGhUhyL2EqkKx4t3p/04xFaLLunso8KjvrxarzjKPlQiEplgoFHWQ2llXcht+vGQV4=
+	t=1761519680; cv=none; b=s6dI1m+Q7w5mxgXQRO+hh3Ta0AKvBAs1MYS5CBWUPwaGIaClgG0dYoUMl76Y1YHRy97pvdTqXXsKWd/wnhzJnlf7TZHFxhJI3noCX4/2Xqa9ieGy4Z6+iqjOj7hf8O9VKOAGg3rpBsNjB8xMACiPgb6W/X0b3VztVzRe88EmJ+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761517684; c=relaxed/simple;
-	bh=C8u18PJisdrlnumf0JBc1D0yVgK2zoevDpnhTaoHV1w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U/wZgmzwUm5VMdEEe2x3SAO0RKT8kn2nEj8Viefv6OKEs6vMcfy4j6Ubu9Pwgn3/g+s7PepMlfmPffws1v+jN4Qe/cfkRJQ1+GS6T1oP/alAKFhATRNiSM3Yix8roUBYwMfJeoV1kk2IQYsk1IIUJz3ZXCCxHk7rJjQmB+j0EXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=m4FBC1Te; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X8Nehzg3; arc=none smtp.client-ip=202.12.124.156
+	s=arc-20240116; t=1761519680; c=relaxed/simple;
+	bh=BayWPvRBdSJQWzjKLv7DczfsfzmClE9y39ucIfE45xQ=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ncTRdmE2njVuwDA4Wv6FUZI8TLkirUYkWUiv/+bURTK5qwt7+cPCri8DjwNVgqGBRgz2OOe+h48geWnEEGZspJSvvAxar5QqrqUlPqdi6t8162sGhE4tmJwW4d9NBPRqoUa24PC3nF/t61EjbVN5ltu03v+RLsZW7fk1T2shguE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=XgtjPS1Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YAwUikuL; arc=none smtp.client-ip=202.12.124.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id DCE327A0289;
-	Sun, 26 Oct 2025 18:28:01 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Sun, 26 Oct 2025 18:28:02 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 191F37A014B;
+	Sun, 26 Oct 2025 19:01:17 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Sun, 26 Oct 2025 19:01:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1761517681;
-	 x=1761604081; bh=5PLuzhFArpw9fUqEmDWkka/sgzY+ZgxjHvHVaGW/fUo=; b=
-	m4FBC1TebzNqa7nPtAeH33fi1TjEjfEReodCLNIQm0sqy/YXRHK58/G1Ix0TKu0R
-	3Y2L1B5cHwUo+NQ6bB7+HWVnkl52u4/soMpPBZBFHWySwKLMCKzeefynol5eLZPa
-	o2tvdwfyTAoswMEboZ9Fi9N1o9SqzpJGeHOwtmzE2j/47mxrR1yCO3qC4x9AVZXq
-	P+rcX8/cgostMkCPz/cv0Uqb9Z+r+/fGF0ajQwJRIN+55k7fJkJjhTqSNlGp8bgz
-	hbCn7pBIj/nzPql36a1FzKkdRaqytEIDWifyUbtLkanjcQfRIX41hop4napnmDjb
-	/3Ui/IhCI2/gUQti0hQLqg==
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1761519676; x=1761606076; bh=DH/w8S4kOOHZslXxE8V6Ab5ys24pkI+MwsM
+	NlBndG0s=; b=XgtjPS1YK1m547vpM3vGkaV4VH+RSa7MdQReR79YUsq5anqPVJJ
+	deG+iAGIV2/64XZQVykqRbCygbwdW6W/nUIYnqAXjI54907MQdwdToIeK5p7q6dc
+	ISemXRuyRLOz9VlgIWTL8SHhBQGTLyqEtaVhZEN4msEkRpuK9LNddt1DRpwRpxpU
+	h/GPqDMiMEOH3uEgHclqS8KIBThAkuFhcEEJcsA6AbN+YNVKIuvyDHoRsNoDZVt/
+	UZ94gaFLwYgeeVbTrf2QpzFbKcx6qFGNsOExq5RnXvzCsoRe2EJ1zm61cWK6GZrZ
+	kDhi+psMaHz/NV6YjOWNA5mEHpJ0WZikA/w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1761517681; x=1761604081; bh=5
-	PLuzhFArpw9fUqEmDWkka/sgzY+ZgxjHvHVaGW/fUo=; b=X8Nehzg3yHXFr4dcy
-	2L8COPsKCwt+1lLdH7tVDM0Rj0Sol8nSUuxhup/uLTGWWo+sFOOnYHRO4AB6s6+/
-	stIZz14+4ZLiGVwvCKWAqd3ib9Bz50CiUxbggah6YjqtMOzhjQAoEN5MrO2PQ2Lx
-	SX9gD1YVKsAa/i3IfHFoMxp5+WIkxgBrUvMbglcK6/v0kaVC/XDg21G28PbaXIZB
-	04+zpHRGkw4d6n3N+t7cx3XIorvZbNMslgOHHUjVgwYYri6gZ65HDl6OzEFggwMQ
-	U/sH5wl8shvvkdZ6OF80oQ1fBpITRGW/LKtdxeAnM9kAcNiQh+guzH/DfB9uR2aq
-	wjkqw==
-X-ME-Sender: <xms:caD-aAS8f9etbpyKArtscPI5ywb3bc3YezBt2-wH5W2BU4bsZ_h6sA>
-    <xme:caD-aBfnb0fVTbvoHSwEz30KNblLyyF0J1xmzZBMmkDvwxxEuwedDK333YD9TVPip
-    RNVsdn-HAkWtJZg-55SZ6__1XjgS_MD8i9OeA4eQfv59m5DuA>
-X-ME-Received: <xmr:caD-aHppOzgfZMkrkoE8toXYlrY8GMppEg1HQ8P2YaFuhf_lawjBggfMsyQm4TNDrEuJPSHT-udMcA-k4zysgMxKPxQ1PTBRRUtZiRxAvLzF>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheeivdelucetufdoteggodetrf
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1761519676; x=
+	1761606076; bh=DH/w8S4kOOHZslXxE8V6Ab5ys24pkI+MwsMNlBndG0s=; b=Y
+	AwUikuLaa8y4tkM0jMvMbNZVnOLbAEw2fSv5Qo60/8nXmEG1oDsRaDUTP6jp6hLY
+	KEFm+qt9tY6jmMGB8l1nfiluB0JA3as8eCzi6AuUgMVlOx9A+CI2SN+9AcRJ+hs3
+	a/pd3wV0+Hf3B8b9IhlChZaKJ1TQILc0a345tscVjLxvSh/yjsDhB4JkDIY7jGJb
+	xBZKBxIRtGbyWtMB4zugbzpTMZRFSdyQn1GltoHvF0XngELWjQWv92AEDxpeSvwt
+	2Lpp3MXJ3NrCJ5vofCPCpXW/xyd/Y/7xHgouo3fUDjEVbr7ibY/N+OvahbX9wkCv
+	Aysb/HSjm5B0rhlLYxLvg==
+X-ME-Sender: <xms:PKj-aLKv3bHYJdESRwZHNwaGJIWRoLpBbzrsRqVhOs1Kd-P6XLFSog>
+    <xme:PKj-aC38xjJrUNdQdq009NlmfZ6Vjoi-qa5Me2dv2OgkkDjKcbYe-iDcvja5KPi_d
+    e6RwiDK2dfLEm50_SeBvptHpEF6rfHHEzTGeGCALAd0oDBNhg>
+X-ME-Received: <xmr:PKj-aNgniS2JaqWAiYHHIV0q7G7x7I6epiifx9O_zeYbudRSkpj9Edug7syAv2cvCHQ9FotGZn4H8MjMI1vv-_ZNDcyFVvBWvt3FdHGX5u1F>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheeifeehucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
-    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:caD-aK_0dD62aSmaIBMaOzczMO4J2s1z7DqDQnBeK8z_NNcoCg-whA>
-    <xmx:caD-aLc3a2WCfTmlzUJlGIdiIZREBwR5GOyHz0dKWPNyfXL-5Zz-kA>
-    <xmx:caD-aMJBmSComh2coWu3MfkbdhBaP_yVMYzFfLxXZw429nYHCC155w>
-    <xmx:caD-aDjCNXsEE9CWUDPhYROEZAUUmVKCd_fvka3nn4TkSYKLa0rGsw>
-    <xmx:caD-aBw65QZX2kIC41gOT4RJeS6guSUIYY7cAx2uvlUNBi7ZnaSjm_un>
+    epleehueeggfegteduieeggeetvedvheegvefhgffhgeejgeekffehgfevvdfhledvnecu
+    ffhomhgrihhnpehophgrqhhuvgdrshhonecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhmrghilhdrnhgvthdpnhgspghr
+    tghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqnh
+    hfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhmsehtrghlphgv
+    hidrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohep
+    uggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:PKj-aLV2P4yqfkBPsptTgy7Z-7cXOhoRaRzDbQauVr_IhQosp8sWcg>
+    <xmx:PKj-aEX4_YaO81WJSOeG0nAboEMNKurO40mJEqe1R-_08wdkkLYgHg>
+    <xmx:PKj-aDjS_OuzEPowrJ2T02F94T9VTPwWC6xvthxPmhhJmApEgzo0gQ>
+    <xmx:PKj-aHZILAlRP2Qbc0vlZBn13pbgYpjAXcv54t2z3pkMvzyB37wFoA>
+    <xmx:PKj-aEpTaWr3oZyoYd7C6OHPkMKob5GdI32kbt3sGp6YutWuFnz_BbQu>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Oct 2025 18:27:59 -0400 (EDT)
-From: NeilBrown <neilb@ownmail.net>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH v3 10/10] nfsd: discard OP_CLEAR_STATEID
-Date: Mon, 27 Oct 2025 09:23:55 +1100
-Message-ID: <20251026222655.3617028-11-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20251026222655.3617028-1-neilb@ownmail.net>
-References: <20251026222655.3617028-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+ 26 Oct 2025 19:01:14 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH v3a 02/10] nfsd: drop explicit tests for special stateids
+ which would be invalid.
+In-reply-to: <20251026222655.3617028-3-neilb@ownmail.net>
+References: <20251026222655.3617028-1-neilb@ownmail.net>,
+ <20251026222655.3617028-3-neilb@ownmail.net>
+Date: Mon, 27 Oct 2025 10:01:12 +1100
+Message-id: <176151967298.1793333.13856723160983723087@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: NeilBrown <neil@brown.name>
 
-Having per-op flags which significantly simplify many ops clearly
-has value, so ALLOWED_WITHOUT_FH makes sense as many ops don't need to
-check for a valid filehandle.
+In two places nfsd has code to test for special stateids and to report
+nfserr_bad_stateid if they are found.
+One is for handling TEST_STATEID ops which always forbid these stateids,
+and one is for all other places that a stateid is used, and the code is
+*after* any checks for special stateids which might be permitted.
 
-However such flags reduce locality: you cannot look at op_foo() and see
-everything that happens when the FOO operation is received, so they
-should be used with caution.
+These tests add no value.  In each each there is a subsequent lookup for
+the stateid which will return the same error code if the stateid is not
+found, and special stateids never will be found.
 
-OP_CLEAR_STATEID does not simplify many functions and the simplification
-is minimal, so I believe its value is not worth the cost.  This patch
-removes it and calls clear_current_stateid() where it is needed.
+Special stateid have a si.opaque.so_id which is either 0 or UINT_MAX.
+Stateids stored in the idr only have so_id ranging from 1 or INT_MAX.
+So there is no possibility of a special stateid being found.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Having the explicit test optimised the unexpected case where a special
+stateid is incorrectly given, and add unnecessary comparisons to the
+common case of a non-special stateid being given.
+
+In nfsd4_lookup_stateid(), simply removing the test would mean that
+a special stateid could result in the incorrect nfserr_stale_stateid
+error, as the validity of so_clid is checked before so_id.  So we
+add extra checks to only return nfserr_stale_stateid if the stateid
+looks like it might have been locally generated - so_id not
+all zeroes or all ones.
+
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c | 20 +++++++++++---------
- fs/nfsd/xdr4.h     |  4 ----
- 2 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 3ebc4357cd67..a6e7898c4157 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -684,6 +684,7 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	__be32 ret;
- 
- 	fh_put(&cstate->current_fh);
-+	nfsd41_clear_current_stateid(cstate);
- 	cstate->current_fh.fh_handle.fh_size = putfh->pf_fhlen;
- 	memcpy(&cstate->current_fh.fh_handle.fh_raw, putfh->pf_fhval,
- 	       putfh->pf_fhlen);
-@@ -702,6 +703,7 @@ nfsd4_putrootfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		union nfsd4_op_u *u)
- {
- 	fh_put(&cstate->current_fh);
-+	nfsd41_clear_current_stateid(cstate);
- 
- 	return exp_pseudoroot(rqstp, &cstate->current_fh);
- }
-@@ -857,6 +859,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		create->cr_bmval[0] &= ~FATTR4_WORD0_ACL;
- 	set_change_info(&create->cr_cinfo, &cstate->current_fh);
- 	fh_dup2(&cstate->current_fh, &resfh);
-+	nfsd41_clear_current_stateid(cstate);
- out:
- 	fh_put(&resfh);
- out_umask:
-@@ -924,6 +927,7 @@ static __be32
- nfsd4_lookupp(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	      union nfsd4_op_u *u)
- {
-+	nfsd41_clear_current_stateid(cstate);
- 	return nfsd4_do_lookupp(rqstp, &cstate->current_fh);
- }
- 
-@@ -931,6 +935,7 @@ static __be32
- nfsd4_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	     union nfsd4_op_u *u)
- {
-+	nfsd41_clear_current_stateid(cstate);
- 	return nfsd_lookup(rqstp, &cstate->current_fh,
- 			   u->lookup.lo_name, u->lookup.lo_len,
- 			   &cstate->current_fh);
-@@ -2952,9 +2957,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 		op->status = op->opdesc->op_func(rqstp, cstate, &op->u);
- 		trace_nfsd_compound_op_err(rqstp, op->opnum, op->status);
- 
--		if (op->opdesc->op_flags & OP_CLEAR_STATEID)
--			nfsd41_clear_current_stateid(cstate);
--
- 		/* Only from SEQUENCE */
- 		if (cstate->status == nfserr_replay_cache) {
- 			dprintk("%s NFS4.1 replay from cache\n", __func__);
-@@ -3404,7 +3406,7 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 	},
- 	[OP_CREATE] = {
- 		.op_func = nfsd4_create,
--		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME | OP_CLEAR_STATEID,
-+		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME,
- 		.op_name = "OP_CREATE",
- 		.op_rsize_bop = nfsd4_create_rsize,
- 	},
-@@ -3455,13 +3457,13 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 	},
- 	[OP_LOOKUP] = {
- 		.op_func = nfsd4_lookup,
--		.op_flags = OP_HANDLES_WRONGSEC | OP_CLEAR_STATEID,
-+		.op_flags = OP_HANDLES_WRONGSEC,
- 		.op_name = "OP_LOOKUP",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
- 	[OP_LOOKUPP] = {
- 		.op_func = nfsd4_lookupp,
--		.op_flags = OP_HANDLES_WRONGSEC | OP_CLEAR_STATEID,
-+		.op_flags = OP_HANDLES_WRONGSEC,
- 		.op_name = "OP_LOOKUPP",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
-@@ -3491,21 +3493,21 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 	[OP_PUTFH] = {
- 		.op_func = nfsd4_putfh,
- 		.op_flags = ALLOWED_WITHOUT_FH | ALLOWED_ON_ABSENT_FS
--				| OP_IS_PUTFH_LIKE | OP_CLEAR_STATEID,
-+				| OP_IS_PUTFH_LIKE,
- 		.op_name = "OP_PUTFH",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
- 	[OP_PUTPUBFH] = {
- 		.op_func = nfsd4_putrootfh,
- 		.op_flags = ALLOWED_WITHOUT_FH | ALLOWED_ON_ABSENT_FS
--				| OP_IS_PUTFH_LIKE | OP_CLEAR_STATEID,
-+				| OP_IS_PUTFH_LIKE,
- 		.op_name = "OP_PUTPUBFH",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
- 	[OP_PUTROOTFH] = {
- 		.op_func = nfsd4_putrootfh,
- 		.op_flags = ALLOWED_WITHOUT_FH | ALLOWED_ON_ABSENT_FS
--				| OP_IS_PUTFH_LIKE | OP_CLEAR_STATEID,
-+				| OP_IS_PUTFH_LIKE,
- 		.op_name = "OP_PUTROOTFH",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index e4357d79271f..1599fa66b5e9 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -1027,10 +1027,6 @@ enum nfsd4_op_flags {
- 	 * the v4.0 case).
- 	 */
- 	OP_CACHEME = 1 << 6,
--	/*
--	 * These are ops which clear current state id.
--	 */
--	OP_CLEAR_STATEID = 1 << 7,
- 	/* Most ops return only an error on failure; some may do more: */
- 	OP_NONTRIVIAL_ERROR_ENCODE = 1 << 8,
- };
--- 
+Sorry - shortly after posting I realised that the change to prevent
+nfserr_stale_stateid being reported incorrectly could mean it was not
+reported when it should have been.  So I added back a simple test for
+"might this be special" in the error path to ensure the correct error.
+
+ fs/nfsd/nfs4state.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index e1c11996c358..a800fde0db21 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -7129,9 +7129,6 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client=
+ *cl, stateid_t *stateid)
+ 	struct nfs4_stid *s;
+ 	__be32 status =3D nfserr_bad_stateid;
+=20
+-	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+-		CLOSE_STATEID(stateid))
+-		return status;
+ 	spin_lock(&cl->cl_lock);
+ 	s =3D find_stateid_locked(cl, stateid);
+ 	if (!s)
+@@ -7186,13 +7183,16 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cst=
+ate,
+=20
+ 	statusmask |=3D SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
+=20
+-	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+-		CLOSE_STATEID(stateid))
+-		return nfserr_bad_stateid;
+ 	status =3D set_client(&stateid->si_opaque.so_clid, cstate, nn);
+ 	if (status =3D=3D nfserr_stale_clientid) {
+ 		if (cstate->session)
+ 			return nfserr_bad_stateid;
++		if (stateid->si_opaque.so_id + 1 <=3D 1)
++			/* so_id is zeroes or ones so most likely a
++			 * special stateid, certainly not one locally
++			 * generated.
++			 */
++			return nfserr_bad_stateid;
+ 		return nfserr_stale_stateid;
+ 	}
+ 	if (status)
+--=20
 2.50.0.107.gf914562f5916.dirty
 
 
