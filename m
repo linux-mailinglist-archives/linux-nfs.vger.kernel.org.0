@@ -1,130 +1,236 @@
-Return-Path: <linux-nfs+bounces-15629-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15630-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4B50C09C95
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 18:56:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BB89C0AFAD
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 19:00:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B2DCC50076F
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Oct 2025 16:33:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74D93189D26E
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 18:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5910030F932;
-	Sat, 25 Oct 2025 16:26:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3C21EBFE0;
+	Sun, 26 Oct 2025 18:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auytd7Bg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpgkXalN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314FC303A1E;
-	Sat, 25 Oct 2025 16:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728DC2AE8E
+	for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 18:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761409566; cv=none; b=jrtBGg94ATmGGWTLMjvVvlx+SYIQpRlFcJSs6bsLGpwVSNH1tCGrbQuxFh/e2rsqTxJXbuWQwrJjgUOcpTWKklHmcMMofxiInNVeP49yI/XbF7BJE4vT4M7dsmv+mBkw4rj8WzurZSl0Ie6+dNVIf2wF4dzuA5isA+AZj4QMGaI=
+	t=1761501634; cv=none; b=S6UGtLYfjkc1nJGheJqtc+X9yBpY+JxdC2ApNK077o3Oo/Al9BncZtmVWTpFjdQ8sSgSrfdV+lX2I0PhE37F4hCi12PRsJLHN8wak2XfMaawvA4yWDeBD8taNkJQPv1AQPkZ6zc1woAGEMgwXuCcWk8f+zI7hZFHoPnpvewqBak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761409566; c=relaxed/simple;
-	bh=KdCwY02XAI2rWBJxdnCMdyzWYd4+LCpAMiSnoQoCINQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IPj3Q8BO1eofbEYzSebaXvY3kDiURNNBTc1ENorJdlPTi6dPGQ09e3fs2dPF2gHBeRARBqpU2gW4bJKfXZy5x9sU5zVrJ8QueWkt/CMg6whiBQmzQS2T0r69SLM4eilgowOl2eaBgGOgf3tXq9C1lBI+FhR1BaZpzaX3dg/Ci0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auytd7Bg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9ED6C4CEF5;
-	Sat, 25 Oct 2025 16:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761409563;
-	bh=KdCwY02XAI2rWBJxdnCMdyzWYd4+LCpAMiSnoQoCINQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=auytd7Bge3hpP+ORabjZPpLV9tZCpqYLM5AlyRGNTameIS6m8L6TN/7anJQ2+9DFs
-	 4+yh1Dp2vo7ubULz2FDVF/n96QMl8zUhmicEIFa378+0PozPxvweyAIgQCcSSx3MKw
-	 QRhV9F2inngc4bNs0DmeYQulApTpBDWB+b0Pyei01h77bwgnkOCJAlH0vHQBVUZuED
-	 H+LAbQIxG48Kuc2jElpS605AviEMmWVUnZKRvyfaE14LSWbuOJv4vVXs8OiSMylbui
-	 yQAK548JYS918tCSJWIDAx1UNGfPGV8Vyl3rK18qdEH7HzZexmrlvi5Dp8lDzTDEBd
-	 iRI/C1+z7CDyQ==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Olga Kornievskaia <okorniev@redhat.com>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	trondmy@kernel.org,
-	anna@kernel.org,
+	s=arc-20240116; t=1761501634; c=relaxed/simple;
+	bh=bsUdyZxowJWtgAkdDM6NuUseZpm4ADIH7h8y/G9Cook=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FX2t89Xaqr6RS+yMdcyv9HdEjb0e+HjrKuNcQbp22wZPDMPFlILUYhT6x2ahYL6MOzrUFKoE7QmBx/WMelTBHkHgZEknjK8LqiyoOVNYSmYMD3xLhqfq/w63UJd+vMqljQ8R0vB+3UOxH/pq8oyosfZh9JTrFwgyHMmPxSPKlpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpgkXalN; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-793021f348fso3192419b3a.1
+        for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 11:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761501633; x=1762106433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHaV3TmVxnoAqXhejDq47KmdfYQgyKejybkw2Me1N8k=;
+        b=NpgkXalN53zfOx+82hdqq4mmlp//Iv6h4JAR8h1ZIM/tCt9p/liItaXki+4QQobo8c
+         WmNSdBiWKl31KOXZFAJ3HoPcHkqyrXKi6aNn2HHs358D3ULZ+6BibVbUTzgE3CNgyL55
+         ieWLl3LUx+WptnS5oOooDUoN0TlXFQt6C0RuOrIWH15pTktjh+/6HNSF3uhmGiGjBYhj
+         lp33KOWi0z797HS34O6WHnANnjb9iuWp0iMfMLaLBHYOT1a+ewJ3eV0tVhL/TUu1HWi9
+         bwQiz5mGuvMq4sb36JCIfC/uj9y5Ct8xn6eL/O7aYQJBINvgr+a4fANpmHZDNIIwqW10
+         QYig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761501633; x=1762106433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DHaV3TmVxnoAqXhejDq47KmdfYQgyKejybkw2Me1N8k=;
+        b=HcVI8vyDHSxXxbtZN3L9tTBUiCAqnURyVGfTAdKJOW1m6v3HenidV4X8RcBJLUjQ9I
+         fk1BOz7zeLzuyb/C6giohWOcqECGbBcfaFoYz7BN2gFMZtPONJeFbBKuYz1gIr0eThMe
+         r8wss7k7VRPV6obhT/nvIcpaDQmZ8jxpSnovAAnl1+g9n+AzJPpYORMUtK7/Nox2/nm2
+         7KdqdhoWvR+L7L5JjKtBcHyYxWKPFc1FBDt9U8BRNR3QOpl42QcS9PrGHM1AZv/5AAqw
+         IixSXxW5iZHBBe15YL1e0CgAX8TQytK1xSuoXrJ5hTfdj7Twuims0yA7OCLWBPkEIPdd
+         A8tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRyytVwKSbCHL1rf3+xCXGZoXWBI7yPkLnTo/gb3fuWAaQuU+Er2q05rJi64uYP4SyU63omAUxrLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3DKLOGE53P5ZOLpdDIrADd2x0V3mJGmXHN6yxTGfy/O1wKCbc
+	xGrszLi+j7YeTK6K87huq3uI0LiFN9p/CDLjDbn2hX51JIOc8nTMP+/W
+X-Gm-Gg: ASbGncsXd+fepRqD3nK7lFVmBdMT9vVpbL7PyXrd3i9uv3l+/7eA9913+jj+6ts1RXc
+	Jgpc9g92O2rJnXf8HUv5gZE7ApZZgC6zl9K1YWHpN+QZJKMC1R1pDJAzyo8xJx/r+DDpgt6kkW1
+	laz83e2qHQQQcaCHk5UfXdpPzZwvNZa70rTgZytkxjf2e9oFznLEmNnMW8a8m5iR+UWmDvCcYC+
+	88h5eHCfr1cAh0cfIwzKu+qz3lr/UNkrisaiZhoIREWoTXDZKFxPg+vzKD2hy7Bwne6t8Xll9e8
+	FsPy1bzgPKVE0d+MxCcwoZ8CM4caJiCaO+mQFyBRreB/1GiqyqrRuj94AWtcyovDQ+AmNfWxHe5
+	NF/0UiXj2WzZYlK1ZkE1ZUTqmca7oVstPNl3RIsJasuEfWFL7Gdfs5mGmrFFRBgXEgf7UuBzE6F
+	Y=
+X-Google-Smtp-Source: AGHT+IH1oNgGKZQ4Y9fVMbqnKjHXUHudd4pszZxhju2pFdhdSu7ADJsfQhD+q8EMHFRpUHk0PC1/dg==
+X-Received: by 2002:a05:6a20:914a:b0:33f:df99:11f2 with SMTP id adf61e73a8af0-33fdf991412mr9718307637.14.1761501632586;
+        Sun, 26 Oct 2025 11:00:32 -0700 (PDT)
+Received: from snowman ([2401:4900:615d:9a11:7123:5dd6:caaa:5450])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33fed7bd08asm5713439a91.3.2025.10.26.11.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Oct 2025 11:00:32 -0700 (PDT)
+From: Khushal Chitturi <kc9282016@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.4] NFSv4: handle ERR_GRACE on delegation recalls
-Date: Sat, 25 Oct 2025 11:59:59 -0400
-Message-ID: <20251025160905.3857885-368-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khushal Chitturi <kc9282016@gmail.com>,
+	Khushal Chitturi <kc928206@gmail.com>
+Subject: [PATCH] xdrgen: handle _XdrString in union encoder/decoder
+Date: Sun, 26 Oct 2025 23:30:16 +0530
+Message-ID: <20251026180018.9248-1-kc9282016@gmail.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Olga Kornievskaia <okorniev@redhat.com>
+Running xdrgen on xdrgen/tests/test.x fails when
+generating encoder or decoder functions for union members
+of type _XdrString. It was because _XdrString
+does not have a spec attribute like _XdrBasic,
+leading to AttributeError.
 
-[ Upstream commit be390f95242785adbf37d7b8a5101dd2f2ba891b ]
+This patch updates emit_union_case_spec_definition
+and emit_union_case_spec_decoder/encoder
+to handle _XdrString by assigning
+type_name = "char *" and  avoiding referencing to spec.
 
-RFC7530 states that clients should be prepared for the return of
-NFS4ERR_GRACE errors for non-reclaim lock and I/O requests.
+Testing: Fixed xdrgen tool was ran on originally failing
+test file (tools/net/sunrpc/xdrgen/tests/test.x) and now completes without AttributeError.
+Modified xdrgen tool was also run against nfs4_1.x (Documentation/sunrpc/xdr/nfs4_1.x).
+The output header file matches with nfs4_1.h (include/linux/sunrpc/xdrgen/nfs4_1.h).
+This validates the patch for all XDR input files currently within the kernel.
 
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Khushal Chitturi <kc928206@gmail.com>
 ---
+ tools/net/sunrpc/xdrgen/generators/union.py   | 35 ++++++++++++++-----
+ .../templates/C/union/encoder/string.j2       |  6 ++++
+ 2 files changed, 32 insertions(+), 9 deletions(-)
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
 
-LLM Generated explanations, may be completely bogus:
-
-YES
-**Key Points**
-- The change at `fs/nfs/nfs4proc.c:7876-7880` extends the recall retry
-  loop so that `-NFS4ERR_GRACE` is treated exactly like
-  `-NFS4ERR_DELAY`, matching RFC 7530’s requirement that non-reclaim
-  requests retry during the server’s grace period; without it we
-  prematurely exit the loop.
-- When the old code bailed out on `-NFS4ERR_GRACE`, control returned up
-  the stack, causing `nfs_delegation_claim_locks()` to propagate
-  `-EAGAIN` (`fs/nfs/delegation.c:176-178`), which in turn made
-  `nfs_end_delegation_return()` fall into the client-recovery path or
-  abort the delegation (`fs/nfs/delegation.c:584-596`), disrupting
-  otherwise healthy delegations after a server restart.
-- Other lock paths already retry on `-NFS4ERR_GRACE` (see
-  `fs/nfs/nfs4proc.c:7594-7604`), so this patch simply aligns the
-  delegation-recall path with existing, well-tested behaviour and
-  prevents unnecessary recovery storms.
-- The fix is tiny, localized to the NFS client delegation logic, and
-  carries minimal regression risk while addressing a real-world failure
-  mode observed during grace periods; it is an ideal candidate for
-  stable backporting.
-
- fs/nfs/nfs4proc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 611e6283c194f..4de3e4bd724b7 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7872,10 +7872,10 @@ int nfs4_lock_delegation_recall(struct file_lock *fl, struct nfs4_state *state,
- 		return err;
- 	do {
- 		err = _nfs4_do_setlk(state, F_SETLK, fl, NFS_LOCK_NEW);
--		if (err != -NFS4ERR_DELAY)
-+		if (err != -NFS4ERR_DELAY && err != -NFS4ERR_GRACE)
- 			break;
- 		ssleep(1);
--	} while (err == -NFS4ERR_DELAY);
-+	} while (err == -NFS4ERR_DELAY || err == -NFSERR_GRACE);
- 	return nfs4_handle_delegation_recall_error(server, state, stateid, fl, err);
- }
+diff --git a/tools/net/sunrpc/xdrgen/generators/union.py b/tools/net/sunrpc/xdrgen/generators/union.py
+index 2cca00e279cd..3118dfdddcc4 100644
+--- a/tools/net/sunrpc/xdrgen/generators/union.py
++++ b/tools/net/sunrpc/xdrgen/generators/union.py
+@@ -1,3 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
+ #!/usr/bin/env python3
+ # ex: set filetype=python:
  
+@@ -8,7 +9,7 @@ from jinja2 import Environment
+ from generators import SourceGenerator
+ from generators import create_jinja2_environment, get_jinja2_template
+ 
+-from xdr_ast import _XdrBasic, _XdrUnion, _XdrVoid, get_header_name
++from xdr_ast import _XdrBasic, _XdrUnion, _XdrVoid, _XdrString, get_header_name
+ from xdr_ast import _XdrDeclaration, _XdrCaseSpec, public_apis, big_endian
+ 
+ 
+@@ -40,13 +41,20 @@ def emit_union_case_spec_definition(
+     """Emit a definition for an XDR union's case arm"""
+     if isinstance(node.arm, _XdrVoid):
+         return
+-    assert isinstance(node.arm, _XdrBasic)
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++        classifier = ""
++    else:
++        type_name = node.arm.spec.type_name
++        classifier = node.arm.spec.c_classifier
++
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
+     template = get_jinja2_template(environment, "definition", "case_spec")
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
+-            classifier=node.arm.spec.c_classifier,
++            type=type_name,
++            classifier=classifier,
+         )
+     )
+ 
+@@ -84,6 +92,12 @@ def emit_union_case_spec_decoder(
+ 
+     if isinstance(node.arm, _XdrVoid):
+         return
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++        classifier = ""
++    else:
++        type_name = node.arm.spec.type_name
++        classifier = node.arm.spec.c_classifier
+ 
+     if big_endian_discriminant:
+         template = get_jinja2_template(environment, "decoder", "case_spec_be")
+@@ -92,13 +106,13 @@ def emit_union_case_spec_decoder(
+     for case in node.values:
+         print(template.render(case=case))
+ 
+-    assert isinstance(node.arm, _XdrBasic)
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
+     template = get_jinja2_template(environment, "decoder", node.arm.template)
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
+-            classifier=node.arm.spec.c_classifier,
++            type=type_name,
++            classifier=classifier,
+         )
+     )
+ 
+@@ -169,7 +183,10 @@ def emit_union_case_spec_encoder(
+ 
+     if isinstance(node.arm, _XdrVoid):
+         return
+-
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++    else:
++        type_name = node.arm.spec.type_name
+     if big_endian_discriminant:
+         template = get_jinja2_template(environment, "encoder", "case_spec_be")
+     else:
+@@ -181,7 +198,7 @@ def emit_union_case_spec_encoder(
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
++            type=type_name,
+         )
+     )
+ 
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
+new file mode 100644
+index 000000000000..2f035a64f1f4
+--- /dev/null
++++ b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
+@@ -0,0 +1,6 @@
++{# SPDX-License-Identifier: GPL-2.0 #}
++{% if annotate %}
++		/* member {{ name }} (variable-length string) */
++{% endif %}
++		if (!xdrgen_encode_string(xdr, ptr->u.{{ name }}, {{ maxsize }}))
++			return false;
 -- 
-2.51.0
+2.51.1
 
 
