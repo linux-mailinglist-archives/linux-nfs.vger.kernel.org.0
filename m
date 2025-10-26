@@ -1,91 +1,92 @@
-Return-Path: <linux-nfs+bounces-15632-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15633-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45F5CC0B5C3
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 23:27:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D41C0B5CC
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 23:27:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2DE824E61E8
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 22:27:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F19103B271C
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Oct 2025 22:27:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10E52BEFE5;
-	Sun, 26 Oct 2025 22:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A541F4CAE;
+	Sun, 26 Oct 2025 22:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="K4s3hDxv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Srf1NDGj"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="tl0VIqBS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n3GwWd7d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A897A2E8DFC
-	for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 22:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DF92BEFE5
+	for <linux-nfs@vger.kernel.org>; Sun, 26 Oct 2025 22:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761517640; cv=none; b=K/xkgh93wQ3Ut0Jx4LDN05krQaNJNMcLSTyVGYcIw+TBlVhxAkphbrkOKD8+rjLoXWDpgEdCw1XGsn4I9opOQDJBn3RpOcKtWnm94x9dYffTlbfKSLSMEAo5aK3tjzUdKfAAhR3OugoHjH3QFDZQUVhdtmRfBic2K8kX91P4KH0=
+	t=1761517646; cv=none; b=ULd7CIWDvtXVa7BVr90ggNFt8yspueX49aW/GL+iTengTwQW24b1+qpNqOBeT3mYIrOpUW4BrmpZuyCs+2Sd7JG5luvUMmBRk02qJ4ZKQgo+lQXb3WBeYx/TsOMw3rQMLWYB2Iu/OMocxmvq8/GXLDZkGXBX6sznEfN8x14OOK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761517640; c=relaxed/simple;
-	bh=a1RcaieALaBqRMncS5vtd9PJ1ItBjgfUrBsTBAlNoyM=;
+	s=arc-20240116; t=1761517646; c=relaxed/simple;
+	bh=FrfwhboZ5MVhur20BX5Fbqgcx6jtGNOSUkBziptgdgE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AeG5QUbdQSJDF5Y/eWgJ2D2DmZSmQVjqdABcbi0GuV4ite5gDf8WcNNNxL9FHWDouQBn9hVRAkFx3kBCe4AhbSK9mIa63EVUuGaZzkfaRqVty4TqVVGgF8WBq9vfOAkHJckrLL77FpZi6OhWWlpaBKqi2O0xfCkgtOkzFaiZBjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=K4s3hDxv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Srf1NDGj; arc=none smtp.client-ip=202.12.124.156
+	 MIME-Version; b=UZJs3rPmQo0N+tPjVId7o9Mr6tzdeRc835VxUqWhXo7M8D5Ho3B7PI3Jo7qYkbRiz93eOY+usQAGYFgPaxFcaktij2FimOoOO92Dnpvbh2DZ5eqy7rsssZKtIoEAhdCfUXp4JQ7ulsQRGGjvi7F6LvGmYaD8CbInQ/z0FQHdjRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=tl0VIqBS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n3GwWd7d; arc=none smtp.client-ip=202.12.124.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 472B97A0283;
-	Sun, 26 Oct 2025 18:27:17 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Sun, 26 Oct 2025 18:27:17 -0400
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id A387A1D001AD;
+	Sun, 26 Oct 2025 18:27:23 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Sun, 26 Oct 2025 18:27:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1761517637;
-	 x=1761604037; bh=SUSe4foexyLvCtipc/VmgXBRzNjiV0mBNlPz9Qwu04M=; b=
-	K4s3hDxvxbBIKDYHxdxj88BA/DpzCRL7dwaGWJXGzpArIGfhqd24HyDOXcopNrdI
-	wCEfoshbJbt6+ecEtuFZJ+2VnEAFAByvndTEf7BwHU5Tk8euSvZZfK4k73Ve/dR5
-	sCgRR3f+GWVQCplWZcc/undLaiOupUmEP+4zKF/CTjQZASUGzHVm2YrrwQ+aD/yK
-	WEnQnp4GMG01qlcEa9ZOuxieRGfvXM/t9Yah30bNGV6+BspULwzTUDjSF0nvm2x0
-	8UZOgj9WjLZB167JgKvTwjxTEfDi9N0zLUuoOBqhPYL1nTf73xn/YqLul++NXM4T
-	B7Q1/qRW6c3Wb8/hsqAxRA==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1761517643;
+	 x=1761604043; bh=nQ5Lisit+7RgJGwuBiQJv8f8zExNdxdUoQY+kefXeKU=; b=
+	tl0VIqBSNyOE1RfExRAFh7/2uM5s2GRAjAhFEbtR8dpZb4u+ut9Bac0LITE9WzzQ
+	reSGfJICPVFVYkDAw17Kd4QH0uJv5RLVfqvXowRSc79uBCXlARxeTzl3Y9nBIA+4
+	Sp/8DURuSjvDAEM7btMuSwroOyyVRoqvmicFyTETMNZ3OJDmXtgLDgfwIesTPfAF
+	689VsFAuX0ukhzld+Hyn3m9tQ2Ksj271a3DcncdMPNXjblq0qmsrN7FWFnrZ4yMb
+	BDmJNVrIY3DfIxGAMD6vO14P94SBV0t0Dw9xI42V/8KfIV2XftaauxZtb/Im/Soe
+	jsZRjFBvfoaxM9cFRb3znQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1761517637; x=1761604037; bh=S
-	USe4foexyLvCtipc/VmgXBRzNjiV0mBNlPz9Qwu04M=; b=Srf1NDGjL8Lcsawfz
-	ZyvipGT4RB1JdLqYRvRlYBGQRc0uyDl14FRqlNQ7b1xIoqMkA8Aj2poJuuBDfuaQ
-	BEO6TtrgyEARjZVoinh9a6lDSFBKYnItDsTEfIVcfwmH431suVYRF/x6S0GgJr+y
-	jR1hSaFFpZi0QWmD2fEsd7houoHLh9mGAcEnBlSc8AFV9tp49QuB34JmiU9jieHz
-	CZhj0xXmu2ROKBRyNmDKEMfXBErdj+e/i76FvNcwvs9nN8bKcwYmuzOR0F2DvXus
-	3t34vPss01RvMqjym9RohJJ+IOm1o2EAPBhZfkk6GTr9PMWIfuqXv6KlxvA7IEmD
-	myGRA==
-X-ME-Sender: <xms:RKD-aIPBsHReufBezrzNka-PnH4lUiNf-6TwciGigntoMc7cca6ZnQ>
-    <xme:RKD-aCpYU3PPZwR40jCG-qv5AINXHXuiy1UmhLxO12pCOLDdhYIaKWnE0yrnK8Pu9
-    u07U3meEhfIGojW6-8obZH2kZ-rdZxlXvvHxDnUOngZ2CXbRw>
-X-ME-Received: <xmr:RKD-aJGgLffxfxp5Jb9DlZq4TH_QKzchNjdPqozYt7uwZQcgBdnmrS1xqyLKkuMh2jpRIB5FMblttbuMg1gmG56MEkLg0yAcmwgbJZZvIwNz>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1761517643; x=1761604043; bh=n
+	Q5Lisit+7RgJGwuBiQJv8f8zExNdxdUoQY+kefXeKU=; b=n3GwWd7d2NoC+g8Tr
+	DGsS3MBYHDMM4gIrY/0un3GNVdqtWohAOipW/KQo02m/2vSAOaK4vj3jOtGi+jCY
+	e0ozWRiZE9bm6gSejInt4fl2pVSybud2bV+/0D3ZUv+RRCyhvhAoqiEqIxRB0kYL
+	65CZS+Yagyean112+JJcZyrns8Ak4LHwVEI5lDE3qiwzN88P0SRT0ndHzlmHIukf
+	k0iz01LULiMa+t2oEVM7Ym9413uU0CCMzjtppaUPXKulPAItALw//TnoF9eHATG3
+	E3025XWiulIcKgL1S3bQSdeX1CuzSk+D8ktl9fQ6eT4zWbZVivtahqyTphq5sUyO
+	B6y4w==
+X-ME-Sender: <xms:S6D-aL4JlsIJt2ZVegxeb3PFHpY81GG6g-ZlvoS7X6LGiD3_wQha9g>
+    <xme:S6D-aEkbPF1zld1twWyySFJBNEfP2v1gzniGRKvkIdrKGo4wwZkPVJMC_lAb5hnsJ
+    sX_yNIEilT08kGVg3mh2SngJNLtoM75FR4wBqEnqsd7S-qu5kY>
+X-ME-Received: <xmr:S6D-aMSOKnHTbq1oxraM-E6OLGtJzBVYZCynmKzW21BDQDfy_aPIG8aHS0WnaqgRkL6UWjTXhyKNZJBg0zkK2xuxEJ933FiERC55hhkEdh24>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheeivdelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
-    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:RKD-aHoTSeQv6fuwVTZN_wy_TSOK8aAt35fNUscjmFfPDv4LeJmwWw>
-    <xmx:RKD-aCa2igHgI_qGhTSH1xY5dqe7U5UaMcdWX4qfnE2D-ss48l5VJQ>
-    <xmx:RKD-aAXR7bXtI0I1SCEwO_j1yy5vTPK17ytA01DIicrz5NJW0MHCkA>
-    <xmx:RKD-aL_zsDRm-i3Moql9LoB3-3HqMtZSAjmq_HZsaPm63Ian71ZASA>
-    <xmx:RaD-aFt0pZa3uv-iHY96JG2U7p0ptz4CcoCQDusYAwV1REFGHxO5koKv>
+    epheegleegleefhfdvffdvheehfeejudeugfefleeigefffffhgeevgefhteeikefgnecu
+    ffhomhgrihhnpehophgrqhhuvgdrshhonecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhmrghilhdrnhgvthdpnhgspghr
+    tghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqnh
+    hfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhmsehtrghlphgv
+    hidrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohep
+    uggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:S6D-aDFRAOQid5AS0WanlsDSvdqgQZgPq84JfWEGm_qBH7MkIVNhUQ>
+    <xmx:S6D-aBFnthpg_lXovmUdn7INGVCAmYdTEM-Gh9A74CpHHpkTR4X1PQ>
+    <xmx:S6D-aBRHH5EYNBuoK1osGDi84UnF3Syre1Vk3IXuzd_y6qrHBVmMiw>
+    <xmx:S6D-aCKypdBzvj2b7GEFnQuZmDIfVWWCSTh3ep4XPCCL_gwE5fgjrA>
+    <xmx:S6D-aFY0xjm7N390LxyvzFjQcF57PUutbOLnpoI4CFivFZMbvQeVFLZZ>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Oct 2025 18:27:14 -0400 (EDT)
+ 26 Oct 2025 18:27:21 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +94,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v3 01/10] nfsd: fix current-stateid handling after PUTFH etc.
-Date: Mon, 27 Oct 2025 09:23:46 +1100
-Message-ID: <20251026222655.3617028-2-neilb@ownmail.net>
+Subject: [PATCH v3 02/10] nfsd: drop explicit tests for special stateids which would be invalid.
+Date: Mon, 27 Oct 2025 09:23:47 +1100
+Message-ID: <20251026222655.3617028-3-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20251026222655.3617028-1-neilb@ownmail.net>
 References: <20251026222655.3617028-1-neilb@ownmail.net>
@@ -110,44 +111,72 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neil@brown.name>
 
-According to RFC 8881 section 16.2.3.1.2 the result of a PUTFH op on the
-current stateid is that it should be set to the (all zeros) anonymous
-stateid, not treated as invalid.
+In two places nfsd has code to test for special stateids and to report
+nfserr_bad_stateid if they are found.
+One is for handling TEST_STATEID ops which always forbid these stateids,
+and one is for all other places that a stateid is used, and the code is
+*after* any checks for special stateids which might be permitted.
 
-Currently if a request contains a PUTFH followed by a READ request using
-the "current stateid" special stateid, it will result in an
-invalid-stateid error, where as it should behave the same as if the
-anonymous stateid were given to the READ request.
+These tests add no value.  In each each there is a subsequent lookup for
+the stateid which will return the same error code if the stateid is not
+found, and special stateids never will be found.
 
-This is easily fixed in clear_current_stateid().
+Special stateid have a si.opaque.so_id which is either 0 or UINT_MAX.
+Stateids stored in the idr only have so_id ranging from 1 or INT_MAX.
+So there is no possibility of a special stateid being found.
+
+Having the explicit test optimised the unexpected case where a special
+stateid is incorrectly given, and add unnecessary comparisons to the
+common case of a non-special stateid being given.
+
+In nfsd4_lookup_stateid(), simply removing the test would mean that
+a special stateid could result in the incorrect nfserr_state_stateid
+error, as the validity of so_clid is checked before so_id.  So we
+also move the stateid lookup before the clientid lookup.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4state.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 35004568d43e..e1c11996c358 100644
+index e1c11996c358..594632998a12 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -9091,7 +9091,7 @@ get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
- }
+@@ -7129,9 +7129,6 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
+ 	struct nfs4_stid *s;
+ 	__be32 status = nfserr_bad_stateid;
  
- static void
--put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
-+put_stateid(struct nfsd4_compound_state *cstate, const stateid_t *stateid)
- {
- 	if (cstate->minorversion) {
- 		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
-@@ -9102,7 +9102,7 @@ put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
- void
- clear_current_stateid(struct nfsd4_compound_state *cstate)
- {
--	CLEAR_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
-+	put_stateid(cstate, &zero_stateid);
- }
+-	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+-		CLOSE_STATEID(stateid))
+-		return status;
+ 	spin_lock(&cl->cl_lock);
+ 	s = find_stateid_locked(cl, stateid);
+ 	if (!s)
+@@ -7186,20 +7183,18 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
  
- /*
+ 	statusmask |= SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
+ 
+-	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+-		CLOSE_STATEID(stateid))
++	stid = find_stateid_by_type(cstate->clp, stateid, typemask, statusmask);
++	if (!stid)
+ 		return nfserr_bad_stateid;
+ 	status = set_client(&stateid->si_opaque.so_clid, cstate, nn);
+ 	if (status == nfserr_stale_clientid) {
++		nfs4_put_stid(stid);
+ 		if (cstate->session)
+ 			return nfserr_bad_stateid;
+ 		return nfserr_stale_stateid;
+ 	}
+ 	if (status)
+ 		return status;
+-	stid = find_stateid_by_type(cstate->clp, stateid, typemask, statusmask);
+-	if (!stid)
+-		return nfserr_bad_stateid;
+ 	if ((stid->sc_status & SC_STATUS_REVOKED) && !return_revoked) {
+ 		nfs4_put_stid(stid);
+ 		return nfserr_deleg_revoked;
 -- 
 2.50.0.107.gf914562f5916.dirty
 
