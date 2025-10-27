@@ -1,186 +1,114 @@
-Return-Path: <linux-nfs+bounces-15654-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15655-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08740C0D04F
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 11:50:33 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD468C0D076
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 11:55:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B76B64F18E6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 10:50:06 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D582634C928
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 10:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEF4B2F6198;
-	Mon, 27 Oct 2025 10:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12122F6194;
+	Mon, 27 Oct 2025 10:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTRW4VsJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IVg6hFYI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79562D77EF
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 10:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2B52F12CE
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 10:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761562205; cv=none; b=iwY9d75wkuaONP/3JxN5ajgreGmrzpu52MYoHIo+13KJ8jO9/37sC17hWmA8UiuaZgvldGNxw+Hi0Ied6xKqYvq792ruGZqc7IEaVRgb8ZbtVmc1YnDtu6Xg/8JRGCeE84Ao2OuDUUkyIBATlzU2R4UTqzwr4isyNhrbq18tcJM=
+	t=1761562543; cv=none; b=HkuJvQR//2y/eTRshD5xxfqfhSEKXyyHP+dHpiNtEL0kV/6HXfW8xN0OSjlk/1sRQw3R9zkeFQLwt79HmFVXdbI60G0ecF5sKuMrexixjmr+q24t7PJIH1K1q6Zw14EynMn4SSKcTEy0sP8235ys2UujXlg6GVriD25UpugUscM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761562205; c=relaxed/simple;
-	bh=38Vf4MQAdVIZZ8UyT7+C1IxrYKXWVivgPb/vi4PjLlg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fNYAZuVAhgFAdMgr4LaINF90122TMeDYKqLkf1M0B/RukqicgVBMEc3yI4Kt0Xnk9XJvCdnH1Q6WpOCLlchrAXC0u0CWazZ10BGcTHXjCfqLae57nbw8jU36M38o6vSIw1hXivvbfZQvVWwXegJQooDLB+UlXRWXPbLcWeEhE9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTRW4VsJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40A5C4CEF1;
-	Mon, 27 Oct 2025 10:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761562205;
-	bh=38Vf4MQAdVIZZ8UyT7+C1IxrYKXWVivgPb/vi4PjLlg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GTRW4VsJTVESO/bl9/rXni/V9UQt5gBdwERKBYvwL+z8SfMebDYxDwZ1xqDY60zeg
-	 RNZRv/7kWa2lwE2chN3T0ZKQpu5TfSjYEadQbwSya/Zbet3OLIRgAY6Rm/yuI3ydaZ
-	 kieAr20V452mg5lnhGCY4kMRSXuILsw7PC10K/coKTTotUDC9E6nmCppIEQPskFTP2
-	 CJ644iaOQZhMLPOShZRBvvvPd3gbD779z37APf8mNiBtuqvnU3QbkDXUJoCUcQHWXU
-	 WQnhF+gZG8mY/xQb3ow7ifNPVGNpygOszOWM8JaMZUXMiEgJ7eOmelBu1FRPxWYUgW
-	 o54SdEjsHQFBQ==
-Message-ID: <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
+	s=arc-20240116; t=1761562543; c=relaxed/simple;
+	bh=a4t24dTNBdqLFTNVmg+2Zwt7gf7ISssxEGzcV5kbdvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=psBK1yQigE40tSKL/FOULyeK5Om0bi0l1vlEEPZdlhg/KMoWgutShQMXYvPaqj3R05tVA88hyj0TKJITxDq30UFo46an9OjJB0808YTG7pZC+FVYOqfQHUKm3glDRZmUHL2svv+1iuOL/s+/5WQeyLdlnKab0er1cjHOvcWDNlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IVg6hFYI; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DezmDp3asapGyBhs76RDtf4sHpmsIXHkTlIwb5yW0ws=; b=IVg6hFYIjdaryB8Rf0JFtBjGwZ
+	sMOvjTaNxiXnYt+2qIa6ftkc787Op3K3zFmLBWjsJbfXLZKrPZe9BUiwvx/8RhwlWUtJU7Dzyci2H
+	G0JpG2Wg9gospWDguyflnix1JRUEXzVEmt3tM5WnNuO7fIjlYOVCUTJUoo8Zex440gOWUVRSpu01a
+	6kQxJgw+QwVaOLcs+w28ahELbVsflMtubsCXxwyf2mQn8uyiQn2bJn3uMIwXrnfTtfYW2MOU5d/Wm
+	mtTmR4/zp2mqpndnkbHa4Vs2Owu5oNakiVMnxSyE8q5mHT0Vqzx3ZLVa6pFnfUmF0x+DytBCPSoLB
+	e79OIsEw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vDKt1-0000000Dh1p-0uzk;
+	Mon, 27 Oct 2025 10:55:39 +0000
+Date: Mon, 27 Oct 2025 03:55:39 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Mike Snitzer <snitzer@kernel.org>, Chuck Lever <cel@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
 Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>, Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org, Chuck Lever
- <chuck.lever@oracle.com>, Christoph Hellwig <hch@lst.de>
-Date: Mon, 27 Oct 2025 06:50:03 -0400
-In-Reply-To: <aP8qPlA7BEN3nlN8@infradead.org>
+Message-ID: <aP9Pqx329OCVXlaJ@infradead.org>
 References: <20251024144306.35652-1-cel@kernel.org>
-	 <20251024144306.35652-15-cel@kernel.org> <aPvBtWOIe9hJBrKC@kernel.org>
-	 <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
-	 <aPvjiwF9vcawuHzi@kernel.org>
-	 <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
-	 <aPwSS9NlfqPFqfn2@kernel.org> <aP8qPlA7BEN3nlN8@infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+ <20251024144306.35652-15-cel@kernel.org>
+ <aPvBtWOIe9hJBrKC@kernel.org>
+ <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
+ <aPvjiwF9vcawuHzi@kernel.org>
+ <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
+ <aPwSS9NlfqPFqfn2@kernel.org>
+ <aP8qPlA7BEN3nlN8@infradead.org>
+ <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, 2025-10-27 at 01:15 -0700, Christoph Hellwig wrote:
-> On Fri, Oct 24, 2025 at 07:56:59PM -0400, Mike Snitzer wrote:
-> > Really, even ignoring all the quirkiness of this: that O_DIRECT can
-> > fallback to buffered, and we need IOCB_DSYNC|IOCB_SYNC for our use of
-> > buffered IO when NFSD_IO_DIRECT configured to ensure data has hit
-> > stable storage -- that's enough justification.  Bit circular but
-> > compelling to prove the need.. albeit wordy and a lot to unpack.
->=20
-> You always need IOCB_DSYNC for data to hit stable storage, both for
-> buffered and direct I/O.  You need IOCB_SYNC in addition to also sync
-> out the timestamps, which I think we now agree we need.  I still don't
-> understand why using direct I/O implies that we want NFS stable writes
-> and not two-stage writes, though.
+On Mon, Oct 27, 2025 at 06:50:03AM -0400, Jeff Layton wrote:
+> > buffered and direct I/O.  You need IOCB_SYNC in addition to also sync
+> > out the timestamps, which I think we now agree we need.  I still don't
+> > understand why using direct I/O implies that we want NFS stable writes
+> > and not two-stage writes, though.
+> 
+> That's certainly a possibility too. Consider the case where we have a
+> WRITE with unaligned parts at both ends. This set so far just does the
+> ends as synchronous I/Os.
+> 
+> We could do the end bits as non-synchronous writes, and follow up with
+> a vfs_fsync_range() call before returning NFS_FILE_SYNC.
+> 
+> We could also just return NFS_FILE_UNSTABLE and let the client follow
+> up with a commit when the write is unaligned. That may be the most
+> efficient scheme if you have a client streaming unaligned writes to the
+> server without gaps.
 
-That's certainly a possibility too. Consider the case where we have a
-WRITE with unaligned parts at both ends. This set so far just does the
-ends as synchronous I/Os.
+It's also the most efficient use for most direct I/O writes.
 
-We could do the end bits as non-synchronous writes, and follow up with
-a vfs_fsync_range() call before returning NFS_FILE_SYNC.
+I'm really confused what the promote to stable writes things is trying
+to solve.  If the clients wants to do O_(D)SYNC writes it can ask for
+STABLE writes itself, no need to do magic on the server.
 
-We could also just return NFS_FILE_UNSTABLE and let the client follow
-up with a commit when the write is unaligned. That may be the most
-efficient scheme if you have a client streaming unaligned writes to the
-server without gaps.
+> > You also need IOCB_DSYNC for direct I/O to hit the media if you want
+> > to return NFS_FILE_SYNC.  But I still don't understand why we want or
+> > need to return NFS_FILE_SYNC to start with.
+> 
+> NFS_FILE_SYNC is not required here, but it's better if we can return
+> that. If the server returns NFS_FILE_SYNC there is no need for the
+> client to follow up with a COMMIT.
 
-My feeling is that if you're doing a lot of unaligned I/Os, you're
-probably better off not enabling DIO support and just doing regular
-buffered (or DONTCACHE) I/Os.
+Yes, but the server had to do a lot more expensive work for every
+write.  And the client can just ask for stable if it wants that.
 
-That said, we don't really know either way (which is why all of this is
-behind debugfs switch instead of a more permanent interface).
-
-> You also need IOCB_DSYNC for direct I/O to hit the media if you want
-> to return NFS_FILE_SYNC.  But I still don't understand why we want or
-> need to return NFS_FILE_SYNC to start with.
-
-NFS_FILE_SYNC is not required here, but it's better if we can return
-that. If the server returns NFS_FILE_SYNC there is no need for the
-client to follow up with a COMMIT.
---=20
-Jeff Layton <jlayton@kernel.org>
 
