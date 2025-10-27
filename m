@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-15659-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15660-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71180C0DBA8
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:58:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50839C0DB72
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:55:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1F6534FB523
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 12:48:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 099643ABE63
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 12:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74D9222D785;
-	Mon, 27 Oct 2025 12:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2085622FE0D;
+	Mon, 27 Oct 2025 12:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El/ezT3b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPVKj5MZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE541DFCE
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 12:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB9522F77B
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 12:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569333; cv=none; b=aXTyWdf0JMglM3jeXWW3zx5yvNUf+NdqKhy7SJiCmvZ5FhApOu8c2aSIwVrfhPK1iXqHUP7R/f3FX+7+DgSCVIASarpbU5AFmZlFJQG0q8G4qSjKmt0FGb7Sb0/cvYDrUvOGoLY/0/CInNUI5YscwdaeqN91qtPndGXKxuQf8hc=
+	t=1761569387; cv=none; b=iJOHjofwad9rQwmNI7Tu0sa4k8b3VbaqyveGaCQLhNmokrruF4KMuIvyLfjPI6JHFiv8DeGlyKsHTH2qjnDMMHfprfoZSUyk5FLql8wkC6UUZCIiJ0T1qLcXcqNQdHaSsynmvmnQyuIo3QIri6M7aTgTmDY4OOMeloc4I7lWj20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569333; c=relaxed/simple;
-	bh=Tj57ocU4khFtwks+R+xJ4IhsjTeeGtczyVCSFPv8FUA=;
+	s=arc-20240116; t=1761569387; c=relaxed/simple;
+	bh=oV8A3UPW/50FgBgqws70joi9GfEqm676caDAwp2U/3s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kX/QZ/AZTBWodCHH2niNwjquafZ2o16y6oOKwVnOaTkMvqwA2SETRUHS0UM7v/31aHjCyqTAidWcffi+5J4Kdr5TfHMlzsbbB4BJ/QXEaQq+XCRze+SjyQjWSjStB311IVPywJ45PXqPL7ni99HwdbRKhaiMFmtnQ+DsEzUz/UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El/ezT3b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58AA4C4CEF1;
-	Mon, 27 Oct 2025 12:48:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=M0emm4GsMV25YQ8Z6TIFa2qGo2hOc4ul6HOh8amirN9Xrdyq10fo4AY6sFzrnzfJ0RkYoLHFuc4aSVJYkDAySQ2GpBGY8xuWI53LgYpkOIPLDpZXzNdfAkFVZbhSQaS7/WNeyJfxYoT8mZZVZkRAeDbFOhGHTJv1qo6rtnThElo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPVKj5MZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0CAC4CEF1;
+	Mon, 27 Oct 2025 12:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761569332;
-	bh=Tj57ocU4khFtwks+R+xJ4IhsjTeeGtczyVCSFPv8FUA=;
+	s=k20201202; t=1761569386;
+	bh=oV8A3UPW/50FgBgqws70joi9GfEqm676caDAwp2U/3s=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=El/ezT3b3pKQd2ygJNiwmQ6WGGUyb5BzHUkYVPv9uThrzAtLdxvpILSalIrZTZrGs
-	 VAFByBon+B0Q35hfYZuRGp/vGag1mzE5147PEIoBk+v9fP8EljCpXVHsmkuh1yJsmY
-	 itKa0YQ1EqbqHpC648yLFtZO0cDUrNWdyzIC1Xis8SBhjZYIHnNZA8Jin/gKPQYl72
-	 CXqsAY4GK0mkSLYKNzO2Tet8WHRGePsOZnGyVolM+RE78GVnaT3u9VqtMcHMLbkqob
-	 VIWVKhtd8bv6upHU+K3Z+GEMqEwHNbDj38Vmr5jsm8dj+8ea0tQNDDcwQdzQxrtkym
-	 gQ5vFY1lHmtQQ==
-Message-ID: <e7d0dcf25d578c64634ec841a551b6463954a29b.camel@kernel.org>
-Subject: Re: [PATCH v3 04/10] nfsd: prepare XXX_current_stateid() functions
- to be non-static
+	b=BPVKj5MZPmMcIAQnDyCY0MKkpJe2ceVG8XSL+xkZKDsTWt3g0K8biAl/j/Q7xXSQA
+	 WDLGkFg62xk7GYuxZjyDHtWG0WOHkMkzVIRnKfE/tc4tGE5IiPGXcs6D8ssoW2sJ+a
+	 51QN/S+uw+kyq7PMTNFLo/2D0QNdyqQkHKTfqfeL/EXtwA4a/l5WMCDh4vh9OO2eK6
+	 eouSMvqnYyq0k3BKpktPgO3NznfvDJolQiisVLcoPVAjvzoj4nDPeZyG4bbyZZscBs
+	 W8dXAT4fWG1hYX2TJ/BaVKs2OQN0uQdCjfuNsGPQpzd7F9EwjNkOptSCgbs20J1nUS
+	 o+W/R26CeKjXg==
+Message-ID: <46453f0b23d9dbe83c36454da9d9f9575da7abcd.camel@kernel.org>
+Subject: Re: [PATCH v3 05/10] nfsd: discard CSTATE flags.
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 27 Oct 2025 08:48:51 -0400
-In-Reply-To: <20251026222655.3617028-5-neilb@ownmail.net>
+Date: Mon, 27 Oct 2025 08:49:45 -0400
+In-Reply-To: <20251026222655.3617028-6-neilb@ownmail.net>
 References: <20251026222655.3617028-1-neilb@ownmail.net>
-	 <20251026222655.3617028-5-neilb@ownmail.net>
+	 <20251026222655.3617028-6-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,259 +138,107 @@ MIME-Version: 1.0
 On Mon, 2025-10-27 at 09:23 +1100, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> A future patch will call the current_stateid accessor from both
-> nfs4state.c and nfs4proc.c.  To prepare for that some cleanup and
-> documentation is in order:
+> The CSTATE flags no longer serve any purpose.  RFC 8881 requires that
+> there always be a current stateid when there is a current filehandle,
+> though the stateid might be anonymous and we now implement that.
 >=20
-> - rename to have a nfs4v1_ prefix, to mention "_current_stateid"
->   consisently, and change "put" to "save" as that seems more meaningful.
->=20
-> - provide kernel doc for the three functions
->=20
-> - move the "v4.1 only" test from put_stateid to get_stateid as it seems
->   to make more sense there: it is only reasonable to test
->   IS_CURRENT_STATE() when we know that session are in use.
->=20
-> - place the extern declaration in nfs4xdr.h rather than
->   current_stateid.h as future patch will remove the latter file.
+> This patch removes the flags for separately recording if the stateid is
+> valid, and assumes that it always is.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/current_stateid.h |  1 -
->  fs/nfsd/nfs4proc.c        |  2 +-
->  fs/nfsd/nfs4state.c       | 75 ++++++++++++++++++++++++++-------------
->  fs/nfsd/xdr4.h            |  6 ++++
->  4 files changed, 58 insertions(+), 26 deletions(-)
+>  fs/nfsd/nfs4proc.c  | 10 ++--------
+>  fs/nfsd/nfs4state.c |  5 +----
+>  fs/nfsd/xdr4.h      |  8 --------
+>  3 files changed, 3 insertions(+), 20 deletions(-)
 >=20
-> diff --git a/fs/nfsd/current_stateid.h b/fs/nfsd/current_stateid.h
-> index c28540d86742..24d769043207 100644
-> --- a/fs/nfsd/current_stateid.h
-> +++ b/fs/nfsd/current_stateid.h
-> @@ -5,7 +5,6 @@
->  #include "state.h"
->  #include "xdr4.h"
-> =20
-> -extern void clear_current_stateid(struct nfsd4_compound_state *cstate);
->  /*
->   * functions to set current state id
->   */
 > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 2222bb283baf..a2b78577ddb2 100644
+> index a2b78577ddb2..1f1d21dfd0cc 100644
 > --- a/fs/nfsd/nfs4proc.c
 > +++ b/fs/nfsd/nfs4proc.c
-> @@ -2967,7 +2967,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  				op->opdesc->op_set_currentstateid(cstate, &op->u);
+> @@ -714,10 +714,7 @@ nfsd4_restorefh(struct svc_rqst *rqstp, struct nfsd4=
+_compound_state *cstate,
+>  		return nfserr_restorefh;
 > =20
->  			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
-> -				clear_current_stateid(cstate);
-> +				nfsd41_clear_current_stateid(cstate);
-> =20
->  			if (current_fh->fh_export &&
->  					need_wrongsec_check(rqstp))
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index cd8214a53145..83f05dec2bf0 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -9083,27 +9083,54 @@ nfs4_state_shutdown(void)
->  	shrinker_free(nfsd_slot_shrinker);
+>  	fh_dup2(&cstate->current_fh, &cstate->save_fh);
+> -	if (HAS_CSTATE_FLAG(cstate, SAVED_STATE_ID_FLAG)) {
+> -		memcpy(&cstate->current_stateid, &cstate->save_stateid, sizeof(stateid=
+_t));
+> -		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
+> -	}
+> +	memcpy(&cstate->current_stateid, &cstate->save_stateid, sizeof(stateid_=
+t));
+>  	return nfs_ok;
 >  }
 > =20
-> -static void
-> -get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
-> +/**
-> + * nfsd41_get_current_stated - use the saved v4.1 stateid if appropriate
-> + * @cstate - the state of the current COMPOUND procedure
-> + * @stateid - the stateid field of the current operation
-> + *
-> + * If the current operation requests use of the v4.1 "current_stateid" a=
-nd
-> + * if a stateid has been saved by a previous operation in this COMPOUND,
-> + * then copy that saved stateid into the current op so it will be availa=
-ble
-> + * for use.
-> + */
-> +void
-> +nfsd41_get_current_stateid(struct nfsd4_compound_state *cstate, stateid_=
-t *stateid)
-
-nit: consider a different verb from "get" here. Maybe "fetch" or even
-"restore"?
-
-We have a lot of get/put functions in nfsd that refer to refcounting,
-so this looks like it's going to take a reference to something even
-when it doesn't.
-
+> @@ -726,10 +723,7 @@ nfsd4_savefh(struct svc_rqst *rqstp, struct nfsd4_co=
+mpound_state *cstate,
+>  	     union nfsd4_op_u *u)
 >  {
-> -	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
-> +	if (nfsd4_has_session(cstate) &&
-> +	    HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
->  	    IS_CURRENT_STATEID(stateid))
+>  	fh_dup2(&cstate->save_fh, &cstate->current_fh);
+> -	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG)) {
+> -		memcpy(&cstate->save_stateid, &cstate->current_stateid, sizeof(stateid=
+_t));
+> -		SET_CSTATE_FLAG(cstate, SAVED_STATE_ID_FLAG);
+> -	}
+> +	memcpy(&cstate->save_stateid, &cstate->current_stateid, sizeof(stateid_=
+t));
+>  	return nfs_ok;
+>  }
+> =20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 83f05dec2bf0..af6bd0248b8a 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -9096,9 +9096,7 @@ nfs4_state_shutdown(void)
+>  void
+>  nfsd41_get_current_stateid(struct nfsd4_compound_state *cstate, stateid_=
+t *stateid)
+>  {
+> -	if (nfsd4_has_session(cstate) &&
+> -	    HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
+> -	    IS_CURRENT_STATEID(stateid))
+> +	if (nfsd4_has_session(cstate) && IS_CURRENT_STATEID(stateid))
 >  		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
 >  }
 > =20
-> -static void
-> -put_stateid(struct nfsd4_compound_state *cstate, const stateid_t *statei=
-d)
-> +/**
-> + * nfsd41_save_current_stated - const saved a v4.1 stateid for future op=
-erations
-> + * @cstate - the state of the current COMPOUND procedure
-> + * @stateid - the stateid field of the current operation
-> + *
-> + * This should be called from operations which create or update a statei=
-d
-> + * that should be available for future v4.1 ops in the same COMPOUND.
-> + * It saves the stateid and records that there is a saved stateid.
-> + * It is safe to call this with any states including v4.0.  v4.0 states
-> + * will simply be ignored.
-> + */
-> +void
-> +nfsd41_save_current_stateid(struct nfsd4_compound_state *cstate, const s=
+> @@ -9117,7 +9115,6 @@ void
+>  nfsd41_save_current_stateid(struct nfsd4_compound_state *cstate, const s=
 tateid_t *stateid)
 >  {
-> -	if (cstate->minorversion) {
-> -		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
-> -		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
-> -	}
-> +	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
-> +	SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
->  }
-> =20
-> -void
-> -clear_current_stateid(struct nfsd4_compound_state *cstate)
-> +/**
-> + * nfsd41_clear_current_stated - clear the saved v4.1 stateid
-> + * @cstate - the state of the current COMPOUND procedure
-> + *
-> + * Store the anon_stateid in the current_stateid as required by
-> + * RFC 8881 section 16.2.3.1.2 when the current filehandle changes
-> + * without a regular stateid being available.
-> + */
-> +void nfsd41_clear_current_stateid(struct nfsd4_compound_state *cstate)
->  {
-> -	put_stateid(cstate, &anon_stateid);
-> +	nfsd41_save_current_stateid(cstate, &anon_stateid);
->  }
-> =20
->  /*
-> @@ -9113,28 +9140,28 @@ void
->  nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	put_stateid(cstate, &u->open_downgrade.od_stateid);
-> +	nfsd41_save_current_stateid(cstate, &u->open_downgrade.od_stateid);
->  }
-> =20
->  void
->  nfsd4_set_openstateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	put_stateid(cstate, &u->open.op_stateid);
-> +	nfsd41_save_current_stateid(cstate, &u->open.op_stateid);
->  }
-> =20
->  void
->  nfsd4_set_closestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	put_stateid(cstate, &u->close.cl_stateid);
-> +	nfsd41_save_current_stateid(cstate, &u->close.cl_stateid);
->  }
-> =20
->  void
->  nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	put_stateid(cstate, &u->lock.lk_resp_stateid);
-> +	nfsd41_save_current_stateid(cstate, &u->lock.lk_resp_stateid);
->  }
-> =20
->  /*
-> @@ -9145,56 +9172,56 @@ void
->  nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->open_downgrade.od_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->open_downgrade.od_stateid);
->  }
-> =20
->  void
->  nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->delegreturn.dr_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->delegreturn.dr_stateid);
->  }
-> =20
->  void
->  nfsd4_get_freestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->free_stateid.fr_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->free_stateid.fr_stateid);
->  }
-> =20
->  void
->  nfsd4_get_setattrstateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->setattr.sa_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->setattr.sa_stateid);
->  }
-> =20
->  void
->  nfsd4_get_closestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->close.cl_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->close.cl_stateid);
->  }
-> =20
->  void
->  nfsd4_get_lockustateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->locku.lu_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->locku.lu_stateid);
->  }
-> =20
->  void
->  nfsd4_get_readstateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->read.rd_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->read.rd_stateid);
->  }
-> =20
->  void
->  nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
->  		union nfsd4_op_u *u)
->  {
-> -	get_stateid(cstate, &u->write.wr_stateid);
-> +	nfsd41_get_current_stateid(cstate, &u->write.wr_stateid);
+>  	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+> -	SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
 >  }
 > =20
 >  /**
 > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index ae75846b3cd7..e2a5fb926848 100644
+> index e2a5fb926848..3aebc62e4b09 100644
 > --- a/fs/nfsd/xdr4.h
 > +++ b/fs/nfsd/xdr4.h
-> @@ -202,6 +202,12 @@ static inline bool nfsd4_has_session(struct nfsd4_co=
-mpound_state *cs)
->  	return cs->slot !=3D NULL;
->  }
+> @@ -43,13 +43,6 @@
+>  #define NFSD4_MAX_TAGLEN	128
+>  #define XDR_LEN(n)                     (((n) + 3) & ~3)
 > =20
-> +void nfsd41_get_current_stateid(struct nfsd4_compound_state *cstate,
-> +				stateid_t *stateid);
-> +void nfsd41_save_current_stateid(struct nfsd4_compound_state *cstate,
-> +				 const stateid_t *stateid);
-> +void nfsd41_clear_current_stateid(struct nfsd4_compound_state *cstate);
-> +
->  struct nfsd4_change_info {
->  	u32		atomic;
->  	u64		before_change;
+> -#define CURRENT_STATE_ID_FLAG (1<<0)
+> -#define SAVED_STATE_ID_FLAG (1<<1)
+> -
+> -#define SET_CSTATE_FLAG(c, f) ((c)->sid_flags |=3D (f))
+> -#define HAS_CSTATE_FLAG(c, f) ((c)->sid_flags & (f))
+> -#define CLEAR_CSTATE_FLAG(c, f) ((c)->sid_flags &=3D ~(f))
+> -
+>  /**
+>   * nfsd4_encode_bool - Encode an XDR bool type result
+>   * @xdr: target XDR stream
+> @@ -194,7 +187,6 @@ struct nfsd4_compound_state {
+>  	stateid_t	current_stateid;
+>  	stateid_t	save_stateid;
+>  	/* to indicate current and saved state id presents */
+> -	u32		sid_flags;
+>  };
+> =20
+>  static inline bool nfsd4_has_session(struct nfsd4_compound_state *cs)
 
-Otherwise the patch is fine though.
+I like the payoff here.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
