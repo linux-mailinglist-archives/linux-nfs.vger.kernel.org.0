@@ -1,132 +1,81 @@
-Return-Path: <linux-nfs+bounces-15666-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15667-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC8FBC0DDAC
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 14:08:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06E4EC0DF98
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 14:20:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6CF4B346CBE
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:08:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00C663AAEA0
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 196EE25A33A;
-	Mon, 27 Oct 2025 13:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E184280312;
+	Mon, 27 Oct 2025 13:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kz6+L0OE"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uz2pKmM2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A09259C94
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 13:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB59280335
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 13:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761570518; cv=none; b=UNUXmpct5yL7ZBpyR1X0ox1yW2sqtgh6S7rsMRkRWRDe12aautcyRprC47jKAlYQZYLVGS3AU+EPFgGUgSRBW+Fcl8PqI4zVnZwWllSIbx+9EpUV/mtvKWeMfiqhwKEPUf7qbT8KCfi4hTUo06QFxGzd8v1n+1mpt54uH+M4iTU=
+	t=1761571160; cv=none; b=DpQkaCYrYu7MbUP/HMxTjCyEDQC/B5p9HA8xRio82tsJWdmTO9GGQNJzJkDdZFqtxbsIj9j2QH1hJRoGtZ4jkQdvI4lUtST+Q1sjan+nc8pDdbC5DNFri/pTkraqYiyK2WAJ9c/6ScQR51J4opai8uYHTbjPr8HM5bEfNMCgye8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761570518; c=relaxed/simple;
-	bh=ZORdBmmNcYFTnNYZYc96AAd7QxcnFlP0iFRA3FrXjec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GKyGxkLLxRlAgRvZtjNBGf86JI2tFz9NThFjCY1BG5mH6ekM5KKH/JiPMcvzzgUNBYAKXWZFJw3VE1GKPuPS+CLw5U/pqFHh0fRQdusCPATj8/0j7vOtY2DCkPnSseGjo8OMM14pVaJTFEgfWP5ydceKoCLJohGu9WpDGH1vpxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kz6+L0OE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C76C4CEFF;
-	Mon, 27 Oct 2025 13:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761570518;
-	bh=ZORdBmmNcYFTnNYZYc96AAd7QxcnFlP0iFRA3FrXjec=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kz6+L0OEfVHSEfXalughQVYFrMGYSKNCdWU69kaNWQK+I6Inowyo+PbMLNUZtJdv9
-	 wl4KXfRaXngghiT6LyM0p4Xo/mTjiKBUsw08nofS1iWG9qXLcyGiBF37ANhK5oXQXu
-	 dqEOLoT9VwGwUutRCT10V2GaZtk2yLbKOde3mCzRwWYeBILr4yq8lg+YVbY35TE0sc
-	 op72pUmtMCyRTvHZA8pnKu2fJmm6ldjfVQgxqsTOtKZstlpVU3M9PoY+kJNGBdzrhz
-	 KHcsZ9TNbhdBCeUqS3fs6va9NvpDu7kdiv2iMkvBoi1vd3qOVznIloqghGmjg8jBWh
-	 elGFKVZ9QCcFQ==
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	s=arc-20240116; t=1761571160; c=relaxed/simple;
+	bh=u7IaoCtlCvqCGDWIDOJDmPsfaIiuussJbq9cnUc5Wqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsgZg2PKySTp7NWl2Mu9vFqQ0sjPnPhTMDapXSZi5/k0XL+wk7iShdf4r3yqgtJuVja+rec9klTdXCNUHHVkU0W68Ogv4zMZqb7KFkDiFV+0IgmvmejvZ/VhcQMuxfBps6ELJbhbpa3WqbIkMrXjkeb7SU9rPsBiGdm1grV+TJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uz2pKmM2; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=b0+KylqGMWzzQnhSfPcyQcm0Lt+7Udinn7c0bHAy37s=; b=uz2pKmM2n/2/CkTq61PQRRlC7F
+	TbvaG0XT1epJ67aSYneyXN41ZQMPTbHbTvlAB+CXu6jGoPSoUoJDw5E6VoCGmbRFByWuiL0+YMLbb
+	KehC3UnUad08i39WfDriOTa6svOVxVk1pPhXZNQy2RRC5i2+w38b+7D0OoqJezgebYU5D4E5QZCqD
+	tjVd6EDRM+hNIM7rmL3AbtQXaE0tgh8cNs9RrSm/8aWV6qnmrzd+yudmOUjVZ2ROnoz283ijQhGid
+	omlc+K6wz1lhS6jqzt3r1bfiXC3NnqgmYJNJhuDm61s4b60f1UIfTWnm0MwzAbuMjsQrRDXv1Pa7m
+	db9L0Okg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vDN80-0000000E0E6-2ZiC;
+	Mon, 27 Oct 2025 13:19:16 +0000
+Date: Mon, 27 Oct 2025 06:19:16 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	linux-nfs@vger.kernel.org
-Subject: [v6.18-rcX PATCH 3/3] nfs/localio: backfill missing partial read support for misaligned DIO
-Date: Mon, 27 Oct 2025 09:08:33 -0400
-Message-ID: <20251027130833.96571-4-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <aPZ-dIObXH8Z06la@kernel.org>
+Subject: Re: [v6.18-rcX PATCH 2/3] nfs/localio: add refcounting for each iocb
+ IO associated with NFS pgio header
+Message-ID: <aP9xVCiY5mYowEoN@infradead.org>
 References: <aPZ-dIObXH8Z06la@kernel.org>
+ <20251027130833.96571-3-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251027130833.96571-3-snitzer@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Misaligned DIO read can be split into 3 IOs, must handle potential for
-short read from each component IO (follows same pattern used for
-handling partial writes, except upper layer read code handles advancing
-offset before retry).
+On Mon, Oct 27, 2025 at 09:08:32AM -0400, Mike Snitzer wrote:
+> Improve completion handling of as many as 3 IOs associated with each
+> misaligned DIO by using a atomic_t to track completion of each IO.
+> 
+> Update nfs_local_pgio_done() to use precise atomic_t accounting for
+> remaining iov_iter (up to 3) associated with each iocb, so that each
+> NFS LOCALIO pgio header is only released after all IOs have completed.
+> But also allow early return if/when a short read or write occurs.
 
-Fixes: c817248fc831 ("nfs/localio: add proper O_DIRECT support for READ and WRITE")
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/localio.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index a5f1eeeef30e..35e332627168 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -414,7 +414,7 @@ nfs_local_iters_setup_dio(struct nfs_local_kiocb *iocb, int rw,
- 	/* Setup misaligned end?
- 	 * If so, the end is purposely setup to be issued using buffered IO
- 	 * before the middle (which will use DIO, if DIO-aligned, with AIO).
--	 * This creates problems if/when the end results in a partial write.
-+	 * This creates problems if/when the end results in short read or write.
- 	 * So must save index and length of end to handle this corner case.
- 	 */
- 	if (local_dio->end_len) {
-@@ -580,8 +580,9 @@ static void nfs_local_read_done(struct nfs_local_kiocb *iocb)
- 	 */
- 	hdr->res.replen = 0;
- 
--	if (hdr->res.count != hdr->args.count ||
--	    hdr->args.offset + hdr->res.count >= i_size_read(file_inode(filp)))
-+	/* nfs_readpage_result() handles short read */
-+
-+	if (hdr->args.offset + hdr->res.count >= i_size_read(file_inode(filp)))
- 		hdr->res.eof = true;
- 
- 	dprintk("%s: read %ld bytes eof %d.\n", __func__,
-@@ -620,6 +621,7 @@ static void nfs_local_call_read(struct work_struct *work)
- 		container_of(work, struct nfs_local_kiocb, work);
- 	struct file *filp = iocb->kiocb.ki_filp;
- 	const struct cred *save_cred;
-+	bool force_done = false;
- 	ssize_t status;
- 	int n_iters;
- 
-@@ -637,7 +639,21 @@ static void nfs_local_call_read(struct work_struct *work)
- 		iocb->kiocb.ki_pos = iocb->offset[i];
- 		status = filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
- 		if (status != -EIOCBQUEUED) {
--			if (nfs_local_pgio_done(iocb, status, false)) {
-+			if (unlikely(status >= 0 && status < iocb->iters[i].count)) {
-+				/* partial read */
-+				if (i == iocb->end_iter_index) {
-+					/* Must not account DIO partial end, otherwise (due
-+					 * to end being issued before middle): the partial
-+					 * read accounting in nfs_local_read_done()
-+					 * would incorrectly advance hdr->args.offset
-+					 */
-+					status = 0;
-+				} else {
-+					/* Partial read at start or middle, force done */
-+					force_done = true;
-+				}
-+			}
-+			if (nfs_local_pgio_done(iocb, status, force_done)) {
- 				nfs_local_read_iocb_done(iocb);
- 				break;
- 			}
--- 
-2.44.0
+Maybe just split the pgio instead?  That's what a lot of the pnfs code
+does.
 
 
