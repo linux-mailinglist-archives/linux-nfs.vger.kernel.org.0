@@ -1,87 +1,114 @@
-Return-Path: <linux-nfs+bounces-15678-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15679-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7342C0E3D1
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 15:06:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2309C0E314
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 14:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C5DF04FF266
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:56:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C617B188AFC7
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:57:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8996B2DE1E6;
-	Mon, 27 Oct 2025 13:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF8862772D;
+	Mon, 27 Oct 2025 13:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRVyQbrH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZUJAZ3Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65559231A23
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 13:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBCF25B30D
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 13:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761573316; cv=none; b=VGnRX00sp4WSDUaPQSYtCIwf/OIBBHsZs1Mo4fiABX8lyJsrCcXSab6ChaZ8ByX+dw751BGy07iiLVskeQtuseffJwF0lJp6ekNdDMGTDEh3qqgWgyhppUOYe27Fln1aQCG7tS/JuMxVpga1hq2k+9hqD7oEdceExkPCfll+UeA=
+	t=1761573395; cv=none; b=D0tEAH6ra2YrEDFREhl6PDNwB3jGwiV+ociCzeyS2RG12PIVgHJ2LOnUaj0OXLX2kIo07s8xf7cDeVMJI5csTlOhFXNHUQqYyXb5xmSnUsI92bov/pnwsYvp2Do5sNN4PTCVtImVxeUTdkNXtnW/7QINfUuprw9r0lT5uZi9wsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761573316; c=relaxed/simple;
-	bh=3oN20YFKF3Dd9pQGT13P4lnNhqwhdNLNtXpCH4DswK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D63gPQkX/x4XFeCEoxo89ZQxAO4ZmPEZ+3P5weOWEoxve/r5yLZQSdgl7ATBp3FG50/vuWBuWcJYZE4oY6jNksOGcct0QKzg+QkmRXCPLMFay771DQbmVjDjqezsJ6EQSR3FoHZ10BA8R77B3O1AWRm5gQaYEv8SWb8lF29gNss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRVyQbrH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B77FC4CEFF;
-	Mon, 27 Oct 2025 13:55:15 +0000 (UTC)
+	s=arc-20240116; t=1761573395; c=relaxed/simple;
+	bh=Kli8NO+/Z5Qq4BfqoUSz0J1me2sARy1Np2xHk8yZMT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jr1SXL/IMUAKyYj/W+GMJlgqYm/aAKZHDAejmNWYgjqCgwg3aAEnWsryJjSvZjGvdIeETPDnCAdStYsI64w9G6yrIRhI0UqTHkb5e99vOO8yvtmCHpThn/FcGZwqT3J9JHqLpvOaci9Gs3ZzhfFd5PociaZJUL2AehuXCGjixBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZUJAZ3Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47C9C4CEF1;
+	Mon, 27 Oct 2025 13:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761573316;
-	bh=3oN20YFKF3Dd9pQGT13P4lnNhqwhdNLNtXpCH4DswK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gRVyQbrHvafVUlJqE88xWbzeJsvKTAsEJaCXvn8h5ZWc8EsKxDB0dTpuazHXDr8Jr
-	 LBuOU8P8YJms5VVRXG4+a27XdhORcd9GSUpK+QZtMs8utJU+CxxjlDI0iqRO/5ib8m
-	 HndUxRgWSxYW6Y/W1ZG+xh6kyWNgKhP2FPdpmZAkk4KI1C1RbZQRmIq5EoGiAcmQd8
-	 Gf1E0r32ZDPIZvF/qF42tjMZHwzjjOg/+K0Cu9k4vVJW6q6o0eUfoifW2kZA3QonTu
-	 ElVz8W35UyYsdyLxh9zugI3DOhFx1JfqgjT4iYTQUW1kmgaUmdZD/UuFPqIAG26ojD
-	 KqUCl7Gf9kKqA==
-Date: Mon, 27 Oct 2025 09:55:14 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [v6.18-rcX PATCH 2/3] nfs/localio: add refcounting for each iocb
- IO associated with NFS pgio header
-Message-ID: <aP95wjsM2LndIY1X@kernel.org>
-References: <aPZ-dIObXH8Z06la@kernel.org>
- <20251027130833.96571-3-snitzer@kernel.org>
- <aP9xVCiY5mYowEoN@infradead.org>
+	s=k20201202; t=1761573395;
+	bh=Kli8NO+/Z5Qq4BfqoUSz0J1me2sARy1Np2xHk8yZMT4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZZUJAZ3QnjueIAldDXkECaehRqkx+Yzkf/P11teioCixxqDB82L7KZhv12f3xT9Hs
+	 bNEnbMCQBF6f00QjtUyU4yfRG4P0JTaOyvuaVOtnRdTOtRkqd/OuZlSxREd9QQaFSG
+	 aezVq4MLGO/GxYR1xgc0vl7WxXy3FYgIFAHZiYfxI/OW1Gb1BwWcz8wqio6ne3j/Kk
+	 O2KtC1oYgkC+Hgx/41RNJBgPkkR2pRs+5EXRJ5qm0rvElStLV+qTcpr+Po+9/scVqn
+	 FLelqdR4zfGzHOilUs+EZ0FY2cM9j3DZo8COP+qbFW2H3aoqg7D3kOPXPuk8/EX+p7
+	 QMZvpHCDnBuaQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v1 1/3] xdrgen: Generalize/harden pathname construction
+Date: Mon, 27 Oct 2025 09:56:31 -0400
+Message-ID: <20251027135633.9573-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aP9xVCiY5mYowEoN@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 27, 2025 at 06:19:16AM -0700, Christoph Hellwig wrote:
-> On Mon, Oct 27, 2025 at 09:08:32AM -0400, Mike Snitzer wrote:
-> > Improve completion handling of as many as 3 IOs associated with each
-> > misaligned DIO by using a atomic_t to track completion of each IO.
-> > 
-> > Update nfs_local_pgio_done() to use precise atomic_t accounting for
-> > remaining iov_iter (up to 3) associated with each iocb, so that each
-> > NFS LOCALIO pgio header is only released after all IOs have completed.
-> > But also allow early return if/when a short read or write occurs.
-> 
-> Maybe just split the pgio instead?  That's what a lot of the pnfs code
-> does. 
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I already tried that, in terms of frontend fs/nfs/direct.c and then
-supporting fs/nfs/pagelist.c changes; ended up being pretty nasty (and
-overdone because in general the NFS client doesn't need to do this
-extra work if its not using LOCALIO).
+Use Python's built-in Path constructor to find the Jinja templates.
+This provides better error checking, proper use of path component
+separators, and more reliable location of the template files.
 
-We only need this misaligned DIO splitting for LOCALIO's benefit
-because in general the NFS client is perfectly happy handling
-misaligned DIO (and sending it out over the wire).
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ tools/net/sunrpc/xdrgen/generators/__init__.py | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/tools/net/sunrpc/xdrgen/generators/__init__.py b/tools/net/sunrpc/xdrgen/generators/__init__.py
+index b98574a36a4a..e22632cf38fb 100644
+--- a/tools/net/sunrpc/xdrgen/generators/__init__.py
++++ b/tools/net/sunrpc/xdrgen/generators/__init__.py
+@@ -2,7 +2,7 @@
+ 
+ """Define a base code generator class"""
+ 
+-import sys
++from pathlib import Path
+ from jinja2 import Environment, FileSystemLoader, Template
+ 
+ from xdr_ast import _XdrAst, Specification, _RpcProgram, _XdrTypeSpecifier
+@@ -14,8 +14,11 @@ def create_jinja2_environment(language: str, xdr_type: str) -> Environment:
+     """Open a set of templates based on output language"""
+     match language:
+         case "C":
++            templates_dir = (
++                Path(__file__).parent.parent / "templates" / language / xdr_type
++            )
+             environment = Environment(
+-                loader=FileSystemLoader(sys.path[0] + "/templates/C/" + xdr_type + "/"),
++                loader=FileSystemLoader(templates_dir),
+                 trim_blocks=True,
+                 lstrip_blocks=True,
+             )
+@@ -48,9 +51,7 @@ def find_xdr_program_name(root: Specification) -> str:
+ 
+ def header_guard_infix(filename: str) -> str:
+     """Extract the header guard infix from the specification filename"""
+-    basename = filename.split("/")[-1]
+-    program = basename.replace(".x", "")
+-    return program.upper()
++    return Path(filename).stem.upper()
+ 
+ 
+ def kernel_c_type(spec: _XdrTypeSpecifier) -> str:
+-- 
+2.51.0
+
 
