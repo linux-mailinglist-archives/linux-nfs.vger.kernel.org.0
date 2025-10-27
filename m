@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-15661-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15662-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BCC2C0DB1A
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:54:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD7D9C0DDBC
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 14:09:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0261188B9C0
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 12:53:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAD2C19C119B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Oct 2025 13:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7A8523D7F5;
-	Mon, 27 Oct 2025 12:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3B11F3FE2;
+	Mon, 27 Oct 2025 13:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d09RpdDV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="supDdeyl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E3223D7C8
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 12:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BAF16F265
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Oct 2025 13:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569578; cv=none; b=XlVEYxoSfhyhVzyqsFhVJUYh9vAoSOVLvctiztGE4PPVJw2WMSeRvOeUdVSRtlE1sM6Rot1WlDgvp5Ynbjs1UTXoOJLVRVIg734u1slXb0DdgE3sfi/m2OxjtuvRwFWJKWoCqiAtRvgdIsarcHXQf8F4CiRSYLIWjtvT/gAWTnI=
+	t=1761570127; cv=none; b=LCTpzY4iEeZ8Ym1p+XVzU6WWGwaAH6yUvB78h27p0s24Nj0UYjnYdRnzZUj7qh35+WLZ229YMI/MRd23qBSRKAMlN8FuJJy0GbU6trxoz+PQ6EDCEBoShTZxoaSPgrKL17tV9gI4DB8TGa5v0t2SAI1WMNIwTHXqmX/kCWQpwk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569578; c=relaxed/simple;
-	bh=9/+8M4MnTHIjr6VcU9HIGwGV8JL9tA/jSI4CO9rdvXE=;
+	s=arc-20240116; t=1761570127; c=relaxed/simple;
+	bh=IqcSbu/Xx1ZayVEGO//a+rW7WQ3ujklRDAFQoIdz2DU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DmEznhz9DtwI5osWG4fyPo6EQJ4CJgXomaj1QsMGYddulhMGkWmlldDpbJ7U6zDHQdzoR9iivrc/fWerE5vkqjL4K/SeuiyKN9F0wnPSX1QcumgosYkyhxZ96qa8rMBZy01vEGK5vdlbJ6DoRgcP4WIjDFBBwW76A5ickmB1Q1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d09RpdDV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD7AC4CEFF;
-	Mon, 27 Oct 2025 12:52:57 +0000 (UTC)
+	 Content-Type:MIME-Version; b=oO6EWHqk0eBLmlXLxAkX0O4YgDLT3XbfYqIYMZ41PkHq73Ec5jCd8YYfacMnOiLx0NGCXL9mvtvtRBSdLCetprcmlOqv54y9r515cfmVFOwpN9lbRPb4X5EfRIU1LDoisgU8BqIWFOaxjdP8e0966CWxuQsq9IImYs/t16EUWII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=supDdeyl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A51C2C4CEF1;
+	Mon, 27 Oct 2025 13:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761569578;
-	bh=9/+8M4MnTHIjr6VcU9HIGwGV8JL9tA/jSI4CO9rdvXE=;
+	s=k20201202; t=1761570127;
+	bh=IqcSbu/Xx1ZayVEGO//a+rW7WQ3ujklRDAFQoIdz2DU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=d09RpdDVDVTzJibdJO6tSi4vhFMtGH2bCs4E6qpttru3Vz7k9Uf1bLg1uWtTmKaTx
-	 V7rPDfv4BSdYGq2+EnrJ/q4GjVE1CSMMlwYm0BmjSStixDhF7Ru1Blm6sXPX2d1E8U
-	 8e0lFtg438mSVcH5zLC5TaFpcye9MdVDf8hmjOzHZuol6gEwq2WycKcPCyJN6Dxgme
-	 hqOnzio+U0eCe6Wf2xxgUmXEITsFza5PITMB94dIHeiqwCTzcr4xtmS2XUxgD8mqgf
-	 UaQhgB7RVQwg2/Kw885Ogmjk/4eOzwqmPFHBpS6g4UKJ/BTvtu9BfSl80drkDsYMC6
-	 b9ToMj1wCk0YA==
-Message-ID: <8cbbe7b1a348ad45d70e873fd6dfc0df278c0c99.camel@kernel.org>
-Subject: Re: [PATCH v3 06/10] nfsd: move set_current_stateid and
- clear_current_stateid calls earlier.
+	b=supDdeylBUjrexVyIFLR234AxiG5oBiVyo3e6YQfz++FAHRcy3itd8y/iwTpQN69P
+	 pIvPmj0qrh+vO2SlUc2rWisuwXYxNtcZVuL8hBYgT+jtxCbIcEUFdbC1SgQQ2ATmlP
+	 jxW/SNgrs0Fc5oQ5u3KaSNTYiH7VAxkxQZLVirqvALPCkuwsX1kS8AgKiBOUxJmSvy
+	 g01lk+3k0kI7x9aK6gwnkQRivKIEFfal3bLQ0vM6ceoUvWvlNduQsU0mXh4rzgVZI9
+	 gnZNVi9vRMzrhmC+2Z5u8bfG50uvzdw+Txw7yNKw46nx2GaqBjnQTOJ/gp2q6zkeKx
+	 uwaZVLMa5D30w==
+Message-ID: <b7607c36d48e414deb158bfa42e06b4b6132da9a.camel@kernel.org>
+Subject: Re: [PATCH v3a 02/10] nfsd: drop explicit tests for special
+ stateids which would be invalid.
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 27 Oct 2025 08:52:56 -0400
-In-Reply-To: <20251026222655.3617028-7-neilb@ownmail.net>
+Date: Mon, 27 Oct 2025 09:02:05 -0400
+In-Reply-To: <176151967298.1793333.13856723160983723087@noble.neil.brown.name>
 References: <20251026222655.3617028-1-neilb@ownmail.net>
-	 <20251026222655.3617028-7-neilb@ownmail.net>
+	, <20251026222655.3617028-3-neilb@ownmail.net>
+	 <176151967298.1793333.13856723160983723087@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,57 +137,88 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-10-27 at 09:23 +1100, NeilBrown wrote:
-> From: NeilBrown <neil@brown.name>
+On Mon, 2025-10-27 at 10:01 +1100, NeilBrown wrote:
+> In two places nfsd has code to test for special stateids and to report
+> nfserr_bad_stateid if they are found.
+> One is for handling TEST_STATEID ops which always forbid these stateids,
+> and one is for all other places that a stateid is used, and the code is
+> *after* any checks for special stateids which might be permitted.
 >=20
-> It is perfectly safe to call either ->set_current_stateid() or
-> nfsd41_clear_current_stateid() when an error has occurred as no future
-> ops will be attempted in this COMPOUND, so the saved stateid will not be
-> used (whether it is set or clear).
+> These tests add no value.  In each each there is a subsequent lookup for
+> the stateid which will return the same error code if the stateid is not
+> found, and special stateids never will be found.
 >=20
-> So the calls can be moved outside if the "if (!op->status)" tests.  They
-> can also moved before the nfserr_replay_cache as that only applies to
-> SEQUENCE ops and those never save or clear the current stateid.
+> Special stateid have a si.opaque.so_id which is either 0 or UINT_MAX.
+> Stateids stored in the idr only have so_id ranging from 1 or INT_MAX.
+> So there is no possibility of a special stateid being found.
 >=20
-> Moving these closer to the ->op_func call makes subsequent patches more
-> obviously correct.
+> Having the explicit test optimised the unexpected case where a special
+> stateid is incorrectly given, and add unnecessary comparisons to the
+> common case of a non-special stateid being given.
+>=20
+> In nfsd4_lookup_stateid(), simply removing the test would mean that
+> a special stateid could result in the incorrect nfserr_stale_stateid
+> error, as the validity of so_clid is checked before so_id.  So we
+> add extra checks to only return nfserr_stale_stateid if the stateid
+> looks like it might have been locally generated - so_id not
+> all zeroes or all ones.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4proc.c | 12 ++++++------
+>=20
+> Sorry - shortly after posting I realised that the change to prevent
+> nfserr_stale_stateid being reported incorrectly could mean it was not
+> reported when it should have been.  So I added back a simple test for
+> "might this be special" in the error path to ensure the correct error.
+>=20
+>  fs/nfsd/nfs4state.c | 12 ++++++------
 >  1 file changed, 6 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 1f1d21dfd0cc..995ac3c4c150 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -2950,6 +2950,12 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  		op->status =3D op->opdesc->op_func(rqstp, cstate, &op->u);
->  		trace_nfsd_compound_op_err(rqstp, op->opnum, op->status);
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index e1c11996c358..a800fde0db21 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7129,9 +7129,6 @@ static __be32 nfsd4_validate_stateid(struct nfs4_cl=
+ient *cl, stateid_t *stateid)
+>  	struct nfs4_stid *s;
+>  	__be32 status =3D nfserr_bad_stateid;
 > =20
-> +		if (op->opdesc->op_set_currentstateid)
-> +			op->opdesc->op_set_currentstateid(cstate, &op->u);
-> +
-> +		if (op->opdesc->op_flags & OP_CLEAR_STATEID)
-> +			nfsd41_clear_current_stateid(cstate);
-> +
->  		/* Only from SEQUENCE */
->  		if (cstate->status =3D=3D nfserr_replay_cache) {
->  			dprintk("%s NFS4.1 replay from cache\n", __func__);
-> @@ -2957,12 +2963,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
->  			goto out;
->  		}
->  		if (!op->status) {
-> -			if (op->opdesc->op_set_currentstateid)
-> -				op->opdesc->op_set_currentstateid(cstate, &op->u);
-> -
-> -			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
-> -				nfsd41_clear_current_stateid(cstate);
-> -
->  			if (current_fh->fh_export &&
->  					need_wrongsec_check(rqstp))
->  				op->status =3D check_nfsd_access(current_fh->fh_export, rqstp, false=
-);
+> -	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> -		CLOSE_STATEID(stateid))
+> -		return status;
+>  	spin_lock(&cl->cl_lock);
+>  	s =3D find_stateid_locked(cl, stateid);
+>  	if (!s)
+> @@ -7186,13 +7183,16 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state =
+*cstate,
+> =20
+>  	statusmask |=3D SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
+> =20
+> -	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> -		CLOSE_STATEID(stateid))
+> -		return nfserr_bad_stateid;
+>  	status =3D set_client(&stateid->si_opaque.so_clid, cstate, nn);
+>  	if (status =3D=3D nfserr_stale_clientid) {
+>  		if (cstate->session)
+>  			return nfserr_bad_stateid;
+> +		if (stateid->si_opaque.so_id + 1 <=3D 1)
+> +			/* so_id is zeroes or ones so most likely a
+> +			 * special stateid, certainly not one locally
+> +			 * generated.
+> +			 */
+> +			return nfserr_bad_stateid;
+>  		return nfserr_stale_stateid;
+>  	}
+>  	if (status)
+
+I guess we have to do this to make v4.0 happy.
+
+At some point, we ought to look at encapsulating the v4.0-specific
+parts in ways that could allow us to compile out v4.0 support in the
+future. Unlike v2 support which is mostly self-contained from other
+versions, the v4.0/v4.1 code is all mashed together.
+
+For now though...
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
