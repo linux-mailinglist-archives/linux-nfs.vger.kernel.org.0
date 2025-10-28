@@ -1,353 +1,354 @@
-Return-Path: <linux-nfs+bounces-15719-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15720-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95896C1238C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 01:43:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B1FC129D6
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 03:02:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90EB0581F25
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 00:40:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 185D63A6DEE
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 02:01:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8F4620297E;
-	Tue, 28 Oct 2025 00:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD751917D0;
+	Tue, 28 Oct 2025 02:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1HTZmW/"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="BUI2N4Fd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G4gHPPSV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCB51FC0FC;
-	Tue, 28 Oct 2025 00:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A00213D8B1
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 02:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761612024; cv=none; b=dtnb1IdE5/+/xE/MpuaiOs8PzeSEnPjc6Gmk/D2758BrIFGQlxE06RlFwLiSeY0COJFfAgzTW4F++F/HVO6fyj4u4BhJJU088Dbg9w3OVm1S0kjKi3w8pbNPHl52E6Wg7mCN8PCNWWZj3QF7MjOf6PYopzx1MCBC88h3MuxCLG0=
+	t=1761616916; cv=none; b=lnqsF3jWlyQNCVwl7Ikidoxdaq4fRilFBFqMrBkZYYxmLmBIHiZONhJigpmYEURS2I/pceVJ/bAE5ndhNvLQ+/1QTq6InixKI+5kg5Y56T8oEecy+7NyGa7Dwh+HBkerfy67U6GMOc+s2a/NSFLHgaNDSm7Fg7DxZd8EoC+qEG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761612024; c=relaxed/simple;
-	bh=dvgAA+ZxPB4+pUIkRpKcb0srDm0jX/Sc0B5IdALDge0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fme0X1HAf/lpI6V3ftcs8vV1Z6PJmxyF2dseXoLgmt1shF4GcZeCLs3PyyEh0e+Y4vumbqE0TfhwoW4gprctB4rwaGosW70b3XJy9bSactt49s894qdjWk7BvJAdOCrcJ4+X5/tlEm433nColSAeo3SHD+SjaARWjxTzStCDVRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1HTZmW/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D928C116B1;
-	Tue, 28 Oct 2025 00:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761612024;
-	bh=dvgAA+ZxPB4+pUIkRpKcb0srDm0jX/Sc0B5IdALDge0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l1HTZmW/bXHKuetlne6DBWZ3VnFF2ujb5AbvBeesPyQSSsaF8a1/5LCZP7KV3GJme
-	 ro6peLCcJvuSAqT1OZ5OGjrZYzEaEl3GdMmTcy9Y5Je0Skw6VeAlFlITViHfAvpK5b
-	 /9+JCx0Jt418tllh9KoJDo5q56nWbPZnKhT2Ju4mRwMATwVhuHN7IVqL18Fd0nR+PT
-	 t7uN8hvVgryWU0tEIp1aAHBeMyD1V2l8DrPB1E4zKhRo82eUvsJbZSHCG5r8JI/wq4
-	 9Dyx4/Bg4Jhes8JglbRQ5Wb8skbS6Ry/KaRKifFECpkXAcMbXzOomFPTTg0CU2ZvA6
-	 pWU9IX/sb9Gag==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Joshua Watt <jpewhacker@gmail.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-6.12] NFS4: Apply delay_retrans to async operations
-Date: Mon, 27 Oct 2025 20:39:03 -0400
-Message-ID: <20251028003940.884625-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251028003940.884625-1-sashal@kernel.org>
-References: <20251028003940.884625-1-sashal@kernel.org>
+	s=arc-20240116; t=1761616916; c=relaxed/simple;
+	bh=n2xhZ37Ya4jvoIkROEUMCvnhybA4bKVMlCYyFhzCbmQ=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=g5ba9U4R3mW7xKtAkpFzvkYze1lUSqgM6epqkloymyu4E9+bC1J+vhCxqQwp+HdoIG7yDq/NS5EwbiV+NixUV7N4Z5MXBwfpVBU5iU2T9zkrQwtbt1UsqMHjj/Ch3SJREmfgkxGw3m1kOnyulWe0/+XOD/yahQIFj4AJTkalYZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=BUI2N4Fd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G4gHPPSV; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id A9B16EC0209;
+	Mon, 27 Oct 2025 22:01:52 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Mon, 27 Oct 2025 22:01:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1761616912; x=1761703312; bh=2fVXsf9OVHl99KcTtECZdfVyZLSm0M0zUSD
+	yu8Nf2Fg=; b=BUI2N4Fdv5R1QdzX5ez758F6+p2oSIWrcchjKhlliTAi1RX9zEY
+	jP1Fp3gPbuLdc5iduwZlwjkOk6Ju+BAFbn6rmr4oGTrZUjFKyKwmKHvqul7XA/Sk
+	PTtGVQJVahm15f6RYMG8tvCDj9WqUqSfp722bwDRGKKTYdMbl6gVcAS13LxZdHSW
+	hiS0bv2VW7N1lO5QoNFfvxwjgN4EOEhQfobLwB6AuPIWS2Muxvzk1Mh4FsJYzpxn
+	r+kT7MHR0z0/Ah99BTLWTP6FPChS0qwuCzVS7KW1XBkzsjDWgwQu8ZKl8YUX+iXJ
+	Kv2k0s3wAmTmWafVYcC6vmuemwQqv15/Qug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761616912; x=
+	1761703312; bh=2fVXsf9OVHl99KcTtECZdfVyZLSm0M0zUSDyu8Nf2Fg=; b=G
+	4gHPPSVntvYO3RVFOIa2UzHvkA88C/BpBfcpVpijN49ePuWQxvHYjEohuauQW/2e
+	kfy1HbgquwFO2DQSlNoBgUE8TGM5eXcbaKsavYCslq7fBwsacQ3IXYFeWyLFat7w
+	m8Otd7qpcVrGA1Uo3Oipv/oqXGIAcF7DGZ3unDoPPbvxDL341Dc8Ww7bS1e8dzrv
+	tkWx4SqjQXI1q3+nUPNKrYlyqr70cDpHkFT1g8CprkN7PffkNpERALvYB9y1yq4E
+	8g4SYNdpppCQECN2vn9rsFeoObbHNECeRXltzbvgHfn9v8CpRupDq25A1D+Di5mj
+	z7kQ2VfHmJNbauycx1hBg==
+X-ME-Sender: <xms:ECQAaZP3BluyS9cfee_puu4IVMImQroF1HYfCFvj9bf72VGj8n4wHA>
+    <xme:ECQAafq8WrHhNti6QHK6LI8sKfcmEICckOOL6oFQbSXWfdeM02OHgXAA5J4mkD3pa
+    9emcPGQtEdyPt3Q6_3k2qZPPZOILWVB4Vy8_E3cCocnOoPk>
+X-ME-Received: <xmr:ECQAaSFtplRFpYGwG_3j3AKEg0862cSg7KRSBks6t0syB3SbJwTVe2EdBlWz7J7WZsqucbiU_-v73OfBo3pnD_wikV0UtQyB9hQJzCNYSSqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheelheelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
+    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:ECQAacqMQa2ua62x9khCCzJ1QcioB0yNVCvY6pfOFvo78Ap53zntYQ>
+    <xmx:ECQAaTY9FAZ6AoqEpxenNnErVhSb16393_c60v8Q5jg1w2A0xfs_nw>
+    <xmx:ECQAadWylJYb6xo2oxlJop55u66nV2wzAZy6DITkjS0m7a5n2HIWXw>
+    <xmx:ECQAaU_5X1bukxDXeCsDrz5051k4wAc03dDQGwmpUZ631Lu60BB_uw>
+    <xmx:ECQAacZVrAVWM3W_T0Ij1MGSWvPqph5-pEgkXu6xvYhE13qCESOYQNE8>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 Oct 2025 22:01:50 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] nfsd: prepare XXX_current_stateid() functions to
+ be non-static
+In-reply-to: <37433325-0bc4-449f-93c5-fa747af7f7f0@oracle.com>
+References: <20251026222655.3617028-1-neilb@ownmail.net>,
+ <20251026222655.3617028-5-neilb@ownmail.net>,
+ <e7d0dcf25d578c64634ec841a551b6463954a29b.camel@kernel.org>,
+ <37433325-0bc4-449f-93c5-fa747af7f7f0@oracle.com>
+Date: Tue, 28 Oct 2025 13:01:38 +1100
+Message-id: <176161689881.1793333.6227216051661923047@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: Joshua Watt <jpewhacker@gmail.com>
+On Tue, 28 Oct 2025, Chuck Lever wrote:
+> On 10/27/25 8:48 AM, Jeff Layton wrote:
+> > On Mon, 2025-10-27 at 09:23 +1100, NeilBrown wrote:
+> >> +void
+> >> +nfsd41_get_current_stateid(struct nfsd4_compound_state *cstate, stateid=
+_t *stateid)
+> >=20
+> > nit: consider a different verb from "get" here. Maybe "fetch" or even
+> > "restore"?
+> >=20
+> > We have a lot of get/put functions in nfsd that refer to refcounting,
+> > so this looks like it's going to take a reference to something even
+> > when it doesn't.
+>=20
+> How about:
+>=20
+>  - "copy current stateid"
 
-[ Upstream commit 7a84394f02ab1985ebbe0a8d6f6d69bd040de4b3 ]
+This is the difficult one to name as the behaviour of the function is
+conditional.
+if the given state-id is the special "current stateid" then use the
+saved "current stateid".
 
-The setting of delay_retrans is applied to synchronous RPC operations
-because the retransmit count is stored in same struct nfs4_exception
-that is passed each time an error is checked. However, for asynchronous
-operations (READ, WRITE, LOCKU, CLOSE, DELEGRETURN), a new struct
-nfs4_exception is made on the stack each time the task callback is
-invoked. This means that the retransmit count is always zero and thus
-delay_retrans never takes effect.
+Also there is potential confusion of what "current stateid" means.
+It primarily means the stateid stored from a previous op, but we are
+also using the term to also mean the special stateid which the RFC
+describes as "designating the current stateid".
 
-Apply delay_retrans to these operations by tracking and updating their
-retransmit count.
+The RFC has text like:
+  but the current stateid set by the previous operation is actually used
+  when the operation is evaluated.
 
-Change-Id: Ieb33e046c2b277cb979caa3faca7f52faf0568c9
-Signed-off-by: Joshua Watt <jpewhacker@gmail.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+which suggests "use_current_stateid()" might be appropriate, but as we
+only do that if the given stateid designates the current stateid then
+maybe
+   cond_use_current_stateid()
+which is a bit clumsy.
 
-LLM Generated explanations, may be completely bogus:
+Maybe a different approach could improve things.  With the exception of
+FREE_STATEID, every op (I think) passes that stateid to
+nfsd4_lookup_stateid() as the first usage.  So we could do without a
+separate function for this task.  We could use
+   if (is_current_stateid(stateid))
+           use_current_stateid(cstate, stateid);
 
-## BACKPORT RECOMMENDATION: **YES**
+or similar.
 
-## Extensive Analysis
+BTW I noticed that if the op isn't CLOSE or OPEN_DOWNGRADE, when when we
+use the current stateid we are supposed to clear si_generation.  I
+wonder why as the existing generation should still be valid...
 
-### 1. Code Changes Analysis
+NeilBrown
 
-The commit adds a `retrans` field to 5 data structures and propagates it
-through async operation callbacks:
 
-**Data structures modified:**
-- `struct nfs4_closedata` (fs/nfs/nfs4proc.c:3639)
-- `struct nfs4_delegreturndata` (fs/nfs/nfs4proc.c:6735)
-- `struct nfs4_unlockdata` (fs/nfs/nfs4proc.c:7105)
-- `struct nfs_pgio_header` (include/linux/nfs_xdr.h:1661)
-
-**Functions modified:**
-- `nfs4_close_done()` - CLOSE operation callback
-- `nfs4_delegreturn_done()` - DELEGRETURN operation callback
-- `nfs4_locku_done()` - LOCKU operation callback
-- `nfs4_read_done_cb()` - READ operation callback
-- `nfs4_write_done_cb()` - WRITE operation callback
-
-Each modification follows the same pattern:
-1. Initialize `exception.retrans` from persistent storage (e.g.,
-   `calldata->retrans`)
-2. Call `nfs4_async_handle_exception()` which increments retrans via
-   `nfs4_exception_should_retrans()`
-3. Save updated retrans back to persistent storage
-
-### 2. Semantic Analysis Tools Used
-
-**mcp__semcode__find_function**: Located all 5 modified async callback
-functions and examined their implementations to understand the callback
-pattern.
-
-**mcp__semcode__find_type**: Examined `struct nfs4_exception`
-(fs/nfs/nfs4_fs.h:206) confirming it already contains the `retrans`
-field in v6.10+.
-
-**mcp__semcode__find_callers**: Verified that:
-- `nfs4_read_done_cb` is called by `nfs4_read_done`
-  (fs/nfs/nfs4proc.c:5638)
-- `nfs4_write_done_cb` is called by `nfs4_write_done`
-  (fs/nfs/nfs4proc.c:5740)
-- Other callbacks are registered via `rpc_call_ops` structures (e.g.,
-  `nfs4_close_ops`)
-
-**mcp__semcode__grep_functions**: Found
-`nfs4_exception_should_retrans()` (fs/nfs/nfs4proc.c:628-636) which
-implements the delay_retrans logic:
-```c
-if (server->flags & NFS_MOUNT_SOFTERR && nfs_delay_retrans >= 0) {
-    if (exception->retrans++ >= (unsigned short)nfs_delay_retrans)
-        return -EAGAIN;
-}
-```
-
-### 3. Impact Scope Assessment
-
-**User-space reachability**: CRITICAL - All affected operations are
-directly triggered by userspace:
-- **READ/WRITE**: Every file read/write operation (most common NFS
-  operations)
-- **CLOSE**: Every file close operation
-- **LOCKU**: Every file unlock operation
-- **DELEGRETURN**: Delegation returns during file operations
-
-**Call graph analysis**: The async operations form the core I/O path:
-- User calls `read()`/`write()` → VFS → NFS client →
-  `nfs4_read_done_cb()`/`nfs4_write_done_cb()`
-- User calls `close()` → VFS → NFS client → `nfs4_close_done()`
-
-**Impact severity**: HIGH
-- Without this fix, the `delay_retrans` parameter (introduced in v6.10
-  via commit 5b9d31ae1c92) is **completely non-functional** for async
-  operations
-- Systems using 'softerr' mounts with `nfs.delay_retrans` configured
-  experience infinite retry loops on NFS4ERR_DELAY
-- This causes knfsd server thread busy-waiting and client hangs
-- The retrans counter is reset to 0 on every callback invocation because
-  a new `struct nfs4_exception` is allocated on the stack
-
-### 4. Dependencies and Backport Risk
-
-**Dependencies**:
-- Requires commit 5b9d31ae1c92 "NFSv4: Add a parameter to limit the
-  number of retries after NFS4ERR_DELAY" (merged in v6.10)
-- All required struct fields (`nfs4_exception.retrans`) exist in v6.10+
-
-**Backport applicability**:
-- **v6.10 through v6.17**: YES - this is the bug window, fix is highly
-  applicable
-- **v6.9 and earlier**: NO - delay_retrans feature doesn't exist
-
-**Risk assessment**: VERY LOW
-- Changes are purely additive (new field, value propagation)
-- No behavioral changes to existing code paths
-- No ABI/API changes visible to userspace
-- Semantic diff analysis shows no complex interactions
-- The fix enables intended functionality that was documented but broken
-
-### 5. Stable Tree Compliance
-
-✅ **Bug fix**: Yes - fixes broken delay_retrans for async operations
-✅ **Important impact**: Yes - affects common I/O operations
-(read/write/close)
-✅ **Small and contained**: Yes - adds one field to 5 structs, simple
-value propagation
-✅ **No new features**: Correct - just makes existing feature work
-properly
-✅ **No architectural changes**: Correct - preserves existing design
-✅ **Clear rationale**: Commit message clearly explains the bug and fix
-
-**Reviewed-by tag**: Present (Benjamin Coddington from Red Hat)
-
-### 6. Historical Context
-
-- delay_retrans introduced: v6.10 (Sept 2023, commit 5b9d31ae1c92)
-- Bug existed: v6.10 through v6.17 (8 kernel versions, ~15 months)
-- Fix merged: v6.18-rc2 (Oct 2025, commit 7a84394f02ab1)
-- Module parameter: `nfs.delay_retrans` (configurable, default -1 =
-  disabled)
-
-### Conclusion
-
-This is a **clear backport candidate** for stable kernels v6.10 through
-v6.17. The commit fixes a real bug that completely breaks the
-delay_retrans feature for the most common NFS operations (READ, WRITE,
-CLOSE). Without this fix, users configuring `nfs.delay_retrans` on
-'softerr' mounts get no protection against infinite NFS4ERR_DELAY retry
-loops for async operations, defeating the entire purpose of the feature
-and potentially causing production issues (server thread starvation,
-client hangs).
-
-The fix is minimal risk, well-contained, and makes an existing
-documented feature work as intended.
-
- fs/nfs/nfs4proc.c       | 13 +++++++++++++
- include/linux/nfs_xdr.h |  1 +
- 2 files changed, 14 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 611e6283c194f..6875215de9a44 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3634,6 +3634,7 @@ struct nfs4_closedata {
- 	} lr;
- 	struct nfs_fattr fattr;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- };
- 
- static void nfs4_free_closedata(void *data)
-@@ -3662,6 +3663,7 @@ static void nfs4_close_done(struct rpc_task *task, void *data)
- 		.state = state,
- 		.inode = calldata->inode,
- 		.stateid = &calldata->arg.stateid,
-+		.retrans = calldata->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
-@@ -3709,6 +3711,7 @@ static void nfs4_close_done(struct rpc_task *task, void *data)
- 		default:
- 			task->tk_status = nfs4_async_handle_exception(task,
- 					server, task->tk_status, &exception);
-+			calldata->retrans = exception.retrans;
- 			if (exception.retry)
- 				goto out_restart;
- 	}
-@@ -5591,9 +5594,11 @@ static int nfs4_read_done_cb(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 			.inode = hdr->inode,
- 			.state = hdr->args.context->state,
- 			.stateid = &hdr->args.stateid,
-+			.retrans = hdr->retrans,
- 		};
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				server, task->tk_status, &exception);
-+		hdr->retrans = exception.retrans;
- 		if (exception.retry) {
- 			rpc_restart_call_prepare(task);
- 			return -EAGAIN;
-@@ -5707,10 +5712,12 @@ static int nfs4_write_done_cb(struct rpc_task *task,
- 			.inode = hdr->inode,
- 			.state = hdr->args.context->state,
- 			.stateid = &hdr->args.stateid,
-+			.retrans = hdr->retrans,
- 		};
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				NFS_SERVER(inode), task->tk_status,
- 				&exception);
-+		hdr->retrans = exception.retrans;
- 		if (exception.retry) {
- 			rpc_restart_call_prepare(task);
- 			return -EAGAIN;
-@@ -6724,6 +6731,7 @@ struct nfs4_delegreturndata {
- 	struct nfs_fh fh;
- 	nfs4_stateid stateid;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- 	struct {
- 		struct nfs4_layoutreturn_args arg;
- 		struct nfs4_layoutreturn_res res;
-@@ -6744,6 +6752,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
- 		.inode = data->inode,
- 		.stateid = &data->stateid,
- 		.task_is_privileged = data->args.seq_args.sa_privileged,
-+		.retrans = data->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &data->res.seq_res))
-@@ -6815,6 +6824,7 @@ static void nfs4_delegreturn_done(struct rpc_task *task, void *calldata)
- 		task->tk_status = nfs4_async_handle_exception(task,
- 				data->res.server, task->tk_status,
- 				&exception);
-+		data->retrans = exception.retrans;
- 		if (exception.retry)
- 			goto out_restart;
- 	}
-@@ -7091,6 +7101,7 @@ struct nfs4_unlockdata {
- 	struct file_lock fl;
- 	struct nfs_server *server;
- 	unsigned long timestamp;
-+	unsigned short retrans;
- };
- 
- static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
-@@ -7145,6 +7156,7 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
- 	struct nfs4_exception exception = {
- 		.inode = calldata->lsp->ls_state->inode,
- 		.stateid = &calldata->arg.stateid,
-+		.retrans = calldata->retrans,
- 	};
- 
- 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
-@@ -7178,6 +7190,7 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
- 			task->tk_status = nfs4_async_handle_exception(task,
- 					calldata->server, task->tk_status,
- 					&exception);
-+			calldata->retrans = exception.retrans;
- 			if (exception.retry)
- 				rpc_restart_call_prepare(task);
- 	}
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index ac4bff6e99135..ea437e468a91c 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1659,6 +1659,7 @@ struct nfs_pgio_header {
- 	void			*netfs;
- #endif
- 
-+	unsigned short		retrans;
- 	int			pnfs_error;
- 	int			error;		/* merge with pnfs_error */
- 	unsigned int		good_bytes;	/* boundary of good data */
--- 
-2.51.0
+>=20
+>  - "change current stateid" or "update current stateid"
+>=20
+>  - "clear current stateid"
+>=20
+> Roughly, this is the terminology used by Section 16.2.3.1.2.
+>=20
+>=20
+> >>  {
+> >> -	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
+> >> +	if (nfsd4_has_session(cstate) &&
+> >> +	    HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
+> >>  	    IS_CURRENT_STATEID(stateid))
+> >>  		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
+> >>  }
+> >> =20
+> >> -static void
+> >> -put_stateid(struct nfsd4_compound_state *cstate, const stateid_t *state=
+id)
+> >> +/**
+> >> + * nfsd41_save_current_stated - const saved a v4.1 stateid for future o=
+perations
+> >> + * @cstate - the state of the current COMPOUND procedure
+> >> + * @stateid - the stateid field of the current operation
+> >> + *
+> >> + * This should be called from operations which create or update a state=
+id
+> >> + * that should be available for future v4.1 ops in the same COMPOUND.
+> >> + * It saves the stateid and records that there is a saved stateid.
+> >> + * It is safe to call this with any states including v4.0.  v4.0 states
+> >> + * will simply be ignored.
+> >> + */
+> >> +void
+> >> +nfsd41_save_current_stateid(struct nfsd4_compound_state *cstate, const =
+stateid_t *stateid)
+> >>  {
+> >> -	if (cstate->minorversion) {
+> >> -		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+> >> -		SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
+> >> -	}
+> >> +	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+> >> +	SET_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
+> >>  }
+> >> =20
+> >> -void
+> >> -clear_current_stateid(struct nfsd4_compound_state *cstate)
+> >> +/**
+> >> + * nfsd41_clear_current_stated - clear the saved v4.1 stateid
+> >> + * @cstate - the state of the current COMPOUND procedure
+> >> + *
+> >> + * Store the anon_stateid in the current_stateid as required by
+> >> + * RFC 8881 section 16.2.3.1.2 when the current filehandle changes
+> >> + * without a regular stateid being available.
+> >> + */
+> >> +void nfsd41_clear_current_stateid(struct nfsd4_compound_state *cstate)
+> >>  {
+> >> -	put_stateid(cstate, &anon_stateid);
+> >> +	nfsd41_save_current_stateid(cstate, &anon_stateid);
+> >>  }
+> >> =20
+> >>  /*
+> >> @@ -9113,28 +9140,28 @@ void
+> >>  nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	put_stateid(cstate, &u->open_downgrade.od_stateid);
+> >> +	nfsd41_save_current_stateid(cstate, &u->open_downgrade.od_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_set_openstateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	put_stateid(cstate, &u->open.op_stateid);
+> >> +	nfsd41_save_current_stateid(cstate, &u->open.op_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_set_closestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	put_stateid(cstate, &u->close.cl_stateid);
+> >> +	nfsd41_save_current_stateid(cstate, &u->close.cl_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	put_stateid(cstate, &u->lock.lk_resp_stateid);
+> >> +	nfsd41_save_current_stateid(cstate, &u->lock.lk_resp_stateid);
+> >>  }
+> >> =20
+> >>  /*
+> >> @@ -9145,56 +9172,56 @@ void
+> >>  nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->open_downgrade.od_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->open_downgrade.od_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->delegreturn.dr_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->delegreturn.dr_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_freestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->free_stateid.fr_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->free_stateid.fr_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_setattrstateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->setattr.sa_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->setattr.sa_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_closestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->close.cl_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->close.cl_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_lockustateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->locku.lu_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->locku.lu_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_readstateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->read.rd_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->read.rd_stateid);
+> >>  }
+> >> =20
+> >>  void
+> >>  nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+> >>  		union nfsd4_op_u *u)
+> >>  {
+> >> -	get_stateid(cstate, &u->write.wr_stateid);
+> >> +	nfsd41_get_current_stateid(cstate, &u->write.wr_stateid);
+> >>  }
+> >> =20
+> >>  /**
+> >> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> >> index ae75846b3cd7..e2a5fb926848 100644
+> >> --- a/fs/nfsd/xdr4.h
+> >> +++ b/fs/nfsd/xdr4.h
+> >> @@ -202,6 +202,12 @@ static inline bool nfsd4_has_session(struct nfsd4_c=
+ompound_state *cs)
+> >>  	return cs->slot !=3D NULL;
+> >>  }
+> >> =20
+> >> +void nfsd41_get_current_stateid(struct nfsd4_compound_state *cstate,
+> >> +				stateid_t *stateid);
+> >> +void nfsd41_save_current_stateid(struct nfsd4_compound_state *cstate,
+> >> +				 const stateid_t *stateid);
+> >> +void nfsd41_clear_current_stateid(struct nfsd4_compound_state *cstate);
+> >> +
+> >>  struct nfsd4_change_info {
+> >>  	u32		atomic;
+> >>  	u64		before_change;
+> >=20
+> > Otherwise the patch is fine though.
+> >=20
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
+> --=20
+> Chuck Lever
+>=20
 
 
