@@ -1,244 +1,245 @@
-Return-Path: <linux-nfs+bounces-15722-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15723-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEC5DC12C22
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 04:27:04 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 404D0C15435
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 15:54:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D37371AA1AEC
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 03:27:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E67B54FC508
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 14:53:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C86B1C5D46;
-	Tue, 28 Oct 2025 03:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC3C2E8E00;
+	Tue, 28 Oct 2025 14:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkYbN8D4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="it10JmqX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4860838F9C
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 03:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BF9253B40
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 14:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761622020; cv=none; b=X5fzwOkAUwhBy8Ae6Q4W3zeTBgOgXznXr9IAJW9f0RbwDLDMuh68DUV1X3dGP03DsWvvSI5LY6+JIaaWPa9V4I68U5OqjTN/CPdMsx83/lVrEtt5CnISPrHSBBSGsYG1NK0PnSgjfIfTYXB0vQOm5qHCBYTAMAggCSEPqZutXSI=
+	t=1761663217; cv=none; b=N7UPvVNUC4HC7Lyph33pBbebfEbm6Skq1/10nRSS1qVsAcGEupLlHmzppS60ChaOUnmBcN4ClkuZABlvl5f/0HyWnALbDlbXUzWcihEEnasvTh1OpxcOJBhmNe1BcIBO9pU2rBRwiqmqFjOl7eUu1NKMM/Xg7sS9uKj5ykOkLhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761622020; c=relaxed/simple;
-	bh=Fok/CIMfGj0B32rjEiJPoySedyRRySPsVC3AZdxcFmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1OjGcLI7Z6A2dMGton8JnVHYub+nQfGI3jVQj0CsXBu/PJoemP+IiPhitMihy/dtCUentcwxNYr6qIH5pIosUITDdzbHjNHbdFQ3zuRYxPy4FIMgkoDP8FH6OFPci3jOcJEDyD12VhAXk4U8sOkyq82hGtsatxQ31KYlZVtKOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkYbN8D4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9478C4CEF1;
-	Tue, 28 Oct 2025 03:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761622019;
-	bh=Fok/CIMfGj0B32rjEiJPoySedyRRySPsVC3AZdxcFmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OkYbN8D4zg6KnCdUPHMltwHybygGH9pwvj12DZg9JyO6iD41xlO7XxY8K+kQNzqQQ
-	 7vn3+jj711tm9ptl6RXidSGykONY4JVv+4uwHDJ/GWNyo4K2/oRFPCT8VPFkFZKaVz
-	 tz5aq7R8ekQq3jMdd9MC4OIAun9osgvOZ9WMUZbORszhAWdt/e6oB4ha+Ce0rDC8fX
-	 Z+p3/6acepBqK2GeVyRDYBocXpbcgtLuWQWeklTBeQcAZWxxICEVsbyFGsql4FAHPZ
-	 RRXYXu+zJqcG1XsDsGA7dIKJopM5t86vh3/UnHZ9ZulnVH5DTzWi908aWDRakroB1e
-	 ysuPUNEKNZRag==
-Date: Mon, 27 Oct 2025 23:26:58 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
-Message-ID: <aQA4AkzjlDybKzCR@kernel.org>
-References: <20251024144306.35652-15-cel@kernel.org>
- <aPvBtWOIe9hJBrKC@kernel.org>
- <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
- <aPvjiwF9vcawuHzi@kernel.org>
- <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
- <aPwSS9NlfqPFqfn2@kernel.org>
- <aP8qPlA7BEN3nlN8@infradead.org>
- <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
- <aP-YV2i8Y9jsrPF9@kernel.org>
- <a221755a-0868-477d-b978-d2c045011977@kernel.org>
+	s=arc-20240116; t=1761663217; c=relaxed/simple;
+	bh=eBV5tomgADNHlVSvWwPHW4U38dRIY2x7fDBeiWqcT0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JiYGQb+Q2zgq4s23k1QgZgs8hX+AJMDwAknnXiaGS7RSb32tZpQCw3kgQ9Lo8i5uTUvKf8UbfMraCU1kVy3WqXiA1tTP/zQJz/boqjKxtj0dzA2emtaXtoqAScI+kd56HMsuBGwsj/FQNNBuKew0orvUchN3CA3Bhb+byFWq1JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=it10JmqX; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-34003f73a05so3048572a91.1
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 07:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761663214; x=1762268014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jIalhegjjb9A0mID8JmFLQUJM2t6ufSIdsLy0MIR4mQ=;
+        b=it10JmqXmnmjfv2NfAd8tgLIGdh6CNPoEHlLxGIVAtbafHKVqyzperEHxcVPhVjECW
+         CikbGOyUlUUFvEi8ehmGSRyh3cjZgCHlQ5R+/+RuR4uUbt2l3k18vgscRRh7WQbDIkWH
+         S7Va6mq8MQuqP7cWDDLakG4Ox7BkKn+7q7JMzazvIZ6MbH0nwP8+Q8/DeAhgnbhKLxIb
+         B89Pi0tvxBjvABS0BNuE37g7D1NlI6Li5hFnR2kJoQiGyn2a/7pC27HZXu9enhjLskot
+         WZkkp6Ts1/pRUBgHruo+3dEAwgDXB9+71TLTiTfoANVLjsm+qqHXapxO2teAH7JUSK0s
+         XoGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761663214; x=1762268014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jIalhegjjb9A0mID8JmFLQUJM2t6ufSIdsLy0MIR4mQ=;
+        b=WPkHM/cAWlAbkbq+NNFfTx2GXcEy5sEeiqROSNiW1ciGbX0ifYJxFHk0sj0fth3YSg
+         0aT6xmpHuhIK89hym9/HXKlISnWAZb3iDAEaWDnRMbQ01kPyAziASO5iiFjI2Y1f14sy
+         qd4WklklzIBbDBBbzR1ZCwluUfdD8QmMK19JFr7O/tczhCDyy4vPqyytOTA0UMx3oP4O
+         xlAw9PkdUN5NQaD5dl2dD0kVVMUNvZmKP4XrKuAcghUp8h13Ys9niSDBtOToh2KC6dnN
+         dSTrHAE7apxokL+T+RnT0bN9lLLEI0pBZoAvzEc3l8DRrj935jqvrTE+3Lvud4nvPdW5
+         lcKw==
+X-Gm-Message-State: AOJu0Yzwxoyu+/+wjemCWxuifDHk7DVzkngqro42XrJmnK9FIXix8ayd
+	3x1RcpYjX9gDIWURErULHcEg/prSOYAp/0uOr9I6bLRT9A7ZnDNggi8B
+X-Gm-Gg: ASbGncumqhyJyA4tngLW+xbVhAhpBwfYJGZqoCaVCigG6YipNL6/sxwXNwWtY8aMysR
+	1IzmLh0QxMm/tBfzMh7AUswsP9xci5VZSy9y84Hxc6DdqthTiFg3CCrV6of31A84sl8mH6XMlH0
+	klcRlVeej9htff+ZO5m5Rr6fb48a4choVH00teqWNRmCPGhCcLljuAYdcGeYmTZzRlYMAztRx33
+	ClH7+9ir2dCJ1q3ghpwl++MfwBPef/A17dnuiD1WDpwPVDOOFyHPLZneFlKF3lkNKGjTzWCYJMD
+	qnP7hI+NzmBgTOzL/wl7FbLObAhM+M902MPU1YfZWc+eQLWAw9jYWvOLqp0NC3wE9f8MxWjJimy
+	Q9izVB/TBUDI//9Yq5DdE/AfbLy1arxtNldtpYPYaGH5xqKlir91pDb2NbtzrJAIwffnp9WTFp3
+	A=
+X-Google-Smtp-Source: AGHT+IG5Jh5Qx7F5nYFMpvwvX4h43bkvhS5OSWOasULrME1OQBV2BPufImkgArWA+uvLmx1JjQh1Ww==
+X-Received: by 2002:a17:90b:5243:b0:33b:b673:1b07 with SMTP id 98e67ed59e1d1-3402875c4b1mr3926768a91.9.1761663213732;
+        Tue, 28 Oct 2025 07:53:33 -0700 (PDT)
+Received: from snowman ([2401:4900:615d:9a55:694d:60a0:5539:22d3])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3402a52c997sm1495828a91.4.2025.10.28.07.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Oct 2025 07:53:33 -0700 (PDT)
+From: Khushal Chitturi <kc9282016@gmail.com>
+To: chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org,
+	jlayton@kernel.org,
+	neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khushal Chitturi <kc9282016@gmail.com>
+Subject: [PATCH v2] xdrgen: handle _XdrString in union encoder/decoder
+Date: Tue, 28 Oct 2025 20:23:17 +0530
+Message-ID: <20251028145317.15021-1-kc9282016@gmail.com>
+X-Mailer: git-send-email 2.51.1
+In-Reply-To: <20251026180018.9248-1-kc9282016@gmail.com>
+References: <20251026180018.9248-1-kc9282016@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a221755a-0868-477d-b978-d2c045011977@kernel.org>
 
-[Apologies, I think I repeated myself 4 slightly different ways below]
+Running xdrgen on xdrgen/tests/test.x fails when
+generating encoder or decoder functions for union
+members of type _XdrString. It was because _XdrString
+does not have a spec attribute like _XdrBasic,
+leading to AttributeError.
 
-On Mon, Oct 27, 2025 at 01:57:25PM -0400, Chuck Lever wrote:
-> On 10/27/25 12:05 PM, Mike Snitzer wrote:
-> >>> You also need IOCB_DSYNC for direct I/O to hit the media if you want
-> >>> to return NFS_FILE_SYNC.  But I still don't understand why we want or
-> >>> need to return NFS_FILE_SYNC to start with.
-> >> NFS_FILE_SYNC is not required here, but it's better if we can return
-> >> that. If the server returns NFS_FILE_SYNC there is no need for the
-> >> client to follow up with a COMMIT.
-> > Yes, which is why I'm confused by Chuck wanting to do away with
-> > NFSD_IO_DIRECT setting NFS_FILE_SYNC "for now".  Not heard compelling
-> > reason, but "it is what it is". 😉
-> 
-> The compelling reason is that it's generally faster (or less work for
-> the NFS server and its storage) to sync the metadata after the client
-> has sent all of the data it wants to write. This amortizes the cost of
-> the metadata operations, and allows the server to get the written data
-> persisted (if it makes sense to do that) while waiting for the COMMIT.
+This patch updates emit_union_case_spec_definition
+and emit_union_case_spec_decoder/encoder to handle
+_XdrString by assigning type_name = "char *" and
+avoiding referencing to spec.
 
-But none of that matters if the only safe way to implement mixing
-buffered and direct IO is by waiting for the DIO to succeed and with
-it any associated page cache invalidation (and associated possible
-failure to invalidate the page handled with using buffered IO fallback
-by underlying filesystem).
+Testing: Fixed xdrgen tool was run on originally failing
+test file (tools/net/sunrpc/xdrgen/tests/test.x) and now
+completes without AttributeError. Modified xdrgen tool was
+also run against nfs4_1.x (Documentation/sunrpc/xdr/nfs4_1.x).
+The output header file matches with nfs4_1.h
+(include/linux/sunrpc/xdrgen/nfs4_1.h).
+This validates the patch for all XDR input files currently
+within the kernel.
 
-Any buffered or direct IO associated with the misaligned DIO WRITE
-handling, in terms of 3 segments, must use IOCB_DSYNC.
+Changes since v1:
+- Corrected email address in Signed-off-by.
+- Wrapped patch description lines to 72 characters.
 
-So can we please revisit your desire to eliminate the use of
-IOCB_DSYNC for NFSD_IO_DIRECT WRITEs?
+Signed-off-by: Khushal Chitturi <kc9282016@gmail.com>
+---
+ tools/net/sunrpc/xdrgen/generators/union.py   | 35 ++++++++++++++-----
+ .../templates/C/union/encoder/string.j2       |  6 ++++
+ 2 files changed, 32 insertions(+), 9 deletions(-)
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
 
-I contend that NFSD_IO_DIRECT should use IOCB_DSYNC|IOCBD_SYNC for
-all 3 segments of a misaligned DIO WRITE (so for both buffered and
-direct IO).
+diff --git a/tools/net/sunrpc/xdrgen/generators/union.py b/tools/net/sunrpc/xdrgen/generators/union.py
+index 2cca00e279cd..3118dfdddcc4 100644
+--- a/tools/net/sunrpc/xdrgen/generators/union.py
++++ b/tools/net/sunrpc/xdrgen/generators/union.py
+@@ -1,3 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
+ #!/usr/bin/env python3
+ # ex: set filetype=python:
+ 
+@@ -8,7 +9,7 @@ from jinja2 import Environment
+ from generators import SourceGenerator
+ from generators import create_jinja2_environment, get_jinja2_template
+ 
+-from xdr_ast import _XdrBasic, _XdrUnion, _XdrVoid, get_header_name
++from xdr_ast import _XdrBasic, _XdrUnion, _XdrVoid, _XdrString, get_header_name
+ from xdr_ast import _XdrDeclaration, _XdrCaseSpec, public_apis, big_endian
+ 
+ 
+@@ -40,13 +41,20 @@ def emit_union_case_spec_definition(
+     """Emit a definition for an XDR union's case arm"""
+     if isinstance(node.arm, _XdrVoid):
+         return
+-    assert isinstance(node.arm, _XdrBasic)
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++        classifier = ""
++    else:
++        type_name = node.arm.spec.type_name
++        classifier = node.arm.spec.c_classifier
++
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
+     template = get_jinja2_template(environment, "definition", "case_spec")
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
+-            classifier=node.arm.spec.c_classifier,
++            type=type_name,
++            classifier=classifier,
+         )
+     )
+ 
+@@ -84,6 +92,12 @@ def emit_union_case_spec_decoder(
+ 
+     if isinstance(node.arm, _XdrVoid):
+         return
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++        classifier = ""
++    else:
++        type_name = node.arm.spec.type_name
++        classifier = node.arm.spec.c_classifier
+ 
+     if big_endian_discriminant:
+         template = get_jinja2_template(environment, "decoder", "case_spec_be")
+@@ -92,13 +106,13 @@ def emit_union_case_spec_decoder(
+     for case in node.values:
+         print(template.render(case=case))
+ 
+-    assert isinstance(node.arm, _XdrBasic)
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
+     template = get_jinja2_template(environment, "decoder", node.arm.template)
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
+-            classifier=node.arm.spec.c_classifier,
++            type=type_name,
++            classifier=classifier,
+         )
+     )
+ 
+@@ -169,7 +183,10 @@ def emit_union_case_spec_encoder(
+ 
+     if isinstance(node.arm, _XdrVoid):
+         return
+-
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++    else:
++        type_name = node.arm.spec.type_name
+     if big_endian_discriminant:
+         template = get_jinja2_template(environment, "encoder", "case_spec_be")
+     else:
+@@ -181,7 +198,7 @@ def emit_union_case_spec_encoder(
+     print(
+         template.render(
+             name=node.arm.name,
+-            type=node.arm.spec.type_name,
++            type=type_name,
+         )
+     )
+ 
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
+new file mode 100644
+index 000000000000..2f035a64f1f4
+--- /dev/null
++++ b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
+@@ -0,0 +1,6 @@
++{# SPDX-License-Identifier: GPL-2.0 #}
++{% if annotate %}
++		/* member {{ name }} (variable-length string) */
++{% endif %}
++		if (!xdrgen_encode_string(xdr, ptr->u.{{ name }}, {{ maxsize }}))
++			return false;
+-- 
+2.51.1
 
-> Since your patch asserts IOCB_DSYNC for all direct write segments,
-> NFSD_IO_DIRECT (as it is implemented in your patch) does not need a
-> subsequent COMMIT operation. Forcing the client to COMMIT is totally
-> unnecessary. That's why I suggested promoting all NFSD_IO_DIRECT WRITEs
-> to FILE_SYNC.
-
-No, the COMMIT can only be elided (and NFS_FILE_SYNC return to client)
-if both IOCB_DSYNC and IOCB_SYNC are set.
-
-But yes, at Bakeathon, the intent/understanding was: if you're already
-setting SYNC then you can avoid the COMMIT -- this nuance of DSYNC vs
-SYNC wasn't on our radar at the time.
-
-> So perhaps the issue here is that the rationale for using IOCB_DSYNC
-> for all NFSD_IO_DIRECT writes is hazy and needs to be clarified.
-
-How is it still hazy?  We've had repeat discussion about the need for
-IOCB_DSYNC (and IOCB_SYNC if we really want to honor intent of
-NFS_FILE_SYNC).
-
-Christoph has repeatedly said DSYNC is needed with O_DIRECT, yet you
-keep removing it.
-
-> > Were we not all concerned about safety first (especially of mixing
-> > buffered and DIO) and performance a secondary concern?  Using
-> > IOCB_DSYNC|IOCB_SYNC for all WRITEs and returning NFS_FILE_SYNC is
-> > really safe right?
-> 
-> The client ensures that UNSTABLE + COMMIT is just as "safe" as
-> FILE_SYNC, generally, by preserving the dirty data in its own page cache
-> until the server indicates the written data is durable and is safe to
-> evict if needed.
-
-I'm aware UNSTABLE is safe thanks to COMMIT, etc.
-
-But the entire intent behind NFSD's O_DIRECT support is to ensure IO
-is on stable storage when it replies to the client.  The client isn't
-meant to get involved with driving the correctness of NFSD's O_DIRECT
-support (by requiring the client set NFS_FILE_SYNC for the benefit of
-a feature it doesn't know enabled in the server).
-
-That cannot be what you're saying, NFSD_IO_DIRECT is entirely managed
-by the server as a configurable implementation detail.  So we need to
-make sure it is implemented safely without the client being involved.
-
-> If you want to make an argument about data integrity, let's
-> be as precise as we can about what we believe might be unsafe. The
-> data integrity doubt was with the unaligned ends, IIRC? If we need
-> that extra bit of integrity, then WRITEs with an unaligned portion
-> will need to be IOCB_DSYNC, and then promoted.
-
-The repeat _valid_ concern from Jeff and you was about the need to
-ensure data integrity in the NFSD_IO_DIRECT's misaligned WRITE support
-(mixes both buffered IO and direct IO for a single misaligned WRITE).
-
-But now you no longer have that concern and have removed the
-IOCB_DSYNC flag which is required for _both_ buffered and direct IO.
-
-(IOCB_SYNC is only required if we'd like to return NFS_FILE_SYNC to
-the client, maybe you meant to leave IOCB_DSYNC but remove IOCB_SYNC?
-Oh man do I really hope so... ;) If so, please trim from here down)
-
-> An NFS WRITE, even an UNSTABLE one, I believe makes the written data
-> visible to other readers. That might be an argument for using IOCB_DSYNC
-> with IOCB_DIRECT, so that subsequent NFS READs (and local applications)
-> see the written data as soon as NFSD generates a response to an NFS
-> WRITE backed by IOCB_DIRECT.
-
-I'm confused, how is using IOCB_DSYNC with IOCB_DIRECT up for question
-again?  It is needed for misaligned DIO WRITE (splitting into 3
-segments, mixing buffered and direct IO).
-
-From the start, NFSD_IO_DIRECT's WRITE support has been about ensuring
-cache coherence on a per WRITE basis (once its acknowledged back to
-the client). I have tried to be careful to do that even when handling
-misaligned DIO WRITEs.
-
-> I think we also discussed that an NFS WRITE should make updates visible
-> in byte order, which is why the segments are handled low offset to high
-> offset.
-
-Trond mentioned it as needed relative to ensuring consistent file
-offset.  I mentioned that is the case, and with NFSD we get that
-simply by issuing the IO in series, in file offset order -- but for
-NFS client's LOCALIO I _do_ issue out-of-order segment IOs (head/tail
-buffered and then DIO aligned middle, but with care to preserve file
-offset integrity even with partial writes of any of the 3 segments).
-
-Maybe its fine to have a mode where NFSD allows O_DIRECT to be used
-without setting DSYNC when using UNSTABLE, _but_ it really shouldn't
-be the default.
-
-> Or, we might decide that, no, NFS WRITE has no data visibility mandate;
-> applications achieve data visibility explicitly using COMMIT and file
-> locking, so none of this matters.
-
-We don't have that freedom if we cannot preserve file offset integrity
-(as would be the case if we removed IOCB_DSYNC when handling all 3
-segments of a misaligned DIO WRITE).  Removing IOCB_DSYNC would
-compromise misaligned DIO WRITE as implemented.
-
-> > And we already showed that doing so really isn't slow.
-> 
-> Well we don't have a comparison with "IOCB_DIRECT without IOCB_DSYNC".
-> That might be faster than what you tested? Plus I think your test was
-> on esoteric enterprise NVMe devices, not on the significantly more
-> commonly deployed SSD devices.
-
-IOCB_DIRECT without IOCB_DSYNC isn't an option because we must ensure
-the data is ondisk.
-
-The only related bake-off would be:
-1) IOCB_DIRECT | IOCB_DSYNC with UNSTABLE 
- vs
-2) IOCB_DIRECT | IOCB_DSYNC | IOCBD_SYNC with NFS_FILE_SYNC
-
-(but on esoteric enterprise storage: there is no difference)
-
-This thread and evolution of the threads before it is jarring:
-
-Just recently we were surprised to find IOCB_DIRECT needs IOCB_DSYNC
-to ensure data is ondisk; that you (and I too) thought O_DIRECT would
-imply that -- I raised concern given what I saw in the XFS performance
-improvement patch that was focused on combining O_DIRECT and O_DSYNC.
-Because I couldn't see how to avoid setting DSYNC, and we've since
-learned DSYNC needed _to ensure data is ondisk_.
-
-So I'm left confused... and I'm feeling sick and would like to get off
-this merry-go-round now ;)
-
-Thanks,
-Mike
 
