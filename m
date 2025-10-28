@@ -1,154 +1,240 @@
-Return-Path: <linux-nfs+bounces-15740-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15741-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF811C1734C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 23:36:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1583EC176D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 00:56:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 34BCC35624E
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 22:36:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 571B81A2288C
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 23:57:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7E13563C6;
-	Tue, 28 Oct 2025 22:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037E3359F94;
+	Tue, 28 Oct 2025 23:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="YkM/TQM1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UTT98Jcj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/qwt0Xr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAF733CEB3
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 22:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31593570A0
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 23:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761690978; cv=none; b=ecvmUt0HX5IuR28mE5xbMs673YcOkyumFMfdEQt7xfCFvEUF5rM1LJgkzBOkmCRYGiU41a2tHdYOhJUifwSADWOHdy1VuFnq8orQ0EomPxeFd2Jgn18zpCT0ZT086vbzpFSbDf2gn68xotmpkDvCc6BPvPhMwlQ9rkda25FqonE=
+	t=1761695789; cv=none; b=jvCqAL5PrvT0jOZPSKMwc0N03QSPzr71V/QTYncDjsGBesekXJWMAu24HJSmqYU9ps76HehQc0rzVeMGpBpFNXk0dMcc8GPrXffJ0u11KzuygtMr4ippU9RBYpdg/sfTryMtN6ptD47IeN3K9ipJ3t/xL1Yx756siY6si8tZifk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761690978; c=relaxed/simple;
-	bh=DYLMj26ubjmXuAfk643cgrRQBYOo4gIF3F4ztH2Chkc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ufSc62R6wYaivd1Jo7uST2QBuUclStWgxwxqqJPIormxWp87rg1Ww/gjzMAbx6HgIgEXRp+noo6Q8neALpUo3N1xFx2wXeFHsnG2loP44vUnnnD0lL2OFndMe3c64BvVKXg7W/dhR0NA2KuHcGmJs5ubM/DCjXsl73WnQkHR8GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=YkM/TQM1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UTT98Jcj; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id B82BD7A00F8;
-	Tue, 28 Oct 2025 18:36:15 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Tue, 28 Oct 2025 18:36:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1761690975; x=1761777375; bh=8ejFiNA5yTH50Zr923v2g/2yrEw8sn5OcEC
-	FGQxlhPU=; b=YkM/TQM1VAlbyXna6j2DGPquZHSTe7b8L9oNwWEbosekc99PvRj
-	xlznG2x6dx9XAEoLyUcTWLhYQ+VItR5UmPXzsaK4LMkp8hq+obxtwIZmefDz+fGL
-	KiOCFEZ1swvHawnoC4iaTz+lHyGWEb7Q6cb7Ghqug6OPIQaTeG/3/FSbbN2ACoZn
-	SnoxNdCGBOOums0K9SnNavuqPvtoClKdgpHD3SHpnr+af/fnMUTz/SQOGCy94kBA
-	Aqk7f+IP/r56wGjm4jCKtNRhmVQp2dz4lbjG//70zSanWy77v5RKZkpo1eT2EOOV
-	sA1iiz9YH2G+oUHvr4y2Ji+uVVQDd//vLWg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761690975; x=
-	1761777375; bh=8ejFiNA5yTH50Zr923v2g/2yrEw8sn5OcECFGQxlhPU=; b=U
-	TT98JcjGtuc5zZMMmonpIieCj0VD1QIDvWudMgEIUEO2MNsi9tIqqCkohqU+/yOe
-	R60JPHCgB1TNwqeAw2zbyzd7TCkIdItXUHgknvca+kX1yQdhRa18HvhP7LTVJFoo
-	enxsmbbxUhw1Qpiq7DYJkbhJJh5/cHaUufko5YGCcTz/zqcfrIuqOTBw2CNoytwR
-	xTR2u8gDO4vSqdUIn9aiprydM+v2UA6RCkdi/h3FiR+eUc7dT3p+dsM1V4NcmEAB
-	7P9xlH+qecmJ6XAOO8q2VzLLjuuZkGo/V0psBd7xGimcuS/qYIeu7T7f6hw1lqFN
-	hagGnQXan1HrL7J1V97qA==
-X-ME-Sender: <xms:XkUBaV0lFHQ9AOmoGX_uXmojYgoZc5BwDg-QNPRcFRIsrSV46__vOg>
-    <xme:XkUBafy3UpVRrGT0vQuRqZHeQmK9qXIfWe28npzPspEdffkevml73ZhiChNY7pOAJ
-    HbXDw1Er2Sv3ZZolRNy6xzQ2831DzJO-bQzwDvwcRXY9tjzFBA>
-X-ME-Received: <xmr:XkUBafsYmFIQLQfmEulflMnu5-qm4a1S0SLfO6C9PiCPkj_Ic9TbxH4FysNcipgAmVmGIxZ3IYpDM7pXL356U7RMrP2fjuAOE5o_QnrksJcy>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduiedvtdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epgfeikeetueehudeigfefkeekleegheehueeifffhieefvdegueetgfekuddukeevnecu
-    ffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqd
-    hnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhomhesthgrlhhp
-    vgihrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtoh
-    hmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohep
-    khholhhgrgesnhgvthgrphhprdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:XkUBaZyUhWYE43qMbVatlIVM15fYMooaDvYguv04-AkQJRaxOrGxhg>
-    <xmx:XkUBaaA9qlhC98ayPaZU163BD65SXVT6cMjDW6XWI7Zca13Krd1zjg>
-    <xmx:XkUBafcbitIAnxN5DIYa2ma9DQAJZYO7LWZ-Y1NPi9orrWtRhX606g>
-    <xmx:XkUBaclIqsGtAFoPBZb2GBRT9ICqx_2iT0tIwQw-CZfHeItBjop9uA>
-    <xmx:X0UBacYp7a-CfXRbVhOxM3bVvQAk5ShI6m2W6IF2rvIDZOA5JTZJhZ11>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 Oct 2025 18:36:13 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1761695789; c=relaxed/simple;
+	bh=FsyasErvTji3bnd3dFdHf4hvsq8BITaavdB/BJq0BO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNsjP+vbu5B5vtZAQetjn+a05dIoe4VJjoyUUpa8mpXktN9nZ0y7pE872qrT8OcUBqHMzicVloo164bJiL5i61EM7miqAPiKSmsdYNQL0oF3tw3kobCQYDVlJ973UnHM0pM3Sa1hoIjB8fmcJdBJ8+JnX45V6k56p0rB5m/fSSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/qwt0Xr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26B63C4CEFD;
+	Tue, 28 Oct 2025 23:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761695789;
+	bh=FsyasErvTji3bnd3dFdHf4hvsq8BITaavdB/BJq0BO0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L/qwt0XrwkP0pfMKgyKQ3KUJzjUvV30H3sWvNfsfBtBMcKkKh1OAQSblw5oDDmLYs
+	 /ZK1ZYPEci9/DKslGyv+/vDRXRJ7Muwi6qh6FMR0wGw/P4nglIZxRnfEhZL3LvG97H
+	 gOWCxDeZXXoRg8oZN50eGpd1PbCLwrdZbaCdHSu7ZfwYIa5iszRZ8Q6eCAuPwAVqsN
+	 XTOJFckz7Y2Zv1eieXxr7S8Np/ck9qXBN0LRIJN5lzYwTJxUfHhZKjmRUpPPJ271iQ
+	 eqaQ/2woCVo8poy5DW1T+5UPivRFQBPrGpDLLqpWHRQiKsME6R1uvOESSUZ5vEnjdJ
+	 PVRy3EHQGyUSg==
+Date: Tue, 28 Oct 2025 19:56:28 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
+Message-ID: <aQFYLKmC2Nr1QUrM@kernel.org>
+References: <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
+ <aPwSS9NlfqPFqfn2@kernel.org>
+ <aP8qPlA7BEN3nlN8@infradead.org>
+ <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
+ <aP-YV2i8Y9jsrPF9@kernel.org>
+ <a221755a-0868-477d-b978-d2c045011977@kernel.org>
+ <aQA4AkzjlDybKzCR@kernel.org>
+ <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
+ <aQDpjNnj47ISRItg@kernel.org>
+ <b63ed4d4-8bbb-4794-ae07-64a4000e0ea9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 0/6] prepare for dynamic server thread management
-In-reply-to: <e03fd3e300b01be35f5c10e33f819f3991776706.camel@kernel.org>
-References: <20241023024222.691745-1-neilb@suse.de>,
- <e03fd3e300b01be35f5c10e33f819f3991776706.camel@kernel.org>
-Date: Wed, 29 Oct 2025 09:36:11 +1100
-Message-id: <176169097134.1793333.6570917569336480125@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b63ed4d4-8bbb-4794-ae07-64a4000e0ea9@kernel.org>
 
-On Wed, 29 Oct 2025, Jeff Layton wrote:
-> On Wed, 2024-10-23 at 13:37 +1100, NeilBrown wrote:
-> > These patches prepare the way for demand-based adjustment of the number
-> > of server threads.  They primarily remove some places there the
-> > configured thread count is used to configure other things.
-> > 
-> > With these in place only two more patches are needed to have demand
-> > based thread count.  The details of how to configure this need to be
-> > discussed to ensure we have considered all perspectives, and I would
-> > rather than happen in the context of two patches, not in the context of
-> > 8.  So I'm sending these first in the hope that will land with minimal
-> > fuss.  Once they do land I'll send the remainder (which you have already
-> > seen) and will look forward to a fruitful discussion.
-> > 
-> > Thanks,
-> > NeilBrown
-> > 
-> >  [PATCH 1/6] SUNRPC: move nrthreads counting to start/stop threads.
-> >  [PATCH 2/6] nfsd: return hard failure for OP_SETCLIENTID when there
-> >  [PATCH 3/6] nfs: dynamically adjust per-client DRC slot limits.
-> >  [PATCH 4/6] nfsd: don't use sv_nrthreads in connection limiting
-> >  [PATCH 5/6] sunrpc: remove all connection limit configuration
-> >  [PATCH 6/6] sunrpc: introduce possibility that requested number of
+On Tue, Oct 28, 2025 at 02:48:33PM -0400, Chuck Lever wrote:
+> On 10/28/25 12:04 PM, Mike Snitzer wrote:
+> > I'm also concerned about initiating
+> > any page cache invalidation off the back of the DIO WRITE in the
+> > middle (and its potential to fallback to buffered if that invalidation
+> > fails... any associated buffered IO fallback or ends best have O_DSYNC
+> > set it ensure everything ondisk).
+>
+> My questions:
+
+All good questions, and I appreciate the time you spent analyzing
+these aspects.
+
+I'm all for NFSD's IO modes being able to work with all possible
+stable_how.  Your analysis helps expand the scope of these IO modes to
+really be pushed to their limits (specifically thinking of
+NFSD_IO_DIRECT being paired with UNSTABLE and it _not_ using
+IOCB_DSYNC, interesting combo but IMO quite a risky default given
+we're only at the debugfs interface stage for NFSD_IO_DIRECT).
+ 
+> A. Which filesystem code can return -ENOTBLK?
 > 
-> Hi Neil,
+> - iomap-based DIO (fs/iomap/direct-io.c:715): XFS, ext4, f2fs, gfs2,
+>   zonefs, erofs
+> - Legacy DIO path (fs/direct-io.c:984): ext2, some ext4 code paths
+> - btrfs (has its own DIO implementation that uses -ENOTBLK)
 > 
-> You sent this just over a year ago. It looks like this set didn't get
-> merged for some reason. Were you still pursuing this work? I have some
-> interest in seeing a dynamic thread count work, so if not I'd be
-> interested in picking up this work.
+> Code auditing shows that vfs_iocb_iter_write() never returns -ENOTBLK
+> because all filesystems that could generate this error internally
+> convert it to 0 or another error code before returning from their
+> write_iter implementation.
+> 
+> Therefore NFSD itself does not need to know about or handle page cache
+> invalidation failure.
 
-Hi Jeff,
- thanks for asking.  This is still on my list of things that I want to
- pursue, but it clearly isn't getting any attention at present and is
- unlikely to any time this year.
- So if you are keen to push it that would be most welcome.
+OK, good to hear; but have you reviewed if they are all using D_SYNC
+as part of their internal handling of their buffered fallback?  NFSD
+setting DSYNC just acknowledges it is required to ensure O_DIRECT
+WRITEs are ondisk upon return to client -- something I don't want to
+leave to the client to ensure via NFS_UNSTABLE's subsequent COMMIT.
 
- My branch which I think was my most recent version of this has just
- been pushed to github.com/neilbrown/linux branch nfsd-dynathread
- in case there is anything useful there.
+Setting O_DSYNC gives us a baseline where we don't leave some other
+subsystem to ensure data gets to disk as quickly as possible (O_DSYNC
+offers NFS_DATA_SYNC, but O_DSYNC|SYNC's NFS_FILE_SYNC offers a win by
+avoiding COMMIT, even more enticing).
 
-Thanks,
-NeilBrown
+So I need NFSD_IO_DIRECT to be able to require IOCB_DSYNC and possibly
+IOCB_DSYNC|IOCB_SYNC.  And I'm most comfortable with the misaligned
+DIO WRITE support using O_DSYNC for all 3 segments; so that WRITE's
+data is ondisk before returning from the WRITE (NFS_DATA_SYNC), and
+bonus if we can avoid extra COMMIT (NFS_FILE_SYNC).
+
+> B. Even if NFSD had to recover from a failed page cache invalidation,
+>    does a fallback write need to set IOCB_DSYNC (not considering the NFS
+>    protocol requirements) ?
+> 
+> When invalidation fails, some pages remain in the cache (dirty or with
+> private data). The buffered fallback writes to those same pages,
+> updating them with the correct data. There's no torn state or corruption
+> hazard.
+> 
+> The fallback restarts the entire write from scratch, as buffered. Any
+> partial progress (like a buffered first segment) gets rewritten with
+> the same data. No orphaned blocks or inconsistent state.
+> 
+> If another process does a DIO read of this region, it will call
+> kiocb_write_and_wait() first (see mm/filemap.c:2912), which flushes any
+> dirty pages before reading. So they'll see correct data even if it's
+> still dirty in cache (Jeff's concern).
+
+Yes, but the point is there is extra work that involves the page
+cache by other layers.  And O_DIRECT is intended to work expecting the
+IO has been flushed to disk.  O_DIRECT is aiming to reduce page cache
+usage, to keep memory use low.  So ensuring the page cache invalidated
+to disk by the subsequent write as a side-efffect of O_DSYNC helps
+(more on this below [0]).
+
+> C. When setting up a three-segment write, is IOCB_DSYNC needed on the
+>    unaligned ends (not considering the NFS protocol requirements) ?
+> 
+> Before writing the DIO middle segment, the VFS must first invalidate the
+> page cache, so the first (buffered) segment is flushed to durability
+> anyway. The use of IOCB_DSYNC for the first segment is superfluous.
+
+No, the first segment reflects the misaligned head of the WRITE. The
+DIO-aligned middle segment's DIO will just invalidate pages aligned on
+the middle segment's alignment (which is page aligned).  So the DIO
+from the middle segment won't have any side-effect on the first
+segment's page.  First page needs to be written out with IOCB_DSYNC.
+
+> After writing the DIO middle segment, the unaligned end remains only in
+> the page cache if IOCB_DSYNC is not used. But a subsequent DIO read will
+> flush that to durability (via kiocb_write_and_wait) before satisfying
+> the read. So, IOCB_DSYNC is not needed there to meet putative file data
+> visibility mandates.
+
+The same applies to both the misaligned first (head) and third (tail)
+segments, they both need O_DSYNC to ensure their contents are ondisk.
+
+[0]: Again, my goal for NFSD_IO_DIRECT is to operate in terms of
+O_DIRECT|O_DSYNC ondisk.. and not lean on the page cache more than
+needed. This makes the VM subsystem more scalable as a side-effect of
+it having more clean pages that are quickly dropped and/or reused if
+something needs memory.
+
+> >> As I understand it, IOCB_DSYNC has nothing to do with whether the three
+> >> segments are directed to the correct file offsets. Serially initiating
+> >> the writes with the same iocb should be sufficient to ensure
+> >> correctness.
+> > 
+> > IOCB_DSYNC just ensures when they complete they are on-disk.  And any
+> > failure of, or short WRITE, is trapped and immediate cause for early
+> > return.  Whereby ensuring file offset integrity.
+> 
+> AFAICT, generic_perform_write() updates ki_pos synchronously whenever
+> it returns successfully, regardless of the IOCB_DSYNC or IOCB_DIRECT
+> flag settings. If the vfs_iocb_iter_write() call fails or returns fewer
+> bytes than expected, the loop terminates immediately and writes to
+> subsequent segments are not initiated. I don't see a data integrity
+> issue here.
+
+For ki_pos we're saying the same thing: yes ki_pos is updated (and
+it'll reflect a short write if one happens, etc). IOCB_DSYNC doesn't
+influence if ki_pos is advanced. But if IOCB_DSYNC isn't set then
+ki_pos is advanced beyond what was written _to disk_. That obviously
+doesn't matter if NFS_UNSTABLE, thanks to its COMMIT, but it does
+increase latency (though it is worth benchmarking with various
+workloads!).
+
+Anyway, I've been working to ensure NFSD_IO_DIRECT acts as if at least
+NFS_DATA_SYNC, but preferably NFS_FILE_SYNC, set.  I should have more  
+clearly stated that.  Bypassing all caches as much possible allows for
+enabling scalable cache coherence, e.g. intelligent applications that
+don't rely on file locking, think multiple writers writing to their
+own extent of a large file.
+
+Having NFSD_IO_DIRECT be handled as UNSTABLE isn't adequate for my
+needs (immediate ondisk requirements, lowest memory and CPU usage as
+possible).  Would you be OK with adding 2 new debugfs knobs?:
+
+/sys/kernel/debug/nfsd/io_cache_read_stable_how
+/sys/kernel/debug/nfsd/io_cache_write_stable_how
+
+- Each defaults to using the stable_how that the client requested.
+
+- Each will serve as a floor, and only override default if they are
+  greater/stricter than the client requested stable_how. (so if
+  'io_cache_write_stable_how' set to NFS_FILE_SYNC it'd override
+  client specified UNSTABLE).
+
+- Each can override the stable_how used so each IO mode behaves
+  accordingly (e.g. I can set NFSD_IO_DIRECT and NFS_FILE_SYNC to get
+  the bahviour I'd like).
+
+> Thus I'm still unconvinced that IOCB_DSYNC is required if the client has
+> requested an UNSTABLE write. I'm open to reviewing actual evidence of a
+> failure mode where IOCB_DSYNC might prevent data corruption, but so far
+> I don't see how it can happen.
+
+Yeah, I see your point now.  If io_cache_{read,write}_stable_how
+debugfs controls are acceptable to you it'll give us maximum
+flexibility for controlling how NFSD behaves in each NFSD_IO mode.
+
+Thanks.
+Mike
 
