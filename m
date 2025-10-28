@@ -1,192 +1,244 @@
-Return-Path: <linux-nfs+bounces-15721-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15722-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C863DC12A00
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 03:05:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEC5DC12C22
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 04:27:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64F5F5E2A13
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 02:04:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D37371AA1AEC
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 03:27:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA2286353;
-	Tue, 28 Oct 2025 02:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C86B1C5D46;
+	Tue, 28 Oct 2025 03:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="eNCvq00U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ejPrPfTk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkYbN8D4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AA7F50F
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 02:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4860838F9C
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 03:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761617064; cv=none; b=tg/4E4SyzZ1WE6EI7ujeixVmMCGYg5NS8CVmOZFNq7tYOGAwmn4hoSQWTrPvuvDQQx3EfBR+aitdkRltECOK0XZbHcR0CGr/EL0mF6U3O/vb7ch2zqFdsmsfJKEbikKgZHzwsMMc4wWPVFTGGZin1NdeLBkxdOnJuujUMujnOuI=
+	t=1761622020; cv=none; b=X5fzwOkAUwhBy8Ae6Q4W3zeTBgOgXznXr9IAJW9f0RbwDLDMuh68DUV1X3dGP03DsWvvSI5LY6+JIaaWPa9V4I68U5OqjTN/CPdMsx83/lVrEtt5CnISPrHSBBSGsYG1NK0PnSgjfIfTYXB0vQOm5qHCBYTAMAggCSEPqZutXSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761617064; c=relaxed/simple;
-	bh=eTjiM3JkgjcA1pKTXJ888RYwrhXgtDGryfToNfVJf+o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=fdJDAfxlyDJjTTj/4XXGOrmm/dYkdTl+vzF5ex8u+iu4XpBE79RImOkc3WRWFstnCZcuEgWZTIRvxfhlsBtuZ4Z8gnw+2mQVGcGv0b1lfnf+HlEXdsCoBFdwiM5Q74Y3iXvjVuDtc3Qd4oUkiY2wfxvmwb5AKwf2nfgRQp18IMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=eNCvq00U; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ejPrPfTk; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
-	by mailfout.phl.internal (Postfix) with ESMTP id 18BE6EC0452;
-	Mon, 27 Oct 2025 22:04:22 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Mon, 27 Oct 2025 22:04:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1761617062; x=1761703462; bh=vZGcLkgSv40WTUnYjDPpe1fvUibiSYnN6DE
-	OAJpqXMc=; b=eNCvq00UPLPutWInIuASWnnH+M52ukl5AFP/ZncT9LE1tn2VEnb
-	bkiNJ5jbSbwkp3HDB+FXLkOU6Xnj5a2xKwcfQQBuUb6mH4XScFyAkZGVInl+fJoJ
-	TTY6uyY7WixMlwX4I9/mdGHyZlfjlUJh7pztUHbUrOAEMksR0/QVIo4MfuR26vO5
-	zCIpL23DgUbxVasjV54pK9QVBkhsi7jsEsSP2KynXY74TD0D/WIp+EJwJTA929+T
-	zr1Y2pbMi23klua7L35XVtotdvUop6gfvSIJjQ93tKK5YOPYP9qakgWYFXxxKiTO
-	UW98YNu806ZNZa/C7EhCX7uFWXV5HzENhdQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761617062; x=
-	1761703462; bh=vZGcLkgSv40WTUnYjDPpe1fvUibiSYnN6DEOAJpqXMc=; b=e
-	jPrPfTkyJVEdGsVXqumqLCBDzdn5eZQWMMP3SysI+5J9ZAHUoJ620kqBwf249aml
-	bU63MRkez6ZGck5svyWuB+RiLOQ8P5wiqYmX3c7G9y2hlwNWNMMeuEcpbM3wUdUn
-	88KTX7XEYA/h8PpqUq6PkXc2WZGMNUkBhugWs0RezRdxBEaJBUP2c79eKpPPHObJ
-	q/c1ccr1/jDySmmBi8Lw16GE8PJmyErbSfRo3bRhGcr+7NVYZ1bdKSlV9bIQvxhB
-	qPG957Ynca6JkDVo2hKXhhCGNnO7TOvVs/2ge42rJD80veAbJPeZ1s1jhwWPd3qG
-	SwbpudnxScBHYP53YwQgA==
-X-ME-Sender: <xms:pSQAacTtkRnJJjRQJOGuiDLT_IT-85MRt5yX1yh27UygOTkcc-7h3g>
-    <xme:pSQAadeV4R5Qt7IKeghRgwnf8bvEYk-op3PoCc3cw2NfbeWBLIxyYl0UFxaKmmY51
-    dDzn5NChrZ8H6KPqQyZvJy-O_Zs8COHzhVlFLy54CJutWdoCQ>
-X-ME-Received: <xmr:pSQAaTpRo68pA-oZnfyc1zXVK1OlQReMsZa0_uFwhoit-bjF8ThPw9JdXdHvQx7BYv2fBgAVXyv7a-sy9JJl0sxwSolzgSEhotOJwWKQNLEe>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheeliedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
-    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:pSQAaW8h6ZRzK5tsybisl9PTGFwIFJUNtqxDHnNCzQ1FoG_0T3KEOA>
-    <xmx:pSQAaXfFFlZAPwrOoy_tJkGeo6zIhcuPKDM_9IMahuO4SBMTPs0-rg>
-    <xmx:pSQAaYIc_-f6psp5rbMextnPfZNW2IVzsdMM8aZml4iKZmvHVlahJw>
-    <xmx:pSQAafhlHA2Wv8QFRBUuav3beEqQZlzU0IBm7rzM0s8MDzxKJ0EW_g>
-    <xmx:piQAaTc6FWsLJkJaKteODHqR3nWD7eG9arBMdHYogyuWY_o7aDVOS94l>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Oct 2025 22:04:19 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1761622020; c=relaxed/simple;
+	bh=Fok/CIMfGj0B32rjEiJPoySedyRRySPsVC3AZdxcFmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1OjGcLI7Z6A2dMGton8JnVHYub+nQfGI3jVQj0CsXBu/PJoemP+IiPhitMihy/dtCUentcwxNYr6qIH5pIosUITDdzbHjNHbdFQ3zuRYxPy4FIMgkoDP8FH6OFPci3jOcJEDyD12VhAXk4U8sOkyq82hGtsatxQ31KYlZVtKOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkYbN8D4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9478C4CEF1;
+	Tue, 28 Oct 2025 03:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761622019;
+	bh=Fok/CIMfGj0B32rjEiJPoySedyRRySPsVC3AZdxcFmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OkYbN8D4zg6KnCdUPHMltwHybygGH9pwvj12DZg9JyO6iD41xlO7XxY8K+kQNzqQQ
+	 7vn3+jj711tm9ptl6RXidSGykONY4JVv+4uwHDJ/GWNyo4K2/oRFPCT8VPFkFZKaVz
+	 tz5aq7R8ekQq3jMdd9MC4OIAun9osgvOZ9WMUZbORszhAWdt/e6oB4ha+Ce0rDC8fX
+	 Z+p3/6acepBqK2GeVyRDYBocXpbcgtLuWQWeklTBeQcAZWxxICEVsbyFGsql4FAHPZ
+	 RRXYXu+zJqcG1XsDsGA7dIKJopM5t86vh3/UnHZ9ZulnVH5DTzWi908aWDRakroB1e
+	 ysuPUNEKNZRag==
+Date: Mon, 27 Oct 2025 23:26:58 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
+Message-ID: <aQA4AkzjlDybKzCR@kernel.org>
+References: <20251024144306.35652-15-cel@kernel.org>
+ <aPvBtWOIe9hJBrKC@kernel.org>
+ <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
+ <aPvjiwF9vcawuHzi@kernel.org>
+ <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
+ <aPwSS9NlfqPFqfn2@kernel.org>
+ <aP8qPlA7BEN3nlN8@infradead.org>
+ <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
+ <aP-YV2i8Y9jsrPF9@kernel.org>
+ <a221755a-0868-477d-b978-d2c045011977@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject:
- Re: [PATCH v3 01/10] nfsd: fix current-stateid handling after PUTFH etc.
-In-reply-to: <a7d27c56-f250-41f2-83e1-4befa144d5cc@oracle.com>
-References: <20251026222655.3617028-1-neilb@ownmail.net>,
- <20251026222655.3617028-2-neilb@ownmail.net>,
- <c79a95a9ae87f22f77a5d144f4d43072bd32ba4b.camel@kernel.org>,
- <a7d27c56-f250-41f2-83e1-4befa144d5cc@oracle.com>
-Date: Tue, 28 Oct 2025 13:04:18 +1100
-Message-id: <176161705835.1793333.5873591071175553489@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a221755a-0868-477d-b978-d2c045011977@kernel.org>
 
-On Tue, 28 Oct 2025, Chuck Lever wrote:
-> On 10/27/25 8:35 AM, Jeff Layton wrote:
-> > On Mon, 2025-10-27 at 09:23 +1100, NeilBrown wrote:
-> >> From: NeilBrown <neil@brown.name>
-> >>
-> >> According to RFC 8881 section 16.2.3.1.2 the result of a PUTFH op on the
-> >> current stateid is that it should be set to the (all zeros) anonymous
-> >> stateid, not treated as invalid.
-> >>
-> >> Currently if a request contains a PUTFH followed by a READ request using
-> >> the "current stateid" special stateid, it will result in an
-> >> invalid-stateid error, where as it should behave the same as if the
-> >> anonymous stateid were given to the READ request.
->=20
-> Wondering if there are implications for pynfs -- either a testing gap,
-> or a test that is now passing that will will fail as a result of this
-> change.
+[Apologies, I think I repeated myself 4 slightly different ways below]
 
-Actually - this "fix" is wrong.
-The RFC says that the current stateid can never be a special stateid.
-So setting it to "anon_stateid" effectively makes it invalid, which is
-how the current code treats it.
+On Mon, Oct 27, 2025 at 01:57:25PM -0400, Chuck Lever wrote:
+> On 10/27/25 12:05 PM, Mike Snitzer wrote:
+> >>> You also need IOCB_DSYNC for direct I/O to hit the media if you want
+> >>> to return NFS_FILE_SYNC.  But I still don't understand why we want or
+> >>> need to return NFS_FILE_SYNC to start with.
+> >> NFS_FILE_SYNC is not required here, but it's better if we can return
+> >> that. If the server returns NFS_FILE_SYNC there is no need for the
+> >> client to follow up with a COMMIT.
+> > Yes, which is why I'm confused by Chuck wanting to do away with
+> > NFSD_IO_DIRECT setting NFS_FILE_SYNC "for now".  Not heard compelling
+> > reason, but "it is what it is". 😉
+> 
+> The compelling reason is that it's generally faster (or less work for
+> the NFS server and its storage) to sync the metadata after the client
+> has sent all of the data it wants to write. This amortizes the cost of
+> the metadata operations, and allows the server to get the written data
+> persisted (if it makes sense to do that) while waiting for the COMMIT.
 
-I'll need to revise this series...
+But none of that matters if the only safe way to implement mixing
+buffered and direct IO is by waiting for the DIO to succeed and with
+it any associated page cache invalidation (and associated possible
+failure to invalidate the page handled with using buffered IO fallback
+by underlying filesystem).
+
+Any buffered or direct IO associated with the misaligned DIO WRITE
+handling, in terms of 3 segments, must use IOCB_DSYNC.
+
+So can we please revisit your desire to eliminate the use of
+IOCB_DSYNC for NFSD_IO_DIRECT WRITEs?
+
+I contend that NFSD_IO_DIRECT should use IOCB_DSYNC|IOCBD_SYNC for
+all 3 segments of a misaligned DIO WRITE (so for both buffered and
+direct IO).
+
+> Since your patch asserts IOCB_DSYNC for all direct write segments,
+> NFSD_IO_DIRECT (as it is implemented in your patch) does not need a
+> subsequent COMMIT operation. Forcing the client to COMMIT is totally
+> unnecessary. That's why I suggested promoting all NFSD_IO_DIRECT WRITEs
+> to FILE_SYNC.
+
+No, the COMMIT can only be elided (and NFS_FILE_SYNC return to client)
+if both IOCB_DSYNC and IOCB_SYNC are set.
+
+But yes, at Bakeathon, the intent/understanding was: if you're already
+setting SYNC then you can avoid the COMMIT -- this nuance of DSYNC vs
+SYNC wasn't on our radar at the time.
+
+> So perhaps the issue here is that the rationale for using IOCB_DSYNC
+> for all NFSD_IO_DIRECT writes is hazy and needs to be clarified.
+
+How is it still hazy?  We've had repeat discussion about the need for
+IOCB_DSYNC (and IOCB_SYNC if we really want to honor intent of
+NFS_FILE_SYNC).
+
+Christoph has repeatedly said DSYNC is needed with O_DIRECT, yet you
+keep removing it.
+
+> > Were we not all concerned about safety first (especially of mixing
+> > buffered and DIO) and performance a secondary concern?  Using
+> > IOCB_DSYNC|IOCB_SYNC for all WRITEs and returning NFS_FILE_SYNC is
+> > really safe right?
+> 
+> The client ensures that UNSTABLE + COMMIT is just as "safe" as
+> FILE_SYNC, generally, by preserving the dirty data in its own page cache
+> until the server indicates the written data is durable and is safe to
+> evict if needed.
+
+I'm aware UNSTABLE is safe thanks to COMMIT, etc.
+
+But the entire intent behind NFSD's O_DIRECT support is to ensure IO
+is on stable storage when it replies to the client.  The client isn't
+meant to get involved with driving the correctness of NFSD's O_DIRECT
+support (by requiring the client set NFS_FILE_SYNC for the benefit of
+a feature it doesn't know enabled in the server).
+
+That cannot be what you're saying, NFSD_IO_DIRECT is entirely managed
+by the server as a configurable implementation detail.  So we need to
+make sure it is implemented safely without the client being involved.
+
+> If you want to make an argument about data integrity, let's
+> be as precise as we can about what we believe might be unsafe. The
+> data integrity doubt was with the unaligned ends, IIRC? If we need
+> that extra bit of integrity, then WRITEs with an unaligned portion
+> will need to be IOCB_DSYNC, and then promoted.
+
+The repeat _valid_ concern from Jeff and you was about the need to
+ensure data integrity in the NFSD_IO_DIRECT's misaligned WRITE support
+(mixes both buffered IO and direct IO for a single misaligned WRITE).
+
+But now you no longer have that concern and have removed the
+IOCB_DSYNC flag which is required for _both_ buffered and direct IO.
+
+(IOCB_SYNC is only required if we'd like to return NFS_FILE_SYNC to
+the client, maybe you meant to leave IOCB_DSYNC but remove IOCB_SYNC?
+Oh man do I really hope so... ;) If so, please trim from here down)
+
+> An NFS WRITE, even an UNSTABLE one, I believe makes the written data
+> visible to other readers. That might be an argument for using IOCB_DSYNC
+> with IOCB_DIRECT, so that subsequent NFS READs (and local applications)
+> see the written data as soon as NFSD generates a response to an NFS
+> WRITE backed by IOCB_DIRECT.
+
+I'm confused, how is using IOCB_DSYNC with IOCB_DIRECT up for question
+again?  It is needed for misaligned DIO WRITE (splitting into 3
+segments, mixing buffered and direct IO).
+
+From the start, NFSD_IO_DIRECT's WRITE support has been about ensuring
+cache coherence on a per WRITE basis (once its acknowledged back to
+the client). I have tried to be careful to do that even when handling
+misaligned DIO WRITEs.
+
+> I think we also discussed that an NFS WRITE should make updates visible
+> in byte order, which is why the segments are handled low offset to high
+> offset.
+
+Trond mentioned it as needed relative to ensuring consistent file
+offset.  I mentioned that is the case, and with NFSD we get that
+simply by issuing the IO in series, in file offset order -- but for
+NFS client's LOCALIO I _do_ issue out-of-order segment IOs (head/tail
+buffered and then DIO aligned middle, but with care to preserve file
+offset integrity even with partial writes of any of the 3 segments).
+
+Maybe its fine to have a mode where NFSD allows O_DIRECT to be used
+without setting DSYNC when using UNSTABLE, _but_ it really shouldn't
+be the default.
+
+> Or, we might decide that, no, NFS WRITE has no data visibility mandate;
+> applications achieve data visibility explicitly using COMMIT and file
+> locking, so none of this matters.
+
+We don't have that freedom if we cannot preserve file offset integrity
+(as would be the case if we removed IOCB_DSYNC when handling all 3
+segments of a misaligned DIO WRITE).  Removing IOCB_DSYNC would
+compromise misaligned DIO WRITE as implemented.
+
+> > And we already showed that doing so really isn't slow.
+> 
+> Well we don't have a comparison with "IOCB_DIRECT without IOCB_DSYNC".
+> That might be faster than what you tested? Plus I think your test was
+> on esoteric enterprise NVMe devices, not on the significantly more
+> commonly deployed SSD devices.
+
+IOCB_DIRECT without IOCB_DSYNC isn't an option because we must ensure
+the data is ondisk.
+
+The only related bake-off would be:
+1) IOCB_DIRECT | IOCB_DSYNC with UNSTABLE 
+ vs
+2) IOCB_DIRECT | IOCB_DSYNC | IOCBD_SYNC with NFS_FILE_SYNC
+
+(but on esoteric enterprise storage: there is no difference)
+
+This thread and evolution of the threads before it is jarring:
+
+Just recently we were surprised to find IOCB_DIRECT needs IOCB_DSYNC
+to ensure data is ondisk; that you (and I too) thought O_DIRECT would
+imply that -- I raised concern given what I saw in the XFS performance
+improvement patch that was focused on combining O_DIRECT and O_DSYNC.
+Because I couldn't see how to avoid setting DSYNC, and we've since
+learned DSYNC needed _to ensure data is ondisk_.
+
+So I'm left confused... and I'm feeling sick and would like to get off
+this merry-go-round now ;)
 
 Thanks,
-NeilBrown
-
->=20
->=20
-> >> This is easily fixed in clear_current_stateid().
-> >>
-> >> Signed-off-by: NeilBrown <neil@brown.name>
-> >> ---
-> >>  fs/nfsd/nfs4state.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> >> index 35004568d43e..e1c11996c358 100644
-> >> --- a/fs/nfsd/nfs4state.c
-> >> +++ b/fs/nfsd/nfs4state.c
-> >> @@ -9091,7 +9091,7 @@ get_stateid(struct nfsd4_compound_state *cstate, s=
-tateid_t *stateid)
-> >>  }
-> >> =20
-> >>  static void
-> >> -put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
-> >> +put_stateid(struct nfsd4_compound_state *cstate, const stateid_t *state=
-id)
-> >=20
-> > Side note: This function should really be named set_stateid() or
-> > something similar. The "put" there makes me think that it's putting a
-> > reference, when it's not. If you feel like renaming it as part of this
-> > set, I wouldn't complain.
->=20
-> Agreed, a get/put pair implies the use of a reference count.
->=20
->=20
-> >>  {
-> >>  	if (cstate->minorversion) {
-> >>  		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
-> >> @@ -9102,7 +9102,7 @@ put_stateid(struct nfsd4_compound_state *cstate, s=
-tateid_t *stateid)
-> >>  void
-> >>  clear_current_stateid(struct nfsd4_compound_state *cstate)
-> >>  {
-> >> -	CLEAR_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG);
-> >> +	put_stateid(cstate, &zero_stateid);
-> >>  }
-> >> =20
-> >>  /*
-> >=20
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
->=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+Mike
 
