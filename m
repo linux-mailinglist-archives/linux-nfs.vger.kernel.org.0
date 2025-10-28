@@ -1,170 +1,253 @@
-Return-Path: <linux-nfs+bounces-15725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6FBCC159EE
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 16:56:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A095C15B35
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 17:12:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A63A13BA628
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 15:50:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20E324610F0
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 16:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B512334166C;
-	Tue, 28 Oct 2025 15:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E27F70809;
+	Tue, 28 Oct 2025 16:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rn32Fvn0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Perb13i5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F925332EC9
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 15:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F427991E
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 16:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761666448; cv=none; b=HJ/nXCUkBTcrbkrX0WhA8+21gLYIQwglZb57bWYnpaCOLqgDjEA4AxJH1nOYhMhRcaz/PncyJgwbN1m+eLUgH+EfRmxX67f3pOu0NzTDXF/pnYx2jGcVYHUj80vQHNfW8accFAJAbJYrnqEnqm57CGhh6CpvSq5PcSxOWAaplaI=
+	t=1761667470; cv=none; b=HTt1tiYyYBfDXaGBt3C5OT5I6gZVwT6c4utG7Z12flRaYQjqD3bqBkfRioliMMdAEzFgwstV6vrpFdlGlhfr2x3Q4yOVbtVg0OfXXk4ncUakGcL3UDadnucVH7wSl+TpZFrMBCPI7xKKXID0F62bF7mToZKIcFADC5JYHdg77Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761666448; c=relaxed/simple;
-	bh=J+5JRnnAYQsPd7O8QZaOTswpTQ74AYHma47X8lXEZ/o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SKP+U9jH/bvWyGslzl4MdNx0Ui0j4p5xsnCAPqfjxE/K5xKkffsWVWKYobPIKuYMwJBaIgjW7NZWju2Z1evf9eyEx1zaz/6AvE5tK3h52UIMgMlxBb4ktt28GWQfCTc94SK4dwYWSVEDFJIxDmM47sbyXDrkRRi5il3J79WkbM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rn32Fvn0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0541C4CEE7;
-	Tue, 28 Oct 2025 15:47:27 +0000 (UTC)
+	s=arc-20240116; t=1761667470; c=relaxed/simple;
+	bh=p29DGZwx+A2BkmP3OVa7VQmXuDjZlbx0MzPKoIOKHM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUWpa+FLSfyQKLfqcOYK66gsHWu5KIa98iPyfKHKb8fiQUiQ6wxs8d/XImZ/vwE6FUAwAS5R8u3zW0wmLZYl/jvoM3K6FMtm4k7j0UlLO0z4GglcMnwv2xtceVU76D3UTf+DhGIDgbAFy69t/yCvxZKixOw+U6nFGhIh6d/KcUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Perb13i5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E23EC4CEE7;
+	Tue, 28 Oct 2025 16:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761666448;
-	bh=J+5JRnnAYQsPd7O8QZaOTswpTQ74AYHma47X8lXEZ/o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Rn32Fvn0N0ZH+T/DyLjHATDY5aVaFJHGnzH1yodbsRsxEGUhH98K3kQ35HJnou3mR
-	 C7Ht7hq1Xn9SxzGRqWlwT5ShpMZycXy1kysuMl0JdT0wELasYhTwct8bqNcfxeC41V
-	 9CM1S8JkxDuZV61rkE+F46TPH5AqMGXugHeyTazVg5gR8mI8w9upCHNC8cWAxiJqsf
-	 UMbDELoRukOXfdQwQtSYDvVs0N74WkAtCPM+OB+pt5Ypy/itZ0uJh4vpxrczLQuvuT
-	 Q/hwt1yhXqE9OxndkZKQ4mLChKGkqNL+n5f27j5ni6eAW/XRrgAPoW3ved97X0xHda
-	 3UqxRd+9iz9GQ==
-Message-ID: <e03fd3e300b01be35f5c10e33f819f3991776706.camel@kernel.org>
-Subject: Re: [PATCH 0/6] prepare for dynamic server thread management
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Tue, 28 Oct 2025 11:47:26 -0400
-In-Reply-To: <20241023024222.691745-1-neilb@suse.de>
-References: <20241023024222.691745-1-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=k20201202; t=1761667469;
+	bh=p29DGZwx+A2BkmP3OVa7VQmXuDjZlbx0MzPKoIOKHM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Perb13i5Ixj4BF1vqinDiU5JU7isyLHb/8gTCDkSViHo5n1kpwMvfECybOsTvgBf4
+	 /TLprvCgD3A5U7hvekE+EFdk2Yme8DopMeSCjlF3plw2pbtKLLdTqB9a3Eizs5t01F
+	 VJHBu4OIXh1xPde1aCBABXsmcrOOjB2FLY2sh37Wmbf+L7S/jJGJWieBXsVbg4MSms
+	 eyR1WhYAUPlKGS3AqLlmaolunOKen8GrfWKYuzhIc6wbiO/wf7b5K1VbDpIn0EYUYi
+	 sI9LV7RC8Zoj946UazJCuXFWhk3T1VfRv512nbGkIJfJAiEwlR4a291UjrdxvnzRRe
+	 OPj04a0JFFfRQ==
+Date: Tue, 28 Oct 2025 12:04:28 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
+Message-ID: <aQDpjNnj47ISRItg@kernel.org>
+References: <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
+ <aPvjiwF9vcawuHzi@kernel.org>
+ <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
+ <aPwSS9NlfqPFqfn2@kernel.org>
+ <aP8qPlA7BEN3nlN8@infradead.org>
+ <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
+ <aP-YV2i8Y9jsrPF9@kernel.org>
+ <a221755a-0868-477d-b978-d2c045011977@kernel.org>
+ <aQA4AkzjlDybKzCR@kernel.org>
+ <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
 
-On Wed, 2024-10-23 at 13:37 +1100, NeilBrown wrote:
-> These patches prepare the way for demand-based adjustment of the number
-> of server threads.  They primarily remove some places there the
-> configured thread count is used to configure other things.
->=20
-> With these in place only two more patches are needed to have demand
-> based thread count.  The details of how to configure this need to be
-> discussed to ensure we have considered all perspectives, and I would
-> rather than happen in the context of two patches, not in the context of
-> 8.  So I'm sending these first in the hope that will land with minimal
-> fuss.  Once they do land I'll send the remainder (which you have already
-> seen) and will look forward to a fruitful discussion.
->=20
-> Thanks,
-> NeilBrown
->=20
->  [PATCH 1/6] SUNRPC: move nrthreads counting to start/stop threads.
->  [PATCH 2/6] nfsd: return hard failure for OP_SETCLIENTID when there
->  [PATCH 3/6] nfs: dynamically adjust per-client DRC slot limits.
->  [PATCH 4/6] nfsd: don't use sv_nrthreads in connection limiting
->  [PATCH 5/6] sunrpc: remove all connection limit configuration
->  [PATCH 6/6] sunrpc: introduce possibility that requested number of
+On Tue, Oct 28, 2025 at 11:37:52AM -0400, Chuck Lever wrote:
+> On 10/27/25 11:26 PM, Mike Snitzer wrote:
+> > So can we please revisit your desire to eliminate the use of
+> > IOCB_DSYNC for NFSD_IO_DIRECT WRITEs?
+> 
+> Let's have a little less breathless panic, please. The whole point of
+> review is to revisit our decisions. And nothing I've done so far is
+> written in stone... even after merge, we can still apply patches. If
+> the consensus is we don't like v8 or some particular patch, I will
+> rewrite or replace it, as I've already said.
+> 
+> You might view me as a whimsical and authoritarian maintainer, but
+> actually, I am resisting the urge to merge a patch that the community
+> (that is now responsible for free long-term support of the patch) hasn't
+> yet fully learned about and carefully reviewed. I see my role as
+> enforcing a consensus process, and both learning and consensus takes
+> time.
 
-Hi Neil,
+Cool, thanks for level setting.  Helps!
 
-You sent this just over a year ago. It looks like this set didn't get
-merged for some reason. Were you still pursuing this work? I have some
-interest in seeing a dynamic thread count work, so if not I'd be
-interested in picking up this work.
+> >> So perhaps the issue here is that the rationale for using IOCB_DSYNC
+> >> for all NFSD_IO_DIRECT writes is hazy and needs to be clarified.
+> 
+> > How is it still hazy?  We've had repeat discussion about the need for
+> > IOCB_DSYNC (and IOCB_SYNC if we really want to honor intent of
+> > NFS_FILE_SYNC).
+> 
+> TL;DR: it's hazy for folks who were not in the room in Raleigh.
+> 
+> I don't see any comments that explain /why/ the unaligned ends need to
+> be durable along with the middle segment. It appears to be assumed that
+> everyone agrees it's necessary. Patch review has shown that is perhaps
+> not a valid assumption.
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+How so?  I missed any patch review that called into question the need
+to ensure all segments are on stable storage.  The only was to do that
+for buffered and direct I is to set IOCB_DSYNC.
+ 
+> So far it's been discussed verbally, but we really /really/ want to have
+> this documented, because we're all going to forget the rationale in a
+> few months.
+
+But it isn't so complex.  DSYNC is needed if you want data to be
+ondisk when the call returns.
+
+> And please do not forget that this is open source code. The code has to
+> be able to be modified by developers outside our community. Right now it
+> isn't well enough documented for anyone who was outside of the room in
+> Raleigh two weeks ago to understand WTF is going on. The point being
+> that we cannot make final decisions in a closed room -- eventually they
+> need to face the larger community.
+> 
+> If we need to insist that NFSD_IO_DIRECT mode is always going to be
+> fully durable, that design choice needs to be explained in code comments
+> that are very close to the code that implements it.
+> 
+> 
+> > Christoph has repeatedly said DSYNC is needed with O_DIRECT, yet you
+> > keep removing it.
+> 
+> That's not what I read. Over the course of three email threads, he wrote
+> that:
+> 
+> - IOCB_DSYNC is always needed when IOCB_SYNC is set, whether or not
+>   we're using IOCB_DIRECT.
+> 
+> - in order to guarantee that a direct write is durable, we /either/ need
+>   IOCB_DSYNC + IOCB_DIRECT, /or/ IOCB_DIRECT by itself with a follow-up
+>   COMMIT.
+> 
+> - for some commonly deployed media types, IOCB_DSYNC with IOCB_DIRECT
+>   might be slower than IOCB_DIRECT followed up with COMMIT.
+
+Hmm, I have other quotes that stand out to me.. but I'll spare you
+(especially since I'm short on time to reply at the moment).
+
+> Therefore, we need to carefully justify why the current patches stick
+> with only IOCB_DSYNC + IOCB_DIRECT, or decide it's truly not necessary
+> to force all NFSD_IO_DIRECT writes to be IOCB_DSYNC.
+
+The misaligned DIO WRITE is what I'm concerned about given the 3
+segments that make up the whole of a given NFS WRITE.
+
+We do have the ability to know a misaligned DIO WRITE is occuring
+(nsegs > 1).
+
+I would _really_ appreciate it if we could ensure setting IOCB_DSYNC
+for that case.
+
+> Christoph and I (if I may put words in his mouth) both seem to be
+> interested in making NFSD_IO_DIRECT useful in contexts other than a very
+> specific enterprise-grade server with esoteric NVMe devices and ultra
+> high bandwidth networking. After all, one of the deep requirements for
+> merging something upstream is that it is likely to be useful to more
+> than a very narrow constituency (see recent discussions about merging
+> TernFS).
+
+You're fine to extend NFSD_IO_DIRECT to be broadly applicable, I
+completely agree with that.  Accomplishing that by removing flags that
+ensure data integrity for misaligned DIO WRITE isn't the way forward.
+
+That's by only point.  Its typical to start with more conservtive
+protection, especially for something manifesting as a new optional
+debug setting like NFSD_IO_DIRECT.
+
+Relaxing the code in a sensible and safe manner is perfectly
+acceptable.  I'm just saying it is _not_ in the misaligned DIO WRITE
+case (I'll stop repeating that now, promise.. heh).
+
+> If we truly care about making NFSD_IO_DIRECT valuable for small memory
+> NFSD systems, then we need to acknowledge that their durable storage is
+> likely to be virtual or in some other way bandwidth-compromised, and not
+> a directly-attached real NVMe device.
+
+Not always the case, but I agree that is one possibility.
+
+> >> Or, we might decide that, no, NFS WRITE has no data visibility mandate;
+> >> applications achieve data visibility explicitly using COMMIT and file
+> >> locking, so none of this matters.
+> > 
+> > We don't have that freedom if we cannot preserve file offset integrity
+> > (as would be the case if we removed IOCB_DSYNC when handling all 3
+> > segments of a misaligned DIO WRITE).  Removing IOCB_DSYNC would
+> > compromise misaligned DIO WRITE as implemented.
+> 
+> As I understand it, IOCB_DSYNC has nothing to do with whether the three
+> segments are directed to the correct file offsets. Serially initiating
+> the writes with the same iocb should be sufficient to ensure
+> correctness.
+
+IOCB_DSYNC just ensures when they complete they are on-disk.  And any
+failure of, or short WRITE, is trapped and immediate cause for early
+return.  Whereby ensuring file offset integrity.
+
+> The concern about integrity is that in the multi-segment case, the
+> segments won't make it to durable storage at the same time, and an
+> intervening NFS READ might see an intermittent file state.
+
+Well that is one concern yes; but I'm also concerned about initiating
+any page cache invalidation off the back of the DIO WRITE in the
+middle (and its potential to fallback to buffered if that invalidation
+fails... any associated buffered IO fallback or ends best have O_DSYNC
+set it ensure everything ondisk).
+
+> If the risk of a torn write is an actual problem for an application, it
+> should serialize its reads, writes, and flushes itself. I think there
+> are already plausible situations in today's non-DIRECT world where
+> incomplete writes are visible, so it might be sensible not to worry too
+> much about it here.
+> 
+> Jeff, please do clarify if I've misunderstood your concern.
+
+Yeah, applications really shouldn't expect perfection in the face of
+contended buffered READ vs DIO WRITE.. I'm most concerned about us
+trying to have misaligned DIO WRITE's IO be handled as if all 3
+segments are a unit (_not_ atomic) that when written will still
+preserve file offset integrity.  Kills 2 birds of "integrity" (data
+and file offset).
+
+> >>> And we already showed that doing so really isn't slow.
+> >>
+> >> Well we don't have a comparison with "IOCB_DIRECT without IOCB_DSYNC".
+> >> That might be faster than what you tested? Plus I think your test was
+> >> on esoteric enterprise NVMe devices, not on the significantly more
+> >> commonly deployed SSD devices.
+> > 
+> > IOCB_DIRECT without IOCB_DSYNC isn't an option because we must ensure
+> > the data is ondisk.
+> 
+> You are stating the exact assumption that we are testing right now. It
+> is not 100% clear from code and comments in these patches why "we must
+> ensure the data is on disk".
+
+So misaligned DIO WRITE in terms of 3 segments works.
+
+Thank you for your attention to this matter! ;)
+
+Mike
 
