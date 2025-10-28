@@ -1,253 +1,200 @@
-Return-Path: <linux-nfs+bounces-15726-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15727-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A095C15B35
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 17:12:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F324C15EB5
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 17:46:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20E324610F0
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 16:04:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 436DF188AFD5
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Oct 2025 16:43:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E27F70809;
-	Tue, 28 Oct 2025 16:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 284C634676A;
+	Tue, 28 Oct 2025 16:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Perb13i5"
+	dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b="WjRLix7o"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11021076.outbound.protection.outlook.com [52.101.52.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F427991E
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 16:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761667470; cv=none; b=HTt1tiYyYBfDXaGBt3C5OT5I6gZVwT6c4utG7Z12flRaYQjqD3bqBkfRioliMMdAEzFgwstV6vrpFdlGlhfr2x3Q4yOVbtVg0OfXXk4ncUakGcL3UDadnucVH7wSl+TpZFrMBCPI7xKKXID0F62bF7mToZKIcFADC5JYHdg77Gs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761667470; c=relaxed/simple;
-	bh=p29DGZwx+A2BkmP3OVa7VQmXuDjZlbx0MzPKoIOKHM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUWpa+FLSfyQKLfqcOYK66gsHWu5KIa98iPyfKHKb8fiQUiQ6wxs8d/XImZ/vwE6FUAwAS5R8u3zW0wmLZYl/jvoM3K6FMtm4k7j0UlLO0z4GglcMnwv2xtceVU76D3UTf+DhGIDgbAFy69t/yCvxZKixOw+U6nFGhIh6d/KcUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Perb13i5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E23EC4CEE7;
-	Tue, 28 Oct 2025 16:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761667469;
-	bh=p29DGZwx+A2BkmP3OVa7VQmXuDjZlbx0MzPKoIOKHM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Perb13i5Ixj4BF1vqinDiU5JU7isyLHb/8gTCDkSViHo5n1kpwMvfECybOsTvgBf4
-	 /TLprvCgD3A5U7hvekE+EFdk2Yme8DopMeSCjlF3plw2pbtKLLdTqB9a3Eizs5t01F
-	 VJHBu4OIXh1xPde1aCBABXsmcrOOjB2FLY2sh37Wmbf+L7S/jJGJWieBXsVbg4MSms
-	 eyR1WhYAUPlKGS3AqLlmaolunOKen8GrfWKYuzhIc6wbiO/wf7b5K1VbDpIn0EYUYi
-	 sI9LV7RC8Zoj946UazJCuXFWhk3T1VfRv512nbGkIJfJAiEwlR4a291UjrdxvnzRRe
-	 OPj04a0JFFfRQ==
-Date: Tue, 28 Oct 2025 12:04:28 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
-Message-ID: <aQDpjNnj47ISRItg@kernel.org>
-References: <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
- <aPvjiwF9vcawuHzi@kernel.org>
- <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
- <aPwSS9NlfqPFqfn2@kernel.org>
- <aP8qPlA7BEN3nlN8@infradead.org>
- <5a2e4884bb6b31b0443bdac6174c77f7273e92b1.camel@kernel.org>
- <aP-YV2i8Y9jsrPF9@kernel.org>
- <a221755a-0868-477d-b978-d2c045011977@kernel.org>
- <aQA4AkzjlDybKzCR@kernel.org>
- <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6CE340DA0
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Oct 2025 16:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761669725; cv=fail; b=pWkT1/1PhqcCOzFp5rBBohJ4zmpG57l8S+u8Yw4Omv8BpbN6MSJvzsAvFmjKrVI83CzRSARChG1BFQhmFe6CYmbDnPCcbpKpfQvWdms+d35cEEgrcyu6ZMziFbiKIvRoiGVSXM8Lx/t72GebEvbycBLnAl/3804FHX/etusgexM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761669725; c=relaxed/simple;
+	bh=2/XgnOOVYT/hmYe6JVQtm/jk0hpOBNIoU2D8pk26sW8=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Z1OOVc0yZZjsurBHuv4R/ZMtNURtmk2RxXaMKURHn3EHQ6tNwH/19hZNCnWswAnAxomV7o1lAzOEA0jmbElFgtjCzvpRZzPGlI6WTYOci1OCkFy0V4tLAsuQU9aikGyt6Uw9/tBq2SjFJRj7YGJSNMizFpVEaOpiArUOb5Zz/Vs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu; spf=none smtp.mailfrom=rutgers.edu; dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b=WjRLix7o; arc=fail smtp.client-ip=52.101.52.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rutgers.edu
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XiLIyfm4PKwbpwpc+4k2znacffCJrVg1T350TfftUpeLAS5eiZJNGoszeGUOrG0R+teofpaNVfjvQaILun6welLnrWe8/o1jx85ELkfygLUQaojfdO104V0YIZSD762/Atvz0OTNgW0gd3h51CFlovjP+eDuP2BYkQQKwebuWzjVCISj+E4A2457xiCBkktfwyesRfvqyos7x9dJs8R7E/SKc0XH/rcWKJhV+KvfweFRUKsboczASImuCUtuKAD0AI4037mtc47vxfuhzdbweGJYybMcfey6EPpF04Zby6OTt7rIDB9y4VxcI3yz1j+rDEuVtoly/5LkZ5KgVRgaCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2/XgnOOVYT/hmYe6JVQtm/jk0hpOBNIoU2D8pk26sW8=;
+ b=IoLEV+FG+MLbtDLxpf6znTO7cBDhI6nVupSLH01Lwbblv9w2bC1uAkZCTuLhM7CT7Uv1sUrnbPnO7fq3GiVuVNjDDxB00/EpTOgN0rSxQGxYisutjZJWxkvGRO4LTeaMgrHoR0p3ssK3epwsa+snamrkQ5Sh0PYsL+l2x4biyINoY5UZc9UmW+1aNPQPT0Fef7dMJgn57P9wL4LvO+QyYZfUyG323MjxVFPAXoxNcW5n12uyNXQt4oahoM8QARRMjyy4IL8FGngP7xNYJUMxsafgWEwrMzqqrlSyY+wEX7+YH5GVJ5ClPTlYZ8Rl80rmtg3OVdQTnpwlijDzJfGlfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
+ dkim=pass header.d=rutgers.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2/XgnOOVYT/hmYe6JVQtm/jk0hpOBNIoU2D8pk26sW8=;
+ b=WjRLix7oQAfJaP2/+215/iF1jZcBY/1DvXSJxT+16kKUGQLpJdXZ6UWK6KpFAh9n18eiJn686kreoaxU5hqpMuKu5SJese4g44ViVCYzW6D2vIso68o4UPoZ77CRGYwwRW1sVXKzzqayZLgCBa9xTn1Pk4yO+uMFcaguLayexnUq+ZMQ/9na0tC2dJHy94gBu4Yr06r6mbJCPACB2pYyjZ/KWCKGlWHWA3HlMpQOHEvqvedYblx4O3ZRbhy0/BW0okMUzU9JuaPD9wfPCMe2GlYfDSz+g7R7VFrKFKxtBGpVcK48JgOy7gPs9yF57LBP0R4AuVpLw7weo1dFZMw0NA==
+Received: from PH0PR14MB5493.namprd14.prod.outlook.com (2603:10b6:510:12a::11)
+ by BY5PR14MB3863.namprd14.prod.outlook.com (2603:10b6:a03:1d2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Tue, 28 Oct
+ 2025 16:41:59 +0000
+Received: from PH0PR14MB5493.namprd14.prod.outlook.com
+ ([fe80::c4e6:a77b:bbcc:efd4]) by PH0PR14MB5493.namprd14.prod.outlook.com
+ ([fe80::c4e6:a77b:bbcc:efd4%4]) with mapi id 15.20.9253.017; Tue, 28 Oct 2025
+ 16:41:59 +0000
+From: Charles Hedrick <hedrick@rutgers.edu>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: NFS client gets confused by two servers with the same serverid
+Thread-Topic: NFS client gets confused by two servers with the same serverid
+Thread-Index: AQHcSCnHfZ7YReWl9025ckgq3T0B7A==
+Date: Tue, 28 Oct 2025 16:41:59 +0000
+Message-ID: <fa676411-e4a9-4c1e-b2a5-3f19828c76cf@cs.rutgers.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=rutgers.edu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR14MB5493:EE_|BY5PR14MB3863:EE_
+x-ms-office365-filtering-correlation-id: 7f701a00-509e-480f-47bb-08de1640ea1e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|10070799003|38070700021;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UFFVTFBkK2tweFBYaFc0WVZDMThGRVJ0NThQb2ZOaG1YbXY5ZmhrU0JRd1Vs?=
+ =?utf-8?B?V2xGQlhsWjlHaGZBOUZmNzZKbTBjSk5vOU9oaFFrS292R3RocVI4NmJZajdB?=
+ =?utf-8?B?OEQvdDZZdnlmaVJzTk9iS1VsZnNaNlpSYm9SY2RjNUpiOHZDNm5rSzUwMTZE?=
+ =?utf-8?B?cGxtNkZUN2lwd09FZGxXczhzd3VYMHFLaE51M0l0YWZZS3gyd21wTlRCa3li?=
+ =?utf-8?B?amVnaG9odmhYdDd2aVUzVXR0VHViTHUzRkx3Q0FUTzNIdTJkc3QvV3M3Tk9S?=
+ =?utf-8?B?UE9BdTg0S0R5R2lweGNhNU43MFhreVE4TWJmcTE4SW5VVXFGcm11UXVITENi?=
+ =?utf-8?B?SWpxWnUyQ0htRm1FR2F6UkhwMDRkZ0lCajZWeVFKUDBnUU0yV1k3NWhiWUdV?=
+ =?utf-8?B?SzlBRTY3cmNPRjJjZ20wcnplSGJsVmlrZ3NQbC9JSUowODJPMGJ1SkJmNjJC?=
+ =?utf-8?B?RkZENm9aL1U5dG5GN3lPT2p1Ly9YOW1MRlhuOXhUejlMV1ZISS9Gd204dVJy?=
+ =?utf-8?B?YytBM1QzRGdBU2F1K2FlUGxUQ25EL2ZDS3Vubjk4SWkwRGIzcDdnekp0dCtk?=
+ =?utf-8?B?Q2FtR2w3ejJ4S21YeE1VYnpydnU2ejRPMEZUY2p4NHg0QWlEVGRwY3pJQU9x?=
+ =?utf-8?B?Rkh3UW5sYkQyMmJqK0hHSlRxKzhiaW1JaUIxaTljWFRVcVdVYWFBRit5dHp1?=
+ =?utf-8?B?aWhRYkZ1ajI1YlBlL0J6UWl1Q1M4a0V6b3lTRzdpbnc5aG54RFpnakZ5V2ht?=
+ =?utf-8?B?dDJjQmFCb3hzVjIxTWM2Y29ncjNLeFIzNThybTkrbUZad3I5dXI1ZmZOdVBr?=
+ =?utf-8?B?STlpMG9CRlZZUGVhUk9jTFZTbXVJUGFHWGExN1l0ekZZczdFYkJ1SUJPMmxU?=
+ =?utf-8?B?M1hTdklVMGd4WWZBOWloQVhXSTZXWVhpMXYwVmVPeTVoeCt0VnN1emtod2U2?=
+ =?utf-8?B?QyswSXRTU3lMQXJlbC9FdFJLVktiZ3lyK0FvQXB4Y2lmSGgxVHpXR3ArMFAx?=
+ =?utf-8?B?M2R1eVk5S1dzSkZmakpDaFNRcmU5N1RFUFhiUmRGKzkzU0k3bFhDUDBsWkhu?=
+ =?utf-8?B?Mjhnd2VmcCtLMHN4b0w4Z2hzVlh0RGxLVGJaVldjSGVrcFRTamxRT29SeEZB?=
+ =?utf-8?B?S0xxMHo5UStQODEzck5RQ2xKQzFZaFNhTFBaeXd4blRMRjZMV25ob1lKaTRo?=
+ =?utf-8?B?Q3dnYUhqVVFFc0lqRVd6bEQvMzNQVXZMbGRKYTg1eFBMVjJpbm5SOVkxUnpa?=
+ =?utf-8?B?ZzRuODhuOTFQc2dOV1o5eEZGcldlTkdPcnFzTXpiRUhDSVpuMVdycXFqR2Vk?=
+ =?utf-8?B?TFBPelFVcVU4cnZSVnNMc3NtT01rQnQ1Y3hQV3d5OVdVZTdodXUyd3NJaEc4?=
+ =?utf-8?B?NEEvVHhZNDV1SSt1cWpHemJhN2NONzcxU0dwOXFWRWQxKzdvVmZlMWcrSzZt?=
+ =?utf-8?B?aGZTZlJ5cTBFSmh2WnZ2ckVEa0kveElqbloxdHM0Vk9xc2pXdDE4U21FNHdJ?=
+ =?utf-8?B?UTN3Y1FqdjVtc2NKQllkYU9NZVB1T21xT0tBQ1NmUDRlTHpJNHkzcGx1Y0di?=
+ =?utf-8?B?SVFzbUtuL3UrY2R3UnRLNngxRk9ocnFVSU1IMml5bi9qZWdZTTRWMkJIaGFk?=
+ =?utf-8?B?WFg4bXlGcmxRQ0ZJcmIzTkZ2NzdzN1RFajZTbXNLS1V5QkRnOHQvV3lJS0U4?=
+ =?utf-8?B?ck80a0pPV2hJSGhtTWFycHMzUkE2R09IRHRNY0ZORjlmYVRvVENGNU9aTEVF?=
+ =?utf-8?B?SFZLTXYxRHpOOEdBQ3RHZUJ1Ty9ETVh1Zis4WXppeXlKYyt2Z3pLcStMNVRD?=
+ =?utf-8?B?UnVVMlBSVUJ3WDFxUmorY0RQcjlSTERKa1NaSWhEUkUvcGcydFgvRjRGSFRH?=
+ =?utf-8?B?RDY5eUtPeXhBejRocTk5SUpXb3NDSTArdGg5ZHZCQTRoRHZjdXdxd1M2S0RC?=
+ =?utf-8?B?Zi9YajkwNVpLK1RrMnVmczRVejVwTDlnZzk5YThLRk5CcVc1dnlRdzBPRlJx?=
+ =?utf-8?B?WkY4R1hiZ3RWYkh2Q1FHckgvMytRYkpBVm1EMjlaUGt4QnR0Qm5BYkF4ZFBh?=
+ =?utf-8?Q?55dIOy?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB5493.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(10070799003)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Ykd0UERGVnhlSmwyKzN4UzhaaEJzMjN5THljRFcyMzh4ZVZSTG9qZllYZmVG?=
+ =?utf-8?B?TTlYYklTdUN1SzhpOHFXbjFJMmJGdStNWlBxNWxhKzhkV1RMdy90SXNHVXZp?=
+ =?utf-8?B?ZmM3L0RpWGdNQ0FobnpDTzFaUm9qdUx3RkhIejVmb05NL2IrbmFOWGtHNXFs?=
+ =?utf-8?B?QVByZ3NXOUt4ZFEwWVlNVkRVNUhqR3VHbE4xK0FLZDl0S0pjMmdvTXJpdnh3?=
+ =?utf-8?B?ZXFicVlyaEVqLzhBRUg3bzdLOE1BUng1aWpBcndveTdZSEJuajdpbTMxN0lq?=
+ =?utf-8?B?VkY0WG5rSzdydUdrc0JpeW93VXhVSHB0dWMxdmpOUHM1MXQwYmUwbkNEVEdo?=
+ =?utf-8?B?a3FCVlRHVjNwK2x2TlVsbW55U3gxRDAyWm16YWVxb2M0azBZY1orRGdvNFVX?=
+ =?utf-8?B?eVNIc0pucVc0dSs2WU9UYVdCK1gzSkkvSmlmQjdnR0FHaEtWaWtvTEEyYVM1?=
+ =?utf-8?B?UnhiZjJQTjdId2VGMmxTRDZCK1ZOTnFOZStjdXlpTkhkS3NUcXJjY1pmNFhI?=
+ =?utf-8?B?Mmd3VUo3NmsyV1J5SW1VVFhkSUQ1RmoyKy82ek9mQjZtWjdPa3hldXQ5RjN5?=
+ =?utf-8?B?b09YR0tGTGFRdlpNYnJsVVBIcmg4Wi9uWkJxNHZRRUNtSU5oSHAyTDZxNERl?=
+ =?utf-8?B?WUtBenEvVUtYT1NQdy9DYXloQkZKK285SEJyNjlEb3NkZXFOemg4VmFwV1pU?=
+ =?utf-8?B?SytyU3BYRnZpVlllQ3BLTWRhQXA2VVZkZjdOWi9acDNpYWo1aDM3SXF2eGps?=
+ =?utf-8?B?NXNZUno4cGlwTm9iTCsxck1Gd0tUeVluZWhnc3dHZUsyamUxdzQ0clJjTGxK?=
+ =?utf-8?B?YWhYaW1Td0J5MDdFSkFlSWROZE9vZmV4WEVaTGVZQW5jRkl5NkxqeUU3Y05F?=
+ =?utf-8?B?Q1pMNG5KbGV4cS82VlZubTNsL1c2S1o0VGJOMUlQR0FJMEROejhCQVNRdW1P?=
+ =?utf-8?B?dC9MbWs1aU5lWFc1RnFqYnVmRUpwWEpya0x3MFRDa3ByZ1JjRzBNczBGNkFN?=
+ =?utf-8?B?aFFZU3IwN25UUjkwbHZvU0xRNCt6VlBZVHRKYkRNRjlneXBFSmc3WVF0eVdR?=
+ =?utf-8?B?OTJYaGd4Znpscnc0ZCt1ZURTanJQTnpDcXI1dkQ0TWZVNHUvWU9GNllabHkr?=
+ =?utf-8?B?eXhlNjRuVFBYaDh1Tkc5VEk1N2ZXNm1kd0NRcWlIdTh5VzcyWTA5czNtYnZR?=
+ =?utf-8?B?MThJNDNiQVpRckZhU25JMDlidlYzZFRNeGJhMjl2Vldpa21HVW43TUxHRXFD?=
+ =?utf-8?B?MHB5UUpxK2ZDZHhMSGIrUXFCNDVlUGxIOUNXWElKRWVKeEs2V2JhL3pZdXVQ?=
+ =?utf-8?B?Y2NrS1Iza09pSVRuYjF6a3dHYnYyMlVGYkxIS1NJbWJNSnhjdXRUOFExTnJB?=
+ =?utf-8?B?NjhyZUJqSC9jbzE5clAvSDdYaUw2YUNOa25vYnB4ZmR6dVZCTkFUbGVscEJW?=
+ =?utf-8?B?QmZDTi9lTzE4ZFIyZE01QmJNRWVCcjhVbTFtamg5Zm5mVTdPTE9EeU92b1Fo?=
+ =?utf-8?B?UFVYQWVia3pGUldoclNOMnlSRXZkNFNkejhZYXBpeTE3RG44WUcvRCswQ1pZ?=
+ =?utf-8?B?NHhQMkF2TXhkRTI0SFRjQUpEekFuN0xsUXpqK2NUcTZCanBRZjBBMTFWSjdl?=
+ =?utf-8?B?R1JnNERKSmd5YlpKTjNHWHVFejB4TFdVVDNrNkgvRjdnNWRyZHcxRzhxb1B5?=
+ =?utf-8?B?TFpDMFRYRlJKa0V3d3JRb2VFSEVHQmxhNFZPdWRDR2IvVndxNGpnd1MwTUZO?=
+ =?utf-8?B?V3U1SERkYXhUSnlpVWV4SFJaS05ZZjFBRklEYnI0QUg5Szk3WXEwcFYyb0wx?=
+ =?utf-8?B?ZFYvS0J4eG01OVo5SjE5dkJzbGpOaEFselNuejQwQWNaaXV1cTJOb1EvMHZz?=
+ =?utf-8?B?UiswSUpobUdvSUVMaWVjMWFkdGV1THZVc1pPbEhjT2hIcHpYOVhiTFdSb0NL?=
+ =?utf-8?B?UmFPaHBveFBZa2E4dnR0MnlPMTJ2VEF0eHE2ZkE5K3FScG1QNU9Id1MrRWNS?=
+ =?utf-8?B?ampJYndnYnI1Y1dVWnBEOUV3RTVYMFhRcUZFMFlTQ0hSVldnazFqNUZwNkto?=
+ =?utf-8?B?VVFSNXUzMm5oeVhuQjlNUC9ja2w3WnpJMWovUzcyZkhzNTlDVHVvOVVZUFBM?=
+ =?utf-8?B?SzZ2MHlGamR6RUVFMThhR25GT2Q0bUkvenV5ZjRXRmxGMmlYZFg2eWFWVzlM?=
+ =?utf-8?Q?MieIXHCZdGX+QWgK1MudTV8=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D918336E094045469C20EB4EC9A7B3DD@namprd14.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
+X-OriginatorOrg: rutgers.edu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB5493.namprd14.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f701a00-509e-480f-47bb-08de1640ea1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2025 16:41:59.4351
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b92d2b23-4d35-4470-93ff-69aca6632ffe
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o2Vz6wYaRGdXktEvkFhs10NYaHOJ/HHBQnrCRmm8tNGKdWAbC71zthx9e54UhrW13ZiNINB4Os/1XSTbgQVpvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR14MB3863
 
-On Tue, Oct 28, 2025 at 11:37:52AM -0400, Chuck Lever wrote:
-> On 10/27/25 11:26 PM, Mike Snitzer wrote:
-> > So can we please revisit your desire to eliminate the use of
-> > IOCB_DSYNC for NFSD_IO_DIRECT WRITEs?
-> 
-> Let's have a little less breathless panic, please. The whole point of
-> review is to revisit our decisions. And nothing I've done so far is
-> written in stone... even after merge, we can still apply patches. If
-> the consensus is we don't like v8 or some particular patch, I will
-> rewrite or replace it, as I've already said.
-> 
-> You might view me as a whimsical and authoritarian maintainer, but
-> actually, I am resisting the urge to merge a patch that the community
-> (that is now responsible for free long-term support of the patch) hasn't
-> yet fully learned about and carefully reviewed. I see my role as
-> enforcing a consensus process, and both learning and consensus takes
-> time.
-
-Cool, thanks for level setting.  Helps!
-
-> >> So perhaps the issue here is that the rationale for using IOCB_DSYNC
-> >> for all NFSD_IO_DIRECT writes is hazy and needs to be clarified.
-> 
-> > How is it still hazy?  We've had repeat discussion about the need for
-> > IOCB_DSYNC (and IOCB_SYNC if we really want to honor intent of
-> > NFS_FILE_SYNC).
-> 
-> TL;DR: it's hazy for folks who were not in the room in Raleigh.
-> 
-> I don't see any comments that explain /why/ the unaligned ends need to
-> be durable along with the middle segment. It appears to be assumed that
-> everyone agrees it's necessary. Patch review has shown that is perhaps
-> not a valid assumption.
-
-How so?  I missed any patch review that called into question the need
-to ensure all segments are on stable storage.  The only was to do that
-for buffered and direct I is to set IOCB_DSYNC.
- 
-> So far it's been discussed verbally, but we really /really/ want to have
-> this documented, because we're all going to forget the rationale in a
-> few months.
-
-But it isn't so complex.  DSYNC is needed if you want data to be
-ondisk when the call returns.
-
-> And please do not forget that this is open source code. The code has to
-> be able to be modified by developers outside our community. Right now it
-> isn't well enough documented for anyone who was outside of the room in
-> Raleigh two weeks ago to understand WTF is going on. The point being
-> that we cannot make final decisions in a closed room -- eventually they
-> need to face the larger community.
-> 
-> If we need to insist that NFSD_IO_DIRECT mode is always going to be
-> fully durable, that design choice needs to be explained in code comments
-> that are very close to the code that implements it.
-> 
-> 
-> > Christoph has repeatedly said DSYNC is needed with O_DIRECT, yet you
-> > keep removing it.
-> 
-> That's not what I read. Over the course of three email threads, he wrote
-> that:
-> 
-> - IOCB_DSYNC is always needed when IOCB_SYNC is set, whether or not
->   we're using IOCB_DIRECT.
-> 
-> - in order to guarantee that a direct write is durable, we /either/ need
->   IOCB_DSYNC + IOCB_DIRECT, /or/ IOCB_DIRECT by itself with a follow-up
->   COMMIT.
-> 
-> - for some commonly deployed media types, IOCB_DSYNC with IOCB_DIRECT
->   might be slower than IOCB_DIRECT followed up with COMMIT.
-
-Hmm, I have other quotes that stand out to me.. but I'll spare you
-(especially since I'm short on time to reply at the moment).
-
-> Therefore, we need to carefully justify why the current patches stick
-> with only IOCB_DSYNC + IOCB_DIRECT, or decide it's truly not necessary
-> to force all NFSD_IO_DIRECT writes to be IOCB_DSYNC.
-
-The misaligned DIO WRITE is what I'm concerned about given the 3
-segments that make up the whole of a given NFS WRITE.
-
-We do have the ability to know a misaligned DIO WRITE is occuring
-(nsegs > 1).
-
-I would _really_ appreciate it if we could ensure setting IOCB_DSYNC
-for that case.
-
-> Christoph and I (if I may put words in his mouth) both seem to be
-> interested in making NFSD_IO_DIRECT useful in contexts other than a very
-> specific enterprise-grade server with esoteric NVMe devices and ultra
-> high bandwidth networking. After all, one of the deep requirements for
-> merging something upstream is that it is likely to be useful to more
-> than a very narrow constituency (see recent discussions about merging
-> TernFS).
-
-You're fine to extend NFSD_IO_DIRECT to be broadly applicable, I
-completely agree with that.  Accomplishing that by removing flags that
-ensure data integrity for misaligned DIO WRITE isn't the way forward.
-
-That's by only point.  Its typical to start with more conservtive
-protection, especially for something manifesting as a new optional
-debug setting like NFSD_IO_DIRECT.
-
-Relaxing the code in a sensible and safe manner is perfectly
-acceptable.  I'm just saying it is _not_ in the misaligned DIO WRITE
-case (I'll stop repeating that now, promise.. heh).
-
-> If we truly care about making NFSD_IO_DIRECT valuable for small memory
-> NFSD systems, then we need to acknowledge that their durable storage is
-> likely to be virtual or in some other way bandwidth-compromised, and not
-> a directly-attached real NVMe device.
-
-Not always the case, but I agree that is one possibility.
-
-> >> Or, we might decide that, no, NFS WRITE has no data visibility mandate;
-> >> applications achieve data visibility explicitly using COMMIT and file
-> >> locking, so none of this matters.
-> > 
-> > We don't have that freedom if we cannot preserve file offset integrity
-> > (as would be the case if we removed IOCB_DSYNC when handling all 3
-> > segments of a misaligned DIO WRITE).  Removing IOCB_DSYNC would
-> > compromise misaligned DIO WRITE as implemented.
-> 
-> As I understand it, IOCB_DSYNC has nothing to do with whether the three
-> segments are directed to the correct file offsets. Serially initiating
-> the writes with the same iocb should be sufficient to ensure
-> correctness.
-
-IOCB_DSYNC just ensures when they complete they are on-disk.  And any
-failure of, or short WRITE, is trapped and immediate cause for early
-return.  Whereby ensuring file offset integrity.
-
-> The concern about integrity is that in the multi-segment case, the
-> segments won't make it to durable storage at the same time, and an
-> intervening NFS READ might see an intermittent file state.
-
-Well that is one concern yes; but I'm also concerned about initiating
-any page cache invalidation off the back of the DIO WRITE in the
-middle (and its potential to fallback to buffered if that invalidation
-fails... any associated buffered IO fallback or ends best have O_DSYNC
-set it ensure everything ondisk).
-
-> If the risk of a torn write is an actual problem for an application, it
-> should serialize its reads, writes, and flushes itself. I think there
-> are already plausible situations in today's non-DIRECT world where
-> incomplete writes are visible, so it might be sensible not to worry too
-> much about it here.
-> 
-> Jeff, please do clarify if I've misunderstood your concern.
-
-Yeah, applications really shouldn't expect perfection in the face of
-contended buffered READ vs DIO WRITE.. I'm most concerned about us
-trying to have misaligned DIO WRITE's IO be handled as if all 3
-segments are a unit (_not_ atomic) that when written will still
-preserve file offset integrity.  Kills 2 birds of "integrity" (data
-and file offset).
-
-> >>> And we already showed that doing so really isn't slow.
-> >>
-> >> Well we don't have a comparison with "IOCB_DIRECT without IOCB_DSYNC".
-> >> That might be faster than what you tested? Plus I think your test was
-> >> on esoteric enterprise NVMe devices, not on the significantly more
-> >> commonly deployed SSD devices.
-> > 
-> > IOCB_DIRECT without IOCB_DSYNC isn't an option because we must ensure
-> > the data is ondisk.
-> 
-> You are stating the exact assumption that we are testing right now. It
-> is not 100% clear from code and comments in these patches why "we must
-> ensure the data is on disk".
-
-So misaligned DIO WRITE in terms of 3 segments works.
-
-Thank you for your attention to this matter! ;)
-
-Mike
+VGhpcyBwcm9ibGVtIHNob3dlZCB1cCBiZWNhdXNlIHRoZSBzdGFydHVwIHNjcmlwdHMgaW4gUmVk
+aGF0IDkuNiANCmFwcGFyZW50bHkgc3RhcnQgbmZzIHRvbyBzb29uLiBUd28gc2VydmVycyBlbmRl
+ZCB1cCB3aXRoIHRoZSBzYW1lIHNlcnZlciANCmlkLiBJJ2xsIGxldCBSZWRoYXQgc3VwcG9ydCBk
+ZWFsIHdpdGggdGhhdC4gQnV0IGl0IGV4cG9zZWQgYSBwcm9ibGVtLg0KDQpSRkMgODg4MSBzYXlz
+DQoNCiJUaGUgcmVhZGVyIGlzIGNhdXRpb25lZCB0aGF0IG11bHRpcGxlIHNlcnZlcnMgbWF5IGRl
+bGliZXJhdGVseSBvciBhY2NpZGVudGFsbHkgY2xhaW0gdG8gaGF2ZSB0aGUgc2FtZSBzb19tYWpv
+cl9pZCBvciBzb19tYWpvcl9pZC9zb19taW5vcl9pZDsgdGhlIHJlYWRlciBzaG91bGQgZXhhbWlu
+ZSBTZWN0aW9ucyAyLjEwLjUgYW5kIDE4LjM1IGluIG9yZGVyIHRvIGF2b2lkIGFjdGluZyBvbiBm
+YWxzZWx5IG1hdGNoaW5nIHNlcnZlciBvd25lciB2YWx1ZXMuIg0KDQoxOC4zNSBzYXlzDQoNCiJU
+aGUgY2xpZW50IElEIHJldHVybmVkIGJ5IEVYQ0hBTkdFX0lEIGlzIG9ubHkgdW5pcXVlIHJlbGF0
+aXZlIHRvIHRoZSBjb21iaW5hdGlvbiBvZiBlaXJfc2VydmVyX293bmVyLnNvX21ham9yX2lkIGFu
+ZCBlaXJfc2VydmVyX3Njb3BlLiBUaHVzLCBpZiB0d28gc2VydmVycyByZXR1cm4gdGhlIHNhbWUg
+Y2xpZW50IElELCB0aGUgb251cyBpcyBvbiB0aGUgY2xpZW50IHRvIGRpc3Rpbmd1aXNoIHRoZSBj
+bGllbnQgSURzIG9uIHRoZSBiYXNpcyBvZiBlaXJfc2VydmVyX293bmVyLnNvX21ham9yX2lkIGFu
+ZCBlaXJfc2VydmVyX3Njb3BlLiBJbiB0aGUgZXZlbnQgdHdvIGRpZmZlcmVudCBzZXJ2ZXJzIGNs
+YWltIG1hdGNoaW5nIHNlcnZlcl9vd25lci5zb19tYWpvcl9pZCBhbmQgZWlyX3NlcnZlcl9zY29w
+ZSwgdGhlIGNsaWVudCBjYW4gdXNlIHRoZSB2ZXJpZmljYXRpb24gdGVjaG5pcXVlcyBkaXNjdXNz
+ZWQgaW4gU2VjdGlvbiAyLjEwLjUuMSB0byBkZXRlcm1pbmUgaWYgdGhlIHNlcnZlcnMgYXJlIGRp
+c3RpbmN0LiBJZiB0aGV5IGFyZSBkaXN0aW5jdCwgdGhlbiB0aGUgY2xpZW50IHdpbGwgbmVlZCB0
+byBub3RlIHRoZSBkZXN0aW5hdGlvbiBuZXR3b3JrIGFkZHJlc3NlcyBvZiB0aGUgY29ubmVjdGlv
+bnMgdXNlZCB3aXRoIGVhY2ggc2VydmVyIGFuZCB1c2UgdGhlIG5ldHdvcmsgYWRkcmVzcyBhcyB0
+aGUgZmluYWwgZGlzY3JpbWluYXRvci4iDQoNClRoZSBMaW51eCBjbGllbnQgaXNuJ3QgZG9pbmcg
+dGhpcy4gVmVyaWZpZWQgb24gdGhlIGxhdGVzdCA2LjE3IGtlcm5lbCBvbiB0aGUgY2xpZW50IHNp
+ZGUuDQoNCg0K
 
