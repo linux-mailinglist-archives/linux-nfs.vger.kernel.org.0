@@ -1,62 +1,61 @@
-Return-Path: <linux-nfs+bounces-15747-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15748-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 900A7C18B62
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 08:33:00 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84A59C18B80
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 08:37:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AE5D44E8ACB
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 07:32:38 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0DACE3507C9
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 07:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D21284662;
-	Wed, 29 Oct 2025 07:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12A42F6198;
+	Wed, 29 Oct 2025 07:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zovNCDkP"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3jFwnQeC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899A82D97AA
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Oct 2025 07:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18C21FF3F
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Oct 2025 07:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761723127; cv=none; b=OC4mW/Ucrw/F1uV1KdpMasiFK34FSCh9ugK43534QXZaitNQV+mjDJESo0ivd9Tj0p4lnMeXrxOv683rvdUxTFi5qUOCZV9pkjCnLpTp4Ord7/isKHjPRt1wRwTwXsZ2MMiaWBGJOaRYmd9yHA4vfh3Bc1vWb5X+mKNxh3aOPv8=
+	t=1761723467; cv=none; b=RQ4DtlFJQH2SWx+rWedbHDN1TK/yHV3Z/+TMhK1Tqst0ePbx6fnO0URBZli5GiD5xvs0sPzKSiPMnzNsOiOQp+agUDrfL1n5tpCNcvJGs3krhn6RrDPYTSUUrtrGcQFUBHrc6qpQkHnqwivzm+lzniWj6biIVtt8T5iej44d90M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761723127; c=relaxed/simple;
-	bh=cOnh0mcW4tBO8MFO9XFluGJnR8nCfRD9eS1zB0t6G6g=;
+	s=arc-20240116; t=1761723467; c=relaxed/simple;
+	bh=iWmd19OQ2fXndltzo1SP4z+VW/uOl9N6D4oHmF5cEnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4B35urAsIiJE0V1J/KXofZDGwc1NeE9EipoSczPPBzlHe3BFFaFDfPxKsSLpg0z6KTRMVur5JFxBRP0z26kWMwgElwdxNKtjIqhVI277Ta8mKZuln3zUV/p/mqJMqOMqBB7hc66RLfGsYo+GJ80UlbB+XNFGu3tVKzgM6r/swc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=zovNCDkP; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=UoSXYTl30NyvXy6PLFqoZGS4Cibm01LG5T7XplCoUlE/BcSJbqNO4uDU3anO0bURVV8/D7/N70ve/RI1ld6DZHUVKSp5c2ZiL2IwG7ySmyTMpKbU+GP4SRaTbuRjbUUeai2ufOKO3MHU2v0P1t7IZTCYgIBIRwDFNT/vVUugQw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3jFwnQeC; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZpKT+I1HLBjxppzlqJ7grLP/xwS4Mqx5x8ViuJ67iwk=; b=zovNCDkPUZbX1tUhIuAmojsxPr
-	KNct8N83zkV6VomZQWS8Ogq0uDCfOd2Wg1g0NcJG7ltQGRPr4skpDCu1pgmlO1xLC5za1YsVheWGm
-	9GLOZqWMjPsZFO/84KuQwdPDblIY0qiOBnG/j3F4UwrgKw5H0WgX1SlGboUKBMraFmx7h5xl019Sd
-	XpbwVqVWoV5zo0jASRT0W7POegdYe3wVHT2JYHvF6ph75nusZ1HwsxR84vB6JUabJru6tZL7KxFHT
-	yAo2dvusNRe2tv2J0sl5DWxSzr3ZXqvDpM8mHv23WgxiikN+g9GOeD4TS6mzdz2TKepecSRFwvegm
-	d1/o1BDA==;
+	bh=n7RynGsbj6gkE86i/EvwisX+asCvnpwpQ9tP82IGWEo=; b=3jFwnQeC6XgzDMDN0MgiozRKKf
+	x/Oz/j0a1WSroVefBIzKXIy3myeqBEGdNgUvLtfEsTGkyleT7H01lFoAOxLD4U+3iwtjl/sszpAq5
+	NBDs1WT5Au1Wi1vVLPnjoLMXaZRq0INwPSCWW/TNvO8QPVfVEj46wwhjmFMqM6CPTueBOrkGSOlvJ
+	GAsAM4AEONbfveV26iSBhWm4Q62btPDXvWuZa3YbNIxMNWtQ4TDnYixlW99F3gHJeoYGfwebpqmP6
+	wKXnGyWpNSgonO7hc/xF4frnRa66vcPIb5StuvjObKSP6mgWoHHOJA0tXP5FpvHG1UVFf2Nos65aP
+	z2ifvrtw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vE0f3-000000006mH-3gwW;
-	Wed, 29 Oct 2025 07:32:01 +0000
-Date: Wed, 29 Oct 2025 00:32:01 -0700
+	id 1vE0kY-000000007ce-3oAk;
+	Wed, 29 Oct 2025 07:37:42 +0000
+Date: Wed, 29 Oct 2025 00:37:42 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+To: Chuck Lever <cel@kernel.org>
+Cc: Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>,
 	Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
 	Christoph Hellwig <hch@lst.de>
 Subject: Re: [PATCH v7 14/14] NFSD: Initialize separate ki_flags
-Message-ID: <aQHC8bR_P6ojXP9C@infradead.org>
-References: <aPvBtWOIe9hJBrKC@kernel.org>
- <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
+Message-ID: <aQHERq4jVwWRNAXo@infradead.org>
+References: <ab3fbc43-864a-49b1-b3fd-ba9034d0c0d2@kernel.org>
  <aPvjiwF9vcawuHzi@kernel.org>
  <5017c8dc-9c14-4a92-a259-6e4cdc67d250@kernel.org>
  <aPwSS9NlfqPFqfn2@kernel.org>
@@ -65,6 +64,7 @@ References: <aPvBtWOIe9hJBrKC@kernel.org>
  <aP-YV2i8Y9jsrPF9@kernel.org>
  <a221755a-0868-477d-b978-d2c045011977@kernel.org>
  <aQA4AkzjlDybKzCR@kernel.org>
+ <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,57 +73,58 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aQA4AkzjlDybKzCR@kernel.org>
+In-Reply-To: <1f7b30d2-f806-400f-81d3-80b6c924c410@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Oct 27, 2025 at 11:26:58PM -0400, Mike Snitzer wrote:
-> But none of that matters if the only safe way to implement mixing
-> buffered and direct IO is by waiting for the DIO to succeed and with
-> it any associated page cache invalidation (and associated possible
-> failure to invalidate the page handled with using buffered IO fallback
-> by underlying filesystem).
+On Tue, Oct 28, 2025 at 11:37:52AM -0400, Chuck Lever wrote:
+> > Christoph has repeatedly said DSYNC is needed with O_DIRECT, yet you
+> > keep removing it.
+> 
+> That's not what I read. Over the course of three email threads, he wrote
+> that:
+> 
+> - IOCB_DSYNC is always needed when IOCB_SYNC is set, whether or not
+>   we're using IOCB_DIRECT.
 
-Why do you think it is the only safe way?  (The above seems to imply
-that to, or maybe it is a question?)
+Yes.
 
 > 
-> Any buffered or direct IO associated with the misaligned DIO WRITE
-> handling, in terms of 3 segments, must use IOCB_DSYNC.
+> - in order to guarantee that a direct write is durable, we /either/ need
+>   IOCB_DSYNC + IOCB_DIRECT, /or/ IOCB_DIRECT by itself with a follow-up
+>   COMMIT.
 
-Can you explain why exactly.  If that's is indeed the case, it is a
-very important point we clearly need to document.
+Yes - although at this level I'd talk about fsync/fdatasync instead of
+COMMIT to be more clear.
 
-> But the entire intent behind NFSD's O_DIRECT support is to ensure IO
-> is on stable storage when it replies to the client.
+> - for some commonly deployed media types, IOCB_DSYNC with IOCB_DIRECT
+>   might be slower than IOCB_DIRECT followed up with COMMIT.
 
-Is it?  This is the first time I read that this is the "entire point".
-I though the main reason was to stop wasting memory on the server
-and reduce memory copies.  If the entire intent is to to commit to
-stable storage only, there is no need for all the direct I/O games,
-and you can just use RWF_DSYNC only.
+This is not primarily about media types.  For any allocation write
+(append, hole filling, conversion of unwritten extent, out of place
+writes due to reflink or a log structured file system), we need to
+commit metadata to make data durable.  Any batching of that is huge
+efficiency win.  For pure overwrites (file data written before, not
+just preallocated, and not on a file system / file writing out of
+place), on devices that do not have a volatile write cache,
+using IOCB_DSYNC will usually be fast.  Maybe also on some devices
+with a write cache if their REQ_FUA implementation is faster than
+a full cache flush (which for cheaper SSDs generally is not the case).
 
-> The client isn't
-> meant to get involved with driving the correctness of NFSD's O_DIRECT
-> support (by requiring the client set NFS_FILE_SYNC for the benefit of
-> a feature it doesn't know enabled in the server).
+> Therefore, we need to carefully justify why the current patches stick
+> with only IOCB_DSYNC + IOCB_DIRECT, or decide it's truly not necessary
+> to force all NFSD_IO_DIRECT writes to be IOCB_DSYNC.
 
-Of course the client should not care about the servers implementation
-detail.  But I don't see how this is relevant here at all.
+Yes.  Especially as the client can explicitly ask for stable writes if
+it thinks they are applicable, and the client is in a much better
+position to decide that as the application tells it!
 
-> IOCB_DIRECT without IOCB_DSYNC isn't an option because we must ensure
-> the data is ondisk.
+> Christoph and I (if I may put words in his mouth) both seem to be
+> interested in making NFSD_IO_DIRECT useful in contexts other than a very
+> specific enterprise-grade server with esoteric NVMe devices and ultra
+> high bandwidth networking.
 
-Why?
-
-> The only related bake-off would be:
-> 1) IOCB_DIRECT | IOCB_DSYNC with UNSTABLE 
->  vs
-> 2) IOCB_DIRECT | IOCB_DSYNC | IOCBD_SYNC with NFS_FILE_SYNC
-> 
-> (but on esoteric enterprise storage: there is no difference)
-
-What are you talking about? With any Linux file system on any storage
-it does make a huge difference except for the corner case of pure
-overwrites of fully allocated ranges.
+SSDs or hard disks with a non-volatile write cache aren't exactly
+esoteric, they are just the more expensive tier.  But for most write
+patterns that doesn't help you anyway.
 
 
