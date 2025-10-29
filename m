@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-15757-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15758-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6527C1B44B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 15:37:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4D9EC1B095
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 14:59:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CC04665D5C
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 13:48:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BB2C1A27B23
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 13:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5BFD34F246;
-	Wed, 29 Oct 2025 13:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3934134FF66;
+	Wed, 29 Oct 2025 13:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyiPQO1n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kS2IntEj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708DA1B4257;
-	Wed, 29 Oct 2025 13:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA0F34FF63;
+	Wed, 29 Oct 2025 13:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761745107; cv=none; b=LVOsLl48O6Qz1nDCNmD2QyMPtvVgSlKCCvU8OX16u+Zyw8OuDhcZpfM4Nl2qQem+WlCczIJGCjDFOh//EpjriEVnXBp01fcb2eWMKl74JZ94uawpLYM5infH6brn3aS6jCNSqQOSgRN3LcvrNwbjGfETLH8mKKGAqX4I9EpWJG0=
+	t=1761745202; cv=none; b=j2qUloR6kdqmn1QQ7Rn/RLettipWNXO6r1lLRWQBad3opxOujr0I2J1HZyTj/7m7fmchHMBpojwk8s3nE80nsDFrdO9das9NRXYk6jpQ5A1pFAHn2sKhphmRyD2eSyNgSkZBNak1NBRIi5+P6AAUDQDkT/jnoA6bQOPyIjVDi9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761745107; c=relaxed/simple;
-	bh=b8C5dqG+zYxYzrAKACxJX6pTVQ0pggJLilm5qh1EJ0Q=;
+	s=arc-20240116; t=1761745202; c=relaxed/simple;
+	bh=Qinq6giTwi2ySMiAwThTVWg/TdY5jx7j7hNrly2hSwk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XgyfOE0m/3+1aCxc4bcMlmsH/9qMzX9NvAZ07W1uMaT5WH7lANHYF6Dkt/DSyTEIows/mXEGTtIH6Y/oJ4nlb2U2UjCPLulGVfEjZZGNGtHeJVMKx7Nre5kCJhwPVd2lHcQwDA34rLBXAJLrxA5ETDbBrJ0bmOOT+OgSdcJN2bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyiPQO1n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9AAFC4CEF7;
-	Wed, 29 Oct 2025 13:38:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BZVq1fXMHU9/YtjjNgih6y66Z1LjtZNaCwLD2dqv1Wd0vJRmS6uQuySHhv5X4+NezjcmeMbHdXz6hqPLll9LoromUY7Wn7n01IFnGhJfqWvTdgdq5lwxzjVTH7ho3OvK7iySjBID2wu6amgXVzsqc2HqUubYX/aZF6WZ1E2bWB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kS2IntEj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE4CC4CEF7;
+	Wed, 29 Oct 2025 13:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761745107;
-	bh=b8C5dqG+zYxYzrAKACxJX6pTVQ0pggJLilm5qh1EJ0Q=;
+	s=k20201202; t=1761745200;
+	bh=Qinq6giTwi2ySMiAwThTVWg/TdY5jx7j7hNrly2hSwk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GyiPQO1n1B09LVdnFKLKGYrIJ22I+SI6fjNmI/pUX92T4sI1XCuj6CDthhbfwGN9x
-	 Ux3SBXEPngzuPWjV4wCH1oheC5lqbZV6AIzuvAhoUM4aXISteab71xfA5hMejVBNKj
-	 0vUHEUAqIUm9deYRSibaoE/6eDo3rThe+CKF9mOpZko7xj1CbsC1lxR15QJu5Ny2uM
-	 m9wgGr4oMmUW7rCM4a8m5OZ8USZBlHkX3NXaL9l4EV5Te44B7sW6B3aqKQRk1h3xJj
-	 Y3vLsQ8Bu8nxGKT0h6TbEDszivUNSuZ/Rw1cfdICr+J5Yw3OAhFvXldLD2llZ0C+NR
-	 eMQwk1kAaFlXg==
-Message-ID: <9238724edeb1510b48a7b75cdc46075a82799dd8.camel@kernel.org>
-Subject: Re: [PATCH v3 06/13] vfs: make vfs_create break delegations on
- parent directory
+	b=kS2IntEjZYOOgJCFT5GpuNXIgsoPZv5v4n+ew2r3YNWrqBlmyCfwwHl7BcL/H1JTA
+	 pGwCA7liMENAIAbyxfuTMjsqIHpm2mAF7LMfgOkRE6V7WmEZvrsyHnzp0CNcKj/Z5a
+	 fY383GhPJ/0as8F9jw6+8chK/OLdSQ8Eg3/4cdW5KlkABa/St/WTnAaz+AoGlmTDuP
+	 3XbMzLwIKYfo1O1X6yAVUCMTIaVzOY5+TGqicvwCyQ42ScEWm2j9GTxHdoNXatGzZe
+	 lZzD6jTDSvifhWr5o98hR1aJ40wLRgyC/IBJPJkL8KwWvJzLfkGju/GZilrslRjWOs
+	 861kBa1wOyUEQ==
+Message-ID: <c3ee834daeaa7a5dbd73bd3c94b12ee5353a9b2e.camel@kernel.org>
+Subject: Re: [PATCH v3 00/13] vfs: recall-only directory delegations for
+ knfsd
 From: Jeff Layton <jlayton@kernel.org>
 To: Christian Brauner <brauner@kernel.org>
 Cc: Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro
@@ -69,11 +69,10 @@ Cc: Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro
 	samba-technical@lists.samba.org, netfs@lists.linux.dev,
  ecryptfs@vger.kernel.org, 	linux-unionfs@vger.kernel.org,
  linux-xfs@vger.kernel.org, netdev@vger.kernel.org
-Date: Wed, 29 Oct 2025 09:38:23 -0400
-In-Reply-To: <20251029-lenken-scham-0cf009d5a7dd@brauner>
+Date: Wed, 29 Oct 2025 09:39:55 -0400
+In-Reply-To: <20251029-scham-munkeln-53f3dd551a91@brauner>
 References: <20251021-dir-deleg-ro-v3-0-a08b1cde9f4c@kernel.org>
-	 <20251021-dir-deleg-ro-v3-6-a08b1cde9f4c@kernel.org>
-	 <20251029-lenken-scham-0cf009d5a7dd@brauner>
+	 <20251029-scham-munkeln-53f3dd551a91@brauner>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -158,50 +157,138 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-10-29 at 14:23 +0100, Christian Brauner wrote:
-> On Tue, Oct 21, 2025 at 11:25:41AM -0400, Jeff Layton wrote:
-> > In order to add directory delegation support, we need to break
-> > delegations on the parent whenever there is going to be a change in the
-> > directory.
+On Wed, 2025-10-29 at 14:38 +0100, Christian Brauner wrote:
+> On Tue, Oct 21, 2025 at 11:25:35AM -0400, Jeff Layton wrote:
+> > Behold, another version of directory delegations. This version contains
+> > support for recall-only delegations. Support for CB_NOTIFY will be
+> > forthcoming (once the client-side patches have caught up).
 > >=20
-> > Add a delegated_inode parameter to vfs_create. Most callers are
-> > converted to pass in NULL, but do_mknodat() is changed to wait for a
-> > delegation break if there is one.
+> > This main differences in this version are bugfixes, but the last patch
+> > adds a more formal API for userland to request a delegation. That
+> > support is optional. We can drop it and the rest of the series should b=
+e
+> > fine.
 > >=20
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> > Reviewed-by: NeilBrown <neil@brown.name>
+> > My main interest in making delegations available to userland is to allo=
+w
+> > testing this support without nfsd. I have an xfstest ready to submit fo=
+r
+> > this if that support looks acceptable. If it is, then I'll also plan to
+> > submit an update for fcntl(2).
+> >=20
+> > Christian, Chuck mentioned he was fine with you merging the nfsd bits
+> > too, if you're willing to take the whole pile.
+>=20
+> This all looks good to me btw. The only thing I'm having issues with is:
+>=20
+>  Base: base-commit d2ced3cadfab04c7e915adf0a73c53fcf1642719 not known, ig=
+noring
+>  Base: attempting to guess base-commit...
+>  Base: tags/v6.18-rc1-23-g2c09630d09c6 (best guess, 21/27 blobs matched)
+>  Base: v6.18-rc1
+> Magic: Preparing a sparse worktree
+> Unable to cleanly apply series, see failure log below
+> ---
+> Applying: filelock: push the S_ISREG check down to ->setlease handlers
+> Applying: vfs: add try_break_deleg calls for parents to vfs_{link,rename,=
+unlink}
+> Applying: vfs: allow mkdir to wait for delegation break on parent
+> Applying: vfs: allow rmdir to wait for delegation break on parent
+> Patch failed at 0004 vfs: allow rmdir to wait for delegation break on par=
+ent
+> error: invalid object 100644 423dd102b51198ea7c447be2b9a0a5020c950dba for=
+ 'fs/nfsd/nfs4recover.c'
+> error: Repository lacks necessary blobs to fall back on 3-way merge.
+> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+> hint: When you have resolved this problem, run "git am --continue".
+> hint: If you prefer to skip this patch, run "git am --skip" instead.
+> hint: To restore the original branch and stop patching, run "git am --abo=
+rt".
+> hint: Disable this message with "git config advice.mergeConflict false"
+>=20
+> That commit isn't in -next nor in any of my branches?
+> Can you resend on top of: vfs-6.19.directory.delegations please?
+>=20
+
+Will do. It's a simple fix. I had based this on top of fs-next, which
+has Chuck's tree in it too.
+
+> >=20
+> > Thanks!
+> > Jeff
+> >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >  fs/ecryptfs/inode.c      |  2 +-
-> >  fs/namei.c               | 26 +++++++++++++++++++-------
-> >  fs/nfsd/nfs3proc.c       |  2 +-
-> >  fs/nfsd/vfs.c            |  3 +--
-> >  fs/open.c                |  2 +-
-> >  fs/overlayfs/overlayfs.h |  2 +-
-> >  fs/smb/server/vfs.c      |  2 +-
-> >  include/linux/fs.h       |  2 +-
-> >  8 files changed, 26 insertions(+), 15 deletions(-)
+> > Changes in v3:
+> > - Fix potential nfsd_file refcount leaks on GET_DIR_DELEGATION error
+> > - Add missing parent dir deleg break in vfs_symlink()
+> > - Add F_SETDELEG/F_GETDELEG support to fcntl()
+> > - Link to v2: https://lore.kernel.org/r/20251017-dir-deleg-ro-v2-0-8c8f=
+6dd23c8b@kernel.org
 > >=20
-> > diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-> > index 88631291b32535f623a3fbe4ea9b6ed48a306ca0..661709b157ce854c3bfdfdb=
-13f7c10435fad9756 100644
-> > --- a/fs/ecryptfs/inode.c
-> > +++ b/fs/ecryptfs/inode.c
-> > @@ -189,7 +189,7 @@ ecryptfs_do_create(struct inode *directory_inode,
-> >  	rc =3D lock_parent(ecryptfs_dentry, &lower_dentry, &lower_dir);
-> >  	if (!rc)
-> >  		rc =3D vfs_create(&nop_mnt_idmap, lower_dir,
-> > -				lower_dentry, mode, true);
-> > +				lower_dentry, mode, true, NULL);
->=20
-> Starts to look like we should epxlore whether a struct create_args (or
-> some other name) similar to struct renamedata I did some years ago would
-> help make the code a bit more legible in the future.
+> > Changes in v2:
+> > - handle lease conflict resolution inside of nfsd
+> > - drop the lm_may_setlease lock_manager operation
+> > - just add extra argument to vfs_create() instead of creating wrapper
+> > - don't allocate fsnotify_mark for open directories
+> > - Link to v1: https://lore.kernel.org/r/20251013-dir-deleg-ro-v1-0-4067=
+80a70e5e@kernel.org
+> >=20
+> > ---
+> > Jeff Layton (13):
+> >       filelock: push the S_ISREG check down to ->setlease handlers
+> >       vfs: add try_break_deleg calls for parents to vfs_{link,rename,un=
+link}
+> >       vfs: allow mkdir to wait for delegation break on parent
+> >       vfs: allow rmdir to wait for delegation break on parent
+> >       vfs: break parent dir delegations in open(..., O_CREAT) codepath
+> >       vfs: make vfs_create break delegations on parent directory
+> >       vfs: make vfs_mknod break delegations on parent directory
+> >       vfs: make vfs_symlink break delegations on parent dir
+> >       filelock: lift the ban on directory leases in generic_setlease
+> >       nfsd: allow filecache to hold S_IFDIR files
+> >       nfsd: allow DELEGRETURN on directories
+> >       nfsd: wire up GET_DIR_DELEGATION handling
+> >       vfs: expose delegation support to userland
+> >=20
+> >  drivers/base/devtmpfs.c    |   6 +-
+> >  fs/cachefiles/namei.c      |   2 +-
+> >  fs/ecryptfs/inode.c        |  10 +--
+> >  fs/fcntl.c                 |   9 +++
+> >  fs/fuse/dir.c              |   1 +
+> >  fs/init.c                  |   6 +-
+> >  fs/locks.c                 |  68 +++++++++++++++-----
+> >  fs/namei.c                 | 150 +++++++++++++++++++++++++++++++++++--=
+--------
+> >  fs/nfs/nfs4file.c          |   2 +
+> >  fs/nfsd/filecache.c        |  57 ++++++++++++-----
+> >  fs/nfsd/filecache.h        |   2 +
+> >  fs/nfsd/nfs3proc.c         |   2 +-
+> >  fs/nfsd/nfs4proc.c         |  22 ++++++-
+> >  fs/nfsd/nfs4recover.c      |   6 +-
+> >  fs/nfsd/nfs4state.c        | 103 ++++++++++++++++++++++++++++++-
+> >  fs/nfsd/state.h            |   5 ++
+> >  fs/nfsd/vfs.c              |  16 ++---
+> >  fs/nfsd/vfs.h              |   2 +-
+> >  fs/open.c                  |   2 +-
+> >  fs/overlayfs/overlayfs.h   |  10 +--
+> >  fs/smb/client/cifsfs.c     |   3 +
+> >  fs/smb/server/vfs.c        |   8 +--
+> >  fs/xfs/scrub/orphanage.c   |   2 +-
+> >  include/linux/filelock.h   |  12 ++++
+> >  include/linux/fs.h         |  13 ++--
+> >  include/uapi/linux/fcntl.h |  10 +++
+> >  net/unix/af_unix.c         |   2 +-
+> >  27 files changed, 425 insertions(+), 106 deletions(-)
+> > ---
+> > base-commit: d2ced3cadfab04c7e915adf0a73c53fcf1642719
+> > change-id: 20251013-dir-deleg-ro-d0fe19823b21
+> >=20
+> > Best regards,
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
 
-I like that idea. Let me see if I can rework this patch along those
-lines. I'll plan to send an updated set.
-
-Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
