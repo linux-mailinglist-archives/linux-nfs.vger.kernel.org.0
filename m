@@ -1,72 +1,126 @@
-Return-Path: <linux-nfs+bounces-15765-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15766-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 946EDC1DAFE
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 00:29:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B181C1DB5E
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 00:44:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1436534C0FF
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 23:29:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF868404A83
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Oct 2025 23:44:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A3A30FF25;
-	Wed, 29 Oct 2025 23:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA82731C567;
+	Wed, 29 Oct 2025 23:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dMi8Ethl"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="GhjEouVc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FVJBB8ko"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BE72D0C90
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Oct 2025 23:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D2B31BC96;
+	Wed, 29 Oct 2025 23:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761780583; cv=none; b=aMogaY6hJHmvf455sU/ha5WAPgCYTkg89ZYCeM0AQN4qo1ocFor7+hHj9QiWAGUXm7EcttOCnwpW1mbfzGe6lKE3YugIqTOGUrTpiJwuU9/K8WWnKmOO7rhUNqN0xzx5UJoeJGTy8YY0BZFP7cxvNoqj23iRTw9bz7C/t/sLV88=
+	t=1761781475; cv=none; b=KOzLg0FCs1dL7UJFkRihYP8m6oV2jO/EUQ6I4KVA4Y8Lpgvqc9/3tcECapSRqK26/LsFrcHUyXBDZXdTrAGjC7K1jklTn8OeiJsfJgXLXahlqh1ZNWcoIJ+hWy8TOcW8ZTdysjrY0lybQ6V4HYPgQYnIVH9AHvbU0bxRaeEcEnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761780583; c=relaxed/simple;
-	bh=i7iaB+CsbA6PAZBmxfjiSiqAxFp5zis19DztMXSvHQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZsOERJ9iqUQiKKlMicQEtI+ofhG/PI8sVTX4MYm/3TzFljPAkQ0H5g8xP4sS01plzRtVETUgJqq9kFPHGvEabcHETl/l9n6B9P87uyPHIkJtMr48GhQXvrmAiS4x9GALJXHCPhyLBqDm9nIiWyvV9RnkK5SwSbIxXja7ZPMPCq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dMi8Ethl; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59TKKHsP015226;
-	Wed, 29 Oct 2025 23:29:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=HXPCt54gkJGrVs1oE3jr2+GjPHxxO
-	akW8Ys3oqqDlWU=; b=dMi8EthlT4FnLsfOOYdrJR/vpS7CBiPLVhpL6T1sAPFrA
-	mPEw+t+RhrFlUihN0cqSYskL4YLIf5z1j+t2L+1tIKoOxCMpP6lh8jwXkejZDqBM
-	PV3ye93p1+XPZW6diloCL7c1ryTX1BUN2fHMuN82joBRWnpijGpNI3gxnXB+Twkh
-	Rc8OR8WtAnO3GS1n2impuTTctb/+ZYN8z0mQvX7Dix1cIuHppQ6Sj9TZ8iTIvNtR
-	2h6oPD2sgE+7bLQqtXhQ9UJCtPIxshb567KJBc9qUS45nf3LpNGDLXysFeta+JD7
-	A1XOu2+47vtBBUxqAlqxztr+zgXpGKi38piDl4F9w==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a33vxk77h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Oct 2025 23:29:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59TL3CdN011192;
-	Wed, 29 Oct 2025 23:29:28 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a33vxvbgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Oct 2025 23:29:28 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 59TNTR2V038791;
-	Wed, 29 Oct 2025 23:29:27 GMT
-Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4a33vxvbgs-1;
-	Wed, 29 Oct 2025 23:29:27 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSD: Fix problem with nfsd4_scsi_fence_client using the wrong reservation type
-Date: Wed, 29 Oct 2025 16:28:26 -0700
-Message-ID: <20251029232917.2212873-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1761781475; c=relaxed/simple;
+	bh=w1kCxW1iy8c7ihHn/8+NGQc8R16rrkANmzgDW8z4SK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sodaNFZAmJTLBnbyHbwkbewZV6SZLFlYP4ZNlrAkG8wdB3YBBNHv7lgLe5YjeUhlbigX9v6dkQ1AgUjxMdXOJW6mbod6+0xslwrnszmdNqYz7+Uvj3KjHeA5Ao22li/apQOm0HioiuLC1d8fFW4NHx/YFuWbya3REI1vdX3KSGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=GhjEouVc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FVJBB8ko; arc=none smtp.client-ip=202.12.124.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailflow.stl.internal (Postfix) with ESMTP id 7E41A1300085;
+	Wed, 29 Oct 2025 19:44:31 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Wed, 29 Oct 2025 19:44:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
+	:subject:to:to; s=fm3; t=1761781471; x=1761788671; bh=3x5QrKJbAU
+	5RZlYDSzt8Tpga/kvzXZxC49Muc/R7QZE=; b=GhjEouVcRX5SJnd2xC8PpJrDd4
+	5gkLEdREwDoq8sl+DBfc/BmSP3BbU8Mna/yRQ0mJT+YerlIyKxQnHG9JNIdfdvWG
+	SEgIFc0Ia63eBD42oxiyZb0QhCz9o3xmVx7jBrsXRZ49p5n5OOlsWj0hSQbFvZeF
+	z5AqkgCSiUEnM/CNER15/xVrFQ90ZlFLCV40LolbJNPKakcnQHHX35eus1VgipNz
+	9mrDLPYpRiymWw5AnPf2k2bnhd7JdUrzezStmq3NbcceOpamzP50amLIRGUUtc2B
+	NQQQo5tUZY5nwh3gZyBpQY/zBR5ZdH71eGZNqzcpALYYSRkPCqHmOjsoY3pA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1761781471; x=1761788671; bh=3x5QrKJbAU5RZlYDSzt8Tpga/kvz
+	XZxC49Muc/R7QZE=; b=FVJBB8kohSZHiLJIbGPXBDlmftX29JM9LBAqg79dTWqk
+	yz1+x4bVzMixLyeUBD6UMAtReNbi/HZFEx46Wq6nfklVi17Cy2HK6aBAMR8ZX5NJ
+	r7/Uf2cBjw48pz8C6vmTnu0Q/8zEPGqjc0doo38FNUGDuD3FfJh72Mu6sRMeVYQp
+	Dv65nNKDg5/a2VSp3rxOwLbG3KmZl6lhfRoiCJkDROdMh7QUeHeeU6DWJRwt7UNn
+	LoItIfP1jQ3FLUiMoV4dzXKGdNizDLgTl4FqI5Ll5IBSQIyTOHMZXZd9jUSvHBaP
+	xpcmVAlz4RvT6v0XDGGxxzdoHjf9otwjESBsILdBQA==
+X-ME-Sender: <xms:3aYCacW0EklVbBr52odzgwMIFadqVZiY_9E7tudg5vTOUlukGR89QQ>
+    <xme:3aYCaTdYh1VR4XWnn3OEfjhVRMW9llb0r_xZdVgEPJBMwC0guDDC5CXJvsrDKgSU3
+    O7sPHab5vsYfOwx2ifIrmOdATuza71bDXE5CgYxiEzhilZdiA>
+X-ME-Received: <xmr:3aYCaROZCepQe3Hu21UI6QwqCD0nSkfSZsBAwHrWmKgYq6O-H3DBzXb5QvKORxj1yfDg4BDFbGwZ_wxSs6RKBleyvZEnJ0v1TFpLhCQQZgBx>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduieehtdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhephffvvefufffkofhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheurhho
+    fihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepge
+    etfeegtddtvdeigfegueevfeelleelgfejueefueektdelieeikeevtdelveelnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesoh
+    ifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgedupdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtg
+    hpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhsvggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheplhhinhhugidqtghifhhssehvghgvrhdrkhgvrhhnvghlrd
+    horhhg
+X-ME-Proxy: <xmx:3aYCadIU3g7PRNyg0QpRBi516BNZpWSYBI7wNvYksLhLN5HboYbfKg>
+    <xmx:3aYCaUi8yMV9Wi329iHBU0ZD5tJV3Inub4fLYJfrLtuvM8baE8Z65g>
+    <xmx:3aYCaTfdaKHZTaBO_Bu6_k6dJq0TTIMOZXGLZvFcx2pwEZqLY08rbw>
+    <xmx:3aYCaU7RSF_CkX0ckxw-AONs1hAD9ap10WIuJvbkwYEEi3Piz-5pGg>
+    <xmx:36YCaR9pl7VkHXdYi10atgXk7DONC_H6TEfCcxqFVlKz7Swud_TD-zUd>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 29 Oct 2025 19:44:19 -0400 (EDT)
+From: NeilBrown <neilb@ownmail.net>
+To: "Alexander Viro" <viro@zeniv.linux.org.uk>,
+	"Christian Brauner" <brauner@kernel.org>,
+	"Amir Goldstein" <amir73il@gmail.com>
+Cc: "Jan Kara" <jack@suse.cz>,	linux-fsdevel@vger.kernel.org,
+	Jeff Layton <jlayton@kernel.org>,	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,	David Howells <dhowells@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,	Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,	Chuck Lever <chuck.lever@oracle.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,	Dai Ngo <Dai.Ngo@oracle.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,	Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,	Mateusz Guzik <mjguzik@gmail.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,	linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev,	ecryptfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,	linux-unionfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,	linux-xfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com,	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [PATCH v4 00/14] Create and use APIs to centralise locking for directory ops.
+Date: Thu, 30 Oct 2025 10:31:00 +1100
+Message-ID: <20251029234353.1321957-1-neilb@ownmail.net>
+X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
+Reply-To: NeilBrown <neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -74,79 +128,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-10-29_08,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 bulkscore=0
- mlxscore=0 adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2510290189
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2MiBTYWx0ZWRfX9/XRGsEJZOPt
- cvC9+FrnHTsmdYUoFbF+TnaoM/NCC1JPFpklYpKxl1tDFHA0exzu/ypp+jhkRNB4VnGdFPD8qjB
- h/qPSb/6lHd8Svqze3tECjY7m4Yp4vVKacI94b3wqas6xBQtwrXLw0LARJAOz5/SyjqrX+ja0Mb
- CbTHq+pFd1Jrc8udT5MnsmERv9OHA8VOnaYk5bniapLzDVOOZt11lXfeBhy8Tk2bfGBJ5WTpf/i
- 2SR6tjsV9/WCaBHcQDwdikgAVcOYfW2iayVTK5Se5MpQsFWE0WLx+nV6svBoHFLoXSuVLx7m1sQ
- 5Oig8WCDe//WtQqvdMv/NTgrUMomJBQNYGREPHFjK0K/eJFMd8JQQlw74H6oEtSA2ZXEDZbyZDS
- nl2ic2QySLFfyspiVFEZtYT/aaICEw==
-X-Authority-Analysis: v=2.4 cv=M/9A6iws c=1 sm=1 tr=0 ts=6902a358 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=xpbcDPnvV1YTWCZAQtMA:9
-X-Proofpoint-ORIG-GUID: brfDGSZhIZ28Z_yM_VfyEKSZv07HZdZ6
-X-Proofpoint-GUID: brfDGSZhIZ28Z_yM_VfyEKSZv07HZdZ6
 
-The reservation type argument for the pr_preempt call should match the
-one used in nfsd4_block_get_device_info_scsi. Additionally, the pr_preempt
-operation only needs to be executed once per SCSI target.
+Hi all,
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/blocklayout.c | 17 +++++++++++++++--
- fs/nfsd/state.h       |  1 +
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ this series is the next part of my effort to change directory-op
+ locking to allow multiple concurrent ops in a directory.  Ultimately we
+ will (in my plan) lock the target dentry(s) rather than the whole
+ parent directory.
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index fde5539cf6a6..4ca6cb420736 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -340,9 +340,22 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
- {
- 	struct nfs4_client *clp = ls->ls_stid.sc_client;
- 	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
-+	int error;
-+
-+	if (ls->ls_fenced)
-+		return;
-+	ls->ls_fenced = true;
-+	error = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
-+			nfsd4_scsi_pr_key(clp),
-+			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
-+	if (error) {
-+		char addr_str[INET6_ADDRSTRLEN];
- 
--	bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
--			nfsd4_scsi_pr_key(clp), 0, true);
-+		ls->ls_fenced = false;
-+		rpc_ntop((struct sockaddr *)&clp->cl_addr, addr_str, sizeof(addr_str));
-+		dprintk("nfsd: failed to fence client %s error %d\n",
-+			addr_str, error);
-+	}
- }
- 
- const struct nfsd4_layout_ops scsi_layout_ops = {
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 1e736f402426..1de4acc7d539 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -735,6 +735,7 @@ struct nfs4_layout_stateid {
- 	stateid_t			ls_recall_sid;
- 	bool				ls_recalled;
- 	struct mutex			ls_mutex;
-+	bool				ls_fenced;
- };
- 
- static inline struct nfs4_layout_stateid *layoutstateid(struct nfs4_stid *s)
--- 
-2.47.3
+ To help with changing the locking protocol, this series centralises
+ locking and lookup in some helpers.  The various helpers are introduced
+ and then used in the same patch - roughly one patch per helper though
+ with various exceptions.
 
+ I haven't introduced these helpers into the various filesystems that
+ Al's tree-in-dcache series is changing.  That series introduces and
+ uses similar helpers tuned to the specific needs of that set of
+ filesystems.  Ultimately all the helpers will use the same backends
+ which can then be adjusted when it is time to change the locking
+ protocol.
+
+ One change that deserves highlighting is in patch 13 where vfs_mkdir()
+ is changed to unlock the parent on failure, as well as the current
+ behaviour of dput()ing the dentry on failure.  Once this change is in
+ place, the final step of both create and an remove sequences only
+ requires the target dentry, not the parent.  So e.g.  end_creating() is
+ only given the dentry (which may be IS_ERR() after vfs_mkdir()).  This
+ helps establish the pattern that it is the dentry that is being locked
+ and unlocked (the lock is currently held on dentry->d_parent->d_inode,
+ but that can change).
+
+ Please review the changes I've made to your respective code areas and
+ let us know of any problems.
+
+Thanks,
+NeilBrown
+
+
+ [PATCH v4 01/14] debugfs: rename end_creating() to
+ [PATCH v4 02/14] VFS: introduce start_dirop() and end_dirop()
+ [PATCH v4 03/14] VFS: tidy up do_unlinkat()
+ [PATCH v4 04/14] VFS/nfsd/cachefiles/ovl: add start_creating() and
+ [PATCH v4 05/14] VFS/nfsd/cachefiles/ovl: introduce start_removing()
+ [PATCH v4 06/14] VFS: introduce start_creating_noperm() and
+ [PATCH v4 07/14] VFS: introduce start_removing_dentry()
+ [PATCH v4 08/14] VFS: add start_creating_killable() and
+ [PATCH v4 09/14] VFS/nfsd/ovl: introduce start_renaming() and
+ [PATCH v4 10/14] VFS/ovl/smb: introduce start_renaming_dentry()
+ [PATCH v4 11/14] Add start_renaming_two_dentries()
+ [PATCH v4 12/14] ecryptfs: use new start_creating/start_removing APIs
+ [PATCH v4 13/14] VFS: change vfs_mkdir() to unlock on failure.
+ [PATCH v4 14/14] VFS: introduce end_creating_keep()
 
