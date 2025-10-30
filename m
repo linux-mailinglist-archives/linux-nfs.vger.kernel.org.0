@@ -1,116 +1,145 @@
-Return-Path: <linux-nfs+bounces-15802-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15803-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58FE3C21370
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 17:35:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9007C213CA
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 17:39:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91AE84058C4
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:32:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3765E4E903F
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:36:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA572DEA8C;
-	Thu, 30 Oct 2025 16:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04662366FC0;
+	Thu, 30 Oct 2025 16:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNXQGoF/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O18vCFOe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA752DCBE3
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 16:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315061E7C19
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 16:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761841925; cv=none; b=LQyPzI1V3EJ/CIYFgDe18n11obg9gm5tdQ0e4p7rtycQOLTqJdcwBFoPmjuf9osG6i2c7A1jbyE0xg7hBZHMakkXup8ZozwJ5rHErHJgtHMDqHM4NfDtqLzxBM05Ar1H9eW9Ipg5JyT9j5EkUDKgfgwUOZOtWyRYW0DShus213k=
+	t=1761842143; cv=none; b=nQkUNAD9iHzCx+/YshVyF5GF96OeI6bS6kIcC98kUvLycH8Bkx3PpRnI2KeKq3woCNldoAoL/Amug49pcAPwAW5beRP5UUraCAdMfcFWIR2qPtzP5kBcJrI6Z5iP9mOiUGLhzg8LocYT2vEX06g5TXN7mqfU/VT5UtwAXwoqOBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761841925; c=relaxed/simple;
-	bh=DV85ka+3pI6N5aTEEHuMW66Xms8Re9O58qLCltxUZHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=axuhQUy9KGYTJi/Co9gn3mRSfwX92FE5vDHptHceQ3twXTugNQ+6iR/Ec4bj+c5sykir1ZapQmbVfSe+uUx9iA8Q/WcbSOO/DNGzCDKUw0BtjT7tqz/FU6M4cSQXJnn9+LrrgRRuRe53h9OBp6aPBKIFfRp3wF0XOUxwndNw43A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNXQGoF/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68712C116B1;
-	Thu, 30 Oct 2025 16:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761841924;
-	bh=DV85ka+3pI6N5aTEEHuMW66Xms8Re9O58qLCltxUZHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CNXQGoF/y6Y3EG4WaJnaPJahO/0BAJjYSlgzwinpMzjSg8cH39W+DlPSxk9Mprv1t
-	 aB32oWDShWjxtj3hWbQM/sq1qs7GojtP7fnKz7juR4st0+TBo9Kx3iXjVHot31raaY
-	 AKDeq8QzDJ6KatlF3NgY0uuuwTg0Pw6SsMmcDC10VxamCpBCJGSoGndwT21VylGav5
-	 a8ypqKXxBSt3jYjoaA3d9M0IGn9+jRcqFfKxw5zKiK7YYgDW5djdNV6UkDd97ieyWg
-	 QCcrUk81IDp/jyQEwkGoMQMu6WRAxKsuOv145rfKYaVbORQ0TOG1PnjzTdYYuRHgPS
-	 Zmz7ZBSSBg+Hw==
-Date: Thu, 30 Oct 2025 12:32:03 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH] NFSD: Add a "file_sync" export option
-Message-ID: <aQOTA76KRGMyVR75@kernel.org>
-References: <20251030125638.128306-1-cel@kernel.org>
- <aQN0Er33HIVmhBWh@infradead.org>
- <aQOFLMJzUZuwj_K7@kernel.org>
- <d046ee5e-4944-43aa-b859-21d85eb55dd6@kernel.org>
+	s=arc-20240116; t=1761842143; c=relaxed/simple;
+	bh=vyvyWKEtJ/oQWZaxv/MrEHu3/g0GjvMtBRyuBaF8JJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TiGn7AjOhgGkm9JIaXsz3Ai5e1CpGGUIk+oFQLp1y1b1BNVHDD+HrQNP1Pww3n8xfsro6iwSq7vuIcylGrN8SUBcay5egBkDMhvPSDrqYHzxqSe8P4oYQXTgBdq+8KQAF2hkQr0ML0LiHXtvNNe2zClQ66n2ZTYn97t5ozQ25Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O18vCFOe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761842141;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=n3kEWy7kmmM+9RGuMPLWOu4CZO5HC2jRVeRIbpOw9L8=;
+	b=O18vCFOeuSCdQAr9rXGu1V/GZN7rz+A3pcly4H2yx2T9LVFTm2c+tHqudqaSnszOTuiU3e
+	u9gXGO3r01lf8d1Kf+ZFqR+Vd9s9msxzRA2+YmMG7hn6WEWo6PKiRSANMe06z8u3g9034i
+	rjNunC2GR7D+KadZnWv7We97O7Bez8I=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-tCIGT9DcOves27mCVh6CgA-1; Thu,
+ 30 Oct 2025 12:35:37 -0400
+X-MC-Unique: tCIGT9DcOves27mCVh6CgA-1
+X-Mimecast-MFC-AGG-ID: tCIGT9DcOves27mCVh6CgA_1761842135
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 206D91954B0D;
+	Thu, 30 Oct 2025 16:35:35 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.64.252])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D955F1800583;
+	Thu, 30 Oct 2025 16:35:33 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	neilb@brown.name,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Subject: [PATCH 1/1] NFSD: don't start nfsd if sv_permsocks is empty
+Date: Thu, 30 Oct 2025 12:35:32 -0400
+Message-ID: <20251030163532.54626-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d046ee5e-4944-43aa-b859-21d85eb55dd6@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Oct 30, 2025 at 11:47:15AM -0400, Chuck Lever wrote:
-> On 10/30/25 11:33 AM, Mike Snitzer wrote:
-> >>> This patch is a year old, so won't apply to current kernels. But
-> >>> the idea is similar to Mike's suggestion that NFSD_IO_DIRECT
-> >>> should promote all NFS WRITEs to durable writes, but is much
-> >>> simpler in execution. Any interest in revisiting this approach?
-> >> This is a much better approach than overloading direct I/O with
-> >> these semantics.  I'd still love to see actual use cases for which
-> >> we see benefits before merging it.
-> 
-> And the reason it hasn't been merged yet is because I couldn't find any
-> such workloads. Even tmpfs was a little slower without the COMMITs,
-> to my surprise.
-> 
-> 
-> > Yes.  Also thinking that a "data_sync" export option would be
-> > appropriate too (that way to have the ability to try all stable_how
-> > variants).  Chuck?  If something like that sounds OK in theory I can
-> > rebase your patch (still attributed to you) and then create a separate
-> > to add "data_sync" and then work to get the permutations tested.
-> 
-> If you want to experiment, feel free.
-> 
-> As always, I'm not enthusiastic about exposing a bunch of tuning knobs
-> like this without a clear understanding of how it benefits users and
-> what documentation might look like explaining how to use it. So for the
-> moment, this patch is, as labeled in the Subject: field, an RFC, and not
-> a firm/official proposal for an API change. (Note that IIRC, adding the
-> new export option was an idea we had /before/ we had
-> /sys/kernel/debug/nfsd available to us).
-> 
-> Or to put it differently, just because I proposed this patch does not
-> mean it's automatically "Chuck approved". I'm interested in experimental
-> results first. I'm thinking you have access to big iron on which to try
-> it.
-> 
-> But, in the bigger picture, I think comparison between this approach
-> and NFSD_IO_DIRECT might be illustrative.
+Previously, while trying to create a server instance, if no
+listening sockets were present then default parameter udp
+and tcp listeners were created. It's unclear what purpose
+was of starting these listeners were and how this could have
+been triggered by the userland setup. This patch proposed
+to ensure the reverse that we never end in a situation where
+no listener sockets are created and we are trying to create
+nfsd threads.
 
-Sure, I'm very interested in the data myself.  A patch to easily
-enable control is all I'm after. So given what you said above, I'll
-actually just run with introducing 2 new variants of NFSD_IO_DIRECT
-for now, so like I mentioned in my previous reply to hch:
+The problem it solves is: when nfs.conf only has tcp=n (and
+nothing else for the choice of transports), nfsdctl would
+still start the server and create udp and tcp listeners.
 
-NFSD_IO_DIRECT_DATA_SYNC
-NFSD_IO_DIRECT_FILE_SYNC
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ fs/nfsd/nfssvc.c | 28 +++++-----------------------
+ 1 file changed, 5 insertions(+), 23 deletions(-)
 
-Because it sounds like it is only in the context of NFSD_IO_DIRECT
-where there is any doubt about whether using NFS_FILE_SYNC helpful.
-So it bounds the supportability exposure, and makes it clear these
-knobs are for experimental purposes relative to NFS_IO mode controls.
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 7057ddd7a0a8..40592b61b04b 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -249,27 +249,6 @@ int nfsd_nrthreads(struct net *net)
+ 	return rv;
+ }
+ 
+-static int nfsd_init_socks(struct net *net, const struct cred *cred)
+-{
+-	int error;
+-	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+-
+-	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
+-		return 0;
+-
+-	error = svc_xprt_create(nn->nfsd_serv, "udp", net, PF_INET, NFS_PORT,
+-				SVC_SOCK_DEFAULTS, cred);
+-	if (error < 0)
+-		return error;
+-
+-	error = svc_xprt_create(nn->nfsd_serv, "tcp", net, PF_INET, NFS_PORT,
+-				SVC_SOCK_DEFAULTS, cred);
+-	if (error < 0)
+-		return error;
+-
+-	return 0;
+-}
+-
+ static int nfsd_users = 0;
+ 
+ static int nfsd_startup_generic(void)
+@@ -377,9 +356,12 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
+ 	ret = nfsd_startup_generic();
+ 	if (ret)
+ 		return ret;
+-	ret = nfsd_init_socks(net, cred);
+-	if (ret)
++
++	if (list_empty(&nn->nfsd_serv->sv_permsocks)) {
++		pr_warn("NFSD: not starting because no listening sockets found\n");
++		ret = -EIO;
+ 		goto out_socks;
++	}
+ 
+ 	if (nfsd_needs_lockd(nn) && !nn->lockd_up) {
+ 		ret = lockd_up(net, cred);
+-- 
+2.47.3
+
 
