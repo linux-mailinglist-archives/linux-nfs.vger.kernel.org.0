@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-15801-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15802-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3990C21208
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 17:18:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58FE3C21370
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 17:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4AA514ED842
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:16:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91AE84058C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94BB3366FCB;
-	Thu, 30 Oct 2025 16:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA572DEA8C;
+	Thu, 30 Oct 2025 16:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1TL2tOj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNXQGoF/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCFB366FC7
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 16:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA752DCBE3
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 16:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761840988; cv=none; b=qF5+B04szutjxGB/Wog3WjAm8cNEltYJDkvWlwiZTnSB/KJmo8Z9XqPe5kjRUuOzuI+jfJv0nAmduzILNZE4T/xSayk7CSrMBlCbcE4/onm1/Xj6hrFyxxhKHHCB4Vq8sjvbq2qOW21BGczF/NRHaC4QYoqApHkBQaCbskUiA1Q=
+	t=1761841925; cv=none; b=LQyPzI1V3EJ/CIYFgDe18n11obg9gm5tdQ0e4p7rtycQOLTqJdcwBFoPmjuf9osG6i2c7A1jbyE0xg7hBZHMakkXup8ZozwJ5rHErHJgtHMDqHM4NfDtqLzxBM05Ar1H9eW9Ipg5JyT9j5EkUDKgfgwUOZOtWyRYW0DShus213k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761840988; c=relaxed/simple;
-	bh=Ae/G1Qkh+5WZGdivEopx6GEFs0bp0GzCFzdt7E7LJlY=;
+	s=arc-20240116; t=1761841925; c=relaxed/simple;
+	bh=DV85ka+3pI6N5aTEEHuMW66Xms8Re9O58qLCltxUZHs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eo7ZXjc8wtFCnoMEFquL4nLhtWJkAN5lh0eYf6sKFmd/bwCiKNkABltqnFOAJ2uFS4UCTIoYAdVuyeoQUJ4K1n0yf0hOXRECxGcxuti41/7Ai56UYypcIc68iIu1xHH/hn0v06qRUM61WcFT/1ONHJLn8VOV0wqGh9pexy5j8MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1TL2tOj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1191C4CEF1;
-	Thu, 30 Oct 2025 16:16:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=axuhQUy9KGYTJi/Co9gn3mRSfwX92FE5vDHptHceQ3twXTugNQ+6iR/Ec4bj+c5sykir1ZapQmbVfSe+uUx9iA8Q/WcbSOO/DNGzCDKUw0BtjT7tqz/FU6M4cSQXJnn9+LrrgRRuRe53h9OBp6aPBKIFfRp3wF0XOUxwndNw43A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNXQGoF/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68712C116B1;
+	Thu, 30 Oct 2025 16:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761840988;
-	bh=Ae/G1Qkh+5WZGdivEopx6GEFs0bp0GzCFzdt7E7LJlY=;
+	s=k20201202; t=1761841924;
+	bh=DV85ka+3pI6N5aTEEHuMW66Xms8Re9O58qLCltxUZHs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b1TL2tOjAS1/RT2YepzFODj8Fg1itPhrgyBzkKlZ6dFAtkTaGlOwfic8vMYF7s/q3
-	 P5uK5ffLIG2RIu7pLgnDH24rnu8Pl69gJIMgAsUKsk3mlld/9rQPrQJMtNR0x641lq
-	 hR3wEzX6KOHP3Jw8mJGGCl35M4930aJ3C4t8DO1SbLApz6Dt3XfhXU7is3JkrSj5Ii
-	 oWeh6A55bAzpPwrhb2tMUGK5tERjs4/Ka/yr7WwyP2fhwkmaZGT1DtkedqDuI3Ih4L
-	 mh+4sRdEaX3CLZWOZu+krG+sPoJByuXG4eqfLjFc/BLN4s9d6HKi7m60JVWgo8/aMW
-	 lWePI7MtmwguA==
-Date: Thu, 30 Oct 2025 12:16:26 -0400
+	b=CNXQGoF/y6Y3EG4WaJnaPJahO/0BAJjYSlgzwinpMzjSg8cH39W+DlPSxk9Mprv1t
+	 aB32oWDShWjxtj3hWbQM/sq1qs7GojtP7fnKz7juR4st0+TBo9Kx3iXjVHot31raaY
+	 AKDeq8QzDJ6KatlF3NgY0uuuwTg0Pw6SsMmcDC10VxamCpBCJGSoGndwT21VylGav5
+	 a8ypqKXxBSt3jYjoaA3d9M0IGn9+jRcqFfKxw5zKiK7YYgDW5djdNV6UkDd97ieyWg
+	 QCcrUk81IDp/jyQEwkGoMQMu6WRAxKsuOv145rfKYaVbORQ0TOG1PnjzTdYYuRHgPS
+	 Zmz7ZBSSBg+Hw==
+Date: Thu, 30 Oct 2025 12:32:03 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
 	Chuck Lever <chuck.lever@oracle.com>
 Subject: Re: [RFC PATCH] NFSD: Add a "file_sync" export option
-Message-ID: <aQOPWnL7pvQUSFCD@kernel.org>
+Message-ID: <aQOTA76KRGMyVR75@kernel.org>
 References: <20251030125638.128306-1-cel@kernel.org>
  <aQN0Er33HIVmhBWh@infradead.org>
  <aQOFLMJzUZuwj_K7@kernel.org>
- <aQOIJtjQvLjBNk3G@infradead.org>
+ <d046ee5e-4944-43aa-b859-21d85eb55dd6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,56 +60,57 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aQOIJtjQvLjBNk3G@infradead.org>
+In-Reply-To: <d046ee5e-4944-43aa-b859-21d85eb55dd6@kernel.org>
 
-On Thu, Oct 30, 2025 at 08:45:42AM -0700, Christoph Hellwig wrote:
-> On Thu, Oct 30, 2025 at 11:33:00AM -0400, Mike Snitzer wrote:
-> > Sure, but not all modern networks have the same level of performance
-> > either.  When the NVMe is faster than the network we don't see nearly
-> > as much MM pressure.  But that implies the network is the bottleneck, so
-> > reducing network operations (like COMMIT) should reduce network
-> > traffic (even if marginally).
+On Thu, Oct 30, 2025 at 11:47:15AM -0400, Chuck Lever wrote:
+> On 10/30/25 11:33 AM, Mike Snitzer wrote:
+> >>> This patch is a year old, so won't apply to current kernels. But
+> >>> the idea is similar to Mike's suggestion that NFSD_IO_DIRECT
+> >>> should promote all NFS WRITEs to durable writes, but is much
+> >>> simpler in execution. Any interest in revisiting this approach?
+> >> This is a much better approach than overloading direct I/O with
+> >> these semantics.  I'd still love to see actual use cases for which
+> >> we see benefits before merging it.
 > 
-> There is a lot of code between the network and the storage, and they
-> tend to be slower than either for many common workloads :)
-
-I've been pretty impressed with how NFS, and surrounding Linux IO
-stacks (network and storage), is able to keep up with really fast
-hardware.
-
-> > Once the network is as fast or faster than the NVMe devices, that's
-> > when we've seen VM writeback/reclaim with buffered IO become
-> > detrimental (when the working set exceeds system memory by a factor of
-> > 3:1).  And that's where NFSD_IO_DIRECT mode has proven best.
+> And the reason it hasn't been merged yet is because I couldn't find any
+> such workloads. Even tmpfs was a little slower without the COMMITs,
+> to my surprise.
 > 
-> I bet that getting VM writeback out of the stack helps at lot.  But as
-> mentioned I doubt forcing stable writes helps, and in fact for most
-> workloads will actually make it slower.  But that's just my experience
-> from similar but not the same things, so I'd love to see numbers if
-> you suspect something else.  Either way we're much better off changing
-> one variable at a time instead of forcing two totally unrelated changes
-> to go together.
+> 
+> > Yes.  Also thinking that a "data_sync" export option would be
+> > appropriate too (that way to have the ability to try all stable_how
+> > variants).  Chuck?  If something like that sounds OK in theory I can
+> > rebase your patch (still attributed to you) and then create a separate
+> > to add "data_sync" and then work to get the permutations tested.
+> 
+> If you want to experiment, feel free.
+> 
+> As always, I'm not enthusiastic about exposing a bunch of tuning knobs
+> like this without a clear understanding of how it benefits users and
+> what documentation might look like explaining how to use it. So for the
+> moment, this patch is, as labeled in the Subject: field, an RFC, and not
+> a firm/official proposal for an API change. (Note that IIRC, adding the
+> new export option was an idea we had /before/ we had
+> /sys/kernel/debug/nfsd available to us).
+> 
+> Or to put it differently, just because I proposed this patch does not
+> mean it's automatically "Chuck approved". I'm interested in experimental
+> results first. I'm thinking you have access to big iron on which to try
+> it.
+> 
+> But, in the bigger picture, I think comparison between this approach
+> and NFSD_IO_DIRECT might be illustrative.
 
-Yeah.  I'd have split them out to new variants of NFSD_IO_DIRECT,
-e.g.:
+Sure, I'm very interested in the data myself.  A patch to easily
+enable control is all I'm after. So given what you said above, I'll
+actually just run with introducing 2 new variants of NFSD_IO_DIRECT
+for now, so like I mentioned in my previous reply to hch:
+
 NFSD_IO_DIRECT_DATA_SYNC
 NFSD_IO_DIRECT_FILE_SYNC
 
-But using a proper export option to control stable_how entirely
-independent of the chosen NFSD_IO mode is more useful.
-
-> > Christoph, if you have canned benchmarks that do a solid job of
-> > showcasing overwrites (which you expect to really benefit from _not_
-> > having DSYNC or DSYNC|SYNC set) please let me know.
-> 
-> None with nfs in the loop.  For an older benchmark with purely
-> local I/O, 3460cac1ca76215a60acb086ebe97b3e50731628 has an example,
-> which should be pretty representative for modern workloads, even if
-> the overall numbers for each case would improve a lot.
-
-Even if not for NFS, we can run NFS client using O_DIRECT which
-should drive the IO so NFSD receives it much like the application
-issued it (albeit wrapped in XDR and NFS protocol).  And if using
-NFSD_IO_DIRECT we should then be able to assess how/if changing
-stable_how impacts performance.
+Because it sounds like it is only in the context of NFSD_IO_DIRECT
+where there is any doubt about whether using NFS_FILE_SYNC helpful.
+So it bounds the supportability exposure, and makes it clear these
+knobs are for experimental purposes relative to NFS_IO mode controls.
 
