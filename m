@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-15787-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15788-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB073C1E88F
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 07:22:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75254C1E8B6
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 07:24:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5C414347AA0
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 06:22:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B9003A8253
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 06:24:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F149E2F0C66;
-	Thu, 30 Oct 2025 06:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0302ED159;
+	Thu, 30 Oct 2025 06:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="WnkiTq6p"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="tHaRpogp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F1720C001;
-	Thu, 30 Oct 2025 06:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640142BE7CD;
+	Thu, 30 Oct 2025 06:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761805340; cv=none; b=FBAzSIJ7cbUmN/G8DcPbhYiixvR8E1eQgCmx84eWbzi+bKIwiMjmBrtjhnb0/M8jt5G5Sgy7rj4jQy4KbhR7+w2P+vROXB+8tWnNfHnsmcPcAWSjWa5dJaLNu1rSQo3Gsf3N/HubaPt2mSqzGDO1RVh9xNVoirj1cdJSMVgqDVg=
+	t=1761805465; cv=none; b=oLCn/Kr2YrvJ4FnHZ6YZLIbZlebu4HzhnYcp3Qv06dob64MJP4raW3OWQ38qONkAjz+58koFZo+EslfIttd58T8YYsvfgJzvxUmJGEynYZ4LZgf5Ybl4PQACPWSxiiMMWiARiLkl6ZGBt1L+a7MnFSjpplKjALtBytF2xzARNrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761805340; c=relaxed/simple;
-	bh=H7w9rChCeFQhpDhI5O6avDItW2h4+IeSwyuf+KYa2S0=;
+	s=arc-20240116; t=1761805465; c=relaxed/simple;
+	bh=6ZbflJkG3X9g3r880e4radul4Mz1Y0GMGOn08GlO9cQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qGBfzcsCurJdgKuevnhw+wq6XDohBiFkX/COj9nyroxbQwxtgUuMHGSjm/ep0JTPfSIL17VHD+v3RqAvQDTYnLGZhQ6fUrX0LmRPfIqhrGC6nVd20grm2232Ka70XgA1w12WEUjfWhoFAFgN83j9xsA3KKvq3LiaenRKTWnm6Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=WnkiTq6p; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=kA/7OWQULcVHKw7sLzF9IkJACvjmTr1dIjQM5ICebwTKr65jVnpYqrc5q6+XDuk/hFa3G1yjos/PeZzhMLW8O7WbOt7vow7zggS92M+PYeT4te0pgj4BKvsOFEdVwI5NW7T21EMGF6llNSwtFhjqRk6kzFOwXL6AluTqGCm87J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=tHaRpogp; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=azjiGcIYmmF6n03ei+Xo/vEfAhUKiS2vQVDPHjb0ew4=; b=WnkiTq6pz7Uq+OV+DsiIUevN2v
-	i4+1c+tR3Dcm17P/LaJSarjfL1Ugsvl96B4DrMx4AF+Lf2EbLJPA9Z219Zt8heh32e+kriF1tpzK/
-	ic5t92bpfL26TrynBB3H1Dkiv2CaNMiGj2l5UcXxTdzm8P4TAiTSWeMuVHy6aYs+KxZ0qOiCGuGZu
-	x+LN+vLHwa5HFUMGcsuHAUi8LRqGYkE75CwT+/qIMNR+qnqmzzQu3rDFK4NQq8wt6Ajt1teqJvyUD
-	BMeKZDuHoqipMl6gzKBGBP2AbBjRKNHiqqwA2AWP7rI6OkYdM838pXi+YMpM/1Fotug43yVl9A53g
-	TxKypknw==;
+	bh=2o4fP7/qPdDmNhS4uzPUYDyvsGd6WoXP2VggTW0el8w=; b=tHaRpogpBdp7+I1+zeafpFRSxG
+	kg3sb/+JxLgdtSbCLYvpOr2JnAkLeBr0wzwX/LPbhcAva+z1b24EhyCGgJg834obEFlob1H91ngo1
+	GZOHv69SQnmSY8WG4Ji/OypavgrYdbO30JJEgAeyrnDDP+Lh2fbHLQtJCb5xTsMGOgUxDph260Dxl
+	tyrD/uzNKb+ABW1iliV4CMVN3YyibSdIUzD+sKLaBOC9dK2NS21TwNqH1fpazGp4VS4/BHsODqU2z
+	JaSkFiqJM5mTApgZB5+Ys023clXRczl9cOMvroMoFVrW2AYjpCivwOb0L8zYJdDXYHB/+UfqAK5JM
+	gjX/mk+Q==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vEM34-00000008yCG-1FE4;
-	Thu, 30 Oct 2025 06:22:14 +0000
-Date: Thu, 30 Oct 2025 06:22:14 +0000
+	id 1vEM56-0000000909w-0QYX;
+	Thu, 30 Oct 2025 06:24:20 +0000
+Date: Thu, 30 Oct 2025 06:24:20 +0000
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: NeilBrown <neil@brown.name>
 Cc: Christian Brauner <brauner@kernel.org>,
@@ -76,10 +76,11 @@ Cc: Christian Brauner <brauner@kernel.org>,
 	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
 	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
 	selinux@vger.kernel.org
-Subject: Re: [PATCH v4 11/14] Add start_renaming_two_dentries()
-Message-ID: <20251030062214.GW2441659@ZenIV>
+Subject: Re: [PATCH v4 12/14] ecryptfs: use new start_creating/start_removing
+ APIs
+Message-ID: <20251030062420.GX2441659@ZenIV>
 References: <20251029234353.1321957-1-neilb@ownmail.net>
- <20251029234353.1321957-12-neilb@ownmail.net>
+ <20251029234353.1321957-13-neilb@ownmail.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,60 +89,15 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251029234353.1321957-12-neilb@ownmail.net>
+In-Reply-To: <20251029234353.1321957-13-neilb@ownmail.net>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Oct 30, 2025 at 10:31:11AM +1100, NeilBrown wrote:
+On Thu, Oct 30, 2025 at 10:31:12AM +1100, NeilBrown wrote:
 
-> +++ b/fs/debugfs/inode.c
+> +static struct dentry *ecryptfs_start_creating_dentry(struct dentry *dentry)
+>  {
+> -	struct dentry *lower_dir_dentry;
+> +	struct dentry *parent = dget_parent(dentry->d_parent);
 
-Why does debugfs_change_name() need any of that horror?  Seriously, WTF?
-This is strictly a name change on a filesystem that never, ever moves
-anything from one directory to another.
-
-IMO struct renamedata is a fucking eyesore, but that aside, this:
-
-> @@ -539,22 +540,30 @@ static int sel_make_policy_nodes(struct selinux_fs_info *fsi,
->  	if (ret)
->  		goto out;
->  
-> -	lock_rename(tmp_parent, fsi->sb->s_root);
-> +	rd.old_parent = tmp_parent;
-> +	rd.new_parent = fsi->sb->s_root;
->  
->  	/* booleans */
-> -	d_exchange(tmp_bool_dir, fsi->bool_dir);
-> +	ret = start_renaming_two_dentries(&rd, tmp_bool_dir, fsi->bool_dir);
-> +	if (!ret) {
-> +		d_exchange(tmp_bool_dir, fsi->bool_dir);
->  
-> -	swap(fsi->bool_num, bool_num);
-> -	swap(fsi->bool_pending_names, bool_names);
-> -	swap(fsi->bool_pending_values, bool_values);
-> +		swap(fsi->bool_num, bool_num);
-> +		swap(fsi->bool_pending_names, bool_names);
-> +		swap(fsi->bool_pending_values, bool_values);
->  
-> -	fsi->bool_dir = tmp_bool_dir;
-> +		fsi->bool_dir = tmp_bool_dir;
-> +		end_renaming(&rd);
-> +	}
->  
->  	/* classes */
-> -	d_exchange(tmp_class_dir, fsi->class_dir);
-> -	fsi->class_dir = tmp_class_dir;
-> +	ret = start_renaming_two_dentries(&rd, tmp_class_dir, fsi->class_dir);
-> +	if (ret == 0) {
-> +		d_exchange(tmp_class_dir, fsi->class_dir);
-> +		fsi->class_dir = tmp_class_dir;
->  
-> -	unlock_rename(tmp_parent, fsi->sb->s_root);
-> +		end_renaming(&rd);
-> +	}
->  
->  out:
->  	sel_remove_old_bool_data(bool_num, bool_names, bool_values);
-
-is very interesting - suddenly you get two non-overlapping scopes instead of one.
-Why is that OK?
+"Grab the reference to grandparent"?
 
