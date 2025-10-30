@@ -1,100 +1,106 @@
-Return-Path: <linux-nfs+bounces-15799-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15800-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05A64C21039
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D44EC21078
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 16:49:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 99D424E8920
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 15:45:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 926F64EDA9B
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 15:47:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522BA1F4CBE;
-	Thu, 30 Oct 2025 15:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BFE2773F0;
+	Thu, 30 Oct 2025 15:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/6NC/5L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZexz1TV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE7E37A3BC
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 15:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B521823B60A
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 15:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761839147; cv=none; b=o7iYAKKjTllNt9MW+sWM5F+nR7iH+BX6OUXN8kNqV0o1EBFVTA+HCU+J+5NRu+889322acATLZxU546DpGAJy7d0Pt+hLFFxAsn63xko9ScasJlvFQ97Ubm2Dh2WAnwj0D0xqPqks67eSwAwjajt/AvTcQAjmGyFwZ5LfYrZzVk=
+	t=1761839237; cv=none; b=Ou2Qi+7YNbLW6h52V+DT3g6asUTbMvAA1i1KLlAEPkbegpkz9OkwZB2auvwq5LsweFYAZYXcyejyoa6AcUCBknTApOvXOWeOUoP5MXcyPVmCdLDU2hpTMw8iIj+IyS1k6hadhzb+Q/QwA5v0CCqXRbLowwXfGQZQ3I5O5UC7JzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761839147; c=relaxed/simple;
-	bh=CvSsSFLJ8lznithJTimZf8GhH+UdCns8VpuiWpG+BSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=akc1MhGKhoHQryR6EzWGUdwe4Q5jZQjoEaLnCRlUIGDwT9au8I3n5BMK0sVxPMxC/UPi8ZCSOg7ETDNBj2bMkZBtsq9hCfyG8cMqq8WKjmH61OcgoFHotaBgBKMWGFIf+fjgnNuuWu78ybtIguWU7WO9P9+auBRppNs8wRAxui8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B/6NC/5L; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HnwdtFIYOPHkbjpVufRxE1grCs4XYVDiA3GWNKq2K48=; b=B/6NC/5LkNqsDJ/nQyFnPNUOPh
-	upm7i0rfWsfjFoqLhvqADdPmAC5L675AU++eHAm0c4SGbzXX3x8TrykTg0y1j4sWxwPtaL45cv/JY
-	0Kd1jAlhD+WYYSlTnIslwUZGy9YLTJ+3ZOP/+csbz3ClbMiVwRFKMzlTuSFkss2BrOfIrcs3c+E5b
-	5mTbje32wl9wTG26OFanElpvdJyWhojwDm4ybU/wsT/9mdL5Lbu8N0HXjiLJp2XyUh1oc0zp6+qH8
-	LQhsliCGVU4M8kmIQv50+BP+YqvokNuc04PxfccUx+q4A41kxSNEeN1f8C4Ydgxu8/aRMN2VE4COu
-	6+1C6vIA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vEUqM-00000004PHi-3rz3;
-	Thu, 30 Oct 2025 15:45:42 +0000
-Date: Thu, 30 Oct 2025 08:45:42 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Chuck Lever <cel@kernel.org>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH] NFSD: Add a "file_sync" export option
-Message-ID: <aQOIJtjQvLjBNk3G@infradead.org>
-References: <20251030125638.128306-1-cel@kernel.org>
- <aQN0Er33HIVmhBWh@infradead.org>
- <aQOFLMJzUZuwj_K7@kernel.org>
+	s=arc-20240116; t=1761839237; c=relaxed/simple;
+	bh=wOKMOXDDr095IhcPu30VfusA3Xmfl11UEO3G6vtIVEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OwNRjNNWOWsRZHGt8nSk2Fn5/nnYBqUsEuewEQh8TJhVhQjNYVxvlJNQU0PP7MYc1nG49ZZ3pJknwWL4/4d6/zzg/Z5dig5d7h/pRA62AQ8P18Gnk6YohIdoWUBTJ0lKvR1AmFX+RuH9t5Rx0Siqqe8S69do5/k+U3eUFDofa/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZexz1TV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE010C4CEF1;
+	Thu, 30 Oct 2025 15:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761839237;
+	bh=wOKMOXDDr095IhcPu30VfusA3Xmfl11UEO3G6vtIVEU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kZexz1TV8833mSNETsL5dKK/qD0bFwlSiSckh4hPcAd0VarsrhrRMUYoauSUyBo2H
+	 yJi2jJvE7V7eGiFceflNQeM/fbW5qws+ZOIiu+KyZvIQG81UzO0zEwB4s7ifuR8eYm
+	 XMutuyYMgi6wsEAhd+KjioIuC2CidOHbhDGqwj2RADWoulYiPXWdSzT7pcicC51z1D
+	 jcZvBVuRP+pOsD3mQRwixSFoUhwAC06T8Q6Yp/94a9xOBNaoPPpJNRxpa24JDLXGnG
+	 cA/3RJU+RZuiwRnsTYFZslB7O5DIP6aXZTyADXMkQ6N5IFIESmlgQBaP3HXAmro73Y
+	 j/povcA1FAo9w==
+Message-ID: <d046ee5e-4944-43aa-b859-21d85eb55dd6@kernel.org>
+Date: Thu, 30 Oct 2025 11:47:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] NFSD: Add a "file_sync" export option
+To: Mike Snitzer <snitzer@kernel.org>, Christoph Hellwig <hch@infradead.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20251030125638.128306-1-cel@kernel.org>
+ <aQN0Er33HIVmhBWh@infradead.org> <aQOFLMJzUZuwj_K7@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
 In-Reply-To: <aQOFLMJzUZuwj_K7@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 30, 2025 at 11:33:00AM -0400, Mike Snitzer wrote:
-> Sure, but not all modern networks have the same level of performance
-> either.  When the NVMe is faster than the network we don't see nearly
-> as much MM pressure.  But that implies the network is the bottleneck, so
-> reducing network operations (like COMMIT) should reduce network
-> traffic (even if marginally).
+On 10/30/25 11:33 AM, Mike Snitzer wrote:
+>>> This patch is a year old, so won't apply to current kernels. But
+>>> the idea is similar to Mike's suggestion that NFSD_IO_DIRECT
+>>> should promote all NFS WRITEs to durable writes, but is much
+>>> simpler in execution. Any interest in revisiting this approach?
+>> This is a much better approach than overloading direct I/O with
+>> these semantics.  I'd still love to see actual use cases for which
+>> we see benefits before merging it.
 
-There is a lot of code between the network and the storage, and they
-tend to be slower than either for many common workloads :)
+And the reason it hasn't been merged yet is because I couldn't find any
+such workloads. Even tmpfs was a little slower without the COMMITs,
+to my surprise.
 
-> Once the network is as fast or faster than the NVMe devices, that's
-> when we've seen VM writeback/reclaim with buffered IO become
-> detrimental (when the working set exceeds system memory by a factor of
-> 3:1).  And that's where NFSD_IO_DIRECT mode has proven best.
 
-I bet that getting VM writeback out of the stack helps at lot.  But as
-mentioned I doubt forcing stable writes helps, and in fact for most
-workloads will actually make it slower.  But that's just my experience
-from similar but not the same things, so I'd love to see numbers if
-you suspect something else.  Either way we're much better off changing
-one variable at a time instead of forcing two totally unrelated changes
-to go together.
+> Yes.  Also thinking that a "data_sync" export option would be
+> appropriate too (that way to have the ability to try all stable_how
+> variants).  Chuck?  If something like that sounds OK in theory I can
+> rebase your patch (still attributed to you) and then create a separate
+> to add "data_sync" and then work to get the permutations tested.
 
-> Christoph, if you have canned benchmarks that do a solid job of
-> showcasing overwrites (which you expect to really benefit from _not_
-> having DSYNC or DSYNC|SYNC set) please let me know.
+If you want to experiment, feel free.
 
-None with nfs in the loop.  For an older benchmark with purely
-local I/O, 3460cac1ca76215a60acb086ebe97b3e50731628 has an example,
-which should be pretty representative for modern workloads, even if
-the overall numbers for each case would improve a lot.
+As always, I'm not enthusiastic about exposing a bunch of tuning knobs
+like this without a clear understanding of how it benefits users and
+what documentation might look like explaining how to use it. So for the
+moment, this patch is, as labeled in the Subject: field, an RFC, and not
+a firm/official proposal for an API change. (Note that IIRC, adding the
+new export option was an idea we had /before/ we had
+/sys/kernel/debug/nfsd available to us).
 
+Or to put it differently, just because I proposed this patch does not
+mean it's automatically "Chuck approved". I'm interested in experimental
+results first. I'm thinking you have access to big iron on which to try
+it.
+
+But, in the bigger picture, I think comparison between this approach
+and NFSD_IO_DIRECT might be illustrative.
+
+
+-- 
+Chuck Lever
 
