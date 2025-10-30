@@ -1,90 +1,105 @@
-Return-Path: <linux-nfs+bounces-15783-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15784-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76ADDC1E2F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 04:04:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18410C1E6D5
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 06:32:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 316153BD08A
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 03:04:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38FDC189451D
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Oct 2025 05:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 170442D0636;
-	Thu, 30 Oct 2025 03:04:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC04B254B18;
+	Thu, 30 Oct 2025 05:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Oe1Jv4Ai"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pWZ489wE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3248532C941
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Oct 2025 03:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7673D1D6BB;
+	Thu, 30 Oct 2025 05:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761793458; cv=none; b=uHv3HoxP4gREae2pPWGl5ZXxNVOMfqmdQuAbDFsTsgojQcP2yM9ptPqoi8hCA7ySI9PGefsJFgLepAGf2qBICg4sS1T2jxr2ZARb6S3dKK7hYr8M/Nreq6Kc+LqrA2J0Mt3gADBEQoDEFrUzgcXNr2jlruFFwa0vKEupQ1PQ7i0=
+	t=1761802347; cv=none; b=Pj/2/lGDES0xsDnRCxn4sMD4z0kZc8PWAeTgg3TT1zT/8KD/yQfC6acoCnUsA5PR56DnxO/G8vSOMpbGmlm1f9NLuwmQ4s0/T3iZkxP9ZD4sYJZgeemsG+EIZ9nCBGxDF137MU+MWyWUxIPMQ59g71dHoA8E5WIev+M869G0rWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761793458; c=relaxed/simple;
-	bh=w1K6a6GisC6Y1KEGAPFyM8N3x956g3lBPbr4nrj81n8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qGp4StnVJZ3N2kHRmzmvm8ajehUVUaC1UIqSy5N1fB4ZDwmQPMMKQ4yq5qIOF5186ouJwr67VoFmHM78ZyTbQnf091y/bcOTOoksqiub7/RNR2WkFk3YBBvdPQoYzivQPrbWNigIGxdoW8V6kZx9M8umgk7aU3/LMG9tMBiIdQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Oe1Jv4Ai; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=SP
-	ixLbOU4Q064kZxSObKd53p0xCpQIo4Hay49pvWmdY=; b=Oe1Jv4Ai1wgLzw81sU
-	il8s1r51bTkvv8p2lW6YtrBgP1iyq4GLpNgQax7wAGcoi+gcgvuUpm3GLapi0zq4
-	kUTKTZeH4KfhxfnAP/qB+d5oGAjJPsnDXjqs0De08oSubHeg6GBkKxYzjHGzxix7
-	wKotey5w7uepW/Iq07z/UlGZQ=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDnj9J+1QJpIZB4AQ--.1378S2;
-	Thu, 30 Oct 2025 11:03:27 +0800 (CST)
-From: Yang Xiuwei <yangxiuwei2025@163.com>
-To: trondmy@kernel.org,
-	anna@kernel.org,
-	bcodding@redhat.com
-Cc: linux-nfs@vger.kernel.org,
-	Yang Xiuwei <yangxiuwei@kylinos.cn>
-Subject: [PATCH] NFS: sysfs: fix leak when nfs_client kobject add fails
-Date: Thu, 30 Oct 2025 11:03:25 +0800
-Message-Id: <20251030030325.157674-1-yangxiuwei2025@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1761802347; c=relaxed/simple;
+	bh=RKZ55e/BX3Bsy8j/0XAduETGE5FWfV4zDbi6AF2gqjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tc+K2iDQSXPcvEmEQIBmDfC5mRctw6ILtjLA5lYMt1wlQQzC/R+5UncTFFhXtPcEo3jLY2lnMUmgt2yvdC92n/Db73QMD5pCqL81mBe4qt6B/kog7ZO3PZKrFNYEwKRwqNv5aRfYB9PRigSHIpP12lMdcTXPruguUeG0H4RoXqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pWZ489wE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66130C4CEF1;
+	Thu, 30 Oct 2025 05:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1761802347;
+	bh=RKZ55e/BX3Bsy8j/0XAduETGE5FWfV4zDbi6AF2gqjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pWZ489wE0/m49sWPsV/Rq7Bz2NYaTqU6b90Ymhx8VEoudj0uV9WaKuBWHmU1WM/O/
+	 xHxhdceQwVt+HGjb6niSCPHuQjJXzAwL234wCbKVKiqhVjf1ULVAxCbXZwSilitsRx
+	 Mpjs6IhZxNwipGykTOUfLGAGdCRTODuSqIbQP0QE=
+Date: Thu, 30 Oct 2025 06:32:24 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: Re: [PATCH v4 01/14] debugfs: rename end_creating() to
+ debugfs_end_creating()
+Message-ID: <2025103013-overcome-jailhouse-538b@gregkh>
+References: <20251029234353.1321957-1-neilb@ownmail.net>
+ <20251029234353.1321957-2-neilb@ownmail.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnj9J+1QJpIZB4AQ--.1378S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrCFW8Aw4fXr1rCF1kKF17Wrg_yoWxXFc_GF
-	WxWrWkuw45JF15Gr4xC3y0q398X3y8uw48CrZayrsrtFWUtryxAw4qyw4Yyr9rW392vFyr
-	Cr1v93sFkr1YyjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8aXdUUUUUU==
-X-CM-SenderInfo: p1dqw55lxzvxisqskqqrwthudrp/xtbCwh9vAGkC1X+yNAAA31
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251029234353.1321957-2-neilb@ownmail.net>
 
-From: Yang Xiuwei <yangxiuwei@kylinos.cn>
+On Thu, Oct 30, 2025 at 10:31:01AM +1100, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
+> 
+> By not using the generic end_creating() name here we are free to use it
+> more globally for a more generic function.
+> This should have been done when start_creating() was renamed.
+> 
+> For consistency, also rename failed_creating().
+> 
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  fs/debugfs/inode.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
 
-If adding the second kobject fails, drop both references to avoid sysfs
-residue and memory leak.
-
-Fixes: e96f9268eea6 ("NFS: Make all of /sys/fs/nfs network-namespace unique")
-
-Signed-off-by: Yang Xiuwei <yangxiuwei@kylinos.cn>
-
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index 545148d42dcc..ea6e6168092b 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -189,6 +189,7 @@ static struct nfs_netns_client *nfs_netns_client_alloc(struct kobject *parent,
- 			return p;
- 
- 		kobject_put(&p->kobject);
-+		kobject_put(&p->nfs_net_kobj);
- 	}
- 	return NULL;
- }
--- 
-2.25.1
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
