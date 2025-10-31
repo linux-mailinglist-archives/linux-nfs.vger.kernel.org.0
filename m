@@ -1,97 +1,115 @@
-Return-Path: <linux-nfs+bounces-15858-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15859-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF33CC26545
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 18:26:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AED07C27344
+	for <lists+linux-nfs@lfdr.de>; Sat, 01 Nov 2025 00:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 627D63512E5
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 17:26:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61E413A80FE
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 23:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA79305E18;
-	Fri, 31 Oct 2025 17:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931D131D378;
+	Fri, 31 Oct 2025 23:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="kL1pSJjD"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="SR4MlKA4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1Wzq4sjQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B422F3607
-	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 17:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0211332C921
+	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 23:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761931609; cv=none; b=dEw3krhymGAOj9AXwJmDsypWLQ3R9HCTjdWgu9ic0JA/9atuPrYokoX9DzWthjg6uiLgTSz3a/iP9q1wxlRjo0aaN/TY5Vw8W1dM/ZpuiXfMCu3BOXxStlvHzFazCiPF/xxzbOs+K/Wp1wnBQ2gfZwcQuBEqEDWdvQUahFaw62s=
+	t=1761954083; cv=none; b=Yry4aqGuhBmV1qFGIIyGKKtbfJJ+5n3InE/9KTykkKCw7PqVaUwEYbab/V3X7Icv6JfQbUW5kiB828FPbkgeItz8/bVxI/+AzuN7/8s1AMWU/Ikv1TWeG5bLC7EH9+OLHF07eD9Q+7Zltw0agNKhkxdq4i8dml7dR9YNL8jXAa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761931609; c=relaxed/simple;
-	bh=kX6ixjj1S/kADGjq+ioiYTpWKH7gnr+DklJP+PanIo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KKj4SVIA6XU9P1+23nzNpeW4VxmMSxz9pDpSzJYNXCTdqufxijE4mZmBf56eaouGhh5sOzj/ageuSdLJCHHSARbEVAlqwhDI8cIofXN2wZ64d1zDpyuLQRyvainVuG7kEXNJysrbbS67Fn2mpwEEWtrtUXM7hZN6Y1WAsRiOiaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=kL1pSJjD; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-378e8d10494so24272621fa.2
-        for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 10:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1761931605; x=1762536405; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EGIj606kC4xu3T3Oefw3/1ddCsFbJDTVthM2Ql8BrhY=;
-        b=kL1pSJjDZEMD0BWYA2fsr6btE4EWTqpVZblqPogHPAD9TrK4VPponNEXMNhlHs8r6d
-         Ud+ffpZnIxWOvWN10uRgksZLVjST1aSfM/jMIgm+i/Mrl3hCWCUg7Px4RxpCVtqqX/tI
-         HN4O8QHtkZ+GphNCHFff1q/tVPQx3WFpIGaAyd/2O5OmLbgbYW6CnssUMZTBvvgAN15V
-         vkVE0cR90+NoLARtcvW8SU3u9YRYcBqbR/4N04OSXppzIUE4hY2tDVb3Jnboy9z4t4tA
-         gpzOKfw+E1rO1thTto9X1F6+LC/KcCymhNDM5JknVkQsUxD9HIgmcmjNVBYTja1YVSyV
-         PicQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761931605; x=1762536405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EGIj606kC4xu3T3Oefw3/1ddCsFbJDTVthM2Ql8BrhY=;
-        b=h5h9jNtUlbgKpc5QBV/j9eeh/1NV1/gXRVb+AhiQknpM4asDQbKF+bTEqT60nFzuQO
-         ndJSgyHfNEBtVGGdqYOMrGmLFqXOfsDXvA0cLH3KeZnNXcCSiX1S3146Lfw9Ji4ZsHaC
-         EiPGgwyZ/C685b5v7nlG9yTAfx2itB70no8pxg/P5YlSi+z4v/XE6fJ210cjSV5jlXaH
-         L65Q+rbt4dBDpgOw6DtZPZ/3eyFY0hZeJZ4VRfJ8iUKbQcKPIgzG/kqlIa7QbFdGNoy+
-         YypbVFaGDuWYns37fjmFBfRrpOJTiUqdsX9QHJC1NpAitl/ya0rXrIxN6qrQ+aw1CpjN
-         CSeg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2LdihNPvQVc68b2dBggm+7TukXI0X+hK0XwO5WqdPd8+5KaGSQZHKt9woVOKqDO/X438Ejno0Yjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7BLe7RmVPHQDSQ77kuzwopegvPyEcH4eHvzu70K4zZAdQEb9m
-	3GfYp1K8VYkUuExLn/1FHS8Leq5Ae31cINLdpU2TQKg6UyaAgs+/3fZlBFhB/Zig5euMXKT/8b7
-	aU17ND5ac3jVvCnIxGx9aR9PNarYIeAYqDw==
-X-Gm-Gg: ASbGncslRwb0TbYSRQGcKFRT63bQa43OphS76lCPRjE0EqwO5EYWex6sjVomQr2vDmM
-	BEAE8aXen8q6eF5YiaUzwDCaQFnpOs0K7zq/JJyRyGDr1ypdq0FEV8MrwoUoMmk47MM1tcMoG76
-	cLN44zgfHuBhwVwP2LnSdMRVeylDxCkial7pXpvsTh5S31LfAvhYP6f38cUdL5MhJ6vwEbu7bsn
-	PbNnjqvsjPh/0UeeQEfTlYnDzWU8xwJLc/SdE+UsaCac9AMlHTPFzcUx/llIOHvhsmS7w==
-X-Google-Smtp-Source: AGHT+IE/ycpXARqvG7joLTDMfwksj2oBuuanCXVxPni/YOXOIbMj0IPGZ8Q9Lwf24WYLyH7lj1jKZET70tDlOf2XpyM=
-X-Received: by 2002:a05:651c:1595:b0:355:e2d9:9c8c with SMTP id
- 38308e7fff4ca-37a18dfbd6cmr15591261fa.28.1761931605121; Fri, 31 Oct 2025
- 10:26:45 -0700 (PDT)
+	s=arc-20240116; t=1761954083; c=relaxed/simple;
+	bh=e26dtzSSEfnKruUr6u8Oki3zsv76C/3KWddnzI7U4pA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=gItWBQseCugl97JGEMViyyP/60SAUC7G8HG1QRIUrT10IkTuvJZkJePM/KQ1pnS9tuke4bB2ilvn7wxVRfQXz6LBwL3bnYYZfOUDZ3vEaxpDjLC/S/iKqwfInZB25sgpJMdeTRyMQcAzuEGAiQpFzy0meCl+j8k0iHHcTCCmRvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=SR4MlKA4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=1Wzq4sjQ; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E1119140015A;
+	Fri, 31 Oct 2025 19:41:19 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Fri, 31 Oct 2025 19:41:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1761954079; x=1762040479; bh=pfvYKszoXSbR23sHnR0yx6Ut+qNFrYiV+P5
+	BD8vDhxE=; b=SR4MlKA4rFTRkk4GvXQ6XU/i577/Z0U1BIx8QEY5JLYMwh/m1tK
+	hhpgaWJOa6DSd2SwkM69kJ0+wsDOyblxEcjGj9e7AIWkObCBzU095qU/pId+pvPB
+	YVN6WpzYmA78+okFWMcNZeMyL009Z3R2MbL5C589TjnOFusp/MknFbhH/nVse8yJ
+	Zi5scxyCnfFLAuiF60R9ugLZYsmqFray7EJbo7uwxu9hHnQvPrMJ62spKZkDmjuO
+	e0nYPeGaN1YK38TnVJoyweIUMjaeZ7kxj1dDEdtCReld8GnAD46twi9xQCHLNsE2
+	F886Wu1MiA54FWrqbizy6BSHWOHFaZ+e9bw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761954079; x=
+	1762040479; bh=pfvYKszoXSbR23sHnR0yx6Ut+qNFrYiV+P5BD8vDhxE=; b=1
+	Wzq4sjQ3JFUmaQzcZ9KKuJz6vL6BQUeXc+VbmZcCL9OCgZTiyQEdwpasXpFhbfzJ
+	+1Y2y+WqMa/PH3PbExmxn4vXiZLte8Ycm3M2nerJGP90zThgT0UIa/l6WBNHb7Ra
+	z5avAOz48qfXu1/HIbzGwkaZp/IG0S5p/aKozSQnTbZQCby8FaJilLphp7baVu0o
+	5FmkWEdLQAEQTw9Jyn84lkxCvsBMhbcJeFjan5R5eY0Q8Yx+OEcvlzCjbXNN6lFU
+	gmohTTNXj1YE+JEUZjCCB73T/a6Ft5JaIo18IyhWZ4pSLOpwuxSv0KynqwSOn0pL
+	WqulnmuTtTYKqrTiVXKKw==
+X-ME-Sender: <xms:H0kFacLGTXt2QEaqBSg9UkMuzoMeskm3E10NmUfWUurg9UGp_XhgTw>
+    <xme:H0kFaebwVdaNeo99GQMFmnZkkHzLSjgweXgQw1nGDmjIsbPvEYE1odxKG3eeF3df0
+    ivYxx_fcz5UlEeGAT70QXPa1aGbdPlDA9-2_--Has8LivOxSGo>
+X-ME-Received: <xmr:H0kFae8RUuxkv8TPHB9CM9p5L5QfjshPhhcaT6DL1LuOoW9jfxLBXhvYd4qCk9sE0fe_7Vvq4gpj3ppjCtjvCyNqQsHhup2QyWm8ZEqJEyss>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddujedtkeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
+    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnh
+    gvihhlsgessghrohifnhdrnhgrmhgv
+X-ME-Proxy: <xmx:H0kFafbKEbQtmJpGZlVEFfqZiS-jZCRYRhfs_qHSyZ_vrLYqbweggg>
+    <xmx:H0kFaSNDaV6dYSby-bwlu3gUFmQua7hHpwCX4rbXilP26efBGtw4KA>
+    <xmx:H0kFabBntFUuFkMO1HaJh865pv8PpI9-5k6-BFk8fTz3UkN9XJtO3g>
+    <xmx:H0kFaZKhEj2iQCSlNbE-fvouOMUA7hTY-9Vfz-4rNOR65Tq9T-jTVQ>
+    <xmx:H0kFaTsT7dWh7BF7Wq0mVThEmDK1rr7TmSznIHyrXN3Qzm-VHNLZCKa0>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 31 Oct 2025 19:41:17 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251030163532.54626-1-okorniev@redhat.com> <18c5ba1652045fb20bc74972d4024e9f42762875.camel@kernel.org>
-In-Reply-To: <18c5ba1652045fb20bc74972d4024e9f42762875.camel@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Fri, 31 Oct 2025 13:26:32 -0400
-X-Gm-Features: AWmQ_blbhOsRxMe6povrWQBXN5CkkKzBYVBE3gtSgxn8mGlqtkFpWiwJJcKZT7c
-Message-ID: <CAN-5tyFmPPp8X3NdJS9AynQ43ppzq4yFMD9gQWroWbsF6v+seA@mail.gmail.com>
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, jlayton@kernel.org,
+ linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com,
+ tom@talpey.com
 Subject: Re: [PATCH 1/1] NFSD: don't start nfsd if sv_permsocks is empty
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, linux-nfs@vger.kernel.org, 
-	neilb@brown.name, Dai.Ngo@oracle.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-reply-to: <bca68f1b-ca56-4e94-abd0-de4c509d3d00@oracle.com>
+References: <20251030163532.54626-1-okorniev@redhat.com>,
+ <bca68f1b-ca56-4e94-abd0-de4c509d3d00@oracle.com>
+Date: Sat, 01 Nov 2025 10:41:08 +1100
+Message-id: <176195406890.1793333.13442574969390728435@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Thu, Oct 30, 2025 at 1:55=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Thu, 2025-10-30 at 12:35 -0400, Olga Kornievskaia wrote:
+On Fri, 31 Oct 2025, Chuck Lever wrote:
+> On 10/30/25 12:35 PM, Olga Kornievskaia wrote:
 > > Previously, while trying to create a server instance, if no
 > > listening sockets were present then default parameter udp
 > > and tcp listeners were created. It's unclear what purpose
@@ -100,90 +118,79 @@ ote:
 > > to ensure the reverse that we never end in a situation where
 > > no listener sockets are created and we are trying to create
 > > nfsd threads.
-> >
+> >=20
 > > The problem it solves is: when nfs.conf only has tcp=3Dn (and
 > > nothing else for the choice of transports), nfsdctl would
 > > still start the server and create udp and tcp listeners.
-> >
+> >=20
+>=20
+> Fixes: ?
+>=20
+> One more below.
+>=20
+>=20
 > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
 > > ---
 > >  fs/nfsd/nfssvc.c | 28 +++++-----------------------
 > >  1 file changed, 5 insertions(+), 23 deletions(-)
-> >
+> >=20
 > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
 > > index 7057ddd7a0a8..40592b61b04b 100644
 > > --- a/fs/nfsd/nfssvc.c
 > > +++ b/fs/nfsd/nfssvc.c
 > > @@ -249,27 +249,6 @@ int nfsd_nrthreads(struct net *net)
-> >       return rv;
+> >  	return rv;
 > >  }
-> >
+> > =20
 > > -static int nfsd_init_socks(struct net *net, const struct cred *cred)
 > > -{
-> > -     int error;
-> > -     struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > -	int error;
+> > -	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
 > > -
-> > -     if (!list_empty(&nn->nfsd_serv->sv_permsocks))
-> > -             return 0;
+> > -	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
+> > -		return 0;
 > > -
-> > -     error =3D svc_xprt_create(nn->nfsd_serv, "udp", net, PF_INET, NFS=
-_PORT,
-> > -                             SVC_SOCK_DEFAULTS, cred);
-> > -     if (error < 0)
-> > -             return error;
+> > -	error =3D svc_xprt_create(nn->nfsd_serv, "udp", net, PF_INET, NFS_PORT,
+> > -				SVC_SOCK_DEFAULTS, cred);
+> > -	if (error < 0)
+> > -		return error;
 > > -
-> > -     error =3D svc_xprt_create(nn->nfsd_serv, "tcp", net, PF_INET, NFS=
-_PORT,
-> > -                             SVC_SOCK_DEFAULTS, cred);
-> > -     if (error < 0)
-> > -             return error;
+> > -	error =3D svc_xprt_create(nn->nfsd_serv, "tcp", net, PF_INET, NFS_PORT,
+> > -				SVC_SOCK_DEFAULTS, cred);
+> > -	if (error < 0)
+> > -		return error;
 > > -
-> > -     return 0;
+> > -	return 0;
 > > -}
 > > -
 > >  static int nfsd_users =3D 0;
-> >
+> > =20
 > >  static int nfsd_startup_generic(void)
-> > @@ -377,9 +356,12 @@ static int nfsd_startup_net(struct net *net, const=
- struct cred *cred)
-> >       ret =3D nfsd_startup_generic();
-> >       if (ret)
-> >               return ret;
-> > -     ret =3D nfsd_init_socks(net, cred);
-> > -     if (ret)
+> > @@ -377,9 +356,12 @@ static int nfsd_startup_net(struct net *net, const s=
+truct cred *cred)
+> >  	ret =3D nfsd_startup_generic();
+> >  	if (ret)
+> >  		return ret;
+> > -	ret =3D nfsd_init_socks(net, cred);
+> > -	if (ret)
 > > +
-> > +     if (list_empty(&nn->nfsd_serv->sv_permsocks)) {
-> > +             pr_warn("NFSD: not starting because no listening sockets =
-found\n");
-> > +             ret =3D -EIO;
-> >               goto out_socks;
-> > +     }
-> >> >       if (nfsd_needs_lockd(nn) && !nn->lockd_up) {
-> >               ret =3D lockd_up(net, cred);
->
->
-> Assuming that there is no regression with rpc.nfsd startup, this looks
-> good to me.
+> > +	if (list_empty(&nn->nfsd_serv->sv_permsocks)) {
+> > +		pr_warn("NFSD: not starting because no listening sockets found\n");
+>=20
+> I know the code refers to sockets, but the term doesn't refer to RDMA
+> listeners at all, and this warning seems applicable to both socket-based
+> and RDMA transports. How about:
+>=20
+> NFSD: No available listeners
 
-I haven't found a combination of parameters to rpc.nfsd that would
-ever trigger nfsd_init_socks() to have an empty list. Looking at the
-nfs-utils nfsd code I see code that fails nfsd start if there were no
-sockets.
+"configured" rather than "available" ??
+"network listeners"?  "network request listeners" ??
+"ports" rather than "sockets" ??
 
-I've been digging into code evolution. And day0 was nfsd would
-svc_create() and then call svc_makesock(UDP) and svc_makesock(TPC)
-(originally ifdef-ed). So sockets were always created right there.
-Then starting from this commit 02a375f0ac4bc "knfsd: separate out some
-parts of nfsd_svc, which start nfs servers", nfsd_init_socks() was
-born with the check for sv_permsock being empty. I'm assuming it's
-because function is called multiple times and socket creation needed
-to be done once... anyway looking at old code, it looked like sockets
-were created in the kernel. Then later socket creation was moved into
-userspace. Then rpc.nfsd would make sure there would be sockets before
-calling into the kernel. At that point I believe nfsd_init_sock()
-would always guarantee that sv_permsocks would have sockets there
-making the code.
+ NFSD: No network ports configured for listening
+??
 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
->
+I did consider suggesting that the message isn't needed.
+
+NeilBrown
 
