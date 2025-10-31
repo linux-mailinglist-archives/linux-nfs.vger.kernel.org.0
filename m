@@ -1,114 +1,239 @@
-Return-Path: <linux-nfs+bounces-15855-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15856-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D37E9C26195
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 17:25:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14B74C2638D
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 17:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9512E5634BF
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 16:14:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 748BE3B8BE4
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 16:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80C134F461;
-	Fri, 31 Oct 2025 16:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03091E520A;
+	Fri, 31 Oct 2025 16:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXJGoMp3"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="d+T2WXcs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11023099.outbound.protection.outlook.com [40.93.196.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931D834F27D
-	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 16:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761926860; cv=none; b=h++/VvUE0PjzAhTyv6u6xsc3LOBq5VO06bTwcGPsd92VyFde3oOe66krVQEWlF9Y9TEzcy5j5HwkG1JT972TkmFcXMdmZlvPBAkU+pqGuuYlhVdwVPCG94I8PaqekdUnIr+2AOMgMyVIGn/oM8WUvV31+PpQFmKFi6WugOfN5rE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761926860; c=relaxed/simple;
-	bh=tvoSBEt2dC11Xsc2adZM1dQiLb9bylaXllf3i5lXf+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hm4ROuEKLPEsCSHo6JVsHrAcuaj+rtqXnDywpg2/CLJNutqdnndxb+1wcqhyjXalVkWqS8KvYk+yUhtbEAV/tTGrWB020X6vBn7SesdADfRtq37jJbVDYt+r6Plmyvy/ABPHSvD2qChZoZPkPb+a9qrASBOaah+EUQi2ab6XS2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXJGoMp3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0671C4CEE7;
-	Fri, 31 Oct 2025 16:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761926859;
-	bh=tvoSBEt2dC11Xsc2adZM1dQiLb9bylaXllf3i5lXf+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GXJGoMp3B/fQRPLn9+eVJOEDmzPuwIPbAIsKPYBfTRGxXKpgS8IkLcR995nellNve
-	 ptMGjLHEmpzwjqaYrbVsxlF983EermPsh1M7v5wZjQdF9CK9Lkj6w/opy0NZdK0a4G
-	 VRrIxmUPA18x+iB0bxJPPpZ0DlvnzMTmKrHCnKjWYtyNwlbwIj+4fhI9LOU3R7VYaz
-	 rQ6jWyWFcOhcOScfUNkeC1UAlGncPC+MtlQzbMm6oVbes2dR8gxAXH0w2CcM55DeJC
-	 ngu72AJF2l+P17DaYHoeQiUAygp34z0UZLCWYYJKKlxwUbYEaxiXiHZGRwS9/r+O3x
-	 zwh5mI445In1w==
-Date: Fri, 31 Oct 2025 12:07:37 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v8 09/12] NFSD: Handle both offset and memory alignment
- for direct I/O
-Message-ID: <aQTeyczWFoERHlpf@kernel.org>
-References: <20251027154630.1774-1-cel@kernel.org>
- <20251027154630.1774-10-cel@kernel.org>
- <aQS3U0bfw6X3J7J2@infradead.org>
- <88535f7a-abc7-4649-a2b4-ba520e9aae0b@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AAE405F7
+	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 16:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761928431; cv=fail; b=MjbMwf4DSK4dgKSI/ayjPXP/TNZ4zKa0vxISPlQm62t9lAk3J9Nr+H/2+qEC++O0rE2EQ4Ngd1gXflZIQt76NahmzTStEOlajkcdos/Ur3whY0GYljX0XxPolCQNsqxzcqjOApcZm8lnuQIypqJhBaC9G8egpowuTT8RgmQpr3k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761928431; c=relaxed/simple;
+	bh=BxFluQNF1++qY8p+napHZyLi6Bf4sogyMosZHg5mueg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JJeNCGniwUxeY8itrIAVhRAuHk9rMAKt7ffw5nZ+qtarS3fU/kF78V5yF1c6fpVOwUTugTaoyNXA6AJkytGQvFr1e6qzAlvfEju2K1I586AS9J0pAWJDkxgh1n/YV4i5peMFrBFIDtXTPqGCPt4Nad7VGMhcfXPu+/2AXX2ibsI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=d+T2WXcs; arc=fail smtp.client-ip=40.93.196.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tV3Fso/lovVBRryhw/gvm5jY5wJ9xFWpuNnnQrBamE5up1kxkYQkHb8L83JtOMPvaAWM+un7neQbbEdAFO+OpkWonzSlYypLIsKwx8SBKGpVzJFY5XS4neZvmmisgbwzyx8TC3TH1qAr8jqcwhXu9IH4qQUVVLHQf4fEY3ORknSbQLZhu0sBkF8z9wLRctWZBN4CSAFXxsQlFiKil3WKOa1rWACr4o6Wr96moaen7xk33ML7cPIvPHen3jXSbRngB3azp1JkI4d3H8RhlYCkVhcp4IHO00cHgdEJU8ChkDfIfvoCuFFe1ZkcdXq/wSi1q4hMtIs9HOsc3YE9WZBfWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a6IpYbQ+fzOgHiKbYpzruDPxc3n7Pd+zlpdKSr/NG4Y=;
+ b=LIobk0/EHMI4R5aoz7WWni1/TjUqISandDU9lFTQI38H6vHkjqdMVbztDWxqWOJxlsSBGvk2eyWfAGmrhZFe0WVSqWmxygBYWtXhRSWUyH2u/4LDuvJ0p0/4+Ewq5j5BiZxaTDEmoFO7a7NuwZrVQVOKeHJL8P+JVyxuHIyYUo35AqzOG5+skCDJse3eQiOR3QDhORC45dbtUFElzkDDpX9rNPQ5zEIZnCoiF3XiPTU0AjkuHtz+X82tZUOczXq/z1sUKS9eytbl+p48CvH7u9EoSVVvKbBF8p3qcwzTP4cCEVz1eS/ylq0wljkzRZDZAgqq1/xkJCWb9aRi+G4kew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a6IpYbQ+fzOgHiKbYpzruDPxc3n7Pd+zlpdKSr/NG4Y=;
+ b=d+T2WXcsLPGtykUWeWkPKpEeZvdTpqb+vgw2woRCGja1w3RsYfFm970sppGXiiIqvHUNA+CRIqsLoPDQqXe1V4yVzAH4OhnUzJmduHDs+7TxpwCrtCRElWA/ZItYZlEypYfTo/XA3kWgZxFboTy8yWsm2zkBjKnVdFOqgCU071A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from PH7PR13MB6217.namprd13.prod.outlook.com (2603:10b6:510:249::12)
+ by BY1PR13MB6261.namprd13.prod.outlook.com (2603:10b6:a03:52f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Fri, 31 Oct
+ 2025 16:33:47 +0000
+Received: from PH7PR13MB6217.namprd13.prod.outlook.com
+ ([fe80::9a18:22fa:f07c:4eb3]) by PH7PR13MB6217.namprd13.prod.outlook.com
+ ([fe80::9a18:22fa:f07c:4eb3%4]) with mapi id 15.20.9275.013; Fri, 31 Oct 2025
+ 16:33:47 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: Benjamin J Coddington <ben.coddington@hammerspace.com>,
+ trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSv4: ensure the open stateid seqid doesn't go backwards
+Date: Fri, 31 Oct 2025 12:33:44 -0400
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <7FF2D782-2009-4CB7-A00E-35F71502AC1D@hammerspace.com>
+In-Reply-To: <aQTS76CWF_jArVq6@aion>
+References: <20251029193135.1527790-1-smayhew@redhat.com>
+ <91B71657-6813-478A-98EC-27FDE7114B37@hammerspace.com>
+ <aQTS76CWF_jArVq6@aion>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BL0PR02CA0089.namprd02.prod.outlook.com
+ (2603:10b6:208:51::30) To PH7PR13MB6217.namprd13.prod.outlook.com
+ (2603:10b6:510:249::12)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88535f7a-abc7-4649-a2b4-ba520e9aae0b@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR13MB6217:EE_|BY1PR13MB6261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56d40b10-8517-49f7-e06a-08de189b43b5
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lpPDUt1dlvWbrCSh00uOcSrHwJiJhS1IuQUNHBDDe0GFb1cYk8U2hxT5YG5T?=
+ =?us-ascii?Q?DU2RkmMCcXl4tLBvkqND38iLavlyFq79As0bdOOqYsee/1cC48WY7PkZraZe?=
+ =?us-ascii?Q?KDBOqc//B8fLHyKyHeadcjxSqYdlb+wXlHuO0vnpxeWgHhSYWSutCtdI37gC?=
+ =?us-ascii?Q?MQIXjbm4XeWd9FRbKNGzGOBuXnnnaJ3uO0CU3Vzwk1+ShIFn/u0RMJ5V5gvq?=
+ =?us-ascii?Q?Toq6xCvBjD7v9XL/DdaKp8zUWANCbzQmOyIDGomUTc2x2Y2nJHW63BFRG0hS?=
+ =?us-ascii?Q?KwoPvQ7LXG6tAUdb25oPB+wEdIbMBwe8dudc1wZflwfB5EsG4y43cbrofaJn?=
+ =?us-ascii?Q?uWAYJDLG3rwQUK/IBXo4LXMFIJtQN/BdS8Y+SprTE7OF7poibzdv5AYkyqm7?=
+ =?us-ascii?Q?y9iMRXfl61JPdBvDOssnGZG/6/03+46HpJnHJY4NLOk8NRSu8WFiQ9VAtwsZ?=
+ =?us-ascii?Q?uZUR9SIEK+g30vC5q9Q9Dr2gduLOhWuMGTfY+H7beVcYPkQIta/iRiNYLNwj?=
+ =?us-ascii?Q?aaSLeE0VCxRaQYnUe2OEKvQX0o8dlomI6TE1ygWsSz1fp+qQ6nUa2nVheJWu?=
+ =?us-ascii?Q?JjmtIriEunWCSYP4euiG9cQxd7+uEmsGQk6ipDVhFt+DbKG+qHBDHnnPHDwF?=
+ =?us-ascii?Q?9vBDH/qwOGlDr9r2+hkv++7oSVk/K3zyT/PXBWC31DgSyA6p7dYQfJri0iyE?=
+ =?us-ascii?Q?GZDIu29sHVQ+ilJMRZe0UrqUsVW6F5Q2XlnERUq++EtklME+oA3RGGdNAY2P?=
+ =?us-ascii?Q?MK+tB25y0LjlR6zc5Wf2qx4m2x/dCL97igvJwJ+gsAg3PCed4KxH8L4B8k8g?=
+ =?us-ascii?Q?Gkvg8KHXEKOQeY2hsd357G9WX1BqRZ9PAj2cI2fnq3pNTgpxV5KetSAe9ZaD?=
+ =?us-ascii?Q?EWDZY4BxlrFTe1maNgOTwqBFlGfRRBFUkXNagsrwVaVwaOs2cM9V6UdKsQ/4?=
+ =?us-ascii?Q?SUHz5B3C1UtN12qjCxG+1MHGvNGrVyUv6ezRRuQP1y5LtcIxB9mEdnKeIBqB?=
+ =?us-ascii?Q?K7/YMp27Q6rL/zfxdk9WS/feGvzHPET9wK2dVRxVTrrfoCKx4C0gkOtbusDV?=
+ =?us-ascii?Q?7x1lOwF2Nff/2I4OUDLofS10aNAhdg2SiVCIVdno90v5ugDw4xst/WsbvIC2?=
+ =?us-ascii?Q?8b5yhgFz6vnaD05O/OMJv/mOSWyN+srIje4KTa7sWVdY2aGAIy1hGt4cCoXX?=
+ =?us-ascii?Q?cOuMmLY8xA6e8RkoC8alKHXFrJ3rehcudzPFKGs8F/s6u4ctw6Wr67k/513M?=
+ =?us-ascii?Q?PHdohnKFTUPAEjPrLNvq/AjAKtPnq4Qw9Mf17FdvajJ8C7MhKWfHSCNkgkf+?=
+ =?us-ascii?Q?3UQ1Kme2d0NoE+8fc41PnZ0L+fhGSK6briywk79E1XJwJssrQe3VCZnWP7zM?=
+ =?us-ascii?Q?s3gFjHeJ/D3Vpd7uLrLIQlq37GWVBXvUEcQ3z2Ipe+fpF3Nu979iU0oWI5Qq?=
+ =?us-ascii?Q?8Aisa3/yzN26V0k4KR+ytNFFfJhIf+ho?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR13MB6217.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Il+cnE18Z54RMJgfX4aySTwhbAuLP7JjzXa0a34MupruHsYpP3L5t+l88LDH?=
+ =?us-ascii?Q?5Uyg8DMuEyo9YVWnerxyKuUzCvPVVCdr+aEtdfG84XU1+MMs94t0+gZNBFpP?=
+ =?us-ascii?Q?XT5E9jzG2LgxgO6HvoujCUH09mTE/v1V8/nTV+5IAFXwAfihizVuH4p5mjV9?=
+ =?us-ascii?Q?Dr5QKVJsb13N4ae5QzhTCUWaL8DLxGfpuSdemNeDCq/HjA075RkcXBJ+GDHZ?=
+ =?us-ascii?Q?8PmkVko7VMa7/wwG2b1M2uT8E9gEeIhFtCJ3if09DTcK06sWCfKN2FBrrbyD?=
+ =?us-ascii?Q?thk7j6DvgUI//lGW6qBo08qcInpIsL2A8bzuwRdttrR/XsvEY2ifUlFDvSqU?=
+ =?us-ascii?Q?FSHpGPMAxvElgHkvUCFDZpv/PHJTWkKCkvUq5wmo9xuOgBYXpqkUElaxB4qN?=
+ =?us-ascii?Q?6DFneZsx4aJhdPKx0tGEm5qUxy/e/YGXFH6GATsEeqZ5C9kFDehzANHjrwkn?=
+ =?us-ascii?Q?OSTG2bJaTn+Gy+NeoOWMlyx+Nm7PPnPYn2dQFFjBHIB3tZQx+OeaShim+86t?=
+ =?us-ascii?Q?BvYkb3HHCHz1zV3gE2U8KDB6EwceRsCZBd/dNfKFVzjL266L/s+TUCZsYqnQ?=
+ =?us-ascii?Q?kMvcgKkd3nqXJVZ6bPQslIxMOEo7ojJHplIpz/wzPS5Mrh0Qw6ehw5QGyF+x?=
+ =?us-ascii?Q?kax/vUiylPDuKdmNJFeV5Mn9J3TJrbnwGwKXHZJEj1gyE3IytIA2SI/ivBDl?=
+ =?us-ascii?Q?rPuCNQOM9NDk5zlHWmsHZptpoE1nZq+3L+HOuZb32vo2sM0glS8TmOAtdm2g?=
+ =?us-ascii?Q?ryjtuydWbtSTa22O/U9zUMEJLzW3iUCergevtJkvd9NHJYC13v0THnhh4uBC?=
+ =?us-ascii?Q?PNzsYy77qMeUT1k6pUgku9FmPy0SzLAiXf+Og7zZedrd9G+GY8TZnTxAsuXF?=
+ =?us-ascii?Q?OxSVJdg/drXxXUdSgVYNxqUmgluVk79KKj1bv+ZQMycqAWafMXtnwoCwK+TD?=
+ =?us-ascii?Q?Ss9PvYSQ+9Jn0LwtcJ0hBqPZSC9SWFeMZtAOW0XOWOj7QuM+mCPcF7DWgVHJ?=
+ =?us-ascii?Q?JA2vJP2wwsG/HTynTlgqXGdkHGvIvux3ti5ZAvBZ9PQcddeM1A+lkZ2nglo6?=
+ =?us-ascii?Q?zEFE/8PmNmgNj+FoZOOapIEXL1vPoOMp7Wf4NxSkDSfxmi6YjtjUG8NTkd6M?=
+ =?us-ascii?Q?hCUAYNBCvJtwYbaXRh6TQd9pmAblfYaDj/0owVZIrISUWtcAsK7+2TvA5Rlm?=
+ =?us-ascii?Q?MW+D2DIzybTXnIuEQeNmQYY3lrC4j1XBfMbuRLmOUY6KSSmSGtDPpqqUc+o0?=
+ =?us-ascii?Q?tB3Y0+xdBiGL4ugy5Wxo6L6J9bxq5EC6V2TFzC5DUn+Vf9Ly5EYJ5qHJn22T?=
+ =?us-ascii?Q?Y3M+iyyw9i66sTAkEFJP4d9d0T5z7JLjsoTFOb7bn1vb7ZMCFOSgNVCiQgDx?=
+ =?us-ascii?Q?uBMr+eYO29/vTsU9XlYtfxrjNaNxz4mbjXRP8+oF4tDdFmJu2L3AGHrxM3KO?=
+ =?us-ascii?Q?qVrYcB6zImDv1icDrMv8NmJxTKsS0u9TiOvzU/1MRuyrTo1DYVWUuIFONLGC?=
+ =?us-ascii?Q?Kc4hoWUvJq60pAzEwGa9MJB2mR18h5MV3/ygdrJr/WJHAILK18ILboVMCJYv?=
+ =?us-ascii?Q?V2XfsBZb4Tn8VDVRJ8BA39aZ7z+X5t6q6pcKXBsi1utY+0SSeFrzWGD7v/UY?=
+ =?us-ascii?Q?CQ=3D=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56d40b10-8517-49f7-e06a-08de189b43b5
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR13MB6217.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2025 16:33:46.9609
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9D7Etj9NtnPo83oUEdTg9JW9cDfwMRAE9kJg2tV9t2UawVXtlXpydZzP3ZCiKlVHWHtUCgI5imwIwg/svGPG8WoT3/OAYe2VIVujFP9J+wY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR13MB6261
 
-On Fri, Oct 31, 2025 at 09:21:27AM -0400, Chuck Lever wrote:
-> On 10/31/25 9:19 AM, Christoph Hellwig wrote:
-> > On Mon, Oct 27, 2025 at 11:46:27AM -0400, Chuck Lever wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> Currently, nfsd_is_write_dio_possible() only considers file offset
-> >> alignment (nf_dio_offset_align) when splitting an NFS WRITE request
-> >> into segments. This leaves accounting for memory buffer alignment
-> >> (nf_dio_mem_align) until nfsd_setup_write_dio_iters(). If this
-> >> second check fails, the code falls back to cached I/O entirely,
-> >> wasting the opportunity to use direct I/O for the bulk of the
-> >> request.
-> >>
-> >> Enhance the logic to find a beginning segment size that satisfies
-> >> both alignment constraints simultaneously. The search algorithm
-> >> starts with the file offset alignment requirement and steps through
-> >> multiples of offset_align, checking memory alignment at each step.
-> >> The search is bounded by lcm(offset_align, mem_align) to ensure that
-> >> it always terminates.
-> > 
-> > How likely is that going to happen?  After the first bvec the
-> > alignment constrains won't change, so how are we going to succeed
-> > then?
-> > 
-> 
-> I was hoping that this algorithm would improve the likelihood of
-> finding a middle segment alignment for NFS WRITE on TCP. I'm not
-> entirely sure it has been effective.
-> 
-> Given the complexity, I'm wondering if I want to keep this one.
+On 31 Oct 2025, at 11:17, Scott Mayhew wrote:
 
-I don't think its worth the complexity.  And I don't see how it'd help
-make TCP's potentially unaligned buffer, for the NFS WRITE's payload,
-able to work within the required ondisk logical offset granularity.
+> [You don't often get email from smayhew@redhat.com. Learn why this is i=
+mportant at https://aka.ms/LearnAboutSenderIdentification ]
+>
+> On Thu, 30 Oct 2025, Benjamin J Coddington wrote:
+>
+>> On 29 Oct 2025, at 15:31, Scott Mayhew wrote:
+>>
+>>> We have observed an NFSv4 client receiving a LOCK reply with a status=
+ of
+>>> NFS4ERR_OLD_STATEID and subsequently retrying the LOCK request with a=
+n
+>>> earlier seqid value in the stateid.  As this was for a new lockowner,=
 
-The mlperf_npz_tool.py I provided does a really good job of exposing
-this worse case scenario, especially when the NFS client is forced to
-use DIO (but even if just using buffered IO it has some issue just
-that the NFS client's use of the page cache causes the IO that's sent
-over the wire to NFSD to be much larger, so its head and tail of that
-large IO are misaligned).  But when the NFS client does use O_DIRECT
-each and every 1MB IO is offset in memory such that every single
-logical_block_size isn't aligned relative to associated page -- each
-spans multiple pages.
+>>> that would imply that nfs_set_open_stateid_locked() had updated the o=
+pen
+>>> stateid seqid with an earlier value.
+>>>
+>>> Looking at nfs_set_open_stateid_locked(), if the incoming seqid is ou=
+t
+>>> of sequence, the task will sleep on the state->waitq for up to 5
+>>> seconds.  If the task waits for the full 5 seconds, then after finish=
+ing
+>>> the wait it'll update the open stateid seqid with whatever value the
+>>> incoming seqid has.  If there are multiple waiters in this scenario,
+>>> then the last one to perform said update may not be the one with the
+>>> highest seqid.
+>>>
+>>> Add a check to ensure that the seqid can only be incremented, and add=
+ a
+>>> tracepoint to indicate when old seqids are skipped.
+>>>
+>>> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+>>> ---
+>>>  fs/nfs/nfs4proc.c  | 7 +++++++
+>>>  fs/nfs/nfs4trace.h | 1 +
+>>>  2 files changed, 8 insertions(+)
+>>>
+>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>> index 411776718494..840ec732ade4 100644
+>>> --- a/fs/nfs/nfs4proc.c
+>>> +++ b/fs/nfs/nfs4proc.c
+>>> @@ -1780,6 +1780,13 @@ static void nfs_set_open_stateid_locked(struct=
+ nfs4_state *state,
+>>>                 if (nfs_stateid_is_sequential(state, stateid))
+>>>                         break;
+>>>
+>>> +               if (nfs4_stateid_match_other(stateid, &state->open_st=
+ateid) &&
+>>
+>> Should we unroll or modify nfs_stateid_is_sequential() which is alread=
+y
+>> doing the match_other check here?  Maybe it could become
+>> nfs_stateid_is_sequential_or_.. skipped?  lost?
+>
+> I think folding the check into nfs_stateid_is_sequential() would make
+> the code less readable.  nfs_stateid_is_sequential() returns a bool.  I=
+f
+> we add our check in there, then we'd need some extra info to indicate
+> why it's returning false.  Is it because the incoming stateid seqid is
+> more than 1 greater than the open stateid seqid (in which case we want
+> the caller to wait)?  Or is it <=3D to the open stateid seqid (in which=
+
+> case we just want the caller to exit)?
+>
+> I suppose we could change the return value to -1/0/1 or add and output
+> parameter or something.  Personally I just think it's clearer to have t=
+he
+> extra check.
+
+I agree it makes the calling convention difficult, but it could be unroll=
+ed.
+Probably the compiler will optimize away the double memcmp().
+
+We had a good run not worrying about this case and only needing
+nfs_stateid_is_sequential().
+
+Ben
 
