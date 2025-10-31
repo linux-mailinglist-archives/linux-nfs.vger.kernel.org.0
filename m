@@ -1,71 +1,62 @@
-Return-Path: <linux-nfs+bounces-15854-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15855-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16EAEC25CF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 16:22:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D37E9C26195
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 17:25:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C140B4E50DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 15:17:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9512E5634BF
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Oct 2025 16:14:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02C7284689;
-	Fri, 31 Oct 2025 15:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80C134F461;
+	Fri, 31 Oct 2025 16:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flsKwqEE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXJGoMp3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A8325CC4D
-	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 15:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931D834F27D
+	for <linux-nfs@vger.kernel.org>; Fri, 31 Oct 2025 16:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761923831; cv=none; b=ZAxNtTOxlVWb9ghR5NRB8DGA9sGN2Mb2bCemRAr85juoJJUbn4Ky/z27l5A37k2YBP28JlN22Bhb4P7M7Ba0QtU9W8kZHPTCG2fUYBOT5bf7BM23L+DY2TEyeoAHwTyQEcNHkvZatH3OwFXCZWNQM8pjPL4L/j4j2oJcP4I7lFs=
+	t=1761926860; cv=none; b=h++/VvUE0PjzAhTyv6u6xsc3LOBq5VO06bTwcGPsd92VyFde3oOe66krVQEWlF9Y9TEzcy5j5HwkG1JT972TkmFcXMdmZlvPBAkU+pqGuuYlhVdwVPCG94I8PaqekdUnIr+2AOMgMyVIGn/oM8WUvV31+PpQFmKFi6WugOfN5rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761923831; c=relaxed/simple;
-	bh=/64G3Pjqy9FMLi7gr2rIYsRpDGylQM/2Au6iGLlFaJw=;
+	s=arc-20240116; t=1761926860; c=relaxed/simple;
+	bh=tvoSBEt2dC11Xsc2adZM1dQiLb9bylaXllf3i5lXf+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b2dFIEAhAL+QVW/FK5JU9xqXs3p9GnoKwL+k0uzWdv1iLkyX6ShD3WikixNZsVBW4KJG2xZJvLsMzEpMmKwpVMQoSYNi3krg5zcKK4JRmj4RV+sp/VxxRwq45RvGKTaaCc0C9X1iL9NcYyjN9+kNecc/DgLn0j3fWFi1iHsMIWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flsKwqEE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761923828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q11xKH2kHPpRanHFwiumdAhgBlGGPuzVoyJ1SVgNj2g=;
-	b=flsKwqEEPIiBRFDg7LdEhg1JCk1cZa2LK5XeZITeGVYOcz3JlTXmRjB2VLtk907GwS2w2s
-	Gh+DUCk0E5T5gZ1X87Fbw0/4ik+h8hWZ5Lf/S6K6oYPclsU96JOX//gkcEIlbwGTbVVL/A
-	Ocid/scd5KFgGzpCSsCE6q4cp4I6AZk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-363-q7nzIBh9OMC2LDNdjTxpIg-1; Fri,
- 31 Oct 2025 11:17:06 -0400
-X-MC-Unique: q7nzIBh9OMC2LDNdjTxpIg-1
-X-Mimecast-MFC-AGG-ID: q7nzIBh9OMC2LDNdjTxpIg_1761923825
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 811CC1956048;
-	Fri, 31 Oct 2025 15:17:05 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.88.126])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C10719560A2;
-	Fri, 31 Oct 2025 15:17:05 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 43B7E4DCA3D; Fri, 31 Oct 2025 11:17:03 -0400 (EDT)
-Date: Fri, 31 Oct 2025 11:17:03 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: Benjamin J Coddington <ben.coddington@hammerspace.com>
-Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSv4: ensure the open stateid seqid doesn't go backwards
-Message-ID: <aQTS76CWF_jArVq6@aion>
-References: <20251029193135.1527790-1-smayhew@redhat.com>
- <91B71657-6813-478A-98EC-27FDE7114B37@hammerspace.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hm4ROuEKLPEsCSHo6JVsHrAcuaj+rtqXnDywpg2/CLJNutqdnndxb+1wcqhyjXalVkWqS8KvYk+yUhtbEAV/tTGrWB020X6vBn7SesdADfRtq37jJbVDYt+r6Plmyvy/ABPHSvD2qChZoZPkPb+a9qrASBOaah+EUQi2ab6XS2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXJGoMp3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0671C4CEE7;
+	Fri, 31 Oct 2025 16:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761926859;
+	bh=tvoSBEt2dC11Xsc2adZM1dQiLb9bylaXllf3i5lXf+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GXJGoMp3B/fQRPLn9+eVJOEDmzPuwIPbAIsKPYBfTRGxXKpgS8IkLcR995nellNve
+	 ptMGjLHEmpzwjqaYrbVsxlF983EermPsh1M7v5wZjQdF9CK9Lkj6w/opy0NZdK0a4G
+	 VRrIxmUPA18x+iB0bxJPPpZ0DlvnzMTmKrHCnKjWYtyNwlbwIj+4fhI9LOU3R7VYaz
+	 rQ6jWyWFcOhcOScfUNkeC1UAlGncPC+MtlQzbMm6oVbes2dR8gxAXH0w2CcM55DeJC
+	 ngu72AJF2l+P17DaYHoeQiUAygp34z0UZLCWYYJKKlxwUbYEaxiXiHZGRwS9/r+O3x
+	 zwh5mI445In1w==
+Date: Fri, 31 Oct 2025 12:07:37 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v8 09/12] NFSD: Handle both offset and memory alignment
+ for direct I/O
+Message-ID: <aQTeyczWFoERHlpf@kernel.org>
+References: <20251027154630.1774-1-cel@kernel.org>
+ <20251027154630.1774-10-cel@kernel.org>
+ <aQS3U0bfw6X3J7J2@infradead.org>
+ <88535f7a-abc7-4649-a2b4-ba520e9aae0b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -74,101 +65,50 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91B71657-6813-478A-98EC-27FDE7114B37@hammerspace.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <88535f7a-abc7-4649-a2b4-ba520e9aae0b@kernel.org>
 
-On Thu, 30 Oct 2025, Benjamin J Coddington wrote:
+On Fri, Oct 31, 2025 at 09:21:27AM -0400, Chuck Lever wrote:
+> On 10/31/25 9:19 AM, Christoph Hellwig wrote:
+> > On Mon, Oct 27, 2025 at 11:46:27AM -0400, Chuck Lever wrote:
+> >> From: Chuck Lever <chuck.lever@oracle.com>
+> >>
+> >> Currently, nfsd_is_write_dio_possible() only considers file offset
+> >> alignment (nf_dio_offset_align) when splitting an NFS WRITE request
+> >> into segments. This leaves accounting for memory buffer alignment
+> >> (nf_dio_mem_align) until nfsd_setup_write_dio_iters(). If this
+> >> second check fails, the code falls back to cached I/O entirely,
+> >> wasting the opportunity to use direct I/O for the bulk of the
+> >> request.
+> >>
+> >> Enhance the logic to find a beginning segment size that satisfies
+> >> both alignment constraints simultaneously. The search algorithm
+> >> starts with the file offset alignment requirement and steps through
+> >> multiples of offset_align, checking memory alignment at each step.
+> >> The search is bounded by lcm(offset_align, mem_align) to ensure that
+> >> it always terminates.
+> > 
+> > How likely is that going to happen?  After the first bvec the
+> > alignment constrains won't change, so how are we going to succeed
+> > then?
+> > 
+> 
+> I was hoping that this algorithm would improve the likelihood of
+> finding a middle segment alignment for NFS WRITE on TCP. I'm not
+> entirely sure it has been effective.
+> 
+> Given the complexity, I'm wondering if I want to keep this one.
 
-> On 29 Oct 2025, at 15:31, Scott Mayhew wrote:
-> 
-> > We have observed an NFSv4 client receiving a LOCK reply with a status of
-> > NFS4ERR_OLD_STATEID and subsequently retrying the LOCK request with an
-> > earlier seqid value in the stateid.  As this was for a new lockowner,
-> > that would imply that nfs_set_open_stateid_locked() had updated the open
-> > stateid seqid with an earlier value.
-> >
-> > Looking at nfs_set_open_stateid_locked(), if the incoming seqid is out
-> > of sequence, the task will sleep on the state->waitq for up to 5
-> > seconds.  If the task waits for the full 5 seconds, then after finishing
-> > the wait it'll update the open stateid seqid with whatever value the
-> > incoming seqid has.  If there are multiple waiters in this scenario,
-> > then the last one to perform said update may not be the one with the
-> > highest seqid.
-> >
-> > Add a check to ensure that the seqid can only be incremented, and add a
-> > tracepoint to indicate when old seqids are skipped.
-> >
-> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > ---
-> >  fs/nfs/nfs4proc.c  | 7 +++++++
-> >  fs/nfs/nfs4trace.h | 1 +
-> >  2 files changed, 8 insertions(+)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 411776718494..840ec732ade4 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -1780,6 +1780,13 @@ static void nfs_set_open_stateid_locked(struct nfs4_state *state,
-> >                 if (nfs_stateid_is_sequential(state, stateid))
-> >                         break;
-> >
-> > +               if (nfs4_stateid_match_other(stateid, &state->open_stateid) &&
-> 
-> Should we unroll or modify nfs_stateid_is_sequential() which is already
-> doing the match_other check here?  Maybe it could become
-> nfs_stateid_is_sequential_or_.. skipped?  lost?
+I don't think its worth the complexity.  And I don't see how it'd help
+make TCP's potentially unaligned buffer, for the NFS WRITE's payload,
+able to work within the required ondisk logical offset granularity.
 
-I think folding the check into nfs_stateid_is_sequential() would make
-the code less readable.  nfs_stateid_is_sequential() returns a bool.  If
-we add our check in there, then we'd need some extra info to indicate
-why it's returning false.  Is it because the incoming stateid seqid is
-more than 1 greater than the open stateid seqid (in which case we want
-the caller to wait)?  Or is it <= to the open stateid seqid (in which
-case we just want the caller to exit)?
-
-I suppose we could change the return value to -1/0/1 or add and output
-parameter or something.  Personally I just think it's clearer to have the
-extra check.
-
--Scott
-> 
-> This is going to be a super-rare occurrence, but when it happens we should
-> be aware that we're going to process the waiters out-of-order.
-> 
-> I'm trying to see any harmful side-effects of doing so, but not coming up
-> with anything.  I guess we could have mis-ordered setting of
-> NFS_DELEGATED_STATE, but I think we race to that anyway.
-> 
-> I've tried to think this over carefully - so:
-> 
-> Reviewed-by: Benjamin Coddington <ben.coddington@hammerspace.com>
-> 
-> Ben
-> 
-> 
-> > +                   !nfs4_stateid_is_newer(stateid, &state->open_stateid)) {
-> > +                       trace_nfs4_open_stateid_update_skip(state->inode,
-> > +                                                           stateid, status);
-> > +                       return;
-> > +               }
-> > +
-> >                 if (status)
-> >                         break;
-> >                 /* Rely on seqids for serialisation with NFSv4.0 */
-> > diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-> > index 9776d220cec3..6285128e631a 100644
-> > --- a/fs/nfs/nfs4trace.h
-> > +++ b/fs/nfs/nfs4trace.h
-> > @@ -1353,6 +1353,7 @@ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_setattr);
-> >  DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_delegreturn);
-> >  DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update);
-> >  DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update_wait);
-> > +DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update_skip);
-> >  DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_close_stateid_update_wait);
-> >
-> >  DECLARE_EVENT_CLASS(nfs4_getattr_event,
-> > --
-> > 2.51.0
-> 
-
+The mlperf_npz_tool.py I provided does a really good job of exposing
+this worse case scenario, especially when the NFS client is forced to
+use DIO (but even if just using buffered IO it has some issue just
+that the NFS client's use of the page cache causes the IO that's sent
+over the wire to NFSD to be much larger, so its head and tail of that
+large IO are misaligned).  But when the NFS client does use O_DIRECT
+each and every 1MB IO is offset in memory such that every single
+logical_block_size isn't aligned relative to associated page -- each
+spans multiple pages.
 
