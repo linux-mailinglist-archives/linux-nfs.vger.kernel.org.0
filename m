@@ -1,194 +1,121 @@
-Return-Path: <linux-nfs+bounces-15861-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15862-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE1A5C27441
-	for <lists+linux-nfs@lfdr.de>; Sat, 01 Nov 2025 01:25:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60DA3C28569
+	for <lists+linux-nfs@lfdr.de>; Sat, 01 Nov 2025 19:29:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 959AD405A11
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Nov 2025 00:25:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DDFA14E1646
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Nov 2025 18:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73DD1D63C2;
-	Sat,  1 Nov 2025 00:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9102FB973;
+	Sat,  1 Nov 2025 18:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="YgHI6+vi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V9fYAyeN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QizEv1GC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121982D7BF
-	for <linux-nfs@vger.kernel.org>; Sat,  1 Nov 2025 00:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781C82FB620
+	for <linux-nfs@vger.kernel.org>; Sat,  1 Nov 2025 18:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761956702; cv=none; b=DL9sBTMl5hmFDb+9UAC/afRIvwIbeDDdWtfH+f+n+aLRGAMrT9UL8ZJCM9lr33eRxif6qxtAvaFFj1xLH1jLhBGTIp0AEDXDuXfN+4+fVNefa6JCMjQ1yaT/eJ7gDE3Pd3gJ00KaWxgKKz9HdGGhwKPBq/JnR2IhZ5njmLhap2w=
+	t=1762021737; cv=none; b=Mdazh9LqkGg2qeAb2v3JT/YUKOLb+IGv5kklgYkHHIn3kgc7HGJ2L3ci5+XdjDuKWw5ymkx6SrDii4w9sMVCCRuMGhaFadiJFX/ZwcKnEBK0hUlho/05zgbHwJqgLPdMxOj17Dt66fIagr9fvCFX49Hj3auj+tYUKGRDJqeo+zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761956702; c=relaxed/simple;
-	bh=mM4kgAOkv1mk7cyxe10e7wqTLtI0dfdnnHFC3gDBLH8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=kWp4sgtTi3YrhUzdaeILPXraK/LjGieA3KAsJ9U8LZamxZrdCPuvvSPxfE5YL38PsdDB86cLJsH542Nsj14XVxzX3ZJbQTVWfKsBXIibMjsLrbFQ2IKalFBS50tthe+YqNngVu7SFGQjY5lBEMUd3zpnEAu+8wGkLVPSTZb7nFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=YgHI6+vi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V9fYAyeN; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id F0746EC0222;
-	Fri, 31 Oct 2025 20:24:59 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Fri, 31 Oct 2025 20:24:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1761956699; x=1762043099; bh=pZDU1Qb878r3unSefeUUm1uQIp6tM82KEj6
-	/xJAl9LQ=; b=YgHI6+viD+dNBAMWnFShsItiuYG/C3Pp4IjihysQGCKNknrL6Ni
-	q4pEFexwUfCu6TY64X59gnBRy6CY4Xz8iAlpH+IknrjEor5cfqPv7ynApY0BU0Zh
-	9iaGZmojtata7l+chmnP+ENJP6L69qwi2dlo+pgdrQ8m1Idg5pa41slwuqYa3JHs
-	vgaP2VFRqswI7+KeET87pYY65AGnTQ3iuXra/TpC9OznmtXZKZ86//zZLV87vWEn
-	9gaK+xULnmJZHbL/tJll8+5kWQjCKp2jhqMpDoqlbiC2IkoLKXzZoSe+Ds0iptR5
-	l9/cL/DG+3brzZKR7v1QdGBhkA9AbsPWk7Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761956699; x=
-	1762043099; bh=pZDU1Qb878r3unSefeUUm1uQIp6tM82KEj6/xJAl9LQ=; b=V
-	9fYAyeNYXaEbnGaQTkVDYQ7T6cHSDchDdTTPb/NKqkEVKRoXnxUJpeI0qdjoYQnh
-	BNEylHrwJD9zdEt2AqkeryJuuzV9iAl99875OXb7It5dtOUPMNMZZzaF98K2O+/l
-	OqaeYZodxhv+iCFcwAVuLwRdHH/TstF5QjmHhqKJzzCtU7GghxVwf63FQvg37TVV
-	xQS7+g593KqXLOoD1y7ltCI2R5/k7j31kJpUiQOl/+lJHJbfYXx1Rmp+J8Cojrmi
-	SKjYaRWrqx2djBvcF6eUTpq1hzTgUwo0zE0Tk8h/bulP7Z5Z936fB/vXjHBXnqAj
-	9kRl61pNtwDLHvwT9EnNQ==
-X-ME-Sender: <xms:W1MFaRkk1a4m7MhuzjMaasCHgSE4uHda5-iBG3I0GkTMF9RSwrSYGw>
-    <xme:W1MFaQgWrNuxGEcmhSPRoV156du6LQkp6n69WwMgVMTeenm8RAbYHy5Qx2SEXHt6t
-    Urxqiq_-AraZQirn4UAg-Lhj3mSo9DzaKnCesROdMF9LSHeNQ>
-X-ME-Received: <xmr:W1MFaRfsM6xUyRhK8xacDBJlO5bikyG68117chPhklG5qvLlf1338EHRfALdhj95JMwmm-9rSefZVZe_kVcsGkUYBGqOO202b6WBYM4-SVyw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddujedtledvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
-    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:W1MFaYifWXPMzJrGOhEnBWXfh2X0it2h_GqdZTbqVfs3wqGDurFMFQ>
-    <xmx:W1MFaRzsUgqjeGr58Ouv5EwO9BksK8N__mA2WtzyNmEfV6ucbXE8pg>
-    <xmx:W1MFacPOb2Zw4Y-WG8sb9X4pUzyKIpkecpHxXMOgcHyK3y_2lgb1lQ>
-    <xmx:W1MFaaWxKtUcbAuo_neiz-b455KGvT4YeFMdvlTi_oJyU2d9h0ZzUQ>
-    <xmx:W1MFaXGu0NgL4BCOgCBMTjkGwNRkhdFrKqJGe5xnbneHUEelBsrN3-QT>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 31 Oct 2025 20:24:57 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1762021737; c=relaxed/simple;
+	bh=NIVbLEhNWVwr/9ZA+xZBrNJEuPJ5/VLt4/GlyzuGbq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BxoqzuclaK4QxLwIQIVetVcY3xDy9wFn51GN1+XHcQaQAlWfGNLet+Y94tsgND8UypVO+bXGq0GD7aZkwmw8qpL4zpXvStMwwhg3qirjqBchGXDliGfHkrRpO/l4YplwCLF65KHXzE3nxdq7zGGdhTshWjiKqZzTqoab0Lxdvew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QizEv1GC; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A1IK2Pj027192;
+	Sat, 1 Nov 2025 18:28:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=N2fivM2ihdx2bL6i8Mmj3tHTgD6SF
+	tx7LTqzcujj4Oo=; b=QizEv1GCTBE3CQJx46plNtYvqKRCD3l8rk5W4QwKakNiA
+	GSj/nISk2iySrup5quzuZRBqM7p/uPUKD7pSf9QrREFKQCI0au+IU8NYZO6e+ovB
+	WcrdDvcaeAk9i06agUuWOYu5rrBMXYJ8w0aNrUjCmJr4YIavZgK3cIyVU1uxKZXh
+	xMlyPFOQC2THIjEvGYqdlImP/80R5YBtqeyBulyHiStKKTC33HJFpX+R69hSzh28
+	N7XKV5GS1uvOYWJB873AaR/JF7quFBt9PE35+hpvwF1l05a+1HLttXfAjGgc6tg/
+	cuzbPs/dFrZOcuY8bLA9pIfNC1VanaGOEEfY+5IaA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a5qcq8055-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 01 Nov 2025 18:28:39 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5A1GfhBr007394;
+	Sat, 1 Nov 2025 18:28:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a58na8cw4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 01 Nov 2025 18:28:38 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5A1ISbNQ035467;
+	Sat, 1 Nov 2025 18:28:37 GMT
+Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4a58na8cvp-1;
+	Sat, 01 Nov 2025 18:28:37 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
+        okorniev@redhat.com, tom@talpey.com, hch@lst.de
+Cc: linux-nfs@vger.kernel.org
+Subject: 
+Date: Sat,  1 Nov 2025 11:25:17 -0700
+Message-ID: <20251101182819.651120-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 06/10] nfsd: change bools in svc_fh it single-bits.
-In-reply-to: <3f209a8e-594e-4180-b8a4-25791d4d5295@oracle.com>
-References: <20251031032524.2141840-1-neilb@ownmail.net>,
- <20251031032524.2141840-7-neilb@ownmail.net>,
- <3f209a8e-594e-4180-b8a4-25791d4d5295@oracle.com>
-Date: Sat, 01 Nov 2025 11:24:55 +1100
-Message-id: <176195669572.1793333.3936693579462442180@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-01_04,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2511010159
+X-Proofpoint-ORIG-GUID: fLU97DT2ZpDet2CT4n0WvaD76vZFb0Lx
+X-Proofpoint-GUID: fLU97DT2ZpDet2CT4n0WvaD76vZFb0Lx
+X-Authority-Analysis: v=2.4 cv=LZ4xKzfi c=1 sm=1 tr=0 ts=69065157 b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8
+ a=I-1mG6jRAAAA:8 a=20KFwNOVAAAA:8 a=SEc3moZ4AAAA:8 a=5KiepZ0alBbxxWZTZwgA:9
+ a=xo5jKAKm-U-Zyk2_beg_:22 a=vAntc5lzOlbkVmf1VcWC:22 a=5oRCH6oROnRZc2VpWJZ3:22
+ cc=ntf awl=host:12123
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDE1NyBTYWx0ZWRfX/PrZ3mMbkKqA
+ qpA7sGUMUoVQAtk/4pShFKMhw/yEfgvMb8lCU9CW2N+3RQnjvsefOAnuiB8PON66CeFJjN7S7TA
+ uM5vhl+coZdxFS+OJ0OSmZqsaSY40Ku45mQ0fkLb3TU/ZetfdM8jtPew+BVX+RzHcEaevvPf7p0
+ u/ec5wViibPb1NK58Uu9kI+r2M/9JaZtb/mAh7Go/fGr01sLHSQJgWvdOmj2q/aGCJhe5F7BwVi
+ +KuhWaT8Ih5m8YLqeFHuLmTg4KcBbCOyYuuxqXgOkXj9w2MR9MFlO1AK2qW6I2qMrB6VaXAp41b
+ u4zrt2EncwaCl02m6MGIyOTb4LMRdehHlCRv+Lesc2So0C2Otoyg53seyosA2YFr0v7p4WadM9O
+ jCA+wXd55augcs4mc69h+DmJyDCEnAMvYTJHZJjoj55Nxzu1+MI=
 
-On Sat, 01 Nov 2025, Chuck Lever wrote:
-> On 10/30/25 11:16 PM, NeilBrown wrote:
-> > From: NeilBrown <neil@brown.name>
-> > 
-> > There are now 9 consecutive bools which, one x86_64, results in a 7 byte
-> > hole reported by pahole.  When there were 8, there was no hole.
-> > 
-> > If we switch them to :1 bit fields then they use 2 bytes instead of 9.
-> > There is still a hole, but the struct is the same size as when there
-> > were 8 bools.
-> > 
-> > Providing we *don't* change fh_want_write to a bit field, this also
-> > reduces the code size on x86_64.  fh_want_write is set in lots of places
-> > (via a static inline) and I think that causes significant code growth.
-> 
-> Anyone with even a hint of OCD is going to look at this and want to
-> turn fh_want_write into a bit field.
-> 
-> Anyone who wants to add a new field will not know whether to make it
-> a common bool or a bit field.
-> 
-> I don't find the bit fields improve readability, but that's entirely
-> subjective.
-> 
-> In any event, I think a code comment is necessary to explain what's
-> going on.
-> 
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com,jlayton@kernel.org,neilb@ownmail.net,okorniev@redhat.com,tom@talpey.com,hch@lst.de
+Cc: linux-nfs@vger.kernel.org
+Bcc: Dai Ngo <dai.ngo@oracle.com>
+Reply-To: 
+Subject: [PATCH 0/3] NFSD: Fix problem with nfsd4_scsi_fence_client using the wrong reservation type
+In-Reply-To: 
 
-That's fair.  I'm curious to understand exactly what operations are made
-smaller by bits fields and which are make larger.  I'd guess stored
-(which are now read-modify-write) are bigger, but I'd suspect tests to
-be the same size..
+This patch series includes the following:
 
-I'm probably going to have to do test compiles on multiple architectures
-and figure out what is going on.
+. Fix problem with nfsd4_scsi_fence_client using the wrong reservation type.
+. No need to fence the client when server receives NFS4ERR_RETRY_UNCACHED_REP.
+  This error means the client has seen and replied to the layout recall.
+. Add trace point to track SCSI preempt operation.
 
-Thanks,
-NeilBrown
+ fs/nfsd/blocklayout.c |  7 +++++--
+ fs/nfsd/nfs4layouts.c |  6 ++++++
+ fs/nfsd/trace.h       | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 2 deletions(-)
 
-
-> 
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> >  fs/nfsd/nfsfh.h | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> > index 995fafc383a0..a570b8a7adfe 100644
-> > --- a/fs/nfsd/nfsfh.h
-> > +++ b/fs/nfsd/nfsfh.h
-> > @@ -85,18 +85,18 @@ typedef struct svc_fh {
-> >  	struct svc_export *	fh_export;	/* export pointer */
-> >  
-> >  	bool			fh_want_write;	/* remount protection taken */
-> > -	bool			fh_no_wcc;	/* no wcc data needed */
-> > -	bool			fh_no_atomic_attr;
-> > +	bool			fh_no_wcc:1;	/* no wcc data needed */
-> > +	bool			fh_no_atomic_attr:1;
-> >  						/*
-> >  						 * wcc data is not atomic with
-> >  						 * operation
-> >  						 */
-> > -	bool			fh_use_wgather;	/* NFSv2 wgather option */
-> > -	bool			fh_64bit_cookies;/* readdir cookie size */
-> > -	bool			fh_foreign;
-> > -	bool			fh_have_stateid; /* associated v4.1 stateid is not special */
-> > -	bool			fh_post_saved;	/* post-op attrs saved */
-> > -	bool			fh_pre_saved;	/* pre-op attrs saved */
-> > +	bool			fh_use_wgather:1;/* NFSv2 wgather option */
-> > +	bool			fh_64bit_cookies:1;/* readdir cookie size */
-> > +	bool			fh_foreign:1;
-> > +	bool			fh_have_stateid:1; /* associated v4.1 stateid is not special */
-> > +	bool			fh_post_saved:1;/* post-op attrs saved */
-> > +	bool			fh_pre_saved:1;	/* pre-op attrs saved */
-> >  
-> >  	/* Pre-op attributes saved when inode is locked */
-> >  	__u64			fh_pre_size;	/* size before operation */
-> 
-> 
-> -- 
-> Chuck Lever
-> 
 
 
