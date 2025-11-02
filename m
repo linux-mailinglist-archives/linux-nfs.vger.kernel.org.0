@@ -1,186 +1,164 @@
-Return-Path: <linux-nfs+bounces-15867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15870-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D0A8C285B1
-	for <lists+linux-nfs@lfdr.de>; Sat, 01 Nov 2025 19:52:47 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20E8CC28946
+	for <lists+linux-nfs@lfdr.de>; Sun, 02 Nov 2025 03:03:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D890F3AC921
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Nov 2025 18:52:45 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DA87A4E0117
+	for <lists+linux-nfs@lfdr.de>; Sun,  2 Nov 2025 02:03:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6FE2FC890;
-	Sat,  1 Nov 2025 18:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A7614B96E;
+	Sun,  2 Nov 2025 02:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qg0+nQRI"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="bj4qnEBI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i0inD383"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB50D2FC870
-	for <linux-nfs@vger.kernel.org>; Sat,  1 Nov 2025 18:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2801F5EA
+	for <linux-nfs@vger.kernel.org>; Sun,  2 Nov 2025 02:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762023163; cv=none; b=lAy598ckAZvpZwmL4pRz9FBeQeFEJqpqpKgs3x4VVucZbGEj6Pv3FF2e8d04j2+oJugxMkciqKkltMF6z4RvfYVezsKaVH95P5rZODz7k2pQ2olbxxV5OzykQ8KAALjXIAIPrHab3+oFJlMzMivr4i2o1sDGC6hXNTdldKMMCjo=
+	t=1762048982; cv=none; b=fVDh1uJxSK9FvFnLqT55uZkN8YrHuiOxrFrBk+ZDRlv78yWDBpjKq1g9t77BDr/tii2ctJLqJ3o0+rKVUQ2Ax9tQDlDy5LBVYohJsS2tshV/D2+A+R/kKziEnjjXrptnteqaNnr1TlWqBsmfvvOF6oj+FjazVvEsdNFYiE9wCbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762023163; c=relaxed/simple;
-	bh=oFr/VtuuWbwN6qUQty3lE/dbyhA8mbdFi/Wh1kDJuL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fd6bej5eiWcdYH7FUvc3jKtyFtjP6Pf0Ubf+DIERGkfL4yg411dOcQDSB6jIG7gcug5IpUli3YxAH5TUuUgcRgM9FAV5eys3tSZNTbVDpNBAnN0gQkY3OtNVaux06eG4mweYLLc3rhHX004qLShh2TsPSGL0TP+gKUvRhCvz3h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Qg0+nQRI; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A1IZqis013328;
-	Sat, 1 Nov 2025 18:52:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=O9GUO
-	HUhkuuZtSUj8rksMJfn+0V0zeltThcsNlX5Ui4=; b=Qg0+nQRIHY/5bucs6rD8a
-	1NbKGLb/J4MKVriO6Ie9ml9DIK8bHGbec0QOQaA0gfPUsyvBkNWd2lAKy/k6cZo2
-	uoicHAcSOpPDYCcqAoYUKYwT5R4OFQ21XJ2LnQLqzv0HFfp6bblU+31xvVAY+vYO
-	D3QYfG/N4vNzoB4HKsE37VCmYWZ5ZJDyzcLWMFs3AMJ9aDmNpm5TE90RZWJVg5Co
-	fwcicTJffEYzROADKrR99Oll1/2RosG/TsOdA+xuN+lJ2069HVoLZJLsqegzzFyE
-	yNZMCDOG6A3FK+c3NsdGT+FgJjzT/henWH00Wywx2E3qlw0kFYP8H0r4jEVHqM1+
-	A==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a5qkrr0hf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 01 Nov 2025 18:52:31 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5A1H03Xa017576;
-	Sat, 1 Nov 2025 18:52:31 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a58n6ggm9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 01 Nov 2025 18:52:31 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5A1IqTSi011363;
-	Sat, 1 Nov 2025 18:52:30 GMT
-Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4a58n6ggks-4;
-	Sat, 01 Nov 2025 18:52:30 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
-        okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSD: Add trace point for SCSI fencing operation.
-Date: Sat,  1 Nov 2025 11:51:35 -0700
-Message-ID: <20251101185220.663905-4-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251101185220.663905-1-dai.ngo@oracle.com>
-References: <20251101185220.663905-1-dai.ngo@oracle.com>
+	s=arc-20240116; t=1762048982; c=relaxed/simple;
+	bh=XI2tNJYSZrLQe8Iz8HhnqppuwCiEMNM7S4noJrCW/gc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=aJ+23XQg76Xw896qn0m4WEggxC7iLcCAcTwFwjQk93f42iFYJKVfMg9l2DAsMNGRevzBvF8NxBb7PQiydG/NUb1/Y9gYu12nrrt7TOhwGWvQ9/AZZkBtXlXrm9mFJDkUZtSrwRHq3mzHp/prohl4O+/457xGFe7YGkOM7w/aXxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=bj4qnEBI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i0inD383; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id DF9367A0083;
+	Sat,  1 Nov 2025 22:02:58 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Sat, 01 Nov 2025 22:02:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762048978; x=1762135378; bh=fn/KQ2WGPcoPk8NbF4Rq9jDypEqp/exhsca
+	5FQNNwF4=; b=bj4qnEBIX254FO5rgHBIilRPZXizh1+i4RTHHlBfGbWTv3Qrilv
+	2vMyr0ni9pn98KtD7Re7U2NIHVQuRxtCYA1Y7ntNCb7DZrJ8EfK3pUYGagzw9di6
+	QXh6mNPn6sBDwHAN3aF2M7kN46VTolC3dC/kjAtZktBITSNpwPe2Sozu1FpLvp5a
+	lM1ySLMKKmuaWYdQexICLdk9nmUlfTV+GRnWHciD4oxlPqZUY9i4y/zk1Zz7TbP/
+	pua/vAzZ1LLVa4zkxoMFi+nGEgzUeMhx6akKXcKK8aamjBSjV3ObK8KBSaADrnH5
+	PvXYNXytNaSx6Pi4nnk3YuhlcUMcRg2p1xg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762048978; x=
+	1762135378; bh=fn/KQ2WGPcoPk8NbF4Rq9jDypEqp/exhsca5FQNNwF4=; b=i
+	0inD383vVcv5LRJsd9uPq9slAn9Jz/Oo6cSZaosxtS8iQfW9rYKH752bUgMfmkM/
+	QiQp8sFPLxGfP9rjB92DAZAR+M4dlzFn5kSjLdcV6r6h1st/kSSPv9sl8kajWXKK
+	hzPc9BiXhZEpNvc8HeRzmymUlnW8WRT3DHR5MUglYrXrmf2ZG5sXqDG8e3rmbX2r
+	t02A/F7+82X/5hBMNgGqJOBSEUiNqNv7EkipVR+gRVQHvqt7Nky9MgQGGErsEps2
+	mJ5hVGDVO7hg1mUumTBW80YN2xTldKbpRMM1cYQXW+/cmGJdK+is0YHjxUNvL/ZG
+	fVbygpgigc4HEO8b9Ha5g==
+X-ME-Sender: <xms:0rsGaUFhiZE2P-e7BF0zXwntvrkTrA2JSTZJ9hKA5hVC8AsWMwW69Q>
+    <xme:0rsGaRAQPGJ3ktTprhc1AbEuKcsnHDJ85PbRQl_n-vIUoK4g5AdHXW4EhyDxICRM7
+    nHr4qzJ7uZmLHv1dNWrJS0X7FQRO1pB9yFrRq67zle7_VfE>
+X-ME-Received: <xmr:0rsGaX-RhMHMiv5feS2JIogfRwHiYtXJeMc0Quuhnxk3PsHVRT9TKJ-XNwveZNcQ9W3bK4w2VTLq6Tse38mBUIsTK4N5qY_-Wbr_r8R6w5qu>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddujeegtddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
+    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:0rsGadB8K6e9GNTLuZwPq_Y1JvcExu8OSLOpKFyJa0dfCUYo38xwFA>
+    <xmx:0rsGacTT3BX5WxdNJxxEh4oY0p3L6mJ_ZW8jd82SmsIY8bemN72DxA>
+    <xmx:0rsGaUthKHWDOJxUAc59fgy6U47QNx5VDu_0qOw33xrQ_7ajLwCVmQ>
+    <xmx:0rsGaY1Fx_IGegNekjVdeTeWbvXitCSQNpaT88bH41juJ84ejK2n7A>
+    <xmx:0rsGaZntHcohe1fgvvVdvIv49l43NpvB4t7ochHU_1cpWjHq_TTtTXLJ>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 1 Nov 2025 22:02:56 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-01_04,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2511010162
-X-Authority-Analysis: v=2.4 cv=FqAIPmrq c=1 sm=1 tr=0 ts=690656f0 cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=ro0K2ivkSJ57f8edTZkA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: oOFHb8D66jx7SFnJCnoFQ3iecycE4bOs
-X-Proofpoint-GUID: oOFHb8D66jx7SFnJCnoFQ3iecycE4bOs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDE1OSBTYWx0ZWRfX/zrywf6eRLZh
- YDO0gjupJqfVTTXesz4WTuyR5yf43lW5lz44JxAzWGL3X0NLmdlBPfMcVg6/8+77WOmUAt85U7e
- 3Rip2uL6pmOhhVqJaA9tkdfzfVRwPHkjx5UuK/0aPbveupI7kNGheWbpRSDhzKzWPo+1jAmgmGA
- eLhnfBSsSdMg/bZg9fNkLf6OIorFZGPe3gqjQ1hXytr9YLzNAokm9pTwdVnnL6R1j7+3peLw6Am
- aVHYp/Sfn8Ik6q9O00yfmxxy+FDDwum+VuD+UxIdmRZmDs6Zsko7oXwlw3N2SPGa0yFb1Kr8AJg
- DjLow7G/buIrOAzZ0ZPKa8XoJ0x5iVyGWk0wSp/u0NPZWGot2YpIeTBI9J4RAm4z9qjUyrayaAw
- Xe1tRrMG6juswuAQ25YhyfXZi+5x0A==
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 10/10] nfsd: conditionally clear seqid when
+ current_stateid is used.
+In-reply-to: <4086d557-00ab-4e50-9424-212cefe0c0b7@oracle.com>
+References: <20251031032524.2141840-1-neilb@ownmail.net>,
+ <20251031032524.2141840-11-neilb@ownmail.net>,
+ <4086d557-00ab-4e50-9424-212cefe0c0b7@oracle.com>
+Date: Sun, 02 Nov 2025 13:02:48 +1100
+Message-id: <176204896840.1793333.10609031806076493945@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-Add trace point to print client IP address, device name and
-status of SCSI pr_preempt command.
+On Sat, 01 Nov 2025, Chuck Lever wrote:
+> On 10/30/25 11:16 PM, NeilBrown wrote:
+> > From: NeilBrown <neil@brown.name>
+> > 
+> > As described in RFC 8881 scions 8.2.3 on Special Stateids:
+> 
+> s/scions/Section/
+> 
+> Does this change need to be backported to LTS kernels?
+> 
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/blocklayout.c |  5 ++++-
- fs/nfsd/trace.h       | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 1 deletion(-)
+I don't think so.  There is no regression, so security issue, no data
+corruption expected.  We (I) don't even know if any clients actually use
+current-stateid, so maybe it is of no consequence.
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index 13ff7f474190..5fb0b6d59fdc 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -13,6 +13,7 @@
- #include "pnfs.h"
- #include "filecache.h"
- #include "vfs.h"
-+#include "trace.h"
- 
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
- 
-@@ -340,9 +341,11 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
- {
- 	struct nfs4_client *clp = ls->ls_stid.sc_client;
- 	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
-+	int status;
- 
--	bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
-+	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
- 			nfsd4_scsi_pr_key(clp), PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
-+	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
- }
- 
- const struct nfsd4_layout_ops scsi_layout_ops = {
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 6e2c8e2aab10..6a8c840bcf2a 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -2613,6 +2613,42 @@ DEFINE_EVENT(nfsd_vfs_getattr_class, __name,		\
- DEFINE_NFSD_VFS_GETATTR_EVENT(nfsd_vfs_getattr);
- DEFINE_NFSD_VFS_GETATTR_EVENT(nfsd_vfs_statfs);
- 
-+DECLARE_EVENT_CLASS(nfsd_pnfs_class,
-+	TP_PROTO(
-+		const struct nfs4_client *clp,
-+		const char *dev,
-+		int error
-+	),
-+	TP_ARGS(clp, dev, error),
-+	TP_STRUCT__entry(
-+		__string(dev, dev)
-+		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
-+		__field(u32, error)
-+	),
-+	TP_fast_assign(
-+		memcpy(__entry->addr, &clp->cl_addr,
-+			sizeof(struct sockaddr_in6));
-+		__assign_str(dev);
-+		__entry->error = error;
-+	),
-+	TP_printk("client=%pISpc dev=%s error=%d",
-+		__entry->addr,
-+		__get_str(dev),
-+		__entry->error
-+	)
-+);
-+
-+#define DEFINE_NFSD_PNFS_ERR_EVENT(name)		\
-+DEFINE_EVENT(nfsd_pnfs_class, nfsd_pnfs_##name,	\
-+	TP_PROTO(					\
-+		const struct nfs4_client *clp,		\
-+		const char *dev,				\
-+		int error				\
-+	),						\
-+	TP_ARGS(clp, dev, error))
-+
-+DEFINE_NFSD_PNFS_ERR_EVENT(fence);
-+
- #endif /* _NFSD_TRACE_H */
- 
- #undef TRACE_INCLUDE_PATH
--- 
-2.47.3
+It took a while to come up with a sample scenario where the change makes
+a practical difference.  What I've come up with is a sequence like
+Figure 4 in section  16.2.3.1.2. Current Stateid  of RFC 8881
+
+ PUTROOTFH
+ OPEN "compA"
+ READ (1,0), 0, 1024
+ CLOSE (1,0)
+
+(here (1,0) is the special stateid for "current stateid").
+
+If some other request from the same client races to also open "compA" -
+possibly by a different name if there is a hard-link, so the client
+cannot know if this might happen - then the seqid in the stateid
+returned by the OPEN could get updated.
+
+If it is update before the CLOSE, then as the CLOSE explicitly must use
+the unchanged seqid, that CLOSE will fail.  That is correct behaviour
+because the client still has the file open via another request.
+
+If the seqid update happens before the READ, then the READ *shouldn't*
+fail because it should use a seqid of zero, but with our current code it
+will fail.
+
+Given that the client must cope with CLOSE failing, can we also expect
+it to cope with READ failing?  Is this serious enough to justify a
+backport?
+
+If we could have the new code in mainline for a few months then decide
+it is safe to backport, I would feel more comfortable.  But as I am
+trying to change this code, we wouldn't have the exactly stable backport
+running in mainline, so I'm not sure it would help confidence...
+
+Those are my thoughts.
+
+NeilBrown
 
 
