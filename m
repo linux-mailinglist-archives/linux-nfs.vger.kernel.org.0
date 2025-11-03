@@ -1,97 +1,113 @@
-Return-Path: <linux-nfs+bounces-15969-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15970-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D24EBC2E25C
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 22:25:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6D73C2E3BB
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 23:15:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F0CD1896FBC
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 21:26:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C92E3BCF80
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 22:13:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAFD2C2374;
-	Mon,  3 Nov 2025 21:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18CEC2EF654;
+	Mon,  3 Nov 2025 22:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaIO0Mmy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A5Bmwd+R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8351C8631
-	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 21:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669F32DF122
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 22:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762205153; cv=none; b=q4iPoJH424+d9CDH/T31qz8vWk/NS4chCV5UrA4sIVEBuRJPsTdZ1cHUXo/GUOClMxrbWpnAicFCNFwGlyNO1xlD1JnI3LXisnaol7JyQ6u/k0HuwWEvETk+fl2Y/vaI8GazXSeefUCuP3t0FAt0Xpk+l87WJ28tZxZ+TFxSdLY=
+	t=1762208028; cv=none; b=ly1QCMenq74PvHYfax8z1OhBnUm57gIqgzlFIWhKj+q108Tqt6/dASIA8d3ov0fSaxoDrylEIjbCEWK7l8Y2irUCxb6N0PRmnzsSrntJwCqZOcrTVYyA/F5zzQa9y49hL1Fun3dwj9CUMB8GlJ6QEswsrFg1DFcRowQcId35wWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762205153; c=relaxed/simple;
-	bh=MR1MljRamxtutH8ruSps9QuaUDUmApA5Cj20Ruu4BAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ouR5YHQKW4Mx3qj64Vl7vZ4x/LiS1Ns4NKSmXRNxpQgR3zPiD7MdIyOhoEBKpaEP1p+trtGxNMrQgGBpUk2MrD7+y/XdJwoIm83qBIhazX6fdeKmEVdUYvpa6AL/VQtnCO6/WWpAAvqgDdOCfR1vrC4jFG0AZAbJX5hx7iKEULY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaIO0Mmy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A10C113D0;
-	Mon,  3 Nov 2025 21:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762205152;
-	bh=MR1MljRamxtutH8ruSps9QuaUDUmApA5Cj20Ruu4BAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IaIO0MmyI4D6SQ1N1AtkKNHUWwb4bExwPcst5eq0FqpohOj+uHFRZF8+nfuk2My7b
-	 bcZiXkLuhQH6a1Rfg7vmIsmYcYBJwR3BMGxuQPt73+vMIbrLOrE9e14Jc5WWzH/SBo
-	 o+c+pDVGhhMsKLDFyQ22+7yewTil6x0PvnKkPMvE22pgKh505BIFH7Izsp0tnbLu4y
-	 +BvCP4KAjuHXjCjSWHP/YGG6K3hCwkYnhUqplFXgen/qbbVquAc6j5LWVvupKcyupG
-	 2wmR1vAuNJLhrHaXLQ3EwPSe14nyUP/m6oA58gqA9JXQlo6yr+Vpm68KGui6lZfPUr
-	 FqT1Un9TRtjwQ==
-Date: Mon, 3 Nov 2025 16:25:51 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v9 12/12] NFSD: add
- Documentation/filesystems/nfs/nfsd-io-modes.rst
-Message-ID: <aQkd34A5URFA6wM6@kernel.org>
-References: <20251103165351.10261-1-cel@kernel.org>
- <20251103165351.10261-13-cel@kernel.org>
+	s=arc-20240116; t=1762208028; c=relaxed/simple;
+	bh=ByczKYmulYNS+cX4RZRSWcTm5v4JqT1uNOY2i/DsZ78=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m4HPUdMi5ygGPzj8V9e11g1GtF7AkaIc5Y4ycQwGw1TkFxGPB9sI8a2lEIGgqswt74rYPpkU6LzUsfb8PeVCAtW6zhrQPjoLg3jijJOOAGRFb6Z1FxvBxBHaOnPPF1RJz5ouXOpkqaYF3ZcOYcaDRPLFXfX3Em3GzMxbmlt9ruQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A5Bmwd+R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762208025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bA9yZlLcsXhLFn/5IZHkfk40SMzinStlZ0RTMri/36k=;
+	b=A5Bmwd+RMs4Xb46hm1wWODRNh+n6SYXE0JxR/b8+qM7WWiM9TQp7nCwf01+elhQdk3BnQq
+	R2SLS9NhWB89b8Y4SGpdpw35ueBVjBycnxPeyCRtUUVPblH75i+XM78qnecZLR7s9InbC/
+	tf9K5X7L1KwgEUUBgDKlJP0p5ybrocQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-61-Okkysmg5MwCXj_-7LJr3sA-1; Mon,
+ 03 Nov 2025 17:13:42 -0500
+X-MC-Unique: Okkysmg5MwCXj_-7LJr3sA-1
+X-Mimecast-MFC-AGG-ID: Okkysmg5MwCXj_-7LJr3sA_1762208021
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 217F219560A3;
+	Mon,  3 Nov 2025 22:13:41 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.81.195])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5452219560A2;
+	Mon,  3 Nov 2025 22:13:40 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v3 0/4] protect access to bc_serv
+Date: Mon,  3 Nov 2025 17:13:35 -0500
+Message-ID: <20251103221339.45145-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103165351.10261-13-cel@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Nov 03, 2025 at 11:53:51AM -0500, Chuck Lever wrote:
-> From: Mike Snitzer <snitzer@kernel.org>
-> 
-> This document details the NFSD IO modes that are configurable using
-> NFSD's experimental debugfs interfaces:
-> 
->   /sys/kernel/debug/nfsd/io_cache_read
->   /sys/kernel/debug/nfsd/io_cache_write
-> 
-> This document will evolve as NFSD's interfaces do (e.g. if/when NFSD's
-> debugfs interfaces are replaced with per-export controls).
-> 
-> Future updates will provide more specific guidance and howto
-> information to help others use and evaluate NFSD's IO modes:
-> BUFFERED, DONTCACHE and DIRECT.
-> 
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  .../filesystems/nfs/nfsd-io-modes.rst         | 144 ++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
+This patch series tries to address the problem that can arise when
+the client is shutting down but gets a backchannel request. As it
+stands now, In nfs4_shutdown_client() we call nfs4_destroy_callback()
+which would destroy/free the bc_serv structure stored in an xprt
+structure. But the xprt structure is still around for a bit until
+it's destroyed. If we get backchannel request after svc_destroy()
+is called, then in xprt_complete_bc_request() we are accessing freed
+memory.
 
-Most of this document holds up, but the tracing section is stale:
-nfsd_analyze_{read,write}_dio was removed.
-nfsd_write_direct was added.
+I propose to use bc_pa_lock lock to protect access to the bc_serv
+structure and make sure we free/nullify bc_serv under the lock
+and then access it under a lock in  xs_complete_bs_request() and
+rpcrdma_bc_receive_call().
 
-But I'll go over it all and backfill analysis like asked, will send an
-incremental diff (probaby tomorrow).
+-- v3 Addressing Anna'a comments. (1) created function for shared
+code between tcp/rdma backchannel and (2) created
+xprt_svc_destroy_nullify_bc() for both on/off CONFIG_SUNRPC_BACKCHANNEL
+values.
 
-Mike
+-- v2 fixing kernel test bot reported compile error in usage of
+xprt_svc_destroy_nullify_bc (CONFIG_SUNRPC_BACKCHANNEL toggle related)
+
+Olga Kornievskaia (4):
+  NFSv4.1: pass transport for callback shutdown
+  SUNRPC: cleanup common code in backchannel request
+  SUNRPC: new helper function for stopping backchannel server
+  NFSv4.1: protect destroying and nullifying bc_serv structure
+
+ fs/nfs/callback.c                 |  7 +++++--
+ fs/nfs/callback.h                 |  3 ++-
+ fs/nfs/nfs4client.c               |  9 ++++++--
+ include/linux/sunrpc/bc_xprt.h    |  6 ++++++
+ net/sunrpc/backchannel_rqst.c     | 35 ++++++++++++++++++++++++++++---
+ net/sunrpc/xprtrdma/backchannel.c |  8 ++-----
+ 6 files changed, 54 insertions(+), 14 deletions(-)
+
+-- 
+2.47.1
+
 
