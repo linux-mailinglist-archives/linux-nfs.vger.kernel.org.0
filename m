@@ -1,110 +1,209 @@
-Return-Path: <linux-nfs+bounces-15974-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15975-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37307C2E39D
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 23:13:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 697CAC2E3D0
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 23:15:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D345C34ADC4
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 22:13:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 946713B285D
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 22:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817EE2EE5F4;
-	Mon,  3 Nov 2025 22:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5A22BFC60;
+	Mon,  3 Nov 2025 22:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKa1FFe1"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="C73QieSk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AWQ2qZx/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ED62EFD92
-	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 22:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE142EF664
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 22:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762208030; cv=none; b=XbDSaI3XPQmUmVJ17xKyEB7hdJKGHsl+B1hYhhZUZnXEO0aKQKmSyiJm4xwEVDGWL5kzs4XkoTWxB87quVIcRNmOY21CyiHiNzVfzphV5SfG3uDV005Qf/zsUmprQI9yL8UrJw0GTbmukh3rvdgx7R3kLnUDIKgL8g4Q3BdSCSs=
+	t=1762208073; cv=none; b=qdOajAJMyQLytwJz046dNzRQPBeWM0VUUnIOBcsX+sFIZs8VKsg+BT7pKjzlnYD4tkThvL1DRxoQsPtsZJfSpK72VpBj/HlBJjwXWUrPyELIi+/gXV7c77FnLtOg3lcCYnv2mjK8LFZOtfcjPh+kmDRGiF1SN32Kkt+N8U0t9sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762208030; c=relaxed/simple;
-	bh=N9k/Jd2kBbBgrM6T0K17PEccw/qLrEGu0Z2uT7mwB9g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MbgrE5sXyCfrSrHebW4lq3spbTb+Q8NmDtczw9R30qCtU/pih1RODLFJ3IvyjddLfgeqzHaDN3OPfLOVseyX9R7c6jr6TATFmzlOd82L4VK6MfKkOepOt6pDzxJz/N8UrkzxLu17ihDMe9A/yff84P6QO7JVpBCvZQ9geaK4DOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WKa1FFe1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762208027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NDHcT8Bma5LoXPK3HnyfCCqD7fk4He1BCLKN7BNUxgo=;
-	b=WKa1FFe1GW5nB3iUPhAssDmhJpMfM/B3xXNu6pwHV/yPq9K0OHB2k8hEMxZAoxXLpUbAMS
-	A77GA0G0em+37w+ANJ2zyRq5m/pl+Yo7PqDZI58JF5zK+fhNcmIuh9Tr8mWskL1bzIfU+/
-	41X/zqHuVtpKzDJFV6O/ilDsrXCsKs0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-62-4E7SQgNrNUShL3mm44CtOA-1; Mon,
- 03 Nov 2025 17:13:46 -0500
-X-MC-Unique: 4E7SQgNrNUShL3mm44CtOA-1
-X-Mimecast-MFC-AGG-ID: 4E7SQgNrNUShL3mm44CtOA_1762208025
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72B36195605F;
-	Mon,  3 Nov 2025 22:13:45 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.81.195])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9C73419560B7;
-	Mon,  3 Nov 2025 22:13:44 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v3 4/4] NFSv4.1: protect destroying and nullifying bc_serv structure
-Date: Mon,  3 Nov 2025 17:13:39 -0500
-Message-ID: <20251103221339.45145-5-okorniev@redhat.com>
-In-Reply-To: <20251103221339.45145-1-okorniev@redhat.com>
-References: <20251103221339.45145-1-okorniev@redhat.com>
+	s=arc-20240116; t=1762208073; c=relaxed/simple;
+	bh=Oh+LjXy97cTuY9uehPheB63iaTsYKyG/C+qiKtQxv1o=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=m3vaHRoJW6f4y1Ufp87wHfBvDR3FHXyVVWBbTD2+vl3vEKMF+URqyP8yVX8ok7vogoMVDXe6lbVFqYA8tt3R+4JmoJC9gngAwTJJDHLYoaRux0G5FOkmPPeWl4ilD1UmB7MFewFjmEKh2bLIjR2DkspVxPdwcUO/4EwRAZoZxfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=C73QieSk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AWQ2qZx/; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 28392EC00C7;
+	Mon,  3 Nov 2025 17:14:30 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 03 Nov 2025 17:14:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762208070; x=1762294470; bh=AeHKrSni3dzNXkjLyi98fr7pz0kCt6T9nmi
+	3wZYm5CY=; b=C73QieSkVnioMsKZ5k3tq0pudl3k/g2epi6pq8J1FHGDKFgP35e
+	1ocd7EN+3bf8DqkRPER/pACmSkBmLtM/pAzQhw0m7aaM51/kAIsCq0u+okZw35Mb
+	hitl3nSCTmpBxrR9uPTezwju0yYtBduXSRwckoq/ObM86kTSlUlUyKZVQQaeyGGt
+	81foCauoB6aqkKE4whjitNtuZRHo6wIFDRrwv2tUKznOl0dMYm+5ml4DD9/yhx8K
+	/rkyk65KBG3GOPQItDmaGTwG20NZwr1f8HCZYdBIT3diO0oFJ1AXFdZuIPZRMToJ
+	Zl4ZVMUrQCoWlKFx6SxHj95IlAIYmqpzEkg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762208070; x=
+	1762294470; bh=AeHKrSni3dzNXkjLyi98fr7pz0kCt6T9nmi3wZYm5CY=; b=A
+	WQ2qZx/yakONAM1FunrrhZnRZTnPXGroNsExF+5vEi4ZTBukSkVQLckJ6s6TcMSJ
+	/G8vcRYxoT0umdGrlzH/5XHy6VtCrJcu44bzrr6v9wfWoLUydkw19ezgcGRV9aQN
+	SX5GGlGoEqAIav60KefMe3JprsSS/yC7BUHPpA8qirT+5p9/b88C10zvUDsLUmIJ
+	SO5gZ3JNUHMmA5F7U/HWoUwVC++Rgn5PniOvid14JFsmZ9swfV9pNG48ghrj1Gf3
+	8BV7xX+r6h9fbsMgdqP995mknX51AW/eHiNebGR05GV1PLBVtiGZoK2p9NsiXLZD
+	kaBZaSqLs73qfHA5z6Eqw==
+X-ME-Sender: <xms:RSkJaZviSuHwS_5kC-NpYrH3p8B4gdgLHaOmKzDAftlKRTfgX4kjfQ>
+    <xme:RSkJaRi5xhNyPb8QeYTjanvMCAtG6Eyq_dZsNl6E46bAMg_d2ELZRZXFtm9UjN1eX
+    b3axdSg1AqFJ-D7MjZB7kwIKUNY3-5D6LkJkVsON7_N6nOLWQ>
+X-ME-Received: <xmr:RSkJaS8dlfudHbqoSKXFB1SSSsj6mc0Q1N0F2LYN-qudWi-vyrk6AaYr5LOKkDoCoqJwTQ12rX4zCIvy4fITOAGzwZ0bjyy-LU8nk6vDX_4G>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddujeelfedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqd
+    hnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhomhesthgrlhhp
+    vgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprh
+    gtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopegthhhu
+    tghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehsnhhithiivghrse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegtvghlsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:RSkJacvE8jQ0W85qnRdT8p5dtYtYlh4u6CHgNwv-u_2KUmh-s4FUaw>
+    <xmx:RSkJaeq6jkVJTI85jl2N42_apysDTxj2d7DyHScd878X21Vj0iA4Jw>
+    <xmx:RSkJaYrPI_YJ_tg-4yrE2fiAtZVRPv09MKdEyQRVtrUl1JX-OV8glA>
+    <xmx:RSkJaVaqsHtgLjq4pvaezvblJYtikVhM4kOOZflm1XV_wmow2-U3Tw>
+    <xmx:RikJafQ7ReTQ89ccFTSP16P0KSzarnkklH-39oA-10-a_jyYV14gJI6p>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Nov 2025 17:14:27 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Mike Snitzer" <snitzer@kernel.org>
+Subject: Re: [PATCH v9 01/12] NFSD: Make FILE_SYNC WRITEs comply with spec
+In-reply-to: <20251103165351.10261-2-cel@kernel.org>
+References: <20251103165351.10261-1-cel@kernel.org>,
+ <20251103165351.10261-2-cel@kernel.org>
+Date: Tue, 04 Nov 2025 09:14:22 +1100
+Message-id: <176220806300.1793333.10389831266293417568@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-When we are shutting down the client, we free the callback
-server structure and then at a later pointer we free the
-transport used by the client. Yet, it's possible that after
-the callback server is freed, the transport receives a
-backchannel request at which point we can dereferene freed
-memory. Instead, do the freeing the bc server and nullying
-bc_serv under the lock.
+On Tue, 04 Nov 2025, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Mike noted that when NFSD responds to an NFS_FILE_SYNC WRITE, it
+> does not also persist file time stamps. To wit, Section 18.32.3
+> of RFC 8881 mandates:
+>=20
+> > The client specifies with the stable parameter the method of how
+> > the data is to be processed by the server. If stable is
+> > FILE_SYNC4, the server MUST commit the data written plus all file
+> > system metadata to stable storage before returning results. This
+> > corresponds to the NFSv2 protocol semantics. Any other behavior
+> > constitutes a protocol violation. If stable is DATA_SYNC4, then
+> > the server MUST commit all of the data to stable storage and
+> > enough of the metadata to retrieve the data before returning.
+>=20
+> For many years, NFSD has used a "data sync only" optimization for
+> FILE_SYNC WRITEs, in violation of the above text (and previous
+> incarnations of the NFS standard). File time stamps haven't been
+> forced to be persisted as the mandate above requires.
 
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
----
- fs/nfs/callback.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I think that is "For the last 5 months..."
 
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 8b674ee093a6..58e865bba03f 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -270,7 +270,10 @@ void nfs_callback_down(int minorversion, struct net *net, struct rpc_xprt *xprt)
- 	if (cb_info->users == 0) {
- 		svc_set_num_threads(serv, NULL, 0);
- 		dprintk("nfs_callback_down: service destroyed\n");
--		svc_destroy(&cb_info->serv);
-+		if (!minorversion)
-+			svc_destroy(&cb_info->serv);
-+		else
-+			xprt_svc_destroy_nullify_bc(xprt, &cb_info->serv);
- 	}
- 	mutex_unlock(&nfs_callback_mutex);
- }
--- 
-2.47.1
+Fixes: 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()")
+
+That patch replaced
+
+-               flags |=3D RWF_SYNC;
+
+with
+
++               kiocb.ki_flags |=3D IOCB_DSYNC;
+
+which looks right given
+
+	if (flags & RWF_SYNC)
+		kiocb_flags |=3D IOCB_DSYNC;
+
+in kiocb_set_rw_flags().
+However that ignores the previous line
+
+	kiocb_flags |=3D (__force int) (flags & RWF_SUPPORTED);
+
+where RWF_SUPPORTED contains RWF_SYNC, and RWF_SYNC is the same bit
+as IOCB_SYNC.
+
+NeilBrown
+
+
+>=20
+> For many in-tree Linux file systems, time stamps, as well as other
+> metadata not needed to find the data on disk, are piggy-backed on
+> fdatasync-mandatory metadata updates. Thus, this change should
+> affect only the case where previously fully-allocated file data
+> is overwritten.
+>=20
+> Reported-by: Mike Snitzer <snitzer@kernel.org>
+> Closes: https://lore.kernel.org/linux-nfs/20251018005431.3403-1-cel@kernel.=
+org/T/#t
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f537a7b4ee01..5333d49910d9 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1314,8 +1314,18 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh=
+ *fhp,
+>  		stable =3D NFS_UNSTABLE;
+>  	init_sync_kiocb(&kiocb, file);
+>  	kiocb.ki_pos =3D offset;
+> -	if (stable && !fhp->fh_use_wgather)
+> -		kiocb.ki_flags |=3D IOCB_DSYNC;
+> +	if (likely(!fhp->fh_use_wgather)) {
+> +		switch (stable) {
+> +		case NFS_FILE_SYNC:
+> +			/* persist data and timestamps */
+> +			kiocb.ki_flags |=3D IOCB_DSYNC | IOCB_SYNC;
+> +			break;
+> +		case NFS_DATA_SYNC:
+> +			/* persist data only */
+> +			kiocb.ki_flags |=3D IOCB_DSYNC;
+> +			break;
+> +		}
+> +	}
+> =20
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+>  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> --=20
+> 2.51.0
+>=20
+>=20
 
 
