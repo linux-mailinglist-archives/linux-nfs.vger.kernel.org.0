@@ -1,88 +1,88 @@
-Return-Path: <linux-nfs+bounces-15913-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15914-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29853C2C164
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 14:30:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7139C2C1D3
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 14:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BC9FF4F4568
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 13:25:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CAB93B9CD2
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 13:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8CFB30E832;
-	Mon,  3 Nov 2025 13:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41C7326F295;
+	Mon,  3 Nov 2025 13:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8KZqbv6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIfc0l6k"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF426F2BB
-	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 13:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4479326F2BC
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 13:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762176270; cv=none; b=MqfoOF2FHwEXyQB1UNsCQevEC65LMve3WWVsk3jjU30uosodvqF7oGsZA7trl9p06u48s5NQT7eq6IWahoLkgiuneMY5RUE2Sy0vPFcOiEBT4KMzPwe+QL+yG0EKfFOKavgt7KaUfkqiU8e/6JUfw1BqS55PdGcJ3I5USDNmiRg=
+	t=1762176597; cv=none; b=g1hfmv5wWLPOPrSK7Kghcl3qiifa4mT+fCTSv+jBtwdvfHzlRVjRewjav5nupV62hOnBTmCWQQ/p0FoqkyDpazuom9oR5TMo3TwJavc954AWLYmjnwIN4N4aP2P7dQXvKC40hp/M1kFzYdxW4ziym2OD1h0kGPI5tP/aHKbnkI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762176270; c=relaxed/simple;
-	bh=O+dRAgI4LPfuYan1hqt3Wh5X/J4xUpMgYGmJUgN4GBk=;
+	s=arc-20240116; t=1762176597; c=relaxed/simple;
+	bh=3P4uhXaD5ilvYs+a4RtrwVqLA5w/zngN8+yS2F+4lkk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a/LyZnT7Seh2XPIiWV+0gbCMVmZxIZpMJqrDVEcnlh/x50AfbLhoaH87dqEHhMQe0Fd6Dndzke9baIhcL5FB6l+ExllHDm6Zpe76GK34Z62FJbdSksRfuf5gZ7s85ezw31Wu/HXy2TU8QTiERlVfdV2NNqI7KLhsfY039ISDvcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8KZqbv6; arc=none smtp.client-ip=209.85.218.50
+	 To:Cc:Content-Type; b=LxuR4QdllrTX1OkK7U2JcIdnmaIkShuZ7KyVEAMuZmpYSDiWwaqacQEOpTrzdiFpfZbOeJ5N1Rj8jIsX+Ovf0M8YmXTVNj4uFJWmaenUSwc+bpeD45z9lwRujLFDy5Pee/Q7Lhk95bCQLtA8yxN1GQqocrMK2n0/aBni3CJ1uVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIfc0l6k; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b710601e659so109265566b.1
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Nov 2025 05:24:26 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640b06fa959so2317916a12.3
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Nov 2025 05:29:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762176265; x=1762781065; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762176593; x=1762781393; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0S6+1dUVKvqII667r+XW9/GENl1vb5Sqoomw0mlu3RI=;
-        b=T8KZqbv6kO/2xrWzX5n2788COipO+Tnz7F384SIxaywjLymb/lsfPxOUz0GOomqB4m
-         tSNiR+3flO68a9EtT4yaCs81ULEj8LfOSo8v3ZU97wAF7FdFSJhOJv2ZeicIbfs6vvRl
-         1gGjjqDGtjMsAY2i9JFTxfgqyW942vF6Q2vzk65RMl3u/HohDHs+eH1IoKambzK6Rwo0
-         /2xTzljrwr5o3ouIWwJ8c92Yk6WGQLDij67OP/z+7tBvBMrLdiEPRX4izLkduDzW/+qd
-         HoG9zb4rHzUKP+pIRspQJTBFjtz/T4jk9Y2st713BaUCRGI8wudxyrwpsYCmR3hy/3EE
-         pTWQ==
+        bh=a21JbFZrSRmyl+TIWUp5y75+miyXDqyFyLKW07xgMRE=;
+        b=iIfc0l6k9iNQArxxX2qbTR4pYsdaNIZ+O0bZS+XBE8EwQROeAVrFCu2U6PBIjIhraX
+         suZNP2HKkCrkhFRfJVo9pyOplIYGW7dcmUuqnY9c40lEekzqbtTY4i73leXVc8hl4+jE
+         ZWGuzBP6tGg8MH0wbbwhE09bM1bGXHolSrhfM1prGDB9cyYHmiQ0l86NMY9N9e22F752
+         ccz127Qgm/Zwcw4gYj9gylM3DpNnvguc4OeZElaIjAP9QE6YuQMj3CCTOmjmIvcXW2At
+         4esTOikzxDAhxUICWw0ISVF7OFAeqdFTaNPpF0fHIOFA39W8YGD9CwZ0m5QUbAAdpKLC
+         f7VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762176265; x=1762781065;
+        d=1e100.net; s=20230601; t=1762176593; x=1762781393;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0S6+1dUVKvqII667r+XW9/GENl1vb5Sqoomw0mlu3RI=;
-        b=m5Az2k2nsGejwwbgV+nIfBUhoKIjxEgi2R3K6m+mCVe4eDHSPy/4Gdq1OUzcmDPjQx
-         JTvlHM2QXbuHrwvQ6uNHG1sRGnewIvj639l0RIsUvv6IJSzADrzVggg7D6TiIsAXvyMq
-         wXHnUDnhS2l24+VtVk42IImYPrIHhL64Eg/u88l00GOVRcgsABs/Vu45LARNLu6KFIO8
-         X1KaeAPr/yEAQqt3DRtq/gWBokQOLi3ReVdnq9HAiOqacIPltpXj9vYvUXPwjf7DoZjz
-         rHBywt0oiDHZVejBGGdnOvS/MY3Ax5R+KJiG0CqNUKOIaN6g7TpvRln7aGLoUysDmMpy
-         +HEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPh4FNhuS4fK+ucx7vquHlmd6M4JWEY/S9sz39QQK+73je2nh1l1WOVCOJ6dSKVfZehGNMjel9ENU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAp9sXLUx2erpwEUda2BSdDpCNtO6RKaAoRXaepMjT/4BY6z5A
-	zz/EDikQEX120zgaLOm2fKSGBj1xQQIDvyOk8pi8dyJw7kjZnCHiR/mHsfXVzdrAxhr09SqRXNf
-	hgeZNlGR0jHSoqj62WT3cCtdZHIsjkvI=
-X-Gm-Gg: ASbGncuD++jL+cXtA1N+9ML4p2mhNnVqwZhSp6LhPnalwKoAmbt+F+mwVntyd1eoZ2y
-	wWDDWdJ5O94B+6BFXkzQysldISOU3yySWHbMhmDljzqvOW8bfOL1PchiK/WkIATglZ6EKeytdD4
-	SpENvvmFK11vzJHKdIB4G6ouLLkQUxdeqpFRSpG6+zCPlNjJawfx5J1cBO0ZJ4yx8RZJ9gRuRfI
-	C124+ZStIs8Iz5BAdGtY2Wo/O9hBi/txQ4usK7jHX5s/Tujr9C3Mb9oVNt/yfgkXdUc7he7D/S7
-	ug+ZEhIDBGrGDHz5zieScsxrxywHhg==
-X-Google-Smtp-Source: AGHT+IELl7DuDv5uo3bD6NZ9q582bvS2bDMma/TtRpWZCxPhIVAv9e4H0npG+fdCye/re4SlhiT2Qy0S3M2gjGw90Ag=
-X-Received: by 2002:a17:907:ea7:b0:b6d:2d0b:1ec2 with SMTP id
- a640c23a62f3a-b70708315e8mr1272156366b.54.1762176265161; Mon, 03 Nov 2025
- 05:24:25 -0800 (PST)
+        bh=a21JbFZrSRmyl+TIWUp5y75+miyXDqyFyLKW07xgMRE=;
+        b=F5hAGWxQNdIynyAg1QUQonjHMdyA/hd8F3HLAM7yDwY+1p7btha6GEAc1gki1SQBid
+         ij25PDQ7WIC0uYpFOSJ12WL9EqQsW4d1QzkXRrYI1TTPI6WXUpEaZ+R/hHTCJOlrmc/X
+         TU9YKos5AwLPTiOnp17OvXugPBUkGEbF9NC0+WtfznXzhE2bJDuL+2fmLH7HY/7RRCzO
+         fPx0Vld6D4KHLl7PPiNHA0zIxZpvnu9ffpewkf31XqVHar+JRdsIsDkjmP6Bmrw4eYiN
+         f1DF605RWnCb0FxJlm8G7GREcIVFfJtDj5GCv10IJouLoHmcYrTtX7r0jnfG+bqH8cVM
+         SApw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZU6t2ufBK4GL/o8i7mEaII1c5uiPcycLoj5TDXbxiw210nYAJXPRcJhLIZMUOD7xd30Svcu73uG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxceXX7vt7J7KQ8LH2dkGE5wE6Qi9PtDXPsbGYTWeNayTdFeP0t
+	KjsKRpqmMxzfj8xnlyVYP/2D8y9gkBMEf6bewWAVYTissSz6VfMQsCa1noezOPNnM77yWc2FplM
+	CqsDK6s8yUMjR3kHfT0bJ34IL0xC90HI=
+X-Gm-Gg: ASbGncu8CUnV68ysAV0SSAtUE7zIM+V1s6vHih5AeCYM8jxCWNoyJS9YxaZi8zCK7MW
+	8rSN6IgW58b8j9U86Y0HD39A/4au7pbtFbGwpCPTGzZmRpRNeUbOcE2EzHph+IDRafK1FpL/P7y
+	bfBVyh0C0+WI07SS1PsE0HcnNrnEaRrZAqxelvF0earovDwzMjn+O7TuEhKoZzUpZ93r30aVuSD
+	iUbbbczOueSHkztvpVJ2kOoYnico+sJmPzDyPfM8LnGiGNqLJqM363KERAtcXbypxjOvoH9tkNQ
+	Sm3QIzy1NKw+jWTjyCR2zXcGGpZ47qEE1hsWePTv
+X-Google-Smtp-Source: AGHT+IGWyTZduHZ2AUQOMuHAUDSKDxSYh2Boylo//kHY7uALzcMyPCHh3aobLMS0sfZ3SBLE+RqIGbSBBaWJY8VJe/k=
+X-Received: by 2002:a05:6402:5108:b0:640:aa67:2933 with SMTP id
+ 4fb4d7f45d1cf-640aa672a40mr5173930a12.21.1762176592344; Mon, 03 Nov 2025
+ 05:29:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org> <20251103-work-creds-guards-simple-v1-4-a3e156839e7f@kernel.org>
-In-Reply-To: <20251103-work-creds-guards-simple-v1-4-a3e156839e7f@kernel.org>
+References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
+In-Reply-To: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 3 Nov 2025 14:24:13 +0100
-X-Gm-Features: AWmQ_blW2akq-ipD0fIUUOxTn8zmugUgDmTC0C57BdhrsmFigJmfJvym14MPro0
-Message-ID: <CAOQ4uxhW2FiVe6XjQDT_aXhzJDyT5yuna9CVaWOLyzU1J99hFg@mail.gmail.com>
-Subject: Re: [PATCH 04/16] backing-file: use credential guards for writes
+Date: Mon, 3 Nov 2025 14:29:40 +0100
+X-Gm-Features: AWmQ_bmz-aFyM_2e0ocdnrdFR9IUaRm9-CuMDUtbkHwY8CVjQjk6nDFhXg5Zzks
+Message-ID: <CAOQ4uxgr33rf1tzjqdJex_tzNYDqj45=qLzi3BkMUaezgbJqoQ@mail.gmail.com>
+Subject: Re: [PATCH 00/16] credentials guards: the easy cases
 To: Christian Brauner <brauner@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-aio@kvack.org, 
@@ -93,128 +93,65 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-fsdevel@vger.kernel.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 3, 2025 at 12:30=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+On Mon, Nov 3, 2025 at 12:28=E2=80=AFPM Christian Brauner <brauner@kernel.o=
 rg> wrote:
 >
-> Use credential guards for scoped credential override with automatic
-> restoration on scope exit.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/backing-file.c | 74 +++++++++++++++++++++++++++++--------------------=
-------
->  1 file changed, 39 insertions(+), 35 deletions(-)
->
-> diff --git a/fs/backing-file.c b/fs/backing-file.c
-> index 4cb7276e7ead..9bea737d5bef 100644
-> --- a/fs/backing-file.c
-> +++ b/fs/backing-file.c
-> @@ -210,11 +210,47 @@ ssize_t backing_file_read_iter(struct file *file, s=
-truct iov_iter *iter,
->  }
->  EXPORT_SYMBOL_GPL(backing_file_read_iter);
->
-> +static int do_backing_file_write_iter(struct file *file, struct iov_iter=
- *iter,
-> +                                     struct kiocb *iocb, int flags,
-> +                                     void (*end_write)(struct kiocb *, s=
-size_t))
-> +{
-> +       struct backing_aio *aio;
-> +       int ret;
-> +
-> +       if (is_sync_kiocb(iocb)) {
-> +               rwf_t rwf =3D iocb_to_rw_flags(flags);
-> +
-> +               ret =3D vfs_iter_write(file, iter, &iocb->ki_pos, rwf);
-> +               if (end_write)
-> +                       end_write(iocb, ret);
-> +               return ret;
-> +       }
-> +
-> +       ret =3D backing_aio_init_wq(iocb);
-> +       if (ret)
-> +               return ret;
-> +
-> +       aio =3D kmem_cache_zalloc(backing_aio_cachep, GFP_KERNEL);
-> +       if (!aio)
-> +               return -ENOMEM;
-> +
-> +       aio->orig_iocb =3D iocb;
-> +       aio->end_write =3D end_write;
-> +       kiocb_clone(&aio->iocb, iocb, get_file(file));
-> +       aio->iocb.ki_flags =3D flags;
-> +       aio->iocb.ki_complete =3D backing_aio_queue_completion;
-> +       refcount_set(&aio->ref, 2);
-> +       ret =3D vfs_iocb_iter_write(file, &aio->iocb, iter);
-> +       backing_aio_put(aio);
-> +       if (ret !=3D -EIOCBQUEUED)
-> +               backing_aio_cleanup(aio, ret);
-> +       return ret;
-> +}
-> +
->  ssize_t backing_file_write_iter(struct file *file, struct iov_iter *iter=
-,
->                                 struct kiocb *iocb, int flags,
->                                 struct backing_file_ctx *ctx)
->  {
-> -       const struct cred *old_cred;
->         ssize_t ret;
->
->         if (WARN_ON_ONCE(!(file->f_mode & FMODE_BACKING)))
-> @@ -237,40 +273,8 @@ ssize_t backing_file_write_iter(struct file *file, s=
-truct iov_iter *iter,
->          */
->         flags &=3D ~IOCB_DIO_CALLER_COMP;
->
-> -       old_cred =3D override_creds(ctx->cred);
-> -       if (is_sync_kiocb(iocb)) {
-> -               rwf_t rwf =3D iocb_to_rw_flags(flags);
-> -
-> -               ret =3D vfs_iter_write(file, iter, &iocb->ki_pos, rwf);
-> -               if (ctx->end_write)
-> -                       ctx->end_write(iocb, ret);
-> -       } else {
-> -               struct backing_aio *aio;
-> -
-> -               ret =3D backing_aio_init_wq(iocb);
-> -               if (ret)
-> -                       goto out;
-> -
-> -               ret =3D -ENOMEM;
-> -               aio =3D kmem_cache_zalloc(backing_aio_cachep, GFP_KERNEL)=
-;
-> -               if (!aio)
-> -                       goto out;
-> -
-> -               aio->orig_iocb =3D iocb;
-> -               aio->end_write =3D ctx->end_write;
-> -               kiocb_clone(&aio->iocb, iocb, get_file(file));
-> -               aio->iocb.ki_flags =3D flags;
-> -               aio->iocb.ki_complete =3D backing_aio_queue_completion;
-> -               refcount_set(&aio->ref, 2);
-> -               ret =3D vfs_iocb_iter_write(file, &aio->iocb, iter);
-> -               backing_aio_put(aio);
-> -               if (ret !=3D -EIOCBQUEUED)
-> -                       backing_aio_cleanup(aio, ret);
-> -       }
-> -out:
-> -       revert_creds(old_cred);
-> -
-> -       return ret;
-> +       with_creds(ctx->cred);
-> +       return do_backing_file_write_iter(file, iter, iocb, flags, ctx->e=
-nd_write);
->  }
+> This converts all users of override_creds() to rely on credentials
+> guards. Leave all those that do the prepare_creds() + modify creds +
+> override_creds() dance alone for now. Some of them qualify for their own
+> variant.
 
-Pointing out the obvious that do_backing_file_write_iter() feels
-unnecessary here.
+Nice!
 
-But I am fine with keeping it for symmetry with
-do_backing_file_read_iter() and in case we will want to call the sync
-end_write() callback outside of creds override context as we do in the
-read case.
+What about with_ovl_creator_cred()/scoped_with_ovl_creator_cred()?
+Is there any reason not to do it as well?
+
+I can try to clear some time for this cleanup.
+
+For this series, feel free to add:
+
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
 Thanks,
 Amir.
+
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+> Christian Brauner (16):
+>       cred: add {scoped_}with_creds() guards
+>       aio: use credential guards
+>       backing-file: use credential guards for reads
+>       backing-file: use credential guards for writes
+>       backing-file: use credential guards for splice read
+>       backing-file: use credential guards for splice write
+>       backing-file: use credential guards for mmap
+>       binfmt_misc: use credential guards
+>       erofs: use credential guards
+>       nfs: use credential guards in nfs_local_call_read()
+>       nfs: use credential guards in nfs_local_call_write()
+>       nfs: use credential guards in nfs_idmap_get_key()
+>       smb: use credential guards in cifs_get_spnego_key()
+>       act: use credential guards in acct_write_process()
+>       cgroup: use credential guards in cgroup_attach_permissions()
+>       net/dns_resolver: use credential guards in dns_query()
+>
+>  fs/aio.c                     |   6 +-
+>  fs/backing-file.c            | 147 ++++++++++++++++++++++---------------=
+------
+>  fs/binfmt_misc.c             |   7 +--
+>  fs/erofs/fileio.c            |   6 +-
+>  fs/nfs/localio.c             |  59 +++++++++--------
+>  fs/nfs/nfs4idmap.c           |   7 +--
+>  fs/smb/client/cifs_spnego.c  |   6 +-
+>  include/linux/cred.h         |  12 ++--
+>  kernel/acct.c                |   6 +-
+>  kernel/cgroup/cgroup.c       |  10 ++-
+>  net/dns_resolver/dns_query.c |   6 +-
+>  11 files changed, 133 insertions(+), 139 deletions(-)
+> ---
+> base-commit: fea79c89ff947a69a55fed5ce86a70840e6d719c
+> change-id: 20251103-work-creds-guards-simple-619ef2200d22
+>
+>
 
