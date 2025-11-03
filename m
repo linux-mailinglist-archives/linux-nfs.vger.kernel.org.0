@@ -1,112 +1,61 @@
-Return-Path: <linux-nfs+bounces-15891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15892-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A05DC2B71F
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 12:40:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCA23C2B7F7
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 12:49:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 391504F740F
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 11:33:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B55984F2760
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 11:42:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54E3930DEB6;
-	Mon,  3 Nov 2025 11:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YaZ0aFlr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0F12EC09A;
+	Mon,  3 Nov 2025 11:42:11 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC3730DEAC;
-	Mon,  3 Nov 2025 11:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972F62FF662
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 11:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762169275; cv=none; b=R9cbITGTKo/wx4g9rMpHZX6EaDK2M5V3Pe0YTykDT3NgySTJX2Q/xA6kCdOUmdqVSMX4hTNzPGK/1owUbf11N315+vPwitItaVA7N+LT0iWPrXiMiPbzZNzxIehfWkyf4uF2d/rxt2ZpvVxZg+Fgrb2yS3TXKvj6FQURHDu+uYY=
+	t=1762170131; cv=none; b=NMkY0QhB+hfVl/jOOog/oWaf1pQ8/7NIRVAfF+BiYUMbpqdVmo4vztwzgg2Z/l/vzrn7f93+u7fPDfnzKmN9YwWDqdwKY50KJ6jD+x9nTMy1up0AsY8VlZTPS4KAMEo0HOgs9JUHPuTqjfj/u64VxBRryQV+1Oaui76tQWudfA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762169275; c=relaxed/simple;
-	bh=bCAyE7tmk17boyOhhm5qwpsQaMCqCnHI3pfKUhK/d+4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FcU6fghtgD6msLW8OC9/LWEkswRYJ5TUQ0n/nhS5b8pP129jTLcmbLVY499NJi7qSpJfMaUKS18pvfJGueKAhosBg6CLmaEAm7tv02KHzyJJQZT+iPGulV4D3VHUkVA0ZjUiFHYgxsid4MP/bq8yN6n59OiI7jgEHr/FLDC/Ok0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YaZ0aFlr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B2A1C116B1;
-	Mon,  3 Nov 2025 11:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762169274;
-	bh=bCAyE7tmk17boyOhhm5qwpsQaMCqCnHI3pfKUhK/d+4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YaZ0aFlrmjLdV5jLyEWA8b2zPj7i9z0dEpY7E7rdwB2Ir37Qxszllxd+LNnnKGHpV
-	 7g9uQsnEh6lDmbJfA/j3i7al14HMc1FhKJuhGYP5jeWI4FqTHyNwG4KUR4LgFazakm
-	 9U6Bp0/ktbSbl18fmnOeWWaJYtfsjuu5jQIn2cic/xqnanYb+hX8H1N2l7eiHfwRYw
-	 WlWwRJueDrp/N+huW0lQhpsaThRzloG3shyGhe98eUpBRrQtTyTnupElathvxWorr+
-	 VU2h9Ct67bfNGBcgfYLonCedVqZrKUuW4QK8H0K+yeAQc3FViZrQoKtD29+DH9/Hq9
-	 IHBHH4/ABmXuA==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 03 Nov 2025 12:27:04 +0100
-Subject: [PATCH 16/16] net/dns_resolver: use credential guards in
- dns_query()
+	s=arc-20240116; t=1762170131; c=relaxed/simple;
+	bh=H8Ej8U6HQcoKfOSfGmE1/2+8UwiLKN2oQkv9EUbvto0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgnbeguaCPsDtRH9qIIo8pYVPj2qYN1/K9dLWIXdCV+Ntx1sWmpE3ySNPzeuHL9lIOF2OpqIPnTEZcCCD4XnABFD4eD072WVUjHg6HlUoxt8QsMMJ90FOZfBBDk47q6B4KVf58otLj7zDQ/0+PDM8Qe94NfMEZDbvf9fv7OXlHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 5D684227AAA; Mon,  3 Nov 2025 12:42:05 +0100 (CET)
+Date: Mon, 3 Nov 2025 12:42:05 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
+	okorniev@redhat.com, tom@talpey.com, hch@lst.de,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] NFSD: Fix problem with nfsd4_scsi_fence_client
+ using the wrong reservation type
+Message-ID: <20251103114205.GB14852@lst.de>
+References: <20251101185220.663905-1-dai.ngo@oracle.com> <20251101185220.663905-2-dai.ngo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-work-creds-guards-simple-v1-16-a3e156839e7f@kernel.org>
-References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
-In-Reply-To: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
- linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, 
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
- cgroups@vger.kernel.org, netdev@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-96507
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1179; i=brauner@kernel.org;
- h=from:subject:message-id; bh=bCAyE7tmk17boyOhhm5qwpsQaMCqCnHI3pfKUhK/d+4=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyTOz49t81KnHqZTWdoJ9Fp9KfSbosV32dkH//j7TF6
- wVfllVmdpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkoZLhv8td6YzC5sipYZKb
- NNX9Ju62Zvq6u5zZbmpraeA33c0/dzIyHF19l68/b9H/cwesPoX/dN9tnRlh6/AjVdTxeV6q8Y6
- 9rAA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251101185220.663905-2-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Use credential guards for scoped credential override with automatic
-restoration on scope exit.
+On Sat, Nov 01, 2025 at 11:51:33AM -0700, Dai Ngo wrote:
+> -			nfsd4_scsi_pr_key(clp), 0, true);
+> +			nfsd4_scsi_pr_key(clp), PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- net/dns_resolver/dns_query.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/net/dns_resolver/dns_query.c b/net/dns_resolver/dns_query.c
-index 82b084cc1cc6..53da62984447 100644
---- a/net/dns_resolver/dns_query.c
-+++ b/net/dns_resolver/dns_query.c
-@@ -78,7 +78,6 @@ int dns_query(struct net *net,
- {
- 	struct key *rkey;
- 	struct user_key_payload *upayload;
--	const struct cred *saved_cred;
- 	size_t typelen, desclen;
- 	char *desc, *cp;
- 	int ret, len;
-@@ -124,9 +123,8 @@ int dns_query(struct net *net,
- 	/* make the upcall, using special credentials to prevent the use of
- 	 * add_key() to preinstall malicious redirections
- 	 */
--	saved_cred = override_creds(dns_resolver_cache);
--	rkey = request_key_net(&key_type_dns_resolver, desc, net, options);
--	revert_creds(saved_cred);
-+	scoped_with_creds(dns_resolver_cache)
-+		rkey = request_key_net(&key_type_dns_resolver, desc, net, options);
- 	kfree(desc);
- 	if (IS_ERR(rkey)) {
- 		ret = PTR_ERR(rkey);
-
--- 
-2.47.3
+Please avoid the overly long line.  Otherwise this looks good to me.
 
 
