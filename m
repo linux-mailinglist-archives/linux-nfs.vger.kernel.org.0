@@ -1,83 +1,141 @@
-Return-Path: <linux-nfs+bounces-15933-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15934-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C443C2D06C
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 17:14:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B494C2D472
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 17:54:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13872188AFAA
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 16:10:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FBA2188C559
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 16:54:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E516C315D2F;
-	Mon,  3 Nov 2025 16:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF9A3101C2;
+	Mon,  3 Nov 2025 16:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4u1KlmW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DA8314B7F;
-	Mon,  3 Nov 2025 16:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACED305068
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 16:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762186222; cv=none; b=dtdGY32zxoKqVJa0uRdbNewXMo+/gdwE5AXOeJAtVVvjJrAQcPvogD1F6SXmQuV42dBZO+/cXikmry5NMfHz4xvXFgg+qx+eu9yB8PZepFBz7PTPw5j680/NQrOZalOVkXCPOqtnbvb1qFihyDrl8pKdfiE5Ly6wtysL6xBKC0E=
+	t=1762188834; cv=none; b=g3FfNXY0FHX4gZjOwsbapYsfq+im13ETXAf8N73EDPbCo/QP7zYg4gwlk+UIR3O9gFtDcMCszB2XcGJZvpEwhBbqBG/cQzx/5X/P6ZzUztIPUHBCX7gAcCgOShJyVTA3JWEAlxLrAlylXqy/VbpQZQsNmII4vXLJDm0biWbEOmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762186222; c=relaxed/simple;
-	bh=PIZ4DoMJooALmRRVauNj4A/92u4T3LrS3MaC+zSCVos=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=INO79ymRvzStf0ENJqFJxQ/iA8rPSv0RbWoPB1sb+xcpYdmjhNYNGVPnsXf7FVXJJsunTh4CqgQ0hh6xLYVXJrvatmnXsSHz+ue3dHvRLB/AqN2LiUCcwQpo2VFQrVqTMMTl5wlfzxy/7dTVHZ7e2vfg3x8WL9Byrbux4loZiV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id ACF47139E08;
-	Mon,  3 Nov 2025 16:10:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id D4E0A20026;
-	Mon,  3 Nov 2025 16:10:14 +0000 (UTC)
-Date: Mon, 3 Nov 2025 11:10:18 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
- cgroups@vger.kernel.org, netdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] trace: use override credential guard
-Message-ID: <20251103111018.1a063e6f@gandalf.local.home>
-In-Reply-To: <20251103-work-creds-guards-prepare_creds-v1-12-b447b82f2c9b@kernel.org>
-References: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
-	<20251103-work-creds-guards-prepare_creds-v1-12-b447b82f2c9b@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762188834; c=relaxed/simple;
+	bh=xHvKNuNkYPl8J/4AtuDaO2i4mG3oGX8NrDuWNSARV04=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9+4IHqBG0pzXwVio6y3m7KFRHGr8Ke8kDz7+QOyBtQqIkFgo+f6zO4Us8ZWIZZKwJ/FsGmOhh36SHrUjlxqSNJiuC2IFYRhTPOY9SAyTaIlwr/qyDIqV3AP22qwdYc+VuyebEEBp/wl0QdYQQUwfkXqBFKJaxbp1kFkQ99Ijwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4u1KlmW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2D8C4CEE7;
+	Mon,  3 Nov 2025 16:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762188834;
+	bh=xHvKNuNkYPl8J/4AtuDaO2i4mG3oGX8NrDuWNSARV04=;
+	h=From:To:Cc:Subject:Date:From;
+	b=c4u1KlmWUMUXllh5SKpHMNIUwKZArJfCWO965nstmyUprDkSpNFqUTn2baqkGX8ua
+	 TchXMworX1631HN6LgxZUl10NiHuyrFOZ/Kc4CqSAjOVekLlFKkDyWFtq0ZwHnFWb7
+	 lwkCgU7w0BFgXsr4KjNkv4gSyP2oM3pZeqQEUwfH8WGJvTd938oJ6DN9fdat4bPAgE
+	 I8DvPJKLRcgZUJ9Nva7L9GmMlT4QiemcRGfUuzS/Cp00E+fk7drDER0IFLUAULcaAe
+	 /cqTTK6o5iadXC7rGOSQG/S+1vHRXPo6I5qbJg90ve5U8/YbVVfbD3gLRzDmGQjSbJ
+	 /98jEOrNGHz2Q==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v9 00/12] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Date: Mon,  3 Nov 2025 11:53:39 -0500
+Message-ID: <20251103165351.10261-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: D4E0A20026
-X-Stat-Signature: 9i8cwffmtnwb5s6qrjb8xtgzkiwywx5n
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19W/8xN94pNILmfZfTWKaYA/3XQ1AXwuhQ=
-X-HE-Tag: 1762186214-326372
-X-HE-Meta: U2FsdGVkX187oVSDRmUrDkx/y/qOH8UZf0p4/Uberk79CvGGM3PB+bS4hFQMtMBRnStKU7tlXn/ljHIltb999OspMxf1AbgAdGJ4HELAt2d5MaZ3fPZKklFy28lWO7r0IfW2NHvpDWpAzd6euKudbGYI+fHpMHhDMkXFuPEqjUv0+MRdLzcQFruKvrL4Gl9DwYesxzucXQGzI2pHTBcEz6bFpl9Bi1TKKSPcL3Nt+jnhVL/ZY4VjnpDa6O+uTo/zuM+YOrGhZidshqQRODml/FXmO4hQP0LvRRP2OeH65EderoO+6Iw5sJs9vuJe8U2RHjqtb5RfJ+b+TBT13gA7yEo+MTIUsNTsghvG0w3kvqWdz/+jfR9m7Faf4VcYB3h/KdOAB3mXHBvjf7jof/ORBw==
+Content-Transfer-Encoding: 8bit
 
-On Mon, 03 Nov 2025 15:57:38 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-> Use override credential guards for scoped credential override with
-> automatic restoration on scope exit.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  kernel/trace/trace_events_user.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+Following on https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
+this series includes the patches needed to make NFSD Direct WRITE
+operational.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+The Documentation update is taken verbatim from Mike's Sep 3 series.
+The document refers to NFSD_IO_DIRECT as working in an "uncached"
+mode, but it doesn't explain how UNSTABLE works with NFSD_IO_DIRECT
+(why a subsequent COMMIT is still required for durability). And IMO,
+it needs a more thorough explanation of "Linux memory management's
+page reclaim scalability problems". I prefer a brief root-cause
+analysis here rather than a reference to a video or a benchmark
+result.
 
--- Steve
+I think the functional code changes come pretty close to what we've
+agreed to so far, however. I dropped one R-b due to significant
+mechanical changes in that patch.
+
+Changes since v8:
+* Drop "NFSD: Handle both offset and memory alignment for direct I/O"
+* Include the Sep 3 version of the Documentation update
+
+Changes since v7:
+* Rebase the series on Mike's original v3 patch
+* Address more review comments
+* Optimize the "when can NFSD use IOCB_DIRECT" logic
+* Revert the "always promote to FILE_SYNC" logic
+
+Changes since v6:
+* Patches to address review comments have been split out
+* Refactored the iter initialization code
+
+Changes since v5:
+* Add a patch to make FILE_SYNC WRITEs persist timestamps
+* Address some of Christoph's review comments
+* The svcrdma patch has been dropped until we actually need it
+
+Changes since v4:
+* Split out refactoring nfsd_buffered_write() into a separate patch
+* Expand patch description of 1/4
+* Don't set IOCB_SYNC flag
+
+Changes since v3:
+* Address checkpatch.pl nits in 2/3
+* Add an untested patch to mark ingress RDMA Read chunks
+
+Chuck Lever (10):
+  NFSD: Make FILE_SYNC WRITEs comply with spec
+  NFSD: Enable return of an updated stable_how to NFS clients
+  NFSD: Remove specific error handling
+  NFSD: Remove alignment size checking
+  NFSD: Clean up struct nfsd_write_dio
+  NFSD: Introduce struct nfsd_write_dio_seg
+  NFSD: Simplify nfsd_iov_iter_aligned_bvec()
+  NFSD: Combine direct I/O feasibility check with iterator setup
+  NFSD: Handle kiocb->ki_flags correctly
+  NFSD: Refactor nfsd_vfs_write
+
+Mike Snitzer (2):
+  NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+  NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
+
+ .../filesystems/nfs/nfsd-io-modes.rst         | 144 +++++++++++++
+ fs/nfsd/debugfs.c                             |   1 +
+ fs/nfsd/nfs3proc.c                            |   2 +-
+ fs/nfsd/nfs4proc.c                            |   2 +-
+ fs/nfsd/nfsproc.c                             |   3 +-
+ fs/nfsd/trace.h                               |   1 +
+ fs/nfsd/vfs.c                                 | 199 +++++++++++++++++-
+ fs/nfsd/vfs.h                                 |   6 +-
+ fs/nfsd/xdr3.h                                |   2 +-
+ 9 files changed, 343 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
+
+-- 
+2.51.0
+
 
