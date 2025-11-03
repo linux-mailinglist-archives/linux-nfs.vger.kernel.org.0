@@ -1,119 +1,144 @@
-Return-Path: <linux-nfs+bounces-15929-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15930-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC192C2CA8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 16:20:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACF94C2CE83
+	for <lists+linux-nfs@lfdr.de>; Mon, 03 Nov 2025 16:53:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2B85A4F92F0
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 15:11:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8029189E13E
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Nov 2025 15:44:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064DA3375CD;
-	Mon,  3 Nov 2025 14:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B219726C3BE;
+	Mon,  3 Nov 2025 15:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpBZwE5Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/312jEW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E0233710D;
-	Mon,  3 Nov 2025 14:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F401D7E5C
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Nov 2025 15:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762181910; cv=none; b=mHcmW+5a8hmzO2t5gvlY9ITKVWnfWe63KpcqdHsoYXe5/O8xmUaQ1J2wfo35V8hd96tCWHvPbi1v8Y3S3qpE18axzsUEzCBCepTv3Xi6O3wZoORU5cODkWVvodqBgAv0gCMSYz1kkFaJov4PcutNvXPdK8SlF4JvsdijTAF0H+w=
+	t=1762184665; cv=none; b=FIGZ6GL+JtFwWzC/ePmjB/0iM3oBqYqFTf/OvSQ01iOzSd0nu0grnvTiqtdw07rWhq/saSkRAjDP4b/KXiFHre9m0rGmqgDfOGoWUtL7LfX33ISSQMUf3GcQPvjdtlZZURxv/g4TeN+CNQfEW110DzJjtp5u+I2pxB4mwybMem0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762181910; c=relaxed/simple;
-	bh=CN70SPaB9uDUTmoTMFQEikVK97VTOop0si2tr6t5dG8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M3oOW0TSOojHQ6xnOcd71thMH7XdqcIMFebRg4tLOPmpM5vYTN5Q27c9KUDcG4O/kXapuv8rZ1uzNb/njgbqjZyHljXq9uDmXmnaBzYmHSfvWXcQW3vNUvRH377aTt1g/qrXXaGEM1m25zioGR6et149Bzs4olRacNsG9VsGz8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpBZwE5Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F91C116C6;
-	Mon,  3 Nov 2025 14:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181909;
-	bh=CN70SPaB9uDUTmoTMFQEikVK97VTOop0si2tr6t5dG8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rpBZwE5Zcf6RBsQu6RQgpC/IOnpRjzOaYYoomnODvXeBO85TArXHgKIPf4o1KLwv+
-	 RzbpwGM3RxPzCzAdgmmMBq25UmuptGH+6wBUSwwshEax8fSLZR8yw1RvBLk8qqC/aH
-	 KP5SheycNIKw15+ZoULoPxIOaz0zpAswNDYLIql7dCo2kLGz/ij6CMdf+3eWWVapx6
-	 RZ1qngT/jX1ctwOiKGTwXqW3OsUQjlbR1YFn6LrpLXVUirPAj1UyARzoJNT8UMd9Tf
-	 BurHwguSrbMYI64Yi9BpIUYlkZDPch+DB9a1ZZh9PiZppcpFnDUgTLvy+Qu3Rh8Uop
-	 RJxn/Pes4VDBw==
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 03 Nov 2025 15:57:38 +0100
-Subject: [PATCH 12/12] trace: use override credential guard
+	s=arc-20240116; t=1762184665; c=relaxed/simple;
+	bh=5EeucuL/sJ/IG6IrztqIl2doZf+61omofGHCMXJCHLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F3WREAaRVRjqKBT0mdLkOWbGO/zj7p1Ysl9rM7mzQOX0XJ4IwnW1Wh7HFSvZ3iSlzS6VkuKA0atv7uXX1eZY/o7MrI3k9pF/0S9rUvk4KS4D195l0pl+eFZc5qcTh6x9ZiHyUBI+t05X8wgmYaP5y0uaVWMElbFBqPgBVd/HWNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/312jEW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762184663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Zsi7d2maywzB5M6PbzXlkog5Ophmf7hGwvl+CQEzdeQ=;
+	b=c/312jEW85Q8icPHo2egCPTRp0ztcvnuv6MaougK7IFGFB6za8/yctS0NTpl45VhR74NaC
+	ebVZM1VccJhOPfdLMvIRkM/3+D+p7c8lr49LULVUjtas+I7QO6egoU6RKf6AHgwg2Ho/fN
+	/80GQOPX6616oT+TVXlFwEHhT5xdDzE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-227-ycYoPqyjNHG9HcN-mJj9HQ-1; Mon,
+ 03 Nov 2025 10:44:19 -0500
+X-MC-Unique: ycYoPqyjNHG9HcN-mJj9HQ-1
+X-Mimecast-MFC-AGG-ID: ycYoPqyjNHG9HcN-mJj9HQ_1762184658
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56B89180120B;
+	Mon,  3 Nov 2025 15:44:18 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.88.126])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DA0130001A1;
+	Mon,  3 Nov 2025 15:44:17 +0000 (UTC)
+Received: from aion.redhat.com (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id EC2AA4E123D;
+	Mon, 03 Nov 2025 10:44:15 -0500 (EST)
+From: Scott Mayhew <smayhew@redhat.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: bcodding@hammerspace.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2] NFSv4: ensure the open stateid seqid doesn't go backwards
+Date: Mon,  3 Nov 2025 10:44:15 -0500
+Message-ID: <20251103154415.1776520-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-work-creds-guards-prepare_creds-v1-12-b447b82f2c9b@kernel.org>
-References: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
-In-Reply-To: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
- linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, 
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
- cgroups@vger.kernel.org, netdev@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-96507
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1248; i=brauner@kernel.org;
- h=from:subject:message-id; bh=CN70SPaB9uDUTmoTMFQEikVK97VTOop0si2tr6t5dG8=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyHHq5Of6I49wDL3cuF1ZOPtQr8766w3eGAQuLxusP1
- 745yP973lHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjARwQ+MDN8aFc4c2FSw7vom
- C+OaYwbfUtlcVpxTr9tpcMK7rDm9Zg7DX5Gwnl2dczkKWLtTnGf/eyuVkLYqfc3KE1JmTosWnJ+
- jzAoA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Use override credential guards for scoped credential override with
-automatic restoration on scope exit.
+We have observed an NFSv4 client receiving a LOCK reply with a status of
+NFS4ERR_OLD_STATEID and subsequently retrying the LOCK request with an
+earlier seqid value in the stateid.  As this was for a new lockowner,
+that would imply that nfs_set_open_stateid_locked() had updated the open
+stateid seqid with an earlier value.
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Looking at nfs_set_open_stateid_locked(), if the incoming seqid is out
+of sequence, the task will sleep on the state->waitq for up to 5
+seconds.  If the task waits for the full 5 seconds, then after finishing
+the wait it'll update the open stateid seqid with whatever value the
+incoming seqid has.  If there are multiple waiters in this scenario,
+then the last one to perform said update may not be the one with the
+highest seqid.
+
+Add a check to ensure that the seqid can only be incremented, and add a
+tracepoint to indicate when old seqids are skipped.
+
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- kernel/trace/trace_events_user.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+v2: Move the new check so that it's only being done for tasks that have
+    waited the full 5 seconds.  That way the common case isn't calling
+    nfs4_stateid_match_other() twice.
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 3461b1d29276..4528c058d7cd 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1449,8 +1449,6 @@ static struct trace_event_functions user_event_funcs = {
- 
- static int user_event_set_call_visible(struct user_event *user, bool visible)
- {
--	int ret;
--	const struct cred *old_cred;
- 	struct cred *cred;
- 
- 	CLASS(prepare_creds, cred)();
-@@ -1470,14 +1468,11 @@ static int user_event_set_call_visible(struct user_event *user, bool visible)
- 
- 	old_cred = override_creds(cred);
- 
-+	with_creds(cred);
- 	if (visible)
--		ret = trace_add_event_call(&user->call);
--	else
--		ret = trace_remove_event_call(&user->call);
-+		return trace_add_event_call(&user->call);
- 
--	revert_creds(old_cred);
--
--	return ret;
-+	return trace_remove_event_call(&user->call);
- }
- 
- static int destroy_user_event(struct user_event *user)
+ fs/nfs/nfs4proc.c  | 13 +++++++++++--
+ fs/nfs/nfs4trace.h |  1 +
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 411776718494..04005dbfb905 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1780,8 +1780,17 @@ static void nfs_set_open_stateid_locked(struct nfs4_state *state,
+ 		if (nfs_stateid_is_sequential(state, stateid))
+ 			break;
+ 
+-		if (status)
+-			break;
++		if (status) {
++			if (nfs4_stateid_match_other(stateid, &state->open_stateid) &&
++			    !nfs4_stateid_is_newer(stateid, &state->open_stateid)) {
++				trace_nfs4_open_stateid_update_skip(state->inode,
++								    stateid, status);
++				return;
++			} else {
++				break;
++			}
++		}
++
+ 		/* Rely on seqids for serialisation with NFSv4.0 */
+ 		if (!nfs4_has_session(NFS_SERVER(state->inode)->nfs_client))
+ 			break;
+diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+index 9776d220cec3..6285128e631a 100644
+--- a/fs/nfs/nfs4trace.h
++++ b/fs/nfs/nfs4trace.h
+@@ -1353,6 +1353,7 @@ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_setattr);
+ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_delegreturn);
+ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update);
+ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update_wait);
++DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_open_stateid_update_skip);
+ DEFINE_NFS4_INODE_STATEID_EVENT(nfs4_close_stateid_update_wait);
+ 
+ DECLARE_EVENT_CLASS(nfs4_getattr_event,
 -- 
-2.47.3
+2.51.0
 
 
