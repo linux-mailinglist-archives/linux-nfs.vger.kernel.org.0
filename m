@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-16005-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16006-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45C93C31C1B
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 16:12:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46661C31C2D
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 16:12:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FA361883506
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 15:07:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15B343AF4EE
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 15:06:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B6EB661;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF8523EABA;
 	Tue,  4 Nov 2025 15:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAd/l1nD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukIqrdyv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4A0224244
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 15:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C42022D7A1
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 15:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762268808; cv=none; b=VLtV3YqkcM02y8QfPQngEsYbpxU7lgFwnihD70C8OW/TbBn/E84B192mjxUg5hZQ2MuAZqUyNX6sPFwipmyCBX4pJ0uIlGjkrmsFp7RntpTMTyvdP16VQhk7UgDrG5uQN5X/iDM0NTPeILgplTumw0k2I9QWeYkxrq4ALAqB3gU=
+	t=1762268808; cv=none; b=FvrjHss1XqfFbNq9eV3Ft6r6JzPu29usoD3vtxRtL/farKx+BHQ4k3odM1+uuhYRvdwuYB2cRle1tYx315wTBrRbEBV4HD0SljBurTXvtUW/pVRzz0fwB8kpX6KWoFWci90GemE+JDiXV6hmLwdYy37fbuOGNR64fdcgOZrRd8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762268808; c=relaxed/simple;
-	bh=sQxUpvc6yiF1qd0r73C7hKubJ76Cpe2gHORvPMGXKA8=;
+	bh=lJ/AVCXPjoMzTtYgiU30MnVGNvChdOFA9BpNFK27slg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XW1TDmeVl6vH4sxprLWn3zNL3BL2az8l6Fi8sHAOxIilnq0k8my60tOgT4aENukOtojilz6sf+KjZfj03DMifm+6hV1Ay2q9EO7wioDk0+O2S7PLeoNYvu1a0GBgDRWCup6GAIq+T9bV31W8TAspgsJT56C6969hHuG0eRb2HgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAd/l1nD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F02AC16AAE;
+	 MIME-Version; b=ZI2+QkeStb49VYTYTMg14AFOFFEanEPXZswTqNLmF6gGVCgN/KTCd7Fpr12hJ1A1Gj+SJhOsMP5vgsGyZdsmzBCpSQbJzxBy3df4UTjbRxYjam2aGT9qkmD5fUgPRrFUJmH10kQfRpYyLt6VTPl+TM2q3SJws1KbSRX9KRIPGUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukIqrdyv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E354EC19422;
 	Tue,  4 Nov 2025 15:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762268807;
-	bh=sQxUpvc6yiF1qd0r73C7hKubJ76Cpe2gHORvPMGXKA8=;
+	s=k20201202; t=1762268808;
+	bh=lJ/AVCXPjoMzTtYgiU30MnVGNvChdOFA9BpNFK27slg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KAd/l1nDKxLQ2RFcGIHJJ+G8YWjtGupbMMizoFqMwqM82ctKO3azSeIzp9wiih6IB
-	 MhKP+8dwAG9RkDSp+DqZwNcOf8adZ1EK+eYH3eUr3/hlgQW+3ypAJUViwQPAhU7TW7
-	 +JVZORjy0GhBSLHu1+s+dNQ9qX63wP+de2v5juZyViEHQXAx8KqLAbBj6UxPxQEsJg
-	 e/14mZyuoOMw6PtcdYEV7PdtelcbjNHBb/GiBlMjdTpLoiJhJPkkAWZt2g1DUPC7KR
-	 hvwN7SVexf3F7HpQrpPFJRQh4tI/mRQS5J92NcxiQfFom14HdFJSVXzlizpCWGh2ml
-	 Rdpc3CNMX/Y6A==
+	b=ukIqrdyvUm6xkFG68os9KdxtWQpVRB+l6CgRPmlCXrC8Ad5lQPi48DJb9iKeH1h0z
+	 k/7CM2ZBrWuilKtXM48opIbmBi24irI95eeSZeOg0DRlcVydeYJAkTWBOCAxr8vAqD
+	 HbN2B+Rvf+V1MTb57NShKCM8lB5Z+SxjmP2LGseR1Q/LGmeQnMvdN9tBkP7tIUah+A
+	 dWdkW8Xf0L7LItuzTTwj9gWgQhjKa9e48jG6M7gDIrerU1PEMKJiIJtMA+lvSZK21C
+	 VoKW0cQhS6NkbPEe142pO8dHxFUNuK/nr1Spg3m8SLvAHgZUtNEtHNbcramBR6aHnc
+	 fw3o7RLvHAhkA==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	trond.myklebust@hammerspace.com
 Cc: anna@kernel.org
-Subject: [PATCH 2/5] NFS: Request a directory delegation on ACCESS, CREATE, and UNLINK
-Date: Tue,  4 Nov 2025 10:06:42 -0500
-Message-ID: <20251104150645.719865-3-anna@kernel.org>
+Subject: [PATCH 3/5] NFS: Request a directory delegation during RENAME
+Date: Tue,  4 Nov 2025 10:06:43 -0500
+Message-ID: <20251104150645.719865-4-anna@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20251104150645.719865-1-anna@kernel.org>
 References: <20251104150645.719865-1-anna@kernel.org>
@@ -61,200 +61,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
-This patch adds a new flag: NFS_INO_REQ_DIR_DELEG to signal that a
-directory wants to request a directory delegation the next time it does
-a GETATTR. I have the client request a directory delegation when doing
-an access, create, or unlink call since these calls indicate that a user
-is working with a directory.
+If we notice that we're renaming a file within a directory then we take
+that as a sign that the user is working with the current directory and
+may want a delegation to avoid extra revalidations when possible.
+
+The nfs_request_directory_delegation() function exists within the NFS v4
+module, so I add an extra flag to rename_setup() to indicate if a dentry
+is being renamed within the same parent directory.
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- fs/nfs/delegation.c       |  1 +
- fs/nfs/delegation.h       |  6 +++++
- fs/nfs/nfs4proc.c         | 55 ++++++++++++++++++++++++++++++++++++---
- include/linux/nfs_fs.h    |  1 +
- include/linux/nfs_fs_sb.h |  1 +
- 5 files changed, 60 insertions(+), 4 deletions(-)
+ fs/nfs/nfs3proc.c       | 3 ++-
+ fs/nfs/nfs4proc.c       | 5 ++++-
+ fs/nfs/proc.c           | 3 ++-
+ fs/nfs/unlink.c         | 3 ++-
+ include/linux/nfs_xdr.h | 3 ++-
+ 5 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 9d3a5f29f17f..b4c192f00e94 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -379,6 +379,7 @@ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
- 	delegation->inode = NULL;
- 	rcu_assign_pointer(nfsi->delegation, NULL);
- 	spin_unlock(&delegation->lock);
-+	clear_bit(NFS_INO_REQ_DIR_DELEG, &nfsi->flags);
- 	return delegation;
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index a4cb67573aa7..1181f9cc6dbd 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -483,7 +483,8 @@ nfs3_proc_unlink_done(struct rpc_task *task, struct inode *dir)
+ static void
+ nfs3_proc_rename_setup(struct rpc_message *msg,
+ 		struct dentry *old_dentry,
+-		struct dentry *new_dentry)
++		struct dentry *new_dentry,
++		struct inode *same_parent)
+ {
+ 	msg->rpc_proc = &nfs3_procedures[NFS3PROC_RENAME];
  }
- 
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index 08ec2e9c68a4..def50e8a83bf 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -124,6 +124,12 @@ static inline int nfs_have_delegated_mtime(struct inode *inode)
- 						 NFS_DELEGATION_FLAG_TIME);
- }
- 
-+static inline void nfs_request_directory_delegation(struct inode *inode)
-+{
-+	if (S_ISDIR(inode->i_mode))
-+		set_bit(NFS_INO_REQ_DIR_DELEG, &NFS_I(inode)->flags);
-+}
-+
- int nfs4_delegation_hash_alloc(struct nfs_server *server);
- 
- #endif
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 411776718494..bd718a270e72 100644
+index bd718a270e72..fa176db362c7 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -4460,6 +4460,28 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
- 	return status;
- }
+@@ -5047,7 +5047,8 @@ static int nfs4_proc_unlink_done(struct rpc_task *task, struct inode *dir)
  
-+#if IS_ENABLED(CONFIG_NFS_V4_1)
-+static bool should_request_dir_deleg(struct inode *inode)
-+{
-+	if (!inode)
-+		return false;
-+	if (!S_ISDIR(inode->i_mode))
-+		return false;
-+	if (!nfs_server_capable(inode, NFS_CAP_DIR_DELEG))
-+		return false;
-+	if (!test_and_clear_bit(NFS_INO_REQ_DIR_DELEG, &(NFS_I(inode)->flags)))
-+		return false;
-+	if (nfs4_have_delegation(inode, FMODE_READ, 0))
-+		return false;
-+	return true;
-+}
-+#else
-+static bool should_request_dir_deleg(struct inode *inode)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_NFS_V4_1 */
-+
- static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 				struct nfs_fattr *fattr, struct inode *inode)
+ static void nfs4_proc_rename_setup(struct rpc_message *msg,
+ 		struct dentry *old_dentry,
+-		struct dentry *new_dentry)
++		struct dentry *new_dentry,
++		struct inode *same_parent)
  {
-@@ -4477,7 +4499,9 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 		.rpc_argp = &args,
- 		.rpc_resp = &res,
- 	};
-+	struct nfs4_gdd_res gdd_res;
- 	unsigned short task_flags = 0;
-+	int status;
- 
- 	if (nfs4_has_session(server->nfs_client))
- 		task_flags = RPC_TASK_MOVEABLE;
-@@ -4486,11 +4510,26 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 	if (inode && (server->flags & NFS_MOUNT_SOFTREVAL))
- 		task_flags |= RPC_TASK_TIMEOUT;
- 
-+	args.get_dir_deleg = should_request_dir_deleg(inode);
-+	if (args.get_dir_deleg)
-+		res.gdd_res = &gdd_res;
-+
- 	nfs4_bitmap_copy_adjust(bitmask, nfs4_bitmask(server, fattr->label), inode, 0);
- 	nfs_fattr_init(fattr);
- 	nfs4_init_sequence(&args.seq_args, &res.seq_res, 0, 0);
--	return nfs4_do_call_sync(server->client, server, &msg,
--			&args.seq_args, &res.seq_res, task_flags);
-+
-+	status = nfs4_do_call_sync(server->client, server, &msg,
-+				   &args.seq_args, &res.seq_res, task_flags);
-+	if (args.get_dir_deleg) {
-+		if (status == -EOPNOTSUPP) {
-+			server->caps &= ~NFS_CAP_DIR_DELEG;
-+		} else if (status == 0 && gdd_res.status == GDD4_OK) {
-+			status = nfs_inode_set_delegation(inode, current_cred(),
-+							  FMODE_READ, &gdd_res.deleg,
-+							  0, NFS4_OPEN_DELEGATE_READ);
-+		}
-+	}
-+	return status;
- }
- 
- int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
-@@ -4503,8 +4542,10 @@ int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 	do {
- 		err = _nfs4_proc_getattr(server, fhandle, fattr, inode);
- 		trace_nfs4_getattr(server, fhandle, fattr, err);
--		err = nfs4_handle_exception(server, err,
--				&exception);
-+		if (err == -EOPNOTSUPP)
-+			exception.retry = true;
-+		else
-+			err = nfs4_handle_exception(server, err, &exception);
- 	} while (exception.retry);
- 	return err;
- }
-@@ -4765,6 +4806,7 @@ static int _nfs4_proc_access(struct inode *inode, struct nfs_access_entry *entry
- 	int status = 0;
- 
- 	if (!nfs4_have_delegation(inode, FMODE_READ, 0)) {
-+		nfs_request_directory_delegation(inode);
- 		res.fattr = nfs_alloc_fattr();
- 		if (res.fattr == NULL)
- 			return -ENOMEM;
-@@ -4872,6 +4914,8 @@ nfs4_proc_create(struct inode *dir, struct dentry *dentry, struct iattr *sattr,
- 
- 	ilabel = nfs4_label_init_security(dir, dentry, sattr, &l);
- 
-+	nfs_request_directory_delegation(dir);
-+
- 	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
- 		sattr->ia_mode &= ~current_umask();
- 	state = nfs4_do_open(dir, ctx, flags, sattr, ilabel, NULL);
-@@ -4968,6 +5012,7 @@ static void nfs4_proc_unlink_setup(struct rpc_message *msg,
- 	nfs4_init_sequence(&args->seq_args, &res->seq_res, 1, 0);
- 
- 	nfs_fattr_init(res->dir_attr);
-+	nfs_request_directory_delegation(d_inode(dentry->d_parent));
- 
- 	if (inode) {
- 		nfs4_inode_return_delegation(inode);
-@@ -10819,6 +10864,7 @@ static const struct nfs4_minor_version_ops nfs_v4_1_minor_ops = {
- 	.minor_version = 1,
- 	.init_caps = NFS_CAP_READDIRPLUS
- 		| NFS_CAP_ATOMIC_OPEN
-+		| NFS_CAP_DIR_DELEG
- 		| NFS_CAP_POSIX_LOCK
- 		| NFS_CAP_STATEID_NFSV41
- 		| NFS_CAP_ATOMIC_OPEN_V1
-@@ -10845,6 +10891,7 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
- 	.minor_version = 2,
- 	.init_caps = NFS_CAP_READDIRPLUS
- 		| NFS_CAP_ATOMIC_OPEN
-+		| NFS_CAP_DIR_DELEG
- 		| NFS_CAP_POSIX_LOCK
- 		| NFS_CAP_STATEID_NFSV41
- 		| NFS_CAP_ATOMIC_OPEN_V1
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index c585939b6cd6..a6624edb7226 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -344,6 +344,7 @@ struct nfs4_copy_state {
- #define NFS_INO_LAYOUTCOMMITTING (10)		/* layoutcommit inflight */
- #define NFS_INO_LAYOUTSTATS	(11)		/* layoutstats inflight */
- #define NFS_INO_ODIRECT		(12)		/* I/O setting is O_DIRECT */
-+#define NFS_INO_REQ_DIR_DELEG	(13)		/* Request a directory delegation */
- 
- static inline struct nfs_inode *NFS_I(const struct inode *inode)
+ 	struct nfs_renameargs *arg = msg->rpc_argp;
+ 	struct nfs_renameres *res = msg->rpc_resp;
+@@ -5058,6 +5059,8 @@ static void nfs4_proc_rename_setup(struct rpc_message *msg,
+ 		nfs4_inode_make_writeable(old_inode);
+ 	if (new_inode)
+ 		nfs4_inode_return_delegation(new_inode);
++	if (same_parent)
++		nfs_request_directory_delegation(same_parent);
+ 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_RENAME];
+ 	res->server = NFS_SB(old_dentry->d_sb);
+ 	nfs4_init_sequence(&arg->seq_args, &res->seq_res, 1, 0);
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index 63e71310b9f6..39df80e4ae6f 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -353,7 +353,8 @@ static int nfs_proc_unlink_done(struct rpc_task *task, struct inode *dir)
+ static void
+ nfs_proc_rename_setup(struct rpc_message *msg,
+ 		struct dentry *old_dentry,
+-		struct dentry *new_dentry)
++		struct dentry *new_dentry,
++		struct inode *same_parent)
  {
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index d30c0245031c..4ba04de6b1ca 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -305,6 +305,7 @@ struct nfs_server {
- #define NFS_CAP_REBOOT_LAYOUTRETURN	(1U << 8)
- #define NFS_CAP_OFFLOAD_STATUS	(1U << 9)
- #define NFS_CAP_ZERO_RANGE	(1U << 10)
-+#define NFS_CAP_DIR_DELEG	(1U << 11)
- #define NFS_CAP_OPEN_XOR	(1U << 12)
- #define NFS_CAP_DELEGTIME	(1U << 13)
- #define NFS_CAP_POSIX_LOCK	(1U << 14)
+ 	msg->rpc_proc = &nfs_procedures[NFSPROC_RENAME];
+ }
+diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
+index b55467911648..4db818c0f9dd 100644
+--- a/fs/nfs/unlink.c
++++ b/fs/nfs/unlink.c
+@@ -390,7 +390,8 @@ nfs_async_rename(struct inode *old_dir, struct inode *new_dir,
+ 
+ 	nfs_sb_active(old_dir->i_sb);
+ 
+-	NFS_PROTO(data->old_dir)->rename_setup(&msg, old_dentry, new_dentry);
++	NFS_PROTO(data->old_dir)->rename_setup(&msg, old_dentry, new_dentry,
++					old_dir == new_dir ? old_dir : NULL);
+ 
+ 	return rpc_run_task(&task_setup_data);
+ }
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 8bf6cba96c46..79fe2dfb470f 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1808,7 +1808,8 @@ struct nfs_rpc_ops {
+ 	int	(*unlink_done) (struct rpc_task *, struct inode *);
+ 	void	(*rename_setup)  (struct rpc_message *msg,
+ 			struct dentry *old_dentry,
+-			struct dentry *new_dentry);
++			struct dentry *new_dentry,
++			struct inode *same_parent);
+ 	void	(*rename_rpc_prepare)(struct rpc_task *task, struct nfs_renamedata *);
+ 	int	(*rename_done) (struct rpc_task *task, struct inode *old_dir, struct inode *new_dir);
+ 	int	(*link)    (struct inode *, struct inode *, const struct qstr *);
 -- 
 2.51.2
 
