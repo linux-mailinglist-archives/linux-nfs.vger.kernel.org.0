@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-16006-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16007-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46661C31C2D
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 16:12:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A074C31C1E
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 16:12:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15B343AF4EE
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 15:06:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A6AD18842A0
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 15:07:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF8523EABA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE712459ED;
 	Tue,  4 Nov 2025 15:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukIqrdyv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKKjFsMe"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C42022D7A1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B5D224244
 	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 15:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762268808; cv=none; b=FvrjHss1XqfFbNq9eV3Ft6r6JzPu29usoD3vtxRtL/farKx+BHQ4k3odM1+uuhYRvdwuYB2cRle1tYx315wTBrRbEBV4HD0SljBurTXvtUW/pVRzz0fwB8kpX6KWoFWci90GemE+JDiXV6hmLwdYy37fbuOGNR64fdcgOZrRd8w=
+	t=1762268808; cv=none; b=PstJNdE7m8XzApttvyYY9TH+FgahChndm3Htg7ykPfwJxVdlKYpfUEeQwx1swhyxeBY7l+y6tzAMxesplVMiZ0cPk3m0AeYlKkAuTIUSHvuEpKtq9YbD+rdKson255jbQniQOHvj0OqfoVKYUo2mQceRbwXvz/8RF+gx/dax6gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762268808; c=relaxed/simple;
-	bh=lJ/AVCXPjoMzTtYgiU30MnVGNvChdOFA9BpNFK27slg=;
+	bh=5C3lQ2SAl23LawN8+oYiPo8HtgYG5KzH4jnC29EDgBI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZI2+QkeStb49VYTYTMg14AFOFFEanEPXZswTqNLmF6gGVCgN/KTCd7Fpr12hJ1A1Gj+SJhOsMP5vgsGyZdsmzBCpSQbJzxBy3df4UTjbRxYjam2aGT9qkmD5fUgPRrFUJmH10kQfRpYyLt6VTPl+TM2q3SJws1KbSRX9KRIPGUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukIqrdyv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E354EC19422;
-	Tue,  4 Nov 2025 15:06:47 +0000 (UTC)
+	 MIME-Version; b=Q7rhBqyC49Q08d2aJNeBPtHkbbX7ZTBNDu2C3dP8iubfPN7nykv96ubRABdtd3csQwL6nIUUCKzL0UfqCdS4Ui2xzn3pIPw6MP7/8ISJV3EFtWnD/0ZomY+PD+pzIxWGW1NdAhrfJ01KPFVFu3YGvye9splynLxxsyaZdj4XMaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKKjFsMe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6474CC16AAE;
+	Tue,  4 Nov 2025 15:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1762268808;
-	bh=lJ/AVCXPjoMzTtYgiU30MnVGNvChdOFA9BpNFK27slg=;
+	bh=5C3lQ2SAl23LawN8+oYiPo8HtgYG5KzH4jnC29EDgBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ukIqrdyvUm6xkFG68os9KdxtWQpVRB+l6CgRPmlCXrC8Ad5lQPi48DJb9iKeH1h0z
-	 k/7CM2ZBrWuilKtXM48opIbmBi24irI95eeSZeOg0DRlcVydeYJAkTWBOCAxr8vAqD
-	 HbN2B+Rvf+V1MTb57NShKCM8lB5Z+SxjmP2LGseR1Q/LGmeQnMvdN9tBkP7tIUah+A
-	 dWdkW8Xf0L7LItuzTTwj9gWgQhjKa9e48jG6M7gDIrerU1PEMKJiIJtMA+lvSZK21C
-	 VoKW0cQhS6NkbPEe142pO8dHxFUNuK/nr1Spg3m8SLvAHgZUtNEtHNbcramBR6aHnc
-	 fw3o7RLvHAhkA==
+	b=XKKjFsMezv06ay1wV2FA8uCaetElmth309sHsgmfw7taB1LwuwbJTcK56Cd2pCyvE
+	 ++TTRP37M3o3GcZ5UGoIyZCEqjvMWR1ZSWVcynj7xzn+TmeFAWlr6vvTgrZRWo5BBh
+	 dmocjv8rDliFrfw1ulEmHPkljHPy7R8B4mDNwYkNPjxrzCOxO3sLUM9h8RR3Kr1kQm
+	 NkIT6caLvKIf8tPpUe9rdH6cFmaNn+MXFwMTK+pcg2AWHe08HGTOXSuSZ60oQn6dkT
+	 RmS0+TvFJmLZ1HjlOk5hv2dVohysBJwBFZFSHIyWEVw44nsnJ3Tju1AuoFDE9foHCb
+	 uf37RxGTjpNCw==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	trond.myklebust@hammerspace.com
 Cc: anna@kernel.org
-Subject: [PATCH 3/5] NFS: Request a directory delegation during RENAME
-Date: Tue,  4 Nov 2025 10:06:43 -0500
-Message-ID: <20251104150645.719865-4-anna@kernel.org>
+Subject: [PATCH 4/5] NFS: Shortcut lookup revalidations if we have a directory delegation
+Date: Tue,  4 Nov 2025 10:06:44 -0500
+Message-ID: <20251104150645.719865-5-anna@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20251104150645.719865-1-anna@kernel.org>
 References: <20251104150645.719865-1-anna@kernel.org>
@@ -61,102 +61,91 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
-If we notice that we're renaming a file within a directory then we take
-that as a sign that the user is working with the current directory and
-may want a delegation to avoid extra revalidations when possible.
-
-The nfs_request_directory_delegation() function exists within the NFS v4
-module, so I add an extra flag to rename_setup() to indicate if a dentry
-is being renamed within the same parent directory.
+Holding a directory delegation means we know that nobody else has
+modified the directory on the server, so we can take a few revalidation
+shortcuts.
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- fs/nfs/nfs3proc.c       | 3 ++-
- fs/nfs/nfs4proc.c       | 5 ++++-
- fs/nfs/proc.c           | 3 ++-
- fs/nfs/unlink.c         | 3 ++-
- include/linux/nfs_xdr.h | 3 ++-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+ fs/nfs/delegation.h |  5 +++++
+ fs/nfs/dir.c        | 19 +++++++++++++++++++
+ fs/nfs/inode.c      |  3 +++
+ 3 files changed, 27 insertions(+)
 
-diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-index a4cb67573aa7..1181f9cc6dbd 100644
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -483,7 +483,8 @@ nfs3_proc_unlink_done(struct rpc_task *task, struct inode *dir)
- static void
- nfs3_proc_rename_setup(struct rpc_message *msg,
- 		struct dentry *old_dentry,
--		struct dentry *new_dentry)
-+		struct dentry *new_dentry,
-+		struct inode *same_parent)
- {
- 	msg->rpc_proc = &nfs3_procedures[NFS3PROC_RENAME];
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index def50e8a83bf..8968f62bf438 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -130,6 +130,11 @@ static inline void nfs_request_directory_delegation(struct inode *inode)
+ 		set_bit(NFS_INO_REQ_DIR_DELEG, &NFS_I(inode)->flags);
  }
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index bd718a270e72..fa176db362c7 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5047,7 +5047,8 @@ static int nfs4_proc_unlink_done(struct rpc_task *task, struct inode *dir)
  
- static void nfs4_proc_rename_setup(struct rpc_message *msg,
- 		struct dentry *old_dentry,
--		struct dentry *new_dentry)
-+		struct dentry *new_dentry,
-+		struct inode *same_parent)
- {
- 	struct nfs_renameargs *arg = msg->rpc_argp;
- 	struct nfs_renameres *res = msg->rpc_resp;
-@@ -5058,6 +5059,8 @@ static void nfs4_proc_rename_setup(struct rpc_message *msg,
- 		nfs4_inode_make_writeable(old_inode);
- 	if (new_inode)
- 		nfs4_inode_return_delegation(new_inode);
-+	if (same_parent)
-+		nfs_request_directory_delegation(same_parent);
- 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_RENAME];
- 	res->server = NFS_SB(old_dentry->d_sb);
- 	nfs4_init_sequence(&arg->seq_args, &res->seq_res, 1, 0);
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index 63e71310b9f6..39df80e4ae6f 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -353,7 +353,8 @@ static int nfs_proc_unlink_done(struct rpc_task *task, struct inode *dir)
- static void
- nfs_proc_rename_setup(struct rpc_message *msg,
- 		struct dentry *old_dentry,
--		struct dentry *new_dentry)
-+		struct dentry *new_dentry,
-+		struct inode *same_parent)
- {
- 	msg->rpc_proc = &nfs_procedures[NFSPROC_RENAME];
++static inline bool nfs_have_directory_delegation(struct inode *inode)
++{
++	return S_ISDIR(inode->i_mode) && nfs_have_delegated_attributes(inode);
++}
++
+ int nfs4_delegation_hash_alloc(struct nfs_server *server);
+ 
+ #endif
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index ea9f6ca8f30f..2cc784ae0581 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1514,6 +1514,15 @@ static int nfs_check_verifier(struct inode *dir, struct dentry *dentry,
+ 		return 0;
+ 	if (!nfs_dentry_verify_change(dir, dentry))
+ 		return 0;
++
++	/*
++	 * If we have a directory delegation then we don't need to revalidate
++	 * the directory. The delegation will either get recalled or we will
++	 * receive a notification when it changes.
++	 */
++	if (nfs_have_directory_delegation(dir))
++		return 0;
++
+ 	/* Revalidate nfsi->cache_change_attribute before we declare a match */
+ 	if (nfs_mapping_need_revalidate_inode(dir)) {
+ 		if (rcu_walk)
+@@ -2202,6 +2211,13 @@ int nfs_atomic_open(struct inode *dir, struct dentry *dentry,
  }
-diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
-index b55467911648..4db818c0f9dd 100644
---- a/fs/nfs/unlink.c
-+++ b/fs/nfs/unlink.c
-@@ -390,7 +390,8 @@ nfs_async_rename(struct inode *old_dir, struct inode *new_dir,
+ EXPORT_SYMBOL_GPL(nfs_atomic_open);
  
- 	nfs_sb_active(old_dir->i_sb);
++static int
++nfs_lookup_revalidate_delegated_parent(struct inode *dir, struct dentry *dentry,
++				       struct inode *inode)
++{
++	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
++}
++
+ static int
+ nfs4_lookup_revalidate(struct inode *dir, const struct qstr *name,
+ 		       struct dentry *dentry, unsigned int flags)
+@@ -2229,6 +2245,9 @@ nfs4_lookup_revalidate(struct inode *dir, const struct qstr *name,
+ 	if (nfs_verifier_is_delegated(dentry))
+ 		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
  
--	NFS_PROTO(data->old_dir)->rename_setup(&msg, old_dentry, new_dentry);
-+	NFS_PROTO(data->old_dir)->rename_setup(&msg, old_dentry, new_dentry,
-+					old_dir == new_dir ? old_dir : NULL);
++	if (nfs_have_directory_delegation(dir))
++		return nfs_lookup_revalidate_delegated_parent(dir, dentry, inode);
++
+ 	/* NFS only supports OPEN on regular files */
+ 	if (!S_ISREG(inode->i_mode))
+ 		goto full_reval;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 18b57c7c2f97..6c92211835e7 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1383,6 +1383,9 @@ __nfs_revalidate_inode(struct nfs_server *server, struct inode *inode)
+ 		status = pnfs_sync_inode(inode, false);
+ 		if (status)
+ 			goto out;
++	} else if (nfs_have_directory_delegation(inode)) {
++		status = 0;
++		goto out;
+ 	}
  
- 	return rpc_run_task(&task_setup_data);
- }
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 8bf6cba96c46..79fe2dfb470f 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1808,7 +1808,8 @@ struct nfs_rpc_ops {
- 	int	(*unlink_done) (struct rpc_task *, struct inode *);
- 	void	(*rename_setup)  (struct rpc_message *msg,
- 			struct dentry *old_dentry,
--			struct dentry *new_dentry);
-+			struct dentry *new_dentry,
-+			struct inode *same_parent);
- 	void	(*rename_rpc_prepare)(struct rpc_task *task, struct nfs_renamedata *);
- 	int	(*rename_done) (struct rpc_task *task, struct inode *old_dir, struct inode *new_dir);
- 	int	(*link)    (struct inode *, struct inode *, const struct qstr *);
+ 	status = -ENOMEM;
 -- 
 2.51.2
 
