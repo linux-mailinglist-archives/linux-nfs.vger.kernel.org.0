@@ -1,101 +1,130 @@
-Return-Path: <linux-nfs+bounces-15993-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15994-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3353FC2F66A
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 06:48:52 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8654FC30538
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 10:46:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E25E03BFC7D
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 05:48:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 638A34E81FA
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 09:46:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CD52D24A1;
-	Tue,  4 Nov 2025 05:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2C5F313277;
+	Tue,  4 Nov 2025 09:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8CeKwjY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rf3pNu0C"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CAE285C85
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 05:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1262D23A4
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 09:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762235319; cv=none; b=UG23zB0cdBNY16ws++UlhJ85CcBfpE9PBQWeYLhzt3cK6saTUJiRhX1Iqkh/GPkCrfjnuJxqcNOhOwWHK+o4WRBWNYf9B50Gekqr3fX+56fqxp2VV51UMFvQpH17TQYOrBWWyzw24CWAB2A4ydCqC3COwql/tLaUiZL12icKT4E=
+	t=1762249551; cv=none; b=U8sH4dXkdETxEQGK40A0NOaW1Kp4V1KnVHCyJHlf3YvNWLnoSWLq1CPzFGxquWOhyPpZui8lJKa1szERmdqAen6I/0vI8G70c7WomFZqRVqpAfHtUtUqTQAuUs29jWfHkiH8zCUhZiYiUoka44QogemSvnuWA9YlOIQMD9o40kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762235319; c=relaxed/simple;
-	bh=3vzY+wIaFc1j3VMUhWuguSg+P+gvqSRpIeuLV55E5jU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=NHuJgjLxmE6meZYyuRFnOzF+YmXPggWnbPPkGgQpXzX8OXekwDZzw1m2WakRJLgCTgOR3Ar4Je0Brl9kfMXlAwE9O7/kVC8WqCPoQgaQVrA9vVy1dweLiUORM2P007q5+Zhjj2obO1beI4F0mMkj0mYzZsax7B5iV20Z04LDlPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8CeKwjY; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1762249551; c=relaxed/simple;
+	bh=Y/8kkJtUlvT/f8ywlYeX1B4ZoD/ySaLtnH0dGnqnmAA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k/tNgKhvFfUmRON/Ex31es2xqncIHBQkieHZRhaWV7hPnQNHSBKfLBBxvMNc8isRgFLzUIusZ/cDSmOn2qaI+UQyCEdGRxY3f1k91T45NdP5MJAs/tykcZ/feSyoW4f7Ilfu59XBW0MjGr3AtJSi/GiMRO46kRVUkZDR4ijqRMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rf3pNu0C; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-64034284521so8875828a12.1
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Nov 2025 21:48:37 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-640c48b3b90so2682278a12.0
+        for <linux-nfs@vger.kernel.org>; Tue, 04 Nov 2025 01:45:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762235316; x=1762840116; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KieIj+hbKDwxME8Dz4DyoaDfYpGeaMwf55ca0PyHRKM=;
-        b=N8CeKwjYxl/MAGacXvUnRUdLMR0qAOWXeD4mUuvSIBxI2fPYEGQvPDsSMGdbmYBKoz
-         QhGWyP12gJ0N1LkZnyP3sRr7vp0pAdrRvBHQSevq+Wsi8rgR0lAg4mqZ2PtQ0mHwzqJO
-         8pp7ZH9OyeLFeS0SNuIGgShyGPoBVVfDvDWo1ySPm7xLDsw0R4gxrk0cQoZdIe6Vwitf
-         tKDk4xoVoutUp+8uyq7Rb0GR3S6hcVjQH4OORj1WRVxaj5Ekz5FJxgQuAwy6XNGnjcHb
-         Kw5V808SsePjdRHNf0VOXwXvyGPQrt9D+M3Exu4WL5OkKBxWI+ChkLUCCxSHVH1B6FqL
-         uqfQ==
+        d=gmail.com; s=20230601; t=1762249547; x=1762854347; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xKJdWvkPbuojvyFkWrgOJDggLZVTca+r/oAisy+M4uA=;
+        b=Rf3pNu0Cg1d48tOeaZtZaLUkE/PEszLIZCf1p0J0eQREPNueGK+mEQ6TOQwKX0fevP
+         DG7Bf49VqBKXjMXfX+cxHFvoOdj0HEyx787WuG/kGgy0ZKASykSskdCNsJbQakDLDfmB
+         t87jC0FfJaGK2EkHbJ2skXAhafGEtVnaWmFwNihX/9k+M/WkZkLc1S7n6MArxGDLViHA
+         mxPiF89Dk7LQiqHnGfCi3TdkBqKIDuUcIWubluYRrUL9svX3Pgcse/je3swjxwnN1W1E
+         gUlOLs/2RRZquqbAd/Rto2820kkWJatdFt7IFS0sjW6lP07/tMpw3G0PdkY6g5ulk8uB
+         zzkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762235316; x=1762840116;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KieIj+hbKDwxME8Dz4DyoaDfYpGeaMwf55ca0PyHRKM=;
-        b=RW4tMFx3ipmowEVdRasPKVd3bXKLOYTwmHBJkYB0j+6bJvYF0L7LefWl4SqTNyGhVv
-         RIaha/I8BhfjWdo3/671v47nTZG5P77ULNd102fTFAxXwtcj2hTHb8PEWyHinUIP+L9Y
-         o75+k+ChsXGBPLbmJUoV13cNlPEXpx9ObbNm7kUiii/b2RLmOu+d8uuv6GiSPfUHHUuI
-         cDthEyiG3MHN5nZJCQHkC3uuv5vOI9FVncNaQpszTXjnFTIdGJCfsCJpqsaB3AgiPpWl
-         OPSBCUwRcqABgq4g2A6zRIxYov+j15Y+Yg6/OhTuJ1lJrcy6XFrV6GlHPcaqhVcO4+qg
-         JLpw==
-X-Gm-Message-State: AOJu0Yy2Lafu19vvUngutWBZjsF0+LU86IislbjlRzgy8TsrKdpQyN0d
-	zKuGZ7im5laAx+dar8g0cPnCI1o7C/msplkWrJuogWHS4JCtMGWPQ48EvEdUUeW6NoEstOvGxmb
-	BjEIv6aMOqwHRP4jnUuxmYGxCg9XegGZlxQZ1
-X-Gm-Gg: ASbGnctfp5op9iB64I7fgtEQhGvRoHoshMApMjUJg9+QKseps+ByXl7RM7KF36Ygu0i
-	PatJBcpRORrUlr7BHbjsxKDD8K6v/q8BlC8Uw48Ku5X0UzllAPjKEPEIE5VEIg++N3MC1XmjHGF
-	ULUYRF+SwwVtMgnBYO4OJFlOrTg0oScCMuwhKZB5pWQCr8Ixv80dJyBmfxx1VqGMHEBHYyv7IWc
-	Cx3Jlsx6wBMTzAuYAKYNjqHd5qeF9naThMs4a3uUNYDpr5852lpJOoK9Is=
-X-Google-Smtp-Source: AGHT+IE6xsD9A7Wgxb+W0kzxM2hOcqTdA+WxMBqHI6wjrX0QKEc69fY7oqrRUS6jvH12z8jloAsYjIi89z3lz2Eny+k=
-X-Received: by 2002:a17:906:ef08:b0:b6d:5363:88a9 with SMTP id
- a640c23a62f3a-b70700b362bmr1449620066b.9.1762235315247; Mon, 03 Nov 2025
- 21:48:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762249547; x=1762854347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xKJdWvkPbuojvyFkWrgOJDggLZVTca+r/oAisy+M4uA=;
+        b=wXlWnCb2Ab5o9xOPvnBw7rNImm/fxXiSGxslue113mPsFYmjc/WyV7RbDPniNFxhSe
+         oGLH1Sk5oxb+JCn5dY3SAm69m7f02es8J1fMwxIhIuVL3RvMa+M3vywwfWXhnqe2TDy0
+         3WaQMzyIUmyX6qamfuORL0DLJnr53uS9qeq2ZdSMQKRWypjgFGJmeoUSv8+g6e2uKOSo
+         V58VMqIWwoBxCiMfs/EWqU0bN2WjpbN6FP9rBy34LzQzRs2vu6A9Kp9Xt/kdi6fTIInf
+         wB0dga678UtSirrXvksgqwVji69lYFY/4rNodToOLen6uMUiGm6Hhhy18hRUj8P7kMhC
+         YFwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPoqO56WHXBY2wunfDnFmFFohSmX3KY+j+QOdWoxGJPxZVr4DBDgPx8noPZOY/pqtYFKuOlTGnUyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRRjydv/u1TLgKR8nd9cmW/vl/StyYiGPOCQm0OERu0K/6DG9O
+	UHfD+/Ds2f44dOblRaFfdhaQewfMmARlf5Oi+eDNtxBrwR91AP1XO9qr9cCMRBdjrxj3IltGQ66
+	D0sbO+FL1XMxniLrbYuM0R1+VI8sCg8I=
+X-Gm-Gg: ASbGncvtKpNsZgzRgPA6HVjLn9G2ySdv/PIo73K2MmMPP/hJb1Eel2192DJwKYerXyd
+	B/Zd0e4H+CauEXBOQeed+yrjO7UcOLKMeEQiNAU3KMbZWCJyD/VtZygpP7z6qCKVVTA3u0B7Upu
+	XDP1Yejm9hg2UoOy9MNgarEvzo3oUmc67KEcP/KA71eJ5E8ruaEgOPURrL2dCr0i5WcrICv3JDa
+	jb2g4l4hoFeeMnP0IXeH5VGoS4rdj0GxZb/ptQm3Mc0do28CkL6sKshHGriltW+v805d6uQfgky
+	ctlDqvqKgiQ7nxs1H6Q=
+X-Google-Smtp-Source: AGHT+IHXA2qJBi6f10DqUtNaDt/G9hT+Ey8B/WnoFdz3Hmrh6KCUpLdIDtROPfgXbvSfxz+h0BRwI+TkCKOqKrtbbyk=
+X-Received: by 2002:a05:6402:1462:b0:640:ea21:8bfd with SMTP id
+ 4fb4d7f45d1cf-640ea219598mr1427481a12.31.1762249547237; Tue, 04 Nov 2025
+ 01:45:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Shyam Prasad N <nspmangalore@gmail.com>
-Date: Tue, 4 Nov 2025 11:18:19 +0530
-X-Gm-Features: AWmQ_bm7-Hh2iNJsqnVefFaFwqKHEdFUh3Afd9837Y7i2ZSpxAgNiprwvu-Yw2Q
-Message-ID: <CANT5p=rmuH59F9dpvrop0f+8XfVnK6fZHyqLhb10UsYfa6XJgw@mail.gmail.com>
-Subject: Requesting a client side feature to enable/disable serialization of
- open/close in NFSv4 clients
-To: linux-nfs@vger.kernel.org, neilb@suse.com, 
-	Bharath SM <bharathsm.hsk@gmail.com>, Trond Myklebust <trondmy@kernel.org>
+References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
+ <20251103-work-creds-guards-simple-v1-14-a3e156839e7f@kernel.org> <CAHk-=wiSmez2LFEpM05VUX=_GKJC8Ag68TJDByVPO=x4QwjyuA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiSmez2LFEpM05VUX=_GKJC8Ag68TJDByVPO=x4QwjyuA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 4 Nov 2025 10:45:36 +0100
+X-Gm-Features: AWmQ_bn9rw0ha0qFFSykU1xP6jfkkEMSMAVkMSHJG30ZX97XNHwd3yxbJVnihQI
+Message-ID: <CAOQ4uxhw2Tc4YXwhkS=5EVC3Tg4F+QyrA7LE3V29pNhQ4WJeyA@mail.gmail.com>
+Subject: Re: [PATCH 14/16] act: use credential guards in acct_write_process()
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-aio@kvack.org, 
+	linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Trond,
+On Tue, Nov 4, 2025 at 12:04=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, 3 Nov 2025 at 20:27, Christian Brauner <brauner@kernel.org> wrote=
+:
+> >
+> >         /* Perform file operations on behalf of whoever enabled account=
+ing */
+> > -       cred =3D override_creds(file->f_cred);
+> > -
+> > +       with_creds(file->f_cred);
+>
+> I'd almost prefer if we *only* did "scoped_with_creds()" and didn't
+> have this version at all.
+>
+> Most of the cases want that anyway, and the couple of plain
+> "with_creds()" cases look like they would only be cleaned up by making
+> the cred scoping more explicit.
+>
+> What do you think?
 
-Several months ago, Neil from SUSE provided this workaround for their
-customer to allow the NFS clients to work around a bug on the server:
-https://code.opensuse.org/kernel/kernel-source/c/d543ea1660582777ca7f8a8f91afd048de09b7b6?branch=377837fd53dbd7a6c35cff41d5c42ab1224512b0
-However, I see that this change is not present in the mainline kernel.
+I had a similar reaction but for another reason.
 
-I would like to request this feature on the NFSv4.1 clients in the
-mainline kernel too, so that we can have this support in all distros
-in the future.
-This is a useful low-risk change that will provide a fallback in case
-of servers that don't implement this scenario properly.
-Let me know what you think.
+The 'with' lingo reminds me of python with statement (e.g.
+with open_file('example.txt', 'w') as file:), which implies a scope.
+So in my head I am reading "with_creds" as with_creds_do.
 
--- 
-Regards,
-Shyam
+Add to that the dubious practice (IMO) of scoped statements
+without an explicit {} scope and this can become a source of
+human brainos, but maybe the only problematic brain is mine..
+
+Thanks,
+Amir.
 
