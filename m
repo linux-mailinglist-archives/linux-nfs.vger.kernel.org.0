@@ -1,101 +1,101 @@
-Return-Path: <linux-nfs+bounces-16017-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16018-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B682C32508
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 18:24:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01812C32586
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 18:31:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B09A3B4927
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 17:23:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 577143A2957
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 17:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B09B330305;
-	Tue,  4 Nov 2025 17:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738AF15530C;
+	Tue,  4 Nov 2025 17:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jHnf9UTN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZjoB6NUA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jx1EGjmk";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="fLrIpbwU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9801F33438F
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 17:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2442E2DC1
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 17:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762277008; cv=fail; b=NTiKtaiigi/7mLhsKe8QG5oAgyqhsRfIxSMPbZNZjF2Y7H42Pr2+/zk/hcucrOq6LK4dOj35VdTboFSp5Hi1qXQb6AT2tYjrW1rTUQuRS//rEeL0Orh8Tv6FshrdvV/rl9zFFjL9pIXCqJ5wux7GlRF8HMmo7KdoK/NEm7wKBuQ=
+	t=1762277308; cv=fail; b=A52BHTaXrI4z1OVCVCU7DMEZFUVrFk+g95DRvGBpSN3FonuQQUe7U9krYnFxyGAdsaWqoz9YcxJ5FGB/hiC8otCvHSPW9s4RkzMsbLwj0iGPwMPMl005Q8O8FSdB8mddqOs33wN+enMXvezijEgeaOOc90qUwg5ApSDKqv5CMt4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762277008; c=relaxed/simple;
-	bh=QehlymDK8Aav9X+aZt4T6mZ/pFgx/HgSAql68yGeC44=;
+	s=arc-20240116; t=1762277308; c=relaxed/simple;
+	bh=jIgzzTlXc0LKR/oIo0OTN3nLpyT+FUgW1ld2fFKUMVE=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PhBqvAsIdgq2uh4GQW+0cAYQkDwuSmwMMmo//MgF7isd7ROe43rjD9v8vUP7pJiH+ASvu6Mb1DbJzlqpQwWua77EOiBrikHk36OG4oaCTZM5K9Ow8OtBkcX8/Wiu8G+2oJa7OXeOopmf2vkFTFdz74k9WNRSDtOiaQtY/sodGas=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jHnf9UTN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZjoB6NUA; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=KPoFZmgd7cWQbp8ymNDIUsO41/L/icxR12Fb8Mikx+BQEHFOtOcunrXZFgGTKnZByUcqMl3C+xMjze0c+aN+afaeWnLbnOEB3b+/yxjqryFBibLunR/C8jWCslpZN/IPhgzqCditiRKLHpEXkQ/gjeA/afKfGLssYBuzxO97dss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jx1EGjmk; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=fLrIpbwU; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A4HNL0A002820;
-	Tue, 4 Nov 2025 17:23:24 GMT
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A4HNOdM011494;
+	Tue, 4 Nov 2025 17:28:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=tnS0dnaBajC7fx6yRBkwtQAc7CNkJJbzr9sd5GH9xIQ=; b=
-	jHnf9UTNH6efFN0jR4BdRDHvgIplGiGpfNarS6Ept3m0chh2hTf78foVsGBDVVCM
-	2BWaqJvIIh4a700pXj0r6lXXuU1IEouMqJnNB4QfplAkcrrGLIqXvOD2KNBpIk5I
-	9B0Mgl2P7ATMlh6EDIEEorbXzbq1f1y8WPHHIk3TtbOB+nF8pn8iyVfT/WZM1eWU
-	UPd5Uy8Nzt81GXfQWijBvVDrYn18y9w/8kFY2sK0YyXbSVwTwP2oxxyM3dkgpfB9
-	TblhSeWWBlIep+27oaB+jXC4wtK7lw9y4YnxOvsIg330KLVdP8J5F+4fnViwsLI8
-	bYhu9TVRtA+hXtmh5gcrGQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a7n97g65m-1
+	corp-2025-04-25; bh=4QngIEfJEQrGZzw2eyePqBY5TWV9IWe0dLb1tt7J9yA=; b=
+	jx1EGjmkxNaTbQ+gxJOzskTQPvCemEKgIhERDVVdn/mSWotItE+qcbzpjPgvpaSY
+	G/6oPnY0CQMd+AXU2mOTnzzDZ4Dvyr6+NiJBJ1VCPIoalf1PqxWUwP9kpdb1c/W4
+	9GTzRRAngcX0vWe9Rn/Qk2ivTATc/7Nvn1MrniHY00K6xh6j12fETnwHTfEOR2D5
+	QlfbfOdlhHZ+aAL2A8B56bripboK9qfKQszIblmc0znQZmgeo2XcIqevWGijt/AJ
+	lcyTu6k2g6Y9tfmWNhqJ+ER/UzHZqvqKaMFzq34gvuYbDRDJCnAqXXMOPHmtClcs
+	x4uKpbcHyigzM3P17fBZXQ==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4a7nsjr1am-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Nov 2025 17:23:23 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5A4GiQQX010029;
-	Tue, 4 Nov 2025 17:23:22 GMT
-Received: from ph7pr06cu001.outbound.protection.outlook.com (mail-westus3azon11010047.outbound.protection.outlook.com [52.101.201.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a58nddkyq-2
+	Tue, 04 Nov 2025 17:28:22 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5A4GhwOe019409;
+	Tue, 4 Nov 2025 17:25:25 GMT
+Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazon11012026.outbound.protection.outlook.com [40.93.195.26])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a58nkp3vm-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Nov 2025 17:23:22 +0000
+	Tue, 04 Nov 2025 17:25:25 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EK0XfzpA+ZgCxkKURKRdSS+bqN/53Orzva8DqWqGYkb65Djz4TRs3yLMA4gc/kJ/J6x44TX/s5T+ywjF51Hnb4UZNeXAC4MVMrEJwu2aRxOjxkWy61PRXT/xyP76+Ob8uPEJSYSBwmMQMK2PnM0mix9/3a8RTc1P6+YbsB3FyVocXikA7GA/mGBUZLbGx3gUtPSazDuRc71TB+KTqp9dE0PFE5UvUpJPp9AX8Y2Hckb7si78m2IRXT0dNtXMPN3XL/txYygbu8y4UzcTfv4GJcA6i5ZodBIo7t6x8JCzwRBW91KOHu3xSS2gd6eTk0bCBXJL9vcOaAnNrkadoKRkXQ==
+ b=IyhJgruLQ20wMoKSTtwwQyHGImaSX8VAma8OP/CCHlxwLrDVgiUOvfxWvXNw6cpRd2QzggRYNsH6WZkuBiGah9pae0cT8C2ha7jWoWq4OMGBQbqo8KqKl5TR1xC7L/xhBH8Hc5LTqAAaBFlVqo1j2mcDbw9gak/0hNqUBZDANtyNWdAK+ZtRgJ8TLMonrky+CtYrjIVt1f8L06rNcKv3EGhyDmRiQd+bf9iz3qRysJVRThDw/v292dtg/xHNMaCmtgZE3eD53kU9ZX8LGDfzGbGQh5xs4y0XcC8k+quyoKMQDIZo0a+5eKiRVzE19wItlZQkzEazMpz/5407KCF0UQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tnS0dnaBajC7fx6yRBkwtQAc7CNkJJbzr9sd5GH9xIQ=;
- b=cydme92Yr6aTRC1UDwBIX8g1gVX9PeTSH7iKwfmtFow7VuDAsSIbzyUXj8iB0b6b7PuNt8V+uU2sCCf1nOOh5u0FF03snu6faxywKSXAMBh7092xM4Kd1NYg4o39feinLbvtp7kb92QAthlOCPuM3Z6CjV81V3y7YiyrFkq49UgLohfudjD0HQXI2+e9p9lH2dLMA9atnkSqdYK3LnBsO0ZmMv2N6ozRJFpHoK1RMVdR09YcYKZDd0W1oJgMjC8EWE7IzL5XKxdhkUIl9cUW4qH+onhWxGY5y/eaMZr64zdPkBFEUrrY2a7hHQ0deEdrZJTViqMnAYXym3oeP0maqQ==
+ bh=4QngIEfJEQrGZzw2eyePqBY5TWV9IWe0dLb1tt7J9yA=;
+ b=q8xP5quBKJq8dx8PSxR+fl5oaJWQkTb2OBUHZtjb4WU4d9oiaG0UrRIp93uSSPOC3WICevr479SaY7KRAFbCk5uvQLDtuPg5DSdpBz6epr5xX3kQi4L92bVHlFYYZ4RFnk9ZrMn/iiUzTJib/svdDEL5pmYc/CD5dbb2423H0000TrsCZGcV2FjPQ/QJi+GEQJ+u/x1hb1mEWQCsQieyM+/DIb4Rx9OKLsy1oyxaNfJKNYD7Luy8dcOaRGWtlXbm5IacToiGaJGikiDtE9NO9ENHWdGCxQcy2CSKfZ823sXMxFEQkOyeOeQs8U6kv3Vfle25gkWpXZExOcJT5Jh2Aw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tnS0dnaBajC7fx6yRBkwtQAc7CNkJJbzr9sd5GH9xIQ=;
- b=ZjoB6NUAdH9W+HqR48WGfH6Wax9wTw14xXnUBEY0vKTnDDt4GhjVl21tpbdWSA8wkLnC2L3DLdHMP7oqu5pTrlPaBHkYe3XLz6BswxeH811hYro/ca8j7Lmy1CChQr3H5KCPY2UH7IQEobD4PQOE3wkeMN5KeZWblKEKKfVSmfw=
+ bh=4QngIEfJEQrGZzw2eyePqBY5TWV9IWe0dLb1tt7J9yA=;
+ b=fLrIpbwUT96digpNPtCKNKuIbph+Sukv5ibXRPUs3HvCvkIiEjgYeYk2RnD5oRRS+5IVO2tsrKRqLHi0kC7gI/Og8E1ukaK+mUG476n4k/sE+rv7V/GfVdK2vWLzY4n0DSl6oqeFr+eD3FrS54zG+1ZeLK/wS8xjVwmKSFLMElc=
 Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by CH0PR10MB5020.namprd10.prod.outlook.com (2603:10b6:610:c0::22) with
+ by PH0PR10MB4517.namprd10.prod.outlook.com (2603:10b6:510:36::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.16; Tue, 4 Nov
- 2025 17:23:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.15; Tue, 4 Nov
+ 2025 17:25:22 +0000
 Received: from DS7PR10MB5134.namprd10.prod.outlook.com
  ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
  ([fe80::39b2:9b47:123b:fc63%4]) with mapi id 15.20.9253.017; Tue, 4 Nov 2025
- 17:23:04 +0000
-Message-ID: <038374d0-6f09-4440-bd99-fbeef8f6d683@oracle.com>
-Date: Tue, 4 Nov 2025 12:23:02 -0500
+ 17:25:22 +0000
+Message-ID: <b7494620-6b89-4904-be7d-a8aee1c1f6b4@oracle.com>
+Date: Tue, 4 Nov 2025 12:25:20 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] nfsd: avoid using DONTCACHE for misaligned DIO's
- buffered IO fallback
+Subject: Re: [PATCH 3/3] NFSD: update
+ Documentation/filesystems/nfs/nfsd-io-modes.rst
 To: Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>
 Cc: linux-nfs@vger.kernel.org
 References: <20251104164229.43259-1-snitzer@kernel.org>
- <20251104164229.43259-2-snitzer@kernel.org>
+ <20251104164229.43259-4-snitzer@kernel.org>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251104164229.43259-2-snitzer@kernel.org>
+In-Reply-To: <20251104164229.43259-4-snitzer@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0023.namprd03.prod.outlook.com
- (2603:10b6:610:b0::28) To DS7PR10MB5134.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR08CA0015.namprd08.prod.outlook.com
+ (2603:10b6:610:5a::25) To DS7PR10MB5134.namprd10.prod.outlook.com
  (2603:10b6:5:3a1::23)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -104,225 +104,260 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|CH0PR10MB5020:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e7d0262-ad40-4a6a-00c7-08de1bc6cff8
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|PH0PR10MB4517:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0cba8c2-a61c-46cf-6472-08de1bc72240
 X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?Z2dKVU41NnJjeW9uWEtiZmovZnNNZ21PSm1LZXBOR1hLS2pMWVMwdWY2dUx2?=
- =?utf-8?B?ZmtER0k5ZEtXM21ZT2k0bG1Fd2Q5b2t4SG9UZkhnQ1pzbEhLWmcyK1BsSlRI?=
- =?utf-8?B?dnlFbG8xSmQzdUV0UktTUWVySTR4amhMbml4WWlsdE1ER2hra2IyYVZtSEdv?=
- =?utf-8?B?MGpLVGs4V05tOXBHYlZJb25CemRrTGkwU0JkQndaR3IrQmVRbXZVOUFOcS8x?=
- =?utf-8?B?WkVKMk1QSHNDR3VGVzZydlJHR1JXNjJmbnJmNWJ6Q0xPTG4wdVB2N3NMdUlR?=
- =?utf-8?B?eGNWU2JGN2xCK2EwSE45SVJmMDF4Zkc3R3FNbDJOK3pzNnQ5YmlrMkxzRFlV?=
- =?utf-8?B?RStjNTJLODNobmhpTTB4MFc4NGxPM2JGVTdraVhtMHNhWktJb0lVUXJMSWtJ?=
- =?utf-8?B?ck9uOG0rZ0cvWlhFREZuMnpVM2h5Wm1JbDdmVHFmWG11SmErOStjU1lDamFJ?=
- =?utf-8?B?OEw4WlNIclN2aWlYRGNRcWxiQU5veldNVDNwbUtSbDRwcGRBcllGUFQyV1l5?=
- =?utf-8?B?TTJ5c3UwcStwaUgxRFppMWtNcDZLdURjL1BDZ01PbzlKbnNFaDRxM1o2VHh5?=
- =?utf-8?B?TE1nV3ZXanNvWkEzT25Lb2VmbWxwZHUrZ1NMY0RJTnpUVHFvOWN5K3hCRFlY?=
- =?utf-8?B?dG91SENvRTMxTWRJV2JvWDNZQUFRMGo3TUpJbFh0Y2dFSVRxSysvclVFMEFZ?=
- =?utf-8?B?Mk9XQXB5WDhqZ3BraU9Geno2K2NzMnVJMVVtbzUzOTBVZFRJSTdpdDlsN3dT?=
- =?utf-8?B?dVlETnFycUorLzh5SmFaOVRKSzA2dUd6OFZxbm1GNUlJNko5ZFFFUEVUSWRO?=
- =?utf-8?B?aW1UeFU5NTh6dVdLR0hFU0JicGo2cWVIM3pzSndlQitjSWdRQ2lxS2NxM0hC?=
- =?utf-8?B?aGFhMWU1V1BVeGp0ck13c3IzQkJsNnc2U2gycG1pYlBVRkVDZ0dFVU9SaHRZ?=
- =?utf-8?B?amVOOEluWFdSdkNQTkdUVGtkbjBaOHJNVVVFL29IME1oSXltK2lERmd4Z1px?=
- =?utf-8?B?Qi92eHJCczQ2YlhBQUZLSVpOOURCTjRQSTgxNDBNY2tYcHYrZFlSM3BLQTAz?=
- =?utf-8?B?MXYzUnVSdnF2K3RnVzFEUlJpOGZCQTV1QndTU1AxMHZRcDNRL1Bmd1ZoZE1U?=
- =?utf-8?B?NUV0dUY2TU9TdmNaWHVueDRmdjJCbTZzUUZZUGtIUTR0UnZXaWlpR01HMSs4?=
- =?utf-8?B?T09CZEtHakNwc1EyR1ZkbC9GMmNnYUR3Uk5CK0RHaWE1T3FDUjZhV3BKNFlt?=
- =?utf-8?B?RGVJclJLZGlrYWhLSXZzdGlEbitHdXl2cEEyYWdwNTdzK083RTkrWVlhdkFP?=
- =?utf-8?B?QU56cTFjQ3gwSGRwcXpKQWlTbG9zZkI4aTJHTkJvMnh5a0djRFhRNS85NFpu?=
- =?utf-8?B?M2lMcW8wWXFhU2U5aWdaTE1oUS94UHZoangzMkt1eldFL01SNkhBc2U4NXFE?=
- =?utf-8?B?dlA5TnhBakpOUDJ2bG1Kenp6bWFWVlFNMkpjcnNMd2o0RkVCQ2xxRU5MOTJH?=
- =?utf-8?B?ZWpDUnl2ZTFaT2ZMNUlLMlVScUtmZFBYRnltTXhxR1djK3BwWk93Z1VTQ2Qz?=
- =?utf-8?B?eWNWWnFVNklodHdXa0lhMm43TDg4Y1lucFQ2T3BwcU1Ra3RXOTFWcmVHV2Y4?=
- =?utf-8?B?b2tudGk3ZjhMQTlIZzZvUnlndXBNS3ZSMWNBdW9UOWZQVitWVmxPaHprWUY0?=
- =?utf-8?B?VlpUSEJYaElaa1g3dGMzVHJaRjErT1lpc2JCV2UyZTZuSGIrQmtiVjhKQkE4?=
- =?utf-8?B?V09SS0IzNy9XNlQ2K0xPYlpxZk1TZUFVdkVMaFk3QXRJU3d4bkJSRUVWeXlT?=
- =?utf-8?B?Z3Bja2RwdUxYOG1HYTAwK1BRcis5Q0V6Znp3RUVLVW9oSTA3em4ydU5rdzRv?=
- =?utf-8?B?cFJaaEwwdEVrVC9YNGZqYnhrY1FFSDhNbmZZOHgwajV0c2wzeU1FTDExdzVT?=
- =?utf-8?Q?wO8Vdx3Z7XiphDvRhbB2R7yFfuvbVRuE?=
+ =?utf-8?B?VWwzY3ZtRGdIaUU0VjNtbFZwYVE5WjNxNmhURFYvWkFQczZoRDQwSEZubVE1?=
+ =?utf-8?B?d25YQngvNm1GNit6eE5lNS8zMFpDeGxaczJnUlhVQjFRZFk4QW9qRjFDc0dw?=
+ =?utf-8?B?VG9jbDVKTGtaWm0xdzFFaXFFeHNqT2Q0dmI5aitnTklsTFR1NmhreWs5WVoz?=
+ =?utf-8?B?WWdRVWgzUHdWdzFvUHZYMUI2SThFcng3MDhiWmFTT0FsU2VCQ2dtRE8xRCtl?=
+ =?utf-8?B?dzN3QmtOcnVqREFha2pTRWI4WFBKRk5raFY4MjNyUGpYQWFvNXUwNld1bndN?=
+ =?utf-8?B?QzlOQithNnhTY2NnNjFVU3FXNHhtZ2l2VFJVcDl2ck5Xd294ZEZJVnVtNldn?=
+ =?utf-8?B?QnMwRDRSVSs0bytMOTRvdjNTMTlmNStNRzBQKzdFUFZPYWFydExhZm5rcG1v?=
+ =?utf-8?B?NjdIaWN5UU1walFUc3dDT01ZMmZxdHl3ejlxMG9yRWhlaVZiN1p0WklmZ3g2?=
+ =?utf-8?B?ZWVFdWExVmF5MTArTzNlK0JteU13UEU5ajBXaWFnNHJjZzhUTUNCam9XZTI3?=
+ =?utf-8?B?ZWU1dE0vcktHYzF6WU5wRjZDYzlmT1R6Z0JqeTBUZDdabHBSRFRZVGdwak5Y?=
+ =?utf-8?B?ZDB1RzdPcFBJelVnZ1YycjdJUXpFWmFkYjB4b0J0bG00QlR6bStlczJOZVRv?=
+ =?utf-8?B?YjdPc29BblJHVGg3MlNDNVhMSkQyTUZyc3czWDFuU0NiRFZVTnZtZ3Nabi9o?=
+ =?utf-8?B?WmpxQjRRQXZmckV0NWVXKzJRNkJ3UUNia1NIT21sNkkyOGxobXlRZS9aVmwy?=
+ =?utf-8?B?UDA1blJ3NDhkSHRlMGx2cUhjV2J5eEZEaGFvS0c0STM4cDgxUmNvV2xJdCtl?=
+ =?utf-8?B?T3FlRFFUQXdxMUxTRS8xSnBrSjNZSlhKNDRUWmh5amZLZ0g1c01LMmpLcW5x?=
+ =?utf-8?B?dTBtYWZjWG0xOUVnREMvdUFidUFYcU40U3cweFNmZW5KYVBEYW4xWjREN3NZ?=
+ =?utf-8?B?WGtHU1hNUFV4VE16eW1JbGd0OTRPVTZHT3RSbDJaQldKRUp2bG5mYXp4cC91?=
+ =?utf-8?B?UDlHUlplVEZyZGxzbHgzRFliOFNTYW1oc1BUK1VDS3BtNWFWQW5IYlpqL1Za?=
+ =?utf-8?B?d2YrM3F5Nmtzd0Z3bVFXUUgwMmFZRStzOWFFVXBzV1grZDIxOTEwdnMySFd5?=
+ =?utf-8?B?UldHRXBIWG0wbFM3Qll0YWRLWmlHVkJDU2ZPLy9PYmxkSmM2a0gwd0loZEJv?=
+ =?utf-8?B?Q2lJMEliRXlwWkZHd2tCM05GS1JTc2l2MUk3MlJoMXF6VGNCV1k5OXBSdTJ4?=
+ =?utf-8?B?ZmYrZXgwMGx5SUVkQVVuc1ZKWEJpLzJZN1g2aTNlQjVwU1hSSlI1VlJGTVBl?=
+ =?utf-8?B?a04rUWI3clRpTU5FTG96emNiWCtGS0Z3czNLQytDOHBFQlVtUnJiRWYyRWVF?=
+ =?utf-8?B?Y2JIT1QyNTArZnl6WTExNGg5ODd4ZnpaU3Z5bEtyNHFHeTJoL1FFcWdhNjJk?=
+ =?utf-8?B?TXRYc1BmNnhCak4reWlYYTlLOTZXV2xkTndTaHRRcVoxYVZPMTlmdUlMY2J2?=
+ =?utf-8?B?SmVoNDlLYUhVdVBQdHZyd3VqMFZ1eHRRSm5aYUN1QXRFTjkrTk5FMTBML3h4?=
+ =?utf-8?B?WktiTGJxZGRZUU1YV3JzbGlKVW9HUnFXb1F5Qld1SzVCc1VtdEJSakFVVlNy?=
+ =?utf-8?B?NFA2MFh3SCtNRmdUVDdqdjNEWW8rYy9HRHAyK3Jja3FjSGc5QWJxOG16NWlK?=
+ =?utf-8?B?UVgyUGtscVBhUU9oc1Zhd2Q5b2lEWUU0WDd1UzQ5UVBaZDR0UVZHRkdGOExw?=
+ =?utf-8?B?RjBhMG11N1E1MktTamZWSUMrOUQyd3BPWjJza2Era2psM2V5MFAzZTRtTTBi?=
+ =?utf-8?B?R3ZFRy8waHMzV0xBUlRVZEVkRzZvUkM3aytEeUpsSU1xR1E1cWdzQjZ6enRD?=
+ =?utf-8?B?cHovU1JBTDRpcnBZdHVjV29qOGhITVlWL2Fubm5Ga2s5NkN6bGF1NG9KSWNR?=
+ =?utf-8?B?MVovRFNFSjJLTGJ5Y1p4NlJJWkNjVHlkeGR4NzZjT3I5V2ZFbzJXQVFyVm02?=
+ =?utf-8?B?UzM4c0QxK0Z3PT0=?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?dUh0OEFIZFR2K2psVllyUTlBZk12ZU84UE5Fd0FOamZWdkRzL0JLN3U4dlJy?=
- =?utf-8?B?ZDBwSERtdUNDWUoyQ0VCZU9nNnl3bVhtV1JFaUMxSHZjZ1l0UVpPR29kUjYw?=
- =?utf-8?B?R0YxMHY1YjVtdCtHWUc0ODhXM2JBdWpUY2czNmxGd1I1bUZDMFExQmw5Qitw?=
- =?utf-8?B?cGFqWGUvUVF0WXBmVU51MmdlZDdqYVkwOHRNbnpuc243aVUrb2JLdHdVVmNR?=
- =?utf-8?B?RUJzaGp2Y2VMT0NlUzZ1ZStOazljMG10eTNKbnV1eW1LMnFOdExJejdtSzF5?=
- =?utf-8?B?Z2hoV0NhaXFuQkJxSDFJL3BBelJqbUVIMVVrcGtEallFMjAwd3B0blEzTnJr?=
- =?utf-8?B?dnlqd05uOWpZSmdRZFVtN0tkNk93b05JSmlhUTBSVEp3QnVGSkN4ZGdDSzJF?=
- =?utf-8?B?eGZ6azBTWGRHWnRRbWZlSDJXSTlWRlRlVXBOTkl5MkJrZzRIVUVaN21DbWND?=
- =?utf-8?B?Z1VTT2I2bkpHVnN5Yi9CMTJMQmNlNThwWkZ0VnBYM0xMWVRhZ1VPdVR1Rk9u?=
- =?utf-8?B?V3ZjZHVEY3RSUk03a0JneWsrS3lyOWxzUUhmWStTTnFhTE9EWXdGWUZrK2ho?=
- =?utf-8?B?bFI1NEpDK2JNOHVwVkRuMmNZQVdYVHMyZXFUOFNnRkhvWUdrUWVxWEF4NU9X?=
- =?utf-8?B?VU90emNWR0Z0RkJWb0d1cjRnbU5mZko1Wnk4UEJjRE8yd0NJamY2Y2ZiR09j?=
- =?utf-8?B?Qk4vM0NXZFNqdElQRzdrdFIyakIvaFo2Ty8zY3lzdEJPdElncmpwd3podjhu?=
- =?utf-8?B?ZFd2WGRhd3hLVVJFdGNNR2gxWmhxVWdTSnpFemhtWDRDTzZqOW5qeEROdGY4?=
- =?utf-8?B?eDNsaEh6RElWSWtzcGR6MEZtRkk0Q0J1TFA2N1ljQkMzMzJSN2VKd1VkWmVx?=
- =?utf-8?B?L1R4TEYyaXBIV0Jkd3F4SVB2dVQ3MDA5SERTWU9nY1djY0ZDUHVTQjV6K0d5?=
- =?utf-8?B?ZENSa1pacnlUMnpsMnMwMjhkMXJPWUVDc2V2WGt5dUdMRFVRQzQ5OGM2eVVK?=
- =?utf-8?B?KzRWL1FmK05xQzNiWk8rSkRVd3I1SHI2NWF4SGwwVmkrNGg0aHBwQWp0SGhi?=
- =?utf-8?B?UVRxNmQzUm1JYmt1Mk5rNlcwL2ZDbEJEWWpEWjdDOWlsMUFScCsrR0RYa2dt?=
- =?utf-8?B?c0hta0VUTnlSWlZ6WGhjWExOdHdacSs2V3dQWVRqRE5sZWQ1eUNLM2RTQkc4?=
- =?utf-8?B?MW1oWGJXeUJKR1p4c1ppZHI0ODNJcktobHNlakhYRFBrTTkxaHlzQmQ1a3I5?=
- =?utf-8?B?NHk2TFBYaFphVWI2czBrQ29qd0FJTUtNV21PMUhGeEd5STRqcTFxSUZMNURV?=
- =?utf-8?B?T1pERWpIb1ZINEJYRENRNjFGblMydHlHeFNMVGVUM0F2MTdsajk2NUhYK05u?=
- =?utf-8?B?Q3FmSFlTT0JQUXkxemJmOWU2cTIySzRUZ0ZacE15WWxnSkxOSys0QmNmMXZI?=
- =?utf-8?B?SGdWQk03bHdXTnFkVXpYRU9aR0ZkUEhqeVNxNWFCUFEyZ2JYSmlEazByUGRB?=
- =?utf-8?B?OGRoTVg4RHMwTWJQS3pydTNQL29NM09yUVRLeTcwMUxkMkxkNHdaaElqSC9C?=
- =?utf-8?B?bnFld1FmZDNPMG9McnRXaVpKZUo1TngyZVpmVTA2ZjVKUURFU3g4Zm1GaERW?=
- =?utf-8?B?eFJiNEpKY3NrVGtvQUV6TGpIS0Q5YlhOa0J3TWp0b0MvMTRjTlFzS1BNVkpW?=
- =?utf-8?B?ZUpOaUxjdmJna3JjTEI5bWRXQ0s5NTRieHpvQm92OTRzZlVhNTlaZjQ5eDlO?=
- =?utf-8?B?amFnUGYyblFaUVFYUGM3OUN3WHhwZjJPWnFudHpMYTJOVk9naHRodERicFZQ?=
- =?utf-8?B?OW82NTNWVGk0VW83ZXg2N3JUL0o1WUE5OEtWVXdoUkhtdFBvM0RXU1haV1d6?=
- =?utf-8?B?bGlSUkZydmgvaTFva1pEVHhGWWNaOGwrQ2Q5V011V0ZuZWlCV2Q0WjRabU5v?=
- =?utf-8?B?VFNIT2RWYURRLzVoTTlHaVVCU2lVSHNjQ1BuVVd0ZmRJRDYvYi93UlkwWStL?=
- =?utf-8?B?dzJ3emR5UkF0YTR6bFFCM05VZTlZc3JBNjdENTd5a2dDejBtVzgwRWFQM2Jr?=
- =?utf-8?B?WDVDaEg3QUVPZjFQU2lmOW5XRzhJdHVpcWJLSVJDV2JUSllYaEd4RDFOVjZY?=
- =?utf-8?B?QkVwMVQ1U1Flb1hDN2wzRkhReWhOQzYwcXJiTExtU3pEMWp0RmxOMHZxaDZy?=
- =?utf-8?B?bEE9PQ==?=
+ =?utf-8?B?TVdYbjRhWWtwbXg0MExyRWhXd3pvekdEL2JtS0N2YTNVbS9LZTEwMlZUTG5p?=
+ =?utf-8?B?MHUvYnFOTUxZd25sSEdYMjcyaW5FVmFXd0Rpcys1cXFyWWxDTURlSjA5VFEx?=
+ =?utf-8?B?V1E5dldjWWJDSHd2TWI4dnVkRjhhREV1cHU0dGxDUDBWTDV2Sk1LcmhLL1dy?=
+ =?utf-8?B?blg5NnV4TmFGTERTL2lPYlVQMmJ3b1ZrN2NFYnErd3hVUDBYTU41QkhSbEdo?=
+ =?utf-8?B?Mll2SENhVUU0cEtId1lOQ0xmM2dkdXVmSG9mQUtFRlpQRGZhOW5veGRCL2gr?=
+ =?utf-8?B?T2R1ZkkwRUJvb3RHT2hEUU91U0JEbTl3eEY4L1ZScEpUc3dTd0hoaUo5Wmgx?=
+ =?utf-8?B?ZFNhSkRwWXZadHN6dmwrcjVLUGJYdUhvdFZMdTZsZzVneThIaWtzZ1licDA5?=
+ =?utf-8?B?YUl6dTYzZUdjL21teStOSy9pZVNEdmhiUUpTYm1NNEt3bEEzNHF6b1c4ZTkv?=
+ =?utf-8?B?dmRWUWF3Q1JSZzNFL0hwUmtOc3R3UzNvTHJJUzJKS1djUngxWldNV1lhbVdU?=
+ =?utf-8?B?OVJmTzZ2d21rSUw1V1ozV2JwYUJLRlpNMUhmQVlPNXp4NW1BZHMvVkh0OEVH?=
+ =?utf-8?B?eExTZU9LK0xKalBLWVdvZHN4NEU4OE5YbFdzSDNDSmxoTGk1emVzOEJURjg0?=
+ =?utf-8?B?cWs3QnhYYktGZmlNY0hBL3VoWHp1R292ODhvY2ZCMWlZZnZCTVZQR0dudkd2?=
+ =?utf-8?B?ditXakMyQnROQWRCWGl1c3YrZWM5QkhjaUg0ZjNQQmVGQTZDWjdwdnY3Tysx?=
+ =?utf-8?B?emdTbjB5em5jNHdCQ0FUWUVIYW5Md3FZcG1lSzBmVkpQaXozaVg5QjBpQVJn?=
+ =?utf-8?B?ZFc4TTJ0UFhnL3NRODF5RC9KYWFwUkJYVXd6VEFJTS8yUUUybjNkY3loYWxC?=
+ =?utf-8?B?UjFFeHl1YWhEY3NPNzR4ZlpwSlpobEprMThWTjlaUXhFU2ZXZ3JsbEplbytF?=
+ =?utf-8?B?WlZuRkw0SHBMNDdBWDBJQ1M3aGFnT0MyVmhxK1JJLzhZQTg0RmVRaTdOa3gy?=
+ =?utf-8?B?UlJXL2RGQVpHZmFISWF1QVQrQ2xKU0NQb0VBemtCcGN1cFY3bi8xVnFKRUY4?=
+ =?utf-8?B?WnE4Qm1CaVNyZWdkdFhZcVNEWGxYR0dDQVUreEVDTU5zNlVLRG5uYm9YM1ds?=
+ =?utf-8?B?ZmdFc1h1dEFTWm9GL3ExUDd0WUVQb3ZTKy9OY1NCWHYvZnJoMWVFM2MwYjVX?=
+ =?utf-8?B?WDRzaWVUbkFHeDYwZCtGSUUwMjI5UlJhOGJvVW15NlNucklDcDcxL1ZQdTdE?=
+ =?utf-8?B?dzVUeS9IdnlDN0s2OXl4Qnl0Y0QyWFJtZW93UDJjYk03aHVKYnRGR1poY1Jm?=
+ =?utf-8?B?TDFuemFlbzRTOUdYNGhia1pjOFdyUFNsdHVsdC9aTmxtbnk5REhuaTNjaGNl?=
+ =?utf-8?B?aUY4VlRrLzRXbk05L0tONTJLa1ovZlB3YWlvT2NxMzNxUkJJN2oyK3ZLZ21p?=
+ =?utf-8?B?bDRKS2RGdnl0aGJ6aHZqM3hkWGM5NnRuMk1ueU9wdk1RV3ZURlpiK1NrM1Bv?=
+ =?utf-8?B?RWJtUnRSZ1hyWDdsUWlzU3FuK0JWU3JlTm9ZVzYydURGbVBtRytGRHdic3Fm?=
+ =?utf-8?B?Q092VHVGdXkxSUxXam1haG01enVDSTNHQ1pNVEsyTnhJUGFDeWU3UGNTNEQx?=
+ =?utf-8?B?SHBxM1M5R3I3Q2tVYWNSdmg1bkhubzQzRWowTkczVzNMeTU0THhUcHV1ZnNy?=
+ =?utf-8?B?RlhCc3VKTit3Q3QzYnNqb004Mko2QWZKb01PanVhRU1kR1F5MFNVckc4Z1lm?=
+ =?utf-8?B?UTJneXQ3c1dTU1p2RDVxenZjSUFjVTZLYzdnMmFrTGtqUzVWNndkbnl5YkZH?=
+ =?utf-8?B?Z0l5bGJJR3Q2YU80SDB1SytKOEVTcnhIVzk3SzFHN1h2UENkV2NhNmZtbHp2?=
+ =?utf-8?B?TzlpcTZGalNpbjJPbjJPV3BUaUZxa2FqQi9HZkJFWmszWi9XUW5rdjdNNzRk?=
+ =?utf-8?B?VDAwU0szd2NRWXNvUkpzUy9qUlo2UFYzZWVrTTZQTHNacE5Cbit3emh2ejhr?=
+ =?utf-8?B?MkN3NVl3dWxKWVBVZmRNemN3RUI4RVR0Y3NRMGJ2SGNJWndWOXd5dXpxODRJ?=
+ =?utf-8?B?M1ZRRVV4bGEyUkpiUVZmTE9wYzFITjNIVUhYTTVadGNVOWMyVGh6YUxaM0tW?=
+ =?utf-8?B?NTFWdnZCQnppelZ0amJTeFJHeEt0Vm1FZ3FJVXJPS3Q1WnFRcG4zNUEyUzU2?=
+ =?utf-8?B?U3c9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ZNwuI2MfC6IRBCSAWCz2HklUQy0lfb01qUvV6xHugEAGlyG+WGmftfqirH4Im2Uzh8PxZbGHYJJN5ZFmp4n6Hg/CDF0ILSJF+aFq4deu2HBnYUfEP37JFehx3w8QKcCjzLiDfqoF52OTa85ZQQaJrgnbcitkk7GLUvugVkS8aKm0IcEMrZ7lz0FxBTbRBePhS/Ek7QHKqRiXAJ6a1I15UJCc6yOfq7EUYNbihcPMriApqvCBA90ps2HqGvknPGRUPgCY8r4f/UwP0FTWnpu98YoxfPS4J7GwhcP6QdlqjeV02IhaJobjJ8RqkUJtfidVpmV0GdzMDo8WmynVUjJ6k0l0KKEeRmIcmUMJ4atsfJszmiNEPqEGzhU0ZRnIE4oKXb1zh7Q19/Ta+MckbO5wWgQU8YSTBcF8mQJRod3lrHXd8USVoYyPEuP+vJs1qGH7u80lWOHiR9TnJwDFxgQ01KAqzWVus61/iqi53+NcXhUg7f8kCHCIg/P8tpWrTXdJaIUunF4kNvL3yD7OHe0UMCSnh7KUKH2czmCev0ZGlNZz4Nh8iek0X/WLemVFahqEg0grz3TH1JhzCjNq6MvdEJ0up33h86FTEe8CH+dj598=
+	87CWWIAivkHkO4FgI7YL1bSE/Z7AN6hwZsKk6vZH9mO9h0/FRNy6WLdQEQv8gFMOFg0aW0mZnxxe0q4xreD9Y7yUUl63wAsERScV53fchj6F4GbRz7Ag1Fs1ANDcVtDACrIHUl8fuycJe+oqxjLSu8qLSStVRWgVZgMycGB2lZXf0YiHT5jIhY+xx+P+Jsg2HnSp4SA9Zom2a1vrztJ7ca1d86mEwWt3jGRkl8kqdg+85XvHfdzyMeIzhTt8An8/K+ebDbuIgHrrLcc+WcpP15FD+/Y5mvbkZSdnECRvfgvg1ll3x8E7wF5B9AvaUUkfUNSv34sOS3qDK0ylJnI/5xcG0xf8NssgMynGutFdiy0PllqhyoUtRM4mHjQjVoGgD/ls6ZEdtejdIFPhCGxVDvpG3YCwMJ1ac7a3KXZ2A9x8LVCQYPKeehqd3gMQR7uL2PxAz8IgTmPnp/U8H16hFNR5dDiaVupwht3v1kktUEvvKhBL23CpCDdfMoMEhbnvvECcRJqqAFw2C5vSUWsNez9TpbYJZXdHyvxidCpWQfr/4MVqzC2blZMZ9iKN10G/LPi21hAqlcEDfVNRlSK1BAus22Fi8IqVj1JSzbd/apY=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7d0262-ad40-4a6a-00c7-08de1bc6cff8
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0cba8c2-a61c-46cf-6472-08de1bc72240
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2025 17:23:04.7904
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2025 17:25:22.7555
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GtFjJaNIvPzpLm9xEkrse3fh33js+t6ES4zJNrU2ujdy2XkQvmFfY3P11SjieLA2vczqONOlzFh7fDb3I5ogrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5020
+X-MS-Exchange-CrossTenant-UserPrincipalName: n2G6E8vxt8Bl5SeRqfp8f2ywjjnoH4bTvpAPJdgP/syvBj0i5+owWl3dd37zA8PXV8tZXx+q6T2kw/dDbm/qPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4517
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-04_02,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2510240000 definitions=main-2511040146
-X-Proofpoint-GUID: uWqnFJbLNOx6aYdndL_JPIUxcHD5eByX
-X-Authority-Analysis: v=2.4 cv=O440fR9W c=1 sm=1 tr=0 ts=690a368b b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511040146
+X-Proofpoint-GUID: Mnb6kLna2eVIMcetjzEDwYkbSxpPc3J3
+X-Proofpoint-ORIG-GUID: Mnb6kLna2eVIMcetjzEDwYkbSxpPc3J3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA0MDE0NSBTYWx0ZWRfX4pdq2apFcHOf
+ ig76IcmnhnJStOIGZgQTR0KEPsLp00PU82VRgXrK8uxmetD1TlULNizK10Ebn3baS6mMZL5HT8v
+ bqvBChpd/Q3GwsxzAYCmBpYrZgqxJu4vVIu+RuHit99AUt/XrcVA7TOi5/ofDflml575p6oKrM+
+ y4yWbvglzRMpH4D6UD8eMAZ401p3YIqEYbAP1Ss38KqzhIBLH3k1I36mezFPz5FgWe98EzCuuCW
+ h4EOtDVkdphOyKpJqIhx61r2mEAhxDMjst/ELY0HXam2LW8n7A/wt+CfJBd2i0MC1y1qkrT69MK
+ hPO9Knd0+6IsMCGtuQdemvWkv0UhP1/qajY0R7/dfDO/Tz/Gf9lHFnJlDPIYqr80qpKDetW4Dur
+ Eoe5B+Ruap+9SKyAc+7j4/D+VqJFAl1RERHmQjR6yzogawm7/EY=
+X-Authority-Analysis: v=2.4 cv=D/BK6/Rj c=1 sm=1 tr=0 ts=690a37b6 b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=SEtKQCMJAAAA:8 a=3Yx1fOL3kRb5t4ZLCiEA:9 a=QEXdDO2ut3YA:10
- a=kyTSok1ft720jgMXX5-3:22 cc=ntf awl=host:12123
-X-Proofpoint-ORIG-GUID: uWqnFJbLNOx6aYdndL_JPIUxcHD5eByX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA0MDE0MCBTYWx0ZWRfXyUdbsEB8yHN2
- D24bBHvDGlowxZx3l3XO5iftKds7IvfWX039AJFNLcXTNWVGu22zz4Yn4JX51Gd8/zJVY4AzU+S
- K9Ba4elMYbeWJefSPtu7bbYUHhHmCv56tPl8oHA2aSs/X7zAUGAYUwl8OZ2Kq8g37/we2jp8Vc5
- YQIbF9eKMHwSiI1d8X4L5eyaKy+GQTb3ZznXDwGGC8tElJbmpXLKNpxgs+MVLiHvs1IO3XmM706
- evcQhus7fb4jrWnuM1M8kocQtKz+O2Rl8xCtfwTyCmlEFPb2IZilExI2Dw/xv2cOMz9FFgXgwBm
- O7pFt9xzb+Tfw4NlCNUyLtQn6+S1+7DzBMyI/YTxilNPHCL9VaRYAvteHLf6g6BxFfJnFifHId4
- IZXgia2Zsx4MEsg9RXjWC0d/eTF5gQWTySVajFhHf40CN9E7YF0=
+ a=VwQbUJbxAAAA:8 a=nDVBkZEsgj93R_hh1rcA:9 a=QEXdDO2ut3YA:10 cc=ntf
+ awl=host:12124
 
 On 11/4/25 11:42 AM, Mike Snitzer wrote:
-> Also, use buffered IO (without DONTCACHE) if READ is less than 32K.
-> But do use DONTCACHE if an entire WRITE is misaligned, this preserves
-> intent of NFSD_IO_DIRECT.
-
-These two changes need to be separate patches.
-
-
-> The misaligned ends of a misaligned DIO WRITE will use buffered IO
-> (without DONTCACHE) but the middle DIO-aligned segment with use direct
-> IO.  This provides ideal performance for streaming misaligned DIO
-> (e.g. IO500's IOR_HARD) because buffered IO is used to benefit RMW.
+> Also fixed some typos.
 > 
-> On one capable testbed, this commit improved IOR_HARD WRITE
-> performance from 0.3433GB/s to 1.26GB/s.
-> 
-> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/vfs.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
+>  .../filesystems/nfs/nfsd-io-modes.rst         | 58 ++++++++++---------
+>  1 file changed, 32 insertions(+), 26 deletions(-)
 > 
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 701dd261c252..9403ec8bb2da 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -104,6 +104,7 @@ nfserrno (int errno)
->  		{ nfserr_perm, -ENOKEY },
->  		{ nfserr_no_grace, -ENOGRACE},
->  		{ nfserr_io, -EBADMSG },
-> +		{ nfserr_eagain, -ENOTBLK },
->  	};
->  	int	i;
+> diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentation/filesystems/nfs/nfsd-io-modes.rst
+> index 4863885c7035..29b84c9c9e25 100644
+> --- a/Documentation/filesystems/nfs/nfsd-io-modes.rst
+> +++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
+> @@ -21,17 +21,20 @@ NFSD's default IO mode (which is NFSD_IO_BUFFERED=0).
 >  
-> @@ -1099,13 +1100,18 @@ nfsd_direct_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  	size_t len;
+>  Based on the configured settings, NFSD's IO will either be:
+>  - cached using page cache (NFSD_IO_BUFFERED=0)
+> -- cached but removed from the page cache upon completion
+> -  (NFSD_IO_DONTCACHE=1).
+> -- not cached (NFSD_IO_DIRECT=2)
+> +- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=1)
+> +- not cached stable_how=NFS_UNSTABLE (NFSD_IO_DIRECT=2)
+> +- not cached stable_how=NFS_DATA_SYNC (NFSD_IO_DIRECT_WRITE_DATA_SYNC=3)
+> +- not cached stable_how=NFS_FILE_SYNC (NFSD_IO_DIRECT_WRITE_FILE_SYNC=4)
 >  
->  	init_sync_kiocb(&kiocb, nf->nf_file);
-> -	kiocb.ki_flags |= IOCB_DIRECT;
+> -To set an NFSD IO mode, write a supported value (0, 1 or 2) to the
+> +To set an NFSD IO mode, write a supported value (0 - 4) to the
+>  corresponding IO operation's debugfs interface, e.g.:
+>    echo 2 > /sys/kernel/debug/nfsd/io_cache_read
+> +  echo 4 > /sys/kernel/debug/nfsd/io_cache_write
 >  
->  	/* Read a properly-aligned region of bytes into rq_bvec */
->  	dio_start = round_down(offset, nf->nf_dio_read_offset_align);
->  	dio_end = round_up((u64)offset + *count, nf->nf_dio_read_offset_align);
+>  To check which IO mode NFSD is using for READ or WRITE, simply read the
+>  corresponding IO operation's debugfs interface, e.g.:
+>    cat /sys/kernel/debug/nfsd/io_cache_read
+> +  cat /sys/kernel/debug/nfsd/io_cache_write
 >  
-> +	/* Don't use expanded DIO READ for IO less than 32K */
-> +	if ((*count < (32 << 10)) &&
-> +	    (((offset - dio_start) > 0) || ((dio_end - (offset + *count)) > 0)))
-> +		return nfserrno(-ENOTBLK); /* fallback to buffered */
+>  NFSD DONTCACHE
+>  ==============
+> @@ -46,10 +49,10 @@ DONTCACHE aims to avoid what has proven to be a fairly significant
+>  limition of Linux's memory management subsystem if/when large amounts of
+>  data is infrequently accessed (e.g. read once _or_ written once but not
+>  read until much later). Such use-cases are particularly problematic
+> -because the page cache will eventually become a bottleneck to surfacing
+> +because the page cache will eventually become a bottleneck to servicing
+>  new IO requests.
+>  
+> -For more context, please see these Linux commit headers:
+> +For more context on DONTCACHE, please see these Linux commit headers:
+>  - Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
+>    to take a struct kiocb")
+>  - for READ:  8026e49bff9b1 ("mm/filemap: add read support for
+> @@ -73,12 +76,18 @@ those with a working set that is significantly larger than available
+>  system memory. The pathological worst-case workload that NFSD DIRECT has
+>  proven to help most is: NFS client issuing large sequential IO to a file
+>  that is 2-3 times larger than the NFS server's available system memory.
+> +The reason for such improvement is NFSD DIRECT eliminates a lot of work
+> +that the memory management subsystem would otherwise be required to
+> +perform (e.g. page allocation, dirty writeback, page reclaim). When
+> +using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
+> +time trying to find adequate free pages so that forward IO progress can
+> +be made.
+>  
+>  The performance win associated with using NFSD DIRECT was previously
+>  discussed on linux-nfs, see:
+>  https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
+>  But in summary:
+> -- NFSD DIRECT can signicantly reduce memory requirements
+> +- NFSD DIRECT can significantly reduce memory requirements
+>  - NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
+>  - NFSD DIRECT can offer more deterministic IO performance
+>  
+> @@ -91,11 +100,11 @@ to generate a "flamegraph" for work Linux must perform on behalf of your
+>  test is a really meaningful way to compare the relative health of the
+>  system and how switching NFSD's IO mode changes what is observed.
+>  
+> -If NFSD_IO_DIRECT is specified by writing 2 to NFSD's debugfs
+> -interfaces, ideally the IO will be aligned relative to the underlying
+> -block device's logical_block_size. Also the memory buffer used to store
+> -the READ or WRITE payload must be aligned relative to the underlying
+> -block device's dma_alignment.
+> +If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
+> +NFSD's debugfs interfaces, ideally the IO will be aligned relative to
+> +the underlying block device's logical_block_size. Also the memory buffer
+> +used to store the READ or WRITE payload must be aligned relative to the
+> +underlying block device's dma_alignment.
+>  
+>  But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
+>  it can:
+> @@ -113,32 +122,29 @@ Misaligned READ:
+>  
+>  Misaligned WRITE:
+>      If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
+> -    middle and end as needed. The large middle extent is DIO-aligned and
+> -    the start and/or end are misaligned. Buffered IO is used for the
+> -    misaligned extents and O_DIRECT is used for the middle DIO-aligned
+> -    extent.
+> -
+> -    If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
+> -    invalidate the page cache on behalf of the DIO WRITE, then
+> -    nfsd_issue_write_dio() will fall back to using buffered IO.
+> +    middle and end as needed. The large middle segment is DIO-aligned
+> +    and the start and/or end are misaligned. Buffered IO is used for the
+> +    misaligned segments and O_DIRECT is used for the middle DIO-aligned
+> +    segment. DONTCACHE buffered IO is _not_ used for the misaligned
+> +    segments because using normal buffered IO offers significant RMW
+> +    performance benefit when handling streaming misaligned WRITEs.
+>  
+>  Tracing:
+> -    The nfsd_analyze_read_dio trace event shows how NFSD expands any
+> +    The nfsd_read_direct trace event shows how NFSD expands any
+>      misaligned READ to the next DIO-aligned block (on either end of the
+>      original READ, as needed).
+>  
+>      This combination of trace events is useful for READs:
+>      echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
+> -    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_read_dio/enable
+> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
+>      echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
+>      echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
+>  
+> -    The nfsd_analyze_write_dio trace event shows how NFSD splits a given
+> -    misaligned WRITE into a mix of misaligned extent(s) and a DIO-aligned
+> -    extent.
+> +    The nfsd_write_direct trace event shows how NFSD splits a given
+> +    misaligned WRITE into a DIO-aligned middle segment.
+>  
+>      This combination of trace events is useful for WRITEs:
+>      echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
+> -    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_write_dio/enable
+> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
+>      echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
+>      echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
 
-Why not just return a specific nfserr code here? No need to go through
-nfserrno.
-
-
-> +
->  	kiocb.ki_pos = dio_start;
-> +	kiocb.ki_flags |= IOCB_DIRECT;
->  
->  	v = 0;
->  	total = dio_end - dio_start;
-> @@ -1184,10 +1190,13 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  		break;
->  	case NFSD_IO_DIRECT:
->  		/* When dio_read_offset_align is zero, dio is not supported */
-> -		if (nf->nf_dio_read_offset_align && !rqstp->rq_res.page_len)
-> -			return nfsd_direct_read(rqstp, fhp, nf, offset,
-> +		if (nf->nf_dio_read_offset_align && !rqstp->rq_res.page_len) {
-> +			__be32 nfserr = nfsd_direct_read(rqstp, fhp, nf, offset,
->  						count, eof);
-> -		fallthrough;
-> +			if (nfserr != nfserr_eagain)
-> +				return nfserr;
-> +		}
-> +		break; /* fallback to buffered */
->  	case NFSD_IO_DONTCACHE:
->  		if (file->f_op->fop_flags & FOP_DONTCACHE)
->  			kiocb.ki_flags = IOCB_DONTCACHE;
-> @@ -1347,6 +1356,15 @@ nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
->  		++args->nsegs;
->  	}
->  
-> +	/*
-> +	 * Don't use IOCB_DONTCACHE if misaligned DIO WRITE (args->nsegs > 1),
-> +	 * because it compromises unaligned segments' RMW IO being able to
-> +	 * benefit from buffered IO (especially important for streaming
-> +	 * misaligned DIO WRITE performance).
-> +	 */
-> +	if (args->nsegs > 1 && (args->flags_buffered & IOCB_DONTCACHE))
-> +		args->flags_buffered &= ~IOCB_DONTCACHE;
-> +
->  	return;
->  
->  no_dio:
-> @@ -1400,7 +1418,7 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  
->  	/*
->  	 * IOCB_DONTCACHE preserves the intent of NFSD_IO_DIRECT when
-> -	 * writing unaligned segments or handling fallback I/O.
-> +	 * falling back to buffered IO if entire WRITE is unaligned.
->  	 */
->  	args.flags_buffered = kiocb->ki_flags;
->  	if (args.nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+I'm thinking this one should be squashed into the existing patch from
+Sep 3.
 
 
 -- 
