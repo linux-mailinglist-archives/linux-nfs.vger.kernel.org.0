@@ -1,210 +1,115 @@
-Return-Path: <linux-nfs+bounces-16033-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16034-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDADFC33389
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 23:27:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70683C333D4
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 23:31:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 454AC1881E08
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 22:26:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EF453A392D
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 22:29:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CA9190664;
-	Tue,  4 Nov 2025 22:26:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A414526A1BE;
+	Tue,  4 Nov 2025 22:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Vf8HJj8q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wBD1iw5D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a6TN3mJ0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAFC280330
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 22:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C353A2FABFA
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 22:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762295181; cv=none; b=qhxaYkpkxVbooEZC1CKT1r/mNZxHAqV8rC09QW7OpPirpIgio5hppdL+hNMVG/S0BPT8ZurNdP16uV1QOHDDRAz3ckb3BPlhs5AfSozN7W5F34Q7+UF5mVbdyar1CLRfYURB3m8/fY8rdg0a7xCLt1Yn6hgH92RWaDjbXSlRDlw=
+	t=1762295374; cv=none; b=jRzF2WHP54G7n3CNWWzi8b74S4ncoF3A6AHMBDAD6hY+Vr5vdL3HzpA/Ik0t9WthaqAO7RZ6XM1cH9kDN/1xp22WpcpC4W7R7bUlJSWFR/5OOYe8yTqMnmKAYBO9A4JUTXEYPNyKEGv2UdHh94wTACKeuD+IlfBRjxzbfc3wzYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762295181; c=relaxed/simple;
-	bh=J5OkmUW0DIMzNcRACBzxDX5edWnirK9i2+iTi6pXn7s=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=IAughqOokDQb0KjZpyrjP5ifep/bIFHR7QoedMJBAQKIsR9juvdHSRPdcPBiOttLHMjUJUARVgyMdLGMkTSWXRdEzKpbgjT91HeufiojP/AHUh22huOQbaW4lZqeT3BiQVGgUQ03+fzQHS6/4cr4gVQoyVJIsiX7HMEdv8tEV+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Vf8HJj8q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wBD1iw5D; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id EC146EC04B7;
-	Tue,  4 Nov 2025 17:26:18 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Tue, 04 Nov 2025 17:26:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762295178; x=1762381578; bh=PnHDNUoPV6lbyH18l3BkF1M1oY6P9LNtZon
-	t508fBBA=; b=Vf8HJj8qFc2y+P3ul1s7DAi3d8oty3YyCyJISAU8gMLCoXSz7eS
-	IxazMNt8z2K362PL2egNqocx0e+vWoi4ndOMIVToTbfotdZH0gVgNmn+OtHJxemG
-	Se3bWt7XyoNBCvS2XhoVs6Eslzq8dbZXJNkxPjAkbON9oPjdRmPgQpFtUp+PLTVH
-	336IJICApTIDAHvqL5NmJo5UtlfMYqotTFhQbT9dZLe4Ytzfh1yXg/kaIfdvEMOG
-	lYV08FWF7vx2Z6awsr4seQcNJGiTjLur196yOr1vRrRdOlYSs2mUeK1zKq+SiBbu
-	6/0md8BOI/RzjbNJS7oy3EGnV1dgb3q8cyg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762295178; x=
-	1762381578; bh=PnHDNUoPV6lbyH18l3BkF1M1oY6P9LNtZont508fBBA=; b=w
-	BD1iw5DDmnU/HTvPZAtOFlVeRJ343wiCHraVI7jsQULlVMVKnIUiwdpL+DeYwOiR
-	z7gw1g/xxyVP8xrWytElxRfv1d2CbbHw7LMsU1nHt6GwdFvWMR1G0EChvN8Wqw4W
-	mQ7iD/Gwo4zaaYm62Q8oDnpnCtq45ApFPPi4A0Mp6nkVoLV+NBkYzI+NzVNolTiL
-	EXoSwQ6utkCe58rOQFyd4UU4BKowmNzM12qbS3V7VpWqJLt0jEtut+ieFguKK7M1
-	CAAx3A5sTvLo/EBnUXGdOGH0swdomBx6kKimSxOp6Vqvr/arBN3QeWdonYOupPFa
-	XFkvehor2TNQFdZgdaqYg==
-X-ME-Sender: <xms:in0Kac-muj2CSGBwFHmmHx4--FyenMWp08F3YkRuRNuQEguMidyhBw>
-    <xme:in0KaW8E-UFS497NsX263rad5HnLcMGdNcoiOWHI9mYv_27N7ic7AP5MX2svvaDnJ
-    0HKOr9HsgWvP7M5fAYSAeiDtjWCXy57qL9C5iX4zGH-eIVhsKM>
-X-ME-Received: <xmr:in0KaUR5mhRiKyIz5yUwlONr96_LGVONvSGxw1g21JfGw9ql3NJPqemIpCW3TU-JAG58uGQJrf5_qXihtssvFOHX8rEi4toNhI-DAhBcOLHA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukedvvdduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphht
-    thhopehhtghhsehlshhtrdguvgdprhgtphhtthhopehsnhhithiivghrsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopegtvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhhnrgeskhgvrhhnvg
-    hlrdhorhhg
-X-ME-Proxy: <xmx:in0KaScoGOBUO27mMkJHjVMUfVFqRlOxh9zfY7bi8BGSFZWZSiN-hw>
-    <xmx:in0KaQD3BDxdWlONtH5wQ3HVo2PgkZCuuuFTp_9CJh5sWY4qMvSREA>
-    <xmx:in0KacmKVAou9Ws5bi7hlyJu9VHSL1Xl58DYiOWW1hNPjkmtQuwuww>
-    <xmx:in0KaTcJ1g0hiYsAWkgwQTO7Fp_gM0Gf79WrvItelrwy3nq-87uCZg>
-    <xmx:in0KaY8O4KYGarm-XuEWL9rNp4ozHY_fF_dfeLdrHaWMMpHlBZzILF5B>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Nov 2025 17:26:16 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1762295374; c=relaxed/simple;
+	bh=w9h/z9fbCh/qYKs2PgDP6pO4yZvzQEkX+1ei7XKdVfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eF5jZXdXyhi/Pchp5GICAMH+zeUuDgmdnsWOw7AUtXPBiJcX6SdfcLtAjFt0vID6wfq3mDxpjq5Qz8Vy7H1kzxwrbe2k7fsRBycL7qACDjfl5eRLS39+jsZeb63UI9Ed0DDWcYS2dkjqt9qHxWtwNtL9Y3ZstBFLfClQA2NxuvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a6TN3mJ0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762295371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ujiv6NlUUypo9YYB1x5mXcHkfWjbQ4aN4g/N4935NBg=;
+	b=a6TN3mJ0KBXaG686gUq8rNSyEonwz0iKwQAyEyAC+1vmmjpwNjXxFtX4KtBC6pBEmT+7wt
+	zfHejJPJaoEOV9qKrYPQX4i56p+uXJFjNjFe+WRAMxYUE0BaMsUnAOYUDxnqxALhSWdpqV
+	dzIwjh9n/uuhl2JgL7bWApPpq0a2CcA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-AXop4JRxOLSzI-cWSuIByA-1; Tue,
+ 04 Nov 2025 17:29:30 -0500
+X-MC-Unique: AXop4JRxOLSzI-cWSuIByA-1
+X-Mimecast-MFC-AGG-ID: AXop4JRxOLSzI-cWSuIByA_1762295369
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E9C8180035D;
+	Tue,  4 Nov 2025 22:29:29 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.88.89])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 695791956056;
+	Tue,  4 Nov 2025 22:29:28 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/4] protect access to bc_serv
+Date: Tue,  4 Nov 2025 17:29:23 -0500
+Message-ID: <20251104222927.69423-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Anna Schumaker" <anna@kernel.org>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Mike Snitzer" <snitzer@kernel.org>, "Christoph Hellwig" <hch@lst.de>
-Subject: Re: [PATCH] NFSD: Prevent a NULL pointer dereference in fh_getattr()
-In-reply-to: <5907db3b-818a-470e-932a-db494dc15402@kernel.org>
-References: <20251104160550.39212-1-cel@kernel.org>,
- <176229107621.1793333.11409972513367324811@noble.neil.brown.name>,
- <5907db3b-818a-470e-932a-db494dc15402@kernel.org>
-Date: Wed, 05 Nov 2025 09:26:14 +1100
-Message-id: <176229517456.1793333.18248554635305336951@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, 05 Nov 2025, Chuck Lever wrote:
-> On 11/4/25 4:17 PM, NeilBrown wrote:
-> > On Wed, 05 Nov 2025, Chuck Lever wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> In general, fh_getattr() can be called after the target dentry has
-> >> gone negative. For a negative dentry, d_inode(p.dentry) will return
-> >> NULL. S_ISREG() will dereference that pointer.
-> >=20
-> > That isn't correct.  While a reference to a dentry is held the inode
-> > cannot become NULL asynchronously.
-> > It can change from NULL to non-NULL if another thread "creates".
-> > It can become NULL if *this* thread calls unlink and no other thread has
-> > a reference.
-> > But it cannot suddenly become NULL.
-> >=20
-> > I like the patch as it avoids a dereference and so puts less pressure on
-> > the dcache, but it does not change correctness.
->=20
-> I think the steps I'm worried about is if NFSD unlinks the file, and
-> then something subsequently invokes fh_getattr() assuming that is
-> safe to do.
+This patch series tries to address the problem that can arise when
+the client is shutting down but gets a backchannel request. As it
+stands now, In nfs4_shutdown_client() we call nfs4_destroy_callback()
+which would destroy/free the bc_serv structure stored in an xprt
+structure. But the xprt structure is still around for a bit until
+it's destroyed. If we get backchannel request after svc_destroy()
+is called, then in xprt_complete_bc_request() we are accessing freed
+memory.
 
-nfsd never creates a svc_fh for the dentry is it about the unlink (or
-rmdir).
-A delete involves an fh for the=20
-I'm guessing=20
-Commit: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test =
-in clamp()")
+I propose to use bc_pa_lock lock to protect access to the bc_serv
+structure and make sure we free/nullify bc_serv under the lock
+and then access it under a lock in  xs_complete_bs_request() and
+rpcrdma_bc_receive_call().
 
-is the problem.
-parent, and a name.  No fh for the child.
+-- v4 addressing Anna's comments and compile issue.
 
->=20
-> How should I update the patch description?
+-- v3 Addressing Anna'a comments. (1) created function for shared
+code between tcp/rdma backchannel and (2) created
+xprt_svc_destroy_nullify_bc() for both on/off CONFIG_SUNRPC_BACKCHANNEL
+values.
 
-Maybe just drop the patch for now.  There is no regression and nothing
-to fix.  Maybe we can make the change latter as part of a cleanup.
+-- v2 fixing kernel test bot reported compile error in usage of
+xprt_svc_destroy_nullify_bc (CONFIG_SUNRPC_BACKCHANNEL toggle related)
 
-NeilBrown
+Olga Kornievskaia (4):
+  NFSv4.1: pass transport for callback shutdown
+  SUNRPC: cleanup common code in backchannel request
+  SUNRPC: new helper function for stopping backchannel server
+  NFSv4.1: protect destroying and nullifying bc_serv structure
 
+ fs/nfs/callback.c                 |  4 ++--
+ fs/nfs/callback.h                 |  3 ++-
+ fs/nfs/nfs4client.c               |  9 ++++++--
+ include/linux/sunrpc/bc_xprt.h    |  7 +++++++
+ net/sunrpc/backchannel_rqst.c     | 35 ++++++++++++++++++++++++++++---
+ net/sunrpc/xprtrdma/backchannel.c |  8 ++-----
+ 6 files changed, 52 insertions(+), 14 deletions(-)
 
->=20
->=20
-> > Sorry if I implied otherwise when I suggested it.
-> >=20
-> > NeilBrown
-> >=20
-> >=20
-> >>
-> >> Avoid this potential regression by using the d_is_reg() helper
-> >> instead.
-> >>
-> >> Suggested-by: NeilBrown <neil@brown.name>
-> >> Fixes: d11f6cd1bb4a ("NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_=
-READ_ALIGN support")
-> >> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
-> >> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >>  fs/nfsd/nfsfh.c | 3 +--
-> >>  1 file changed, 1 insertion(+), 2 deletions(-)
-> >>
-> >> Hi Anna -
-> >>
-> >> nfsd-fixes is still based on v6.17-rc, so this patch does not apply
-> >> to it. Can you take it for v6.18-rc ?
-> >>
-> >> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> >> index ed85dd43da18..16182936828f 100644
-> >> --- a/fs/nfsd/nfsfh.c
-> >> +++ b/fs/nfsd/nfsfh.c
-> >> @@ -696,10 +696,9 @@ __be32 fh_getattr(const struct svc_fh *fhp, struct =
-kstat *stat)
-> >>  		.mnt		=3D fhp->fh_export->ex_path.mnt,
-> >>  		.dentry		=3D fhp->fh_dentry,
-> >>  	};
-> >> -	struct inode *inode =3D d_inode(p.dentry);
-> >>  	u32 request_mask =3D STATX_BASIC_STATS;
-> >> =20
-> >> -	if (S_ISREG(inode->i_mode))
-> >> +	if (d_is_reg(p.dentry))
-> >>  		request_mask |=3D (STATX_DIOALIGN | STATX_DIO_READ_ALIGN);
-> >> =20
-> >>  	if (fhp->fh_maxsize =3D=3D NFS4_FHSIZE)
-> >> --=20
-> >> 2.51.0
-> >>
-> >>
-> >=20
-> >=20
->=20
->=20
-> --=20
-> Chuck Lever
->=20
+-- 
+2.47.1
 
 
