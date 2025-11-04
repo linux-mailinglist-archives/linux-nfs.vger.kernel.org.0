@@ -1,176 +1,89 @@
-Return-Path: <linux-nfs+bounces-15990-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15991-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09233C2EA4E
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 01:38:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6690C2EE19
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 02:51:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C51D23A4E76
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 00:34:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A230018885FC
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 01:50:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB3CC1DFDB8;
-	Tue,  4 Nov 2025 00:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F5A21ABBB;
+	Tue,  4 Nov 2025 01:50:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="ZXaqscoA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uIbao+gH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1rmbqE8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051131A2C11;
-	Tue,  4 Nov 2025 00:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB4372614
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 01:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762216473; cv=none; b=lzlOV+EXsjNYiPsaLH82jB2wgfDB69HCrBzNK2JJd5irOhA0ernPHKF7molmUp6ATqrwMBg6o6Ol6YMWqMEbUEPkPrcMM25M5D3SP7HsnhDDMp/boTNZ/ygUAVW8329u0lKV3+ku1RPy+IzqzAk1rSsNsRhXKTzRNChhYloJj84=
+	t=1762221024; cv=none; b=batKFYXEIp0qvVXgjVv26x4jUf/242KOfKsIGnCYsZFs5Wn3ZPhElRhkhru01oir034XqcljgW3V9lJQuUTM0tLPKegDtJoywKsd/FWy6XE3C4p+nHmNpS9QZAVUEEludvhlkXCenN3ubAHJJEuohgOcNLSW12qwcR1VQhzeNZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762216473; c=relaxed/simple;
-	bh=BGZwrpus3lHtfsbvhH4iXIFhobnmKnvjJoGJprtyb3k=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=N7ANdc6HMAfsJ5Uh4UpKDKYp+h68C5a+KtKVozcXAv+cJXm0Jb3ya38MrQbuO36Rn4g3nDwhSUpUZkuzrKooN8PUwTThbJS58DKpvoSoHNYbn8IVXXcrF4jkgAmfiDAV1VgSXm3TFQ8wjDDHloqOGb267iLLgbFHVFEhAS3RbyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=ZXaqscoA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uIbao+gH; arc=none smtp.client-ip=202.12.124.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.stl.internal (Postfix) with ESMTP id 30BE41300AAF;
-	Mon,  3 Nov 2025 19:34:30 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 03 Nov 2025 19:34:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762216470; x=1762223670; bh=qeQ9pSvQPAFnDOoHPFbKVWO6Cl7+FMERadY
-	NQKykv7k=; b=ZXaqscoAoWcyH5B6xlrBBs/1+Rbd43ofN8C2+S833h0k/oNrSwV
-	tAPafKpitQJp18rWNitPDWUEXYlHxhySCAmJPDB2F4lWtimOf5M6zxQw1LHwyQbi
-	boU+V3+XsmK+8yJT3a4tW/nDkdJNf2N5GLldQAQcw4fFN8KV4VxCBeS9bI4x2SJr
-	NER8eXk22/5ALkGXkrRQBGuSbFvp12ruMqe5r+Z83PiW1LUny24nlxWxc13HsQId
-	niT5mXQfHrwnzboeDYCBTQ+RnHf08JnJdKNGS24XVRxiDoxSXF6YCIBA9yfSv6lJ
-	E1zyPCY4CGtHO76G9ZIQUTgooqrpI5FilIg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762216470; x=
-	1762223670; bh=qeQ9pSvQPAFnDOoHPFbKVWO6Cl7+FMERadYNQKykv7k=; b=u
-	Ibao+gH9sPTr2bMMb8QFEzQCRAhf/D0CjSv3wC9IXrnO5K1G3KSxmRI8jQQUEgcJ
-	oWSCbYF8ejh/x6nBRUIpNP5szu0CKcUe3P7Shoua8EPrptU3c2MYR3X5j14a5dyq
-	jIz5Lls2CEVdxPMnITfhZCW6o139DpG+KcWN3W6ZzRNFEW7zDhHx1LRLk81jxYYx
-	wBKUSaLgYJgRavsvONgEcLjy88Ipj2YwVQzhcQZbcslWl0FKlIHamDwvN0YlFf3s
-	FMGx6mYrl5QDpBiwfz7Fnvf7hSc3NCkLc38qqWu0I5NHlsHKfXX/u0J9d/3dJTn4
-	8tcV9XfAWtpmeFQKrHCJA==
-X-ME-Sender: <xms:FUoJaXYKrufVPSQJF8yOL7P3S15hULdNbQHFw3Q-P9WggcvC-K8u_w>
-    <xme:FUoJaVbZ0XsaJ3UHNUfy6u6Go54wGf1pPefW6xlXguX5iaX6NOMNk5-pVE2yMVQsl
-    RB1_SsanqQtUXC7G2e_M0JJ130va4vB0Gvc-eLqZchJlxQq-Q>
-X-ME-Received: <xmr:FUoJaSNli2Bk6QH8ww3lpsxfug9luibV5gSJW-ye3CQdnk_LIKWJXHAwq9t9KkZwisurttg_OyfvPLrvL-96yEdKU-Pk3J7mWxVpX0VP8_B3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddujeelheekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgeefpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    oheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
-    htoheplhhinhhugidqtghifhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepvggtrhihphhtfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:FUoJaaCX7ROhHlMxfULTjMpZCXgJx070-5t210jOrh2vKf1Dbsc70Q>
-    <xmx:FUoJacNlhGxAsNNP0sTE0PwH-m67-XImxsL7odxy-Iy5MH7tEpM_Wg>
-    <xmx:FUoJafyVPnRwFltBkXYn0n3f5Z_EqJ8RodWi2JrDgGA2BRx_fYEGWg>
-    <xmx:FUoJaXfJX06EVls3FZbb6OdR9ehl65ofH1qSAGck_eYJQGsDo2rIOg>
-    <xmx:FkoJad1IPwXLYRPa8uXI6XqJquLGVJAuaWDq2BDfal-cowKmcB1EugxP>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Nov 2025 19:34:18 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1762221024; c=relaxed/simple;
+	bh=ArUbHz837jGCzBKiF7G63BOAzfRXtQ8g2xjjw7O2Tf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IkeVzSU888M+V9MP+BOA8fPgpijcTNfD2fUf7PgfdSEsdkjqlv2xk3ZMzmC6aUC/nD6P58PMm9LFVj6Gwqtdu3LErUx6CGr5YTvvwOU0dirKw0xB4NcdopRULBWzQD70zy/9lvndP5s8eyQh54DNvWHzx/ImLa8PN6JNWH64RUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1rmbqE8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBA8C4CEE7;
+	Tue,  4 Nov 2025 01:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762221024;
+	bh=ArUbHz837jGCzBKiF7G63BOAzfRXtQ8g2xjjw7O2Tf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V1rmbqE81nElqaaTD4q7DQqEVR+e7xf+l2VF7sT7BjntN+XAPvntOUypjNrMOmaU7
+	 1tO5dZYQw/NSrXEqv0YM0tGSv5OvglhQkmawlZhi7iar+8gCv5j5WdzAJIb2nykvnU
+	 eQlboWHRcOr79hmo+9/OXe8cgf/BqOoOwry057vdGDepq3AXVDn6w59Vb44oY479Zw
+	 h1VFfWGmJuB/b+zViUOvD3SR9CcLs7WtpQiZrJyMatvXq/7eZBYmx08DiUL5Uv7NLW
+	 lMNOQl+VL/SORRyIpgUqcKwHkxjcMmw1yzWNfJh1M9AAeo86xLU2l4w2wvKpkM8qyq
+	 P1Jy+h3wkl5Mw==
+From: Chuck Lever <cel@kernel.org>
+To: jlayton@kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	neilb@brown.name,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Subject: Re: [PATCH v2 1/1] NFSD: don't start nfsd if sv_permsocks is empty
+Date: Mon,  3 Nov 2025 20:50:19 -0500
+Message-ID: <176222101233.32169.13503558412269965060.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251103175734.38634-1-okorniev@redhat.com>
+References: <20251103175734.38634-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Miklos Szeredi" <miklos@szeredi.hu>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
- "Bharath SM" <bharathsm@microsoft.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>,
- "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Amir Goldstein" <amir73il@gmail.com>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Steve French" <smfrench@gmail.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Carlos Maiolino" <cem@kernel.org>,
- "Kuniyuki Iwashima" <kuniyu@google.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, netfs@lists.linux.dev,
- ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
- linux-xfs@vger.kernel.org, netdev@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v4 09/17] vfs: add struct createdata for passing arguments
- to vfs_create()
-In-reply-to: <176221480589.1793333.7801494824880510264@noble.neil.brown.name>
-References: <20251103-dir-deleg-ro-v4-0-961b67adee89@kernel.org>, <>,
- <20251103-dir-deleg-ro-v4-9-961b67adee89@kernel.org>,
- <176221480589.1793333.7801494824880510264@noble.neil.brown.name>
-Date: Tue, 04 Nov 2025 11:34:14 +1100
-Message-id: <176221645432.1793333.17238801449784435061@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 04 Nov 2025, NeilBrown wrote:
-> On Mon, 03 Nov 2025, Jeff Layton wrote:
-> > vfs_create() has grown an uncomfortably long argument list, and a
-> > following patch will add another. Convert it to take a new struct
-> > createdata pointer and fix up the callers to pass one in.
-> > 
-> 
-> I know Christian asked for this and he is a Maintainer so.....
-> 
-> but I would like say that I don't think this is a win.  The argument
-> list isn't *that* long, and all the args are quite different so there is
-> little room for confusion.
-> 
-> I would be in favour of dropping the "dir" arg because it is always
->    d_inode(dentry->d_parent)
-> which is stable.
-> 
-> I would rather pass the vfsmnt rather than the idmap, then we could pass
-> "struct path", for both that and dentry, but I know Christian disagrees.
-> 
-> So if anyone really thinks the arg list is too long, I think there are
-> better solutions.  But I don't even think the length is a problem.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Also *every* caller of vfs_create() passes ".excl = true".  So maybe we
-don't need that arg at all.
+On Mon, 03 Nov 2025 12:57:34 -0500, Olga Kornievskaia wrote:
+> Previously, while trying to create a server instance, if no
+> listening sockets were present then default parameter udp
+> and tcp listeners were created. It's unclear what purpose
+> was of starting these listeners were and how this could have
+> been triggered by the userland setup. This patch proposed
+> to ensure the reverse that we never end in a situation where
+> no listener sockets are created and we are trying to create
+> nfsd threads.
+> 
+> [...]
 
-I think that the last time false might have been passed to vfs_create()
-was before
+Applied to nfsd-testing, thanks!
 
-Commit ce8644fcadc5 ("lookup_open(): expand the call of vfs_create()")
+[1/1] NFSD: don't start nfsd if sv_permsocks is empty
+      commit: 1782663f9156302f16f9e8c3fee3dee0865f6eac
 
-NeilBrown
+--
+Chuck Lever
+
 
