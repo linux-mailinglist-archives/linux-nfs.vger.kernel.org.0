@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-16013-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16014-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DE58C321C4
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 17:43:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F5F4C321D9
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 17:44:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1178C3B5B91
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 16:42:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 046864EF12D
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 16:42:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05371335082;
-	Tue,  4 Nov 2025 16:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD0F33508F;
+	Tue,  4 Nov 2025 16:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0NnlbiR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYSJKqQV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2881334C22
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 16:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842CF3346A9
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 16:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762274552; cv=none; b=DbKaOUnObIYvsd/xFyIjdlK2PUW08gwW9j2MNZtnfYTNCLGhXLmnq23Yxl42iJhwP+JV8/fF4IJAluBGpCnzDRBe/tgRrxyemtCA8uf7r+emdD1E8ncq+kB4Jc86Be8YIbyCdPH4qHGsirK13Izx+Lur+DvdxWFyS7EJtYmMjyE=
+	t=1762274553; cv=none; b=lusS6Wvsoq1pNrGpc17hs58FtvXSsQA4900NSdbqg+8GcSLNm0b04SKKLWvrZE25WWDQuZ/zBcoZAKxVb1ILvH5JfNtURW8aiBYVBGK+ArLcjIbG+AXE4Fdgeb4JOKr9qRKA6caumDuMqexAXZ/qE8oeWhsy8RCHEWI/jzpsaag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762274552; c=relaxed/simple;
-	bh=PZ+qALRA07lZ3KEt+2YJEpgt+mPWC+A8c7BR/OxGjno=;
+	s=arc-20240116; t=1762274553; c=relaxed/simple;
+	bh=YswqB/SjxFW2KKAtzgJl7GxKyXA8wHZKUe+e2YytfAc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bjQwUPYJM6b+307TjigHW03yGo/hZK6S1mhhyFw5w1brh0zCFDwX0h8w9Gr7PYrLGhIuDWaKTcWkZLWRTuVUhhugd+HaMvhNwf0EMU6gs4Shzdi4kZ5jyZtB7uSqHVSyLnx7cGhGLQ2zr9pZUuoQMQ080H4zHJTimxym4zz5RMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0NnlbiR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4D0C4CEF7;
-	Tue,  4 Nov 2025 16:42:31 +0000 (UTC)
+	 MIME-Version; b=hwqyUvu86BAaaDszPIlm4h+maGbnlEa5msv+GJHs/1p+3ayl61KY6mxovDlwpJSPdM0y8qmTJ9NNvUv66HJ4kAv3eTs7q3UD2RKJIIcmKhWXdfkMbuGuWMwHw5TQPmd9/4Xz5GbWGL8vL6zFwUd0IZ5EL5qHnlEO2nFMkE79+x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYSJKqQV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09FCFC4CEF7;
+	Tue,  4 Nov 2025 16:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762274551;
-	bh=PZ+qALRA07lZ3KEt+2YJEpgt+mPWC+A8c7BR/OxGjno=;
+	s=k20201202; t=1762274553;
+	bh=YswqB/SjxFW2KKAtzgJl7GxKyXA8wHZKUe+e2YytfAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F0NnlbiRuxcz/P/U6sUby994yBLUt7gmrff43pBOtMqOOPhhWkrQNSixcK3L543OW
-	 jkoJxdGn1BHGgu1y5w2JupMXrk/xNUR9bynyL1kkVqNsI9ocCMrTeGOU+WiwRJNJcv
-	 fAS8hja4qG0mX27+zG8BQZvS0+2AEy1zpkYgma5hV0F92Lgp7CIdX8DD6Ysl6JK22S
-	 tUNdumPNP19bkJh5zT1IqfhqzfbBzJSiLRt38mpDLtsZvqdOqtYqX2Lq4KOdJ0I5Q7
-	 KmLalbc0mBrm1LdhKSZ7yafPR01xhFGkyweaISVdbY4b6LWfhWLOrtha7VsdC4zUdl
-	 7QLdxqh6JjeLA==
+	b=FYSJKqQVlqjkOkht6vVwQDCREDWxo0Kap/H/DTV+jcPN8YKvIDpRe0UFa7mxB+UG9
+	 m2HbRkHlCBwIZ+uqkbX/IotgC7Ax9f9hWL531zensbyvwEq9lqN7+l2+oWvQMy26Mf
+	 AQz8mS7/B5WATaxjKyjhHMs0Z/+5dI+IxAgwzIgSuM9Kij2jD2d7l1cSCg50PxJ1Op
+	 zn7sQqbcHwVr0nq+3aGy1pP/6HA3/L8bV9/a8jo1+9dv0WvVG0phsqeQRXN/pZPnUO
+	 OBhpDaAMW6d7+Zvlft7KyFEYsabUnLEa3R/QRrqsBnnUbbdHae57mSgzTpX0Vgje38
+	 SamWkl3OP43yw==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/3] nfsd: avoid using DONTCACHE for misaligned DIO's buffered IO fallback
-Date: Tue,  4 Nov 2025 11:42:27 -0500
-Message-ID: <20251104164229.43259-2-snitzer@kernel.org>
+Subject: [PATCH 2/3] NFSD: add new NFSD_IO_DIRECT variants that may override stable_how
+Date: Tue,  4 Nov 2025 11:42:28 -0500
+Message-ID: <20251104164229.43259-3-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20251104164229.43259-1-snitzer@kernel.org>
 References: <20251104164229.43259-1-snitzer@kernel.org>
@@ -59,97 +59,150 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Also, use buffered IO (without DONTCACHE) if READ is less than 32K.
-But do use DONTCACHE if an entire WRITE is misaligned, this preserves
-intent of NFSD_IO_DIRECT.
+NFSD_IO_DIRECT_WRITE_FILE_SYNC is direct IO with stable_how=NFS_FILE_SYNC.
+NFSD_IO_DIRECT_WRITE_DATA_SYNC is direct IO with stable_how=NFS_DATA_SYNC.
 
-The misaligned ends of a misaligned DIO WRITE will use buffered IO
-(without DONTCACHE) but the middle DIO-aligned segment with use direct
-IO.  This provides ideal performance for streaming misaligned DIO
-(e.g. IO500's IOR_HARD) because buffered IO is used to benefit RMW.
+The stable_how associated with each is a hint in the form of a "floor"
+value for stable_how.  Meaning if the client provided stable_how is
+already of higher value it will not be changed.
 
-On one capable testbed, this commit improved IOR_HARD WRITE
-performance from 0.3433GB/s to 1.26GB/s.
+These permutations of NFSD_IO_DIRECT allow to experiment with also
+elevating stable_how and sending it back to the client.  Which for
+NFSD_IO_DIRECT_WRITE_FILE_SYNC will cause the client to elide its
+COMMIT.
 
-Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- fs/nfsd/vfs.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ fs/nfsd/debugfs.c |  7 ++++++-
+ fs/nfsd/nfsd.h    |  2 ++
+ fs/nfsd/vfs.c     | 46 ++++++++++++++++++++++++++++++++++------------
+ 3 files changed, 42 insertions(+), 13 deletions(-)
 
+diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+index 7f44689e0a53..8538e29ed2ab 100644
+--- a/fs/nfsd/debugfs.c
++++ b/fs/nfsd/debugfs.c
+@@ -68,7 +68,7 @@ static int nfsd_io_cache_read_set(void *data, u64 val)
+ 	case NFSD_IO_DIRECT:
+ 		/*
+ 		 * Must disable splice_read when enabling
+-		 * NFSD_IO_DONTCACHE.
++		 * NFSD_IO_DONTCACHE and NFSD_IO_DIRECT.
+ 		 */
+ 		nfsd_disable_splice_read = true;
+ 		nfsd_io_cache_read = val;
+@@ -90,6 +90,9 @@ DEFINE_DEBUGFS_ATTRIBUTE(nfsd_io_cache_read_fops, nfsd_io_cache_read_get,
+  * Contents:
+  *   %0: NFS WRITE will use buffered IO
+  *   %1: NFS WRITE will use dontcache (buffered IO w/ dropbehind)
++ *   %2: NFS WRITE will use direct IO with stable_how=NFS_UNSTABLE
++ *   %3: NFS WRITE will use direct IO with stable_how=NFS_DATA_SYNC
++ *   %4: NFS WRITE will use direct IO with stable_how=NFS_FILE_SYNC
+  *
+  * This setting takes immediate effect for all NFS versions,
+  * all exports, and in all NFSD net namespaces.
+@@ -109,6 +112,8 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
+ 	case NFSD_IO_BUFFERED:
+ 	case NFSD_IO_DONTCACHE:
+ 	case NFSD_IO_DIRECT:
++	case NFSD_IO_DIRECT_WRITE_DATA_SYNC:
++	case NFSD_IO_DIRECT_WRITE_FILE_SYNC:
+ 		nfsd_io_cache_write = val;
+ 		break;
+ 	default:
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index e4263326ca4a..10eca169392b 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -161,6 +161,8 @@ enum {
+ 	NFSD_IO_BUFFERED,
+ 	NFSD_IO_DONTCACHE,
+ 	NFSD_IO_DIRECT,
++	NFSD_IO_DIRECT_WRITE_DATA_SYNC,
++	NFSD_IO_DIRECT_WRITE_FILE_SYNC,
+ };
+ 
+ extern u64 nfsd_io_cache_read __read_mostly;
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 701dd261c252..9403ec8bb2da 100644
+index 9403ec8bb2da..99c62340f58f 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -104,6 +104,7 @@ nfserrno (int errno)
- 		{ nfserr_perm, -ENOKEY },
- 		{ nfserr_no_grace, -ENOGRACE},
- 		{ nfserr_io, -EBADMSG },
-+		{ nfserr_eagain, -ENOTBLK },
- 	};
- 	int	i;
+@@ -1407,15 +1407,45 @@ nfsd_issue_dio_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	return 0;
+ }
  
-@@ -1099,13 +1100,18 @@ nfsd_direct_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	size_t len;
- 
- 	init_sync_kiocb(&kiocb, nf->nf_file);
--	kiocb.ki_flags |= IOCB_DIRECT;
- 
- 	/* Read a properly-aligned region of bytes into rq_bvec */
- 	dio_start = round_down(offset, nf->nf_dio_read_offset_align);
- 	dio_end = round_up((u64)offset + *count, nf->nf_dio_read_offset_align);
- 
-+	/* Don't use expanded DIO READ for IO less than 32K */
-+	if ((*count < (32 << 10)) &&
-+	    (((offset - dio_start) > 0) || ((dio_end - (offset + *count)) > 0)))
-+		return nfserrno(-ENOTBLK); /* fallback to buffered */
++static void
++nfsd_init_write_kiocb_from_stable(u32 stable_floor,
++				  struct kiocb *kiocb,
++				  u32 *stable_how)
++{
++	if (stable_floor < *stable_how)
++		return; /* stable_how already set higher */
 +
- 	kiocb.ki_pos = dio_start;
-+	kiocb.ki_flags |= IOCB_DIRECT;
- 
- 	v = 0;
- 	total = dio_end - dio_start;
-@@ -1184,10 +1190,13 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		break;
- 	case NFSD_IO_DIRECT:
- 		/* When dio_read_offset_align is zero, dio is not supported */
--		if (nf->nf_dio_read_offset_align && !rqstp->rq_res.page_len)
--			return nfsd_direct_read(rqstp, fhp, nf, offset,
-+		if (nf->nf_dio_read_offset_align && !rqstp->rq_res.page_len) {
-+			__be32 nfserr = nfsd_direct_read(rqstp, fhp, nf, offset,
- 						count, eof);
--		fallthrough;
-+			if (nfserr != nfserr_eagain)
-+				return nfserr;
-+		}
-+		break; /* fallback to buffered */
- 	case NFSD_IO_DONTCACHE:
- 		if (file->f_op->fop_flags & FOP_DONTCACHE)
- 			kiocb.ki_flags = IOCB_DONTCACHE;
-@@ -1347,6 +1356,15 @@ nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
- 		++args->nsegs;
- 	}
- 
-+	/*
-+	 * Don't use IOCB_DONTCACHE if misaligned DIO WRITE (args->nsegs > 1),
-+	 * because it compromises unaligned segments' RMW IO being able to
-+	 * benefit from buffered IO (especially important for streaming
-+	 * misaligned DIO WRITE performance).
-+	 */
-+	if (args->nsegs > 1 && (args->flags_buffered & IOCB_DONTCACHE))
-+		args->flags_buffered &= ~IOCB_DONTCACHE;
++	*stable_how = stable_floor;
 +
- 	return;
++	switch (stable_floor) {
++	case NFS_FILE_SYNC:
++		/* persist data and timestamps */
++		kiocb->ki_flags |= IOCB_DSYNC | IOCB_SYNC;
++		break;
++	case NFS_DATA_SYNC:
++		/* persist data only */
++		kiocb->ki_flags |= IOCB_DSYNC;
++		break;
++	}
++}
++
+ static noinline_for_stack int
+ nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		  struct nfsd_file *nf, u32 *stable_how, unsigned int nvecs,
+ 		  unsigned long *cnt, struct kiocb *kiocb)
+ {
+ 	struct nfsd_write_dio_args args;
++	u32 stable_floor = NFS_UNSTABLE;
  
- no_dio:
-@@ -1400,7 +1418,7 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	args.nf = nf;
  
++	if (nfsd_io_cache_write == NFSD_IO_DIRECT_WRITE_FILE_SYNC)
++		stable_floor = NFS_FILE_SYNC;
++	else if (nfsd_io_cache_write == NFSD_IO_DIRECT_WRITE_DATA_SYNC)
++		stable_floor = NFS_DATA_SYNC;
++	if (stable_floor != NFS_UNSTABLE)
++		nfsd_init_write_kiocb_from_stable(stable_floor, kiocb,
++						  stable_how);
  	/*
  	 * IOCB_DONTCACHE preserves the intent of NFSD_IO_DIRECT when
--	 * writing unaligned segments or handling fallback I/O.
-+	 * falling back to buffered IO if entire WRITE is unaligned.
- 	 */
- 	args.flags_buffered = kiocb->ki_flags;
- 	if (args.nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+ 	 * falling back to buffered IO if entire WRITE is unaligned.
+@@ -1490,18 +1520,8 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		stable = NFS_UNSTABLE;
+ 	init_sync_kiocb(&kiocb, file);
+ 	kiocb.ki_pos = offset;
+-	if (likely(!fhp->fh_use_wgather)) {
+-		switch (stable) {
+-		case NFS_FILE_SYNC:
+-			/* persist data and timestamps */
+-			kiocb.ki_flags |= IOCB_DSYNC | IOCB_SYNC;
+-			break;
+-		case NFS_DATA_SYNC:
+-			/* persist data only */
+-			kiocb.ki_flags |= IOCB_DSYNC;
+-			break;
+-		}
+-	}
++	if (likely(!fhp->fh_use_wgather))
++		nfsd_init_write_kiocb_from_stable(stable, &kiocb, stable_how);
+ 
+ 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+ 
+@@ -1511,6 +1531,8 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 
+ 	switch (nfsd_io_cache_write) {
+ 	case NFSD_IO_DIRECT:
++	case NFSD_IO_DIRECT_WRITE_DATA_SYNC:
++	case NFSD_IO_DIRECT_WRITE_FILE_SYNC:
+ 		host_err = nfsd_direct_write(rqstp, fhp, nf, stable_how,
+ 					     nvecs, cnt, &kiocb);
+ 		stable = *stable_how;
 -- 
 2.44.0
 
