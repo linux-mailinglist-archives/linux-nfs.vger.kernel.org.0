@@ -1,195 +1,126 @@
-Return-Path: <linux-nfs+bounces-16015-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16016-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E37DC321C7
-	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 17:43:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 149C1C32290
+	for <lists+linux-nfs@lfdr.de>; Tue, 04 Nov 2025 17:55:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93BA218C3C56
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 16:43:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECD484216FF
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Nov 2025 16:54:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C54F2C0F9C;
-	Tue,  4 Nov 2025 16:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6952E3375CD;
+	Tue,  4 Nov 2025 16:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHUXvmjy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dQXT6I3z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1951C285060
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 16:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDBA33769A
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Nov 2025 16:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762274556; cv=none; b=MHzGodcp/WSCyAFLddmu67og0Qw8TcSngS+2+PeKvD1a2yH6xLFwDfrxGm1owanKqCBrcM9KkRZOSxPtLBRY0BWCoH3gVGQrQN7WGwc8quT3/P3hjMS8tQScTNsEbZXHC3K1AyW2Qi/psaZKMsLbFQC7p4sV4SjIjyeZvJxKa4g=
+	t=1762275238; cv=none; b=OLpJ/c0ximgwSWfNX3cOb+K+ifs10wEFqjgirBdA/KoAnGss1AXXP7AEKQZfbY+/+bOUUdNouzIQBZHkhs6MxrXvS9PeknmqY0wMDRNHf00qS00QMu0Dz+ZbQEyb1MwOJVzMDKAt6gx8GQlrkxt4hXzW9uqWlsq9xEvj36d8Zqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762274556; c=relaxed/simple;
-	bh=nHB6hYbFaaPL4GzfzOPqdzsWiQHtO7GWidgKzULpetA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ulos/uQpOUNuQvwsTqLZXchgklIuYI+/JZOo/11TcXSZYYQX/UvMGSCzmvVhEdC5Er8xuRFgzhB7PPFl8yFhVLUcYAI6i0z+bq2jDSV7RrGsXekiVteHSH9miyGYw4theP8nHkLzRVRdTA3DxcyYEebQG1aEclvYK2ee6f2ksu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHUXvmjy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F172C116C6;
-	Tue,  4 Nov 2025 16:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762274554;
-	bh=nHB6hYbFaaPL4GzfzOPqdzsWiQHtO7GWidgKzULpetA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GHUXvmjyVtphaKXsbyue9J8OQeCYfoPt6YqKltSwfPUXaWqZS3nIHiDFOk0n+s2k3
-	 2vAE9WXBABr00lS7/1iWFwHDjvXGS+9r0fp05bxf2LkfS6YRYo6qhqY//VjVoy2gtH
-	 ccjFQ5FocrsT+iaKnQb+SEzzO81JqpXbJ5iiJlKDXZVWs3y3JBeCrhcuKAkcTrFHLN
-	 xYhXjMSXGRmUJKMJDrUNbarWT3jIU5yZgK+/W4n9SYQLCc6EvmCTHzTEPq2sbnuK6D
-	 eMxF0PN6YzVyMj48OXJYiOhBqdK7Ebqdeo/Nt4qWj6lQZPNDodUc/8R1NKDjQOKR9I
-	 n/YjaRKI33lVw==
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSD: update Documentation/filesystems/nfs/nfsd-io-modes.rst
-Date: Tue,  4 Nov 2025 11:42:29 -0500
-Message-ID: <20251104164229.43259-4-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20251104164229.43259-1-snitzer@kernel.org>
-References: <20251104164229.43259-1-snitzer@kernel.org>
+	s=arc-20240116; t=1762275238; c=relaxed/simple;
+	bh=801Y4MEGjmcd1waB8sN3DVwqfK3PY8whbEFeV7sghKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJ11kg8gRK35VbX3LpNTS1kyAfHn/v6xlRncLbEJxqIumFGc2h+T1l2LZ8yU91hpB7ioIA2CzuIlCMnO0ksJf9vySma4WdS09EbYtfD3N6wChsXg7NCJjjCXEDC3YKjIOuAf4DV2EThpNYuhkSTlBN6oR4plbBj7So5jEXgX/Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dQXT6I3z; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762275237; x=1793811237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=801Y4MEGjmcd1waB8sN3DVwqfK3PY8whbEFeV7sghKY=;
+  b=dQXT6I3zlHf/S/M7QIvYEOKjA+Vl5+WWtHOTHSgBjYOixZAARhKlDElO
+   piAJ3QFvLrvbnyv6d0ZzsB2fjWrRcD7n/y/4e37kzbWTkoiGKUGWzjIrU
+   U5Tvde+ZVW/KTjek5LmQnHPB2NuLNOAPN6rkRyp2Z75SZTmUbu3CCg5G9
+   xzKwuPquenLFjdKZ+aEVJ0hmxW16JXj6CCg9zmfGie5d3LV13UFProG01
+   XzzX6OdttRp2++0OArJmTJWImAQzdRZY0AYmMWaUB4ar1hUIrN+ZguLfg
+   xIOUVs6Hkw39ZuhVjVo4yD3VnL7p3qORM5/O7J6Em/j0nXIam3XKMDAmO
+   w==;
+X-CSE-ConnectionGUID: Mi/jlFg0RQqktAYsP0xT7A==
+X-CSE-MsgGUID: UIY4XoZPRn6apY6RhyFf/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64414004"
+X-IronPort-AV: E=Sophos;i="6.19,279,1754982000"; 
+   d="scan'208";a="64414004"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 08:53:57 -0800
+X-CSE-ConnectionGUID: R9w+IGxtQxuBXmN+JFHhuw==
+X-CSE-MsgGUID: RfOA+qdoRJKOIXS4MEfK7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,279,1754982000"; 
+   d="scan'208";a="187154927"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 04 Nov 2025 08:53:55 -0800
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vGKHE-000Rd6-08;
+	Tue, 04 Nov 2025 16:53:12 +0000
+Date: Wed, 5 Nov 2025 00:52:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Olga Kornievskaia <okorniev@redhat.com>, trondmy@kernel.org,
+	anna@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] SUNRPC: new helper function for stopping
+ backchannel server
+Message-ID: <202511050011.oPM1X3Kt-lkp@intel.com>
+References: <20251103221339.45145-4-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251103221339.45145-4-okorniev@redhat.com>
 
-Also fixed some typos.
+Hi Olga,
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- .../filesystems/nfs/nfsd-io-modes.rst         | 58 ++++++++++---------
- 1 file changed, 32 insertions(+), 26 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentation/filesystems/nfs/nfsd-io-modes.rst
-index 4863885c7035..29b84c9c9e25 100644
---- a/Documentation/filesystems/nfs/nfsd-io-modes.rst
-+++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
-@@ -21,17 +21,20 @@ NFSD's default IO mode (which is NFSD_IO_BUFFERED=0).
- 
- Based on the configured settings, NFSD's IO will either be:
- - cached using page cache (NFSD_IO_BUFFERED=0)
--- cached but removed from the page cache upon completion
--  (NFSD_IO_DONTCACHE=1).
--- not cached (NFSD_IO_DIRECT=2)
-+- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=1)
-+- not cached stable_how=NFS_UNSTABLE (NFSD_IO_DIRECT=2)
-+- not cached stable_how=NFS_DATA_SYNC (NFSD_IO_DIRECT_WRITE_DATA_SYNC=3)
-+- not cached stable_how=NFS_FILE_SYNC (NFSD_IO_DIRECT_WRITE_FILE_SYNC=4)
- 
--To set an NFSD IO mode, write a supported value (0, 1 or 2) to the
-+To set an NFSD IO mode, write a supported value (0 - 4) to the
- corresponding IO operation's debugfs interface, e.g.:
-   echo 2 > /sys/kernel/debug/nfsd/io_cache_read
-+  echo 4 > /sys/kernel/debug/nfsd/io_cache_write
- 
- To check which IO mode NFSD is using for READ or WRITE, simply read the
- corresponding IO operation's debugfs interface, e.g.:
-   cat /sys/kernel/debug/nfsd/io_cache_read
-+  cat /sys/kernel/debug/nfsd/io_cache_write
- 
- NFSD DONTCACHE
- ==============
-@@ -46,10 +49,10 @@ DONTCACHE aims to avoid what has proven to be a fairly significant
- limition of Linux's memory management subsystem if/when large amounts of
- data is infrequently accessed (e.g. read once _or_ written once but not
- read until much later). Such use-cases are particularly problematic
--because the page cache will eventually become a bottleneck to surfacing
-+because the page cache will eventually become a bottleneck to servicing
- new IO requests.
- 
--For more context, please see these Linux commit headers:
-+For more context on DONTCACHE, please see these Linux commit headers:
- - Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
-   to take a struct kiocb")
- - for READ:  8026e49bff9b1 ("mm/filemap: add read support for
-@@ -73,12 +76,18 @@ those with a working set that is significantly larger than available
- system memory. The pathological worst-case workload that NFSD DIRECT has
- proven to help most is: NFS client issuing large sequential IO to a file
- that is 2-3 times larger than the NFS server's available system memory.
-+The reason for such improvement is NFSD DIRECT eliminates a lot of work
-+that the memory management subsystem would otherwise be required to
-+perform (e.g. page allocation, dirty writeback, page reclaim). When
-+using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
-+time trying to find adequate free pages so that forward IO progress can
-+be made.
- 
- The performance win associated with using NFSD DIRECT was previously
- discussed on linux-nfs, see:
- https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
- But in summary:
--- NFSD DIRECT can signicantly reduce memory requirements
-+- NFSD DIRECT can significantly reduce memory requirements
- - NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
- - NFSD DIRECT can offer more deterministic IO performance
- 
-@@ -91,11 +100,11 @@ to generate a "flamegraph" for work Linux must perform on behalf of your
- test is a really meaningful way to compare the relative health of the
- system and how switching NFSD's IO mode changes what is observed.
- 
--If NFSD_IO_DIRECT is specified by writing 2 to NFSD's debugfs
--interfaces, ideally the IO will be aligned relative to the underlying
--block device's logical_block_size. Also the memory buffer used to store
--the READ or WRITE payload must be aligned relative to the underlying
--block device's dma_alignment.
-+If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
-+NFSD's debugfs interfaces, ideally the IO will be aligned relative to
-+the underlying block device's logical_block_size. Also the memory buffer
-+used to store the READ or WRITE payload must be aligned relative to the
-+underlying block device's dma_alignment.
- 
- But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
- it can:
-@@ -113,32 +122,29 @@ Misaligned READ:
- 
- Misaligned WRITE:
-     If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
--    middle and end as needed. The large middle extent is DIO-aligned and
--    the start and/or end are misaligned. Buffered IO is used for the
--    misaligned extents and O_DIRECT is used for the middle DIO-aligned
--    extent.
--
--    If vfs_iocb_iter_write() returns -ENOTBLK, due to its inability to
--    invalidate the page cache on behalf of the DIO WRITE, then
--    nfsd_issue_write_dio() will fall back to using buffered IO.
-+    middle and end as needed. The large middle segment is DIO-aligned
-+    and the start and/or end are misaligned. Buffered IO is used for the
-+    misaligned segments and O_DIRECT is used for the middle DIO-aligned
-+    segment. DONTCACHE buffered IO is _not_ used for the misaligned
-+    segments because using normal buffered IO offers significant RMW
-+    performance benefit when handling streaming misaligned WRITEs.
- 
- Tracing:
--    The nfsd_analyze_read_dio trace event shows how NFSD expands any
-+    The nfsd_read_direct trace event shows how NFSD expands any
-     misaligned READ to the next DIO-aligned block (on either end of the
-     original READ, as needed).
- 
-     This combination of trace events is useful for READs:
-     echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
--    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_read_dio/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
-     echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
-     echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
- 
--    The nfsd_analyze_write_dio trace event shows how NFSD splits a given
--    misaligned WRITE into a mix of misaligned extent(s) and a DIO-aligned
--    extent.
-+    The nfsd_write_direct trace event shows how NFSD splits a given
-+    misaligned WRITE into a DIO-aligned middle segment.
- 
-     This combination of trace events is useful for WRITEs:
-     echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
--    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_analyze_write_dio/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
-     echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
-     echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.18-rc4 next-20251104]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Olga-Kornievskaia/NFSv4-1-pass-transport-for-callback-shutdown/20251104-062226
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20251103221339.45145-4-okorniev%40redhat.com
+patch subject: [PATCH v3 3/4] SUNRPC: new helper function for stopping backchannel server
+config: openrisc-defconfig (https://download.01.org/0day-ci/archive/20251105/202511050011.oPM1X3Kt-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251105/202511050011.oPM1X3Kt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511050011.oPM1X3Kt-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from net/sunrpc/clnt.c:40:
+>> include/linux/sunrpc/bc_xprt.h:73:13: warning: 'xprt_svc_destroy_nullify_bc' defined but not used [-Wunused-function]
+      73 | static void xprt_svc_destroy_nullify_bc(struct rpc_xprt *xprt, struct svc_serv **serv)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/xprt_svc_destroy_nullify_bc +73 include/linux/sunrpc/bc_xprt.h
+
+    69	
+    70	static inline void xprt_free_bc_request(struct rpc_rqst *req)
+    71	{
+    72	}
+  > 73	static void xprt_svc_destroy_nullify_bc(struct rpc_xprt *xprt, struct svc_serv **serv)
+
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
