@@ -1,90 +1,109 @@
-Return-Path: <linux-nfs+bounces-16050-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16051-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB6AFC3625C
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 15:49:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60B7CC36262
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 15:49:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 215474E61B2
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 14:47:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BCC894EF66A
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 14:48:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE2172192EE;
-	Wed,  5 Nov 2025 14:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EE923645D;
+	Wed,  5 Nov 2025 14:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFsfujQ1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMQhaqiL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4EA2264CD
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Nov 2025 14:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF9E23370F
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Nov 2025 14:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762354067; cv=none; b=SuHOBfiQYtD1PSm3jTsGnzthsgACitHbe6RdVLQR2zGA6D58ibbnxt4xkiIdakJxvsooXZupThfHD+X8kNFm12vdeymR88Vk2MbqDQeHHoTFX83bU59DGTruiAM8+/SBj22VqbegWE1QqbpOgitboTNdx6nfeCbRmSGpyjQo0U8=
+	t=1762354083; cv=none; b=mxsprm5vQKYfh/SHYkMF3HVahZq53AJcHhzrxMjXj5PSKJeAhTVTzeiYfjVPSsnJbtXGJ6QUeb3Rejti4gp7/mKS1cs6k+KiPTKzePnPtny8W3QGvK3ozVS7cuRdzlbW0pj9lcRsHMKxzgf4FGqVkQt6tS+UVBxD+dKBH16LHu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762354067; c=relaxed/simple;
-	bh=izNwYZ9wCIopceAPj1FGUdw6CLRJ6MmpV1QqQ0wN4K4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=LE6s8cQ5CRSTUHrxkHFV6maD0s95+vQjXuGCxbozI+nb40Ucf5ZKJ4Kkw3gbWbiE4axPwxk19IE76YYm8jqgOfGtiQx1qeIDgfkaL17JhGEWgDCokNSCg6Ripr7b7svGN4dKwUgJQecVFsJ6XhuqGbyjlUOUrIa85s0ySre2uPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IFsfujQ1; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6399328ff1fso11371325a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Nov 2025 06:47:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762354064; x=1762958864; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=izNwYZ9wCIopceAPj1FGUdw6CLRJ6MmpV1QqQ0wN4K4=;
-        b=IFsfujQ14iKdSx4SSauYgHKhTAKiIIgM7Tv82fTJ3D9wEEA3TB7W+dT9MU5QRUjCGw
-         +GifySLI4mwcG9e1l2nsluSUk8WpqMrA9Kuv1XoHDP1rlMJ3MOkTFeASFrgMuCM7H3t0
-         yxu96ScnXu77q3yW+77Fe9bMZ4V8TSFPGTnclB8bSVZbIxFA8tNhV3hO/PPXWbj049hs
-         PW39m9TdAYkr/AW5gchhy+2PO+DWthPCQ07tcfPYwzTUVpsdePupll3Tpl4v9Bpb5kq4
-         iCoaWZ020bxiPNyTZtFj12VHhmNRCRJy1sqBKNoROBfWXc9gYkrVd25ZvZRFns24DpoA
-         YnEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762354064; x=1762958864;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=izNwYZ9wCIopceAPj1FGUdw6CLRJ6MmpV1QqQ0wN4K4=;
-        b=VNV1Hyn1BRD+8j0Ae+YCGybHgQxKCLlUVvDZoyBc/Q79kTZwIjkFeh8k+pFhKcKrx2
-         tEWYoz5E8hIuXMBh8AGyTcqnGt5cSnMJfr1+gz+gqsiiQhwA6nBcN/ddhbeq20cDwCfF
-         6mbpSHavL9E1LPgq7XDf4AgumylqXMtpJCMKnpXF2wZDr4DH5OvS2tD/yYKhDsnQpurR
-         qnjq047PoEEYCpi1tiiw/AvrjyAGTTbWHCsXcomoDXHo3w8vGVEzrcIlyR9BDQx7vktG
-         hHZCP6WeJLC0dQ/UEir1jYSRquvGU+KLQvUwCp2pdoE7URbRYwpGjP2j4+dSf6/I7HdG
-         wrYQ==
-X-Gm-Message-State: AOJu0YxCz3KxFICy/gciby2h77H6748FiouvGvgDBNO55L4sY0KXwO2O
-	lfgEO5fAbxsWOaRXebjiUt3JyWMfQDv2pCrOQdkKQi3cP2LhWnIYcVwYjOv5zuEzzL2dnFnVRSS
-	mYEkG1fNx8VLr8zoBybEXjwUDjT4nuitQX7dWlmY=
-X-Gm-Gg: ASbGncvRqlkvag10qPyNJZ7ja2DQtUR7hGMwOa08PkxMXbJ/asBokp1xdmXmbBEjBZa
-	WQMh4mnTDUTEZ08T/PHjd6dtLr2zPnD8ukt5CUI33gjgyREkosFAy7VSbAO1ACo95J0q/DBvI6X
-	o5tBH+UGM7NeJUl8VM/7JI+ihJFTz3Djbkkdqubax+LRPXzoVEa6ZLd+Zuqn7ooE6cgkdKbwIZT
-	x6+cffaR6M3c57YkVRfgaQcrYqL2CBtU5W+4GYg9gdDMbqYjl/8Wq99aaMf
-X-Google-Smtp-Source: AGHT+IFxbR7YCRXSqulwkbGMzJnZSinXjMUX4hx7LuBbWjca/RbvfgWxYlVGRPLEuU3gGplStqe5FpiWW+euHkLHqFY=
-X-Received: by 2002:a05:6402:40c6:b0:640:c800:f5d2 with SMTP id
- 4fb4d7f45d1cf-64105b80aaemr2979253a12.26.1762354063856; Wed, 05 Nov 2025
- 06:47:43 -0800 (PST)
+	s=arc-20240116; t=1762354083; c=relaxed/simple;
+	bh=oO/Pgu+aQO39NBTXFLF2RMkyQS3N9ESgYzry3miIrIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CZ5gn7q96oEpqkH096Obk+RdRZuGpwHAMzEVRouE42SN7VsW/Cj/1RUwbayBxV5pEGOPyzm13nbcbOhf4Nc4TCCJ4LIY2yqeHXmyE9L6AAFo6BgFNBDmETsZBe1ydJJfq5tMkTG97H2YFW8/YGc+q44cfgZOMvA2yWtoIXMcalg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMQhaqiL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB14C4CEF5;
+	Wed,  5 Nov 2025 14:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762354082;
+	bh=oO/Pgu+aQO39NBTXFLF2RMkyQS3N9ESgYzry3miIrIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VMQhaqiLY0d9KDFDKrNo8fxRE93G/BhOZYEfiS3eEBdNnTtSFz0qga9mhACrEU+di
+	 l4UoiRweOmodboFRyIGd4gy46rXp+puEJFVGHkTbwwouWEiYnGd+yvnDcbr83R24wt
+	 irIpOZg1XpaycZQj44GWPErB9UzMowQqOPkKjv79G6wYVhLtFIDsPjZcmQ41ntwSMP
+	 OCDlsWDo6azvLIFyD1nsYq9JSN7l1NOgHF93+zGG5p8YqE5Iszk/Z3ngCZRNdzy2df
+	 2ElfdxIdQH2kqc1brZCL16gMsdyXhuhbgV1PxhETiPGMYEJRWtqPAyf9x6MGzO9z+m
+	 k1YuMAmTYkIFg==
+Date: Wed, 5 Nov 2025 09:48:01 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v9 05/12] NFSD: Remove alignment size checking
+Message-ID: <aQtjoU9ClF8TAIq9@kernel.org>
+References: <20251103165351.10261-1-cel@kernel.org>
+ <20251103165351.10261-6-cel@kernel.org>
+ <176220902556.1793333.10293656800242618512@noble.neil.brown.name>
+ <aQnpB4mYMwW9IGM0@infradead.org>
+ <35ddc8b0-2727-453e-b970-07b493e21f93@kernel.org>
+ <aQtIqn28Bo2ElPqG@infradead.org>
+ <a06fd92d-0c37-4b18-8ec2-1392d587264a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Lionel Cons <lionelcons1972@gmail.com>
-Date: Wed, 5 Nov 2025 15:47:07 +0100
-X-Gm-Features: AWmQ_bn1nQ_jGGyIPnYVIrUwRt5AQlIpILM9YFJllkkLbn29-3QTK8N_NZ0n3VM
-Message-ID: <CAPJSo4Wa4EGCTQhfK7O9S9O7rmkb5aQHg85_R19FJHqCGi1Usg@mail.gmail.com>
-Subject: NFSv4 server sets/gets FATTR4_HIDDEN, FATTR4_SYSTEM, FATTR4_ARCHIVE
- attributes from Linux "user.DOSATTRIB"?
-To: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a06fd92d-0c37-4b18-8ec2-1392d587264a@kernel.org>
 
-Is it feasibe that the Linux NFSv4 server sets/gets FATTR4_HIDDEN,
-FATTR4_SYSTEM, FATTR4_ARCHIVE attributes from Linux "user.DOSATTRIB"
-XATTR used by SMB/CIFS?
+On Wed, Nov 05, 2025 at 09:38:33AM -0500, Chuck Lever wrote:
+> On 11/5/25 7:52 AM, Christoph Hellwig wrote:
+> > On Tue, Nov 04, 2025 at 09:14:09AM -0500, Chuck Lever wrote:
+> >>>> It might be good to capture here *why* the check is removed.
+> >>>> Is it because alignments never exceed PAGE_SIZE, or because the code is
+> >>>> quite capable of handling larger alignments
+> >>>> (I haven't been following the conversation closely..)
+> >>>
+> >>> I'm still trying to understand why it was added in the first place :)
+> >>
+> >> I'm trying to understand what action you'd like me to take. Should I
+> >> drop this patch?
+> > 
+> > With "it" I meant the check.  І think Mike explain this was due to a
+> > PAGE_SIZE bound buffer originally, and in that context it makes sense.
+> > Without the explanation I don't understand the rationale for adding the
+> > check in the first place.
+> 
+> Agreed, Mike's original patch has no explanatory comment, and there
+> needs to be one. Mike, can you suggest a one or two sentence comment
+> and I will replace this patch with one that adds the comment.
 
-This is for MacOS, MacOS X and Windows client support.
+I replied yesterday suggesting you just fold 5 into 3.
 
-Lionel
+> >>> But I'm also completely lost in the maze of fixup patches.
+> >> Several people have asked me to collapse the fix-ups into a single
+> >> patch. We would lose some history and attributions doing that. Does
+> >> anyone have other thoughts?
+> > 
+> > The action I'd see is to collapse the series into reviewable chunks.
+> > I.e., fold the addition of the direct I/O writes into a single patch
+> > that has all the policy decisions and documents them, leaving only
+> > clearly separate prep patches separate.
+> Meaning: combine the patches from 3/12 to 12/12 into a single patch.
+
+But if you elect to fold all of 3 to 12, definitely add your
+Co-developed-by:
 
