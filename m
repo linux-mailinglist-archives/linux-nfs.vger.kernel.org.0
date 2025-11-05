@@ -1,97 +1,97 @@
-Return-Path: <linux-nfs+bounces-16096-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16097-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA71C38018
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 22:27:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34663C38132
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 22:44:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 669854F7BFB
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 21:24:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 660B13B070E
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 21:27:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C492DE711;
-	Wed,  5 Nov 2025 21:24:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852442C0F97;
+	Wed,  5 Nov 2025 21:27:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="HmU5hGoP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qSmEJgx4"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="NBHnJwpj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3M/rrUhi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A34F23F424;
-	Wed,  5 Nov 2025 21:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DF92C236D;
+	Wed,  5 Nov 2025 21:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762377849; cv=none; b=i4JciZp882lhO+EIRmak5VUTyfPbdPgWOHnqVKwi4FWsn4BmrrY3n5csFOyxN3y4F/PTyi40oXxqfCoJu1opa0WoeU5FTq5NF1Jzg62sbd+YQH6NK7C51ezim9QzetLr4fux9Ft5Dweed7WDI9ZyPZ2YxwU2O0ock1eFhXdDLLE=
+	t=1762378069; cv=none; b=n5YURDpxDuQmUtzARuFI80OXZhMWoF0LYMHA4URtQeX4tcDwOuA9Y9oh2D6lCjhtIA4Oe4RazGr3WvNZrbkC/ACaPF5XlasQU2KZEezr3+9axVq1BtvanY6TEaZU69/7W73eXqJR+86a1Kg0Zsp6g5XadzMx99mD0RAEuyTKOq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762377849; c=relaxed/simple;
-	bh=u7d9evMnHLg8hJK0Bj/mYGhbV3SaK5dJyb8wyfl1+zg=;
+	s=arc-20240116; t=1762378069; c=relaxed/simple;
+	bh=bsJ/Udr6HIBj2j3DHtF1mJqwIo8FnbCO8DJuuTTp7AY=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=HShAdk2x0EZ/hCfR6hiYIh+DOtgJ/yMqTxtEDwpRYr+c4sQHQZ0WxHnwh1YVCmt2oX/xazquhtSrOnEbpf9jc/MyJf/pPUbsnVrQGSxvgduq9+doZq6Gg8KjwfsgaxOjl5JoqsEmmU7VW1+/5SfQ20tMBzrydN3y2BPbTgye7U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=HmU5hGoP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qSmEJgx4; arc=none smtp.client-ip=202.12.124.141
+	 References:Date:Message-id; b=UF1HRXU3T5n1v8Zh88rIW7d38dZB8hJ0jejZ3gc1padRMQTcbYWaCTCOQvwNpktoLk50XzQixqlOHZnq3MBhRx+DAWwhoLZ2Su+MQ2cijeBGpE6cTL5eoxwAfjUs/0fBrV2lG3tiE/UfiY9pm/8ssIPtPuXQ8Th4fvSrMV60s/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=NBHnJwpj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=3M/rrUhi; arc=none smtp.client-ip=202.12.124.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
 Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.stl.internal (Postfix) with ESMTP id 1739B1300C2C;
-	Wed,  5 Nov 2025 16:24:03 -0500 (EST)
+	by mailflow.stl.internal (Postfix) with ESMTP id 0D9511300C27;
+	Wed,  5 Nov 2025 16:27:45 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 05 Nov 2025 16:24:05 -0500
+  by phl-compute-03.internal (MEProxy); Wed, 05 Nov 2025 16:27:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762377842; x=1762385042; bh=EVCZm+k0TFnzyISAYv/ad61W8yGyS+Ggtni
-	ecPh35bI=; b=HmU5hGoPqokqzJCeAqGf4BLGNy0MGNPv7gplJ67n7ajHRRuR5XU
-	QACgC7SBMngKWRr4nVPjJJgBKA3Q8lvkyUIGSJ1J47cOcYiClbPU1pS4MppGb5wh
-	2U2/xgadcENW/jgHJsJTyYYdk+1XjojR7/TQqmLQq3cUPGl27XnIya4CBHC1wN5U
-	B+nehvMy/L9Mb2tEVTuU62Q/a0ARwc5MO2szCGIyxpVtm6vXzecjyFmyuGF+NoPC
-	aDoFRHfQnTUA0wUc9ga83EokX5Vq/Y4zVF59Z0IqpO5AZkbSr//2iHDO/uH6Mdle
-	v+KzAJeRAhAF2PY5f//xFYICp+6h/EtUY0Q==
+	1762378064; x=1762385264; bh=5CX/6mtoYFxir8X1F5OVPvA/OUy5Hh9/ND3
+	R8DtJqdE=; b=NBHnJwpjzuHIsUT27Y57rWaJK10DtVOwxECp26qAgU5U2ikzYZl
+	M90AeLnEPJscbb16J19gvwy+B4NZoJRivr0Kl/sDL1WtKYsBIOcIU/852lrhgqq/
+	GKpuXfd3fOlM1hSTmng5Eykm2SDZU+rDa1/3QCl4npJjdOdSa4TG9dpLKZzWTZau
+	gQKLJddbfSk7iP2cfocCd6lwvv8WNjntDUxjyvhguNRIoYy5cYz8v7pgB6OdrZID
+	eo/hzOuwTPvx8j13d20hMasG3aiklwbNYaKqed8tm9GulrRukjfYfVMUU+ubDqNE
+	5IFnjPvLo6riN3CKxIUqANOUuK511UeBr+g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762377842; x=
-	1762385042; bh=EVCZm+k0TFnzyISAYv/ad61W8yGyS+GgtniecPh35bI=; b=q
-	SmEJgx4M8dlmgTjoUZkSr8FLucgLUEVlbd9odWDFkQcMJ+PFRsH9Y//0VRWWOa2P
-	Ww7Nr0XlQSokRvZEPNvVMlDa6wHjsBAaK17Tal0oudel/kBoVldVw56udPXn9uh7
-	Mczp91CekHgkQQrSfj7GW2ikHW7rCR3uH+ZZqm5byT0S1cyww1zJkHKJ+SuERDBe
-	UBNUFH0g9LBeW66OTxBJSBU1+z1R+WJlAHRefWLPYecfVMfJsDxhw/7LXOajVkRK
-	EY0gezm21MwMMJYPZofen2+s3eL3i0IyTk0/RNQdye2aRU/x2B6K2Dlf35uwcujj
-	UVMV0x49c00E0JFs7mDIA==
-X-ME-Sender: <xms:asALaQBQoSVaUuTXtcG_GYkEHX7ZGK1IdW3-DpTTeAob7NvcdQnESw>
-    <xme:asALaZvvSYTRURk71wOmt1sLYQpre30qKc9hcTtEoays4h59X1vNTOzcXv4ewIAT7
-    PBP05Cv2IT0eKS3Y5hzt-pSpQXWpNcWFPc3z3tPuShZJnbiAw>
-X-ME-Received: <xmr:asALaV1K1vj_trpV4WX4Ug9tckywabHWFw4izsBwBHNEfUZdhT2LhWV0hKbStCEFmuTyATTpSjnEcu5m6FzT9u-CFv5Y_mYw-vIlsrnNGGDt>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeegleejucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762378064; x=
+	1762385264; bh=5CX/6mtoYFxir8X1F5OVPvA/OUy5Hh9/ND3R8DtJqdE=; b=3
+	M/rrUhioH8XUekNhjPbddPDnBn7n7UQz6zEWYhMdJzgaKPUZki5Si9V9oHY1Ogop
+	wXK5pvp5JtloGloRJyhjQ+2g3DFkHJIsPf1kJQ9SRoFA1OYYao78/h5ua/7WVVKr
+	DX+Ajwtsc07FWpwIeyLBbksAID7RZIbG2vTFcoPvGOBOYPZWyaoKettLH2wbO2Id
+	zKDpw89eEUWl/BgYOURwsIfdCSu9Zdtbf8szQKl7cVJ5bzYuDeYhoPqbJZCUYoKO
+	UZQ0HyqjcmXxStXvR2TDlvY0c4w3Pn/LIGuOHcFde9b8MNLY8rM1ER7IKpgSaQz2
+	fo67zQAgkeqNFzV2z+NIw==
+X-ME-Sender: <xms:UMELaTX303FHgII2VhPCDsLqAaz7DXpODKCSAw4DGpYCqOIYMw_8zQ>
+    <xme:UMELaalAv0IbTqHYOiNCaxTQxCHNYl3ObvfykhtHLjOM-xv4HXM4-O5UB5FicXKO4
+    aJ5vH9vBYrGmrMZ_ywg8xmZ6HOs7HRayKsq762rTphtV6QY5VU>
+X-ME-Received: <xmr:UMELaXr1-Ji_La_HqW1BRUEv9gTeMOwPrnbybPjNk5nkzekaJJ_jmOB-OurJPK7b-HcbN7SNbSmn59Pi_qJVyNSOkvZPYWst3NWLBXCl3DJX>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeegleekucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
     vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepleegpdhmohguvgepshhmthhp
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgeefpdhmohguvgepshhmthhp
     ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepfhhrrghnkhdrlhhisehvihhvohdrtghomhdprhgtphhtthhopehlihhn
-    uhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhnihhlfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
-    igqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:asALafmPr_ZX1OBseZ_yN5P8ha0kcdOo70DqfQ-d7eox1J3FRhMuTg>
-    <xmx:asALaYv6caGo7YOyqxlwHt-aa7xcS6ubR74B6joQPFkP4nVa857B-Q>
-    <xmx:asALaQazXCEbXKvEWtOde9MGMuFd4iSpENdxHY6Br8A6SQLP9UCqOg>
-    <xmx:asALaUc6XxQI42baNH5r4oVKLbArJeUxiTNL9duhGxUFeugLz9diCA>
-    <xmx:csALaZ2nr3Xo9lu7ZwRVoMnu5vfNzgtS4RKi9tfb5i1b6hqQye68vliH>
+    hrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhinhhugidqtghifhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepvggtrhihphhtfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:UMELaas2dgxfilRLBUrQKjBzvFla9FVJzR7OHV29epBrN0TxHC_Zrg>
+    <xmx:UMELaXL_tyUQYVcmu-B8I71Pa7g3b9MIUvkmgGp58Io5P9qADq2c4w>
+    <xmx:UMELaX8_nhpfJRosFBux8I7DSDNy8EkxssJf6tgxkmBv96HvCzl8zA>
+    <xmx:UMELaT6oKvaTbilSvWrldHDoodd9WTL6TODMPNKGUr-HrQG2M0IzRg>
+    <xmx:UMELacRM2CO16jgdzCpw14XismqrJauCEWxLaqWueHVYB4MJELrVVaIb>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Nov 2025 16:23:32 -0500 (EST)
+ 5 Nov 2025 16:27:33 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -100,102 +100,71 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
 To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Eric Van Hensbergen" <ericvh@kernel.org>,
- "Latchesar Ionkov" <lucho@ionkov.net>,
- "Dominique Martinet" <asmadeus@codewreck.org>,
- "Christian Schoenebeck" <linux_oss@crudebyte.com>,
- "David Sterba" <dsterba@suse.com>, "David Howells" <dhowells@redhat.com>,
- "Marc Dionne" <marc.dionne@auristor.com>,
+Cc: "Miklos Szeredi" <miklos@szeredi.hu>,
  "Alexander Viro" <viro@zeniv.linux.org.uk>,
  "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
- "Chris Mason" <clm@fb.com>, "Xiubo Li" <xiubli@redhat.com>,
- "Ilya Dryomov" <idryomov@gmail.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
- coda@cs.cmu.edu, "Tyler Hicks" <code@tyhicks.com>,
- "Jeremy Kerr" <jk@ozlabs.org>, "Ard Biesheuvel" <ardb@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Sungjong Seo" <sj1557.seo@samsung.com>,
- "Yuezhang Mo" <yuezhang.mo@sony.com>, "Theodore Ts'o" <tytso@mit.edu>,
- "Andreas Dilger" <adilger.kernel@dilger.ca>,
- "Jaegeuk Kim" <jaegeuk@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Andreas Gruenbacher" <agruenba@redhat.com>,
- "Viacheslav Dubeyko" <slava@dubeyko.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Yangtao Li" <frank.li@vivo.com>, "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Mikulas Patocka" <mikulas@artax.karlin.mff.cuni.cz>,
- "Muchun Song" <muchun.song@linux.dev>,
- "Oscar Salvador" <osalvador@suse.de>,
- "David Hildenbrand" <david@redhat.com>,
- "David Woodhouse" <dwmw2@infradead.org>,
- "Dave Kleikamp" <shaggy@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
  "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>,
- "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
- "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
- "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
- "Joseph Qi" <joseph.qi@linux.alibaba.com>,
- "Bob Copeland" <me@bobcopeland.com>,
- "Mike Marshall" <hubcap@omnibond.com>,
- "Martin Brandenburg" <martin@omnibond.com>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Paulo Alcantara" <pc@manguebit.org>,
  "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
  "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
  "Bharath SM" <bharathsm@microsoft.com>,
- "Zhihao Cheng" <chengzhihao1@huawei.com>,
- "Hans de Goede" <hansg@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
- "Hugh Dickins" <hughd@google.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Kees Cook" <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
- linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
- linux-um@lists.infradead.org, linux-mm@kvack.org,
- linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
- linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
- ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
- linux-hardening@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [PATCH] vfs: remove the excl argument from the ->create() inode_operation
-In-reply-to: <20251105-create-excl-v1-1-a4cce035cc55@kernel.org>
-References: <20251105-create-excl-v1-1-a4cce035cc55@kernel.org>
-Date: Thu, 06 Nov 2025 08:23:24 +1100
-Message-id: <176237780417.634289.15818324160940255011@noble.neil.brown.name>
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>,
+ "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Amir Goldstein" <amir73il@gmail.com>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Steve French" <smfrench@gmail.com>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Carlos Maiolino" <cem@kernel.org>,
+ "Kuniyuki Iwashima" <kuniyu@google.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, netfs@lists.linux.dev,
+ ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ linux-xfs@vger.kernel.org, netdev@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject: Re: [PATCH v5 09/17] vfs: clean up argument list for vfs_create()
+In-reply-to: <20251105-dir-deleg-ro-v5-9-7ebc168a88ac@kernel.org>
+References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>,
+ <20251105-dir-deleg-ro-v5-9-7ebc168a88ac@kernel.org>
+Date: Thu, 06 Nov 2025 08:27:31 +1100
+Message-id: <176237805165.634289.1849067298194355086@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
 On Thu, 06 Nov 2025, Jeff Layton wrote:
-> Since ce8644fcadc5 ("lookup_open(): expand the call of vfs_create()"),
-> the "excl" argument to the ->create() inode_operation is always set to
-> true. Remove it, and fix up all of the create implementations.
+> As Neil points out:
+> 
+> "I would be in favour of dropping the "dir" arg because it is always
+> d_inode(dentry->d_parent) which is stable."
+> 
+> ...and...
+> 
+> "Also *every* caller of vfs_create() passes ".excl = true".  So maybe we
+> don't need that arg at all."
+> 
+> Drop both arguments from vfs_create() and fix up the callers.
+> 
+> Suggested-by: NeilBrown <neilb@ownmail.net>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-nonono
+This I like.
 
+Reviewed-by: NeilBrown <neil@brown.name>
 
-> @@ -3802,7 +3802,7 @@ static struct dentry *lookup_open(struct nameidata *n=
-d, struct file *file,
->  		}
-> =20
->  		error =3D dir_inode->i_op->create(idmap, dir_inode, dentry,
-> -						mode, open_flag & O_EXCL);
-> +						mode);
+It would be consistent to also remove the 'dir' arg from vfs_mkdir(),
+vfs_mknod(), etc.  I wouldn't do that until we find out what other
+people think of the change.
 
-"open_flag & O_EXCL" is not the same as "true".
-
-It is true that "all calls to vfs_create() pass true for 'excl'"
-The same is NOT true for inode_operations.create.
-
+Thanks,
 NeilBrown
+
 
 
