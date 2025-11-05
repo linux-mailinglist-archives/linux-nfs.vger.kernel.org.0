@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-16059-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16061-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6180BC36E04
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 18:01:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 509EAC36E2C
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 18:02:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CA65C4FE09C
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 16:55:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BCC844FF27F
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 16:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1854533DEF9;
-	Wed,  5 Nov 2025 16:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E10CD340275;
+	Wed,  5 Nov 2025 16:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ssyu0wjB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXZ9ry9u"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92C13385BC;
-	Wed,  5 Nov 2025 16:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51EA33FE06;
+	Wed,  5 Nov 2025 16:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762361657; cv=none; b=ByOXqAmpuO04K5+1E2dgetf4O1lYVoO8BA+AS9stdqqalWEFaDlEb4AoGqyeCx8N03E2wnt2ewT0O84X3L5zzOfdtFNSuxW9FnXn3vO/ZboUTEkQTBRm6VRkJvIasCPswBw6uDVjqONtK55FzXbndI1dEr4PIm3z6NBRsdwWMP8=
+	t=1762361663; cv=none; b=gsT/RIr9r8e2RpC2vANOlrUozQZZLLFt0Amfx/+u/uRmA06B+ySCtAg+yv3t/D5vVWikqmwlIul4uw+sz82N1Z1ikxpU5PMo2C2OljW7vYPw4Qqf9wLnVRXQaeCkwX70JPXBlgqrvhvxX7A4OX42uMHmd7Wn83W2P45qCEhi/RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762361657; c=relaxed/simple;
-	bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
+	s=arc-20240116; t=1762361663; c=relaxed/simple;
+	bh=GcsMrS33yeMCZHbhLsrwn2fXghDYDgJpfU5BwKmzfzs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sUlb4x0Zs9VGOnl4YelYOWx9SiMqELC1YuMs9euKJm0FeOSz+2Ctpxtb4AH8vCyGp930R1HJNfWko3T2YfMisTK7JnA+wxwiFgd9QkXYCpmHD093NNZY1OyUMYsbaWGU2LYb1ZKCO9e4D936gKwDGhybYFtuwijBkz6J7bsbnt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ssyu0wjB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 374AFC116B1;
-	Wed,  5 Nov 2025 16:54:13 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=kVU3Ddqkm06RKJEUSsrYaFnES5G068PBSWD3cY+UBpOkJBqSlCZhDgDuZSJb/X9GxbLHXwf/iae4W8biVd5ShoiR03F7twBc3wnMVqFG4GOpyIGBSMd3Wpn0b+L2CVcM8Z+r1UXyk2zpMJ1wxNIGZEQUgquYe35h9b2um3MI01A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXZ9ry9u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11480C19422;
+	Wed,  5 Nov 2025 16:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762361656;
-	bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
+	s=k20201202; t=1762361663;
+	bh=GcsMrS33yeMCZHbhLsrwn2fXghDYDgJpfU5BwKmzfzs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ssyu0wjBLztyEO0NpAjSd5Ts5bVddB1l87h/A+XU0SqN12fdm4ykIkN5p69qAnSf4
-	 cuipg8BT+dwjlTG6KrUpWyo/63SqmP0o/yWuyAiCFHqsus3C4pZT8NAl5ToMdV+UYh
-	 WN6APCO/05bN3RJLIYPW6vJ3XKlblAUx/ZmyhIQwJQwDae3nNNBmEclsJkUgttls7+
-	 RjmQX7od4Y7PYC8pdcTMHmXUbIXm6susotUt0FfWn5xL/hvBTy6Q+8c95EGLQl36UQ
-	 Bn1fIvv+14zIdwGxWW9z+LqT9fOYMBjoRPWPlfr50TFZi2J9yzsLstJSgybK035eXG
-	 GZah8dVlzVUzQ==
+	b=mXZ9ry9uCFohj8MJfSEi+CHA6qNy71q1klGXvWiTbQoGJQKRzbaZuqXpsB1E28chK
+	 laOslj5Pcq2S8iGLUM7xBzNoDyuzGOEkc3dIpVFGaUw50BUFHPYcfSW9ID7upBhB1+
+	 17V9QBO05hVMefueSj5gNLLm3nuKrGnndmBuhhntCnt5UNDGa1vvahTpyH36nMw+Zt
+	 S7ygyeeub3tfRTAHHhdhig9exQZIlHPZOaNdoxC1Js0xNp5YQHPvHeT5m52wqHqRHw
+	 SI8JrbthqwakOLKY2x5kBHnKq4JTSh64bOEV7OoLS5PtjB/MPfJfVs2Jo1GOHTHbho
+	 1VaPAZrRmuW7w==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 05 Nov 2025 11:53:48 -0500
-Subject: [PATCH v5 02/17] filelock: rework the __break_lease API to use
- flags
+Date: Wed, 05 Nov 2025 11:53:50 -0500
+Subject: [PATCH v5 04/17] filelock: push the S_ISREG check down to
+ ->setlease handlers
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-dir-deleg-ro-v5-2-7ebc168a88ac@kernel.org>
+Message-Id: <20251105-dir-deleg-ro-v5-4-7ebc168a88ac@kernel.org>
 References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 In-Reply-To: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 To: Miklos Szeredi <miklos@szeredi.hu>, 
@@ -84,212 +84,109 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7009; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4EqGpJT2uSMD0Zg5LVNzajiLtEt8+gmiWB3f
- SofTpcQwNuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBKgAKCRAADmhBGVaC
- FeiVEACrjPUYdZxXw/jUy1SdViYprZIaOpkdsQEeB9UdTO+uRoCZ43GNan4EUCQnHKZJCzEWFKF
- Fxckex30N18LHml154x7MMwD7x5Q52tXJVhRof3T6SLPtmVLL3w7nLb/OJFXOEY8OVXKZelA+o3
- G/AvyumQF345UhA3qe+0XOAeS0daPg8kqQs0LO6qMwnnEj4NiuLGBj1nNnKI5K4ZKHsh9uBmS+/
- MbtOa0zXh5ND3/9zt4BFCSO8xNrPAoDOSQ2BDMdwgdR6kX0KMkYRYYs/UHHIznjc4FrC/sF+AZ4
- aXD8UmW2UDLQN0dwSwRPTl5LhXbhHuiCXKO2YNqAgYwrybEd0ZxTHNcuYT/RGmxh1MmwvOBpl6r
- cuToxSTTGRBYX99pd25E1ajultjfw4ZLYxGU8AjB1eV1Df7XKYToad2qcPD6yjur9nMA8XlMTnp
- 6mYxJspJ3Z6ykY15K0JqZ0FzIXZQEi949IHduaqd3qD4K93Y0ItEiKyYW1CkHtZdm0brWfUFumj
- iuApa3YjuY7PZrp0iQv0TwcWlJoQ3F3z+iWwihUNxoLS0yfbD4GPoOFlq+7rUFHNYpgd0dbLzlZ
- W8+N7SctnNRwPU0gKD4dy+jQebdihOKZcESWY0WZqjbwkZYrtojt1qVcyFaXJgnCc5oF6nGSNXN
- OCumg91RWmhQLrw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3489; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=GcsMrS33yeMCZHbhLsrwn2fXghDYDgJpfU5BwKmzfzs=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4ErMfLW3WwdkEqkBaw9YAj//ntzrQ4bSHKpI
+ +WthUOzcZqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBKwAKCRAADmhBGVaC
+ FSEOD/sGnl4nXGxrUiH4HV74LVigfLgxBGvcCvofbPESbST6oRhyTftwB8j847ijjWuZtJiC0Bk
+ W4YzdfbjE6obkTq1+/wRiq3b45ztWVhsQo3hRi/YKm8WqRpU7GqMm0wBuCO9RX9FiGNknkZcsek
+ 6Sj8PYI4WIF9Iyt/+gmnge9iWAugQ7OcT53c+NOdKNNu6c9I0J6yu6ztOPsR44+hxJEWRRCgQav
+ hghq2Fe6ApKmD2CRWjXSFavfaMNFhcSbrLskz2WgHs8lug72m352YQaoOtku5pqTkplEG5IJR05
+ efdytOESy80DNxhmzMABrI0QD7sY/Fntq3vpDgNWGEawyyWvyEbhOw1h0B9uGzZ3rz7SDaBwTNR
+ ldj1OsoAHBLuGkFG2thkoQTDhvzdOHCj8hXG4PD2GAn43y116K44sYShVtJVQh7lMDoiEIdFAKz
+ Toz/GV6oIL/9FeBLHSrzIOd32XpGvVF2x5IloZ42SAgEdwcb2B0cTI6ELJ5tTL67vEKZD4M09A8
+ tyHsD2XCM1DE0O+WP4htcMrYqpHJC8++/P27568fvxqL327SrwPn/5KVy8JL5o4fMMpqYEZ/NK8
+ 22MTIDkdVHi6kyAzxosrAPqKP2I9oq10y3OjRTTDqJzbVd0GPtPzT1iFnJ8vg4qVPGYhnIcJmYG
+ 2fX3dKB+yWG5ceg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Currently __break_lease takes both a type and an openmode. With the
-addition of directory leases, that makes less sense. Declare a set of
-LEASE_BREAK_* flags that can be used to control how lease breaks work
-instead of requiring a type and an openmode.
+When nfsd starts requesting directory delegations, setlease handlers may
+see requests for leases on directories. Push the !S_ISREG check down
+into the non-trivial setlease handlers, so we can selectively enable
+them where they're supported.
 
+FUSE is special: It's the only filesystem that supports atomic_open and
+allows kernel-internal leases. atomic_open is issued when the VFS
+doesn't know the state of the dentry being opened. If the file doesn't
+exist, it may be created, in which case the dir lease should be broken.
+
+The existing kernel-internal lease implementation has no provision for
+this. Ensure that we don't allow directory leases by default going
+forward by explicitly disabling them there.
+
+Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/locks.c               | 29 +++++++++++++++++----------
- include/linux/filelock.h | 52 +++++++++++++++++++++++++++++++++++-------------
- 2 files changed, 56 insertions(+), 25 deletions(-)
+ fs/fuse/dir.c          | 1 +
+ fs/locks.c             | 5 +++--
+ fs/nfs/nfs4file.c      | 2 ++
+ fs/smb/client/cifsfs.c | 3 +++
+ 4 files changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index ecaec0fea3a132e7cbb88121e7db7fb504d57d3c..667774cc72a1d49796f531fcb342d2e4878beb85 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -2230,6 +2230,7 @@ static const struct file_operations fuse_dir_operations = {
+ 	.fsync		= fuse_dir_fsync,
+ 	.unlocked_ioctl	= fuse_dir_ioctl,
+ 	.compat_ioctl	= fuse_dir_compat_ioctl,
++	.setlease	= simple_nosetlease,
+ };
+ 
+ static const struct inode_operations fuse_common_inode_operations = {
 diff --git a/fs/locks.c b/fs/locks.c
-index b33c327c21dcd49341fbeac47caeb72cdf7455db..3cdd84a0fbedc9bd1b47725a9cf963342aafbce9 100644
+index 3cdd84a0fbedc9bd1b47725a9cf963342aafbce9..f5b210a2dc34c70ac36e972436c62482bbe32ca6 100644
 --- a/fs/locks.c
 +++ b/fs/locks.c
-@@ -1529,24 +1529,31 @@ any_leases_conflict(struct inode *inode, struct file_lease *breaker)
- /**
-  *	__break_lease	-	revoke all outstanding leases on file
-  *	@inode: the inode of the file to return
-- *	@mode: O_RDONLY: break only write leases; O_WRONLY or O_RDWR:
-- *	    break all leases
-- *	@type: FL_LEASE: break leases and delegations; FL_DELEG: break
-- *	    only delegations
-+ *	@flags: LEASE_BREAK_* flags
-  *
-  *	break_lease (inlined for speed) has checked there already is at least
-  *	some kind of lock (maybe a lease) on this file.  Leases are broken on
-- *	a call to open() or truncate().  This function can sleep unless you
-- *	specified %O_NONBLOCK to your open().
-+ *	a call to open() or truncate().  This function can block waiting for the
-+ *	lease break unless you specify LEASE_BREAK_NONBLOCK.
-  */
--int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-+int __break_lease(struct inode *inode, unsigned int flags)
+@@ -1935,6 +1935,9 @@ static int generic_delete_lease(struct file *filp, void *owner)
+ int generic_setlease(struct file *filp, int arg, struct file_lease **flp,
+ 			void **priv)
  {
--	int error = 0;
--	struct file_lock_context *ctx;
- 	struct file_lease *new_fl, *fl, *tmp;
-+	struct file_lock_context *ctx;
- 	unsigned long break_time;
--	int want_write = (mode & O_ACCMODE) != O_RDONLY;
-+	unsigned int type;
- 	LIST_HEAD(dispose);
-+	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
-+	int error = 0;
-+
-+	if (flags & LEASE_BREAK_LEASE)
-+		type = FL_LEASE;
-+	else if (flags & LEASE_BREAK_DELEG)
-+		type = FL_DELEG;
-+	else if (flags & LEASE_BREAK_LAYOUT)
-+		type = FL_LAYOUT;
-+	else
++	if (!S_ISREG(file_inode(filp)->i_mode))
 +		return -EINVAL;
- 
- 	new_fl = lease_alloc(NULL, type, want_write ? F_WRLCK : F_RDLCK);
- 	if (IS_ERR(new_fl))
-@@ -1595,7 +1602,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 	if (list_empty(&ctx->flc_lease))
- 		goto out;
- 
--	if (mode & O_NONBLOCK) {
-+	if (flags & LEASE_BREAK_NONBLOCK) {
- 		trace_break_lease_noblock(inode, new_fl);
- 		error = -EWOULDBLOCK;
- 		goto out;
-diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index c2ce8ba05d068b451ecf8f513b7e532819a29944..47da6aa28d8dc9122618d02c6608deda0f3c4d3e 100644
---- a/include/linux/filelock.h
-+++ b/include/linux/filelock.h
-@@ -212,7 +212,14 @@ int locks_lock_inode_wait(struct inode *inode, struct file_lock *fl);
- void locks_init_lease(struct file_lease *);
- void locks_free_lease(struct file_lease *fl);
- struct file_lease *locks_alloc_lease(void);
--int __break_lease(struct inode *inode, unsigned int flags, unsigned int type);
 +
-+#define LEASE_BREAK_LEASE		BIT(0)	// break leases and delegations
-+#define LEASE_BREAK_DELEG		BIT(1)	// break delegations only
-+#define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
-+#define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
-+#define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
+ 	switch (arg) {
+ 	case F_UNLCK:
+ 		return generic_delete_lease(filp, *priv);
+@@ -2024,8 +2027,6 @@ vfs_setlease(struct file *filp, int arg, struct file_lease **lease, void **priv)
+ 
+ 	if ((!vfsuid_eq_kuid(vfsuid, current_fsuid())) && !capable(CAP_LEASE))
+ 		return -EACCES;
+-	if (!S_ISREG(inode->i_mode))
+-		return -EINVAL;
+ 	error = security_file_lock(filp, arg);
+ 	if (error)
+ 		return error;
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 7f43e890d3564a000dab9365048a3e17dc96395c..7317f26892c5782a39660cae87ec1afea24e36c0 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -431,6 +431,8 @@ void nfs42_ssc_unregister_ops(void)
+ static int nfs4_setlease(struct file *file, int arg, struct file_lease **lease,
+ 			 void **priv)
+ {
++	if (!S_ISREG(file_inode(file)->i_mode))
++		return -EINVAL;
+ 	return nfs4_proc_setlease(file, arg, lease, priv);
+ }
+ 
+diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+index 05b1fa76e8ccf1e86f0c174593cd6e1acb84608d..03c44c1d9bb631b87a8b67aa16e481d6bb3c7d14 100644
+--- a/fs/smb/client/cifsfs.c
++++ b/fs/smb/client/cifsfs.c
+@@ -1149,6 +1149,9 @@ cifs_setlease(struct file *file, int arg, struct file_lease **lease, void **priv
+ 	struct inode *inode = file_inode(file);
+ 	struct cifsFileInfo *cfile = file->private_data;
+ 
++	if (!S_ISREG(inode->i_mode))
++		return -EINVAL;
 +
-+int __break_lease(struct inode *inode, unsigned int flags);
- void lease_get_mtime(struct inode *, struct timespec64 *time);
- int generic_setlease(struct file *, int, struct file_lease **, void **priv);
- int kernel_setlease(struct file *, int, struct file_lease **, void **);
-@@ -367,7 +374,7 @@ static inline int locks_lock_inode_wait(struct inode *inode, struct file_lock *f
- 	return -ENOLCK;
- }
- 
--static inline int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-+static inline int __break_lease(struct inode *inode, unsigned int flags)
- {
- 	return 0;
- }
-@@ -428,6 +435,17 @@ static inline int locks_lock_file_wait(struct file *filp, struct file_lock *fl)
- }
- 
- #ifdef CONFIG_FILE_LOCKING
-+static inline unsigned int openmode_to_lease_flags(unsigned int mode)
-+{
-+	unsigned int flags = 0;
-+
-+	if ((mode & O_ACCMODE) == O_RDONLY)
-+		flags |= LEASE_BREAK_OPEN_RDONLY;
-+	if (mode & O_NONBLOCK)
-+		flags |= LEASE_BREAK_NONBLOCK;
-+	return flags;
-+}
-+
- static inline int break_lease(struct inode *inode, unsigned int mode)
- {
- 	struct file_lock_context *flctx;
-@@ -443,11 +461,11 @@ static inline int break_lease(struct inode *inode, unsigned int mode)
- 		return 0;
- 	smp_mb();
- 	if (!list_empty_careful(&flctx->flc_lease))
--		return __break_lease(inode, mode, FL_LEASE);
-+		return __break_lease(inode, LEASE_BREAK_LEASE | openmode_to_lease_flags(mode));
- 	return 0;
- }
- 
--static inline int break_deleg(struct inode *inode, unsigned int mode)
-+static inline int break_deleg(struct inode *inode, unsigned int flags)
- {
- 	struct file_lock_context *flctx;
- 
-@@ -461,8 +479,10 @@ static inline int break_deleg(struct inode *inode, unsigned int mode)
- 	if (!flctx)
- 		return 0;
- 	smp_mb();
--	if (!list_empty_careful(&flctx->flc_lease))
--		return __break_lease(inode, mode, FL_DELEG);
-+	if (!list_empty_careful(&flctx->flc_lease)) {
-+		flags |= LEASE_BREAK_DELEG;
-+		return __break_lease(inode, flags);
-+	}
- 	return 0;
- }
- 
-@@ -470,7 +490,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
- {
- 	int ret;
- 
--	ret = break_deleg(inode, O_WRONLY|O_NONBLOCK);
-+	ret = break_deleg(inode, LEASE_BREAK_NONBLOCK);
- 	if (ret == -EWOULDBLOCK && delegated_inode) {
- 		*delegated_inode = inode;
- 		ihold(inode);
-@@ -482,7 +502,7 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
- {
- 	int ret;
- 
--	ret = break_deleg(*delegated_inode, O_WRONLY);
-+	ret = break_deleg(*delegated_inode, 0);
- 	iput(*delegated_inode);
- 	*delegated_inode = NULL;
- 	return ret;
-@@ -491,20 +511,24 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
- static inline int break_layout(struct inode *inode, bool wait)
- {
- 	smp_mb();
--	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease))
--		return __break_lease(inode,
--				wait ? O_WRONLY : O_WRONLY | O_NONBLOCK,
--				FL_LAYOUT);
-+	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease)) {
-+		unsigned int flags = LEASE_BREAK_LAYOUT;
-+
-+		if (!wait)
-+			flags |= LEASE_BREAK_NONBLOCK;
-+
-+		return __break_lease(inode, flags);
-+	}
- 	return 0;
- }
- 
- #else /* !CONFIG_FILE_LOCKING */
--static inline int break_lease(struct inode *inode, unsigned int mode)
-+static inline int break_lease(struct inode *inode, bool wait)
- {
- 	return 0;
- }
- 
--static inline int break_deleg(struct inode *inode, unsigned int mode)
-+static inline int break_deleg(struct inode *inode, unsigned int flags)
- {
- 	return 0;
- }
+ 	/* Check if file is oplocked if this is request for new lease */
+ 	if (arg == F_UNLCK ||
+ 	    ((arg == F_RDLCK) && CIFS_CACHE_READ(CIFS_I(inode))) ||
 
 -- 
 2.51.1
