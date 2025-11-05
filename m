@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-16071-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16073-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B615C36F15
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 18:08:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01233C3723A
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 18:39:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E31664FC129
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 17:00:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3DCC6248A6
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 17:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F2434D4FE;
-	Wed,  5 Nov 2025 16:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2EB83385A6;
+	Wed,  5 Nov 2025 16:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIhafmxk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5Oenf/S"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB5534D4F8;
-	Wed,  5 Nov 2025 16:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AF934DB46;
+	Wed,  5 Nov 2025 16:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762361697; cv=none; b=D1wS7efUE8ok0sGcW0O1pbd6V/SAZk0LadajmzGf5WV7JoQhBmvuAeOw7POm5pKqAwxdj6dOo3P+Yfu5O25nZVDQq4x7o1ZwsgdCKF23kI2sDlj7t18yhH781+QcxUiKxPiKoFsM4yHgYlmGu6Q5pYsvwkDemXLbnmC01OYHEx4=
+	t=1762361704; cv=none; b=OPDO5NDYrGQlRK0djNyfoWL1RzdJzGJb8eFNtB4P3yxmBXROVjvJ7OyGUA5HguXBTJoI1dSVisBd+auPF0QN4T6H0JxbNZrlky5nfxGsUe1vtHxfymjY2hNjSUh35dEXvASbZIYx5d6xQ6ttOv0hTwUy/hipltHXAqNC4uyE3RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762361697; c=relaxed/simple;
-	bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
+	s=arc-20240116; t=1762361704; c=relaxed/simple;
+	bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DFImf7jQe7C2LlwKsMWRdwNjHGKX6kaGn+B0YoGlJA5wtDNUTUOaQ/drocKLFUTY6vAS28OO2WbB9SYwlz5Vw+g6Pf/y0d0yJHCy/BDo/xUkxCQGLDxSL8WANieU0eX9cbXniFxD8wPP2Bo79g2l2vb5ODSJSwhEWx7PRM2FWyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIhafmxk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C02BC4CEF8;
-	Wed,  5 Nov 2025 16:54:54 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ORNKYIM1wbi5GGEwOOwvAgELcBH1kV6V03jbTobn5hGoHfF14iVa9Beh4vh4iHbUqXNgkl2CsR1erF4hdBcmCdKXlKmQt2AHgSqW+tnJCq8S6/nLiz5h7GYEWgzYox5apN5SC+Hhe6JGwYHtp8OhQnrSZt2Fb4DYRLrfq6uXa80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5Oenf/S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473F2C116B1;
+	Wed,  5 Nov 2025 16:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762361697;
-	bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
+	s=k20201202; t=1762361704;
+	bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pIhafmxkLGXXxmHcDbfYFQrqONgdD2VU+s092OKlNEP3AkARYCls+yQChsUM9uvD7
-	 JHvleF9bXfw5G4lxvsDUafm1dz3Ns/SF3RCYR84yB5T/2ucGRzXEFDmcCCux1+gXb8
-	 FsX1A4XIdazQV3xxeUmvwIy8Luyh1PSnNhxOVakHH9CFJjpQn0KXh4S5vYLibGn81E
-	 S5R7f3LSjxZXdbHJYNCvk+4ix1P29Ok3H5568eoep7VZE3+N/8RybK4oQcaaZFHu8T
-	 wAEdA+RTKBF/Eln3kaqUyyRB0ddRi2K4ID4HhN2t14gLMP/Bo4GcDOeJ2rXM+YR9V9
-	 46GbgBpGw/ENw==
+	b=f5Oenf/SvFAFjRdyni7XQijTep2IHierotWbgMU2UbOTpksiQsROt1aF+dPbNuCH2
+	 1oUKbKzhFqYLnyn8JhgnONeFClnDzW8M9TGesb6LwYtWJuKxjsSbbs1h8WxRaWYIku
+	 FJ57ri0MQ0uxUTufrEk5zhCmAkFAQ7VmW8mldA2Yz/ApMrrQ3+dm/w0Pz4iAWkG5LJ
+	 umYmGXuujNQbIo8Zte0Td4zJfysJEylWTl2UYkVi1/93DRbi1KJjqDd9Ga6ZVgLDh6
+	 SZR74lxKruPDtv3zTQmLrs+cJRcNK2D6HFXXlPN4jtgbao5GWNEqIhb64uOsS1Te5i
+	 qsZlLrSUFn8qw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 05 Nov 2025 11:54:00 -0500
-Subject: [PATCH v5 14/17] nfsd: allow filecache to hold S_IFDIR files
+Date: Wed, 05 Nov 2025 11:54:02 -0500
+Subject: [PATCH v5 16/17] nfsd: wire up GET_DIR_DELEGATION handling
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-dir-deleg-ro-v5-14-7ebc168a88ac@kernel.org>
+Message-Id: <20251105-dir-deleg-ro-v5-16-7ebc168a88ac@kernel.org>
 References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 In-Reply-To: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 To: Miklos Szeredi <miklos@szeredi.hu>, 
@@ -83,212 +83,202 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7422; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4EtIm6eYsYgxcntowp09WIkEvRyEAogXm4gX
- cx+mXnJvA6JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBLQAKCRAADmhBGVaC
- FWW2D/0c+om1Ucx1g8f4epimbGNM62WQniOoQEsEgLuQoVSUvdSzo4uKff3061ngMx2EquEvjc1
- kKC1vRKd6WYz2fqLgvYj1S4k6sg11DGAe4gOZTmDvzNTYGGR7lhY1zinO9fwRWgcLdmaorPnOyY
- jTmFk4Ngiy0WaxCYR71TzNPOnAX4Qf8Gtt6Jhf0szLIlvfPp/ucRckeqJKMjuOtDTZ5UdkBoUdS
- rXuZoDjQiW/AbU7edUlOjqzvtlbwTQIB7fpvVX1TvQCig51dIPSu2S30RTJCSWNsByWWMLP0dlP
- MFvFFKvtAFcL0NrvabuK4kkgbzQ0KkBLjkAsLpNQwbBggPi7XlMpkcawVwibHS4kY6iTAzfPFn2
- mvKxmLOa2i8z3kLSbPRApNiF75xRiHLkvgoDYbolzJ+Ze9ytm/xsgKOgPM00uFoMYxppGGnqYLI
- VewIqLjx3sBRRcXCfWbn9OUxd5Lk8ETT2Utfit664G5qJQ3xDx13BaY7iVlq/iGgy/NDVMfHI1D
- KBShlGckogIE37SXtLfDwG4xFPxJVd6UBG1ANP/QtExnC7KgfkRA6KVt2t9pn4MfJCOVBDOBFn9
- oJW/iI2/a7s25F7Rx0hgay4rxGN/RR5fwXxUPU3bKwd0U+VX5GB2msId2IjWXDwjb8TT8n6mFqr
- BtuPAMulxu/eCBg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5577; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4EtKjXEEAavufgz3/17T2+K75udF1YHhM8p1
+ kLLoOFSASaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBLQAKCRAADmhBGVaC
+ Fb9xD/0SrANaaUs/KwJlwN9tPXS96N80QDXhAa3/aQiaUd38olFHdxjgtSPwz6fVN7C1NS/8N2M
+ Y9GmCgY8SHLYhnxhx/iCJwOleWwCFWmuMdkZFV9/1gA3tOQOLBL865n/f5m+ZRStY5poVfIIILu
+ QfhhswKVyGxN0uHjsPfRuudcAVBU/1eUk3RdxpE8MChbCbgBCzFmpK94I+Xy2hCSAKUPDzjLXFc
+ jauSu6SmQzJhluP3AP5KxGBgsizOV/8ZwakjK+qL3eOw2E9awNueo7rijaJnKpkKsn13pZwPYRP
+ NMdz0PoSm1sZDc9jsPjYjRV954z1kT5USy2LsMU5Boo6/0LopQ+Q1ohSQYIvq9t2QeQYK0O8z57
+ jzSivucdoTuLJkMX1HjMQ1K0CExea8CqgWo8lz+yUWu9d+WBxkXXePCSzKXXwSjZiNymqx09lFG
+ G7lHF9Eu5wiZMYrLtWkdcWEZG1H0LSJndAcF+RuyqV/icgFU1vwqvQPdgDk4WcPoYopYUXx/FhQ
+ nhM83yNV3bpUQ/m46YDkW7zjaHpU3Zsm7GCpG110w2rp2Wx7fgcjX+nOwXu6AkFjJ6inHLsMpnl
+ rgvcZDfAZmpEEtQ7rwDEo9e0HORqkLdmWFuD5q3hFC0gYkUis+Ww48x201kxjnMS/iWMZJ3xkaA
+ yKs0Ihu73wXrnuQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The filecache infrastructure will only handle S_IFREG files at the
-moment. Directory delegations will require adding support for opening
-S_IFDIR inodes.
+Add a new routine for acquiring a read delegation on a directory. These
+are recallable-only delegations with no support for CB_NOTIFY. That will
+be added in a later phase.
 
-Plumb a "type" argument into nfsd_file_do_acquire() and have all of the
-existing callers set it to S_IFREG. Add a new nfsd_file_acquire_dir()
-wrapper that nfsd can call to request a nfsd_file that holds a directory
-open.
+Since the same CB_RECALL/DELEGRETURN infrastructure is used for regular
+and directory delegations, a normal nfs4_delegation is used to represent
+a directory delegation.
 
-For now, there is no need for a fsnotify_mark for directories, as
-CB_NOTIFY is not yet supported. Change nfsd_file_do_acquire() to avoid
-allocating one for non-S_IFREG inodes.
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/filecache.c | 57 ++++++++++++++++++++++++++++++++++++++++-------------
- fs/nfsd/filecache.h |  2 ++
- fs/nfsd/vfs.c       |  5 +++--
- fs/nfsd/vfs.h       |  2 +-
- 4 files changed, 49 insertions(+), 17 deletions(-)
+ fs/nfsd/nfs4proc.c  |  22 +++++++++++-
+ fs/nfsd/nfs4state.c | 100 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/state.h     |   5 +++
+ 3 files changed, 126 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index a238b6725008a5c2988bd3da874d1f34ee778437..93798575b8075c63f95cd415b6d24df706ada0f6 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1086,7 +1086,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 		     struct auth_domain *client,
- 		     struct svc_fh *fhp,
- 		     unsigned int may_flags, struct file *file,
--		     struct nfsd_file **pnf, bool want_gc)
-+		     umode_t type, bool want_gc, struct nfsd_file **pnf)
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index e466cf52d7d7e1a78c3a469613a85ab3546d6d17..517968dddf4a33651313658d300f9f929f83c5af 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2341,6 +2341,13 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+ 			 union nfsd4_op_u *u)
  {
- 	unsigned char need = may_flags & NFSD_FILE_MAY_MASK;
- 	struct nfsd_file *new, *nf;
-@@ -1097,13 +1097,13 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 	int ret;
+ 	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
++	struct nfs4_delegation *dd;
++	struct nfsd_file *nf;
++	__be32 status;
++
++	status = nfsd_file_acquire_dir(rqstp, &cstate->current_fh, &nf);
++	if (status != nfs_ok)
++		return status;
  
- retry:
--	if (rqstp) {
--		status = fh_verify(rqstp, fhp, S_IFREG,
-+	if (rqstp)
-+		status = fh_verify(rqstp, fhp, type,
- 				   may_flags|NFSD_MAY_OWNER_OVERRIDE);
--	} else {
--		status = fh_verify_local(net, cred, client, fhp, S_IFREG,
-+	else
-+		status = fh_verify_local(net, cred, client, fhp, type,
- 					 may_flags|NFSD_MAY_OWNER_OVERRIDE);
--	}
+ 	/*
+ 	 * RFC 8881, section 18.39.3 says:
+@@ -2354,7 +2361,20 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+ 	 * return NFS4_OK with a non-fatal status of GDD4_UNAVAIL in this
+ 	 * situation.
+ 	 */
+-	gdd->gddrnf_status = GDD4_UNAVAIL;
++	dd = nfsd_get_dir_deleg(cstate, gdd, nf);
++	nfsd_file_put(nf);
++	if (IS_ERR(dd)) {
++		int err = PTR_ERR(dd);
 +
- 	if (status != nfs_ok)
- 		return status;
- 	inode = d_inode(fhp->fh_dentry);
-@@ -1176,15 +1176,18 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 
- open_file:
- 	trace_nfsd_file_alloc(nf);
--	nf->nf_mark = nfsd_file_mark_find_or_create(inode);
--	if (nf->nf_mark) {
++		if (err != -EAGAIN)
++			return nfserrno(err);
++		gdd->gddrnf_status = GDD4_UNAVAIL;
++		return nfs_ok;
++	}
 +
-+	if (type == S_IFREG)
-+		nf->nf_mark = nfsd_file_mark_find_or_create(inode);
-+
-+	if (type != S_IFREG || nf->nf_mark) {
- 		if (file) {
- 			get_file(file);
- 			nf->nf_file = file;
- 			status = nfs_ok;
- 			trace_nfsd_file_opened(nf, status);
- 		} else {
--			ret = nfsd_open_verified(fhp, may_flags, &nf->nf_file);
-+			ret = nfsd_open_verified(fhp, type, may_flags, &nf->nf_file);
- 			if (ret == -EOPENSTALE && stale_retry) {
- 				stale_retry = false;
- 				nfsd_file_unhash(nf);
-@@ -1246,7 +1249,7 @@ nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		     unsigned int may_flags, struct nfsd_file **pnf)
- {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, NULL, pnf, true);
-+				    fhp, may_flags, NULL, S_IFREG, true, pnf);
++	gdd->gddrnf_status = GDD4_OK;
++	memcpy(&gdd->gddr_stateid, &dd->dl_stid.sc_stateid, sizeof(gdd->gddr_stateid));
++	nfs4_put_stid(&dd->dl_stid);
+ 	return nfs_ok;
  }
  
- /**
-@@ -1271,7 +1274,7 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		  unsigned int may_flags, struct nfsd_file **pnf)
- {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, NULL, pnf, false);
-+				    fhp, may_flags, NULL, S_IFREG, false, pnf);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index da66798023aba4c36c38208cec7333db237e46e0..8f8c9385101e15b64883eabec71775f26b14f890 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -9347,3 +9347,103 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+ 	nfs4_put_stid(&dp->dl_stid);
+ 	return status;
  }
- 
- /**
-@@ -1314,8 +1317,8 @@ nfsd_file_acquire_local(struct net *net, struct svc_cred *cred,
- 	const struct cred *save_cred = get_current_cred();
- 	__be32 beres;
- 
--	beres = nfsd_file_do_acquire(NULL, net, cred, client,
--				     fhp, may_flags, NULL, pnf, false);
-+	beres = nfsd_file_do_acquire(NULL, net, cred, client, fhp, may_flags,
-+				     NULL, S_IFREG, false, pnf);
- 	put_cred(revert_creds(save_cred));
- 	return beres;
- }
-@@ -1344,7 +1347,33 @@ nfsd_file_acquire_opened(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 			 struct nfsd_file **pnf)
- {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, file, pnf, false);
-+				    fhp, may_flags, file, S_IFREG, false, pnf);
-+}
 +
 +/**
-+ * nfsd_file_acquire_dir - Get a struct nfsd_file with an open directory
-+ * @rqstp: the RPC transaction being executed
-+ * @fhp: the NFS filehandle of the file to be opened
-+ * @pnf: OUT: new or found "struct nfsd_file" object
++ * nfsd_get_dir_deleg - attempt to get a directory delegation
++ * @cstate: compound state
++ * @gdd: GET_DIR_DELEGATION arg/resp structure
++ * @nf: nfsd_file opened on the directory
 + *
-+ * The nfsd_file_object returned by this API is reference-counted
-+ * but not garbage-collected. The object is unhashed after the
-+ * final nfsd_file_put(). This opens directories only, and only
-+ * in O_RDONLY mode.
-+ *
-+ * Return values:
-+ *   %nfs_ok - @pnf points to an nfsd_file with its reference
-+ *   count boosted.
-+ *
-+ * On error, an nfsstat value in network byte order is returned.
++ * Given a GET_DIR_DELEGATION request @gdd, attempt to acquire a delegation
++ * on the directory to which @nf refers. Note that this does not set up any
++ * sort of async notifications for the delegation.
 + */
-+__be32
-+nfsd_file_acquire_dir(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		      struct nfsd_file **pnf)
++struct nfs4_delegation *
++nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
++		   struct nfsd4_get_dir_delegation *gdd,
++		   struct nfsd_file *nf)
 +{
-+	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL, fhp,
-+				    NFSD_MAY_READ|NFSD_MAY_64BIT_COOKIE,
-+				    NULL, S_IFDIR, false, pnf);
- }
++	struct nfs4_client *clp = cstate->clp;
++	struct nfs4_delegation *dp;
++	struct file_lease *fl;
++	struct nfs4_file *fp, *rfp;
++	int status = 0;
++
++	fp = nfsd4_alloc_file();
++	if (!fp)
++		return ERR_PTR(-ENOMEM);
++
++	nfsd4_file_init(&cstate->current_fh, fp);
++
++	rfp = nfsd4_file_hash_insert(fp, &cstate->current_fh);
++	if (unlikely(!rfp)) {
++		put_nfs4_file(fp);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	if (rfp != fp) {
++		put_nfs4_file(fp);
++		fp = rfp;
++	}
++
++	/* if this client already has one, return that it's unavailable */
++	spin_lock(&state_lock);
++	spin_lock(&fp->fi_lock);
++	/* existing delegation? */
++	if (nfs4_delegation_exists(clp, fp)) {
++		status = -EAGAIN;
++	} else if (!fp->fi_deleg_file) {
++		fp->fi_deleg_file = nfsd_file_get(nf);
++		fp->fi_delegees = 1;
++	} else {
++		++fp->fi_delegees;
++	}
++	spin_unlock(&fp->fi_lock);
++	spin_unlock(&state_lock);
++
++	if (status) {
++		put_nfs4_file(fp);
++		return ERR_PTR(status);
++	}
++
++	/* Try to set up the lease */
++	status = -ENOMEM;
++	dp = alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ);
++	if (!dp)
++		goto out_delegees;
++
++	fl = nfs4_alloc_init_lease(dp);
++	if (!fl)
++		goto out_put_stid;
++
++	status = kernel_setlease(nf->nf_file,
++				 fl->c.flc_type, &fl, NULL);
++	if (fl)
++		locks_free_lease(fl);
++	if (status)
++		goto out_put_stid;
++
++	/*
++	 * Now, try to hash it. This can fail if we race another nfsd task
++	 * trying to set a delegation on the same file. If that happens,
++	 * then just say UNAVAIL.
++	 */
++	spin_lock(&state_lock);
++	spin_lock(&clp->cl_lock);
++	spin_lock(&fp->fi_lock);
++	status = hash_delegation_locked(dp, fp);
++	spin_unlock(&fp->fi_lock);
++	spin_unlock(&clp->cl_lock);
++	spin_unlock(&state_lock);
++
++	if (!status)
++		return dp;
++
++	/* Something failed. Drop the lease and clean up the stid */
++	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
++out_put_stid:
++	nfs4_put_stid(&dp->dl_stid);
++out_delegees:
++	put_deleg_file(fp);
++	return ERR_PTR(status);
++}
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 1e736f4024263ffa9c93bcc9ec48f44566a8cc77..b052c1effdc5356487c610db9728df8ecfe851d4 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -867,4 +867,9 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
  
- /*
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index e3d6ca2b60308e5e91ba4bb32d935f54527d8bda..b383dbc5b9218d21a29b852572f80fab08de9fa9 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -82,5 +82,7 @@ __be32 nfsd_file_acquire_opened(struct svc_rqst *rqstp, struct svc_fh *fhp,
- __be32 nfsd_file_acquire_local(struct net *net, struct svc_cred *cred,
- 			       struct auth_domain *client, struct svc_fh *fhp,
- 			       unsigned int may_flags, struct nfsd_file **pnf);
-+__be32 nfsd_file_acquire_dir(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		  struct nfsd_file **pnf);
- int nfsd_file_cache_stats_show(struct seq_file *m, void *v);
- #endif /* _FS_NFSD_FILECACHE_H */
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 28710da4cce7cc7fc1e14d29420239dc357316f6..8c3ffacc533e9de0d506fb2ec222387446ba8e9f 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -959,15 +959,16 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
- /**
-  * nfsd_open_verified - Open a regular file for the filecache
-  * @fhp: NFS filehandle of the file to open
-+ * @type: S_IFMT inode type allowed (0 means any type is allowed)
-  * @may_flags: internal permission flags
-  * @filp: OUT: open "struct file *"
-  *
-  * Returns zero on success, or a negative errno value.
-  */
- int
--nfsd_open_verified(struct svc_fh *fhp, int may_flags, struct file **filp)
-+nfsd_open_verified(struct svc_fh *fhp, umode_t type, int may_flags, struct file **filp)
- {
--	return __nfsd_open(fhp, S_IFREG, may_flags, filp);
-+	return __nfsd_open(fhp, type, may_flags, filp);
- }
- 
- /*
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 0c0292611c6de3daf6f3ed51e2c61c0ad2751de4..09de48c50cbef8e7c4828b38dcb663b529514a30 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -114,7 +114,7 @@ __be32		nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- int 		nfsd_open_break_lease(struct inode *, int);
- __be32		nfsd_open(struct svc_rqst *, struct svc_fh *, umode_t,
- 				int, struct file **);
--int		nfsd_open_verified(struct svc_fh *fhp, int may_flags,
-+int		nfsd_open_verified(struct svc_fh *fhp, umode_t type, int may_flags,
- 				struct file **filp);
- __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				struct file *file, loff_t offset,
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+ 		struct dentry *dentry, struct nfs4_delegation **pdp);
++
++struct nfsd4_get_dir_delegation;
++struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
++						struct nfsd4_get_dir_delegation *gdd,
++						struct nfsd_file *nf);
+ #endif   /* NFSD4_STATE_H */
 
 -- 
 2.51.1
