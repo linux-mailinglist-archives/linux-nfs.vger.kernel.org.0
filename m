@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-16086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16085-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DA56C3779B
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 20:28:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B4F9C37798
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 20:28:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 54DF34E2D83
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 19:28:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A5E654E27D1
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 19:28:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918B633E34D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D77833CEB2;
 	Wed,  5 Nov 2025 19:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSBZwarw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3LB37Oo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E1632D431;
-	Wed,  5 Nov 2025 19:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E93339B38
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Nov 2025 19:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762370893; cv=none; b=YvB+iXVG27d+MrNhuqfR0s8Kr0k4eWk6YE9gITOd7MencC2glXER0VsSXPYd3aTZnCYEwN0XSaNWh9SuWHMHrMhxf8RvlHKJEY/4CCrwffVXay5vFcXibp5KKjhBFBAHt4NC2Ym4NsHaR+XdzFdxSgahE9EXVcvoop/0vGgLoHU=
+	t=1762370893; cv=none; b=bgkf1hGHOHguo+DMjHM5C5QuX1fveeYMKXiFes+21xbpXzuixE5Iy4fGDxuTNQ32f/cIoSSC+4uncwDu73nciunhZaTkiFFQZgpgA5lg7B6krtCLQYdyqjHo9MOQclFQB0lsm7gzPT7A+MImzUg4ZzknhDHkosE0Wmr6LZ8Dumg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762370893; c=relaxed/simple;
-	bh=IHr11CVMUl96Wf7pB/+uXQyisnt8qEF1vZ/qiyhjdBo=;
+	bh=TjjykDML6r+rw5IZkayefhkVfJUgOKQgJS4DnzFc5Yk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rlBI1x/WSsVmltj2GCwXL1mjbhPZ4kjCeo5a3XCWjot7mkW6DOmQA3o8nuHGuJoMeBZmeW5I3FOBKxZWp/+hYP0UwyczIIcW1TC4Gxyt+VD4NAi5KvBh4Y0TmZ3x7m02Esf6lpeEwZbHuSWe5Bq2zowHkqJp7fZPoobUx84HGQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSBZwarw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7438C2BC86;
-	Wed,  5 Nov 2025 19:28:10 +0000 (UTC)
+	 MIME-Version; b=r3t5EimkaQyruaYkuEwwEiid8+gLVH8+pttAM4/Iu75ThrfXZSnQXpmmuVmkYZxBIRXgaTadN0I5Xz5pX/rfTG6+R3qNZcXRyKA/rBFuLXZ0g9PtLBFhaX2oZgSmQhKFTYF7wMqn6OTVMTBeP+PFWg/rBE54WsVH6E0J3o3F5Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3LB37Oo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7A3C4CEF5;
+	Wed,  5 Nov 2025 19:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762370891;
-	bh=IHr11CVMUl96Wf7pB/+uXQyisnt8qEF1vZ/qiyhjdBo=;
+	s=k20201202; t=1762370893;
+	bh=TjjykDML6r+rw5IZkayefhkVfJUgOKQgJS4DnzFc5Yk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qSBZwarwKq2oZpjqjSnq0/v1DlJZ7D6N0ijNqG/si0cLffaToSXpZy3xmbAirGbDv
-	 uEy9dPkClf4RolqbU9iSnepmTVJB82JOkoNf2Rj8dafhmBNHlBdSkcUcfy+NQ95fel
-	 zzpXxmHlSJtDEy5a72RWPxMTXYzMIDFuEAFb0EgkBjIbAEBGpvitzc3taKWXdnXmU6
-	 7wY08FIrftJCTia4nz7TpFQCSi4hL85DwoDaSzXtrDOk0KSGXjfPIl+WurGTjIBgR4
-	 QK3qa8/9rBMK0Y9UJ4ohmpcv2jgPAqpsHgkyb6eIIkoN3eUR347njWDGjZxcSZaBx9
-	 y9zIJjvh7Hv7Q==
+	b=Z3LB37Ooi6uZqbb/PvYTjhH8vfmW01OkNzgv+cXwlPnkCudEDc44Y+xqPc6JnuQ9B
+	 5wj5bC7Nc2ytfhBWHZnGpIfhP0DOddV1PvwGL6eVyHPZYMQ7iOoTf1eLVcUyW+dSAf
+	 xUW+0B3aHBkIeWq/M4ZHvaOwizwDqTGsYH+6Wrnrg5FhvNwjMgEc/2OmsrR2p46PZo
+	 ma4tf1JiSYKhz7VcH0gU26F/ctLjwiMm/qiOWfVtGNCo/5XgCTbjVORmC2m1c2cDFr
+	 Bz3+HGXCJn0jA61K5AxBoAuOL1gQowHM26hL5O/Av/71R6TVQOJZf/868JlGnCo+iW
+	 Y5wN0l8dVCWkg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,11 +49,10 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v10 2/5] NFSD: Make FILE_SYNC WRITEs comply with spec
-Date: Wed,  5 Nov 2025 14:28:03 -0500
-Message-ID: <20251105192806.77093-3-cel@kernel.org>
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v10 3/5] NFSD: Enable return of an updated stable_how to NFS clients
+Date: Wed,  5 Nov 2025 14:28:04 -0500
+Message-ID: <20251105192806.77093-4-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251105192806.77093-1-cel@kernel.org>
 References: <20251105192806.77093-1-cel@kernel.org>
@@ -67,76 +66,186 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Mike noted that when NFSD responds to an NFS_FILE_SYNC WRITE, it
-does not also persist file time stamps. To wit, Section 18.32.3
-of RFC 8881 mandates:
+NFSv3 and newer protocols enable clients to perform a two-phase
+WRITE. A client requests an UNSTABLE WRITE, which sends dirty data
+to the NFS server, but does not persist it. The server replies that
+it performed the UNSTABLE WRITE, and the client is then obligated to
+follow up with a COMMIT request before it can remove the dirty data
+from its own page cache. The COMMIT reply is the client's guarantee
+that the written data has been persisted on the server.
 
-> The client specifies with the stable parameter the method of how
-> the data is to be processed by the server. If stable is
-> FILE_SYNC4, the server MUST commit the data written plus all file
-> system metadata to stable storage before returning results. This
-> corresponds to the NFSv2 protocol semantics. Any other behavior
-> constitutes a protocol violation. If stable is DATA_SYNC4, then
-> the server MUST commit all of the data to stable storage and
-> enough of the metadata to retrieve the data before returning.
+The purpose of this protocol design is to enable clients to send
+a large amount of data via multiple WRITE requests to a server, and
+then wait for persistence just once. The server is able to start
+persisting the data as soon as it gets it, to shorten the length of
+time the client has to wait for the final COMMIT to complete.
 
-Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") replaced:
+It's also possible for the server to respond to an UNSTABLE WRITE
+request in a way that indicates that the data was persisted anyway.
+In that case, the client can skip the COMMIT and remove the dirty
+data from its memory immediately. NetApp filers, for example, do
+this because they have a battery-backed cache and can guarantee that
+written data is persisted quickly and immediately.
 
--		flags |= RWF_SYNC;
+NFSD has never implemented this kind of promotion. UNSTABLE WRITE
+requests are unconditionally treated as UNSTABLE. However, in a
+subsequent patch, nfsd_vfs_write() will be able to promote an
+UNSTABLE WRITE to be a FILE_SYNC WRITE. This will be because NFSD
+will handle some WRITE requests locally with O_DIRECT, which
+persists written data immediately. The FILE_SYNC WRITE response
+indicates to the client that no follow-up COMMIT is necessary.
 
-with:
+This patch prepares for that change by enabling the modified
+stable_how value to be passed along to NFSD's WRITE reply encoder.
+No behavior change is expected.
 
-+		kiocb.ki_flags |= IOCB_DSYNC;
-
-which appears to be correct given:
-
-	if (flags & RWF_SYNC)
-		kiocb_flags |= IOCB_DSYNC;
-
-in kiocb_set_rw_flags(). However the author of that commit did not
-appreciate that the previous line in kiocb_set_rw_flags() results
-in IOCB_SYNC also being set:
-
-	kiocb_flags |= (__force int) (flags & RWF_SUPPORTED);
-
-RWF_SUPPORTED contains RWF_SYNC, and RWF_SYNC is the same bit as
-IOCB_SYNC. Reviewers at the time did not catch the omission.
-
-Reported-by: Mike Snitzer <snitzer@kernel.org>
-Closes: https://lore.kernel.org/linux-nfs/20251018005431.3403-1-cel@kernel.org/T/#t
+Reviewed-by: NeilBrown <neil@brown.name>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Fixes: 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()")
-Cc: stable@vger.kernel.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/vfs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs3proc.c |  2 +-
+ fs/nfsd/nfs4proc.c |  2 +-
+ fs/nfsd/nfsproc.c  |  3 ++-
+ fs/nfsd/vfs.c      | 11 ++++++-----
+ fs/nfsd/vfs.h      |  6 ++++--
+ fs/nfsd/xdr3.h     |  2 +-
+ 6 files changed, 15 insertions(+), 11 deletions(-)
 
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index b6d03e1ef5f7..ad14b34583bb 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -236,7 +236,7 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
+ 	resp->committed = argp->stable;
+ 	resp->status = nfsd_write(rqstp, &resp->fh, argp->offset,
+ 				  &argp->payload, &cnt,
+-				  resp->committed, resp->verf);
++				  &resp->committed, resp->verf);
+ 	resp->count = cnt;
+ 	resp->status = nfsd3_map_status(resp->status);
+ 	return rpc_success;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 7f7e6bb23a90..2222bb283baf 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1285,7 +1285,7 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	write->wr_how_written = write->wr_stable_how;
+ 	status = nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+ 				write->wr_offset, &write->wr_payload,
+-				&cnt, write->wr_how_written,
++				&cnt, &write->wr_how_written,
+ 				(__be32 *)write->wr_verifier.data);
+ 	nfsd_file_put(nf);
+ 
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 8f71f5748c75..706401ed6f8d 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -251,6 +251,7 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+ 	struct nfsd_writeargs *argp = rqstp->rq_argp;
+ 	struct nfsd_attrstat *resp = rqstp->rq_resp;
+ 	unsigned long cnt = argp->len;
++	u32 committed = NFS_DATA_SYNC;
+ 
+ 	dprintk("nfsd: WRITE    %s %u bytes at %d\n",
+ 		SVCFH_fmt(&argp->fh),
+@@ -258,7 +259,7 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+ 
+ 	fh_copy(&resp->fh, &argp->fh);
+ 	resp->status = nfsd_write(rqstp, &resp->fh, argp->offset,
+-				  &argp->payload, &cnt, NFS_DATA_SYNC, NULL);
++				  &argp->payload, &cnt, &committed, NULL);
+ 	if (resp->status == nfs_ok)
+ 		resp->status = fh_getattr(&resp->fh, &resp->stat);
+ 	else if (resp->status == nfserr_jukebox)
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index f537a7b4ee01..5333d49910d9 100644
+index 5333d49910d9..f3be36b960e5 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1314,8 +1314,18 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		stable = NFS_UNSTABLE;
- 	init_sync_kiocb(&kiocb, file);
- 	kiocb.ki_pos = offset;
--	if (stable && !fhp->fh_use_wgather)
--		kiocb.ki_flags |= IOCB_DSYNC;
-+	if (likely(!fhp->fh_use_wgather)) {
-+		switch (stable) {
-+		case NFS_FILE_SYNC:
-+			/* persist data and timestamps */
-+			kiocb.ki_flags |= IOCB_DSYNC | IOCB_SYNC;
-+			break;
-+		case NFS_DATA_SYNC:
-+			/* persist data only */
-+			kiocb.ki_flags |= IOCB_DSYNC;
-+			break;
-+		}
-+	}
+@@ -1262,7 +1262,7 @@ static int wait_for_concurrent_writes(struct file *file)
+  * @offset: Byte offset of start
+  * @payload: xdr_buf containing the write payload
+  * @cnt: IN: number of bytes to write, OUT: number of bytes actually written
+- * @stable: An NFS stable_how value
++ * @stable_how: IN: Client's requested stable_how, OUT: Actual stable_how
+  * @verf: NFS WRITE verifier
+  *
+  * Upon return, caller must invoke fh_put on @fhp.
+@@ -1274,11 +1274,12 @@ __be32
+ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	       struct nfsd_file *nf, loff_t offset,
+ 	       const struct xdr_buf *payload, unsigned long *cnt,
+-	       int stable, __be32 *verf)
++	       u32 *stable_how, __be32 *verf)
+ {
+ 	struct nfsd_net		*nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+ 	struct file		*file = nf->nf_file;
+ 	struct super_block	*sb = file_inode(file)->i_sb;
++	u32			stable = *stable_how;
+ 	struct kiocb		kiocb;
+ 	struct svc_export	*exp;
+ 	struct iov_iter		iter;
+@@ -1444,7 +1445,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+  * @offset: Byte offset of start
+  * @payload: xdr_buf containing the write payload
+  * @cnt: IN: number of bytes to write, OUT: number of bytes actually written
+- * @stable: An NFS stable_how value
++ * @stable_how: IN: Client's requested stable_how, OUT: Actual stable_how
+  * @verf: NFS WRITE verifier
+  *
+  * Upon return, caller must invoke fh_put on @fhp.
+@@ -1454,7 +1455,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+  */
+ __be32
+ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+-	   const struct xdr_buf *payload, unsigned long *cnt, int stable,
++	   const struct xdr_buf *payload, unsigned long *cnt, u32 *stable_how,
+ 	   __be32 *verf)
+ {
+ 	struct nfsd_file *nf;
+@@ -1467,7 +1468,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+ 		goto out;
  
- 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
- 	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+ 	err = nfsd_vfs_write(rqstp, fhp, nf, offset, payload, cnt,
+-			     stable, verf);
++			     stable_how, verf);
+ 	nfsd_file_put(nf);
+ out:
+ 	trace_nfsd_write_done(rqstp, fhp, offset, *cnt);
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index fa46f8b5f132..c713ed0b04e0 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -130,11 +130,13 @@ __be32		nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				u32 *eof);
+ __be32		nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				loff_t offset, const struct xdr_buf *payload,
+-				unsigned long *cnt, int stable, __be32 *verf);
++				unsigned long *cnt, u32 *stable_how,
++				__be32 *verf);
+ __be32		nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				struct nfsd_file *nf, loff_t offset,
+ 				const struct xdr_buf *payload,
+-				unsigned long *cnt, int stable, __be32 *verf);
++				unsigned long *cnt, u32 *stable_how,
++				__be32 *verf);
+ __be32		nfsd_readlink(struct svc_rqst *, struct svc_fh *,
+ 				char *, int *);
+ __be32		nfsd_symlink(struct svc_rqst *, struct svc_fh *,
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 522067b7fd75..c0e443ef3a6b 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -152,7 +152,7 @@ struct nfsd3_writeres {
+ 	__be32			status;
+ 	struct svc_fh		fh;
+ 	unsigned long		count;
+-	int			committed;
++	u32			committed;
+ 	__be32			verf[2];
+ };
+ 
 -- 
 2.51.0
 
