@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-16087-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16088-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4367CC377A1
-	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 20:28:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CA0DC377A4
+	for <lists+linux-nfs@lfdr.de>; Wed, 05 Nov 2025 20:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0D4334E2459
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 19:28:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3CF034E5271
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Nov 2025 19:28:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A8133E361;
-	Wed,  5 Nov 2025 19:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9479B29B783;
+	Wed,  5 Nov 2025 19:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlePasYA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HiT8qisy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82072245006
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Nov 2025 19:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCC8245006
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Nov 2025 19:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762370894; cv=none; b=TuaGnfOpbu1KnGibiGoes4mvLE0bnaP+ixysJkk9eXDo9zyTpizOzQMx3B7ULIc509ayHOIaocAzQ8o6CkqztQxkhwJ8EfP9rbxeURv+hChIVG8PZdyOAvRDkclbrHS6h9iwW0vrsFICQSkh5wbUbugkEe1S8bsbwJ71giyTqsQ=
+	t=1762370895; cv=none; b=fJzBD/rU1YuMYCKhax/5KPfAxqzsz9Wzv4ZZK+6Xs2SzgHVuDYiM+LD0jTzowJQLS7K5AoYSclbTd4A/njHQ5MKz6eX2iTp31EaH/U1PSqExx6KJTJwRcqscd8lFmPjNM2dHGHuW/01DfJkUm0gEAFYqgnkI6ANDj6iNYqwqWfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762370894; c=relaxed/simple;
-	bh=89VIyq4/MDixFIruAlStmmcaw4vVK1QbD8fAwLF0Dp0=;
+	s=arc-20240116; t=1762370895; c=relaxed/simple;
+	bh=oX+BplBE7skBfpU4YoSzHyZNIM+RtH18ktcjC8Roxcw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sDDLjGhaOiF/m6MKDB/EwVYpcE/OzhmuznBve4d1zmBNm8C6PPAQcV6idCsS2uC6W/LCI65/+UV9sdMwZ5RiPraee1rq4TA5kIlTAsOISiVIjnFHeTZoGlFRB9biYse3MyEYc1RdDiyyOeznjolocgk6ccx+Vg/95qar77rKUqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlePasYA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B3FC116C6;
-	Wed,  5 Nov 2025 19:28:13 +0000 (UTC)
+	 MIME-Version; b=lbalrfHfEihjmtBf3aFHPq3811Yor9m47vUysZfr2r0TqiagDs9nB0Kmctbf/o09yRvGI+yv1qJA7tbHzUXpfQirPnC631qop5H9L0cWNf3K/UuDabvKlCGrM9IEBJdMgdWhXLgSRremEnjMesmvE4yFixCQRlDTQvKDaH2uuaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HiT8qisy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43505C4CEF5;
+	Wed,  5 Nov 2025 19:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762370894;
-	bh=89VIyq4/MDixFIruAlStmmcaw4vVK1QbD8fAwLF0Dp0=;
+	s=k20201202; t=1762370895;
+	bh=oX+BplBE7skBfpU4YoSzHyZNIM+RtH18ktcjC8Roxcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlePasYA5oOuVlWlCB4vZhiVOYGy521t+dWFVjNo7sX+RZq3IZLb1x7dWXcWSTKHn
-	 WH0EUJyqq3q5vs4V4pplHz8BkAp39/i+TmFjKtYWF0yrY9h3JyCVO1q5vPgSl+Y/xI
-	 ie0wn2sUxaSgw5iM89mvINkxOAxBC6dX2vQpvAAitcqju/mSft6SxLnbObAxuaDrv2
-	 OwIg2iqzulusthGzUs7ntabTrxrjljLRBLuVvF1rZ4C06CaxSJc1TqhjOWuooRm/t8
-	 INap+CTkGM0Ff8tFigpBZi3fDxTzCaXCvDBDWb9UU9hM4ryOWyJtPALJCRyMKDHlQ7
-	 M1ZuX7S+OgwBA==
+	b=HiT8qisyjJVZakUYVZCZqhgVeyBQgEIg/nAIi7UvlsA4spRnP+wfvqmIISR5LViiG
+	 cU/pf2n84xWcCMuZTfcD4Kklt89cyM62gs0Ty5wGjyrrwGMlA00Nkxn3vD7w6tg/My
+	 CFHGdtJ64Bkq/b9ctwsQzoqY4dPSe7icLpIC7AwONDE4bCwBDyLvVFml+/suoQDg1O
+	 WdFLJt3mG+51+0FvGuyOlNjn8f0D/nH+vn863aUZulwp/WpPKQ6VT2AjjUqU0r1Mhq
+	 CvMqryA1JaNKZp6Gv+ucTTaKSwLjRSQFYaI5djMxxIdb+nI53mWAvg28RxCPpeLLpZ
+	 ox0fZltQLIljA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +48,10 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v10 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Date: Wed,  5 Nov 2025 14:28:05 -0500
-Message-ID: <20251105192806.77093-5-cel@kernel.org>
+	Mike Snitzer <snitzer@kernel.org>
+Subject: [PATCH v10 5/5] NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
+Date: Wed,  5 Nov 2025 14:28:06 -0500
+Message-ID: <20251105192806.77093-6-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251105192806.77093-1-cel@kernel.org>
 References: <20251105192806.77093-1-cel@kernel.org>
@@ -66,254 +65,182 @@ Content-Transfer-Encoding: 8bit
 
 From: Mike Snitzer <snitzer@kernel.org>
 
-When NFSD_IO_DIRECT is selected via the
-/sys/kernel/debug/nfsd/io_cache_write experimental tunable, split
-incoming unaligned NFS WRITE requests into a prefix, middle and
-suffix segment, as needed. The middle segment is now DIO-aligned and
-the prefix and/or suffix are unaligned. Synchronous buffered IO is
-used for the unaligned segments, and IOCB_DIRECT is used for the
-middle DIO-aligned extent.
+This document details the NFSD IO modes that are configurable using
+NFSD's experimental debugfs interfaces:
 
-Although IOCB_DIRECT avoids the use of the page cache, by itself it
-doesn't guarantee data durability. For UNSTABLE WRITE requests,
-durability is obtained by a subsequent NFS COMMIT request.
+  /sys/kernel/debug/nfsd/io_cache_read
+  /sys/kernel/debug/nfsd/io_cache_write
+
+This document will evolve as NFSD's interfaces do (e.g. if/when NFSD's
+debugfs interfaces are replaced with per-export controls).
+
+Future updates will provide more specific guidance and howto
+information to help others use and evaluate NFSD's IO modes:
+BUFFERED, DONTCACHE and DIRECT.
 
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Co-developed-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/debugfs.c |   1 +
- fs/nfsd/trace.h   |   1 +
- fs/nfsd/vfs.c     | 170 ++++++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 168 insertions(+), 4 deletions(-)
+ .../filesystems/nfs/nfsd-io-modes.rst         | 150 ++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+ create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
 
-diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
-index 00eb1ecef6ac..7f44689e0a53 100644
---- a/fs/nfsd/debugfs.c
-+++ b/fs/nfsd/debugfs.c
-@@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
- 	switch (val) {
- 	case NFSD_IO_BUFFERED:
- 	case NFSD_IO_DONTCACHE:
-+	case NFSD_IO_DIRECT:
- 		nfsd_io_cache_write = val;
- 		break;
- 	default:
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index bfd41236aff2..ad74439d0105 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
- DEFINE_NFSD_IO_EVENT(read_done);
- DEFINE_NFSD_IO_EVENT(write_start);
- DEFINE_NFSD_IO_EVENT(write_opened);
-+DEFINE_NFSD_IO_EVENT(write_direct);
- DEFINE_NFSD_IO_EVENT(write_io_done);
- DEFINE_NFSD_IO_EVENT(write_done);
- DEFINE_NFSD_IO_EVENT(commit_start);
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index f3be36b960e5..8158e129a560 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1254,6 +1254,161 @@ static int wait_for_concurrent_writes(struct file *file)
- 	return err;
- }
- 
-+struct nfsd_write_dio_seg {
-+	struct iov_iter			iter;
-+	bool				use_dio;
-+};
+diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentation/filesystems/nfs/nfsd-io-modes.rst
+new file mode 100644
+index 000000000000..29b84c9c9e25
+--- /dev/null
++++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
+@@ -0,0 +1,150 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+struct nfsd_write_dio_args {
-+	struct nfsd_file		*nf;
-+	int				flags_buffered;
-+	int				flags_direct;
-+	unsigned int			nsegs;
-+	struct nfsd_write_dio_seg	segment[3];
-+};
++=============
++NFSD IO MODES
++=============
 +
-+/*
-+ * Check if the bvec iterator is aligned for direct I/O.
-+ *
-+ * bvecs generated from RPC receive buffers are contiguous: After the first
-+ * bvec, all subsequent bvecs start at bv_offset zero (page-aligned).
-+ * Therefore, only the first bvec is checked.
-+ */
-+static bool
-+nfsd_iov_iter_aligned_bvec(const struct nfsd_file *nf, const struct iov_iter *i)
-+{
-+	unsigned int addr_mask = nf->nf_dio_mem_align - 1;
-+	const struct bio_vec *bvec = i->bvec;
++Overview
++========
 +
-+	return ((unsigned long)(bvec->bv_offset + i->iov_offset) & addr_mask) == 0;
-+}
++NFSD has historically always used buffered IO when servicing READ and
++WRITE operations. BUFFERED is NFSD's default IO mode, but it is possible
++to override that default to use either DONTCACHE or DIRECT IO modes.
 +
-+static void
-+nfsd_write_dio_seg_init(struct nfsd_write_dio_seg *segment,
-+			struct bio_vec *bvec, unsigned int nvecs,
-+			unsigned long total, size_t start, size_t len)
-+{
-+	iov_iter_bvec(&segment->iter, ITER_SOURCE, bvec, nvecs, total);
-+	if (start)
-+		iov_iter_advance(&segment->iter, start);
-+	iov_iter_truncate(&segment->iter, len);
-+	segment->use_dio = false;
-+}
++Experimental NFSD debugfs interfaces are available to allow the NFSD IO
++mode used for READ and WRITE to be configured independently. See both:
++- /sys/kernel/debug/nfsd/io_cache_read
++- /sys/kernel/debug/nfsd/io_cache_write
 +
-+static void
-+nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
-+			  loff_t offset, unsigned long total,
-+			  struct nfsd_write_dio_args *args)
-+{
-+	u32 offset_align = args->nf->nf_dio_offset_align;
-+	u32 mem_align = args->nf->nf_dio_mem_align;
-+	loff_t prefix_end, orig_end, middle_end;
-+	size_t prefix, middle, suffix;
++The default value for both io_cache_read and io_cache_write reflects
++NFSD's default IO mode (which is NFSD_IO_BUFFERED=0).
 +
-+	args->nsegs = 0;
++Based on the configured settings, NFSD's IO will either be:
++- cached using page cache (NFSD_IO_BUFFERED=0)
++- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=1)
++- not cached stable_how=NFS_UNSTABLE (NFSD_IO_DIRECT=2)
++- not cached stable_how=NFS_DATA_SYNC (NFSD_IO_DIRECT_WRITE_DATA_SYNC=3)
++- not cached stable_how=NFS_FILE_SYNC (NFSD_IO_DIRECT_WRITE_FILE_SYNC=4)
 +
-+	/*
-+	 * Check if direct I/O is feasible for this write request.
-+	 * If alignments are not available, the write is too small,
-+	 * or no alignment can be found, fall back to buffered I/O.
-+	 */
-+	if (unlikely(!mem_align || !offset_align) ||
-+	    unlikely(total < max(offset_align, mem_align)))
-+		goto no_dio;
++To set an NFSD IO mode, write a supported value (0 - 4) to the
++corresponding IO operation's debugfs interface, e.g.:
++  echo 2 > /sys/kernel/debug/nfsd/io_cache_read
++  echo 4 > /sys/kernel/debug/nfsd/io_cache_write
 +
-+	/* Calculate aligned segments */
-+	prefix_end = round_up(offset, offset_align);
-+	orig_end = offset + total;
-+	middle_end = round_down(orig_end, offset_align);
++To check which IO mode NFSD is using for READ or WRITE, simply read the
++corresponding IO operation's debugfs interface, e.g.:
++  cat /sys/kernel/debug/nfsd/io_cache_read
++  cat /sys/kernel/debug/nfsd/io_cache_write
 +
-+	prefix = prefix_end - offset;
-+	middle = middle_end - prefix_end;
-+	suffix = orig_end - middle_end;
++NFSD DONTCACHE
++==============
 +
-+	if (!middle)
-+		goto no_dio;
++DONTCACHE offers a hybrid approach to servicing IO that aims to offer
++the benefits of using DIRECT IO without any of the strict alignment
++requirements that DIRECT IO imposes. To achieve this buffered IO is used
++but the IO is flagged to "drop behind" (meaning associated pages are
++dropped from the page cache) when IO completes.
 +
-+	if (prefix) {
-+		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
-+					nvecs, total, 0, prefix);
-+		++args->nsegs;
-+	}
++DONTCACHE aims to avoid what has proven to be a fairly significant
++limition of Linux's memory management subsystem if/when large amounts of
++data is infrequently accessed (e.g. read once _or_ written once but not
++read until much later). Such use-cases are particularly problematic
++because the page cache will eventually become a bottleneck to servicing
++new IO requests.
 +
-+	nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec, nvecs,
-+				total, prefix, middle);
-+	if (!nfsd_iov_iter_aligned_bvec(args->nf,
-+					&args->segment[args->nsegs].iter))
-+		goto no_dio;
-+	args->segment[args->nsegs].use_dio = true;
-+	++args->nsegs;
++For more context on DONTCACHE, please see these Linux commit headers:
++- Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
++  to take a struct kiocb")
++- for READ:  8026e49bff9b1 ("mm/filemap: add read support for
++  RWF_DONTCACHE")
++- for WRITE: 974c5e6139db3 ("xfs: flag as supporting FOP_DONTCACHE")
 +
-+	if (suffix) {
-+		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
-+					nvecs, total, prefix + middle, suffix);
-+		++args->nsegs;
-+	}
++If NFSD_IO_DONTCACHE is specified by writing 1 to NFSD's debugfs
++interfaces, FOP_DONTCACHE must be advertised as supported by the
++underlying filesystem (e.g. XFS), otherwise all IO flagged with
++RWF_DONTCACHE will fail with -EOPNOTSUPP.
 +
-+	return;
++NFSD DIRECT
++===========
 +
-+no_dio:
-+	/*
-+	 * No DIO alignment possible - pack into single non-DIO segment.
-+	 * IOCB_DONTCACHE preserves the intent of NFSD_IO_DIRECT.
-+	 */
-+	if (args->nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
-+		args->flags_buffered |= IOCB_DONTCACHE;
-+	nfsd_write_dio_seg_init(&args->segment[0], bvec, nvecs, total,
-+				0, total);
-+	args->nsegs = 1;
-+}
++DIRECT IO doesn't make use of the page cache, as such it is able to
++avoid the Linux memory management's page reclaim scalability problems
++without resorting to the hybrid use of page cache that DONTCACHE does.
 +
-+static int
-+nfsd_issue_dio_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		     struct kiocb *kiocb, unsigned int nvecs,
-+		     unsigned long *cnt, struct nfsd_write_dio_args *args)
-+{
-+	struct file *file = args->nf->nf_file;
-+	ssize_t host_err;
-+	unsigned int i;
++Some workloads benefit from NFSD avoiding the page cache, particularly
++those with a working set that is significantly larger than available
++system memory. The pathological worst-case workload that NFSD DIRECT has
++proven to help most is: NFS client issuing large sequential IO to a file
++that is 2-3 times larger than the NFS server's available system memory.
++The reason for such improvement is NFSD DIRECT eliminates a lot of work
++that the memory management subsystem would otherwise be required to
++perform (e.g. page allocation, dirty writeback, page reclaim). When
++using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
++time trying to find adequate free pages so that forward IO progress can
++be made.
 +
-+	nfsd_write_dio_iters_init(rqstp->rq_bvec, nvecs, kiocb->ki_pos,
-+				  *cnt, args);
++The performance win associated with using NFSD DIRECT was previously
++discussed on linux-nfs, see:
++https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
++But in summary:
++- NFSD DIRECT can significantly reduce memory requirements
++- NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
++- NFSD DIRECT can offer more deterministic IO performance
 +
-+	*cnt = 0;
-+	for (i = 0; i < args->nsegs; i++) {
-+		if (args->segment[i].use_dio) {
-+			kiocb->ki_flags = args->flags_direct;
-+			trace_nfsd_write_direct(rqstp, fhp, kiocb->ki_pos,
-+						args->segment[i].iter.count);
-+		} else
-+			kiocb->ki_flags = args->flags_buffered;
++As always, your mileage may vary and so it is important to carefully
++consider if/when it is beneficial to make use of NFSD DIRECT. When
++assessing comparative performance of your workload please be sure to log
++relevant performance metrics during testing (e.g. memory usage, cpu
++usage, IO performance). Using perf to collect perf data that may be used
++to generate a "flamegraph" for work Linux must perform on behalf of your
++test is a really meaningful way to compare the relative health of the
++system and how switching NFSD's IO mode changes what is observed.
 +
-+		host_err = vfs_iocb_iter_write(file, kiocb,
-+					       &args->segment[i].iter);
-+		if (host_err < 0)
-+			return host_err;
-+		*cnt += host_err;
-+		if (host_err < args->segment[i].iter.count)
-+			break;	/* partial write */
-+	}
++If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
++NFSD's debugfs interfaces, ideally the IO will be aligned relative to
++the underlying block device's logical_block_size. Also the memory buffer
++used to store the READ or WRITE payload must be aligned relative to the
++underlying block device's dma_alignment.
 +
-+	return 0;
-+}
++But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
++it can:
 +
-+static noinline_for_stack int
-+nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		  struct nfsd_file *nf, unsigned int nvecs,
-+		  unsigned long *cnt, struct kiocb *kiocb)
-+{
-+	struct nfsd_write_dio_args args;
++Misaligned READ:
++    If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
++    DIO-aligned block (on either end of the READ). The expanded READ is
++    verified to have proper offset/len (logical_block_size) and
++    dma_alignment checking.
 +
-+	args.flags_direct = kiocb->ki_flags | IOCB_DIRECT;
-+	args.flags_buffered = kiocb->ki_flags;
-+	args.nf = nf;
++    Any misaligned READ that is less than 32K won't be expanded to be
++    DIO-aligned (this heuristic just avoids excess work, like allocating
++    start_extra_page, for smaller IO that can generally already perform
++    well using buffered IO).
 +
-+	return nfsd_issue_dio_write(rqstp, fhp, kiocb, nvecs, cnt, &args);
-+}
++Misaligned WRITE:
++    If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
++    middle and end as needed. The large middle segment is DIO-aligned
++    and the start and/or end are misaligned. Buffered IO is used for the
++    misaligned segments and O_DIRECT is used for the middle DIO-aligned
++    segment. DONTCACHE buffered IO is _not_ used for the misaligned
++    segments because using normal buffered IO offers significant RMW
++    performance benefit when handling streaming misaligned WRITEs.
 +
- /**
-  * nfsd_vfs_write - write data to an already-open file
-  * @rqstp: RPC execution context
-@@ -1329,25 +1484,32 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	}
- 
- 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
--	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
++Tracing:
++    The nfsd_read_direct trace event shows how NFSD expands any
++    misaligned READ to the next DIO-aligned block (on either end of the
++    original READ, as needed).
 +
- 	since = READ_ONCE(file->f_wb_err);
- 	if (verf)
- 		nfsd_copy_write_verifier(verf, nn);
- 
- 	switch (nfsd_io_cache_write) {
--	case NFSD_IO_BUFFERED:
-+	case NFSD_IO_DIRECT:
-+		host_err = nfsd_direct_write(rqstp, fhp, nf, nvecs,
-+					     cnt, &kiocb);
- 		break;
- 	case NFSD_IO_DONTCACHE:
- 		if (file->f_op->fop_flags & FOP_DONTCACHE)
- 			kiocb.ki_flags |= IOCB_DONTCACHE;
-+		fallthrough;
-+	case NFSD_IO_BUFFERED:
-+		iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-+		host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
-+		if (host_err < 0)
-+			break;
-+		*cnt = host_err;
- 		break;
- 	}
--	host_err = vfs_iocb_iter_write(file, &kiocb, &iter);
- 	if (host_err < 0) {
- 		commit_reset_write_verifier(nn, rqstp, host_err);
- 		goto out_nfserr;
- 	}
--	*cnt = host_err;
- 	nfsd_stats_io_write_add(nn, exp, *cnt);
- 	fsnotify_modify(file);
- 	host_err = filemap_check_wb_err(file->f_mapping, since);
++    This combination of trace events is useful for READs:
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
++    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
++
++    The nfsd_write_direct trace event shows how NFSD splits a given
++    misaligned WRITE into a DIO-aligned middle segment.
++
++    This combination of trace events is useful for WRITEs:
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
++    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
++    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
 -- 
 2.51.0
 
