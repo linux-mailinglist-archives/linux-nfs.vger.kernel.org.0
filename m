@@ -1,266 +1,204 @@
-Return-Path: <linux-nfs+bounces-16115-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16107-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F633C38A07
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 02:02:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96AFAC3895B
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 01:58:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D66521A275F9
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 00:59:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7D681A24566
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 00:57:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4FB242D72;
-	Thu,  6 Nov 2025 00:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5EC8221F06;
+	Thu,  6 Nov 2025 00:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="PTST6WA8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZJEcOsnA"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="AYdp/zuE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mXCjJ22k"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A847E1FE46D;
-	Thu,  6 Nov 2025 00:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7CC21CC44;
+	Thu,  6 Nov 2025 00:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762390636; cv=none; b=n87Kzlfpv36SFB5SFlHICkyTTVvugCr/CoPTrK/ny+W76rXGQj70g8N+o9lVZBJxl6SylopAT35NEsWX/fj7jwawuR2sMtfX40T+3UTYrE3f1mH1GGUgBKauq4pDVKlXvQRXnVvEO1Fx2oDIl2s2v/RXtm2P3QJXfTHh65U+tFY=
+	t=1762390553; cv=none; b=hIcBWydy2AemqdcEp3U2HtbeobL4NbxaeBjT6EMJ4GbLVabr+BqFz5DKRGS++vMThrOYKUtc54ceBnMK/d9oRBHGmNDN2k7aGPr9JMOvt08EZAx2fggMKw9MUiqG5ZA9Uw7M9h/f9E8+FDOIJOVsEeBMKpm4M0AYbtUu3Sfar5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762390636; c=relaxed/simple;
-	bh=X2D3OwIKW4rR3cIHHnntV7DDsOoGo04YBA483px290I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SCfvo29P/A0dvsHBV9k3+0VOQ2GSxJs+6QLkoZ65jv6uE7ruk26wWh1gvYJPifmIfTS4bKBAglmIF3rxd/Ja0BVF8rvzk61WupZDTXoLlPPqx4a7RHjNF3zX78sQii/9toSDA9zqRAodSp8rAxZSSFc3Aub81nj6lRDV7PpPxfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=PTST6WA8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZJEcOsnA; arc=none smtp.client-ip=202.12.124.139
+	s=arc-20240116; t=1762390553; c=relaxed/simple;
+	bh=7H7QGaWvft+luniqx0UKd/bXeFRFlhwP/Jl882o/Zbc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=SrYqBOgqw4NvSoiV/hVJjsXZETwaYe5/lXXPltcGqavQYKW5xNDetxVegqvvlMk5V1AxFM0vHsveRNBkkOPTVrT6GKkFVXN+55zTE/B3y/FRDM403AVG0155t+5++RuFODDUYN7Ij7gyVO5DMfvop/TWXhtb/NpxxG2gms5l8l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=AYdp/zuE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mXCjJ22k; arc=none smtp.client-ip=202.12.124.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.stl.internal (Postfix) with ESMTP id E9AA113005FE;
-	Wed,  5 Nov 2025 19:57:12 -0500 (EST)
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id B60AC7A01B8;
+	Wed,  5 Nov 2025 19:55:50 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 05 Nov 2025 19:57:13 -0500
+  by phl-compute-04.internal (MEProxy); Wed, 05 Nov 2025 19:55:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1762390632;
-	 x=1762397832; bh=6X4X+jO8scXaaR1fA21EGG74X2XQZWnQw+ie11lSXCw=; b=
-	PTST6WA8hfLl1kp1qyqqgQgCaPl3oThCtjKzi+CutJCPiAO0qOZtCNkFXtOZbYIr
-	6/z7UAeFWK610e9P12o+aWGmoMgMBUXVfwQB5ewT+6rnXfz80ZHUWC4Ci5gSv7hl
-	wWCTyCVcyzACiu+rfkAx8934wUDpptGJClj6DJhv3FWWECLZDPwAN+ZeJ2OXJzRM
-	JthM/fejEKuFoSlzgzdp98QNLTP6J81Zn3brDKEMg/TiormExtTiIcWLTeK/L34D
-	Fnzb5cclWtt/gVEEIRGSQHnrAftkUB/ecYH7cK1J88qYraX6ykEgcnDJsgZOPOeu
-	LCVucLO90TPP/KNbMQJRPg==
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762390550; x=1762476950; bh=6bwaOUosHeKjBD7IF9WTD2fjiqBFStNKmf8
+	+KkU1Rdk=; b=AYdp/zuEdSIxpGxEhvYzTECQjriorRNJh+Sy4gXHFGYQm8y10gR
+	LSzy6doeSKART4BdLSqMSQOZ8s2aLbsQnkjFkGCsnvRSqspmaDtXOSMR2V5JcP5O
+	kyJBCTHynVqRnsSPRYg6Qx8w05bAHpTsO3YLHj597ifQfLtluoci3DEBZg5OZQGu
+	1ABaDiKtL8ucy8sKwZdR/Dog4i5LnAJa+WMxMj+O155Dpf6n08DZfKYWeHYhH2y8
+	LtdxPpIZMMboKcUpiH2r37FiAt9xfSwSZ22EJPPN53WHTtyl3pTiUdCT/Qvcvt1s
+	lR/bbmv+Nzz/JtwE9rEsi9zI536Ns+msdkA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1762390632; x=1762397832; bh=6
-	X4X+jO8scXaaR1fA21EGG74X2XQZWnQw+ie11lSXCw=; b=ZJEcOsnAfFH09d89e
-	xMnEvMts0mGxlHriO4R2hiJGejWj2avaymUdFF/QjuJP+aOtLH601VFRHHSwMVcc
-	6z5nghlAOmInHpxMhXOIyd4qVNmRqKbOdvEoH6vDYx/tqLXTAImiKPu4jrKb1pTu
-	pYcjRcxOM//owrYHfZ8iPi6eEJ8fzPecQ4FjjyG4v7BunczFu8jY0b88J0ScmbQV
-	qw4r5H7jrAKrn0+5I9DtlG3GimpgUMhSnkmiBIR0Z66UCSfwz/wZpmmle5NyYNRQ
-	XEr1bXgqDSmRNrzHz4BxVFEDE0BqRoa/DOu321Z6ZkGO+9I0CGHYUt3XQbfIVJ/0
-	P6zAw==
-X-ME-Sender: <xms:aPILaQoliaJCA0F8WPgArfBCnlyvr_5jlFurL2Iax8fjtRYmvNaj2g>
-    <xme:aPILabuP5SmzjrZSMnDYXIF37Bi1aUl1JFwDkXZe47jYVq-chGG2SQG4NFAmvPH5i
-    -XEurUYyaiId4CZnVm8uPRngXZhWdYTVXLMQW2HBQcUEBK4TA>
-X-ME-Received: <xmr:aPILaSN6aqtKa1guMORW5uua4BDZUfBARCFJLayzm2unI6ppmY8ceqmyl1PzwWdEyevUXUf5NnIBqdXP4Nt2fOKc1Qd-yp1X238JPFBU3jjk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeehfeelucetufdoteggodetrf
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762390550; x=
+	1762476950; bh=6bwaOUosHeKjBD7IF9WTD2fjiqBFStNKmf8+KkU1Rdk=; b=m
+	XCjJ22kJUH0chM64i4cS5/vOnJsTBqUBQNq6aOhVt02Eo/gOUbWwXJlpBjhWyudg
+	+IEp/sN3Bq2jQl6+5/Foeysb3Msbgx9yspn8oWn89H6eGUi5T/2ozOJ2n7eYxROB
+	dDwlzqBZf+C13LfvCOXLq3vgA2v/pFRkeV2KrlZRT3hJYO6duDOHc71Z1MBF7YVB
+	B53ZiOtFa7oZ0ZsXky3NtNIdenAXEOq4WWSoMHFs7wGOfFnWiQ8+6PHvSDHNvG4l
+	6EQ7iWQYtZcTJNSBP/KLeAbdQANsRqNaZWYSeYLLjFK+2+tqBIuVZUtEnS2uYs5w
+	otwHiAomEKCmSXTiISIzA==
+X-ME-Sender: <xms:FvILaWLVncfdkaMWdk73246nbmHv_psnaAR4Fwvtqd8fS8JDEqiTLQ>
+    <xme:FvILaTGczouEstYRRNZOKJB0Kv2FEh1Vhw2t6IHdO_J1gULxOmiiRHI3apnjnZz0_
+    xZxAC83pliYcrcb0ohkSIhy2IS2zTM-O08hc78oRcrerJwYow>
+X-ME-Received: <xmr:FvILaa-2-CNMz2dNBzre1pRBv_QKfT2lf0EF7ReRZugNUeXLZgKqUDyPanVkd1qIijZwpTFmX2_E1fKNJQr1majN7-DcXfbhiNdEbotgYUqb>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeehgedtucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgedtpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhsvggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqtghifhhssehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhg
-X-ME-Proxy: <xmx:aPILaVkUhA08m4Sorrl9Wc2SBj15wI5xlRK_lOh9YRS19MEhgXlIHA>
-    <xmx:aPILaRY3IReKWTzcv-pRVn183qO-H72I7OjH9XpoVlCJmldBN8YODw>
-    <xmx:aPILac1Gx-DLb0z5dk-RSQfbm_gPK58TNeBlI1G1A2mzTTgdWupztw>
-    <xmx:aPILafRnqqWjoD5PXsl_HNX8qNHlMmVM1Gkdl7p4mbFP_uQZI7OBCQ>
-    <xmx:aPILadyOYBpskcKadCFIOqZ6_3lrJ0Wdn6zP2iMtmTntXjzow5PIl0Hp>
+    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtoh
+    hmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthho
+    pegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopegthhhutghkrdhlvg
+    hvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehsnhhithiivghrsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegtvghlsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:FvILabK4_AFB466RbnYVeDiuZmkDo9o5yn3mZSgAt3SRwTUfYhQ0yA>
+    <xmx:FvILaQuMqU8dtPLUSk5R8XOiRLNnctF8Smox9s_CPXNECyJj8VG1Ig>
+    <xmx:FvILaaBp8lrZEhZxXruy4lKmZKhSDP8IKesN1wRYuPtLOR6Hlq6c4g>
+    <xmx:FvILaQPyQhc5QHsBMVdXSVyqSAAkFHatPPD5XO-stuLkGpk5gqmWlA>
+    <xmx:FvILabo4z7WKdpBB_GveH2GUXd020-LvXYYTVWubVmRU7J0eItj-bGZM>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Nov 2025 19:57:02 -0500 (EST)
-From: NeilBrown <neilb@ownmail.net>
-To: "Alexander Viro" <viro@zeniv.linux.org.uk>,
-	"Christian Brauner" <brauner@kernel.org>,
-	"Amir Goldstein" <amir73il@gmail.com>
-Cc: "Jan Kara" <jack@suse.cz>,	linux-fsdevel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,	Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>,	David Howells <dhowells@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,	Tyler Hicks <code@tyhicks.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,	Chuck Lever <chuck.lever@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,	Dai Ngo <Dai.Ngo@oracle.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,	Steve French <smfrench@gmail.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>,	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,	Mateusz Guzik <mjguzik@gmail.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,	linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev,	ecryptfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,	linux-unionfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,	linux-xfs@vger.kernel.org,
-	linux-security-module@vger.kernel.org,	selinux@vger.kernel.org
-Subject: [PATCH v5 14/14] VFS: introduce end_creating_keep()
-Date: Thu,  6 Nov 2025 11:50:58 +1100
-Message-ID: <20251106005333.956321-15-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20251106005333.956321-1-neilb@ownmail.net>
-References: <20251106005333.956321-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+ 5 Nov 2025 19:55:47 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Mike Snitzer" <snitzer@kernel.org>,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v10 2/5] NFSD: Make FILE_SYNC WRITEs comply with spec
+In-reply-to: <20251105192806.77093-3-cel@kernel.org>
+References: <20251105192806.77093-1-cel@kernel.org>,
+ <20251105192806.77093-3-cel@kernel.org>
+Date: Thu, 06 Nov 2025 11:55:45 +1100
+Message-id: <176239054580.634289.78476170437073732@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: NeilBrown <neil@brown.name>
+On Thu, 06 Nov 2025, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Mike noted that when NFSD responds to an NFS_FILE_SYNC WRITE, it
+> does not also persist file time stamps. To wit, Section 18.32.3
+> of RFC 8881 mandates:
+>=20
+> > The client specifies with the stable parameter the method of how
+> > the data is to be processed by the server. If stable is
+> > FILE_SYNC4, the server MUST commit the data written plus all file
+> > system metadata to stable storage before returning results. This
+> > corresponds to the NFSv2 protocol semantics. Any other behavior
+> > constitutes a protocol violation. If stable is DATA_SYNC4, then
+> > the server MUST commit all of the data to stable storage and
+> > enough of the metadata to retrieve the data before returning.
+>=20
+> Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") replaced:
+>=20
+> -		flags |=3D RWF_SYNC;
+>=20
+> with:
+>=20
+> +		kiocb.ki_flags |=3D IOCB_DSYNC;
+>=20
+> which appears to be correct given:
+>=20
+> 	if (flags & RWF_SYNC)
+> 		kiocb_flags |=3D IOCB_DSYNC;
+>=20
+> in kiocb_set_rw_flags(). However the author of that commit did not
 
-Occasionally the caller of end_creating() wants to keep using the dentry.
-Rather then requiring them to dget() the dentry (when not an error)
-before calling end_creating(), provide end_creating_keep() which does
-this.
+"the author and reviewers of that commit"
 
-cachefiles and overlayfs make use of this.
+Reviewed-by: NeilBrown <neil@brown.name>
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/cachefiles/namei.c |  3 +--
- fs/overlayfs/dir.c    |  8 ++------
- fs/overlayfs/super.c  | 11 +++--------
- include/linux/namei.h | 22 ++++++++++++++++++++++
- 4 files changed, 28 insertions(+), 16 deletions(-)
+Thanks,
+NeilBrown
 
-diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-index 59327618ac42..ef22ac19545b 100644
---- a/fs/cachefiles/namei.c
-+++ b/fs/cachefiles/namei.c
-@@ -155,8 +155,7 @@ struct dentry *cachefiles_get_directory(struct cachefiles_cache *cache,
- 
- 	/* Tell rmdir() it's not allowed to delete the subdir */
- 	inode_lock(d_inode(subdir));
--	dget(subdir);
--	end_creating(subdir);
-+	end_creating_keep(subdir);
- 
- 	if (!__cachefiles_mark_inode_in_use(NULL, d_inode(subdir))) {
- 		pr_notice("cachefiles: Inode already in use: %pd (B=%lx)\n",
-diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-index a4a0dc261310..50717ff8cac7 100644
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -252,10 +252,7 @@ struct dentry *ovl_create_temp(struct ovl_fs *ofs, struct dentry *workdir,
- 	if (IS_ERR(ret))
- 		return ret;
- 	ret = ovl_create_real(ofs, workdir, ret, attr);
--	if (!IS_ERR(ret))
--		dget(ret);
--	end_creating(ret);
--	return ret;
-+	return end_creating_keep(ret);
- }
- 
- static int ovl_set_opaque_xerr(struct dentry *dentry, struct dentry *upper,
-@@ -365,8 +362,7 @@ static int ovl_create_upper(struct dentry *dentry, struct inode *inode,
- 	if (IS_ERR(newdentry))
- 		return PTR_ERR(newdentry);
- 
--	dget(newdentry);
--	end_creating(newdentry);
-+	end_creating_keep(newdentry);
- 
- 	if (ovl_type_merge(dentry->d_parent) && d_is_dir(newdentry) &&
- 	    !ovl_allow_offline_changes(ofs)) {
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 3acda985c8a3..7b8fc1cab6eb 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -319,8 +319,7 @@ static struct dentry *ovl_workdir_create(struct ovl_fs *ofs,
- 		};
- 
- 		if (work->d_inode) {
--			dget(work);
--			end_creating(work);
-+			end_creating_keep(work);
- 			if (persist)
- 				return work;
- 			err = -EEXIST;
-@@ -336,9 +335,7 @@ static struct dentry *ovl_workdir_create(struct ovl_fs *ofs,
- 		}
- 
- 		work = ovl_do_mkdir(ofs, dir, work, attr.ia_mode);
--		if (!IS_ERR(work))
--			dget(work);
--		end_creating(work);
-+		end_creating_keep(work);
- 		err = PTR_ERR(work);
- 		if (IS_ERR(work))
- 			goto out_err;
-@@ -630,9 +627,7 @@ static struct dentry *ovl_lookup_or_create(struct ovl_fs *ofs,
- 		if (!child->d_inode)
- 			child = ovl_create_real(ofs, parent, child,
- 						OVL_CATTR(mode));
--		if (!IS_ERR(child))
--			dget(child);
--		end_creating(child);
-+		end_creating_keep(child);
- 	}
- 	dput(parent);
- 
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index b4d95b79b5a8..58600cf234bc 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -126,6 +126,28 @@ static inline void end_creating(struct dentry *child)
- 	end_dirop(child);
- }
- 
-+/* end_creating_keep - finish action started with start_creating() and return result
-+ * @child: dentry returned by start_creating() or vfs_mkdir()
-+ *
-+ * Unlock and return the child. This can be called after
-+ * start_creating() whether that function succeeded or not,
-+ * but it is not needed on failure.
-+ *
-+ * If vfs_mkdir() was called then the value returned from that function
-+ * should be given for @child rather than the original dentry, as vfs_mkdir()
-+ * may have provided a new dentry.
-+ *
-+ * Returns: @child, which may be a dentry or an error.
-+ *
-+ */
-+static inline struct dentry *end_creating_keep(struct dentry *child)
-+{
-+	if (!IS_ERR(child))
-+		dget(child);
-+	end_dirop(child);
-+	return child;
-+}
-+
- /**
-  * end_removing - finish action started with start_removing
-  * @child:  dentry returned by start_removing()
--- 
-2.50.0.107.gf914562f5916.dirty
+
+> appreciate that the previous line in kiocb_set_rw_flags() results
+> in IOCB_SYNC also being set:
+>=20
+> 	kiocb_flags |=3D (__force int) (flags & RWF_SUPPORTED);
+>=20
+> RWF_SUPPORTED contains RWF_SYNC, and RWF_SYNC is the same bit as
+> IOCB_SYNC. Reviewers at the time did not catch the omission.
+>=20
+> Reported-by: Mike Snitzer <snitzer@kernel.org>
+> Closes: https://lore.kernel.org/linux-nfs/20251018005431.3403-1-cel@kernel.=
+org/T/#t
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Fixes: 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f537a7b4ee01..5333d49910d9 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1314,8 +1314,18 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh=
+ *fhp,
+>  		stable =3D NFS_UNSTABLE;
+>  	init_sync_kiocb(&kiocb, file);
+>  	kiocb.ki_pos =3D offset;
+> -	if (stable && !fhp->fh_use_wgather)
+> -		kiocb.ki_flags |=3D IOCB_DSYNC;
+> +	if (likely(!fhp->fh_use_wgather)) {
+> +		switch (stable) {
+> +		case NFS_FILE_SYNC:
+> +			/* persist data and timestamps */
+> +			kiocb.ki_flags |=3D IOCB_DSYNC | IOCB_SYNC;
+> +			break;
+> +		case NFS_DATA_SYNC:
+> +			/* persist data only */
+> +			kiocb.ki_flags |=3D IOCB_DSYNC;
+> +			break;
+> +		}
+> +	}
+> =20
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+>  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> --=20
+> 2.51.0
+>=20
+>=20
 
 
