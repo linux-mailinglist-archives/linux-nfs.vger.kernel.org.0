@@ -1,318 +1,130 @@
-Return-Path: <linux-nfs+bounces-16130-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16131-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2273C3B859
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 15:00:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2B28C3BCAC
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 15:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84222567240
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 13:52:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9020188DF1C
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 14:35:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02AA2E0B6D;
-	Thu,  6 Nov 2025 13:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8301B33F8DD;
+	Thu,  6 Nov 2025 14:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOLKNHf4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8u3gMiq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541C125C6F1
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 13:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FAD31A80D;
+	Thu,  6 Nov 2025 14:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762437122; cv=none; b=r24poEaGAbCE5oJbdi42JJyHyze1ENT29gZo+ms0i/0uBmbBtMy2VmUQwzSWnrcaBpgbtu55XONziCYOhVRfWetqAXCA7eDxrp+uL2d66VWlyInSxAyc6uGwKw6wAVMBCjxHwrgwpuRFu5gtPg2pwh8E3Y+E7HS3oZmFPlr4DP4=
+	t=1762439610; cv=none; b=VigLvWoFi4D36LBM+zt7Cx/aPLeMs+rAzq/zoSYg3ItO2Or5w4QruSAP7w928pGd3UA5lnO1m15RURX4wkdOfiPYMTJV0hhO6tMD38/E7ZHTeDlBx85v2652JkAtJfasOCj9J8n+FbibTztx2RQBj5xhGlP2yruwPhOn1XdHAF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762437122; c=relaxed/simple;
-	bh=rKY2bK0AiCaFG1wKuE4WNg5TrrK8uAQbugzAEKtEjGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JObqHu/DCcfXSwWbDgDup0IPtn+Zcw0X74mZ+hBoqmzE7bJTDJ4BO1D+LyVMQHNjAGUkZJTew5J7IIUBhSolr+bCPRqN23QeFJbFPHhPt5fhNdOKeQYX2Vjujq0yVXocIW+3duGlJocP+2BW1mhKUoBJkIEbqVrpzSLkMgTYUjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOLKNHf4; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=921jXvPhNFUsoUXpFBGrW/ckGSHwbTodIn243setQK0=; b=iOLKNHf4N02+UMcwfA6AmV+GPJ
-	Pt7E6/zey9vFwGUo35eXoolDEF/egJdwOP9XFGvrY4+yisN7+uvpyrT3bpNttPPqM+ukfSp6wzljH
-	hBe/ABkrgnrx0F+nm6QEc7NGeyyJuaawEqUB3B1LbtlnMLbyJR0e9LQQDAJltuSRtv4h65Ke5HBaB
-	XmOK2lxplrbDuMPSYRGrXXdALg2hdwNYgEXjAp/j08PF9LrNC6sZje3vpcINFpqKOF+mxOWSWOanQ
-	mXcs9uwWKB0UP4e4DTLyisMbodaqIC1IHo45SYPq3IjMbATtufxwDYzEvYHJCSCKDY4VVCN0yZRLu
-	PQS2N+iQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vH0P5-0000000FdVM-3bhy;
-	Thu, 06 Nov 2025 13:51:55 +0000
-Date: Thu, 6 Nov 2025 05:51:55 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v10 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aQyn-_GSL_z3a9to@infradead.org>
-References: <20251105192806.77093-1-cel@kernel.org>
- <20251105192806.77093-5-cel@kernel.org>
- <176242391124.634289.8771352649615589358@noble.neil.brown.name>
- <aQyfgfWu8kPfe1uA@infradead.org>
+	s=arc-20240116; t=1762439610; c=relaxed/simple;
+	bh=0wSHlM09iOhzFBw498LhHwkOc0mjGo5Tmr0ceb2EkkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:References:To:Cc:From:
+	 In-Reply-To:Content-Type; b=M0sBXDZIySaDFCdZs3udkBdBfidqW5z3VVw6xE8rGEoL3M0Xf1YS6YP6a9KT2t2q0+KHwfVCyccDBWpzTzpBuA38EW60EZccbnudiCTxG4ErcQH/qQAgfcQdZndiDeztH1+hZq+7Q87Vr2qo5eruTHD/YemNUMawQI83xIEYe9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8u3gMiq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69460C116D0;
+	Thu,  6 Nov 2025 14:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762439610;
+	bh=0wSHlM09iOhzFBw498LhHwkOc0mjGo5Tmr0ceb2EkkQ=;
+	h=Date:Subject:References:To:Cc:From:In-Reply-To:From;
+	b=U8u3gMiqvXcE1IVfbLOWbXBxDliYkBclkIbFGDvc5MONPdchzOilNcljsqoyDv0hR
+	 JpFKc4yim6QUNcoczIQvUPbIWNt+2xmDspxvTRy6VnWMDFYLZt78gifNCiKPg6D3tD
+	 3sSCfERfI6JAJMfb+SH6Zz0IpQpQYIsRC1eQWcd6IXmcVH+VT3ni9D1iiU5dvLoXJe
+	 Pk+ImE01klQuuCURJ0G2ToPr30+BpZ4Iew2RCXkDLWLDzL4buaPHWSawgTAdfIeF3j
+	 iBbysaiXiwJNxHSAG2qTwxpa3rm5COFBZ2HD0mB1XfvQhz5lRJPAt7rk9QKydaw5v7
+	 GYqlKi1oT/1XQ==
+Message-ID: <37bc1037-37d8-4168-afc9-da8e2d1dd26b@kernel.org>
+Date: Thu, 6 Nov 2025 09:33:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQyfgfWu8kPfe1uA@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
+ greater than high limit total_avail/scale_factor
+References: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+Content-Language: en-US
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Laight <David.Laight@ACULAB.COM>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ speedcracker@hotmail.com
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+X-Forwarded-Message-Id: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 06, 2025 at 05:15:45AM -0800, Christoph Hellwig wrote:
-> On Thu, Nov 06, 2025 at 09:11:51PM +1100, NeilBrown wrote:
-> > > +struct nfsd_write_dio_seg {
-> > > +	struct iov_iter			iter;
-> > > +	bool				use_dio;
-> > 
-> > This is only used to choose which flags to use.
-> > I think it would be neater the have 'flags' here explicitly.
+FYI
+
+https://bugzilla.kernel.org/show_bug.cgi?id=220745
+
+
+-------- Forwarded Message --------
+Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit
+slotsize greater than high limit total_avail/scale_factor
+Date: Thu, 06 Nov 2025 07:29:25 -0500
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike-SPC via Bugspray Bot <bugbot@kernel.org>, cel@kernel.org,
+neilb@ownmail.net, trondmy@kernel.org, linux-nfs@vger.kernel.org,
+anna@kernel.org, neilb@brown.name
+
+On Thu, 2025-11-06 at 11:30 +0000, Mike-SPC via Bugspray Bot wrote:
+> Mike-SPC writes via Kernel.org Bugzilla:
 > 
-> Actually, looking at the grand unified patch now (thanks, this is so
-> much easier to review!), we can just do away with the struct entirely.
-> Just have nfsd_write_dio_iters_init return if direct I/O is possible
-> or not, and do a single vfs_iocb_iter_write on the origin kiocb/iter
-> if not.
+> (In reply to Bugspray Bot from comment #5)
+> > Chuck Lever <cel@kernel.org> replies to comment #4:
+> > 
+> > On 11/5/25 7:25 AM, Mike-SPC via Bugspray Bot wrote:
+> > > Mike-SPC writes via Kernel.org Bugzilla:
+> > > 
+> > > > Have you found a 6.1.y kernel for which the build doesn't fail?
+> > > 
+> > > Yes. Compiling Version 6.1.155 works without problems.
+> > > Versions >= 6.1.156 aren't.
+> > 
+> > My analysis yesterday suggests that, because the nfs4state.c code hasn't
+> > changed, it's probably something elsewhere that introduced this problem.
+> > As we can't reproduce the issue, can you use "git bisect" between
+> > v6.1.155 and v6.1.156 to find the culprit commit?
+> > 
+> > (via https://msgid.link/ab235dbe-7949-4208-a21a-2cdd50347152@kernel.org)
+> 
+> 
+> Yes, your analysis is right (thanks for it).
+> After some investigation, the issue appears to be caused by changes introduced in
+> include/linux/minmax.h.
+> 
+> I verified this by replacing minmax.h in 6.1.156 with the version from 6.1.155,
+> and the kernel then compiles successfully.
+> 
+> The relevant section in the 6.1.156 changelog (https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.156) shows several modifications to minmax.h (notably around __clamp_once() and the use of
+> BUILD_BUG_ON_MSG(statically_true(ulo > uhi), ...)), which seem to trigger a compile-time assertion when building NFSD.
+> 
+> Replacing the updated header with the previous one resolves the issue, so this appears
+> to be a regression introduced by the new clamp() logic.
+> 
+> Could you please advise who is the right person or mailing list to report this issue to
+> (minmax.h maintainers, kernel core, or stable tree)?
+> 
 
-That didn't work out too well, and indeed having flags here seems
-saner.
+I'd let all 3 know, and I'd include the author of the patches that you
+suspect are the problem. They'll probably want to revise the one that's
+a problem.
 
-Chuck, below is an untested incremental patch I did while reviewing
-it.  Besides this flags thing, it adds the actual NFSD_IO_DIRECT
-definition that was missing, but otherwise mostly just folds things
-so that we don't need the extra args structure and thus simplifies
-things quite a bit.
-
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index ea87b42894dd..bdb60ee1f1a4 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -157,6 +157,7 @@ enum {
- 	/* Any new NFSD_IO enum value must be added at the end */
- 	NFSD_IO_BUFFERED,
- 	NFSD_IO_DONTCACHE,
-+	NFSD_IO_DIRECT,
- };
- 
- extern u64 nfsd_io_cache_read __read_mostly;
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index bb94da333d50..8038d8d038f3 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1170,56 +1170,38 @@ static int wait_for_concurrent_writes(struct file *file)
- 
- struct nfsd_write_dio_seg {
- 	struct iov_iter			iter;
--	bool				use_dio;
-+	int				flags;
- };
- 
--struct nfsd_write_dio_args {
--	struct nfsd_file		*nf;
--	int				flags_buffered;
--	int				flags_direct;
--	unsigned int			nsegs;
--	struct nfsd_write_dio_seg	segment[3];
--};
--
--/*
-- * Check if the bvec iterator is aligned for direct I/O.
-- *
-- * bvecs generated from RPC receive buffers are contiguous: After the first
-- * bvec, all subsequent bvecs start at bv_offset zero (page-aligned).
-- * Therefore, only the first bvec is checked.
-- */
--static bool
--nfsd_iov_iter_aligned_bvec(const struct nfsd_file *nf, const struct iov_iter *i)
-+static unsigned long iov_iter_bvec_offset(const struct iov_iter *iter)
- {
--	unsigned int addr_mask = nf->nf_dio_mem_align - 1;
--	const struct bio_vec *bvec = i->bvec;
--
--	return ((unsigned long)(bvec->bv_offset + i->iov_offset) & addr_mask) == 0;
-+	return (unsigned long)(iter->bvec->bv_offset + iter->iov_offset);
- }
- 
- static void
- nfsd_write_dio_seg_init(struct nfsd_write_dio_seg *segment,
- 			struct bio_vec *bvec, unsigned int nvecs,
--			unsigned long total, size_t start, size_t len)
-+			unsigned long total, size_t start, size_t len,
-+			struct kiocb *iocb)
- {
- 	iov_iter_bvec(&segment->iter, ITER_SOURCE, bvec, nvecs, total);
- 	if (start)
- 		iov_iter_advance(&segment->iter, start);
- 	iov_iter_truncate(&segment->iter, len);
--	segment->use_dio = false;
-+	segment->flags = iocb->ki_flags;
- }
- 
--static void
--nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
--			  loff_t offset, unsigned long total,
--			  struct nfsd_write_dio_args *args)
-+static unsigned int
-+nfsd_write_dio_iters_init(struct nfsd_file *nf, struct bio_vec *bvec,
-+		unsigned int nvecs, struct kiocb *iocb, unsigned long total,
-+		struct nfsd_write_dio_seg segments[3])
- {
--	u32 offset_align = args->nf->nf_dio_offset_align;
--	u32 mem_align = args->nf->nf_dio_mem_align;
-+	u32 offset_align = nf->nf_dio_offset_align;
-+	u32 mem_align = nf->nf_dio_mem_align;
-+	loff_t offset = iocb->ki_pos;
- 	loff_t prefix_end, orig_end, middle_end;
- 	size_t prefix, middle, suffix;
--
--	args->nsegs = 0;
-+	unsigned int nsegs = 0;
- 
- 	/*
- 	 * Check if direct I/O is feasible for this write request.
-@@ -1242,87 +1224,80 @@ nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
- 	if (!middle)
- 		goto no_dio;
- 
--	if (prefix) {
--		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
--					nvecs, total, 0, prefix);
--		++args->nsegs;
--	}
-+	if (prefix)
-+		nfsd_write_dio_seg_init(&segments[nsegs++], bvec,
-+					nvecs, total, 0, prefix, iocb);
- 
--	nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec, nvecs,
--				total, prefix, middle);
--	if (!nfsd_iov_iter_aligned_bvec(args->nf,
--					&args->segment[args->nsegs].iter))
-+	nfsd_write_dio_seg_init(&segments[nsegs], bvec, nvecs,
-+				total, prefix, middle, iocb);
-+
-+	/*
-+	 * Check if the bvec iterator is aligned for direct I/O.
-+	 *
-+	 * bvecs generated from RPC receive buffers are contiguous: After the
-+	 * first bvec, all subsequent bvecs start at bv_offset zero
-+	 * (page-aligned).
-+	 * Therefore, only the first bvec is checked.
-+	 */
-+	if (iov_iter_bvec_offset(&segments[nsegs].iter) & (mem_align - 1))
- 		goto no_dio;
--	args->segment[args->nsegs].use_dio = true;
--	++args->nsegs;
-+	segments[nsegs].flags |= IOCB_DIRECT;
-+	nsegs++;
- 
--	if (suffix) {
--		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
--					nvecs, total, prefix + middle, suffix);
--		++args->nsegs;
--	}
-+	if (suffix)
-+		nfsd_write_dio_seg_init(&segments[nsegs++], bvec,
-+					nvecs, total, prefix + middle, suffix,
-+					iocb);
- 
--	return;
-+	return nsegs;
- 
- no_dio:
- 	/*
- 	 * No DIO alignment possible - pack into single non-DIO segment.
--	 * IOCB_DONTCACHE preserves the intent of NFSD_IO_DIRECT.
- 	 */
--	if (args->nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
--		args->flags_buffered |= IOCB_DONTCACHE;
--	nfsd_write_dio_seg_init(&args->segment[0], bvec, nvecs, total,
--				0, total);
--	args->nsegs = 1;
-+	nfsd_write_dio_seg_init(&segments[0], bvec, nvecs, total,
-+				0, total, iocb);
-+	return 1;
- }
- 
--static int
--nfsd_issue_dio_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		     struct kiocb *kiocb, unsigned int nvecs,
--		     unsigned long *cnt, struct nfsd_write_dio_args *args)
-+static noinline_for_stack int
-+nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		  struct nfsd_file *nf, unsigned int nvecs,
-+		  unsigned long *cnt, struct kiocb *kiocb)
- {
--	struct file *file = args->nf->nf_file;
-+	struct file *file = nf->nf_file;
-+	struct nfsd_write_dio_seg segments[3];
-+	unsigned int nsegs = 0, i;
- 	ssize_t host_err;
--	unsigned int i;
- 
--	nfsd_write_dio_iters_init(rqstp->rq_bvec, nvecs, kiocb->ki_pos,
--				  *cnt, args);
-+	nsegs = nfsd_write_dio_iters_init(nf, rqstp->rq_bvec, nvecs,
-+			kiocb, *cnt, segments);
- 
- 	*cnt = 0;
--	for (i = 0; i < args->nsegs; i++) {
--		if (args->segment[i].use_dio) {
--			kiocb->ki_flags = args->flags_direct;
-+	for (i = 0; i < nsegs; i++) {
-+		kiocb->ki_flags = segments[i].flags;
-+		if (kiocb->ki_flags & IOCB_DIRECT) {
- 			trace_nfsd_write_direct(rqstp, fhp, kiocb->ki_pos,
--						args->segment[i].iter.count);
--		} else
--			kiocb->ki_flags = args->flags_buffered;
-+						segments[i].iter.count);
-+		} else if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE) {
-+			/*
-+			 * IOCB_DONTCACHE preserves the intent of
-+			 * NFSD_IO_DIRECT.
-+			 */
-+			kiocb->ki_flags |= IOCB_DONTCACHE;
-+		}
- 
--		host_err = vfs_iocb_iter_write(file, kiocb,
--					       &args->segment[i].iter);
-+		host_err = vfs_iocb_iter_write(file, kiocb, &segments[i].iter);
- 		if (host_err < 0)
- 			return host_err;
- 		*cnt += host_err;
--		if (host_err < args->segment[i].iter.count)
-+		if (host_err < segments[i].iter.count)
- 			break;	/* partial write */
- 	}
- 
- 	return 0;
- }
- 
--static noinline_for_stack int
--nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		  struct nfsd_file *nf, unsigned int nvecs,
--		  unsigned long *cnt, struct kiocb *kiocb)
--{
--	struct nfsd_write_dio_args args;
--
--	args.flags_direct = kiocb->ki_flags | IOCB_DIRECT;
--	args.flags_buffered = kiocb->ki_flags;
--	args.nf = nf;
--
--	return nfsd_issue_dio_write(rqstp, fhp, kiocb, nvecs, cnt, &args);
--}
--
- /**
-  * nfsd_vfs_write - write data to an already-open file
-  * @rqstp: RPC execution context
+Cheers,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
