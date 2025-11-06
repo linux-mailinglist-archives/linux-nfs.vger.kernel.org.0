@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-16131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B28C3BCAC
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 15:37:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30495C3BE05
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 15:52:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9020188DF1C
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 14:35:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AA029504354
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 14:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8301B33F8DD;
-	Thu,  6 Nov 2025 14:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189AE34575F;
+	Thu,  6 Nov 2025 14:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8u3gMiq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9gSgrPP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FAD31A80D;
-	Thu,  6 Nov 2025 14:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66DC34572E
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 14:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762439610; cv=none; b=VigLvWoFi4D36LBM+zt7Cx/aPLeMs+rAzq/zoSYg3ItO2Or5w4QruSAP7w928pGd3UA5lnO1m15RURX4wkdOfiPYMTJV0hhO6tMD38/E7ZHTeDlBx85v2652JkAtJfasOCj9J8n+FbibTztx2RQBj5xhGlP2yruwPhOn1XdHAF4=
+	t=1762440341; cv=none; b=JlSjnzREg6n+zfjXy86s3cKQhDy7ug25U0fnpPrQwT01H40j/WQysjuwIh+os+Bb278tiFNN3BqLyNfNVtowrY5hrbhEAqXssSol+OPDEQWjFQp5q64bZGVVouFTsGmKp3dIad5vI0Z+wYpJeVOLLCVzo4M9oPQfhAEnLiKPck0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762439610; c=relaxed/simple;
-	bh=0wSHlM09iOhzFBw498LhHwkOc0mjGo5Tmr0ceb2EkkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:References:To:Cc:From:
-	 In-Reply-To:Content-Type; b=M0sBXDZIySaDFCdZs3udkBdBfidqW5z3VVw6xE8rGEoL3M0Xf1YS6YP6a9KT2t2q0+KHwfVCyccDBWpzTzpBuA38EW60EZccbnudiCTxG4ErcQH/qQAgfcQdZndiDeztH1+hZq+7Q87Vr2qo5eruTHD/YemNUMawQI83xIEYe9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8u3gMiq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69460C116D0;
-	Thu,  6 Nov 2025 14:33:29 +0000 (UTC)
+	s=arc-20240116; t=1762440341; c=relaxed/simple;
+	bh=Ue+JFIZEW0MWnrC4yU8kWJzfO10DM56MUlKrDzNxwcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j/fMaQ5AaQCD/z4kIFw5Em/4yCfxe9ojRUH21cNJTO3Y1XbIKzv4QsP0gP/cVmUci5Z1asZend042QvpphXc3cx1wjMsvdkM438B80ncDmjHfeH1BawtHKUu5XVPaGz8ucYQ3SToEeDIRtjwfEjEDLUO5t4wUD/vUa90ldETPh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9gSgrPP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8E4C116C6;
+	Thu,  6 Nov 2025 14:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762439610;
-	bh=0wSHlM09iOhzFBw498LhHwkOc0mjGo5Tmr0ceb2EkkQ=;
-	h=Date:Subject:References:To:Cc:From:In-Reply-To:From;
-	b=U8u3gMiqvXcE1IVfbLOWbXBxDliYkBclkIbFGDvc5MONPdchzOilNcljsqoyDv0hR
-	 JpFKc4yim6QUNcoczIQvUPbIWNt+2xmDspxvTRy6VnWMDFYLZt78gifNCiKPg6D3tD
-	 3sSCfERfI6JAJMfb+SH6Zz0IpQpQYIsRC1eQWcd6IXmcVH+VT3ni9D1iiU5dvLoXJe
-	 Pk+ImE01klQuuCURJ0G2ToPr30+BpZ4Iew2RCXkDLWLDzL4buaPHWSawgTAdfIeF3j
-	 iBbysaiXiwJNxHSAG2qTwxpa3rm5COFBZ2HD0mB1XfvQhz5lRJPAt7rk9QKydaw5v7
-	 GYqlKi1oT/1XQ==
-Message-ID: <37bc1037-37d8-4168-afc9-da8e2d1dd26b@kernel.org>
-Date: Thu, 6 Nov 2025 09:33:28 -0500
+	s=k20201202; t=1762440341;
+	bh=Ue+JFIZEW0MWnrC4yU8kWJzfO10DM56MUlKrDzNxwcs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g9gSgrPPR5zbTe2VmCe1gBJT0s9RgxSwSK+pFfs0X2josAyrwIo1s2G6vm5Awb2w+
+	 OWhloEfcGasjWEChhCUQzU1Gyoz4lSvMQJS2wFDAzNe569PK/g4P532McAYhakY61R
+	 9g9mTy2O7C+AQKnbYQYn7MaPFd/s7yMcg4B6OhF5mHr3ttPVNSxLvqzPipyzLulxH8
+	 RM/cIU/uW2ioA5LM0+XYsrFc0gHS3aYw4XBGMV0f9+IFULjftzoHS12xyG9NOQ833f
+	 k69aNV+L8e2XdhYENiEiU0gAPfVMurNyaSI0Q0/MU4MTZEa79v4XaKaV5H+47QUhJ5
+	 Ud8V3BfemHHCw==
+Message-ID: <fd7e5de7-bad7-4f0b-83f8-7e1d7d27cffd@kernel.org>
+Date: Thu, 6 Nov 2025 09:45:39 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,81 +50,53 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Fwd: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
- greater than high limit total_avail/scale_factor
-References: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+Subject: Re: [PATCH v10 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+To: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>
+Cc: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+References: <20251105192806.77093-1-cel@kernel.org>
+ <20251105192806.77093-5-cel@kernel.org>
+ <176242391124.634289.8771352649615589358@noble.neil.brown.name>
+ <aQyfgfWu8kPfe1uA@infradead.org> <aQyn-_GSL_z3a9to@infradead.org>
 Content-Language: en-US
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Laight <David.Laight@ACULAB.COM>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- speedcracker@hotmail.com
 From: Chuck Lever <cel@kernel.org>
 Organization: kernel.org
-In-Reply-To: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
-X-Forwarded-Message-Id: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+In-Reply-To: <aQyn-_GSL_z3a9to@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-FYI
+On 11/6/25 8:51 AM, Christoph Hellwig wrote:
+> On Thu, Nov 06, 2025 at 05:15:45AM -0800, Christoph Hellwig wrote:
+>> On Thu, Nov 06, 2025 at 09:11:51PM +1100, NeilBrown wrote:
+>>>> +struct nfsd_write_dio_seg {
+>>>> +	struct iov_iter			iter;
+>>>> +	bool				use_dio;
+>>>
+>>> This is only used to choose which flags to use.
+>>> I think it would be neater the have 'flags' here explicitly.
+>>
+>> Actually, looking at the grand unified patch now (thanks, this is so
+>> much easier to review!), we can just do away with the struct entirely.
+>> Just have nfsd_write_dio_iters_init return if direct I/O is possible
+>> or not, and do a single vfs_iocb_iter_write on the origin kiocb/iter
+>> if not.
+> 
+> That didn't work out too well, and indeed having flags here seems
+> saner.
+> 
+> Chuck, below is an untested incremental patch I did while reviewing
+> it.  Besides this flags thing, it adds the actual NFSD_IO_DIRECT
+> definition that was missing,
 
-https://bugzilla.kernel.org/show_bug.cgi?id=220745
+It's not missing. This series applies on patches that are already in
+the nfsd-testing branch, which has a patch that defines that constant.
+
+I'm not sure my tooling enables me to specify a particular base commit
+when posting a series. Maybe I can add it to the cover letter.
 
 
--------- Forwarded Message --------
-Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit
-slotsize greater than high limit total_avail/scale_factor
-Date: Thu, 06 Nov 2025 07:29:25 -0500
-From: Jeff Layton <jlayton@kernel.org>
-To: Mike-SPC via Bugspray Bot <bugbot@kernel.org>, cel@kernel.org,
-neilb@ownmail.net, trondmy@kernel.org, linux-nfs@vger.kernel.org,
-anna@kernel.org, neilb@brown.name
-
-On Thu, 2025-11-06 at 11:30 +0000, Mike-SPC via Bugspray Bot wrote:
-> Mike-SPC writes via Kernel.org Bugzilla:
-> 
-> (In reply to Bugspray Bot from comment #5)
-> > Chuck Lever <cel@kernel.org> replies to comment #4:
-> > 
-> > On 11/5/25 7:25 AM, Mike-SPC via Bugspray Bot wrote:
-> > > Mike-SPC writes via Kernel.org Bugzilla:
-> > > 
-> > > > Have you found a 6.1.y kernel for which the build doesn't fail?
-> > > 
-> > > Yes. Compiling Version 6.1.155 works without problems.
-> > > Versions >= 6.1.156 aren't.
-> > 
-> > My analysis yesterday suggests that, because the nfs4state.c code hasn't
-> > changed, it's probably something elsewhere that introduced this problem.
-> > As we can't reproduce the issue, can you use "git bisect" between
-> > v6.1.155 and v6.1.156 to find the culprit commit?
-> > 
-> > (via https://msgid.link/ab235dbe-7949-4208-a21a-2cdd50347152@kernel.org)
-> 
-> 
-> Yes, your analysis is right (thanks for it).
-> After some investigation, the issue appears to be caused by changes introduced in
-> include/linux/minmax.h.
-> 
-> I verified this by replacing minmax.h in 6.1.156 with the version from 6.1.155,
-> and the kernel then compiles successfully.
-> 
-> The relevant section in the 6.1.156 changelog (https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.156) shows several modifications to minmax.h (notably around __clamp_once() and the use of
-> BUILD_BUG_ON_MSG(statically_true(ulo > uhi), ...)), which seem to trigger a compile-time assertion when building NFSD.
-> 
-> Replacing the updated header with the previous one resolves the issue, so this appears
-> to be a regression introduced by the new clamp() logic.
-> 
-> Could you please advise who is the right person or mailing list to report this issue to
-> (minmax.h maintainers, kernel core, or stable tree)?
-> 
-
-I'd let all 3 know, and I'd include the author of the patches that you
-suspect are the problem. They'll probably want to revise the one that's
-a problem.
-
-Cheers,
 -- 
-Jeff Layton <jlayton@kernel.org>
+Chuck Lever
 
