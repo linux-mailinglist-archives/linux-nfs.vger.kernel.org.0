@@ -1,57 +1,59 @@
-Return-Path: <linux-nfs+bounces-16147-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16148-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1886BC3CD3F
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 18:28:27 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F668C3CDF8
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 18:37:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 207284FC096
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 17:23:34 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8297234716C
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 17:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A34634F46A;
-	Thu,  6 Nov 2025 17:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6201B34FF75;
+	Thu,  6 Nov 2025 17:36:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="celARsZo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3Rf8fdu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C9A34F462
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 17:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B17234DB4E
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 17:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762449795; cv=none; b=J6YSy/7akOAIouGez0Fji2bKVzHmSbSDdPhhvkynW5o51yjQ6CtaNsAvhAERj6rCqimdrZLSwRD+sWBd8uC2YBT5VsA3i9ldE7QIPA10e0pzZ0/CM2mnz5xD9yHFiddQ5LnfNkzEnwRrCh6DQNFRzG+3NPzZ8FbTNitAUa53mtA=
+	t=1762450600; cv=none; b=hSyB8hA4PoR58WNmDmKjrshQM6NuGo4k0uGBzKJxjaXd3JhvuQUrKRjyePGaBOAb0s5/39ePrt0oIHBwOs8IvSjQ0Eyg0SO5jkSRm6163V4er0hpEW1biiVMcW2MM84pxJ2K8QboMn9xeLMYtYAV30bKT68gaH95Gb0lfbP5K8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762449795; c=relaxed/simple;
-	bh=P7Nyaol4+rcqIgnbjlRVSn4hbazWwuOiSSy1v2LkPkM=;
+	s=arc-20240116; t=1762450600; c=relaxed/simple;
+	bh=oL98/o0G/Q4jev5evsWm+o0AQoYnwoLYnma1j1hlCCo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D5Qhe0Qcm945tr2bqgpRhQHQdEyIVifUULw8qT2gu7WCiG8FwewOlkSVvkOIw+laZ29Up2i5gbcPz3Ehr9/cuyl4i4Pn/0j5M4vG2DVu5STF4NtDjNIJqyvg6W9mwyJMdfTwnoDmBUVbF3QL3Qkw9W8UJyCSo59PHapXxXVnZa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=celARsZo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86951C116C6;
-	Thu,  6 Nov 2025 17:23:14 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ITHqLazxB0Lh+RrkGYCUX0Znc3gWRoN9NOJUhhR38d7LOyFog5bJHVH4IH0exmCAZMu2kHkLNSzYpFcOrPm9mCZnUMwb3VhJ4lSKoa5/0/EjkTU7NEVgHOq02WV1JmDFN87afamBPFkzM8lNs2DdqwJATaX7Nbbb7g5Pb+DRbkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3Rf8fdu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B4DC4CEFB;
+	Thu,  6 Nov 2025 17:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762449795;
-	bh=P7Nyaol4+rcqIgnbjlRVSn4hbazWwuOiSSy1v2LkPkM=;
+	s=k20201202; t=1762450599;
+	bh=oL98/o0G/Q4jev5evsWm+o0AQoYnwoLYnma1j1hlCCo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=celARsZoUJl4S5f57iR/i0a9r5hGWFLh7oda/gL485YV+Qsf8BI3wpDE/YHbgu9iu
-	 /QhTmkIfCto/z/VSb7K/apwdDnY3VpdxyyS/72TAS4rxfBXxFBy9EBAs0GHI6r6300
-	 0+ntjB3QPhRxi65tAwB7iee9HR+qd0xIUKCnPAPxjFHfgmNiwl44OCwQwQh/btAzU4
-	 J2tE1kS7CHW5lr4xwggMfbnYiVoydqeLPnzOHj1elITGJ2uFi46Q5AyB0DiuaNh9Iw
-	 KUW/fL5xZAgaAg216+HPAA9SnImbnP2q6gZacyZQ1rrMwjPkeEXw2lvbeyLdYaABCm
-	 eOXqkwEbGEypQ==
-Message-ID: <8f4ce8f03919de7e29e2fc601ed9e25f392aa2c3.camel@kernel.org>
-Subject: Re: [PATCH 1/2] locks: Introduce lm_breaker_timedout op to
- lease_manager_operations
+	b=t3Rf8fdupocbnRENwYCnbE1A3OHNqF0mqR55/DIXZVsjH9am4Jh8YJM6FbusmaRSu
+	 rTh76G/ciU2VRR9lMQyDmW9G82FLojRqdkn+Ju0A1wf0D571D4vVxYafYXkknsX4k8
+	 Nz9hPH5JxLwnPh3Jaky4zHXLZ/n52k/LA9mWJSR8bG/twf0WW1K55/cbd7IscaGKhX
+	 xu3tda8tejgHnZgVvnbEX8vbxwTj6DKXCf+811bheE6U/K8JlwVJOUO1b5qed9fDUl
+	 ZzsPE9MWgkHSkncSpprs0OMV/8Gn+iv58nc9rfMPoITW13OzFVxj39WVKAEzWLouRh
+	 wdO21K5pOw/dw==
+Message-ID: <9922e28aaa5197493d1be8e4881ffad7ed726f84.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSD: Fix server hang when there are multiple
+ layout conflicts
 From: Jeff Layton <jlayton@kernel.org>
 To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@ownmail.net,
  	okorniev@redhat.com, tom@talpey.com, hch@lst.de
 Cc: linux-nfs@vger.kernel.org
-Date: Thu, 06 Nov 2025 12:23:13 -0500
-In-Reply-To: <20251106164821.300872-2-dai.ngo@oracle.com>
+Date: Thu, 06 Nov 2025 12:36:38 -0500
+In-Reply-To: <f024e6a7-b6e3-46d4-8c5d-0f00f9700a09@oracle.com>
 References: <20251106164821.300872-1-dai.ngo@oracle.com>
-	 <20251106164821.300872-2-dai.ngo@oracle.com>
+	 <20251106164821.300872-3-dai.ngo@oracle.com>
+	 <f6eb3ffb4dd88e63e27aedcdedf70fb6153defb5.camel@kernel.org>
+	 <f024e6a7-b6e3-46d4-8c5d-0f00f9700a09@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,116 +138,106 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-11-06 at 08:47 -0800, Dai Ngo wrote:
-> Some consumers of the lease_manager_operations need to perform additional
-> actions when a lease break, triggered by a conflict, times out.
+On Thu, 2025-11-06 at 09:17 -0800, Dai Ngo wrote:
+> On 11/6/25 9:14 AM, Jeff Layton wrote:
+> > On Thu, 2025-11-06 at 08:47 -0800, Dai Ngo wrote:
+> > > When a layout conflict triggers a call to __break_lease, the function
+> > > nfsd4_layout_lm_break clears the fl_break_time timeout before sending
+> > > the CB_LAYOUTRECALL. As a result, __break_lease repeatedly restarts
+> > > its loop, waiting indefinitely for the conflicting file lease to be
+> > > released.
+> > >=20
+> > > If the number of lease conflicts matches the number of NFSD threads
+> > > (which defaults to 8), all available NFSD threads become occupied.
+> > > Consequently, there are no threads left to handle incoming requests
+> > > or callback replies, leading to a total hang of the NFS server.
+> > >=20
+> > > This issue is reliably reproducible by running the Git test suite
+> > > on a configuration using SCSI layout.
+> > >=20
+> > > This patch addresses the problem by using the break lease timeout
+> > > and ensures that the unresponsive client is fenced, preventing it fro=
+m
+> > > accessing the data server directly.
+> > >=20
+> > > Fixes: f99d4fbdae67 ("nfsd: add SCSI layout support")
+> > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> > > ---
+> > >   fs/nfsd/nfs4layouts.c | 25 +++++++++++++++++++++----
+> > >   1 file changed, 21 insertions(+), 4 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+> > > index 683bd1130afe..b9b1eb32624c 100644
+> > > --- a/fs/nfsd/nfs4layouts.c
+> > > +++ b/fs/nfsd/nfs4layouts.c
+> > > @@ -747,11 +747,10 @@ static bool
+> > >   nfsd4_layout_lm_break(struct file_lease *fl)
+> > >   {
+> > >   	/*
+> > > -	 * We don't want the locks code to timeout the lease for us;
+> > > -	 * we'll remove it ourself if a layout isn't returned
+> > > -	 * in time:
+> > > +	 * Enforce break lease timeout to prevent starvation of
+> > > +	 * NFSD threads in __break_lease that causes server to
+> > > +	 * hang.
+> > >   	 */
+> > > -	fl->fl_break_time =3D 0;
+> > I guess this ends up with whatever the default fl_break_time is which
+> > is:
+> >=20
+> > 	jiffies + lease_break_time * HZ;
 >=20
-> The NFS server is the first consumer of this operation.
+> Yes, currently is 45 secs which is, I think, is way too long.
 >=20
-> When a pNFS layout conflict occurs, and the lease break times out -
-> resulting in the layout being revoked and its file_lease beeing removed
-> from the flc_lease list, the NFS server must issue a fence operation.
-> This ensures that the client is prevented from accessing the data
-> server after the layout is revoked.
+> >=20
+> > I wonder if this should be based around some multiple of the grace
+> > period instead?
 >=20
-> Fixes: f99d4fbdae67 ("nfsd: add SCSI layout support")
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  Documentation/filesystems/locking.rst |  2 ++
->  fs/locks.c                            | 14 +++++++++++---
->  include/linux/filelock.h              |  2 ++
->  3 files changed, 15 insertions(+), 3 deletions(-)
+> I think the time to allow for recall reply should be in milliseconds.
 >=20
-> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
-stems/locking.rst
-> index 77704fde9845..cd600db6c4b9 100644
-> --- a/Documentation/filesystems/locking.rst
-> +++ b/Documentation/filesystems/locking.rst
-> @@ -403,6 +403,7 @@ prototypes::
->  	bool (*lm_breaker_owns_lease)(struct file_lock *);
->          bool (*lm_lock_expirable)(struct file_lock *);
->          void (*lm_expire_lock)(void);
-> +        void (*lm_breaker_timedout)(struct file_lease *);
-> =20
->  locking rules:
-> =20
-> @@ -416,6 +417,7 @@ lm_change		yes		no			no
->  lm_breaker_owns_lease:	yes     	no			no
->  lm_lock_expirable	yes		no			no
->  lm_expire_lock		no		no			yes
-> +lm_breaker_timedout     no              no                      yes
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  buffer_head
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 04a3f0e20724..1f254e0cd398 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -369,9 +369,15 @@ locks_dispose_list(struct list_head *dispose)
->  	while (!list_empty(dispose)) {
->  		flc =3D list_first_entry(dispose, struct file_lock_core, flc_list);
->  		list_del_init(&flc->flc_list);
-> -		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
-> +		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT)) {
-> +			if (flc->flc_flags & FL_BREAKER_TIMEDOUT) {
-> +				struct file_lease *fl =3D file_lease(flc);
-> +
-> +				if (fl->fl_lmops->lm_breaker_timedout)
-> +					fl->fl_lmops->lm_breaker_timedout(fl);
-> +			}
->  			locks_free_lease(file_lease(flc));
-> -		else
-> +		} else
->  			locks_free_lock(file_lock(flc));
->  	}
->  }
+> -Dai
+>=20
 
-I think this would be fine in the case initial task that calls
-__break_lease(), since that task will also be the one to call
-locks_dispose_list() for the lease (and hence will fence the client). I
-think though that if you have multiple tasks that end up blocked in
-__break_lease(), that the later tasks could end up proceeding before
-the client is properly fenced.
+I don't think that's at all reasonable. We'll be fencing slow machines
+all over the place. Clients expect that they can be out of contact for
+a little while (a lease period) and not lose their state. Fencing them
+on a timeout substantially less than that will violate that
+expectation.
 
-We'll need to ensure that any other breaking tasks block until the
-fence operations are complete.
-
-=20
-> @@ -1482,8 +1488,10 @@ static void time_out_leases(struct inode *inode, s=
-truct list_head *dispose)
->  		trace_time_out_leases(inode, fl);
->  		if (past_time(fl->fl_downgrade_time))
->  			lease_modify(fl, F_RDLCK, dispose);
-> -		if (past_time(fl->fl_break_time))
-> +		if (past_time(fl->fl_break_time)) {
->  			lease_modify(fl, F_UNLCK, dispose);
-> +			fl->c.flc_flags |=3D FL_BREAKER_TIMEDOUT;
-> +		}
->  	}
->  }
-> =20
-> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> index c2ce8ba05d06..06ccd6b66012 100644
-> --- a/include/linux/filelock.h
-> +++ b/include/linux/filelock.h
-> @@ -17,6 +17,7 @@
->  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
->  #define FL_LAYOUT	2048	/* outstanding pNFS layout */
->  #define FL_RECLAIM	4096	/* reclaiming from a reboot server */
-> +#define	FL_BREAKER_TIMEDOUT	8192	/* lease breaker timed out */
-> =20
->  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
-> =20
-> @@ -49,6 +50,7 @@ struct lease_manager_operations {
->  	int (*lm_change)(struct file_lease *, int, struct list_head *);
->  	void (*lm_setup)(struct file_lease *, void **);
->  	bool (*lm_breaker_owns_lease)(struct file_lease *);
-> +	void (*lm_breaker_timedout)(struct file_lease *fl);
->  };
-> =20
->  struct lock_manager {
+> >=20
+> > >   	nfsd4_recall_file_layout(fl->c.flc_owner);
+> > >   	return false;
+> > >   }
+> > > @@ -764,9 +763,27 @@ nfsd4_layout_lm_change(struct file_lease *onlist=
+, int arg,
+> > >   	return lease_modify(onlist, arg, dispose);
+> > >   }
+> > >  =20
+> > > +static void nfsd_layout_breaker_timedout(struct file_lease *fl)
+> > > +{
+> > > +	struct nfs4_layout_stateid *ls =3D fl->c.flc_owner;
+> > > +	struct nfsd_file *nf;
+> > > +
+> > > +	rcu_read_lock();
+> > > +	nf =3D nfsd_file_get(ls->ls_file);
+> > > +	rcu_read_unlock();
+> > > +	if (nf) {
+> > > +		int type =3D ls->ls_layout_type;
+> > > +
+> > > +		if (nfsd4_layout_ops[type]->fence_client)
+> > > +			nfsd4_layout_ops[type]->fence_client(ls, nf);
+> > > +		nfsd_file_put(nf);
+> > > +	}
+> > > +}
+> > > +
+> > >   static const struct lease_manager_operations nfsd4_layouts_lm_ops =
+=3D {
+> > >   	.lm_break	=3D nfsd4_layout_lm_break,
+> > >   	.lm_change	=3D nfsd4_layout_lm_change,
+> > > +	.lm_breaker_timedout	=3D nfsd_layout_breaker_timedout,
+> > >   };
+> > >  =20
+> > >   int
 
 --=20
 Jeff Layton <jlayton@kernel.org>
