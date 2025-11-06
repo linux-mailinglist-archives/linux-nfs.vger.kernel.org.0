@@ -1,272 +1,403 @@
-Return-Path: <linux-nfs+bounces-16119-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16120-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E66C6C39BA3
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 10:04:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BB8C3A37B
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 11:25:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C11A7189ED51
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 09:03:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EFED461D6E
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 10:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDEC309EFD;
-	Thu,  6 Nov 2025 09:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2500A30DEDE;
+	Thu,  6 Nov 2025 10:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Rz8HkzgU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Mm16pD++"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9A8309DDF
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 09:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5351430E0E2
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 10:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762419771; cv=none; b=sWNrzLlFNtcIZU0sezN5kBnFIBYDWIRKi0uSOfNAV5dDS9OmISVAYDkKZrMizJBDyGsWfjHTWp3JHZHrIhP3LxIwzyTuvz49MvT+vqmJMHOUBthrlnuNhNs1d/5QE5QxxtNH2ohf5/hMHqBZXl+E5V1IKSJRtrwuws4ov/8zKHc=
+	t=1762423923; cv=none; b=P7lzsbF59RpZwVuWUjD4FoB8l5/HdqOrYAeef6MC0p9HANZrmot7sa8cgG4yjoYK45XIMBiOaunUuD4/On9QPgz1lFShVT8AE4VN24WxHAAO+TePiwYjmqSPQkWGv5UMW+5lTOp9yGI9M9TzXtob7jD7P/xdbfH1YG2q5eMU/Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762419771; c=relaxed/simple;
-	bh=Rr7rNnPEzbOTdtYIuAcXQ36F1YEIBKRcDnXlgES33XM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=PtYn9NWP/bWl8kCAGKmZwDE6D7GUHIgxt6Tzai9CgTLI/Yd3nZENGB+eZZ8DMZcjse7sG04XTmNgt6zbWf/sDnUykOqGgmj9fZgg0lqXxtt02sxmLkA8UIqks9t6vgXFIiJ5ZOobh5ftslVrb5WpAAhnXT/ARUh5doTNwZVlpLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-43328dcdac1so4248895ab.2
-        for <linux-nfs@vger.kernel.org>; Thu, 06 Nov 2025 01:02:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762419767; x=1763024567;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r8E0+ouzlVdoTElswHiPK8yFC6riJLd5SyKVj4+Fe4w=;
-        b=I+YufQhBttTcRlOKXpTICXUJkFpetC2JDGY6l3J89GLRN3QXUy00Ufqc9NhOnxRfKd
-         cXqT112gnAM4oJGeh/IoLJnIUU3OQclXijTd3iY0levdOUer3+38hUAuPf2fR9FB4KPc
-         0GSEPgCvlGbu6iaDU7T5beo3bdjqjk8qgeneh4sH2O/PfgGg/BA0jmg3wVa+6rBvMDr+
-         OmXAokxf7JcxAB/cunIoHJRNKfOYuDCk4fOydYhs/AycH8W/DqVChePfFHHe0aNJnPsU
-         UtKtuZjWnJXQ4eFAvxPYk5S3lu+i/Faqzua2tmRLpRkgVnkponCZaUE3o6Y058okzsJu
-         3uWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCdeCu+dd4yKXNgPcs0NRfUPj20KMrfu097ywJ70SeiiaGRgW2qb0WCRahCqu0jjZKPBIJP9QxfPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDQwHc1upFyZMBYUPBgO3Vc0n/555hXPv4rOkz3GlIwmL2mCX5
-	ttcmYYBn8TS4Jx1LDJ/9IpPjSwSBQ90sBkCD407dFk9cx/GpsZPB3biUCp/ws5QY2KZKZbV+W52
-	ztlMltNSqAknsGLiTvYfcYrk2a22CWgus4d8GYe64wUU4OMA8t1Nvkpi4HkY=
-X-Google-Smtp-Source: AGHT+IG2+XO9mtVu991pXvlz+VZb8KzNDnm0wvskVW9qOHFFxk5SFup8IMdJP1K43vqqIYpPzRVA5JUpKoQ5O6f2XWPv7TKHUvKc
+	s=arc-20240116; t=1762423923; c=relaxed/simple;
+	bh=ZaYqEkbqzyh1LLZ/MBP93xhwxnRnrjtF5DQjQiCdkJ8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=AfV1dO+xh5amVfpAi2jKGiJbwLEmXsWvxCi4Fsqu9Prpidw959D515xFWQRRUzby1wDvjTCu8LoQ3soQ5lFJ5U2sly1iD+Up36P67fdkEULmeWuuLS2xDqfoe3X8mxhCZXQa4R3o5OTWJL06LfTCxnKOaxXwbJ2Yen0blDdbNe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Rz8HkzgU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Mm16pD++; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 460177A01A9;
+	Thu,  6 Nov 2025 05:11:59 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 06 Nov 2025 05:11:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762423919; x=1762510319; bh=Uc2Vl4ndbuEgFDhc1bV85pJd9WWNvcYG/75
+	zy0N36Rw=; b=Rz8HkzgUBf0AUjoajCPARamjzvtQahEkXC+czLwG+oDbUxUkMU7
+	mLI17prRNwHBhXKCvyUAlglhXSvG/OUKQl/PAoYCZNAlelEyUmQpdiiIqzsbdWXs
+	yHj4yfvAcf6izg0M4Qcf6a1UVWOcZKP3E0sm5lZQ62DcWhbGnO4gshRc9C1GMzrs
+	DbRxU4/aP1WrtpS1HYacg81SXAjyZrwxN5DvOK/DJKUJLmXAoXL5L5rKk6Dm9Xwn
+	UL87f2LPKIOIssRDWXO1fpJxUw8GcJGKUIbtHya+YHRaZJnAAo7lbVXvmOr0coHU
+	Th44/cYIouPjF7crx5xOKRcqDA71nKwDtHw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762423919; x=
+	1762510319; bh=Uc2Vl4ndbuEgFDhc1bV85pJd9WWNvcYG/75zy0N36Rw=; b=M
+	m16pD++pwhHwp8beHJ2N9i1hbTw9t4/NQ9bV5DOwd/aP/mjdQi4FMRP2UwjMSHY/
+	JikI7xTOpT3TG/sbBMNFYIg/Ug5VTEQU9ybc+7Iv47kHQ+858PbVlneWPMrDf0hx
+	pEiKCfbCxWS3gQk2X0v/z9I/VQta5eLdV24ZUrzzbIWDyZFnFUKA8LbIwEosD7Jw
+	kRCtgUkOJ4Qg6n3eS9Wv7F9LLZmLNjNL9foR9IT1P0Xd9KcwtSZqqDLpKVoHV4M4
+	a03VVaMYkP6q593YQqbeMo9bRTfMVvQ92ZcXasEef54pqJNFOUCRbO0eTRc/KPyO
+	ZhiH27qrgX4Ll8mwv4I8w==
+X-ME-Sender: <xms:bnQMadrWxFRrIgRXPrIh5fpqjq8hUQSS6p_q8otMdDMtpw_u2tHiFQ>
+    <xme:bnQMaetROJyKCnqoNf8egO05DyDOPz_n3baw_Lcmc_1hhv852272sxzRUjRAue-Ma
+    r0yGZtiPwXX28cl983TLd9GgQeynhBF7BKeG33MBaMVOk_TQQ>
+X-ME-Received: <xmr:bnQMaQbBxP8B5OlbqEMi7M4Dr3boxfUaslivIyJ7zp3UX6qsoXDLTc0c0spjGOswmOAnNLd_L9P8akBr2PzDcdOys8WNEK2-aYrFvbDi9prV>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeeiheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
+    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
+    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepshhnihhtiigvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjh
+    hlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:bnQMaVaxokbSQj5SAFtR0pGUHHKgrH8l2-ihB0aq9dbhvXG0XoJy5w>
+    <xmx:bnQMaRlUH3aBntfknEFcxkrrTF1Oq8mrqAbEy3yC4S2bTE806sRnFg>
+    <xmx:bnQMaY1CqYZMUUW3dqGYz9WXuuJZSJdFZlVGY1fcz91pMA5N_S2Y-w>
+    <xmx:bnQMaZ1Um4rtHFLoI3bz73iPbt_tyXbB-Yx_dNzCqGOd0Z_vaZP52w>
+    <xmx:b3QMaYtywMr4bvUT8Isx7ONTKuxosNrCIt0pIEYRNvbNZBaRscAngz8e>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Nov 2025 05:11:56 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:330e:b0:430:c90d:10ae with SMTP id
- e9e14a558f8ab-433407dfcc7mr95789415ab.32.1762419767538; Thu, 06 Nov 2025
- 01:02:47 -0800 (PST)
-Date: Thu, 06 Nov 2025 01:02:47 -0800
-In-Reply-To: <20251106005333.956321-1-neilb@ownmail.net>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <690c6437.050a0220.baf87.0083.GAE@google.com>
-Subject: [syzbot ci] Re: Create and use APIs to centralise locking for
- directory ops.
-From: syzbot ci <syzbot+ci853f3070c3383748@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, brauner@kernel.org, cem@kernel.org, 
-	chuck.lever@oracle.com, clm@fb.com, code@tyhicks.com, dai.ngo@oracle.com, 
-	dakr@kernel.org, dhowells@redhat.com, djwong@kernel.org, dsterba@suse.com, 
-	ecryptfs@vger.kernel.org, gregkh@linuxfoundation.org, jack@suse.cz, 
-	jlayton@kernel.org, jmorris@namei.org, john.johansen@canonical.com, 
-	linkinjeon@kernel.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	lorenzo.stoakes@oracle.com, miklos@szeredi.hu, mjguzik@gmail.com, 
-	neilb@ownmail.net, netfs@lists.linux.dev, okorniev@redhat.com, 
-	omosnace@redhat.com, paul@paul-moore.com, rafael@kernel.org, 
-	selinux@vger.kernel.org, senozhatsky@chromium.org, serge@hallyn.com, 
-	smfrench@gmail.com, stefanb@linux.ibm.com, stephen.smalley.work@gmail.com, 
-	viro@zeniv.linux.org.uk
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Mike Snitzer" <snitzer@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v10 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+In-reply-to: <20251105192806.77093-5-cel@kernel.org>
+References: <20251105192806.77093-1-cel@kernel.org>,
+ <20251105192806.77093-5-cel@kernel.org>
+Date: Thu, 06 Nov 2025 21:11:51 +1100
+Message-id: <176242391124.634289.8771352649615589358@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-syzbot ci has tested the following series
+On Thu, 06 Nov 2025, Chuck Lever wrote:
+> From: Mike Snitzer <snitzer@kernel.org>
+>=20
+> When NFSD_IO_DIRECT is selected via the
+> /sys/kernel/debug/nfsd/io_cache_write experimental tunable, split
+> incoming unaligned NFS WRITE requests into a prefix, middle and
+> suffix segment, as needed. The middle segment is now DIO-aligned and
+> the prefix and/or suffix are unaligned. Synchronous buffered IO is
+> used for the unaligned segments, and IOCB_DIRECT is used for the
+> middle DIO-aligned extent.
+>=20
+> Although IOCB_DIRECT avoids the use of the page cache, by itself it
+> doesn't guarantee data durability. For UNSTABLE WRITE requests,
+> durability is obtained by a subsequent NFS COMMIT request.
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Co-developed-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/debugfs.c |   1 +
+>  fs/nfsd/trace.h   |   1 +
+>  fs/nfsd/vfs.c     | 170 ++++++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 168 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 00eb1ecef6ac..7f44689e0a53 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -108,6 +108,7 @@ static int nfsd_io_cache_write_set(void *data, u64 val)
+>  	switch (val) {
+>  	case NFSD_IO_BUFFERED:
+>  	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+>  		nfsd_io_cache_write =3D val;
+>  		break;
+>  	default:
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index bfd41236aff2..ad74439d0105 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -469,6 +469,7 @@ DEFINE_NFSD_IO_EVENT(read_io_done);
+>  DEFINE_NFSD_IO_EVENT(read_done);
+>  DEFINE_NFSD_IO_EVENT(write_start);
+>  DEFINE_NFSD_IO_EVENT(write_opened);
+> +DEFINE_NFSD_IO_EVENT(write_direct);
+>  DEFINE_NFSD_IO_EVENT(write_io_done);
+>  DEFINE_NFSD_IO_EVENT(write_done);
+>  DEFINE_NFSD_IO_EVENT(commit_start);
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f3be36b960e5..8158e129a560 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1254,6 +1254,161 @@ static int wait_for_concurrent_writes(struct file *=
+file)
+>  	return err;
+>  }
+> =20
+> +struct nfsd_write_dio_seg {
+> +	struct iov_iter			iter;
+> +	bool				use_dio;
 
-[v5] Create and use APIs to centralise locking for directory ops.
-https://lore.kernel.org/all/20251106005333.956321-1-neilb@ownmail.net
-* [PATCH v5 01/14] debugfs: rename end_creating() to debugfs_end_creating()
-* [PATCH v5 02/14] VFS: introduce start_dirop() and end_dirop()
-* [PATCH v5 03/14] VFS: tidy up do_unlinkat()
-* [PATCH v5 04/14] VFS/nfsd/cachefiles/ovl: add start_creating() and end_creating()
-* [PATCH v5 05/14] VFS/nfsd/cachefiles/ovl: introduce start_removing() and end_removing()
-* [PATCH v5 06/14] VFS: introduce start_creating_noperm() and start_removing_noperm()
-* [PATCH v5 07/14] VFS: introduce start_removing_dentry()
-* [PATCH v5 08/14] VFS: add start_creating_killable() and start_removing_killable()
-* [PATCH v5 09/14] VFS/nfsd/ovl: introduce start_renaming() and end_renaming()
-* [PATCH v5 10/14] VFS/ovl/smb: introduce start_renaming_dentry()
-* [PATCH v5 11/14] Add start_renaming_two_dentries()
-* [PATCH v5 12/14] ecryptfs: use new start_creating/start_removing APIs
-* [PATCH v5 13/14] VFS: change vfs_mkdir() to unlock on failure.
-* [PATCH v5 14/14] VFS: introduce end_creating_keep()
+This is only used to choose which flags to use.
+I think it would be neater the have 'flags' here explicitly.
 
-and found the following issues:
-* WARNING: lock held when returning to user space in start_creating
-* possible deadlock in mnt_want_write
+> +};
+> +
+> +struct nfsd_write_dio_args {
+> +	struct nfsd_file		*nf;
+> +	int				flags_buffered;
+> +	int				flags_direct;
 
-Full report is available here:
-https://ci.syzbot.org/series/4f406e4d-6aba-457a-b9c1-21f4407176a0
+The difference between these two is that the latter has IOCB_DIRECT.
+So we don't need both.  Just have 'flags' and when we currently use
+"flags_direct", use "flag | IOCB_DIRECT" instead.
 
-***
+> +	unsigned int			nsegs;
+> +	struct nfsd_write_dio_seg	segment[3];
+> +};
+> +
+> +/*
+> + * Check if the bvec iterator is aligned for direct I/O.
+> + *
+> + * bvecs generated from RPC receive buffers are contiguous: After the first
+> + * bvec, all subsequent bvecs start at bv_offset zero (page-aligned).
+> + * Therefore, only the first bvec is checked.
+> + */
+> +static bool
+> +nfsd_iov_iter_aligned_bvec(const struct nfsd_file *nf, const struct iov_it=
+er *i)
+> +{
+> +	unsigned int addr_mask =3D nf->nf_dio_mem_align - 1;
+> +	const struct bio_vec *bvec =3D i->bvec;
+> +
+> +	return ((unsigned long)(bvec->bv_offset + i->iov_offset) & addr_mask) =3D=
+=3D 0;
+> +}
+> +
+> +static void
+> +nfsd_write_dio_seg_init(struct nfsd_write_dio_seg *segment,
+> +			struct bio_vec *bvec, unsigned int nvecs,
+> +			unsigned long total, size_t start, size_t len)
 
-WARNING: lock held when returning to user space in start_creating
+If we passed 'args' in here then:
+ - we wouldn't need segment or bvec
+ - we could increment nsegs in one place
+ - we would have direct access to 'flags'.
 
-tree:      torvalds
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
-base:      6146a0f1dfae5d37442a9ddcba012add260bceb0
-arch:      amd64
-compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-config:    https://ci.syzbot.org/builds/49013fb4-56ed-423c-8e15-252d65d5c1b4/config
-C repro:   https://ci.syzbot.org/findings/403597e5-81d3-4a9e-8d43-cf15c00b3265/c_repro
-syz repro: https://ci.syzbot.org/findings/403597e5-81d3-4a9e-8d43-cf15c00b3265/syz_repro
+possibly a 'direct' flag could be passed in which causes IOCB_DIRECT to
+be set, and triggers failure if DIRECT isn't possible.
 
-UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
-overlayfs: upper fs needs to support d_type.
-overlayfs: upper fs does not support tmpfile.
-================================================
-WARNING: lock held when returning to user space!
-syzkaller #0 Not tainted
-------------------------------------------------
-syz.0.17/5964 is leaving the kernel with locks still held!
-1 lock held by syz.0.17/5964:
- #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
- #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
- #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
- #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
-
-
-***
-
-possible deadlock in mnt_want_write
-
-tree:      torvalds
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
-base:      6146a0f1dfae5d37442a9ddcba012add260bceb0
-arch:      amd64
-compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-config:    https://ci.syzbot.org/builds/49013fb4-56ed-423c-8e15-252d65d5c1b4/config
-syz repro: https://ci.syzbot.org/findings/7d1f626d-9979-4c5b-b36b-5616a983b0ac/syz_repro
-
-======================================================
-WARNING: possible circular locking dependency detected
-syzkaller #0 Not tainted
-------------------------------------------------------
-syz.0.17/6011 is trying to acquire lock:
-ffff88810943c420
- (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:508
-
-but task is already holding lock:
-ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
-ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
-ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
-ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}:
-       reacquire_held_locks+0x127/0x1d0 kernel/locking/lockdep.c:5385
-       __lock_release kernel/locking/lockdep.c:5574 [inline]
-       lock_release+0x1b4/0x3e0 kernel/locking/lockdep.c:5889
-       up_write+0x2d/0x420 kernel/locking/rwsem.c:1642
-       inode_unlock include/linux/fs.h:990 [inline]
-       end_dirop fs/namei.c:2818 [inline]
-       end_creating include/linux/namei.h:125 [inline]
-       vfs_mkdir+0x111/0x570 fs/namei.c:5037
-       do_mkdirat+0x247/0x5e0 fs/namei.c:5058
-       __do_sys_mkdir fs/namei.c:5080 [inline]
-       __se_sys_mkdir fs/namei.c:5078 [inline]
-       __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (sb_writers#12){.+.+}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3165 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3284 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3908
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
-       percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
-       percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
-       __sb_start_write include/linux/fs.h:1916 [inline]
-       sb_start_write+0x4d/0x1c0 include/linux/fs.h:2052
-       mnt_want_write+0x41/0x90 fs/namespace.c:508
-       filename_create+0x14f/0x360 fs/namei.c:4785
-       do_mkdirat+0x32c/0x5e0 fs/namei.c:5050
-       __do_sys_mkdir fs/namei.c:5080 [inline]
-       __se_sys_mkdir fs/namei.c:5078 [inline]
-       __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&type->i_mutex_dir_key#5/1);
-                               lock(sb_writers#12);
-                               lock(&type->i_mutex_dir_key#5/1);
-  rlock(sb_writers#12);
-
- *** DEADLOCK ***
-
-1 lock held by syz.0.17/6011:
- #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
- #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
- #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
- #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 6011 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2043
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2175
- check_prev_add kernel/locking/lockdep.c:3165 [inline]
- check_prevs_add kernel/locking/lockdep.c:3284 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3908
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
- percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
- percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
- __sb_start_write include/linux/fs.h:1916 [inline]
- sb_start_write+0x4d/0x1c0 include/linux/fs.h:2052
- mnt_want_write+0x41/0x90 fs/namespace.c:508
- filename_create+0x14f/0x360 fs/namei.c:4785
- do_mkdirat+0x32c/0x5e0 fs/namei.c:5050
- __do_sys_mkdir fs/namei.c:5080 [inline]
- __se_sys_mkdir fs/namei.c:5078 [inline]
- __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fdc9a98efc9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fdc9b79b038 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-RAX: ffffffffffffffda RBX: 00007fdc9abe5fa0 RCX: 00007fdc9a98efc9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00002000000008c0
-RBP: 00007fdc9aa11f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fdc9abe6038 R14: 00007fdc9abe5fa0 R15: 00007ffe4d481c38
- </TASK>
+I'm not certain all the above changes are a certain win, but I ask you
+to consider them and see if you think it makes the code cleaner.
 
 
-***
+> +{
+> +	iov_iter_bvec(&segment->iter, ITER_SOURCE, bvec, nvecs, total);
+> +	if (start)
+> +		iov_iter_advance(&segment->iter, start);
+> +	iov_iter_truncate(&segment->iter, len);
+> +	segment->use_dio =3D false;
+> +}
+> +
+> +static void
+> +nfsd_write_dio_iters_init(struct bio_vec *bvec, unsigned int nvecs,
+> +			  loff_t offset, unsigned long total,
+> +			  struct nfsd_write_dio_args *args)
+> +{
+> +	u32 offset_align =3D args->nf->nf_dio_offset_align;
+> +	u32 mem_align =3D args->nf->nf_dio_mem_align;
+> +	loff_t prefix_end, orig_end, middle_end;
+> +	size_t prefix, middle, suffix;
+> +
+> +	args->nsegs =3D 0;
+> +
+> +	/*
+> +	 * Check if direct I/O is feasible for this write request.
+> +	 * If alignments are not available, the write is too small,
+> +	 * or no alignment can be found, fall back to buffered I/O.
+> +	 */
+> +	if (unlikely(!mem_align || !offset_align) ||
+> +	    unlikely(total < max(offset_align, mem_align)))
+> +		goto no_dio;
+> +
+> +	/* Calculate aligned segments */
+> +	prefix_end =3D round_up(offset, offset_align);
+> +	orig_end =3D offset + total;
+> +	middle_end =3D round_down(orig_end, offset_align);
+> +
+> +	prefix =3D prefix_end - offset;
+> +	middle =3D middle_end - prefix_end;
+> +	suffix =3D orig_end - middle_end;
+> +
+> +	if (!middle)
+> +		goto no_dio;
+> +
+> +	if (prefix) {
+> +		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
+> +					nvecs, total, 0, prefix);
+> +		++args->nsegs;
+> +	}
+> +
+> +	nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec, nvecs,
+> +				total, prefix, middle);
+> +	if (!nfsd_iov_iter_aligned_bvec(args->nf,
+> +					&args->segment[args->nsegs].iter))
+> +		goto no_dio;
+> +	args->segment[args->nsegs].use_dio =3D true;
+> +	++args->nsegs;
+> +
+> +	if (suffix) {
+> +		nfsd_write_dio_seg_init(&args->segment[args->nsegs], bvec,
+> +					nvecs, total, prefix + middle, suffix);
+> +		++args->nsegs;
+> +	}
+> +
+> +	return;
+> +
+> +no_dio:
+> +	/*
+> +	 * No DIO alignment possible - pack into single non-DIO segment.
+> +	 * IOCB_DONTCACHE preserves the intent of NFSD_IO_DIRECT.
+> +	 */
+> +	if (args->nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> +		args->flags_buffered |=3D IOCB_DONTCACHE;
+> +	nfsd_write_dio_seg_init(&args->segment[0], bvec, nvecs, total,
+> +				0, total);
+> +	args->nsegs =3D 1;
+> +}
+> +
+> +static int
+> +nfsd_issue_dio_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		     struct kiocb *kiocb, unsigned int nvecs,
+> +		     unsigned long *cnt, struct nfsd_write_dio_args *args)
+> +{
+> +	struct file *file =3D args->nf->nf_file;
+> +	ssize_t host_err;
+> +	unsigned int i;
+> +
+> +	nfsd_write_dio_iters_init(rqstp->rq_bvec, nvecs, kiocb->ki_pos,
+> +				  *cnt, args);
+> +
+> +	*cnt =3D 0;
+> +	for (i =3D 0; i < args->nsegs; i++) {
+> +		if (args->segment[i].use_dio) {
+> +			kiocb->ki_flags =3D args->flags_direct;
+> +			trace_nfsd_write_direct(rqstp, fhp, kiocb->ki_pos,
+> +						args->segment[i].iter.count);
+> +		} else
+> +			kiocb->ki_flags =3D args->flags_buffered;
 
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
+Why do we trace the direct write, but not the buffered write?
 
----
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
+Thanks,
+NeilBrown
+
+
+
+> +
+> +		host_err =3D vfs_iocb_iter_write(file, kiocb,
+> +					       &args->segment[i].iter);
+> +		if (host_err < 0)
+> +			return host_err;
+> +		*cnt +=3D host_err;
+> +		if (host_err < args->segment[i].iter.count)
+> +			break;	/* partial write */
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static noinline_for_stack int
+> +nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		  struct nfsd_file *nf, unsigned int nvecs,
+> +		  unsigned long *cnt, struct kiocb *kiocb)
+> +{
+> +	struct nfsd_write_dio_args args;
+> +
+> +	args.flags_direct =3D kiocb->ki_flags | IOCB_DIRECT;
+> +	args.flags_buffered =3D kiocb->ki_flags;
+> +	args.nf =3D nf;
+> +
+> +	return nfsd_issue_dio_write(rqstp, fhp, kiocb, nvecs, cnt, &args);
+> +}
+> +
+>  /**
+>   * nfsd_vfs_write - write data to an already-open file
+>   * @rqstp: RPC execution context
+> @@ -1329,25 +1484,32 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	}
+> =20
+>  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+> -	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +
+>  	since =3D READ_ONCE(file->f_wb_err);
+>  	if (verf)
+>  		nfsd_copy_write_verifier(verf, nn);
+> =20
+>  	switch (nfsd_io_cache_write) {
+> -	case NFSD_IO_BUFFERED:
+> +	case NFSD_IO_DIRECT:
+> +		host_err =3D nfsd_direct_write(rqstp, fhp, nf, nvecs,
+> +					     cnt, &kiocb);
+>  		break;
+>  	case NFSD_IO_DONTCACHE:
+>  		if (file->f_op->fop_flags & FOP_DONTCACHE)
+>  			kiocb.ki_flags |=3D IOCB_DONTCACHE;
+> +		fallthrough;
+> +	case NFSD_IO_BUFFERED:
+> +		iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+> +		host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
+> +		if (host_err < 0)
+> +			break;
+> +		*cnt =3D host_err;
+>  		break;
+>  	}
+> -	host_err =3D vfs_iocb_iter_write(file, &kiocb, &iter);
+>  	if (host_err < 0) {
+>  		commit_reset_write_verifier(nn, rqstp, host_err);
+>  		goto out_nfserr;
+>  	}
+> -	*cnt =3D host_err;
+>  	nfsd_stats_io_write_add(nn, exp, *cnt);
+>  	fsnotify_modify(file);
+>  	host_err =3D filemap_check_wb_err(file->f_mapping, since);
+> --=20
+> 2.51.0
+>=20
+>=20
+
 
