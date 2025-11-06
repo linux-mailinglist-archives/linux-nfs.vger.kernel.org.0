@@ -1,92 +1,86 @@
-Return-Path: <linux-nfs+bounces-16136-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16137-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38254C3C64D
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 17:26:53 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E486CC3C839
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 17:40:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 723B63B437C
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 16:21:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B3485029A3
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 16:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D4DF2C0303;
-	Thu,  6 Nov 2025 16:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9C233491DE;
+	Thu,  6 Nov 2025 16:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GARey9jq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rM75byoG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FF8242D7D
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 16:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837CD2253EC
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 16:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762445650; cv=none; b=a+6NFZcHd1HZXjjFXcMpPDJnytYXIvfFRMXH8AwzeNw1y3RI13kSp5zYdtJgfwI3v7gvrfEt/uzc9NCMNjCe5uVQUlN/C3pVedcyzF/7BN7lZMLhRXoC9zJ0apVxTRJ4xrDhZDE4+NpnXhjKf+/jSjVjDryBxsedUs6HpyrL75Y=
+	t=1762446628; cv=none; b=srC3iB8GaMVf5xbz3fCUMyRe3FcbTBBsHHWmtWVpBVb5UfGJn88tnq1QQMbP3pV/MN7FPB9JTgkzINWQrcNdtgpw9PV5MlLYmx82robrpcbAM7C5W0GGRJ3JngW4JemqZGugx/5hG1PnpyIPO1oPQymuSIBQfg+kGQCTntDlPzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762445650; c=relaxed/simple;
-	bh=//ygh+Lnh6YkRKsfaSoeDDoyLhqJV/sfeYnGCaSlp3s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGPmzYSO6EgmBhXh1TYsSZ2ovoqf23twOgUNGS9rQwaw0s6GBUDaalS71Hs0CnDfFcjjo4Xf7PrHh1JNP1c44dxHilNwkyf9IjESNtDKsIpHPsneeGRk8sI5tqZSREvy0a2DL0VTS1i2tD+wVqUid4SAjHa8fxlJAHhDYIlVyTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GARey9jq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCFCC116B1;
-	Thu,  6 Nov 2025 16:14:07 +0000 (UTC)
+	s=arc-20240116; t=1762446628; c=relaxed/simple;
+	bh=xVfPQ4RI3zVVsRrmGXA+bvyAwdktjvLB+m4+ZLkfCPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UXBb3jjXzZkQHWnEqiSIpwj+Ns+gI49/GkwqRX30YhAo89N9FkzLl8m1GXS42YB3SH5hWpyBjGpJ20WoMOGSFmO2Ra11jrbfJsTJohSPmf3Yz99mul2c+ianju6p320zrzJRZX5bCBwCVCgueg2ejdsUTm0LbvuCP5WLCdefyxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rM75byoG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423DBC4CEF7;
+	Thu,  6 Nov 2025 16:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762445648;
-	bh=//ygh+Lnh6YkRKsfaSoeDDoyLhqJV/sfeYnGCaSlp3s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GARey9jq9HrU0FZpzadqa0VUB8qQ77pEkL12Ubfv+XiwIqOoLU2Ve2y6prcJmGQXi
-	 rm6DcBHUV5k2mD4tkoQ5b08p8YOxQW6Y66SG3k7Jo+WwzNOlozE5S0EZHWQoQSvdnl
-	 1d8yjDF+WHxUD76eYIhWgvYVN+NGriYYxpu/B50Z5+wfRCkp2KR+E/9nRZYWv4i6vS
-	 hD2ny4OXFrptMm/C+nnYQfWulpVQJSYAAs7I6JIcgqyo4bdZp/jMoHVfQQADrZPz30
-	 Ssij+r/K6bF6AquMtmjKuG/w7EEhcHrMO4390r67QF+vz1lO4e396bfycV7zis3fAA
-	 rFziWuNItlZZw==
-From: Chuck Lever <cel@kernel.org>
-To: jlayton@kernel.org,
-	neilb@ownmail.net,
-	okorniev@redhat.com,
-	tom@talpey.com,
-	hch@lst.de,
-	Dai Ngo <dai.ngo@oracle.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] NFSD: Fix problem with nfsd4_scsi_fence_client
-Date: Thu,  6 Nov 2025 11:14:04 -0500
-Message-ID: <176244563600.14191.2482065659966696646.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251105204737.3815186-1-dai.ngo@oracle.com>
-References: <20251105204737.3815186-1-dai.ngo@oracle.com>
+	s=k20201202; t=1762446628;
+	bh=xVfPQ4RI3zVVsRrmGXA+bvyAwdktjvLB+m4+ZLkfCPQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rM75byoGxZUyesmlgqhMTghixF8DFgvotNEMCuh+pECDm48AFhkMGc/ldQA89x7Ua
+	 +gP3cOAT321xVeZBnlj0dB0l1QD8oX+W0CpVe0PSqck1cET0JChStAw94nUdXBRk7n
+	 mMjuj0JRhkASjAEafTi0yET+Icmcr4MYxB7+L41icq1lwZ9Z6VF7OQeMZZ8O/1EOdl
+	 BpZb5UW7NmXX0JMJK4qKHjvHUj/+JZmQu+l729710d85FvhKxbB8K7n5vkvgwblJGy
+	 X3jdBR8kfBAwgAFO7kTANfR+q4IkvPqhLva9HuYPTMD0agWe/q+cg5qCKHqDI69yIJ
+	 sD4ti27rMuKXQ==
+Message-ID: <95a20f81-b648-4adb-b791-46899652d521@kernel.org>
+Date: Thu, 6 Nov 2025 11:30:26 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/5] NFSD: Enable return of an updated stable_how to
+ NFS clients
+To: Christoph Hellwig <hch@infradead.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20251105192806.77093-1-cel@kernel.org>
+ <20251105192806.77093-4-cel@kernel.org> <aQyde06-9qKs6o9O@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <aQyde06-9qKs6o9O@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
-
-On Wed, 05 Nov 2025 12:45:53 -0800, Dai Ngo wrote:
-> This patchset includes the following:
+On 11/6/25 8:07 AM, Christoph Hellwig wrote:
+> I don't think we need this any more with the current version, or am I
+> missing something?
 > 
-> . Fix problem with nfsd4_scsi_fence_client using the wrong reservation type.
-> . Add trace point to track SCSI preempt operation.
-> 
-> v2:
-> . drop patch that skips fencing on NFS4ERR_RETRY_UNCACHED_REP
-> . add namespace number in output of fencing trace point
-> 
-> [...]
 
-Applied to nfsd-testing, thanks!
+Correct, the updated version of 4/5 does not need this change.
 
-[1/2] NFSD: use correct reservation type in nfsd4_scsi_fence_client
-      commit: 7069b8dfa5a9ddd3e5c79e4d34e0b12ed0481a97
-[2/2] NFSD: Add trace point for SCSI fencing operation.
-      commit: 7af6ee667f4bbe500f1f4eac62ad1aea09716c79
+I left it in because I agree with Neil's observation that it's a good
+change to have anyway. However, the usual practice is to omit changes
+that are not directly related to a series, so I will drop this one for
+the next revision.
 
---
+Let's keep a pin in it, though. It might be needed in the future.
+
+
+-- 
 Chuck Lever
-
 
