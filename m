@@ -1,78 +1,57 @@
-Return-Path: <linux-nfs+bounces-16125-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16126-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F064C3AD74
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 13:17:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97D45C3AE4B
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 13:30:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 260514FC061
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 12:11:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 037974E6C4A
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 12:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D163254A7;
-	Thu,  6 Nov 2025 12:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F032F291D;
+	Thu,  6 Nov 2025 12:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCSP76bS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzGfdv+0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDAB14F112;
-	Thu,  6 Nov 2025 12:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F67763B9
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 12:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430944; cv=none; b=DJ77N3Sbj9SIU/ePx1iDtqsFJJpz2ge8Fdocds/zYsznwtoxXLuItZt1iGkwtjpyD+KIyGzktyzjpb30A2wxavxGrNaCVWV0N/JAlraLJ1oy9TQJbmK6ansnkwpWc/MYTAFGr9bAPrINeBvKzMU0Icc3dwC9xKVPrcg8ewnvrek=
+	t=1762432167; cv=none; b=Ttca8pxYJu46kRpss+3/Si6xpv7CxBxt3PuN1M8JRXOYtNi6SNE1bIKHUxjo9Tb0BuXDMeo5y4YUf79z9yQbd4Sdpk0NAxkevSCdsp50hbXFyRbadQV2QVvp4QiuXZ+cKT5NiqLZpM6trAlzkWpAZ7EebO11L8LNmBYBAaCTtvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430944; c=relaxed/simple;
-	bh=LP7ZmyrMkXBm+ONLXJyVda0lQs6BJPqHUOBgiw51NPQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nZrrb5TVzNEBU9OpMuNVcPeDgyAvMmpOl4lZzi0hh8IbyMpdXIQL70RqvHQWxBFEcmAIvRYFdAkKRjuhbh7rUpBfSmX/DJqKzqSEkMZtY+C2RfzKQ2FC9HENV73eM02okfaaeZ6nIN/cl1wlpsttEIveRHx9DAC6L92BHx2G1Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCSP76bS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBB8C113D0;
-	Thu,  6 Nov 2025 12:09:00 +0000 (UTC)
+	s=arc-20240116; t=1762432167; c=relaxed/simple;
+	bh=vCCR4dzUaQzsdGNkIQM2UKH0xt7so0+8qrK+8YUzLq8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jXwBOkt3CMzi2VuClU/twMduGuk5HMMSPyfY8fBBKK2V1GckTORhbidvlB0+jm/V0N2xWZbKqh+AtitrjP51uWnKzIIL8jXK+JiTZZYbE8v3O8NckDi9iU/T/8NXOsrLDwBoqmjhnLBEOSB+k2F/caiPFLVj0zKv13ZIKfKxs44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzGfdv+0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 931F5C4CEFB;
+	Thu,  6 Nov 2025 12:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762430943;
-	bh=LP7ZmyrMkXBm+ONLXJyVda0lQs6BJPqHUOBgiw51NPQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aCSP76bShFtNtarqKQ39cOrob87BYEJLR8x3XybpvWCgVqAQg/pdqC7n7NRZSmbQS
-	 aNN47Anax/M1kyq/usu7O/0dBObpluAMnF3sFzlrhrSW8T43auNgEuci9QQYAtoBIx
-	 29Va/KeJj7GrIBHoYMiSKxlyXBSa59bf+6AeS5TxZu/sS49XPQCYJAhsJ7NnONgO66
-	 3Hy0defaktIndrn0UqyxX+ZlmLRDGnf42JeFjvZfb1NVnXcZZpwWwhut7If4/G9LSI
-	 v8698KoD1zXlJDLOT70thrR2ItNqSa0voVRpVm3ljJRTYzULb0nbvr8BfxPvlFNjUO
-	 /xHq47tX/fPpg==
-Message-ID: <fc9765e8c58fbbc14c8066f685477da0cb2b55d0.camel@kernel.org>
-Subject: Re: [PATCH v5 09/17] vfs: clean up argument list for vfs_create()
+	s=k20201202; t=1762432167;
+	bh=vCCR4dzUaQzsdGNkIQM2UKH0xt7so0+8qrK+8YUzLq8=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=pzGfdv+0Q3waPNE/QPKVlZJxFKkxAuun29S6kjeLjkGPgTqtrkoz5AuSFye7KHxri
+	 kSE4BfBcjoh6jgvAX/vqJqxjj9zLry46ZAKqWqxPmQbYoR+c34d+HWrzVO7/wUevRy
+	 8DJWyqyye5QT3vaCbvt6quFW3K9phwmZ9vtXn9xQNr1mLI/mcWDVHcTnl/6H5S8BJE
+	 vxehhnUnoVL8g3u5WLaYPWSRY/xCZIHqK+UBo6Ts4CHRCh4dQkHwLY/ioPx8P0VFTx
+	 5E+Us1KeoNC8fyHyHkK2aCTaUP02o3J09v3xBkcYBJR8U3zDB1uRJBhxMO5puuwx3f
+	 eGgFBds4ULaWA==
+Message-ID: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
+Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
+ greater than high limit total_avail/scale_factor
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro
- <viro@zeniv.linux.org.uk>,  Christian Brauner	 <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>, Chuck Lever	 <chuck.lever@oracle.com>, Alexander Aring
- <alex.aring@gmail.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,  Paulo
- Alcantara	 <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N	 <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Bharath SM	 <bharathsm@microsoft.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, David Howells	 <dhowells@redhat.com>,
- Tyler Hicks <code@tyhicks.com>, Olga Kornievskaia	 <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Amir Goldstein	 <amir73il@gmail.com>, Namjae
- Jeon <linkinjeon@kernel.org>, Steve French	 <smfrench@gmail.com>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>,
- Kuniyuki Iwashima <kuniyu@google.com>, "David S. Miller"	
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski	
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
- <horms@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, 	samba-technical@lists.samba.org,
- netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
- netdev@vger.kernel.org
-Date: Thu, 06 Nov 2025 07:08:59 -0500
-In-Reply-To: <176237805165.634289.1849067298194355086@noble.neil.brown.name>
-References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
-	, <20251105-dir-deleg-ro-v5-9-7ebc168a88ac@kernel.org>
-	 <176237805165.634289.1849067298194355086@noble.neil.brown.name>
+To: Mike-SPC via Bugspray Bot <bugbot@kernel.org>, cel@kernel.org, 
+	neilb@ownmail.net, trondmy@kernel.org, linux-nfs@vger.kernel.org,
+ anna@kernel.org, 	neilb@brown.name
+Date: Thu, 06 Nov 2025 07:29:25 -0500
+In-Reply-To: <20251106-b220745c6-0a65ef0b5697@bugzilla.kernel.org>
+References: <ab235dbe-7949-4208-a21a-2cdd50347152@kernel.org>
+	 <20251106-b220745c6-0a65ef0b5697@bugzilla.kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -157,36 +136,60 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-11-06 at 08:27 +1100, NeilBrown wrote:
-> On Thu, 06 Nov 2025, Jeff Layton wrote:
-> > As Neil points out:
-> >=20
-> > "I would be in favour of dropping the "dir" arg because it is always
-> > d_inode(dentry->d_parent) which is stable."
-> >=20
-> > ...and...
-> >=20
-> > "Also *every* caller of vfs_create() passes ".excl =3D true".  So maybe=
- we
-> > don't need that arg at all."
-> >=20
-> > Drop both arguments from vfs_create() and fix up the callers.
-> >=20
-> > Suggested-by: NeilBrown <neilb@ownmail.net>
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Thu, 2025-11-06 at 11:30 +0000, Mike-SPC via Bugspray Bot wrote:
+> Mike-SPC writes via Kernel.org Bugzilla:
 >=20
-> This I like.
+> (In reply to Bugspray Bot from comment #5)
+> > Chuck Lever <cel@kernel.org> replies to comment #4:
+> >=20
+> > On 11/5/25 7:25 AM, Mike-SPC via Bugspray Bot wrote:
+> > > Mike-SPC writes via Kernel.org Bugzilla:
+> > >=20
+> > > > Have you found a 6.1.y kernel for which the build doesn't fail?
+> > >=20
+> > > Yes. Compiling Version 6.1.155 works without problems.
+> > > Versions >=3D 6.1.156 aren't.
+> >=20
+> > My analysis yesterday suggests that, because the nfs4state.c code hasn'=
+t
+> > changed, it's probably something elsewhere that introduced this problem=
+.
+> > As we can't reproduce the issue, can you use "git bisect" between
+> > v6.1.155 and v6.1.156 to find the culprit commit?
+> >=20
+> > (via https://msgid.link/ab235dbe-7949-4208-a21a-2cdd50347152@kernel.org=
+)
 >=20
-> Reviewed-by: NeilBrown <neil@brown.name>
 >=20
-> It would be consistent to also remove the 'dir' arg from vfs_mkdir(),
-> vfs_mknod(), etc.  I wouldn't do that until we find out what other
-> people think of the change.
+> Yes, your analysis is right (thanks for it).
+> After some investigation, the issue appears to be caused by changes intro=
+duced in
+> include/linux/minmax.h.
+>=20
+> I verified this by replacing minmax.h in 6.1.156 with the version from 6.=
+1.155,
+> and the kernel then compiles successfully.
+>=20
+> The relevant section in the 6.1.156 changelog (https://cdn.kernel.org/pub=
+/linux/kernel/v6.x/ChangeLog-6.1.156) shows several modifications to minmax=
+.h (notably around __clamp_once() and the use of
+> BUILD_BUG_ON_MSG(statically_true(ulo > uhi), ...)), which seem to trigger=
+ a compile-time assertion when building NFSD.
+>=20
+> Replacing the updated header with the previous one resolves the issue, so=
+ this appears
+> to be a regression introduced by the new clamp() logic.
+>=20
+> Could you please advise who is the right person or mailing list to report=
+ this issue to
+> (minmax.h maintainers, kernel core, or stable tree)?
 >=20
 
-I was thinking that too. I can roll patches to do those as well, but at
-this point I think I'd rather do that on top of this series rather than
-in the context of it.
+I'd let all 3 know, and I'd include the author of the patches that you
+suspect are the problem. They'll probably want to revise the one that's
+a problem.
+
+Cheers,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
