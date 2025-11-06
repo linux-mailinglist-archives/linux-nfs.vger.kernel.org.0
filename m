@@ -1,329 +1,272 @@
-Return-Path: <linux-nfs+bounces-16118-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16119-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A9DFC38F11
-	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 04:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E66C6C39BA3
+	for <lists+linux-nfs@lfdr.de>; Thu, 06 Nov 2025 10:04:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1A9318884B5
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 03:03:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C11A7189ED51
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Nov 2025 09:03:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD7945038;
-	Thu,  6 Nov 2025 03:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THVtXDha"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDEC309EFD;
+	Thu,  6 Nov 2025 09:02:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B52D347DD
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 03:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9A8309DDF
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Nov 2025 09:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762398186; cv=none; b=Vw0fxr5GLlko+wPZtZzZEGsvxluqfgqRh1lZzsFNy3gu8Nc94SFFljY5vm98LsF86zBryve9EvJ19OrsZafPQyiNRGxrtsvibu+zZnfZOIq/YR8wtN2fkfpYmRPQx6IcK9DVLsjEOsRR+wAfFVMjg5MKNCHjBhhIkkxFGe+AAVk=
+	t=1762419771; cv=none; b=sWNrzLlFNtcIZU0sezN5kBnFIBYDWIRKi0uSOfNAV5dDS9OmISVAYDkKZrMizJBDyGsWfjHTWp3JHZHrIhP3LxIwzyTuvz49MvT+vqmJMHOUBthrlnuNhNs1d/5QE5QxxtNH2ohf5/hMHqBZXl+E5V1IKSJRtrwuws4ov/8zKHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762398186; c=relaxed/simple;
-	bh=fpWk5HXgd1/bPO8i4cYLwpvrvk7W9QLwYO1v+vBT9qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqIoXOifh2Izf62UQxSpiTImwMKpE+XCL0/TmD4p/nT/CqzeGnuasM1jp23yefE2nSQeUoFW9EW7ybn6DuBSBFJM7C4oHWYf8tSi1gWSD3B3+TfZoYTwYyUIBfRJty5zCurBNsEi3HxXHPhUWCehra+tdZscg4I+jPIfidq0NGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THVtXDha; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8CF3C4CEF5;
-	Thu,  6 Nov 2025 03:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762398185;
-	bh=fpWk5HXgd1/bPO8i4cYLwpvrvk7W9QLwYO1v+vBT9qo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=THVtXDhaeywODrJr0w+LVNYqcrQf6l5JJlDWkwBSPxHVplBzEK14ot6aqPK+6hZmV
-	 xXrA1HksjHEcTYIv6tRvAvRjGGVaDbnNc+hjv4hCG45r74tC+TFaed+VeDpXySlDAq
-	 1fVUWR1bxd4ceMjjURK/VSWQc9EGwaabkyFDFTgLmQgKizOGGR9maLUsQ/ITN3gwMH
-	 INW7eg2OWON+7ZWx3dESSTKhWikEqOxfjux+N/ubUqzR21ip3tyAH7d+lwvHZo4cA/
-	 jz5q/UBQsnM/Dq9IbcMbEFfo5v3/E6CCuR/lPvSH/vbqd4WLIofDXBlhqJSMnkpbTv
-	 bT8h+CRZj7P2w==
-Date: Wed, 5 Nov 2025 22:03:04 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	linux-nfs@vger.kernel.org
-Subject: [v6.18-rcX PATCH v3 5/3] nfs/localio: do not issue misaligned DIO
- out-of-order
-Message-ID: <aQwP6OZv5Mkqz35U@kernel.org>
-References: <aPSvi5Yr2lGOh5Jh@dell-per750-06-vm-07.rhts.eng.pek2.redhat.com>
- <ed50690c04699c820873642ea38a01eec53d21af.camel@kernel.org>
- <aPURMSaH1rXQJkdj@kernel.org>
- <aPZ-dIObXH8Z06la@kernel.org>
- <aP-xXB_ht8F1i5YQ@kernel.org>
- <aQKhAksYqPjOzUNv@kernel.org>
- <aQQV1Fw7MX-3cdZd@kernel.org>
- <503dacbf-49b1-4ed7-97db-8b92aff9f1c5@oracle.com>
- <aQo_wu1SMGn5RRsy@kernel.org>
- <aQwM-h1QA4SkpLnX@kernel.org>
+	s=arc-20240116; t=1762419771; c=relaxed/simple;
+	bh=Rr7rNnPEzbOTdtYIuAcXQ36F1YEIBKRcDnXlgES33XM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=PtYn9NWP/bWl8kCAGKmZwDE6D7GUHIgxt6Tzai9CgTLI/Yd3nZENGB+eZZ8DMZcjse7sG04XTmNgt6zbWf/sDnUykOqGgmj9fZgg0lqXxtt02sxmLkA8UIqks9t6vgXFIiJ5ZOobh5ftslVrb5WpAAhnXT/ARUh5doTNwZVlpLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-43328dcdac1so4248895ab.2
+        for <linux-nfs@vger.kernel.org>; Thu, 06 Nov 2025 01:02:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762419767; x=1763024567;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r8E0+ouzlVdoTElswHiPK8yFC6riJLd5SyKVj4+Fe4w=;
+        b=I+YufQhBttTcRlOKXpTICXUJkFpetC2JDGY6l3J89GLRN3QXUy00Ufqc9NhOnxRfKd
+         cXqT112gnAM4oJGeh/IoLJnIUU3OQclXijTd3iY0levdOUer3+38hUAuPf2fR9FB4KPc
+         0GSEPgCvlGbu6iaDU7T5beo3bdjqjk8qgeneh4sH2O/PfgGg/BA0jmg3wVa+6rBvMDr+
+         OmXAokxf7JcxAB/cunIoHJRNKfOYuDCk4fOydYhs/AycH8W/DqVChePfFHHe0aNJnPsU
+         UtKtuZjWnJXQ4eFAvxPYk5S3lu+i/Faqzua2tmRLpRkgVnkponCZaUE3o6Y058okzsJu
+         3uWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCdeCu+dd4yKXNgPcs0NRfUPj20KMrfu097ywJ70SeiiaGRgW2qb0WCRahCqu0jjZKPBIJP9QxfPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDQwHc1upFyZMBYUPBgO3Vc0n/555hXPv4rOkz3GlIwmL2mCX5
+	ttcmYYBn8TS4Jx1LDJ/9IpPjSwSBQ90sBkCD407dFk9cx/GpsZPB3biUCp/ws5QY2KZKZbV+W52
+	ztlMltNSqAknsGLiTvYfcYrk2a22CWgus4d8GYe64wUU4OMA8t1Nvkpi4HkY=
+X-Google-Smtp-Source: AGHT+IG2+XO9mtVu991pXvlz+VZb8KzNDnm0wvskVW9qOHFFxk5SFup8IMdJP1K43vqqIYpPzRVA5JUpKoQ5O6f2XWPv7TKHUvKc
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQwM-h1QA4SkpLnX@kernel.org>
+X-Received: by 2002:a05:6e02:330e:b0:430:c90d:10ae with SMTP id
+ e9e14a558f8ab-433407dfcc7mr95789415ab.32.1762419767538; Thu, 06 Nov 2025
+ 01:02:47 -0800 (PST)
+Date: Thu, 06 Nov 2025 01:02:47 -0800
+In-Reply-To: <20251106005333.956321-1-neilb@ownmail.net>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <690c6437.050a0220.baf87.0083.GAE@google.com>
+Subject: [syzbot ci] Re: Create and use APIs to centralise locking for
+ directory ops.
+From: syzbot ci <syzbot+ci853f3070c3383748@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, cem@kernel.org, 
+	chuck.lever@oracle.com, clm@fb.com, code@tyhicks.com, dai.ngo@oracle.com, 
+	dakr@kernel.org, dhowells@redhat.com, djwong@kernel.org, dsterba@suse.com, 
+	ecryptfs@vger.kernel.org, gregkh@linuxfoundation.org, jack@suse.cz, 
+	jlayton@kernel.org, jmorris@namei.org, john.johansen@canonical.com, 
+	linkinjeon@kernel.org, linux-cifs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	lorenzo.stoakes@oracle.com, miklos@szeredi.hu, mjguzik@gmail.com, 
+	neilb@ownmail.net, netfs@lists.linux.dev, okorniev@redhat.com, 
+	omosnace@redhat.com, paul@paul-moore.com, rafael@kernel.org, 
+	selinux@vger.kernel.org, senozhatsky@chromium.org, serge@hallyn.com, 
+	smfrench@gmail.com, stefanb@linux.ibm.com, stephen.smalley.work@gmail.com, 
+	viro@zeniv.linux.org.uk
+Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From https://lore.kernel.org/linux-nfs/aQHASIumLJyOoZGH@infradead.org/
+syzbot ci has tested the following series
 
-On Wed, Oct 29, 2025 at 12:20:40AM -0700, Christoph Hellwig wrote:
-> On Mon, Oct 27, 2025 at 12:18:30PM -0400, Mike Snitzer wrote:
-> > LOCALIO's misaligned DIO will issue head/tail followed by O_DIRECT
-> > middle (via AIO completion of that aligned middle). So out of order
-> > relative to file offset.
->
-> That's in general a really bad idea.  It will obviously work, but
-> both on SSDs and out of place write file systems it is a sure way
-> to increase your garbage collection overhead a lot down the line.
+[v5] Create and use APIs to centralise locking for directory ops.
+https://lore.kernel.org/all/20251106005333.956321-1-neilb@ownmail.net
+* [PATCH v5 01/14] debugfs: rename end_creating() to debugfs_end_creating()
+* [PATCH v5 02/14] VFS: introduce start_dirop() and end_dirop()
+* [PATCH v5 03/14] VFS: tidy up do_unlinkat()
+* [PATCH v5 04/14] VFS/nfsd/cachefiles/ovl: add start_creating() and end_creating()
+* [PATCH v5 05/14] VFS/nfsd/cachefiles/ovl: introduce start_removing() and end_removing()
+* [PATCH v5 06/14] VFS: introduce start_creating_noperm() and start_removing_noperm()
+* [PATCH v5 07/14] VFS: introduce start_removing_dentry()
+* [PATCH v5 08/14] VFS: add start_creating_killable() and start_removing_killable()
+* [PATCH v5 09/14] VFS/nfsd/ovl: introduce start_renaming() and end_renaming()
+* [PATCH v5 10/14] VFS/ovl/smb: introduce start_renaming_dentry()
+* [PATCH v5 11/14] Add start_renaming_two_dentries()
+* [PATCH v5 12/14] ecryptfs: use new start_creating/start_removing APIs
+* [PATCH v5 13/14] VFS: change vfs_mkdir() to unlock on failure.
+* [PATCH v5 14/14] VFS: introduce end_creating_keep()
 
-Fix this by never issuing misaligned DIO out of order. This fix means
-the DIO-aligned middle will only use AIO completion if there is no
-misaligned end segment. Otherwise, all 3 segments of a misaligned DIO
-will be issued without AIO completion to ensure file offset increases
-properly for all partial READ or WRITE situations.
+and found the following issues:
+* WARNING: lock held when returning to user space in start_creating
+* possible deadlock in mnt_want_write
 
-Factoring out nfs_local_iter_setup() helps standardize repetitive
-nfs_local_iters_setup_dio() code and is inspired by cleanup work that
-Chuck Lever did on the NFSD Direct code.
+Full report is available here:
+https://ci.syzbot.org/series/4f406e4d-6aba-457a-b9c1-21f4407176a0
 
-Fixes: c817248fc831 ("nfs/localio: add proper O_DIRECT support for READ and WRITE")
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+***
+
+WARNING: lock held when returning to user space in start_creating
+
+tree:      torvalds
+URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
+base:      6146a0f1dfae5d37442a9ddcba012add260bceb0
+arch:      amd64
+compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
+config:    https://ci.syzbot.org/builds/49013fb4-56ed-423c-8e15-252d65d5c1b4/config
+C repro:   https://ci.syzbot.org/findings/403597e5-81d3-4a9e-8d43-cf15c00b3265/c_repro
+syz repro: https://ci.syzbot.org/findings/403597e5-81d3-4a9e-8d43-cf15c00b3265/syz_repro
+
+UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
+overlayfs: upper fs needs to support d_type.
+overlayfs: upper fs does not support tmpfile.
+================================================
+WARNING: lock held when returning to user space!
+syzkaller #0 Not tainted
+------------------------------------------------
+syz.0.17/5964 is leaving the kernel with locks still held!
+1 lock held by syz.0.17/5964:
+ #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
+ #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
+ #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
+ #0: ffff888119a282a0 (&type->i_mutex_dir_key#8/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
+
+
+***
+
+possible deadlock in mnt_want_write
+
+tree:      torvalds
+URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux
+base:      6146a0f1dfae5d37442a9ddcba012add260bceb0
+arch:      amd64
+compiler:  Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
+config:    https://ci.syzbot.org/builds/49013fb4-56ed-423c-8e15-252d65d5c1b4/config
+syz repro: https://ci.syzbot.org/findings/7d1f626d-9979-4c5b-b36b-5616a983b0ac/syz_repro
+
+======================================================
+WARNING: possible circular locking dependency detected
+syzkaller #0 Not tainted
+------------------------------------------------------
+syz.0.17/6011 is trying to acquire lock:
+ffff88810943c420
+ (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:508
+
+but task is already holding lock:
+ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
+ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
+ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
+ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}:
+       reacquire_held_locks+0x127/0x1d0 kernel/locking/lockdep.c:5385
+       __lock_release kernel/locking/lockdep.c:5574 [inline]
+       lock_release+0x1b4/0x3e0 kernel/locking/lockdep.c:5889
+       up_write+0x2d/0x420 kernel/locking/rwsem.c:1642
+       inode_unlock include/linux/fs.h:990 [inline]
+       end_dirop fs/namei.c:2818 [inline]
+       end_creating include/linux/namei.h:125 [inline]
+       vfs_mkdir+0x111/0x570 fs/namei.c:5037
+       do_mkdirat+0x247/0x5e0 fs/namei.c:5058
+       __do_sys_mkdir fs/namei.c:5080 [inline]
+       __se_sys_mkdir fs/namei.c:5078 [inline]
+       __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (sb_writers#12){.+.+}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3165 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3284 [inline]
+       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3908
+       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
+       percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
+       percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
+       __sb_start_write include/linux/fs.h:1916 [inline]
+       sb_start_write+0x4d/0x1c0 include/linux/fs.h:2052
+       mnt_want_write+0x41/0x90 fs/namespace.c:508
+       filename_create+0x14f/0x360 fs/namei.c:4785
+       do_mkdirat+0x32c/0x5e0 fs/namei.c:5050
+       __do_sys_mkdir fs/namei.c:5080 [inline]
+       __se_sys_mkdir fs/namei.c:5078 [inline]
+       __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&type->i_mutex_dir_key#5/1);
+                               lock(sb_writers#12);
+                               lock(&type->i_mutex_dir_key#5/1);
+  rlock(sb_writers#12);
+
+ *** DEADLOCK ***
+
+1 lock held by syz.0.17/6011:
+ #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:1025 [inline]
+ #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: __start_dirop fs/namei.c:2794 [inline]
+ #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_dirop fs/namei.c:2805 [inline]
+ #0: ffff888169f40940 (&type->i_mutex_dir_key#5/1){+.+.}-{4:4}, at: start_creating+0xbe/0x100 fs/namei.c:3261
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 6011 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2043
+ check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2175
+ check_prev_add kernel/locking/lockdep.c:3165 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3284 [inline]
+ validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3908
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5237
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5868
+ percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
+ percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
+ __sb_start_write include/linux/fs.h:1916 [inline]
+ sb_start_write+0x4d/0x1c0 include/linux/fs.h:2052
+ mnt_want_write+0x41/0x90 fs/namespace.c:508
+ filename_create+0x14f/0x360 fs/namei.c:4785
+ do_mkdirat+0x32c/0x5e0 fs/namei.c:5050
+ __do_sys_mkdir fs/namei.c:5080 [inline]
+ __se_sys_mkdir fs/namei.c:5078 [inline]
+ __x64_sys_mkdir+0x6c/0x80 fs/namei.c:5078
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdc9a98efc9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fdc9b79b038 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00007fdc9abe5fa0 RCX: 00007fdc9a98efc9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00002000000008c0
+RBP: 00007fdc9aa11f91 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fdc9abe6038 R14: 00007fdc9abe5fa0 R15: 00007ffe4d481c38
+ </TASK>
+
+
+***
+
+If these findings have caused you to resend the series or submit a
+separate fix, please add the following tag to your commit message:
+  Tested-by: syzbot@syzkaller.appspotmail.com
+
 ---
- fs/nfs/localio.c | 128 +++++++++++++++++++----------------------------
- 1 file changed, 52 insertions(+), 76 deletions(-)
-
-v3: fix accounting bug where iocb->n_iters is too high if DIO has a
-    misaligned head _and_ the middle also isn't DIO aligned so we
-    fallback to buffered. Also fix a typo in a related comment.
-    (and again, sorry for all the churn while arriving at this fix)
-
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index 24b0c7d62458..5aa903b2b836 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -44,8 +44,7 @@ struct nfs_local_kiocb {
- 	short int		end_iter_index;
- 	atomic_t		n_iters;
- 	bool			iter_is_dio_aligned[NFSLOCAL_MAX_IOS];
--	loff_t                  offset[NFSLOCAL_MAX_IOS] ____cacheline_aligned;
--	struct iov_iter		iters[NFSLOCAL_MAX_IOS];
-+	struct iov_iter		iters[NFSLOCAL_MAX_IOS] ____cacheline_aligned;
- 	/* End mostly DIO-specific members */
- };
- 
-@@ -314,6 +313,7 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
- 	init_sync_kiocb(&iocb->kiocb, file);
- 
- 	iocb->hdr = hdr;
-+	iocb->kiocb.ki_pos = hdr->args.offset;
- 	iocb->kiocb.ki_flags &= ~IOCB_APPEND;
- 	iocb->kiocb.ki_complete = NULL;
- 	iocb->aio_complete_work = NULL;
-@@ -387,13 +387,24 @@ static bool nfs_iov_iter_aligned_bvec(const struct iov_iter *i,
- 	return true;
- }
- 
-+static void
-+nfs_local_iter_setup(struct iov_iter *iter, int rw, struct bio_vec *bvec,
-+		     unsigned int nvecs, unsigned long total,
-+		     size_t start, size_t len)
-+{
-+	iov_iter_bvec(iter, rw, bvec, nvecs, total);
-+	if (start)
-+		iov_iter_advance(iter, start);
-+	iov_iter_truncate(iter, len);
-+}
-+
- /*
-  * Setup as many as 3 iov_iter based on extents described by @local_dio.
-  * Returns the number of iov_iter that were setup.
-  */
- static int
- nfs_local_iters_setup_dio(struct nfs_local_kiocb *iocb, int rw,
--			  unsigned int nvecs, size_t len,
-+			  unsigned int nvecs, unsigned long total,
- 			  struct nfs_local_dio *local_dio)
- {
- 	int n_iters = 0;
-@@ -401,41 +412,17 @@ nfs_local_iters_setup_dio(struct nfs_local_kiocb *iocb, int rw,
- 
- 	/* Setup misaligned start? */
- 	if (local_dio->start_len) {
--		iov_iter_bvec(&iters[n_iters], rw, iocb->bvec, nvecs, len);
--		iters[n_iters].count = local_dio->start_len;
--		iocb->offset[n_iters] = iocb->hdr->args.offset;
--		iocb->iter_is_dio_aligned[n_iters] = false;
--		atomic_inc(&iocb->n_iters);
-+		nfs_local_iter_setup(&iters[n_iters], rw, iocb->bvec,
-+				     nvecs, total, 0, local_dio->start_len);
- 		++n_iters;
- 	}
- 
--	/* Setup misaligned end?
--	 * If so, the end is purposely setup to be issued using buffered IO
--	 * before the middle (which will use DIO, if DIO-aligned, with AIO).
--	 * This creates problems if/when the end results in short read or write.
--	 * So must save index and length of end to handle this corner case.
-+	/*
-+	 * Setup DIO-aligned middle, if there is no misaligned end (below)
-+	 * then AIO completion is used, see nfs_local_call_{read,write}
- 	 */
--	if (local_dio->end_len) {
--		iov_iter_bvec(&iters[n_iters], rw, iocb->bvec, nvecs, len);
--		iocb->offset[n_iters] = local_dio->end_offset;
--		iov_iter_advance(&iters[n_iters],
--			local_dio->start_len + local_dio->middle_len);
--		iocb->iter_is_dio_aligned[n_iters] = false;
--		/* Save index and length of end */
--		iocb->end_iter_index = n_iters;
--		iocb->end_len = local_dio->end_len;
--		atomic_inc(&iocb->n_iters);
--		++n_iters;
--	}
--
--	/* Setup DIO-aligned middle to be issued last, to allow for
--	 * DIO with AIO completion (see nfs_local_call_{read,write}).
--	 */
--	iov_iter_bvec(&iters[n_iters], rw, iocb->bvec, nvecs, len);
--	if (local_dio->start_len)
--		iov_iter_advance(&iters[n_iters], local_dio->start_len);
--	iters[n_iters].count -= local_dio->end_len;
--	iocb->offset[n_iters] = local_dio->middle_offset;
-+	nfs_local_iter_setup(&iters[n_iters], rw, iocb->bvec, nvecs,
-+			     total, local_dio->start_len, local_dio->middle_len);
- 
- 	iocb->iter_is_dio_aligned[n_iters] =
- 		nfs_iov_iter_aligned_bvec(&iters[n_iters],
-@@ -443,11 +430,22 @@ nfs_local_iters_setup_dio(struct nfs_local_kiocb *iocb, int rw,
- 
- 	if (unlikely(!iocb->iter_is_dio_aligned[n_iters])) {
- 		trace_nfs_local_dio_misaligned(iocb->hdr->inode,
--			iocb->hdr->args.offset, len, local_dio);
-+			local_dio->start_len, local_dio->middle_len, local_dio);
- 		return 0; /* no DIO-aligned IO possible */
- 	}
-+	iocb->end_iter_index = n_iters;
- 	++n_iters;
- 
-+	/* Setup misaligned end? */
-+	if (local_dio->end_len) {
-+		nfs_local_iter_setup(&iters[n_iters], rw, iocb->bvec,
-+				     nvecs, total, local_dio->start_len +
-+				     local_dio->middle_len, local_dio->end_len);
-+		iocb->end_iter_index = n_iters;
-+		++n_iters;
-+	}
-+
-+	atomic_set(&iocb->n_iters, n_iters);
- 	return n_iters;
- }
- 
-@@ -474,7 +472,7 @@ nfs_local_iters_init(struct nfs_local_kiocb *iocb, int rw)
- 	len = hdr->args.count - total;
- 
- 	/*
--	 * For each iocb, iocb->n_iter is always at least 1 and we always
-+	 * For each iocb, iocb->n_iters is always at least 1 and we always
- 	 * end io after first nfs_local_pgio_done call unless misaligned DIO.
- 	 */
- 	atomic_set(&iocb->n_iters, 1);
-@@ -492,9 +490,7 @@ nfs_local_iters_init(struct nfs_local_kiocb *iocb, int rw)
- 	}
- 
- 	/* Use buffered IO */
--	iocb->offset[0] = hdr->args.offset;
- 	iov_iter_bvec(&iocb->iters[0], rw, iocb->bvec, v, len);
--	iocb->iter_is_dio_aligned[0] = false;
- }
- 
- static void
-@@ -631,30 +627,20 @@ static void nfs_local_call_read(struct work_struct *work)
- 
- 	n_iters = atomic_read(&iocb->n_iters);
- 	for (int i = 0; i < n_iters ; i++) {
--		/* DIO-aligned middle is always issued last with AIO completion */
- 		if (iocb->iter_is_dio_aligned[i]) {
- 			iocb->kiocb.ki_flags |= IOCB_DIRECT;
--			iocb->kiocb.ki_complete = nfs_local_read_aio_complete;
--			iocb->aio_complete_work = nfs_local_read_aio_complete_work;
--		}
-+			/* Only use AIO completion if DIO-aligned segment is last */
-+			if (i == iocb->end_iter_index) {
-+				iocb->kiocb.ki_complete = nfs_local_read_aio_complete;
-+				iocb->aio_complete_work = nfs_local_read_aio_complete_work;
-+			}
-+		} else
-+			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
- 
--		iocb->kiocb.ki_pos = iocb->offset[i];
- 		status = filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
- 		if (status != -EIOCBQUEUED) {
--			if (unlikely(status >= 0 && status < iocb->iters[i].count)) {
--				/* partial read */
--				if (i == iocb->end_iter_index) {
--					/* Must not account DIO partial end, otherwise (due
--					 * to end being issued before middle): the partial
--					 * read accounting in nfs_local_read_done()
--					 * would incorrectly advance hdr->args.offset
--					 */
--					status = 0;
--				} else {
--					/* Partial read at start or middle, force done */
--					force_done = true;
--				}
--			}
-+			if (unlikely(status >= 0 && status < iocb->iters[i].count))
-+				force_done = true; /* Partial read */
- 			if (nfs_local_pgio_done(iocb, status, force_done)) {
- 				nfs_local_read_iocb_done(iocb);
- 				break;
-@@ -849,30 +835,20 @@ static void nfs_local_call_write(struct work_struct *work)
- 	file_start_write(filp);
- 	n_iters = atomic_read(&iocb->n_iters);
- 	for (int i = 0; i < n_iters ; i++) {
--		/* DIO-aligned middle is always issued last with AIO completion */
- 		if (iocb->iter_is_dio_aligned[i]) {
- 			iocb->kiocb.ki_flags |= IOCB_DIRECT;
--			iocb->kiocb.ki_complete = nfs_local_write_aio_complete;
--			iocb->aio_complete_work = nfs_local_write_aio_complete_work;
--		}
-+			/* Only use AIO completion if DIO-aligned segment is last */
-+			if (i == iocb->end_iter_index) {
-+				iocb->kiocb.ki_complete = nfs_local_write_aio_complete;
-+				iocb->aio_complete_work = nfs_local_write_aio_complete_work;
-+			}
-+		} else
-+			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
- 
--		iocb->kiocb.ki_pos = iocb->offset[i];
- 		status = filp->f_op->write_iter(&iocb->kiocb, &iocb->iters[i]);
- 		if (status != -EIOCBQUEUED) {
--			if (unlikely(status >= 0 && status < iocb->iters[i].count)) {
--				/* partial write */
--				if (i == iocb->end_iter_index) {
--					/* Must not account DIO partial end, otherwise (due
--					 * to end being issued before middle): the partial
--					 * write accounting in nfs_local_write_done()
--					 * would incorrectly advance hdr->args.offset
--					 */
--					status = 0;
--				} else {
--					/* Partial write at start or middle, force done */
--					force_done = true;
--				}
--			}
-+			if (unlikely(status >= 0 && status < iocb->iters[i].count))
-+				force_done = true; /* Partial write */
- 			if (nfs_local_pgio_done(iocb, status, force_done)) {
- 				nfs_local_write_iocb_done(iocb);
- 				break;
--- 
-2.44.0
-
+This report is generated by a bot. It may contain errors.
+syzbot ci engineers can be reached at syzkaller@googlegroups.com.
 
