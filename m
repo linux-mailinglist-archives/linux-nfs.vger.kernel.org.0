@@ -1,87 +1,101 @@
-Return-Path: <linux-nfs+bounces-16170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F5F7C40268
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 14:37:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 321E5C40674
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 15:39:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 131394EAAF5
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 13:37:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EDE323AA891
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 14:38:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC732EBBB7;
-	Fri,  7 Nov 2025 13:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A362E6CCD;
+	Fri,  7 Nov 2025 14:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZ/eKImN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69B02EBB99;
-	Fri,  7 Nov 2025 13:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E2532720F
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 14:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762522672; cv=none; b=FYiPJGCeyL+koU+REBKjbNpJjeeDcLEETY2hwTv6FXZx73igAxE39lRgrMlyqrv083rm2phFt1tloSZhn81o1c+BoTgRpHwKT/Kla94SkM85Qk+HaQ/mdIPmgA+1TkceIJdh/Bz9V0syJoIyEJ3wJABCEk/axcNonr7629OEfDQ=
+	t=1762526326; cv=none; b=M4JWtbTl5eKF4Y95vdfdcGYCjgAjbTi9zw5U/WsX8e+tkNxwmcLYwRUjg+AtuNCPvg0pItSqhrMdHCkwJXbkSrk+HF8kSlNbODy/GN70LFAx3svDLKmjOgUqueJPOOOPGIP4ETKoBWC6jYRZs8C8ulvj+iHrAAbj3Fah8sFVDRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762522672; c=relaxed/simple;
-	bh=8xZspVBCCIAUVlKCUDdtd84EGV/fxhteLT5WItRN29A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mauRWr1qb/4OPdpI3JJuYOR81JjQcBcKBLmxuUpn7LveW0DxJsB2fhqFc0sejcicwbzfC4lo0Gnah83m90+zR8ioLmLBBCS4/v3z/Mjzv9US+Hu13QeCM9Wey7A1Eb/X5YOxbHZUqfX6bAC5S8diH0IUbjZKCl8Q8ED/guUsirw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6E374227AAE; Fri,  7 Nov 2025 14:37:42 +0100 (CET)
-Date: Fri, 7 Nov 2025 14:37:42 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Kundan Kumar <kundan.kumar@samsung.com>
-Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
-	Dave Chinner <david@fromorbit.com>, jaegeuk@kernel.org,
-	chao@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com,
-	trondmy@kernel.org, anna@kernel.org, akpm@linux-foundation.org,
-	willy@infradead.org, mcgrof@kernel.org, clm@meta.com,
-	amir73il@gmail.com, axboe@kernel.dk, ritesh.list@gmail.com,
-	dave@stgolabs.net, wangyufei@vivo.com,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com,
-	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com
-Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
-Message-ID: <20251107133742.GA5596@lst.de>
-References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com> <20251014120845.2361-1-kundan.kumar@samsung.com> <aPa7xozr7YbZX0W4@dread.disaster.area> <20251022043930.GC2371@lst.de> <e51e4fb9-01f7-4273-a363-fc1c2c61954b@samsung.com> <20251029060932.GS4015566@frogsfrogsfrogs> <20251029085526.GA32407@lst.de> <91367b76-e48b-46b4-b10b-43dfdd8472fa@samsung.com>
+	s=arc-20240116; t=1762526326; c=relaxed/simple;
+	bh=S9y3EsJhC1+WFDZ7FHIamQHgQ2VLeb2c/mPrJKigT18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SD4V8rDtRVdKQnNSP/Cbbcrwsg+mDtCpmgTpcyTUx2ZcCMG+GQJoG+vgfyIpeuB4xy3ErFuBdlMFiN9HEBR0FjLJ07y03RpGU30wO2FV73REOd+vS/5Nq3KYKLNdgX15Vq62WRvIU9pajD47pzAoAxti1IzQ/Wo0K8PDWmE3o/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZ/eKImN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5507C16AAE;
+	Fri,  7 Nov 2025 14:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762526325;
+	bh=S9y3EsJhC1+WFDZ7FHIamQHgQ2VLeb2c/mPrJKigT18=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qZ/eKImNiRl8W+ftHtmS47TMkxsvvDy2K3rrvcF2tVW2CIra7en0UGtyplhMiSeKz
+	 EeCQdGDmhWZY9thrfNxF2/PktgTN1ZshS6PWESuAb/Mx8ZMXw4C0nLA1N8FIODGncl
+	 SFA27fA/Xzb1JBep3H86WRoDObXStHkkYbKWU0AYdpRjejXioh1H+/kGZTH8sxeX82
+	 FI1ueqqoY+mb3HJP5fHPp40lMq1gxPiosOGcV4uQdfFL/FX/CCmoggZb6xj3vlZm79
+	 /lvkQk1RkyIGUyTGeiyMfMVNQocZLx+r3Y7rgi0DXKIq5q7bEtc4knmPYv/f9mc6jl
+	 1JJjnKLgsfEYA==
+Message-ID: <60402263-4336-42e0-acfc-7f1cab6c1742@kernel.org>
+Date: Fri, 7 Nov 2025 09:38:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91367b76-e48b-46b4-b10b-43dfdd8472fa@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 4/5] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+To: Christoph Hellwig <hch@infradead.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20251105192806.77093-1-cel@kernel.org>
+ <20251105192806.77093-5-cel@kernel.org>
+ <176242391124.634289.8771352649615589358@noble.neil.brown.name>
+ <aQyfgfWu8kPfe1uA@infradead.org> <aQyn-_GSL_z3a9to@infradead.org>
+ <aQzRdTcyc2nhTWqj@kernel.org>
+ <e0723227-6984-4c04-be7c-c3be852a8607@kernel.org>
+ <aQzwvqlD0xiYjMCW@kernel.org> <aQ3zFRizxIa-Hk6F@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <aQ3zFRizxIa-Hk6F@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 07, 2025 at 02:54:42PM +0530, Kundan Kumar wrote:
-> Predicting the Allocation Group (AG) for aged filesystems and passing
-> this information to per-AG writeback threads appears to be a complex
-> task.
-
-Yes.  But in the end aged file systems are what will see most usage.
-Fresh file systems look nice in benchmarks, but they aren't what
-users will mostly deal with.
-
-> To segregate these I/O requests by AG, it is necessary to associate
-> AG-specific information with the pages/folios in the page cache. Two
-> possible approaches are:
-> (1) storing AG information in the folio->private field, or
-> (2) introducing new markers in the xarray to track AG-specific data.
+On 11/7/25 8:24 AM, Christoph Hellwig wrote:
+> On Thu, Nov 06, 2025 at 02:02:22PM -0500, Mike Snitzer wrote:
+>>>> Selectively pushing the flag twiddling out to nfsd_direct_write()
+>>>> ignores that we don't want to use DONTCACHE for the unaligned
+>>>> prefix/suffix. Chuck and I discussed this a fair bit 1-2 days ago.
 > 
-> The AG-affined writeback thread processes specific pages from the page 
-> cache marked for its AG. Is this a viable approach, or are there 
-> alternative solutions that could be more effective?
+> Please document why.  Because honestly it makes zero sense to do that.
 
-Or maybe the per-AG scheme isn't that great after all and we just
-need some other simple sharding scheme?  Of course lock contention
-will be nicer on a per-AG basis, but as you found out actually
-mapping high-level writeback to AGs is pretty hard.
+There is a slow-down. But it's not like using DONTCACHE on the unaligned
+ends results in a regression, technically, since this is a brand new
+feature.
 
+So for an UNSTABLE unaligned WRITE in NFSD_IO_DIRECT mode, the unaligned
+ends would go through the page cache, and would not be durable until
+the subsequent COMMIT. Using DONTCACHE for the end segments adds a
+penalty, and no durability; but what is the value we get for that?
+
+
+> But if you insist, at least write a detailed comment why you don't want
+> that, so if people have to debug that odd decision in the future they
+> at least know why it was taken.
+> 
+> The rest looks ok to me.
+> 
+
+
+-- 
+Chuck Lever
 
