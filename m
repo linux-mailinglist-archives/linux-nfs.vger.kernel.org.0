@@ -1,146 +1,184 @@
-Return-Path: <linux-nfs+bounces-16163-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16164-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8DF3C3F260
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 10:25:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C394C3FB14
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 12:17:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C21AA188E5D4
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 09:26:18 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5CCAE4EE403
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 11:17:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765C42DE1E6;
-	Fri,  7 Nov 2025 09:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C1F1320CC2;
+	Fri,  7 Nov 2025 11:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nNuFq4Jn"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="CIxH4+JH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ghCBnvDO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241FA3016E8
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 09:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833641F5821;
+	Fri,  7 Nov 2025 11:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762507520; cv=none; b=V4FtmXdAXOtX8vz4jwnvAhALarPqxgMU73Ced0RBDHs4xk9GXVvGnK1RlgwviuAv8nRTJeW6liuot7toH4MsR7sIelHQ8+asADf17uqvpfyuvwA3BLEI0Ug1YptHyVonqzMUvWrt/YM5mgVsMKIxzBvu/+FOg6unvvOtaYk8zr8=
+	t=1762514259; cv=none; b=i5gJwBuTS72sdWBhfJwpHwfYkFpPJ3QXI6SdaxxM+nsWQd+0pbrSfheJnTj0YIPMGTDxrNo0HOv+2i6IwSFBYfiTF6iXkm/clow1Uom8kGbyhSjugtR/4G1HwkYatmC4WCh4tr09w11ndAX290aAQSG37WwJyfqSOyIFi4Z9DsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762507520; c=relaxed/simple;
-	bh=Llyb6G0N3m4WlabBeyiNpWRbU+9xF3fUAQa726lzReU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=KK7XnY9DBxQPtBDhNK3/iGLxuOVt/IjxL/OTUQOpesOu3VOi2p2N53UbSJ9Bh5R6BjxTEQLr22UmeCZxxGcBTovBrf27msZ0xEDtzcEePG2ra9u96cSAd78qdyPa8ezpqrP5qGbjhg3ieUJzxKKPBq65gcpU7/V1pTOW/nZSIB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nNuFq4Jn; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20251107092510epoutp03c8190112dd1ce7b6ce5df7d63048c91f~1rz4CQj8K1099010990epoutp03y
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 09:25:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20251107092510epoutp03c8190112dd1ce7b6ce5df7d63048c91f~1rz4CQj8K1099010990epoutp03y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1762507510;
-	bh=u8uZZ4eKtfeKdhCl1Q4zHBINNzxY5n31tzDb1+D2ZUs=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=nNuFq4JnvaalPuw3XSCF+FmfhR4hroJIdPSDaHbSmmalxbF06Dg/9xIUKs6+9KzFz
-	 +mAELlYpPRLM/VRb9troicO5aYquOMj5KfMMzbcDgQdZ0rmuNl5y5iIwuarLma8XZW
-	 tCVt9qc3o0mDZEE2QeTmo6c4tZqQQITd/PUA9KvM=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20251107092509epcas5p39521b5623906275347b3ec7177eac680~1rz3UXgnn2572925729epcas5p39;
-	Fri,  7 Nov 2025 09:25:09 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.91]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4d2tv81KkDz2SSKY; Fri,  7 Nov
-	2025 09:25:08 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20251107092507epcas5p3041edfe682f64c59ac3fe0fab4b9384b~1rz1O74AD2299222992epcas5p3F;
-	Fri,  7 Nov 2025 09:25:07 +0000 (GMT)
-Received: from [107.111.86.57] (unknown [107.111.86.57]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20251107092447epsmtip2e07f9528cf570ebdd336a8a4571fc676~1rzi_2xUI0827208272epsmtip2i;
-	Fri,  7 Nov 2025 09:24:46 +0000 (GMT)
-Message-ID: <91367b76-e48b-46b4-b10b-43dfdd8472fa@samsung.com>
-Date: Fri, 7 Nov 2025 14:54:42 +0530
+	s=arc-20240116; t=1762514259; c=relaxed/simple;
+	bh=Y9pUCfcFi4AsEJHJltTCRril7hFnOkYG0tyEo8NBeFg=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=tfCunUB9VUgJ6YTiLHtqWqyvhj/PsxKg7OIjKdAWX51jgsCrlHf7aNijX/Zx+dfafCYhXGD63fIde5dwS3CuMAeiPbROEWxGHUqcgzny/ElILwlQujHHj4nFN1KAW4i7JEbopaiYQvk/oEx53dzZBROrPqhjUfFMWuPe2C+nIH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=CIxH4+JH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ghCBnvDO; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 4F60B1D00149;
+	Fri,  7 Nov 2025 06:17:35 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Fri, 07 Nov 2025 06:17:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762514255; x=1762600655; bh=BBzJnnctCnq4Fcyhvxggl9CB8DYe4i8BJNv
+	opXA2dBs=; b=CIxH4+JHa2AOTOyFspUql3H/vqlFrzbrSO/NjyqXPiC2sdj8AVB
+	maNeRVlSZAcLLc/VsqivXSGEcf94YBo1Newtl90xemViH4OYbYXJU7vyft23yjkS
+	KSjj4I9tbY7Tpxcpbb4gxrQik45Tm42kRyWos+sQ34GMWHdwpQ5xuzHYWGynvuoF
+	Iq2CZw8PKEaFhP/IHfWXxqPjyQQQdaFRSilliOepB1/F+gSTsTUEIsDc9SsTXyfO
+	4hkVVlj4918R3u0tyDXj0y0GvpRA9duTM8jWsgNkNT6ktlVhVaWb8fZie9nIZkRd
+	+CEP12CdDW/XreIeBlEk/Y/+1Mi5WW86KMQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762514255; x=
+	1762600655; bh=BBzJnnctCnq4Fcyhvxggl9CB8DYe4i8BJNvopXA2dBs=; b=g
+	hCBnvDOJ4EuRX5QTbG9wrnoQXEoGLPEWjdom+5QjeYOXzhQ/Z8WvcaU6tlFtoJm+
+	7jjbgYTroGPrqngoFE147RZsbhrtRJF3yPWlnTsODstodSzyLYX2Oelu3hjKjvia
+	QuEMDAoZIZL32HyzbPHLbpOklMzkwoSeXkTLFS5RL9wYkpjz1Df+YfIhVJTRSIfU
+	bj450jcs/BpLb4WJz1eLDO/pbTzrZVKrN8XazAne5YGNjcQu5dvJjU4XSIrnOJxF
+	cYwcrh2IPkjre2WpuUdM07pfqLTa4Cffrd8/U9SHW/Apcthqnfmcpf9/Fv/ngfh1
+	E6e9YZC0QZhAcRYMC11ZA==
+X-ME-Sender: <xms:TtUNaYs0uvLVFFCyvD_8DfaSdGHQ-37Sf9L55YaURw3jXyY2deyViA>
+    <xme:TtUNaRc_WX-_83TnheJz7KtwST_KrnfE9Qk89OiznRBWE3SKx_1YZ5RrxqTyOpOqq
+    g6RuSzxs3swrh8tLBmJWHZivhNGreWbdAJkSYEVRrmJUGfODQ>
+X-ME-Received: <xmr:TtUNaV_XpQVM1AH9oe-T2sDfB_qirhgiaxNgtGjaAeJfewzRrmM5F2_Ly6RtpX-vck8ayhwAbYqEgb-AKoCCQqXiBjfekVLVispmOjkwvDGb>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeelhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epgeehfeevheehteetudehjeduiefhueehieevvdejkeeufeevkeelieffffduhfevnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhf
+    ohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegtvghlsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehsphgvvggutghrrggtkhgvrheshhhothhmrghilhdrtghomhdprhgt
+    phhtthhopegurghvihgurdhlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomhdprh
+    gtphhtthhopegurghvihgurdhlrghighhhthesrggtuhhlrggsrdgtohhm
+X-ME-Proxy: <xmx:TtUNacTtY4f33CCyCn7XaQghQ8b0lqIHX9-ooYPf8lRWqp4KxxROZw>
+    <xmx:TtUNaWop-ByXFOldZ-xsyF5cp7mdV5n-KujEEwrMGwVOv4HthesJ_w>
+    <xmx:TtUNaZmTI3IkTimhuisxgGiLwx3y-4IWqCg0zBCbzASnqihUygUzjA>
+    <xmx:TtUNafd9TdB4ll859qYjl6MA9tvEmbDVTV89LfuBik2ycadxRkLZUg>
+    <xmx:T9UNaRmvNsoXUjsACfHe8Ip7M8Xg3XEdNZC716U44UxJOZgDT5iuATIz>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Nov 2025 06:17:32 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: Dave Chinner <david@fromorbit.com>, jaegeuk@kernel.org, chao@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	miklos@szeredi.hu, agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org,
-	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
-	clm@meta.com, amir73il@gmail.com, axboe@kernel.dk, ritesh.list@gmail.com,
-	dave@stgolabs.net, wangyufei@vivo.com,
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, anuj20.g@samsung.com, vishak.g@samsung.com,
-	joshi.k@samsung.com
-From: Kundan Kumar <kundan.kumar@samsung.com>
-In-Reply-To: <20251029085526.GA32407@lst.de>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20251107092507epcas5p3041edfe682f64c59ac3fe0fab4b9384b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9
-References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com>
-	<20251014120845.2361-1-kundan.kumar@samsung.com>
-	<aPa7xozr7YbZX0W4@dread.disaster.area> <20251022043930.GC2371@lst.de>
-	<e51e4fb9-01f7-4273-a363-fc1c2c61954b@samsung.com>
-	<20251029060932.GS4015566@frogsfrogsfrogs> <20251029085526.GA32407@lst.de>
+From: NeilBrown <neilb@ownmail.net>
+To: "David Laight" <david.laight.linux@gmail.com>
+Cc: "Chuck Lever" <cel@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "David Laight" <David.Laight@ACULAB.COM>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
+ speedcracker@hotmail.com
+Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
+ greater than high limit total_avail/scale_factor
+In-reply-to: <20251106192210.1b6a3ca0@pumpkin>
+References: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>,
+ <37bc1037-37d8-4168-afc9-da8e2d1dd26b@kernel.org>,
+ <20251106192210.1b6a3ca0@pumpkin>
+Date: Fri, 07 Nov 2025 22:17:20 +1100
+Message-id: <176251424056.634289.13464296772500147856@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On 10/29/2025 2:25 PM, Christoph Hellwig wrote:
-> On Tue, Oct 28, 2025 at 11:09:32PM -0700, Darrick J. Wong wrote:
->> Was that with or without rtgroups?  metadir/rtgroups aren't enabled by
->> default yet so you'd have to select that manually with mkfs.xfs -m
->> metadir=1.
->>
->> (and you might still not see much change because of what hch said)
+On Fri, 07 Nov 2025, David Laight wrote:
+> On Thu, 6 Nov 2025 09:33:28 -0500
+> Chuck Lever <cel@kernel.org> wrote:
 > 
-> The real problem here is that even the inode number to AG association
-> is just a hint, and will often go wrong on an aged file system.
+> > FYI
+> > 
+> > https://bugzilla.kernel.org/show_bug.cgi?id=220745
 > 
-> Now for the zoned RT device we could probably do a thread per open
-> zone, as that is a very logical association.  The problem with that
-> right now is that we only pick the zone to write to once doing
-> writeback, but there might be ways to lift it up.  Then again
-> zoned writeback is so little code that I can't see how it would
-> saturate a single thread.
+> Ugg - that code is horrid.
+> It seems to have got deleted since, but it is:
 > 
-
-Predicting the Allocation Group (AG) for aged filesystems and passing
-this information to per-AG writeback threads appears to be a complex
-task.
-
-For write operations without pre-allocated data blocks (fallocate=none,
-resulting in DELALLOC), the next available AG is selected, and the
-XFS hook can be used to predict the AG that will be allocated.
-
-In contrast, when writing to a previously allocated data block
-(fallocate default, resulting in UNWRITTEN), the AG containing the data
-block is chosen. Large files that span multiple AGs can lead to a mix
-of random I/O operations (DELALLOC, UNWRITTEN, MAPPED) being directed
-to different AGs, while still being cached in the same page cache.
-
-To segregate these I/O requests by AG, it is necessary to associate
-AG-specific information with the pages/folios in the page cache. Two
-possible approaches are:
-(1) storing AG information in the folio->private field, or
-(2) introducing new markers in the xarray to track AG-specific data.
-
-The AG-affined writeback thread processes specific pages from the page 
-cache marked for its AG. Is this a viable approach, or are there 
-alternative solutions that could be more effective?
-
->>
->> --D
-> ---end quoted text---
+> 	u32 slotsize = slot_bytes(ca);
+> 	u32 num = ca->maxreqs;
+> 	unsigned long avail, total_avail;
+> 	unsigned int scale_factor;
 > 
+> 	spin_lock(&nfsd_drc_lock);
+> 	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
+> 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+> 	else
+> 		/* We have handed out more space than we chose in
+> 		 * set_max_drc() to allow.  That isn't really a
+> 		 * problem as long as that doesn't make us think we
+> 		 * have lots more due to integer overflow.
+> 		 */
+> 		total_avail = 0;
+> 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
+> 	/*
+> 	 * Never use more than a fraction of the remaining memory,
+> 	 * unless it's the only way to give this client a slot.
+> 	 * The chosen fraction is either 1/8 or 1/number of threads,
+> 	 * whichever is smaller.  This ensures there are adequate
+> 	 * slots to support multiple clients per thread.
+> 	 * Give the client one slot even if that would require
+> 	 * over-allocation--it is better than failure.
+> 	 */
+> 	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+> 
+> 	avail = clamp_t(unsigned long, avail, slotsize,
+> 			total_avail/scale_factor);
+> 	num = min_t(int, num, avail / slotsize);
+> 	num = max_t(int, num, 1);
+> 
+> Lets rework it a bit...
+> 	if (nfsd_drc_max_mem > nfsd_drc_mem_used) {
+> 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+> 		avail = min(NFSD_MAX_MEM_PER_SESSION, total_avail);
+> 		avail = clamp(avail, n + sizeof(xxx), total_avail/8)
+> 	} else {
+> 		total_avail = 0;
+> 		avail = 0;
+> 		avail = clamp(0, n + sizeof(xxx), 0);
+> 	}
+> 
+> Neither of those clamp() are sane at all - should be clamp(val, lo, hi)
+> with 'lo <= hi' otherwise the result is dependant on the order of the
+> comparisons.
+> The compiler sees the second one and rightly bleats.
 
+In fact only gcc-9 bleats.
+
+gcc-7 gcc-10 gcc-13 gcc-15
+all seem to think it is fine.
+
+NeilBrown
 
