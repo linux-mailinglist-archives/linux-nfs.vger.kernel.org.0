@@ -1,167 +1,146 @@
-Return-Path: <linux-nfs+bounces-16162-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16163-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BE25C3F172
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 10:11:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DF3C3F260
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 10:25:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89E9C188D17B
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 09:12:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C21AA188E5D4
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 09:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D45316918;
-	Fri,  7 Nov 2025 09:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765C42DE1E6;
+	Fri,  7 Nov 2025 09:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="esfXnlnU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S26y+VmD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nNuFq4Jn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79930316917
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 09:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241FA3016E8
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 09:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762506696; cv=none; b=W99UH5fucYa0Mt5Qs+poCPwBZs8LWIOBP4Xi4gcPtZyCUve+GBDgbaZkD0OO8jlfjTQQa4PK2yqNk8EL1LoE1kaafX2cPb7fTMDo9eueULfH6fjixVw+eq1+Qo8JoRGvNngSihKraQGMy+0UJKxvzclQKEVADuTzhPeEPeOadYE=
+	t=1762507520; cv=none; b=V4FtmXdAXOtX8vz4jwnvAhALarPqxgMU73Ced0RBDHs4xk9GXVvGnK1RlgwviuAv8nRTJeW6liuot7toH4MsR7sIelHQ8+asADf17uqvpfyuvwA3BLEI0Ug1YptHyVonqzMUvWrt/YM5mgVsMKIxzBvu/+FOg6unvvOtaYk8zr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762506696; c=relaxed/simple;
-	bh=gRf7GzMLxHIp1cv3ooX9ZTX0S/O5AuCcFOO7fFPL5YI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=gD6xcOr5XVV6Opn0VOY+YO2a7em1hzTpSTdkYJzoddc5zSNjCLOdLYxXq709olUWDpIfJSTyGmE0Ejgzc7hC7XWPruyPkJRQjhPCH9sUOD7CgK+ndR4tWifO1gbOXklc6Hrep070+9U+k7BSrdEN2K5Dfp6KdHcDgtEwDheTWvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=esfXnlnU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S26y+VmD; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5543F1D000A1;
-	Fri,  7 Nov 2025 04:11:32 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Fri, 07 Nov 2025 04:11:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762506692; x=1762593092; bh=YwJZVVnmS0p6hYrcG9MSJIHBYRnBNE043GJ
-	UN3B7RoY=; b=esfXnlnU7O+kmZIYTNZvxKNK0Si/3VhyH6YDuIjZseGiD782iRi
-	yBipsKiCFwOII7baKCRNhJqj92axV8Z5tEWnN18NEzIFQ1CECLJsqKOkR+o2ooxJ
-	t8gR6HxG/5qEaY92VGEq1SmE68sVFEgv7B3XPapwkPcrs9W+D+n/falHPgrAPqxn
-	blCjjEzk/hYDBwoHijImXyVck+9eYlD+qvS2tZlJ0bq/xvY0kOfMSV71eYUWvCIp
-	2tGCpYs72KlMPIpP0BX7TNEIL2fuZVSdEHewnoWKgRlbboid7v9yQeHNFp/OJ8aZ
-	IykjPT/vArBkD7lGdlbUMPfsJXYXuOzQ35A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762506692; x=
-	1762593092; bh=YwJZVVnmS0p6hYrcG9MSJIHBYRnBNE043GJUN3B7RoY=; b=S
-	26y+VmD4s/z5vIeP79IANNEh0ihZi7piyiu9UuDfUPzkaOaVDBWov60/pizEKQ8f
-	VLL8fmtjUrwafckgtcmgH53zVZ+mmxwajzsCZ8+rfkq9yPRbak2bC6WZ5AEFqXOQ
-	jGplOBLr2/JdgtbbjI7+vxMWzySuvi4fIvJtZuEPuwSJDFN8I3wqAu7LtHfE8TBb
-	La24r2oaKed7MmtVdN+zxosZHGgjYCKjBSawbn5icndUjGrt9tPiiog/pXnZ5B7c
-	A+JQjgIHxmQNQSlldh7Z+wlyb0DtaKGJg9OX/6cwk3Cmi/G4LiTTVpkLK/pR7LOq
-	3OMbMf8Xp5vs8vCUQMt+g==
-X-ME-Sender: <xms:xLcNaV44SM8H1lvgvtfQWHGinXePbSuSPPY9NM_U2kDy3HreOjVPVA>
-    <xme:xLcNaZ40OwJqgt51nBgV6RE9geWzmKu_aHjmoChITsuXlSNOSw3nsMlV5ml6x9jUa
-    fxsO10gKvmq5JCNfjtmBMVpXnqfbI3FOKREAzMqcc673_zB>
-X-ME-Received: <xmr:xLcNaRdpDRje0WjSJUnituJP7Q2vuI-pZfFy0M5tkyFohNNzM3AyegCrgG6UaRdlFxbRJ5vdJwQR-5pujykRzf8Sew3a8FPVogtC4ihhnu0I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddukeelvdejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveeuheeuteeigffftdetgeeiveffkeeigeettdekleevffffvefggfdtueeliedvnecu
-    ffhomhgrihhnpehophgvnhhsuhhsvgdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhn
-    sggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuh
-    igqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhrohhnughm
-    hieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhsphhmrghnghgrlhhorhgvsehgmh
-    grihhlrdgtohhmpdhrtghpthhtohepsghhrghrrghthhhsmhdrhhhskhesghhmrghilhdr
-    tghomh
-X-ME-Proxy: <xmx:xLcNadB2dPY9hvUeMSNWjTgp69V6QCHMIbI3zRUbJEi6-qccdpoJOQ>
-    <xmx:xLcNaU-sVidpXJJQALt_OG8Gq180YVnw0ISb4Go-uzkPNBK2uvKHHA>
-    <xmx:xLcNaYKlIEiZwb1xmNJ79Ap8kAhomlS8UJZwsUpxAioLOLnx2JbbvQ>
-    <xmx:xLcNadhXXOI5Z1WAQDDFlrXhk7JanHx1z6gSPo5UBy08Ym4tuO5JfQ>
-    <xmx:xLcNaVvl9J-SyedzALlgLDd4F8oCCb_XewXeLlB2XR2oKJIN_PR8wn7n>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Nov 2025 04:11:30 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1762507520; c=relaxed/simple;
+	bh=Llyb6G0N3m4WlabBeyiNpWRbU+9xF3fUAQa726lzReU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=KK7XnY9DBxQPtBDhNK3/iGLxuOVt/IjxL/OTUQOpesOu3VOi2p2N53UbSJ9Bh5R6BjxTEQLr22UmeCZxxGcBTovBrf27msZ0xEDtzcEePG2ra9u96cSAd78qdyPa8ezpqrP5qGbjhg3ieUJzxKKPBq65gcpU7/V1pTOW/nZSIB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nNuFq4Jn; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20251107092510epoutp03c8190112dd1ce7b6ce5df7d63048c91f~1rz4CQj8K1099010990epoutp03y
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 09:25:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20251107092510epoutp03c8190112dd1ce7b6ce5df7d63048c91f~1rz4CQj8K1099010990epoutp03y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1762507510;
+	bh=u8uZZ4eKtfeKdhCl1Q4zHBINNzxY5n31tzDb1+D2ZUs=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=nNuFq4JnvaalPuw3XSCF+FmfhR4hroJIdPSDaHbSmmalxbF06Dg/9xIUKs6+9KzFz
+	 +mAELlYpPRLM/VRb9troicO5aYquOMj5KfMMzbcDgQdZ0rmuNl5y5iIwuarLma8XZW
+	 tCVt9qc3o0mDZEE2QeTmo6c4tZqQQITd/PUA9KvM=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20251107092509epcas5p39521b5623906275347b3ec7177eac680~1rz3UXgnn2572925729epcas5p39;
+	Fri,  7 Nov 2025 09:25:09 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.91]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4d2tv81KkDz2SSKY; Fri,  7 Nov
+	2025 09:25:08 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251107092507epcas5p3041edfe682f64c59ac3fe0fab4b9384b~1rz1O74AD2299222992epcas5p3F;
+	Fri,  7 Nov 2025 09:25:07 +0000 (GMT)
+Received: from [107.111.86.57] (unknown [107.111.86.57]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20251107092447epsmtip2e07f9528cf570ebdd336a8a4571fc676~1rzi_2xUI0827208272epsmtip2i;
+	Fri,  7 Nov 2025 09:24:46 +0000 (GMT)
+Message-ID: <91367b76-e48b-46b4-b10b-43dfdd8472fa@samsung.com>
+Date: Fri, 7 Nov 2025 14:54:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Shyam Prasad N" <nspmangalore@gmail.com>
-Cc: linux-nfs@vger.kernel.org, "Bharath SM" <bharathsm.hsk@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>
-Subject: Re: Requesting a client side feature to enable/disable serialization
- of open/close in NFSv4 clients
-In-reply-to:
- <CANT5p=od_-93SNQtvaid7yrW_XTqCN5_MJS=cYzgydrPkhtJ3g@mail.gmail.com>
-References:
- <CANT5p=rmuH59F9dpvrop0f+8XfVnK6fZHyqLhb10UsYfa6XJgw@mail.gmail.com>,
- <CANT5p=od_-93SNQtvaid7yrW_XTqCN5_MJS=cYzgydrPkhtJ3g@mail.gmail.com>
-Date: Fri, 07 Nov 2025 20:11:23 +1100
-Message-id: <176250668306.634289.13564785727214953785@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: Dave Chinner <david@fromorbit.com>, jaegeuk@kernel.org, chao@kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	miklos@szeredi.hu, agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org,
+	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
+	clm@meta.com, amir73il@gmail.com, axboe@kernel.dk, ritesh.list@gmail.com,
+	dave@stgolabs.net, wangyufei@vivo.com,
+	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+	gost.dev@samsung.com, anuj20.g@samsung.com, vishak.g@samsung.com,
+	joshi.k@samsung.com
+From: Kundan Kumar <kundan.kumar@samsung.com>
+In-Reply-To: <20251029085526.GA32407@lst.de>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20251107092507epcas5p3041edfe682f64c59ac3fe0fab4b9384b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9
+References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com>
+	<20251014120845.2361-1-kundan.kumar@samsung.com>
+	<aPa7xozr7YbZX0W4@dread.disaster.area> <20251022043930.GC2371@lst.de>
+	<e51e4fb9-01f7-4273-a363-fc1c2c61954b@samsung.com>
+	<20251029060932.GS4015566@frogsfrogsfrogs> <20251029085526.GA32407@lst.de>
 
-On Fri, 07 Nov 2025, Shyam Prasad N wrote:
-> On Tue, Nov 4, 2025 at 11:18=E2=80=AFAM Shyam Prasad N <nspmangalore@gmail.=
-com> wrote:
-> >
-> > Hi Trond,
-> >
-> > Several months ago, Neil from SUSE provided this workaround for their
-> > customer to allow the NFS clients to work around a bug on the server:
-> > https://code.opensuse.org/kernel/kernel-source/c/d543ea1660582777ca7f8a8f=
-91afd048de09b7b6?branch=3D377837fd53dbd7a6c35cff41d5c42ab1224512b0
-> > However, I see that this change is not present in the mainline kernel.
-> >
-> > I would like to request this feature on the NFSv4.1 clients in the
-> > mainline kernel too, so that we can have this support in all distros
-> > in the future.
-> > This is a useful low-risk change that will provide a fallback in case
-> > of servers that don't implement this scenario properly.
-> > Let me know what you think.
-> >
-> > --
-> > Regards,
-> > Shyam
->=20
-> Looks like Neil's email ID has changed since. Updating the email ID.
->=20
-> Hi Neil,
-> Is there a specific reason why you did not submit this patch upstream?
->=20
+On 10/29/2025 2:25 PM, Christoph Hellwig wrote:
+> On Tue, Oct 28, 2025 at 11:09:32PM -0700, Darrick J. Wong wrote:
+>> Was that with or without rtgroups?  metadir/rtgroups aren't enabled by
+>> default yet so you'd have to select that manually with mkfs.xfs -m
+>> metadir=1.
+>>
+>> (and you might still not see much change because of what hch said)
+> 
+> The real problem here is that even the inode number to AG association
+> is just a hint, and will often go wrong on an aged file system.
+> 
+> Now for the zoned RT device we could probably do a thread per open
+> zone, as that is a very logical association.  The problem with that
+> right now is that we only pick the zone to write to once doing
+> writeback, but there might be ways to lift it up.  Then again
+> zoned writeback is so little code that I can't see how it would
+> saturate a single thread.
+> 
 
-I didn't submit it because I didn't think it was appropriate for
-upstream and I was confident that it wouldn't be accepted.
+Predicting the Allocation Group (AG) for aged filesystems and passing
+this information to per-AG writeback threads appears to be a complex
+task.
 
-We don't work around bugs in servers - that would give the server
-vendors an excuse not to fix them.
+For write operations without pre-allocated data blocks (fallocate=none,
+resulting in DELALLOC), the next available AG is selected, and the
+XFS hook can be used to predict the AG that will be allocated.
 
-I implemented that patch for SUSE because earlier kernels *did*
-serialise all opens for v4.1.  When we released a newer kernel to our
-customers which removed the serialisation, that created a regression for
-some and we take regressions seriously.  But it wasn't a regression in
-the kernel (which upstream takes seriously), it was a regression in the
-customer's experience (which SUSE takes seriously, but the kernel
-community is less invested in).
+In contrast, when writing to a previously allocated data block
+(fallocate default, resulting in UNWRITTEN), the AG containing the data
+block is chosen. Large files that span multiple AGs can lead to a mix
+of random I/O operations (DELALLOC, UNWRITTEN, MAPPED) being directed
+to different AGs, while still being cached in the same page cache.
 
-If a buggy server exposed a weakness in the Linux client (e.g.  could
-cause a crash or an infinite loop), then I think we should address that.
-If a server raised the possibility of ambiguity in the specification,
-then we should consider addressing that.  But this is a case of the
-server clearly behaving incorrectly in way that doesn't harm the client
-and isn't ambiguous.  So I don't think the upstream client should work
-around this bug.
+To segregate these I/O requests by AG, it is necessary to associate
+AG-specific information with the pages/folios in the page cache. Two
+possible approaches are:
+(1) storing AG information in the folio->private field, or
+(2) introducing new markers in the xarray to track AG-specific data.
 
-It would be much better to ask the server vendor to fix their server (or
-use a different server).
+The AG-affined writeback thread processes specific pages from the page 
+cache marked for its AG. Is this a viable approach, or are there 
+alternative solutions that could be more effective?
 
-NeilBrown
+>>
+>> --D
+> ---end quoted text---
+> 
+
 
