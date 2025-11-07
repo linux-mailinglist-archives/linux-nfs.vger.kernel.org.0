@@ -1,99 +1,118 @@
-Return-Path: <linux-nfs+bounces-16176-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16180-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CFF1C408BC
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:10:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0228EC40948
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:28:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F15EE565051
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:09:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 86D6F1889D3A
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:28:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCFC32B993;
-	Fri,  7 Nov 2025 15:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92692239E9E;
+	Fri,  7 Nov 2025 15:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR0srvfo"
+	dkim=pass (2048-bit key) header.d=joshua.hu header.i=@joshua.hu header.b="i8d+q1qi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48352DFA46;
-	Fri,  7 Nov 2025 15:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EC43271EF
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 15:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762528194; cv=none; b=lcAmTgFyJb30v8Oue4octHmsGYMAXL+y3hZj9S0I0G+BjVYiZJ79Ln94f3zKAloP48p3QaMGL49SrLgaq2ywM2RxLSlWpn3qE0IxPmDr5GbKpuDNk5JZDRzAwC0xN9yFY9BL6aNpGFk6ZcZ3BDcO7p/exf/Y3KHLzcWrXU8LKV4=
+	t=1762529304; cv=none; b=Df4Q1KXsYnh9qGc8L/DPCDLnsqxvz+I1REkuMt+Sv2RXeO6GwJtyTRNQCmKM7PJk2UJIbgC0JPrEegcbxhrGlcFflSsbzelDxIhOdxFcQpFUkqmCfIIkTgFM0We1RNmxx5HjcXakok2nisPd0lVuQ06yJ36sBZ+GNK/701josmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762528194; c=relaxed/simple;
-	bh=xL7B0BSUN6mHT9AN8poxu8dlAZx5mx0OPi/a+IeTqT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YQ9HSsdkL/eSvUp2PLfTIfRdWwZuRSP3vhoWvXLT0MtlgkORABOB65Zc0HFiS4oGs6ZntC7MWhRbreJ6Hc/7gQRLzTbnUtjeVxdRfEmTvIQ7OfK33LkzLllfunzulu09sWBQaGrb7UjHSunZaKCoNzU7+EGzGIdVr2mI0LsAW4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR0srvfo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E7CC4CEF8;
-	Fri,  7 Nov 2025 15:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762528194;
-	bh=xL7B0BSUN6mHT9AN8poxu8dlAZx5mx0OPi/a+IeTqT8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QR0srvfo2liatRzyYfqY4ZrIgwMZVZq8CtfgVOg0JTZZjJr3nSazUeR5u29na1ZZm
-	 tQ6/jgChANMcvGu5bulmUkfYn7P2QC3dqDH1Pnpl8nc8S7khwlrVuktigAEzBhlx9K
-	 aHJa6H5yE5Ny64ygn6q4v8U5ksi2d5Gw36xvOcuz+Hol2OZjBlC7A/F6+HQxUFqMLj
-	 jOeM+P5Pspb6+pAZF6xHXv7aCPVz3uuvjFps04ujRPwYB2++ItAbb6F+ES8pCfTV+m
-	 k4HxS5zka4NLXLe9ymtWlwuMgfB/MIjVTX3iWP0/nMt65Jw/nfqFDPK5ZuwS5G2HyL
-	 mxwmtn32hOZfw==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Joshua Rogers <linux@joshua.hu>
-Subject: [PATCH 3/3] svcrdma: bound check rq_pages index in inline path
-Date: Fri,  7 Nov 2025 10:09:49 -0500
-Message-ID: <20251107150949.3808-3-cel@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1762529304; c=relaxed/simple;
+	bh=hJzS02rP0AnAnJ60/YAmGtiQoi39f08YIZAT89xXNec=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oTr+H20CgbU+DuVhdrlTJixHVbtF1TAjTMycrxfShEMVrxYMFsHBFuUGFRKRe+999BxrCS06cKCzsOTDxgM0XatzFx4rUQac/lxfyYQzzJKD7fFuS2YJvN5qA/eTXGKF2TEOM6urCHVDAWdNXQqBT/XoKRCGan83fPBIi+7cNb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=joshua.hu; spf=pass smtp.mailfrom=joshua.hu; dkim=pass (2048-bit key) header.d=joshua.hu header.i=@joshua.hu header.b=i8d+q1qi; arc=none smtp.client-ip=85.9.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=joshua.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joshua.hu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=joshua.hu;
+	s=protonmail2; t=1762528993; x=1762788193;
+	bh=hJzS02rP0AnAnJ60/YAmGtiQoi39f08YIZAT89xXNec=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=i8d+q1qiIRpbZCv40S650IAOS12bBYlDFmd1VwB0OTrSwFsPkbDAAULwC0vh8JHbk
+	 wCoIyXLZkxQ6iA9immHHXgMzuxd3bd389tWHKu4/+m7GEKYD9DFrcz+CW4IqRVMNKa
+	 OJuWSLX2VXgANyMDhCR74lscGNAUvRTSEQI8Y5XLS0mIZP+/OjRo0VORi9/nL18EA6
+	 S1wLreb71snEWtZYASxoBTL1LDE0LtR1F1Kmn57R1UQjB+xzfoBnuQzgn6cJI7pNki
+	 vQ7m3p7Q48tfmar6HvyP0ja02iADilF8HKGeQF4SZnF9LxRIfc8w7Ky+4giNNhiU9F
+	 BRAFFVKW0+l5Q==
+Date: Fri, 07 Nov 2025 15:23:06 +0000
+To: Chuck Lever <cel@kernel.org>
+From: Joshua Rogers <reszta@joshua.hu>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Joshua Rogers <linux@joshua.hu>
+Subject: Re: [PATCH 1/3] svcrdma: use rc_pageoff for memcpy byte offset
+Message-ID: <fxcda7FkdbPG_fttyXlSupjn11fncefYSlmcpQVVhEqZtDujhBlOxPADG_Havmcju29ZqPMXVwmMI980FtUVWs9jDUYiy-JWbaClISNNwQk=@joshua.hu>
 In-Reply-To: <20251107150949.3808-1-cel@kernel.org>
 References: <20251107150949.3808-1-cel@kernel.org>
+Feedback-ID: 126372902:user:proton
+X-Pm-Message-ID: b8c332fb05f9bf71f35e34d3d2e7a48fc888e7f1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Joshua Rogers <linux@joshua.hu>
+Apologies: is it possible to slightly change the commit msg to include "Fou=
+nd with ZeroPath"? As this bug was, indeed, found with a tool called ZeroPa=
+th. If not, it's OK, thought I'd ask.
 
-svc_rdma_copy_inline_range indexed rqstp->rq_pages[rc_curpage] without
-verifying rc_curpage stays within the allocated page array. Add guards
-before the first use and after advancing to a new page.
+Thank you.
 
-Fixes: d7cc73972661 ("svcrdma: support multiple Read chunks per RPC")
-X-Cc: stable@vger.kernel.org
-Signed-off-by: Joshua Rogers <linux@joshua.hu>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index e813e5463352..310de7a80be5 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -841,6 +841,9 @@ static int svc_rdma_copy_inline_range(struct svc_rqst *rqstp,
- 	for (page_no = 0; page_no < numpages; page_no++) {
- 		unsigned int page_len;
- 
-+		if (head->rc_curpage >= rqstp->rq_maxpages)
-+			return -EINVAL;
-+
- 		page_len = min_t(unsigned int, remaining,
- 				 PAGE_SIZE - head->rc_pageoff);
- 
--- 
-2.51.0
+On Friday, 7 November 2025 at 23:09, Chuck Lever <cel@kernel.org> wrote:
 
+>=20
+>=20
+> From: Joshua Rogers linux@joshua.hu
+>=20
+>=20
+> svc_rdma_copy_inline_range added rc_curpage (page index) to the page
+> base instead of the byte offset rc_pageoff. Use rc_pageoff so copies
+> land within the current page.
+>=20
+> Fixes: 8e122582680c ("svcrdma: Move svc_rdma_read_info::ri_pageno to stru=
+ct svc_rdma_recv_ctxt")
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: Joshua Rogers linux@joshua.hu
+>=20
+> Signed-off-by: Chuck Lever chuck.lever@oracle.com
+>=20
+> ---
+> net/sunrpc/xprtrdma/svc_rdma_rw.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_=
+rdma_rw.c
+> index 661b3fe2779f..945fbb374331 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> @@ -848,7 +848,7 @@ static int svc_rdma_copy_inline_range(struct svc_rqst=
+ *rqstp,
+> head->rc_page_count++;
+>=20
+>=20
+> dst =3D page_address(rqstp->rq_pages[head->rc_curpage]);
+>=20
+> - memcpy(dst + head->rc_curpage, src + offset, page_len);
+>=20
+> + memcpy((unsigned char *)dst + head->rc_pageoff, src + offset, page_len)=
+;
+>=20
+>=20
+> head->rc_readbytes +=3D page_len;
+>=20
+> head->rc_pageoff +=3D page_len;
+>=20
+> --
+> 2.51.0
 
