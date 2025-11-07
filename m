@@ -1,139 +1,232 @@
-Return-Path: <linux-nfs+bounces-16206-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16207-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA410C41D6A
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 23:35:35 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBE5C41DD7
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 23:50:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CC70F4E458C
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 22:35:33 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3EA8434A0A2
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 22:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00DC238DF9;
-	Fri,  7 Nov 2025 22:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAE8302CC0;
+	Fri,  7 Nov 2025 22:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gwskUpuJ"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="iu3sfu2+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yWmg7GrN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A052192EE;
-	Fri,  7 Nov 2025 22:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A682FFDF4;
+	Fri,  7 Nov 2025 22:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762554927; cv=none; b=VEMmWm+StNGd9+3I2NLgfIvkLmxKS3F3IuT6lOsChqK49yfSWqrhBm6EeytqgewZGUsWot0DB2Da34oMteEa5Z+jCRg3Gjw0uQ7I4xpZZBxORlA+7OA2Jjz6kTYvpDiNM0AU+cA+KSjUmqND0kKnuNvbOaAi/0fqNrFDhkei2pU=
+	t=1762555802; cv=none; b=mEiBf07PZbHM/RpSQtm2C+qKEsHONefXwLnnHuneiKhOWYtyi5R1zvd8HiQmpyGUdjyQU8TRe4zHkcZFdEdKVaEBkfIrYd93WbR5vO/rFMHSERDGAB4bX1uUpTJe6XuWq9HS2fYQDpKV7gF4Jh9J7EGPiqioLUJYxMWsrPMRkHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762554927; c=relaxed/simple;
-	bh=XFl4H7zlaSjNeZC0YFUU21tNjZ/wnYPimecT/uq5tKQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S1xtH2u4rErEkLWHkV8kpO0zban8Az3Fo5CgS3FzsfqI7gAcBe9jwQcf/kEBHs/+oD0CROQFAF5+/7CmLYxDyVKG0JtNYN6j17lP22Sxuz8necqIIgcp6xrjpwNdZRVyOj2kZL8+zlc08KJQvi+MxucdhheR5s4Z9MjQV2dvD/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=gwskUpuJ; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 65A4040AED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1762554918; bh=1SMRxhNRshB8vecJq42CGMcQSf+tMG9pcOEmrtJR/2o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gwskUpuJ4a2g0JY5PiFttMjCeJQuS5S9UEPZocWG6S53nMlyt4gNfosYgLoQ6Jwhj
-	 dtsb6S+afpYrUIi0QfyDP5S6e0bDBizWxKwt/uIC0tV/2BUoFA5ZIOjasCC/wOB6C5
-	 IvBnQSvlGwdiy84Vv7DtwNnU0ThlI1+rpNmvLMNs2Mlba7j5UvudGA8dWS/wNWoEhb
-	 QQZECfmiJHj8aTYEDJFrkXseci/C7M7RQmHvvaOKNnK8EDDOg1KshyEqtA+pwvZFub
-	 CJuACGdj/HuNVrTYEYhxm/X8rI6+e/rYpIzGlIZWWTn5T4qJ87Gv51ZI5YPYmAqjvD
-	 ATLFFKQC18bmQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 65A4040AED;
-	Fri,  7 Nov 2025 22:35:18 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov
- <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, Christian
- Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne
- <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Tigran
- A. Aivazian" <aivazian.tigran@gmail.com>, Chris Mason <clm@fb.com>, Xiubo
- Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
- Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>, Namjae Jeon
- <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang
- Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu
- <chao@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Miklos
- Szeredi <miklos@szeredi.hu>, Andreas Gruenbacher <agruenba@redhat.com>,
- Viacheslav Dubeyko <slava@dubeyko.com>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, Richard
- Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Mikulas Patocka
- <mikulas@artax.karlin.mff.cuni.cz>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@redhat.com>,
- David Woodhouse <dwmw2@infradead.org>, Dave Kleikamp <shaggy@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Ryusuke Konishi <konishi.ryusuke@gmail.com>, Konstantin Komarov
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Bob Copeland <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
- Martin Brandenburg <martin@omnibond.com>, Amir Goldstein
- <amir73il@gmail.com>, Steve French <sfrench@samba.org>, Paulo Alcantara
- <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam
- Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Bharath SM
- <bharathsm@microsoft.com>, Zhihao Cheng <chengzhihao1@huawei.com>, Hans de
- Goede <hansg@kernel.org>, Carlos Maiolino <cem@kernel.org>, Hugh Dickins
- <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew
- Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
- linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
- linux-um@lists.infradead.org, linux-mm@kvack.org,
- linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
- linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
- ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, Jeff Layton
- <jlayton@kernel.org>
-Subject: LLM disclosure (was: [PATCH v2] vfs: remove the excl argument from
- the ->create() inode_operation)
-In-Reply-To: <176255458305.634289.5577159882824096330@noble.neil.brown.name>
-References: <20251107-create-excl-v2-1-f678165d7f3f@kernel.org>
- <176255458305.634289.5577159882824096330@noble.neil.brown.name>
-Date: Fri, 07 Nov 2025 15:35:17 -0700
-Message-ID: <87ikfl1nfe.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1762555802; c=relaxed/simple;
+	bh=Aeo/VzE1/UV207VY7Gch3A/3nfTb68ooL8dPoD/Cfgk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=lG9Sp7m19ZgC92YogBUF+xX8tQlzn7ENci82l99xy7Xwr0yzZi8kTqWSdxlx/rO+HMsKPF7aFk/POvCT6HPdJxt+Osu2dLlIVgBAIH13wLyux8I1T05fgJreFwoKleCzbbPjn/j+85asqYlggGHdLCvBWh3bfEDxC6MaJkMtWAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=iu3sfu2+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yWmg7GrN; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 15C9C7A01B6;
+	Fri,  7 Nov 2025 17:49:59 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 07 Nov 2025 17:49:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762555798; x=1762642198; bh=aCExvVff/T1beCIBhfJtcWSIpIUbwYfLTD4
+	NHxXGVdI=; b=iu3sfu2+YJ7TYN2VUmigtGfTH6CAMsDtvQD4TAhwLUVySVkqkpJ
+	QGUMOHAORfsvpT4qVHU8fgcgWuhWEQu7LMu+CAKvU0MANY24xEFhQ8xsEaUbnzWx
+	seyCzCPRbb5ulphgJ7HfL8KgdOMzAcj6LZTba3B0QLO4RGv+1GhINuN2blWSFCI1
+	ivqS4UQOvvrYkOmPeCIS7XQWTQIzHDMnqk+lBmck47W6KCiP7RrBwFLI5zACLlvc
+	8U3YBhj0n1g+Gx7OR4Aey3RQkLRZCa4+hkZjZZjMBFOiOdjmmckw43n9rfJo7qck
+	jzeAI5dyCkpuEX+75UOXBBhe6kkojcwlaSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762555798; x=
+	1762642198; bh=aCExvVff/T1beCIBhfJtcWSIpIUbwYfLTD4NHxXGVdI=; b=y
+	Wmg7GrNix50DzyxmmMWAJUoJyrI3nwULpuLdidrebuh9iswgamFWc0BgPE105k+L
+	VCSlOAH+QT2nt39mYC4nq/JiJsdqoSiYv7x6QAYS6joHqaWdhw/v5PHjAttJz2YH
+	eBCblF14XzqdXzeS5ggIhwopdUbV3KrWxxjkxmqI21LzYAOIXynAyGncq4oHGRFW
+	7mzqzMj+3zilAEXuvmLykreM4AJybeek38fwU2HCdDcPQXxQ2XuXlEWrGbhJQdOq
+	lKMThsAxIWA+0FRYyQCVGMpR3736QUjbTl5+aORhUQXzxRKaS0MP6ZsMTfQOcvdQ
+	hmhattUrbaXkgM+yIuO+w==
+X-ME-Sender: <xms:lncOaRzQIDkTa-CRCRh4xZmJ2SYpjHrmJHTDfxrmT_PXKDRe58KOyg>
+    <xme:lncOadTBedDKvxcHedF0VgEA7eu5ZvaLJ-o0yCVL2eTe0OAfNk-Xm1g9hzlu0WrfY
+    AWaH0hmazOqWBvjPZROQHI15pzS5sSBNavC6LLielthZdJbWJI>
+X-ME-Received: <xmr:lncOadhPLzKIB0pEmS33mhes9fK5QTTvGX2CJhSAlfIHJqE9bfxGoaF0F8Ol-gjUNh-0JK0LDARj8r1CIoUHq9XW0q74bq9UUZbunGSwSY8R>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduledtledtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epgeehfeevheehteetudehjeduiefhueehieevvdejkeeufeevkeelieffffduhfevnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhf
+    ohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegtvghlsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehsphgvvggutghrrggtkhgvrheshhhothhmrghilhdrtghomhdprhgt
+    phhtthhopegurghvihgurdhlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomhdprh
+    gtphhtthhopegurghvihgurdhlrghighhhthesrggtuhhlrggsrdgtohhm
+X-ME-Proxy: <xmx:lncOaUnvtP20W8uSG4C8mVFJ6jFF0wSgG_yWQ1P13vF9czCfqZCR5g>
+    <xmx:lncOaQtNbwFjr7hXu8207q0mYuOO9iPywfuQAPT0iCX5mHBhFWfM2A>
+    <xmx:lncOaSZlTDlM_1AWJvzq4pzotmDI5dOcEU6hqOlazDo6YTbvctdNEQ>
+    <xmx:lncOaQBl77wqtwFAkQDUI6In3xYAZaWblNM_I_TrP3679hKJNdn6eg>
+    <xmx:lncOaVLv1GPoSSc8pWS15F-PsDNKcMz8lR1C0ds9hUl1c4l49aMkoaot>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Nov 2025 17:49:55 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+From: NeilBrown <neilb@ownmail.net>
+To: "David Laight" <david.laight.linux@gmail.com>
+Cc: "Chuck Lever" <cel@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "David Laight" <David.Laight@ACULAB.COM>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
+ speedcracker@hotmail.com
+Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
+ greater than high limit total_avail/scale_factor
+In-reply-to: <20251107114324.33fd69f3@pumpkin>
+References: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>,
+ <37bc1037-37d8-4168-afc9-da8e2d1dd26b@kernel.org>,
+ <20251106192210.1b6a3ca0@pumpkin>,
+ <176251424056.634289.13464296772500147856@noble.neil.brown.name>,
+ <20251107114324.33fd69f3@pumpkin>
+Date: Sat, 08 Nov 2025 09:49:49 +1100
+Message-id: <176255578949.634289.10177595719141795960@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-NeilBrown <neilb@ownmail.net> writes:
+On Fri, 07 Nov 2025, David Laight wrote:
+> On Fri, 07 Nov 2025 22:17:20 +1100
+> NeilBrown <neilb@ownmail.net> wrote:
+> 
+> > On Fri, 07 Nov 2025, David Laight wrote:
+> > > On Thu, 6 Nov 2025 09:33:28 -0500
+> > > Chuck Lever <cel@kernel.org> wrote:
+> > >   
+> > > > FYI
+> > > > 
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=220745  
+> > > 
+> > > Ugg - that code is horrid.
+> > > It seems to have got deleted since, but it is:
+> > > 
+> > > 	u32 slotsize = slot_bytes(ca);
+> > > 	u32 num = ca->maxreqs;
+> > > 	unsigned long avail, total_avail;
+> > > 	unsigned int scale_factor;
+> > > 
+> > > 	spin_lock(&nfsd_drc_lock);
+> > > 	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
+> > > 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+> > > 	else
+> > > 		/* We have handed out more space than we chose in
+> > > 		 * set_max_drc() to allow.  That isn't really a
+> > > 		 * problem as long as that doesn't make us think we
+> > > 		 * have lots more due to integer overflow.
+> > > 		 */
+> > > 		total_avail = 0;
+> > > 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
+> > > 	/*
+> > > 	 * Never use more than a fraction of the remaining memory,
+> > > 	 * unless it's the only way to give this client a slot.
+> > > 	 * The chosen fraction is either 1/8 or 1/number of threads,
+> > > 	 * whichever is smaller.  This ensures there are adequate
+> > > 	 * slots to support multiple clients per thread.
+> > > 	 * Give the client one slot even if that would require
+> > > 	 * over-allocation--it is better than failure.
+> > > 	 */
+> > > 	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+> > > 
+> > > 	avail = clamp_t(unsigned long, avail, slotsize,
+> > > 			total_avail/scale_factor);
+> > > 	num = min_t(int, num, avail / slotsize);
+> > > 	num = max_t(int, num, 1);
+> > > 
+> > > Lets rework it a bit...
+> > > 	if (nfsd_drc_max_mem > nfsd_drc_mem_used) {
+> > > 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+> > > 		avail = min(NFSD_MAX_MEM_PER_SESSION, total_avail);
+> > > 		avail = clamp(avail, n + sizeof(xxx), total_avail/8)
+> > > 	} else {
+> > > 		total_avail = 0;
+> > > 		avail = 0;
+> > > 		avail = clamp(0, n + sizeof(xxx), 0);
+> > > 	}
+> > > 
+> > > Neither of those clamp() are sane at all - should be clamp(val, lo, hi)
+> > > with 'lo <= hi' otherwise the result is dependant on the order of the
+> > > comparisons.
+> > > The compiler sees the second one and rightly bleats.  
+> > 
+> > In fact only gcc-9 bleats.
+> 
+> That is probably why it didn't get picked up earlier.
+> 
+> > gcc-7 gcc-10 gcc-13 gcc-15
+> > all seem to think it is fine.
+> 
+> Which, of course, it isn't...
 
-> On Sat, 08 Nov 2025, Jeff Layton wrote:
+I've now had a proper look at your analysis of the code - thanks.
 
->> Full disclosure: I did use Claude code to generate the first
->> approximation of this patch, but I had to fix a number of things that it
->> missed.  I probably could have given it better prompts. In any case, I'm
->> not sure how to properly attribute this (or if I even need to).
->
-> My understanding is that if you fully understand (and can defend) the
-> code change with all its motivations and implications as well as if you
-> had written it yourself, then you don't need to attribute whatever fancy
-> text editor or IDE (e.g.  Claude) that you used to help produce the
-> patch.
+I agree that the code is unclear (at best) and that if it were still
+upstream I would want to fix it.  However is does function correctly.
 
-The proposed policy for such things is here, under review right now:
+As you say, when min > max, the result of clamp(val, min, max) depends
+on the order of comparison, and we know what the order of comparison is
+because we can look at the code for clamp().
 
-  https://lore.kernel.org/all/20251105231514.3167738-1-dave.hansen@linux.intel.com/
+Currently it is 
 
-jon
+	((val) >= (hi) ? (hi) : ((val) <= (lo) ? (lo) : (val)))
+
+which will use max when max is below val and min.
+Previously it was 
+	min((typeof(val))max(val, lo), hi)
+which also will use max when it is below val and min
+
+Before that it was 
+#define clamp_t(type, val, min, max) ({                \
+       type __val = (val);                     \
+       type __min = (min);                     \
+       type __max = (max);                     \
+       __val = __val < __min ? __min: __val;   \
+       __val > __max ? __max: __val; })
+
+which also uses max when that is less that val and min.
+
+So I think the nfsd code has always worked correctly.  That is not
+sufficient for mainline - there we want it to also be robust and
+maintainable. But for stable kernels it should be sufficient.
+Adding a patch to "stable" kernels which causes working code to fail to
+compile does not seem, to me, to be in the spirit of "stability".
+(Have the "clamp" checking in mainline, finding problems there,
+and backporting the fixes to stable seems to me to be the best way
+to use these checking improvements to improve "stable").
+
+Thanks,
+NeilBrown
 
