@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-16186-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16187-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAB0EC4099A
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:34:29 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41939C4099B
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:34:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DDE51A4452A
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:34:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9FE8E34CE54
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCFE22DF143;
-	Fri,  7 Nov 2025 15:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6F2B32A3C9;
+	Fri,  7 Nov 2025 15:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTXn9JGs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKSWX+Ff"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9372239E7F
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 15:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF97C239E7F;
+	Fri,  7 Nov 2025 15:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762529666; cv=none; b=j+Dkmscwp3v707leYsHOAsuzQ/7h4q4bb6BuIeWjAKFDlpBsKy6vv8mvVDEvFd6z04HLcDfa0oN5tmVaL8WT7Yiby3qWGVe92yA9ieFQTZiBov+Gh1jIl0iCzfBgPXiWL6kLSOPzwCdv5xtTYYQuMum/9ym5ZC/BLaT5TAvVw3E=
+	t=1762529667; cv=none; b=A8iB66V1yiqYvJeDST4dQ6ZM/UNgH7owH7BN0omS8tIeYc+BMSbrHIFCjmjAIkZ2bBXm26cR40EBosLmESAENm6Xp/RgFhZZYTjxZ3KUHXHVP+9jWDb7wh5rF556nNg89JghPZGZvpNqRXHhhbokb8X6WC712JdmLm8QG5N23RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762529666; c=relaxed/simple;
-	bh=+nF/f2j7sxPxH8iCe/mnKTrMBRXmTkzHrtdzsO1/L/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HoYYHhX3U4YmTHvbClZQJbgLNPKwbzEKd+fD4CLN3OYRLBkh1N9MXkZNbFUh0LoJ4eTCi8sGSmbFo1uQ1o1qOGqgHszeiMXtoA7Zqh0Ji0HNayjNylLQkV7hUg0XeEV4VexYumfb0v0RK6Drec1fXu2uhI6IlOXKCHVdZimkSGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTXn9JGs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC7CC16AAE;
-	Fri,  7 Nov 2025 15:34:25 +0000 (UTC)
+	s=arc-20240116; t=1762529667; c=relaxed/simple;
+	bh=LxNetJZGDoMZFkpRGbsUFYiHX1dIJkPSJNhZIh7fWk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mioMD9bOgDDst19fxrjSLvVkLSu7M1NDxY4vPQ6wwvSu6XlzTYw0CZYfW/7nTUkLNUIM9irv47c2lwHL//BLdKEy55tpWsr0rk0ArY7GrcqoLtX89Tcs0JYR1fO2VwzEDiTCzuBIyKozPH1BrOfzyaxANtCDrhgXJqL/ksGyb0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKSWX+Ff; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD15C116B1;
+	Fri,  7 Nov 2025 15:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762529666;
-	bh=+nF/f2j7sxPxH8iCe/mnKTrMBRXmTkzHrtdzsO1/L/0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nTXn9JGsSL+/dMOuc0gfa5Vu/ueV7/InE2vJYW1LWAQEj0M5IPaLfczWTNF5NLHZo
-	 NVHdh6SiglSdENomRaESYVHEuO6HjSLcb04Hgg3v98rATE6+iH0aK9DCRoh0aK4vlL
-	 fp3fuPWoSfGVTkatUsCtFafJzgF6Nu053HTKErr+zfDYevWu2hDrWGqM0cuzeMPDv7
-	 kYC9Xh89l89uGkd5haaA3AGQMrw5iRoeazm33+oJEKvbBGD7rWUtEt4qNjG+0n0Niw
-	 3JPBH2MBQ0L05SBjdzosE1dxv4+1LTHkGq2n0U4kHg/ANI+W246lgymC3QRjrQn2ic
-	 MsWu58KYm8NNA==
+	s=k20201202; t=1762529667;
+	bh=LxNetJZGDoMZFkpRGbsUFYiHX1dIJkPSJNhZIh7fWk4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dKSWX+FfsMx27vKMdLnIXVhMQqCrPvpioKY188pQpJICpX1zPI77ADOc1aaYfI0mV
+	 cxbkirMijskTZNQElzCjKRE04R3G3NZbHualo2FN+jgcAlbvt+uDU5qX/ldGyRkSFg
+	 /Gz0AdUSmGJEsyMUqj4+j0kAYej55PNlMQIzLLfRKoT96y/8PXjrbqN0fcXgvtE2YT
+	 wD5GZib4UO8AN4HkObf11wjhBSUBSGjtJVedIgkfY8LCiOQYzR8QUHwbJ0HO1XTyd5
+	 dLyzTgSkdAdkxUoWx8loeEauPbnFuqUHnNCkjEehUbGRzdyWlz3Qk2o/A+e95BS+Up
+	 8Hu/UmzQmPEKQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,11 +48,16 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v11 0/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Date: Fri,  7 Nov 2025 10:34:19 -0500
-Message-ID: <20251107153422.4373-1-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	stable@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v11 1/3] NFSD: Make FILE_SYNC WRITEs comply with spec
+Date: Fri,  7 Nov 2025 10:34:20 -0500
+Message-ID: <20251107153422.4373-2-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251107153422.4373-1-cel@kernel.org>
+References: <20251107153422.4373-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,83 +68,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Following on https://lore.kernel.org/linux-nfs/aPAci7O_XK1ljaum@kernel.org/
-this series includes the patches needed to make NFSD Direct WRITE
-operational.
+Mike noted that when NFSD responds to an NFS_FILE_SYNC WRITE, it
+does not also persist file time stamps. To wit, Section 18.32.3
+of RFC 8881 mandates:
 
-After applying Christoph's patch, I looked at restoring the comment
-block in front of iov_iter_bvec_offset(), but it seems to make
-slightly more sense to leave it where it is in
-nfsd_write_dio_iters_init().
+> The client specifies with the stable parameter the method of how
+> the data is to be processed by the server. If stable is
+> FILE_SYNC4, the server MUST commit the data written plus all file
+> system metadata to stable storage before returning results. This
+> corresponds to the NFSv2 protocol semantics. Any other behavior
+> constitutes a protocol violation. If stable is DATA_SYNC4, then
+> the server MUST commit all of the data to stable storage and
+> enough of the metadata to retrieve the data before returning.
 
-I'm still looking into Neil's comment about adding a trace point
-for unaligned segments.
+Commit 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()") replaced:
 
-One controversy remains: Whether to set DONTCACHE for the unaligned
-segments.
+-		flags |= RWF_SYNC;
 
-I still see this during fstests runs with NFSD_IO_DIRECT enabled:
+with:
 
-WARNING: CPU: 5 PID: 1309 at fs/iomap/buffered-io.c:1402 iomap_zero_iter+0x1a4/0x390
++		kiocb.ki_flags |= IOCB_DSYNC;
 
-No new test failures, but I need to narrow down which test is
-triggering this message.
+which appears to be correct given:
 
-Applies on: 7f7d8421c7fa2588930146cb461e3e069658ced9
-In the branch https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/log/?h=nfsd-testing
+	if (flags & RWF_SYNC)
+		kiocb_flags |= IOCB_DSYNC;
 
+in kiocb_set_rw_flags(). However the author of that commit did not
+appreciate that the previous line in kiocb_set_rw_flags() results
+in IOCB_SYNC also being set:
 
-Changes since v10:
-* Applied Christoph's clean-ups
-* Applied Mike's documentation fixes
+	kiocb_flags |= (__force int) (flags & RWF_SUPPORTED);
 
-Changes since v9:
-* Unaligned segments no longer use IOCB_DONTCACHE
-* Squashed all review patches into Mike's initial patch
-* Squashed Mike's documentation update into the final patch
+RWF_SUPPORTED contains RWF_SYNC, and RWF_SYNC is the same bit as
+IOCB_SYNC. Reviewers at the time did not catch the omission.
 
-Changes since v8:
-* Drop "NFSD: Handle both offset and memory alignment for direct I/O"
-* Include the Sep 3 version of the Documentation update
+Reported-by: Mike Snitzer <snitzer@kernel.org>
+Closes: https://lore.kernel.org/linux-nfs/20251018005431.3403-1-cel@kernel.org/T/#t
+Fixes: 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()")
+Cc: stable@vger.kernel.org
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/vfs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Changes since v7:
-* Rebase the series on Mike's original v3 patch
-* Address more review comments
-* Optimize the "when can NFSD use IOCB_DIRECT" logic
-* Revert the "always promote to FILE_SYNC" logic
-
-Changes since v6:
-* Patches to address review comments have been split out
-* Refactored the iter initialization code
-
-Changes since v5:
-* Add a patch to make FILE_SYNC WRITEs persist timestamps
-* Address some of Christoph's review comments
-* The svcrdma patch has been dropped until we actually need it
-
-Changes since v4:
-* Split out refactoring nfsd_buffered_write() into a separate patch
-* Expand patch description of 1/4
-* Don't set IOCB_SYNC flag
-
-Changes since v3:
-* Address checkpatch.pl nits in 2/3
-* Add an untested patch to mark ingress RDMA Read chunks
-
-Chuck Lever (1):
-  NFSD: Make FILE_SYNC WRITEs comply with spec
-
-Mike Snitzer (2):
-  NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-  NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
-
- .../filesystems/nfs/nfsd-io-modes.rst         | 144 ++++++++++++++++
- fs/nfsd/debugfs.c                             |   1 +
- fs/nfsd/trace.h                               |   1 +
- fs/nfsd/vfs.c                                 | 154 +++++++++++++++++-
- 4 files changed, 294 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
-
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index f537a7b4ee01..5333d49910d9 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1314,8 +1314,18 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		stable = NFS_UNSTABLE;
+ 	init_sync_kiocb(&kiocb, file);
+ 	kiocb.ki_pos = offset;
+-	if (stable && !fhp->fh_use_wgather)
+-		kiocb.ki_flags |= IOCB_DSYNC;
++	if (likely(!fhp->fh_use_wgather)) {
++		switch (stable) {
++		case NFS_FILE_SYNC:
++			/* persist data and timestamps */
++			kiocb.ki_flags |= IOCB_DSYNC | IOCB_SYNC;
++			break;
++		case NFS_DATA_SYNC:
++			/* persist data only */
++			kiocb.ki_flags |= IOCB_DSYNC;
++			break;
++		}
++	}
+ 
+ 	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
+ 	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
 -- 
 2.51.0
 
