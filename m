@@ -1,241 +1,100 @@
-Return-Path: <linux-nfs+bounces-16189-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16185-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A5EBC4099E
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:34:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D82ABC40999
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 16:34:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 371C11A44623
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:34:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 859291A44159
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 15:34:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568CF329C58;
-	Fri,  7 Nov 2025 15:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22FB2F0C45;
+	Fri,  7 Nov 2025 15:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoTyDEMe"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="syXZWE7f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A35239E7F
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 15:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6083239E7F
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 15:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762529669; cv=none; b=IldaUK8Cp5INPKI4+B14ZTuAode28BMZqwC16TnInQkg89jYFIjfGSdqe7B3MC/35qzIORamHC/UZHuSfTbPpy4n6p2gkq6za1uBHoSEL4ksyVqemHHzkpXNtgoDzZlIWZl0Wyvl2r3i5TDEjY7yfsUixbVCgOGdOsjjZ9VYobM=
+	t=1762529663; cv=none; b=NS5UYmeWWb9/UAL9WzngCpUp66/CI1cOYZ7T4oIcJ/A1UOds12rZaOrvG5H6+AtnVW8c79CNx513zOvLQbt9GvudVYNSTKd2L37+RDWHMlTAYiFfKs2fVe6Rvvir8eYzkmGggEKBhpmPjijVuF9O6SwXbbrTeA+K8MwtCosbnBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762529669; c=relaxed/simple;
-	bh=v07p/4VOC2SprrkXdHWNh2W7Byfr1trYRvRc2DxJgtA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F2YH1TNjubW/8YmlOEzc6c7dycNnjlW6iWi/MdlOatgQGj+ByvA7XJETk6o7FK/udgpsH19qmghCwU8H6nK/R9bB2qXUcIvRBvKn16f9XHfXtPnGLpu/bhkCNr3lflEXmW1U6E6XnYklCyJy+LXVEq5bDKiThJeGxEeem+EU53s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoTyDEMe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B427C2BC86;
-	Fri,  7 Nov 2025 15:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762529668;
-	bh=v07p/4VOC2SprrkXdHWNh2W7Byfr1trYRvRc2DxJgtA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FoTyDEMeim17dWbM9Rm8APwQlX24EegYqAe1f9L75GHo2/OCJ1hDULnblGGAvVUVE
-	 PFCrS2jd8t+9JOAvIvt+mSr1rK3IBEWoiB06skb/C2czwFmsncZS1LCpfM0wnj89/W
-	 AOI6wQxYC+WACvIlGdVnduQAvwEkZREa2//U9y9yRX9rsUB11aSMuBpdYEvCk9pyEL
-	 xZ7bqSjBkVPzHTpshSObxEDd5KgiCu1QFSgn31kEtCReF6lw1hxGlGFl4Yppt655lx
-	 hxWDbDn9hWp4MGoZYGYOXmYtpFZ0gitTEHVJJVkTFaCUioFV+v2p31coE8G1S/T0Dt
-	 e8kFDOzPO2t5Q==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: [PATCH v11 3/3] NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
-Date: Fri,  7 Nov 2025 10:34:22 -0500
-Message-ID: <20251107153422.4373-4-cel@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251107153422.4373-1-cel@kernel.org>
-References: <20251107153422.4373-1-cel@kernel.org>
+	s=arc-20240116; t=1762529663; c=relaxed/simple;
+	bh=ZRAN9WR3nmo7Yux21d6jdeXWTmDTo4DSRVgbFAWCK5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLOV0lhmx/733yaCZxokU2eGljIaOXB2l4PxJ2e64TCDwWzk9PDbgoCtBPwCFSGjDR8zzOptESC7S4MejLijGnuz1Mv0UnWbESzY3qL5/ym9LfYljJF4F70QrvD8a0rpheQ2qE04vl6rLR6EIcpHlMXsGxsfWKyWrp9HqZThVLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=syXZWE7f; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=C6nxKiJN5pT7zjAnlNh5+VFog+ut8PTN99yD9f6CCck=; b=syXZWE7fxNEP4W4scGj2PcjyuR
+	2hvUDovIz5AbNvxmFfE9HnhzQnEshUnSWWOtvAwUeVEFDOshKlnMqj5E8n/3nfz5GHSMUsMr3Gz2s
+	BvQB+UwmK8rLY147cvE+C+ZZvVSK0dYjazt8YbG4gemgpBVH0D/ze5q+3eJRDDBRSWGALBDToN+QD
+	FqvgONXTd0E3juzhMRhH2Vj2EK0InG07GdcNYyHqQUnpKSCJUCRht2kFentHO4GS+GWYRWF0phsPr
+	1hAkaZ+h9+vR+1LQyrq7bGJBU6q5dNLtka26NcoRNSN83JAP0xUsSADNTgF1fUPuZ9aAOaiROK04g
+	h0vCVmrw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vHOTm-0000000Habn-0bSw;
+	Fri, 07 Nov 2025 15:34:22 +0000
+Date: Fri, 7 Nov 2025 07:34:22 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] NFSD: add new NFSD_IO_DIRECT variants that may
+ override stable_how
+Message-ID: <aQ4RftwuYIxwvLgb@infradead.org>
+References: <20251105174210.54023-1-snitzer@kernel.org>
+ <20251105174210.54023-3-snitzer@kernel.org>
+ <c1f4d144-826e-4c27-821c-47652a7b67d2@oracle.com>
+ <aQ0CUPcYYg6-5IJ1@kernel.org>
+ <7d9bcc0c-d997-4fb9-aa0c-831b8f08a9b0@oracle.com>
+ <aQ0noN473a-QFqpz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aQ0noN473a-QFqpz@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Mike Snitzer <snitzer@kernel.org>
+On Thu, Nov 06, 2025 at 05:56:32PM -0500, Mike Snitzer wrote:
+> OK, I'll take a closer look at NFS client controls for stable_how,
+> because NFSD clearly handles NFS_DATA_SYNC and NFS_FILE_SYNC so I just
+> assumed its because the client does actually send them.
 
-This document details the NFSD IO modes that are configurable using
-NFSD's experimental debugfs interfaces:
+Asking for NFS_DATA_SYNC / NFS_FILE_SYNC for O_ЅYNC/O_SYNC writes or
+even fdatasync/fsync calls that translate to a single on the write write
+request would be a valuable client additoon that should speed things up
+with most if not all servers.
 
-  /sys/kernel/debug/nfsd/io_cache_read
-  /sys/kernel/debug/nfsd/io_cache_write
+> > And as I said above, "no plan to merge it for now," meaning it's still
+> > on the table for sometime down the road. I have some other ideas I'm
+> > cooking up, such as using BDI congestion to control NFS WRITE
+> > throttling.
+> 
+> Hmm, I thought the BDI congestion infra got killed (by Jan Kara and
+> others).. which made me sad because when it was first introduced it
+> was amazing at solving some complex deadlocks (but we're talking 20
+> years ago now).  So I haven't kept my finger on the pulse of what is
+> still available to us relative to BDI congestion.
 
-This document will evolve as NFSD's interfaces do (e.g. if/when NFSD's
-debugfs interfaces are replaced with per-export controls).
+Yes, BDI congestion is gone, mostly because it didn't really work.
+I'm also not sure how it could have solved deadlocks.
 
-Future updates will provide more specific guidance and howto
-information to help others use and evaluate NFSD's IO modes:
-BUFFERED, DONTCACHE and DIRECT.
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- .../filesystems/nfs/nfsd-io-modes.rst         | 144 ++++++++++++++++++
- 1 file changed, 144 insertions(+)
- create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
-
-diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentation/filesystems/nfs/nfsd-io-modes.rst
-new file mode 100644
-index 000000000000..e3a522d09766
---- /dev/null
-+++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
-@@ -0,0 +1,144 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============
-+NFSD IO MODES
-+=============
-+
-+Overview
-+========
-+
-+NFSD has historically always used buffered IO when servicing READ and
-+WRITE operations. BUFFERED is NFSD's default IO mode, but it is possible
-+to override that default to use either DONTCACHE or DIRECT IO modes.
-+
-+Experimental NFSD debugfs interfaces are available to allow the NFSD IO
-+mode used for READ and WRITE to be configured independently. See both:
-+- /sys/kernel/debug/nfsd/io_cache_read
-+- /sys/kernel/debug/nfsd/io_cache_write
-+
-+The default value for both io_cache_read and io_cache_write reflects
-+NFSD's default IO mode (which is NFSD_IO_BUFFERED=0).
-+
-+Based on the configured settings, NFSD's IO will either be:
-+- cached using page cache (NFSD_IO_BUFFERED=0)
-+- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=1)
-+- not cached stable_how=NFS_UNSTABLE (NFSD_IO_DIRECT=2)
-+
-+To set an NFSD IO mode, write a supported value (0 - 2) to the
-+corresponding IO operation's debugfs interface, e.g.:
-+  echo 2 > /sys/kernel/debug/nfsd/io_cache_read
-+  echo 2 > /sys/kernel/debug/nfsd/io_cache_write
-+
-+To check which IO mode NFSD is using for READ or WRITE, simply read the
-+corresponding IO operation's debugfs interface, e.g.:
-+  cat /sys/kernel/debug/nfsd/io_cache_read
-+  cat /sys/kernel/debug/nfsd/io_cache_write
-+
-+If you experiment with NFSD's IO modes on a recent kernel and have
-+interesting results, please report them to linux-nfs@vger.kernel.org
-+
-+NFSD DONTCACHE
-+==============
-+
-+DONTCACHE offers a hybrid approach to servicing IO that aims to offer
-+the benefits of using DIRECT IO without any of the strict alignment
-+requirements that DIRECT IO imposes. To achieve this buffered IO is used
-+but the IO is flagged to "drop behind" (meaning associated pages are
-+dropped from the page cache) when IO completes.
-+
-+DONTCACHE aims to avoid what has proven to be a fairly significant
-+limition of Linux's memory management subsystem if/when large amounts of
-+data is infrequently accessed (e.g. read once _or_ written once but not
-+read until much later). Such use-cases are particularly problematic
-+because the page cache will eventually become a bottleneck to servicing
-+new IO requests.
-+
-+For more context on DONTCACHE, please see these Linux commit headers:
-+- Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
-+  to take a struct kiocb")
-+- for READ:  8026e49bff9b1 ("mm/filemap: add read support for
-+  RWF_DONTCACHE")
-+- for WRITE: 974c5e6139db3 ("xfs: flag as supporting FOP_DONTCACHE")
-+
-+NFSD_IO_DONTCACHE will fall back to NFSD_IO_BUFFERED if the underlying
-+filesystem doesn't indicate support by setting FOP_DONTCACHE.
-+
-+NFSD DIRECT
-+===========
-+
-+DIRECT IO doesn't make use of the page cache, as such it is able to
-+avoid the Linux memory management's page reclaim scalability problems
-+without resorting to the hybrid use of page cache that DONTCACHE does.
-+
-+Some workloads benefit from NFSD avoiding the page cache, particularly
-+those with a working set that is significantly larger than available
-+system memory. The pathological worst-case workload that NFSD DIRECT has
-+proven to help most is: NFS client issuing large sequential IO to a file
-+that is 2-3 times larger than the NFS server's available system memory.
-+The reason for such improvement is NFSD DIRECT eliminates a lot of work
-+that the memory management subsystem would otherwise be required to
-+perform (e.g. page allocation, dirty writeback, page reclaim). When
-+using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
-+time trying to find adequate free pages so that forward IO progress can
-+be made.
-+
-+The performance win associated with using NFSD DIRECT was previously
-+discussed on linux-nfs, see:
-+https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
-+But in summary:
-+- NFSD DIRECT can significantly reduce memory requirements
-+- NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
-+- NFSD DIRECT can offer more deterministic IO performance
-+
-+As always, your mileage may vary and so it is important to carefully
-+consider if/when it is beneficial to make use of NFSD DIRECT. When
-+assessing comparative performance of your workload please be sure to log
-+relevant performance metrics during testing (e.g. memory usage, cpu
-+usage, IO performance). Using perf to collect perf data that may be used
-+to generate a "flamegraph" for work Linux must perform on behalf of your
-+test is a really meaningful way to compare the relative health of the
-+system and how switching NFSD's IO mode changes what is observed.
-+
-+If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
-+NFSD's debugfs interfaces, ideally the IO will be aligned relative to
-+the underlying block device's logical_block_size. Also the memory buffer
-+used to store the READ or WRITE payload must be aligned relative to the
-+underlying block device's dma_alignment.
-+
-+But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
-+it can:
-+
-+Misaligned READ:
-+    If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
-+    DIO-aligned block (on either end of the READ). The expanded READ is
-+    verified to have proper offset/len (logical_block_size) and
-+    dma_alignment checking.
-+
-+Misaligned WRITE:
-+    If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-+    middle and end as needed. The large middle segment is DIO-aligned
-+    and the start and/or end are misaligned. Buffered IO is used for the
-+    misaligned segments and O_DIRECT is used for the middle DIO-aligned
-+    segment. DONTCACHE buffered IO is _not_ used for the misaligned
-+    segments because using normal buffered IO offers significant RMW
-+    performance benefit when handling streaming misaligned WRITEs.
-+
-+Tracing:
-+    The nfsd_read_direct trace event shows how NFSD expands any
-+    misaligned READ to the next DIO-aligned block (on either end of the
-+    original READ, as needed).
-+
-+    This combination of trace events is useful for READs:
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
-+    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
-+
-+    The nfsd_write_direct trace event shows how NFSD splits a given
-+    misaligned WRITE into a DIO-aligned middle segment.
-+
-+    This combination of trace events is useful for WRITEs:
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
-+    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
-+    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
--- 
-2.51.0
+I feel a little out of the loops, though - what are the NFS-level
+write throttling needs to start with?
 
 
