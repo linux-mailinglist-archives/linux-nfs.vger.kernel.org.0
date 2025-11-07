@@ -1,126 +1,220 @@
-Return-Path: <linux-nfs+bounces-16204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3B37C41D0A
-	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 23:24:24 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 944E3C41D2E
+	for <lists+linux-nfs@lfdr.de>; Fri, 07 Nov 2025 23:30:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 657551899C0A
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 22:24:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 36C284E368D
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Nov 2025 22:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAE331327C;
-	Fri,  7 Nov 2025 22:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447E5302155;
+	Fri,  7 Nov 2025 22:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgOb9U66"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="RSl+2Ovm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UuwaUA5H"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4693E24BBE4
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Nov 2025 22:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4761F4CA9;
+	Fri,  7 Nov 2025 22:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762554260; cv=none; b=VYftU/6pt8kX4CdVvwXOIM1A3BaoVNeL0Tq5Ex3Re1zqzTeR1X0r8uCn297IAQ++fyJqPz2dVeMV/TFrqqS+lYdMjYVEgo9usIrPg6VUV4ftuILYROk+rmFpxeuVjsa9fd/UR0Tl54DcVxgvmwSDc/t+D4QM/gPW6vlJtbgMTgA=
+	t=1762554621; cv=none; b=B6Gk440rJkqTWqlee7+vvrypHgfpnj+sraRZojUhfzHjMaHt0wpoM9Mklp+QtaVS7Q3EWbrOmeT/Fn7vDqdR8mLx+5A+O1i3VMkTCKGWUmLJNTDDn+Aw2E0j239iakuPtkZroNT0RC8Uxa9adMRYLWQ3y4/pbybK2tQf7culAOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762554260; c=relaxed/simple;
-	bh=ekONy9Lv/Vda8AgrD7ZXlmg+v1pW6FxqQLsiW3WA2pE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QanFMbFJ1ABgDHoTJ3E+4waK7gu8YjQon4YmERj8g2mCtN31FjkbVuwDzEMYZi7TRWqVbDixMZDfBqKAc/D0YfgVzKrEjzqWKgwMfEBLIquQvZQexmBpE387GUBxr64rYhOIJcmEe2sL5d5+LarvcGsalDs1kmaPfZ68Hpdz/aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgOb9U66; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49176C4AF0D;
-	Fri,  7 Nov 2025 22:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762554259;
-	bh=ekONy9Lv/Vda8AgrD7ZXlmg+v1pW6FxqQLsiW3WA2pE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JgOb9U66Sfbc03ymJDoVoSjj0tdRoySMQe//fO0ObwcD92SQMBxK4JYPZs8ubecJ1
-	 SOGMgw2x3sklm95MQEWe6yn2RuTs/b2smlnRJBL6e+tvLxH/0f1ao2XBlAQBwEsD/C
-	 4VHO/S0OWALQX2wuP3LP/ROU0B9nb0WFVLjXN8+PNdWivCQjihOLFF0vvfDuvdn84a
-	 JlnFWfxfYCy+A7aPE3AsDS9M+XMasJdkvdrKQjFa3/9NXmE2uNm2eOSGp+y2nzeeiL
-	 6+EvH8gQhImVLcuxmo46LaYx4M3L9O/jMZg8ystC0KUwvv4NKhSTfVuAYOYdvJgzKk
-	 1ZMcTtv+dLVQA==
-Date: Fri, 7 Nov 2025 17:24:18 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neilb@ownmail.net>
-Cc: Chuck Lever <cel@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aQ5xkjIzf6uU_zLa@kernel.org>
-References: <20251107153422.4373-1-cel@kernel.org>
- <20251107153422.4373-3-cel@kernel.org>
- <aQ4Sr5M9dk2jGS0D@infradead.org>
- <82be5f47-77df-423d-a4f3-17f83ddb6636@kernel.org>
- <aQ5Q99Kvw0ZE09Th@kernel.org>
- <fb0d6399-ea74-462a-982a-df232e3f4be9@kernel.org>
- <aQ5SSnW9xUWj9xBi@kernel.org>
- <176255273643.634289.15333032218575182744@noble.neil.brown.name>
+	s=arc-20240116; t=1762554621; c=relaxed/simple;
+	bh=W+ttskEK9RUptSjJ3i+3bIIqHWPThqYvd6x7/NI5P2o=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=cJ2bQbcpx/OQclvRLgy8SSh8A1UpGV0uBXYTmbRCncsZfvF4XdPaCTyQz94AqYZ6APUsuYK/9TzFf0hA3OE5TxVU/3Lq2I0NuOaWcf93LaURh5aNlavXx0Y50cu3nz5buLEscnxLKvTW4DAx7OkP6AITIWx1GDunho4W88vqUu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=RSl+2Ovm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UuwaUA5H; arc=none smtp.client-ip=202.12.124.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailflow.stl.internal (Postfix) with ESMTP id 793A513004D8;
+	Fri,  7 Nov 2025 17:30:15 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 07 Nov 2025 17:30:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762554615; x=1762561815; bh=ZwkPbF9nsnt/dQhVAIT39vJvv4cO/9hCxNu
+	UVfACV+4=; b=RSl+2OvmuLLOe4+H9eKpqC9RuowrdRH1jGe8qwVoOfdZ4I27ekS
+	h347QoJGR7MbFLykEaO1W0OFpHRCXityFGk6z/rxp66MZo+KGt12LqqTInEw2CYx
+	3UVsJ0CnGd7WLdxCGmc3/jPkOyINCLxKnxNZklsUc3J3YikUBo2z3iRjiXQtMcY8
+	yq2lYeSEAVc2EWLQj1vGWye7x7mEIpjRksMMLReKQwYai89hN6GT0qLs9w2fXT/S
+	aMCWnv9MVDkZT/W5daTSkcLSwc8NcaRJOdNaOs10bJXlSp1ckOlZsLuPaoex29HZ
+	f8A5rEk01MsQM2q7vJ8gaDY5oWS9+X43upg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762554615; x=
+	1762561815; bh=ZwkPbF9nsnt/dQhVAIT39vJvv4cO/9hCxNuUVfACV+4=; b=U
+	uwaUA5HM3Mo8/6XH0sr3iEvIm8qkyq18WHGz5dmT4o3VuNPYFK0sT5/XwMakgpxt
+	Ddom64XoCKrACYy2h4ZcgV+Tb8PW+9ZOvOvsw3PhcaXohwqssibqLdWfGuvkRTof
+	t0u6Tm24jIfdJQPXMml4ZsBV3LhgKvo8idsWtpOv2NMgA6+6q/kF7vulaDiw1Wu8
+	QXM1pWPcrGZS5Ickwb89bPU2A6H7dDCOZcL68OGNiBqQPLXtlFiE4VEh4FSXHbCH
+	jVfBahE281hNyxR2h1puiT9DkuKNVkHHM+JFBCiTT4EucRcOcOrhAYY2UT2c/Eoo
+	JZasuDe2hIsiAlgrLmPZw==
+X-ME-Sender: <xms:8HIOaWcJ3fvBIlxYhSXg2q9kliHbCJheSrwA-afUtv0OZvqwXLDyaQ>
+    <xme:8HIOaUV0elXG3FvBZLynkKLK1KgrkL5csSh7j4QStWTKC78ohwNtKKCTXTTHgS-gp
+    tx6yHyJkUTuEkTZ5fK6ZZAuUD2GiIcU7CC_2eZ5UrNZYjQDQA>
+X-ME-Received: <xmr:8HIOaZisnAl3bLTOnvZKYyms_eoqV6GZneXYuZmTxpw76w3Ai29fkPeeLdpc1Or3ahBpEelhGgOyPonxIcN_mwWmfK2BHg0p1qv3ZiVRU6Jc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduledtkeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepleejpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtohepfhhrrghnkhdrlhhisehvihhvohdrtghomhdprhgtphhtthhopehlihhn
+    uhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
+    dquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhnihhlfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
+    igqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:8HIOaQRYcr2XZwYm0IZqPOguq_RH9vLLuCtHHjKz_7fIxkwW75Seeg>
+    <xmx:8HIOaYxjBK0ZJhgdNXL6-GZM5wqctaqKx4DPCA07b6HaSPRwb68vzg>
+    <xmx:8HIOaa-QnxtUrxuCdvh7t737bdTRYVtIsmaz5JhvP3JtprsULcfyDA>
+    <xmx:8HIOacn1Ltrl3NwobU3IDf3ppIfGvZcjgmhPN9__dNGKj77ZkqtQiQ>
+    <xmx:93IOadG3kN8Y0sl9-bllfvn04bE55YSNPrlPh3KgJLC15UMHH_zqyJDP>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Nov 2025 17:29:44 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <176255273643.634289.15333032218575182744@noble.neil.brown.name>
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Eric Van Hensbergen" <ericvh@kernel.org>,
+ "Latchesar Ionkov" <lucho@ionkov.net>,
+ "Dominique Martinet" <asmadeus@codewreck.org>,
+ "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+ "David Sterba" <dsterba@suse.com>, "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ "Chris Mason" <clm@fb.com>, "Xiubo Li" <xiubli@redhat.com>,
+ "Ilya Dryomov" <idryomov@gmail.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
+ coda@cs.cmu.edu, "Tyler Hicks" <code@tyhicks.com>,
+ "Jeremy Kerr" <jk@ozlabs.org>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sungjong Seo" <sj1557.seo@samsung.com>,
+ "Yuezhang Mo" <yuezhang.mo@sony.com>, "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Yangtao Li" <frank.li@vivo.com>, "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Mikulas Patocka" <mikulas@artax.karlin.mff.cuni.cz>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Oscar Salvador" <osalvador@suse.de>,
+ "David Hildenbrand" <david@redhat.com>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Dave Kleikamp" <shaggy@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Bob Copeland" <me@bobcopeland.com>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Zhihao Cheng" <chengzhihao1@huawei.com>,
+ "Hans de Goede" <hansg@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
+ "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Kees Cook" <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
+ linux-um@lists.infradead.org, linux-mm@kvack.org,
+ linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject: Re: [PATCH v2] vfs: remove the excl argument from the ->create()
+ inode_operation
+In-reply-to: <20251107-create-excl-v2-1-f678165d7f3f@kernel.org>
+References: <20251107-create-excl-v2-1-f678165d7f3f@kernel.org>
+Date: Sat, 08 Nov 2025 09:29:43 +1100
+Message-id: <176255458305.634289.5577159882824096330@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Sat, Nov 08, 2025 at 08:58:56AM +1100, NeilBrown wrote:
-> On Sat, 08 Nov 2025, Mike Snitzer wrote:
-> > On Fri, Nov 07, 2025 at 03:08:11PM -0500, Chuck Lever wrote:
-> > > On 11/7/25 3:05 PM, Mike Snitzer wrote:
-> > > >> Agreed. The cover letter noted that this is still controversial.
-> > > > Only see this, must be missing what you're referring to:
-> > > > 
-> > > >   Changes since v9:
-> > > >   * Unaligned segments no longer use IOCB_DONTCACHE
-> > > 
-> > > From the v11 cover letter:
-> > > 
-> > > > One controversy remains: Whether to set DONTCACHE for the unaligned
-> > > > segments.
-> > 
-> > Ha, blind as a bat...
-> > 
-> > hopefully the rest of my reply helps dispel the controversy
-> > 
+On Sat, 08 Nov 2025, Jeff Layton wrote:
+> With two exceptions, ->create() methods provided by filesystems ignore
+> the "excl" flag.  Those exception are NFS and GFS2 which both also
+> provide ->atomic_open.
 > 
-> Unfortunately I don't think it does.  I don't think it even addresses
-> it.
+> Since ce8644fcadc5 ("lookup_open(): expand the call of vfs_create()"),
+> the "excl" argument to the ->create() inode_operation is always set to
+> true in vfs_create(). The ->create() call in lookup_open() sets it
+> according to the O_EXCL open flag, but is never called if the filesystem
+> provides ->atomic_open().
 > 
-> What Christoph said was:
+> The excl flag is therefore always either ignored or true.  Remove it,
+> and change NFS and GFS2 to act as if it were always true.
 > 
->    I'd like to sort out the discussion on why to set IOCB_DONTCACHE when
->    nothing is aligned, but not for the non-aligned parts as that is
->    extremely counter-intuitive.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Note that this is based on top of the dir delegation series [1]. LMK
+> if the Documentation/ updates are too wordy.
+
+Patch is very nice.  I don't think the documentation is too wordy.
+I think it is good that the two changes to the different files say
+essentially the same thing but use different words.  That helps.
+
+Reviewed-by: NeilBrown <neil@brown.name>
+
 > 
-> You gave a lengthy (and probably valid) description on why "not for the
-> non-aligned parts" but don't seem to address the "why to set
-> IOCB_DONTCACHE when nothing is aligned" bit.
+> Full disclosure: I did use Claude code to generate the first
+> approximation of this patch, but I had to fix a number of things that it
+> missed.  I probably could have given it better prompts. In any case, I'm
+> not sure how to properly attribute this (or if I even need to).
 
-Because if the entire IO is so poorly formed that it cannot be issued
-with DIO then at least we can provide the spirit of what was requested
-from the admin having cared to enable NFSD_IO_DIRECT.
+My understanding is that if you fully understand (and can defend) the
+code change with all its motivations and implications as well as if you
+had written it yourself, then you don't need to attribute whatever fancy
+text editor or IDE (e.g.  Claude) that you used to help produce the
+patch.
 
-Those IOs could be quite large.. full WRITE payload.  I have a
-reproducer if you'd like it!
-
-Limiting extensive use of caching buffered IO is pretty important if
-the admin enabled NFSD_IO_DIRECT.
-
-A misaligned WRITE's non-aligned head and tail are _not_ extensive
-amounts of mmeory.  They are at most 2 individial pages.
-
-> I can see Christoph's point.
->
-> Can you please explain why all the arguments you have for avoiding
-> IOCB_DONTCACHE on the non-aligned head and tail do not equally apply
-> when the whole body is assessed as non-aligned.  i.e.  the no_dio label
-> in nfsd_write_dio_iters_init().
-
-Sure, hopefully I just did above.
+Thanks,
+NeilBrown
 
