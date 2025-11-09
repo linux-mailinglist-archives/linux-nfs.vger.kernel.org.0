@@ -1,80 +1,76 @@
-Return-Path: <linux-nfs+bounces-16218-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16219-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC1BC44528
-	for <lists+linux-nfs@lfdr.de>; Sun, 09 Nov 2025 19:36:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1B8DC4453D
+	for <lists+linux-nfs@lfdr.de>; Sun, 09 Nov 2025 19:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED5153A4C77
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Nov 2025 18:36:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94CF33AC877
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Nov 2025 18:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FFEF221277;
-	Sun,  9 Nov 2025 18:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2DAE226541;
+	Sun,  9 Nov 2025 18:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Bak+cONk"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="R99IRQC1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11020142.outbound.protection.outlook.com [52.101.201.142])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021103.outbound.protection.outlook.com [52.101.62.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60423218ACC;
-	Sun,  9 Nov 2025 18:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BAB223DE9;
+	Sun,  9 Nov 2025 18:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.103
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762713388; cv=fail; b=BX5C2DgLqc8jnoL1o6viyZv7/qxnEHeUUhWv1fF2ACEHnikNdQDPF4dXj7x4XB0K9KcVQm1FzSCa7zhMavn4dz4OcsaQQtrJJjwGRjKw8rkstsqSpXAnZ6Zl7uC/SuUxOalkCFozQCVObt1NNU1b9da5TCiOOzAZNi9VDV+k/vg=
+	t=1762714655; cv=fail; b=GePojRwX8pHvP2ObcxgKfTZEcASp10RgOKsLzB0qiBef0o5RaNM1S6iIf2984Y5TsP49S7LDxnFov54eJdyxFzsEfy1PkLLeXp9xZZv+DdvlwB168eueGh4pP7qInEg59SQYCI3IQkgiHOCBdMHzTcppsEvwR5Iola4FwZFPTOs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762713388; c=relaxed/simple;
-	bh=vuoNpqNnkuBMfckiR26pMuR9pwNedHaNJ6p+hfsvWlo=;
+	s=arc-20240116; t=1762714655; c=relaxed/simple;
+	bh=UVqbcCg70sqYa0uKutISfIdG481KtAN5Ein3xfyrJqY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hOf8NU7SwB7tBq6SFq1AaCk6wFI3YOO5yr2ORthYSbuhQ6JzuwVy9LAb4fjIvffH9+PH0n17WWV4a0oNCcNkblMRuFu0eh8Izno0BEb5gzz+VqZWCo6qpTW1hDYal0kKxPJppoAjxFX7hkwMsnUNktE4qKK2Iram3pVXhROR/mk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Bak+cONk; arc=fail smtp.client-ip=52.101.201.142
+	 Content-Type:MIME-Version; b=Y3skpUewUbNh8pJErstJUNhmL6W/9M8dq0ao7pf+tpc/EjTRfqWkxde3aDa3yQIKe1YJlRxyyOr/zE0Dt7541lX+1Dz2GfbGQ3o2aYD20f8PICn3Gj1obe66gjEbbUPbstR7E1byCgv4+SPfU9BHLArX0OH8pkMIZe7RhEsl9/E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=R99IRQC1; arc=fail smtp.client-ip=52.101.62.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qGfWw9C3UnVkFh9LoT4SB+ctND6blm24zWgDUGIKt7AET8zNkQmK20fe8RFvvHL2CVg5vmhEqm+ble2+tTDp4HUfjSwodzFbbmxBZQZYg4FCJ3+iIiVY1lAzEwC+cB0yQivV9fXVXNGYdMVWRQWeuAijA29gpKv4mwYyQCuCjzd4uYWhYRvwsYdT3+N1oah2uZ/fm0E4MnR68O0NHpWs1vnMluAzgcopKTZ4cWFI+Y2/PyoqNdQOZQLiVTqUA1nTL8v5rE7A6jw+lVF27YU1CQZd5v9r6SNoMi1EQy2SBfgiqBdqCTHgvbQVQOLBmohQO4kaE463LYSzQI05Q8nwkA==
+ b=rmmYbZSuK/xZHUdSqeY7lkRFOInu9T5mtPnfWRzR8d6cdziLlO9NfeXXnn2VkacIP/e6O2KOphilCDbeYFrwejZSI2v8PVpndOtKDAQmTG8xKmjJbuU1nSlgzTNmvs0AfzKdPITeS3HuEnsLdpUMpz7Kwz+tsLeZB0s2n75bs4YT6QhWCWU1OUbJsAvaUDtv523xJUNCOVRLWDxirt6AJU00oefc6TOLNNMEo55iMuVH2fS/dJ80G5+OiQMIMv43jWLw+HkM3s8K1xbObwHaypkeHv7iWEVMyd17KHkEkv0dDo9sUgtoANzNKLMvJNOemXoVgNkdmEdikpzAPP1Jgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h3lpTo6GlZXQO8pCpN/4FSaMWLMO8aoUZqfY1uNbSt4=;
- b=R8QO+MnRhJvXwdN6AcYQV1tdOAOFVuFpsUwnMGI9+KiPfgl1tFYHnQoaAVzZniY0fu1Js/8NuaiUTisbUQsI/rQJhfoj7xhLCb68eQ0IzMG0Sfflu7q0NA/tIOwR1zvC+VGtSK3HFCaqPq3A5n+vlOUah2oGpjiPy7SWbBjMsYIzajQWAkJOziF+SUKx74MUDGqxsLw3c1ejmgHvRsESJKjiMeCozYsvaKCxIISUp4wOgone3ovc6teHKbYbpgAEPCOJGoITqiAPRrOmORjc8BtnrZcepPEshlF4aRXP7BV1kIYglZ8+/dUu5UdwjEJaFU2QT8+GOIkZd1li8cqRgA==
+ bh=13pNlSkUjHC9o9eAsf5gQnNI7ShkwVnEJ+LO9+JgRgY=;
+ b=CW456EDnSyrV2iy3hPZfilYYgkQw3fOuG/3ESeyD6gMFdpG22pbTLdO4o5/YLSI9/Bqrck0Zk3XvmFSmVthV503vtQm7NzJ+rgfFoQZ8nxBDVrTzzlnS8RvsM+l/UMP7eFDZchsO1iBPjK2DIjboV1izjUOBoo77MiYcbDtt9Bev4A3Wg43F8y1TR3W7MjZDztNMX5k9J2jeHVAdtXUBC+Tb+FQORzxrkg3ctuoMHZKaUJUDar3qX/QM3KOGjvUou5TrbgmWRXJdKOk1Pyju45w11K7jO5ITSQH9yYKknTKHKNLKx/7uStjRr8IeajCjSAO7R2dSGeZpefbfepNDeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=hammerspace.com; dmarc=pass action=none
  header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3lpTo6GlZXQO8pCpN/4FSaMWLMO8aoUZqfY1uNbSt4=;
- b=Bak+cONkePQceoGtTeFc5lZ+2CbgMedqagvAkayQCGEPbzUSGA0t+h/ERhzOlt3PdeTZVeV4vtUIRj9AtY7O+4VBJEb9H6UMDtDNlg7jVrKKBgdLtxqRdomJxGvb9GOs6qN0tkUZ9+tFTgTbiZfzX5O70Vsp7mGhhjm9+azhXvU=
+ bh=13pNlSkUjHC9o9eAsf5gQnNI7ShkwVnEJ+LO9+JgRgY=;
+ b=R99IRQC1UM3Ki6LMu7zNQDAlbS2wfdCn8eCK3g7PVgiuMA1bg9+H8ZPp6B3hRxD54mFjbZlyoXe1Jr9S95vX+oYJ5ZXtF6XyDT284iV+EMGWb72nFSzhie4AaM1sF46CVg9twVQuybyjqrm3345pnpLh2afIK7tgynkhjBULGTU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=hammerspace.com;
 Received: from SN6PR13MB2365.namprd13.prod.outlook.com (2603:10b6:805:5a::14)
- by SA6PR13MB7064.namprd13.prod.outlook.com (2603:10b6:806:408::6) with
+ by DM6PR13MB3954.namprd13.prod.outlook.com (2603:10b6:5:2a3::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.13; Sun, 9 Nov
- 2025 18:36:23 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.12; Sun, 9 Nov
+ 2025 18:57:30 +0000
 Received: from SN6PR13MB2365.namprd13.prod.outlook.com
  ([fe80::9127:c65a:b5c5:a9d]) by SN6PR13MB2365.namprd13.prod.outlook.com
  ([fe80::9127:c65a:b5c5:a9d%7]) with mapi id 15.20.9298.015; Sun, 9 Nov 2025
- 18:36:23 +0000
+ 18:57:30 +0000
 From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
- okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com,
- viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [Patch 0/2] NFSD: Fix server hang when there are multiple layout
- conflicts
-Date: Sun, 09 Nov 2025 13:34:26 -0500
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: RFC: NFSD administrative interface to prevent offering NFSv4
+ delegation
+Date: Sun, 09 Nov 2025 13:57:10 -0500
 X-Mailer: MailMate (2.0r6272)
-Message-ID: <ADB5A1E8-F1BF-4B42-BD77-96C57B135305@hammerspace.com>
-In-Reply-To: <20251106170729.310683-1-dai.ngo@oracle.com>
-References: <20251106170729.310683-1-dai.ngo@oracle.com>
+Message-ID: <2602B6D3-C892-4D5A-98E7-299095BD245F@hammerspace.com>
+In-Reply-To: <8918ca00-11cb-4a39-855a-e4b727cb63b8@oracle.com>
+References: <8918ca00-11cb-4a39-855a-e4b727cb63b8@oracle.com>
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: CH0PR03CA0345.namprd03.prod.outlook.com
- (2603:10b6:610:11a::29) To SN6PR13MB2365.namprd13.prod.outlook.com
+X-ClientProxiedBy: CH0PR08CA0001.namprd08.prod.outlook.com
+ (2603:10b6:610:33::6) To SN6PR13MB2365.namprd13.prod.outlook.com
  (2603:10b6:805:5a::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -83,137 +79,123 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR13MB2365:EE_|SA6PR13MB7064:EE_
-X-MS-Office365-Filtering-Correlation-Id: 947b0b20-f9f4-4741-677a-08de1fbee25a
+X-MS-TrafficTypeDiagnostic: SN6PR13MB2365:EE_|DM6PR13MB3954:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8abf994-0296-4fa7-853f-08de1fc1d534
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lXMXMxCJVPDjYitytx5GUdRQ1/YD1qleDbeRGhsDLSv81gUy4oLDOafZYstG?=
- =?us-ascii?Q?EaAMnIFzKVQC2CRuBwoXfcj06FPpMyAt9lQaSNJWwcH9s1J5kfiSJRso+5ba?=
- =?us-ascii?Q?jeVlhz552xMi4PSkwCpDPLZgOSw5c6FlWr4n+q4QmtloTB+DwjtWV8zbeQyc?=
- =?us-ascii?Q?o2v97STivoTcs0GNmW3wtLQxsWMdPc7ImS4IyaHYn/iu+ePTxrJ6rGfsnuEX?=
- =?us-ascii?Q?/gLk9eC97lrpezCFttajXpZ9NQshv3+04ApAJT+rgJVtZASwLwPt/pZTjkF/?=
- =?us-ascii?Q?LDy8y30q1P03edOTYHGqRBm9SYdc7nvVyLIYRsw1h3nbZUwIacuBRfWURl7r?=
- =?us-ascii?Q?eoRJ+AiLLFONnyPlDO6bQhw3QxNU11BukW+tjzXnHP8CfD/XuPAUwaSwW1FE?=
- =?us-ascii?Q?+SWbbiB/8giSIVuDw5yceCwXPrjle8m8x0mCydKXyqrAOAZG3c9zSfuFXQ9c?=
- =?us-ascii?Q?QvPJZuu2LVjtsRAqZ0niUuHiL2vi2/2Sq9bhS8zBQK+2wILBOy3YOjq8oAYG?=
- =?us-ascii?Q?1Lgq+DQ+0XHcxcFxw6yef6xc5ujCP0tFFh4CFHVOBO8x4dtBrkn0nlG7fj1f?=
- =?us-ascii?Q?/l/o3f5u7Zu1L60basMrYS24yFe9WAe8997neuVor5NQK7FIFY47Nd/mDb8i?=
- =?us-ascii?Q?t+R16rzFG/RbHxrd43fLT+aWau22VlKaIwh2mNXP4ljpODcDpK9AN3uGi80p?=
- =?us-ascii?Q?TXrGVjPjWboMr5wYB1oseFe3gWo9BxWPTvwCLAzO/A2tKi0qKj7AORGsPXmN?=
- =?us-ascii?Q?T24tJK/Fo6zEkXAxyfOeO7EcYbDD3x5AW76mbk5r0Cu/zX9YGS4SEzLMoI/X?=
- =?us-ascii?Q?oqmjF71rjKv7QSzhUOl9b4NTxlzW75yriex+nO6VObtge4VAmEAQYS+EycOm?=
- =?us-ascii?Q?IbBGjCyiQFtTnm05p+RcipEXjmP2soW2MpxyctkJkS54dwxfryGQKQV1tXfS?=
- =?us-ascii?Q?033gCKK40DxzeotSoBPLJeTOaKgpJDsbdZVx6ZrTfaTXbvvQtgRLc0Y3oxHm?=
- =?us-ascii?Q?wF7wdN0fxVv/oqkVU9SucRatXXe0UHlbXFCPSzLV+JEqMk+zGLJsYNab0zeM?=
- =?us-ascii?Q?Y8e51q8GX33dy7hw7CHgsujUW2Vx1eG8xMBzadNEcnJcGN2+NAbzgd/D0g8/?=
- =?us-ascii?Q?y3TaNtazh/b3iveqFUJ6kjWPEg6jDJjCywtn2pVQh37M1XrWk+GUxt5KBFLy?=
- =?us-ascii?Q?lGITwWMb5QyAYKDC+1nR7MvyUOdF4yD14av6D/0tSYucHE2S7977IeiKh7P4?=
- =?us-ascii?Q?ulQZn5xaUEtTYTT55phVQyw3Vj0qLOBV3JYQ15e1WzIG2rdDHqGl5FqLHIe4?=
- =?us-ascii?Q?dS75dvvodrXOAjsM2pNkLI3mqXgSRPGsAchwfcQJpS9nrPjf443hz3zP1Kmu?=
- =?us-ascii?Q?B0kDXXJhBBH1w4D1PMGqt3T6Yb8VIA0FryGdwJQrGJwa6IZZjkEzExw32tyV?=
- =?us-ascii?Q?8ebcWVF+Qni0pggCVRs6riYymROeFxXEbrp7bQpXTkVUjecUV/t1cQ=3D=3D?=
+	=?us-ascii?Q?zQSkkVFk3Fcjb7HXXje7AzQunyKXEWL3zsLxrJCT9kA4fFqGznh9/rLmsdSy?=
+ =?us-ascii?Q?IOptsIZsorZ/MlgTZ8LvrsxHXUCE1POGo/I+jtyDyNcDe+82B8SGsK+6ejAq?=
+ =?us-ascii?Q?aGwfOwPv3qdn0VSldncodPaUCvEWBHm2ExDfrdIWvkEZt2hDzeAlEz17lbgF?=
+ =?us-ascii?Q?R5j2Xd9ZClTBUidkos5jkZK2DfC36eq6Fvhm7ngyUAb5V/tOX1HN+um89MAT?=
+ =?us-ascii?Q?zNAscIVqdWsCedPZYDdVP7Gk1lEzCjTA+sMl+Z82Rs2wcoAZcw4rwkYv4SUL?=
+ =?us-ascii?Q?cmUABUYwG9JlRNWiVvHV2dmNGN+7L2cXeOz5TwcKjNqtz1+0OiIKbBbJWzHV?=
+ =?us-ascii?Q?ju3gCdGJ0ENovbsE4ZOnzTrUZazE6GcFomxP+DtyvWQx49/4ufmJiAN3M3xS?=
+ =?us-ascii?Q?BQtrOxNDk2u+1FCALUPjGXmxuM02iIQp0gMIJAtImNg+xnh3IgHjA2n/AlFF?=
+ =?us-ascii?Q?wGSR0jmcL2oDx8/aFyvGp+Sn6vUfhvNjhYHqU1dWwHobdDzmi3vzWH41kukw?=
+ =?us-ascii?Q?IcAVeLs8iIHjYWDKK4LXUjhY0SyGTri7n1Lh3zTmLb5BX+frA91P+9p52u3k?=
+ =?us-ascii?Q?AQDDD3T5524BUbls8IxIdxs3frtnssZU8nDtcApSorTAEp21qfg3rYKxSZU5?=
+ =?us-ascii?Q?WlRa00sOgLIKBnpdH1ki54gtnUfjh/q0isP9nE1h4lwDJANTbQoKN6AZ1NcS?=
+ =?us-ascii?Q?lGTAIfd1x40BI5zOz72uHNY9IE5E5btK83Wgmwy8kTRG4++rKYRvnFTHCsCZ?=
+ =?us-ascii?Q?BE3UJS5uorRzJANZ1CYugGu/6Uk6QbPfmM6EvsJrCArlJlKPeuR2w7hzSChq?=
+ =?us-ascii?Q?mP8VoaRw7wzKJMTKWm4BzP0rmMRwr9ZXs8kdQuUFb4eoqbWZOtvSWiOUqzfv?=
+ =?us-ascii?Q?eNWFGjvM/yDGP8DdQWcR/vzD8R/rEx6RZP4+ArbM4G8dhvQkEsVrlH6nXCsL?=
+ =?us-ascii?Q?w+8lMMg0+xF60nawYfOLFS/OqLk/avwc82Ri+24eGfJN6hzPmuMswBAtQjOj?=
+ =?us-ascii?Q?FWBWVNQwg79o+E+dUUCiKzjiI1PixLGaeUrJCoRCzk2EfdFcgFXTTdQxbmCh?=
+ =?us-ascii?Q?TrFE6B38CdeofSroHX7zDWNWcjpVzcwrD0MQyIZTiNHdQDjA1JVsf3AcsNjq?=
+ =?us-ascii?Q?2nlx/j1HwlE2RDYFJhXinn2+wJ0vjexLM0KUVMgEr1jenD4ld6whiS7PaNwd?=
+ =?us-ascii?Q?ZEKmN8YOv+dGLNXuJcCWstgYIKSpDE4bIpSI1pY1gzDTUf5Tc42PnNKmJ8Pv?=
+ =?us-ascii?Q?x/jBw3t3tg9cgubLpK64oZ0HqI0sCRzvTWvGVNcFdF25gt2n8A/V/617IiEg?=
+ =?us-ascii?Q?r+vKnjf/SnKwV3DANSfRs2KLLDNlNcS7lsKDVAkMNN+cdBaL7ILwkbVw+V5z?=
+ =?us-ascii?Q?IdZ4CN5BXUndostyp3O5U0C5KR/YC8l/9d4kPO67tJduDFvKdGqbHTOk+tM3?=
+ =?us-ascii?Q?FnYTq0ilQusrVq5shJrbuuYC9kxv8/cE?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR13MB2365.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR13MB2365.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zlFT2vKeWy4DfNayRF3DRqmu5UPS8iiQxi4bMtKhmz/mkOJbsQy0Tb+Ws2kG?=
- =?us-ascii?Q?6vspKc2S7/VDzsAWSkw4+/aD9PD1oaIjT9k11yeoy7Kn2GH5DukbPa+SrFyq?=
- =?us-ascii?Q?H8irtJB0oPOSblkDb6ymYOrtSXuc+48yJULVy/hdQ/FUrCmgozAs5Zi1SqLI?=
- =?us-ascii?Q?0NTbC3w50Yuw4750fdgPDAQvU0MEstoMjLpax3dvHxLviRDMG4jTLIbf5u2z?=
- =?us-ascii?Q?Rt/bL5dFPD5m2BOKpVJpW4691F2zwOyKjvHG5++2FZqiaFqb5pjySDLMYefL?=
- =?us-ascii?Q?m4D667lhBBN08HckGamyOnKMx0mBOCmVHhrMHAK1v7n22C9L6zBOgSt96fC2?=
- =?us-ascii?Q?RWvQx+ki2VPL3oSWjJJLUD4oMCwDzrnvcfdyMcHcmPoytLct3v7rYxCdGJDV?=
- =?us-ascii?Q?DdGnxJqBr36gxgc77g8eTlFGwfg8ELzfVj3fanzBFwVqJ8jNrE/k/U2ZuA+q?=
- =?us-ascii?Q?2XtHjuNxmdyRfDpidhwdyxlmO7WeRWqXW07sZG/h4XK/YiNJwFr7UKmenaw5?=
- =?us-ascii?Q?jYXmklD/1ykNdQtJ6OJxW2hHn/db2xPLRedRGBWEYsZxK22/09B8KGH4ZPR4?=
- =?us-ascii?Q?TTetTU7zqWdL4dhhw/t5QNv73y/Wt5iz10E+IxLCpHEAehtAB38e1vu83s+7?=
- =?us-ascii?Q?7asmZcqPCWGLdYHyoK4a4RSd80LBcU/2XrlN2jl12ljfV12wiYd02yZ/AkxY?=
- =?us-ascii?Q?U92bBRT4iXu8qk82Wksc83/8mwk2VBPEp71pubIQDazdmje468eIMgp7rFN1?=
- =?us-ascii?Q?o2/CmFEVvS+u18ZfGTTLT181h8rA+zUwoN4/4dtcULFvJOy6EHyz77X3u2rQ?=
- =?us-ascii?Q?fNNIG3ZbC8wW2GnUHSLKaww625McKhDzUjYMHag1bQLB+seKLJiFZW61YzII?=
- =?us-ascii?Q?tBOhcWuUK4DhTx9msDrXhuh5VwpyZ2TtnPPiMOxIzlXntAPwSY/dWypj+JtG?=
- =?us-ascii?Q?/X1455EOVAaNRDGrVWxrQm5x/61AwKFXr665nxp4v9QYBWCZA7nyl8Z2iKgb?=
- =?us-ascii?Q?kgV+GVKpY1/K7b8GHCEPYhPBMTHNHxwDPBb3LPJ7rMQDsqUefHL6rOIZQnY0?=
- =?us-ascii?Q?KAFBUH6P50n1PuHzlaGVlH1GytQS+XGPzeIhL1rqzqn5GzsAX2bVTXSBhrar?=
- =?us-ascii?Q?L0GHuld8mrnd9FniH+bP4gBZyQwl9+BKGhZpiCdtBXO3q4llO65UL1rVt//+?=
- =?us-ascii?Q?hUmlAhhTDCqrNnbHt7vqawXiw+ACB4R7nECr+LAk5r3X/AZKkwFxP1nHFz4r?=
- =?us-ascii?Q?nPD0aRybceH5kEEHdaDImuoHLXiY0TtK/72VMKYLsW0ltZWrtB/afvWl2YuL?=
- =?us-ascii?Q?nwq4zIPJXgGhsu8qnA7x/dMRWZumAnrwGyDIArqkHcmJJKcR1OwPLQ+cL2FC?=
- =?us-ascii?Q?5EUYS2uOLaVr9YfDIpnXchhc8iT3lACrojP01iiYJKiW3bMr7iOVZHTexsPn?=
- =?us-ascii?Q?LNguNSZkiJ68RLm+DUhzTYE/qoesiiBFYLARkScy/s+xd0kDKBzZVQ7VfPuu?=
- =?us-ascii?Q?FGtFJk/vIcfdBEohn+F+i5hh+3H1KydY9UDgFnWWEsbescOT6PD19K5qiBEg?=
- =?us-ascii?Q?KcE3pzLCBeQmLOel7cVAuUjMIjAHAI1WXIr3EjJRMl4anQbEwwWeWPtevQap?=
- =?us-ascii?Q?yvO54gqB7ZDDWmp+/+NDKTI=3D?=
+	=?us-ascii?Q?H0iaBk/kgbga09g+uV9l8m4LC0fK58N6i34nnxKgVXjqBd0yQ4dzjPyqUScY?=
+ =?us-ascii?Q?mxeJTKMzR6u1nLCp9vTG1xneJ/adT0qBQaao54/Y02hYHsZQ+W6f+2JzpLJU?=
+ =?us-ascii?Q?G9GVg0l1+sMOnGCLWORDRyqj0WMTqIy+pTjguLxD+Dh0n/EOq9kkvO5X6QMA?=
+ =?us-ascii?Q?G3Inq8YJ/9EDIBFOWy1sQlCvhzHzFOMsQ0dB9IN68OmbYCLtUfCkdu/DM0FK?=
+ =?us-ascii?Q?HoV8jHTjpUhkE+7wHokB2Zq4lNs3Qwdd4352nrUnVxVOqhxe42WVQsK90Dy4?=
+ =?us-ascii?Q?V/CdVc6ov4acB3EGbZ4LqMgx1JrmmVTOm2k0YDWGsb4yw0ZRgeg5WqR241zO?=
+ =?us-ascii?Q?riJxomUEM6e4/TPx0tyEtpgJITVxdVyyGddN2LXh1Dix6fCBHwZj0FGw/0bq?=
+ =?us-ascii?Q?LZqSY1ZZsig2T2CZmbFAuftne+El4PmVLDkUoXPp0swqNFpE0yQ5JbBdE/PH?=
+ =?us-ascii?Q?ZNCh92VXtKy/emtIooy44VVYFY2+/6jTMpHRRj/Z/FYi3cc6ERKswd7LIxlj?=
+ =?us-ascii?Q?KEkmgwhQYKKNd6C7jLP8GDblX8NZmVpDCAkfwI9HyTPUJhILH6TekzqGMe/Q?=
+ =?us-ascii?Q?mRl0MMuXc5eB7/RZrZIsyAtUQWL+5qiiishroBpBfykdtglpWt/IC81MCJW1?=
+ =?us-ascii?Q?RLbqD7ScJrUW1+I3ZdrZBAbODdLjsWa0F+EuY8epgwXRilpbBniFjav5KELe?=
+ =?us-ascii?Q?lX0b/f648eitY9rYZTJu3NHJdKPnHKZC/Ty+eM0MCqRsfSmdEwcjzapqCVTu?=
+ =?us-ascii?Q?Ukb5PlgAkdF7C1ccScVaw0ROfPrNlrvcAb6GW21pfMEkvRpbzTgaZIzGvEN7?=
+ =?us-ascii?Q?slPxhQxSgjuKuFhDHyt+dJZx34Y45Av8TL3zfHGOPk5sl5id94Ch+8PBdvDc?=
+ =?us-ascii?Q?CU7MNYOqxTfAu7m19hTfYGjlaqLvNJitEfxckQLD533sI98Sce6FrfsV22cE?=
+ =?us-ascii?Q?FonkGs6J7GCnOlsPdr4gpiEpi5wn9zl/MUUHbiu99JeAQjy5G+co8YHs4d66?=
+ =?us-ascii?Q?kKj85eB1YYeuNgBKLRNmGvV2MepKfPRfRFo/BTO6gHe0P54CXA4b75MQUnGR?=
+ =?us-ascii?Q?uLXwqzy1PRSSblLibXXpQQk922DZH+eW28Ev9s88CV8CLGhPECfW7gtqassQ?=
+ =?us-ascii?Q?eX5UDx8vnqdcTFphnWnKt7Fu2Cx53I2hfDPewlS7Pkr78E5pgzcBiBL7CVib?=
+ =?us-ascii?Q?/2OCWsd7eDqicZ9mvfWpIzgTKRAZNlSjtFsve0Akhw7X2I5N7BZ/9eEc35QL?=
+ =?us-ascii?Q?EhQcs5aSbucFpvG9L73nn7FBGjuWEVfLn90tnv5wRDavyUIPYUa2TJ67c6JR?=
+ =?us-ascii?Q?04TCvRr2Vmg5VmsSEZjoijDL2RWTKb5iXAvr2dvOhR5l2YQdKOtP0J0ltICB?=
+ =?us-ascii?Q?g5FQSKIWzCVbSiKd7T9HKHRpVezVGFOjeKAF61f10KCR/mkQxNxwPS5qlFMV?=
+ =?us-ascii?Q?30gtvGR+lL8D92LVdSemeH+ZQBwXwpgV9wqoQBde5qKRpSLOnErW/MAW3Dvp?=
+ =?us-ascii?Q?/kG99HWm0f45EpYqxC517bBRFTqNLMGs4oXFpjKOSXECtz+MmNo8jVS00s9T?=
+ =?us-ascii?Q?ocxljMszPIX8sdBDYq5YFJrnwzK3qwHUI++jLge64J4sLfUNGgWHhAROmvHk?=
+ =?us-ascii?Q?55N99i0729Hh4CVogJpG0MY=3D?=
 X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 947b0b20-f9f4-4741-677a-08de1fbee25a
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8abf994-0296-4fa7-853f-08de1fc1d534
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR13MB2365.namprd13.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2025 18:36:23.6305
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2025 18:57:30.0401
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mW0FMEOz+HOJA3mdp6M+Xc56TG8gnIiyhO6ok/APTwqbMwc2Pp52s12No8drr5dj/LCrCP38KVBIgFAl12kOfw7qTw37b6a6pFYiEvnb0sU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR13MB7064
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZHdaDiPeNSqqrmRGECRvUpQbWfO+D5YT6YlGseVfHJeE2enbBTLxqCVw1twoQF0PeTgaiFS7w9PFf77OrtJBkLH9+L3GKjtVHBhzMq7vSp4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB3954
 
-On 6 Nov 2025, at 12:05, Dai Ngo wrote:
+On 4 Nov 2025, at 10:54, Chuck Lever wrote:
 
-> When a layout conflict triggers a call to __break_lease, the function
-> nfsd4_layout_lm_break clears the fl_break_time timeout before sending
-> the CB_LAYOUTRECALL. As a result, __break_lease repeatedly restarts
-> its loop, waiting indefinitely for the conflicting file lease to be
-> released.
+> NFSD has long had some ability to disable NFSv4 delegation, by disabling
+> fs leases.
 >
-> If the number of lease conflicts matches the number of NFSD threads (wh=
-ich
-> defaults to 8), all available NFSD threads become occupied. Consequentl=
-y,
-> there are no threads left to handle incoming requests or callback repli=
-es,
-> leading to a total hang of the NFS server.
+> However it would be nice to have more fine-grained control, for example
+> in cases where read delegation seems to work well but the newer forms
+> of delegation (directory, or attribute) might have bugs or performance
+> problems, and need to be disabled. There are also testing scenarios
+> where a unit test might focus specifically on one type of delegation.
 >
-> This issue is reliably reproducible by running the Git test suite on a
-> configuration using SCSI layout.
+> A little brainstorming:
 >
-> This patchset fixes this problem by introducing the new lm_breaker_time=
-dout
-> operation to lease_manager_operations and using timeout for layout
-> lease break.
+> * Controls would be per net namespace
+> * Allow read delegations, or read and write
+> * Control attribute delegations too? Perhaps yes.
+> * Ignore the OPEN_XOR_DELEG flag? Either that, or mask off the
+>   advertised feature flag.
+> * Change of setting would cause immediate behavior change; no
+>   server restart needed
+> * Control directory delegations too (when they arrive)
+>
+> Is this for NFSD only, or also for local accessors (via the VFS) on the
+> NFS server?
+>
+> Should this be plumbed into NFSD netlink, or into /sys ?
+>
+> Any thoughts/opinions/suggestions are welcome at this point.
 
-Hey Dai,
+Happy to read this.
 
-I like your solution here, but I worry it can cause unexpected or
-unnecessary client fencing when the problem is server-side (not enough
-threads).  Clients might be dutifully sending LAYOUTRETURN, but the serve=
-r
-can't service them - and this change will cause some potentially unexpect=
-ed
-fencing in environments where things could be fixed (by adding more knfsd=
+I think this would be most welcomed by the distros - there's been a lot of
+instances of "disable delegations" with the big knob
+/proc/sys/fs/leases-enable
 
-threads).  Also, I think we significantly bumped default thread counts
-recently in nfs-utils:
-eb5abb5c60ab (tag: nfs-utils-2-8-2-rc3) nfsd: dump default number of thre=
-ads to 16
+I'd also like to be able to twiddle these bits for clients as well, and
+lacking a netlink tool to do it for the client the logical place might be
+the client's sysfs interface.
 
-You probably have already seen previous discussions about this:
-https://lore.kernel.org/linux-nfs/1CC82EC5-6120-4EE4-A7F0-019CF7BC762C@re=
-dhat.com/
+Would you also look to grain these settings per-client?  The server's
+per-client interface in proc has been fantastic.
 
-This also changes the behavior for all layouts, I haven't thought through=
-
-the implications of that - but I wish we could have knob for this behavio=
-r,
-or perhaps a knfsd-specific fl_break_time tuneable.
-
-Last thought (for now): I think Neil has some work for dynamic knfsd thre=
-ad
-count.. or Jeff?  (I am having trouble finding it) Would that work around=
-
-this problem?
-
-Regards,
 Ben
 
