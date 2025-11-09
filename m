@@ -1,250 +1,163 @@
-Return-Path: <linux-nfs+bounces-16216-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16217-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 352C3C43591
-	for <lists+linux-nfs@lfdr.de>; Sat, 08 Nov 2025 23:40:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25F72C44379
+	for <lists+linux-nfs@lfdr.de>; Sun, 09 Nov 2025 18:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ADBB83486EF
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Nov 2025 22:40:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1F883A5EAB
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Nov 2025 17:10:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08FF9246788;
-	Sat,  8 Nov 2025 22:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E12F3019C0;
+	Sun,  9 Nov 2025 17:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJqA0/rm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VLrx7IJK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CBE221DAD
-	for <linux-nfs@vger.kernel.org>; Sat,  8 Nov 2025 22:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE961E0083
+	for <linux-nfs@vger.kernel.org>; Sun,  9 Nov 2025 17:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762641610; cv=none; b=epTzOmqAn5YN8gFc+ByEx+teRc8JR8u16F80/mg2/rqaoi27eveljOr5tA7tMPc8CtviPpVKViAS2baye+9mlJr5ndsh7Uhbk55qFy4orZbKzs1MJm2bpwY1ovpc4EIIhNzqZWWPrVMMXQByN2V2JpgAeiF6GO7Gsl5Pj8vfKYI=
+	t=1762708232; cv=none; b=mSbOdjLcKA7YOAmJWoNsC5MoPNAyvBMS8biln05trTFVfB94L3dwS9XZ3cz/eWdV86vO5bpF5nufz9Ttt666SwQtOUhmiQTjhTdFdrnDc7NI0yq+IsXJ6iYtobuKJEtKpn1HNRC6SByS8PL3iTD2oNUOaHD4GiwvpyppqmQUQhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762641610; c=relaxed/simple;
-	bh=v2olXTITm7id/Jbok7SDUxyytcIF0922b41bv/r3gEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J9h7fZmwcmdGXylI/wlttpCdNLIUcpHFW8thxssY8J+sIFPTD6RIoGrOev6e1gbPAf0rPT5P//o+o8d6LWR0FpwEVvgjj/v2xeJT29/34tEinyhXdpjzxBQrq/ZN82qh3zpyw+mIZcKdt0DfwJ9TELazPl5XNt7KAFUBlcO6Vyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJqA0/rm; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-47114a40161so19555575e9.3
-        for <linux-nfs@vger.kernel.org>; Sat, 08 Nov 2025 14:40:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762641607; x=1763246407; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GeISWmTa3vUK5FBNCaamQkWxvL/7eMCUuRL+6ngrP4Y=;
-        b=NJqA0/rm4BCXw1p5FOX+GDVCIjt58glkz9Q3ZcfHYl+bQhke5jQF8tHQAoP756LAEN
-         RoEO1iHN1pJnsaCwQAJugdstZHDrY7RZHUv9cJZkiyW4eRJHB/HZO8BHEYbgXefjWHfJ
-         zzmDbvR+1wBEyS3oVxJmNxGHlRu9NLTwsNmHczq3QpM/P2eYEevH5t9xCFxZ+CFUT3+F
-         Bhs3kd1ZQM88X++du1e04gyLGr+NLbxjs+c8xm+v0xs9AbXoxRPSKUXeDx+4v6RHewXE
-         Jh4ztCqjxd8faYiMkD1DalrKN923yhr0Xu0kfm9/G9+lE17rUvB6RbfwD5hL5z5H2ppv
-         SOKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762641607; x=1763246407;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GeISWmTa3vUK5FBNCaamQkWxvL/7eMCUuRL+6ngrP4Y=;
-        b=xKTxyWvlhwbFLaO5Lz8zaTnGkOHxtU+DU+BK7sQ60cf5Ws6rN3BQN/aHWFz1R3gPcV
-         LSASO0h+nYZNuMJtqnWDA9GAXQz5f1vUUdvx7d+p338asueuKJXLgEL69cjDLmlDxGdg
-         laVtuPZVJ/W6Gp7DXepsghfJdI6J3osX205elNQE5lKVOsjlmvgLj4InugD+FTaH87GJ
-         LxrUsV9OmgCS9JDOmcdIc8MkEa8MYyzr+mnZw33AAjF7gXtYgJuyiqow6Col5eeNdNC2
-         nw2M88UZHN+xF/2uS957vlUKwRy3C8gQ/Orf7eamB/d8H4ivUI58DfKtQ4qbd6QnPhbS
-         bpqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeWTLuhjJF35GRWAxOrWQpKOtSr0jhkjLWf/yq8LyFMUVHUoDuqNm9JgSmPpCArfIXr6zqhOU+FMI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPU0CNp1/cG8SFInjfM6Jg3aqbQYcecu5ixT89kpuCSjiQiWjz
-	fjwHqsU9HoaAYTofdsASz+mLUTDx0ieA1XH6bOerMsCnx7FZj2ZLZsr1
-X-Gm-Gg: ASbGncsereY8tXXZSNwrUtgVywzCYdp7nvoJN0EaFqZyB4kudhysgOwl3oWpVL6Uo9q
-	Fsc87rfDMd2j2w4Ob3dpdscYx2KQmsJFCcEihOYQdtMix3hHc/QqPBIwPIUtCWDr0OSDjgy6OKd
-	a1ftMMjXhGTa/2/Ku5WSMjNGIRlkQ1fvkPAxFCGzj0vS9uokJHADQNSv4jQsvNv2jIqVTuIMkuu
-	KRk/d6Sp6Ywvo5PBOwtSt74N3c3Axlhan+G5yPEZdLoEyxp1yXYI6QADLu+kjbhE6KeDTgl07nl
-	2GSVpweFpWXNPrZikZENbej+zMSssdHCEHMWd/YGPv5CNGuc5m5CGMmo/H5scPuD1amtVLxWt60
-	mvvkd6rViNFr52Ar8e5E3YCDWhR2vDPpH6i+Sz/ziEaRgRJoRHd9tEQg9PEa0235Yag0q/w/2Fe
-	4TOI9kkSd2c9xJfp0kae84lOs6CWjhofEINy8K3zPu5uSil1WFFIIX
-X-Google-Smtp-Source: AGHT+IGsbfXCcLr/eMJsRMvbDro8yZc7tlZ7s2qGXaBx74rmIg1A2WehS9AdBI43idEKThFTSBaWAA==
-X-Received: by 2002:a05:600c:8709:b0:471:15c1:45b9 with SMTP id 5b1f17b1804b1-47773288defmr31071275e9.29.1762641606936;
-        Sat, 08 Nov 2025 14:40:06 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47763e4f89fsm78847315e9.3.2025.11.08.14.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Nov 2025 14:40:06 -0800 (PST)
-Date: Sat, 8 Nov 2025 22:40:04 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, "stable@vger.kernel.org"
- <stable@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, David
- Laight <David.Laight@ACULAB.COM>, Linux NFS Mailing List
- <linux-nfs@vger.kernel.org>, Linux List Kernel Mailing
- <linux-kernel@vger.kernel.org>, speedcracker@hotmail.com
-Subject: Re: Compile Error fs/nfsd/nfs4state.o - clamp() low limit slotsize
- greater than high limit total_avail/scale_factor
-Message-ID: <20251108224004.05895f84@pumpkin>
-In-Reply-To: <cf9573c2-5fb7-4417-8ff0-eef4172621fb@kernel.org>
-References: <bbba88825d7b2b06031c1b085d76787a2502d70e.camel@kernel.org>
-	<37bc1037-37d8-4168-afc9-da8e2d1dd26b@kernel.org>
-	<20251106192210.1b6a3ca0@pumpkin>
-	<176251424056.634289.13464296772500147856@noble.neil.brown.name>
-	<20251107114324.33fd69f3@pumpkin>
-	<176255578949.634289.10177595719141795960@noble.neil.brown.name>
-	<cf9573c2-5fb7-4417-8ff0-eef4172621fb@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1762708232; c=relaxed/simple;
+	bh=L2TEEkoCgu6y0av2g3O8h9FI8CG25KGvc2xukF29Pro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u4M4mx7MLU+x5S/mJgrmFZQ2zzJLJrsKJ3VcLB590IV+hHzUwUTWPWYKryPKiWzVSvPkmudBMlFtMGWYfxz5R3fXYXaN8qAb/AmUBq5zEDaA7cP6m0eavGAkQcQGAVVwmQJN6bkaCYgtGr2AL+A5zzi9y86lpNaFasSaFpbnkQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VLrx7IJK; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A9GHRC9021721;
+	Sun, 9 Nov 2025 17:10:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=dWte5/eGknXv3pMKJHff9Xd8KD0ri
+	CRncZbeIL9d0UI=; b=VLrx7IJK2mdW8Rx0K0eJfiftubLjyPW+MrdbqfYrkKd8/
+	vcUjvonrtXChmWPTmttdMKpQFPjlLscFY9lyg7bhcrMB5Hw6BqKGhAXap9MASTml
+	hmaOc4zE7SbFmXYtZ2OW5AChC06tn52HRJAjzeYI89z3MdteolDv/tmbjhitvWwt
+	S0SkHIh+HKT1FqjgFWozjKGFU+rlF6YQQnqJN/nAfcLDHqhHM06hUjHF7VnP+kSf
+	y5608+M1zVXYa6t9Mq5spFjCBfcE1N4qjTTjEPTI0eD+70vdYtBN6WGPpctw6SfC
+	tbC43mp+9ppnlqfLXYEpZpBAN9YC9k7rdveRp3rlw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aarydg9ps-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 09 Nov 2025 17:10:22 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5A9BJ2Ie007383;
+	Sun, 9 Nov 2025 17:05:21 GMT
+Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4a9va7tsk1-1;
+	Sun, 09 Nov 2025 17:05:21 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: trondmy@kernel.org, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFS: Fix LTP test failures when timestamps are delegated
+Date: Sun,  9 Nov 2025 09:05:08 -0800
+Message-ID: <20251109170517.2730183-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-09_07,2025-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511090150
+X-Proofpoint-ORIG-GUID: nkv7ncH24IZIdF6w1B8X0zrBhhPFtr1Y
+X-Proofpoint-GUID: nkv7ncH24IZIdF6w1B8X0zrBhhPFtr1Y
+X-Authority-Analysis: v=2.4 cv=AtjjHe9P c=1 sm=1 tr=0 ts=6910cafe cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=JDWldgB-vNn1QpYc8cAA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA5MDA4OSBTYWx0ZWRfX7woReGAU/sUc
+ x+aCJXuQXM1VCgBPq045yB/s2t5XqFKUg5YkisuhuYjyeCVKqPKAGllT+1czY9ffhFVgz4XxQuG
+ uylbVQ/12KA0E7HHRNJsxD4suMrBcsZvdj6cR2s97EsOXFQ6Z8/tNSFlWc6Q2/RCp8zm2xjsDqW
+ Yv4n2j//RfuUMcwT73baFn9ZuupC7HU7qbSWMy3Jv5BAz44RAYS8LdHR+JjLAEaHzbn56E2nobA
+ gblYzRiQT5DfbPK/XMLtN5EAPoHdnEggyXnsMJnyQ5L7W91plRjZ3BjSJQikaeGLQ7UwghsCClh
+ 5Z4KsjEg++k7VVEdZSzs74x+W2ZsiZy2W6LUWl8JfT1pNkb7z6Bxkm/F1q7b6Lhj2faO78ntQv/
+ GUyXMz/M9u2WPSTKPOF4/NgEd6U7hQ==
 
-On Sat, 8 Nov 2025 10:49:34 -0500
-Chuck Lever <cel@kernel.org> wrote:
+The utimes01 and utime06 tests fail when delegated timestamps are
+enabled, specifically in subtests that modify the atime and mtime
+fields using the 'nobody' user ID.
 
-> On 11/7/25 5:49 PM, NeilBrown wrote:
-> > On Fri, 07 Nov 2025, David Laight wrote:  
-> >> On Fri, 07 Nov 2025 22:17:20 +1100
-> >> NeilBrown <neilb@ownmail.net> wrote:
-> >>  
-> >>> On Fri, 07 Nov 2025, David Laight wrote:  
-> >>>> On Thu, 6 Nov 2025 09:33:28 -0500
-> >>>> Chuck Lever <cel@kernel.org> wrote:
-> >>>>     
-> >>>>> FYI
-> >>>>>
-> >>>>> https://bugzilla.kernel.org/show_bug.cgi?id=220745    
-> >>>>
-> >>>> Ugg - that code is horrid.
-> >>>> It seems to have got deleted since, but it is:
-> >>>>
-> >>>> 	u32 slotsize = slot_bytes(ca);
-> >>>> 	u32 num = ca->maxreqs;
-> >>>> 	unsigned long avail, total_avail;
-> >>>> 	unsigned int scale_factor;
-> >>>>
-> >>>> 	spin_lock(&nfsd_drc_lock);
-> >>>> 	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
-> >>>> 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
-> >>>> 	else
-> >>>> 		/* We have handed out more space than we chose in
-> >>>> 		 * set_max_drc() to allow.  That isn't really a
-> >>>> 		 * problem as long as that doesn't make us think we
-> >>>> 		 * have lots more due to integer overflow.
-> >>>> 		 */
-> >>>> 		total_avail = 0;
-> >>>> 	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
-> >>>> 	/*
-> >>>> 	 * Never use more than a fraction of the remaining memory,
-> >>>> 	 * unless it's the only way to give this client a slot.
-> >>>> 	 * The chosen fraction is either 1/8 or 1/number of threads,
-> >>>> 	 * whichever is smaller.  This ensures there are adequate
-> >>>> 	 * slots to support multiple clients per thread.
-> >>>> 	 * Give the client one slot even if that would require
-> >>>> 	 * over-allocation--it is better than failure.
-> >>>> 	 */
-> >>>> 	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
-> >>>>
-> >>>> 	avail = clamp_t(unsigned long, avail, slotsize,
-> >>>> 			total_avail/scale_factor);
-> >>>> 	num = min_t(int, num, avail / slotsize);
-> >>>> 	num = max_t(int, num, 1);
-> >>>>
-> >>>> Lets rework it a bit...
-> >>>> 	if (nfsd_drc_max_mem > nfsd_drc_mem_used) {
-> >>>> 		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
-> >>>> 		avail = min(NFSD_MAX_MEM_PER_SESSION, total_avail);
-> >>>> 		avail = clamp(avail, n + sizeof(xxx), total_avail/8)
-> >>>> 	} else {
-> >>>> 		total_avail = 0;
-> >>>> 		avail = 0;
-> >>>> 		avail = clamp(0, n + sizeof(xxx), 0);
-> >>>> 	}
-> >>>>
-> >>>> Neither of those clamp() are sane at all - should be clamp(val, lo, hi)
-> >>>> with 'lo <= hi' otherwise the result is dependant on the order of the
-> >>>> comparisons.
-> >>>> The compiler sees the second one and rightly bleats.    
-> >>>
-> >>> In fact only gcc-9 bleats.  
-> >>
-> >> That is probably why it didn't get picked up earlier.
-> >>  
-> >>> gcc-7 gcc-10 gcc-13 gcc-15
-> >>> all seem to think it is fine.  
-> >>
-> >> Which, of course, it isn't...  
-> > 
-> > I've now had a proper look at your analysis of the code - thanks.
-> > 
-> > I agree that the code is unclear (at best) and that if it were still
-> > upstream I would want to fix it.  However is does function correctly.
-> > 
-> > As you say, when min > max, the result of clamp(val, min, max) depends
-> > on the order of comparison, and we know what the order of comparison is
-> > because we can look at the code for clamp().
-> > 
-> > Currently it is 
-> > 
-> > 	((val) >= (hi) ? (hi) : ((val) <= (lo) ? (lo) : (val)))
-> > 
-> > which will use max when max is below val and min.
-> > Previously it was 
-> > 	min((typeof(val))max(val, lo), hi)
-> > which also will use max when it is below val and min
-> > 
-> > Before that it was 
-> > #define clamp_t(type, val, min, max) ({                \
-> >        type __val = (val);                     \
-> >        type __min = (min);                     \
-> >        type __max = (max);                     \
-> >        __val = __val < __min ? __min: __val;   \
-> >        __val > __max ? __max: __val; })
-> > 
-> > which also uses max when that is less that val and min.
-> > 
-> > So I think the nfsd code has always worked correctly.  That is not
-> > sufficient for mainline - there we want it to also be robust and
-> > maintainable. But for stable kernels it should be sufficient.
-> > Adding a patch to "stable" kernels which causes working code to fail to
-> > compile does not seem, to me, to be in the spirit of "stability".
-> > (Have the "clamp" checking in mainline, finding problems there,
-> > and backporting the fixes to stable seems to me to be the best way
-> > to use these checking improvements to improve "stable").  
-> 
-> I agree with Neil. The LTS code was building and working rather
-> universally until recently. The less risky approach is to leave this
-> code unchanged and seek another remedy for the OP.
+The problem can be reproduced as follow:
 
-IIRC minmax.h was backported to allow other changes be backported.
-So something has to give.
-Changing the:
-	avail = clamp_t(unsigned long, avail, slotsize, total_avail/scale_factor);
-to
-	avail = min(avail, total_avail/scale_factor);
-fixes everything and leaves this code behaving the same way.
-The later:
-	num = max_t(int, num, 1);
-has the effect that the lower bound of the clamp_t() was expected to have.
+# echo "/media *(rw,no_root_squash,sync)" >> /etc/exports
+# export -ra
+# mount -o rw,nfsvers=4.2 127.0.0.1:/media /tmpdir
+# cd /opt/ltp
+# ./runltp -d /tmpdir -s utimes01
+# ./runltp -d /tmpdir -s utime06
 
-I've just looked through the old versions.
-The comment when the clamp_t() was added is:
-	* Never use more than a third of the remaining memory,
-	* unless it's the only way to give this client a slot.
-The intention was clearly that 'avail' would be at least 'slotsize',
-even though clamp() has never worked that way (and relying on the order
-of the comparisons is a bug in itself).
-This got 'fixed' by the extra check that ensures 'num' is at least one,
-but the code clearly wasn't read properly at that time.
-(It has also suffered because clamp_t() was used and truncated significant
-bits of the values.)
-I've no sympathy for this buggy code that has been bodge fixed several times.
+This issue occurs because nfs_setattr does not verify the inode's
+UID against the caller's fsuid when delegated timestamps are
+permitted for the inode.
 
-	David
+This patch adds the UID check and if it does not match then the
+request is sent to the server for permission checking.
 
+Fixes: e12912d94137 ("NFSv4: Add support for delegated atime and mtime attributes")
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/nfs/inode.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 18b57c7c2f97..13ad70fc00d8 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -718,6 +718,8 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	struct nfs_fattr *fattr;
+ 	loff_t oldsize = i_size_read(inode);
+ 	int error = 0;
++	kuid_t task_uid = current_fsuid();
++	kuid_t owner_uid = inode->i_uid;
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSSETATTR);
+ 
+@@ -739,9 +741,11 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	if (nfs_have_delegated_mtime(inode) && attr->ia_valid & ATTR_MTIME) {
+ 		spin_lock(&inode->i_lock);
+ 		if (attr->ia_valid & ATTR_MTIME_SET) {
+-			nfs_set_timestamps_to_ts(inode, attr);
+-			attr->ia_valid &= ~(ATTR_MTIME|ATTR_MTIME_SET|
++			if (uid_eq(task_uid, owner_uid)) {
++				nfs_set_timestamps_to_ts(inode, attr);
++				attr->ia_valid &= ~(ATTR_MTIME|ATTR_MTIME_SET|
+ 						ATTR_ATIME|ATTR_ATIME_SET);
++			}
+ 		} else {
+ 			nfs_update_timestamps(inode, attr->ia_valid);
+ 			attr->ia_valid &= ~(ATTR_MTIME|ATTR_ATIME);
+@@ -751,10 +755,12 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		   attr->ia_valid & ATTR_ATIME &&
+ 		   !(attr->ia_valid & ATTR_MTIME)) {
+ 		if (attr->ia_valid & ATTR_ATIME_SET) {
+-			spin_lock(&inode->i_lock);
+-			nfs_set_timestamps_to_ts(inode, attr);
+-			spin_unlock(&inode->i_lock);
+-			attr->ia_valid &= ~(ATTR_ATIME|ATTR_ATIME_SET);
++			if (uid_eq(task_uid, owner_uid)) {
++				spin_lock(&inode->i_lock);
++				nfs_set_timestamps_to_ts(inode, attr);
++				spin_unlock(&inode->i_lock);
++				attr->ia_valid &= ~(ATTR_ATIME|ATTR_ATIME_SET);
++			}
+ 		} else {
+ 			nfs_update_delegated_atime(inode);
+ 			attr->ia_valid &= ~ATTR_ATIME;
+-- 
+2.47.3
 
 
