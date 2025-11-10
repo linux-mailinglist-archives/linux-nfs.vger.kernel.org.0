@@ -1,160 +1,215 @@
-Return-Path: <linux-nfs+bounces-16234-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16235-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA281C48708
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 18:57:46 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7759EC49B8B
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 00:18:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 770C44E3BA0
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 17:57:45 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E9E9E34A660
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 23:18:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02CBA2E6CB5;
-	Mon, 10 Nov 2025 17:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20571235053;
+	Mon, 10 Nov 2025 23:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMzsJhfD"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="fseYXR81";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IPt204lt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EDE29D281
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Nov 2025 17:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6119B242D78;
+	Mon, 10 Nov 2025 23:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762797462; cv=none; b=Bx33VltDEl+Z8/MM5NXUSCQ7aaexo/eZ8TmWvJfr9f5FlZhgfh6sRKDw07zvawGV9TAqJIu62+Iwga/Y+CwH9yKtbfPF4Dsjys8GR5oNWfoJXRReS6Inxbm9FSi79yp7317LlpD3X+L+OX4On3mJ0kCcJQAxSD9s3fmHF+F0g1Q=
+	t=1762816710; cv=none; b=emqO4P/hXJbOxmfw0AnPv3q66kbakCSGPe+ZXIQ2piTh7ZNY+80rnxLEbasjNb1TuheVi9sM/DU9s/bqLoyDKzxUmwRAZGcFNO1moUuUl633AF8calWE/LkkRl0H1+zMqTyQtHyMW/yNnlHRk+3xE4LlP0eRHHYcBtQ7aApJDyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762797462; c=relaxed/simple;
-	bh=oqBAPL5BwQ2HDF800QYDMEOysjocvnkHmt3Wp7C85g8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8Hng+AnP9tFpY+MaUu/YN6ZhWD0ul0iP/TQKo9c4ped+8gRLxEW3BM7RBmEQxr9AxLIxWzZ/xjF0JvY2IT7LEX8l0vwP6qhC+MlqblURbEB43lIOqajM8OzdvnMlCdQjjU8oMNTVfg6yJdSv+mFEWr3Ro5cIR+87ovCmGy+S/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMzsJhfD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290A9C113D0;
-	Mon, 10 Nov 2025 17:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762797462;
-	bh=oqBAPL5BwQ2HDF800QYDMEOysjocvnkHmt3Wp7C85g8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lMzsJhfDU0u1UzS9CxlMpkNGgbnyH+/iNW9esWpJaoHsRmrAh/wn6IoJYAPurbtxw
-	 Bvo0mBRKJzNM5C0z638A3ig/+MpjY6vm0Y8G15AD7MIrgqFB0bN93FYK1Ucnr283Vr
-	 o8dyixSgDqhAMgBEVURbfT0T4BY6Quxv9l1yweuaZfDRBw1KHw5x+rqTyczu4orQCZ
-	 eixyPM8PBpiD8lV6JX+J9fWakDLjCVC+VsjkW1r1WgTzAsD71jwmlDHraamsQBFp8C
-	 pjKrHdCU52psddZo0Tey7MIaM0UOAQKS80dUIGdKUti1gLyOkCnZCJBtZGcOhXTOJy
-	 w93T19SbLVGyg==
-Date: Mon, 10 Nov 2025 12:57:41 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: NeilBrown <neilb@ownmail.net>, Christoph Hellwig <hch@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, axboe@kernel.dk
-Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aRInlX7ZO9SmdMhO@kernel.org>
-References: <aQ4Sr5M9dk2jGS0D@infradead.org>
- <82be5f47-77df-423d-a4f3-17f83ddb6636@kernel.org>
- <aQ5Q99Kvw0ZE09Th@kernel.org>
- <fb0d6399-ea74-462a-982a-df232e3f4be9@kernel.org>
- <aQ5SSnW9xUWj9xBi@kernel.org>
- <176255273643.634289.15333032218575182744@noble.neil.brown.name>
- <aQ5xkjIzf6uU_zLa@kernel.org>
- <176255894778.634289.2265909350991291087@noble.neil.brown.name>
- <aQ6kkd74pj2aUd8b@kernel.org>
- <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
+	s=arc-20240116; t=1762816710; c=relaxed/simple;
+	bh=x8wyF9KUZS67p+qkcbiNjLsonDBfnOPM5VU//pUMgXA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=p4s8Q1TKRqutzLSb2JHAiwL/12aIDXheAsEGwvEJ9uL+k+PS3gW6aLVADVgPTR65GW1oiyiTej87FsR1n8SAU5u51qSfdISI9D4dHdvlq3iHpR6SxiH8Y/iSnGSRWesKErOiCdAz8Q/dYej4t0aBF5DoUR+Py7PwR+ZVhOXw/EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=fseYXR81; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IPt204lt; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 62BA47A00F7;
+	Mon, 10 Nov 2025 18:18:26 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Mon, 10 Nov 2025 18:18:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1762816706; x=1762903106; bh=+HGKJK0puQ4xAOM/cfIuqP/yBP/Srkmb9O7
+	8+GprgqI=; b=fseYXR81AQwOUb0dF31tsCxOqOoMBwT7IkTDL3wsa69EN8FgaIQ
+	uVDPIpekK5Bxu4/0Bb4sz8anKxANCsDvqWrR0YckQmv5ilEmPLQwQVWk4NEr21WK
+	Twmq9iR11OnBi9x2+CqlS1c854ILEECLchp3NZEwliJmDKf9oqK8VpXtasVR44Fk
+	ggFdixblgNXO+9cx0kovyN5z5wivYneRUWzKO8hXMG8wiLNOOc1lfIzaKFT3p0Es
+	QPJixPEzW9xEL13OE7ugtvD4fqtn1P3CksAwGIaS1mK4hxGXGT1UzAgFFfvf3CxQ
+	rxm8Ft8zo7riekI2iisLQGRj+KbYP8rQAMA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762816706; x=
+	1762903106; bh=+HGKJK0puQ4xAOM/cfIuqP/yBP/Srkmb9O78+GprgqI=; b=I
+	Pt204ltT5YqSQvDuaSzaivuZxDbKf281mYVakFWu5bYzSadgIcBNK4VYa0X1e/v5
+	Enhcp+U+pxYqVHHp4Y284QnV24GsjP3kKEllBA9KY+/GzQC8wgKyR/W6m3uMzWxa
+	FrysD87iYETYH7CU0HPH2O4XWslLJ4OO1tAHLkATvHEkwOlkdFBi4Rsn/8keKIa8
+	zf+ypln5RHHP1sUsro8ppf4UwIRFGnVXgosAYvm7O5NCk4O+fdJLv6/xZ7IuQcPq
+	OS1Z9zz546Fdcc9H8irBfPEZmKLCgNXf0D4nmuGueooFpFvpzvxPfySHE0GwQJDl
+	E4Mg2312xt23SdtTqARIw==
+X-ME-Sender: <xms:wXISaeHD9iWnB6qEs-jKNmujhGVLeaM0McFpwlkRIzvaAhxpjbkHlg>
+    <xme:wXISaZbsxuHlnequ0FFGE9S-O5kooL3aZJYlKqPF3Zd8wEMEaXkfAwwKeZA_lOvBd
+    DChqig1HegFhJUPwah8gHbpESTRCgUWSz-yWyDF_7ejdxMFKBg>
+X-ME-Received: <xmr:wXISaYDbY3wemOYqoQmjxC6dIsan-yxgLCroySjJ4RMRCL_xSVqfFfjt_GFZ6kzyiMLybIOPqst4TF0FmQ8qH4NvFB9AePy4VXzFx0MccYUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduleelieduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhes
+    ohhrrggtlhgvrdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurg
+    htihhonhdrohhrghdprhgtphhtthhopehsphgvvggutghrrggtkhgvrheshhhothhmrghi
+    lhdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhthesrggtuhhlrggsrdgtoh
+    hm
+X-ME-Proxy: <xmx:wXISaZlwIpYYRj276ba6x-avQXre3RTC4VTD3ueF8ra7o3hr2ymcyA>
+    <xmx:wXISaRwlbOwSheDt0LvjV4SEPMe4rVEHDqkgptjoEdkoLn2h-hHZlA>
+    <xmx:wXISabQSHMbGVBc2HH08oz-zSSDUCi-V7DepyGP2QNMAYBweuNomAg>
+    <xmx:wXISaR898BBYUoIDK31yYDRFX5hCvVgxT9eCdY2VxvJ-v3xuVsIbCQ>
+    <xmx:wnISaXVwKiJ2UhMhHANmqlw837S0CoKV_JzHWMGreF7aMwWgxJCT-8vq>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Nov 2025 18:18:23 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: stable@vger.kernel.org, "Andrew Morton" <akpm@linux-foundation.org>,
+ "David Laight" <David.Laight@ACULAB.COM>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
+ speedcracker@hotmail.com
+Subject: Re: [PATCH stable 6.1.y] nfsd: use __clamp in nfsd4_get_drc_mem()
+In-reply-to: <17e85980-9af9-4320-88d1-fa0c9a7220b1@oracle.com>
+References: <176272473578.634289.16492611931438112048@noble.neil.brown.name>,
+ <17e85980-9af9-4320-88d1-fa0c9a7220b1@oracle.com>
+Date: Tue, 11 Nov 2025 10:18:19 +1100
+Message-id: <176281669984.634289.12369219545843965992@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Mon, Nov 10, 2025 at 11:41:09AM -0500, Chuck Lever wrote:
-> On 11/7/25 9:01 PM, Mike Snitzer wrote:
-> > Q: Case 2 uses DONTCACHE, so case 1 should too right?
-> > 
-> > A: NO. There is legit benefit to having case 1 use cached buffered IO
-> > when issuing its 2 subpage IOs; and that benefit doesn't cause harm> because order-0 page management is not causing the MM problems that
-> > NFSD_IO_DIRECT sets out to avoid (whereas higher order cached buffered
-> > IO is exactly what both DONTCACHE and NFSD_IO_DIRECT aim to avoid.
-> > Otherwise MM spins and spins trying to find adequate free pages,
-> > cannot so does dirty writeback and reclaim which causes kswapd and
-> > kcompactd to burn cpu, etc).
-> 
-> Paraphrasing: Each unaligned end (case 1) is always smaller than a page,
-> thus it will stick with order-0 allocations (if that byte range is not
-> already in the page cache), allocations that are, practically speaking,
-> reliable.
-> 
-> However it might be a stretch to claim that an order-0 allocation
-> /never/ drives memory reclaim.
+On Mon, 10 Nov 2025, Chuck Lever wrote:
+> Hi Neil -
+>=20
+> On 11/9/25 4:45 PM, NeilBrown wrote:
+> >=20
+> > From: NeilBrown <neil@brown.name>
+> >=20
+> > A recent change to clamp_t() in 6.1.y caused fs/nfsd/nfs4state.c to fail
+> > to compile with gcc-9.
+>=20
+> I have a comment on merge process:
+>=20
+> Reported on 6.1.y, but might be present in other LTS releases, since
+> 2030ca560c5f exists in every LTS kernel since v5.4.y.
 
-That's fair.
+I thought this might be likely but I didn't have enough motivation to check.
 
-> It still comes down to "it's faster and generally not harmful... and
-> clients have to issue WRITEs that are arbitrarily aligned, so let's help
-> them out."
-> 
-> What we still don't know is exactly what the extra cost of setting
-> DONTCACHE is, even on small writes. Maybe DONTCACHE should be cleared
-> for /all/ segments that are smaller than a page?
+>=20
+> At least, my understanding of the stable rules is that they prefer this
+> kind of patch be applied to all relevant LTS kernels. I strongly prefer
+> that NFSD experts review and test this change /before/ it is merged,
+> since nfsd4_get_drc_mem() is part of the NFSv4.1 session slot
+> implementation, and since in this case we don't get the benefit of
+> /any/ soak time in linux-next or an upstream -rc release.
 
-I think so.  Might be Jens has thoughts on this (now cc'd)?
+The patch is deliberately written to transparent without requiring any
+(export or otherwise) understand of the NFS or even of the code being
+changed.
+It purely removes the BUILD_BUG_ON().
 
-> Sidebar: I resist calling such writes poorly formed or misaligned, as
-> there seems to be a little (unintended) moralism in those terms. Clients
-> must write only what data has changed. Aligning the payload byte ranges
-> (using RMW) is incredibly inefficient. So those writes are just as
-> correct and valid as writes that are optimally aligned.
-> 
-> When I hear "poorly formed" write, I think of an NFS WRITE that has
-> invalid arguments or corrupted XDR.
+>=20
+> So IMHO this patch needs to target v6.12.y, not v6.1.y, and it should be
+> marked
 
-Very useful sidebar point.
+Can I leave the process management to you.
+Though as you say later, the same patch should apply equally to both.
 
-NFSD is just trying to accommodate IO it has no choice but to service
-from the NFS clients.
+>=20
+> Fixes: 2030ca560c5f ("nfsd: degraded slot-count more gracefully as
+> allocation nears exhaustion.")
 
-> > Let's please not get hung up of intent of O_DIRECT because
-> > NFSD_IO_DIRECT achieves that intent very well
-> 
-> I think we need to have a clear idea what that intent is, because it
-> is explicitly referenced in a code comment as the rationale for setting
-> DONTCACHE.
+There is no evidence that patch is broken so it is hard to justify
+saying that we fixed it.  But I honestly don't care.
 
-Sure, the duality of:
-DONTCACHE being useful for large buffered IO
-  versus
-DONTCACHE being detrimental for subpage IO.
+>=20
+> (Since the patched code hasn't changed in many years, I think the final
+> patch ought to apply cleanly to both 6.12.y and 6.1.y).
+>=20
+> I need to take the fix into nfsd-6.12.y and run NFSD CI against it, then
+> it can be sent along to stable@, and they will put it back into the
+> older LTS kernels for us.
+>=20
+>=20
+> > The code was written with the assumption that when "max < min",
+> >    clamp(val, min, max)
+> > would return max.  This assumption is not documented as an API promise
+> > and the change cause a compile failure if it could be statically
+> > determined that "max < min".
+> >=20
+> > The relevant code was no longer present upstream when the clamp() change
+> > landed there, so there is no upstream change to backport.
+> >=20
+> > As there is no clear case that the code is functioning incorrectly, the
+> > patch aims to restore the behaviour to exactly that before the clamp
+> > change, and to match what compilers other than gcc-9 produce.
+>=20
+> > clamp_t(type,v,min,max) is replaced with
+> >   __clamp((type)v, (type)min, (type)max)
+> >=20
+> > Some of those type casts are unnecessary but they are included to make
+> > the code obviously correct.
+> > (__clamp() is the same as clamp(), but without the static API usage
+> > test).
+> >=20
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220745#c0
+> > Fixes: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi te=
+st in clamp()")
+>=20
+> Stable-dep-of: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the
+> lo < hi test in clamp()")
+>=20
 
-That duality just means using DONTCACHE isn't a silver bullet for when
-we need to fallback to buffered IO (but our overall intent is to avoid
-page cache contention).
+I haven't come across Stable-dep-of before.  I can't find it in
+Documentation.  Looking at some examples I guess it makes sense.
+Except that Stable-dep-of normally comes before, and Fixes normally
+comes after the target...
 
-> It might be better to replace that comment with a reason for
-> using DONTCACHE that does not mention "the intent of using DIRECT".
-> Something like:
-> 
->  * Mark the I/O buffer as evict-able to reduce memory contention.
+Thanks,
+NeilBrown
 
-Sure, that'd work.
 
-I'm really reassured by how well you understand all this Chuck.
+> might be more appropriate.
+>=20
+>=20
+> > Signed-off-by: NeilBrown <neil@brown.name>
+>=20
+> --=20
+> Chuck Lever
+>=20
 
-Restating for benefit of others (Jens in particular):
-
-My point was that even with the case where an IO is split into 3
-segments (1: subpage head 2: DIO-aligned middle 3: subpage tail) the
-intent of O_DIRECT (avoiding caching buffered IO's page cache use) is
-met as best we can (ideally IO is aligned so there are no subpage
-end segments).
-
-The other extreme this NFSD_IO_DIRECT mode must handle is the entire
-IO doesn't have any segment that is DIO-aligned, so it must be issued
-with buffered IO but we want to do so without opening us up to memory
-contention, DONTCACHE gives us the best option for those IOs.
-
-Mike
 
