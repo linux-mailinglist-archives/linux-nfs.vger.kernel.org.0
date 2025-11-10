@@ -1,205 +1,160 @@
-Return-Path: <linux-nfs+bounces-16233-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16234-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00689C4856B
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 18:31:20 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA281C48708
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 18:57:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C387188CDB8
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 17:31:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 770C44E3BA0
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 17:57:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC6A2D7DE1;
-	Mon, 10 Nov 2025 17:30:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02CBA2E6CB5;
+	Mon, 10 Nov 2025 17:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC9XHANc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMzsJhfD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013C32D73BD
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Nov 2025 17:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EDE29D281
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Nov 2025 17:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762795854; cv=none; b=JYeQG0Q2G83ALDNPoEmyh3R9IyzwmxM7EDp4KiQMf0XbY5hpMkD0Sk3AAMRC0EA8sH/C2Dfcoj7fcNToqteSiuQaljr4R+kfrJyWgNAcphgG6cVz8k1IMqtjgtiQquJvZ3U4nSXuCY0BJAO3dwT8f/yZViO7KW+SCwC6aVjc3NY=
+	t=1762797462; cv=none; b=Bx33VltDEl+Z8/MM5NXUSCQ7aaexo/eZ8TmWvJfr9f5FlZhgfh6sRKDw07zvawGV9TAqJIu62+Iwga/Y+CwH9yKtbfPF4Dsjys8GR5oNWfoJXRReS6Inxbm9FSi79yp7317LlpD3X+L+OX4On3mJ0kCcJQAxSD9s3fmHF+F0g1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762795854; c=relaxed/simple;
-	bh=troxVhxfQBVjFwf8LpZkj4v60KJWpcZ7GG8KqeA3sP8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FnefUfYzXEleAXMXHRoZc6kzVKktBqsGw56sKzlaMwFqhnSxBT47hZeYkSJMa9ViEiljiTBUy+cvcZCoSOGzewQQBnQqFfZpgPj/EAF5Di0pyPEGN3NpDJcyFXLt4rh3gHHrtBZMY0jrjMQcTeRCszjxQGXfVAMZo1EGnD6iRtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AC9XHANc; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34182b1c64bso1990224a91.3
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Nov 2025 09:30:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762795851; x=1763400651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZBupVcckmVz5Ln4jfPWyUolTVnASsByCuaOtA4I7qvo=;
-        b=AC9XHANc7Jv98OiD1RAbXbgghzmw1fEwG+S7ohAbVKTZWl40zZDYQxjQT60E0kzVgF
-         0lDK3EhNyqlXgP46+IyQtHB8hn5TTuyX8hGN7aPnqGaC/cZ/twGlZbKdZ4mHsmjIMj2m
-         9B235fBEy+69JEIZbjZKnmzi0oot5veGPLpqdFnhs6N0L6Z4WRAY3bOc2sWGobkCepm7
-         29F+ut8qbkM9nIyouH+e9sIriR42Kmct4jI6zyyL2LV5cRdCJE9MZ2KaCcj1YONMjG0N
-         BLlTXjRo6B8D1sl2IY0/xH6nDtCVzbGhLx6JTNf/sUskbrDXyIOTzOZLSIPdvJK0aHUy
-         HwUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762795851; x=1763400651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZBupVcckmVz5Ln4jfPWyUolTVnASsByCuaOtA4I7qvo=;
-        b=ZLNKTVbkqJv14c9IOTsbTdwLcMi1dItYcZPFR7EnWfVkDvB7KMKPu/pTIv3uLulfoW
-         +OYEF89T/rHxyxALPFC2jg7kXb3FmUcWNK90O6KIiyUh9wWyxo0lyXzSxwn+sOcbmnD6
-         neRO7U4q/0/koecIjx7P5uK8uQUeEDVP5jo5yO25eK62MjPXnbhBjIvFO80CiztnlN+C
-         aKzlqjo4ElODkd2NP5sHceHtwTkUmkRHIbP7+RD6Bne5SP3oYouzVyWLQOC4JA7f1kyC
-         hG71C0U3t1NgXdXcjnPdspR5QwBblE4fL5/51oNG7lP+COgW5MdnRFdOwKNgJqlanQ/Q
-         UGNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtw51JYYQ1rbqneKTCdHqwKm9iUKBEhNS0qVlGrJJNGzYy4qkPV+T9qICb2J++csEpVyBUaoNPQlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuZYSUNpYgRraox/FrZZpgP/gFvJhIvX5CGMzrlDUqAS9XZEz2
-	cE7pUP5TfDFpyiGUdCLTRCbUZp28aGUbCHH5pkdnjEX/GFsQYNkOy8X//S8Yy2hAi4gQjhXnSgd
-	1dZD5/QOQDHQiZkhcY91S8VmB7lVfmpc=
-X-Gm-Gg: ASbGncvdAtYDfVVDgtBFhQWIaJJ5CRSdGU0DbHqCL27OadPAru0K3ptcCDKkQTB0hQ9
-	qIh486YfNgJPLkprnha3Ypb4efXDnCmMTuI/f2E+nHFr9ocV2KCAE8lO7qrtABB2NTKRMTzNoWC
-	RjbiyZpvL7gwSdTiknDd0U3mjbwFWHHFzW8JGE17poGRQQBUuBfJXyfnMAXnmommwFZqzKUdxBK
-	S7nD1pjgdkUGMs9VZ4TOozMaH96llV3V7vNbKdfsJcnsq+ThMH/ofwFJXBv
-X-Google-Smtp-Source: AGHT+IG1vzxlgOlG9RofPIQ8HXS/TzZg0c7M7/gWC0zTYmT64xMp8LfK4tDIRftHYt3f+PSr3BPp3nPvSQoI3SsCuMA=
-X-Received: by 2002:a17:90a:ac0e:b0:343:747e:2cab with SMTP id
- 98e67ed59e1d1-343747e31a5mr6285125a91.8.1762795851107; Mon, 10 Nov 2025
- 09:30:51 -0800 (PST)
+	s=arc-20240116; t=1762797462; c=relaxed/simple;
+	bh=oqBAPL5BwQ2HDF800QYDMEOysjocvnkHmt3Wp7C85g8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8Hng+AnP9tFpY+MaUu/YN6ZhWD0ul0iP/TQKo9c4ped+8gRLxEW3BM7RBmEQxr9AxLIxWzZ/xjF0JvY2IT7LEX8l0vwP6qhC+MlqblURbEB43lIOqajM8OzdvnMlCdQjjU8oMNTVfg6yJdSv+mFEWr3Ro5cIR+87ovCmGy+S/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMzsJhfD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290A9C113D0;
+	Mon, 10 Nov 2025 17:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762797462;
+	bh=oqBAPL5BwQ2HDF800QYDMEOysjocvnkHmt3Wp7C85g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lMzsJhfDU0u1UzS9CxlMpkNGgbnyH+/iNW9esWpJaoHsRmrAh/wn6IoJYAPurbtxw
+	 Bvo0mBRKJzNM5C0z638A3ig/+MpjY6vm0Y8G15AD7MIrgqFB0bN93FYK1Ucnr283Vr
+	 o8dyixSgDqhAMgBEVURbfT0T4BY6Quxv9l1yweuaZfDRBw1KHw5x+rqTyczu4orQCZ
+	 eixyPM8PBpiD8lV6JX+J9fWakDLjCVC+VsjkW1r1WgTzAsD71jwmlDHraamsQBFp8C
+	 pjKrHdCU52psddZo0Tey7MIaM0UOAQKS80dUIGdKUti1gLyOkCnZCJBtZGcOhXTOJy
+	 w93T19SbLVGyg==
+Date: Mon, 10 Nov 2025 12:57:41 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neilb@ownmail.net>, Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, axboe@kernel.dk
+Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aRInlX7ZO9SmdMhO@kernel.org>
+References: <aQ4Sr5M9dk2jGS0D@infradead.org>
+ <82be5f47-77df-423d-a4f3-17f83ddb6636@kernel.org>
+ <aQ5Q99Kvw0ZE09Th@kernel.org>
+ <fb0d6399-ea74-462a-982a-df232e3f4be9@kernel.org>
+ <aQ5SSnW9xUWj9xBi@kernel.org>
+ <176255273643.634289.15333032218575182744@noble.neil.brown.name>
+ <aQ5xkjIzf6uU_zLa@kernel.org>
+ <176255894778.634289.2265909350991291087@noble.neil.brown.name>
+ <aQ6kkd74pj2aUd8b@kernel.org>
+ <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251106005333.956321-1-neilb@ownmail.net> <20251106005333.956321-12-neilb@ownmail.net>
- <CAEjxPJ528Ou4dvRwHo+kXjWreGicda8BOXkQRvq3vMED6JQKOQ@mail.gmail.com>
-In-Reply-To: <CAEjxPJ528Ou4dvRwHo+kXjWreGicda8BOXkQRvq3vMED6JQKOQ@mail.gmail.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Mon, 10 Nov 2025 12:30:39 -0500
-X-Gm-Features: AWmQ_bndNmWOI1mokvMjGbHl4ympSya5-SIjECF6vpxPVypYlN3NvFXLixarZ1U
-Message-ID: <CAEjxPJ6-BXRntLqNRJxveAbwHmC2EB9YYg7f4hLD9T2g-H3fzw@mail.gmail.com>
-Subject: Re: [PATCH v5 11/14] Add start_renaming_two_dentries()
-To: NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Jeff Layton <jlayton@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
-	David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Chuck Lever <chuck.lever@oracle.com>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Stefan Berger <stefanb@linux.ibm.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
-	ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
 
-On Mon, Nov 10, 2025 at 11:08=E2=80=AFAM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Wed, Nov 5, 2025 at 7:56=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrot=
-e:
-> >
-> > From: NeilBrown <neil@brown.name>
-> >
-> > A few callers want to lock for a rename and already have both dentries.
-> > Also debugfs does want to perform a lookup but doesn't want permission
-> > checking, so start_renaming_dentry() cannot be used.
-> >
-> > This patch introduces start_renaming_two_dentries() which is given both
-> > dentries.  debugfs performs one lookup itself.  As it will only continu=
-e
-> > with a negative dentry and as those cannot be renamed or unlinked, it i=
-s
-> > safe to do the lookup before getting the rename locks.
-> >
-> > overlayfs uses start_renaming_two_dentries() in three places and  selin=
-ux
-> > uses it twice in sel_make_policy_nodes().
-> >
-> > In sel_make_policy_nodes() we now lock for rename twice instead of just
-> > once so the combined operation is no longer atomic w.r.t the parent
-> > directory locks.  As selinux_state.policy_mutex is held across the whol=
-e
-> > operation this does open up any interesting races.
+On Mon, Nov 10, 2025 at 11:41:09AM -0500, Chuck Lever wrote:
+> On 11/7/25 9:01 PM, Mike Snitzer wrote:
+> > Q: Case 2 uses DONTCACHE, so case 1 should too right?
+> > 
+> > A: NO. There is legit benefit to having case 1 use cached buffered IO
+> > when issuing its 2 subpage IOs; and that benefit doesn't cause harm> because order-0 page management is not causing the MM problems that
+> > NFSD_IO_DIRECT sets out to avoid (whereas higher order cached buffered
+> > IO is exactly what both DONTCACHE and NFSD_IO_DIRECT aim to avoid.
+> > Otherwise MM spins and spins trying to find adequate free pages,
+> > cannot so does dirty writeback and reclaim which causes kswapd and
+> > kcompactd to burn cpu, etc).
+> 
+> Paraphrasing: Each unaligned end (case 1) is always smaller than a page,
+> thus it will stick with order-0 allocations (if that byte range is not
+> already in the page cache), allocations that are, practically speaking,
+> reliable.
+> 
+> However it might be a stretch to claim that an order-0 allocation
+> /never/ drives memory reclaim.
 
-Also, I assume you mean "does NOT open up any interesting races" above.
+That's fair.
 
-> >
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> >
-> > ---
-> > changes since v3:
-> >  added missing assignment to rd.mnt_idmap in ovl_cleanup_and_whiteout
-> > ---
->
-> > diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.=
-c
-> > index 232e087bce3e..a224ef9bb831 100644
-> > --- a/security/selinux/selinuxfs.c
-> > +++ b/security/selinux/selinuxfs.c
-> > @@ -539,22 +540,30 @@ static int sel_make_policy_nodes(struct selinux_f=
-s_info *fsi,
-> >         if (ret)
-> >                 goto out;
-> >
-> > -       lock_rename(tmp_parent, fsi->sb->s_root);
-> > +       rd.old_parent =3D tmp_parent;
-> > +       rd.new_parent =3D fsi->sb->s_root;
-> >
-> >         /* booleans */
-> > -       d_exchange(tmp_bool_dir, fsi->bool_dir);
-> > +       ret =3D start_renaming_two_dentries(&rd, tmp_bool_dir, fsi->boo=
-l_dir);
-> > +       if (!ret) {
-> > +               d_exchange(tmp_bool_dir, fsi->bool_dir);
->
-> I would recommend an immediate goto out if ret !=3D 0; we don't want to
-> silently fall through and possibly reset ret on the next
-> start_renaming_two_dentries() call, thereby ultimately returning 0 to
-> the caller and acting as if nothing bad happened.
->
-> >
-> > -       swap(fsi->bool_num, bool_num);
-> > -       swap(fsi->bool_pending_names, bool_names);
-> > -       swap(fsi->bool_pending_values, bool_values);
-> > +               swap(fsi->bool_num, bool_num);
-> > +               swap(fsi->bool_pending_names, bool_names);
-> > +               swap(fsi->bool_pending_values, bool_values);
-> >
-> > -       fsi->bool_dir =3D tmp_bool_dir;
-> > +               fsi->bool_dir =3D tmp_bool_dir;
-> > +               end_renaming(&rd);
-> > +       }
-> >
-> >         /* classes */
-> > -       d_exchange(tmp_class_dir, fsi->class_dir);
-> > -       fsi->class_dir =3D tmp_class_dir;
-> > +       ret =3D start_renaming_two_dentries(&rd, tmp_class_dir, fsi->cl=
-ass_dir);
-> > +       if (ret =3D=3D 0) {
-> > +               d_exchange(tmp_class_dir, fsi->class_dir);
-> > +               fsi->class_dir =3D tmp_class_dir;
-> >
-> > -       unlock_rename(tmp_parent, fsi->sb->s_root);
-> > +               end_renaming(&rd);
-> > +       }
-> >
-> >  out:
-> >         sel_remove_old_bool_data(bool_num, bool_names, bool_values);
-> > --
-> > 2.50.0.107.gf914562f5916.dirty
-> >
+> It still comes down to "it's faster and generally not harmful... and
+> clients have to issue WRITEs that are arbitrarily aligned, so let's help
+> them out."
+> 
+> What we still don't know is exactly what the extra cost of setting
+> DONTCACHE is, even on small writes. Maybe DONTCACHE should be cleared
+> for /all/ segments that are smaller than a page?
+
+I think so.  Might be Jens has thoughts on this (now cc'd)?
+
+> Sidebar: I resist calling such writes poorly formed or misaligned, as
+> there seems to be a little (unintended) moralism in those terms. Clients
+> must write only what data has changed. Aligning the payload byte ranges
+> (using RMW) is incredibly inefficient. So those writes are just as
+> correct and valid as writes that are optimally aligned.
+> 
+> When I hear "poorly formed" write, I think of an NFS WRITE that has
+> invalid arguments or corrupted XDR.
+
+Very useful sidebar point.
+
+NFSD is just trying to accommodate IO it has no choice but to service
+from the NFS clients.
+
+> > Let's please not get hung up of intent of O_DIRECT because
+> > NFSD_IO_DIRECT achieves that intent very well
+> 
+> I think we need to have a clear idea what that intent is, because it
+> is explicitly referenced in a code comment as the rationale for setting
+> DONTCACHE.
+
+Sure, the duality of:
+DONTCACHE being useful for large buffered IO
+  versus
+DONTCACHE being detrimental for subpage IO.
+
+That duality just means using DONTCACHE isn't a silver bullet for when
+we need to fallback to buffered IO (but our overall intent is to avoid
+page cache contention).
+
+> It might be better to replace that comment with a reason for
+> using DONTCACHE that does not mention "the intent of using DIRECT".
+> Something like:
+> 
+>  * Mark the I/O buffer as evict-able to reduce memory contention.
+
+Sure, that'd work.
+
+I'm really reassured by how well you understand all this Chuck.
+
+Restating for benefit of others (Jens in particular):
+
+My point was that even with the case where an IO is split into 3
+segments (1: subpage head 2: DIO-aligned middle 3: subpage tail) the
+intent of O_DIRECT (avoiding caching buffered IO's page cache use) is
+met as best we can (ideally IO is aligned so there are no subpage
+end segments).
+
+The other extreme this NFSD_IO_DIRECT mode must handle is the entire
+IO doesn't have any segment that is DIO-aligned, so it must be issued
+with buffered IO but we want to do so without opening us up to memory
+contention, DONTCACHE gives us the best option for those IOs.
+
+Mike
 
