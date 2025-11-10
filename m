@@ -1,215 +1,304 @@
-Return-Path: <linux-nfs+bounces-16235-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16236-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7759EC49B8B
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 00:18:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2675EC49CAA
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 00:39:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E9E9E34A660
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 23:18:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4EE674F0604
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Nov 2025 23:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20571235053;
-	Mon, 10 Nov 2025 23:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7AF2F691F;
+	Mon, 10 Nov 2025 23:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="fseYXR81";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IPt204lt"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TMHd2hFq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6119B242D78;
-	Mon, 10 Nov 2025 23:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6840821B196;
+	Mon, 10 Nov 2025 23:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762816710; cv=none; b=emqO4P/hXJbOxmfw0AnPv3q66kbakCSGPe+ZXIQ2piTh7ZNY+80rnxLEbasjNb1TuheVi9sM/DU9s/bqLoyDKzxUmwRAZGcFNO1moUuUl633AF8calWE/LkkRl0H1+zMqTyQtHyMW/yNnlHRk+3xE4LlP0eRHHYcBtQ7aApJDyc=
+	t=1762817931; cv=none; b=gki2rwmjgGUez8+9u7hhrgCyQRn09InCkVnuq9TR8DOnTtWlfHgOjEkMPpwJszZlpCQVZcHpJyqji7DwdIxc3hk/ex9i9FKhG4F9cvAHoIJkt49Zx6wl+zNxtkNY8OUO5a1MoTm3a5hEiBtPyOwNcI2gkH4BQvLd8/locAtPVEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762816710; c=relaxed/simple;
-	bh=x8wyF9KUZS67p+qkcbiNjLsonDBfnOPM5VU//pUMgXA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=p4s8Q1TKRqutzLSb2JHAiwL/12aIDXheAsEGwvEJ9uL+k+PS3gW6aLVADVgPTR65GW1oiyiTej87FsR1n8SAU5u51qSfdISI9D4dHdvlq3iHpR6SxiH8Y/iSnGSRWesKErOiCdAz8Q/dYej4t0aBF5DoUR+Py7PwR+ZVhOXw/EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=fseYXR81; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IPt204lt; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 62BA47A00F7;
-	Mon, 10 Nov 2025 18:18:26 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Mon, 10 Nov 2025 18:18:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762816706; x=1762903106; bh=+HGKJK0puQ4xAOM/cfIuqP/yBP/Srkmb9O7
-	8+GprgqI=; b=fseYXR81AQwOUb0dF31tsCxOqOoMBwT7IkTDL3wsa69EN8FgaIQ
-	uVDPIpekK5Bxu4/0Bb4sz8anKxANCsDvqWrR0YckQmv5ilEmPLQwQVWk4NEr21WK
-	Twmq9iR11OnBi9x2+CqlS1c854ILEECLchp3NZEwliJmDKf9oqK8VpXtasVR44Fk
-	ggFdixblgNXO+9cx0kovyN5z5wivYneRUWzKO8hXMG8wiLNOOc1lfIzaKFT3p0Es
-	QPJixPEzW9xEL13OE7ugtvD4fqtn1P3CksAwGIaS1mK4hxGXGT1UzAgFFfvf3CxQ
-	rxm8Ft8zo7riekI2iisLQGRj+KbYP8rQAMA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762816706; x=
-	1762903106; bh=+HGKJK0puQ4xAOM/cfIuqP/yBP/Srkmb9O78+GprgqI=; b=I
-	Pt204ltT5YqSQvDuaSzaivuZxDbKf281mYVakFWu5bYzSadgIcBNK4VYa0X1e/v5
-	Enhcp+U+pxYqVHHp4Y284QnV24GsjP3kKEllBA9KY+/GzQC8wgKyR/W6m3uMzWxa
-	FrysD87iYETYH7CU0HPH2O4XWslLJ4OO1tAHLkATvHEkwOlkdFBi4Rsn/8keKIa8
-	zf+ypln5RHHP1sUsro8ppf4UwIRFGnVXgosAYvm7O5NCk4O+fdJLv6/xZ7IuQcPq
-	OS1Z9zz546Fdcc9H8irBfPEZmKLCgNXf0D4nmuGueooFpFvpzvxPfySHE0GwQJDl
-	E4Mg2312xt23SdtTqARIw==
-X-ME-Sender: <xms:wXISaeHD9iWnB6qEs-jKNmujhGVLeaM0McFpwlkRIzvaAhxpjbkHlg>
-    <xme:wXISaZbsxuHlnequ0FFGE9S-O5kooL3aZJYlKqPF3Zd8wEMEaXkfAwwKeZA_lOvBd
-    DChqig1HegFhJUPwah8gHbpESTRCgUWSz-yWyDF_7ejdxMFKBg>
-X-ME-Received: <xmr:wXISaYDbY3wemOYqoQmjxC6dIsan-yxgLCroySjJ4RMRCL_xSVqfFfjt_GFZ6kzyiMLybIOPqst4TF0FmQ8qH4NvFB9AePy4VXzFx0MccYUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduleelieduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhes
-    ohhrrggtlhgvrdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurg
-    htihhonhdrohhrghdprhgtphhtthhopehsphgvvggutghrrggtkhgvrheshhhothhmrghi
-    lhdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhthesrggtuhhlrggsrdgtoh
-    hm
-X-ME-Proxy: <xmx:wXISaZlwIpYYRj276ba6x-avQXre3RTC4VTD3ueF8ra7o3hr2ymcyA>
-    <xmx:wXISaRwlbOwSheDt0LvjV4SEPMe4rVEHDqkgptjoEdkoLn2h-hHZlA>
-    <xmx:wXISabQSHMbGVBc2HH08oz-zSSDUCi-V7DepyGP2QNMAYBweuNomAg>
-    <xmx:wXISaR898BBYUoIDK31yYDRFX5hCvVgxT9eCdY2VxvJ-v3xuVsIbCQ>
-    <xmx:wnISaXVwKiJ2UhMhHANmqlw837S0CoKV_JzHWMGreF7aMwWgxJCT-8vq>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Nov 2025 18:18:23 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1762817931; c=relaxed/simple;
+	bh=sR43zrzrdmlvoBwZ64SsCIgT5y5AVagDKmg9rPhaoxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Z2IoC4s+PIug6fAQcpn/q82ZZ3Rw9rkw8f2MEX3J+lSlWEeZB5XIqXC6sQN/bXSVfToiYY+k1lNNx27xlVHo5TDYbz8iPgCd+6dtMURJf/v5r3l+9xGQWEFbukrsSKbb9yQ8quEc4u4s93GWXfPjkuuU9iVGGLM1+PJbwF2bryE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TMHd2hFq; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1762817918;
+	bh=9+n8g7Oe9NC8CoA1EbspLz1bfjTzk0COygqpR6OrGWs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TMHd2hFqVdpC/DVSfVnmat3/dUC/bZpxo/YLMSqzt8eDSwy8vSXtk21YTg1EtQfPR
+	 Bk4jMUcDeWFAEoGfaJZ44scMuTI+g3KJzqfFwawOg+RLiJLwK2HzP2S6s6VC00d0G6
+	 quRPFMV981VFgGjyGLlIPIFc9zLDBcYLbVhEV8Y4hEKPZNzcRYFmmYJwqKvGRKnCJz
+	 F/ci82lOtwUXf4Ph9EL4DABe+Dzk/qTDjJDwgONeFv6XOkFvJkJQmcNM2VMQek7oV8
+	 7KPH6nBY1k0GvOvJulpJcaU3WZasvc/+JO+tLlgoiyg95ew9E7Biq7GHUsya8+ngGA
+	 lih91MUZpr1dg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4d55hZ4kggz4wBD;
+	Tue, 11 Nov 2025 10:38:38 +1100 (AEDT)
+Date: Tue, 11 Nov 2025 10:38:37 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>, Anna Schumaker
+ <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>, Mike Snitzer
+ <snitzer@kernel.org>, NFS Mailing List <linux-nfs@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the vfs-brauner tree with the nfs-anna
+ tree
+Message-ID: <20251111103837.0ecdf26d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org, "Andrew Morton" <akpm@linux-foundation.org>,
- "David Laight" <David.Laight@ACULAB.COM>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
- "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
- speedcracker@hotmail.com
-Subject: Re: [PATCH stable 6.1.y] nfsd: use __clamp in nfsd4_get_drc_mem()
-In-reply-to: <17e85980-9af9-4320-88d1-fa0c9a7220b1@oracle.com>
-References: <176272473578.634289.16492611931438112048@noble.neil.brown.name>,
- <17e85980-9af9-4320-88d1-fa0c9a7220b1@oracle.com>
-Date: Tue, 11 Nov 2025 10:18:19 +1100
-Message-id: <176281669984.634289.12369219545843965992@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: multipart/signed; boundary="Sig_/TDV1KL+3TQeTorugdiyX=w5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, 10 Nov 2025, Chuck Lever wrote:
-> Hi Neil -
->=20
-> On 11/9/25 4:45 PM, NeilBrown wrote:
-> >=20
-> > From: NeilBrown <neil@brown.name>
-> >=20
-> > A recent change to clamp_t() in 6.1.y caused fs/nfsd/nfs4state.c to fail
-> > to compile with gcc-9.
->=20
-> I have a comment on merge process:
->=20
-> Reported on 6.1.y, but might be present in other LTS releases, since
-> 2030ca560c5f exists in every LTS kernel since v5.4.y.
+--Sig_/TDV1KL+3TQeTorugdiyX=w5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I thought this might be likely but I didn't have enough motivation to check.
+Hi all,
 
->=20
-> At least, my understanding of the stable rules is that they prefer this
-> kind of patch be applied to all relevant LTS kernels. I strongly prefer
-> that NFSD experts review and test this change /before/ it is merged,
-> since nfsd4_get_drc_mem() is part of the NFSv4.1 session slot
-> implementation, and since in this case we don't get the benefit of
-> /any/ soak time in linux-next or an upstream -rc release.
+Today's linux-next merge of the vfs-brauner tree got a conflict in:
 
-The patch is deliberately written to transparent without requiring any
-(export or otherwise) understand of the NFS or even of the code being
-changed.
-It purely removes the BUILD_BUG_ON().
+  fs/nfs/localio.c
 
->=20
-> So IMHO this patch needs to target v6.12.y, not v6.1.y, and it should be
-> marked
+between commits:
 
-Can I leave the process management to you.
-Though as you say later, the same patch should apply equally to both.
+  51a491f2708d ("nfs/localio: remove unecessary ENOTBLK handling in DIO WRI=
+TE support")
+  f2060bdc21d7 ("nfs/localio: add refcounting for each iocb IO associated w=
+ith NFS pgio header")
+  d0497dd27452 ("nfs/localio: backfill missing partial read support for mis=
+aligned DIO")
+  6a218b9c3183 ("nfs/localio: do not issue misaligned DIO out-of-order")
 
->=20
-> Fixes: 2030ca560c5f ("nfsd: degraded slot-count more gracefully as
-> allocation nears exhaustion.")
+from the nfs-anna tree and commit:
 
-There is no evidence that patch is broken so it is hard to justify
-saying that we fixed it.  But I honestly don't care.
+  94afb627dfc2 ("nfs: use credential guards in nfs_local_call_read()")
 
->=20
-> (Since the patched code hasn't changed in many years, I think the final
-> patch ought to apply cleanly to both 6.12.y and 6.1.y).
->=20
-> I need to take the fix into nfsd-6.12.y and run NFSD CI against it, then
-> it can be sent along to stable@, and they will put it back into the
-> older LTS kernels for us.
->=20
->=20
-> > The code was written with the assumption that when "max < min",
-> >    clamp(val, min, max)
-> > would return max.  This assumption is not documented as an API promise
-> > and the change cause a compile failure if it could be statically
-> > determined that "max < min".
-> >=20
-> > The relevant code was no longer present upstream when the clamp() change
-> > landed there, so there is no upstream change to backport.
-> >=20
-> > As there is no clear case that the code is functioning incorrectly, the
-> > patch aims to restore the behaviour to exactly that before the clamp
-> > change, and to match what compilers other than gcc-9 produce.
->=20
-> > clamp_t(type,v,min,max) is replaced with
-> >   __clamp((type)v, (type)min, (type)max)
-> >=20
-> > Some of those type casts are unnecessary but they are included to make
-> > the code obviously correct.
-> > (__clamp() is the same as clamp(), but without the static API usage
-> > test).
-> >=20
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220745#c0
-> > Fixes: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi te=
-st in clamp()")
->=20
-> Stable-dep-of: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the
-> lo < hi test in clamp()")
->=20
+from the vfs-brauner tree.
 
-I haven't come across Stable-dep-of before.  I can't find it in
-Documentation.  Looking at some examples I guess it makes sense.
-Except that Stable-dep-of normally comes before, and Fixes normally
-comes after the target...
+I fixed it up (I think - see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
-Thanks,
-NeilBrown
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc fs/nfs/localio.c
+index 656976b4f42c,0c89a9d1e089..000000000000
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@@ -620,37 -595,30 +620,34 @@@ static void nfs_local_call_read(struct=20
+  	struct nfs_local_kiocb *iocb =3D
+  		container_of(work, struct nfs_local_kiocb, work);
+  	struct file *filp =3D iocb->kiocb.ki_filp;
+- 	const struct cred *save_cred;
+ +	bool force_done =3D false;
+  	ssize_t status;
+ +	int n_iters;
+ =20
+- 	save_cred =3D override_creds(filp->f_cred);
++ 	scoped_with_creds(filp->f_cred) {
+ -		for (int i =3D 0; i < iocb->n_iters ; i++) {
+++		n_iters =3D atomic_read(&iocb->n_iters);
+++		for (int i =3D 0; i < n_iters ; i++) {
++ 			if (iocb->iter_is_dio_aligned[i]) {
++ 				iocb->kiocb.ki_flags |=3D IOCB_DIRECT;
+ -				iocb->kiocb.ki_complete =3D nfs_local_read_aio_complete;
+ -				iocb->aio_complete_work =3D nfs_local_read_aio_complete_work;
+ -			}
+++				/* Only use AIO completion if DIO-aligned segment is last */
+++				if (i =3D=3D iocb->end_iter_index) {
+++					iocb->kiocb.ki_complete =3D nfs_local_read_aio_complete;
+++					iocb->aio_complete_work =3D nfs_local_read_aio_complete_work;
+++				}
+++			} else
+++				iocb->kiocb.ki_flags &=3D ~IOCB_DIRECT;
+ =20
+- 	n_iters =3D atomic_read(&iocb->n_iters);
+- 	for (int i =3D 0; i < n_iters ; i++) {
+- 		if (iocb->iter_is_dio_aligned[i]) {
+- 			iocb->kiocb.ki_flags |=3D IOCB_DIRECT;
+- 			/* Only use AIO completion if DIO-aligned segment is last */
+- 			if (i =3D=3D iocb->end_iter_index) {
+- 				iocb->kiocb.ki_complete =3D nfs_local_read_aio_complete;
+- 				iocb->aio_complete_work =3D nfs_local_read_aio_complete_work;
+- 			}
+- 		} else
+- 			iocb->kiocb.ki_flags &=3D ~IOCB_DIRECT;
+-=20
+- 		status =3D filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
+- 		if (status !=3D -EIOCBQUEUED) {
+- 			if (unlikely(status >=3D 0 && status < iocb->iters[i].count))
+- 				force_done =3D true; /* Partial read */
+- 			if (nfs_local_pgio_done(iocb, status, force_done)) {
+- 				nfs_local_read_iocb_done(iocb);
+- 				break;
+ -			iocb->kiocb.ki_pos =3D iocb->offset[i];
++ 			status =3D filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
++ 			if (status !=3D -EIOCBQUEUED) {
+ -				nfs_local_pgio_done(iocb->hdr, status);
+ -				if (iocb->hdr->task.tk_status)
+++				if (unlikely(status >=3D 0 && status < iocb->iters[i].count))
+++					force_done =3D true; /* Partial read */
+++				if (nfs_local_pgio_done(iocb, status, force_done)) {
+++					nfs_local_read_iocb_done(iocb);
++ 					break;
+++				}
+  			}
+  		}
+  	}
+--
+- 	revert_creds(save_cred);
+ -	if (status !=3D -EIOCBQUEUED) {
+ -		nfs_local_read_done(iocb, status);
+ -		nfs_local_pgio_release(iocb);
+ -	}
+  }
+ =20
+  static int
+@@@ -820,47 -781,78 +817,55 @@@ static void nfs_local_write_aio_complet
+  	nfs_local_pgio_aio_complete(iocb); /* Calls nfs_local_write_aio_complete=
+_work */
+  }
+ =20
+- static void nfs_local_call_write(struct work_struct *work)
++ static ssize_t do_nfs_local_call_write(struct nfs_local_kiocb *iocb,
++ 				       struct file *filp)
+  {
+- 	struct nfs_local_kiocb *iocb =3D
+- 		container_of(work, struct nfs_local_kiocb, work);
+- 	struct file *filp =3D iocb->kiocb.ki_filp;
+- 	unsigned long old_flags =3D current->flags;
+- 	const struct cred *save_cred;
+ +	bool force_done =3D false;
+  	ssize_t status;
+ +	int n_iters;
+ =20
+- 	current->flags |=3D PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+- 	save_cred =3D override_creds(filp->f_cred);
+-=20
+  	file_start_write(filp);
+ -	for (int i =3D 0; i < iocb->n_iters ; i++) {
+ +	n_iters =3D atomic_read(&iocb->n_iters);
+ +	for (int i =3D 0; i < n_iters ; i++) {
+  		if (iocb->iter_is_dio_aligned[i]) {
+  			iocb->kiocb.ki_flags |=3D IOCB_DIRECT;
+ -			iocb->kiocb.ki_complete =3D nfs_local_write_aio_complete;
+ -			iocb->aio_complete_work =3D nfs_local_write_aio_complete_work;
+ -		}
+ -retry:
+ -		iocb->kiocb.ki_pos =3D iocb->offset[i];
+ +			/* Only use AIO completion if DIO-aligned segment is last */
+ +			if (i =3D=3D iocb->end_iter_index) {
+ +				iocb->kiocb.ki_complete =3D nfs_local_write_aio_complete;
+ +				iocb->aio_complete_work =3D nfs_local_write_aio_complete_work;
+ +			}
+ +		} else
+ +			iocb->kiocb.ki_flags &=3D ~IOCB_DIRECT;
+ +
+  		status =3D filp->f_op->write_iter(&iocb->kiocb, &iocb->iters[i]);
+  		if (status !=3D -EIOCBQUEUED) {
+ -			if (unlikely(status >=3D 0 && status < iocb->iters[i].count)) {
+ -				/* partial write */
+ -				if (i =3D=3D iocb->end_iter_index) {
+ -					/* Must not account partial end, otherwise, due
+ -					 * to end being issued before middle: the partial
+ -					 * write accounting in nfs_local_write_done()
+ -					 * would incorrectly advance hdr->args.offset
+ -					 */
+ -					status =3D 0;
+ -				} else {
+ -					/* Partial write at start or buffered middle,
+ -					 * exit early.
+ -					 */
+ -					nfs_local_pgio_done(iocb->hdr, status);
+ -					break;
+ -				}
+ -			} else if (unlikely(status =3D=3D -ENOTBLK &&
+ -					    (iocb->kiocb.ki_flags & IOCB_DIRECT))) {
+ -				/* VFS will return -ENOTBLK if DIO WRITE fails to
+ -				 * invalidate the page cache. Retry using buffered IO.
+ -				 */
+ -				iocb->kiocb.ki_flags &=3D ~IOCB_DIRECT;
+ -				iocb->kiocb.ki_complete =3D NULL;
+ -				iocb->aio_complete_work =3D NULL;
+ -				goto retry;
+ -			}
+ -			nfs_local_pgio_done(iocb->hdr, status);
+ -			if (iocb->hdr->task.tk_status)
+ +			if (unlikely(status >=3D 0 && status < iocb->iters[i].count))
+ +				force_done =3D true; /* Partial write */
+ +			if (nfs_local_pgio_done(iocb, status, force_done)) {
+ +				nfs_local_write_iocb_done(iocb);
+  				break;
+ +			}
+  		}
+  	}
+  	file_end_write(filp);
+ =20
+- 	revert_creds(save_cred);
++ 	return status;
++ }
++=20
++ static void nfs_local_call_write(struct work_struct *work)
++ {
++ 	struct nfs_local_kiocb *iocb =3D
++ 		container_of(work, struct nfs_local_kiocb, work);
++ 	struct file *filp =3D iocb->kiocb.ki_filp;
++ 	unsigned long old_flags =3D current->flags;
++ 	ssize_t status;
++=20
++ 	current->flags |=3D PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
++=20
++ 	scoped_with_creds(filp->f_cred)
++ 		status =3D do_nfs_local_call_write(iocb, filp);
++=20
+  	current->flags =3D old_flags;
+ -
+ -	if (status !=3D -EIOCBQUEUED) {
+ -		nfs_local_write_done(iocb, status);
+ -		nfs_local_vfs_getattr(iocb);
+ -		nfs_local_pgio_release(iocb);
+ -	}
+  }
+ =20
+  static int
 
-> might be more appropriate.
->=20
->=20
-> > Signed-off-by: NeilBrown <neil@brown.name>
->=20
-> --=20
-> Chuck Lever
->=20
+--Sig_/TDV1KL+3TQeTorugdiyX=w5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmkSd30ACgkQAVBC80lX
+0GwQ8Qf+JNBhJW3HHY9s99XWPThbcmK/3t6eMDCUnS9dUKhIyD0jTAkoe2ugAX+o
+EEaAycevgrLcaUDWjXFN8kak3CARIfgZbLUDmoH5pL9oL5KfeQxSP6RO+Pb9C32h
+srguHNv0E8KJglMpFXxwtFJN9npR2Ce+FudgfdouseCFKxLP26VLd/EpsDDaiXbu
+y9shhSUD8Fyq3RtUbWp7wr5gF+mQz/+7LTlpp7LW/YFs9depCeMg9I0t9dErzUue
+fJz9VB9wACvrIcBplZMbGxpy3yf9u4ap0tz6jDa6jqK3dQTPHE1ok6lgOGnE5Aw6
+gtvGRLgzEeqN5tlEtQJmgGKSHrRTaw==
+=4z7x
+-----END PGP SIGNATURE-----
+
+--Sig_/TDV1KL+3TQeTorugdiyX=w5--
 
