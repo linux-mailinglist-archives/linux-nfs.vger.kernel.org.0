@@ -1,299 +1,266 @@
-Return-Path: <linux-nfs+bounces-16264-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16265-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CC05C4E736
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 15:26:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F09D5C4E760
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 15:27:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 534443B5027
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 14:19:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1524B1891D2C
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 14:22:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75ED36C59D;
-	Tue, 11 Nov 2025 14:14:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EDBD2FFFA4;
+	Tue, 11 Nov 2025 14:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l15myyQI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AvogiCKW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ilz6TYYx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392E236C59A;
-	Tue, 11 Nov 2025 14:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762870443; cv=none; b=ag+VwmvkdMVTeKRZXDa18VuSjyN0iB6S56/pecTRdylOoVQ7eoNzogzK2pn1fUoWhWWrxXstsaqfujoJKejzSDojOJM7jFHCh7+PbMrDsJJp5bFtuk2LOLozCDLwvt5TcXt8yDUwtqoPEvE6d6UNgXBw3z7o2UfKRq0AyV+kcGc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762870443; c=relaxed/simple;
-	bh=WdewGaiNuFLjHV1a6vCFo/mDFJ2AWK1PFe+Yl6HB3Sk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cr2+r9Q7SwfHi3K7CshA3FjCficCwZYKOJqd5GNKFo1wUSlVdGjIV3x6RbJAXR19TiFRb9KUdrDofKeya3leu0AVWCxEnFEwxtiMXkDaD80ERdzdoSdiyziu6TtQbP7u8IEjyNybPRVj9iilO0TWXGRyKANgSMvN7xQ+exmM6pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l15myyQI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF65C4CEF7;
-	Tue, 11 Nov 2025 14:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762870442;
-	bh=WdewGaiNuFLjHV1a6vCFo/mDFJ2AWK1PFe+Yl6HB3Sk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l15myyQIerMvxjgtiRi6NwuRnkXFNTFcl60S3EzEy5KHr7vD5SJE25gbpJBLscxRe
-	 tZ+TF5RNMOPAgumvBWteGwwBJqcf/CpQtr1SDnn2Rjrtj9qBBzArMZhh9ddqoy+CjD
-	 rvTeM4E+m/QTBMkeNes1o7UL6DzVXut+2zpjb68DQap317Td29xpx5LijMTQkSRYKl
-	 u362c7yWxTpdQpWZRy4Cy44JvutBF7vCD8hQbVAdRMSv7eWTv3fv3e+VkGXDNHcVET
-	 +oXc4M7SafwrMJyCrtHM68p4NBgut2PRkYGSmg89k3LjKveh8qwKqXKPJD+iUnEfw9
-	 4Rcb0wgf3KpcQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 11 Nov 2025 09:12:58 -0500
-Subject: [PATCH v6 17/17] vfs: expose delegation support to userland
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4481DF258
+	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 14:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762870881; cv=fail; b=sLK2vHtrnMiJBjrDLu0HtDftr8E71QirYk0X/1Nrbj3/P8GgJfg74ys3U39vRBCVYj/In1ygyX51SRgL+rHKS8TbIr5Vpbk7Qhrq2WgdM1lddhmzjChNb4EVG0M3rbAJmzXpdKHESmJc8kt+56t99LBB4MSOP/C0z7I5LdZrA14=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762870881; c=relaxed/simple;
+	bh=ohADZfMw+LELeNjmW8z2jt12CsPXqJzWe0CKS2Lr6Wk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QE+kybTVsvn6y2oiKDZwkyHVT31jHO9YJV8KCCNGL42t9+LLIn9L1Ozc3TFsTTKSwM58D7kwioAEwSSrBcpo2O4ogfGbK47urS0/yojzSWpKugyR4rT8JkSTKlvDED4xdpyh2ibhn5SKCAXPx2o7AefCF117joUII48JZNdcXHo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AvogiCKW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ilz6TYYx; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ABEGmUK018307;
+	Tue, 11 Nov 2025 14:20:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=6pE3iqpaCA69IPeolSuoBKUGJb1yWCW0HXHlebfnCds=; b=
+	AvogiCKWlXJPSHdbRxdVMQVURW/q8ihzHU4L+WqAQHmkCzSMypOdrCObHXEPt6L2
+	j/uAy4Fi4aPiq7fsQEZrmJITTgTNNDsVBuMg5tzwaQKNWdI+vjrZeI/9CWhx2j1X
+	9NFaWbDheHO3CsgUeNT3znvyvru7x1GeQAbsusL+C7xW25Vj8ws3L5moK/cZZGiV
+	kVlmze+j2EIMDMeGmUc+sLkITXnKbdTL8V+/Xa4SPX+wpWrID7r3jVeCehHbcCD7
+	zp41eVJ9pu0A1ftGKRwb0NjR/wW1ovdtTQehiYX4iQRSf9KMafmwt3KE8czaoyjo
+	c5ZbT7kS1f50ABiQagZWlg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4ac500r79k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Nov 2025 14:20:57 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ABDcUtj000743;
+	Tue, 11 Nov 2025 14:20:57 GMT
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010006.outbound.protection.outlook.com [52.101.61.6])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vadkbcp-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Nov 2025 14:20:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xVWD/7EtlEjqFLI1knYpX8mpnJrVs1gQlxiyuOSRMLOrRUl8lQ//NBOBqZksyg0rQcZyhwXIsPzuTTP2uTRKP6C1UWAZz/oVHSJ0gJEIQV91KAEsc+rLAKLP7OiLmtNwl/zLUw+VjlQTSLwSYFWgAJm5UzHfW6QXg0pto9HaWn5YM6nM28qzV9izS+y/aMEjEgd0Vt1+Kh9dvuTEANyiVy8dUT3Y485kUtpE1ewh6ICnSK8JaPBIJ3IU0Uc+6bfmSKgdnq+OBtIlnIes8esUSvmJf1EarE5f3OAQqZayr29/IsvFuH0FIHvalQZV4As0E7XrWAMZKElIXEpwGCm+2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6pE3iqpaCA69IPeolSuoBKUGJb1yWCW0HXHlebfnCds=;
+ b=U1OyBVJzyXERAqTWMn178wgB22+8+909FhRy23sGfob6AU6I9OE/FNy3H0E4A1ub9Ous/p8xRG/K2RXxjvVnTmej7jatqACYhDLrh4xGb1vBMBG4V/3AUZBQmrYmqeEdQ794t/Oujd54t3Z654i5lA1AnTu0R7BZskCwgqotu+kmIpchtzcRLI6BUBQix7T8xniNdJbMxDKLTLJG1Hok11R6EuhWT54nchNF2S16So0oCQzolapcO9LxxSo3jYFpAXzfbforQAAVwacVU9+ljM/QEYKkwS7KRB4oUtAXxpSwOp9nTaLxeikpwf6DlGpjERiqilU+qbDnkmCnHrFIIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6pE3iqpaCA69IPeolSuoBKUGJb1yWCW0HXHlebfnCds=;
+ b=ilz6TYYxYv0Hq5Okdbg2CmLY2ph8O26oaO9QFI3ps1SM2Lc2kTr7o9skCp74kWVyqbGyL5m6VOiWR5I/2xyPYzqbQ5yTClBWnRpGbJA3V60WISJxfuzE++WypHNEjWzdqvi8TxTT70EUhkGU3QS9u5DuGPoY64V1QL8zCpZ1QUk=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH3PR10MB6713.namprd10.prod.outlook.com (2603:10b6:610:143::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Tue, 11 Nov
+ 2025 14:20:54 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9298.010; Tue, 11 Nov 2025
+ 14:20:54 +0000
+Message-ID: <e0798cbc-87ce-4ba3-ae9c-d1ff669dcf75@oracle.com>
+Date: Tue, 11 Nov 2025 09:20:52 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+To: Christoph Hellwig <hch@infradead.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+References: <aQ4Sr5M9dk2jGS0D@infradead.org>
+ <82be5f47-77df-423d-a4f3-17f83ddb6636@kernel.org>
+ <aQ5Q99Kvw0ZE09Th@kernel.org>
+ <fb0d6399-ea74-462a-982a-df232e3f4be9@kernel.org>
+ <aQ5SSnW9xUWj9xBi@kernel.org>
+ <176255273643.634289.15333032218575182744@noble.neil.brown.name>
+ <aQ5xkjIzf6uU_zLa@kernel.org>
+ <176255894778.634289.2265909350991291087@noble.neil.brown.name>
+ <aQ6kkd74pj2aUd8b@kernel.org>
+ <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
+ <aRL5EPMD9VsG1n3D@infradead.org>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <aRL5EPMD9VsG1n3D@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0P220CA0016.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:610:ef::32) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251111-dir-deleg-ro-v6-17-52f3feebb2f2@kernel.org>
-References: <20251111-dir-deleg-ro-v6-0-52f3feebb2f2@kernel.org>
-In-Reply-To: <20251111-dir-deleg-ro-v6-0-52f3feebb2f2@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
- Bharath SM <bharathsm@microsoft.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Amir Goldstein <amir73il@gmail.com>, 
- Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Carlos Maiolino <cem@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, netfs@lists.linux.dev, 
- ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
- linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
- linux-api@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6536; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=WdewGaiNuFLjHV1a6vCFo/mDFJ2AWK1PFe+Yl6HB3Sk=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpE0Rqurk9cWPo6zP4fAmosJ6He97p9pqHQES7s
- Z06KXXBPjWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaRNEagAKCRAADmhBGVaC
- FTB/EACh5AspYIZTqRbll6q3mdwbK586tz7VH6SHn0JNvaDbeCV5/kAN0/r/8NI5lSY/RXE9gfA
- NjDm600CiqSZi94ckvFWfZdcUb/cwo7kbMk4UQHL+JH8fcRjqE1v2KGmf8gFejRebq7xo4/BxLa
- 3r+EIRxQoWimgPyhqtSPeBGqq2KOdBrYWqzAB6NZdULUezfg4g5aHo7aPxHtn4P0n4ZUMIdpJ8J
- 7z0K+s6lGWBNtXTFb3pSiNF7NXM3amOPp4TYrxSMmigVmvBD/kdoy2UOyGr4hMWx/DawdzNuBxQ
- vwgik4WPHaUMdUZBS+7wPoEJnDML2IRdKFET2wLPlN6X/Xf4vA3t4sC7Z0g+u8gFNjKLB0S+6O0
- rM58JVJ8PvU4+PAUQsabbYf0YWm+49DC03SLQrOKX/oNFKaP1PSJFmzzqH/I1Tu0xd8usz4Lzvn
- HPjh1KW+KhUOtuUphSu/+eCRdEOc3vU9X9QYvPeSLdFurXnezJvxuEedvoaYop03JBRZ3kZzo/H
- Sr4QfnmZ+D7XqOdSPKDdz5IplJfDj71bOagfmFVc5ckULbrLCbrGmeESpfEqEqNbtiTVmq8QRX+
- AChQAZDZPCkee/EMaXoyb3CsgpEUzjpyhGQSFi6zLmXSviCpp4yfqo3tkyxqpoqiakzaqXVIzui
- g4ecbM/7WKg19EQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH3PR10MB6713:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bfbabbd-3324-4268-10c7-08de212d861c
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?L1V4cm5MbVExdXFvYVBnZVdldEY0MEU3QXRaNUVsR1U0SFV3cUJYZ1BjNmJQ?=
+ =?utf-8?B?S2wwYndBQ05oeW5VL1o1NFkyRzVDbmk0S0RCZUhiSjk1Y2QwTVBnNmlHYVJK?=
+ =?utf-8?B?c1VyMnIwdUJ6a0s1ZG5PS3RoL25ZWFFKOUE0aWhiQnBIdUI0S3RzRjYzYTR0?=
+ =?utf-8?B?OS8yU3hidC8wRGNVVDJ6U3hTSGhSbkdQQ1BGTGkxdElSMDBhU0xtSkVkZHVo?=
+ =?utf-8?B?OEE1cHhWb3paZVNFNE00dUhTM1JhTi82dUdOR2MxVkExbk1LdmpZWGJleUpl?=
+ =?utf-8?B?d0ZieDhyY3Z1YmFzYnRDMDF0UytPRmRnaU4yTE40U3AvYVUvYzU2b0tKVHRR?=
+ =?utf-8?B?UUhIeFkzM3ZEZHVOZkp1MFNUK1VCRHllVHNpMnZ4SGlWVGRQSVZGZ2lvUG5X?=
+ =?utf-8?B?bmhQQ21jVGVlM1E2d0tndUU5SXVVZmVzUjA1YlBmVG1tN0xacEVTK2NYQ0dV?=
+ =?utf-8?B?UVVUREh0U3l1WEZCUnNmczg2eXdMdGFwRGFlVWZzM2NnL2NhY1BlSFhXcWdZ?=
+ =?utf-8?B?cGNoTjhwa2RrV1MvMm5HSVl6b3JZdmdoTm5oR0lSVi9sRGtZWEFZY2xVeVI1?=
+ =?utf-8?B?TmV4SERzbFdpTHNDNmpFcVh1bFRXREZHYkJKVHJtVDNxVGQ4Q3dOeHhWOWpF?=
+ =?utf-8?B?cHo0YjNCREdYTE8vSXMyYy8wWXVTUENncnZOb1RyZmRaR2NwRmFVMS9wNlNT?=
+ =?utf-8?B?cjBkRE1wMHhaa3VFNG1zMmpLeUZySEJxdFJrV3h6SUhuTytaL1QrTmUvU01m?=
+ =?utf-8?B?bTF2QnVBQktoeTIrc0x1aDFwTEtKOHlUNFlacTVQbi9tSUQxTHBPcXVHd3ZF?=
+ =?utf-8?B?RlNncG5BWU4vMkhMTWNJa2hPN1BOUVpQTXB3RVBITDhRYXZhQXZ0OGlyWXZU?=
+ =?utf-8?B?V2pnSzlaUXpIOUVGS1FGbE9zQTF0MU9vKzNYaHJvVktOdE5WQ29ncnRYTUZ4?=
+ =?utf-8?B?UHhyOXk3bDV2KzBnUE0xMU94dXRQNkpGdENWdnBmNnVwME1iS3pkbnJ1RXBR?=
+ =?utf-8?B?Z2c2SHMxOW9XRjQ4YUFEZkE0UkkxRXpEQU1BQXoycGoyV1ZscFhkMnlqQnMx?=
+ =?utf-8?B?bnBIN0loaUFUNWJXcXBnQUJ3TUIrWHlsdEtwQmdRYlc3QnprU0QxcWhoVkdY?=
+ =?utf-8?B?VHVEZmJGemxkTDkvSmFiQ2RMK3VDTmF6MkZ0MzhhRXBYWm9zazBXNFQ4b2RR?=
+ =?utf-8?B?QmYyU0EyQTZJNEN1ZkF0ZE5iZ1JCeTlpU3lCMkRSZDA1N0xOR3U1TlhVRERy?=
+ =?utf-8?B?Ris5Rk5WcVZtNS9rcGE1OWJZR1VKTWNmUHpDUzFqWTZDVnZnM1Q3Vkw5dVFZ?=
+ =?utf-8?B?VGR5dFZrVHYxV1Y0VVRvR3RxUFFaR3lBc3ViZVZ2NHpxcER4Y2E0bGNCRDhJ?=
+ =?utf-8?B?VnBQUm5nd1pISG91UjNSOWZBMEkvMk9sSHN4dWZpL3VyOEFWc2hYN1NYbWVm?=
+ =?utf-8?B?VkNDNnd5SDdET25adUcwOUZ3NU51WVgybXNXV2wweWh3aGlJcjRHTjhEbmZG?=
+ =?utf-8?B?VTVsc0lBNDlhSGxiZ1JOcG9FM05pYjRsbG9pMXpBL1ErMiswemh5YlptWE1B?=
+ =?utf-8?B?NERCS2JsMG0rUmVrNm5hdlJuY2dFQ1VWK3hDT2lMdG55NGttbUJGTVJRQStY?=
+ =?utf-8?B?QlRDQWdOY3oxdXA1OC83eDFpcStzY0pBbHZaT1BXMElUUTFsUTI2dnJmM2lk?=
+ =?utf-8?B?ZTBscGpBQXhad29sd1pYVmZSZldpRWZvVDBZSVZtOHVFVkZGckxKOHdZUVVl?=
+ =?utf-8?B?Uk9VL1BjamM5bS9qT3BBQ3J4bWJhb05WWE1VZzYxZ1RFbFkwc2lhOXp0eUdS?=
+ =?utf-8?B?T05KN1lkTXpDTXZxczlPM0x6VzBSOXp3U1lGMWRGZXNBbk9ybGViQ0k4Z01V?=
+ =?utf-8?B?Uzk2UlZxT2ZBMTk2U0I5ODJTblk0aUNkSUpQbWkrZVFVN2xwWXRxYm13VmQv?=
+ =?utf-8?Q?xf5cbiv/8qJux3LnC7ntfglP2itpAbhS?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?NTMvVW5ITW9QNUw2cjNKa2ViaDBNSFVkSkxiRlVsVmY5Rmt5RDAwanBkUUUr?=
+ =?utf-8?B?bVFBL0ZmSEt4QlJMS2JKcE5scElNM1pHY21XVFZMMC83Q25CMU1JVTBvNmY1?=
+ =?utf-8?B?NWJQOWtDYzllNVpvL3ZjWHp5S2tmZ3VaZzBZc0VtbmtyR2FBUnR2S3FiUCtu?=
+ =?utf-8?B?TzNyS1FicjNRYUxoV2dGVzVkbjI4ZzNoWjdjYkZLd1ZFSFRML2txUkxnUHU4?=
+ =?utf-8?B?RkZmQitpMiswQmw1bkxXQzJqUnExTzA3Z0RsWVpSb3hHWW0xMTlNbW50K1o0?=
+ =?utf-8?B?L3VtZzcrMmplMEc5Um9sOTlVZVRSSFlsS0ZJOUczKzBiVGRvV1oyTWJMTkZi?=
+ =?utf-8?B?NGVTRzlBb1BqTHFEcEgrM2ZGOUZLTVk0YmNnb3M4RDNqVTk3TXBnRllTTUJa?=
+ =?utf-8?B?WFRjSVp1WTc3R3lzUS9oU1labURKczNzeWZuTUJvSyt5ZGhROGpsVWEwdSto?=
+ =?utf-8?B?dENpaU5rdGxyUVg0bGMvU2E4ZmVwTG5vSmtLclZZdGorRFM3UlRVTEd6YTNh?=
+ =?utf-8?B?YkFueXpRejVMNWhCOEhIUUtkWHZxVCtCOFdUM0F6QWl5OHpYSkRVNjA0MHZ4?=
+ =?utf-8?B?c3VKZ0tsZjA5ek9DT0ZpZ1MvRjJiT1lsTTRtR3plM0s3c0EzeUhpZHozeDVO?=
+ =?utf-8?B?c1hJcU5JWTdFRGJSM3JEZHFVSTM2RS85NTJURnhuTzZiVkpYdDlKTlNFU1RO?=
+ =?utf-8?B?STVNUHNPMExSZWlTMFhnUThFSVhGZUtRQ0hxRG9hZnViUnZEbHp2bjJESHZ4?=
+ =?utf-8?B?RUdCYTJKbG9yOEJmTHpFbWZZRDZyQllpbVk1c3RLTStrR0gva0xkUDJ4eHY5?=
+ =?utf-8?B?bTVkRXR6SkNiTWU3NlFzS0kvVU9oOEZVK3l3NVVFSFBDaDBDcTlaaDBWZWZ3?=
+ =?utf-8?B?a1c4Qmw3NWtJTXBqcjN4aFZ0QkMvMTFWSmF4RlBhWFRmeFRQVGhndGpONGl0?=
+ =?utf-8?B?M3pEOEtLaGJXZnQ0ZzFCQ3EzYnAxZXRneXd6ZUpiK1V2UkREelRnYkoyTlVj?=
+ =?utf-8?B?T0xBaGFLV2VYb1JjeVVkdHZlTWRXRjVKZFhtc1BibldzSHd5Yzc0NEgvNlpY?=
+ =?utf-8?B?ZmMyK3ppcVNtMm90d2pwbGx5MVVBS3dieVdnMk1HWEpqRDlORDdEdVNrM0Zr?=
+ =?utf-8?B?TE5uajZkankzTTB6SnkwSUxiUHQ1NFBCVS9uVXNmaytyK2JyQ0FzbUJFemxk?=
+ =?utf-8?B?OTlhQjRvc3l3OVVyRGFTSUk4ZHg1VE1NWW9waDUrd3hzVlUxYStseDRkL0t0?=
+ =?utf-8?B?UkE3M3FmN2NPMnhrRmhObkd3bmFlWXF3TUV2Q01CeVRvQzQzRVUyRGdLeDNI?=
+ =?utf-8?B?SU1wdWl3UlJCQVNhcmVCNE45Sk5JKzc5VFh4OVZpMlBtKytiMmJXTjhpeW50?=
+ =?utf-8?B?L0I2bks3amVBNW16K1F3UXhlUzU1RnhVelFYeVoyaFNtM2NGOFFkNWoxdFps?=
+ =?utf-8?B?bWhLcFEvU3g4RjdvclJZRElHdUV1bEo0YkI5K1J0Wk04MUhiOUtKZ1ptRVgv?=
+ =?utf-8?B?RjlkWGk2bExKcTJLNFdvM1Y1dTUxSGJvVFVMK283UWxsaVVwQkM0dVloOGMw?=
+ =?utf-8?B?R2RjejE5UGdIUGJqMWMrSkRiNHkzeDBRVEROdDNycEh3L00yajZUako3U25V?=
+ =?utf-8?B?bGNSRlZsTHRDeEpjUzFCMGdhU0s1MTRyRloxQXc5WnRCeVMrQkNtNzhIeDBn?=
+ =?utf-8?B?Nm41dFB0eTVmallLMC9pOVNZMGNRWkNVU2tBRmFNRGdCaHp6c2JFWkJQWndR?=
+ =?utf-8?B?M3Y1VjJSQk9JbnBsSUxiNHVPbmtJLy9jRTRLSnlTS29ib0dQM2NIZjdhUzZu?=
+ =?utf-8?B?NUhwRWt4VlROb2tyL0ZyUTJHUFo2aFlnY0t1bjNpMmNSQ0pLeWFkME5iNTNz?=
+ =?utf-8?B?bSszcWhXa0E0cUhPeW1ZbDlDWVM4UllqOGErdE5EV2VZSlNXNDNGMmhpWXNW?=
+ =?utf-8?B?Z1VFWDA3L3pFZ01kWXB0WGxOMzZUcmZaRXZscmZXQ3h5YTAzWTdaZVNmUTN5?=
+ =?utf-8?B?VTNTM0k5dlA3c2k0VExMUGZHZE1RZ1pqQW00WEtNeVoxMDBjZWs3YXFwMVZE?=
+ =?utf-8?B?ZG84a2RBcnZ6SURxVzh1V2dBSExmWjZIMDhHcjNibnAvQ3R3NnVIY3dTTE8w?=
+ =?utf-8?Q?Zl65OoVr5HHbx16Tz8Iht5t/c?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	XccZmi+j+hHdfPi2IGdCH6m/2JNYnSCDW71/gNLEmcXD1/DiYUFFBDfAkuc3ePInG7XSLfbaiufUJktJThxEU0ToGPKXyLh9oHaEwmtjYViuAsjqdbtWUYxqcQL/9GBVzJM0SUJOoPVwtd64y1i0Vd53A4px8geIkImStulQGuIuRgj3VZ2cC72scwB6TpBGRDnN9woSAdONhV+cRoqnKU6kxWZ7GLRP6+In630f5yCUoocgeoVifkuHCpwU2OnXc8vOG/PVYji3crQ308+1JsdhwHlBDFOdiJL1T85lkpMw28GyNdoGWVSyTsGzKbfAyeKsq3dTXASw4ELyBAqzhcKLowhGEM119h/9jSC73TCtnlkM5ouWrYf/Wavn3ccDEUEsmxJ3Jc68K80WhT1+Pa0G3DcUT5W6VeWwsg3Ax38xeCLerHb8XfzW1hExf0YFUnRbLSjNvNEDFo/cRXoRoin3hyQollcc/mQuo30FrWgFceInWZ2BIJ4GnUDAkvPKyYYhqxaBmRMHjrjAvTquUyh5VBeGiEZE/Hyg5mv3RwgfNOOu5Zd91mcEYVPESaaABqhelJZHgGKQ0SmSgppOqVmfJWbcsF+PvR0KZk3Hrxg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bfbabbd-3324-4268-10c7-08de212d861c
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 14:20:54.1630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6bjtel54pMke8jV+rs/DqHzV5KUGxlgt773ClUDrrG1XTOlZFhGSrvzzRjgHUlH+zjwunZN/FPhv2IQ/mIoXEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6713
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-11_02,2025-11-11_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=978 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2511110115
+X-Proofpoint-ORIG-GUID: Tk2MYuznKe27U8FkCO6_5QOI91DLonAY
+X-Authority-Analysis: v=2.4 cv=WuYm8Nfv c=1 sm=1 tr=0 ts=6913464a b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=CwAErSL-LLb0EiMAUAQA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13634
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTExMDA5NyBTYWx0ZWRfX4+RXdakhxWIF
+ iAjn4U4AywPZSYj4jH6r3URWNgPflH3EiztRqVyicyCAnQfozWnjxNWALjbG9gijn6/n4u3kL7q
+ zCXl3KK7gKBrajjAf6HtrPc1zwh8Ud096Y1wXRwEh3JPRRkbs0m6kkCZasGEgTHyFSO/1IuJ+45
+ khVMTiha9jg+4OitQpe6l4LgVfeTZmSqsBsgSaGmAcSt5CDjLpIX4QWbNfl4/Ap3wTCp79IB7m1
+ MOFbZrLewmU8OyyrwJV8ZjiT183d/4dtQ3Nn3sAxstu9ZGaHQK3Ls6YWjMeP38V8SM1vjA3uIzG
+ xPo9Ych6s7jIOYialC2pW3XhXDbATsaN+BwXrfOGILI5vFCgx+bWy7Kt/32BxiCHrVGfOn5i4Pn
+ dXsdfkQd+oO2HzPdqu2ZsOb9AS86I08W7tpRjKD/HbhudhO86FE=
+X-Proofpoint-GUID: Tk2MYuznKe27U8FkCO6_5QOI91DLonAY
 
-Now that support for recallable directory delegations is available,
-expose this functionality to userland with new F_SETDELEG and F_GETDELEG
-commands for fcntl().
+On 11/11/25 3:51 AM, Christoph Hellwig wrote:
+>> What we still don't know is exactly what the extra cost of setting
+>> DONTCACHE is, even on small writes. Maybe DONTCACHE should be cleared
+>> for /all/ segments that are smaller than a page?
+> I suspect the best initial tweak is for every segment or entire write
+> that is not page aligned in the file, as that is an indicator that
+> multiple RMW cycles are possible.  At least if we're streaming, but
+> we don't have that information.  That means all of these cases:
+> 
+>  1) writes smaller than PAGE_SIZE
+>  2) writes smaller than PAGE_SIZE * 2 but not aligned to PAGE_SIZE
+>  3) unaligned end segments < PAGE_SIZE
+> 
+> If we want to fine tune, we'd probably expand case 2 a bit as a single
+> page cache operation on an order 2 pages is going to be faster than
+> three I/Os most of the time, but compared to the high level discussion
+> here that's minor details.
 
-Note that this also allows userland to request a FL_DELEG type lease on
-files too. Userland applications that do will get signalled when there
-are metadata changes in addition to just data changes (which is a
-limitation of FL_LEASE leases).
+To move forward before it is too late to hit v6.19, what I'm thinking
+is this:
 
-These commands accept a new "struct delegation" argument that contains a
-flags field for future expansion.
+* I'll reset the patch to leave DONTCACHE set for all unaligned
+  segments, as it was in the original logic
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/fcntl.c                 | 13 +++++++++++++
- fs/locks.c                 | 45 ++++++++++++++++++++++++++++++++++++++++-----
- include/linux/filelock.h   | 12 ++++++++++++
- include/uapi/linux/fcntl.h | 11 +++++++++++
- 4 files changed, 76 insertions(+), 5 deletions(-)
+* I'll post a final version of the series to be merged
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 72f8433d9109889eecef56b32d20a85b4e12ea44..f93dbca0843557d197bd1e023519cfa0f00ad78f 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -445,6 +445,7 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 		struct file *filp)
- {
- 	void __user *argp = (void __user *)arg;
-+	struct delegation deleg;
- 	int argi = (int)arg;
- 	struct flock flock;
- 	long err = -EINVAL;
-@@ -550,6 +551,18 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 	case F_SET_RW_HINT:
- 		err = fcntl_set_rw_hint(filp, arg);
- 		break;
-+	case F_GETDELEG:
-+		if (copy_from_user(&deleg, argp, sizeof(deleg)))
-+			return -EFAULT;
-+		err = fcntl_getdeleg(filp, &deleg);
-+		if (!err && copy_to_user(argp, &deleg, sizeof(deleg)))
-+			return -EFAULT;
-+		break;
-+	case F_SETDELEG:
-+		if (copy_from_user(&deleg, argp, sizeof(deleg)))
-+			return -EFAULT;
-+		err = fcntl_setdeleg(fd, filp, &deleg);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/fs/locks.c b/fs/locks.c
-index dd290a87f58eb5d522f03fa99d612fbad84dacf3..7f4ccc7974bc8d3e82500ee692c6520b53f2280f 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1703,7 +1703,7 @@ EXPORT_SYMBOL(lease_get_mtime);
-  *	XXX: sfr & willy disagree over whether F_INPROGRESS
-  *	should be returned to userspace.
-  */
--int fcntl_getlease(struct file *filp)
-+static int __fcntl_getlease(struct file *filp, unsigned int flavor)
- {
- 	struct file_lease *fl;
- 	struct inode *inode = file_inode(filp);
-@@ -1719,7 +1719,8 @@ int fcntl_getlease(struct file *filp)
- 		list_for_each_entry(fl, &ctx->flc_lease, c.flc_list) {
- 			if (fl->c.flc_file != filp)
- 				continue;
--			type = target_leasetype(fl);
-+			if (fl->c.flc_flags & flavor)
-+				type = target_leasetype(fl);
- 			break;
- 		}
- 		spin_unlock(&ctx->flc_lock);
-@@ -1730,6 +1731,19 @@ int fcntl_getlease(struct file *filp)
- 	return type;
- }
- 
-+int fcntl_getlease(struct file *filp)
-+{
-+	return __fcntl_getlease(filp, FL_LEASE);
-+}
-+
-+int fcntl_getdeleg(struct file *filp, struct delegation *deleg)
-+{
-+	if (deleg->d_flags != 0 || deleg->__pad != 0)
-+		return -EINVAL;
-+	deleg->d_type = __fcntl_getlease(filp, FL_DELEG);
-+	return 0;
-+}
-+
- /**
-  * check_conflicting_open - see if the given file points to an inode that has
-  *			    an existing open that would conflict with the
-@@ -2039,13 +2053,13 @@ vfs_setlease(struct file *filp, int arg, struct file_lease **lease, void **priv)
- }
- EXPORT_SYMBOL_GPL(vfs_setlease);
- 
--static int do_fcntl_add_lease(unsigned int fd, struct file *filp, int arg)
-+static int do_fcntl_add_lease(unsigned int fd, struct file *filp, unsigned int flavor, int arg)
- {
- 	struct file_lease *fl;
- 	struct fasync_struct *new;
- 	int error;
- 
--	fl = lease_alloc(filp, FL_LEASE, arg);
-+	fl = lease_alloc(filp, flavor, arg);
- 	if (IS_ERR(fl))
- 		return PTR_ERR(fl);
- 
-@@ -2081,7 +2095,28 @@ int fcntl_setlease(unsigned int fd, struct file *filp, int arg)
- 
- 	if (arg == F_UNLCK)
- 		return vfs_setlease(filp, F_UNLCK, NULL, (void **)&filp);
--	return do_fcntl_add_lease(fd, filp, arg);
-+	return do_fcntl_add_lease(fd, filp, FL_LEASE, arg);
-+}
-+
-+/**
-+ *	fcntl_setdeleg	-	sets a delegation on an open file
-+ *	@fd: open file descriptor
-+ *	@filp: file pointer
-+ *	@deleg: delegation request from userland
-+ *
-+ *	Call this fcntl to establish a delegation on the file.
-+ *	Note that you also need to call %F_SETSIG to
-+ *	receive a signal when the lease is broken.
-+ */
-+int fcntl_setdeleg(unsigned int fd, struct file *filp, struct delegation *deleg)
-+{
-+	/* For now, no flags are supported */
-+	if (deleg->d_flags != 0 || deleg->__pad != 0)
-+		return -EINVAL;
-+
-+	if (deleg->d_type == F_UNLCK)
-+		return vfs_setlease(filp, F_UNLCK, NULL, (void **)&filp);
-+	return do_fcntl_add_lease(fd, filp, FL_DELEG, deleg->d_type);
- }
- 
- /**
-diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index 208d108df2d73a9df65e5dc9968d074af385f881..54b824c05299261e6bd6acc4175cb277ea35b35d 100644
---- a/include/linux/filelock.h
-+++ b/include/linux/filelock.h
-@@ -159,6 +159,8 @@ int fcntl_setlk64(unsigned int, struct file *, unsigned int,
- 
- int fcntl_setlease(unsigned int fd, struct file *filp, int arg);
- int fcntl_getlease(struct file *filp);
-+int fcntl_setdeleg(unsigned int fd, struct file *filp, struct delegation *deleg);
-+int fcntl_getdeleg(struct file *filp, struct delegation *deleg);
- 
- static inline bool lock_is_unlock(struct file_lock *fl)
- {
-@@ -278,6 +280,16 @@ static inline int fcntl_getlease(struct file *filp)
- 	return F_UNLCK;
- }
- 
-+static inline int fcntl_setdeleg(unsigned int fd, struct file *filp, struct delegation *deleg)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int fcntl_getdeleg(struct file *filp, struct delegation *deleg)
-+{
-+	return -EINVAL;
-+}
-+
- static inline bool lock_is_unlock(struct file_lock *fl)
- {
- 	return false;
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 3741ea1b73d8500061567b6590ccf5fb4c6770f0..008fac15e573084a9b48e4e991528b4363c54047 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -79,6 +79,17 @@
-  */
- #define RWF_WRITE_LIFE_NOT_SET	RWH_WRITE_LIFE_NOT_SET
- 
-+/* Set/Get delegations */
-+#define F_GETDELEG		(F_LINUX_SPECIFIC_BASE + 15)
-+#define F_SETDELEG		(F_LINUX_SPECIFIC_BASE + 16)
-+
-+/* Argument structure for F_GETDELEG and F_SETDELEG */
-+struct delegation {
-+	uint32_t	d_flags;	/* Must be 0 */
-+	uint16_t	d_type;		/* F_RDLCK, F_WRLCK, F_UNLCK */
-+	uint16_t	__pad;		/* Must be 0 */
-+};
-+
- /*
-  * Types of directory notifications that may be requested.
-  */
+* We can resume this discussion after the series is merged, as an
+  opportunity for optimization
+
 
 -- 
-2.51.1
-
+Chuck Lever
 
