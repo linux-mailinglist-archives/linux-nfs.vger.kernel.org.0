@@ -1,143 +1,160 @@
-Return-Path: <linux-nfs+bounces-16237-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16238-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FD66C4B8F2
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 06:41:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF92C4C71D
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 09:45:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 021943B0FFC
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 05:41:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DD453B4D93
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 08:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87092882B2;
-	Tue, 11 Nov 2025 05:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7162F2FA0F2;
+	Tue, 11 Nov 2025 08:45:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dzkz4SMG"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UaZJMSXw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9175E2877CD
-	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 05:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59492773F4
+	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 08:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762839706; cv=none; b=H46/i5yhZA4BUlrDJrz3PO+JjGV6ktmBn2ksjcxtSQZfDvk49w/r7ltGiGbUeAjg3KYTGgDaC0FwNtRlMR0gR3uetCr1Q4Pbjr1yL670qt3KwjBBn3l125xTDO7975r5/4csooUaIq0SX95bJLDAS+wMpFKQdDGIDATLgsynBpU=
+	t=1762850705; cv=none; b=ARfL+HdYOOAkCnomOGrpA0UYFxIl3oFPO3DmNe8hjMHzSsUBb8hsKBXEnkGJwqJyUUAQ1kmzQPTrzKU/hxv9Nys4F2ls++DBobD/CFS53ZAKFexpb4ioToXor0WCL0QDeeYlnGC5ojXWc6M4YgseEBLpDSiVREQNaQaXXsxyHE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762839706; c=relaxed/simple;
-	bh=OtHB60otof8Ib6WXAVLkc2DNl5es41ACdONUKvBmt5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=t5/fjny/kVU23NOHiqnXuaI6llm5+kZFBp8wt3QuXLyuEhXX4Afa5FMWfKwBi450ESSQ+v1OlzpCwMw9lLo3CGMYp7vZ1RHXst0HJLuGsxEusbM+6lJ1iIQgTiRdkoOK4aaPvWeLUwP16P3WqGW66F5lQu3HfIGTsPkiupC86kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dzkz4SMG; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251111054136epoutp048c23ca9effca6a4b90f96aaf7aff0e86~23V08eVh_1080210802epoutp04z
-	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 05:41:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251111054136epoutp048c23ca9effca6a4b90f96aaf7aff0e86~23V08eVh_1080210802epoutp04z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1762839696;
-	bh=ef0RDZCWoK3lvtiD9fAfX9+MmhcguTfmbAAtnNupmPs=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=dzkz4SMGWoa+X2wPgIyjI16jRtOo/FcrxblhLH/gDESsRNTwlNoEdxA6USFbcFcuv
-	 O7w2sr+2TQuqXN9wpmZU2LIIGrFGxiAFBmtio9TgGknllbajhUARdXSkOozHkgSx8f
-	 ml85fpLcWwsJujGvI6FWUL/Z9iw7tdZuksYYUMGM=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20251111054135epcas5p1d15ca46bbaf565fb7c66295f670d762c~23V0NCthE3166631666epcas5p1V;
-	Tue, 11 Nov 2025 05:41:35 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.90]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4d5FlL51stz3hhTJ; Tue, 11 Nov
-	2025 05:41:34 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20251111054133epcas5p20b40bd8e7a3f97b9291d974346022f8b~23VybX4aU0629806298epcas5p24;
-	Tue, 11 Nov 2025 05:41:33 +0000 (GMT)
-Received: from [107.111.86.57] (unknown [107.111.86.57]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20251111054129epsmtip241c0542d0446455b092d644d9c07434f~23VukFjr81175011750epsmtip2P;
-	Tue, 11 Nov 2025 05:41:29 +0000 (GMT)
-Message-ID: <38aa0903-24e6-4c9c-987c-86f6e7634f87@samsung.com>
-Date: Tue, 11 Nov 2025 11:11:28 +0530
+	s=arc-20240116; t=1762850705; c=relaxed/simple;
+	bh=7UIv0REVMPsR6TeO6DtT3RXaZCq5vg2DTU2XtMGVAkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1kjTrf3FrDaZcd73ihbZgynawGeInp17qXSJYFJ2tFvPjiXbUeN4tQoqt18Ao1qHA7M+wM19V1SKO+pxZY3JcQdLWNtBuA+2PjlDOHcH2V6g+Tba1QRNg3T3JIxRd5Oh04G47HmgJORVKSWKWaTjWzgC2jf/tQ3GtR+6W8Lz3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UaZJMSXw; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=np4snkbLuZln5nv1QHe642a/ScNlfpDqyy8rcO6LL2o=; b=UaZJMSXw1mm+DV4HAgnOFoU42h
+	Y8Ri6jQIYhZQl0r5OJIWQWOIeHS+gzhfJfXLIaeLUtVDQiW8hpZ1fJetpHzHvcsSxXDDG1K4IzAz6
+	RXPp57fQ6fU3iyOD+XC8vDbFYmHP2fXxmpjfhyoNp6ULHdcHsQHsp+CxCI629vi5g9Jzpz3s9X+Ek
+	EzlhhhooqiA4hkR1Xms++WWGVxKMCF5PjrNTW7GL+aVjmcxkLfzaHwBwYfl0Qui9ygXJNqq7sVz/f
+	HF8fsvj/yEPJcbE2O8AfVYh5ZZkAAz2I2wK8ZEehkFdyCZUhyCMK9DYz8teMTKsa6LE9ZVin6JKI2
+	DYulKv8Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vIjzm-00000006nco-2QoL;
+	Tue, 11 Nov 2025 08:44:58 +0000
+Date: Tue, 11 Nov 2025 00:44:58 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Chuck Lever <cel@kernel.org>,
+	NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aRL3imaw47ovSy7H@infradead.org>
+References: <20251107153422.4373-1-cel@kernel.org>
+ <20251107153422.4373-3-cel@kernel.org>
+ <aQ4Sr5M9dk2jGS0D@infradead.org>
+ <4714c5d0-cc40-4442-a8af-7f29cbb1b35d@kernel.org>
+ <aQ5vu47II-ZiFsmt@kernel.org>
+ <aRGsgQPe6lktLG2W@infradead.org>
+ <aRIH-ClvzCdoIaqz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/16] Parallelizing filesystem writeback
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Dave Chinner
-	<david@fromorbit.com>, jaegeuk@kernel.org, chao@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	miklos@szeredi.hu, agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org,
-	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
-	clm@meta.com, amir73il@gmail.com, axboe@kernel.dk, ritesh.list@gmail.com,
-	dave@stgolabs.net, wangyufei@vivo.com,
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-	gost.dev@samsung.com, anuj20.g@samsung.com, vishak.g@samsung.com,
-	joshi.k@samsung.com
-From: Kundan Kumar <kundan.kumar@samsung.com>
-In-Reply-To: <20251107133742.GA5596@lst.de>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20251111054133epcas5p20b40bd8e7a3f97b9291d974346022f8b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9
-References: <CGME20251014120958epcas5p267c3c9f9dbe6ffc53c25755327de89f9@epcas5p2.samsung.com>
-	<20251014120845.2361-1-kundan.kumar@samsung.com>
-	<aPa7xozr7YbZX0W4@dread.disaster.area> <20251022043930.GC2371@lst.de>
-	<e51e4fb9-01f7-4273-a363-fc1c2c61954b@samsung.com>
-	<20251029060932.GS4015566@frogsfrogsfrogs> <20251029085526.GA32407@lst.de>
-	<91367b76-e48b-46b4-b10b-43dfdd8472fa@samsung.com>
-	<20251107133742.GA5596@lst.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRIH-ClvzCdoIaqz@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 11/7/2025 7:07 PM, Christoph Hellwig wrote:
-> On Fri, Nov 07, 2025 at 02:54:42PM +0530, Kundan Kumar wrote:
->> Predicting the Allocation Group (AG) for aged filesystems and passing
->> this information to per-AG writeback threads appears to be a complex
->> task.
+On Mon, Nov 10, 2025 at 10:42:48AM -0500, Mike Snitzer wrote:
+> On Mon, Nov 10, 2025 at 01:12:33AM -0800, Christoph Hellwig wrote:
+> > On Fri, Nov 07, 2025 at 05:16:27PM -0500, Mike Snitzer wrote:
+> > > Those ends lend themselves to benefitting from more capable RMW
+> > > if/when needed.
+> > 
+> > How are ends of a larger I/O inhently more benefits from cached
+> > RMW then say a single tiny I/O?
 > 
-> Yes.  But in the end aged file systems are what will see most usage.
-> Fresh file systems look nice in benchmarks, but they aren't what
-> users will mostly deal with.
-> 
->> To segregate these I/O requests by AG, it is necessary to associate
->> AG-specific information with the pages/folios in the page cache. Two
->> possible approaches are:
->> (1) storing AG information in the folio->private field, or
->> (2) introducing new markers in the xarray to track AG-specific data.
->>
->> The AG-affined writeback thread processes specific pages from the page
->> cache marked for its AG. Is this a viable approach, or are there
->> alternative solutions that could be more effective?
-> 
-> Or maybe the per-AG scheme isn't that great after all and we just
-> need some other simple sharding scheme?  Of course lock contention
-> will be nicer on a per-AG basis, but as you found out actually
-> mapping high-level writeback to AGs is pretty hard.
-> 
-> 
-Thank you for your insightful comments, Christoph. I'm considering using
-folio private to incorporate IOMAP type and predicted AG information.
-The prediction for DELALLOC, using pagf_freeblks etc., and for UNWRITTEN
-and MAPPED, using the actual location of allocated blocks.
+> Any unaligned WRITE, no matter the size of the WRITE, will benefit
+> from RMW of its subpage ends if streaming unaligned WRITEs.
 
-Subsequently, schedule all writeback threads for the inode. With all the
-necessary information, these threads will be able to filter AG-specific
-folios and focus on those marked for the corresponding AG. Although this
-approach may seem complex, it should effectively address various use
-cases, including aged filesystems, filesystem fragmentation, and locking
-concerns.
+Yes.
 
-We tried CPU and inode based sharding, CPU based sharding increases
-filesystem fragmentation, and inode based sharding results in AG lock
-contention. We adopted AG-based sharding to resolve these issues.
+> I saw below that even saying "unaligned WRITE" leaves you annoyed.
+
+No, it doesn't.
+
+> Every time I say stuff like "the entire reason for the patchset" I set
+> myself up for a rebuttal from you.  You just did the same thing.  I'm
+> going to try to be accomodating and cool but please lets dial back
+> this weirdly caustic dynamic that is forming yet again.
+> 
+> Why is it that you cannot acknowledge that it isn't an all or nothing
+> situation?
+
+I'm actually arguing for that, not you.  You make claims of "the entire
+reason", not me.
+
+
+> Restating an important point underpinning my desire to handle this
+> niche unaligned streaming WRITE case efficiently: it removes the one
+> case I know of where NFSD_IO_DIRECT cannot compete with
+> NFSD_IO_BUFFERED. Whereby making NFSD_IO_DIRECT a compelling
+> alternative default IO mode.  To leave it to use DONTCACHE would be
+> purposely compromising NFSD_IO_DIRECT to be less effective.
+> 
+> I'm also saying: there is very limited downside to using cached
+> buffered for these subpage end segments.  But IF I'm proven wrong and
+> they do show themselves to be a problem in the future then a code
+> change will be needed.
+
+So spell them out in a comment, and leave nuggets for future readers.
+And explain why they don't apply for a single segment this is not
+page aligned by either being smaller than a page or straddling two
+pages.
+
+> 
+> > Also to go back to my previous mail:  How can an I/O that is aligned
+> > in file offset and length, but not in the backing memory ever going
+> > to benefit from this caching?
+> 
+> It wouldn't, because it would take the no_dio path and the entire IO
+> would be issued using DONTCACHE.
+
+Yes, I see that right now it does not.  But I want to hear from you
+why you think it is worth treating different.  Because there is no
+rationale that a small unaligned write won't benefit from it.  In fact
+all conventional wisdom suggest it will benefit even more.  And I'm
+trying to explain that for a few days now, but somehow it doesn't make
+it across.
+
+> 
+> That I just had to point that out shows how absurd all this contrarian
+> hand-wringing has gotten.
+
+Can you please top these attacks?
+
+> 
+> > > Or is this something we make tunable?
+> > > NFSD_IO_DIRECT_DONTCACHE_UNALIGNED?
+> > 
+> > Throwing in yet another tunable while not understanding the problem
+> > at hand is about the worst possible outcome.
+> 
+> Just because you don't understand something: that isn't my failing.
+> So your need to be the expert here is misplaced.  Please show you
+> understand the problem before you project lack of understanding onto
+> me.
+
+Well, if you do understand it you failed to explain it, which means
+there it no _collective_ understanding.  But to me this thread suggests
+you don't understand it either, although I'd rather get to the bottom
+of it then getting stuck on who understands what.
 
 
