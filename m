@@ -1,92 +1,92 @@
-Return-Path: <linux-nfs+bounces-16243-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16244-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E98CC4D4C7
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 12:07:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14C3BC4D522
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 12:10:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E40718C42B4
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 11:01:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B86B04FC360
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Nov 2025 11:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A90358D03;
-	Tue, 11 Nov 2025 10:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A58241103;
+	Tue, 11 Nov 2025 11:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MvCFFVYW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="P3QkYLWD";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AZ504nQQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="33GaccVM"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="R/SF8wuf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tyvCvYZ5";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="R/SF8wuf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tyvCvYZ5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B531B355042
-	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 10:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245B732D450
+	for <linux-nfs@vger.kernel.org>; Tue, 11 Nov 2025 11:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762858636; cv=none; b=XFi3M28VFsexEki1xCQ14a66AntwLOjHT4ADpf9e5wSw2sUgOTFKivm+NtLLfNGsU37L2h1l5JOD7OkIlYrfuqeBnI0C3lQ1g5nDyX5nxSa2CU9sYO9ZfDwrKpG0YUpLlAFnsnv/jkOto6PVgBezW4F4F//9MD9NAbRTYBdKodo=
+	t=1762858894; cv=none; b=fG7OEW8kYsWRHpCiru0tV8UYzNlNRz84rZ8DePsIR70EeL3EM4CfjZlp6DRilQHxEEG2F1Qeo+6CW9QYdAf1UIzCYbrLMBXyrLPZACJnt+cL5yHknLB6Oefpv2G+hpwRH1WkXfkts1mWP8f6n9+1uP1zyh0yqMHX/XYRPYgafek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762858636; c=relaxed/simple;
-	bh=0qIKVWddtsPV5G/8hROLCcnDFjecC5eN+g5hMbRRlOw=;
+	s=arc-20240116; t=1762858894; c=relaxed/simple;
+	bh=eurXhqdivXv0KRTmNXzmarIKKNOuugWm8/37QAkMAko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQlTYVAPJ+cfCd36smfOk2+2sxBhb7NY9pSbxoNXEE3JV1PMmG/C2UCcuXzIT+X94b+KGOHcmsKy9glnelKjN7Q3kxF3dpinNbFM3/Vd2jF3zLBOEFpFmzfVsFsiv8vF3+PCPkF4LP1vdz38k0++89wYWIkqVcFbP2SGhQU6yF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MvCFFVYW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=P3QkYLWD; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AZ504nQQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=33GaccVM; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=lE7dfP5EmauNSJKHxT1SrQCSurbuhR0hzD3IuLKQWk4Jj+G4mW1phEHtmw7iIxKdD3coek/juRSL+XzRdJEgfz1cdbiEqaHY8EhYTQbT/XjkSmW0yIV3LtlMHocN3e+EbcYt/aqu1RZN/o/Fw7Am4GJRTsfUcdwLIMxt4lmVi7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=R/SF8wuf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tyvCvYZ5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=R/SF8wuf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tyvCvYZ5; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DCD701F6E6;
-	Tue, 11 Nov 2025 10:57:09 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 840CF1F750;
+	Tue, 11 Nov 2025 11:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762858631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1762858890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Tro3eQIQ3vyegRPUo7YaUGYg3RQMDIXBqzFb8qZf8+g=;
-	b=MvCFFVYWL5JqlsT/4QlFyaMQSfKKnBXdNafiZLkP6b4bDJO3s7Vrjp/EY45p+ON7HJkvpT
-	LdC1gJ3IquF49avQWhiqvR4JUnpy+3etN7fs+6xsdiGPrC2uYQSlexFZxQHUV4LIzhaxUB
-	mnAX0YE5SJBgjjCwkCZQNQdhsGIM0Ms=
+	bh=q0xIfy6Adj2vTJvQP9AjqPtLnU8M8pTVdFLFRqnVOck=;
+	b=R/SF8wufIMyxCRQr4XMRcIxPtTJeWN2jnT9iLxCdg/V+eDziZBN6hCl06KqUhNn272vyuI
+	8i2m+KVM9wdnlof/wSdKV25BWTPJRNtPTyiOXlCFabklKSfrlBEwwas85EZbmVNiwtU7ro
+	pMSyBDpTpus7je5SUgz6CQ2xYjS/dHk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762858631;
+	s=susede2_ed25519; t=1762858890;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Tro3eQIQ3vyegRPUo7YaUGYg3RQMDIXBqzFb8qZf8+g=;
-	b=P3QkYLWDDehOJBhUl5o4hYHBQthdkh6UovCAOmKZrTJ2YKlzS4EUJpj3TfJp6hG+M2wwqZ
-	rifSI0SkbBM1J9BQ==
+	bh=q0xIfy6Adj2vTJvQP9AjqPtLnU8M8pTVdFLFRqnVOck=;
+	b=tyvCvYZ5PrB6TX5lw4ufWg3PufNnXuFh1izpDbnSfRJg9PYA3PHucLiBWkGoowB3vb7+Da
+	X5mmdK0p2foU7MBA==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1762858629; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1762858890; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Tro3eQIQ3vyegRPUo7YaUGYg3RQMDIXBqzFb8qZf8+g=;
-	b=AZ504nQQ/qxjD7wBdRDwoPJZk2UIlqEBuK7dzo2R4HW0ZWZ91xo0ujXogFopSyCucSFt1N
-	KE1jhJ7m7aEhPa3FflYyccMsS0xt3HZuxN5zQ+Se3l8GrB7RUsxwyZI3qqDiPquF0b2RZe
-	DRY6QjoRn7onOsXLD1a17Wp1q62Jqaw=
+	bh=q0xIfy6Adj2vTJvQP9AjqPtLnU8M8pTVdFLFRqnVOck=;
+	b=R/SF8wufIMyxCRQr4XMRcIxPtTJeWN2jnT9iLxCdg/V+eDziZBN6hCl06KqUhNn272vyuI
+	8i2m+KVM9wdnlof/wSdKV25BWTPJRNtPTyiOXlCFabklKSfrlBEwwas85EZbmVNiwtU7ro
+	pMSyBDpTpus7je5SUgz6CQ2xYjS/dHk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1762858629;
+	s=susede2_ed25519; t=1762858890;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Tro3eQIQ3vyegRPUo7YaUGYg3RQMDIXBqzFb8qZf8+g=;
-	b=33GaccVMUKt+yQ5hHqE1wM3DyUhmohaF+FnnT0u2N/oQsU98WvkobEmrkUwEHsmiJkEPmm
-	1UkSw875MKOLqeCA==
+	bh=q0xIfy6Adj2vTJvQP9AjqPtLnU8M8pTVdFLFRqnVOck=;
+	b=tyvCvYZ5PrB6TX5lw4ufWg3PufNnXuFh1izpDbnSfRJg9PYA3PHucLiBWkGoowB3vb7+Da
+	X5mmdK0p2foU7MBA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BE43F14904;
-	Tue, 11 Nov 2025 10:57:09 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 625B714908;
+	Tue, 11 Nov 2025 11:01:30 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NwZlLoUWE2muSAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 11 Nov 2025 10:57:09 +0000
+	id Ys/+F4oXE2lQTQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 11 Nov 2025 11:01:30 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 72622A28C8; Tue, 11 Nov 2025 11:57:01 +0100 (CET)
-Date: Tue, 11 Nov 2025 11:57:01 +0100
+	id E492CA28C8; Tue, 11 Nov 2025 12:01:29 +0100 (CET)
+Date: Tue, 11 Nov 2025 12:01:29 +0100
 From: Jan Kara <jack@suse.cz>
 To: Jeff Layton <jlayton@kernel.org>
 Cc: Miklos Szeredi <miklos@szeredi.hu>, 
@@ -109,11 +109,10 @@ Cc: Miklos Szeredi <miklos@szeredi.hu>,
 	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, netfs@lists.linux.dev, 
 	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
 	netdev@vger.kernel.org
-Subject: Re: [PATCH v5 02/17] filelock: rework the __break_lease API to use
- flags
-Message-ID: <n3nwojvti3upo6a75ndqci476aoo2ceoo3mz2zvuc35pxkcf4d@tqoqua3jjr64>
+Subject: Re: [PATCH v5 03/17] filelock: add struct delegated_inode
+Message-ID: <xzmaeyzqevtqmtt2nppyjmj6k7qdiu66wxytjr2hiolesxwzyb@7vz6zvpz32ob>
 References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
- <20251105-dir-deleg-ro-v5-2-7ebc168a88ac@kernel.org>
+ <20251105-dir-deleg-ro-v5-3-7ebc168a88ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -122,7 +121,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251105-dir-deleg-ro-v5-2-7ebc168a88ac@kernel.org>
+In-Reply-To: <20251105-dir-deleg-ro-v5-3-7ebc168a88ac@kernel.org>
 X-Spamd-Result: default: False [-2.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -147,208 +146,435 @@ X-Spamd-Result: default: False [-2.30 / 50.00];
 	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	R_RATELIMIT(0.00)[to_ip_from(RL63fqwwx8ot6gmekemcs76f9d)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
 X-Spam-Flag: NO
 X-Spam-Score: -2.30
 X-Spam-Level: 
 
-On Wed 05-11-25 11:53:48, Jeff Layton wrote:
-> Currently __break_lease takes both a type and an openmode. With the
-> addition of directory leases, that makes less sense. Declare a set of
-> LEASE_BREAK_* flags that can be used to control how lease breaks work
-> instead of requiring a type and an openmode.
+On Wed 05-11-25 11:53:49, Jeff Layton wrote:
+> The current API requires a pointer to an inode pointer. It's easy for
+> callers to get this wrong. Add a new delegated_inode structure and use
+> that to pass back any inode that needs to be waited on.
 > 
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Looks good. Feel free to add:
+I didn't find anything particularly problematic with struct inode ** but I
+agree this seems a tad bit cleaner and harder to get wrong. So feel free to
+add:
 
 Reviewed-by: Jan Kara <jack@suse.cz>
 
 								Honza
 
 > ---
->  fs/locks.c               | 29 +++++++++++++++++----------
->  include/linux/filelock.h | 52 +++++++++++++++++++++++++++++++++++-------------
->  2 files changed, 56 insertions(+), 25 deletions(-)
+>  fs/attr.c                |  2 +-
+>  fs/namei.c               | 18 +++++++++---------
+>  fs/open.c                |  8 ++++----
+>  fs/posix_acl.c           |  8 ++++----
+>  fs/utimes.c              |  4 ++--
+>  fs/xattr.c               | 12 ++++++------
+>  include/linux/filelock.h | 36 +++++++++++++++++++++++++++---------
+>  include/linux/fs.h       |  9 +++++----
+>  include/linux/xattr.h    |  4 ++--
+>  9 files changed, 60 insertions(+), 41 deletions(-)
 > 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index b33c327c21dcd49341fbeac47caeb72cdf7455db..3cdd84a0fbedc9bd1b47725a9cf963342aafbce9 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -1529,24 +1529,31 @@ any_leases_conflict(struct inode *inode, struct file_lease *breaker)
->  /**
->   *	__break_lease	-	revoke all outstanding leases on file
->   *	@inode: the inode of the file to return
-> - *	@mode: O_RDONLY: break only write leases; O_WRONLY or O_RDWR:
-> - *	    break all leases
-> - *	@type: FL_LEASE: break leases and delegations; FL_DELEG: break
-> - *	    only delegations
-> + *	@flags: LEASE_BREAK_* flags
->   *
->   *	break_lease (inlined for speed) has checked there already is at least
->   *	some kind of lock (maybe a lease) on this file.  Leases are broken on
-> - *	a call to open() or truncate().  This function can sleep unless you
-> - *	specified %O_NONBLOCK to your open().
-> + *	a call to open() or truncate().  This function can block waiting for the
-> + *	lease break unless you specify LEASE_BREAK_NONBLOCK.
+> diff --git a/fs/attr.c b/fs/attr.c
+> index 795f231d00e8eaaadf5b62f241655cb4b69cb507..b9ec6b47bab2fc2b561677b639633bd32994022f 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -415,7 +415,7 @@ EXPORT_SYMBOL(may_setattr);
+>   * performed on the raw inode simply pass @nop_mnt_idmap.
 >   */
-> -int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-> +int __break_lease(struct inode *inode, unsigned int flags)
+>  int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+> -		  struct iattr *attr, struct inode **delegated_inode)
+> +		  struct iattr *attr, struct delegated_inode *delegated_inode)
 >  {
-> -	int error = 0;
-> -	struct file_lock_context *ctx;
->  	struct file_lease *new_fl, *fl, *tmp;
-> +	struct file_lock_context *ctx;
->  	unsigned long break_time;
-> -	int want_write = (mode & O_ACCMODE) != O_RDONLY;
-> +	unsigned int type;
->  	LIST_HEAD(dispose);
-> +	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
-> +	int error = 0;
-> +
-> +	if (flags & LEASE_BREAK_LEASE)
-> +		type = FL_LEASE;
-> +	else if (flags & LEASE_BREAK_DELEG)
-> +		type = FL_DELEG;
-> +	else if (flags & LEASE_BREAK_LAYOUT)
-> +		type = FL_LAYOUT;
-> +	else
-> +		return -EINVAL;
+>  	struct inode *inode = dentry->d_inode;
+>  	umode_t mode = inode->i_mode;
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 7377020a2cba02501483020e0fc93c279fb38d3e..bf42f146f847a5330fc581595c7256af28d9db90 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -4648,7 +4648,7 @@ SYSCALL_DEFINE1(rmdir, const char __user *, pathname)
+>   * raw inode simply pass @nop_mnt_idmap.
+>   */
+>  int vfs_unlink(struct mnt_idmap *idmap, struct inode *dir,
+> -	       struct dentry *dentry, struct inode **delegated_inode)
+> +	       struct dentry *dentry, struct delegated_inode *delegated_inode)
+>  {
+>  	struct inode *target = dentry->d_inode;
+>  	int error = may_delete(idmap, dir, dentry, 0);
+> @@ -4706,7 +4706,7 @@ int do_unlinkat(int dfd, struct filename *name)
+>  	struct qstr last;
+>  	int type;
+>  	struct inode *inode = NULL;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	unsigned int lookup_flags = 0;
+>  retry:
+>  	error = filename_parentat(dfd, name, lookup_flags, &path, &last, &type);
+> @@ -4743,7 +4743,7 @@ int do_unlinkat(int dfd, struct filename *name)
+>  	if (inode)
+>  		iput(inode);	/* truncate the inode here */
+>  	inode = NULL;
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> @@ -4892,7 +4892,7 @@ SYSCALL_DEFINE2(symlink, const char __user *, oldname, const char __user *, newn
+>   */
+>  int vfs_link(struct dentry *old_dentry, struct mnt_idmap *idmap,
+>  	     struct inode *dir, struct dentry *new_dentry,
+> -	     struct inode **delegated_inode)
+> +	     struct delegated_inode *delegated_inode)
+>  {
+>  	struct inode *inode = old_dentry->d_inode;
+>  	unsigned max_links = dir->i_sb->s_max_links;
+> @@ -4968,7 +4968,7 @@ int do_linkat(int olddfd, struct filename *old, int newdfd,
+>  	struct mnt_idmap *idmap;
+>  	struct dentry *new_dentry;
+>  	struct path old_path, new_path;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	int how = 0;
+>  	int error;
 >  
->  	new_fl = lease_alloc(NULL, type, want_write ? F_WRLCK : F_RDLCK);
->  	if (IS_ERR(new_fl))
-> @@ -1595,7 +1602,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
->  	if (list_empty(&ctx->flc_lease))
->  		goto out;
+> @@ -5012,7 +5012,7 @@ int do_linkat(int olddfd, struct filename *old, int newdfd,
+>  			 new_dentry, &delegated_inode);
+>  out_dput:
+>  	end_creating_path(&new_path, new_dentry);
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error) {
+>  			path_put(&old_path);
+> @@ -5098,7 +5098,7 @@ int vfs_rename(struct renamedata *rd)
+>  	struct inode *new_dir = d_inode(rd->new_parent);
+>  	struct dentry *old_dentry = rd->old_dentry;
+>  	struct dentry *new_dentry = rd->new_dentry;
+> -	struct inode **delegated_inode = rd->delegated_inode;
+> +	struct delegated_inode *delegated_inode = rd->delegated_inode;
+>  	unsigned int flags = rd->flags;
+>  	bool is_dir = d_is_dir(old_dentry);
+>  	struct inode *source = old_dentry->d_inode;
+> @@ -5261,7 +5261,7 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
+>  	struct path old_path, new_path;
+>  	struct qstr old_last, new_last;
+>  	int old_type, new_type;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	unsigned int lookup_flags = 0, target_flags =
+>  		LOOKUP_RENAME_TARGET | LOOKUP_CREATE;
+>  	bool should_retry = false;
+> @@ -5369,7 +5369,7 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
+>  exit3:
+>  	unlock_rename(new_path.dentry, old_path.dentry);
+>  exit_lock_rename:
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> diff --git a/fs/open.c b/fs/open.c
+> index 3d64372ecc675e4795eb0a0deda10f8f67b95640..fdaa6f08f6f4cac5c2fefd3eafa5e430e51f3979 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -631,7 +631,7 @@ SYSCALL_DEFINE1(chroot, const char __user *, filename)
+>  int chmod_common(const struct path *path, umode_t mode)
+>  {
+>  	struct inode *inode = path->dentry->d_inode;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	struct iattr newattrs;
+>  	int error;
 >  
-> -	if (mode & O_NONBLOCK) {
-> +	if (flags & LEASE_BREAK_NONBLOCK) {
->  		trace_break_lease_noblock(inode, new_fl);
->  		error = -EWOULDBLOCK;
->  		goto out;
+> @@ -651,7 +651,7 @@ int chmod_common(const struct path *path, umode_t mode)
+>  			      &newattrs, &delegated_inode);
+>  out_unlock:
+>  	inode_unlock(inode);
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> @@ -756,7 +756,7 @@ int chown_common(const struct path *path, uid_t user, gid_t group)
+>  	struct mnt_idmap *idmap;
+>  	struct user_namespace *fs_userns;
+>  	struct inode *inode = path->dentry->d_inode;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	int error;
+>  	struct iattr newattrs;
+>  	kuid_t uid;
+> @@ -791,7 +791,7 @@ int chown_common(const struct path *path, uid_t user, gid_t group)
+>  		error = notify_change(idmap, path->dentry, &newattrs,
+>  				      &delegated_inode);
+>  	inode_unlock(inode);
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+> index 4050942ab52f95741da2df13d191ade5c5ca12a2..768f027c142811ea907fe8545155ba7abd016305 100644
+> --- a/fs/posix_acl.c
+> +++ b/fs/posix_acl.c
+> @@ -1091,7 +1091,7 @@ int vfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	int acl_type;
+>  	int error;
+>  	struct inode *inode = d_inode(dentry);
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  
+>  	acl_type = posix_acl_type(acl_name);
+>  	if (acl_type < 0)
+> @@ -1141,7 +1141,7 @@ int vfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+>  out_inode_unlock:
+>  	inode_unlock(inode);
+>  
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> @@ -1212,7 +1212,7 @@ int vfs_remove_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	int acl_type;
+>  	int error;
+>  	struct inode *inode = d_inode(dentry);
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  
+>  	acl_type = posix_acl_type(acl_name);
+>  	if (acl_type < 0)
+> @@ -1249,7 +1249,7 @@ int vfs_remove_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+>  out_inode_unlock:
+>  	inode_unlock(inode);
+>  
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> diff --git a/fs/utimes.c b/fs/utimes.c
+> index c7c7958e57b22f91646ca9f76d18781b64d371a3..bf9f45bdef54947de7ac55c9f873ae9d0336dafa 100644
+> --- a/fs/utimes.c
+> +++ b/fs/utimes.c
+> @@ -22,7 +22,7 @@ int vfs_utimes(const struct path *path, struct timespec64 *times)
+>  	int error;
+>  	struct iattr newattrs;
+>  	struct inode *inode = path->dentry->d_inode;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  
+>  	if (times) {
+>  		if (!nsec_valid(times[0].tv_nsec) ||
+> @@ -66,7 +66,7 @@ int vfs_utimes(const struct path *path, struct timespec64 *times)
+>  	error = notify_change(mnt_idmap(path->mnt), path->dentry, &newattrs,
+>  			      &delegated_inode);
+>  	inode_unlock(inode);
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 8851a5ef34f5ab34383975dd4cef537de3f6391e..32d445fb60aaf2aaf4b16b62934dc99bad378067 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -274,7 +274,7 @@ int __vfs_setxattr_noperm(struct mnt_idmap *idmap,
+>  int
+>  __vfs_setxattr_locked(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		      const char *name, const void *value, size_t size,
+> -		      int flags, struct inode **delegated_inode)
+> +		      int flags, struct delegated_inode *delegated_inode)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+>  	int error;
+> @@ -305,7 +305,7 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	     const char *name, const void *value, size_t size, int flags)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	const void  *orig_value = value;
+>  	int error;
+>  
+> @@ -322,7 +322,7 @@ vfs_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  				      flags, &delegated_inode);
+>  	inode_unlock(inode);
+>  
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
+> @@ -533,7 +533,7 @@ EXPORT_SYMBOL(__vfs_removexattr);
+>  int
+>  __vfs_removexattr_locked(struct mnt_idmap *idmap,
+>  			 struct dentry *dentry, const char *name,
+> -			 struct inode **delegated_inode)
+> +			 struct delegated_inode *delegated_inode)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+>  	int error;
+> @@ -567,7 +567,7 @@ vfs_removexattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		const char *name)
+>  {
+>  	struct inode *inode = dentry->d_inode;
+> -	struct inode *delegated_inode = NULL;
+> +	struct delegated_inode delegated_inode = { };
+>  	int error;
+>  
+>  retry_deleg:
+> @@ -576,7 +576,7 @@ vfs_removexattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  					 name, &delegated_inode);
+>  	inode_unlock(inode);
+>  
+> -	if (delegated_inode) {
+> +	if (is_delegated(&delegated_inode)) {
+>  		error = break_deleg_wait(&delegated_inode);
+>  		if (!error)
+>  			goto retry_deleg;
 > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> index c2ce8ba05d068b451ecf8f513b7e532819a29944..47da6aa28d8dc9122618d02c6608deda0f3c4d3e 100644
+> index 47da6aa28d8dc9122618d02c6608deda0f3c4d3e..208d108df2d73a9df65e5dc9968d074af385f881 100644
 > --- a/include/linux/filelock.h
 > +++ b/include/linux/filelock.h
-> @@ -212,7 +212,14 @@ int locks_lock_inode_wait(struct inode *inode, struct file_lock *fl);
->  void locks_init_lease(struct file_lease *);
->  void locks_free_lease(struct file_lease *fl);
->  struct file_lease *locks_alloc_lease(void);
-> -int __break_lease(struct inode *inode, unsigned int flags, unsigned int type);
-> +
-> +#define LEASE_BREAK_LEASE		BIT(0)	// break leases and delegations
-> +#define LEASE_BREAK_DELEG		BIT(1)	// break delegations only
-> +#define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
-> +#define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
-> +#define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
-> +
-> +int __break_lease(struct inode *inode, unsigned int flags);
->  void lease_get_mtime(struct inode *, struct timespec64 *time);
->  int generic_setlease(struct file *, int, struct file_lease **, void **priv);
->  int kernel_setlease(struct file *, int, struct file_lease **, void **);
-> @@ -367,7 +374,7 @@ static inline int locks_lock_inode_wait(struct inode *inode, struct file_lock *f
->  	return -ENOLCK;
->  }
->  
-> -static inline int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-> +static inline int __break_lease(struct inode *inode, unsigned int flags)
->  {
+> @@ -486,25 +486,35 @@ static inline int break_deleg(struct inode *inode, unsigned int flags)
 >  	return 0;
 >  }
-> @@ -428,6 +435,17 @@ static inline int locks_lock_file_wait(struct file *filp, struct file_lock *fl)
->  }
 >  
->  #ifdef CONFIG_FILE_LOCKING
-> +static inline unsigned int openmode_to_lease_flags(unsigned int mode)
-> +{
-> +	unsigned int flags = 0;
+> -static inline int try_break_deleg(struct inode *inode, struct inode **delegated_inode)
+> +struct delegated_inode {
+> +	struct inode *di_inode;
+> +};
 > +
-> +	if ((mode & O_ACCMODE) == O_RDONLY)
-> +		flags |= LEASE_BREAK_OPEN_RDONLY;
-> +	if (mode & O_NONBLOCK)
-> +		flags |= LEASE_BREAK_NONBLOCK;
-> +	return flags;
+> +static inline bool is_delegated(struct delegated_inode *di)
+> +{
+> +	return di->di_inode;
 > +}
 > +
->  static inline int break_lease(struct inode *inode, unsigned int mode)
->  {
->  	struct file_lock_context *flctx;
-> @@ -443,11 +461,11 @@ static inline int break_lease(struct inode *inode, unsigned int mode)
->  		return 0;
->  	smp_mb();
->  	if (!list_empty_careful(&flctx->flc_lease))
-> -		return __break_lease(inode, mode, FL_LEASE);
-> +		return __break_lease(inode, LEASE_BREAK_LEASE | openmode_to_lease_flags(mode));
->  	return 0;
->  }
->  
-> -static inline int break_deleg(struct inode *inode, unsigned int mode)
-> +static inline int break_deleg(struct inode *inode, unsigned int flags)
->  {
->  	struct file_lock_context *flctx;
->  
-> @@ -461,8 +479,10 @@ static inline int break_deleg(struct inode *inode, unsigned int mode)
->  	if (!flctx)
->  		return 0;
->  	smp_mb();
-> -	if (!list_empty_careful(&flctx->flc_lease))
-> -		return __break_lease(inode, mode, FL_DELEG);
-> +	if (!list_empty_careful(&flctx->flc_lease)) {
-> +		flags |= LEASE_BREAK_DELEG;
-> +		return __break_lease(inode, flags);
-> +	}
->  	return 0;
->  }
->  
-> @@ -470,7 +490,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
+> +static inline int try_break_deleg(struct inode *inode,
+> +				  struct delegated_inode *di)
 >  {
 >  	int ret;
 >  
-> -	ret = break_deleg(inode, O_WRONLY|O_NONBLOCK);
-> +	ret = break_deleg(inode, LEASE_BREAK_NONBLOCK);
->  	if (ret == -EWOULDBLOCK && delegated_inode) {
->  		*delegated_inode = inode;
+>  	ret = break_deleg(inode, LEASE_BREAK_NONBLOCK);
+> -	if (ret == -EWOULDBLOCK && delegated_inode) {
+> -		*delegated_inode = inode;
+> +	if (ret == -EWOULDBLOCK && di) {
+> +		di->di_inode = inode;
 >  		ihold(inode);
-> @@ -482,7 +502,7 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
+>  	}
+>  	return ret;
+>  }
+>  
+> -static inline int break_deleg_wait(struct inode **delegated_inode)
+> +static inline int break_deleg_wait(struct delegated_inode *di)
 >  {
 >  	int ret;
 >  
-> -	ret = break_deleg(*delegated_inode, O_WRONLY);
-> +	ret = break_deleg(*delegated_inode, 0);
->  	iput(*delegated_inode);
->  	*delegated_inode = NULL;
+> -	ret = break_deleg(*delegated_inode, 0);
+> -	iput(*delegated_inode);
+> -	*delegated_inode = NULL;
+> +	ret = break_deleg(di->di_inode, 0);
+> +	iput(di->di_inode);
+> +	di->di_inode = NULL;
 >  	return ret;
-> @@ -491,20 +511,24 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
->  static inline int break_layout(struct inode *inode, bool wait)
->  {
->  	smp_mb();
-> -	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease))
-> -		return __break_lease(inode,
-> -				wait ? O_WRONLY : O_WRONLY | O_NONBLOCK,
-> -				FL_LAYOUT);
-> +	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease)) {
-> +		unsigned int flags = LEASE_BREAK_LAYOUT;
-> +
-> +		if (!wait)
-> +			flags |= LEASE_BREAK_NONBLOCK;
-> +
-> +		return __break_lease(inode, flags);
-> +	}
->  	return 0;
+>  }
+>  
+> @@ -523,6 +533,13 @@ static inline int break_layout(struct inode *inode, bool wait)
 >  }
 >  
 >  #else /* !CONFIG_FILE_LOCKING */
-> -static inline int break_lease(struct inode *inode, unsigned int mode)
-> +static inline int break_lease(struct inode *inode, bool wait)
+> +struct delegated_inode { };
+> +
+> +static inline bool is_delegated(struct delegated_inode *di)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline int break_lease(struct inode *inode, bool wait)
+>  {
+>  	return 0;
+> @@ -533,12 +550,13 @@ static inline int break_deleg(struct inode *inode, unsigned int flags)
+>  	return 0;
+>  }
+>  
+> -static inline int try_break_deleg(struct inode *inode, struct inode **delegated_inode)
+> +static inline int try_break_deleg(struct inode *inode,
+> +				  struct delegated_inode *delegated_inode)
 >  {
 >  	return 0;
 >  }
 >  
-> -static inline int break_deleg(struct inode *inode, unsigned int mode)
-> +static inline int break_deleg(struct inode *inode, unsigned int flags)
+> -static inline int break_deleg_wait(struct inode **delegated_inode)
+> +static inline int break_deleg_wait(struct delegated_inode *delegated_inode)
 >  {
+>  	BUG();
 >  	return 0;
->  }
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c895146c1444be36e0a779df55622cc38c9419ff..909a88e3979d4f1ba3104f3d05145e1096ed44d5 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -80,6 +80,7 @@ struct fs_context;
+>  struct fs_parameter_spec;
+>  struct file_kattr;
+>  struct iomap_ops;
+> +struct delegated_inode;
+>  
+>  extern void __init inode_init(void);
+>  extern void __init inode_init_early(void);
+> @@ -2119,10 +2120,10 @@ int vfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
+>  int vfs_symlink(struct mnt_idmap *, struct inode *,
+>  		struct dentry *, const char *);
+>  int vfs_link(struct dentry *, struct mnt_idmap *, struct inode *,
+> -	     struct dentry *, struct inode **);
+> +	     struct dentry *, struct delegated_inode *);
+>  int vfs_rmdir(struct mnt_idmap *, struct inode *, struct dentry *);
+>  int vfs_unlink(struct mnt_idmap *, struct inode *, struct dentry *,
+> -	       struct inode **);
+> +	       struct delegated_inode *);
+>  
+>  /**
+>   * struct renamedata - contains all information required for renaming
+> @@ -2140,7 +2141,7 @@ struct renamedata {
+>  	struct dentry *old_dentry;
+>  	struct dentry *new_parent;
+>  	struct dentry *new_dentry;
+> -	struct inode **delegated_inode;
+> +	struct delegated_inode *delegated_inode;
+>  	unsigned int flags;
+>  } __randomize_layout;
+>  
+> @@ -3071,7 +3072,7 @@ static inline int bmap(struct inode *inode,  sector_t *block)
+>  #endif
+>  
+>  int notify_change(struct mnt_idmap *, struct dentry *,
+> -		  struct iattr *, struct inode **);
+> +		  struct iattr *, struct delegated_inode *);
+>  int inode_permission(struct mnt_idmap *, struct inode *, int);
+>  int generic_permission(struct mnt_idmap *, struct inode *, int);
+>  static inline int file_permission(struct file *file, int mask)
+> diff --git a/include/linux/xattr.h b/include/linux/xattr.h
+> index 86b0d47984a16d935dd1c45ca80a3b8bb5b7295b..64e9afe7d647dc38f686a4b5c6f765e061cde54c 100644
+> --- a/include/linux/xattr.h
+> +++ b/include/linux/xattr.h
+> @@ -85,12 +85,12 @@ int __vfs_setxattr_noperm(struct mnt_idmap *, struct dentry *,
+>  			  const char *, const void *, size_t, int);
+>  int __vfs_setxattr_locked(struct mnt_idmap *, struct dentry *,
+>  			  const char *, const void *, size_t, int,
+> -			  struct inode **);
+> +			  struct delegated_inode *);
+>  int vfs_setxattr(struct mnt_idmap *, struct dentry *, const char *,
+>  		 const void *, size_t, int);
+>  int __vfs_removexattr(struct mnt_idmap *, struct dentry *, const char *);
+>  int __vfs_removexattr_locked(struct mnt_idmap *, struct dentry *,
+> -			     const char *, struct inode **);
+> +			     const char *, struct delegated_inode *);
+>  int vfs_removexattr(struct mnt_idmap *, struct dentry *, const char *);
+>  
+>  ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
 > 
 > -- 
 > 2.51.1
