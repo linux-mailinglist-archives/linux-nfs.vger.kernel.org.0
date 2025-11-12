@@ -1,204 +1,227 @@
-Return-Path: <linux-nfs+bounces-16314-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16315-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1E36C54BED
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 23:51:01 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EEEBC54C86
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 00:14:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1B293AD6B9
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 22:50:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A3715345063
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 23:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4826E2DC77F;
-	Wed, 12 Nov 2025 22:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126952EBB8F;
+	Wed, 12 Nov 2025 23:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="jir4MDTS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BLfz97DO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqVoIqu/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240B92D662F;
-	Wed, 12 Nov 2025 22:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB542E229F
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Nov 2025 23:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762987851; cv=none; b=HD5Xal+Zr7lriij/G0bjyszNOGPePlRtVdhzrmLq8H3OW65U5IwIFmuYeYh2zHFQArQPpcEb1LdYcjc93Hq7/O5oV61h6uh+lNqvJyl1MG1nCG7ZoDEOy/mZPaZTKy2IC7jhrhYGxR6CrmcRLuoTb2UQWShXcHjRoI2tPi+YhFo=
+	t=1762989257; cv=none; b=gZ4WJjGduXg/ofBuX80BYwd+OMMUicH/KdDZYhRuGhiU9SNCaYMgT/1AbA94kRI1bpCqYG13cbZ3oDXRVK7F94ck6pnkKGLuk9a9SpxTOnEsPumVMhOfktrIbS+RlteaudLRJuyRCSjQM7rLWKMU2L8gfDTlBtmgfNYTtPhj+Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762987851; c=relaxed/simple;
-	bh=gk7jTwjg4YxTK3MshudwEyHBJmgG7UmOjt2m1+Hpy58=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=OFR7JHd88JXJxIrLb7TcuuQUsxn5OON07B63a3EzAWjkgZjr0aeBFKif2EA6r7JeuW3sgxakuroMtigzpEzXjyVGgbd7T1F0a4IrCKFe2CG0IaGO5gO0KA27SpThmk/ljpPNPnLH60Vop0rM847w9jErooqjvsxnLF5aj8pHxYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=jir4MDTS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BLfz97DO; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailflow.phl.internal (Postfix) with ESMTP id 2988313806A6;
-	Wed, 12 Nov 2025 17:50:47 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Wed, 12 Nov 2025 17:50:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1762987847; x=1762995047; bh=hNbQnRc+kFUP5bxPugl1ooBdBy11Z0986aY
-	SJmKRoLs=; b=jir4MDTSxsZfdM2IRl9MZbN0ALWiQls5PQ+nkklZ0+Odf25WN63
-	px+vcxmJZ/343yP0NnlBKVwK9UifM3DSBJDQPbAFUEV9RD5AqwZvUJdQhaLuTQmw
-	UMa/+H1qYZUQYbJ01k3iXjj+uLQe7TureLQBiP2RBEbTDpfefArurTdZIdbV79J/
-	VG9hoPkx4Re71SD1pdP5jdsU8c4x8Ezycn/VnUN5FCrl/jR70BlyL4zfNzJy/h3A
-	nfRtqg2lcQaFC5lamfb3UvooMox2B6ZgIGDv1YGF6LqG6+o9WobjyEhGWpJol2dM
-	OhU0GqkHlPpxdhVwG/7n3HoSAb6+icZzBmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762987847; x=
-	1762995047; bh=hNbQnRc+kFUP5bxPugl1ooBdBy11Z0986aYSJmKRoLs=; b=B
-	Lfz97DOs9f3pV8SMym55iFWtFF0Whk7qDnQ7uIoppMUeJlo6Z0wL/odbqfprJdGy
-	FnYb68xmGsmOb4bwylkvMw9b4omvIT1aH6A93ZOUtT4iIQDLLSTrgX0qy9L8EkJx
-	2zLSUyHXFGTj3nsbQOhT9OJZCobm3DukzPSXo2q4pi0NvwU8nF5h8OcA0NO+5+WA
-	0PEOnjwgyw2GICsat/bKQx5g2FiKE36lmJ2EeDP81tYbdF2UKae3j5A0ArfiPEkq
-	tRNKKiTUoVkBXzLbRPb+3CMC74viLl/0M55NkH+tCt3g9/mQCG6MbNsCmCzOGKZi
-	c2sokfrybzXBgGwQIO8xQ==
-X-ME-Sender: <xms:RQ8VafhhigNHwThNGgZL6VDUmCMzXzWdXCNwp2pF9cAfKCwuajl6KA>
-    <xme:RQ8VaRrwL2PAkM5MKDdTENePzo0MjHhfVHYDfATSpFFtRSDGrSBcOfJ_2gZsV_Bhk
-    uahMwsauI6qCdXkAeG549afc_l-kQDyx0JOK71rMbO5t_g8>
-X-ME-Received: <xmr:RQ8VaXJM8GaoDYtM7fK95Dxg6WkypMVogX_gysXAEdMyX14QpFP4ew9huDyHB4B5ld3mGurSzbtmUMvrPXcurN68ClN2Anzm-nOx7SrNsNiE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvtdehfeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpegtgfgghffvvefujghffffkrhesthhqre
-    dttddtjeenucfhrhhomheppfgvihhluehrohifnhcuoehnvghilhgssehofihnmhgrihhl
-    rdhnvghtqeenucggtffrrghtthgvrhhnpeffhefggfegfeefuddtvdektdekheduudeftd
-    dufefhgfetteffudehheffjeefgeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhs
-    hiiisghothdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeeg
-    fedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlih
-    hnuhigrdhorhhgrdhukhdprhgtphhtthhopehsvghlihhnuhigsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvtghurhhithihqdhmohguuhhlvg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgv
-    lhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtihhfsh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:RQ8VaU_TZlxPuvrWeAqkACaP2k8Al-3-wPUeHNBrUxdJjRalfLbJiQ>
-    <xmx:RQ8VabLvN9wKNh7vsrGQuPbdRitR6XBWPg0OYSH6a_8Jv-ozj0HwQA>
-    <xmx:RQ8VacyF-HUMepz3fbS9mezvCzbSlJV_E4Q-4rygphXSIubclEfTDQ>
-    <xmx:RQ8VaZQFjRq0rKiXJyTmjlzTiI1hgqKgTB2deemjEUNcNAYbcMDMYQ>
-    <xmx:Rw8VaRng3xIxkUPzVLT2SQWh71AIXEEteEsvxx4LCf38ADBus3t6KOp1>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 12 Nov 2025 17:50:34 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1762989257; c=relaxed/simple;
+	bh=q6b+clI19YqeAO964kJVgsn9LXJ8GlD0KdgYLlUFyOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbITQL1hSwqnKQJljvp2tT8Yz2VvryyOsk296VUGWpE1yUj429D1FYmOwidPasnsM1R76MlWMiW1uuzVkScBHQrUQ9uyeVcLz5Fvv8ylROuEioRCRvivEldiMqZ59VNhDLNr7x/DmlT/VMmrdghFTRYhyhpHAEsNoZeQ2qxTwSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqVoIqu/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4217DC4AF09;
+	Wed, 12 Nov 2025 23:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762989256;
+	bh=q6b+clI19YqeAO964kJVgsn9LXJ8GlD0KdgYLlUFyOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WqVoIqu/4xduBKMWG3/4/EeoRxmligyxqxkCrQyXv6d00ntmyX4XBQGng86PsL5xU
+	 +X1+upbHpUwUtq4zVt+BuuAH2ovGXSmWqQnuDemJnwiYlSw6TTVoMAn46AMrM+jrLf
+	 l0xJ994zoYQnpPdH2L7g4ItWNI/fDPF+72/3gtD4cS17txgIWUm8tnYekpT8aj/xXq
+	 kqXFNExmrSva7vOFRFkqgjcWJ8Bsq/pBsLVjK+6rKAW3lbJ91Rw3TbjmeBK5THR61M
+	 bPerlIRytRVeFx/sn5ForUk4e+LalNaUmJzsw5Gp4hVT8nrV5fwvPSWh6X4CkhcJch
+	 FCbmvbIxQDRAQ==
+Date: Wed, 12 Nov 2025 18:14:15 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, jonathan.flynn@hammerspace.com
+Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+Message-ID: <aRUUx2c6YNnRYRZ_@kernel.org>
+References: <fb0d6399-ea74-462a-982a-df232e3f4be9@kernel.org>
+ <aQ5SSnW9xUWj9xBi@kernel.org>
+ <176255273643.634289.15333032218575182744@noble.neil.brown.name>
+ <aQ5xkjIzf6uU_zLa@kernel.org>
+ <176255894778.634289.2265909350991291087@noble.neil.brown.name>
+ <aQ6kkd74pj2aUd8b@kernel.org>
+ <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
+ <aRL5EPMD9VsG1n3D@infradead.org>
+ <aRPPikkia5ZVZxJG@kernel.org>
+ <aRShjU_Ti7f2Ci7I@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "syzbot ci" <syzbot+ci853f3070c3383748@syzkaller.appspotmail.com>
-Cc: amir73il@gmail.com, brauner@kernel.org, cem@kernel.org,
- chuck.lever@oracle.com, clm@fb.com, code@tyhicks.com, dai.ngo@oracle.com,
- dakr@kernel.org, dhowells@redhat.com, djwong@kernel.org,
- dsterba@suse.com, ecryptfs@vger.kernel.org, gregkh@linuxfoundation.org,
- jack@suse.cz, jlayton@kernel.org, jmorris@namei.org,
- john.johansen@canonical.com, linkinjeon@kernel.org,
- linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-unionfs@vger.kernel.org,
- linux-xfs@vger.kernel.org, lorenzo.stoakes@oracle.com, miklos@szeredi.hu,
- mjguzik@gmail.com, netfs@lists.linux.dev, okorniev@redhat.com,
- omosnace@redhat.com, paul@paul-moore.com, rafael@kernel.org,
- selinux@vger.kernel.org, senozhatsky@chromium.org, serge@hallyn.com,
- smfrench@gmail.com, stefanb@linux.ibm.com,
- stephen.smalley.work@gmail.com, viro@zeniv.linux.org.uk,
- syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot ci] Re: Create and use APIs to centralise locking for
- directory ops.
-In-reply-to: <690c6437.050a0220.baf87.0083.GAE@google.com>
-References: <20251106005333.956321-1-neilb@ownmail.net>,
- <690c6437.050a0220.baf87.0083.GAE@google.com>
-Date: Thu, 13 Nov 2025 09:50:26 +1100
-Message-id: <176298782655.634289.16817979269470605281@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRShjU_Ti7f2Ci7I@infradead.org>
 
-On Thu, 06 Nov 2025, syzbot ci wrote:
-> syzbot ci has tested the following series
->=20
-> [v5] Create and use APIs to centralise locking for directory ops.
-> https://lore.kernel.org/all/20251106005333.956321-1-neilb@ownmail.net
-> * [PATCH v5 01/14] debugfs: rename end_creating() to debugfs_end_creating()
-> * [PATCH v5 02/14] VFS: introduce start_dirop() and end_dirop()
-> * [PATCH v5 03/14] VFS: tidy up do_unlinkat()
-> * [PATCH v5 04/14] VFS/nfsd/cachefiles/ovl: add start_creating() and end_cr=
-eating()
-> * [PATCH v5 05/14] VFS/nfsd/cachefiles/ovl: introduce start_removing() and =
-end_removing()
-> * [PATCH v5 06/14] VFS: introduce start_creating_noperm() and start_removin=
-g_noperm()
-> * [PATCH v5 07/14] VFS: introduce start_removing_dentry()
-> * [PATCH v5 08/14] VFS: add start_creating_killable() and start_removing_ki=
-llable()
-> * [PATCH v5 09/14] VFS/nfsd/ovl: introduce start_renaming() and end_renamin=
-g()
-> * [PATCH v5 10/14] VFS/ovl/smb: introduce start_renaming_dentry()
-> * [PATCH v5 11/14] Add start_renaming_two_dentries()
-> * [PATCH v5 12/14] ecryptfs: use new start_creating/start_removing APIs
-> * [PATCH v5 13/14] VFS: change vfs_mkdir() to unlock on failure.
-> * [PATCH v5 14/14] VFS: introduce end_creating_keep()
->=20
-> and found the following issues:
-> * WARNING: lock held when returning to user space in start_creating
-> * possible deadlock in mnt_want_write
->=20
-> Full report is available here:
-> https://ci.syzbot.org/series/4f406e4d-6aba-457a-b9c1-21f4407176a0
->=20
-> ***
->=20
-> WARNING: lock held when returning to user space in start_creating
+On Wed, Nov 12, 2025 at 07:02:37AM -0800, Christoph Hellwig wrote:
+> On Tue, Nov 11, 2025 at 07:06:34PM -0500, Mike Snitzer wrote:
+> > +	/* Mark the I/O buffer as evict-able to reduce memory contention. */
+> > +	if (!use_cached_buffered_fallback &&
+> > +	    nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> > +		kiocb->ki_flags |= IOCB_DONTCACHE;
+> 
+> This won't work, because ki_flags get overwritten by the flags in
+> the segment layer.
 
-I think this was due to a bug in=20
-   VFS: change vfs_mkdir() to unlock on failure.
-in ovl_create_real()
+Thanks, yeah that was a copy-n-paste bug, should've been:
+segments[0].flags |= IOCB_DONTCACHE;
 
-That patch removed a end_creating() call that was after
-ovl_create_real() returned failure, but didn't add end_creating() in
-ovl_create_real() on failure.  So it could exit with the lock still
-held.
+I should've stated that my patch wasn't tested and was intended as
+RFC.
 
-This patch should fix it, particularly the second hunk.
+> I walked through this to understand all the cases,
+> and ended up with a slightly different version including long comments
+> explaining them.  This is also untested, but I'd love to have other
+> cross check the logic in it:
+> 
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index ab46301da4ae..4727235ef43f 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1292,12 +1292,23 @@ nfsd_write_dio_iters_init(struct nfsd_file *nf, struct bio_vec *bvec,
+>  	unsigned int nsegs = 0;
+>  
+>  	/*
+> -	 * Check if direct I/O is feasible for this write request.
+> -	 * If alignments are not available, the write is too small,
+> -	 * or no alignment can be found, fall back to buffered I/O.
+> +	 * If the file system doesn't advertise any alignment requirements,
+> +	 * don't try to issue direct I/O.  Fall back to uncached buffered
+> +	 * I/O if possible because we'll assume it is not block based and
+> +	 * doesn't need read-modify-write cycles.
+>  	 */
 
-Thanks,
-NeilBrown
+Not sure what is implied by "not block based" in this comment.
 
-diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-index a4a0dc261310..739f974dc258 100644
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -187,7 +187,7 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, struct=
- dentry *parent,
- 			if (!err && ofs->casefold !=3D ovl_dentry_casefolded(newdentry)) {
- 				pr_warn_ratelimited("wrong inherited casefold (%pd2)\n",
- 						    newdentry);
--				dput(newdentry);
-+				end_creating(newdentry);
- 				err =3D -EINVAL;
- 			}
- 			break;
-@@ -237,8 +237,7 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, struct=
- dentry *parent,
- 	}
- out:
- 	if (err) {
--		if (!IS_ERR(newdentry))
--			dput(newdentry);
-+		end_creating(newdentry);
- 		return ERR_PTR(err);
- 	}
- 	return newdentry;
+> -	if (unlikely(!mem_align || !offset_align) ||
+> -	    unlikely(total < max(offset_align, mem_align)))
+> +	if (unlikely(!mem_align || !offset_align)) {
+> +		if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> +			segments[0].flags |= IOCB_DONTCACHE;
+> +		goto no_dio;
+> +	}
+> +
+> +	/*
+> +	 * If the I/O is smaller than the larger of the memory and logical
+> +	 * offset alignment, it is like to require read-modify-write cycles.
+> +	 * Issue cached buffered I/O.
+> +	 */
+
+Nit: s/like/likely/ typo.
+
+> +	if (unlikely(total < max(offset_align, mem_align)))
+>  		goto no_dio;
+>  
+>  	prefix_end = round_up(offset, offset_align);
+> @@ -1308,7 +1319,17 @@ nfsd_write_dio_iters_init(struct nfsd_file *nf, struct bio_vec *bvec,
+>  	middle = middle_end - prefix_end;
+>  	suffix = orig_end - middle_end;
+>  
+> -	if (!middle)
+> +	/*
+> +	 * If there is no aligned middle section, or aligned part is tiny,
+> +	 * issue a single buffered I/O write instead of splitting up the
+> +	 * write.
+> +	 *
+> +	 * Note: the middle section size here is random constant.  I suspect
+> +	 * when benchmarking it we'd actually end up with a significant larger
+> +	 * number, with the details depending on hardware.
+> +	 */
+> +	if (!middle ||
+> +	    ((prefix || suffix) && middle < PAGE_SIZE * 2))
+>  		goto no_dio;
+>  
+>  	if (prefix)
+
+Expressing this threshold in terms of PAGE_SIZE might be a
+problem for other archs like ARM (where using 64K the norm for
+performance).
+
+The "Note:" portion of the above comment might do well to address the
+goal being to avoid using cached buffered for higher order
+allocations. You or Chuck may have solid ideas for refining wording.
+
+But so you're aware Jon Flynn (who kindly does the heavy lifting of
+performance testing for me) agrees with you: larger will likely be
+beneficial but it'll be hardware dependent.  So I'm going to expose a
+knob for Jon to try various values so we can see.
+
+From Jon's results we might elect to take further action.
+
+> @@ -1324,16 +1345,24 @@ nfsd_write_dio_iters_init(struct nfsd_file *nf, struct bio_vec *bvec,
+>  	 * bvecs generated from RPC receive buffers are contiguous: After
+>  	 * the first bvec, all subsequent bvecs start at bv_offset zero
+>  	 * (page-aligned). Therefore, only the first bvec is checked.
+> +	 *
+> +	 * If the memory is not aligned at all, but we have a large enough
+> +	 * logical offset-aligned middle section, try to use uncached buffered
+> +	 * I/O for that to avoid cache pollution.  If not fall back to a single
+> +	 * cached buffered I/O for the entire write.
+>  	 */
+> -	if (iov_iter_bvec_offset(&segments[nsegs].iter) & (mem_align - 1))
+> -		goto no_dio;
+> -	segments[nsegs].flags |= IOCB_DIRECT;
+> +	if (iov_iter_bvec_offset(&segments[nsegs].iter) & (mem_align - 1)) {
+> +		if (!(nf->nf_file->f_op->fop_flags & FOP_DONTCACHE))
+> +			goto no_dio;
+> +		segments[nsegs].flags |= IOCB_DONTCACHE;
+
+This is a new one for me, but its a nice catch: just because
+IOCBD_DIRECT isn't possible for the middle doesn't mean that we should
+avoid issuing the subpage segments in terms of buffered IO.
+
+> +	} else {
+> +		segments[nsegs].flags |= IOCB_DIRECT;
+> +	}
+>  	nsegs++;
+>  
+>  	if (suffix)
+>  		nfsd_write_dio_seg_init(&segments[nsegs++], bvec, nvecs, total,
+>  					prefix + middle, suffix, iocb);
+> -
+>  	return nsegs;
+>  
+>  no_dio:
+> @@ -1362,16 +1391,9 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		if (kiocb->ki_flags & IOCB_DIRECT)
+>  			trace_nfsd_write_direct(rqstp, fhp, kiocb->ki_pos,
+>  						segments[i].iter.count);
+> -		else {
+> +		else
+>  			trace_nfsd_write_vector(rqstp, fhp, kiocb->ki_pos,
+>  						segments[i].iter.count);
+> -			/*
+> -			 * Mark the I/O buffer as evict-able to reduce
+> -			 * memory contention.
+> -			 */
+> -			if (nf->nf_file->f_op->fop_flags & FOP_DONTCACHE)
+> -				kiocb->ki_flags |= IOCB_DONTCACHE;
+> -		}
+>  
+>  		host_err = vfs_iocb_iter_write(file, kiocb, &segments[i].iter);
+>  		if (host_err < 0)
+
+Overall this patch looks good.  Would welcome seeing you submit a
+formal patch.  In parallel I'll work with Jon to get this tested on
+Hammerspace's performance cluster to confirm all looks good.
+
+Mike
 
