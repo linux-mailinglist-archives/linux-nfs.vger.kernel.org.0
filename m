@@ -1,54 +1,88 @@
-Return-Path: <linux-nfs+bounces-16306-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16307-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15912C53D27
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 19:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55569C53DC6
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 19:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 037804E27F7
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 17:53:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D84FA4F886A
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Nov 2025 18:02:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23510345750;
-	Wed, 12 Nov 2025 17:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D516C340287;
+	Wed, 12 Nov 2025 18:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcI/QEhF"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ActtmNRL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA8C23BCEE;
-	Wed, 12 Nov 2025 17:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A53347BB6
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Nov 2025 18:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762970036; cv=none; b=KC5JBZWuZmNG514QyT9/z7+FyawXlR/VCCx/XEItiULwUKB4u7Ln7LyDS5LkiFkxNAK0fmBcFbYoXJhy3ZRpAodtYVXWOWhWKfSKfP15Mhst//thUbL4FLD7q2J17QYqh7cvpHeWxqSXrNwbbKSU97xu/6uMPe4PlZNHM6SrJg8=
+	t=1762970569; cv=none; b=kcUo6QGt5GngpYuXecW1wRyUIkl6Dr71d5SQ8ZFjnfud3NkDcgeaUZCvn30xiDGNsQGSLlepl8koRXfBdBcl50VFagtfYbimuzIvM3yq/SfKJMGXVWiPxxyQnfnKWG3ggYn0Mag9R/X+YhKoe+moFSnUmnrYf0CdLyFpqS2ADYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762970036; c=relaxed/simple;
-	bh=4b3se09iHRWwWYcdoNAIZlLBYirLJ2RPBDSWNssH0LA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pDBQA3seaiUd13QF3ou1rE+OFW1OXsEoEx81eILd0TFNGcA5MP6i3OxMNWx0aW2G7LrmYC67oTlmz1L4hqYrz+vsn3GTQSskPDwrs4YieSxqSdmyab7lRkQYttQLsyNsbJH0pWae9k2Ts6t7+9d60EninOQI0JV6WgVx8kfM93s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcI/QEhF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C808C19422;
-	Wed, 12 Nov 2025 17:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762970035;
-	bh=4b3se09iHRWwWYcdoNAIZlLBYirLJ2RPBDSWNssH0LA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pcI/QEhFuUQusIdh5b6gEC5cssjrm1ylszm0/06WdesfyAg7iW+jLOhn7KTLzMLXY
-	 h57ZIjnqhh1innDdeCrsl88w0l6Ol8YmSp1ZQEj/jdZ19tinG7nZSbOqXV1qQ/mXrd
-	 wt43hVS1ri+PkoI4KcLrC3Ha9eN5o6e3fUQx1AX55t/I/C6o82FBerYFdMpxoLegrY
-	 6cVmdKPMfW2MOsSAW4Q9Yo1Ef9b5OidOFhykQ97AzHLA5IyJxvCdvm1LpS96YvyNob
-	 tqP+aU8byIu18Liav3V+wOmNfmvP6VVHtzN/6L0/SlgEYO3fXm4amTQ9IIYu8ltVqP
-	 K9mGGu+N88IKA==
-From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] Third round of NFSD fixes for v6.18
-Date: Wed, 12 Nov 2025 12:53:54 -0500
-Message-ID: <20251112175354.13059-1-cel@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1762970569; c=relaxed/simple;
+	bh=pJXNq7nWHLgL7Z2QmZYy19z/ob2CV0QYQqYwaTP8uXE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JHC7GRVloZnd83cTXcAGCXtURChNglQZSVpgrYVehgfGxo/QVovmvIttGCXkhQ/qeNgdPVx+nc/Vh8aFUimEGMkobfpyeDCoS72U93ib9pFP3LQLg7iEBa+cOrejM38e85xgZeym8by9YZh/vZ6T/muBiRSNGKSs4f1zgDHRfis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ActtmNRL; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b3e7cc84b82so228131566b.0
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Nov 2025 10:02:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1762970565; x=1763575365; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1I6P5+InNxbRtt54+O7hkAcOS9XQZk7rvLRdH65PFTQ=;
+        b=ActtmNRL3R4UKq3+6plM9arTmqVk+QZsn0yRjialdOvrZGwPwjsfbCI97YgA+6UHsK
+         ChSa8gUZTaYehET5MRzH1l5DL2BPwln3rU92d1qUwNJrpvM8PT51SxkyqODqP2UP83wL
+         tVe9jCmWCs8dXSU//VAMpEzxTeN2X8CJHmh3zOQUppHNFKDoh15PJsQhv+zOFvYdysmJ
+         Msf8G941PNG7LE/HhI9D1n28uXDl3zMRz6rGQJFABxnQ0VY5XiTe9BO3DWjDBeMsBJIE
+         KJwkpHRiQ2IzUCtuNitVIEaoyiZDp+6n+AOS8ylTNQ50qhNnEkgiouYQCmBLhYITjzzj
+         DbHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762970565; x=1763575365;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1I6P5+InNxbRtt54+O7hkAcOS9XQZk7rvLRdH65PFTQ=;
+        b=AvKWHTwGmI5EgNQXgLCL+fCBoYNd1omRHVY6VUnrnBmggyCnYDf5YebchWaz4+0kzS
+         tiVbHEvpgkRArFjSrbRDw5j2FZZtPZ4lb/zczRyebhOHWuT8LsZCsg7gAah1awT64vNz
+         p3WELTdT1ok+R5Jl9NAqDae0RlscDF2NkDQHoq+vUDHSWYs0uluNKMtsFHjQnyxegYnZ
+         uaYp/LwPXXf77LBeNf6fn4qSpCwr9+hHqszAOEOy4xRzuCl+myISTpJPAooFDNfRUdY6
+         KbDWm86EUA1lChvPyO5fXiZWijRrqRUVTFLwxvkO+uj3jZtDvLV8Cs46HUW1oYasYTkr
+         H/QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWWLy09fRuLQEgITkNw0zh3ZVMPYlErBD/76jwZEZMgEd5k1bgXCHbWHZW9uodJEvYMW9olFXmLn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw26brIhOY3y0QJ2YOmPfpy3Wcg9IiY95Yf90dxOSePOfQ09VMq
+	owzwTzGEYVp6ZQpX+o2R3oMAqLGv3md3zMgQV/8jNvjdI/livCdf4Z31PwZnarOgCs6Mdm9YfQR
+	ByjS+
+X-Gm-Gg: ASbGnctkxin7KIaD23NigKz7OcoqKNB3/h1r28hV+qLpr09al320VEZfbwGtDNABmla
+	Kczq50+9O8AL6eFV3hi2sIFc0jcGby7LIpm22TOtABIdGYJ9saDuQfpJRh3Rnr7O7Exa/GDnStR
+	3OC8BjELaHZYfwKGwIBurzsSD3d1C1jpG0qZABSk6WzaWmt+HPHha0SYekkMwZcoaFMYwiXFSBl
+	nAuBYcWmQ0bL12eXw2S557/ZgBQMM7ESP0cNGT32Q9JzTD+esvbCI8R96tCmSryOILavVdFXHVf
+	jAJv8kbLziOIALSkodJHqvEEAKRRnzLfT5dSDkZNxrwEkEZbH/OakEnNvoaOxOqyTmQYocRO6mt
+	I13ivHO4pF6mgo7EBGyLvPU5mX/7IqQuP28YnzKa+onjRTvHfVc+0HHQPU1zGY5M+nE2E9KxdSD
+	Ao
+X-Google-Smtp-Source: AGHT+IE/8CNXMJNP69vNyYi5NR6+56wQ5L6npYz7X53rZ/ywz4B94NkdBhsSb8AbSOFYn5RNO0Twyw==
+X-Received: by 2002:a17:907:da6:b0:b4b:4f7:7a51 with SMTP id a640c23a62f3a-b7331b3bcb6mr468553666b.62.1762970565585;
+        Wed, 12 Nov 2025 10:02:45 -0800 (PST)
+Received: from localhost ([208.88.158.128])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b72bf4fd021sm1633902266b.25.2025.11.12.10.02.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Nov 2025 10:02:45 -0800 (PST)
+From: Jonathan Curley <jcurley@purestorage.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Jonathan Curley <jcurley@purestorage.com>,
+	Haihua Yang <yanghh@gmail.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/1] NFSv4/pNFS: Clear NFS_INO_LAYOUTCOMMIT in pnfs_mark_layout_stateid_invalid
+Date: Wed, 12 Nov 2025 18:02:41 +0000
+Message-Id: <20251112180242.345608-1-jcurley@purestorage.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,54 +91,48 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following changes since commit 3e7f011c255582d7c914133785bbba1990441713:
+This diff fixes a segfault in pnfs_layoutcommit_inode when
+nfsi->layout is null during the core critical section. My initial fix
+was to check for null here:
 
-  Revert "NFSD: Remove the cap on number of operations per NFSv4 COMPOUND" (2025-10-21 11:03:50 -0400)
+   if (!test_and_clear_bit(NFS_INO_LAYOUTCOMMIT, &nfsi->flags))
+       goto out_unlock;
 
-are available in the Git repository at:
+This fix worked but I suspected it wouldn't pass code review since it
+doesn't explain how we got in this inconsistent state.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.18-3
+Around the time I was looking at this I also saw Haihua Yang's diff
+for ensuring layout commit happens before layout return. If such an
+invariant could be established then it seemed like it would also fix
+this issue. When I tested that strategy with stress tests it resulted
+in deadlocks. Adding Haihua to the cc in case they're seeing a similar
+issue and may find this diff helpful.
 
-for you to fetch changes up to 324be6dcbf09133a322db16977a84fbb45c16129:
+Over time I studied the history of how the NFS_INO_LAYOUTCOMMIT,
+NFS_LSEG_LAYOUTCOMMIT and NFS_INO_LAYOUTCOMMITTING work in conjunction
+with layout and lseg reference counting to ensure layouts and lsegs
+stick around for the commit operation.
 
-  Revert "SUNRPC: Make RPCSEC_GSS_KRB5 select CRYPTO instead of depending on it" (2025-11-10 09:31:52 -0500)
+The next fix I tried was to hold a reference on the layout in addition
+to the lseg during set_layoutcommit. This worked but building a
+complete fix was looking complicated. It was later noted that lsegs
+hold a reference to the layout as well, so such logic appeared to be
+redundant. At that point I searched for a place where lseg reference
+gets removed without also clearing NFS_INO_LAYOUTCOMMIT and I stumbled
+upon this path. With this fix the crash no longer happens during
+stress tests.
 
-----------------------------------------------------------------
-nfsd-6.18 fixes:
+I added a fixes label since it seems to be introduced from the
+referenced patch.
 
-Address recently reported issues or issues found at the recent NFS
-bake-a-thon held in Raleigh, NC.
+Jonathan Curley (1):
+  NFSv4/pNFS: Clear NFS_INO_LAYOUTCOMMIT in
+    pnfs_mark_layout_stateid_invalid
 
-Issues reported with v6.18-rc:
-- Address a kernel build issue
-- Reorder SEQUENCE processing to avoid spurious NFS4ERR_SEQ_MISORDERED
+ fs/nfs/pnfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Issues that need expedient stable backports:
-- Close a refcount leak exposure
-- Report support for NFSv4.2 CLONE correctly
-- Fix oops during COPY_NOTIFY processing
-- Prevent rare crash after XDR encoding failure
-- Prevent crash due to confused or malicious NFSv4.1 client
+-- 
+2.34.1
 
-----------------------------------------------------------------
-Chuck Lever (3):
-      NFSD: Skip close replay processing if XDR encoding fails
-      NFSD: Never cache a COMPOUND when the SEQUENCE operation fails
-      Revert "SUNRPC: Make RPCSEC_GSS_KRB5 select CRYPTO instead of depending on it"
-
-NeilBrown (2):
-      nfsd: fix refcount leak in nfsd_set_fh_dentry()
-      nfsd: ensure SEQUENCE replay sends a valid reply.
-
-Olga Kornievskaia (2):
-      nfsd: add missing FATTR4_WORD2_CLONE_BLKSIZE from supported attributes
-      NFSD: free copynotify stateid in nfs4_free_ol_stateid()
-
- fs/nfsd/nfs4state.c | 68 ++++++++++++++++++++++++++++++++++++++---------------
- fs/nfsd/nfs4xdr.c   |  5 ++--
- fs/nfsd/nfsd.h      |  1 +
- fs/nfsd/nfsfh.c     |  6 ++---
- fs/nfsd/xdr4.h      |  3 ++-
- net/sunrpc/Kconfig  |  3 +--
- 6 files changed, 58 insertions(+), 28 deletions(-)
 
