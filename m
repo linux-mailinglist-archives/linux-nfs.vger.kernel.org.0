@@ -1,141 +1,123 @@
-Return-Path: <linux-nfs+bounces-16337-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16338-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FF2C562E4
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 09:13:55 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93C5BC56480
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 09:33:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 14E414E1AFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 08:13:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B655D343885
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 08:31:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D08331219;
-	Thu, 13 Nov 2025 08:13:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FAA53314C0;
+	Thu, 13 Nov 2025 08:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VGejnSsL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3gRu1uD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9B8330D32
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Nov 2025 08:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2433122B;
+	Thu, 13 Nov 2025 08:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763021595; cv=none; b=Wj4mP4b2/9/2RKq34QviJLXXlfkjleXsowb5r1VREBxJDOYNbVs0WutYyZSMSfFjtxsVw14JMkhDRFdmAhN8rN19YgCgiMRSCsRFGR58N7xbE+mmkTz4PnfNc0LQ6gMtmfIgCiAIo2AUECq23tHL9m7kE23UTSuF98lpfjvKZAQ=
+	t=1763022701; cv=none; b=ASzsj34cefWxH3Xl340VASNrhUwvYQi/mYBUSAUbirUfHaGCkPfVOX2+l0jyFPhQGpZ97f8JWHZpa30cix8/klxGiFKDHcnZjUnSGIYjbXEuNlNsvLtF78yfrry/AJ2oHiq1/HkUoJc2OSKFLcQT0RsYWzQ1ZR95E+8wF83U9BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763021595; c=relaxed/simple;
-	bh=yHLILiyWuyc5l2qgphTjKhmRjI66f36cM3D2fhheQqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNttXlz+w8Rxnli3fEPkNSSKGbWSgrEBpTqnyLjegwp8nZCsLgpyAKz4yYGuN+drcRIXkhBBpzpgMPSnKDcl+8SJkZNwZ3Razv/SUM9/QCmvPh9VEgMBnz/FDJ4ZBfYtYR3k6BodvvuLHqg0FCb3KQ9Ef+fGtbEQGg8/ppgMK6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VGejnSsL; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dUzeGFRtRHmiQ2jJWFQhQ+s537PqrSSckpmmffYGIKM=; b=VGejnSsLxHVTCkJv96+q+0jwpK
-	Kr5dDEPXwXEUhYrvXM8shrJ2EySbjSsAKEqqOcSynrBRlVkqIXBvxV2CH1/Lk/wk9Q49fuD+1T1S2
-	XS2qRDo2BlcDcTkpFySggnRAtQJcj74EjCKnhhYBDbmVHuYX6FWOUk14k8DCd+yJ9QDVNufw1KuMN
-	ZRdr6PWgKU4auVukYK0u0B59H7jecv8CL1JSFAeehP8WEnX2rWB5Tlk6SyYzjMOlWvRMlP6H5bggD
-	RRbCmIFzszNMuOrt75vs0nbTfZQHnrNlPlEARnZj9CF8DL1AA0kcKP3buPLELJsNy+OBjm18ehtxY
-	q7EXfjiQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJSS5-0000000A3dX-1TXF;
-	Thu, 13 Nov 2025 08:13:09 +0000
-Date: Thu, 13 Nov 2025 00:13:09 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
+	s=arc-20240116; t=1763022701; c=relaxed/simple;
+	bh=sh8tPaxzbCRkZTn+mAAnWLRNuBS0xq2IFZWa/aEhdy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oxqdfvtKQyz/Hr7amEDLJLoWHl7COxQTtOjmxQgFMqolRxEYq0mYimD5tNmN88LITiw8jwU/PM3RcSK9O9fx3kfTIFmgk9znlha0YB9jBJvfZYbBgPgKe70xwtIkuJpiBGBicJMggkZvIxv7e4XX7+vGAm79xmyBz53FbIx8WYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3gRu1uD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763022699; x=1794558699;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sh8tPaxzbCRkZTn+mAAnWLRNuBS0xq2IFZWa/aEhdy0=;
+  b=U3gRu1uDcklcJRZM743/HpVsrd2yJCK73LKTbgyZXBKrcqn558QL9FHB
+   ffqJeI1iBchIcAlxGdVMMUkUvi49g/Cxb/p4GijOk88fUxsgIsN3Fzvfq
+   HdOkLMkdJgcXSHlrZwJvE2gFdFjMRNhdvihervLl5TNZpzdnpJw+82ekf
+   Uh8PS4O28rWRffNWfsEE6WuGFsSqDTaNJwS6jBwKnYWa4GCBBYIA43E+t
+   z5iLE3U7X0C4UPVsRF1pcugv6hYt5rFHLBL0lsrznv2nqh5gXlOI5Tmde
+   6BpaztrofKBGYU0zE0Jr6JyzW+BgXzfsNfPSZZE5oJ6bdi9z3otzA8BmK
+   g==;
+X-CSE-ConnectionGUID: YIxQ1bYZQ3uEEPDVLrgthg==
+X-CSE-MsgGUID: G18EiflaQkCunIW0hybPrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="65190943"
+X-IronPort-AV: E=Sophos;i="6.19,301,1754982000"; 
+   d="scan'208";a="65190943"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 00:31:38 -0800
+X-CSE-ConnectionGUID: HDAOUDW5Tn61WcLFiA0Yxg==
+X-CSE-MsgGUID: LRVIW+Y4QreOBP+f6axuRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,301,1754982000"; 
+   d="scan'208";a="189101167"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa007.fm.intel.com with ESMTP; 13 Nov 2025 00:31:36 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 9E5E595; Thu, 13 Nov 2025 09:31:34 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, jonathan.flynn@hammerspace.com
-Subject: Re: [PATCH v11 2/3] NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
-Message-ID: <aRWTFQZrmNCMfGtp@infradead.org>
-References: <aQ5SSnW9xUWj9xBi@kernel.org>
- <176255273643.634289.15333032218575182744@noble.neil.brown.name>
- <aQ5xkjIzf6uU_zLa@kernel.org>
- <176255894778.634289.2265909350991291087@noble.neil.brown.name>
- <aQ6kkd74pj2aUd8b@kernel.org>
- <2b024928-e078-4414-a062-bbeedfeea5d9@oracle.com>
- <aRL5EPMD9VsG1n3D@infradead.org>
- <aRPPikkia5ZVZxJG@kernel.org>
- <aRShjU_Ti7f2Ci7I@infradead.org>
- <aRUUx2c6YNnRYRZ_@kernel.org>
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] nfsd: Mark variable __maybe_unused to avoid W=1 build break
+Date: Thu, 13 Nov 2025 09:31:31 +0100
+Message-ID: <20251113083131.2239677-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRUUx2c6YNnRYRZ_@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 12, 2025 at 06:14:15PM -0500, Mike Snitzer wrote:
-> > -	 * Check if direct I/O is feasible for this write request.
-> > -	 * If alignments are not available, the write is too small,
-> > -	 * or no alignment can be found, fall back to buffered I/O.
-> > +	 * If the file system doesn't advertise any alignment requirements,
-> > +	 * don't try to issue direct I/O.  Fall back to uncached buffered
-> > +	 * I/O if possible because we'll assume it is not block based and
-> > +	 * doesn't need read-modify-write cycles.
-> >  	 */
-> 
-> Not sure what is implied by "not block based" in this comment.
+Clang is not happy about set but (in some cases) unused variable:
 
-e.g. re-exporting another network file system or tmpfs.
+fs/nfsd/export.c:1027:17: error: variable 'inode' set but not used [-Werror,-Wunused-but-set-variable]
 
-> > +	/*
-> > +	 * If the I/O is smaller than the larger of the memory and logical
-> > +	 * offset alignment, it is like to require read-modify-write cycles.
-> > +	 * Issue cached buffered I/O.
-> > +	 */
-> 
-> Nit: s/like/likely/ typo.
+since it's used as a parameter to dprintk() which might be configured
+a no-op. To avoid uglifying code with the specific ifdeffery just mark
+the variable __maybe_unused.
 
-Thanks.
+The commit [1], which introduced this behaviour, is quite old and hence
+the Fixes tag points to the first of Git era.
 
-> > +	if (!middle ||
-> > +	    ((prefix || suffix) && middle < PAGE_SIZE * 2))
-> >  		goto no_dio;
-> >  
-> >  	if (prefix)
-> 
-> Expressing this threshold in terms of PAGE_SIZE might be a
-> problem for other archs like ARM (where using 64K the norm for
-> performance).
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=0431923fb7a1 [1]
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ fs/nfsd/export.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-True.
-
-> The "Note:" portion of the above comment might do well to address the
-> goal being to avoid using cached buffered for higher order
-> allocations. You or Chuck may have solid ideas for refining wording.
-
-Honestly I'm not worried about higher order allocations at all.  Yes,
-they used to be very painful in the past, but if we get them here
-it means the file system supports large folios, which means we're going
-to churn through a lot of them anyway.
-
-> But so you're aware Jon Flynn (who kindly does the heavy lifting of
-> performance testing for me) agrees with you: larger will likely be
-> beneficial but it'll be hardware dependent.  So I'm going to expose a
-> knob for Jon to try various values so we can see.
-
-That does sound useful, thanks!
-
-> Overall this patch looks good.  Would welcome seeing you submit a
-> formal patch.  In parallel I'll work with Jon to get this tested on
-> Hammerspace's performance cluster to confirm all looks good.
-
-I have no problem fixing up the nits and writing a commit message,
-but I have no time to properly test this.  I'm too busy with my
-own projects and just stealing some time to help with whiteboard
-coding here :)  I'd also be perfectly fine with whoever actually
-brings this across taking full credit.
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 9d55512d0cc9..2a1499f2ad19 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -1024,7 +1024,7 @@ exp_rootfh(struct net *net, struct auth_domain *clp, char *name,
+ {
+ 	struct svc_export	*exp;
+ 	struct path		path;
+-	struct inode		*inode;
++	struct inode		*inode __maybe_unused;
+ 	struct svc_fh		fh;
+ 	int			err;
+ 	struct nfsd_net		*nn = net_generic(net, nfsd_net_id);
+-- 
+2.50.1
 
 
