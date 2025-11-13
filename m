@@ -1,108 +1,105 @@
-Return-Path: <linux-nfs+bounces-16346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16347-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CBDAC57F91
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 15:38:20 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58EEBC58042
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 15:46:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 749CC350823
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 14:38:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 12CBD4E6AF0
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 14:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D300281532;
-	Thu, 13 Nov 2025 14:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E42286D60;
+	Thu, 13 Nov 2025 14:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DltT5UjC";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="yef3hnbt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hWDsMcK+";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="toHORCTO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABCA1A83F9;
-	Thu, 13 Nov 2025 14:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AD521B191;
+	Thu, 13 Nov 2025 14:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763044695; cv=fail; b=HYl89j9ytDUs3cxq+zT8i+X69km8LJm7ytnifc6+2dmUMHRZLrYKKC4GvzrucQnJsHyuCpVu/mSAk3P17dbML4PyJ5DxY+8tRbtEld8PoV7y8mRK7xY3uTcpOItuNGyZ8MvmLu2gSfwGrPOlILylDRO+9gnfcL7SE8q2hzwMy9U=
+	t=1763044944; cv=fail; b=KYeT0EN4VE63myJMBmc5gG0M0b6lp8JmM9cGf5RTaB3D5ZAXjPFCPfpAaAtUwDJtQfTaxXOabn7YC4X4UAUW+42HVg1zmjT0sZZeuB4FDgH285b8ef1my5CsUJyK1nHVfGEB2D3po16apdflEfaehaXFhhrNWQ5+JJH80M2hIro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763044695; c=relaxed/simple;
-	bh=HWTOtY9vycMBySJkbh7bJ7WzwQm8UHEoSdOpLOECCO4=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hW5RGXGF7lb9QVECNrtkI1+kbiTSiMIdVpwmq8O7YvD+7lg1MLCSePHkiUZiE7woJoE7co+Dc3LVQeZRrWNRo6XVh+y9ooi0Aq8OYysdTjQKNTgtrdfv8YCL5EExgGRDo2VlpGiJn5+OskvRN2SZnruBaiYwcNniXgIK9rdFWJk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DltT5UjC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=yef3hnbt; arc=fail smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1763044944; c=relaxed/simple;
+	bh=b+v6DWR2o8S2wAStIowgJI9FFjNsOzCE7buue91tsdM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HstTmcuptw7cXjO7y6mc9JC6c8UQZ3MM+L7vUmXleNzgLm2ZB/q1/MrqeZQk+CWF4cUQoioYP2tQeJVxO7UVLQioZm9LJmDPXUiioslGylLTrgb70ZoiSVqFxZ3hLfBCK3ExuHHJynvU9/c0RxDsu0sExWSy4ihrtYcUdsbEAFc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hWDsMcK+; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=toHORCTO; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADE9thX027934;
-	Thu, 13 Nov 2025 14:37:48 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADE9uDn023921;
+	Thu, 13 Nov 2025 14:41:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=rm2rxRQpWyflX4FGEZcK4FqqI8MD1SnlPDeag/d/VIg=; b=
-	DltT5UjCDQDdkFZG+h7t+7Uf/xsHHQtjf1mAvkF2r+BE8qqKywxbGa9Ha7bd4ejI
-	4VR6WSchlwRc+DawJs4uccB2VXgOpXxmcwft2cUM7bG8nNmcJd4zR8LRG/aQ/EVi
-	ryc5pbVwINe5s8X1IQlNBb2bLbhFqLblm+NjeHTW/m13OGUxQSv6eCpL5MoiWgyt
-	Y1iH75OmOf3Beol0Zlk6nwvqMD48Q0q6F6lJW2sSCbZkov4oPW5qmIB+8FOaHq3J
-	KM6kQ36jtXhb4VbCdWVgEuYZ0Ki6lkZzWrSGr05GqmMpgSG/nb1fmjGph0YZl1x0
-	VfMSWs0lDs7qEQpahuFTXA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4acyjs9wcv-1
+	corp-2025-04-25; bh=6K8Gd5W/ZMdGscSfDokMTzGC1BYz81GwXbiXAS5Uqg0=; b=
+	hWDsMcK+oojtn36ymlWBBOFC3qeFdjLYC6/MvQ0NuIpkVZv0AysQOOjNarTg1uYk
+	6vtJhiPLsuRUzkwKmq32VOk9I7D7Gm8yfa1pmjI4rkrF87cUiQL46mkyO50BkAR4
+	d0r0MyVwjqA//LWSm/FEI5a8H2wCNYKpqfd4Kqi3cHQ++Wa6dfKOAom0moEaWK2l
+	CZeec1SUeJ9kQNjya3Ke5GGu+rCofqQ1iwxe+4IfZMdNke6G7cAr7geVJRqVJFBu
+	oRcxV/2Sdhuc264NhJRpOe4SZe3gqHC1S+/iK3kkk+xRX18g9MfiPFSmvDgo6Ufc
+	f/3yxnLHKrSYyS/Uc4voTA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4acvsstc2x-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 14:37:47 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADDwO8t027744;
-	Thu, 13 Nov 2025 14:37:47 GMT
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013065.outbound.protection.outlook.com [40.107.201.65])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vag8rss-1
+	Thu, 13 Nov 2025 14:41:57 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADEDO2l000388;
+	Thu, 13 Nov 2025 14:41:56 GMT
+Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazon11013055.outbound.protection.outlook.com [40.93.196.55])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vafrccn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 14:37:47 +0000
+	Thu, 13 Nov 2025 14:41:56 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PwyTk07LHL4fFWPgSugpAfJVB2RtyahiZMXkaMNB7rs9JQwVQ3jyy3AOLBhsOXg8J3E/92nOfoHpdVKrr19FaHx+O2zASKobUp59eaPWXP3gcvV9qpeRVDGBGezSbNcsHesrDMGSLcAnevuDFKGmRKPtzCzqM+V5qGdIAGSSE5jPL7eCB+khp6NYslGcuVORpCMpdoCqqitomB5FIk/FRM0leI+ltBZqVSHFMJwox7q4BD3wB3Rf22P4KLRvAhZpUKf1KyTEG+kmqYd2uIMmoEXJd4TfMvr6AfR9ItJduJgohfT6eDSDAqIR0UElOiQOFaN99Uoy5FkR3s8l6oHpPQ==
+ b=cJ2unzRNKLBiqwgIFnpjK1EaYtr/h/9jGhy0MdMvfeGepXM6gZZ1JtkErNHvnH8ZASuvdO7pCFy45hN8cTcsexos/Vz7CnlvDHKt9bb1vLgnw13+PqJyBe3ZvXxwJjyOQqrWxW5CRGYl7QShQTKdd1quOtFE3gqkZZRWeIxAg9prXUtpQiUwACpaS9OkE9TEJsY+WM0qGtQgYuF8kfv8Gq68jdeSJFjsasNdZmWvx8BMD/csgTcnICuJHRXgCm4ZeNpzPTtSY8KHuQUZwiwLljBy13ySYTlqHGdUdymvNuRkSOuHXqzGOkW4W+MCbSIEQYSwT8oEau/encTJsHsdJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rm2rxRQpWyflX4FGEZcK4FqqI8MD1SnlPDeag/d/VIg=;
- b=Zdu9MNH/tSeFIaHApmUqzAVYkpTocWS9NN8dYYvMlytlFKhY8LfcAprwNJxrVacc9mCMComhHurrgRwmxWQlbslT8p7rHQehCKV7CbPARmPEiUy5G+yJpv7U7vGsTxaW8Eind1PrdSeQb0izbUjZ/kM8zbmXRjwcJB7lcMWMIrb8+OP4CUxnefEAi3Usups00eK0ECDgtL/K3ai4WfQkWkwB/QBZVS6xwbxnoU2F/QxnhH40ZeX3tOTnCpWLulg+LDc7GTtnqMGp5Zk3Um7VqZGc8JdvB4N3A8GQ7//iSMzZhr3suSFkkClhnUZCrig4g6/7yuDiQkyslAJBSAIntw==
+ bh=6K8Gd5W/ZMdGscSfDokMTzGC1BYz81GwXbiXAS5Uqg0=;
+ b=f3cIjpMBis7W5vf3SQXEfGwwmSQWhVBmUehBzJthioVuW2jTnRxpmr2xgU2M5A4vhbis21qh9dlyG7xPgAkU2XMsRlbkzyQEL+mNEglxlxYytibRM1AjGqgCade4nc1SZumOLVyq7kOaTu0iOGF+SHPh058QirnJO//mzR6uobVPz7I8gyLrQOVOpcjuKSybdhynq5Y5XUJppcvMAquHBy/kdjh5RUHgCJ6VYYc/nQBz4GpDw8sjrQwI5CiWRMhOjbsQChdzv5WYko8BZmZZGo41EkUJjg1kE+b4VCQEinS1XkMaStaUqT0i51pOn1hZBOvu+ZPwrmtYF7rS+kYizA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rm2rxRQpWyflX4FGEZcK4FqqI8MD1SnlPDeag/d/VIg=;
- b=yef3hnbtlBopul1kye5Cc77z3+KnsZy5Avb0Tc8Y1egON+QnsPTmijhfm8ctuWwhj9TvrOG+LXzouGiCvic1rjoJcXI7v++HK6e+3kw84fwppJhtens5xWsqBX4Av7WwLEfGpcwQAAojvMZatrz1vMeCmdQLoleb5OHLo0uCu9g=
+ bh=6K8Gd5W/ZMdGscSfDokMTzGC1BYz81GwXbiXAS5Uqg0=;
+ b=toHORCTOx76DmxKh57jlQNqmP0WAjJbjWaRZCzUsZXbSccknpBvWKg8VzKcC6ycBjwZJ2eG16BVclueP/54WHGxMQRwrK9TnvPAsYfeHZ62GwY4XxbULl+FJ5X4/mPTjo4UO5+bq8xiz2FzrSI0r6UZtCVmopdaq0nK+ium6uZk=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB7298.namprd10.prod.outlook.com (2603:10b6:8:ec::14) with
+ by IA1PR10MB7417.namprd10.prod.outlook.com (2603:10b6:208:448::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Thu, 13 Nov
- 2025 14:37:43 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Thu, 13 Nov
+ 2025 14:41:52 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9298.010; Thu, 13 Nov 2025
- 14:37:43 +0000
-Message-ID: <13cf56a7-31fa-4903-9bc2-54f894fdc5ed@oracle.com>
-Date: Thu, 13 Nov 2025 09:37:41 -0500
+ 14:41:52 +0000
+Message-ID: <f5178593-c308-496d-92d5-2a4b5f16be8f@oracle.com>
+Date: Thu, 13 Nov 2025 09:41:49 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] net/handshake: Define handshake_sk_destruct_req
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Alistair Francis <alistair23@gmail.com>
-Cc: hare@kernel.org, kernel-tls-handshake@lists.linux.dev,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-nfs@vger.kernel.org, kbusch@kernel.org, axboe@kernel.dk,
-        hch@lst.de, sagi@grimberg.me, kch@nvidia.com, hare@suse.de,
+Subject: Re: [PATCH v5 4/6] net/handshake: Support KeyUpdate message types
+To: alistair23@gmail.com, hare@kernel.org,
+        kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+        kch@nvidia.com, hare@suse.de,
         Alistair Francis <alistair.francis@wdc.com>
 References: <20251112042720.3695972-1-alistair.francis@wdc.com>
- <20251112042720.3695972-3-alistair.francis@wdc.com>
- <49bbe54a-4b55-48a7-bfb4-30a222cb7d4f@oracle.com>
- <CAKmqyKN4SN6DkjaRMe4st23Xnc3gb6DcqUGHi72UTgaiE9EqGw@mail.gmail.com>
- <0d77853e-7201-47c4-991c-bb492a12dd29@oracle.com>
+ <20251112042720.3695972-5-alistair.francis@wdc.com>
 Content-Language: en-US
-In-Reply-To: <0d77853e-7201-47c4-991c-bb492a12dd29@oracle.com>
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20251112042720.3695972-5-alistair.francis@wdc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR10CA0016.namprd10.prod.outlook.com
- (2603:10b6:610:4c::26) To BN0PR10MB5128.namprd10.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR04CA0024.namprd04.prod.outlook.com
+ (2603:10b6:610:52::34) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -111,254 +108,477 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB7298:EE_
-X-MS-Office365-Filtering-Correlation-Id: af79b02a-1cad-4519-7d33-08de22c234bc
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA1PR10MB7417:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28d25019-b4c8-4a2c-74f7-08de22c2c8bb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|366016|1800799024|7416014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eXljSDZCYlBHa1E2bXBsTVI3M2RreTBHYmtucXdPc1VuamJGbmkvWDJDa3M0?=
- =?utf-8?B?Mk4rU1dHWUdBdzUzWlhlVnlwVFg0YTMyTEtOWEF6dUZtTld4bW9ZMFdoRzNr?=
- =?utf-8?B?c3VLYStmMEVxdklRWDF1OFFXbE9NNGdSWTlOdDg4TXRrN3pRa2U5UkNMZ3Vw?=
- =?utf-8?B?cmNaZndjWEpST3JFVVRQZFlKcEgzc2NpTmlTY0lGWmRjWFFwelg4WEtmd3Nu?=
- =?utf-8?B?ai9rbURCL2JsYlFqK0lidkM1Z20zUmttRmtBVTlUNjVhWGlKMS84eWpwS1hC?=
- =?utf-8?B?UFRDdzZXQnJLbkpjeDdNR1Z5d3FpRUtPUWVwS2FjUDRhK0NsYzNyekhTZG1a?=
- =?utf-8?B?V1VSK3hhb0RBSEp6KzFpSVY5WERoYVcwQ3o5cWpCNHdabjY1MlZPU3ZvSDg4?=
- =?utf-8?B?NzI4SnNTNSs1TnlkSGJER3BsL2oxMzZhY1BrSktkdWlSUUR0NVFqcHdUbUNG?=
- =?utf-8?B?T0dvbzl2YkRMYU1MMWNoM3diN0UzS0N0NnR3b2FEVjB1c25oTnFnTTY3RWs1?=
- =?utf-8?B?RUM0aHoyK2VXSlUvMHRkREJvUVU5WTVYVWNTNmN3LzJweXBNN2tvOU9YdUlW?=
- =?utf-8?B?T093WFpLcTN0TVhIQ0tKdlVLdEppU3B1aUNmT29BMDNGcUliV2J0VkRCRXV6?=
- =?utf-8?B?RERiUjlNdkVDcmRTYS9yWEVNSW8zZFA2YkRPYkREWEtBdjBVSTJvbyt1MGlZ?=
- =?utf-8?B?VzVSZ0U1SVFaRHhpd0tXN1hOMEZRUkNuVUROc1ZRSnhhakk0aklueVBMOVlU?=
- =?utf-8?B?Z2o4dzZKT0MyS3FCbEFYQnBYRHptMjFRdEVlZ1FXV3J4enoweVlUY2hEdWt4?=
- =?utf-8?B?TVdFMGg2Q1NHYnF6dmc5QUJGampYa0tSWjVDZDVWaE9sb1lrY2hSNGZ1Y1pD?=
- =?utf-8?B?cnVoY0FKS2hxYW02ZmhvOWxWemxXdmgwUDlBMmtVbmx6TGtPejIxdFQ4RlRM?=
- =?utf-8?B?TnJmc1drOXJNN2FCeDJ0S0YxR0FZNnVVaGxmbzE4aHdxcnBEd0pEamZPclZJ?=
- =?utf-8?B?MUJNRUk1cHY1dGxwaU4rNDdrN0xCSnJzbkdoNHR6Sllid20vSGhLQWY3dEl1?=
- =?utf-8?B?cmhzRXFvaFhSSEh2bVViUHEvZ3R5M1FmSTk4Zkd4QmRmNmFzVjlRM1hjeUxW?=
- =?utf-8?B?V2k2dGRBd0JxbjhnNjloYWtpalFORTJYVkVJOTJabTh6aDdMTGRLOStYR1dD?=
- =?utf-8?B?Q0N1L01BMjBXa3ZHY3lsRDdCbWNYdWs4dVhPU2txWERNNFRaR2ZmY09XK1dh?=
- =?utf-8?B?QjV5V0lGSnYxOW5SbGN0ZWdFODd2ai8xK0ZKWGY4ckhHTzlrOG9uNVE2ZTZu?=
- =?utf-8?B?QlRJZXYwVGV1WTVzWHJHbE1neXZJYWJzb3JLYnIya2ZYTmU1bTBFSGV3UGpM?=
- =?utf-8?B?OUpRTEpOZ0w3QTZpU3R5YVZ6Mlc1THoyUThEMnpWdzUyYmZWd2pMWE5PTjZM?=
- =?utf-8?B?ajBGWFgvQzhQaG91a0QwbXF4L0hLT0lYd3VXdzJwbTM5ak9CemtMcVlrdTdt?=
- =?utf-8?B?ZnV4VlBwdU80dmMyejJnS3l1TlhIb2hDekVVbWhxTEdRQUtIek5GOCtrNnpV?=
- =?utf-8?B?K3IybUVBWnFUakV2TEdTTzJ3cTBReFVPRjhkS3RNS2U0MHZLbld5ZUdkRWJn?=
- =?utf-8?B?QjNPSE5nOWRxVVc3dGNjRmJuTWVzQVVjeFhnU2Mzc1ZkUkxQOVZtZDVsaUIr?=
- =?utf-8?B?RHJjUVJMNEF6VDNhVHRkRjdtMFc5L2poandoQ05PTTdEMzgvSFFmeWpHb1Nw?=
- =?utf-8?B?dnZkaStGNi82TURNS1loUmRsNWgzaEF6MXJubFZLY3RvOExsNS9OR0tWUUM5?=
- =?utf-8?B?QUlTaXFBTktNcVBobWpidkxiNkl5QWxBVVFyZzVTb25ZUjBZZ3htZEh4bVlK?=
- =?utf-8?B?S0ltMlMxNWlNYnJZMURCN1NYZDc4OTdFK1JVZVJQSXlHZ3ZjUzN1SE5GQ2x1?=
- =?utf-8?Q?0oILMzkgc81GbxvHjV2ToWxC+SzWGKHZ?=
+	=?utf-8?B?THp6bGF4NDlBWG0zNnY5T1pseExQNUlIczYyZlFCK2ZFNTFpZmtFb1JyTVpK?=
+ =?utf-8?B?UVlBdlBuY20rbFQrbStPVDhIMGc3Q0x5R0lJVTNocDdsSDZxUEJ0cHc5RkdQ?=
+ =?utf-8?B?RXZXdFd1U0I0bDFJWDFyS00rbmVCdDhGdFZNRDZaZm53b2NmSDlkYklEU0Zw?=
+ =?utf-8?B?ME9SVnNra0VKS0N3b1ZyTzRkZDUzTmpnd1dLcmhMcVRRNnFSc0hrSSsrKzhS?=
+ =?utf-8?B?ZjZYTEI4NzVyajdoRlAxZXdKR0lGVFFQNHBvSDFLR0dkTktTNUNkRGZXUzZn?=
+ =?utf-8?B?L2FsT1FrMFI5c2lNRk1TOUlIbW02cU4rend4c2dCU1lVNlUzMXN0YWkxcjNz?=
+ =?utf-8?B?RGxtZjFacURFMUlOQlowRS9VWUFZUGVBZTF4L3NCM1I0d0hCbmdRdFQwSnZk?=
+ =?utf-8?B?cDV6VGxNcWgrM3duYjJpSFR0RnFaWldPV3YrT3BnV05vMjdhdkMrd3pFYkJh?=
+ =?utf-8?B?UjMrNVJnVnh5Z0x3QVNCQWcyZGJ1amphVkw2THMxR2ZVYTBwYXVFVkthZmlL?=
+ =?utf-8?B?RXZtK2ZoTjhBeW5yYzVqb3dDeDIrZkFuOW9makFnZFVaZEZUUVJKMG5wMnpQ?=
+ =?utf-8?B?QURTRG8zc1VHVFZIV2FZdDFENUpkZVI3TnN1TTYweGIwdkFJUmFCVmU5OCtJ?=
+ =?utf-8?B?UFNsZ01VeGpaMWYrQUZDTllCeXBVdHYrdy9XS0JyK2EwellDcUQrbTR1azgw?=
+ =?utf-8?B?Nkp0OE1LTnpTQnRxY21ja1JralA3SFI0ZmdlTHBBbkN3M0xSNFl0RTdrT2xR?=
+ =?utf-8?B?ODdhZHdYWGYwUm8zQThhYnBFV24xdzM5RndrbUltUURoR21iZkRZMFJEV1Zs?=
+ =?utf-8?B?cjZrRm81ZEdYeGszdUFRSE5rSzA4VWxQWVRuZUlJcUdZWGFRVzNNVENJZUdO?=
+ =?utf-8?B?TURhWGZRTkZ2MFZuVVhybnRsa3QwLzN4VzRLTVZlVE43MkliekZRZmhPa2sx?=
+ =?utf-8?B?Q0Y1YjA0VFRSdDgrVFB5VW1iVko5Z1pRN3JtbXBJcm40L3F2WVlDQ25WL2Y0?=
+ =?utf-8?B?QUI0NkMvYkg4NkZXVnRTTTNidEdDdlkyWlExdGZ1OWpPTFJKaTRKM2xUUmp5?=
+ =?utf-8?B?eDkzVk51L1Byd3FIenFHVmJnZG9VT0lXSnlLYjJxcXZaSDFBVWVHeGdmd1hR?=
+ =?utf-8?B?SjVvVnVpa2wvMktaUjFBTHJqa3VHUzg4TWdCV3NSem01MVZDSDA4bGZlUmV5?=
+ =?utf-8?B?NHNTNC96eE40TjNYQW9Jd0pvT3VoUFV1UUp5OHVHcDd2dERhRm11VlhITUdG?=
+ =?utf-8?B?bEJKc21ZVUc3cXVnTjNLNWo1QXovTlhoNmd6cWRoditCQ2krWUI1VUJrN0pN?=
+ =?utf-8?B?TEI4aGJXd0UwQ2l0QytpVGZnOUVrL3NEdElCWTJ2Yjg1cGU4aVlCd2ozeXpo?=
+ =?utf-8?B?MGhFUU9GeEFXbjFqOEoxTTBuK2RjQmxJT3ZYZERvaWVKcllVSE9BSzBacGhx?=
+ =?utf-8?B?MHNlYTRRYmhTVVYrcGtRQ3g2RGJNTU1ickdCblZjUGJDbkpiTERMMlRkSmRN?=
+ =?utf-8?B?bUFsbE1zKzBsYmF0R2hvOElGelYwMGVFeFgxNnNDeGNIY0M5VTZTYzBYTk1k?=
+ =?utf-8?B?eGh5VmFnQ2ZkWENweUd0YTFMb0NCdkhJeHRQMXBsWVZiNU1jeUxJdWZOc1BN?=
+ =?utf-8?B?SXZiSlRKSWZGR0ovTHlTOEtwUFgreTF0eldVOFhPdzVESXNSSW9ubDAxVHZS?=
+ =?utf-8?B?a3lVT1AxNHd5aFNXRHU3dXgwaHlWaGlCZFQrRHVKYjF3VzNNOUhxNFFOeUJp?=
+ =?utf-8?B?UWpuN2YyUHZDVC9OUDZEUUdhekNjWnFvbWRPVElWaUJubEtZcy9lbTZTVStJ?=
+ =?utf-8?B?RHFZaERhci9TRnBLZHpjR1AxYUpVQlYycjlHd2lvVStGM0x2eENtZXN1dGJL?=
+ =?utf-8?B?N3RmQmRuaTdpaTFkRUdBWVhHb3VZZ1J5SUtHa1IzUWtiVktrNmh6dzVIdW1E?=
+ =?utf-8?Q?G6yxPT+x0bFoGpmoTrKWUhAvMhRWnSU2?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WExSMnpWblkvazJiZ3B0aysxZkFyZmc2VU5DcFYrbTI4L2NVelpaT0lOaFpt?=
- =?utf-8?B?ZzEzNDF4TWVuV1NsV1JreldWSklZRmUxWFdDUVVzTnRmUUd0cUgzQjB1ZDlB?=
- =?utf-8?B?bE9yZkZhTXhQNWdjYlRweStmNElSSFNlcFhZY3VTQjRvNUZYTjJLRmk0UkMy?=
- =?utf-8?B?aXhtZnhzK1k5d0NDaEd3VlBmZ29iZ29LNVRxZjNlY1ZERHduWU9ZWVF0VWJr?=
- =?utf-8?B?R0U5dW1GdEZVb09lemxWbGxvOTVCeGlKOXA5NnZuZHlaemNCeUx4bTFkZEpO?=
- =?utf-8?B?SFo4WFZvaUtBYlBkbGNwaG0zeGdRQWJLazN1UzlRQmdzYUxpLytzVXp3UUxC?=
- =?utf-8?B?QWZaUW1WamtNUXpTc1hrZ1M2ZlhHamY2MHNVd0ZMbXNZazdaK2FUd1pqYWhy?=
- =?utf-8?B?T3Y3bmhkcmNVTjNEOENaTmFhRlM5ZGZNaDBJWXM5RWpRRmM3dnA2MUhSYTVp?=
- =?utf-8?B?ZitRUld5dFNBRmp1TThvYXZhQWUwK2JFTmVyaWxJOENBSXRuR1VJcDZRM3c2?=
- =?utf-8?B?M0hKMlVSejQ1RFdNakJsLy8vbFYrK3JEM0xIM2hhUzFBVEgzdHJjWG5YOHFl?=
- =?utf-8?B?MzlySnJBZ2RKb1p4M1ZoMHlCYWZLMlROY0JhbWJiN2xOMTZTZ2ZUMHczZGRp?=
- =?utf-8?B?UlgyaHh4bWxJZmJsMWNGdDVzMnNDQTJ6ajJOejlwaFYrWWZhOHRQblNvcFRp?=
- =?utf-8?B?MEhDdnBWd1h1U1RudXpZbXk5ajQ0ZTU4TEJkeUtwSmJVN1NsOGJKQkNEYWNY?=
- =?utf-8?B?UXluUm5aR3hvU2JWRlFRNkV3b2xyZXJNN1M0S3NWL1FwS21oNGRyNndMd2pu?=
- =?utf-8?B?R3FzRk1JOS8rR0JtSUhreEdtalFqdGZvZTFWZnU4R1VpN013N0VQY2dhYUVF?=
- =?utf-8?B?T3hyMElKNDI5Z0JwY1hqdkoxVFg2T1dxMXBNV1NIS2RvZjJaWElrUFFDekh6?=
- =?utf-8?B?SGJ4R25jaVVCZm0rZ2U1d2FqV3hmeE1LRUhkTTUxS1dBTDJGZ3NmQ01xVWxu?=
- =?utf-8?B?ZEVZUDdzdFpWL0o1RWpLTGdrNFJ3a01vbWpONkpEa21iK1R5WUNqRGEzb1dy?=
- =?utf-8?B?bDM5T2dNRTYwK0lkaDdJZVpjK05KNjU5MHcxa3hlS1l6VkpuNHc1ak1NOUZ5?=
- =?utf-8?B?NE9UZ29kTzZJdFh5NWhZcWtpcUN3UWdja0R3dUZPMDJJZWtzNnRIVkJLS254?=
- =?utf-8?B?SU4wRWN1OTEvT1ZjTFpDR3NoUXBvcys2MWNHMzFqVU40Zm5nK0ZYU3dEMjBn?=
- =?utf-8?B?VVE1c2hNVTVTUXZ4dHU0Sm9GaldVRjh6OHllRXQ3a2MwaEFYTlkyMFdhRlE4?=
- =?utf-8?B?RWtZNEFmallyS0Q0OTBWZ01jWHZlMmI4RlZPa2Z0WjJrRjdrSUlmUXFrL0xh?=
- =?utf-8?B?ZHRGWnF2VlhXNkhJRzhvbWFESWlzbXJPd0tOdHNTc1V3Z0hMT2w3Vyt4VXdO?=
- =?utf-8?B?SXMwUGh1bUpGSlVWT3pPaHhoM1o1UGJkNVVkTjBtdm5ReGxlMzQ2Smh1ZkNU?=
- =?utf-8?B?cFljdjI1T3FRV2hYQlp4dDRRSjk5Vnc1VjU2Mzd6T2htd0ZOcnA4eWZ0U09G?=
- =?utf-8?B?b1U0VVE2SDROZTZlV3lxNGhxVmE3M3UvbTV4YVVQTnd5cmorS2t1NnUzSlpp?=
- =?utf-8?B?U3ZvVmtLaWhWQ3dOVmE2WndHNVdFRE1ST0NBOE0xZWdadThDdUpWNkNvbDA3?=
- =?utf-8?B?bW4rQ3VEYUFENS9wUEQ1SG9tOTF0ZGtTKzErN2JRUkNDMWYrQ1JsU1dHRHhI?=
- =?utf-8?B?Ky9aaVBXbFZzRWxIZmpuY251NVl6YXA4SEdzNitncjFnZmt4ZTBSMjhLUXFV?=
- =?utf-8?B?VWdGQlVIVUNYak1jdE5aRG9DdmQ0Nmd4cllTT1F5TWZueTM2aXdzeDNMTFRR?=
- =?utf-8?B?RDJobEpWSnB4dHZLd0tqczNFU0xySzZnRVFzQ0h2azA5RCt0L3JQSnUyaFpv?=
- =?utf-8?B?bHF1WnFldTZTd3g0QlpWZUtLYmc5ZEQ5VVNUa2svazI5aVdPN3JLMjNYS0JQ?=
- =?utf-8?B?Y3JmQWtpNXFUZStIbE9NdVAyQ3RsZ0YweURaT1ErTFJLdGlGb28yRi9DcDZ2?=
- =?utf-8?B?SVJqaGpvZUR0cVdNVzZlbFc2SmY0RlAxbStSYmorZlpKd2tiUWp0aFVkTUVX?=
- =?utf-8?B?MDNrR082NXg3ckZWQ201VFRvMGJZQS9VcXFwY3N1SlN2aFQrSHE0eGVxazZB?=
- =?utf-8?B?WEE9PQ==?=
+	=?utf-8?B?UXhqbndLaTdpd0NHcXNWc1pWZFIxVDhuYkEwbkJEMFhLRzcranRjWTRhTUNv?=
+ =?utf-8?B?U2o3RzlrVDVNSkd6WFBnKzIyN3YvcUN3SnJlMjVEVjRSczJacHZmS3E0cWV4?=
+ =?utf-8?B?NjNSZjJFS0UxdGpZaTZXaDhvcEx2TWV0aXc2Tm9hU2ZTTlBrbitWa0g4SExY?=
+ =?utf-8?B?NHJUVFNubENYSXRPS2dmMEJGckFxWEZrSWRpbnJEUHJXdERQUjJJK2RaRm1p?=
+ =?utf-8?B?ZFFhRmxmWnQxK3lFdnNtclo5ejk0WHZ2aU5aYUpQVXVuNEJPdnp6UXFYcTkv?=
+ =?utf-8?B?QmNDRU9pb3kxUmxvSkdsTWh5YlhiUUdBNGFpNSs4eGhMM3J2OVdwM2dBWGlT?=
+ =?utf-8?B?K2tqR0QvWm00RGhtQVFxaUdHZUZpdEhVWDNvVW8wcTgvakE1RW1EbVNnUHlk?=
+ =?utf-8?B?ZmQrY0pDVkhNMW9Pa2JPQ0p5UFhOUnFyVFc2djllK2ZqVExpaFJCRmlkNXRS?=
+ =?utf-8?B?cmM0NU1GTjdpTXI1UmV1NUlLengxSFBLOTY1bzk1S1d2SWpQRUhod1JYWmFL?=
+ =?utf-8?B?NlRuZWFYL1lSZFZCemZQN2txZm1MS2VrUWZuM1BrRWIrME03eHNzYzNDY3Y1?=
+ =?utf-8?B?VWFaV200K24xQW9ZR3c5WHNnbStVbGZsNzdXWUlxKzBJd3NjUno0WmZkQ241?=
+ =?utf-8?B?a0daTTg2VlRPMzQ5Z2pXV3EwT1EvUklRenFMRDNZczBGL2ZaOWFCS0xTTGRi?=
+ =?utf-8?B?b1kvRXlZOVRXNndyRFdlczJOYmNyRDhBTDlrNHkwY2hLMXNZMHEzYUg4eUs2?=
+ =?utf-8?B?U1pSSTZzY1pqbHJOUUlhQ3F6T1ZRR0todVNheDNXL2kxZW9EeU5QTlZtUXR2?=
+ =?utf-8?B?bC80ZHdYTjZENXdBbDcxVmU0MVk5NVZiU0tkL0o5SUs4Z3lWMXVxM0t1NHk4?=
+ =?utf-8?B?b2dZVTJ0clFBVXppK3htLzZEcklIRVZEcks5VCtNNXlwWWVzR0NUMTRGWW5K?=
+ =?utf-8?B?YVNJbnNGUXVRSHZRVTdCZWZTNmlLZGxXM0RMSzZoM2tCZ1JaR1JSYlJpWTRl?=
+ =?utf-8?B?YW9tdlhPekVoOUdMK3RhOU5GcUpsakh3RllWZERCc1RJT08veTNkdEJPalZr?=
+ =?utf-8?B?a1l6bGZNdkJOQ2tmMHdTdE1zZC9uaXJEL21LNTJuVnVWeUlMVXVlaWxYaFdY?=
+ =?utf-8?B?dU5EM2x4amFKS2paWGRZcXFjMnZ0OVFzZWx4c1FWZ1NPbnduS0ZaaldOdnds?=
+ =?utf-8?B?UHYrSUFxVHFnejNTQkw4ajl5UzBKcmYycG42UFBWWkNBa21reVhVeWxkb2Jh?=
+ =?utf-8?B?Z0duWHRySFI2Q2tlNHp4SjlWbmlDQVM2QjhGREpzWW5Ydm96L3IzOGFqSlNi?=
+ =?utf-8?B?NTFvV09QQTd6cVhvTXcrcWhOdGhrbTlEWE1tRXF3dzVYa0VpdXR6Zy9vVGtO?=
+ =?utf-8?B?TEc0TDZUUlU1L0ZiUGpac2dwUXpud0RzYUc1UmNyeldsZFBNNDZTcDg3Vm9M?=
+ =?utf-8?B?OE5UZmlKL2FQV2lHWG5jOWhuSmV4Z05YdHV6UEVTRlE2RndqblVZcTFpTlFq?=
+ =?utf-8?B?a1JBZnAwWk9EK1ZIVmMxNW1uNG1vcC92SEtxdnVyT2s1MTI0VkxxYXBlZENi?=
+ =?utf-8?B?NDZKei95RXYzN1VlVTVQNGdKbVJXRWdCY2RRR1V2azZ3WUFnc1YyNEZCQVEv?=
+ =?utf-8?B?VG5nYXY5bFRJSzJ4MExzeHhwMnpDUHhVaWY1Y2pXQjYxNnRlRGt6d0FEdHFh?=
+ =?utf-8?B?b3BZTFliVWxaT2pQR2xleU5zYmRrb3pBWXM0UzBUbE5EOVBxbzhiUFpST3Nw?=
+ =?utf-8?B?aU1BWXNoNlB1a1ZGN3lRTzdEd2U5c1Q1UkRXMGVwaXhEYzNWc1Z3eStzUURS?=
+ =?utf-8?B?bTNkS2lBaWF2V1lGN05UZUl1dmhVMVRsK2tGRUphRzJhNFlWVWs2K3dYTzVh?=
+ =?utf-8?B?SmwxNkJneXY0SC8zUXRJV3B2dFFaV2J0cGg1dXlzMTh5VndCVzZZUkU3dFB1?=
+ =?utf-8?B?RWlOT2JVQmk1TFFIRW1YcVBBMWlrbGVlSHBPcmZodldLMzlJdSs4T1lWVmcy?=
+ =?utf-8?B?VmRuaWx0bnFZTDlMNlpGdWtOL0pDL0w1NklIZ2RYZzRxTHpUZHB4Rkl2cTVV?=
+ =?utf-8?B?dUlLV2Urc1prTGNyWmdDRzdJTUlzeEMyREZvd0pLQkdvRWU5YTJwZEFUTFZL?=
+ =?utf-8?B?Y2RHWmtUUWlYbFFhWTd3MUV0VzlXSWlrTUdubEE4bENiVHRnYjBNVGcyTG1O?=
+ =?utf-8?B?eVE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ByEo06UnbGpiuNfjewVntVn+N5HfeB6QQ7wmiMW6auFG1RbNVgXRz5jIaGDuBBeH5F0Q8fLPpP2nTbIISc1AbxFvVKFi9cPapbpI7OICBzUjjEToB+qdMR5obOQhMNTPNZ99g5NcRRc2tbCnYhoKxF8Cuwjkkvdj+qi15rUmyHxCsUC+hWMulAMZa1sEs7jgdPy7iDhwE7aKDO8CX7w2iVyHBWiFW+s1Vro0hc6zTj1UddCkgSBCtNNRrgAaSOVrQOmrgcpROufOH5GVkT7Fq+n6bFSSENWfknWbW24yA+3aDzKT13/Dm/qXQ97icdakBJfEM2//IPV/xD4m2BZJxMeuNe0k67XEeALoNTdS+Ve/5MEDFxow/FxjS3FzhvKE2n5s0NXGugf4gkEhUSV8Dlc68KsgiKAlM3iaOBYzKlGgHiT/iBFUxO9bo7ECJpr0M++xUQZOmR8TRRMOSfHl8/VRHlceoan0NFzOyA8DgJY9bWjz0ksWEphIOXf5iNw5t+FepH4wtmtMjRKcc55vCYL3DjKw4mDoZzknO6/m1l9T6L4Bz5f+T73sYoMEaAdRQWoS1Qt2J5zsVuFUlxFihBDAeUGbug470i2xmZj4oJY=
+	Cwu8KcsL6ahFi+5vO5TbpUsz4j78HZTbNx8zbq2VlljJ3zOH/H6upGCT2GrSfQHInTKFuTiSKJsiVZqzkbkROgJDUmS5+cSAruNjFEvxsA9/AeKnDiDF+FAszSuaXBnzHxGW6yoBWlbEnchZ3hi/z9n4fy7xdifD+vzNffIotSY42jRr0/iVHpDacHTIikDtNoJ5NRxH8USVL+ZBJygEhnVQOIJu7+IGYpwET2yfn6WnCEVmQZQV6NoTCdkHH9VFVhnYIhDROLguN7Pplrju02OcS8RRKYZSc+TNQxyNt4IwYa+Jxfwe4LXoDJocI/Mt49KoKTQIsw0bFNAGBfE5gdXlx1P7iQkyXR+8VZ2/DJf1nPguGRSfevstFvePZXnQyrgpmfXOLBsf6T1Ak/ztUGERwxWVMMlXRgrGOlj4AqFAQT4MN3GrdtfUgYPDnGwnpJavyM5S7HuF1/zIrwWHe4xmPfsRxdf+Oumx/4ms9fwXNmq9aKP5SmPl8+uQ2ZNjEVjfjOu2j65SbXuQVH12HKxNRGXU45f3t6ftlgDFs+TPDfkBhQjmhJuPDA7UHmfnxmM50+8OmZDNhq2WE2L7hVSY/23WO6RmC6s8k8+FC+Q=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af79b02a-1cad-4519-7d33-08de22c234bc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28d25019-b4c8-4a2c-74f7-08de22c2c8bb
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 14:37:43.7931
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 14:41:52.1036
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8pe7kYEwrBZrqOG7HbHDByxTsUr3p2RvpIYb9n4dzTYmFj+E940Fzf2Bz4wmp3GkIUwDDkfrRsU86rS9a8z2uA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7298
+X-MS-Exchange-CrossTenant-UserPrincipalName: NhGMGz2pIJFFRhOJ8WC+CDjfHrhLgo6f10pBgjqsTshrKdRN+RJ3SwoaPkCdfvLMAv0QSASCU8NYhoEGYTWa/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7417
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-13_02,2025-11-13_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2510240000 definitions=main-2511130112
-X-Proofpoint-GUID: 9jHVllpkIXS6kMZhQ-fivAyoEPlipuT6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDE0OSBTYWx0ZWRfX5FW4VUQ4hbAu
- 4SP/A9+SRQcb6oPRriU4CaHnfClLE2Pm06SSnzincPUugujsqyCY78t0XZoaPqD23BLwRH0A/dV
- upahQ1EcCTkq4jGXxyn7YobUL5dgmb64y866v7vmwYhHCivN/TQyvvMF1tODB9FJxvDFMiZhh12
- wTUuJ/mJq7y8H1q0vmY/ML5Ny2SZtYpBSzSe832lJQnKzUwXD2oc2SZjwEgnUbLnpkaxQhrSugj
- zvV4UqLJDEuTGfvqIQCkxzfttos7qJIAIJkTEhGBzzVkdj39nQwAPg1a5KJvsVDKrWy6yVKqcaB
- x3vtfoMmFH8EfFHevqQGly6fGgrNqkMVUpELAamdaB7YJuo5ZFSId57627Fl7sHgrDfBhF6DWVH
- j5hwbyLwYZ6miZL/glNBoXnQca3QfL0zWb29TIOrFCACQ6Gmg50=
-X-Proofpoint-ORIG-GUID: 9jHVllpkIXS6kMZhQ-fivAyoEPlipuT6
-X-Authority-Analysis: v=2.4 cv=HLzO14tv c=1 sm=1 tr=0 ts=6915ed3b b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ phishscore=0 suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511130112
+X-Authority-Analysis: v=2.4 cv=bJUb4f+Z c=1 sm=1 tr=0 ts=6915ee35 b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=yPCof4ZbAAAA:8 a=pGLkceISAAAA:8 a=JF9118EUAAAA:8 a=_OaH9TiUWISvIOXzOnkA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=xVlTc564ipvMDusKsbsT:22 cc=ntf
- awl=host:13634
+ a=48vgC7mUAAAA:8 a=pGLkceISAAAA:8 a=JF9118EUAAAA:8 a=yPCof4ZbAAAA:8
+ a=rnpwRbQdqEPikXMJ1TUA:9 a=QEXdDO2ut3YA:10 a=xVlTc564ipvMDusKsbsT:22 cc=ntf
+ awl=host:12099
+X-Proofpoint-GUID: WwcyhPA0nhEz_2NiRHnHjE1U6XvI5i_B
+X-Proofpoint-ORIG-GUID: WwcyhPA0nhEz_2NiRHnHjE1U6XvI5i_B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDEyMyBTYWx0ZWRfX6Wnt/UBRZMLp
+ cRerXFKCDtzS34AdXG5xksxxvOVcsHvJUptqhmRsW9V77wa/dbAKOPnU/K7iQ3bH2FZigKzgsyp
+ zPITSgTY9fRvGONNRxu59Gh4A5yfoWVevVOz2DeCuzEL5S5qo3/X4pVpLyCYt78FdflFasnYH9h
+ +qEZdLh3XQ8XaLWHzz0gBDd2QFgXwyuF0GIk3CI+f7ZYvrBI3U5sGYubK4/s+xRWhvsT+8XKVr5
+ BTz1TGTSl0Ri6ZCScJmy3p+fyQirQ2PZsIIt9+84SdjEkoUAsNP42CAFd2ubs8vVzifuRVq3p2F
+ QZwzFSsJKkKuexQ39GHISnm7bhS5V2g/lZj94H764qH5g3BxAy+OAUNjekMNsoEceEPua3RQXZB
+ ZxfEsh4TO413Y+KZs+0R5QUAAfEUdxsL6fJrDodXwW4ImLLH99c=
 
-On 11/13/25 9:01 AM, Chuck Lever wrote:
-> On 11/13/25 5:19 AM, Alistair Francis wrote:
->> On Thu, Nov 13, 2025 at 1:47 AM Chuck Lever <chuck.lever@oracle.com> wrote:
->>>
->>> On 11/11/25 11:27 PM, alistair23@gmail.com wrote:
->>>> From: Alistair Francis <alistair.francis@wdc.com>
->>>>
->>>> Define a `handshake_sk_destruct_req()` function to allow the destruction
->>>> of the handshake req.
->>>>
->>>> This is required to avoid hash conflicts when handshake_req_hash_add()
->>>> is called as part of submitting the KeyUpdate request.
->>>>
->>>> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
->>>> Reviewed-by: Hannes Reinecke <hare@suse.de>
->>>> ---
->>>> v5:
->>>>  - No change
->>>> v4:
->>>>  - No change
->>>> v3:
->>>>  - New patch
->>>>
->>>>  net/handshake/request.c | 16 ++++++++++++++++
->>>>  1 file changed, 16 insertions(+)
->>>>
->>>> diff --git a/net/handshake/request.c b/net/handshake/request.c
->>>> index 274d2c89b6b2..0d1c91c80478 100644
->>>> --- a/net/handshake/request.c
->>>> +++ b/net/handshake/request.c
->>>> @@ -98,6 +98,22 @@ static void handshake_sk_destruct(struct sock *sk)
->>>>               sk_destruct(sk);
->>>>  }
->>>>
->>>> +/**
->>>> + * handshake_sk_destruct_req - destroy an existing request
->>>> + * @sk: socket on which there is an existing request
->>>
->>> Generally the kdoc style is unnecessary for static helper functions,
->>> especially functions with only a single caller.
->>>
->>> This all looks so much like handshake_sk_destruct(). Consider
->>> eliminating the code duplication by splitting that function into a
->>> couple of helpers instead of adding this one.
->>>
->>>
->>>> + */
->>>> +static void handshake_sk_destruct_req(struct sock *sk)
->>>
->>> Because this function is static, I imagine that the compiler will
->>> bark about the addition of an unused function. Perhaps it would
->>> be better to combine 2/6 and 3/6.
->>>
->>> That would also make it easier for reviewers to check the resource
->>> accounting issues mentioned below.
->>>
->>>
->>>> +{
->>>> +     struct handshake_req *req;
->>>> +
->>>> +     req = handshake_req_hash_lookup(sk);
->>>> +     if (!req)
->>>> +             return;
->>>> +
->>>> +     trace_handshake_destruct(sock_net(sk), req, sk);
->>>
->>> Wondering if this function needs to preserve the socket's destructor
->>> callback chain like so:
->>>
->>> +       void (sk_destruct)(struct sock sk);
->>>
->>>   ...
->>>
->>> +       sk_destruct = req->hr_odestruct;
->>> +       sk->sk_destruct = sk_destruct;
->>>
->>> then:
->>>
->>>> +     handshake_req_destroy(req);
->>>
->>> Because of the current code organization and patch ordering, it's
->>> difficult to confirm that sock_put() isn't necessary here.
->>>
->>>
->>>> +}
->>>> +
->>>>  /**
->>>>   * handshake_req_alloc - Allocate a handshake request
->>>>   * @proto: security protocol
->>>
->>> There's no synchronization preventing concurrent handshake_req_cancel()
->>> calls from accessing the request after it's freed during handshake
->>> completion. That is one reason why handshake_complete() leaves completed
->>> requests in the hash.
->>
->> Ah, so you are worried that free-ing the request will race with
->> accessing the request after a handshake_req_hash_lookup().
->>
->> Ok, makes sense. It seems like one answer to that is to add synchronisation
->>
->>>
->>> So I'm thinking that removing requests like this is not going to work
->>> out. Would it work better if handshake_req_hash_add() could recognize
->>> that a KeyUpdate is going on, and allow replacement of a hashed
->>> request? I haven't thought that through.
->>
->> I guess the idea would be to do something like this in
->> handshake_req_hash_add() if the entry already exists?
->>
->>     if (test_and_set_bit(HANDSHAKE_F_REQ_COMPLETED, &req->hr_flags)) {
->>         /* Request already completed */
->>         rhashtable_replace_fast(...);
->>     }
->>
->> I'm not sure that's better. That could possibly still race with
->> something that hasn't yet set HANDSHAKE_F_REQ_COMPLETED and overwrite
->> the request unexpectedly.
->>
->> What about adding synchronisation and keeping the current approach?
->> From a quick look it should be enough to just edit
->> handshake_sk_destruct() and handshake_req_cancel()
+On 11/11/25 11:27 PM, alistair23@gmail.com wrote:
+> From: Alistair Francis <alistair.francis@wdc.com>
 > 
-> Or make the KeyUpdate requests somehow distinctive so they do not
-> collide with initial handshake requests.
+> When reporting the msg-type to userspace let's also support reporting
+> KeyUpdate events. This supports reporting a client/server event and if
+> the other side requested a KeyUpdateRequest.
+> 
+> Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+> v5:
+>  - Drop clientkeyupdaterequest and serverkeyupdaterequest
+> v4:
+>  - Don't overload existing functions, instead create new ones
+> v3:
+>  - Fixup yamllint and kernel-doc failures
+> 
+>  Documentation/netlink/specs/handshake.yaml | 16 ++++-
+>  drivers/nvme/host/tcp.c                    | 15 +++-
+>  drivers/nvme/target/tcp.c                  | 10 ++-
+>  include/net/handshake.h                    |  6 ++
+>  include/uapi/linux/handshake.h             | 11 +++
+>  net/handshake/tlshd.c                      | 83 +++++++++++++++++++++-
+>  6 files changed, 133 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/netlink/specs/handshake.yaml b/Documentation/netlink/specs/handshake.yaml
+> index a273bc74d26f..2f77216c8ddf 100644
+> --- a/Documentation/netlink/specs/handshake.yaml
+> +++ b/Documentation/netlink/specs/handshake.yaml
+> @@ -21,12 +21,18 @@ definitions:
+>      type: enum
+>      name: msg-type
+>      value-start: 0
+> -    entries: [unspec, clienthello, serverhello]
+> +    entries: [unspec, clienthello, serverhello, clientkeyupdate,
+> +              serverkeyupdate]
+>    -
+>      type: enum
+>      name: auth
+>      value-start: 0
+>      entries: [unspec, unauth, psk, x509]
+> +  -
+> +    type: enum
+> +    name: key-update-type
+> +    value-start: 0
+> +    entries: [unspec, send, received, received_request_update]
+>  
+>  attribute-sets:
+>    -
+> @@ -74,6 +80,13 @@ attribute-sets:
+>        -
+>          name: keyring
+>          type: u32
+> +      -
+> +        name: key-update-request
+> +        type: u32
+> +        enum: key-update-type
+> +      -
+> +        name: session-id
+> +        type: u32
+>    -
+>      name: done
+>      attributes:
+> @@ -116,6 +129,7 @@ operations:
+>              - certificate
+>              - peername
+>              - keyring
+> +            - session-id
+>      -
+>        name: done
+>        doc: Handler reports handshake completion
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 024d02248831..4797a4532b0d 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/iov_iter.h>
+>  #include <net/busy_poll.h>
+>  #include <trace/events/sock.h>
+> +#include <uapi/linux/handshake.h>
+>  
+>  #include "nvme.h"
+>  #include "fabrics.h"
+> @@ -206,6 +207,10 @@ static struct workqueue_struct *nvme_tcp_wq;
+>  static const struct blk_mq_ops nvme_tcp_mq_ops;
+>  static const struct blk_mq_ops nvme_tcp_admin_mq_ops;
+>  static int nvme_tcp_try_send(struct nvme_tcp_queue *queue);
+> +static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
+> +			      struct nvme_tcp_queue *queue,
+> +			      key_serial_t pskid,
+> +			      enum handshake_key_update_type keyupdate);
+>  
+>  static inline struct nvme_tcp_ctrl *to_tcp_ctrl(struct nvme_ctrl *ctrl)
+>  {
+> @@ -1729,7 +1734,8 @@ static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid,
+>  
+>  static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
+>  			      struct nvme_tcp_queue *queue,
+> -			      key_serial_t pskid)
+> +			      key_serial_t pskid,
+> +			      enum handshake_key_update_type keyupdate)
+>  {
+>  	int qid = nvme_tcp_queue_id(queue);
+>  	int ret;
+> @@ -1751,7 +1757,10 @@ static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
+>  	args.ta_timeout_ms = tls_handshake_timeout * 1000;
+>  	queue->tls_err = -EOPNOTSUPP;
+>  	init_completion(&queue->tls_complete);
+> -	ret = tls_client_hello_psk(&args, GFP_KERNEL);
+> +	if (keyupdate == HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
+> +		ret = tls_client_hello_psk(&args, GFP_KERNEL);
+> +	else
+> +		ret = tls_client_keyupdate_psk(&args, GFP_KERNEL, keyupdate);
+>  	if (ret) {
+>  		dev_err(nctrl->device, "queue %d: failed to start TLS: %d\n",
+>  			qid, ret);
+> @@ -1901,7 +1910,7 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+>  
+>  	/* If PSKs are configured try to start TLS */
+>  	if (nvme_tcp_tls_configured(nctrl) && pskid) {
+> -		ret = nvme_tcp_start_tls(nctrl, queue, pskid);
+> +		ret = nvme_tcp_start_tls(nctrl, queue, pskid, HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC);
+>  		if (ret)
+>  			goto err_init_connect;
+>  	}
+> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+> index 7f8516892359..818efdeccef1 100644
+> --- a/drivers/nvme/target/tcp.c
+> +++ b/drivers/nvme/target/tcp.c
+> @@ -1833,7 +1833,8 @@ static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w)
+>  	kref_put(&queue->kref, nvmet_tcp_release_queue);
+>  }
+>  
+> -static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue)
+> +static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
+> +				   enum handshake_key_update_type keyupdate)
+>  {
+>  	int ret = -EOPNOTSUPP;
+>  	struct tls_handshake_args args;
+> @@ -1852,7 +1853,10 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue)
+>  	args.ta_keyring = key_serial(queue->port->nport->keyring);
+>  	args.ta_timeout_ms = tls_handshake_timeout * 1000;
+>  
+> -	ret = tls_server_hello_psk(&args, GFP_KERNEL);
+> +	if (keyupdate == HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
+> +		ret = tls_server_hello_psk(&args, GFP_KERNEL);
+> +	else
+> +		ret = tls_server_keyupdate_psk(&args, GFP_KERNEL, keyupdate);
+>  	if (ret) {
+>  		kref_put(&queue->kref, nvmet_tcp_release_queue);
+>  		pr_err("failed to start TLS, err=%d\n", ret);
+> @@ -1934,7 +1938,7 @@ static void nvmet_tcp_alloc_queue(struct nvmet_tcp_port *port,
+>  		sk->sk_data_ready = port->data_ready;
+>  		write_unlock_bh(&sk->sk_callback_lock);
+>  		if (!nvmet_tcp_try_peek_pdu(queue)) {
+> -			if (!nvmet_tcp_tls_handshake(queue))
+> +			if (!nvmet_tcp_tls_handshake(queue, HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC))
+>  				return;
+>  			/* TLS handshake failed, terminate the connection */
+>  			goto out_destroy_sq;
+> diff --git a/include/net/handshake.h b/include/net/handshake.h
+> index 68d7f89e431a..f5a249327bf6 100644
+> --- a/include/net/handshake.h
+> +++ b/include/net/handshake.h
+> @@ -10,6 +10,8 @@
+>  #ifndef _NET_HANDSHAKE_H
+>  #define _NET_HANDSHAKE_H
+>  
+> +#include <uapi/linux/handshake.h>
+> +
+>  enum {
+>  	TLS_NO_KEYRING = 0,
+>  	TLS_NO_PEERID = 0,
+> @@ -38,8 +40,12 @@ struct tls_handshake_args {
+>  int tls_client_hello_anon(const struct tls_handshake_args *args, gfp_t flags);
+>  int tls_client_hello_x509(const struct tls_handshake_args *args, gfp_t flags);
+>  int tls_client_hello_psk(const struct tls_handshake_args *args, gfp_t flags);
+> +int tls_client_keyupdate_psk(const struct tls_handshake_args *args, gfp_t flags,
+> +			     enum handshake_key_update_type keyupdate);
+>  int tls_server_hello_x509(const struct tls_handshake_args *args, gfp_t flags);
+>  int tls_server_hello_psk(const struct tls_handshake_args *args, gfp_t flags);
+> +int tls_server_keyupdate_psk(const struct tls_handshake_args *args, gfp_t flags,
+> +			     enum handshake_key_update_type keyupdate);
+>  
+>  bool tls_handshake_cancel(struct sock *sk);
+>  void tls_handshake_close(struct socket *sock);
+> diff --git a/include/uapi/linux/handshake.h b/include/uapi/linux/handshake.h
+> index b68ffbaa5f31..483815a064f0 100644
+> --- a/include/uapi/linux/handshake.h
+> +++ b/include/uapi/linux/handshake.h
+> @@ -19,6 +19,8 @@ enum handshake_msg_type {
+>  	HANDSHAKE_MSG_TYPE_UNSPEC,
+>  	HANDSHAKE_MSG_TYPE_CLIENTHELLO,
+>  	HANDSHAKE_MSG_TYPE_SERVERHELLO,
+> +	HANDSHAKE_MSG_TYPE_CLIENTKEYUPDATE,
+> +	HANDSHAKE_MSG_TYPE_SERVERKEYUPDATE,
+>  };
+>  
+>  enum handshake_auth {
+> @@ -28,6 +30,13 @@ enum handshake_auth {
+>  	HANDSHAKE_AUTH_X509,
+>  };
+>  
+> +enum handshake_key_update_type {
+> +	HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC,
+> +	HANDSHAKE_KEY_UPDATE_TYPE_SEND,
+> +	HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED,
+> +	HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED_REQUEST_UPDATE,
+> +};
+> +
+>  enum {
+>  	HANDSHAKE_A_X509_CERT = 1,
+>  	HANDSHAKE_A_X509_PRIVKEY,
+> @@ -46,6 +55,8 @@ enum {
+>  	HANDSHAKE_A_ACCEPT_CERTIFICATE,
+>  	HANDSHAKE_A_ACCEPT_PEERNAME,
+>  	HANDSHAKE_A_ACCEPT_KEYRING,
+> +	HANDSHAKE_A_ACCEPT_KEY_UPDATE_REQUEST,
+> +	HANDSHAKE_A_ACCEPT_SESSION_ID,
+>  
+>  	__HANDSHAKE_A_ACCEPT_MAX,
+>  	HANDSHAKE_A_ACCEPT_MAX = (__HANDSHAKE_A_ACCEPT_MAX - 1)
+> diff --git a/net/handshake/tlshd.c b/net/handshake/tlshd.c
+> index 85c5fed690c0..91d2bb515b7d 100644
+> --- a/net/handshake/tlshd.c
+> +++ b/net/handshake/tlshd.c
+> @@ -41,6 +41,7 @@ struct tls_handshake_req {
+>  	unsigned int		th_num_peerids;
+>  	key_serial_t		th_peerid[5];
+>  
+> +	unsigned int		th_key_update_request;
+>  	key_serial_t		handshake_session_id;
+>  };
+>  
+> @@ -58,7 +59,8 @@ tls_handshake_req_init(struct handshake_req *req,
+>  	treq->th_num_peerids = 0;
+>  	treq->th_certificate = TLS_NO_CERT;
+>  	treq->th_privkey = TLS_NO_PRIVKEY;
+> -	treq->handshake_session_id = TLS_NO_PRIVKEY;
+> +	treq->handshake_session_id = args->handshake_session_id;
 
-Another thought: expand the current _req structure to also manage
-KeyUpdates. I think there can be only one upcall request pending
-at a time, right?
+Should you initialize the new th_key_update_request field to 0 here?
+Prevent leaking previous memory contents to user space...
+
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+
+
+> +
+>  	return treq;
+>  }
+>  
+> @@ -265,6 +267,16 @@ static int tls_handshake_accept(struct handshake_req *req,
+>  		break;
+>  	}
+>  
+> +	ret = nla_put_u32(msg, HANDSHAKE_A_ACCEPT_SESSION_ID,
+> +			  treq->handshake_session_id);
+> +	if (ret < 0)
+> +		goto out_cancel;
+> +
+> +	ret = nla_put_u32(msg, HANDSHAKE_A_ACCEPT_KEY_UPDATE_REQUEST,
+> +			  treq->th_key_update_request);
+> +	if (ret < 0)
+> +		goto out_cancel;
+> +
+>  	genlmsg_end(msg, hdr);
+>  	return genlmsg_reply(msg, info);
+>  
+> @@ -372,6 +384,44 @@ int tls_client_hello_psk(const struct tls_handshake_args *args, gfp_t flags)
+>  }
+>  EXPORT_SYMBOL(tls_client_hello_psk);
+>  
+> +/**
+> + * tls_client_keyupdate_psk - request a PSK-based TLS handshake on a socket
+> + * @args: socket and handshake parameters for this request
+> + * @flags: memory allocation control flags
+> + * @keyupdate: specifies the type of KeyUpdate operation
+> + *
+> + * Return values:
+> + *   %0: Handshake request enqueue; ->done will be called when complete
+> + *   %-EINVAL: Wrong number of local peer IDs
+> + *   %-ESRCH: No user agent is available
+> + *   %-ENOMEM: Memory allocation failed
+> + */
+> +int tls_client_keyupdate_psk(const struct tls_handshake_args *args, gfp_t flags,
+> +			     enum handshake_key_update_type keyupdate)
+> +{
+> +	struct tls_handshake_req *treq;
+> +	struct handshake_req *req;
+> +	unsigned int i;
+> +
+> +	if (!args->ta_num_peerids ||
+> +	    args->ta_num_peerids > ARRAY_SIZE(treq->th_peerid))
+> +		return -EINVAL;
+> +
+> +	req = handshake_req_alloc(&tls_handshake_proto, flags);
+> +	if (!req)
+> +		return -ENOMEM;
+> +	treq = tls_handshake_req_init(req, args);
+> +	treq->th_type = HANDSHAKE_MSG_TYPE_CLIENTKEYUPDATE;
+> +	treq->th_key_update_request = keyupdate;
+> +	treq->th_auth_mode = HANDSHAKE_AUTH_PSK;
+> +	treq->th_num_peerids = args->ta_num_peerids;
+> +	for (i = 0; i < args->ta_num_peerids; i++)
+> +		treq->th_peerid[i] = args->ta_my_peerids[i];
+> +
+> +	return handshake_req_submit(args->ta_sock, req, flags);
+> +}
+> +EXPORT_SYMBOL(tls_client_keyupdate_psk);
+> +
+>  /**
+>   * tls_server_hello_x509 - request a server TLS handshake on a socket
+>   * @args: socket and handshake parameters for this request
+> @@ -428,6 +478,37 @@ int tls_server_hello_psk(const struct tls_handshake_args *args, gfp_t flags)
+>  }
+>  EXPORT_SYMBOL(tls_server_hello_psk);
+>  
+> +/**
+> + * tls_server_keyupdate_psk - request a server TLS KeyUpdate on a socket
+> + * @args: socket and handshake parameters for this request
+> + * @flags: memory allocation control flags
+> + * @keyupdate: specifies the type of KeyUpdate operation
+> + *
+> + * Return values:
+> + *   %0: Handshake request enqueue; ->done will be called when complete
+> + *   %-ESRCH: No user agent is available
+> + *   %-ENOMEM: Memory allocation failed
+> + */
+> +int tls_server_keyupdate_psk(const struct tls_handshake_args *args, gfp_t flags,
+> +			     enum handshake_key_update_type keyupdate)
+> +{
+> +	struct tls_handshake_req *treq;
+> +	struct handshake_req *req;
+> +
+> +	req = handshake_req_alloc(&tls_handshake_proto, flags);
+> +	if (!req)
+> +		return -ENOMEM;
+> +	treq = tls_handshake_req_init(req, args);
+> +	treq->th_type = HANDSHAKE_MSG_TYPE_SERVERKEYUPDATE;
+> +	treq->th_key_update_request = keyupdate;
+> +	treq->th_auth_mode = HANDSHAKE_AUTH_PSK;
+> +	treq->th_num_peerids = 1;
+> +	treq->th_peerid[0] = args->ta_my_peerids[0];
+> +
+> +	return handshake_req_submit(args->ta_sock, req, flags);
+> +}
+> +EXPORT_SYMBOL(tls_server_keyupdate_psk);
+> +
+>  /**
+>   * tls_handshake_cancel - cancel a pending handshake
+>   * @sk: socket on which there is an ongoing handshake
 
 
 -- 
