@@ -1,264 +1,169 @@
-Return-Path: <linux-nfs+bounces-16365-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16366-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DEC2C5A452
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 23:05:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8394C5A4D1
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 23:20:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 016D54E05E7
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 22:05:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63C063A7628
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Nov 2025 22:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDF833164C2;
-	Thu, 13 Nov 2025 22:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764C4320CCD;
+	Thu, 13 Nov 2025 22:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JsRtRow0";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BCfLZ4p1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ0Bn01F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2625C244679;
-	Thu, 13 Nov 2025 22:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763071528; cv=fail; b=KoB1SGpY3c9GXCbpTp0Cj3amEAlojcSr9/ylELX8Ghp1gpfctV9nUnZ3fq0kG5CrahcMqO3poWy55J+WCJGzMLMbZpNg0BUFMxLMVbrFTVzwdl7pM6aGcKSn/vCj6DQjLhvQ7vUSUSKyOvRaped6/ILTmZLvN0UedBut0yhEJOE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763071528; c=relaxed/simple;
-	bh=Rthk3B27ebKEqcj+ETzemQ8t5K/ZbWo3VuAfA/NpRTc=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=U58lU+JQBwcUIQmCdmXD05ETQc/ixqVZCt0br2D7hvqmAXrILq8O+aLG0YU9KxdjhVxry4e4+JlpyAkzwgIhmMbuRcOjsaGMla8DAbqEndsmOf/Z+adGzFJLJI8PgyOZYI07J7f8hbZsGf8sd9x59liUgn059HjK1F1IuFOqdSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JsRtRow0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BCfLZ4p1; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADKN2GA009527;
-	Thu, 13 Nov 2025 22:05:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=CR0dLmH2Ymkntdz65qIVndhBthKYXhlXuZ3eLRScYTc=; b=
-	JsRtRow0l9hCPibAfqsiTquYaCu1YL8J/SCNL1GFyLkBzBPxMNTVEztp6TOtedhI
-	rGLTQ8Manuyp9Yd6s/09sPhJyuUCBM+ITc3oDKY5u0sLCoZjohDyGudcjQASUp24
-	bcklxCl8mtrVTR9rNtcqQfl3HtnihAhBd+nQhZYy8QjO+dVjhkh8/4fHNEDlw+BT
-	wlZt9Bkj6Oqq/pBy+fjSua/tFw3zvchKYh0M/IUAlk1GnGUF2GJZ9FAElsp+nqNu
-	PF5Ol9CxJBI4Z5uhX5ta2NLtiqJFmE50Ali0u0u31CjuuHhChk0YYoe+MdXrl8bU
-	vL3cmvD6wvi/Xo+lXNU32w==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4acyjsaw7c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 22:05:12 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADLX8YO010897;
-	Thu, 13 Nov 2025 22:05:12 GMT
-Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010038.outbound.protection.outlook.com [52.101.61.38])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vapgngw-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 22:05:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YySJAizMn591PZzft5tjaxDQ3OwRcoTp5LhJLvLQUCK7iXal2xryzlU0VVaNIA2WorvBiKWWDsDY4bfLXMfWmgKOayMDw4ZY9wBIkC2iuK5jjLgv3sbdBvrXONunsxM0xhRIxC9xAJ6nxz5GU13g6zIsqvvVomjFtO9PtBzO7fTDM6XaSjEiY3ZeY91FZzQppJSt8LFleIvNtC5LqYV7a7xrvLV6IMhrl8urb/Qi1KayIz9k5Bj5GpLfUXS/ZMZ8XcjRc2SjLsgAujXSdl3TPzjBwVpjKkNLCUULNP9r168+xbl5S6G2XL1smVh4NvPGqyXR4VTq6EbJxC38l1gGjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CR0dLmH2Ymkntdz65qIVndhBthKYXhlXuZ3eLRScYTc=;
- b=WLtibW7c09L3Si6TTlTwCbglJ5vKxgQL3AjbdfzEHVSktNv4uoF/JKUVJ27cACTtxsaXjW8pZ+vkGqMG1cG6R22ZN4B+YI8pHbQETLu4yRcd2PTHjTOK47SjND5bR3FAYgbSTtZ3wZVPDO9fK5S/eMs/rxv+GM51XAdxs4C85rhhLv0GtgLee7wPTv3WgMU0huy9H0h3dPocV3WHKEqak7WU2oitETH7hugXBnLA5gxnfWftED0d+BXCWAnX83vTLD+J92cA0FX1nA58wgZsQkijCyG2MA7RSJWQG+64oqL2Dir34wBHxWWWaKuNUiwxYL1JmUdbal+pPRxTjvtl/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0428405C
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Nov 2025 22:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763072422; cv=none; b=dyMrCPODXXFe9AJE3S6uyGnapcyg7QqfBEbFxfBEa3i3q9bw/tI0e6ipk3hb98rLQiMRNn6itr0aTWWgFiALr8yYyjSaBazSvNg7qYQzQqG5w2tFodewV2fVsIpM0aTj9AQtkfTiifWIC+90ayVEOwL0/O37WuRVf/17LND7WtU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763072422; c=relaxed/simple;
+	bh=q3qpMo01f8XaBD3HWLZ1JfzQDmrbrutVRvh9hYqKids=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NlZAXDjsO/98iXNI9M0ij2RPstKDRka0D51+zRC5pfM0PWEiUW+pbhSe4JAMJis+2FscIfaLD+ILO6aXzl6R44Jui5lNJHaSVOv6XdAH2kHGJxChf25Ge1s7FL48T7pnDKqrPFMhlW7DUWMkJgsdBiUISVxed+JIioie5O3cNwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJ0Bn01F; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-42b427cda88so961670f8f.0
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Nov 2025 14:20:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CR0dLmH2Ymkntdz65qIVndhBthKYXhlXuZ3eLRScYTc=;
- b=BCfLZ4p1HQzYnfKwba+4/4+WbbJt3Gj9lYGKKPmHQ4h8LTWa42NSFn93/r+Nx4vjKwUtNbL0GGg0NFMduxHpfkSjz0Vt5HzbQjmFfOUTo4o+Q2U1jdTdW/Kn6Z4snJW1cCJDnzt3XnQkTEVcu+o425mEM4F0DBeiqT74259dpkk=
-Received: from MW6PR10MB7639.namprd10.prod.outlook.com (2603:10b6:303:244::14)
- by SJ0PR10MB4573.namprd10.prod.outlook.com (2603:10b6:a03:2ac::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Thu, 13 Nov
- 2025 22:05:09 +0000
-Received: from MW6PR10MB7639.namprd10.prod.outlook.com
- ([fe80::69ee:3509:9565:9cd6]) by MW6PR10MB7639.namprd10.prod.outlook.com
- ([fe80::69ee:3509:9565:9cd6%4]) with mapi id 15.20.9320.013; Thu, 13 Nov 2025
- 22:05:09 +0000
-Message-ID: <03da26c1-57b1-465f-8108-424fe6015380@oracle.com>
-Date: Thu, 13 Nov 2025 14:05:06 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 0/2] NFSD: Fix server hang when there are multiple
- layout conflicts
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
-        okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-References: <20251113164043.1809156-1-dai.ngo@oracle.com>
-Content-Language: en-US
-In-Reply-To: <20251113164043.1809156-1-dai.ngo@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH1PEPF00013308.namprd07.prod.outlook.com
- (2603:10b6:518:1::15) To MW6PR10MB7639.namprd10.prod.outlook.com
- (2603:10b6:303:244::14)
+        d=gmail.com; s=20230601; t=1763072419; x=1763677219; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mxD6Va4nlrGdLx84AnZel4scwr9uai3z0FsuYN7KzXI=;
+        b=cJ0Bn01FsO1/ybg+6F92/lu3Z5xKYHlZFL0ZZEGlfH8ns/bTCmRHOLetiD7t1fuXUZ
+         x4KJfm2WwJIprceMuDGent6XFLgvNjxWZ0aovsuW+HPshf/xCGKy4hzj26nqJjSdxZlH
+         S0RNgY8fVVdNqq3CQaNV+a4nkTb7JakPELFtgJvehKd0PFV9HvJt+AMUlhTCs/dLI4Gf
+         RagvSwIHUlobTDN6B4YYXOM5ttf8XFtBGFI6rnHgizmd4ZnGmT9y+Nyff0W9khgHEcEk
+         OSy3VWBjzLlPmbVl9hNV+xrrs4OsuGxQpy4QbCMqg8GzvWIdOWEXyV8p2xKB4bflGb5a
+         ZguQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763072419; x=1763677219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mxD6Va4nlrGdLx84AnZel4scwr9uai3z0FsuYN7KzXI=;
+        b=BCjk53cTUjjnbqFhw4xIVVBQ/e50daFZDwIjTHq4f6ArVp0JQc0enUU9JNoKmUgED7
+         rao//Eho+Su2tw/tr1BC5OF7B8KJUzY78m5GPtlxbV4QfZfSsgx1PJ9pLAkZC+URcUgl
+         evHlvcLGOKFz7L+T0Fu5nHyyXI9O7MXM6/nyP15c2fA2dQCOHlREsDrQCNWePsu9PPnO
+         6P401v8/x/ezmBQjQWZVNxZdkn5Zh4yz11OO5uAz0ZaCNg49ut7bjXKvWfdlB3WQOQLB
+         Cz0630v8ME2kVdPR0K0T1SPRlRrKFQYRp4Avf3cNu8bQvKNussRknRX/pzMRRCLCLP/I
+         aZ3g==
+X-Forwarded-Encrypted: i=1; AJvYcCX9U95Jg87unsNuQL23oP0MZKso0dQB6EnWes1yQkdrKzSyOrrUGerpw8ZrMo6LyZBxxcpxFTcmFEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxaYlH91rAFIP0gIoHe19qs3f1M6dWJRT/VHEEZpbhtTSdQv3a
+	A63QpwvCIT4HNTw7UGoUFYKqTupBK50ipID1rEcBj79E2dNpIhW8p0kB
+X-Gm-Gg: ASbGnctQxLlOZQZfdnL5qJTAg3R2pO2lTK2xdHwaFsrYkzq4dvxMdjJJL3Y9snEQe8x
+	2oI6JCcGjGh+tzTMhKB5jOVxorC9d/DeDHC63m+c0phO5k9WPK0rbMOoJZn4CtiVvF++TN95kDv
+	weRV/2K1Pn0ROCSxwlJuCQUj3x7QuV7ZXbYdr3Kp9RplX31Grfj0l+dO6ixwC8Yyq681D8bjjrh
+	0rNlTTtN8Z4K675gLOvZjwTyxIvoRw7ha557KBQ5kklvg6RbXiyMRX5gb+cGeYvFVm05jaoM28j
+	lWOdBWsd/DQ1FBOnVYXfHyK7otFUsSiJ3nmNvh5zF4UG3axVK6Cy8rSZQGng9HQAdSyfoZwAB22
+	paGZRuYHCP1fzYkF2hr8EGz6gVApEqBUFGGHYCMAxNHUz9ILZGJt+R4lR7ZWjMc1rRtTf26yeMi
+	/roqA0BMqaYO3U0sNq/lzfmI3bNzai+CSDQA==
+X-Google-Smtp-Source: AGHT+IEZr/jgTUzIzh92CEqHXY9JBpXDSThmF8hDmL5x+X3hWg9F2OP0W6O2TCfdZmtA3yVNYmboqg==
+X-Received: by 2002:a05:6000:2f83:b0:429:d3e9:694 with SMTP id ffacd0b85a97d-42b5932360dmr897283f8f.5.1763072418673;
+        Thu, 13 Nov 2025 14:20:18 -0800 (PST)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e982d6sm6400196f8f.21.2025.11.13.14.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Nov 2025 14:20:17 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id D2AD4BE2EE7; Thu, 13 Nov 2025 23:20:16 +0100 (CET)
+Date: Thu, 13 Nov 2025 23:20:16 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: "Tyler W. Ross" <TWR@tylerwross.com>,
+	"1120598@bugs.debian.org" <1120598@bugs.debian.org>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Scott Mayhew <smayhew@redhat.com>,
+	Steve Dickson <steved@redhat.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: ls input/output error ("NFS: readdir(/) returns -5") on krb5
+ NFSv4 client using SHA2
+Message-ID: <aRZZoNB5rsC8QUi4@eldamar.lan>
+References: <176298368872.955.14091113173156448257.reportbug@nfsclient-sid.ipa.twrlab.net>
+ <aRVl8yGqTkyaWxPM@eldamar.lan>
+ <8d873978-2df6-4b79-891d-f0fd78485551@oracle.com>
+ <c8-cRKuS2KXjk19lBwOGLCt21IbVv7HsS-V-ihDmhQ1Uae_LHNm83T0dOKvbYqsf4AeP5T8PR_xdiKLj5-Nvec-QVTLqIC4NGuU2FA0hN5U=@tylerwross.com>
+ <c7136bad-5a00-4224-a25c-0cf7e8252f4a@oracle.com>
+ <aRZL8kbmfbssOwKF@eldamar.lan>
+ <1cee1c3e-e6b9-485a-a4d4-c336072f14c3@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW6PR10MB7639:EE_|SJ0PR10MB4573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6660f4d5-5c98-4d9d-487c-08de2300b5ba
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?MUZTYWF5Z2dCMlBaQ2Y1ZXFLN3llR3VjYjAvS1huTzFMT3NGUWhrU3hKRnhR?=
- =?utf-8?B?WGhGckY4TlpzUTZoc2VqTEhzQitCbENKY2RnenhoZzhIVWdVQVV0R3FRMklX?=
- =?utf-8?B?aHZYMW56NWg0SVNMS2dsM0U2UzdpUmZDWHFSejk0MDdSWExhQ1J3RFk1NEhF?=
- =?utf-8?B?QzdnSzIzT25MUXFhbk9CZERTRTR6bmNVbFhWOVNzY1Rmd1dIRlUrcTUrNW9s?=
- =?utf-8?B?MlVQL2cxbmxWSm1HYlUyVmQzK3owT3NjVFI5N2dwRnZkNGxvekswNng3UzJN?=
- =?utf-8?B?cldvcVJOaVFCbXFIUUU5YlhYaXhrUCtON0hWWEpmVmgrUSs2ZmtNVzRmM1VL?=
- =?utf-8?B?czQ1UWpaazdhSVppT1p1eWJFbVo0WU5tRy9YOWh5Si9aS2dnQlpJSHpmY0hl?=
- =?utf-8?B?ck9jdjJBdTBpSGhybWFGL3lxV0wrVURUdWErTmo2Mm55Q3I5VUhQZUdWNHVy?=
- =?utf-8?B?aGlqZW0xVTNPR2RpUFdrd0U4RWJQcVFSRXFGVTVMVnBnZkQ4aG5UODlXNDFQ?=
- =?utf-8?B?MDNMdFRuS04xSVZXWGU3UGhYZmlKU2xvTGRPYXJrbjc5cC95QzFkMnIwUER0?=
- =?utf-8?B?eE9OUFUwTnBkSWJUUDM1Z0d3bTNhWmtueGRTK21JcUFhM2krSDRub2VVeXZQ?=
- =?utf-8?B?bDZOYmhGNHVFUjZTNzVGOHJIdUhXYnVUeW1yRUV0SWtqazRVNFJ4aWxzWUJ4?=
- =?utf-8?B?OWpLSjNJS1JrSUxUTko4cXpLQm9ZendsWm1sUWY1cWdHWjdBMndmRTRyRmF1?=
- =?utf-8?B?QUxROWxYdlBtMlplRjMyWEFWeThCd2F4bWh4MjlqYWlrdzRiOVNVdEdVNW1z?=
- =?utf-8?B?NFA5SjYwMkl5NS9OV2NXSC8wUmFTd0FucG94bzJKekVkc0xPQ0RWUzhVWmdX?=
- =?utf-8?B?WmlKZ0JwODFGeGhpMk1kZDFBTmNQak53WHdpL3FCb2xoNG1kK0xqUXM1ZkRi?=
- =?utf-8?B?bzh1VGtxV3VYNUhleHdSQUhYb2hLQ1VGcEs2TW1EZFB3R2g5RzZ5TlNhLzI4?=
- =?utf-8?B?M3g3c3JxUDB1d1VNd0cybE95NmxmdFU1S05iOWloT1hBN3JQMGs1QUZDMVZ1?=
- =?utf-8?B?RzN6QnFJY3M4U1E4dTF5NC9CaGFDcjBTeFJUUS8xZXd2RDRzaXA5TTNQc1Jq?=
- =?utf-8?B?YzdJQktESUZuYVRNd09pdERmaHBlZ1A0aGpYNyt5b2lseHpVTWNMaEtCTVM2?=
- =?utf-8?B?WWxCcFJ2QksyeXF6QXRlVmMvOHBSNitGZ1pSLzgxUTgwQVJSOHo2Y25QWkxu?=
- =?utf-8?B?YXlRZC9UVmN4bjIzUEh5WUd5Q2FqaTVvR3dxZnI4VWVHZmw0RzNJTEVCYVJw?=
- =?utf-8?B?UWhCV1BlL25kTHJGS09wRFZ2STkvUHNrN3VYNTZLMVliZGxYb2lCd2ZHTHh3?=
- =?utf-8?B?cXNweEludTcwZ041bnpSL3lzL3FZMW5qaFF0M3dZK0p2dG1YcjFxa0M5WitY?=
- =?utf-8?B?RVNCNk1MWVZLOTUwNTkxWnZiZXBtSFVNa1oyQTE5Q0Qxejl0Z1VHYWdjaVRW?=
- =?utf-8?B?ME4wZ0pZN3kwcmgrVG9hTDlKRWFhdTIrM2o3aGdxWEx2VFJZTnFQNXo4SGNH?=
- =?utf-8?B?MUNDL0YyU1NDL3hxOGcyNSs5U3RRc0ZESXp2YmM5U3RaRzBEaE5PdmgwL1lF?=
- =?utf-8?B?b3VOSzdKc2szZmw4YUM3STY1N3BoSUUzN1NFU3B0N29EYzRhczZJaVQybldJ?=
- =?utf-8?B?TmppU05VR0hHUUllcDk1a2JwVFZ5QUFWZzQxYU5ZL1hieUtVcytISDQ1SFI2?=
- =?utf-8?B?c2V4M1hSOEpLZENKRGdMTmNOMjJnTGl1SUhZMlM2YXVrV1BxMmRHa1luZW9Q?=
- =?utf-8?B?cTk3VDh0aFlWdk1iR1phQXNIQXpGckJPdDQ2M2lBVXJlWnZqY0xsNkxncFlP?=
- =?utf-8?B?aUhmZUQ0S1NHZEpsOTV3VzRibTFmOGNNTTR0ZzFndWxYSkljZ05JYk9nQ25W?=
- =?utf-8?B?UTVwQUpnaGpEaFFPb0ZYNHNSOXpyM0hVNzFSbmhXQWRKZURhQVRSRWMrVlhW?=
- =?utf-8?Q?iQcvfZFNYJxcKJk+wvXHWhakiJtp6s=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR10MB7639.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?aXZzNmx1bVZ2bDU5Q3NiZVpQM3phZnFkNE5IWVkwWG02eDFvdStiR3NZZXNK?=
- =?utf-8?B?emJHT1NneUdubTNQeFB4VThqM21sTlhTaWcwNzcwZGs3Qi9FZWMyUFhsTm02?=
- =?utf-8?B?bmdNOWM5ZW1lZ3RoSjdaUmhxb2ViNG40SzhaNmRrd0o5MVRSUWFiTG00UGpL?=
- =?utf-8?B?ZDVNL3RKWnJ0SDJzUUxmNmpEbC93RXlpS2tWd1hrcWJURWJycmdML2o1S0t5?=
- =?utf-8?B?cDhHeFc3MHBEUkUzcHNoTTZMUjh5TmlTK3dMUE44WDdXU0NwaEFFYUhwdzlZ?=
- =?utf-8?B?Z3k4UVZQSUh3Z0pMSWxsUG1HV1RKODNzazgrY052UUNVcFpzQmlCUEpXMENQ?=
- =?utf-8?B?elFOR1FkWlRPMVdQK3RBTVB2WWVGUFZIT3Y0SEsxUk5pZitMS0lDWExYdExw?=
- =?utf-8?B?NGJMTzdHNnVBd3dkQjBhVWE5WjRzNXkvRXVGaTRYZFJRakx0aUVvclJlN2d5?=
- =?utf-8?B?OE1MckdtT0lVa21LMmVQb1h3TVk0YXhJblV0ZFFZSXlhcHFMc3FBd080enkw?=
- =?utf-8?B?YzlXOC9QcFZlNVRIdmxUbVB0bVUrSnRRRGFMQzNSekF0Sld0aHV3N3lOQWhH?=
- =?utf-8?B?RjVITWJlaUJINHlSYmUwbzJDUTlzdjM3bkowR2ZPWjIzNFlJL05nZ1ZuaGtt?=
- =?utf-8?B?Z0xyeURuVUFjekVlanQwVWhQclJ6N2RwbnR6MEdyYWRURm53cG04N3M5MFhV?=
- =?utf-8?B?c3RkVXFveTBwL29hYURPVDloc1EvZk93aFRxT3JFSVpHcXk5NFZMNXhTOGd2?=
- =?utf-8?B?WFovZndtQjdRTTQySTE3ZHJ2cWdQanFURXhYR012WUtseE10V2ovQllnQlJs?=
- =?utf-8?B?aDVIQ2VJajNDVk1IZWd1SEx5UjQ5MVVWbDdTOEh5VGlpanVsYzBpYnhjRWdN?=
- =?utf-8?B?bmxyYTN1cWdMQTY0ZUpsQU1PTzU0SmJ5UlpIcEVOM1BqQ1R4VkxoUnl0OTND?=
- =?utf-8?B?Q1d4bUdiK2VrTUVnSzM2Wk12MHRodnlBTDRZTC9JVVJXU2hFWU9NRzlmQUZK?=
- =?utf-8?B?SzBuN09GVTl6a3g5c2RpS3VmSWg4T1V6aDB1SjRlblVxSk8vQ0FsZFJqZ2ht?=
- =?utf-8?B?MnF3ZVVaaUcwZklZYnRzd2NBYTJHOFZDMlJPb2hGZ2lpTkRldmRZTzJWTHQv?=
- =?utf-8?B?b1I0ckhVdmk5M1R6VXFQaVV4K3diNTVxYklnTkJvSm5DNGZkbDM0ejQ4WXVx?=
- =?utf-8?B?YitZbWl5TTAvTXphSitRR1N4eitWU0JsMTY3R3BqQzdSSjdCWklVenBsOWdh?=
- =?utf-8?B?cU1XejZHNDNpdVNrREF3Zzk3MW56WUk4U3N3YlJLRGJmRzVTdjByMks0Rm42?=
- =?utf-8?B?Q3I0Z2t0dENUQ0tBdzVPQjRnVHJkR0hWNTZHeTg3cTBBaUdvWEk4T2dCTzBs?=
- =?utf-8?B?emNHL3BIREtyRzdQWFRFUHF2RVgyWlBkZlN3ZGIyV3JhQTdWNm9QcTNIL0Y2?=
- =?utf-8?B?eTNVWHJHVTJXUW44dHdMVEJDUkRvcEJTbmE1VTlDUVo2V2w3M0t6ejVYMXNz?=
- =?utf-8?B?NG9jNy9kWmNrb1p1azlhb1p5S3Z6YVAyQ0tqMWhMeFl3anpxTEpvTGhlODIz?=
- =?utf-8?B?dldKZ2l6YlZYTmw0L09INVRtSHZvdDFybjdqSmw3ZTV0b2FSdExmei9CSFVW?=
- =?utf-8?B?a3B6c2tHNlNOZFViVklQcHhkUko3Z3lUTDVTa2w0UW04WlJZc0JaUmd3K2lY?=
- =?utf-8?B?MXZ2dlgxZnBqWE0xTTlLeGNrT3dPclpxbHhZNnEyMFMwUitIS0xzTGtTVlN0?=
- =?utf-8?B?QVg1aExJSDRhY3phbHA0MkhqWGhTV3ZJR2V6aFIwMDR0Y3FaMXlBMU1NNlFZ?=
- =?utf-8?B?S2F1SzEzMEs1cTh0c21yYjU5Tno3Y09jUHpyaEgvZ2Z2eXpVVkd4eDVrQlFr?=
- =?utf-8?B?Z01zdnMwMWxrT0F6TmxyeHYwSUFkUFdzVWJXK2lQTXF4OUV4L2Y1NlhaaGRP?=
- =?utf-8?B?dWQvZ0xycXJRL1VIQXI1dlI5bTJhQmhYQ3hpeUxPRHkyY3ZHRnVQT0txSlpW?=
- =?utf-8?B?UHZIejZRd01sOUUrK0RzNHpHRUwrTzdhRVh4VnFYc2pUU2o3OU9qUllIMUpq?=
- =?utf-8?B?WUVFbnpmTVpKUGFrNGh2cFZCVUp3elYyMFVkUmllZHpOYkJzTWNsVlhjYU1r?=
- =?utf-8?Q?c/WHUQBjO2vKdDRbUtb4MG/gL?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	n4TLNfbfdUEUx056b4TCF0WC/g8k0K+RYuuNb5JGBogXXiiLeSuOsTGDpEnqJFJ+4TIhXl5bPm485EyhiGSd9qYacxpMQ6CF0a1+7UHGcUdLlGcKjPUPMVa2b+qONMg/tGuuUq21yCU3PkfteN8Mbi5WjI63euPJsyI+E3TloTAUvuykHL97Tm79RimuS2k+VhWZRhxI4B/iLGeRGFjksVTxMY48UyQNyNGLlZZnUpvkzRujVAMjImp/HUCmuZTqQS9QKTAs6zJswPfkn6gEdftol80cKlrx4qv6aUWYeZgmHICxJH5meyBWQZxGroClrV/GkdxYC7gQ1kuFVJkPEOdVwIRkcYVoPybW7kPr32sCe0ftVmvkAifnH+0Mak94G5pFxogpVKBipJiy2mapDfEZlskZA5SXEEKOdwpK1uhRddqSc0qN9npKgmW5l7NI0ZXjUbOHaOolnthocJ8+3Ia1gcDkwqK/QNKoBkiIW3s+K4Wtar5PPSGX9uVzirQ8fkCD+YJpZWThiZXuCGcXqqJOMseGp7xK/S12JQXbCH0nY4ZjG4eI/o+kd9gUm0qZdtXX2x7i0EFq+Eb1wVfDXDhmPx+rF5w4k3U0Gv3Jj2k=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6660f4d5-5c98-4d9d-487c-08de2300b5ba
-X-MS-Exchange-CrossTenant-AuthSource: MW6PR10MB7639.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 22:05:09.1085
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UNYAcBS3QwDYN4FWVHyulsV3LHUtk4hFj4neMOM9l6sWkCyV6amL1GvC/nZ0Cw8EQ3ik4bLJ6zaS3hMaqlA68w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4573
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-13_06,2025-11-13_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2511130173
-X-Proofpoint-GUID: nKlD0xXazBsd2f_D2LekQvOu3f1Vv6SO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDE0OSBTYWx0ZWRfXxTBZmlEIFdCc
- w6TWyV341pR1cFHcOa+yKiazag48hTLYRqm4aCa/XP0yIDX0yS4OI7QH8R4Q6fZ/nlsxIx0A9wx
- FdBK7WFdLwNWkXmP6TGrCDGFEhsozIFNEw+xUNRFLJ3aZHaH5flDhLxng95I8Qt3gtu78yznTmG
- +09dpEyKNGF5zT+A0xGktuzGlEqphGVBp/llzyrv+ZKZJ8s+BJtlj0H33SdvTw4h7aC6zqtVVM2
- qTkn1YcUWZXesbqsdxgm0i0I66Ba+NGwUNOZKCSCYrL9nuTIVDqeusIzhJfiBPz0tZNT3zY0JhJ
- fEmRgyV+/XZYMTV6AzTRfutdfTW0dbWIxxrIlgyDTJ4RzqB+xeaLOq0BKHYpe7Swc/CmZxcMcJG
- XF1IYxF7BWTKG2K/N0LKBd4Q8JXoDq5ZfajglgVc/OR/YVjheuA=
-X-Proofpoint-ORIG-GUID: nKlD0xXazBsd2f_D2LekQvOu3f1Vv6SO
-X-Authority-Analysis: v=2.4 cv=HLzO14tv c=1 sm=1 tr=0 ts=69165619 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=L3MgVh_lYD9YF1JyEg4A:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:12099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1cee1c3e-e6b9-485a-a4d4-c336072f14c3@oracle.com>
 
-I will resend v2 with some minor changes.
+Hi Chuck,
 
--Dai
+On Thu, Nov 13, 2025 at 04:23:52PM -0500, Chuck Lever wrote:
+> On 11/13/25 4:21 PM, Salvatore Bonaccorso wrote:
+> > Hi Chuck,
+> > 
+> > On Thu, Nov 13, 2025 at 12:47:23PM -0500, Chuck Lever wrote:
+> >> On 11/13/25 12:16 PM, Tyler W. Ross wrote:
+> >>> Thanks, Chunk.
+> >>>
+> >>> Suggested trace-cmd report from the client follows. Last 3 lines appear salient, but I've included the full report just in case.
+> >>>
+> >>>           <idle>-0     [001] ..s2.   270.327040: xs_data_ready:        peer=[10.108.2.102]:2049
+> >>>    kworker/u16:0-12    [001] ...1.   270.327048: xprt_lookup_rqst:     peer=[10.108.2.102]:2049 xid=0x7b569c7a status=0
+> >>>    kworker/u16:0-12    [001] ...2.   270.327050: rpc_task_wakeup:      task:00000008@00000005 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=0x6 status=0 timeout=15000 queue=xprt_pending
+> >>>    kworker/u16:0-12    [001] .....   270.327054: xs_stream_read_request: peer=[10.108.2.102]:2049 xid=0x7b569c7a copied=988 reclen=988 offset=988
+> >>>    kworker/u16:0-12    [001] .....   270.327055: xs_stream_read_data:  peer=[10.108.2.102]:2049 err=-11 total=992
+> >>>               ls-969   [003] .....   270.327062: rpc_task_sync_wake:   task:00000008@00000005 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|0x4 status=0 action=call_status
+> >>>               ls-969   [003] .....   270.327062: rpc_task_run_action:  task:00000008@00000005 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|0x4 status=0 action=xprt_timer
+> >>>               ls-969   [003] .....   270.327063: rpc_task_run_action:  task:00000008@00000005 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|0x4 status=0 action=call_status
+> >>>               ls-969   [003] .....   270.327063: rpc_task_run_action:  task:00000008@00000005 flags=MOVEABLE|DYNAMIC|SENT|NORTO|CRED_NOREF runstate=RUNNING|0x4 status=0 action=call_decode
+> >>>               ls-969   [003] .....   270.327063: rpc_xdr_recvfrom:     task:00000008@00000005 head=[0xffff8895c29fef64,140] page=4008(88) tail=[0xffff8895c29feff0,36] len=988
+> >>>               ls-969   [003] .....   270.327067: rpc_xdr_overflow:     task:00000008@00000005 nfsv4 READDIR requested=8 p=0xffff8895c29fefec end=0xffff8895c29feff0 xdr=[0xffff8895c29fef64,140]/4008/[0xffff8895c29feff0,36]/988
+> >>
+> >> Here's the problem. This is a sign of an XDR decoding issue. If you
+> >> capture the traffic with Wireshark, does Wireshark indicate where the
+> >> XDR is malformed?
+> >>
+> >> If it doesn't, then there is some problem with the client code. Since
+> >> Fedora 43 is working as expected, I would guess there's a misapplied
+> >> patch on Debian 13's kernel...?
+> > 
+> > if it is helpful: Debian follows the stable upstream releases (6.12.y
+> > for trixie/Debian 13, right now 6.17.y for Debian unstable) and we try
+> > to keep the patches limited which we apply on top. So far I see none
+> > which touches net/sunrpc/. The patches applied:
+> > https://salsa.debian.org/kernel-team/linux/-/tree/debian/6.17/forky/debian/patches?ref_type=heads
+> > (in case this could help narrowing down more the issue).
+> > 
+> > But we could try here additionally, if Tylor has the possibility to do
+> > so, to try directly the 6.17.7 upstream version without Debian patches
+> > applied.
+> 
+> A bisect between broken v6.12.y and working v6.17.7 could identify
+> what is possibly missing from v6.12.y.
 
-On 11/13/25 8:39 AM, Dai Ngo wrote:
-> When a layout conflict triggers a call to __break_lease, the function
-> nfsd4_layout_lm_break clears the fl_break_time timeout before sending
-> the CB_LAYOUTRECALL. As a result, __break_lease repeatedly restarts
-> its loop, waiting indefinitely for the conflicting file lease to be
-> released.
->
-> If the number of lease conflicts matches the number of NFSD threads (which
-> defaults to 8), all available NFSD threads become occupied. onsequently,
-> there are no threads left to handle incoming requests or callback replies,
-> leading to a total hang of the NFSD server.
->
-> This issue is reliably reproducible by running the Git test suite on a
-> configuration using the SCSI layout.
->
-> This patchset fixes this problem by introducing the new lm_breaker_timedout
-> operation to lease_manager_operations and enforcing timeout for layout
-> lease break.
->
-> V2:
-> . replace int with u32 for ls_layout_type in nfsd_layout_breaker_timedout.
->
-> . add mechanism to ensure threads wait in __break_lease for layout conflict
->    must wait until one of the waiting threads done with the fencing operation
->    before these threads can continue.
->
->   Documentation/filesystems/locking.rst |  2 ++
->   fs/locks.c                            | 30 ++++++++++++++++++++++++++----
->   fs/nfsd/nfs4layouts.c                 | 25 +++++++++++++++++++++----
->   include/linux/filelock.h              |  4 ++++
->   4 files changed, 53 insertions(+), 8 deletions(-)
->
->
+There seems to be a missundestanding? 6.17.7 as present in Debian
+unstable is neither working, at least Tyler said:
+
+> 2. Freshly installed Debian sid via mini ISO (2025-11-01). Same
+> configuration as 1/above.
+
+which includes a 6.17.y based kernel (6.17.7-1).
+
+Regards,
+Salvatore
 
