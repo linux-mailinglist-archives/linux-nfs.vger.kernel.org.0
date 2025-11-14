@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-16409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16410-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF900C5F3DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 21:29:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 64FA7C5F3DD
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 21:29:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7E3DE348AFC
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 20:29:41 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 42004348692
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 20:29:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B100346785;
-	Fri, 14 Nov 2025 20:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F2233F8C1;
+	Fri, 14 Nov 2025 20:29:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6SXPr+M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVwAoRei"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3653A342536
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 20:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA400342536
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 20:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763152177; cv=none; b=JxhAAADkkVxoCsYQ4WlkgGCZAqpLxcMUL9FZdsGHrOc5BbdmQoujhUUgAMejGsuycq/7TVa7p+nu+ofBxcHFNxH4iPR3nU5FqLJ4T2lkOuo6EZidY/Xq+yqYTKdhvEahvVwjgfpWnUOhfKMw/YdLjejQsG0BbTOXWGXwLTEAk5Y=
+	t=1763152178; cv=none; b=OQ6PkPqTGe+pYFlFadr91ZcHRrlo09bMl/EdldBq8lUvEmOaRw21yfcrLyYAkZmLVp3hD5pjA8AuoQROrI2OxKUwAbLMzm7xehC0R6RYlaWj/5xb3AvMzuZz4dK9Ts0TEfovV/U5FTrSf8VpJvZ+bEbX4sGSubexfGoTw7IRQrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763152177; c=relaxed/simple;
-	bh=awiYQNSghYO15CxFZ3Clw+Fkg6PjC2x1pFVzNVMSqOQ=;
+	s=arc-20240116; t=1763152178; c=relaxed/simple;
+	bh=lcVdmU5vz7a+l0gC4ZEeBa+XBngETbEwW0f7bZfrPtE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CaZXAsYdo9sULtUgxN2tzXV9mZVJLfHQ4nGeO3cPX9Q4CGPWWZSmZgbHOBTHGP7B5iTfEq3WQcKFCw2sGK1D3vh9FUB0i99n3phd2N1Xt0Es0VBuwmxWCMMzkn39anLx05eZSJj9/vaMD70kjr8mFIyTsrayJVtUEaCxViiYUhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6SXPr+M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB96C4CEF8;
+	 MIME-Version; b=Vw3wPyI4/yA54KQySndzBTC0aIkpAtJ22R20rHMvy8g52MPQ1tcxYbf9lZoqkuadFsHBgCodAi9TlkzNlVWfLCZ8Lety7JYjcDK41DtqQH6o3XTQtHUj7YO5WFdREOgLVpCjHNiBWvox/GgXUq4cUSKcaBGEnlUDZ3gCs7hE4VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVwAoRei; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060BCC113D0;
 	Fri, 14 Nov 2025 20:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763152176;
-	bh=awiYQNSghYO15CxFZ3Clw+Fkg6PjC2x1pFVzNVMSqOQ=;
+	s=k20201202; t=1763152177;
+	bh=lcVdmU5vz7a+l0gC4ZEeBa+XBngETbEwW0f7bZfrPtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t6SXPr+Mq6BbY0LLXeoD7fwrY02lfAOvvItQfMgoTRXP0GQKafvH9N3x9U34naizE
-	 RvvgiG+9dkoNtq4pqhYzHVp6m+Isrl26ydO0nGYmfjwmz2f/T65D7YG/1tz40ikYrM
-	 2YzFCABDaBgE7RlH9QVKWGzVWUdoG78almZfMEFMFiueHVDChchJp+4Ij0owp4s/ld
-	 OIJL4eDXFLlY2z9Rxh1l5cYvRK0gnhq3CDTk1wHCyKiK7ro+JSUWbtSdqkQY1Opprg
-	 dt7k2dP/bJ0p+fgQnj89ji7zU/f2l+F9mNlm6Ngckpe0lrT9iaFCikoRen28aVxUR3
-	 r4lDhy3ykXBKw==
+	b=rVwAoReikhuLhqaYZntozsrXFS8Ve+YJJFKZJBqxBZXBaPbAh3Gh7xufld7SkMwF0
+	 9zLd0evNA6lfvxsnpnImj3LKn7kaKePjz/+wzpHlbjt9gIjgwahEUGCdvyQO96dq8o
+	 +wCOl74dCplbcubagcudUasWJfJWBDB5k85FluHlMnCdDLbebzKyp/WmKxsd5VM3Ts
+	 D8N0qRARVhSd6TT96t7Bx29XCia2tCWzXQ5KLaVtWJ8DNpW6ZOKZMzomqPhXbghqTu
+	 traiK6zy3bCag9LpuyJz/99+KbZOeECPrnbQkfhnXy3xpwv0J7POWDTc3YB3ny4vg0
+	 LLKeg8SPb5vfg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 1/3] NFSD: Clear SECLABEL in the suppattr_exclcreat bitmap
-Date: Fri, 14 Nov 2025 15:29:31 -0500
-Message-ID: <20251114202933.6133-2-cel@kernel.org>
+Subject: [PATCH v1 2/3] NFSD: Clear TIME_DELEG in the suppattr_exclcreat bitmap
+Date: Fri, 14 Nov 2025 15:29:32 -0500
+Message-ID: <20251114202933.6133-3-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251114202933.6133-1-cel@kernel.org>
 References: <20251114202933.6133-1-cel@kernel.org>
@@ -81,32 +81,29 @@ an NFS server to indicate that it /doesn't/ implement an attribute,
 but then also indicate that clients /are/ allowed to set that
 attribute using OPEN(create) with EXCLUSIVE4_1.
 
-Ensure that the SECURITY_LABEL and ACL bits are not set in the
-suppattr_exclcreat bitmask when they are also not set in the
-supported_attrs bitmask.
+The FATTR4_WORD2_TIME_DELEG attributes are also not to be allowed
+for OPEN(create) with EXCLUSIVE4_1. It doesn't make sense to set
+a delegated timestamp on a new file.
 
-Fixes: 8c18f2052e75 ("nfsd41: SUPPATTR_EXCLCREAT attribute")
+Fixes: 7e13f4f8d27d ("nfsd: handle delegated timestamps in SETATTR")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfsd/nfs4xdr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 30ce5851fe4c..51ef97c25456 100644
+index 51ef97c25456..8f12dee4c3b5 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3375,6 +3375,11 @@ static __be32 nfsd4_encode_fattr4_suppattr_exclcreat(struct xdr_stream *xdr,
- 	u32 supp[3];
+@@ -3379,6 +3379,8 @@ static __be32 nfsd4_encode_fattr4_suppattr_exclcreat(struct xdr_stream *xdr,
+ 		supp[0] &= ~FATTR4_WORD0_ACL;
+ 	if (!args->contextsupport)
+ 		supp[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
++	supp[2] &= ~FATTR4_WORD2_TIME_DELEG_ACCESS;
++	supp[2] &= ~FATTR4_WORD2_TIME_DELEG_MODIFY;
  
- 	memcpy(supp, nfsd_suppattrs[resp->cstate.minorversion], sizeof(supp));
-+	if (!IS_POSIXACL(d_inode(args->dentry)))
-+		supp[0] &= ~FATTR4_WORD0_ACL;
-+	if (!args->contextsupport)
-+		supp[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-+
  	supp[0] &= NFSD_SUPPATTR_EXCLCREAT_WORD0;
  	supp[1] &= NFSD_SUPPATTR_EXCLCREAT_WORD1;
- 	supp[2] &= NFSD_SUPPATTR_EXCLCREAT_WORD2;
 -- 
 2.51.0
 
