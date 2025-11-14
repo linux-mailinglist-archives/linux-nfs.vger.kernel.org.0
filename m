@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-16408-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16409-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC0FAC5F3D7
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 21:29:39 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF900C5F3DA
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 21:29:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C03794E0369
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 20:29:38 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7E3DE348AFC
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 20:29:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97FA1343D75;
-	Fri, 14 Nov 2025 20:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B100346785;
+	Fri, 14 Nov 2025 20:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfG60flH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6SXPr+M"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739FC342536
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3653A342536
 	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 20:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763152176; cv=none; b=EDYKS0ycXT7MRuoZda/MwJUCa51UVstzj1fiDnZSbnZ1w6k4mUUzVHqijOPQU+D6d5FxRwi/XiY94rOpiFVtqiOcgvYaHTrYOBnXZtRntfksrkb7gIu4iXEpjdzaJdbaWxCPMBue6ILQFUER03qV1Jlp7ZL6F1A5/nB9/gw3CcI=
+	t=1763152177; cv=none; b=JxhAAADkkVxoCsYQ4WlkgGCZAqpLxcMUL9FZdsGHrOc5BbdmQoujhUUgAMejGsuycq/7TVa7p+nu+ofBxcHFNxH4iPR3nU5FqLJ4T2lkOuo6EZidY/Xq+yqYTKdhvEahvVwjgfpWnUOhfKMw/YdLjejQsG0BbTOXWGXwLTEAk5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763152176; c=relaxed/simple;
-	bh=TW77I05qDQAOMaqkBjgxZJolt2m7oSCeDJmiQbOPv4U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F649GjfivY9abB1OUp/CVBLRkQoAaTamPZ2Qpf/3mIojVPLrYukuqdy1LSfbt1tlta0M6SokEeuyl9F7RymQL68p8OKMzUpKtZkbrrVl28OuaQACbRYjdiOLS/yp7ygkYlbWea+PgdaeINyx2cbnfZEe4klAD3H5VX52ILKeKoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfG60flH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67063C4CEF5;
-	Fri, 14 Nov 2025 20:29:35 +0000 (UTC)
+	s=arc-20240116; t=1763152177; c=relaxed/simple;
+	bh=awiYQNSghYO15CxFZ3Clw+Fkg6PjC2x1pFVzNVMSqOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CaZXAsYdo9sULtUgxN2tzXV9mZVJLfHQ4nGeO3cPX9Q4CGPWWZSmZgbHOBTHGP7B5iTfEq3WQcKFCw2sGK1D3vh9FUB0i99n3phd2N1Xt0Es0VBuwmxWCMMzkn39anLx05eZSJj9/vaMD70kjr8mFIyTsrayJVtUEaCxViiYUhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6SXPr+M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB96C4CEF8;
+	Fri, 14 Nov 2025 20:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763152176;
-	bh=TW77I05qDQAOMaqkBjgxZJolt2m7oSCeDJmiQbOPv4U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OfG60flHKHf1ynsDOssW8i3EKB2Zzk8R5+MebLUOMkVw6fG/Kg5meC2DUY1ZISjic
-	 2ituiu27drLSufBsnM3qRsA0TQNaEmRVW/oKupW5s9LIAlI8Vh1U8ZliuZGcsbAU4p
-	 j9jkkvB2sDiCOZHQr1b0TT047OAETWPSdOdeb4xar9q2H76O1MFy5jzDCusgomYLVn
-	 TOVt4LhPnBep5m6dLFBeVakJD04c9k136q0kw2nd5LR5s8k3r6xLNs4mnfnWFITXRL
-	 W6HHrGay8ghS+ftUL5hqCfKzvlL1C2/HO2Fp9UuFO3auhuLj288dj+MLrO3deCQm04
-	 fWz2w0sCx3FjA==
+	bh=awiYQNSghYO15CxFZ3Clw+Fkg6PjC2x1pFVzNVMSqOQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t6SXPr+Mq6BbY0LLXeoD7fwrY02lfAOvvItQfMgoTRXP0GQKafvH9N3x9U34naizE
+	 RvvgiG+9dkoNtq4pqhYzHVp6m+Isrl26ydO0nGYmfjwmz2f/T65D7YG/1tz40ikYrM
+	 2YzFCABDaBgE7RlH9QVKWGzVWUdoG78almZfMEFMFiueHVDChchJp+4Ij0owp4s/ld
+	 OIJL4eDXFLlY2z9Rxh1l5cYvRK0gnhq3CDTk1wHCyKiK7ro+JSUWbtSdqkQY1Opprg
+	 dt7k2dP/bJ0p+fgQnj89ji7zU/f2l+F9mNlm6Ngckpe0lrT9iaFCikoRen28aVxUR3
+	 r4lDhy3ykXBKw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,10 +49,12 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 0/3] Update suppattr_exclcreat bitmask
-Date: Fri, 14 Nov 2025 15:29:30 -0500
-Message-ID: <20251114202933.6133-1-cel@kernel.org>
+Subject: [PATCH v1 1/3] NFSD: Clear SECLABEL in the suppattr_exclcreat bitmap
+Date: Fri, 14 Nov 2025 15:29:31 -0500
+Message-ID: <20251114202933.6133-2-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251114202933.6133-1-cel@kernel.org>
+References: <20251114202933.6133-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,25 +65,48 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-While working on some new pynfs tests to verify the behavior of
-OPEN(create), I found a couple of bugs in NFSD's suppattr_exclcreat
-bitmask.
+From RFC 8881:
 
-I've split this into two "fix" patches, because the fixes have
-different LTS blast radii. The third patch is a clean-up that
-should not be backported.
+5.8.1.14. Attribute 75: suppattr_exclcreat
 
-I will post the new pynfs tests under separate cover.
+> The bit vector that would set all REQUIRED and RECOMMENDED
+> attributes that are supported by the EXCLUSIVE4_1 method of file
+> creation via the OPEN operation. The scope of this attribute
+> applies to all objects with a matching fsid.
 
-Chuck Lever (3):
-  NFSD: Clear SECLABEL in the suppattr_exclcreat bitmap
-  NFSD: Clear TIME_DELEG in the suppattr_exclcreat bitmap
-  NFSD: Clean up nfsd4_check_open_attributes()
+There's nothing in RFC 8881 that states that suppattr_exclcreat is
+or is not allowed to contain bits for attributes that are clear in
+the reported supported_attrs bitmask. But it doesn't make sense for
+an NFS server to indicate that it /doesn't/ implement an attribute,
+but then also indicate that clients /are/ allowed to set that
+attribute using OPEN(create) with EXCLUSIVE4_1.
 
- fs/nfsd/nfs4proc.c | 40 +++++++++++++++++++++-------------------
- fs/nfsd/nfs4xdr.c  |  7 +++++++
- 2 files changed, 28 insertions(+), 19 deletions(-)
+Ensure that the SECURITY_LABEL and ACL bits are not set in the
+suppattr_exclcreat bitmask when they are also not set in the
+supported_attrs bitmask.
 
+Fixes: 8c18f2052e75 ("nfsd41: SUPPATTR_EXCLCREAT attribute")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfs4xdr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 30ce5851fe4c..51ef97c25456 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3375,6 +3375,11 @@ static __be32 nfsd4_encode_fattr4_suppattr_exclcreat(struct xdr_stream *xdr,
+ 	u32 supp[3];
+ 
+ 	memcpy(supp, nfsd_suppattrs[resp->cstate.minorversion], sizeof(supp));
++	if (!IS_POSIXACL(d_inode(args->dentry)))
++		supp[0] &= ~FATTR4_WORD0_ACL;
++	if (!args->contextsupport)
++		supp[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
++
+ 	supp[0] &= NFSD_SUPPATTR_EXCLCREAT_WORD0;
+ 	supp[1] &= NFSD_SUPPATTR_EXCLCREAT_WORD1;
+ 	supp[2] &= NFSD_SUPPATTR_EXCLCREAT_WORD2;
 -- 
 2.51.0
 
