@@ -1,119 +1,95 @@
-Return-Path: <linux-nfs+bounces-16391-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16392-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF79CC5B95A
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 07:39:13 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2CA3C5D1F4
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 13:32:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 46E164F0F1D
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 06:32:39 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E9D1F34E977
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 12:24:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDFF3016FB;
-	Fri, 14 Nov 2025 06:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EBE4136358;
+	Fri, 14 Nov 2025 12:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wDjPg/Hn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L88J3kMN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8967A2F25FA;
-	Fri, 14 Nov 2025 06:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04274BA3D;
+	Fri, 14 Nov 2025 12:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763101710; cv=none; b=r46qDz5RXhXJD6V3Fw8Saj7fgbJhbS/seFbvctPx00YrKWbx0DWWGm77F0HeCV327jtmrqBiDB0EBe8h5IcgXBhjFVYTRAB7BgnBgjs+MUOfbWACtIAXpYurfEOdbTl6O0n0x3w/4/SyQ7IiMsroQ0jiZghhVCXYWXx1v2xuukE=
+	t=1763123092; cv=none; b=M2u5i/QIENyB9GgQz58g43qoBJYxuGR9Wday9Gv0wvi8f0WZTvQxcITPn7qfGLS77BP7dA421w146Tiv77mPFc3t2R2EWcwL/5M5YtZFNOa5nDjT77fjMZvc2jMjo/WPzgjL6FACfmlgqGKX8rp6wx0ZKMKpWOXO35iuqYBZ1Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763101710; c=relaxed/simple;
-	bh=Px//exW9w+i1Xyx0n/Gu2ivv2DKbOfMBeouZxCEIvg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ml1BggoMyumwRgwONzKZtibJsqmCW2f5255RTbTy0mW71DJ4voNhxj1IOZuhYO+KBw6qja46EolEstDGRZ7XQl+uhnUUG9J2rlMJKELhgDceL4C97VD9tT22qgP+x8i8juf+lglPiL9I+hQPiQzoA6YH6TllK1RlZKvAKxS11p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wDjPg/Hn; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=wLYiunlc4HRKn1/cO6G76qMYBolsg+5Lse9an4ctyXI=; b=wDjPg/HnYNzaiMxT8G9jB6lS4A
-	7iN7sM3Ekdm2Y6UeAx6yBrOE/02uZVIC5ITdC+LD0180UwMMnX5hOq0PIibCShC3MMzISsNP9XXq6
-	VZylP7Zr9IdEEkPqJBNzqX/e8IRX6CyNdJRAlwfilDk+O1L30SGJbpNZ3WGlPVeVhQieOv13EAZ/k
-	VUUjjD4BEOG8AOlr18JvaUhH3mHzKKKw3eoxHGMP7KThMLN3jr6kT/+L6kecdQKPoZnsfsFrkCbJT
-	roucWpCkQe22oqYGzMwe2fB9AIYqy7GRKQJ9FZgDpboo8q0DRVtmvkZdsmVTuF/7bcn4x82tnhNmH
-	fUvOZNGQ==;
-Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vJnIJ-0000000BfCq-0DHz;
-	Fri, 14 Nov 2025 06:28:27 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	David Sterba <dsterba@suse.com>,
-	Jan Kara <jack@suse.cz>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Carlos Maiolino <cem@kernel.org>,
-	Stefan Roesch <shr@fb.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	gfs2@lists.linux.dev,
-	io-uring@vger.kernel.org,
-	devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-xfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH 14/14] xfs: enable non-blocking timestamp updates
-Date: Fri, 14 Nov 2025 07:26:17 +0100
-Message-ID: <20251114062642.1524837-15-hch@lst.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251114062642.1524837-1-hch@lst.de>
-References: <20251114062642.1524837-1-hch@lst.de>
+	s=arc-20240116; t=1763123092; c=relaxed/simple;
+	bh=+mBDMZqOqXyj1nw2FoUq3hfj9Pq1+bVG+kNKFkCOjGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uncm53JlyQI3sC0uNQ/siFO2d34jb51g2OdTsNckO1Up3EqgIVPiq51Rw7opVrd3tCYaVTwmhhztHrU3GnXRiYbYz/zdXXB3od0WLMH/2xoNY6jnSyTZgN/L9OFbk5Bk8NhCYQZokI84gmzPfKqH+1zM0EaReMHFKhJ91cos8ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L88J3kMN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B678C4AF09;
+	Fri, 14 Nov 2025 12:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763123091;
+	bh=+mBDMZqOqXyj1nw2FoUq3hfj9Pq1+bVG+kNKFkCOjGM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L88J3kMNXclmlVXvSCh0nwJz3MI/z//UToTodAyB8+hSlNnkgXmt679fqapIropxt
+	 TUKtETf1WbcWvQE6SEEa+vxb91ma9o4EiZV0RToOZ4Ov5mPY5b43+Ubt0LW1+fDwfU
+	 tLqEQIv5BoWbspBjSFZbeubTeip6wzBqqXljdlL33QtlYekrXKtmNVKynge7yPqMts
+	 +QLPN90oTnvZgsDNursj4MM6EYHj2IB3cRa5vnPrY6LbfG/BgI4m2zsEsMemyRtNPJ
+	 ymiv896FRZ1UahmIF3bSUq4VROCfN8SABYT93BJyBU6UnvuYE29zdU0f92GFitE8Zk
+	 L1O4gixSsAR3g==
+Date: Fri, 14 Nov 2025 13:24:41 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Jeff Layton <jlayton@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
+	David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Carlos Maiolino <cem@kernel.org>, John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Subject: Re: [PATCH v6 00/15] Create and use APIs to centralise locking for
+ directory ops
+Message-ID: <20251114-baden-banknoten-96fb107f79d7@brauner>
+References: <20251113002050.676694-1-neilb@ownmail.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251113002050.676694-1-neilb@ownmail.net>
 
-The lazytime path using generic_update_time can never block in XFS
-because there is no ->dirty_inode method that could block.  Allow
-non-blocking timestamp updates for this case.
+On Thu, Nov 13, 2025 at 11:18:23AM +1100, NeilBrown wrote:
+> Following is a new version of this series:
+>  - fixed a bug found by syzbot
+>  - cleanup suggested by Stephen Smalley
+>  - added patch for missing updates in smb/server - thanks Jeff Layton
 
-Fixes: 66fa3cedf16a ("fs: Add async write file modification handling.")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_iops.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The codeflow right now is very very gnarly in a lot of places which
+obviously isn't your fault. But start_creating() and end_creating()
+would very naturally lend themselves to be CLASS() guards.
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index bd0b7e81f6ab..3d7b89ffacde 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1195,9 +1195,6 @@ xfs_vn_update_time(
- 
- 	trace_xfs_update_time(ip);
- 
--	if (flags & S_NOWAIT)
--		return -EAGAIN;
--
- 	if (inode->i_sb->s_flags & SB_LAZYTIME) {
- 		if (!((flags & S_VERSION) &&
- 		      inode_maybe_inc_iversion(inode, false)))
-@@ -1207,6 +1204,9 @@ xfs_vn_update_time(
- 		log_flags |= XFS_ILOG_CORE;
- 	}
- 
-+	if (flags & S_NOWAIT)
-+		return -EAGAIN;
-+
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
- 	if (error)
- 		return error;
--- 
-2.47.3
-
+Unrelated: I'm very inclined to slap a patch on top that renames
+start_creating()/end_creating() and start_dirop()/end_dirop() to
+vfs_start_creating()/vfs_end_creating() and
+vfs_start_dirop()/vfs_end_dirop(). After all they are VFS level
+maintained helpers and I try to be consistent with the naming in the
+codebase making it very easy to grep.
 
