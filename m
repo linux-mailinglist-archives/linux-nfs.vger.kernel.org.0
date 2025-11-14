@@ -1,154 +1,254 @@
-Return-Path: <linux-nfs+bounces-16373-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16374-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 827F8C5B16E
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 04:24:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC58C5B3C9
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 04:51:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 69F184E8962
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 03:23:03 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A43463590CE
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 03:46:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4DC2264CC;
-	Fri, 14 Nov 2025 03:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1063427E074;
+	Fri, 14 Nov 2025 03:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG25Vppl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmA8koHh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE8D1E51E1
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 03:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2761F248880
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 03:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763090579; cv=none; b=KGEC/KSQ/J/1G5wKpaS9/9CdRd4G9z/jp+S3d4hMjTN7gmkwUuHFsoGdz5o2Pxc/t0xZayHPfHEr5Q9gGjEFnN/x7SbosPgZb12HXhbmy8YZ7xa/N2E0w8zFhs+4+DEKjoUASsmep0ealZhEwQGc3yKcj9CZKZIU987J3amhrBU=
+	t=1763091891; cv=none; b=D8ILZbgLHUQ2uZVnnQCKfinrkebzTMwXltnHyWId5+kr0mae4Y/DTRD1IHbtxOwrRe9jRGMDA3lEa9PjHrvbdmDgfWnVbWv3FhsXr0kQvd+CzEDF7+4D1k8a4p9Kj+Es8zQAM5zRKHMdmVkdkvami7iAZfsG6bW9VXc4cDQctw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763090579; c=relaxed/simple;
-	bh=t5ktfVERDBQx8COUi5vs6RCmOQVjndPyrTkVUXogQUk=;
+	s=arc-20240116; t=1763091891; c=relaxed/simple;
+	bh=HfUdRnYR5OSZGlucD4l0cXr2QpMS0rVTqK8miUgIcn8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZZyBJv9e77YSUSMgqgK/g2WAnkLHUjtdU3/Zn4RuETrwGnttsL44wTqZGzRCYc1P5y+f+pKp6VrqD0SMnoEMQE6PD8JdUsL5doPxCZW5+foEiKf2fE2taKB2dqWxqnd5RECtzqHYoTSfo0tTmJ+U87h4hcWeQ/rtJlBSsCO+2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eG25Vppl; arc=none smtp.client-ip=209.85.167.176
+	 To:Cc:Content-Type; b=lTRepmWoLRK/RhyLTz/55GuVb6Vazjw8zvqEsvKwVxALuRMMiDZHXlNR7WGIZzwUvVcTGcgcVBSkmoaT9XmHkbwSube2nRiMuotpZbmfDgyvnKwAaMyb+YH6i87zHtBLcpxIhRofXC1oSrhM177uwEDjhxTkifWWY1PztUDQRNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmA8koHh; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4505ade79c2so724697b6e.1
-        for <linux-nfs@vger.kernel.org>; Thu, 13 Nov 2025 19:22:57 -0800 (PST)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b72b495aa81so183828066b.2
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Nov 2025 19:44:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763090577; x=1763695377; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763091885; x=1763696685; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t5ktfVERDBQx8COUi5vs6RCmOQVjndPyrTkVUXogQUk=;
-        b=eG25VpplHXPNMBizbKOLPzcpB+1o55BAR8KFSvlRxsAMuQS1VwafA6tOdfUNA1VG7t
-         MBXJ0m4Ixw9qcCNI/a9SoQC64ixCSphYBhTqvNps+2Sescs/AOXz9FkuhipYNSzfJSqX
-         EF6ArO0NlbeYsCX3tAGh33GzF5YVno8ISfSm8YSwCF+r2VF3uADTfcMQozXP1CDzDan3
-         VS2wkC8s2qaJybb6ElpmQE2Ued59RM7CXCTotBURj0Rqc5GA72hGPMBk/FsqG17AXsrU
-         I73EEDTTJmC2k104lBlrGb764pXGoQNa4vYAMzTCC/BOIK69kmrYXMMVl2EzmCEbqUka
-         Hclw==
+        bh=W6mtqdCrs5s13DdsY7nLARbcmjZ6uHESPgGUhdIcOCQ=;
+        b=RmA8koHhFyOa5gROx+J0dDBz3pV8Xg9hDuGLe/MfAWCZ/h2tXajR1x5UrtuTa8MKXG
+         GF7Ar1R63J4UKj43hxM7QJ++1zksASVYF1rOk2A4GSFO2ysovtaox8d/6A1SU3Q9J2ha
+         DGGkn/Xa54tGcA0OCezkCqie/ixojp883Z0JXe2ytKO7ekCQqT6mSHYSRtOOka6oQiFC
+         A4+GK5Usf8cduQEoAOfD66I0n8igrT7REx4/lniKrTRlmy/RyTUZbMZORg6tg13jtgvR
+         3VsqexpAhqqb9gFjfn3J1iwBR/JcNBsnLBWpyirDupDzlZJzvTfcwY3oFMYEnWmGkggJ
+         /aaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763090577; x=1763695377;
+        d=1e100.net; s=20230601; t=1763091885; x=1763696685;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=t5ktfVERDBQx8COUi5vs6RCmOQVjndPyrTkVUXogQUk=;
-        b=BzkWP6oSlJp76k/VQz5NhBNRv1Neg49s9pRumJVYSw63A2xao8BumEsBM+iMPAviCT
-         rR9mnIzNzx97ML0PkTm/URbujD05n6VHjRNFa2I2iBeBKMSJf9Xq2Q+PHszg8gh+/OGf
-         ovCQd+aRZFgWMmVZSQN/9ubj+Bgmkl98vzeZV6awwFpWHjdohepkjRDq9N50MdKeJudi
-         MQvSdlQyvvLGBWObYVvizrv2b5bPR2MWWWHGXKuoYzxwKhRf6kK6xLyGFGqyrh32q+P1
-         vDtbNFmfjVdbEOTaNdqzCmaDJhxiKLioL6CiRDZkiBRsUF4QVw8AGyOJWBp3biw0GGDf
-         7Kpw==
-X-Gm-Message-State: AOJu0Yx2p8Z7TX9wOYEZfDuvRmURk0BtIbRIES5zdNFg8KZ1dHDg3TjE
-	14brcz/b1D8vF4WHewrnNROnfpXWo/ELAWpfexM6sZx10fr9OXv8C321PgE+1t6Jha4j7eMlJcb
-	evwnABvUtnY5XDU+t5xa7cUjKmqWAIf0=
-X-Gm-Gg: ASbGncuLU1lAFDs/HquNNpOkeSuRbrIlQBxMhBgNbxkucMjvoNBmaCnT920QIOz2a4v
-	wm6UYJxGtRkwWjEIutQg0be53bzG+L5qu9802GwQWnj/6mSU6dmNz9OszdF/53Z5xXx/MA1VLwW
-	1PWTj6ejH3y4vUsXOsrzGz+Gn8T6kRT0Zn88hxczfQrQWTcTl7a+qTG88p1TJNvLOnGg+8Xu6Vv
-	1J3erUVzQnu257pQ3nuCj+4N5FJOIbv3NKnOes5Ez8lPrhDqMfv73Yjnd6Og4w=
-X-Google-Smtp-Source: AGHT+IFMa2Z+JKTwsZv+27UioeCE+ca9aGuAXVkjl0sV4WUg/U/pMZkU5DH2OEKCi2lBFFO6ZMQogL8/AZ1NvUIGRlA=
-X-Received: by 2002:a05:6808:6702:b0:44f:df33:7682 with SMTP id
- 5614622812f47-450973ba6b6mr830311b6e.2.1763090576827; Thu, 13 Nov 2025
- 19:22:56 -0800 (PST)
+        bh=W6mtqdCrs5s13DdsY7nLARbcmjZ6uHESPgGUhdIcOCQ=;
+        b=W8wdTlSmqAapCmXCnOgvIxWeoSVNc46SRn8pib3OgQEwrH43zvy6FDkZQIXtXzbWuu
+         IbZaXSFy9RLNgmtiso7q1eCIGNQi9TgjHD2GowTrqIFlkRP+gmp7RXhnOxTX2eQh53Tx
+         dG7dsYUuXobZDYjbtsEGsfFaZs7Jhu9CvrT9ctX6ffBRC8+qSXkXrQia+E9FAcBx25r2
+         K3+0x8o19dRDxOUfLZhxBfy/NHRJ1hHOzLqGObZZk/1KsMDnWHKUmkmym+/PD+UG4O6h
+         q/xWHhFsJv5EBRisYWMiaZS/eb6MMCaxgTZXChjbOZ6i6ftVOQCfFlXQOsU7ppxwuXz2
+         g4PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3vAANk1a/V5SDJT24ys9x3zct9VMAla0VKkCrMW3aoWOfPrDMAiPCaO9ohNuSfgCsGdxiCK68wSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLZhp0Op7j64uEu1fVFjV4Pxbo9yeMRscRE4cTPZ4mbK1DzdLW
+	ktPVq94LPs2Oixdpx3WXoFCknqUNE8gM2SHPN7SVvKQCjV9awUzbnPteVxvSQUGhsdL+BsQTg1q
+	PaWDPrhwj5xw3HTEZcic4yAO+PYh7nNk=
+X-Gm-Gg: ASbGncvAWd+R0aVtNM385JyrXwLXcPktEqKtrhXRE50+cbA2J3xTz/BEEKl4Obc7Tmq
+	HA04ZInpDu0Ro7taKvGAvZ38kK53Fc0bUxUVL5ilTAMjey9935Gk9OaOqzCBuQSszsmO/vVTUkD
+	K2vMOjx6vnsfKybzu85WMwN/Il35lTeWLZqriXmhXNeJ57XvrJIcmCplWYrXoSFNdecb5DSCeBc
+	vHEs4N0Mio7tOQKJS8HHw7mZImRmSof0AtC7GLfbmVprc33w/ZPXy+8xqieIwuzAym1h9dvuGmC
+	veweP0pw8mycNeY=
+X-Google-Smtp-Source: AGHT+IFeY6ExbhnLix/V8V2HiLoJfg49zjUIkHAqrWQ16NjMplNdRqeUyyg/UCDy4n1WKY6+b/r4V6jK0pS5c2c7MTg=
+X-Received: by 2002:a17:907:7fa9:b0:b70:7d61:b8a5 with SMTP id
+ a640c23a62f3a-b7367b6f8afmr165505566b.62.1763091885372; Thu, 13 Nov 2025
+ 19:44:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251113093720.20428-1-gaurav.gangalwar@gmail.com>
- <d3b2e4c8-18ec-4b8f-a05f-42bc00196e1c@oracle.com> <CAJiE4O=zhEaJKQO7bBc8g9gXCiMoi7G7qSiVbQ5Cq+SwBK8OVw@mail.gmail.com>
- <fc58b0f2-d00b-4e4e-a353-ffe43bec6c6e@oracle.com>
-In-Reply-To: <fc58b0f2-d00b-4e4e-a353-ffe43bec6c6e@oracle.com>
-From: gaurav gangalwar <gaurav.gangalwar@gmail.com>
-Date: Fri, 14 Nov 2025 08:52:45 +0530
-X-Gm-Features: AWmQ_bk8fsp6Bvemtoo_4TUuB2ArUk-urh864jkCU9MPKd1HYl_s0s4UHt3NTKw
-Message-ID: <CAJiE4OnqsKu9Z7VHz2KW+JWctFbQ8_vz8+82rDbZqZ=AVs-=NQ@mail.gmail.com>
-Subject: Re: [PATCH] Make RPCRDMA_MAX_RECV_BATCH configurable.
+References: <20251112042720.3695972-1-alistair.francis@wdc.com>
+ <20251112042720.3695972-3-alistair.francis@wdc.com> <49bbe54a-4b55-48a7-bfb4-30a222cb7d4f@oracle.com>
+ <CAKmqyKN4SN6DkjaRMe4st23Xnc3gb6DcqUGHi72UTgaiE9EqGw@mail.gmail.com>
+ <0d77853e-7201-47c4-991c-bb492a12dd29@oracle.com> <13cf56a7-31fa-4903-9bc2-54f894fdc5ed@oracle.com>
+In-Reply-To: <13cf56a7-31fa-4903-9bc2-54f894fdc5ed@oracle.com>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Fri, 14 Nov 2025 13:44:18 +1000
+X-Gm-Features: AWmQ_bkh-hR1xTkgsN4bcSSt81jUJ1aCCzsHDAZD7xu3wz-1oUVwA9mDnPBItVQ
+Message-ID: <CAKmqyKObzFKHoW3_wry6=8GuDBdJiKQPE6LWPOUHebwGOH2PJA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] net/handshake: Define handshake_sk_destruct_req
 To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, neilb@brown.name, 
-	Jeff Layton <jlayton@kernel.org>, 
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Cc: hare@kernel.org, kernel-tls-handshake@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nvme@lists.infradead.org, 
+	linux-nfs@vger.kernel.org, kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, 
+	sagi@grimberg.me, kch@nvidia.com, hare@suse.de, 
+	Alistair Francis <alistair.francis@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2025 at 11:11=E2=80=AFPM Chuck Lever <chuck.lever@oracle.co=
+On Fri, Nov 14, 2025 at 12:37=E2=80=AFAM Chuck Lever <chuck.lever@oracle.co=
 m> wrote:
 >
-> On 11/13/25 11:39 AM, gaurav gangalwar wrote:
-> > On Thu, Nov 13, 2025 at 7:49=E2=80=AFPM Chuck Lever <chuck.lever@oracle=
-.com> wrote:
+> On 11/13/25 9:01 AM, Chuck Lever wrote:
+> > On 11/13/25 5:19 AM, Alistair Francis wrote:
+> >> On Thu, Nov 13, 2025 at 1:47=E2=80=AFAM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>>
+> >>> On 11/11/25 11:27 PM, alistair23@gmail.com wrote:
+> >>>> From: Alistair Francis <alistair.francis@wdc.com>
+> >>>>
+> >>>> Define a `handshake_sk_destruct_req()` function to allow the destruc=
+tion
+> >>>> of the handshake req.
+> >>>>
+> >>>> This is required to avoid hash conflicts when handshake_req_hash_add=
+()
+> >>>> is called as part of submitting the KeyUpdate request.
+> >>>>
+> >>>> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> >>>> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> >>>> ---
+> >>>> v5:
+> >>>>  - No change
+> >>>> v4:
+> >>>>  - No change
+> >>>> v3:
+> >>>>  - New patch
+> >>>>
+> >>>>  net/handshake/request.c | 16 ++++++++++++++++
+> >>>>  1 file changed, 16 insertions(+)
+> >>>>
+> >>>> diff --git a/net/handshake/request.c b/net/handshake/request.c
+> >>>> index 274d2c89b6b2..0d1c91c80478 100644
+> >>>> --- a/net/handshake/request.c
+> >>>> +++ b/net/handshake/request.c
+> >>>> @@ -98,6 +98,22 @@ static void handshake_sk_destruct(struct sock *sk=
+)
+> >>>>               sk_destruct(sk);
+> >>>>  }
+> >>>>
+> >>>> +/**
+> >>>> + * handshake_sk_destruct_req - destroy an existing request
+> >>>> + * @sk: socket on which there is an existing request
+> >>>
+> >>> Generally the kdoc style is unnecessary for static helper functions,
+> >>> especially functions with only a single caller.
+> >>>
+> >>> This all looks so much like handshake_sk_destruct(). Consider
+> >>> eliminating the code duplication by splitting that function into a
+> >>> couple of helpers instead of adding this one.
+> >>>
+> >>>
+> >>>> + */
+> >>>> +static void handshake_sk_destruct_req(struct sock *sk)
+> >>>
+> >>> Because this function is static, I imagine that the compiler will
+> >>> bark about the addition of an unused function. Perhaps it would
+> >>> be better to combine 2/6 and 3/6.
+> >>>
+> >>> That would also make it easier for reviewers to check the resource
+> >>> accounting issues mentioned below.
+> >>>
+> >>>
+> >>>> +{
+> >>>> +     struct handshake_req *req;
+> >>>> +
+> >>>> +     req =3D handshake_req_hash_lookup(sk);
+> >>>> +     if (!req)
+> >>>> +             return;
+> >>>> +
+> >>>> +     trace_handshake_destruct(sock_net(sk), req, sk);
+> >>>
+> >>> Wondering if this function needs to preserve the socket's destructor
+> >>> callback chain like so:
+> >>>
+> >>> +       void (sk_destruct)(struct sock sk);
+> >>>
+> >>>   ...
+> >>>
+> >>> +       sk_destruct =3D req->hr_odestruct;
+> >>> +       sk->sk_destruct =3D sk_destruct;
+> >>>
+> >>> then:
+> >>>
+> >>>> +     handshake_req_destroy(req);
+> >>>
+> >>> Because of the current code organization and patch ordering, it's
+> >>> difficult to confirm that sock_put() isn't necessary here.
+> >>>
+> >>>
+> >>>> +}
+> >>>> +
+> >>>>  /**
+> >>>>   * handshake_req_alloc - Allocate a handshake request
+> >>>>   * @proto: security protocol
+> >>>
+> >>> There's no synchronization preventing concurrent handshake_req_cancel=
+()
+> >>> calls from accessing the request after it's freed during handshake
+> >>> completion. That is one reason why handshake_complete() leaves comple=
+ted
+> >>> requests in the hash.
 > >>
-> >> On 11/13/25 4:37 AM, Gaurav Gangalwar wrote:
-> >>> Bumped up rpcrdma_max_recv_batch to 64.
-> >>> Added param to change to it, it becomes handy to use higher value
-> >>> to avoid hung.
+> >> Ah, so you are worried that free-ing the request will race with
+> >> accessing the request after a handshake_req_hash_lookup().
 > >>
-> >> [ Resend with correct NFSD reviewer email addresses and linux-rdma@ ]
+> >> Ok, makes sense. It seems like one answer to that is to add synchronis=
+ation
 > >>
-> >> Hi Gaurav -
+> >>>
+> >>> So I'm thinking that removing requests like this is not going to work
+> >>> out. Would it work better if handshake_req_hash_add() could recognize
+> >>> that a KeyUpdate is going on, and allow replacement of a hashed
+> >>> request? I haven't thought that through.
 > >>
-> >> Adding an administrative setting is generally a last resort. First,
-> >> we want a full root-cause analysis to understand the symptoms you
-> >> are trying to address. Do you have an RCA or a simple reproducer to
-> >> share with us?
+> >> I guess the idea would be to do something like this in
+> >> handshake_req_hash_add() if the entry already exists?
+> >>
+> >>     if (test_and_set_bit(HANDSHAKE_F_REQ_COMPLETED, &req->hr_flags)) {
+> >>         /* Request already completed */
+> >>         rhashtable_replace_fast(...);
+> >>     }
+> >>
+> >> I'm not sure that's better. That could possibly still race with
+> >> something that hasn't yet set HANDSHAKE_F_REQ_COMPLETED and overwrite
+> >> the request unexpectedly.
+> >>
+> >> What about adding synchronisation and keeping the current approach?
+> >> From a quick look it should be enough to just edit
+> >> handshake_sk_destruct() and handshake_req_cancel()
 > >
-> > Issue found while testing fio workload over RDMA
-> > Client: Ubuntu 24.04
-> > Server: Ganesha NFS server
-> > We have seen intermittent hung on client with buffered IO workload at
-> > large scale with around 30 RDMA connections, client was under memory
-> > pressure.
-> > Ganesha log shows
-> >
-> > 10/11/2025 16:39:12Z : ntnx-10-57-210-224-a-fsvm 1309416[none]
-> > [0x7f49a6c3fe80] rpc :TIRPC :EVENT :rpc_rdma_cq_event_handler() cq
-> > completion status: RNR retry counter exceeded (13) rdma_xprt state 5
-> > opcode 2 cbc 0x7f4996688000 inline 1
-> >
-> > Which points to lack of posted recv buffers on client.
-> > Once we increased rpcrdma_max_recv_batch to 64, issue was resolved.
+> > Or make the KeyUpdate requests somehow distinctive so they do not
+> > collide with initial handshake requests.
+
+Hmmm... Then each KeyUpdate needs to be distinctive, which will
+indefinitely grow the hash table
+
 >
-> That still doesn't convince me that increasing the receive batch count
-> is a good fix, though it's certainly a workaround.
->
-> The client's RPC/RDMA code is supposed to track the number of Sends and
-> keep the correct number of Receives on the Receive Queue. The goal of
-> the implementation is to never encounter an RNR.
->
-> Therefore, if it's not doing that (and the RNR retries suggests that's
-> the case) there is an actual bug somewhere. The extra batch Receives are
-> an optimization, and should have no impact on correct operation.
->
-> If you can't reproduce this with the Linux NFS server, the place to
-> start looking for misbehavior is NFS/Ganesha, as it is the newer NFS
-> over RDMA implementation of the two servers. Maybe it's not handling
-> credit accounting correctly, or perhaps it's putting more Sends on
-> the wire than the credit limit allows.
-Sure I will try to get more details.
-Issue is specific to pNFS, for non pNFS shares we don't see this issue.
-Even for pNFS we see hung when number of ds connections are high (30
-ds connections)
-But this work around is definitely helping.
+> Another thought: expand the current _req structure to also manage
+> KeyUpdates. I think there can be only one upcall request pending
+> at a time, right?
+
+There should only be a single request pending per queue.
+
+I'm not sure I see what we could do to expand the _req structure.
+
+What about adding `HANDSHAKE_F_REQ_CANCEL` to `hr_flags_bits` and
+using that to ensure we don't free something that is currently being
+cancelled and the other way around?
+
+Alistair
+
 >
 >
 > --
