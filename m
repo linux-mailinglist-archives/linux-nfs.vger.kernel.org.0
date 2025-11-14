@@ -1,76 +1,62 @@
-Return-Path: <linux-nfs+bounces-16395-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16396-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 763A7C5D7F3
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 15:11:46 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A66CC5D81A
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 15:13:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 105B34EBCA8
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 14:06:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B004B35373D
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 14:06:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED60631CA54;
-	Fri, 14 Nov 2025 14:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142073164AB;
+	Fri, 14 Nov 2025 14:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2gK+Z2R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kh1kytMG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E12314A86;
-	Fri, 14 Nov 2025 14:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB111B87EB;
+	Fri, 14 Nov 2025 14:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763129155; cv=none; b=cI2SSr5uQKMBTPBvDJ4vu+DE0OGupTe8meo9PCG5cnJ2ceWTkGDoqT1DXqv5IlF8J/43nNS69FrcZMuLIoq5fZShPlPUlTuBPuiiJsfBkni/0Yzs6afr0UVyStvLq4CSuCSZu8XaZ1xH6toxSY9uFBgAmVvy+T45lMFaLqQsxT0=
+	t=1763129196; cv=none; b=FwXtgXMyEDxTbhYzpXcYRylrgj1kMlIy5i+Q/CrJF9hnFlnm3OQG2SiYVSjoZ2T7Iyei4CjoO/2sUH3zHrk8iIPN3kiV0TPO2QS2ugauqVZkmUpA9E2BKBmUe/pIqAUjS3mANB4xNJoKkWAh6qzb9C9MWH9fEi7h14cFiWo09sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763129155; c=relaxed/simple;
-	bh=ZEg0b7s99KNx4Nn2gvpPToGyxGUieeAOKuc2AOfsqIw=;
+	s=arc-20240116; t=1763129196; c=relaxed/simple;
+	bh=C92F0tAjCKW9Rf4zUTTPeU3TgqfeEnOGVq0K5kNBZ2M=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oIbxps0tUCyB96J/aKC66At9WNL+JR+XByVMbmLiH4AWhWhNe1F8r/4L5DYlj+jjBhfJ/jPZM2zx29a1NflT0W5lsSZTtN3drKIqAH0YtIqgfdeLEgIuAQK4qLdKaEI4z31oGatHUwKWeXnI33l9KokR+7/ENZtlba5CiItgbOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2gK+Z2R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD9AC113D0;
-	Fri, 14 Nov 2025 14:05:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gHh6iWvGT8CKg7nriCfKm99a3IRSUqm77M2XibEXFXwRglHC7SoCrjkUnOi2c9OtpWhnbqt7Y3g7X2jLbFE/A5rCnRXvE9A40tyNekdHBztsRuh7/vJkksN662ksukE3D+cc0UMTkEhOrmGAW+rE66uDZl0PIyK0DJEaWtCnf5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kh1kytMG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B19FC4CEFB;
+	Fri, 14 Nov 2025 14:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763129155;
-	bh=ZEg0b7s99KNx4Nn2gvpPToGyxGUieeAOKuc2AOfsqIw=;
+	s=k20201202; t=1763129195;
+	bh=C92F0tAjCKW9Rf4zUTTPeU3TgqfeEnOGVq0K5kNBZ2M=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=g2gK+Z2R1kkCNwMWd3/1/a2Gwy4+svU66Kyd0VXHdTxpok4JKQ23poq7HsFRoV07N
-	 xwm0EkfzePQa3UwDOdege8hJ3aD+cSLFN2nZPEf/ElsqNE0ezlSz9CIwyLdCwoSqYY
-	 gGG+2ZgkHhsCVVtCAydzDfFPNRmL8hLE0a3YiUXIrDB9z8HfyLfzx9bua2wfY8zuEY
-	 2AJ/0W1E3LwZl5Mtuivea9rBXZH8U7qZQMPlascthU1jcxbgVRJ8ennTndvILnh9tK
-	 Jj6nx/k1gHR1NjUaZMT26+hPbHkqaYk3o9q/DcLmf461HiLq+qtZQrMpTaAiKhP8EJ
-	 RB4nI7XbzCDvg==
-Message-ID: <b30eac3d6368d2eb03a2acbae113455b65753e0c.camel@kernel.org>
-Subject: Re: [PATCH v6 00/15] Create and use APIs to centralise locking for
- directory ops
+	b=Kh1kytMG/KYWCCKufCrsevd6utt/soEMrfWuNKO44iNHwqQwRP0sVGKSBeYGeunmb
+	 JPY3z5I4FKqQNmk/S0hR6DYCU8pw5sjXRCkdO+ueNqYfrjmL0wePQRMN499EJg3PDt
+	 MxME1jsXJ0LjMBd1yhJ5iX7iYvfnJJ/rhZhWbvMS2Hx2nRQ//pXQmlEBLraBm9W42M
+	 G3tQUAVX9izXNDZoc8lmv3CuvLNl9siyrVrn5w9pOxHYejgKJpxoKTghXA1+VhiVjY
+	 HsLnchRJpuq9gBRcA+bHoNGmQBIeqECSIw1N8u2V9MdaTixx01QyNcCgp8iWrj3U18
+	 e259J/FgwVAhg==
+Message-ID: <4990df3273eb868aa21dde745c1ae2636af4cdd8.camel@kernel.org>
+Subject: Re: [PATCH 06/14] organgefs: use inode_update_timestamps directly
 From: Jeff Layton <jlayton@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Amir Goldstein	
- <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org,  Chris Mason	 <clm@fb.com>, David Sterba
- <dsterba@suse.com>, David Howells <dhowells@redhat.com>,  Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich	 <dakr@kernel.org>, Tyler Hicks
- <code@tyhicks.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Chuck Lever
- <chuck.lever@oracle.com>, Olga Kornievskaia	 <okorniev@redhat.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Namjae Jeon	 <linkinjeon@kernel.org>, Steve French
- <smfrench@gmail.com>, Sergey Senozhatsky	 <senozhatsky@chromium.org>,
- Carlos Maiolino <cem@kernel.org>, John Johansen	
- <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, James
- Morris	 <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Stephen
- Smalley	 <stephen.smalley.work@gmail.com>, Ondrej Mosnacek
- <omosnace@redhat.com>,  Mateusz Guzik <mjguzik@gmail.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Stefan Berger	 <stefanb@linux.ibm.com>,
- "Darrick J. Wong" <djwong@kernel.org>, 	linux-kernel@vger.kernel.org,
- netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Date: Fri, 14 Nov 2025 09:05:51 -0500
-In-Reply-To: <20251114-baden-banknoten-96fb107f79d7@brauner>
-References: <20251113002050.676694-1-neilb@ownmail.net>
-	 <20251114-baden-banknoten-96fb107f79d7@brauner>
+To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan
+ Kara <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>, Martin
+ Brandenburg	 <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>,
+ Stefan Roesch	 <shr@fb.com>, linux-kernel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, 	gfs2@lists.linux.dev,
+ io-uring@vger.kernel.org, devel@lists.orangefs.org, 
+	linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Fri, 14 Nov 2025 09:06:33 -0500
+In-Reply-To: <20251114062642.1524837-7-hch@lst.de>
+References: <20251114062642.1524837-1-hch@lst.de>
+	 <20251114062642.1524837-7-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -155,26 +141,37 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-11-14 at 13:24 +0100, Christian Brauner wrote:
-> On Thu, Nov 13, 2025 at 11:18:23AM +1100, NeilBrown wrote:
-> > Following is a new version of this series:
-> >  - fixed a bug found by syzbot
-> >  - cleanup suggested by Stephen Smalley
-> >  - added patch for missing updates in smb/server - thanks Jeff Layton
->=20
-> The codeflow right now is very very gnarly in a lot of places which
-> obviously isn't your fault. But start_creating() and end_creating()
-> would very naturally lend themselves to be CLASS() guards.
->=20
-> Unrelated: I'm very inclined to slap a patch on top that renames
-> start_creating()/end_creating() and start_dirop()/end_dirop() to
-> vfs_start_creating()/vfs_end_creating() and
-> vfs_start_dirop()/vfs_end_dirop(). After all they are VFS level
-> maintained helpers and I try to be consistent with the naming in the
-> codebase making it very easy to grep.
+Please do fix the spelling of orangefs in the subject line. It'll be
+hard to grep for otherwise...
 
-That sounds like a good idea. The current names are a little too
-generic.
+On Fri, 2025-11-14 at 07:26 +0100, Christoph Hellwig wrote:
+> Orangefs has no i_version handling and __orangefs_setattr already
+> explicitly marks the inode dirty.  So instead of the using
+> the flags return value from generic_update_time, just call the
+> lower level inode_update_timestamps helper directly.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/orangefs/inode.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+> index a01400cd41fd..55f6c8026812 100644
+> --- a/fs/orangefs/inode.c
+> +++ b/fs/orangefs/inode.c
+> @@ -878,7 +878,9 @@ int orangefs_update_time(struct inode *inode, int fla=
+gs)
+> =20
+>  	gossip_debug(GOSSIP_INODE_DEBUG, "orangefs_update_time: %pU\n",
+>  	    get_khandle_from_ino(inode));
+> -	flags =3D generic_update_time(inode, flags);
+> +
+> +	flags =3D inode_update_timestamps(inode, flags);
+> +
+>  	memset(&iattr, 0, sizeof iattr);
+>          if (flags & S_ATIME)
+>  		iattr.ia_valid |=3D ATTR_ATIME;
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
