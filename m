@@ -1,64 +1,63 @@
-Return-Path: <linux-nfs+bounces-16406-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16407-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 197BCC5E83D
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 18:21:16 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 660EFC5F1A8
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 20:51:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD6813BF17B
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 17:21:14 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D970335C030
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 19:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567862D5925;
-	Fri, 14 Nov 2025 17:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134CD2F60A1;
+	Fri, 14 Nov 2025 19:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAt9J/6c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxygaeVo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F1B2D541E;
-	Fri, 14 Nov 2025 17:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FD82EDD53;
+	Fri, 14 Nov 2025 19:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763140871; cv=none; b=JVjavL8C61pAYN5JQSyzOHm5Xr7exMckmWEuOR0TXf+TGuVpgvdl6aUqNtl70dr6pT/YiNMYgHpMYSXThapMJrukRrho3vYaTT0n4QRX3KmjktuRIf6DG4cft90Wcktc9p53Scu2CHmZdvCcnwNR7uzo/4psvEOEC6p5pcWmRhc=
+	t=1763149636; cv=none; b=O1f+P8PelD9nTkshXf173r7zOG4VxcyFonQ4q05XAD8DMhPqsnrBF7cHdZszS/oSG3ovPGUpv1In9bIgf7usPBFJitvlGH4q71cIyFj+mZDLG6slAHLihwsGfjsKOR0XWWryjmQoaEfMuttSXNUGaNDghn2df75Vk2l2MaUuPxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763140871; c=relaxed/simple;
-	bh=o4wUBZrrP4HjuCLrYyd45VSZhHaqi9XvuTvsSmX9Ms4=;
+	s=arc-20240116; t=1763149636; c=relaxed/simple;
+	bh=REeSO5rMp1YGjY627e4cE9lzZEy2V6tti6RpwKKRYO4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JJ5ZZcnjuEwyyEalZakQuKJbTk+ysLiT4NGt86svzsSpbQJE/PfS+pn3ptkywWiYqR6XT+VOaE9VOBcLBpMT4S/f7nzs6jY6HZ8JaQdes+O6C7B59s5GZ4n3Q+IxfkyYCpqI+tS7loVjUz1DctLkPjfIi0t9J5cMkSiEQvpWaSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAt9J/6c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B262C113D0;
-	Fri, 14 Nov 2025 17:21:09 +0000 (UTC)
+	 Content-Type:MIME-Version; b=MTNjLUi+u/qSHMTTAMfFD8K4Wx7BKSlEhQosqFfgOGeJF8CJLFWAqrVdI7UU25zOExN6k2r6dNfMtOVK5GsbLuKY0SanBFRKxzHAenpZjYqwutETkMcGRkANmeBeHgHuWVxcPKZ5tyBdeWr5qPdjyAlkBjxIGEuGwg2mZDyI96g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxygaeVo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1033C116B1;
+	Fri, 14 Nov 2025 19:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763140870;
-	bh=o4wUBZrrP4HjuCLrYyd45VSZhHaqi9XvuTvsSmX9Ms4=;
+	s=k20201202; t=1763149635;
+	bh=REeSO5rMp1YGjY627e4cE9lzZEy2V6tti6RpwKKRYO4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=BAt9J/6c9+owmHQTyiKI3qK8glE/UKpqTTBzZRk/lpUV2DeTZkHVBV8HyyMOb1nqL
-	 zA98n/JEUCU0odjvTfPSDyNRdCpAHfPXr4d4e9qHWPGOsC+6X7mASI4vDwgzJs4cih
-	 2EZKyAvtmYcmY7Y+ACzUfzXP0LeKkDd4cap4pVwIGT50+GBxBf1edz8DQQvz9yZP/K
-	 trZ7Ritt3aUvM8SPIh0NnQcgS3+8L2CkWEKplJw45lrrqVyLQSs2fnzZil5toa1C3g
-	 1CF6LsPLWYERdImsbr5H3Om2SujQd2e/FKEyiaZ6hxAw9okDefojw5ghEtOgDF/pWc
-	 h4QAbY3F+CdgA==
-Message-ID: <775371813836c06af830d9dbf6b191728636e911.camel@kernel.org>
+	b=DxygaeVo++Am9yVdIn2xmS6RdOu/inN1IV3jHs/i65Il9sH4kXFCXZQRH5PqD9kr7
+	 EEjZxd3IRMWSOQchWHEfgw+idatwGYPzx/gD3u5YjLB1Pt0fG2Pogz1QmjK0o00JkM
+	 DrMxy1bSGkJycCGUE+c/nOa8kTJi6YXXNZF7GP2h2ijlzMvK0RwGo6u73krrsINHQT
+	 pjI7iap4NoyYLSCxOqlCq/TOw6v5+9tGwYMh8s5ujo+Q+Fl/45AJ5iWazDHDFLKddh
+	 7v9ff2dr2Gf3S9MQ8/+MOVQsoprAYDXpgjpmSCO+YO8o4MXPlDQeYOa9TdZi2Wi+l4
+	 X1LsouQTUgnng==
+Message-ID: <edac512451530bbe4b5f1e8baaeecdcc96e8d39b.camel@kernel.org>
 Subject: Re: re-enable IOCB_NOWAIT writes to files
 From: Jeff Layton <jlayton@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>, 
- Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan
- Kara <jack@suse.cz>,  Mike Marshall <hubcap@omnibond.com>, Martin
- Brandenburg <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>, 
- Stefan Roesch	 <shr@fb.com>, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	gfs2@lists.linux.dev,
- io-uring@vger.kernel.org, devel@lists.orangefs.org, 
+To: Christoph Hellwig <hch@lst.de>
+Cc: Christian Brauner <brauner@kernel.org>, Al Viro
+ <viro@zeniv.linux.org.uk>,  David Sterba <dsterba@suse.com>, Jan Kara
+ <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>, Stefan Roesch
+ <shr@fb.com>, 	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ gfs2@lists.linux.dev, 	io-uring@vger.kernel.org, devel@lists.orangefs.org, 
 	linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
 	linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Fri, 14 Nov 2025 12:21:08 -0500
-In-Reply-To: <20251114170129.GI196370@frogsfrogsfrogs>
+Date: Fri, 14 Nov 2025 14:47:12 -0500
+In-Reply-To: <20251114152840.GD30351@lst.de>
 References: <20251114062642.1524837-1-hch@lst.de>
 	 <b7e8d5e3a0ce8da103f4591afc1f4a9c683ef3c7.camel@kernel.org>
-	 <20251114170129.GI196370@frogsfrogsfrogs>
+	 <20251114152840.GD30351@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,103 +142,80 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-11-14 at 09:01 -0800, Darrick J. Wong wrote:
+On Fri, 2025-11-14 at 16:28 +0100, Christoph Hellwig wrote:
 > On Fri, Nov 14, 2025 at 09:04:58AM -0500, Jeff Layton wrote:
-> > On Fri, 2025-11-14 at 07:26 +0100, Christoph Hellwig wrote:
-> > > Hi all,
-> > >=20
-> > > commit 66fa3cedf16a ("fs: Add async write file modification handling.=
-")
-> > > effectively disabled IOCB_NOWAIT writes as timestamp updates currentl=
-y
-> > > always require blocking, and the modern timestamp resolution means we
-> > > always update timestamps.  This leads to a lot of context switches fr=
-om
-> > > applications using io_uring to submit file writes, making it often wo=
-rse
-> > > than using the legacy aio code that is not using IOCB_NOWAIT.
-> > >=20
-> > > This series allows non-blocking updates for lazytime if the file syst=
-em
-> > > supports it, and adds that support for XFS.
-> > >=20
-> > > It also fixes the layering bypass in btrfs when updating timestamps o=
-n
-> > > device files for devices removed from btrfs usage, and FMODE_NOCMTIME
-> > > handling in the VFS now that nfsd started using it.  Note that I'm st=
-ill
-> > > not sure that nfsd usage is fully correct for all file systems, as on=
-ly
-> > > XFS explicitly supports FMODE_NOCMTIME, but at least the generic code
-> > > does the right thing now.
-> > >=20
-> > > Diffstat:
-> > >  Documentation/filesystems/locking.rst |    2=20
-> > >  Documentation/filesystems/vfs.rst     |    6 ++
-> > >  fs/btrfs/inode.c                      |    3 +
-> > >  fs/btrfs/volumes.c                    |   11 +--
-> > >  fs/fat/misc.c                         |    3 +
-> > >  fs/fs-writeback.c                     |   53 ++++++++++++++----
-> > >  fs/gfs2/inode.c                       |    6 +-
-> > >  fs/inode.c                            |  100 +++++++++++------------=
------------
-> > >  fs/internal.h                         |    3 -
-> > >  fs/orangefs/inode.c                   |    7 ++
-> > >  fs/overlayfs/inode.c                  |    3 +
-> > >  fs/sync.c                             |    4 -
-> > >  fs/ubifs/file.c                       |    9 +--
-> > >  fs/utimes.c                           |    1=20
-> > >  fs/xfs/xfs_iops.c                     |   29 ++++++++-
-> > >  fs/xfs/xfs_super.c                    |   29 ---------
-> > >  include/linux/fs.h                    |   17 +++--
-> > >  include/trace/events/writeback.h      |    6 --
-> > >  18 files changed, 152 insertions(+), 140 deletions(-)
-> >=20
 > > This all looks pretty reasonable to me. There are a few changelog and
 > > subject line typos, but the code changes look fine. You can add:
-> >=20
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >=20
+>=20
+> Please tell me about them so I can fix them.=20
+>=20
 > > As far as nfsd's usage of FMODE_NOCMTIME, it looks OK to me. That's
 > > implemented today by the check in file_modified_flags(), which is
 > > generic and should work across filesystems.
-> >=20
-> > The main exception is xfs_exchange_range() which has some special
-> > handling for it, but nfsd doesn't use that functionality so that
-> > shouldn't be an issue.
-> >=20
-> > Am I missing some subtlety?
 >=20
-> In exchangerange specifically?
->=20
-> The FMODE_NOCMTIME checks in xfs_exchange_range exist to tell the
-> exchange-range code to update cmtime, but only if it decides to actually
-> go through with the mapping exchange.  Since the mapping exchange
-> requires a transaction anyway, it's cheap to bundle in timestamp
-> updates.
->=20
-> Also there's no way that we can do nonblocking exchangerange so a NOWAIT
-> flag wouldn't be much help here anyway.
->=20
-> (I hope that answers your question)
->=20
->=20
-
-Christoph mentioned nfsd might be doing something wrong, which is my
-main interest here. nfsd doesn't have a way to expose exchangerange
-functionality right now, but if it did then it seems like that would
-just work too.
-
-HCH says:
-
 > Nothing requires file_update_time / file_modified_flags are helpers
 > that a file system may or may not call.  I've not done an audit
 > if everyone actually uses them.
 
-I'll have to think about how to efficiently audit that. The good news
-is that nfsd really only cares about the write() and page_mkwrite()
-codepaths. For other activity, the delegation will be broken and
-recalled.
+FWIW, I turned claude loose on this, and it produced:
+
+-------------------------------8<----------------------------------
+  Findings:                                                          =20
+                                                                           =
+                             =20
+  1. coda_file_write_iter (fs/coda/file.c:66-94)                     =20
+                                                                           =
+                                                                           =
+                                                            =20
+  Location: fs/coda/file.c:86Issue: Manually updates ctime in
+write_iter operation                                                 =20
+  inode_set_mtime_to_ts(coda_inode,
+inode_set_ctime_current(coda_inode));
+  Context: This is a stacking filesystem that delegates writes to a
+container file via vfs_iter_write(), then manually copies attributes
+back. However, it bypasses file_update_time() or file_modified(),    =20
+  which means it doesn't handle:                   =20
+  - Read-only filesystem checks                                      =20
+  - Immutable inode checks                                           =20
+  - S_NOCMTIME flag                                                  =20
+  - i_version updates                                                =20
+  - Proper dirty marking                                             =20
+                                                                           =
+                             =20
+  2. efivarfs_file_write (fs/efivarfs/file.c:15-77)                  =20
+
+  Location: fs/efivarfs/file.c:66Issue: Manually updates ctime in write
+operation                       =20
+  inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+  Context: Uses the legacy .write operation (not .write_iter), but
+still a write path that should use proper timestamp helpers.
+
+  3. ocfs2_write_end_nolock (fs/ocfs2/aops.c:1926-2050)
+
+  Location: fs/ocfs2/aops.c:2024-2026Issue: Manually updates ctime in
+write_end callback
+  inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+  di->i_mtime =3D di->i_ctime =3D cpu_to_le64(inode_get_mtime_sec(inode));
+  di->i_mtime_nsec =3D di->i_ctime_nsec =3D
+cpu_to_le32(inode_get_mtime_nsec(inode));
+  Context: This is called from OCFS2's write path. While
+ocfs2_file_write_iter calls __generic_file_write_iter, the write_end
+callback manually manages timestamps. This is used both by regular
+writes and
+  page_mkwrite via __ocfs2_page_mkwrite.
+
+  4. ubifs_vm_page_mkwrite (fs/ubifs/file.c:1493-1580)
+
+  Location: fs/ubifs/file.c:1570Issue: Manually updates ctime in
+page_mkwrite operation
+  inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+  Context: UBIFS implements its own timestamp update logic with
+mctime_update_needed() and manual budgeting for space, bypassing
+file_update_time().
+-------------------------------8<----------------------------------
+
+Only ocfs2 is exportable, so I think we want to convert that one. The
+others I'm not sure of yet.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
