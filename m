@@ -1,61 +1,76 @@
-Return-Path: <linux-nfs+bounces-16394-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16395-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A71AC5D7E7
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 15:11:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 763A7C5D7F3
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 15:11:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 707B5349B9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 14:05:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 105B34EBCA8
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 14:06:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A3B30B50A;
-	Fri, 14 Nov 2025 14:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED60631CA54;
+	Fri, 14 Nov 2025 14:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imd5Szlx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2gK+Z2R"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237C723908B;
-	Fri, 14 Nov 2025 14:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E12314A86;
+	Fri, 14 Nov 2025 14:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763129102; cv=none; b=GDmqDT3zm/lhhbRptBWKG6NOX6TD8C5terFQIkjWyq9mTkMv6HNjh94gY6BF0Bdw3J6hwhtbb/kOj9TTVCQeyffUWoejCnq3fcwJNrTFbrgAG8QnzJrR0n4CmDpXe7eTWwTRjtXMXNN9mVQu+N95olbSDCIMcLFQrgiOim8uEB8=
+	t=1763129155; cv=none; b=cI2SSr5uQKMBTPBvDJ4vu+DE0OGupTe8meo9PCG5cnJ2ceWTkGDoqT1DXqv5IlF8J/43nNS69FrcZMuLIoq5fZShPlPUlTuBPuiiJsfBkni/0Yzs6afr0UVyStvLq4CSuCSZu8XaZ1xH6toxSY9uFBgAmVvy+T45lMFaLqQsxT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763129102; c=relaxed/simple;
-	bh=qBagfT6KUYlyRbtMMbYHwsZqeSY2dB8e3MH2A2nSEjg=;
+	s=arc-20240116; t=1763129155; c=relaxed/simple;
+	bh=ZEg0b7s99KNx4Nn2gvpPToGyxGUieeAOKuc2AOfsqIw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LsNpKfLNIAfx0I+iBMkM0KeS7D+XQ4K3QhCY6lJrWFP9dBabDx0F7bj1+6C5/2oP8HdYO0QTG3OuXWIHNek4BjZU+9wmBcdWGHIttuF55JBKI+8VScx94imXyfcgrCIZKCqNqdi5LIRi8PNQOl0Pc1+mrWMNPK3Y/d0z3vEjZNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imd5Szlx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6AAAC4CEF1;
-	Fri, 14 Nov 2025 14:04:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=oIbxps0tUCyB96J/aKC66At9WNL+JR+XByVMbmLiH4AWhWhNe1F8r/4L5DYlj+jjBhfJ/jPZM2zx29a1NflT0W5lsSZTtN3drKIqAH0YtIqgfdeLEgIuAQK4qLdKaEI4z31oGatHUwKWeXnI33l9KokR+7/ENZtlba5CiItgbOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2gK+Z2R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD9AC113D0;
+	Fri, 14 Nov 2025 14:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763129101;
-	bh=qBagfT6KUYlyRbtMMbYHwsZqeSY2dB8e3MH2A2nSEjg=;
+	s=k20201202; t=1763129155;
+	bh=ZEg0b7s99KNx4Nn2gvpPToGyxGUieeAOKuc2AOfsqIw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=imd5SzlxTnaqrWpaf+ZkkISorjK2X4szbYW0BsMvyDSFrrTlTyfdIl631CTJ+U747
-	 OKWzMKxVjtX9U1sG+jbCY2/T5lQe6mlfksGJ2lEGPJMrmNreDesQNvmQA9WF/9+jp5
-	 DgqQj9E+IdyckU2ZlOpluZP4yufRC62EkN4NDbV4EThZsNYraUD0Qe5Au9EGlI4mgQ
-	 hG96pQYfYtdoOqaLkfoWSVgD9UagjaSHcFgqgPOYaiBjRfNZd2IiUvxzx9GTBqjmBM
-	 bQl5NcvDpg9BLb0VzzG4kUBaL01xbs/Tx3VZh0aIuoNMXWs3qMwJbnVKCdDbu07/7z
-	 0SkhVbdtpuBQA==
-Message-ID: <b7e8d5e3a0ce8da103f4591afc1f4a9c683ef3c7.camel@kernel.org>
-Subject: Re: re-enable IOCB_NOWAIT writes to files
+	b=g2gK+Z2R1kkCNwMWd3/1/a2Gwy4+svU66Kyd0VXHdTxpok4JKQ23poq7HsFRoV07N
+	 xwm0EkfzePQa3UwDOdege8hJ3aD+cSLFN2nZPEf/ElsqNE0ezlSz9CIwyLdCwoSqYY
+	 gGG+2ZgkHhsCVVtCAydzDfFPNRmL8hLE0a3YiUXIrDB9z8HfyLfzx9bua2wfY8zuEY
+	 2AJ/0W1E3LwZl5Mtuivea9rBXZH8U7qZQMPlascthU1jcxbgVRJ8ennTndvILnh9tK
+	 Jj6nx/k1gHR1NjUaZMT26+hPbHkqaYk3o9q/DcLmf461HiLq+qtZQrMpTaAiKhP8EJ
+	 RB4nI7XbzCDvg==
+Message-ID: <b30eac3d6368d2eb03a2acbae113455b65753e0c.camel@kernel.org>
+Subject: Re: [PATCH v6 00/15] Create and use APIs to centralise locking for
+ directory ops
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan
- Kara <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>, Martin
- Brandenburg	 <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>,
- Stefan Roesch	 <shr@fb.com>, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	gfs2@lists.linux.dev,
- io-uring@vger.kernel.org, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Fri, 14 Nov 2025 09:04:58 -0500
-In-Reply-To: <20251114062642.1524837-1-hch@lst.de>
-References: <20251114062642.1524837-1-hch@lst.de>
+To: Christian Brauner <brauner@kernel.org>, NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Amir Goldstein	
+ <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org,  Chris Mason	 <clm@fb.com>, David Sterba
+ <dsterba@suse.com>, David Howells <dhowells@redhat.com>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich	 <dakr@kernel.org>, Tyler Hicks
+ <code@tyhicks.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Chuck Lever
+ <chuck.lever@oracle.com>, Olga Kornievskaia	 <okorniev@redhat.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Namjae Jeon	 <linkinjeon@kernel.org>, Steve French
+ <smfrench@gmail.com>, Sergey Senozhatsky	 <senozhatsky@chromium.org>,
+ Carlos Maiolino <cem@kernel.org>, John Johansen	
+ <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, James
+ Morris	 <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Stephen
+ Smalley	 <stephen.smalley.work@gmail.com>, Ondrej Mosnacek
+ <omosnace@redhat.com>,  Mateusz Guzik <mjguzik@gmail.com>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, Stefan Berger	 <stefanb@linux.ibm.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, 	linux-kernel@vger.kernel.org,
+ netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Date: Fri, 14 Nov 2025 09:05:51 -0500
+In-Reply-To: <20251114-baden-banknoten-96fb107f79d7@brauner>
+References: <20251113002050.676694-1-neilb@ownmail.net>
+	 <20251114-baden-banknoten-96fb107f79d7@brauner>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,60 +155,26 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-11-14 at 07:26 +0100, Christoph Hellwig wrote:
-> Hi all,
+On Fri, 2025-11-14 at 13:24 +0100, Christian Brauner wrote:
+> On Thu, Nov 13, 2025 at 11:18:23AM +1100, NeilBrown wrote:
+> > Following is a new version of this series:
+> >  - fixed a bug found by syzbot
+> >  - cleanup suggested by Stephen Smalley
+> >  - added patch for missing updates in smb/server - thanks Jeff Layton
 >=20
-> commit 66fa3cedf16a ("fs: Add async write file modification handling.")
-> effectively disabled IOCB_NOWAIT writes as timestamp updates currently
-> always require blocking, and the modern timestamp resolution means we
-> always update timestamps.  This leads to a lot of context switches from
-> applications using io_uring to submit file writes, making it often worse
-> than using the legacy aio code that is not using IOCB_NOWAIT.
+> The codeflow right now is very very gnarly in a lot of places which
+> obviously isn't your fault. But start_creating() and end_creating()
+> would very naturally lend themselves to be CLASS() guards.
 >=20
-> This series allows non-blocking updates for lazytime if the file system
-> supports it, and adds that support for XFS.
->=20
-> It also fixes the layering bypass in btrfs when updating timestamps on
-> device files for devices removed from btrfs usage, and FMODE_NOCMTIME
-> handling in the VFS now that nfsd started using it.  Note that I'm still
-> not sure that nfsd usage is fully correct for all file systems, as only
-> XFS explicitly supports FMODE_NOCMTIME, but at least the generic code
-> does the right thing now.
->=20
-> Diffstat:
->  Documentation/filesystems/locking.rst |    2=20
->  Documentation/filesystems/vfs.rst     |    6 ++
->  fs/btrfs/inode.c                      |    3 +
->  fs/btrfs/volumes.c                    |   11 +--
->  fs/fat/misc.c                         |    3 +
->  fs/fs-writeback.c                     |   53 ++++++++++++++----
->  fs/gfs2/inode.c                       |    6 +-
->  fs/inode.c                            |  100 +++++++++++----------------=
--------
->  fs/internal.h                         |    3 -
->  fs/orangefs/inode.c                   |    7 ++
->  fs/overlayfs/inode.c                  |    3 +
->  fs/sync.c                             |    4 -
->  fs/ubifs/file.c                       |    9 +--
->  fs/utimes.c                           |    1=20
->  fs/xfs/xfs_iops.c                     |   29 ++++++++-
->  fs/xfs/xfs_super.c                    |   29 ---------
->  include/linux/fs.h                    |   17 +++--
->  include/trace/events/writeback.h      |    6 --
->  18 files changed, 152 insertions(+), 140 deletions(-)
+> Unrelated: I'm very inclined to slap a patch on top that renames
+> start_creating()/end_creating() and start_dirop()/end_dirop() to
+> vfs_start_creating()/vfs_end_creating() and
+> vfs_start_dirop()/vfs_end_dirop(). After all they are VFS level
+> maintained helpers and I try to be consistent with the naming in the
+> codebase making it very easy to grep.
 
-This all looks pretty reasonable to me. There are a few changelog and
-subject line typos, but the code changes look fine. You can add:
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-
-As far as nfsd's usage of FMODE_NOCMTIME, it looks OK to me. That's
-implemented today by the check in file_modified_flags(), which is
-generic and should work across filesystems.
-
-The main exception is xfs_exchange_range() which has some special
-handling for it, but nfsd doesn't use that functionality so that
-shouldn't be an issue.
-
-Am I missing some subtlety?
+That sounds like a good idea. The current names are a little too
+generic.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
