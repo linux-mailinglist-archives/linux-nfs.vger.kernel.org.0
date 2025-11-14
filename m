@@ -1,137 +1,163 @@
-Return-Path: <linux-nfs+bounces-16417-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16418-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ED5CC5F743
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 23:00:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63CB0C5F7C1
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 23:15:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 026A4358B20
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 22:00:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AEEF3BCCFB
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Nov 2025 22:15:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0805C21CC60;
-	Fri, 14 Nov 2025 22:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8291D30B50C;
+	Fri, 14 Nov 2025 22:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfwJU+ZU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M448Fyck"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6A230B50C;
-	Fri, 14 Nov 2025 22:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62E630AD05
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 22:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763157613; cv=none; b=Q7WpqbInVi+fH7ovhkmFRlH4yOy2knIj4xumWx4Lg3dmFsRuvvuDxINm0H2UtIKQt2oG+Gqp/KWfFOwQOCNUiEQ6Nc+ZKabLpi/t/9S6JRIkYakgKKrUmPPEMOOpugECL7tO3kDexPfWPocW3YMgFw7vaO7MYr7cfGYr9/uAnOo=
+	t=1763158487; cv=none; b=tWyNzmdWDvRFhm0ZI22A6MA4bmqpl+5JbPfxFdcsWdsCu6y5cflkfpTf1DA4BIXCenvw7lbA4e5TYt8sZPpiPlk8Gx3NM2ckKVF6WmsbvCcMp8v/xT64C+dvLVuIKY65S5hzYkDi4U6zbPtreUImt/Fv6ODB9BVL9MPgKWvYf9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763157613; c=relaxed/simple;
-	bh=j7RZqy16ewoXhRgrqJNjQ7/+/CoZMfyd+6JInM1le7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdfGRtKbBPiX3hE/9dTwCIcE9mIb+s0c11ExVY5mHeVxfaVwhQ27EOJJRSNOruwKv3GbNcg9z/VNIQOL0Byp9R4znSlXZuvFMYERhxCzf+eibeOTP86OIVtfCzmNO7DcbSAycgnEGE0qOsqQEOB17sJk0n75Udaez25QQFrdT08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfwJU+ZU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D246DC4CEF8;
-	Fri, 14 Nov 2025 22:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763157613;
-	bh=j7RZqy16ewoXhRgrqJNjQ7/+/CoZMfyd+6JInM1le7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EfwJU+ZUNjn6c5WRHTfTiKmw/cdc6ZbEieKQ8JC1UXhHEzhgMJa+pi7uOa9BYXOgy
-	 1jq5bJrMPT9t+b1CwfZXQst6xQ497J/u/j9d2lHz3Aq0C+sg0bviuV3lbLYBhxVOFd
-	 abwmBU/NlfhjmNQgVVgGJQ7hjV+P9jHuAP4y+qCDr0bqXBlPGUp1lOcgpBGMdvd7/d
-	 zpD2mNXtOk5tMPZo2JZtOKV9ArhNES0aWPAlNwR2owUfIs7n2FjaaHUlN0r5iTB4oj
-	 T4HGhidEIh9kSIO2vxnO/fTIUASB0Xuvskb4gfsHPVJEenytYvZCwtZS47sJosv2yE
-	 GO05Ixa1HGn3g==
-Date: Fri, 14 Nov 2025 23:00:02 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
-	David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Steve French <smfrench@gmail.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Carlos Maiolino <cem@kernel.org>, John Johansen <john.johansen@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Stefan Berger <stefanb@linux.ibm.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
-	ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Subject: Re: [PATCH v6 00/15] Create and use APIs to centralise locking for
- directory ops
-Message-ID: <20251114-simulation-gerissen-aec3f9b82844@brauner>
-References: <20251113002050.676694-1-neilb@ownmail.net>
- <20251114-baden-banknoten-96fb107f79d7@brauner>
- <20251114-liedgut-eidesstattlich-8c116178202f@brauner>
- <3209fb8c9be25362316bf3585a156c21f3b0a7e2.camel@kernel.org>
+	s=arc-20240116; t=1763158487; c=relaxed/simple;
+	bh=AeAR0M6mN5y9tfSb089vll0wM+bX8hpgQUBfGyUAPbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uLXR6JxepSCzVZL+dJk1xGVNfQ6bwsL/cIKlLrvasaWCA34rJozPeO6grm20z3RIS/ciKdmVn/3VbvWgeCTK4grBJx4zQOGhMVfyPYp/6/XMw9wHcKYDvy0qGN/w3f6V0ahOA0csgna6P2zk0x9GodM4RyI6KSZviku7sbE4CHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M448Fyck; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-477632d9326so17656135e9.1
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Nov 2025 14:14:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763158484; x=1763763284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C7NTstYfdgFQcU+ZeosUKnP918N0qC2sjoB9U+WCqJg=;
+        b=M448FyckiJbWILnucjl43yiDJZmCTY1lLssr8N4vIS1fsENpsyfe0isqPJRD8WK1Zv
+         nvwaK7HJpwABbNX+Zy0uSOYHMyzl6qeEfQxjxCR9yHE7xEnCyuAXadDF99Qxu6HBbmZJ
+         iH08XCCgelqR7TDzfpF35zoswl3fo4zyW0FXDQCvcw2ZLtaZJApqoiNkn4nYlKpzLzOT
+         /D8Z0Yi+rvBc2saUW80gxuhBfcjMd9Y0JE0KHkQOxXFQmqAyKktip3ABkLXe0Gfq0tpA
+         OdXruiv0r/dQRMN2f1FoDguYtJ0ihdXEqRD21iKrbXsF/jKjRb4LDzcF/O8H9FIVryju
+         ziCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763158484; x=1763763284;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=C7NTstYfdgFQcU+ZeosUKnP918N0qC2sjoB9U+WCqJg=;
+        b=appJHZxr/gizLxFZPToweE0KynYXLaz7DNpLhucaXybgFdY6kA1uAQLiLJgQAtw9CR
+         6VwdZYj/mZPiY89kUOIGYt8XuUQAis6B24L8eb/qwaRCv+j4ysgY6y80UMk0c1qg5UIm
+         /cBLfYbJCZFDMVGA3uRsbEEbzyJPIgWYL7tQTD7oC+OZoHZrM9XdDZd6voMQDCgsGive
+         E1qqSOSuGfQTjY2kbmHfrTixfh+vVP3H+Yx9IV5nRAEg7wrAMcVkj1QPSb12gf4dHoeY
+         RCyT2GewF60lmPJpcwBhymg+TU0SQk07H9I+Ko4sC4g7turxkh7X1nYiCIDbgdlJm+Le
+         Y2pA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcXebmlgXBPd6HtdMQaxBbnIrpOPjisXxMn9MA64IvJSxiJ+RKqRpPYar7fINU9d2JZuU52jvSZ5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn7tWy5RFLUsyLr1S3fhgR3fIpiiE9thdoMlM4w+uLROyb0cmS
+	5F6xj07U/tjE0/z11o08a1yLfxzOBKi7qrwiUIF9q3y54WG0Pbtrt4so
+X-Gm-Gg: ASbGncumVWygknPLNnKPBIUEfPNWaUk9YaqphEhlyk4kWSowNOdViGyk6ihLeSgZ+/L
+	1K8gjq72ekscA6rEmCZtvfzqBQ3cpf1qpsJv87agVvik1sWU+w/g3Y4k+E1YQ3RnDbz2/MioNrT
+	ZpmQuug9f9TXx06XExBk+VzOhjQlP3AhWjA5GsbcG/NpplnF4BekdH8O0nIKoKH6Gf69l/8FwSI
+	0XPqzRoz+Yqleqq4U5CLVfZZVK+v+gzMHEgoWcaV2l7V1V0OnXMt2+nRGeblm6XAdVDK5H+O7YO
+	5+fPooDX2RuFPMZu8J0jCjmOdxY28RXJLAW4cKYpdwDK4NDleGi4jUAacKevO1UWHPfy9D9YJN5
+	C7nb9Vy6y1W4N+V9lxYUCPa1vMXw9ll5rGH2MFZuzevhqIk+Mklgzi6FAvfXpALQ+ACnTPXYlCi
+	0eA17E+QyiVdSVUGwljAWC4KbSb1pHj6nHaEdC62laSM6Oqj6JMnB7
+X-Google-Smtp-Source: AGHT+IE0XeSBj5bp4627BP3nAgHaoIXuFpJ7/yfefA7DkOxrWwspxLMHxhrDGXhBwCSWL97AvT4zYg==
+X-Received: by 2002:a05:600c:3550:b0:477:7d94:9d05 with SMTP id 5b1f17b1804b1-4778feb0f3emr46454605e9.35.1763158484005;
+        Fri, 14 Nov 2025 14:14:44 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4778bd0f761sm55370795e9.4.2025.11.14.14.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 14:14:43 -0800 (PST)
+Date: Fri, 14 Nov 2025 22:14:41 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: Andrew Morten <akpm@linux-foundation.org>, NeilBrown <neil@brown.name>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>, speedcracker@hotmail.com
+Subject: Re: [PATCH v1 v6.12.y] nfsd: Replace clamp_t in nfsd4_get_drc_mem()
+Message-ID: <20251114221441.49481cec@pumpkin>
+In-Reply-To: <20251114211922.6312-1-cel@kernel.org>
+References: <20251114211922.6312-1-cel@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3209fb8c9be25362316bf3585a156c21f3b0a7e2.camel@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 14, 2025 at 09:52:59AM -0500, Jeff Layton wrote:
-> On Fri, 2025-11-14 at 15:23 +0100, Christian Brauner wrote:
-> > On Fri, Nov 14, 2025 at 01:24:41PM +0100, Christian Brauner wrote:
-> > > On Thu, Nov 13, 2025 at 11:18:23AM +1100, NeilBrown wrote:
-> > > > Following is a new version of this series:
-> > > >  - fixed a bug found by syzbot
-> > > >  - cleanup suggested by Stephen Smalley
-> > > >  - added patch for missing updates in smb/server - thanks Jeff Layton
-> > > 
-> > > The codeflow right now is very very gnarly in a lot of places which
-> > > obviously isn't your fault. But start_creating() and end_creating()
-> > > would very naturally lend themselves to be CLASS() guards.
-> > >
-> > > Unrelated: I'm very inclined to slap a patch on top that renames
-> > > start_creating()/end_creating() and start_dirop()/end_dirop() to
-> > > vfs_start_creating()/vfs_end_creating() and
-> > > vfs_start_dirop()/vfs_end_dirop(). After all they are VFS level
-> > > maintained helpers and I try to be consistent with the naming in the
-> > > codebase making it very easy to grep.
-> > 
-> > @Neil, @Jeff, could you please look at:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs.all
-> > 
-> > and specifically at the merge conflict resolution I did for:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=vfs.all&id=f28c9935f78bffe6fee62f7fb9f6c5af7e30d9b2
-> > 
-> > and tell me whether it all looks sane?
-> 
-> 
-> I don't see any major issues. I'm kicking off a quick pynfs test run
-> now with it. One fairly minor nit:
-> 
-> @@ -212,15 +210,13 @@ nfsd4_create_clid_dir(struct nfs4_client *clp)
->  		 * In the 4.0 case, we should never get here; but we may
->  		 * as well be forgiving and just succeed silently.
->  		 */
-> -		goto out_put;
-> -	dentry = vfs_mkdir(&nop_mnt_idmap, d_inode(dir), dentry, 0700, NULL);
-> +		goto out_end;
-> +	dentry = vfs_mkdir(&nop_mnt_idmap, d_inode(dir), dentry, S_IRWXU, NULL);
->  	if (IS_ERR(dentry))
->  		status = PTR_ERR(dentry);
-> 
-> I'm not sure if it was Neil's patch or your resolution that changed it,
-> but the change from 0700 to a symbolic constant is not preferred, IMO.
-> File modes are one of the few places where I think it's easier to
-> interpret (octal) numbers rather than symbolic constants.
+On Fri, 14 Nov 2025 16:19:22 -0500
+Chuck Lever <cel@kernel.org> wrote:
 
-Neil's patches didn't change that. They just keep the status quo ante.
-You've changed it all to octals at the same time you extended directory
-operations to allow delegations. Not sure how great it is to mix those
-changes together in a single patch.
+> From: NeilBrown <neil@brown.name>
+> 
+> A recent change to clamp_t() in 6.1.y caused fs/nfsd/nfs4state.c to fail
+> to compile with gcc-9. The code in nfsd4_get_drc_mem() was written with
+> the assumption that when "max < min",
+> 
+>    clamp(val, min, max)
+> 
+> would return max.  This assumption is not documented as an API promise
+> and the change caused a compile failure if it could be statically
+> determined that "max < min".
+> 
+> The relevant code was no longer present upstream when commit 1519fbc8832b
+> ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()")
+> landed there, so there is no upstream change to nfsd4_get_drc_mem() to
+> backport.
+> 
+> There is no clear case that the existing code in nfsd4_get_drc_mem()
+> is functioning incorrectly. The goal of this patch is to permit the clean
+> application of commit 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for
+> the lo < hi test in clamp()"), and any commits that depend on it, to LTS
+> kernels without affecting the ability to compile those kernels. This is
+> done by open-coding the __clamp() macro sans the built-in type checking.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220745#c0
+> Signed-off-by: NeilBrown <neil@brown.name>
+> Stable-dep-of: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-I can change the resolution to use 0700 again ofc.
+Reviewed_by: David Laight <david.laight.linux@gmail.com>
+> ---
+>  fs/nfsd/nfs4state.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> Changes since Neil's post:
+> * Editorial changes to the commit message
+> * Attempt to address David's review comments
+> * Applied to linux-6.12.y, passed NFSD upstream CI suite
+> 
+> This patch is intended to be applied to linux-6.12.y, and should
+> apply cleanly to other LTS kernels since nfsd4_get_drc_mem hasn't
+> changed since v5.4.
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 7b0fabf8c657..41545933dd18 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1983,8 +1983,10 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn
+>  	 */
+>  	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+>  
+> -	avail = clamp_t(unsigned long, avail, slotsize,
+> -			total_avail/scale_factor);
+> +	if (avail > total_avail / scale_factor)
+> +		avail = total_avail / scale_factor;
+> +	else if (avail < slotsize)
+> +		avail = slotsize;
+>  	num = min_t(int, num, avail / slotsize);
+>  	num = max_t(int, num, 1);
+>  	nfsd_drc_mem_used += num * slotsize;
+
 
