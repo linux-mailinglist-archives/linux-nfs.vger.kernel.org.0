@@ -1,362 +1,350 @@
-Return-Path: <linux-nfs+bounces-16430-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16431-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C68FC61490
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Nov 2025 13:15:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72A00C6189D
+	for <lists+linux-nfs@lfdr.de>; Sun, 16 Nov 2025 17:30:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0EC33B5FD6
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Nov 2025 12:15:01 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E95D0353336
+	for <lists+linux-nfs@lfdr.de>; Sun, 16 Nov 2025 16:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C02A2D46B2;
-	Sun, 16 Nov 2025 12:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6461930E0E9;
+	Sun, 16 Nov 2025 16:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=helgefjell.de header.i=@helgefjell.de header.b="kano2wBv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hu4S/VoQ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EMy3a/JU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.helgefjell.de (mail.helgefjell.de [142.132.201.35])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E4B2D3A9E
-	for <linux-nfs@vger.kernel.org>; Sun, 16 Nov 2025 12:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.201.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763295293; cv=none; b=p7JqN+QnQUUFCs/ltc67k5vsocU6UtG8p56AWr2gfiCMKMbkd32b367FgIQIUJmekOMteYisZiXydHEKm4bUM3JmHdiv6jAtYjTdnn/Was97j0n4dh8ju/WH3StSfzWGmyKCsZAZii2DtGdc2CPgLWlJ2xupbULt5xx0TzGY4CE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763295293; c=relaxed/simple;
-	bh=Hs3X4HAo7Y51czw92ytTo8h4ASOW0BZVLaLcBgr15ts=;
-	h=Date:From:To:Subject:Message-ID:Mime-Version:Content-Type:
-	 Content-Disposition; b=f3tyMLUxUqmxVPBL4DZ8Ql2AuqnW24Kc/ozz57aSGzEpIBXUKuHjBrSoC1kL7bZxxaisPrO1I4B0968+caB+CczotgtkjeX0HR5/hyIJCmY7zNDC2LMRnWdJ9gumgMNnZ+BHZ/KOk4YbuS2Vul3BDzD5S9lyu/U9IWvpXoPBkOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=helgefjell.de; spf=pass smtp.mailfrom=helgefjell.de; dkim=pass (2048-bit key) header.d=helgefjell.de header.i=@helgefjell.de header.b=kano2wBv; arc=none smtp.client-ip=142.132.201.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=helgefjell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=helgefjell.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=helgefjell.de;
-	s=selector.helgefjell; t=1763294979;
-	bh=8CQFJCSX88OU9yEKmvHGaR1nltWixYDF4WIWEOuwuH0=;
-	h=Date:From:To:Subject;
-	b=kano2wBveIiWme0xXOH6GmhJWdFdim1BblIdmvZ251lHH6JrMjuqMROV/xLmVSCDc
-	 sJvdsJ+xpXO+3saDc+4l7Kw4XwFrG7LgxXeWFaQx1WnsJS7NzNMhc0m+HHKmq4uwBo
-	 Pn9P1s3g5Zbdjypw7l9HpLYKqkce2+I7uxBsilSevqYji7jGKuVAVo1btq1zUxa0cE
-	 A09yjvJ/F45vpwHyiSgacYXgDMvhIrZUXYWZl1wdKTVCwq9PkdLbGvk1JwBJfXnHxP
-	 af2ovFJXNZufaMZ0NqAVzmfeJFFnK67FKwSWAQZ5/4psq8+wLV9nK14mdn8K1W5NF4
-	 x7Nh8YCjhmwQA==
-Original-Subject: Issues in man pages of nfs
-Author: Helge Kreutzmann <debian@helgefjell.de>
-Received: from localhost (localhost [127.0.0.1])
-  (uid 1002)
-  by mail.helgefjell.de with local
-  id 00000000000200EA.000000006919BF03.003C0D73; Sun, 16 Nov 2025 12:09:39 +0000
-Date: Sun, 16 Nov 2025 12:09:39 +0000
-From: Helge Kreutzmann <debian@helgefjell.de>
-To: linux-nfs@vger.kernel.org
-Subject: Issues in man pages of nfs
-Message-ID: <aRm_A91ko3DRPtHc@meinfjell.helgefjelltest.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93642286A7;
+	Sun, 16 Nov 2025 16:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763310602; cv=fail; b=I8IDkw9CI7cg0xWS7aJIgqVchrgwCDhzlYEFor4XHAScdPPJQKlV/bI9V+H8SlR9yLmaU8ANWODWu6LZ9n9+arKJ+C4lI9ls5gE2C8XYiHTF9Aukm6+YIwbWEdDG/IrtcvPzRPIJWNdrryjAHStq1WG1VFxe6ojHQRGlBmLEzL8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763310602; c=relaxed/simple;
+	bh=kjfl5gSMwBVNPgeOIV3JW7+CtamI8VxWHc24gpbtnbQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PSRaVyPLEeH2oDKi0IogSuM0+slq0YxiEDX7yPfSsdKfOi5WIMH1ooW3boJuBjl05fxiiH9KFv9DMlS87+guQo/rAL+iLp8ppVLlXiH3ZxkJYQmZLlimuQPqZfHP8rrwC+QiHBzOEs8qX7ZlRHxQuksuk7kY+K1vLO86adRzzhg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Hu4S/VoQ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EMy3a/JU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AGBsrcs011447;
+	Sun, 16 Nov 2025 16:29:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=mGKJ0w3K9g1I50LPfiG9PTJ0Ca+yu0FoXBUMkOltztA=; b=
+	Hu4S/VoQvujz+6r+zVXhmm7haFKGhTc7V22wKR3SWmTJcpFsNWhKOx9e+0HLdSgV
+	/+b/BtBc9SXQgwHxH+xJTXh1wfgtfG/0p3oRlxyQWXwYWiJGdbsULiugBceYxhjQ
+	g0DzlyVbZtH8yymGReVJ4DInC83bpEL5YMo8Gfb6z0mSx7RAD4eElsT15j6iY3DF
+	ZNoKp6Kq7+1mqGa7WgBsFBVq+kRglFUmw54vIDLmvBPMOQr8/1j+12IR1s3QtoHq
+	c8Tiko6BKcsWOO9nFklWVipamSqlPUuE8bkqWHfI1nykNkHOLt1clNJ8PS30PCNR
+	lnp2SAvQ8GmZdtARrFGkKw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aejbuh51b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 16 Nov 2025 16:29:42 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AGE5Y0r007756;
+	Sun, 16 Nov 2025 16:29:42 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010040.outbound.protection.outlook.com [40.93.198.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefy6t3jm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 16 Nov 2025 16:29:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xUP3sx2mrWAsCv5svEqf8PnZ37VBaN079jMAXwtyBLC1tWLJxcw7IM/Zm02bzbiwWXHB7N89VbIFVINKWTt3skxXyU0f1PiJ33r5B9KCtS96Je3Qc7utpB2yPGJcSbaAmVz8TLzWQzsVK9GiEJxR/A9EMr+izIz3k0GKvU8Q82cKho8HHLD2suJ98BppQM67GTgaNAQRN82CNOAPWCPahM/xpPeTkFyvoTNJ1Sc1g/UzecRPJMuDk35giRvqH86QVjV5ISTMJpuPjjfZVbu0On7OySHN+9y22nNtANufyEDK+aK4uCMoNA4Rourdyc+x1hgBuW9oDdFmIxM7hVvSHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mGKJ0w3K9g1I50LPfiG9PTJ0Ca+yu0FoXBUMkOltztA=;
+ b=RESyJ9BP2JZymhI3PCS7qb2lXsZ5pzXDAM4Y4cPPjkA/eHvDtIvkhlcnM1kZdNDasZiQPib4XZWzeDjbDkXS58JBr7yKL/NiM86Z1pDej2GOFkvB10rAztXKAdk2zVq2na4Jkee9c85Ko6XJievlHsn4mW65cIKTsJzWWFsLzQ/wRNXrvDwiqDV2CJOsnT5R1bUnxSi5Idh+G/dKjtSJ16bjC5CU2XZ0kYzr21yVdHeGm1ly9VNPUDqW9E4DPr27ZKVwuEbFu++6Qd0t1MZG+bv2t2FZC4Ob9S/tZGyo3ElEj/NMwWFwGOODfC4VE5IF8FbFTpPRQKV0dLUywpVU3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mGKJ0w3K9g1I50LPfiG9PTJ0Ca+yu0FoXBUMkOltztA=;
+ b=EMy3a/JUOMFkrtvFx1d24QqMOyd75cp79Rv6e/MioOf0BVz2zFwUjsq88puBDFkWguJXt6G8SLxDaXGqR+ZaNkMZWmjBalIusrfBGGWhM44KSXYW42PN3oZbDUoxb21Dj4cPsO5SH0S8vzVDtf7leKLgJoan89z1z2lu+4SyqLg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH0PR10MB4519.namprd10.prod.outlook.com (2603:10b6:510:37::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Sun, 16 Nov
+ 2025 16:29:38 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9298.010; Sun, 16 Nov 2025
+ 16:29:38 +0000
+Message-ID: <4a63ad3d-b53a-4eab-8ffb-dd206f52c20e@oracle.com>
+Date: Sun, 16 Nov 2025 11:29:36 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: ls input/output error ("NFS: readdir(/) returns -5") on krb5
+ NFSv4 client using SHA2
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+        "1120598@bugs.debian.org" <1120598@bugs.debian.org>,
+        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+        Scott Mayhew <smayhew@redhat.com>, Steve Dickson <steved@redhat.com>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Tyler W. Ross" <TWR@tylerwross.com>
+References: <176298368872.955.14091113173156448257.reportbug@nfsclient-sid.ipa.twrlab.net>
+ <c7136bad-5a00-4224-a25c-0cf7e8252f4a@oracle.com>
+ <aRZL8kbmfbssOwKF@eldamar.lan>
+ <1cee1c3e-e6b9-485a-a4d4-c336072f14c3@oracle.com>
+ <aRZZoNB5rsC8QUi4@eldamar.lan>
+ <de44bf50-0c87-4062-b974-0b879868c0f5@oracle.com>
+ <AVpI5XolCCA38sGzxlfk6azQI9oUAxafUVl9B7B1WgJEmGgSAQq5nvulQO6P_RQqjBp3adqasHFsodhAAxai0dcp5scRMJk0dLsGMQeSiew=@tylerwross.com>
+ <fVv3cF7Ulh3cKUP17C98gh_uOv9BcMlMpsIh1Nv5_0tdw-75PKiPJgIEP5o2jBVry7orwz7jeiGQenfCbuUxyj5JFstbx3RTFYr223qDmV0=@tylerwross.com>
+ <a6d1435b-f507-49eb-b80c-4322dc7e1157@oracle.com>
+ <Y79HV0VGpScPYqI_dDxeItkX2UZwSdReaUOpIeMeZXq2HLsHf5J_PTQqr7HrBYygICRsn-OB89QPrxPzjgv2smuzTThUPy_3fq_N1NprlUg=@tylerwross.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <Y79HV0VGpScPYqI_dDxeItkX2UZwSdReaUOpIeMeZXq2HLsHf5J_PTQqr7HrBYygICRsn-OB89QPrxPzjgv2smuzTThUPy_3fq_N1NprlUg=@tylerwross.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR16CA0020.namprd16.prod.outlook.com
+ (2603:10b6:610:50::30) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256; protocol="application/pgp-signature"; boundary="=_meinfjell-3935603-1763294979-0001-2"
-Content-Disposition: inline
-X-Public-Key-URL: http://www.helgefjell.de/data/debian_neu.asc
-X-homepage: http://www.helgefjell.de/debian
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH0PR10MB4519:EE_
+X-MS-Office365-Filtering-Correlation-Id: d045d37d-a75c-400b-e8a5-08de252d560a
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|159843002;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?cWY1VWR6T0ZYaklJU09OTHEwN0JHUnN0SFFWQjREb0hlOWNaQ2hDYnFEY0Ri?=
+ =?utf-8?B?NDFyOEh0WkNnc3NWcXZmejJteEZrY1V2VUVuNE9PYXRmTEUrU1ZWZjh4VVlk?=
+ =?utf-8?B?NytXbXV0Y0NjdVFselJONjRXdEpPL3pOK2t2cUtucjh1ZkFNc2s1MWpqWjM1?=
+ =?utf-8?B?aytzVGJ0OGsxQWNjUFg2R3liUUptdWN5cHl1UE8ycWE2YUlwYWQvSHRaYXJw?=
+ =?utf-8?B?WCtGUDJUVVBxNDNYTWxBdkk3VExlY1JnUEdXTmRPV002YjR6T25QL2hUMnJM?=
+ =?utf-8?B?WkVJOFJpQXpIeXViWmlnYUlSM2JwTzA4QUtyQ3lHR2NwYUErU2dNZnppbUkz?=
+ =?utf-8?B?cUk5aVY1ejNOM2dlTTNxVzFGSlBjYkRad0VjNW9KeE1NajV1K2pXMzVCRW1u?=
+ =?utf-8?B?dmt3cGJra2hCc1Z1T0MraTVkY2RzcWxneDRNRVd3Sk95dDBLS3ZYVTRDaTB4?=
+ =?utf-8?B?K2NjaWdEQUE3OGNXcE54RWg0UGlYSDNEWVBZbE9ZSm9BeDg2bW4rdGllVW5V?=
+ =?utf-8?B?QVZ5d0YzRmY1UWYyUHRaK1pzS0N5Nmc1QWZ2VnhiR2VsQzNqcGplajdWSTNC?=
+ =?utf-8?B?NHVpL0ZIWS94SlhPenJOTUFQOE1wV1pPWHlreFBrY0RKem5OeFFoZFFlMlNK?=
+ =?utf-8?B?dzJoZWpSdk1HWWtCS21HRm5xb2FhV2VnQVV2c0cwVXlUUWhZOTlTWlJRdGEy?=
+ =?utf-8?B?UENDN3UvNzRHWkREYVh3U1NrN1hmUmM2Qm1YZlYrNjFaR3ZVcUZVeUFidC9J?=
+ =?utf-8?B?c0FZNk9kbnd3Sk9kNHBjdmMySDBweVB1ZEtOdVh1VHhPU3lZckZpNTVhNDQ5?=
+ =?utf-8?B?cFZGK1lkSS9uMU5UWm9XYk9tTUtXRXpNMmFiNHBwSlBFOGtlTUhVbkFrMElo?=
+ =?utf-8?B?UzNDdW5vVG1VUk1JY0RRUXlwdXZNS2ZjYkZCS2JLNFFuY1pmNkF1bFU3RFBT?=
+ =?utf-8?B?QUg1NllxTjBBRzNjRVlONEY2L3lxaTM0SGNaNk44M0o0b2pqUC8zVmJJem1B?=
+ =?utf-8?B?dnFxQkdaWVRzaHBkdzBsenRZNzhIaW9ZM1pkbC9FblN5VFdSZW9QcmZCMGFY?=
+ =?utf-8?B?SnQ5TEhyaUlTa3pvR1pIQVEzc21CWDRwOCtGVUpETWt5Z0lsSFlWam8wc0lE?=
+ =?utf-8?B?dG9JS1Q0OW55QitpQk5PUHQreld0Wk9GQ0JwMTh3aDdsZDVHWGU1b1kwZElh?=
+ =?utf-8?B?YklLamNUNmVkRmJRRklXTmdZT3lkd0d5TzlKRWY1dCtEM2FPRmhrQTJ4STZZ?=
+ =?utf-8?B?WnJBclpkT3ZWYlF2U0ZGYTI2WGVvQVU0SkVVZm1neFZlNkE3V0xwMUo2UXZt?=
+ =?utf-8?B?ODRwUytGaVVDL01yM0w0NGlFMFVlY210UGphM0FQcDFWTHNtN1pUYUZCQjlW?=
+ =?utf-8?B?MDgzMm5oLzZESm5UdGRkL3lkMG9QSnpWUm5iVnl1L3lvdUUwTHR2Vklqc3Zs?=
+ =?utf-8?B?N2gzM1NndzMxZkgyMjBmMGt3cmdzUHJ1UmRpSGJiaHUyUVRqdXdiaFdHdTdB?=
+ =?utf-8?B?THhqK1VZS09sYUVRcGNtNnE2M2pqTnhrZHdsbGNyanZscFVMcEZOaUdqeTJq?=
+ =?utf-8?B?aHBYeFZNNVJZek16WHlPL1lLejdzNTVyejlST0R0Q1NZc1NrTzFrUGlKdnpZ?=
+ =?utf-8?B?WG5leTlGOXVTcitUdGxjdnFpbDIvZXdUTXJhN1hQZEFKR0g2MS96dnZ4SDRR?=
+ =?utf-8?B?a2xlUDF5T0ZGYTZydmNvUHZDbUwreFprVjBxdXpSa0lkYWJYSitBbkYxV0RB?=
+ =?utf-8?B?V3N0K0Z0NlRGVUduMitFd3FzZklZZ2Y1em84OVMyYXVBck16anVMd0l5SzN3?=
+ =?utf-8?B?TmxkNmE0NTZEbEZ4L0t0b0JFbjZzT3VrcU5zME1RQTAxMSt5L2xXQVNQaXFH?=
+ =?utf-8?B?OEZZcFJBTkswRFhaOFFmSkxCZDB1TGFlU0pWV21wREhaeC8ySjhVNXFrdXJS?=
+ =?utf-8?B?dGlvODNvVlpzK2lYWm5qcE11bGxzbDZWTitySzVIOHR1SEY4OGZCbXZ2OXRS?=
+ =?utf-8?B?OVJEYlQ3eEp6MG53cHFOcFlYT2RCMnBnYTNxZHJLVnZIK0h3WW1ualREL1dV?=
+ =?utf-8?Q?8pgXmu?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(159843002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?VjZDa2dRd2Q1azRLMmxQdTFBT0tIYURodW4wK01MQ04vT3E0SFdQME1YcUJz?=
+ =?utf-8?B?SGRRNWtjOXQxeXhMcDRSMXRYTDFxdE5ZVm5qZDFQTS9LR0lOUENwZFpFc09R?=
+ =?utf-8?B?djNYakN2d1psdWhGOElYMlBoNkM3UzRRSTNPbUg5MmoyWXBpV2d1UnFiM29n?=
+ =?utf-8?B?Qm93WUN6SERIYktRN3NoM0d2bit4UzRDQ1p3YUtFMlA2SGltc2UzYldpeWV3?=
+ =?utf-8?B?SGh1TzJkL25XM3lCc0c3S1VRVkVqckZaU0R1eEtaUTFHQXBkRlhmKzlSYU9X?=
+ =?utf-8?B?d3A0ZlBMNE85dnJLR3p2dTlKNXBKdHo5Tm5KNDQ3MWo5T3oxWlhydEg2TVdL?=
+ =?utf-8?B?Y3RTbVpVQUx1MjYwaGJZYzczL25RTFZjckhRQURqTDd4N1BiRnZVZVd5ckNX?=
+ =?utf-8?B?aTFzOVlXNldyaFFveERLekp1ZU5HWkhRaHBWTzJVeHMwZ0NuLytONjZ0U0Y5?=
+ =?utf-8?B?N3F5djVNK0dmSkkrUFlNa0ZpMEFiVUVBSy9IUkEwanVBSEJvU0N4S2lUbGF2?=
+ =?utf-8?B?S3h3Q2ZBTXpVcjB0bGRTakY0S2pSbEtPc0VqZkRrcTlxOUF0Si85SmNvZ1Fa?=
+ =?utf-8?B?M21qbkFBVVlVUkRNYlViSjBRTytiWTFKVUlMZUhQWWRGTWpmdjA2VXRhWGNW?=
+ =?utf-8?B?eXgxNXVWSHErSmFCVm5QZjRZakVwcjFNTWlkcHViYWEwaXBsaGZ5bWU4WHVY?=
+ =?utf-8?B?dGd6RHZQa2NXNDZvMno1QnlMRHhBZDF1VWRGeXpMTlFucXdKR04wSG9OMDhY?=
+ =?utf-8?B?VXZ1TDN5dFJiaHdUdGNXTkRVZ1lnN2ZSeHQ3ZlJpWWg5QmpOSTUzK0lWSWF2?=
+ =?utf-8?B?OU9VT0tvbEtrL1ZIVkhQY1hPWkZrd29oQjNvSDNHQk4zQ25XbWdLdUQySU8w?=
+ =?utf-8?B?NkFldzFNTmU4NXFBb2JxRVRDNmh5SUJkaEoxQ0krNERab1dZN0NqTjllTkFl?=
+ =?utf-8?B?Q0szT2xGVTI1Q1pNazN0YzZrQXAxTkdoY3AzcWVDeTgzelZHKyszTVc1WjEy?=
+ =?utf-8?B?d2psaWhoQlVmVE5EdlVhcU5vaUhiaXU5NEpqQi9GTnQzVnBJWmxFRXcxc244?=
+ =?utf-8?B?RURKNW1XVTJqdFdlQ2I0Z05WandvT2VRdFp4U0wwQWhNTU84OU5IZHFERENV?=
+ =?utf-8?B?T3hXVWhwNldiZVZNSVZPZThyY2hlcnlWdVgrZHBsbWxYYURPSzIrMXNkSGRF?=
+ =?utf-8?B?ZGdXZnRHWlZsTzV3bmFUajVoQmNkRDM3NkVBQzlRNDUyRW5ETzdpdEpHYTRZ?=
+ =?utf-8?B?YUpqTTVMRUNUNFpPbGVsR1BhZjhWdmdEemswaHdUNVMxOWtDUXE0MWIrZzNL?=
+ =?utf-8?B?ekl5cHJ5bktyVTBQMVdJMXorcmtxNlNyN205L2tvRW1nUFZXR0h4MzRoNFVN?=
+ =?utf-8?B?RWRHM01xV08zdEJjV09TZUQyY2o2dHJzSEtVZllkUVF5MG9vcVdqaVArTS92?=
+ =?utf-8?B?eGJ0VXBGemhnTHVFYVByQVRIRHN2cXZOVXB2WHN5ZkdaRE5Za25aSFloQXBj?=
+ =?utf-8?B?R3dheDd2NmRjTlJSYTdGNGFHT1pOSGpIdm5pUDArNDgyNy80NjhmZ0F3YWhC?=
+ =?utf-8?B?QUhPdlM0S2ZvbDF2TTV3S3VZL1QxbkJ4Y3hvSUl6bHpPMk9CUTFyY0hLM1hR?=
+ =?utf-8?B?bDlvUmVzeWFEZ1BUVDBPbnZ1b2QzNWdyVzVUNlB4MlM2ZlljbDA3d2pqYlpS?=
+ =?utf-8?B?dXI2akljb2JHVmh2cUFUUnlTNTMwZE1UNTFSVVFxM2ZQNHhzNFgrY0MvV3ow?=
+ =?utf-8?B?WE12VnJJaHNOWTdoYnNqd0xiaGRuNS95bVhLZ2Y1TlN3STFqQ21zR1ZORFZM?=
+ =?utf-8?B?Z1dYT28wdFlCb3NMbDB1QUdwUEVORVo2WXR0VStERXZ6QmRRcHZUUk02c2hI?=
+ =?utf-8?B?MDkxdWd3MExkVHdQNXpQekJuVWU1RFUySGxSV29mNXAzZW13bXVqandlOTRX?=
+ =?utf-8?B?Sm9sdkFLSkh2cVNDbnduc3ovaWgyU0pSLzc2VVFxS3FNNUJyLzQ2dDhHWXY0?=
+ =?utf-8?B?cG13TDBYR3JxVFFnbW0xNE9KNG5jNktxTC9OOVYyQm9CNUM3ZEtJKzdWbXQy?=
+ =?utf-8?B?cWE3VHQyWE53dmtWa3VIN2NBb3BMQnNLdHJqUS9sZ1ZLQm5LMXJ3VHNrV3px?=
+ =?utf-8?B?eHhTV3phVFJMZlJwY1g4WEx3Y3lqYkE4eUQ2YUhhTjlQZmtkK0hQVkVyOG1l?=
+ =?utf-8?B?S1E9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	tTz7C8AEgHlqDtkHDGprdWmNqEaYy/GwvKFnqywOd/7QMjJXnPCmRjLJpDnrMjriUb2fOeEQ3Q3YjX8ocYAXve+QFHcCzBNfg6QBaeX8OSZZsBKwXXLsOZHreG0EuSwIKzvG6tu/svwNPaEkwaglxKzF9CL8wZ3QOh2jN9zkiEBMaunjAtFqjR/lAazJdtwoINae80vDMo8Kv8SC71t1dcGIrtnjiRj4HJRM8MBzVfzcuCFJX28WyouhZ8RT6QTrUNbkF5dEck2+y3WfnWfV02Es2uGZEa+ootsNfjkSjnTdPVNLO8X6ZGC5mp23ndKp4S6oVIjGcCNaTBus2+0T0vPNFZqH658E5JofUEPwGaWZcEo60KP635mLifQl1faAoeugnvLGfhFN3B5SoZs8O2dN9KCu9ojwuyPS6OGeYY2WUf4sp0q9Dz18YXiPylyCYgOt9NiRuWdqNZpvf3Fsk+AzAQToTikoPZtzzftp11jX11aniYFPbwhT4bJ9Q8WgqTX8f6K9bALTuhVGrcyWqDux4P/XvxebEqDQaIrN1Omj49wnALcqd/eQnp7zH9qSGnCyzGc2TguRE4S/eMzXRw7cI8aJiHVTCyxll9ot9qY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d045d37d-a75c-400b-e8a5-08de252d560a
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2025 16:29:38.1665
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gacw8iAVav1jlTyMeUA+kG2T3eXLpNyUq/HpnwIOAhpt20AxJq6tKAKInv6Yt31Mi94xMb4g568QjxBhJP+F+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4519
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-16_06,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511160137
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX16Zj5GFMToqG
+ +oAawa0vN2dNWVh8gkq+eATOfQOeZaMblvENu+hVskSDBismF7LOHFf0hxyu4aWH6dTWQhSxV9h
+ 1b+nZHuNcPsXpsGBO8x9UI/yQenvChAVe1Hoh0eSQpYuzrVAG4l7ZlGwrDCaxHZzYVQUO2OyVta
+ myIQ19+o+/u66Y/A04Lw6c+YYHupnE9paGdTVM9MgMCLyDimHfgMOp1er2AHbWysyISfSeuFKve
+ uz3bC1kSuqlY2dWgbrqsAmsTsYFvCRS1xO6GScc/Jxtqor+0m6qW2gNqsYYxbS6za/XwRThCzVn
+ JOy2hgoiKHei0rrCLO0nWml+8sGFOffL4Rx1n1myCmFOJ4unagey6M+C+uCOHsWIZ5o4qKNwNOA
+ IsHIF6KRPmdPen/Dpl6AGkh+hGO7Wg==
+X-Proofpoint-GUID: y_ByRWrhtBA20rbLkxx9L6BcAMgg5DVG
+X-Proofpoint-ORIG-GUID: y_ByRWrhtBA20rbLkxx9L6BcAMgg5DVG
+X-Authority-Analysis: v=2.4 cv=Rdydyltv c=1 sm=1 tr=0 ts=6919fbf7 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yPCof4ZbAAAA:8 a=ID6ng7r3AAAA:8 a=_-F3z6XJesxesWQ1zhgA:9 a=QEXdDO2ut3YA:10
+ a=AkheI1RvQwOzcTXhi5f4:22 a=cPQSjfK2_nFv0Q5t_7PE:22
 
-This is a MIME-formatted message.  If you see this text it means that your
-E-mail software does not support MIME-formatted messages.
+On 11/15/25 7:38 PM, Tyler W. Ross wrote:
+> On Friday, November 14th, 2025 at 7:19 AM, Chuck Lever <chuck.lever@oracle.com> wrote:
+>> Then I would say further hunting for the broken commit is going to be
+>> fruitless. Adding the WARNs in net/sunrpc/xdr.c is a good next step so
+>> we see which XDR data item (assuming it's the same one every time) is
+>> failing to decode.
+> 
+> I added WARNs after each trace_rpc_xdr_overflow() call, and then a couple
+> pr_info() inside xdr_copy_to_scratch() as a follow-up.
+> 
+> If I'm understanding correctly, it's failing in the xdr_copy_to_scratch()
+> call inside xdr_inline_decode(), because the xdr_stream struct has an
+> unset/NULL scratch kvec. I don't understand the context enough to
+> speculate on why, though.
+> 
+> [   26.844102] Entered xdr_copy_to_scratch()
+> [   26.844105] xdr->scratch.iov_base: 0000000000000000
+> [   26.844107] xdr->scratch.iov_len: 0
+> [   26.844127] ------------[ cut here ]------------
+> [   26.844128] WARNING: CPU: 1 PID: 886 at net/sunrpc/xdr.c:1490 xdr_inline_decode.cold+0x65/0x141 [sunrpc]
+> [   26.844153] Modules linked in: rpcsec_gss_krb5 nfsv4 dns_resolver nfs lockd grace netfs binfmt_misc intel_rapl_msr intel_rapl_common kvm_amd ccp kvm cfg80211 hid_generic usbhid hid irqbypass rfkill ghash_clmulni_intel aesni_intel pcspkr 8021q garp stp virtio_balloon llc mrp button evdev joydev sg auth_rpcgss sunrpc configfs efi_pstore nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock vmw_vmci qemu_fw_cfg ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 crc32c_cryptoapi sr_mod cdrom bochs uhci_hcd drm_client_lib drm_shmem_helper ehci_pci ata_generic sd_mod drm_kms_helper ehci_hcd ata_piix libata drm virtio_net usbcore virtio_scsi floppy psmouse net_failover failover scsi_mod serio_raw i2c_piix4 usb_common scsi_common i2c_smbus
+> [   26.844217] CPU: 1 UID: 591200003 PID: 886 Comm: ls Not tainted 6.17.8-debbug1120598hack3 #9 PREEMPT(lazy)  
+> [   26.844220] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+> [   26.844222] RIP: 0010:xdr_inline_decode.cold+0x65/0x141 [sunrpc]
+> [   26.844238] Code: 24 48 c7 c7 e7 eb 8c c0 48 8b 71 28 e8 5a 36 fc d7 48 8b 0c 24 4c 8b 44 24 10 48 8b 54 24 08 4c 39 41 28 73 0c 0f 1f 44 00 00 <0f> 0b e9 b7 fe fe ff 48 89 d8 48 89 cf 4c 89 44 24 08 48 29 d0 48
+> [   26.844240] RSP: 0018:ffffd09e82ce3758 EFLAGS: 00010293
+> [   26.844242] RAX: 0000000000000017 RBX: ffff8f1e0adcffe8 RCX: ffffd09e82ce3838
+> [   26.844244] RDX: ffff8f1e0adcffe4 RSI: 0000000000000001 RDI: ffff8f1f37c5ce40
+> [   26.844245] RBP: ffffd09e82ce37b4 R08: 0000000000000008 R09: ffffd09e82ce3600
+> [   26.844246] R10: ffffffff9acdb348 R11: 00000000ffffefff R12: 000000000000001a
+> [   26.844247] R13: ffff8f1e01151200 R14: 0000000000000000 R15: 0000000000440000
+> [   26.844250] FS:  00007fa5d13db240(0000) GS:ffff8f1f9c44a000(0000) knlGS:0000000000000000
+> [   26.844252] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   26.844253] CR2: 00007fa5d13b9000 CR3: 000000010ab82000 CR4: 0000000000750ef0
+> [   26.844255] PKRU: 55555554
+> [   26.844257] Call Trace:
+> [   26.844259]  <TASK>
+> [   26.844263]  __decode_op_hdr+0x20/0x120 [nfsv4]
+> [   26.844288]  nfs4_xdr_dec_readdir+0xbb/0x120 [nfsv4]
+> [   26.844305]  gss_unwrap_resp+0x9e/0x150 [auth_rpcgss]
+> [   26.844311]  call_decode+0x211/0x230 [sunrpc]
+> [   26.844332]  ? __pfx_call_decode+0x10/0x10 [sunrpc]
+> [   26.844348]  __rpc_execute+0xb6/0x480 [sunrpc]
+> [   26.844369]  ? rpc_new_task+0x17a/0x200 [sunrpc]
+> [   26.844386]  rpc_execute+0x133/0x160 [sunrpc]
+> [   26.844401]  rpc_run_task+0x103/0x160 [sunrpc]
+> [   26.844419]  nfs4_call_sync_sequence+0x74/0xb0 [nfsv4]
+> [   26.844440]  _nfs4_proc_readdir+0x28d/0x310 [nfsv4]
+> [   26.844459]  nfs4_proc_readdir+0x60/0xf0 [nfsv4]
+> [   26.844475]  nfs_readdir_xdr_to_array+0x1fb/0x410 [nfs]
+> [   26.844494]  nfs_readdir+0x2ed/0xf00 [nfs]
+> [   26.844506]  iterate_dir+0xaa/0x270
 
---=_meinfjell-3935603-1763294979-0001-2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Trond, Anna -
 
-Dear nfs maintainer,
-the manpage-l10n project[1] maintains a large number of translations of
-man pages both from a large variety of sources (including nfs) as
-well for a large variety of target languages.
+NFSv4 READDIR is hitting an XDR overflow because the XDR stream's
+scratch buffer is missing, and one of the READDIR response's fields
+crosses a page boundary in the receive buffer.
 
-During their work translators notice different possible issues in the
-original (english) man pages. Sometimes this is a straightforward
-typo, sometimes a hard to read sentence, sometimes this is a
-convention not held up and sometimes we simply do not understand the
-original.
+Shouldn't the client's readdir XDR decoder have a scratch buffer?
 
-We use several distributions as sources and update regularly (at
-least every 2 month). This means we are fairly recent (some
-distributions like archlinux also update frequently) but might miss
-your latest upstream version once in a while, so the error might be
-already fixed. We apologize and ask you to close the issue immediately
-if this should be the case, but given the huge volume of projects and
-the very limited number of volunteers we are not able to double check
-each and every issue.
 
-Secondly we translators see the manpages in the neutral po format,
-i.e. converted and harmonized, but not the original source (be it man,
-groff, xml or other). So we cannot provide a true patch (where
-possible), but only an approximation which you need to convert into
-your source format.
+> [   26.844517]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844521]  __x64_sys_getdents64+0x7b/0x110
+> [   26.844523]  ? __pfx_filldir64+0x10/0x10
+> [   26.844526]  do_syscall_64+0x82/0x320
+> [   26.844530]  ? mod_memcg_lruvec_state+0xe7/0x2e0
+> [   26.844533]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844535]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844537]  ? __lruvec_stat_mod_folio+0x85/0xd0
+> [   26.844539]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844541]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844550]  ? set_ptes.isra.0+0x36/0x80
+> [   26.844555]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844557]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844560]  ? do_anonymous_page+0x101/0x970
+> [   26.844563]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844565]  ? ___pte_offset_map+0x1b/0x160
+> [   26.844570]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844572]  ? __handle_mm_fault+0xac6/0xef0
+> [   26.844577]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844578]  ? count_memcg_events+0xd6/0x220
+> [   26.844581]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844583]  ? handle_mm_fault+0x1d6/0x2d0
+> [   26.844585]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844587]  ? do_user_addr_fault+0x21a/0x690
+> [   26.844591]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844593]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   26.844595]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   26.844597] RIP: 0033:0x7fa5d15678a3
+> [   26.844606] Code: 8b 05 59 a5 10 00 64 c7 00 16 00 00 00 31 c0 eb 9e e8 11 03 04 00 90 b8 ff ff ff 7f 48 39 c2 48 0f 47 d0 b8 d9 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 21 a5 10 00 f7 d8
+> [   26.844607] RSP: 002b:00007fffa272d848 EFLAGS: 00000293 ORIG_RAX: 00000000000000d9
+> [   26.844609] RAX: ffffffffffffffda RBX: 00007fa5d13b9010 RCX: 00007fa5d15678a3
+> [   26.844610] RDX: 0000000000020000 RSI: 00007fa5d13b9040 RDI: 0000000000000003
+> [   26.844611] RBP: 00007fa5d13b9040 R08: 00007fa5d1707400 R09: 0000000000000000
+> [   26.844613] R10: 0000000000000022 R11: 0000000000000293 R12: 00007fa5d13b9014
+> [   26.844614] R13: fffffffffffffea0 R14: 0000000000000000 R15: 0000564585c1c200
+> [   26.844617]  </TASK>
+> [   26.844618] ---[ end trace 0000000000000000 ]---
+> 
+> 
+> 
+> TWR
 
-Finally the issues I'm reporting have accumulated over time and are
-not always discovered by me, so sometimes my description of the
-problem my be a bit limited - do not hesitate to ask so we can clarify
-them.
 
-I'm now reporting the issues for your project. If future reports
-should use another channel, please let me know.
-
-[1] https://manpages-l10n-team.pages.debian.net/manpages-l10n/
-
-Man page: blkmapd.8
-Issue:    Markup of device-mapper
-
-"The topology typically consists of a hierarchy of volumes built by stripin=
-g, "
-"slicing, and concatenating the simple volumes.  The B<blkmapd> daemon uses=
- "
-"the device-mapper driver to construct logical devices that reflect the "
-"server topology, and passes these devices to the kernel for use by the pNF=
-S "
-"block layout client."
---
-Man page: blkmapd.8
-Issue:    Markup of syslogd
-
-"Runs B<blkmapd> in the foreground and sends output to stderr (as opposed t=
-o "
-"syslogd)"
---
-Man page: exportfs.8
-Issue:    missing period at the end of sentence
-
-"B<exportfs> will also recognize the B<state-directory-path> value from bot=
-h "
-"the B<[mountd]> section and the B<[exportd]> section"
---
-Man page: exportfs.8
-Issue:    B<exports(5)> =E2=86=92 B<exports>(5)
-
-"The I<host:/path> argument specifies a local directory to export, along wi=
-th "
-"the client or clients who are permitted to access it.  See B<exports(5)> f=
-or "
-"a description of supported options and access list formats."
---
-Man page: nfs.5
-Issue:    Why is the word "option" in bold? (And not the "-s"?)
-
-"The B<sloppy> option is an alternative to specifying B<mount.nfs> -s "
-"B<option.>"
---
-Man page: nfs.5
-Issue:    If is =E2=86=92 If it
-
-"When the client discovers a new filesystem on a NFSv4.1+ server, the "
-"B<trunkdiscovery> mount option will cause it to send a GETATTR for the "
-"fs_locations attribute.  If is receives a non-zero length reply, it will "
-"iterate through the response, and for each server location it will establi=
-sh "
-"a connection, send an EXCHANGE_ID, and test for session trunking.  If the "
-"trunking test succeeds, the connection will be added to the existing set o=
-f "
-"transports for the server, subject to the limit specified by the "
-"B<max_connect> option.  The default is B<notrunkdiscovery>."
---
-Man page: nfs.5
-Issue:    B<nfsmount.conf(5)> =E2=86=92 B<nfsmount.conf>(5)
-
-"If the mount command is configured to do so, all of the mount options "
-"described in the previous section can also be configured in the I</etc/"
-"nfsmount.conf> file. See B<nfsmount.conf(5)> for details."
---
-Man page: nfs.conf.5
-Issue:    Replace comma at the end by a full stop
-
-"Recognized values: B<threads>, B<host>, B<scope>, B<port>, B<grace-time>, "
-"B<lease-time>, B<udp>, B<tcp>, B<vers3>, B<vers4>, B<vers4.0>, B<vers4.1>,=
- "
-"B<vers4.2>, B<rdma>,"
---
-Man page: nfsd.7
-Issue:   back-slash vs. backslash, should be consistent
-
-"Each line of the file contains a path name, a client name, and a number of=
- "
-"options in parentheses.  Any space, tab, newline or back-slash character i=
-n "
-"the path name or client name will be replaced by a backslash followed by t=
-he "
-"octal ASCII code for that character."
---
-Man page: nfsd.7
-Issue:    thread currently =E2=86=92 threads currently
-
-"This file represents the number of B<nfsd> thread currently running.  "
-"Reading it will show the number of threads.  Writing an ASCII decimal numb=
-er "
-"will cause the number of threads to be changed (increased or decreased as "
-"necessary) to achieve that number."
---
-Man page: nfsd.7
-Issue:    The first sentence is logical, but this applies to every file?
-
-"This is a somewhat unusual file in that what is read from it depends on wh=
-at "
-"was just written to it.  It provides a transactional interface where a "
-"program can open the file, write a request, and read a response.  If two "
-"separate programs open, write, and read at the same time, their requests "
-"will not be mixed up."
---
-Man page: nfsd.7
-Issue:    can be display =E2=86=92 can be displayed
-
-"The directory B</proc/net/rpc> in the B<procfs> filesystem contains a numb=
-er "
-"of files and directories.  The files contain statistics that can be displa=
-y "
-"using the I<nfsstat> program.  The directories contain information about "
-"various caches that the NFS server maintains to keep track of access "
-"permissions that different clients have for different filesystems.  The "
-"caches are:"
---
-Man page: nfsd.7
-Issue 1:  select(2) or poll(2) =E2=86=92 B<select>(2) or B<poll>(2)
-Issue 2:  and end-of-file =E2=86=92 an end-of-file
-
-"If the program uses select(2) or poll(2) to discover if it can read from t=
-he "
-"B<channel> then it will never see and end-of-file but when all requests ha=
-ve "
-"been answered, it will block until another request appears."
---
-Man page: nfsd.8
-Issue:    B<netconfig(5).> =E2=86=92 B<netconfig>(5) (no full stop in SEE A=
-LSO)
-
-"B<nfsd>(7), B<rpc.mountd>(8), B<exports>(5), B<exportfs>(8), B<nfs.conf>(5=
-), "
-"B<rpc.rquotad>(8), B<nfsstat>(8), B<netconfig(5).>"
---
-Man page: nfsmount.conf.5
-Issue 1:  "Variables are assignmen statements =E2=80=A6 variables" =E2=80=
-=A6?
-Issue 2:  independant =E2=86=92 independent
-
-"The configuration file is made up of multiple section headers followed by "
-"variable assignments associated with that section.  A section header is "
-"defined by a string enclosed by B<[> and B<]> brackets.  Variable "
-"assignments are assignment statements that assign values to particular "
-"variables using the B<=3D> operator, as in B<Proto=3DTcp>.  The variables =
-that "
-"can be assigned are the set of NFS specific mount options listed in "
-"B<nfs>(5)  together with the filesystem-independant mount options listed i=
-n "
-"B<mount>(8)  and three additions: B<Sloppy=3DTrue> has the same effect as =
-the "
-"B<-s> option to I<mount>, and B<Foreground=3DTrue> and B<Background=3DTrue=
-> have "
-"the same effect as B<bg> and B<fg>."
---
-Man page: nfsmount.conf.5
-Issue:    over-ride =E2=86=92 override
-
-"Default NFS mount configuration files, variables set in the later file ove=
-r-"
-"ride those in the earlier file."
---
-Man page: nfsmount.conf.5
-Issue:    Remove comma at the end (use full stop)
-
-"B<nfs>(5), B<mount>(8),"
---
-Man page: nfs.systemd.7
-Issue 1:  I<nfs-utils> =E2=86=92 B<nfs-utils>
-Issue 2:  I<systemd> =E2=86=92 B<systemd>(8)
-
-"The I<nfs-utils> package provides a suite of I<systemd> unit files and "
-"generators which allow the various services to be started and managed.  "
-"These unit files and generators ensure that the services are started in th=
-e "
-"correct order, and the prerequisites are active before dependant services "
-"start.  As there are quite a few unit files and generators, it is not "
-"immediately obvious how best to achieve certain results.  The following "
-"subsections attempt to cover the issues that are most likely to come up."
---
-Man page: nfs.systemd.7
-Issue 1:  systemd =E2=86=92 B<systemd>(1)
-Issue 2:  I<nfs-utils> =E2=86=92 B<nfs-utils>
-
-"systemd unit generators are small executables placed in I</usr/lib/systemd=
-/"
-"system-generators/> to dynamically extend the unit file hierarchy.  The "
-"I<nfs-utils> package provides three:"
---
-Man page: nfs.systemd.7
-Issue:    /sysroot =E2=86=92 I</sysroot>
-
-"It creates the B<sysroot.mount> unit to mount /sysroot via NFSv4 in the "
-"initrd, if it detects one the following options in the kernel command line=
-:"
---
-Man page: nfs.systemd.7
-Issue:    I<nfs-server.service> =E2=86=92 B<nfs-server.service>
-
-"It creates ordering dependencies between I<nfs-server.service> and various=
- "
-"filesystem mounts: it should start before any \"nfs\" mountpoints are "
-"mounted, in case they are loop-back mounts, and after all exported "
-"filesystems are mounted, so there is no risk of exporting the underlying "
-"directory."
---
-Man page: showmount.8
-Issue:    markup of sort -u: B<sort -u>
-
-"B<showmount> queries the mount daemon on a remote host for information abo=
-ut "
-"the state of the NFS server on that machine.  With no options B<showmount>=
- "
-"lists the set of clients who are mounting from that host.  The output from=
- "
-"B<showmount> is designed to appear as though it were processed through "
-"``sort -u''."
---
-Man page: umount.nfs.8
-Issue:    refer =E2=86=92 refer to the
-
-"For further information please refer B<nfs>(5)  and B<umount>(8)  manual "
-"pages."
---
-Man page: umount.nfs.8
-Issue:    Replace final comma by full stop
-
-"B<nfs>(5), B<umount>(8),"
-
---=20
-      Dr. Helge Kreutzmann                     debian@helgefjell.de
-           Dipl.-Phys.                   http://www.helgefjell.de/debian.php
-        64bit GNU powered                     gpg signed mail preferred
-           Help keep free software "libre": http://www.ffii.de/
-
---=_meinfjell-3935603-1763294979-0001-2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEbZZfteMW0gNUynuwQbqlJmgq5nAFAmkZvwAACgkQQbqlJmgq
-5nAESw/+OxomXAHZ9a/upaabb+KjnIej8lTlZl2A4LCHOSgxl1Y/ITQsFbNGTcye
-dkZTPBXCzvqaR3Y115hNgG4QlFPXGJpk1TbNaSxdmIXXmbeVCtogqOcvKvcrhJ97
-hG+cUDr0SsGoKJO7/2OGlc4JjMtumLUc5viFU42AW2UeL6PYtYaB8n4669ej7cpS
-FfhX+19tI+0Dd7tdVXg790VloqGeLICK9LkmfB9paFLuleOO1KXZrG4yagQFcVTt
-X7QRhPtuYVa0OdJDv2cXvHpY+kq+WcDPtSF8mOZljnh9c3OvNU6fk08r1LTueu5w
-Uobwo69eLw9mnsn96dSP35cur93jbyG2PWAGgikioOtupprx9Rc6i2iN2T0bYgXS
-/AC/resit3XgK0MHw6FZJb2+4Ij8dbnci5vJAsYKXjXobA/4gZ5ke3HFVT5VB7LK
-pFK1gAh4neC+60IIH8YJnVvgfC45OsDc8L87WK4Bh79DWEv5qqFoH7joBTrZJ/Lv
-9ahhd1UbcF15QA3JnIRR0sg9mWlH7MXMbHUmWB3c8Avwk+5niIihO07Vzz8gdDDa
-bQbOjrqMXcfXaFFvnP5hBxAA9S0aMUnWO+ekYH6FaCDATrAza6jU9IRGrjKQLH+C
-BZvyCQAtY/oqBPv7lvoWfaAgVYFtq+95TOfKEcRbP9W8uUBYd1g=
-=PzcF
------END PGP SIGNATURE-----
-
---=_meinfjell-3935603-1763294979-0001-2--
+-- 
+Chuck Lever
 
