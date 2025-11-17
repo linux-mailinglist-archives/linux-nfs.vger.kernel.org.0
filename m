@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-16456-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16457-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45C0AC6502E
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 17:01:04 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EA7DC6503D
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 17:01:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id E47EA28FC0
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 16:01:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EB1074E6CF6
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 16:01:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 211E0299ABF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8252874E3;
 	Mon, 17 Nov 2025 16:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7x/rVoi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2ksF4rW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E127F2874E3
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 16:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895592BEFE7
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 16:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763395256; cv=none; b=MA2vMBTf+8mAbs1hIfI8LK/AjhgvdOR0/QUv/6s3AxsAFrrRR1HpT+8V+N1LaXrTULvs8FdVl5ZlwJDjJBZakKCNEyXzBKxWzmKyW+VasLUV6HMyRsuFksAJqg55Hntf0uUGtwTyGyWF+sulZcAmr+WjCVyUVXlo2E3KsbOr6Ks=
+	t=1763395256; cv=none; b=daf7Yb64gpgNGGaDmwj5/8urEm4lYtloSNwTbrneJIQxU0fK8VfI044UWk+cjgfJYsAe4ErdhkRfUavs4IDTfs0mz/ZanVwxZZ+9w+bzNrK3+vft5M14e9UYV6KcgUr9uL+I/ZCl4AOgKcBePo6Ncbj/YM3SNIDn9l8mpahhbIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763395256; c=relaxed/simple;
-	bh=1Lu3gCox5TSf/ueq33OM0uP8ZA8I8ch9SynnlfUDpeg=;
+	bh=dA6cCOY9N/6JlEbBxivA2F67fiOTM0397iuxNDhejho=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pjodJIPVzgJLriugUABgpTk2CiwdLpCNYZyPCk4zcv5AZHpqQW33FxGvvjhw0tdwcz88NrraPpby+N1H2TpCE+1lHmoMZHKygjzfpILvh84pESh+knaJNAEnPRoAQXPR5rFOONAbhwOluPY/B4LPy4rVtfVIxp6KW+E90FfTbqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7x/rVoi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69B7C2BCB4;
-	Mon, 17 Nov 2025 16:00:54 +0000 (UTC)
+	 MIME-Version; b=ZPLn2g/n6sf6vm/WOYxgiqWxZrLi6LdYY1xp644GaSWU5LsBTQyOv1ujMMp7YjWXj/opxPcUxzgXXEUF+324+S7BYgt96Pfg4W49fMDmyy9GKP2sLjJA+y4Ea/NZTPPHmXCQEq6FiH4fzGITVI2ng82QsJUTMB7EH/da4ggCFTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2ksF4rW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986B9C4CEF1;
+	Mon, 17 Nov 2025 16:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763395255;
-	bh=1Lu3gCox5TSf/ueq33OM0uP8ZA8I8ch9SynnlfUDpeg=;
+	s=k20201202; t=1763395256;
+	bh=dA6cCOY9N/6JlEbBxivA2F67fiOTM0397iuxNDhejho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a7x/rVoikpow5LSQmYNtGCf28LoYrAEeMRvVC3ECKVa9S5ZnWPEwk82/fuXsC++6K
-	 tCmZVHglzDdHZDkzIZlrm1W/IyHSpRKCNqRyu4Yt7i5C1HzL5zj20hXXTUyvkso5UA
-	 v4/UwBq1a7wF/NqHHkrPoUvx6jNgNLubKEx8h6VC4kHnFk3+orZMJ0wAxyaxcSAydg
-	 bIlqCfBI14KNg2LF+A7P8lBB6x9QIh5my9CR3Q9rIDz/D7d+sAxCExs0zs6YB5jHhV
-	 TmlB84M/kmhLNEKBngWTArqRaau5hZF7ichrzo2JUUaXJNs7QQDWo38BdmwWfElsGb
-	 UlaNMxVoteSSA==
+	b=W2ksF4rWU972W3CnLSI4jlSzLtTCbM7jq55jpS3IubuPbIK1VZ6IXwgroVw7eVOyW
+	 rwi8P7K8ePC5OkVeGFibondBe9OCHVA1gnx3Cv1zBK+ETt6EU2pDDKsY73TlCbGojG
+	 1DRtYxOpKtkwyMOjz3afn+5jg+Y8QRwEyb9XR9PDL0YcRFy1OL4+4eGtNNLZQaflZj
+	 /kfMRHOLmMSyEjtpgj32BP61mzbIcid7EqQGag/lndNNfV0up/XokVWAIY2mkZ0Rne
+	 nVfhRKKsX6AbyIlpRRmTUocT/32I54PDh6uVjHQDhzlESsICBbUrWGEcMJ96T3qrz4
+	 S5RT+rtyfhuIw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 2/3] NFSD: Clear TIME_DELEG in the suppattr_exclcreat bitmap
-Date: Mon, 17 Nov 2025 11:00:50 -0500
-Message-ID: <20251117160051.10213-3-cel@kernel.org>
+Subject: [PATCH v2 3/3] NFSD: Clean up nfsd4_check_open_attributes()
+Date: Mon, 17 Nov 2025 11:00:51 -0500
+Message-ID: <20251117160051.10213-4-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251117160051.10213-1-cel@kernel.org>
 References: <20251117160051.10213-1-cel@kernel.org>
@@ -65,52 +65,106 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-From RFC 8881:
+The @rqstp parameter was introduced in commit 3c8e03166ae2 ("NFSv4:
+do exact check about attribute specified") but has never been used.
 
-5.8.1.14. Attribute 75: suppattr_exclcreat
+Reduce indentation in callers to improve readability.
 
-> The bit vector that would set all REQUIRED and RECOMMENDED
-> attributes that are supported by the EXCLUSIVE4_1 method of file
-> creation via the OPEN operation. The scope of this attribute
-> applies to all objects with a matching fsid.
-
-There's nothing in RFC 8881 that states that suppattr_exclcreat is
-or is not allowed to contain bits for attributes that are clear in
-the reported supported_attrs bitmask. But it doesn't make sense for
-an NFS server to indicate that it /doesn't/ implement an attribute,
-but then also indicate that clients /are/ allowed to set that
-attribute using OPEN(create) with EXCLUSIVE4_1.
-
-The FATTR4_WORD2_TIME_DELEG attributes are also not to be allowed
-for OPEN(create) with EXCLUSIVE4_1. It doesn't make sense to set
-a delegated timestamp on a new file.
-
-Fixes: 7e13f4f8d27d ("nfsd: handle delegated timestamps in SETATTR")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfsd.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index e4263326ca4a..50be785f1d2c 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -547,8 +547,14 @@ static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
- #define NFSD_SUPPATTR_EXCLCREAT_WORD1 \
- 	(NFSD_WRITEABLE_ATTRS_WORD1 & \
- 	 ~(FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_MODIFY_SET))
-+/*
-+ * The FATTR4_WORD2_TIME_DELEG attributes are not to be allowed for
-+ * OPEN(create) with EXCLUSIVE4_1. It doesn't make sense to set a
-+ * delegated timestamp on a new file.
-+ */
- #define NFSD_SUPPATTR_EXCLCREAT_WORD2 \
--	NFSD_WRITEABLE_ATTRS_WORD2
-+	(NFSD_WRITEABLE_ATTRS_WORD2 & \
-+	~(FATTR4_WORD2_TIME_DELEG_ACCESS | FATTR4_WORD2_TIME_DELEG_MODIFY))
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 7f7e6bb23a90..dcad50846a97 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -81,8 +81,8 @@ static u32 nfsd41_ex_attrmask[] = {
+ };
  
- extern int nfsd4_is_junction(struct dentry *dentry);
- extern int register_cld_notifier(void);
+ static __be32
+-check_attr_support(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+-		   u32 *bmval, u32 *writable)
++check_attr_support(struct nfsd4_compound_state *cstate, u32 *bmval,
++		   u32 *writable)
+ {
+ 	struct dentry *dentry = cstate->current_fh.fh_dentry;
+ 	struct svc_export *exp = cstate->current_fh.fh_export;
+@@ -103,21 +103,25 @@ check_attr_support(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ }
+ 
+ static __be32
+-nfsd4_check_open_attributes(struct svc_rqst *rqstp,
+-	struct nfsd4_compound_state *cstate, struct nfsd4_open *open)
++nfsd4_check_open_attributes(struct nfsd4_compound_state *cstate,
++			    struct nfsd4_open *open)
+ {
+ 	__be32 status = nfs_ok;
+ 
+-	if (open->op_create == NFS4_OPEN_CREATE) {
+-		if (open->op_createmode == NFS4_CREATE_UNCHECKED
+-		    || open->op_createmode == NFS4_CREATE_GUARDED)
+-			status = check_attr_support(rqstp, cstate,
+-					open->op_bmval, nfsd_attrmask);
+-		else if (open->op_createmode == NFS4_CREATE_EXCLUSIVE4_1)
+-			status = check_attr_support(rqstp, cstate,
+-					open->op_bmval, nfsd41_ex_attrmask);
+-	}
++	if (open->op_create != NFS4_OPEN_CREATE)
++		return status;
+ 
++	switch (open->op_createmode) {
++	case NFS4_CREATE_UNCHECKED:
++	case NFS4_CREATE_GUARDED:
++		status = check_attr_support(cstate, open->op_bmval,
++					    nfsd_attrmask);
++		break;
++	case NFS4_CREATE_EXCLUSIVE4_1:
++		status = check_attr_support(cstate, open->op_bmval,
++					    nfsd41_ex_attrmask);
++		break;
++	}
+ 	return status;
+ }
+ 
+@@ -583,7 +587,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto out;
+ 	}
+ 
+-	status = nfsd4_check_open_attributes(rqstp, cstate, open);
++	status = nfsd4_check_open_attributes(cstate, open);
+ 	if (status)
+ 		goto out;
+ 
+@@ -795,8 +799,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		return status;
+ 
+-	status = check_attr_support(rqstp, cstate, create->cr_bmval,
+-				    nfsd_attrmask);
++	status = check_attr_support(cstate, create->cr_bmval, nfsd_attrmask);
+ 	if (status)
+ 		return status;
+ 
+@@ -1216,8 +1219,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		return nfserrno(err);
+ 	status = nfs_ok;
+ 
+-	status = check_attr_support(rqstp, cstate, setattr->sa_bmval,
+-				    nfsd_attrmask);
++	status = check_attr_support(cstate, setattr->sa_bmval, nfsd_attrmask);
+ 	if (status)
+ 		goto out;
+ 
+@@ -2270,7 +2272,7 @@ _nfsd4_verify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		return status;
+ 
+-	status = check_attr_support(rqstp, cstate, verify->ve_bmval, NULL);
++	status = check_attr_support(cstate, verify->ve_bmval, NULL);
+ 	if (status)
+ 		return status;
+ 
 -- 
 2.51.0
 
