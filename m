@@ -1,248 +1,188 @@
-Return-Path: <linux-nfs+bounces-16474-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16475-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8F47C667E1
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 23:54:42 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 596FAC66852
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 00:05:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BA97B4E1B4E
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 22:54:41 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0464F363972
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 23:04:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC85C34C9AE;
-	Mon, 17 Nov 2025 22:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B67DA2BEC23;
+	Mon, 17 Nov 2025 23:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjNgOQUX"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YmjZq2vE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBEC34888C
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 22:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DF82F7475
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 23:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763420061; cv=none; b=nrM2Z7s35MBQtWO4W1xnyXaEMFOc+PpCtdrNGyXljvFKs9dyDQEILXcJqppw47xZHyeouymd1h+RmNIjt4EDMtjP46R/kXHX3zezQNobMWpA7sp608v7mfYV2UwEUwxqVvS2ZR0jS/A0X9IRayVFR8tM4E2ZkzN5xxKxUBlvW0k=
+	t=1763420681; cv=none; b=Z+izhYZ0uATymxI65crlEFvvwFdLTQrTfvjauIiMgfE0VlFETdd+xxl0esRCzoaRL93BesOOt5XvcIO5qyQ+WfX78ZrrXjfAMbiObsG4rNgF/dzb45jZ3LMiqzBW/3jPC2Wfku8JKtgIWM5JrrGFNULbNEA4r9baX7npSGJwqGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763420061; c=relaxed/simple;
-	bh=3jnNW8n0NTjbUDU7klixZgiAvvhwUdS1fISy+VvIpZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agbCRqoiFtLXZ2KDN1YHlYg+qyzJVId7ACbPDkH4tLyCt0wDP4NIN4gmYtFMNfHahCK9YOWDkxhcJYzDgx3xY+OTIaGBrSmgJHz1L/kLUKvZc7kRVdyjzVn15wVemUQvYpsyqyGG8x792PZw+ePQogrHH2QexJzbtAiaf1v5XSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TjNgOQUX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763420058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UPJIFnSezoO/svVeVSa5tqwSF3bEtIA0JRQ+MhzUvEM=;
-	b=TjNgOQUXqXrRZODHQ6IoKg7iKoZYhZ53TETn3KKSe1fPnWuUXePddy4s24gwWc2VwEGpyH
-	Z9qTQ870O3VGY6deOG88g71UW1lEyFijlFu4fHvXfuqXJFT8kmdhUz46z7dvGEB5TRH4Ew
-	C1JZt+Sx7Iv6VtUGcNve6SSpVcOE7K8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-539-OgwhEP0mMPe5GzcZiovkDg-1; Mon,
- 17 Nov 2025 17:54:15 -0500
-X-MC-Unique: OgwhEP0mMPe5GzcZiovkDg-1
-X-Mimecast-MFC-AGG-ID: OgwhEP0mMPe5GzcZiovkDg_1763420053
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 14C33195608F;
-	Mon, 17 Nov 2025 22:54:13 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.81.26])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E77553003761;
-	Mon, 17 Nov 2025 22:54:11 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 223C8505600; Mon, 17 Nov 2025 17:54:10 -0500 (EST)
-Date: Mon, 17 Nov 2025 17:54:10 -0500
-From: Scott Mayhew <smayhew@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Anna Schumaker <anna@kernel.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	"1120598@bugs.debian.org" <1120598@bugs.debian.org>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Steve Dickson <steved@redhat.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Tyler W. Ross" <TWR@tylerwross.com>
-Subject: Re: ls input/output error ("NFS: readdir(/) returns -5") on krb5
- NFSv4 client using SHA2
-Message-ID: <aRunktdq8sJ7Eecj@aion>
-References: <aRZL8kbmfbssOwKF@eldamar.lan>
- <1cee1c3e-e6b9-485a-a4d4-c336072f14c3@oracle.com>
- <aRZZoNB5rsC8QUi4@eldamar.lan>
- <de44bf50-0c87-4062-b974-0b879868c0f5@oracle.com>
- <AVpI5XolCCA38sGzxlfk6azQI9oUAxafUVl9B7B1WgJEmGgSAQq5nvulQO6P_RQqjBp3adqasHFsodhAAxai0dcp5scRMJk0dLsGMQeSiew=@tylerwross.com>
- <fVv3cF7Ulh3cKUP17C98gh_uOv9BcMlMpsIh1Nv5_0tdw-75PKiPJgIEP5o2jBVry7orwz7jeiGQenfCbuUxyj5JFstbx3RTFYr223qDmV0=@tylerwross.com>
- <a6d1435b-f507-49eb-b80c-4322dc7e1157@oracle.com>
- <Y79HV0VGpScPYqI_dDxeItkX2UZwSdReaUOpIeMeZXq2HLsHf5J_PTQqr7HrBYygICRsn-OB89QPrxPzjgv2smuzTThUPy_3fq_N1NprlUg=@tylerwross.com>
- <4a63ad3d-b53a-4eab-8ffb-dd206f52c20e@oracle.com>
- <902ff4995d8e75ad1cd2196bf7d8da42932fba35.camel@kernel.org>
+	s=arc-20240116; t=1763420681; c=relaxed/simple;
+	bh=i7DdhnG71ftd4i2m2G21HgRfKhN3UzNnHz1O3MhLXC4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wn7T7qX/9hGkM6JFInbrsy0B6se06rLN+BPa9+hKjuH81CmneIYIh9CpWaOMont4j5uZvD2/1zmqly7G4zlly+44vdK961zml3EPUFQcMfPfYuxUMaEf8mlrkAN5f//DAq4EraJ+Bq5x3HeclScUFa+44H/2q1sFWdOVPNcotj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YmjZq2vE; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-340bb1cb9ddso4124645a91.2
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 15:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1763420676; x=1764025476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=67DqjyCI/JhVTsF1ULoiPuOUOphLY2mp3g5O7RzL6g8=;
+        b=YmjZq2vEP3RrKkuynMuBECfzV/qmuCZcW2k5SrDDwNLrBwCjhC9leZeksspqC9Reg5
+         7m1qs16aYUYUzMy31VgnfaRfQ925KDC/Wf0JDl3vg/7PHxxunMH/Nn6A8qpdHIeOgmKF
+         SSalfOtnM6+aKcPi/R1diKoX6mzhOZoLeEgbC5txiQiK8mFtldLoRKhJhxkJw2YYx59r
+         W0OtXAGkR5gvdztwjWl9g4n1k7D8tVL8dwrwiXVcU0tTMTY3u4bltrQMVL5eUp5spcvr
+         GNGswPZEV3ZLiPG9FXx0fVQEcWAztc4A7KBMY/KmU8D+TNzUS8SypFep3kDas3TIZnAY
+         J+LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763420676; x=1764025476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=67DqjyCI/JhVTsF1ULoiPuOUOphLY2mp3g5O7RzL6g8=;
+        b=SpOmIM0bUHYu8RIAWd1tP4Om5mFI7SxqlMudVxKfAzqE9DGsbb0rzTCS4os2Abr0rb
+         u2G4sj7uSV9wEPUt5I6mwrg7e+c6cfhGPXoncOi8sdBrbEX80mxSNIJ7IRtD2cPm3JqI
+         3pBZG1woHsJV9fciHOfvUVEfkjR4lHs5YyRcLJT7uH1kvLmY0uwys2gHNJR8j2eSL2ZY
+         Xb5r1rwVfjd+dcRzYFT3PNkyq/2psEvISHbVLeKcFYGFwU1Jmc8ajPcAreC7TJ6nNR32
+         r/E1G2x1uQ3BwjfDEPBfFK7NM2AXEs4gAJ7YrHC0bRJYYbg5hkVvKfZFg/71JoWDt3Pv
+         9I7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVh71r4g+mxCCif5RSAKwbraP42dkcI4GWGGc6JTpNldjOWJXGTq0IK4VwLZzh7WKmONHyJXSNoEVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgkV1Yxusxdk9XbCrxLoVXXh/XvsDz0Pv/jahGFc92s35L+HDj
+	hj6/LyLmf0BRB6rH014tKDskHJWjUnqgG0t6Sp4mSp7CH1fUO1VkwnhiefePrXYfRWImcvjXtoR
+	h3QlcDvaFQwLDx5xrqcHoroOd4RMgESK9vhS1Hy7/
+X-Gm-Gg: ASbGncvoidCtSk0PVF9SEHAMYP+rB5dL9+mOT94Hmg6rExhiutqmT2MxV2kYRp06keh
+	Ar59mtI8wySx27PTgppJBtcrOL64H8yqKWHq4B9TzXTslw3URfsEiZTGj4dRd+ylnJsGOCs91X2
+	4w7l6rO8ynO7Np2rgZ1lZDz28SmHDXsROEGuEaf8pAT/pbYsmlpMLGIh/At0GA0SV4GZFLbyK9v
+	kQ8zJreZt/L4ry4mK6e4Gz4o5eTfWQTRIUut4gYMsTA+hBtqp7u6w0SFZxsIftuDyCSnVNzLQ7X
+	XzMk3w==
+X-Google-Smtp-Source: AGHT+IEvNsvH0S9IPXXRMbbmgzHTccG9PPI2nYN0bRiYDZkjLr7eZa3zFcl2Aq+G2oZCl+9tdbOi4J//UzL45yvj1Lw=
+X-Received: by 2002:a17:90b:3a45:b0:341:2141:d809 with SMTP id
+ 98e67ed59e1d1-343fa74b235mr16121302a91.26.1763420676475; Mon, 17 Nov 2025
+ 15:04:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20251113002050.676694-1-neilb@ownmail.net> <20251113002050.676694-13-neilb@ownmail.net>
+In-Reply-To: <20251113002050.676694-13-neilb@ownmail.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 17 Nov 2025 18:04:25 -0500
+X-Gm-Features: AWmQ_blmwKtGFLQfMeJ-bOJqBB1-xlrqHYzasnjIoux8218WIXniQF0qawaCUpA
+Message-ID: <CAHC9VhQERRrabQhMUd3DHRg+TqV6Ztoo0kqwK_tn5u--in-f4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 12/15] Add start_renaming_two_dentries()
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Jeff Layton <jlayton@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
+	David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Chuck Lever <chuck.lever@oracle.com>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>, 
+	John Johansen <john.johansen@canonical.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <902ff4995d8e75ad1cd2196bf7d8da42932fba35.camel@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sun, 16 Nov 2025, Trond Myklebust wrote:
+On Wed, Nov 12, 2025 at 7:42=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrote=
+:
+>
+> From: NeilBrown <neil@brown.name>
+>
+> A few callers want to lock for a rename and already have both dentries.
+> Also debugfs does want to perform a lookup but doesn't want permission
+> checking, so start_renaming_dentry() cannot be used.
+>
+> This patch introduces start_renaming_two_dentries() which is given both
+> dentries.  debugfs performs one lookup itself.  As it will only continue
+> with a negative dentry and as those cannot be renamed or unlinked, it is
+> safe to do the lookup before getting the rename locks.
+>
+> overlayfs uses start_renaming_two_dentries() in three places and  selinux
+> uses it twice in sel_make_policy_nodes().
+>
+> In sel_make_policy_nodes() we now lock for rename twice instead of just
+> once so the combined operation is no longer atomic w.r.t the parent
+> directory locks.  As selinux_state.policy_mutex is held across the whole
+> operation this does not open up any interesting races.
+>
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: NeilBrown <neil@brown.name>
+>
+> ---
+> changes since v5:
+>  - sel_make_policy_nodes now uses "goto out" on error from start_renaming=
+_two_dentries()
+>
+> changes since v3:
+>  added missing assignment to rd.mnt_idmap in ovl_cleanup_and_whiteout
+> ---
+>  fs/debugfs/inode.c           | 48 ++++++++++++--------------
+>  fs/namei.c                   | 65 ++++++++++++++++++++++++++++++++++++
+>  fs/overlayfs/dir.c           | 43 ++++++++++++++++--------
+>  include/linux/namei.h        |  2 ++
+>  security/selinux/selinuxfs.c | 15 +++++++--
+>  5 files changed, 131 insertions(+), 42 deletions(-)
 
-> On Sun, 2025-11-16 at 11:29 -0500, Chuck Lever wrote:
-> > On 11/15/25 7:38 PM, Tyler W. Ross wrote:
-> > > On Friday, November 14th, 2025 at 7:19 AM, Chuck Lever
-> > > <chuck.lever@oracle.com> wrote:
-> > > > Then I would say further hunting for the broken commit is going
-> > > > to be
-> > > > fruitless. Adding the WARNs in net/sunrpc/xdr.c is a good next
-> > > > step so
-> > > > we see which XDR data item (assuming it's the same one every
-> > > > time) is
-> > > > failing to decode.
-> > >=20
-> > > I added WARNs after each trace_rpc_xdr_overflow() call, and then a
-> > > couple
-> > > pr_info() inside xdr_copy_to_scratch() as a follow-up.
-> > >=20
-> > > If I'm understanding correctly, it's failing in the
-> > > xdr_copy_to_scratch()
-> > > call inside xdr_inline_decode(), because the xdr_stream struct has
-> > > an
-> > > unset/NULL scratch kvec. I don't understand the context enough to
-> > > speculate on why, though.
-> > >=20
-> > > [=A0=A0 26.844102] Entered xdr_copy_to_scratch()
-> > > [=A0=A0 26.844105] xdr->scratch.iov_base: 0000000000000000
-> > > [=A0=A0 26.844107] xdr->scratch.iov_len: 0
-> > > [=A0=A0 26.844127] ------------[ cut here ]------------
-> > > [=A0=A0 26.844128] WARNING: CPU: 1 PID: 886 at net/sunrpc/xdr.c:1490
-> > > xdr_inline_decode.cold+0x65/0x141 [sunrpc]
-> > > [=A0=A0 26.844153] Modules linked in: rpcsec_gss_krb5 nfsv4
-> > > dns_resolver nfs lockd grace netfs binfmt_misc intel_rapl_msr
-> > > intel_rapl_common kvm_amd ccp kvm cfg80211 hid_generic usbhid hid
-> > > irqbypass rfkill ghash_clmulni_intel aesni_intel pcspkr 8021q garp
-> > > stp virtio_balloon llc mrp button evdev joydev sg auth_rpcgss
-> > > sunrpc configfs efi_pstore nfnetlink vsock_loopback
-> > > vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock
-> > > vmw_vmci qemu_fw_cfg ip_tables x_tables autofs4 ext4 crc16 mbcache
-> > > jbd2 crc32c_cryptoapi sr_mod cdrom bochs uhci_hcd drm_client_lib
-> > > drm_shmem_helper ehci_pci ata_generic sd_mod drm_kms_helper
-> > > ehci_hcd ata_piix libata drm virtio_net usbcore virtio_scsi floppy
-> > > psmouse net_failover failover scsi_mod serio_raw i2c_piix4
-> > > usb_common scsi_common i2c_smbus
-> > > [=A0=A0 26.844217] CPU: 1 UID: 591200003 PID: 886 Comm: ls Not tainted
-> > > 6.17.8-debbug1120598hack3 #9 PREEMPT(lazy)=A0=20
-> > > [=A0=A0 26.844220] Hardware name: QEMU Standard PC (i440FX + PIIX,
-> > > 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> > > [=A0=A0 26.844222] RIP: 0010:xdr_inline_decode.cold+0x65/0x141 [sunrp=
-c]
-> > > [=A0=A0 26.844238] Code: 24 48 c7 c7 e7 eb 8c c0 48 8b 71 28 e8 5a 36
-> > > fc d7 48 8b 0c 24 4c 8b 44 24 10 48 8b 54 24 08 4c 39 41 28 73 0c
-> > > 0f 1f 44 00 00 <0f> 0b e9 b7 fe fe ff 48 89 d8 48 89 cf 4c 89 44 24
-> > > 08 48 29 d0 48
-> > > [=A0=A0 26.844240] RSP: 0018:ffffd09e82ce3758 EFLAGS: 00010293
-> > > [=A0=A0 26.844242] RAX: 0000000000000017 RBX: ffff8f1e0adcffe8 RCX:
-> > > ffffd09e82ce3838
-> > > [=A0=A0 26.844244] RDX: ffff8f1e0adcffe4 RSI: 0000000000000001 RDI:
-> > > ffff8f1f37c5ce40
-> > > [=A0=A0 26.844245] RBP: ffffd09e82ce37b4 R08: 0000000000000008 R09:
-> > > ffffd09e82ce3600
-> > > [=A0=A0 26.844246] R10: ffffffff9acdb348 R11: 00000000ffffefff R12:
-> > > 000000000000001a
-> > > [=A0=A0 26.844247] R13: ffff8f1e01151200 R14: 0000000000000000 R15:
-> > > 0000000000440000
-> > > [=A0=A0 26.844250] FS:=A0 00007fa5d13db240(0000)
-> > > GS:ffff8f1f9c44a000(0000) knlGS:0000000000000000
-> > > [=A0=A0 26.844252] CS:=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [=A0=A0 26.844253] CR2: 00007fa5d13b9000 CR3: 000000010ab82000 CR4:
-> > > 0000000000750ef0
-> > > [=A0=A0 26.844255] PKRU: 55555554
-> > > [=A0=A0 26.844257] Call Trace:
-> > > [=A0=A0 26.844259]=A0 <TASK>
-> > > [=A0=A0 26.844263]=A0 __decode_op_hdr+0x20/0x120 [nfsv4]
-> > > [=A0=A0 26.844288]=A0 nfs4_xdr_dec_readdir+0xbb/0x120 [nfsv4]
-> > > [=A0=A0 26.844305]=A0 gss_unwrap_resp+0x9e/0x150 [auth_rpcgss]
-> > > [=A0=A0 26.844311]=A0 call_decode+0x211/0x230 [sunrpc]
-> > > [=A0=A0 26.844332]=A0 ? __pfx_call_decode+0x10/0x10 [sunrpc]
-> > > [=A0=A0 26.844348]=A0 __rpc_execute+0xb6/0x480 [sunrpc]
-> > > [=A0=A0 26.844369]=A0 ? rpc_new_task+0x17a/0x200 [sunrpc]
-> > > [=A0=A0 26.844386]=A0 rpc_execute+0x133/0x160 [sunrpc]
-> > > [=A0=A0 26.844401]=A0 rpc_run_task+0x103/0x160 [sunrpc]
-> > > [=A0=A0 26.844419]=A0 nfs4_call_sync_sequence+0x74/0xb0 [nfsv4]
-> > > [=A0=A0 26.844440]=A0 _nfs4_proc_readdir+0x28d/0x310 [nfsv4]
-> > > [=A0=A0 26.844459]=A0 nfs4_proc_readdir+0x60/0xf0 [nfsv4]
-> > > [=A0=A0 26.844475]=A0 nfs_readdir_xdr_to_array+0x1fb/0x410 [nfs]
-> > > [=A0=A0 26.844494]=A0 nfs_readdir+0x2ed/0xf00 [nfs]
-> > > [=A0=A0 26.844506]=A0 iterate_dir+0xaa/0x270
-> >=20
-> > Hi Trond, Anna -
-> >=20
-> > NFSv4 READDIR is hitting an XDR overflow because the XDR stream's
-> > scratch buffer is missing, and one of the READDIR response's fields
-> > crosses a page boundary in the receive buffer.
-> >=20
-> > Shouldn't the client's readdir XDR decoder have a scratch buffer?
->=20
-> No it shouldn't.
->=20
-> The READDIR XDR decoder doesn't interpret the contents of the readdir
-> buffer. What it is supposed to do is read the op header and the readdir
-> verifier, and then to align the remaining data into the pages that were
-> allocated as buffer using a call to xdr_read_page(). Essentially, it's
-> the exact same procedure as we follow for a READ call.
->=20
-> So if we're crossing into the pages before we hit the call to
-> xdr_read_pages() then that means we've allocated too small a header
-> buffer. Since it only appears to happen with RPCSEC_GSS, then my money
-> would be on AUTH_GSS not padding the reply buffer sufficiently when
-> setting the value of auth->au_cslack.
+...
 
-If replies are the problem, why wouldn't we want to focus on
-auth->au_rslack and auth->au_ralign?
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 4b740048df97..7f0384ceb976 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -3877,6 +3877,71 @@ int start_renaming_dentry(struct renamedata *rd, i=
+nt lookup_flags,
+>  }
+>  EXPORT_SYMBOL(start_renaming_dentry);
+>
+> +/**
+> + * start_renaming_two_dentries - Lock to dentries in given parents for r=
+ename
 
-FWIW I have both Debian Trixie and Sid/Forky VMs, and krb5{,i,p} is
-working across the board for me.  Normally I just use a plain MIT KDC,
-so I tried IPA and that works fine too.  Looking Tyler's tracepoint
-output, these two jump out:
+I'm guessing you meant this to read "Lock *two* dentries ...".
 
-              ls-969   [003] .....   270.326933: rpc_buf_alloc:        task=
-:00000008@00000005 callsize=3D3932 recvsize=3D176 status=3D0
-                                                                           =
-                                          ^^^
-              ls-969   [003] .....   270.326936: rpc_xdr_reply_pages:  task=
-:00000008@00000005 head=3D[0xffff8895c29fef64,140] page=3D4008(88) tail=3D[=
-0xffff8895c29feff0,36] len=3D0
-                                                                           =
-                                            ^^^
+Otherwise the SELinux changes look fine to me.
 
-Contrast that with what I see on my own systems:
-              ls-13558   [000] ..... 419637.290876: rpc_buf_alloc: task:000=
-00008@00000007 callsize=3D3932 recvsize=3D148 status=3D0
-                                                                           =
-                                      ^^^=20
-              ls-13558   [000] ..... 419637.290879: rpc_xdr_reply_pages: ta=
-sk:00000008@00000007 head=3D[0000000050ca7092,144] page=3D4008(88) tail=3D[=
-000000007b84934f,4] len=3D0
-                                                                           =
-                                            ^^^
-Those values for the receive size and the head iov length are consistent
-across all my VMs (not just my Debian ones).
+Acked-by: Paul Moore <paul@paul-moore.com> (SELinux)
 
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
->=20
+> + * @rd:           rename data containing parent
+> + * @old_dentry:   dentry of name to move
+> + * @new_dentry:   dentry to move to
+> + *
+> + * Ensure locks are in place for rename and check parentage is still cor=
+rect.
+> + *
+> + * On success the two dentries are stored in @rd.old_dentry and
+> + * @rd.new_dentry and @rd.old_parent and @rd.new_parent are confirmed to
+> + * be the parents of the dentries.
+> + *
+> + * References and the lock can be dropped with end_renaming()
+> + *
+> + * Returns: zero or an error.
+> + */
 
+--=20
+paul-moore.com
 
