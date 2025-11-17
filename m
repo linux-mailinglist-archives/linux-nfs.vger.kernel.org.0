@@ -1,250 +1,231 @@
-Return-Path: <linux-nfs+bounces-16460-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16461-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 674B2C65A94
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 19:07:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 190EFC65A64
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 19:03:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3AF04349B15
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 18:02:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B325F4E0557
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 18:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7910E2773EE;
-	Mon, 17 Nov 2025 18:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD3128750C;
+	Mon, 17 Nov 2025 18:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUTq1h13"
+	dkim=pass (2048-bit key) header.d=gatech.edu header.i=@gatech.edu header.b="TpDKx5U6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11021088.outbound.protection.outlook.com [40.107.208.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E73319005E;
-	Mon, 17 Nov 2025 18:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763402528; cv=none; b=bnQkk3l/q9c2X1wcnNY90r2OumWfCGf9yYgSoFVwmzEk8hp2AwdxENYBv+BEZLTTiEbJgZhvpZdl+rzZhvJwSEsqQ0PEJ97OgiblP+xcJInMMzyh65/iS04rshre8fhxyAqCkkKoJz7pqlAJc4uQsr4Z1iv0TLYLWFVXPJ5Edjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763402528; c=relaxed/simple;
-	bh=m/ukyzqeGxnmVwkwClcOJ79bEz39R19cR/8UCadb2yo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FCiJZ69QuE5Vg29v3+a2B/FXLD+jMxfnPD1UjIaPt+0El98ZgqBKQ0K1Ltiui2MpwSW2YA4Q0wP3pjacwp/5xabA9Q0p6BxeSUJFg1vSMqb7zzwLuRSNdAkRMSIRLdt+dv//DV85gfCAuURG+s3c/nLjLH+yth/bH0vT2rTKqAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUTq1h13; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D1F6C19421;
-	Mon, 17 Nov 2025 18:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763402527;
-	bh=m/ukyzqeGxnmVwkwClcOJ79bEz39R19cR/8UCadb2yo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eUTq1h13DbOmUr0/pTkOcVHPtGWu/r73GBqRb29vE20fvuphAChzcaSzn5/bpu6LR
-	 KzWFYmURvFwIDFZHZLBqmVqjNWIfKWiOnL5pNLOYWMQGKV47KOze5Yl2UCmtH/hqOH
-	 wRI+o1qfvFeL+1ixIwvNyF/BtDCCX6xCXVwy/a/UTCQ6st4oQXUPNsWlnFtluwYFrN
-	 M7tCnStitwOJTwOOq7zy453kAP+3hUT9GNPbwuzs6vFgrVkYf/68JpRz+nZq97r61t
-	 KKNwRv/ToQ92bqDfQqVNeoHhleDFJFm2/+eVkMi9kYY1StHWZfXtdq9QBC3xQP3w0D
-	 ru5BkFBJsiC2w==
-Message-ID: <86aa02b2214a6a775bc2d3fde0d180c2a55cb374.camel@kernel.org>
-Subject: Re: [PATCH v4 1/3] locks: Introduce lm_breaker_timedout operation
- to lease_manager_operations
-From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@ownmail.net,
- 	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Mon, 17 Nov 2025 13:02:04 -0500
-In-Reply-To: <20251115191722.3739234-2-dai.ngo@oracle.com>
-References: <20251115191722.3739234-1-dai.ngo@oracle.com>
-	 <20251115191722.3739234-2-dai.ngo@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB6523D7CF;
+	Mon, 17 Nov 2025 18:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763402625; cv=fail; b=kI2yotsRWm9bg5qkF6vMp5stG/mblGdIbku5lItA7LuUwDDvzA/C8J0kKtYUlHG7nlZ0cOAjTobXAGJ0IjwvmL3QLZMg/rEeHHJw5wDnEzL3TJVV4Ikp4lRLcqDwzBn2YOeGYBtG0+oDPQruytLm5kQiYFbN5/bAzk24jfKORWo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763402625; c=relaxed/simple;
+	bh=JTIokI5p4wKRyBWzmCq0eTWoM6VenDILuTB+ri2/dpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=FB8T9ebxQtFEHSuWR1l4TWeacs3m7U3hCGP8osbmJlQtj/QXtMZf2nMqpJDx9QnpmMxlEYIUTC0N4R6BhfgLjlOwH9mT7chBCJdtxqaqKz3Rx/ixgofB9iIDU50xJSI+op7E1/8zKHM/RJcD6WiW5llbZKHjHgM4TvqDpNVKMLU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gatech.edu; spf=pass smtp.mailfrom=gatech.edu; dkim=pass (2048-bit key) header.d=gatech.edu header.i=@gatech.edu header.b=TpDKx5U6; arc=fail smtp.client-ip=40.107.208.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gatech.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gatech.edu
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GWFdIUn6ZlZhs1493v/tEahEZHF0jx0vBwTq+E0bXis/b0wUctM/Hx5mjwqOGTztY74rBB1YHHuIZkx2RIOTyShdb5xuwSHkTz0uuwzGoBgEV42xZTk4nPm91HvkXMMa+xnLvFpM8SbUgKJCbeoPTiUX4ckeas1tClqLEhkk/yNxqeFrRIatJ78XXLh+J0gnTvLpUTD10MKKI3va0Rc6gj1h7Beo8pyZArnm5Jh7mAlh0j9o7LRfAcJnImRY6quAUN/uYZDeJU/cdj/RuaphmBBOuxD5sGrCnn76nLzhY+KCMmll/9YZ2+0w6afQeJZibFnrM1zR3aateM47n9ca+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wbDPcZ4iKr7UsW0R47YbQ+7hFMKT2QyShS8bVnOoU6U=;
+ b=h51RQGAiqd56/gdW47JnxquJSo5kUSONBSaVZ7lHIiGgo74rFOvBnLeOYZJ8Gz5CzN+Knya1PK/e1XV11PnZN36sq5f+oQjIeByPi9qvEBdfWHfFeLi6wVWuP94tik2NQDTalDrvZXzNiTYQv1VVsrmgw5gSaHVwKo3wT1vkYU7obGXkl2Cn5Mv93fYgv8MF1By6gwe0Ksrv0UdWL66gNcx0QDJDTBXMmAc+34pLPQFyEjVW/mkSCL3JDxnDxPesh6IzpV1SliqprOe7V1HEa3HJUYxeGEHpJVNm4D5/1/Hr7CMR0KGt3HD0RZLjWTi/iMDWeuGHmSecfdAeWYM1jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gatech.edu; dmarc=pass action=none header.from=gatech.edu;
+ dkim=pass header.d=gatech.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gatech.edu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wbDPcZ4iKr7UsW0R47YbQ+7hFMKT2QyShS8bVnOoU6U=;
+ b=TpDKx5U6qD9F5O1cNP27QCwAOFfu+c4M3fHtMglZxIQHdh0qOmYdT6no9Xe/qcXrJdc89SaVqtegnIO8uoeTpN99hFIa2E0MAJ959jUG1cAw4RswycPuY4XQ418hQkWhPM8HrRqzRyq1vwuPxh0RJpx2kLDLQFUqli/Nz8g6AEhBlaFsrmw1ZBMhAPEFU4frUMfiePLoUfrRnGFlUTuDPnuFCUtIG2VaRzOulT5SlLQ4qQpNUiqd3lEwpbRaCS7nfVIZKfwK4dZneRCkdo+1ADgcFigRUkx1l8Mr3qqlgdRJnpRFVZ8Q3DwpqwjkNt5/hp4PL3mxkK9zkxPYdEcaNA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gatech.edu;
+Received: from LV8PR07MB9999.namprd07.prod.outlook.com (2603:10b6:408:1e6::7)
+ by SA1PR07MB9006.namprd07.prod.outlook.com (2603:10b6:806:1f6::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Mon, 17 Nov
+ 2025 18:03:38 +0000
+Received: from LV8PR07MB9999.namprd07.prod.outlook.com
+ ([fe80::75de:dea2:92ed:dc7b]) by LV8PR07MB9999.namprd07.prod.outlook.com
+ ([fe80::75de:dea2:92ed:dc7b%7]) with mapi id 15.20.9320.021; Mon, 17 Nov 2025
+ 18:03:38 +0000
+Date: Mon, 17 Nov 2025 13:03:29 -0500
+From: Aiden Lambert <alambert48@gatech.edu>
+To: trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.org, 
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: ensure nfs_safe_remove() atomic nlink drop
+Message-ID: <qqu6ndrq6ytkt7rfe7hw62iu34fkt6eckixjgx7bkhqgvzvcm6@h4tj3bkvvidi>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: BLAPR03CA0021.namprd03.prod.outlook.com
+ (2603:10b6:208:32b::26) To LV8PR07MB9999.namprd07.prod.outlook.com
+ (2603:10b6:408:1e6::7)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR07MB9999:EE_|SA1PR07MB9006:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ac8f511-67a0-41d3-d243-08de2603a256
+X-GT-Tenant: 042d12d7-75fe-4547-b5b6-0573f80f829d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|10070799003|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8iJHZlWvwSJjFNQyrT68/6whyTnbUDzKSZgIQm+F6By4b9LjAmjG+1hvU/wP?=
+ =?us-ascii?Q?t05l1/ZMrsxMmUAi3IpCwqXVYpkYBLMOL8G7LoaKspHJBS5H+WMna+WUPdet?=
+ =?us-ascii?Q?JySRWcvpbH8R7wuTbnLX4SsHGKd1DAeHzGyv8toVmzZZVToV19EquIoO7tCL?=
+ =?us-ascii?Q?1oMHF3ajzWLMSq1d14wGegwuHypRHnNWfdK3in/LtKSrHqlIQUCt+P8k7681?=
+ =?us-ascii?Q?YjmvNqLCw+SvMpZ7SawFMuQRYAMWpDqm1sJrrO8hJrhDPOO6Vx2LYRJKFWg4?=
+ =?us-ascii?Q?sQU4ugqmAIOI7gLoNrxANxdOL2aEHyqZPKfu9wnO36/nJ3uD9+1K0v6N6NSH?=
+ =?us-ascii?Q?66fgRitoGOSNR8q2J8WSEtYpdGWlpqGOVfYKCkJeUy9OOPCwnrJkVRliDFIZ?=
+ =?us-ascii?Q?eT07CyRdv7JGL8syhkYQ5NqHzeO9qK3UxkmgrCeSt44CzLYwJdIsFf9cLgN9?=
+ =?us-ascii?Q?b3KgtTzN0MsHDG8a18w15B/s/B0BzW7RdTJo3WTXu1BM4xoPzzA/67ZdsMK0?=
+ =?us-ascii?Q?XfDwfMzI23tNzaajNncB8Qi1WTaj7c0yJSJXOhvet+oF+LeYzdbjuqmXBEBV?=
+ =?us-ascii?Q?FjWlW1ypaum1Usir0/CH02ijPFM8RB6W3C+8wLkZd+RbERlEaDHob3qZNrqy?=
+ =?us-ascii?Q?3i3RFSt9v/lEgttqAEp1qMPc5enUskl5EH8+yGODK7+0ggbsXPbdXXtKst1y?=
+ =?us-ascii?Q?5DMR7lvLVNPhNZJ3UNYraQBN3fJJKYyhqWNQMR8qTEIyUiZphipYJc/CwVvh?=
+ =?us-ascii?Q?VPg7rhaLUMjW9O7tTctTmN4dkYkYwJ8+vTrg2E0prJWtxK4PgbFbWD0RwXv6?=
+ =?us-ascii?Q?jx+8ShVXxFcdbGhQcluBMoyuTRl9jIIV6xOQgY36OsfXhaA6ZhAVtPFP2+NB?=
+ =?us-ascii?Q?b7l69Lr1ZDNnxmV0RqEStQcy9KARZ7nWLXJ5eMmboGiyir9VPb7FVDmBQunN?=
+ =?us-ascii?Q?8mi5794yPoOID3xMOqcPLKkul3FHmQNOa2mkaecg0omkPAyD8te7t4Xddotu?=
+ =?us-ascii?Q?vpUI8LZlE5OS/jC6XwYilXOYWJSFTD8Czr701gGKgypxovFjwECq8YUY/eTy?=
+ =?us-ascii?Q?Y1Wojr8p/ZFs7F8GCl5M/W1jVjeGLEqfnnOs0n1mTPceRrtlgWfFPy4Mm8Xv?=
+ =?us-ascii?Q?DVtYSl/k4Vd8AC+fcRJ0C19WhCsx/pURSpQDV5glrEAddlJmMF4DFOFcSq6e?=
+ =?us-ascii?Q?KBb/HmxesfXxwgzjT8XxpiSNhTGI8xCzTmA2jMp3dtkm7KajMY0yuOnWwLaC?=
+ =?us-ascii?Q?ajHX68f2uoFFsCYv2uoW3qYP+YZ/YHyjdh1cURrkEXcMMIeR1k7piT0ndTex?=
+ =?us-ascii?Q?fzjfMWUiJ+3WLVKas5LrzoE546k2HDFyQxp3yxoOoqSn4vnzOXH9dQ55Qm6M?=
+ =?us-ascii?Q?9e5+5YbThvCF8rPMFINd966ZSAL15GCPfmWUKdRQWxbKFs1n9xA9Dbkem/28?=
+ =?us-ascii?Q?tmoXumGm44mRm3ZXniAPlNnAFuVn2gpq?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR07MB9999.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(10070799003)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aE++/sLocHjLCBk9kVf718MaC+5own4mOQQnjCvX9iWpQ+4iwm+fQGQR/QDL?=
+ =?us-ascii?Q?SoOqk0UntiHPON0PTpghBhg5eVd3ewxgIVg8jXk8w6/Ga6ta5w2K6QliNyNg?=
+ =?us-ascii?Q?GrMsCnZQ3UNgSAd2RXklRR4r88Ax9AMzWkcR20U03QehJ5t9t6QSlZIf4cA0?=
+ =?us-ascii?Q?M7ZWwt87nUsOY5X1mN0ie89n2tzCEa49UI19ygsVp9pCtSm525CAfCf6HAqo?=
+ =?us-ascii?Q?sJqWuOKEh1XJZS/qV2IPSIelW2D1m6p0uwk+w3LId5h2aJUPoluVQN63ChSe?=
+ =?us-ascii?Q?tYS2u1Fnpl6m8+Ikfv9UtIC0r0LWtDO3L03laKZS9JPGCWgDEkqrYCGXQJA3?=
+ =?us-ascii?Q?oUXSq3M8hX8CUJaqa2UjlQc6/gkAuLc/FnVzhmbB5XxUJLcqbVvNSb0x5mLX?=
+ =?us-ascii?Q?cuZ1nZaZLUDC/FSYYSUKWp6L6euWiOPbB7o5RWmtZFPBxRQYxWTmY1keUGhv?=
+ =?us-ascii?Q?nJ2Arm6O8TKh5dQVbamtwzh8uGN7uoMR5h/VKo2NFtBQAd0pql+LBtwtp0c5?=
+ =?us-ascii?Q?iHRD6ABvzFgbUhKzBFiGhLGuUQFoWo1BO53PayckxsrKWMesVSJZo+26z/17?=
+ =?us-ascii?Q?sykgFXL63LDctmvR2wNmE/z4Z4zyjgzSyKJm0FLxSgLFpHeHfKPMLT1W1xTa?=
+ =?us-ascii?Q?ld3PaFeLVvqchvjH0aYGKxUekJ8piAP4BCE6Na0SdYO4aMkdXy+/Ue1S5NzV?=
+ =?us-ascii?Q?U8vEwTS3I1HkQh8514jw8WpvNPRDWA2mi0ggmeNFmhRrsnPkKMmRM6O8JJ4d?=
+ =?us-ascii?Q?ena2tuPJTWxFez4poOEeDW5lECIYeOexiL1gQ8D7QADZhXJwZBhHxFsgt9ju?=
+ =?us-ascii?Q?b+T2o62jpDXjiVla/RhnpOycmQFIwUyv+JWvTnIWQ7aEeWE4+UIpCIcb5GsB?=
+ =?us-ascii?Q?WGyFF+l7CLn4F1g4krQBjeiKCO9rtXVSA46foLtw0YaT8UdjzVoWHaq5XrAr?=
+ =?us-ascii?Q?J19W+RySvgwBxfo48912AdY0EXSYlQetyJUVwuv7brdcfoqTUUnuR4Ir0w6s?=
+ =?us-ascii?Q?6Wb5Y3LYR3PD6/uW9qTiw6HavM3FU6AqctildKYckswaT3usgssdUH19bObf?=
+ =?us-ascii?Q?JUz7V3TpW1QpD/uJUo/W+PFMuN1oOc2CYWWkFAD5wOVzkxdyRoU95G+T8K2i?=
+ =?us-ascii?Q?iFbyLm+8A7SogiSJTuL/9VB24301aEZNpc6Ku6uns/7Nn1XhBAyrqC1A172Z?=
+ =?us-ascii?Q?iozavPilyM++4RoPApi/2cAgSK+SngkRoDkbzMPrMyDLFydcCbhgmZLwEN0x?=
+ =?us-ascii?Q?fCZPq8yp2TOCiApB17Y0rxuU4WyV8DZkN2mO1Qnem9tTJjnaaSsxDAMsLior?=
+ =?us-ascii?Q?gkTmDoMdXf/RH2aDLYD/QCB2l9jbMT78lhg/u6YCVyr07xB+pK2adh9lj/b8?=
+ =?us-ascii?Q?gmN27cX3IoBvbb1v/VxRXh3ccG4Ve+J2kK/47CKqPECaocmDmIC+HVNl84VZ?=
+ =?us-ascii?Q?OYxcxC/aH/8NVeV1CaNmLYuP70+GAn6Kn8Cq9UD/gZYg2SqXKcHM7P4BlJwO?=
+ =?us-ascii?Q?6Wnl4TTbizTLv/u5BBKbpM93ncOrC3pHEzm+hSbsUihplEq/mz7N8iiqFxfn?=
+ =?us-ascii?Q?AvBLelijFkCiFRxV34u9EiGuUHLrFroaIl6iQe0uN6iW7UqM28vMrCILj2JM?=
+ =?us-ascii?Q?gomHeE4ZfIyfIn7tLPTQLnavU+AfK5s642ZIbk4r2kf/?=
+X-OriginatorOrg: gatech.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ac8f511-67a0-41d3-d243-08de2603a256
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR07MB9999.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2025 18:03:38.4894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 482198bb-ae7b-4b25-8b7a-6d7f32faa083
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xqsqv27WZgyzKfl2s+qGpQi3IQuUyD1yP2KQy4Ki0Evz+xqj/xMW4GOzZ36902njedRi0a5Yip3PLn9J7cOU+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR07MB9006
 
-On Sat, 2025-11-15 at 11:16 -0800, Dai Ngo wrote:
-> Some consumers of the lease_manager_operations structure need
-> to perform additional actions when a lease break, triggered by
-> a conflict, times out.
->=20
-> The NFS server is the first consumer of this operation.
->=20
-> When a pNFS layout conflict occurs and the lease break times
-> out =E2=80=94 resulting in the layout being revoked and its file lease
-> removed from the flc_lease list =E2=80=94 the NFS server must issue a
-> fence operation. This operation ensures that the client is
-> prevented from accessing the data server after the layout
-> revocation.
->=20
-> Fixes: f99d4fbdae67 ("nfsd: add SCSI layout support")
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  Documentation/filesystems/locking.rst |  2 ++
->  fs/locks.c                            | 14 +++++++++++---
->  include/linux/filelock.h              |  2 ++
->  3 files changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
-stems/locking.rst
-> index 77704fde9845..cd600db6c4b9 100644
-> --- a/Documentation/filesystems/locking.rst
-> +++ b/Documentation/filesystems/locking.rst
-> @@ -403,6 +403,7 @@ prototypes::
->  	bool (*lm_breaker_owns_lease)(struct file_lock *);
->          bool (*lm_lock_expirable)(struct file_lock *);
->          void (*lm_expire_lock)(void);
-> +        void (*lm_breaker_timedout)(struct file_lease *);
-> =20
->  locking rules:
-> =20
-> @@ -416,6 +417,7 @@ lm_change		yes		no			no
->  lm_breaker_owns_lease:	yes     	no			no
->  lm_lock_expirable	yes		no			no
->  lm_expire_lock		no		no			yes
-> +lm_breaker_timedout     no              no                      yes
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  buffer_head
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 04a3f0e20724..1f254e0cd398 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -369,9 +369,15 @@ locks_dispose_list(struct list_head *dispose)
->  	while (!list_empty(dispose)) {
->  		flc =3D list_first_entry(dispose, struct file_lock_core, flc_list);
->  		list_del_init(&flc->flc_list);
-> -		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
-> +		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT)) {
-> +			if (flc->flc_flags & FL_BREAKER_TIMEDOUT) {
-> +				struct file_lease *fl =3D file_lease(flc);
-> +
-> +				if (fl->fl_lmops->lm_breaker_timedout)
-> +					fl->fl_lmops->lm_breaker_timedout(fl);
-> +			}
+A race condition occurs when both unlink() and link() are running
+concurrently on the same inode, and the nlink count from the nfs server
+received in link()->nfs_do_access() clobbers the nlink count of the
+inode in nfs_safe_remove() after the "remove" RPC is made to the server
+but before we decrement the link count. If the nlink value from
+nfs_do_access() reflects the decremented nlink of the "remove" RPC, a
+double decrement occurs, which can lead to the dropping of the client
+side inode, causing the link call to return ENOENT. To fix this, we
+record an expected nlink value before the "remove" RPC and compare it
+with the value afterwards---if these two are the same, the drop is
+performed. Note that this does not take into account nlink values that
+are a result of multi-client (un)link operations as these are not
+guaranteed to be atomic by the NFS spec.
 
-locks_dispose_list() is a common function for locks and leases, and
-this is only going to be relevant from __break_lease().
+Signed-off-by: Aiden Lambert <alambert48@gatech.edu>
+---
+ fs/nfs/dir.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-Can you move this handling into a separate function that is called
-before the relevant locks_dispose_list() call in __break_lease()?
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 46d9c65d50f..965787a8eee 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1892,19 +1892,24 @@ static int nfs_dentry_delete(const struct dentry *dentry)
+ 	return 0;
+ 
+ }
+ 
+-/* Ensure that we revalidate inode->i_nlink */
+-static void nfs_drop_nlink(struct inode *inode)
++static void nfs_drop_nlink_locked(struct inode *inode)
+ {
+-	spin_lock(&inode->i_lock);
+ 	/* drop the inode if we're reasonably sure this is the last link */
+ 	if (inode->i_nlink > 0)
+ 		drop_nlink(inode);
+ 	NFS_I(inode)->attr_gencount = nfs_inc_attr_generation_counter();
+ 	nfs_set_cache_invalid(
+ 		inode, NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
+ 			       NFS_INO_INVALID_NLINK);
++}
++
++/* Ensure that we revalidate inode->i_nlink */
++static void nfs_drop_nlink(struct inode *inode)
++{
++	spin_lock(&inode->i_lock);
++	nfs_drop_nlink_locked(inode);
+ 	spin_unlock(&inode->i_lock);
+ }
+ 
+ /*
+@@ -2505,11 +2510,18 @@ static int nfs_safe_remove(struct dentry *dentry)
+ 	}
+ 
+ 	trace_nfs_remove_enter(dir, dentry);
+ 	if (inode != NULL) {
++		spin_lock(&inode->i_lock);
++		unsigned int expected_nlink = inode->i_nlink;
++
++		spin_unlock(&inode->i_lock);
++
+ 		error = NFS_PROTO(dir)->remove(dir, dentry);
+-		if (error == 0)
+-			nfs_drop_nlink(inode);
++
++		spin_lock(&inode->i_lock);
++		if (error == 0 && expected_nlink == inode->i_nlink)
++			nfs_drop_nlink_locked(inode);
++		spin_unlock(&inode->i_lock);
+ 	} else
+ 		error = NFS_PROTO(dir)->remove(dir, dentry);
+ 	if (error == -ENOENT)
+ 		nfs_dentry_handle_enoent(dentry);
+-- 
+2.51.1
 
->  			locks_free_lease(file_lease(flc));
-> -		else
-> +		} else
->  			locks_free_lock(file_lock(flc));
->  	}
->  }
-> @@ -1482,8 +1488,10 @@ static void time_out_leases(struct inode *inode, s=
-truct list_head *dispose)
->  		trace_time_out_leases(inode, fl);
->  		if (past_time(fl->fl_downgrade_time))
->  			lease_modify(fl, F_RDLCK, dispose);
-> -		if (past_time(fl->fl_break_time))
-> +		if (past_time(fl->fl_break_time)) {
->  			lease_modify(fl, F_UNLCK, dispose);
-> +			fl->c.flc_flags |=3D FL_BREAKER_TIMEDOUT;
-> +		}
->  	}
->  }
-> =20
-> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> index c2ce8ba05d06..06ccd6b66012 100644
-> --- a/include/linux/filelock.h
-> +++ b/include/linux/filelock.h
-> @@ -17,6 +17,7 @@
->  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
->  #define FL_LAYOUT	2048	/* outstanding pNFS layout */
->  #define FL_RECLAIM	4096	/* reclaiming from a reboot server */
-> +#define	FL_BREAKER_TIMEDOUT	8192	/* lease breaker timed out */
-> =20
->  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
-> =20
-> @@ -49,6 +50,7 @@ struct lease_manager_operations {
->  	int (*lm_change)(struct file_lease *, int, struct list_head *);
->  	void (*lm_setup)(struct file_lease *, void **);
->  	bool (*lm_breaker_owns_lease)(struct file_lease *);
-> +	void (*lm_breaker_timedout)(struct file_lease *fl);
->  };
-> =20
->  struct lock_manager {
-
---=20
-Jeff Layton <jlayton@kernel.org>
 
