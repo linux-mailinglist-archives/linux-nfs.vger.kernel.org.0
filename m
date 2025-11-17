@@ -1,56 +1,58 @@
-Return-Path: <linux-nfs+bounces-16459-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16460-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF051C6541A
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 17:52:55 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 674B2C65A94
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 19:07:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id D093829018
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 16:52:52 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3AF04349B15
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 18:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28FE82FB97B;
-	Mon, 17 Nov 2025 16:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7910E2773EE;
+	Mon, 17 Nov 2025 18:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uycJRMX1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUTq1h13"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FA329D294
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 16:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E73319005E;
+	Mon, 17 Nov 2025 18:02:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763398320; cv=none; b=EoZQtqpAdv71Plbs5Fe9/PPB+BMCQELlRfXrq0UXRrmu3GE5jYaOT4/blR27HUJJHF4EKfoqXy9MOz65otNdSRXVfWU3hdtkEB+NqIx3J8QRKA/OieJwnW85FfVkBh/P3RATyedhmG+O3o6LyhXqSCRkiRLcMsnf58GS6Uo6qUo=
+	t=1763402528; cv=none; b=bnQkk3l/q9c2X1wcnNY90r2OumWfCGf9yYgSoFVwmzEk8hp2AwdxENYBv+BEZLTTiEbJgZhvpZdl+rzZhvJwSEsqQ0PEJ97OgiblP+xcJInMMzyh65/iS04rshre8fhxyAqCkkKoJz7pqlAJc4uQsr4Z1iv0TLYLWFVXPJ5Edjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763398320; c=relaxed/simple;
-	bh=MTYy08Q1LuerDjexCsl62z/wOILIfj73H9GqpDDgrEw=;
+	s=arc-20240116; t=1763402528; c=relaxed/simple;
+	bh=m/ukyzqeGxnmVwkwClcOJ79bEz39R19cR/8UCadb2yo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VwkQVEg5nvchGB2i4uecO/xXxwz/KDM6t2GEZRSQel+2iae4ey5ILrIBQ5YHqwICNQ6tbBWuSuKvdErzjS3s64Mzcz21Wjxcw1R+ms4pxqvUukuXF/K3x11Xe3d7t6DpfNz4yLaYZaJVzajP896wlKVzB/C9FPQL2z5vZju/ir8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uycJRMX1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 120D7C19421;
-	Mon, 17 Nov 2025 16:51:58 +0000 (UTC)
+	 Content-Type:MIME-Version; b=FCiJZ69QuE5Vg29v3+a2B/FXLD+jMxfnPD1UjIaPt+0El98ZgqBKQ0K1Ltiui2MpwSW2YA4Q0wP3pjacwp/5xabA9Q0p6BxeSUJFg1vSMqb7zzwLuRSNdAkRMSIRLdt+dv//DV85gfCAuURG+s3c/nLjLH+yth/bH0vT2rTKqAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUTq1h13; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D1F6C19421;
+	Mon, 17 Nov 2025 18:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763398319;
-	bh=MTYy08Q1LuerDjexCsl62z/wOILIfj73H9GqpDDgrEw=;
+	s=k20201202; t=1763402527;
+	bh=m/ukyzqeGxnmVwkwClcOJ79bEz39R19cR/8UCadb2yo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=uycJRMX10Plxq+YA5TK2ulYWLt9p2noJc0hHSmXSLn4XORwMFhwFCQIPnNfmqmPvd
-	 0QIsznSU+iOlPveXxbAh1QX7GWIqSAP5+vCuhwbeLhAY/TfJpl15R9+rGN3FxXdkAD
-	 lbWvojMTJLVq2P2CVUFZGGzndPGcx7HcvXGAqZJn/xCaJmSGwaWp5DIvX3DQ2njVkl
-	 rcXWFybfNdVmtp/yX6eHAhiTEFkqvbFf61OxuO8xlldVbJEkxgCPuTuVGF7y03/ZqF
-	 jZ3uv1kU9JHW1bqUehLRstqTj6EqyGESE4s7ZklHvJ5qJqLDuQ1KEiTXd1JQPqIV2l
-	 ryQPXoAIRt6iw==
-Message-ID: <789630ae1f2f5a325d67c6b5de6896c434c01c69.camel@kernel.org>
-Subject: Re: [PATCH v2 0/3] Update suppattr_exclcreat bitmask
+	b=eUTq1h13DbOmUr0/pTkOcVHPtGWu/r73GBqRb29vE20fvuphAChzcaSzn5/bpu6LR
+	 KzWFYmURvFwIDFZHZLBqmVqjNWIfKWiOnL5pNLOYWMQGKV47KOze5Yl2UCmtH/hqOH
+	 wRI+o1qfvFeL+1ixIwvNyF/BtDCCX6xCXVwy/a/UTCQ6st4oQXUPNsWlnFtluwYFrN
+	 M7tCnStitwOJTwOOq7zy453kAP+3hUT9GNPbwuzs6vFgrVkYf/68JpRz+nZq97r61t
+	 KKNwRv/ToQ92bqDfQqVNeoHhleDFJFm2/+eVkMi9kYY1StHWZfXtdq9QBC3xQP3w0D
+	 ru5BkFBJsiC2w==
+Message-ID: <86aa02b2214a6a775bc2d3fde0d180c2a55cb374.camel@kernel.org>
+Subject: Re: [PATCH v4 1/3] locks: Introduce lm_breaker_timedout operation
+ to lease_manager_operations
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 17 Nov 2025 11:51:57 -0500
-In-Reply-To: <20251117160051.10213-1-cel@kernel.org>
-References: <20251117160051.10213-1-cel@kernel.org>
+To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@ownmail.net,
+ 	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Mon, 17 Nov 2025 13:02:04 -0500
+In-Reply-To: <20251115191722.3739234-2-dai.ngo@oracle.com>
+References: <20251115191722.3739234-1-dai.ngo@oracle.com>
+	 <20251115191722.3739234-2-dai.ngo@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,33 +137,114 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-11-17 at 11:00 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Sat, 2025-11-15 at 11:16 -0800, Dai Ngo wrote:
+> Some consumers of the lease_manager_operations structure need
+> to perform additional actions when a lease break, triggered by
+> a conflict, times out.
 >=20
-> While working on some new pynfs tests to verify the behavior of
-> OPEN(create), I found a couple of bugs in NFSD's suppattr_exclcreat
-> bitmask.
+> The NFS server is the first consumer of this operation.
 >=20
-> I've split this into two "fix" patches, because the fixes have
-> different LTS blast radii. The third patch is a clean-up that
-> should not be backported.
+> When a pNFS layout conflict occurs and the lease break times
+> out =E2=80=94 resulting in the layout being revoked and its file lease
+> removed from the flc_lease list =E2=80=94 the NFS server must issue a
+> fence operation. This operation ensures that the client is
+> prevented from accessing the data server after the layout
+> revocation.
 >=20
-> The new pynfs tests were posted under separate cover.
+> Fixes: f99d4fbdae67 ("nfsd: add SCSI layout support")
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  Documentation/filesystems/locking.rst |  2 ++
+>  fs/locks.c                            | 14 +++++++++++---
+>  include/linux/filelock.h              |  2 ++
+>  3 files changed, 15 insertions(+), 3 deletions(-)
 >=20
-> Changes since v1:
-> * Address Jeff's review comment
->=20
-> Chuck Lever (3):
->   NFSD: Clear SECLABEL in the suppattr_exclcreat bitmap
->   NFSD: Clear TIME_DELEG in the suppattr_exclcreat bitmap
->   NFSD: Clean up nfsd4_check_open_attributes()
->=20
->  fs/nfsd/nfs4proc.c | 40 +++++++++++++++++++++-------------------
->  fs/nfsd/nfs4xdr.c  |  5 +++++
->  fs/nfsd/nfsd.h     |  8 +++++++-
->  3 files changed, 33 insertions(+), 20 deletions(-)
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
+stems/locking.rst
+> index 77704fde9845..cd600db6c4b9 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -403,6 +403,7 @@ prototypes::
+>  	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>          bool (*lm_lock_expirable)(struct file_lock *);
+>          void (*lm_expire_lock)(void);
+> +        void (*lm_breaker_timedout)(struct file_lease *);
+> =20
+>  locking rules:
+> =20
+> @@ -416,6 +417,7 @@ lm_change		yes		no			no
+>  lm_breaker_owns_lease:	yes     	no			no
+>  lm_lock_expirable	yes		no			no
+>  lm_expire_lock		no		no			yes
+> +lm_breaker_timedout     no              no                      yes
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  buffer_head
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 04a3f0e20724..1f254e0cd398 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -369,9 +369,15 @@ locks_dispose_list(struct list_head *dispose)
+>  	while (!list_empty(dispose)) {
+>  		flc =3D list_first_entry(dispose, struct file_lock_core, flc_list);
+>  		list_del_init(&flc->flc_list);
+> -		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
+> +		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT)) {
+> +			if (flc->flc_flags & FL_BREAKER_TIMEDOUT) {
+> +				struct file_lease *fl =3D file_lease(flc);
+> +
+> +				if (fl->fl_lmops->lm_breaker_timedout)
+> +					fl->fl_lmops->lm_breaker_timedout(fl);
+> +			}
 
-Looks good!
+locks_dispose_list() is a common function for locks and leases, and
+this is only going to be relevant from __break_lease().
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Can you move this handling into a separate function that is called
+before the relevant locks_dispose_list() call in __break_lease()?
+
+>  			locks_free_lease(file_lease(flc));
+> -		else
+> +		} else
+>  			locks_free_lock(file_lock(flc));
+>  	}
+>  }
+> @@ -1482,8 +1488,10 @@ static void time_out_leases(struct inode *inode, s=
+truct list_head *dispose)
+>  		trace_time_out_leases(inode, fl);
+>  		if (past_time(fl->fl_downgrade_time))
+>  			lease_modify(fl, F_RDLCK, dispose);
+> -		if (past_time(fl->fl_break_time))
+> +		if (past_time(fl->fl_break_time)) {
+>  			lease_modify(fl, F_UNLCK, dispose);
+> +			fl->c.flc_flags |=3D FL_BREAKER_TIMEDOUT;
+> +		}
+>  	}
+>  }
+> =20
+> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> index c2ce8ba05d06..06ccd6b66012 100644
+> --- a/include/linux/filelock.h
+> +++ b/include/linux/filelock.h
+> @@ -17,6 +17,7 @@
+>  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+>  #define FL_LAYOUT	2048	/* outstanding pNFS layout */
+>  #define FL_RECLAIM	4096	/* reclaiming from a reboot server */
+> +#define	FL_BREAKER_TIMEDOUT	8192	/* lease breaker timed out */
+> =20
+>  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
+> =20
+> @@ -49,6 +50,7 @@ struct lease_manager_operations {
+>  	int (*lm_change)(struct file_lease *, int, struct list_head *);
+>  	void (*lm_setup)(struct file_lease *, void **);
+>  	bool (*lm_breaker_owns_lease)(struct file_lease *);
+> +	void (*lm_breaker_timedout)(struct file_lease *fl);
+>  };
+> =20
+>  struct lock_manager {
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
