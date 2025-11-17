@@ -1,95 +1,84 @@
-Return-Path: <linux-nfs+bounces-16447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DBFC647FC
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 14:55:54 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12377C64A9C
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 15:37:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 065E64EFB0F
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 13:50:56 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 65BB534210A
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 14:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3145F336ED6;
-	Mon, 17 Nov 2025 13:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAmzihsp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9550832938D;
+	Mon, 17 Nov 2025 14:32:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A99336ECB;
-	Mon, 17 Nov 2025 13:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE772C9D
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 14:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763387374; cv=none; b=F0zO4mRw7WNmYad4RNQp1YNwhf0qXfYhck6bIcxx2+fScVTaxWlH8bB0yR5QGgSWSqG6JqRvgemJiRnxPv40aWpjK3MBAhcWrgWzX7JAMp19KNnqJkj2RFl9aoYIH3676H2YLlk4DD8IIdD5vVDH5VeMlb3fpFp7ECYXKfjC9E4=
+	t=1763389970; cv=none; b=hdyg6eZATQcHtJo9/7VIWQp8HjTnzXtU7PKMXNYuQLrP4A5dtx5W2ASwR7R0B3bq2mNTJYFEhCtaqtKvhSrHwxYDLeEblyS/7NcraYhCcr9sXzOLooCB90cLZV/zwk+CH3Wn3reCquxkKkfn7ANbL6QHPt3yNwHu+eldlNm7lUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763387374; c=relaxed/simple;
-	bh=bfn9Sd+jXceYJB8fpwsyLT5HEI1erXmgZqmQuFDjS24=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MLKHadRQLTM4xk507JHEgfB/Rpjqp5X4scEn5lEea/FPi5+UCJDYH94waq6+Z/U6OlWIG8RhXuceBI93M3RP9gzUZNZhJdMKwShGL371k4A7n3F+Ed17mrm0uNYNNzPcAeA1hBsyaigdbcHgIqg37x14ZsBGUm07QcTbvEraosA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAmzihsp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF20C4AF0C;
-	Mon, 17 Nov 2025 13:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763387373;
-	bh=bfn9Sd+jXceYJB8fpwsyLT5HEI1erXmgZqmQuFDjS24=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nAmzihsp5OmtW82ED85KlE+nM9z5CsynSlC1XxORmEnm20tuYXOm1xTRnCd/MgRhj
-	 2JggoabVgUOzScONMDh3vjqSo0DGa1OQ3tpNpFs5KptjHMaU6k26hIXW8oNP7VkiFu
-	 KpP4jQkctNbk6Iv+9JK8lh/PUdrk9RGoKfp6Nkob9A+FfPt20wgCmTXLaw7naHfPWP
-	 68qz9QzbWH8N1YxTsaaQKpwJfk+85UnrVZhJ5c/wpea1V9KpMBrjAtmon0FaDQ1Ary
-	 3CZnzGotgoYsfbkjMee473el3MAeXqSSLkY0rWeZxAzVW7ZPoXK1wNtympz4iO31/T
-	 KvFZZPL8A+VMQ==
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] nfsd: Mark variable __maybe_unused to avoid W=1 build break
-Date: Mon, 17 Nov 2025 08:49:29 -0500
-Message-ID: <176338731878.4204.10224670039692915729.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251113083131.2239677-1-andriy.shevchenko@linux.intel.com>
-References: <20251113083131.2239677-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1763389970; c=relaxed/simple;
+	bh=3l7SefgOKi61O+YOv1eN9mfOzJGKFQFin72vRE1O7d4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Vmbnl28HVSlzB0i9idVGyX7Liwy5n1lM0HS17nu5sl8RpinoataYm3Xg/bWTpJ+7687KGhAGNUDrbPqSk0uKFhrULkOq5MtxGktfMh9RCiNFUbwJMarHm9pkUTsNgq3ak0C4iVxHqnKz3QGy0MLmwy+jGxgjn6swUOAyPZJA/KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5364FFEC
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 06:32:39 -0800 (PST)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 782D13F740
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 06:32:46 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH] locktest: use correct build flags
+Date: Mon, 17 Nov 2025 14:32:41 +0000
+Message-ID: <20251117143241.1501312-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+This makefile uses CFLAGS_FOR_BUILD etc but since 2020[1] hasn't used
+CC_FOR_BUILD as CC.
 
-On Thu, 13 Nov 2025 09:31:31 +0100, Andy Shevchenko wrote:
-> Clang is not happy about set but (in some cases) unused variable:
-> 
-> fs/nfsd/export.c:1027:17: error: variable 'inode' set but not used [-Werror,-Wunused-but-set-variable]
-> 
-> since it's used as a parameter to dprintk() which might be configured
-> a no-op. To avoid uglifying code with the specific ifdeffery just mark
-> the variable __maybe_unused.
-> 
-> [...]
+This means in cross-compile environments this uninstalled binary is
+built for the host machine using build machine flags, which can result
+in incorrect paths being passed.
 
-Applied to nfsd-testing, thanks!
+As this binary hasn't been built with CC_FOR_BUILD for five years, we
+can assume that this isn't actually used and just remove the _FOR_BUILD
+flags entirely.
 
-[1/1] nfsd: Mark variable __maybe_unused to avoid W=1 build break
-      commit: 56e9f88b25abf08de6f2b1bfbbb2ddc4e6622d1e
+Original patch by Khem Raj <raj.khem@gmail.com>.
 
---
-Chuck Lever
+[1] nfs-utils 1fee8caa ("locktest: Makefile.am: remove host compiler costraint")
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ tools/locktest/Makefile.am | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
+index e8914655..2fd36971 100644
+--- a/tools/locktest/Makefile.am
++++ b/tools/locktest/Makefile.am
+@@ -2,8 +2,5 @@
+ 
+ noinst_PROGRAMS = testlk
+ testlk_SOURCES = testlk.c
+-testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
+-testlk_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
+-testlk_LDFLAGS=$(LDFLAGS_FOR_BUILD)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+-- 
+2.43.0
 
 
