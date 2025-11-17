@@ -1,54 +1,57 @@
-Return-Path: <linux-nfs+bounces-16449-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16450-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DDF4C64E3B
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 16:35:01 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58F95C64EA6
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 16:40:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4DE7A4EA553
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 15:34:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EBD1A35B8C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Nov 2025 15:38:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B932627F9;
-	Mon, 17 Nov 2025 15:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C45B2857FA;
+	Mon, 17 Nov 2025 15:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7kehfE9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyoEOS89"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32126E703
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Nov 2025 15:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D9A274669;
+	Mon, 17 Nov 2025 15:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763393619; cv=none; b=q/ehrCL0tXmyTCidQd46dgi/QPG8R0xw/jpO7RQLV5rZ56QGTjQ9T/+tpoXVeEjlBuYG86p/nTv7Wx8gd6FlajBjWwL2R8vddA18+McE8PzFiILHQKgcBLPy38jed6sw+QjeBJo2O5LTXpHfHWaEumnRXdYVV+adIRxWzrJ3+GM=
+	t=1763393796; cv=none; b=lWp42FhYup2yFF3uXlV1IY48Re20+MF261VD1oERLyKmxtJhHZcTa6dTet+eD0U2SYEoEn1qc69lJ5Cx0jKZilcPgN2IQm2Q7bHC52aJayBz/b1WlRPxkp2Us2BRBoS5qwtnmuvGeTq565avd4X2kL30upUAeBVueXP5DhloV4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763393619; c=relaxed/simple;
-	bh=BReCrfQjftodkC/b+PT+bCSnrKxmXRKLcYLICiEoZnI=;
+	s=arc-20240116; t=1763393796; c=relaxed/simple;
+	bh=SkDDtghdI5QVFj/KZKmc2mvCVVDm6T4MnsOd87wT8sM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BBHgnetfhwZZclIgbNb1TJDeG4Wq+ZWko1ydtjB6pT6KaqMATsayslJe2nuCuNLuSvgHPr56Cyomjue7nrKjF2JdK9yW9CEnCEkqxdgySar1ZPNG2j9IshX1cMmAGcIKjq2w8kusndxiiQcbOC0RfpkK1fbXqJq3slGi6SqiWLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7kehfE9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CE0C113D0;
-	Mon, 17 Nov 2025 15:33:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=PUrN+8nI1rLlt+FtUiOpIEv0WQqOpM4LArkLjGTbKotaSYt3WEnXZAO4AEuKLOMCAl/wpDrMIz/XKZABLDLlLO9hcoqa0YEFebYEBeC8WQ0R5OJKh/SqgA5+AIw4ODdObY8Bf6QYhLNQ7KZmFW6ZWSCtvTYJhxP7WnJgrG2hgoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyoEOS89; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97626C2BC86;
+	Mon, 17 Nov 2025 15:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763393619;
-	bh=BReCrfQjftodkC/b+PT+bCSnrKxmXRKLcYLICiEoZnI=;
+	s=k20201202; t=1763393796;
+	bh=SkDDtghdI5QVFj/KZKmc2mvCVVDm6T4MnsOd87wT8sM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q7kehfE9qqu7cZd+7g1yxbhEGhpmv1pHZqp9nt8+LNEbfbMNerx2GUS67I6tVouBy
-	 LXilQ1lRzZbgY9opD4avBNyHJnaEmvJC8qGf4fOY4w4pNt2haJ4LBJG0iuJkgfyhLM
-	 2pztOyai1aGir2cc2K60dncSmISvwvSg6/yiL7V1f67GpVWwoH2deKjbmLWRk8Tw9s
-	 38LzQsnezRweDgJ0GFq324qQcHS1xJF3HP9wAyYRh1wtgQMBhEKW/fjmhW67w09lup
-	 qx+x+hPR7egWTAn5u1/pQrAF21f7DumuzHNrQ3Mqrn19X6+qx7U3e1hrTSd7IKe3sg
-	 mqKga4vtWcJog==
-Message-ID: <749b345a16b9e799c953554491493d55d3fa1ca5.camel@kernel.org>
-Subject: Re: [PATCH] locktest: use correct build flags
+	b=pyoEOS89nD2rTJbJ0XUfnPeE61xk+Kv/IeUsBATzkQJhKLTsaKyHBQlBg64jXKjGi
+	 z3ipKM4papkuiTTX3IocqeFjXmsCEqQjcPFfs+koX/2mEi7GewxvrH6TIahbRbdFHM
+	 bvXd1m6HzR+C8OtoHJb0xnqaPc0GCeSHv9cq/gf8dfMQ2dhzA06k58xGj4yumTspWB
+	 CZxzSCDJIfvMp85vlPKDizYZrv8lZvkGt/xTReeyC/lzXoB5WdOpYzVX+pLbW+eXlT
+	 vs6sskPp3tlT0WdqDNQxC+KGy3Ot9zwBWhx2t8erDO222XvzbyN2iZJulvHqF2QCiW
+	 Msf+6/IohWa6g==
+Message-ID: <f255c85df01f3e9f9d4022436f13e2ed76a8d4eb.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: fix memory leak in nfsd_create_serv error paths
 From: Jeff Layton <jlayton@kernel.org>
-To: Ross Burton <ross.burton@arm.com>, linux-nfs@vger.kernel.org
-Cc: steved@redhat.com
-Date: Mon, 17 Nov 2025 10:33:37 -0500
-In-Reply-To: <20251117143241.1501312-1-ross.burton@arm.com>
-References: <20251117143241.1501312-1-ross.burton@arm.com>
+To: Shardul Bankar <shardul.b@mpiricsoftware.com>, shardulsb08@gmail.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+099461f8558eb0a1f4f3@syzkaller.appspotmail.com,
+ chuck.lever@oracle.com, 	neil@brown.name, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, 	janak@mpiricsoftware.com
+Date: Mon, 17 Nov 2025 10:36:34 -0500
+In-Reply-To: <20251117121121.3557585-1-shardul.b@mpiricsoftware.com>
+References: <20251117121121.3557585-1-shardul.b@mpiricsoftware.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,42 +136,57 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-11-17 at 14:32 +0000, Ross Burton wrote:
-> This makefile uses CFLAGS_FOR_BUILD etc but since 2020[1] hasn't used
-> CC_FOR_BUILD as CC.
+On Mon, 2025-11-17 at 17:41 +0530, Shardul Bankar wrote:
+> When nfsd_create_serv() calls percpu_ref_init() to initialize
+> nn->nfsd_net_ref, it allocates both a percpu reference counter
+> and a percpu_ref_data structure (64 bytes). However, if the
+> function fails later due to svc_create_pooled() returning NULL
+> or svc_bind() returning an error, these allocations are not
+> cleaned up, resulting in a memory leak.
 >=20
-> This means in cross-compile environments this uninstalled binary is
-> built for the host machine using build machine flags, which can result
-> in incorrect paths being passed.
+> The leak manifests as:
+> - Unreferenced percpu allocation (8 bytes per CPU)
+> - Unreferenced percpu_ref_data structure (64 bytes)
 >=20
-> As this binary hasn't been built with CC_FOR_BUILD for five years, we
-> can assume that this isn't actually used and just remove the _FOR_BUILD
-> flags entirely.
+> Fix this by adding percpu_ref_exit() calls in both error paths
+> to properly clean up the percpu_ref_init() allocations.
 >=20
-> Original patch by Khem Raj <raj.khem@gmail.com>.
+> This patch fixes the percpu_ref leak in nfsd_create_serv() seen
+> as an auxiliary leak in syzbot report 099461f8558eb0a1f4f3; the
+> prepare_creds() and vsock-related leaks in the same report
+> remain to be addressed separately.
 >=20
-> [1] nfs-utils 1fee8caa ("locktest: Makefile.am: remove host compiler cost=
-raint")
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> Reported-by: syzbot+099461f8558eb0a1f4f3@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=3D099461f8558eb0a1f4f3
+> Fixes: 47e988147f40 ("nfsd: add nfsd_serv_try_get and nfsd_serv_put")
+> Signed-off-by: Shardul Bankar <shardul.b@mpiricsoftware.com>
 > ---
->  tools/locktest/Makefile.am | 3 ---
->  1 file changed, 3 deletions(-)
+>  fs/nfsd/nfssvc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
-> index e8914655..2fd36971 100644
-> --- a/tools/locktest/Makefile.am
-> +++ b/tools/locktest/Makefile.am
-> @@ -2,8 +2,5 @@
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 7057ddd7a0a8..32cc03a7e7be 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -633,12 +633,15 @@ int nfsd_create_serv(struct net *net)
+>  	serv =3D svc_create_pooled(nfsd_programs, ARRAY_SIZE(nfsd_programs),
+>  				 &nn->nfsd_svcstats,
+>  				 nfsd_max_blksize, nfsd);
+> -	if (serv =3D=3D NULL)
+> +	if (serv =3D=3D NULL) {
+> +		percpu_ref_exit(&nn->nfsd_net_ref);
+>  		return -ENOMEM;
+> +	}
 > =20
->  noinst_PROGRAMS =3D testlk
->  testlk_SOURCES =3D testlk.c
-> -testlk_CFLAGS=3D$(CFLAGS_FOR_BUILD)
-> -testlk_CPPFLAGS=3D$(CPPFLAGS_FOR_BUILD)
-> -testlk_LDFLAGS=3D$(LDFLAGS_FOR_BUILD)
-> =20
->  MAINTAINERCLEANFILES =3D Makefile.in
+>  	error =3D svc_bind(serv, net);
+>  	if (error < 0) {
+>  		svc_destroy(&serv);
+> +		percpu_ref_exit(&nn->nfsd_net_ref);
+>  		return error;
+>  	}
+>  	spin_lock(&nfsd_notifier_lock);
 
-(cc'ing SteveD since he's nfs-utils maintainer)
+Nice catch!
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
