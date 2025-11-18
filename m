@@ -1,244 +1,209 @@
-Return-Path: <linux-nfs+bounces-16493-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16494-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09800C6B10E
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 18:57:26 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED188C6B147
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 19:02:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6F0284EC734
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 17:53:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3E20A4E7632
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 18:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5792A353888;
-	Tue, 18 Nov 2025 17:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E982F29BD81;
+	Tue, 18 Nov 2025 18:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P485/J7m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Clz5V+EZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF11349B0B
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Nov 2025 17:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD612877E9;
+	Tue, 18 Nov 2025 18:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763488384; cv=none; b=Qtu3VObY108gFuySgl/AAuGXdfuFhcFk0AhtXH4SwkfrwXmUd8sxs622S1MzclfqT2iSKd59IEZiByeXWN9yc+DOeujZwcaqDCCVXxKAdCMJCsgiw8KtjU2gcB3i4vWuhHJwu1AiX8DnVCtshFxnAS/5jR8GDUod3nX5tlp+/nk=
+	t=1763488868; cv=none; b=CvROjLHQnJaOKDccIZQ+gXwKoXDhGHP/+ER9PEIVc2Ys6L1GdEaVOWFjIekelqCOq4BJBiInHw+V52BccavaekT57dsnyYeTHjvi5EjmnNDSWRdYbCPbvqgDn+u3IVIDSDMOuhf6gM1+SSGEx1hzcFSBL8omVKLlpwbojxUoelU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763488384; c=relaxed/simple;
-	bh=oMnhAE1V1fXLVwhUz27gpxmt+ditmKfZvOxZorHT2LQ=;
+	s=arc-20240116; t=1763488868; c=relaxed/simple;
+	bh=9i0tX+fm6GQ/4+C9FMLe3HpAnvy4obZVXZOsB1Ofq4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lpfOkaEjk5fZ4Adrvrdaa7+jzZC1n2QlVEk+7U/Fj2mDCc4dH8G7m24itECb/yj3Es4h49pD850nt+0l46fhSyA5uvlzcqG+bcxxbGRELvtmM7AW76SifFvsN2fE1/pN7OChj9LyZMb34ynJvEdpF4/mMM+7GB3VxtCPCQpc9uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P485/J7m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763488381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vu/csfEFnyEkBBsr41ROQz63TVw41GbcSZBaDhOBGCU=;
-	b=P485/J7mNMIjDm6sAzll285DYN7ZJg4qz82nl6HfLMhIXnBoSqUzac0mw/JhZDUosEQLZv
-	XbgY5EdQrS15TMCZjfEcXRdrkb5JnYOjC8NTKExuqwuFZIgmrAB43S3+23WIGRvk2lxwBq
-	Fpxd76aJLfc6jfjVd4t7FTrr9rwcjLQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-503-EpWiH5ygPf26TUpakK7_ZQ-1; Tue,
- 18 Nov 2025 12:52:31 -0500
-X-MC-Unique: EpWiH5ygPf26TUpakK7_ZQ-1
-X-Mimecast-MFC-AGG-ID: EpWiH5ygPf26TUpakK7_ZQ_1763488349
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6394F19560A2;
-	Tue, 18 Nov 2025 17:52:29 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.81.26])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3E7319560B0;
-	Tue, 18 Nov 2025 17:52:28 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 3112F50AFE4; Tue, 18 Nov 2025 12:52:27 -0500 (EST)
-Date: Tue, 18 Nov 2025 12:52:27 -0500
-From: Scott Mayhew <smayhew@redhat.com>
-To: "Tyler W. Ross" <TWR@tylerwross.com>
-Cc: Trond Myklebust <trondmy@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbVUwX4dl3BVJaUH0ryAVigNJb0QRV6amy3gX/EL4Kf7nA2WOtoo9iV5IwApDo/ff1WY2FXLgNj022kt60QQqLzYCEflrhVzB5pxqNy0WxBZFieUNdt/5fJjfM0ncujA9kCm9o0FefQJRvKf4japRGMuafPufSL8MEUNinnawBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Clz5V+EZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA430C4CEF1;
+	Tue, 18 Nov 2025 18:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763488868;
+	bh=9i0tX+fm6GQ/4+C9FMLe3HpAnvy4obZVXZOsB1Ofq4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Clz5V+EZQ+vUsNPLkub2y+gRMWGxDgzsLOKd5zX4xaAXauOTXJTLe4qSep4mKZLfZ
+	 aAykgvHWaSdObQ8TYEJtqEagt2yoxRoHUzV0QKz/SQCSz7mpi+58+1mMw6JD2AuN74
+	 enEUPAxOgBliafXs9b3yrbMemAcJRWzuWubmkrdkIc8VOi01q/Av5YjoKuHsluS4sx
+	 Ed1seqw3nIMyvzlQ6ArbJxLzGk5JLUuS4rSRsW5/SpwnH++j6A9dXgeXC+5HX04UsD
+	 GGxcU/rGbjv7IsWBlEwFhKJNOlIm1qfp+nTndyLWb7aZnPo/Fg1p5Yb6u7R0bpq+gz
+	 78rHNQqvpTjIA==
+Date: Tue, 18 Nov 2025 13:01:06 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Benjamin Coddington <bcodding@hammerspace.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	"1120598@bugs.debian.org" <1120598@bugs.debian.org>,
 	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Steve Dickson <steved@redhat.com>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: ls input/output error ("NFS: readdir(/) returns -5") on krb5
- NFSv4 client using SHA2
-Message-ID: <aRyyWy6hO1ueKf5_@aion>
-References: <aRZL8kbmfbssOwKF@eldamar.lan>
- <de44bf50-0c87-4062-b974-0b879868c0f5@oracle.com>
- <AVpI5XolCCA38sGzxlfk6azQI9oUAxafUVl9B7B1WgJEmGgSAQq5nvulQO6P_RQqjBp3adqasHFsodhAAxai0dcp5scRMJk0dLsGMQeSiew=@tylerwross.com>
- <fVv3cF7Ulh3cKUP17C98gh_uOv9BcMlMpsIh1Nv5_0tdw-75PKiPJgIEP5o2jBVry7orwz7jeiGQenfCbuUxyj5JFstbx3RTFYr223qDmV0=@tylerwross.com>
- <a6d1435b-f507-49eb-b80c-4322dc7e1157@oracle.com>
- <Y79HV0VGpScPYqI_dDxeItkX2UZwSdReaUOpIeMeZXq2HLsHf5J_PTQqr7HrBYygICRsn-OB89QPrxPzjgv2smuzTThUPy_3fq_N1NprlUg=@tylerwross.com>
- <4a63ad3d-b53a-4eab-8ffb-dd206f52c20e@oracle.com>
- <902ff4995d8e75ad1cd2196bf7d8da42932fba35.camel@kernel.org>
- <aRunktdq8sJ7Eecj@aion>
- <db8b1ef4-afbb-4c23-b7f1-9ae688cef363@TylerWRoss.com>
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>
+Subject: Re: [PATCH v1 3/3] VFS/knfsd: Teach dentry_create() to use
+ atomic_open()
+Message-ID: <aRy0Yp-GvUrD3uJY@kernel.org>
+References: <cover.1763483341.git.bcodding@hammerspace.com>
+ <149570774f6cb48bf469514ca37cd636612f49b1.1763483341.git.bcodding@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <db8b1ef4-afbb-4c23-b7f1-9ae688cef363@TylerWRoss.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <149570774f6cb48bf469514ca37cd636612f49b1.1763483341.git.bcodding@hammerspace.com>
 
-On Tue, 18 Nov 2025, Tyler W. Ross wrote:
+On Tue, Nov 18, 2025 at 11:33:59AM -0500, Benjamin Coddington wrote:
+> While knfsd offers combined exclusive create and open results to clients,
+> on some filesystems those results may not be atomic.  This behavior can be
+> observed.  For example, an open O_CREAT with mode 0 will succeed in creating
+> the file but unexpectedly return -EACCES from vfs_open().
+> 
+> Additionally reducing the number of remote RPC calls required for O_CREAT
+> on network filesystem provides a performance benefit in the open path.
+> 
+> Teach knfsd's helper create_dentry() to use atomic_open() for filesystems
+> that support it.
+> 
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  fs/namei.c         | 43 ++++++++++++++++++++++++++++++++++++-------
+>  fs/nfsd/nfs4proc.c |  8 +++++---
+>  include/linux/fs.h |  2 +-
+>  3 files changed, 42 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 9c0aad5bbff7..70ab74fb5e95 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -4208,21 +4208,50 @@ EXPORT_SYMBOL(user_path_create);
+>   * On success, returns a "struct file *". Otherwise a ERR_PTR
+>   * is returned.
+>   */
+> -struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+> +struct file *dentry_create(struct path *path, int flags, umode_t mode,
+>  			   const struct cred *cred)
+>  {
+> +	struct dentry *dentry = path->dentry;
+> +	struct dentry *dir = dentry->d_parent;
+> +	struct inode *dir_inode = d_inode(dir);
+> +	struct mnt_idmap *idmap;
+>  	struct file *file;
+> -	int error;
+> +	int error, create_error;
+>  
+>  	file = alloc_empty_file(flags, cred);
+>  	if (IS_ERR(file))
+>  		return file;
+>  
+> -	error = vfs_create(mnt_idmap(path->mnt),
+> -			   d_inode(path->dentry->d_parent),
+> -			   path->dentry, mode, true);
+> -	if (!error)
+> -		error = vfs_open(path, file);
+> +	idmap = mnt_idmap(path->mnt);
+> +
+> +	if (dir_inode->i_op->atomic_open) {
+> +		path->dentry = dir;
+> +		mode = vfs_prepare_mode(idmap, dir_inode, mode, S_IALLUGO, S_IFREG);
+> +
+> +		create_error = may_o_create(idmap, path, dentry, mode);
+> +		if (create_error)
+> +			flags &= ~O_CREAT;
+> +
+> +		dentry = atomic_open(path, dentry, file, flags, mode);
+> +		error = PTR_ERR_OR_ZERO(dentry);
+> +
+> +		if (unlikely(create_error) && error == -ENOENT)
+> +			error = create_error;
+> +
+> +		if (!error) {
+> +			if (file->f_mode & FMODE_CREATED)
+> +				fsnotify_create(dir->d_inode, dentry);
+> +			if (file->f_mode & FMODE_OPENED)
+> +				fsnotify_open(file);
+> +		}
+> +
+> +		path->dentry = dentry;
+> +
+> +	} else {
+> +		error = vfs_create(idmap, dir_inode, dentry, mode, true);
+> +		if (!error)
+> +			error = vfs_open(path, file);
+> +	}
+>  
+>  	if (unlikely(error)) {
+>  		fput(file);
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 71b428efcbb5..7ff7e5855e58 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -194,7 +194,7 @@ static inline bool nfsd4_create_is_exclusive(int createmode)
+>  }
+>  
+>  static __be32
+> -nfsd4_vfs_create(struct svc_fh *fhp, struct dentry *child,
+> +nfsd4_vfs_create(struct svc_fh *fhp, struct dentry **child,
+>  		 struct nfsd4_open *open)
+>  {
+>  	struct file *filp;
+> @@ -214,9 +214,11 @@ nfsd4_vfs_create(struct svc_fh *fhp, struct dentry *child,
+>  	}
+>  
+>  	path.mnt = fhp->fh_export->ex_path.mnt;
+> -	path.dentry = child;
+> +	path.dentry = *child;
+>  	filp = dentry_create(&path, oflags, open->op_iattr.ia_mode,
+>  			     current_cred());
+> +	*child = path.dentry;
+> +
+>  	if (IS_ERR(filp))
+>  		return nfserrno(PTR_ERR(filp));
+>  
 
-> On 11/17/25 3:54 PM, Scott Mayhew wrote:
-> > FWIW I have both Debian Trixie and Sid/Forky VMs, and krb5{,i,p} is
-> > working across the board for me.  Normally I just use a plain MIT KDC,
-> > so I tried IPA and that works fine too.
->=20
-> Did you confirm the enctype used?
+Given the potential for side-effect due to dentry_create() now using
+atomic_open() if available, I think you'd do well to update the
+comment block above dentry_create to make it clear that the caller
+really should pass along the dentry (regardless of whether
+dentry_create returns an ERR_PTR).
 
-Yes.  This is how I was testing:
-
-root@forky:~# uname -r
-6.17.7+deb14+1-amd64
-root@forky:~# systemctl restart rpc-gssd
-root@forky:~# klist -ce /tmp/krb5ccmachine_SMAYHEW.TEST
-klist: No credentials cache found (filename: /tmp/krb5ccmachine_SMAYHEW.TES=
-T)
-root@forky:~# for serv in forky trixie rawhide rhel10 rhel9; do for flav in=
- krb5 krb5i krb5p; do mount -o v4.2,sec=3D$flav $serv.smayhew.test:/export =
-/mnt/t; ls -lR /mnt/t >/dev/null; umount /mnt/t; done; done
-root@forky:~# klist -ce /tmp/krb5ccmachine_SMAYHEW.TEST
-Ticket cache: FILE:/tmp/krb5ccmachine_SMAYHEW.TEST
-Default principal: nfs/forky.smayhew.test@SMAYHEW.TEST
-
-Valid starting     Expires            Service principal
-11/14/25 14:53:03  11/15/25 14:53:03  krbtgt/SMAYHEW.TEST@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-11/14/25 14:53:03  11/15/25 14:53:03  nfs/forky.smayhew.test@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-11/14/25 14:53:03  11/15/25 14:53:03  nfs/trixie.smayhew.test@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-11/14/25 14:53:03  11/15/25 14:53:03  nfs/rawhide.smayhew.test@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-11/14/25 14:53:04  11/15/25 14:53:03  nfs/rhel10.smayhew.test@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-11/14/25 14:53:05  11/15/25 14:53:03  nfs/rhel9.smayhew.test@SMAYHEW.TEST
-        Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha3=
-84-192
-
->=20
-> My repro steps, from initial mounted state:
-> kinit
-> kvno -e aes256-cts-hmac-sha384-192 <nfs spn>
-> ls /mnt/example
->=20
-> On my Debian Sid VM, if I do kinit and then immediately ls, the issue=20
-> does not occur. klist shows the acquired service ticket has an
-> aes256-cts-hmac-sha1-96 session key.
-
-Oh!  I see the problem.  If the automatically acquired service ticket
-for a normal user is using aes256-cts-hmac-sha1-96, then I'm assuming
-the machine credential is also using aes256-cts-hmac-sha1-96.
-Run 'klist -ce /tmp/krb5ccmachine_IPA.TWRLAB.NET' to check.  You can't
-use 'kvno -e' to choose a different encryption type.  Why are you doing
-that?  Is it because you want to use the stronger encryption types?  In
-that case, the proper way to do this would be to manually add this line
-to the "[libdefaults]" stanza of your /etc/krb5.conf:
-
-  permitted_enctypes =3D aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha256-=
-128 aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96
-
-and get rid of allowed-enctypes settings that you may have added to
-/etc/nfs.conf.  Then unmount, run 'systemctl restart rpc-gssd', remount,
-etc. and your system should be using aes256-cts-hmac-sha384-192 by default.
-
-RHEL/CentOS/Fedora all ship a package called "crypto-policies" that
-include system-wide configurations for various crypto packages.  For
-kerberos, it drops a config snippet in /etc/krb5.conf.d similar to what
-I have above.  AFAICT Suse has this package too, but it appears Debian
-does not.
-
-Without the permitted_enctypes setting, the kerberos library will fall
-back to the default settings, which according to krb5.conf(5)=20
-
----8<---
-       permitted_enctypes
-              Identifies the encryption types that servers will permit for =
-ses=E2=80=90
-              sion keys and for ticket and authenticator encryption, ordere=
-d by
-              preference from highest to lowest.   Starting  in  release  1=
-=2E18,
-              this  tag also acts as the default value for default_tgs_enct=
-ypes
-              and default_tkt_enctypes.  The default  value  for  this  tag=
-  is
-              aes256-cts-hmac-sha1-96                   aes128-cts-hmac-sha=
-1-96
-              aes256-cts-hmac-sha384-192             aes128-cts-hmac-sha256=
--128
-              des3-cbc-sha1    arcfour-hmac-md5   camellia256-cts-cmac   ca=
-mel=E2=80=90
-              lia128-cts-cmac.
----8<---
-
-If I remove that line from my krb5.conf and use 'kvno -e' like your
-test, then I can reproduce the behavior you're seeing:
-
-root@forky:~# systemctl restart rpc-gssd
-root@forky:~# mount -o v4.2,sec=3Dkrb5 trixie.smayhew.test:/export /mnt/t
-root@forky:~# klist -ce /tmp/krb5ccmachine_SMAYHEW.TEST=20
-Ticket cache: FILE:/tmp/krb5ccmachine_SMAYHEW.TEST
-Default principal: nfs/forky.smayhew.test@SMAYHEW.TEST
-
-Valid starting     Expires            Service principal
-11/18/25 17:41:29  11/19/25 17:15:04  krbtgt/SMAYHEW.TEST@SMAYHEW.TEST
-	Etype (skey, tkt): aes256-cts-hmac-sha1-96, camellia256-cts-cmac=20
-11/18/25 17:41:29  11/19/25 17:15:04  nfs/trixie.smayhew.test@SMAYHEW.TEST
-	Etype (skey, tkt): aes256-cts-hmac-sha1-96, aes256-cts-hmac-sha384-192=20
-root@forky:~# su - smayhew
-smayhew@forky:~$ kinit
-Password for smayhew@SMAYHEW.TEST:=20
-smayhew@forky:~$ kvno -e aes256-cts-hmac-sha384-192 nfs/trixie.smayhew.test
-nfs/trixie.smayhew.test@SMAYHEW.TEST: kvno =3D 1
-smayhew@forky:~$ klist -ce=20
-Ticket cache: KEYRING:persistent:1052000003:1052000003
-Default principal: smayhew@SMAYHEW.TEST
-
-Valid starting     Expires            Service principal
-11/18/25 17:41:53  11/19/25 17:20:27  nfs/trixie.smayhew.test@SMAYHEW.TEST
-	Etype (skey, tkt): aes256-cts-hmac-sha384-192, aes256-cts-hmac-sha384-192=
-=20
-11/18/25 17:41:39  11/19/25 17:20:27  krbtgt/SMAYHEW.TEST@SMAYHEW.TEST
-	Etype (skey, tkt): aes256-cts-hmac-sha1-96, camellia256-cts-cmac=20
-smayhew@forky:~$ ls /mnt/t
-ls: reading directory '/mnt/t': Input/output error
-smayhew@forky:~$=20
-logout
-root@forky:~# grep overflow /sys/kernel/debug/tracing/trace
-              ls-2032    [002] .....  3025.593816: rpc_xdr_overflow: task:0=
-0000009@00000006 nfsv4 READDIR requested=3D8 p=3D00000000dfba8950 end=3D000=
-00000b97e329e xdr=3D[00000000389cc91a,132]/4008/[00000000b97e329e,4]/988
-
--Scott
->=20
->=20
-> TWR
->=20
-
+> @@ -353,7 +355,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	status = fh_fill_pre_attrs(fhp);
+>  	if (status != nfs_ok)
+>  		goto out;
+> -	status = nfsd4_vfs_create(fhp, child, open);
+> +	status = nfsd4_vfs_create(fhp, &child, open);
+>  	if (status != nfs_ok)
+>  		goto out;
+>  	open->op_created = true;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 601d036a6c78..772b734477e5 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2878,7 +2878,7 @@ struct file *dentry_open(const struct path *path, int flags,
+>  			 const struct cred *creds);
+>  struct file *dentry_open_nonotify(const struct path *path, int flags,
+>  				  const struct cred *cred);
+> -struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+> +struct file *dentry_create(struct path *path, int flags, umode_t mode,
+>  			   const struct cred *cred);
+>  struct path *backing_file_user_path(const struct file *f);
+>  
+> -- 
+> 2.50.1
+> 
 
