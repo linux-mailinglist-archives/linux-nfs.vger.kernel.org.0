@@ -1,180 +1,159 @@
-Return-Path: <linux-nfs+bounces-16496-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16497-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2573C6B7D9
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 20:51:39 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF7BFC6B7F1
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 20:53:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 6669428D47
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 19:51:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 550734E4941
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Nov 2025 19:53:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A03928C87C;
-	Tue, 18 Nov 2025 19:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C042DC79F;
+	Tue, 18 Nov 2025 19:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDty9WFq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2ECBA3D;
-	Tue, 18 Nov 2025 19:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331F9280A20
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Nov 2025 19:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763495496; cv=none; b=JzLef7jZ3pu8JWhVsaRB95WCsNHhXOJKiVRIXhrsaq9w27MHJze0ruDvJvGtgSIVhqSUOqZK0OBZIWVpojlwnmr15OG6aTz1ylmbZCa7zpPdKxOAV550NijULqzi/jBp2moLMRPLSa+1tCt92y4GF2o6yUuLRqKm/UYd6gybbzo=
+	t=1763495630; cv=none; b=f03MINj6uDBy2qY2OHWT3nH93aH62St2XacoxbL56pMgDuJxh9GCCfqHuCuzF/jSFgIkzmg8/Tbc/WX1T1dBxo2F4HSxn4mn2BahNaO3PP6EggvnVigAGcP7T1CcqVt/TjkjmtEtuiRV+cOnjoMAduUczGTFV+JYCQE2tyt6pK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763495496; c=relaxed/simple;
-	bh=xhodetud9+cR1zDKjIDe6PdmUMM+XghJjZVVEMlocaw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=Q3kWkAzU17yfteBRiW40Dk13EI/n1HG+3T59wQhXR1LB2g0EmO8vImsz2NlggHMhMr+QXwdnCZNSNluPz20pd2uE6VLGcIsP7t/n/SM/bBUlGE1CqHZtIPjagxOrl+Tg4W/QlidiMET1knpRaLFjk/2lhS6BC2GAa4xUERWij0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.104] (213.87.158.194) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 18 Nov
- 2025 22:51:10 +0300
-Message-ID: <f89eaa5c-886e-4dc1-ac69-27ff6fdcff6e@omp.ru>
-Date: Tue, 18 Nov 2025 22:51:09 +0300
+	s=arc-20240116; t=1763495630; c=relaxed/simple;
+	bh=3kk21AVR0BUcua2zkddv676b0sKfxa6DENI/ptrFn4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tv8vEeDU3X2EqWVr5Z66OwzRBatc6sehUPwN0LxjGgWB2xfXbFzSMnrJ9/mLsd5CZbVV9pkF0JsXDf8PHVNGWpwvETW3WKPoDtNR5ctrf+07E6gX6ycp54LIcNlTnMUZ5feUaBCI1qv/kcuar+2E7xpVIZpPVBbqJwzVU/SsWj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDty9WFq; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29586626fbeso62854525ad.0
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Nov 2025 11:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763495628; x=1764100428; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5SpKL5XOhSd8b79ER6CmdySWzSN2pcIo7OGXrr04v0U=;
+        b=QDty9WFqmuaXBEv5vCBVmOOmmEZ6bbqbT4EymEHkKZdPvLYqQ9qVFoL1R0n/10Iq+1
+         EZyK/WAhaVUYJwhcsrOBuPHPjDNg2eQDavrnngPKtaNsdc99xzmmo3lfW5PN0OFZzl1Y
+         XmrgBjFivuTHeeggCITF7i2vZ7PL5XR8FTOcjXsuFUx7YSiEwwpTItTAx8su4RBJMZW7
+         Fo4W+L/iroiUZwh1RJsagm9PtlQGUQuFhT6QGmH+bYRizcvNMlPMmS6Y4xseWivkM/zI
+         aLkMSRHFX0iGqmG2Dsk6faNBWDHVgiXdyPmIULPhPAR9er9JJMDM7jDbW2y+QRISN7FJ
+         A4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763495628; x=1764100428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5SpKL5XOhSd8b79ER6CmdySWzSN2pcIo7OGXrr04v0U=;
+        b=Tl5YgQgf7NczhT9AZFRaDewe4uGcluS/pDGU75KAmDaN1qmdaiHvXZuX7NoI0aQWMY
+         7PrB7laA8yXHrVreGa2jSo0IrWr15aomS7XT6YcVvQZg4a31E+zVdLHuZ/ia7n6nsXbK
+         DwOOW1ZvMD4eLVu+D7N/syqxKvDQOfB+Komf11lICgDDyPifNQE4MA22msxScMYo+rnd
+         o+jwxjM/RwZ6Lb8VRs0eRVVLM0bQ91gI4JENuFmDCzboDqWgWUKQUS3O2JT30hKLdP3y
+         RrseheyAgkltrBFfHTsMvwNVfG2W5Au21ii6PVZ2rxwfEDrXJ3DPSTvWxEiyanBXt3ca
+         V8CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwHOFz9oa6ct8pnAHut7AAyPfGNB4+mUBa+wC8O1PcGwCtIvG0MsqX7E4zg87MnmG++eM2b2CKeJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz/DroSLL1qJL1JmTwiKHbSkiU2AB10IYPzKPsj3JFIhJvyg0a
+	LibRAkYakb1UQHX6yX+IFiSxkKD2RgQmY8FCfMIJc+X615RsbL1kauowPUOZDR4i3O0=
+X-Gm-Gg: ASbGncsIs8x4zJAWemlJK2dljeCF3Phg9lz7lmh+uq28iAnOAlNFE0MCeiKCS2HxJI5
+	n2KaOZHO5wBfREsGjEVlMldese7rf5RcMSyCyijs+oqssl8uBst/xNN8PgAlcInT6Gikg2OyUnc
+	AfAuyZtcuFSPMq/DuNd6lTUV6fOC5kRGJvK5t4TsFLrCiNnTPJW0DGds5IkUJKs8k0nDtHdDNKa
+	pAaRae+2/f9mF0d6WK+EVYWfY7ArV0KTn6dIqxF2s7OkYSH4XfIfMAH+DnCkg9LEkcKDxdd7xKS
+	hWaKqMt2Ko4Gwo6LFE2INE4PWeJYs2Dy+ltram6Vi/1nyiLW/MgNq+XcAKlqFv9JIjwxrIuHZE7
+	Sq3pPqI5XUOA1hbNDMNYQEFk0UK/XHYmr9pWvLxsvH36kMEplIb7FvnG2ZIKFuXLwvHOFntWI8u
+	6Mju3UiTH7Mg==
+X-Google-Smtp-Source: AGHT+IG73H9fMzBHLW9z64tVvn4pTF1swZZsbvhjuhF9VgeDf0MxRI4T4My4bdGDW+hWCxUACqwVuw==
+X-Received: by 2002:a17:902:ebd2:b0:294:fc1d:9d0 with SMTP id d9443c01a7336-2986a750101mr220915645ad.40.1763495628422;
+        Tue, 18 Nov 2025 11:53:48 -0800 (PST)
+Received: from snowman ([2401:4900:647d:8da9:4ba8:dd95:deb3:d9e4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2346f3sm183220085ad.18.2025.11.18.11.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 11:53:47 -0800 (PST)
+From: Khushal Chitturi <kc9282016@gmail.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khushal Chitturi <kc9282016@gmail.com>
+Subject: [PATCH] xdrgen: improve error reporting for invalid void declarations
+Date: Wed, 19 Nov 2025 01:22:58 +0530
+Message-ID: <20251118195258.6497-1-kc9282016@gmail.com>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: Re: [PATCH v3] NFSv4: prevent integer overflow while calling
- nfs4_set_lease_period()
-To: David Laight <david.laight.linux@gmail.com>
-CC: <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <e0d1a313-f359-4ad0-bee3-3fcf0ffc0cda@omp.ru>
- <20251113224113.4f752ccc@pumpkin>
-Content-Language: en-US
-Organization: Open Mobile Platform
-In-Reply-To: <20251113224113.4f752ccc@pumpkin>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 11/18/2025 19:40:01
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 198206 [Nov 18 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 77 0.3.77
- 32e48053defa8195f3a40f668b6fa713f8e2761b
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.158.194 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.158.194 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;213.87.158.194:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.158.194
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 11/18/2025 19:42:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 11/18/2025 5:32:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: 8bit
 
-On 11/14/25 1:41 AM, David Laight wrote:
-[...]
+RFC 4506 defines void as a zero-length type that may appear only as
+union arms or as program argument/result types. It cannot be declared
+with an identifier, so constructs like "typedef void temp;" are not
+valid XDR.
 
->> The nfs_client::cl_lease_time field (as well as the jiffies variable it's
->> used with) is declared as *unsigned long*, which is 32-bit type on 32-bit
->> arches and 64-bit type on 64-bit arches. When nfs4_set_lease_period() that
->> sets nfs_client::cl_lease_time is called, 32-bit nfs_fsinfo::lease_time
->> field is multiplied by HZ -- that might overflow before being implicitly
->> cast to *unsigned long*. Actually, there's no need to multiply by HZ at all
->> the call sites of nfs4_set_lease_period() -- it makes more sense to do that
->> once, inside that function, calling check_mul_overflow() and falling back
->> to 1 hour on an actual overflow...
->>
->> Found by Linux Verification Center (linuxtesting.org) with the Svace static
->> analysis tool.
->>
->> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
->> Cc: stable@vger.kernel.org
+Previously, xdrgen raised a NotImplementedError when it encountered a
+void declaration in a typedef. Which was misleading, as the problem is an
+invalid RPC specification rather than missing functionality in xdrgen.
 
-[...]>> Index: linux-nfs/fs/nfs/nfs4renewd.c
->> ===================================================================
->> --- linux-nfs.orig/fs/nfs/nfs4renewd.c
->> +++ linux-nfs/fs/nfs/nfs4renewd.c
->> @@ -137,11 +137,15 @@ nfs4_kill_renewd(struct nfs_client *clp)
->>   * nfs4_set_lease_period - Sets the lease period on a nfs_client
->>   *
->>   * @clp: pointer to nfs_client
->> - * @lease: new value for lease period
->> + * @period: new value for lease period (in seconds)
->>   */
->> -void nfs4_set_lease_period(struct nfs_client *clp,
->> -		unsigned long lease)
->> +void nfs4_set_lease_period(struct nfs_client *clp, u32 period)
->>  {
->> +	unsigned long lease;
->> +
->> +	if (check_mul_overflow(period, HZ, &lease))
->> +		lease = 60UL * 60UL * HZ; /* one hour */
-> 
-> That isn't good enough, just a few lines higher there is:
-> 	timeout = (2 * clp->cl_lease_time) / 3 + (long)clp->cl_last_renewal
-> 		- (long)jiffies;
-   Indeed, I should have probably capped period at 3600 secs as well...
+This patch replaces the NotImplementedError for _XdrVoid in typedef
+handling with a clearer ValueError that specifies incorrect use of void
+in the XDR input, making it clear that the issue lies in the RPC
+specification being parsed.
 
-> So the value has to be multipliable by 2 without overflowing.
-> I also suspect the modulo arithmetic also only works if the values
-> are 'much smaller than long'.
+Signed-off-by: Khushal Chitturi <kc9282016@gmail.com>
+---
+ tools/net/sunrpc/xdrgen/generators/typedef.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-   You mean the jiffies-relative math? I think it should work with any
-values, with either 32- or 64-bit *unsigned long*...
+diff --git a/tools/net/sunrpc/xdrgen/generators/typedef.py b/tools/net/sunrpc/xdrgen/generators/typedef.py
+index fab72e9d6915..75e3a40e14e1 100644
+--- a/tools/net/sunrpc/xdrgen/generators/typedef.py
++++ b/tools/net/sunrpc/xdrgen/generators/typedef.py
+@@ -58,7 +58,7 @@ def emit_typedef_declaration(environment: Environment, node: _XdrDeclaration) ->
+     elif isinstance(node, _XdrOptionalData):
+         raise NotImplementedError("<optional_data> typedef not yet implemented")
+     elif isinstance(node, _XdrVoid):
+-        raise NotImplementedError("<void> typedef not yet implemented")
++        raise ValueError("invalid void usage in RPC Specification")
+     else:
+         raise NotImplementedError("typedef: type not recognized")
+ 
+@@ -104,7 +104,7 @@ def emit_type_definition(environment: Environment, node: _XdrDeclaration) -> Non
+     elif isinstance(node, _XdrOptionalData):
+         raise NotImplementedError("<optional_data> typedef not yet implemented")
+     elif isinstance(node, _XdrVoid):
+-        raise NotImplementedError("<void> typedef not yet implemented")
++        raise ValueError("invalid void usage in RPC Specification")
+     else:
+         raise NotImplementedError("typedef: type not recognized")
+ 
+@@ -165,7 +165,7 @@ def emit_typedef_decoder(environment: Environment, node: _XdrDeclaration) -> Non
+     elif isinstance(node, _XdrOptionalData):
+         raise NotImplementedError("<optional_data> typedef not yet implemented")
+     elif isinstance(node, _XdrVoid):
+-        raise NotImplementedError("<void> typedef not yet implemented")
++        raise ValueError("invalid void usage in RPC Specification")
+     else:
+         raise NotImplementedError("typedef: type not recognized")
+ 
+@@ -225,7 +225,7 @@ def emit_typedef_encoder(environment: Environment, node: _XdrDeclaration) -> Non
+     elif isinstance(node, _XdrOptionalData):
+         raise NotImplementedError("<optional_data> typedef not yet implemented")
+     elif isinstance(node, _XdrVoid):
+-        raise NotImplementedError("<void> typedef not yet implemented")
++        raise ValueError("invalid void usage in RPC Specification")
+     else:
+         raise NotImplementedError("typedef: type not recognized")
+ 
+-- 
+2.51.2
 
-> With HZ = 1000 and a requested period of 1000 hours the multiply (just)
-> fits in 32 bits - but none of the code is going to work at all.
-> 
-> It would be simpler and safer to just put a sanity upper limit on period.
-
-   Yes.
-
-> I've no idea what normal/sane values are (lower as well as upper).
-
-   The RFCs don't have any, it seems...
-
-> But perhaps you want:
-> 	/* For sanity clamp between 10 mins and 100 hours */
-> 	lease = clamp(period, 10 * 60, 100 * 60 * 60) * HZ;
-
-   Trond was talking about 1-hour period... And I don't think we need the
-lower bound (except maybe 1 second?)...
-
->> +
->>  	spin_lock(&clp->cl_lock);
->>  	clp->cl_lease_time = lease;
->>  	spin_unlock(&clp->cl_lock);
-> 
-> Do I see a lock that doesn't?
-
-   Doesn't do anything useful, you mean? :-)
-
-[...]
-
-MBR, Sergey
 
