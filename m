@@ -1,389 +1,240 @@
-Return-Path: <linux-nfs+bounces-16578-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16579-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01D68C70CDA
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:27:52 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id F382FC70D3D
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:33:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id AB1EC2A9DF
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:27:50 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4E592343683
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:33:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3275D35A92F;
-	Wed, 19 Nov 2025 19:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC5137031B;
+	Wed, 19 Nov 2025 19:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HByy2ET1";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JTRbEy85"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z98hcrzq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E31243376
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763580466; cv=fail; b=uLZmaDdfNZ1RG/iJK94E4w8lAesRg7KhC17eRdcxsSSACGrQT5AQnC7qV59rWMYaWgncSj/seU6dG/47Mg2HW8g0oNTdC2gjhLzEx4Lp/WzTogeLI1u4sVsKQzn85IQIb05jhXwwScSUHR27njBeH+bRaWk5SXomNy7izle3SrA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763580466; c=relaxed/simple;
-	bh=wZK7k4RJHfE8wrgepFUtM3o0hCUaL9VVQBAKBZA5m8M=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lXJuJBQtajTJ8gvgZdBoxmFG5KbbG+4Lbe4c/MxI7wcVf8m0uzkGCyFtcZBZ6vExx6nva3JOmioZuwqV5FfJ+r8QK6mhASI9PwmaMf1KjioU59Of6c1dQSYdWjtlIy60u+u1ywfSpw2F9AIYw1RLzoe1b6oQZ19wrw/oow7fvEA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HByy2ET1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JTRbEy85; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJJCC7b007645;
-	Wed, 19 Nov 2025 19:27:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=1n+Pr2mcYMykyaSK3HRSLNc1GbJqzlWD0gpHNLusM1s=; b=
-	HByy2ET1IGuGyjWPv+x7Rxe+YwhY0bZtMq5c/lKipLSD+4C4lun2ssZlgrp2R3yw
-	pzI+CmzuOwxgSZCZcltqu8mAJyV7hH/QCHUvjaQu5BLA+oMvwJNhCbdEGM+EdIxz
-	PU1p/u5H0Vi7fKaTPmROpU0XV+kvTUmyURvAEc2tPc5Nk+kvs0CFs+MIT+fZHf52
-	xI1xyllXnrBvAlWFfAgkMiGDUXHoePKd1VWyGllhNFgV/ZBp22K2KFWBDHhCoZh+
-	gb4o0w1o9quEUwWYU2CiaxpmoXMM4c6T9CpK4MwKwmkJI8YS1QkYW4oQycoTlwru
-	OnIvc+Iygg/STr9F1ayysw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aej907u9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 19:27:33 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJHsdNr002704;
-	Wed, 19 Nov 2025 19:27:32 GMT
-Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012015.outbound.protection.outlook.com [52.101.43.15])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefyb24cn-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Nov 2025 19:27:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OZB3qVi4uZztZRCDzBiub4Loq+mEWXwnrR5jg7iM0VtrnBmwsZyrmFmxLkRuLRVuabDc+j5HFNUR6rVnRpHc+s05C4RTRCtJ5tlZCN1G0X4x7oMApj+xIihkcp8Q3dBsLQJOX/ryMxu1hos52mhpZes+sXHwlTNbdsUCYGTTzj8nl91H81J4hGR/kvyNCxRunzLNyMWGdqOt5hk1OVmTtnRHfr5XUeD2xbkvvleH7S/TyfaNoQpMcSBcy5YhdUWFz1R0KShJtjcXee4ouQSFTxLWdaoQySM5V4UkMGAms6FDpJWe5WQWStABnxkgziTj7iHZ9nd0o2Rp4iGt/KuI/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1n+Pr2mcYMykyaSK3HRSLNc1GbJqzlWD0gpHNLusM1s=;
- b=b3Yl/pJPbmlaemRjulGtHto9qb26Eriyjn6Ot7aSvo95Uv0eCBm11xQUi7GUTCYaP+KMNCNMuHDE6nG2Rm375+Pbl4p+luraco7goNmWFVxawR1g4PlqwGyoo7KtmxxtuhNb0YU2qrhWkobC8hGjH0cQUvqZ07QB2u1F4LPwsfMGEVtucU6XsEs53eLd6eNsqInmjbyy5lFjcmJ5vwtZwK+ebgM7OlaspjINflUJ1vOfBKExrSuwGcOcStSHPL6/EpaGGn2gbLWxZEBiBH9VBf417lCvHezwgnE1j8qrQsCveocrD21UgzWvFVNK4jOd5v8NP/YWA31bqA8OGIIusQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1n+Pr2mcYMykyaSK3HRSLNc1GbJqzlWD0gpHNLusM1s=;
- b=JTRbEy854neOTctXJHhVEixMzLGG3z6r0adtz59Xz0rD6rVQTpl4tffC9yJ8LB9W5bj9/YncTHCh4/k2JdH6BnfqDGtj/rF3Y0+I7KVivby3oMwJf7jSMTgqVgmYqF5OBhSpffaedmdhte9vD9dnVchiT9xoYdb+2tDvttI7KHU=
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by SJ0PR10MB4416.namprd10.prod.outlook.com (2603:10b6:a03:2ae::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
- 2025 19:27:26 +0000
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63%4]) with mapi id 15.20.9343.009; Wed, 19 Nov 2025
- 19:27:26 +0000
-Message-ID: <803d3e56-ed6c-450f-b609-6dbfdd1e4d14@oracle.com>
-Date: Wed, 19 Nov 2025 14:27:24 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 06/11] nfsd: revise names of special stateid, and
- predicate functions.
-To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D60B28469C
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763580740; cv=none; b=HH0DKVqhXqSLdSrJJJd2zKFH+xXAWlGkAATuq2pdMDWC9aVUkAzcUvJ1g5b5qKmrftQ0aXP2VUw83Ic193nlcx0Fq/gdn2zXQQizj9zHzKqZEAR89JT/HVyu4w88XkStQP1xSmCQic/YdubB7+bfVBW4AtuQM9VFNrNSIt4CXkI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763580740; c=relaxed/simple;
+	bh=zriFXX8jSysvW13vJMMs9Cruc2nwBb1VyZeoYYP5w1w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rP7OTueF+Pt9DZ8eqE3OPdn3lFSGnTD3cmnYty3251H50TTz+FhfFN9QhJkZn+JE0ZU+ELw6oR5JfD3I+B7MOXd0jXpgp3bce0zYDVriTRbam6You75u+Tsoi/fkbCIwOyYDEb++u8QM0NMiy/FYLVkknO1gBbAxWcxAejYl9z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z98hcrzq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1243AC4CEF5;
+	Wed, 19 Nov 2025 19:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763580737;
+	bh=zriFXX8jSysvW13vJMMs9Cruc2nwBb1VyZeoYYP5w1w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Z98hcrzqZCsOzhRXao6VlxxgeqQ8909XOPEQ3fi2U4y9/3ps1IEHxKxau1bN5v6Cr
+	 SAPThMUM2cMIBjCfLxyYwyeqXxTslAq1O4LMBef6QoQWKcnY1dYRS3DWXA4EgMi6hx
+	 i44bb5/FyJoIdwUdVNl4ftBSgKVLlSMaVpK1WKr4Ec7jo8303Mum/OBGi1DmOiazAS
+	 0hxlm0gK6D4Wcyp0xityWGK1NsnNPjWVK4OXs8CEuOoMp34DmtiZ0lEK1RT+yUn0Wa
+	 9WtLuI6l9rtA2c+HXcmz8gKYliVcuwcHkxz7HJStPp0ZVY+Mel/WQqNyhsrrgdQgB4
+	 3iNAAbsp+vEPw==
+Message-ID: <a136ef0852d4f180c9d8a5946b6452fdafd3d188.camel@kernel.org>
+Subject: Re: [PATCH v5 05/11] nfsd: drop explicit tests for special stateids
+ which would be invalid.
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Date: Wed, 19 Nov 2025 14:32:16 -0500
+In-Reply-To: <20251119033204.360415-6-neilb@ownmail.net>
 References: <20251119033204.360415-1-neilb@ownmail.net>
- <20251119033204.360415-7-neilb@ownmail.net>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20251119033204.360415-7-neilb@ownmail.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0097.namprd03.prod.outlook.com
- (2603:10b6:610:cd::12) To DS7PR10MB5134.namprd10.prod.outlook.com
- (2603:10b6:5:3a1::23)
+	 <20251119033204.360415-6-neilb@ownmail.net>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|SJ0PR10MB4416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c84fcea-39c5-41e9-340a-08de27a1abc3
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?STdVdGZWMnRiYjQwV0tOWHozcWo1NlB0eEp4cmE3Y0poVmkyK1J5aGlGS2pH?=
- =?utf-8?B?b21Fa3pnN1J4Y3Y4b3BLYnhobmsxL2pGZ0hiNGlUazIzTnROU3hpSmM2eTBJ?=
- =?utf-8?B?Ym9IT1BMNHoxREZBS01Md3R2ZTJmSEs2dHVveVYraTNleDBRNElybUpNVGMv?=
- =?utf-8?B?cFdvVzJURUFFLzhkYmdvNi9tMXJnT3AvYy9WNkpUT0IrOFhxQkR2K3JtQ0VO?=
- =?utf-8?B?YnFnVUJEZzBjZzR5VzVURmZ4L216T1NkQ2pLQzRVTzhIbjY5N3FzZjJUYitY?=
- =?utf-8?B?UEo0S1phZTRkTFFUazRtMTRxOUlSaUtDMUd2TmJSTGZiUDRnMG9XUFdXRmla?=
- =?utf-8?B?aUU1M25xRiswWVJQNkNJdEhGd3A0ZFk4NndGZTlSSTFNOCtBQWRNZmNYbTFj?=
- =?utf-8?B?cTc5TmRYc1hYRWM2amx5Ym9jRWpFeGhUZEtkY005Tk9nTTNuMTh0Q0UyL3JX?=
- =?utf-8?B?Y0F3QTI5aktubUMzYnp3a2dqQ290WERibm13T21vL2N1bDl3aWhSUzAzdm1n?=
- =?utf-8?B?ajF6VWdBdHQwY3dVZXFEQmRQa0d3NktQTmo5RGF6cjU0c0pveGNUaTdMSGt0?=
- =?utf-8?B?b3NKbzhvWkxMN2dScm1TTk1yOGtMeFB1eXVpaUt1TndaaEZhcHhDT3JnbjBx?=
- =?utf-8?B?S1Nzc2dMZkdHVVVUdjJCSlFWV1g2VmxHRW9sZ2ZDcDNxREhENGZpYTdkSmNZ?=
- =?utf-8?B?MHRlb3ZoTVZKZ1pXQUh3amM2SWZ2ZWM0bFc1TVFPRXB1bXdwNGtqV1dlWE1W?=
- =?utf-8?B?YTczVmVNUXJiV2x6K2hBZGhlckp1T1Vwak9OQVJydUpNNnhSLzVxaG80UUxi?=
- =?utf-8?B?NmxhS0VNMCs4czRjS1RrdzV3eHRFMHNOWEZSSGhvb1pEclM3WHdVN2hPMTdx?=
- =?utf-8?B?THk1RVhpZzIwZGNubmkvNGlqckc1bElLTVJKUk5XYVFJR2VDakFlYXhQanZH?=
- =?utf-8?B?UVRIQUpQcXY3dW9lVVZsWEpVZktCUHI5K3pqSm5TMXVpNUJKbVhCWGg3NStQ?=
- =?utf-8?B?ODVuMVFwYXpXVWNRTkk3Sm5pbWwyS2oyNlhuM3orb0ZvNDZsR3JWTU5VSHlq?=
- =?utf-8?B?U1RnZy8zZkFBZEhIQUwzQWpYbUFhQVUrckNDWmxXZUFQbEwra2Fad1hUbUUz?=
- =?utf-8?B?RG9UcUpxWU1RMkNpZFhTTW1JQXExK2VuYUYvWEoyYml3aU91QWU5KzF1SE0x?=
- =?utf-8?B?UnJ2bTM5ZzFITHhNRlFYYjVhakQxWnlzOUZWZ2V6NTZXS0JocHh1WEN5RHpj?=
- =?utf-8?B?Z1ZLRFVhZTlFRGZUN0dOZDYwV1NkeTRtN25ZcDVNZHVSeVgrWFVmd1NWZURv?=
- =?utf-8?B?c0VEbkhYQ1BpeXhMeE1ZQVNSQXlYbXliWXYwaXl0Rm5UZ0dSbGZNa0Q2WkhO?=
- =?utf-8?B?WlJFblBmWDcvOU81T2FWbUxvZEtnMGVTQ1dqSlNGVWpQQzlac25KVUYxTnBv?=
- =?utf-8?B?Um1UanhwdUthUVpwVHhBUHM3L0FrcjlyU3NzeDhldDRKTDNNWm1zQnJ0T1R5?=
- =?utf-8?B?Z3pRaHdzdDI3TjlMa1kvTUtoaW0rMlVpbWZmc2N2RTIvWmcxd3kwOUsyZmli?=
- =?utf-8?B?UDFLMzdVbE03SVMwcXV4M1pTK0hMWjRwVXpSRWpkOVl2VCtuUEJkOGN0YTM1?=
- =?utf-8?B?QTFaNzhRNDhrR1l0Nm1wNUlYOFNnQjI5b3Y5emZYY1JZTG9FaXZIa3NuNnk0?=
- =?utf-8?B?S0dDcUZBVzAwMHN4RVFwN2RLTFZQVUo2ditZbVlOWVdMQ1djVGREQmcyZjVF?=
- =?utf-8?B?cHl4QklPSXlTQkd6Q0RFZkttTVFBaFlYT045UE0rbG9pR0wvWnF3dzNIVTl3?=
- =?utf-8?B?VDFhdEt0Wmx6T3doTTlxSkF5elBCZUlSTTA0YWNsWlZNNS9pdC9VQ3YwUCsy?=
- =?utf-8?B?dFdNREwybDRSYllXQW1qOWJmNlFRZGJDVTNTZFIvMmVMWW8rVHE1NG04ZlZv?=
- =?utf-8?Q?SuZEFefcGi/9x0wtrFhLmfZ5VWZZNu5+?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?WDUyYWo0VHAwa0h1b2hzQWFOMmIzY1RITC9pRkxOZ3V3VzB5QUpESVlFQUVm?=
- =?utf-8?B?TUQ4R0g5VjBoamZmN3QwUjFxZ0h3VENieWloZU9DNXJuMWpvWlM5UkNBTGla?=
- =?utf-8?B?cFlVdFBWMnNjMER0MmhkUzZ0dm9xdlNFbGVSZElHVFptWEV0Rnp3Sm9BS2xy?=
- =?utf-8?B?VUE1dEc5U0VVdTJsZzZ3NkpKR1UwNmw3WGhWMmtKOUp4b25JbmNybmpwaTBX?=
- =?utf-8?B?bGVYa2p5ZmVhWVRRSGZBcGVBSnoweHlUeDBoRU9ZeTQ3Qk80SDdSVFdHZUwx?=
- =?utf-8?B?QThTbXg1VjY0QXdESzA1eUcvTUxIaDkzMk12eTNFbEZTdG5VOEZVa0NCNEJl?=
- =?utf-8?B?OVhENzVOZ3NtVE5FcGhPNzAxVWFiNGRkT3VHK3A2VEFqQzlHelROU2dwc1Rk?=
- =?utf-8?B?SXQzNVlvak9rT0lSTVpqNE5BeE93R0M4ZTBHUnlEUmJ0UVFzcmMyaUtRUlZl?=
- =?utf-8?B?c1J1YkdtdVFxMkRnZHBrNmNDOUM0bnFwRGtyUDArZ2phSXZYc1kyeUJoUS90?=
- =?utf-8?B?Yi9pYzNVYXlHbW1za0R1N29YeVdCYnBia1JNRzFibGJXTlZCVFZOSFc3bCtF?=
- =?utf-8?B?dEQ4b1YrL3VNTTFaaUtyTmEraitFT3B1cloxdXMwalBvVVVCcWk5OWpQNUd6?=
- =?utf-8?B?d3hMbm1pVUhMcVBBcHkrbFk0WVFmKzdlNVhJVTE5TFBNaHdtZTZRZW5tUkpo?=
- =?utf-8?B?cGFrWG9raTFONHQwbCtkQTUxTG5lalF2RFdCMUxDMmtET0wzVzR6OU9KYnNM?=
- =?utf-8?B?YjBZZ3poRDB2bUxlenBORm8wUXNRWW1GenRHYnF5dytGRmg1VFZWdmczc2kw?=
- =?utf-8?B?UFFHRzd5SUZjc2hXVWlFSG82TXc3b0sxeWUxTW5uWCtQUnFteVBaaDkycVhw?=
- =?utf-8?B?eEFrODdDS0MzcHpWMDY1MThHam01ZXI4QldSR0xrVjRGMkRPZVU3aFN6ZHA2?=
- =?utf-8?B?RStzK3NOR3NibDZPRnR5Qm9BMDFZY2ZlVHBRakR1WWYwQlBIMDJHcTRKNFdP?=
- =?utf-8?B?aDdZWkdRUVlYOGhmbkpRRHNzMW5hdHlFMFJZZHVqR0VtR0hwcmFQLzVCQTlE?=
- =?utf-8?B?MlNqakNoUjVjYjYxUjV6Y3dvbFROMysvRVRMdnU1dUpvcjl5NGdaMitoaVRQ?=
- =?utf-8?B?MGR1QThRazUvM1VTMTlJRmpYMmJPWTlreEIrMFA3VFVSNWx0OUpHUW1YeTVi?=
- =?utf-8?B?akFnSE1wanNQazRPS21rZlBjbytOdSt0R1V3YWwybTJWcURZaTdIc1FmVXhj?=
- =?utf-8?B?azlha1BUUlpOcUFlS2JiSExBZnN6SHo3djBEWUFDQ0I2T2FCVjZNb1pHZnBi?=
- =?utf-8?B?K1JsaHV1SjU2dHllamZWdlpqNkhia3dWTjI1dUlsVVdEWkpnVzE3ZDE4Vk9x?=
- =?utf-8?B?ZzdpN0hpT3J1Y0puTlg3RnRPS0VoSUEyUzdwc3ZjL3NBc29nc0E0RUdGQW9U?=
- =?utf-8?B?NXEwV0QvTFBrV2lHbGhoOVkzZ3N5TUZKb1hXcXl3MVdsdFBtdVVJTmhxcnph?=
- =?utf-8?B?RERNUXUrNTgxNStTZkpzSTRkYXdsL25WVExsdTlDZFhwdCtuWXNMMEhLWEI0?=
- =?utf-8?B?eVdZeWhTY2JEVmMzeGJFRkJJTjZYWm5QNmRMVDAvVmRKWWNGcHM0bGU5YWxV?=
- =?utf-8?B?eG5JNkI4RjBEaW50Njl5Rm1LUjNuZkZrWnZ1dUFYY09qZTNjQ1FOZHdjcUhH?=
- =?utf-8?B?TSs4a1R3a2FsNHFVUmNkMFVZMk9ObmE1WlQydjlZTlFDNlNnMlRnWlJmcFhH?=
- =?utf-8?B?Mk5EdktXYnpzV3NrN3RuY1UrUWo2MERNakVPRzJaUG56Qml2akVMc2VXZWlo?=
- =?utf-8?B?M2NqK2EzWVpONFVPUFFmcW5RNjI5MjFXVVdmQlYvSEx2dmY2bFRSVU9VcDdh?=
- =?utf-8?B?VzdUZWRtdFdIYVJsSHF4QkgrWitpYzNMWks3YnlWaklNMDY2WDhWZjhIbVNx?=
- =?utf-8?B?VjFyTjJsN3pTanNhVWhvekNwYlc2TlZ3R0lsMzFUb1VIYnptNnE1dWxLd2pu?=
- =?utf-8?B?UlZvajdNRjJKQUlTOFY1d1lqWE9yMzhEZ05tTzlHc3RxeWVoNDVaRzM0Nkh3?=
- =?utf-8?B?SE5qRjVsSGZKUmV6alFoSVN5bytBOUo3ajRKS3U3QnhDVzVsMWtaQ01WdEdt?=
- =?utf-8?B?Z0JtTExXVFFUckdWNjFMODNPK3ZacXVnVWlROHpRTlBlK25COStURGdqQ1VW?=
- =?utf-8?B?bFE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	IwRn3eG3NkI4tj3LujX0gVlmzUj+BfhQCN+nBTl3Bgxg5PPttW3PIorA2J5g3UxDII1oiksZFlLy5soKl/AvRyk1MFaVZ3SOQESJG4nK0Fvsqp3BKux62PyF7bPcB/AaOrGkIHG8XBL/CgXwvq84/+m5NchX8TLztrVv0uVFvb6T5eZQIqlNPmavLr3xh4KLBHt6Oogh9VmjP21dy4tKlTWbbeIBcLryFFMCJi0JNSy9nQ2XP8qx3HPUU0bfXcvkpzC/+cf6DSUcrtOwEchDAMknZEYJzvzleay7P0zLv+6z/rJIeBGYVe0a1JFs+2xwzelOretfzoDmhVPsY76fciTnd0gCKrxtgQTAnizQMm7Fel30TQtxYt2vGqZ98a+25zdX4f8aRXKfoTSrUQHs4r4A50O42fo7fZUfWgBU0OBz+iCML+IHszEVASD8A2lOPDrMRwj6MS2dXYnIP5OsZe7mk8epDr111jzyNJRPo5FXsVRekICNCosu+LTGOe7Wd7FfE46oYqmRu3TUaBOC3Vy9iIkB1eVr0vIXTO5x+MWNJ3SrTcusa4lexqtJW6INxMrx8WC19y/fShEcvOk57c5coXv52hz77fd6KY5nfLI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c84fcea-39c5-41e9-340a-08de27a1abc3
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 19:27:26.1341
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CTHcXfLjiOL5L+c74e4yOyLxla8PoOcq0IEK72SMIJz31TC3NE50bXl3JoDMctM+SJCvobW9rOVIs2cqYEwvJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4416
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-19_05,2025-11-18_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2510240000 definitions=main-2511190152
-X-Authority-Analysis: v=2.4 cv=OMAqHCaB c=1 sm=1 tr=0 ts=691e1a25 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=H2BUxC0YDGfdVTMlhkQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: EHRTfTeBzKYc4CO5XBw5enQqClWf0gul
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMSBTYWx0ZWRfX2GBlrArlKOXz
- MEUGZlN0K1BY6sDwHVa+JTlQkSnFMaTr8YK2IC9mlHRYft6KQ0M+RupJKSPnjSbt27beQhDWUlR
- sbAawU3pIwy7pcsjdDJEcq1+bjRv6fg/Cwd2GDqxVzIbJSc305aTOmdP+QC8wFGFiHXKOWQ+QrI
- azBhEUnNWJajvCpaVZQ4FOqjtOwG31kgoi7CNzLoHPew+tAz/KDUUxTAEuIQ7RcdkuKBEtYhMAS
- exa6vdLcmgG2B1oqUk3UXb5V9VhCdZG18NrxDaJiAEYjEkNMvdGIz3qG0vA22mV/Lzn5X4V/1TP
- X9kI1Ty0YaJzfAO2JD/T9MRQeLD5c5XBBz7aKELIGOxHZ2hlxK9ewC98aR8uK6FwKMM02KldpDF
- ffj0KoYkIfX1r77QWdkJ6MaExCac9g==
-X-Proofpoint-GUID: EHRTfTeBzKYc4CO5XBw5enQqClWf0gul
 
-On 11/18/25 10:28 PM, NeilBrown wrote:
+On Wed, 2025-11-19 at 14:28 +1100, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
-> 
-> When I see "CURRENT_STATEID(foo)" in the code it is not clear that this
-> is testing the stateid to see if it is a special stateid.  I find that
-> IS_CURRENT_STATEID(foo) is clearer.  But an inline function is even
-> better, so is_current_stateid().
-> 
-> There are other special stateids which are described in RFC 8881 Section
-> 8.2.3 as "anonymous", "READ bypass", and "invalid".  The nfsd code
-> currently names them "zero", "one" and "close" which doesn't help with
-> comparing the code to the RFC.
-> 
-> So this patch changes the names of those special stateids and adds
-> "is_" to the front of the predicates.
-> 
-> As CLOSE_STATEID() was not needed, it is discarded rather than replacing
-> with is_invalid_stateid().
-> 
-> I felt that is_read_bypass_stateid() was a little too verbose, so I made
-> it is_bypass_stateid().
-> 
-> For consistency, invalid_stateid is changed to use ~0 rather than
-> 0xffffffffU for the generation number.  (RFC 8881 say to use
-> "NFS4_UINT32_MAX" for the generation number here, and "all ones" for the
-> generation and opaque of anon_stateid).
-> 
+>=20
+> In two places nfsd has code to test for special stateids and to report
+> nfserr_bad_stateid if they are found.
+> One is for handling TEST_STATEID ops which always forbid these stateids,
+> and one is for all other places that a stateid is used, and the code is
+> *after* any checks for special stateids which might be permitted.
+>=20
+> These tests add no value.  In each case there is a subsequent lookup for
+> the stateid which will return the same error code if the stateid is not
+> found, and special stateids never will be found.
+>=20
+> Special stateids have a si.opaque.so_id which is either 0 or UINT_MAX.
+> Stateids stored in the idr only have so_id ranging from 1 or INT_MAX.
+> So there is no possibility of a special stateid being found.
+>=20
+> Having the explicit test optimises the unexpected case where a special
+> stateid is incorrectly given, and adds unnecessary comparisons to the
+> common case of a non-special stateid being given.
+>=20
+> In nfsd4_lookup_stateid(), simply removing the test would mean that
+> a special stateid could result in the incorrect nfserr_stale_stateid
+> error, as the validity of so_clid is checked before so_id.  So we
+> add extra checks to only return nfserr_stale_stateid if the stateid
+> looks like it might have been locally generated - so_id not
+> all zeroes or all ones.
+>=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++-----------------
->  1 file changed, 23 insertions(+), 17 deletions(-)
-> 
+>  fs/nfsd/nfs4state.c | 33 ++++++++++++++++++++++++---------
+>  1 file changed, 24 insertions(+), 9 deletions(-)
+>=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index ea931e606f40..f92b01bdb4dd 100644
+> index 35004568d43e..ea931e606f40 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -60,18 +60,18 @@
->  #define NFSDDBG_FACILITY                NFSDDBG_PROC
->  
->  #define all_ones {{ ~0, ~0}, ~0}
-> -static const stateid_t one_stateid = {
-> +static const stateid_t read_bypass_stateid = {
->  	.si_generation = ~0,
->  	.si_opaque = all_ones,
+> @@ -74,6 +74,23 @@ static const stateid_t close_stateid =3D {
+>  	.si_generation =3D 0xffffffffU,
 >  };
-> -static const stateid_t zero_stateid = {
-> +static const stateid_t anon_stateid = {
->  	/* all fields zero */
->  };
-> -static const stateid_t currentstateid = {
-> +static const stateid_t current_stateid = {
->  	.si_generation = 1,
->  };
-> -static const stateid_t close_stateid = {
-> -	.si_generation = 0xffffffffU,
-> +static const stateid_t invalid_stateid = {
-> +	.si_generation = ~0,
->  };
->  
->  /*
-> @@ -93,10 +93,16 @@ static inline bool stateid_well_formed(stateid_t *stid)
->  
->  static u64 current_sessionid = 1;
->  
-> -#define ZERO_STATEID(stateid) (!memcmp((stateid), &zero_stateid, sizeof(stateid_t)))
-> -#define ONE_STATEID(stateid)  (!memcmp((stateid), &one_stateid, sizeof(stateid_t)))
-> -#define CURRENT_STATEID(stateid) (!memcmp((stateid), &currentstateid, sizeof(stateid_t)))
-> -#define CLOSE_STATEID(stateid)  (!memcmp((stateid), &close_stateid, sizeof(stateid_t)))
-> +/* These special stateid are defined in RFC 8881 Section 8.2.3 */
-> +static inline bool is_anon_stateid(stateid_t *stateid) {
-> +	return memcmp(stateid, &anon_stateid, sizeof(stateid_t));
+> =20
+> +/*
+> + * In NFSv4.0 there is a case were we should return NFS4ERR_STALE_STATEI=
+D
+> + * if the stateid looks like one we might have created previously, and
+> + * NFS4ERR_BAD_STATEID if it looks like it was never valid.
+> + * There is not a lot of redundancy in the stateid that can be used to m=
+ake
+> + * this distinction, but it would be useful to differentiate special
+> + * stateids from locally generated stateid.
+> + * Special stateids have si.opaque.so_id being either all zeros or all 1=
+s,
+> + * so 0 or (u32)-1. Locally generated stateids have si.opaque.so_id as
+> + * a number from 1 to INT_MAX (as generated by idr_alloc_cyclic()).
+> + * We can test for the later range with some simple arithmetic.
+> + */
+> +static inline bool stateid_well_formed(stateid_t *stid)
+> +{
+> +	return (stid->si_opaque.so_id - 1) < INT_MAX;
 > +}
-> +static inline bool is_bypass_stateid(stateid_t *stateid) {
-> +	return memcmp(stateid, &read_bypass_stateid, sizeof(stateid_t));
-> +}
-> +static inline bool is_current_stateid(stateid_t *stateid) {
-> +	return memcmp(stateid, &current_stateid, sizeof(stateid_t));
-> +}
-
-The new static inline functions appear to invert the logic -- the macros
-use "!memcmp" but the new functions omit the "!". memcmp() returns an
-int, so there is an implicit type conversion here as well. So maybe you
-want "memcmp(stateid, ... ) == 0" ?
-
-And now we can use "sizeof(*stateid)" here which is slightly less
-brittle.
-
-
->  /* forward declarations */
->  static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner);
-> @@ -388,7 +394,7 @@ nfsd4_cb_notify_lock_prepare(struct nfsd4_callback *cb)
->  static int
->  nfsd4_cb_notify_lock_done(struct nfsd4_callback *cb, struct rpc_task *task)
->  {
-> -	trace_nfsd_cb_notify_lock_done(&zero_stateid, task);
-> +	trace_nfsd_cb_notify_lock_done(&anon_stateid, task);
->  
->  	/*
->  	 * Since this is just an optimization, we don't try very hard if it
-> @@ -6512,7 +6518,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
->  	 * open stateid would have to be created.
->  	 */
->  	if (new_stp && open_xor_delegation(open)) {
-> -		memcpy(&open->op_stateid, &zero_stateid, sizeof(open->op_stateid));
-> +		memcpy(&open->op_stateid, &anon_stateid, sizeof(open->op_stateid));
->  		open->op_rflags |= OPEN4_RESULT_NO_OPEN_STATEID;
->  		release_open_stateid(stp);
+> +
+>  static u64 current_sessionid =3D 1;
+> =20
+>  #define ZERO_STATEID(stateid) (!memcmp((stateid), &zero_stateid, sizeof(=
+stateid_t)))
+> @@ -7129,9 +7146,6 @@ static __be32 nfsd4_validate_stateid(struct nfs4_cl=
+ient *cl, stateid_t *stateid)
+>  	struct nfs4_stid *s;
+>  	__be32 status =3D nfserr_bad_stateid;
+> =20
+> -	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> -		CLOSE_STATEID(stateid))
+> -		return status;
+>  	spin_lock(&cl->cl_lock);
+>  	s =3D find_stateid_locked(cl, stateid);
+>  	if (!s)
+> @@ -7186,14 +7200,15 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state =
+*cstate,
+> =20
+>  	statusmask |=3D SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
+> =20
+> -	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> -		CLOSE_STATEID(stateid))
+> -		return nfserr_bad_stateid;
+>  	status =3D set_client(&stateid->si_opaque.so_clid, cstate, nn);
+>  	if (status =3D=3D nfserr_stale_clientid) {
+> -		if (cstate->session)
+> -			return nfserr_bad_stateid;
+> -		return nfserr_stale_stateid;
+> +		if (!cstate->session && stateid_well_formed(stateid))
+> +			/*
+> +			 * Might be from earlier instance - v4.0 likes
+> +			 * to know
+> +			 */
+> +			return nfserr_stale_stateid;
+> +		return nfserr_bad_stateid;
 >  	}
-> @@ -7076,7 +7082,7 @@ __be32 nfs4_check_openmode(struct nfs4_ol_stateid *stp, int flags)
->  static inline __be32
->  check_special_stateids(struct net *net, svc_fh *current_fh, stateid_t *stateid, int flags)
->  {
-> -	if (ONE_STATEID(stateid) && (flags & RD_STATE))
-> +	if (is_bypass_stateid(stateid) && (flags & RD_STATE))
->  		return nfs_ok;
->  	else if (opens_in_grace(net)) {
->  		/* Answer in remaining cases depends on existence of
-> @@ -7085,7 +7091,7 @@ check_special_stateids(struct net *net, svc_fh *current_fh, stateid_t *stateid,
->  	} else if (flags & WR_STATE)
->  		return nfs4_share_conflict(current_fh,
->  				NFS4_SHARE_DENY_WRITE);
-> -	else /* (flags & RD_STATE) && ZERO_STATEID(stateid) */
-> +	else /* (flags & RD_STATE) && is_anon_stateid(stateid) */
->  		return nfs4_share_conflict(current_fh,
->  				NFS4_SHARE_DENY_READ);
->  }
-> @@ -7401,7 +7407,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
->  	if (nfp)
->  		*nfp = NULL;
->  
-> -	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid)) {
-> +	if (is_anon_stateid(stateid) || is_bypass_stateid(stateid)) {
->  		status = check_special_stateids(net, fhp, stateid, flags);
->  		goto done;
->  	}
-> @@ -7823,12 +7829,12 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  
->  	/* v4.1+ suggests that we send a special stateid in here, since the
->  	 * clients should just ignore this anyway. Since this is not useful
-> -	 * for v4.0 clients either, we set it to the special close_stateid
-> +	 * for v4.0 clients either, we set it to the special invalid_stateid
->  	 * universally.
->  	 *
->  	 * See RFC5661 section 18.2.4, and RFC7530 section 16.2.5
->  	 */
-> -	memcpy(&close->cl_stateid, &close_stateid, sizeof(close->cl_stateid));
-> +	memcpy(&close->cl_stateid, &invalid_stateid, sizeof(close->cl_stateid));
->  
->  	/* put reference from nfs4_preprocess_seqid_op */
->  	nfs4_put_stid(&stp->st_stid);
-> @@ -9101,7 +9107,7 @@ static void
->  get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
->  {
->  	if (HAS_CSTATE_FLAG(cstate, CURRENT_STATE_ID_FLAG) &&
-> -	    CURRENT_STATEID(stateid))
-> +	    is_current_stateid(stateid))
->  		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
->  }
->  
+>  	if (status)
+>  		return status;
 
-
--- 
-Chuck Lever
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
