@@ -1,153 +1,215 @@
-Return-Path: <linux-nfs+bounces-16571-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16572-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34551C70A38
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:28:04 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D61C70A4B
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:29:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D0FB8343977
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 18:23:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3FF6B34B686
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 18:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E843112D2;
-	Wed, 19 Nov 2025 18:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C6425EFBE;
+	Wed, 19 Nov 2025 18:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IleJNGpW";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="JVcsWFA7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0hVnMhp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E548526C3BF
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 18:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A60288C34
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 18:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763576591; cv=none; b=kDR81ANI1ok802tGGVu/5d9FEy4KFhqxsqa137dchKzSeddfceXN40JuFwGR7rprTJ6fy47GG2ipZdjK3ofv8eT/1agZ97pUM12Dtv5mw/EKfpDfOR4f1jZngav9mLEGoOBLGR8RUO8tm12tffr+C9rVDU7DRFvJeQtA8KWXP8c=
+	t=1763576672; cv=none; b=TqHUF6xFaNzsL1fnuQ8rlfIjLnqLKfJkpRX66wfrSYYoz64IIkfOUoWb0Vf/RbH7eg/aC7ymiPyPjxGzfu78dLJ+vVmJDm/FzSwJKg9kgqltuioBp3vAyMSPSYnY7QA971f8iSePReXB6uyMyLVPMzPLHvE9nrk6qdAXV+UJJ1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763576591; c=relaxed/simple;
-	bh=kIE/2jpVArIfWTz+yU9k0O6c+hOXWKg0ujMakQqF3dY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=S2rUCGY90qzVe/x+DJY/bO20u++vJI9zudBGnE18UQXpPnpmiFOiF28L8nNzOV/rSg0wu8r6/UnuhSuBuiOL5AznOOdO+f1woAr5Gnqhs9CrFG9Dgyr2dG5suzklsGR6ef+XPUHJmEE/iv0NFHDycrQR5HJIbpx5QbjH7G9CFjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IleJNGpW; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=JVcsWFA7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763576583;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qw0qt9nIqi048zd9eDMfUVaCdS7lucHj6QtAWfhbmzI=;
-	b=IleJNGpWOIuEbhzTGdk+vKExj32NHYgKzWaD7N1k6UQ+QVe4LOCZwIA73tk4H8Lk0uPIpE
-	eLAlkRKC8PIqeCxXA7x+vQLrFYG6psg+VAOEZtLU+KbwVxErldSdHZ04z56ckXUsbYSVyf
-	8V3CGVkodbqtkmEt93/0rWk0Z8hMjjE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-676-LF9RvQIKOGS5betF9GgtkA-1; Wed, 19 Nov 2025 13:23:02 -0500
-X-MC-Unique: LF9RvQIKOGS5betF9GgtkA-1
-X-Mimecast-MFC-AGG-ID: LF9RvQIKOGS5betF9GgtkA_1763576581
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-882529130acso834786d6.2
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 10:23:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763576580; x=1764181380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Qw0qt9nIqi048zd9eDMfUVaCdS7lucHj6QtAWfhbmzI=;
-        b=JVcsWFA7PGhIbQc6FOrgZFtQ4zoLQPxDd/5K1VrJi/VxgHOhhpj3ZC6EV9U8WEFx1J
-         OZx7jZSeRwKBvPW1hwHOXahbWE43p+9Z6+SpWsIEWtbSLR9j7T1QoTrtfZXj+IG+kX8T
-         a0gm06MGjkXEC5hlZrqqDbJadR6WeRALwjYk7gzCVNaPDwqLXnVYEAy3gsQYR1wJx+ZK
-         1X/pvAe1hxNjNbrF8UeQysHYp8hKzo6sRcnMW9fTm2G8DJDbCV3cvbdBLxpL5wNEBn/H
-         V7q+5yLkmeDWZAfSjV+4mIQfDvV3Vee2HXli7MgUNmDj2PBwtiZNa4dAsUnUJHGaWwCF
-         c8Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763576580; x=1764181380;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qw0qt9nIqi048zd9eDMfUVaCdS7lucHj6QtAWfhbmzI=;
-        b=JbM4Y9bPsRESNJIYE6gGD4c+dtpZWTtzEj0hLU6BhThYfS5H6FHh00v65d9mX0iDef
-         1pYwS+Wxl6nvinjMxtjPi6vOxWJSVgJztJ4i11+L73sdcfKlG5vsJtW1Mg9u8RdsCLSC
-         mQ5UgpGzCEzZLSI2DCLSeUMafIcedgsFg0ZL4wZjl/0v0HcBq9JqvYzcvcwdsViJC9sl
-         oHe8c2bTUBga2aEkeIRUDokjGuoZhDzbBa/R1H7OnW2NI8fqX9ByKVrOCf/CYnn5dp0N
-         mKnp/P589Rz5Y2XskArjDuda0QhK1qRYhl6mzWF0JMeW3rQxOmwjb57UY7PW2lk9hAT/
-         zCtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOkQ05MQosnLd3OPnckapioMcuvtzAXSHhG2/X7AUgc94RBnmy+ARuSIUbwfSBPR04Gc7pD01PChQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz1ZhYeNR/nEctsCcO9/ASygW3b/NOo3g173K+lDEFXdXOQUT7
-	MIz8H56GjA3nS6dbjVzflvEJEamfrNm/R/YAbfXai/yaHTYNpMQ5jqNeNB1YAdADkld7yFt6zfK
-	S9H3k9i2uwVQdm9amu+n6/3zHgaiB/t8HTyQfD7mBkbzIIAIstjKfWLQ86WnKWgxX8tQSRw==
-X-Gm-Gg: ASbGnctPoZT4BJEdYMD9MERmB5aJHfFMOhH2/3RAkK5eiSqdnwudlGOQLQgqMAVr6P5
-	g+FgsyH5T8j60N4S4ZlIKccVh9MYxMOw3r2Fapf1faW/84u4mRxyRC8AnvfUpAKBMFrkMjkc/qJ
-	78TlRE2+OyQgfsD7syIs6rydb4/eDWIPnj153xkO6Tr3mKMdSONptN62tv8mOCVSZeuDd8v/ZA8
-	TnamB2hMeYbJUoiH6/qyZjlGSxr8f91FFUHTpbjhxcZDUxP6IGACFecnKTKg3/Wf5D/SBkcyQvc
-	uv0Ky4rmG6PZgIYtuvLY26Y7nG8u0xJMk/4u0W/1KyQpBV5y/tU7kLWYD1jg6MMf2eE1XAIttAC
-	nUA6dDtp7bg==
-X-Received: by 2002:a05:6214:20ea:b0:87c:2938:c358 with SMTP id 6a1803df08f44-8846e2475demr2153726d6.67.1763576580439;
-        Wed, 19 Nov 2025 10:23:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1JpSgC2TvKigq7DGKtr1+rgoHZ1rbkEUjUVspfEE3JxrGjxSaDXoH9FhroWQYKaGMgEGhhw==
-X-Received: by 2002:a05:6214:20ea:b0:87c:2938:c358 with SMTP id 6a1803df08f44-8846e2475demr2153406d6.67.1763576579992;
-        Wed, 19 Nov 2025 10:22:59 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.249.237])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8846e446463sm472616d6.11.2025.11.19.10.22.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 10:22:59 -0800 (PST)
-Message-ID: <836688db-32b5-4dcb-a071-8b4949434cb5@redhat.com>
-Date: Wed, 19 Nov 2025 13:22:58 -0500
+	s=arc-20240116; t=1763576672; c=relaxed/simple;
+	bh=/+/BtcFT/YcCq4fkuNftQ7uqBuyrzC/gmC5W0l0EdBU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D1QknoIY6c23fADAoCdEN405C9Q4f9ImLATYpumsJ3rsUUkNxKV5WsM2kkDc2mXMwBHacAERIaeGGI7I5zjxUJKqJoFkTL1XiwBPPM099illi5xLji9RU8Uj5qE0f9UM2huHaNs+ofuoQY+aOY4IXWVvfyTv2VguuEDeaxS6PdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0hVnMhp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78870C4CEF5;
+	Wed, 19 Nov 2025 18:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763576671;
+	bh=/+/BtcFT/YcCq4fkuNftQ7uqBuyrzC/gmC5W0l0EdBU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=o0hVnMhp1mnwmGU7hDDfUVWgt2GWoV/fJ9AeIdxBEJxf0EcR/5rBN6l6KveM8a/Z0
+	 y9jVo6sAPcJtcygYNXH/ms3K7jcjC6UWS7bajiRnD8li9G4Wi/BB8SbEjmZM2JJQNt
+	 qL76lg8m/KjGW0AtfYIHwvFkWrnhatD4qYvwynhzG24H1ImJs5KQyS3pPm9OMdK0n7
+	 S8ja0r9q2oRa9k410bQFyjivwR9zzaLvsuYKhyFQ48/H5Vp5sJ1b+VAxDEqaq8gdXb
+	 bKVO4Ja/YiX58dNp8e4uKaylfEK4EgoDG2JmB17MELF5s5F1zmooHe7psKDz5ysLYz
+	 ksy58tj3nhHcw==
+Message-ID: <08ce85ac96d63f4ac9dd94bf444095359ffe4dbd.camel@kernel.org>
+Subject: Re: [PATCH] nfs: Implement delayed data server destruction with
+ hold cache
+From: Trond Myklebust <trondmy@kernel.org>
+To: gaurav gangalwar <gaurav.gangalwar@gmail.com>
+Cc: anna@kernel.org, tom@talpey.com, chuck.lever@oracle.com, 
+	linux-nfs@vger.kernel.org
+Date: Wed, 19 Nov 2025 13:24:29 -0500
+In-Reply-To: <CAJiE4O=62Yxeo=24p9k3H_dC6Z7LuVwLFo8ca98yJTvsSTMfhQ@mail.gmail.com>
+References: <20251118105752.52098-1-gaurav.gangalwar@gmail.com>
+	 <fe6b3cb2fde809977394c5f605b844de043189ed.camel@kernel.org>
+	 <1fd78dbccac873a277e71e55409acc5d1d3e6886.camel@kernel.org>
+	 <CAJiE4O=62Yxeo=24p9k3H_dC6Z7LuVwLFo8ca98yJTvsSTMfhQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] locktest: use correct build flags
-To: Ross Burton <ross.burton@arm.com>, linux-nfs@vger.kernel.org
-References: <20251117143241.1501312-1-ross.burton@arm.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20251117143241.1501312-1-ross.burton@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+On Wed, 2025-11-19 at 22:04 +0530, gaurav gangalwar wrote:
+> Thanks Trond for review comments, reply inline.
+>=20
+> On Tue, Nov 18, 2025 at 9:46=E2=80=AFPM Trond Myklebust <trondmy@kernel.o=
+rg>
+> wrote:
+> >=20
+> > On Tue, 2025-11-18 at 09:43 -0500, Trond Myklebust wrote:
+> > > On Tue, 2025-11-18 at 05:57 -0500, Gaurav Gangalwar wrote:
+> > > > Introduce a hold cache mechanism for NFS pNFS data servers to
+> > > > avoid
+> > > > unnecessary connection churn when data servers are temporarily
+> > > > idle.
+> > > >=20
+> > > > Key changes:
+> > > >=20
+> > > > 1. Hold Cache Implementation:
+> > > > =C2=A0=C2=A0 - Add nfs4_data_server_hold_cache to namespace structu=
+re
+> > > > =C2=A0=C2=A0 - Move data servers to hold cache when refcount reache=
+s zero
+> > > > =C2=A0=C2=A0 - Always update ds_last_access timestamp on every refe=
+rence
+> > > >=20
+> > > > 2. Configurable Module Parameters:
+> > > > =C2=A0=C2=A0 - nfs4_pnfs_ds_grace_period: Grace period before destr=
+oying
+> > > > idle
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 data servers (default: 300 seconds)
+> > > > =C2=A0=C2=A0 - nfs4_pnfs_ds_cleanup_interval: Interval for periodic
+> > > > cleanup
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 work (default: 300 seconds)
+> > > >=20
+> > > > 3. Periodic Cleanup Work:
+> > > > =C2=A0=C2=A0 - Schedule delayed work on first DS usage (lazy
+> > > > initialization)
+> > > > =C2=A0=C2=A0 - Check hold cache and destroy data servers that excee=
+d
+> > > > grace
+> > > > period
+> > > > =C2=A0=C2=A0 - Reschedule work automatically for continuous monitor=
+ing
+> > > >=20
+> > > > 4. Callback Mechanism:
+> > > > =C2=A0=C2=A0 - Use function pointer callback to avoid circular modu=
+le
+> > > > dependencies
+> > > > =C2=A0=C2=A0 - nfsv4.ko registers cleanup callback during initializ=
+ation
+> > > > =C2=A0=C2=A0 - nfs.ko calls callback during namespace cleanup (if
+> > > > registered)
+> > > >=20
+> > > > 5. Timestamp Tracking:
+> > > > =C2=A0=C2=A0 - Add ds_last_access field to nfs4_pnfs_ds structure
+> > > > =C2=A0=C2=A0 - Update timestamp on DS allocation, lookup, and refer=
+ence
+> > > >=20
+> > > > Benefits:
+> > > > - Reduces connection setup/teardown overhead for intermittently
+> > > > used
+> > > > DSs
+> > > > - Allows DS reuse if accessed again within grace period
+> > > > - Configurable behavior via module parameters
+> > > >=20
+> > >=20
+> > > Please read RFC8881 Section 12.2.10
+> > > (https://datatracker.ietf.org/doc/html/rfc8881#device_ids)
+> > >=20
+> > > Specifically, the following paragraph, which disallows what you
+> > > are
+> > > proposing:
+> > >=20
+> > > Device ID to device address mappings are not leased, and can be
+> > > changed
+> > > at any time. (Note that while device ID to device address
+> > > mappings
+> > > are
+> > > likely to change after the metadata server restarts, the server
+> > > is
+> > > not
+> > > required to change the mappings.) A server has two choices for
+> > > changing
+> > > mappings. It can recall all layouts referring to the device ID or
+> > > it
+> > > can use a notification mechanism.
+> > >=20
+> nfs4_data_server_cache is per network namespace and cache ds_addrs ->
+> nfs_client, so it should be independent of device id.
 
+OK, but that dissociates the address cache from the deviceid cache, and
+means that when we finally get round to implementing deviceid
+notifications, then we'll have to manage 2 levels of caching. That's
+not desirable either.
 
-On 11/17/25 9:32 AM, Ross Burton wrote:
-> This makefile uses CFLAGS_FOR_BUILD etc but since 2020[1] hasn't used
-> CC_FOR_BUILD as CC.
-> 
-> This means in cross-compile environments this uninstalled binary is
-> built for the host machine using build machine flags, which can result
-> in incorrect paths being passed.
-> 
-> As this binary hasn't been built with CC_FOR_BUILD for five years, we
-> can assume that this isn't actually used and just remove the _FOR_BUILD
-> flags entirely.
-> 
-> Original patch by Khem Raj <raj.khem@gmail.com>.
-> 
-> [1] nfs-utils 1fee8caa ("locktest: Makefile.am: remove host compiler costraint")
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-Committed... (tag: nfs-utils-2-8-5-rc1)
+If you really need this extra caching of connections, then is there any
+reason why you can't just implement it with deviceid notifications?
 
-steved.> ---
->   tools/locktest/Makefile.am | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
-> index e8914655..2fd36971 100644
-> --- a/tools/locktest/Makefile.am
-> +++ b/tools/locktest/Makefile.am
-> @@ -2,8 +2,5 @@
->   
->   noinst_PROGRAMS = testlk
->   testlk_SOURCES = testlk.c
-> -testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
-> -testlk_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
-> -testlk_LDFLAGS=$(LDFLAGS_FOR_BUILD)
->   
->   MAINTAINERCLEANFILES = Makefile.in
+> I am trying to understand how a change in Device ID to device address
+> mapping can make difference to nfs4_data_server_cache,
+> since this cache lookup is done using ds address. As long as the
+> address and connections are valid it should be fine.
+> One scenario I can think of for address is valid but connection is
+> not
+> could be an ip address move, but in that case connection should reset
+> and nfs client should reconnect.
 
+Are you asking under what circumstances a notification might want to be
+sent?
+The following come to mind: rebalancing client load across multiple IP
+addresses, managing RDMA vs plain TCP connections, network
+failover/failback to a different IP and/or subnet, or just letting the
+client know about temporary outages of some addresses. In some cases,
+it could even just be that the data server is being decommissioned, and
+so the deviceids are being deleted permanently.
+
+The point is that notifications allow you to do caching of connections
+indefinitely if you want to.
+
+One thing to note though, is that since hyperscalers have been known to
+set up environments where the number of data servers reaches the 1000s,
+you will at the very least want to limit the maximum size of the cache.
+
+> >=20
+> > Note that you could circumvent the above restriction by adding a
+> > revalidating step.
+> > i.e. in order to figure out if the cached addresses and connections
+> > are
+> > still valid and preferred, call GETDEVICEINFO after receiving the
+> > first
+> > LAYOUTGET to re-reference the cached device id.
+> Didn't get this, GETDEVICEINFO should be already happening after
+> LAYOUTGET, so if there is change in device info it will get it.
+> >=20
+> > However given that we usually keep layouts around until the
+> > delegation
+> > is returned (assuming the server handed us one), we should be
+> > caching
+> > these connections for a minute or so already.
+>=20
+> We have enabled only read delegations, so this is unlikely to help.
+
+Sure, but that's something you can fix on the server. The client
+support is already fully implemented.
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
