@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-16574-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16575-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3682CC70BE3
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BEA58C70BF8
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:14:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E29AD4E0662
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:12:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 24CE54E05D0
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4B7364E8A;
-	Wed, 19 Nov 2025 19:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24A2734F485;
+	Wed, 19 Nov 2025 19:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtg7bTBf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGNuLY1s"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B52243376
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DFA341048
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763579559; cv=none; b=ZYZ3clv7l8pevC3hUxplwAAbtjvKUeWlN/Np+jF1xRml5L0k7uMSfx6CuB4d3wa66BiF/2E05PxeX+oNF/EvmPM+hSBLMJij33UpKXWhLSOKwzB0bJ6tGUuHNONwPoH4dZ9lLsJcrIcvptZG9yDcT4IaGNhYEU1LldOut3p/ops=
+	t=1763579629; cv=none; b=AEa8HKyH6Ot1RqnxtiqlrDDJhLvUW1JuyUcZZ0ebTj2KpwoEHOc8DIezx/eDaZiaVkVjqniGR9preWPIy9WLDZhw/bN76BW6uOtESLZUjm6mTBVtbDjY/MajDuwdB9I+2bih62K9dSB0NQLeM35dobLWeqagXf+G7jfgwuhdwu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763579559; c=relaxed/simple;
-	bh=8r8eSl+D3lCupSYI/L/+CbJgnPtJKvLXjrghJMDR9wU=;
+	s=arc-20240116; t=1763579629; c=relaxed/simple;
+	bh=Ela2kky5G0aziR8wo9akwX8BfKR3GFY0MHy/oS722NQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gsGLASrOpjWmITewwnjuwIWFghjxjgE2BeoR5XrobeZzgKuX7IfcreSXm2e6gJgOvypncJr9K5hqQ2b3ixV86Y0GX9a8rpsaMKkzksK+AhlfysLko5fO1cgieVkIjzsQmdNWcU1NWHHushl2exkndUZJGUjF1XoCP9t3OePgrVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtg7bTBf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5D1C4CEF5;
-	Wed, 19 Nov 2025 19:12:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=e+Q1cDJatRjgPVenaRNGMHPWAEZRuOxxZX7c06KVxQegJVkOY2nNCzehMSo3kEcgzeQK4CM8h3Pxm6IynX96RlM8u3VXNbg6VBoYerlkP77LhVtTN/24VBHR4x0BdmsshRavbuXdSpKz92/oDm/XuOp4ON2isY8MVm/bJBo73xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGNuLY1s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45A8C4CEF5;
+	Wed, 19 Nov 2025 19:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763579558;
-	bh=8r8eSl+D3lCupSYI/L/+CbJgnPtJKvLXjrghJMDR9wU=;
+	s=k20201202; t=1763579628;
+	bh=Ela2kky5G0aziR8wo9akwX8BfKR3GFY0MHy/oS722NQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Vtg7bTBfstgsvdRc88LgzZ+FJTHidh0GG018FhLfgW6YzUgHZmTGxx2b1INXO8CrW
-	 wxJMgnzgsE9TeHBgGlq4ksFS7F8QttyIsXi8PgShP70qxnciwwfz6FpNSoqqgVcOcw
-	 +VY8PW6RFSFe3HgjzadgkSBZgXmcZ5roL1bkEVwj4+Yq+nm86aXmPiM5arRYPQwxpz
-	 WMrmzMpDEkTsBon4VHCtRRq0Ydsw+VmE49VfsbHGb6R2e//X1JZZfOfTeJ0tp+f3kM
-	 /dyhohkeO8mXemC6nmX00fIVfXbBD/Mbp7cjXMpcAhu+Wh6Io2zm7LdfsTgEmeZvOK
-	 k7gr4PNrJtfZw==
-Message-ID: <5268ef547aff9fe27a75d7f1c9d1c574b60dd248.camel@kernel.org>
-Subject: Re: [PATCH v5 01/11] nfsd: rename ALLOWED_WITHOUT_FH to
- ALLOWED_WITHOUT_LOCAL_FH and revise use
+	b=mGNuLY1sq81yCJgLno952cKOnUVzNpYpOhG2msk7tebkk+1H8YWtEkfRUM73L0va4
+	 BMA+0Ri52qETkhJl7Qh8a/4THh5RJPKJGZxK0r4DVcit3maOsDVDN7H/KMlLQGqTHh
+	 8IzIR3lMhxBVMqVSaHwuYJGMq6k72dYsvQL8EGhw38g1LdGV9LTQ0nQlFN0fYoGBQR
+	 48lzuDwPaPB8f4Ybf8JcOyy+RI4hmEKpwNaEGaL1wpSSt5byXSBpxKWwPv+yRUTIIe
+	 2gzEq7S/xYMqZ38XEfj6A4A5PXT8LSytJVGrj9qbuG9DQGg5aBdfhq6ZISVg3vwrfl
+	 UiTuizXdPE4Qg==
+Message-ID: <80bf413d1df31d07ad56492bddc21d6acb943c92.camel@kernel.org>
+Subject: Re: [PATCH v5 02/11] nfsd: discard NFSD4_FH_FOREIGN
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Wed, 19 Nov 2025 14:12:37 -0500
-In-Reply-To: <20251119033204.360415-2-neilb@ownmail.net>
+Date: Wed, 19 Nov 2025 14:13:46 -0500
+In-Reply-To: <20251119033204.360415-3-neilb@ownmail.net>
 References: <20251119033204.360415-1-neilb@ownmail.net>
-	 <20251119033204.360415-2-neilb@ownmail.net>
+	 <20251119033204.360415-3-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,54 +138,73 @@ MIME-Version: 1.0
 On Wed, 2025-11-19 at 14:28 +1100, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> nfsdv4 ops which do not have ALLOWED_WITHOUT_FH can assume that a PUTFH
-> has been called and may assume that current_fh->fh_dentry is non-NULL.
-> nfsd4_setattr(), for example, assumes fh_dentry !=3D NULL.
+> NFSD4_FH_FOREIGN is not needed as the same information is elsewhere.
 >=20
-> However the possibility of foreign filehandles (needed for v4.2 COPY)
-> means that there maybe a filehandle present while fh_dentry is NULL.
+> If fh_handle.fh_len is 0 then there is no filehandle
+> else if fh_dentry is NULL then the filehandle is foreign
+> else the filehandle is local.
 >=20
-> Sending a COMPOUND containing:
->    SEQUENCE
->    PUTFH - foreign filehandle
->    SETATTR - new mode
->    SAVEFH
->    COPY - with non-empty server list
+> So we can discard NFSD4_FH_FOREIGN and the related struct field,
+> and code.
 >=20
-> to an NFS server with inter-server copy enabled will cause a NULL
-> pointer dereference when nfsd4_setattr() calls fh_want_write().
->=20
-> Most NFSv4 ops actually want a "local" filehandle, not just any
-> filehandle.  So this patch renames ALLOWED_WITHOUT_FH to
-> ALLOWED_WITHOUT_LOCAL_FH and sets it on those which don't require a local
-> filehandle.  That is all that don't require any filehandle together with
-> SAVEFH, which is the only OP which needs to handle a foreign current_fh.
-> (COPY must handle a foreign save_fh, but all ops which access save_fh
-> already do any required validity tests themselves).
->=20
-> nfsd4_savefh() is changed to validate the filehandle itself as the
-> caller no longer validates it.
->=20
-> nfsd4_proc_compound no longer allows ops without
-> ALLOWED_WITHOUT_LOCAL_FH to be called with a foreign fh - current_fh
-> must be local and ->fh_dentry must be non-NULL.  This protects
-> nfsd4_setattr() and any others that might use ->fh_dentry without
-> checking.
->=20
-> The
->        current_fh->fh_export &&
-> test is removed from an "else if" because that condition is now only
-> tested when current_fh->fh_dentry is not NULL, and in that case
-> current_fh->fh_export is also guaranteed to not be NULL.
->=20
-> Fixes: b9e8638e3d9e ("NFSD: allow inter server COPY to have a STALE sourc=
-e server fh")
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4proc.c | 58 ++++++++++++++++++++++++++--------------------
->  fs/nfsd/xdr4.h     |  2 +-
->  2 files changed, 34 insertions(+), 26 deletions(-)
+>  fs/nfsd/nfs4proc.c | 7 ++-----
+>  fs/nfsd/nfsfh.h    | 4 ----
+>  2 files changed, 2 insertions(+), 9 deletions(-)
 >=20
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index e5871e861dce..3160e899a5da 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -693,10 +693,8 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	       putfh->pf_fhlen);
+>  	ret =3D fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
+>  #ifdef CONFIG_NFSD_V4_2_INTER_SSC
+> -	if (ret =3D=3D nfserr_stale && putfh->no_verify) {
+> -		SET_FH_FLAG(&cstate->current_fh, NFSD4_FH_FOREIGN);
+> +	if (ret =3D=3D nfserr_stale && putfh->no_verify)
+>  		ret =3D 0;
+> -	}
+>  #endif
+>  	return ret;
+>  }
+> @@ -734,8 +732,7 @@ nfsd4_savefh(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	 * is not required, but fh_handle *is*.  Thus a foreign fh
+>  	 * can be saved as needed for inter-server COPY.
+>  	 */
+> -	if (!current_fh->fh_dentry &&
+> -	    !HAS_FH_FLAG(current_fh, NFSD4_FH_FOREIGN))
+> +	if (cstate->current_fh.fh_handle.fh_size =3D=3D 0)
+>  		return nfserr_nofilehandle;
+> =20
+>  	fh_dup2(&cstate->save_fh, &cstate->current_fh);
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 5ef7191f8ad8..43fcc1dcf69a 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -93,7 +93,6 @@ typedef struct svc_fh {
+>  						 */
+>  	bool			fh_use_wgather;	/* NFSv2 wgather option */
+>  	bool			fh_64bit_cookies;/* readdir cookie size */
+> -	int			fh_flags;	/* FH flags */
+>  	bool			fh_post_saved;	/* post-op attrs saved */
+>  	bool			fh_pre_saved;	/* pre-op attrs saved */
+> =20
+> @@ -111,9 +110,6 @@ typedef struct svc_fh {
+>  	struct kstat		fh_post_attr;	/* full attrs after operation */
+>  	u64			fh_post_change; /* nfsv4 change; see above */
+>  } svc_fh;
+> -#define NFSD4_FH_FOREIGN (1<<0)
+> -#define SET_FH_FLAG(c, f) ((c)->fh_flags |=3D (f))
+> -#define HAS_FH_FLAG(c, f) ((c)->fh_flags & (f))
+> =20
+>  enum nfsd_fsid {
+>  	FSID_DEV =3D 0,
+
+Nice.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
