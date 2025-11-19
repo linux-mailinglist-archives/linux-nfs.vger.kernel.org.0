@@ -1,100 +1,101 @@
-Return-Path: <linux-nfs+bounces-16569-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16570-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45133C70A3B
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:28:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABA49C70A3E
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:28:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 59AC94E2F4A
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 18:22:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 90C254E2869
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 18:22:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA40D346E6B;
-	Wed, 19 Nov 2025 18:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A7630F552;
+	Wed, 19 Nov 2025 18:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IqesVCSN";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="D25D28jr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JorJjGbV";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="VWb4oB5/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC96F2F49FD
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 18:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AED30BB94
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 18:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763576552; cv=none; b=LnEuUSS3OczfipAUqnYi3+utbR2/7HXi1SmQ4GkREAUoR3coPlj7aFy1qbLoUBb4lQvRW+8L4GSjhV6qXelIXtyxaEC7qH8Wljhs1yF0YAy++QhLbTG+KFeTH7DfkBt3k2nDORkRybnUs6MiFZtt8Pk9R524jax2ocg5M70lWt0=
+	t=1763576564; cv=none; b=BsK0ZBJIMBD5g3bX6NxygIePYgTGeMVIl7oGT0SBODXEbf5qYX5xTvJMQGQ0sv01wm98OlSEJKBR748Pn7NCakuygHlZGqvSvnR6tHqo4jaQocGJ8WXj/b5j3+oz8wCWyUAUNqR5XHHRpjPnj9UmeCB3UDhoz65eecpTmvwvDhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763576552; c=relaxed/simple;
-	bh=Ikw1vDKn0yD5/0kvF8xD28xFpH2fvirwxuPQijfa+DE=;
+	s=arc-20240116; t=1763576564; c=relaxed/simple;
+	bh=B+5xjwDoONNfqsE7KEgR1rLzdqgEj6WKDO6iGU/BhWo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eGJt4xJEF/o31+z/dDaejW/JiIuafQ/w+zx+pJPNlJ7efgMoBu7VvIGmD2PMjcOOWW6EOp1P7FifG8xOGCUW456anjv85DEA8hu/m5ZVIA2EoYq8w/jPBEPQ6jejTTidMtu2ve/9YRLb7a2kK7jOeya+nEBi6WTT+ecFr52uvYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IqesVCSN; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=D25D28jr; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=s98SFb/eSFi4KOTBNZ+sikN7Zmq0DVBThplWI5FQtY9mNOGNhff7XDghD6uA10yCGvVf1aDA7WkriHz+plBWPNVvJQgh0ue5zNp3KsofNbviIeThM3k9Y0y9ciZGKnTwmuKqoRk92Pd1rctNzORMGldPNKo6CL0FgJ1QTqRVo48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JorJjGbV; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=VWb4oB5/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763576541;
+	s=mimecast20190719; t=1763576555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MOI5ClHdz0tcg1kFoaIxC269EChhhXLbWFbrf4AZK3k=;
-	b=IqesVCSNq74fgpBoAUPDK8LVzDyA5kw31IXi3QbTSsFV63NkEkloXl9amlXqIU1MBc75k/
-	T51iH7Txpy6j4IGB3HTI90gGnVXWp9cxjCqQlv42ANlQ5UsUbWPtzI1QhWNdMBzehy+GIq
-	pWiZ46UbR8v2hU5BiSNdPV39GJ/3vvQ=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=FO4KjGAbGPuvhBe9yeD5XsNnfu5YNrr6lV0HpFXJ+/A=;
+	b=JorJjGbVskBBsr6xfm1tluPfQSSO/t5RMljZFC0vvsj07/zIOaKb0B6vBlFrExm9Wkvo4V
+	qFOak/FbEuNQVcbCz/FhuYV8Z8MIKk6t/H/xyfqELhurxLjXxvxmFs7X84UKXjIz1bsRP1
+	qsLL9RbZTgSI+7Tlh669PIhW1HEyKW8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-187-DDjuIf78MXa3JbnUWbNJaQ-1; Wed, 19 Nov 2025 13:22:20 -0500
-X-MC-Unique: DDjuIf78MXa3JbnUWbNJaQ-1
-X-Mimecast-MFC-AGG-ID: DDjuIf78MXa3JbnUWbNJaQ_1763576539
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8b2e19c8558so6559485a.2
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 10:22:19 -0800 (PST)
+ us-mta-678-Tj6xgTK4OCGWRLatavkKxA-1; Wed, 19 Nov 2025 13:22:33 -0500
+X-MC-Unique: Tj6xgTK4OCGWRLatavkKxA-1
+X-Mimecast-MFC-AGG-ID: Tj6xgTK4OCGWRLatavkKxA_1763576553
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ed7591799eso1248551cf.0
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 10:22:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763576538; x=1764181338; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1763576553; x=1764181353; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MOI5ClHdz0tcg1kFoaIxC269EChhhXLbWFbrf4AZK3k=;
-        b=D25D28jr9FJfXu+ofh5mRaOxrzwfI6a7wwH/vAIEzsr4QWnuPt5N9pGQfLDIUvI/ql
-         zrmUIxQDHuImRaRl/+muZ63a/9Ta4gOI9BXSKeFyC5btuUqel83dDyV0fzEJzNodQZFj
-         egaYzmvozmZfof9oxSe2n2OmV9IfsFlMRQbOBuBLQTOfHDfS8tAMbGqGEa4uEJL0ACxd
-         YGFYPnoRyyYh89zE6WeuXp9Wt0P9CeaYpyfjx2GLzAlC6cF0sjr6EiMgLeqS6n4tLNr2
-         I87VI3UvnyPt9ipUrB7txg61uaprcKipees+eRzcHjKItMUFJM+rGB3U6Wx8ENDlxYbj
-         6mqQ==
+        bh=FO4KjGAbGPuvhBe9yeD5XsNnfu5YNrr6lV0HpFXJ+/A=;
+        b=VWb4oB5/iX8pCb+RnLHko82CC245FGWViUPz2Gckm+/nEhI+DNZ/0ULtqWL7frWnhn
+         IIG8byfUJHMbjUKq42WUM/B8LED+s80y0tlxAF8dfo9M9UkUnd8hmi49GSL3zJV9t7YE
+         PW9oq/2dk10QnN7m/Gs3mWW30panGWkGHDm1ktJeAcdZxwM3M2RiZ0gi8CiU8djvubZs
+         gYISWQV1Qep4k2TyAV1qnlBP2V0fZc+QZhOQR6MwSvHVtTK7MDQpCdO2Cuc7Iudhi+D3
+         1DETvov04hTsn4fBiFiQCxMbzzyXTosybdv2oq5B26fDQKwoQdSxBCaSUEbYscxn/+gs
+         56yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763576538; x=1764181338;
+        d=1e100.net; s=20230601; t=1763576553; x=1764181353;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MOI5ClHdz0tcg1kFoaIxC269EChhhXLbWFbrf4AZK3k=;
-        b=bj7eHsPm5rYvmBWBIZHIswEsqua20OElTvGmoNErAk6GALdAkWLRZGZq2eYPGJkeaO
-         yh4tpC902hflksK2AhxPvftUjRDfW1wcae5hOC+hCrigsjARmO+wKAktA0keR8AL3Dr6
-         IwTMqWIKOYqcuf1VYEttiPzFVYT8iPQbDkKklp0E/h48NmAcijmuWj2roaRShzlOE0+B
-         iEXTU/r9z1Kc4GKt8CGzMAhevjnRUpluoNtf6K33Lg1RKFXJTswypSb+zGXgIelQFclg
-         7LkgogKtyznxEd0SBdu3/IYUS14SmKoyhn7AInK6BfOFHhtLApZQc1DSJQJoiLxS2un0
-         CSzg==
-X-Gm-Message-State: AOJu0YxFfIEF4/XsK8C51VM2ZpPgHV/z1JENcMskEBzv+Q2Kn6axX4iF
-	kUoG9XcUI2WELlXU4akEJ+XYTB+mVXA+6ia8IXtcggyJxQ1DuUiiZBiXcRh90WDKKfzPnA+KhKy
-	ENJLjdsy1nRChJatyDgy7w1/6B2+Tc9rT/7cmjcbnpegzQaR0N3pD1L/eYnEIaYNzQL520w==
-X-Gm-Gg: ASbGncs81tpcQZSJjrWn/cL6M5Qq3zM3Ly+bDeowxjeRTMiXsX5rcCAZr3cDO1B6eVe
-	HBUQmOfuU1JwhWCNiVoGpw0w/7gpXbJnQSPvCFOzdUxFlB2wZKeRd3afIz/g5yAxWh4P1B8OIG5
-	iQ4nPYsEQxIGuU8GavfoSEfLIQG3C9rODovk/YpWVLSl6kZ24YGnu4qMYIgGVWXlsWvv2KuArjx
-	gQ6XsKuFkfMmb3ODd72gv4x+YLZfytFIFSw2y3pTSZoahEg9r7WawgF1Fnjozom70GbM9hEzMhH
-	d4DDDVZDSXPTOKy6nOLBjm6LGJQFrW1pj7xNRjMUmHxbgo2xzZIwHSswcBiSMCGWlTGMG3/TWIb
-	oO6M9ukeyCA==
-X-Received: by 2002:a05:620a:711b:b0:8b2:62f9:9fd8 with SMTP id af79cd13be357-8b327499f45mr44227085a.61.1763576538386;
-        Wed, 19 Nov 2025 10:22:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF6Y0NXf6c7WeJmALN3e6amRiQV8WQUEQdCKFRA1gCVhQG685+8wbQRpJbgjFoHGFxDep54Tg==
-X-Received: by 2002:a05:620a:711b:b0:8b2:62f9:9fd8 with SMTP id af79cd13be357-8b327499f45mr44223685a.61.1763576537935;
-        Wed, 19 Nov 2025 10:22:17 -0800 (PST)
+        bh=FO4KjGAbGPuvhBe9yeD5XsNnfu5YNrr6lV0HpFXJ+/A=;
+        b=wund+AiNbhxnDFWTPMTeOexr/QyyhNGlCs+MyqPQ8WPdmmoB7N9FjoV6e20nuZbxUB
+         wcWZrVlSwpHu6LFPmF1oqE2CsvVKJ3dh4fLvzMVVnhmJ8bN7WAufICSAfn3gl3X/JcYh
+         vDdL7CRL9AfS8dQS5hgIlHT6g9iuWqLsXROo/OuZJ2a7M/UEF5DwAwxzzbKInQByv54V
+         a1SNRElHfBVAlW2wgD5c6ccKlZ1+P0DrkUAji7AL5oD7HrPqOx8Uoe1sdwNOpp6EGOev
+         UmskDZcljJW0HibhakXnSDWtZn7GUVHxzhPiHVBsqtnv5Mhar/wgQ/4azeeF2P519jS3
+         xCCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWz6izizC8ey8NFLZjGOPXt8xHboumTsVFhtLSzbktol/zcat2LilPidVbmS33KAwa/4QzCCCUWH20=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk92pDflb3ebBXQaAIfM9UKw5JWB91RyX79bJQbTEFJkBVhLdR
+	TIPIulqh6W/BE8hp/9wrD0Skrk6itqYh3FvG+NLq1g1GlGewoUZO8QxtTME3EpR6FISVFAKlViy
+	xkaFqDOwqJUJM2u8uzz6xdSHvtS3ZFNo8YMBpUc7LM9MG3/SgOjI+22cJp9O2RQ==
+X-Gm-Gg: ASbGnctRgI/Vea69xkwQnsSqfZ1pAYg3j/oNy1E22X8VjeS0sRbmbVeGmY4+mvXX7nH
+	/ye+fQSCrRWQkvGBs5OOaQohAeajNsVeTjxxtZz1RVANGn1P2OEdCFlPWgRaX3gfGwaoeRSPmOG
+	rHK6uuIcsraKegDPyLT+CpRdP4DMfaEexpjM16XPR7Utddng4LYcrK7Lx/eai5epGbJ9y6wYYrl
+	+nHaNmfTIyegnWU6ZhuAz+mhvbouOG5H+5AYM+8TSMNjSOHdbH5QENxJvDo1EQYef/mEFH1ig+U
+	lOkFM2wIGIPPLeCKInUwnmtySTfsleaDGel3BVmDSfHV+5jma/XyXbJClKxUNHF4Pz310TmN91t
+	6xa299PD83A==
+X-Received: by 2002:ac8:5f82:0:b0:4ee:1c57:5ce4 with SMTP id d75a77b69052e-4ee496cea06mr2774571cf.66.1763576552872;
+        Wed, 19 Nov 2025 10:22:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHvt+1zeDh5Ofy7EK6Z/fTtrB9kwXRVzKc8aI9vjUgjAL/l6xdzzHqq11ZxJDhT1bUEFIDL5g==
+X-Received: by 2002:ac8:5f82:0:b0:4ee:1c57:5ce4 with SMTP id d75a77b69052e-4ee496cea06mr2774281cf.66.1763576552487;
+        Wed, 19 Nov 2025 10:22:32 -0800 (PST)
 Received: from [172.31.1.12] ([70.105.249.237])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2e519bb84sm901224385a.34.2025.11.19.10.22.16
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ee48e6c2c3sm1757061cf.28.2025.11.19.10.22.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Nov 2025 10:22:17 -0800 (PST)
-Message-ID: <e5e8219d-944c-4f64-af49-9a1fc539dde6@redhat.com>
-Date: Wed, 19 Nov 2025 13:22:15 -0500
+        Wed, 19 Nov 2025 10:22:31 -0800 (PST)
+Message-ID: <b846d03d-aa62-4671-8d44-4f3b14b53320@redhat.com>
+Date: Wed, 19 Nov 2025 13:22:30 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -102,62 +103,107 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] gssd: protect kerberos ticket cache access
-To: Olga Kornievskaia <okorniev@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-References: <20251027153812.80887-1-okorniev@redhat.com>
+Subject: Re: [PATCH] nfs-utils: Do not drop privileges if running as non-root
+ user
+To: peter@bluetoad.com.au, linux-nfs@vger.kernel.org
+Cc: Peter Schwenke <pschwenke@ddn.com>
+References: <20251104043454.751100-1-peter@bluetoad.com.au>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20251027153812.80887-1-okorniev@redhat.com>
+In-Reply-To: <20251104043454.751100-1-peter@bluetoad.com.au>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/27/25 11:38 AM, Olga Kornievskaia wrote:
-> gssd_get_single_krb5_cred() is a function that's will (for when needed)
-> send a TGT request to the KDC and then store it in a credential cache.
-> If multiple threads (eg., parallel mounts) are making an upcall at the
-> same time then getting creds and storing creds need to be serialized due
-> to do kerberos API not being concurrency safe.
+On 11/3/25 11:34 PM, peter@bluetoad.com.au wrote:
+> From: Peter Schwenke <peter@bluetoad.com.au>
 > 
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> If sm-notify is not running root and is running
+> as the owner of the state directory, it is not
+> necessary to drop privileges.
+> 
+> The patch checks if the current user is the owner of the state
+> directory.
+> 
+> In the case of a ha-callout, the ha-callout will, more than likely, be running
+> as rpcuser - or similar.  That means the sm-notify program can not be called
+> from the ha-callout.
+> 
+> nsm_drop_privileges() is also called by statd.  However, that will fail for
+> a number of reasons such as not being able to create the PID file etc.  So,
+> this patch should not cause any issues for statd.  statd will still need to be
+> started as root.
+> 
+> Without this patch capabalities such as cap_setpcap, cap_setgid,
+> cap_net_bind_service=ep need to be set.  Clearly, that is an ugly hack and
+> best avoided.
+> 
+> Signed-off-by: Peter Schwenke <pschwenke@ddn.com>
+> Signed-off-by: Peter Schwenke <peter@bluetoad.com.au>
 Committed... (tag: nfs-utils-2-8-5-rc1)
 
 steved.> ---
->   utils/gssd/krb5_util.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+>   support/nsm/file.c        | 11 +++++++++++
+>   utils/statd/sm-notify.man | 10 +++++++++-
+>   2 files changed, 20 insertions(+), 1 deletion(-)
 > 
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index 09625fb9..137cffda 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -456,12 +456,14 @@ gssd_get_single_krb5_cred(krb5_context context,
->   	krb5_get_init_creds_opt_set_tkt_life(opts, 5*60);
->   #endif
+> diff --git a/support/nsm/file.c b/support/nsm/file.c
+> index 5ec801c3..1e97b5b6 100644
+> --- a/support/nsm/file.c
+> +++ b/support/nsm/file.c
+> @@ -394,6 +394,7 @@ _Bool
+>   nsm_drop_privileges(const int pidfd)
+>   {
+>   	struct stat st;
+> +	uid_t uid;
 >   
-> +	pthread_mutex_lock(&ple_lock);
->   	if ((code = krb5_get_init_creds_opt_set_out_ccache(context, opts,
->   							   ccache))) {
->   		k5err = gssd_k5_err_msg(context, code);
->   		printerr(1, "WARNING: %s while initializing ccache for "
->   			 "principal '%s' using keytab '%s'\n", k5err,
->   			 pname ? pname : "<unparsable>", kt_name);
-> +		pthread_mutex_unlock(&ple_lock);
->   		goto out;
->   	}
->   	if ((code = krb5_get_init_creds_keytab(context, &my_creds, ple->princ,
-> @@ -470,10 +472,10 @@ gssd_get_single_krb5_cred(krb5_context context,
->   		printerr(1, "WARNING: %s while getting initial ticket for "
->   			 "principal '%s' using keytab '%s'\n", k5err,
->   			 pname ? pname : "<unparsable>", kt_name);
-> +		pthread_mutex_unlock(&ple_lock);
->   		goto out;
+>   	(void)umask(S_IRWXO);
+>   
+> @@ -408,6 +409,16 @@ nsm_drop_privileges(const int pidfd)
+>   		return false;
 >   	}
 >   
-> -	pthread_mutex_lock(&ple_lock);
->   	ple->endtime = my_creds.times.endtime;
->   	pthread_mutex_unlock(&ple_lock);
+> +	/*
+> +	 * Check if we are running as non-root user and we are the owner of
+> +	 * the monitor directory.  Then there is no reason to drop privileges
+> +	 * and change groups etc.
+> +	 */
+> +	uid = getuid();
+> +	if (uid != 0 && uid == st.st_uid) {
+> +		return true;
+> +	}
+> +
+>   	if (!prune_bounding_set())
+>   		return false;
 >   
+> diff --git a/utils/statd/sm-notify.man b/utils/statd/sm-notify.man
+> index addf5d3c..2e82c683 100644
+> --- a/utils/statd/sm-notify.man
+> +++ b/utils/statd/sm-notify.man
+> @@ -275,7 +275,7 @@ section is
+>   .SH SECURITY
+>   The
+>   .B sm-notify
+> -command must be started as root to acquire privileges needed
+> +command is, generally, started as root to acquire privileges needed
+>   to access the state information database.
+>   It drops root privileges
+>   as soon as it starts up to reduce the risk of a privilege escalation attack.
+> @@ -290,6 +290,14 @@ chooses, simply use
+>   .BR chown (1)
+>   to set the owner of
+>   the state directory.
+> +.PP
+> +The
+> +.B sm-notify
+> +command can also be started by the user ID that owns the state directory.
+> +That is useful for the situation when it is called from an rpc-stat
+> +ha-callout program that is already running as the
+> +non-privileged user.  The non-root user will not have the capabilities
+> +to drop the root privileges as described above.
+>   .SH ADDITIONAL NOTES
+>   Lock recovery after a reboot is critical to maintaining data integrity
+>   and preventing unnecessary application hangs.
 
 
