@@ -1,197 +1,136 @@
-Return-Path: <linux-nfs+bounces-16538-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16539-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4365C6EF0E
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 14:37:14 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC071C6F098
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 14:51:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 8C56C2E86E
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 13:37:13 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 76E673585C6
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 13:43:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFA3D32721A;
-	Wed, 19 Nov 2025 13:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370C635F8DD;
+	Wed, 19 Nov 2025 13:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQLWKXO8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSkXHuKu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A008355024
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 13:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0739835A151;
+	Wed, 19 Nov 2025 13:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763559389; cv=none; b=UQLP7jrs3FfUoPe4T+a+q37uTa660oVkaHX9/Asj/aNtg547U8PbF2RCkUlnsoPW8SCc6e2VES5QaEAIvufeH4QTPGY/vGj09EzmEALNURwKGjdvaSta0ytqkVHNlZSCbWSZYwJs01dQ4Oz5zDbyhJedFl8TMOz5QnVeCtTueAY=
+	t=1763559762; cv=none; b=SX15h+AAMfMlJHbwBor4XbV0HiBa0vO503yD0mh6rkA7qtWednUxdb4xKIExjKMb6JUwm0ubreLi7EIdzWstGELXxBOvj1YVy792Fm3ES4icEKxjSpOt+f/xSfcNkOiYH5i7TevOv3iFggIHD6o+kp9aSHIEyFqwFOIr70RuAWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763559389; c=relaxed/simple;
-	bh=pPXKHjO4NQ7VfCGBRA+prrjb6nqBroQ3WVmGWhxed80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WQwnQorzl2hu+IjDvT0Wdlo453RxiakDb5LgwJWKpPdH5iE+zS5stVjiv+6ffOmiLeQVSOGhknSitLjZwvwjKJ/n/rlZ0Si1aVRA7waNUD6q+mzASNHZBs9NOmwes6MxyjtG7ykbaCVHW3iIB9skmLEU6Q3M0+SBvGDY7qdfTSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NQLWKXO8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763559387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0PRa9z0pKCuLKGL658u7Ew2t9bLbt3/kinAXsN6/RNk=;
-	b=NQLWKXO83Qdip2BSkM5xy7RjLjTROBiYo+5KNtIVrxUba5INUA1uiMe/Ymu5d4VstzNZRb
-	iZc05XyDNieFurzB861mxnCGpDJloczNZUqDEwbjyHFe5HWzmr1pNTxsrYazZdT3B393zM
-	M3N93NxlDdp5+QvAJw0qmH8Wjmx8UOk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-110-SI8EuZZUPXmv0DY7NEWDyA-1; Wed,
- 19 Nov 2025 08:36:23 -0500
-X-MC-Unique: SI8EuZZUPXmv0DY7NEWDyA-1
-X-Mimecast-MFC-AGG-ID: SI8EuZZUPXmv0DY7NEWDyA_1763559381
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 271E519560AD;
-	Wed, 19 Nov 2025 13:36:21 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.81.26])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20DC018004A3;
-	Wed, 19 Nov 2025 13:36:20 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 55CD950BB30; Wed, 19 Nov 2025 08:36:18 -0500 (EST)
-Date: Wed, 19 Nov 2025 08:36:18 -0500
-From: Scott Mayhew <smayhew@redhat.com>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: "Tyler W. Ross" <TWR@tylerwross.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Anna Schumaker <anna@kernel.org>,
-	"1120598@bugs.debian.org" <1120598@bugs.debian.org>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Steve Dickson <steved@redhat.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Simon Josefsson <simon@josefsson.org>
-Subject: Re: ls input/output error ("NFS: readdir(/) returns -5") on krb5
- NFSv4 client using SHA2
-Message-ID: <aR3H0kYQrmmq0RMS@aion>
-References: <fVv3cF7Ulh3cKUP17C98gh_uOv9BcMlMpsIh1Nv5_0tdw-75PKiPJgIEP5o2jBVry7orwz7jeiGQenfCbuUxyj5JFstbx3RTFYr223qDmV0=@tylerwross.com>
- <a6d1435b-f507-49eb-b80c-4322dc7e1157@oracle.com>
- <Y79HV0VGpScPYqI_dDxeItkX2UZwSdReaUOpIeMeZXq2HLsHf5J_PTQqr7HrBYygICRsn-OB89QPrxPzjgv2smuzTThUPy_3fq_N1NprlUg=@tylerwross.com>
- <4a63ad3d-b53a-4eab-8ffb-dd206f52c20e@oracle.com>
- <902ff4995d8e75ad1cd2196bf7d8da42932fba35.camel@kernel.org>
- <aRunktdq8sJ7Eecj@aion>
- <db8b1ef4-afbb-4c23-b7f1-9ae688cef363@TylerWRoss.com>
- <aRyyWy6hO1ueKf5_@aion>
- <85cd9202-dc22-41b8-8a20-e82cd118215f@TylerWRoss.com>
- <aR1MiaZYVc4kR8Yf@eldamar.lan>
+	s=arc-20240116; t=1763559762; c=relaxed/simple;
+	bh=lIATXqczS2S/5ru6b8lNhYDwW0smj3pArVa7xKT4H+U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QMMYQxCKqaWgKfgRzI+EsNffwC7UdcebOOWOevq4p1M3+ieo6jTaNp7tBNr7seRZz9e73pSuPvEeguGEkL0QceH5Jt5AmJav1oBCWVACEPE8GD9yBI6ZIgdSAVBmhI9nIN8shAe2HvTasTyuripBZ5qXF7glZWMv+VDT/iNr1II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSkXHuKu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BEBC4AF17;
+	Wed, 19 Nov 2025 13:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763559761;
+	bh=lIATXqczS2S/5ru6b8lNhYDwW0smj3pArVa7xKT4H+U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=rSkXHuKuj5y81013DBOjwJj9reIpfHBnHrP1MPFQgsB+ukUxPoeua9jAP8cXKAnUv
+	 mZsiRGpgoKpSVED63CoFZKdcMhE/vriiNLWu6yLO7Mqr5zPj/wSXN/M/Z/oBE30TH5
+	 2GHO0csonDGKJfwF3bV1l472rBWvK5upzr2PCxvKedzRDm/i3S+hLQPiEQIbRofGQL
+	 g+rajwrkDLrIfZT5hm5stJqe37xjOSnPxE6yLQyykwWLbnblryv03ZF2DiK+D06ZNg
+	 oKrONsQHGD65gMU0g2YY1872UT5Fm2O5FS6IQk6ZE8DaUqNS/DiJbAt9SIQhrHWB3a
+	 RlT79nl+YV7AA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v8 0/3] vfs: expose delegation support to userland
+Date: Wed, 19 Nov 2025 08:42:17 -0500
+Message-Id: <20251119-dir-deleg-ro-v8-0-81b6cf5485c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aR1MiaZYVc4kR8Yf@eldamar.lan>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XMQQ6CMBCF4auQWTuGKWrBlfcwLKqdwkRCzdQQD
+ endrexd/i953wqJVTjBuVpBeZEkcS7R7iq4j24eGMWXBlObIxFZ9KLoeeIBNaLhkzlYR652HZT
+ LUznIe+OufelR0ivqZ9MX+1v/QItFwtDegqfGNbajy4N15mkfdYA+5/wFK8XaZqkAAAA=
+X-Change-ID: 20251117-dir-deleg-ro-2e6247a1a0a9
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Aring <alex.aring@gmail.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1965; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=lIATXqczS2S/5ru6b8lNhYDwW0smj3pArVa7xKT4H+U=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpHclJEdWcxA9JE6/PF9sWo1m1teb249LmuWAKa
+ kwYM8RH7geJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaR3JSQAKCRAADmhBGVaC
+ FfusD/wM/Tnn5DpA3SnA/VAo1+TyqvAFbgTBnz9R96t6mYGexrvCyUD+5NcUaUfKaxXQkHo6bCn
+ lEl8vK4/h+l+AEWc/xFAjUn73xIhScSU4tDkr6uSmoMlGUez7dbP/sh3QT6sOKgbVb25OllVBPp
+ 6hBq02N/7J0L26PzeTn2Sd9qXfdHFFFD/692wVq7wfJ8FHJ17m6vjmRaDETbHng+u3pk+eOsD4i
+ 6YDQXNeAma6ktswawqWv3cXoJJa78OWLzcBq5/SWgvI7DAnoC6KOVXw3giQ59TTJ3hzTchFzb9B
+ d17G1Q/5Rk+9JX42m9lDIMOw/iy/H462VbIAeJRBXDs8K11GDatpF2iYFsE4QR4F1ZCMp8k2QAW
+ tYE1JXiYkDlFhXvLI5HjS+UFJHEucHzqDnwoTGCFACCy81DzVwCoYY6pNdQn8Sjk3Z/M8dkbhrD
+ joMEXuy2bvpGH64EwFB4l52qHEjuS46IMsUtw/nFHeDasakRYb9ed3xpasNSukCdTO/DwMsV/uS
+ BUzNgPrraVWssrRNU/9PJ2jQfNzSAaitHAGkxikHYhGS0CzBWk6+/SYB4TbXDMeU1eaz1G5izwO
+ Zyz7+LXpoFhmkxqldIrUJZz6at6wNmG5f1+Y7yypui21PY1XdTGRkY3ZsXaLyj0V98UDNmal3cQ
+ ARYEL4/MVs9KVBg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, 19 Nov 2025, Salvatore Bonaccorso wrote:
+Stephen hit a couple of problems while merging the last patch in the
+directory delegation series, and I found some problems while testing
+userland delegations (more fstests forthcoming).
 
-> Hi,
-> 
-> On Tue, Nov 18, 2025 at 11:43:29PM +0000, Tyler W. Ross wrote:
-> > On 11/18/25 10:52 AM, Scott Mayhew wrote:
-> > > Oh!  I see the problem.  If the automatically acquired service ticket
-> > > for a normal user is using aes256-cts-hmac-sha1-96, then I'm assuming
-> > > the machine credential is also using aes256-cts-hmac-sha1-96.
-> > > Run 'klist -ce /tmp/krb5ccmachine_IPA.TWRLAB.NET' to check.  You can't
-> > > use 'kvno -e' to choose a different encryption type.  Why are you doing
-> > > that?
-> > 
-> > Aha! Thank you!
-> 
-> Thanks to all helping to debug this issue when reported downstream in
-> Debian, your time invested is very much appreciated!
+Christian, could you drop the last patch in
+vfs-6.19.directory.delegations, and pick up these patches? They should
+address all of the problems Stephen reported and make userland
+delegation support on files work properly. Let me know if you'd rather I
+resend a whole new directory delegation series instead.
 
-While I still assert that if you want to use the stronger encryption
-types with NFS, then you should prioritize those encryption types higher
-in your kerberos configuration... after discussing this yesterday with
-Olga I think the above scenario should probably work too.
+To: Alexander Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+To: Chuck Lever <chuck.lever@oracle.com>
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-I just sent a patch that makes that happen, but I forgot to add
-"--in-reply-to" my "git send-email" command, so here's the link:
+Changes in v8:
+- split out lease_dispose_list() helper
+- add new ->lm_open_conflict() lease_manager_operation
+- Link to v7: https://lore.kernel.org/r/20251117-dir-deleg-ro-v7-1-f8bfd13a3791@kernel.org
 
-https://lore.kernel.org/linux-nfs/20251119133231.3660975-1-smayhew@redhat.com/T/#u
+Changes in v7:
+- have fcntl.h include proper headers for stdint.h integers
+- move comment above fcntl_getlease() to the proper place
+- add a kerneldoc comment over fcntl_getdeleg()
 
--Scott
+---
+Jeff Layton (3):
+      vfs: expose delegation support to userland
+      filelock: add lease_dispose_list() helper
+      filelock: allow lease_managers to dictate what qualifies as a conflict
 
-> 
-> > That's exactly the case: the machine credential is
-> > aes256-cts-hmac-sha1-96.
-> > 
-> > So, taking a step back for context/background: this issue was escalated to
-> > me by someone attempting to use constrained delegation via gssproxy. In the
-> > course of troubleshooting that, we found (by examining the krb5kdc logs on
-> > the IPA server) that the NFS service ticket acquired by gssproxy had an
-> > aes256-cts-hmac-sha384-192 session key.
-> > 
-> > Not understanding that the machine and user tickets must having matching
-> > enctypes, I ended up down this rabbit hole thinking the problem
-> > was with the SHA2 enctypes. Sorry to bring you all with me on that
-> > misadventure.
-> > 
-> > 
-> > 
-> > The actual issue at hand then seems to be that gssproxy is requesting (and
-> > receiving) a service ticket with an unusable (for the NFS mount) enctype,
-> > when performing constrained delegation/S4U2Proxy.
-> > 
-> > krb5kdc logs of gssproxy performing S4U2Self and S4U2Proxy:Nov 18 18:06:51
-> > directory.ipa.twrlab.net krb5kdc[8463](info): TGS_REQ (8 etypes
-> > {aes256-cts-hmac-sha1-96(18), aes128-cts-hmac-sha1-96(17),
-> > aes256-cts-hmac-sha384-192(20), aes128-cts-hmac-sha256-128(19),
-> > UNSUPPORTED:des3-hmac-sha1(16), DEPRECATED:arcfour-hmac(23),
-> > camellia128-cts-cmac(25), camellia256-cts-cmac(26)}) 10.108.2.105: ISSUE:
-> > authtime 1763506600, etypes {rep=aes256-cts-hmac-sha1-96(18),
-> > tkt=aes256-cts-hmac-sha384-192(20), ses=aes256-cts-hmac-sha1-96(18)},
-> > host/nfsclient.ipa.twrlab.net@IPA.TWRLAB.NET for
-> > host/nfsclient.ipa.twrlab.net@IPA.TWRLAB.NET
-> > Nov 18 18:06:51 directory.ipa.twrlab.net krb5kdc[8463](info):
-> > ... PROTOCOL-TRANSITION s4u-client=jsmith@IPA.TWRLAB.NET
-> > Nov 18 18:06:51 directory.ipa.twrlab.net krb5kdc[8463](info): closing down
-> > fd 4
-> > Nov 18 18:06:51 directory.ipa.twrlab.net krb5kdc[8465](info): TGS_REQ (4
-> > etypes {aes256-cts-hmac-sha384-192(20), aes128-cts-hmac-sha256-128(19),
-> > aes256-cts-hmac-sha1-96(18), aes128-cts-hmac-sha1-96(17)}) 10.108.2.105:
-> > ISSUE: authtime 1763506600, etypes {rep=aes256-cts-hmac-sha1-96(18),
-> > tkt=aes256-cts-hmac-sha384-192(20), ses=aes256-cts-hmac-sha384-192(20)},
-> > host/nfsclient.ipa.twrlab.net@IPA.TWRLAB.NET for
-> > nfs/nfssrv.ipa.twrlab.net@IPA.TWRLAB.NET
-> > Nov 18 18:06:51 directory.ipa.twrlab.net krb5kdc[8465](info): ...
-> > CONSTRAINED-DELEGATION s4u-client=jsmith@IPA.TWRLAB.NET
-> > Nov 18 18:06:51 directory.ipa.twrlab.net krb5kdc[8465](info): closing down
-> > fd 11
-> > 
-> > 
-> > On the Fedora 43 client, gssproxy also acquires an
-> > aes256-cts-hmac-sha384-192 service ticket, but the machine credential is
-> > aes256-cts-hmac-sha384-192 and everything works as-ex
-> > pected.
-> 
-> I'm looping in here the gssproxy maintainer as well. Simon, this is
-> about https://bugs.debian.org/1120598 . I assume there is nothing on
-> gssroxy side which can be done to warn about the situation, quoting
-> again:
-> 
-> > The actual issue at hand then seems to be that gssproxy is requesting (and
-> > receiving) a service ticket with an unusable (for the NFS mount) enctype,
-> > when performing constrained delegation/S4U2Proxy.
-> 
-> ?
-> 
-> Regards,
-> Salvatore
-> 
+ fs/fcntl.c                 |  13 +++
+ fs/locks.c                 | 199 ++++++++++++++++++++++++++++-----------------
+ fs/nfsd/nfs4layouts.c      |  11 ++-
+ fs/nfsd/nfs4state.c        |   7 ++
+ include/linux/filelock.h   |  13 +++
+ include/uapi/linux/fcntl.h |  16 ++++
+ 6 files changed, 181 insertions(+), 78 deletions(-)
+---
+base-commit: 5c4a3c4961067120fbf6d35622c2e839f9ceba12
+change-id: 20251117-dir-deleg-ro-2e6247a1a0a9
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
