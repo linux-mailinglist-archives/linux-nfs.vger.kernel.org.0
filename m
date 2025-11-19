@@ -1,76 +1,76 @@
-Return-Path: <linux-nfs+bounces-16587-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16588-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BC65C712F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 22:47:48 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBD4C71333
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 22:55:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id E93442950A
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 21:47:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id BA45528F5D
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 21:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58690307481;
-	Wed, 19 Nov 2025 21:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4312E307AC8;
+	Wed, 19 Nov 2025 21:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Cwexs4PB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zIof/Vmt"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="cwSg3g90";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ClfvVd+Z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A45303A1B
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 21:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C80372AA5
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 21:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763588848; cv=none; b=jcruNysCnBAq8est7zw36bOso8NQ7PTdll9I2bwRV9wpB/cOtqDU2dXvFem/8beuIpNB1dnNwuw6JiNRaRHbFB3bpQXvZs9TRNcSYdqKqRHgRCuz9kat/WQEK3vvw7d+VQc5qY3Wu+SMr5hdClYRP2oJoGmxAMb5kkX1i4lkS9w=
+	t=1763589351; cv=none; b=NekAmH4pbBARsxp+2o1YTpRFlecKCfvBTWuVmK9vXn4ZGwL86c/RuX+MkvOVOtYQufS73JB9jiCWZHUaxoa/DZcqJ+LkXhDOVhs63RuIJJBh665zr1AbiaaqQMwk2Dd5eFdAwHt2Co8DwFQ9NZbRyM9PxWGpxkFmESmCt7szddY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763588848; c=relaxed/simple;
-	bh=Astg7UGi99B0j12Sa2JpTcQxZDrJiy1CvD+70xPeKDs=;
+	s=arc-20240116; t=1763589351; c=relaxed/simple;
+	bh=F0hA3AMBMqVPpqZuZr7KBFpYVJ0mNiTAvGi+DIX42pg=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ArJ8fPeg6Ml1Ehz74HyrT6z/UULoIIkwdca6yD3KUprtt9Z9E8oq3SJ1AxsNf1vZ1pOsmPnp595lJ8ycNTUdwECT5dDWy++mzAcMGWj/wyaiCBIsk0mOqHJsZ52zbGEjF0t7DaJbtD4ryBR2hfsTBmhngy83ucOqWMmvM0Y3RQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Cwexs4PB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zIof/Vmt; arc=none smtp.client-ip=103.168.172.148
+	 References:Date:Message-id; b=EL7Ib3jkTX9dxO5xPHCAO7Yy8GCzRrfVwoWWy/9b8NA2YvJcaXpa2yxTgSu3lIxz/etXnxUkl4ypYcpbR6fCGuCT6JhEv0FlUmdms0GFbY4Ux2jV4+bUB8I/L0zjN21ffHNOCyoNykK+OX6vrrXxgkm0BNEBAOSuAiQ9pxh/G+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=cwSg3g90; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ClfvVd+Z; arc=none smtp.client-ip=103.168.172.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 84BA5EC01BF;
-	Wed, 19 Nov 2025 16:47:25 -0500 (EST)
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 971251400200;
+	Wed, 19 Nov 2025 16:55:48 -0500 (EST)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Wed, 19 Nov 2025 16:47:25 -0500
+  by phl-compute-05.internal (MEProxy); Wed, 19 Nov 2025 16:55:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1763588845; x=1763675245; bh=W4ZJ75xv2Fu8JcQCPkAGqyG+Qc2ECEDsR2m
-	ihrEzvrI=; b=Cwexs4PBmQQkR09MmmiyJW2/mRk+IYGD7Lp1XA+w0eGKOHdZQAY
-	hRfU1VqpYWLD+6LkSzGPiCLfv86v7YF8W/kjPy7drK2gQQbW/XoeCLnhXzES5KHy
-	ATqoJEz8q8PUB8o52ZZCdtiGyKIZ0kAX50/7vIky2XTtOh4WsPHxEYp8zEGvxHEJ
-	UUFwsuKLLCHf9xLpFYCZxVNKGaN1b2WKDWZXCH3h83diZ84M/BGtDbzxB/sHpApa
-	BzIwnm1W3zwtIQHbx0KK3pwtQyUKr02Leyf0o2VJT4NO6oOBT4kaRY74KR1USQgG
-	ToVNA0PkZrDem0RaiKf2UalDts59nG+yCww==
+	1763589348; x=1763675748; bh=mUkT7ZfVM+v+LB3DBjpZZb8/5uL/MBj89+3
+	r8HyFNjQ=; b=cwSg3g90/X5AumKJcUSkVhk82K43U4WQpQpzNZh0mQ2eJgjQFUS
+	fo0WufiOHOUiGnXy5qdSvwoURjCgtwFkz9FB6SC9ju+uQ8HsaiizqUFEEjknBDUN
+	YXt0XRav0lWyC9xE5SeZIlP5DwpqvsVdEkcDHAY7SeBKDExkdkABN+kXFMZ0bWZM
+	kokyqGIbw/pbkF5QlsKlY3EGwEscNCYMRqospx+JZXMlG9OoQIy7fJT5kB/9HsxY
+	vWEMfMeeFIIz/mx0x4z51ZD/oxTP/wCtjNo/zyFbiV/OKI2rsbd1hknr7MsNxweg
+	Vd8vAkawsiUEfPru/STFW8STJuZnDEhnndA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763588845; x=
-	1763675245; bh=W4ZJ75xv2Fu8JcQCPkAGqyG+Qc2ECEDsR2mihrEzvrI=; b=z
-	Iof/VmtJlRcXTaBECoeZjjiT7XXm5oi4EPSPthZdKYR01Yprot52ILtwHGqGyxvH
-	LBikufb62KnB+dh2/VbLD5P8oB5kbUjlEXWKmClrrVd4KqI6jL4tCOjXjwy8uMuw
-	0N18IEu5d09E9mhudrZQJhC4NAtD5PfIfhksSMJRarG7rXhj/h8L2PXdlMbRdQcn
-	d49Dca2RE2i+WIY9U1ZsNpIDvywhf+OLyWi7B+reQSic98EOEZ3lcnh5F/4iC8jE
-	OWG3U1hLnIVNB+RT2+Ac9DrjFmk42Sa7D3FeV4xtLNpUzghOkWp5gqqOf0l+L5Jz
-	I9PlXZQ0SR2u/oebf6a3Q==
-X-ME-Sender: <xms:7ToeaR3VndZK2BO-A-3ewnpLZ998LOIBKbnFF_3fhWMY1N2rI01cFA>
-    <xme:7ToeabwM2cJrp3YtHAd_Q12UgmA_Y_oqIr3aM0-6qr6UP0EaAq7jTN2vj-q2VUZZX
-    NQCr0fXO8ruJ3v1XNMwZyCK0UcqJkazNvgK_8uC6hJpXfwQXg>
-X-ME-Received: <xmr:7Toeabuu7gVbWE8C4qvz4Bsw2rFtVMd383npMUnGraKiqLNHYgACSOAlBowJkmK55OhHLRoQRFwSBmMg7uTUHpR6QMnc0j6ZyoT5LUzRxz_4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdehfedvucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763589348; x=
+	1763675748; bh=mUkT7ZfVM+v+LB3DBjpZZb8/5uL/MBj89+3r8HyFNjQ=; b=C
+	lfvVd+ZusgwpVRPfbgpbHNZ2pFh1TmabEiejDUDbJPMsHcGx1RvCgbB/HWvNqEgA
+	0+DPkAkoE8SQiszaux7qRiYPIB3Ww2G4geZCnw9q0532ZlydGAdVZcFEEqvgh+9o
+	eA0OSFOe9zVFb/K4qivbTTva/lUW6a4HEg8l1AqNpVvkuq5SJvhaZfazjouIx8pG
+	WEYn81Jn+JWa2RDOJ2+/0zOKzugyzzmNNIBO3KhZ4Ml6tbNocs4j7SC+nsWM4/Sy
+	dmeivvphtdCKQDQ51xuDIs3L1FQlog+6uAHMMEL/XOvuOQs1qlzQu7ZCJy9YpvxF
+	DA1U0DJBsgg8hF/8vayCg==
+X-ME-Sender: <xms:5DweaT_Lscu3tmt-rvaoYDq_K8rEEvwiE_yfmJ4RkbwdsCZyxcG5pQ>
+    <xme:5DweaTZl0254OD0tSbH4hSJuOPz4fDaeAkM8WyXildXNusmEnWBMh-9PHwGlBG8cd
+    bkiOI6er9L5V7G5a7B1trj5jsLhk-VfDhIZpZGpBhtXzis_fA>
+X-ME-Received: <xmr:5Dweaa32e4e77WxIg2bzcKIiYwM5FrWD0cZ44LpeiP6iVB7hK5Iv5mmU0InI_-c9AwtcTDJI3A9a8HnBrki1vh2z3WEW0e2zs8T2S2YdanWS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdehfeefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
     vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
     esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
     uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
@@ -78,16 +78,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdehfedvucetufdote
     ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
     hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
     pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:7ToeaVzX7RnEKhvUGUx941383SqKX3ByOr1c23KIk8O4YjB9-wqFHw>
-    <xmx:7ToeaWApB3HWHYgUe3a-qpEh0zg3AyU95c0Q4GqNea962d9odgBtJw>
-    <xmx:7Toeabf86IIRthp9IZYfu7EnUl7HybDw8e2r2tCIyxUm8pIJD5XNMg>
-    <xmx:7ToeaYl6_MgTcB2rVlnGG0122ljemfTwkDHyHFki_E5A6dyAzCRlgA>
-    <xmx:7ToeaXVMe3QmhAxPgDkr8dkiLZQvwFfArWyyvPxTPOJd1gQOIAn9-6L3>
+X-ME-Proxy: <xmx:5DweaWbl0GAuUDe_D_kyHsmRH5qagJoEYrFrUwQwOkHTZobc-c7eXQ>
+    <xmx:5DweaaIfiTv0FwLYOrAmhyE17Ap-A4eMJMwdEr7gLO25TiiIxeIsAg>
+    <xmx:5DweadEiVsC6SkzA7B4e8FTzE2TW8zLVP3sQw-tEIN0fii7WmMb7tg>
+    <xmx:5DweaZsPqawpeUR1oxNUlIkHgToOdnl_cG93Dnzgs4jRwM33R4qP9A>
+    <xmx:5DweaReBcT6Ewr6uiVGkzNAxGvwEUOYdTpHiAFFS22ANn4vjpIJ_zLev>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Nov 2025 16:47:23 -0500 (EST)
+ 19 Nov 2025 16:55:46 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,116 +99,48 @@ To: "Chuck Lever" <chuck.lever@oracle.com>
 Cc: "Jeff Layton" <jlayton@kernel.org>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v5 06/11] nfsd: revise names of special stateid, and
- predicate functions.
-In-reply-to: <803d3e56-ed6c-450f-b609-6dbfdd1e4d14@oracle.com>
+Subject: Re: [PATCH v5 07/11] nfsd: simplify clearing of current-state-id
+In-reply-to: <7c2e77a6-6ac1-4b32-a245-4a7a98f7e577@oracle.com>
 References: <20251119033204.360415-1-neilb@ownmail.net>,
- <20251119033204.360415-7-neilb@ownmail.net>,
- <803d3e56-ed6c-450f-b609-6dbfdd1e4d14@oracle.com>
-Date: Thu, 20 Nov 2025 08:47:21 +1100
-Message-id: <176358884158.634289.2155109158356141626@noble.neil.brown.name>
+ <20251119033204.360415-8-neilb@ownmail.net>,
+ <7c2e77a6-6ac1-4b32-a245-4a7a98f7e577@oracle.com>
+Date: Thu, 20 Nov 2025 08:55:44 +1100
+Message-id: <176358934480.634289.12895134302600589105@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
 On Thu, 20 Nov 2025, Chuck Lever wrote:
 > On 11/18/25 10:28 PM, NeilBrown wrote:
 > > From: NeilBrown <neil@brown.name>
-> >=20
-> > When I see "CURRENT_STATEID(foo)" in the code it is not clear that this
-> > is testing the stateid to see if it is a special stateid.  I find that
-> > IS_CURRENT_STATEID(foo) is clearer.  But an inline function is even
-> > better, so is_current_stateid().
-> >=20
-> > There are other special stateids which are described in RFC 8881 Section
-> > 8.2.3 as "anonymous", "READ bypass", and "invalid".  The nfsd code
-> > currently names them "zero", "one" and "close" which doesn't help with
-> > comparing the code to the RFC.
-> >=20
-> > So this patch changes the names of those special stateids and adds
-> > "is_" to the front of the predicates.
-> >=20
-> > As CLOSE_STATEID() was not needed, it is discarded rather than replacing
-> > with is_invalid_stateid().
-> >=20
-> > I felt that is_read_bypass_stateid() was a little too verbose, so I made
-> > it is_bypass_stateid().
-> >=20
-> > For consistency, invalid_stateid is changed to use ~0 rather than
-> > 0xffffffffU for the generation number.  (RFC 8881 say to use
-> > "NFS4_UINT32_MAX" for the generation number here, and "all ones" for the
-> > generation and opaque of anon_stateid).
-> >=20
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> >  fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++-----------------
-> >  1 file changed, 23 insertions(+), 17 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index ea931e606f40..f92b01bdb4dd 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -60,18 +60,18 @@
-> >  #define NFSDDBG_FACILITY                NFSDDBG_PROC
-> > =20
-> >  #define all_ones {{ ~0, ~0}, ~0}
-> > -static const stateid_t one_stateid =3D {
-> > +static const stateid_t read_bypass_stateid =3D {
-> >  	.si_generation =3D ~0,
-> >  	.si_opaque =3D all_ones,
-> >  };
-> > -static const stateid_t zero_stateid =3D {
-> > +static const stateid_t anon_stateid =3D {
-> >  	/* all fields zero */
-> >  };
-> > -static const stateid_t currentstateid =3D {
-> > +static const stateid_t current_stateid =3D {
-> >  	.si_generation =3D 1,
-> >  };
-> > -static const stateid_t close_stateid =3D {
-> > -	.si_generation =3D 0xffffffffU,
-> > +static const stateid_t invalid_stateid =3D {
-> > +	.si_generation =3D ~0,
-> >  };
-> > =20
-> >  /*
-> > @@ -93,10 +93,16 @@ static inline bool stateid_well_formed(stateid_t *sti=
-d)
-> > =20
-> >  static u64 current_sessionid =3D 1;
-> > =20
-> > -#define ZERO_STATEID(stateid) (!memcmp((stateid), &zero_stateid, sizeof(=
-stateid_t)))
-> > -#define ONE_STATEID(stateid)  (!memcmp((stateid), &one_stateid, sizeof(s=
-tateid_t)))
-> > -#define CURRENT_STATEID(stateid) (!memcmp((stateid), &currentstateid, si=
-zeof(stateid_t)))
-> > -#define CLOSE_STATEID(stateid)  (!memcmp((stateid), &close_stateid, size=
-of(stateid_t)))
-> > +/* These special stateid are defined in RFC 8881 Section 8.2.3 */
-> > +static inline bool is_anon_stateid(stateid_t *stateid) {
-> > +	return memcmp(stateid, &anon_stateid, sizeof(stateid_t));
-> > +}
-> > +static inline bool is_bypass_stateid(stateid_t *stateid) {
-> > +	return memcmp(stateid, &read_bypass_stateid, sizeof(stateid_t));
-> > +}
-> > +static inline bool is_current_stateid(stateid_t *stateid) {
-> > +	return memcmp(stateid, &current_stateid, sizeof(stateid_t));
-> > +}
->=20
-> The new static inline functions appear to invert the logic -- the macros
-> use "!memcmp" but the new functions omit the "!". memcmp() returns an
-> int, so there is an implicit type conversion here as well. So maybe you
-> want "memcmp(stateid, ... ) =3D=3D 0" ?
+> > 
+> > In NFSv4.1 the current and saved filehandle each have a corresponding
+> > stateid.  RFC 8881 requires that in certain circumstances - particularly
+> > when the current filehandle is changed - the current stateid should be
+> > set to the anonymous stateid (all zeros).  It also requires that when a
+> > request tries to use the current stateid, if that stateid is "special"
+> > (which includes the anonymous stateid), then a BAD_STATEID error must
+> > be produced.
+> > 
+> > Linux nfsd current implements these requirements using a flag to record
+> > if the stateid (current or saved) is valid rather than actually storing
+> > the anon stateid when invalid.  This has the same net effect.
+> > 
+> > The aim of this patch is to simplify this code and particularly to
+> > remove the per-op OP_CLEAR_STATEID flag which is unnecessary.
+> > 
+> > The "is valid" flag is moved from 'struct nfsd4_compound_state' to
+> > 'struct svc_fh' which already has a number of flags related to the
+> > filehandle.  This flag will only ever be set for the v4 current_fh and
+> > saved_fh and records if the corresponding stateid is valid.
+> > 
+> > fh_put() is changed to clear this flag.
+> 
+> I don't see a hunk in the patch that implements this.
 
-I must have been asleep ?  Thanks.
-(I really don't like "!memcmp" or "!strcmp" so I definitely intended to
-change it.  I have now).
+Nor do I.  I don't see it in my "git reflog" either.
+This is why I like the commit message to give plenty of detail, it
+helps reviewers find my mistakes.
 
->=20
-> And now we can use "sizeof(*stateid)" here which is slightly less
-> brittle.
-
-Good idea.
-
-Thanks,
+Thanks!
 NeilBrown
+
 
