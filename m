@@ -1,100 +1,78 @@
-Return-Path: <linux-nfs+bounces-16532-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16533-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E214AC6E180
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 11:58:27 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F210C6E389
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 12:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B97D13501AD
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 10:53:53 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 69DE234BD1F
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 11:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 654A434DB79;
-	Wed, 19 Nov 2025 10:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEC8D352F8F;
+	Wed, 19 Nov 2025 11:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vtm+3DVh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C76530F7F7;
-	Wed, 19 Nov 2025 10:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D696351FDE
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 11:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763549606; cv=none; b=AEDxQhCiiajzr+FY2JaonWqgy3d6JMehsFpsk4A61Evu2ScbmroRDP6RwuEBaJosmOKxtI3NScUWfNjtg1mv5fHVIsZVLN5SdJ0tCO7+4/765Gp1l1HN5GfBaB2e76uJfFawMCy8Mb0PDtfBkZIT2pifenk8UHukbz1XL54x4OI=
+	t=1763551241; cv=none; b=npPKwWp6V5GVXKtikA9XfU1+haCWqHFJqeLmdbCTiXOB3XjusU+RB1rQaRgsLbgcoviqHh304ww8L7pig3cNft5rlZpI3n/KpQqAt69YmSpK/dURVqfzWvlOlCJKZyDcEQvK9o2NEa/nlSxOPcFS093U+hWHXQdrTP8aLBymHnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763549606; c=relaxed/simple;
-	bh=GYqmggF3znhUGPatz51esM7m1/OXe2ZD930Ya1NBl3c=;
+	s=arc-20240116; t=1763551241; c=relaxed/simple;
+	bh=n1ssxyGcRM+PfkXOFco2Il0uRHH1F+ktAABiJ82ROQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iSdpErlYwInwQO+DyzZsWdgWMKqzGn5jooVZl3ad4Bj6PltiBD39upDQy6FLnd0kirFrUfMSbRq+QBAcM1oXi5av4sG7JwvLvwZGiS+1HRTd1napN6Be4UGCfC3BVwrykfUAIVif1ijnLg/17K3XSZCluH711aFJ4UhEhe8YrmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-1c-691da19e91dd
-Date: Wed, 19 Nov 2025 19:53:12 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com, torvalds@linux-foundation.org,
-	damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
-	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org, will@kernel.org,
-	tglx@linutronix.de, rostedt@goodmis.org, joel@joelfernandes.org,
-	sashal@kernel.org, daniel.vetter@ffwll.ch, duyuyang@gmail.com,
-	johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
-	willy@infradead.org, david@fromorbit.com, amir73il@gmail.com,
-	gregkh@linuxfoundation.org, kernel-team@lge.com, linux-mm@kvack.org,
-	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
-	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
-	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 44/47] dept: introduce APIs to set page usage and use
- subclasses_evt for the usage
-Message-ID: <20251119105312.GA11582@system.software.com>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-45-byungchul@sk.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=YqDsZ/W2i7NhKWqUB0+BrWPGZ+ZNtaSN9LN3Ya+9o50ALoQkwaVuG9wRB/4YXVgu/PE7svum3PxlwmjU5slgv9NMbYfD1asuHJrL5WbuNHq3mHH7yTv8ZiRX+BsUIHHwMJ0y2t3tubZlQejvdp6B3rIg9kgGNGMFSwEKBYemOEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vtm+3DVh; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763551240; x=1795087240;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n1ssxyGcRM+PfkXOFco2Il0uRHH1F+ktAABiJ82ROQI=;
+  b=Vtm+3DVhMo+lX66Wk5VfwwUF+F/HnzP7112GQJwvfM/SV+GRk2YZU9TJ
+   /qJhWySNCfVknl+Aqb5JE36ij22xIvC79G83x9diJtfMmbVhfIHtCOPV7
+   5z3V4rL8/iCvDETFNkJMncJGeG8IiE76tfhE5/omYMWi7hVXay4TxdpxQ
+   Kcf3cG1EEwz5RIazmV8BeBL+nCrVljC0cq6ukxIecEhye3/veUwCd46rN
+   /0DVudA5MTwVYOsMF8Dv4lwC4VyuMiLlwFOqAg0Wp1g7nwUbQmL/Nn17I
+   Uod/OWpSbUKft1K9MjOJ19x8FNne3IbU+9uuVJlYTotvoqpQAItTrVrFK
+   g==;
+X-CSE-ConnectionGUID: SKRlxHq1QqOlwd/UQHT8eg==
+X-CSE-MsgGUID: 9xJ30wVwQEyoLHe67Y15Pw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="65469757"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="65469757"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 03:20:39 -0800
+X-CSE-ConnectionGUID: fFSGaDUeQqKQOB64wwURRg==
+X-CSE-MsgGUID: h4Qq38zORXG5ySVDF9x0CQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="191283233"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Nov 2025 03:20:37 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLgEl-0002oB-1O;
+	Wed, 19 Nov 2025 11:20:35 +0000
+Date: Wed, 19 Nov 2025 19:20:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gaurav Gangalwar <gaurav.gangalwar@gmail.com>, trondmy@kernel.org,
+	anna@kernel.org, tom@talpey.com, chuck.lever@oracle.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-nfs@vger.kernel.org,
+	Gaurav Gangalwar <gaurav.gangalwar@gmail.com>
+Subject: Re: [PATCH] nfs: Implement delayed data server destruction with hold
+ cache
+Message-ID: <202511191852.nGdrhdUC-lkp@intel.com>
+References: <20251118105752.52098-1-gaurav.gangalwar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -103,276 +81,108 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251002081247.51255-45-byungchul@sk.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTZxTH+9z73Jc2VK8di1cZy9JJnDhRF5adD7hotmX3w2ZYTLZlZpEq
-	N3K1FFNeFLMtMGQyA6ayWUPLu6FUaJC1TFDBIBYEgVhk0Q7rkACFRjoW1taRlboWY+aXk1/+
-	55z/OSc5LKmqoTeyki5P1Os0WjWtwAp/XOO22oZEaYf3xia4X9yLIRgow1B92UaDq60VwdN/
-	zSQElh8yYByrJMHWUUzA3+0RGi74ijEsWsoRmLxmBnz9H4N/8joFD0ILCCwzEQJWjEehrtER
-	LT3vQtAw9YiE+fbTCHqs39Mwa/iVhPGZNfBbcJGGP9tpqDFXIjDW2DGMPQkT4DFWEtBq/xQm
-	LV4Mw4ZGIjqSBvOFEiIa5glYtrQwMHLRg8E8Ok5BeGonPKvPgYHWOQba/HcpmLz9AwWdRY8Z
-	sP/ej8BW7iWh7FoQg336PgU9E1uhqtZDQ3fPEIaylQCC8WvV0at7hym41+rCcHnOTcDwwCCG
-	IdMlDE0PxghwjI6QEDqbAK5zFRS4DbNod6bwtPQsFkrvrdCCrdaGhFJDNNxaWCSFU47jQtPw
-	Ai30hOqxcG50m3DV9IgR6u35wimnnxIc1mThYrePECae7BLsLT/S6W99pUjLFLVSgajf/n6G
-	IuvG42b62OldJ6xzXUwRGtlxBslZnkvlr078xbzghUDDKmMuiR8sHqdiTHObebd7mYxxPPcG
-	76jwRnUFS3JVCXywvYSOJV7htHzI2bbarOSAd9Y5V3UVd5A/3/IT9Vxfxw9VzeAYk1wy7474
-	iDOIjXIC3xxhY7Kce49vqxtAMX6Ve5PvvXKbiM3iuT/k/BXrP+j5ohv4m1Y3NiDO9JKt6SVb
-	0/+29YhsQSpJV5CtkbSpKVmFOulEyqGcbDuKPq3l2/D+LrTk2teHOBap45RlaxMlFaUpyC3M
-	7kM8S6rjlUl7XpNUykxN4UlRn3NAn68Vc/tQAovV65XvhI5nqrjDmjzxqCgeE/UvsgQr31iE
-	Kko+DG5/uH6Ncd/Bpk++sD3r/OCXr/sabuX5IxM3+5em5xUZyXHOzs7dS3s/S9J2VDaHFQdq
-	ZJLs+oZ31WsDGVNMxeGTmwarP/ft75JrQ93KL8v1H8VvCR+ROYO6aSIl1TOfvmfvZCTtmyN3
-	LmVwho7EtLeD+emynwfMr896Dsm+k6lxbpZmZzKpz9X8Bx9L8M6wAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxjHfc+dZtUjg3hiXUK6oQaDQjLmk7kZlyzxxGXGxA9LtkWtejYa
-	SmGtY9aEDCyNBJ3UukJoBcrt2BSE2noBSQ3jUqdCLKubZIMBSy0wuSTaApXbTl2W+eXN7/39
-	n3/yfHgYPHGF3MyotacEnValUVIyQnZwjzG9uu4tdUYgvBt+K+4iIBopJeBKWwsFpZ4qEgKt
-	zQhGo6UIFpbsOJg61ghYsfhpiMT+oGHN50dQMWjBoeVGMQYv3KsUPOt5jsA6HqKgcqqYgDnx
-	AgJb2E7DVN9+mBntJGFtZAKDJ/PTCMTQKgahrnMIVipyoLbeS8HSwCMcKq0BBHXjIzhMuqXw
-	hv9PBD7nWQqemm/iEAyth8fROQruW89TMDN4BYNZNwWOsz4Squ0WBMaGNgoqqj0EdIzdoWHw
-	2TIGwxUWDJo9n8KoGCbgobkek/aTpq5vAnulEZOeSQys1zoxiIkuGvobhgkQi1LBPhAk4S+n
-	jYbl8UxYc+SBv3mChpFyKwGtM4/IfVbEL5guErzLewvjTb+sUHxLTQvil15aEB9pMuK8ySx9
-	e6bncL7E+x3f9HCa4l9Gf6V437yD4B/Uc/ylgXS+wzZC8yV3f6cPvf+57IOTgkZdIOh27T0m
-	y747dpXKP/fhaedEO12E+jPKUALDse9y05E6Os4Em8r9XBwk40yx27ihoRge5yQ2hfP+EJa8
-	jMHZKgUXdRupePAmq+Hme1tfleUscL21va98Inucs7ouk//6jdz9qhARZ5xN44ZWp7AyxEis
-	4K6uMnGdwO7mWmv9KM7J7Ntc1617mBnJba+1ba+1bf+3HQh3oSS1tiBXpdZk7dTnZBu06tM7
-	T+TlepB0lGLh8qV2FAnu70Ysg5RvyBfNW9SJpKpAb8jtRhyDK5PkqR9JSn5SZTgj6PKO6r7V
-	CPpupGAI5Sb5gc+EY4ns16pTQo4g5Au6/1KMSdhchFwpXRu+f55pejyW9YVKH3sykbl93dbC
-	NPTJ4t5wRvJC5zd/L9aUKH5aUISInB9v6icPtycf6T/cdHQwwJ+pOeBrNNBHKgvHHxwKOi+I
-	X/aleAJfpR8MG4wZTva2uyemnd1RfvHpO0lZfeWjH7MNmONyG31evL7eWzY7/F7jjJjfqyT0
-	2arMNFynV/0DMGDGq5ADAAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <20251118105752.52098-1-gaurav.gangalwar@gmail.com>
 
-On Thu, Oct 02, 2025 at 05:12:44PM +0900, Byungchul Park wrote:
-> False positive reports have been observed since dept works with the
-> assumption that all the pages have the same dept class, but the class
-> should be split since the problematic call paths are different depending
-> on what the page is used for.
-> 
-> At least, ones in block device's address_space and ones in regular
-> file's address_space have exclusively different usages.
-> 
-> Thus, define usage candidates like:
-> 
->    DEPT_PAGE_REGFILE_CACHE /* page in regular file's address_space */
->    DEPT_PAGE_BDEV_CACHE    /* page in block device's address_space */
->    DEPT_PAGE_DEFAULT       /* the others */
+Hi Gaurav,
 
-1. I'd like to annotate a page to DEPT_PAGE_REGFILE_CACHE when the page
-   starts to be associated with a page cache for fs data.
+kernel test robot noticed the following build warnings:
 
-2. And I'd like to annotate a page to DEPT_PAGE_BDEV_CACHE when the page
-   starts to be associated with meta data of fs e.g. super block.
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.18-rc6 next-20251119]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-3. Lastly, I'd like to reset the annotated value if any, that has been
-   set in the page, when the page ends the assoication with either page
-   cache or meta block of fs e.g. freeing the page.
+url:    https://github.com/intel-lab-lkp/linux/commits/Gaurav-Gangalwar/nfs-Implement-delayed-data-server-destruction-with-hold-cache/20251118-190020
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20251118105752.52098-1-gaurav.gangalwar%40gmail.com
+patch subject: [PATCH] nfs: Implement delayed data server destruction with hold cache
+config: arm-lpc32xx_defconfig (https://download.01.org/0day-ci/archive/20251119/202511191852.nGdrhdUC-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511191852.nGdrhdUC-lkp@intel.com/reproduce)
 
-Can anyone suggest good places in code for the annotation 1, 2, 3?  It'd
-be totally appreciated. :-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511191852.nGdrhdUC-lkp@intel.com/
 
-	Byungchul
+All warnings (new ones prefixed by >>):
 
-> Introduce APIs to set each page's usage properly and make sure not to
-> interact between at least between DEPT_PAGE_REGFILE_CACHE and
-> DEPT_PAGE_BDEV_CACHE.  However, besides the exclusive usages, allow any
-> other combinations to interact to the other for example:
-> 
->    PG_locked for DEPT_PAGE_DEFAULT page can wait for PG_locked for
->    DEPT_PAGE_REGFILE_CACHE page and vice versa.
-> 
->    PG_locked for DEPT_PAGE_DEFAULT page can wait for PG_locked for
->    DEPT_PAGE_BDEV_CACHE page and vice versa.
-> 
->    PG_locked for DEPT_PAGE_DEFAULT page can wait for PG_locked for
->    DEPT_PAGE_DEFAULT page.
-> 
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  include/linux/dept.h       | 31 +++++++++++++++-
->  include/linux/mm_types.h   |  1 +
->  include/linux/page-flags.h | 76 +++++++++++++++++++++++++++++++++++++-
->  3 files changed, 104 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/dept.h b/include/linux/dept.h
-> index 0ac13129f308..fbbc41048fac 100644
-> --- a/include/linux/dept.h
-> +++ b/include/linux/dept.h
-> @@ -21,8 +21,8 @@ struct task_struct;
->  #define DEPT_MAX_WAIT_HIST		64
->  #define DEPT_MAX_ECXT_HELD		48
->  
-> -#define DEPT_MAX_SUBCLASSES		16
-> -#define DEPT_MAX_SUBCLASSES_EVT		2
-> +#define DEPT_MAX_SUBCLASSES		24
-> +#define DEPT_MAX_SUBCLASSES_EVT		3
->  #define DEPT_MAX_SUBCLASSES_USR		(DEPT_MAX_SUBCLASSES / DEPT_MAX_SUBCLASSES_EVT)
->  #define DEPT_MAX_SUBCLASSES_CACHE	2
->  
-> @@ -390,6 +390,32 @@ struct dept_ext_wgen {
->  	unsigned int wgen;
->  };
->  
-> +enum {
-> +	DEPT_PAGE_DEFAULT = 0,
-> +	DEPT_PAGE_REGFILE_CACHE,	/* regular file page cache */
-> +	DEPT_PAGE_BDEV_CACHE,		/* block device cache */
-> +	DEPT_PAGE_USAGE_NR,		/* nr of usages options */
-> +};
-> +
-> +#define DEPT_PAGE_USAGE_SHIFT 16
-> +#define DEPT_PAGE_USAGE_MASK ((1U << DEPT_PAGE_USAGE_SHIFT) - 1)
-> +#define DEPT_PAGE_USAGE_PENDING_MASK (DEPT_PAGE_USAGE_MASK << DEPT_PAGE_USAGE_SHIFT)
-> +
-> +/*
-> + * Identify each page's usage type
-> + */
-> +struct dept_page_usage {
-> +	/*
-> +	 * low 16 bits  : the current usage type
-> +	 * high 16 bits : usage type requested to be set
-> +	 *
-> +	 * Do not apply the type requested immediately but defer until
-> +	 * after clearing PG_locked bit of the folio or page e.g. by
-> +	 * folio_unlock().
-> +	 */
-> +	atomic_t type; /* Update and read atomically */
-> +};
-> +
->  struct dept_event_site {
->  	/*
->  	 * event site name
-> @@ -562,6 +588,7 @@ extern void dept_hardirqs_off(void);
->  struct dept_key { };
->  struct dept_map { };
->  struct dept_ext_wgen { };
-> +struct dept_page_usage { };
->  struct dept_event_site { };
->  
->  #define DEPT_MAP_INITIALIZER(n, k) { }
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 5ebc565309af..8ccbb030500c 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -224,6 +224,7 @@ struct page {
->  	struct page *kmsan_shadow;
->  	struct page *kmsan_origin;
->  #endif
-> +	struct dept_page_usage usage;
->  	struct dept_ext_wgen pg_locked_wgen;
->  } _struct_page_alignment;
->  
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index d3c4954c4218..3fd3660ddc6f 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -204,6 +204,68 @@ enum pageflags {
->  
->  extern struct dept_map pg_locked_map;
->  
-> +static inline int dept_set_page_usage(struct page *p,
-> +		unsigned int new_type)
-> +{
-> +	unsigned int type = atomic_read(&p->usage.type);
-> +
-> +	if (WARN_ON_ONCE(new_type >= DEPT_PAGE_USAGE_NR))
-> +		return -1;
-> +
-> +	new_type <<= DEPT_PAGE_USAGE_SHIFT;
-> +retry:
-> +	new_type &= ~DEPT_PAGE_USAGE_MASK;
-> +	new_type |= type & DEPT_PAGE_USAGE_MASK;
-> +
-> +	if (!atomic_try_cmpxchg(&p->usage.type, &type, new_type))
-> +		goto retry;
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int dept_reset_page_usage(struct page *p)
-> +{
-> +	return dept_set_page_usage(p, DEPT_PAGE_DEFAULT);
-> +}
-> +
-> +static inline void dept_update_page_usage(struct page *p)
-> +{
-> +	unsigned int type = atomic_read(&p->usage.type);
-> +	unsigned int new_type;
-> +
-> +retry:
-> +	new_type = type & DEPT_PAGE_USAGE_PENDING_MASK;
-> +	new_type >>= DEPT_PAGE_USAGE_SHIFT;
-> +	new_type |= type & DEPT_PAGE_USAGE_PENDING_MASK;
-> +
-> +	/*
-> +	 * Already updated by others.
-> +	 */
-> +	if (type == new_type)
-> +		return;
-> +
-> +	if (!atomic_try_cmpxchg(&p->usage.type, &type, new_type))
-> +		goto retry;
-> +}
-> +
-> +static inline unsigned long dept_event_flags(struct page *p, bool wait)
-> +{
-> +	unsigned int type;
-> +
-> +	type = atomic_read(&p->usage.type) & DEPT_PAGE_USAGE_MASK;
-> +
-> +	if (WARN_ON_ONCE(type >= DEPT_PAGE_USAGE_NR))
-> +		return 0;
-> +
-> +	/*
-> +	 * event
-> +	 */
-> +	if (!wait)
-> +		return 1UL << type;
-> +
-> +	return (1UL << DEPT_PAGE_DEFAULT) | (1UL << type);
-> +}
-> +
->  /*
->   * Place the following annotations in its suitable point in code:
->   *
-> @@ -214,20 +276,28 @@ extern struct dept_map pg_locked_map;
->  
->  static inline void dept_page_set_bit(struct page *p, int bit_nr)
->  {
-> +	dept_update_page_usage(p);
->  	if (bit_nr == PG_locked)
->  		dept_request_event(&pg_locked_map, &p->pg_locked_wgen);
->  }
->  
->  static inline void dept_page_clear_bit(struct page *p, int bit_nr)
->  {
-> +	unsigned long evt_f;
-> +
-> +	evt_f = dept_event_flags(p, false);
->  	if (bit_nr == PG_locked)
-> -		dept_event(&pg_locked_map, 1UL, _RET_IP_, __func__, &p->pg_locked_wgen);
-> +		dept_event(&pg_locked_map, evt_f, _RET_IP_, __func__, &p->pg_locked_wgen);
->  }
->  
->  static inline void dept_page_wait_on_bit(struct page *p, int bit_nr)
->  {
-> +	unsigned long evt_f;
-> +
-> +	dept_update_page_usage(p);
-> +	evt_f = dept_event_flags(p, true);
->  	if (bit_nr == PG_locked)
-> -		dept_wait(&pg_locked_map, 1UL, _RET_IP_, __func__, 0, -1L);
-> +		dept_wait(&pg_locked_map, evt_f, _RET_IP_, __func__, 0, -1L);
->  }
->  
->  static inline void dept_folio_set_bit(struct folio *f, int bit_nr)
-> @@ -245,6 +315,8 @@ static inline void dept_folio_wait_on_bit(struct folio *f, int bit_nr)
->  	dept_page_wait_on_bit(&f->page, bit_nr);
->  }
->  #else
-> +#define dept_set_page_usage(p, t)		do { } while (0)
-> +#define dept_reset_page_usage(p)		do { } while (0)
->  #define dept_page_set_bit(p, bit_nr)		do { } while (0)
->  #define dept_page_clear_bit(p, bit_nr)		do { } while (0)
->  #define dept_page_wait_on_bit(p, bit_nr)	do { } while (0)
-> -- 
-> 2.17.1
+>> fs/nfs/pnfs_nfs.c:753:6: warning: variable 'active_count' set but not used [-Wunused-but-set-variable]
+     753 |         int active_count = 0, hold_count = 0, expired_count = 0;
+         |             ^
+>> fs/nfs/pnfs_nfs.c:753:24: warning: variable 'hold_count' set but not used [-Wunused-but-set-variable]
+     753 |         int active_count = 0, hold_count = 0, expired_count = 0;
+         |                               ^
+>> fs/nfs/pnfs_nfs.c:753:40: warning: variable 'expired_count' set but not used [-Wunused-but-set-variable]
+     753 |         int active_count = 0, hold_count = 0, expired_count = 0;
+         |                                               ^
+   3 warnings generated.
+
+
+vim +/active_count +753 fs/nfs/pnfs_nfs.c
+
+   741	
+   742	/*
+   743	 * Periodic cleanup task to check hold cache and destroy expired DS entries
+   744	 */
+   745	void nfs4_pnfs_ds_cleanup_work(struct work_struct *work)
+   746	{
+   747		struct nfs_net *nn = container_of(work, struct nfs_net,
+   748						  nfs4_data_server_cleanup_work.work);
+   749		struct nfs4_pnfs_ds *ds, *tmp;
+   750		LIST_HEAD(destroy_list);
+   751		unsigned long grace_period = nfs4_pnfs_ds_grace_period * HZ;
+   752		unsigned long now = jiffies;
+ > 753		int active_count = 0, hold_count = 0, expired_count = 0;
+   754	
+   755		dprintk("NFS: DS cleanup work started for namespace (jiffies=%lu)\n", now);
+   756	
+   757		spin_lock(&nn->nfs4_data_server_lock);
+   758	
+   759		/* Count entries in active cache */
+   760		list_for_each_entry(ds, &nn->nfs4_data_server_cache, ds_node)
+   761			active_count++;
+   762	
+   763		/* Process hold cache */
+   764		list_for_each_entry_safe(ds, tmp, &nn->nfs4_data_server_hold_cache, ds_node) {
+   765			unsigned long time_since_last_access = now - ds->ds_last_access;
+   766	
+   767			hold_count++;
+   768			if (time_since_last_access >= grace_period) {
+   769				/* Grace period expired, move to destroy list */
+   770				dprintk("NFS: DS cleanup task destroying expired DS: %s (idle for %lu seconds)\n",
+   771					ds->ds_remotestr, time_since_last_access / HZ);
+   772				list_move(&ds->ds_node, &destroy_list);
+   773				expired_count++;
+   774			} else {
+   775				dprintk("NFS: DS %s in hold cache (idle for %lu seconds, %lu seconds remaining)\n",
+   776					ds->ds_remotestr, time_since_last_access / HZ,
+   777					(grace_period - time_since_last_access) / HZ);
+   778			}
+   779		}
+   780	
+   781		spin_unlock(&nn->nfs4_data_server_lock);
+   782	
+   783		dprintk("NFS: DS cleanup work: active_cache=%d, hold_cache=%d, expired=%d\n",
+   784			active_count, hold_count, expired_count);
+   785	
+   786		/* Destroy DS entries outside of lock */
+   787		list_for_each_entry_safe(ds, tmp, &destroy_list, ds_node) {
+   788			list_del_init(&ds->ds_node);
+   789			destroy_ds(ds);
+   790		}
+   791	
+   792		/* Reschedule cleanup task */
+   793		dprintk("NFS: DS cleanup work completed, rescheduling in %u seconds\n",
+   794			nfs4_pnfs_ds_cleanup_interval);
+   795		schedule_delayed_work(&nn->nfs4_data_server_cleanup_work,
+   796				      nfs4_pnfs_ds_cleanup_interval * HZ);
+   797	}
+   798	EXPORT_SYMBOL_GPL(nfs4_pnfs_ds_cleanup_work);
+   799	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
