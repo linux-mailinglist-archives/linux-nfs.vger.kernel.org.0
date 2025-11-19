@@ -1,71 +1,71 @@
-Return-Path: <linux-nfs+bounces-16510-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16511-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4A0AC6CA01
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 04:35:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DADF1C6C9BE
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 04:32:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B9FB64EEBF3
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 03:32:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 897302AE3E
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 03:32:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153C52ECD32;
-	Wed, 19 Nov 2025 03:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 924912E9EC7;
+	Wed, 19 Nov 2025 03:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="JMAu3OZT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="psiXUmrH"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="AaGJwcxl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qMwnT+I3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC5D2E9EC7
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 03:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71D02ECE9C
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 03:32:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763523152; cv=none; b=G9qoyMD+wN72PAltTp/fT6I/LoVjwrGaI9zxhJUP9EXb35y8X4+Rje4XeUCST66QgLaoDm3vwaZUzYrNrg4UZgz//Lm/yD3iK3TycjoEKtWIwoPezTf0RPb+wC0xkulYAUa1yjUXRx0Tj9rFvbmziLYXTqP7re6h85e8Wq6Ept0=
+	t=1763523156; cv=none; b=AaanSLNfkvprCR24Lrf8jJunZ3qQZ9LaBpBb8KmjmmoODTVlxSj/EzAbZzxOFc5IU6Y+QBF5r4LibCU5jD44Y54S0U42zZDqKS92RWAeVYD5WVzHLBx8ifglQAT/9/zU3wpZ/o41oV92BZHb+dQ53bForLsvF/xxCCg8vOzu3wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763523152; c=relaxed/simple;
-	bh=e3sTHoS4Bd9mzYFWV8j5ZYiWxwECpPLVb+rE5JvYF1Q=;
+	s=arc-20240116; t=1763523156; c=relaxed/simple;
+	bh=+ABL252nNLraVR9H+ijCqifJgt6Bg9Xx7X8k6DyWDyw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g+i51g5ocKeEQ47Mi+VjQmMWybAFhRADjLhHSU8ww5GAby613Z3BimwHLKcudsRk3TqBK3mIyGLL9B7hOH/NYkDH4wQ6VmNZpAFsw9cZo4O2DQ8V9zb7AAE+J1SjVZvO0eG7FVm8/8K9syct5PW5LpGsgkjT5C4vI4MNAbw5wXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=JMAu3OZT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=psiXUmrH; arc=none smtp.client-ip=202.12.124.144
+	 MIME-Version; b=EW8LcOBvBNjdCaHxco/RQqVqtlSDuGe3yvPHfPmikENS43SgW/CWQ25KfqbT+MOBowVqZxpRaxUTRhlO4nciDECfKVPwJPG3GtAb0nZZimP74qFq5+9tBiCE4B+DdAFNYtiHGlR6h0HIVGMb5Jyq8+DHfbaIq+1lC4NzeFdy+F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=AaGJwcxl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qMwnT+I3; arc=none smtp.client-ip=202.12.124.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 213181D00158;
-	Tue, 18 Nov 2025 22:32:29 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 18 Nov 2025 22:32:29 -0500
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id AE8E31D000B5;
+	Tue, 18 Nov 2025 22:32:33 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 18 Nov 2025 22:32:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763523148;
-	 x=1763609548; bh=DTnSh109Ga/gaoJ/5cfiusC2w3rK4cfim8feEOp0o2I=; b=
-	JMAu3OZTHRHGL1Lt03sYOxL+qtKeYHRth11SHKPJelrHJ8UwCX/rNOP5HMHO/I7O
-	Og5v0cMKK0Zbdyvxvrd4LU40uPBjUwXx/BUGSwnt9WwfRqFqP8Irzyigxgva0Sk7
-	LNCgZDDTEnqqBUKPp2zNkQ/B7r5Nd+hfJyljARFX/pxMi3yExE7FUJS4ui7e6BZo
-	vL3ia0h/zGxjPkzoCxfsA0kD5UYVvI+Z0gX7aL4DOMmUwtOUaw/tHc8ADMqqF+ZS
-	F3Oc5s1c2vS3vWmBJbkHmK+UPgm72lysYLta/BdIl+0+I6IlFrcA7g6J0GUT5Obo
-	uztf3EvonlGR8vcZB2oq5Q==
+	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763523153;
+	 x=1763609553; bh=YOes9NlCRNixty/F1Kac43m2qOW1/Uv3tc1Bi3Bgv9c=; b=
+	AaGJwcxlqxTb1rw/5CyKf81KBtrhJthRV06GWFhJu6+YbcHQRKfaUd3U5jb3WsJF
+	CdaFxScDI44ixyAeZvtWgHs5ix7v9HIgBJklK57bydr2tzGguxy/LOXvcbEYpAvp
+	HWX3M0zF2ZSe5LFhIVZDHfvOfQ+J/x+KQzRRB0VEXrHZzZ+3jQr0om2E17eNf2Bk
+	CAHN4ub0aktB/hLuSxO7wn79CbQPHG90oWhxTmZj8w2wJvN0R6i8iCdvXf2y996B
+	uRGW/rui5DjmBuh44TFlOtv4Hw42UpjXm1Uns+SpUMx3MXR0LwC3nz+jv3JaKFUO
+	TjCkeV1LBIHAXUQL2650qw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1763523148; x=1763609548; bh=D
-	TnSh109Ga/gaoJ/5cfiusC2w3rK4cfim8feEOp0o2I=; b=psiXUmrHEsk9T+7Y5
-	IoH3e1dfxDNjti5IzRW3i8FWN3LSLSuE9MNQcpivRDjGbOJG668LA/xcXMBcRTk+
-	Y5sQ7VDcdN/SBk+X+jf3s3jHrQeuIgJT+LjjbqUEmLJic4GN1S9lniCOcsOJBYG6
-	3r5hB00jPmg43usgbNYgFT/zJ6bPTSmEd7dkqPMl8bX8hyc2BnJLiYap7ARGbnJH
-	8YXlJVGMEpE3MUiXKe8mPS9k9cWcPY3YN9Hqe+nhjpCeF0qlN3SwjM3XCTUxFYyX
-	n3PltfZBLxtAlPW9Yl9tvRlFPMs660YgZwjzZu0wZjCCMgtwGqlKTIRiPg8iUQtP
-	+KySA==
-X-ME-Sender: <xms:TDodactlozH5vk9EKUmuEqlp0QZhvY4Dt52KHs42HBAOsMQf8W4ZHQ>
-    <xme:TDodadL6m8j82Fq1Y6_Wpv-o4444pcBjiqeQGjo4DgApBmAw4ZoMzgpG2joV56M7J
-    y8Bv3vIp37MJYXYhjr0NZ-e2fe0uMSSMIJvDXfmmMPB4Fh0xQ>
-X-ME-Received: <xmr:TDodaRnSHSw_P9mzmLpf8vdwpNdRvxGtXcBUl2mQXo5vrdJuaOqCgOxRVbkFhZr5DqZSNCwdxqVho-I98_rsTrBBEeZggAda5CUw2UXf6DPn>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdefudefucetufdoteggodetrf
+	:x-me-sender:x-sasl-enc; s=fm3; t=1763523153; x=1763609553; bh=Y
+	Oes9NlCRNixty/F1Kac43m2qOW1/Uv3tc1Bi3Bgv9c=; b=qMwnT+I3X/f2Z4h2I
+	E9FFWS0QMpj7UEPFyDW3AWtaFpjmxziS0XAQvg5jFNfKGN25CInyk8FA16Mj3vgP
+	jMIHM995GcIRNYnVlPryyTY4NqMAa8RGxzcxWN9+gj48ZBnjmgfGqUwf4CKNvdnb
+	V3CDD5angU21YNl3JLx4zw7imaa2qnn2cfYS6aGXM7vHLFEh86T0JitwADsMy9oz
+	cM0t/ZyGv2Jk9IW56LP23EtDQbfhNcl+iFj7xZnvUn1jdaz47YZ+oZeJNLUffzeE
+	4zYZWtl3L+5roC4Rl4LkK9yutNirOIElDzV9GdVNrTjcLBzyIdvA8PXi2cl3cqz0
+	NCo+g==
+X-ME-Sender: <xms:UTodaT_CZCM85uqNrZD0RAI1i20if1TGLijBOo_vcLabq61TAksbaw>
+    <xme:UTodaTaQ8ENQrJAwgN3S5u7mvN9nGGiqhh0xsuTSqyvYf6ai3dbu1N606BXR5-Y7V
+    N9gnDhJ63AvD9mT9YN6PDh-hw7RCH2aQ0iJhmyyn5k7AjUQeHA>
+X-ME-Received: <xmr:UTodaa1FiR0jm17qNkQiDZNp7ji4dlr6fkHSFPw4Q0bkTy4AOmn4Wdsn2rgjRohHHBAhCFkIM4P3EB8SYAK2S_ajlXyXPynGpVEG4srIFNOH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdefuddvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
@@ -78,14 +78,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdefudefucetufdote
     ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
     hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
     pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:TDodaWJabtQu4L_wWuxIO-hRmQGRFW9CulcYu5v-4QEGlxvgsQ9Y5Q>
-    <xmx:TDodae5W_kyb3qu1XFFUrbyyHuI5A5gIt8Q8MFoGAm-FCTnAmYWCRw>
-    <xmx:TDodaS32_GCWMw-927A1QKSgGpDV7vSyGTwd1b_ztnu---zZ7ZMlkw>
-    <xmx:TDodace1ZZZNxHSuxMNcJrpGs37YhBMSUJWhQCdvsQU5MOiY98I3rw>
-    <xmx:TDodaaNCbR7waoGcrhiOKdQCF6IMPrRZaGddA7v8nTPqLNDYIWqylBTl>
+X-ME-Proxy: <xmx:UTodaWaIdQ1s_jhyisjRkIlgV-IaVpBBOLhShXUtYu4bnRDZc6kBMw>
+    <xmx:UTodaaKGFOzYYEnYvE9O8-6_gUaS7nGLHH_OlJAZe6L3lBoQDxE80Q>
+    <xmx:UTodadH9Oh7BGvvbgqQn8s-xr1Q5_dmJK8F2_freaFvrtwgChXybzw>
+    <xmx:UTodaZtO3CcV5ocKZesUCYW1ZV988d08D-WW7eH_L2KIx8GVpSz8bw>
+    <xmx:UTodaRc4378O4UKnPFRMxtGkrqiitZ6KVxAg_uxCrYi5ljv9Ar6hwb04>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 18 Nov 2025 22:32:26 -0500 (EST)
+ 18 Nov 2025 22:32:31 -0500 (EST)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +93,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v5 03/11] nfsd: simplify foreign-filehandle handling to better match RFC-7862
-Date: Wed, 19 Nov 2025 14:28:49 +1100
-Message-ID: <20251119033204.360415-4-neilb@ownmail.net>
+Subject: [PATCH v5 04/11] nfsd: report correct error for attempt to use foreign filehandle
+Date: Wed, 19 Nov 2025 14:28:50 +1100
+Message-ID: <20251119033204.360415-5-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20251119033204.360415-1-neilb@ownmail.net>
 References: <20251119033204.360415-1-neilb@ownmail.net>
@@ -110,196 +110,75 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neil@brown.name>
 
-When the COPY v4.2 op is used in the inter-server copy mode, the file
-handle of the source file (presented as the saved filehandle to COPY)
-is for a different ("foreign") file server which would not be expected
-to be understood by this server.  fh_verify() might return nfserr_stale
-or nfserr_badhandle.
+A COMPOUND with
+   PUTFH foreign filehandle
+   SAVFH
+   RESTOREFH
+   some-op-that-uses-current_fh
+   COPY
 
-In order of this filehandle to still be available to COPY, both PUTFH
-and SAVEFH much not trigger an error.
+will report NFS4ERR_NOHANDLE for that 4th op as ALLOWED_WITHOUT_LOCAL_FH
+is set and ->fh_dentry is NULL.  However that error is not correct.
+NFS4ERR_STALE or NFS4ERR_BADHANDLE would be the correct error.
 
-RFC 7862 section 15.2.3 says:
+This patch saves the correct error and reports it when appropriate.
 
-   If the request is for an inter-server copy, the source-fh is a
-   filehandle from the source server and the COMPOUND procedure is being
-   executed on the destination server.  In this case, the source-fh is a
-   foreign filehandle on the server receiving the COPY request.  If
-   either PUTFH or SAVEFH checked the validity of the filehandle, the
-   operation would likely fail and return NFS4ERR_STALE.
-
-   If a server supports the inter-server copy feature, a PUTFH followed
-   by a SAVEFH MUST NOT return NFS4ERR_STALE for either operation.
-   These restrictions do not pose substantial difficulties for servers.
-   CURRENT_FH and SAVED_FH may be validated in the context of the
-   operation referencing them and an NFS4ERR_STALE error returned for an
-   invalid filehandle at that point.
-
-[The RFC neglects the possibility of NFS4ERR_BADHANDLE]
-
-Linux nfsd currently takes a different approach.  Rather than just
-checking for "a PUTFH followed by a SAVEFH", it goes further to consider
-only that case when this filehandle is then used for COPY, and allows
-that it might have been subject of RESTOREFH and SAVEFH in between.
-
-This is not a problem in itself except for the extra code with little
-benefit.  This analysis of the COMPOUND to detect PUTFH ops which need
-care is performed on every COMPOUND request, which is not necessary.
-
-It is sufficient to check if the relevant conditions are met only when a
-PUTFH op actually receives an error from fh_verify().
-
-This patch removes the checking code from common paths and places it in
-nfsd4_putfh() only when fh_verify() returns a relevant error.
-
-Rather than scanning ahead for a COPY, this patch notes (in
-nfsd4_compoundargs) when an inter-server COPY is decoded, and in that
-case only checks the next op to see if it is SAVEFH as this is what the
-RFC requires.
-
-A test on "inter_copy_offload_enable" is also added to be completely
-consistent with the "If a server supports the inter-server copy feature"
-precondition.
-
-As we do this test in nfsd4_putfh() there is no now need to mark the
-putfh op as "no_verify".
+It is highly unlikely that a client would ever notice this difference as
+the COMPOUND that would produce it is bizarre.  Maybe we don't need this
+patch.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c | 64 ++++++++++++++++------------------------------
- fs/nfsd/nfs4xdr.c  |  2 +-
- fs/nfsd/xdr4.h     |  2 +-
- 3 files changed, 24 insertions(+), 44 deletions(-)
+ fs/nfsd/nfs4proc.c | 4 +++-
+ fs/nfsd/xdr4.h     | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 3160e899a5da..e6f8b5b907a9 100644
+index e6f8b5b907a9..e61b1ee6c8d8 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -693,8 +693,28 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	       putfh->pf_fhlen);
- 	ret = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_BYPASS_GSS);
- #ifdef CONFIG_NFSD_V4_2_INTER_SSC
--	if (ret == nfserr_stale && putfh->no_verify)
--		ret = 0;
-+	if ((ret == nfserr_badhandle || ret == nfserr_stale) &&
-+	    inter_copy_offload_enable) {
-+		struct nfsd4_compoundargs *args = rqstp->rq_argp;
-+		struct nfsd4_compoundres *resp = rqstp->rq_resp;
-+		struct nfsd4_op	*next_op = &args->ops[resp->opcnt];
-+
-+		if (resp->opcnt <= args->opcnt &&
-+		    next_op->opnum == OP_SAVEFH &&
-+		    args->is_inter_server_copy) {
-+			/*
-+			 * RFC 7862 section 15.2.3 says:
-+			 *  If a server supports the inter-server copy
-+			 *  feature, a PUTFH followed by a SAVEFH MUST
-+			 *  NOT return NFS4ERR_STALE for either
-+			 *  operation.
-+			 * We limit this to when there is a COPY
-+			 * in the COMPOUND, and extend it to
-+			 * NFS4ERR_BADHANDLE.
-+			 */
-+			ret = 0;
-+		}
-+	}
- #endif
- 	return ret;
- }
-@@ -2809,45 +2829,6 @@ static bool need_wrongsec_check(struct svc_rqst *rqstp)
- 	return !(nextd->op_flags & OP_HANDLES_WRONGSEC);
- }
- 
--#ifdef CONFIG_NFSD_V4_2_INTER_SSC
--static void
--check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
--{
--	struct nfsd4_op	*op, *current_op = NULL, *saved_op = NULL;
--	struct nfsd4_copy *copy;
--	struct nfsd4_putfh *putfh;
--	int i;
--
--	/* traverse all operation and if it's a COPY compound, mark the
--	 * source filehandle to skip verification
--	 */
--	for (i = 0; i < args->opcnt; i++) {
--		op = &args->ops[i];
--		if (op->opnum == OP_PUTFH)
--			current_op = op;
--		else if (op->opnum == OP_SAVEFH)
--			saved_op = current_op;
--		else if (op->opnum == OP_RESTOREFH)
--			current_op = saved_op;
--		else if (op->opnum == OP_COPY) {
--			copy = (struct nfsd4_copy *)&op->u;
--			if (!saved_op) {
--				op->status = nfserr_nofilehandle;
--				return;
--			}
--			putfh = (struct nfsd4_putfh *)&saved_op->u;
--			if (nfsd4_ssc_is_inter(copy))
--				putfh->no_verify = true;
--		}
--	}
--}
--#else
--static void
--check_if_stalefh_allowed(struct nfsd4_compoundargs *args)
--{
--}
--#endif
--
- /*
-  * COMPOUND call.
-  */
-@@ -2897,7 +2878,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 		resp->opcnt = 1;
- 		goto encode_op;
+@@ -712,6 +712,7 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			 * in the COMPOUND, and extend it to
+ 			 * NFS4ERR_BADHANDLE.
+ 			 */
++			cstate->saved_status = ret;
+ 			ret = 0;
+ 		}
  	}
--	check_if_stalefh_allowed(args);
- 
- 	rqstp->rq_lease_breaker = (void **)&cstate->clp;
- 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 51ef97c25456..7e44af3d10b9 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -1250,7 +1250,6 @@ nfsd4_decode_putfh(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
- 	if (!putfh->pf_fhval)
- 		return nfserr_jukebox;
- 
--	putfh->no_verify = false;
- 	return nfs_ok;
- }
- 
-@@ -2047,6 +2046,7 @@ nfsd4_decode_copy(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
- 	if (status)
- 		return status;
- 
-+	argp->is_inter_server_copy = true;
- 	ns_dummy = kmalloc(sizeof(struct nl4_server), GFP_KERNEL);
- 	if (ns_dummy == NULL)
- 		return nfserr_jukebox;
+@@ -2856,6 +2857,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 	resp->tag = args->tag;
+ 	resp->rqstp = rqstp;
+ 	cstate->minorversion = args->minorversion;
++	cstate->saved_status = nfserr_nofilehandle;
+ 	fh_init(current_fh, NFS4_FHSIZE);
+ 	fh_init(save_fh, NFS4_FHSIZE);
+ 	/*
+@@ -2907,7 +2909,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 		}
+ 		if (!current_fh->fh_dentry) {
+ 			if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_LOCAL_FH)) {
+-				op->status = nfserr_nofilehandle;
++				op->status = cstate->saved_status;
+ 				goto encode_op;
+ 			}
+ 		} else if (current_fh->fh_export->ex_fslocs.migrated &&
 diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 1f0967236cc2..3de8f4e07c49 100644
+index 3de8f4e07c49..bcaf631ec12d 100644
 --- a/fs/nfsd/xdr4.h
 +++ b/fs/nfsd/xdr4.h
-@@ -335,7 +335,6 @@ struct nfsd4_lookup {
- struct nfsd4_putfh {
- 	u32		pf_fhlen;           /* request */
- 	char		*pf_fhval;          /* request */
--	bool		no_verify;	    /* represents foreigh fh */
- };
- 
- struct nfsd4_getxattr {
-@@ -907,6 +906,7 @@ struct nfsd4_compoundargs {
- 	u32				client_opcnt;
- 	u32				opcnt;
- 	bool				splice_ok;
-+	bool				is_inter_server_copy;
- 	struct nfsd4_op			*ops;
- 	struct nfsd4_op			iops[8];
- };
+@@ -187,10 +187,11 @@ struct nfsd4_compound_state {
+ 	struct nfsd4_session	*session;
+ 	struct nfsd4_slot	*slot;
+ 	int			data_offset;
+-	bool                    spo_must_allowed;
++	bool			spo_must_allowed;
+ 	size_t			iovlen;
+ 	u32			minorversion;
+ 	__be32			status;
++	__be32			saved_status;
+ 	stateid_t	current_stateid;
+ 	stateid_t	save_stateid;
+ 	/* to indicate current and saved state id presents */
 -- 
 2.50.0.107.gf914562f5916.dirty
 
