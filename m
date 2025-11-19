@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-16576-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16577-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9264C70CC5
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:26:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC4FC70CD1
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 20:26:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0B0EA3485AD
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:23:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 8ADB22ADEF
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 19:26:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BB5536C0D5;
-	Wed, 19 Nov 2025 19:23:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CD936E541;
+	Wed, 19 Nov 2025 19:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1cpRByJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO3dtqEV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E175364032
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D732FBDFF
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 19:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763580197; cv=none; b=q3JLHmvsQwGXKuSNS3QSgYcdhCN9OtPNyY/2AKVko4B//ovFpoQoWK5gqT6RAR3WWsX09EaNXb9PMdYwbjiA+oc0dSYBJDOJvXwjTBP7TkbHBO+qC1vwq53KO7ZxAqLJA/pRvwjVr5ETObvn4CcH9zvL5DBd1c9D3HegfbNMy+c=
+	t=1763580408; cv=none; b=o5sREHPt9chRXYk9S8OmW40mTUlBOfk4uoo5lxDd2RZNsvkIHxgZcX2QL0bFUszl1VCvrglcUYynqiG3/zTI/eQdFA6uX5SSoWLRHOuiNYX8adgZcIe/d9sYZWDbX10MKChQgwM8nscSSuoqTq9M9AT/paRY3YYa9wPlQprb83E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763580197; c=relaxed/simple;
-	bh=gUR9v/9unllLq1t37JgWCn4XWzvHtKN4OQyOgp+WnA4=;
+	s=arc-20240116; t=1763580408; c=relaxed/simple;
+	bh=h5pZQMtOb6x98bom8j7Ai5ndsEUoo0Jj93ME55dBf1w=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NsHJ582wbZemfb+2sbUEQIBgc0b/Ki2vOi9z2KNcZI4FO/rYuNmpWHG+iMcwNsmmT/oTZrkgNWqC9/UIGG6bUzPi6vHXgXJXwcdCNUOvUsb2Jys3Lf0OdSpu27JMp0z9DFOC+4xADhD5QIhbDQhE9iuWAH+H/Aa8L43cH2/DtwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1cpRByJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD048C4AF09;
-	Wed, 19 Nov 2025 19:23:15 +0000 (UTC)
+	 Content-Type:MIME-Version; b=eTQfxA1Qvj7OEdlAWjXZ2GyYlA5r4onhXE7+jykNJhbwoFn3BrrD9EwIBDRrnJUzPckapcugOmQZjSZpHJI7O6N+vzfG9ZOoYFI+ab9Woyhy/OrN3SvoPD2folQfR1JD/DLjMENuHMxElGkK8VxBzNaOq0anBnbAH7BggwQplwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO3dtqEV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD77C4CEF5;
+	Wed, 19 Nov 2025 19:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763580196;
-	bh=gUR9v/9unllLq1t37JgWCn4XWzvHtKN4OQyOgp+WnA4=;
+	s=k20201202; t=1763580406;
+	bh=h5pZQMtOb6x98bom8j7Ai5ndsEUoo0Jj93ME55dBf1w=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Y1cpRByJ1/uOv0qrr+46FhNwejk0saux2/DV7PaG+WtUpTXNn0Ak+9NQlVayE/rKM
-	 zS6j1hqVFj0G//ZuNJIx/TMEdsyX0LozCLBmWtt0IRj5u7jvvm19ZyzIDsWLUsjJxk
-	 z4l3tVUFCXxSJtX8+5YZsGEiO/j2fW12IZhl6W3/6pE2XQFJjgTW5DUIEtAofVG/lH
-	 HeVorlCs0f0qpmoY/Y2daVAVfY3eEn9iZmOOxhCiCNGQ/PFwfP6dvlogCXkFgJfphQ
-	 SS9V3QN89chynumP4dV2bQGlCr/C7pr52Czz7iZ6Pe9FWudFtpQSnpXjTn4YKFbiAn
-	 uDI9hvdOESyuA==
-Message-ID: <a28961a088cdc0aa78b1dbd4a453b10bdcd76568.camel@kernel.org>
-Subject: Re: [PATCH v5 03/11] nfsd: simplify foreign-filehandle handling to
- better match RFC-7862
+	b=VO3dtqEVS2RTe7vmMYYjxW2SnjauQrWWfZg6C1sU52hQHIMvRrNN5zlUBdLvprWf9
+	 WyYG74v7KuaOfy3J/TKv0a3zUtbDZhnAAmXmYzQWhCwD5NAylrmBYsGJTE34BfB93+
+	 mGh457eR9gkkyBRIbBELfjcXxRymFCW7xWhyMOLYj5QVFSqr+pOsaaZL3Jkczik03c
+	 A4kCtF3MO0nw/ho6UOk3kp9NbUAkQ0rMwDKS9znf6Y6/qe0ldy9yrNXBA6FhLs2SgX
+	 xnkxUKOgx65dkoB3reqkzFY67a0DPp4h8g8OxJfOtxWo3dpCgMUT+jRedEiLzlrJTO
+	 kUhiB+zSrzJKA==
+Message-ID: <c8dd31150dcc2571eaa2ee2af567cadfb47f69de.camel@kernel.org>
+Subject: Re: [PATCH v5 04/11] nfsd: report correct error for attempt to use
+ foreign filehandle
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Wed, 19 Nov 2025 14:23:14 -0500
-In-Reply-To: <20251119033204.360415-4-neilb@ownmail.net>
+Date: Wed, 19 Nov 2025 14:26:45 -0500
+In-Reply-To: <20251119033204.360415-5-neilb@ownmail.net>
 References: <20251119033204.360415-1-neilb@ownmail.net>
-	 <20251119033204.360415-4-neilb@ownmail.net>
+	 <20251119033204.360415-5-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,67 +139,83 @@ MIME-Version: 1.0
 On Wed, 2025-11-19 at 14:28 +1100, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> When the COPY v4.2 op is used in the inter-server copy mode, the file
-> handle of the source file (presented as the saved filehandle to COPY)
-> is for a different ("foreign") file server which would not be expected
-> to be understood by this server.  fh_verify() might return nfserr_stale
-> or nfserr_badhandle.
+> A COMPOUND with
+>    PUTFH foreign filehandle
+>    SAVFH
+>    RESTOREFH
+>    some-op-that-uses-current_fh
+>    COPY
 >=20
-> In order of this filehandle to still be available to COPY, both PUTFH
-> and SAVEFH much not trigger an error.
+> will report NFS4ERR_NOHANDLE for that 4th op as ALLOWED_WITHOUT_LOCAL_FH
+> is set and ->fh_dentry is NULL.  However that error is not correct.
+> NFS4ERR_STALE or NFS4ERR_BADHANDLE would be the correct error.
 >=20
-> RFC 7862 section 15.2.3 says:
+> This patch saves the correct error and reports it when appropriate.
 >=20
->    If the request is for an inter-server copy, the source-fh is a
->    filehandle from the source server and the COMPOUND procedure is being
->    executed on the destination server.  In this case, the source-fh is a
->    foreign filehandle on the server receiving the COPY request.  If
->    either PUTFH or SAVEFH checked the validity of the filehandle, the
->    operation would likely fail and return NFS4ERR_STALE.
->=20
->    If a server supports the inter-server copy feature, a PUTFH followed
->    by a SAVEFH MUST NOT return NFS4ERR_STALE for either operation.
->    These restrictions do not pose substantial difficulties for servers.
->    CURRENT_FH and SAVED_FH may be validated in the context of the
->    operation referencing them and an NFS4ERR_STALE error returned for an
->    invalid filehandle at that point.
->=20
-> [The RFC neglects the possibility of NFS4ERR_BADHANDLE]
->=20
-> Linux nfsd currently takes a different approach.  Rather than just
-> checking for "a PUTFH followed by a SAVEFH", it goes further to consider
-> only that case when this filehandle is then used for COPY, and allows
-> that it might have been subject of RESTOREFH and SAVEFH in between.
->=20
-> This is not a problem in itself except for the extra code with little
-> benefit.  This analysis of the COMPOUND to detect PUTFH ops which need
-> care is performed on every COMPOUND request, which is not necessary.
->=20
-> It is sufficient to check if the relevant conditions are met only when a
-> PUTFH op actually receives an error from fh_verify().
->=20
-> This patch removes the checking code from common paths and places it in
-> nfsd4_putfh() only when fh_verify() returns a relevant error.
->=20
-> Rather than scanning ahead for a COPY, this patch notes (in
-> nfsd4_compoundargs) when an inter-server COPY is decoded, and in that
-> case only checks the next op to see if it is SAVEFH as this is what the
-> RFC requires.
->=20
-> A test on "inter_copy_offload_enable" is also added to be completely
-> consistent with the "If a server supports the inter-server copy feature"
-> precondition.
->=20
-> As we do this test in nfsd4_putfh() there is no now need to mark the
-> putfh op as "no_verify".
+> It is highly unlikely that a client would ever notice this difference as
+> the COMPOUND that would produce it is bizarre.  Maybe we don't need this
+> patch.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4proc.c | 64 ++++++++++++++++------------------------------
->  fs/nfsd/nfs4xdr.c  |  2 +-
->  fs/nfsd/xdr4.h     |  2 +-
->  3 files changed, 24 insertions(+), 44 deletions(-)
+>  fs/nfsd/nfs4proc.c | 4 +++-
+>  fs/nfsd/xdr4.h     | 3 ++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
 >=20
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index e6f8b5b907a9..e61b1ee6c8d8 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -712,6 +712,7 @@ nfsd4_putfh(struct svc_rqst *rqstp, struct nfsd4_comp=
+ound_state *cstate,
+>  			 * in the COMPOUND, and extend it to
+>  			 * NFS4ERR_BADHANDLE.
+>  			 */
+> +			cstate->saved_status =3D ret;
+>  			ret =3D 0;
+>  		}
+>  	}
+> @@ -2856,6 +2857,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  	resp->tag =3D args->tag;
+>  	resp->rqstp =3D rqstp;
+>  	cstate->minorversion =3D args->minorversion;
+> +	cstate->saved_status =3D nfserr_nofilehandle;
+>  	fh_init(current_fh, NFS4_FHSIZE);
+>  	fh_init(save_fh, NFS4_FHSIZE);
+>  	/*
+> @@ -2907,7 +2909,7 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+>  		}
+>  		if (!current_fh->fh_dentry) {
+>  			if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_LOCAL_FH)) {
+> -				op->status =3D nfserr_nofilehandle;
+> +				op->status =3D cstate->saved_status;
+>  				goto encode_op;
+>  			}
+>  		} else if (current_fh->fh_export->ex_fslocs.migrated &&
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index 3de8f4e07c49..bcaf631ec12d 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -187,10 +187,11 @@ struct nfsd4_compound_state {
+>  	struct nfsd4_session	*session;
+>  	struct nfsd4_slot	*slot;
+>  	int			data_offset;
+> -	bool                    spo_must_allowed;
+> +	bool			spo_must_allowed;
+>  	size_t			iovlen;
+>  	u32			minorversion;
+>  	__be32			status;
+> +	__be32			saved_status;
+>  	stateid_t	current_stateid;
+>  	stateid_t	save_stateid;
+>  	/* to indicate current and saved state id presents */
+
+It seems like a reasonable thing to do, even if not strictly needed.
+nfsd does occasionally have to deal with weird compounds coming from
+stuff like pynfs. Hmm...maybe we need a pynfs test that crafts such a
+compound?
+
+Anyway, you can add this, but I'm ok with dropping it if you prefer.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
