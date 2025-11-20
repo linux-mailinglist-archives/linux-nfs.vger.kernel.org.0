@@ -1,213 +1,131 @@
-Return-Path: <linux-nfs+bounces-16638-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16639-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1950C763AF
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:48:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5E5DC765BB
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 22:23:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D4A214E22F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 20:48:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5449A4E01E0
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31012306B15;
-	Thu, 20 Nov 2025 20:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D17F72F999F;
+	Thu, 20 Nov 2025 21:23:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="MzdRO598"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDPfe7Nj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021107.outbound.protection.outlook.com [40.93.194.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6F2305940;
-	Thu, 20 Nov 2025 20:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763671714; cv=fail; b=FyGeebyxPIvKMC18/K7ZjlyqXXRx44H2o2aVlFHkwOKPBa31+N1gdZgGisCMF6G/CqzHW90ec7YBspzCFUo86XnFLzFvHP28FSg74If/NieEFvKZ/EbhzToVcYqJ0vkEqDfATfI9mA08Lwgh7LzjpjH+PI1IRt7bfwQCUPU1aFw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763671714; c=relaxed/simple;
-	bh=gobMV9eV56sfmJwSBIvnCYWDGP68yivjBAUo1o0tgZE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z/k+Ij5yKV/OEqHfrx/mrBAQM0U/bsxG2PuOXKCgq/YvyL6vs6J4+6UyPaumOdUZow0jKZTG37SA1MAegOMe3808f/GW59ktcbvdSO1S8+o+lNwB8Ks1s2hMf/WUOC9iurplClf7B56p93h9mRQG6Sj9wPd3GjZ0js9PhSGSrcw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=MzdRO598; arc=fail smtp.client-ip=40.93.194.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oYJ32RFVIIA/w7k7Vd6Z363Q90BvP2heCPn7Cl2NBqnFG6NcRF97a0B3e+WPZBL5If3/2actWDYEb9eUoR6BfpPCLWLNblVXojvs7P3TZvxljkh+ta6u8gFIqEcGTBQZivzBY0cAlsrkLhEnO89J2u/JcpB2zwf/49El2cHr9sETQiiKT11ehXORRdxO4UPcBbLt1JIvJSgEL4LMAEoyCecZZ5ybOGo2PAo+Vr/lRku97hYaCBqptpwZw60h7LPO80q/Bobl6vNv1zb0mJC27Fx7cwtQWnyuuCew7KqNyPlWwM8M1KSZBfovCRyANzRcxNZXE8GCQPGGpzfbFud+Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6rGSEhdM5YCAuXicLRDmV8GJI0Jxk8FE4McRpmkZyfU=;
- b=AEt6w3TTRpPnFVoBPC9UbWsGR9zVSu9GhfGid8j6QpDztR4RGI87ANI7NRca6G6CDVfS9hhootkJzauugZdQ20yDxbXL7Ial/UPVwa2hwiUbWVWrRNq6+IOVZZmowcHaKq5BX91wHoRuclZgX4s4p+qZ56jqHzSXhKF555Epv5nF24NJ+3Xf4DwpJgFWBOupznsgfMQDUwC4u9BGPOu8vIHhvaMsAt9H9SCN1OATg6ZLSiHIPaB0HxOCKTbyrJe5936DiqPbmyKToSjcVI/3EqWs5jRBYSWC9RgPpz/fXM/yCWWpPEtt8esiuHuDUlCHJI25jmDeHJ+gY/2SsWOA5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6rGSEhdM5YCAuXicLRDmV8GJI0Jxk8FE4McRpmkZyfU=;
- b=MzdRO598iY80PIxbJotPB/EswcHLg9YGxPqon/cHCDsJlmzE9O5HgEA4llbG8rH/+IzUv1xQWQSU9aFCMLNeqpTXLeCZVbDv0f8KWP62g0Ol7+arIX2wAi6YlZagsE7yKQNs7/kzvqdLQROVfAHpds0nO6UymPqps7v7hDzoH8k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-Received: from SN6PR13MB2365.namprd13.prod.outlook.com (2603:10b6:805:5a::14)
- by BLAPR13MB4660.namprd13.prod.outlook.com (2603:10b6:208:321::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Thu, 20 Nov
- 2025 20:48:28 +0000
-Received: from SN6PR13MB2365.namprd13.prod.outlook.com
- ([fe80::9127:c65a:b5c5:a9d]) by SN6PR13MB2365.namprd13.prod.outlook.com
- ([fe80::9127:c65a:b5c5:a9d%7]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
- 20:48:28 +0000
-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
- Mike Snitzer <snitzer@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] VFS/knfsd: Teach dentry_create() to use
- atomic_open()
-Date: Thu, 20 Nov 2025 15:48:24 -0500
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <845984BB-7A05-4A4C-8EAD-C28C93D43679@hammerspace.com>
-In-Reply-To: <b718b3c2-d19e-42c7-a29e-5e07319e2439@oracle.com>
-References: <cover.1763653605.git.bcodding@hammerspace.com>
- <d7405b554e3b12a037dbce4b9db29394d87183d1.1763653605.git.bcodding@hammerspace.com>
- <b718b3c2-d19e-42c7-a29e-5e07319e2439@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: PH8PR07CA0033.namprd07.prod.outlook.com
- (2603:10b6:510:2cf::20) To SN6PR13MB2365.namprd13.prod.outlook.com
- (2603:10b6:805:5a::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9C82C21C1
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 21:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763673825; cv=none; b=qS9grvi4BRql+HqL6dTAIjRyYQWFYorgLMxlFmktMElgcy3RCymuXv3R3VMxu7q93S3Daevehg2/+LpActS/PW9wraVA3coigSCPBQ6FN4Sji2KzhAWw+E1PnVVXwo4vNKo6ShpTsiUMoprxoSbY3gzkUzKutkk5im4uaToE5Vw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763673825; c=relaxed/simple;
+	bh=e4M3eNKCoU74Eo0/pZlYbyJi0fi06AYvB+KoAvQYGks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=kgXailEK3fqK/wNFeL9YNYrayjYxiqSgKxDY6mjPsexx0Yfys1RubZmmkcSU5bEQtPXgS05O/S3XK8zry8UPLFZs22oBFJB1GBkMuFDB52deyPKKXlaOU/aDNf5ybsKJeKtZGsrBjWt8clOvuYG9O7vOQPp3znRrpdtuwW288Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eDPfe7Nj; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-641977dc00fso1905288a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 13:23:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763673822; x=1764278622; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e4M3eNKCoU74Eo0/pZlYbyJi0fi06AYvB+KoAvQYGks=;
+        b=eDPfe7NjrYi+LXizFSF+7eRbyfA453xfKLoj0ODNM1qiUMncXNcbQ4aDRSw5rLcwyK
+         3157vJGR5xA4QbaVbRSgognQz7zBSiqD7GAiLaaKY8c0NNzYdlVXW1CqejilWJrLiUgm
+         cPebQpOe6Mikm78pZADFw9/MZJ/CnooPdHEZtW22tcLJeQkA29mLXOO5ixUwXS+MCWcx
+         ST9nO1PoIW7g2aIstRGbayYd2RAwIVDJ1LsLv3kry3zWt6hoslbw5VMsAoZAR5erUo6m
+         x/6WYELEqi+XUC3g+Kl/vLHXiMux3st3Dc5cW4xLTnFY0f1I9AzcBFa9uu2xPySzqXUG
+         U2cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763673822; x=1764278622;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=e4M3eNKCoU74Eo0/pZlYbyJi0fi06AYvB+KoAvQYGks=;
+        b=bdnA5Xg0AtaiZzc+n4jxaWIwEiE2kRwutkvbVB6cGYFaI8/FtebIxliz9c+nzAK0YS
+         hi1DheWVDiMQt/vbluAEwJ7C0ULKlZxmz3UOvuvwtfUlGZuhK8vj7tEI/T8Y9Nfnq/Ws
+         veRkRcEVCPSbXMpgVxN/KFHAQvu1MpvJtO3sefqOHWoLPgLPpB7dRveyzlXU0Q5JikqB
+         XHTCGZHp/aTrOr4pEXk4sA/5oG968Q8O3H8VgJjt7mw87kQzz/5WFSfuF+hdctAbLQS8
+         yBetguQTntwYGYM68gJonY3RyJX4Hkyycodh/vbkVb7n9CGMc56g4OzoAIYt/gv/FnX4
+         qtLA==
+X-Gm-Message-State: AOJu0YzoF+H4aURtjpsTc/fzvd55uE+h4qFjdU9axQchFeiOL9FKK7Q6
+	gHFAZZ6UvmYrZo7jX0kC76/mfVzjeRHDx7XbGR2RC/xiDannM3gXrQqXIk6ICELX/ITRZFWwEw2
+	c/AWKoVwVq9BmC2BoJzvTsXSYaHrW5Og1B0lNZ/4=
+X-Gm-Gg: ASbGncuvtXzQWp0Cr60/N6iXZMio0rnGZRU8uqk+r4YYLy+eIczeLrI9a/QO6dw01Dv
+	3qp0pFZRZs1bi0xALB2CCnzg0liAEf2H23YWEukvf6KFVfm0Witjqyx89h/UQKsgBohimQvQkGW
+	kAUt7d3f94E10f1e3Jlt9BOGjR3sH2UG1z5zns67CjWj2Rhr/FEUjwc+00hDvYJ/QHQSnIk8Ssx
+	THaKqge65di6I8QJSPK3NiVtXYKK2hJcFvK+VohuYyFcUeijIRmfiCF0yNpulKsCrfERXY=
+X-Google-Smtp-Source: AGHT+IG1/GHANuv+gq8YZVpLBbCOylwJMnJNYajjzporSM/Mjs6Vc0uBliuJyDWxpIgu/V/RGD8NFIPtJTBHOJ62cxk=
+X-Received: by 2002:a05:6402:2714:b0:640:b1cf:f800 with SMTP id
+ 4fb4d7f45d1cf-64554320e36mr159492a12.4.1763673821966; Thu, 20 Nov 2025
+ 13:23:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR13MB2365:EE_|BLAPR13MB4660:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a514b28-55a1-4d2e-67aa-08de28762887
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sbL9EnSM7K9FG4pQ1WlptklHgRQHu1jCwTTVZwIOxtZGw7Vr3t/LttUGFQNz?=
- =?us-ascii?Q?0lrco+aOEy6VkTutosU2q6fmrD8OXjAHz/uOTCrThDu8gRt2vJCVe98cFyWx?=
- =?us-ascii?Q?wASvYH31yaEpXVeFLG9ir+7evLKfLeli1M4O3fBkmk7oYV3wsnwWjX1HDbdh?=
- =?us-ascii?Q?a0z3+hD/NZwy6jmgcc30WGbYjC6Q7UknbfWERfA+yE+a8Ri/sMl5hxQbRBz/?=
- =?us-ascii?Q?ArUi7zFz5kBdtNrcaPcm2TjRLjHf+UQr/rrlhGSsseODkEa0ln9BoUxqBsE8?=
- =?us-ascii?Q?wuILnX+PXHJ8scwLEBApt2//CL8clKIb3rH7LXMOHmkiZW04hzPM72DuoCAD?=
- =?us-ascii?Q?7mo+8aA8d+m3AVOGLFH5MbpYnRscBru1rONC7gCz6pWGcUQDSptDoivta5dQ?=
- =?us-ascii?Q?yL6WorAsdSfzOdeJZj8Te1y8hZAA65vKfdMCJgblJvmTHFCYaqAx6trviPdS?=
- =?us-ascii?Q?D/LsO8dkv3jatJVTjdNbdeh87CC1p9p+6mDrou/RCVmBaA6YTZKjn4c5jLca?=
- =?us-ascii?Q?wz7bnqtEbu+LGSB3YQbsMdOXyJivO5EXsBx8APw8pumvnpnlVnPomvNSTjuO?=
- =?us-ascii?Q?cfONH15e9vKpa8Ah6LqUQOzP+bBNX3h5EWaiEplBmb/ej0D61tBDN7FBSmH2?=
- =?us-ascii?Q?UEM3oNjwR1x2zkLv5RglMzteTlsGKqEA4QjKZQ3fJZjQOzHqmXnfx+FjueVk?=
- =?us-ascii?Q?Uwn+fqKTi77TykyivEPd2lYtxrNKXIDBKcYYnq3N0rMZYJPZ2w8bBNDEkMTx?=
- =?us-ascii?Q?8STY9lV2rJEq9QKCXeSDLfe8uJFu8dUl79VEYQdhi6lrFUMi6Bl1b938wTBh?=
- =?us-ascii?Q?EsqR3S7SZfYnf+hQcgQ9P2+BHTebZn+31yV+iuhwKi34LoVPXkhicYhPG9Iq?=
- =?us-ascii?Q?5ANeNAw9r+Boz1XmOO8cpbq3pRqGvyDVBOMBLA9sZafmpSS9wSHBGjLdu7zE?=
- =?us-ascii?Q?H1QNT9qlmp6PAeAQCeHCKIfQsNeFGP9xpK9f8QIV3gbfeAdzhKGAcfsvjNDt?=
- =?us-ascii?Q?KQHzf0ZKnSCQm4dreTJyi8obVeg9V1XUhqVLfzpkuE7ip0sD4inFYjKwmo2K?=
- =?us-ascii?Q?GMgAKvvC5ZScuY64wedQSCb7DAT2E7OGJi4htsfhwmnACrfz4brhD2T0cUUG?=
- =?us-ascii?Q?A6OCnNiUx6ns1/OjZYVb5oeRJY8EObM1p+qE79aj0AqYw/jTn0x0xlC2mxdz?=
- =?us-ascii?Q?ow/kHZUTLCkDe/fa0MRbUNifGnUKK0daMtpF7kwwMhi9L/OhjVNSsJXh3KES?=
- =?us-ascii?Q?GSv4Rb2R3fKSUADjiXE3dMujpx0BEFCzTYA+oxFcwNhyYo9MGiGFlUt2JoZ9?=
- =?us-ascii?Q?p6pcMsM6v0X11uZm2/39bxHflIFFtcK38QpxGqQGJhfAX/EEHGGzKmfAA8nu?=
- =?us-ascii?Q?vdXODLP3Cgsn/m+uNCOLWz/IQEBYeS/Dj+2HuQTGuyUBvBXVtd7uxIBsdj5V?=
- =?us-ascii?Q?3cKUj/6jLutPsl9OQ88AWNG0Z8Vm3Df8?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR13MB2365.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uiKNqMchE+ZS5X0BN/DMmwztTTFZDR3TW8o1F+gFkswirCtonpV9DJvtswML?=
- =?us-ascii?Q?O+0Gr5vTlfMkBto9O2mfiZgrnjD9kYihUe2eBWn010r0AJ7+8TcxnPgZ5qbW?=
- =?us-ascii?Q?YO6q3zcwPqcPd1yG6bNEIpEOrY5Gmqo+eL7kjr1ZXZP3WDrQOikO51IrC3X/?=
- =?us-ascii?Q?5T78lwxLXccZUZotLUSbJL8yarlusGeafGFUhBsmDYhyr+urT4khQ88UIzf2?=
- =?us-ascii?Q?0CRra65V74Sq+/Q1MCe9lV+9N6UCy9HBHVBByU3wHjsBVRSowmRMC2VmARpU?=
- =?us-ascii?Q?hLXRYJNYdihosW0RAygHAzThe79ognRzA+DlgZP/6HoeXOjuFm2NoTPKeJ45?=
- =?us-ascii?Q?urW9bTNkVRMZgWeHMJ4VNY9NuOO51u0UZLXa/vq+TQ8c2tTTbtr/XSKMjLk0?=
- =?us-ascii?Q?wsNwdrYxWCyO+raSceAVZmlKlBLhoUdBi66Q77he5yNhGSYd/OLyWtAWgw/Q?=
- =?us-ascii?Q?F8QMpjFuVezJirynHqguq3guQ5iOyWrXE9r6G+kEOkWtP425hREH8Qo8FVzr?=
- =?us-ascii?Q?UCYlKvo3WfasiMBnkRR4HTI4G8tHxj06NlVPoxoSkb44mxIXqxPbrwU9OVSi?=
- =?us-ascii?Q?zGDw3p4YJcZj2Ayi89kXrbNTV0Cgzh0Q2UTrUPzxualg0wABgW4hRuDcq434?=
- =?us-ascii?Q?LBaYKZx5HDjY64ADzkobhqr+daG1ABJnl/dlA+qA5ZmQ5ttT5xJHpTCvk8MR?=
- =?us-ascii?Q?fPQtSefjhTPjEEbkBjjEgLJaOrDkfcCy6VjNfkRyfPPayL4IGNPCS+rqzMB8?=
- =?us-ascii?Q?7/JJ7KFRv5ilgsvZM5jjDegJU2acVOcoyo/2QvUYXFhbZP9TIi0EiEzhNlFT?=
- =?us-ascii?Q?6I1FpiuAHj5eGWCg2izPiWvIyIQ78J6/5vMrgsBMiqkDhsyng+G+zPhxp4J1?=
- =?us-ascii?Q?5uTGjYMSK0LjT1+d7mxsU5itYSiJM7EFQJD46Ifr64t1WV0E7VjTWcNNGEHu?=
- =?us-ascii?Q?1sgVxGlSEO8tWX918AUYXmb060x+It6EPFsUgnj1RoAn6KVDLtraSiiWZuIt?=
- =?us-ascii?Q?g4Dx4g3HPutZCyspterY6kaz1GwDXmoe7vX26TLT+8aKrU/ziF5tUuqSgO3D?=
- =?us-ascii?Q?27Lgw97pzgR2lWcwY1lY8F92fsY7H0COYKzRg7Q+/KqURHOj1XL78Qrkx0+o?=
- =?us-ascii?Q?J4AvQd6MmCw+te2yGlgntI5LXI0vc/NbD1JpgWN3H/rRTzmydF6/v1ch94dP?=
- =?us-ascii?Q?iXW46QxCrLYQMh663ZhfoyZYxj0uZ9QejZNTrEHQF1hADdl3hqpP4eSYBX3X?=
- =?us-ascii?Q?GbLVkw1St9bbaKwBaieaYQviwcsr8AVihmJFjMdx96x1BksKTSLyqf32Aahm?=
- =?us-ascii?Q?y9QZe/MtFan1vEMA0hzIh02qcgIvkEzuvDKg+qIihpZPAAOT8saGBa8ciKvP?=
- =?us-ascii?Q?MsKT9gCv7PsTtwSOB2fWPQBPtl/phY4sHYSourkUnH4GRJGMeDa6flo3BDZ1?=
- =?us-ascii?Q?SXB8Y8XRh9BBNr9akqhNHIRSABVqX3cxYLDR+MN24oaCSLx7L0WjFTr6c4Om?=
- =?us-ascii?Q?MqhhxMr9WpRI39BwBGmXvZqDsIq64ZLgQWxB0ZsNxCt5opMKaX1iAnDy5eRJ?=
- =?us-ascii?Q?pxcpTwnapI+4LxzfWUZY/YgRSR7N+XUKt12fnCSsZNVpH8WgGVXEm6BRUzgI?=
- =?us-ascii?Q?1w=3D=3D?=
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a514b28-55a1-4d2e-67aa-08de28762887
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR13MB2365.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 20:48:28.5378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Srz/Z/clfat2UormkN+5snG+p5kKtIK7Gx+uIL1EgI1W8KoyyGnbytPlgtIu6v3dNOBdgQAlY+YblB7VcYIkeY8JSPrNr4YFjZcD++/NcVA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR13MB4660
+References: <20251119005119.5147-1-cel@kernel.org>
+In-Reply-To: <20251119005119.5147-1-cel@kernel.org>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Thu, 20 Nov 2025 22:22:00 +0100
+X-Gm-Features: AWmQ_bn62Tkfc2Ni90bWjMsLINkUpuhLtWUMSa7MlUsfDR_QVmofxXBWWII5IDM
+Message-ID: <CA+1jF5q1CE0vxHx+_MJ+Oak9mLuGQ3dVBq0qJOZVcrjoFepH6g@mail.gmail.com>
+Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
+To: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20 Nov 2025, at 15:09, Chuck Lever wrote:
-
-> On 11/20/25 10:57 AM, Benjamin Coddington wrote:
+On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
 >
->> +
->> +		dentry = atomic_open(path, dentry, file, flags, mode);
->> +		error = PTR_ERR_OR_ZERO(dentry);
->> +
->> +		if (unlikely(create_error) && error == -ENOENT)
->> +			error = create_error;
->> +
->> +		if (!error) {
->> +			if (file->f_mode & FMODE_CREATED)
->> +				fsnotify_create(dir->d_inode, dentry);
->> +			if (file->f_mode & FMODE_OPENED)
->> +				fsnotify_open(file);
->> +		}
->> +
->> +		path->dentry = dentry;
+> From: Chuck Lever <chuck.lever@oracle.com>
 >
-> When atomic_open() fails, it returns ERR_PTR. Then path->dentry gets set
-> to ERR_PTR unconditionally here.
+> An NFSv4 client that sets an ACL with a named principal during file
+> creation retrieves the ACL afterwards, and finds that it is only a
+> default ACL (based on the mode bits) and not the ACL that was
+> requested during file creation. This violates RFC 8881 section
+> 6.4.1.3: "the ACL attribute is set as given".
 >
-> Should path->dentry restoration be conditional, only updating on
-> success? Or perhaps should the original dentry be preserved in the local
-> variable and restored on error?
-
-No, we want to assign it and pass it along because there's a conditional
-dput() at the bottom of nfsd4_create_file() that wants to know what happened
-to the dentry.  And that conditional dput() needs to be there in case other
-paths error out before we get to atomic_open().
-
->> +
->> +	} else {
->> +		error = vfs_create(idmap, dir_inode, dentry, mode, true);
->> +		if (!error)
->> +			error = vfs_open(path, file);
+> The issue occurs in nfsd_create_setattr(), which calls
+> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
+> However, nfsd_attrs_valid() checks only for iattr changes and
+> security labels, but not POSIX ACLs. When only an ACL is present,
+> the function returns false, nfsd_setattr() is skipped, and the
+> POSIX ACL is never applied to the inode.
 >
-> Revisiting this, I wonder if the non-atomic error flow needs specific
-> code to clean up after creation/open failures.
+> Subsequently, when the client retrieves the ACL, the server finds
+> no POSIX ACL on the inode and returns one generated from the file's
+> mode bits rather than returning the originally-specified ACL.
+>
+> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
+> Cc: Roland Mainz <roland.mainz@nrubsig.org>
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: Chuck Lever <cel@kernel.org>
 
-I think the fput() is all you need here.  I have throughly exercised the
-non-atomic vfs_create() failure as well as the vfs_create() success then
-vfs_open() failure paths in my testing and development.
+Yes, it works on all affected clients,platforms (Windows
+ms-nfs41-client, Windows Exceed NFS4 client, OSX).
+Thank you.
 
-Thanks for the review!
+Windows test code is at
+https://github.com/kofemann/ms-nfs41-client/blob/master/tests/atomiccreatef=
+ilewithacl/atomiccreatefilewithacl.ps1
 
-Ben
+The only thing I did not test was exporting a NFSv4+ filesystem with
+Linux CIFS server, and letting Windows CIFS client create a file with
+an ACL.
+
+Aur=C3=A9lien
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
