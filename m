@@ -1,62 +1,57 @@
-Return-Path: <linux-nfs+bounces-16620-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16621-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D7DFC74836
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 15:18:15 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 883DBC74900
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 15:30:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C73DF34D446
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 14:17:30 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0A018353C84
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 14:30:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB1234AB12;
-	Thu, 20 Nov 2025 14:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEE7D137930;
+	Thu, 20 Nov 2025 14:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PV/N2yd2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpfQvf1f"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27CF347BBA;
-	Thu, 20 Nov 2025 14:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C970E3B2BA
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 14:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763648191; cv=none; b=NGwTJutNEvoSp0WZI6FuIuHoOYLPwmGPiFtBEHrODln+JK1rqLU45rF/W2dYMWYRssB1u6E/NV9PJ6sAB1rBtwuwD1gZCHVeUazzd7TuA4jk77bjdOJJdCJK0ynQpXuKdvwOrgapzUm+BMtIXFGMZKG22s49eaRcPnNABZS0gkk=
+	t=1763649048; cv=none; b=ZL3kIWQL1orN8nDK9iz6FN651/SCdXF1j4HsHfjopd032X97vAvB8HbDZYhQQaHrVX5YYHktk2BN6FePdToXksOOoSAD1AnefM1DlyyfQe+/KtEVsdvV3Hbfs/Jjp869zzjUR1S4eExMTrmWqdAgw0HjiKEA5TNzd5WwMUsk4LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763648191; c=relaxed/simple;
-	bh=v0VO9dYEhA+UGnORRHe7yF+Q+1hgT5u+mOf1/mZRcL4=;
+	s=arc-20240116; t=1763649048; c=relaxed/simple;
+	bh=4YrLQ15vVaDJhK4rBmSCrACVpwQ55mc82ACfyJdZkCU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oXaLs30aB2eZC5+JjDHh8N0Yn4909l8y4wBtlibInq2wKeCv+Je1lieREV3LgnRwHYvK7jinglk8x/PJtQ0SxXKJLCwSqo4jN/eNkRns3TFw6xzBpxzDshZef4NMIhka5u7Awo10tFQXv7E0cfS4hqvfeC9oyMNbYOjvN/ylcFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PV/N2yd2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A4EC4CEF1;
-	Thu, 20 Nov 2025 14:16:29 +0000 (UTC)
+	 Content-Type:MIME-Version; b=XKKOHd2KKMx3HfyDaP1cCZMqRDYVX54TenI3ptVnQGr76NMdOc38n+vhb3VrzzW2lrLMjUX/NJZGiZhg7oSmlC5uu+xqhgCREYT5DskpAjy7coMvXEXSx8jjUV7LqmbvWYiqvT3iO9tP4jtZyhAKmyN+Inw73qvSWUkuQHum0do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpfQvf1f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8382C4CEF1;
+	Thu, 20 Nov 2025 14:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763648191;
-	bh=v0VO9dYEhA+UGnORRHe7yF+Q+1hgT5u+mOf1/mZRcL4=;
+	s=k20201202; t=1763649048;
+	bh=4YrLQ15vVaDJhK4rBmSCrACVpwQ55mc82ACfyJdZkCU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PV/N2yd2XfJSJl+7Hh4F74QYukpzxhX2fQG/h/ZWGRu5+SvD7KAvmaUYchLSt4Q+J
-	 4VtbD37LTitMazVTqtUrz4PleJthMVs3K2mfDJgiL2OxJ5atdIOjjhULpAZsa3c6t4
-	 eiaVBD8MQo6yukCQPBjFT3UgiMsAVE2pcImZaLJwgU3IkRuGdd+NjTnc3ZKzI/RRqg
-	 heH0qek7ZSxkSoXEbzPQi1gehSB1E9SgGFCgi4c/TjkE3+JQSBzQ/VMqNbbFHXuOzO
-	 rUWdzUqAmbGyIlw9zk3Qa2hToiecME+JmML7/hWNPs+6c6z++CnsONHAWRRKqOvZiJ
-	 9uU/x0Zg6pN8g==
-Message-ID: <ca04c19da203d0fab27a13db9b55b22cef91dc70.camel@kernel.org>
-Subject: Re: [PATCH 16/16] xfs: enable non-blocking timestamp updates
+	b=MpfQvf1f3N0DYqXF2XzJrbrYPC7C9G5Tvk0BGjYD8191QyTbOip/eDHMeZ7Lk7SQl
+	 kSOIDfs08fxR16UUCecPlIsw7fXt7XJhufKASDECgvl77IE3AuylEuFAQkjzqkgki8
+	 7PJ86YWaQ7sRT+tVHRV69+d9sa+7DFLJQzFMtziirdOW9S8Z8ARoPsValp56r9V1Hg
+	 CQVEW0dguks8FFHJCCsiLp7gLXcwKW6IgKBqILICdm6tvtDSdjdTJu8pSBPAmXgB7q
+	 P4JwAfxbeRd5F4UW+uESpGFKKY2OU6uEXFdLODFYc39x2oYsnG2nqmR5wS7o0BoAij
+	 cbszbwjbB/tMw==
+Message-ID: <40af5afceb6230d881ba9814e3eed317ead8c1e1.camel@kernel.org>
+Subject: Re: [PATCH v2] SUNRPC: Check if we need to recalculate slack
+ estimates
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan
- Kara <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>, Martin
- Brandenburg	 <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>,
- Stefan Roesch	 <shr@fb.com>, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	linux-fsdevel@vger.kernel.org,
- gfs2@lists.linux.dev, io-uring@vger.kernel.org, 	devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, 	linux-mtd@lists.infradead.org,
- linux-xfs@vger.kernel.org, 	linux-nfs@vger.kernel.org
-Date: Thu, 20 Nov 2025 09:16:28 -0500
-In-Reply-To: <20251120064859.2911749-17-hch@lst.de>
-References: <20251120064859.2911749-1-hch@lst.de>
-	 <20251120064859.2911749-17-hch@lst.de>
+To: Chuck Lever <chuck.lever@oracle.com>, Scott Mayhew <smayhew@redhat.com>,
+ 	trondmy@kernel.org, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 20 Nov 2025 09:30:46 -0500
+In-Reply-To: <02f6a095-5f64-4e06-b799-6213f207fa4c@oracle.com>
+References: <20251120121252.3724988-1-smayhew@redhat.com>
+	 <02f6a095-5f64-4e06-b799-6213f207fa4c@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,58 +136,68 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-11-20 at 07:47 +0100, Christoph Hellwig wrote:
-> The lazytime path using the generic helpers can never block in XFS
-> because there is no ->dirty_inode method that could block.  Allow
-> non-blocking timestamp updates for this case by replacing
-> generic_update_times with the open coded version without the S_NOWAIT
-> check.
+On Thu, 2025-11-20 at 08:44 -0500, Chuck Lever wrote:
+> On 11/20/25 7:12 AM, Scott Mayhew wrote:
+> > If the incoming GSS verifier is larger than what we previously recorded
+> > on the gss_auth, that would indicate the GSS cred/context used for that
+> > RPC is using a different enctype than the one used by the machine
+> > cred/context, and we should recalculate the slack variables accordingly=
+.
+> >=20
+> > Link: https://bugs.debian.org/1120598
 >=20
-> Fixes: 66fa3cedf16a ("fs: Add async write file modification handling.")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_iops.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+> Since there is a bug link, a Fixes: tag is recommended.
 >=20
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index bd0b7e81f6ab..57ff05be5700 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1195,16 +1195,24 @@ xfs_vn_update_time(
-> =20
->  	trace_xfs_update_time(ip);
-> =20
-> -	if (flags & S_NOWAIT)
-> -		return -EAGAIN;
-> -
->  	if (inode->i_sb->s_flags & SB_LAZYTIME) {
-> -		if (!((flags & S_VERSION) &&
-> -		      inode_maybe_inc_iversion(inode, false)))
-> -			return generic_update_time(inode, flags);
+>=20
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  net/sunrpc/auth_gss/auth_gss.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >=20
+> > diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_=
+gss.c
+> > index 5c095cb8cb20..bff5f10581a2 100644
+> > --- a/net/sunrpc/auth_gss/auth_gss.c
+> > +++ b/net/sunrpc/auth_gss/auth_gss.c
+> > @@ -1721,6 +1721,18 @@ gss_validate(struct rpc_task *task, struct xdr_s=
+tream *xdr)
+> >  	if (maj_stat)
+> >  		goto bad_mic;
+> > =20
+> > +	/*
+> > +	 * Normally we only recalculate the slack variables once after
+> > +	 * creating a new gss_auth, but we should also do it if the incoming
+> > +	 * verifier has a larger size than what was previously recorded.
+> > +	 * When the incoming verifier is larger than expected, the
+> > +	 * GSS context is using a different enctype than the one used
+> > +	 * initially by the machine credential. Force a slack size update
+> > +	 * to maintain good payload alignment.
+> > +	 */
+> > +	if (cred->cr_auth->au_verfsize < (XDR_QUADLEN(len) + 2))
+> > +		__set_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags);
+>=20
+> set_bit() rather than __set_bit is a better choice for a lockless update
+> where multiple concurrent threads can have access to the flags field.
+>=20
+>=20
 
-I especially like getting this inode_maybe_inc_iversion() out of this
-function.
+This function tests for that flag just below though. Could another task
+do the test_and_clear_bit() in gss_update_rslack(), such that the
+au_verfsize doesn't get updated below ?
 
-> +		int updated =3D flags;
-> +
-> +		error =3D inode_update_timestamps(inode, &updated);
-> +		if (error)
-> +			return error;
-> +
-> +		if (!(updated & S_VERSION)) {
-> +			if (updated)
-> +				mark_inode_dirty_time(inode, updated);
-> +			return 0;
-> +		}
-> =20
->  		/* Capture the iversion update that just occurred */
->  		log_flags |=3D XFS_ILOG_CORE;
-> +	} else {
-> +		if (flags & S_NOWAIT)
-> +			return -EAGAIN;
->  	}
-> =20
->  	error =3D xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
+If that is a possibility, maybe you should update the au_verfsize
+first, and then the flag just afterward (with a barrier between).
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > +
+> >  	/* We leave it to unwrap to calculate au_rslack. For now we just
+> >  	 * calculate the length of the verifier: */
+> >  	if (test_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags))
+>=20
+> Thanks for pursuing this one, Scott.
+>=20
+> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
