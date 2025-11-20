@@ -1,34 +1,34 @@
-Return-Path: <linux-nfs+bounces-16592-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16593-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12CB3C71DCC
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 03:34:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95E01C723B0
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 06:15:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 5FA7B2C9C0
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 02:34:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 03FDD4E4DED
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 05:14:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B422D481F;
-	Thu, 20 Nov 2025 02:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0B022AE5D;
+	Thu, 20 Nov 2025 05:14:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB58429B77C;
-	Thu, 20 Nov 2025 02:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89347242D7D;
+	Thu, 20 Nov 2025 05:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763606065; cv=none; b=jYwr2+6wEACyI9/NLUcaLmsUifXbBN5ExkpJTnAy7p3OElohJhoQMm26cI68bu9bFpRCp+a2qJE05cD3EkQfWAaLYrFnQX9nPOuUlYG1HN6FbPXiY5dljp4orqw4Wi8XTBEnAx1IteB5BDMd3SMc11Ctbzlrxbh6eybJtMISwvI=
+	t=1763615663; cv=none; b=nflZCYJUOm5Mz0jNwUcOlYYgkNugM4AaDleTFMt/Baqto0PuF1/IZ7UrBrHNGklkP8o0u5lbNAa844ipJnkKzvvGkDF7XQvjvvw2Yqz1Zi0tJROzfgi/C9fipX4bsrJZVRkVC0Bi0tFv1U/o38ZVzN882ilwIVlJ3JhcyYqpVmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763606065; c=relaxed/simple;
-	bh=/EG5zoBd9EOTX77N44tGF7qVruGgiPwa1ndxkUQivj4=;
+	s=arc-20240116; t=1763615663; c=relaxed/simple;
+	bh=uUrpx+g526d5GVlYUAYE7oeVYDK91OLrSvMwSuOHD5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgHiAhW590Z/lBWCgyPPXJGPgD4WHwVEQ9rqpjRujQgMNOSi3o1ixJLMv9o3Sjhn5kEJnb04Sr4jvxstHh0AtvAVvjQo1mZ7HoYLUUhqDYLZNOdP2M0iiWxT/7zFNcP+MCglsJoU5B4KlbeLJBVaxEnjTyWB8nFRgOARRSGmEkA=
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXJs4qlwaZhMeUPnBCnKdA7PNn/U4dda1kotzi/HyM0qW+JC3V90u7vUxxazeaJUq6ZV5J9m2fHxpCXo+A4OlzaBo8tKBHt+OMyeOuQeETJeV4mN+n3LNwf1wlNUDqk90GfUoWox816CvLbx3vjJ0WdbQlOpt+gI8m8YrgzgRvM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-28-691e7e2be02d
-Date: Thu, 20 Nov 2025 11:34:13 +0900
+X-AuditID: a67dfc5b-c2dff70000001609-90-691ea3a8ad9b
+Date: Thu, 20 Nov 2025 14:14:11 +0900
 From: Byungchul Park <byungchul@sk.com>
 To: Matthew Wilcox <willy@infradead.org>
 Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
@@ -92,7 +92,7 @@ Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
 	linux-rt-devel@lists.linux.dev
 Subject: Re: [PATCH v17 44/47] dept: introduce APIs to set page usage and use
  subclasses_evt for the usage
-Message-ID: <20251120023413.GA27403@system.software.com>
+Message-ID: <20251120051411.GA18291@system.software.com>
 References: <20251002081247.51255-1-byungchul@sk.com>
  <20251002081247.51255-45-byungchul@sk.com>
  <20251119105312.GA11582@system.software.com>
@@ -108,40 +108,40 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20251120020909.GA78650@system.software.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa2xTdRjG8z/3NlQPHZO/DI2pNjNVJkzQ18R4C4nni8a4xCyI0cYdXWPX
-	kTM2NiKkMIYTiK3VXTxls7twGKwIdgW34ZIxR3GXZoXN2kU6drNSt7mEbCW7sNkzYuTLm+d9
-	nie/vB9ejtTXMJs4i22vKNnMVgOjpbQz6+q2PHPwccvWrzwZED7UScHJ814G7i65SShrW6Xg
-	nivAwtzCHyysdgQQVF53keD1HyJgVjmBQI65WYhffRNmbl2m4ffENAJlcoWApeAACXVjURL8
-	gREEHU2HGfjTeZGEwcmHYGh+loGeiuMM/HOBAc/hDhpq3C4EpQ3nGais8VHQNtrOwvWpZQJu
-	VroIaPa9BbeUGAV9znoCquLJ1o8bwV1VSiTHbQIqzl0mYEE5y0J/w00KFLsR3MFBGsabZBaW
-	x7bBqicfoo4KCnpGwjT8ZB9lwTd8FcHc0BgB3hMxEsrb5ynwTSTTuqONFARaxwkYbD/JwIh3
-	lYZQZx8NN5pDyQsCvyYp8hkKxkYjNLQE+8nXcoSyG/cYwVvrRcLSogsJc6dKSaHMmVx/mZ4l
-	hVN904ywOP8bI3QkPJTQW4+Fr4NbhDY5ygoeX6FwpHuGFlqaTELDz3Hincxd2pdzRKulSJSe
-	e+Ujba4vECL2ND5RfGnCj+woio8hjsP8dtx4JvMY0qxJ+0QUqTbFG3Ft+4uqzfDpOBJZIFV7
-	A/80nvYn21qO5OvT8LneK7TaSeGtONH9A6tqHQ/4aP8yrZb0/N8IX3T6qfvBetzz3eSaJnkT
-	jqzECRVK8mn49Aqn2hr+JRxuca0xU/knceela4TKwXxMg8PyFLp/56P4SlOEciJefgArP4CV
-	/8d6EHkW6S22ojyzxbo9I7fEZinO+Dg/z4eST6scWH6/Fd0JZXUhnkOGdbrswGMWPW0uKijJ
-	60KYIw0bdMbXN1v0uhxzyX5Ryv9QKrSKBV0ojaMMG3WZiX05ev5T817xM1HcI0r/pQSn2WRH
-	O7/9QvI3HmeKCyt5FNghbT7iPbA1y5haYvNVL4ajw+LdmGmfktK6GNr9uStr11A8tffdDxyP
-	dL/xyXvPJoarUfOrT62kUM//JfelD1iH0r/cv0N5e6pGCkqFtZ0Oz7jGEa1WvklUDZR31WUW
-	Zz982/T97rYXssv1joPGC3fyr+00UAW55m0mUiow/wu4SwdtsAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xTZxTPd7/7orPLtbLxKZtxNUSjwc1Ns7NHli1b4MbEjWQm6jYzm3kj
-	V0rBVhGWoMVaR5hzpVlLaFUYaEHAgm0lQwNBxDpUIo+JRKlYLSqTR6aAQ0pZ67LMf05+5/fK
-	+ePwWBVmFvGybpek12m0alZBKz7/wJS8cu9i+S13H4K+glYaJicKaThSX8dCoaeUgS53LYLB
-	yUIET2ecGMxNczTMWv0cTEzf4mCu2Y/A3m3FUOcroOBJQ4SFRxceI7AFQyyUDBfQMO46hMBx
-	38nB8MVUGB08x8Bc4AEFN6ZGELhCEQpCrT8gmLVnQFmFl4WZzmsYSmxdCH4NBjA8bIiKPv9t
-	BM3V+1kYspzB0Bt6Gf6YHGehw/YjC6PdRygYa2ChfH8zA0edVgSmynoW7Ec9NDTdOctB96Mw
-	BQN2KwW1nvUw6LpPwxVLBRW9L+o6nQDOEhMVHQ8psJ06R8G0q4aDq5UDNLiMSeDs7GXgbrWD
-	g3BwNcyVZ4G/9gEHgZ9tNLhHrzEf25D41HyYFmu8jZRo7pllxbpjdUiceWZF4sQJExbNluh6
-	YWQciwe8e8QTV0ZY8dnkdVZsniqnxcsVRCzuTBabHAFOPNByk0t7/yvFh9skrZwj6d/8aKsi
-	3ePvorKPL8ltvOdDRhQgRSiOJ8IaYrwXQEWI52khiRw7+26MZoVlpL9/GsfoeGE5GfG9XYQU
-	PBYqEsmpy+eZmGeBoCVT7W4uhpUCkINXw0zMpBL+ROSMxUf/K8wnHaWh5xgLK0h/ZJiKlWIh
-	kVRF+BgdJ7xH+rzW552vCEtJa+MlyoKUjhfSjhfSjv/T5QjXoHhZl5OpkbVrVxky0vN0cu6q
-	77IyPSj6k678cPFvaKI3tQ0JPFLPU27yvy6rGE2OIS+zDREeq+OVSZ+8JquU2zR530v6rG/1
-	u7WSoQ0l8rQ6Qbluo7RVJWzX7JIyJClb0v+nUnzcIiNKyZ6u+rL1SdpL2+mFZY9Nd/YuLZzB
-	r1r+2jJl8q9sGUv5Zd+AuequbvGenp4kb9rp4oadBz/bfD5i2ZGivl6p34eHNm7QlG1u/+bv
-	Hcaf3PX2ky1DN2/83rLzndS1h+xy8Ovx3QsWJuQOLEle193x6bxg/uHSLe1VYzg/f836NPfy
-	6i/eUNOGdM3qFVhv0PwDJjjDWY8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf1DTdRjH7/P9vR3Tb1PiEyvvWqcWHZhK9VTW5R9d3z/oxyneefVHfS++
+	JzvHsIEoXD/IXBEJjSXrGKA7PAfClPUFtKFwiIIgcoAUfTXHWI0R4dIDBHUBbXRe/vd+nud1
+	r+f54+FI7VEmkTOYciWzSTTqGTWlDsfVJJ84tsbw3HgwDqoa3QwUyRU0+O8UIZiPVJJg8S5R
+	sGDrZmGprRuBfchGgrv5CwJmPIsMTF2YRlAeCDLgCFWyMNn1JoT9Z2lY8k0Q4AouEhDs+BrB
+	gn03HK1pYiDSP0DCn55oq63uAAPj1hYShoMrIDxURcDfHgacB9poqK60RTdVyxR4x1pZuGG3
+	EdAgvwV+V4iCHyYZsP+YAOUnzxJwz1XPQmX/MA2/1zmiJzqzobthggXfd+UUnAoP0DAVsjHg
+	v/QVDfK1LgSzPwcIcB8KkSD/MUJDxZEbDJxr66VguLWKgUOeFhpG3Us0DHb00XC1YZCCxgmF
+	gF7HCQqO/zpEwFypDgbLSmhQrOMIXHdusa9nCPOWUkqobzpNCJarC4zgPuJGQuS+DQmzx78k
+	BYs1Wl64eYsUyvqTBa/DxwoH26+zglPeKxy8GKaFY+cmCeH61KuCXP8N827Se+otGZLRkCeZ
+	N7z2oTqzxx1h9txes99yt50oRL0JxUjFYT4Vd3mqmQd59PL3bCxT/Frc4w0vZ4ZfjxXlHlmM
+	OG41/zS+2bypGKk5kq/R4ZOXz9MxZhVvxHMXT7ExRsMDnvdsiTFa/i+EW6zNVIzR8I/g3org
+	cib5JKwsThIxnuR1uHaRi7VV/Et4pMm2rIznn8Idpy8RMQ/mQyrcekZG/935GD5fp1BWxDse
+	0joe0jr+1zoRWY+0BlNelmgwpqZk5psM+1M+ys6SUfRtXZ/+8/5PaHpweyfiOaSP0+zsfsKg
+	pcW8nPysToQ5Ur9as3br4watJkPML5DM2R+Y9xqlnE6k4yh9gmbT3L4MLb9LzJV2S9Ieyfxg
+	SnCqxEJ0eORjZfOKQEngZTrxjSn3lVEPXZG7Izv9Mx83+4J2bpV/pz3dLxeMlDWltEdg37ep
+	136ZedGb1rcyvqekdl1Vde0noVdun1EKH33HVbryc/E3lfO+N9CoK5h5vjR587PTb/fdlaVt
+	8aYx31jxgG5bEfNkF0S2pz2zQ1S2KumHe9L0VE6muDGJNOeI/wILdggfsgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTdxTH87v39t5Lt+qlsvBDHHE1RCMKaLbkuJnFRzJ+IRsx/qMxIdrI
+	jRTKI61DWbJIhUaCZtbOQmhFOgiVQEUolYAGwkMroMhrY920MmbloWWYjYc8u5Zkmf+cfM/5
+	fr4n54/D0/IVyWZelXlW1GQq1QpWykiTvsjfXV0ZpYp/+WwrjOjaGZibLWTgxh07C4WOUgkM
+	1NUiGJ0rRLCwbKFB3+JnYNXo4mB28RkH/lYXguJBIw12p46Cf+rXWHjT9TcC05iXhZIpHQMz
+	tisIzOMWDqYeJsD06H0J+D0TFPw670Ng865R4G2/hGC1OB3KKxpZWO7rp6HENIDgpzEPDZP1
+	AdPpeoGgtfoiC68Md2kY9m6An+dmWOgxXWZhevAGBX/Vs2C92CqBMosRQX7lHRaKyxwMtPxx
+	j4PBNysUPC82UlDr+AZGbeMMPDZUUIH7AlRDOFhK8qlAmaTAdPs+BYu2Gg6eVD5nwJYXDZa+
+	YQn8WW3mYGVsD/itWeCqneDAc9XEQN10v+SACZEF/Q8MqWlsooh+aJUl9pt2RJaXjIjMVuXT
+	RG8ItF2+GZoUNJ4jVY99LFma+4UlrfNWhvRWYHKtbzdpMXs4UtD2O3fk8xPS/SmiWpUjauK+
+	PCVN7bYvs9lvo87r37VReagnvAiF8Fj4FL/o/ZELakaIxt0t0+uaFbZjt3uRLkI8HybswD7n
+	3iIk5WmhIhLf7u2QBJlNghrPP6jjgoxMALxQvz/IyIXXCN81OJkgIxNCcU+pd13Twk7sXpui
+	gjwtROJba3xwHCLswyONxvWVHwnbcHvTI8qAZOb30ub30ub/01ZE16AwVWZOhlKl/ixWm56a
+	m6k6H3s6K8OBAj9p+37lWjOaHU7oRAKPFB/Kjrs+VsklyhxtbkYnwjytCJNFH9yikstSlLnf
+	iZqsk5pv1aK2E0XyjCJclnhMPCUXzijPiumimC1q/nMpPmRzHtq7o2DoxPHYmeqy1IMDhzu2
+	7DrXxI9uHLyZeCbu6aR1rFv/22H3oZdXbKFX9yUlNmx9p0s+etQfP+6oc0RsvP4qxZdY5CGf
+	HCjsbiMRX+OIXULZyAdfdbAx7nju5K3QDeOHtkddb2Z8F/QdzTFpyZcMS5d9D9MMb8vLJywI
+	zzvTdApGm6rcs5PWaJX/An0YZayPAwAA
 X-CFilter-Loop: Reflected
 
 On Thu, Nov 20, 2025 at 11:09:09AM +0900, Byungchul Park wrote:
@@ -209,16 +209,14 @@ On Thu, Nov 20, 2025 at 11:09:09AM +0900, Byungchul Park wrote:
 > > locking at the mapping/anon_vma level instead?
 > 
 > Piece of cake.  Even though it may increase the number of DEPT classes,
-> I hope it will be okay.  I just need to know the points in code where
-> folios start/end being associated to their specific mappings.
 
-Assuming that I understand what you meant correctly, I can use the
-@mapping value in struct page as a second key in DEPT.  Of course, it
-doesn't guarantee unique ids of the mappings for ever.  However, I think
-it can be a good and quite simple start.
+Might be not as easy as I thought it'd be.  I need to think it more..
 
 	Byungchul
 
+> I hope it will be okay.  I just need to know the points in code where
+> folios start/end being associated to their specific mappings.
+> 
 > 	Byungchul
 > 
 > > ---
