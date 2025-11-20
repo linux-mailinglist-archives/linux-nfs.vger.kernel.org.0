@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-16635-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16636-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17BE6C7629D
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:16:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E575C76295
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 116854E2B76
+	by sea.lore.kernel.org (Postfix) with ESMTPS id ECAB32BCAE
 	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 20:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0633242AA;
-	Thu, 20 Nov 2025 20:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C61F2673AA;
+	Thu, 20 Nov 2025 20:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4/eVOtj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3bCpJro"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EA3274B35
-	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 20:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A9D3242B4
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 20:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763669756; cv=none; b=jDfC4GXP9QcfFpiBO6Kd7JlZ5Rtsd4l5O8RVh5M4TGDsuWSyV7HwRmUsuPC+uQ5u3XO4wBE0qJge9MPU9mq43Rj+/3Gbw6p4frxL70+ZW2jjD78FiZOeXIENE4TQvPx8wUEUQ0Q5PWY7CxT7tir5UtgyS1FGjcC/My8cvLu7U3c=
+	t=1763669757; cv=none; b=WGRDTEUM+HLCT7kUfTsOjxgOZvbOyT58W/culYZFpr08T+EEVgg3HoT2QbJN3UakSZXgGI13NpilOjV6vQLywXPa1tAOQ9nVkUC1LvESm8LKmswhuuX3pKcsmcTqgL0iqtf9XTepJrCp4t3y3ZgMa0d55tvAJUlhd3P9mMH0wJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763669756; c=relaxed/simple;
-	bh=4C7TptZBqJyyEJ+/+ItsYKJ62IurW20qorGKvh+AoRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ej7ZQpnd0xWJ6sXbbzA4MICBFUGlRDYPM75O10i/pmAgodcg9dQ3jd00yEMNMdTL+8grGQXCzpraNsLVKZPzAIY5fTQhKhBDNjBNqGshOGurmo8IP+0lEubVDk/YyY7Tg+n9NlshkigGT6RZVcZdRDGGUIlWhvY5x8u3/lqs0ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4/eVOtj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836FCC4CEF1;
-	Thu, 20 Nov 2025 20:15:55 +0000 (UTC)
+	s=arc-20240116; t=1763669757; c=relaxed/simple;
+	bh=jmHY3ANOIPogR/JmnNlgsTA/S/qwknye1RrpKyw5AEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lkAGPU4Xq+VFTqtVGTWNYCwmjpe68pC7XadPqx4zzUOaQKR4MPPYEQnQR+COvDzZBEzAwwRyhYm0W7uj6b3lO5ee3FTckDZZr3+MpFsf28mUPSqHQD4Rxd9+Zo62HvRLiy6yJpoL3/tEPCKSqwYvrtU3Qa2CKU21aiPrihvkiDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3bCpJro; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D43EC116B1;
+	Thu, 20 Nov 2025 20:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763669756;
-	bh=4C7TptZBqJyyEJ+/+ItsYKJ62IurW20qorGKvh+AoRE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=D4/eVOtjQVv6js97fTZlZSOD8myClNz/lH595YPt+sC8Y0UV2bZyh+heJpoVhfHQb
-	 FGg8eysmJ+7YDOKUDXuPISVPw7IUNE2wF4DNJqAnLuBQ3rGKGY6XAt1HHujkQAGhzr
-	 TGbbrU2PbrFVTTipRK2pgn9VRIj6bjNqxv1nJNo3dJqtuv+Csu5tr7pC77l1pDOhDb
-	 BzdKLZ0S4AmGTHIHyYvk0W8/rh87StA24qCMWfbxEbGdNma2BCPJ6xb5Px/ENOrSlp
-	 W2LWLgwXc0s1kHplNutkySLGRt1TSkqo2zZ54I0Ht/jy4MjXqJUqb0YjsZpDvhmIl5
-	 Mnr/tcAC/Tqdw==
+	bh=jmHY3ANOIPogR/JmnNlgsTA/S/qwknye1RrpKyw5AEc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=P3bCpJroljHXAMLn0PzXGxDuB+NOlXgY+60sivApXDi8pAzwClMIuCEmf2zIFwTXw
+	 oeswFvP+T1j2mqNTpPX/V3sxCoJkGiSMa+906neKAO0E6QQSO+GwJN7A+Gnd9xTEMC
+	 U94phfTz0Nrm4jdTyHFBM4JIvnH1TRQ+4cw2QCimcqZEdwiPMNnpG+e6IcTraNCr1Z
+	 pzdQOb0qlRcI7Dov+3u/uByynWDNfN9GgrSHm23nUdJ3C1hVwm5ApVCKPd7VgX+3iG
+	 BR9qN2ySf2G8a0wMUjyxldTtxzYn2jwkJLK4fnQghUT6A5kOC6PC20oI79VbaeD0Y6
+	 bKT7DlNj0odoQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,11 +48,14 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 1/2] NFSD: Add instructions on how to deal with xdrgen files
-Date: Thu, 20 Nov 2025 15:15:51 -0500
-Message-ID: <20251120201552.9668-1-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH 2/2] xdrgen: Generate "if" instead of "switch" for boolean union enumerators
+Date: Thu, 20 Nov 2025 15:15:52 -0500
+Message-ID: <20251120201552.9668-2-cel@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251120201552.9668-1-cel@kernel.org>
+References: <20251120201552.9668-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,43 +66,207 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-xdrgen requires a number of Python packages on the build system. We
-don't want to add these to the kernel build dependency list, which
-is long enough already.
+Eliminate this warning in code generated by xdrgen:
 
-The generated files are generated manually using
+fs/nfsd/nfs3xdr_gen.c:220:2: warning: switch condition has boolean value [-Wswitch-bool]
+  220 |         switch (ptr->attributes_follow) {
+      |         ^       ~~~~~~~~~~~~~~~~~~~~~~
 
-  $ cd fs/nfsd && make xdrgen
+No more -Wswitch-bool warnings when compiling with W=1.
 
-whenever the .x files are modified, then they are checked into the
-kernel repo so others do not need to rebuild them.
+The generated code is functionally equivalent but somewhat more
+idiomatic.
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202511172336.Y75zj4v6-lkp@intel.com/
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/Makefile | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ tools/net/sunrpc/xdrgen/generators/union.py   | 115 +++++++++++++++---
+ .../templates/C/union/decoder/bool_spec.j2    |   7 ++
+ .../templates/C/union/encoder/bool_spec.j2    |   7 ++
+ 3 files changed, 109 insertions(+), 20 deletions(-)
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
 
-diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-index 55744bb786c9..f0da4d69dc74 100644
---- a/fs/nfsd/Makefile
-+++ b/fs/nfsd/Makefile
-@@ -26,7 +26,15 @@ nfsd-$(CONFIG_NFSD_FLEXFILELAYOUT) += flexfilelayout.o flexfilelayoutxdr.o
- nfsd-$(CONFIG_NFS_LOCALIO) += localio.o
- nfsd-$(CONFIG_DEBUG_FS) += debugfs.o
+diff --git a/tools/net/sunrpc/xdrgen/generators/union.py b/tools/net/sunrpc/xdrgen/generators/union.py
+index ad1f214ef22a..d15837dae651 100644
+--- a/tools/net/sunrpc/xdrgen/generators/union.py
++++ b/tools/net/sunrpc/xdrgen/generators/union.py
+@@ -84,6 +84,31 @@ def emit_union_switch_spec_decoder(
+     print(template.render(name=node.name, type=node.spec.type_name))
  
--
-+#
-+# XDR code generation (requires Python and additional packages)
-+#
-+# The generated *xdr_gen.{h,c} files are checked into git. Normal kernel
-+# builds do not require the xdrgen tool or its Python dependencies.
-+#
-+# Developers modifying .x files in Documentation/sunrpc/xdr/ should run
-+# "make xdrgen" to regenerate the affected files.
-+#
- .PHONY: xdrgen
  
- xdrgen: ../../include/linux/sunrpc/xdrgen/nfs4_1.h nfs4xdr_gen.h nfs4xdr_gen.c
++def emit_union_arm_decoder(
++    environment: Environment, node: _XdrCaseSpec
++) -> None:
++    """Emit decoder for an XDR union's arm (data only, no case/break)"""
++
++    if isinstance(node.arm, _XdrVoid):
++        return
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++        classifier = ""
++    else:
++        type_name = node.arm.spec.type_name
++        classifier = node.arm.spec.c_classifier
++
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
++    template = get_jinja2_template(environment, "decoder", node.arm.template)
++    print(
++        template.render(
++            name=node.arm.name,
++            type=type_name,
++            classifier=classifier,
++        )
++    )
++
++
+ def emit_union_case_spec_decoder(
+     environment: Environment, node: _XdrCaseSpec, big_endian_discriminant: bool
+ ) -> None:
+@@ -151,19 +176,33 @@ def emit_union_decoder(environment: Environment, node: _XdrUnion) -> None:
+     template = get_jinja2_template(environment, "decoder", "open")
+     print(template.render(name=node.name))
+ 
+-    emit_union_switch_spec_decoder(environment, node.discriminant)
++    # For boolean discriminants, use if statement instead of switch
++    if node.discriminant.spec.type_name == "bool":
++        template = get_jinja2_template(environment, "decoder", "bool_spec")
++        print(template.render(name=node.discriminant.name, type=node.discriminant.spec.type_name))
+ 
+-    for case in node.cases:
+-        emit_union_case_spec_decoder(
+-            environment,
+-            case,
+-            node.discriminant.spec.type_name in big_endian,
+-        )
++        # Find and emit the TRUE case
++        for case in node.cases:
++            if case.values and case.values[0] == "TRUE":
++                emit_union_arm_decoder(environment, case)
++                break
+ 
+-    emit_union_default_spec_decoder(environment, node)
++        template = get_jinja2_template(environment, "decoder", "close")
++        print(template.render())
++    else:
++        emit_union_switch_spec_decoder(environment, node.discriminant)
+ 
+-    template = get_jinja2_template(environment, "decoder", "close")
+-    print(template.render())
++        for case in node.cases:
++            emit_union_case_spec_decoder(
++                environment,
++                case,
++                node.discriminant.spec.type_name in big_endian,
++            )
++
++        emit_union_default_spec_decoder(environment, node)
++
++        template = get_jinja2_template(environment, "decoder", "close")
++        print(template.render())
+ 
+ 
+ def emit_union_switch_spec_encoder(
+@@ -175,6 +214,28 @@ def emit_union_switch_spec_encoder(
+     print(template.render(name=node.name, type=node.spec.type_name))
+ 
+ 
++def emit_union_arm_encoder(
++    environment: Environment, node: _XdrCaseSpec
++) -> None:
++    """Emit encoder for an XDR union's arm (data only, no case/break)"""
++
++    if isinstance(node.arm, _XdrVoid):
++        return
++    if isinstance(node.arm, _XdrString):
++        type_name = "char *"
++    else:
++        type_name = node.arm.spec.type_name
++
++    assert isinstance(node.arm, (_XdrBasic, _XdrString))
++    template = get_jinja2_template(environment, "encoder", node.arm.template)
++    print(
++        template.render(
++            name=node.arm.name,
++            type=type_name,
++        )
++    )
++
++
+ def emit_union_case_spec_encoder(
+     environment: Environment, node: _XdrCaseSpec, big_endian_discriminant: bool
+ ) -> None:
+@@ -235,19 +296,33 @@ def emit_union_encoder(environment, node: _XdrUnion) -> None:
+     template = get_jinja2_template(environment, "encoder", "open")
+     print(template.render(name=node.name))
+ 
+-    emit_union_switch_spec_encoder(environment, node.discriminant)
++    # For boolean discriminants, use if statement instead of switch
++    if node.discriminant.spec.type_name == "bool":
++        template = get_jinja2_template(environment, "encoder", "bool_spec")
++        print(template.render(name=node.discriminant.name, type=node.discriminant.spec.type_name))
+ 
+-    for case in node.cases:
+-        emit_union_case_spec_encoder(
+-            environment,
+-            case,
+-            node.discriminant.spec.type_name in big_endian,
+-        )
++        # Find and emit the TRUE case
++        for case in node.cases:
++            if case.values and case.values[0] == "TRUE":
++                emit_union_arm_encoder(environment, case)
++                break
+ 
+-    emit_union_default_spec_encoder(environment, node)
++        template = get_jinja2_template(environment, "encoder", "close")
++        print(template.render())
++    else:
++        emit_union_switch_spec_encoder(environment, node.discriminant)
+ 
+-    template = get_jinja2_template(environment, "encoder", "close")
+-    print(template.render())
++        for case in node.cases:
++            emit_union_case_spec_encoder(
++                environment,
++                case,
++                node.discriminant.spec.type_name in big_endian,
++            )
++
++        emit_union_default_spec_encoder(environment, node)
++
++        template = get_jinja2_template(environment, "encoder", "close")
++        print(template.render())
+ 
+ 
+ def emit_union_maxsize(environment: Environment, node: _XdrUnion) -> None:
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
+new file mode 100644
+index 000000000000..05ad491f74af
+--- /dev/null
++++ b/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
+@@ -0,0 +1,7 @@
++{# SPDX-License-Identifier: GPL-2.0 #}
++{% if annotate %}
++	/* discriminant {{ name }} */
++{% endif %}
++	if (!xdrgen_decode_{{ type }}(xdr, &ptr->{{ name }}))
++		return false;
++	if (ptr->{{ name }}) {
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
+new file mode 100644
+index 000000000000..e5135ed6471c
+--- /dev/null
++++ b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
+@@ -0,0 +1,7 @@
++{# SPDX-License-Identifier: GPL-2.0 #}
++{% if annotate %}
++	/* discriminant {{ name }} */
++{% endif %}
++	if (!xdrgen_encode_{{ type }}(xdr, ptr->{{ name }}))
++		return false;
++	if (ptr->{{ name }}) {
 -- 
 2.51.0
 
