@@ -1,214 +1,228 @@
-Return-Path: <linux-nfs+bounces-16590-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16591-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05FB3C716A4
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 00:07:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 79097C71C36
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 03:10:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AFF134E10A2
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Nov 2025 23:07:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A66814E3816
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 02:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4B331ED7A;
-	Wed, 19 Nov 2025 23:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="htVSVFS1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="paF1GhZ1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 608E225C6FF;
+	Thu, 20 Nov 2025 02:09:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3B721CFFD
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Nov 2025 23:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 684621DE3DC;
+	Thu, 20 Nov 2025 02:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763593619; cv=none; b=eIYnyBAcHpWD9c6x8wC0nGpzmGQmy5rT7DIsKYx1tqpQwFlMPhndIGeLH6k3kkIEf0oGCqx1bJfNM6bb5+Qktmy2fFV7EUqY+YO6DJOuG/9phBBeNFkOOs9RVIJiCrBSB8IhTUhgeWb5R/ygOK8Cjb9xp7A5bKrAqnlNBVUK4JU=
+	t=1763604568; cv=none; b=Isfni3xDAXIpgyEEW2460j4u0ulf1xJlD3S6FLMzvNR31Hu7GUROolsJcJrSI4l0CoPpNBIIQIaFWfjNoqi9m7hekUeF6nGio9ysSoKcBT8vqNzYTdLn4ST7NtH7cDKraZR0YJHb6WAyRnSNRmhqCe80QpZiL4BeijmcD69B/Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763593619; c=relaxed/simple;
-	bh=uJzUV7LeubBZRXA9INwU/4qavbM4qTE3Ynee3V4XUU4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=H7dx8yZ8y81ixFMF/6kcd1dBVnvT6owGaJOVKPC7/hM8QH7nHID1+Ils8BW9J0t1v3lITz3o5Go2WP4tQ43pFsUjIt4RasZkKFFcDvej979dvjS559H7O76YAP5+s9OAzce5iCNR+OHbTYo+c4mI7Nx7cMGLf/oI67oRPyTirdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=htVSVFS1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=paF1GhZ1; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id F3547EC00EF;
-	Wed, 19 Nov 2025 18:06:55 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 19 Nov 2025 18:06:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1763593615; x=1763680015; bh=HqF9oL7d22JLC897QJbP2WemzvoaLsOg+w6
-	6eYt2Gnk=; b=htVSVFS17lIXlY02epY8cD7Sxy0lKTLNeZTRessgQRzBjrD8gLH
-	WAO19YFFUF09ThKMqGCO2f79SmBRWXUibs6+GHxDlRJJdljMerW30NpSLSZXnjAr
-	1Jui2xFekRKQTrZbYwvQYVMoYe+HKQqjsKXkFDo5dqKga14Xh3hgRZxN0KgsS9vZ
-	tx6guC7zW7qfxj6DvFJ+9qbd106kW2ZBaqrc9qfYqQwv+djOF2E73jJdAlIoOOpd
-	Xd5Yc66byR5+F0r7FCjgkWJ2p/9JKE8iVFg07EJYyPZf7RKdiMwiYeF0zVxYekFl
-	giTCgRU9rNOE+vL2kkoOI2lL5SKpgPJOFTA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763593615; x=
-	1763680015; bh=HqF9oL7d22JLC897QJbP2WemzvoaLsOg+w66eYt2Gnk=; b=p
-	aF1GhZ1w+wyHexZ7j2Mc8fuz/zUUJBSw24y8eE7JF5mUw2GtoarHmtmV+ZnwDHqe
-	86foqQTJBumZUi7iMccYLzM9VFvve6CpjsBypj/xpkXXP8iRxaYUQy0OCK2NBWr1
-	H9eLNcdqLO6RXCyb0d3RAYdFfMhAvYT973rqSMhvLr3Mp3BKvabT+HiXaiv6z4iR
-	P3d6JKylmNaXWYi+7lXgZ7G2HMBA9tZSzJ3/aavRCfDmHh+19wSRxw2iPPCszMAH
-	BJ6dsPxfozTAGz2Ir7+9OD1KhpnKyBOtLU7DJa8nXXP9P/HtGUXaiooRLl41CnaS
-	krwYSBrW50Lo735XSRMeQ==
-X-ME-Sender: <xms:j00eaX8JpgFfRoanqtbdR4DJ0pLRM7-WwOAZSIJwvgcLJFtPuHZRmQ>
-    <xme:j00eaXZmv7qPVs9zzzGOdndhInphHyZD2NDOvFawyuWyi4N_m-nbO1OqB_9LFQJsW
-    rZ3DRCoMi2lrwcclQBxvMG5FYxejf2bJxddwLqcQc5eOsjzYqQ>
-X-ME-Received: <xmr:j00eae3-F4vmM-BzJPfIg66hInMxMgI6KQXTq_8uWX83nVaMUvddcEAlJCm3wcdjUI-Q9lvouAcrvLOYr0IZQIQrFenrnUtw3dz28uXO-hb4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvdehgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
-    hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:j00eaaboqTTo9c_S81du-ulFvqUSYPXeGsDi8007tKAnrBmv0lKU0g>
-    <xmx:j00eaeIB2-ayAXcCKINWdPOnmiakFtI6xj8GmmoXSHrDRwata4o0FQ>
-    <xmx:j00eaRH4eFYIB_dHW78q3NSfTyXAVEPidGSLxom_M4JSTBveFLpFLw>
-    <xmx:j00eadtbFfxnjtKuMEUmrSnCxSzdm7hgd9mitf90vnAS1SX9dJJjiw>
-    <xmx:j00eaVcPijJrncvN8_oFef1LHsh9qhtc7aXdosZ6qNAtrNEhU5dJswXF>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Nov 2025 18:06:53 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1763604568; c=relaxed/simple;
+	bh=QUgA1HX7B/qcO1RvgSuXmUmQCsyytJqwclA8xmQo11E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uqmTeN8IXLccaRcij+riy3sey2Kq/PuOPVvsP1u5dOfSOYyqTrUqxAIBaEDTRQFtXbgpClsanmlpnPpXKS/nQMIGq8bhKkw+0Rk5wtOoqs7RzrU/PUVE22S56OjynKh3R2JBAXdnZK1GJ/fZCBly1t+aJoZB0B0ltU7MV8K5wdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c45ff70000001609-d3-691e784bff7b
+Date: Thu, 20 Nov 2025 11:09:09 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
+	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
+	tytso@mit.edu, david@fromorbit.com, amir73il@gmail.com,
+	gregkh@linuxfoundation.org, kernel-team@lge.com, linux-mm@kvack.org,
+	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
+	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
+	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
+	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
+	ngupta@vflare.org, linux-block@vger.kernel.org,
+	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
+	djwong@kernel.org, dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
+	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
+	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
+	yeoreum.yun@arm.com, netdev@vger.kernel.org,
+	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
+	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
+	sumit.semwal@linaro.org, gustavo@padovan.org,
+	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
+	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
+	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
+	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
+	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
+	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
+	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
+	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
+	yuzhao@google.com, baolin.wang@linux.alibaba.com,
+	usamaarif642@gmail.com, joel.granados@kernel.org,
+	richard.weiyang@gmail.com, geert+renesas@glider.be,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
+	chenhuacai@kernel.org, francesco@valla.it,
+	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
+	masahiroy@kernel.org, brauner@kernel.org,
+	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
+	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v17 44/47] dept: introduce APIs to set page usage and use
+ subclasses_evt for the usage
+Message-ID: <20251120020909.GA78650@system.software.com>
+References: <20251002081247.51255-1-byungchul@sk.com>
+ <20251002081247.51255-45-byungchul@sk.com>
+ <20251119105312.GA11582@system.software.com>
+ <aR3WHf9QZ_dizNun@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Olga Kornievskaia" <okorniev@redhat.com>, jlayton@kernel.org,
- linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com, tom@talpey.com
-Subject: Re: [PATCH] lockd: fix vfs_lock_test() calls
-In-reply-to: <d1bc454f-bb51-4892-a8ae-bcef9bf23aa1@oracle.com>
-References: <176351137459.634289.99556130353777712@noble.neil.brown.name>,
- <d1bc454f-bb51-4892-a8ae-bcef9bf23aa1@oracle.com>
-Date: Thu, 20 Nov 2025 10:06:51 +1100
-Message-id: <176359361186.634289.6568838479730641723@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aR3WHf9QZ_dizNun@casper.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxTZxSH89773tvbat214nwnzixdCAYCGwaTs2TZR2KyGxeTGTXZ1Gxr
+	bCONBbEowpwJzOIa3AyytEALDDDU8qm0iraIUSa4jg/5cFIcDItYJVLMsC1BS12vZpn/nDw5
+	v1+enD8ORyuq2bWcNuuQRp+l0ilZGZYFltemfJ63Xvu++UEKhIJGDJXnmlkwOioYGGxtQrDw
+	3EpDkesFhuDiXxJ4ej7KwuPf5hGYfNMslM0UYnhi+wmBxW+VwEz3ZxCY7GDgxcRDCkbDswiW
+	zPvh1zonC7W+CRo67T+w8KDkIg0j0yvAYzrJQmCokoK58yxUWUsRmKscGFz33BIYN5dSMGnz
+	YzC3rQFr2XEqNh5RYGrpoGDR1iiBvjPjGGwFCWDtH2Eg4kuD1sAtBjx/32Hgsb+UhcmbJxi4
+	VHBPAo6xbgTB2z4KjO4QBsf9WKXzbjJUVI+zcKXTg8G4FETQc3mKgsFrvQwMNw1iOPfQS4HH
+	0oDhlruFgfrRIQqc/X00hE/FQ8tcHQu/zPnRJ2phoegUFhqd7ZRQNLzECs3VzUgI1h+nhaKS
+	GBmcR4T63llWeBb6kxU6wzVYON2fIrgsExLBcPWuRKhxHBYMNwKM4LQnfZG8S/ahWqPT5mr0
+	7330rSwj8qwGZzvW5Z0ZtVAFyPBmMZJyhE8npqrndDHiXnKf4Zi4xnwC6S12syKzfCLxehdf
+	VuL4DWT2wsZiJONovi6etPxxnRE7q3gdCd9olYgs54FEG+xILCn4DkRun2hjXgUriadiGotM
+	80nEG52hRCnNx5OzUU5cS2MnjNX9SIu8mn+XXGu/SYkewk9JSZOxgX5181vkut2LSxBveU1r
+	eU1r+V9bg+hGpNBm5WaqtLr01Iz8LG1e6t4DmQ4U+1rbscjuy2h+cHsX4jmkXC7/sudtrYJR
+	5ebkZ3YhwtHKOHnCp+u0Crlalf+dRn/gG/1hnSanC8VzWLlGvjF8RK3g96kOafZrNNka/X8p
+	xUnXFqA9pxe+GkgdMMk8H38d/L6wxG+lEhPjElye5Ce/Lwtv7v75afvWZW0HQ+sjd5JdY6rs
+	gZPbNpsn79PlZ8tz03dsP4hG3th0dVNoZeFO1l617cqUdJdid23a1M5K8s/Y0cjIOx/MRaXl
+	3dSO3keBPb4tF9X01p4tR5tXDDvKhlZPuOcZJc7JUKUl0foc1b9rqkVSsQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0xbZRTGfe/73j80llwrsuvYNOmCkiVDIS4eJzH6aTdLtqgxcUGJa8aN
+	3LQU1jIEsyVlpUJQJ5QUspbNWlxFYIy1SGSk2LFRMxjbKtOhDgFTYQQYyaRs0NLaG2Pcl5Pf
+	Oc/znJwPh8OaOL2Vk40VksmoM2gZFVEdeNW6a1/VM/KLQ50F8EtNkEB0tZ5A2/luBup9p2i4
+	2dOFYDpaj+BBzIXBNpAksGkPsbC6/jsLyUAIQUvYjqG7r4aCv3sTDCxevo/AMRthoHWhhsCK
+	9zMEzjkXCwsje2F5epCG5NQ8BbfXlhB4IwkKIsE6BJstevjS42cgNn4DQ6vjJoKvZqcw3O1N
+	iX2hPxAEOk4w8FfjdxgmIulwK7rCwFXHpwwsh9souNfLgPtEgIbTLjsCa/t5BlpO+wgMzFxk
+	IbwYp+BOi52CLt9+mPbOERhr9FCp+1KuC1vA1WqlUuUuBY5zgxSseztZuNZ+h4DXkg2u8Qka
+	/uxwshCfzYOkuwxCXfMsTH3hINCzfIN+3YHEB7aTROz091Oi7adNRuw+043E2IYdiatnrVi0
+	Nabay0srWKz1fySeHVtixI3oz4wYWHMTcdQjiE3ju8QB5xQr1g79xr65p1BVUCwZ5ErJ9MJr
+	h1Ql8Q03Kfdtq2q/7aQsqDazAXGcwL8kXKs93oDSOMJnC2MNFxmFGf55YXJyHSuWDD5HWOrL
+	b0AqDvOeLOHc6CVa8TzJG4S1Kz2swmoehMS3HUgxafhBJNz65AL9r/CEcPVUhCiM+Z3CZGKB
+	UpZiPkv4JsEp47TUCb966rDCT/E7hGD/j1QjUjsfSTsfSTv/T7sR7kQZsrGyVCcbduea9SXV
+	Rrkq93BZqQ+lftJ7PN70PVqd2DuMeA5pH1cfDG2XNbSu0lxdOowEDmsz1NlvbJM16mJd9ceS
+	qewD01GDZB5GWRzRblHve1c6pOE/1FVIekkql0z/qRSXttWCrhx772hBRWHmyz35+R7LTPMr
+	6Q99b0dzFv30wPD8Y+k1Ujhel/t+buERlz6WbWwK0qEiOJPjj+lHdrxT2mxJPHvP5ZH3+0bn
+	8GDeTODwyeofirZfPxI8WJ9sO0bfL+6zft1sGhop6Ch/eo9Fbb1kux7+fPfD/oTkKyKxt57L
+	PKAl5hJd3k5sMuv+AScIleSPAwAA
+X-CFilter-Loop: Reflected
 
-On Thu, 20 Nov 2025, Chuck Lever wrote:
-> On 11/18/25 7:16 PM, NeilBrown wrote:
-> > Usage of vfs_lock_test() is somewhat confused.  Documentation suggests
-> > it is given a "lock" but this is not the case.  It is given a struct
-> > file_lock which contains some details of the sort of lock it should be
-> > looking for.
-> >=20
-> > In particular passing a "file_lock" containing fl_lmops or fl_ops is
-> > meaningless and possibly confusing.
-> >=20
-> > This is particularly problematic in lockd.  nlmsvc_testlock() receives
-> > an initialised "file_lock" from xdr-decode, including manager ops etc.
-> > It them mistakenly passes this to vfs_test_lock() which might replace
->=20
-> s/them/then
->=20
->=20
-> > the owner and the ops.  This can lead to confusion when freeing the
-> > lock.
-> >=20
-> > The primary role of the 'struct file_lock' is to report a conflicting
-> > lock that was found, so it makes more sense for nlmsvc_testlock() to
-> > pass "conflock", which it used for returning the conflicting lock.
->=20
-> s/it/is
->=20
->=20
-> > With this change, freeing of the lock is not confused and code in
-> > __nlm4svc_proc_test() and __nlmsvc_proc_test() can be simplified.
-> >=20
-> > Documentation for vfs_test_lock() is improved to reflect its real
-> > purpose, and a WARN_ON_ONCE() is added to avoid a similar problem in the
-> > future.
->=20
->=20
-> > diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> > index a31dc9588eb8..381b837a8c18 100644
-> > --- a/fs/lockd/svclock.c
-> > +++ b/fs/lockd/svclock.c
-> > @@ -627,7 +627,13 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_f=
-ile *file,
-> >  	}
-> > =20
-> >  	mode =3D lock_to_openmode(&lock->fl);
-> > -	error =3D vfs_test_lock(file->f_file[mode], &lock->fl);
-> > +	locks_init_lock(&conflock->fl);
-> > +	/* vfs_test_lock only uses start, end, and owner, but tests flc_file */
-> > +	conflock->fl.c.flc_file =3D lock->fl.c.flc_file;
-> > +	conflock->fl.fl_start =3D lock->fl.fl_start;
-> > +	conflock->fl.fl_end =3D lock->fl.fl_end;
-> > +	conflock->fl.c.flc_owner =3D lock->fl.c.flc_owner;
-> > +	error =3D vfs_test_lock(file->f_file[mode], &conflock->fl);
-> >  	if (error) {
-> >  		/* We can't currently deal with deferred test requests */
-> >  		if (error =3D=3D FILE_LOCK_DEFERRED)
->=20
->                         WARN_ON_ONCE(1);
->=20
->                 ret =3D nlm_lck_denied_nolocks;
->                 goto out;
->         }
->=20
->         if (lock->fl.c.flc_type =3D=3D F_UNLCK) {
-> 	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->                 ret =3D nlm_granted;
->                 goto out;
->         }
->=20
-> Since vfs_test_lock() modifies conflock->fl.c.flc_type to contain an
-> actual lock, should this check also be modifed to look at the returned
-> lock (that is, conflock->fl.c.flc_type) instead of lock->fl.c.flc_type?
+On Wed, Nov 19, 2025 at 02:37:17PM +0000, Matthew Wilcox wrote:
+> On Wed, Nov 19, 2025 at 07:53:12PM +0900, Byungchul Park wrote:
+> > On Thu, Oct 02, 2025 at 05:12:44PM +0900, Byungchul Park wrote:
+> > > False positive reports have been observed since dept works with the
+> > > assumption that all the pages have the same dept class, but the class
+> > > should be split since the problematic call paths are different depending
+> > > on what the page is used for.
+> > >
+> > > At least, ones in block device's address_space and ones in regular
+> > > file's address_space have exclusively different usages.
+> > >
+> > > Thus, define usage candidates like:
+> > >
+> > >    DEPT_PAGE_REGFILE_CACHE /* page in regular file's address_space */
+> > >    DEPT_PAGE_BDEV_CACHE    /* page in block device's address_space */
+> > >    DEPT_PAGE_DEFAULT       /* the others */
+> >
+> > 1. I'd like to annotate a page to DEPT_PAGE_REGFILE_CACHE when the page
+> >    starts to be associated with a page cache for fs data.
+> >
+> > 2. And I'd like to annotate a page to DEPT_PAGE_BDEV_CACHE when the page
+> >    starts to be associated with meta data of fs e.g. super block.
+> >
+> > 3. Lastly, I'd like to reset the annotated value if any, that has been
+> >    set in the page, when the page ends the assoication with either page
+> >    cache or meta block of fs e.g. freeing the page.
+> >
+> > Can anyone suggest good places in code for the annotation 1, 2, 3?  It'd
+> > be totally appreciated. :-)
+> 
+> I don't think it makes sense to track lock state in the page (nor
+> folio).  Partly bcause there's just so many of them, but also because
+> the locking rules don't really apply to individual folios so much as
+> they do to the mappings (or anon_vmas) that contain folios.
 
-Yes, it should.  The following dprintk() should also reference
-conflock rather than lock.
+Thank you for the suggestion!
 
+Since two folios associated to different mappings might appear in the
+same callpath that usually be classified to a single class, I need to
+think how to reflect the suggestion.
 
->=20
->=20
-> > diff --git a/fs/locks.c b/fs/locks.c
-> > index 04a3f0e20724..14dad411ef88 100644
-> > --- a/fs/locks.c
-> > +++ b/fs/locks.c
-> > @@ -2185,13 +2185,18 @@ SYSCALL_DEFINE2(flock, unsigned int, fd, unsigned=
- int, cmd)
-> >  /**
-> >   * vfs_test_lock - test file byte range lock
-> >   * @filp: The file to test lock for
-> > - * @fl: The lock to test; also used to hold result
-> > + * @fl: The byte-range in the file to test; also used to hold result
-> >   *
-> > + * On entry, @fl does not contain a lock, but identifies a range (fl_sta=
-rt, fl_end)
-> > + * in the file (c.flc_file), and an owner (c.flc_owner) for whom existin=
-g locks
-> > + * should be ignored.  c.flc_type and c.flc_types are ignored.
-> > + * Both fl_lmops and fl_ops in @fl must be NULL.
->=20
-> I can't find a definition of the flc_types field referenced in this
-> comment.
+I guess you wanted to tell me a folio can only be associated to a single
+mapping at once.  Right?  If so, sure, I should reflect it.
 
-That is because I meant to type "flc_flags" and failed to proof read.
+> If you're looking to find deadlock scenarios, I think it makes more
+> sense to track all folio locks in a given mapping as the same lock
+> type rather than track each folio's lock status.
+> 
+> For example, let's suppose we did something like this in the
+> page fault path:
+> 
+> Look up and lock a folio (we need folios locked to insert them into
+> the page tables to avoid a race with truncate)
+> Try to allocate a page table
+> Go into reclaim, attempt to reclaim a folio from this mapping
+> 
+> We ought to detect that as a potential deadlock, regardless of which
+> folio in the mapping we attempt to reclaim.  So can we track folio
 
-Thanks for the careful review!
+Did you mean 'regardless' for 'potential' detection, right?
 
-NeilBrown
+> locking at the mapping/anon_vma level instead?
+
+Piece of cake.  Even though it may increase the number of DEPT classes,
+I hope it will be okay.  I just need to know the points in code where
+folios start/end being associated to their specific mappings.
+
+	Byungchul
+
+> ---
+> 
+> My current understanding of folio locking rules:
+> 
+> If you hold a lock on folio A, you can take a lock on folio B if:
+> 
+> 1. A->mapping == B->mapping and A->index < B->index
+>    (for example writeback; we take locks on all folios to be written
+>     back in order)
+> 2. !S_ISBLK(A->mapping->host) and S_ISBLK(B->mapping->host)
+> 3. S_ISREG(A->mapping->host) and S_ISREG(B->mapping->host) with
+>    inode_lock() held on both and A->index < B->index
+>    (the remap_range code)
 
