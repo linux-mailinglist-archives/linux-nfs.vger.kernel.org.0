@@ -1,273 +1,158 @@
-Return-Path: <linux-nfs+bounces-16636-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16637-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E575C76295
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:16:05 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D63C5C7630A
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 21:22:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id ECAB32BCAE
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 20:16:03 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1A6084E193F
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Nov 2025 20:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C61F2673AA;
-	Thu, 20 Nov 2025 20:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3214330B0E;
+	Thu, 20 Nov 2025 20:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3bCpJro"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KyAXRjn9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A9D3242B4
-	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 20:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9903173
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Nov 2025 20:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763669757; cv=none; b=WGRDTEUM+HLCT7kUfTsOjxgOZvbOyT58W/culYZFpr08T+EEVgg3HoT2QbJN3UakSZXgGI13NpilOjV6vQLywXPa1tAOQ9nVkUC1LvESm8LKmswhuuX3pKcsmcTqgL0iqtf9XTepJrCp4t3y3ZgMa0d55tvAJUlhd3P9mMH0wJs=
+	t=1763670159; cv=none; b=UDNXNc0LIjI4RHeaGjHKq1CPZc24+HcQytsjiaRoPv7RXkb66C9q9UjRTPZjIn5Ampwp8oQ/V8ZGhTCA1kSLHbOHIjU33/N7BSQ67thmcHHPimqui/4pPTsJancR2GgIbwbWi5ADk1E1oYNKhSOlrMQ3Jg/5fdNlCwT8jkQNyDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763669757; c=relaxed/simple;
-	bh=jmHY3ANOIPogR/JmnNlgsTA/S/qwknye1RrpKyw5AEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lkAGPU4Xq+VFTqtVGTWNYCwmjpe68pC7XadPqx4zzUOaQKR4MPPYEQnQR+COvDzZBEzAwwRyhYm0W7uj6b3lO5ee3FTckDZZr3+MpFsf28mUPSqHQD4Rxd9+Zo62HvRLiy6yJpoL3/tEPCKSqwYvrtU3Qa2CKU21aiPrihvkiDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3bCpJro; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D43EC116B1;
-	Thu, 20 Nov 2025 20:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763669756;
-	bh=jmHY3ANOIPogR/JmnNlgsTA/S/qwknye1RrpKyw5AEc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P3bCpJroljHXAMLn0PzXGxDuB+NOlXgY+60sivApXDi8pAzwClMIuCEmf2zIFwTXw
-	 oeswFvP+T1j2mqNTpPX/V3sxCoJkGiSMa+906neKAO0E6QQSO+GwJN7A+Gnd9xTEMC
-	 U94phfTz0Nrm4jdTyHFBM4JIvnH1TRQ+4cw2QCimcqZEdwiPMNnpG+e6IcTraNCr1Z
-	 pzdQOb0qlRcI7Dov+3u/uByynWDNfN9GgrSHm23nUdJ3C1hVwm5ApVCKPd7VgX+3iG
-	 BR9qN2ySf2G8a0wMUjyxldTtxzYn2jwkJLK4fnQghUT6A5kOC6PC20oI79VbaeD0Y6
-	 bKT7DlNj0odoQ==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] xdrgen: Generate "if" instead of "switch" for boolean union enumerators
-Date: Thu, 20 Nov 2025 15:15:52 -0500
-Message-ID: <20251120201552.9668-2-cel@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251120201552.9668-1-cel@kernel.org>
-References: <20251120201552.9668-1-cel@kernel.org>
+	s=arc-20240116; t=1763670159; c=relaxed/simple;
+	bh=T8aW8ZWe82575L5jlY1j6CbOSeNcS/dxs+aehTQKLDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHs14OCj7XEDxmzZ84MKHVtQe8kBLBtDP6gX5/PZzIid0KpshejoDYJ/ylWmIOx4a4TNYbW8nooqceGD/TuCB2xPplbOLpHmq/suSQ4iKmxmgM0lMkBzTSJAVKWdaPKCponivOtTidRdDgLUEUvFZ7sgvg3ienmExem+W+jH7wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KyAXRjn9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763670156;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GPVwJW3BYFeE6GKw8xcEsWR5C85+JqHQyNpzBhaznsU=;
+	b=KyAXRjn9sfk/P3q5OQ/kD5SrySUCYIG2+wpZKWf6IO9WIeg69j9BqbdzqlU1ynBytrFup1
+	/YY3uoZnvYyqhtMpizVOpw5LbwnNgDoE0NGAw2XVa2t+Ui3vt32dJLsUTB1yLIxcFGZ4yV
+	qa12qMhYc0vLMu5s+k0VikxqBL6JBcM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-0pwcEBXqMqiUuijxFZv18g-1; Thu,
+ 20 Nov 2025 15:22:32 -0500
+X-MC-Unique: 0pwcEBXqMqiUuijxFZv18g-1
+X-Mimecast-MFC-AGG-ID: 0pwcEBXqMqiUuijxFZv18g_1763670151
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79BDD1955F4A;
+	Thu, 20 Nov 2025 20:22:31 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.81.26])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47D8430044DB;
+	Thu, 20 Nov 2025 20:22:31 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id 643E350C8DA; Thu, 20 Nov 2025 15:22:29 -0500 (EST)
+Date: Thu, 20 Nov 2025 15:22:29 -0500
+From: Scott Mayhew <smayhew@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, trondmy@kernel.org,
+	anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] SUNRPC: Check if we need to recalculate slack
+ estimates
+Message-ID: <aR94hXJCQAKhvbXq@aion>
+References: <20251120121252.3724988-1-smayhew@redhat.com>
+ <02f6a095-5f64-4e06-b799-6213f207fa4c@oracle.com>
+ <40af5afceb6230d881ba9814e3eed317ead8c1e1.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40af5afceb6230d881ba9814e3eed317ead8c1e1.camel@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 20 Nov 2025, Jeff Layton wrote:
 
-Eliminate this warning in code generated by xdrgen:
+> On Thu, 2025-11-20 at 08:44 -0500, Chuck Lever wrote:
+> > On 11/20/25 7:12 AM, Scott Mayhew wrote:
+> > > If the incoming GSS verifier is larger than what we previously recorded
+> > > on the gss_auth, that would indicate the GSS cred/context used for that
+> > > RPC is using a different enctype than the one used by the machine
+> > > cred/context, and we should recalculate the slack variables accordingly.
+> > > 
+> > > Link: https://bugs.debian.org/1120598
+> > 
+> > Since there is a bug link, a Fixes: tag is recommended.
+> > 
+> > 
+> > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > > ---
+> > >  net/sunrpc/auth_gss/auth_gss.c | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > > 
+> > > diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+> > > index 5c095cb8cb20..bff5f10581a2 100644
+> > > --- a/net/sunrpc/auth_gss/auth_gss.c
+> > > +++ b/net/sunrpc/auth_gss/auth_gss.c
+> > > @@ -1721,6 +1721,18 @@ gss_validate(struct rpc_task *task, struct xdr_stream *xdr)
+> > >  	if (maj_stat)
+> > >  		goto bad_mic;
+> > >  
+> > > +	/*
+> > > +	 * Normally we only recalculate the slack variables once after
+> > > +	 * creating a new gss_auth, but we should also do it if the incoming
+> > > +	 * verifier has a larger size than what was previously recorded.
+> > > +	 * When the incoming verifier is larger than expected, the
+> > > +	 * GSS context is using a different enctype than the one used
+> > > +	 * initially by the machine credential. Force a slack size update
+> > > +	 * to maintain good payload alignment.
+> > > +	 */
+> > > +	if (cred->cr_auth->au_verfsize < (XDR_QUADLEN(len) + 2))
+> > > +		__set_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags);
+> > 
+> > set_bit() rather than __set_bit is a better choice for a lockless update
+> > where multiple concurrent threads can have access to the flags field.
+> > 
+> > 
+> 
+> This function tests for that flag just below though. Could another task
+> do the test_and_clear_bit() in gss_update_rslack(), such that the
+> au_verfsize doesn't get updated below ?
+> 
+> If that is a possibility, maybe you should update the au_verfsize
+> first, and then the flag just afterward (with a barrier between).
 
-fs/nfsd/nfs3xdr_gen.c:220:2: warning: switch condition has boolean value [-Wswitch-bool]
-  220 |         switch (ptr->attributes_follow) {
-      |         ^       ~~~~~~~~~~~~~~~~~~~~~~
+Yes, I suppose that is a possibility.  But in that case we are pretty
+much screwed (at least in the case of krb5i and krb5p) because it's
+likely that the fields used to generate the 'before' and 'after' values
+passed gss_update_rslack() don't coincide with the verifier anyways.
 
-No more -Wswitch-bool warnings when compiling with W=1.
+IOW if we're going to recalculate rslack and ralign based on a larger
+verifier, then it pretty much has to be done by the same task that sets
+the flag in the first place.
 
-The generated code is functionally equivalent but somewhat more
-idiomatic.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202511172336.Y75zj4v6-lkp@intel.com/
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- tools/net/sunrpc/xdrgen/generators/union.py   | 115 +++++++++++++++---
- .../templates/C/union/decoder/bool_spec.j2    |   7 ++
- .../templates/C/union/encoder/bool_spec.j2    |   7 ++
- 3 files changed, 109 insertions(+), 20 deletions(-)
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
-
-diff --git a/tools/net/sunrpc/xdrgen/generators/union.py b/tools/net/sunrpc/xdrgen/generators/union.py
-index ad1f214ef22a..d15837dae651 100644
---- a/tools/net/sunrpc/xdrgen/generators/union.py
-+++ b/tools/net/sunrpc/xdrgen/generators/union.py
-@@ -84,6 +84,31 @@ def emit_union_switch_spec_decoder(
-     print(template.render(name=node.name, type=node.spec.type_name))
- 
- 
-+def emit_union_arm_decoder(
-+    environment: Environment, node: _XdrCaseSpec
-+) -> None:
-+    """Emit decoder for an XDR union's arm (data only, no case/break)"""
-+
-+    if isinstance(node.arm, _XdrVoid):
-+        return
-+    if isinstance(node.arm, _XdrString):
-+        type_name = "char *"
-+        classifier = ""
-+    else:
-+        type_name = node.arm.spec.type_name
-+        classifier = node.arm.spec.c_classifier
-+
-+    assert isinstance(node.arm, (_XdrBasic, _XdrString))
-+    template = get_jinja2_template(environment, "decoder", node.arm.template)
-+    print(
-+        template.render(
-+            name=node.arm.name,
-+            type=type_name,
-+            classifier=classifier,
-+        )
-+    )
-+
-+
- def emit_union_case_spec_decoder(
-     environment: Environment, node: _XdrCaseSpec, big_endian_discriminant: bool
- ) -> None:
-@@ -151,19 +176,33 @@ def emit_union_decoder(environment: Environment, node: _XdrUnion) -> None:
-     template = get_jinja2_template(environment, "decoder", "open")
-     print(template.render(name=node.name))
- 
--    emit_union_switch_spec_decoder(environment, node.discriminant)
-+    # For boolean discriminants, use if statement instead of switch
-+    if node.discriminant.spec.type_name == "bool":
-+        template = get_jinja2_template(environment, "decoder", "bool_spec")
-+        print(template.render(name=node.discriminant.name, type=node.discriminant.spec.type_name))
- 
--    for case in node.cases:
--        emit_union_case_spec_decoder(
--            environment,
--            case,
--            node.discriminant.spec.type_name in big_endian,
--        )
-+        # Find and emit the TRUE case
-+        for case in node.cases:
-+            if case.values and case.values[0] == "TRUE":
-+                emit_union_arm_decoder(environment, case)
-+                break
- 
--    emit_union_default_spec_decoder(environment, node)
-+        template = get_jinja2_template(environment, "decoder", "close")
-+        print(template.render())
-+    else:
-+        emit_union_switch_spec_decoder(environment, node.discriminant)
- 
--    template = get_jinja2_template(environment, "decoder", "close")
--    print(template.render())
-+        for case in node.cases:
-+            emit_union_case_spec_decoder(
-+                environment,
-+                case,
-+                node.discriminant.spec.type_name in big_endian,
-+            )
-+
-+        emit_union_default_spec_decoder(environment, node)
-+
-+        template = get_jinja2_template(environment, "decoder", "close")
-+        print(template.render())
- 
- 
- def emit_union_switch_spec_encoder(
-@@ -175,6 +214,28 @@ def emit_union_switch_spec_encoder(
-     print(template.render(name=node.name, type=node.spec.type_name))
- 
- 
-+def emit_union_arm_encoder(
-+    environment: Environment, node: _XdrCaseSpec
-+) -> None:
-+    """Emit encoder for an XDR union's arm (data only, no case/break)"""
-+
-+    if isinstance(node.arm, _XdrVoid):
-+        return
-+    if isinstance(node.arm, _XdrString):
-+        type_name = "char *"
-+    else:
-+        type_name = node.arm.spec.type_name
-+
-+    assert isinstance(node.arm, (_XdrBasic, _XdrString))
-+    template = get_jinja2_template(environment, "encoder", node.arm.template)
-+    print(
-+        template.render(
-+            name=node.arm.name,
-+            type=type_name,
-+        )
-+    )
-+
-+
- def emit_union_case_spec_encoder(
-     environment: Environment, node: _XdrCaseSpec, big_endian_discriminant: bool
- ) -> None:
-@@ -235,19 +296,33 @@ def emit_union_encoder(environment, node: _XdrUnion) -> None:
-     template = get_jinja2_template(environment, "encoder", "open")
-     print(template.render(name=node.name))
- 
--    emit_union_switch_spec_encoder(environment, node.discriminant)
-+    # For boolean discriminants, use if statement instead of switch
-+    if node.discriminant.spec.type_name == "bool":
-+        template = get_jinja2_template(environment, "encoder", "bool_spec")
-+        print(template.render(name=node.discriminant.name, type=node.discriminant.spec.type_name))
- 
--    for case in node.cases:
--        emit_union_case_spec_encoder(
--            environment,
--            case,
--            node.discriminant.spec.type_name in big_endian,
--        )
-+        # Find and emit the TRUE case
-+        for case in node.cases:
-+            if case.values and case.values[0] == "TRUE":
-+                emit_union_arm_encoder(environment, case)
-+                break
- 
--    emit_union_default_spec_encoder(environment, node)
-+        template = get_jinja2_template(environment, "encoder", "close")
-+        print(template.render())
-+    else:
-+        emit_union_switch_spec_encoder(environment, node.discriminant)
- 
--    template = get_jinja2_template(environment, "encoder", "close")
--    print(template.render())
-+        for case in node.cases:
-+            emit_union_case_spec_encoder(
-+                environment,
-+                case,
-+                node.discriminant.spec.type_name in big_endian,
-+            )
-+
-+        emit_union_default_spec_encoder(environment, node)
-+
-+        template = get_jinja2_template(environment, "encoder", "close")
-+        print(template.render())
- 
- 
- def emit_union_maxsize(environment: Environment, node: _XdrUnion) -> None:
-diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
-new file mode 100644
-index 000000000000..05ad491f74af
---- /dev/null
-+++ b/tools/net/sunrpc/xdrgen/templates/C/union/decoder/bool_spec.j2
-@@ -0,0 +1,7 @@
-+{# SPDX-License-Identifier: GPL-2.0 #}
-+{% if annotate %}
-+	/* discriminant {{ name }} */
-+{% endif %}
-+	if (!xdrgen_decode_{{ type }}(xdr, &ptr->{{ name }}))
-+		return false;
-+	if (ptr->{{ name }}) {
-diff --git a/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2 b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
-new file mode 100644
-index 000000000000..e5135ed6471c
---- /dev/null
-+++ b/tools/net/sunrpc/xdrgen/templates/C/union/encoder/bool_spec.j2
-@@ -0,0 +1,7 @@
-+{# SPDX-License-Identifier: GPL-2.0 #}
-+{% if annotate %}
-+	/* discriminant {{ name }} */
-+{% endif %}
-+	if (!xdrgen_encode_{{ type }}(xdr, ptr->{{ name }}))
-+		return false;
-+	if (ptr->{{ name }}) {
--- 
-2.51.0
+> 
+> > > +
+> > >  	/* We leave it to unwrap to calculate au_rslack. For now we just
+> > >  	 * calculate the length of the verifier: */
+> > >  	if (test_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags))
+> > 
+> > Thanks for pursuing this one, Scott.
+> > 
+> > Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> > 
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
 
 
