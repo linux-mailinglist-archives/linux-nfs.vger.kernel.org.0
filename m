@@ -1,423 +1,358 @@
-Return-Path: <linux-nfs+bounces-16645-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16646-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33197C78228
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Nov 2025 10:25:30 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A732BC7B5B1
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Nov 2025 19:40:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C9161343347
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Nov 2025 09:23:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 81D2A4E1BC0
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Nov 2025 18:40:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6546342532;
-	Fri, 21 Nov 2025 09:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A962022B8BD;
+	Fri, 21 Nov 2025 18:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRiQS1/b"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FX9fsZg0";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="y9jRJPXZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA5C33F8B4
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Nov 2025 09:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763716826; cv=none; b=jGckprRBpLyc/FwYDNfqnn8ZogbgrkXxyVOrptORtX1RmYKC7njgsl3MlEC1jfNywCwtcA9go40H+daPfk+j0OqhFXb6yxDXrS/nE8bS+TdV6uq2TMeXUW/xvN2ZK4DkZqmtC+hOhdHD0Gu2KC7vXin82Mc0ka49LR95OFG8kxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763716826; c=relaxed/simple;
-	bh=jDzPnXsAcrWJ6827o6/zByB4qjKEdXy4ClFgclKRLrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lYGWqLSoC0MaGKovQgH+DdYiQ8wmUf1jB3vPfMKWryd6Gb58/NrQIiawV8XQzFmjLoIui6LJM99KFrRWS7dV2W7oWFyNM3dPMU2BvkjHUxz4jSxqFD0jdWfmH8RcXVEVaA8ZMyTLR7Bwd3y91n92ehiNHIPF6nkE8AdBVSgE+iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HRiQS1/b; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b713c7096f9so290723266b.3
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Nov 2025 01:20:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E314B2BD5AF
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Nov 2025 18:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763750397; cv=fail; b=M4FBgTA7LDEKXpuUxtrf+vgcZrgCspTQqRzQw3b8s/GFSI8wCBqbZk5Uy3PA7yWcm95+40H9RF6CKLVT8CV5bLHQL2ceMWvalvMYwVZYJAormslQepqPr0gfg53ABBO3BEq/P8RF2Rt3I9v6FPwDFssxWghxBTnhKnEkSDaz8Jk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763750397; c=relaxed/simple;
+	bh=gmcUSSW303l0kx4XG6y4MIzIM1DGkEQfisVCySoGtA8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IZRrEDOCWy3lwUQ+HQdcqXV9q3drWmadNr4l3gSmq0slyHNiKDwWXJlPinVP/uYMrNspbmjzVinyfAP2iL06A3QKCgK5tnXD6i2/xECwNjefZ+IQncgHcuONOxPwINp4qN0g/s1agA/p/hUVEeJbHfdoa8jvH0oFWvnEpvR/iiw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FX9fsZg0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=y9jRJPXZ; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ALEhHcG028690;
+	Fri, 21 Nov 2025 18:39:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=dextRAWhRaU1JipP/aQO/v9/YWBa6JvKYeb1y/zS9Uo=; b=
+	FX9fsZg03mR1hMVuleBfEfIDWb/s/g314rRfA5EGQJtdci6SN8ZPABwXO7C5eSAf
+	71B4TXlvWU6MoVgXyQQdf762J9+D+/rmknSzAlpxozkkKBjKId75Cq8E4tAX86tl
+	ftY3nvop9LAs6OO9uZhsPf8myjMyXcjXPehpp7OxI43PTOO+/3wLoxzyWbGMa84t
+	RulaWFaIKFbLU34D4W8Fpdcg8hATX+c2tNzsgTO1LNKSUyBjprCCNZuXiufQH9xE
+	s/CTWNK5faM72vP05kimJyIC4+MpLKELUu0nUW+cBkxQHBPvRVMclNzdGOpegZmz
+	PXDHtvmtPjTS0Frh/VHjXQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aej96c4tt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Nov 2025 18:39:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ALHjxuf007231;
+	Fri, 21 Nov 2025 18:39:44 GMT
+Received: from sn4pr0501cu005.outbound.protection.outlook.com (mail-southcentralusazon11011017.outbound.protection.outlook.com [40.93.194.17])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefydytwh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Nov 2025 18:39:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gY1iYWuPOHENVBSwNKn6Lvf9KTvZH+dX6MQZPwQpi0T7rkBeWoZt2f+5wyJw34rX4Q1hVdeoGc/TnVsZdFiycOZ2Eu4dA59Tes8Kg2AwPUJnCq39c4kO7RTkv5p6QMTrS1A5OZkw0eVtqdQr5XERz8Pf+oJ7lepbaXufKzM8NmNkGOHpquesRywTWf5YTgxH+3u7KCdr2Q3P+LLogXp1LRGyHk/67gRmbFTdq33OKA1Jaq7ZTTob4wck9tta9R2GuHB66t4pLDVDyC3/8/6w0mn3IgK1hr8t7Li6wQVhbnvhROTl7fHoK7kWVHtEsIxESmKRkNTjOXjWmdJxGwPPvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dextRAWhRaU1JipP/aQO/v9/YWBa6JvKYeb1y/zS9Uo=;
+ b=Fcql+EJXY8hKg2xoDJu1sZkI0+URWy2MenWlr/dFjFuASGMS4f6+VsHQ4WVEeXYUReKtjO7uwbccohyAp4KIMv47XcBZXqEpeN0lk0iW95hmGSWjUBoM/SaEGAEOTx/hCYftAOGWtgrHXuw+cFyfD4O1WFNgX6VlrkNK1Pbz6M8fTgvPXgEq2eIETQDW8qJU+7DM17aLhqAyPyYmOENiB9P3ydmkDBShkFp+3385++LWS6ZLMw8FZ0q6mq2H0gn802teZEA39wEmol1qBXyaT1TG301y7GHrXjZy4Ypn3t6Cniow+mrxUHA4ryBt9G/Bdajczt89BcYSqjdTqRFhAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763716823; x=1764321623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=szpgBIBgsaLz6eiBUSfZt06vD62hmWvhuPoyx2+xahQ=;
-        b=HRiQS1/bCoG8nuy6Sj2Dadem05M00ALndxMf+7l58MZ3buNr0wVbgpYX6DqyxUWtn9
-         wyeAu4kHIjl9pOZ0cA/CGBoxBZVSUtqz9M8gEVC4rSglZKv/6Emlti1qxGBqZQikx+s6
-         NxTlqNqwLxWzYo4Kdec0ztXLwhmPq4DL5zakghngnlTFSXRuDRk7cUhAmt2cs24ieed/
-         fEM+M1Bf32IfBsioJfkM7P2L1E4QS1WY7j0TZ+NyMuJIkJPHc1fx7R79/9JReGVCZvC3
-         uVC2Gsspc8ilAzWOFAekbtmpPHUOkhEAFLrXaiXGvUaqrWdw1xKNrgIU/e6anzZGRvXf
-         7cmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763716823; x=1764321623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=szpgBIBgsaLz6eiBUSfZt06vD62hmWvhuPoyx2+xahQ=;
-        b=QzKxx2cKt0yEa+uCSxtPkm53l4SH+bo/IYZ3sJYrQaNlBBMGLoRC83c8UbOWgXa8sn
-         Wx0aHBiufG2h6snYWvTAN4qYAa9IVrI6iXmbz59hEGL3PEzkGteQA0IJ3GtV7ijc5iSu
-         kj9pqB51wU1afC/2mMI17xXFgjQEodr4aATdcFjlugVnQDglY4CwBKJHcZbxq0NYXzru
-         a8Abj2nBtg01yG2wxBfEemTVAcknajLs/q68TnU0BRjsOLP9ABCUloOsHSNbOPManjlL
-         NCpRkv0hPcFG1CF+UG4l6SGfz6+jvs1p2ozOg1/As1ywPRR5zxB4OZB3HIEWi9PiYrRO
-         v5Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGM58MhLXHGkd6bG6TEmJgUccbuAh/COYyO6DnA9b4D/6j/qimmUiPHXFUaiVLAD5KWkFojgLt3P8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZWK5d22yqDr6OUAJANN9nMkCEBmduUQf+4eFvGy602Zu/hWCG
-	+fmhqvdwXJ6BLeT6EuA2vlexWd5Aa2erEzpbfawtqSH7c8HZUaqjuERxsiQJFqbwPcev3PF6wvf
-	3cLdaeQR/+N/+9GgQROOZO8P0MKN1DG4=
-X-Gm-Gg: ASbGnctFVSsYzkVk4CFxnswPkf7P1T5BQZpC6g+ZpFN6aSWEviAog6SYKrp/We+Xnn5
-	JDi2wPVQPxAu2EWCUPanqqfhmexbgrUL3otTEVCZoj8PDHV8/q16NBdZpGqq2o8TlFvKSLMHybB
-	qmao9WmvjntJXbQT+bmjgWQgYVw2Ms2U9jEUFDUNNwailZDCmujKA8Ywt11i0jqb/06qa8yxpnQ
-	qHFYtUJNP1K6cKxytI3YRr3grcUO7NQdf0nsxbA8IQRxb7X8IM9Wzg/dEl/Joaa5YSWx9Pa
-X-Google-Smtp-Source: AGHT+IFh1S/U6tzBt1cINd8qAe3t+spvP5+Tro7AKiZmiuxBtTSP83Fl5DNJiuAk1r9oqLBk6FflyjszzM/O+lERnGQ=
-X-Received: by 2002:a17:907:3f1b:b0:b73:544d:b963 with SMTP id
- a640c23a62f3a-b767159e21amr157078466b.13.1763716822363; Fri, 21 Nov 2025
- 01:20:22 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dextRAWhRaU1JipP/aQO/v9/YWBa6JvKYeb1y/zS9Uo=;
+ b=y9jRJPXZaVw+0tjgKwPwdEKu1JD3tY4QLfHUXdKQzICYnCks9jAKxImw7WHhxCiP90P3JeXsOGTv0JH1F+aS8A5klmdMc+nAvC9jl1jZubdv9lsdgnovbvD6caEdgLUItRkV1NMcIyQDAVatkJ5XMkOnaqOIBnJGon38/RnGAro=
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com (2603:10b6:303:244::14)
+ by DS0PR10MB7399.namprd10.prod.outlook.com (2603:10b6:8:11c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Fri, 21 Nov
+ 2025 18:39:39 +0000
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6]) by MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6%5]) with mapi id 15.20.9343.011; Fri, 21 Nov 2025
+ 18:39:39 +0000
+Message-ID: <d5368480-744b-4200-a647-fc77affcdeaa@oracle.com>
+Date: Fri, 21 Nov 2025 10:39:37 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] locks: Add lm_would_deadlock callback to prevent NFSD
+ hangs
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
+        Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20251120174831.5860-1-cel@kernel.org>
+Content-Language: en-US
+From: Dai Ngo <dai.ngo@oracle.com>
+In-Reply-To: <20251120174831.5860-1-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR04CA0003.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::8) To MW6PR10MB7639.namprd10.prod.outlook.com
+ (2603:10b6:303:244::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111145932.23784-1-cel@kernel.org> <20251111145932.23784-4-cel@kernel.org>
-In-Reply-To: <20251111145932.23784-4-cel@kernel.org>
-From: Anton Gavriliuk <antosha20xx@gmail.com>
-Date: Fri, 21 Nov 2025 11:20:11 +0200
-X-Gm-Features: AWmQ_blMKlxhomnsM5b2pwVw0OtB4JDe9vJmMKjr7Jp-vGZNx79HgsLEata8gKQ
-Message-ID: <CAAiJnjrE2TOxFvkGiq3g17795nFvA+wFZTddOpu4KiUz2_7i8Q@mail.gmail.com>
-Subject: Re: [PATCH v12 3/3] NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR10MB7639:EE_|DS0PR10MB7399:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9be71f8f-5bac-444e-cb26-08de292d53be
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?VFBVWHJrQURYbCtLY0o0WUt1N29Wdm54RTU5bmFzRTNNLzVpV21PQ3BLNzVX?=
+ =?utf-8?B?TUZ6d0c3QWdCWE01Ti9xR2k1TldheEdudThUbUJoK04xMDNPSGVCNFJMTUNS?=
+ =?utf-8?B?UTc4dGhwN1oxTG9rdWE1Y2cwaUwvamNWQkdHNURTVXhCUjc2N2JIdHVTVmhl?=
+ =?utf-8?B?OTFWYmFXckJScmo2eHlWVG1Sd2k5VUlVd0JaY1oxbTB0NTI3cE9BL3VkTDM4?=
+ =?utf-8?B?SkdDdmZONURUQmJ6Y1BmQVdrNmJYcjR0eVZtUHVzZEVGWmZUMDJKc2VQM2FE?=
+ =?utf-8?B?VFZEa3FlbUNSRG9BczNnV3NCaGhmS0NQY3VRVFdUejJsdU92TmYwT3NnVHNl?=
+ =?utf-8?B?RHRWenhrTXpXK2hmZmtnZDlNYm53NFJRUWhMdWRiaGZtYWk1WVo4VEhtTm5u?=
+ =?utf-8?B?dUhKRVgzaVNBK0xlcndPSlFJUGVBOEkwcWJKMVhvNGhlY0RjU0lmbVpzcVNn?=
+ =?utf-8?B?aWJNZGFPQnFacXFId1pTbGxqd0h0M1YwaDlSOVdaTmxaQVczOHNVbUxLMi8r?=
+ =?utf-8?B?ZWRUQzhyRExaZE1Jd1JqQjVtS01QV25IRm0wbmZ2UVhYd09SK2JMQ1ZpSFRD?=
+ =?utf-8?B?eE5GekFWMVRDdXd5UmVyRmExckV5S2lpczA2T3dDUHordkx0aklOOHlwMGhG?=
+ =?utf-8?B?M0pON3NzaWNIb0FEM3cwcnpzK1NsSzJqUXphK1hqRGdqdm13RXR1UEVoZnl5?=
+ =?utf-8?B?QnYxNm5qWURpRnZVSytya2NzcUlWaTZ2SjN1MjBHUlk4MlI5bzd3d3VCOWMr?=
+ =?utf-8?B?SWpjNmJvUGovNGZiTmExMkk4YXh3YTRPM3UxWnBrREtkTEFwLzNqbDQxM2hG?=
+ =?utf-8?B?SWxBbkFxeW53dzFkMTBXM2dzK0tGS052MTM1dExTTnFHalBmcjF3b0MrN0dT?=
+ =?utf-8?B?R3F4cC8vYVpNOGVLSDFROElEQnpndWFkQ0hRMVBEM1YwY2orbEVVVjN5Smo4?=
+ =?utf-8?B?TDlmUzJGVTBvVmwwWWE1RnZHUHY4WmlRYUtmbCtCMjRWRTk0S3F5eEZzUVBu?=
+ =?utf-8?B?MDVJM3czVjA2aWhjL3B6ZUY5QWdhY01RRTZRY044OVNkQUNVMURpZmdPc212?=
+ =?utf-8?B?RTJ2Z1h2TzlMMnRxM2VMM0xMSVpGN0ZLb1pBbkpwcU1pWlFrV3BZNlJaSnAv?=
+ =?utf-8?B?OExhNGZWR1psbE5UZ2F4TG1WNWhUcWJ0RnI4NGIwcGlqRmRDSkFNbXdvNXlQ?=
+ =?utf-8?B?eVBuQ2E5NFJLVys5OWhheUdFbmlyRjVYZEd5aG5wcEM3RCt6cENSTmpBcUU3?=
+ =?utf-8?B?cEZVV3k0OWhSSzFld3hLeXBaRTEyU2dsLzJ4NWIzT0g4OWd0bVBNcXFFV0hk?=
+ =?utf-8?B?WmRkSmJXNG1qU3l1VDQ3WTA1WDRmOUZvUXlFMWZMQlExbm9pZTJaVDBXckkw?=
+ =?utf-8?B?T2FaNjgrcGFHQjRTbksxeHhhZCt5WkwxZGNJZkhQcXlXSUEwb3NrcWh2c1lB?=
+ =?utf-8?B?eXZ4R1krZ1BLdzNEOGV2STVOd3MxclpJRWtUK2ttRWtoemVXUkNWditZMEtH?=
+ =?utf-8?B?WExWMTM3aWNzMVo5eFE2cEdENTZKL0dJK1lIb2dWZG8zM2hCV0lmV0Z5QTFa?=
+ =?utf-8?B?Q3ZJVWpvV0U0NlA4SnY5UjZkNmIwZktrRGVSODJMZmJIOUJCaEJTVzRyb1Ez?=
+ =?utf-8?B?MUJoMDNuSUpDZnRWLy9oNjMvck1hQkdWb3owWEw2b09ieHVycExzVWQ1YURN?=
+ =?utf-8?B?aGNJdE10bWNFQ3dvV09zVnJYOXcwZEhNcnBoVElBRGtQZTNTWk8wMmNneEpJ?=
+ =?utf-8?B?NjE5b3JRcktyWE4wNnpaRkI2SXMxb1ZvRWJvMWxwd0JWUDlEbS9ROW5vaFdy?=
+ =?utf-8?B?L1ppRlRwM1NDakpyL2diSXpPd2tHVTQyemVvZzJ6UmtYRXhHdTBSU1FMUENJ?=
+ =?utf-8?B?T2JnQkNpbUpXV2YyWlppTm84TjZKTW9haityR1VBV3BwRllwS3JUR3dZMzhv?=
+ =?utf-8?Q?wigpLQa0CxE+hs+0u9bcaF54wXMhOap3?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR10MB7639.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?RzdJdll5dFdzbTdralZ3R3c0RGI4bDluZnorODkxbjlERDFUVk4wV3lWS2pK?=
+ =?utf-8?B?b0NBM0NDNDlNTG1qTHV1ZklaNnRaT2dsa1RmMG54UkZ5eUVKMGdGNVJuajJs?=
+ =?utf-8?B?VnlaK2pKNHp5dGMyejNxRlAwZUFwQ0cyWlQwZlNNd1dJSVhCU200S2g0dmZp?=
+ =?utf-8?B?OW5RL2hONFh0OUV6VHJFVDdmT1BsYjJNempoa3A0YTFZeGhNNGQ5ekhyOUVa?=
+ =?utf-8?B?VC9QRTV1RnFMRFArWmlxS2dlQ3czcTg1ZHAyc3hnNEdaYVJjdnkrUEJqWnlQ?=
+ =?utf-8?B?bDBrVSsycXVMOVd0NDdyM2xraTlJTktieUVJM2d2SUFpVlRaTHBZSHpyS3pB?=
+ =?utf-8?B?MThzclIvdGl2RlhhcCtXSTlUbWpsay9GMHdNbnpGZVpaQmlkbTU5ZFp1Q1pK?=
+ =?utf-8?B?WnJ2TGVuVitzTS9jQjAzajR6d3YzT0plUjkvOXVWVnRqQmtkYUx3YjhpYitz?=
+ =?utf-8?B?b21vRkNkbTdTWTI2MFFWSTdkUmVmS0tyRWpPQzBkVjVIS2lwM1F5QVg5WDZp?=
+ =?utf-8?B?Nmhxd2dNeFpEUW9zSzNHZmtQaHZvWTRGTHljUXBOUnY0UVMyNldGakRyVGtB?=
+ =?utf-8?B?Z2M4RkRQN0hwWGNwVFpRTldSaWw1UHo0WmZpNWtYNm4yT2QreCtKcWV6UEZy?=
+ =?utf-8?B?cHJoWkwzcDU5OCtCK3drM0oyWWhCT3BQUHRPejNuVUdGejEzVWZNVFBhaG9u?=
+ =?utf-8?B?c1g2am9sVUJaK01sOFhkVXd5OTNDeFc4dU1VWmxLUXoxMHJRNzhTMGIvVUMv?=
+ =?utf-8?B?UjIxcGYyQ01oQnlKcXNhbit6cXcwZXpqaENxajlaNjZPQTVCcWdIUk9GK1lx?=
+ =?utf-8?B?RG42RzNiNDZvS09GRkFWRFNOTzczUnowZ3NXVU92NzNwYTNpdzZzZHpaVHZx?=
+ =?utf-8?B?cmVXWnZlR0J5UU93K3NtbUphU3M1YXVvMDZkKzJvTExSSDkySENsdGpWaFQ2?=
+ =?utf-8?B?RFJIbmxlaHpDOThnbEd0SERHQmtDTWhNOVFwNmhWekN4TEMrZnBxR1RqSXlj?=
+ =?utf-8?B?Y1hacDRQNmFaNEdWMjFLNms0dGFFTnlUVndLNXNjd1dYZ2xVSVQrdHR0eTls?=
+ =?utf-8?B?OVZOYTRiQUFVQTFwYmM2U0c2NUhkMjFKdk0rWEtsSzhSbWs0UXAxTUxVVnhO?=
+ =?utf-8?B?aE1nR21YREMxTjlSUEMvc1Z5eUtYQTZaWmJRNUdGRStxaXBSSzBpR21tL1RN?=
+ =?utf-8?B?N3E5VFB6d3A0UU9qSExtdTh1ZitIZHJ0QUhBSEZqTTlCL1pWMTRPenR2VXBy?=
+ =?utf-8?B?Q0RwV1dCNDNJaW9ZTHBDS1JFakkwTk85WkV2MEUrRU4zeGhNR0FzU21jRVdB?=
+ =?utf-8?B?NHlITWYyaTA4QXF0Q25qcGYzODNOa3ZtUnRJQXc4RS8zR0FYeUhFZlJyT1FW?=
+ =?utf-8?B?dE9FOVVpTmc2TnFLdlZEM1J0N1preDJUZldRMUgrQkcxNkN2cW44U2dsZ2NJ?=
+ =?utf-8?B?M2E0ZDgrRUNLMjc4U1ZvbVgwU1UzS09sQjJiSzhka09Kck5MRkI3ZSsyRzBO?=
+ =?utf-8?B?clpUTXJHVUZiR2F6L3FGWTRaMTlvSHE1ZnZNWUNEeThyNGw1VVF3aHFTUEdP?=
+ =?utf-8?B?ZmpVVE1IVnNuSk9nL0lOK25NR3pYUnpMR2dnbVEwcVBRZXUxbzFNV3o0WGlW?=
+ =?utf-8?B?aDBnYkFhRUxSc3VFdGwvaW1LZXZrbmJMMFZXYjZ2OU5iNVk2SGtmWG1wYTJv?=
+ =?utf-8?B?aVNVUUlUK1M5L0tKRGdrWFRSWnY5K0tzSFdrcjU3VlpNL1NEbW9RZ0ZJU1Uz?=
+ =?utf-8?B?L1lsUVdjWTZNY3ZXZzU0YTlXSW5qNGE4eHRLbmJnRXIyc0x3NHB5a2hpRkZw?=
+ =?utf-8?B?clh2TkpSVjJ2czR6Q05MdTRsa2lYbG9LREJ3QnoxTEZ4SllwR3N4SmVNVHF4?=
+ =?utf-8?B?Wms0ZXlaOWdrU1ZaRElsQjk3THBZQzhwd0dJWmZjQUROYndHclRnNHZ4YWtm?=
+ =?utf-8?B?R0pUUUhGVmxvMjM1RE11eXVyN0ZCNmZTV05zdHdIR3czdExIa21PeHJWYTZF?=
+ =?utf-8?B?blhHRE5xU2l5U3ZPZDZoL3RreGRtVm93anNlRCtaS3BUL05sQVRlOVFwV3Qv?=
+ =?utf-8?B?aWp3bUlCWUhTUnovYU0wOSttdE8wVGZCWmUrVjFMNjlHNndMY0tPREM1UlBH?=
+ =?utf-8?Q?N7PF42USCSqSbiy9vzpX9OfTi?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0d3c+Mfk7PtnLGjxQxdw9/DASwT0AZWc0KrpQ7kCG9c/LX73FS+nctchwRTpH0StvQoFaePu+9AfrbgIntZ0fQsVroMDKBBzY1IQOg4quYx46rCoPDxE2cvhnbBMWihWG4HMLFgnvmsExz0sFXvPkqRB3PZaF9Jc1+ViI/UB9B+RFDNxn/vMruyInW/94UPZaqkIOvk/thq/kKheGnBwHQAHV21JvbNPNjOtav/kfgmoWTbaxBmmmbMuB9VK385WU/axwv2OGKhR+74WczpWUsJklVqXM2Ctunc+lo1jUzLJXtDyGW9bxEuRDBZArPE5Tpn3uJLMFZvYbhuvUbQ533h22m/U63HL2MYknpu5Z3t+R/Z2JsPQgkJdNrsaMn6RhS1QY2m1Rt0aNx/9006ZIxSOH+NZ3Dbx9TbLm0hU4YEv4qbnNe0Gp5UylR0a4BzK7QL8ZqjRUjlp050l9Ge+Zg46s7LF9T0cv5GBQhzVn7L2sAQbHjeXkZcVxIzdFjpAIawYHOtHcSd/QWLp3mu+H9Z7yYbVUpVulbkkw3SMRmd4MVY2xCknQabHhWF2u+w9eUDmi3Ozg0buXb0xf97pGMF7fz/WvD9eJI1O67dlB2A=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9be71f8f-5bac-444e-cb26-08de292d53be
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR10MB7639.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2025 18:39:39.0724
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fbr2p3lLTd75hH0N+AN5hsHa0jkM3vxlt1GG0ma3RrmWIjMi7UY/lZNwV4D3g5ybkIrprc+IrA2vOjUcwMZQIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7399
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-21_05,2025-11-21_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511210141
+X-Authority-Analysis: v=2.4 cv=DYoaa/tW c=1 sm=1 tr=0 ts=6920b1f1 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yPCof4ZbAAAA:8 a=Cl_zYlBAfxDI2oA5XcoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 43q8SaBwCdT7MNiPRhRr6KIYw4xa9iCA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMSBTYWx0ZWRfX4cHc9lFz9QXE
+ IGR4GJN+I1UcvTTUODt3YgoTPSYXtGF8UHl2hWQFk2i1gEMLyGKpcpFC0gTy4MjdpXi3TyYN07b
+ XBQnaL2aFT8DlEh6HMHxiA7/liIhpfaLtASehBl8pcXppl6LU5gFSv/jT8P95mQSORtzM9pvWwE
+ E2YdG5CWlZxf1l30pH/DVw7wBDeiE+ENlLoofeTvAGSIZ5zrbeTWyYuifBgxuk/J4xPE3ZSsvGc
+ ht4QtdzsuKcknb6/vpgsKrEAY/+VlyyrksLl80jdMx3wYcS99o/0JFo7Jf8R5D/2dGjOaZQru/J
+ NnqgK8Ks3Vzz/x3h4c+qXFCDNBUiMsFsKhX5rZ9svp++Fpf2TsVSAYQGB1nCnYB1Gn+gWjl8zZJ
+ uZ57jIrJydeH+G1RZgi8dMgq2eY+Hg==
+X-Proofpoint-ORIG-GUID: 43q8SaBwCdT7MNiPRhRr6KIYw4xa9iCA
 
-> +If you experiment with NFSD's IO modes on a recent kernel and have
-> +interesting results, please report them to linux-nfs@vger.kernel.org
 
-Hello
-
-There are two physical boxes - NFS server and client, directly
-connected via 4x200 Gb/s ConnectX-7 ports.
-Rocky Linux 10 on both boxes, on NFS server kernel 6.18.0-rc6, on NFS
-client kernel 6.12.0-55.41.1.el10_0.x86_64
-Both boxes have 192 GB DRAM.
-On the NFS server there are 6 x CM7-V 5.0 NVMe SSD in mdadm raid0.
-Thanks to DMA, locally I'm able to read the file 87 GB/s,
-
-[root@memverge4 ~]# fio --name=3Dlocal_test --ioengine=3Dlibaio --rw=3Dread
---bs=3D3072K --numjobs=3D1 --direct=3D1 --filename=3D/mnt/testfile
---iodepth=3D32
-local_test: (g=3D0): rw=3Dread, bs=3D(R) 3072KiB-3072KiB, (W)
-3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=3Dlibaio, iodepth=3D32
-fio-3.41-41-gf5b2
-Starting 1 process
-Jobs: 1 (f=3D1): [R(1)][100.0%][r=3D81.2GiB/s][r=3D27.7k IOPS][eta 00m:00s]
-local_test: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D14009: Fri Nov 21 09:5=
-5:00 2025
-  read: IOPS=3D27.7k, BW=3D81.1GiB/s (87.1GB/s)(512GiB/6313msec)
-    slat (usec): min=3D4, max=3D1006, avg=3D 6.56, stdev=3D 5.34
-    clat (usec): min=3D275, max=3D4653, avg=3D1148.62, stdev=3D32.32
-     lat (usec): min=3D300, max=3D5659, avg=3D1155.19, stdev=3D33.71
-
-On the NFS client share mounted with the next options,
-
-[root@memverge3 ~]# mount -t nfs -o proto=3Drdma,nconnect=3D16,vers=3D3
-1.1.1.4:/mnt /mnt
-
-All caches (on server and client) are cleared using "sync; echo 3 >
-/proc/sys/vm/drop_caches".
-On the NFS server /sys/kernel/debug/nfsd/io_cache_read default value 0.
-
-[root@memverge3 ~]# fio --name=3Dlocal_test --ioengine=3Dlibaio --rw=3Dread
---bs=3D3072K --numjobs=3D1 --direct=3D1 --filename=3D/mnt/testfile
---iodepth=3D32
-local_test: (g=3D0): rw=3Dread, bs=3D(R) 3072KiB-3072KiB, (W)
-3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=3Dlibaio, iodepth=3D32
-fio-3.41-45-g7c8d
-Starting 1 process
-Jobs: 1 (f=3D1): [R(1)][100.0%][r=3D2865MiB/s][r=3D955 IOPS][eta 00m:00s]
-local_test: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D141930: Fri Nov 21 10:=
-04:08 2025
-  read: IOPS=3D1723, BW=3D5170MiB/s (5421MB/s)(512GiB/101408msec)
-    slat (usec): min=3D84, max=3D528, avg=3D147.91, stdev=3D29.89
-    clat (usec): min=3D950, max=3D116978, avg=3D18419.36, stdev=3D11746.45
-     lat (usec): min=3D1082, max=3D117116, avg=3D18567.27, stdev=3D11729.90
-
-All caches (on server and client) are cleared using "sync; echo 3 >
-/proc/sys/vm/drop_caches".
-On the NFS server /sys/kernel/debug/nfsd/io_cache_read default value 2.
-
-[root@memverge3 ~]# fio --name=3Dlocal_test --ioengine=3Dlibaio --rw=3Dread
---bs=3D3072K --numjobs=3D1 --direct=3D1 --filename=3D/mnt/testfile
---iodepth=3D32
-local_test: (g=3D0): rw=3Dread, bs=3D(R) 3072KiB-3072KiB, (W)
-3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=3Dlibaio, iodepth=3D32
-fio-3.41-45-g7c8d
-Starting 1 process
-Jobs: 1 (f=3D1): [R(1)][100.0%][r=3D16.9GiB/s][r=3D5770 IOPS][eta 00m:00s]
-local_test: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D142151: Fri Nov 21 10:=
-07:36 2025
-  read: IOPS=3D5803, BW=3D17.0GiB/s (18.3GB/s)(512GiB/30111msec)
-    slat (usec): min=3D58, max=3D468, avg=3D171.72, stdev=3D15.26
-    clat (usec): min=3D264, max=3D9284, avg=3D5340.71, stdev=3D141.85
-     lat (usec): min=3D455, max=3D9748, avg=3D5512.42, stdev=3D145.54
-
-3+x times improvement!!
-
-Now let's take a look at NFS client side, why can't I exceed 20 GB/s ?
-
-It looks that the fio thread most of time spends on the cpu executing
-next kernel functions,
-
-    HARDCLOCK entries
-       Count     Pct  State  Function
-         384  38.40%  SYS    nfs_page_create_from_page
-         142  14.20%  SYS    nfs_get_lock_context
-         109  10.90%  SYS    __nfs_pageio_add_request
-          70   7.00%  SYS    refcount_dec_and_lock
-          64   6.40%  SYS    nfs_page_create
-          58   5.80%  SYS    nfs_direct_read_schedule_iovec
-          39   3.90%  SYS    nfs_pageio_add_request
-          38   3.80%  SYS    kmem_cache_alloc_noprof
-          13   1.30%  SYS    rpc_execute
-          12   1.20%  SYS    nfs_generic_pg_pgios
-          10   1.00%  SYS    get_partial_node.part.0
-          10   1.00%  SYS    rmqueue_bulk
-          10   1.00%  SYS    nfs_generic_pgio
-           8   0.80%  SYS    gup_fast_fallback
-           6   0.60%  SYS    xprt_iter_next_entry_roundrobin
-           4   0.40%  SYS    allocate_slab
-           4   0.40%  SYS    nfs_file_direct_read
-           3   0.30%  SYS    rpc_task_set_transport
-           2   0.20%  SYS    __get_random_u32_below
-           2   0.20%  SYS    nfs_pgheader_init
-
-       Count     Pct  HARDCLOCK Stack trace
-       =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-         384  38.40%  nfs_page_create_from_page
-nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-io_submit_one  __x64_sys_io_submit  do_syscall_64
-entry_SYSCALL_64_after_hwframe  |  syscall
-         141  14.10%  nfs_get_lock_context  nfs_page_create_from_page
-nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-io_submit_one  __x64_sys_io_submit  do_syscall_64
-entry_SYSCALL_64_after_hwframe  |  syscall
-         109  10.90%  __nfs_pageio_add_request  nfs_pageio_add_request
- nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-io_submit_one  __x64_sys_io_submit  do_syscall_64
-entry_SYSCALL_64_after_hwframe  |  syscall
-          70   7.00%  refcount_dec_and_lock  nfs_put_lock_context
-nfs_page_create_from_page  nfs_direct_read_schedule_iovec
-nfs_file_direct_read  aio_read io_submit_one  __x64_sys_io_submit
-do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
-          64   6.40%  nfs_page_create  nfs_page_create_from_page
-nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-io_submit_one  __x64_sys_io_submit  do_syscall_64
-entry_SYSCALL_64_after_hwframe  |  syscall
-          58   5.80%  nfs_direct_read_schedule_iovec
-nfs_file_direct_read  aio_read  io_submit_one  __x64_sys_io_submit
-do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
-          39   3.90%  nfs_pageio_add_request
-nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-io_submit_one  __x64_sys_io_submit  do_syscall_64
-entry_SYSCALL_64_after_hwframe  |  syscall
-          36   3.60%  kmem_cache_alloc_noprof  nfs_page_create
-nfs_page_create_from_page  nfs_direct_read_schedule_iovec
-nfs_file_direct_read  aio_read  io_submit_one  __x64_sys_io_submit
-do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
-
-Even if I created and added 2M huge pages as fio's backing page size
-(adding --mem=3Dmmaphuge --hugepage-size=3D2m), there is still
-distribution as shown above.
-
-I might be wrong, but even with fio's huge pages, the standard
-upstream NFS client creates a struct nfs_page for every 4K chunk
-(page_size), regardless of the backing page size.
-
-Could 2M huge pages be implemented for NFS client ??, it would even
-more improve performance using NFSD direct reads.
-
-Anton
-
-=D0=B2=D1=82, 11 =D0=BD=D0=BE=D1=8F=D0=B1. 2025=E2=80=AF=D0=B3. =D0=B2 17:0=
-9, Chuck Lever <cel@kernel.org>:
+On 11/20/25 9:48 AM, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >
-> From: Mike Snitzer <snitzer@kernel.org>
+> When multiple pNFS layout conflicts occur on an NFS server, the NFSD
+> thread pool can become exhausted while threads are waiting in
+> __break_lease for clients to return their layouts. If all NFSD
+> threads are blocked, none are available to process incoming
+> LAYOUTRETURNs, creating a deadlock.
 >
-> This document details the NFSD IO modes that are configurable using
-> NFSD's experimental debugfs interfaces:
+> The approach proposed here, although somewhat expedient, avoids
+> fencing responsive clients.
 >
->   /sys/kernel/debug/nfsd/io_cache_read
->   /sys/kernel/debug/nfsd/io_cache_write
->
-> This document will evolve as NFSD's interfaces do (e.g. if/when NFSD's
-> debugfs interfaces are replaced with per-export controls).
->
-> Future updates will provide more specific guidance and howto
-> information to help others use and evaluate NFSD's IO modes:
-> BUFFERED, DONTCACHE and DIRECT.
->
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  .../filesystems/nfs/nfsd-io-modes.rst         | 144 ++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
+>   Documentation/filesystems/locking.rst |  2 ++
+>   fs/locks.c                            | 12 ++++++++++
+>   fs/nfsd/nfs4layouts.c                 | 33 +++++++++++++++++++++++++++
+>   include/linux/filelock.h              |  1 +
+>   4 files changed, 48 insertions(+)
 >
-> diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentat=
-ion/filesystems/nfs/nfsd-io-modes.rst
-> new file mode 100644
-> index 000000000000..e3a522d09766
-> --- /dev/null
-> +++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
-> @@ -0,0 +1,144 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +NFSD IO MODES
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Overview
-> +=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +NFSD has historically always used buffered IO when servicing READ and
-> +WRITE operations. BUFFERED is NFSD's default IO mode, but it is possible
-> +to override that default to use either DONTCACHE or DIRECT IO modes.
-> +
-> +Experimental NFSD debugfs interfaces are available to allow the NFSD IO
-> +mode used for READ and WRITE to be configured independently. See both:
-> +- /sys/kernel/debug/nfsd/io_cache_read
-> +- /sys/kernel/debug/nfsd/io_cache_write
-> +
-> +The default value for both io_cache_read and io_cache_write reflects
-> +NFSD's default IO mode (which is NFSD_IO_BUFFERED=3D0).
-> +
-> +Based on the configured settings, NFSD's IO will either be:
-> +- cached using page cache (NFSD_IO_BUFFERED=3D0)
-> +- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=3D=
-1)
-> +- not cached stable_how=3DNFS_UNSTABLE (NFSD_IO_DIRECT=3D2)
-> +
-> +To set an NFSD IO mode, write a supported value (0 - 2) to the
-> +corresponding IO operation's debugfs interface, e.g.:
-> +  echo 2 > /sys/kernel/debug/nfsd/io_cache_read
-> +  echo 2 > /sys/kernel/debug/nfsd/io_cache_write
-> +
-> +To check which IO mode NFSD is using for READ or WRITE, simply read the
-> +corresponding IO operation's debugfs interface, e.g.:
-> +  cat /sys/kernel/debug/nfsd/io_cache_read
-> +  cat /sys/kernel/debug/nfsd/io_cache_write
-> +
-> +If you experiment with NFSD's IO modes on a recent kernel and have
-> +interesting results, please report them to linux-nfs@vger.kernel.org
-> +
-> +NFSD DONTCACHE
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +DONTCACHE offers a hybrid approach to servicing IO that aims to offer
-> +the benefits of using DIRECT IO without any of the strict alignment
-> +requirements that DIRECT IO imposes. To achieve this buffered IO is used
-> +but the IO is flagged to "drop behind" (meaning associated pages are
-> +dropped from the page cache) when IO completes.
-> +
-> +DONTCACHE aims to avoid what has proven to be a fairly significant
-> +limition of Linux's memory management subsystem if/when large amounts of
-> +data is infrequently accessed (e.g. read once _or_ written once but not
-> +read until much later). Such use-cases are particularly problematic
-> +because the page cache will eventually become a bottleneck to servicing
-> +new IO requests.
-> +
-> +For more context on DONTCACHE, please see these Linux commit headers:
-> +- Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
-> +  to take a struct kiocb")
-> +- for READ:  8026e49bff9b1 ("mm/filemap: add read support for
-> +  RWF_DONTCACHE")
-> +- for WRITE: 974c5e6139db3 ("xfs: flag as supporting FOP_DONTCACHE")
-> +
-> +NFSD_IO_DONTCACHE will fall back to NFSD_IO_BUFFERED if the underlying
-> +filesystem doesn't indicate support by setting FOP_DONTCACHE.
-> +
-> +NFSD DIRECT
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +DIRECT IO doesn't make use of the page cache, as such it is able to
-> +avoid the Linux memory management's page reclaim scalability problems
-> +without resorting to the hybrid use of page cache that DONTCACHE does.
-> +
-> +Some workloads benefit from NFSD avoiding the page cache, particularly
-> +those with a working set that is significantly larger than available
-> +system memory. The pathological worst-case workload that NFSD DIRECT has
-> +proven to help most is: NFS client issuing large sequential IO to a file
-> +that is 2-3 times larger than the NFS server's available system memory.
-> +The reason for such improvement is NFSD DIRECT eliminates a lot of work
-> +that the memory management subsystem would otherwise be required to
-> +perform (e.g. page allocation, dirty writeback, page reclaim). When
-> +using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
-> +time trying to find adequate free pages so that forward IO progress can
-> +be made.
-> +
-> +The performance win associated with using NFSD DIRECT was previously
-> +discussed on linux-nfs, see:
-> +https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
-> +But in summary:
-> +- NFSD DIRECT can significantly reduce memory requirements
-> +- NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
-> +- NFSD DIRECT can offer more deterministic IO performance
-> +
-> +As always, your mileage may vary and so it is important to carefully
-> +consider if/when it is beneficial to make use of NFSD DIRECT. When
-> +assessing comparative performance of your workload please be sure to log
-> +relevant performance metrics during testing (e.g. memory usage, cpu
-> +usage, IO performance). Using perf to collect perf data that may be used
-> +to generate a "flamegraph" for work Linux must perform on behalf of your
-> +test is a really meaningful way to compare the relative health of the
-> +system and how switching NFSD's IO mode changes what is observed.
-> +
-> +If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
-> +NFSD's debugfs interfaces, ideally the IO will be aligned relative to
-> +the underlying block device's logical_block_size. Also the memory buffer
-> +used to store the READ or WRITE payload must be aligned relative to the
-> +underlying block device's dma_alignment.
-> +
-> +But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
-> +it can:
-> +
-> +Misaligned READ:
-> +    If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
-> +    DIO-aligned block (on either end of the READ). The expanded READ is
-> +    verified to have proper offset/len (logical_block_size) and
-> +    dma_alignment checking.
-> +
-> +Misaligned WRITE:
-> +    If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
-> +    middle and end as needed. The large middle segment is DIO-aligned
-> +    and the start and/or end are misaligned. Buffered IO is used for the
-> +    misaligned segments and O_DIRECT is used for the middle DIO-aligned
-> +    segment. DONTCACHE buffered IO is _not_ used for the misaligned
-> +    segments because using normal buffered IO offers significant RMW
-> +    performance benefit when handling streaming misaligned WRITEs.
-> +
-> +Tracing:
-> +    The nfsd_read_direct trace event shows how NFSD expands any
-> +    misaligned READ to the next DIO-aligned block (on either end of the
-> +    original READ, as needed).
-> +
-> +    This combination of trace events is useful for READs:
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
-> +    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
-> +
-> +    The nfsd_write_direct trace event shows how NFSD splits a given
-> +    misaligned WRITE into a DIO-aligned middle segment.
-> +
-> +    This combination of trace events is useful for WRITEs:
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
-> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
-> +    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
-> --
-> 2.51.0
+> This is 100% untested and falls squarely in the "crazy ideas"
+> category. I'm posting to provide an alternative and encourage some
+> creative thinking about this sticky problem.
 >
->
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+> index 77704fde9845..6b0cb5fd03fd 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -403,6 +403,7 @@ prototypes::
+>   	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>           bool (*lm_lock_expirable)(struct file_lock *);
+>           void (*lm_expire_lock)(void);
+> +        bool (*lm_would_deadlock)(struct file_lock *);
+>   
+>   locking rules:
+>   
+> @@ -416,6 +417,7 @@ lm_change		yes		no			no
+>   lm_breaker_owns_lease:	yes     	no			no
+>   lm_lock_expirable	yes		no			no
+>   lm_expire_lock		no		no			yes
+> +lm_would_deadlock	yes		no			no
+>   ======================	=============	=================	=========
+>   
+>   buffer_head
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 04a3f0e20724..4ea473c885a8 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -1615,6 +1615,18 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+>   	percpu_up_read(&file_rwsem);
+>   
+>   	locks_dispose_list(&dispose);
+> +
+> +	/* Check if lease manager predicts a deadlock situation */
+> +	if (fl->fl_lmops && fl->fl_lmops->lm_would_deadlock &&
+> +	    fl->fl_lmops->lm_would_deadlock(fl)) {
+> +		trace_break_lease_noblock(inode, new_fl);
+> +		error = -EWOULDBLOCK;
+> +		percpu_down_read(&file_rwsem);
+> +		spin_lock(&ctx->flc_lock);
+> +		__locks_delete_block(&new_fl->c);
+> +		goto out;
+> +	}
+> +
+>   	error = wait_event_interruptible_timeout(new_fl->c.flc_wait,
+>   						 list_empty(&new_fl->c.flc_blocked_member),
+>   						 break_time);
+> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+> index 683bd1130afe..748a1b1b0626 100644
+> --- a/fs/nfsd/nfs4layouts.c
+> +++ b/fs/nfsd/nfs4layouts.c
+> @@ -764,9 +764,42 @@ nfsd4_layout_lm_change(struct file_lease *onlist, int arg,
+>   	return lease_modify(onlist, arg, dispose);
+>   }
+>   
+> +static bool
+> +nfsd4_layout_lm_would_deadlock(struct file_lease *fl)
+> +{
+> +	struct svc_rqst *rqstp;
+> +	struct svc_pool *pool;
+> +	struct llist_node *idle;
+> +
+> +	/*
+> +	 * Check if we're running in an NFSD thread context.
+> +	 * If not, we can't cause an NFSD deadlock.
+> +	 */
+> +	rqstp = nfsd_current_rqst();
+> +	if (!rqstp)
+> +		return false;
+
+If this is intended for layout lease only then I think we should
+check for 4.1 or newer.
+
+-Dai
+
+> +
+> +	pool = rqstp->rq_pool;
+> +
+> +	/*
+> +	 * Check the number of idle threads in the pool. We use
+> +	 * READ_ONCE as sp_idle_threads is a lockless list.
+> +	 * If we have 0 or 1 idle threads remaining and the current
+> +	 * thread is about to block, we risk deadlock as there may
+> +	 * not be enough threads available to process the LAYOUTRETURN
+> +	 * RPCs needed to unblock.
+> +	 */
+> +	idle = READ_ONCE(pool->sp_idle_threads.first);
+> +	if (!idle || !READ_ONCE(idle->next))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>   static const struct lease_manager_operations nfsd4_layouts_lm_ops = {
+>   	.lm_break	= nfsd4_layout_lm_break,
+>   	.lm_change	= nfsd4_layout_lm_change,
+> +	.lm_would_deadlock = nfsd4_layout_lm_would_deadlock,
+>   };
+>   
+>   int
+> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> index c2ce8ba05d06..7c46444a3d50 100644
+> --- a/include/linux/filelock.h
+> +++ b/include/linux/filelock.h
+> @@ -49,6 +49,7 @@ struct lease_manager_operations {
+>   	int (*lm_change)(struct file_lease *, int, struct list_head *);
+>   	void (*lm_setup)(struct file_lease *, void **);
+>   	bool (*lm_breaker_owns_lease)(struct file_lease *);
+> +	bool (*lm_would_deadlock)(struct file_lease *);
+>   };
+>   
+>   struct lock_manager {
 
