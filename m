@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-16660-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16661-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA8B4C7C0A6
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 01:53:45 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D40BC7C0BB
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 01:54:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A09A03A68E6
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 00:53:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AE1454EB568
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 00:53:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B346023EA8E;
-	Sat, 22 Nov 2025 00:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 857FA23ABAA;
+	Sat, 22 Nov 2025 00:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="h66B3a2Y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EL6SmXnv"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="WX8yQdsr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cTqtDRPr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6372423EA80
-	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 00:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4AF253F11
+	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 00:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763772816; cv=none; b=hH57DoX4y4Be1zLmPG5WdSHJwvC5OvBoFwoLt8hWh9Badns7Paj39Iw3XQDaDeCG9pnqd7uqbnL90HADlfBqWvyk0vcDQo08e+xxrvL+FZK4hMdd4gx2+mGzvW+LAhoooCWMEKbdXo9y5LpYuUQRbrPAgHaxMXQ/lKd2CoFFLag=
+	t=1763772821; cv=none; b=knR+9MUNK9BHqtfZX1fBtoReSw+hEWO11sxUCMcLG2XgEX2VNGQKpgnkVTuB5dzIIiTvRvwcjny2XDVwJiJjw2F6YjJi4fITxtspTSVilvv8CChXD0pnxF47qmwpIMPU+9D2X9DwavHa0efAZ7GzFoums25mNatzpg9o11q2yJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763772816; c=relaxed/simple;
-	bh=+l2G3NCOsnBgGcuBqFoouRSmDpaB3BsXRUtGsrSsLBg=;
+	s=arc-20240116; t=1763772821; c=relaxed/simple;
+	bh=xIGB7CAp4qS+VwgG84OW8VLBDmriztMPJYYt8Si2yK8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UYRIDpPXUOTaDDx8xDvQaFTty0EAF/hxN+vId+xirqv53DltVobW1eEuEBw8bgVIb+jgjQF615GOSPnHyS3TFAtuAXM0Rf0pfrTBKIIFcXw3cRW5tm+0k4CC/jeyXfUqYsF+HbStJXrSOtfkESaTmi91wBUtQ2yyGqzJi4fl070=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=h66B3a2Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EL6SmXnv; arc=none smtp.client-ip=103.168.172.158
+	 MIME-Version; b=FLvIQz5VGYMrZKpaWqYsVaTFUnVa9NqgsKQZFepu45IWeHU/22cMCjrt6YSEez0q7/gAabHTlOZxILgdIg+SdD/bm3RCqDiWioKiHkbShRyCYcXQUxoceJmduZf8M1NgQvMge2NMpOdXNnRvLkVwdlXeW4vaumo9OmibgLc+BFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=WX8yQdsr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cTqtDRPr; arc=none smtp.client-ip=103.168.172.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 731FC14000CA;
-	Fri, 21 Nov 2025 19:53:33 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Fri, 21 Nov 2025 19:53:33 -0500
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0D02014000B6;
+	Fri, 21 Nov 2025 19:53:38 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Fri, 21 Nov 2025 19:53:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763772813;
-	 x=1763859213; bh=lQlQHcZaRGkeNYt1qtJb6GmJWM0IeDQAmVXi8v2r0AI=; b=
-	h66B3a2YV0GC5ZqgKZViPi/PF5T3nX1aM6yfjPozmpSVfm3Sah58XpSkfHetWUjv
-	32cQ2Ft3jKCQbaNRNkfPeWnSdn8AKswMFNSkGrXU8ekFJIbdNsdhgzNMfa3aYr33
-	4wsdMpLG2EmnBhheIqKhbaPaBFV/FxPW9gXNACkxv5AP2BK+y2o/SLMnT++0iEV6
-	qgkcyhznUDmvWbcICLMKshUsmESz7vAzMR6DD4CbjHDd7kQUmHYuIK65plDB3YiP
-	il6dtGbpV9akQWrTMObZlLsIV+CNRVED2ztpP8ZrJyBeLMposR2+RTcxAkxxzy42
-	dQMWV6sU9aIy14hQlVJu0w==
+	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763772818;
+	 x=1763859218; bh=hPxjow6zBBx1rTa1ifyEFbm0LqW6YdhPEDw6kdGjdvU=; b=
+	WX8yQdsr0Oc7ote3kNJAev08AT2nXbuE3Di02CTgZ5/+xO4VZ038dX8v0+PyBn0U
+	DrCQeMyQyHxz8+/MRnIo6ntDxHRY1oBj33LfeQ2LreEReofoRtroSCc1rYL5oLck
+	4oH8LmNC8XE47HnV+qo3qs2TNe+hIUB/uIryBPIpObsRVCEXLvpIyWgWarxQOxjF
+	/TgvAsMbplIrGM5pdLuVzkoNYNYIhqeR0dKOsgVMoBmvTVx9iaBqjlqHcSxKhqsV
+	+No/cgndldFz+MYukjf01SK3uKI3hjEAg/0T4PYy4MepZY2w53VxJu3KdPXUt9/L
+	ia6v5eTA26bAc0vVUDsusQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1763772813; x=1763859213; bh=l
-	QlQHcZaRGkeNYt1qtJb6GmJWM0IeDQAmVXi8v2r0AI=; b=EL6SmXnv6csIqMXMp
-	kFMPoi7aEboNRDLzz4VESmTN0n+NKp0OG2NfqRZiuu92rA1zRGF+zfdYqO8dvaQi
-	A5YiHaRExH7z3Hb10yxZxlr4QuGF1gZNxLPxFxDDGhrrQ21fBAuJvFpCm22a3iMZ
-	oDWa7OSmUfc+wzcVqKUFXz9r3x21oD0t0EYShiuo0V0OdecoCaGtBxtQa/VyJ9CK
-	Zjirxih5JcMx9M3/PR0hGmmfX7Vi1jpqvZMfOCilPQ88nGIcAymHJAo2HqRRQZvA
-	XRMAduyWDWKLSgbYPDm+gutBurAqHb2jhSEAx/Svmqz8bTjRIr6LddGegrgbTneP
-	SGg+w==
-X-ME-Sender: <xms:jQkhadI3mrJ0EFXYjJqyY26DeljqIVk-wQ8GRDbR0yOifP9o5eH07w>
-    <xme:jQkhac2x2SJksBAgJuy4ZVvnGSWYrEq3kL4tpV3lDvXfmAl8XcgkKu6KMAmDIZ5pZ
-    1BWLQsJqnXm-ch1I9PivAIjB9GnTkG4ZG2iEDA8T2hKgwf04Q>
-X-ME-Received: <xmr:jQkhafg8LmSpKZmudsuCUffx1kWrZJO9Um4UtjXVfndRmKyecQuebDbjAx3JEBoUyXRbt5jjIrkuK-3yr5TRpm5KlCf3_PSEA75la62xcFOQ>
+	:x-me-sender:x-sasl-enc; s=fm3; t=1763772818; x=1763859218; bh=h
+	Pxjow6zBBx1rTa1ifyEFbm0LqW6YdhPEDw6kdGjdvU=; b=cTqtDRPrYKvkXUOjb
+	55fwCUCnW0at1rH0qOkxH3p9nb/mna3TO2UJjcApBJDSHeCeafbexr+eru2K4Zvy
+	k6f5xpb/HCEp9oyz0BFu1sUtZe+DRsmIzEmVM3l2aXaBsZj+WA7hQNVRhy4f7Fr8
+	hWdSXJL3qA7y0xSgzJqtVY7bRWOd7abguVaZvFcz4vpNMzbZ61t2AivvI7Z7syD7
+	Z8EH+GRxyiaCPJbc9C5pp5mOjo0gRd9BB7eB607kMcKt5CBMXr/ltDZQKL3yIO3x
+	TKic3jWPvoxPUUSZ68Cpprvi6S+tI4Bm+fHaRKWouYOrQJ5Fh/orbZUwaL0fGFC0
+	78bVw==
+X-ME-Sender: <xms:kQkhabXPmnxgoHDciaXvSY6NJOrRmXoO8ygP3tmirG5UiGsaNzSeRQ>
+    <xme:kQkhaXRP1IwJfwITrC-dVFxe5uozrxPCl0miTM7ctXt1FY_htF2BOlb_S42nL6qbu
+    vmh5ICB6bT3KYVPP0uWPk7tCAyEFw5xpYbdzYbXNDGEfH_5zrM>
+X-ME-Received: <xmr:kQkhaRNne9UsCzUhlTvnyTPVuChbr9uPf4UGYz2drCMlAipqztMIAE0It4B27P7hpf_wV0bOQXrJehgJ_FeUkEoUabLINltHPfwLyluLvhDb>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedugeehucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
     epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    vehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
     esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
     uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
     dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
     ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
     hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
     pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:jQkhaVU1BFufkWbJ0dxC2jSxkeFgC6gqhm7aYQKhcOpiPoD7E2DC0Q>
-    <xmx:jQkhaWXihs_1LRuAmRZgkkZkJp-j8SdQilg8uymPnqQ15k9zT0UiHg>
-    <xmx:jQkhadhBIWbhIApgjTcZgbV84injwurrSCiqyYlhpJM840Z5yeWjdw>
-    <xmx:jQkhaZaPeW4HQ9cbyT_5eOrlQ9gIxeRUu27rl_F86WteiPd1YbZmXw>
-    <xmx:jQkhaWpD9SQyDxAtnELcqGRgyASNu_AC4dL30Lu7px7XaWJVHmiGNv_Z>
+X-ME-Proxy: <xmx:kQkhadRklyfYjzEyweoI1aVu5jRmJpLrqXCxMYBaWfa3cq263dV94A>
+    <xmx:kQkhaXg18hHuL6M7-C0GykWiX5L98DanlskDL-ZTzh-OkZ76m2Qssg>
+    <xmx:kQkhae-y-inQPRre_-dRsnB4pDgigKD386uuyKKx3JkZ64jBu0H4Mw>
+    <xmx:kQkhaWFg3WCRcuJjzpomwgc1H4yEVI8bJLkMbA8n0gPGOHM65xm51Q>
+    <xmx:kgkhaQ116tCu7Lw4xHxEzXYUi020RYTkkxiUFcEa6VfRRx7F03HyJfmn>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Nov 2025 19:53:31 -0500 (EST)
+ 21 Nov 2025 19:53:35 -0500 (EST)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +93,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v6 11/14] nfsd: simplify use of the current stateid.
-Date: Sat, 22 Nov 2025 11:47:09 +1100
-Message-ID: <20251122005236.3440177-12-neilb@ownmail.net>
+Subject: [PATCH v6 12/14] nfsd: simplify saving of the current stateid
+Date: Sat, 22 Nov 2025 11:47:10 +1100
+Message-ID: <20251122005236.3440177-13-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20251122005236.3440177-1-neilb@ownmail.net>
 References: <20251122005236.3440177-1-neilb@ownmail.net>
@@ -110,290 +110,354 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neil@brown.name>
 
-In NFSv4.1 any use of a stateid in an OP should check if it is
-the special stateid that
-   has "other" set to zero and "seqid" set to one
+OPs that return a stateid must update the current stateid stored in the
+COMPOUND state so it can be used in later OPs.
 
-If it is, then the stateid saved from a previous operation should be
-used unless that stateid as "special" stateid, in which case BAD_STATEID
-must be returned.
+Every OP that returns a stateid uses nfs4_inc_and_copy_stateid() to
+provide the stateid to return.
 
-Most ops that include a stateid pass it (indirectly) to
-nfsd4_lookup_stateid().  The one exception is FREE_STATEID which uses
-find_stateid_locked() directly.  (TEST_STATEID is not considered.  It is
-given a list of stateids, among which any special stateid is explicitly
-forbidden).
+This patch updates that function to store the resulting stateid in
+cstate->current_stateid, and passes cstate (the COMPOUND state) through
+to the function in all cases except when used in a callback.
 
-So rather than providing dedicated op_get_currentstateid functions for
-each relevant op, we can include the required logic directly in
-nfsd4_lookup_stateid() and nfsd4_free_stateid().  That is what this
-patch does.
+This removes the need for op_set_currentstateid.
 
-We also include an explicit return of nfserr_bad_stateid when the
-special stateid is used, but no valid stateid is available.  This does
-not change behaviour as the error would have been returned eventually.
+This also sets the current stateid in more cases, such as LOCKU and
+LAYOUTGET.
 
-This patch also removes the "minorversion" test in put_stateid() and
-instead checks that sessions are in use when the stateid is used.  This
-seems more natural.  Note that nfsd4_free_stateid() doesn't need this
-explicit test as the function cannot be called for v4.0.
+One case that this does not cover is CLOSE.  CLOSE always reports a
+special (invalid) stateid, so it is changed to simply mark the current
+stateid as not valid.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/current_stateid.h | 21 ----------
- fs/nfsd/nfs4proc.c        | 11 -----
- fs/nfsd/nfs4state.c       | 85 ++++++---------------------------------
- fs/nfsd/xdr4.h            |  2 -
- 4 files changed, 13 insertions(+), 106 deletions(-)
+ fs/nfsd/current_stateid.h | 11 -------
+ fs/nfsd/nfs4layouts.c     | 10 ++++---
+ fs/nfsd/nfs4proc.c        | 11 ++-----
+ fs/nfsd/nfs4state.c       | 62 ++++++++++-----------------------------
+ fs/nfsd/pnfs.h            |  5 ++--
+ fs/nfsd/state.h           |  3 +-
+ fs/nfsd/xdr4.h            |  1 +
+ 7 files changed, 30 insertions(+), 73 deletions(-)
 
 diff --git a/fs/nfsd/current_stateid.h b/fs/nfsd/current_stateid.h
-index 24d769043207..eaa4b8e40dc8 100644
+index eaa4b8e40dc8..9dce3004b846 100644
 --- a/fs/nfsd/current_stateid.h
 +++ b/fs/nfsd/current_stateid.h
-@@ -16,25 +16,4 @@ extern void nfsd4_set_lockstateid(struct nfsd4_compound_state *,
- 		union nfsd4_op_u *);
- extern void nfsd4_set_closestateid(struct nfsd4_compound_state *,
- 		union nfsd4_op_u *);
--
+@@ -5,15 +5,4 @@
+ #include "state.h"
+ #include "xdr4.h"
+ 
 -/*
-- * functions to consume current state id
+- * functions to set current state id
 - */
--extern void nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *,
+-extern void nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *,
 -		union nfsd4_op_u *);
--extern void nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *,
+-extern void nfsd4_set_openstateid(struct nfsd4_compound_state *,
 -		union nfsd4_op_u *);
--extern void nfsd4_get_freestateid(struct nfsd4_compound_state *,
+-extern void nfsd4_set_lockstateid(struct nfsd4_compound_state *,
 -		union nfsd4_op_u *);
--extern void nfsd4_get_setattrstateid(struct nfsd4_compound_state *,
+-extern void nfsd4_set_closestateid(struct nfsd4_compound_state *,
 -		union nfsd4_op_u *);
--extern void nfsd4_get_closestateid(struct nfsd4_compound_state *,
--		union nfsd4_op_u *);
--extern void nfsd4_get_lockustateid(struct nfsd4_compound_state *,
--		union nfsd4_op_u *);
--extern void nfsd4_get_readstateid(struct nfsd4_compound_state *,
--		union nfsd4_op_u *);
--extern void nfsd4_get_writestateid(struct nfsd4_compound_state *,
--		union nfsd4_op_u *);
--
  #endif   /* _NFSD4_CURRENT_STATE_H */
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 683bd1130afe..4519a01bb354 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -414,7 +414,8 @@ nfsd4_recall_conflict(struct nfs4_layout_stateid *ls)
+ }
+ 
+ __be32
+-nfsd4_insert_layout(struct nfsd4_layoutget *lgp, struct nfs4_layout_stateid *ls)
++nfsd4_insert_layout(struct nfsd4_compound_state *cstate,
++		    struct nfsd4_layoutget *lgp, struct nfs4_layout_stateid *ls)
+ {
+ 	struct nfsd4_layout_seg *seg = &lgp->lg_seg;
+ 	struct nfs4_file *fp = ls->ls_stid.sc_file;
+@@ -453,7 +454,7 @@ nfsd4_insert_layout(struct nfsd4_layoutget *lgp, struct nfs4_layout_stateid *ls)
+ 	list_add_tail(&new->lo_perstate, &ls->ls_layouts);
+ 	new = NULL;
+ done:
+-	nfs4_inc_and_copy_stateid(&lgp->lg_sid, &ls->ls_stid);
++	nfs4_inc_and_copy_stateid(cstate, &lgp->lg_sid, &ls->ls_stid);
+ 	spin_unlock(&ls->ls_lock);
+ out:
+ 	spin_unlock(&fp->fi_lock);
+@@ -528,7 +529,8 @@ nfsd4_return_file_layouts(struct svc_rqst *rqstp,
+ 	}
+ 	if (!list_empty(&ls->ls_layouts)) {
+ 		if (found)
+-			nfs4_inc_and_copy_stateid(&lrp->lr_sid, &ls->ls_stid);
++			nfs4_inc_and_copy_stateid(cstate, &lrp->lr_sid,
++						  &ls->ls_stid);
+ 		lrp->lrs_present = true;
+ 	} else {
+ 		trace_nfsd_layoutstate_unhash(&ls->ls_stid.sc_stateid);
+@@ -659,7 +661,7 @@ nfsd4_cb_layout_prepare(struct nfsd4_callback *cb)
+ 		container_of(cb, struct nfs4_layout_stateid, ls_recall);
+ 
+ 	mutex_lock(&ls->ls_mutex);
+-	nfs4_inc_and_copy_stateid(&ls->ls_recall_sid, &ls->ls_stid);
++	nfs4_inc_and_copy_stateid(NULL, &ls->ls_recall_sid, &ls->ls_stid);
+ 	mutex_unlock(&ls->ls_mutex);
+ }
+ 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index ae9427ac7e5e..784f241c7119 100644
+index 784f241c7119..806306f48043 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -2943,8 +2943,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 		if (op->status)
- 			goto encode_op;
+@@ -635,7 +635,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto out;
+ 	}
  
--		if (op->opdesc->op_get_currentstateid)
--			op->opdesc->op_get_currentstateid(cstate, &op->u);
- 		op->status = op->opdesc->op_func(rqstp, cstate, &op->u);
- 		trace_nfsd_compound_op_err(rqstp, op->opnum, op->status);
+-	status = nfsd4_process_open2(rqstp, &cstate->current_fh, &parent_fh, open);
++	status = nfsd4_process_open2(rqstp, cstate, &cstate->current_fh, &parent_fh, open);
+ 	fh_put(&parent_fh);
+ 	if (status && open->op_created)
+ 		pr_warn("nfsd4_process_open2 failed to open newly-created file: status=%u\n",
+@@ -2536,7 +2536,7 @@ nfsd4_layoutget(struct svc_rqst *rqstp,
+ 	if (nfserr)
+ 		goto out_put_stid;
  
-@@ -3391,7 +3389,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+-	nfserr = nfsd4_insert_layout(lgp, ls);
++	nfserr = nfsd4_insert_layout(cstate, lgp, ls);
+ 
+ out_put_stid:
+ 	mutex_unlock(&ls->ls_mutex);
+@@ -2953,9 +2953,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			goto out;
+ 		}
+ 		if (!op->status) {
+-			if (op->opdesc->op_set_currentstateid)
+-				op->opdesc->op_set_currentstateid(cstate, &op->u);
+-
+ 			if (current_fh->fh_export &&
+ 					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp, false);
+@@ -3389,7 +3386,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
  		.op_flags = OP_MODIFIES_SOMETHING,
  		.op_name = "OP_CLOSE",
  		.op_rsize_bop = nfsd4_status_stateid_rsize,
--		.op_get_currentstateid = nfsd4_get_closestateid,
- 		.op_set_currentstateid = nfsd4_set_closestateid,
+-		.op_set_currentstateid = nfsd4_set_closestateid,
  	},
  	[OP_COMMIT] = {
-@@ -3411,7 +3408,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_flags = OP_MODIFIES_SOMETHING,
- 		.op_name = "OP_DELEGRETURN",
- 		.op_rsize_bop = nfsd4_only_status_rsize,
--		.op_get_currentstateid = nfsd4_get_delegreturnstateid,
+ 		.op_func = nfsd4_commit,
+@@ -3434,7 +3430,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+ 				OP_NONTRIVIAL_ERROR_ENCODE,
+ 		.op_name = "OP_LOCK",
+ 		.op_rsize_bop = nfsd4_lock_rsize,
+-		.op_set_currentstateid = nfsd4_set_lockstateid,
  	},
- 	[OP_GETATTR] = {
- 		.op_func = nfsd4_getattr,
-@@ -3452,7 +3448,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_flags = OP_MODIFIES_SOMETHING,
- 		.op_name = "OP_LOCKU",
- 		.op_rsize_bop = nfsd4_status_stateid_rsize,
--		.op_get_currentstateid = nfsd4_get_lockustateid,
+ 	[OP_LOCKT] = {
+ 		.op_func = nfsd4_lockt,
+@@ -3471,7 +3466,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+ 		.op_flags = OP_HANDLES_WRONGSEC | OP_MODIFIES_SOMETHING,
+ 		.op_name = "OP_OPEN",
+ 		.op_rsize_bop = nfsd4_open_rsize,
+-		.op_set_currentstateid = nfsd4_set_openstateid,
  	},
- 	[OP_LOOKUP] = {
- 		.op_func = nfsd4_lookup,
-@@ -3489,7 +3484,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
+ 	[OP_OPEN_CONFIRM] = {
+ 		.op_func = nfsd4_open_confirm,
+@@ -3484,7 +3478,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
  		.op_flags = OP_MODIFIES_SOMETHING,
  		.op_name = "OP_OPEN_DOWNGRADE",
  		.op_rsize_bop = nfsd4_status_stateid_rsize,
--		.op_get_currentstateid = nfsd4_get_opendowngradestateid,
- 		.op_set_currentstateid = nfsd4_set_opendowngradestateid,
+-		.op_set_currentstateid = nfsd4_set_opendowngradestateid,
  	},
  	[OP_PUTFH] = {
-@@ -3518,7 +3512,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_release = nfsd4_read_release,
- 		.op_name = "OP_READ",
- 		.op_rsize_bop = nfsd4_read_rsize,
--		.op_get_currentstateid = nfsd4_get_readstateid,
- 	},
- 	[OP_READDIR] = {
- 		.op_func = nfsd4_readdir,
-@@ -3577,7 +3570,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME
- 				| OP_NONTRIVIAL_ERROR_ENCODE,
- 		.op_rsize_bop = nfsd4_setattr_rsize,
--		.op_get_currentstateid = nfsd4_get_setattrstateid,
- 	},
- 	[OP_SETCLIENTID] = {
- 		.op_func = nfsd4_setclientid,
-@@ -3604,7 +3596,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_flags = OP_MODIFIES_SOMETHING | OP_CACHEME,
- 		.op_name = "OP_WRITE",
- 		.op_rsize_bop = nfsd4_write_rsize,
--		.op_get_currentstateid = nfsd4_get_writestateid,
- 	},
- 	[OP_RELEASE_LOCKOWNER] = {
- 		.op_func = nfsd4_release_lockowner,
-@@ -3686,7 +3677,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_func = nfsd4_free_stateid,
- 		.op_flags = ALLOWED_WITHOUT_LOCAL_FH | OP_MODIFIES_SOMETHING,
- 		.op_name = "OP_FREE_STATEID",
--		.op_get_currentstateid = nfsd4_get_freestateid,
- 		.op_rsize_bop = nfsd4_only_status_rsize,
- 	},
- 	[OP_GET_DIR_DELEGATION] = {
-@@ -3754,7 +3744,6 @@ static const struct nfsd4_operation nfsd4_ops[] = {
- 		.op_release = nfsd4_read_release,
- 		.op_name = "OP_READ_PLUS",
- 		.op_rsize_bop = nfsd4_read_plus_rsize,
--		.op_get_currentstateid = nfsd4_get_readstateid,
- 	},
- 	[OP_SEEK] = {
- 		.op_func = nfsd4_seek,
+ 		.op_func = nfsd4_putfh,
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 03f29a6d7c14..de66b2971cd3 100644
+index de66b2971cd3..e3b38245ba45 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -7191,6 +7191,11 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
- 	struct nfs4_stid *stid;
- 	bool return_revoked = false;
+@@ -1216,7 +1216,8 @@ nfs4_put_stid(struct nfs4_stid *s)
+ }
  
-+	if (nfsd4_has_session(cstate) && is_current_stateid(stateid)) {
-+		if (!cstate->current_fh.fh_have_stateid)
-+			return nfserr_bad_stateid;
-+		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
-+	}
- 	/*
- 	 *  only return revoked delegations if explicitly asked.
- 	 *  otherwise we report revoked or bad_stateid status.
-@@ -7507,6 +7512,12 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	struct nfs4_client *cl = cstate->clp;
- 	__be32 ret = nfserr_bad_stateid;
+ void
+-nfs4_inc_and_copy_stateid(stateid_t *dst, struct nfs4_stid *stid)
++nfs4_inc_and_copy_stateid(struct nfsd4_compound_state *cstate,
++			  stateid_t *dst, struct nfs4_stid *stid)
+ {
+ 	stateid_t *src = &stid->sc_stateid;
  
-+	if (is_current_stateid(stateid)) {
-+		if (!cstate->current_fh.fh_have_stateid)
-+			return nfserr_bad_stateid;
-+		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
+@@ -1225,6 +1226,10 @@ nfs4_inc_and_copy_stateid(stateid_t *dst, struct nfs4_stid *stid)
+ 		src->si_generation = 1;
+ 	memcpy(dst, src, sizeof(*dst));
+ 	spin_unlock(&stid->sc_lock);
++	if (cstate) {
++		memcpy(&cstate->current_stateid, dst, sizeof(stateid_t));
++		cstate->current_fh.fh_have_stateid = true;
 +	}
-+
- 	spin_lock(&cl->cl_lock);
- 	s = find_stateid_locked(cl, stateid);
- 	if (!s || s->sc_status & SC_STATUS_CLOSED)
-@@ -9102,21 +9113,11 @@ nfs4_state_shutdown(void)
+ }
+ 
+ static void put_deleg_file(struct nfs4_file *fp)
+@@ -6399,6 +6404,7 @@ static bool open_xor_delegation(struct nfsd4_open *open)
+ /**
+  * nfsd4_process_open2 - finish open processing
+  * @rqstp: the RPC transaction being executed
++ * @cstate: the nfsd4_compound_state for the current COMPOUND.
+  * @current_fh: NFSv4 COMPOUND's current filehandle
+  * @parent_fh: filehandle of parent when CLAIM_NULL
+  * @open: OPEN arguments
+@@ -6410,7 +6416,8 @@ static bool open_xor_delegation(struct nfsd4_open *open)
+  * network byte order is returned.
+  */
+ __be32
+-nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh,
++nfsd4_process_open2(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
++		    struct svc_fh *current_fh,
+ 		    struct svc_fh *parent_fh,
+ 		    struct nfsd4_open *open)
+ {
+@@ -6494,7 +6501,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh,
+ 			open->op_odstate = NULL;
+ 	}
+ 
+-	nfs4_inc_and_copy_stateid(&open->op_stateid, &stp->st_stid);
++	nfs4_inc_and_copy_stateid(cstate, &open->op_stateid, &stp->st_stid);
+ 	mutex_unlock(&stp->st_mutex);
+ 
+ 	if (nfsd4_has_session(&resp->cstate)) {
+@@ -7688,7 +7695,7 @@ nfsd4_open_confirm(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto put_stateid;
+ 	}
+ 	oo->oo_flags |= NFS4_OO_CONFIRMED;
+-	nfs4_inc_and_copy_stateid(&oc->oc_resp_stateid, &stp->st_stid);
++	nfs4_inc_and_copy_stateid(cstate, &oc->oc_resp_stateid, &stp->st_stid);
+ 	mutex_unlock(&stp->st_mutex);
+ 	trace_nfsd_open_confirm(oc->oc_seqid, &stp->st_stid.sc_stateid);
+ 	nfsd4_client_record_create(oo->oo_owner.so_client);
+@@ -7760,7 +7767,7 @@ nfsd4_open_downgrade(struct svc_rqst *rqstp,
+ 	}
+ 	nfs4_stateid_downgrade(stp, od->od_share_access);
+ 	reset_union_bmap_deny(od->od_share_deny, stp);
+-	nfs4_inc_and_copy_stateid(&od->od_stateid, &stp->st_stid);
++	nfs4_inc_and_copy_stateid(cstate, &od->od_stateid, &stp->st_stid);
+ 	status = nfs_ok;
+ put_stateid:
+ 	mutex_unlock(&stp->st_mutex);
+@@ -7830,7 +7837,7 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	 * copied value below, but we continue to do so here just to ensure
+ 	 * that racing ops see that there was a state change.
+ 	 */
+-	nfs4_inc_and_copy_stateid(&close->cl_stateid, &stp->st_stid);
++	nfs4_inc_and_copy_stateid(cstate, &close->cl_stateid, &stp->st_stid);
+ 
+ 	need_move_to_close_list = nfsd4_close_open_stateid(stp);
+ 	mutex_unlock(&stp->st_mutex);
+@@ -7845,6 +7852,7 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	 * See RFC5661 section 18.2.4, and RFC7530 section 16.2.5
+ 	 */
+ 	memcpy(&close->cl_stateid, &invalid_stateid, sizeof(close->cl_stateid));
++	cstate->current_fh.fh_have_stateid = false;
+ 
+ 	/* put reference from nfs4_preprocess_seqid_op */
+ 	nfs4_put_stid(&stp->st_stid);
+@@ -8419,7 +8427,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	err = vfs_lock_file(nf->nf_file, F_SETLK, file_lock, conflock);
+ 	switch (err) {
+ 	case 0: /* success! */
+-		nfs4_inc_and_copy_stateid(&lock->lk_resp_stateid, &lock_stp->st_stid);
++		nfs4_inc_and_copy_stateid(cstate, &lock->lk_resp_stateid, &lock_stp->st_stid);
+ 		status = 0;
+ 		if (lock->lk_reclaim)
+ 			nn->somebody_reclaimed = true;
+@@ -8664,7 +8672,7 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		dprintk("NFSD: nfs4_locku: vfs_lock_file failed!\n");
+ 		goto out_nfserr;
+ 	}
+-	nfs4_inc_and_copy_stateid(&locku->lu_stateid, &stp->st_stid);
++	nfs4_inc_and_copy_stateid(cstate, &locku->lu_stateid, &stp->st_stid);
+ put_file:
+ 	nfsd_file_put(nf);
+ put_stateid:
+@@ -9113,44 +9121,6 @@ nfs4_state_shutdown(void)
  	shrinker_free(nfsd_slot_shrinker);
  }
  
 -static void
--get_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
+-put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
 -{
--	if (cstate->current_fh.fh_have_stateid &&
--	    is_current_stateid(stateid))
--		memcpy(stateid, &cstate->current_stateid, sizeof(stateid_t));
+-	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
+-	cstate->current_fh.fh_have_stateid = true;
 -}
 -
- static void
- put_stateid(struct nfsd4_compound_state *cstate, stateid_t *stateid)
- {
--	if (cstate->minorversion) {
--		memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
--		cstate->current_fh.fh_have_stateid = true;
--	}
-+	memcpy(&cstate->current_stateid, stateid, sizeof(stateid_t));
-+	cstate->current_fh.fh_have_stateid = true;
- }
- 
- /*
-@@ -9150,66 +9151,6 @@ nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
- 	put_stateid(cstate, &u->lock.lk_resp_stateid);
- }
- 
 -/*
-- * functions to consume current state id
+- * functions to set current state id
 - */
--
 -void
--nfsd4_get_opendowngradestateid(struct nfsd4_compound_state *cstate,
+-nfsd4_set_opendowngradestateid(struct nfsd4_compound_state *cstate,
 -		union nfsd4_op_u *u)
 -{
--	get_stateid(cstate, &u->open_downgrade.od_stateid);
+-	put_stateid(cstate, &u->open_downgrade.od_stateid);
 -}
 -
 -void
--nfsd4_get_delegreturnstateid(struct nfsd4_compound_state *cstate,
+-nfsd4_set_openstateid(struct nfsd4_compound_state *cstate,
 -		union nfsd4_op_u *u)
 -{
--	get_stateid(cstate, &u->delegreturn.dr_stateid);
+-	put_stateid(cstate, &u->open.op_stateid);
 -}
 -
 -void
--nfsd4_get_freestateid(struct nfsd4_compound_state *cstate,
+-nfsd4_set_closestateid(struct nfsd4_compound_state *cstate,
 -		union nfsd4_op_u *u)
 -{
--	get_stateid(cstate, &u->free_stateid.fr_stateid);
+-	put_stateid(cstate, &u->close.cl_stateid);
 -}
 -
 -void
--nfsd4_get_setattrstateid(struct nfsd4_compound_state *cstate,
+-nfsd4_set_lockstateid(struct nfsd4_compound_state *cstate,
 -		union nfsd4_op_u *u)
 -{
--	get_stateid(cstate, &u->setattr.sa_stateid);
--}
--
--void
--nfsd4_get_closestateid(struct nfsd4_compound_state *cstate,
--		union nfsd4_op_u *u)
--{
--	get_stateid(cstate, &u->close.cl_stateid);
--}
--
--void
--nfsd4_get_lockustateid(struct nfsd4_compound_state *cstate,
--		union nfsd4_op_u *u)
--{
--	get_stateid(cstate, &u->locku.lu_stateid);
--}
--
--void
--nfsd4_get_readstateid(struct nfsd4_compound_state *cstate,
--		union nfsd4_op_u *u)
--{
--	get_stateid(cstate, &u->read.rd_stateid);
--}
--
--void
--nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
--		union nfsd4_op_u *u)
--{
--	get_stateid(cstate, &u->write.wr_stateid);
+-	put_stateid(cstate, &u->lock.lk_resp_stateid);
 -}
 -
  /**
   * nfsd4_vet_deleg_time - vet and set the timespec for a delegated timestamp update
   * @req: timestamp from the client
+diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
+index db9af780438b..1714471d173d 100644
+--- a/fs/nfsd/pnfs.h
++++ b/fs/nfsd/pnfs.h
+@@ -56,8 +56,9 @@ extern const struct nfsd4_layout_ops ff_layout_ops;
+ __be32 nfsd4_preprocess_layout_stateid(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate, stateid_t *stateid,
+ 		bool create, u32 layout_type, struct nfs4_layout_stateid **lsp);
+-__be32 nfsd4_insert_layout(struct nfsd4_layoutget *lgp,
+-		struct nfs4_layout_stateid *ls);
++__be32 nfsd4_insert_layout(struct nfsd4_compound_state *cstate,
++			   struct nfsd4_layoutget *lgp,
++			   struct nfs4_layout_stateid *ls);
+ __be32 nfsd4_return_file_layouts(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate,
+ 		struct nfsd4_layoutreturn *lrp);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 1e736f402426..c6e97d6daa5f 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -797,7 +797,8 @@ void nfs4_free_copy_state(struct nfsd4_copy *copy);
+ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
+ 			struct nfs4_stid *p_stid);
+ void nfs4_put_stid(struct nfs4_stid *s);
+-void nfs4_inc_and_copy_stateid(stateid_t *dst, struct nfs4_stid *stid);
++void nfs4_inc_and_copy_stateid(struct nfsd4_compound_state *cstate,
++			       stateid_t *dst, struct nfs4_stid *stid);
+ void nfs4_remove_reclaim_record(struct nfs4_client_reclaim *, struct nfsd_net *);
+ extern void nfs4_release_reclaim(struct nfsd_net *);
+ extern struct nfs4_client_reclaim *nfsd4_find_reclaim_client(struct xdr_netobj name,
 diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 87986f1d5506..4f54108f24f9 100644
+index 4f54108f24f9..ad1b96f50131 100644
 --- a/fs/nfsd/xdr4.h
 +++ b/fs/nfsd/xdr4.h
-@@ -1036,8 +1036,6 @@ struct nfsd4_operation {
- 	/* Try to get response size before operation */
- 	u32 (*op_rsize_bop)(const struct svc_rqst *rqstp,
- 			const struct nfsd4_op *op);
--	void (*op_get_currentstateid)(struct nfsd4_compound_state *,
--			union nfsd4_op_u *);
- 	void (*op_set_currentstateid)(struct nfsd4_compound_state *,
- 			union nfsd4_op_u *);
- };
+@@ -965,6 +965,7 @@ __be32 nfsd4_reclaim_complete(struct svc_rqst *, struct nfsd4_compound_state *,
+ extern __be32 nfsd4_process_open1(struct nfsd4_compound_state *,
+ 		struct nfsd4_open *open, struct nfsd_net *nn);
+ extern __be32 nfsd4_process_open2(struct svc_rqst *rqstp,
++				  struct nfsd4_compound_state *cstate,
+ 				  struct svc_fh *current_fh,
+ 				  struct svc_fh *parent_fh,
+ 				  struct nfsd4_open *open);
 -- 
 2.50.0.107.gf914562f5916.dirty
 
