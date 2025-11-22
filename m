@@ -1,402 +1,312 @@
-Return-Path: <linux-nfs+bounces-16669-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16670-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEFBCC7D386
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 16:52:18 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFE5CC7D3A5
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 17:11:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A1C9F4E01C3
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 15:52:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D8296342880
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 16:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C438419258E;
-	Sat, 22 Nov 2025 15:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B332989B5;
+	Sat, 22 Nov 2025 16:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmYVp4TW"
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="jv99IRja";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZdxsHzgm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5A9C2EA
-	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 15:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5460238C03
+	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 16:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763826733; cv=none; b=Tk1xz1Lc3MYS9aiCoiqfGNUvf/XD9sEDWcX/r1ulvcPTJ+3Dnuku5xfe0f5H4S4RTqPd+QbzIsKrGEUDvrSo0Jx7QYEzLrcVoK3qkvwMoO1BJQTobUcNCCrAVVXHrf0kQ11XHWb44uNsEb7SzIC31gQyQ/wz5RsyztHQp4EzfdA=
+	t=1763827857; cv=none; b=qonKHsm0Pzg7V0fXAnrleiNjRnE6PFIyd+wZFaV60QT7qLuteALsJvtvAwOvHHdxUEduBGmTNulE/1xhyMS30Je1dOaXUge/bgv7b3wuZtTlTA/GcVPPPxCfHc8Lp0tcjbAgIEcDT6Id3Tug11OeRoZV++K2KBrGLdaGEBVJe9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763826733; c=relaxed/simple;
-	bh=whGgJUtEqoYd5bixP3n+nSVr7olkmG+RUGCPNxZTgG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zmd+4Dfhjt6rqDdLsAwswKAQg84oLVjzoYGHG1l+L6KTqUM1TOBy0ANZValc7eHnqD0i6wYlFYUotgGRi09yZX123rLXbCEpgVpEgeUaj/RQ410E3chEL1Z4s7lMjfrid+qxPwFB19iZkvssW1140WSgmz6Q29BesILpIO0e6ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmYVp4TW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B7EC4CEF5;
-	Sat, 22 Nov 2025 15:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763826732;
-	bh=whGgJUtEqoYd5bixP3n+nSVr7olkmG+RUGCPNxZTgG8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CmYVp4TWB7QB0RgSZJagQ8V5Mgiddf7ztZRiSupEeF9YpOT3Jo8UAUZlejIXJKxq7
-	 kIXPkUQk3M0z2cog1py/hsOOeUJLomzHl+fGTWYj+5Vo7rOHNNtxURqElx2gONtAFi
-	 jzcrieNEtzKK7YVdF0Ky+yTADWlnCu0LlwTgi/vRbYeJDSgdPU2A3jNK4FDr91UF0Y
-	 vF9Jh9QNbm0XneEc8WZAcAOyCbceEbh0GlvHjQcIb/lX4hOixcl91oI2goYfqAxYIi
-	 n7XdnxL0GwF63GvwWrWoT7Hc9rPt59jxFPLSXZfWmDDvUOyCrcZBHaVYtWMZ8RitTx
-	 av1K1mJBeSkAg==
-Message-ID: <84dc1fe7-c3ff-4377-9d44-a17d0e4c34a3@kernel.org>
-Date: Sat, 22 Nov 2025 10:52:10 -0500
+	s=arc-20240116; t=1763827857; c=relaxed/simple;
+	bh=S9gRcI8k4o7EsiMJSUBrTHn4XqUYM3OsnzCNXZoQkPQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XXXAe6LT3zf9yeVwZpxpmC4g4bg5gZ2WDpTW2hYKitrkX1+Aga8qysqTT0kQOAj7915//ytTOQjlO0Gn1+M/aplbXB+Vds0hsoHGjLJjnyeTiZT3HJWwaOGfD4bHMyko5sUbooEDAdGahv5tuhnwXvHTMaqwIdvRPe5bnvQH26M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=jv99IRja; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZdxsHzgm; arc=none smtp.client-ip=202.12.124.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailflow.stl.internal (Postfix) with ESMTP id F0FB61300283;
+	Sat, 22 Nov 2025 11:10:51 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Sat, 22 Nov 2025 11:10:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1763827851;
+	 x=1763831451; bh=q5uPLUjj8TzTtd8yNigyoo9L5SKJ4EiuGD2bb/FCaiI=; b=
+	jv99IRjacMr9FZbpZ5QrkturghwMWquNxP0Tl/0Sx1IMdCdWqUSNnftWfbtbo81h
+	6UeP5aaO73Rw6EcODz43qNvlkcF73A+OwCBuCmzNWGNhe9sEz86G60zNaIDKKLh5
+	Yr/6uxHtrrda3pLdaNNUHDlSqg8pogh9l5oCsMK4jbQVJAg4k2iJ8c34A4T3OiNN
+	cqN4HW0TFZhZJffEENlTkV4zV/UoHIspeO+FIXxaDNeFs7YCfDsPDjXFP+8DHP35
+	m4udJjrjRMTbfS9QIavwIeDY29a8Ts/hXjj2MO3uL6l/shujMDFzNAzcwQWZ7Pt1
+	utfvnnbrxqdKsnES+1vFbg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763827851; x=
+	1763831451; bh=q5uPLUjj8TzTtd8yNigyoo9L5SKJ4EiuGD2bb/FCaiI=; b=Z
+	dxsHzgmKE3lMze9KzE1LOWb7rAlQ2ER7H/qkjFUdkNolNa/SW6xewDObGM39pZgs
+	mgfM1NM+pLG1WtBO9sF5UGY83od4QXf+fMRkc4+z9VolbfG6IXw83X739iUSytrv
+	gB9rArYZtyVMEPjYf7sKNLkfvcy4NSqWznGrWXJUiyS3MSozm4FP7a1ZpOGP5cmV
+	erwfgfeYvGYqxHEUdzJRuUgWhe8jg+q6NYT+55D/6iIfWI0UscfStWvmPw3ZnKiT
+	6Z3JjzWQZVHRSfuI0S8zip+4bzghs1KU6OPr+FTDbmczoINTVhVUoCJb0c/e+SkE
+	rr3WiZR45kwZ+rhS30xag==
+X-ME-Sender: <xms:i-AhaT_BN8kTPEyMurOk897RU-7crzZnJ54ywpHYc64_itcabtckMg>
+    <xme:i-Ahaai1_mcZ1SX-YwliAJtmWsqAWyySC7tCknuftRwW06KiLhN2y5p_fOfzGvlqo
+    8DiFsGcTYS3tsBOGsMq4zqMrLZ9my1IHZyoiTN6OnFBWuWOt6x4B64>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfeefvdelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotghhuhgtkhhlvghvvghrsehfrghsthhmrghilhdrtghomheqne
+    cuggftrfgrthhtvghrnhepfeejgfegheefiefgieehhfdvgedufefhkeehudffjeejkedt
+    hffhheevgfduueevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhes
+    fhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepjhhl
+    rgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrihdrnhhgohesohhrrg
+    gtlhgvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgt
+    ohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtth
+    hopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:i-AhaTWLk-UzfzjApwdxJFfAT1K8cidvEgHxQ1zHUBvomQkP5xmfFg>
+    <xmx:i-AhacRRbyhENRQoO7i-bPOLRNw5hdB-K-Q2ef-PA6yXfcGLoAA81w>
+    <xmx:i-Ahadm8QNuUb9CNpTHyKcewE7ttrw-doJbmsBeIfM6QUXgSnPC3Ew>
+    <xmx:i-AhaS6-lBxCPtiotyG4GUg4nZAlRW45y7pKVqMIWSS3LPqHywj8Tg>
+    <xmx:i-AhaR6mzbRqsbKVQVcl6Uz5_NAoj7isTRPOG_jANV04GNiflhqQHhve>
+Feedback-ID: ifa964810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 11DA1780054; Sat, 22 Nov 2025 11:10:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 3/3] NFSD: add
- Documentation/filesystems/nfs/nfsd-io-modes.rst
-To: Anton Gavriliuk <antosha20xx@gmail.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- Mike Snitzer <snitzer@kernel.org>
-References: <20251111145932.23784-1-cel@kernel.org>
- <20251111145932.23784-4-cel@kernel.org>
- <CAAiJnjrE2TOxFvkGiq3g17795nFvA+wFZTddOpu4KiUz2_7i8Q@mail.gmail.com>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <CAAiJnjrE2TOxFvkGiq3g17795nFvA+wFZTddOpu4KiUz2_7i8Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ThreadId: ADrCbGGn5uSZ
+Date: Sat, 22 Nov 2025 11:10:30 -0500
+From: "Chuck Lever" <chucklever@fastmail.com>
+To: NeilBrown <neil@brown.name>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Message-Id: <6149cfe6-3546-4f71-9da4-7cac12e09116@app.fastmail.com>
+In-Reply-To: <20251122010253.3445570-2-neilb@ownmail.net>
+References: <20251122010253.3445570-1-neilb@ownmail.net>
+ <20251122010253.3445570-2-neilb@ownmail.net>
+Subject: Re: [PATCH v2 1/2] lockd: fix vfs_test_lock() calls
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Comments on client behavior go to Trond and Anna.
+On Fri, Nov 21, 2025, at 8:00 PM, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
+>
+> Usage of vfs_test_lock() is somewhat confused.  Documentation suggests
+> it is given a "lock" but this is not the case.  It is given a struct
+> file_lock which contains some details of the sort of lock it should be
+> looking for.
+>
+> In particular passing a "file_lock" containing fl_lmops or fl_ops is
+> meaningless and possibly confusing.
+>
+> This is particularly problematic in lockd.  nlmsvc_testlock() receives
+> an initialised "file_lock" from xdr-decode, including manager ops and an
+> owner.  It then mistakenly passes this to vfs_test_lock() which might
+> replace the owner and the ops.  This can lead to confusion when freeing
+> the lock.
+>
+> The primary role of the 'struct file_lock' passed to vfs_test_lock() is
+> to report a conflicting lock that was found, so it makes more sense for
+> nlmsvc_testlock() to pass "conflock", which it uses for returning the
+> conflicting lock.
+>
+> With this change, freeing of the lock is not confused and code in
+> __nlm4svc_proc_test() and __nlmsvc_proc_test() can be simplified.
+>
+> Documentation for vfs_test_lock() is improved to reflect its real
+> purpose, and a WARN_ON_ONCE() is added to avoid a similar problem in the
+> future.
+>
+> Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+> Closes: https://lore.kernel.org/all/20251021130506.45065-1-okorniev@redhat.com
+> Signed-off-by: NeilBrown <neil@brown.name>
 
+At a guess:
 
-On 11/21/25 4:20 AM, Anton Gavriliuk wrote:
->> +If you experiment with NFSD's IO modes on a recent kernel and have
->> +interesting results, please report them to linux-nfs@vger.kernel.org
-> 
-> Hello
-> 
-> There are two physical boxes - NFS server and client, directly
-> connected via 4x200 Gb/s ConnectX-7 ports.
-> Rocky Linux 10 on both boxes, on NFS server kernel 6.18.0-rc6, on NFS
-> client kernel 6.12.0-55.41.1.el10_0.x86_64
-> Both boxes have 192 GB DRAM.
-> On the NFS server there are 6 x CM7-V 5.0 NVMe SSD in mdadm raid0.
-> Thanks to DMA, locally I'm able to read the file 87 GB/s,
-> 
-> [root@memverge4 ~]# fio --name=local_test --ioengine=libaio --rw=read
-> --bs=3072K --numjobs=1 --direct=1 --filename=/mnt/testfile
-> --iodepth=32
-> local_test: (g=0): rw=read, bs=(R) 3072KiB-3072KiB, (W)
-> 3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=libaio, iodepth=32
-> fio-3.41-41-gf5b2
-> Starting 1 process
-> Jobs: 1 (f=1): [R(1)][100.0%][r=81.2GiB/s][r=27.7k IOPS][eta 00m:00s]
-> local_test: (groupid=0, jobs=1): err= 0: pid=14009: Fri Nov 21 09:55:00 2025
->   read: IOPS=27.7k, BW=81.1GiB/s (87.1GB/s)(512GiB/6313msec)
->     slat (usec): min=4, max=1006, avg= 6.56, stdev= 5.34
->     clat (usec): min=275, max=4653, avg=1148.62, stdev=32.32
->      lat (usec): min=300, max=5659, avg=1155.19, stdev=33.71
-> 
-> On the NFS client share mounted with the next options,
-> 
-> [root@memverge3 ~]# mount -t nfs -o proto=rdma,nconnect=16,vers=3
-> 1.1.1.4:/mnt /mnt
-> 
-> All caches (on server and client) are cleared using "sync; echo 3 >
-> /proc/sys/vm/drop_caches".
-> On the NFS server /sys/kernel/debug/nfsd/io_cache_read default value 0.
-> 
-> [root@memverge3 ~]# fio --name=local_test --ioengine=libaio --rw=read
-> --bs=3072K --numjobs=1 --direct=1 --filename=/mnt/testfile
-> --iodepth=32
-> local_test: (g=0): rw=read, bs=(R) 3072KiB-3072KiB, (W)
-> 3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=libaio, iodepth=32
-> fio-3.41-45-g7c8d
-> Starting 1 process
-> Jobs: 1 (f=1): [R(1)][100.0%][r=2865MiB/s][r=955 IOPS][eta 00m:00s]
-> local_test: (groupid=0, jobs=1): err= 0: pid=141930: Fri Nov 21 10:04:08 2025
->   read: IOPS=1723, BW=5170MiB/s (5421MB/s)(512GiB/101408msec)
->     slat (usec): min=84, max=528, avg=147.91, stdev=29.89
->     clat (usec): min=950, max=116978, avg=18419.36, stdev=11746.45
->      lat (usec): min=1082, max=117116, avg=18567.27, stdev=11729.90
-> 
-> All caches (on server and client) are cleared using "sync; echo 3 >
-> /proc/sys/vm/drop_caches".
-> On the NFS server /sys/kernel/debug/nfsd/io_cache_read default value 2.
-> 
-> [root@memverge3 ~]# fio --name=local_test --ioengine=libaio --rw=read
-> --bs=3072K --numjobs=1 --direct=1 --filename=/mnt/testfile
-> --iodepth=32
-> local_test: (g=0): rw=read, bs=(R) 3072KiB-3072KiB, (W)
-> 3072KiB-3072KiB, (T) 3072KiB-3072KiB, ioengine=libaio, iodepth=32
-> fio-3.41-45-g7c8d
-> Starting 1 process
-> Jobs: 1 (f=1): [R(1)][100.0%][r=16.9GiB/s][r=5770 IOPS][eta 00m:00s]
-> local_test: (groupid=0, jobs=1): err= 0: pid=142151: Fri Nov 21 10:07:36 2025
->   read: IOPS=5803, BW=17.0GiB/s (18.3GB/s)(512GiB/30111msec)
->     slat (usec): min=58, max=468, avg=171.72, stdev=15.26
->     clat (usec): min=264, max=9284, avg=5340.71, stdev=141.85
->      lat (usec): min=455, max=9748, avg=5512.42, stdev=145.54
-> 
-> 3+x times improvement!!
-> 
-> Now let's take a look at NFS client side, why can't I exceed 20 GB/s ?
-> 
-> It looks that the fio thread most of time spends on the cpu executing
-> next kernel functions,
-> 
->     HARDCLOCK entries
->        Count     Pct  State  Function
->          384  38.40%  SYS    nfs_page_create_from_page
->          142  14.20%  SYS    nfs_get_lock_context
->          109  10.90%  SYS    __nfs_pageio_add_request
->           70   7.00%  SYS    refcount_dec_and_lock
->           64   6.40%  SYS    nfs_page_create
->           58   5.80%  SYS    nfs_direct_read_schedule_iovec
->           39   3.90%  SYS    nfs_pageio_add_request
->           38   3.80%  SYS    kmem_cache_alloc_noprof
->           13   1.30%  SYS    rpc_execute
->           12   1.20%  SYS    nfs_generic_pg_pgios
->           10   1.00%  SYS    get_partial_node.part.0
->           10   1.00%  SYS    rmqueue_bulk
->           10   1.00%  SYS    nfs_generic_pgio
->            8   0.80%  SYS    gup_fast_fallback
->            6   0.60%  SYS    xprt_iter_next_entry_roundrobin
->            4   0.40%  SYS    allocate_slab
->            4   0.40%  SYS    nfs_file_direct_read
->            3   0.30%  SYS    rpc_task_set_transport
->            2   0.20%  SYS    __get_random_u32_below
->            2   0.20%  SYS    nfs_pgheader_init
-> 
->        Count     Pct  HARDCLOCK Stack trace
->        ============================================================
->          384  38.40%  nfs_page_create_from_page
-> nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-> io_submit_one  __x64_sys_io_submit  do_syscall_64
-> entry_SYSCALL_64_after_hwframe  |  syscall
->          141  14.10%  nfs_get_lock_context  nfs_page_create_from_page
-> nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-> io_submit_one  __x64_sys_io_submit  do_syscall_64
-> entry_SYSCALL_64_after_hwframe  |  syscall
->          109  10.90%  __nfs_pageio_add_request  nfs_pageio_add_request
->  nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-> io_submit_one  __x64_sys_io_submit  do_syscall_64
-> entry_SYSCALL_64_after_hwframe  |  syscall
->           70   7.00%  refcount_dec_and_lock  nfs_put_lock_context
-> nfs_page_create_from_page  nfs_direct_read_schedule_iovec
-> nfs_file_direct_read  aio_read io_submit_one  __x64_sys_io_submit
-> do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
->           64   6.40%  nfs_page_create  nfs_page_create_from_page
-> nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-> io_submit_one  __x64_sys_io_submit  do_syscall_64
-> entry_SYSCALL_64_after_hwframe  |  syscall
->           58   5.80%  nfs_direct_read_schedule_iovec
-> nfs_file_direct_read  aio_read  io_submit_one  __x64_sys_io_submit
-> do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
->           39   3.90%  nfs_pageio_add_request
-> nfs_direct_read_schedule_iovec  nfs_file_direct_read  aio_read
-> io_submit_one  __x64_sys_io_submit  do_syscall_64
-> entry_SYSCALL_64_after_hwframe  |  syscall
->           36   3.60%  kmem_cache_alloc_noprof  nfs_page_create
-> nfs_page_create_from_page  nfs_direct_read_schedule_iovec
-> nfs_file_direct_read  aio_read  io_submit_one  __x64_sys_io_submit
-> do_syscall_64  entry_SYSCALL_64_after_hwframe  |  syscall
-> 
-> Even if I created and added 2M huge pages as fio's backing page size
-> (adding --mem=mmaphuge --hugepage-size=2m), there is still
-> distribution as shown above.
-> 
-> I might be wrong, but even with fio's huge pages, the standard
-> upstream NFS client creates a struct nfs_page for every 4K chunk
-> (page_size), regardless of the backing page size.
-> 
-> Could 2M huge pages be implemented for NFS client ??, it would even
-> more improve performance using NFSD direct reads.
-> 
-> Anton
-> 
-> вт, 11 нояб. 2025 г. в 17:09, Chuck Lever <cel@kernel.org>:
->>
->> From: Mike Snitzer <snitzer@kernel.org>
->>
->> This document details the NFSD IO modes that are configurable using
->> NFSD's experimental debugfs interfaces:
->>
->>   /sys/kernel/debug/nfsd/io_cache_read
->>   /sys/kernel/debug/nfsd/io_cache_write
->>
->> This document will evolve as NFSD's interfaces do (e.g. if/when NFSD's
->> debugfs interfaces are replaced with per-export controls).
->>
->> Future updates will provide more specific guidance and howto
->> information to help others use and evaluate NFSD's IO modes:
->> BUFFERED, DONTCACHE and DIRECT.
->>
->> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->>  .../filesystems/nfs/nfsd-io-modes.rst         | 144 ++++++++++++++++++
->>  1 file changed, 144 insertions(+)
->>  create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
->>
->> diff --git a/Documentation/filesystems/nfs/nfsd-io-modes.rst b/Documentation/filesystems/nfs/nfsd-io-modes.rst
->> new file mode 100644
->> index 000000000000..e3a522d09766
->> --- /dev/null
->> +++ b/Documentation/filesystems/nfs/nfsd-io-modes.rst
->> @@ -0,0 +1,144 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=============
->> +NFSD IO MODES
->> +=============
->> +
->> +Overview
->> +========
->> +
->> +NFSD has historically always used buffered IO when servicing READ and
->> +WRITE operations. BUFFERED is NFSD's default IO mode, but it is possible
->> +to override that default to use either DONTCACHE or DIRECT IO modes.
->> +
->> +Experimental NFSD debugfs interfaces are available to allow the NFSD IO
->> +mode used for READ and WRITE to be configured independently. See both:
->> +- /sys/kernel/debug/nfsd/io_cache_read
->> +- /sys/kernel/debug/nfsd/io_cache_write
->> +
->> +The default value for both io_cache_read and io_cache_write reflects
->> +NFSD's default IO mode (which is NFSD_IO_BUFFERED=0).
->> +
->> +Based on the configured settings, NFSD's IO will either be:
->> +- cached using page cache (NFSD_IO_BUFFERED=0)
->> +- cached but removed from page cache on completion (NFSD_IO_DONTCACHE=1)
->> +- not cached stable_how=NFS_UNSTABLE (NFSD_IO_DIRECT=2)
->> +
->> +To set an NFSD IO mode, write a supported value (0 - 2) to the
->> +corresponding IO operation's debugfs interface, e.g.:
->> +  echo 2 > /sys/kernel/debug/nfsd/io_cache_read
->> +  echo 2 > /sys/kernel/debug/nfsd/io_cache_write
->> +
->> +To check which IO mode NFSD is using for READ or WRITE, simply read the
->> +corresponding IO operation's debugfs interface, e.g.:
->> +  cat /sys/kernel/debug/nfsd/io_cache_read
->> +  cat /sys/kernel/debug/nfsd/io_cache_write
->> +
->> +If you experiment with NFSD's IO modes on a recent kernel and have
->> +interesting results, please report them to linux-nfs@vger.kernel.org
->> +
->> +NFSD DONTCACHE
->> +==============
->> +
->> +DONTCACHE offers a hybrid approach to servicing IO that aims to offer
->> +the benefits of using DIRECT IO without any of the strict alignment
->> +requirements that DIRECT IO imposes. To achieve this buffered IO is used
->> +but the IO is flagged to "drop behind" (meaning associated pages are
->> +dropped from the page cache) when IO completes.
->> +
->> +DONTCACHE aims to avoid what has proven to be a fairly significant
->> +limition of Linux's memory management subsystem if/when large amounts of
->> +data is infrequently accessed (e.g. read once _or_ written once but not
->> +read until much later). Such use-cases are particularly problematic
->> +because the page cache will eventually become a bottleneck to servicing
->> +new IO requests.
->> +
->> +For more context on DONTCACHE, please see these Linux commit headers:
->> +- Overview:  9ad6344568cc3 ("mm/filemap: change filemap_create_folio()
->> +  to take a struct kiocb")
->> +- for READ:  8026e49bff9b1 ("mm/filemap: add read support for
->> +  RWF_DONTCACHE")
->> +- for WRITE: 974c5e6139db3 ("xfs: flag as supporting FOP_DONTCACHE")
->> +
->> +NFSD_IO_DONTCACHE will fall back to NFSD_IO_BUFFERED if the underlying
->> +filesystem doesn't indicate support by setting FOP_DONTCACHE.
->> +
->> +NFSD DIRECT
->> +===========
->> +
->> +DIRECT IO doesn't make use of the page cache, as such it is able to
->> +avoid the Linux memory management's page reclaim scalability problems
->> +without resorting to the hybrid use of page cache that DONTCACHE does.
->> +
->> +Some workloads benefit from NFSD avoiding the page cache, particularly
->> +those with a working set that is significantly larger than available
->> +system memory. The pathological worst-case workload that NFSD DIRECT has
->> +proven to help most is: NFS client issuing large sequential IO to a file
->> +that is 2-3 times larger than the NFS server's available system memory.
->> +The reason for such improvement is NFSD DIRECT eliminates a lot of work
->> +that the memory management subsystem would otherwise be required to
->> +perform (e.g. page allocation, dirty writeback, page reclaim). When
->> +using NFSD DIRECT, kswapd and kcompactd are no longer commanding CPU
->> +time trying to find adequate free pages so that forward IO progress can
->> +be made.
->> +
->> +The performance win associated with using NFSD DIRECT was previously
->> +discussed on linux-nfs, see:
->> +https://lore.kernel.org/linux-nfs/aEslwqa9iMeZjjlV@kernel.org/
->> +But in summary:
->> +- NFSD DIRECT can significantly reduce memory requirements
->> +- NFSD DIRECT can reduce CPU load by avoiding costly page reclaim work
->> +- NFSD DIRECT can offer more deterministic IO performance
->> +
->> +As always, your mileage may vary and so it is important to carefully
->> +consider if/when it is beneficial to make use of NFSD DIRECT. When
->> +assessing comparative performance of your workload please be sure to log
->> +relevant performance metrics during testing (e.g. memory usage, cpu
->> +usage, IO performance). Using perf to collect perf data that may be used
->> +to generate a "flamegraph" for work Linux must perform on behalf of your
->> +test is a really meaningful way to compare the relative health of the
->> +system and how switching NFSD's IO mode changes what is observed.
->> +
->> +If NFSD_IO_DIRECT is specified by writing 2 (or 3 and 4 for WRITE) to
->> +NFSD's debugfs interfaces, ideally the IO will be aligned relative to
->> +the underlying block device's logical_block_size. Also the memory buffer
->> +used to store the READ or WRITE payload must be aligned relative to the
->> +underlying block device's dma_alignment.
->> +
->> +But NFSD DIRECT does handle misaligned IO in terms of O_DIRECT as best
->> +it can:
->> +
->> +Misaligned READ:
->> +    If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
->> +    DIO-aligned block (on either end of the READ). The expanded READ is
->> +    verified to have proper offset/len (logical_block_size) and
->> +    dma_alignment checking.
->> +
->> +Misaligned WRITE:
->> +    If NFSD_IO_DIRECT is used, split any misaligned WRITE into a start,
->> +    middle and end as needed. The large middle segment is DIO-aligned
->> +    and the start and/or end are misaligned. Buffered IO is used for the
->> +    misaligned segments and O_DIRECT is used for the middle DIO-aligned
->> +    segment. DONTCACHE buffered IO is _not_ used for the misaligned
->> +    segments because using normal buffered IO offers significant RMW
->> +    performance benefit when handling streaming misaligned WRITEs.
->> +
->> +Tracing:
->> +    The nfsd_read_direct trace event shows how NFSD expands any
->> +    misaligned READ to the next DIO-aligned block (on either end of the
->> +    original READ, as needed).
->> +
->> +    This combination of trace events is useful for READs:
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_direct/enable
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
->> +    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
->> +
->> +    The nfsd_write_direct trace event shows how NFSD splits a given
->> +    misaligned WRITE into a DIO-aligned middle segment.
->> +
->> +    This combination of trace events is useful for WRITEs:
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_opened/enable
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_direct/enable
->> +    echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_write_io_done/enable
->> +    echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_write/enable
->> --
->> 2.51.0
->>
->>
+Fixes: 5ea0d75037b9 ("lockd: handle test_lock deferrals")  ??
+
+I suspect this also needs a Cc: stable.
 
 
--- 
-Chuck Lever
+> ---
+> changes since v1:
+> - use conflock more consistently in nlmsvc_testlock()
+> ---
+>  fs/lockd/svc4proc.c |  4 +---
+>  fs/lockd/svclock.c  | 21 ++++++++++++---------
+>  fs/lockd/svcproc.c  |  5 +----
+>  fs/locks.c          | 12 ++++++++++--
+>  4 files changed, 24 insertions(+), 18 deletions(-)
+>
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 109e5caae8c7..4b6f18d97734 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -97,7 +97,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  	struct nlm_args *argp = rqstp->rq_argp;
+>  	struct nlm_host	*host;
+>  	struct nlm_file	*file;
+> -	struct nlm_lockowner *test_owner;
+>  	__be32 rc = rpc_success;
+> 
+>  	dprintk("lockd: TEST4        called\n");
+> @@ -107,7 +106,6 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  	if ((resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
+>  		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
+> 
+> -	test_owner = argp->lock.fl.c.flc_owner;
+>  	/* Now check for conflicting locks */
+>  	resp->status = nlmsvc_testlock(rqstp, file, host, &argp->lock,
+>  				       &resp->lock);
+> @@ -116,7 +114,7 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  	else
+>  		dprintk("lockd: TEST4        status %d\n", ntohl(resp->status));
+> 
+> -	nlmsvc_put_lockowner(test_owner);
+> +	nlmsvc_release_lockowner(&argp->lock);
+>  	nlmsvc_release_host(host);
+>  	nlm_release_file(file);
+>  	return rc;
+> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> index a31dc9588eb8..d66e82851599 100644
+> --- a/fs/lockd/svclock.c
+> +++ b/fs/lockd/svclock.c
+> @@ -627,7 +627,13 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct 
+> nlm_file *file,
+>  	}
+> 
+>  	mode = lock_to_openmode(&lock->fl);
+> -	error = vfs_test_lock(file->f_file[mode], &lock->fl);
+> +	locks_init_lock(&conflock->fl);
+> +	/* vfs_test_lock only uses start, end, and owner, but tests flc_file 
+> */
+> +	conflock->fl.c.flc_file = lock->fl.c.flc_file;
+> +	conflock->fl.fl_start = lock->fl.fl_start;
+> +	conflock->fl.fl_end = lock->fl.fl_end;
+> +	conflock->fl.c.flc_owner = lock->fl.c.flc_owner;
+> +	error = vfs_test_lock(file->f_file[mode], &conflock->fl);
+>  	if (error) {
+>  		/* We can't currently deal with deferred test requests */
+>  		if (error == FILE_LOCK_DEFERRED)
+> @@ -637,22 +643,19 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct 
+> nlm_file *file,
+>  		goto out;
+>  	}
+> 
+> -	if (lock->fl.c.flc_type == F_UNLCK) {
+> +	if (conflock->fl.c.flc_type == F_UNLCK) {
+>  		ret = nlm_granted;
+>  		goto out;
+>  	}
+> 
+>  	dprintk("lockd: conflicting lock(ty=%d, %Ld-%Ld)\n",
+> -		lock->fl.c.flc_type, (long long)lock->fl.fl_start,
+> -		(long long)lock->fl.fl_end);
+> +		conflock->fl.c.flc_type, (long long)conflock->fl.fl_start,
+> +		(long long)conflock->fl.fl_end);
+>  	conflock->caller = "somehost";	/* FIXME */
+>  	conflock->len = strlen(conflock->caller);
+>  	conflock->oh.len = 0;		/* don't return OH info */
+> -	conflock->svid = lock->fl.c.flc_pid;
+> -	conflock->fl.c.flc_type = lock->fl.c.flc_type;
+> -	conflock->fl.fl_start = lock->fl.fl_start;
+> -	conflock->fl.fl_end = lock->fl.fl_end;
+> -	locks_release_private(&lock->fl);
+> +	conflock->svid = conflock->fl.c.flc_pid;
+> +	locks_release_private(&conflock->fl);
+> 
+>  	ret = nlm_lck_denied;
+>  out:
+> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+> index f53d5177f267..5817ef272332 100644
+> --- a/fs/lockd/svcproc.c
+> +++ b/fs/lockd/svcproc.c
+> @@ -117,7 +117,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  	struct nlm_args *argp = rqstp->rq_argp;
+>  	struct nlm_host	*host;
+>  	struct nlm_file	*file;
+> -	struct nlm_lockowner *test_owner;
+>  	__be32 rc = rpc_success;
+> 
+>  	dprintk("lockd: TEST          called\n");
+> @@ -127,8 +126,6 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  	if ((resp->status = nlmsvc_retrieve_args(rqstp, argp, &host, &file)))
+>  		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
+> 
+> -	test_owner = argp->lock.fl.c.flc_owner;
+> -
+>  	/* Now check for conflicting locks */
+>  	resp->status = cast_status(nlmsvc_testlock(rqstp, file, host,
+>  						   &argp->lock, &resp->lock));
+> @@ -138,7 +135,7 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct 
+> nlm_res *resp)
+>  		dprintk("lockd: TEST          status %d vers %d\n",
+>  			ntohl(resp->status), rqstp->rq_vers);
+> 
+> -	nlmsvc_put_lockowner(test_owner);
+> +	nlmsvc_release_lockowner(&argp->lock);
+>  	nlmsvc_release_host(host);
+>  	nlm_release_file(file);
+>  	return rc;
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 04a3f0e20724..bf5e0d05a026 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -2185,13 +2185,21 @@ SYSCALL_DEFINE2(flock, unsigned int, fd, 
+> unsigned int, cmd)
+>  /**
+>   * vfs_test_lock - test file byte range lock
+>   * @filp: The file to test lock for
+> - * @fl: The lock to test; also used to hold result
+> + * @fl: The byte-range in the file to test; also used to hold result
+>   *
+> + * On entry, @fl does not contain a lock, but identifies a range 
+> (fl_start, fl_end)
+> + * in the file (c.flc_file), and an owner (c.flc_owner) for whom 
+> existing locks
+> + * should be ignored.  c.flc_type and c.flc_flags are ignored.
+> + * Both fl_lmops and fl_ops in @fl must be NULL.
+>   * Returns -ERRNO on failure.  Indicates presence of conflicting lock 
+> by
+> - * setting conf->fl_type to something other than F_UNLCK.
+> + * setting fl->fl_type to something other than F_UNLCK.
+> + *
+> + * If vfs_test_lock() does find a lock and return it, the caller must
+> + * use locks_free_lock() or locks_release_private() on the returned 
+> lock.
+>   */
+>  int vfs_test_lock(struct file *filp, struct file_lock *fl)
+>  {
+> +	WARN_ON_ONCE(fl->fl_ops || fl->fl_lmops);
+>  	WARN_ON_ONCE(filp != fl->c.flc_file);
+>  	if (filp->f_op->lock)
+>  		return filp->f_op->lock(filp, F_GETLK, fl);
+> -- 
+> 2.50.0.107.gf914562f5916.dirty
 
