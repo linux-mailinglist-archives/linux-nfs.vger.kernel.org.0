@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-16657-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16658-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06EF7C7C09A
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 01:53:28 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 547C2C7C09D
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 01:53:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AED1B3A6514
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 00:53:26 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CDF3C35F9CE
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Nov 2025 00:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126E323E320;
-	Sat, 22 Nov 2025 00:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707F823D2AB;
+	Sat, 22 Nov 2025 00:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="eOEGQGBq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RGQFFuHw"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="L6LpNG53";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UtGqniNF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDE2239E80
-	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 00:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8411F09AD
+	for <linux-nfs@vger.kernel.org>; Sat, 22 Nov 2025 00:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763772803; cv=none; b=k9RlfWEKGJXTR2OYbz1wlJZvjPW8H7tOM3+TaRn61oyPg5hYd6CtMpN+8I4JOBb5S3ro3gTLm3OKqXRVBvdD1PJp0yTQPIXocTWKR6Rjt7/kBgrpB10m4bBMMQKbNbwTJyNf/TEoGztJUZkCc8yplvL8k0jP6xh6WnqB6wRfWH4=
+	t=1763772808; cv=none; b=XPLo0BB6FT+pIFmrwuDx6lPbPr+YkEyIL65GhH7poHqZea/vk/bJJ9itCJC2AjspgCjkUmJic+jm3bLYWfRXyLISEKQP8fxHeirr6iwIUm7mHGV3rX8FYJxQxnGzVSEPLKc8YvC+pFLdItxpEFkZvkExSZDnzwS+xam/ncqboh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763772803; c=relaxed/simple;
-	bh=nbMRVREgAu5PPss2C8gLWq2sXTZU9PIztuCGuO8sojY=;
+	s=arc-20240116; t=1763772808; c=relaxed/simple;
+	bh=ZB8Wk3FGi/EjZIs1HEybwoVZ2DJO/ayhbO/cB9C2jmU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n50iRWwcEb03q8QJPpbxRPdD8E/M82UvFinJXrk7n9DVO+GHyTJ6vqyltNRztsexmQfhOHlAtWo4+bF4EY6nv/9o8DpyS/EmHaPizFUR03vqpNZ4ykB1+F+4ykc6PXolxYS7PQ2WCc3qbfaiOkxFozteNghgDRm47nMTDh6jPRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=eOEGQGBq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RGQFFuHw; arc=none smtp.client-ip=103.168.172.147
+	 MIME-Version; b=WkzwbRX7z/2ASRBrne86WBmxRTqgS2oocpcGvWnwvN9X2Oy1uO6CMIVMk2a8xmVTE8FehqngUdZmYbVnk5c20L6h/Oib0URnEn7HaybE5BnR/YzR6a7/2m/rzHU5jVSDKWPdknzv9RgAyfWfMz+lkrVhEMjv4FIBfXWaL3SCUG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=L6LpNG53; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UtGqniNF; arc=none smtp.client-ip=103.168.172.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id C57CEEC00F9;
-	Fri, 21 Nov 2025 19:53:20 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Fri, 21 Nov 2025 19:53:20 -0500
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id F333A14000B6;
+	Fri, 21 Nov 2025 19:53:24 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 21 Nov 2025 19:53:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763772800;
-	 x=1763859200; bh=BiexMDC9/zAru0oGfUqOr0i4btAYYG0zspd0xzuSNSY=; b=
-	eOEGQGBqjazFHEe5456evXZ40o9OB+cfKKWAPEufn8Leva6oXL/3r54zN9r6LweP
-	uYPf/dbrlkaCKwT4HCIE7tgO6br3vr7LERcGiXVI0zdBoZUvnpCPDhc1cD5JLPDZ
-	ZiN3W7EhxXXyK0uwJPp1aDrwyxmf8yDtQBEb3VHKL2Lc8GoLQXbK9oIrzHoPCPfN
-	tBcFZUzr8JhPrUUFEkIfC5KBki3QJViEKGmVLHDlFpklScjb6DpC254c49Ovc97x
-	NEzEwUFgzGhqG2nQp9alowQwOQ0ubvSo0GDpngId42uuBnzNTOnLVzJ6xMhfs/YM
-	UYnwA/7YnPZCEN9aLKnfJQ==
+	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1763772804;
+	 x=1763859204; bh=hGA9OMrjnY119at1nMXs2smI0COoyeN15d7fioruhQo=; b=
+	L6LpNG53Ev37E2qW+qOONrz60GF0PmWUY6rIod9PU7zQZ0ySeZoLI6Pb/xkW1oOn
+	BWnqv3rPKxqUpnwYhnwbzUBtydDaGkf2wZ/5E1BL+lxaFE6D5S3jIf0nypsOXSQc
+	1Rj82vb3i8SaRY+yFxzjPGlW8QU+Hw++pGxm9OX86mDObVQiGKZ4ex8MYAL4rtkS
+	cDgK+Z25ieLMnFJ907EG0Cko+P4ZRlkB1dX01MfXL6arHdiUB8fdMYDpVaO/Eys6
+	l7IWOn2NWtVDEEPa9+5Fy6DP/z3m1p3M1SK3IocRsv6sD8ybHLs5Zx8300/HXk8u
+	Xhz2+NuAKLSojo9R3iOTyA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1763772800; x=1763859200; bh=B
-	iexMDC9/zAru0oGfUqOr0i4btAYYG0zspd0xzuSNSY=; b=RGQFFuHwbnnJ7lXlD
-	Y+kGZ4e8KyfjSQMr5RAEwmWdFxbd+ZxDgG9FBlhGXGBEQ1/F4/LeYAyFeREWcwi+
-	wn+KC9R8EvmNMBKxa9iWvA51FzW6mNioQAOz5+2pQZH6f5iPT/5Naic7wflQA7nd
-	YQ4LNE2dpEJP5KTW0kbV9n+QAvul6+n5QqyKk/EMpxeiAq5xobGh0TmJo4UlwpbR
-	nhNye/G1nEsbvdJg/tGlmgykuak0mQnDqAcOoRmun6VF1ZfW/3dvxxL4u0njzdDW
-	Fw8j+P8o40ryUoXxscmMN39a5j9fUJ0d4GYHhS/lUOfsB0XBu/PmsvC4c1NQ1A+g
-	lk9Aw==
-X-ME-Sender: <xms:gAkhaYFXBQMN7zI42Ix3lR_jofVy1iLHUEsew76UUG6P34Y8qWyYOA>
-    <xme:gAkhaVBpQZbhohsol5UbkOceaiId0n4ixpAvnh3J4AsKerwJH14d9AHF-L7jtXtPY
-    thT4shk6ZJq98OBq1phAiekmdxaao9srgrIoAEnkS3KM_oB5dA>
-X-ME-Received: <xmr:gAkhab8R-3ywraD_lQD5IARjwrQqR3tILue7Oo1SNQXYSZIVCfD7587Mvza0FLZ4_VlZq9kgcubJX4bP9wZ_iFJZyGyjhw6hx9bdUzrQS9cI>
+	:x-me-sender:x-sasl-enc; s=fm3; t=1763772804; x=1763859204; bh=h
+	GA9OMrjnY119at1nMXs2smI0COoyeN15d7fioruhQo=; b=UtGqniNFztmkFseOc
+	Q2DcUpMVWKtC68PAp1tqU/B/gLoEUVB5B7XGIhg4fuNCxCGrwS2EiGrKnE0sGdkO
+	Umm7MDtfVeCJoLd/FNvNQlOmT6NivAlMlK/JT2d/DzpuhWokVip/2O29xLc9WX6w
+	Ezop1HxKZCixtgaV9RMfs1/Y2UxpR/HfRzPRsz/a8y3/W3IhssIKsdrRym60t206
+	SIsuPicOibrk7k82pA6H0Oc4J+NW2mJikC+irv2uTfRKOWDS7jL68e7x83yHYt+v
+	Cw1Ildi0rH7pSCY7PAtmZHElWY2GVEPqVEEbXMy7dd7I7U6u5QyWTkEJZ+9X6SHR
+	1EFIA==
+X-ME-Sender: <xms:hAkhaU0L2ZNwb6uMJvJO2XAqhUbflWjM5VhBHwJAvpbRH5803ajxVA>
+    <xme:hAkhaSw__hsFNNglxh8FDTPsRu1S_V9tN2Y3ky7KXcgVd7sTofdipq4PlJU0bWGJR
+    IlTmu1m8wnrdb-_GDLYqioZ506raGPUZopWxNkT3C0guMDLUN4>
+X-ME-Received: <xmr:hAkhaWvIVQUN9Vhv41uBiK-ATtALKpshoYwCpjrnGEbB4wIYGrfIrXhxSf2LuflBXLEVH95zRW4V9IYuvR4JU80ed_FFpZCNeUy3sMRrGqr7>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedugeehucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
     epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    vehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
     esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
     uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
     dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
     ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesoh
     hrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
     pdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:gAkhaRCY2apY0VzvX83NSMyISAhlRXqXuPvZIzcnWpTAiKu6xwyFNg>
-    <xmx:gAkhaQTuebJzFDYU9N9ZN8R-31K8t-ioWEv62hU8bSl0T8fEkXsfLA>
-    <xmx:gAkhaYsOovzk6_-lqk213BKWXv01a95kEzs-Q7sBL_ucn8_QVetMQg>
-    <xmx:gAkhac2JPSrObWAT5no5SEHkxs4-qbx-aqhO2h8Jk0cfWPWEasyvdQ>
-    <xmx:gAkhadkzlBPD7x-2ypyvLs6FOSFMgXVGbph0slk3x945Sg21ECoJBnmk>
+X-ME-Proxy: <xmx:hAkhaUznJ8gKwhvFAgZbHw447oImL5ByoD1XVu1FsKKOGGyvAjgngQ>
+    <xmx:hAkhaZCSUZsO-2gq4C0btW1HIf1jY-ddGaZWM_njaQ8hQuC4MrY-5A>
+    <xmx:hAkhaSfmWPflR5XtF0X9v-aeN371EWQNLS7bQ04UoinujSTmxav5hQ>
+    <xmx:hAkhaTl_nTtbCu0HahFtR4gDjJ2FLHnEw4IGN2bifjYK3OiQ002CZA>
+    <xmx:hAkhaaUeVmNbMDVGmWZ-s-EYdMp9y3rg1l6M5girbkmD2YpX8HhTqVP6>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Nov 2025 19:53:18 -0500 (EST)
+ 21 Nov 2025 19:53:22 -0500 (EST)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +93,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v6 08/14] nfsd: pass parent_fh explicitly to nfsd4_process_open2()
-Date: Sat, 22 Nov 2025 11:47:06 +1100
-Message-ID: <20251122005236.3440177-9-neilb@ownmail.net>
+Subject: [PATCH v6 09/14] nfsd: revert nfsd4: delay setting current_fh in open
+Date: Sat, 22 Nov 2025 11:47:07 +1100
+Message-ID: <20251122005236.3440177-10-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20251122005236.3440177-1-neilb@ownmail.net>
 References: <20251122005236.3440177-1-neilb@ownmail.net>
@@ -110,181 +110,148 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neil@brown.name>
 
-nfsd4_process_open2() sometimes needs the filehandle of the parent of
-the created file.  This is passed to nfs4_set_delegation() to verify
-that the parent is unchanged after the delegation is obtained.
+This reverts
+ Commit: c0e6bee48059 ("nfsd4: delay setting current_fh in open")
 
-Currently nfsd4_process_open2() knows that the parent is
-cstate->current_fh but that will change in the next patch.
+That patch was a precusor to
 
-So with this patch we take a copy of current_fh earlier in the one case
-(NFS4_OPEN_CLAIM_NULL) where it is needed and before any lookup happens.
+Commit: 4335723e8e9f ("nfsd4: fix delegation-unlink/rename race")
 
-nfs4_open_delegation() currently uses "currentfh" (which is the parent)
-to pass to nfs4_delegation_stat().  As nfs4_delegation_stat() only wants
-the vfsmount, it can equally well use "fh" which is the filehandle for the
-newly created file - it must be on the same filesystem.
+which attempted to fix a race by holding the parent directory locked for
+longer.  That race was subsequently fixed a better way
+Commit: 876c553cb410 ("NFSD: verify the opened dentry after setting a delegation")
+
+which repeated the lookup after the delegation was obtained.
+
+So delaying the setting of current_fh is no longer needed.
+
+A cost of setting current_fh later is that when
+nfs4_inc_and_copy_stateid() is called, current_fh has already been set
+to the correct filehandle everywhere *except* in nfsd4_process_open2().
+With this change, the current_fh will be stable from when
+nfs4_inc_and_copy_stateid() which will allow a future patch which
+simplifies the handling of current_stateid.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c  |  8 ++++++--
- fs/nfsd/nfs4state.c | 25 ++++++++++++-------------
- fs/nfsd/xdr4.h      |  4 +++-
- 3 files changed, 21 insertions(+), 16 deletions(-)
+ fs/nfsd/nfs4proc.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index bd7ba5df07a7..0c13c75e4092 100644
+index 0c13c75e4092..0f490f2524fa 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -538,6 +538,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+@@ -424,16 +424,17 @@ set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
+ }
+ 
+ static __be32
+-do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, struct nfsd4_open *open, struct svc_fh **resfh)
++do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, struct nfsd4_open *open)
+ {
+ 	struct svc_fh *current_fh = &cstate->current_fh;
++	struct svc_fh *resfh;
+ 	int accmode;
+ 	__be32 status;
+ 
+-	*resfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
+-	if (!*resfh)
++	resfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
++	if (!resfh)
+ 		return nfserr_jukebox;
+-	fh_init(*resfh, NFS4_FHSIZE);
++	fh_init(resfh, NFS4_FHSIZE);
+ 	open->op_truncate = false;
+ 
+ 	if (open->op_create) {
+@@ -453,7 +454,7 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
+ 		 */
+ 
+ 		current->fs->umask = open->op_umask;
+-		status = nfsd4_create_file(rqstp, current_fh, *resfh, open);
++		status = nfsd4_create_file(rqstp, current_fh, resfh, open);
+ 		current->fs->umask = 0;
+ 
+ 		/*
+@@ -466,7 +467,7 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
+ 						FATTR4_WORD1_TIME_MODIFY);
+ 	} else {
+ 		status = nfsd_lookup(rqstp, current_fh,
+-				     open->op_fname, open->op_fnamelen, *resfh);
++				     open->op_fname, open->op_fnamelen, resfh);
+ 		if (status == nfs_ok)
+ 			/* NFSv4 protocol requires change attributes even though
+ 			 * no change happened.
+@@ -475,18 +476,21 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
+ 	}
+ 	if (status)
+ 		goto out;
+-	status = nfsd_check_obj_isreg(*resfh, cstate->minorversion);
++	status = nfsd_check_obj_isreg(resfh, cstate->minorversion);
+ 	if (status)
+ 		goto out;
+ 
+-	nfsd4_set_open_owner_reply_cache(cstate, open, *resfh);
++	nfsd4_set_open_owner_reply_cache(cstate, open, resfh);
+ 	accmode = NFSD_MAY_NOP;
+ 	if (open->op_created ||
+ 			open->op_claim_type == NFS4_OPEN_CLAIM_DELEGATE_CUR)
+ 		accmode |= NFSD_MAY_OWNER_OVERRIDE;
+-	status = do_open_permission(rqstp, *resfh, open, accmode);
++	status = do_open_permission(rqstp, resfh, open, accmode);
+ 	set_change_info(&open->op_cinfo, current_fh);
++	fh_dup2(current_fh, resfh);
+ out:
++	fh_put(resfh);
++	kfree(resfh);
+ 	return status;
+ }
+ 
+@@ -537,7 +541,6 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ {
  	struct nfsd4_open *open = &u->open;
  	__be32 status;
- 	struct svc_fh *resfh = NULL;
-+	struct svc_fh parent_fh = {};
+-	struct svc_fh *resfh = NULL;
+ 	struct svc_fh parent_fh = {};
  	struct net *net = SVC_NET(rqstp);
  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	bool reclaim = false;
-@@ -601,8 +602,10 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		goto out;
- 
- 	switch (open->op_claim_type) {
--	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
- 	case NFS4_OPEN_CLAIM_NULL:
-+		fh_dup2(&parent_fh, &cstate->current_fh);
-+		fallthrough;
-+	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
- 		status = do_open_lookup(rqstp, cstate, open, &resfh);
+@@ -606,7 +609,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		fh_dup2(&parent_fh, &cstate->current_fh);
+ 		fallthrough;
+ 	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
+-		status = do_open_lookup(rqstp, cstate, open, &resfh);
++		status = do_open_lookup(rqstp, cstate, open);
  		if (status)
  			goto out;
-@@ -630,7 +633,8 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		break;
+@@ -622,7 +625,6 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		status = do_open_fhandle(rqstp, cstate, open);
+ 		if (status)
+ 			goto out;
+-		resfh = &cstate->current_fh;
+ 		break;
+ 	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
+ 	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
+@@ -633,7 +635,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  		goto out;
  	}
  
--	status = nfsd4_process_open2(rqstp, resfh, open);
-+	status = nfsd4_process_open2(rqstp, resfh, &parent_fh, open);
-+	fh_put(&parent_fh);
+-	status = nfsd4_process_open2(rqstp, resfh, &parent_fh, open);
++	status = nfsd4_process_open2(rqstp, &cstate->current_fh, &parent_fh, open);
+ 	fh_put(&parent_fh);
  	if (status && open->op_created)
  		pr_warn("nfsd4_process_open2 failed to open newly-created file: status=%u\n",
- 			be32_to_cpu(status));
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index f10c22d02735..3aebe90a12ec 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6046,7 +6046,7 @@ static bool nfsd4_want_deleg_timestamps(const struct nfsd4_open *open)
- 
- static struct nfs4_delegation *
- nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
--		    struct svc_fh *parent)
-+		    struct svc_fh *parent_fh)
- {
- 	bool deleg_ts = nfsd4_want_deleg_timestamps(open);
- 	struct nfs4_client *clp = stp->st_stid.sc_client;
-@@ -6146,8 +6146,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	if (status)
- 		goto out_clnt_odstate;
- 
--	if (parent) {
--		status = nfsd4_verify_deleg_dentry(open, fp, parent);
-+	if (parent_fh && parent_fh->fh_dentry) {
-+		status = nfsd4_verify_deleg_dentry(open, fp, parent_fh);
- 		if (status)
- 			goto out_unlock;
+@@ -645,11 +647,6 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		fput(open->op_filp);
+ 		open->op_filp = NULL;
  	}
-@@ -6288,13 +6288,12 @@ nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqstp, struct nfsd4_open *open,
-  */
- static void
- nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
--		     struct nfs4_ol_stateid *stp, struct svc_fh *currentfh,
-+		     struct nfs4_ol_stateid *stp, struct svc_fh *parent_fh,
- 		     struct svc_fh *fh)
- {
- 	struct nfs4_openowner *oo = openowner(stp->st_stateowner);
- 	bool deleg_ts = nfsd4_want_deleg_timestamps(open);
- 	struct nfs4_client *clp = stp->st_stid.sc_client;
--	struct svc_fh *parent = NULL;
- 	struct nfs4_delegation *dp;
- 	struct kstat stat;
- 	int status = 0;
-@@ -6308,8 +6307,6 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 				open->op_recall = true;
- 			break;
- 		case NFS4_OPEN_CLAIM_NULL:
--			parent = currentfh;
--			fallthrough;
- 		case NFS4_OPEN_CLAIM_FH:
- 			/*
- 			 * Let's not give out any delegations till everyone's
-@@ -6327,7 +6324,7 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 		default:
- 			goto out_no_deleg;
- 	}
--	dp = nfs4_set_delegation(open, stp, parent);
-+	dp = nfs4_set_delegation(open, stp, parent_fh);
- 	if (IS_ERR(dp))
- 		goto out_no_deleg;
- 
-@@ -6337,7 +6334,7 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 		struct file *f = dp->dl_stid.sc_file->fi_deleg_file->nf_file;
- 
- 		if (!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp) ||
--				!nfs4_delegation_stat(dp, currentfh, &stat)) {
-+				!nfs4_delegation_stat(dp, fh, &stat)) {
- 			nfs4_put_stid(&dp->dl_stid);
- 			destroy_delegation(dp);
- 			goto out_no_deleg;
-@@ -6354,7 +6351,7 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 		spin_unlock(&f->f_lock);
- 		trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
- 	} else {
--		open->op_delegate_type = deleg_ts && nfs4_delegation_stat(dp, currentfh, &stat) ?
-+		open->op_delegate_type = deleg_ts && nfs4_delegation_stat(dp, fh, &stat) ?
- 					 OPEN_DELEGATE_READ_ATTRS_DELEG : OPEN_DELEGATE_READ;
- 		dp->dl_atime = stat.atime;
- 		trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
-@@ -6403,6 +6400,7 @@ static bool open_xor_delegation(struct nfsd4_open *open)
-  * nfsd4_process_open2 - finish open processing
-  * @rqstp: the RPC transaction being executed
-  * @current_fh: NFSv4 COMPOUND's current filehandle
-+ * @parent_fh: filehandle of parent when CLAIM_NULL
-  * @open: OPEN arguments
-  *
-  * If successful, (1) truncate the file if open->op_truncate was
-@@ -6412,7 +6410,9 @@ static bool open_xor_delegation(struct nfsd4_open *open)
-  * network byte order is returned.
-  */
- __be32
--nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nfsd4_open *open)
-+nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh,
-+		    struct svc_fh *parent_fh,
-+		    struct nfsd4_open *open)
- {
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
- 	struct nfs4_client *cl = open->op_openowner->oo_owner.so_client;
-@@ -6509,8 +6509,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	* Attempt to hand out a delegation. No error return, because the
- 	* OPEN succeeds even if we fail.
- 	*/
--	nfs4_open_delegation(rqstp, open, stp,
--		&resp->cstate.current_fh, current_fh);
-+	nfs4_open_delegation(rqstp, open, stp, parent_fh, current_fh);
- 
- 	/*
- 	 * If there is an existing open stateid, it must be updated and
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index b5ec2cdd61a0..ea61e1a4c263 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -974,7 +974,9 @@ __be32 nfsd4_reclaim_complete(struct svc_rqst *, struct nfsd4_compound_state *,
- extern __be32 nfsd4_process_open1(struct nfsd4_compound_state *,
- 		struct nfsd4_open *open, struct nfsd_net *nn);
- extern __be32 nfsd4_process_open2(struct svc_rqst *rqstp,
--		struct svc_fh *current_fh, struct nfsd4_open *open);
-+				  struct svc_fh *current_fh,
-+				  struct svc_fh *parent_fh,
-+				  struct nfsd4_open *open);
- extern void nfsd4_cstate_clear_replay(struct nfsd4_compound_state *cstate);
- extern void nfsd4_cleanup_open_state(struct nfsd4_compound_state *cstate,
- 		struct nfsd4_open *open);
+-	if (resfh && resfh != &cstate->current_fh) {
+-		fh_dup2(&cstate->current_fh, resfh);
+-		fh_put(resfh);
+-		kfree(resfh);
+-	}
+ 	nfsd4_cleanup_open_state(cstate, open);
+ 	nfsd4_bump_seqid(cstate, status);
+ 	return status;
 -- 
 2.50.0.107.gf914562f5916.dirty
 
