@@ -1,132 +1,104 @@
-Return-Path: <linux-nfs+bounces-16679-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16680-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36CD4C7E2CC
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 16:47:05 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B2E8C7E2FC
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 16:56:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F22C44E0370
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 15:47:03 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E6A544E0F48
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 15:56:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C3A1E8826;
-	Sun, 23 Nov 2025 15:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5BE224AE0;
+	Sun, 23 Nov 2025 15:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqmnIwri"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhDGZlr8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53BF3597B
-	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 15:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90D41B4F2C
+	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 15:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763912820; cv=none; b=c/Jxjy+YvXzYsAWoD1Zy7Ybzjv14w9Wk+racA6Ei0S2jdQ/33PZXvuSQRKO3yNTwPOM9vGxx7td3QNzWOUKKDMSoRuINLowd/VRwQySXl+0hLn5YMcJEcor/8jR+W4Cbo2IrGvBHRjXnzZsMAnMycIzEnNHx544PRJBj/SudkmI=
+	t=1763913387; cv=none; b=Y0BB1UlOo0xLLogTnvp0LYmSo/xhBlSUkyUaf5bkBDKxhCVSAWErHQmjojlOfheh3hx2TMIKd47zfuOyoW3AXOz/WcySi5VA3dwvFXogkWulPSen51u6559cztUQEb5zv1uRr9vnrWX01TMn4jnwm8d+teEqKKeUwKdHWCmxyBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763912820; c=relaxed/simple;
-	bh=IPBMTIM1eZstskxJm+aRPOi4x5lPzxZo7AehKBe6tJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QSmvYF2OzW3+4KMT9BHvdvKAFjTkwFnH1RTMMOUo6tzafT5w8iUlvQyPaxbf5XoajETiUA0d6Jm5wboYplPWrPlGqesbT3brqOG05V0Sl1DWVTKnKxysgt91/HAyUPg9/oL/2RW1LzJhlYbx6Mi/V5EKfeKUFZxEu7yns3WUUEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqmnIwri; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E779C113D0;
-	Sun, 23 Nov 2025 15:46:57 +0000 (UTC)
+	s=arc-20240116; t=1763913387; c=relaxed/simple;
+	bh=Vk3PUYtS80f1yqN7dCOt+usK+mO3WwcBi4lr9JT0Ogc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lxd1sq7+xlWM/R2ywTmJ7Af8WZnkfLxsNObOd0uQuqbik4idXo2M4D72jSXfuXjlLtNyh8aFajRgwmWmh0G4tLKWP7T2wYVHr9qxW5FJUwq8ICJrrhAResoQaXhIeqfyUlPf0leyHrKQsovFY2ceyh0BWg+gzShwQHsyDbcwdjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhDGZlr8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F7BC113D0;
+	Sun, 23 Nov 2025 15:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763912818;
-	bh=IPBMTIM1eZstskxJm+aRPOi4x5lPzxZo7AehKBe6tJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bqmnIwriCJW9zjkPNGZ3IyhThFNvHVNGOLRLqi9scoOUJFpJaZL7yJpOUam1H3pub
-	 sd+7wGhkCudHOKFyV0vLIf9F/qIB8GMzIr7PyYCfXjlxhUqdx4Btj+PtLfZuYoKVHh
-	 acovRIuwJsPIVuImCd9aVMPXieS3cA2rTmmA1Zx9okrVJGbSLoQqeKVjsjfpFj2nB5
-	 LyNMwG4UxpXRIXr3reHYqdlWuoVOP3LDhDgKqr+t5GYgpsCr2zuK1WyMn/OqjTTU0m
-	 X+//fBe0xk+J69vIWsscUW64MQ0PkS/wAGqU3IKiHnHifTWVosisUHf3ca9FzRrien
-	 sUEx/n6usRBtQ==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 0EBD5F40068;
-	Sun, 23 Nov 2025 10:46:57 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Sun, 23 Nov 2025 10:46:57 -0500
-X-ME-Sender: <xms:cCwjaXdDBqUznizXa5vpShZkSwfkY7N11iNAFvwuSH-uWgmQYDaShA>
-    <xme:cCwjaTNDjyBIZnGQSoTk7NE_zcNA272dC_lefknnI-OAIwlmuJA_l2TZph5XoM3cp
-    MqDHVEgxlzUiIKK0ktAQrKwh17ZpN0NUPboCSSxXTUV-swEHQktXUY>
-X-ME-Received: <xmr:cCwjaeJkrPSfzLfB6o4a2XpHUONEe-CwHy6HjnmXigvWa9vHObdjWGEZeeUcfj2E4BXdwTceD-riuA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfeeiuddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeevhhhutghk
-    ucfnvghvvghruceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    fhleehueejiedtjedtgeeivdehleduieetleekjeegiedvffefheevgfejgefhjeenucff
-    ohhmrghinheplhhinhhugidqnhhfshdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhdomhgvshhmthhprghu
-    thhhphgvrhhsohhnrghlihhthidqudeifeegleelleehledqfedvleekgeegvdefqdgtvg
-    hlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthht
-    ohepvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghurhgvlhhivghnrdgtoh
-    huuggvrhgtvddttddvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhf
-    shesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:cCwjaUFJPDTcPmd4blE0Oft-PWhznrEpJiX5LvrMOBJACDD-Hp_9rQ>
-    <xmx:cCwjaWQULjewLJbv1x4qMNt6jFlgmeEvxcZ5w1k00v7vLGKbiDLwgA>
-    <xmx:cCwjaQFyuAYWD-2PWe6RkTbMPtzhrIU6VMVbJPP_9l6oyeYF8kiPwg>
-    <xmx:cCwjaS8jdmULmPds2NkoC7Ki1fu5nn1kyKNYvTzDlQscTWZ9iFNdBA>
-    <xmx:cSwjaaIsDzrnzD2Wgib8ofJayNXINStEljKxy3SfB6jIdkHJECwudnbf>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 23 Nov 2025 10:46:56 -0500 (EST)
-Date: Sun, 23 Nov 2025 10:46:55 -0500
+	s=k20201202; t=1763913387;
+	bh=Vk3PUYtS80f1yqN7dCOt+usK+mO3WwcBi4lr9JT0Ogc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dhDGZlr8TAaeTm4OqoYSUDeZAgq/NFHN/JPMWotdCCMU1Gr1zOnLLziG6BQ7tHFNk
+	 JpLdMz4sgfWsenb9AGn65Jjn6MacdMI5330ofAKJFi086QSKRFYuw1G7LyQOaLMfcp
+	 oscJh7CMyjM2VkutJEPWuMWDTVoDBDcHoHJJX4StTW0q9WrDO6DRmY/Z+RYuPl1m4o
+	 Qda/O8cvvKernvGXvpAi3nqSlUekhICwzUfhdEvJUQfexuf8B0cmZZdc8LWvpVqQdx
+	 pLNUzLd5RbqLy6ThDdvFNy/TfljD1VRfmCYmhRWbf7nODqhZFtNNLsBZZHUSr29HUO
+	 FknNPs4Lb0HWw==
 From: Chuck Lever <cel@kernel.org>
-To: =?iso-8859-1?Q?Aur=E9lien?= Couderc <aurelien.couderc2002@gmail.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
-Message-ID: <aSMsb350kJgqysbz@morisot.1015granger.net>
-References: <20251119005119.5147-1-cel@kernel.org>
- <CA+1jF5pF+K3s9N4p5mc4cxyzg=r5ow5R_T31Eab=DOW5AjBG-g@mail.gmail.com>
+To: Calum Mackay <calum.mackay@oracle.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 00/10] pynfs tests for setting ACL+MODE
+Date: Sun, 23 Nov 2025 10:56:08 -0500
+Message-ID: <20251123155623.514129-1-cel@kernel.org>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+1jF5pF+K3s9N4p5mc4cxyzg=r5ow5R_T31Eab=DOW5AjBG-g@mail.gmail.com>
 
-On Sun, Nov 23, 2025 at 03:54:48PM +0100, Aurélien Couderc wrote:
-> On Wed, Nov 19, 2025 at 1:51 AM Chuck Lever <cel@kernel.org> wrote:
-> >
-> > From: Chuck Lever <chuck.lever@oracle.com>
-> >
-> > An NFSv4 client that sets an ACL with a named principal during file
-> > creation retrieves the ACL afterwards, and finds that it is only a
-> > default ACL (based on the mode bits) and not the ACL that was
-> > requested during file creation. This violates RFC 8881 section
-> > 6.4.1.3: "the ACL attribute is set as given".
-> >
-> > The issue occurs in nfsd_create_setattr(), which calls
-> > nfsd_attrs_valid() to determine whether to call nfsd_setattr().
-> > However, nfsd_attrs_valid() checks only for iattr changes and
-> > security labels, but not POSIX ACLs. When only an ACL is present,
-> > the function returns false, nfsd_setattr() is skipped, and the
-> > POSIX ACL is never applied to the inode.
-> >
-> > Subsequently, when the client retrieves the ACL, the server finds
-> > no POSIX ACL on the inode and returns one generated from the file's
-> > mode bits rather than returning the originally-specified ACL.
-> >
-> > Reported-by: Aurélien Couderc <aurelien.couderc2002@gmail.com>
-> > Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
-> > Cc: Roland Mainz <roland.mainz@nrubsig.org>
-> > X-Cc: stable@vger.kernel.org
-> > Signed-off-by: Chuck Lever <cel@kernel.org>
-> 
-> As said the patch works, but are there any tests in the Linux NFS
-> testsuite which cover ACLs with multiple users and groups, at OPEN and
-> SETATTR time?
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I developed several new pynfs [1] tests while troubleshooting this
-issue. I'll post them soon.
+There are plenty of corner cases when an NFSv4 client requests
+setting an NFSv4 ACL and POSIX mode bits in the a single SETATTR
+request. It's even worse for NFS server implementations that have
+to translate NFSv4 ACLs to POSIX ACLs.
+
+Note that the in-kernel Linux NFS client itself does not support 
+NFSv4 ACLs since Linux is a POSIX ACL ecosystem. I believe it will
+never send an OPEN(create) or SETATTR that sets an NFSv4 ACL and
+mode bits simultaneously, relying on only user space tooling to set
+the ACL. So we must depend on pynfs for testing this server feature.
+
+pynfs didn't have many tests in this particular category when I set
+out to troubleshoot a recently reported ACL+MODE bug in NFSD. So
+I've written a handful to exercise this specific case.
+
+These are RFC, so Calum, let's hold off on applying these until
+they've had some review.
+
+Chuck Lever (10):
+  Add helper to report unsupported protocol features
+  Add helper to format ACE access masks
+  Add helper to format attribute bitmaps
+  Add a helper to compute POSIX mode bits from NFSv4 ACLs
+  Add make_test_acl() helper to nfs4acl modules
+  Add access_mask_to_str() helper to nfs4.0/nfs4acl.py
+  Add verify_acl() helper to nfs4acl modules
+  Add verify_mode_and_acl() helper to nfs4acl modules
+  Add tests for SETATTR with MODE and ACL
+  Add tests for OPEN(create) with ACLs
+
+ nfs4.0/nfs4acl.py                   | 180 ++++++
+ nfs4.0/servertests/st_setattr.py    | 844 +++++++++++++++++++++++++++-
+ nfs4.1/nfs4acl.py                   | 188 +++++++
+ nfs4.1/nfs4lib.py                   |  69 +++
+ nfs4.1/server41tests/environment.py |   3 +
+ nfs4.1/server41tests/st_open.py     | 723 +++++++++++++++++++++++-
+ 6 files changed, 2003 insertions(+), 4 deletions(-)
+ create mode 100644 nfs4.1/nfs4acl.py
 
 -- 
-Chuck Lever
+2.51.1
 
-[1] git://git.linux-nfs.org/projects/cdmackay/pynfs.git
 
