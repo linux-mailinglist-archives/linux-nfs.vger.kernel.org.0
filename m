@@ -1,59 +1,55 @@
-Return-Path: <linux-nfs+bounces-16676-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16677-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54E8DC7E0EB
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 13:15:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D8EFEC7E0F7
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 13:16:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D01EB346138
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 12:15:41 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EA2F43496CA
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 12:16:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553DF1CAA65;
-	Sun, 23 Nov 2025 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ADE2D59F7;
+	Sun, 23 Nov 2025 12:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJGPjhzc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1B/Hf5U"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27420259C80
-	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 12:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1201E834E
+	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 12:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763900139; cv=none; b=J8RgnW3EG23SVly5sdFrP0VKm9+sjdlImpzGfTWtP1Sq3FBAsjZgFKS2yeMB8lOys9A4bAeU+WbMgLzlwrDcwM2p86oH7pS7MTXHf+EMGRpaKlZv52GjAr62GWxXAixMRna+zgF22s62gbEAhIm2eDDy1fWOedWlNuj6KUGHXig=
+	t=1763900198; cv=none; b=OFP+a8eX20UsR0jPY0sQ5m46X5G9BC8JF93HHPiTA8MlPB+sUnLqNcxLad4VRFLcQ87cq3VMsDfkmhNDtt6fWdshtVvdAtIMUh4aaYpQNRjz1Z82o4MFPZUWwtwnh+M6VkFMnWPMUL0+jXM7FPnGqeZ+I+nBFCGci9+TF1pxFdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763900139; c=relaxed/simple;
-	bh=bReAgeeDkauNzafJ8KwAdekcmzRIJXhY1sy6vBAX4M4=;
+	s=arc-20240116; t=1763900198; c=relaxed/simple;
+	bh=utvBcuol9kHYQHFq44yx89o3VZ0qkz7ZcPqemmnNcTg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r0xYIElGS6ofWxGOrzX1KbNWSkhRcytF6OaDMmfl6o9ZmLMmq9fe7vtV1ainGMHre2EFpoHG8oDYbuFrBD1zNBDt6MEGWxpX2UbrdACG43KjhZ522XjdFlAa73QzV3M4MBVs69lZu9XW77BtM/Y4FODswRaS9SkvTWhEkZ4SWAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJGPjhzc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED1CC113D0;
-	Sun, 23 Nov 2025 12:15:37 +0000 (UTC)
+	 Content-Type:MIME-Version; b=X9EQVHb7sZ0/ueJUBjICRaZo17BjYyICTW074t13RjCiN37GOjEF6cSnWJ98MqUwvxN1eYfTIDF40xSGWqH+S1eCDg6aRycD+ILpCTmtOTA5FrrtMQzYjIMUYisYUQKUWtFnqMeJmq+HRXAajwExoT8uqHntmZyyxU2CYPzxIH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1B/Hf5U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741E9C113D0;
+	Sun, 23 Nov 2025 12:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763900138;
-	bh=bReAgeeDkauNzafJ8KwAdekcmzRIJXhY1sy6vBAX4M4=;
+	s=k20201202; t=1763900196;
+	bh=utvBcuol9kHYQHFq44yx89o3VZ0qkz7ZcPqemmnNcTg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cJGPjhzc25fPoBpQqLokPTRWss8c5o2paOIp97vaBTI67vSAZDdQzi7GqJVH8X/RU
-	 4nW35ED4b4l6QCpJhKcYDu70IUSXDyjIJ4LfXB4nQJ42MfMbx0Pt2ad5DuHU6Tfb8B
-	 cXseujE990+SD746AhQm8SKYHH7daSA95vRzgl7AoTK+URkdN/fjdJnJ0XuDHt4yje
-	 RvRHs2H2vrMNUsWLDIxbVKiqOV5TYc8B0eoTN+1spucuyW2FX8wcKxxL/xi1O0bT5F
-	 TO7rK/yTwQmhDk49wOilaRSNRru+TqYKS1sGE2oi3N6jMcfWouF60c+ihki0iE06Rc
-	 4+s31KTBIjAXA==
-Message-ID: <95a11afd51dc7975e75b81083ddab7d869b8bf3a.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] lockd: fix vfs_test_lock() calls
+	b=t1B/Hf5UVYxzYJpR0xBbMoeigOiWJdkJE4y7tIAZ4IlgljwPwYBVuWomP0+JcHCyF
+	 iAy90b+EhksoU2Uos86lUtSQP0co5cfDEUVdvPBobpjoc71O436crqUY6IIk4BxqQg
+	 10CUVoFvQXx6KMMmycUNdaZI79nd+wrbrmGSmus48eUe0ctwbNxCZNfea6mdjqUZX0
+	 7tGCROU43D7Qu4/WnBHZg8peEymf6laVpapBgmYZmH6CfS3BQxmhmje56ocmO64qRg
+	 0Ah0HJ5R/rYI1ZH+o/AbgT4KQcjbVC1U/SKeld8e+CDxDhWYUAft/jwKevsJ8uEEAu
+	 WSgqaZHJ8Cx5A==
+Message-ID: <9e3ac94443e25f1d3108757fa9de813e98e0a59c.camel@kernel.org>
+Subject: Re: [PATCH v2 0/2] lockd/locks: address issues with vfs_test_lock()
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chucklever@fastmail.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, 	linux-nfs@vger.kernel.org
-Date: Sun, 23 Nov 2025 07:15:36 -0500
-In-Reply-To: <176384450696.634289.131833962229924725@noble.neil.brown.name>
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+Date: Sun, 23 Nov 2025 07:16:35 -0500
+In-Reply-To: <20251122010253.3445570-1-neilb@ownmail.net>
 References: <20251122010253.3445570-1-neilb@ownmail.net>
-	, <20251122010253.3445570-2-neilb@ownmail.net>
-	, <6149cfe6-3546-4f71-9da4-7cac12e09116@app.fastmail.com>
-	 <176384450696.634289.131833962229924725@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,77 +134,22 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-11-23 at 07:48 +1100, NeilBrown wrote:
-> On Sun, 23 Nov 2025, Chuck Lever wrote:
-> > On Fri, Nov 21, 2025, at 8:00 PM, NeilBrown wrote:
-> > > From: NeilBrown <neil@brown.name>
-> > >=20
-> > > Usage of vfs_test_lock() is somewhat confused.  Documentation suggest=
-s
-> > > it is given a "lock" but this is not the case.  It is given a struct
-> > > file_lock which contains some details of the sort of lock it should b=
-e
-> > > looking for.
-> > >=20
-> > > In particular passing a "file_lock" containing fl_lmops or fl_ops is
-> > > meaningless and possibly confusing.
-> > >=20
-> > > This is particularly problematic in lockd.  nlmsvc_testlock() receive=
-s
-> > > an initialised "file_lock" from xdr-decode, including manager ops and=
- an
-> > > owner.  It then mistakenly passes this to vfs_test_lock() which might
-> > > replace the owner and the ops.  This can lead to confusion when freei=
-ng
-> > > the lock.
-> > >=20
-> > > The primary role of the 'struct file_lock' passed to vfs_test_lock() =
-is
-> > > to report a conflicting lock that was found, so it makes more sense f=
-or
-> > > nlmsvc_testlock() to pass "conflock", which it uses for returning the
-> > > conflicting lock.
-> > >=20
-> > > With this change, freeing of the lock is not confused and code in
-> > > __nlm4svc_proc_test() and __nlmsvc_proc_test() can be simplified.
-> > >=20
-> > > Documentation for vfs_test_lock() is improved to reflect its real
-> > > purpose, and a WARN_ON_ONCE() is added to avoid a similar problem in =
-the
-> > > future.
-> > >=20
-> > > Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-> > > Closes: https://lore.kernel.org/all/20251021130506.45065-1-okorniev@r=
-edhat.com
-> > > Signed-off-by: NeilBrown <neil@brown.name>
-> >=20
-> > At a guess:
-> >=20
-> > Fixes: 5ea0d75037b9 ("lockd: handle test_lock deferrals")  ??
+On Sat, 2025-11-22 at 12:00 +1100, NeilBrown wrote:
+> v2 contains fixes to problem found by Chuck (thanks) and also improves
+> the documentation for vfs_test_lock().
 >=20
-> I think the problem is, in practice, more recent.
-> I think there is only a problem if the filesystem that lockd is
-> accessing sets fl_lmops on locks.
+> Documentation says that it returns 0 or -ERRNO, but one caller check for
+> a FILE_LOCK_DEFERRED which is neither of those.  So I address that in
+> the second patch.
 >=20
-
-...and specifically if the filesystem sets lm_get_owner/lm_put_owner.
-That's only NFS/NLM, currently.
-
-> So maybe
->=20
-> Fixes: 20fa19027286 ("nfs: add export operations")
->=20
-
-That's likely the place where it became a real problem, yes.
-
-> >=20
-> > I suspect this also needs a Cc: stable.
->=20
-> I think that would be appropriate - yes.
->=20
+> Thanks,
 > NeilBrown
+>=20
+>=20
+>  [PATCH v2 1/2] lockd: fix vfs_test_lock() calls
+>  [PATCH v2 2/2] locks: ensure vfs_test_lock() never returns
 
-Ditto.
---=20
-Jeff Layton <jlayton@kernel.org>
+Nice cleanup.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
