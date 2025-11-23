@@ -1,155 +1,123 @@
-Return-Path: <linux-nfs+bounces-16677-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16678-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8EFEC7E0F7
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 13:16:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9079AC7E207
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 15:55:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EA2F43496CA
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 12:16:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 347103AB2CF
+	for <lists+linux-nfs@lfdr.de>; Sun, 23 Nov 2025 14:55:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ADE2D59F7;
-	Sun, 23 Nov 2025 12:16:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2767A227BA4;
+	Sun, 23 Nov 2025 14:55:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1B/Hf5U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjSxjjDC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1201E834E
-	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 12:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C219145355
+	for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 14:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763900198; cv=none; b=OFP+a8eX20UsR0jPY0sQ5m46X5G9BC8JF93HHPiTA8MlPB+sUnLqNcxLad4VRFLcQ87cq3VMsDfkmhNDtt6fWdshtVvdAtIMUh4aaYpQNRjz1Z82o4MFPZUWwtwnh+M6VkFMnWPMUL0+jXM7FPnGqeZ+I+nBFCGci9+TF1pxFdw=
+	t=1763909728; cv=none; b=N9scfDmZtzOpH7z3ph1wFyGe2zzVjIpAvdWpXkbZ/5h4cpycheZZUfak+zez6g8ISnOIHHQdqaLYsgx14EG7++58g5owt2qls5It7m2Wovem3fl4GD9xzyQdlMIWLCa9kLJf968UfBVPWIbfdx/gUWWUjjOD4zWjdcC46XmiQDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763900198; c=relaxed/simple;
-	bh=utvBcuol9kHYQHFq44yx89o3VZ0qkz7ZcPqemmnNcTg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X9EQVHb7sZ0/ueJUBjICRaZo17BjYyICTW074t13RjCiN37GOjEF6cSnWJ98MqUwvxN1eYfTIDF40xSGWqH+S1eCDg6aRycD+ILpCTmtOTA5FrrtMQzYjIMUYisYUQKUWtFnqMeJmq+HRXAajwExoT8uqHntmZyyxU2CYPzxIH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1B/Hf5U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741E9C113D0;
-	Sun, 23 Nov 2025 12:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763900196;
-	bh=utvBcuol9kHYQHFq44yx89o3VZ0qkz7ZcPqemmnNcTg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=t1B/Hf5UVYxzYJpR0xBbMoeigOiWJdkJE4y7tIAZ4IlgljwPwYBVuWomP0+JcHCyF
-	 iAy90b+EhksoU2Uos86lUtSQP0co5cfDEUVdvPBobpjoc71O436crqUY6IIk4BxqQg
-	 10CUVoFvQXx6KMMmycUNdaZI79nd+wrbrmGSmus48eUe0ctwbNxCZNfea6mdjqUZX0
-	 7tGCROU43D7Qu4/WnBHZg8peEymf6laVpapBgmYZmH6CfS3BQxmhmje56ocmO64qRg
-	 0Ah0HJ5R/rYI1ZH+o/AbgT4KQcjbVC1U/SKeld8e+CDxDhWYUAft/jwKevsJ8uEEAu
-	 WSgqaZHJ8Cx5A==
-Message-ID: <9e3ac94443e25f1d3108757fa9de813e98e0a59c.camel@kernel.org>
-Subject: Re: [PATCH v2 0/2] lockd/locks: address issues with vfs_test_lock()
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Sun, 23 Nov 2025 07:16:35 -0500
-In-Reply-To: <20251122010253.3445570-1-neilb@ownmail.net>
-References: <20251122010253.3445570-1-neilb@ownmail.net>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	s=arc-20240116; t=1763909728; c=relaxed/simple;
+	bh=vChghRH5mo3x8/u0TR1OZDeNryp/g3r3qWDKP4RscqY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=UUUgsTDkxlTWvHQ4HOdd5TbgLX2bVS+s/AZKCjYM/b+H+rFGe+eWlGgME6nhZwx390g6Sosc1kMG/JafhwzxZJc7FQaT4mLlJGKgdAFrJjWdAc9grfGSBQ5OmCyabkJzjkD32saDh/P3j2RYXwRLOAbUEVPoR9dnyai4fZijYTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YjSxjjDC; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b735ce67d1dso543481066b.3
+        for <linux-nfs@vger.kernel.org>; Sun, 23 Nov 2025 06:55:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763909724; x=1764514524; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vChghRH5mo3x8/u0TR1OZDeNryp/g3r3qWDKP4RscqY=;
+        b=YjSxjjDCQ9TGyDYh7YZulp5T8dtxytpxoq0vW+B2sBumgd6iof98g/YI5R4k73/VYe
+         XPNEiW2dC8Iz+B5vWLeyUNgYOcP4QytcGWLn1rI//T3rkWIyXxzrbYgDJdGhETgqsNie
+         c0p68ulpcQudqffekJQZSozg5zZbXDW7Xcr4KybilvhrQV3+F5kY/1hRYq49EJA4DKk6
+         ggUSueijZwmuWF27NPUve2K5LNNXMjfGdf7LDzeDzuB6Zf/4Vdh9NEGAFvK2a55SGK1h
+         4J2eY+L607EQR4Za1IFnYtkLYwg8pYySIVw2xhaY1Ze01KAY2skvmqTAFqGrs+jZrax0
+         KBEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763909724; x=1764514524;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vChghRH5mo3x8/u0TR1OZDeNryp/g3r3qWDKP4RscqY=;
+        b=Uh7qZlLp18Yb3Xe26SvehV16nJis6itatci2tzpqmopQ9fgTf80cH3xUe0D+hulame
+         mpuZKa6RcLmP7+LSKnqyNAUECRHci7fAI2lCoXZp8GOn02NV+7MrMk21c2xOZckfSRGz
+         oMn04Ar8FPi88tdJ4NZPWkNXlB6JHlvavTUB55Bhf2IBmI5aipFXTquZNfBU/CKPlnTz
+         NHHvj0qqMX+3LZIgZrY9YzgEj8lG+AQPZyh35ZKD5VsXUHxK+GHkpwMv3Yi/+K+nkV25
+         jjA+p09lZW3dz4W9BwZd6nhGX7TxrVcuj2Lu3rMlj8onS8axwgOLS+ITaJjpdTyLq4mv
+         nmLA==
+X-Gm-Message-State: AOJu0Yz982CxA50ZG+LO/LZrplcUhc0O/oQeABo9CToByw9eu7ZtoeYk
+	NTVr7kCKNYCI16IQlnRHKkUNWxR5yLh6lpsjOYfjzTh9WWBeJN9h8TTwbKu+Jxud4cLKWDNlsSL
+	EHurZzGtxhkHaWyHtoxRxxxcPH45X6iKrtT1E
+X-Gm-Gg: ASbGncsbKKzGjp2AWxUYGPae8vAtBiv5c6rOmIxhaqyodhNPWLPRQPoG44yVUv//zRJ
+	4Mubl5p5kjBpA9nKlgig0SCwWmzkjcOhl6ZFSMbiTBcbKQga861u2DOe6fWW7vGi/V25R2neQb1
+	ZpmqLR1VYb761q7uWQy2ID5QNGAp1FR6cxDUcXgaSxd2XQb19c3hlceEedhY8QD5cHq+XoIoOW8
+	JTmfWWWr54P9e2sC5jTrblFDSvfd7IWWzOdF89BDd6pw9H1uU4jwdk0v3q49pgjQscn1Q==
+X-Google-Smtp-Source: AGHT+IFq9XyMjZXl3XmOgzCJvi+5acqKmdSUPwkW6qDpB4xkRTgW7/dsr9C4qF2JZWrK+HbgxA7LcvhtlqAJkIDPeKE=
+X-Received: by 2002:a17:907:720b:b0:b73:5693:4ec1 with SMTP id
+ a640c23a62f3a-b767189bf61mr848046466b.57.1763909724353; Sun, 23 Nov 2025
+ 06:55:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251119005119.5147-1-cel@kernel.org>
+In-Reply-To: <20251119005119.5147-1-cel@kernel.org>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Sun, 23 Nov 2025 15:54:48 +0100
+X-Gm-Features: AWmQ_bmMeP_SpD-6inV81gng5NFTeL8pWAPDbZPtYBmg5RORGpf_d6cWDOl8824
+Message-ID: <CA+1jF5pF+K3s9N4p5mc4cxyzg=r5ow5R_T31Eab=DOW5AjBG-g@mail.gmail.com>
+Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-11-22 at 12:00 +1100, NeilBrown wrote:
-> v2 contains fixes to problem found by Chuck (thanks) and also improves
-> the documentation for vfs_test_lock().
->=20
-> Documentation says that it returns 0 or -ERRNO, but one caller check for
-> a FILE_LOCK_DEFERRED which is neither of those.  So I address that in
-> the second patch.
->=20
-> Thanks,
-> NeilBrown
->=20
->=20
->  [PATCH v2 1/2] lockd: fix vfs_test_lock() calls
->  [PATCH v2 2/2] locks: ensure vfs_test_lock() never returns
+On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> An NFSv4 client that sets an ACL with a named principal during file
+> creation retrieves the ACL afterwards, and finds that it is only a
+> default ACL (based on the mode bits) and not the ACL that was
+> requested during file creation. This violates RFC 8881 section
+> 6.4.1.3: "the ACL attribute is set as given".
+>
+> The issue occurs in nfsd_create_setattr(), which calls
+> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
+> However, nfsd_attrs_valid() checks only for iattr changes and
+> security labels, but not POSIX ACLs. When only an ACL is present,
+> the function returns false, nfsd_setattr() is skipped, and the
+> POSIX ACL is never applied to the inode.
+>
+> Subsequently, when the client retrieves the ACL, the server finds
+> no POSIX ACL on the inode and returns one generated from the file's
+> mode bits rather than returning the originally-specified ACL.
+>
+> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
+> Cc: Roland Mainz <roland.mainz@nrubsig.org>
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: Chuck Lever <cel@kernel.org>
 
-Nice cleanup.
+As said the patch works, but are there any tests in the Linux NFS
+testsuite which cover ACLs with multiple users and groups, at OPEN and
+SETATTR time?
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Aur=C3=A9lien
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
