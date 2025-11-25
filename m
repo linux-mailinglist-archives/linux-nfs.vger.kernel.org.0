@@ -1,169 +1,228 @@
-Return-Path: <linux-nfs+bounces-16706-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16707-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BD28C81EE4
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Nov 2025 18:37:31 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20963C82EA7
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 01:15:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70C053AAACC
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Nov 2025 17:36:41 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9A7BF348643
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 00:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9AC2BF013;
-	Mon, 24 Nov 2025 17:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05FA17A2E8;
+	Tue, 25 Nov 2025 00:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pAANx02d";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4c/b4Sor";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pAANx02d";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4c/b4Sor"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K9ZAtVXP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F07229993D
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Nov 2025 17:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF13818EFD1
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Nov 2025 00:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764005799; cv=none; b=Ajyo5A2wt/3ful/pemkXj/3+bLkg4n6CPR5gMTOoaC71BT3DohgcrS5m/d4kOs/01M7V4WhJKnNynKLyDlIKS5QiZzH40pyrVzfiRxa9+FWI9iHbYIUp3E3Q/7t/2OR26BU29LHPXXG+gMVvP3PAGQJ6fyJ90SDZPf98FPgKQL4=
+	t=1764029753; cv=none; b=ZukRUg+HhJOtgPSh8a7gwQjnpPMq/lmudkWGHThWgBbFPmykjCSIEL7EkD18674GHWbExKwn2Rw+Jyo72JDFXN+FxR9vqFgxbiqEa3NcH31LFe49WW4vswc7VWc4t/nAZM/daILdCh7a8mCxaMvFKiRbEZvu1w0SxSv5dmxpRcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764005799; c=relaxed/simple;
-	bh=G0LQ82Mldli948S1XVknyxbrkZD+BoCECMs/OrXffn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hjjZzgHYnsUGT6osXTYCTn1BWurYhmHwnWLkqNKqGmiwttceZqI+F4W+riZJzTgahOl9pRYp95xvII8zR+RpaCaQmrdudnoZH4Z3p3wUXurkFMzmdjWFvaAUXMxgMfQH46sDgDMkZSD5MYtdd9SN7Kir4r64/Abw+yc8rGO0u7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pAANx02d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4c/b4Sor; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pAANx02d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4c/b4Sor; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1764029753; c=relaxed/simple;
+	bh=1KYMfjoGNbFP2tZXhq2+6/8PLkGd1xd6VCY0p+uWX/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ONXlxflJJXc2j/LkqohDnhOObWVUyIEIjbI6Ar8yxtM3kVxkB5zURnlCSPtkQLPBIkW8/tDIoVrvxdD/pKki2cYYY3tVFqZvLX7OawG/RHptj8mEPmFGbtmmrpVQ5fQOQpAdxlgEmKa/lFaxyXj2D2QYcLqtW23D3XCr/UhZig4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K9ZAtVXP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764029750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vzvK5geIwDJR6cEZc5soyNUgefYYIlNkSWn8uGawaqA=;
+	b=K9ZAtVXPnO9gdBwWClxCjhaGpasI12YayXJNEKXL22N5DlTA0JL6jDmSbyH+9rdhKTfjJS
+	HFaw3vAQFwjn64QR86z4CvwJQ+psoSOJg8XTqTCrmS2sgHEd621l6/EOqYRGsKw2Hoxl/f
+	eMSW0Ee6hBf5v6ytpuTPXIW+xO6QvMc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-LdVvytxVOy-qocq7uGcxvw-1; Mon,
+ 24 Nov 2025 19:15:47 -0500
+X-MC-Unique: LdVvytxVOy-qocq7uGcxvw-1
+X-Mimecast-MFC-AGG-ID: LdVvytxVOy-qocq7uGcxvw_1764029746
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B46B75BCC2;
-	Mon, 24 Nov 2025 17:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1764005795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b2IZs/iJywacdojXMvk6M27OfFIstOkeVS4WvVUZksU=;
-	b=pAANx02dXtFmVRv/b9/4fjYVaw9bU37MXsjfLUgb9Cm1odeC+dn7vCZi8K1qqa4bAB6Pl+
-	PqBFI/lIRYgRfEawFwH+UMghvcc/L7DAPq9DWBLx6yzeut/8sx8X1cpY1I9UXgigltupUu
-	JnReC0hSGKvh/HAxZhite2NOXbb5sSg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1764005795;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b2IZs/iJywacdojXMvk6M27OfFIstOkeVS4WvVUZksU=;
-	b=4c/b4Sor5YE0OMWOxhE09AyRQJZAtjf+C7NRbXkGiEImIBGvtmrqI9n3KIFLTNyYlFmvYX
-	CoxaZK82MJuNcOBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=pAANx02d;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="4c/b4Sor"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1764005795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b2IZs/iJywacdojXMvk6M27OfFIstOkeVS4WvVUZksU=;
-	b=pAANx02dXtFmVRv/b9/4fjYVaw9bU37MXsjfLUgb9Cm1odeC+dn7vCZi8K1qqa4bAB6Pl+
-	PqBFI/lIRYgRfEawFwH+UMghvcc/L7DAPq9DWBLx6yzeut/8sx8X1cpY1I9UXgigltupUu
-	JnReC0hSGKvh/HAxZhite2NOXbb5sSg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1764005795;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b2IZs/iJywacdojXMvk6M27OfFIstOkeVS4WvVUZksU=;
-	b=4c/b4Sor5YE0OMWOxhE09AyRQJZAtjf+C7NRbXkGiEImIBGvtmrqI9n3KIFLTNyYlFmvYX
-	CoxaZK82MJuNcOBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 943783EA66;
-	Mon, 24 Nov 2025 17:36:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id VZwpJKOXJGmzRQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 24 Nov 2025 17:36:35 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0CB0CA0A04; Mon, 24 Nov 2025 18:36:31 +0100 (CET)
-Date: Mon, 24 Nov 2025 18:36:31 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Carlos Maiolino <cem@kernel.org>, Stefan Roesch <shr@fb.com>, Jeff Layton <jlayton@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, gfs2@lists.linux.dev, 
-	io-uring@vger.kernel.org, devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 10/14] fs: factor out a sync_lazytime helper
-Message-ID: <zxcwflyr4gjglqmpjnr6vgcb6iv3zu5iub4yf35i2kdhn37ox5@rudbrvydeev5>
-References: <20251114062642.1524837-1-hch@lst.de>
- <20251114062642.1524837-11-hch@lst.de>
- <vkobnnw3ij2n47bhhooawbw546dgwzii32nfqcx4bduoga5d7r@vdo5ryq4mffz>
- <20251124140924.GB14417@lst.de>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 377E41800451;
+	Tue, 25 Nov 2025 00:15:46 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.64.87])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCF2C3003761;
+	Tue, 25 Nov 2025 00:15:45 +0000 (UTC)
+Received: from aion.redhat.com (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id 5BA8A50F7B7;
+	Mon, 24 Nov 2025 19:15:44 -0500 (EST)
+From: Scott Mayhew <smayhew@redhat.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH RFC] NFS: Add some knobs for disabling delegations in sysfs
+Date: Mon, 24 Nov 2025 19:15:44 -0500
+Message-ID: <20251125001544.18584-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251124140924.GB14417@lst.de>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B46B75BCC2
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.01
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon 24-11-25 15:09:24, Christoph Hellwig wrote:
-> On Mon, Nov 24, 2025 at 02:31:02PM +0100, Jan Kara wrote:
-> > > +	if (wbc->sync_mode == WB_SYNC_ALL ||
-> > > +	    time_after(jiffies, inode->dirtied_time_when +
-> > > +			dirtytime_expire_interval * HZ))
-> > > +		sync_lazytime(inode);
-> > 
-> > The checking of inode->dirtied_time_when for inode potentially without
-> > I_DIRTY_TIME set (and thus with unclear value of dirtied_time_when) is kind
-> > of odd. It is harmless but IMO still not a good practice. Can't we keep
-> > this condition as is and just call sync_lazytime()?
-> 
-> As in keeping the I_DIRTY_TIME in the caller?  Sure, I could do that.
+There's occasionally a need to disable delegations, whether it be due to
+known bugs or simply to give support staff some breathing room to
+troubleshoot issues.  Currently the only real method for disabling
+delegations in Linux NFS is via /proc/sys/fs/leases-enable, which has
+some major drawbacks in that 1) it's only applicable to knfsd, and 2) it
+affects all clients using that server.
 
-Yes, keeping I_DIRTY_TIME check at this call site.
+Technically it's not really possible to disable delegations from the
+client side since it's ultimately up to the server whether grants a
+delegation or not, but we can achieve a similar affect in NFSv4.1+ by
+manipulating the OPEN4_SHARE_ACCESS_WANT* flags.
 
-								Honza
+Rather than proliferating a bunch of new mount options, add some sysfs
+knobs to allow some of the nfs_server->caps flags related to delegations
+to be adjusted.
+
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ fs/nfs/nfs4proc.c         |  8 ++++++
+ fs/nfs/sysfs.c            | 55 +++++++++++++++++++++++++++++++++++++++
+ include/linux/nfs_fs_sb.h |  1 +
+ 3 files changed, 64 insertions(+)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 93c6ce04332b..42810260f7d8 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1396,6 +1396,11 @@ nfs4_map_atomic_open_share(struct nfs_server *server,
+ 		res |= NFS4_SHARE_WANT_NO_DELEG;
+ 		goto out;
+ 	}
++	/* open delegation disabled in sysfs */
++	if (!(server->caps & NFS_CAP_DELEGATION)) {
++		res |= NFS4_SHARE_WANT_NO_DELEG;
++		goto out;
++	}
+ 	/* res |= NFS4_SHARE_WANT_NO_PREFERENCE; */
+ 	if (server->caps & NFS_CAP_DELEGTIME)
+ 		res |= NFS4_SHARE_WANT_DELEG_TIMESTAMPS;
+@@ -10796,6 +10801,7 @@ static const struct nfs4_minor_version_ops nfs_v4_0_minor_ops = {
+ 	.minor_version = 0,
+ 	.init_caps = NFS_CAP_READDIRPLUS
+ 		| NFS_CAP_ATOMIC_OPEN
++		| NFS_CAP_DELEGATION
+ 		| NFS_CAP_POSIX_LOCK,
+ 	.init_client = nfs40_init_client,
+ 	.shutdown_client = nfs40_shutdown_client,
+@@ -10822,6 +10828,7 @@ static const struct nfs4_minor_version_ops nfs_v4_1_minor_ops = {
+ 	.minor_version = 1,
+ 	.init_caps = NFS_CAP_READDIRPLUS
+ 		| NFS_CAP_ATOMIC_OPEN
++		| NFS_CAP_DELEGATION
+ 		| NFS_CAP_POSIX_LOCK
+ 		| NFS_CAP_STATEID_NFSV41
+ 		| NFS_CAP_ATOMIC_OPEN_V1
+@@ -10848,6 +10855,7 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
+ 	.minor_version = 2,
+ 	.init_caps = NFS_CAP_READDIRPLUS
+ 		| NFS_CAP_ATOMIC_OPEN
++		| NFS_CAP_DELEGATION
+ 		| NFS_CAP_POSIX_LOCK
+ 		| NFS_CAP_STATEID_NFSV41
+ 		| NFS_CAP_ATOMIC_OPEN_V1
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index ea6e6168092b..cce2b7f594d5 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -323,6 +323,43 @@ implid_name_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 
+ static struct kobj_attribute nfs_sysfs_attr_implid_name = __ATTR_RO(implid_name);
+ 
++#define DEFINE_NFS_SYSFS_DELEG_KNOB(name, capname)			\
++	static ssize_t							\
++	name##_show(struct kobject *kobj, struct kobj_attribute *attr,	\
++					char *buf)			\
++	{								\
++		struct nfs_server *server = container_of(kobj, struct nfs_server, kobj); \
++		bool val = server->caps & NFS_CAP_##capname;		\
++									\
++		return sysfs_emit(buf, "%d\n", val);			\
++	}								\
++									\
++	static ssize_t							\
++	name##_store(struct kobject *kobj, struct kobj_attribute *attr,	\
++					const char *buf, size_t count)	\
++	{								\
++		struct nfs_server *server = container_of(kobj, struct nfs_server, kobj); \
++		bool val;						\
++		int ret;						\
++									\
++		ret = kstrtobool(buf, &val);				\
++		if (ret < 0)						\
++			return ret;					\
++									\
++		if (val == true)					\
++			server->caps |= NFS_CAP_##capname;		\
++		else							\
++			server->caps &= ~NFS_CAP_##capname;		\
++									\
++		return count;						\
++	}								\
++									\
++	static struct kobj_attribute nfs_sysfs_attr_##name = __ATTR_RW(name); \
++
++DEFINE_NFS_SYSFS_DELEG_KNOB(open_deleg, DELEGATION)
++DEFINE_NFS_SYSFS_DELEG_KNOB(open_xor_deleg, OPEN_XOR)
++DEFINE_NFS_SYSFS_DELEG_KNOB(timestamp_deleg, DELEGTIME)
++
+ #endif /* IS_ENABLED(CONFIG_NFS_V4_1) */
+ 
+ #define RPC_CLIENT_NAME_SIZE 64
+@@ -381,6 +418,24 @@ static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
+ 	if (ret < 0)
+ 		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
+ 			server->s_sysfs_id, ret);
++
++	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_open_deleg.attr,
++				   nfs_netns_server_namespace(&server->kobj));
++	if (ret < 0)
++		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
++			server->s_sysfs_id, ret);
++
++	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_open_xor_deleg.attr,
++				   nfs_netns_server_namespace(&server->kobj));
++	if (ret < 0)
++		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
++			server->s_sysfs_id, ret);
++
++	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_timestamp_deleg.attr,
++				   nfs_netns_server_namespace(&server->kobj));
++	if (ret < 0)
++		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
++			server->s_sysfs_id, ret);
+ }
+ #else /* CONFIG_NFS_V4_1 */
+ static inline void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index d30c0245031c..dcbb4ce6b3fd 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -305,6 +305,7 @@ struct nfs_server {
+ #define NFS_CAP_REBOOT_LAYOUTRETURN	(1U << 8)
+ #define NFS_CAP_OFFLOAD_STATUS	(1U << 9)
+ #define NFS_CAP_ZERO_RANGE	(1U << 10)
++#define NFS_CAP_DELEGATION	(1U << 11)
+ #define NFS_CAP_OPEN_XOR	(1U << 12)
+ #define NFS_CAP_DELEGTIME	(1U << 13)
+ #define NFS_CAP_POSIX_LOCK	(1U << 14)
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.51.0
+
 
