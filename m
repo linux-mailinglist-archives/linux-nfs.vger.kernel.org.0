@@ -1,112 +1,115 @@
-Return-Path: <linux-nfs+bounces-16712-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16713-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7C64C853D0
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 14:49:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAEBDC85473
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 14:56:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DC8A94EA71D
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 13:48:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBCB73B1E79
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 13:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302A2239562;
-	Tue, 25 Nov 2025 13:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 680FA261B8F;
+	Tue, 25 Nov 2025 13:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtcmpgOz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FIqFQhPQ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="a5Maq7j0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170ED23278D;
-	Tue, 25 Nov 2025 13:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CEB25A320;
+	Tue, 25 Nov 2025 13:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764078515; cv=fail; b=owLYUOME1tsibXkHqNiiSqfvJnsPL/EaaPLzzsOypCks6VVEhB4ra6Tv6dV7x9SAOeW8MwVvTuKMsSRtKaOXiRkd+6xdmOZ7bAO5v7KC6v2oVFVTtgzl88NGdFy9lkUUyo1zdPEEg3NlohS9sJA1ErVTHul72F3FuhFQuPpTXHg=
+	t=1764078959; cv=fail; b=bAhbWA68978M6WH81dPhToqRdznffPbctNsWqBFb9mFzm/lIBdWueuf+8rCVQEDhSRtl8AQMt2ItX6xUEAeFbpDFnQrMW0l1PLpUETQzCIKQENXuvLKLnZpwmEs9lJjyla4JNuar2JEiwmXZfNoBxWCzR4oCP08JzbAeXRZ1BL0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764078515; c=relaxed/simple;
-	bh=kzZe86Sr+j5tv5A33ErztYsO879D7KTumKt1g77ZeEQ=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=pnZtgpXzZFvucdg2AO39WZrUP3bqTRxNMSlaLggzktaemU7hzor5DsJxP4Q4b12JSkNaEBdfo/YPfhnmMIvzh7lb+H5eS2fVRrdBU8JwCUWcxY3WOMUF9GutJu23/u1N56XcueL0HMRrjDpv9olmDcVsaORnDCoiCfBkjYrw29U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JtcmpgOz; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764078513; x=1795614513;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=kzZe86Sr+j5tv5A33ErztYsO879D7KTumKt1g77ZeEQ=;
-  b=JtcmpgOzH6xf1YMUrK1sPPWuDtMbjdFBZT/QxmPlUKsvlheN+hxFSDRR
-   ystM9ztqWKY3fvbWF+cUGAWOgqRmHKDE856yA1giR2y2B7BgTBirTNnp9
-   WQvobGjvGIlILMeowudXuvjvfsogna7LLJNSTKoCxPo3l3UKRrb96nEr1
-   kS3JPRHsG25gI6s7SRhTutoqD5l7K0CHwmyiHNPKIy60zl1XUKoJUklfE
-   vc5V98hq/UVhWoPB04M56mWcayjdQ4qM0W1cMIEji/9xnOxmhUXCN6ikG
-   Xr9QbnN/tgPN9nPeocXT31ZFaQE79B7kEvnJ5TdxmfbYIbQ42vbSb2MkN
-   A==;
-X-CSE-ConnectionGUID: tQ0C+jKiQH6m4Jc2EEBCIg==
-X-CSE-MsgGUID: TnRK+MrzR8+3MAEYIfDfQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="88747179"
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="88747179"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 05:48:32 -0800
-X-CSE-ConnectionGUID: OmVCOTeTR2qsPJ2nbZp1uw==
-X-CSE-MsgGUID: UPUKYqjMS+m81qzA91oLpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="223320360"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 05:48:32 -0800
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Tue, 25 Nov 2025 05:48:31 -0800
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Tue, 25 Nov 2025 05:48:31 -0800
-Received: from PH0PR06CU001.outbound.protection.outlook.com (40.107.208.21) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Tue, 25 Nov 2025 05:48:31 -0800
+	s=arc-20240116; t=1764078959; c=relaxed/simple;
+	bh=G8yVKmhywUFGOho3W37mAQvKtJcfq0H3XZlnmXwGWZY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ri2Ct1+rHu1/gpRlngBOCVsh+6cmdF3QM+BNPsPzWRm3gUjSHlfzy9I5WxpVp5G7msU4KAvb63vUpXNCv9VLIz2ry78KnF7pKCc7nQbpH/HVq6tSkEzwjYca3xx0Lrw6UL0rEfxhcTc0vNmzOCcODL1guKlWKLi81l0TcY5rUzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FIqFQhPQ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=a5Maq7j0; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5APDMfWA3706503;
+	Tue, 25 Nov 2025 13:55:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=twfOPNXIlz3Ob2f7aJKGF1W8NWZsCq8iF5WPXyiwbnM=; b=
+	FIqFQhPQn/13hlXYDFxa+58KiYcILKQJpfvsX1iGekPtXVQmmMRNi1f2rI9KQvYM
+	Yedb6xVeYMq2Soin0r6DxlCto2HYd7Xd5jJdzhmWuhE+oza9OUvAWcO9W6huB1aE
+	J5BRMb7gyd759aeUi9l6+XXbEIH/Y8Nw53sbap6FH6CTOC7NiKAb5LxZpYDn6s1m
+	hXrpyfxkDVDVU1gjoLgRfTUIEBUxvV4To/vSapAnPIat61nYmZ2HaRk+uT9FelNa
+	MFqzYdeOObG8HNaL9/bHChxn4qTlyQjATfUTP+uj9KSAnxh9seHuVtP4YD7ba6rE
+	7f33b0k/j59MymiR4QuHTQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4ak8dddhj3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Nov 2025 13:55:38 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5APD02Ui032124;
+	Tue, 25 Nov 2025 13:55:36 GMT
+Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011031.outbound.protection.outlook.com [52.101.62.31])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4ak3m9gxrj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Nov 2025 13:55:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OOWzfIri75bac5/dxD/BZUYLJbTRcKm1oUMMp6W9X9HaS0hif4dLcIECGZ2oK9d7ATVfI3AMP+fqifZrSv/HHRDk/ytf8u9crCGI0ryckzmwLM0k4CrpS916J3LEcICI0BdKIQYDbUayAbGAOdbStULdd4S67yOFkLOc83hBjC9/tSgIOA/WF14abb5mI0/k+qnFPQfn40BBI6MLmUVA4NvwiwMLKoS9IQUwk0y1Q3Jz8ZyhbiL0Knt1xAZ7G16Lguf/PpXz8egAzO9HFqHIVv5OCpOhyF/NcRttKZRZP6X5MlVySRp8JBQvBxat94T8BxJeNQ6opBkoOudn6wpFsA==
+ b=Lw63BX9orctBeQUyNpN1UpV/fzBSUEgtsWAZhMHbLqMTHSSKe3kWyeUkzeecdE3tk2aFN/Nvohk+as018crBnYYIiki0PIRgoP+tm8H3WbDQTQlBtXQ1xfagiP3Jt48JUuMUW8/c7/DooRPNaGODa33a3ya3MOohMex+7b/FAQaPH7vM+krd5HK8swSRDJTn/QCIHSgyeVrvkgsZSi9rt9DWK1BgSj2tQJGZs2P3EnDsjL2B1uTMxIwccFBhO0/fKOMhSVK6g6KhZGzBcxHX4ZiQisNJKwnUky6XRljNIjzsm66Qv4sCY11iaWyAtWN15tLUY6msIZV3dDWMBvtanQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gn14+FxTK28QLvhvldLrp8O5CTlrcFxD0GqXgykfbdc=;
- b=rCl52UnYhMySA0UW36KYjeWRNB6BfSadWu00if4d0fsY2+teNRoVRKg3ho506KVCUEcRmWLz/4kxGqu1xTXzC2nE6IMS9XZvy8IlmOZfWUw8wj4Ipsjc/qDEWQb7fxJfsWNi6NmTAMtJ7tv8lKeQq2BaxS1uX+8+qhrHvkPgapnUeHRzW6PpGZ4Rm8NMHIwwZV75mcdhGLwF8dRT8RF51McRavOSBDvl9y/ZGy1HMT7qqv6XMyJJZ9xKkVxBJ0PJwfJ4Km2Im+U5GugOmwvaB0hQH45bkuOHsgjLyWSYGb36hbwmw74i+soHRRkoHJkmKTtYa0NDiG+Hi+2XIotcYw==
+ bh=twfOPNXIlz3Ob2f7aJKGF1W8NWZsCq8iF5WPXyiwbnM=;
+ b=pTqrjJ1LGAW9k8eR8o/5AhD62iyj0ev4Mk1O0hrDZtP1xWFX6ToQLb8N7suduGDk5S1FxiCbcPdgqYP0s/0RWPwLqKWw7IVJUERhu3A94DpKzBWwoVnP/cyCAObxRkEAa2Gh3nKp1zifS+1IdeG4Qsqed0PGcRzLa2EbMC4kTSonAI226uSZotN41P8QcDWQvDlsSYzt2RzqGG61F6/ueyj6CNr3kaEzYEnELDmMKzo4r3NONVq7nVeoBNddX3QMJVqIY/ys/zUHreQqvWWRtFPiTwu9KkiZ2Yr9vyNwby77dLF3ZqWHTqwyAgC4qI5yAzEtWNYfBlASTg0etEm9cg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by LV3PR11MB8693.namprd11.prod.outlook.com (2603:10b6:408:215::15) with
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=twfOPNXIlz3Ob2f7aJKGF1W8NWZsCq8iF5WPXyiwbnM=;
+ b=a5Maq7j02CJbwJYQMy/bfe4LJM4mD0AHqkONKF3TpHWHzbyPkyT2MlIS3EPvWtgyFpb3EhGwQgnhMRxFuvVY858zN6KAPH3JcniMq5ReEKgADEhyX+2oU1R2kCCVNKc11Uaqqwt9ShurOlgCxIbmPv7EHyTTifFntK/lOl9EsXE=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH0PR10MB5845.namprd10.prod.outlook.com (2603:10b6:510:14b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.14; Tue, 25 Nov
- 2025 13:48:28 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9366.009; Tue, 25 Nov 2025
- 13:48:28 +0000
-Date: Tue, 25 Nov 2025 21:48:18 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: NeilBrown <neil@brown.name>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Christian Brauner
-	<brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, Amir Goldstein
-	<amir73il@gmail.com>, <netfs@lists.linux.dev>,
-	<linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-	<linux-unionfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linux-next:master] [VFS/nfsd/cachefiles/ovl]  7ab96df840:
- WARNING:at_fs/dcache.c:#umount_check
-Message-ID: <202511252132.2c621407-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI1PR02CA0033.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::14) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Tue, 25 Nov
+ 2025 13:55:28 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.9366.009; Tue, 25 Nov 2025
+ 13:55:28 +0000
+Message-ID: <ab5add5d-24b3-455e-b560-311b56bf73ff@oracle.com>
+Date: Tue, 25 Nov 2025 08:55:24 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/6] net/handshake: Define handshake_sk_destruct_req
+To: Alistair Francis <alistair23@gmail.com>
+Cc: hare@kernel.org, kernel-tls-handshake@lists.linux.dev,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-nfs@vger.kernel.org, kbusch@kernel.org, axboe@kernel.dk,
+        hch@lst.de, sagi@grimberg.me, kch@nvidia.com, hare@suse.de,
+        Alistair Francis <alistair.francis@wdc.com>
+References: <20251112042720.3695972-1-alistair.francis@wdc.com>
+ <20251112042720.3695972-3-alistair.francis@wdc.com>
+ <49bbe54a-4b55-48a7-bfb4-30a222cb7d4f@oracle.com>
+ <CAKmqyKN4SN6DkjaRMe4st23Xnc3gb6DcqUGHi72UTgaiE9EqGw@mail.gmail.com>
+ <0d77853e-7201-47c4-991c-bb492a12dd29@oracle.com>
+ <13cf56a7-31fa-4903-9bc2-54f894fdc5ed@oracle.com>
+ <CAKmqyKObzFKHoW3_wry6=8GuDBdJiKQPE6LWPOUHebwGOH2PJA@mail.gmail.com>
+ <1cc19e43-26b4-4c38-975e-ab29e0e52168@oracle.com>
+ <CAKmqyKMjZWAvbc23JQ358kyWyJ0ZajHd8o0eFgF-i1eXX85-jA@mail.gmail.com>
+ <14f4ee67-d1dc-4eb0-a677-9472a36ae3bc@oracle.com>
+ <CAKmqyKNJ3BsooptPxMAhrhQZnCVaq_gnnhCrv66+eoTpWvpOww@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAKmqyKNJ3BsooptPxMAhrhQZnCVaq_gnnhCrv66+eoTpWvpOww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0P221CA0036.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::14) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -114,237 +117,330 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|LV3PR11MB8693:EE_
-X-MS-Office365-Filtering-Correlation-Id: bea41a98-9e06-4ccb-1110-08de2c295016
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH0PR10MB5845:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0f7f5ba-0533-4e7e-8c9a-08de2c2a494d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?UMa8Vk53hTV7wWtOyp2OFYzBTKijOkqVKnJEy0p9sQI2ilQfqWBAAxlH5xI1?=
- =?us-ascii?Q?eLOXFsOdkr4hKxSL7RCQBE3TVhvuY8LLk5Go9bZPhTYevkpUe0FFjgXnULTE?=
- =?us-ascii?Q?x+D2NxDnfWArUyBw4PTFOQ9z7fn4R3m4PRYSGKvl0nCeudSAfeZs72TpxlOp?=
- =?us-ascii?Q?PpAJTUtGCUjCOZy01Bq/VfFmYaQJxDAYrDXg717BObtXqJLbB83WOYQQ94Zc?=
- =?us-ascii?Q?RAwFTcam731q2mqqGcsGsnKlsFuvRwFCJLRKs9Pg2RpZziSlSnBjrfQHhxjr?=
- =?us-ascii?Q?nxXG/vWK6gsx8jRgdJzknnAWWozB3d2WMx+fTT/3bM3T02cnxJfC+7RO/Fpg?=
- =?us-ascii?Q?IkBHBSrnZvChRiuAI91JS+4SQeV44b3PIt62zlEgBqMAv7R+Xo6eptma3ptq?=
- =?us-ascii?Q?DUEZ61V8JqeJYF7UPc9NdxgkH6/UIcGds/PZgbXU3ssb+B5fl3eYAozhlRqO?=
- =?us-ascii?Q?VWy4c2x1G0Tflnrbsi3n1DAIC1BJN3XxWi7D2fNfmDBntvCMA3wYxZHJzvAg?=
- =?us-ascii?Q?C5dCA620uDGPhmC1IDVNv6Q4JNLXVkPz4I9J014AtNoqboEnV127O81+UgRd?=
- =?us-ascii?Q?SaT2kMx+YdplnKkxFSpfhdlpyIbTVrZ9bVJ0in8T2Er53+mWmrJDZ9NZ7ytJ?=
- =?us-ascii?Q?IZywMElsyVhrNoHQuAHQu/SQM9mTJqxFjtbyfMtBJ6JmK3KtIuNeoRFIJXqj?=
- =?us-ascii?Q?uPsVFfR3BW5Egc/9qz5yBPd5jBwyxDUS7XmqT/kg588ZzFKrx0qkVvCz4q8D?=
- =?us-ascii?Q?JgLUioZe+W/ytuQXULnK2Yvpa+L1tjWZXS0psl1RIdUB84IpkoN/QSTHNbbR?=
- =?us-ascii?Q?pD+D1Hze40DiwJhbJh1wvO6hkGQV828bDH68t90L/It3YomHDWHXRZBQE55J?=
- =?us-ascii?Q?6wQJ582zgAqLL2hEygLKnhqoQF1GMr8crjN77PQHn2S8DglcXjn7TueFeKIe?=
- =?us-ascii?Q?AP/vkotBqQEOukZi2nwMd41A6NHCBUdZnGbtDmwxgubkx4cWr1hoM37ATII5?=
- =?us-ascii?Q?I5Od+BWykU6zw9GMoBVFIei58MifwxpRV1mtmNyC5MW7PCtwg+yu53M0ACPP?=
- =?us-ascii?Q?y/UzUed5vvE/+RNl5DETbtYTFuCaogSoC6jMn7L4gBxr/jM2BOijsqCTL+N3?=
- =?us-ascii?Q?KC+0A18nmwl5L4epZjK9cnsSNHCq1fFjfKtmRKbL05ymkHAeEbr5/JWL/l6E?=
- =?us-ascii?Q?FjysV9rT4QTUYZZ0IYYwTxFOElYC6YKE+5laZGHbqTTFXjodMsaCfA+hjk2L?=
- =?us-ascii?Q?COD+GR4Io2wCQvVdaZbjl4/rAOZV5GaEAgLMX57PZYncSOEWDH4X8SXVmPPC?=
- =?us-ascii?Q?YkqTPrOlqr+oP0n8MxJ0I/gECkOUlEqK4UY/wGgB9twVdHEIa71ChXuK3wfr?=
- =?us-ascii?Q?6krjcEDHlpcIq5MlB1LCiAcU9C1rFxQ8C54EYvWjyB3SvCLrlqjXuHAzQ4Tx?=
- =?us-ascii?Q?x5WYprC2v/Fta+j2+8srzNyYoMYfaZ9toXZ/PIhxcs4FROQkAeZLyw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?M0Z3ZXUwRDFEMDJERnQzQVQrRHFDUWltdEQrUVZ6d1MrT29DTktudU9aMm1W?=
+ =?utf-8?B?cG1odzYxL2tZdUVzNUg2MC8wd0JjMVpDbUZrVmtLTk44akZiQ2lSU1BINTFF?=
+ =?utf-8?B?Umx6Sjk2S1hPcyszR0VZYXdCQ0tMTHJVTHpkY0FrQjI5aDdyLzA2WGhBZ1k1?=
+ =?utf-8?B?c0Zqbm93Tm1vWlVOeDZULzRDcmtoNXNob0cxWG9wSjdPWWl5b21GYWp3dFpi?=
+ =?utf-8?B?a0FFNy9VelR5Ujl3NG1lSDBXZTFtdzJsUGc4U25GRHY2d1ZIYnA1QlhtKysz?=
+ =?utf-8?B?UTdUcnpxSDU0MXNBSjhUSitDUVRMMzlQUWtLUE1XbktPSEVUeEhrUEhuaDJL?=
+ =?utf-8?B?RkcrRFNyV2VMQktvUi9zUSt5dVYwKzdZMGJTS1EzaGFXNFVock1DYWZvZGFk?=
+ =?utf-8?B?YXFUTTdXSGxKYStDMGdNMmhGYmw0ZEY5RmJ2NkkvM29qVXpEcGhQcE9ybHhh?=
+ =?utf-8?B?NnduQVhxZFV6Z29xa3h0L2V4MHF6NllvZGJIWEdKMmY5RXY2dldIQWUvQkVn?=
+ =?utf-8?B?N2RJdEUvK0NacStra2MvOWVSY3BlSTNkNUdTb1kza1lSUjQxWkF3aGU2Zzds?=
+ =?utf-8?B?akQzOGJtdzY0ZmlOVkZ4aUlvWXZSeUVCOVRVb3hUWVFiTDZwWDFMYWVWZCt4?=
+ =?utf-8?B?ZFZNT21BOTNwWTl3OU42Q25ldzhmUStNYm91RUZURW9XeUlzanFZdE5xNGRF?=
+ =?utf-8?B?OElLMk9VS1pKNG9wcG5JUHQxV0dNZ2FEazdWdFlFUVl2V3VRbUpBUlJuWGRR?=
+ =?utf-8?B?SE1Ydm1EMjdxTlhKQlE0dU5xTDgweGl6MmJEWEp3ZVlmelp0Y29JVjY3NUJi?=
+ =?utf-8?B?V2lEbi9kSExiSitsM3BZVnhoVXkzTnh4LzA5NWhJRUNGbVh6dmJtZWxXaWo5?=
+ =?utf-8?B?Z2dSUnkyODlja0w3K0plV0VQQ2RKT01JWitOc3gxT042ZDB0MWtzaXVHd2E1?=
+ =?utf-8?B?czB4djliU3Z6OVBMMHhRNnZObWlBbEtCMUxFYmxGK05sR0EyUVlEOHQzdEpO?=
+ =?utf-8?B?VEJVTysxeW9QbHAvVEJHUldOUEozNkE0ZU91R0FFUGJUWWprVEdncEh5NjZp?=
+ =?utf-8?B?MENIc2ZEaDdYL1JKN1FNRWxHOXpscWNVK05nNDV3dHFVRlR3MXR1YmxZTFRX?=
+ =?utf-8?B?anJ6VXQzeE5aeHkwV3VkSEZ1S0pzWHZjVVlQQWl2dzJSYnVZR05CWWNJSEVN?=
+ =?utf-8?B?cVJOTjN4K1BNUWZ2MlRaalkwdFpsZ0hNQ3Bya00yLzVsZDI2WEh6Wk94bUh0?=
+ =?utf-8?B?NGhGY2lESGhMVjQycU1FdFhsemlEcENYTEZtdkJQSjhXdlU3TnAvd0svbE5O?=
+ =?utf-8?B?T09KSEhuN3FHNjZBNyttcXgyaDROSHRBRkhWZkgyaGE3ZjIzcU1IL0YwY0Fz?=
+ =?utf-8?B?MUNBRGs4d0ZxbHk5Zm0yZ3I1ZU9Xd0FnR3dvYXlUU0Fac1FMQVFVUk8xb1E0?=
+ =?utf-8?B?elNXRllGRTZ2VS9PVWtjY3EvVzVlS2JyR1JKQ3VDM0xJeVNzUkV1bk10dkFC?=
+ =?utf-8?B?R2RIU3JkUUhWaXR1amYzTEplVXdIVG1CRUpDUndiclZUbnJhK25QcS9OMXVz?=
+ =?utf-8?B?UVZtODJYcHVtR3RzZ2hqWC82T1ludVpkaFJUY2NRNDUvdTBCNHAzNDREbkRk?=
+ =?utf-8?B?UFVGL3VjMXFPRlRra1ZlMnF0ZDVVUHpneEE0NURuK3RvZm9iYXZxQ2dVUkx6?=
+ =?utf-8?B?SXB2anBOU095ZjBabVh0RnBPa245aVFQK2ZCMEJNK1F3TTUyZTRGNkJkWDlR?=
+ =?utf-8?B?b3NMRk9uVFQwZjdCSkhTL1BKYnJaa1lncWdaVDhUYU8ycTJZdWtuOVBibVFq?=
+ =?utf-8?B?SlV3U2ZsZVdXN0JDWWFNR01mTU83RjkrbmlOcFowYkdqWDlFS1RQeGMvTG1Q?=
+ =?utf-8?B?c01LaWRtRzlUSFc5bTBpdk9uYWt5L2ErQzhjQVVRcnNsRTdpdWlTT3BicXBu?=
+ =?utf-8?Q?GR4IUUoYtoBxGAxqi3YpberOHPvmDmsA?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lcIsOf+DFgWCk/THNNYt9peVeprkYoXvxZbXPiPE/qDW9EDisvI58AgFPwU+?=
- =?us-ascii?Q?81i07GHgedrEUBGGs7JvDmGiQosY3+EFPhX6AgmTmppyO1PS3/FIJFuzhh3K?=
- =?us-ascii?Q?xsSSPKQ4CZ2DudoTHGM4nY+AMo4aqQ/vLsyDTMTXNqOMlIA98XqrnwTCaC0z?=
- =?us-ascii?Q?r6b8YyYtSYZN2VVQUfO0Hnpu1X9sa3FaKgx+KFlT7Ut0fqLbRFl5E7kTzVIR?=
- =?us-ascii?Q?127p8yDBn+qBOwsW+61/MjoNDdvbsJmrRn2kGF1JQjLYWzltPdDcUfLpCdhL?=
- =?us-ascii?Q?3fC0lqA3yrqhhb5ATtxqUdp7eN2Yp5Hy6Ootc/Rcd4wyy4tgc0H3j9VyX+kB?=
- =?us-ascii?Q?y8KvUuFWnxRAUoKnNfWBccF0naSJz+KfHbC2FWzQjLCgnHcHU0AfLTFUaH1n?=
- =?us-ascii?Q?tjbnqLNY1Krx0l91Dl/9WwuwEGlsK3qAFFdXq7LNhMXwRzh4rchmZQfOONA5?=
- =?us-ascii?Q?BLeiC5X9Xb0TEVRGqNnPr3jewjyGu775kWOCpw3dzy0DYnE3Z4sMHnM8fKoO?=
- =?us-ascii?Q?Bgl/QXfHHrW303/dQGyltf8nEZfZ1Nrc5frThWPM73Zbz/JxgRtzZq6ABWdH?=
- =?us-ascii?Q?brDgtsUCugv6EXLkhvW6ubfTE9kqFkaoXTwa2gfCUA1GrjKZXfJ6ou2/JFrD?=
- =?us-ascii?Q?82qWcyedkc6WCKIOoqRtcgxnhmwcYvZwjyYy2MkeP21bXcre6Wg7Wt6cSMFl?=
- =?us-ascii?Q?R8XK4xo+PXLTAytMLI5LjbBPOYqD8k/Fi4VL+4HcK/H5MSYI1O0GiB8e553M?=
- =?us-ascii?Q?w3azK8fE5Z6ISJA4y2gn+9ESymZ/1U3/sEzY5LrQEYDssFUSfAll4qtZBlsG?=
- =?us-ascii?Q?G4BHPma/5WzFRPIwbhC/fU6b4i6vPmQBj1N3Uln2B2Pmy7HX3TIjqq242FKc?=
- =?us-ascii?Q?nImscIVbavxQPEEJYmDUxEyu4xrG78Q/LuW7iS+kB99VE6hcAcxZk9EHLCvY?=
- =?us-ascii?Q?mVcR0o2cWUZjlssisAuxfTJhZSSOAYEi1wKdHC8LXZKkN7W+7zHQwnU08ulr?=
- =?us-ascii?Q?BKCAwu//0ud5EIf65BBJ66D01eTc8juyspe+y3G+RGqlj2a9Lyt+gQRtNqSA?=
- =?us-ascii?Q?H8otzHYvyhDBLN/zrjW6cKKqWrvAZLjmOfu9N1RcQ6pP/b9m8+WrcHesOurU?=
- =?us-ascii?Q?IRBbpaEt5cUR3ALQ74V6R3UGkp6Uxc4JnU4v7edSc2y693xHFxutlyTuvr+g?=
- =?us-ascii?Q?OzqGCFJIWtULZeZX4SSb6wfJPBe6YgrXumd2aagfWv4RXoLHkRTj5vsEbSJi?=
- =?us-ascii?Q?OR2OoAnwu3+nfbq1ZQMqISGLi8oIgNILMqwp9xa5e3yAYLRfKJcCefDzaeEO?=
- =?us-ascii?Q?GYv004icNpDbF9wOJJuxU48+o+U3hOgVPMAJNugTQS2ytLWD2XgcX3salpMz?=
- =?us-ascii?Q?VbWSE+a6I+qc+W7YmGxO/3UgbLWYPk1nta65Pd1hanACqJ9CfWqE4EPwQM9+?=
- =?us-ascii?Q?P3Rgo9VVEfwaRPLMeZU4UXONp0WN+1v+mmnN2pLFMkLLhCCanQxBtlrNz2zh?=
- =?us-ascii?Q?XuHraBqYHRw0+sZEIW0jb1aelaT+Wnqee28F9LWSpASUC8pwTS6pNknhtVcB?=
- =?us-ascii?Q?OYfdTkeV9eypaiRG3J/b+8Ewn785HtlWISLQZ9gncQLbIHThYqAq841Bhu6w?=
- =?us-ascii?Q?Bw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea41a98-9e06-4ccb-1110-08de2c295016
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R3B0NTNxQ0RjYWNFNWo2ek5veGZVQldqbUI2dlNBRENpaTVEUTFiNUhJd1kr?=
+ =?utf-8?B?OFZJR01uMmpBaC94Qkc1ekVYeHM0Vzg2cTBZaWlyRi8rb2NkTjN3MzVoMTU1?=
+ =?utf-8?B?V1QxMFB2djBKd2F0L1c2QmphSFF4NGp5Vno0aG8xNUFyenFRRktnWlZZQ2ZX?=
+ =?utf-8?B?VXlTMGFTQVNTUTlvYjBYcGtVY0xzejRnNFdMM2NJUmV5SHhBNUJnSU54Y3E1?=
+ =?utf-8?B?dlVhdmF0cGloL0RlWXU1VlhEUCtUdVVzZ2tTSE16OS9HRDE0WlNQYjE5dFM5?=
+ =?utf-8?B?MTF4VXorTDNLTVpKNzZLYjYvU3dYclZ6cFpHUmtTUkVWQlc4K3VaWU5oTDda?=
+ =?utf-8?B?clRKMFAvZk5iMXJFOENwUzYvSU80Vm02U1lMLzNWejJSRWo5ZmJVUmtCOFBt?=
+ =?utf-8?B?TmlNZno1MXBOVldXQ1JtbzBxNDNNUC80SHhFRkkxNW5TTDJWYnNCNGJqVGd1?=
+ =?utf-8?B?eE5lQkgvT1VoRjZ5V1RiNi9iMnk3MzZoMnZKcld6RkRpUUVJazA3QVNlVjBK?=
+ =?utf-8?B?WVY3bGhaZ0RrWHlQRUNqaXlQNk9RU05obGZ3TksyeE9OY05MY3c0WTNteDFl?=
+ =?utf-8?B?Lzk1OUJ2STB3ZExXak41VWE2WW5Sc1RUZ09Na1lzSHZQaWZpMkdEQ08rcnQz?=
+ =?utf-8?B?RzU3SnJTZkNva2R4ZG83YjdWUkNMV2tvWklpSDlpUHlzMm8rN1BpUklaVGdz?=
+ =?utf-8?B?QTFLdW9qTG1EcGh2MGl0RTRrRFhqQVhsbkNCNWhUcTNNWWVHN09BdDhFSXZT?=
+ =?utf-8?B?Y3RtcWVKbGJJU0F6SlMyU0FYUkh6WXZacFNTMkhZVFA2QWs4U2MxMi91RjR6?=
+ =?utf-8?B?VHNQYmVpbUtVWlhpcHJNYlEyL1VCc2RzS3U1L3d5SWtFUE9nRDcvaHdYbUp5?=
+ =?utf-8?B?VjMyQXNFWTF2WnNZR042MDF5Nm51ZEdUYS9QWUlndVJDVkgzQmtXVElITVVu?=
+ =?utf-8?B?R2tJTVNsNDYwRjF5RUsxZHhXMHpXLzhBdlZyZy85WlVQWTN1NVNrdmwzWHJS?=
+ =?utf-8?B?TC85OWNDdU05aVJ3TjJhUVVOYUFWSTE2N0ZlbUtEZWVoUTBKNjNoWHhYS2Nm?=
+ =?utf-8?B?Z2ZnVERoblFHM2g1MTlkSFhSRWl1KzJGWWlyTDlhVDF2dVJXS1JzL1VnMDVw?=
+ =?utf-8?B?emM3VnV0UWRqOUdVS0VIVGF3N3V5Vkk1NDhkNmNsNW5oMUsvM0luMW0wNi9F?=
+ =?utf-8?B?TGp0Y3ZLaDNDSVJYRk1nWlJVVWlJYm01QWgxWFRoSWFzR24wMWM1aHlWQjBC?=
+ =?utf-8?B?cm8rRnZNU0syYmN5aWV5b21uaFNNUlpZWHpwdlE1RmdxVnh6Z3BaSlp0ZW53?=
+ =?utf-8?B?ZzhvRzhDTWJRV0U1djJhcFV4RFJEV1FUdHUwbFpGbU5idDF3SVZ1WUhteFB4?=
+ =?utf-8?B?MkxORWVnbUF6eW9DQUpzQUtIckRZQzdnN3lIdEthT01KcmpPenREZ0ZOM2pE?=
+ =?utf-8?B?VzVkVkJxN1BBeWh3Nkx5RFJhb2Z5UFV2L25jRExpTTZTamdyT2RBd1cwWkd0?=
+ =?utf-8?B?dTFzUlRRckRnWDRueStRbDczWHhleDkybHdLbUgyKzhLOUZWSlc5elBjQjgw?=
+ =?utf-8?B?K1NMRXhIQUw3L0I1TVNISlFWNTJsaklvamZJUEpLeUhPSW56L25UaGUzcThP?=
+ =?utf-8?B?eVppemRXc0tXenZGcWRoMGJBYWVWUzkyRjJZSjAreEluRWtaMW9sVFpYQU5C?=
+ =?utf-8?B?RDlLRFJQSCtqSXAyd28xNFFITXhTYXU0UTFzL20xbHBvZ3BIYlptWkk4N2tr?=
+ =?utf-8?B?NTJUOVA5Szh6SWJFYlpvZUNUT08vc1B6L1FIYTk1K3huczhEUytaOWxGSEFv?=
+ =?utf-8?B?S2dOTTJMSmNraHYyWk5XWVRwWU4vSW5aVUhOK2JhUE5IT200TEprM09YSkk1?=
+ =?utf-8?B?dlhoVzJBWGRBZHhKakl4NlRGQ1MvL1cwRmZ2SXhmQXdTRUpEZnQvQVNrdkRx?=
+ =?utf-8?B?cFNzbzBabGhwVmtoZEE1dzVjam9mbEZZdDBmUWp1enVDY0oxWkZnK0pzbE5E?=
+ =?utf-8?B?U0U1SHdHUFRpZnVOSkVvaWZiaTIrc2ZZY1JEWTVpV0NqYUFjR2MwSEUzOGt6?=
+ =?utf-8?B?S3d3aXZWTFh2am1NMmZkNUcvLzhuQjBsQmpsY1IydzF1QXNzNEdaSGRYNWxT?=
+ =?utf-8?Q?enKdt6t+wwbH5CFegMynHG5OW?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9JKMWYBvoQPXKI8ZtKojl9AJqyZViHh00JrPunKMFSn1hXXopF8q0QhP+5uDUqltoz/acF637LNqAJ2hG/y6HNucldRKMHR7ZiB8VaxuY3Ax8IUDGDDljzEPcEB0LerswIppfzDpuTQRO9ANloMjqFlSQ42w707DVV0iCM6eL8kB3BhXMzoXXmigt8sJ0ijsSJMMcDgNgvBZ84oIUHCowYJ0Aitwz/VU58gW/6DKWviZMoC8RPhUCEHQJ6wJDKaaYLbQjiGqe7JkWIkAwJoL3DKL6kfRWnspNi3K/A4HklYlftDpqzBBGGxJvwlKQ4VX3MKNsNwAP2a0HZpgsKhKSv6B0ylfWhJQPPxhMwMk4lX7rZB+zdVdSXbjEzO43FFTecBFHKxeLEJu1Iz5ZSTqRbuLk0uJd8WWyKzUFmENZjO8jZgZ442yzv9su8By0RPiM3bfod8oZ4oUvMXOppvqnOIKPqMUtQwNSgzs1/UopXYRCibhmbX9jZsLHHVE5Vgdi01KrywxLBVquXS1kTsnJzpgD+6puNGQw4YDgJneFOY5OZPAM4YjcM8uCMpdEqnIHkBqgA368uTz/3IuXvJi30vtayrCyM4he1CIaMX8KPE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0f7f5ba-0533-4e7e-8c9a-08de2c2a494d
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2025 13:48:28.3291
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2025 13:55:28.1854
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FRZwdLhbkczHCkbQl60kCl0b2ig3cTtyl9Q1c/IiIWQtnMDwGTY6E5lVTGswJFSZkcvG91JMqLLnoiDRK03spw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8693
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: f+gy5cm8lrUZm6FmOcTuvmxroNWO9b+zTm7elBLP70xc7zMzE2nCGX2DoU6gIwcT1MyDGRIR0Jp9vujtJQnIWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5845
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 adultscore=0 phishscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511250115
+X-Proofpoint-GUID: KvZN3tOl3NSfu2sk4V-fdA6Ef0s2nffO
+X-Authority-Analysis: v=2.4 cv=ObqVzxTY c=1 sm=1 tr=0 ts=6925b55a b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yPCof4ZbAAAA:8 a=pGLkceISAAAA:8 a=JF9118EUAAAA:8 a=bR6fvlR38kIQhSPvDGgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=xVlTc564ipvMDusKsbsT:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI1MDExNSBTYWx0ZWRfX8LLEohWyUdNw
+ xrLHu+f4EWq3yF6evZxGLHEkYHlBDQGsTBuuHZu+QJwlAQQuyihK1aovUBgjFt5LLlqmmwL1wwX
+ lOyrglftKbzf+pfToUCGcbSA/3Y3+X2nNhNzlcuwIwakAshYfRej+4y1EBxYwTkG+exzZgfQJlg
+ uJqAU+B+Bax9b1qpsCpugG74xfCuQcH0n0M0h4MvK5TsLNDisQN53uBU12iWaTfGJaCJnGe4SWc
+ PWwd/gdGtpSytC/WrO29nwlPSSvd6Sv3fj1JuvKnapYiQmAuuKecJp7W+mQldBCJoUI8k3wAm1E
+ czxDlMdMgk8JCwnN30sGTy0lq4C8pZhK6GmS2Z0Jp/Z3Rs+qDe6HEgKqJErIDMU3yEwo469j1z9
+ WUztqxHwWzjVket+FJihcDf7uIUibA==
+X-Proofpoint-ORIG-GUID: KvZN3tOl3NSfu2sk4V-fdA6Ef0s2nffO
 
+On 11/25/25 12:00 AM, Alistair Francis wrote:
+> On Thu, Nov 20, 2025 at 11:51 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>
+>> On 11/18/25 7:45 PM, Alistair Francis wrote:
+>>> On Sat, Nov 15, 2025 at 12:14 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> On 11/13/25 10:44 PM, Alistair Francis wrote:
+>>>>> On Fri, Nov 14, 2025 at 12:37 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>>>
+>>>>>> On 11/13/25 9:01 AM, Chuck Lever wrote:
+>>>>>>> On 11/13/25 5:19 AM, Alistair Francis wrote:
+>>>>>>>> On Thu, Nov 13, 2025 at 1:47 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>>>>>>
+>>>>>>>>> On 11/11/25 11:27 PM, alistair23@gmail.com wrote:
+>>>>>>>>>> From: Alistair Francis <alistair.francis@wdc.com>
+>>>>>>>>>>
+>>>>>>>>>> Define a `handshake_sk_destruct_req()` function to allow the destruction
+>>>>>>>>>> of the handshake req.
+>>>>>>>>>>
+>>>>>>>>>> This is required to avoid hash conflicts when handshake_req_hash_add()
+>>>>>>>>>> is called as part of submitting the KeyUpdate request.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+>>>>>>>>>> Reviewed-by: Hannes Reinecke <hare@suse.de>
+>>>>>>>>>> ---
+>>>>>>>>>> v5:
+>>>>>>>>>>  - No change
+>>>>>>>>>> v4:
+>>>>>>>>>>  - No change
+>>>>>>>>>> v3:
+>>>>>>>>>>  - New patch
+>>>>>>>>>>
+>>>>>>>>>>  net/handshake/request.c | 16 ++++++++++++++++
+>>>>>>>>>>  1 file changed, 16 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/net/handshake/request.c b/net/handshake/request.c
+>>>>>>>>>> index 274d2c89b6b2..0d1c91c80478 100644
+>>>>>>>>>> --- a/net/handshake/request.c
+>>>>>>>>>> +++ b/net/handshake/request.c
+>>>>>>>>>> @@ -98,6 +98,22 @@ static void handshake_sk_destruct(struct sock *sk)
+>>>>>>>>>>               sk_destruct(sk);
+>>>>>>>>>>  }
+>>>>>>>>>>
+>>>>>>>>>> +/**
+>>>>>>>>>> + * handshake_sk_destruct_req - destroy an existing request
+>>>>>>>>>> + * @sk: socket on which there is an existing request
+>>>>>>>>>
+>>>>>>>>> Generally the kdoc style is unnecessary for static helper functions,
+>>>>>>>>> especially functions with only a single caller.
+>>>>>>>>>
+>>>>>>>>> This all looks so much like handshake_sk_destruct(). Consider
+>>>>>>>>> eliminating the code duplication by splitting that function into a
+>>>>>>>>> couple of helpers instead of adding this one.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> + */
+>>>>>>>>>> +static void handshake_sk_destruct_req(struct sock *sk)
+>>>>>>>>>
+>>>>>>>>> Because this function is static, I imagine that the compiler will
+>>>>>>>>> bark about the addition of an unused function. Perhaps it would
+>>>>>>>>> be better to combine 2/6 and 3/6.
+>>>>>>>>>
+>>>>>>>>> That would also make it easier for reviewers to check the resource
+>>>>>>>>> accounting issues mentioned below.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> +{
+>>>>>>>>>> +     struct handshake_req *req;
+>>>>>>>>>> +
+>>>>>>>>>> +     req = handshake_req_hash_lookup(sk);
+>>>>>>>>>> +     if (!req)
+>>>>>>>>>> +             return;
+>>>>>>>>>> +
+>>>>>>>>>> +     trace_handshake_destruct(sock_net(sk), req, sk);
+>>>>>>>>>
+>>>>>>>>> Wondering if this function needs to preserve the socket's destructor
+>>>>>>>>> callback chain like so:
+>>>>>>>>>
+>>>>>>>>> +       void (sk_destruct)(struct sock sk);
+>>>>>>>>>
+>>>>>>>>>   ...
+>>>>>>>>>
+>>>>>>>>> +       sk_destruct = req->hr_odestruct;
+>>>>>>>>> +       sk->sk_destruct = sk_destruct;
+>>>>>>>>>
+>>>>>>>>> then:
+>>>>>>>>>
+>>>>>>>>>> +     handshake_req_destroy(req);
+>>>>>>>>>
+>>>>>>>>> Because of the current code organization and patch ordering, it's
+>>>>>>>>> difficult to confirm that sock_put() isn't necessary here.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>  /**
+>>>>>>>>>>   * handshake_req_alloc - Allocate a handshake request
+>>>>>>>>>>   * @proto: security protocol
+>>>>>>>>>
+>>>>>>>>> There's no synchronization preventing concurrent handshake_req_cancel()
+>>>>>>>>> calls from accessing the request after it's freed during handshake
+>>>>>>>>> completion. That is one reason why handshake_complete() leaves completed
+>>>>>>>>> requests in the hash.
+>>>>>>>>
+>>>>>>>> Ah, so you are worried that free-ing the request will race with
+>>>>>>>> accessing the request after a handshake_req_hash_lookup().
+>>>>>>>>
+>>>>>>>> Ok, makes sense. It seems like one answer to that is to add synchronisation
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> So I'm thinking that removing requests like this is not going to work
+>>>>>>>>> out. Would it work better if handshake_req_hash_add() could recognize
+>>>>>>>>> that a KeyUpdate is going on, and allow replacement of a hashed
+>>>>>>>>> request? I haven't thought that through.
+>>>>>>>>
+>>>>>>>> I guess the idea would be to do something like this in
+>>>>>>>> handshake_req_hash_add() if the entry already exists?
+>>>>>>>>
+>>>>>>>>     if (test_and_set_bit(HANDSHAKE_F_REQ_COMPLETED, &req->hr_flags)) {
+>>>>>>>>         /* Request already completed */
+>>>>>>>>         rhashtable_replace_fast(...);
+>>>>>>>>     }
+>>>>>>>>
+>>>>>>>> I'm not sure that's better. That could possibly still race with
+>>>>>>>> something that hasn't yet set HANDSHAKE_F_REQ_COMPLETED and overwrite
+>>>>>>>> the request unexpectedly.
+>>>>>>>>
+>>>>>>>> What about adding synchronisation and keeping the current approach?
+>>>>>>>> From a quick look it should be enough to just edit
+>>>>>>>> handshake_sk_destruct() and handshake_req_cancel()
+>>>>>>>
+>>>>>>> Or make the KeyUpdate requests somehow distinctive so they do not
+>>>>>>> collide with initial handshake requests.
+>>>>>
+>>>>> Hmmm... Then each KeyUpdate needs to be distinctive, which will
+>>>>> indefinitely grow the hash table
+>>>>
+>>>> Two random observations:
+>>>>
+>>>> 1. There is only zero or one KeyUpdate going on at a time. Certainly
+>>>> the KeyUpdate-related data structures don't need to stay around.
+>>>
+>>> That's the same as the original handshake req though, which you are
+>>> saying can't be freed
+>>>
+>>>>
+>>>> 2. Maybe a separate data structure to track KeyUpdates is appropriate.
+>>>>
+>>>>
+>>>>>> Another thought: expand the current _req structure to also manage
+>>>>>> KeyUpdates. I think there can be only one upcall request pending
+>>>>>> at a time, right?
+>>>>>
+>>>>> There should only be a single request pending per queue.
+>>>>>
+>>>>> I'm not sure I see what we could do to expand the _req structure.
+>>>>>
+>>>>> What about adding `HANDSHAKE_F_REQ_CANCEL` to `hr_flags_bits` and
+>>>>> using that to ensure we don't free something that is currently being
+>>>>> cancelled and the other way around?
+>>>>
+>>>> A CANCEL can happen at any time during the life of the session/socket,
+>>>> including long after the handshake was done. It's part of socket
+>>>> teardown. I don't think we can simply remove the req on handshake
+>>>> completion.
+>>>
+>>> Does that matter though? If a cancel is issued on a freed req we just
+>>> do nothing as there is nothing to cancel.
+>>
+>> I confess I've lost a bit of the plot.
+> 
+> Ha, we are in the weeds a bit.
+> 
+>>
+>> I still don't yet understand why the req has to be removed from the
+>> hash rather than re-using the socket's existing req for KeyUpdates.
+> 
+> Basically we want to call handshake_req_submit() to submit a KeyUpdate
+> request. That will fail if there is already a request in the hash
+> table, in this case the request has been completed but not destroyed.
+> 
+> This patch is deconstructing the request on completion so that when we
+> perform a KeyUpdate the request doesn't exist. Which to me seems like
+> the way to go as we are no longer using the request, so why keep it
+> around.
+> 
+> You said that might race with cancelling the request
+> (handshake_req_cancel()), which I'm trying to find a solution to. My
+> proposal is to add some atomic synchronisation to ensure we don't
+> cancel/free a request at the same time.
+> 
+> You are saying that we could instead add a new function similar to
+> handshake_req_submit() that reuses the existing request. I was
+> thinking that would also race with handshake_req_cancel(), but I guess
+> it won't as nothing is being freed.
+> 
+> So you would prefer changing handshake_req_submit() to just re-use an
+> existing completed request for KeyUpdate?
 
-Hello,
+Thanks. That jogs the memory.
 
-kernel test robot noticed "WARNING:at_fs/dcache.c:#umount_check" on:
-
-commit: 7ab96df840e60eb933abfe65fc5fe44e72f16dc0 ("VFS/nfsd/cachefiles/ovl: add start_creating() and end_creating()")
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-
-[test failed on linux-next/master d724c6f85e80a23ed46b7ebc6e38b527c09d64f5]
-
-in testcase: filebench
-version: filebench-x86_64-22620e6-1_20251009
-with following parameters:
-
-	disk: 1SSD
-	fs: ext4
-	fs2: nfsv4
-	test: ratelimcopyfiles.f
-	cpufreq_governor: performance
-
-
-
-config: x86_64-rhel-9.4
-compiler: gcc-14
-test machine: 192 threads 4 sockets Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz (Cascade Lake) with 176G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202511252132.2c621407-lkp@intel.com
-
-
-Unmount[  252.448780][T17295] ------------[ cut here ]------------
-[  252.455068][T17295] WARNING: CPU: 114 PID: 17295 at fs/dcache.c:1590 umount_check (fs/dcache.c:1590 (discriminator 1) fs/dcache.c:1580 (discriminator 1))
-m - /opt/rootfs.[  252.540436][T17295] CPU: 114 UID: 0 PID: 17295 Comm: umount Tainted: G S                  6.18.0-rc1-00004-g7ab96df840e6 #1 VOLUNTARY
-[  252.553273][T17295] Tainted: [S]=CPU_OUT_OF_SPEC
-[  252.558205][T17295] Hardware name: Intel Corporation ............/S9200WKBRD2, BIOS SE5C620.86B.0D.01.0552.060220191912 06/02/2019
-[  252.558206][T17295] RIP: 0010:umount_check (fs/dcache.c:1590 (discriminator 1) fs/dcache.c:1580 (discriminator 1))
-[  252.575407][T17295] Code: 8d 88 a0 03 00 00 48 8b 40 28 4c 8b 08 48 8b 46 30 48 85 c0 74 04 48 8b 50 40 51 48 c7 c7 88 3b ad 82 48 89 f1 e8 27 07 c0 ff <0f> 0b 58 31 c0 c3 cc cc cc cc 41 83 f8 01 75 bf eb aa 0f 1f 44 00
-All code
-========
-   0:	8d 88 a0 03 00 00    	lea    0x3a0(%rax),%ecx
-   6:	48 8b 40 28          	mov    0x28(%rax),%rax
-   a:	4c 8b 08             	mov    (%rax),%r9
-   d:	48 8b 46 30          	mov    0x30(%rsi),%rax
-  11:	48 85 c0             	test   %rax,%rax
-  14:	74 04                	je     0x1a
-  16:	48 8b 50 40          	mov    0x40(%rax),%rdx
-  1a:	51                   	push   %rcx
-  1b:	48 c7 c7 88 3b ad 82 	mov    $0xffffffff82ad3b88,%rdi
-  22:	48 89 f1             	mov    %rsi,%rcx
-  25:	e8 27 07 c0 ff       	call   0xffffffffffc00751
-  2a:*	0f 0b                	ud2		<-- trapping instruction
-  2c:	58                   	pop    %rax
-  2d:	31 c0                	xor    %eax,%eax
-  2f:	c3                   	ret
-  30:	cc                   	int3
-  31:	cc                   	int3
-  32:	cc                   	int3
-  33:	cc                   	int3
-  34:	41 83 f8 01          	cmp    $0x1,%r8d
-  38:	75 bf                	jne    0xfffffffffffffff9
-  3a:	eb aa                	jmp    0xffffffffffffffe6
-  3c:	0f                   	.byte 0xf
-  3d:	1f                   	(bad)
-  3e:	44                   	rex.R
-	...
-
-Code starting with the faulting instruction
-===========================================
-   0:	0f 0b                	ud2
-   2:	58                   	pop    %rax
-   3:	31 c0                	xor    %eax,%eax
-   5:	c3                   	ret
-   6:	cc                   	int3
-   7:	cc                   	int3
-   8:	cc                   	int3
-   9:	cc                   	int3
-   a:	41 83 f8 01          	cmp    $0x1,%r8d
-   e:	75 bf                	jne    0xffffffffffffffcf
-  10:	eb aa                	jmp    0xffffffffffffffbc
-  12:	0f                   	.byte 0xf
-  13:	1f                   	(bad)
-  14:	44                   	rex.R
-	...
-[  252.575410][T17295] RSP: 0018:ffffc9003672bb88 EFLAGS: 00010282
-[  252.601300][T17295] RAX: 0000000000000000 RBX: ffff88ac4c0c55c0 RCX: 0000000000000027
-[  252.601301][T17295] RDX: ffff888c5009c1c8 RSI: 0000000000000001 RDI: ffff888c5009c1c0
-[  252.601303][T17295] RBP: ffff8881e925da40 R08: 0000000000000000 R09: ffffc9003672b958
-[  252.625337][T17295] R10: ffff88ac7fc33fa8 R11: 0000000000000003 R12: ffffffff81748d50
-[  252.625338][T17295] R13: ffff8881e925da40 R14: ffff88ac4c0c9200 R15: ffff88ac4c0c9280
-[  252.625339][T17295] FS:  00007ffff7bfb840(0000) GS:ffff888ccc272000(0000) knlGS:0000000000000000
-[  252.625340][T17295] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  252.625341][T17295] CR2: 00007ffff7ec97a0 CR3: 00000001ce11e005 CR4: 00000000007726f0
-[  252.625342][T17295] PKRU: 55555554
-[  252.625343][T17295] Call Trace:
-[  252.625345][T17295]  <TASK>
-[  252.625348][T17295]  d_walk (fs/dcache.c:1322)
-[  252.625353][T17295]  shrink_dcache_for_umount (include/linux/spinlock.h:351 fs/dcache.c:601 fs/dcache.c:1606 fs/dcache.c:1621)
-[  252.625357][T17295]  generic_shutdown_super (fs/super.c:621)
-[  252.689813][T17295]  kill_block_super (fs/super.c:1723)
-[  252.689817][T17295] ext4_kill_sb (fs/ext4/super.c:7405) ext4
-[  252.699584][T17295]  deactivate_locked_super (fs/super.c:434 fs/super.c:475)
-Unmount[  252.704921][T17295]  cleanup_mnt (fs/namespace.c:242 fs/namespace.c:1328)
-[  252.704926][T17295]  task_work_run (include/linux/sched.h:2092 kernel/task_work.c:229)
-- Legacy Locks D[  252.727385][T17295]  ? __cond_resched (kernel/sched/core.c:7477)
-irectory /run/lo[  252.733357][T17295]  ? generic_fillattr (fs/stat.c:99)
-[  252.739669][T17295]  ? _copy_to_user (arch/x86/include/asm/uaccess_64.h:126 arch/x86/include/asm/uaccess_64.h:147 include/linux/uaccess.h:197 lib/usercopy.c:26)
-[  252.744854][T17295]  ? cp_new_stat (fs/stat.c:506 (discriminator 1))
-[  252.744857][T17295]  ? __do_sys_newfstatat (fs/stat.c:546 (discriminator 1))
-[  252.744861][T17295]  ? do_syscall_64 (arch/x86/include/asm/jump_label.h:36 include/linux/context_tracking_state.h:108 include/linux/context_tracking.h:41 include/linux/irq-entry-common.h:261 include/linux/entry-common.h:212 arch/x86/entry/syscall_64.c:100)
-[  252.759380][T17295]  ? clear_bhb_loop (arch/x86/entry/entry_64.S:1548)
-[  252.764099][T17295]  ? clear_bhb_loop (arch/x86/entry/entry_64.S:1548)
-[  252.764101][T17295]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-[  252.774744][T17295] RIP: 0033:0x7ffff7e54217
-[  252.779199][T17295] Code: 0d 00 f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 b1 5b 0d 00 f7 d8 64 89 02 b8
-All code
-========
-   0:	0d 00 f7 d8 64       	or     $0x64d8f700,%eax
-   5:	89 02                	mov    %eax,(%rdx)
-   7:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
-   c:	c3                   	ret
-   d:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
-  13:	31 f6                	xor    %esi,%esi
-  15:	e9 09 00 00 00       	jmp    0x23
-  1a:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
-  21:	00 00 
-  23:	b8 a6 00 00 00       	mov    $0xa6,%eax
-  28:	0f 05                	syscall
-  2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
-  30:	77 01                	ja     0x33
-  32:	c3                   	ret
-  33:	48 8b 15 b1 5b 0d 00 	mov    0xd5bb1(%rip),%rdx        # 0xd5beb
-  3a:	f7 d8                	neg    %eax
-  3c:	64 89 02             	mov    %eax,%fs:(%rdx)
-  3f:	b8                   	.byte 0xb8
-
-Code starting with the faulting instruction
-===========================================
-   0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
-   6:	77 01                	ja     0x9
-   8:	c3                   	ret
-   9:	48 8b 15 b1 5b 0d 00 	mov    0xd5bb1(%rip),%rdx        # 0xd5bc1
-  10:	f7 d8                	neg    %eax
-  12:	64 89 02             	mov    %eax,%fs:(%rdx)
-  15:	b8                   	.byte 0xb8
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20251125/202511252132.2c621407-lkp@intel.com
-
+How about a new API, say, handshake_req_keyupdate() that /expects/ to
+find an existing req with a completed handshake? I think that fits a
+little better with the state machine.
 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Chuck Lever
 
