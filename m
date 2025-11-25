@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-16723-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16724-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88FE0C86DB3
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 20:49:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15B76C86DBF
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 20:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D1EA44E9FED
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 19:49:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF1A53B520B
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Nov 2025 19:49:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4424E33ADA9;
-	Tue, 25 Nov 2025 19:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2010233A705;
+	Tue, 25 Nov 2025 19:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7c31PAq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDWxsmzs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F27E33ADA7
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Nov 2025 19:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE67339B3C
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Nov 2025 19:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764100185; cv=none; b=D58ltr6DQn/vQCcReKsd3p3O7ZtXWSSUCeiGbirp+dwsF6D5E1dvON9cbYT4VMeNw6Cm9lGkR8y54PjJCFzW3pfADowg9oMtsht1GxjcoqOmG+a2x+ZXQgljhjesuAl9kvxkMvZBGoPlzaTak9jwfFG9nhtEU2CjfalDwe3oYcY=
+	t=1764100186; cv=none; b=MVXBYyuLTp9NWVqijwUNgPDMCsvdW2TvHUw+2AWQPAGh3LMKZ7Eh3GfHpIE2lJ3aFw2HtMj1Fp6W+Bq3+viL7H0adJfiY1NsH1VVef64pi6xOM5aey0C6QxnpytHi3EMyXhmz1wKeNBnvrIWRQkuz4mRIGbagw2ieIzjwMNsliU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764100185; c=relaxed/simple;
-	bh=IGqg+gzajXV5+ySHZUn/c5nqkFaxrEbGmSQvdlHhx9s=;
+	s=arc-20240116; t=1764100186; c=relaxed/simple;
+	bh=ZAkvwXCiB2EuPlORdmFuA8rHnJ7U53bvyCiTJjzfyhs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GNQmN7XfFo0588odGpfPh3f4ntPf1Lgk0LMgq90dVA6priDJVnoRwhyIcWpR2lnCEMk3auRWagM6cVtzZ15y9aGANAjpsuu4OhlsRiRDcjEKn37Uk++lNAJDz3+r1QR/BORejfrpnyjYWvanJNs1xchu3eYxIPNoLP8sKbyiM/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7c31PAq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567F6C116B1;
+	 MIME-Version:Content-Type; b=UOcQcBDcpqSJ4hFdhZyZpjX8CeOvp1H9nIuKUXslR8u26hsZBE067E1r13C9OyP5s0Ue8erre06eaBcjO0E/EIEFKf7fVMBW2jaF/Io024bBVaKSezGlRTSdTNl8vgXE4HXW4fxE9H0MaWuOR/Biej3RxFTJC1olLwjZDC22qg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDWxsmzs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02824C116D0;
 	Tue, 25 Nov 2025 19:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764100184;
-	bh=IGqg+gzajXV5+ySHZUn/c5nqkFaxrEbGmSQvdlHhx9s=;
+	s=k20201202; t=1764100185;
+	bh=ZAkvwXCiB2EuPlORdmFuA8rHnJ7U53bvyCiTJjzfyhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i7c31PAqcUsm9K3NDgEWyGvx+X59BWaVPSsY+FzhlB5WgnQTiPVgptgo9z2Y5Ceho
-	 3/Rlj3zQqsgUqJ8h1YimARZIzbCh/jH7Ds7oY874FzRCGqbyM/GEYnd1hCrnGnLlFV
-	 IRc4FKqRmlMz1PjidaHmC4XPb/ona9FRjOLSQMOrtd+R6IIaD6VsnhOaiar6RNrXTg
-	 TglvSKKdtu7Ou1ei2zBQ3NpRS/lQHgYQw3cNP33iGHaYwKxn9xtVRi9XwK5o837+DZ
-	 oyXzkfVUczwWA/I8zoiv3xnGL9/XaxoKLtnp6ZEJtekJmeW3g5J7oKuHbwaOZMu+Po
-	 056phSpLrHsCA==
+	b=mDWxsmzsKf7ednYfV+UvuEo5pfOYc42jen1Ls1mYpP0bxpYmokOnxy/GVIJ8812Z9
+	 8UCgEzNhpsoCFlKRsKNrjcm+S4kUM5FPAqy8oyUJ1PU53p6PqoaRIGl8vUCu8zvSep
+	 XiaxyRvFHA6wSBpEeMaBbAGInzxxa01Lc3enPr8Kfw9IjGmfsTVmLlS0W3e2gfb8pt
+	 t13Kqa4VSK0YemX5qoemybm/CjoMMvUlDC6eQi7TMbJekjkgaLIJJr0H44Mtd+HfPL
+	 VohO0OkO6me2rGHumhGX3xVKYLf66fmzvyo4Of8Cx1aSwQTdw/y5d2fEyOcRYNJqCK
+	 kTdEKgB8Usfag==
 From: Chuck Lever <cel@kernel.org>
 To: <linux-nfs@vger.kernel.org>
 Cc: Calum Mackay <calum.mackay@oracle.com>,
 	aurelien.couderc2002@gmail.com,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 8/9] Add tests for SETATTR with MODE and ACL
-Date: Tue, 25 Nov 2025 14:49:33 -0500
-Message-ID: <20251125194936.770792-9-cel@kernel.org>
+Subject: [PATCH v2 9/9] Add tests for OPEN(create) with ACLs
+Date: Tue, 25 Nov 2025 14:49:34 -0500
+Message-ID: <20251125194936.770792-10-cel@kernel.org>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251125194936.770792-1-cel@kernel.org>
 References: <20251125194936.770792-1-cel@kernel.org>
@@ -63,522 +63,680 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add comprehensive tests that verify SETATTR behavior when both
-mode bits and an ACL are set simultaneously. The new tests cover:
+Check that the server can attach an ACL when it creates a file.
 
-1. SATT19: testSetattrModeWithACL (lines 837-870)
- - Basic test that sets both MODE (0o640) and ACL in a single
-   SETATTR
- - Verifies both attributes are correctly set and retrieved
-2. SATT20: testSetattrModePreservedWithACL (lines 872-905)
- - Tests MODE preservation with a specific mode (0o600) set
-   alongside ACL
- - Ensures MODE is preserved exactly as requested
-3. SATT21: testSetattrRestrictiveModeWithACL (lines 907-941)
- - Tests the edge case of restrictive MODE (0o400 read-only) with
-   ACL
- - Verifies server handles the case where MODE is more restrictive
-   than ACL
-4. SATT22: testSetattrACLThenMode (lines 943-987)
- - Compares setting MODE+ACL together vs separately in sequence
- - Creates two files and verifies consistent behavior
+Add tests for OPEN(create) with MODE and ACL
+
+Add comprehensive tests that verify OPEN(create) behavior when
+both mode bits and an ACL are set simultaneously. The new tests
+cover:
+
+- EXCLUSIVE4_1 create with both MODE and ACL attributes (OPEN14)
+- MODE preservation when set with ACL for all three create modes:
+  UNCHECKED4 (OPEN15), GUARDED4 (OPEN16), and EXCLUSIVE4_1
+  (OPEN17)
+- Restrictive MODE (0o400) with ACL for all create modes (OPEN18)
 
 These tests ensure that servers correctly handle the interaction
-between MODE and ACL attributes when setting file attributes, and
-verify that the ACL specified in the OPEN operation matches the ACL
+between MODE and ACL attributes during file creation, and verify
+that the ACL specified in the OPEN operation matches the ACL
 after the OPEN completes.
 
-SETATTR: ACL-to-mode verification tests
+OPEN15-17: Fix MODE+ACL verification per RFC 8881
 
-These new tests verify:
+Apply the same fix used for SATT19-21 to OPEN15-17. When both
+MODE and ACL are set together during OPEN CREATE, RFC 8881
+§6.4.1.3 specifies that both attributes are processed, but the
+final mode is derived from the ACL per §6.3.2, not from the
+requested MODE value.
 
-- Mode is correctly derived from ACL per RFC 8881 §6.3.2
-- Write bit requires both ACE4_WRITE_DATA and ACE4_APPEND_DATA
-- ACL evaluation order (first ACE takes precedence)
-- EVERYONE@ ACEs affect all three permission classes
-- Complex ACLs with multiple identifiers
+The tests now verify that:
+1. Both MODE and ACL are processed (in attrset bitmap)
+2. The final mode matches the ACL-derived mode per RFC 8881
+   §6.3.2 using acl2mode_rfc8881()
+3. The mode may differ from the requested MODE
 
-SETATTR: Two additional ACL verification tests
+This fixes OPEN15 (UNCHECKED4), OPEN16 (GUARDED4), and OPEN17
+(EXCLUSIVE4_1) which were previously failing with "MODE not
+preserved" errors.
 
-New test SATT28: Verify that the final ACL is the same no matter what
-the file's previous mode bits were.
+OPEN41-42: Set ACE4_IDENTIFIER_GROUP flag for group principals
 
-New test SATT29: Verify that SETATTR(ACL) preserves high-order mode
-bits (SUID/SGID/SVTX).
+Fix OPEN41 and OPEN42 to properly set the ACE4_IDENTIFIER_GROUP
+flag when creating ACEs for named group principals. Without this
+flag, the kernel treats the principal as a user (ACL_USER) instead
+of a group (ACL_GROUP), preventing proper synthetic GROUP@
+detection and filtering.
 
-SETATTR: Verify behavior when setting both MODE and ACL
+The tests were creating group principal ACEs with flag=0, which
+should have been flag=ACE4_IDENTIFIER_GROUP. This is required for
+the kernel to distinguish between:
+- Named user principals (no flag) -> ACL_USER
+- Named group principals (with flag) -> ACL_GROUP
 
-Add three comprehensive tests that verify SETATTR(MODE+ACL) behavior
-per RFC 8881 §6.4.1.3:
-
-SATT30:
-Verify attrsset bitmap and final mode consistency when MODE+ACL set
-together. Whether or not the server includes MODE in attrsset, the
-final mode must match what the ACL derives to per §6.4.1.3.
-
-SATT31:
-Test MODE+ACL interaction when they conflict significantly.
-Regardless of requested MODE, final mode always matches ACL
-derivation. This shows that ACL wins when both are set (per
-§6.4.1.3: "possibly changing the final mode").
+With this fix, both tests now pass, and the server correctly
+returns ACLs with named principals "as given" per RFC 8881
+§6.4.1.2, without exposing synthetic OWNER@ or GROUP@ entries.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- nfs4.0/servertests/st_setattr.py | 863 ++++++++++++++++++++++++++++++-
- 1 file changed, 862 insertions(+), 1 deletion(-)
+ nfs4.1/server41tests/st_open.py | 723 +++++++++++++++++++++++++++++++-
+ 1 file changed, 720 insertions(+), 3 deletions(-)
 
-diff --git a/nfs4.0/servertests/st_setattr.py b/nfs4.0/servertests/st_setattr.py
-index 5d51054c29b4..513fe8ce8223 100644
---- a/nfs4.0/servertests/st_setattr.py
-+++ b/nfs4.0/servertests/st_setattr.py
-@@ -1,9 +1,10 @@
+diff --git a/nfs4.1/server41tests/st_open.py b/nfs4.1/server41tests/st_open.py
+index 28540b59a8fe..115daf9f5273 100644
+--- a/nfs4.1/server41tests/st_open.py
++++ b/nfs4.1/server41tests/st_open.py
+@@ -1,15 +1,16 @@
+ from .st_create_session import create_session
  from xdrdef.nfs4_const import *
- from .environment import check, get_invalid_utf8strings
- from nfs4lib import bitmap2list, dict2fattr
--from xdrdef.nfs4_type import nfstime4, settime4
-+from xdrdef.nfs4_type import nfstime4, settime4, nfsace4
+ 
+-from .environment import check, fail, create_file, open_file, close_file, write_file, read_file
+-from .environment import open_create_file_op
++from .environment import check, fail, unsupported, create_file, open_file, close_file, write_file, read_file
++from .environment import open_create_file_op, do_getattrdict
+ from xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
+ from xdrdef.nfs4_type import creatverfattr, fattr4, stateid4, locker4, lock_owner4
+-from xdrdef.nfs4_type import open_to_lock_owner4
++from xdrdef.nfs4_type import open_to_lock_owner4, nfsace4
  import nfs_ops
  op = nfs_ops.NFS4ops()
+ import threading
+ import nfs4lib
 +import nfs4acl
  
- def _set_mode(t, c, file, stateid=None, msg=" using stateid=0",
-               warnlist=[]):
-@@ -783,3 +784,863 @@ def testMixed(t, env):
-     c.init_connection()
-     fh, stateid = c.create_confirm(t.word(), deny=OPEN4_SHARE_DENY_NONE)
-     _set_mixed(t, c, fh)
+ def expect(res, seqid):
+     """Verify that open result has expected stateid.seqid"""
+@@ -195,3 +196,719 @@ def testCloseWithZeroSeqid(t, env):
+     stateid.seqid = 0
+     res = close_file(sess1, fh, stateid=stateid)
+     check(res)
 +
-+def testSetattrModeWithACL(t, env):
-+    """SETATTR with both MODE and ACL attributes
++def testSuppattrExclcreat(t, env):
++    """Check that FATTR4_SUPPATTR_EXCLCREAT is supported and valid
 +
-+    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
-+    both are processed, but the final mode is derived from the ACL and may
-+    differ from the requested MODE.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT19
++    FLAGS: open all
++    CODE: OPEN12
 +    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+    fh, stateid = c.create_confirm(t.word())
++    sess = env.c1.new_client_session(env.testname(t))
++    res = sess.compound([op.putrootfh(),
++                        op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS,
++                                                         FATTR4_SUPPATTR_EXCLCREAT]))])
++    check(res)
++    attrs_info = res.resarray[-1].obj_attributes
 +
-+    acl = nfs4acl.make_test_acl()
-+    mode = 0o640
++    if FATTR4_SUPPORTED_ATTRS not in attrs_info:
++        fail("Server did not return FATTR4_SUPPORTED_ATTRS")
 +
-+    # Set both MODE and ACL in a single SETATTR
-+    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
-+    ops = c.use_obj(fh) + [c.setattr(attrs)]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with both MODE and ACL")
++    # Check if SUPPATTR_EXCLCREAT is in the supported attributes
++    supported = attrs_info[FATTR4_SUPPORTED_ATTRS]
++    if not (supported & (1 << FATTR4_SUPPATTR_EXCLCREAT)):
++        unsupported("Server does not support FATTR4_SUPPATTR_EXCLCREAT")
 +
-+    # Check which attributes were actually set by examining the reply bitmask
-+    attrsset = bitmap2list(res.resarray[-1].attrsset)
++    # If supported, check that it was returned
++    if FATTR4_SUPPATTR_EXCLCREAT not in attrs_info:
++        fail("FATTR4_SUPPATTR_EXCLCREAT not returned even though it "
++             "appears in FATTR4_SUPPORTED_ATTRS")
 +
-+    # Verify both MODE and ACL were set (processed)
-+    if FATTR4_MODE not in attrsset:
-+        t.fail("MODE not in attrsset, but MODE was requested")
-+    if FATTR4_ACL not in attrsset:
-+        t.fail("ACL not in attrsset, but ACL was requested")
++def testSuppattrExclcreatSubset(t, env):
++    """FATTR4_SUPPATTR_EXCLCREAT must be subset of SUPPORTED_ATTRS
 +
-+    # Verify ACL was set correctly
-+    attrs_dict = c.do_getattrdict(fh, [FATTR4_ACL, FATTR4_MODE])
-+    try:
-+        returned_mode, expected_mode = nfs4acl.verify_mode_and_acl(
-+            attrs_dict, acl, "SETATTR")
-+    except AssertionError as e:
-+        t.fail(str(e))
-+
-+    # Display informational message about mode derivation
-+    if returned_mode != mode:
-+        t.pass_warn("MODE+ACL: requested 0%o, final 0%o (derived from ACL per RFC 8881 §6.3.2)"
-+                    % (mode, returned_mode))
-+
-+def testSetattrModePreservedWithACL(t, env):
-+    """Verify MODE derivation when SETATTR sets both MODE and ACL
-+
-+    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
-+    both are processed, but the final mode is derived from the ACL and may
-+    differ from the requested MODE.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT20
++    FLAGS: open all
++    CODE: OPEN13
++    DEPEND: OPEN12
 +    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+    fh, stateid = c.create_confirm(t.word())
++    sess = env.c1.new_client_session(env.testname(t))
++    res = sess.compound([op.putrootfh(),
++                        op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS,
++                                                         FATTR4_SUPPATTR_EXCLCREAT]))])
++    check(res)
++    attrs_info = res.resarray[-1].obj_attributes
 +
-+    acl = nfs4acl.make_test_acl()
-+    mode = 0o600
++    supported = attrs_info[FATTR4_SUPPORTED_ATTRS]
++    excl_supported = attrs_info[FATTR4_SUPPATTR_EXCLCREAT]
 +
-+    # Set both MODE and ACL
-+    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
-+    ops = c.use_obj(fh) + [c.setattr(attrs)]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with MODE and ACL")
++    # SUPPATTR_EXCLCREAT must be a subset of SUPPORTED_ATTRS
++    # i.e., every bit set in excl_supported must also be set in supported
++    invalid = excl_supported & ~supported
++    if invalid != 0:
++        fail("FATTR4_SUPPATTR_EXCLCREAT contains attributes not in "
++             "FATTR4_SUPPORTED_ATTRS:\n"
++             "  Invalid attributes: %s" % nfs4lib.attr_bitmap_to_str(invalid))
 +
-+    # Check which attributes were actually set by examining the reply bitmask
-+    attrsset = bitmap2list(res.resarray[-1].attrsset)
++def testACLSupported(t, env):
++    """Check that server supports FATTR4_ACL attribute
 +
-+    # Verify both MODE and ACL were set (processed)
-+    if FATTR4_MODE not in attrsset:
-+        t.fail("MODE not in attrsset, but MODE was requested")
-+    if FATTR4_ACL not in attrsset:
-+        t.fail("ACL not in attrsset, but ACL was requested")
-+
-+    # Verify ACL was set correctly
-+    attrs_dict = c.do_getattrdict(fh, [FATTR4_ACL, FATTR4_MODE])
-+    try:
-+        returned_mode, expected_mode = nfs4acl.verify_mode_and_acl(
-+            attrs_dict, acl, "SETATTR")
-+    except AssertionError as e:
-+        t.fail(str(e))
-+
-+    # Display informational message about mode derivation
-+    if returned_mode != mode:
-+        t.pass_warn("MODE+ACL: requested 0%o, final 0%o (derived from ACL per RFC 8881 §6.3.2)"
-+                    % (mode, returned_mode))
-+
-+def testSetattrRestrictiveModeWithACL(t, env):
-+    """SETATTR with restrictive MODE (0o400) and ACL together
-+
-+    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
-+    both are processed, but the final mode is derived from the ACL and may
-+    differ from the requested MODE. This tests the case where the requested
-+    MODE is more restrictive than what the ACL would grant.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT21
++    FLAGS: open acl all
++    CODE: OPEN8a
 +    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+    fh, stateid = c.create_confirm(t.word())
++    sess = env.c1.new_client_session(env.testname(t))
++    res = sess.compound([op.putrootfh(),
++                        op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS]))])
++    check(res)
++    attrs_info = res.resarray[-1].obj_attributes
++    if FATTR4_SUPPORTED_ATTRS not in attrs_info:
++        fail("Server did not return FATTR4_SUPPORTED_ATTRS")
++    supported = attrs_info[FATTR4_SUPPORTED_ATTRS]
++    if not (supported & (1 << FATTR4_ACL)):
++        unsupported("Server does not support FATTR4_ACL attribute")
 +
++def testACLExclusiveSupported(t, env):
++    """Check that server supports setting ACL during EXCLUSIVE4_1 create
++
++    FLAGS: open acl all
++    CODE: OPEN8b
++    """
++    sess = env.c1.new_client_session(env.testname(t))
++    res = sess.compound([op.putrootfh(),
++                        op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPATTR_EXCLCREAT]))])
++    check(res)
++    attrs_info = res.resarray[-1].obj_attributes
++    if FATTR4_SUPPATTR_EXCLCREAT not in attrs_info:
++        unsupported("Server does not support FATTR4_SUPPATTR_EXCLCREAT")
++    excl_supported = attrs_info[FATTR4_SUPPATTR_EXCLCREAT]
++    if not (excl_supported & (1 << FATTR4_ACL)):
++        unsupported("Server does not support setting FATTR4_ACL during "
++                    "EXCLUSIVE4_1 create")
++
++def testOpenCreateWithACLUnchecked(t, env):
++    """OPEN with UNCHECKED4 CREATE setting NFSv4 ACL attribute
++
++    FLAGS: open acl all
++    CODE: OPEN9
++    DEPEND: OPEN8a
++    """
++    sess = env.c1.new_client_session(env.testname(t))
 +    acl = nfs4acl.make_test_acl()
-+    mode = 0o400  # Read-only for owner
 +
-+    # Set restrictive MODE with ACL
-+    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
-+    ops = c.use_obj(fh) + [c.setattr(attrs)]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with restrictive MODE and ACL")
++    # Create file with ACL attribute using UNCHECKED4 mode
++    attrs = {FATTR4_MODE: 0o644, FATTR4_ACL: acl}
++    res = create_file(sess, env.testname(t), attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    expect(res, seqid=1)
 +
-+    # Check which attributes were actually set by examining the reply bitmask
-+    attrsset = bitmap2list(res.resarray[-1].attrsset)
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
 +
-+    # Verify both MODE and ACL were set (processed)
-+    if FATTR4_MODE not in attrsset:
-+        t.fail("MODE not in attrsset, but MODE was requested")
-+    if FATTR4_ACL not in attrsset:
-+        t.fail("ACL not in attrsset, but ACL was requested")
-+
-+    # Verify ACL was set correctly
-+    attrs_dict = c.do_getattrdict(fh, [FATTR4_ACL, FATTR4_MODE])
-+    if FATTR4_ACL not in attrs_dict or FATTR4_MODE not in attrs_dict:
-+        t.fail("ACL or MODE not returned after SETATTR")
++    # Verify the ACL was set correctly by reading it back
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL])
++    if FATTR4_ACL not in attrs_dict:
++        fail("ACL attribute not returned after OPEN with CREATE")
 +
 +    try:
 +        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
 +    except AssertionError as e:
-+        t.fail(str(e))
++        fail(str(e))
 +
-+    # Per RFC 8881 §6.4.1.3, when both MODE and ACL are set, the final mode
-+    # is derived from the ACL per §6.3.2, and may differ from requested MODE
-+    returned_mode = attrs_dict[FATTR4_MODE] & 0o777
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateWithACLGuarded(t, env):
++    """OPEN with GUARDED4 CREATE setting NFSv4 ACL attribute
++
++    FLAGS: open acl all
++    CODE: OPEN10
++    DEPEND: OPEN8a
++    """
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++
++    # Create file with ACL attribute using GUARDED4 mode
++    attrs = {FATTR4_MODE: 0o644, FATTR4_ACL: acl}
++    res = create_file(sess, env.testname(t), attrs=attrs, mode=GUARDED4)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Verify the ACL was set correctly by reading it back
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL])
++    if FATTR4_ACL not in attrs_dict:
++        fail("ACL attribute not returned after OPEN with CREATE")
++
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateWithACLExclusive(t, env):
++    """OPEN with EXCLUSIVE4_1 CREATE setting NFSv4 ACL attribute
++
++    FLAGS: open acl all
++    CODE: OPEN11
++    DEPEND: OPEN8b
++    """
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++
++    # Create file with ACL attribute using EXCLUSIVE4_1 mode
++    # EXCLUSIVE4_1 allows attributes to be set atomically with create
++    # Don't set MODE with ACL - let the ACL determine permissions
++    attrs = {FATTR4_ACL: acl}
++    verifier = b"testverif"
++    res = create_file(sess, env.testname(t), attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Verify the ACL was set correctly by reading it back
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL])
++    if FATTR4_ACL not in attrs_dict:
++        fail("ACL attribute not returned after OPEN with CREATE")
++
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateModeWithACLExclusive(t, env):
++    """OPEN with EXCLUSIVE4_1 setting both MODE and ACL
++
++    FLAGS: open acl all
++    CODE: OPEN14
++    DEPEND: OPEN8b
++    """
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++
++    # Create file with both MODE and ACL using EXCLUSIVE4_1
++    # This tests that server can handle both attributes together
++    attrs = {FATTR4_MODE: 0o640, FATTR4_ACL: acl}
++    verifier = b"testverif"
++    res = create_file(sess, env.testname(t), attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Verify both ACL and MODE were set correctly
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL, FATTR4_MODE])
++    if FATTR4_ACL not in attrs_dict:
++        fail("ACL attribute not returned after OPEN with CREATE")
++    if FATTR4_MODE not in attrs_dict:
++        fail("MODE attribute not returned after OPEN with CREATE")
++
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateModePreservedUnchecked(t, env):
++    """Verify MODE derivation with ACL in UNCHECKED4 create
++
++    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
++    both are processed, but the final mode is derived from the ACL and may
++    differ from the requested MODE.
++
++    FLAGS: open acl all
++    CODE: OPEN15
++    DEPEND: OPEN8a
++    """
++    from nfs4acl import acl2mode_rfc8881
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++    mode = 0o600
++
++    # Create file with both MODE and ACL
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    res = create_file(sess, env.testname(t), attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Check which attributes were actually set by examining the reply bitmask
++    attrset = nfs4lib.bitmap2list(res.resarray[-2].attrset)
++
++    # Verify both MODE and ACL were set (processed)
++    if FATTR4_MODE not in attrset:
++        fail("MODE not in attrset, but MODE was requested")
++    if FATTR4_ACL not in attrset:
++        fail("ACL not in attrset, but ACL was requested")
++
++    # Verify ACL was set correctly
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL, FATTR4_MODE])
++    try:
++        nfs4acl.verify_mode_and_acl(attrs_dict, acl, "OPEN with CREATE")
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateModePreservedGuarded(t, env):
++    """Verify MODE derivation with ACL in GUARDED4 create
++
++    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
++    both are processed, but the final mode is derived from the ACL and may
++    differ from the requested MODE.
++
++    FLAGS: open acl all
++    CODE: OPEN16
++    DEPEND: OPEN8a
++    """
++    from nfs4acl import acl2mode_rfc8881
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++    mode = 0o640
++
++    # Create file with both MODE and ACL
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    res = create_file(sess, env.testname(t), attrs=attrs, mode=GUARDED4)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Check which attributes were actually set by examining the reply bitmask
++    attrset = nfs4lib.bitmap2list(res.resarray[-2].attrset)
++
++    # Verify both MODE and ACL were set (processed)
++    if FATTR4_MODE not in attrset:
++        fail("MODE not in attrset, but MODE was requested")
++    if FATTR4_ACL not in attrset:
++        fail("ACL not in attrset, but ACL was requested")
++
++    # Verify ACL was set correctly
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL, FATTR4_MODE])
++    try:
++        nfs4acl.verify_mode_and_acl(attrs_dict, acl, "OPEN with CREATE")
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateModePreservedExclusive(t, env):
++    """Verify MODE derivation with ACL in EXCLUSIVE4_1 create
++
++    Per RFC 8881 Section 6.4.1.3, when both MODE and ACL are set together,
++    both are processed, but the final mode is derived from the ACL and may
++    differ from the requested MODE.
++
++    FLAGS: open acl all
++    CODE: OPEN17
++    DEPEND: OPEN8b
++    """
++    from nfs4acl import acl2mode_rfc8881
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++    mode = 0o600
++
++    # Create file with both MODE and ACL using EXCLUSIVE4_1
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    verifier = b"testverif"
++    res = create_file(sess, env.testname(t), attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    expect(res, seqid=1)
++
++    fh = res.resarray[-1].object
++    stateid = res.resarray[-2].stateid
++
++    # Check which attributes were actually set by examining the reply bitmask
++    attrset = nfs4lib.bitmap2list(res.resarray[-2].attrset)
++
++    # Verify both MODE and ACL were set (processed)
++    if FATTR4_MODE not in attrset:
++        fail("MODE not in attrset, but MODE was requested")
++    if FATTR4_ACL not in attrset:
++        fail("ACL not in attrset, but ACL was requested")
++
++    # Verify ACL was set correctly
++    attrs_dict = do_getattrdict(sess, fh, [FATTR4_ACL, FATTR4_MODE])
++    try:
++        nfs4acl.verify_mode_and_acl(attrs_dict, acl, "OPEN with CREATE")
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh, stateid=stateid)
++    check(res)
++
++def testOpenCreateRestrictiveModeWithACL(t, env):
++    """Test OPEN CREATE with restrictive MODE and ACL together
++
++    Test all three create modes with a restrictive MODE (0o400) and ACL
++    to ensure the server handles the interaction correctly. The MODE
++    being more restrictive than the ACL is an interesting edge case.
++
++    FLAGS: open acl all
++    CODE: OPEN18
++    DEPEND: OPEN8a OPEN8b
++    """
++    sess = env.c1.new_client_session(env.testname(t))
++    acl = nfs4acl.make_test_acl()
++    mode = 0o400  # Read-only for owner
++
++    # Test UNCHECKED4
++    name1 = env.testname(t) + b"_unchecked"
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    res = create_file(sess, name1, attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    fh1 = res.resarray[-1].object
++    stateid1 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh1, [FATTR4_ACL, FATTR4_MODE])
++    if FATTR4_ACL not in attrs_dict or FATTR4_MODE not in attrs_dict:
++        fail("ACL or MODE not returned after UNCHECKED4 CREATE")
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh1, stateid=stateid1)
++    check(res)
++
++    # Test GUARDED4
++    name2 = env.testname(t) + b"_guarded"
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    res = create_file(sess, name2, attrs=attrs, mode=GUARDED4)
++    check(res)
++    fh2 = res.resarray[-1].object
++    stateid2 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh2, [FATTR4_ACL, FATTR4_MODE])
++    if FATTR4_ACL not in attrs_dict or FATTR4_MODE not in attrs_dict:
++        fail("ACL or MODE not returned after GUARDED4 CREATE")
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh2, stateid=stateid2)
++    check(res)
++
++    # Test EXCLUSIVE4_1
++    name3 = env.testname(t) + b"_exclusive"
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    verifier = b"testverif"
++    res = create_file(sess, name3, attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    fh3 = res.resarray[-1].object
++    stateid3 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh3, [FATTR4_ACL, FATTR4_MODE])
++    if FATTR4_ACL not in attrs_dict or FATTR4_MODE not in attrs_dict:
++        fail("ACL or MODE not returned after EXCLUSIVE4_1 CREATE")
++    try:
++        nfs4acl.verify_acl(attrs_dict[FATTR4_ACL], acl)
++    except AssertionError as e:
++        fail(str(e))
++
++    res = close_file(sess, fh3, stateid=stateid3)
++    check(res)
++
++#
++# Tests for OPEN CREATE with MODE and ACL per RFC 8881 §6.4.3
++#
++
++def testOpenCreateModeDerivation(t, env):
++    """OPEN CREATE with MODE should derive ACL from mode
++
++    Per RFC 8881 §6.4.3: If just mode is given, the mode MUST be
++    applied to the inherited/created ACL per §6.4.1.1. Test with
++    UNCHECKED4, GUARDED4, and EXCLUSIVE4_1.
++
++    FLAGS: open all
++    CODE: OPEN38
++    """
++    from nfs4acl import acl2mode_rfc8881
++
++    sess = env.c1.new_client_session(env.testname(t))
++
++    # Test with UNCHECKED4
++    mode = 0o640
++    attrs = {FATTR4_MODE: mode}
++    name1 = env.testname(t) + b"_unchecked"
++    res = create_file(sess, name1, attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    fh1 = res.resarray[-1].object
++    stateid1 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh1, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    if result_mode != mode:
++        fail("UNCHECKED4: mode (0%o) doesn't match requested (0%o)" %
++             (result_mode, mode))
++
++    acl_derived_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
++    if result_mode != acl_derived_mode:
++        fail("UNCHECKED4: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, acl_derived_mode))
++
++    res = close_file(sess, fh1, stateid=stateid1)
++    check(res)
++
++    # Test with GUARDED4
++    mode = 0o750
++    attrs = {FATTR4_MODE: mode}
++    name2 = env.testname(t) + b"_guarded"
++    res = create_file(sess, name2, attrs=attrs, mode=GUARDED4)
++    check(res)
++    fh2 = res.resarray[-1].object
++    stateid2 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh2, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    if result_mode != mode:
++        fail("GUARDED4: mode (0%o) doesn't match requested (0%o)" %
++             (result_mode, mode))
++
++    acl_derived_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
++    if result_mode != acl_derived_mode:
++        fail("GUARDED4: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, acl_derived_mode))
++
++    res = close_file(sess, fh2, stateid=stateid2)
++    check(res)
++
++    # Test with EXCLUSIVE4_1
++    mode = 0o755
++    attrs = {FATTR4_MODE: mode}
++    name3 = env.testname(t) + b"_exclusive"
++    verifier = b"testverif"
++    res = create_file(sess, name3, attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    fh3 = res.resarray[-1].object
++    stateid3 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh3, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    if result_mode != mode:
++        fail("EXCLUSIVE4_1: mode (0%o) doesn't match requested (0%o)" %
++             (result_mode, mode))
++
++    acl_derived_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
++    if result_mode != acl_derived_mode:
++        fail("EXCLUSIVE4_1: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, acl_derived_mode))
++
++    res = close_file(sess, fh3, stateid=stateid3)
++    check(res)
++
++def testOpenCreateACLDerivation(t, env):
++    """OPEN CREATE with ACL should derive mode from ACL
++
++    Per RFC 8881 §6.4.3: If just ACL is given, inheritance SHOULD NOT
++    take place, ACL should be set as given, and mode modified per §6.4.1.2.
++
++    FLAGS: open all
++    CODE: OPEN39
++    """
++    from nfs4acl import acl2mode_rfc8881
++
++    sess = env.c1.new_client_session(env.testname(t))
++
++    # Test with UNCHECKED4
++    acl = [
++        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
++                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA,
++                b"OWNER@"),
++        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
++                ACE4_READ_DATA,
++                b"GROUP@")
++    ]
++    attrs = {FATTR4_ACL: acl}
++    name1 = env.testname(t) + b"_unchecked"
++    res = create_file(sess, name1, attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    fh1 = res.resarray[-1].object
++    stateid1 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh1, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
 +    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
 +
-+    # Display informational message about mode derivation
-+    if returned_mode != mode:
-+        t.pass_warn("MODE+ACL: requested 0%o, final 0%o (derived from ACL per RFC 8881 §6.3.2)"
-+                    % (mode, returned_mode))
++    if result_mode != expected_mode:
++        fail("UNCHECKED4: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, expected_mode))
 +
-+    if returned_mode != expected_mode:
-+        t.fail("MODE (0%o) does not match RFC 8881 §6.3.2 derivation "
-+               "from ACL (expected 0%o)" % (returned_mode, expected_mode))
++    res = close_file(sess, fh1, stateid=stateid1)
++    check(res)
 +
-+def testSetattrACLThenMode(t, env):
-+    """SETATTR MODE+ACL together vs ACL then MODE separately
-+
-+    Per RFC 8881 sections 6.4.1.1-6.4.1.3, when MODE and ACL are set
-+    together in a single SETATTR, the server computes the final mode
-+    from the ACL (the MODE attribute is effectively ignored). When
-+    ACL is set first and MODE is set in a separate operation, the
-+    final mode is the explicitly-set MODE value.
-+
-+    This test verifies this difference by using a MODE (0o755) that
-+    differs from the ACL-derived mode (0o644).
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT22
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # Create two test files
-+    fh1, stateid1 = c.create_confirm(t.word() + b"_1")
-+    fh2, stateid2 = c.create_confirm(t.word() + b"_2")
-+
-+    # make_test_acl() derives to mode 0o644 (rw-r--r--)
-+    acl = nfs4acl.make_test_acl()
-+    acl_derived_mode = acl2mode_rfc8881(acl)
-+
-+    # Use a different mode to demonstrate the RFC-defined difference
-+    explicit_mode = 0o755
-+
-+    # File 1: Set MODE and ACL together
-+    # Per RFC 8881 §6.4.1.2, mode is derived from ACL (MODE ignored)
-+    attrs = {FATTR4_MODE: explicit_mode, FATTR4_ACL: acl}
-+    ops = c.use_obj(fh1) + [c.setattr(attrs)]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with MODE and ACL together")
-+
-+    # File 2: Set ACL first, then MODE separately
-+    # Per RFC 8881 §6.4.1.1, final mode is the explicit MODE value
-+    ops = c.use_obj(fh2) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with ACL")
-+
-+    ops = c.use_obj(fh2) + [c.setattr({FATTR4_MODE: explicit_mode})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with MODE after ACL")
-+
-+    # Verify the modes differ as expected per RFC 8881
-+    attrs1 = c.do_getattrdict(fh1, [FATTR4_MODE, FATTR4_ACL])
-+    attrs2 = c.do_getattrdict(fh2, [FATTR4_MODE, FATTR4_ACL])
-+
-+    mode1 = attrs1[FATTR4_MODE] & 0o7777
-+    mode2 = attrs2[FATTR4_MODE] & 0o7777
-+
-+    # File 1 (MODE+ACL together): mode should be derived from ACL
-+    if mode1 != acl_derived_mode:
-+        t.fail("MODE+ACL together: expected ACL-derived mode 0%o, got 0%o"
-+               % (acl_derived_mode, mode1))
-+
-+    # File 2 (ACL then MODE): mode should be explicit MODE value
-+    if mode2 != explicit_mode:
-+        t.fail("ACL then MODE: expected explicit mode 0%o, got 0%o"
-+               % (explicit_mode, mode2))
-+
-+def testSetattrACLModeDeriveBasic(t, env):
-+    """SETATTR(ACL) should derive mode per RFC 8881 Section 6.3.2
-+
-+    Test basic mode derivation from ACL when setting ACL alone.
-+    The mode's permission bits should match what is computed from the ACL.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT23
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    fh, stateid = c.create_confirm(t.word())
-+
-+    # Create ACL: OWNER@ gets read+write+execute, others get nothing
++    # Test with GUARDED4
 +    acl = [
 +        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                b"OWNER@"),
-+        nfsace4(ACE4_ACCESS_DENIED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                b"GROUP@"),
-+        nfsace4(ACE4_ACCESS_DENIED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                b"EVERYONE@")
-+    ]
-+
-+    # Set ACL only (not MODE)
-+    ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with ACL only")
-+
-+    # Get resulting mode
-+    attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+    returned_mode = attrs[FATTR4_MODE] & 0o777
-+    returned_acl = attrs[FATTR4_ACL]
-+
-+    # Compute expected mode from returned ACL per RFC 8881 §6.3.2
-+    expected_mode = acl2mode_rfc8881(returned_acl)
-+
-+    if returned_mode != expected_mode:
-+        t.fail("Mode (0%o) does not match RFC 8881 §6.3.2 derivation "
-+               "from ACL (expected 0%o)" % (returned_mode, expected_mode))
-+
-+def testSetattrACLModeDeriveWriteBits(t, env):
-+    """SETATTR(ACL) write bit requires BOTH WRITE_DATA and APPEND_DATA
-+
-+    Per RFC 8881 §6.3.2, the write mode bit should only be set if BOTH
-+    ACE4_WRITE_DATA and ACE4_APPEND_DATA are present in the ACL.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT24
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # Test 1: Only WRITE_DATA (no APPEND_DATA) - write bit should NOT be set
-+    fh1, stateid1 = c.create_confirm(t.word() + b"_1")
-+    acl1 = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_WRITE_DATA,  # Missing APPEND_DATA
++                ACE4_READ_DATA | ACE4_EXECUTE,
 +                b"OWNER@")
 +    ]
-+    ops = c.use_obj(fh1) + [c.setattr({FATTR4_ACL: acl1})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with only WRITE_DATA")
++    attrs = {FATTR4_ACL: acl}
++    name2 = env.testname(t) + b"_guarded"
++    res = create_file(sess, name2, attrs=attrs, mode=GUARDED4)
++    check(res)
++    fh2 = res.resarray[-1].object
++    stateid2 = res.resarray[-2].stateid
 +
-+    attrs1 = c.do_getattrdict(fh1, [FATTR4_MODE, FATTR4_ACL])
-+    mode1 = attrs1[FATTR4_MODE] & 0o777
-+    expected_mode1 = acl2mode_rfc8881(attrs1[FATTR4_ACL])
++    attrs_dict = do_getattrdict(sess, fh2, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
 +
-+    if mode1 != expected_mode1:
-+        t.fail("Mode (0%o) with only WRITE_DATA does not match expected (0%o). "
-+               "Write bit should NOT be set without APPEND_DATA." %
-+               (mode1, expected_mode1))
++    if result_mode != expected_mode:
++        fail("GUARDED4: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, expected_mode))
 +
-+    # Test 2: Only APPEND_DATA (no WRITE_DATA) - write bit should NOT be set
-+    fh2, stateid2 = c.create_confirm(t.word() + b"_2")
-+    acl2 = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_APPEND_DATA,  # Missing WRITE_DATA
-+                b"OWNER@")
-+    ]
-+    ops = c.use_obj(fh2) + [c.setattr({FATTR4_ACL: acl2})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with only APPEND_DATA")
++    res = close_file(sess, fh2, stateid=stateid2)
++    check(res)
 +
-+    attrs2 = c.do_getattrdict(fh2, [FATTR4_MODE, FATTR4_ACL])
-+    mode2 = attrs2[FATTR4_MODE] & 0o777
-+    expected_mode2 = acl2mode_rfc8881(attrs2[FATTR4_ACL])
-+
-+    if mode2 != expected_mode2:
-+        t.fail("Mode (0%o) with only APPEND_DATA does not match expected (0%o). "
-+               "Write bit should NOT be set without WRITE_DATA." %
-+               (mode2, expected_mode2))
-+
-+    # Test 3: Both WRITE_DATA and APPEND_DATA - write bit SHOULD be set
-+    fh3, stateid3 = c.create_confirm(t.word() + b"_3")
-+    acl3 = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_WRITE_DATA | ACE4_APPEND_DATA,  # Both present
-+                b"OWNER@")
-+    ]
-+    ops = c.use_obj(fh3) + [c.setattr({FATTR4_ACL: acl3})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with both WRITE_DATA and APPEND_DATA")
-+
-+    attrs3 = c.do_getattrdict(fh3, [FATTR4_MODE, FATTR4_ACL])
-+    mode3 = attrs3[FATTR4_MODE] & 0o777
-+    expected_mode3 = acl2mode_rfc8881(attrs3[FATTR4_ACL])
-+
-+    if mode3 != expected_mode3:
-+        t.fail("Mode (0%o) with WRITE_DATA+APPEND_DATA does not match "
-+               "expected (0%o)" % (mode3, expected_mode3))
-+
-+def testSetattrACLModeDeriveAllowDeny(t, env):
-+    """SETATTR(ACL) with ALLOW/DENY interaction
-+
-+    Test that ACL evaluation order is correct when mixing ALLOW and DENY ACEs.
-+    Per RFC 8881 §6.3.2, evaluate ACEs in order, with earlier ACEs taking
-+    precedence.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT25
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # Test: ALLOW first, then DENY - the ALLOW should win
-+    fh, stateid = c.create_confirm(t.word())
-+    acl = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                b"OWNER@"),
-+        nfsace4(ACE4_ACCESS_DENIED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,  # This should be ignored (already allowed)
-+                b"OWNER@")
-+    ]
-+
-+    ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with ALLOW then DENY")
-+
-+    attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+    returned_mode = attrs[FATTR4_MODE] & 0o777
-+    expected_mode = acl2mode_rfc8881(attrs[FATTR4_ACL])
-+
-+    if returned_mode != expected_mode:
-+        t.fail("Mode (0%o) with ALLOW/DENY does not match expected (0%o). "
-+               "First ACE should take precedence." % (returned_mode, expected_mode))
-+
-+def testSetattrACLModeDeriveEveryone(t, env):
-+    """SETATTR(ACL) with EVERYONE@ affecting all identifiers
-+
-+    Test that EVERYONE@ ACEs are considered when evaluating permissions
-+    for OWNER@ and GROUP@ per RFC 8881 §6.3.2.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT26
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # EVERYONE@ gets read, specific OWNER@ gets nothing extra
-+    # Final result: OWNER@ should have read (from EVERYONE@)
-+    fh, stateid = c.create_confirm(t.word())
-+    acl = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                b"EVERYONE@")
-+    ]
-+
-+    ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with only EVERYONE@")
-+
-+    attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+    returned_mode = attrs[FATTR4_MODE] & 0o777
-+    expected_mode = acl2mode_rfc8881(attrs[FATTR4_ACL])
-+
-+    if returned_mode != expected_mode:
-+        t.fail("Mode (0%o) does not match expected (0%o). "
-+               "EVERYONE@ should affect all mode bits." %
-+               (returned_mode, expected_mode))
-+
-+def testSetattrACLModeDeriveComplex(t, env):
-+    """SETATTR(ACL) with complex ACL including multiple identifiers
-+
-+    Test mode derivation with a more realistic ACL including OWNER@,
-+    GROUP@, and EVERYONE@ with various permissions.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT27
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    fh, stateid = c.create_confirm(t.word())
-+
-+    # Create a complex ACL:
-+    # OWNER@: read + write + execute
-+    # GROUP@: read + execute (no write)
-+    # EVERYONE@: read only
++    # Test with EXCLUSIVE4_1
 +    acl = [
 +        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
 +                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
@@ -590,214 +748,41 @@ index 5d51054c29b4..513fe8ce8223 100644
 +                ACE4_READ_DATA,
 +                b"EVERYONE@")
 +    ]
++    attrs = {FATTR4_ACL: acl}
++    name3 = env.testname(t) + b"_exclusive"
++    verifier = b"testverif"
++    res = create_file(sess, name3, attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    fh3 = res.resarray[-1].object
++    stateid3 = res.resarray[-2].stateid
 +
-+    ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with complex ACL")
++    attrs_dict = do_getattrdict(sess, fh3, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
 +
-+    attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+    returned_mode = attrs[FATTR4_MODE] & 0o777
-+    expected_mode = acl2mode_rfc8881(attrs[FATTR4_ACL])
++    if result_mode != expected_mode:
++        fail("EXCLUSIVE4_1: mode (0%o) doesn't match ACL derivation (0%o)" %
++             (result_mode, expected_mode))
 +
-+    if returned_mode != expected_mode:
-+        t.fail("Mode (0%o) does not match RFC 8881 §6.3.2 derivation "
-+               "from complex ACL (expected 0%o)" %
-+               (returned_mode, expected_mode))
++    res = close_file(sess, fh3, stateid=stateid3)
++    check(res)
 +
-+def testSetattrACLIndependentOfMode(t, env):
-+    """SETATTR(ACL) outcome should not depend on existing mode bits
++def testOpenCreateModeACLConflict(t, env):
++    """OPEN CREATE with both MODE and ACL - ACL should win
 +
-+    Per RFC 8881 §6.4.1.2, when setting ACL without mode, the ACL should
-+    be set as given. The existing mode should not affect the ACL that gets
-+    stored. This test verifies that setting the same ACL on files with
-+    different initial modes results in identical ACLs being stored.
++    Per RFC 8881 §6.4.3: If both mode and ACL are given, both attributes
++    will be set per §6.4.1.3 (MODE first, then ACL, with ACL modifying
++    the final mode).
 +
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT28
++    FLAGS: open all
++    CODE: OPEN40
 +    """
 +    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
 +
-+    # Create the same ACL to use for all files
-+    # OWNER@: read + write, GROUP@: read, EVERYONE@: nothing
-+    test_acl = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA,
-+                b"OWNER@"),
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                b"GROUP@")
-+    ]
++    sess = env.c1.new_client_session(env.testname(t))
 +
-+    # Test with various initial mode values
-+    initial_modes = [0o600, 0o644, 0o755, 0o777, 0o400, 0o000]
-+    files = []
-+
-+    # Create files with different initial modes
-+    for initial_mode in initial_modes:
-+        fh, stateid = c.create_confirm(t.word() + (b"_%o" % initial_mode))
-+
-+        # Set initial mode
-+        ops = c.use_obj(fh) + [c.setattr({FATTR4_MODE: initial_mode})]
-+        res = c.compound(ops)
-+        check(res, msg="Setting initial mode to 0%o" % initial_mode)
-+
-+        files.append((fh, initial_mode))
-+
-+    # Now set the same ACL on all files
-+    for fh, initial_mode in files:
-+        ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: test_acl})]
-+        res = c.compound(ops)
-+        check(res, msg="SETATTR ACL on file with initial mode 0%o" % initial_mode)
-+
-+    # Retrieve the ACLs that were actually stored
-+    acls = []
-+    for fh, initial_mode in files:
-+        attrs = c.do_getattrdict(fh, [FATTR4_ACL])
-+        acls.append((initial_mode, attrs[FATTR4_ACL]))
-+
-+    # Helper function to compare ACLs (comparing ACE lists)
-+    def acl_equal(acl1, acl2):
-+        """Compare two ACLs for equality"""
-+        if len(acl1) != len(acl2):
-+            return False
-+        for ace1, ace2 in zip(acl1, acl2):
-+            if (ace1.type != ace2.type or
-+                ace1.flag != ace2.flag or
-+                ace1.access_mask != ace2.access_mask or
-+                ace1.who != ace2.who):
-+                return False
-+        return True
-+
-+    def acl_to_string(acl):
-+        """Convert ACL to readable string for error messages"""
-+        aces = []
-+        for ace in acl:
-+            type_str = "ALLOW" if ace.type == ACE4_ACCESS_ALLOWED_ACE_TYPE else "DENY"
-+            aces.append("<%s:%s:0x%x:0x%x>" %
-+                       (type_str, ace.who.decode(), ace.access_mask, ace.flag))
-+        return "[" + ", ".join(aces) + "]"
-+
-+    # Compare all ACLs - they should all be identical
-+    reference_mode, reference_acl = acls[0]
-+    for initial_mode, acl in acls[1:]:
-+        if not acl_equal(reference_acl, acl):
-+            t.fail("ACLs differ based on initial mode! "
-+                   "File with mode 0%o has ACL %s, "
-+                   "but file with mode 0%o has ACL %s. "
-+                   "RFC 8881 §6.4.1.2: ACL should be set as given, "
-+                   "independent of existing mode." %
-+                   (reference_mode, acl_to_string(reference_acl),
-+                    initial_mode, acl_to_string(acl)))
-+
-+    # Also verify that the mode derived from the ACL is consistent
-+    modes = []
-+    for initial_mode, acl in acls:
-+        derived_mode = acl2mode_rfc8881(acl)
-+        modes.append(derived_mode)
-+
-+    if len(set(modes)) != 1:
-+        mode_str = ", ".join("0%o (from initial 0%o)" % (m, acls[i][0])
-+                             for i, m in enumerate(modes))
-+        t.fail("ACLs derive to different modes: %s. "
-+               "This suggests ACLs were stored differently based on initial mode." %
-+               mode_str)
-+
-+def testSetattrACLIndependentModeHighBits(t, env):
-+    """SETATTR(ACL) should preserve high-order mode bits (SUID/SGID/SVTX)
-+
-+    Per RFC 8881 §6.4.1.2, when setting ACL without mode, the three
-+    high-order bits of mode (SUID, SGID, SVTX) SHOULD remain unchanged.
-+    Only the low-order nine permission bits should be modified.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT29
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # Create ACL to set
-+    test_acl = [
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                b"OWNER@"),
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                b"GROUP@")
-+    ]
-+
-+    # Test with different high-order bits set
-+    test_cases = [
-+        (0o4755, "SUID"),      # Set-user-ID
-+        (0o2755, "SGID"),      # Set-group-ID
-+        (0o1755, "SVTX"),      # Sticky bit
-+        (0o6755, "SUID+SGID"), # Both SUID and SGID
-+        (0o7755, "ALL"),       # All three bits
-+    ]
-+
-+    for initial_mode, description in test_cases:
-+        fh, stateid = c.create_confirm(t.word() + (b"_%s" % description.encode()))
-+
-+        # Set initial mode with high-order bits
-+        ops = c.use_obj(fh) + [c.setattr({FATTR4_MODE: initial_mode})]
-+        res = c.compound(ops)
-+        check(res, msg="Setting initial mode 0%o (%s)" % (initial_mode, description))
-+
-+        # Verify the mode was set
-+        before_attrs = c.do_getattrdict(fh, [FATTR4_MODE])
-+        before_mode = before_attrs[FATTR4_MODE] & 0o7777
-+
-+        # Set ACL only (not mode)
-+        ops = c.use_obj(fh) + [c.setattr({FATTR4_ACL: test_acl})]
-+        res = c.compound(ops)
-+        check(res, msg="SETATTR ACL on file with %s" % description)
-+
-+        # Check that high-order bits are preserved
-+        after_attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+        after_mode = after_attrs[FATTR4_MODE] & 0o7777
-+
-+        # Extract high-order bits (SUID, SGID, SVTX)
-+        before_high = before_mode & 0o7000
-+        after_high = after_mode & 0o7000
-+
-+        if before_high != after_high:
-+            t.fail("High-order mode bits not preserved for %s: "
-+                   "before=0%o, after=0%o. RFC 8881 §6.4.1.2 says "
-+                   "high-order bits SHOULD remain unchanged." %
-+                   (description, before_mode, after_mode))
-+
-+        # Verify low-order bits match ACL derivation
-+        after_low = after_mode & 0o777
-+        expected_low = acl2mode_rfc8881(after_attrs[FATTR4_ACL])
-+
-+        if after_low != expected_low:
-+            t.fail("Low-order mode bits (0%o) don't match RFC 8881 §6.3.2 "
-+                   "derivation (expected 0%o) for %s" %
-+                   (after_low, expected_low, description))
-+
-+def testSetattrModeACLattrsset(t, env):
-+    """SETATTR(MODE+ACL) should indicate which attributes were actually set
-+
-+    Per RFC 8881 §6.4.1.3, when both MODE and ACL are set together, the
-+    server processes MODE first, then ACL (which may modify the mode).
-+    The attrsset bitmap indicates which attributes were actually set.
-+    This test verifies the attrsset bitmap and final mode consistency.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT30
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    fh, stateid = c.create_confirm(t.word())
-+
-+    # Create an ACL that will derive to a specific mode (0754)
++    # Test with UNCHECKED4: ACL would derive to 0754, request MODE 0640
 +    acl = [
 +        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
 +                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
@@ -809,204 +794,79 @@ index 5d51054c29b4..513fe8ce8223 100644
 +                ACE4_READ_DATA,
 +                b"EVERYONE@")
 +    ]
++    mode = 0o640
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    name1 = env.testname(t) + b"_unchecked"
++    res = create_file(sess, name1, attrs=attrs, mode=UNCHECKED4)
++    check(res)
++    fh1 = res.resarray[-1].object
++    stateid1 = res.resarray[-2].stateid
 +
-+    # Request a different mode (0640)
-+    requested_mode = 0o640
++    attrs_dict = do_getattrdict(sess, fh1, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
 +
-+    # Set both MODE and ACL together
-+    attrs = {FATTR4_MODE: requested_mode, FATTR4_ACL: acl}
-+    ops = c.use_obj(fh) + [c.setattr(attrs)]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR with MODE and ACL together")
++    if result_mode != expected_mode:
++        fail("UNCHECKED4: mode (0%o) doesn't match ACL derivation (0%o). "
++             "Per §6.4.3, should follow §6.4.1.3 (ACL wins)" %
++             (result_mode, expected_mode))
 +
-+    # Check the attrsset bitmap
-+    attrsset = bitmap2list(res.resarray[-1].attrsset)
++    res = close_file(sess, fh1, stateid=stateid1)
++    check(res)
 +
-+    # Get the final attributes
-+    final_attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+    final_mode = final_attrs[FATTR4_MODE] & 0o7777
-+    final_acl = final_attrs[FATTR4_ACL]
-+
-+    # ACL should always be set
-+    if FATTR4_ACL not in attrsset:
-+        t.fail("FATTR4_ACL not in attrsset, but ACL was requested")
-+
-+    # Compute what mode should be derived from the ACL
-+    acl_derived_mode = acl2mode_rfc8881(final_acl)
-+
-+    if FATTR4_MODE in attrsset:
-+        # Server claims it set MODE - but per §6.4.1.3, the ACL processing
-+        # will modify the mode. The final mode should match ACL derivation,
-+        # not necessarily the requested mode.
-+        if final_mode != acl_derived_mode:
-+            t.fail("Server set MODE in attrsset, but final mode (0%o) "
-+                   "doesn't match ACL-derived mode (0%o). "
-+                   "Per RFC 8881 §6.4.1.3, ACL processing modifies mode." %
-+                   (final_mode, acl_derived_mode))
-+    else:
-+        # Server did not include MODE in attrsset - this means it recognized
-+        # that the ACL processing would override the requested mode.
-+        # Final mode should still match ACL derivation.
-+        if final_mode != acl_derived_mode:
-+            t.fail("MODE not in attrsset (expected behavior), but final mode "
-+                   "(0%o) doesn't match ACL-derived mode (0%o). "
-+                   "Per RFC 8881 §6.4.1.2, mode should be derived from ACL." %
-+                   (final_mode, acl_derived_mode))
-+
-+def testSetattrModeACLConflict(t, env):
-+    """SETATTR(MODE+ACL) when MODE and ACL would produce different permissions
-+
-+    Test the interaction when the requested MODE differs significantly from
-+    what the ACL would derive. Per RFC 8881 §6.4.1.3, MODE is applied first,
-+    then ACL is applied (possibly changing the final mode).
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT31
-+    """
-+    from nfs4acl import acl2mode_rfc8881
-+    c = env.c1
-+    c.init_connection()
-+
-+    # Test multiple conflict scenarios
-+    test_cases = [
-+        # (requested_mode, ACL, description)
-+        (0o777, [  # Request all permissions
-+            nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                    ACE4_READ_DATA,  # But ACL only grants read
-+                    b"OWNER@")
-+        ], "MODE=0777 but ACL grants only read"),
-+
-+        (0o000, [  # Request no permissions
-+            nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                    ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                    b"OWNER@")  # But ACL grants everything
-+        ], "MODE=0000 but ACL grants rwx"),
-+
-+        (0o644, [  # Request read for all, write for owner
-+            nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                    ACE4_EXECUTE,  # But ACL only grants execute
-+                    b"OWNER@")
-+        ], "MODE=0644 but ACL grants only execute"),
-+    ]
-+
-+    for requested_mode, acl, description in test_cases:
-+        fh, stateid = c.create_confirm(t.word() + ("_%o" % requested_mode).encode())
-+
-+        # Set both MODE and ACL together
-+        attrs = {FATTR4_MODE: requested_mode, FATTR4_ACL: acl}
-+        ops = c.use_obj(fh) + [c.setattr(attrs)]
-+        res = c.compound(ops)
-+        check(res, msg="SETATTR MODE+ACL: %s" % description)
-+
-+        # Get final attributes
-+        final_attrs = c.do_getattrdict(fh, [FATTR4_MODE, FATTR4_ACL])
-+        final_mode = final_attrs[FATTR4_MODE] & 0o777
-+        final_acl = final_attrs[FATTR4_ACL]
-+
-+        # Verify final mode matches ACL derivation
-+        expected_mode = acl2mode_rfc8881(final_acl)
-+
-+        if final_mode != expected_mode:
-+            t.fail("Test case '%s': final mode (0%o) doesn't match "
-+                   "ACL-derived mode (0%o). Per RFC 8881 §6.4.1.3, "
-+                   "ACL should be set as given and mode derived from it." %
-+                   (description, final_mode, expected_mode))
-+
-+def testSetattrACLNamedPrincipals(t, env):
-+    """SETATTR(ACL) with named principals should preserve them
-+
-+    Per RFC 8881 §6.4.1.3: "the ACL attribute is set as given."
-+    When an ACL contains named principals (not OWNER@/GROUP@/EVERYONE@),
-+    the server must preserve those exact principals in the stored ACL,
-+    not convert them to special identifiers.
-+
-+    FLAGS: setattr acl all
-+    DEPEND: MODE ACL0
-+    CODE: SATT32
-+    """
-+    c = env.c1
-+    c.init_connection()
-+
-+    # First create a file and get its owner and group
-+    temp_fh, temp_stateid = c.create_confirm(t.word() + b"_temp")
-+    attrs = c.do_getattrdict(temp_fh, [FATTR4_OWNER, FATTR4_OWNER_GROUP])
-+    current_owner = attrs[FATTR4_OWNER]
-+    current_group = attrs[FATTR4_OWNER_GROUP]
-+
-+    # Test 1: SETATTR(ACL) with named principals only
-+    fh1, stateid1 = c.create_confirm(t.word() + b"_acl_only")
-+
++    # Test with GUARDED4
 +    acl = [
 +        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
 +                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA,
-+                current_owner),  # Named principal, not OWNER@
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                current_group)  # Named principal, not GROUP@
++                b"OWNER@")
 +    ]
-+
-+    ops = c.use_obj(fh1) + [c.setattr({FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR ACL with named principals")
-+
-+    # Verify ACL was preserved with named principals
-+    returned_attrs = c.do_getattrdict(fh1, [FATTR4_ACL])
-+    returned_acl = returned_attrs[FATTR4_ACL]
-+
-+    if len(returned_acl) < len(acl):
-+        t.fail("Returned ACL has fewer entries than requested: "
-+               "expected at least %d, got %d" % (len(acl), len(returned_acl)))
-+
-+    for i, expected_ace in enumerate(acl):
-+        if i >= len(returned_acl):
-+            t.fail("Missing ACE %d in returned ACL" % i)
-+        returned_ace = returned_acl[i]
-+
-+        if returned_ace.who != expected_ace.who:
-+            t.fail("ACE %d who mismatch: expected %s, got %s. "
-+                   "Server converted named principal to special identifier, "
-+                   "violating RFC 8881 §6.4.1.3 'ACL attribute is set as given'" %
-+                   (i, expected_ace.who, returned_ace.who))
-+
-+    # Test 2: SETATTR(MODE+ACL) with named principals
-+    fh2, stateid2 = c.create_confirm(t.word() + b"_mode_acl")
-+
 +    mode = 0o755
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    name2 = env.testname(t) + b"_guarded"
++    res = create_file(sess, name2, attrs=attrs, mode=GUARDED4)
++    check(res)
++    fh2 = res.resarray[-1].object
++    stateid2 = res.resarray[-2].stateid
++
++    attrs_dict = do_getattrdict(sess, fh2, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
++
++    if result_mode != expected_mode:
++        fail("GUARDED4: mode (0%o) doesn't match ACL derivation (0%o). "
++             "Per §6.4.3, should follow §6.4.1.3" %
++             (result_mode, expected_mode))
++
++    res = close_file(sess, fh2, stateid=stateid2)
++    check(res)
++
++    # Test with EXCLUSIVE4_1
 +    acl = [
 +        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_WRITE_DATA | ACE4_APPEND_DATA | ACE4_EXECUTE,
-+                current_owner),  # Named principal
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA | ACE4_EXECUTE,
-+                current_group),  # Named principal
-+        nfsace4(ACE4_ACCESS_ALLOWED_ACE_TYPE, 0,
-+                ACE4_READ_DATA,
-+                b"EVERYONE@")  # Special identifier is fine
++                ACE4_EXECUTE,
++                b"OWNER@")
 +    ]
++    mode = 0o644
++    attrs = {FATTR4_MODE: mode, FATTR4_ACL: acl}
++    name3 = env.testname(t) + b"_exclusive"
++    verifier = b"testverif"
++    res = create_file(sess, name3, attrs=attrs,
++                      mode=EXCLUSIVE4_1, verifier=verifier)
++    check(res)
++    fh3 = res.resarray[-1].object
++    stateid3 = res.resarray[-2].stateid
 +
-+    ops = c.use_obj(fh2) + [c.setattr({FATTR4_MODE: mode, FATTR4_ACL: acl})]
-+    res = c.compound(ops)
-+    check(res, msg="SETATTR MODE+ACL with named principals")
++    attrs_dict = do_getattrdict(sess, fh3, [FATTR4_MODE, FATTR4_ACL])
++    result_mode = attrs_dict[FATTR4_MODE] & 0o777
++    expected_mode = acl2mode_rfc8881(attrs_dict[FATTR4_ACL])
 +
-+    # Verify ACL was preserved
-+    returned_attrs = c.do_getattrdict(fh2, [FATTR4_ACL])
-+    returned_acl = returned_attrs[FATTR4_ACL]
++    if result_mode != expected_mode:
++        fail("EXCLUSIVE4_1: mode (0%o) doesn't match ACL derivation (0%o). "
++             "Per §6.4.3, should follow §6.4.1.3" %
++             (result_mode, expected_mode))
 +
-+    if len(returned_acl) < len(acl):
-+        t.fail("Returned ACL has fewer entries than requested: "
-+               "expected at least %d, got %d" % (len(acl), len(returned_acl)))
-+
-+    for i, expected_ace in enumerate(acl):
-+        if i >= len(returned_acl):
-+            t.fail("Missing ACE %d in returned ACL" % i)
-+        returned_ace = returned_acl[i]
-+
-+        if returned_ace.who != expected_ace.who:
-+            t.fail("ACE %d who mismatch: expected %s, got %s. "
-+                   "Server converted named principal to special identifier, "
-+                   "violating RFC 8881 §6.4.1.3" %
-+                   (i, expected_ace.who, returned_ace.who))
++    res = close_file(sess, fh3, stateid=stateid3)
++    check(res)
 -- 
 2.51.1
 
