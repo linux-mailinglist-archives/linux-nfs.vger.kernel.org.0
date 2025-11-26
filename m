@@ -1,178 +1,231 @@
-Return-Path: <linux-nfs+bounces-16731-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16732-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E659C88DD3
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 10:09:34 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD92CC89597
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 11:43:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB2083B6506
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 09:09:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 59E0E4E4A13
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 10:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9117B311C33;
-	Wed, 26 Nov 2025 09:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62CC631B119;
+	Wed, 26 Nov 2025 10:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wqdxp7xy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcxCeMcv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E45C315D2C
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Nov 2025 09:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A85531AF33;
+	Wed, 26 Nov 2025 10:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764148149; cv=none; b=bK0z6MHtSeOSWPICikCTyzbNpuD5gqYGoOQYK5L/khFVVervfjhO5fO7bBPfjjjrbEVCjxoSZnFdWF7ViMyZ+VJhgoc/+kLuHdIycryC3YlPifcB7KvPFcBa3XXkmDChfl5HRpk2WTh9QuXHrPiCd1J0DB0n7c3EuZgYyD9KI4A=
+	t=1764153777; cv=none; b=FPSazhbKz8VlQ76fHipoYqgtq0zyAejwNmTwbtSsIb1dqyC9UPzyb1FukAcjDAa6qy/sy1xcPzTWu/HAxKu5E+ieV1m1EfF6+yBdnmApW7gNiKATQwmYaVNVND5RCMf85Jpe9/VECVH31KsVk1CmRjmzr5x8Xhy+RMMXmWha45Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764148149; c=relaxed/simple;
-	bh=6w7rkWZMm2OzZs1d4tCa6J3Sjb91QF8PMCdGPkKWBoM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o08dc8/c8BT+QVcJoGRAI6NVoOu54kXriYJfKenuAN41WGaUFzfhP3J+/t5m2FoZNjJNTsAZ4vtHP3AYig9UVS3iXOHEIBc6GWfsuiMHXCwKr0H/uLIdx8aDnaH72pE/l28MYk3tBDbVeLpEY5Ae6nmpDKC2Gf0tyaf0Q/KI9yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wqdxp7xy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764148146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QioLbPIbEdhHQpe6rbAMDZ2orQalmMmfV24sYZuRkpM=;
-	b=Wqdxp7xy4+Os0DcgohpI+IhukFCTVK0rGUSvqVRv8BLZfeGpU1i2hwC0nxwc8i691Om1m3
-	eg4ZlyVYT/19A8sLOSA8frnM8WUQI2PujsyKTE+adOW1p/VLnmhuNNzWBbUv56UuoAzbwk
-	u6j6oFikFAVEHAwURFEXxQTAbz2j1KE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-9NRKrjBsMOyjmcTaAx-1rg-1; Wed,
- 26 Nov 2025 04:09:02 -0500
-X-MC-Unique: 9NRKrjBsMOyjmcTaAx-1rg-1
-X-Mimecast-MFC-AGG-ID: 9NRKrjBsMOyjmcTaAx-1rg_1764148138
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 432561956096;
-	Wed, 26 Nov 2025 09:08:57 +0000 (UTC)
-Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.44.32.146])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F32D63001E83;
-	Wed, 26 Nov 2025 09:08:46 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>,  Amir Goldstein <amir73il@gmail.com>,
- linux-fsdevel@vger.kernel.org,  Josef Bacik <josef@toxicpanda.com>,
- Jeff Layton <jlayton@kernel.org>,  Mike Yuan <me@yhndnzj.com>,
- Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
- Lennart Poettering <mzxreary@0pointer.de>,
- Daan De Meyer <daan.j.demeyer@gmail.com>,
- Aleksa Sarai <cyphar@cyphar.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Jens Axboe <axboe@kernel.dk>,  Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,  Eric Dumazet
- <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>,  linux-nfs@vger.kernel.org,
- linux-kselftest@vger.kernel.org,  linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org,  cgroups@vger.kernel.org,
- netdev@vger.kernel.org, libc-alpha@sourceware.org, Dmitry V. Levin
- <ldv@strace.io>, address-sanitizer <address-sanitizer@googlegroups.com>,
- strace-devel@lists.strace.io
-Subject: Stability of ioctl constants in the UAPI (Re: [PATCH 01/32] pidfs:
- validate extensible ioctls)
-In-Reply-To: <20250910-work-namespace-v1-1-4dd56e7359d8@kernel.org> (Christian
-	Brauner's message of "Wed, 10 Sep 2025 16:36:46 +0200")
-References: <20250910-work-namespace-v1-0-4dd56e7359d8@kernel.org>
-	<20250910-work-namespace-v1-1-4dd56e7359d8@kernel.org>
-Date: Wed, 26 Nov 2025 10:08:44 +0100
-Message-ID: <lhu7bvd6u03.fsf_-_@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1764153777; c=relaxed/simple;
+	bh=lbpZf9gg/RcL75ufLv278uL0wL+ezAd+BmzUYqMcMf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=maz0v5EPe+uMB6/FdOINrvGPpm0CNMyLp6OgfjjLPdDkBu76v8yKcWOHqDVYxAQgzij1lOGVPDzcsrhnCXBeeUJ1Gb6KKHAsfC+8fDFAxSkH1HDRp3W2y7WiGBh4+k0+eUTIS+orsd9qAhkmy1HdrHZH5351kIMoQWd5aY7+QRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcxCeMcv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEF7C113D0;
+	Wed, 26 Nov 2025 10:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764153777;
+	bh=lbpZf9gg/RcL75ufLv278uL0wL+ezAd+BmzUYqMcMf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QcxCeMcvJQHMi1iiutCQRXYS2XFOyjsUtZsWrkE/Dh+pXe/7hA7oNNq2GWVe+4GEP
+	 TJH2jeGIrebRwSGb+ngB0bZEDBmcfi2aOSx2josMWsuuIEZy/gByYTREW3TVhp0khp
+	 Hb/ejwQYl45W0VLUYg3E4mEvoZTo4tGb/F/N13DELJG9VIUxyuzYISWWIXi9dU40RI
+	 a1AaE7AzCBflH5CGAUA69ywVw9u31sV+lL6CDNQnGwwQ297xzePm5sF7if0KFSLH+u
+	 pAr2fUjA5J0j6tTKSyTuPswsTOMfINKG4JP14kfc7hGrcjDj/RiCtalOe7lLlCnKN8
+	 EEO0AUHMOZPpQ==
+Date: Wed, 26 Nov 2025 11:42:51 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [VFS/nfsd/cachefiles/ovl]  7ab96df840:
+ WARNING:at_fs/dcache.c:#umount_check
+Message-ID: <20251126-beerdigen-spanplatten-d86d4e9eaaa7@brauner>
+References: <202511252132.2c621407-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202511252132.2c621407-lkp@intel.com>
 
-* Christian Brauner:
+On Tue, Nov 25, 2025 at 09:48:18PM +0800, kernel test robot wrote:
+> 
+> Hello,
+> 
+> kernel test robot noticed "WARNING:at_fs/dcache.c:#umount_check" on:
+> 
+> commit: 7ab96df840e60eb933abfe65fc5fe44e72f16dc0 ("VFS/nfsd/cachefiles/ovl: add start_creating() and end_creating()")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> [test failed on linux-next/master d724c6f85e80a23ed46b7ebc6e38b527c09d64f5]
 
-> Validate extensible ioctls stricter than we do now.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/pidfs.c         |  2 +-
->  include/linux/fs.h | 14 ++++++++++++++
->  2 files changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/pidfs.c b/fs/pidfs.c
-> index edc35522d75c..0a5083b9cce5 100644
-> --- a/fs/pidfs.c
-> +++ b/fs/pidfs.c
-> @@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
->  		 * erronously mistook the file descriptor for a pidfd.
->  		 * This is not perfect but will catch most cases.
->  		 */
-> -		return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
-> +		return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
->  	}
->  
->  	return false;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index d7ab4f96d705..2f2edc53bf3c 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -4023,4 +4023,18 @@ static inline bool vfs_empty_path(int dfd, const char __user *path)
->  
->  int generic_atomic_write_valid(struct kiocb *iocb, struct iov_iter *iter);
->  
-> +static inline bool extensible_ioctl_valid(unsigned int cmd_a,
-> +					  unsigned int cmd_b, size_t min_size)
-> +{
-> +	if (_IOC_DIR(cmd_a) != _IOC_DIR(cmd_b))
-> +		return false;
-> +	if (_IOC_TYPE(cmd_a) != _IOC_TYPE(cmd_b))
-> +		return false;
-> +	if (_IOC_NR(cmd_a) != _IOC_NR(cmd_b))
-> +		return false;
-> +	if (_IOC_SIZE(cmd_a) < min_size)
-> +		return false;
-> +	return true;
-> +}
-> +
->  #endif /* _LINUX_FS_H */
+Neil, can you please take a look at this soon?
+I plan on sending the batch of PRs for this cycle on Friday.
 
-Is this really the right direction?  This implies that the ioctl
-constants change as the structs get extended.  At present, this impacts
-struct pidfd_info and PIDFD_GET_INFO.
-
-I think this is a deparature from the previous design, where (low-level)
-userspace did not have not worry about the internal structure of ioctl
-commands and could treat them as opaque bit patterns.  With the new
-approach, we have to dissect some of the commands in the same way
-extensible_ioctl_valid does it above.
-
-So far, this impacts glibc ABI tests.  Looking at the strace sources, it
-doesn't look to me as if the ioctl handler is prepared to deal with this
-situation, either, because it uses the full ioctl command for lookups.
-
-The sanitizers could implement generic ioctl checking with the embedded
-size information in the ioctl command, but the current code structure is
-not set up to handle this because it's indexed by the full ioctl
-command, not the type.  I think in some cases, the size is required to
-disambiguate ioctl commands because the type field is not unique across
-devices.  In some cases, the sanitizers would have to know the exact
-command (not just the size), to validate points embedded in the struct
-passed to the ioctl.  So I don't think changing ioctl constants when
-extensible structs change is obviously beneficial to the sanitizers,
-either.
-
-I would prefer if the ioctl commands could be frozen and decoupled from
-the structs.  As far as I understand it, there is no requirement that
-the embedded size matches what the kernel deals with.
-
-Thanks,
-Florian
-
+> 
+> in testcase: filebench
+> version: filebench-x86_64-22620e6-1_20251009
+> with following parameters:
+> 
+> 	disk: 1SSD
+> 	fs: ext4
+> 	fs2: nfsv4
+> 	test: ratelimcopyfiles.f
+> 	cpufreq_governor: performance
+> 
+> 
+> 
+> config: x86_64-rhel-9.4
+> compiler: gcc-14
+> test machine: 192 threads 4 sockets Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz (Cascade Lake) with 176G memory
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202511252132.2c621407-lkp@intel.com
+> 
+> 
+> Unmount[  252.448780][T17295] ------------[ cut here ]------------
+> [  252.455068][T17295] WARNING: CPU: 114 PID: 17295 at fs/dcache.c:1590 umount_check (fs/dcache.c:1590 (discriminator 1) fs/dcache.c:1580 (discriminator 1))
+> m - /opt/rootfs.[  252.540436][T17295] CPU: 114 UID: 0 PID: 17295 Comm: umount Tainted: G S                  6.18.0-rc1-00004-g7ab96df840e6 #1 VOLUNTARY
+> [  252.553273][T17295] Tainted: [S]=CPU_OUT_OF_SPEC
+> [  252.558205][T17295] Hardware name: Intel Corporation ............/S9200WKBRD2, BIOS SE5C620.86B.0D.01.0552.060220191912 06/02/2019
+> [  252.558206][T17295] RIP: 0010:umount_check (fs/dcache.c:1590 (discriminator 1) fs/dcache.c:1580 (discriminator 1))
+> [  252.575407][T17295] Code: 8d 88 a0 03 00 00 48 8b 40 28 4c 8b 08 48 8b 46 30 48 85 c0 74 04 48 8b 50 40 51 48 c7 c7 88 3b ad 82 48 89 f1 e8 27 07 c0 ff <0f> 0b 58 31 c0 c3 cc cc cc cc 41 83 f8 01 75 bf eb aa 0f 1f 44 00
+> All code
+> ========
+>    0:	8d 88 a0 03 00 00    	lea    0x3a0(%rax),%ecx
+>    6:	48 8b 40 28          	mov    0x28(%rax),%rax
+>    a:	4c 8b 08             	mov    (%rax),%r9
+>    d:	48 8b 46 30          	mov    0x30(%rsi),%rax
+>   11:	48 85 c0             	test   %rax,%rax
+>   14:	74 04                	je     0x1a
+>   16:	48 8b 50 40          	mov    0x40(%rax),%rdx
+>   1a:	51                   	push   %rcx
+>   1b:	48 c7 c7 88 3b ad 82 	mov    $0xffffffff82ad3b88,%rdi
+>   22:	48 89 f1             	mov    %rsi,%rcx
+>   25:	e8 27 07 c0 ff       	call   0xffffffffffc00751
+>   2a:*	0f 0b                	ud2		<-- trapping instruction
+>   2c:	58                   	pop    %rax
+>   2d:	31 c0                	xor    %eax,%eax
+>   2f:	c3                   	ret
+>   30:	cc                   	int3
+>   31:	cc                   	int3
+>   32:	cc                   	int3
+>   33:	cc                   	int3
+>   34:	41 83 f8 01          	cmp    $0x1,%r8d
+>   38:	75 bf                	jne    0xfffffffffffffff9
+>   3a:	eb aa                	jmp    0xffffffffffffffe6
+>   3c:	0f                   	.byte 0xf
+>   3d:	1f                   	(bad)
+>   3e:	44                   	rex.R
+> 	...
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	0f 0b                	ud2
+>    2:	58                   	pop    %rax
+>    3:	31 c0                	xor    %eax,%eax
+>    5:	c3                   	ret
+>    6:	cc                   	int3
+>    7:	cc                   	int3
+>    8:	cc                   	int3
+>    9:	cc                   	int3
+>    a:	41 83 f8 01          	cmp    $0x1,%r8d
+>    e:	75 bf                	jne    0xffffffffffffffcf
+>   10:	eb aa                	jmp    0xffffffffffffffbc
+>   12:	0f                   	.byte 0xf
+>   13:	1f                   	(bad)
+>   14:	44                   	rex.R
+> 	...
+> [  252.575410][T17295] RSP: 0018:ffffc9003672bb88 EFLAGS: 00010282
+> [  252.601300][T17295] RAX: 0000000000000000 RBX: ffff88ac4c0c55c0 RCX: 0000000000000027
+> [  252.601301][T17295] RDX: ffff888c5009c1c8 RSI: 0000000000000001 RDI: ffff888c5009c1c0
+> [  252.601303][T17295] RBP: ffff8881e925da40 R08: 0000000000000000 R09: ffffc9003672b958
+> [  252.625337][T17295] R10: ffff88ac7fc33fa8 R11: 0000000000000003 R12: ffffffff81748d50
+> [  252.625338][T17295] R13: ffff8881e925da40 R14: ffff88ac4c0c9200 R15: ffff88ac4c0c9280
+> [  252.625339][T17295] FS:  00007ffff7bfb840(0000) GS:ffff888ccc272000(0000) knlGS:0000000000000000
+> [  252.625340][T17295] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  252.625341][T17295] CR2: 00007ffff7ec97a0 CR3: 00000001ce11e005 CR4: 00000000007726f0
+> [  252.625342][T17295] PKRU: 55555554
+> [  252.625343][T17295] Call Trace:
+> [  252.625345][T17295]  <TASK>
+> [  252.625348][T17295]  d_walk (fs/dcache.c:1322)
+> [  252.625353][T17295]  shrink_dcache_for_umount (include/linux/spinlock.h:351 fs/dcache.c:601 fs/dcache.c:1606 fs/dcache.c:1621)
+> [  252.625357][T17295]  generic_shutdown_super (fs/super.c:621)
+> [  252.689813][T17295]  kill_block_super (fs/super.c:1723)
+> [  252.689817][T17295] ext4_kill_sb (fs/ext4/super.c:7405) ext4
+> [  252.699584][T17295]  deactivate_locked_super (fs/super.c:434 fs/super.c:475)
+> Unmount[  252.704921][T17295]  cleanup_mnt (fs/namespace.c:242 fs/namespace.c:1328)
+> [  252.704926][T17295]  task_work_run (include/linux/sched.h:2092 kernel/task_work.c:229)
+> - Legacy Locks D[  252.727385][T17295]  ? __cond_resched (kernel/sched/core.c:7477)
+> irectory /run/lo[  252.733357][T17295]  ? generic_fillattr (fs/stat.c:99)
+> [  252.739669][T17295]  ? _copy_to_user (arch/x86/include/asm/uaccess_64.h:126 arch/x86/include/asm/uaccess_64.h:147 include/linux/uaccess.h:197 lib/usercopy.c:26)
+> [  252.744854][T17295]  ? cp_new_stat (fs/stat.c:506 (discriminator 1))
+> [  252.744857][T17295]  ? __do_sys_newfstatat (fs/stat.c:546 (discriminator 1))
+> [  252.744861][T17295]  ? do_syscall_64 (arch/x86/include/asm/jump_label.h:36 include/linux/context_tracking_state.h:108 include/linux/context_tracking.h:41 include/linux/irq-entry-common.h:261 include/linux/entry-common.h:212 arch/x86/entry/syscall_64.c:100)
+> [  252.759380][T17295]  ? clear_bhb_loop (arch/x86/entry/entry_64.S:1548)
+> [  252.764099][T17295]  ? clear_bhb_loop (arch/x86/entry/entry_64.S:1548)
+> [  252.764101][T17295]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> [  252.774744][T17295] RIP: 0033:0x7ffff7e54217
+> [  252.779199][T17295] Code: 0d 00 f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 b1 5b 0d 00 f7 d8 64 89 02 b8
+> All code
+> ========
+>    0:	0d 00 f7 d8 64       	or     $0x64d8f700,%eax
+>    5:	89 02                	mov    %eax,(%rdx)
+>    7:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+>    c:	c3                   	ret
+>    d:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+>   13:	31 f6                	xor    %esi,%esi
+>   15:	e9 09 00 00 00       	jmp    0x23
+>   1a:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+>   21:	00 00 
+>   23:	b8 a6 00 00 00       	mov    $0xa6,%eax
+>   28:	0f 05                	syscall
+>   2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
+>   30:	77 01                	ja     0x33
+>   32:	c3                   	ret
+>   33:	48 8b 15 b1 5b 0d 00 	mov    0xd5bb1(%rip),%rdx        # 0xd5beb
+>   3a:	f7 d8                	neg    %eax
+>   3c:	64 89 02             	mov    %eax,%fs:(%rdx)
+>   3f:	b8                   	.byte 0xb8
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
+>    6:	77 01                	ja     0x9
+>    8:	c3                   	ret
+>    9:	48 8b 15 b1 5b 0d 00 	mov    0xd5bb1(%rip),%rdx        # 0xd5bc1
+>   10:	f7 d8                	neg    %eax
+>   12:	64 89 02             	mov    %eax,%fs:(%rdx)
+>   15:	b8                   	.byte 0xb8
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20251125/202511252132.2c621407-lkp@intel.com
+> 
+> 
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
 
