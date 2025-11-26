@@ -1,110 +1,135 @@
-Return-Path: <linux-nfs+bounces-16725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0D22C8801A
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 05:01:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55ACDC882CA
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 06:41:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5CCC8352A4D
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 04:01:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13C943B321C
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 05:41:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4CA430E0FD;
-	Wed, 26 Nov 2025 04:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FDD347DD;
+	Wed, 26 Nov 2025 05:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/yDTgjQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TahFNRri"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8031E30DECE;
-	Wed, 26 Nov 2025 04:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187D04C9D;
+	Wed, 26 Nov 2025 05:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764129663; cv=none; b=qqLww9XXZHMdI+cqL+a+m8nqLTUtznRIYQZh+jFJNmDB1Ak4fcxzTBnuktjkY6co25Q/9XfFvy5JdpWuckG7m/ax8e5iWALvNZiMOLl7CKzGiF3m9/QkNUDKLO+q/+wu1XxQLPTBTX9HTLdVozyxP9ANkXpUnucYba29aMTAnEA=
+	t=1764135693; cv=none; b=RjSWrNC/ymukB0mtql/fGnvfSwPqNn3F/llq0sIx09wUTwQhKzfMjlH6U7CcAjmfQIFvznQY3Tq7929e/QErpbr6904eYDLNfbIU5s3hr5YUfUZU4ArO2+dsyB1p/FvCeAsLtlEH1pmORH0XnVoTo9yodFCGO2wMv+D031jCkBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764129663; c=relaxed/simple;
-	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iEqG11iZOF0+ZD8gwofKR0tQilCuIi+1CwU89HcLxfmVZQOREx5j1js2I6o+CFz3abOUZ4yyp53vHQqYVOxy0Xki2HE9iDEQUb3Im0obVrC2AY6M8my4jv3S9POhnIrC5qybre1NURZ5b2xsXwVo7VmT9jvZ0ckLgu7KGi64/Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/yDTgjQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B69C116C6;
-	Wed, 26 Nov 2025 04:01:01 +0000 (UTC)
+	s=arc-20240116; t=1764135693; c=relaxed/simple;
+	bh=GMXu/4I7zzQgm+L6w7tz8iBYxeVA2h+/HGxG6IsCMB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TqqD6SHknyP8UPItUKUKGBykKS3EtBTAKEvgweBZZvTJmSdwPdnPmwEh/+S/AwlfECFzlijq3con0N8FdE9rrZD+eM3jNVu28a3gCASFZcjWWA4co4ArXP9XORorEBZ0O3b6UVYZN7f6QhG7E+6cQISflHgFJ6IV4T9Rhfdq+hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TahFNRri; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D02C113D0;
+	Wed, 26 Nov 2025 05:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764129662;
-	bh=u7WhcPoQgtAyom6NzBpHZKJ3S3T/moATUT+y2VUtn54=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=e/yDTgjQbXQSTAwyvE7FgkPAE2NIAdDvmLJBzvDj2W4EsmGcJ1JBQOVZielSccaMJ
-	 p19DNUWBtAWq3Yd1PWsRpkeFy4K8CankCXsikmYaNgOZuLfXirt5L+c6pr739oOFIR
-	 HQJsf/uiDkobuySu0JXq16xpvXr8XkvIWMiZjt40xaj0p8lzbM3r5iPuYH7WRNr7MI
-	 eKWylT03jbRbrXXBhBJs1o74rHp1RdRXPPGLEl5gxZ2RI+/GDMXi+lfU/zjPXWYvwr
-	 JLL5nOydA1W7L8+CIeb4NrwLOnZaY60R3CDjK2f9Jyk3gxx959tMwpfDT5iMbwVE2B
-	 BLLbukuAI37MQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D99380AA73;
-	Wed, 26 Nov 2025 04:00:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1764135692;
+	bh=GMXu/4I7zzQgm+L6w7tz8iBYxeVA2h+/HGxG6IsCMB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TahFNRrixa1ahnAx5yvZIRY6cqyUo0Sj/jW1lxpYn7a1SpZtu9ygTQ4juSRuMrQQv
+	 jhQjSmpJZIi40yjGVFQcK6r5gD7Tw7zYH9XIy9gopBZ5hgGrVXTWZPkzAsskus6h4I
+	 jP4s/8L/kvP/nsJlPtPBTnNW5D8UgvEUm6kJwtmTZQAdAtetF9o83phjNr2R4c8qF7
+	 ri1uy57Kl9TiFmLqCdbq0aYSMDhiQDVMWyfJeOLHvCiC8D+rK1RJ68oYxqlxMS/nKD
+	 BOLC/LKbAtKcRtIHRDuBsSw6s546ZNQJkPOOnxb1y2LhofIlVYKTIxcap/cUczFO7V
+	 vm4GrzCUVC7Yw==
+Date: Wed, 26 Nov 2025 00:41:31 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Zorro Lang <zlang@redhat.com>, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfs/localio: fix regression due to out-of-order __put_cred
+ [was: Re: [Bug][xfstests crash on nfs] kernel BUG at kernel/cred.c:104!]
+Message-ID: <aSaTC51DkxEqQkrZ@kernel.org>
+References: <20251125144508.rxepvtwrubbuhzxs@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] tools: ynl-gen: regeneration comment +
- function
- prefix
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176412962400.1513924.8908884768543220332.git-patchwork-notify@kernel.org>
-Date: Wed, 26 Nov 2025 04:00:24 +0000
-References: <20251120174429.390574-1-ast@fiberby.net>
-In-Reply-To: <20251120174429.390574-1-ast@fiberby.net>
-To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@codeaurora.org
-Cc: donald.hunter@gmail.com, kuba@kernel.org, Jason@zx2c4.com,
- andrew+netdev@lunn.ch, anna@kernel.org, antonio@openvpn.net,
- arkadiusz.kubalewski@intel.com, arve@android.com, cmllamas@google.com,
- brauner@kernel.org, chuck.lever@oracle.com, Dai.Ngo@oracle.com,
- daniel.zahka@gmail.com, dsahern@kernel.org, davem@davemloft.net,
- dw@davidwei.uk, edumazet@google.com, geliang@kernel.org,
- gregkh@linuxfoundation.org, hare@kernel.org, jacob.e.keller@intel.com,
- jlayton@kernel.org, jiri@resnulli.us, jdamato@fastly.com,
- joelagnelf@nvidia.com, kernel-tls-handshake@lists.linux.dev,
- dualli@google.com, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- maco@android.com, martineau@kernel.org, matttbe@kernel.org,
- almasrymina@google.com, mptcp@lists.linux.dev, neil@brown.name,
- netdev@vger.kernel.org, okorniev@redhat.com, pabeni@redhat.com,
- sd@queasysnail.net, skhawaja@google.com, horms@kernel.org, sdf@fomichev.me,
- surenb@google.com, tkjos@android.com, tom@talpey.com, trondmy@kernel.org,
- vadim.fedorenko@linux.dev, willemb@google.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251125144508.rxepvtwrubbuhzxs@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 
-Hello:
+Commit 86855311c117 ("nfs/localio: add refcounting for each iocb IO
+associated with NFS pgio header") inadvertantly reintroduced the same
+potential for __put_cred() triggering BUG_ON(cred == current->cred)
+that commit 992203a1fba5 ("nfs/localio: restore creds before releasing
+pageio data") fixed.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Fix this by saving and restoring the cred around each {read,write}_iter 
+call within the respective for loop of nfs_local_call_{read,write}.
 
-On Thu, 20 Nov 2025 17:44:25 +0000 you wrote:
-> It looks like these two patches are the last ones needed
-> for YNL, before the WireGuard patches can go in.
-> 
-> These patches was both requested by Jason, during review
-> of the WireGuard YNL conversion patchset[1].
-> 
-> [1] https://lore.kernel.org/r/20251105183223.89913-1-ast@fiberby.net/T/#u
-> 
-> [...]
+Reported-by: Zorro Lang <zlang@redhat.com>
+Fixes: 86855311c117 ("nfs/localio: add refcounting for each iocb IO associated with NFS pgio header")
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 
-Here is the summary with links:
-  - [net-next,1/2] tools: ynl-gen: add function prefix argument
-    https://git.kernel.org/netdev/net-next/c/17fa6ee35bd4
-  - [net-next,2/2] tools: ynl-gen: add regeneration comment
-    https://git.kernel.org/netdev/net-next/c/68e83f347266
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index 6461ce3ba9a4..eeb05a0d8d26 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -623,8 +623,6 @@ static void nfs_local_call_read(struct work_struct *work)
+ 	ssize_t status;
+ 	int n_iters;
+ 
+-	save_cred = override_creds(filp->f_cred);
+-
+ 	n_iters = atomic_read(&iocb->n_iters);
+ 	for (int i = 0; i < n_iters ; i++) {
+ 		if (iocb->iter_is_dio_aligned[i]) {
+@@ -637,7 +635,10 @@ static void nfs_local_call_read(struct work_struct *work)
+ 		} else
+ 			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
+ 
++		save_cred = override_creds(filp->f_cred);
+ 		status = filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
++		revert_creds(save_cred);
++
+ 		if (status != -EIOCBQUEUED) {
+ 			if (unlikely(status >= 0 && status < iocb->iters[i].count))
+ 				force_done = true; /* Partial read */
+@@ -647,8 +648,6 @@ static void nfs_local_call_read(struct work_struct *work)
+ 			}
+ 		}
+ 	}
+-
+-	revert_creds(save_cred);
+ }
+ 
+ static int
+@@ -830,7 +829,6 @@ static void nfs_local_call_write(struct work_struct *work)
+ 	int n_iters;
+ 
+ 	current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+-	save_cred = override_creds(filp->f_cred);
+ 
+ 	file_start_write(filp);
+ 	n_iters = atomic_read(&iocb->n_iters);
+@@ -845,7 +843,10 @@ static void nfs_local_call_write(struct work_struct *work)
+ 		} else
+ 			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
+ 
++		save_cred = override_creds(filp->f_cred);
+ 		status = filp->f_op->write_iter(&iocb->kiocb, &iocb->iters[i]);
++		revert_creds(save_cred);
++
+ 		if (status != -EIOCBQUEUED) {
+ 			if (unlikely(status >= 0 && status < iocb->iters[i].count))
+ 				force_done = true; /* Partial write */
+@@ -857,7 +858,6 @@ static void nfs_local_call_write(struct work_struct *work)
+ 	}
+ 	file_end_write(filp);
+ 
+-	revert_creds(save_cred);
+ 	current->flags = old_flags;
+ }
+ 
 
