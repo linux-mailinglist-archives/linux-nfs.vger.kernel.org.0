@@ -1,225 +1,226 @@
-Return-Path: <linux-nfs+bounces-16743-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16744-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E6B3C8C275
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 23:07:32 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 104DBC8C6DC
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 01:36:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2F34B34CCE8
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Nov 2025 22:07:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E8AF54E0101
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 00:36:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D292333AD99;
-	Wed, 26 Nov 2025 22:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B895B21CC79;
+	Thu, 27 Nov 2025 00:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="E+8p+tts"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="dZ3oUZB+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XSNSgk9a"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020123.outbound.protection.outlook.com [52.101.46.123])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E860616DEB0;
-	Wed, 26 Nov 2025 22:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764194844; cv=fail; b=ZnfwR4FrC8uUmAIzVcBL1qMQzwUU3Yf/J//RntkqquZ/CHe86A14qkhRZQR9G/WO5szCO8+/wz8cXsv2DZzjH/9WrmvbOWO6xnprVlKAU/iTcuINzXTFFYguHHfxd/1ivHb5X/IOJPLAoqgvpZ0ikJRuoG6MYazwz8HgkY+E0OY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764194844; c=relaxed/simple;
-	bh=tEjFkGoonShFPc0gAt8pn4Oq7dCz55nowlNuFvnAXgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nAQeWyQ3c3h/lNvA4syufqtG9SpCPy9ZBdGG+hCIwN9IEAZ92k4RqNC6zm0Sk5dzp7omrWigRFAUdi+vcJCqi+0ifldujR1PYg3j5rQup9WgGOmJ1vpmsjWO6a4New1a/MDhgK5PbpeX7UOwDvfa5TIavK58hqi/DKVRW+rqN+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=E+8p+tts; arc=fail smtp.client-ip=52.101.46.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i3ZLF1RgLuCOMaH17Z0dbWr9NtNxqhHE5eCQN5Nt3XTrLIVZLpaZcip5/qXzru9VG/EFAX3S2BoolNa3x+wOfqL8IxGl/826CJUx7OQYVr3Alwd+mHeYgX8NHXOtOLYQOuWVti9nxCRrspIULi67bFryOapz7Wr22b/G4UTh+7BImKirfiwRgrpnHVWo6KYAlKUdN6+QVMFfKj4P5fxWlifGL516SRJDK5rimtSUgFWxBpcA2P4skPl278hEEpPwj2nBDJCd+JWMBN5vnR2zDzH9WKgEyWosoIeTHIJN4wKGY5QBBaBZJpuonLXPWhdV+jGoWHzmghQ/zC4i2Ju3DA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hsz1hdi4uZFygFEaD35EieaNrQ2yyN3lfvHqO8O8sBI=;
- b=WZRePf1SZ6kQRIyV2ARlFR7B72K6GlUXkhPWlOTYYCSA+J9DL1mXP1aLOuohrWSZxEFg2SYqc7mYDAYgxsDWyfTOWsuI8pRtxBgPZcNtcfdeLuGlVkcjFFrzv2MGKNgcVcVi5tbkUIhGLHpwQbVHm1txeiP+6PUZyEeGZ7cNh50NHGkZRLSwFRTD+CDDViZCU5E8XBHd5WINptF9oV6FVm6TkQCD7mBvJW636OtZiOV/7mlVvnL8+SRsD5CCp+Bg1FY4RHpLapjLEd0gAw6z/KBM/lU6YpOh+wUIPIznBiS/snX+LyuxbEa9lkVt+lrdxd77n7WdL8umW8wvLrlbsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hsz1hdi4uZFygFEaD35EieaNrQ2yyN3lfvHqO8O8sBI=;
- b=E+8p+ttsRzrBJ+4lT9Y7QOXwR6sGoeboSF0UmpYXF7QNSEyeY8icRMRZNP4O+sBcI3/DxRaMUDh2Cm7vsZGMbefRHFtiz2mQ6OOrGzTl2nxsSm0VZ9kLrcuu3I3+Hd5G7gznNsDbeTwhu4wsZ8m5LGjkA5wyoKpg5e6Q6bTsGyI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-Received: from SN6PR13MB2365.namprd13.prod.outlook.com (2603:10b6:805:5a::14)
- by BN0PR13MB5182.namprd13.prod.outlook.com (2603:10b6:408:155::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.13; Wed, 26 Nov
- 2025 22:06:07 +0000
-Received: from SN6PR13MB2365.namprd13.prod.outlook.com
- ([fe80::9127:c65a:b5c5:a9d]) by SN6PR13MB2365.namprd13.prod.outlook.com
- ([fe80::9127:c65a:b5c5:a9d%7]) with mapi id 15.20.9366.009; Wed, 26 Nov 2025
- 22:06:07 +0000
-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- Trond Myklebust <trondmy@kernel.org>, Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH v1 0/3] Allow knfsd to use atomic_open()
-Date: Wed, 26 Nov 2025 17:06:02 -0500
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <9DF41F45-F6E6-4306-93BC-48BF63236BE4@hammerspace.com>
-In-Reply-To: <176419077220.634289.8903814965587480932@noble.neil.brown.name>
-References: <cover.1763483341.git.bcodding@hammerspace.com>
- <176351538077.634289.8846523947369398554@noble.neil.brown.name>
- <0C9008B1-2C70-43C4-8532-52D91D6B7ED1@hammerspace.com>
- <176367758664.634289.10094974539440300671@noble.neil.brown.name>
- <034A5D25-AAD3-4633-B90A-317762CED5D2@hammerspace.com>
- <176419077220.634289.8903814965587480932@noble.neil.brown.name>
-Content-Type: text/plain
-X-ClientProxiedBy: PH8P221CA0036.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:346::25) To SN6PR13MB2365.namprd13.prod.outlook.com
- (2603:10b6:805:5a::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0653A8F7;
+	Thu, 27 Nov 2025 00:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764203792; cv=none; b=tEBzw5rj2rCHG5S0MwhhM8SO1mqaHNOkr0F406Pt/SAJDJ3uAZ1IPSAa8EDPH3s8RGTgGUoKZqADR/OlhDs7+v6mZWmp/FrDxLqS19FfZCKpe0nhnL99v5gjWGnmjhWg9vDQY+q5kqYhyetYEw4Mcn1PgezmESolktttsa9sELk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764203792; c=relaxed/simple;
+	bh=xsuFcbAlg2HboMaO7bbDJ/KZc/wViFY/2Ba8FAZUTeg=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=BlTotGO4XtWMPdaPhriUeaTwGjm3Xq+szyHpIIU9KLqBac56vbGoIB6A/hRmG8+bDgRPEfQQSeyY3KynQTVaXc7K+WEPOs2I7WxEyxvseWF81iq9EkqahMR9fPJDx5RhwEpvUFb3G55XVtcOZfDkN2igZLajeRRxF7VUn5WDdFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=dZ3oUZB+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XSNSgk9a; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id D6447EC0032;
+	Wed, 26 Nov 2025 19:36:28 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Wed, 26 Nov 2025 19:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1764203788; x=1764290188; bh=P7Cl5oo2kGuj6tjWqJ/aNffHuN9nBjPRtVO
+	qt/AXLNA=; b=dZ3oUZB+vN9SYW55tRyRF+d1BsOlZ1fE6rDXfsWgX+hru5OUWmI
+	9mCR5VtxXCHIprPTHz+DuB0fUv2Sn1/XsUpHrlKjtmVRCq3jwIhPZpFBDD+Xh3Ad
+	Fx6TpoZmaLTq+hjPjSZ+6O+/sy7NHpWc2O+j//USDWeGM//YS/1AJbv9HVCDzq0a
+	8Z1xC2YKNqJFTTbYuTOeTd9djT3uT2hMzK1dBt3npXoqR6WKlQd+DCGNAatWlcPu
+	yOi2A1I/vGbYhzCRktUyl10QSrDpTQJkOkVmsAi0jZRKKX6rJLrMTV2gP26hISIZ
+	mDwCGtVvFMGFB4Rk/3tb5IQ/AenVHmgBUWw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1764203788; x=
+	1764290188; bh=P7Cl5oo2kGuj6tjWqJ/aNffHuN9nBjPRtVOqt/AXLNA=; b=X
+	SNSgk9aw65jvcthV0WQALtb4HUptm5zN93f2RTegAXPa3oOd9ISGr9SzQ/BbO64V
+	RKFD5/gZ1oDO2fKCS/EI6bMfF5C00XdIMsJwwNrKZ9zCT31P5A+FRLhViiHOpc9f
+	PKGz8sdaMmL6X8N/w8q9EP7IzFvLeXtgE0WNVLGXHV5+F5N7V8vhUPDHZR0m9VUN
+	LneN9ggbbyKEK3N0acZHjgGwZlS/c0ztkT3zrztX/Fnh65Vlzd0sIQkyHMa8db9W
+	XJ/zk2Zi+HhGSsiBNLpAXFTRWU+jpOR/cIKyGvZ23+olzhym/SkHDtkvb1oEIevo
+	OnPv54+L8r+WUCi8/1XdQ==
+X-ME-Sender: <xms:DJ0naZmuFUdboO5grDQinB8zM6PhJacgP75g4kKod8JvVB50Max2-g>
+    <xme:DJ0nafPhWelhwuJKpOwxOv66Fc4HOdOeEcgNBChw5o2qg3CJtxrOpeKgDAUtqmTQq
+    9exj0MfK6oCDpw12I0lnsDjZ7C_rd9XOyGJdsAKVgFJpdDGdw>
+X-ME-Received: <xmr:DJ0naVwmEM9AECzzdwQLQer52s-IKpxQ55dTh7I4zQtInOOAly0AeW6ReDkvPoNth_mmstDKUlYkU-XW6eFh36SlZNRVHCE2NRbp-p_zoHLg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgeehkedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepudegpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepjhgrtghkse
+    hsuhhsvgdrtgiipdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdp
+    rhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtth
+    hopegurghirdhnghhosehorhgrtghlvgdrtghomh
+X-ME-Proxy: <xmx:DJ0naUshjuwxhK27jyugEFQEqOGn16QnyCyQ7vAdfTBX4NGFSSSdpg>
+    <xmx:DJ0naQaUvLmul-zcc8s6wSnCgOYCA3_STMu9qsBqsb8by5yuDzmdug>
+    <xmx:DJ0nab3del8lnk4_thAw4hwnWgBw8yk122anGVXVUjZkVBKM_V_ByQ>
+    <xmx:DJ0naaunp7sfseXVlMn7jTfxxlb1hHpzl1ESGRinaO4KEgcbXxkEYw>
+    <xmx:DJ0naewUMTSZCCDhjiGzlqLDY4YwQZIIl2VOEdtRF5AE5wsPx9ARWPPI>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Nov 2025 19:36:24 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR13MB2365:EE_|BN0PR13MB5182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56343342-2628-44ec-fda9-08de2d37ffa0
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5eiRyJoRUrViCsCs7fFl9ZCZjuG9xbTqxcF7aGsB9QcRKhzd7yXiagMd0fgq?=
- =?us-ascii?Q?o/0CXreH0wwue8xvhmy9tmwxiT3kJ620MORV0FKJzY+lt6rGcmt7+jBWq7tV?=
- =?us-ascii?Q?/JB+eh6cTrON6shM8+6/btgAObZXSJ3aVYMyz5RTrl7LXQ+K6W8YpvqH3B2p?=
- =?us-ascii?Q?qJ3OjJY/oE7pwbCWu7urZ+wvnIlQG/klahDawW/x7GnJaQ0V7q0ZlGY64WmG?=
- =?us-ascii?Q?0F6R7VOPKtpqxvn8nU1d3szzKj2Jdmumy/213cSHHUBv4j+sNL/KmxXv0/s8?=
- =?us-ascii?Q?fFaTYxtcCPeriC8Z6Cc4jH5UPk1Pw5jjd/jBUshexLrF1PjIBT7W8R1nL8y+?=
- =?us-ascii?Q?2qsILOkrNQ0TqB6Wz6+2HF4qDx7pToFMGs6g5a6G9QquZ8CHueAWykXs+ASC?=
- =?us-ascii?Q?8tIFhpJWJwRRWkYSsn0xcTyJC1rMEMYFj7Jt3fOw3yo8y7XKll5xnq3aBY75?=
- =?us-ascii?Q?VtOtpPw4nb6E2Mxs9UkriKIzlGwHgMGblleksjo24/H3A6jqEhFNzpocjA9V?=
- =?us-ascii?Q?Oq9ufDvUiEfGcXNSoNfLVebmBxAvfq3dV94CsItUyyBK9phbKqTPDjoxImpt?=
- =?us-ascii?Q?0XdJfY6vnpO3W66ipRlgGmwnF+m/WfIZaKBhrdmzGP8bCqH3BESTUaB2Bzuz?=
- =?us-ascii?Q?ndsXUVzSbRfbmpwKBnE1ynmNAcQ+bchI+FZyrv/Uh9iH/eoX1wb/45ZjVusA?=
- =?us-ascii?Q?QTAUGlmko/bFjMYWkzuHCApLCH336VknLayjbrWQegi45xcsDh/rxsEA1OpE?=
- =?us-ascii?Q?CtuxXhJKGzn+c1a+wjbzwKPC4QDf55L/LyHernNTeF51tBZ2b8sDfa/qBf7R?=
- =?us-ascii?Q?FGGDZJyo8NN7zAfJVN75+G1pBvW9tNvTs1SXYC4Do62f20SOz62B6s562Y6U?=
- =?us-ascii?Q?Qxs4UEdW0N6CaiCBSen54dhscwvhhPRrMBZna6IdtAX5olGH/7PNtvVfCv9/?=
- =?us-ascii?Q?nvN8Wp7DunlAo9P3OY5hJHPlQvb38dp10FDt9Hg3mV3zRk6jHpZEI9cCZJ8G?=
- =?us-ascii?Q?xa7cJUSEF53YsT2U7agCUfknhFozBX8NiVpeacqmQ+xYf5M3gsCKN0yqqAfP?=
- =?us-ascii?Q?maFbhrPi4szKvdCDsDbiFTuFKSR+eET+Sa1Xx9iWL7j/HM2SKvFamS6W31py?=
- =?us-ascii?Q?A5LyB/kUX7h1KNuF29TbAdF6okmxsFhhOc1gqK+2o8POxtrRSNcT2re70Hfi?=
- =?us-ascii?Q?WdhkVBW7HZOE7mGuSGEdfmLsvjnGEuETHH74qvZnBumFCYBMXYjjAHaccsXf?=
- =?us-ascii?Q?HIlMeWYT0qse9YE3C49HUpzlYtuqJxL8KR7CC7PfAIh0ZvK8kDuLqHXbn/Io?=
- =?us-ascii?Q?QKq44xlgRIuzj9FbYq5tOSAAvGb6Ux0LKmPhr8LDoc2+g93XWGtootfGc7kU?=
- =?us-ascii?Q?AV0c8Jp8p9hsbLmV2KOPU870AGCB4t4gnUMNT2QCqGAcT+nMoT93eIzb8JCB?=
- =?us-ascii?Q?TOXcxjdYN1/CR2dMQSUF4cEDa9cwARMX?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR13MB2365.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vhQrsTZFE6YDHGqvO69cQa3nBmzjpqLfyyv3gwbtnGLz/aIf21+fBsLJNLXw?=
- =?us-ascii?Q?39NNDfK0RzDcUpdSJG806MpOOTosh47UBiQM27ExVC4TaqHO+oFXBhXPbPiM?=
- =?us-ascii?Q?jUTHwz96Dk6U9XG7uT301tUS0Ld2Bwspm7PsyFh4lFa+Keu8KP8CFBy0N/t2?=
- =?us-ascii?Q?SslnvU/f5AQy/O9745h4HKjYfm35JxSq48xv8gegX/7hKZCK5r+GucU1Dwzk?=
- =?us-ascii?Q?HLXwU4xPEemOUywp0fu51ES8ERV7/4oN+PAzcAFUWyJKTpdO5+Ttv4yHw9mZ?=
- =?us-ascii?Q?faCuPMln/AavLjRQy0UV45uH1LZyC8o7q2STIDNTLfXCVuZ0xsD1OsUK5F6p?=
- =?us-ascii?Q?HHOoE8oZ+ELKDKptC+tWov5sRGsVqvcvHLNw5qpOhIpSYqoMMaChsZHTmmV1?=
- =?us-ascii?Q?N1a6asENPbB4attkvnzdxXo1U0G2ZOvzI1tO/Lzaq/2lQRih1WeLQAgr5iZJ?=
- =?us-ascii?Q?iD2FqkBUB5MapI//E3N3hdLXZju4ji2OaonoZAfIlpwauMVIMBNsgiwhbAHB?=
- =?us-ascii?Q?rt2YBccELRVLw/tiProGx1tfsaUdQgDdHtj8//mf2lps0x0M0aMvTn3rG4D9?=
- =?us-ascii?Q?OfZJcxIfhaCYVK9nIKL9QztlI1r9TbiOSGw2sop9oRp1DshtgeGgw56dZE07?=
- =?us-ascii?Q?CCnT8emC/b7ebNPw9ayoPtp7oMiouMja0btlYjFONpPgndmAteEA/GKTODQe?=
- =?us-ascii?Q?s9bgu4I25NJtkylZC4gK7ORVSCg40d34+GXIHfN6V1XRSfeW2AOTzrK+OBV/?=
- =?us-ascii?Q?fbrWPIUg9ExCfxMcGvGeU+ckn1YRcvIfrKZmg3BKYv+7iauKHVl2SlGY12c1?=
- =?us-ascii?Q?91BV0GqWrywFEPaNaNmSGDqv0xWEkq4HHD3DD3eUjBYExbuSM1NALUrCTBfp?=
- =?us-ascii?Q?TY3jh0U82Q2OKH+NmtImIJeyXw2Mq/xMRGpw4/5XvqHZyv6p4zuOkLulFpel?=
- =?us-ascii?Q?WvSS4pJLWvun2h2FlMAhHxrdD5skntp7EK/4r2zi0aZTE6S5g5fZ+2lmpvJo?=
- =?us-ascii?Q?shL5b9NkPlelCJ0pd5P350NrGVFYOnVngXty32PKbDh0dlof66wU+vnc41BI?=
- =?us-ascii?Q?6frY4l7+mKuWbqW462o88kMjA8ed32mduasPTpVx26U2g0Pvdw5z9KSqZJ0B?=
- =?us-ascii?Q?sNUo0pYXt7ytP+3i7nDm8Dv2et2hmxuOB6/4ePPpzlo4MZ6zS3cKLAx3VnVC?=
- =?us-ascii?Q?8cqoSb1Mhb65rH1V8uwjMFDv7J0UYo4xdCdlLddpuuHqP16vC77SQfLy4XV1?=
- =?us-ascii?Q?N6rDJD3mNIcyjjEdhGpe13rWTLiRiznWDnEKfcqyHgrdEap6jxN3gU3Rn/3p?=
- =?us-ascii?Q?WsYEKmf+YwvOtQjJoBZu47pgXzuBmZAzb6wONAPsg9yrk62bdr4nQXCV4JM1?=
- =?us-ascii?Q?Pl13rklylENf+JmvEo9TJxKrJGE0+OCq4HWNyrtpUTsChpXWtR2HKXt9aU/M?=
- =?us-ascii?Q?sORjeX5F62CtY45xHWjwstsLCHRpVMr6Ay6ipRz1HIAozsAiVOgTSV3Iz6+h?=
- =?us-ascii?Q?iX4vCIzmViAaHZRQsoVtSep/kic2JBPvzuSXw+hPzadBvzHDpwEd35rXXKAf?=
- =?us-ascii?Q?zBVgU7e4GiqvorBrNZcfxRRMptMoQBHauY6XtMfsQPDm2WcTTxJD6Wluay8O?=
- =?us-ascii?Q?Pw=3D=3D?=
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56343342-2628-44ec-fda9-08de2d37ffa0
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR13MB2365.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 22:06:07.0403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GbNiUmjTpuCHVxlT68UZNxrxz8ZRxBKUNFUgIVpIgczVmlPLXuhzU+ngoqO83/Kv0q489eOQIqTIBM1vPipWfHDi0RA+Xv45eqOlyqgnRDI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR13MB5182
+From: NeilBrown <neilb@ownmail.net>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ "Trond Myklebust" <trondmy@kernel.org>, "Mike Snitzer" <snitzer@kernel.org>
+Subject: Re: [PATCH v1 0/3] Allow knfsd to use atomic_open()
+In-reply-to: <9DF41F45-F6E6-4306-93BC-48BF63236BE4@hammerspace.com>
+References: <cover.1763483341.git.bcodding@hammerspace.com>,
+ <176351538077.634289.8846523947369398554@noble.neil.brown.name>,
+ <0C9008B1-2C70-43C4-8532-52D91D6B7ED1@hammerspace.com>,
+ <176367758664.634289.10094974539440300671@noble.neil.brown.name>,
+ <034A5D25-AAD3-4633-B90A-317762CED5D2@hammerspace.com>,
+ <176419077220.634289.8903814965587480932@noble.neil.brown.name>,
+ <9DF41F45-F6E6-4306-93BC-48BF63236BE4@hammerspace.com>
+Date: Thu, 27 Nov 2025 11:36:20 +1100
+Message-id: <176420378092.634289.15227073044036379500@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On 26 Nov 2025, at 15:59, NeilBrown wrote:
+On Thu, 27 Nov 2025, Benjamin Coddington wrote:
+> On 26 Nov 2025, at 15:59, NeilBrown wrote:
+>=20
+> > On Fri, 21 Nov 2025, Benjamin Coddington wrote:
+> >> On 20 Nov 2025, at 17:26, NeilBrown wrote:
+> >>
+> >>> On Wed, 19 Nov 2025, Benjamin Coddington wrote:
+> >>>
+> >>>> Ah, it's true.  I did not validate knfsd's behaviors, only its interfa=
+ce with
+> >>>> VFS.  IIUC knfsd gets around needing to pass O_EXCL by holding the dir=
+ectory
+> >>>> inode lock over the create, and since it doesn't need to do lookup bec=
+ause
+> >>>> it already has a filehandle, I think O_EXCL is moot.
+> >>>
+> >>> Holding the directory lock is sufficient for providing O_EXCL for local
+> >>> filesystems which will be blocked from creating while that lock is held.
+> >>> It is *not* sufficient for remote filesystems which are precisely those
+> >>> which provide ->atomic_open.
+> >>>
+> >>> The fact that you are adding support for atomic_open means that O_EXCL
+> >>> isn't moot.
+> >>
+> >> I mean to say: knfsd doesn't need to pass O_EXCL because its already tak=
+ing
+> >> care to produce an exclusive open via nfsv4 semantics.
+> >
+> > Huh?
+> >
+> > The interesting circumstance here is an NFS re-export of an NFS
+> > filesystem - is that right?
+>=20
+> That's right.
+>=20
+> > The only way that an exclusive create can be achieved on the target
+> > filesystem is if an NFS4_CREATE_EXCLUSIVE4_1 (or similar) create request
+> > is sent to the ultimate sever.  There is nothing knfsd can do to
+> > produce exclusive open semantics on a remote NFS serve except to
+> > explicitly request them.
+>=20
+> True - but I haven't really been worried about that, so I think I see what
+> you're getting at now - you'd like kNFSD to start using O_EXCL when it
+> receives NFS4_CREATE_EXCLUSIVE4_1.
+>=20
+> I think that's a whole different change on its own, but not necessary
+> here because these changes are targeting a very specific problem - the
+> problem where open(O_CREAT) is done in two operations on the remote
+> filesystem.  That problem is solved by this patchset, and I don't think the
+> solution is incomplete because we're not passing O_EXCL for the
+> NFS4_CREATE_EXCLUSIVE{4_1} case.  I think that's a new enhancement - one
+> that I haven't thought through (yet) or tested.
+>=20
+> Up until now, kNFSD has not bothered fiddling with O_EXCL because of the
+> reasons I listed above - for local filesystems or remote.
+>=20
+> Do you disagree that the changes here for the open(O_CREAT) problem is
+> incomplete without new O_EXCL passing to atomic_open()?=20
 
-> On Fri, 21 Nov 2025, Benjamin Coddington wrote:
->> On 20 Nov 2025, at 17:26, NeilBrown wrote:
->>
->>> On Wed, 19 Nov 2025, Benjamin Coddington wrote:
->>>
->>>> Ah, it's true.  I did not validate knfsd's behaviors, only its interface with
->>>> VFS.  IIUC knfsd gets around needing to pass O_EXCL by holding the directory
->>>> inode lock over the create, and since it doesn't need to do lookup because
->>>> it already has a filehandle, I think O_EXCL is moot.
->>>
->>> Holding the directory lock is sufficient for providing O_EXCL for local
->>> filesystems which will be blocked from creating while that lock is held.
->>> It is *not* sufficient for remote filesystems which are precisely those
->>> which provide ->atomic_open.
->>>
->>> The fact that you are adding support for atomic_open means that O_EXCL
->>> isn't moot.
->>
->> I mean to say: knfsd doesn't need to pass O_EXCL because its already taking
->> care to produce an exclusive open via nfsv4 semantics.
->
-> Huh?
->
-> The interesting circumstance here is an NFS re-export of an NFS
-> filesystem - is that right?
+It isn't so much that the change is incomplete.  Rather, the change
+introduces a regression.
 
-That's right.
+The old code was
 
-> The only way that an exclusive create can be achieved on the target
-> filesystem is if an NFS4_CREATE_EXCLUSIVE4_1 (or similar) create request
-> is sent to the ultimate sever.  There is nothing knfsd can do to
-> produce exclusive open semantics on a remote NFS serve except to
-> explicitly request them.
+-	error =3D vfs_create(mnt_idmap(path->mnt),
+-			   d_inode(path->dentry->d_parent),
+-			   path->dentry, mode, true);
 
-True - but I haven't really been worried about that, so I think I see what
-you're getting at now - you'd like kNFSD to start using O_EXCL when it
-receives NFS4_CREATE_EXCLUSIVE4_1.
 
-I think that's a whole different change on its own, but not necessary
-here because these changes are targeting a very specific problem - the
-problem where open(O_CREAT) is done in two operations on the remote
-filesystem.  That problem is solved by this patchset, and I don't think the
-solution is incomplete because we're not passing O_EXCL for the
-NFS4_CREATE_EXCLUSIVE{4_1} case.  I think that's a new enhancement - one
-that I haven't thought through (yet) or tested.
+Note the "true" at the end.  This instructs nfs_create() to pass O_EXCL
+to nfs_do_create() so an over-the-wire exclusive create is performed.
 
-Up until now, kNFSD has not bothered fiddling with O_EXCL because of the
-reasons I listed above - for local filesystems or remote.
+The new code is
 
-Do you disagree that the changes here for the open(O_CREAT) problem is
-incomplete without new O_EXCL passing to atomic_open()?  If so, do we also
-need to consider passing O_EXCL when kNFSD does vfs_open() for the case when
-the filesystem does not have atomic_open()?
++		dentry =3D atomic_open(path, dentry, file, flags, mode);
 
-Thanks for engaging with me,
-Ben
+Where "flags" is oflags from nfsd4_vfs_create() which is=20
+   O_CREAT| O_LARGEFILE | O_(read/write/rdwr)
+and no O_EXCL.
+(When atomic_open is called by lookup_open, "open_flag" is passed which
+might contain O_EXCL).
+
+>                                                          If so, do we also
+> need to consider passing O_EXCL when kNFSD does vfs_open() for the case when
+> the filesystem does not have atomic_open()?
+
+No as vfs_open() doesn't do the create, vfs_create() does that.
+And we do need to pass (the equivalent of) O_EXCL when calling
+vfs_create().  In fact we do - that 'true' as the large arg means
+exactly O_EXCL.
+(really we shouldn't be passing 'true' if an exclusive create wasn't
+requested, but it only makes a difference for filesystems that support
+->atomic_open, so it doesn't actually matter what we pass - and Jeff
+has a patch to remove that last arg to vfs_create()).
+
+
+>=20
+> Thanks for engaging with me,
+> Ben
+>=20
+
+Thanks,
+NeilBrown
+
 
