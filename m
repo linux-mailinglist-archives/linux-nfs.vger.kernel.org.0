@@ -1,143 +1,156 @@
-Return-Path: <linux-nfs+bounces-16767-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16768-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA34C8FD5F
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 19:00:38 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F826C8FDAD
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 19:03:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35F113AED8D
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 17:59:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5BAA94E324A
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 18:03:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CEC2F60CA;
-	Thu, 27 Nov 2025 17:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD352F659F;
+	Thu, 27 Nov 2025 18:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LjTeTI+W";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ozXkWwQo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="muuaQkT+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447B02F83B4
-	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 17:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5C2F7446;
+	Thu, 27 Nov 2025 18:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764266336; cv=none; b=R5Ocn/wWsZb9Uxy43Kf7/VTqBv32RH8fmHhdYfqdAnuZ2w7IJsMylMkHkqeBKP7dDOUIjA7bziUpv5KBShXG/zO/kERjRB5et0TXERb+5Nb5anwVqHuYXRrhVZuge1flirMjxjyynMdYRc7wnp0et4qmyDKfofXrXkhK3+bNsfw=
+	t=1764266591; cv=none; b=F7tu3kLt/Ug0Lz+MQqxDaJpdy2fs6aVMOouTrUo2/U916RC2BfMfG64HK+zXJtP39ecsYAk6VDBxnVDrr/QbBiyjB55sAU5LeKiVCGOpk7Ddy6k6CkeqG0YCbDqA/coByKyhqYrwHE37rEdLOinpdR8oWaalMmteoJhdW7Rwkyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764266336; c=relaxed/simple;
-	bh=KxnHkjnVnZ6TgOdAA8JxaeOec8CYFIkP8zyi8kr3cpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lyrt7vFOuPJdP1VjMMfGtCZGHYkv3MgwjyNWshmnM4jknpp935nBUn1aDL729xRgjvmR/unXRmmzq0FBusYvZlhzRcunYVRAs3ZAyHWDPFT96P7r37QiuLv7TDj0B2gRhQfUH10U8lrna6Ir1OCpiyeCsPl4Blcp8yuTAY8nBZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LjTeTI+W; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ozXkWwQo; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from kunlun.arch.suse.cz (unknown [10.100.128.76])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 6F81A5BCCE;
-	Thu, 27 Nov 2025 17:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764266329; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PgtLLMpSqB4C6RIRJA/gqYhCTxKW+cgtBd+/999RS+k=;
-	b=LjTeTI+W6WXy8OFG0nwdgOIJj72wF4EvXx6Z6tODUeNyvPLoovWVNdFyyEkbOyUon6HHcV
-	V7x0rSjpOyrcMpDldQNQ3tw7at5W36eJnznOH4WOIMkM28M01ZnM38MML91i2wXsXS8Rgx
-	rHDRIQhkMXwDiHfGtJ2wc0fbygvKd8A=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764266328; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PgtLLMpSqB4C6RIRJA/gqYhCTxKW+cgtBd+/999RS+k=;
-	b=ozXkWwQos2piNDaY7JVqzOqnlR2uOcXubP+FyO6ATYNq6fnvehQOcyx4k1DN5nhQxLwSpU
-	SzNFH5VOxhVG/jh2Qv8nCpLrK4D8MBESKWyLYZuOWsPXt5q3XpNHbompdCJ78lhb8kkP2t
-	yg2B20aaRzQobKD3y4wMfsd2etk7kgs=
-From: Anthony Iliopoulos <ailiop@suse.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 2/2] nfsd: fix return error code for nfsd_map_name_to_[ug]id
-Date: Thu, 27 Nov 2025 18:57:53 +0100
-Message-ID: <20251127175753.134132-3-ailiop@suse.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251127175753.134132-1-ailiop@suse.com>
-References: <20251127175753.134132-1-ailiop@suse.com>
+	s=arc-20240116; t=1764266591; c=relaxed/simple;
+	bh=jr+sar5T/+6hulJrsWce23uDbzalLgb+DGFiRtA+CIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y6iNXiXHitzyg1reyMbZj0C8WKtnZhfIqtHw32DdjVGLqB7/sdy50RuFHONdwqsCIRmSOM8CsJ7DeTJBmoXzgaDoXumAot0aAiERj4jF2ioRsntrC3Hfi6k/NeSftHWTpboMP9lmQxTBj9Cuthw132utIrApeLP0i0emdW+Jthw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=muuaQkT+; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764266590; x=1795802590;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jr+sar5T/+6hulJrsWce23uDbzalLgb+DGFiRtA+CIk=;
+  b=muuaQkT+6fPz55yZEpq5HMP6HibKsfg3v0FwrIundOBvm0dO4mkRW+UQ
+   tor11i22SrfeFFEvE4FdEPoX/DTt5G9bpVnsmWifqTzt9CQR1khyAlMeC
+   o4TmgcEK9x+cd4wZ/4RyTSEIAmcwFI8EG2trhLnISi/7P47OwVaM/Zfbz
+   Qjz7b++Q66tl+s1QQsA1Feb6SAt5fVqWLxxU++vKISbMQf0nTdJKrJDS3
+   E54zk/1QQrPXpNQnoxwTt4TUT1jFO/SqDQs7kgISYRjW4PjvuoLco5JLy
+   cZxPFonrt92UzlmBa6iTsgy70GHHridssPUVPxDwLJrxFjqES6qt4zVSi
+   Q==;
+X-CSE-ConnectionGUID: iX+uXLcdS6eEU57gB0XaTw==
+X-CSE-MsgGUID: uvffyBZASnSgKptXAGd/0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11626"; a="53883642"
+X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
+   d="scan'208";a="53883642"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 10:03:08 -0800
+X-CSE-ConnectionGUID: zpGF1I0AQLON/Z81+MDeiQ==
+X-CSE-MsgGUID: FKQWafcdRV6ii16yoaZUvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
+   d="scan'208";a="193179100"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 10:03:05 -0800
+Date: Thu, 27 Nov 2025 20:03:03 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] nfsd: Mark variable __maybe_unused to avoid W=1
+ build break
+Message-ID: <aSiSV9SKClTZAVjy@smile.fi.intel.com>
+References: <20251113083131.2239677-1-andriy.shevchenko@linux.intel.com>
+ <176338731878.4204.10224670039692915729.b4-ty@oracle.com>
+ <aSgCyqR72Zu6TSSI@black.igk.intel.com>
+ <087f6258-a605-4e8c-9fa7-420ec12bef6f@kernel.org>
+ <aSiCg0i4wMXk6QxV@smile.fi.intel.com>
+ <52260b53-9ed8-400a-aaed-b1dc9e7910e9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ZERO(0.00)[0];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	URIBL_BLOCKED(0.00)[suse.com:mid,suse.com:email,kunlun.arch.suse.cz:helo];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kunlun.arch.suse.cz:helo,suse.com:mid,suse.com:email]
-X-Spam-Level: 
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52260b53-9ed8-400a-aaed-b1dc9e7910e9@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-idmap lookups can time out while the cache is waiting for a userspace
-upcall reply. In that case cache_check() returns -ETIMEDOUT to callers.
+On Thu, Nov 27, 2025 at 12:08:09PM -0500, Chuck Lever wrote:
+> On 11/27/25 11:55 AM, Andy Shevchenko wrote:
+> > On Thu, Nov 27, 2025 at 11:20:16AM -0500, Chuck Lever wrote:
+> >> On 11/27/25 2:50 AM, Andy Shevchenko wrote:
+> >>> On Mon, Nov 17, 2025 at 08:49:29AM -0500, Chuck Lever wrote:
+> >>>> On Thu, 13 Nov 2025 09:31:31 +0100, Andy Shevchenko wrote:
+> >>>>> Clang is not happy about set but (in some cases) unused variable:
+> >>>>>
+> >>>>> fs/nfsd/export.c:1027:17: error: variable 'inode' set but not used [-Werror,-Wunused-but-set-variable]
+> >>>>>
+> >>>>> since it's used as a parameter to dprintk() which might be configured
+> >>>>> a no-op. To avoid uglifying code with the specific ifdeffery just mark
+> >>>>> the variable __maybe_unused.
 
-The nfsd_map_name_to_[ug]id functions currently proceed with attempting
-to map the id to a kuid despite a potentially temporary failure to
-perform the idmap lookup. This results in the code returning the error
-NFSERR_BADOWNER which can cause client operations to return to userspace
-with failure.
+[...]
 
-Fix this by returning the failure status before attempting kuid mapping.
+> >>>> Applied to nfsd-testing, thanks!
+> >>>>
+> >>>> [1/1] nfsd: Mark variable __maybe_unused to avoid W=1 build break
+> >>>>       commit: 56e9f88b25abf08de6f2b1bfbbb2ddc4e6622d1e
+> >>>
+> >>> Thanks, but still no appearance in Linux Next and problem seems to be present.
+> >>>
+> >>
+> >> The usual practice is to keep patches in nfsd-testing for four
+> >> weeks to allow NFSD and community CI processes to work, and to
+> >> enable extended review before it is merged. Both the community
+> >> CI processes (eg, zero-day bots) and the availability of
+> >> reviewers are not something I have control over.
+> >>
+> >> It will be available for upstream merge after December 11. You
+> >> seem to be suggesting there is a sense of urgency so I will
+> >> direct it towards v6.20-rc as soon as it is merge-ready.
+> 
+> Oops:
+> 
+> s/v6.20-rc/v6.19-rc/
+> 
+> 
+> > Since it's (not so critical TBH, but still) a build breakage I supposed this to
+> > go via the respective -fixes path.
+> 
+> Yes, what I meant above was I will submit it just after the
+> v6.19 merge window closes in a few weeks.
 
-This will return NFSERR_JUKEBOX on idmap lookup timeout so that clients
-can retry the operation instead of aborting it.
+Ah, that's wonderful, thanks!
 
-Fixes: 65e10f6d0ab0 ("nfsd: Convert idmap to use kuids and kgids")
-Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
----
- fs/nfsd/nfs4idmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> > But okay, your call.
+> 
+> It's just a build warning, but I know such issues affect the
+> Fedora and Red Hat kernel build pipelines, as they enable the
+> "warning => error" compile option.
+> 
+> However, those distributions enable SunRPC debugging, which
+> means they won't see it. So I think this problem is not likely
+> to be pervasive.
 
-diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
-index 8cca1329f348..123ac45b512e 100644
---- a/fs/nfsd/nfs4idmap.c
-+++ b/fs/nfsd/nfs4idmap.c
-@@ -654,6 +654,8 @@ nfsd_map_name_to_uid(struct svc_rqst *rqstp, const char *name, size_t namelen,
- 		return nfserr_inval;
- 
- 	status = do_name_to_id(rqstp, IDMAP_TYPE_USER, name, namelen, &id);
-+	if (status)
-+		return status;
- 	*uid = make_kuid(nfsd_user_namespace(rqstp), id);
- 	if (!uid_valid(*uid))
- 		status = nfserr_badowner;
-@@ -671,6 +673,8 @@ nfsd_map_name_to_gid(struct svc_rqst *rqstp, const char *name, size_t namelen,
- 		return nfserr_inval;
- 
- 	status = do_name_to_id(rqstp, IDMAP_TYPE_GROUP, name, namelen, &id);
-+	if (status)
-+		return status;
- 	*gid = make_kgid(nfsd_user_namespace(rqstp), id);
- 	if (!gid_valid(*gid))
- 		status = nfserr_badowner;
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
 
