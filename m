@@ -1,67 +1,67 @@
-Return-Path: <linux-nfs+bounces-16766-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16767-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2120BC8FD50
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 19:00:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA34C8FD5F
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 19:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D3A514EA5A2
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 17:58:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35F113AED8D
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 17:59:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9B12F616D;
-	Thu, 27 Nov 2025 17:58:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CEC2F60CA;
+	Thu, 27 Nov 2025 17:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="awZaClfS";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="awZaClfS"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LjTeTI+W";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ozXkWwQo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085BA2F549E
-	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 17:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447B02F83B4
+	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 17:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764266329; cv=none; b=EqZ9YThOBbVPHQaWrOa4Es+RG7DDAdmyDqkfbOKspSM8N+sjMzNjwl7DR2p03KFizXEIrLvvHIP+w00S4Qy3TGCbhEDdTkXPCuGB6fB851tgBC0R7RX/YczbgMM52NG3STGEZ29LmnsZN+vPSBvKMQcejylhqvP6sZgmNDVDw3U=
+	t=1764266336; cv=none; b=R5Ocn/wWsZb9Uxy43Kf7/VTqBv32RH8fmHhdYfqdAnuZ2w7IJsMylMkHkqeBKP7dDOUIjA7bziUpv5KBShXG/zO/kERjRB5et0TXERb+5Nb5anwVqHuYXRrhVZuge1flirMjxjyynMdYRc7wnp0et4qmyDKfofXrXkhK3+bNsfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764266329; c=relaxed/simple;
-	bh=9G/Dxo+bgGOU2AzhpFfqEvVvKBY+xzY7ipmI5VZzo6Y=;
+	s=arc-20240116; t=1764266336; c=relaxed/simple;
+	bh=KxnHkjnVnZ6TgOdAA8JxaeOec8CYFIkP8zyi8kr3cpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PYXU7Rb+gcDyzWWLrA1gOTMW5DCZdxfnfmd1n//Q6ASCwmx4FrKRXe/pYC32XXowSwsr/9IGjOeO2Wm+QrD7cGclzngEvJ7HkxPGaHQxDDkxtNxWx7A27Ab5uJ1vzsqO8wxp0xOYDOxXco1DRSO4mhHyUrOIa64ul4nY1gzQEiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=awZaClfS; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=awZaClfS; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=Lyrt7vFOuPJdP1VjMMfGtCZGHYkv3MgwjyNWshmnM4jknpp935nBUn1aDL729xRgjvmR/unXRmmzq0FBusYvZlhzRcunYVRAs3ZAyHWDPFT96P7r37QiuLv7TDj0B2gRhQfUH10U8lrna6Ir1OCpiyeCsPl4Blcp8yuTAY8nBZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LjTeTI+W; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ozXkWwQo; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Received: from kunlun.arch.suse.cz (unknown [10.100.128.76])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 1ACD35BCC1;
-	Thu, 27 Nov 2025 17:58:44 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTP id 6F81A5BCCE;
+	Thu, 27 Nov 2025 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764266324; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764266329; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=30KYWi6yVGsWMKGKDQnnTwu/HZUrR0y40HT8Lfe5xtA=;
-	b=awZaClfSC2qpdNQwb1gyWZB9B/SO0lU61jCDyPKGFwBz7x5FFlZz7EMfUo6IV/Ox2ZWekt
-	/LTO9RxRVOhJeBtknyWgvj5pSkI4abIB5cTXZW5OW0nXBL1QuFXdaWsKMiydfXerv223Qg
-	BDAYY1tv5BLnjkjs41ZOp0MFt6PzoAE=
+	bh=PgtLLMpSqB4C6RIRJA/gqYhCTxKW+cgtBd+/999RS+k=;
+	b=LjTeTI+W6WXy8OFG0nwdgOIJj72wF4EvXx6Z6tODUeNyvPLoovWVNdFyyEkbOyUon6HHcV
+	V7x0rSjpOyrcMpDldQNQ3tw7at5W36eJnznOH4WOIMkM28M01ZnM38MML91i2wXsXS8Rgx
+	rHDRIQhkMXwDiHfGtJ2wc0fbygvKd8A=
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764266324; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764266328; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=30KYWi6yVGsWMKGKDQnnTwu/HZUrR0y40HT8Lfe5xtA=;
-	b=awZaClfSC2qpdNQwb1gyWZB9B/SO0lU61jCDyPKGFwBz7x5FFlZz7EMfUo6IV/Ox2ZWekt
-	/LTO9RxRVOhJeBtknyWgvj5pSkI4abIB5cTXZW5OW0nXBL1QuFXdaWsKMiydfXerv223Qg
-	BDAYY1tv5BLnjkjs41ZOp0MFt6PzoAE=
+	bh=PgtLLMpSqB4C6RIRJA/gqYhCTxKW+cgtBd+/999RS+k=;
+	b=ozXkWwQos2piNDaY7JVqzOqnlR2uOcXubP+FyO6ATYNq6fnvehQOcyx4k1DN5nhQxLwSpU
+	SzNFH5VOxhVG/jh2Qv8nCpLrK4D8MBESKWyLYZuOWsPXt5q3XpNHbompdCJ78lhb8kkP2t
+	yg2B20aaRzQobKD3y4wMfsd2etk7kgs=
 From: Anthony Iliopoulos <ailiop@suse.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 1/2] nfsd: never defer requests during idmap lookup
-Date: Thu, 27 Nov 2025 18:57:52 +0100
-Message-ID: <20251127175753.134132-2-ailiop@suse.com>
+Subject: [PATCH 2/2] nfsd: fix return error code for nfsd_map_name_to_[ug]id
+Date: Thu, 27 Nov 2025 18:57:53 +0100
+Message-ID: <20251127175753.134132-3-ailiop@suse.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251127175753.134132-1-ailiop@suse.com>
 References: <20251127175753.134132-1-ailiop@suse.com>
@@ -95,50 +95,48 @@ X-Spam-Level:
 X-Spam-Score: -2.80
 X-Spam-Flag: NO
 
-During v4 request compound arg decoding, some ops (e.g. SETATTR) can
-trigger idmap lookup upcalls. When those upcall responses get delayed
-beyond the allowed time limit, cache_check() will mark the request for
-deferral and cause it to be dropped.
+idmap lookups can time out while the cache is waiting for a userspace
+upcall reply. In that case cache_check() returns -ETIMEDOUT to callers.
 
-This prevents nfs4svc_encode_compoundres from being executed, and thus the
-session slot flag NFSD4_SLOT_INUSE never gets cleared. Subsequent client
-requests will fail with NFSERR_JUKEBOX, given that the slot will be marked
-as in-use, making the SEQUENCE op fail.
+The nfsd_map_name_to_[ug]id functions currently proceed with attempting
+to map the id to a kuid despite a potentially temporary failure to
+perform the idmap lookup. This results in the code returning the error
+NFSERR_BADOWNER which can cause client operations to return to userspace
+with failure.
 
-Fix this by making sure that the RQ_USEDEFERRAL flag is always clear during
-nfs4svc_decode_compoundargs(), since no v4 request should ever be deferred.
+Fix this by returning the failure status before attempting kuid mapping.
 
-Fixes: 2f425878b6a7 ("nfsd: don't use the deferral service, return NFS4ERR_DELAY")
+This will return NFSERR_JUKEBOX on idmap lookup timeout so that clients
+can retry the operation instead of aborting it.
+
+Fixes: 65e10f6d0ab0 ("nfsd: Convert idmap to use kuids and kgids")
 Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
 ---
- fs/nfsd/nfs4xdr.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4idmap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 6040a6145dad..0a1a46b750ef 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -5989,6 +5989,7 @@ bool
- nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- {
- 	struct nfsd4_compoundargs *args = rqstp->rq_argp;
-+	bool ret = false;
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index 8cca1329f348..123ac45b512e 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -654,6 +654,8 @@ nfsd_map_name_to_uid(struct svc_rqst *rqstp, const char *name, size_t namelen,
+ 		return nfserr_inval;
  
- 	/* svcxdr_tmp_alloc */
- 	args->to_free = NULL;
-@@ -5997,7 +5998,11 @@ nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 	args->ops = args->iops;
- 	args->rqstp = rqstp;
+ 	status = do_name_to_id(rqstp, IDMAP_TYPE_USER, name, namelen, &id);
++	if (status)
++		return status;
+ 	*uid = make_kuid(nfsd_user_namespace(rqstp), id);
+ 	if (!uid_valid(*uid))
+ 		status = nfserr_badowner;
+@@ -671,6 +673,8 @@ nfsd_map_name_to_gid(struct svc_rqst *rqstp, const char *name, size_t namelen,
+ 		return nfserr_inval;
  
--	return nfsd4_decode_compound(args);
-+	clear_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
-+	ret = nfsd4_decode_compound(args);
-+	set_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
-+
-+	return ret;
- }
- 
- bool
+ 	status = do_name_to_id(rqstp, IDMAP_TYPE_GROUP, name, namelen, &id);
++	if (status)
++		return status;
+ 	*gid = make_kgid(nfsd_user_namespace(rqstp), id);
+ 	if (!gid_valid(*gid))
+ 		status = nfserr_badowner;
 -- 
 2.52.0
 
