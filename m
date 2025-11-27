@@ -1,358 +1,228 @@
-Return-Path: <linux-nfs+bounces-16756-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16757-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 114AFC8E7DC
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 14:34:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0638C8F6BF
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 17:03:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D05924E8A21
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 13:32:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5E5C3A44DC
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 16:02:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DFE286402;
-	Thu, 27 Nov 2025 13:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E512C027A;
+	Thu, 27 Nov 2025 16:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rh8dnYFm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OmQlmb6N";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="166tjX+O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PS1WAt3E"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="HYQYtp1O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023119.outbound.protection.outlook.com [40.93.201.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF21283130
-	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 13:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764250268; cv=none; b=TG31mtL5iq//22UeX/2eui45pTPqOX/sQBC4DPVMalunOFnwmaIVFZIqBrZFSzF4pjTSxhqohb+4+4ceSYo/1a8LlJXK1gUDuG+VoyG4kh4QTswv0KQWFaQRjrIJrifzdE/3lEMHRjcSOqyCxbM6UqcqkLFAu6by+AqYuYEBUV0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764250268; c=relaxed/simple;
-	bh=aD+Z6IumaOiPhSKdGozpzfKuEvmUdQSQvBKOS8KlarI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MhEKoBxUT4InThe6sPKexovY8Ywy7CsT0bvPmTaOp/GrD92bqiP29rtcYQSjN6mBZ5Gl706pU0sLICAgau88HkavtyDaTY8Fy6KTTltCiZEfY/4D+qGlWKpeJKrilM9ia6S05M4jOggM4Eb2JaGqTxy1cFuVOAZFM5EBsDLiXOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rh8dnYFm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OmQlmb6N; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=166tjX+O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PS1WAt3E; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A824F3374C;
-	Thu, 27 Nov 2025 13:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764250262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RMTVveMh5YfenpE8iMkQrTizREiFLrVIWd+fohp24gE=;
-	b=rh8dnYFmP9bqVzCOiQwcKgNVs6Dl7jD229uCl0x+P0gxdZlFDIwhfdOWWTXadOBAHNADdC
-	ngg1SvfhxHtUo7ofE4DoKiRMD/pimJfkVNcVQyQSAO0pTVWll/ZH8vydyCs9yxfZNrqUIx
-	6NTX2kS3MTvXcpmIrI1PSdaB1Fa4Dhc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764250262;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RMTVveMh5YfenpE8iMkQrTizREiFLrVIWd+fohp24gE=;
-	b=OmQlmb6Nk7C39zzgoo28LC+n97DjqOJ+t4DU3OllM45dWpjQccrnsGqPSVxt+AZtiAYY54
-	rlNvhJftA3cuxqAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=166tjX+O;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PS1WAt3E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764250261; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RMTVveMh5YfenpE8iMkQrTizREiFLrVIWd+fohp24gE=;
-	b=166tjX+O8IPVTHmzP2K2Rui8g5AUAtGZIa5izr2ZMc++1oa+ad6e3WRR4j49t1Z/sgEqrZ
-	hhXziLVBxDKYmRBr1sj5EDQXoSF2QdQcFFTIDhNthIe7mM9onMZG4Ex0BmUoZACiLRm242
-	C13aLS+HXMv0xhe1cNrvlmSCjT9+b78=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764250261;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RMTVveMh5YfenpE8iMkQrTizREiFLrVIWd+fohp24gE=;
-	b=PS1WAt3E1C/zR0Wj3qXvCoyWz1TXUCN36K09vXwdqXwT1KnTU+CVRSpCXahWfNCfJcskHP
-	SiE9oLkGcuEv8WBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6C2DB3EA63;
-	Thu, 27 Nov 2025 13:31:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /OvDGZVSKGk6UQAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 27 Nov 2025 13:31:01 +0000
-Message-ID: <f7a91a49-9f82-492a-8bf9-520ee1c832ba@suse.de>
-Date: Thu, 27 Nov 2025 14:31:01 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918FE2773FE;
+	Thu, 27 Nov 2025 16:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.119
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764259336; cv=fail; b=HTkXnO/dVBSVZPH3R1hbb+javOAZxCDTN/l/xkT2SHfviRlOjVVyq7LwyyVHjvYNlcHiyzF/282FDQsf8MJMmWgO8cHM16g8Ivv20ACtT0Jf1Ch5MNbKPeLQFuE64byjPKjnDwbaz0FcjSh8GCKQT5L48THuq+UmZqUOh1isC8Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764259336; c=relaxed/simple;
+	bh=AgTKhNx4wUgM5nYeJFV87Qvxj9eJZsxrUdROpqxChE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cRjWY00vasfsCKvsOiOS2bnWRdtYHO8VSijjmpMdtB7Wxmq9Odds8JvB8rsWzDo5tp27lEq4E6d/0A1Kb/nur7YQaSPyu34zbC+wmfTbyER3BF2YanjehgqRDUlsQATCfrwvdTroIgVaCejDHl8HfA0yQ7AHd0WqF5z6qGBtm2k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=HYQYtp1O; arc=fail smtp.client-ip=40.93.201.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q6EwH8wQnpdFYRrHScO5s5dzt3wozSaEIUMpgrMb8x4VgHxQO4D9ogZzl5L7zPwx8OjVBeg/v/oliCAHl+qkyBMaqEifoNpN7FFpr7KlMJryLzvwwsi0mM80mWonkWgyrSuTgFsh3W9Pf3PVBrDSwUrH290OW1DnrkDwyX4RXWxtoDg+pGpjMYz9nRTA0FqDHaYuF6Ye40F1YaEBUWEQ7/O6xZcsB2tqjz833VA2d0lbkbA83I9LGi+Wsu/eZ8+WV5rUHiMF+I5taXRv/rvly8W4kaNFbUQaY9dRZ0X8mzP/idS7oKpVXJbQMja03K6WPNUUk7gOG5Mr40QkZN4PyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iLRXYOxSgXP7BZPhrXvoI4FdNuNkc1/TMx5kJ9uJFMA=;
+ b=XuaIWF+Lm1icQWzak8JP0RlQuxLuM+y7qLkWBtCYDkk/sH3f5r2FJo9ACjQZI+V29/wDdyAz8/sRU6NCujVlMpASLHNyYbI+Q77b7F3XD8qMYUsxnKvmC59FbrLTPv6LX90ODUSlvkaz4Blpj8r9XmlkzyJwmeZBziOc29aeIfW5fQzR0/mrK1Bj2eTp5sKHcbBaJOO/YFzk0ZBrZKnzd6a1w3jsWUhoCXFlaqbWXjTTBxmrgf6s7DbIBoBgr96m1mKn+SU+IawyJP83gKPQNbC9msp0kEfw5xGC0smaCL5HFRd0AMakAix8GGntpZ1uctwkLHh6HAbyeQMlOwpeKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iLRXYOxSgXP7BZPhrXvoI4FdNuNkc1/TMx5kJ9uJFMA=;
+ b=HYQYtp1OxT1fZ3Z4Hbbk4lvvdryYRG93j3Vi/We0WYL/7k+9YE777TqDU7/SHL2KN4JNhxP6zt5o5nFIPrWmWihrplxgunj0sOhZFIPQPFHIGcdWDiiFKJVul3qlzeTKLdF9zJgRBvyD18Ux+/bmJUEVDbfodcnHG7xLxO/L+x4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from SN6PR13MB2365.namprd13.prod.outlook.com (2603:10b6:805:5a::14)
+ by SJ0PR13MB5500.namprd13.prod.outlook.com (2603:10b6:a03:421::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Thu, 27 Nov
+ 2025 16:02:09 +0000
+Received: from SN6PR13MB2365.namprd13.prod.outlook.com
+ ([fe80::9127:c65a:b5c5:a9d]) by SN6PR13MB2365.namprd13.prod.outlook.com
+ ([fe80::9127:c65a:b5c5:a9d%7]) with mapi id 15.20.9366.009; Thu, 27 Nov 2025
+ 16:02:08 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Mike Snitzer <snitzer@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/3] Allow knfsd to use atomic_open()
+Date: Thu, 27 Nov 2025 11:02:02 -0500
+Message-ID: <cover.1764259052.git.bcodding@hammerspace.com>
+X-Mailer: git-send-email 2.50.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL0PR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:208:91::23) To SN6PR13MB2365.namprd13.prod.outlook.com
+ (2603:10b6:805:5a::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/6] nvme-tcp: Support KeyUpdate
-To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
- kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
-References: <20251112042720.3695972-1-alistair.francis@wdc.com>
- <20251112042720.3695972-6-alistair.francis@wdc.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20251112042720.3695972-6-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ietf.org:url,suse.de:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,wdc.com:email];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: A824F3374C
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR13MB2365:EE_|SJ0PR13MB5500:EE_
+X-MS-Office365-Filtering-Correlation-Id: efd9cc7e-55c2-4ad9-73a4-08de2dce5173
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?s51su9uThSJwz/DOSnp4+X1oMlHFUqFc8V/vKOHewXNxURJ4rdPNlYuUA6KD?=
+ =?us-ascii?Q?oQCiC3djm62W8NP+iJ4F4GT/2UI9lE0we7ddyfzSp4Jj5htw9GYkubso5Zjs?=
+ =?us-ascii?Q?eHsTmVo66S7jc6lsk3wUfjtGcEReZlS2TTcZ95TjpaQduqRYnX4jdU/O540V?=
+ =?us-ascii?Q?m7XIZrKygpo7XTzHfbMo91xk++MMY3brzkNVNpYbiRv8jGVmOrbIZS8XFxhb?=
+ =?us-ascii?Q?lPG7CDUIseYvX6pDphR6gh/TpusBqBJjnO/3Z/fpbIZ9Edmlv/WDMIfjWU3v?=
+ =?us-ascii?Q?lnk904oGvlEjIhoQ2ilwpf83DhfbHo6N1U2+NMHV8SFIiusNOT7M1vjpJ9SP?=
+ =?us-ascii?Q?w2ftzgRa2bNFrly3keSN5LVf0CWCGJ/d9Au9VwuWdMb0IS0ujG9Uks31Dzyr?=
+ =?us-ascii?Q?Lcu3wtWD4MpFHngAxKrQdBUtNe+m8Pzv08N7xnfIU/PNbSODpl3BmKhisUVV?=
+ =?us-ascii?Q?lG2YxgHxl3INVzr0tR/TNiJCrbtZhrnsVxwMeUou9S8GoFNLw9o28RgBMBPr?=
+ =?us-ascii?Q?+lWe7ppZ/tX8o0AmjDY0Yx+XemMJXyFOi5GPox9RvJAoOzeZaDy/xGu1feKD?=
+ =?us-ascii?Q?wxelFpa3BvTQB7RREGkO1/BARO9S+IVzJy7bAkrtelna1abRmQ1POkZvbc9v?=
+ =?us-ascii?Q?2ut2P1dMhHObubXr+CeTwWVbbCWdqpuO0CLbFIhgJjeNcqINGBPveJUkQFFV?=
+ =?us-ascii?Q?thiYTr21h5bxoDOH4K7FJ+GksluXW19MDyn5K2MzgcGTQsRF8M74w1zw41hR?=
+ =?us-ascii?Q?UIT3ukmJcenqAQjgZC/WjsQ+gCQjlLAU/aEoGD9WaePM994za/AWo18AeUP0?=
+ =?us-ascii?Q?M1o54xeYOZ4a+n9RoeCGwx4MH7Nf9LuC83IbmorugNqFi/S+s8odszCrG2fi?=
+ =?us-ascii?Q?lerVSRG43w8gRyxzF3Y20ytZub9+xMgj9JVEYmn9z3y3yHV7enb6X+19hI4n?=
+ =?us-ascii?Q?yzeV+0YkLoLqZN0h7asq9ah3YCiAkpNaOJ5VRR+vetGu5yBfEVsulwWrnEVS?=
+ =?us-ascii?Q?e0wCwVqdsD/ttXB4RnLKoWrFsawuBDyJn5agMCfiKGhInQwgaOsQ6gU/bV5F?=
+ =?us-ascii?Q?OeugTnRtxk1G8BYzxeneyMsHRu0dSPuvZK/vBA4ZowbcwNlRa0/f8Flu/sOk?=
+ =?us-ascii?Q?8pGC31v1Id+gCwKXRDEWqklp++X0GORBIgX0D2JpRsttQbViKTcTzyAEHB2n?=
+ =?us-ascii?Q?yXzxg9wIX0AsTTepdECbq/SclUZVWgO82x2I6MdN1fPJBy9EzkFbD3Nyh/f0?=
+ =?us-ascii?Q?PVxeUkBwnRTa3rbmOuq6qsF9Hhz6iCp+B7aAfEszVS69oz/9ZkaY01YKwfCy?=
+ =?us-ascii?Q?CmG0/sxzGT2/3h9Ut/RMEgB+EhCQZXFgqz8/SL2a6Lwyck+dcEbVujw/rwaq?=
+ =?us-ascii?Q?5mWGNWZFlSpL0nq3jdlkpW/15YA5Ttmh0IiXSKMVAER2pont87R6PjEeAs8r?=
+ =?us-ascii?Q?gQqf/AadLoAlapUmlP/S9YPdqHikjEefvEW5BaUnycPcACHNu2pGDS+jNbts?=
+ =?us-ascii?Q?QwmuyjxyLwgzTKc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR13MB2365.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?G26GciByu80oCHTwh4Ic97goAmS7pIz1hSgeTqxOuojKwXnaSubuTo8/mDLi?=
+ =?us-ascii?Q?monLfi6dUFvcq/z1/DOZHgw/B1STyw0kTLqEhvrb7LNKjMPmhOYWYjBeriri?=
+ =?us-ascii?Q?Dr9fuVdEukbgzR2mrOnNQaK2NqBZpA5D5nsLjm97e+KVaXL2caulSJAUy6YK?=
+ =?us-ascii?Q?ed+PlB2zKXULPFiVaw7CKSkuePRi9u+cAFoGvVuH8hzQt2stbl2/ajJEh7bB?=
+ =?us-ascii?Q?FkO/HMILbhw5GvJ/p7OmxQThllFWGO0X7Y145LKaCNKFXtHGXVaG+z0CDWcq?=
+ =?us-ascii?Q?Dchepom9nwnHVuFvEs9X0M2nIFmaXowh/2K6YQPphY2IrUtZM6rUmJvA8Ud/?=
+ =?us-ascii?Q?qq2ypfL3AGMgvyKmJFcswp+E1qvfqo9g1NNciBmge6ZyFvZso1K1iai7lymg?=
+ =?us-ascii?Q?+qF4ErLAbvPmDAGSjfCQumXqCf+1hlS6IBhIdt0Sy1bAgsWzWWIjmLSIH/uv?=
+ =?us-ascii?Q?xW3LU9fxZqcNpxeOLjmaP/boOd14oV1GhckqBtnNxm9Azd8dieDmxGBDnutq?=
+ =?us-ascii?Q?njOR+Q38l8VVItXFpMR0sL6lc5czYo4plFTEAuKiE9KZ1aJvFztzYTgraDuw?=
+ =?us-ascii?Q?KzSf2NmYo8aiQjJVGebPZAan9r6qpfmdeMTOmfZ6neSinDSr8B0tvIDsuWWC?=
+ =?us-ascii?Q?nAuJxexQm15iteDbLtPDVAH0MeK71V2kyfYeASLbmVN7QB/YZD+cbgSmSRZH?=
+ =?us-ascii?Q?Eokp0vPZmh87RaQrbH2ynk7+X2YR05l7mH6TNN7DXymwGl0A2ahNk16FEEXM?=
+ =?us-ascii?Q?zQOsXjY4EN+1ieylGQGq5qLlCuRVtTTD5B5cTlnziagPcC5QwYTC2WL5F3MB?=
+ =?us-ascii?Q?atU4gDHsM8fMbr45P7PYzO+4aeghb9jUIFRb3/w42G3TQfBQd9RHWzL4rNqF?=
+ =?us-ascii?Q?Ho8mkq+Lt+DRYKjaX73D1Hzx0mTi9jI7qO1jfMi0fpuDxKgIHaDJMo9XfLc0?=
+ =?us-ascii?Q?IgFG8ur+ByCyESCiqCr8otj48M4yyH+Ui6fVhXA0YsGOg1/CTCwG65u7i6Lu?=
+ =?us-ascii?Q?WlqecrKRPyaiMdK5pKUAT91G9ksElmbD3AZGs0M9ZWpirsQoXJTsBP4dfFgn?=
+ =?us-ascii?Q?f++d7wMXFBCPemh5nszEgn80hOiYaSPaPVN+Fy3THlFcPNvi9TZlQvU8yOPj?=
+ =?us-ascii?Q?otvA5s2fmHFR755lJOfWrCXRkDANCOvWOZc+e4eofT7Nuu35+rzgRkaOmZHX?=
+ =?us-ascii?Q?Z+AN4Hxsy4Qk/BpGUSj/srjeL27B3QewadG6H2Nj/nlA/g3SHDZy6HDMTRrv?=
+ =?us-ascii?Q?WbPNv/c9feWF7dP55QFcioIyk3bNPOqSqmXN10AfcymT7HI/uWRqwK7Rmq1i?=
+ =?us-ascii?Q?MIF5lgOuTslvH7G+pG29Zdk/ALnlwsAzFh8aH6c54eBi6QYGHch/g6F+rK9K?=
+ =?us-ascii?Q?/0dEOjzqmCi3LfvhUosBZDzNlfRC7IfIWwrfCss92/AxNXgjtbkbbJ/6Ye6R?=
+ =?us-ascii?Q?IuQf46lnUMqRVOMH4r/PcZie6wRTvXyGxd4w2avJaN48DkBoUlp7EUaILmKO?=
+ =?us-ascii?Q?nsap+MZxBnoj6NE+mxNgSVY+CKYC9rkuYjRgE4qkSNd1t3WfJUiu93VOkm30?=
+ =?us-ascii?Q?kkI/bIQ6PoS6cUhYRZDU6gp3mCFIgAtO7YoL+e2Z/0EwyiZ4/LmIbsSWFfi/?=
+ =?us-ascii?Q?Hw=3D=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efd9cc7e-55c2-4ad9-73a4-08de2dce5173
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR13MB2365.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2025 16:02:08.7622
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HX5DlK8wyRWVPNQl8X4mJZ6dVf7eSLOMxwua/NswOoxYg+3MGTTf6K6aWyxOK+Q2bjOT+1I2e3o5gMO/px1z1+NQMkPajfXFRWUdP/r8olw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR13MB5500
 
-On 11/12/25 05:27, alistair23@gmail.com wrote:
-> From: Alistair Francis <alistair.francis@wdc.com>
-> 
-> If the nvme_tcp_try_send() or nvme_tcp_try_recv() functions return
-> EKEYEXPIRED then the underlying TLS keys need to be updated. This occurs
-> on an KeyUpdate event as described in RFC8446
-> https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3.
-> 
-> If the NVMe Target (TLS server) initiates a KeyUpdate this patch will
-> allow the NVMe layer to process the KeyUpdate request and forward the
-> request to userspace. Userspace must then update the key to keep the
-> connection alive.
-> 
-> This patch allows us to handle the NVMe target sending a KeyUpdate
-> request without aborting the connection. At this time we don't support
-> initiating a KeyUpdate.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> v5:
->   - Cleanup code flow
->   - Check for MSG_CTRUNC in the msg_flags return from recvmsg
->     and use that to determine if it's a control message
-> v4:
->   - Remove all support for initiating KeyUpdate
->   - Don't call cancel_work() when updating keys
-> v3:
->   - Don't cancel existing handshake requests
-> v2:
->   - Don't change the state
->   - Use a helper function for KeyUpdates
->   - Continue sending in nvme_tcp_send_all() after a KeyUpdate
->   - Remove command message using recvmsg
-> 
->   drivers/nvme/host/tcp.c | 85 +++++++++++++++++++++++++++++++++--------
->   1 file changed, 70 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-> index 4797a4532b0d..5cec5a974bbf 100644
-> --- a/drivers/nvme/host/tcp.c
-> +++ b/drivers/nvme/host/tcp.c
-> @@ -172,6 +172,7 @@ struct nvme_tcp_queue {
->   	bool			tls_enabled;
->   	u32			rcv_crc;
->   	u32			snd_crc;
-> +	key_serial_t		handshake_session_id;
->   	__le32			exp_ddgst;
->   	__le32			recv_ddgst;
->   	struct completion       tls_complete;
-> @@ -858,7 +859,10 @@ static void nvme_tcp_handle_c2h_term(struct nvme_tcp_queue *queue,
->   static int nvme_tcp_recvmsg_pdu(struct nvme_tcp_queue *queue)
->   {
->   	char *pdu = queue->pdu;
-> +	char cbuf[CMSG_LEN(sizeof(char))] = {};
->   	struct msghdr msg = {
-> +		.msg_control = cbuf,
-> +		.msg_controllen = sizeof(cbuf),
->   		.msg_flags = MSG_DONTWAIT,
->   	};
->   	struct kvec iov = {
-> @@ -873,12 +877,17 @@ static int nvme_tcp_recvmsg_pdu(struct nvme_tcp_queue *queue)
->   	if (ret <= 0)
->   		return ret;
->   
-> +	hdr = queue->pdu;
-> +	if (hdr->type == TLS_HANDSHAKE_KEYUPDATE) {
-> +		dev_err(queue->ctrl->ctrl.device, "KeyUpdate message\n");
-> +		return 1;
-> +	}
-> +
+We have workloads that will benefit from allowing knfsd to use atomic_open()
+in the open/create path.  There are two benefits; the first is the original
+matter of correctness: when knfsd must perform both vfs_create() and
+vfs_open() in series there can be races or error results that cause the
+caller to receive unexpected results.  The second benefit is that for some
+network filesystems, we can reduce the number of remote round-trip
+operations by using a single atomic_open() path which provides a performance
+benefit.
 
-Errm. 'hdr' is of type 'struct nvme_tcp_hdr', and that most certainly
-does not define TLS_HANDSHAKE_KEYUPDATE. I think you should evaluate the
-cmsg type here.
+I've implemented this with the simplest possible change - by modifying
+dentry_create() which has a single user: knfsd.  The changes cause us to
+insert ourselves part-way into the previously closed/static atomic_open()
+path, so I expect VFS folks to have some good ideas about potentially
+superior approaches.
 
->   	queue->pdu_remaining -= ret;
->   	queue->pdu_offset += ret;
->   	if (queue->pdu_remaining)
->   		return 0;
->   
-> -	hdr = queue->pdu;
->   	if (unlikely(hdr->hlen != sizeof(struct nvme_tcp_rsp_pdu))) {
->   		if (!nvme_tcp_recv_pdu_supported(hdr->type))
->   			goto unsupported_pdu;
-> @@ -944,6 +953,7 @@ static int nvme_tcp_recvmsg_data(struct nvme_tcp_queue *queue)
->   	struct request *rq =
->   		nvme_cid_to_rq(nvme_tcp_tagset(queue), pdu->command_id);
->   	struct nvme_tcp_request *req = blk_mq_rq_to_pdu(rq);
-> +	char cbuf[CMSG_LEN(sizeof(char))] = {};
->   
->   	if (nvme_tcp_recv_state(queue) != NVME_TCP_RECV_DATA)
->   		return 0;
-> @@ -976,10 +986,26 @@ static int nvme_tcp_recvmsg_data(struct nvme_tcp_queue *queue)
->   
->   		ret = sock_recvmsg(queue->sock, &msg, msg.msg_flags);
->   		if (ret < 0) {
-> -			dev_err(queue->ctrl->ctrl.device,
-> -				"queue %d failed to receive request %#x data",
-> -				nvme_tcp_queue_id(queue), rq->tag);
-> -			return ret;
-> +			/* If MSG_CTRUNC is set, it's a control message,
-> +			 * so let's read the control message.
-> +			 */
-> +			if (msg.msg_flags & MSG_CTRUNC) {
-> +				memset(&msg, 0, sizeof(msg));
-> +				msg.msg_flags = MSG_DONTWAIT;
-> +				msg.msg_control = cbuf;
-> +				msg.msg_controllen = sizeof(cbuf);
-> +
-This is not correct; reading the control message implies a kernel
-memory allocation as message buffer, not an interator (as it's the
-case here).
-  > +				ret = sock_recvmsg(queue->sock, &msg, msg.msg_flags);
-> +			}
-> +
-> +			if (ret < 0) {
-> +				dev_dbg(queue->ctrl->ctrl.device,
-> +					"queue %d failed to receive request %#x data, %d",
-> +					nvme_tcp_queue_id(queue), rq->tag, ret);
-> +				return ret;
-> +			}
-> +
-> +			return 0;
->   		}
->   		if (queue->data_digest)
->   			nvme_tcp_ddgst_calc(req, &queue->rcv_crc, ret);
-> @@ -1384,15 +1410,39 @@ static int nvme_tcp_try_recvmsg(struct nvme_tcp_queue *queue)
->   		}
->   	} while (result >= 0);
->   
-> -	if (result < 0 && result != -EAGAIN) {
-> -		dev_err(queue->ctrl->ctrl.device,
-> -			"receive failed:  %d\n", result);
-> -		queue->rd_enabled = false;
-> -		nvme_tcp_error_recovery(&queue->ctrl->ctrl);
-> -	} else if (result == -EAGAIN)
-> -		result = 0;
-> +	if (result < 0) {
-> +		if (result != -EKEYEXPIRED && result != -EAGAIN) {
-> +			dev_err(queue->ctrl->ctrl.device,
-> +				"receive failed:  %d\n", result);
-> +			queue->rd_enabled = false;
-> +			nvme_tcp_error_recovery(&queue->ctrl->ctrl);
-> +		}
-> +		return result;
-> +	}
-> +
-> +	queue->nr_cqe = nr_cqe;
-> +	return nr_cqe;
-> +}
-> +
-> +static void update_tls_keys(struct nvme_tcp_queue *queue)
-> +{
-> +	int qid = nvme_tcp_queue_id(queue);
-> +	int ret;
-> +
-> +	dev_dbg(queue->ctrl->ctrl.device,
-> +		"updating key for queue %d\n", qid);
->   
-> -	return result < 0 ? result : (queue->nr_cqe = nr_cqe);
-> +	flush_work(&(queue->ctrl->ctrl).async_event_work);
-> +
-> +	ret = nvme_tcp_start_tls(&(queue->ctrl->ctrl),
-> +				 queue, queue->ctrl->ctrl.tls_pskid,
-> +				 HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED);
-> +
-> +	if (ret < 0) {
-> +		dev_err(queue->ctrl->ctrl.device,
-> +			"failed to update the keys %d\n", ret);
-> +		nvme_tcp_fail_request(queue->request);
-> +	}
->   }
->   
->   static void nvme_tcp_io_work(struct work_struct *w)
-> @@ -1417,8 +1467,11 @@ static void nvme_tcp_io_work(struct work_struct *w)
->   		result = nvme_tcp_try_recvmsg(queue);
->   		if (result > 0)
->   			pending = true;
-> -		else if (unlikely(result < 0))
-> -			return;
-> +		else if (unlikely(result < 0)) {
-> +			if (result == -EKEYEXPIRED)
-> +				update_tls_keys(queue);
-> +			break;
-> +		}
->   
->   		/* did we get some space after spending time in recv? */
->   		if (nvme_tcp_queue_has_pending(queue) &&
-> @@ -1726,6 +1779,7 @@ static void nvme_tcp_tls_done(void *data, int status, key_serial_t pskid,
->   			ctrl->ctrl.tls_pskid = key_serial(tls_key);
->   		key_put(tls_key);
->   		queue->tls_err = 0;
-> +		queue->handshake_session_id = handshake_session_id;
->   	}
->   
->   out_complete:
-> @@ -1755,6 +1809,7 @@ static int nvme_tcp_start_tls(struct nvme_ctrl *nctrl,
->   		keyring = key_serial(nctrl->opts->keyring);
->   	args.ta_keyring = keyring;
->   	args.ta_timeout_ms = tls_handshake_timeout * 1000;
-> +	args.handshake_session_id = queue->handshake_session_id;
->   	queue->tls_err = -EOPNOTSUPP;
->   	init_completion(&queue->tls_complete);
->   	if (keyupdate == HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
-Cheers,Hannes
+Previous work on commit fb70bf124b05 ("NFSD: Instantiate a struct file when
+creating a regular NFSv4 file") addressed most of the atomicity issues, but
+there are still a few gaps on network filesystems.
+
+The problem was noticed on a test that did open O_CREAT with mode 0 which
+will succeed in creating the file but will return -EACCES from vfs_open() -
+this specific test is mentioned in 3/3 description.
+
+Also, Trond notes that independently of the permissions issues, atomic_open
+also solves races in open(O_CREAT|O_TRUNC). The NFS client now uses it for
+both NFSv4 and NFSv3 for that reason.  See commit 7c6c5249f061 "NFS: add
+atomic_open for NFSv3 to handle O_TRUNC correctly."
+
+Changes on v4:
+	- ensure we pass O_EXCL for NFS4_CREATE_EXCLUSIVE and
+  NFS4_CREATE_EXCLUSIVE4_1, thanks to Neil Brown
+
+Changes on v3:
+	- rebased onto v6.18-rc7
+	- R-b on 3/3 thanks to Chuck Lever
+
+Changes on v2:
+	- R-b thanks to Jeff Layton
+	- improvements to patch descriptions thanks to Chuck Lever, Neil
+  Brown, and Trond Myklebust
+	- improvements to dentry_create()'s doc comment to clarify dentry
+  handling thanks to Mike Snitzer
+
+Thanks for any additional comment and critique.  gobble gobble
+
+
+Benjamin Coddington (3):
+  VFS: move dentry_create() from fs/open.c to fs/namei.c
+  VFS: Prepare atomic_open() for dentry_create()
+  VFS/knfsd: Teach dentry_create() to use atomic_open()
+
+ fs/namei.c         | 86 ++++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4proc.c | 11 ++++--
+ fs/open.c          | 41 ----------------------
+ include/linux/fs.h |  2 +-
+ 4 files changed, 88 insertions(+), 52 deletions(-)
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+2.50.1
+
 
