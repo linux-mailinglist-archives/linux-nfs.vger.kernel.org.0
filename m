@@ -1,115 +1,164 @@
-Return-Path: <linux-nfs+bounces-16749-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16750-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0714EC8D418
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 08:56:02 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AFD4C8DD88
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 11:54:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABDA63A53B9
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 07:54:14 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0D4FD34BE0A
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 10:54:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93FDC321437;
-	Thu, 27 Nov 2025 07:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF4131AF39;
+	Thu, 27 Nov 2025 10:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agE39cJC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="anYvLVKd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B6A3242A7;
-	Thu, 27 Nov 2025 07:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83C917BA2;
+	Thu, 27 Nov 2025 10:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764229840; cv=none; b=ihi7F33sQXk2G2tTWim4WoVb0LNGc4HYnieVrDx3l5Wnf72iRwP4D1IVE/iJe+p2PAGrFnv4s2UmQ7WLL64NieuEePd9eI+5Fu/s7ee2nLnHhF/L95huO13f7ygXrEW8rIqUTWR7jrl9PzmJWhDBkXonYnF97+KBXkXFXlEQ8jA=
+	t=1764240841; cv=none; b=BXgjg6nE2BYbkzONpHrunJJ0pvWFOufSN6w3tP7a9SXBD4CYH90X5gkKiLHRob+n67vzLl8KghfEUs8RLUTHugSScMuY4C8ZngIuQR5esu6yvxi6BpGWdjWsu30q3kzdG5Wn77sCWmCjIenT4jXLV7OV1IbynCCzlXIf0UPZ+oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764229840; c=relaxed/simple;
-	bh=8UoFwEA8BV5fyntT6fyEPjGg92U4QgrkAqawzzW0xgU=;
+	s=arc-20240116; t=1764240841; c=relaxed/simple;
+	bh=m908laCROEU9fWyjb2BB4szGW1mRmKkvS+ErKipnKdI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQ/s92DOWdJZx3HK8BTmxe+ZHDGyui44VLoLq/6zN/48YxrUqUJrkOBC3xW1J681FCytY6f7QfxtkUnEeub2JtPt3ayz6abFOotrgG2+qEAeFrk6zSbnHbKCevBu06LnlWG0d9s7kruIxWCkBACM/e+1ZUhrzbT5sVDZZ7MjN1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agE39cJC; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764229839; x=1795765839;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8UoFwEA8BV5fyntT6fyEPjGg92U4QgrkAqawzzW0xgU=;
-  b=agE39cJC3IetaxacAF33ehZmqfjSZB/YRzwD5t7UKWl60Dpptpmfo7Dm
-   12pZv+f2T5fIGtqjtD1ik499mQrwL9/W9jVUjSOD0vVrVRtG3nUf47K6t
-   2qKDs8XImXLAQzRCPNw1gmJG/gZZUrnk94JJHiIgKHUka4oGBgt4K7AZ1
-   +pJfeScoJ6AAdjbDH4WTANsEpE/CtPFlQfeOfFI/mMKkCoZBWPgfrii8C
-   v23qZk9rTJJ7FNvhp+aZy7XzbjQCz+tLOtqdnfKAOMvIp09apMklB2yWQ
-   uetezlgZVj5iRRs09fgSw2QNkWHIbmBYXzWe7Qxb6gg8/fwYJH0COzD9O
-   Q==;
-X-CSE-ConnectionGUID: /bDWQTayQQKS/eHc/E7aTA==
-X-CSE-MsgGUID: M3L9ng5ORJSzWQuuU4fACA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="53842033"
-X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
-   d="scan'208";a="53842033"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 23:50:38 -0800
-X-CSE-ConnectionGUID: dMwi9piuQ/aggK1q2vS9fg==
-X-CSE-MsgGUID: X4ZIhokpQ0ioBUA2oLq7OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
-   d="scan'208";a="193619336"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa009.fm.intel.com with ESMTP; 26 Nov 2025 23:50:35 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 557A6A0; Thu, 27 Nov 2025 08:50:34 +0100 (CET)
-Date: Thu, 27 Nov 2025 08:50:34 +0100
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] nfsd: Mark variable __maybe_unused to avoid W=1
- build break
-Message-ID: <aSgCyqR72Zu6TSSI@black.igk.intel.com>
-References: <20251113083131.2239677-1-andriy.shevchenko@linux.intel.com>
- <176338731878.4204.10224670039692915729.b4-ty@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHjyWYWq96++AiPfyV4ELOmrOFAyBEXWCQNQy+EZf/JrIQVpcFDGVVwoJ5nTB1hwjnBY4mUJf6+V2AqBhnCTQbtnLsMyjW5hnRU2DJPowzPBzlCp0DrzZ/G2TiGtssRE0pbccKYsK3n05fdrB3e+XMxPM8yDq9smXNV+TO/7NY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anYvLVKd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DA8C4CEF8;
+	Thu, 27 Nov 2025 10:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764240840;
+	bh=m908laCROEU9fWyjb2BB4szGW1mRmKkvS+ErKipnKdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=anYvLVKdnBeZh0Re0GdAB1eguMdnMme+JxIizaUmMbGqLmHOtwYgSzPlgU2a+2nOh
+	 uYCMarR8Z18I7XdVEptEIiB9ak1Kcpvn+89PMg9gnoljy+4nZ3ILlfOvo7b3jO0fUe
+	 oR9i9KqON1ts0muc6dYmBNHIujVbht5sOC13fxf6KmGZOJlmnh86fRkGhiHBEm4H/e
+	 PFBlyJoSf2CQoMiLIznE5rRu6Bs3sRmg4yV9I7Rnfk7Bz184NjFkZLbTBto2uVm6zT
+	 X/ZWjNiDAQVtZYZRfjoZYfQ54mNFQRFTxcnZZwN+gs/QR/moQQeZs17NKkOv3p+jOo
+	 UC8dww1JRPN4Q==
+Date: Thu, 27 Nov 2025 11:53:55 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Amir Goldstein <amir73il@gmail.com>, Jeff Layton <jlayton@kernel.org>, 
+	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [VFS/nfsd/cachefiles/ovl] 7ab96df840:
+ WARNING:at_fs/dcache.c:#umount_check
+Message-ID: <20251127-engel-eschenholz-805b54630656@brauner>
+References: <202511252132.2c621407-lkp@intel.com>
+ <20251126-beerdigen-spanplatten-d86d4e9eaaa7@brauner>
+ <CAOQ4uxgHqKyaRfXAugnCP4sozgwiOGTGDYvx2A-XJdxfswo-Ug@mail.gmail.com>
+ <176419027888.634289.8284458326359928729@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <176338731878.4204.10224670039692915729.b4-ty@oracle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <176419027888.634289.8284458326359928729@noble.neil.brown.name>
 
-On Mon, Nov 17, 2025 at 08:49:29AM -0500, Chuck Lever wrote:
-> On Thu, 13 Nov 2025 09:31:31 +0100, Andy Shevchenko wrote:
-> > Clang is not happy about set but (in some cases) unused variable:
+On Thu, Nov 27, 2025 at 07:51:18AM +1100, NeilBrown wrote:
+> On Wed, 26 Nov 2025, Amir Goldstein wrote:
+> > On Wed, Nov 26, 2025 at 11:42 AM Christian Brauner <brauner@kernel.org> wrote:
+> > >
+> > > On Tue, Nov 25, 2025 at 09:48:18PM +0800, kernel test robot wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > kernel test robot noticed "WARNING:at_fs/dcache.c:#umount_check" on:
+> > > >
+> > > > commit: 7ab96df840e60eb933abfe65fc5fe44e72f16dc0 ("VFS/nfsd/cachefiles/ovl: add start_creating() and end_creating()")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > >
+> > > > [test failed on linux-next/master d724c6f85e80a23ed46b7ebc6e38b527c09d64f5]
+> > >
+> > > Neil, can you please take a look at this soon?
+> > > I plan on sending the batch of PRs for this cycle on Friday.
+> > >
+> > > >
+> > > > in testcase: filebench
+> > > > version: filebench-x86_64-22620e6-1_20251009
+> > > > with following parameters:
+> > > >
+> > > >       disk: 1SSD
+> > > >       fs: ext4
+> > > >       fs2: nfsv4
+> > > >       test: ratelimcopyfiles.f
+> > > >       cpufreq_governor: performance
+> > > >
 > > 
-> > fs/nfsd/export.c:1027:17: error: variable 'inode' set but not used [-Werror,-Wunused-but-set-variable]
+> > Test is copying to nfsv4 so that's the immediate suspect.
+> > WARN_ON is in unmount of ext4, but I suspect that nfs
+> > was loop mounted for the test.
 > > 
-> > since it's used as a parameter to dprintk() which might be configured
-> > a no-op. To avoid uglifying code with the specific ifdeffery just mark
-> > the variable __maybe_unused.
-
-[...]
-
-> Applied to nfsd-testing, thanks!
+> > FWIW, nfsd_proc_create() looks very suspicious.
+> > 
+> > nfsd_create_locked() does end_creating() internally (internal API change)
+> > but nfsd_create_locked() still does end_creating() regardless.
 > 
-> [1/1] nfsd: Mark variable __maybe_unused to avoid W=1 build break
->       commit: 56e9f88b25abf08de6f2b1bfbbb2ddc4e6622d1e
+> Thanks for looking at this Amir.  That omission in nfsproc.c is
+> certainly part of the problem but not all of it.
+> By skipping the end_creating() there, we avoid a duplicate unlock, but
+> also lose a dput() which we need.  Both callers of nfsd_create_locked()
+> have the same problem.
+> I think this should fix it.  The resulting code is a bit ugly but I can
+> fix that with the nfsd team once this gets upstream.
+> 
+> (FYI nfsd_proc_create() is only used for NFSv2 and as it was an nfsv4 test,
+>  that could wouldn't have been run)
+> 
+> Thanks,
+> NeilBrown
+> 
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 28f03a6a3cc3..481e789a7697 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -407,6 +407,9 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+>  		/* File doesn't exist. Create it and set attrs */
+>  		resp->status = nfsd_create_locked(rqstp, dirfhp, &attrs, type,
+>  						  rdev, newfhp);
+> +		/* nfsd_create_locked() unlocked the parent */
+> +		dput(dchild);
+> +		goto out_write;
+>  	} else if (type == S_IFREG) {
+>  		dprintk("nfsd:   existing %s, valid=%x, size=%ld\n",
+>  			argp->name, attr->ia_valid, (long) attr->ia_size);
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 145f1c8d124d..4688f3fd59e2 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1633,16 +1633,14 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		return nfserrno(host_err);
+>  
+>  	err = fh_compose(resfhp, fhp->fh_export, dchild, fhp);
+> -	/*
+> -	 * We unconditionally drop our ref to dchild as fh_compose will have
+> -	 * already grabbed its own ref for it.
+> -	 */
+>  	if (err)
+>  		goto out_unlock;
+>  	err = fh_fill_pre_attrs(fhp);
+>  	if (err != nfs_ok)
+>  		goto out_unlock;
+>  	err = nfsd_create_locked(rqstp, fhp, attrs, type, rdev, resfhp);
+> +	/* nfsd_create_locked() unlocked the parent */
+> +	dput(dchild);
+>  	return err;
+>  
+>  out_unlock:
 
-Thanks, but still no appearance in Linux Next and problem seems to be present.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks for the quick fix. I've added a patch to
+vfs-6.19.directory.unlocking which I attributed to you.
+It'd be easier if you just shoot something I can apply directly next
+time. :)
 
