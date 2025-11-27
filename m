@@ -1,177 +1,174 @@
-Return-Path: <linux-nfs+bounces-16753-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16754-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7AAAC8DE82
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 12:11:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C136C8E61C
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 14:12:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 87D6C4E54B2
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 11:11:52 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AE33F350ADD
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 13:12:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6307632AAC8;
-	Thu, 27 Nov 2025 11:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1E926E17A;
+	Thu, 27 Nov 2025 13:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="c+VxFWOo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YK6ML7HD"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q7LZT069";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KqxWqbxC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iwwxgqLh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sEtM4pKd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B87223BD06;
-	Thu, 27 Nov 2025 11:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6092B24291B
+	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 13:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764241909; cv=none; b=SvzTXwdWFYZrtPnsGFT+IktpOo8uPRIlqyvnkNERx7kzf7aU2jg2NP+pLKwkxPUmKITlZcOyv66TZLrwIyv03gg0Ms2Vi9BILAdLnnWi71YUpDQ2CcUIV5MSrdZ6gKBZ10hdfyaS2AEP0YputqTQClLbiynWYjJMs8Y3vWzwtJ0=
+	t=1764249142; cv=none; b=gNx+RpXqo2sBuyAe6dj/S2X+VZKzT1haSGaRLKm4xCTXZyP03PgNF8YbzTKU4JZsrK0uK+HCUekBdqpTvHSiZqmm5DsJuBk9dn7ictiPKr7wcILfd7Vq4B2Zrd0Q45QZbhS3aMRYi+I/LMz/3EzgkOBHZ7MkcJ2oa0NosEVSHaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764241909; c=relaxed/simple;
-	bh=GbIDAT9rtj7UlTcfXk6NmMiPhN0t9jJouRITwhbuniQ=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=fAjqoGyAp9J3imr3YX+bTtZO8yFfHgOICh6l6dkC7WNIc8ANqrBpYTkcW0T6ICDK2mX8x9RlQ92VvvZvu3nkKH7FtqpkvBR4gkDpD84Oosl33Y5r8cDgTFwjqhH0Xi9EG1Ou8FvdY9yQ8Cs/ZXvzadDdufcyqaHoM+LM2P/59wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=c+VxFWOo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YK6ML7HD; arc=none smtp.client-ip=202.12.124.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
-	by mailflow.stl.internal (Postfix) with ESMTP id E54531300112;
-	Thu, 27 Nov 2025 06:11:45 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Thu, 27 Nov 2025 06:11:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1764241905; x=1764249105; bh=m1kV6hlzxb2O2XlqHGM1BPPCpFOnIPzOUy0
-	n7fZKnGU=; b=c+VxFWOo9uq1DK4cCUXO6NBeE5V6mjiuePKe7uq7i7Uzw+e5z1r
-	KSIFI9qcaqcHz/n4M2JGC1ShKl/MbAFLeZ5Gkz2dElDfo78nIMMAzxNeatPtEK9e
-	Ru07vJE9mRlHzolsNc6YCOBgflzvX8LDXidjAqnXlE38xqoVzFriH4DNrf2ruGli
-	heSyikJBEqbjPgZS6+el63Q1N05e2qxh4QAGs1ZfrzHXS7yCHKjO1lQEOkmReEhx
-	qnzUYADGoVR0mdu9DH1ddnFcsMreV9GoBSAI6qINupHzYFkPg0j5YH5S3fkJCJTp
-	FrDhzYk2BwjOPy5YmiyxBPmHIMvYQb6zYWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1764241905; x=
-	1764249105; bh=m1kV6hlzxb2O2XlqHGM1BPPCpFOnIPzOUy0n7fZKnGU=; b=Y
-	K6ML7HDTpTVp9PjUPBfoTqh+u1zoLmFqmw+hkFRFq+N9YuLOKVRydNumSmfQAYgx
-	OAttLjP+MFjq5RGkd91Hsq1Qcr44B8QVwobJrDtMl5UulnzgmDvIeua0pUppOct1
-	22Hh23EtIDNgAw6sEMv/72llJaTe/P8BT5wbDKTpu7rR9nT1jj5Z/uUAWxmrcbAy
-	V/h1oahiRy9rLpbiThxDQ+oIi8S+8z6uK9W6qpNro9kteF6xAi8wW7pXkY8pEIxL
-	mzXa3JvSnawJshJHoyvNpEsRSBSqP/ndEheTdpqPjD3QX1ywhnT1v/sxGhBhdxEW
-	zJ9oWyeEY/D8XM1NtqTaw==
-X-ME-Sender: <xms:8TEoabu7JYFYMUfT7S8_I5--Lo9rbrFJdwoaNpvJDL9YrWnILVfvgQ>
-    <xme:8TEoaRi_IAui-deAtJacilhZHHf4PFcDfB7m1UWRGkdliewWwXHx4qEADYj6VQBh7
-    Qhd33fJ6UAMn6BXa5LXo7PE8unF5m36jwIvdlqBrbZforJtLg>
-X-ME-Received: <xmr:8TEoabwy5w0jZKY1rlGFdR9h2JuLLKcSlLcY3KhHiDFqYSQUh_uGJMNO0XTo5J1Em-XAiAWPRrsI0FwLL4oUHwxhQtwrO4uben-LiXPBsZkx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgeejtdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeegtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhirhhose
-    iivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehsvghlihhnuhigsehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqgihfshesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvtghurhhith
-    ihqdhmohguuhhlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
-    hnuhigqdgtihhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:8TEoaX4jhOU-RJfrf3t1xEcR-lNfjS28e99wANWzbIhtgXOc8tvlQQ>
-    <xmx:8TEoadfn3ihxo_f2JsQabXyhrsPX7Ty6n2NXo-mzGemtFZUciGdvkw>
-    <xmx:8TEoafruRCtJU5PoM56axqXYQfY267HfKJE3cT5se9N7bV25X2ebug>
-    <xmx:8TEoaR1xv1E0dscVlFpB4htOxcDXJkE0QaT7-sPWv8fjNCO-_Nn03g>
-    <xmx:8TEoacuIUsW2XK9lNoDW8FFI-jSTzwnKCqQ_3XoqxqRE8twj9TVgjbxl>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Nov 2025 06:11:35 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1764249142; c=relaxed/simple;
+	bh=k/wtGNkoBswZG5c+ttQTy9CE/ckOgp8Wd5qCrYhXrj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zhiu+GaTl6y01PvKj3Ocz3/SVj6ZRtwe1Ctpw9zUciajAWL1gB1P1YpuQR0+hDNVGxmywslaWmPRie2u4/j2WwSJYqODkz8zS74OK7rDQgA9TBMGjFR9sneB9eDKX2D7kLh7M/lWnBLwQBuSLf+uiWTTJGya5klfwfrzbMmleAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q7LZT069; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KqxWqbxC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iwwxgqLh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sEtM4pKd; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7F222336F2;
+	Thu, 27 Nov 2025 13:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764249137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8UOz1lx4bQABnsPJotRzictXM7dsqgfz1cF/UHESVg=;
+	b=Q7LZT069FGyDoauMgZjTpX8sfA0cmHnyhroJrgnuIMgAqej0qJ0QcmTT0uTZYWQDT5rj/K
+	1osMPlbrxbqvRnErpCN3fRop7u871wW9q6XO0t0nfKA6z17NrJZqZEVoQWp+zVoyOcTDAL
+	3yiS+DqdppC1LpqoH6kJ2BDgraETCeE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764249137;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8UOz1lx4bQABnsPJotRzictXM7dsqgfz1cF/UHESVg=;
+	b=KqxWqbxC3GMWFx+kNR0xS0/5PUETZtYhGNkDMkvUq8sJH5JzzIJ2noF8Abm6rKMstgm0YX
+	TQCBAQBS19K/D9BQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764249136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8UOz1lx4bQABnsPJotRzictXM7dsqgfz1cF/UHESVg=;
+	b=iwwxgqLhraQyZbIG2ojZtyTwjTMPJrNHf/cJSiCsF3PeF5J4lFZ1owgZUY1/9kQN5EwLEi
+	UHnbwUKh+4XUC9UuKyiGMz1XMZHjmdV5PqHZ/I1SZbsaeHbDLaUA6YOtXmxxvZDriCz3tN
+	i82P0paxlmFoRxCNDp2L8OKm1aNS5MM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764249136;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8UOz1lx4bQABnsPJotRzictXM7dsqgfz1cF/UHESVg=;
+	b=sEtM4pKdE4gTvSNTpa3lJ+45lyyhG2KI9X/2BVsaIUCBIKdmzX3/5fKEf/I/Pg5azosv2B
+	hCF9MEtAQJOHqoBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3CD163EA63;
+	Thu, 27 Nov 2025 13:12:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PqFPDjBOKGl3PgAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 27 Nov 2025 13:12:16 +0000
+Message-ID: <bd570dbc-2844-4720-8a19-a9d508a1e365@suse.de>
+Date: Thu, 27 Nov 2025 14:12:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Amir Goldstein" <amir73il@gmail.com>, "Jan Kara" <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org, "Chris Mason" <clm@fb.com>,
- "David Sterba" <dsterba@suse.com>, "David Howells" <dhowells@redhat.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Tyler Hicks" <code@tyhicks.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Namjae Jeon" <linkinjeon@kernel.org>,
- "Steve French" <smfrench@gmail.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Carlos Maiolino" <cem@kernel.org>,
- "John Johansen" <john.johansen@canonical.com>,
- "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- "Stephen Smalley" <stephen.smalley.work@gmail.com>,
- "Ondrej Mosnacek" <omosnace@redhat.com>,
- "Mateusz Guzik" <mjguzik@gmail.com>,
- "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
- "Stefan Berger" <stefanb@linux.ibm.com>,
- "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
- netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v6 00/15] Create and use APIs to centralise locking for
- directory ops
-In-reply-to: <20251114-liedgut-eidesstattlich-8c116178202f@brauner>
-References: <20251113002050.676694-1-neilb@ownmail.net>,
- <20251114-baden-banknoten-96fb107f79d7@brauner>,
- <20251114-liedgut-eidesstattlich-8c116178202f@brauner>
-Date: Thu, 27 Nov 2025 22:11:33 +1100
-Message-id: <176424189349.634289.4480398011245842622@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] net/handshake: Support KeyUpdate message types
+To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
+ kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
+References: <20251112042720.3695972-1-alistair.francis@wdc.com>
+ <20251112042720.3695972-5-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20251112042720.3695972-5-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
 
-On Sat, 15 Nov 2025, Christian Brauner wrote:
-> On Fri, Nov 14, 2025 at 01:24:41PM +0100, Christian Brauner wrote:
-> > On Thu, Nov 13, 2025 at 11:18:23AM +1100, NeilBrown wrote:
-> > > Following is a new version of this series:
-> > >  - fixed a bug found by syzbot
-> > >  - cleanup suggested by Stephen Smalley
-> > >  - added patch for missing updates in smb/server - thanks Jeff Layton
-> >=20
-> > The codeflow right now is very very gnarly in a lot of places which
-> > obviously isn't your fault. But start_creating() and end_creating()
-> > would very naturally lend themselves to be CLASS() guards.
-> >=20
-> > Unrelated: I'm very inclined to slap a patch on top that renames
-> > start_creating()/end_creating() and start_dirop()/end_dirop() to
-> > vfs_start_creating()/vfs_end_creating() and
-> > vfs_start_dirop()/vfs_end_dirop(). After all they are VFS level
-> > maintained helpers and I try to be consistent with the naming in the
-> > codebase making it very easy to grep.
->=20
-> @Neil, @Jeff, could you please look at:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=3Dvfs.all
->=20
-> and specifically at the merge conflict resolution I did for:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=3Dvfs=
-.all&id=3Df28c9935f78bffe6fee62f7fb9f6c5af7e30d9b2
->=20
-> and tell me whether it all looks sane?
->=20
+On 11/12/25 05:27, alistair23@gmail.com wrote:
+> From: Alistair Francis <alistair.francis@wdc.com>
+> 
+> When reporting the msg-type to userspace let's also support reporting
+> KeyUpdate events. This supports reporting a client/server event and if
+> the other side requested a KeyUpdateRequest.
+> 
+> Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+> v5:
+>   - Drop clientkeyupdaterequest and serverkeyupdaterequest
+> v4:
+>   - Don't overload existing functions, instead create new ones
+> v3:
+>   - Fixup yamllint and kernel-doc failures
+> 
+>   Documentation/netlink/specs/handshake.yaml | 16 ++++-
+>   drivers/nvme/host/tcp.c                    | 15 +++-
+>   drivers/nvme/target/tcp.c                  | 10 ++-
+>   include/net/handshake.h                    |  6 ++
+>   include/uapi/linux/handshake.h             | 11 +++
+>   net/handshake/tlshd.c                      | 83 +++++++++++++++++++++-
+>   6 files changed, 133 insertions(+), 8 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-That merge is a7b062be95fed490d1dcd350d3b5657f243d7d4f today, and I
-agree with Jeff that it looks good.
+Cheers,
 
-Thanks,
-NeilBrown
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
