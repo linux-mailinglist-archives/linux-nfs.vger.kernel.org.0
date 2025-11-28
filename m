@@ -1,141 +1,169 @@
-Return-Path: <linux-nfs+bounces-16769-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16770-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61268C902DD
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 22:13:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DE2DC9073B
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 01:46:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 14D1F34022A
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Nov 2025 21:13:33 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B695C34DA88
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 00:46:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D2A3195EF;
-	Thu, 27 Nov 2025 21:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF9FD3AC39;
+	Fri, 28 Nov 2025 00:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ej40D2G9"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="OhvUDKkY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gx4O72dQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB30D31DD96
-	for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 21:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EE720B22
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 00:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764277997; cv=none; b=N/UoEh2ydoo5QvLmkf8FyzdYn1X8Une8qi8Dk2VaAzwPLgfczz+h3E86ymat2DVb4uOllAENuep5TJ8MRvs7wC3ryeQ7AG/KHlOOX1+7AyC6VOTdrH1R7NrzNoIo3KYBTShyUdKk3uom3T8ZzWde7ZmKKfr4nZVU+P6Ue4hvegw=
+	t=1764290804; cv=none; b=g+uzxi0/O998yNOwe1aI63BV6msxwIcANyowGvJkGvjP9Sg08H7pANCNbv13IYHOOCNV+flxoAwrI0ZMgq1KAvPN7j1sXM8p+1Rz2tAkI0QwIgTRAGQH+dVCDmNhtJfjCpyCSd8J/Jx6uNkQwU+b64+PLtX+UqhngVudOU0K6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764277997; c=relaxed/simple;
-	bh=3KeKJpB2bti7v9gQYXl0h2I867lfql7RNqqfq54cKqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=POyy9tdIJLONKhN9E+HBW6A9Pftwg8Z/1aePGv78ssf+/5I/RtSjfDkSSPijynKzj7AyZE6ckMR4SEEftoZGftCcSzK4xLXNybIawUQej4fGZB1/vTJ9+Xs3EY0/zR8M88apzkH/mO/nbLjdYhAnUKGmezAd1LK4hdjKxjgF8Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ej40D2G9; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64149f78c0dso1927135a12.3
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 13:13:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764277994; x=1764882794; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3KeKJpB2bti7v9gQYXl0h2I867lfql7RNqqfq54cKqk=;
-        b=Ej40D2G9GUSbCIYDhLzAx301igt+P7IKQzG+BYuvEeucNImfVlZhemdBRUJGC3YfiZ
-         6G/qPU7F7p1iHVqRdo9fkRq2ETJ36HqWRKo+EbyNfJzOnS2ObVvw1PsS5+TxsVuHVFiA
-         KOBszWluFRu9NabpBGVQKHg/PiB2yFqU2Rpq7diXAgH16ts/UA2O95tEnS3j5kLHuvv2
-         mAdjqxd+R5bfTrdMCx0WCXkuzwEC1msuF1E05sQ6NSIxyQkt+Oi2svb3p+21avMU/Lc3
-         SrYZ1gENhYf2bmCf72biAeZsHtn/CasS2BFdscFXT15duZzYJvewMNestALpOOOEZQFt
-         un9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764277994; x=1764882794;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3KeKJpB2bti7v9gQYXl0h2I867lfql7RNqqfq54cKqk=;
-        b=P4uGFrfDQyHKrbAzffL0e6WMFfQo8SuK+fP2P9CFNv0s0yEcf/6sTm7Sy8ZVwvLDxs
-         AXCZ8ML9NAGQbVel117ZkMHnDYPYCPDDuAavCjC1h1ugaQOYIR8wUxBZQ8W2FahU80Dd
-         NfoirFqcnHOAs3GtCgGnP6WveH/JvennQk8xjcVsa4UJUix76y5iu5QLuvN2bv7duMdv
-         Tx5JbFAjKGlsOnYgel05HbY8GFVcU5GAaGrYhS/nczHmysA8udThl0VtNgr8lQSjWFUH
-         n4/HquXgiEy/H+tFyBwhQIo1kvtIMgiVmSDG3eBV5A/ztMD+oQIslnm9h3wtPbvXBZls
-         WpAQ==
-X-Gm-Message-State: AOJu0YwZIqDEud8hckraF5NCZiz7CQ+Q4gGb/F2R6GBafEN/rZk1Jr6m
-	ECKtrKtFkeK1XhE9NJPlQSUF21p5ZKvrkFwoa2bUoHVo7wHH+teACWFh3ZSx/BfL9ci87g2lj69
-	pxfeZc5B7S6B5PwLqZHKscWMiM4ReCXIBi6Yu
-X-Gm-Gg: ASbGncsf6iRbNOhn9ilxVvV3aHyj3ORY/XssQr+0wCp7Nf/VzdYXqmrH2UNGnwdOC+5
-	eSIe7E385GKKdoqz1cYd4/Y7Dl2fWdLejdlLoIfupOUig7MU+5fwBWHLorzPjVJZ0DClFmIaysK
-	OdggBxIMW80xrz8bpkn3NLI1ClJaVl4BNlEect7oGfZkTeH6RSgbZ1zKmIK0aZ/HLWarUfH2Jv8
-	bQOOizODiVPzARsIOub3cYiMpUv0uzhFBm2h0hYwrmlV17Tw1grnQDoCUxNrEp7dvpXruJlElN6
-	yVdsz1mlYpFJB8f1RGtdk/nwUg==
-X-Google-Smtp-Source: AGHT+IE2RF0oQDT+3VP13hIRczHDHgxwVYrrqBYjeV0VTB+MAtkLTFrChG3atIKiVP2tH+cnm7H8egJahcqjUhKqCoU=
-X-Received: by 2002:a05:6402:2816:b0:640:93b2:fd1e with SMTP id
- 4fb4d7f45d1cf-64555cd8cc4mr23306003a12.17.1764277993906; Thu, 27 Nov 2025
- 13:13:13 -0800 (PST)
+	s=arc-20240116; t=1764290804; c=relaxed/simple;
+	bh=4QH29UFncTwXlMq2I3GxjxwPPnN7bHx5E5ZmxVnM3q0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=gZHykWWxCIcu2ljDmh6FQ36AKw7Rfzj43SVckV8eXKxgKp13kFp2u6PaY2xMgfmRtWIpxSYUWyjt5saQqhMXFF6ujpXiZ17CAbhhK6CY1QOomxkDSiD66sDoOGgiZUHSZ0xTl/gT0evVfeBkdtfZSBnq81gIlNoXJ5haDD4aIWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=OhvUDKkY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Gx4O72dQ; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6ED2C1D005ED;
+	Thu, 27 Nov 2025 19:46:41 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 27 Nov 2025 19:46:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1764290801; x=1764377201; bh=oHcjRlutoS9uoNJO5W4cpvA0kS1xf0LS50x
+	g1ZVP99I=; b=OhvUDKkY5cZCgPXf4KHZu6CenLj7I6vmG72yrQI7hBArHflwTKl
+	Wt0F08ckwLTvNl/NEqnK6Z84eSAtxPPapVyENt6gDwzLpJwCi8SkW9SEurKW7Mu8
+	VUSFw5B/Z1rY52favvFpgJVS61dqw8xIyALSsjDth9s1ORsaC2ODTThDqqDDxZzA
+	eWI5aAdLURgnFY1G1Wgu9qvkiiKZmVDWSzbMy/+lBcp8mRDKm/z9s/YzYf9cPyK/
+	a7HXmWOAdtrMKjX0Xv/SopSrXgGtsj9n4uGg/9Q2KSsshjqJIuiZi6FTbSOZNavv
+	gZVpea+/mAYTJDG9+NqiPlBQR4nlYCT49ZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1764290801; x=
+	1764377201; bh=oHcjRlutoS9uoNJO5W4cpvA0kS1xf0LS50xg1ZVP99I=; b=G
+	x4O72dQ6iTKQeDpiaPsU2ET2O5E3kI0KqCvX5pFAoA1Dgjhp+TNXGhBb4/74mVQC
+	N/pTnc3RBwqAGEF2QeuPaUS6JVO/oSyHtDsjAn5UaU0UynFbHOzvxblJrt9en1i5
+	qmQzqDl5+uQhSERbdUJgCeduBRznD7GRrYXfT6/qjnD06+q6lFFk67Ce4MfBysaB
+	MU9cHa7msbvxYSjDJAuUqV5w+J4lkoNQUSFJNUZ+P8uz29BG8AIcot7z/43GJM2o
+	AtczdVaq3TXPNMTJMH/yM2EUo4vCAfYyEJGbPdFJqN00Wlf6U+7lTtKqLFAVKmMw
+	Huvq23zkgSlFL/d2FN6Wg==
+X-ME-Sender: <xms:8PAoafi-30W2DDwoJEvDIpCB5RyMS0com-0EwBHlpBrD6Pe7ry_LzA>
+    <xme:8PAoaTDgpUXCFTvdUhKfHPg8mVRZxUyzwsecSeGpsoOLSLl6AvVTpSfmAzKo_pxPL
+    QpJPShziuaXgqlkwtow3_zIMKGWuY5cjBw3Xk1lCLRg3z9kHQ>
+X-ME-Received: <xmr:8PAoaUGiNWknEBpzmZQFJ0HldSdllMqw6jyE0K3c63DXVQEeEfTQBTVAu55daKYLQfZXamTZAlIWABeJMKEPT5N2X_en6wZTxe549rvrAyR->
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgeekheekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopegrihhlihhophesshhushgvrdgtohhmpdhrtghpthhtoheptghhuhgt
+    khdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:8fAoabKJqMY_5_qwjzM2ZPYMOCqx20ioe96C8wptcWpHWGJnwJ7frQ>
+    <xmx:8fAoaYnC0fqcxrldKoD2naaN2wsPE0X_Il-QJSokhT2s35qEJM03SQ>
+    <xmx:8fAoaTQ4-bKj0vLSY-nE6edIBDtOowrHcoLUyjYrvNsYjELk4CFO3w>
+    <xmx:8fAoaaK5dowwWHTORrHaRfcvJA2QppMS8oSEscVwOpsCFHqPEwIH1A>
+    <xmx:8fAoaVmTrD7aplXiBJFx8pQitxUQfQom6FzqkHIHQIZCNSKYVT_4PLCg>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Nov 2025 19:46:39 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251119005119.5147-1-cel@kernel.org> <CA+1jF5pF+K3s9N4p5mc4cxyzg=r5ow5R_T31Eab=DOW5AjBG-g@mail.gmail.com>
- <aSMsb350kJgqysbz@morisot.1015granger.net>
-In-Reply-To: <aSMsb350kJgqysbz@morisot.1015granger.net>
-From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
-Date: Thu, 27 Nov 2025 22:12:37 +0100
-X-Gm-Features: AWmQ_blFhlQY-ZV8Xa30GRPAdjIWMbSQWGVkDdHd0E2uWw49YCOP2xN1EjXoHQY
-Message-ID: <CA+1jF5o5tiYfvqPKnf7_teMNOnOwig38epUywfsFLXsXVm=NmQ@mail.gmail.com>
-Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: NeilBrown <neilb@ownmail.net>
+To: "Anthony Iliopoulos" <ailiop@suse.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH 2/2] nfsd: fix return error code for nfsd_map_name_to_[ug]id
+In-reply-to: <20251127175753.134132-3-ailiop@suse.com>
+References: <20251127175753.134132-1-ailiop@suse.com>,
+ <20251127175753.134132-3-ailiop@suse.com>
+Date: Fri, 28 Nov 2025 11:46:31 +1100
+Message-id: <176429079160.634289.2367318269182809643@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Sun, Nov 23, 2025 at 4:46=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
->
-> On Sun, Nov 23, 2025 at 03:54:48PM +0100, Aur=C3=A9lien Couderc wrote:
-> > On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> wr=
-ote:
-> > >
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > >
-> > > An NFSv4 client that sets an ACL with a named principal during file
-> > > creation retrieves the ACL afterwards, and finds that it is only a
-> > > default ACL (based on the mode bits) and not the ACL that was
-> > > requested during file creation. This violates RFC 8881 section
-> > > 6.4.1.3: "the ACL attribute is set as given".
-> > >
-> > > The issue occurs in nfsd_create_setattr(), which calls
-> > > nfsd_attrs_valid() to determine whether to call nfsd_setattr().
-> > > However, nfsd_attrs_valid() checks only for iattr changes and
-> > > security labels, but not POSIX ACLs. When only an ACL is present,
-> > > the function returns false, nfsd_setattr() is skipped, and the
-> > > POSIX ACL is never applied to the inode.
-> > >
-> > > Subsequently, when the client retrieves the ACL, the server finds
-> > > no POSIX ACL on the inode and returns one generated from the file's
-> > > mode bits rather than returning the originally-specified ACL.
-> > >
-> > > Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
-> > > Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
-> > > Cc: Roland Mainz <roland.mainz@nrubsig.org>
-> > > X-Cc: stable@vger.kernel.org
-> > > Signed-off-by: Chuck Lever <cel@kernel.org>
-> >
-> > As said the patch works, but are there any tests in the Linux NFS
-> > testsuite which cover ACLs with multiple users and groups, at OPEN and
-> > SETATTR time?
->
-> I developed several new pynfs [1] tests while troubleshooting this
-> issue. I'll post them soon.
+On Fri, 28 Nov 2025, Anthony Iliopoulos wrote:
+> idmap lookups can time out while the cache is waiting for a userspace
+> upcall reply. In that case cache_check() returns -ETIMEDOUT to callers.
+>=20
+> The nfsd_map_name_to_[ug]id functions currently proceed with attempting
+> to map the id to a kuid despite a potentially temporary failure to
+> perform the idmap lookup. This results in the code returning the error
+> NFSERR_BADOWNER which can cause client operations to return to userspace
+> with failure.
+>=20
+> Fix this by returning the failure status before attempting kuid mapping.
+>=20
+> This will return NFSERR_JUKEBOX on idmap lookup timeout so that clients
+> can retry the operation instead of aborting it.
+>=20
+> Fixes: 65e10f6d0ab0 ("nfsd: Convert idmap to use kuids and kgids")
+> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> ---
+>  fs/nfsd/nfs4idmap.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+> index 8cca1329f348..123ac45b512e 100644
+> --- a/fs/nfsd/nfs4idmap.c
+> +++ b/fs/nfsd/nfs4idmap.c
+> @@ -654,6 +654,8 @@ nfsd_map_name_to_uid(struct svc_rqst *rqstp, const char=
+ *name, size_t namelen,
+>  		return nfserr_inval;
+> =20
+>  	status =3D do_name_to_id(rqstp, IDMAP_TYPE_USER, name, namelen, &id);
+> +	if (status)
+> +		return status;
+>  	*uid =3D make_kuid(nfsd_user_namespace(rqstp), id);
 
-Thank you
+Ignoring the state and using the id anyway is clearly wrong.
 
-My point however was if pynfs can take a list of users@domain,
-groups@domain as input parameters, which are then used for
-FATTR4_OWNER, FATTR4_OWNER_GROUP, FATTR4_ACL and FATTR4_DACL tests.
+Reviewed-by: NeilBrown <neil@brown.name>
 
-Some of the ACL issues only happen for specific ACL combinations, thus
-such two lists with parameter input would be useful.
+Thanks,
+NeilBrown
 
-Aur=C3=A9lien
---=20
-Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
-Big Data/Data mining expert, chess enthusiast
+
+>  	if (!uid_valid(*uid))
+>  		status =3D nfserr_badowner;
+> @@ -671,6 +673,8 @@ nfsd_map_name_to_gid(struct svc_rqst *rqstp, const char=
+ *name, size_t namelen,
+>  		return nfserr_inval;
+> =20
+>  	status =3D do_name_to_id(rqstp, IDMAP_TYPE_GROUP, name, namelen, &id);
+> +	if (status)
+> +		return status;
+>  	*gid =3D make_kgid(nfsd_user_namespace(rqstp), id);
+>  	if (!gid_valid(*gid))
+>  		status =3D nfserr_badowner;
+> --=20
+> 2.52.0
+>=20
+>=20
+>=20
+
 
