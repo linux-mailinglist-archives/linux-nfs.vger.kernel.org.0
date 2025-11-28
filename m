@@ -1,180 +1,158 @@
-Return-Path: <linux-nfs+bounces-16782-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16783-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 961ABC932E1
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 22:20:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF53C93494
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 00:16:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B57233473A8
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 21:20:46 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6A52E3463C7
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 23:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32452246BC7;
-	Fri, 28 Nov 2025 21:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1DD52E62A6;
+	Fri, 28 Nov 2025 23:16:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nUlGN0NR";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IXvM5AJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpD+YD84"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8B1DE2AD
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 21:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FD9233704
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 23:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764364843; cv=none; b=UtICxZ6163VuCK8sqEyYU2A8rRKvPgqGm5NUKm+HioIPCjPd8sNQhEghAf7IrStPz647mcLz301QNal7efKZ0czyw+kk2PsVcf9usXP3a1aBkmvgHTaOOqB7Ky5yDBuBoLJC455hTJjO6424d662u2kqzDDARunrqafRqS+q9po=
+	t=1764371815; cv=none; b=BLjxDBXjXDZcu8u+2vAhdkF7ljW1NwhDp0FS6n7s+k7e/54YFaBccIZHlNCvGE1l9BYtUVNfr2lqxOEqTL9beZl0Al2dlbYIgbz2oMpeyUIn6D+fu88VAJjrbhf6WOLMRx3D0lpXljcP7bXtu6uHkpDlBwrGxlPC9RUjF6MVfsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764364843; c=relaxed/simple;
-	bh=rDRu152hEmwxHrRczfbqgwepqYB00+cTXZzj6JcWpeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIgpKBkX8FdioWj5cnsOmQKwgFHnxAXjSsBV9gY6qg8seB7repSyoOiqmByZ6Y0q0UoL24KeFsDvXFFViMS7bzgC3gP/A1Vv67ThLPdVQjl1iU/5BMjL4fVXwrLAqGIrovFtTmgYvHNqMAmVmkWIEQYt39EGFl9F/zE56vkI+PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nUlGN0NR; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IXvM5AJe; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EC62B3376B;
-	Fri, 28 Nov 2025 21:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764364839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DUuA+EbVmRkE8AAGZMeKrX2qVPlqAaV4vprXKDXarDM=;
-	b=nUlGN0NRL1sKtBg11vNimworHAdmXlyCPOX6P5KNQzRMC+Ji3Gr2F/rMNuS17+s3sqiXHE
-	2KfmRaybJ99afDCuY6RRAnePzqvvtu8X7wgEadsAhFxw2GItlrw/rwjFh7G9qtHAbNCIMj
-	PtTZCDf9BUEg3dc3s0KKhYWLXH/EneY=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=IXvM5AJe
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764364838; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DUuA+EbVmRkE8AAGZMeKrX2qVPlqAaV4vprXKDXarDM=;
-	b=IXvM5AJesGHidWQYGPUkePgpTnzJIUZkmDZvXwTgHb6dQDlyRcX9STH80Pkt2BQIDztmfW
-	TD9zmMwjGa+SnvnyULw9bsvNIRugwtllvo4a07DRxawqrIv2+o0RJFwOQyZvtDUb3RxjC7
-	WUJcEQ52S5q6fpKH/RBk8l5rRRIspSQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 912643EA63;
-	Fri, 28 Nov 2025 21:20:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MAJZICYSKmnuWQAAD6G6ig
-	(envelope-from <ailiop@suse.com>); Fri, 28 Nov 2025 21:20:38 +0000
-Date: Fri, 28 Nov 2025 22:20:37 +0100
-From: Anthony Iliopoulos <ailiop@suse.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] nfsd: never defer requests during idmap lookup
-Message-ID: <aSoSJcYIXDEi3kvJ@technoir>
-References: <20251127175753.134132-1-ailiop@suse.com>
- <20251127175753.134132-2-ailiop@suse.com>
- <388da717-eb5a-4497-99f7-6a6f34405b58@app.fastmail.com>
+	s=arc-20240116; t=1764371815; c=relaxed/simple;
+	bh=tFBSzm3ziSX2HnGlD7Fylufo2XH3JRCTl+cbouDgK54=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gv9XmcgOAsqM+wAWw5VNjHEu5aM/vARDPxqBCj9BpNZNQFZMZYQeNRSNImfZWRCYjhdu1F/4jvjg0d+fwjP57D0fcwUntj/3OMufXXi6rUWjTlQ1+h7ELK3ib0RJQcqYuFkb6ywtkipTUOi/H7uYfoJb5tOaeAjEdfZ8evMa6O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hpD+YD84; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b7380f66a8bso362700166b.2
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 15:16:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764371812; x=1764976612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tFBSzm3ziSX2HnGlD7Fylufo2XH3JRCTl+cbouDgK54=;
+        b=hpD+YD84V9WGog0uv/iYvQCZTti9DXpeGTsGfiTscIHaZxQtWpZx35q/hUU2YL/Pbr
+         KxcLt67n34Uq9O+nlk9DtXTIsQiJkzcWQVWgRdShF0nlRRCgrw8VeBwLN5TB+pw1bO2v
+         T0XSYtN2SXHyk/Bj4HGBU3AiIGCUnn1KfrFNj+fsrXBfsFPzGIRRcn6S98WLLkT4WiPu
+         6SmCELy6tZnpJ3fG9pD7SpShyCSjfy44QIFDyT/NcGVlY4HsjVoNPCVLW1wK6nyD7h1+
+         xCNVyHH+lcUu6GI+eTrjxsbIB7mf3LwLuO9EwEB6ZBt39iuABTplOpPpBuMSt6X3y3W0
+         p/eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764371812; x=1764976612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tFBSzm3ziSX2HnGlD7Fylufo2XH3JRCTl+cbouDgK54=;
+        b=ZwgIdM5sKlZgZ2FDd3mGDSu6A8s5O2ILCVI83/dbQnU8jSmWvIzOIw5E7xcgZQJ8hi
+         kIvp23g7nA9ZX0alSqGlZ6uV3Ei4oBx/J939ABJ7/kd7AN/nsZb2PrnoVWLqhmHdKlzP
+         6snaUqIbhvw6uSScTSr5eJQSZgcQQlwig03yNEwRLkJHxI7tDjFpxgxW8J95TU/yydS8
+         vC9lW7t+CMrAJZtd0DatFPs1ODgpPIJX10RPYaSiRM8P2mRq7Dfpy+53xrowUNNSFNOJ
+         roBT8lsO3KgpgpMrFf7PK4K0Raoc5sNtuvWkzEaGiKHgpZSb7h/k7n/RF6NQZg5A6nH/
+         pa2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVJaU7L/sSFwUTZRGHl8E9juPzlrX23imM54JPGQSDmIRSNnHU8Pq4CUTyXspK2fTL9UvwPFAwArS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweV3ClS/q8QQxkSmLVLq0acJFuiAfRSN6/ypsVNpYrJ1RdrcN3
+	zM7ucaf/HTW6RlVKt5g0LHUcUxqQVuPTfcqG+rl+R1tLHQSs3mkLRSH1cEEsgxajTrTbjNXQEj/
+	/QO3qHciQefIcEIk6bbfEWFMwq+qiog==
+X-Gm-Gg: ASbGnct3RC4qD2yPwmv8+FbQ3jRWCmqcZPD9/A7B/xgicrqyeinQnPoO34MrT/mc+Bo
+	QYA8oeoyzM2U/p+hrUZJ8xSXzrmRrNxWmZhkq1+K8JxhtAnAjakzFUcXu8aLQQVmXp5TRaHeKgu
+	UHJlHpATt7u0haKIpGOs6sYYOsA1MFnacFf0c/7Hscq//ionUOZQcWViWvjOaLg/6qFm+FkgGzz
+	2vqr+D+dxAG24jEMqAPKDAtzS69lzM2EfFjzIaV3/7rGS/ILoYPnd/NH3r1p68evPjnrrj4Dsu6
+	9+NVZQ66dUBUICkDffMKgXJCOdk=
+X-Google-Smtp-Source: AGHT+IHeeYyNlhMBLcvKlxoLv5vSDViLpxq3LPnvUJ8i1uefHukfvsgCv8wWMFxUnlfmKlHkimPgQMKwGXw/XFBpvwA=
+X-Received: by 2002:a17:906:b052:b0:b76:8cda:c936 with SMTP id
+ a640c23a62f3a-b768cdad168mr1929424366b.36.1764371812092; Fri, 28 Nov 2025
+ 15:16:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <388da717-eb5a-4497-99f7-6a6f34405b58@app.fastmail.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:dkim];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Spam-Level: 
-X-Spam-Score: -4.01
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: EC62B3376B
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
+References: <tencent_780E66F24A209F467917744D@qq.com> <5e1b3d07-fd80-47d0-bbf8-726d1f01ba54@app.fastmail.com>
+ <CAHnbEGLi--K9R_JHhROR4YfY4gbD3NmyO3MwX2xrdX8fxxAAdA@mail.gmail.com> <d0bcf5cd-bfa2-4f91-b1ea-1159639303c7@app.fastmail.com>
+In-Reply-To: <d0bcf5cd-bfa2-4f91-b1ea-1159639303c7@app.fastmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Fri, 28 Nov 2025 15:16:39 -0800
+X-Gm-Features: AWmQ_bmUWTMYIIK9yb0Bh70AJcaYyrEK9Azt6mCdOZMGeIxiOHzavTL7KzSIp-E
+Message-ID: <CAM5tNy6jjeoN0H_JcD=8Ci4X8hU=4oyn3ZxRJrhpxJgApZUCcQ@mail.gmail.com>
+Subject: Re: LAYOUT4_NFSV4_1_FILES supported? Re: Can the PNFS blocklayout of
+ the Linux nfsd server be used in a production environment?
+To: Chuck Lever <cel@kernel.org>
+Cc: Sebastian Feld <sebastian.n.feld@gmail.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 28, 2025 at 11:09:52AM -0500, Chuck Lever wrote:
-> 
-> 
-> On Thu, Nov 27, 2025, at 12:57 PM, Anthony Iliopoulos wrote:
-> > During v4 request compound arg decoding, some ops (e.g. SETATTR) can
-> > trigger idmap lookup upcalls. When those upcall responses get delayed
-> > beyond the allowed time limit, cache_check() will mark the request for
-> > deferral and cause it to be dropped.
-> 
-> The RFCs mandate that NFSv4 servers MUST NOT drop requests. What
-> nfsd_dispatch() does in your case is return RPC_GARBAGE_ARGS to
-> the client, which is distinct behavior from "dropping" a request.
+On Fri, Nov 28, 2025 at 8:24=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+>
+>
+>
+> On Fri, Nov 28, 2025, at 3:57 AM, Sebastian Feld wrote:
+> > On Thu, Nov 27, 2025 at 5:41=E2=80=AFPM Chuck Lever <cel@kernel.org> wr=
+ote:
+> >>
+> >> On Wed, Nov 26, 2025, at 9:14 PM, Zhou Jifeng wrote:
+> >> > Hello everyone, I learned through ChatGPT that the PNFS blocklayout =
+of Linux
+> >> > nfsd cannot be used for production environment deployment. However, =
+I saw
+> >> > a technical sharing conference video on YouTube titled "SNIA SDC 202=
+4 - The
+> >> > Linux NFS Server in 2024" where it was mentioned that the PNFS block=
+layout
+> >> > of nfsd has been fully maintained, which is contrary to the result g=
+iven by
+> >> > ChatGPT.
+> >> >
+> >> > My question is: Can the PNFS blocklayout of nfsd be used for
+> >> > production environment deployment? If yes, from which kernel version=
+ can it
+> >> > be used in the production environment?
+> >>
+> >> Responding as the presenter of the SNIA SDC talk:
+> >>
+> >> There's a difference between "maintained" and "can be deployed in a
+> >> production environment". "Maintained" means there are developers
+> >> who are active and can help with bugs and new features. "Production
+> >> ready" means you can trust it with significant workloads.
+> >>
+> >> The pNFS block layout type has several subtypes. Pure block, iSCSI,
+> >> SCSI, and NVMe.
+> >
+> > What about the LAYOUT4_NFSV4_1_FILES layout type? Is that still support=
+ed?
+>
+> Above, we're talking about the Linux NFS server... IIRC NFSD never
+> supported the NFSv4.1 file layout type. It has a simple experimental
+> implementation of the flexfile layout type (the MDS and DS are the
+> same server).
+Once upon a time Benny Halevy had a single server (in the Linux
+kernel) that did file layout. (I remember because that is what I used
+for testing the FreeBSD client side.) It even knew how to do striping.
 
-It actually does drop the request, as pc_decode doesn't fail when this
-happens.
+However, it was a "single server" (MDS and DS in the same Linux kernel nfsd=
+),
+so it was only useful for testing purposes.
 
-For example in one instance of this issue which occurs while decoding a
-SETATTR op that has FATTR4_WORD1_OWNER/GROUP set, nfsd4_decode_setattr
-returns with status set to nfserr_badowner. This is set in op->status in
-nfsd4_decode_compound, which will stop decoding further ops, but stil
-returns true.
+I have no idea if it is still around somewhere, but unless someone wants
+to do a lot of work on it, it is definitely not useful for production sites=
+.
 
-During nfsd4_decode_setattr, nfsd_map_name_to_[ug]id will end up calling
-cache_check in idmap_lookup. What that does is basically:
+rick
 
-- issue the upcall
-- wait for completion with a short timeout
-- attempt to defer the request if the upcall hasn't updated the cache entry
-  in the meantime
-
-That happens by calling svc_defer which will set RQ_DROPME on the
-rqstp->rq_flags, causing nfsd_dispatch to return through the
-out_update_drop, and in turn there will be no response sent out by
-svc_process.
-
-> > Fix this by making sure that the RQ_USEDEFERRAL flag is always clear during
-> > nfs4svc_decode_compoundargs(), since no v4 request should ever be deferred.
-> 
-> Help me understand how the upcall failure during XDR decoding is
-> handled later? What server response is returned? Is it possible
-> for the proc function to execute anyway with incorrect uid and
-> gid values?
-
-Without the next patch in this series, if the request isn't deferred it
-will send back the NFS4ERR_BADOWNER status, which the nfs client will
-map to -EINVAL and return to userspace.
-
-With the next patch, it will return NFS4ERR_DELAY so that the client
-will keep retrying the request until the id mapping completes.
-
-In either case, even when the request is being dropped, the proc
-function is never executed. While nfsd_dispatch will proceed to call the
-pc_func, nfsd4_proc_compound checks for the op->status which was set in
-the decoding stage, and jumps to nfsd4_encode_operation without calling
-the op_func. In the particular instance of the SETATTR op, the encoder
-will encode an empty attrsset bitmap to indicate the inability to set
-any attributes.
-
-Regards,
-Anthony
+>
+> The Linux NFS client fully implements the file, flexfile, and all
+> the block layout types.
+>
+>
+> --
+> Chuck Lever
+>
 
