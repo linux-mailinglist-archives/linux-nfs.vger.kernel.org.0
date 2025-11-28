@@ -1,170 +1,177 @@
-Return-Path: <linux-nfs+bounces-16771-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16772-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 614DDC90759
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 01:55:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2993AC90E56
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 06:48:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29B9B4E045B
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 00:55:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9AF73AAF90
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 05:48:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FCC192B90;
-	Fri, 28 Nov 2025 00:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0080624466C;
+	Fri, 28 Nov 2025 05:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Qe4OyHPY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o9325mao"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr6+48NU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F9A20B22
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 00:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D44B3B1B3
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 05:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764291336; cv=none; b=Pi5klyyjKJBjuQZRg2HIBFrxbIPR4HtVs+PjwAxE13q7JuXhMJAGA1K8oK9SiH0Z4ZKL8+3x1HUriR8pOkETXcvME8EQ+Z2lB8Jk/CGCIBW5BjgITIxkVTL86Wx7q8KN026EuOYjeQAkmhD5Kbyq6pcgcQNdSv69TUL6jpQgtmI=
+	t=1764308930; cv=none; b=p3eMvg52vhVGZt+1+RW7/H/dMcLBQdT+suEKNICEkS3p7kZcHpBS2lswQGQU8w3Veydt4qa1q58dqjRxyPgK6kPsHqnvMjw54WyjBEYSQ+UFlqFAGVvDIdK2IxMuYgtE3YM1PpsP1+9m2SvSyDujDE1WEEOp/PJ7myweE2xqlVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764291336; c=relaxed/simple;
-	bh=duG4jzxPXs4UXsc6y88ySAO8OnVTcu7zi+i5Mxyn9BE=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=b5v7HC2jiDRxY3CKvmMticKiIcElCQNmSoIA2d6dI6PfSjWXp+difYI5bgqsfJgbHwh/NLCvP2kqAUbZ66nR45KvbMnZgTyT/KnF5ioXhMxYLo8NLPT5+/8Sjv5hUjPmd9pS66TJleX9S4fWzUEyu8rESQfC4BFsuK2ysZaTzwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Qe4OyHPY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=o9325mao; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id DBAF41D0064F;
-	Thu, 27 Nov 2025 19:55:33 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Thu, 27 Nov 2025 19:55:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1764291333; x=1764377733; bh=UxdlRv09jWxaXk+G081oo5Au5N32DXVKkS+
-	6OmxO+kM=; b=Qe4OyHPY9Tsa/j2/0QOqxm+YEhaf0X9UoUxwWoUdE3J+YEy4VBL
-	5N3R/gpQISBpboNDslaJwCJOf5wweaP2Q40fLpjviI8gBv7IMbqvviU38Ug4Gg9S
-	KUkjAI7S4Ec7rN8Qw4a4UC4o4YcW8hY+1cEqa8oHPfz4Xu0FJMmz5nbifSz3w3fx
-	tbT6Z6C419WlMMDfDegw4o/VSUCs6c43HQQmO6e/umy8y/nSP/uXAfzSUreg8nGn
-	q1ydh7iUGbejIfSMpBGnu60VPJqgsR6tESS141DreU+wzysgAe9eTGqsZ0yoJhMJ
-	hNh25/3fexZ49ibjgEyK7fpKZJtJBptBliQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1764291333; x=
-	1764377733; bh=UxdlRv09jWxaXk+G081oo5Au5N32DXVKkS+6OmxO+kM=; b=o
-	9325maoAed23Iq+OSJvLv8xnwhZWorKZ2ro4KCy/061V+h8i9G/ev4BLQI9+lHQr
-	LfRv80QQnXqd/t/wXZ7ZPalq0yariHW9F8JunKjHEZR3DYjFX/0XgOEdzTxblakx
-	seT/drG2f2cf+59wwNeVbBP051E1ISatm+WnX/yvCB0tD6QOnX/FexRBNflTBSIK
-	Tf6UeHivqWCDXmPF5e/gH3ZIK6KFSYPB5OymcuaFoTSEqzLXG2U3nmEaUsvVm5Pi
-	bj7E/E8b+dn61uQuMvNH61WXdoHVq1dm3Mrnv++ZGH7L0jPHyO4tAoXTk7RJGNrF
-	4Sa4rITqNOdX4UUzfHfkg==
-X-ME-Sender: <xms:BfMoaRUeBcIFXj82qc_5U_yYGxBDNQLzotbN-0hWikZr4EctQ7WGYQ>
-    <xme:BfMoaYltv4k2fPP1EuzNDDYN-5VvBYNgrdOXk67FfbPr_DeU6QFKNfSSPS1hLzkii
-    3yPfZtxSQtMOBB6wwu93bomLo3maXoCCDIUbK-3J19cMfy0x-g>
-X-ME-Received: <xmr:BfMoaSbHINmZQJlYnllMp6GpOpbGDNF9T3Jx975ETlSkh96ueWh3Y_KP2HvOSwEUQDCrHydqQUDM8ocmAO4GL_jcFFTDeRgW2cf9_R8iv3xH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgeekiedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegrihhlihhophesshhushgvrdgtohhmpdhrtghpthhtoheptghhuhgt
-    khdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:BfMoaTP9CEoML-MmeEWhe0t-kSo1CMAeIo_zSJhnALM7ENxjNuDRAQ>
-    <xmx:BfMoaXbWlOshn11zitIcJF36xvLBjsQlzhSgvBsoGeH0VFfnD66SjA>
-    <xmx:BfMoaR2ia14cuV6PEkR1jS4dVIYvoGh4P9p8y661agKp9FPn15IFdQ>
-    <xmx:BfMoadcnIQhvTpVo8uVEFj_-mCRrMrXzUTEfHfK4s8nMmr3Ljucusw>
-    <xmx:BfMoaStWQ_WjvP9mywSFPAA0hWMf_GfLdj2aDQemzb6YaDIdUHKe_YHB>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Nov 2025 19:55:31 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1764308930; c=relaxed/simple;
+	bh=fSjIyGyS4jVRIJpVP5drxPSucJxMk9FPbAbE4rfGF1U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XmBJOJfAocNCg9hcwxQw7rCyvbU5pOYB/TkAdDBTERC7xJv3nnOXc6dCQnypaZVg0E2XfbbIUOIHwbU+21ocy/A5JIndtlyigS/eUPteC2Ppt47T+E1rpA+I1FMMO7B+N+R/EU52ZRL2jkPeW2hytWTRGe3Xj9PtHpzh1rUMNMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mr6+48NU; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-657490df6f3so564402eaf.2
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Nov 2025 21:48:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764308928; x=1764913728; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fSjIyGyS4jVRIJpVP5drxPSucJxMk9FPbAbE4rfGF1U=;
+        b=mr6+48NUxGK1ER18Fu2U63afyQliZseZXRlBwnTh6JhblgEOrN4KvvnKCGG8v8KYf+
+         nvaJA0gUsoCJ76Z5VFSav2X4CKzjZahSE5N4NfQvyq0yH9IO4OwfG4PMeozn2HVy/9Bw
+         +kzJQu0AUw7VomAFJIo+DliWIrl2+CFlMEAYOkqC8saD4JxjWVig3i1oiN/z9+ol9wiF
+         uGxeSZR6RbFhWYVVcmStQhKIqT+/BlwoQtOX3v/YXcOuWJwLWXK7ZOY0wSw6HubNJnMt
+         yrHwzotjd/tnUMgNiZX5GeeF5rKhbYJb+yoNZ55r/vmbwDiSkVNCUUxXyBt1jQNpYzv/
+         ahTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764308928; x=1764913728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fSjIyGyS4jVRIJpVP5drxPSucJxMk9FPbAbE4rfGF1U=;
+        b=qn79p7Q0333sbZYI5VsPiPDiZPgbsF1+xrkEKiGT+I9rvtiTGuU2Us+721tYhfpdS7
+         SaKyHiOLWE5qr2smPWKlHyH7IjQRMOkXBT7O1wfR7CloVo6qhK9e8wIaGtzuAV7HlpF4
+         DMPyA/l3veACjN/efgNG1UKD9h4POx2MF0H6oEpszZ8iN0Up2do2MnXX1KlKkO8HKuUT
+         glb7bDyxe5yodWxdZJa4cazyvMawFFhWaNZJriIa3YaPjc30J5rdJplrnoPbtwts1lvS
+         ldl7XRUWrlZuquDgKEoUxa+sb5TZmVn1iUBiTbOJ032Wk1DLqKXpzdGOALM7PQxmY5KL
+         E8gg==
+X-Forwarded-Encrypted: i=1; AJvYcCWITXEJXOTvVdFwJozXAA6OQO2Z3G4bS3Ama5wgoIRrEZi1VTUg9gA3GHRpPJPBnWoLybhUAedh2uU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMLVQ1KC9gWqalv+9iOgbL8KYaJQ1eBMkbWiyv8f10m/veytXg
+	aHt5ifYbramti7ebRKTuuinHK4DIU7xRsuQC3rFv9kqoGcMZv4LmuVPJq5EvQWsCDXz1TKQirBW
+	BlFyEO+u2XeBZE5DYdga0Z4vllIOyDwY=
+X-Gm-Gg: ASbGncvywiTsQ8hYIH2nJ0F3ZZGS82vQq4tsWixzaLlIZa/24PnF5TVFyIp5SVbAFBA
+	WwVZFzE7phJsSIhT5k6gVGnOulxrPA5FmHB8k9aVb9O+epcjEOslKBph25Z2gG7efgUKhsZT9dN
+	laEvnldpWk8uizImu52B9aK+hA3RbUQLMCSVdF2JGnt6CI43ImPk05DHbWA22Ab1+6HX5NfUXcV
+	f/DxoipIEgCcXdn0aSLnnQOL6quuPevR4LGPhTO6xLcKLkqeReiPwFMDmkG7Y/Ptfak4HREIw==
+X-Google-Smtp-Source: AGHT+IETVVoMLF/ZbBbT6Lkyv00mgDtVUreHT7hilfznapRWibURo+ZvVRSnOJY7itZuwYEpeHBeJgOOfD2EIXJG9co=
+X-Received: by 2002:a05:6820:2017:b0:657:5cc3:f38 with SMTP id
+ 006d021491bc7-657908538bcmr9144016eaf.0.1764308928307; Thu, 27 Nov 2025
+ 21:48:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Anthony Iliopoulos" <ailiop@suse.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] nfsd: never defer requests during idmap lookup
-In-reply-to: <20251127175753.134132-2-ailiop@suse.com>
-References: <20251127175753.134132-1-ailiop@suse.com>,
- <20251127175753.134132-2-ailiop@suse.com>
-Date: Fri, 28 Nov 2025 11:55:30 +1100
-Message-id: <176429133008.634289.1589243643340647452@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+References: <20251113093720.20428-1-gaurav.gangalwar@gmail.com>
+ <d3b2e4c8-18ec-4b8f-a05f-42bc00196e1c@oracle.com> <CAJiE4O=zhEaJKQO7bBc8g9gXCiMoi7G7qSiVbQ5Cq+SwBK8OVw@mail.gmail.com>
+ <fc58b0f2-d00b-4e4e-a353-ffe43bec6c6e@oracle.com> <55be56d3-b286-4b39-8246-4be80b03c22c@talpey.com>
+In-Reply-To: <55be56d3-b286-4b39-8246-4be80b03c22c@talpey.com>
+From: gaurav gangalwar <gaurav.gangalwar@gmail.com>
+Date: Fri, 28 Nov 2025 11:18:37 +0530
+X-Gm-Features: AWmQ_bm2eeyH_w63djEYQd-J6wll3KLYlQ4mWv5zbTcFuZT9EAoM28QZhLoY65k
+Message-ID: <CAJiE4OndWrE5jCrVXg4jse-nWUawPXnzEkYA9L1UAoMCL=KfAw@mail.gmail.com>
+Subject: Re: [PATCH] Make RPCRDMA_MAX_RECV_BATCH configurable.
+To: Tom Talpey <tom@talpey.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, neilb@brown.name, 
+	Jeff Layton <jlayton@kernel.org>, 
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 28 Nov 2025, Anthony Iliopoulos wrote:
-> During v4 request compound arg decoding, some ops (e.g. SETATTR) can
-> trigger idmap lookup upcalls. When those upcall responses get delayed
-> beyond the allowed time limit, cache_check() will mark the request for
-> deferral and cause it to be dropped.
->=20
-> This prevents nfs4svc_encode_compoundres from being executed, and thus the
-> session slot flag NFSD4_SLOT_INUSE never gets cleared. Subsequent client
-> requests will fail with NFSERR_JUKEBOX, given that the slot will be marked
-> as in-use, making the SEQUENCE op fail.
->=20
-> Fix this by making sure that the RQ_USEDEFERRAL flag is always clear during
-> nfs4svc_decode_compoundargs(), since no v4 request should ever be deferred.
->=20
-> Fixes: 2f425878b6a7 ("nfsd: don't use the deferral service, return NFS4ERR_=
-DELAY")
-> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
-> ---
->  fs/nfsd/nfs4xdr.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 6040a6145dad..0a1a46b750ef 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -5989,6 +5989,7 @@ bool
->  nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
->  {
->  	struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
-> +	bool ret =3D false;
+On Sat, Nov 15, 2025 at 2:34=E2=80=AFAM Tom Talpey <tom@talpey.com> wrote:
+>
+> On 11/13/2025 12:41 PM, Chuck Lever wrote:
+> > On 11/13/25 11:39 AM, gaurav gangalwar wrote:
+> >> On Thu, Nov 13, 2025 at 7:49=E2=80=AFPM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>>
+> >>> On 11/13/25 4:37 AM, Gaurav Gangalwar wrote:
+> >>>> Bumped up rpcrdma_max_recv_batch to 64.
+> >>>> Added param to change to it, it becomes handy to use higher value
+> >>>> to avoid hung.
+> >>>
+> >>> [ Resend with correct NFSD reviewer email addresses and linux-rdma@ ]
+> >>>
+> >>> Hi Gaurav -
+> >>>
+> >>> Adding an administrative setting is generally a last resort. First,
+> >>> we want a full root-cause analysis to understand the symptoms you
+> >>> are trying to address. Do you have an RCA or a simple reproducer to
+> >>> share with us?
+> >>
+> >> Issue found while testing fio workload over RDMA
+> >> Client: Ubuntu 24.04
+> >> Server: Ganesha NFS server
+> >> We have seen intermittent hung on client with buffered IO workload at
+> >> large scale with around 30 RDMA connections, client was under memory
+> >> pressure.
+> >> Ganesha log shows
+> >>
+> >> 10/11/2025 16:39:12Z : ntnx-10-57-210-224-a-fsvm 1309416[none]
+> >> [0x7f49a6c3fe80] rpc :TIRPC :EVENT :rpc_rdma_cq_event_handler() cq
+> >> completion status: RNR retry counter exceeded (13) rdma_xprt state 5
+> >> opcode 2 cbc 0x7f4996688000 inline 1
+> >>
+> >> Which points to lack of posted recv buffers on client.
+> >> Once we increased rpcrdma_max_recv_batch to 64, issue was resolved.
+> >
+> > That still doesn't convince me that increasing the receive batch count
+> > is a good fix, though it's certainly a workaround.
+>
+> It's not a workaround, this will fail on any RDMA provider that doesn't
+> perform RNR retry, for example iWARP. But more importantly, RNR retry is
+> unnecessary because the rpcrdma protocol implements a strict crediting
+> exchange. A proper rpcrdma implementation will never trigger RNR.
+>
+> This is almost certainly an rpcrdma protocol violation in the sender,
+> which is failing to honor the credit limit granted by the receiving
+> peer and is overrunning the peer's receive queue. A wireshark trace
+> would prove it. Please do this research.
+>
+> Tom.
+>
+>
+> >
+> > The client's RPC/RDMA code is supposed to track the number of Sends and
+> > keep the correct number of Receives on the Receive Queue. The goal of
+> > the implementation is to never encounter an RNR.
+> >
+> > Therefore, if it's not doing that (and the RNR retries suggests that's
+> > the case) there is an actual bug somewhere. The extra batch Receives ar=
+e
+> > an optimization, and should have no impact on correct operation.
+> >
+> > If you can't reproduce this with the Linux NFS server, the place to
+> > start looking for misbehavior is NFS/Ganesha, as it is the newer NFS
+> > over RDMA implementation of the two servers. Maybe it's not handling
+> > credit accounting correctly, or perhaps it's putting more Sends on
+> > the wire than the credit limit allows.
+> >
+> >
+>
+Thanks for the review, I was going through server implementation for
+NFS Ganesha, we strictly honor read_chunks, write_chunks and
+reply_chunks, so the credit limit should be client driven only.
+Only in case of callbacks from server to client, as of now there is no
+credits check, we advertise server_credits in cb call similar to
+rb_bc_max_requests in linux NFS server, but don't check for
+client_credits from client in reply. We need to limit callbacks to
+MIN(server_credits, client_credits)
 
-This initialisation is unnecessary.  Just
-
-        bool ret;
-
-please.
-
-> =20
->  	/* svcxdr_tmp_alloc */
->  	args->to_free =3D NULL;
-> @@ -5997,7 +5998,11 @@ nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, =
-struct xdr_stream *xdr)
->  	args->ops =3D args->iops;
->  	args->rqstp =3D rqstp;
-> =20
-> -	return nfsd4_decode_compound(args);
-> +	clear_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
-> +	ret =3D nfsd4_decode_compound(args);
-> +	set_bit(RQ_USEDEFERRAL, &rqstp->rq_flags);
-> +
-> +	return ret;
->  }
-
-nfs4svc_encode_compoundres doesn't need this because the encoding
-actually happens from nfsd4_proc_compound on an op-by-op basis.
-So only decode_compoundargs and proc_compound need to clear RQ_USEDEFERRAL.
-proc_compound already does, this patch handles decode_compoundargs.
-
-Reviewed-By: NeilBrown <neil@brown.name>
-
-Thanks,
-NeilBrown
+Regards,
+Gaurav
 
