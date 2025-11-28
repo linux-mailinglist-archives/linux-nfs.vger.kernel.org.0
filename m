@@ -1,143 +1,159 @@
-Return-Path: <linux-nfs+bounces-16780-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16781-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4309C92923
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 17:24:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 293BAC92D1B
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 18:40:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72B443AE009
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 16:24:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C95FD3A7BBB
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Nov 2025 17:40:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6DF922F389;
-	Fri, 28 Nov 2025 16:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D59E31FC8;
+	Fri, 28 Nov 2025 17:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SmJXf4Jp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9by+G/u";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="mmIkSFe1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91206221D9E
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 16:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8D3248F54
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 17:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764347048; cv=none; b=ivxUhMqknOkpo0zH5GH/78dnI0D19MyhS/SeFJ4PFHzRhNe+Hu4pZOUMjDxwJQ+s/E19hoZDZXLbyAvspYZETCO4GnR+etPHb0CJnRKFzjD2hs8a+aDrpLlY8DR39Smondrk1vw1BsaYQ21ceDzeyLc4td0dhgovCZb7k9s+Ypc=
+	t=1764351650; cv=none; b=smHwMvETf+Y1+/7vJq1eWyNsERjhMSDvPXbC69inV4jTKLVN3K97JrvxcpHKvguMedXkuPxZNX5QN2vmAg0ZKJr++M2qpW1liJLgGeZE/AkfcWWaD7QujBZLt3b0ls2R3SNOVYxKQPX0x+vQFvKi+YbkluXjAgLaUsoyQlFQ07Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764347048; c=relaxed/simple;
-	bh=msiwvk5w4mQwC8jpLhIDDPXyCOM5gvKsJt0ERunqEIs=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=e6FILfQfuqX3tWvbK17JcedNlRw+79rWRLIpG3zRQyycF8r7ywQcHr5fnDVAxWLdZlyJZZLJ4zFCT/ESmnAR9SVV1rm+pJfFaaD8snvqr4aucjBITDCKysFcOLThlJk9eR8nWSpkZE7AJRUVfcVXp3Jr3uQEk+eueSLsWKY8Fyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SmJXf4Jp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A2AC4CEF1
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764347047;
-	bh=msiwvk5w4mQwC8jpLhIDDPXyCOM5gvKsJt0ERunqEIs=;
-	h=Date:From:To:In-Reply-To:References:Subject:From;
-	b=SmJXf4Jp78fCzZZ4WIZemhuipeZz4ysza707yMRIRD4Xr5zZxZ0fmnnK4aih+Byl1
-	 bqVZp3UMMOH/kLA+R58S5aiIs56ehMae9xRxtwPUG1EwFJFKgKt9A8abAxGYgyWWyc
-	 3UjrqFMcAjmTYjXFz0JwKxY0pziW6ZtqVyHA36jZvMSNwhM5BP0fRpH4cxGayf7B+q
-	 HjFj8LUpjsR07VqSiEcAt7KGCUalBOaiuvzzsfUmC6SDtJB8wq4YeWD7/ETDcY0exS
-	 4kNHEF7y9f/x00vNLMnmrp/7EpldHHgqPfBIDAjJch6EXi2OHx3ByvgiCHmSVm+Pe0
-	 oQdGGHZ8FKJcQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 18791F40068;
-	Fri, 28 Nov 2025 11:24:06 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 28 Nov 2025 11:24:06 -0500
-X-ME-Sender: <xms:pcwpads7Od9WaJi24vXt9RQItsqeqw0UAeaUV9SpyU01kyClwgAG8w>
-    <xme:pcwpaRQSmGpnjHO4TbPdH4zzdS6l6z3fsPTaCJby1AP70DGUWPYhWFdKOkNR3Zekz
-    gVpeegfnXaB4gSH0uXTdl8Cip3tVRiYrWGZ_VyyrkxjIZn-DuntInM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvhedtfeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvffkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephefgvdetffdugfdvtdetieeiudffuefhleeuffdvgeduueehffffveejteeuhfdunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehsvggsrghsthhirghnrdhnrdhfvghlugesghhmrghilhdrtghomhdprhgtphhtth
-    hopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:pcwpacZPhlrhdJpOU1Bi8GOViLr4w1kcODBAdiYd8vwxi7MwabSC2g>
-    <xmx:pcwpaVUkPp3JhSA-fvGxnS_uYGMPdK27nVc8y9QJwEwbfGz3Wv-d2g>
-    <xmx:pcwpaehTPOaoR0Y3Kgs065gy8pNj0XyAct2uI5iFqW4A_lSBa0fb-A>
-    <xmx:pcwpaTUVimIkRx6OChLes52Kz8nQhvuAIAyiwDJG_ktDL10-sL8nzA>
-    <xmx:pswpaVNYSWJxibKRV02W4eqVhjjBmfocR-GGf8UE921UIco7WsUaC8zt>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CF2EE78006C; Fri, 28 Nov 2025 11:24:05 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1764351650; c=relaxed/simple;
+	bh=aePqSOs99Iuf6MsTP4nGkf7pP5MeE5mscYRvThKQDjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJDdNUVCvmq0BFGcB7fH9gHnVLP/JBSZ/HzcSRM5kfelqK5B48f1FxK60DU0mY1MYMAeY8xpVuaJ08jah7JPTxRVGMOPynAUYFqnGy2dmFK12A+8FlZuKsxV2sDiSW/XIm1KYYlXBsQGs0WjbwuEWLI8fJGC8a0+YDVKsYj17iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d9by+G/u; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=mmIkSFe1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764351647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qldbNojuQEMz3aYOlEfESNtBsAKqB347GXKhFK0aE6U=;
+	b=d9by+G/ugG/DBFJn6G3OzsmUafABu4W+GEL6IkARI1xqrlqhQFdZr39LDIH8M5xQDRwYuN
+	45hYcY9PK0S1cKlv1PRJkXFLI7r8VBCG4xlJ4naWfryoz19ycf6ukjVkPUp9Kr+FWNf1Qu
+	GweZpt4gP6dVXaLqXYHY1Lk56SQdfH0=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-682-Vy5aQWLFPYuMtfRKLaFJ1g-1; Fri, 28 Nov 2025 12:40:45 -0500
+X-MC-Unique: Vy5aQWLFPYuMtfRKLaFJ1g-1
+X-Mimecast-MFC-AGG-ID: Vy5aQWLFPYuMtfRKLaFJ1g_1764351645
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7b89c1ce9cfso1804332b3a.2
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 09:40:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1764351644; x=1764956444; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qldbNojuQEMz3aYOlEfESNtBsAKqB347GXKhFK0aE6U=;
+        b=mmIkSFe1ejPwoo1uobZ97haKhl9eTCZfmIjMA+ZnikIs5pi8KELJzdt6c4uD6ncwfk
+         C+bfYrRNrsyoEmEFZfdYxG82acMtFWZG+5LAYwe4WV7uV2PHpnMsB0ykB6iiJ8UwIBM6
+         nfGnaog7tDkYRrZzOxIUaFhvHbVuO+fnlwo2DsasUNGCpqLULHw7LnVkv6PrAX0LNRXR
+         RDhVjTv0c+5UYNswTtMm3ejHvogfAgD/Laa2Z6CDTNW5IZ2AwNLUqnVw8QBiTkLMx1KO
+         DjffuL5IucFqLeqf4WLd0yJ/1VggRgWlOf7GE3Si1VLox4ggDIWNrQ6kkOsv1EiOfm3t
+         Vsjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764351644; x=1764956444;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qldbNojuQEMz3aYOlEfESNtBsAKqB347GXKhFK0aE6U=;
+        b=ExSXYyGn/DT1LvmzqL49XoSaBO6M0QAk47TO1EqNk4Y+Ax5PNYlGeezOGfNKKV37qG
+         GvoAECmAkR5R3/yyEiS0ltjPROCNQYFD+UNWpSFQXH+oKqvuqXgaPNiz8Fve/dEtaOpP
+         v70Ki1bKyaMKmYoXbz6MaXJPCl15NfMXTD614/IP5XD7slp3PeSLZ2tJzRVWmj6olWfO
+         A4v0PbIiRLWvZKeO0kezDWvzy+Er/ZbW3tKmmz7PSn+zSDd3poXfnKLDp2PXpqqd425M
+         IE6nwjXJV771p03CY41SiJ32GBN4hDhQrdGohTpg68LbKOqrLijeMQPS51OknWPpNS4A
+         f5fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkqOSd728rfvtNlW6aJgiy+QCa2zVw5NHBjhJLpGTWUbk2FtLaRwDrkZRMlicIoKVbaeka6MqJGdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw31ZvE77CNyNlvbMY+hNkH5ykGLGLTmrv/oENXFX6cfkjNeTlb
+	SBJq3riI13KZO8HvKvTVZUd3jZDsr0pbAUY3cRjrBipl7CfLOe5jSKQCCvf8C1LCZI6fNh4i0VN
+	3jQsb/B4kTOGBhwYp1ajernmJmgXWBpxJTzYKYOeKvUxLz0fUE6YVj/Q+G08MBkrHx5rSqg==
+X-Gm-Gg: ASbGncvcyDNHzHyMvWH2FItVUohzfFz5+Q/fsV7UDhd8wd0NCHFSkxF4wIWAV8dh04l
+	QYppvlYDSFGB9vbUUA+yafd82KDvDNMqSSr/hmCIxDcgHRUKO0SE8TTKXkGj7sJ9wz2rRmIhexo
+	QtHK1Wkf9S5jbqVoHya7uipb+B6aSIMsuOWj9ct7BjJeAHOeSwLJOZndjCJ2aIk88BI8tWhPjUe
+	hdS3VGCWqpY/oCWLdSvjE0B+/FnYUegHTvl60sETHXEGeeiAqJk+539aPXSjrGMLhE2LkuHNwlp
+	43/OjjRb+8qeu7N6nOMtVaTwZ041AgQemZYKUAn8mukEx4RknRAEqBW8d/BqsHQi1JKJHtdiBPF
+	68G5MHevH4DyciwN1vSC7raeSVULmDar4z5eQpR7EERxv7Rk1xg==
+X-Received: by 2002:a05:6a00:3e0d:b0:7b8:8bfa:5e1e with SMTP id d2e1a72fcca58-7ca8740d6d4mr15779326b3a.4.1764351644188;
+        Fri, 28 Nov 2025 09:40:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGCAAkQu2eaO/fFi9mDFABm0jJp0jEk4PDSUYKBl1At7Juj0FNjoI4i5YqMH39bfP30zxycRg==
+X-Received: by 2002:a05:6a00:3e0d:b0:7b8:8bfa:5e1e with SMTP id d2e1a72fcca58-7ca8740d6d4mr15779297b3a.4.1764351643624;
+        Fri, 28 Nov 2025 09:40:43 -0800 (PST)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7d15e9c3b8bsm5571876b3a.44.2025.11.28.09.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 09:40:42 -0800 (PST)
+Date: Sat, 29 Nov 2025 01:40:38 +0800
+From: Zorro Lang <zlang@redhat.com>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [for-v6.18 PATCH v2 0/3] nfs/localio: fix various new issues
+Message-ID: <20251128174038.o3gas3rn7puau235@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <20251126060127.67773-1-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A9oaoCPaRE3R
-Date: Fri, 28 Nov 2025 11:23:24 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Sebastian Feld" <sebastian.n.feld@gmail.com>,
- linux-nfs <linux-nfs@vger.kernel.org>
-Message-Id: <d0bcf5cd-bfa2-4f91-b1ea-1159639303c7@app.fastmail.com>
-In-Reply-To: 
- <CAHnbEGLi--K9R_JHhROR4YfY4gbD3NmyO3MwX2xrdX8fxxAAdA@mail.gmail.com>
-References: <tencent_780E66F24A209F467917744D@qq.com>
- <5e1b3d07-fd80-47d0-bbf8-726d1f01ba54@app.fastmail.com>
- <CAHnbEGLi--K9R_JHhROR4YfY4gbD3NmyO3MwX2xrdX8fxxAAdA@mail.gmail.com>
-Subject: Re: LAYOUT4_NFSV4_1_FILES supported? Re: Can the PNFS blocklayout of the Linux
- nfsd server be used in a production environment?
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126060127.67773-1-snitzer@kernel.org>
 
+On Wed, Nov 26, 2025 at 01:01:24AM -0500, Mike Snitzer wrote:
+> Hi Anna,
+> 
+> Here are 3 LOCALIO fixes for issues discovered as a side-effect of
+> Zorro's recent bug report:
+> https://lore.kernel.org/linux-nfs/20251125144508.rxepvtwrubbuhzxs@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com/
 
+Hi Mike,
 
-On Fri, Nov 28, 2025, at 3:57 AM, Sebastian Feld wrote:
-> On Thu, Nov 27, 2025 at 5:41=E2=80=AFPM Chuck Lever <cel@kernel.org> w=
-rote:
->>
->> On Wed, Nov 26, 2025, at 9:14 PM, Zhou Jifeng wrote:
->> > Hello everyone, I learned through ChatGPT that the PNFS blocklayout=
- of Linux
->> > nfsd cannot be used for production environment deployment. However,=
- I saw
->> > a technical sharing conference video on YouTube titled "SNIA SDC 20=
-24 - The
->> > Linux NFS Server in 2024" where it was mentioned that the PNFS bloc=
-klayout
->> > of nfsd has been fully maintained, which is contrary to the result =
-given by
->> > ChatGPT.
->> >
->> > My question is: Can the PNFS blocklayout of nfsd be used for
->> > production environment deployment? If yes, from which kernel versio=
-n can it
->> > be used in the production environment?
->>
->> Responding as the presenter of the SNIA SDC talk:
->>
->> There's a difference between "maintained" and "can be deployed in a
->> production environment". "Maintained" means there are developers
->> who are active and can help with bugs and new features. "Production
->> ready" means you can trust it with significant workloads.
->>
->> The pNFS block layout type has several subtypes. Pure block, iSCSI,
->> SCSI, and NVMe.
->
-> What about the LAYOUT4_NFSV4_1_FILES layout type? Is that still suppor=
-ted?
+I just tested this patchset (base on linux v6.18-rc7 which can reproduce that
+cred crash bug). Then the test didn't trigger the crash. So I think this
+patchset works for that crash bug. (But the g/751 hang bug is still there.)
 
-Above, we're talking about the Linux NFS server... IIRC NFSD never
-supported the NFSv4.1 file layout type. It has a simple experimental
-implementation of the flexfile layout type (the MDS and DS are the
-same server).
+> 
+> (note that the "generic/751 hang on nfs" still isn't fixed but that
+> one is a long-standing issue that can be reproduced against stock
+> v6.12.53 -- whereas these 3 fixes address code introduced during
+> v6.18-rcX).
+> 
+> Sorry for the trouble, have a wonderful Thanksgiving!
 
-The Linux NFS client fully implements the file, flexfile, and all
-the block layout types.
+Have a nice Thanksgiving day!
 
+Thanks,
+Zorro
 
---=20
-Chuck Lever
+> 
+> Mike
+> 
+> v2 changes:
+> - patch 1/3 is the same as was posted here:
+>   https://lore.kernel.org/linux-nfs/aSaTC51DkxEqQkrZ@kernel.org/
+> - added patches 2/3 and 3/3
+> 
+> Mike Snitzer (3):
+>   nfs/localio: fix regression due to out-of-order __put_cred
+>   nfs/localio: remove alignment size checking in nfs_is_local_dio_possible
+>   nfs/localio: remove 61 byte hole from needless ____cacheline_aligned
+> 
+>  fs/nfs/localio.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.44.0
+> 
+
 
