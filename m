@@ -1,133 +1,136 @@
-Return-Path: <linux-nfs+bounces-16793-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16794-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50A09C94154
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 16:40:48 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D37C9417E
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 16:50:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CED723452F2
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 15:40:47 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5A5B6342D1E
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 15:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33701EE7B9;
-	Sat, 29 Nov 2025 15:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004151C860B;
+	Sat, 29 Nov 2025 15:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPT7V4sY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6lwuZZM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8CA1A9FAC
-	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 15:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9D5199FB0
+	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 15:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764430844; cv=none; b=YLPs/9kHjyjYzSQkPVqmmNQUmYyzU2oDxM3T6v+imv1TIJIYNzlCwn4NBj+Kwg4S/FTV2AQrzArgbex+4K+PupToBPyUuCnl+1kejp0lgF+s3BW7KCm5Nnyna9G67ddJ+nX+Jn07nYF3WkAfIa5wI2bY6dJFYq2r/2h4dtszYr8=
+	t=1764431414; cv=none; b=KFZcoYuS37AIuKig7d60MZg4ulxL8w7W7cZV5QCIxulEsXxr9D3WlyzGgfYRH8UoIZqTUgg2FWNytnjx8/Y7Ear7NSgEK0KqoSzs93Hd8n/8jtfSiY7VI+IVw2Ve7jCZnTjFcJnbrmTQnhYgOfpymQyByaf0nxG07aG8sLp0Zpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764430844; c=relaxed/simple;
-	bh=cUhCtvourTec25IW7Lm55jVX/2alWK+X1PLs2qrph84=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PQrSSfQd9BJqyy7m/nKhtBkRYA7W5DA3M7IIDoAqT3n7YIpx37Hl5du+jgxUismh/EkIAPEYqvAZO/lRWOk0bO9xIZkBUOLFL1NkMmkX/kVWo9MkSTCULtsj1SJJhaWOa2jodme0StzMa/ukq0U8pOv8mmUFEulgoJdj74s09r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPT7V4sY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F2CC4CEF7;
-	Sat, 29 Nov 2025 15:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764430844;
-	bh=cUhCtvourTec25IW7Lm55jVX/2alWK+X1PLs2qrph84=;
-	h=Date:From:To:In-Reply-To:References:Subject:From;
-	b=RPT7V4sY1BnPFP1BpI9RQnhaoZzhDbHCoAGWHjPZQDOqSFJsXaCK5uuq7y3Y6iX8E
-	 9z5vMTKKVV2SJR3nFt9x/LMl5tOkt+m8g6Gtw4cua2fCPc+d4tJ/RjMym1gzk4RACS
-	 /OmoBAXh4VCrmChJfT5Hy6LK6APoNOyhVIMIR6M5tlUGRROKbGn6AXJJEDoO8V2kd1
-	 tKGk/OKjRR+1dPP/dwGHKgZg8MxrjOCPGkv6j5YnfqbsVExV5vCD7NUy2X4tg6CbbW
-	 322woTqQEYBi2W3gUz99MXKGEXIAZ74C2daPQqx/HA/kFkZ5wFKEzWKoeT50Tnf9aq
-	 i+hpU61wMUViA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B5426F4008C;
-	Sat, 29 Nov 2025 10:40:42 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 29 Nov 2025 10:40:42 -0500
-X-ME-Sender: <xms:-hMraX7C3EKqTtgvVmzm5yyFhftCCUZ7G2FqkruTcgX6drLC5ySRFA>
-    <xme:-hMraXvXcjoaYbAA9K8E9BT_N4MdDb0pqGDHAzPa9GfMGDmP44Y8IQr8aLhtbR2UP
-    vVh9ISNUwsJ059hi6I1W-0nFh6Vi2Nb-3w5bKmxQySzQQCC8ufbtM0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvhedvkeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvffkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephefgvdetffdugfdvtdetieeiudffuefhleeuffdvgeduueehffffveejteeuhfdunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegruhhrvghlihgvnhdrtghouhguvghrtgdvtddtvdesghhmrghilhdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:-hMraSnF9A9ShE7JTjfQhS79SmI6u6neBKUaFAGhniiZqsnN1hKfcA>
-    <xmx:-hMraXwRASxdeel3mMVQTI3cs_Sah3uCEq87cCiu-pcijHC3Fn2igw>
-    <xmx:-hMraYNXQELVNv98Mzz0Eo73kDouWC97VJTcm6rfL9TKQxGYIaWOQQ>
-    <xmx:-hMraTTgYOgAYhpfha2khCpiMrtTEu56uKP21Y_Gw3NYaNGQ6jtLsg>
-    <xmx:-hMraebgMp6FHeQPtemBt_0rLjGRY_fzV6Ch0fMgIZi4pCJIk5dlZ3Qm>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7B026780054; Sat, 29 Nov 2025 10:40:42 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1764431414; c=relaxed/simple;
+	bh=1BupSjR26JQmhX9EWadwRaAjzRphytaQZJgN6X+EDRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=WlEXqAxTISbimWai+9GIxs+d7XrQcLX5lSlk3CPNwzj7L0tQtB+K6dKL9bxNuj8+a7RNFyaUpFPJ8QbKzSlDSLKIZEzciOEZLetiIp1FwTX9FpWlKPhGJl5N57+wbhwpxYp8dy+E83g4T79gxjofdLQifyD+CbiCLhaztT63n5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6lwuZZM; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64074f01a6eso5083460a12.2
+        for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 07:50:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764431411; x=1765036211; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1BupSjR26JQmhX9EWadwRaAjzRphytaQZJgN6X+EDRk=;
+        b=G6lwuZZMOdb4HaRxilBBO4LROEBKcpFe+ToGCJgJJMxC2vbUJkJfYbBJQ6ZrvG38P7
+         LFQyOYqJ4kYapmguuNBG/Lo/4zlsvAzR2JLEPJ711jjIAfpv4g3r6qS/2UDuVt+P01tM
+         hy0YOBWnXXrp59C4UmRCS3nu58sWvq4i1rfYZcXIC/rQww9I4Up/LxUB+LWuNkjfB2Gh
+         gOhNE+5AOtNj8tuzFs8tMwAcwq5Pg47nvsAdqPlzMw/OaTFh3Yq9wW3Zln86d896IPUx
+         Z5MoFw1L+yoJhmYqs0pWTVm6cnQ57y9RXA5upAhLZILk8JjxtGuxOmXf+B6U7jdkKwi6
+         X9vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764431411; x=1765036211;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1BupSjR26JQmhX9EWadwRaAjzRphytaQZJgN6X+EDRk=;
+        b=ZOoq22KCS7z1z1JMJgryI9ydzPfWhOH5tJ7ZSs6yVjhmOn+pQaF8IlGrsjOTpCK/8Q
+         mBlYqyNhTg99T4ReS6HxNN2a9YRhHLK0AUruXcnUXRT2pyhOgzhjPhifutbostyn6bWX
+         /EbD+gCTqf0WNl97ijkimt30slk6BZqYZFeisB2vGpmUALYJxxZnYD89QxueX5x6Xveg
+         quRNJDbqj7Mv7glp5+yiRlpYEbD3ptNhigkzdmSo2yt5wDHoFSb+5J1aU0z6OJfi+aHI
+         VYN55pGg6Uq/EPmyKMhuH+p1bhppwFu0OWk5K64cNuMq2HIdVu4LIIN8dhde2VzydTur
+         HgfA==
+X-Gm-Message-State: AOJu0YwHDx+PDNgReQ8p5v+25sFvBFaPzzOSpGila0W+e3Qeh6is2PlJ
+	y7yMn3ZfAfw31UexxAqr8Sro5c14ZDZHInuTV95qqPByWtzv4C2HDxs8L7Wf4FoBfsnWJ8JHLad
+	EFFvyJmGlPSpw3/L1anwTZq3LdnkBUenk3TzFfKQ=
+X-Gm-Gg: ASbGncu3DY6lIXjhPU7Bbet+se0kxZ9DM5jp1NPlH7LNjPnTUtttUO+PAqXHYYdsofO
+	USNxpgn4t5DzyogDULGrG4GSJ90Ckx1ChQVzXXblSL/6r3TYFzwekCUA+dd+xFcSCjVwQh/MWEN
+	AIjuXIOXWfYN6x4jUg0Zf/iBluzhsu/fclhv00q0cPJLno0zn+Kisgrf2wrpMYjRQHlkrPFKN4o
+	L/vPD/wE8g+nVzCdLA1/aoAG3pNJh7SbK7zhqyibC5AGeIV33arWnv7wGaRtdpnbcH/05uJcM+M
+	LbOZ4IuhLgQ49LE3k3L6xlBi+SE=
+X-Google-Smtp-Source: AGHT+IHkcKF01Oibgm3Be3naPTIc0d+FKDIeyRjjsvsmBq6CYiC7dgsT04yj5zoRcLM05Ec1ITtS1xZsMz7Yn9eTBYY=
+X-Received: by 2002:a05:6402:35cf:b0:640:b736:6c2f with SMTP id
+ 4fb4d7f45d1cf-64555cd9f48mr29816256a12.18.1764431411304; Sat, 29 Nov 2025
+ 07:50:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AwX2CI0UG88J
-Date: Sat, 29 Nov 2025 10:40:18 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>,
- linux-nfs@vger.kernel.org
-Message-Id: <bde0d0ba-4e1d-420c-b8f5-71835ffcba16@app.fastmail.com>
-In-Reply-To: 
- <CA+1jF5pTHTh1o1S92s1JVF4Lvx5XT7+tccu=woDSbDUPRsubXA@mail.gmail.com>
-References: <20251119005119.5147-1-cel@kernel.org>
- <CA+1jF5pTHTh1o1S92s1JVF4Lvx5XT7+tccu=woDSbDUPRsubXA@mail.gmail.com>
+References: <20251119005119.5147-1-cel@kernel.org> <CA+1jF5pTHTh1o1S92s1JVF4Lvx5XT7+tccu=woDSbDUPRsubXA@mail.gmail.com>
+ <bde0d0ba-4e1d-420c-b8f5-71835ffcba16@app.fastmail.com>
+In-Reply-To: <bde0d0ba-4e1d-420c-b8f5-71835ffcba16@app.fastmail.com>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Sat, 29 Nov 2025 16:49:34 +0100
+X-Gm-Features: AWmQ_bmm4bDxoUNn-_rW-Ato-keL5EdHmF-38-aAgHOKMzllp7KApTGLwTHfUeQ
+Message-ID: <CA+1jF5qLyY0=oKmUMwH6-b8azfP1J7j4B3LeOcfc0kg-n9bOgw@mail.gmail.com>
 Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
-Content-Type: text/plain; charset=utf-8
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On Sat, Nov 29, 2025, at 2:57 AM, Aur=C3=A9lien Couderc wrote:
-> On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> w=
-rote:
->>
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> An NFSv4 client that sets an ACL with a named principal during file
->> creation retrieves the ACL afterwards, and finds that it is only a
->> default ACL (based on the mode bits) and not the ACL that was
->> requested during file creation. This violates RFC 8881 section
->> 6.4.1.3: "the ACL attribute is set as given".
->>
->> The issue occurs in nfsd_create_setattr(), which calls
->> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
->> However, nfsd_attrs_valid() checks only for iattr changes and
->> security labels, but not POSIX ACLs. When only an ACL is present,
->> the function returns false, nfsd_setattr() is skipped, and the
->> POSIX ACL is never applied to the inode.
->>
->> Subsequently, when the client retrieves the ACL, the server finds
->> no POSIX ACL on the inode and returns one generated from the file's
->> mode bits rather than returning the originally-specified ACL.
->>
->> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
->> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
->> Cc: Roland Mainz <roland.mainz@nrubsig.org>
->> X-Cc: stable@vger.kernel.org
->> Signed-off-by: Chuck Lever <cel@kernel.org>
+On Sat, Nov 29, 2025 at 4:40=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
 >
-> stable@vger.kernel.org is in CC. When will this patch land in the
-> Linux 6.6 and 5.10 STABLE branches?
+>
+>
+> On Sat, Nov 29, 2025, at 2:57 AM, Aur=C3=A9lien Couderc wrote:
+> > On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> wr=
+ote:
+> >>
+> >> From: Chuck Lever <chuck.lever@oracle.com>
+> >>
+> >> An NFSv4 client that sets an ACL with a named principal during file
+> >> creation retrieves the ACL afterwards, and finds that it is only a
+> >> default ACL (based on the mode bits) and not the ACL that was
+> >> requested during file creation. This violates RFC 8881 section
+> >> 6.4.1.3: "the ACL attribute is set as given".
+> >>
+> >> The issue occurs in nfsd_create_setattr(), which calls
+> >> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
+> >> However, nfsd_attrs_valid() checks only for iattr changes and
+> >> security labels, but not POSIX ACLs. When only an ACL is present,
+> >> the function returns false, nfsd_setattr() is skipped, and the
+> >> POSIX ACL is never applied to the inode.
+> >>
+> >> Subsequently, when the client retrieves the ACL, the server finds
+> >> no POSIX ACL on the inode and returns one generated from the file's
+> >> mode bits rather than returning the originally-specified ACL.
+> >>
+> >> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+> >> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
+> >> Cc: Roland Mainz <roland.mainz@nrubsig.org>
+> >> X-Cc: stable@vger.kernel.org
+> >> Signed-off-by: Chuck Lever <cel@kernel.org>
+> >
+> > stable@vger.kernel.org is in CC. When will this patch land in the
+> > Linux 6.6 and 5.10 STABLE branches?
+>
+> I can't give an exact date, but I expect it will appear in the LTS
+> kernels in about 6-7 weeks, unless someone finds an issue with it.
 
-I can't give an exact date, but I expect it will appear in the LTS
-kernels in about 6-7 weeks, unless someone finds an issue with it.
+Do you have a web link (URL) where the patch is in Linus's tree (Linux
+git HEAD)?
 
-
+Aur=C3=A9lien
 --=20
-Chuck Lever
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
