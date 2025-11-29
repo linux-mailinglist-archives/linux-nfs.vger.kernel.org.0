@@ -1,74 +1,76 @@
-Return-Path: <linux-nfs+bounces-16796-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16797-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 281C8C94334
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 17:16:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DC90C94485
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 17:54:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 004AF4E128D
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 16:16:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECC1F3A5028
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 16:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4991EB5E1;
-	Sat, 29 Nov 2025 16:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E2121DF963;
+	Sat, 29 Nov 2025 16:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvngJzck"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFP8aK42"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6741E5714
-	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 16:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE411D86FF
+	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 16:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764433010; cv=none; b=skVGngZifT9SgDWFA8GyX0lMQxPtwrQ9wCEExA6gjkea/VphQgGfkKkGqIcT1Zb4PMgdFN/vIwPlALHsrzk26OGKTHfWxnTEo8maDpu3c53Qt0giAS+/zisoUJJfXruYp4LstbVpFPT1i9agjY/TRwl5uuyu0yhJ3UuBF08zRSU=
+	t=1764435282; cv=none; b=AcRHuzr/nbHJxx8KAL+mecgudR7Q98+SKCXSlF65nlQpro4OlnlnED19cQRQkWkEC9g3q0zwLDLM52US5RXCakH/xun4btw1Kn1/C/0ARy+FOFGF5UaYBLlbuvXbUJkpr86EjPivNZKxNz4nbHzJX0t+FP4dI23xVdIiljS7M/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764433010; c=relaxed/simple;
-	bh=jv6nffjdYGCTaQCh/Ojyhj+fUzH0FcV9ti+mfShA7F4=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=nJQDjQdyRP2qqe1rgwP21ZbWoAkbY+LnjvSypk32iRKb1ouT9TZofwsSEgaE/neN4Ur/VETy/O5/iiVldj5GQU+igQ9pYCREnkRD4ysycVqEyqaKyNPBtubduOjmKASPTTRWisLfOaqlKtrIv4c29pA8gNnWAj9hYlIlql3t1jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvngJzck; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55545C113D0
-	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 16:16:47 +0000 (UTC)
+	s=arc-20240116; t=1764435282; c=relaxed/simple;
+	bh=ZgeEiGdUzNBEU6VP/to7bHqli/aJoNIV3NvbJb1pUnA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Zd6B7nZb6TQGGQnnGufNmVMjYjmvQjHEC3fWvlGQ8ku1O1RT/rQIPkSXX+U9yfYZwEgfHk05A8VMhLvt5EqYmzeHR2twNkCtkoqXvRTBjJ8QKn6rnx4UeoxFN+xV9xnf5jm5gihkG262mB5Af6ogVpbeLOLXfpkveP4O6djjNg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFP8aK42; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E92C116C6;
+	Sat, 29 Nov 2025 16:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764433007;
-	bh=jv6nffjdYGCTaQCh/Ojyhj+fUzH0FcV9ti+mfShA7F4=;
-	h=Date:From:To:In-Reply-To:References:Subject:From;
-	b=dvngJzckzETs9jLybdS9v4McvDQ0TSHuPKuWegl5bcA/6MuWIgEI0nd6H7BSRyKAB
-	 pwBitPNobtdzJyQGbx0lTbBfUsoBDpmlbmPGRSb2yMNLux9bhrYMszi5PA7EOrHIfK
-	 NxhwGV6nnIPqBKFggcncIiaMT+Uzco8ZksQwHzo4XvoOO3syfINkzM/SY0jtRfa/QF
-	 3ycycjaGuKUoL2phrpzhGtlUbEA2t2sTl5maJEuANvNU1XYphJcTuEz40X0QMUTc8H
-	 Fe2kAaqO3Fn8TWRAj8H6swQ6BxZGkdL+DBSvIVeeo6/6rSMU1A8tgp/wYQjL+CZLeg
-	 TJCQ6/eJyn+lA==
+	s=k20201202; t=1764435281;
+	bh=ZgeEiGdUzNBEU6VP/to7bHqli/aJoNIV3NvbJb1pUnA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=YFP8aK42xAsx615Nz8JmQtNw+T7hz09Eq3EL+vVrWI3YLjFkLRJLYYTGQpPupH1uy
+	 Cc2BT/m8TDF3jRm7wdL7vHaMlx9erphmP/DuQGuHHWmlsPAF2cgefKzMhTGqndMVnI
+	 wQoQozwGWt80enRfmyUFuvYjIOpbDQlvkMGOumydRDMQhnSfUtol7sGUypwZsRVmzc
+	 nZeMw14QgX/AuEKKXAyYrbcMJLpOTil6NKYSPyPNtUvgRt5IOR5bHudNcMlTt1Wboq
+	 x1KczAAcTSG4Lx7U9O7rXz2z19yCGQqKWjd4AtaIoIBDTewzX9tYN4Quxhl1BiSFII
+	 K6z2+NEyeYK5Q==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5E1C7F4007C;
-	Sat, 29 Nov 2025 11:16:46 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3CAF6F40080;
+	Sat, 29 Nov 2025 11:54:40 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 29 Nov 2025 11:16:46 -0500
-X-ME-Sender: <xms:bhwrabRABpwBWWN2TbEgmB_zegN-hnJBO9wwJr9EySXrdEMNQRcLsg>
-    <xme:bhwraXkYSqbDw_53e0Qud6Pal4siozN7ruUgoMbetiKZUyGa8rsba2cg47P27UbDn
-    Pxzt8-flC0Cdd56DCM842ynWmiyFXEkMIRM26IMd4a3VcDt4fSrNBQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvhedvleduucetufdoteggodetrf
+  by phl-compute-10.internal (MEProxy); Sat, 29 Nov 2025 11:54:40 -0500
+X-ME-Sender: <xms:UCUraSKKC8jVvTIj8EMhCx74SQQ-b7WWD10vITMqY59UsJK5_CwpEw>
+    <xme:UCUraU8w6zmVd5JxPapsVnh_bs0DbZCabRbbtYNktbPrtwZQfgL9ep_6nm0fXpTsn
+    YnN1DORHXyPF-x-YYlbX04ApmSxmAfvDhijMiRHBXpmWMIcolaTBkYg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvhedvleelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvffkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephefgvdetffdugfdvtdetieeiudffuefhleeuffdvgeduueehffffveejteeuhfdunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegruhhrvghlihgvnhdrtghouhguvghrtgdvtddtvdesghhmrghilhdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:bhwrad888nZWAH_Hm6vmi1FXVLVHCf1PCmPN-A7bRry0YZhud1Rn9g>
-    <xmx:bhwrafqNQu_To3L_8YOOJEgFZcGepNYlB7s9pZI5QbUbIQ-ZyNJ5Fg>
-    <xmx:bhwraSmNI0Mn3vSS3mKcBb8ooiepkDTm4zUERseVxfdccQjyjNLVPA>
-    <xmx:bhwraeLbWdS0GHBKsNmJKUyPl84U-wCbEHtt2yZnH58M6Z5vAhOoyg>
-    <xmx:bhwrafxdvLFwbwFWRqE12iuDbfOHLJcXkW5MVT-Hru6EpQwdtU43GiP3>
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkh
+    drlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheprghilhhiohhpsehsuhhs
+    vgdrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrd
+    horhhg
+X-ME-Proxy: <xmx:UCUraawKMrw73_8u27RrHqTsBV_iFQOvyPCkzSUKwDQfMUfrV9QbTQ>
+    <xmx:UCUraUEhle651tMqx2gJSClgu0n1FB1C0pDb5Sahl0xjAV48s4T1dQ>
+    <xmx:UCUraWzEjETcVyEcZs1P2iWuXrKn6eLXlznxSsBUrPRaiF0TawlGfQ>
+    <xmx:UCUradv3jrL6Bl9Y_fibdmsLBidw4dALY0x5CGASHnjComA8-0viIA>
+    <xmx:UCUrab1dXWmF7zhZwLHmrIPLpBCz6lNr47h5RY3R3VwG19ArMeSJJZD0>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2652A780054; Sat, 29 Nov 2025 11:16:46 -0500 (EST)
+	id E367D780054; Sat, 29 Nov 2025 11:54:39 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -76,71 +78,115 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AwX2CI0UG88J
-Date: Sat, 29 Nov 2025 11:16:04 -0500
+X-ThreadId: AieIdV2Ewi8g
+Date: Sat, 29 Nov 2025 11:54:15 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>,
- linux-nfs@vger.kernel.org
-Message-Id: <b7ec524c-91fa-4638-86f0-ab2e93029c2a@app.fastmail.com>
-In-Reply-To: 
- <CA+1jF5qLyY0=oKmUMwH6-b8azfP1J7j4B3LeOcfc0kg-n9bOgw@mail.gmail.com>
-References: <20251119005119.5147-1-cel@kernel.org>
- <CA+1jF5pTHTh1o1S92s1JVF4Lvx5XT7+tccu=woDSbDUPRsubXA@mail.gmail.com>
- <bde0d0ba-4e1d-420c-b8f5-71835ffcba16@app.fastmail.com>
- <CA+1jF5qLyY0=oKmUMwH6-b8azfP1J7j4B3LeOcfc0kg-n9bOgw@mail.gmail.com>
-Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+To: "Anthony Iliopoulos" <ailiop@suse.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Message-Id: <84abc156-0839-4ba4-935f-783b51274301@app.fastmail.com>
+In-Reply-To: <aSoSJcYIXDEi3kvJ@technoir>
+References: <20251127175753.134132-1-ailiop@suse.com>
+ <20251127175753.134132-2-ailiop@suse.com>
+ <388da717-eb5a-4497-99f7-6a6f34405b58@app.fastmail.com>
+ <aSoSJcYIXDEi3kvJ@technoir>
+Subject: Re: [PATCH 1/2] nfsd: never defer requests during idmap lookup
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
 
-On Sat, Nov 29, 2025, at 10:49 AM, Aur=C3=A9lien Couderc wrote:
-> On Sat, Nov 29, 2025 at 4:40=E2=80=AFPM Chuck Lever <cel@kernel.org> w=
-rote:
->>
->>
->>
->> On Sat, Nov 29, 2025, at 2:57 AM, Aur=C3=A9lien Couderc wrote:
->> > On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org=
-> wrote:
->> >>
->> >> From: Chuck Lever <chuck.lever@oracle.com>
->> >>
->> >> An NFSv4 client that sets an ACL with a named principal during file
->> >> creation retrieves the ACL afterwards, and finds that it is only a
->> >> default ACL (based on the mode bits) and not the ACL that was
->> >> requested during file creation. This violates RFC 8881 section
->> >> 6.4.1.3: "the ACL attribute is set as given".
->> >>
->> >> The issue occurs in nfsd_create_setattr(), which calls
->> >> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
->> >> However, nfsd_attrs_valid() checks only for iattr changes and
->> >> security labels, but not POSIX ACLs. When only an ACL is present,
->> >> the function returns false, nfsd_setattr() is skipped, and the
->> >> POSIX ACL is never applied to the inode.
->> >>
->> >> Subsequently, when the client retrieves the ACL, the server finds
->> >> no POSIX ACL on the inode and returns one generated from the file's
->> >> mode bits rather than returning the originally-specified ACL.
->> >>
->> >> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
->> >> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
->> >> Cc: Roland Mainz <roland.mainz@nrubsig.org>
->> >> X-Cc: stable@vger.kernel.org
->> >> Signed-off-by: Chuck Lever <cel@kernel.org>
->> >
->> > stable@vger.kernel.org is in CC. When will this patch land in the
->> > Linux 6.6 and 5.10 STABLE branches?
->>
->> I can't give an exact date, but I expect it will appear in the LTS
->> kernels in about 6-7 weeks, unless someone finds an issue with it.
+On Fri, Nov 28, 2025, at 4:20 PM, Anthony Iliopoulos wrote:
+> On Fri, Nov 28, 2025 at 11:09:52AM -0500, Chuck Lever wrote:
+>> 
+>> 
+>> On Thu, Nov 27, 2025, at 12:57 PM, Anthony Iliopoulos wrote:
+>> > During v4 request compound arg decoding, some ops (e.g. SETATTR) can
+>> > trigger idmap lookup upcalls. When those upcall responses get delayed
+>> > beyond the allowed time limit, cache_check() will mark the request for
+>> > deferral and cause it to be dropped.
+>> 
+>> The RFCs mandate that NFSv4 servers MUST NOT drop requests. What
+>> nfsd_dispatch() does in your case is return RPC_GARBAGE_ARGS to
+>> the client, which is distinct behavior from "dropping" a request.
 >
-> Do you have a web link (URL) where the patch is in Linus's tree (Linux
-> git HEAD)?
+> It actually does drop the request, as pc_decode doesn't fail when this
+> happens.
 
-It hasn't been merged yet, so it isn't in Linus' tree at the moment.
+Anthony, thanks for clarifying. So, pc_decode returns true, but
+it has set op->status to something other than nfs_ok.
 
 
---=20
+> For example in one instance of this issue which occurs while decoding a
+> SETATTR op that has FATTR4_WORD1_OWNER/GROUP set, nfsd4_decode_setattr
+> returns with status set to nfserr_badowner. This is set in op->status in
+> nfsd4_decode_compound, which will stop decoding further ops, but stil
+> returns true.
+>
+> During nfsd4_decode_setattr, nfsd_map_name_to_[ug]id will end up calling
+> cache_check in idmap_lookup. What that does is basically:
+>
+> - issue the upcall
+> - wait for completion with a short timeout
+> - attempt to defer the request if the upcall hasn't updated the cache entry
+>   in the meantime
+>
+> That happens by calling svc_defer which will set RQ_DROPME on the
+> rqstp->rq_flags, causing nfsd_dispatch to return through the
+> out_update_drop, and in turn there will be no response sent out by
+> svc_process.
+>
+>> > Fix this by making sure that the RQ_USEDEFERRAL flag is always clear during
+>> > nfs4svc_decode_compoundargs(), since no v4 request should ever be deferred.
+>> 
+>> Help me understand how the upcall failure during XDR decoding is
+>> handled later? What server response is returned? Is it possible
+>> for the proc function to execute anyway with incorrect uid and
+>> gid values?
+>
+> Without the next patch in this series, if the request isn't deferred it
+> will send back the NFS4ERR_BADOWNER status, which the nfs client will
+> map to -EINVAL and return to userspace.
+>
+> With the next patch, it will return NFS4ERR_DELAY so that the client
+> will keep retrying the request until the id mapping completes.
+
+I agree that nfserr_delay is a much better server response than
+nfserr_badowner when idmapping experiences a temporary failure.
+
+Clearing USEDEFERRAL during pc_decode seems a bit expedient,
+though. Probably this is a good initial fix because it can be
+backported cleanly. But it's a brittle fix IMHO and leaves a
+lot of technical debt.
+
+[ Review action: I'm thinking of taking this fix because it can
+be applied to LTS kernels -- I see that the idmapper calls have
+been in the pc_decode path since day zero. But please add more
+of this nice detail to the patch description. ]
+
+In the longer term, one thing that might improve matters is to
+move all idmapping calls out of the pc_decode path. That would
+include both nfsd4_decode_fattr4 and nfsd4_decode_nfsace4.
+
+
+> In either case, even when the request is being dropped, the proc
+> function is never executed. While nfsd_dispatch will proceed to call the
+> pc_func, nfsd4_proc_compound checks for the op->status which was set in
+> the decoding stage, and jumps to nfsd4_encode_operation without calling
+> the op_func.
+
+OK, but how does that improve the situation with the in-use
+session slot? Are there other cases where COMPOUND decoding
+sets a non-nfs_ok status and leaves an in-use slot?
+
+This is what worries me in the longer run.
+
+
+> In the particular instance of the SETATTR op, the encoder
+> will encode an empty attrsset bitmap to indicate the inability to set
+> any attributes.
+
+
+-- 
 Chuck Lever
 
