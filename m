@@ -1,173 +1,120 @@
-Return-Path: <linux-nfs+bounces-16791-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16792-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A395EC93906
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 08:56:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 666BBC93909
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 08:57:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 075D7347233
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 07:56:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23EEB3A7C4D
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Nov 2025 07:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EBC32144CF;
-	Sat, 29 Nov 2025 07:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43AF2144CF;
+	Sat, 29 Nov 2025 07:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlpGW/uE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHEr8SXU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2991391
-	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 07:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DE01391
+	for <linux-nfs@vger.kernel.org>; Sat, 29 Nov 2025 07:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764403008; cv=none; b=igL+oeDqPXhkySmw9gOFf1RAF3+5/ipkaufeXAHFX8A/g5DeJESE6WZCvURoQ55PGHDixtSKdebcH32QS7mrXAdLzSI8oA5M/NMvcR78BFuqgodeSdZDRjPH15V0Tf6z9l3LI19BWkCfW4yarWoanbLueTkm3lVz+W89ZhDKY2Q=
+	t=1764403042; cv=none; b=K7HfPdZrUGO6sQV2zK21fCL34Imy+jTpkXDESDOiO6pTje/GjgrVAaXDIONZ9+fRomuN4M9Yy7EIkdIyYftY09ApMqEMz3PHTUuy726jVM2LJzBjuW5odE2L/xZQdOgO56u7+nTJt0ftHFO6pDPdQPnQa56jdcTE61GjrdCBVQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764403008; c=relaxed/simple;
-	bh=nS75EqJqjLTfmBREdDj+8KZdBxUq17m/xehJOur+DTs=;
+	s=arc-20240116; t=1764403042; c=relaxed/simple;
+	bh=Xu/bdNRo9NbEnx+4TDdsh8mhr8caTMrrSNZaxKtcY84=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=F9dOGd9WNAytKWDUHE27Yn1hly3qVAg0vZIAu1n/YclzP6kMUsPHWBAuoGVyULLu2uZoH2np5jgjP+LiFT3ECVmuN4/heQ6QVd5hUV/CcD0pug0po6kkPI0olPPvxb2wtP+Ewu3KrS7owdrXxnfh1L42PNhCEqBBxN6G/ehrBHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WlpGW/uE; arc=none smtp.client-ip=209.85.218.44
+	 To:Content-Type; b=Vjhn8MBLlj8otz2JgTAfEAAtNRKw3EzKEo7v++sf9Z9MeLtym6LFA+xFhfSRykM2pt3+P366B34KRGGLL5FoOOorxEtFsqG5Zd9LlLpW6x93SiRTApwaFJIWmQ2YL0Acr8LC1SAm7J/ZeeoEDg2lp2VapsCVUBAwo6roIHTGy4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHEr8SXU; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b73a9592fb8so674858566b.1
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 23:56:46 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64320b9bb4bso5000173a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Nov 2025 23:57:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764403005; x=1765007805; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764403039; x=1765007839; darn=vger.kernel.org;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nS75EqJqjLTfmBREdDj+8KZdBxUq17m/xehJOur+DTs=;
-        b=WlpGW/uEexA3qWS3NauwbdbVK0ORUg8cIg2FPdOtqqqOT1olqbiV7sgxX7CJazUyr7
-         6Bc4YPSvq8hAfAV0xoeTo7mp8NFxrBtCdBoOsNPrOeByfgef09Si5eVYp3T0DKodczhO
-         rE7d8ZQNAxPqkEUQ4fxXz05/W6q/D7sVgLCA9v1z21FPC1cabi6GSGpRgMob3J1ZhjYO
-         HCrO3o0opVEhyyVPVjlmyE0yhvKkUfRdQ3ZJLD6B3OvG2HYgslMHRG1q2TyaGJPA4e6v
-         pxOPTvgz97pTjTMP2Cnx0OTstFZaAJoLygr2Y4HqGxorW753gr1tLXh8raReg5n2v80d
-         gE4g==
+        bh=Xu/bdNRo9NbEnx+4TDdsh8mhr8caTMrrSNZaxKtcY84=;
+        b=nHEr8SXU41sn7a59ye1sGzWaOab3+NAao5AwvbxFSgL9g7R98v7DaX22plr72OsZue
+         /hzZLqVpFK0o0TgQHrIkNRGkDIonTzrliQer6dkOtzGCfyZAUNtJtlGLC2TDqf3KNXlO
+         K06mn4c8xhcL2sSo3d6NrSSswp1sInECmynG11MHXHeH6lbYmQcBJntmx7J2TJe6iAa0
+         +M5NKBpsVGNbyBU1OeuEpO1uhSXV3liwYAuiM8vOwieFokDqWMXfFTBl7d1eCRb0WhMn
+         1diQgyWf4k8/E1hZSROWbhHt+viWuz6j635QT+pcNQcmAjx9GqyxPIhuM/zO2MSfWKUX
+         rZNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764403005; x=1765007805;
+        d=1e100.net; s=20230601; t=1764403039; x=1765007839;
         h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nS75EqJqjLTfmBREdDj+8KZdBxUq17m/xehJOur+DTs=;
-        b=k8YCcvY5mz+Qs8PHPLeRzePbVMAaVbfP4u2aIKB4tvDva+ILLzY0UFF0hWp2DONgoR
-         97AFNlc4UMWnUAlxHKj9sQDn4GN7e5CF59orpjxac2dV6cDsiS3+/r45JAdCLlQoYU4d
-         VEC/bPNWUq+C86xVsEs88PrCzWIEGj4yT8pbDncseCox4zPvHwhICU0bb71TcATQhKCI
-         zYj7nQ5NeEDz+rTCKhaSoHOj8fYMPeRtou7+qCz+M9J+NX0TD9uHcJRS+Y+UFMV5zMbQ
-         yUcISerHnhUwX7c70g8/qRc+RDUmOhxDfQKS6ZgjgO4BFXZoeFuiLQ1NrRffkteviQkY
-         q9tQ==
-X-Gm-Message-State: AOJu0YwmtoYU10WudEbL7CeXQ7sDw8GadT0Z/Y2c5l9zFFBT8uns/bff
-	69d/asEKMyjNRWCAQwr41/xCeZihT8JgDhTKeUl6pwI8npoxgbElbH2bXWVgmDfXZoxjRHES39L
-	8AdLEgP05GFkezT78sgrhv0SVMBFFfC+BnJsW
-X-Gm-Gg: ASbGncuYUOOg2s7uBVY1jdXk0isq89DGS0ZpTzuT6lS5x4x5SFdE9A4daa//ym0wy54
-	LhdjTOHT3Y98g6Y8rFcG625tH5TgSFPU+idpQWSMJQyPBCYARyBEmCcYXMykpDb38HjUVMK+zcJ
-	FXdQag41FDp+yBO8LYrWguE+m0mkxSZcKDUmQ7zBPvhITs2g1aks/x4UYuoWaglGft1AQ0m8Upb
-	IIS1tnGuZjuOH87EBkYSl/Z8tmHZsDaC9r1nEB1OTKPVtXsZzz0MSprv+VXh5p6srk7WdySBMlz
-	Ul03DfZreoaASCB3quI2mezjlA==
-X-Google-Smtp-Source: AGHT+IF4jKn4MQjEhMtCvVVrparVg9fN4wZqaqt0G+6HowoTFKj7KqqllNEJaNiORndR5prsmAXMdy9bV0adaIf1Wqk=
-X-Received: by 2002:a17:907:3d4f:b0:b77:1427:bb5e with SMTP id
- a640c23a62f3a-b771427bbc2mr438107666b.1.1764403004573; Fri, 28 Nov 2025
- 23:56:44 -0800 (PST)
+        bh=Xu/bdNRo9NbEnx+4TDdsh8mhr8caTMrrSNZaxKtcY84=;
+        b=TJinNcQbaI5xGHFiO29eUf31YPpeo6ZrWa9QG8wr1pNp1Jc+x2cY0vD3QaZwJaYjvR
+         24y1hwwTBUHsSHIOOqxIKvdP55jrAypu4APJgoh7u/QAsagVpJ/8hLxiOYdxIZPd9606
+         d2qWDECuQ8aUKfDb4dzL5gFHJfURdHaGYGA2Hzre1/kJP8V7V0mS90e8tcvp1Q0pwrSt
+         1HLZdBvB16X2/AutGU18RsVGAyfMAujfLrs5el25PvB3ULPHS5WKXlVDQwD4PdHoDH5g
+         ouVaFOrN0UaD2XDGsJYi4C1Noh7hZa46bdVAdV1TR7wLCii0crPfXihXILaBshRJa891
+         wP0Q==
+X-Gm-Message-State: AOJu0YxCyq6h5whaSc903cXXrnMQFxluQPCeswtx+nV9jkeY0Bb9uZAx
+	hc50nwZxsbIXGXBh2XlXapnv60Y42/3/FVWU8tBk90NgvZ3qiYVM9UWXBqjM/ibML4b1QDeW4Ur
+	A6aJgyug7luDuz844CYPosrUKSj2krXx3w1Gz
+X-Gm-Gg: ASbGncvS32cgiazTlDc+2CUy5gX3J5TtzB9FzJOUm2I/LSLdtB6UwhvyJTITnHyjR0i
+	JI5MEVA7EA/RtEMbCWC3tx6+IUR4fevYATbJjoIz6ODW02nnN92U69epNPXs9Qr8G7W8o59IewU
+	KxC+gGC+D6kYtnqhdBr/eQMV2C1TrbaWdgS3ak9I3Abng3x0sEqk789ZRr6egoj3zIzDZ4XvkyO
+	j1DMlcPORFhGp2U8fwcu+wAcTh2xGa+TZP8CvOHYZSeqcU7/uPjwdamZzohWBLnai1A/oogs+6S
+	HP+OMHbHq2x0a2guHnQb3lkDxA==
+X-Google-Smtp-Source: AGHT+IFeLlhvgtvWNd+9KKHaB7JrecvLToSOT/Wwbsxj2707GRE7PmVosRCDseX71/wPzi73QtvlRoYTVVTt49ttzkc=
+X-Received: by 2002:a05:6402:23ca:b0:636:2699:3812 with SMTP id
+ 4fb4d7f45d1cf-64554817594mr26105831a12.0.1764403039131; Fri, 28 Nov 2025
+ 23:57:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251119005119.5147-1-cel@kernel.org> <CA+1jF5pF+K3s9N4p5mc4cxyzg=r5ow5R_T31Eab=DOW5AjBG-g@mail.gmail.com>
- <aSMsb350kJgqysbz@morisot.1015granger.net> <CA+1jF5o5tiYfvqPKnf7_teMNOnOwig38epUywfsFLXsXVm=NmQ@mail.gmail.com>
- <49f3ae79-bbe1-470c-a247-68c942fc2f7d@app.fastmail.com>
-In-Reply-To: <49f3ae79-bbe1-470c-a247-68c942fc2f7d@app.fastmail.com>
+References: <20251119005119.5147-1-cel@kernel.org>
+In-Reply-To: <20251119005119.5147-1-cel@kernel.org>
 From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
-Date: Sat, 29 Nov 2025 08:55:00 +0100
-X-Gm-Features: AWmQ_bks7cvOY9mX8G0MKWDSKnxGhYKvq4ESH7OrBI-AsQtvWpo7NhNXSDwMUXI
-Message-ID: <CA+1jF5pSBNUK7GBMcRqzfOB=NfWuVOQs8bxWsTV4_qxb18_3mA@mail.gmail.com>
+Date: Sat, 29 Nov 2025 08:57:00 +0100
+X-Gm-Features: AWmQ_bmk469P8rnzmu_hr0Q9K3glg8l6CbAL9QmOqBhQI-3UazPm9oWf9BSqmQo
+Message-ID: <CA+1jF5pTHTh1o1S92s1JVF4Lvx5XT7+tccu=woDSbDUPRsubXA@mail.gmail.com>
 Subject: Re: [PATCH v1] NFSD: NFSv4 file creation neglects setting ACL
 To: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 28, 2025 at 4:44=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
 >
+> From: Chuck Lever <chuck.lever@oracle.com>
 >
+> An NFSv4 client that sets an ACL with a named principal during file
+> creation retrieves the ACL afterwards, and finds that it is only a
+> default ACL (based on the mode bits) and not the ACL that was
+> requested during file creation. This violates RFC 8881 section
+> 6.4.1.3: "the ACL attribute is set as given".
 >
-> On Thu, Nov 27, 2025, at 4:12 PM, Aur=C3=A9lien Couderc wrote:
-> > On Sun, Nov 23, 2025 at 4:46=E2=80=AFPM Chuck Lever <cel@kernel.org> wr=
-ote:
-> >>
-> >> On Sun, Nov 23, 2025 at 03:54:48PM +0100, Aur=C3=A9lien Couderc wrote:
-> >> > On Wed, Nov 19, 2025 at 1:51=E2=80=AFAM Chuck Lever <cel@kernel.org>=
- wrote:
-> >> > >
-> >> > > From: Chuck Lever <chuck.lever@oracle.com>
-> >> > >
-> >> > > An NFSv4 client that sets an ACL with a named principal during fil=
-e
-> >> > > creation retrieves the ACL afterwards, and finds that it is only a
-> >> > > default ACL (based on the mode bits) and not the ACL that was
-> >> > > requested during file creation. This violates RFC 8881 section
-> >> > > 6.4.1.3: "the ACL attribute is set as given".
-> >> > >
-> >> > > The issue occurs in nfsd_create_setattr(), which calls
-> >> > > nfsd_attrs_valid() to determine whether to call nfsd_setattr().
-> >> > > However, nfsd_attrs_valid() checks only for iattr changes and
-> >> > > security labels, but not POSIX ACLs. When only an ACL is present,
-> >> > > the function returns false, nfsd_setattr() is skipped, and the
-> >> > > POSIX ACL is never applied to the inode.
-> >> > >
-> >> > > Subsequently, when the client retrieves the ACL, the server finds
-> >> > > no POSIX ACL on the inode and returns one generated from the file'=
-s
-> >> > > mode bits rather than returning the originally-specified ACL.
-> >> > >
-> >> > > Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com=
+> The issue occurs in nfsd_create_setattr(), which calls
+> nfsd_attrs_valid() to determine whether to call nfsd_setattr().
+> However, nfsd_attrs_valid() checks only for iattr changes and
+> security labels, but not POSIX ACLs. When only an ACL is present,
+> the function returns false, nfsd_setattr() is skipped, and the
+> POSIX ACL is never applied to the inode.
 >
-> >> > > Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
-> >> > > Cc: Roland Mainz <roland.mainz@nrubsig.org>
-> >> > > X-Cc: stable@vger.kernel.org
-> >> > > Signed-off-by: Chuck Lever <cel@kernel.org>
-> >> >
-> >> > As said the patch works, but are there any tests in the Linux NFS
-> >> > testsuite which cover ACLs with multiple users and groups, at OPEN a=
-nd
-> >> > SETATTR time?
-> >>
-> >> I developed several new pynfs [1] tests while troubleshooting this
-> >> issue. I'll post them soon.
-> >
-> > Thank you
-> >
-> > My point however was if pynfs can take a list of users@domain,
-> > groups@domain as input parameters, which are then used for
-> > FATTR4_OWNER, FATTR4_OWNER_GROUP, FATTR4_ACL and FATTR4_DACL tests.
+> Subsequently, when the client retrieves the ACL, the server finds
+> no POSIX ACL on the inode and returns one generated from the file's
+> mode bits rather than returning the originally-specified ACL.
 >
-> pynfs tests are not parametrized, but we can choose specific
-> combinations of arguments to exercise, and then add a new test
-> for each of those cases.
+> Reported-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+> Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
+> Cc: Roland Mainz <roland.mainz@nrubsig.org>
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: Chuck Lever <cel@kernel.org>
 
-OK. But this is a SEVERE and gaping black hole in the test coverage,
-because it prevents pynfs from properly testing FATTR4_OWNER,
-FATTR4_OWNER_GROUP, FATTR4_ACL and FATTR4_DACL.
-
-I think there should be parameters like that, and defaults such as
-pynfsuser1, pynfsuser2, pynfsgroup1 and pynfsgroup2
-
->
->
-> > Some of the ACL issues only happen for specific ACL combinations, thus
-> > such two lists with parameter input would be useful.
->
-> I have additional pynfs tests which aren't quite ready yet that
-> exercise the relationship between OWNER@, GROUP@, and named
-> principals.
->
-> There are some complications with the NFSv4 <-> POSIX translation
-> adding a DENY ACE when it doesn't recognize that a named principal
-> is the same as OWNER@ or GROUP@. In that specific case a user can
-> set an ACL that locks the file owner out of the file unintentionally.
-
-Shouldn't OWNER@, GROUP@ priorise going into the uid and gid fields?
+stable@vger.kernel.org is in CC. When will this patch land in the
+Linux 6.6 and 5.10 STABLE branches?
 
 Aur=C3=A9lien
 --=20
