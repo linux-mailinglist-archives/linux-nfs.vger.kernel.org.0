@@ -1,313 +1,170 @@
-Return-Path: <linux-nfs+bounces-16818-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16819-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C6FAC97F8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 16:09:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3866DC97FB6
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 16:12:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8DD53A47C6
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 15:09:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB1443A3994
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 15:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2634320CB3;
-	Mon,  1 Dec 2025 15:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE943164DF;
+	Mon,  1 Dec 2025 15:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwZBKqYR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4EBiGbs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A32320A0C;
-	Mon,  1 Dec 2025 15:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E25313E0C
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Dec 2025 15:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764601729; cv=none; b=hN/CxIzJ3hw/CMuGiYFN/SDyRJosIbzdVYn1zovpZ2s11aRqCTfBupcqZ93XpvDfXZFMY1v/yIJtouz8M31yVmLGH+wirSKPLqPk9mLtIaQjSF7tKhfPgr+xLzjswiyYFc73Ka81nRHHkHAcTog5VSsiLfUtPPAKzu1M6fvSDE4=
+	t=1764601885; cv=none; b=slMqimIqvzNMvsbXBE3uskZ8+OUPTxtGOKH9ubd+4LSYygwXTXKdNqdmmFl6hvK0zksOfMPW1R4J5PdijSb/z5vWCcE2JsvoZ49QovIiCpq2EBnBdwD8ih7XhxG84kkszcfA6Nhlzc89Jku7KxrXTEjtTcn54kXkuGJbavNwEV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764601729; c=relaxed/simple;
-	bh=PMj33NdudVvwiBGVA7gH+K9mVC7vigOAoji4v5w2vQw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cwdyXqMGd5Jx8H2TztT7S3FOiCq7sNhgTmJgzRHwLnWT2ywrT9nkx2RiPTPekRuRgHjZbDQ5uesVEW6vslvOxyygSnz0lcaS2r2tCeb/gtFjwxIvPYoe/HuGsWggwbELnpDorUiGeEiex10HG7opxYB77RESASv+O/ct/l00dO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwZBKqYR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD0AC16AAE;
-	Mon,  1 Dec 2025 15:08:47 +0000 (UTC)
+	s=arc-20240116; t=1764601885; c=relaxed/simple;
+	bh=CQjhTj/QubEllB3g+Hbf2r8jG0zen4l3G1e8YpFoGnE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FHiVihnXMJCtM5w1paSlS0oz13IPKDKRyAkduGSWx9Pf/VPeJUWYKPfnOlAGPlenIWhPOQ2mi9V5Vp+p47o6+jj/bYtqDnCXRLtUJu9KoVP0kWcPkm2gOErJtjp+Q8XlOQKDy3AwbwIcvSoN4N/8E1accwShI0NbdiXsJLw7LA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4EBiGbs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A39AC116C6;
+	Mon,  1 Dec 2025 15:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764601729;
-	bh=PMj33NdudVvwiBGVA7gH+K9mVC7vigOAoji4v5w2vQw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lwZBKqYRowWgp6D0wrh4REA7mBMv7LbPD5pmtvEzzkKHvbavqcHtC0dFepNN2YvaX
-	 w/KLZHo4SpVCI3WAduGoGwc0KmbeIwY98ozPI6KsK5tmCnFKjTz9epRgbuM/unM+Qm
-	 zPwTSZFy/mEqcuBuI7+aBY0WJLErMPdnKRQOZGCd3oQX1NacxcmXb9NBWdzAugfk5H
-	 DXcM3nH+BQ00+my5CyiOYrfgcQiW1yTVZB5DMnY5aD3NrKFaFw+Y/eKZUt/uXMRE+b
-	 U6KGqvxze1NoTu+ryxwZMc76/GuA2xcrdwmE/Kt5zDd0E4JSEflRhlsMKDtCWO2YZW
-	 JN2b5nnEPXATA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 01 Dec 2025 10:08:20 -0500
-Subject: [PATCH 2/2] filelock: allow lease_managers to dictate what
- qualifies as a conflict
+	s=k20201202; t=1764601884;
+	bh=CQjhTj/QubEllB3g+Hbf2r8jG0zen4l3G1e8YpFoGnE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=X4EBiGbs8z0Rj86ZhAnB2c4p2M+Vk7xCd9Ed9kvIW2acaZdd2J7mJhH+TnqcLwx45
+	 tD5ZEF6tIC8YNWPsPilEx8la4vpzaltgybu+/QAn01S+ZKyN58IWLFjCXLIYDtCU+r
+	 AXADeMpYX8dfzyFojnNtWYpuWRhUqCdAMxfSBqrq0jbNxB7/GX7C6msMY3PIGwoUJq
+	 46Yuk9y0Eq2XcSx9BzMRS9WQ1PMdgJs6hzSGfXXyRWxVd8c7IO537DZ79+qtEHiUjh
+	 ynGNapdjHxWQBMRUWKW+6UPztQcF/cezSldia07YNZdFU54MCQpMYezpLm/vQUXW8x
+	 yC+2TE6cl2X+A==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 73C3AF4006E;
+	Mon,  1 Dec 2025 10:11:23 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 01 Dec 2025 10:11:23 -0500
+X-ME-Sender: <xms:G7AtadovReR_7FvTxW81ocUQgGf8avpaL5AgNRc7K-sROM_2cBbOSQ>
+    <xme:G7AtaacP-l5ZEQK84zmL7IJeogTiUzZtlXiJ9JvLiDJRN1BtJQ5nzmDI613aGfsuG
+    HiPkXd02gL7G2pzOrghmEZX7W0N8fIUOTpEGoDs_4SfW1nBqmnq_A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvheektdefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhgeejgfegvdfgkeeugfejheefkeeghfdtleegheejheekgfekjeeluddvveekuden
+    ucffohhmrghinheplhhinhhugidqnhhfshdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhdomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleehledqfedvleekgeegvdefqd
+    gtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghp
+    thhtohepfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhitghkrdhmrggtkh
+    hlvghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshgvsggrshhtihgrnhdrnhdrfhgv
+    lhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:G7AtaeGES2vNTcbCoPLYREoMfhdwMJYS_QEGH0fqCOihYYEZLQB6Ew>
+    <xmx:G7AtaXE9wA4T6ilFaiF4HteOMEM91XWArsChlVHFuGTr2E_cNkBfPg>
+    <xmx:G7AtabMqmwtnssENBceGqJGqA9wSMe0P3kC59ZDRW8yEsdKLWqy_5A>
+    <xmx:G7AtaWGBA_uZLZVw1OjZ_Pk7i1EyAZ5miQECmyPLNIlMrNxG6YvydQ>
+    <xmx:G7AtaSNG-tdfr8g5_d3sI4NFdMqPxnTxJLkK8V_MNoKe4uI-zzaUfAGJ>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 34956780054; Mon,  1 Dec 2025 10:11:23 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251201-dir-deleg-ro-v1-2-2e32cf2df9b7@kernel.org>
-References: <20251201-dir-deleg-ro-v1-0-2e32cf2df9b7@kernel.org>
-In-Reply-To: <20251201-dir-deleg-ro-v1-0-2e32cf2df9b7@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Jonathan Corbet <corbet@lwn.net>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7914; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=PMj33NdudVvwiBGVA7gH+K9mVC7vigOAoji4v5w2vQw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpLa984ZHsy+VvZEGXl1gqV2N6gPZscwKM1l8pX
- s/zWcksSgqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaS2vfAAKCRAADmhBGVaC
- FTuHD/9tDyXZGWOvfU15vvMSKlhAfQ73VqpnQ5iJbR7fCnSZeTFlGVaqU90LW+jaBFfEFUoyFvm
- YAV1ObJG9WTtx0r81wbIG2rp+TAF6f/Gj5g6BA2tU2If+JLkUAKPfzoExf1B/oIiRCnDkw+vb/h
- rl+XIvfrXwsPjEfXCLzF83pXR0pDHK0s4jG1ufL7UveumAnHwLV6fKhjX6vM0fFAKSgTQKEnbiB
- 7vGRvYaRZCM89ZCc6nZ7tRQifAMbYXuY7lfun9SAgO05WqViJNKNNWTQSx45ExoKjh0W94gxV/l
- QB4C5rOIN8BleMKUUWi4jhzmg1kaV3fO63w+HMpvcqf4R87ZXJzi+PXxhyGyL5X+WnMeO8JRjLe
- SHHDzYqa7ekiQ4jmGKcMVqTO80u8v0nmVaktyJVov2P5f6OZfuQE+3HZzPy1qGyKyCMjEzQpSlg
- dSy6c8/yYM0AcO14+Pv3YWTgmFZuY06FYwvnSP26NSMddKSL7Q4akT+mkK4JSs6HgRwt9s7NEew
- 1Sa+p26rn+E+06W26YqWJ4TiIr4IiaWPtPWVo1qH6g5t2pAZWqiQFeRcZNnQCMcO7sR2H10cCwA
- GrINhRWkXNBjGW5xH9aS7hKjnuzYMYJ7JcYYUoPoJR4aZ2rMU93B1dAO2zcAgW6/MUyXnhPErLG
- 5YyYICWHoT4DsvQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-ThreadId: A9oaoCPaRE3R
+Date: Mon, 01 Dec 2025 10:11:00 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Rick Macklem" <rick.macklem@gmail.com>
+Cc: "Sebastian Feld" <sebastian.n.feld@gmail.com>,
+ linux-nfs <linux-nfs@vger.kernel.org>
+Message-Id: <eee05a02-8f4a-4a41-8af1-c40900e4aed8@app.fastmail.com>
+In-Reply-To: 
+ <CAM5tNy6jjeoN0H_JcD=8Ci4X8hU=4oyn3ZxRJrhpxJgApZUCcQ@mail.gmail.com>
+References: <tencent_780E66F24A209F467917744D@qq.com>
+ <5e1b3d07-fd80-47d0-bbf8-726d1f01ba54@app.fastmail.com>
+ <CAHnbEGLi--K9R_JHhROR4YfY4gbD3NmyO3MwX2xrdX8fxxAAdA@mail.gmail.com>
+ <d0bcf5cd-bfa2-4f91-b1ea-1159639303c7@app.fastmail.com>
+ <CAM5tNy6jjeoN0H_JcD=8Ci4X8hU=4oyn3ZxRJrhpxJgApZUCcQ@mail.gmail.com>
+Subject: Re: LAYOUT4_NFSV4_1_FILES supported? Re: Can the PNFS blocklayout of the Linux
+ nfsd server be used in a production environment?
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Requesting a delegation on a file from the userland fcntl() interface
-currently succeeds when there are conflicting opens present.
 
-This is because the lease handling code ignores conflicting opens for
-FL_LAYOUT and FL_DELEG leases. This was a hack put in place long ago,
-because nfsd already checks for conflicts in its own way. The kernel
-needs to perform this check for userland delegations the same way it is
-done for leases, however.
 
-Make this dependent on the lease_manager by adding a new
-->lm_open_conflict() lease_manager operation and have
-generic_add_lease() call that instead of check_conflicting_open().
-Morph check_conflicting_open() into a ->lm_open_conflict() op that is
-only called for userland leases/delegations. Set the
-->lm_open_conflict() operations for nfsd to trivial functions that
-always return 0.
+On Fri, Nov 28, 2025, at 6:16 PM, Rick Macklem wrote:
+> On Fri, Nov 28, 2025 at 8:24=E2=80=AFAM Chuck Lever <cel@kernel.org> w=
+rote:
+>>
+>>
+>>
+>> On Fri, Nov 28, 2025, at 3:57 AM, Sebastian Feld wrote:
+>> > On Thu, Nov 27, 2025 at 5:41=E2=80=AFPM Chuck Lever <cel@kernel.org=
+> wrote:
+>> >>
+>> >> On Wed, Nov 26, 2025, at 9:14 PM, Zhou Jifeng wrote:
+>> >> > Hello everyone, I learned through ChatGPT that the PNFS blocklay=
+out of Linux
+>> >> > nfsd cannot be used for production environment deployment. Howev=
+er, I saw
+>> >> > a technical sharing conference video on YouTube titled "SNIA SDC=
+ 2024 - The
+>> >> > Linux NFS Server in 2024" where it was mentioned that the PNFS b=
+locklayout
+>> >> > of nfsd has been fully maintained, which is contrary to the resu=
+lt given by
+>> >> > ChatGPT.
+>> >> >
+>> >> > My question is: Can the PNFS blocklayout of nfsd be used for
+>> >> > production environment deployment? If yes, from which kernel ver=
+sion can it
+>> >> > be used in the production environment?
+>> >>
+>> >> Responding as the presenter of the SNIA SDC talk:
+>> >>
+>> >> There's a difference between "maintained" and "can be deployed in a
+>> >> production environment". "Maintained" means there are developers
+>> >> who are active and can help with bugs and new features. "Production
+>> >> ready" means you can trust it with significant workloads.
+>> >>
+>> >> The pNFS block layout type has several subtypes. Pure block, iSCSI,
+>> >> SCSI, and NVMe.
+>> >
+>> > What about the LAYOUT4_NFSV4_1_FILES layout type? Is that still sup=
+ported?
+>>
+>> Above, we're talking about the Linux NFS server... IIRC NFSD never
+>> supported the NFSv4.1 file layout type. It has a simple experimental
+>> implementation of the flexfile layout type (the MDS and DS are the
+>> same server).
+> Once upon a time Benny Halevy had a single server (in the Linux
+> kernel) that did file layout. (I remember because that is what I used
+> for testing the FreeBSD client side.) It even knew how to do striping.
+>
+> However, it was a "single server" (MDS and DS in the same Linux kernel=
+ nfsd),
+> so it was only useful for testing purposes.
+>
+> I have no idea if it is still around somewhere, but unless someone wan=
+ts
+> to do a lot of work on it, it is definitely not useful for production =
+sites.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- Documentation/filesystems/locking.rst |  1 +
- fs/locks.c                            | 90 ++++++++++++++++-------------------
- fs/nfsd/nfs4layouts.c                 | 11 ++++-
- fs/nfsd/nfs4state.c                   |  7 +++
- include/linux/filelock.h              |  1 +
- 5 files changed, 60 insertions(+), 50 deletions(-)
+I am going to guess that was Dan Muntz's prototype. AFAIK that was
+never merged upstream, but remains available in archive form at
+git.linux-nfs.org.
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 77704fde98457423beae7ff00525a7383e37132b..29d453a2201bcafa03b26b706e4c68eaf5683829 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -416,6 +416,7 @@ lm_change		yes		no			no
- lm_breaker_owns_lease:	yes     	no			no
- lm_lock_expirable	yes		no			no
- lm_expire_lock		no		no			yes
-+lm_open_conflict        yes             no                      no
- ======================	=============	=================	=========
- 
- buffer_head
-diff --git a/fs/locks.c b/fs/locks.c
-index e974f8e180fe48682a271af4f143e6bc8e9c4d3b..a58c51c2cdd0cc4496538ed54d063cd523264128 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -585,10 +585,50 @@ lease_setup(struct file_lease *fl, void **priv)
- 	__f_setown(filp, task_pid(current), PIDTYPE_TGID, 0);
- }
- 
-+/**
-+ * lease_open_conflict - see if the given file points to an inode that has
-+ *			 an existing open that would conflict with the
-+ *			 desired lease.
-+ * @filp:	file to check
-+ * @arg:	type of lease that we're trying to acquire
-+ *
-+ * Check to see if there's an existing open fd on this file that would
-+ * conflict with the lease we're trying to set.
-+ */
-+static int
-+lease_open_conflict(struct file *filp, const int arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	int self_wcount = 0, self_rcount = 0;
-+
-+	if (arg == F_RDLCK)
-+		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-+	else if (arg != F_WRLCK)
-+		return 0;
-+
-+	/*
-+	 * Make sure that only read/write count is from lease requestor.
-+	 * Note that this will result in denying write leases when i_writecount
-+	 * is negative, which is what we want.  (We shouldn't grant write leases
-+	 * on files open for execution.)
-+	 */
-+	if (filp->f_mode & FMODE_WRITE)
-+		self_wcount = 1;
-+	else if (filp->f_mode & FMODE_READ)
-+		self_rcount = 1;
-+
-+	if (atomic_read(&inode->i_writecount) != self_wcount ||
-+	    atomic_read(&inode->i_readcount) != self_rcount)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
- static const struct lease_manager_operations lease_manager_ops = {
- 	.lm_break = lease_break_callback,
- 	.lm_change = lease_modify,
- 	.lm_setup = lease_setup,
-+	.lm_open_conflict = lease_open_conflict,
- };
- 
- /*
-@@ -1753,52 +1793,6 @@ int fcntl_getdeleg(struct file *filp, struct delegation *deleg)
- 	return 0;
- }
- 
--/**
-- * check_conflicting_open - see if the given file points to an inode that has
-- *			    an existing open that would conflict with the
-- *			    desired lease.
-- * @filp:	file to check
-- * @arg:	type of lease that we're trying to acquire
-- * @flags:	current lock flags
-- *
-- * Check to see if there's an existing open fd on this file that would
-- * conflict with the lease we're trying to set.
-- */
--static int
--check_conflicting_open(struct file *filp, const int arg, int flags)
--{
--	struct inode *inode = file_inode(filp);
--	int self_wcount = 0, self_rcount = 0;
--
--	if (flags & FL_LAYOUT)
--		return 0;
--	if (flags & FL_DELEG)
--		/* We leave these checks to the caller */
--		return 0;
--
--	if (arg == F_RDLCK)
--		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
--	else if (arg != F_WRLCK)
--		return 0;
--
--	/*
--	 * Make sure that only read/write count is from lease requestor.
--	 * Note that this will result in denying write leases when i_writecount
--	 * is negative, which is what we want.  (We shouldn't grant write leases
--	 * on files open for execution.)
--	 */
--	if (filp->f_mode & FMODE_WRITE)
--		self_wcount = 1;
--	else if (filp->f_mode & FMODE_READ)
--		self_rcount = 1;
--
--	if (atomic_read(&inode->i_writecount) != self_wcount ||
--	    atomic_read(&inode->i_readcount) != self_rcount)
--		return -EAGAIN;
--
--	return 0;
--}
--
- static int
- generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **priv)
- {
-@@ -1835,7 +1829,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **pr
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
- 	time_out_leases(inode, &dispose);
--	error = check_conflicting_open(filp, arg, lease->c.flc_flags);
-+	error = lease->fl_lmops->lm_open_conflict(filp, arg);
- 	if (error)
- 		goto out;
- 
-@@ -1892,7 +1886,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **pr
- 	 * precedes these checks.
- 	 */
- 	smp_mb();
--	error = check_conflicting_open(filp, arg, lease->c.flc_flags);
-+	error = lease->fl_lmops->lm_open_conflict(filp, arg);
- 	if (error) {
- 		locks_unlink_lock_ctx(&lease->c);
- 		goto out;
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 683bd1130afe298f9df774684192c89f68102b72..ca7ec7a022bd5c12fad60ff9e51145d9cca55527 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -764,9 +764,16 @@ nfsd4_layout_lm_change(struct file_lease *onlist, int arg,
- 	return lease_modify(onlist, arg, dispose);
- }
- 
-+static int
-+nfsd4_layout_lm_open_conflict(struct file *filp, int arg)
-+{
-+	return 0;
-+}
-+
- static const struct lease_manager_operations nfsd4_layouts_lm_ops = {
--	.lm_break	= nfsd4_layout_lm_break,
--	.lm_change	= nfsd4_layout_lm_change,
-+	.lm_break		= nfsd4_layout_lm_break,
-+	.lm_change		= nfsd4_layout_lm_change,
-+	.lm_open_conflict	= nfsd4_layout_lm_open_conflict,
- };
- 
- int
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 8f8c9385101e15b64883eabec71775f26b14f890..669fabb095407e61525e5b71268cf1f06fc09877 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5543,10 +5543,17 @@ nfsd_change_deleg_cb(struct file_lease *onlist, int arg,
- 		return -EAGAIN;
- }
- 
-+static int
-+nfsd4_deleg_lm_open_conflict(struct file *filp, int arg)
-+{
-+	return 0;
-+}
-+
- static const struct lease_manager_operations nfsd_lease_mng_ops = {
- 	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
- 	.lm_break = nfsd_break_deleg_cb,
- 	.lm_change = nfsd_change_deleg_cb,
-+	.lm_open_conflict = nfsd4_deleg_lm_open_conflict,
- };
- 
- static __be32 nfsd4_check_seqid(struct nfsd4_compound_state *cstate, struct nfs4_stateowner *so, u32 seqid)
-diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index 54b824c05299261e6bd6acc4175cb277ea35b35d..2f5e5588ee0733c200103801d0d2ba19bebbf9af 100644
---- a/include/linux/filelock.h
-+++ b/include/linux/filelock.h
-@@ -49,6 +49,7 @@ struct lease_manager_operations {
- 	int (*lm_change)(struct file_lease *, int, struct list_head *);
- 	void (*lm_setup)(struct file_lease *, void **);
- 	bool (*lm_breaker_owns_lease)(struct file_lease *);
-+	int (*lm_open_conflict)(struct file *, int);
- };
- 
- struct lock_manager {
+NFSD continues to implement only the block-related layout types,
+plus flexfile (in toy form).
 
--- 
-2.52.0
 
+--=20
+Chuck Lever
 
