@@ -1,172 +1,145 @@
-Return-Path: <linux-nfs+bounces-16822-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16823-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BD5CC98290
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 17:03:26 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A720C98695
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 18:08:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E126E3436C2
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 16:03:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0200E4E1EFB
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 17:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C417C3191A2;
-	Mon,  1 Dec 2025 16:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78884335092;
+	Mon,  1 Dec 2025 17:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIGe1Ps6"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="m6tHBhvO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6B51DE887;
-	Mon,  1 Dec 2025 16:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E83733468A;
+	Mon,  1 Dec 2025 17:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764605000; cv=none; b=XeoPHW5ENn0toRDkSbxkl2QPbxgOw2BUsJ7wBcfGIwNSToFYcbjceTmmU+TiVtmTUBVN72qryfvGnx8r2xyb5mSHXzmTVg+s/F0I854V2RTk5CpqfS57L1N5Vzxe/IiuGBDWHHw0rCAx9oNYFbEtM6Gims6d1K1xj1IfKnyLwdo=
+	t=1764608892; cv=none; b=SS83MYQ3XFL0X6sQHYxcuCmb1/FSKkLWrud0Kz2LOtjuP8s2QtxBm8x0EB1iH90ASugqFdoA6dQMf2QnsJqeTMRs/22ygTiEyV6I9a+gmDx/Y/b56W1FFTeUeuB06mkeu/7xJp+ADHl1yvlskToXWpWdcTNrN4QZFytKCMBMP7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764605000; c=relaxed/simple;
-	bh=L694A+hcx1692Ups7VU6/fHwaV+/sr3zZmZeWzx6L7k=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=fFJSvf+Y09ZJWMv35J1w7UYnw03o/+EN8VgoztlTghqQpsrpSyJlpdSURVH/w+/cHrU+vwHKe9FfxB8IfpwtoGBDk2Bc7gCsbLg80nZgignKoTcj0XFD2nSTyIe6DJGBaUj2TucRaD3O3WSlI5I9sLZYARiuAyz4/JWndlu5bts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIGe1Ps6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E137AC116C6;
-	Mon,  1 Dec 2025 16:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764605000;
-	bh=L694A+hcx1692Ups7VU6/fHwaV+/sr3zZmZeWzx6L7k=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=DIGe1Ps6tMLcC/64dye/OiKC6hTkPRTu9ee1HXSAb6CsAjpU7QwluXuXccBLdeVq4
-	 sxvCD3oo+3ZF/JpF/ynixe8mKvDhC/SxB7zzHAVKfQ/JU/IjkeJH90DJSTakYAmO2B
-	 u5q2ZFotxbLgduuRNalSQEEUlLKj/7ENjffZcTX6izClViB+oSHtaQHMsp2IOIozWP
-	 /SmtLPBhhKM0BGMBTmljKMTBlUasLJrINP6WV/D5PBgx2mXwjDijG/WdqV/Kxf/W+H
-	 7J7M8MuKxnCRgkYssaVTEITHCXxDL4V3bcIiKTh7GW3Ef0DeD2O1yrvm3jUo+bqUHk
-	 ZQ6+oIuHSIMxg==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 090A6F40094;
-	Mon,  1 Dec 2025 11:03:19 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 01 Dec 2025 11:03:19 -0500
-X-ME-Sender: <xms:RrwtaUZJyw5z4kK5o9zGWtoc_QyoMKZtmclUwks2lmudUHxR-4CpHw>
-    <xme:RrwtaaPqeQz3lQm4P5CjCQWl6oHXinM7gqE_knhJxI7ZoxoHfoz-gSoWdAHoEYLof
-    6fQkJLhAMjCwPTrsV7o8KDRTJ1voab7U9NgY6aTkN9YJQEFsdHpSw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvheekudefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtoheprghlvgigrdgrrh
-    hinhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfihilhhlhiesihhnfhhrrgguvggr
-    ugdrohhrghdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrsggv
-    theslhifnhdrnhgvthdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomh
-    dprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphht
-    thhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:RrwtabtFWcE-yCULQ3moXO3b1NtdDzsQlEjhglqGK1X3YqwtCfexZg>
-    <xmx:RrwtaQlVArQLulqrEVJjy6nV9xrJEZzNGAGMuazF0lLGcmpieKNtFg>
-    <xmx:RrwtabwJ9TiaKV8NHB2BjismzRlPl0m9IURwRMrMg0KPoCsX1HCnKA>
-    <xmx:RrwtaUypRStNp2sOQ-xkOS5UAs4rgsA60Ya6lZ5NCmEt5PP8ISPozw>
-    <xmx:R7wtaS82eR-2vzXf4SyCVAGrfnysrmeW2FGfIDgnBLxg6Camo5BZGaXA>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A6FE8780070; Mon,  1 Dec 2025 11:03:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1764608892; c=relaxed/simple;
+	bh=c1hVLffTbOic9SRKj/Vx/1bE1OkZBkKNJY7xX1j8I3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=POLJ7GqLU0xad/kS7ZBYwoaCtaRRMzoPMX64BPxA+oAmnqZ0ArJd8KF/WiRHAGdh9WmWzYzbuXcdGIytRXkS9IJNwvBLhU6wWpsSRAx4WJ31CJtLPlEpMFunyNQBoUAloCFrGF8eRgJ+Te5OBoK/MbwofYifLKwOk5rc+QCldP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=m6tHBhvO; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=chyrhP448TKCA7mjR+pn/4FRynfEGDb/eEOSGrjCi48=; b=m6tHBhvODjORIENDeypTobyuUz
+	dAfJPXFwkttmrEIudNiC+eJ++pHJAehlDyTlgb+ujjJWYhGYSpXw0zgCrIZdzySovjHT9cA2lZ7cz
+	jzkoihgeSwKZL/QyryX0gMwRMsHu9fIKtRAIcuexFdlw2rHqKpYf1jthXT46t235cSaPO8XhxuaTe
+	UAahQWu4SoOIcWhhn/JZl9xBFfE56iKVrlHQOW3w03FPhCGJmpbu8/gQLozFObDI4/H9EJOOIPMa2
+	/2Q76hpj/QtV0dHTpaDtoXdZQnJPZ4t9wMlA/K+oYAUz07/WLzmLSKsNCsBoZqTGtGNhzD+M8DpUC
+	vLmNTgIw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.99 #2 (Red Hat Linux))
+	id 1vQ7Nl-000000041Kz-21Ah;
+	Mon, 01 Dec 2025 17:08:13 +0000
+Date: Mon, 1 Dec 2025 17:08:13 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Amir Goldstein <amir73il@gmail.com>, NeilBrown <neil@brown.name>,
+	Christian Brauner <brauner@kernel.org>,
+	Val Packett <val@packett.cool>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH] fuse: fix conversion of fuse_reverse_inval_entry() to
+ start_removing()
+Message-ID: <20251201170813.GH3538@ZenIV>
+References: <20251113002050.676694-1-neilb@ownmail.net>
+ <20251113002050.676694-7-neilb@ownmail.net>
+ <6713ea38-b583-4c86-b74a-bea55652851d@packett.cool>
+ <176454037897.634289.3566631742434963788@noble.neil.brown.name>
+ <CAOQ4uxjihcBxJzckbJis8hGcWO61QKhiqeGH+hDkTUkDhu23Ww@mail.gmail.com>
+ <20251201083324.GA3538@ZenIV>
+ <CAJfpegs+o01jgY76WsGnk9j41LS5V0JQSk--d6xsJJp4VjTh8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Aw9RNCMXdYSN
-Date: Mon, 01 Dec 2025 11:01:38 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- "Jonathan Corbet" <corbet@lwn.net>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <d3635d5d-0594-4639-bf56-f35519b39c5b@app.fastmail.com>
-In-Reply-To: <803c22e7855b699a74cf65c0ba9a0e9ad5b41257.camel@kernel.org>
-References: <20251201-dir-deleg-ro-v1-0-2e32cf2df9b7@kernel.org>
- <78e50574-56f3-42e6-a471-c2dba4c7f1ad@app.fastmail.com>
- <803c22e7855b699a74cf65c0ba9a0e9ad5b41257.camel@kernel.org>
-Subject: Re: [PATCH 0/2] filelock: fix conflict detection with userland file
- delegations
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegs+o01jgY76WsGnk9j41LS5V0JQSk--d6xsJJp4VjTh8Q@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
+On Mon, Dec 01, 2025 at 03:03:08PM +0100, Miklos Szeredi wrote:
+> On Mon, 1 Dec 2025 at 09:33, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > On Mon, Dec 01, 2025 at 09:22:54AM +0100, Amir Goldstein wrote:
+> >
+> > > I don't think there is a point in optimizing parallel dir operations
+> > > with FUSE server cache invalidation, but maybe I am missing
+> > > something.
+> >
+> > The interesting part is the expected semantics of operation;
+> > d_invalidate() side definitely doesn't need any of that cruft,
+> > but I would really like to understand what that function
+> > is supposed to do.
+> >
+> > Miklos, could you post a brain dump on that?
+> 
+> This function is supposed to invalidate a dentry due to remote changes
+> (FUSE_NOTIFY_INVAL_ENTRY).  Originally it was supplied a parent ID and
+> a name and called d_invalidate() on the looked up dentry.
+> 
+> Then it grew a variant (FUSE_NOTIFY_DELETE) that was also supplied a
+> child ID, which was matched against the looked up inode.  This was
+> commit 451d0f599934 ("FUSE: Notifying the kernel of deletion."),
+> Apparently this worked around the fact that at that time
+> d_invalidate() returned -EBUSY if the target was still in use and
+> didn't unhash the dentry in that case.
+> 
+> That was later changed by commit bafc9b754f75 ("vfs: More precise
+> tests in d_invalidate") to unconditionally unhash the target, which
+> effectively made FUSE_NOTIFY_INVAL_ENTRY and FUSE_NOTIFY_DELETE
+> equivalent and the code in question unnecessary.
+> 
+> For the future, we could also introduce FUSE_NOTIFY_MOVE, that would
+> differentiate between a delete and a move, while
+> FUSE_NOTIFY_INVAL_ENTRY would continue to be the common (deleted or
+> moved) notification.
 
+Then as far as VFS is concerned, it's an equivalent of "we'd done
+a dcache lookup and revalidate told us to bugger off", which does
+*not* need locking the parent - the same sequence can very well
+happen without touching any inode locks.
 
-On Mon, Dec 1, 2025, at 10:52 AM, Jeff Layton wrote:
-> On Mon, 2025-12-01 at 10:19 -0500, Chuck Lever wrote:
->> 
->> On Mon, Dec 1, 2025, at 10:08 AM, Jeff Layton wrote:
->> > This patchset fixes the way that conflicts are detected when userland
->> > requests file delegations. The problem is due to a hack that was added
->> > long ago which worked up until userland could request a file delegation.
->> > 
->> > This fixes the bug and makes things a bit less hacky. Please consider
->> > for v6.19.
->> 
->> I would like a little more time to review this carefully, especially
->> in light of similar work Dai has already posted in this area. If by
->> "v6.19" you mean "not before v6.19-rcN where N > 3", then that WFM.
->> 
->
-> Ok. Do you have a specific concern?
+IOW, from the point of view of locking protocol changes that's not
+a removal at all.
 
-It looks so similar to what Dai was doing to deal with nfsd deadlocking
-and my recent RFC in the same area that we should ensure that these
-efforts are all going in a compatible direction.
-
-Clearly, adding callbacks to NFSD that just return 0 is not a
-functional risk ;-) But during a merge window I can't guarantee I'll
-have time to look at this closely.
-
-
-> FWIW, I did mention to Dai that the
-> first patch in this series would make it more palatable to handle his
-> new lm_breaker_timedout operation in lease_dispose_list().
->
-> By v6.19, I mean before v6.19 ships. This bug needs to be fixed before
-> we release a kernel that provides the new F_SETDELEG interface.
-
-No problem. v6.19-rc rather than in the merge window is all I need.
-
-
->> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> > ---
->> > Jeff Layton (2):
->> >       filelock: add lease_dispose_list() helper
->> >       filelock: allow lease_managers to dictate what qualifies as a conflict
->> > 
->> >  Documentation/filesystems/locking.rst |   1 +
->> >  fs/locks.c                            | 119 +++++++++++++++++-----------------
->> >  fs/nfsd/nfs4layouts.c                 |  11 +++-
->> >  fs/nfsd/nfs4state.c                   |   7 ++
->> >  include/linux/filelock.h              |   1 +
->> >  5 files changed, 79 insertions(+), 60 deletions(-)
->> > ---
->> > base-commit: 76c63ff12e067e1ff77b19a83c24774899ed01fc
->> > change-id: 20251201-dir-deleg-ro-41a16bc22838
->> > 
->> > Best regards,
->> > -- 
->> > Jeff Layton <jlayton@kernel.org>
->
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-
--- 
-Chuck Lever
+Or do you need them serialized for fuse-internal purposes?
 
