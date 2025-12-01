@@ -1,145 +1,140 @@
-Return-Path: <linux-nfs+bounces-16823-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16824-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A720C98695
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 18:08:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 38D6AC987DA
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 18:20:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0200E4E1EFB
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 17:08:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3F7DA4E2AE2
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 17:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78884335092;
-	Mon,  1 Dec 2025 17:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E213533373A;
+	Mon,  1 Dec 2025 17:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="m6tHBhvO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czS9cgjC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E83733468A;
-	Mon,  1 Dec 2025 17:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0691F461D
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Dec 2025 17:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764608892; cv=none; b=SS83MYQ3XFL0X6sQHYxcuCmb1/FSKkLWrud0Kz2LOtjuP8s2QtxBm8x0EB1iH90ASugqFdoA6dQMf2QnsJqeTMRs/22ygTiEyV6I9a+gmDx/Y/b56W1FFTeUeuB06mkeu/7xJp+ADHl1yvlskToXWpWdcTNrN4QZFytKCMBMP7A=
+	t=1764609481; cv=none; b=MhfJwu65iTu/MSXqafAnVwOfjcQUO7hQhoi37mz0Z2MPZpQRBTdPTaWQcbkQSRp2YLvgiAE+ByYS7GGXdLIRgvV5CgRShv7LeufSnbXSnU/vr4kOOZYcZjWOzmsKKOF8U1zE2B1DF4xTGvqf8+uX6Eh+tXSmBg8U+upW/3dNddo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764608892; c=relaxed/simple;
-	bh=c1hVLffTbOic9SRKj/Vx/1bE1OkZBkKNJY7xX1j8I3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POLJ7GqLU0xad/kS7ZBYwoaCtaRRMzoPMX64BPxA+oAmnqZ0ArJd8KF/WiRHAGdh9WmWzYzbuXcdGIytRXkS9IJNwvBLhU6wWpsSRAx4WJ31CJtLPlEpMFunyNQBoUAloCFrGF8eRgJ+Te5OBoK/MbwofYifLKwOk5rc+QCldP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=m6tHBhvO; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=chyrhP448TKCA7mjR+pn/4FRynfEGDb/eEOSGrjCi48=; b=m6tHBhvODjORIENDeypTobyuUz
-	dAfJPXFwkttmrEIudNiC+eJ++pHJAehlDyTlgb+ujjJWYhGYSpXw0zgCrIZdzySovjHT9cA2lZ7cz
-	jzkoihgeSwKZL/QyryX0gMwRMsHu9fIKtRAIcuexFdlw2rHqKpYf1jthXT46t235cSaPO8XhxuaTe
-	UAahQWu4SoOIcWhhn/JZl9xBFfE56iKVrlHQOW3w03FPhCGJmpbu8/gQLozFObDI4/H9EJOOIPMa2
-	/2Q76hpj/QtV0dHTpaDtoXdZQnJPZ4t9wMlA/K+oYAUz07/WLzmLSKsNCsBoZqTGtGNhzD+M8DpUC
-	vLmNTgIw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.99 #2 (Red Hat Linux))
-	id 1vQ7Nl-000000041Kz-21Ah;
-	Mon, 01 Dec 2025 17:08:13 +0000
-Date: Mon, 1 Dec 2025 17:08:13 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>, NeilBrown <neil@brown.name>,
-	Christian Brauner <brauner@kernel.org>,
-	Val Packett <val@packett.cool>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-	David Howells <dhowells@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <smfrench@gmail.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH] fuse: fix conversion of fuse_reverse_inval_entry() to
- start_removing()
-Message-ID: <20251201170813.GH3538@ZenIV>
-References: <20251113002050.676694-1-neilb@ownmail.net>
- <20251113002050.676694-7-neilb@ownmail.net>
- <6713ea38-b583-4c86-b74a-bea55652851d@packett.cool>
- <176454037897.634289.3566631742434963788@noble.neil.brown.name>
- <CAOQ4uxjihcBxJzckbJis8hGcWO61QKhiqeGH+hDkTUkDhu23Ww@mail.gmail.com>
- <20251201083324.GA3538@ZenIV>
- <CAJfpegs+o01jgY76WsGnk9j41LS5V0JQSk--d6xsJJp4VjTh8Q@mail.gmail.com>
+	s=arc-20240116; t=1764609481; c=relaxed/simple;
+	bh=kITgaGD+FWQyY2BzAbNS9l0/UyX7RA/Qu4Vp2hyKRXE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SAs0o56jQBE4d0G9vEJ4UNpmoc++chlB1VFNosrMYinRDo5t1ugYFVvyuicc13vXL0FmXsFrD31HY0W0XgVolpjnVn4R0DjKBZa5q3cJ5B/zPxhP0TvT7USzaMidQcgiBqBdMF/WXb+pmplMsl22/b6NRu9Z/e1YsnlUHy0Ia1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czS9cgjC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDE6C116C6;
+	Mon,  1 Dec 2025 17:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764609480;
+	bh=kITgaGD+FWQyY2BzAbNS9l0/UyX7RA/Qu4Vp2hyKRXE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=czS9cgjCwSkn1gCfRumgZnHVVCWv9kwc5wxTWgtOgs6No7VSaSgAD5LtF1f5UHp1W
+	 Mb54oU/vmJsmGrbQkkDfp9+g0FZ/WYgGB3S8tAmx2W2lv4LsNvO75kI0oIGMw9/odT
+	 ps2lCRs+lw+CyZP4cZ0UUXJaqaZh/zUwlvpaTy1Gq54tVDnB9uZh5UmXUd/0Cbsr4p
+	 /1U8d+Gf2C8AVb2ET4hpTQnemk82zbHijePPlZdhbpzRguKg/dWCa+FxQ3fIUzfcBT
+	 DPXYIoSawk6Ay/yr/urF9rYOoTLHYLxh5nDjEVnRC0qxQKloRg6XarwX3xOg0NPEPv
+	 +8RUyso9ybG/Q==
+Message-ID: <22defa137c5b30d271a6b76771651ee4346be761.camel@kernel.org>
+Subject: Re: [PATCH RFC] NFS: Add some knobs for disabling delegations in
+ sysfs
+From: Trond Myklebust <trondmy@kernel.org>
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: anna@kernel.org, linux-nfs@vger.kernel.org
+Date: Mon, 01 Dec 2025 12:17:31 -0500
+In-Reply-To: <aS19VL6-SLpejH1r@aion>
+References: <20251125001544.18584-1-smayhew@redhat.com>
+	 <e49d89f7818c72fb3f7bbb2dd90630394c55c0dc.camel@kernel.org>
+	 <aS19VL6-SLpejH1r@aion>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegs+o01jgY76WsGnk9j41LS5V0JQSk--d6xsJJp4VjTh8Q@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Mon, Dec 01, 2025 at 03:03:08PM +0100, Miklos Szeredi wrote:
-> On Mon, 1 Dec 2025 at 09:33, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > On Mon, Dec 01, 2025 at 09:22:54AM +0100, Amir Goldstein wrote:
-> >
-> > > I don't think there is a point in optimizing parallel dir operations
-> > > with FUSE server cache invalidation, but maybe I am missing
-> > > something.
-> >
-> > The interesting part is the expected semantics of operation;
-> > d_invalidate() side definitely doesn't need any of that cruft,
-> > but I would really like to understand what that function
-> > is supposed to do.
-> >
-> > Miklos, could you post a brain dump on that?
-> 
-> This function is supposed to invalidate a dentry due to remote changes
-> (FUSE_NOTIFY_INVAL_ENTRY).  Originally it was supplied a parent ID and
-> a name and called d_invalidate() on the looked up dentry.
-> 
-> Then it grew a variant (FUSE_NOTIFY_DELETE) that was also supplied a
-> child ID, which was matched against the looked up inode.  This was
-> commit 451d0f599934 ("FUSE: Notifying the kernel of deletion."),
-> Apparently this worked around the fact that at that time
-> d_invalidate() returned -EBUSY if the target was still in use and
-> didn't unhash the dentry in that case.
-> 
-> That was later changed by commit bafc9b754f75 ("vfs: More precise
-> tests in d_invalidate") to unconditionally unhash the target, which
-> effectively made FUSE_NOTIFY_INVAL_ENTRY and FUSE_NOTIFY_DELETE
-> equivalent and the code in question unnecessary.
-> 
-> For the future, we could also introduce FUSE_NOTIFY_MOVE, that would
-> differentiate between a delete and a move, while
-> FUSE_NOTIFY_INVAL_ENTRY would continue to be the common (deleted or
-> moved) notification.
+On Mon, 2025-12-01 at 06:34 -0500, Scott Mayhew wrote:
+> On Mon, 24 Nov 2025, Trond Myklebust wrote:
+>=20
+> > Hi Scott,
+> >=20
+> > On Mon, 2025-11-24 at 19:15 -0500, Scott Mayhew wrote:
+> > > There's occasionally a need to disable delegations, whether it be
+> > > due
+> > > to
+> > > known bugs or simply to give support staff some breathing room to
+> > > troubleshoot issues.=C2=A0 Currently the only real method for
+> > > disabling
+> > > delegations in Linux NFS is via /proc/sys/fs/leases-enable, which
+> > > has
+> > > some major drawbacks in that 1) it's only applicable to knfsd,
+> > > and 2)
+> > > it
+> > > affects all clients using that server.
+> > >=20
+> > > Technically it's not really possible to disable delegations from
+> > > the
+> > > client side since it's ultimately up to the server whether grants
+> > > a
+> > > delegation or not, but we can achieve a similar affect in
+> > > NFSv4.1+ by
+> > > manipulating the OPEN4_SHARE_ACCESS_WANT* flags.
+> > >=20
+> > > Rather than proliferating a bunch of new mount options, add some
+> > > sysfs
+> > > knobs to allow some of the nfs_server->caps flags related to
+> > > delegations
+> > > to be adjusted.
+> > >=20
+> >=20
+> > Shouldn't we rather be allowing the application to select whether
+> > it
+> > wants to request a delegation or not?
+> >=20
+> > IOW: while there may or may not be a place for a 'big hammer'
+> > solution
+> > like you propose, should we not rather first try to enable a
+> > solution
+> > in which someone could add a O_DELEGATION or O_NODELEGATION flag to
+> > open() in order to specify what they want.
+> >=20
+> > That might also allow someone to add an LD_PRELOAD library to add
+> > or
+> > remove these flags from an existing application's open() calls.
+>=20
+> Sure, allowing the application to specify whether it wants a
+> delegation
+> or not would be better... but with open() being governed by POSIX and
+> with delegations being an NFS-specific feature, I figured adding open
+> flags related to delegations wasn't feasible.=C2=A0 I discussed it with
+> Olga,
+> and she had the same opinion.=C2=A0 Are we mistaken here?
+>=20
 
-Then as far as VFS is concerned, it's an equivalent of "we'd done
-a dcache lookup and revalidate told us to bugger off", which does
-*not* need locking the parent - the same sequence can very well
-happen without touching any inode locks.
+O_DIRECT, O_NOATIME, O_PATH and O_TMPFILE are all open modes that are
+unsupported by POSIX.
+Furthermore, the openat2() system call is designed to be extensible.
 
-IOW, from the point of view of locking protocol changes that's not
-a removal at all.
+> >=20
+> > It might also be useful for the directory delegation functionality
+> > that
+> > Anna and Jeff have been working on...
+> >=20
+> > Just some food for thought while you're digesting on Thursday :-
+> > )...
+> >=20
 
-Or do you need them serialized for fuse-internal purposes?
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
