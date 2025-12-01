@@ -1,229 +1,191 @@
-Return-Path: <linux-nfs+bounces-16806-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16807-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB714C95FB2
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 08:18:54 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CA0C9618E
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Dec 2025 09:23:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7D4443431F8
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 07:18:53 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E8D193439A3
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Dec 2025 08:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB08E29BDBA;
-	Mon,  1 Dec 2025 07:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88C992F28EB;
+	Mon,  1 Dec 2025 08:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYChTdbZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF0529B775;
-	Mon,  1 Dec 2025 07:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ECC2DA771
+	for <linux-nfs@vger.kernel.org>; Mon,  1 Dec 2025 08:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764573525; cv=none; b=jFheUykKVUrzXLbVncfUApvjKYpAkcEtoOFBlNwv8Nk0nlS8umKLo9Wq3oyu4LPNhoSeHu0ARbD79gudy972LXBvKt8F2CXYzTnixfCh6oD8YcCbFwU0ARgiAX0zMBBRIZpovBpC/xZ3fYp043mkHhNWrelmWeTabX+5bQAKAnE=
+	t=1764577391; cv=none; b=D0RFZUTm3Ia/tnLTSa55MIMaauE49c3aAyNzzjjXN9XN2eFzQ9AIUCKgulxzv4/FeuiOwrmwLAL9oS3m/N7fKhuPfZWFWPOW49T9aZRjlLfMk7KMncZYV0PwyvWUEmmiflGrdy65ZKCnrvzd+OeZG6lXosNjHVxkQw1EoPlFeQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764573525; c=relaxed/simple;
-	bh=9mfff0zf0WYT7Y1m0h9SwdlbThjNAg6ePi3np+RzYlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XmUiSbkKbWlqc5X6aqvcAoucppiqP33xsXrqcYdIrAc6QoIFYuffmDXyurpkeMaQ2f4eUt6YCoLWqYWCYNh62mCgsVqHWzEZuv7i93fQlZvslTDZBIayc3utQjD/AuRDerEARxqkm3xIWp9v069umj4iLac9QoIzL85ySxpSQfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c45ff70000001609-82-692d414835f4
-Date: Mon, 1 Dec 2025 16:18:27 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, david@fromorbit.com, amir73il@gmail.com,
-	gregkh@linuxfoundation.org, kernel-team@lge.com, linux-mm@kvack.org,
-	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
-	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
-	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-	djwong@kernel.org, dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, yunseong.kim@ericsson.com, ysk@kzalloc.com,
-	yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, luto@kernel.org,
-	sumit.semwal@linaro.org, gustavo@padovan.org,
-	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
-	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
-	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v17 44/47] dept: introduce APIs to set page usage and use
- subclasses_evt for the usage
-Message-ID: <20251201071827.GA70324@system.software.com>
-References: <20251002081247.51255-1-byungchul@sk.com>
- <20251002081247.51255-45-byungchul@sk.com>
- <20251119105312.GA11582@system.software.com>
- <aR3WHf9QZ_dizNun@casper.infradead.org>
+	s=arc-20240116; t=1764577391; c=relaxed/simple;
+	bh=TrlI8KF/qCeVsAfOA6ACvSSTJoCfx71xxH3YdpjqFy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mw2nahuz2JP0R5Y/gWNkJfwPubCznSF4GqC2D9MXpwGOuTndL/Tnm9v8vP+23uUA3B0SY3In70jcnC0oMD9U97VSgsTB/jIV9ri6lzdcFAnUbXcVlAMS8gs315BVnLvxDyzCHME+2a0tn0Lsj95O0nwp8Sz9nnociFWm5EICfr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYChTdbZ; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-640ca678745so6721237a12.2
+        for <linux-nfs@vger.kernel.org>; Mon, 01 Dec 2025 00:23:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764577387; x=1765182187; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+UDNGf4W59vxX6MyDgWfRD0V6LCN4sc0r1Qgyk2LJH4=;
+        b=jYChTdbZ5OUD1+vaubSuu+HN5tydPki6kg8b6tc8pSohrpj81F4D9Uj+76RsdVV6TO
+         cps70XcuOHZHLoQXHb+3DE5vQOdeGq2zQE5RzPvNbO0nBJbrmrOiZHjKK0Ft7k5FVzDt
+         jG0aveXq+1ZG/2DkFXvzWOia9SnlN2wVRv560vjuprSo+e4B2ugFdxbJYgY5PA7ifnit
+         sj0m0v9V+nsiySi8ujx0BxeOSGvVLhjJyYbZ5mDZT3iMbO+F7m+rnpz0yA1lnbBB3UrL
+         eoPWZcYstP/FS0S6Y+++ywzAqYXjdGm5QrqK4Zmhupc77lTvXJpREzA6b8DCIvxPwww6
+         GeLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764577387; x=1765182187;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+UDNGf4W59vxX6MyDgWfRD0V6LCN4sc0r1Qgyk2LJH4=;
+        b=iLz/oqv9EBzbsmLMfJTmrLJsQWsuqCbcvCzggCxNQgAzR8DV55DsZnNWbbNQ+Djfe5
+         0XcZyM/8/tcBhQIl+S1pu9pIU/FNZs9xwZey+7/1/kVfJ0Yuh4VF/CHtl26ZeIeS7td1
+         aE9Y25iE3CKV5SIFnrJ6tyhapIQZF6v0n3aidVLwvO3KqyxvVYAJbpflH6aoYg/gmnL9
+         jT7GYCygWNA5DKRHVHZnSJ9LCmNpjfQI6YkEqvjH6K46jJ7HqeCuBtCV6Ud+UeRMw2au
+         QbIEvZRO4a+qwstwK0ETwcKADxqFu8j8j0R0tIZOTKW/0NFCrWI5oZKmrpBI9yHcFuKq
+         mbmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBdD2j7Tdu1kjixrbFdNdZTtIIk0UIMHgrRnxzdG64nPTfx8aA8RKDulwggOF8RPffHjxZgzg/zc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHt69NKLFJV+1UmH3CTDUF9qK2GGpnYjU/yrlxAh+eyvx9Qe/R
+	ivAkEETaesGdy/uUJWKFUHFqBx4ofnz/Jvyu5WhDNOEm8wysglFraBcy8Jy0LxfEiDHAdDK1SHo
+	iB0hZ4asX2KMOpW5xeiRZyBffOtG40Dg=
+X-Gm-Gg: ASbGncv0kkuTqn7ESe/iReaXfpQfwNvlWaPSFx+NbmTVqzxSpnZL8CnNNip3xBgBnWd
+	7AY503OcewOl+S7OR3EhNybexdvQTET2rdFcgCCvkEmlA1hmw6rsd4c7OpBRsv5yYHR0v31qx3c
+	FWplAN67nZuRnuecSmFvUO7etVyBa9PNMIUUCrd3lkicKyXXbbuZsjButXXWmcxqOezb1nq6MBK
+	n553Mk4VGquxktfdtVO26AUE3XKaIv6DxbBh7sYXPgsRZNr4WXSaVeIk+T+qZG+xXiOg+Q+fBYC
+	AsQ9LCgeDtscU/JfE+IR5Cb8ZjFr
+X-Google-Smtp-Source: AGHT+IHj59Fq162Q+xUifGgiokcU6h4xrAjviadpNqTh31A0WmXmIZVxJbhdYoPX7MCvx0GXwNcf5jp7tW359myAd7I=
+X-Received: by 2002:a05:6402:4388:b0:645:cd33:7db5 with SMTP id
+ 4fb4d7f45d1cf-645cd337dd5mr21497896a12.24.1764577387055; Mon, 01 Dec 2025
+ 00:23:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aR3WHf9QZ_dizNun@casper.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTWRSFPffcF40N1w7KGVB06qCGiCLRZBsnzjjGeAwx1ugvx1cjN9JY
-	qikFwUfS+gLrI2QIGG5FS0cFtaDWDvIQBHwiokgNVg2KjRaZgEaCNUZkhmrI+G9lrZVvrx9b
-	xBofFyMaTBbZbNIbtbyKVfWPdSUuW5RoSPL9w0GnrZGFPE8xBx8/OzAMfnomgNtrY+BYr40F
-	JegQoP9FHQf/dvUw8KVoC5x0Xebhc9sDDKUvuzC8uZiLwHvrOYLX+X9jcO6p56CoxMNCTXet
-	AOc9y6E138WA49gbBgor6hg4Y40HR5uPg0C5IkBl/wMOrli7BfA8uYnAfTg4wj1wigVf7XEe
-	2htbObjQ42egRTnLQsHbIIKBUyEWGvK6Gbhx4QoDHncnDz1KCQMFHU4eOv88ycP5hywUDuXx
-	4LAdRXBofxELF9+X8b8l0f0dX3jqPuFGdPD0Xkyv973DtD7kZOldF6E1SpdA9zU8FajTk0kv
-	lyfQv672MrR04ANHPecO8rTUWojpiZaV9Mjet7wuZo3ql1TZaMiSzbMXblSldeUPstvq4rKV
-	jl+tKBhtRxEikeaSptp77KjuabYzYc1KP5OS+udCWPPSdOL3f8J2JIpR0gzS5022I5WIJVcs
-	qbjbxIU7P0hGErpR+bWvloD4GipxuKSR6hB5dOAS9y0YR1qKX309hqUE4h/uZcJQLMWSsmEx
-	bEeMbHjiysVhPV6aShqrbjNhDpECEcT/uB9/G/ojaSr3s/lIUr7DKt9hlf+xToTPIY3BlJWu
-	NxjnzkrLMRmyZ23amu5BI692ZvfQH9VooH1VM5JEpB2rvgMzDRpOn5WRk96MiIi1UWpt9oil
-	TtXn7JDNWzeYM41yRjOKFVlttDo5tD1VI23WW+QtsrxNNo+mjBgRY0WHLV5d9S71zoPDK9C4
-	FLVtfZ9xYuTkWwsD9nn3H9pds4PtZyOXLlhS35qSRO9U9YXMtxOmMWk/3c/TlTl3Fom6Ce5Q
-	/LJnQ4tX2AY/JBZH1loCBVW/e6edrl47IKRMnBTfMd++cd/qI3MC10TLvaa497nVyet2qaMz
-	TW1TxlToFq/Sshlp+jkJ2Jyh/w+jDkE8ZgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0xTZxjOd77vXOhWc8ZYOIFkP+rM0Igbi0ve3S8/1i8zW/ZvixpHM462
-	tlzSYge6LVxkYFlYaVKILUxWY2VQELlFJCUVJ5s6xFIvbLMi2IGMW8IKCpR27ZZl/nnzvM/l
-	zfPjFXByhE0TdHmFsjFPY1BxCqL48LXyTPpOpu7FR20quFXqI7AcriLQcMbDQVXncRaut7ci
-	GF+uQvBw3Ymhoi9GYMM2xEN49XceYt4hBHV+GwZPdykDf3VEOZi9uITAPhHioH6mlMCi+xsE
-	jiknDzOX1DA/3s9CLDjNwO2VOQTuUJSBkK8SwUadHk64ujhYHx7BUG+/juD7iSCGBx1xsXvo
-	LgJvcxkHf1h7MARCm+DG8iIHl+3VHMz7GxhY6OCgqczLQqPThqD85BkO6ho7CfTdO8+DfzbC
-	wJ06GwOtnR/AuHuKwFWri4n3i7vOpoKzvpyJjwcM2Nv6GVh1t/Dwy8k7BNwlW8A5HGBhstnB
-	Q2QiC2JN+TDUOs1D8Fs7gfb5EfZtO6IPK2oIbenqZWjF6AZHPd95EF1fsyEaPlWOaYU1vl6c
-	W8T0aNfn9NTVOY6uLd/kqHelidArLonWDmfSPkeQp0cHfuM/enW34vUc2aAzy8YX3sxWaIPW
-	MCnof7bIMfpWCZpKtaAkQRJ3StODFiaBific1Oi9yycwJz4vjY2tYgsShBQxQ5rrfsmCFAIW
-	XelS25ULbMLztGiQVn5s/8evFEEKDLTjhClZ7EfSja/Psv8KT0mXj4dIAmNxmzQWnWESR7GY
-	Lp2OCgk6Kd7hV1clTuBnxM2Sr/cnxoqUjsfSjsfSjv/TTQi3oBRdnjlXozO8vMOk1xbn6Yp2
-	fJaf24niP+n+MlJ7DoUD6kEkCkj1pNKXtV2XzGrMpuLcQSQJWJWiVBXFKWWOpviwbMz/1HjI
-	IJsGUbpAVKnK9z+Ws5PFA5pCWS/LBbLxP5URktJK0KUv+gw379uqLT0/74vM9h47uLB1tDn7
-	vVfozO0cbYqbS8uoqVnV7iI7B7aqf2iIXdsYOFK2J0N9f+Keb61Mv3tL4ea9ud1Lfx6RGw9W
-	F+yvqZy/9u4bS/vMh4NVZv9X0U88PXseHTpREqhd2zSyt239Qv2Cfpf3Ftq/3R89P3nsiUm1
-	ipi0mqxt2GjS/A2TVMQejwMAAA==
-X-CFilter-Loop: Reflected
+References: <20251113002050.676694-1-neilb@ownmail.net> <20251113002050.676694-7-neilb@ownmail.net>
+ <6713ea38-b583-4c86-b74a-bea55652851d@packett.cool> <176454037897.634289.3566631742434963788@noble.neil.brown.name>
+In-Reply-To: <176454037897.634289.3566631742434963788@noble.neil.brown.name>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 1 Dec 2025 09:22:54 +0100
+X-Gm-Features: AWmQ_bkmbCFj52T5piKawt5MYU4Qwo914sia_qtE6Q0yvLfrgb4Ycc6nfs_K2NQ
+Message-ID: <CAOQ4uxjihcBxJzckbJis8hGcWO61QKhiqeGH+hDkTUkDhu23Ww@mail.gmail.com>
+Subject: Re: [PATCH] fuse: fix conversion of fuse_reverse_inval_entry() to start_removing()
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Val Packett <val@packett.cool>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Jeff Layton <jlayton@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
+	David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tyler Hicks <code@tyhicks.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Chuck Lever <chuck.lever@oracle.com>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Carlos Maiolino <cem@kernel.org>, 
+	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Mateusz Guzik <mjguzik@gmail.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Stefan Berger <stefanb@linux.ibm.com>, "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, 
+	netfs@lists.linux.dev, ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 02:37:17PM +0000, Matthew Wilcox wrote:
-> On Wed, Nov 19, 2025 at 07:53:12PM +0900, Byungchul Park wrote:
-> > On Thu, Oct 02, 2025 at 05:12:44PM +0900, Byungchul Park wrote:
-> > > False positive reports have been observed since dept works with the
-> > > assumption that all the pages have the same dept class, but the class
-> > > should be split since the problematic call paths are different depending
-> > > on what the page is used for.
-> > >
-> > > At least, ones in block device's address_space and ones in regular
-> > > file's address_space have exclusively different usages.
-> > >
-> > > Thus, define usage candidates like:
-> > >
-> > >    DEPT_PAGE_REGFILE_CACHE /* page in regular file's address_space */
-> > >    DEPT_PAGE_BDEV_CACHE    /* page in block device's address_space */
-> > >    DEPT_PAGE_DEFAULT       /* the others */
-> >
-> > 1. I'd like to annotate a page to DEPT_PAGE_REGFILE_CACHE when the page
-> >    starts to be associated with a page cache for fs data.
-> >
-> > 2. And I'd like to annotate a page to DEPT_PAGE_BDEV_CACHE when the page
-> >    starts to be associated with meta data of fs e.g. super block.
-> >
-> > 3. Lastly, I'd like to reset the annotated value if any, that has been
-> >    set in the page, when the page ends the assoication with either page
-> >    cache or meta block of fs e.g. freeing the page.
-> >
-> > Can anyone suggest good places in code for the annotation 1, 2, 3?  It'd
-> > be totally appreciated. :-)
-> 
-> I don't think it makes sense to track lock state in the page (nor
-> folio).  Partly bcause there's just so many of them, but also because
-> the locking rules don't really apply to individual folios so much as
-> they do to the mappings (or anon_vmas) that contain folios.
-
-I've been trying to fully understand what you meant but maybe failed.
-
-FWIW, dept is working based on classification, not instance by instance,
-that is similar to lockdep.  This patch is for resolving issues that
-might come from the fact that there is a **single class** for PG_locked,
-by splitting the class to several ones according to their usages.
-
-> If you're looking to find deadlock scenarios, I think it makes more
-> sense to track all folio locks in a given mapping as the same lock
-> type rather than track each folio's lock status.
-> 
-> For example, let's suppose we did something like this in the
-> page fault path:
-> 
-> Look up and lock a folio (we need folios locked to insert them into
-> the page tables to avoid a race with truncate)
-> Try to allocate a page table
-> Go into reclaim, attempt to reclaim a folio from this mapping
-
-I think you are talking about nested lock patterns involving PG_locked.
-
-Even though dept can do much more jobs than just tracking nested lock
-patterns within a single context, of course, nested lock patterns
-involving PG_locked should be handled appropriately, maybe with the
-useful information you gave.  When I work on handling nested locks esp.
-involving PG_locked, I will try to get you again.  Thanks.
-
-However, I have no choice but to keep this approach for the **single
-class** issue.  Feel free to ask if any.
-
-	Byungchul
-
-> We ought to detect that as a potential deadlock, regardless of which
-> folio in the mapping we attempt to reclaim.  So can we track folio
-> locking at the mapping/anon_vma level instead?
-> 
+On Sun, Nov 30, 2025 at 11:06=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrot=
+e:
+>
+>
+> From: NeilBrown <neil@brown.name>
+>
+> The recent conversion of fuse_reverse_inval_entry() to use
+> start_removing() was wrong.
+> As Val Packett points out the original code did not call ->lookup
+> while the new code does.  This can lead to a deadlock.
+>
+> Rather than using full_name_hash() and d_lookup() as the old code
+> did, we can use try_lookup_noperm() which combines these.  Then
+> the result can be given to start_removing_dentry() to get the required
+> locks for removal.  We then double check that the name hasn't
+> changed.
+>
+> As 'dir' needs to be used several times now, we load the dput() until
+> the end, and initialise to NULL so dput() is always safe.
+>
+> Reported-by: Val Packett <val@packett.cool>
+> Closes: https://lore.kernel.org/all/6713ea38-b583-4c86-b74a-bea55652851d@=
+packett.cool
+> Fixes: c9ba789dad15 ("VFS: introduce start_creating_noperm() and start_re=
+moving_noperm()")
+> Signed-off-by: NeilBrown <neil@brown.name>
 > ---
-> 
-> My current understanding of folio locking rules:
-> 
-> If you hold a lock on folio A, you can take a lock on folio B if:
-> 
-> 1. A->mapping == B->mapping and A->index < B->index
->    (for example writeback; we take locks on all folios to be written
->     back in order)
-> 2. !S_ISBLK(A->mapping->host) and S_ISBLK(B->mapping->host)
-> 3. S_ISREG(A->mapping->host) and S_ISREG(B->mapping->host) with
->    inode_lock() held on both and A->index < B->index
->    (the remap_range code)
+>  fs/fuse/dir.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index a0d5b302bcc2..8384fa96cf53 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -1390,8 +1390,8 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, =
+u64 parent_nodeid,
+>  {
+>         int err =3D -ENOTDIR;
+>         struct inode *parent;
+> -       struct dentry *dir;
+> -       struct dentry *entry;
+> +       struct dentry *dir =3D NULL;
+> +       struct dentry *entry =3D NULL;
+>
+>         parent =3D fuse_ilookup(fc, parent_nodeid, NULL);
+>         if (!parent)
+> @@ -1404,11 +1404,19 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc=
+, u64 parent_nodeid,
+>         dir =3D d_find_alias(parent);
+>         if (!dir)
+>                 goto put_parent;
+> -
+> -       entry =3D start_removing_noperm(dir, name);
+> -       dput(dir);
+> -       if (IS_ERR(entry))
+> -               goto put_parent;
+> +       while (!entry) {
+> +               struct dentry *child =3D try_lookup_noperm(name, dir);
+> +               if (!child || IS_ERR(child))
+> +                       goto put_parent;
+> +               entry =3D start_removing_dentry(dir, child);
+> +               dput(child);
+> +               if (IS_ERR(entry))
+> +                       goto put_parent;
+> +               if (!d_same_name(entry, dir, name)) {
+> +                       end_removing(entry);
+> +                       entry =3D NULL;
+> +               }
+> +       }
+
+Can you explain why it is so important to use
+start_removing_dentry() around shrink_dcache_parent()?
+
+Is there a problem with reverting the change in this function
+instead of accomodating start_removing_dentry()?
+
+I don't think there is a point in optimizing parallel dir operations
+with FUSE server cache invalidation, but maybe I am missing
+something.
+
+Thanks,
+Amir.
 
