@@ -1,185 +1,132 @@
-Return-Path: <linux-nfs+bounces-16850-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16851-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25947C9BF7F
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Dec 2025 16:34:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E88DCC9C070
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Dec 2025 16:51:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D26723A3058
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Dec 2025 15:34:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D6CC94E055B
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Dec 2025 15:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F7F224AE0;
-	Tue,  2 Dec 2025 15:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F70321441;
+	Tue,  2 Dec 2025 15:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EE7v91of";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r/LgDe3s";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W5XJk3j5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hQPOlI+G"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dUPFZtzz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028201E51EB
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Dec 2025 15:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F71245005;
+	Tue,  2 Dec 2025 15:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764689664; cv=none; b=MGYJ88AhmLDwvIvKjfjP2GehjKIoHYSmLVwBuD1Z8H/qljOcKgD/dt4ridNRvoY7qHYRmw5MtwSeH0sow9eMAveHn0b0xaIs+GiPnMknSqlc4hjhesDXsu4FxpzSOMLwP0D+P+kZwPOLbBVgXpHgWHJyVqUNM+kJRpcHefx45y0=
+	t=1764690681; cv=none; b=QX5bYye5G1uuVCDV7exm06n8ub4so0euPfFWFKGgn4L+lyMa3bmfjdSZExm6qBQUIzPlDqJ2zs/4o6cpPlRMR3NFAEPidj/f9Ow2MOVL3dy2DtkGFn/gjLrJcFnlMcTZfEK5t56G8X70Nxf/Fa8NgK8V7JBQy1nbnVMkF3GcJHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764689664; c=relaxed/simple;
-	bh=OTgI1At8eTdZ2KqWaaFwyuZ+zxr42zo9QL45J2c1fyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ov5GnBF5C+j0dcVAS7osXbt08p5qXMcSvPW9BKqnKpNJazqYWEeXCCW1DPDH0N/xs/D5GTpXedNzJs9n62QZZtuLq7eGVCBGivJThO+jP+Zj67h+6pKIzHULZ4Wwg2IL/enr0+UPQBoXr0OAFm36ne1sZP14KlCJRRxcAt2560o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EE7v91of; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r/LgDe3s; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W5XJk3j5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hQPOlI+G; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2609F5BD4D;
-	Tue,  2 Dec 2025 15:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764689660; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNeLGy/zjpql2kXCkFr8XeMTEV3ES+WnHxQAyPKOG9k=;
-	b=EE7v91ofMqIJjZw6P7uIQw3P0TzAgu57QzOsutslnBOavY4QhpjhPk005WRWFKKfYoDHYL
-	wigkQ2mw7yJ7oZlrgSmFlxtykJZbdM3pyFVgcQGo3NLTkFXxFWTIGFOldg3Q8vN3P90NGF
-	bpc+pQVSjDljvRrcNJcw7IALIt7Th3o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764689660;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNeLGy/zjpql2kXCkFr8XeMTEV3ES+WnHxQAyPKOG9k=;
-	b=r/LgDe3sQvGySTYKr44DkBTtHn4ahnkbF+/7mQ5JGLbY2aLkbntrELovOBI2eJTGGfPoqY
-	ZCJCpq2iTVPwKKAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=W5XJk3j5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hQPOlI+G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764689659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNeLGy/zjpql2kXCkFr8XeMTEV3ES+WnHxQAyPKOG9k=;
-	b=W5XJk3j5wGIdemV+j/85yZIf2d2VHDrFEVmz6+9j7P02YIl/d92vcwpyYX6ZWMXu1cz3WB
-	7BSmqco9ui7hRpPivBDXeAmwqAFyQ7qSBF5m6r5pCJVnlSlWMRruevlrPRh/P9r+3eMQ9g
-	AkteitjkzV6LJpdV49Q2n0RT9aGff+8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764689659;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNeLGy/zjpql2kXCkFr8XeMTEV3ES+WnHxQAyPKOG9k=;
-	b=hQPOlI+GC9fTYPgcevMNmI5InxIIJhYfrf2tCBpfv9xTnPhiJeyG/hdBR6scTRdsMCXTv8
-	o44fr9T/ntbuxxCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C1E773EA63;
-	Tue,  2 Dec 2025 15:34:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id shUrLvoGL2k8MwAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 02 Dec 2025 15:34:18 +0000
-Message-ID: <4b5a6010-3404-43ab-8964-d704dbeac6d9@suse.de>
-Date: Tue, 2 Dec 2025 16:34:18 +0100
+	s=arc-20240116; t=1764690681; c=relaxed/simple;
+	bh=CGnunB09lXs1PGQMquVlhnjDRgopcnbuXFOqRCg9gdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E15LAGf3ZAikHLRzkhjkYRq8oc0RZNdUHIkxb82l+Bz/z3LQ/va0/mxXq5M7mGBH6HMTwicqtzvMratIsvj9t94+irKBGAI3tCjDu+OvNHZa6DCOKdLD+7NN2lFION51MWR9PD+BxPtRJCWKHzRPElQnO2x67IgRcoO37+gK1UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dUPFZtzz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B48C4CEF1;
+	Tue,  2 Dec 2025 15:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1764690680;
+	bh=CGnunB09lXs1PGQMquVlhnjDRgopcnbuXFOqRCg9gdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dUPFZtzzkFvlTrMc99DmYJXbbHUdnnPANCVf768+o/C5BozHLSvihSGs/waqlzpx9
+	 3zAtEnQ4/KNcnI64aVPpacu356U3s2MGM0vfYhwTFwU+P3IWgdNYI461OC1He3Q8Fw
+	 wKmZDABXshts+C4q60hqbVpn86iZTL2Q1rtnr8Lc=
+Date: Tue, 2 Dec 2025 16:51:16 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	linux-kernel@vger.kernel.org, speedcracker@hotmail.com,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	david.laight.linux@gmail.com,
+	Andrew Morten <akpm@linux-foundation.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v1 v6.12.y] nfsd: Replace clamp_t in nfsd4_get_drc_mem()
+Message-ID: <2025120202-appetizer-pushy-6b96@gregkh>
+References: <20251114211922.6312-1-cel@kernel.org>
+ <8bd5a144-1d67-447c-b33e-388ef27b1176@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/5] net/handshake: Define handshake_req_keyupdate
-To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
- kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
-Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, Alistair Francis <alistair.francis@wdc.com>
-References: <20251202013429.1199659-1-alistair.francis@wdc.com>
- <20251202013429.1199659-3-alistair.francis@wdc.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20251202013429.1199659-3-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Rspamd-Queue-Id: 2609F5BD4D
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim,suse.de:email,wdc.com:email];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bd5a144-1d67-447c-b33e-388ef27b1176@kernel.org>
 
-On 12/2/25 02:34, alistair23@gmail.com wrote:
-> From: Alistair Francis <alistair.francis@wdc.com>
+On Mon, Dec 01, 2025 at 02:28:50PM -0500, Chuck Lever wrote:
+> On 11/14/25 4:19 PM, Chuck Lever wrote:
+> > From: NeilBrown <neil@brown.name>
+> > 
+> > A recent change to clamp_t() in 6.1.y caused fs/nfsd/nfs4state.c to fail
+> > to compile with gcc-9. The code in nfsd4_get_drc_mem() was written with
+> > the assumption that when "max < min",
+> > 
+> >    clamp(val, min, max)
+> > 
+> > would return max.  This assumption is not documented as an API promise
+> > and the change caused a compile failure if it could be statically
+> > determined that "max < min".
+> > 
+> > The relevant code was no longer present upstream when commit 1519fbc8832b
+> > ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()")
+> > landed there, so there is no upstream change to nfsd4_get_drc_mem() to
+> > backport.
+> > 
+> > There is no clear case that the existing code in nfsd4_get_drc_mem()
+> > is functioning incorrectly. The goal of this patch is to permit the clean
+> > application of commit 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for
+> > the lo < hi test in clamp()"), and any commits that depend on it, to LTS
+> > kernels without affecting the ability to compile those kernels. This is
+> > done by open-coding the __clamp() macro sans the built-in type checking.
+> > 
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220745#c0
+> > Signed-off-by: NeilBrown <neil@brown.name>
+> > Stable-dep-of: 1519fbc8832b ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()")
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > ---
+> >  fs/nfsd/nfs4state.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > Changes since Neil's post:
+> > * Editorial changes to the commit message
+> > * Attempt to address David's review comments
+> > * Applied to linux-6.12.y, passed NFSD upstream CI suite
+> > 
+> > This patch is intended to be applied to linux-6.12.y, and should
+> > apply cleanly to other LTS kernels since nfsd4_get_drc_mem hasn't
+> > changed since v5.4.
+> > 
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 7b0fabf8c657..41545933dd18 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -1983,8 +1983,10 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn
+> >  	 */
+> >  	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+> >  
+> > -	avail = clamp_t(unsigned long, avail, slotsize,
+> > -			total_avail/scale_factor);
+> > +	if (avail > total_avail / scale_factor)
+> > +		avail = total_avail / scale_factor;
+> > +	else if (avail < slotsize)
+> > +		avail = slotsize;
+> >  	num = min_t(int, num, avail / slotsize);
+> >  	num = max_t(int, num, 1);
+> >  	nfsd_drc_mem_used += num * slotsize;
 > 
-> Add a new handshake_req_keyupdate() function which is similar to the
-> existing handshake_req_submit().
-> 
-> The new handshake_req_keyupdate() does not add the request to the hash
-> table (unlike handshake_req_submit()) but instead uses the existing
-> request from the initial handshake.
-> 
-> During the initial handshake handshake_req_submit() will add the request
-> to the hash table. The request will not be removed from the hash table
-> unless the socket is closed (reference count hits zero).
-> 
-> After the initial handshake handshake_req_keyupdate() can be used to re-use
-> the existing request in the hash table to trigger a KeyUpdate with
-> userspace.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> v6:
->   - New patch
-> 
->   net/handshake/handshake.h |  2 +
->   net/handshake/request.c   | 95 +++++++++++++++++++++++++++++++++++++++
->   2 files changed, 97 insertions(+)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Is something else needed from me to get this applied to v6.12 and older
+> LTS kernels?
 
-Cheers,
+Oops, sorry about that, now queued up.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+greg k-h
 
