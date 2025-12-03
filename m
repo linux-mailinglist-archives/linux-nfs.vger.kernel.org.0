@@ -1,217 +1,443 @@
-Return-Path: <linux-nfs+bounces-16888-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16889-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4849CA16B7
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 20:36:39 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D936CA1712
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 20:44:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 22494301CD05
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 19:35:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 027673003126
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 19:44:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A5B3164D4;
-	Wed,  3 Dec 2025 19:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E78229ACD8;
+	Wed,  3 Dec 2025 19:44:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMpOx5U0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJtdjDe+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291A4316184;
-	Wed,  3 Dec 2025 19:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF2B2727FA;
+	Wed,  3 Dec 2025 19:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764790503; cv=none; b=NhXhIQM1RriS9bDe5Ep5HCt36uCq/0D5Jlj1fSu/bGVLPx9ml/YXm2Y99y3JRr/wqQETURZLXcA6DAPm9DSsoZe5vR1SonhZc4QowPcKucGYR4pNy6kNz69yalby/SiBX1J86XiHDXrEuY+3wVl/E1EvsnoUm1e+XrS/0/z4D58=
+	t=1764791059; cv=none; b=pouqAHHV98UCOUfu8m8Mqt2UHDK/BaMLoHkihkz3IvZcXtFfb4gmMhYSoChKM8Ouu8n2Akejd7gffOiuCLtI/RQjxX8GRYxPslkQmJshzDWzT3LxBTy8L1GXIOt7NyEcWT2hNJICIPgOnGv1btKoRJc/AvS/M3hpkXlu+J0vbeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764790503; c=relaxed/simple;
-	bh=yW8wL8LE2AZ9Pp3nc5eXQNh9A5Z+GhYj0dSwhIj9Dog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jsN8D1Brhtyyq6wHkxnjIvNuijAredAXgUYDp8AKXaKXhvV40YvW4xML9Twb4VBlIXSPqckYBB6PaHHFgXGVZUdilyfSxibzKss+kG1d6KMzbKsOMSP6yDEasE7OWmfHZjX9kI5UiM0kC9hp+dC2PHyaVbpGmhg5utXyKsTeUvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMpOx5U0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74AEEC19422;
-	Wed,  3 Dec 2025 19:35:01 +0000 (UTC)
+	s=arc-20240116; t=1764791059; c=relaxed/simple;
+	bh=/SPXWYmqqIt+3J1y1r3JwQXuOAOSjdiHYJVmFwPhB5E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bkEEgq7dYrka+HXuQQZ4V1f8HZqau9/Fp5wFij25zsZ8ZZH3D5sbJooPo1okaEUP87N6Yj5QAKT8pwD8+XsU2/+LudC4W78itxQfaTcp47EVfr6jGtD2hpctzHYal5/xWozOski0K7mF3ikI0DDC1hLSH0/umOrnM9+7CQz5rbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJtdjDe+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E0D7C4CEF5;
+	Wed,  3 Dec 2025 19:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764790502;
-	bh=yW8wL8LE2AZ9Pp3nc5eXQNh9A5Z+GhYj0dSwhIj9Dog=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pMpOx5U0U0lbF7J8EUTR91x3VgtfHdvGGOy7CxVJstVPcDn1PfH2wgsF2qkzFl1pf
-	 wcf9Z+5xUUmrOclI015pNdokXiiE9eAX6iBTCUDs3whc/D68yhM8RjIY+OOb3ba6dJ
-	 nX6Dp94nL6ndVsNnLI9vLSvkCYqJzEk5lOGXXhRnAmv2Ckj8vF8W/0RYmNQe5Qp8YI
-	 8bW1ja3wG9zhqAAY3PDYL2pE8d/e6T10gQCK2ppYczcrW+hQxDhzkw6QcSnwtzKrEg
-	 iCVdA/bR0RStnUi0Pz/HdGayD52wSAP9fzZ6G5XnxSBzxMrJBKiNk+PULR7/cyYUbd
-	 Zgiwkn6EPkKKg==
-Message-ID: <a5da76b6-6b84-42b7-a9c5-8f271a546af1@kernel.org>
-Date: Wed, 3 Dec 2025 14:35:00 -0500
+	s=k20201202; t=1764791058;
+	bh=/SPXWYmqqIt+3J1y1r3JwQXuOAOSjdiHYJVmFwPhB5E=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EJtdjDe+gZflefhc/DRS3AJfbNGy6wGTCIKW2GTtN4ab9xhBewYv2aTSFRF67JtXK
+	 8tiA0tTuR0Hks5+vX74tQwfzZ5jrgeAXPZIrZicvrAplXf4zFlEUc9KkOVAWTLU9xx
+	 C+wI08LzSzFy13fKRDEFb+L+8cCVt2QKjcgMasOC/m8puN2iF3Lxb7D3xmVHTI8tYC
+	 jcbNaKZIJXH3F1M+wKbBTO7DPrk+7bnM0fmzb/SFEqsn3DWXDfmEYSlqd0O8zjz18p
+	 fIL3xPNKypOnfWJbZ+1+b27RjFDlrawEJmwyG3pmKZO1qIOVThEVet3pKOep9RZGp5
+	 kfouQV/tDR38A==
+Message-ID: <82320f68300e0cbcbc0545944191a832b946cf80.camel@kernel.org>
+Subject: Re: [PATCH 2/2] filelock: allow lease_managers to dictate what
+ qualifies as a conflict
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
+ Lever	 <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jonathan Corbet
+ <corbet@lwn.net>, NeilBrown <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Wed, 03 Dec 2025 14:44:15 -0500
+In-Reply-To: <ae795e6b-bf65-46ec-9629-edcec3dcd0b9@app.fastmail.com>
+References: <20251201-dir-deleg-ro-v1-0-2e32cf2df9b7@kernel.org>
+	 <20251201-dir-deleg-ro-v1-2-2e32cf2df9b7@kernel.org>
+	 <ae795e6b-bf65-46ec-9629-edcec3dcd0b9@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] filelock: add lease_dispose_list() helper
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>,
- Alexander Aring <alex.aring@gmail.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Jonathan Corbet <corbet@lwn.net>, NeilBrown <neil@brown.name>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-References: <20251201-dir-deleg-ro-v1-0-2e32cf2df9b7@kernel.org>
- <20251201-dir-deleg-ro-v1-1-2e32cf2df9b7@kernel.org>
- <9a6f7f4b-dc45-4288-a8ee-6dcaabd19eb9@app.fastmail.com>
- <697eb0d57f34882317e1f5cd73951f1e3b1e3175.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <697eb0d57f34882317e1f5cd73951f1e3b1e3175.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 12/3/25 2:33 PM, Jeff Layton wrote:
-> On Wed, 2025-12-03 at 13:55 -0500, Chuck Lever wrote:
->>
->> On Mon, Dec 1, 2025, at 10:08 AM, Jeff Layton wrote:
->>> ...and call that from the lease handling code instead of
->>> locks_dispose_list(). Remove the lease handling parts from
->>> locks_dispose_list().
->>
->> The actual change here isn't bothering me, but I'm having trouble
->> understanding why it's needed. It doesn't appear to be a strict
->> functional prerequisite for 2/2.
->>
-> 
-> It's not. We can table this patch for now if that's preferable, but I
-> do think it's a worthwhile cleanup.
->  
->> A little more context in the commit message would be helpful.
->> Sample commit description:
->>
->>   The lease-handling code paths always know they're disposing of leases,
->>   yet locks_dispose_list() checks flags at runtime to determine whether
->>   to call locks_free_lease() or locks_free_lock().
->>
->>   Split out a dedicated lease_dispose_list() helper for lease code paths.
->>   This makes the type handling explicit and prepares for the upcoming
->>   lease_manager enhancements where lease-specific operations are being
->>   consolidated.
->>
-> 
-> I may crib this if I end up resending it.
-> 
->> But that reflects only my naive understanding of the patch. You
->> might have something else in mind.
->>
->>
-> 
-> Nope, no ulterior motive here. It's just a nice to have cleanup that
-> helps to further separate the lock and lease handling code.
+On Wed, 2025-12-03 at 14:00 -0500, Chuck Lever wrote:
+>=20
+> On Mon, Dec 1, 2025, at 10:08 AM, Jeff Layton wrote:
+> > Requesting a delegation on a file from the userland fcntl() interface
+> > currently succeeds when there are conflicting opens present.
+> >=20
+> > This is because the lease handling code ignores conflicting opens for
+> > FL_LAYOUT and FL_DELEG leases. This was a hack put in place long ago,
+> > because nfsd already checks for conflicts in its own way. The kernel
+> > needs to perform this check for userland delegations the same way it is
+> > done for leases, however.
+> >=20
+> > Make this dependent on the lease_manager by adding a new
+> > ->lm_open_conflict() lease_manager operation and have
+> > generic_add_lease() call that instead of check_conflicting_open().
+> > Morph check_conflicting_open() into a ->lm_open_conflict() op that is
+> > only called for userland leases/delegations. Set the
+> > ->lm_open_conflict() operations for nfsd to trivial functions that
+> > always return 0.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  Documentation/filesystems/locking.rst |  1 +
+> >  fs/locks.c                            | 90 ++++++++++++++++-----------=
+--------
+> >  fs/nfsd/nfs4layouts.c                 | 11 ++++-
+> >  fs/nfsd/nfs4state.c                   |  7 +++
+> >  include/linux/filelock.h              |  1 +
+> >  5 files changed, 60 insertions(+), 50 deletions(-)
+> >=20
+> > diff --git a/Documentation/filesystems/locking.rst=20
+> > b/Documentation/filesystems/locking.rst
+> > index=20
+> > 77704fde98457423beae7ff00525a7383e37132b..29d453a2201bcafa03b26b706e4c6=
+8eaf5683829=20
+> > 100644
+> > --- a/Documentation/filesystems/locking.rst
+> > +++ b/Documentation/filesystems/locking.rst
+> > @@ -416,6 +416,7 @@ lm_change		yes		no			no
+> >  lm_breaker_owns_lease:	yes     	no			no
+> >  lm_lock_expirable	yes		no			no
+> >  lm_expire_lock		no		no			yes
+> > +lm_open_conflict        yes             no                      no
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >=20
+> >  buffer_head
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index=20
+> > e974f8e180fe48682a271af4f143e6bc8e9c4d3b..a58c51c2cdd0cc4496538ed54d063=
+cd523264128=20
+> > 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -585,10 +585,50 @@ lease_setup(struct file_lease *fl, void **priv)
+> >  	__f_setown(filp, task_pid(current), PIDTYPE_TGID, 0);
+> >  }
+> >=20
+> > +/**
+> > + * lease_open_conflict - see if the given file points to an inode that=
+ has
+> > + *			 an existing open that would conflict with the
+> > + *			 desired lease.
+> > + * @filp:	file to check
+> > + * @arg:	type of lease that we're trying to acquire
+> > + *
+> > + * Check to see if there's an existing open fd on this file that would
+> > + * conflict with the lease we're trying to set.
+> > + */
+> > +static int
+> > +lease_open_conflict(struct file *filp, const int arg)
+> > +{
+> > +	struct inode *inode =3D file_inode(filp);
+> > +	int self_wcount =3D 0, self_rcount =3D 0;
+> > +
+> > +	if (arg =3D=3D F_RDLCK)
+> > +		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
+> > +	else if (arg !=3D F_WRLCK)
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * Make sure that only read/write count is from lease requestor.
+> > +	 * Note that this will result in denying write leases when i_writecou=
+nt
+> > +	 * is negative, which is what we want.  (We shouldn't grant write lea=
+ses
+> > +	 * on files open for execution.)
+> > +	 */
+> > +	if (filp->f_mode & FMODE_WRITE)
+> > +		self_wcount =3D 1;
+> > +	else if (filp->f_mode & FMODE_READ)
+> > +		self_rcount =3D 1;
+> > +
+> > +	if (atomic_read(&inode->i_writecount) !=3D self_wcount ||
+> > +	    atomic_read(&inode->i_readcount) !=3D self_rcount)
+> > +		return -EAGAIN;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct lease_manager_operations lease_manager_ops =3D {
+> >  	.lm_break =3D lease_break_callback,
+> >  	.lm_change =3D lease_modify,
+> >  	.lm_setup =3D lease_setup,
+> > +	.lm_open_conflict =3D lease_open_conflict,
+> >  };
+> >=20
+> >  /*
+> > @@ -1753,52 +1793,6 @@ int fcntl_getdeleg(struct file *filp, struct=20
+> > delegation *deleg)
+> >  	return 0;
+> >  }
+> >=20
+> > -/**
+> > - * check_conflicting_open - see if the given file points to an inode=
+=20
+> > that has
+> > - *			    an existing open that would conflict with the
+> > - *			    desired lease.
+> > - * @filp:	file to check
+> > - * @arg:	type of lease that we're trying to acquire
+> > - * @flags:	current lock flags
+> > - *
+> > - * Check to see if there's an existing open fd on this file that would
+> > - * conflict with the lease we're trying to set.
+> > - */
+> > -static int
+> > -check_conflicting_open(struct file *filp, const int arg, int flags)
+> > -{
+> > -	struct inode *inode =3D file_inode(filp);
+> > -	int self_wcount =3D 0, self_rcount =3D 0;
+> > -
+> > -	if (flags & FL_LAYOUT)
+> > -		return 0;
+> > -	if (flags & FL_DELEG)
+> > -		/* We leave these checks to the caller */
+> > -		return 0;
+> > -
+> > -	if (arg =3D=3D F_RDLCK)
+> > -		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
+> > -	else if (arg !=3D F_WRLCK)
+> > -		return 0;
+> > -
+> > -	/*
+> > -	 * Make sure that only read/write count is from lease requestor.
+> > -	 * Note that this will result in denying write leases when=20
+> > i_writecount
+> > -	 * is negative, which is what we want.  (We shouldn't grant write=20
+> > leases
+> > -	 * on files open for execution.)
+> > -	 */
+> > -	if (filp->f_mode & FMODE_WRITE)
+> > -		self_wcount =3D 1;
+> > -	else if (filp->f_mode & FMODE_READ)
+> > -		self_rcount =3D 1;
+> > -
+> > -	if (atomic_read(&inode->i_writecount) !=3D self_wcount ||
+> > -	    atomic_read(&inode->i_readcount) !=3D self_rcount)
+> > -		return -EAGAIN;
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >  static int
+> >  generic_add_lease(struct file *filp, int arg, struct file_lease **flp,=
+=20
+> > void **priv)
+> >  {
+> > @@ -1835,7 +1829,7 @@ generic_add_lease(struct file *filp, int arg,=20
+> > struct file_lease **flp, void **pr
+> >  	percpu_down_read(&file_rwsem);
+> >  	spin_lock(&ctx->flc_lock);
+> >  	time_out_leases(inode, &dispose);
+> > -	error =3D check_conflicting_open(filp, arg, lease->c.flc_flags);
+> > +	error =3D lease->fl_lmops->lm_open_conflict(filp, arg);
+> >  	if (error)
+> >  		goto out;
+> >=20
+> > @@ -1892,7 +1886,7 @@ generic_add_lease(struct file *filp, int arg,=20
+> > struct file_lease **flp, void **pr
+> >  	 * precedes these checks.
+> >  	 */
+> >  	smp_mb();
+> > -	error =3D check_conflicting_open(filp, arg, lease->c.flc_flags);
+> > +	error =3D lease->fl_lmops->lm_open_conflict(filp, arg);
+> >  	if (error) {
+> >  		locks_unlink_lock_ctx(&lease->c);
+> >  		goto out;
+> > diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+> > index=20
+> > 683bd1130afe298f9df774684192c89f68102b72..ca7ec7a022bd5c12fad60ff9e5114=
+5d9cca55527=20
+> > 100644
+> > --- a/fs/nfsd/nfs4layouts.c
+> > +++ b/fs/nfsd/nfs4layouts.c
+> > @@ -764,9 +764,16 @@ nfsd4_layout_lm_change(struct file_lease *onlist,=
+=20
+> > int arg,
+> >  	return lease_modify(onlist, arg, dispose);
+> >  }
+> >=20
+> > +static int
+> > +nfsd4_layout_lm_open_conflict(struct file *filp, int arg)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+>=20
+> The usual idiom for no-op callbacks is to make them optional.
+> Then generic_add_lease would check if the ->lm_open_conflict
+> callback is defined first and skip the call if it's not.
+>=20
 
-Yep, it's a good clean-up.
+That is what we usually do, but there are only a few lease managers and
+they all need to define this op, so it saves us a trivial pointer check
+to not do that. I can switch to doing it that way if you have a
+preference.
 
+> If that doesn't make sense to do, and these NFSD-specific
+> functions need to remain, then our usual practice is to add
+> a kdoc comment for both of the new functions that looks like
+> the one you added above for lease_open_conflict().
+>=20
 
->>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>> ---
->>>  fs/locks.c | 29 +++++++++++++++++++----------
->>>  1 file changed, 19 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/fs/locks.c b/fs/locks.c
->>> index 
->>> 7f4ccc7974bc8d3e82500ee692c6520b53f2280f..e974f8e180fe48682a271af4f143e6bc8e9c4d3b 
->>> 100644
->>> --- a/fs/locks.c
->>> +++ b/fs/locks.c
->>> @@ -369,10 +369,19 @@ locks_dispose_list(struct list_head *dispose)
->>>  	while (!list_empty(dispose)) {
->>>  		flc = list_first_entry(dispose, struct file_lock_core, flc_list);
->>>  		list_del_init(&flc->flc_list);
->>> -		if (flc->flc_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
->>> -			locks_free_lease(file_lease(flc));
->>> -		else
->>> -			locks_free_lock(file_lock(flc));
->>> +		locks_free_lock(file_lock(flc));
->>> +	}
->>> +}
->>> +
->>> +static void
->>> +lease_dispose_list(struct list_head *dispose)
->>> +{
->>> +	struct file_lock_core *flc;
->>> +
->>> +	while (!list_empty(dispose)) {
->>> +		flc = list_first_entry(dispose, struct file_lock_core, flc_list);
->>> +		list_del_init(&flc->flc_list);
->>> +		locks_free_lease(file_lease(flc));
->>>  	}
->>>  }
->>>
->>> @@ -1620,7 +1629,7 @@ int __break_lease(struct inode *inode, unsigned int flags)
->>>  	spin_unlock(&ctx->flc_lock);
->>>  	percpu_up_read(&file_rwsem);
->>>
->>> -	locks_dispose_list(&dispose);
->>> +	lease_dispose_list(&dispose);
->>>  	error = wait_event_interruptible_timeout(new_fl->c.flc_wait,
->>>  						 list_empty(&new_fl->c.flc_blocked_member),
->>>  						 break_time);
->>> @@ -1643,7 +1652,7 @@ int __break_lease(struct inode *inode, unsigned 
->>> int flags)
->>>  out:
->>>  	spin_unlock(&ctx->flc_lock);
->>>  	percpu_up_read(&file_rwsem);
->>> -	locks_dispose_list(&dispose);
->>> +	lease_dispose_list(&dispose);
->>>  free_lock:
->>>  	locks_free_lease(new_fl);
->>>  	return error;
->>> @@ -1726,7 +1735,7 @@ static int __fcntl_getlease(struct file *filp, 
->>> unsigned int flavor)
->>>  		spin_unlock(&ctx->flc_lock);
->>>  		percpu_up_read(&file_rwsem);
->>>
->>> -		locks_dispose_list(&dispose);
->>> +		lease_dispose_list(&dispose);
->>>  	}
->>>  	return type;
->>>  }
->>> @@ -1895,7 +1904,7 @@ generic_add_lease(struct file *filp, int arg, 
->>> struct file_lease **flp, void **pr
->>>  out:
->>>  	spin_unlock(&ctx->flc_lock);
->>>  	percpu_up_read(&file_rwsem);
->>> -	locks_dispose_list(&dispose);
->>> +	lease_dispose_list(&dispose);
->>>  	if (is_deleg)
->>>  		inode_unlock(inode);
->>>  	if (!error && !my_fl)
->>> @@ -1931,7 +1940,7 @@ static int generic_delete_lease(struct file 
->>> *filp, void *owner)
->>>  		error = fl->fl_lmops->lm_change(victim, F_UNLCK, &dispose);
->>>  	spin_unlock(&ctx->flc_lock);
->>>  	percpu_up_read(&file_rwsem);
->>> -	locks_dispose_list(&dispose);
->>> +	lease_dispose_list(&dispose);
->>>  	return error;
->>>  }
->>>
->>> @@ -2726,7 +2735,7 @@ locks_remove_lease(struct file *filp, struct 
->>> file_lock_context *ctx)
->>>  	spin_unlock(&ctx->flc_lock);
->>>  	percpu_up_read(&file_rwsem);
->>>
->>> -	locks_dispose_list(&dispose);
->>> +	lease_dispose_list(&dispose);
->>>  }
->>>
->>>  /*
->>>
->>> -- 
->>> 2.52.0
-> 
+Even for one that just returns 0? Ok
 
+>=20
+> Otherwise, I'm comfortable that this change fits in with the
+> deadlock prevention patches we are considering for NFSD.
+>=20
+> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> For both 1/2 and 2/2.
+>=20
 
--- 
-Chuck Lever
+Thanks!
+
+>=20
+> >  static const struct lease_manager_operations nfsd4_layouts_lm_ops =3D =
+{
+> > -	.lm_break	=3D nfsd4_layout_lm_break,
+> > -	.lm_change	=3D nfsd4_layout_lm_change,
+> > +	.lm_break		=3D nfsd4_layout_lm_break,
+> > +	.lm_change		=3D nfsd4_layout_lm_change,
+> > +	.lm_open_conflict	=3D nfsd4_layout_lm_open_conflict,
+> >  };
+> >=20
+> >  int
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index=20
+> > 8f8c9385101e15b64883eabec71775f26b14f890..669fabb095407e61525e5b71268cf=
+1f06fc09877=20
+> > 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -5543,10 +5543,17 @@ nfsd_change_deleg_cb(struct file_lease *onlist,=
+=20
+> > int arg,
+> >  		return -EAGAIN;
+> >  }
+> >=20
+> > +static int
+> > +nfsd4_deleg_lm_open_conflict(struct file *filp, int arg)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct lease_manager_operations nfsd_lease_mng_ops =3D {
+> >  	.lm_breaker_owns_lease =3D nfsd_breaker_owns_lease,
+> >  	.lm_break =3D nfsd_break_deleg_cb,
+> >  	.lm_change =3D nfsd_change_deleg_cb,
+> > +	.lm_open_conflict =3D nfsd4_deleg_lm_open_conflict,
+> >  };
+> >=20
+> >  static __be32 nfsd4_check_seqid(struct nfsd4_compound_state *cstate,=
+=20
+> > struct nfs4_stateowner *so, u32 seqid)
+> > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> > index=20
+> > 54b824c05299261e6bd6acc4175cb277ea35b35d..2f5e5588ee0733c200103801d0d2b=
+a19bebbf9af=20
+> > 100644
+> > --- a/include/linux/filelock.h
+> > +++ b/include/linux/filelock.h
+> > @@ -49,6 +49,7 @@ struct lease_manager_operations {
+> >  	int (*lm_change)(struct file_lease *, int, struct list_head *);
+> >  	void (*lm_setup)(struct file_lease *, void **);
+> >  	bool (*lm_breaker_owns_lease)(struct file_lease *);
+> > +	int (*lm_open_conflict)(struct file *, int);
+> >  };
+> >=20
+> >  struct lock_manager {
+> >=20
+> > --=20
+> > 2.52.0
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
