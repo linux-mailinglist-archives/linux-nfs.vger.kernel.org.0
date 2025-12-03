@@ -1,105 +1,191 @@
-Return-Path: <linux-nfs+bounces-16864-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16865-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91F89C9DEF4
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 07:33:00 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id A74BFC9EADC
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 11:19:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5D9B04E07BB
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 06:32:59 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DF70C347325
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 10:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 230C423EA8E;
-	Wed,  3 Dec 2025 06:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806C32E7BBA;
+	Wed,  3 Dec 2025 10:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F8wGiO5r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sia1MYIL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E700136351;
-	Wed,  3 Dec 2025 06:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119562DE707;
+	Wed,  3 Dec 2025 10:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764743575; cv=none; b=N6qIa+s4cyx/Yv137VIyrWuJDSJ4AaBp3vyacWNAr5Sw62l5PS2p5nnYtv0o3dHzOkP4MTNCczOfxCkws9eDfhp6fN9bh9q3OjP/cUYZqREY/W9MQj0mq5I+1t91kHy14HvY70isXMtRbdvcR9BTrjcOSxEvV5qEiM9W2FrCQxY=
+	t=1764757151; cv=none; b=l1y/iSY3P6bBKvJmq7rfGniKBLZ/N+ITjeHc/tYquDWUGvNErSeQ+Nx1uktYZhMQwK9KJaKYAVzIDIwpFWKsOCDR5OQt2vxS1pXHKllevKb46ByutDXSV7CIX1ds0M4LfkzWbsbeKqWsSV42pR80nsIwvB1HEA7q5/RDEwFV3CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764743575; c=relaxed/simple;
-	bh=ab7gVqHTJ9oQMaZ4q9PbW5zQpxxLw+jDBtOIyA+DiiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jfnLBovrGoYbWNvLiPrH2EDhna5Ndt97fSBDt+vhpO/C5ro3xGm4SVHkriWEkDFQWAjcuE8kIhX93YRD+D64Lh1zR+Ad0/pn95DauvEdbpYHJVKO7fVrPAYcuHMLZFVI5gUVfarKofotT8qSZeQf3fM5H75TJGdzmdZpZTYcN0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F8wGiO5r; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=Q4Celb0Cx2Ef9zOuXbWuPB02TdKRuUDQhXX/E0hzTrg=; b=F8wGiO5rIx9I1q6c0WA/BVfwN3
-	bd+BHOgNkrenzt8HxD78dpAgvMlPdYNTOEnF7jWHWOn9Ik4wqJeqHAmezyLp4HvTbQejkgSEv4gZ1
-	ALtTFMJ+sSlVqq7G1j7ChsF7dftanyMkZy9pNmKkAr8yAQCXVb10zQImRJraGgXlwQhfJuaaMPUEM
-	gGkW4JwSY1ZipHGUuK7KURXoVrnTtpGtYZq2vZsyggFJ7NQvVR+9MB3BLTlK/hcbVdA1HNZrOJJ6w
-	9Koc5yskuMqwn3iZEUYDfmEBuiURZF0OrIMc+6Pc4b0TY/ymmA7Zd53F2Kj8vBD983SupKJ+KXggT
-	Itu26AkA==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQgPz-00000006BvS-3O1l;
-	Wed, 03 Dec 2025 06:32:51 +0000
-Message-ID: <cd05ee0d-18ad-43ba-b1c7-9ddc8a9afff9@infradead.org>
-Date: Tue, 2 Dec 2025 22:32:50 -0800
+	s=arc-20240116; t=1764757151; c=relaxed/simple;
+	bh=1ALGFmGlgOHY6f+bdLdgKebsX+au1yQ5dTRhimTaFoA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MzVrCaPOfJSbHnu5034+sN/igCQpAT0+eqawrc2CmK2pAHRA2QjXw7hUydE514Q7CmplIfKVrvREVZ5mESHganvctY0wvUSStpd4q0tj2K2UR/RW+qDVmiF3IJKZIDMao2imUe8JmnRcJWDHCn1/lUgf8DoAhemIKTQ1oTsaR84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sia1MYIL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25361C113D0;
+	Wed,  3 Dec 2025 10:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764757150;
+	bh=1ALGFmGlgOHY6f+bdLdgKebsX+au1yQ5dTRhimTaFoA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Sia1MYILwN3OHyU8vJVbFzEbPmh+E9Rkdc13NmENJiNAQwujMzrx7aLJDYQwnRJH2
+	 icv0Cs7+2DiJlUtJrJ3jFjsxz5e5SC+H4b4cDPm/4/s+aTZepyO4AvrHMcRjPs8po7
+	 P0lAluHlqilBXk1Sh/B/XN0TZMdipTL7EolZ0FehsZ8XGO0/aidHMHK8ayQiiiT5TA
+	 U6OOgYna9Ec2DgYD68Hcv9/StfMLZVIApf1YAZumWdYivMJy+S1b4NF19fKc5R60wD
+	 vv/cJLS0nI7ttPeXB8OyKOFM1iSYjxfn/4avfs6o2Xu7czGUpIFQziUIbMv79dw+WM
+	 YExRE41C2xh0g==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	NeilBrown <neilb@ownmail.net>,
+	linux-kernel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-afs@lists.infradead.org,
+	linux-btrfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu,
+	ecryptfs@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	gfs2@lists.linux.dev,
+	linux-um@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org,
+	linux-nilfs@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	linux-karma-devel@lists.sourceforge.net,
+	devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-xfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	NeilBrown <neil@brown.name>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Chris Mason <clm@fb.com>,
+	Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	coda@cs.cmu.edu,
+	Tyler Hicks <code@tyhicks.com>,
+	Jeremy Kerr <jk@ozlabs.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Bob Copeland <me@bobcopeland.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@kernel.org>
+Subject: Re: [PATCH RESEND v3] vfs: remove the excl argument from the ->create() inode_operation
+Date: Wed,  3 Dec 2025 11:18:32 +0100
+Message-ID: <20251203-sechzehn-lethargisch-cd739d4ff49a@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251201-create-excl-v3-1-8933a444b046@kernel.org>
+References: <20251201-create-excl-v3-1-8933a444b046@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] NFSD IO MODES documentation fixes
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux NFS <linux-nfs@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Mike Snitzer <snitzer@kernel.org>
-References: <20251203010911.14234-1-bagasdotme@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251203010911.14234-1-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1370; i=brauner@kernel.org; h=from:subject:message-id; bh=1ALGFmGlgOHY6f+bdLdgKebsX+au1yQ5dTRhimTaFoA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQa8NXdfyOWEe7C1j7j3H39MtmOfckhfYU3uPbO3GJ5W X9idSdfRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwER6JjEyXElxiNLjXsTcG/zF veHQZtE3X3LuXMnZx/2vIaPja/5RBYb/9Vo7JnHefOS2MX2Dr5zm5id7fnmJz3GXVk7n4Wu5Kpf KBAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+On Mon, 01 Dec 2025 08:11:42 -0500, Jeff Layton wrote:
+> With three exceptions, ->create() methods provided by filesystems ignore
+> the "excl" flag.  Those exception are NFS, GFS2 and vboxsf which all also
+> provide ->atomic_open.
+> 
+> Since ce8644fcadc5 ("lookup_open(): expand the call of vfs_create()"),
+> the "excl" argument to the ->create() inode_operation is always set to
+> true in vfs_create(). The ->create() call in lookup_open() sets it
+> according to the O_EXCL open flag, but is never called if the filesystem
+> provides ->atomic_open().
+> 
+> [...]
 
+Applied to the vfs-6.20.mkdir branch of the vfs/vfs.git tree.
+Patches in the vfs-6.20.mkdir branch should appear in linux-next soon.
 
-On 12/2/25 5:09 PM, Bagas Sanjaya wrote:
-> Hi,
-> 
-> Here are fixes for NFSD IO modes documentation as reported in linux-next [1].
-> 
-> Enjoy!
-> 
-> [1]: https://lore.kernel.org/linux-next/20251202152506.7a2d2d41@canb.auug.org.au/
-> 
-> Bagas Sanjaya (3):
->   NFSD: Add toctree entry for NFSD IO modes docs
->   NFSD: nfsd-io-modes: Wrap shell snippets in literal code blocks
->   NFSD: nfsd-io-modes: Separate lists
-> 
->  Documentation/filesystems/nfs/index.rst       |  1 +
->  .../filesystems/nfs/nfsd-io-modes.rst         | 33 ++++++++++++-------
->  2 files changed, 22 insertions(+), 12 deletions(-)
-> 
-> 
-> base-commit: fa8d4e6784d1b6a6eaa3911bac993181631d2856
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-for all 3 patches:
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Thanks.
--- 
-~Randy
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.20.mkdir
+
+[1/1] vfs: remove the excl argument from the ->create() inode_operation
+      https://git.kernel.org/vfs/vfs/c/7d91315b4335
 
