@@ -1,182 +1,228 @@
-Return-Path: <linux-nfs+bounces-16871-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16872-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B266EC9F62A
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 15:57:46 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6573CC9F624
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 15:57:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 63191300775C
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 14:55:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id 4458A30000BA
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 14:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154B3303A1E;
-	Wed,  3 Dec 2025 14:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DEB73043C3;
+	Wed,  3 Dec 2025 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8NGb+D8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D00dP9ZX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EE4302166
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 14:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AA3303C91
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764773697; cv=none; b=nIYr1KtXzfzT90wbkCJppXevMWIr+yvy+pYJJ15NCs/c54UWIy6cLayiIAoagD50AYlRqIopeHJqZz9xeD2A9CIOMo1To8N5X9s2Dh6FDvJlRZiA10UAOn0G/ry/Aw0D15k3EA6em3+MZ0nc5SJgM6NvHWrGzsTfBZXd8DsrVaY=
+	t=1764773807; cv=none; b=XyKhcsAASjFiUE/487yuiRrdEMTCJe/5NZpLG0JAXycX1ND/ya/3Z7SNNu4AkoutSyxA2O+Gp4mjCGOAgkPRC5oA613crFlV7icnhcgGelFU+E6kE3J74jhmdeBK9Ba2JWYrKoFdgmZNU+CYmIz2UGmmSccGSwHQsq5ujbdL1iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764773697; c=relaxed/simple;
-	bh=J5occkpU/0qdNMTyKLXz45WN7D2JqZZ9VpRzhUXuFXU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=je5OWuirxWjKngPgW81RUGj545XrCbaIwR3VKLSKRLZD3hGHOhFnMPTfLCCm978Jh73xTPBWnFvGjX7UX9Qj6wVrSlcg1D6fMW6jB801kq0KPz4sX4xe+C/S/50vUDJJaLf7MGLEO7fdHFGXuxsFNM6DmJMpxuU26ps74U+3su4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8NGb+D8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F192C4CEF5
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 14:54:56 +0000 (UTC)
+	s=arc-20240116; t=1764773807; c=relaxed/simple;
+	bh=meELnK5PQoc3jXfdGB3tcHx/ggI7/iZBEfpiMdiAbqg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=A2aLAp9eMtE4RtiVMipHJNGXPhyAkbIdby7AW3CD8Vj5WNBOwkPH2YFKs1gD3HQuSXl/R50nsv/Xj3nkSaGYK7je6Txrj8qBLOZzm6XEM95sJSgNVAh/zn00fC1bvQSqZBkPT5l/CivWxmusR10YZU6uXyu6rtKA0YN5g5u9q4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D00dP9ZX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDDBC4CEF5;
+	Wed,  3 Dec 2025 14:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764773696;
-	bh=J5occkpU/0qdNMTyKLXz45WN7D2JqZZ9VpRzhUXuFXU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=a8NGb+D8uk4xi4NPkghcaiWyUohZ5U8Cw1sLMTbnGh0wB2oiaY2cMSImtbaLX8NCo
-	 RY6hADhUOMxpTvKE1qaqgXc5/oy+eRmcMtVW4TJPwH87PBM8ANUwncAVC1JfQ7Or1r
-	 eb2wNro+XHq2Gc4HTcqMcuHCG1UgAX1ZOmaEmCNG9XnNfDK5KqAs4IJ8DshacgxIHL
-	 Hqhpk9ad7xyJlNFQmE1leZ10qkfmcy7YmfxTQ6P6XVfcJJE8n/utKAFT61b0X9JIPO
-	 ibo+DfD+qVl8RfPcMAA3h9422xnw3u58tuEvw1wbejFeb0312UD0Bz4PgspjwmXjRN
-	 62EmernmBhhKw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8379AF40068;
-	Wed,  3 Dec 2025 09:54:55 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 03 Dec 2025 09:54:55 -0500
-X-ME-Sender: <xms:P08waT1071ySN-zo8lCOVV9CSoiDbB9psc4ZLSLo2KhE6n9ORpkBCA>
-    <xme:P08wac4fLp6cnN4TY3jd04jMQ0ke0dD_MxXE-lm_iqIuLW-HQSBmK4kLS1e17EMRS
-    QuWd8I22QYXxgURZrXnwPtwG56eJFGlKGN2gfs6kfRwKpCQAHEO6XY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefuddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgtkhcu
-    nfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    fghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklh
-    gvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleeh
-    ledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilh
-    drtghomhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
-    ohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdr
-    tghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtth
-    hopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgr
-    lhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:P08waQPpfNj1Ba4V8XPC1zN8_J4-Pi1cud1h7Vi7Gv1sURL_Nu5bjg>
-    <xmx:P08waXpW-12tk_f_w_a7Dmaxn9GtSKpWFEeq6QM54fm1w0MVzHq7Cg>
-    <xmx:P08waVdC4p_FDO4QuDHXUaNrFNh0wiJnsNt6LzMPERgm7C95qObFgw>
-    <xmx:P08wadTIcUd-qUtMKpYvi7euTOnTBsk2CNjiAKxUY6jhcvsDCTgd1w>
-    <xmx:P08waeZVKxWvZ58RseXx5gvaQdPhhvCQSuAMWbE3jvejHdpcTjvvXVmF>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 63A9E780054; Wed,  3 Dec 2025 09:54:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1764773807;
+	bh=meELnK5PQoc3jXfdGB3tcHx/ggI7/iZBEfpiMdiAbqg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=D00dP9ZXtERrZWIay5aIGbNhURHriSEH/wxOebhKoW08ZWdksA2C+b4uaF57j2VDi
+	 o3Bx9R30phfy7/uxtBJ3isAf4yldmgnFxXd7DOSORvas+dYM7Qe36oO942hORkMtL6
+	 X8a/F/bsIA4JYzqi8cPJLX0AqrP6pSo9+LIJDNlwm51O5VmR2CrDm/sc59a0fq/I83
+	 KuoorAXFu0oHuuXTnXOnYJV1TptonxaXzGAWXtJT1in6iPSRwNs2/Kqvy3p2WmSIYl
+	 cCwFqEO1Dn5ZWImEvBYrJ/8A4jTl6E/4xqOQ1DY6pqBLtXkEFp0iOJC97FfCJ+OKkN
+	 QVWH/hI07WHjQ==
+Message-ID: <a590ce8898046d2e56966b6f307566f885c7f4fe.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] nfsd: prevent write delegations when client has
+ existing opens
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, Chuck Lever
+ <chuck.lever@oracle.com>
+Date: Wed, 03 Dec 2025 09:56:45 -0500
+In-Reply-To: <079ef086-fa1c-4a9f-b011-e47547b4e3bc@app.fastmail.com>
+References: <20251202224208.4449-1-cel@kernel.org>
+	 <176471811359.16766.18131279195615642514@noble.neil.brown.name>
+	 <dc25626e-fae0-401b-93ed-1c4fdf34186c@app.fastmail.com>
+	 <176472909957.16766.8691035364646019081@noble.neil.brown.name>
+	 <eaaa46486ec7b1273adfc1a3bdbf11cb1f557e40.camel@kernel.org>
+	 <079ef086-fa1c-4a9f-b011-e47547b4e3bc@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AW-f6n96Aybc
-Date: Wed, 03 Dec 2025 09:54:35 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>
-Cc: "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <079ef086-fa1c-4a9f-b011-e47547b4e3bc@app.fastmail.com>
-In-Reply-To: <eaaa46486ec7b1273adfc1a3bdbf11cb1f557e40.camel@kernel.org>
-References: <20251202224208.4449-1-cel@kernel.org>
- <176471811359.16766.18131279195615642514@noble.neil.brown.name>
- <dc25626e-fae0-401b-93ed-1c4fdf34186c@app.fastmail.com>
- <176472909957.16766.8691035364646019081@noble.neil.brown.name>
- <eaaa46486ec7b1273adfc1a3bdbf11cb1f557e40.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] nfsd: prevent write delegations when client has existing
- opens
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-
-
-On Wed, Dec 3, 2025, at 7:26 AM, Jeff Layton wrote:
-> On Wed, 2025-12-03 at 13:31 +1100, NeilBrown wrote:
->> On Wed, 03 Dec 2025, Chuck Lever wrote:
->> >=20
->> > On Tue, Dec 2, 2025, at 6:28 PM, NeilBrown wrote:
->> > > On Wed, 03 Dec 2025, Chuck Lever wrote:
->> > > > From: Chuck Lever <chuck.lever@oracle.com>
->> > > >=20
->> > > > When a client holds an existing OPEN stateid for a file and then
->> > > > requests a new OPEN that could receive a write delegation, the
->> > > > server must not grant that delegation. A write delegation promi=
+On Wed, 2025-12-03 at 09:54 -0500, Chuck Lever wrote:
+>=20
+> On Wed, Dec 3, 2025, at 7:26 AM, Jeff Layton wrote:
+> > On Wed, 2025-12-03 at 13:31 +1100, NeilBrown wrote:
+> > > On Wed, 03 Dec 2025, Chuck Lever wrote:
+> > > >=20
+> > > > On Tue, Dec 2, 2025, at 6:28 PM, NeilBrown wrote:
+> > > > > On Wed, 03 Dec 2025, Chuck Lever wrote:
+> > > > > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > > > >=20
+> > > > > > When a client holds an existing OPEN stateid for a file and the=
+n
+> > > > > > requests a new OPEN that could receive a write delegation, the
+> > > > > > server must not grant that delegation. A write delegation promi=
 ses
->> > > > the client it can handle "all opens" locally, but this promise =
+> > > > > > the client it can handle "all opens" locally, but this promise =
 is
->> > > > violated when the server is already tracking open state for that
->> > > > same client.
->> > >=20
->> > > Can you please spell out how the promise is violated?
->> > > Where RFC 8881, section 10.4 says
->> > >=20
->> > >    An OPEN_DELEGATE_WRITE delegation allows the client to handle,=
+> > > > > > violated when the server is already tracking open state for tha=
+t
+> > > > > > same client.
+> > > > >=20
+> > > > > Can you please spell out how the promise is violated?
+> > > > > Where RFC 8881, section 10.4 says
+> > > > >=20
+> > > > >    An OPEN_DELEGATE_WRITE delegation allows the client to handle,=
  on its
->> > >    own, all opens.=20
->> > >=20
->> > > I interpret that to mean that all open *requests* from the applic=
+> > > > >    own, all opens.=20
+> > > > >=20
+> > > > > I interpret that to mean that all open *requests* from the applic=
 ation can
->> > > now be handled without reference to the server.
->> > > I don't think that "all opens" can reasonably refer to "all exist=
+> > > > > now be handled without reference to the server.
+> > > > > I don't think that "all opens" can reasonably refer to "all exist=
 ing or
->> > > future open state for the file".  Is that how you interpret it?
->> >=20
->> > It is: as long as a client holds a write delegation stateid, that=E2=
-=80=99s a
->> > promise that the server will inform that client when any other clie=
+> > > > > future open state for the file".  Is that how you interpret it?
+> > > >=20
+> > > > It is: as long as a client holds a write delegation stateid, that=
+=E2=80=99s a
+> > > > promise that the server will inform that client when any other clie=
 nt
->> > wants to open that file. In other words, an NFS server can=E2=80=99=
+> > > > wants to open that file. In other words, an NFS server can=E2=80=99=
 t offer a
->> > write delegation to a client if there is another OPEN on that file.
->>=20
->> Agreed: "other" client and "another" OPEN.
->>=20
->> >=20
->> > The issue here is about an OPEN that occurred in the past and is st=
+> > > > write delegation to a client if there is another OPEN on that file.
+> > >=20
+> > > Agreed: "other" client and "another" OPEN.
+> > >=20
+> > > >=20
+> > > > The issue here is about an OPEN that occurred in the past and is st=
 ill
->> > active, not a future OPEN. NFSD was checking for OPENs that other
->> > clients had for a file before offering a write delegation, but it d=
+> > > > active, not a future OPEN. NFSD was checking for OPENs that other
+> > > > clients had for a file before offering a write delegation, but it d=
 oes not
->> > currently check if the /requesting client/ itself has an OPEN state=
+> > > > currently check if the /requesting client/ itself has an OPEN state=
 id for
->> > that file.
->> >=20
->>=20
->> I don't see a problem with offering a write delegation when the client
->> previously had the same file open.
->> Note that a client only ever has one stateid for any given file.  If =
+> > > > that file.
+> > > >=20
+> > >=20
+> > > I don't see a problem with offering a write delegation when the clien=
+t
+> > > previously had the same file open.
+> > > Note that a client only ever has one stateid for any given file.  If =
 it
->> opens the same file again, it will get the same stateid - with seqid
->> incremented.  If it closes the stateid, then it will not have that fi=
+> > > opens the same file again, it will get the same stateid - with seqid
+> > > incremented.  If it closes the stateid, then it will not have that fi=
 le
->> open at all any more.
+> > > open at all any more.
+>=20
+> > I agree with Neil here (despite my questioning this on our call
+> > yesterday).
+> >=20
+> > Conceptually, granting a write delegation to a client that already
+> > holds an open stateid for the file doesn't seem problematic. Before
+> > returning that delegation, the client would need to establish open
+> > stateids for any opens that it had granted locally. If it already holds
+> > an open stateid though, then that isn't a problem IMO -- it just has a
+> > head start on establishing them before a DELEGRETURN.
+>=20
+> Then you prefer the v1 patch that reuses the nfsd_file already
+> in fi_fds[O_RDONLY], and we can drop the addition of the
+> WARN_ON_ONCE ?
+>=20
 
-> I agree with Neil here (despite my questioning this on our call
-> yesterday).
->
-> Conceptually, granting a write delegation to a client that already
-> holds an open stateid for the file doesn't seem problematic. Before
-> returning that delegation, the client would need to establish open
-> stateids for any opens that it had granted locally. If it already holds
-> an open stateid though, then that isn't a problem IMO -- it just has a
-> head start on establishing them before a DELEGRETURN.
-
-Then you prefer the v1 patch that reuses the nfsd_file already
-in fi_fds[O_RDONLY], and we can drop the addition of the
-WARN_ON_ONCE ?
-
-
+Yeah, I think that's probably the best thing to do.
 --=20
-Chuck Lever
+Jeff Layton <jlayton@kernel.org>
 
