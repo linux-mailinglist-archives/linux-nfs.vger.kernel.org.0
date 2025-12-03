@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-16866-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16867-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 925D3C9EFC2
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 13:26:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43E3DC9EFD1
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 13:28:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB87A3A7268
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 12:26:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0AAB34E03B4
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 12:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 247762DA763;
-	Wed,  3 Dec 2025 12:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553D62D836A;
+	Wed,  3 Dec 2025 12:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/zqGIK1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0kFQJMI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21702D8DB7
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 12:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300B52BE026
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 12:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764764779; cv=none; b=NeT37qvZH9l714rC12qACScDZkjQ7wduEW/CgwZZmP5OBXzOpxVhrlxIbsN8hoLb8YV3ag1C2bbFmnTgpPz2tTA1gLSLX4SLmFIWEyg8u72y4XxQ81GemqC97K8uLmQ6isvNVzI602KeS01yNbcnvyxB7qBaHGKKBvB8hiHj0DM=
+	t=1764764900; cv=none; b=JEDLVeW9aOeh1ZvfSV63Ho8Hp+zMovM2jKuB8WlbccrzBNH/VDDHTTkd1csMaUx+g5YNc31IYzZXU+iUI8Vv80yhKgWUEQy+W3ksCPTAro4hinxowbRyD5OZeRu5h1Q3WMLw6vFXE7phKExDwZYwE1VdItOGMi5oSpqoMfR0RRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764764779; c=relaxed/simple;
-	bh=RzOO0t8NS9yCiB5WJt+5PGVRlXgLAzZk5byIPBg65Xk=;
+	s=arc-20240116; t=1764764900; c=relaxed/simple;
+	bh=V5rB6EnSLBwFcFQtU2AxCNQdXUacluqFTSQ6XiWRJDQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CXQocwk1uxaAnRE/JVfsO0DyHWDAHAgWqiHaamPWcIg7wbTH59VKhvl3cB6uldGFXj6uapOUs4YMV1+Piss8ZeZ98+FbKiMSeho7Zvf8TED0O1kfhtsQoh1qyuH3GIdJSD3anYhV4I4fzoPZkIDzDMWaqFABxK5U59o74gMikbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/zqGIK1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C6BC4CEFB;
-	Wed,  3 Dec 2025 12:26:17 +0000 (UTC)
+	 Content-Type:MIME-Version; b=KHvoxjOncIeZYPSq1CsO0DA6FPT1TS0BTJB9Xrfq43U2GpZmvPHi9J6QQ+w2cs79zd7khMWPV2TrDf573zGzO23uwbkpudBh3FVNQQrPPAljcXI0O51sVzmOSrpJ4h2uWoXkzciYGWX3WeRWf+pdwt86CUw3rnqXFn1MUhjpQrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0kFQJMI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1660CC4CEFB;
+	Wed,  3 Dec 2025 12:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764764778;
-	bh=RzOO0t8NS9yCiB5WJt+5PGVRlXgLAzZk5byIPBg65Xk=;
+	s=k20201202; t=1764764899;
+	bh=V5rB6EnSLBwFcFQtU2AxCNQdXUacluqFTSQ6XiWRJDQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=H/zqGIK1iczMM/QtATl1nezS2NjSQySxUviylni2fMqY6yatNJa4uZRvdFw83Hq2O
-	 my+JjnjuJu53WavTtQR4+rMaNEU+X720QxTbc3KSqlbzwpESOW2h9qel1+b81xvXGR
-	 DixwHJUWxSeojBR8Ap9AIA0Ra9B7XLauJ1TEBgsbFkZBAT0mYxIgh4fKDDVBVs7OMl
-	 36vTgVeZp5OYQFWjLr9l2GOJeC9vgYdZfyEntUEm+eE13YT6PvsKApm9tBbu/1ASdW
-	 D+hWeJLRJmWR+iCT83tCxMBgGmvauBQzYNaI8GLhklxiqEXk7ZpGGvyow+lai7YsVV
-	 IIWWcVZBeJUAQ==
-Message-ID: <eaaa46486ec7b1273adfc1a3bdbf11cb1f557e40.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] nfsd: prevent write delegations when client has
- existing opens
+	b=t0kFQJMIRJ8jmdL8pNfAIL1oe5b4g8pj1YIjoKaM2ewxSbJs97o1Z8GCGXH56sVkW
+	 mvnA7vHeOqQ0QbdwzV4uY2fXTJVd0oTEW6I53WU4bMjRrLSqG4FGyO2oVbrhEBJOp6
+	 J1A9vNJNAR/kbyjVr9CsgHGinOK3O6HPfHIKheJEu8iswyonSevWWTRTlhVNpBnNd3
+	 B2jH+GhKsyhxfLE38riHZrv5NXY+UL4nILnTL9ioeLvTGyOQmswP/MdQAzNPgoVv+E
+	 JAwvOUK65hIcQK0OpZbMs8LdH96DA0ycGXxpwp7tdtZ0PS6FejwLro75GuZ1Gcpb9E
+	 9EKdzeC+nGMDA==
+Message-ID: <79e91507932cf2ffbb33a5e9d1b5670e3cd1d4a3.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] NFSD: WARN if fi_fds[O_RDONLY] is already
+ populated
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <cel@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, Chuck Lever
- <chuck.lever@oracle.com>
-Date: Wed, 03 Dec 2025 07:26:16 -0500
-In-Reply-To: <176472909957.16766.8691035364646019081@noble.neil.brown.name>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Wed, 03 Dec 2025 07:28:18 -0500
+In-Reply-To: <20251202224208.4449-2-cel@kernel.org>
 References: <20251202224208.4449-1-cel@kernel.org>
-	, <176471811359.16766.18131279195615642514@noble.neil.brown.name>
-	, <dc25626e-fae0-401b-93ed-1c4fdf34186c@app.fastmail.com>
-	 <176472909957.16766.8691035364646019081@noble.neil.brown.name>
+	 <20251202224208.4449-2-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,125 +137,40 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-12-03 at 13:31 +1100, NeilBrown wrote:
-> On Wed, 03 Dec 2025, Chuck Lever wrote:
-> >=20
-> > On Tue, Dec 2, 2025, at 6:28 PM, NeilBrown wrote:
-> > > On Wed, 03 Dec 2025, Chuck Lever wrote:
-> > > > From: Chuck Lever <chuck.lever@oracle.com>
-> > > >=20
-> > > > When a client holds an existing OPEN stateid for a file and then
-> > > > requests a new OPEN that could receive a write delegation, the
-> > > > server must not grant that delegation. A write delegation promises
-> > > > the client it can handle "all opens" locally, but this promise is
-> > > > violated when the server is already tracking open state for that
-> > > > same client.
-> > >=20
-> > > Can you please spell out how the promise is violated?
-> > > Where RFC 8881, section 10.4 says
-> > >=20
-> > >    An OPEN_DELEGATE_WRITE delegation allows the client to handle, on =
-its
-> > >    own, all opens.=20
-> > >=20
-> > > I interpret that to mean that all open *requests* from the applicatio=
-n can
-> > > now be handled without reference to the server.
-> > > I don't think that "all opens" can reasonably refer to "all existing =
-or
-> > > future open state for the file".  Is that how you interpret it?
-> >=20
-> > It is: as long as a client holds a write delegation stateid, that=E2=80=
-=99s a
-> > promise that the server will inform that client when any other client
-> > wants to open that file. In other words, an NFS server can=E2=80=99t of=
-fer a
-> > write delegation to a client if there is another OPEN on that file.
+On Tue, 2025-12-02 at 17:42 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Agreed: "other" client and "another" OPEN.
+> nfsd4_add_rdaccess_to_wrdeleg() expects that fi_fds[O_RDONLY] is
+> NULL. If it's not NULL, there's a software bug somewhere else that
+> needs to be looked into.
 >=20
-> >=20
-> > The issue here is about an OPEN that occurred in the past and is still
-> > active, not a future OPEN. NFSD was checking for OPENs that other
-> > clients had for a file before offering a write delegation, but it does =
-not
-> > currently check if the /requesting client/ itself has an OPEN stateid f=
-or
-> > that file.
-> >=20
+> Replace the redundant fp assignment with a WARN_ON_ONCE.
 >=20
-> I don't see a problem with offering a write delegation when the client
-> previously had the same file open.
-> Note that a client only ever has one stateid for any given file.  If it
-> opens the same file again, it will get the same stateid - with seqid
-> incremented.  If it closes the stateid, then it will not have that file
-> open at all any more.
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> If the client has the file open for READ, then opens again for WRITE,
-> then it does not get "another" open, it gets "the same" open, but with
-> different access.  When the client hold a write delegation, then it can
-> be sure there is only one open stateid for that file - the one that it
-> holds (it cannot hold two for the same file).
->=20
-> > The scenario I observed is that the requesting client held an OPEN
-> > for SHARED_ACCESS_READ on the file. The code in
-> > nfsd4_add_rdaccess_to_wrdeleg() assumes that if NFSD is about
-> > to set up a write delegation, the pointer in fi_fds[O_RDONLY] is NULL.
-> > That assumption isn=E2=80=99t true if that client still holds the S_A_R=
- OPEN
-> > state id, and fi_fds[O_RDONLY] for that file then gets overwritten and
-> > the nfsd_file it previously referenced is orphaned.
->=20
-> I agree that the current code is flawed.  It needs to allow for the
-> possibility that the client already had the file open.  I just don't see
-> the justification for withholding a delegation when an open is upgraded
-> from read-only to read-write.
->=20
-> If the client already holds a READ delegation, then I see that there
-> might be a problem.  I don't think there *should* be a problem, but I
-> cannot see in the RFC how it would be handled.  Would the existing
-> delegation get upgraded the same way that the OPEN stateid is upgraded?=
-=20
-> Or would a new delegation be issued?  The RFC isn't clear so I don't
-> think it can happen (safely).
->=20
-> I note that section 10.4 says:
->=20
->     The following is a typical set of conditions that servers might use
->     in deciding whether an OPEN should be delegated:=20
->      ....
->     - There must be no current OPEN conflicting with the requested delega=
-tion.
->=20
-> That text seems advisory rather than normative.  Does an OPEN from the
-> same client conflict with a delegation?  Maybe it depends on your
-> perspective.
->=20
-> I also note 18.16.3 says:
->=20
->      If another client has a delegation of the file being opened that
->      conflicts with open being done (...), the delegation(s) MUST be
->      recalled,
->=20
-> So if the SAME client has a delegation - it doesn't need to be recalled?
->=20
-> and
->        In the case of an OPEN_DELEGATE_WRITE delegation, any open by a
->        different client will conflict,
->=20
-> Again "different client" - any open by the same client, it would seem,
-> does not conflict.
->=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 1c9802d06de1..b8fd0ed3fd53 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -6236,7 +6236,7 @@ nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqst=
+p, struct nfsd4_open *open,
+>  		fp =3D stp->st_stid.sc_file;
+>  		spin_lock(&fp->fi_lock);
+>  		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
+> -		fp =3D stp->st_stid.sc_file;
+> +		WARN_ON_ONCE(fp->fi_fds[O_RDONLY] !=3D NULL);
+>  		fp->fi_fds[O_RDONLY] =3D nf;
+>  		fp->fi_rdeleg_file =3D nf;
+>  		spin_unlock(&fp->fi_lock);
 
-I agree with Neil here (despite my questioning this on our call
-yesterday).
+Given that the client can have the file open for read before we grant a
+write deleg, then this would fire pretty often I think. This might not
+be a good idea either.
 
-Conceptually, granting a write delegation to a client that already
-holds an open stateid for the file doesn't seem problematic. Before
-returning that delegation, the client would need to establish open
-stateids for any opens that it had granted locally. If it already holds
-an open stateid though, then that isn't a problem IMO -- it just has a
-head start on establishing them before a DELEGRETURN.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
