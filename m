@@ -1,249 +1,313 @@
-Return-Path: <linux-nfs+bounces-16891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16892-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B35CA1828
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 21:02:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E2E3CA19D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 22:06:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F076300C29D
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 20:02:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD33A30198B0
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 21:06:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110C8296BA8;
-	Wed,  3 Dec 2025 20:02:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFAE72C0296;
+	Wed,  3 Dec 2025 21:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gua5w8vu"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FlgmO3zQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010010.outbound.protection.outlook.com [52.101.46.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8A12E7160
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 20:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764792121; cv=none; b=fH7yn3xhGcodJ0CFU7wlto9Ag9NFjTH+KFiF0uH8ExajeMAZa/W8Tf4vesQIug6xupw1e7FRix6UcXTqiy7Vv2agMNR6xC11onPyTovF6RECaOhDEqrZ1/NJv9fm+NTjQjjnpBtEoMff68rJO0bZGQTZCDoPZep15LUR5DdyOUY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764792121; c=relaxed/simple;
-	bh=hbRxPzrFs0+hdOQNG7cizB6rmMqCryN13XBu971WWrc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CN117u2IPbQPvgted9dqr34m68zSV+6Qa9UrnDB6uXSJslLTeqbybG0gQXOMrKBxxoONHLlGv7/r+i2gLYRtIWkIIiK9aRHbz86lULSRq1dhR+7lBkVu1+Lafg+/lGGmm+8HPoIwTYes5vm34tXu8G4bPdkoB36HqhnLJORQjCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gua5w8vu; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-29558061c68so2302905ad.0
-        for <linux-nfs@vger.kernel.org>; Wed, 03 Dec 2025 12:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764792116; x=1765396916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lWaqHaC4GF2GSiscDP1QV02fWUrsKcrNYOyAr5e3bj4=;
-        b=Gua5w8vuNJ0CIFuzPH5VMXH+Unqz3dxMkoqGogUFBB+/hM9CqQmuyIED5ze48QVDC7
-         F6xjoTrULY5M7EqT+AJZD0hvqAMNJ+PRrlr6Inntq3kBJ++u/tLReaA3IV1lS0zOemH2
-         b98G4f/j+wrWww+ymeJ+M9jZJuFujJi2Tl+6K8JwPFpHPssQKU0/P5lu18EXGIWaXATB
-         PSH2hLh2kN6uZUfSCgb3MtXCNtgVXfbIPyMVI7dOhDuHYJZig8JspbUyPrEoE7Hexahz
-         pKg0AU3P0vZH0gGCXzCJosTJIMSFqKCpf1JnHfZyKwIgNEpRufT8Jeldhz1ihTYtv/QT
-         dB2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764792116; x=1765396916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lWaqHaC4GF2GSiscDP1QV02fWUrsKcrNYOyAr5e3bj4=;
-        b=dyIjMWposCdkvj7nW7CMXKMF6H8CGdh+0kXq+ifuvTQ8SCQTEOwNNLTsS21/WuOc12
-         bk/JYvJbGn3+WTUWEWwhzszQBp9+KhZt9IZL8UT/sShac0Pp1tYPjBw+VbFR1qOznuef
-         /XCmDIeHTpJqOEqdaEQil+M6KZ0SdWKbwdJtUuzEHbueqoZDl66M5pLp0Pxq/0poHnXF
-         ZmA7Og7v8Y7+mFbExUv8yef+ZAturwNuOsmdFya8FPg28G8GEuUBFmO2U8TYtD0I24Io
-         r9v2gFMPjmsJiBz/rX/0su1//LkQzVuzfTQ6UcrsbidEleJ/n8br/EvlBp5MvYd6o68y
-         K6mA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7LZqx+3Qaezz7cn1ZMyT4qyNecAzQbxDXX+zVlmMteiVrW7Lh1z+WXp9p1XHQhfXXbgFucwtpWvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLEV7AmSgBWqUGyS6/1yAXOuhs5SNZ3uwsuxXsab5q5YqQzRts
-	tmqAcRvKspi6GhvfrtUNKbphboyI9YSGJI7s+g/LSB1+1Q80dLnI7G4QkwbV7yU0MLMsmWGFlmx
-	w3BrOvPYk+HINYxPqqS4SjCZKsWKdl34=
-X-Gm-Gg: ASbGncst+QLE15szqFKQbZyco2A9aufDWgy2EBQxXMz806Q/08M1135U1H5tj80L1m8
-	/enEKACV1Kf/uJKxkrPBethdOLszrqetW1YeVEVmafT65oLpdlGRup2w3uXqbuaRvzriRKGrFX2
-	QAkN3x1fbJAp22d6fNEWwSmv4lvJkK/fd2mauoogK1Y3w+t+5SL5bjWwxuJ8IFVxmy/ZebWjG+D
-	PoFbIAjsFWecw1a66er3qfNsdy4FGdFJQulOVtW8//do6AJlN1ZGakVQtAqwZ2rkxs+qX0=
-X-Google-Smtp-Source: AGHT+IFMW2zvGnUfsXUU0ZfhpGZCjO/uFcPG/fkXmof4XTwIGBBP8YMgombNXaZ4eGJxAoBe7L60wBZMW3zl1igUF10=
-X-Received: by 2002:a17:903:1aec:b0:298:485d:556b with SMTP id
- d9443c01a7336-29d6833a74fmr38470125ad.5.1764792116164; Wed, 03 Dec 2025
- 12:01:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477F482EB;
+	Wed,  3 Dec 2025 21:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764795986; cv=fail; b=gMYh8x9FhFWPjPH0mwBbpvQTCySntR/DKobzkb3gVC7esc0gUtEymWaew0JRHotohJQoJwr0OV4xOZz3IrvCGJ5bYiPzsbBJTJnYmsKR8mamTm2tdwrWvzJz2SJVov6kIbI9bFuKFl8ZA3fJkIld7O7KAIuNOUdbxBO4DZ/FTwk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764795986; c=relaxed/simple;
+	bh=hlY6UhShro63FksaZ2PM7GQrloCRAnjPl6+7c2cvdLU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SZMkT8FLLR+lCTU8on+sFoctEsW5Dy0QePdDDGPFDBeclPVxuYoNOO9PxZNccqTv3SFbNp3JxaeVTjnvsu1K+al8n3c4rk8CIS9k9wxreLFZ3qTlfZjXz5Etn6masZBxS1UXsAT8BxUSGbmY58m1dqmokjfiWKRYxLfyucYSJAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FlgmO3zQ; arc=fail smtp.client-ip=52.101.46.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Iaw2ecDuY70cTVNlz/xcgtl3R7UBNaQg2YIHC7vtZE1OZEe2YWdiVEp42Nn15sLjUsNNL7aX6G89jNk36C+3TjLwt3gCFAylTS84HG7/TJyTltpZfc2mLJ8NjaFO80Ya1WgmfDpQn/O9URrkwe8RNyqFPrfK8M5di4SQsMys4Mge6csXKHByTgWjgcwp8X2cpwJ7QLSL6Ro1cZS2U6SGzjyFPjX7YpUadPhaBc0JWZqNXBPHCSYldy6+sDtcykVR1vxPH82sQY7cZmOdVdy/9NKZ/nhnCCQQTvY6n+mCVFlLBLCPSv2sozkfnqvWej30xQQ5DMrvt1GiJg5c8N3TBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=86s+e+8VX/FFlMRtFyJtKG2/kn8xYLot15+FAdyZLT0=;
+ b=Fd/BGSIYTvyHX7JSoGDumeR2PfkJiy3VLRGm4Z3u2v1FdsOMVBJFYXh209etxEtbHzN2HKEsZbZ4YBfamt70SjuA660pICuFAU9k1qtDiRzOjQKgjzOUSj9L7kipKuBZc1dggz6Qavc8KSoePE9Q5gdtPgHNcGn9gQIACtUt6oRtrFVhEBGnSoYBsreDoCyeGn2A2/TeIMgaJtVBeT8R9grqIlF7mf7E9TUdkA4jUa8K1rpOQBODcVEokXW/IDuztC3fBYFAFXX+MLyugewzUcvdue1ZekShcwbnHXX2YZAXf1fuQumNGSIm9luYQRa+p/GyqdTT2tSIga30ol7XBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=86s+e+8VX/FFlMRtFyJtKG2/kn8xYLot15+FAdyZLT0=;
+ b=FlgmO3zQgRo0vjYuj/VKyIbdl0gvP/UpEh3As3rUoKRMeMOWvDXoeEfAKcxd3jSTiWhz3pENCo8HBVLGbP59btDPUm9lLZwp/LuCfDDPQVZxVq5mDIJbR6GuicxL8aktSH+44Tf13FKVWadlqpdVcsYKBU9jf63vj3bMRrk327zKNRTOldI5icEQ6h2NytCKDNBVzVkjdNlauKEtjhtzyACblI/7G1aitKwPefJu2Uoru3VT+Wxxpl/8cBXQ+aTvupnXpkcFuyGpQ3VELfJCIqXz8w3mkHNlwXQh5RneeZCJ4ixkx+Fr1LUXvqfa5uM/eX+h7s7v2CJ6LF0NDlKqKA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by DS0PR12MB6439.namprd12.prod.outlook.com (2603:10b6:8:c9::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9366.17; Wed, 3 Dec 2025 21:06:18 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%7]) with mapi id 15.20.9388.003; Wed, 3 Dec 2025
+ 21:06:17 +0000
+Message-ID: <d3da8a0e-4bb3-4a47-9804-2d0f3c452a84@nvidia.com>
+Date: Wed, 3 Dec 2025 21:06:14 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] NFS: Request a directory delegation on ACCESS,
+ CREATE, and UNLINK
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20251104150645.719865-1-anna@kernel.org>
+ <20251104150645.719865-3-anna@kernel.org>
+ <4f5da6d9-ee72-4045-8fe1-c5eacedb4660@nvidia.com>
+ <bfe61da1-3b52-49a4-844d-6f39d7ca4e9d@nvidia.com>
+ <ba1a5563fd66738156a372eed016986952f11fd5.camel@kernel.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <ba1a5563fd66738156a372eed016986952f11fd5.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR04CA0046.namprd04.prod.outlook.com
+ (2603:10b6:610:77::21) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
- <CAHC9VhQfrMe7EY3_bvW6PcLdaW7tPMgv6WZuePxd1RrbhyZv-g@mail.gmail.com>
- <CAHC9VhQyDX+NgWipgm5DGMewfVTBe3DkLbe_AANRiuAj40bA1w@mail.gmail.com>
- <6797b694-6c40-4806-9541-05ce6a0b07fc@oracle.com> <CAHC9VhQsK_XpJ-bbt6AXM4fk30huhrPvvMSEuHHTPb=eJZwoUA@mail.gmail.com>
- <CAHC9VhQnR6TKzzzpE9XQqiFivV0ECbVx7GH+1fQmz917-MAhsw@mail.gmail.com>
- <CAEjxPJ7_7_Uru3dwXzNLSj5GdBTzdPDQr5RwXtdjvDv9GjmVAQ@mail.gmail.com>
- <CAHC9VhQDHTNkrB4YuNoafM0bhAav=CP5Ux6ZZGY9+WF0+0_9ww@mail.gmail.com> <CAEjxPJ6e8z__=MP5NfdUxkOMQ=EnUFSjWFofP4YPwHqK=Ki5nw@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6e8z__=MP5NfdUxkOMQ=EnUFSjWFofP4YPwHqK=Ki5nw@mail.gmail.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 3 Dec 2025 15:01:45 -0500
-X-Gm-Features: AWmQ_bmK8IWF69Ya7Il-q1NU_c222p9dRgleuYlQl2p8kptbZYlJgZKkfKVtZaM
-Message-ID: <CAEjxPJ4T4srp91xsfbVd357Fhwb6Mx_3RGxCHT8Tnk_zk38m+g@mail.gmail.com>
-Subject: Re: [PATCH v2] security,fs,nfs,net: update security_inode_listsecurity()
- interface
-To: Paul Moore <paul@paul-moore.com>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Simon Horman <horms@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|DS0PR12MB6439:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0a11a69-56fe-411e-931b-08de32afcd36
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|10070799003|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Mi9tb0xsWWtXdEkzWG9aQTVGN21rdXRIK2Z6aGxjUUdUc2c3SXlNVGJVNndM?=
+ =?utf-8?B?MnhIRzZ5a2xIbDdjS2x3MU9qQk1SOXlBMmh3TGRwZ2Vpc0RoZW0vdlgvNjZ6?=
+ =?utf-8?B?RU9qWVZacXNaUDZpdkRXeE5BRG40UEdnc21uYUw2ZkxRNHJsNkZ2WTZRUGNy?=
+ =?utf-8?B?bzV3MW9yVFJGZXpsaFJlOUhreVg2OGc0SlkwelY3bXFlYmllM1laNkxTN0I1?=
+ =?utf-8?B?TTRBaTlQSTRwbVRuSGRkVDVRaGtySHZhYU4zTHo3aUt5cnRqRXNxdnkyM1Iv?=
+ =?utf-8?B?bkRWaFJJVTVJTlhLSXRIek1ZVkdFaXNhVjJsNEZMMWlIWm9EZUllTWVZcXB2?=
+ =?utf-8?B?S2RQZDZkTnUyOThJZVFBOFRNZ3BHdk1xbFRyVE84djNxYng3eU15ZDRpbG82?=
+ =?utf-8?B?WHp0MHNFSnJVRURzY09udkJxTTFEemFwcCtZM2xxeVV3TjBWZ1ZYSHZrcGpo?=
+ =?utf-8?B?RDFsUko1ci9HT0VMNGMzekZ3dFBDYTgxbUJseWcyM0JOOCtISStjNlQxS3ZN?=
+ =?utf-8?B?Qk14QVdVcHZpN0dTRTdtenJ6UXlWVkExajNCakpaYXM3dWFJMHFOSUVZZ3Vv?=
+ =?utf-8?B?TS93NEFCVlhDM1BlUjFES0NTSXVsQ1N4RlBwdkVqRmZkbk9uOTZFbHZhNUlT?=
+ =?utf-8?B?c3R4VThEZUNFZ0ZUL1JQVUtsZmx5eGNxZnlSaEwwSmVIZ01wWTFObDZQd0VR?=
+ =?utf-8?B?MVRkYkNmdFA3MlVUSzRiODd2a0V3MW16YVd4TGtmUXl3V0tuMzZPMmdIdmp4?=
+ =?utf-8?B?MmFIOS9ObXR0eU4xZFl5V2U3a3B2UnNZK1BGcTdMRXZtN2JneWZkSUpqdm4w?=
+ =?utf-8?B?cllCUllQTkJ5UmRkR0FILzc2cXE1TVpQclp1OUN3YnB4U0d4YUg2UHhVWWxa?=
+ =?utf-8?B?SjFncm1wTExqbVR6OFY4OEYyN3A1cFRVak5TK0pMejRXRWhRYVl2VjlsdVdL?=
+ =?utf-8?B?cjY4bUtWcWtGWnRidEszSnRyMGU4cGFIVk1aR0crdVZkcnQ0M3JyM0xxMFBN?=
+ =?utf-8?B?YjU0TEVCOUcwYndJeDNsTjFMcWlhRWtsbGRKK3ZpZ3BGZENjd01kbFVZYkpq?=
+ =?utf-8?B?V2ova25GWUJqemlQVkx5aUFyaFcwb25UL1dCblZERWZGSlZzcEQzT2VKbXBJ?=
+ =?utf-8?B?VjJOSFBaWXg4S1l6cncrQmlVZ3BkaG9JMEZjUDlEYUlaNEI2WjZuMjY3VXVm?=
+ =?utf-8?B?eUcxSW1tYjJ0TllCTjNBL01uTGpnNXVneXpVNUxmMU5MaFRKdCtjclFjbVBB?=
+ =?utf-8?B?MlhwNmJvNDVzSWZMdDVaUklUd3pMV09KRHJyNEVUdkpJbUNEU2ZUbDlCLzBr?=
+ =?utf-8?B?ZXZoVlZWMFFXRlFzTXVyZElSSjRFR0RNb3lpTlVLcmgrY0NDY3pzbTFqbnV6?=
+ =?utf-8?B?SWs4d1lKbGtwZFJabSthUEUyOWQyTm9qTVRxaFNSWU16dU1ENmdEaXFRYlhW?=
+ =?utf-8?B?YTBxckwvN3pQbDdmVGMxYWFpSW9GWlVKYTN2ODBjUUNJNGFqdWs5c3llVkpl?=
+ =?utf-8?B?bFBqMzRlcWhtR2pJLzZCcjVXQzhsWE9acGlqM0tLQkh0ZVdlSnFJQStNRXBW?=
+ =?utf-8?B?eWU1YmlzcTEzL3Y2T3A1QXBXSTJRdjRMRFZYRlBzUmQrTnRUUDlKVTJ2UjRQ?=
+ =?utf-8?B?VDE1djc3OXBqUDQ2NWtSejBtV2p0a0ZqZFE4R0xmVkkrakN0a3ZoZm9OaC8v?=
+ =?utf-8?B?Nng1eXZBM0VWbHR6ZWFzSDZXbFlHSFpJK3llY3J1VVpITGRHTWdhTGVJNGlM?=
+ =?utf-8?B?MXlrUG9HZzZrbjVmWFp2VCt0dlZ0ZzhxZkJKTWRJRUhHQUZNa2U0OVpYRFVM?=
+ =?utf-8?B?Y1NYNldSeWpKejgrajNuQk96dGc3VnZvMktUZmJVZU5xcHBVL2E3YjIxWVo4?=
+ =?utf-8?B?M3VlOFIyaU4wZEVJTVFlRXZYQmpFYWtCVFJBVWxOWlZORG9zWDNSUDgySnpn?=
+ =?utf-8?Q?L5emLEz09S77mfEKKjPPeeg1fb4oTl9F?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WFErSFhvMzJJSnVLMmZQWGRFUUlkUUZQdVJUZnFKd0RIMmhrU0xxTlZ2TjdP?=
+ =?utf-8?B?Q0RobFdGZzdhNk5aUVhVQVNIZmVPWFhmRDFIZDZTWnJveVJ5K2NmWFV1NC9H?=
+ =?utf-8?B?TWxVTnpac05zckpaSUE0MDEreHRlS0VWZjJSYVJ6aGtGQTFwc1ZwYWdCcjll?=
+ =?utf-8?B?V0tpcTQvWEJpQXlnUWp1NTV0U1J4YjAzZ3VLRTd3NkJEbGtySjFOUU9Va3ds?=
+ =?utf-8?B?TEtYZ3l1OXFxMlNiQkpCNGNwUkkzLzB3OGJJVWd4c0NtUkRoK1lpSS9PYmdG?=
+ =?utf-8?B?cXRtSDBlZU55b2pOekpTdGhKR0RXZ0k4UG9NaHZSQnBKd3FUQ3VkSFFoRklQ?=
+ =?utf-8?B?RTA2N0ZrdFRVSmd6NnBtaitkbGpNeUhlbWt3UHpVVGhmaEQrK3NWcWZ0L0J5?=
+ =?utf-8?B?eXF5VGxpSDkzVC9NTWs1NkNEWGMyZGo0VHlVdGJtZHJFZVk3WGhubnE3bTF1?=
+ =?utf-8?B?amV5T1h4d0xkK2VwTjFmdFd6NjJIREtvalYwMzhYN01KOTl4ZmFtbkZCTjFo?=
+ =?utf-8?B?enBQOGVrdU80WHdiRWRDaXVXQk5nMEhvNGpKUEFWMDNuZVJHM0Q4SndWdEov?=
+ =?utf-8?B?NmpCK1ZtQWJLaVRDOTdMZEdvZDNGQUNjLzFmRVY2K1oxTVFVdmU2UlRUL3Vn?=
+ =?utf-8?B?c3czUW43Q0s1SFNzOU11UHZUcVhyMnh6U2gxTm9TUVBGdGtYRG1FaXVhRTZK?=
+ =?utf-8?B?cWxZbm9DZkpFd3lPWkRBcXYzOERnbnc5dnArSTcrZnAwcjMrT3UvZ0RnQm9r?=
+ =?utf-8?B?VWEvUW9NUldJd0s1dTkrVm41Z2NvVWM0YThaZURsUzJBTUcxVFRwNk8xTnRa?=
+ =?utf-8?B?dlFFaU4xWEJBRzhJeURJR1hUd1E1YkJ1bnloaVFucHZVUm9qSGJ4dEllMnlE?=
+ =?utf-8?B?dFFQWWtSdmdzT0RMaFMyMzhuK2UyOGZXQWRYMkE5WXk5dmNDeHgzUFY2eEs3?=
+ =?utf-8?B?STlFaXhkMW5GRzllVndYYzB6Z3dvd0xNbFdGMjBMbkNCQTlHR1NlVFpOYTlG?=
+ =?utf-8?B?aE5PTm84czh3aHpudnprVlRnRnlNcitsaEpKczhtVVRydzBIL1BkRm1vNjlZ?=
+ =?utf-8?B?akdPZjl6ZUdNVEhORVdSN0RBa2JQSHRNUEVDZXhiLy9Xb0tmOStvUEFucm1F?=
+ =?utf-8?B?YUljNmJoWkNXREwyMys0QThsbFdvNnZoV1NDaXhPL1VncXdWeTVyOXQzUmJa?=
+ =?utf-8?B?bWtiK1V6K0RzZHRlSW16NmVZbGRYbFVVWDc1Mng2Q2c1ZGxtRmM2N3l2VFEy?=
+ =?utf-8?B?WlliUlZIL0ZnaDlleUE1eTBnNG4xU1VNYW9xSVJDWmxrTUgzZU92U0c4S2hR?=
+ =?utf-8?B?TXoyWHhYbklScUplR3RuTDYwMmNrWDVxVUgxcVQ4SW1tYWliRzJZZmE1RFNl?=
+ =?utf-8?B?OWJWbHdFRlREbjRjMTM1cUw0OVNjTWorbXpwTjFyZmJ4cU5yOU51L2JMOEJN?=
+ =?utf-8?B?MWlQNjI5WkpVY2tkaW1xbnNDM1JrOWZzTlgwQWozVndZdVA4TmtEY2RPcDhx?=
+ =?utf-8?B?Y2Y4UGdmWmNzMkREenU1R2o4UzdnNjVQd3NmYU5MTGRCVEFSNXNqK3dMa0lM?=
+ =?utf-8?B?bk5xRVVGUnMxdWRNU0tNS1JhREVVYk9pREVQa1g4NjdLTFVnTW1xZ2tFdEkw?=
+ =?utf-8?B?S2NMQTZ6S2JHcFUvWDFtYXVuVmhia1hGZkhKR0ZBNCtveHJneTBxc1JkeVFX?=
+ =?utf-8?B?bzdhdDFaNlg4MTJXMFVWdEhLd05NcW1PVEE5QVVlbHJIZnZJdC9EcUx6OWt3?=
+ =?utf-8?B?czVCemVGRGYvOEdtQVdMYWY2d3VwZnA0RmxmVGhNSnJzeHhwTU1DUkVWUnYv?=
+ =?utf-8?B?TW5oeVcvYm9MbXV3M3hPUVRNS1NWTDdjZlNvSzdKMXVPZCtLSFhnRm5LamNq?=
+ =?utf-8?B?VERpeEEzT3g3eTg0TDQzUmFmT2FqRnhjOGVJRDh3eXBKeEZSdHNYME9nZk5Z?=
+ =?utf-8?B?Sy9wV09HY2RVdDd5bDZ4UUt4UDVEMkFvNy9sVjFkaDhGUjlQWjNEcEpUYXgr?=
+ =?utf-8?B?V2pBT3ZVMnV5YzZFSGM3R1M0VnkrWU5kK1V0dUxXeGl3SzVrR21ScnRFQkov?=
+ =?utf-8?B?M1VSallucEVzcE53dWpZMWlwbWM5bTl3Q2lmcTJaQlNpOFlqaGVaQmpLTjZK?=
+ =?utf-8?B?N3pRYlpUSzFzU0I5Mk90eWFGMkpwRDByUjRJaDNYdXlJQ3Z3aVE0ZmxQTXlB?=
+ =?utf-8?B?RjFmaG5HTk55UzE0UFZPNTlteEJTdnRkR2loT3dYQXc3d3FoNVdVVDBnQlhW?=
+ =?utf-8?B?VkNsQ1FpaEhhM3VkYVl5TGNkOTNnPT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0a11a69-56fe-411e-931b-08de32afcd36
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2025 21:06:17.8613
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MDa2uXVo4Fd7x0EPjStLIiKDcImvGhkwQDNLVsNDZww1Neeoi+Insi/mjf/XXvGH2lUu0/0YPME/zQMykqBZbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6439
 
-On Wed, Dec 3, 2025 at 1:08=E2=80=AFPM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Wed, Dec 3, 2025 at 10:55=E2=80=AFAM Paul Moore <paul@paul-moore.com> =
-wrote:
-> >
-> > On Wed, Dec 3, 2025 at 10:35=E2=80=AFAM Stephen Smalley
-> > <stephen.smalley.work@gmail.com> wrote:
-> > > On Wed, Jul 23, 2025 at 10:10=E2=80=AFPM Paul Moore <paul@paul-moore.=
-com> wrote:
-> > > > On Thu, Jun 19, 2025 at 5:18=E2=80=AFPM Paul Moore <paul@paul-moore=
-.com> wrote:
-> > > > > On Tue, May 27, 2025 at 5:03=E2=80=AFPM Anna Schumaker
-> > > > > <anna.schumaker@oracle.com> wrote:
-> > > > > > On 5/20/25 5:31 PM, Paul Moore wrote:
-> > > > > > > On Tue, Apr 29, 2025 at 7:34=E2=80=AFPM Paul Moore <paul@paul=
--moore.com> wrote:
-> > > > > > >> On Mon, Apr 28, 2025 at 4:15=E2=80=AFPM Stephen Smalley
-> > > > > > >> <stephen.smalley.work@gmail.com> wrote:
-> > > > > > >>>
-> > > > > > >>> Update the security_inode_listsecurity() interface to allow
-> > > > > > >>> use of the xattr_list_one() helper and update the hook
-> > > > > > >>> implementations.
-> > > > > > >>>
-> > > > > > >>> Link: https://lore.kernel.org/selinux/20250424152822.2719-1=
--stephen.smalley.work@gmail.com/
-> > > > > > >>>
-> > > > > > >>> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.=
-com>
-> > > > > > >>> ---
-> > > > > > >>> This patch is relative to the one linked above, which in th=
-eory is on
-> > > > > > >>> vfs.fixes but doesn't appear to have been pushed when I loo=
-ked.
-> > > > > > >>>
-> > > > > > >>>  fs/nfs/nfs4proc.c             | 10 ++++++----
-> > > > > > >>>  fs/xattr.c                    | 19 +++++++------------
-> > > > > > >>>  include/linux/lsm_hook_defs.h |  4 ++--
-> > > > > > >>>  include/linux/security.h      |  5 +++--
-> > > > > > >>>  net/socket.c                  | 17 +++++++----------
-> > > > > > >>>  security/security.c           | 16 ++++++++--------
-> > > > > > >>>  security/selinux/hooks.c      | 10 +++-------
-> > > > > > >>>  security/smack/smack_lsm.c    | 13 ++++---------
-> > > > > > >>>  8 files changed, 40 insertions(+), 54 deletions(-)
-> > > > > > >>
-> > > > > > >> Thanks Stephen.  Once we get ACKs from the NFS, netdev, and =
-Smack
-> > > > > > >> folks I can pull this into the LSM tree.
-> > > > > > >
-> > > > > > > Gentle ping for Trond, Anna, Jakub, and Casey ... can I get s=
-ome ACKs
-> > > > > > > on this patch?  It's a little late for the upcoming merge win=
-dow, but
-> > > > > > > I'd like to merge this via the LSM tree after the merge windo=
-w closes.
-> > > > > >
-> > > > > > For the NFS change:
-> > > > > >     Acked-by: Anna Schumaker <anna.schumaker@oracle.com>
-> > > > >
-> > > > > Hi Anna,
-> > > > >
-> > > > > Thanks for reviewing the patch.  Unfortunately when merging the p=
-atch
-> > > > > today and fixing up some merge conflicts I bumped into an odd cas=
-e in
-> > > > > the NFS space and I wanted to check with you on how you would lik=
-e to
-> > > > > resolve it.
-> > > > >
-> > > > > Commit 243fea134633 ("NFSv4.2: fix listxattr to return selinux
-> > > > > security label")[1] adds a direct call to
-> > > > > security_inode_listsecurity() in nfs4_listxattr(), despite the
-> > > > > existing nfs4_listxattr_nfs4_label() call which calls into the sa=
-me
-> > > > > LSM hook, although that call is conditional on the server support=
-ing
-> > > > > NFS_CAP_SECURITY_LABEL.  Based on a quick search, it appears the =
-only
-> > > > > caller for nfs4_listxattr_nfs4_label() is nfs4_listxattr() so I'm
-> > > > > wondering if there isn't some room for improvement here.
-> > > > >
-> > > > > I think there are two obvious options, and I'm curious about your
-> > > > > thoughts on which of these you would prefer, or if there is anoth=
-er
-> > > > > third option that you would like to see merged.
-> > > > >
-> > > > > Option #1:
-> > > > > Essentially back out commit 243fea134633, removing the direct LSM=
- call
-> > > > > in nfs4_listxattr() and relying on the nfs4_listxattr_nfs4_label(=
-) for
-> > > > > the LSM/SELinux xattrs.  I think we would want to remove the
-> > > > > NFS_CAP_SECURITY_LABEL check and build nfs4_listxattr_nfs4_label(=
-)
-> > > > > regardless of CONFIG_NFS_V4_SECURITY_LABEL.
-> > > > >
-> > > > > Option #2:
-> > > > > Remove nfs4_listxattr_nfs4_label() entirely and keep the direct L=
-SM
-> > > > > call in nfs4_listxattr(), with the required changes for this patc=
-h.
-> > > > >
-> > > > > Thoughts?
-> > > > >
-> > > > > [1] https://lore.kernel.org/all/20250425180921.86702-1-okorniev@r=
-edhat.com/
-> > > >
-> > > > A gentle ping on the question above for the NFS folks.  If I don't
-> > > > hear anything I'll hack up something and send it out for review, bu=
-t I
-> > > > thought it would nice if we could sort out the proper fix first.
-> > >
-> > > Raising this thread back up again to see if the NFS folks have a
-> > > preference on option #1 or #2 above, or
-> > > something else altogether. Should returning of the security.selinux
-> > > xattr name from listxattr() be dependent on
-> > > NFS_CAP_SECURITY_LABEL being set by the server and should it be
-> > > dependent on CONFIG_NFS_V4_SECURITY_LABEL?
-> >
-> > Thanks for bringing this back up Stephen, it would be good to get this =
-resolved.
->
-> On second look, I realized that commit 243fea134633 ("NFSv4.2: fix
-> listxattr to return selinux security label") was likely motivated by
-> the same issue as commit 8b0ba61df5a1c44e2b3cf6 ("fs/xattr.c: fix
-> simple_xattr_list to always include security.* xattrs"), i.e. the
-> coreutils change that switched ls -Z from unconditionally calling
-> getxattr("security.selinux") (via libselinux getfilecon(3)) to only
-> doing so if listxattr() returns the "security.selinux" xattr name.
-> Hence, we want the call to security_inode_listsecurity() to be
-> unconditional, which favors option #2. My only residual question
-> though is that commit 243fea134633 put the call _after_ fetching the
-> user.* xattr names, whereas the nfs4_listxattr_nfs4_label() returns it
-> _before_ any user.* xattrs are appended. I'd be inclined to move up
-> the security_inode_listsecurity() call to replace the
-> nfs4_listxattr_nfs4_label() call along with option #2.
+Hi Trond,
 
-I've made an attempt to unify the two security_inode_listsecurity()
-hook calls in the nfs4 code into a single, unconditional call from
-nfs4_listxattr(), which can be found here:
-https://lore.kernel.org/selinux/20251203195728.8592-1-stephen.smalley.work@=
-gmail.com/T/#u
+On 03/12/2025 16:23, Trond Myklebust wrote:
+> Hi Jon,
+> 
+> On Wed, 2025-12-03 at 15:56 +0000, Jon Hunter wrote:
+>>
+>> On 02/12/2025 16:01, Jon Hunter wrote:
+>>> Hi Anna,
+>>>
+>>> On 04/11/2025 15:06, Anna Schumaker wrote:
+>>>> From: Anna Schumaker <anna.schumaker@oracle.com>
+>>>>
+>>>> This patch adds a new flag: NFS_INO_REQ_DIR_DELEG to signal that
+>>>> a
+>>>> directory wants to request a directory delegation the next time
+>>>> it does
+>>>> a GETATTR. I have the client request a directory delegation when
+>>>> doing
+>>>> an access, create, or unlink call since these calls indicate that
+>>>> a user
+>>>> is working with a directory.
+>>>>
+>>>> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+>>>
+>>>
+>>> We use NFS for boot testing our boards and once this commit landed
+>>> in -
+>>> next a lot of them, but no all, started failing to boot. Bisect is
+>>> pointing to this change.
+>>>
+>>> We have a custom init script that runs to mount the rootfs and I
+>>> see
+>>> that it displays ...
+>>>
+>>> [   10.238091] Run /init as init process
+>>> [   10.266026] ERROR: mounting debugfs fail...
+>>> [   10.286535] Root device found: nfs
+>>> [   10.300342] Ethernet interface: eth0
+>>> [   10.313920] IP Address: 192.168.99.2
+>>> [   10.382738] Rootfs mounted over nfs
+>>> [   10.416010] Switching from initrd to actual rootfs
+>>
+>> It appears that there are multiple boot issues on -next at the moment
+>> and the above it not the relevant part for this particular issue.
+>> Looking further at the logs I am seeing the following errors which
+>> are related to this change ...
+>>
+>> [   11.100334] systemd[1]: Failed to open directory
+>> /etc/systemd/system, ignoring: Unknown error 524
+>> [   11.119234] systemd[1]: Failed to open directory
+>> /lib/systemd/system, ignoring: Unknown error 524
+>> [   11.143487] systemd[1]: Failed to load default target: No such
+>> file or directory
+>> [   11.158620] systemd[1]: Trying to load rescue target...
+>> [   11.169388] systemd[1]: Failed to load rescue target: No such file
+>> or directory
+>> [   11.188856] systemd[1]: Freezing execution.
+>>
+>> Thanks
+>> Jon
+> 
+> Does the following patch fix it for you?
+> 
+> 8<---------------------------------------------
+>  From 849bdbd3a2136a86c809ce6a7fa6ae30e9f0728a Mon Sep 17 00:00:00 2001
+> Message-ID: <849bdbd3a2136a86c809ce6a7fa6ae30e9f0728a.1764778907.git.trond.myklebust@hammerspace.com>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Wed, 3 Dec 2025 11:17:25 -0500
+> Subject: [PATCH] NFSv4: Handle NFS4ERR_NOTSUPP errors for directory
+>   delegations
+> 
+> The error NFS4ERR_NOTSUPP will be returned for operations that are
+> legal, but not supported by the server.
+> 
+> Fixes: 156b09482933 ("NFS: Request a directory delegation on ACCESS, CREATE, and UNLINK")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>   fs/nfs/nfs4proc.c | 25 +++++++++++++++++--------
+>   1 file changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index c53ddb185aa3..ec1ce593dea2 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -4533,12 +4533,17 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
+>   	status = nfs4_do_call_sync(server->client, server, &msg,
+>   				   &args.seq_args, &res.seq_res, task_flags);
+>   	if (args.get_dir_deleg) {
+> -		if (status == -EOPNOTSUPP) {
+> +		switch (status) {
+> +		case 0:
+> +			if (gdd_res.status != GDD4_OK)
+> +				break;
+> +			status = nfs_inode_set_delegation(
+> +				inode, current_cred(), FMODE_READ,
+> +				&gdd_res.deleg, 0, NFS4_OPEN_DELEGATE_READ);
+> +			break;
+> +		case -ENOTSUPP:
+> +		case -EOPNOTSUPP:
+>   			server->caps &= ~NFS_CAP_DIR_DELEG;
+> -		} else if (status == 0 && gdd_res.status == GDD4_OK) {
+> -			status = nfs_inode_set_delegation(inode, current_cred(),
+> -							  FMODE_READ, &gdd_res.deleg,
+> -							  0, NFS4_OPEN_DELEGATE_READ);
+>   		}
+>   	}
+>   	return status;
+> @@ -4554,10 +4559,14 @@ int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
+>   	do {
+>   		err = _nfs4_proc_getattr(server, fhandle, fattr, inode);
+>   		trace_nfs4_getattr(server, fhandle, fattr, err);
+> -		if (err == -EOPNOTSUPP)
+> -			exception.retry = true;
+> -		else
+> +		switch (err) {
+> +		default:
+>   			err = nfs4_handle_exception(server, err, &exception);
+> +			break;
+> +		case -ENOTSUPP:
+> +		case -EOPNOTSUPP:
+> +			exception.retry = true;
+> +		}
+>   	} while (exception.retry);
+>   	return err;
+>   }
 
-If this is deemed acceptable by the NFS folks, then I can re-base this
-patch on top of that one.
+Yes that does appear to fix it thanks!
+
+Cheers
+Jon
+
+-- 
+nvpublic
+
 
