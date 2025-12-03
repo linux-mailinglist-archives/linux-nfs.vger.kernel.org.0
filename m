@@ -1,58 +1,60 @@
-Return-Path: <linux-nfs+bounces-16867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43E3DC9EFD1
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 13:28:23 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35C81C9EFD7
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Dec 2025 13:30:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0AAB34E03B4
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 12:28:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AADC834635D
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Dec 2025 12:30:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553D62D836A;
-	Wed,  3 Dec 2025 12:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E43A32D836A;
+	Wed,  3 Dec 2025 12:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0kFQJMI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxsXXn+P"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300B52BE026
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Dec 2025 12:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B472529D287;
+	Wed,  3 Dec 2025 12:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764764900; cv=none; b=JEDLVeW9aOeh1ZvfSV63Ho8Hp+zMovM2jKuB8WlbccrzBNH/VDDHTTkd1csMaUx+g5YNc31IYzZXU+iUI8Vv80yhKgWUEQy+W3ksCPTAro4hinxowbRyD5OZeRu5h1Q3WMLw6vFXE7phKExDwZYwE1VdItOGMi5oSpqoMfR0RRw=
+	t=1764765000; cv=none; b=N1kwN7Nl57Y7edaVbiLQ1AH7u7nK/8d9MidyRJ+jp1yi59/4obyqtKatXyZrbXXrxtmOznn2xE9WpQUj9deonzyDGfe3fjQAprPf4OI8mgEZVpTam0ciQwUDMxNcKNJq9M+6wo9oKuOUuHsj3oEW437OVhBjDjnwPAyhFmEUIZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764764900; c=relaxed/simple;
-	bh=V5rB6EnSLBwFcFQtU2AxCNQdXUacluqFTSQ6XiWRJDQ=;
+	s=arc-20240116; t=1764765000; c=relaxed/simple;
+	bh=H3UNn/YxNSbZ/hnZY3iBYaxfF6CGteTEMT3L1st3FIk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KHvoxjOncIeZYPSq1CsO0DA6FPT1TS0BTJB9Xrfq43U2GpZmvPHi9J6QQ+w2cs79zd7khMWPV2TrDf573zGzO23uwbkpudBh3FVNQQrPPAljcXI0O51sVzmOSrpJ4h2uWoXkzciYGWX3WeRWf+pdwt86CUw3rnqXFn1MUhjpQrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0kFQJMI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1660CC4CEFB;
-	Wed,  3 Dec 2025 12:28:18 +0000 (UTC)
+	 Content-Type:MIME-Version; b=UXurSv5aUZH323btH+sFiKI1BXYJsY5Tt4HO+kozrwJKwV9JDMqV7MIGGkiHex+EOXVIecKDeFO8APqyhUIzZekggaSwtTIJKfavmVaCk5zDjcTTQPGSJjjl73bWVBfS1lTD0OpMKe3MqdwPlkyBGpHuwI9MJ3s4ipMQWtyhpj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxsXXn+P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF4CC4CEFB;
+	Wed,  3 Dec 2025 12:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764764899;
-	bh=V5rB6EnSLBwFcFQtU2AxCNQdXUacluqFTSQ6XiWRJDQ=;
+	s=k20201202; t=1764764999;
+	bh=H3UNn/YxNSbZ/hnZY3iBYaxfF6CGteTEMT3L1st3FIk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=t0kFQJMIRJ8jmdL8pNfAIL1oe5b4g8pj1YIjoKaM2ewxSbJs97o1Z8GCGXH56sVkW
-	 mvnA7vHeOqQ0QbdwzV4uY2fXTJVd0oTEW6I53WU4bMjRrLSqG4FGyO2oVbrhEBJOp6
-	 J1A9vNJNAR/kbyjVr9CsgHGinOK3O6HPfHIKheJEu8iswyonSevWWTRTlhVNpBnNd3
-	 B2jH+GhKsyhxfLE38riHZrv5NXY+UL4nILnTL9ioeLvTGyOQmswP/MdQAzNPgoVv+E
-	 JAwvOUK65hIcQK0OpZbMs8LdH96DA0ycGXxpwp7tdtZ0PS6FejwLro75GuZ1Gcpb9E
-	 9EKdzeC+nGMDA==
-Message-ID: <79e91507932cf2ffbb33a5e9d1b5670e3cd1d4a3.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] NFSD: WARN if fi_fds[O_RDONLY] is already
- populated
+	b=DxsXXn+PV1UwBIxanSIIvRrSkkOwFoCCoXNLiWdxjaJ3gGbXrF+1d/Z7RFE4YSe2B
+	 MKX6A8y/woGm8VTDqLTBlfs56guSjQfBZ/0x1XOkHQ1hLIoN3lqihjuNJ3UaE9oZGU
+	 VvmuVnh9eP9NbYbIy0vfLZgPprk+3l9cRu4aDhUg0ZEZPlmE4f7XSmMVfQnBC2bNBr
+	 sbZjbIWD/YPjkWVDcUZKLEZgqMkWYzFtXUFrVu8PecGAQtjT/44EnhSc+QiLWXJgWD
+	 gxH6lvpMNXG2RWVYr2KDxYJ8LY8Wmp9y/wK2c5FQeXtMb/05B6fH2qIG7QkkYH93Eo
+	 XQpcDV0daOYMA==
+Message-ID: <0eed5efe1c314f02e0c05c90a7acdf141b8a9faf.camel@kernel.org>
+Subject: Re: [PATCH 0/3] NFSD IO MODES documentation fixes
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 03 Dec 2025 07:28:18 -0500
-In-Reply-To: <20251202224208.4449-2-cel@kernel.org>
-References: <20251202224208.4449-1-cel@kernel.org>
-	 <20251202224208.4449-2-cel@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List	
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>,  Linux NFS <linux-nfs@vger.kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, Jonathan Corbet <corbet@lwn.net>,  Mike
+ Snitzer <snitzer@kernel.org>
+Date: Wed, 03 Dec 2025 07:29:57 -0500
+In-Reply-To: <20251203010911.14234-1-bagasdotme@gmail.com>
+References: <20251203010911.14234-1-bagasdotme@gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,40 +139,28 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-12-02 at 17:42 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 2025-12-03 at 08:09 +0700, Bagas Sanjaya wrote:
+> Hi,
 >=20
-> nfsd4_add_rdaccess_to_wrdeleg() expects that fi_fds[O_RDONLY] is
-> NULL. If it's not NULL, there's a software bug somewhere else that
-> needs to be looked into.
+> Here are fixes for NFSD IO modes documentation as reported in linux-next =
+[1].
 >=20
-> Replace the redundant fp assignment with a WARN_ON_ONCE.
+> Enjoy!
 >=20
-> Suggested-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> [1]: https://lore.kernel.org/linux-next/20251202152506.7a2d2d41@canb.auug=
+.org.au/
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 1c9802d06de1..b8fd0ed3fd53 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6236,7 +6236,7 @@ nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqst=
-p, struct nfsd4_open *open,
->  		fp =3D stp->st_stid.sc_file;
->  		spin_lock(&fp->fi_lock);
->  		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
-> -		fp =3D stp->st_stid.sc_file;
-> +		WARN_ON_ONCE(fp->fi_fds[O_RDONLY] !=3D NULL);
->  		fp->fi_fds[O_RDONLY] =3D nf;
->  		fp->fi_rdeleg_file =3D nf;
->  		spin_unlock(&fp->fi_lock);
+> Bagas Sanjaya (3):
+>   NFSD: Add toctree entry for NFSD IO modes docs
+>   NFSD: nfsd-io-modes: Wrap shell snippets in literal code blocks
+>   NFSD: nfsd-io-modes: Separate lists
+>=20
+>  Documentation/filesystems/nfs/index.rst       |  1 +
+>  .../filesystems/nfs/nfsd-io-modes.rst         | 33 ++++++++++++-------
+>  2 files changed, 22 insertions(+), 12 deletions(-)
+>=20
+>=20
+> base-commit: fa8d4e6784d1b6a6eaa3911bac993181631d2856
 
-Given that the client can have the file open for read before we grant a
-write deleg, then this would fire pretty often I think. This might not
-be a good idea either.
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
