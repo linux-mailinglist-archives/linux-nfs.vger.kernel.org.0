@@ -1,336 +1,159 @@
-Return-Path: <linux-nfs+bounces-16900-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16901-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A780CA3E3A
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Dec 2025 14:49:41 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06FBECA3EE8
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Dec 2025 15:01:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C517A3030CBE
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Dec 2025 13:49:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9E239301AD20
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Dec 2025 14:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A659133CEB2;
-	Thu,  4 Dec 2025 13:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E95641E9915;
+	Thu,  4 Dec 2025 13:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1X3Lk6l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yo2LRBOF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7677B23D7C4;
-	Thu,  4 Dec 2025 13:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2C4320A34
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Dec 2025 13:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764856152; cv=none; b=c7pY59dxgi6qv1a8XBB3/ZeaLRODWWjzEGtsmAa3pXOk59wzXg/fdJ2v3UFPypFRK8cJ9uxN1EPxt5amVi42iuYb2Uzu1qvb5vZBKLjw+KIBG+Io2HWggwy9mdNj3dQP9vMk9oay52VVc6JeLug12SDujfq3swiGVCNC0ZWuBIA=
+	t=1764856392; cv=none; b=n4dQdPzlMbzhXh800SLhpMsBk1y10CtryZwchJWFBL64lUcEVjR1AOJxBQmiDtFnvpkMhpjY+9Qcc0QSdpAzYbb4toTbMxjB1H0787kiJBVUs8s44sTS9lWXvDN4VAu6bwR79Z9Br4JomF4QTSGAxy0b1RrDi1fyUDNHpYuf2dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764856152; c=relaxed/simple;
-	bh=PGNKCM4RWRgePAblEoxnyv/9Ompl/rGisrWkB5ubAmE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Df+4Gi6OT+xigLXGylPm1rgIjOpD/7UO/CDHrZkzRSa+zS66KITUT2pGLyidz+z7K93K/7E+CYMaol0Mn7TVXMLWR8HslyU3nlhNAzXnLqJIfOlvuRoJ3WinolU+jbOKRSCtXgRq9i3f8MmN9X+4Sck53pxcQ6LAotE7fixpWbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1X3Lk6l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5708C4CEFB;
-	Thu,  4 Dec 2025 13:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764856152;
-	bh=PGNKCM4RWRgePAblEoxnyv/9Ompl/rGisrWkB5ubAmE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=A1X3Lk6l2gjAZR+pR/NS/vm11m4GMGpy9rUogQvatNK5neVQKSjdG0/LBgOKrH/nm
-	 4dEcZJEno6PVRfDTxofbJ1mZbZBX6EqGSwE0zLvgYpLenTmGyyL8U1GJDeV+VvNsan
-	 Z9PBwZyynBT1toOYpRTAVXeikEFo9MKlpxBcnqWbJ4iHmnWvRF9UDVu29PL+pIpAT2
-	 Nkfpr+t7ygX2ZqtetVaAE8PG5TLobG95dP30FCQ23ZxqTpNhxt6VHSghOC9W4Mjhr0
-	 hqNrrMmw0IjeOrARRvzs6yAnwaIE5vf+MNqg1Lylh7NbXSsZhQMWKzU4jeGfs/zM72
-	 XTLsHHgEwqobQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 04 Dec 2025 08:48:33 -0500
-Subject: [PATCH v2 2/2] filelock: allow lease_managers to dictate what
- qualifies as a conflict
+	s=arc-20240116; t=1764856392; c=relaxed/simple;
+	bh=+wkgqtB1gZpHa5ETxGm3XQRKsl8HEXkWqtCGCWZMHAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ANFg5HWfztCbWYUS2RGAXjZ3NfHp1Y5BBNUx4smEkdQm4kSEcHzNg7xdAz51VSXz64SgL4TgoUljmYPfhRUv94oMXz0/FKfL9kIgz/iDHxbcwEtlrdc4Rg+eVnQQBAJ5Dn/XG1YDPuDrvik73C2wUB3uLLKQJobNn4jjpzN5UvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yo2LRBOF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764856389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nYHzJkA0HvD4jLB3LUvRrKReSIouTc9ggv6QgwqaH5I=;
+	b=Yo2LRBOFXVD1hb7iEV1hB7jzqfKyV5d9r9icevyvlIEz0JrFZfMXi0HrX40vcqE3Lo5XNy
+	kUMMpmEgoHkapE5iuC56B3GyjeKfFWN8bZYmijL1jnLSiqX5zz8mhqZYNvHLnfUGqpv0vS
+	KMiDvCVuRzVG4VkUygvQT4ZWEyBAAkE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-315-sExXSmw2Mq-SX086aE7Plw-1; Thu,
+ 04 Dec 2025 08:53:05 -0500
+X-MC-Unique: sExXSmw2Mq-SX086aE7Plw-1
+X-Mimecast-MFC-AGG-ID: sExXSmw2Mq-SX086aE7Plw_1764856384
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C57BF19560B2;
+	Thu,  4 Dec 2025 13:53:04 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.64.87])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8FD051953986;
+	Thu,  4 Dec 2025 13:53:04 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id F30DC548BFE; Thu, 04 Dec 2025 08:53:02 -0500 (EST)
+Date: Thu, 4 Dec 2025 08:53:02 -0500
+From: Scott Mayhew <smayhew@redhat.com>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: anna@kernel.org, chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] SUNRPC: Check if we need to recalculate slack
+ estimates
+Message-ID: <aTGSPl66JCYjlt6W@aion>
+References: <20251120121252.3724988-1-smayhew@redhat.com>
+ <305f38b14cec83b79921d5e1552ace515db59f24.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251204-dir-deleg-ro-v2-2-22d37f92ce2c@kernel.org>
-References: <20251204-dir-deleg-ro-v2-0-22d37f92ce2c@kernel.org>
-In-Reply-To: <20251204-dir-deleg-ro-v2-0-22d37f92ce2c@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Jonathan Corbet <corbet@lwn.net>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8943; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=PGNKCM4RWRgePAblEoxnyv/9Ompl/rGisrWkB5ubAmE=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpMZFTudx42rp8equhKu0RbCtNAGdFvOREM0JQT
- ztclX7HqUWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaTGRUwAKCRAADmhBGVaC
- FWODD/9L4ge3HADqlBPoTNGjbzKHlVuRIfbyOhnY+q7DSle3VxbxQUNYCW/yHKGayZrhEkERw8s
- jwMVhBi0jaMl4Cmtbz1a4khoO8UaJ1K5ctnDWTDznq4WCT6NtV5iJLrm1/QTiBMSTVNJWBzIF2s
- IABhZhl3Q87xgD4/iLn5yS88j30dLSorzf2q0hKAtR+AyS8kGF1cugLndmaFM2PAeaHDujv12T6
- EPPDgCDAEOjCUE6DFZix+g9+waKEyc7lH0CF1gQtQ7rke1YbxUNUNw44DmoMx8fP/QixhBsJr+8
- TeBWzzZmqVFsEPGubrQYENyZKi4yUNWO0PCYeuz1zEMA+rb7L8dcj5emlfEMwZwkpjB3OCPDSGR
- 0D6Ny7exPhhEO7/yE3dNzJG0GGwkkX3+bu+3/zt6OIv+LReqCnD9SIccTE9lzPoG9Zeul+NDUHZ
- 1piJlPi6j2CfwfklxmWea5Gb0/s/XUyTXm61cB69TOC2NI5sPq1MOua0ljECcWnWGl3KQBCriF+
- lqvY04NbssspiHovxxif+0FLdrbD4JvnUjbcAsNF5bWgAIWUQ8Hm2arCOcuj7kr0FsKfXVb03wz
- ciqFJGaG3Kw7YVOo3CSyRItLSha9UaNkmFVxts2V983phmgxI4qU2OE+IA7G3rFrCGR6T+iVWtM
- uCSLtQCx1uDOElg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <305f38b14cec83b79921d5e1552ace515db59f24.camel@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Requesting a delegation on a file from the userland fcntl() interface
-currently succeeds when there are conflicting opens present.
+On Wed, 03 Dec 2025, Trond Myklebust wrote:
 
-This is because the lease handling code ignores conflicting opens for
-FL_LAYOUT and FL_DELEG leases. This was a hack put in place long ago,
-because nfsd already checks for conflicts in its own way. The kernel
-needs to perform this check for userland delegations the same way it is
-done for leases, however.
+> Hi Scott,
+>=20
+> On Thu, 2025-11-20 at 07:12 -0500, Scott Mayhew wrote:
+> > If the incoming GSS verifier is larger than what we previously
+> > recorded
+> > on the gss_auth, that would indicate the GSS cred/context used for
+> > that
+> > RPC is using a different enctype than the one used by the machine
+> > cred/context, and we should recalculate the slack variables
+> > accordingly.
+> >=20
+> > Link: https://bugs.debian.org/1120598
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> > =A0net/sunrpc/auth_gss/auth_gss.c | 12 ++++++++++++
+> > =A01 file changed, 12 insertions(+)
+> >=20
+> > diff --git a/net/sunrpc/auth_gss/auth_gss.c
+> > b/net/sunrpc/auth_gss/auth_gss.c
+> > index 5c095cb8cb20..bff5f10581a2 100644
+> > --- a/net/sunrpc/auth_gss/auth_gss.c
+> > +++ b/net/sunrpc/auth_gss/auth_gss.c
+> > @@ -1721,6 +1721,18 @@ gss_validate(struct rpc_task *task, struct
+> > xdr_stream *xdr)
+> > =A0	if (maj_stat)
+> > =A0		goto bad_mic;
+> > =A0
+> > +	/*
+> > +	 * Normally we only recalculate the slack variables once
+> > after
+> > +	 * creating a new gss_auth, but we should also do it if the
+> > incoming
+> > +	 * verifier has a larger size than what was previously
+> > recorded.
+> > +	 * When the incoming verifier is larger than expected, the
+> > +	 * GSS context is using a different enctype than the one
+> > used
+> > +	 * initially by the machine credential. Force a slack size
+> > update
+> > +	 * to maintain good payload alignment.
+> > +	 */
+> > +	if (cred->cr_auth->au_verfsize < (XDR_QUADLEN(len) + 2))
+> > +		__set_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth-
+> > >au_flags);
+> > +
+> > =A0	/* We leave it to unwrap to calculate au_rslack. For now we
+> > just
+> > =A0	 * calculate the length of the verifier: */
+> > =A0	if (test_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth-
+> > >au_flags))
+>=20
+> What's the status here? Are you planning to put out a new version with
+> the non-atomic __set_bit() -> atomic set_bit() change?
 
-Make this dependent on the lease_manager by adding a new
-->lm_open_conflict() lease_manager operation and have
-generic_add_lease() call that instead of check_conflicting_open().
-Morph check_conflicting_open() into a ->lm_open_conflict() op that is
-only called for userland leases/delegations. Set the
-->lm_open_conflict() operations for nfsd to trivial functions that
-always return 0.
+No.  After discussing with Chuck and Jeff I'm not sure this is the
+right approach.
 
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- Documentation/filesystems/locking.rst |  1 +
- fs/locks.c                            | 90 ++++++++++++++++-------------------
- fs/nfsd/nfs4layouts.c                 | 23 ++++++++-
- fs/nfsd/nfs4state.c                   | 19 ++++++++
- include/linux/filelock.h              |  1 +
- 5 files changed, 84 insertions(+), 50 deletions(-)
+I was under the impression that the slack and ralign values were more
+like estimates and we could afford to be conservative, i.e. I was
+thinking that as long as we were accommodating the enctype with the
+largest space requirements then we'd be okay.  But if that's not the
+case, then  updating the values when a user cred is using a SHA2
+enctype would mean the values are incorrect if the machine cred is using
+a SHA1 enctype.
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 77704fde98457423beae7ff00525a7383e37132b..04c7691e50e01f7728ee597d598aea5851b9a21e 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -416,6 +416,7 @@ lm_change		yes		no			no
- lm_breaker_owns_lease:	yes     	no			no
- lm_lock_expirable	yes		no			no
- lm_expire_lock		no		no			yes
-+lm_open_conflict	yes		no			no
- ======================	=============	=================	=========
- 
- buffer_head
-diff --git a/fs/locks.c b/fs/locks.c
-index be0b79286da89d6b939ac071a9174c557d7f4d81..e75c8084d937be1cb3abab0b844c3abfbca7f4ca 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -585,10 +585,50 @@ lease_setup(struct file_lease *fl, void **priv)
- 	__f_setown(filp, task_pid(current), PIDTYPE_TGID, 0);
- }
- 
-+/**
-+ * lease_open_conflict - see if the given file points to an inode that has
-+ *			 an existing open that would conflict with the
-+ *			 desired lease.
-+ * @filp:	file to check
-+ * @arg:	type of lease that we're trying to acquire
-+ *
-+ * Check to see if there's an existing open fd on this file that would
-+ * conflict with the lease we're trying to set.
-+ */
-+static int
-+lease_open_conflict(struct file *filp, const int arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	int self_wcount = 0, self_rcount = 0;
-+
-+	if (arg == F_RDLCK)
-+		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
-+	else if (arg != F_WRLCK)
-+		return 0;
-+
-+	/*
-+	 * Make sure that only read/write count is from lease requestor.
-+	 * Note that this will result in denying write leases when i_writecount
-+	 * is negative, which is what we want.  (We shouldn't grant write leases
-+	 * on files open for execution.)
-+	 */
-+	if (filp->f_mode & FMODE_WRITE)
-+		self_wcount = 1;
-+	else if (filp->f_mode & FMODE_READ)
-+		self_rcount = 1;
-+
-+	if (atomic_read(&inode->i_writecount) != self_wcount ||
-+	    atomic_read(&inode->i_readcount) != self_rcount)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
- static const struct lease_manager_operations lease_manager_ops = {
- 	.lm_break = lease_break_callback,
- 	.lm_change = lease_modify,
- 	.lm_setup = lease_setup,
-+	.lm_open_conflict = lease_open_conflict,
- };
- 
- /*
-@@ -1754,52 +1794,6 @@ int fcntl_getdeleg(struct file *filp, struct delegation *deleg)
- 	return 0;
- }
- 
--/**
-- * check_conflicting_open - see if the given file points to an inode that has
-- *			    an existing open that would conflict with the
-- *			    desired lease.
-- * @filp:	file to check
-- * @arg:	type of lease that we're trying to acquire
-- * @flags:	current lock flags
-- *
-- * Check to see if there's an existing open fd on this file that would
-- * conflict with the lease we're trying to set.
-- */
--static int
--check_conflicting_open(struct file *filp, const int arg, int flags)
--{
--	struct inode *inode = file_inode(filp);
--	int self_wcount = 0, self_rcount = 0;
--
--	if (flags & FL_LAYOUT)
--		return 0;
--	if (flags & FL_DELEG)
--		/* We leave these checks to the caller */
--		return 0;
--
--	if (arg == F_RDLCK)
--		return inode_is_open_for_write(inode) ? -EAGAIN : 0;
--	else if (arg != F_WRLCK)
--		return 0;
--
--	/*
--	 * Make sure that only read/write count is from lease requestor.
--	 * Note that this will result in denying write leases when i_writecount
--	 * is negative, which is what we want.  (We shouldn't grant write leases
--	 * on files open for execution.)
--	 */
--	if (filp->f_mode & FMODE_WRITE)
--		self_wcount = 1;
--	else if (filp->f_mode & FMODE_READ)
--		self_rcount = 1;
--
--	if (atomic_read(&inode->i_writecount) != self_wcount ||
--	    atomic_read(&inode->i_readcount) != self_rcount)
--		return -EAGAIN;
--
--	return 0;
--}
--
- static int
- generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **priv)
- {
-@@ -1836,7 +1830,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **pr
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
- 	time_out_leases(inode, &dispose);
--	error = check_conflicting_open(filp, arg, lease->c.flc_flags);
-+	error = lease->fl_lmops->lm_open_conflict(filp, arg);
- 	if (error)
- 		goto out;
- 
-@@ -1893,7 +1887,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lease **flp, void **pr
- 	 * precedes these checks.
- 	 */
- 	smp_mb();
--	error = check_conflicting_open(filp, arg, lease->c.flc_flags);
-+	error = lease->fl_lmops->lm_open_conflict(filp, arg);
- 	if (error) {
- 		locks_unlink_lock_ctx(&lease->c);
- 		goto out;
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 683bd1130afe298f9df774684192c89f68102b72..ad7af8cfcf1f9019f290a22214f27c3ceeee33a4 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -764,9 +764,28 @@ nfsd4_layout_lm_change(struct file_lease *onlist, int arg,
- 	return lease_modify(onlist, arg, dispose);
- }
- 
-+/**
-+ *  nfsd4_layout_lm_open_conflict - see if the given file points to an inode that has
-+ *				    an existing open that would conflict with the
-+ *				    desired lease.
-+ * @filp:	file to check
-+ * @arg:	type of lease that we're trying to acquire
-+ *
-+ * The kernel will call into this operation to determine whether there
-+ * are conflicting opens that may prevent the layout from being granted.
-+ * For nfsd, that check is done at a higher level, so this trivially
-+ * returns 0.
-+ */
-+static int
-+nfsd4_layout_lm_open_conflict(struct file *filp, int arg)
-+{
-+	return 0;
-+}
-+
- static const struct lease_manager_operations nfsd4_layouts_lm_ops = {
--	.lm_break	= nfsd4_layout_lm_break,
--	.lm_change	= nfsd4_layout_lm_change,
-+	.lm_break		= nfsd4_layout_lm_break,
-+	.lm_change		= nfsd4_layout_lm_change,
-+	.lm_open_conflict	= nfsd4_layout_lm_open_conflict,
- };
- 
- int
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 6791fc239dbdb5c30ad69912addfd16ad67eb743..c28799f7c775df114274735210d98244b478879d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5574,10 +5574,29 @@ nfsd_change_deleg_cb(struct file_lease *onlist, int arg,
- 		return -EAGAIN;
- }
- 
-+/**
-+ *  nfsd4_deleg_lm_open_conflict - see if the given file points to an inode that has
-+ *				   an existing open that would conflict with the
-+ *				   desired lease.
-+ * @filp:	file to check
-+ * @arg:	type of lease that we're trying to acquire
-+ *
-+ * The kernel will call into this operation to determine whether there
-+ * are conflicting opens that may prevent the deleg from being granted.
-+ * For nfsd, that check is done at a higher level, so this trivially
-+ * returns 0.
-+ */
-+static int
-+nfsd4_deleg_lm_open_conflict(struct file *filp, int arg)
-+{
-+	return 0;
-+}
-+
- static const struct lease_manager_operations nfsd_lease_mng_ops = {
- 	.lm_breaker_owns_lease = nfsd_breaker_owns_lease,
- 	.lm_break = nfsd_break_deleg_cb,
- 	.lm_change = nfsd_change_deleg_cb,
-+	.lm_open_conflict = nfsd4_deleg_lm_open_conflict,
- };
- 
- static __be32 nfsd4_check_seqid(struct nfsd4_compound_state *cstate, struct nfs4_stateowner *so, u32 seqid)
-diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-index 54b824c05299261e6bd6acc4175cb277ea35b35d..2f5e5588ee0733c200103801d0d2ba19bebbf9af 100644
---- a/include/linux/filelock.h
-+++ b/include/linux/filelock.h
-@@ -49,6 +49,7 @@ struct lease_manager_operations {
- 	int (*lm_change)(struct file_lease *, int, struct list_head *);
- 	void (*lm_setup)(struct file_lease *, void **);
- 	bool (*lm_breaker_owns_lease)(struct file_lease *);
-+	int (*lm_open_conflict)(struct file *, int);
- };
- 
- struct lock_manager {
+Maybe we should instead just emit some sort of a warning when we
+encounter a verifier with a different size that what we previously
+recorded on the auth handle?
 
--- 
-2.52.0
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trondmy@kernel.org, trond.myklebust@hammerspace.com
+>=20
 
 
