@@ -1,141 +1,122 @@
-Return-Path: <linux-nfs+bounces-16896-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16897-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E93CCA2156
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Dec 2025 02:07:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0262ACA215F
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Dec 2025 02:12:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 24268300259D
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Dec 2025 01:07:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C16AA301DBA9
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Dec 2025 01:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02A35155C87;
-	Thu,  4 Dec 2025 01:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1OOIjqc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 471781A317D;
+	Thu,  4 Dec 2025 01:12:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D125F1DFDE
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Dec 2025 01:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BDE182D0;
+	Thu,  4 Dec 2025 01:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764810471; cv=none; b=mLz2EfsPYnHMSVOfIaBnIIEnH6/fwrFrIbo/AyoG6AH+pGNOySBGB8wuj+RUA+p844JsCjdPX8mYoD7UgR555c/GGf+5O+l91GP01AQOqHencOX6LuA/ViNZqkiC2q28wRlrxQVCDVTsHQCHXcj9+lvoFCLqcZEMQ677RM+m4hQ=
+	t=1764810769; cv=none; b=OHeMTU2YEH2pc1A2/tN1goI3Qd+jr7FshnlMm9eLfYLhyqPzoUAV8YM10iLxlkisTiIoxu5KYH8d5BEHcCftg2CG87tVsSSQ5TWdkwnB57gtxMgVRIFsr6zZ4l4G3tJtYKwPYJEVFHMghNrYTRSL+/wsFZTyOx3rAZisQAjuQ4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764810471; c=relaxed/simple;
-	bh=hY06PDBfqjyHwMtE3v3SCaGLx34vv46S5WL6zcankg4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j5n1iVS9MhvZVeTzrV4JV6RmKxAv8qBNORg59Ch+D35Q92gc3z3c6KfWzhfP2/JfVs4Il8jprYfWWKgLuQqrmanFE2haDfX2n+SBuvxJ495mLJOKVth+9D27SePi1iqHSZWAXioPul5R+rbSRvi9nWHzf32Nj/kAeeZ72z0+M6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1OOIjqc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAB0C116B1;
-	Thu,  4 Dec 2025 01:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764810471;
-	bh=hY06PDBfqjyHwMtE3v3SCaGLx34vv46S5WL6zcankg4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=j1OOIjqceL5I7nI3NN6y1AY/HjRd7QHiWHn2OQJUyL/rfhzEfX5P1a5MXh6CDwrnE
-	 ui1pB3cLmjlo8MbB1/KY8fbgSKZcaGNbiD7vEqC/TxR49rj+7K9Bmi+sYrgXW8YGoY
-	 sog/Bv4ridX9r9RPJ5PnJtnaLSYv25w+9zRMmcx0WkHhuF3ReVM27Ja/yjcaqnw9m6
-	 TLGbPf9y6pj4AbkzPiyuZELkx8rYgkfzctJLpBmDp6wjlLZOqYVroMKgs6vquG0TKR
-	 W7DerLVADFzJQH1Fyt53yQlJYcz1buRi9LrW/4WgSeMvlsURW98sOOhZihVJZlgjbw
-	 IGDF0R5lGvjDA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 28B8BF4006A;
-	Wed,  3 Dec 2025 20:07:50 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 03 Dec 2025 20:07:50 -0500
-X-ME-Sender: <xms:5t4waRyj4hnuNGS18HHHWLc2x0pvXoNwa6GAIGmQzZfuNXOXzpvsSg>
-    <xme:5t4wacFuaSXuzv6XcDkkkrhiECQxFptEm7qUO2BVQYzz3HRbmtWnG_TbCQxJj3rWf
-    8rwsU9E618GdWVr5wklYHOMBU7_Q9iQ6YRh1PWxiZWtGBmV9Z9Gy-c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgtkhcu
-    nfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    fghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklh
-    gvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleeh
-    ledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilh
-    drtghomhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
-    ohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdr
-    tghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtth
-    hopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgr
-    lhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:5t4waUrexlMc8M5-PTfsP_KLrDbNzL59P-EE24nBypqLZ4oUFwtkPQ>
-    <xmx:5t4wabWPSv7Dwt-J23ATPwOcXcxK-FF7JeqJy8KHhSBGW6fCf5JjHA>
-    <xmx:5t4waXaibPuJG8lxiFlfX115rZjcnXeTaLvTeU4liGOaiNOpB9QDOA>
-    <xmx:5t4waQeQTBL65bg8Leda26Rc2zVUEz1CaiIEuoW_AFaB9rcii-3lBg>
-    <xmx:5t4waZ34TeBmiUN3CMmd6HIXutXjS5NbQtmnaHujTuWtbzBigrUGELeG>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 04834780054; Wed,  3 Dec 2025 20:07:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1764810769; c=relaxed/simple;
+	bh=zPeVun2lXFp3lUxpiMBe+ba5hiR+qBkiq2MyrQzJhII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ESpqzvt8hMqF4LPWtl66MqsmN00LJMY89BIWOKB8oBPuSCSNlbK2rrXQuCtzhuxuHz9Cl4xp1DrCFyfYLU2NwEQYHagi/hy4494w18HHeHGfs1hb5YlsSZz3mIxTKlkS+OJt5FlsqPL5w9r9R8SmpXaOcJAglVM2GaAW5m1L6x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5256496ad0ae11f0a38c85956e01ac42-20251204
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
+	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:3a5e45e1-666d-4a4d-95e9-0818e75db6ec,IP:10,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:0
+X-CID-INFO: VERSION:1.3.6,REQID:3a5e45e1-666d-4a4d-95e9-0818e75db6ec,IP:10,URL
+	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:1da5b09dffecb786ce1fede61200d24b,BulkI
+	D:2512011054219RRSEZPR,BulkQuantity:1,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,
+	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+	,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 5256496ad0ae11f0a38c85956e01ac42-20251204
+X-User: zhaochenguang@kylinos.cn
+Received: from localhost.localdomain [(223.70.160.239)] by mailgw.kylinos.cn
+	(envelope-from <zhaochenguang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 831413987; Thu, 04 Dec 2025 09:12:37 +0800
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND linux-next] SUNRPC: Optimize list definition method
+Date: Thu,  4 Dec 2025 09:12:32 +0800
+Message-Id: <20251204011232.41487-1-zhaochenguang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AW-f6n96Aybc
-Date: Wed, 03 Dec 2025 20:06:49 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <6b45c31e-d5b8-4510-83dc-8a6578cd5ccf@app.fastmail.com>
-In-Reply-To: <176480190344.16766.4086911917002460445@noble.neil.brown.name>
-References: <20251202224208.4449-1-cel@kernel.org>
- <176471811359.16766.18131279195615642514@noble.neil.brown.name>
- <dc25626e-fae0-401b-93ed-1c4fdf34186c@app.fastmail.com>
- <176472909957.16766.8691035364646019081@noble.neil.brown.name>
- <eaaa46486ec7b1273adfc1a3bdbf11cb1f557e40.camel@kernel.org>
- <079ef086-fa1c-4a9f-b011-e47547b4e3bc@app.fastmail.com>
- <176480190344.16766.4086911917002460445@noble.neil.brown.name>
-Subject: Re: [PATCH v2 1/2] nfsd: prevent write delegations when client has existing
- opens
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+Integrate list definition and initialization into LIST_HEAD macro
 
+Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+---
+ net/sunrpc/backchannel_rqst.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On Wed, Dec 3, 2025, at 5:45 PM, NeilBrown wrote:
-> On Thu, 04 Dec 2025, Chuck Lever wrote:
->>=20
->> On Wed, Dec 3, 2025, at 7:26 AM, Jeff Layton wrote:
->
->>=20
->> > I agree with Neil here (despite my questioning this on our call
->> > yesterday).
->
-> Ahh.. I wondered what had triggered the about-face between one patch s=
-et
-> and the next.  I now see it was your off-line conversation ...
-> Maybe it would help to surface this:
->
->   Jeff suggested in a private conversation that ....  so this version
->   takes a different approach and .....
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index caa94cf57123..949022c5574c 100644
+--- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -131,7 +131,7 @@ EXPORT_SYMBOL_GPL(xprt_setup_backchannel);
+ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned int min_reqs)
+ {
+ 	struct rpc_rqst *req;
+-	struct list_head tmp_list;
++	LIST_HEAD(tmp_list);
+ 	int i;
+ 
+ 	dprintk("RPC:       setup backchannel transport\n");
+@@ -147,7 +147,6 @@ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned int min_reqs)
+ 	 * lock is held on the rpc_xprt struct.  It also makes cleanup
+ 	 * easier in case of memory allocation errors.
+ 	 */
+-	INIT_LIST_HEAD(&tmp_list);
+ 	for (i = 0; i < min_reqs; i++) {
+ 		/* Pre-allocate one backchannel rpc_rqst */
+ 		req = xprt_alloc_bc_req(xprt);
+-- 
+2.25.1
 
-The idea I took from my conversation with Jeff was that v1 might not
-have actually gotten to the root of the problem. I thought it might be
-evident from the higher-level fix in v2 that RCA was ongoing, but
-perhaps it wasn=E2=80=99t that obvious.
-
-
->> Then you prefer the v1 patch that reuses the nfsd_file already
->> in fi_fds[O_RDONLY], and we can drop the addition of the
->> WARN_ON_ONCE ?
->
-> That is the direction that I would prefer too.
-
-I=E2=80=99ve applied v1 to nfsd-testing. As always, it is still open to =
-review
-comments.
-
-
---=20
-Chuck Lever
 
