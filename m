@@ -1,162 +1,136 @@
-Return-Path: <linux-nfs+bounces-16962-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16963-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5EA0CA8AF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Dec 2025 18:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71A8CCA9532
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Dec 2025 21:59:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C935930BC50F
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Dec 2025 17:48:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 319F3313C14D
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Dec 2025 20:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D437734C9A9;
-	Fri,  5 Dec 2025 17:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2AF36B069;
+	Fri,  5 Dec 2025 18:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oviwmDWC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cK2nRCcr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B019934C9A1
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Dec 2025 17:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D5836B061
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Dec 2025 18:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764956505; cv=none; b=AUUaFp+FknIgNxQW1BP+9V/7G0KcIR00q2A9XgUR++W0doTxgvk+3s/kDs/0yLqQmQ+vWlu9Lwdv7fhdPqUrP3yIOhEY/fCd31YJNr0vSIvYHw2Ey9FwXeV/w343lOrHtN8emy/IhirS/C9g268wDvEOMpwsamkYRnM3pmyUayE=
+	t=1764960128; cv=none; b=d1eFmKYVnFfqY943xuZBC8k75JqqKYwyZnCgp0EWNkOvgKD2PLLZiNGjH5W/8HoyH02HIh1YpGHnh2niabvx+/ISXZrM2zQk78ZzToPkZhSvnvtE3zQmgmyozqiXNVh2i6RjCTTgsOfeaseIZhPwp5k2KCrVcZhR5rerNRGhfoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764956505; c=relaxed/simple;
-	bh=9P+oUCNrHqQr6TTse4VstKkT/97+r6l55NAKHEhSJ9s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Tbl4rB6BjgDFuhGSp5e+V/GKaycAEmCjgMCu1DEMwO7DE0prLTLBm/IYc8Ul1CRaXeGWyeX1PyVxmJC+hH9JPlCjWLe7bq2TzVpdItmkMqyeDM8pron4jIeGi+i7AIV0GlTBYLZ4w4pqxymjdSTacVzTAZ+x1Sz8TIjBC5U6bYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oviwmDWC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53E6C4CEF1;
-	Fri,  5 Dec 2025 17:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764956505;
-	bh=9P+oUCNrHqQr6TTse4VstKkT/97+r6l55NAKHEhSJ9s=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=oviwmDWCzYHpDX4wfzofBRm9GQZKAOShMHLidMh2k622DxLjwkFlIM7xaUH3scOSl
-	 HGKqbb8km99rlq3YhJdBITxZUVpuzRWNcJUPi/8CDuqg2tewxk1AVtiuy3FrtKuasz
-	 F2dWGAQIB8nyBhVm2LOsz2w+qav4DPSd602h59UgGLrrC7Suxfz4ne01rVRBuaRtId
-	 X64UkjS1FTgRyNUPlBvaRhf3mfmBaXYE6B+jzs/GigOClyx0phyG58qSRUoLhMQY34
-	 Ft4qC7vTIOwmqFGb/nREezZfPgBulqCFU0du0pZj1j9/b6iMKFf6sX+vI3REBLMCvU
-	 BCFVnYOc2uAyQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id F0FEEF4006C;
-	Fri,  5 Dec 2025 12:41:43 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 05 Dec 2025 12:41:43 -0500
-X-ME-Sender: <xms:VxkzaVllaefO6Cr-V0OcyG5qCs6STHAyg-nt-DpYBYUNeqOeinx6YA>
-    <xme:VxkzabrwiLD7QKwWSn2KA1g48uuUUoYYWy9P2IxCo0gqCaX8f01TV8ED19vLsrE_V
-    8yJCg0TRNGBaqPC9v7k7ZBSxt5sj0ENsX82BOtzIcefWh34s_XHfrI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeltddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgtkhcu
-    nfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    fhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklh
-    gvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleeh
-    ledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilh
-    drtghomhdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepuggrvhgvmhesuggrvh
-    gvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgt
-    ohhmpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhoh
-    hrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epthhrohhnughmhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepiihhrghotghhvghn
-    ghhurghngheskhihlhhinhhoshdrtghn
-X-ME-Proxy: <xmx:VxkzaaEGclyb4xuLsHEaPlshe4WnaPIsTSjuADqvbaSRSRrIfZavWw>
-    <xmx:VxkzaXpCbzZAMmHvlwWEp_G0rVc6pClaXFCCWt0pt_PhZ9S30VT_GA>
-    <xmx:VxkzaVyMhvEEKux-F80P-ZzcEpWbBuFWPB3Qswr802E4FVRbtNU_ZQ>
-    <xmx:VxkzaRMqeS6rnLxCPla-GgyvjCy9rpvnPGao3f5FpsNx7A3nSUWM9w>
-    <xmx:VxkzaVeYyat1uHtS1X1SBryztmo_OSLSaCGhdljt_2U7Q5cS2sx_hCTF>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C9429780054; Fri,  5 Dec 2025 12:41:43 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1764960128; c=relaxed/simple;
+	bh=oXVwtTeWYUkM3jX7hpWDHKK7TCPZ0s2cMIPCKsERX9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKAl9OtO0GYWDPBGyInFX6LTDD1OrvKUT1rkEyh3vq0tR7R+ketoVy6+cK6qKbsBlAo/gW0TqXYh2oK73c2tVjeYHmeECvJQ6h5qKmd0QrjCODmDNs2Vl9A3mKomhAe5zNLA5zpB1tGMrQSKz6Kp7jzLNdqEmzjlM98iftHQhj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cK2nRCcr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764960125;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7MQiJqQiqUP1+KMyhn41p5RfeBv+OofzT26keorvkng=;
+	b=cK2nRCcrW73mn91HI8hWTF3UlwCjkRAqxqu2flXmLQCocxQyvL0EGm6HkgfqhvMTmiG5sl
+	pwLDFECgCe6HdbAQZL0GBcvy/HoblPg/K1icN+f3ZimrTrbbAmE8XyHVltVvG7fULywWBI
+	7uhYmkXMowMk74lXdy+Hb7JBKhKM+7U=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-173-nc9JB8siMR-habMOi9588A-1; Fri,
+ 05 Dec 2025 13:42:00 -0500
+X-MC-Unique: nc9JB8siMR-habMOi9588A-1
+X-Mimecast-MFC-AGG-ID: nc9JB8siMR-habMOi9588A_1764960119
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D07941956095;
+	Fri,  5 Dec 2025 18:41:58 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.65.211])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4E9B41800357;
+	Fri,  5 Dec 2025 18:41:57 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	neilb@brown.name,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Subject: [PATCH 1/1] nfsd: check that server is running in unlock_filesystem
+Date: Fri,  5 Dec 2025 13:41:56 -0500
+Message-ID: <20251205184156.10983-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AyOyYelYpCes
-Date: Fri, 05 Dec 2025 12:41:21 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Chenguang Zhao" <zhaochenguang@kylinos.cn>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <dd196d82-6c38-4aa3-bdb5-228fe66f4e5b@app.fastmail.com>
-In-Reply-To: <20251204011232.41487-1-zhaochenguang@kylinos.cn>
-References: <20251204011232.41487-1-zhaochenguang@kylinos.cn>
-Subject: Re: [PATCH RESEND linux-next] SUNRPC: Optimize list definition method
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+If we are trying to unlock the filesystem via an administrative
+interface and nfsd isn't running, it crashes the server.
 
-On Wed, Dec 3, 2025, at 8:12 PM, Chenguang Zhao wrote:
-> Integrate list definition and initialization into LIST_HEAD macro
->
-> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
-> ---
->  net/sunrpc/backchannel_rqst.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
-> index caa94cf57123..949022c5574c 100644
-> --- a/net/sunrpc/backchannel_rqst.c
-> +++ b/net/sunrpc/backchannel_rqst.c
-> @@ -131,7 +131,7 @@ EXPORT_SYMBOL_GPL(xprt_setup_backchannel);
->  int xprt_setup_bc(struct rpc_xprt *xprt, unsigned int min_reqs)
->  {
->  	struct rpc_rqst *req;
-> -	struct list_head tmp_list;
-> +	LIST_HEAD(tmp_list);
->  	int i;
-> 
->  	dprintk("RPC:       setup backchannel transport\n");
-> @@ -147,7 +147,6 @@ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned 
-> int min_reqs)
->  	 * lock is held on the rpc_xprt struct.  It also makes cleanup
->  	 * easier in case of memory allocation errors.
->  	 */
-> -	INIT_LIST_HEAD(&tmp_list);
->  	for (i = 0; i < min_reqs; i++) {
->  		/* Pre-allocate one backchannel rpc_rqst */
->  		req = xprt_alloc_bc_req(xprt);
-> -- 
-> 2.25.1
+[   59.445578] Modules linked in: nfsd nfs_acl lockd grace nfs_localio ext4 crc16 mbcache jbd2 overlay uinput snd_seq_dummy snd_hrtimer qrtr rfkill vfat fat uvcvideo snd_hda_codec_generic videobuf2_vmalloc videobuf2_memops uvc videobuf2_v4l2 videobuf2_common snd_hda_intel snd_intel_dspcfg snd_hda_codec videodev snd_hda_core snd_hwdep mc snd_seq snd_seq_device snd_pcm snd_timer snd soundcore sg loop auth_rpcgss vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock xfs ghash_ce nvme e1000e nvme_core nvme_keyring nvme_auth hkdf sr_mod cdrom vmwgfx drm_ttm_helper ttm 8021q garp stp llc mrp sunrpc dm_mirror dm_region_hash dm_log iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi fuse dm_multipath dm_mod nfnetlink
+[   59.451979] CPU: 4 UID: 0 PID: 5193 Comm: bash Kdump: loaded Tainted: G    B               6.18.0-rc4+ #74 PREEMPT(voluntary)
+[   59.453311] Tainted: [B]=BAD_PAGE
+[   59.453913] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.24006586.BA64.2406042154 06/04/2024
+[   59.454869] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[   59.455463] pc : nfsd4_revoke_states+0x1b4/0x898 [nfsd]
+[   59.456069] lr : nfsd4_revoke_states+0x19c/0x898 [nfsd]
+[   59.456701] sp : ffff80008cd67900
+[   59.457115] x29: ffff80008cd679d0 x28: 1fffe00016a53f84 x27: dfff800000000000
+[   59.458006] x26: 04b800ef00000000 x25: 1fffe00016a53f80 x24: ffff0000a796ea00
+[   59.458872] x23: ffff0000b89d6000 x22: ffff0000b6c36900 x21: ffff0000b6c36580
+[   59.459738] x20: ffff80008cd67990 x19: ffff0000b6c365c0 x18: 0000000000000000
+[   59.460602] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   59.461480] x14: 0000000000000000 x13: 0000000000000001 x12: ffff7000119acf13
+[   59.462272] x11: 1ffff000119acf12 x10: ffff7000119acf12 x9 : dfff800000000000
+[   59.463002] x8 : ffff80008cd67810 x7 : 0000000000000000 x6 : 0097001de0000000
+[   59.463732] x5 : 0000000000000004 x4 : ffff0000b5818000 x3 : 04b800ef00000004
+[   59.464368] x2 : 0000000000000000 x1 : 0000000000000005 x0 : 04b800ef00000000
+[   59.465072] Call trace:
+[   59.465308]  nfsd4_revoke_states+0x1b4/0x898 [nfsd] (P)
+[   59.465830]  write_unlock_fs+0x258/0x440 [nfsd]
+[   59.466278]  nfsctl_transaction_write+0xb0/0x120 [nfsd]
+[   59.466780]  vfs_write+0x1f0/0x938
+[   59.467088]  ksys_write+0xfc/0x1f8
+[   59.467395]  __arm64_sys_write+0x74/0xb8
+[   59.467746]  invoke_syscall.constprop.0+0xdc/0x1e8
+[   59.468177]  do_el0_svc+0x154/0x1d8
+[   59.468489]  el0_svc+0x40/0xe0
+[   59.468767]  el0t_64_sync_handler+0xa0/0xe8
+[   59.469138]  el0t_64_sync+0x1ac/0x1b0
+[   59.469472] Code: 91001343 92400865 d343fc66 110004a1 (38fb68c0)
+[   59.470012] SMP: stopping secondary CPUs
+[   59.472070] Starting crashdump kernel...
+[   59.472537] Bye!
 
-The commit message:
+Fixes: 1ac3629bf0125 ("nfsd: prepare for supporting admin-revocation of state")
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ fs/nfsd/nfs4state.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> SUNRPC: Optimize list definition method
-> 
-> Integrate list definition and initialization into LIST_HEAD macro
-
-Only describes what the change does, not why it's needed. The body
-just restates the diff in English.
-
-A commit message should justify the change. For this patch, there's
-no justification. Moreover the word "Optimize" in the subject is
-misleading - it implies a benefit that doesn't exist.
-
-If this change were genuinely needed, the commit message should
-explain something like:
-
-- "...to match the pattern used elsewhere in this file" (if applicable)
-- "...as a prerequisite for X"
-- "...to fix Y"
-
-For example, is this patch part of a kernel-wide audit driven by a
-code safety concern?
-
-
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 35004568d43e..faa874eff1e9 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1775,6 +1775,9 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
+ 	unsigned int idhashval;
+ 	unsigned int sc_types;
+ 
++	if (!nn->nfsd_serv)
++		return;
++
+ 	sc_types = SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG | SC_TYPE_LAYOUT;
+ 
+ 	spin_lock(&nn->client_lock);
 -- 
-Chuck Lever
+2.47.3
+
 
