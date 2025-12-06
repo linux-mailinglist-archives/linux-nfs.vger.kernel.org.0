@@ -1,306 +1,112 @@
-Return-Path: <linux-nfs+bounces-16967-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16968-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B59CCA9CCD
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 02:04:34 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48643CA9D9A
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 02:32:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 88B1F31371FA
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 01:03:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 239F730268AB
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 01:32:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 690EE78F2B;
-	Sat,  6 Dec 2025 00:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF95523BD13;
+	Sat,  6 Dec 2025 01:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jz01d7Xd"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="COjg6Hlh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AF422D7B0;
-	Sat,  6 Dec 2025 00:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7292192590
+	for <linux-nfs@vger.kernel.org>; Sat,  6 Dec 2025 01:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764981369; cv=none; b=aRMDfnO+8ftKThwV0kx7s190L+havrupYuNIt45tBm8PaxHKV//J+y/rzKtlaBkRj91m7c/Aa/OyYMir9RLokNNvQ+nu0imvpQrB8IE8ohuq0ztw9wU1zf7v9r8z2UiSMPG3JvY8t6MAm5Ao+5uY2+4kEuO8Ur2K0sYtfLncaTc=
+	t=1764984772; cv=none; b=Np5wra1mZUL5tmeFJewtWQ4TB5Y8Zfvq1Z2Enzhm0lYUfhzPzKOc05w8BTXcG+ckFLKLSm3jXBPbGzJubcEBFMQTk3ET2F0JbCoGJ4gowP2/uKQ5RNazmBK+fq+3D+kCJ7vnxv+YB5GVaNIKo2Rp+cIvomkXE/zGuqovZcmryVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764981369; c=relaxed/simple;
-	bh=pfXYKdpItIfRgEeXoNc9Bp9AeE+5VnblPxTDJZCRl4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HzuhYafI57fUvu/I4C953nhiHFOGbf8NgEpT6UsmbUXbqL5JA3wWyyMbhuEmbLQgTM5c9MryAAvDflVJOvbqiV7FJWXswywh7nS/ka9oSU2HOO8kssTdEKB+MFTJLSiskSR7rNxQNrSfBJ7NeDptkE7hIWQrgskSi2+q1eRZ354=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jz01d7Xd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A5AC4CEF1;
-	Sat,  6 Dec 2025 00:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764981368;
-	bh=pfXYKdpItIfRgEeXoNc9Bp9AeE+5VnblPxTDJZCRl4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jz01d7Xd4g5AIHTuk4Vg12IUd/RHfpQeKQ9BvbT3Xo9UkyR+rM/6wJtLNsg6NYgAx
-	 Lr/gJk4GPebh7V3yJRZN3BNwlYP+OLhqMT5c+D+mZNFu5LaPlXkIQWT4EHpMf5vfVJ
-	 M7kfyx/m5EhSeEntC7XeBCBOWvDn25xbn8hqaLV44cUYBIb6cFfDY4mwqykurUo/Ew
-	 MxtmPqcuaSmjTs+43eNa+3gFZzLWVqN3oeyi4FXvQcPFNOqIVH6engDtdmzUPXq+3z
-	 35wW4ybfkeeNQnYQJi3tlKPhFRr0KNePLHHWrPDOhTTdjR0iWau/cGd1nJcKEpgAct
-	 LAwYuUc/NRHeA==
-Date: Fri, 5 Dec 2025 19:36:07 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	linux-nfs@vger.kernel.org, linux-stable@vger.kernel.org
-Subject: Re: [6.19 PATCH] nfs/localio: fix regression due to out-of-order
- __put_cred [was: Re: linux-next: manual merge of the nfs tree with Linus'
- tree]
-Message-ID: <aTN6d0Qkh3WKt796@kernel.org>
-References: <20251205111942.4150b06f@canb.auug.org.au>
- <aTIwhhOF847CcQGl@kernel.org>
- <64034c4b052649773272c6fa9c3c929e28ecd40d.camel@kernel.org>
+	s=arc-20240116; t=1764984772; c=relaxed/simple;
+	bh=G3uWtlYMhc/P42nV1aFlBObMwMb7uHpwWh/Lw8T8hY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RomAAUzid/TlkEHQhTUByI2LPcLdrePOLTSxWtzTJLFcZmxhwmItIl/RIJfPy+8wNYRqRdM7m9gF6VB00jUh3BTYDzVCmZy5HV1nvfedNdoPOQDSR8m5t3jUewnsDAexWSV4ySOXa+uF2ot+RrAeGCIKzgtX0sLCtK6qI9zxXIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=COjg6Hlh; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-64198771a9bso4697376a12.2
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Dec 2025 17:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1764984769; x=1765589569; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hE0FG+S9Az3jU7SddvjaG88pIGPfxI7jbwuXxfqu+w4=;
+        b=COjg6Hlh1G5IUpRRkWhBgjlhiKFihnytRebT7TBqQUnSD8K53+V3DRyOBfbOpKP5sP
+         POVPkE/SpsTt4NDrTf/dMPeiHQj9Ph963sZKgeC5NNe7hQToS3qHlWglICE2vyahB00G
+         /05f3I+SoTaM2i4+y6hKKI9biZ+CZjUp8Jfk4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764984769; x=1765589569;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hE0FG+S9Az3jU7SddvjaG88pIGPfxI7jbwuXxfqu+w4=;
+        b=glNkk8+l7BU2eBhm7oMAYF2yFUvVm+8ItyWKpQy7QaVr+Kn3VwlZAuRKIc+6MO8Eg0
+         MkI81gzI25vi5T1cNH5u7wStyROKgfS+IE2Bpl3Gn+kYN6fauWxKyrClDTvp2t4azlyi
+         utDiVm/ZsFTOLAJthsNk2dDEJodZY9JpNsm5OiBzROM+KQPwfSuZkvdN8bVlGoOYTClz
+         NK9NvBV1xjhK4dSVyfWg9EUPu+T5+xgFnNvKj2WUI6jnPzo4gnIMcagvU+DW4jZL9gdE
+         sqD0Xv100LUBSG/WGtigR1wAcOY8WTZn/ouTCi8Eyr7iByv+Pce/0m6z9dvDYQauXHmN
+         q1wg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3p9Ab/rpQDKlrqYasV25im8rUjVCiD6vNUm+3B2WbHan3Aq8a0vT5QvCmXzEAqYuT+f/Mqf5VEqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPnFFaVBu0KeHGQhqE8+sv9NLTv9Gc+cGubRwNXwnvOXj5JBeR
+	Xh5QHufuUOou/IkKDwIOxpLWZBkaUzjU7lKm8UR89lNWyuW066hqDhlnmi8QzCon5c9eNgqfBK2
+	59FurOBIWuQ==
+X-Gm-Gg: ASbGncvDGhPEr0yXds7AyAuVj3AKibZX6MWfvGaiF54X28L5fJJPaMgPOywZrAmYbUY
+	VTLX8jW0oVF9oVyFY0mYpAfKfdTsn+fOvc2Jc0HjOdWmH9tu2/R2Ktsf3pAhsIQzrx5mpRuv4Nf
+	FhRQo5bEtuA1q6Hj3mT0kX3VI4UcE+va2ZLr1Sev6PE4bqvcHmrqmPf3qu1RwPXjER5nUeplz28
+	O6NaQVgX0WyvKc2kxgxm/4vU7MOd0PN+/+aTOK9A5z0AYoRp1WkEpPPi0jS+WwxOFXTRJWu7DkQ
+	oCfS9xCEcwIYbcM998okI3g5q2GjGmt6hro7lr+RmpGmGHCy9NPAZpN5+kqM4VDVXKXmdNmNk5v
+	DV5TJa0QspWIrYqDsP01z3Q8dS+8RtGKXIH8UUYVMDEJJAY99bifzRPIYKXwLX11POvL3mV5wLY
+	WaemPziO1IY1H9hygtGuxZ8SBNN0pwhfLvAxaHlZZIYZeUPNKbyqEtDxTHLYxx
+X-Google-Smtp-Source: AGHT+IFuhNCWQxrcxiYYTqoou+Y6Pzlp0qERLBH25Wcpt21kqTBPY+dE1/gNZSBEs5cWdfnBeIobUw==
+X-Received: by 2002:a17:907:98a:b0:b79:e99d:913b with SMTP id a640c23a62f3a-b7a247f96acmr111460766b.54.1764984768777;
+        Fri, 05 Dec 2025 17:32:48 -0800 (PST)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b79f44d3db6sm501711266b.29.2025.12.05.17.32.48
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Dec 2025 17:32:48 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-64175dfc338so4494112a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Dec 2025 17:32:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVs2D7kIahZtnK8Bp+81+dhDpfiKBVPjRL6/E3Vv3Y/R5aEIA/ZddKJ7iUvvnhY17Q0gd3P04NRr8g=@vger.kernel.org
+X-Received: by 2002:a05:6402:2694:b0:63c:eb6:65e8 with SMTP id
+ 4fb4d7f45d1cf-6491ade9325mr748559a12.30.1764984767729; Fri, 05 Dec 2025
+ 17:32:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <64034c4b052649773272c6fa9c3c929e28ecd40d.camel@kernel.org>
+References: <20251205111942.4150b06f@canb.auug.org.au> <aTIwhhOF847CcQGl@kernel.org>
+ <64034c4b052649773272c6fa9c3c929e28ecd40d.camel@kernel.org> <aTN6d0Qkh3WKt796@kernel.org>
+In-Reply-To: <aTN6d0Qkh3WKt796@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 5 Dec 2025 17:32:31 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh58ZKQTC1iogoMy+Rj+gOuSQM_r2jT3NKD_jiiLyvU8Q@mail.gmail.com>
+X-Gm-Features: AQt7F2pT-Vjocf-DHhK60Z-euiFVzVF-nK7kKTkBpeaXu3ebyxYzh2idgSlRfKU
+Message-ID: <CAHk-=wh58ZKQTC1iogoMy+Rj+gOuSQM_r2jT3NKD_jiiLyvU8Q@mail.gmail.com>
+Subject: Re: [6.19 PATCH] nfs/localio: fix regression due to out-of-order
+ __put_cred [was: Re: linux-next: manual merge of the nfs tree with Linus' tree]
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Christian Brauner <brauner@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Dec 05, 2025 at 07:01:13PM -0500, Trond Myklebust wrote:
-> On Thu, 2025-12-04 at 20:08 -0500, Mike Snitzer wrote:
-> > Hi Stephen,
-> > 
-> > On Fri, Dec 05, 2025 at 11:19:42AM +1100, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Today's linux-next merge of the nfs tree got a conflict in:
-> > > 
-> > >   fs/nfs/localio.c
-> > > 
-> > > between commits:
-> > > 
-> > >   94afb627dfc2 ("nfs: use credential guards in
-> > > nfs_local_call_read()")
-> > >   bff3c841f7bd ("nfs: use credential guards in
-> > > nfs_local_call_write()")
-> > >   1d18101a644e ("Merge tag 'kernel-6.19-rc1.cred' of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs")
-> > > 
-> > > from Linus' tree and commit:
-> > > 
-> > >   30a4385509b4 ("nfs/localio: fix regression due to out-of-order
-> > > __put_cred")
-> > > 
-> > > from the nfs tree.
-> > 
-> > The NFS tree's commit 30a4385509b4 needed to be rebased (taken care
-> > of
-> > below), which complicates the 6.18-stable backport (equivalent of the
-> > nfs tree's commit 30a4385509b4 must be sent to linux-stable@ rather
-> > than it being cherry-picked once the below updated fix applied to
-> > Linus' tree).
-> > 
-> > > I fixed it up (I just dropped the nfs tree commit) and can carry
-> > > the
-> > > fix as necessary. This is now fixed as far as linux-next is
-> > > concerned,
-> > > but any non trivial conflicts should be mentioned to your upstream
-> > > maintainer when your tree is submitted for merging.  You may also
-> > > want
-> > > to consider cooperating with the maintainer of the conflicting tree
-> > > to
-> > > minimise any particularly complex conflicts.
-> > 
-> > Trond and Linus,
-> > 
-> > Here is the fix for 6.19 rebased ontop of Linus' tree:
-> > 
-> > From: Mike Snitzer <snitzer@kernel.org>
-> > Date: Wed, 26 Nov 2025 01:01:25 -0500
-> > Subject: [PATCH] nfs/localio: fix regression due to out-of-order
-> > __put_cred
-> > 
-> > Commit f2060bdc21d7 ("nfs/localio: add refcounting for each iocb IO
-> > associated with NFS pgio header") inadvertantly reintroduced the same
-> > potential for __put_cred() triggering BUG_ON(cred == current->cred)
-> > that commit 992203a1fba5 ("nfs/localio: restore creds before
-> > releasing
-> > pageio data") fixed.
-> > 
-> > Fix this by saving and restoring the cred around each
-> > {read,write}_iter
-> > call within the respective for loop of nfs_local_call_{read,write}
-> > using scoped_with_creds().
-> > 
-> > NOTE: this fix started by first reverting the following commits:
-> > 
-> >  94afb627dfc2 ("nfs: use credential guards in nfs_local_call_read()")
-> >  bff3c841f7bd ("nfs: use credential guards in
-> > nfs_local_call_write()")
-> >  1d18101a644e ("Merge tag 'kernel-6.19-rc1.cred' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs")
-> > 
-> > followed by narrowly fixing the cred lifetime issue by using
-> > scoped_with_creds(). In doing so, this commit's changes appear more
-> > extensive than they really are (as evidenced by comparing to v6.18's
-> > fs/nfs/localio.c).
-> > 
-> > Reported-by: Zorro Lang <zlang@redhat.com>
-> > Fixes: f2060bdc21d7 ("nfs/localio: add refcounting for each iocb IO
-> > associated with NFS pgio header")
-> > Cc: linux-stable@vger.kernel.org # a custom 6.18-stable backport is
-> > required
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > 
-> > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> > index 49ed90c6b9f2..f33bfa7b58e6 100644
-> > --- a/fs/nfs/localio.c
-> > +++ b/fs/nfs/localio.c
-> > @@ -615,8 +615,11 @@ static void nfs_local_read_aio_complete(struct
-> > kiocb *kiocb, long ret)
-> >  	nfs_local_pgio_aio_complete(iocb); /* Calls
-> > nfs_local_read_aio_complete_work */
-> >  }
-> >  
-> > -static void do_nfs_local_call_read(struct nfs_local_kiocb *iocb,
-> > struct file *filp)
-> > +static void nfs_local_call_read(struct work_struct *work)
-> >  {
-> > +	struct nfs_local_kiocb *iocb =
-> > +		container_of(work, struct nfs_local_kiocb, work);
-> > +	struct file *filp = iocb->kiocb.ki_filp;
-> >  	bool force_done = false;
-> >  	ssize_t status;
-> >  	int n_iters;
-> > @@ -633,7 +636,9 @@ static void do_nfs_local_call_read(struct
-> > nfs_local_kiocb *iocb, struct file *fi
-> >  		} else
-> >  			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
-> >  
-> > -		status = filp->f_op->read_iter(&iocb->kiocb, &iocb-
-> > >iters[i]);
-> > +		scoped_with_creds(filp->f_cred)
-> > +			status = filp->f_op->read_iter(&iocb->kiocb,
-> > &iocb->iters[i]);
-> > +
-> >  		if (status != -EIOCBQUEUED) {
-> >  			if (unlikely(status >= 0 && status < iocb-
-> > >iters[i].count))
-> >  				force_done = true; /* Partial read
-> > */
-> > @@ -645,16 +650,6 @@ static void do_nfs_local_call_read(struct
-> > nfs_local_kiocb *iocb, struct file *fi
-> >  	}
-> >  }
-> >  
-> > -static void nfs_local_call_read(struct work_struct *work)
-> > -{
-> > -	struct nfs_local_kiocb *iocb =
-> > -		container_of(work, struct nfs_local_kiocb, work);
-> > -	struct file *filp = iocb->kiocb.ki_filp;
-> > -
-> > -	scoped_with_creds(filp->f_cred)
-> > -		do_nfs_local_call_read(iocb, filp);
-> > -}
-> > -
-> >  static int
-> >  nfs_local_do_read(struct nfs_local_kiocb *iocb,
-> >  		  const struct rpc_call_ops *call_ops)
-> > @@ -822,13 +817,18 @@ static void nfs_local_write_aio_complete(struct
-> > kiocb *kiocb, long ret)
-> >  	nfs_local_pgio_aio_complete(iocb); /* Calls
-> > nfs_local_write_aio_complete_work */
-> >  }
-> >  
-> > -static ssize_t do_nfs_local_call_write(struct nfs_local_kiocb *iocb,
-> > -				       struct file *filp)
-> > +static void nfs_local_call_write(struct work_struct *work)
-> >  {
-> > +	struct nfs_local_kiocb *iocb =
-> > +		container_of(work, struct nfs_local_kiocb, work);
-> > +	struct file *filp = iocb->kiocb.ki_filp;
-> > +	unsigned long old_flags = current->flags;
-> >  	bool force_done = false;
-> >  	ssize_t status;
-> >  	int n_iters;
-> >  
-> > +	current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
-> > +
-> >  	file_start_write(filp);
-> >  	n_iters = atomic_read(&iocb->n_iters);
-> >  	for (int i = 0; i < n_iters ; i++) {
-> > @@ -842,7 +842,9 @@ static ssize_t do_nfs_local_call_write(struct
-> > nfs_local_kiocb *iocb,
-> >  		} else
-> >  			iocb->kiocb.ki_flags &= ~IOCB_DIRECT;
-> >  
-> > -		status = filp->f_op->write_iter(&iocb->kiocb, &iocb-
-> > >iters[i]);
-> > +		scoped_with_creds(filp->f_cred)
-> > +			status = filp->f_op->write_iter(&iocb-
-> > >kiocb, &iocb->iters[i]);
-> > +
-> >  		if (status != -EIOCBQUEUED) {
-> >  			if (unlikely(status >= 0 && status < iocb-
-> > >iters[i].count))
-> >  				force_done = true; /* Partial write
-> > */
-> > @@ -854,22 +856,6 @@ static ssize_t do_nfs_local_call_write(struct
-> > nfs_local_kiocb *iocb,
-> >  	}
-> >  	file_end_write(filp);
-> >  
-> > -	return status;
-> > -}
-> > -
-> > -static void nfs_local_call_write(struct work_struct *work)
-> > -{
-> > -	struct nfs_local_kiocb *iocb =
-> > -		container_of(work, struct nfs_local_kiocb, work);
-> > -	struct file *filp = iocb->kiocb.ki_filp;
-> > -	unsigned long old_flags = current->flags;
-> > -	ssize_t status;
-> > -
-> > -	current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
-> > -
-> > -	scoped_with_creds(filp->f_cred)
-> > -		status = do_nfs_local_call_write(iocb, filp);
-> > -
-> >  	current->flags = old_flags;
-> >  }
-> >  
-> 
-> OK, so what is the easiest way to merge this?
-> 
-> Should I just remove the "old" patch from my tree, and submit that
-> patch directly to stable@vger.kernel.org as a fix for 6.18?
+On Fri, 5 Dec 2025 at 16:36, Mike Snitzer <snitzer@kernel.org> wrote:
+>
+> Or Linus picks up my patch directly but first adjusts its tags?
 
-Yes, that will need to happen no matter what.
+Let me do that once I finish my "merge various architecture updates".
+I'm almost done with that side - just one more SoC pull to go, I htink
+- and can go back to looking at filesystem changes.
 
-> That would allow Christian to pick up this (after perhaps removing the stable and
-> Fixes tags above), and submit it as part of his merge, thus fixing the
-> 6.19 kernel.
-> 
-> Thoughts? Preferences?
-
-Christian already sent his merge, at the top you'll see Stephen
-referenced commits that are in Linus' tree.  Those are the commits I
-referenced in the above updated patch's header as having reverted.
-
-Maybe you prepare a 2nd post-merge NFS client pull that is based on
-tip of Linus' tree with only my patch applied? (after adjusting tags
-like you suggested).
-
-Or Linus picks up my patch directly but first adjusts its tags?
-
-Christian provided his Reviewed-by earlier today, if Linus were to
-pick it up you'd do well to first provide your Reviewed-by: (which
-would replace the Signed-off-by I mistakenly left attributed to you in
-the updated patch).
-
-However you all decide to skin this cat: sorry for the trouble!
-
-Thanks,
-Mike
+             Linus
 
