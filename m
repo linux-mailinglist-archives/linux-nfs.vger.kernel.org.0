@@ -1,116 +1,221 @@
-Return-Path: <linux-nfs+bounces-16974-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16975-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3067CAA8AC
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 15:48:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19903CAA952
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 16:33:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5A5DA3059964
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 14:48:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 59D7630BBA64
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 15:33:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BFA223336;
-	Sat,  6 Dec 2025 14:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D542140E5F;
+	Sat,  6 Dec 2025 15:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIn1Kaov"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LONQw2rE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910B979C8
-	for <linux-nfs@vger.kernel.org>; Sat,  6 Dec 2025 14:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D233B8D75;
+	Sat,  6 Dec 2025 15:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765032507; cv=none; b=H0NF/t/rXKBsbBAvmEtXKBf4Qqtwp++Yqqp++Lk5MfbhryIt1edUO9q+mvsnmgiDYEDJQ4/gadQdEOBvnXulz5YvopUi2hVdi2g7g949sIghgeIWoe1eJ2Rpy8kHM+gBGMdSA6j7xPF8c06ripeJH8Yo54tFs6pryBQ3Ut9XlLs=
+	t=1765035225; cv=none; b=nZ9gh0PE2SaQb5T8T03TNVuMFWJoawg1trunBOsIJSSzJPkjjliqTxg9FznYgw5S1AlE0+SR+cxy7SEjQRphi0u2DWaKrH7PhumgSVctoShtsII4h0lSRLZWvhjEdS5QPPw+V3szVC4xW8H/YWpF5wyWgtTtN2ayd2wjGwzqDxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765032507; c=relaxed/simple;
-	bh=5A1QVpOTBNxLxRPQY5MwmuNm9jLldFhQquetG3X0rIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AfHwq993YjviYxIx9+Eg20Rw31iA4qdCjf7BgW1I2s1aJH+wQKiEg36kERy9UJu3mDef80EjIqDpTwJP5l8z9GopOHh0kZoHFj9tWqAytcyPdg25tTGTs4khSbgG5jQaHtbbl/T39ZcYrErN75t/Yj6yNgyh0craKqQeqHT8nvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIn1Kaov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 613FAC4CEF5;
-	Sat,  6 Dec 2025 14:48:26 +0000 (UTC)
+	s=arc-20240116; t=1765035225; c=relaxed/simple;
+	bh=BhZWmeChvYAdA+x7UJqpPQtMLmY4r3GggKMPHM8g4TQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H75N/duRKOdW4GiyrF7XqDi0ExOTujnxCHkHIxdWPJOEFK91Rqu+bo72Ypv6Ff6YQYTWR0cjOrGHHAXSxfFRRgHyLgWnjiePXB7411mora0uWOpE5d0UTu9FxxXE1Zlo79uCQ+gkMxEM/edT17SY19YrU9zS9XS91F0gNNj5Vnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LONQw2rE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB50CC116B1;
+	Sat,  6 Dec 2025 15:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765032506;
-	bh=5A1QVpOTBNxLxRPQY5MwmuNm9jLldFhQquetG3X0rIw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FIn1KaovnjDeLRHvjW9sa0CUy/8ewwmh2INpHGqbfUU5jI4tjrkGZhlZ0DZ3AL0Nb
-	 Kp0EdTVsINZ/3JHObQwWSrS+nv8kIBjDTr1xIw1yO6LAlDrpuKHFAAjKlTGUQi0/aG
-	 kl9clWIg4bKglHKSPNybxQR9l7jstp5zPkfxRRcNJRSSdPFG/4PBdaV2xaR+9kIvmg
-	 HWn0e3wr7/wVi+UYycCMv6GXnoFUG0MsONf/oJ3tHKzd4br64P0SPEEBT0zXUrB9Zu
-	 kLILbksKGtOx+XPVc+qVq75sZ7EF2TwGd87SMq9AP4fijCjr50/i9jOQK7e5HO10tP
-	 D4exBOLUI2Emw==
+	s=k20201202; t=1765035225;
+	bh=BhZWmeChvYAdA+x7UJqpPQtMLmY4r3GggKMPHM8g4TQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LONQw2rE5yjPoGxaeQNVeVG4U6jDbTPcckmrktc+VWG6A7a8hF1Ad5ehe6IheSPwF
+	 q9QGL0vZ46Ark+tcb4nKrOlCsnTE8o18XlpXacWw5BRorTyb3FWTthVk3oadKr3OPp
+	 +GY1CZ/ZJSA+C94fEPBBk46y2OMnVV4E1m666SVi3ok1/MfF3TrBxobDs2A6kbCyuU
+	 ErDFJaRko7Tt6CbtPPf55rVWVWQWssiENukTDHb6Vm/l+0on3wpLyqJJnJ0f81uc6w
+	 nPLLVwDRLTKJUXeUyxAZrJkl/fkjueIUlcmxzz/fFGjqo308DB4mFY3VKgjjEW2+FS
+	 Ziaw8x8r3BTxg==
 From: Chuck Lever <cel@kernel.org>
-To: jlayton@kernel.org,
-	Olga Kornievskaia <okorniev@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	neilb@brown.name,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Subject: Re: [PATCH 1/1] nfsd: check that server is running in unlock_filesystem
-Date: Sat,  6 Dec 2025 09:48:22 -0500
-Message-ID: <176503249208.64607.318563193496080721.b4-ty@oracle.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <linux-kernel@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL]: NFSD changes for v6.19
+Date: Sat,  6 Dec 2025 10:33:43 -0500
+Message-ID: <20251206153343.66592-1-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251205184156.10983-1-okorniev@redhat.com>
-References: <20251205184156.10983-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Linus-
 
-On Fri, 05 Dec 2025 13:41:56 -0500, Olga Kornievskaia wrote:
-> If we are trying to unlock the filesystem via an administrative
-> interface and nfsd isn't running, it crashes the server.
-> 
-> [   59.445578] Modules linked in: nfsd nfs_acl lockd grace nfs_localio ext4 crc16 mbcache jbd2 overlay uinput snd_seq_dummy snd_hrtimer qrtr rfkill vfat fat uvcvideo snd_hda_codec_generic videobuf2_vmalloc videobuf2_memops uvc videobuf2_v4l2 videobuf2_common snd_hda_intel snd_intel_dspcfg snd_hda_codec videodev snd_hda_core snd_hwdep mc snd_seq snd_seq_device snd_pcm snd_timer snd soundcore sg loop auth_rpcgss vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock xfs ghash_ce nvme e1000e nvme_core nvme_keyring nvme_auth hkdf sr_mod cdrom vmwgfx drm_ttm_helper ttm 8021q garp stp llc mrp sunrpc dm_mirror dm_region_hash dm_log iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi fuse dm_multipath dm_mod nfnetlink
-> [   59.451979] CPU: 4 UID: 0 PID: 5193 Comm: bash Kdump: loaded Tainted: G    B               6.18.0-rc4+ #74 PREEMPT(voluntary)
-> [   59.453311] Tainted: [B]=BAD_PAGE
-> [   59.453913] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.24006586.BA64.2406042154 06/04/2024
-> [   59.454869] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-> [   59.455463] pc : nfsd4_revoke_states+0x1b4/0x898 [nfsd]
-> [   59.456069] lr : nfsd4_revoke_states+0x19c/0x898 [nfsd]
-> [   59.456701] sp : ffff80008cd67900
-> [   59.457115] x29: ffff80008cd679d0 x28: 1fffe00016a53f84 x27: dfff800000000000
-> [   59.458006] x26: 04b800ef00000000 x25: 1fffe00016a53f80 x24: ffff0000a796ea00
-> [   59.458872] x23: ffff0000b89d6000 x22: ffff0000b6c36900 x21: ffff0000b6c36580
-> [   59.459738] x20: ffff80008cd67990 x19: ffff0000b6c365c0 x18: 0000000000000000
-> [   59.460602] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> [   59.461480] x14: 0000000000000000 x13: 0000000000000001 x12: ffff7000119acf13
-> [   59.462272] x11: 1ffff000119acf12 x10: ffff7000119acf12 x9 : dfff800000000000
-> [   59.463002] x8 : ffff80008cd67810 x7 : 0000000000000000 x6 : 0097001de0000000
-> [   59.463732] x5 : 0000000000000004 x4 : ffff0000b5818000 x3 : 04b800ef00000004
-> [   59.464368] x2 : 0000000000000000 x1 : 0000000000000005 x0 : 04b800ef00000000
-> [   59.465072] Call trace:
-> [   59.465308]  nfsd4_revoke_states+0x1b4/0x898 [nfsd] (P)
-> [   59.465830]  write_unlock_fs+0x258/0x440 [nfsd]
-> [   59.466278]  nfsctl_transaction_write+0xb0/0x120 [nfsd]
-> [   59.466780]  vfs_write+0x1f0/0x938
-> [   59.467088]  ksys_write+0xfc/0x1f8
-> [   59.467395]  __arm64_sys_write+0x74/0xb8
-> [   59.467746]  invoke_syscall.constprop.0+0xdc/0x1e8
-> [   59.468177]  do_el0_svc+0x154/0x1d8
-> [   59.468489]  el0_svc+0x40/0xe0
-> [   59.468767]  el0t_64_sync_handler+0xa0/0xe8
-> [   59.469138]  el0t_64_sync+0x1ac/0x1b0
-> [   59.469472] Code: 91001343 92400865 d343fc66 110004a1 (38fb68c0)
-> [   59.470012] SMP: stopping secondary CPUs
-> [   59.472070] Starting crashdump kernel...
-> [   59.472537] Bye!
-> 
-> [...]
+Stephen Rothwell reports one merge conflict with VFS changes that
+already reside in your tree, and proposes a resolution:
 
-Applied to nfsd-testing, thanks!
+  https://lore.kernel.org/linux-next/20251203101108.02f419d7@canb.auug.org.au/
 
-[1/1] nfsd: check that server is running in unlock_filesystem
-      commit: 93a8a71809edddea8212e726abf7b9bf2379bd0c
 
---
-Chuck Lever
+--- cut here ---
 
+The following changes since commit 6a23ae0a96a600d1d12557add110e0bb6e32730c:
+
+  Linux 6.18-rc6 (2025-11-16 14:25:38 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.19
+
+for you to fetch changes up to df8c841dd92a7f262ad4fa649aa493b181e02812:
+
+  NFSD: nfsd-io-modes: Separate lists (2025-12-03 09:05:14 -0500)
+
+----------------------------------------------------------------
+NFSD 6.19 Release Notes
+
+Mike Snitzer's mechanism for disabling I/O caching introduced in
+v6.18 is extended to include using direct I/O. The goal is to
+further reduce the memory footprint consumed by NFS clients
+accessing large data sets via NFSD.
+
+The NFSD community adopted a maintainer entry profile during this
+cycle. See
+
+  Documentation/filesystems/nfs/nfsd-maintainer-entry-profile.rst
+
+Work continues on hardening NFSD's implementation of the pNFS block
+layout type. This type enables pNFS clients to directly access the
+underlying block devices that contain an exported file system,
+reducing server overhead and increasing data throughput.
+
+The remaining patches in this pull request are clean-ups and minor
+optimizations. Many thanks to the contributors, reviewers, testers,
+and bug reporters who participated during the v6.19 NFSD development
+cycle.
+
+----------------------------------------------------------------
+Bagas Sanjaya (4):
+      NFS: nfsd-maintainer-entry-profile: Inline function name prefixes
+      NFSD: Add toctree entry for NFSD IO modes docs
+      NFSD: nfsd-io-modes: Wrap shell snippets in literal code blocks
+      NFSD: nfsd-io-modes: Separate lists
+
+Christoph Hellwig (1):
+      MAINTAINERS: add a nfsd blocklayout reviewer
+
+Chuck Lever (14):
+      svcrdma: Release transport resources synchronously
+      NFSD: Add array bounds-checking in nfsd_iter_read()
+      NFSD: Update comment documenting unsupported fattr4 attributes
+      svcrdma: Increase the server's default RPC/RDMA credit grant
+      NFSD: Relocate the xdr_reserve_space_vec() call site
+      NFSD: Implement NFSD_IO_DIRECT for NFS READ
+      SUNRPC: Improve "fragment too large" warning
+      NFSD: Add a subsystem policy document
+      xdrgen: Generalize/harden pathname construction
+      xdrgen: Make the xdrgen script location-independent
+      xdrgen: Fix the variable-length opaque field decoder template
+      xdrgen: Fix union declarations
+      xdrgen: Don't generate unnecessary semicolon
+      NFSD: Make FILE_SYNC WRITEs comply with spec
+
+Dai Ngo (2):
+      NFSD: use correct reservation type in nfsd4_scsi_fence_client
+      NFSD: Add trace point for SCSI fencing operation.
+
+Eric Biggers (1):
+      nfsd: Use MD5 library instead of crypto_shash
+
+Jeff Layton (3):
+      nfsd: switch the default for NFSD_LEGACY_CLIENT_TRACKING to "n"
+      sunrpc: allocate a separate bvec array for socket sends
+      lockd: don't allow locking on reexported NFSv2/3
+
+Khushal Chitturi (1):
+      xdrgen: handle _XdrString in union encoder/decoder
+
+Matvey Kovalev (1):
+      nfsd: delete unreachable confusing code in nfs4_open_delegation()
+
+Mike Snitzer (3):
+      NFSD: pass nfsd_file to nfsd_iter_read()
+      NFSD: Implement NFSD_IO_DIRECT for NFS WRITE
+      NFSD: add Documentation/filesystems/nfs/nfsd-io-modes.rst
+
+NeilBrown (3):
+      nfsd: move name lookup out of nfsd4_list_rec_dir()
+      nfsd: change nfs4_client_to_reclaim() to allocate data
+      nfsd: stop pretending that we cache the SEQUENCE reply.
+
+Olga Kornievskaia (1):
+      NFSD: don't start nfsd if sv_permsocks is empty
+
+Sergey Bashirov (4):
+      NFSD/blocklayout: Fix minlength check in proc_layoutget
+      NFSD/blocklayout: Extract extent mapping from proc_layoutget
+      NFSD/blocklayout: Introduce layout content structure
+      NFSD/blocklayout: Support multiple extents per LAYOUTGET
+
+ Documentation/filesystems/nfs/index.rst            |   1 +
+ Documentation/filesystems/nfs/nfsd-io-modes.rst    | 153 ++++++
+ .../nfs/nfsd-maintainer-entry-profile.rst          | 547 +++++++++++++++++++++
+ .../maintainer/maintainer-entry-profile.rst        |   1 +
+ MAINTAINERS                                        |   5 +
+ fs/lockd/svclock.c                                 |  12 +
+ fs/lockd/svcshare.c                                |   6 +
+ fs/nfsd/Kconfig                                    |   6 +-
+ fs/nfsd/blocklayout.c                              | 162 ++++--
+ fs/nfsd/blocklayoutxdr.c                           |  36 +-
+ fs/nfsd/blocklayoutxdr.h                           |  14 +
+ fs/nfsd/debugfs.c                                  |   3 +
+ fs/nfsd/nfs4recover.c                              | 195 +++-----
+ fs/nfsd/nfs4state.c                                |  85 ++--
+ fs/nfsd/nfs4xdr.c                                  |  28 +-
+ fs/nfsd/nfsd.h                                     |   4 +-
+ fs/nfsd/nfssvc.c                                   |  28 +-
+ fs/nfsd/trace.h                                    |  41 ++
+ fs/nfsd/vfs.c                                      | 261 +++++++++-
+ fs/nfsd/vfs.h                                      |   2 +-
+ fs/nfsd/xdr4.h                                     |  21 -
+ include/linux/lockd/lockd.h                        |   9 +-
+ include/linux/sunrpc/svc_rdma.h                    |   2 +-
+ include/linux/sunrpc/svcsock.h                     |   3 +
+ net/sunrpc/svcsock.c                               |  62 ++-
+ net/sunrpc/xprtrdma/svc_rdma_transport.c           |  19 +-
+ tools/net/sunrpc/xdrgen/generators/__init__.py     |  11 +-
+ tools/net/sunrpc/xdrgen/generators/union.py        |  34 +-
+ .../xdrgen/templates/C/pointer/decoder/close.j2    |   2 +-
+ .../xdrgen/templates/C/pointer/encoder/close.j2    |   2 +-
+ .../xdrgen/templates/C/struct/decoder/close.j2     |   2 +-
+ .../C/struct/decoder/variable_length_opaque.j2     |   2 +-
+ .../xdrgen/templates/C/struct/encoder/close.j2     |   2 +-
+ .../xdrgen/templates/C/typedef/decoder/basic.j2    |   2 +-
+ .../C/typedef/decoder/fixed_length_array.j2        |   2 +-
+ .../C/typedef/decoder/fixed_length_opaque.j2       |   2 +-
+ .../xdrgen/templates/C/typedef/decoder/string.j2   |   2 +-
+ .../C/typedef/decoder/variable_length_array.j2     |   2 +-
+ .../C/typedef/decoder/variable_length_opaque.j2    |   2 +-
+ .../xdrgen/templates/C/typedef/encoder/basic.j2    |   2 +-
+ .../C/typedef/encoder/fixed_length_array.j2        |   2 +-
+ .../C/typedef/encoder/fixed_length_opaque.j2       |   2 +-
+ .../xdrgen/templates/C/typedef/encoder/string.j2   |   2 +-
+ .../C/typedef/encoder/variable_length_array.j2     |   2 +-
+ .../C/typedef/encoder/variable_length_opaque.j2    |   2 +-
+ .../xdrgen/templates/C/union/declaration/close.j2  |   4 +
+ .../xdrgen/templates/C/union/decoder/close.j2      |   2 +-
+ .../xdrgen/templates/C/union/encoder/close.j2      |   2 +-
+ .../xdrgen/templates/C/union/encoder/string.j2     |   6 +
+ tools/net/sunrpc/xdrgen/xdrgen                     |   5 +
+ 50 files changed, 1431 insertions(+), 373 deletions(-)
+ create mode 100644 Documentation/filesystems/nfs/nfsd-io-modes.rst
+ create mode 100644 Documentation/filesystems/nfs/nfsd-maintainer-entry-profile.rst
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/declaration/close.j2
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/union/encoder/string.j2
 
