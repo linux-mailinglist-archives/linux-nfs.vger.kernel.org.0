@@ -1,103 +1,142 @@
-Return-Path: <linux-nfs+bounces-16972-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16973-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D560DCAA282
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 08:39:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 264AECAA8A0
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 15:38:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B05B7300E451
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 07:39:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A43393035D25
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 14:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBE72DECC2;
-	Sat,  6 Dec 2025 07:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC9BB2FFDE2;
+	Sat,  6 Dec 2025 14:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SmKE1cIz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF00258CD0;
-	Sat,  6 Dec 2025 07:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9924B2F261D
+	for <linux-nfs@vger.kernel.org>; Sat,  6 Dec 2025 14:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765006742; cv=none; b=F1rbdoRMVXm270AbvCY1MBCStfhLgqJP3xd8vv2yizOISB1cfsVnly3RnDRUCe6xwdkGAmHSGwk6h+wedAtpCMIyiLFprbH2Y8w/UykyV17ClLzN7QJs7ducy59ZRru+qF4BF67pL7YerhAbhJmmvoi0bjWPvHOWKqm1x4DAvGI=
+	t=1765031886; cv=none; b=CkloYlB7xNnuSVQA5gKIPDs6MwfV1LvEgj0Zs5Zr4EAI3MD9zmJVtVw9nyBoAy9x9/u3uEDONED7At69s64wfUSX7bX3U/D4ET+yWEIv6TmQzL0nSATU6o7vr3KRucfMSlsZ0uhWDmcV1gvA104xq2jJ1a2SlMZDOGchr7LZf7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765006742; c=relaxed/simple;
-	bh=HPCQnytAiDrGeOpmwYKbb6Y4zpzPGCtCXRIjvBT++Yk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K8Tjx6gn7WuG/Drb15lwLEUU1Ig0HctM+TXtXmHoUg0gy2lqCMWOxCwkZ03FwdkbIMqdW6NwDaesGt4KehslaKgSyaRRwLwmIBILf2LH8RtbLXhyRTijW/tkaUTy1Ewh5CBAH35L1yU4mjHogcsP6rjnOPy8XdQ/pECmq87NNs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from localhost.localdomain (unknown [36.112.3.223])
-	by APP-01 (Coremail) with SMTP id qwCowACHGMiE3TNpW5hBAw--.11676S2;
-	Sat, 06 Dec 2025 15:38:44 +0800 (CST)
-From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	bfields@fieldses.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] nfsd: Drop the client reference in client_states_open()
-Date: Sat,  6 Dec 2025 15:38:42 +0800
-Message-Id: <20251206073842.196835-1-lihaoxiang@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1765031886; c=relaxed/simple;
+	bh=r1kaDwMLovXRYSkG9s6VRxQxezI7Zw0GWjAl7S5cIQQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qp3HMoKQejuNWRDcv3gcBa7MKYDFjyLgsmezVo9uhNMQiQ+Ud2a0GD40Gan5pbw5tEGpm6tyiZ60tw2hcwl84tAN/aT0S4EXgF/s9ZUj4wzM1UG4TcsaTGW+OfBak2MUA5dZcBoCDOBMmNRhpmCJdb+8ZXLSXUKGtGBLR3F7x9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SmKE1cIz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62055C4CEF5;
+	Sat,  6 Dec 2025 14:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765031885;
+	bh=r1kaDwMLovXRYSkG9s6VRxQxezI7Zw0GWjAl7S5cIQQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=SmKE1cIzOiXizNctUkAfiFqzJZostVOvbsWDRr5/PXOOdMl4DJqK215RIfrJ/rRDY
+	 bMTq1Uq+PU8IMGRz4fr6NHxIUB0Xck6TTx+kfzrQCxDF/kmuEvxeWr7kQdWS8Cnkyd
+	 6j0f3z36aanr3tk75iu5n647MQg4A0mmmWfPIgngzxaQmMLDkuJL1Hes194POPcRUj
+	 4yemntXJN4A501tBZW791HdpWP4GAHk77EBP+e1bvZsXjjyYrPhiApKo2Ubalpha35
+	 EVExoNB/LUueg3kF5so5jPbQ2+q4Z1nsjiDxD87Hvuq8f17eSBz8neEsNwOAkL7fy/
+	 nLIya1qI/uGLg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6DC18F40076;
+	Sat,  6 Dec 2025 09:38:04 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Sat, 06 Dec 2025 09:38:04 -0500
+X-ME-Sender: <xms:zD80abwByXW_LZESxY_s8cKvvAYwy8FQeZLTU5xgvhZ_VwxwtQ9pyA>
+    <xme:zD80aeF4Azvnj3KoskdERSVVzQeiR3BwPl15XrVeQIkIwE8JjAuuIrTjN8g_4f-cF
+    wQUJ5RmIEl6caYjUKIg_UX9bOX3O6cHsvqiaQ5MlMHNJ6LYvMq3oWc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduuddulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegsfhhivghlughsse
+    hfihgvlhgushgvshdrohhrghdprhgtphhtthhopehlihhhrghogihirghnghesihhsrhgt
+    rdhishgtrghsrdgrtgdrtghnpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthht
+    oheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepohhkoh
+    hrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidr
+    tghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:zD80aTrTzL1n64HIlxYJKhTgfC7eS9cqbkBYBemAizq62b2uV6DuiQ>
+    <xmx:zD80aVzdcgYTvu3rYScZfIEMnWDZLHTc6ITiRFr0Lm3yaz5s-p3caw>
+    <xmx:zD80afv1MZS79T5-ogvB1-dACAb30GJ4BfMMIo5rXuQi0jq8-d9pTg>
+    <xmx:zD80aW28E7ylYxVMOFZC3VPzrkWUO04mjpm5UjxubxXRTn8z1jIniQ>
+    <xmx:zD80afBJHYeMurzNrH6b0O7QeZRjoqMox7aJ-tGtML-bKg2jCXcels40>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 483A1780054; Sat,  6 Dec 2025 09:38:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACHGMiE3TNpW5hBAw--.11676S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UuFy5ur1rAr4kuFWrAFb_yoW3WFX_Wa
-	129FykXrWUWFW8Cryak34YvayxArn3Jryru3ya9r9FkFW5JryqkrZ2qrsxCryUWrW3tr95
-	Kw1kurn8Ka4fujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1j6r18M7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-	1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VU13ku3UUUUU==
-X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiBg0IE2kzj39+RwAAsD
+X-ThreadId: ARL2P0UxYAB3
+Date: Sat, 06 Dec 2025 09:37:44 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Haoxiang Li" <lihaoxiang@isrc.iscas.ac.cn>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ bfields@fieldses.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Message-Id: <0ec5a1be-372b-4a0a-9b64-099b1d8bf710@app.fastmail.com>
+In-Reply-To: <20251206073842.196835-1-lihaoxiang@isrc.iscas.ac.cn>
+References: <20251206073842.196835-1-lihaoxiang@isrc.iscas.ac.cn>
+Subject: Re: [PATCH] nfsd: Drop the client reference in client_states_open()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-In error path, call drop_client() to drop the reference
-obtained by get_nfsdfs_clp().
 
-Fixes: a204f25e372d ("nfsd: create get_nfsdfs_clp helper")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
----
- fs/nfsd/nfs4state.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 8a6960500217..caa0756b6914 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3097,8 +3097,10 @@ static int client_states_open(struct inode *inode, struct file *file)
- 		return -ENXIO;
- 
- 	ret = seq_open(file, &states_seq_ops);
--	if (ret)
-+	if (ret) {
-+		drop_client(clp);
- 		return ret;
-+	}
- 	s = file->private_data;
- 	s->private = clp;
- 	return 0;
+On Sat, Dec 6, 2025, at 2:38 AM, Haoxiang Li wrote:
+> In error path, call drop_client() to drop the reference
+> obtained by get_nfsdfs_clp().
+>
+> Fixes: a204f25e372d ("nfsd: create get_nfsdfs_clp helper")
+
+An argument could be made that 78599c42ae3c ("nfsd4: add file
+to display list of client's opens") is where the reference
+counting was first broken. Would you mind if I updated the
+Fixes: tag when I apply this?
+
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+> ---
+>  fs/nfsd/nfs4state.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 8a6960500217..caa0756b6914 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -3097,8 +3097,10 @@ static int client_states_open(struct inode 
+> *inode, struct file *file)
+>  		return -ENXIO;
+> 
+>  	ret = seq_open(file, &states_seq_ops);
+> -	if (ret)
+> +	if (ret) {
+> +		drop_client(clp);
+>  		return ret;
+> +	}
+>  	s = file->private_data;
+>  	s->private = clp;
+>  	return 0;
+> -- 
+> 2.25.1
+
 -- 
-2.25.1
-
+Chuck Lever
 
