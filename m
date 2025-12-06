@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-16976-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16977-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39833CAAC4D
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 19:36:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98B79CAAC5F
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Dec 2025 19:43:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DEB7B301EC5C
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 18:36:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D9F1303AE9F
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Dec 2025 18:43:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C59DB2D0C9A;
-	Sat,  6 Dec 2025 18:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BA3261B6D;
+	Sat,  6 Dec 2025 18:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eG68zWXo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ge/a72oC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7258A2D0C83
-	for <linux-nfs@vger.kernel.org>; Sat,  6 Dec 2025 18:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AD725CC79;
+	Sat,  6 Dec 2025 18:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765046207; cv=none; b=HQr0YROgZ6tgPHw8Voq9iATpxIGdoQDi58cXuiK8IxFgEI3iQE5WTSGQPWyviNL9smCpUMGjO+pDAP6C7cUN++VyxvlwRHQP2oa8jpswSIL/dgMvYx1UPO4gGTPWfSwpu06D28GpT1Ee/yk+ASFSzXn6x6DyNVjm2ZTlBUokfOk=
+	t=1765046589; cv=none; b=KtQclWXbNwBG/L9ibSt/VdK5OgxJhu1eutovLrGQhUWoDVAhZqQNPSyY08TkBnTC68HCoo7DeKZnsNcKMduRbvmFbdD/nTtT6tAWizVakP59Qazx2dMfKf/ZyePbkKHeE2RsKVEo1qRRMvUbIJ+yiEyRR34zpgrgqcT+VMgiJTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765046207; c=relaxed/simple;
-	bh=lRCodCDpCl+O+76zFf9G6mJPgM0zQ34Ji4rw8JUexSc=;
+	s=arc-20240116; t=1765046589; c=relaxed/simple;
+	bh=GjdAf0d4Mi5gEqmKCHwKLJroFwdVjesN3mdbEy79aFU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kejOeX6gu85ZV3AVkWf8xt21kdMVj2k+n8D1VUJtbl7M/KWnsXpGSSyF2lOlSuRncbTPqNEbzxC6CrwrqEEVwkHR/PYyHt2sE1DxhQEKc3n8sJiXy4Rbmut4fVaH6904N/s4ucrHp+QGAVdIRVrn0qKVgyjPLMdbMY2pyJlMnRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eG68zWXo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EEC7C4CEF5;
-	Sat,  6 Dec 2025 18:36:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=NIXDSc3pQAWMvHeTQFI5rAjC/WzL7tEVuUoLK3F1J+SrThQSPK4jLeBHYAVfeIcHJfWyAWr2ucyByNWz06uEtt2LaZXfR0tKuUHTmouhLRns77rFk75Il6PxHkDYNui2dCVJEKkjaVW1Ud7lu3NlIGKuUYkkjoXhAYLBdQZyF/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ge/a72oC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4236C4CEF5;
+	Sat,  6 Dec 2025 18:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765046206;
-	bh=lRCodCDpCl+O+76zFf9G6mJPgM0zQ34Ji4rw8JUexSc=;
+	s=k20201202; t=1765046589;
+	bh=GjdAf0d4Mi5gEqmKCHwKLJroFwdVjesN3mdbEy79aFU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eG68zWXo/pmT5qapZ+o70O3qR6ytWkdYqssqGlOJsH59S6Cu7uO0C/0vi4LSUbVyE
-	 1zcvzLIBDyiM25uHoBDhU17ndfqZr5rEVJnzedqb9sZ9XD1rnI/vMRjH9OWyTSTxgX
-	 9S6jKf0D4lxeO6gwbmdbVEiKKwngzkXMNrnBa2yVNTw+oFvmx04LBnVUK41aVvg7/y
-	 5Bl7fOFrw8YZJZXlJuCtokpeWQwx77KgBSlEBJ2nDKNisKvSmc7n510NejxVD/g7Qu
-	 TjSGSDVyueNhCqjJEh8ZIMh9MJZMJPVYzw9AyMmy9PYkYrOxAx4M9WZBMuhCn1s6Iq
-	 eCHDwWMo77xDg==
-Message-ID: <817d25dbce20c38ed3a2e1bcece089e50c1164d0.camel@kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: check that server is running in
- unlock_filesystem
+	b=Ge/a72oCjBP9P3fe4/2qhD99bTol0wtNxQOHB752JkuefoZq9IgyTz4TXpWl3QQms
+	 wIZUksFGkImH4culXkbpJFLU5Cpd7+kcTKhhmg6JHRKkXNYEfFFBEFgN0jZU9VqQot
+	 RxZElN6yjDTuvlER/m97n54JpSoYhaK2z9c7LAHqZYFT4IBOPlqFiRas43UfQuLSyA
+	 qHMwmpbVQpHTP7o6bXgeGvteC3FhpXEdijdCaAZpSoDmM7eDxp0Ghr329S2eeRcNbv
+	 4XXkqfQRNFD0V4hGlFdObV7fK9jzwrhAu2FVrns+fZQh0ryPWpY/aNV4m6wHOWoIQX
+	 hFQzMLRVwerBg==
+Message-ID: <4263ceeab14cb5fdc8b0cc90496648ca195cbc8e.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Drop the client reference in client_states_open()
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com, 
-	tom@talpey.com
-Date: Sun, 07 Dec 2025 03:36:42 +0900
-In-Reply-To: <20251205184156.10983-1-okorniev@redhat.com>
-References: <20251205184156.10983-1-okorniev@redhat.com>
+To: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>, chuck.lever@oracle.com, 
+	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	bfields@fieldses.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Sun, 07 Dec 2025 03:43:04 +0900
+In-Reply-To: <20251206073842.196835-1-lihaoxiang@isrc.iscas.ac.cn>
+References: <20251206073842.196835-1-lihaoxiang@isrc.iscas.ac.cn>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,93 +134,36 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-12-05 at 13:41 -0500, Olga Kornievskaia wrote:
-> If we are trying to unlock the filesystem via an administrative
-> interface and nfsd isn't running, it crashes the server.
+On Sat, 2025-12-06 at 15:38 +0800, Haoxiang Li wrote:
+> In error path, call drop_client() to drop the reference
+> obtained by get_nfsdfs_clp().
 >=20
-> [   59.445578] Modules linked in: nfsd nfs_acl lockd grace nfs_localio ex=
-t4 crc16 mbcache jbd2 overlay uinput snd_seq_dummy snd_hrtimer qrtr rfkill =
-vfat fat uvcvideo snd_hda_codec_generic videobuf2_vmalloc videobuf2_memops =
-uvc videobuf2_v4l2 videobuf2_common snd_hda_intel snd_intel_dspcfg snd_hda_=
-codec videodev snd_hda_core snd_hwdep mc snd_seq snd_seq_device snd_pcm snd=
-_timer snd soundcore sg loop auth_rpcgss vsock_loopback vmw_vsock_virtio_tr=
-ansport_common vmw_vsock_vmci_transport vmw_vmci vsock xfs ghash_ce nvme e1=
-000e nvme_core nvme_keyring nvme_auth hkdf sr_mod cdrom vmwgfx drm_ttm_help=
-er ttm 8021q garp stp llc mrp sunrpc dm_mirror dm_region_hash dm_log iscsi_=
-tcp libiscsi_tcp libiscsi scsi_transport_iscsi fuse dm_multipath dm_mod nfn=
-etlink
-> [   59.451979] CPU: 4 UID: 0 PID: 5193 Comm: bash Kdump: loaded Tainted: =
-G    B               6.18.0-rc4+ #74 PREEMPT(voluntary)
-> [   59.453311] Tainted: [B]=3DBAD_PAGE
-> [   59.453913] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.0=
-0V.24006586.BA64.2406042154 06/04/2024
-> [   59.454869] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYP=
-E=3D--)
-> [   59.455463] pc : nfsd4_revoke_states+0x1b4/0x898 [nfsd]
-> [   59.456069] lr : nfsd4_revoke_states+0x19c/0x898 [nfsd]
-> [   59.456701] sp : ffff80008cd67900
-> [   59.457115] x29: ffff80008cd679d0 x28: 1fffe00016a53f84 x27: dfff80000=
-0000000
-> [   59.458006] x26: 04b800ef00000000 x25: 1fffe00016a53f80 x24: ffff0000a=
-796ea00
-> [   59.458872] x23: ffff0000b89d6000 x22: ffff0000b6c36900 x21: ffff0000b=
-6c36580
-> [   59.459738] x20: ffff80008cd67990 x19: ffff0000b6c365c0 x18: 000000000=
-0000000
-> [   59.460602] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
-0000000
-> [   59.461480] x14: 0000000000000000 x13: 0000000000000001 x12: ffff70001=
-19acf13
-> [   59.462272] x11: 1ffff000119acf12 x10: ffff7000119acf12 x9 : dfff80000=
-0000000
-> [   59.463002] x8 : ffff80008cd67810 x7 : 0000000000000000 x6 : 0097001de=
-0000000
-> [   59.463732] x5 : 0000000000000004 x4 : ffff0000b5818000 x3 : 04b800ef0=
-0000004
-> [   59.464368] x2 : 0000000000000000 x1 : 0000000000000005 x0 : 04b800ef0=
-0000000
-> [   59.465072] Call trace:
-> [   59.465308]  nfsd4_revoke_states+0x1b4/0x898 [nfsd] (P)
-> [   59.465830]  write_unlock_fs+0x258/0x440 [nfsd]
-> [   59.466278]  nfsctl_transaction_write+0xb0/0x120 [nfsd]
-> [   59.466780]  vfs_write+0x1f0/0x938
-> [   59.467088]  ksys_write+0xfc/0x1f8
-> [   59.467395]  __arm64_sys_write+0x74/0xb8
-> [   59.467746]  invoke_syscall.constprop.0+0xdc/0x1e8
-> [   59.468177]  do_el0_svc+0x154/0x1d8
-> [   59.468489]  el0_svc+0x40/0xe0
-> [   59.468767]  el0t_64_sync_handler+0xa0/0xe8
-> [   59.469138]  el0t_64_sync+0x1ac/0x1b0
-> [   59.469472] Code: 91001343 92400865 d343fc66 110004a1 (38fb68c0)
-> [   59.470012] SMP: stopping secondary CPUs
-> [   59.472070] Starting crashdump kernel...
-> [   59.472537] Bye!
->=20
-> Fixes: 1ac3629bf0125 ("nfsd: prepare for supporting admin-revocation of s=
-tate")
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> Fixes: a204f25e372d ("nfsd: create get_nfsdfs_clp helper")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
 > ---
->  fs/nfsd/nfs4state.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  fs/nfsd/nfs4state.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 35004568d43e..faa874eff1e9 100644
+> index 8a6960500217..caa0756b6914 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -1775,6 +1775,9 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  	unsigned int idhashval;
->  	unsigned int sc_types;
+> @@ -3097,8 +3097,10 @@ static int client_states_open(struct inode *inode,=
+ struct file *file)
+>  		return -ENXIO;
 > =20
-> +	if (!nn->nfsd_serv)
-> +		return;
-> +
->  	sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG | SC_TYPE_LAYO=
-UT;
-> =20
->  	spin_lock(&nn->client_lock);
+>  	ret =3D seq_open(file, &states_seq_ops);
+> -	if (ret)
+> +	if (ret) {
+> +		drop_client(clp);
+>  		return ret;
+> +	}
+>  	s =3D file->private_data;
+>  	s->private =3D clp;
+>  	return 0;
 
-Ouch. Good catch. I'm surprised we haven't seen this before!
+Nice catch.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
