@@ -1,111 +1,127 @@
-Return-Path: <linux-nfs+bounces-16982-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16983-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE47ECAB1BF
-	for <lists+linux-nfs@lfdr.de>; Sun, 07 Dec 2025 06:23:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCE27CAB2AC
+	for <lists+linux-nfs@lfdr.de>; Sun, 07 Dec 2025 09:25:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6AD6330900BB
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Dec 2025 05:23:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3C854305AC70
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Dec 2025 08:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A2A2E0418;
-	Sun,  7 Dec 2025 05:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwT5MXT9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0152D3755;
+	Sun,  7 Dec 2025 08:25:16 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFA12E03F0;
-	Sun,  7 Dec 2025 05:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F20221D96;
+	Sun,  7 Dec 2025 08:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765085029; cv=none; b=LZdFuDym9Uid0jev27bvlrM0qkpiUmXUxOt22cVGG4SBifWnXFHE5PF/bUOpuODyPk27TXCHW8X+HJcBlZF/ss4SqTtsX+v1BflmKSC/z8zSMLnsX8WWTrIxBWy1Kn3PdMr/ecCa5DFXtB7ZtwCH1nBXar69cy2R5kJHlImZXyM=
+	t=1765095916; cv=none; b=RekbjQM4jNbnAw1hjwqv/IolNSgm/QB3DiTvkf1f5ZJajNOYN7R5ZCtOCGsjVhUtNztFMY6CiGUQjmw7QVbv8gAjMdZjK2WCKcC2yHbVmd7ceLxIZilebp3q3/Oq3UOjdZxpbdOXCVhA0ZzbyB4W4AqMTNqWkREEL+n1s57mv6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765085029; c=relaxed/simple;
-	bh=h0u3ccSp7RgQuIj96S6xEAYHUUQSKllyQ70WaTCES2Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aY5zazXSPkSNAu4sv6Ix9jeW3ERqyFV5plzt07R9j3UnaPnFfnbClNnIcTqw/wp51z2pYHaAqbhijuTSqEjvonEd6RwGVGkr8y2VA7X5I3Cwflu+0SgYPWfUZvqS+qcdT9KaxQkdkQtXrzwK4KAinux1a0IJn4qLzz6ReiWeBrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwT5MXT9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF99C4CEFB;
-	Sun,  7 Dec 2025 05:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765085028;
-	bh=h0u3ccSp7RgQuIj96S6xEAYHUUQSKllyQ70WaTCES2Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OwT5MXT9IdqUL6qZ10/vYecnl/BmGJ53qjmSYzAt6l1Pu5Sd3vx4pcF0GfW2342dH
-	 qWQIG2lTgFEtiIgsuFlvteys5VtavNejm7GZcWAW2XKB4iyx7D5C7R2M39bE0mHOtv
-	 4exV8OOtoff5XtW9DmncneX68IYEj3AumdaFI5yY8iLqdAdB5J50YlfA/qg4DVgibz
-	 SC7C7gTWDC5qWnJ5QaQ1a8tgbuzxawjaLydmdRncfEEq+5qPeuBJ2fQ20PFwlSwhod
-	 OcPxygC2BLVH3pZuBvQXs0WcHAshxxU6OTtjYHm3FuQdsD2p8PnP6i2b7EZvHb5LaR
-	 /XsZVt3Tj33Xw==
-Message-ID: <96a0e826081846120d98e3ca5ec5c001b50ed989.camel@kernel.org>
-Subject: Re: [PATCH] nfs/localio: fix regression due to out-of-order
- __put_cred
-From: Trond Myklebust <trondmy@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Zorro Lang
-	 <zlang@redhat.com>, linux-nfs@vger.kernel.org
-Date: Sun, 07 Dec 2025 00:23:47 -0500
-In-Reply-To: <2025120753-cycling-shifty-4967@gregkh>
-References: 
-	<30a4385509b4daa55512058c02685314adda85d7.1765066510.git.trond.myklebust@hammerspace.com>
-	 <2025120753-cycling-shifty-4967@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=arc-20240116; t=1765095916; c=relaxed/simple;
+	bh=ce2Iz7KBrQEhj0edCa2MiL+MGT6pOrlTOxOzZROaWF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ttaU/o+HP+nnC7rB3NNbsSEN2QOtPDOcZJdWf4Z9jq4CtSO4sSARr9A4+7y5jc4bk75UdBakd8D/cOi0h+86l8kMy0YXtRA0DtqnAn72ZvjSvYb8v/X1Epcs3GrsgD2aY9A7cofwPCSHMP48i2aF+uWLtUqQZQ+4ywo4Z5iSvFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from localhost.localdomain (unknown [36.112.3.223])
+	by APP-01 (Coremail) with SMTP id qwCowADHWsrbOTVpCrFeAw--.36508S2;
+	Sun, 07 Dec 2025 16:24:59 +0800 (CST)
+From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+To: cel@kernel.org
+Cc: Dai.Ngo@oracle.com,
+	bfields@fieldses.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	lihaoxiang@isrc.iscas.ac.cn,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	neil@brown.name,
+	okorniev@redhat.com,
+	stable@vger.kernel.org,
+	tom@talpey.com
+Subject: Re: [PATCH] nfsd: Drop the client reference in client_states_open()
+Date: Sun,  7 Dec 2025 16:24:58 +0800
+Message-Id: <20251207082458.18833-1-lihaoxiang@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <0ec5a1be-372b-4a0a-9b64-099b1d8bf710@app.fastmail.com>
+References: <0ec5a1be-372b-4a0a-9b64-099b1d8bf710@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHWsrbOTVpCrFeAw--.36508S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFyxJryUCry5AF4ktF4UXFb_yoW8JFWUpr
+	4xJa15KrWktFWxWFsrZan0qa4ruw1vyr18GrZYq3WrAF93Zr15KF1F9wn5uF45CrWfZw1S
+	qr4UKFWjg39xZFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUGVWUWwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
+X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiBgoJE2k088FT7AACsE
 
-On Sun, 2025-12-07 at 09:42 +0900, Greg KH wrote:
-> On Sat, Dec 06, 2025 at 07:24:14PM -0500, Trond Myklebust wrote:
-> > From: Mike Snitzer <snitzer@kernel.org>
-> >=20
-> > commit 3af870aedbff10bfed220e280b57a405e972229f upstream.
-> >=20
-> > Commit f2060bdc21d7 ("nfs/localio: add refcounting for each iocb IO
-> > associated with NFS pgio header") inadvertantly reintroduced the
-> > same
-> > potential for __put_cred() triggering BUG_ON(cred =3D=3D current->cred)
-> > that commit 992203a1fba5 ("nfs/localio: restore creds before
-> > releasing
-> > pageio data") fixed.
-> >=20
-> > Fix this by saving and restoring the cred around each
-> > {read,write}_iter
-> > call within the respective for loop of nfs_local_call_{read,write}.
-> >=20
-> > Reported-by: Zorro Lang <zlang@redhat.com>
-> > Fixes: f2060bdc21d7 ("nfs/localio: add refcounting for each iocb IO
-> > associated with NFS pgio header")
-> > Cc: <stable@vger.kernel.org> # 6.18.x
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hi, Chuck!
+
+Sat, 06 Dec 2025 09:37:44 -0500, Chuck Lever wrote:
+> >
+> On Sat, Dec 6, 2025, at 2:38 AM, Haoxiang Li wrote:
+> > In error path, call drop_client() to drop the reference
+> > obtained by get_nfsdfs_clp().
+> >
+> > Fixes: a204f25e372d ("nfsd: create get_nfsdfs_clp helper")
+
+> An argument could be made that 78599c42ae3c ("nfsd4: add file
+> to display list of client's opens") is where the reference
+> counting was first broken. Would you mind if I updated the
+> Fixes: tag when I apply this?
+
+Thanks for pointing out the incorrect Fixes tag in the patch.
+Please feel free to correct it.
+
+-Haoxiang Li
+
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
 > > ---
->=20
-> What kernel is this for, just 6.18.y?=C2=A0 And why was the changelog
-> rewritten/formatted from the original?
->=20
+> > fs/nfsd/nfs4state.c | 4 +++-
+> > 1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 8a6960500217..caa0756b6914 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -3097,8 +3097,10 @@ static int client_states_open(struct inode 
+> > *inode, struct file *file)
+> >  	 	 return -ENXIO;
+> >
+> > 	 ret = seq_open(file, &states_seq_ops);
+> > -	 if (ret)
+> > +	 if (ret) {
+> > +		 drop_client(clp);
+> > 		 return ret;
+> > +	 }
+> > 	 s = file->private_data;
+> > 	 s->private = clp;
+> >  	 return 0;
+> > -- 
+> > 2.25.1
 
-The patch is just for 6.18.y. It is actually the original patch that
-was submitted in the last week of the 6.18-rc series. That patch didn't
-make it in before 6.18 was released due to the Thanksgiving holiday,
-etc.
+> -- 
+> Chuck Lever
 
-When commits 94afb627dfc2 and bff3c841f7bd were merged early in the
-6.19 merge window, a port was required in order to match up the fix to
-the new "scoped_with_creds()" paradigm. While that port could be
-backported as is, it would require pulling in the full framework for
-"scoped_with_creds()", hence the preference for just submitting the
-original patch.
-
-
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
 
