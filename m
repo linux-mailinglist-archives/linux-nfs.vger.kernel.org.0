@@ -1,43 +1,43 @@
-Return-Path: <linux-nfs+bounces-16995-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16996-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF926CAE251
-	for <lists+linux-nfs@lfdr.de>; Mon, 08 Dec 2025 21:15:40 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6048CAE254
+	for <lists+linux-nfs@lfdr.de>; Mon, 08 Dec 2025 21:15:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D52CF301FA61
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Dec 2025 20:15:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0D30B3008B5A
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Dec 2025 20:15:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7129F2343BE;
-	Mon,  8 Dec 2025 20:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975AE2236E3;
+	Mon,  8 Dec 2025 20:15:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C139205E25
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Dec 2025 20:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291EF246333
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Dec 2025 20:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765224938; cv=none; b=QSppUUZc8eY+pF/OQFzgDPXCzmUS51de/W4az8kn5+vZIGyB5J2vhaeGj+MTd4zK3UssLhAIWV4MdWBV5/GKbHRQ7rfjDA5zHBKNANySE09kKf0LXJtVXqjTkljSDTMdVmmGTflUanhtjB9aIcdw0yjnxk6isXwooeRkO5+RuMA=
+	t=1765224944; cv=none; b=T1b31xnt0ZaG/wMmK4bjr7UXAY6jMIIvg4Zif8QnWCLMd3Kqga4CA+tf0LpAsX0OT1/pAMPZUTaJv/B1xROgSDPqXOn2veUD8eAhc9sgg02137EAHpovWHzZvCZq2MFa0C80gY0FctmQBtdQnPR6TihEC+y3SZ8nA0oSiudcJc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765224938; c=relaxed/simple;
-	bh=7ZN1RB1uR25yPJQmq1DEa4qSUs8pLk+A1PuztypjI1k=;
+	s=arc-20240116; t=1765224944; c=relaxed/simple;
+	bh=dT1wIW9NCgFNFBS8ApIE067jcZcHdWLCvrILKVEvMww=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CJ5rOdhPOrbemixqvPJe9jbkEQUy7jIjPq//68n2KOGG2jIsWlwal1E8iCf+VH4JTLCJH9OwH3wMQyjbW8cSDXS8yFur+Jt/zXthmd62x1Rx03+16sWcNp52HeHteaF3VDgHEmbop1GdMT6AbnK8hxYYui8GxwNabYtUn16oZMo=
+	 MIME-Version:Content-Type; b=OuDEYf3PDW87Jii1Box3sPbO8yihw3er8+TtO9PE4L9UZjTpd7RTyeX4stRDtlmrKAbH4UPQPcMt2oc0qf9R/UzHO/r1poWQC0xyZw2ZmP2XnNnC6fBroV2KfO451P1e6EVVYJthudOTokTJTguQysMqSaKxKTPVud8jNL8IFuo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
 Received: from wasted (213.87.153.35) by msexch01.omp.ru (10.188.4.12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 8 Dec
- 2025 23:15:29 +0300
+ 2025 23:15:33 +0300
 From: Sergey Shtylyov <s.shtylyov@omp.ru>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
 	<linux-nfs@vger.kernel.org>
 CC: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH RESEND 1/2] NFSv4: pass lease period in seconds to nfs4_set_lease_period()
-Date: Mon, 8 Dec 2025 23:15:03 +0300
-Message-ID: <20251208201506.20880-2-s.shtylyov@omp.ru>
+Subject: [PATCH RESEND 2/2] NFSv4: limit lease period in nfs4_set_lease_period()
+Date: Mon, 8 Dec 2025 23:15:04 +0300
+Message-ID: <20251208201506.20880-3-s.shtylyov@omp.ru>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251208201506.20880-1-s.shtylyov@omp.ru>
 References: <20251208201506.20880-1-s.shtylyov@omp.ru>
@@ -72,7 +72,6 @@ X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.153.35 in (user)
  dbl.spamhaus.org}
 X-KSE-AntiSpam-Info:
 	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: {fromrtbl complete}
 X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
 X-KSE-AntiSpam-Info: FromAlignment: s
 X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.153.35
@@ -80,8 +79,8 @@ X-KSE-AntiSpam-Info: {DNS response errors}
 X-KSE-AntiSpam-Info: Rate: 19
 X-KSE-AntiSpam-Info: Status: not_detected
 X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=none header.from=omp.ru;spf=temperror
- smtp.mailfrom=wasted;dkim=none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
 X-KSE-Antiphishing-Info: Clean
 X-KSE-Antiphishing-ScanningType: Heuristic
 X-KSE-Antiphishing-Method: None
@@ -92,79 +91,49 @@ X-KSE-Attachment-Filter-Triggered-Rules: Clean
 X-KSE-Attachment-Filter-Triggered-Filters: Clean
 X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-There's no need to multiply the lease period by HZ at all the call sites of
-nfs4_set_lease_period() -- it makes more sense to do that only once, inside
-that function, by passing to it lease period as 32-bit # of seconds instead
-of 32/64-bit *unsigned long* # of jiffies...
+In nfs4_set_lease_period(), the passed 32-bit lease period in seconds is
+multiplied by HZ -- that might overflow before being implicitly cast to
+*unsigned long* (32/64-bit type), while initializing the lease variable.
+Cap the lease period at MAX_LEASE_PERIOD (#define'd to 1 hour for now),
+before multipying to avoid such overflow...
+
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
 Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Suggested-by: Trond Myklebust <trondmy@kernel.org>
 ---
- fs/nfs/nfs4_fs.h    | 3 +--
- fs/nfs/nfs4proc.c   | 2 +-
- fs/nfs/nfs4renewd.c | 7 ++++---
- fs/nfs/nfs4state.c  | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ fs/nfs/nfs4renewd.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index c34c89af9c7d..44cf167f65c6 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -464,8 +464,7 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *);
- extern void nfs4_schedule_state_renewal(struct nfs_client *);
- extern void nfs4_kill_renewd(struct nfs_client *);
- extern void nfs4_renew_state(struct work_struct *);
--extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
--
-+extern void nfs4_set_lease_period(struct nfs_client *clp, u32 period);
- 
- /* nfs4state.c */
- extern const nfs4_stateid current_stateid;
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ec1ce593dea2..b66f97acafde 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5556,7 +5556,7 @@ static int nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh *fhandle, str
- 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
- 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
- 		if (err == 0) {
--			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
-+			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time);
- 			break;
- 		}
- 		err = nfs4_handle_exception(server, err, &exception);
 diff --git a/fs/nfs/nfs4renewd.c b/fs/nfs/nfs4renewd.c
-index 18ae614e5a6c..043b2de8d416 100644
+index 043b2de8d416..30065df1482e 100644
 --- a/fs/nfs/nfs4renewd.c
 +++ b/fs/nfs/nfs4renewd.c
-@@ -137,11 +137,12 @@ nfs4_kill_renewd(struct nfs_client *clp)
+@@ -133,6 +133,8 @@ nfs4_kill_renewd(struct nfs_client *clp)
+ 	cancel_delayed_work_sync(&clp->cl_renewd);
+ }
+ 
++#define MAX_LEASE_PERIOD (60 * 60)	/* 1 hour */
++
+ /**
   * nfs4_set_lease_period - Sets the lease period on a nfs_client
   *
-  * @clp: pointer to nfs_client
-- * @lease: new value for lease period
-+ * @period: new value for lease period (in seconds)
+@@ -141,7 +143,13 @@ nfs4_kill_renewd(struct nfs_client *clp)
   */
--void nfs4_set_lease_period(struct nfs_client *clp,
--		unsigned long lease)
-+void nfs4_set_lease_period(struct nfs_client *clp, u32 period)
+ void nfs4_set_lease_period(struct nfs_client *clp, u32 period)
  {
-+	unsigned long lease = period * HZ;
+-	unsigned long lease = period * HZ;
++	unsigned long lease;
 +
++	/* Limit the lease period */
++	if (period < MAX_LEASE_PERIOD)
++		lease = period * HZ;
++	else
++		lease = MAX_LEASE_PERIOD * HZ;
+ 
  	spin_lock(&clp->cl_lock);
  	clp->cl_lease_time = lease;
- 	spin_unlock(&clp->cl_lock);
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 01179f7de322..a435d4d47b3c 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -103,7 +103,7 @@ static int nfs4_setup_state_renewal(struct nfs_client *clp)
- 
- 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
- 	if (status == 0) {
--		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
-+		nfs4_set_lease_period(clp, fsinfo.lease_time);
- 		nfs4_schedule_state_renewal(clp);
- 	}
- 
 -- 
 2.52.0
 
