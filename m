@@ -1,265 +1,252 @@
-Return-Path: <linux-nfs+bounces-16998-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-16999-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EA71CAE2F5
-	for <lists+linux-nfs@lfdr.de>; Mon, 08 Dec 2025 22:05:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E18ECAE3AD
+	for <lists+linux-nfs@lfdr.de>; Mon, 08 Dec 2025 22:31:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6E861300C20D
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Dec 2025 21:05:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0F6503011A8B
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Dec 2025 21:31:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 150C62D7D2F;
-	Mon,  8 Dec 2025 21:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BFC21770A;
+	Mon,  8 Dec 2025 21:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a01Ezyeo"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="nG6D1hE0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H3GYsMoB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E352D2D3EC7
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Dec 2025 21:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394AD1DB95E
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Dec 2025 21:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765227930; cv=none; b=jY8Qemn1IQPKZIESmj4nmLnccEpoyvGpVlBMdcCt0uKDaUjjXl/HK8JBSgVAbwriZBTkQLeVIlGHB92fRpvwu38XHliAcrRU/xy+I8vHISiNEakakest5XOV9LM5knxDElvEqF1fi9Vje0fiwMyhkdWzXTPWB24BTY/XsH3pdk4=
+	t=1765229488; cv=none; b=WmDzD4pF1H5wqp72e1144AYWE/qTIiMcz/tTKMll7bBJ/Qy+NBa3mTBo6hFht/C4uvqwN6i9dMqXFIEPE972kqwlbryYG3hpZXIhAoJIbm0AyoVkbRNW+ZJz/4y5Bi4CWbkQLqHTabAQJ6kPsS55DCUQN599fTm5zy2QxJ7635o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765227930; c=relaxed/simple;
-	bh=QQQGC5CKCWAhpef3VXBA1RSQKUq5KrP0Z0NBvfHQSCg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=eYWk6nmx2zHZKLP94PD9lk7p+OnSap8PtQJBzO2udCYsFyb7p1FgK4gLJNUte6zsechspHO1p+P3ab1RlCWjwleH3Te4rvpzGrZzhztU182o1xXOrj/IYvfijJP66bepOerWt5U6zjKf36VVACiZs040CjmHwUEYuuLk6D3xxUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a01Ezyeo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E365C4CEF1
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Dec 2025 21:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765227929;
-	bh=QQQGC5CKCWAhpef3VXBA1RSQKUq5KrP0Z0NBvfHQSCg=;
-	h=From:To:Subject:Date:From;
-	b=a01EzyeorI5yvSbMudcPHiu42HkpvgjCUilqXmVboqaDU4/SnVwRJSLEXuN8NyPxZ
-	 gZGRVPqI9VCjGYWktsJDFgvhL1//6gKJSDBFHeT0iFIz+R9fILovPYitRMAji7smBs
-	 6AX0nxgV0IRPEFkTS937tKQjqnj/7vN6k4zFTZuSHHO197IkgVqggqGrLbB1f56hSe
-	 FKdEDyN9ksdH85X2fk+VbGnm3ykWnVfJPcH8683Xco1chibR9PzqseeEI/Pv1lagjz
-	 s6Ww3VKOcLlbUwKN82MdzPWv6svvsknErzuCXQaFxV3kr9/ikPVZOfvpDyhGnMUTUs
-	 Ajc6mv/bvLa7Q==
-From: Trond Myklebust <trondmy@kernel.org>
-To: linux-nfs@vger.kernel.org
-Subject: [PATCH] pNFS: Fix a deadlock when returning a delegation during open()
-Date: Mon,  8 Dec 2025 16:05:28 -0500
-Message-ID: <24ff118a0bc9c9a845df3987e532365e9d6ecf2a.1765224921.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1765229488; c=relaxed/simple;
+	bh=xuGcHFhZh52029i4ab6iLtKZBMhXZML7k0oHM31vp20=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=rqBH6OhezvQNkv36iy7kAJHyK2JVZJO40Yb19vS8MUp+7EauV4ng3PgsbHcT8Bs7pAz2IH4XR8tQ3Glmcs0755qXrx2saVSKDxJvfRmu9igm8f0iCbFdWNSw5I62D6fdXbT+LBYSYF6OQISF5KU5DXf+T2eIX8LslcUUiMbJdKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=nG6D1hE0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H3GYsMoB; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5D3987A0024;
+	Mon,  8 Dec 2025 16:31:24 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 08 Dec 2025 16:31:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1765229484; x=1765315884; bh=PSeQIO+RkV4MrrbLMAtpMehGhdhaCVWd3vh
+	4CuAcEes=; b=nG6D1hE00FaFosbi6hYwNHULyYTJu54+aN6sUBo9Lqv1amlXGVx
+	AXpfth43EE9DxuRmBBsr5y97c7Xjc2q5o/F/0f3/kaLZWof3aohI3tM3LkbC8NOw
+	WZjU7aT8yF82UqUXOb+KTQ9C+I4oLccHMjNkTMBqXf1PUnNHdecRojmGIxmTaQw2
+	cUsU6MKpwF/c+DtuTB4IZ/202w2d+0cY7c9SMJrhmY3xOmodB3pNCUeaCVmdXmw3
+	84DZ/cMJrqHJ6/0hMcatZ99CP3oG95F2+yhEykFkeNLCytLisCA34Dm6UqpHO9/r
+	V/R+bZoshQZC3GVa1svE7O82vor9sDwaK+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765229484; x=
+	1765315884; bh=PSeQIO+RkV4MrrbLMAtpMehGhdhaCVWd3vh4CuAcEes=; b=H
+	3GYsMoBif3ofRWsIIeMgcYr6or7PE2/o8BF2kRCIbJrDdZjotb/A3q6dT9VfYwlg
+	n9Tw2S8yGAuEAPB3jh93ahSJzC5+aw8XJvmpxpQoYx6yXmWfVJ4Bslc1mv+WVTIR
+	ob/J4R9u94YHlJ4RBAk73Y1UnYAjjRzm1V8q06qssnVAylWzL658Co1+vQ5y3mnC
+	7o6KOncdwxFl0bExwNUHZ1g0q/tcTgN58r6nMKyfVet5L8aB2mJ08RATD7is8exW
+	QqNqVDjSiL+HxmZhvnynA6AcoAswFrW0O/LxC+iHBi8E+e3KXF7//UGs9eWWGlwo
+	HmGOBtCBAkidqE5WFPNUQ==
+X-ME-Sender: <xms:q0M3aWQlDYJ5jyCbGpQjXqLKW204fZJ3wbz1X2iANgqFsxJLp1b2bg>
+    <xme:q0M3aa2-ye1xoMA6-F6K5gBLz4HnVPc0FwZCQ3Zsfdq0VXxv1boAF-PYlIsd1sCD2
+    nU1EhNPxjpIoJ6ZC7km3xtxgtg8G4ql0f02cDbFAAeNFMH3kw>
+X-ME-Received: <xmr:q0M3aaBbPuH-kcZs9v4Ro4RoS2-bm11k8z9QnyE9TUCYOVKnZuctCWVoUL4IjPP6mnzrq3_lL1jGClZk-E2JlGKJsG2WGcNV5M6kLLBuPH9q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeejjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheprghglhhosehumhhitghhrdgvughupdhrtghpthhtohepthhomhesthgr
+    lhhpvgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomh
+    dprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphht
+    thhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehjlhgrhihtoh
+    hnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghilhgssegsrhhofihnrdhnrghm
+    vg
+X-ME-Proxy: <xmx:q0M3aejgR5r2ttd0ck1lJT4sA-tkOhZceAyd-Kx3W_ocYjxfpxpwJA>
+    <xmx:q0M3aUPByfKUTiBaXiEkp4u68nXMhL9nd8F8K1y7BEEWo1_t5D7d9g>
+    <xmx:q0M3aW95BcgElRpsE74esdEhGg2ueryW93Q9sZU1MYFHaSRgXFjepA>
+    <xmx:q0M3ade-hcx-1CQ4WH1M1KD7HBLbAhPeGxaWqTD9NYMy9lWcXobFMQ>
+    <xmx:rEM3aRBUkcmHinJD1P-J1zpYrGA2dywN7Y84SYGPt-KFDyERjosk7E12>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 8 Dec 2025 16:31:21 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Olga Kornievskaia" <aglo@umich.edu>
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, chuck.lever@oracle.com,
+ jlayton@kernel.org, linux-nfs@vger.kernel.org, neilb@brown.name,
+ Dai.Ngo@oracle.com, tom@talpey.com
+Subject:
+ Re: [PATCH 1/1] nfsd: check that server is running in unlock_filesystem
+In-reply-to:
+ <CAN-5tyFNgMk0j37ZnhiRqKK8LoLChb25_oCjvo5LWsjapGJL9w@mail.gmail.com>
+References: <20251205184156.10983-1-okorniev@redhat.com>,
+ <176508180496.16766.14577514890223630313@noble.neil.brown.name>,
+ <CAN-5tyFNgMk0j37ZnhiRqKK8LoLChb25_oCjvo5LWsjapGJL9w@mail.gmail.com>
+Date: Tue, 09 Dec 2025 08:31:18 +1100
+Message-id: <176522947804.16766.1562289482158759372@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Tue, 09 Dec 2025, Olga Kornievskaia wrote:
+> On Sat, Dec 6, 2025 at 11:30=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrote:
+> >
+> > On Sat, 06 Dec 2025, Olga Kornievskaia wrote:
+> > > If we are trying to unlock the filesystem via an administrative
+> > > interface and nfsd isn't running, it crashes the server.
+> > >
+> > > [   59.445578] Modules linked in: nfsd nfs_acl lockd grace nfs_localio =
+ext4 crc16 mbcache jbd2 overlay uinput snd_seq_dummy snd_hrtimer qrtr rfkill =
+vfat fat uvcvideo snd_hda_codec_generic videobuf2_vmalloc videobuf2_memops uv=
+c videobuf2_v4l2 videobuf2_common snd_hda_intel snd_intel_dspcfg snd_hda_code=
+c videodev snd_hda_core snd_hwdep mc snd_seq snd_seq_device snd_pcm snd_timer=
+ snd soundcore sg loop auth_rpcgss vsock_loopback vmw_vsock_virtio_transport_=
+common vmw_vsock_vmci_transport vmw_vmci vsock xfs ghash_ce nvme e1000e nvme_=
+core nvme_keyring nvme_auth hkdf sr_mod cdrom vmwgfx drm_ttm_helper ttm 8021q=
+ garp stp llc mrp sunrpc dm_mirror dm_region_hash dm_log iscsi_tcp libiscsi_t=
+cp libiscsi scsi_transport_iscsi fuse dm_multipath dm_mod nfnetlink
+> > > [   59.451979] CPU: 4 UID: 0 PID: 5193 Comm: bash Kdump: loaded Tainted=
+: G    B               6.18.0-rc4+ #74 PREEMPT(voluntary)
+> > > [   59.453311] Tainted: [B]=3DBAD_PAGE
+> > > [   59.453913] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201=
+.00V.24006586.BA64.2406042154 06/04/2024
+> > > [   59.454869] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BT=
+YPE=3D--)
+> > > [   59.455463] pc : nfsd4_revoke_states+0x1b4/0x898 [nfsd]
+> >
+> > But *why* does it crash?
+>=20
+> > Can you please
+> >    ./scripts/faddr2line fs/nfsd/nfs4state.o nfsd4_revoke_states+0x1b4/0x8=
+98
+> >
+> > and report what line of code it is crashing on?
+>=20
+> okorniev@linux-10:/source/linux$ ./scripts/faddr2line
+> fs/nfsd/nfs4state.o nfsd4_revoke_states+0x1b4/0x898
+> nfsd4_revoke_states+0x1b4/0x898:
+> find_one_sb_stid at /source/linux/fs/nfsd/nfs4state.c:1748
+> (inlined by) nfsd4_revoke_states at /source/linux/fs/nfsd/nfs4state.c:1786
 
-Ben Coddington reports seeing a hang in the following stack trace:
-  0 [ffffd0b50e1774e0] __schedule at ffffffff9ca05415
-  1 [ffffd0b50e177548] schedule at ffffffff9ca05717
-  2 [ffffd0b50e177558] bit_wait at ffffffff9ca061e1
-  3 [ffffd0b50e177568] __wait_on_bit at ffffffff9ca05cfb
-  4 [ffffd0b50e1775c8] out_of_line_wait_on_bit at ffffffff9ca05ea5
-  5 [ffffd0b50e177618] pnfs_roc at ffffffffc154207b [nfsv4]
-  6 [ffffd0b50e1776b8] _nfs4_proc_delegreturn at ffffffffc1506586 [nfsv4]
-  7 [ffffd0b50e177788] nfs4_proc_delegreturn at ffffffffc1507480 [nfsv4]
-  8 [ffffd0b50e1777f8] nfs_do_return_delegation at ffffffffc1523e41 [nfsv4]
-  9 [ffffd0b50e177838] nfs_inode_set_delegation at ffffffffc1524a75 [nfsv4]
- 10 [ffffd0b50e177888] nfs4_process_delegation at ffffffffc14f41dd [nfsv4]
- 11 [ffffd0b50e1778a0] _nfs4_opendata_to_nfs4_state at ffffffffc1503edf [nfsv4]
- 12 [ffffd0b50e1778c0] _nfs4_open_and_get_state at ffffffffc1504e56 [nfsv4]
- 13 [ffffd0b50e177978] _nfs4_do_open at ffffffffc15051b8 [nfsv4]
- 14 [ffffd0b50e1779f8] nfs4_do_open at ffffffffc150559c [nfsv4]
- 15 [ffffd0b50e177a80] nfs4_atomic_open at ffffffffc15057fb [nfsv4]
- 16 [ffffd0b50e177ad0] nfs4_file_open at ffffffffc15219be [nfsv4]
- 17 [ffffd0b50e177b78] do_dentry_open at ffffffff9c09e6ea
- 18 [ffffd0b50e177ba8] vfs_open at ffffffff9c0a082e
- 19 [ffffd0b50e177bd0] dentry_open at ffffffff9c0a0935
+Thanks.  As you suggest it is likely accessing memory that we freed by
+nfsd_shutdown_net().  By the time it gets into find_one_sb_stid() it
+would have already accessed some freed memory so it was lucky to get
+that far.
 
-The issue is that the delegreturn is being asked to wait for a layout
-return that cannot complete because a state recovery was initiated. The
-state recovery cannot complete until the open() finishes processing the
-delegations it was given.
+Code that wants to access conf_id_hash and related parts of nn should
+use:
 
-The solution is to propagate the existing flags that indicate a
-non-blocking call to the function pnfs_roc(), so that it knows not to
-wait in this situation.
+  nfsd_net_try_get(net)
 
-Reported-by: Benjamin Coddington <bcodding@hammerspace.com>
-Fixes: 29ade5db1293 ("pNFS: Wait on outstanding layoutreturns to complete in pnfs_roc()")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfs4proc.c |  6 ++---
- fs/nfs/pnfs.c     | 58 +++++++++++++++++++++++++++++++++--------------
- fs/nfs/pnfs.h     | 17 ++++++--------
- 3 files changed, 51 insertions(+), 30 deletions(-)
+to check if it is safe and to keep it safe, and then nfsd_net_put(net)
+when it has finished.  That is more robust than simply checking nfsd_serv.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ec1ce593dea2..51da62ba6559 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3894,8 +3894,8 @@ int nfs4_do_close(struct nfs4_state *state, gfp_t gfp_mask, int wait)
- 	calldata->res.seqid = calldata->arg.seqid;
- 	calldata->res.server = server;
- 	calldata->res.lr_ret = -NFS4ERR_NOMATCHING_LAYOUT;
--	calldata->lr.roc = pnfs_roc(state->inode,
--			&calldata->lr.arg, &calldata->lr.res, msg.rpc_cred);
-+	calldata->lr.roc = pnfs_roc(state->inode, &calldata->lr.arg,
-+				    &calldata->lr.res, msg.rpc_cred, wait);
- 	if (calldata->lr.roc) {
- 		calldata->arg.lr_args = &calldata->lr.arg;
- 		calldata->res.lr_res = &calldata->lr.res;
-@@ -7005,7 +7005,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
- 	data->inode = nfs_igrab_and_active(inode);
- 	if (data->inode || issync) {
- 		data->lr.roc = pnfs_roc(inode, &data->lr.arg, &data->lr.res,
--					cred);
-+					cred, issync);
- 		if (data->lr.roc) {
- 			data->args.lr_args = &data->lr.arg;
- 			data->res.lr_res = &data->lr.res;
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 7ce2e840217c..33bc6db0dc92 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1533,10 +1533,9 @@ static int pnfs_layout_return_on_reboot(struct pnfs_layout_hdr *lo)
- 				      PNFS_FL_LAYOUTRETURN_PRIVILEGED);
- }
- 
--bool pnfs_roc(struct inode *ino,
--		struct nfs4_layoutreturn_args *args,
--		struct nfs4_layoutreturn_res *res,
--		const struct cred *cred)
-+bool pnfs_roc(struct inode *ino, struct nfs4_layoutreturn_args *args,
-+	      struct nfs4_layoutreturn_res *res, const struct cred *cred,
-+	      bool sync)
- {
- 	struct nfs_inode *nfsi = NFS_I(ino);
- 	struct nfs_open_context *ctx;
-@@ -1547,7 +1546,7 @@ bool pnfs_roc(struct inode *ino,
- 	nfs4_stateid stateid;
- 	enum pnfs_iomode iomode = 0;
- 	bool layoutreturn = false, roc = false;
--	bool skip_read = false;
-+	bool skip_read;
- 
- 	if (!nfs_have_layout(ino))
- 		return false;
-@@ -1560,20 +1559,14 @@ bool pnfs_roc(struct inode *ino,
- 		lo = NULL;
- 		goto out_noroc;
- 	}
--	pnfs_get_layout_hdr(lo);
--	if (test_bit(NFS_LAYOUT_RETURN_LOCK, &lo->plh_flags)) {
--		spin_unlock(&ino->i_lock);
--		rcu_read_unlock();
--		wait_on_bit(&lo->plh_flags, NFS_LAYOUT_RETURN,
--				TASK_UNINTERRUPTIBLE);
--		pnfs_put_layout_hdr(lo);
--		goto retry;
--	}
- 
- 	/* no roc if we hold a delegation */
-+	skip_read = false;
- 	if (nfs4_check_delegation(ino, FMODE_READ)) {
--		if (nfs4_check_delegation(ino, FMODE_WRITE))
-+		if (nfs4_check_delegation(ino, FMODE_WRITE)) {
-+			lo = NULL;
- 			goto out_noroc;
-+		}
- 		skip_read = true;
- 	}
- 
-@@ -1582,12 +1575,43 @@ bool pnfs_roc(struct inode *ino,
- 		if (state == NULL)
- 			continue;
- 		/* Don't return layout if there is open file state */
--		if (state->state & FMODE_WRITE)
-+		if (state->state & FMODE_WRITE) {
-+			lo = NULL;
- 			goto out_noroc;
-+		}
- 		if (state->state & FMODE_READ)
- 			skip_read = true;
- 	}
- 
-+	if (skip_read) {
-+		bool writes = false;
-+
-+		list_for_each_entry(lseg, &lo->plh_segs, pls_list) {
-+			if (lseg->pls_range.iomode != IOMODE_READ) {
-+				writes = true;
-+				break;
-+			}
-+		}
-+		if (!writes) {
-+			lo = NULL;
-+			goto out_noroc;
-+		}
-+	}
-+
-+	pnfs_get_layout_hdr(lo);
-+	if (test_bit(NFS_LAYOUT_RETURN_LOCK, &lo->plh_flags)) {
-+		if (!sync) {
-+			pnfs_set_plh_return_info(
-+				lo, skip_read ? IOMODE_RW : IOMODE_ANY, 0);
-+			goto out_noroc;
-+		}
-+		spin_unlock(&ino->i_lock);
-+		rcu_read_unlock();
-+		wait_on_bit(&lo->plh_flags, NFS_LAYOUT_RETURN,
-+			    TASK_UNINTERRUPTIBLE);
-+		pnfs_put_layout_hdr(lo);
-+		goto retry;
-+	}
- 
- 	list_for_each_entry_safe(lseg, next, &lo->plh_segs, pls_list) {
- 		if (skip_read && lseg->pls_range.iomode == IOMODE_READ)
-@@ -1627,7 +1651,7 @@ bool pnfs_roc(struct inode *ino,
- out_noroc:
- 	spin_unlock(&ino->i_lock);
- 	rcu_read_unlock();
--	pnfs_layoutcommit_inode(ino, true);
-+	pnfs_layoutcommit_inode(ino, sync);
- 	if (roc) {
- 		struct pnfs_layoutdriver_type *ld = NFS_SERVER(ino)->pnfs_curr_ld;
- 		if (ld->prepare_layoutreturn)
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 91ff877185c8..3db8f13d8fe4 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -303,10 +303,9 @@ int pnfs_mark_matching_lsegs_return(struct pnfs_layout_hdr *lo,
- 				u32 seq);
- int pnfs_mark_layout_stateid_invalid(struct pnfs_layout_hdr *lo,
- 		struct list_head *lseg_list);
--bool pnfs_roc(struct inode *ino,
--		struct nfs4_layoutreturn_args *args,
--		struct nfs4_layoutreturn_res *res,
--		const struct cred *cred);
-+bool pnfs_roc(struct inode *ino, struct nfs4_layoutreturn_args *args,
-+	      struct nfs4_layoutreturn_res *res, const struct cred *cred,
-+	      bool sync);
- int pnfs_roc_done(struct rpc_task *task, struct nfs4_layoutreturn_args **argpp,
- 		  struct nfs4_layoutreturn_res **respp, int *ret);
- void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
-@@ -773,12 +772,10 @@ pnfs_layoutcommit_outstanding(struct inode *inode)
- 	return false;
- }
- 
--
--static inline bool
--pnfs_roc(struct inode *ino,
--		struct nfs4_layoutreturn_args *args,
--		struct nfs4_layoutreturn_res *res,
--		const struct cred *cred)
-+static inline bool pnfs_roc(struct inode *ino,
-+			    struct nfs4_layoutreturn_args *args,
-+			    struct nfs4_layoutreturn_res *res,
-+			    const struct cred *cred, bool sync)
- {
- 	return false;
- }
--- 
-2.52.0
+>=20
+> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > index 35004568d43e..faa874eff1e9 100644
+> > > --- a/fs/nfsd/nfs4state.c
+> > > +++ b/fs/nfsd/nfs4state.c
+> > > @@ -1775,6 +1775,9 @@ void nfsd4_revoke_states(struct net *net, struct =
+super_block *sb)
+> > >       unsigned int idhashval;
+> > >       unsigned int sc_types;
+> > >
+> > > +     if (!nn->nfsd_serv)
+> > > +             return;
+> > > +
+> >
+> > Seeing that nfsd4_revoke_states() doesn't make any reference to
+> > nfsd_serv, I think this change is - at best - confusing.
+>=20
+> This solution was in line with how the rest of proc functionality did
+> it (ie it checks whether or not the server is running).
 
+That code checks nfsd_serv while holding nfsd_mutex.  write_unlock_fs()
+does not take nfsd_mutex, so testing nfsd_serv in nfsd4_revoke_state()
+is racy.
+
+>=20
+> > As there is no lock held here, nfsd_serv could spontaneously become NULL
+> > at any time, so this is unlikely to be a complete fix.
+>=20
+> I disagree that it's not a fix. As the main logic I think should be
+> that the unlock operation shouldn't be attempted if there isn't a
+> running server.
+>=20
+> However, what I think you are saying is that the server shutdown
+> cleanup should have cleaned things such that this error shouldn't
+> occur even if there isn't a check for the running server. While I see
+> the logic there, I find it more confusing to ignore the fact that we
+> are not checking for the running state of the server before trying to
+> perform an operation that assumes the server is running.
+>=20
+> > I would expect each conf_id_hashtbl[] list to be empty
+>=20
+> Not only is it empty, it's been freed by nfsd4_state_destroy_net() function.
+>=20
+> "systemctl start nfs-server" --- creates the conf_id_hashtbl
+> "systemctl stop nfs-server" --- ends up freeing it
+> echo path > unlock_filesystem --- has no conf_id_hashtbl.
+>=20
+> I still stand that the solution here is to check for the running
+> server. If you think the check nn->nfsd_net_up is better than checking
+> for null, I can do that.
+>=20
+> >  when no server is
+> > running so the function should do nothing.  Clearly my expectation is
+> > wrong, but I would like to know *why* it is wrong, and to fix the root
+> > cause.
+> >
+> >
+> > We also need this
+> >
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -1778,7 +1778,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
+per_block *sb)
+> >         sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG | SC_TYP=
+E_LAYOUT;
+> >
+> >         spin_lock(&nn->client_lock);
+> > -       for (idhashval =3D 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
+> > +       for (idhashval =3D 0; idhashval < CLIENT_HASH_SIZE; idhashval++) {
+> >                 struct list_head *head =3D &nn->conf_id_hashtbl[idhashval=
+];
+> >                 struct nfs4_client *clp;
+> >         retry:
+> >
+> > Maybe it should be part of the same patch - maybe not.
+>=20
+> I gather this is a needed change but insufficient to fix the issue and
+> should be a separate patch (as a fix for something but not this
+> problem).
+
+It is just a tangentially related bug that I noticed while reading the
+code.  Not really related to the bug you found, so it deserves to be a
+separate patch.  I'll send something.
+
+Thanks,
+NeilBrown
 
