@@ -1,267 +1,186 @@
-Return-Path: <linux-nfs+bounces-17011-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17012-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76967CB06BA
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Dec 2025 16:39:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEBF1CB071C
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Dec 2025 16:46:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8FC193016B8F
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Dec 2025 15:39:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9338A3009AB4
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Dec 2025 15:46:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB1352FF653;
-	Tue,  9 Dec 2025 15:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263522641E3;
+	Tue,  9 Dec 2025 15:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZopApb9"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="CgrXCj7o"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022128.outbound.protection.outlook.com [52.101.43.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ADD2FFDE1
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Dec 2025 15:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765294766; cv=none; b=ECT9WWld9h7bngWWtKpxVKrleJwoKMTzrX5MQjj//HoPmZrDazF50wvqlPJedW+ebhLvoTIwnO9NJm5OTvZ/Ob32vqa+PTpIB8mO3CovPvykH3Sr984fEY7V5sNwhXySBOdatwmkx6xA0ZFqwaVM24fjzL72hCE7Xv36yICAMpg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765294766; c=relaxed/simple;
-	bh=CFGSNLkB63JH3kpEQCHbbI5n8W2oWS///CRnWemEVY4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GMep/f4ttxxO2G6unqFzPpNHBiUeQYM4E6RmiLNOMLz2YK3Qr0CLqmOq3oXP/S96d6LKeURMPyhy22ccF2WcIVy1VV1fYWs/Z52GTWwQDLvZKq/KD9ml02CxGpHGAGbo3BLZiiQUdTkCFXn7Tpo8/8GU/sPdWr7E238DQhluzFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZopApb9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E04BC4CEF5;
-	Tue,  9 Dec 2025 15:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765294766;
-	bh=CFGSNLkB63JH3kpEQCHbbI5n8W2oWS///CRnWemEVY4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SZopApb98Ms+DtTCM4USLk162+OtUcb78vYyOC8Hmp+lMyVDc92lDkiHHqFwgKV7X
-	 R3qgG2LYqYFNIyQwDaYLIzshQVAunAyrJuTBbabGWctgiNAGOXhDuiB/fevVXNHS4h
-	 law/bQUr9XsUAVoCI71Di7B9RHV5kvPqt0u670Zrqno7aF+cZnXHXb3n0HtnJTx6Ni
-	 zGHxW1dSczk6B/kcX/LG7sj3vwBYT639+o4ubnFQtRnsRFA977mdq561r0R7K2tccB
-	 6HAK07Fw1yslFH9uN4xQpoJTSgLXuY/01LjPDemmhfL4tGxNz5ITqc/NhUBUJ44V4y
-	 90WVnVOoQD9iA==
-Message-ID: <0988361336efb7d2b185069a870b1cc7bf356ccc.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F211A9FB4
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Dec 2025 15:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765295170; cv=fail; b=C7FjSMZUOl7d7f4R17PwOp9cB65vwAPUSQexZnAg/GNL5SU3u2P9HjZVjkY6o75WAkMpfjXJapHd6MfrPqpmdgA9IXiQWGus6TuP0ZkMpfalY5rlXA5whuJ20PoTz6Tuur33Rx/0JBpKGbla1YXpJHJuTVQQGPohHp1rqyeVaGE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765295170; c=relaxed/simple;
+	bh=a51EbzyOGF/HX9/7uBTQ+274ax664xuZn8QPdf3PwSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fiK9MNeEYJquUFizlIPo/zDYDOd/wnchLrNQnEarzcnlSDjFOvfCgxKD02XJCx8sKwhQ0JW180K86K3G4wtVosqMraupsejAMTm4VtTfrjdjlZl2YczUA3RN9tDdIaVMBdRdV/Jp0YsIA6jBHAHuDxifLnSGcMCapUW7tGfu6fc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=CgrXCj7o; arc=fail smtp.client-ip=52.101.43.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gxWAQIf+VEb9ktFamHS9wwsJhDafM/74NDaLJBeoBD7ex/8gdWR6VJeQS4zFGMPUfv9But43eaATorqzFw+dF/i/T9o+DyHjUthLcb3b6r1mgH6As7ahHEtq0u9T8XTBAqgB3pxqo/H7kbC4zKKt8J2bxBW0BgDvW/DKNgvJi0PTgumRYqarpAKiH2zWezNgaKMH2MMidHdjvkya5lzbHY6ChAKlJgTjlLp66QN4eUIsFBGfIIVj9vS8ku6FKPX2BqGzly+lAwf4Pw/yhMWCnN47w6k5xkSxPFUWSVRv+2VaNDJ5MHaWcs9mM7Rnn8Hzfp7nehLjo4+T445b3bD7aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s7lZ4HIG4BgKyJy/p24ZV/WfwHod9eGFEgvHcCyiZ0s=;
+ b=cscCxz834Yok2dk/j8Xbbh5EYvIJAZTHRLFrFDoF3bGtjrzXwI+0M85IQLgwfbYXJST5fcKzMYflLwaPBiQPNdpg/4l5aLhriJko9RndJ6STZNSG4LEQER9o5vuhHQ/qMOGjtsX1MpUw8vcynEH70WmURIYghLczGOpdRnkEg3lvoqA4q7NeqqGQURVe1TICD/wKwOJwYloQrtI75vVPDcyVnuSaho/IIi50/jWG/FGjd8Q7UX0PADtZf4w4N2cEY7b7U6eY3F+sXmrEKB+mCb03bk8M/l6LHbkWLityZOOdIFKuDon0L3d1Z+TaVwGn4vVTD7RXd4fL+7cmiWlVjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s7lZ4HIG4BgKyJy/p24ZV/WfwHod9eGFEgvHcCyiZ0s=;
+ b=CgrXCj7oXDcOD3B8TIlKEHtbeqWsYkbdJc4qvM0gvOvBObz4trmHQ5Le6+eo+tBF89vj12RYxAM+va4Fdn3yIMhjDHVhlSj3zxvotpVD190OTD2YLZ4TFQ+kb018t+5tt1rUzwTp5V3hKmEaooV8MEJbwVLsp83QoDTWpTwCpHY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from SA1PR13MB6648.namprd13.prod.outlook.com (2603:10b6:806:3e7::10)
+ by MW4PR13MB5530.namprd13.prod.outlook.com (2603:10b6:303:182::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.13; Tue, 9 Dec
+ 2025 15:45:40 +0000
+Received: from SA1PR13MB6648.namprd13.prod.outlook.com
+ ([fe80::c48a:c42a:aa18:2ef4]) by SA1PR13MB6648.namprd13.prod.outlook.com
+ ([fe80::c48a:c42a:aa18:2ef4%3]) with mapi id 15.20.9412.005; Tue, 9 Dec 2025
+ 15:45:39 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org
 Subject: Re: [PATCH] pNFS: Fix a deadlock when returning a delegation during
  open()
-From: Trond Myklebust <trondmy@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Tue, 09 Dec 2025 10:39:25 -0500
-In-Reply-To: <3090400A-1FB8-4DE3-AB71-08D2D7451ADD@hammerspace.com>
-References: 
-	<24ff118a0bc9c9a845df3987e532365e9d6ecf2a.1765224921.git.trond.myklebust@hammerspace.com>
-	 <3090400A-1FB8-4DE3-AB71-08D2D7451ADD@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+Date: Tue, 09 Dec 2025 10:45:37 -0500
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <B737E0A1-A462-4129-879E-417290E96A27@hammerspace.com>
+In-Reply-To: <0988361336efb7d2b185069a870b1cc7bf356ccc.camel@kernel.org>
+References: <24ff118a0bc9c9a845df3987e532365e9d6ecf2a.1765224921.git.trond.myklebust@hammerspace.com>
+ <3090400A-1FB8-4DE3-AB71-08D2D7451ADD@hammerspace.com>
+ <0988361336efb7d2b185069a870b1cc7bf356ccc.camel@kernel.org>
+Content-Type: text/plain
+X-ClientProxiedBy: PH0PR07CA0069.namprd07.prod.outlook.com
+ (2603:10b6:510:f::14) To SA1PR13MB6648.namprd13.prod.outlook.com
+ (2603:10b6:806:3e7::10)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|MW4PR13MB5530:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d970a74-8086-4b2c-8dc4-08de373a00fd
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xOINSehveCzQ/iEj5R6CCpmX1N6mDrQz93D3MnbROpmXHBamQ/+ZTJHRASYs?=
+ =?us-ascii?Q?Q9fyhbdaDsxpv8tWqezcWq8UxMoRsvzSg0J3PIwXUzkw51GXmAsd1ztXTGKr?=
+ =?us-ascii?Q?+DGsTn3bFHQ04sI62MkxY7N/MBOmqxx/+T0Mbp7CYaFywkYaQ5OyG28jHeTB?=
+ =?us-ascii?Q?aKLSlpzaUqJyXKy/VdsN+wkJNsoMZ6FfHHftRqhJkuRChkJYY/kkQ1tjffsJ?=
+ =?us-ascii?Q?FqZ0NcXpaSZE44cK6ZESNIKFMhbvubjkDAnQaBeC8Snso8JrukJ3UT4gYIUG?=
+ =?us-ascii?Q?YILFZIa8RKZK8Ihe+KN4L4s593TxwLHTpgCUZWBuInsyotZJsoAv2R6pYPa5?=
+ =?us-ascii?Q?QrJqOQIXWqqydMvVX8GQKNe4X3d6IlMC7Ylh/hlEDBNPpRt2/ycHIKu8auyN?=
+ =?us-ascii?Q?0XCzozXY8ryuOXYrmjw//q4Knjkox3xz9ZCIV2ov0ZY0AdjJd6VXi5ooXwZX?=
+ =?us-ascii?Q?nDNyxUKKXpjExjUWc6jhoXj+/Sy6PwHXhJCOMWE0K/4j2Vvt8AKzBJ4TCrD0?=
+ =?us-ascii?Q?btqyCSK+bd0vTRXwvrFyVKu2tMxh95PLUVHB7OG6XDlwqjQoHLsxJd898+Id?=
+ =?us-ascii?Q?KEXZIL/PVXyAMLtjbHW23Saamf2x8ySkYKfLHwwh2fkOmYMBtET7MQ5t68tm?=
+ =?us-ascii?Q?6pcQmvEjREMPxpPaIa0K56kYpWvj/TVZzsO97Ci62rTA/hxAV4xXcNVKaPpz?=
+ =?us-ascii?Q?qEzgXR7Btx5qLXEL+2hL8PBgBXfe5M1CYRrTfuXeS737A/Y61Gjx/jPfJgnx?=
+ =?us-ascii?Q?m9my8/bVChvelITNgO9yWoWywAkk5WqPTvF/zlgxPyf2oIs6oWk4NcMbhSnl?=
+ =?us-ascii?Q?+YIElSNysTVshsAgwdRbJFuTdlmEbPa7TAqMbmBCIYXCq/J3Z0ouQYexB8eE?=
+ =?us-ascii?Q?8ziDGwaRYjKpyRmh1HkIlGgMg0qMVfPtRYJ2UWFbbs0h0t/pgTp5ifdbTrpZ?=
+ =?us-ascii?Q?SPJyiqF9r8E1Eh36U2ymsEhjiYnpurHEtnscNgbRO8NFGmBlststqWyMiQK2?=
+ =?us-ascii?Q?+77DE0gWKl+4jRoXsjDTCTF3ZcayFO/HOlNcmQ/fE0Sql+LjcQY911fbqFVp?=
+ =?us-ascii?Q?97bHxEVkH5BYI1i3kgxxtz/8cgskIyRBvFYrYZ+NGcJV7WYrxxeG6/F3aBOk?=
+ =?us-ascii?Q?pRoVrcOmPv2KaXYxslWUl2iC2aL5bugYactUMuY0J30nHXT2hmcWLg7hlkNF?=
+ =?us-ascii?Q?gqaXWG2Lwf7LSh7vp1nV0b1P+iFIdf5szKJoqtIXJmYsgEsIB/1AM3PLf5Pi?=
+ =?us-ascii?Q?TwsJVmM+MGTA51HPqFJ9lyFmKN85FATU/cVXo4NLaY/uIgUeLKE72PeYjuew?=
+ =?us-ascii?Q?+fhAateUJ9Bk0DLRHk1zTCgc9FgzwXcu3vA69OyXfbeNUqR3G61tMDUrKowi?=
+ =?us-ascii?Q?1qpsQZBRFTj4LlnnZwrSdIFH3pL/IlLpjrFWOSIqx4851creDptXKXw2Gqeo?=
+ =?us-ascii?Q?HtZ4/weFn9vGYFiRIbVmMswY6gYu/ROx?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?maDhxnwW5ko0qLDNC/oKDl7Uu/8zYZNBM9Vld3ipw+WsbB8T5MvI/y7fWNeW?=
+ =?us-ascii?Q?lo/zf6TRR60+yh1qyZIdKVBmNP+J76z1SS8C9HLyUyXjAJ8+oi/G4XzTBgwv?=
+ =?us-ascii?Q?xxLaFHf+Mx8pfIr8NCH83YNrNiLVV3Y88u4AnNu65m8Dyfiqf7KUgv27zwgK?=
+ =?us-ascii?Q?guUDaAp0vOCEbeTAwTxmXG+B6dfOETU5qU2KT4sSdeTTiRZ5PVrx+G44M+mb?=
+ =?us-ascii?Q?WqmWXXsWlqHG+ppkTsnkDhv8/mUxwZ8whfgRGenGJnHfaGtIZdfMcxi3t9dR?=
+ =?us-ascii?Q?2Ufyx+Zz5kj4Xhi4Trr8/11HztSXEPsF4pe13hf02OSYzWb3CLw8zS6IxvMg?=
+ =?us-ascii?Q?+bO6nxv+Cpch25fIeEb29UjJc4od0VDJ8jmB6YUBvryExm4V5TzWZcL+LNN7?=
+ =?us-ascii?Q?IvYBjmEwMzin7ZY1t/DxT7tEcEm6ecHPmHSRMzMEQwSjRu0GkSh/hnrx53l3?=
+ =?us-ascii?Q?2fJ4y+wP8Vgz2qgT0LBIvkj+UoOhCHKgB+YS0qxp58s0ofdSEtgdY/DuIX4D?=
+ =?us-ascii?Q?lKTu9USHLqqEamwS3wopRIxUP4ZXZG6XCmrjOBKJM1GH8J/VNT6bPAt8Bn4k?=
+ =?us-ascii?Q?zBRlwsiKNO9ALCjNMEL4aaIbU53/PWHYpA/uMTVi+uWmDPj4XS88P2nOngSJ?=
+ =?us-ascii?Q?rVVyQIXqEWXw6rY+7PNRsEhwBFOPPrMAAm8zi8VNUOLRg5qBkvctfN06d5ij?=
+ =?us-ascii?Q?Q6lEW5bAJ7gAcnsiULr1mIFnSFbJT8IIAfJ9FC9JDomwLIi/Rm62X4Ucj6l5?=
+ =?us-ascii?Q?KtMDfaOuj/B+st4upHcrQlJfk2oFJCLJgPYQ0+IPOQlNalJlLvdoBr+jtYGy?=
+ =?us-ascii?Q?xmwFQ27UK++1sQ/oPM1zgbG4dJQysHbWGoqsay5QB5uQo/ADad3OIMurgSzJ?=
+ =?us-ascii?Q?L7LYuD04EaWmbXDeLHwUl0SB68S+G32/AJM8Qsz30ZjTBRXckoTovb29YXCb?=
+ =?us-ascii?Q?pyTgvVkxnOtKJuyBDAukxROqdZkhBQxSyJIMjT2B7ofTrvz8oXhrzlQTgMin?=
+ =?us-ascii?Q?KjH5m3Zl9DkF5d+wM82nngFoebmjRk1HcrvkKDOo3/UVjqIziSaEeT3JLQ6O?=
+ =?us-ascii?Q?PCevTbnGCVPUB4PbBTgjwLYlNBRAO9d5WGf/LUBaLThWL/r53iI09jvfyz4c?=
+ =?us-ascii?Q?6rTKiNhutIs43uta4ANhozaIx3OYE0tPTzgjnU7yanXBejaQ3rbzLktbBd69?=
+ =?us-ascii?Q?dm7Ine+Km1jvijsUtTmyJbOShnkf358c9fLgJDO62IDKDEoAMuNHUANYNUEI?=
+ =?us-ascii?Q?NjUx0wKQtkkuXQaRiGLhnX8WtC9mPtqX7R8KKJbkHldyXN6NJHOv2YqbndoN?=
+ =?us-ascii?Q?UtDuDpmMmhN81h4xUbk4QD4v3ciBdhgLbbH/lx97kBHrxXm6JRhUpEPJWNUS?=
+ =?us-ascii?Q?4xb24k2zLc/Za+jusa60Lfc/RTt1r2eWn/CjAlEt/P5Nt7piBtlW+WoUramU?=
+ =?us-ascii?Q?KqD1vcBqG1TN3+GWDgJHLxqG1W6KQDvevnQ8rVwimaz5EBw/c7I6oW9Rfdz7?=
+ =?us-ascii?Q?bQC2Cqi3mS0WxyBLwB8K9zo/nnAy0nUllQdXpbvpiFRVvT0LXdBz/LlQbdZA?=
+ =?us-ascii?Q?8Fh5gadgHD5TkKzBBJ4W/GcPw2ZqSEUtlX+EjLpe7KnvO2L916hIHAX/zW9q?=
+ =?us-ascii?Q?wA=3D=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d970a74-8086-4b2c-8dc4-08de373a00fd
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB6648.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 15:45:39.8555
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +puNaOmqrlAzLh/EQ9/8LuOhLrmA3xOZ9j9x6RFMLH/dH+RboFpjRE7vq5vFXAFf0ILy2048bogvuEMQ8LmKaWLeSnpLYDEZ4fLfoCMSHqc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5530
 
-On Tue, 2025-12-09 at 10:27 -0500, Benjamin Coddington wrote:
-> On 8 Dec 2025, at 16:05, Trond Myklebust wrote:
->=20
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >=20
-> > Ben Coddington reports seeing a hang in the following stack trace:
->=20
-> Thanks!!=C2=A0 Question below:
->=20
-> > =C2=A0 0 [ffffd0b50e1774e0] __schedule at ffffffff9ca05415
-> > =C2=A0 1 [ffffd0b50e177548] schedule at ffffffff9ca05717
-> > =C2=A0 2 [ffffd0b50e177558] bit_wait at ffffffff9ca061e1
-> > =C2=A0 3 [ffffd0b50e177568] __wait_on_bit at ffffffff9ca05cfb
-> > =C2=A0 4 [ffffd0b50e1775c8] out_of_line_wait_on_bit at ffffffff9ca05ea5
-> > =C2=A0 5 [ffffd0b50e177618] pnfs_roc at ffffffffc154207b [nfsv4]
-> > =C2=A0 6 [ffffd0b50e1776b8] _nfs4_proc_delegreturn at ffffffffc1506586
-> > [nfsv4]
-> > =C2=A0 7 [ffffd0b50e177788] nfs4_proc_delegreturn at ffffffffc1507480
-> > [nfsv4]
-> > =C2=A0 8 [ffffd0b50e1777f8] nfs_do_return_delegation at ffffffffc1523e4=
-1
-> > [nfsv4]
-> > =C2=A0 9 [ffffd0b50e177838] nfs_inode_set_delegation at ffffffffc1524a7=
-5
-> > [nfsv4]
-> > =C2=A010 [ffffd0b50e177888] nfs4_process_delegation at ffffffffc14f41dd
-> > [nfsv4]
-> > =C2=A011 [ffffd0b50e1778a0] _nfs4_opendata_to_nfs4_state at
-> > ffffffffc1503edf [nfsv4]
-> > =C2=A012 [ffffd0b50e1778c0] _nfs4_open_and_get_state at ffffffffc1504e5=
-6
-> > [nfsv4]
-> > =C2=A013 [ffffd0b50e177978] _nfs4_do_open at ffffffffc15051b8 [nfsv4]
-> > =C2=A014 [ffffd0b50e1779f8] nfs4_do_open at ffffffffc150559c [nfsv4]
-> > =C2=A015 [ffffd0b50e177a80] nfs4_atomic_open at ffffffffc15057fb [nfsv4=
-]
-> > =C2=A016 [ffffd0b50e177ad0] nfs4_file_open at ffffffffc15219be [nfsv4]
-> > =C2=A017 [ffffd0b50e177b78] do_dentry_open at ffffffff9c09e6ea
-> > =C2=A018 [ffffd0b50e177ba8] vfs_open at ffffffff9c0a082e
-> > =C2=A019 [ffffd0b50e177bd0] dentry_open at ffffffff9c0a0935
-> >=20
-> > The issue is that the delegreturn is being asked to wait for a
-> > layout
-> > return that cannot complete because a state recovery was initiated.
-> > The
-> > state recovery cannot complete until the open() finishes processing
-> > the
-> > delegations it was given.
-> >=20
-> > The solution is to propagate the existing flags that indicate a
-> > non-blocking call to the function pnfs_roc(), so that it knows not
-> > to
-> > wait in this situation.
-> >=20
-> > Reported-by: Benjamin Coddington <bcodding@hammerspace.com>
-> > Fixes: 29ade5db1293 ("pNFS: Wait on outstanding layoutreturns to
-> > complete in pnfs_roc()")
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > ---
-> > =C2=A0fs/nfs/nfs4proc.c |=C2=A0 6 ++---
-> > =C2=A0fs/nfs/pnfs.c=C2=A0=C2=A0=C2=A0=C2=A0 | 58 ++++++++++++++++++++++=
-+++++++++++----------
-> > ----
-> > =C2=A0fs/nfs/pnfs.h=C2=A0=C2=A0=C2=A0=C2=A0 | 17 ++++++--------
-> > =C2=A03 files changed, 51 insertions(+), 30 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index ec1ce593dea2..51da62ba6559 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -3894,8 +3894,8 @@ int nfs4_do_close(struct nfs4_state *state,
-> > gfp_t gfp_mask, int wait)
-> > =C2=A0	calldata->res.seqid =3D calldata->arg.seqid;
-> > =C2=A0	calldata->res.server =3D server;
-> > =C2=A0	calldata->res.lr_ret =3D -NFS4ERR_NOMATCHING_LAYOUT;
-> > -	calldata->lr.roc =3D pnfs_roc(state->inode,
-> > -			&calldata->lr.arg, &calldata->lr.res,
-> > msg.rpc_cred);
-> > +	calldata->lr.roc =3D pnfs_roc(state->inode, &calldata-
-> > >lr.arg,
-> > +				=C2=A0=C2=A0=C2=A0 &calldata->lr.res,
-> > msg.rpc_cred, wait);
-> > =C2=A0	if (calldata->lr.roc) {
-> > =C2=A0		calldata->arg.lr_args =3D &calldata->lr.arg;
-> > =C2=A0		calldata->res.lr_res =3D &calldata->lr.res;
-> > @@ -7005,7 +7005,7 @@ static int _nfs4_proc_delegreturn(struct
-> > inode *inode, const struct cred *cred,
-> > =C2=A0	data->inode =3D nfs_igrab_and_active(inode);
-> > =C2=A0	if (data->inode || issync) {
-> > =C2=A0		data->lr.roc =3D pnfs_roc(inode, &data->lr.arg,
-> > &data->lr.res,
-> > -					cred);
-> > +					cred, issync);
-> > =C2=A0		if (data->lr.roc) {
-> > =C2=A0			data->args.lr_args =3D &data->lr.arg;
-> > =C2=A0			data->res.lr_res =3D &data->lr.res;
-> > diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> > index 7ce2e840217c..33bc6db0dc92 100644
-> > --- a/fs/nfs/pnfs.c
-> > +++ b/fs/nfs/pnfs.c
-> > @@ -1533,10 +1533,9 @@ static int
-> > pnfs_layout_return_on_reboot(struct pnfs_layout_hdr *lo)
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > PNFS_FL_LAYOUTRETURN_PRIVILEGED);
-> > =C2=A0}
-> >=20
-> > -bool pnfs_roc(struct inode *ino,
-> > -		struct nfs4_layoutreturn_args *args,
-> > -		struct nfs4_layoutreturn_res *res,
-> > -		const struct cred *cred)
-> > +bool pnfs_roc(struct inode *ino, struct nfs4_layoutreturn_args
-> > *args,
-> > +	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs4_layoutreturn_res *res, con=
-st struct cred
-> > *cred,
-> > +	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool sync)
-> > =C2=A0{
-> > =C2=A0	struct nfs_inode *nfsi =3D NFS_I(ino);
-> > =C2=A0	struct nfs_open_context *ctx;
-> > @@ -1547,7 +1546,7 @@ bool pnfs_roc(struct inode *ino,
-> > =C2=A0	nfs4_stateid stateid;
-> > =C2=A0	enum pnfs_iomode iomode =3D 0;
-> > =C2=A0	bool layoutreturn =3D false, roc =3D false;
-> > -	bool skip_read =3D false;
-> > +	bool skip_read;
-> >=20
-> > =C2=A0	if (!nfs_have_layout(ino))
-> > =C2=A0		return false;
-> > @@ -1560,20 +1559,14 @@ bool pnfs_roc(struct inode *ino,
-> > =C2=A0		lo =3D NULL;
-> > =C2=A0		goto out_noroc;
-> > =C2=A0	}
-> > -	pnfs_get_layout_hdr(lo);
-> > -	if (test_bit(NFS_LAYOUT_RETURN_LOCK, &lo->plh_flags)) {
-> > -		spin_unlock(&ino->i_lock);
-> > -		rcu_read_unlock();
-> > -		wait_on_bit(&lo->plh_flags, NFS_LAYOUT_RETURN,
-> > -				TASK_UNINTERRUPTIBLE);
-> > -		pnfs_put_layout_hdr(lo);
-> > -		goto retry;
-> > -	}
-> >=20
-> > =C2=A0	/* no roc if we hold a delegation */
-> > +	skip_read =3D false;
-> > =C2=A0	if (nfs4_check_delegation(ino, FMODE_READ)) {
-> > -		if (nfs4_check_delegation(ino, FMODE_WRITE))
-> > +		if (nfs4_check_delegation(ino, FMODE_WRITE)) {
-> > +			lo =3D NULL;
-> > =C2=A0			goto out_noroc;
-> > +		}
-> > =C2=A0		skip_read =3D true;
-> > =C2=A0	}
-> >=20
-> > @@ -1582,12 +1575,43 @@ bool pnfs_roc(struct inode *ino,
-> > =C2=A0		if (state =3D=3D NULL)
-> > =C2=A0			continue;
-> > =C2=A0		/* Don't return layout if there is open file state
-> > */
-> > -		if (state->state & FMODE_WRITE)
-> > +		if (state->state & FMODE_WRITE) {
-> > +			lo =3D NULL;
-> > =C2=A0			goto out_noroc;
-> > +		}
-> > =C2=A0		if (state->state & FMODE_READ)
-> > =C2=A0			skip_read =3D true;
-> > =C2=A0	}
-> >=20
-> > +	if (skip_read) {
-> > +		bool writes =3D false;
-> > +
-> > +		list_for_each_entry(lseg, &lo->plh_segs, pls_list)
-> > {
-> > +			if (lseg->pls_range.iomode !=3D IOMODE_READ)
-> > {
->=20
->=20
-> ^^ This seems clever, can iomode be zero here, perhaps if another
-> layout
-> type doesn't know the rules for it?
+On 9 Dec 2025, at 10:39, Trond Myklebust wrote:
+> On Tue, 2025-12-09 at 10:27 -0500, Benjamin Coddington wrote:
+>> On 8 Dec 2025, at 16:05, Trond Myklebust wrote:
+>>> @@ -1582,12 +1575,43 @@ bool pnfs_roc(struct inode *ino,
 
-The only valid iomodes for a layout segment are IOMODE_READ and
-IOMODE_RW. If the server doesn't obey that rule, then it is violating
-the NFSv4.x protocol, and should be taken out behind the shed.
+..
+>>> +	if (skip_read) {
+>>> +		bool writes = false;
+>>> +
+>>> +		list_for_each_entry(lseg, &lo->plh_segs, pls_list)
+>>> {
+>>> +			if (lseg->pls_range.iomode != IOMODE_READ)
+>>> {
+>>
+>>
+>> ^^ This seems clever, can iomode be zero here, perhaps if another layout
+>> type doesn't know the rules for it?
+>
+> The only valid iomodes for a layout segment are IOMODE_READ and
+> IOMODE_RW. If the server doesn't obey that rule, then it is violating
+> the NFSv4.x protocol, and should be taken out behind the shed.
 
->=20
-> Otherwise, looks good - thanks for the rescue!=C2=A0=C2=A0 It would have =
-taken
-> me
-> a month to get this far.
->=20
-> Reviewed-by: Benjamin Coddington <bcodding@hammerspace.com>
->=20
-> I've been musing about NFS growing something like is_sync() scoped
-> thing
-> that the kernel uses in other places - then we could modify our
-> wait_on_bit() interfaces to complain about it.
-> </half-baked thought>
->=20
-> Ben
+Ah, got it - yes I see _ANY is only for LAYOUTRETURN and CB_LAYOUTRECALL.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+There were some 'pnfs_iomode' vars in the kernel getting set to 0 for some
+special cases, but I don't see that happening for any lsegs.  I just
+wondered if another layout driver might trip over this someday.
+
+Ben
 
