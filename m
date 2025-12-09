@@ -1,186 +1,203 @@
-Return-Path: <linux-nfs+bounces-17012-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17013-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEBF1CB071C
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Dec 2025 16:46:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF10FCB1396
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Dec 2025 22:42:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9338A3009AB4
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Dec 2025 15:46:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4E6233007E71
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Dec 2025 21:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263522641E3;
-	Tue,  9 Dec 2025 15:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67766306496;
+	Tue,  9 Dec 2025 21:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="CgrXCj7o"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="M6tMCG1O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q6PfeEt7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022128.outbound.protection.outlook.com [52.101.43.128])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F211A9FB4
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Dec 2025 15:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.128
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765295170; cv=fail; b=C7FjSMZUOl7d7f4R17PwOp9cB65vwAPUSQexZnAg/GNL5SU3u2P9HjZVjkY6o75WAkMpfjXJapHd6MfrPqpmdgA9IXiQWGus6TuP0ZkMpfalY5rlXA5whuJ20PoTz6Tuur33Rx/0JBpKGbla1YXpJHJuTVQQGPohHp1rqyeVaGE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765295170; c=relaxed/simple;
-	bh=a51EbzyOGF/HX9/7uBTQ+274ax664xuZn8QPdf3PwSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fiK9MNeEYJquUFizlIPo/zDYDOd/wnchLrNQnEarzcnlSDjFOvfCgxKD02XJCx8sKwhQ0JW180K86K3G4wtVosqMraupsejAMTm4VtTfrjdjlZl2YczUA3RN9tDdIaVMBdRdV/Jp0YsIA6jBHAHuDxifLnSGcMCapUW7tGfu6fc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=CgrXCj7o; arc=fail smtp.client-ip=52.101.43.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gxWAQIf+VEb9ktFamHS9wwsJhDafM/74NDaLJBeoBD7ex/8gdWR6VJeQS4zFGMPUfv9But43eaATorqzFw+dF/i/T9o+DyHjUthLcb3b6r1mgH6As7ahHEtq0u9T8XTBAqgB3pxqo/H7kbC4zKKt8J2bxBW0BgDvW/DKNgvJi0PTgumRYqarpAKiH2zWezNgaKMH2MMidHdjvkya5lzbHY6ChAKlJgTjlLp66QN4eUIsFBGfIIVj9vS8ku6FKPX2BqGzly+lAwf4Pw/yhMWCnN47w6k5xkSxPFUWSVRv+2VaNDJ5MHaWcs9mM7Rnn8Hzfp7nehLjo4+T445b3bD7aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s7lZ4HIG4BgKyJy/p24ZV/WfwHod9eGFEgvHcCyiZ0s=;
- b=cscCxz834Yok2dk/j8Xbbh5EYvIJAZTHRLFrFDoF3bGtjrzXwI+0M85IQLgwfbYXJST5fcKzMYflLwaPBiQPNdpg/4l5aLhriJko9RndJ6STZNSG4LEQER9o5vuhHQ/qMOGjtsX1MpUw8vcynEH70WmURIYghLczGOpdRnkEg3lvoqA4q7NeqqGQURVe1TICD/wKwOJwYloQrtI75vVPDcyVnuSaho/IIi50/jWG/FGjd8Q7UX0PADtZf4w4N2cEY7b7U6eY3F+sXmrEKB+mCb03bk8M/l6LHbkWLityZOOdIFKuDon0L3d1Z+TaVwGn4vVTD7RXd4fL+7cmiWlVjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s7lZ4HIG4BgKyJy/p24ZV/WfwHod9eGFEgvHcCyiZ0s=;
- b=CgrXCj7oXDcOD3B8TIlKEHtbeqWsYkbdJc4qvM0gvOvBObz4trmHQ5Le6+eo+tBF89vj12RYxAM+va4Fdn3yIMhjDHVhlSj3zxvotpVD190OTD2YLZ4TFQ+kb018t+5tt1rUzwTp5V3hKmEaooV8MEJbwVLsp83QoDTWpTwCpHY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-Received: from SA1PR13MB6648.namprd13.prod.outlook.com (2603:10b6:806:3e7::10)
- by MW4PR13MB5530.namprd13.prod.outlook.com (2603:10b6:303:182::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.13; Tue, 9 Dec
- 2025 15:45:40 +0000
-Received: from SA1PR13MB6648.namprd13.prod.outlook.com
- ([fe80::c48a:c42a:aa18:2ef4]) by SA1PR13MB6648.namprd13.prod.outlook.com
- ([fe80::c48a:c42a:aa18:2ef4%3]) with mapi id 15.20.9412.005; Tue, 9 Dec 2025
- 15:45:39 +0000
-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] pNFS: Fix a deadlock when returning a delegation during
- open()
-Date: Tue, 09 Dec 2025 10:45:37 -0500
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <B737E0A1-A462-4129-879E-417290E96A27@hammerspace.com>
-In-Reply-To: <0988361336efb7d2b185069a870b1cc7bf356ccc.camel@kernel.org>
-References: <24ff118a0bc9c9a845df3987e532365e9d6ecf2a.1765224921.git.trond.myklebust@hammerspace.com>
- <3090400A-1FB8-4DE3-AB71-08D2D7451ADD@hammerspace.com>
- <0988361336efb7d2b185069a870b1cc7bf356ccc.camel@kernel.org>
-Content-Type: text/plain
-X-ClientProxiedBy: PH0PR07CA0069.namprd07.prod.outlook.com
- (2603:10b6:510:f::14) To SA1PR13MB6648.namprd13.prod.outlook.com
- (2603:10b6:806:3e7::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C40275105
+	for <linux-nfs@vger.kernel.org>; Tue,  9 Dec 2025 21:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765316555; cv=none; b=GzeyPOkDlhn18Z2uZrMuuUIK0d/DiydloeHn8bNJYgLcaAkdF3Rww77lamk2iGSmVj1Afhafqorw8bwab4N6dlN1rPk9qjFts5vN7GQugjb13lEvgq/1mQu1z9XS8b/6TjlwoZkZr7gSciWnrEkKpaAUM22EiRU/v9zM/8Cy150=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765316555; c=relaxed/simple;
+	bh=0uz6BDCaRcaUULFk1AMtWGC1BiUs80BrkEHdNTXKecU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=PyDi/SGFbUUsvmabECIGRNJxcV3iNp1ylDpUoDvf8UqQJXafV2zxbjMEtftUW515D7HnT9shiwxtnwp+IsMf+MvZ6O4oln7NKf3utdGJ0rn0g6755LW4zqbkWVkci63ytPd0ht86PmKE0anSzyiC79THnpmahc8qlp6tDY5vyVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=M6tMCG1O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q6PfeEt7; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id E2B051D000BF;
+	Tue,  9 Dec 2025 16:42:31 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Tue, 09 Dec 2025 16:42:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1765316551; x=1765402951; bh=C+0z/TEqZvCU2yU01ztLf5m4qPcbEi02Qwn
+	naAyoBAw=; b=M6tMCG1Ohj/p87RlU0Z2ltFV4hzM0cK0WXMKA3uiFnkS5Z446+1
+	VgI2ldndpT/5xtLpEv/c1whO1YU7PxUIBTrMzEQNKZOs0HXpJjcO1uWGgllpk6sQ
+	w/fBliGdZ11ICtkLYykXB+lLulHu6mjJfH0oAzzoSgV04zWp4p0GkRNOaAOH6LyR
+	zo77h98SkL6WOULhaXrOkurkSj8Pyx88fzfbe6HIonG3Oa3Hd3u9sFmi75hg2xw6
+	4TCJIv4U8WpOy9PFM3zGiMLMI1eVhmHsSJilf6haNNHBqUEfy+LU5mag81jf+v3B
+	0cayfXkHYwSlt0eByd8Dr3DwiMONAIvLD7w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765316551; x=
+	1765402951; bh=C+0z/TEqZvCU2yU01ztLf5m4qPcbEi02QwnnaAyoBAw=; b=Q
+	6PfeEt7TcdPS68WYTvK+ZN8+vJG7m7ZbVqcV8xlrOqfgw7EpaAJlu8PKrqgAN2w4
+	QPDadxHmQbYmC9M2kPYknV40un5KRNvAX1LA/I2cA+I+aKMz7F2ZTlw0elXSPOpP
+	Hmv/Jokl37hRtk1qHRR5wjWnUZJBQEDU9ABABLVolC3O+SIqNEIq3X2VKCFR2at4
+	R4AkWYI+WUi9JZU48MIVLAv8l7O451Cuj1UlIp26cyOQ1RrF1j7tQVzrnNwE4luj
+	TFPW2tNGHM2FWVUEtVNb0oViwBKSikn4pCcNngUMU1C5AaC10dphTfO4FqIasERJ
+	stgqHKUI4uNkMqCBYK0vg==
+X-ME-Sender: <xms:x5c4aVqdmIWfMyMQBpg2k3HxNYYv9Y0cIAXeA7Jxx9el3nQ2RI7Rgg>
+    <xme:x5c4aWvWuqgzLHKySEG2J82mWYPl74cWjuIueYinpYThpTaKNTz0fkvXiRwfbgToS
+    ql2CAUHwUCG-spr3oG_wgP8YMj2rpVvr8kRLT86zUjPonMdnf4>
+X-ME-Received: <xmr:x5c4aYYrYrwltn9tvC-jd8rDO6E-rVPgJMog6YdQH2y1DgmzSpeC9SEIdwYonYGPiQvONJYcFk_uo4Oy9W3ujkAf7TaYLeJB4GvythbclvN9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvtdeijecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhi
+    vghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvg
+    drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvg
+    hlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhghhihrheshhgrmhhmvghrshhp
+    rggtvgdrtghomh
+X-ME-Proxy: <xmx:x5c4adYJWDGvd7rLJzCHo7MzZH6esD-XcdGR-Noi7NNsq3jitmkyGA>
+    <xmx:x5c4aZkC2ejdaCC95mzljm_scZ2tcMtjooGOB7hQKYSWEkkqncLRuA>
+    <xmx:x5c4aQ2PfxB5QfJ7LlTOewG1U5cUQE2Hh2GslQ-x1caMMDGIJJs5lw>
+    <xmx:x5c4aR3nlEmPeTugB0yCPg_oyjzI9AJZ89ESgcea-P20qqQKkPOJ9g>
+    <xmx:x5c4aZVcS8z_VxdOgRZDepwFdNzVuNJhOnPvPI2diStRD7GxeiTxXCfV>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 9 Dec 2025 16:42:28 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|MW4PR13MB5530:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d970a74-8086-4b2c-8dc4-08de373a00fd
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xOINSehveCzQ/iEj5R6CCpmX1N6mDrQz93D3MnbROpmXHBamQ/+ZTJHRASYs?=
- =?us-ascii?Q?Q9fyhbdaDsxpv8tWqezcWq8UxMoRsvzSg0J3PIwXUzkw51GXmAsd1ztXTGKr?=
- =?us-ascii?Q?+DGsTn3bFHQ04sI62MkxY7N/MBOmqxx/+T0Mbp7CYaFywkYaQ5OyG28jHeTB?=
- =?us-ascii?Q?aKLSlpzaUqJyXKy/VdsN+wkJNsoMZ6FfHHftRqhJkuRChkJYY/kkQ1tjffsJ?=
- =?us-ascii?Q?FqZ0NcXpaSZE44cK6ZESNIKFMhbvubjkDAnQaBeC8Snso8JrukJ3UT4gYIUG?=
- =?us-ascii?Q?YILFZIa8RKZK8Ihe+KN4L4s593TxwLHTpgCUZWBuInsyotZJsoAv2R6pYPa5?=
- =?us-ascii?Q?QrJqOQIXWqqydMvVX8GQKNe4X3d6IlMC7Ylh/hlEDBNPpRt2/ycHIKu8auyN?=
- =?us-ascii?Q?0XCzozXY8ryuOXYrmjw//q4Knjkox3xz9ZCIV2ov0ZY0AdjJd6VXi5ooXwZX?=
- =?us-ascii?Q?nDNyxUKKXpjExjUWc6jhoXj+/Sy6PwHXhJCOMWE0K/4j2Vvt8AKzBJ4TCrD0?=
- =?us-ascii?Q?btqyCSK+bd0vTRXwvrFyVKu2tMxh95PLUVHB7OG6XDlwqjQoHLsxJd898+Id?=
- =?us-ascii?Q?KEXZIL/PVXyAMLtjbHW23Saamf2x8ySkYKfLHwwh2fkOmYMBtET7MQ5t68tm?=
- =?us-ascii?Q?6pcQmvEjREMPxpPaIa0K56kYpWvj/TVZzsO97Ci62rTA/hxAV4xXcNVKaPpz?=
- =?us-ascii?Q?qEzgXR7Btx5qLXEL+2hL8PBgBXfe5M1CYRrTfuXeS737A/Y61Gjx/jPfJgnx?=
- =?us-ascii?Q?m9my8/bVChvelITNgO9yWoWywAkk5WqPTvF/zlgxPyf2oIs6oWk4NcMbhSnl?=
- =?us-ascii?Q?+YIElSNysTVshsAgwdRbJFuTdlmEbPa7TAqMbmBCIYXCq/J3Z0ouQYexB8eE?=
- =?us-ascii?Q?8ziDGwaRYjKpyRmh1HkIlGgMg0qMVfPtRYJ2UWFbbs0h0t/pgTp5ifdbTrpZ?=
- =?us-ascii?Q?SPJyiqF9r8E1Eh36U2ymsEhjiYnpurHEtnscNgbRO8NFGmBlststqWyMiQK2?=
- =?us-ascii?Q?+77DE0gWKl+4jRoXsjDTCTF3ZcayFO/HOlNcmQ/fE0Sql+LjcQY911fbqFVp?=
- =?us-ascii?Q?97bHxEVkH5BYI1i3kgxxtz/8cgskIyRBvFYrYZ+NGcJV7WYrxxeG6/F3aBOk?=
- =?us-ascii?Q?pRoVrcOmPv2KaXYxslWUl2iC2aL5bugYactUMuY0J30nHXT2hmcWLg7hlkNF?=
- =?us-ascii?Q?gqaXWG2Lwf7LSh7vp1nV0b1P+iFIdf5szKJoqtIXJmYsgEsIB/1AM3PLf5Pi?=
- =?us-ascii?Q?TwsJVmM+MGTA51HPqFJ9lyFmKN85FATU/cVXo4NLaY/uIgUeLKE72PeYjuew?=
- =?us-ascii?Q?+fhAateUJ9Bk0DLRHk1zTCgc9FgzwXcu3vA69OyXfbeNUqR3G61tMDUrKowi?=
- =?us-ascii?Q?1qpsQZBRFTj4LlnnZwrSdIFH3pL/IlLpjrFWOSIqx4851creDptXKXw2Gqeo?=
- =?us-ascii?Q?HtZ4/weFn9vGYFiRIbVmMswY6gYu/ROx?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?maDhxnwW5ko0qLDNC/oKDl7Uu/8zYZNBM9Vld3ipw+WsbB8T5MvI/y7fWNeW?=
- =?us-ascii?Q?lo/zf6TRR60+yh1qyZIdKVBmNP+J76z1SS8C9HLyUyXjAJ8+oi/G4XzTBgwv?=
- =?us-ascii?Q?xxLaFHf+Mx8pfIr8NCH83YNrNiLVV3Y88u4AnNu65m8Dyfiqf7KUgv27zwgK?=
- =?us-ascii?Q?guUDaAp0vOCEbeTAwTxmXG+B6dfOETU5qU2KT4sSdeTTiRZ5PVrx+G44M+mb?=
- =?us-ascii?Q?WqmWXXsWlqHG+ppkTsnkDhv8/mUxwZ8whfgRGenGJnHfaGtIZdfMcxi3t9dR?=
- =?us-ascii?Q?2Ufyx+Zz5kj4Xhi4Trr8/11HztSXEPsF4pe13hf02OSYzWb3CLw8zS6IxvMg?=
- =?us-ascii?Q?+bO6nxv+Cpch25fIeEb29UjJc4od0VDJ8jmB6YUBvryExm4V5TzWZcL+LNN7?=
- =?us-ascii?Q?IvYBjmEwMzin7ZY1t/DxT7tEcEm6ecHPmHSRMzMEQwSjRu0GkSh/hnrx53l3?=
- =?us-ascii?Q?2fJ4y+wP8Vgz2qgT0LBIvkj+UoOhCHKgB+YS0qxp58s0ofdSEtgdY/DuIX4D?=
- =?us-ascii?Q?lKTu9USHLqqEamwS3wopRIxUP4ZXZG6XCmrjOBKJM1GH8J/VNT6bPAt8Bn4k?=
- =?us-ascii?Q?zBRlwsiKNO9ALCjNMEL4aaIbU53/PWHYpA/uMTVi+uWmDPj4XS88P2nOngSJ?=
- =?us-ascii?Q?rVVyQIXqEWXw6rY+7PNRsEhwBFOPPrMAAm8zi8VNUOLRg5qBkvctfN06d5ij?=
- =?us-ascii?Q?Q6lEW5bAJ7gAcnsiULr1mIFnSFbJT8IIAfJ9FC9JDomwLIi/Rm62X4Ucj6l5?=
- =?us-ascii?Q?KtMDfaOuj/B+st4upHcrQlJfk2oFJCLJgPYQ0+IPOQlNalJlLvdoBr+jtYGy?=
- =?us-ascii?Q?xmwFQ27UK++1sQ/oPM1zgbG4dJQysHbWGoqsay5QB5uQo/ADad3OIMurgSzJ?=
- =?us-ascii?Q?L7LYuD04EaWmbXDeLHwUl0SB68S+G32/AJM8Qsz30ZjTBRXckoTovb29YXCb?=
- =?us-ascii?Q?pyTgvVkxnOtKJuyBDAukxROqdZkhBQxSyJIMjT2B7ofTrvz8oXhrzlQTgMin?=
- =?us-ascii?Q?KjH5m3Zl9DkF5d+wM82nngFoebmjRk1HcrvkKDOo3/UVjqIziSaEeT3JLQ6O?=
- =?us-ascii?Q?PCevTbnGCVPUB4PbBTgjwLYlNBRAO9d5WGf/LUBaLThWL/r53iI09jvfyz4c?=
- =?us-ascii?Q?6rTKiNhutIs43uta4ANhozaIx3OYE0tPTzgjnU7yanXBejaQ3rbzLktbBd69?=
- =?us-ascii?Q?dm7Ine+Km1jvijsUtTmyJbOShnkf358c9fLgJDO62IDKDEoAMuNHUANYNUEI?=
- =?us-ascii?Q?NjUx0wKQtkkuXQaRiGLhnX8WtC9mPtqX7R8KKJbkHldyXN6NJHOv2YqbndoN?=
- =?us-ascii?Q?UtDuDpmMmhN81h4xUbk4QD4v3ciBdhgLbbH/lx97kBHrxXm6JRhUpEPJWNUS?=
- =?us-ascii?Q?4xb24k2zLc/Za+jusa60Lfc/RTt1r2eWn/CjAlEt/P5Nt7piBtlW+WoUramU?=
- =?us-ascii?Q?KqD1vcBqG1TN3+GWDgJHLxqG1W6KQDvevnQ8rVwimaz5EBw/c7I6oW9Rfdz7?=
- =?us-ascii?Q?bQC2Cqi3mS0WxyBLwB8K9zo/nnAy0nUllQdXpbvpiFRVvT0LXdBz/LlQbdZA?=
- =?us-ascii?Q?8Fh5gadgHD5TkKzBBJ4W/GcPw2ZqSEUtlX+EjLpe7KnvO2L916hIHAX/zW9q?=
- =?us-ascii?Q?wA=3D=3D?=
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d970a74-8086-4b2c-8dc4-08de373a00fd
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB6648.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 15:45:39.8555
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +puNaOmqrlAzLh/EQ9/8LuOhLrmA3xOZ9j9x6RFMLH/dH+RboFpjRE7vq5vFXAFf0ILy2048bogvuEMQ8LmKaWLeSnpLYDEZ4fLfoCMSHqc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5530
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Thomas Haynes" <loghyr@hammerspace.com>
+Subject: Re: [PATCH v1] NFSD: Use struct knfsd_fh in struct pnfs_ff_layout
+In-reply-to: <88a43961-144f-4e11-ab35-2957f00067e8@app.fastmail.com>
+References: <20251208194428.174229-1-cel@kernel.org>,
+ <176522973244.16766.13514511634601889702@noble.neil.brown.name>,
+ <ce9714c8-1558-4201-b3a5-bf73567282be@app.fastmail.com>,
+ <176523482003.16766.5991961928943612885@noble.neil.brown.name>,
+ <1510f19f-6bfa-47c4-a7fb-0f6fa8f723a1@app.fastmail.com>,
+ <88a43961-144f-4e11-ab35-2957f00067e8@app.fastmail.com>
+Date: Wed, 10 Dec 2025 08:42:25 +1100
+Message-id: <176531654526.16766.8587255373456590272@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On 9 Dec 2025, at 10:39, Trond Myklebust wrote:
-> On Tue, 2025-12-09 at 10:27 -0500, Benjamin Coddington wrote:
->> On 8 Dec 2025, at 16:05, Trond Myklebust wrote:
->>> @@ -1582,12 +1575,43 @@ bool pnfs_roc(struct inode *ino,
+On Tue, 09 Dec 2025, Chuck Lever wrote:
+>=20
+> On Mon, Dec 8, 2025, at 6:13 PM, Chuck Lever wrote:
+> > On Mon, Dec 8, 2025, at 6:00 PM, NeilBrown wrote:
+> >> On Tue, 09 Dec 2025, Chuck Lever wrote:
+> >>> On Mon, Dec 8, 2025, at 4:35 PM, NeilBrown wrote:
+> >>> > Now that "struct knfsd_fh" doesn't encode info about the fh format th=
+at
+> >>> > knfsd uses, would it instead make sense to discard it and use "struct
+> >>> > nfs_fh" throughout NFSD?
+> >>>=20
+> >>> Based on the effort I've already put into dealing with just ssc, I
+> >>> think that would be a monumental change, and I'm not convinced it's
+> >>> worth the cost.
+> >>>=20
+> >>> What's more, it would move in the wrong direction. Stapling the client
+> >>> and server implementations together by using the same headers makes
+> >>> the code more difficult to modify without touching both trees in a
+> >>> rather invasive way.
+>=20
+> OK. If we want to go the other way (replace knfsd_fh with nfs_fh
+> throughout NFSD) then I'd rather keep only the struct and the
+> CRC hash function in a single header to avoid pulling in a lot
+> of junk that only a few consumers need.
 
-..
->>> +	if (skip_read) {
->>> +		bool writes = false;
->>> +
->>> +		list_for_each_entry(lseg, &lo->plh_segs, pls_list)
->>> {
->>> +			if (lseg->pls_range.iomode != IOMODE_READ)
->>> {
->>
->>
->> ^^ This seems clever, can iomode be zero here, perhaps if another layout
->> type doesn't know the rules for it?
->
-> The only valid iomodes for a layout segment are IOMODE_READ and
-> IOMODE_RW. If the server doesn't obey that rule, then it is violating
-> the NFSv4.x protocol, and should be taken out behind the shed.
+This thing that I keep thinking of the is "enum nfs_stat".  I don't
+think we want two copies of that in the kernel.  It is currently in
+uapi/nfs.h and so in nfs.h
 
-Ah, got it - yes I see _ANY is only for LAYOUTRETURN and CB_LAYOUTRECALL.
+>=20
+> However there is still the problem of how large to make the
+> structure's data field. Right now it's NFS4_FHSIZE, but that means
+> you have to somehow include the header that defines NFS4_FHSIZE,
+> and that pulls in a lot more stuff than we really need or want.
+> It's difficult to separate the file handle structure from the rest
+> of the protocol.
 
-There were some 'pnfs_iomode' vars in the kernel getting set to 0 for some
-special cases, but I don't see that happening for any lsegs.  I just
-wondered if another layout driver might trip over this someday.
+"128".
+I don't think this *needs* to be NFS4_FHSIZE (though it will have the
+same value).
 
-Ben
+#define NFS_MAXFHSIZE		128
+
+works for me.
+
+>=20
+> NFS3_FHSIZE, for instance, would be defined in both linux/nfs3.h
+> and include/linux/sunrpc/xdrgen/nfs3.h .
+
+Ok, I think this might be getting close to a central issue.
+I think you want the .x file to become the source for all the various
+constants and types with the generated .h files included where needed
+and, significantly, any existing .h files which define the same name NOT
+included in those places.
+
+That sounds like a good long-term goal, but it isn't clear to me that we
+want to jump straight there.
+
+In the first instance, I think the main value of generating code from
+xdr is the code - not the declarations.
+
+What barriers are there to NOT using the .h files generated by xdrgen?
+
+ linux/nfs3.h includes
+> uapi/linux/nfs3.h. And fs/nfsd/nfsd.h includes linux/nfs.h,
+> linux/nfs3.h, and linux/nfs4.h, so there's no escape from the
+> uapi headers. (I'm not sure why NFS uapi headers have the
+> protocol bits in them; shouldn't they have only the admin UI
+> APIs?).
+>=20
+> I don't think any of this would be terribly obvious to reviewers
+> even if the series had more patches. You basically have to go
+> spelunking to discover it.
+>=20
+> A different way to slice this would be to make the subsystem-
+> agnostic NFS file handle merely a size and pointer to a buffer
+> (like struct xdr_netobj). Then both the client and server
+> implementations can use either static arrays or dynamically
+> allocated buffers, and they can get their maximum size
+> constants from wherever they like.
+
+I don't think the extra indirection of using the xdr_netobj approach for
+filehandle is a good idea.
+
+Thanks,
+NeilBrown
+
 
