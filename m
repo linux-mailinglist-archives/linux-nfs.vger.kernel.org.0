@@ -1,144 +1,151 @@
-Return-Path: <linux-nfs+bounces-17021-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17022-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41FE3CB18FB
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Dec 2025 02:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 07601CB3153
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Dec 2025 15:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EC3E0306BE63
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Dec 2025 01:01:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71C0E314D24D
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Dec 2025 13:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29572249E5;
-	Wed, 10 Dec 2025 01:01:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800B5325721;
+	Wed, 10 Dec 2025 13:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="x9Y7yBio";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U1W/cIGk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdoqgGvw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD83820A5EA
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Dec 2025 01:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A76031B111
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Dec 2025 13:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765328488; cv=none; b=mpiTRY6g8atbpYgTlp5v12GsULQux5AYnAcWeD07NYes+8vG7diSp9hNfJx+OToSZNc0gsMsPGrzbV1E7z6SgradtRerBF+8T8iqm6u4OChVvRVhHk2ggTSIzJ6rIfgSpPcWPK41vbVgPfUT2+4Pz62rvBJegNNVOmrvBtz6rNo=
+	t=1765375015; cv=none; b=BNXsQEvrNaXshTd8W4OgJrY0Fr+dfde7SyBZY3zXLpahYm1LTRHNf24MTb5EOPShIgF7k5t2SK/lRtHdIbWO4MQmZia1SSHTNIdBAfEJE0MkQki65qWzT6kQ1XZlqbw9nm5guWQEmHubxJCG/Y/DSvyzILDhSZL32JEHwPmu12s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765328488; c=relaxed/simple;
-	bh=yE2ti7rEBK2BGag5J41fl/i+35FtFHjK6OErAYwq+ig=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=VJiqEZ6gECSibwClq43PCnqa9MAcDVWgcBYvJYOwGD+EdOgkW7a+Wx+mfkPxdm+kvtTxbQZvNQwZuvwkBeKhrsx0EeWziAcF6sZBNg1aLp9EJWxkLbTIgbGFQVuO0Bhiz10mRfAH+tjiez8UBIIwjbuTOf2g1DlfKelg2yliTgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=x9Y7yBio; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=U1W/cIGk; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 706D57A011B;
-	Tue,  9 Dec 2025 20:01:24 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 09 Dec 2025 20:01:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1765328484; x=1765414884; bh=MrdHKyLERKRcyPfFlQtdLewCEtlwtHHHdyI
-	7k/XYxbQ=; b=x9Y7yBio9rWhJJLkdKharoe0VhyKGmaHYCmpyD1JmkPM88HbqMk
-	Ujxiuw5j9LPcyf270s1ZU2H2br2hWuMkJSMDaoHj7oOPQFiNqusWtJVQfXzIVexj
-	/W4vOP09KlLdiruNxYEFgXanib0hD1HDHh+WZh8z5SUp72MXwhkZjDUMl4WTBadv
-	7pZLWO+XYk56mv6ZWs+pGiOctLH0iScrIaW+2ANiK/dU5WFYxJQ4dtiVNb9An2Mr
-	vSKWsG+19B/lR2HRylaKu0QWb98kyh8ICFT4/cEKPwPP3Ium1RxkROsdCPNSoacE
-	sSgKizdhoXptaZgmS72vZsRe2CKjI5rMrMg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765328484; x=
-	1765414884; bh=MrdHKyLERKRcyPfFlQtdLewCEtlwtHHHdyI7k/XYxbQ=; b=U
-	1W/cIGkJLBZ6tyRVpCU+ViHAw+8Wm02mNvHxTYYgFxgFyXqrkpkyU67K6I7VFihR
-	nXZR+XiAtVbmPAXInCTbt8mxlJeQD9h4wOZB2PpQMZZAIBbZIjZKNqZzkSZ11HrF
-	+EZcyK1POtCzbcWo4/wg+6WiECF0TsubW2wtxakGRM3ZHq8xYHwkAfU6kLDEK9NS
-	HBITvobaLTn4wYf56aJNi3KVczyyOHWj4b0/Khb44bovHzu6U3AC4yXyIpE3G9iR
-	ecGk6E5ny11Ip7eV9ryHprydkDXyxCLVTjyiTZp4aTZ/f3XsXkCIjoHz04Il5V/U
-	K4yDjd+TuTm50MAwPYmzg==
-X-ME-Sender: <xms:ZMY4ae19IRK9MLmhBlkFqM5vXZ7FJhz_TyVMvkNm16wfiKeLsZzHeg>
-    <xme:ZMY4aTWQr2r1IvYlwjl4GY2wSlo-ZnnhXzvh6KROro5bzFznXPZ6n6h43mj2yT5zQ
-    Ew-LwdYXNLTAUNEKxoILg2rbaL2k70GQGsZV2tukchA5k5ARYU>
-X-ME-Received: <xmr:ZMY4aZLgb_rCz7n-LNgm0o2l45ZnHEvMhjatmtD7__fO9ZllkdzW_n0EFbOOb1OoKceoR2_5P916iRnhIZQFqWgESnUEPTs6kdOm9sAdXFIe>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvuddtjecutefuodetggdotefrod
+	s=arc-20240116; t=1765375015; c=relaxed/simple;
+	bh=ou9T/NoEP9eDmLZQVCdbq0JkKzCU0vxJBsaaqvCiVss=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=P8Rnxk/6JZz25asDEA/zit6Ivl1taXjN3I32J3kO+Yf6MdKEW+KiUKYwJJicumyEUSEHiuYc9vuW6pYTGxBuZV8e1pgbN58wgaMG2KlLl6JxGXqF8zHgnK2KjcazaWEnic2KVojmISB4L5bIvcFrwYXwnnxtasqWA5xqhW3fXcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdoqgGvw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59458C4CEF1;
+	Wed, 10 Dec 2025 13:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765375014;
+	bh=ou9T/NoEP9eDmLZQVCdbq0JkKzCU0vxJBsaaqvCiVss=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=qdoqgGvwpqw4BO0frns1J3iowajzAoaH6jShe42Owcz+Qit7mGapoPUMFw4mPEpBG
+	 VSEzhg58J6kep/63xqqToMCA5jlWWLSkPunNApf0mdndqpQf/hOgo0oMmz85sNyNWV
+	 wJu2l93aPQM8z7Vuzx3UmA2TZK3PeBU64xidrUcbF/ikUKw6t6EeEiHvlhb1STvKYz
+	 H4lRrdCesQZTXoks+EwMjeIAVoUftMo+/QcFNxqRcxA8rFCAiwdKkmUWpWs9EHDLq0
+	 2Vr0Z0A4uXKJyeETjmwNizi4uu06W3MvuRF4jkPcCQ8M4UIYQldrGioPQcFzFjnsyQ
+	 OQrNYuoB4ihkQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 84799F40068;
+	Wed, 10 Dec 2025 08:56:53 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 10 Dec 2025 08:56:53 -0500
+X-ME-Sender: <xms:JXw5ad-hYmqq25kD8wSa1wxE_gjenRnSVs8Vinno_rW3WZwyndgX5w>
+    <xme:JXw5acgZkGDF1c-O1kJoajrA8tLTW-XRz3VWPyeXuRPQIS8dDgJ-Jj-0RCIW4t3Rg
+    S7qOhPAHzBJ7HdnPaec7S0tlVZqgLZ7FXpeAvamY7vGUjFhpJIz71s>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdeitdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthejredttddtjeenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    duteefhfduveehvdefueefvdffkeevkefgtdefgffgkeehjeeghfetiefhgffgleenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepohhkohhrnhhi
-    vghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvg
-    drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
-    rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvg
-    hlsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:ZMY4aV04rVaCIKIQVrp4mDwh0sP7_BPTnQWllHE5MHnY8FJpiXjN3g>
-    <xmx:ZMY4af5h1WsixIrbt__BTDlPibKcSij8Pmwvugl3Yarl9pQ1_OxUaw>
-    <xmx:ZMY4ae9MWozKVoyuf4vMU4og31VI4dtpojC49S0Cuhw4XgTdNtsU5A>
-    <xmx:ZMY4aWXXv4UsVOK-j_Mzw-RXE4hKdOJkEcPP9qrvM_HmyUqfRuHUVw>
-    <xmx:ZMY4aTBq6hiVjoMEVhw9juBsNSna-e5t7LGBlBhBcbcYjmi25N6BaaWk>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Dec 2025 20:01:21 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegurghvvghmsegurg
+    hvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdr
+    tghomhdprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephh
+    horhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeiihhgrohgthhgv
+    nhhguhgrnhhgsehkhihlihhnohhsrdgtnh
+X-ME-Proxy: <xmx:JXw5abcMc8nYlo9Iwdyh6Lu2TEq_2JlJXhcXKKTr2xKJZo7iFFkjCw>
+    <xmx:JXw5adidnjsIz4BqB3LJAHwrURP1gDMdUG_dF_Ohhiho7FXbbyi0og>
+    <xmx:JXw5aWLnbnHdFvoyKsKtZrbpn8QO1C7kLOUh02rxU25eolnx1-TEyw>
+    <xmx:JXw5aaFPt4O3snyMy37k-5biYWjJzR9_AREDy7ig4RqwNVaue519wA>
+    <xmx:JXw5ac0p5Y9jd-vxrfuXCw1oDjADJmfXF5M7jwbVA_xWCoWcKgTOM9VN>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 561F7780054; Wed, 10 Dec 2025 08:56:53 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Chuck Lever" <cel@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH 0/2] Address minor issues with status codes
-In-reply-to: <45662e818b57ef1e65156a76736a49a0609517fa.camel@kernel.org>
-References: <20251210002850.318350-1-cel@kernel.org>,
- <45662e818b57ef1e65156a76736a49a0609517fa.camel@kernel.org>
-Date: Wed, 10 Dec 2025 12:01:15 +1100
-Message-id: <176532847537.16766.17141101695422327144@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+X-ThreadId: AhUqZCzku-iw
+Date: Wed, 10 Dec 2025 08:56:33 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Chenguang Zhao" <zhaochenguang@kylinos.cn>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <9fd4fded-abee-45ab-8654-359f98846ba2@app.fastmail.com>
+In-Reply-To: <20251208085348.467419-1-zhaochenguang@kylinos.cn>
+References: <20251208085348.467419-1-zhaochenguang@kylinos.cn>
+Subject: Re: [PATCH linux-next v2] SUNRPC: Change list definition method
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Dec 2025, Jeff Layton wrote:
-> On Tue, 2025-12-09 at 19:28 -0500, Chuck Lever wrote:
-> > From: Chuck Lever <chuck.lever@oracle.com>
-> > 
-> > Here are two examples of minor bugs I found when comparing NFSD's
-> > human-generated status code definitions with equivalent xdrgen-
-> > generated headers.
-> > 
-> > Chuck Lever (2):
-> >   NFSD: Remove NFSERR_EAGAIN
-> >   NFS: NFSERR_INVAL is not defined by NFSv2
-> > 
-> >  fs/nfs_common/common.c   | 1 -
-> >  fs/nfsd/nfs4proc.c       | 2 +-
-> >  fs/nfsd/nfsd.h           | 1 -
-> >  fs/nfsd/nfsproc.c        | 2 +-
-> >  include/trace/misc/nfs.h | 2 --
-> >  include/uapi/linux/nfs.h | 3 +--
-> >  6 files changed, 3 insertions(+), 8 deletions(-)
+
+
+On Mon, Dec 8, 2025, at 3:53 AM, Chenguang Zhao wrote:
+> The LIST_HEAD macro can both define a linked list and initialize
+> it in one step. To simplify code, we replace the separate operations
+> of linked list definition and manual initialization with the LIST_HEAD
+> macro.
+>
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> ---
+> v2:
+>  - Modify the commit message according to Chuck's suggestion
 > 
-> These both look fine to me.
+>  net/sunrpc/backchannel_rqst.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+> index caa94cf57123..949022c5574c 100644
+> --- a/net/sunrpc/backchannel_rqst.c
+> +++ b/net/sunrpc/backchannel_rqst.c
+> @@ -131,7 +131,7 @@ EXPORT_SYMBOL_GPL(xprt_setup_backchannel);
+>  int xprt_setup_bc(struct rpc_xprt *xprt, unsigned int min_reqs)
+>  {
+>  	struct rpc_rqst *req;
+> -	struct list_head tmp_list;
+> +	LIST_HEAD(tmp_list);
+>  	int i;
 > 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> 
-Agreed.
+>  	dprintk("RPC:       setup backchannel transport\n");
+> @@ -147,7 +147,6 @@ int xprt_setup_bc(struct rpc_xprt *xprt, unsigned 
+> int min_reqs)
+>  	 * lock is held on the rpc_xprt struct.  It also makes cleanup
+>  	 * easier in case of memory allocation errors.
+>  	 */
+> -	INIT_LIST_HEAD(&tmp_list);
+>  	for (i = 0; i < min_reqs; i++) {
+>  		/* Pre-allocate one backchannel rpc_rqst */
+>  		req = xprt_alloc_bc_req(xprt);
+> -- 
+> 2.25.1
 
-Reviewed-by: NeilBrown <neil@brown.name>
+backchannel_rqst.c looks like a client-side file, so I defer to my
+colleagues who maintain the Linux NFS client.
 
-I cannot easily find a path that would lead to NFSv2 being presented
-with nfserr_symlink or nfserr_wrong_type, so that change probably isn't
-visible.  I might have missed something though.
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 
-Thanks,
-NeilBrown
- 
+
+-- 
+Chuck Lever
 
