@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-17032-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17033-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0C7FCB5DE8
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 13:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77BFACB5DEE
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 13:33:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CE832303753F
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 12:28:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 42041308F218
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 12:28:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38FB82E540D;
-	Thu, 11 Dec 2025 12:28:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166612F99A3;
+	Thu, 11 Dec 2025 12:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yme36KJ0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B37Uwdp3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA022E2665;
-	Thu, 11 Dec 2025 12:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CDA2DA765;
+	Thu, 11 Dec 2025 12:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765456084; cv=none; b=O2QxLkdbyzytyK24ullNuTITk2G4Sw20HV4TXRW23YLR8x/eFezrKgSsTVoYXpR1I5OiZBbo+Q0vkPHpUcP7o+9MXo2aocJI/WPkCtSzRBuMJIt031YhYJquIh+F297paqr4gRRxKUvg3lnHwa7V1aaIjr81DJgvfa6Jh8Zu/8Y=
+	t=1765456089; cv=none; b=IjC8EQ70oKKK3dWna+gK8nBl7zjfNM9fEjQ9FnfZco7Q88OUhm3jHOlWkmziT7GA0xyYpJuNij13gTzX+V+K/diTZ0hm3KSdTgcGg/QmhxkaFXsn7K/Vi3A+eHj6kOguSS+jtqLnqomoGb6RHPwZnVwvBPHz2tFp0bG0oBW0RjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765456084; c=relaxed/simple;
-	bh=he0+dkLeHdg0N5RCMR3gbFmD2nJSj7YERowHpWY9q/0=;
+	s=arc-20240116; t=1765456089; c=relaxed/simple;
+	bh=WPz2bNUZ+FzpkwPqUiVzwBoPZBOem2p9KR0QoiFzyVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZBUUV4PK4geFVmQpJRmWk82fZQ+cwcH5YLZa5r5Uj97OQtofNCxYenRVjmIXY9Dpuv023Mz45PvhhejRsi3AF3njbwtQEJFLmXeNvmV1PPtfEmRp1oGJ9WQNKAVO9tdk7Id8Qs/Umq31zaee267L/38vAwI1JSmY2TN4mh9qCUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yme36KJ0; arc=none smtp.client-ip=192.198.163.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=hS1P9g3a0s0c5DvsnWsvpbIbXKA5/T3kiDPAR2mCFME/Neduvgqn6Lf1ZgFUuo218DNzvA+qPp/+mfoUbW8kzMXa2unvbxmRcwnIr/UJ15dt+WckYc1TtjHOcnx+xmefxDz9PRGm7yfNI1lMug7CNJeyBDpPR60h6Fqcp46JH6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B37Uwdp3; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765456082; x=1796992082;
+  t=1765456085; x=1796992085;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=he0+dkLeHdg0N5RCMR3gbFmD2nJSj7YERowHpWY9q/0=;
-  b=Yme36KJ0kffSvAL8y4pZwS9xfywZWcBI/cwiwohQn+OAv1u8dVkD0k9n
-   pBnpWtH2vyJT3Tv8GmAjS+4rfYADnY8/OKi0/n5MyHFdtFX60fgJDf76T
-   hGaMUE5+GxVxR9TvqD32B+DONw2IK4kTDcMM/BLxy46itRCNXqzY6W9Lw
-   Q/Llmb2FMQNf2CKJAQyh9PkW3oCdLAGlbtnvV2IaoNQqVhismPICGAGl+
-   tKCBYsq0hFYmQHAFt/4NVsQtCvKZvNry1qIs5TUQ8JQNwNNBPpR371RUX
-   m+4h0HHH/Uj941dTqO0qg4GlV83rLntKpnxeQPonGvJO2vPM/u/JsLxNN
-   w==;
-X-CSE-ConnectionGUID: 1kANMrGTTCS0bYYzDbuOeg==
-X-CSE-MsgGUID: AaGcYcPkQEiuUIhMIhMYcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="54983663"
+  bh=WPz2bNUZ+FzpkwPqUiVzwBoPZBOem2p9KR0QoiFzyVU=;
+  b=B37Uwdp3775QGCHYWxaidXZv5HI1mqk9AXg1JEfXMszSbgBj/d54Ri8w
+   X33BC5qLkLcasF3xzZcgv2dfgxV4mJKmiWoWJ+8tUpVqggGyX9NLvlvNo
+   yqSUotpMb0BMpWKef+wcKI5TPUD8oCF7czvdoJKBoz9b8+wTosHC6PlC7
+   vfZHX+hhuzOe/a+7Uol2rb0/UDj3abLnTUv6yWLRiu1+UavXv98kmX2Uj
+   cEyf/Ab05+FKtopdTKAnYFx71H8RBd3ELvhbo8RZl7TViNhDDgwCImJCI
+   qebeQoy+WN+d06O1B7DPLlQJ/bdN0aMHxQ+Ww4pXQC/fafbkiJ68tixLp
+   Q==;
+X-CSE-ConnectionGUID: sWBqSeQbQL+Kf72A1nXuXQ==
+X-CSE-MsgGUID: he40xLqATxKeC97nxJfVCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="54983669"
 X-IronPort-AV: E=Sophos;i="6.21,265,1763452800"; 
-   d="scan'208";a="54983663"
+   d="scan'208";a="54983669"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 04:28:02 -0800
-X-CSE-ConnectionGUID: Yp5JWb4QRam9plaRu7HMkQ==
-X-CSE-MsgGUID: GLKy5C46QNqBGUU+LU3WoA==
+X-CSE-ConnectionGUID: uU1cTDoyT6q2rP7uGl2Vsg==
+X-CSE-MsgGUID: 5l6BGU51TtWQYJcGB7pBZg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,265,1763452800"; 
-   d="scan'208";a="196054267"
+   d="scan'208";a="196054268"
 Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
   by orviesa010.jf.intel.com with ESMTP; 11 Dec 2025 04:28:00 -0800
 Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vTfm1-000000004dJ-1MFv;
+	id 1vTfm1-000000004dL-1RNN;
 	Thu, 11 Dec 2025 12:27:57 +0000
-Date: Thu, 11 Dec 2025 20:27:43 +0800
+Date: Thu, 11 Dec 2025 20:27:53 +0800
 From: kernel test robot <lkp@intel.com>
 To: Pycode <pycode42@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev
 Subject: Re: [PATCH] Removed unused variable
-Message-ID: <202512111949.7OSsjLSn-lkp@intel.com>
+Message-ID: <202512112024.98GqQFaU-lkp@intel.com>
 References: <aTnfSQJ4QsfwTSf0@raspberrypi>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -93,87 +93,66 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Pycode/Removed-unused-var
 base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
 patch link:    https://lore.kernel.org/r/aTnfSQJ4QsfwTSf0%40raspberrypi
 patch subject: [PATCH] Removed unused variable
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20251211/202512111949.7OSsjLSn-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251211/202512111949.7OSsjLSn-lkp@intel.com/reproduce)
+config: sh-allyesconfig (https://download.01.org/0day-ci/archive/20251211/202512112024.98GqQFaU-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251211/202512112024.98GqQFaU-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512111949.7OSsjLSn-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512112024.98GqQFaU-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:48: error: use of undeclared identifier 'ret'; did you mean 'net'?
+   In file included from include/linux/uio.h:8,
+                    from include/linux/socket.h:8,
+                    from include/uapi/linux/in.h:25,
+                    from include/linux/in.h:19,
+                    from include/linux/nfs_fs.h:22,
+                    from fs/nfs/flexfilelayout/flexfilelayoutdev.c:10:
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c: In function 'nfs4_ff_alloc_deviceid_node':
+>> fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:55: error: 'ret' undeclared (first use in this function); did you mean 'net'?
      182 |         dprintk("%s ERROR: returning %d\n", __func__, ret);
          |                                                       ^~~
-         |                                                       net
-   include/linux/sunrpc/debug.h:25:28: note: expanded from macro 'dprintk'
-      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |                                   ^
-   include/linux/sunrpc/debug.h:42:26: note: expanded from macro 'dfprintk'
-      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);                    \
-         |                                        ^
-   include/linux/sunrpc/debug.h:34:57: note: expanded from macro '__sunrpc_printk'
-      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##__VA_ARGS__)
-         |                                                             ^
-   include/linux/kernel.h:276:26: note: expanded from macro 'trace_printk'
-     276 |                 do_trace_printk(fmt, ##__VA_ARGS__);    \
-         |                                        ^
-   include/linux/kernel.h:287:37: note: expanded from macro 'do_trace_printk'
-     287 |         __trace_printk_check_format(fmt, ##args);                       \
-         |                                            ^
-   include/linux/kernel.h:239:40: note: expanded from macro '__trace_printk_check_format'
+   include/linux/kernel.h:239:54: note: in definition of macro '__trace_printk_check_format'
      239 |                 ____trace_printk_check_format(fmt, ##args);             \
-         |                                                      ^
-   fs/nfs/flexfilelayout/flexfilelayoutdev.c:52:14: note: 'net' declared here
-      52 |         struct net *net = server->nfs_client->cl_net;
-         |                     ^
->> fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:48: error: use of undeclared identifier 'ret'; did you mean 'net'?
+         |                                                      ^~~~
+   include/linux/kernel.h:276:17: note: in expansion of macro 'do_trace_printk'
+     276 |                 do_trace_printk(fmt, ##__VA_ARGS__);    \
+         |                 ^~~~~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:34:41: note: in expansion of macro 'trace_printk'
+      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##__VA_ARGS__)
+         |                                         ^~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:42:17: note: in expansion of macro '__sunrpc_printk'
+      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);                    \
+         |                 ^~~~~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfprintk'
+      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:9: note: in expansion of macro 'dprintk'
+     182 |         dprintk("%s ERROR: returning %d\n", __func__, ret);
+         |         ^~~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:55: note: each undeclared identifier is reported only once for each function it appears in
      182 |         dprintk("%s ERROR: returning %d\n", __func__, ret);
          |                                                       ^~~
-         |                                                       net
-   include/linux/sunrpc/debug.h:25:28: note: expanded from macro 'dprintk'
-      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |                                   ^
-   include/linux/sunrpc/debug.h:42:26: note: expanded from macro 'dfprintk'
-      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);                    \
-         |                                        ^
-   include/linux/sunrpc/debug.h:34:57: note: expanded from macro '__sunrpc_printk'
-      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##__VA_ARGS__)
-         |                                                             ^
-   include/linux/kernel.h:276:26: note: expanded from macro 'trace_printk'
+   include/linux/kernel.h:239:54: note: in definition of macro '__trace_printk_check_format'
+     239 |                 ____trace_printk_check_format(fmt, ##args);             \
+         |                                                      ^~~~
+   include/linux/kernel.h:276:17: note: in expansion of macro 'do_trace_printk'
      276 |                 do_trace_printk(fmt, ##__VA_ARGS__);    \
-         |                                        ^
-   include/linux/kernel.h:290:50: note: expanded from macro 'do_trace_printk'
-     290 |                 __trace_bprintk(_THIS_IP_, trace_printk_fmt, ##args);   \
-         |                                                                ^
-   fs/nfs/flexfilelayout/flexfilelayoutdev.c:52:14: note: 'net' declared here
-      52 |         struct net *net = server->nfs_client->cl_net;
-         |                     ^
->> fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:48: error: use of undeclared identifier 'ret'; did you mean 'net'?
+         |                 ^~~~~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:34:41: note: in expansion of macro 'trace_printk'
+      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##__VA_ARGS__)
+         |                                         ^~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:42:17: note: in expansion of macro '__sunrpc_printk'
+      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);                    \
+         |                 ^~~~~~~~~~~~~~~
+   include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfprintk'
+      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:182:9: note: in expansion of macro 'dprintk'
      182 |         dprintk("%s ERROR: returning %d\n", __func__, ret);
-         |                                                       ^~~
-         |                                                       net
-   include/linux/sunrpc/debug.h:25:28: note: expanded from macro 'dprintk'
-      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
-         |                                   ^
-   include/linux/sunrpc/debug.h:42:26: note: expanded from macro 'dfprintk'
-      42 |                 __sunrpc_printk(fmt, ##__VA_ARGS__);                    \
-         |                                        ^
-   include/linux/sunrpc/debug.h:34:57: note: expanded from macro '__sunrpc_printk'
-      34 | #  define __sunrpc_printk(fmt, ...)     trace_printk(fmt, ##__VA_ARGS__)
-         |                                                             ^
-   include/linux/kernel.h:276:26: note: expanded from macro 'trace_printk'
-     276 |                 do_trace_printk(fmt, ##__VA_ARGS__);    \
-         |                                        ^
-   include/linux/kernel.h:292:36: note: expanded from macro 'do_trace_printk'
-     292 |                 __trace_printk(_THIS_IP_, fmt, ##args);                 \
-         |                                                  ^
-   fs/nfs/flexfilelayout/flexfilelayoutdev.c:52:14: note: 'net' declared here
-      52 |         struct net *net = server->nfs_client->cl_net;
-         |                     ^
-   3 errors generated.
+         |         ^~~~~~~
 
 
 vim +182 fs/nfs/flexfilelayout/flexfilelayoutdev.c
