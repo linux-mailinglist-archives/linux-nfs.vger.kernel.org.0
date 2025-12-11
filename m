@@ -1,156 +1,157 @@
-Return-Path: <linux-nfs+bounces-17042-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17043-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91688CB654C
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 16:25:15 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F5D7CB753A
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 00:00:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 697B43064B99
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 15:22:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BA8F130012D4
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 23:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6473148B9;
-	Thu, 11 Dec 2025 15:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE6CB194A6C;
+	Thu, 11 Dec 2025 23:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4AH/VHT"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="5MkwRDxa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qh4wc3Hr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9093148A0;
-	Thu, 11 Dec 2025 15:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A93A800
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Dec 2025 23:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765466518; cv=none; b=KGK/Ls7os49h81zwsD/x1q3GaqNnUsy03R5dZ2TlDeV5fecdJG0rHD5fq0EiSxEY5MWkYseanrm5+Gv24WSNKZa+VG8zWd3i+eUrYwUWmyFl1E2tEWiS2mk0D5vS6I5t+Eb0J4PUIByfuCxOXqHoHtjiLAyrxMi9LXj/XBJhsl0=
+	t=1765494051; cv=none; b=V5TYnFeW2SIJl2z99CSA7vFiSr4Ch2+9W4Ac4rWRL9iBIco4NCg4VcVH32yQCuFHa5mlm1XGUZGTmKDv+lBPgyknpp0RShhLSyzg2q6mB3nPv3YLtgmTe3LTE24eagB/pPnQPzSNPKgR87RAN/njl6v/wd6/d92nAdEr4AbpKr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765466518; c=relaxed/simple;
-	bh=cBQ7OwxCQJmyRnBB78Msff46NnL6E68T38nm8NO24nE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gXfwGuKHwXAe/RQFDnJeKd5zSQibNXwddvJMk0fVc32Iu2SB0I+kznuGb3VmbFERw431mY1x568x3Dux1m+wEX2y8X2sdAcDvvRD+j7LcGt3ioMaEutUAESSmQDMcAv7IyPDOqjSJgPggh4xVN1iw+beUcN4Y0uAiRZRkvfGSh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4AH/VHT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61525C16AAE;
-	Thu, 11 Dec 2025 15:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765466518;
-	bh=cBQ7OwxCQJmyRnBB78Msff46NnL6E68T38nm8NO24nE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n4AH/VHTRJQ2E11//4xXPtHcDqYx6hvHuGFjclBd+irtPAI7C1nNdhc1dyWMjnW00
-	 OXeCbztIERWLDCzlxhb6txxL6UGHnCczW9FC7FhdR0rkdAGd2EhKGP9ZT2oT6RGaid
-	 N6DgberopwgdLk/w4u4ynLdtTbSzKgN3HTJTjSZ1owilOgEFYoP1nRqnXXFohTwl9k
-	 t5z7PRFM8rzq0JH0KeXjs5rlmXSXqSmpS6IitF1bHPLakO2vnOCf/covPTLFNMmNKY
-	 JXqTgX4lLENYAB9XUcXHjer+nD5SrJ6V5d0xhFO1dyKayhUOWz1mJfoSLy2hXWAZqX
-	 sM8HmWJH6cTUw==
-From: Chuck Lever <cel@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>
-Cc: <linux-fsdevel@vger.kernel.org>,
-	linux-ext4@vger.kernel.org,
-	<linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	hirofumi@mail.parknet.co.jp,
-	almaz.alexandrovich@paragon-software.com,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	Volker.Lendecke@sernet.de,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 6/6] nfsd: Implement NFSv4 FATTR4_CASE_INSENSITIVE and FATTR4_CASE_PRESERVING
-Date: Thu, 11 Dec 2025 10:21:16 -0500
-Message-ID: <20251211152116.480799-7-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251211152116.480799-1-cel@kernel.org>
-References: <20251211152116.480799-1-cel@kernel.org>
+	s=arc-20240116; t=1765494051; c=relaxed/simple;
+	bh=/zxRVTYCHDTqHE9xmJ7+uZAuCiyDnENQVKNIt5Kne34=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=J9v0H3we9hXuacqikbV+O52ctiIj7id9827sqde8WH3zmTtz0KtJycnLsCqIon31exA6FbtXR/IMqs/MBp9OhRL41Czy8LgNWp95csXlcfcXDb5dCx2XJizleFkkXa+OLhOzZrxwu0LR9FuhVhPPg+NdJypJsyHktf6ff+5FJVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=5MkwRDxa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qh4wc3Hr; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5A49C1D00166;
+	Thu, 11 Dec 2025 18:00:48 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Thu, 11 Dec 2025 18:00:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1765494048; x=1765580448; bh=eA2vptayTHWUAfanpGHPqMIlQJM8NfTbeAa
+	sH+/HmO4=; b=5MkwRDxaDsdbnwrHr1ULc2QDQDGMGaGm76GWtVYxz/5qvyFKLrp
+	4bRcbwB4b+zAKBlA2O7dRBgpjRwJj3SSFp6nigVDQajFyVsyMYVQltsSU0wNqsHA
+	+RcyvYK2CHgvCkLsc3/5rcsIwVa5W5FBoPNNIQlNnS7pHeUDwxEjkw0cVxtJUQle
+	JWEppG/I7X2L4IFNj/cz6EHMB5wyvE1ej1B0VFgxRh7GwQDF/J1JmIRQ1rI2XhU7
+	W9sCMYnikaShsNpwm91NPu9ttDSMv7g/YJ087SMRW07MZIn56yuCzJ79ISdxKXV6
+	vQE+zBrN0n/3XbBBhbEBclvQL/P5r/JBJeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765494048; x=
+	1765580448; bh=eA2vptayTHWUAfanpGHPqMIlQJM8NfTbeAasH+/HmO4=; b=Q
+	h4wc3Hrb+V6/CtUv1tPquu+3P4LmT4Rb3ycVZ4VkFnMcnGobAYFlJgDLrJEkl7Fw
+	Q1KaG8NTH5MFScnbRTGXWLkFabmbwYOx3pQ/DlvjiI/LToxbvPcDSZK1tNhre6on
+	G+iriahbbkUrs6iVn/Szw1f5oUh9iA8T0s+V1culwUdnJSvNdW3IM87LdhLDPteo
+	ecwy0RGFYg+G9n3DPN1Ag/ng+qI3hTB7bGgMJ+HhesTdPWn6O1Mwdo9upCmdLQav
+	iHUGTtqpHj2BObVK26VpEsHouoJqQdXNL32K4xuftZ2w19hXVBJMhEMD+2OGEPQG
+	BthBr2QMOO1DHsrFsdlag==
+X-ME-Sender: <xms:IE07ablduMRt4S3An1wvGrQQYxmx9UtWoMUt2rscgBVTo9yoQyvWmA>
+    <xme:IE07aREiDjqhyJhBQ0Di-8QmBgWxrmZliKWnXSCqMhYnJnVVo9c2LDvqDXPIVGkfy
+    BmOvmZwsLFGLlUPap1g3YXAeAdrl2qi2d7gk-Zs9soQWkAO1g>
+X-ME-Received: <xmr:IE07aT6jj3vVDl7gCBOG2Rvt2SqJXSyW-amXuEF8pSHNOREN-vNtEe5MWA1k3wL-SLYDU1JjDPFafmr8TAwt6GuA7zn796mXhfxioov-wRvB>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepshhmrgihhhgv
+    fiesrhgvughhrghtrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrth
+    drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehjlh
+    grhihtohhnsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:IE07aZmjqXgbeRsfjp-subA-_xFb52uTgycxQUTxFACoDbAeMYPCzA>
+    <xmx:IE07aYry9o8KW5fKb4KSOnnvoL_kz6BL8HLsww080We4ViUGjojkIg>
+    <xmx:IE07aYugkr_8Tyk7SLIKjedngFKOeuoIN8ZHwx90Y0GGTPb7pMGJpQ>
+    <xmx:IE07adGYqUsztJEW17zbAVlxCFuPnoYpIkYdjUxs2d6rbIrootcyVg>
+    <xmx:IE07aQxnI2aqKvpvExyAeXPP-nHZ1k11Kwz1nHD4t0lYRtwKiNC-veEm>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 11 Dec 2025 18:00:45 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Scott Mayhew" <smayhew@redhat.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSD: Fix permission check for read access to
+ executable-only files
+In-reply-to: <20251211123434.3261028-1-smayhew@redhat.com>
+References: <20251211123434.3261028-1-smayhew@redhat.com>
+Date: Fri, 12 Dec 2025 10:00:42 +1100
+Message-id: <176549404255.16766.6301657662845248203@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 11 Dec 2025, Scott Mayhew wrote:
+> Commit abc02e5602f7 added NFSD_MAY_OWNER_OVERRIDE to the access flags
+> passed from nfsd4_layoutget() to fh_verify().  This causes LAYOUTGET
+> to fail for executable-only files, and causes xfstests generic/126 to
+> fail on pNFS SCSI.
+>=20
+> To allow read access to executable-only files, what we really want is:
+> 1. The "permissions" portion of the access flags (the lower 6 bits)
+>    must be exactly NFSD_MAY_READ
+> 2. The "hints" portion of the access flags (the upper 26 bits) can
+>    contain any combination of NFSD_MAY_OWNER_OVERRIDE and
+>    NFSD_MAY_READ_IF_EXEC
+>=20
+> Fixes: abc02e5602f7 ("NFSD: Support write delegations in LAYOUTGET")
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  fs/nfsd/vfs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 964cf922ad83..168d3ccc8155 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -2865,8 +2865,8 @@ nfsd_permission(struct svc_cred *cred, struct svc_exp=
+ort *exp,
+> =20
+>  	/* Allow read access to binaries even when mode 111 */
+>  	if (err =3D=3D -EACCES && S_ISREG(inode->i_mode) &&
+> -	     (acc =3D=3D (NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE) ||
+> -	      acc =3D=3D (NFSD_MAY_READ | NFSD_MAY_READ_IF_EXEC)))
+> +	     (((acc & NFSD_MAY_MASK) =3D=3D NFSD_MAY_READ) &&
+> +	      (acc & (NFSD_MAY_OWNER_OVERRIDE | NFSD_MAY_READ_IF_EXEC))))
+>  		err =3D inode_permission(&nop_mnt_idmap, inode, MAY_EXEC);
 
-Replace the hard-coded values for the NFSv4 case_insensitive and
-case_preserving attributes with dynamic values retrieved from the
-underlying filesystem via vfs_get_case_info().
+Reviewed-by: NeilBrown <neil@brown.name>
 
-This allows NFSv4 clients to discover the actual case sensitivity
-behavior of exported filesystems, including per-directory settings
-for filesystems like ext4 with casefold support.
+The new code is cleaner and more correct - thanks.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4xdr.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+NeilBrown
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 67bb9c0b9fcb..0c51d390d995 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2933,6 +2933,8 @@ struct nfsd4_fattr_args {
- 	u32			rdattr_err;
- 	bool			contextsupport;
- 	bool			ignore_crossmnt;
-+	bool			case_insensitive;
-+	bool			case_preserving;
- };
- 
- typedef __be32(*nfsd4_enc_attr)(struct xdr_stream *xdr,
-@@ -3131,6 +3133,18 @@ static __be32 nfsd4_encode_fattr4_acl(struct xdr_stream *xdr,
- 	return nfs_ok;
- }
- 
-+static __be32 nfsd4_encode_fattr4_case_insensitive(struct xdr_stream *xdr,
-+					const struct nfsd4_fattr_args *args)
-+{
-+	return nfsd4_encode_bool(xdr, args->case_insensitive);
-+}
-+
-+static __be32 nfsd4_encode_fattr4_case_preserving(struct xdr_stream *xdr,
-+					const struct nfsd4_fattr_args *args)
-+{
-+	return nfsd4_encode_bool(xdr, args->case_preserving);
-+}
-+
- static __be32 nfsd4_encode_fattr4_filehandle(struct xdr_stream *xdr,
- 					     const struct nfsd4_fattr_args *args)
- {
-@@ -3482,8 +3496,8 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
- 	[FATTR4_ACLSUPPORT]		= nfsd4_encode_fattr4_aclsupport,
- 	[FATTR4_ARCHIVE]		= nfsd4_encode_fattr4__noop,
- 	[FATTR4_CANSETTIME]		= nfsd4_encode_fattr4__true,
--	[FATTR4_CASE_INSENSITIVE]	= nfsd4_encode_fattr4__false,
--	[FATTR4_CASE_PRESERVING]	= nfsd4_encode_fattr4__true,
-+	[FATTR4_CASE_INSENSITIVE]	= nfsd4_encode_fattr4_case_insensitive,
-+	[FATTR4_CASE_PRESERVING]	= nfsd4_encode_fattr4_case_preserving,
- 	[FATTR4_CHOWN_RESTRICTED]	= nfsd4_encode_fattr4__true,
- 	[FATTR4_FILEHANDLE]		= nfsd4_encode_fattr4_filehandle,
- 	[FATTR4_FILEID]			= nfsd4_encode_fattr4_fileid,
-@@ -3669,8 +3683,9 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		if (err)
- 			goto out_nfserr;
- 	}
--	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
--	    !fhp) {
-+	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID |
-+			    FATTR4_WORD0_CASE_INSENSITIVE |
-+			    FATTR4_WORD0_CASE_PRESERVING)) && !fhp) {
- 		tempfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
- 		status = nfserr_jukebox;
- 		if (!tempfh)
-@@ -3682,6 +3697,13 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		args.fhp = tempfh;
- 	} else
- 		args.fhp = fhp;
-+	if (attrmask[0] & (FATTR4_WORD0_CASE_INSENSITIVE |
-+			   FATTR4_WORD0_CASE_PRESERVING)) {
-+		status = nfsd_get_case_info(args.fhp, &args.case_insensitive,
-+					    &args.case_preserving);
-+		if (status != nfs_ok)
-+			goto out;
-+	}
- 
- 	if (attrmask[0] & FATTR4_WORD0_ACL) {
- 		err = nfsd4_get_nfs4_acl(rqstp, dentry, &args.acl);
--- 
-2.52.0
+
+> =20
+>  	return err? nfserrno(err) : 0;
+> --=20
+> 2.51.0
+>=20
+>=20
 
 
