@@ -1,115 +1,176 @@
-Return-Path: <linux-nfs+bounces-17034-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17035-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0B5ECB5E45
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 13:36:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7D5CB6278
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 15:12:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C6C7B3004B95
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 12:34:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8716E3051613
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Dec 2025 14:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F5AB30F92C;
-	Thu, 11 Dec 2025 12:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139E42C15A8;
+	Thu, 11 Dec 2025 14:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LRqp1YP9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZtr57Ny"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76D830F92B
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Dec 2025 12:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9DD280325;
+	Thu, 11 Dec 2025 14:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765456481; cv=none; b=pZlpF1t/2lBiIq0jC0mlfhVpbatPYgwnd2dM4rIb9I5GBnTGozzynvBs/lIdBxjGdOdX4WcRi1zzMmff1wHcD1BkKSXDmaG23gYLfucu1qGibp2Ge2oXOfq45J1K6AiumMEFazXjg5uS+RRhkeawxB6x+zP1X5tENvd5dZJQnv0=
+	t=1765462065; cv=none; b=ZwiNNGlUhAz5JQ+kRg8H7lvTMmBm/OudXW+AA1Vrti0NBgvo+U2c7HJY1XqKIRauHHyCH7ULAt6OXPJu/dkSFBxHxPccja/bF0VnJ7rUmtuZDX8GtwZmJAK/Jk2MvTv/iXDu/S/GjldIaNAT80EdLRM3siN28gZ13XaH1q2iWxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765456481; c=relaxed/simple;
-	bh=aZxq/Wmqbd86VjP37O09xeQLjJIGH7VZflOpLHiHywQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YZMnh/O26yRXy0ydw4Ufu/eGXdrhQSQYRvLXpqmzAWxXA+Gb29tWepQWHlE61EqCeqfWgg5bbiAo0N2u/9uauprKCQ/FRusTktyRDsww7fko8BC3LYiBkEiT6zMKjr05Cj8sdUS+fJJV9E5c3bS4oJqJJ1Neez+HYnua3uc+cnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LRqp1YP9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765456479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ofb5A0cYx1PD1lpb7hAtLTnvTyviL7hyIWl+FrwNW+E=;
-	b=LRqp1YP9QjJwEGiTdswipbtnJ2ta8meNd4ILGnaDpMcAYsfPKdBB5zmOOf52QiqEsOI+i3
-	IJu023jX+kJ6qU17aRK5Loi1czRTSxXLTx1Ds0xduUR1T9igx94GwnZhUP0Le87LPAc40b
-	V13uAiXXBHduqZ/qpJ+QoS1DmNmTpyo=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-139-evmBSHneMf-fnq36JX8ByA-1; Thu,
- 11 Dec 2025 07:34:37 -0500
-X-MC-Unique: evmBSHneMf-fnq36JX8ByA-1
-X-Mimecast-MFC-AGG-ID: evmBSHneMf-fnq36JX8ByA_1765456476
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5940718011DF;
-	Thu, 11 Dec 2025 12:34:36 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.80.38])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D71631953984;
-	Thu, 11 Dec 2025 12:34:35 +0000 (UTC)
-Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 4ADDE54DAB4;
-	Thu, 11 Dec 2025 07:34:34 -0500 (EST)
-From: Scott Mayhew <smayhew@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSD: Fix permission check for read access to executable-only files
-Date: Thu, 11 Dec 2025 07:34:34 -0500
-Message-ID: <20251211123434.3261028-1-smayhew@redhat.com>
+	s=arc-20240116; t=1765462065; c=relaxed/simple;
+	bh=uaiJOHOoZxSvKqlzkySuM51W37wHEGtMYLbx9MQkD8Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=B6fzxzO2GArZt3khO3X/T+ZAJl3dmHJYk/9OFcUn1gkxd8ypXMZwmExWVHl05mFiuoeYVxcJN3AoEvg+gm9Yiv92cRwtoFHun6i1g8/jo2D9o7/WfEzUm28Yu+UOcQ8VNLQqU5iUzprmKC/ADwSnaX7hwJi+QStRsgV/Sx71bzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZtr57Ny; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F246C4CEF7;
+	Thu, 11 Dec 2025 14:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765462064;
+	bh=uaiJOHOoZxSvKqlzkySuM51W37wHEGtMYLbx9MQkD8Y=;
+	h=Subject:From:To:Cc:Date:From;
+	b=nZtr57Nyy9J7p5EwG9m+7YAq1vasm48F1TCUekhzBmZrYoR2CkC2ZG9hSW5SlGyv/
+	 a7MIjNjYs1dl0MUPhMR7VdCR40n48nve0WF3ay4furFGdOYu985z4Rv0xeKTNAeOsg
+	 l3Bd2h5DJ7DEMfGyHEiQUx5eYozJh2DyWp+cwClykCBV+jWel5UHa28Fy1j38ymSCd
+	 xYb+V44pY0dHJZKlNJyOvAjp3SwtUfTsvQNqypBr6sOAhn+QvWqqom6kFR7aFORM9f
+	 me7XEG+dKCwrg4k+UZrXfi+UJPM3ynX4RqMQ+gUBDRfqJ+sxJiReAQHT6eb9fGh1R6
+	 69a9veRPra8FA==
+Message-ID: <36d449e22bf28df97c7717ab4dfb30f100f159a4.camel@kernel.org>
+Subject: [GIT PULL] Please pull NFS client updates for Linux 6.19
+From: Trond Myklebust <trondmy@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 11 Dec 2025 09:07:42 -0500
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Commit abc02e5602f7 added NFSD_MAY_OWNER_OVERRIDE to the access flags
-passed from nfsd4_layoutget() to fh_verify().  This causes LAYOUTGET
-to fail for executable-only files, and causes xfstests generic/126 to
-fail on pNFS SCSI.
+Hi Linus,
 
-To allow read access to executable-only files, what we really want is:
-1. The "permissions" portion of the access flags (the lower 6 bits)
-   must be exactly NFSD_MAY_READ
-2. The "hints" portion of the access flags (the upper 26 bits) can
-   contain any combination of NFSD_MAY_OWNER_OVERRIDE and
-   NFSD_MAY_READ_IF_EXEC
+The following changes since commit 6a23ae0a96a600d1d12557add110e0bb6e32730c=
+:
 
-Fixes: abc02e5602f7 ("NFSD: Support write delegations in LAYOUTGET")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfsd/vfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  Linux 6.18-rc6 (2025-11-16 14:25:38 -0800)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 964cf922ad83..168d3ccc8155 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -2865,8 +2865,8 @@ nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
- 
- 	/* Allow read access to binaries even when mode 111 */
- 	if (err == -EACCES && S_ISREG(inode->i_mode) &&
--	     (acc == (NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE) ||
--	      acc == (NFSD_MAY_READ | NFSD_MAY_READ_IF_EXEC)))
-+	     (((acc & NFSD_MAY_MASK) == NFSD_MAY_READ) &&
-+	      (acc & (NFSD_MAY_OWNER_OVERRIDE | NFSD_MAY_READ_IF_EXEC))))
- 		err = inode_permission(&nop_mnt_idmap, inode, MAY_EXEC);
- 
- 	return err? nfserrno(err) : 0;
--- 
-2.51.0
+are available in the Git repository at:
 
+  git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.19-=
+1
+
+for you to fetch changes up to bd3b04b46c7a9940989ff4b29376e899e93d3a4a:
+
+  NFSv4: Handle NFS4ERR_NOTSUPP errors for directory delegations (2025-12-0=
+5 19:34:29 -0500)
+
+Cheers
+  Trond
+
+----------------------------------------------------------------
+NFS client updates for Linux 6.19
+
+Highlights include:
+
+Bugfixes:
+- Fix 'nlink' attribute update races when unlinking a file.
+- Add missing initialisers for the directory verifier in various places.
+- Don't regress the NFSv4 open state due to misordered racing replies.
+- Ensure the NFSv4.x callback server uses the correct transport
+  connection.
+- Fix potential use-after-free races when shutting down the NFSv4.x
+  callback server.
+- Fix a pNFS layout commit crash.
+- Assorted fixes to ensure correct propagation of mount options when the
+  client crosses a filesystem boundary and triggers the VFS automount
+  code.
+- More localio fixes.
+
+Features and cleanups:
+- Add initial support for basic directory delegations.
+- SunRPC back channel code cleanups.
+
+----------------------------------------------------------------
+Anna Schumaker (5):
+      NFS: Add support for sending GDD_GETATTR
+      NFS: Request a directory delegation on ACCESS, CREATE, and UNLINK
+      NFS: Request a directory delegation during RENAME
+      NFS: Shortcut lookup revalidations if we have a directory delegation
+      NFS: Add a module option to disable directory delegations
+
+Jonathan Curley (1):
+      NFSv4/pNFS: Clear NFS_INO_LAYOUTCOMMIT in pnfs_mark_layout_stateid_in=
+valid
+
+Mike Snitzer (2):
+      nfs/localio: remove alignment size checking in nfs_is_local_dio_possi=
+ble
+      nfs/localio: remove 61 byte hole from needless ____cacheline_aligned
+
+Olga Kornievskaia (4):
+      NFSv4.1: pass transport for callback shutdown
+      SUNRPC: cleanup common code in backchannel request
+      SUNRPC: new helper function for stopping backchannel server
+      NFSv4.1: protect destroying and nullifying bc_serv structure
+
+Scott Mayhew (1):
+      NFSv4: ensure the open stateid seqid doesn't go backwards
+
+Trond Myklebust (11):
+      NFS: Avoid changing nlink when file removes and attribute updates rac=
+e
+      NFS: Initialise verifiers for visible dentries in readdir and lookup
+      NFS: Initialise verifiers for visible dentries in nfs_atomic_open()
+      NFS: Initialise verifiers for visible dentries in _nfs4_open_and_get_=
+state
+      Revert "nfs: ignore SB_RDONLY when remounting nfs"
+      Revert "nfs: clear SB_RDONLY before getting superblock"
+      Revert "nfs: ignore SB_RDONLY when mounting nfs"
+      NFS: Automounted filesystems should inherit ro,noexec,nodev,sync flag=
+s
+      NFS: Fix inheritance of the block sizes when automounting
+      NFS: Fix up the automount fs_context to use the correct cred
+      NFSv4: Handle NFS4ERR_NOTSUPP errors for directory delegations
+
+ fs/nfs/callback.c                 |   4 +-
+ fs/nfs/callback.h                 |   3 +-
+ fs/nfs/client.c                   |  21 ++++++--
+ fs/nfs/delegation.c               |   8 +++
+ fs/nfs/delegation.h               |  13 +++++
+ fs/nfs/dir.c                      |  46 ++++++++++++----
+ fs/nfs/inode.c                    |   3 ++
+ fs/nfs/internal.h                 |   3 +-
+ fs/nfs/localio.c                  |   4 +-
+ fs/nfs/namespace.c                |  16 +++++-
+ fs/nfs/nfs3proc.c                 |   3 +-
+ fs/nfs/nfs4client.c               |  27 +++++++---
+ fs/nfs/nfs4proc.c                 | 111 +++++++++++++++++++++++++++++++---=
+----
+ fs/nfs/nfs4trace.h                |   1 +
+ fs/nfs/nfs4xdr.c                  | 106 ++++++++++++++++++++++++++++++++++=
+++
+ fs/nfs/pnfs.c                     |   1 +
+ fs/nfs/proc.c                     |   3 +-
+ fs/nfs/super.c                    |  33 ++----------
+ fs/nfs/unlink.c                   |   3 +-
+ include/linux/nfs_fs.h            |   1 +
+ include/linux/nfs_fs_sb.h         |   6 +++
+ include/linux/nfs_xdr.h           |  10 +++-
+ include/linux/sunrpc/bc_xprt.h    |   7 +++
+ net/sunrpc/backchannel_rqst.c     |  35 ++++++++++--
+ net/sunrpc/xprtrdma/backchannel.c |   8 +--
+ 25 files changed, 385 insertions(+), 91 deletions(-)
+
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
