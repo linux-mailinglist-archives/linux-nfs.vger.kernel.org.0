@@ -1,77 +1,179 @@
-Return-Path: <linux-nfs+bounces-17053-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0567CB895F
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 11:12:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD48CB9161
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 16:19:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A770430202FF
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 10:12:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CCD2430CEAB2
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 15:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BE7315D24;
-	Fri, 12 Dec 2025 10:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8863242C9;
+	Fri, 12 Dec 2025 15:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOrrPWCI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFlc2zw2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40011314D0A;
-	Fri, 12 Dec 2025 10:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6582F3242B4;
+	Fri, 12 Dec 2025 15:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765534335; cv=none; b=c4C40v60SIkcROwwNxvHpoEivBwNoC8AhHI1ER5yM3/xDPYK5B+sCtxPjWuUng2+RhbhnXk8Wz9OvCKrwEIlcSiINDcCcwBIHMhFmJf572NViY63BOCn/S1tFsnn8BGMZ/0DBXVsvsOEpUGtdljMnho3wbx6fcv3ZwVR0UhrX8A=
+	t=1765552195; cv=none; b=NDrr1TcqW+YgWBF+mZZabGb5zVKtdxCv+vi6qc77r+yIUe9LdcjDoudG5Re+TRhAx+wwVdibzx1U/a/PEdbSNaAupoCJS3OrvKBFQx+EkcCF4zMM07VPK27jdxk4BRptPoqH4qwLhCi3AAnk1nfxxl4UjO1bATETifuglotyF6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765534335; c=relaxed/simple;
-	bh=KA47seWtZI7rGpkIonXa1kmdB5Q6F/ACB5MBafVu9b0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=PTeS1r18P8+tDuSpKbgADAfUEoXvTSDOhOuelIp72uqeTeg0ZNXTulkV8f70XqSEoWcpYHAiMNWT6fljuZd4QMZ3hPRqhSTE0IcPg2umPXqbqnzQustDzmE+cP/SjSErGk0sog5giOCItqFTRcFmssYjFYhCcyDF6fAU+gt+iNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOrrPWCI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22986C4CEF1;
-	Fri, 12 Dec 2025 10:12:15 +0000 (UTC)
+	s=arc-20240116; t=1765552195; c=relaxed/simple;
+	bh=I+qP5oa35NoOJF+73V6wWh4dwUAPHcAldfi38uS5WuI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=p/cgn9p7vyAx4QRS3J8owd0OFesNVbkPkFZT6zV6znm9Znykl060L0fZFOKEvpw/zbtpUTQpJSiM2+VZlc4cwB2bURzTbzMJogNycOeOtZ/qJNqin7Orq5VDXcDWuT26ncw1BC2MlNJ2jPt07HcTegul4hriFcH6pDo4IA/ZkkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFlc2zw2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC842C116B1;
+	Fri, 12 Dec 2025 15:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765534335;
-	bh=KA47seWtZI7rGpkIonXa1kmdB5Q6F/ACB5MBafVu9b0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=IOrrPWCIgOfHmD1SaeoP+60G0KraxDlvueQsIr2h/+IYibFbwZRpsGuqVqJj3e3cY
-	 pbWyyN+vyMkUo38aS7QtTa2mX2AGwcOQ48ReRJTZjM7ywYfp+gd/DobDTf+H/fJPax
-	 SHohOEwQ/8SRiXTkuL16yBvWkbK7Cea9s/CxK6lTULWNUZII27JYAFdeTDCARu3F74
-	 /boht75HmRumHcIECZqxK8WIPxlh3H1dvhyep70qxjokxFyj+AfbIsQ1hfOfvz4QUG
-	 zYx8tqnqL3+3e1Gmcl99UfNzcG547itn5ksfkBT26iwlVSnwA9/Dq04L+7/VPvPA4q
-	 eNRzc3ux90OLw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B59AB3809A90;
-	Fri, 12 Dec 2025 10:09:09 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull NFS client updates for Linux 6.19
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <36d449e22bf28df97c7717ab4dfb30f100f159a4.camel@kernel.org>
-References: <36d449e22bf28df97c7717ab4dfb30f100f159a4.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <36d449e22bf28df97c7717ab4dfb30f100f159a4.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.19-1
-X-PR-Tracked-Commit-Id: bd3b04b46c7a9940989ff4b29376e899e93d3a4a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6bb34aff1ebdd4ee8ea1721068f74d476d707f01
-Message-Id: <176553414834.2108206.5544741374608047303.pr-tracker-bot@kernel.org>
-Date: Fri, 12 Dec 2025 10:09:08 +0000
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1765552195;
+	bh=I+qP5oa35NoOJF+73V6wWh4dwUAPHcAldfi38uS5WuI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=AFlc2zw2uucDYEetJfKb6XBj8TBwXASwMN9MPet0HvEcaanSlE7CFITn56A2NG0Ib
+	 LoFG8vndRYLcbM6ivj35ZyuHl7Dl54SPU/dPhAUv42Ksl60fVNzCJWVkYgGoy11s5a
+	 BNeo17SWZ+umGGp+2ixepMykt5a7BX77QjWbvy1e+qdonW9nhvOUmgbXP+WJ2nVNcS
+	 EOVSjJ0g6UgRwf9qWwNqdT6EQiQQLovDE/JAddbONBvYdNp8XhzC8/Odi5NNcm/NIs
+	 AT14mwe9DRWACSzFApxhaVxE0ZtWoeXsR7GlK6bQqbCiNqPlp0oafNMs4Mr8HXvwZg
+	 9rLYAhv6iKaig==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id BADCEF40072;
+	Fri, 12 Dec 2025 10:09:53 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 12 Dec 2025 10:09:53 -0500
+X-ME-Sender: <xms:QTA8aUytefFxC2oGXmrPtewnnJ6B8_Or61aOCnsFzrIgWOZaKeHBOA>
+    <xme:QTA8aTHlH6idpJ3_pm2MM2vNdMOk7tsA_MDPy9qIC5yQ5j62W55fqoGHxwv3x5hF7
+    K-_fJsB__U7SHGzU8Gpu7NAabDJ3UZXbAY8w1ID2m5cbN8YI2i41es>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epleehteekvefhhfeuvdekuefftdffvdeufeekleehheekvdekjedviefghedtieelnecu
+    ffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghr
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvd
+    elkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhm
+    pdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprg
+    guihhlghgvrhdrkhgvrhhnvghlseguihhlghgvrhdrtggrpdhrtghpthhtohepsghrrghu
+    nhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehhihhrohhfuhhmihesmhgrihhlrdhprghrkhhnvght
+    rdgtohdrjhhppdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphhtthhope
+    gthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegrlhhmrgii
+    rdgrlhgvgigrnhgurhhovhhitghhsehprghrrghgohhnqdhsohhfthifrghrvgdrtghomh
+    dprhgtphhtthhopehvohhlkhgvrhdrlhgvnhguvggtkhgvsehsvghrnhgvthdruggvpdhr
+    tghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:QTA8aQsK8J2qgZIVIQpL0IU2tvEgcoBNSS-pcYB9aCNDNpVCS146Kw>
+    <xmx:QTA8ac5Mxc9sC45MtvaVibuxvWHI83VyDcjf9hRiQBsxg605Qok5Xw>
+    <xmx:QTA8ac3MFcDhqctl04FQyJ2MH7yxkLZd6RZUvPr3Cw8K79zESiXcMw>
+    <xmx:QTA8aXjU7iWTbB8X2lQ8yM-rKYJ_vdqfhAdyjfiHmkvXweptVtUpOw>
+    <xmx:QTA8aUq3Fwm0jIi3alstO43Q6A3IbUQhI-ALtJm_H-yLy2cjWJj3yYsN>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9480578006C; Fri, 12 Dec 2025 10:09:53 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-ThreadId: AG4gnELdBCjJ
+Date: Fri, 12 Dec 2025 10:08:18 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Theodore Tso" <tytso@mit.edu>
+Cc: "Eric Biggers" <ebiggers@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, hirofumi@mail.parknet.co.jp,
+ almaz.alexandrovich@paragon-software.com, adilger.kernel@dilger.ca,
+ Volker.Lendecke@sernet.de, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <ed9d790a-fea8-4f3e-8118-d3a59d31107b@app.fastmail.com>
+In-Reply-To: <20251212021834.GB65406@macsyma.local>
+References: <20251211152116.480799-1-cel@kernel.org>
+ <20251211152116.480799-2-cel@kernel.org> <20251211234152.GA460739@google.com>
+ <9f30d902-2407-4388-805b-b3f928193269@app.fastmail.com>
+ <20251212021834.GB65406@macsyma.local>
+Subject: Re: [PATCH v2 1/6] fs: Add case sensitivity info to file_kattr
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Thu, 11 Dec 2025 09:07:42 -0500:
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.19-1
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6bb34aff1ebdd4ee8ea1721068f74d476d707f01
+On Thu, Dec 11, 2025, at 9:18 PM, Theodore Tso wrote:
+> On Thu, Dec 11, 2025 at 08:16:45PM -0500, Chuck Lever wrote:
+>> 
+>> > I see you're proposing that ext4, fat, and ntfs3 all set
+>> > FILEATTR_CASEFOLD_UNICODE, at least in some cases.
+>> >
+>> > That seems odd, since they don't do the matching the same way.
+>> 
+>> The purpose of this series is to design the VFS infrastructure. Exactly what
+>> it reports is up to folks who actually understand i18n.
+>
+> Do we know who would be receiving this information and what their needs 
+> might be?
 
-Thank you!
+The unicode v. ascii case folding information was included just as
+an example. I don't have any use case for that, and as I told Eric,
+those specifics can be removed from the API.
+
+The case-insensitivity and case-preserving booleans can be consumed
+immediately by NFSD. These two booleans have been part of the NFSv3
+and NFSv4 protocols for decades, in order to support NFS clients on
+non-POSIX systems.
+
+I'm told that Samba has to detect and expose file system case folding
+behavior to its clients as well. Supporting Samba and other user
+space file servers is why this series exposes case folding information
+via a local user-space API. I don't know of any other category of
+user-space application that requires access to case folding info.
+
+
+The Linux NFS community has a growing interest in supporting NFS
+clients on Windows and MacOS platforms, where file name behavior does
+not align with traditional POSIX semantics.
+
+One example of a Windows-based NFS client is [1]. This client
+implementation explicitly requires servers to report
+FATTR4_WORD0_CASE_INSENSITIVE = TRUE for proper operation, a hard
+requirement for Windows client interoperability because Windows
+applications expect case-insensitive behavior. When an NFS client
+knows the server is case-insensitive, it can avoid issuing multiple
+LOOKUP/READDIR requests to search for case variants, and applications
+like Win32 programs work correctly without manual workarounds or
+code changes.
+
+Even the Linux client can take advantage of this information. Trond
+merged patches 4 years ago [2] that introduce support for case
+insensitivity, in support of the Hammerspace NFS server. In
+particular, when a client detects a case-insensitive NFS share,
+negative dentry caching must be disabled (a lookup for "FILE.TXT"
+failing shouldn't cache a negative entry when "file.txt" exists)
+and directory change invalidation must clear all cached case-folded
+file name variants.
+
+Hammerspace servers and several other NFS server implementations
+operate in multi-protocol environments, where a single file service
+instance caters to both NFS and SMB clients. In those cases, things
+work more smoothly for everyone when the NFS client can see and adapt
+to the case folding behavior that SMB users rely on and expect. NFSD
+needs to support the case-insensitivity and case-preserving booleans
+properly in order to participate as a first-class citizen in such
+environments.
+
+As a side note: I assumed these details were already well-known in
+this community; otherwise I would have included it in the series
+cover letter. I can include it when posting subsequent revisions.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Chuck Lever
+
+[1] https://github.com/kofemann/ms-nfs41-client
+
+[2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.439352-1-trondmy@kernel.org/
 
