@@ -1,138 +1,91 @@
-Return-Path: <linux-nfs+bounces-17047-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17048-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24661CB7882
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 02:17:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 270A0CB78B2
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 02:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BD5F830274CB
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 01:17:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EF42D300CA15
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 01:32:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6BBE15B998;
-	Fri, 12 Dec 2025 01:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9762BCF5;
+	Fri, 12 Dec 2025 01:32:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5jzf8qo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtiWce6Y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A91219FC;
-	Fri, 12 Dec 2025 01:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261BA10F1
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Dec 2025 01:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765502228; cv=none; b=iyo+aNWr9mIDHxgCwvF0QVXkmr1TOXwq78L6OHAVxUuCJtkehglW7YJziSNc6EYjOq5L/I8LEHLA5jdperz4aT3Zjm3z2UK+uDiPIQjn16EMc7NXkuvZkBWR8bho1V4gUkoh0xRW7jjrYR31wxp7E6qX6EuyoRrTxvuIQI/2Wsw=
+	t=1765503120; cv=none; b=lgubWhljwHPwDoiTChnwwlQQdY+qsNNXgqWua1u9lUcu2aSPCL+qoB8gds6PY0mqY8aqXL/SllRI48GDdmpf5cDTXTE36nMWwrLtch1AROyaC8amvPs1XBTG+LBQAPmQjcD28SYPmuVJXAO/UJgfopYXVou7121FaeOyM9mBZQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765502228; c=relaxed/simple;
-	bh=9TYcESrho76VKCg838GHOj8IUeqDDF8vAva70L9A6Vk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Fqhh1V3RtY6kdNF3teIwsPno2YJUE/DOZLwKOgfhW4J177a0tha9Q637RbRx2XiPDTkCaM5pmNNmkXR+esIRBZsmh80DBgp6cuFYJaW92XMVvWBIt1XsiFQhInPx4UwcjqiUFBViAIDHhYF2+aoIXy/pwVoAWn04LJFN2OHEuL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5jzf8qo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7443BC16AAE;
-	Fri, 12 Dec 2025 01:17:07 +0000 (UTC)
+	s=arc-20240116; t=1765503120; c=relaxed/simple;
+	bh=rzoQvfRF+roMTLHPVJ7Mni8ScTALXXRVbUSYZlJNeEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ek1nnbrHIra586nDVr1FtFXYvQd/tzgd+/a0/P1XPtRnMsJPbIGbIy93hCRAUDfER5C4Gw//lMQucMLRUM+HWubBwy9njJRVhLAmjoqcnBpHkpsO0BL6HvQvpw+Rd6Jplv9i29N8K7m5X2OBqN6gy2aLPs72rdI6XgsmTB6o/UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtiWce6Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF78C4CEF7;
+	Fri, 12 Dec 2025 01:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765502228;
-	bh=9TYcESrho76VKCg838GHOj8IUeqDDF8vAva70L9A6Vk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=e5jzf8qo3oMz8H+RHNI6SvEyguI3wkI+NPdMCNpBInkeqI+4THhhHJ88gBzZqS2TF
-	 o0DdH854/hz8sDb3VGnxPJ7fgzMuWmpl9E2R7lvbcltGt7AjPNSdyzS6pIeEWJ4nyK
-	 4yopRtan4P0DoIMIgaskwR43Sv5wnkv2fwswO9HkM0s8dmSc6aNaMak1cYkcEWPcWv
-	 lgOIq2uYlGxn0kFx306CvrHdfvWSzu33SzPJMFCm5ap3/vUeEIZ399UsGahJw+pc+Z
-	 TWWaNdHHotpz/s463tNVbi4RlMjgh0DqsCSl7HjPF5eyrO87VJOlxVU9MMZYBrE+iI
-	 IMTQ1OwTF9XwA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9D260F40074;
-	Thu, 11 Dec 2025 20:17:06 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 11 Dec 2025 20:17:06 -0500
-X-ME-Sender: <xms:Em07aXXru7VRw27WV74wnpbmHTxNgqddovrGVuMBqnEN4ymBGMirqQ>
-    <xme:Em07aaYy-Zd1hV2IJZ-Ds0WxvL5j_0jXS93mzzOf-RYzDZpFL230v1XhgDN0NBrpB
-    7NvIkpjmkWqU71wSkoYmlWoA5vle2CfQnUgAU20XXOt3fEGsHzkKqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieekgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtoheprgguihhlghgvrhdrkhgvrhhnvghlseguihhlghgvrhdrtggrpdhrtghpthhtoh
-    epsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhihhrohhfuhhmihesmhgrihhlrdhprg
-    hrkhhnvghtrdgtohdrjhhppdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgt
-    phhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhope
-    grlhhmrgiirdgrlhgvgigrnhgurhhovhhitghhsehprghrrghgohhnqdhsohhfthifrghr
-    vgdrtghomhdprhgtphhtthhopehvohhlkhgvrhdrlhgvnhguvggtkhgvsehsvghrnhgvth
-    druggvpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:Em07abThipl_qzI3JjqYlaFSEYKA9WxgtgQddbS6Ju-cKrupRIXYnQ>
-    <xmx:Em07acP1QGx5L7a7mhBx8FaplQHJm51P79Gm3P67YEX_V-Mwz_m6_A>
-    <xmx:Em07aR7bZLLkqiBQ_VijPqanLdWKDVQtUf24f6NjIOKZP0sWIX9egQ>
-    <xmx:Em07afWyIMl4axoBXBbfTf8t1Nmxi_BtaYpGWgbEuZPSs19xggesDg>
-    <xmx:Em07aYPAc9RI8JlKKUxUfGPsSQ2T9ldrcAdXPkvG9GqC67rE9i0mB2a9>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7834B780054; Thu, 11 Dec 2025 20:17:06 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1765503119;
+	bh=rzoQvfRF+roMTLHPVJ7Mni8ScTALXXRVbUSYZlJNeEQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OtiWce6YOWupjktb5ovXHg00KUyNdEKnTBZgwdoo6SZgLFvrYkbFyE7PqpVeuKxYN
+	 7mbqeNEh3D5FqelKWPmkHw8htkoXrBNO0adT5KB+2Su3fpRc4I+5BmcMUvvKyyKAke
+	 p5gB/PnYq5SiBqWsjku1yXgq97COfh8oCNyf5ioqU6zvJ41sngcgnyehwnHOD1meG5
+	 bnan4FDmCNrMF5xUmfvIHmhTTh2AM76ZxtyGkykMGJRvBBV/pElIjGVJiw4B9VY+mv
+	 FGSO9wAsrDx81CjUsZXO8mljBje+7oA94x5EQTHZZSnG610/b4406bCZWBdfLtTzaf
+	 c5mwx7Vi9T3HA==
+From: Chuck Lever <cel@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>,
+	Scott Mayhew <smayhew@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSD: Fix permission check for read access to executable-only files
+Date: Thu, 11 Dec 2025 20:31:55 -0500
+Message-ID: <176550310799.517876.17801339647981040619.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251211123434.3261028-1-smayhew@redhat.com>
+References: <20251211123434.3261028-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AG4gnELdBCjJ
-Date: Thu, 11 Dec 2025 20:16:45 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Eric Biggers" <ebiggers@kernel.org>
-Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, hirofumi@mail.parknet.co.jp,
- almaz.alexandrovich@paragon-software.com, tytso@mit.edu,
- adilger.kernel@dilger.ca, Volker.Lendecke@sernet.de,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <9f30d902-2407-4388-805b-b3f928193269@app.fastmail.com>
-In-Reply-To: <20251211234152.GA460739@google.com>
-References: <20251211152116.480799-1-cel@kernel.org>
- <20251211152116.480799-2-cel@kernel.org> <20251211234152.GA460739@google.com>
-Subject: Re: [PATCH v2 1/6] fs: Add case sensitivity info to file_kattr
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Chuck Lever <chuck.lever@oracle.com>
 
+On Thu, 11 Dec 2025 07:34:34 -0500, Scott Mayhew wrote:
+> Commit abc02e5602f7 added NFSD_MAY_OWNER_OVERRIDE to the access flags
+> passed from nfsd4_layoutget() to fh_verify().  This causes LAYOUTGET
+> to fail for executable-only files, and causes xfstests generic/126 to
+> fail on pNFS SCSI.
+> 
+> To allow read access to executable-only files, what we really want is:
+> 1. The "permissions" portion of the access flags (the lower 6 bits)
+>    must be exactly NFSD_MAY_READ
+> 2. The "hints" portion of the access flags (the upper 26 bits) can
+>    contain any combination of NFSD_MAY_OWNER_OVERRIDE and
+>    NFSD_MAY_READ_IF_EXEC
+> 
+> [...]
 
-On Thu, Dec 11, 2025, at 6:41 PM, Eric Biggers wrote:
-> On Thu, Dec 11, 2025 at 10:21:11AM -0500, Chuck Lever wrote:
->> +/* Values stored in the low-order byte */
->> +enum fileattr_case_folding {
->> +	/* Code points are compared directly with no case folding. */
->> +	FILEATTR_CASEFOLD_NONE = 0,
->> +
->> +	/* ASCII case-insensitive: A-Z are treated as a-z. */
->> +	FILEATTR_CASEFOLD_ASCII,
->> +
->> +	/* Unicode case-insensitive matching. */
->> +	FILEATTR_CASEFOLD_UNICODE,
->> +};
->
-> What does "Unicode case-insensitive matching" mean?  There are many
-> different things it could mean: there are multiple types of Unicode
-> normalization, Unicode case-folding, NTFS's upper case table, etc.
-> There are also multiple versions of each.
+Applied to nfsd-testing, thanks!
 
-This is left over from the RFC version of the series, and can be removed.
+[1/1] NFSD: Fix permission check for read access to executable-only files
+      commit: 2341758268d9bdc099c48fde624fee6d3754bb84
 
-
-> I see you're proposing that ext4, fat, and ntfs3 all set
-> FILEATTR_CASEFOLD_UNICODE, at least in some cases.
->
-> That seems odd, since they don't do the matching the same way.
-
-The purpose of this series is to design the VFS infrastructure. Exactly what
-it reports is up to folks who actually understand i18n.
-
-
--- 
+--
 Chuck Lever
+
 
