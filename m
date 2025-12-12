@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-17060-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17061-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF40CB9F7C
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 23:40:35 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F37ECB9F70
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 23:39:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 58CAD30BDA9B
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 22:39:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3D14130022CD
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Dec 2025 22:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E2F2DA76D;
-	Fri, 12 Dec 2025 22:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6F32D9EE6;
+	Fri, 12 Dec 2025 22:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGe0pLN7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfsBUhwD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061B82D543E;
-	Fri, 12 Dec 2025 22:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A418D2C08DF;
+	Fri, 12 Dec 2025 22:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765579185; cv=none; b=HpYch7LZInXHHnOHNYuUI2I5oWdj+XYj6373FDQe9V1sxIEZYlJkuPsLAv/d8o7OjTEO2+CCNjPLxRCZPPxyz8lDnIKjMEv3+YHFLjhCHevO77cH2kULLvwx3WPPN5tgmiVkP0bOOovYGEWiI2TI9doq6wfuQT4Ph/MKcRI+RQg=
+	t=1765579188; cv=none; b=WWTWWyScKQVb046BL8QSu2HXfyc29KdzLuBViODPbXFJRaI0JZvhexHv+nSu6OF/zGGK24ybkbRpRuFExdy0MCfLZC4d1ljuzi69mN7chPHZyu2aFAHYnENrefDLGNINGy3HrMTOmzS8o2Q3cT7zHfkWzfIoMCrKXxWiIRHgfTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765579185; c=relaxed/simple;
-	bh=En+G5End2AK7R9Jp9jH88aqH0V7NIQgAbC6srDNX1fM=;
+	s=arc-20240116; t=1765579188; c=relaxed/simple;
+	bh=PBKOld62qb3aIXy84QE4/Vk+CdaXTEqGox5SaOfThHc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VNjxkcFG3RxdR8PvBOBtaoh4M2AT5QYfJZ9AhngvqM7vfiYEr76Wf1LPP5WkfH8oGWate/J9rYpKdI9IptLrt2sbwV+uF9X/Vw6xizlk4ziL8RfrGp8YEUAsFAihvrDaTUzvMlYzZAQqOATfJoTPuSbSoEzfCCG0WR887cWHRoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGe0pLN7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575C1C19422;
-	Fri, 12 Dec 2025 22:39:42 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=YXqAxZsWDRXi3hQTunYLj7ifxC2vjW2yXiuRbt5FYn0F6bnWjMJY6iWEQJuvzCNarXjtTWlvk31pOZiqXr58Z1SmATCVqSVAD1Eo0gkvSq5vUI/S5ILG8iM2KtMhDO0SvufNLzHwC5cuUqvg5fYYn0yBaBXMO5BtMhP7Rj9VXTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfsBUhwD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05152C4CEF5;
+	Fri, 12 Dec 2025 22:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765579184;
-	bh=En+G5End2AK7R9Jp9jH88aqH0V7NIQgAbC6srDNX1fM=;
+	s=k20201202; t=1765579187;
+	bh=PBKOld62qb3aIXy84QE4/Vk+CdaXTEqGox5SaOfThHc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NGe0pLN7ypbCZzN9Rtkjv/nE5/IdxxzMMg/0EdKBGw+ZXvj7udEj4MUDRMNeKWPDn
-	 ZE6vELmQbTADxggSpmzXMGY/jgwiuE7IT6FlY8uG7oyCqiXxW4sRVQv+baxECx0vpo
-	 gZN/RxzHH+NIZUr7bCRZQueGHTZ26126D6rtU81gy4Cjl77i4auE64Xaw4XiPJGIic
-	 derMC/A86Vs9GBT8uNUNoPrxYuuiMy5tmvukGIYzwQ9AoHIYeMVgS6h+/BmG6BUmWV
-	 5Aub2TBJbg8Upt0KAEMYfZXMNal6Pzoe1Z3Q4P8BXmF7EvY5/V0x7ie2ii4bX/IY/R
-	 CcnjcvvBGxZEA==
+	b=mfsBUhwDIDqsp85o5x8bVDDKZO+7PN92uUjLWiNMZOYqOsq8x3qawibnc4cGhz/Qk
+	 25jN+bc1qYuIT1RcVqdTQIAsYVZWYWS7yMZnBCfu4gRGKbcX44ZwOP2HK0kZIaXPtU
+	 tSVpsOK2XcvXA1iJFphbUiZ2bMSx/YGy0hzuENhvAYlJHAQqJoZi/qtjl45x1KcOb8
+	 q9H7GLaB02IRGYGefTceI/JIyjRpvYwJZgXGdjUYXigc3rXTQP3rDWpuLg/CdWX9mN
+	 z1d1+8qt5Z1DA8Z4+JCa1Yq5FGx2VS4GT47xy1F7J59bdo/r6kUlKLLxJ05Ivo6Bze
+	 tcD6tsNy0zNkQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 13 Dec 2025 07:39:14 +0900
-Subject: [PATCH RFC 2/6] sunrpc: remove special handling of NULL pool from
- svc_start/stop_kthreads()
+Date: Sat, 13 Dec 2025 07:39:15 +0900
+Subject: [PATCH RFC 3/6] sunrpc: track the max number of requested threads
+ in a pool
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251213-nfsd-dynathread-v1-2-de755e59cbc4@kernel.org>
+Message-Id: <20251213-nfsd-dynathread-v1-3-de755e59cbc4@kernel.org>
 References: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
 In-Reply-To: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -61,122 +61,64 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3170; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=En+G5End2AK7R9Jp9jH88aqH0V7NIQgAbC6srDNX1fM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpPJmoAa2yTOUtJ6P9idQv872HMKEYxxzFgfI04
- OPhnOXdIXKJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaTyZqAAKCRAADmhBGVaC
- FVxnD/9nn+oTWCUNdxFkMZY7aCdTLByi1MSUP0/2eoTVNdqOcXtpKk9kkxXK1u01YJs3vuPDTS9
- TU34miZWs3ICC9MzmUdv/ZSPR/7O1oyBMoRqdZ5OvhoGkcGtvjfteVCdx3u6HXmUbYWkOml/wxk
- cytr8EOZ0isvKX1fNI8LejYaEyN0yKH0wIyxh48dve57H9U4feO7aqQErqnVpE+7432DGQCDg46
- f9GufuwY0TPvW0Ry6w7duTH979aNQrzdTAro2n8NlbMZaXRbYtxQ2ucHf+J15jXP7DHIOSEGeUO
- fcn0Qr+HY7dzfvIBflVWD9WgYkmOfvBqi87ZvAT8n1XmtEco9lAW/QLtmWPIzNuX3xO5WrhyBa0
- GQSLogZu+Nu2gBs5zIC4J1/YEQp/POiBZOzSIfE/ZbTaN/zUmripHl2kfFqzkRHhU+MPsjrB6Ry
- xZuI5EJhMBn77T1qpIDuK7QvpepDDP2wrW0I7gcLs1aOIATY6PejLMy5mhoIHquTIsz56vUKi0d
- Pmqb28lkHcKx4vAdMcWqBFYLQZWVriRpCZk0/xFkp9vNvXejblqC/L/4/4cDDnLiPz2GkJkBtr0
- Jk28tEOvCIiIqu0H5Ecgh+vIoby9NN5jVjNWgeUz7KihTPZAXTKxWOh9oYjNvJiYdCVjGbwhiwq
- q3JgvvlcPBqJSgA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1768; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=PBKOld62qb3aIXy84QE4/Vk+CdaXTEqGox5SaOfThHc=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpPJmoQYoeeQc4T9DkAvMsTkadnS0nwtEAyMVPF
+ HTG+B5OFRCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaTyZqAAKCRAADmhBGVaC
+ FSbmD/4lAqmiBjKc83UVvYOunR+6KzIz/U4Q5BBUxJ5jneRxcZdldc9qPNF82pmOM1ITjU0PfT6
+ mY8ysicZDTWvABjbHBMGMsuhmzBaVHFTb423x5ig4Upau20HeXitgFe758zo1sXSNtfWW0NvKm9
+ ERNBxV4mCr45CBgewHz3tqG0dzHOrE2RoAmTVPaWuupQcAIpZvZX9OVVdZiGFJgHDrtnM7E2MEF
+ LkSIO/sXVIY0gOBohxsQr4ufTDs9AVOGjpq/FsUAQMPaNTVHHeLKnZyEphr1QLHYuIth2B5Wn4n
+ CbzHTzDlUc6iB5O/KuPZafAiDpJbRjxX/pzZjG/DLdjJlFIRWYsc5agu6IXfxUYi/ePVFf8YFc6
+ J36kUmBwNOw9/MaE1bo5BTwUm78W5xjyLdJmj4qbtqq3TaHRrUoBpQ5Qb1yXxvjR/78kniQhIxb
+ XrOS1714N9F+VigcQLp4wie9MWX7hdU83d1HN6ltH3wLsSjbrVzqWIsNfmYuJL0nBbgjVfyBnP1
+ lwTGTnt3VMKpKwhVDWrwA0kgmJH9tzMdiMHRpwQq+pR6D/HlyRaoEHF5kNu5FbCwp3v68/2+djo
+ pa8JPCySYeFOBJ4y9cwmQfjFeNjtrNz2EKziTXBDROB9Uy0JG+Q2s9TcMfUeYQga4tNajJDfYz/
+ DJ3Rh4IIjOqABVQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Now that svc_set_num_threads() handles distributing the threads among
-the available pools, remove the special handling of a NULL pool pointer
-from svc_start_kthreads() and svc_stop_kthreads().
+The kernel currently tracks the number of threads running in a pool in
+the "sp_nrthreads" field. In the future, where threads are dynamically
+spun up and down, it'll be necessary to keep track of the maximum number
+of requested threads separately from the actual number running.
+
+Add a pool->sp_nrthrmax parameter to track this. When userland changes
+the number of threads in a pool, update that value accordingly.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/svc.c | 53 +++++++----------------------------------------------
- 1 file changed, 7 insertions(+), 46 deletions(-)
+ include/linux/sunrpc/svc.h | 3 ++-
+ net/sunrpc/svc.c           | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index dd5fbbf8b3d39df6c17a7624edf344557fffd32c..ee9260ca908c907f4373f4cfa471b272bc7bcc8c 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -35,8 +35,9 @@
+  */
+ struct svc_pool {
+ 	unsigned int		sp_id;		/* pool id; also node id on NUMA */
++	unsigned int		sp_nrthreads;	/* # of threads currently running in pool */
++	unsigned int		sp_nrthrmax;	/* Max requested number of threads in pool */
+ 	struct lwq		sp_xprts;	/* pending transports */
+-	unsigned int		sp_nrthreads;	/* # of threads in pool */
+ 	struct list_head	sp_all_threads;	/* all server threads */
+ 	struct llist_head	sp_idle_threads; /* idle server threads */
+ 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 3fe5a7f8e57e3fa3837265ec06884b357d5373ff..3484c587a108e6f34e5c23edaf8f3a3c169c9e4a 100644
+index 3484c587a108e6f34e5c23edaf8f3a3c169c9e4a..8cd45f62ef74af6e0826b8f13cc903b0962af5e0 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -763,53 +763,19 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
- }
- EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+@@ -836,6 +836,7 @@ svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ 	if (!pool)
+ 		return -EINVAL;
  
--static struct svc_pool *
--svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
--{
--	return pool ? pool : &serv->sv_pools[(*state)++ % serv->sv_nrpools];
--}
--
--static struct svc_pool *
--svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
--		unsigned int *state)
--{
--	struct svc_pool *pool;
--	unsigned int i;
--
--	pool = target_pool;
--
--	if (!pool) {
--		for (i = 0; i < serv->sv_nrpools; i++) {
--			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
--			if (pool->sp_nrthreads)
--				break;
--		}
--	}
--
--	if (pool && pool->sp_nrthreads) {
--		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
--		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
--		return pool;
--	}
--	return NULL;
--}
--
- static int
- svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
- 	struct svc_rqst	*rqstp;
- 	struct task_struct *task;
--	struct svc_pool *chosen_pool;
--	unsigned int state = serv->sv_nrthreads-1;
- 	int node;
- 	int err;
++	pool->sp_nrthrmax = nrservs;
+ 	nrservs -= pool->sp_nrthreads;
  
- 	do {
- 		nrservs--;
--		chosen_pool = svc_pool_next(serv, pool, &state);
--		node = svc_pool_map_get_node(chosen_pool->sp_id);
-+		node = svc_pool_map_get_node(pool->sp_id);
- 
--		rqstp = svc_prepare_thread(serv, chosen_pool, node);
-+		rqstp = svc_prepare_thread(serv, pool, node);
- 		if (!rqstp)
- 			return -ENOMEM;
- 		task = kthread_create_on_node(serv->sv_threadfn, rqstp,
-@@ -821,7 +787,7 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 
- 		rqstp->rq_task = task;
- 		if (serv->sv_nrpools > 1)
--			svc_pool_map_set_cpumask(task, chosen_pool->sp_id);
-+			svc_pool_map_set_cpumask(task, pool->sp_id);
- 
- 		svc_sock_update_bufs(serv);
- 		wake_up_process(task);
-@@ -840,16 +806,11 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- static int
- svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
--	unsigned int state = serv->sv_nrthreads-1;
--	struct svc_pool *victim;
--
- 	do {
--		victim = svc_pool_victim(serv, pool, &state);
--		if (!victim)
--			break;
--		svc_pool_wake_idle_thread(victim);
--		wait_on_bit(&victim->sp_flags, SP_VICTIM_REMAINS,
--			    TASK_IDLE);
-+		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-+		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+		svc_pool_wake_idle_thread(pool);
-+		wait_on_bit(&pool->sp_flags, SP_VICTIM_REMAINS, TASK_IDLE);
- 		nrservs++;
- 	} while (nrservs < 0);
- 	return 0;
+ 	if (nrservs > 0)
 
 -- 
 2.52.0
