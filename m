@@ -1,56 +1,58 @@
-Return-Path: <linux-nfs+bounces-17080-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17081-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D069DCBB420
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:35:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D549CBB426
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:38:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3C6E730088A5
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:35:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 825373008EA7
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:38:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EBC4309F1C;
-	Sat, 13 Dec 2025 21:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6812E92D2;
+	Sat, 13 Dec 2025 21:38:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RK3FdrSL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkrD6nWi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AEA1A83F9;
-	Sat, 13 Dec 2025 21:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9552B246798;
+	Sat, 13 Dec 2025 21:38:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765661723; cv=none; b=gxl8F8rSUicf6P3IzhZzpjD1WYS7AQqKNk/DdAhipnaHqqIr26OjKU7dnFbqF2yj7j3Y2ADeV+dZKTc4gjYp241ygRr4nAZAqnsZBB0ErCGzNDeu2yMMpJ2TH5Z4yz7xxJjpRM3GigbOHIlLfh8XP8igSw3x56i6B27ENRILMcA=
+	t=1765661923; cv=none; b=cbVOXznq1z18BT3evO0WZMog45DKuXIbeq5qgRgFrhWCP5pmaiwkeqYWY6gMw/ff6auUEKZOXuv5f2CRzj7ZS/7WV+3WeDtLhAzgZp8pCI7ZFX5YZoFdE68Ys0sN2AepcfH2wixtEOcbjm0BD1wQeUCZ2OfJsdlGC3HnOyU/1Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765661723; c=relaxed/simple;
-	bh=m8q3UCFLf7V04fENheYu1xfh1KxdNGvGfzMyrAOboEg=;
+	s=arc-20240116; t=1765661923; c=relaxed/simple;
+	bh=gkz9AhvTHlwtv2cVgbcVKM3B/qPO50m6F+I806zQruE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uZWS5LuZoJuQqL/m+/tHM6BwTxVT3yo50jgxWEhVjNQEfzNFlJGVrQgdsfCSqnzPVgg4kjrdqr/ZAUZ+gQ4i55sD3ir+NgZVwT8O+uMu3kopkY5ZcdQVEMymyZnEV59abpYDyY3KPHvOn3YjGTge1QF/epzaeV6FoBXjtfEWCDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RK3FdrSL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977B6C4CEFB;
-	Sat, 13 Dec 2025 21:35:20 +0000 (UTC)
+	 Content-Type:MIME-Version; b=LZWffRIJ+ilv7zTL5cJSRW6nxTrB6zJisRM4oDr2F1ZbdUB9rSciQO6XkKc/eL+FtJDlHb4ovoYc+JyZZjMTZWgYezTkUdRcH1LxAyZtT/cqtjFhB1Uyek7PUkkHcjcoffRiV910i+/zWkAd4tsl06Robjk0tEcV/BJS/e3OfZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkrD6nWi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99033C4CEF7;
+	Sat, 13 Dec 2025 21:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765661722;
-	bh=m8q3UCFLf7V04fENheYu1xfh1KxdNGvGfzMyrAOboEg=;
+	s=k20201202; t=1765661923;
+	bh=gkz9AhvTHlwtv2cVgbcVKM3B/qPO50m6F+I806zQruE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RK3FdrSLBjn3sDc0ybBo+HkjUpBTuPhXTWGKpOVpB/Fp/Jo56C2NQf5BSBclE+kh+
-	 QgnbTxi0c3Br3mzzQz5uIDoPOgInaSAne3nzdebBdMmbFZg8gdUs0pIUe0Adzf56Ed
-	 KJfxMMMiSIhJKA/1QCTW3BY6G9SaBp8RMvLh/A8gM6UpoatBCEVnKgpIucSutQb+TP
-	 Y4a4RXOgY+UiZccL0Y6il6DDXZCiBYxMMmywCTj+bKsu+HdA7ERzfG8dLqmlQoSgac
-	 PWVhbK9yYlDBcFO4+812GYaxAYLpQL+alUvE1wYHfhCC9soinVEcdjdzwRlakZqpme
-	 ay8Hvqgu4Ry2A==
-Message-ID: <2d56440cd9747988358e1d3e1d0b981626329f62.camel@kernel.org>
-Subject: Re: [PATCH RFC 0/6] nfsd: allow for a dynamically-sized threadpool
+	b=kkrD6nWiwwAcnyyBvUZh1fEbBsQ5k7xKsXKeOs6HahOGESJ7QyWETS1OxbBCOhRYh
+	 QQ+EMUCpdcSrfPtivmRIDh+pj7DM66DEQr7Y5y7q1B4dm5LuIrugb4MtQN/u6m+0Mh
+	 FGRx3kFYMCuvsU0zX4kawnBz/ZV1dLlz5EqQGBJky4GmPkcp8hrKsIaqmae9yUaTtI
+	 lGZ3mnF3BEhxgiwdTxCV8xubwxWwAoEy//pPZWhFdBlg+bSr/bUxzWnqoVstu3ISH1
+	 FGBf7S2wsoEaQDzQz48yt4uBN1rg6ULwEW9TAt1SjJyRfNUPe1ZbLYV1qnWxhuDnPA
+	 PRdvKZLQRfm6g==
+Message-ID: <92da69632c342cf4ab82a379a51670d676075b53.camel@kernel.org>
+Subject: Re: [PATCH RFC 4/6] sunrpc: introduce the concept of a minimum
+ number of threads per pool
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
  NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
  <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 14 Dec 2025 06:35:18 +0900
-In-Reply-To: <53080a86-df29-4321-8b51-c5af565cc6f2@app.fastmail.com>
+Date: Sun, 14 Dec 2025 06:38:39 +0900
+In-Reply-To: <828c4fe7-930b-41b3-be73-62b2c76f43e4@app.fastmail.com>
 References: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
-	 <53080a86-df29-4321-8b51-c5af565cc6f2@app.fastmail.com>
+	 <20251213-nfsd-dynathread-v1-4-de755e59cbc4@kernel.org>
+	 <828c4fe7-930b-41b3-be73-62b2c76f43e4@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,75 +137,295 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 14:34 -0500, Chuck Lever wrote:
+On Sat, 2025-12-13 at 15:19 -0500, Chuck Lever wrote:
 >=20
 > On Fri, Dec 12, 2025, at 5:39 PM, Jeff Layton wrote:
-> > This patchset changes nfsd to dynamically size its threadpool as
-> > needed. The main user-visible change is the addition of new controls
-> > that allow the admin to set a minimum number of threads.
+> > Add a new pool->sp_nrthrmin field to track the minimum number of thread=
+s
+> > in a pool. Add min_threads parameters to both svc_set_num_threads() and
+> > svc_set_pool_threads(). If min_threads is non-zero, then have
+> > svc_set_num_threads() ensure that the number of running threads is
+> > between the min and the max.
 > >=20
-> > When the minimum is set to a non-zero value, the traditional "threads"
-> > setting is interpreted as a maximum number of threads instead of a
-> > static count. The server will start the minimum number of threads, and
-> > then ramp up the thread count as needed. When the server is idle, it
-> > will gradually ramp down the thread count.
+> > For now, the min_threads is always 0, but a later patch will pass the
+> > proper value through from nfsd.
 > >=20
-> > This control scheme should allow us to sanely switch between kernels
-> > that do and do not support dynamic threading. In the case where dynamic
-> > threading is not supported, the user will just get the static maximum
-> > number of threads.
->=20
-> An important consideration!
->=20
->=20
-> > The series is based on a set of draft patches by Neil. There are a
-> > number of changes from his work:
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/lockd/svc.c             |  4 ++--
+> >  fs/nfs/callback.c          |  8 ++++----
+> >  fs/nfsd/nfssvc.c           |  8 ++++----
+> >  include/linux/sunrpc/svc.h |  7 ++++---
+> >  net/sunrpc/svc.c           | 21 ++++++++++++++++++---
+> >  5 files changed, 32 insertions(+), 16 deletions(-)
 > >=20
-> > 1/ his original series was based around a new setting that defined a
-> > maximum number of threads. This one instead adds a control to define a
-> > minimum number of threads.
->=20
-> My concern is whether one or more clients can force this mechanism
-> to continue creating threads until resource exhaustion causes a
-> denial of service.
->=20
-
-The old "threads" setting is repurposed as a maximum when "min-theads"
-is set. If someone sets "threads" high enough that they can drive the
-machine into resource exhaustion, then that's an administrative error
-IMO.
-
-> I'm not convinced that setting a minimum number of threads is all
-> that interesting. Can you elaborate on why you chose that design?
->=20
-
-The main reason to do dynamic threading is that NFS activity can be
-spotty. Servers often have periods where they are very busy and other
-times where they are idle.
-
-Today, admins usually just set "threads" to the maximum number that
-they think they will ever need to deal with this. This is a waste of
-resources when nfsd is idle, of course. For a dedicated NFS server that
-isn't doing anything else, that's usually considered acceptable.
-
-So, I see the dynamic threading as mostly useful for machines that are
-running nfsd as a "side job". e.g. -- a compute-heavy server that runs
-nfsd in order to make its results available to other hosts. In those
-cases, it makes sense to allow the thread count to ramp down when no
-one is accessing nfsd so that those resources can be used for other
-things.
-
-With that in mind, it makes sense to repurpose "threads" as a maximum,
-since that reflects the reality for most people today. So, the new
-control should have the effect of setting a minimum number of threads.
+> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+> > index=20
+> > fbf132b4e08d11a91784c21ee0209fd7c149fd9d..7899205314391415dfb698ab58fe9=
+7efc426d928=20
+> > 100644
+> > --- a/fs/lockd/svc.c
+> > +++ b/fs/lockd/svc.c
+> > @@ -340,7 +340,7 @@ static int lockd_get(void)
+> >  		return -ENOMEM;
+> >  	}
+> >=20
+> > -	error =3D svc_set_num_threads(serv, 1);
+> > +	error =3D svc_set_num_threads(serv, 1, 0);
+> >  	if (error < 0) {
+> >  		svc_destroy(&serv);
+> >  		return error;
+> > @@ -368,7 +368,7 @@ static void lockd_put(void)
+> >  	unregister_inet6addr_notifier(&lockd_inet6addr_notifier);
+> >  #endif
+> >=20
+> > -	svc_set_num_threads(nlmsvc_serv, 0);
+> > +	svc_set_num_threads(nlmsvc_serv, 0, 0);
+> >  	timer_delete_sync(&nlmsvc_retry);
+> >  	svc_destroy(&nlmsvc_serv);
+> >  	dprintk("lockd_down: service destroyed\n");
+> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+> > index=20
+> > 44b35b7f8dc022f1d8c069eaf2f7d334c93f77fc..32bbc0e688ff3988e4ba50eeb36b4=
+808cec07c87=20
+> > 100644
+> > --- a/fs/nfs/callback.c
+> > +++ b/fs/nfs/callback.c
+> > @@ -119,9 +119,9 @@ static int nfs_callback_start_svc(int minorversion,=
 =20
-For my own testing, I've mostly set min-threads to 1. We could
-certainly convert this into a "dynamic-threading" bool setting and just
-hardcode the minimum to 1 or some other value in that case, but I think
-it makes sense to allow the flexibility to set the value higher, at
-least until we have a better feeling for how this affects performance.
+> > struct rpc_xprt *xprt,
+> >  	if (serv->sv_nrthreads =3D=3D nrservs)
+> >  		return 0;
+> >=20
+> > -	ret =3D svc_set_num_threads(serv, nrservs);
+> > +	ret =3D svc_set_num_threads(serv, nrservs, 0);
+> >  	if (ret) {
+> > -		svc_set_num_threads(serv, 0);
+> > +		svc_set_num_threads(serv, 0, 0);
+> >  		return ret;
+> >  	}
+> >  	dprintk("nfs_callback_up: service started\n");
+> > @@ -242,7 +242,7 @@ int nfs_callback_up(u32 minorversion, struct=20
+> > rpc_xprt *xprt)
+> >  	cb_info->users++;
+> >  err_net:
+> >  	if (!cb_info->users) {
+> > -		svc_set_num_threads(cb_info->serv, 0);
+> > +		svc_set_num_threads(cb_info->serv, 0, 0);
+> >  		svc_destroy(&cb_info->serv);
+> >  	}
+> >  err_create:
+> > @@ -268,7 +268,7 @@ void nfs_callback_down(int minorversion, struct net=
+=20
+> > *net)
+> >  	nfs_callback_down_net(minorversion, serv, net);
+> >  	cb_info->users--;
+> >  	if (cb_info->users =3D=3D 0) {
+> > -		svc_set_num_threads(serv, 0);
+> > +		svc_set_num_threads(serv, 0, 0);
+> >  		dprintk("nfs_callback_down: service destroyed\n");
+> >  		svc_destroy(&cb_info->serv);
+> >  	}
+> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > index=20
+> > aafec8ff588b85b0e26d40b76ef00953dc6472b4..993ed338764b0ccd7bdfb76bd6fbb=
+5dc6ab4022d=20
+> > 100644
+> > --- a/fs/nfsd/nfssvc.c
+> > +++ b/fs/nfsd/nfssvc.c
+> > @@ -594,7 +594,7 @@ void nfsd_shutdown_threads(struct net *net)
+> >  	}
+> >=20
+> >  	/* Kill outstanding nfsd threads */
+> > -	svc_set_num_threads(serv, 0);
+> > +	svc_set_num_threads(serv, 0, 0);
+> >  	nfsd_destroy_serv(net);
+> >  	mutex_unlock(&nfsd_mutex);
+> >  }
+> > @@ -704,7 +704,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
+=20
+> > net *net)
+> >=20
+> >  	/* Special case: When n =3D=3D 1, distribute threads equally among po=
+ols. */
+> >  	if (n =3D=3D 1)
+> > -		return svc_set_num_threads(nn->nfsd_serv, nthreads[0]);
+> > +		return svc_set_num_threads(nn->nfsd_serv, nthreads[0], 0);
+> >=20
+> >  	if (n > nn->nfsd_serv->sv_nrpools)
+> >  		n =3D nn->nfsd_serv->sv_nrpools;
+> > @@ -732,7 +732,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
+=20
+> > net *net)
+> >  	for (i =3D 0; i < n; i++) {
+> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
+> >  					   &nn->nfsd_serv->sv_pools[i],
+> > -					   nthreads[i]);
+> > +					   nthreads[i], 0);
+> >  		if (err)
+> >  			goto out;
+> >  	}
+> > @@ -741,7 +741,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
+=20
+> > net *net)
+> >  	for (i =3D n; i < nn->nfsd_serv->sv_nrpools; ++i) {
+> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
+> >  					   &nn->nfsd_serv->sv_pools[i],
+> > -					   0);
+> > +					   0, 0);
+> >  		if (err)
+> >  			goto out;
+> >  	}
+> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > index=20
+> > ee9260ca908c907f4373f4cfa471b272bc7bcc8c..35bd3247764ae8dc5dcdfffeea36f=
+7cfefd13372=20
+> > 100644
+> > --- a/include/linux/sunrpc/svc.h
+> > +++ b/include/linux/sunrpc/svc.h
+> > @@ -36,6 +36,7 @@
+> >  struct svc_pool {
+> >  	unsigned int		sp_id;		/* pool id; also node id on NUMA */
+> >  	unsigned int		sp_nrthreads;	/* # of threads currently running in pool=
+=20
+> > */
+> > +	unsigned int		sp_nrthrmin;	/* Min number of threads to run per pool *=
+/
+> >  	unsigned int		sp_nrthrmax;	/* Max requested number of threads in pool=
+=20
+> > */
+> >  	struct lwq		sp_xprts;	/* pending transports */
+> >  	struct list_head	sp_all_threads;	/* all server threads */
+> > @@ -72,7 +73,7 @@ struct svc_serv {
+> >  	struct svc_stat *	sv_stats;	/* RPC statistics */
+> >  	spinlock_t		sv_lock;
+> >  	unsigned int		sv_nprogs;	/* Number of sv_programs */
+> > -	unsigned int		sv_nrthreads;	/* # of server threads */
+> > +	unsigned int		sv_nrthreads;	/* # of running server threads */
+> >  	unsigned int		sv_max_payload;	/* datagram payload size */
+> >  	unsigned int		sv_max_mesg;	/* max_payload + 1 page for overheads */
+> >  	unsigned int		sv_xdrsize;	/* XDR buffer size */
+> > @@ -447,8 +448,8 @@ struct svc_serv *  svc_create_pooled(struct=20
+> > svc_program *prog,
+> >  				     struct svc_stat *stats,
+> >  				     unsigned int bufsize,
+> >  				     int (*threadfn)(void *data));
+> > -int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
+> > int);
+> > -int		   svc_set_num_threads(struct svc_serv *, int);
+> > +int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
+> > int, unsigned int);
+> > +int		   svc_set_num_threads(struct svc_serv *, int, unsigned int);
+> >  int		   svc_pool_stats_open(struct svc_info *si, struct file *file);
+> >  void		   svc_process(struct svc_rqst *rqstp);
+> >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
+> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > index=20
+> > 8cd45f62ef74af6e0826b8f13cc903b0962af5e0..dc818158f8529b62dcf96c91bd9a9=
+d4ab21df91f=20
+> > 100644
+> > --- a/net/sunrpc/svc.c
+> > +++ b/net/sunrpc/svc.c
+> > @@ -821,6 +821,7 @@ svc_stop_kthreads(struct svc_serv *serv, struct=20
+> > svc_pool *pool, int nrservs)
+> >   * @serv: RPC service to adjust
+> >   * @pool: Specific pool from which to choose threads
+> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
+=20
+> > threads)
+> > + * @min_threads: minimum number of threads per pool (0 means set to=
+=20
+> > same as nrservs)
+> >   *
+> >   * Create or destroy threads in @pool to bring it to @nrservs.
+> >   *
+> > @@ -831,12 +832,22 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
+=20
+> > svc_pool *pool, int nrservs)
+> >   * starting a thread.
+> >   */
+> >  int
+> > -svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
+=20
+> > nrservs)
+> > +svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
+=20
+> > nrservs,
+> > +		     unsigned int min_threads)
+> >  {
+> >  	if (!pool)
+> >  		return -EINVAL;
+> >=20
+> >  	pool->sp_nrthrmax =3D nrservs;
+> > +	if (min_threads) {
+> > +		if (pool->sp_nrthreads > nrservs) {
+> > +			// fallthrough to update nrservs
+> > +		} else if (pool->sp_nrthreads < min_threads) {
+> > +			nrservs =3D min_threads;
+>=20
+> Nit: The mixed sign types here gives me hives. Can you think of
+> a reason nrservs is a signed int rather than unsigned?
+>=20
+>=20
+> > +		} else {
+> > +			return 0;
+> > +		}
+> > +	}
+> >  	nrservs -=3D pool->sp_nrthreads;
+> >=20
+> >  	if (nrservs > 0)
 
-Thanks for taking a look!
+Because of this ^^^. We could certainly make the argument unsigned and
+use a signed value internally in this function. I'll plan to do that on
+the next respin.
+
+
+> > @@ -851,6 +862,7 @@ EXPORT_SYMBOL_GPL(svc_set_pool_threads);
+> >   * svc_set_num_threads - adjust number of threads in serv
+> >   * @serv: RPC service to adjust
+> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
+=20
+> > threads)
+> > + * @min_threads: minimum number of threads per pool (0 means set to=
+=20
+> > same as nrservs)
+> >   *
+> >   * Create or destroy threads in @serv to bring it to @nrservs. If ther=
+e
+> >   * are multiple pools then the new threads or victims will be=20
+> > distributed
+> > @@ -863,20 +875,23 @@ EXPORT_SYMBOL_GPL(svc_set_pool_threads);
+> >   * starting a thread.
+> >   */
+> >  int
+> > -svc_set_num_threads(struct svc_serv *serv, int nrservs)
+> > +svc_set_num_threads(struct svc_serv *serv, int nrservs, unsigned int=
+=20
+> > min_threads)
+> >  {
+> >  	int base =3D nrservs / serv->sv_nrpools;
+> >  	int remain =3D nrservs % serv->sv_nrpools;
+> >  	int i, err;
+> >=20
+> >  	for (i =3D 0; i < serv->sv_nrpools; ++i) {
+> > +		struct svc_pool *pool =3D &serv->sv_pools[i];
+> >  		int threads =3D base;
+> >=20
+> >  		if (remain) {
+> >  			++threads;
+> >  			--remain;
+> >  		}
+> > -		err =3D svc_set_pool_threads(serv, &serv->sv_pools[i], threads);
+> > +
+> > +		pool->sp_nrthrmin =3D min_threads;
+> > +		err =3D svc_set_pool_threads(serv, pool, threads, min_threads);
+> >  		if (err)
+> >  			break;
+> >  	}
+> >=20
+> > --=20
+> > 2.52.0
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
