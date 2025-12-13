@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-17081-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17082-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D549CBB426
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:38:46 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01266CBB42F
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:44:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 825373008EA7
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:38:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BD26B3005298
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:44:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6812E92D2;
-	Sat, 13 Dec 2025 21:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 895CA30AABE;
+	Sat, 13 Dec 2025 21:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkrD6nWi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiSxEMtS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9552B246798;
-	Sat, 13 Dec 2025 21:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2311EB5F8;
+	Sat, 13 Dec 2025 21:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765661923; cv=none; b=cbVOXznq1z18BT3evO0WZMog45DKuXIbeq5qgRgFrhWCP5pmaiwkeqYWY6gMw/ff6auUEKZOXuv5f2CRzj7ZS/7WV+3WeDtLhAzgZp8pCI7ZFX5YZoFdE68Ys0sN2AepcfH2wixtEOcbjm0BD1wQeUCZ2OfJsdlGC3HnOyU/1Lk=
+	t=1765662242; cv=none; b=lwj44JjOuCj6IR8ynkWm50lIQ5lhc52YpPf/qcTN27eAU2i+QLgUJa5XQpSqeT5OLPrbmOB0NgKUPbg5LUXbbVFkyQdUsaKo9U6+wGx1pSvWZ1M4l68BhgL9uFD/1oJE4n9pemQ8196BjrdbIBnP9L1mJ0/ZiC1WoEpJAxx3anc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765661923; c=relaxed/simple;
-	bh=gkz9AhvTHlwtv2cVgbcVKM3B/qPO50m6F+I806zQruE=;
+	s=arc-20240116; t=1765662242; c=relaxed/simple;
+	bh=S89q/3uXSIJOQ+FafMNoaojOpoqdAdMWlRtM3df+vMA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LZWffRIJ+ilv7zTL5cJSRW6nxTrB6zJisRM4oDr2F1ZbdUB9rSciQO6XkKc/eL+FtJDlHb4ovoYc+JyZZjMTZWgYezTkUdRcH1LxAyZtT/cqtjFhB1Uyek7PUkkHcjcoffRiV910i+/zWkAd4tsl06Robjk0tEcV/BJS/e3OfZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkrD6nWi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99033C4CEF7;
-	Sat, 13 Dec 2025 21:38:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=sOpsoPjRLCL1qXxcPBXGfY/kii/f4nGseEd6oCprTvwUXiDeHNgYPYx5KIfnWme2gbMfen4pBKrQnfEnWmm50ZpQf13hKEvlOejwIJOGumiqaQyvWBgC4DMyJjsbp6eWlFokkqEpRmHILYkZ8fB8pyD+qPzWb0N+QCJw0FDzV/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiSxEMtS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC6A2C4CEF7;
+	Sat, 13 Dec 2025 21:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765661923;
-	bh=gkz9AhvTHlwtv2cVgbcVKM3B/qPO50m6F+I806zQruE=;
+	s=k20201202; t=1765662241;
+	bh=S89q/3uXSIJOQ+FafMNoaojOpoqdAdMWlRtM3df+vMA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kkrD6nWiwwAcnyyBvUZh1fEbBsQ5k7xKsXKeOs6HahOGESJ7QyWETS1OxbBCOhRYh
-	 QQ+EMUCpdcSrfPtivmRIDh+pj7DM66DEQr7Y5y7q1B4dm5LuIrugb4MtQN/u6m+0Mh
-	 FGRx3kFYMCuvsU0zX4kawnBz/ZV1dLlz5EqQGBJky4GmPkcp8hrKsIaqmae9yUaTtI
-	 lGZ3mnF3BEhxgiwdTxCV8xubwxWwAoEy//pPZWhFdBlg+bSr/bUxzWnqoVstu3ISH1
-	 FGBf7S2wsoEaQDzQz48yt4uBN1rg6ULwEW9TAt1SjJyRfNUPe1ZbLYV1qnWxhuDnPA
-	 PRdvKZLQRfm6g==
-Message-ID: <92da69632c342cf4ab82a379a51670d676075b53.camel@kernel.org>
-Subject: Re: [PATCH RFC 4/6] sunrpc: introduce the concept of a minimum
- number of threads per pool
+	b=QiSxEMtS1dDBM5bjz15DiPV1oPmpq+prKDVPZKWMGIGoM90LsoytGMKLrzfvehICb
+	 +LgFXSp/LYYOqTemXUjprPLqtTcUTruY7ghTWLuXChTV6uUZ5kSUd06A1Jqs12It5Y
+	 vaF2Judlvcroatb20ntOkI1jPvw+rhKOv5jUg/tRXX4dgjqTaKqqcVXOuz7oL1DmE1
+	 6LHtbupYV7udq1RX5G6AO/zZvxTX6ShJtjZTOZh/0kzsNvgHcGL9Ez7S294ReiLp9c
+	 wHfYSi8odmfTcuMP+bYtxcDa2ddO5jmmdgcgHTUL36CmCoxODezN83sEtmQWpoy4ol
+	 Ows4X5krdzSEQ==
+Message-ID: <c3b8dddebecbcc5ed56c9ebcf578cd4a52ba6b77.camel@kernel.org>
+Subject: Re: [PATCH RFC 5/6] nfsd: adjust number of running nfsd threads
+ based on activity
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
  NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
  <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 14 Dec 2025 06:38:39 +0900
-In-Reply-To: <828c4fe7-930b-41b3-be73-62b2c76f43e4@app.fastmail.com>
+Date: Sun, 14 Dec 2025 06:43:57 +0900
+In-Reply-To: <ede9496b-aaa8-41a9-8657-3a1f3cf4a9aa@app.fastmail.com>
 References: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
-	 <20251213-nfsd-dynathread-v1-4-de755e59cbc4@kernel.org>
-	 <828c4fe7-930b-41b3-be73-62b2c76f43e4@app.fastmail.com>
+	 <20251213-nfsd-dynathread-v1-5-de755e59cbc4@kernel.org>
+	 <ede9496b-aaa8-41a9-8657-3a1f3cf4a9aa@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,295 +137,498 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 15:19 -0500, Chuck Lever wrote:
+On Sat, 2025-12-13 at 15:54 -0500, Chuck Lever wrote:
 >=20
 > On Fri, Dec 12, 2025, at 5:39 PM, Jeff Layton wrote:
-> > Add a new pool->sp_nrthrmin field to track the minimum number of thread=
-s
-> > in a pool. Add min_threads parameters to both svc_set_num_threads() and
-> > svc_set_pool_threads(). If min_threads is non-zero, then have
-> > svc_set_num_threads() ensure that the number of running threads is
-> > between the min and the max.
+> > This patch is based on a draft patch by Neil:
 > >=20
-> > For now, the min_threads is always 0, but a later patch will pass the
-> > proper value through from nfsd.
+> > svc_recv() is changed to return a status.  This can be:
 > >=20
+> >  -ETIMEDOUT - waited for 5 seconds and found nothing to do.  This is
+> >           boring.  Also there are more actual threads than really
+> >           needed.
+> >  -EBUSY - I did something, but there is more stuff to do and no one
+> >           idle who I can wake up to do it.
+> >           BTW I successful set a flag: SP_TASK_STARTING.  You better
+> >           clear it.
+> >  0 - just minding my own business, nothing to see here.
+> >=20
+> > nfsd() is changed to pay attention to this status.  In the case of
+> > -ETIMEDOUT, if the service mutex can be taken (trylock), the thread
+> > becomes and RQ_VICTIM so that it will exit.  In the case of -EBUSY, if
+> > the actual number of threads is below the calculated maximum, a new
+> > thread is started.  SP_TASK_STARTING is cleared.
+>=20
+> Jeff, since you reworked things to be based on a minimum rather
+> than a maximum count, is this paragraph now stale?
+>=20
+>=20
+
+Yes, it is. Will fix.
+
+> > To support the above, some code is split out of svc_start_kthreads()
+> > into svc_new_thread().
+> >=20
+> > I think we want memory pressure to be able to push a thread into
+> > returning -ETIMEDOUT.  That can come later.
+> >=20
+> > Signed-off-by: NeilBrown <neil@brown.name>
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >  fs/lockd/svc.c             |  4 ++--
-> >  fs/nfs/callback.c          |  8 ++++----
-> >  fs/nfsd/nfssvc.c           |  8 ++++----
-> >  include/linux/sunrpc/svc.h |  7 ++++---
-> >  net/sunrpc/svc.c           | 21 ++++++++++++++++++---
-> >  5 files changed, 32 insertions(+), 16 deletions(-)
+> >  fs/nfsd/nfssvc.c               | 35 ++++++++++++++++++++-
+> >  fs/nfsd/trace.h                | 35 +++++++++++++++++++++
+> >  include/linux/sunrpc/svc.h     |  2 ++
+> >  include/linux/sunrpc/svcsock.h |  2 +-
+> >  net/sunrpc/svc.c               | 69 ++++++++++++++++++++++++----------=
+--------
+> >  net/sunrpc/svc_xprt.c          | 45 ++++++++++++++++++++++-----
+> >  6 files changed, 148 insertions(+), 40 deletions(-)
 > >=20
-> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-> > index=20
-> > fbf132b4e08d11a91784c21ee0209fd7c149fd9d..7899205314391415dfb698ab58fe9=
-7efc426d928=20
-> > 100644
-> > --- a/fs/lockd/svc.c
-> > +++ b/fs/lockd/svc.c
-> > @@ -340,7 +340,7 @@ static int lockd_get(void)
-> >  		return -ENOMEM;
-> >  	}
-> >=20
-> > -	error =3D svc_set_num_threads(serv, 1);
-> > +	error =3D svc_set_num_threads(serv, 1, 0);
-> >  	if (error < 0) {
-> >  		svc_destroy(&serv);
-> >  		return error;
-> > @@ -368,7 +368,7 @@ static void lockd_put(void)
-> >  	unregister_inet6addr_notifier(&lockd_inet6addr_notifier);
-> >  #endif
-> >=20
-> > -	svc_set_num_threads(nlmsvc_serv, 0);
-> > +	svc_set_num_threads(nlmsvc_serv, 0, 0);
-> >  	timer_delete_sync(&nlmsvc_retry);
-> >  	svc_destroy(&nlmsvc_serv);
-> >  	dprintk("lockd_down: service destroyed\n");
-> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-> > index=20
-> > 44b35b7f8dc022f1d8c069eaf2f7d334c93f77fc..32bbc0e688ff3988e4ba50eeb36b4=
-808cec07c87=20
-> > 100644
-> > --- a/fs/nfs/callback.c
-> > +++ b/fs/nfs/callback.c
-> > @@ -119,9 +119,9 @@ static int nfs_callback_start_svc(int minorversion,=
-=20
-> > struct rpc_xprt *xprt,
-> >  	if (serv->sv_nrthreads =3D=3D nrservs)
-> >  		return 0;
-> >=20
-> > -	ret =3D svc_set_num_threads(serv, nrservs);
-> > +	ret =3D svc_set_num_threads(serv, nrservs, 0);
-> >  	if (ret) {
-> > -		svc_set_num_threads(serv, 0);
-> > +		svc_set_num_threads(serv, 0, 0);
-> >  		return ret;
-> >  	}
-> >  	dprintk("nfs_callback_up: service started\n");
-> > @@ -242,7 +242,7 @@ int nfs_callback_up(u32 minorversion, struct=20
-> > rpc_xprt *xprt)
-> >  	cb_info->users++;
-> >  err_net:
-> >  	if (!cb_info->users) {
-> > -		svc_set_num_threads(cb_info->serv, 0);
-> > +		svc_set_num_threads(cb_info->serv, 0, 0);
-> >  		svc_destroy(&cb_info->serv);
-> >  	}
-> >  err_create:
-> > @@ -268,7 +268,7 @@ void nfs_callback_down(int minorversion, struct net=
-=20
-> > *net)
-> >  	nfs_callback_down_net(minorversion, serv, net);
-> >  	cb_info->users--;
-> >  	if (cb_info->users =3D=3D 0) {
-> > -		svc_set_num_threads(serv, 0);
-> > +		svc_set_num_threads(serv, 0, 0);
-> >  		dprintk("nfs_callback_down: service destroyed\n");
-> >  		svc_destroy(&cb_info->serv);
-> >  	}
 > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
 > > index=20
-> > aafec8ff588b85b0e26d40b76ef00953dc6472b4..993ed338764b0ccd7bdfb76bd6fbb=
-5dc6ab4022d=20
+> > 993ed338764b0ccd7bdfb76bd6fbb5dc6ab4022d..26c3a6cb1f400f1b757d26f6ba77e=
+27deb7e8ee2=20
 > > 100644
 > > --- a/fs/nfsd/nfssvc.c
 > > +++ b/fs/nfsd/nfssvc.c
-> > @@ -594,7 +594,7 @@ void nfsd_shutdown_threads(struct net *net)
+> > @@ -896,9 +896,11 @@ static int
+> >  nfsd(void *vrqstp)
+> >  {
+> >  	struct svc_rqst *rqstp =3D (struct svc_rqst *) vrqstp;
+> > +	struct svc_pool *pool =3D rqstp->rq_pool;
+> >  	struct svc_xprt *perm_sock =3D=20
+> > list_entry(rqstp->rq_server->sv_permsocks.next, typeof(struct=20
+> > svc_xprt), xpt_list);
+> >  	struct net *net =3D perm_sock->xpt_net;
+> >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > +	bool have_mutex =3D false;
+> >=20
+> >  	/* At this point, the thread shares current->fs
+> >  	 * with the init process. We need to create files with the
+> > @@ -916,7 +918,36 @@ nfsd(void *vrqstp)
+> >  	 * The main request loop
+> >  	 */
+> >  	while (!svc_thread_should_stop(rqstp)) {
+> > -		svc_recv(rqstp);
+> > +		switch (svc_recv(rqstp)) {
+> > +		case -ETIMEDOUT: /* Nothing to do */
+> > +			if (mutex_trylock(&nfsd_mutex)) {
+> > +				if (pool->sp_nrthreads > pool->sp_nrthrmin) {
+> > +					trace_nfsd_dynthread_kill(net, pool);
+> > +					set_bit(RQ_VICTIM, &rqstp->rq_flags);
+> > +					have_mutex =3D true;
+> > +				} else
+> > +					mutex_unlock(&nfsd_mutex);
+> > +			} else {
+> > +				trace_nfsd_dynthread_trylock_fail(net, pool);
+> > +			}
+> > +			break;
+> > +		case -EBUSY: /* Too much to do */
+> > +			if (pool->sp_nrthreads < pool->sp_nrthrmax &&
+> > +			    mutex_trylock(&nfsd_mutex)) {
+> > +				// check no idle threads?
+>=20
+> Can this comment be clarified? It looks like a note-to-self, that maybe
+> something is unfinished.
+>=20
+
+That's leftover from Neil's original patch. I'm not sure what his
+thinking was there. I'll plan to remove it.
+
+>=20
+> > +				if (pool->sp_nrthreads < pool->sp_nrthrmax) {
+> > +					trace_nfsd_dynthread_start(net, pool);
+> > +					svc_new_thread(rqstp->rq_server, pool);
+> > +				}
+> > +				mutex_unlock(&nfsd_mutex);
+> > +			} else {
+> > +				trace_nfsd_dynthread_trylock_fail(net, pool);
+> > +			}
+> > +			clear_bit(SP_TASK_STARTING, &pool->sp_flags);
+> > +			break;
+> > +		default:
+> > +			break;
+> > +		}
+> >  		nfsd_file_net_dispose(nn);
 > >  	}
 > >=20
-> >  	/* Kill outstanding nfsd threads */
-> > -	svc_set_num_threads(serv, 0);
-> > +	svc_set_num_threads(serv, 0, 0);
-> >  	nfsd_destroy_serv(net);
-> >  	mutex_unlock(&nfsd_mutex);
+> > @@ -924,6 +955,8 @@ nfsd(void *vrqstp)
+> >=20
+> >  	/* Release the thread */
+> >  	svc_exit_thread(rqstp);
+> > +	if (have_mutex)
+> > +		mutex_unlock(&nfsd_mutex);
+> >  	return 0;
 > >  }
-> > @@ -704,7 +704,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
 > >=20
-> >  	/* Special case: When n =3D=3D 1, distribute threads equally among po=
-ols. */
-> >  	if (n =3D=3D 1)
-> > -		return svc_set_num_threads(nn->nfsd_serv, nthreads[0]);
-> > +		return svc_set_num_threads(nn->nfsd_serv, nthreads[0], 0);
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index=20
+> > 5ae2a611e57f4b4e51a4d9eb6e0fccb66ad8d288..8885fd9bead98ebf55379d68ab9c3=
+701981a5150=20
+> > 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -91,6 +91,41 @@ DEFINE_EVENT(nfsd_xdr_err_class, nfsd_##name##_err, =
+\
+> >  DEFINE_NFSD_XDR_ERR_EVENT(garbage_args);
+> >  DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
 > >=20
-> >  	if (n > nn->nfsd_serv->sv_nrpools)
-> >  		n =3D nn->nfsd_serv->sv_nrpools;
-> > @@ -732,7 +732,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
-> >  	for (i =3D 0; i < n; i++) {
-> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> >  					   &nn->nfsd_serv->sv_pools[i],
-> > -					   nthreads[i]);
-> > +					   nthreads[i], 0);
-> >  		if (err)
-> >  			goto out;
-> >  	}
-> > @@ -741,7 +741,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
-> >  	for (i =3D n; i < nn->nfsd_serv->sv_nrpools; ++i) {
-> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> >  					   &nn->nfsd_serv->sv_pools[i],
-> > -					   0);
-> > +					   0, 0);
-> >  		if (err)
-> >  			goto out;
-> >  	}
+> > +DECLARE_EVENT_CLASS(nfsd_dynthread_class,
+> > +	TP_PROTO(
+> > +		const struct net *net,
+> > +		const struct svc_pool *pool
+> > +	),
+> > +	TP_ARGS(net, pool),
+> > +	TP_STRUCT__entry(
+> > +		__field(unsigned int, netns_ino)
+> > +		__field(unsigned int, pool_id)
+> > +		__field(unsigned int, nrthreads)
+> > +		__field(unsigned int, nrthrmin)
+> > +		__field(unsigned int, nrthrmax)
+> > +	),
+> > +	TP_fast_assign(
+> > +		__entry->netns_ino =3D net->ns.inum;
+> > +		__entry->pool_id =3D pool->sp_id;
+> > +		__entry->nrthreads =3D pool->sp_nrthreads;
+> > +		__entry->nrthrmin =3D pool->sp_nrthrmin;
+> > +		__entry->nrthrmax =3D pool->sp_nrthrmax;
+> > +	),
+> > +	TP_printk("pool=3D%u nrthreads=3D%u nrthrmin=3D%u nrthrmax=3D%u",
+> > +		__entry->pool_id, __entry->nrthreads,
+> > +		__entry->nrthrmin, __entry->nrthrmax
+> > +	)
+> > +);
+> > +
+> > +#define DEFINE_NFSD_DYNTHREAD_EVENT(name) \
+> > +DEFINE_EVENT(nfsd_dynthread_class, nfsd_dynthread_##name, \
+> > +	TP_PROTO(const struct net *net, const struct svc_pool *pool), \
+> > +	TP_ARGS(net, pool))
+> > +
+> > +DEFINE_NFSD_DYNTHREAD_EVENT(start);
+> > +DEFINE_NFSD_DYNTHREAD_EVENT(kill);
+> > +DEFINE_NFSD_DYNTHREAD_EVENT(trylock_fail);
+> > +
+> >  #define show_nfsd_may_flags(x)						\
+> >  	__print_flags(x, "|",						\
+> >  		{ NFSD_MAY_EXEC,		"EXEC" },		\
 > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
 > > index=20
-> > ee9260ca908c907f4373f4cfa471b272bc7bcc8c..35bd3247764ae8dc5dcdfffeea36f=
-7cfefd13372=20
+> > 35bd3247764ae8dc5dcdfffeea36f7cfefd13372..f47e19c9bd9466986438766e9ab7b=
+4c71cda1ba6=20
 > > 100644
 > > --- a/include/linux/sunrpc/svc.h
 > > +++ b/include/linux/sunrpc/svc.h
-> > @@ -36,6 +36,7 @@
-> >  struct svc_pool {
-> >  	unsigned int		sp_id;		/* pool id; also node id on NUMA */
-> >  	unsigned int		sp_nrthreads;	/* # of threads currently running in pool=
+> > @@ -55,6 +55,7 @@ enum {
+> >  	SP_TASK_PENDING,	/* still work to do even if no xprt is queued */
+> >  	SP_NEED_VICTIM,		/* One thread needs to agree to exit */
+> >  	SP_VICTIM_REMAINS,	/* One thread needs to actually exit */
+> > +	SP_TASK_STARTING,	/* Task has started but not added to idle yet */
+> >  };
+> >=20
+> >=20
+> > @@ -442,6 +443,7 @@ struct svc_serv *svc_create(struct svc_program *,=
 =20
-> > */
-> > +	unsigned int		sp_nrthrmin;	/* Min number of threads to run per pool *=
-/
-> >  	unsigned int		sp_nrthrmax;	/* Max requested number of threads in pool=
+> > unsigned int,
+> >  bool		   svc_rqst_replace_page(struct svc_rqst *rqstp,
+> >  					 struct page *page);
+> >  void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
+> > +int		   svc_new_thread(struct svc_serv *serv, struct svc_pool *pool);
+> >  void		   svc_exit_thread(struct svc_rqst *);
+> >  struct svc_serv *  svc_create_pooled(struct svc_program *prog,
+> >  				     unsigned int nprog,
+> > diff --git a/include/linux/sunrpc/svcsock.h=20
+> > b/include/linux/sunrpc/svcsock.h
+> > index=20
+> > de37069aba90899be19b1090e6e90e509a3cf530..5c87d3fedd33e7edf5ade32e60523=
+cae7e9ebaba=20
+> > 100644
+> > --- a/include/linux/sunrpc/svcsock.h
+> > +++ b/include/linux/sunrpc/svcsock.h
+> > @@ -61,7 +61,7 @@ static inline u32 svc_sock_final_rec(struct svc_sock=
 =20
-> > */
-> >  	struct lwq		sp_xprts;	/* pending transports */
-> >  	struct list_head	sp_all_threads;	/* all server threads */
-> > @@ -72,7 +73,7 @@ struct svc_serv {
-> >  	struct svc_stat *	sv_stats;	/* RPC statistics */
-> >  	spinlock_t		sv_lock;
-> >  	unsigned int		sv_nprogs;	/* Number of sv_programs */
-> > -	unsigned int		sv_nrthreads;	/* # of server threads */
-> > +	unsigned int		sv_nrthreads;	/* # of running server threads */
-> >  	unsigned int		sv_max_payload;	/* datagram payload size */
-> >  	unsigned int		sv_max_mesg;	/* max_payload + 1 page for overheads */
-> >  	unsigned int		sv_xdrsize;	/* XDR buffer size */
-> > @@ -447,8 +448,8 @@ struct svc_serv *  svc_create_pooled(struct=20
-> > svc_program *prog,
-> >  				     struct svc_stat *stats,
-> >  				     unsigned int bufsize,
-> >  				     int (*threadfn)(void *data));
-> > -int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
-> > int);
-> > -int		   svc_set_num_threads(struct svc_serv *, int);
-> > +int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
-> > int, unsigned int);
-> > +int		   svc_set_num_threads(struct svc_serv *, int, unsigned int);
-> >  int		   svc_pool_stats_open(struct svc_info *si, struct file *file);
-> >  void		   svc_process(struct svc_rqst *rqstp);
-> >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
+> > *svsk)
+> >  /*
+> >   * Function prototypes.
+> >   */
+> > -void		svc_recv(struct svc_rqst *rqstp);
+> > +int		svc_recv(struct svc_rqst *rqstp);
+> >  void		svc_send(struct svc_rqst *rqstp);
+> >  int		svc_addsock(struct svc_serv *serv, struct net *net,
+> >  			    const int fd, char *name_return, const size_t len,
 > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
 > > index=20
-> > 8cd45f62ef74af6e0826b8f13cc903b0962af5e0..dc818158f8529b62dcf96c91bd9a9=
-d4ab21df91f=20
+> > dc818158f8529b62dcf96c91bd9a9d4ab21df91f..9fca2dd340037f82baa4936766ebe=
+0e38c3f0d85=20
 > > 100644
 > > --- a/net/sunrpc/svc.c
 > > +++ b/net/sunrpc/svc.c
-> > @@ -821,6 +821,7 @@ svc_stop_kthreads(struct svc_serv *serv, struct=20
-> > svc_pool *pool, int nrservs)
-> >   * @serv: RPC service to adjust
-> >   * @pool: Specific pool from which to choose threads
-> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
+> > @@ -714,9 +714,6 @@ svc_prepare_thread(struct svc_serv *serv, struct=
 =20
-> > threads)
-> > + * @min_threads: minimum number of threads per pool (0 means set to=
-=20
-> > same as nrservs)
-> >   *
-> >   * Create or destroy threads in @pool to bring it to @nrservs.
-> >   *
-> > @@ -831,12 +832,22 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
-=20
-> > svc_pool *pool, int nrservs)
-> >   * starting a thread.
-> >   */
-> >  int
-> > -svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
+> > svc_pool *pool, int node)
+> >=20
+> >  	rqstp->rq_err =3D -EAGAIN; /* No error yet */
+> >=20
+> > -	serv->sv_nrthreads +=3D 1;
+> > -	pool->sp_nrthreads +=3D 1;
+> > -
+> >  	/* Protected by whatever lock the service uses when calling
+> >  	 * svc_set_num_threads()
+> >  	 */
+> > @@ -763,45 +760,57 @@ void svc_pool_wake_idle_thread(struct svc_pool *p=
+ool)
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+> >=20
+> > -static int
+> > -svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int n=
+rservs)
+> > +int svc_new_thread(struct svc_serv *serv, struct svc_pool *pool)
+>=20
+> Is now an exported function, should get a kdoc comment.
+>=20
+
+ACK.
+
+>=20
+> >  {
+> >  	struct svc_rqst	*rqstp;
+> >  	struct task_struct *task;
+> >  	int node;
+> >  	int err;
+> >=20
+> > -	do {
+> > -		nrservs--;
+> > -		node =3D svc_pool_map_get_node(pool->sp_id);
+> > -
+> > -		rqstp =3D svc_prepare_thread(serv, pool, node);
+> > -		if (!rqstp)
+> > -			return -ENOMEM;
+> > -		task =3D kthread_create_on_node(serv->sv_threadfn, rqstp,
+> > -					      node, "%s", serv->sv_name);
+> > -		if (IS_ERR(task)) {
+> > -			svc_exit_thread(rqstp);
+> > -			return PTR_ERR(task);
+> > -		}
+> > +	node =3D svc_pool_map_get_node(pool->sp_id);
+> >=20
+> > -		rqstp->rq_task =3D task;
+> > -		if (serv->sv_nrpools > 1)
+> > -			svc_pool_map_set_cpumask(task, pool->sp_id);
+> > +	rqstp =3D svc_prepare_thread(serv, pool, node);
+> > +	if (!rqstp)
+> > +		return -ENOMEM;
+> > +	set_bit(SP_TASK_STARTING, &pool->sp_flags);
+> > +	task =3D kthread_create_on_node(serv->sv_threadfn, rqstp,
+> > +				      node, "%s", serv->sv_name);
+> > +	if (IS_ERR(task)) {
+> > +		clear_bit(SP_TASK_STARTING, &pool->sp_flags);
+> > +		svc_exit_thread(rqstp);
+>=20
+> svc_exit_thread() decrements serv->sv_nrthreads and pool->sp_nrthreads
+> but this call site hasn't incremented them yet. Perhaps this error
+> flow needs a simpler clean-up than calling svc_exit_thread().
+>=20
+
+ACK. I'll give that a harder look.
+
+>=20
+> > +		return PTR_ERR(task);
+> > +	}
+> >=20
+> > -		svc_sock_update_bufs(serv);
+> > -		wake_up_process(task);
+> > +	serv->sv_nrthreads +=3D 1;
+> > +	pool->sp_nrthreads +=3D 1;
+> >=20
+> > -		wait_var_event(&rqstp->rq_err, rqstp->rq_err !=3D -EAGAIN);
+> > -		err =3D rqstp->rq_err;
+> > -		if (err) {
+> > -			svc_exit_thread(rqstp);
+> > -			return err;
+> > -		}
+> > -	} while (nrservs > 0);
+> > +	rqstp->rq_task =3D task;
+> > +	if (serv->sv_nrpools > 1)
+> > +		svc_pool_map_set_cpumask(task, pool->sp_id);
+> >=20
+> > +	svc_sock_update_bufs(serv);
+> > +	wake_up_process(task);
+> > +
+> > +	wait_var_event(&rqstp->rq_err, rqstp->rq_err !=3D -EAGAIN);
+> > +	err =3D rqstp->rq_err;
+> > +	if (err) {
+> > +		svc_exit_thread(rqstp);
+> > +		return err;
+> > +	}
+> >  	return 0;
+> >  }
+> > +EXPORT_SYMBOL_GPL(svc_new_thread);
+> > +
+> > +static int
+> > +svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int n=
+rservs)
+> > +{
+> > +	int err =3D 0;
+> > +
+> > +	while (!err && nrservs--)
+> > +		err =3D svc_new_thread(serv, pool);
+> > +
+> > +	return err;
+> > +}
+> >=20
+> >  static int
+> >  svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int=
 =20
 > > nrservs)
-> > +svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
-=20
-> > nrservs,
-> > +		     unsigned int min_threads)
-> >  {
-> >  	if (!pool)
-> >  		return -EINVAL;
+> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > index=20
+> > 6973184ff6675211b4338fac80105894e9c8d4df..9612334300c8dae38720a0f5c61c0=
+f505432ec2f=20
+> > 100644
+> > --- a/net/sunrpc/svc_xprt.c
+> > +++ b/net/sunrpc/svc_xprt.c
+> > @@ -714,15 +714,22 @@ svc_thread_should_sleep(struct svc_rqst *rqstp)
+> >  	return true;
+> >  }
 > >=20
-> >  	pool->sp_nrthrmax =3D nrservs;
-> > +	if (min_threads) {
-> > +		if (pool->sp_nrthreads > nrservs) {
-> > +			// fallthrough to update nrservs
-> > +		} else if (pool->sp_nrthreads < min_threads) {
-> > +			nrservs =3D min_threads;
+> > -static void svc_thread_wait_for_work(struct svc_rqst *rqstp)
+> > +static bool nfsd_schedule_timeout(long timeout)
 >=20
-> Nit: The mixed sign types here gives me hives. Can you think of
-> a reason nrservs is a signed int rather than unsigned?
+> Perhaps svc_schedule_timeout() is a more appropriate name for
+> a function that resides in net/sunrpc/svc_xprt.c.
 >=20
+
+Sounds good.
+
 >=20
-> > +		} else {
-> > +			return 0;
-> > +		}
-> > +	}
-> >  	nrservs -=3D pool->sp_nrthreads;
-> >=20
-> >  	if (nrservs > 0)
-
-Because of this ^^^. We could certainly make the argument unsigned and
-use a signed value internally in this function. I'll plan to do that on
-the next respin.
-
-
-> > @@ -851,6 +862,7 @@ EXPORT_SYMBOL_GPL(svc_set_pool_threads);
-> >   * svc_set_num_threads - adjust number of threads in serv
-> >   * @serv: RPC service to adjust
-> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
-=20
-> > threads)
-> > + * @min_threads: minimum number of threads per pool (0 means set to=
-=20
-> > same as nrservs)
-> >   *
-> >   * Create or destroy threads in @serv to bring it to @nrservs. If ther=
-e
-> >   * are multiple pools then the new threads or victims will be=20
-> > distributed
-> > @@ -863,20 +875,23 @@ EXPORT_SYMBOL_GPL(svc_set_pool_threads);
-> >   * starting a thread.
-> >   */
-> >  int
-> > -svc_set_num_threads(struct svc_serv *serv, int nrservs)
-> > +svc_set_num_threads(struct svc_serv *serv, int nrservs, unsigned int=
-=20
-> > min_threads)
-> >  {
-> >  	int base =3D nrservs / serv->sv_nrpools;
-> >  	int remain =3D nrservs % serv->sv_nrpools;
-> >  	int i, err;
-> >=20
-> >  	for (i =3D 0; i < serv->sv_nrpools; ++i) {
-> > +		struct svc_pool *pool =3D &serv->sv_pools[i];
-> >  		int threads =3D base;
-> >=20
-> >  		if (remain) {
-> >  			++threads;
-> >  			--remain;
-> >  		}
-> > -		err =3D svc_set_pool_threads(serv, &serv->sv_pools[i], threads);
+> > +{
+> > +	return schedule_timeout(timeout) =3D=3D 0;
+> > +}
 > > +
-> > +		pool->sp_nrthrmin =3D min_threads;
-> > +		err =3D svc_set_pool_threads(serv, pool, threads, min_threads);
-> >  		if (err)
-> >  			break;
+> > +static bool svc_thread_wait_for_work(struct svc_rqst *rqstp)
+> >  {
+> >  	struct svc_pool *pool =3D rqstp->rq_pool;
+> > +	bool did_timeout =3D false;
+> >=20
+> >  	if (svc_thread_should_sleep(rqstp)) {
+> >  		set_current_state(TASK_IDLE | TASK_FREEZABLE);
+> >  		llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
+> > +		clear_bit(SP_TASK_STARTING, &pool->sp_flags);
+> >  		if (likely(svc_thread_should_sleep(rqstp)))
+> > -			schedule();
+> > +			did_timeout =3D nfsd_schedule_timeout(5 * HZ);
+> >=20
+> >  		while (!llist_del_first_this(&pool->sp_idle_threads,
+> >  					     &rqstp->rq_idle)) {
+> > @@ -734,7 +741,10 @@ static void svc_thread_wait_for_work(struct=20
+> > svc_rqst *rqstp)
+> >  			 * for this new work.  This thread can safely sleep
+> >  			 * until woken again.
+> >  			 */
+> > -			schedule();
+> > +			if (did_timeout)
+> > +				did_timeout =3D nfsd_schedule_timeout(HZ);
+> > +			else
+> > +				did_timeout =3D nfsd_schedule_timeout(5 * HZ);
+> >  			set_current_state(TASK_IDLE | TASK_FREEZABLE);
+> >  		}
+> >  		__set_current_state(TASK_RUNNING);
+> > @@ -742,6 +752,7 @@ static void svc_thread_wait_for_work(struct=20
+> > svc_rqst *rqstp)
+> >  		cond_resched();
 > >  	}
+> >  	try_to_freeze();
+> > +	return did_timeout;
+> >  }
+> >=20
+> >  static void svc_add_new_temp_xprt(struct svc_serv *serv, struct=20
+> > svc_xprt *newxpt)
+> > @@ -825,6 +836,8 @@ static void svc_handle_xprt(struct svc_rqst *rqstp,=
+=20
+> > struct svc_xprt *xprt)
+> >=20
+> >  static void svc_thread_wake_next(struct svc_rqst *rqstp)
+> >  {
+> > +	clear_bit(SP_TASK_STARTING, &rqstp->rq_pool->sp_flags);
+> > +
+> >  	if (!svc_thread_should_sleep(rqstp))
+> >  		/* More work pending after I dequeued some,
+> >  		 * wake another worker
+> > @@ -839,21 +852,31 @@ static void svc_thread_wake_next(struct svc_rqst =
+*rqstp)
+> >   * This code is carefully organised not to touch any cachelines in
+> >   * the shared svc_serv structure, only cachelines in the local
+> >   * svc_pool.
+> > + *
+> > + * Returns -ETIMEDOUT if idle for an extended period
+> > + *         -EBUSY is there is more work to do than available threads
+> > + *         0 otherwise.
+> >   */
+> > -void svc_recv(struct svc_rqst *rqstp)
+> > +int svc_recv(struct svc_rqst *rqstp)
+> >  {
+> >  	struct svc_pool *pool =3D rqstp->rq_pool;
+> > +	bool did_wait;
+> > +	int ret =3D 0;
+> >=20
+> >  	if (!svc_alloc_arg(rqstp))
+> > -		return;
+> > +		return ret;
+> > +
+> > +	did_wait =3D svc_thread_wait_for_work(rqstp);
+> >=20
+> > -	svc_thread_wait_for_work(rqstp);
+> > +	if (did_wait && svc_thread_should_sleep(rqstp) &&
+> > +	    pool->sp_nrthrmin && (pool->sp_nrthreads > pool->sp_nrthrmin))
+> > +		ret =3D -ETIMEDOUT;
+> >=20
+> >  	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+> >=20
+> >  	if (svc_thread_should_stop(rqstp)) {
+> >  		svc_thread_wake_next(rqstp);
+> > -		return;
+> > +		return ret;
+> >  	}
+> >=20
+> >  	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
+> > @@ -867,8 +890,13 @@ void svc_recv(struct svc_rqst *rqstp)
+> >  		 */
+> >  		if (pool->sp_idle_threads.first)
+> >  			rqstp->rq_chandle.thread_wait =3D 5 * HZ;
+> > -		else
+> > +		else {
+> >  			rqstp->rq_chandle.thread_wait =3D 1 * HZ;
+> > +			if (!did_wait &&
+> > +			    !test_and_set_bit(SP_TASK_STARTING,
+> > +					      &pool->sp_flags))
+> > +				ret =3D -EBUSY;
+> > +		}
+> >=20
+> >  		trace_svc_xprt_dequeue(rqstp);
+> >  		svc_handle_xprt(rqstp, xprt);
+> > @@ -887,6 +915,7 @@ void svc_recv(struct svc_rqst *rqstp)
+> >  		}
+> >  	}
+> >  #endif
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_recv);
+> >=20
 > >=20
 > > --=20
 > > 2.52.0
+>=20
+> The extensive use of atomic bit ops here is a little worrying.
+> Those can be costly -- and the sp_flags field is going to get
+> poked at by more and more threads as the pool's thread count
+> increases.
+>=20
 
+The current way that threading works is dependent on this today. We
+could consider a spinlock and a non-atomic bitops, but that might be
+even worse. I'll have to think about that.
+
+Thanks for the review!
 --=20
 Jeff Layton <jlayton@kernel.org>
 
