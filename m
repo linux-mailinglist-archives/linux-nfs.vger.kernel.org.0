@@ -1,85 +1,92 @@
-Return-Path: <linux-nfs+bounces-17071-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17072-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2279CBB236
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 19:35:01 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 162C2CBB242
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 19:42:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BAF773042FC3
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 18:34:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 813EA3001629
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 18:42:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D390F2E5B05;
-	Sat, 13 Dec 2025 18:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D75623EAB2;
+	Sat, 13 Dec 2025 18:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6+56Esw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5EdbBAQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DFC15624B;
-	Sat, 13 Dec 2025 18:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945E1DF748
+	for <linux-nfs@vger.kernel.org>; Sat, 13 Dec 2025 18:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765650898; cv=none; b=AdsbzXBMwQvm5DCEz7Xvf+74+ULm6Ayfwm9dthEF0S66csi+XyIopkQtzD06p4kUOkif1NdR8dzly6f936lOfQn2Ppb+DrObbvg4uURkVLgW/rfbCaNUfk6igt/zPE2fShpO1UUHmYxJszFpYhn8a2UQHfux9XlBX7hZu1zej60=
+	t=1765651330; cv=none; b=Ut7UApdfXrDMt0XCFoXoPxPQGN1rGMwfdYJLYh2yXerLDMGmKxRwuu2/OJzWWj04m3iVGVmEG0IXM2QiHQywigfRRkRH1ogeKZflPE1oeEE0ohmlhdvJ9P4tIKlGNwMVpLC9Le/Gg877i6cjw31pgNktR/0nTyVmqVRdzylVxxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765650898; c=relaxed/simple;
-	bh=9ZwQOKtBjSec+04I3oVKV4GYd68ewmRAiioUC+3d7Cw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pmrIXut//kI5Jab1kDFo6UUmsoprLYgAMR20v0nKWWyyR2NUh22lMQVzfyfLE2wtD9MvXrTGCFdUHkG3nhznRPBsLSu2N+Uz1Z7RAxWcvlD/RTIbyffHFTmWZTLJFNmRywm5nkA6uoUhA4ViiTj2vYXZNNFXu0AdsxbvLxh3UJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6+56Esw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817E7C4CEF7;
-	Sat, 13 Dec 2025 18:34:57 +0000 (UTC)
+	s=arc-20240116; t=1765651330; c=relaxed/simple;
+	bh=JMrt6DUfb8sb2a0U+kc+4CKfuOcJJbITrjrOD/j4MgM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sANGcnDLPVkjur//t4uLlcAJqibpEls2nq2uhoBo8eOkY7YJAoxzOon4q1Cv4ihnBErYAhJkDN6iLnGfo9hdpiM2M0SBddnEaEjbm+GIuHRBGICO1Ct/sxXAQwPSW6R1g2YfA50n/jtoTGfxzx9wbu3L/2rXKSxYtPpkjih2Q5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5EdbBAQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F289AC4CEF7;
+	Sat, 13 Dec 2025 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765650898;
-	bh=9ZwQOKtBjSec+04I3oVKV4GYd68ewmRAiioUC+3d7Cw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U6+56EswufTrm926mkYXaXrzVmx32umZmXov8sYZ68GPgQSlZd3vmszYyxEHrLV0l
-	 dI+BYhC8i4Ero9Zm/t8lLsT2DRgxmKmv8NGyFAtwqcyAkNRq9kTfFLR7wBTeMCWT3O
-	 4LPq7wQ51r3jJClUGDarbHUj+wuBOlbxaT48mpEKuOJpLqn/YiPHGdhOtLtEXByxuV
-	 MA14vrXuEersB5/dfIlLPG9UctUAc5g54tzHfncNmv08WT2COZCOFomVcUwfwAM2rh
-	 89O8lmvrr26Y8LQI/dlPFvoY85O+PlePcI4D280mipWaxPxtUvVMGY+wgJkZixbfUf
-	 7eddG4GdOw2GA==
+	s=k20201202; t=1765651329;
+	bh=JMrt6DUfb8sb2a0U+kc+4CKfuOcJJbITrjrOD/j4MgM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e5EdbBAQnMKFJt6kZv7RMqSJgwfBvVdrM4Y3GcLudLuCorICPJhP7iLsQrQapIwGX
+	 8t79/hLRTPnUsSsOpdhjnEcUHLotl0CwGZI4AgKNN0Zk3zFJ0uqqufF5FEtSuMgO3X
+	 oWdLlH5mtIigVHZH4s3W/OIYnxCZUVgftOWgngJz5segMOotENYv84b7CB2meLBpJn
+	 Z0Fo0Q74popVy5baL9XdEJ+R36+7tUAtYXg4WkllGIgs2tzQ8n2O1c7IgRRGCRaoT1
+	 ic5+2wNLOyuOONlyJocI2m5X0OlPJNk/QXe7Xf87K1FN8C48hayLVdSdNR7aGsj/Hy
+	 sHlCw78lKMA2Q==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Chris Mason <clm@meta.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix nfs4_file refcount leak in nfsd_get_dir_deleg()
-Date: Sat, 13 Dec 2025 13:34:53 -0500
-Message-ID: <176564891602.581939.5245628213222165856.b4-ty@oracle.com>
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	lilingfeng3@huawei.com,
+	yangerkun@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v3 0/2] provide locking for v4_end_grace
+Date: Sat, 13 Dec 2025 13:41:58 -0500
+Message-ID: <20251213184200.585652-1-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251213-nfsd-6-19-v1-1-8af64b59c14e@kernel.org>
-References: <20251213-nfsd-6-19-v1-1-8af64b59c14e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Sat, 13 Dec 2025 11:53:17 +0900, Jeff Layton wrote:
-> Claude pointed out that there is nfs4_file refcount leak in
-> nfsd_get_dir_deleg(). Ensure that the reference to "fp" is released
-> before returning.
-> 
-> 
+Following up on:
 
-Applied to nfsd-testing, thanks!
+https://lore.kernel.org/linux-nfs/175136659151.565058.6474755472267609432@noble.neil.brown.name/#r
 
-[1/1] nfsd: fix nfs4_file refcount leak in nfsd_get_dir_deleg()
-      commit: 08efc1ef9f6e574de433c4df4899ca07b251fe57
+This is now two patches: one that can be backported, and one that
+simplifies the fix based on mechanisms available only in recent
+kernels. I've also addressed all the review comments I could find.
 
---
-Chuck Lever
+These patches have been compile-tested only.
+
+NeilBrown (2):
+  nfsd: provide locking for v4_end_grace
+  nfsd: use workqueue enable/disable APIs for v4_end_grace sync
+
+ fs/nfsd/netns.h     |  1 +
+ fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++++++++++++++++---
+ fs/nfsd/nfsctl.c    |  3 +--
+ fs/nfsd/state.h     |  2 +-
+ 4 files changed, 40 insertions(+), 6 deletions(-)
+
+-- 
+2.52.0
 
 
