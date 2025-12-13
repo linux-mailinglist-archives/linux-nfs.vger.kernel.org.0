@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-17083-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17084-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F5F6CBB435
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:47:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D927CBB450
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:56:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D386530062E1
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:47:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8E6B630010D0
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CD61A2C0B;
-	Sat, 13 Dec 2025 21:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3909B30ACF1;
+	Sat, 13 Dec 2025 21:55:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NBXMASTX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cU8QHQLL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9534273F9;
-	Sat, 13 Dec 2025 21:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0D426FDBF;
+	Sat, 13 Dec 2025 21:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765662445; cv=none; b=IbkAgHBR+/OjME5vpfTBX3z8DR2SYLMSEXNycUWNxgdpTNHYNBDCpKKuzir9KobyUK/lV5U9cB+IzIPC0ccE7d3IRBsoqbFDqCC5fa3l8Jvgzqgk1xWGpRxFNLJ1Si8Bn6Mm4Rp+PokUKGFrFUptvPQBA6MZpP+FKxKF5AD5qME=
+	t=1765662958; cv=none; b=hU754Urd3unR8OsDAptjzXt04JHwNHmhv6JKsFmEXNcSZoEzvrn8Z+Z8yf89/nVL4FmK/bAzmnRYPpxPWVWqhyCOfN5DMmjwQShb+Tkwj6nGp90PJISrIvzm+pqS8aFNVlTFeF3LOgCTmrMnJs/tRP8p6hJm0Ecb1HkwJ+3825M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765662445; c=relaxed/simple;
-	bh=o9wmk44jPKyQzAZEM9CFRG19A+667jzE35flShzjVAE=;
+	s=arc-20240116; t=1765662958; c=relaxed/simple;
+	bh=2xXDN5GQtvuUy7mVsijHOan3JazOdGgX6Y1+ikFCXH4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XEsYTMEMag9l2iWmaTFDGjD8Gz7WIxd/S+XGpyCRSxmuOH03mBZVDvduhiURSwg33nX2L30cKsFUihp5HdmHHr5mwcIwOubishLG3lP8djli4einWXbdSwyubVudQUZ0le6htxLvMXusJF2WE9Q3cV7n6g/VEt6n5tctLW3rgzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NBXMASTX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BD3C4CEF7;
-	Sat, 13 Dec 2025 21:47:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Bt4w5mNmNn1v04bY4eb99B18Nwm1HTJj8EJzFgzX4rY9xXg8aystowrY/IMaSgprssLAAasMncUKoZMsRvyrKUuqWXcyg1i0GyPRNhO0ciJyNo/E+OClvXunNfmfYhbZh7txOSbDfY5dRVON8YUUPzny0VDjaxPwKpA/lzIZxxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cU8QHQLL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4AAC4CEF7;
+	Sat, 13 Dec 2025 21:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765662445;
-	bh=o9wmk44jPKyQzAZEM9CFRG19A+667jzE35flShzjVAE=;
+	s=k20201202; t=1765662957;
+	bh=2xXDN5GQtvuUy7mVsijHOan3JazOdGgX6Y1+ikFCXH4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NBXMASTXHpinf70hKk2wRYdKiFCaA4iLYZ7mLZVpbWIQEYLKYw6bDWiM2MCwrgxPa
-	 rtWz6jAEhnWhDC0tH/wUxsU41qsVeyKk7sNhFf96yR1HFljqfCSIMDTqyTuI+0CisF
-	 ndCKfF6B3/Sqov70ojG/dp/3+wRfd3KljXTBBHZFH6fqf0FHGc3GEiO7Z6O/VSBMsc
-	 7l/YhTnGg2YVbdBhIDTZCX/H0Z0ySFfNdPfrz8Kq5OyLzEzBqAVpIadfNbPOeQbHnH
-	 329ZqzwT9+WuHWWQVg9WnPxW3MOUF0pUkQUX7dVNwU0kt4ZCGf5DYQDCR8ZQbwERNw
-	 pJ+5zT31sl3vg==
-Message-ID: <fb148cf880aac410bf487a40a458acfe6a257a84.camel@kernel.org>
-Subject: Re: [PATCH RFC 6/6] nfsd: add controls to set the minimum number of
- threads per pool
+	b=cU8QHQLLGZ8wh8sPIw7E0u+YqjPxa8+96Arv2e1uCfBzT/AxAw0IZjhxpygAEIc5Y
+	 lChQ5emIns0cyJwpTc8OunmNFMUA4EOYQmyW2Gfvylq5vQaQUfzsd7CGRXVBwThZ0l
+	 KjjOkcIfO/J5+nPMbDvqx63ywqHY4LGfi/PWiNW99s6vvatsKYyrUpmud/GV2ePQEz
+	 kZ6VKWe/Y5H+gujGTaIzc4Q+tUWROJTF4Kjls7hwSJ4YgxUY0BXgljcvK+fsi0k3/0
+	 fRqXj5n0juF3kZCfm5xol1kiFP3xNH0adm7NARaI4B78obpz127hh8kPqv60GrhTmT
+	 nKyFvi3fFaHhw==
+Message-ID: <a5e0fbe428b85327793cac81207042b7d1d3f455.camel@kernel.org>
+Subject: Re: [PATCH RFC 1/6] sunrpc: split svc_set_num_threads() into two
+ functions
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
  NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
  <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 14 Dec 2025 06:47:21 +0900
-In-Reply-To: <476dcf18-242c-40b2-8afa-ca2128fe4895@app.fastmail.com>
+Date: Sun, 14 Dec 2025 06:55:53 +0900
+In-Reply-To: <587f5358-fdb2-4834-b50e-6d48c9b43214@app.fastmail.com>
 References: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
-	 <20251213-nfsd-dynathread-v1-6-de755e59cbc4@kernel.org>
-	 <476dcf18-242c-40b2-8afa-ca2128fe4895@app.fastmail.com>
+	 <20251213-nfsd-dynathread-v1-1-de755e59cbc4@kernel.org>
+	 <587f5358-fdb2-4834-b50e-6d48c9b43214@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,265 +137,103 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 16:10 -0500, Chuck Lever wrote:
+On Sat, 2025-12-13 at 14:29 -0500, Chuck Lever wrote:
 >=20
 > On Fri, Dec 12, 2025, at 5:39 PM, Jeff Layton wrote:
-> > Add a new "min_threads" variable to the nfsd_net, along with the
-> > corresponding nfsdfs and netlink interfaces to set that value from
-> > userland. Pass that value to svc_set_pool_threads() and
-> > svc_set_num_threads().
+> > svc_set_num_threads() will set the number of running threads for a give=
+n
+> > pool. If the pool argument is set to NULL however, it will distribute
+> > the threads among all of the pools evenly.
+> >=20
+> > These divergent codepaths complicate the move to dynamic threading.
+> > Simplify the API by splitting these two cases into different helpers:
+> >=20
+> > Add a new svc_set_pool_threads() function that sets the number of
+> > threads in a single, given pool. Modify svc_set_num_threads() to
+> > distribute the threads evenly between all of the pools and then call
+> > svc_set_pool_threads() for each.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >  Documentation/netlink/specs/nfsd.yaml |  5 ++++
-> >  fs/nfsd/netlink.c                     |  5 ++--
-> >  fs/nfsd/netns.h                       |  6 +++++
-> >  fs/nfsd/nfsctl.c                      | 50 +++++++++++++++++++++++++++=
-++++++++
-> >  fs/nfsd/nfssvc.c                      |  8 +++---
-> >  fs/nfsd/trace.h                       | 19 +++++++++++++
-> >  include/uapi/linux/nfsd_netlink.h     |  1 +
-> >  7 files changed, 88 insertions(+), 6 deletions(-)
+> >  fs/lockd/svc.c             |  4 ++--
+> >  fs/nfs/callback.c          |  8 +++----
+> >  fs/nfsd/nfssvc.c           | 21 ++++++++----------
+> >  include/linux/sunrpc/svc.h |  3 ++-
+> >  net/sunrpc/svc.c           | 54 +++++++++++++++++++++++++++++++++++++-=
+--------
+> >  5 files changed, 61 insertions(+), 29 deletions(-)
 > >=20
-> > diff --git a/Documentation/netlink/specs/nfsd.yaml=20
-> > b/Documentation/netlink/specs/nfsd.yaml
+> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
 > > index=20
-> > 100363029e82aed87295e34a008ab771a95d508c..badb2fe57c9859c6932c621a589da=
-694782b0272=20
+> > d68afa196535a8785bab2931c2b14f03a1174ef9..fbf132b4e08d11a91784c21ee0209=
+fd7c149fd9d=20
 > > 100644
-> > --- a/Documentation/netlink/specs/nfsd.yaml
-> > +++ b/Documentation/netlink/specs/nfsd.yaml
-> > @@ -78,6 +78,9 @@ attribute-sets:
-> >        -
-> >          name: scope
-> >          type: string
-> > +      -
-> > +        name: min-threads
-> > +        type: u32
-> >    -
-> >      name: version
-> >      attributes:
-> > @@ -159,6 +162,7 @@ operations:
-> >              - gracetime
-> >              - leasetime
-> >              - scope
-> > +            - min-threads
-> >      -
-> >        name: threads-get
-> >        doc: get the number of running threads
-> > @@ -170,6 +174,7 @@ operations:
-> >              - gracetime
-> >              - leasetime
-> >              - scope
-> > +            - min-threads
-> >      -
-> >        name: version-set
-> >        doc: set nfs enabled versions
-> > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> > index=20
-> > ac51a44e1065ec3f1d88165f70a831a828b58394..887525964451e640304371e33aa4f=
-415b4ff2848=20
-> > 100644
-> > --- a/fs/nfsd/netlink.c
-> > +++ b/fs/nfsd/netlink.c
-> > @@ -24,11 +24,12 @@ const struct nla_policy=20
-> > nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1] =3D {
-> >  };
-> >=20
-> >  /* NFSD_CMD_THREADS_SET - do */
-> > -static const struct nla_policy=20
-> > nfsd_threads_set_nl_policy[NFSD_A_SERVER_SCOPE + 1] =3D {
-> > +static const struct nla_policy=20
-> > nfsd_threads_set_nl_policy[NFSD_A_SERVER_MIN_THREADS + 1] =3D {
-> >  	[NFSD_A_SERVER_THREADS] =3D { .type =3D NLA_U32, },
-> >  	[NFSD_A_SERVER_GRACETIME] =3D { .type =3D NLA_U32, },
-> >  	[NFSD_A_SERVER_LEASETIME] =3D { .type =3D NLA_U32, },
-> >  	[NFSD_A_SERVER_SCOPE] =3D { .type =3D NLA_NUL_STRING, },
-> > +	[NFSD_A_SERVER_MIN_THREADS] =3D { .type =3D NLA_U32, },
-> >  };
-> >=20
-> >  /* NFSD_CMD_VERSION_SET - do */
-> > @@ -57,7 +58,7 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D =
-{
-> >  		.cmd		=3D NFSD_CMD_THREADS_SET,
-> >  		.doit		=3D nfsd_nl_threads_set_doit,
-> >  		.policy		=3D nfsd_threads_set_nl_policy,
-> > -		.maxattr	=3D NFSD_A_SERVER_SCOPE,
-> > +		.maxattr	=3D NFSD_A_SERVER_MIN_THREADS,
-> >  		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> >  	},
-> >  	{
-> > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > index=20
-> > 3e2d0fde80a7ce434ef2cce9f1666c2bd16ab2eb..1c3449810eaefea8167ddd284af7b=
-d66cac7e211=20
-> > 100644
-> > --- a/fs/nfsd/netns.h
-> > +++ b/fs/nfsd/netns.h
-> > @@ -128,6 +128,12 @@ struct nfsd_net {
-> >  	seqlock_t writeverf_lock;
-> >  	unsigned char writeverf[8];
-> >=20
-> > +	/*
-> > +	 * Minimum number of threads to run per pool.  If 0 then the
-> > +	 * min =3D=3D max requested number of threads.
-> > +	 */
-> > +	unsigned int min_threads;
-> > +
-> >  	u32 clientid_base;
-> >  	u32 clientid_counter;
-> >  	u32 clverifier_counter;
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index=20
-> > 206534fccf36a992026669fee6533adff1062c36..a5401015e62499d07150cde8822f1=
-e7dd0515dfe=20
-> > 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -48,6 +48,7 @@ enum {
-> >  	NFSD_Versions,
-> >  	NFSD_Ports,
-> >  	NFSD_MaxBlkSize,
-> > +	NFSD_MinThreads,
-> >  	NFSD_Filecache,
-> >  	NFSD_Leasetime,
-> >  	NFSD_Gracetime,
-> > @@ -67,6 +68,7 @@ static ssize_t write_pool_threads(struct file *file,=
-=20
-> > char *buf, size_t size);
-> >  static ssize_t write_versions(struct file *file, char *buf, size_t=20
-> > size);
-> >  static ssize_t write_ports(struct file *file, char *buf, size_t size);
-> >  static ssize_t write_maxblksize(struct file *file, char *buf, size_t=
-=20
-> > size);
-> > +static ssize_t write_minthreads(struct file *file, char *buf, size_t=
-=20
-> > size);
-> >  #ifdef CONFIG_NFSD_V4
-> >  static ssize_t write_leasetime(struct file *file, char *buf, size_t=
-=20
-> > size);
-> >  static ssize_t write_gracetime(struct file *file, char *buf, size_t=
-=20
-> > size);
-> > @@ -85,6 +87,7 @@ static ssize_t (*const write_op[])(struct file *,=20
-> > char *, size_t) =3D {
-> >  	[NFSD_Versions] =3D write_versions,
-> >  	[NFSD_Ports] =3D write_ports,
-> >  	[NFSD_MaxBlkSize] =3D write_maxblksize,
-> > +	[NFSD_MinThreads] =3D write_minthreads,
-> >  #ifdef CONFIG_NFSD_V4
-> >  	[NFSD_Leasetime] =3D write_leasetime,
-> >  	[NFSD_Gracetime] =3D write_gracetime,
-> > @@ -899,6 +902,46 @@ static ssize_t write_maxblksize(struct file *file,=
-=20
-> > char *buf, size_t size)
-> >  							nfsd_max_blksize);
-> >  }
-> >=20
-> > +/*
-> > + * write_minthreads - Set or report the current min number of threads
-> > + *
-> > + * Input:
-> > + *			buf:		ignored
-> > + *			size:		zero
-> > + * OR
-> > + *
-> > + * Input:
-> > + *			buf:		C string containing an unsigned
-> > + *					integer value representing the new
-> > + *					max number of threads
->=20
-> s/max number of threads/min number of threads
->=20
-
-Will fix.
-
->=20
-> > + *			size:		non-zero length of C string in @buf
-> > + * Output:
-> > + *	On success:	passed-in buffer filled with '\n'-terminated C string
-> > + *			containing numeric value of min_threads setting
-> > + *			for this net namespace;
-> > + *			return code is the size in bytes of the string
-> > + *	On error:	return code is zero or a negative errno value
-> > + */
-> > +static ssize_t write_minthreads(struct file *file, char *buf, size_t=
-=20
-> > size)
-> > +{
-> > +	char *mesg =3D buf;
-> > +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> > +	unsigned int minthreads =3D nn->min_threads;
-> > +
-> > +	if (size > 0) {
->=20
-> What if @size is a very large number?
->=20
-
-Then it'll basically be ignored and you'll get a static "threads" count
-of threads.
-
->=20
-> > +		int rv =3D get_uint(&mesg, &minthreads);
-> > +
-> > +		if (rv)
-> > +			return rv;
-> > +		trace_nfsd_ctl_minthreads(netns(file), minthreads);
-> > +		mutex_lock(&nfsd_mutex);
-> > +		nn->min_threads =3D minthreads;
-> > +		mutex_unlock(&nfsd_mutex);
-> > +	}
-> > +
-> > +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%u\n", minthreads);
-> > +}
-> > +
-> >  #ifdef CONFIG_NFSD_V4
-> >  static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t=
-=20
-> > size,
-> >  				  time64_t *time, struct nfsd_net *nn)
-> > @@ -1292,6 +1335,7 @@ static int nfsd_fill_super(struct super_block=20
-> > *sb, struct fs_context *fc)
-> >  		[NFSD_Versions] =3D {"versions", &transaction_ops, S_IWUSR|S_IRUSR},
-> >  		[NFSD_Ports] =3D {"portlist", &transaction_ops, S_IWUSR|S_IRUGO},
-> >  		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops,=20
-> > S_IWUSR|S_IRUGO},
-> > +		[NFSD_MinThreads] =3D {"min_threads", &transaction_ops,=20
-> > S_IWUSR|S_IRUGO},
-> >  		[NFSD_Filecache] =3D {"filecache", &nfsd_file_cache_stats_fops,=20
-> > S_IRUGO},
-> >  #ifdef CONFIG_NFSD_V4
-> >  		[NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops,=20
-> > S_IWUSR|S_IRUSR},
-> > @@ -1636,6 +1680,10 @@ int nfsd_nl_threads_set_doit(struct sk_buff=20
-> > *skb, struct genl_info *info)
-> >  			scope =3D nla_data(attr);
+> > --- a/fs/lockd/svc.c
+> > +++ b/fs/lockd/svc.c
+> > @@ -340,7 +340,7 @@ static int lockd_get(void)
+> >  		return -ENOMEM;
 > >  	}
 > >=20
-> > +	attr =3D info->attrs[NFSD_A_SERVER_MIN_THREADS];
-> > +	if (attr)
-> > +		nn->min_threads =3D nla_get_u32(attr);
-> > +
-> >  	ret =3D nfsd_svc(nrpools, nthreads, net, get_current_cred(), scope);
-> >  	if (ret > 0)
-> >  		ret =3D 0;
-> > @@ -1675,6 +1723,8 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb,=
+> > -	error =3D svc_set_num_threads(serv, NULL, 1);
+> > +	error =3D svc_set_num_threads(serv, 1);
+> >  	if (error < 0) {
+> >  		svc_destroy(&serv);
+> >  		return error;
+> > @@ -368,7 +368,7 @@ static void lockd_put(void)
+> >  	unregister_inet6addr_notifier(&lockd_inet6addr_notifier);
+> >  #endif
+> >=20
+> > -	svc_set_num_threads(nlmsvc_serv, NULL, 0);
+> > +	svc_set_num_threads(nlmsvc_serv, 0);
+> >  	timer_delete_sync(&nlmsvc_retry);
+> >  	svc_destroy(&nlmsvc_serv);
+> >  	dprintk("lockd_down: service destroyed\n");
+> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+> > index=20
+> > c8b837006bb27277ab34fe516f1b63992fee9b7f..44b35b7f8dc022f1d8c069eaf2f7d=
+334c93f77fc=20
+> > 100644
+> > --- a/fs/nfs/callback.c
+> > +++ b/fs/nfs/callback.c
+> > @@ -119,9 +119,9 @@ static int nfs_callback_start_svc(int minorversion,=
 =20
-> > struct genl_info *info)
-> >  			  nn->nfsd4_grace) ||
-> >  	      nla_put_u32(skb, NFSD_A_SERVER_LEASETIME,
-> >  			  nn->nfsd4_lease) ||
-> > +	      nla_put_u32(skb, NFSD_A_SERVER_MIN_THREADS,
-> > +			  nn->min_threads) ||
-> >  	      nla_put_string(skb, NFSD_A_SERVER_SCOPE,
-> >  			  nn->nfsd_name);
-> >  	if (err)
+> > struct rpc_xprt *xprt,
+> >  	if (serv->sv_nrthreads =3D=3D nrservs)
+> >  		return 0;
+> >=20
+> > -	ret =3D svc_set_num_threads(serv, NULL, nrservs);
+> > +	ret =3D svc_set_num_threads(serv, nrservs);
+> >  	if (ret) {
+> > -		svc_set_num_threads(serv, NULL, 0);
+> > +		svc_set_num_threads(serv, 0);
+> >  		return ret;
+> >  	}
+> >  	dprintk("nfs_callback_up: service started\n");
+> > @@ -242,7 +242,7 @@ int nfs_callback_up(u32 minorversion, struct=20
+> > rpc_xprt *xprt)
+> >  	cb_info->users++;
+> >  err_net:
+> >  	if (!cb_info->users) {
+> > -		svc_set_num_threads(cb_info->serv, NULL, 0);
+> > +		svc_set_num_threads(cb_info->serv, 0);
+> >  		svc_destroy(&cb_info->serv);
+> >  	}
+> >  err_create:
+> > @@ -268,7 +268,7 @@ void nfs_callback_down(int minorversion, struct net=
+=20
+> > *net)
+> >  	nfs_callback_down_net(minorversion, serv, net);
+> >  	cb_info->users--;
+> >  	if (cb_info->users =3D=3D 0) {
+> > -		svc_set_num_threads(serv, NULL, 0);
+> > +		svc_set_num_threads(serv, 0);
+> >  		dprintk("nfs_callback_down: service destroyed\n");
+> >  		svc_destroy(&cb_info->serv);
+> >  	}
 > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
 > > index=20
-> > 26c3a6cb1f400f1b757d26f6ba77e27deb7e8ee2..d6120dd843ac1b6a42f0ef331700f=
-4d6d70d8c38=20
+> > 93f7435cafd2362d9ddb28815277c824067cb370..aafec8ff588b85b0e26d40b76ef00=
+953dc6472b4=20
 > > 100644
 > > --- a/fs/nfsd/nfssvc.c
 > > +++ b/fs/nfsd/nfssvc.c
@@ -403,113 +241,218 @@ of threads.
 > >  	}
 > >=20
 > >  	/* Kill outstanding nfsd threads */
-> > -	svc_set_num_threads(serv, 0, 0);
-> > +	svc_set_num_threads(serv, 0, nn->min_threads);
->=20
-> Seems like this could actually /start/ threads during NFSD shutdown.
-> At the very least it needs an explanatory comment.
->=20
-
-I can add a comment, but if min-threads > threads, then min-threads
-will have no effect.
-
->=20
+> > -	svc_set_num_threads(serv, NULL, 0);
+> > +	svc_set_num_threads(serv, 0);
 > >  	nfsd_destroy_serv(net);
 > >  	mutex_unlock(&nfsd_mutex);
 > >  }
-> > @@ -704,7 +704,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
+> > @@ -702,12 +702,9 @@ int nfsd_set_nrthreads(int n, int *nthreads,=20
+> > struct net *net)
+> >  	if (nn->nfsd_serv =3D=3D NULL || n <=3D 0)
+> >  		return 0;
 > >=20
-> >  	/* Special case: When n =3D=3D 1, distribute threads equally among po=
+> > -	/*
+> > -	 * Special case: When n =3D=3D 1, pass in NULL for the pool, so that =
+the
+> > -	 * change is distributed equally among them.
+> > -	 */
+> > +	/* Special case: When n =3D=3D 1, distribute threads equally among po=
 ols. */
 > >  	if (n =3D=3D 1)
-> > -		return svc_set_num_threads(nn->nfsd_serv, nthreads[0], 0);
-> > +		return svc_set_num_threads(nn->nfsd_serv, nthreads[0], nn->min_threa=
-ds);
+> > -		return svc_set_num_threads(nn->nfsd_serv, NULL, nthreads[0]);
+> > +		return svc_set_num_threads(nn->nfsd_serv, nthreads[0]);
 > >=20
 > >  	if (n > nn->nfsd_serv->sv_nrpools)
 > >  		n =3D nn->nfsd_serv->sv_nrpools;
-> > @@ -732,7 +732,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
+> > @@ -733,18 +730,18 @@ int nfsd_set_nrthreads(int n, int *nthreads,=20
+> > struct net *net)
+> >=20
+> >  	/* apply the new numbers */
 > >  	for (i =3D 0; i < n; i++) {
-> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> >  					   &nn->nfsd_serv->sv_pools[i],
-> > -					   nthreads[i], 0);
-> > +					   nthreads[i], nn->min_threads);
+> > -		err =3D svc_set_num_threads(nn->nfsd_serv,
+> > -					  &nn->nfsd_serv->sv_pools[i],
+> > -					  nthreads[i]);
+> > +		err =3D svc_set_pool_threads(nn->nfsd_serv,
+> > +					   &nn->nfsd_serv->sv_pools[i],
+> > +					   nthreads[i]);
 > >  		if (err)
 > >  			goto out;
 > >  	}
-> > @@ -741,7 +741,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct=
-=20
-> > net *net)
+> >=20
+> >  	/* Anything undefined in array is considered to be 0 */
 > >  	for (i =3D n; i < nn->nfsd_serv->sv_nrpools; ++i) {
-> >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> >  					   &nn->nfsd_serv->sv_pools[i],
-> > -					   0, 0);
-> > +					   0, nn->min_threads);
+> > -		err =3D svc_set_num_threads(nn->nfsd_serv,
+> > -					  &nn->nfsd_serv->sv_pools[i],
+> > -					  0);
+> > +		err =3D svc_set_pool_threads(nn->nfsd_serv,
+> > +					   &nn->nfsd_serv->sv_pools[i],
+> > +					   0);
 > >  		if (err)
 > >  			goto out;
 > >  	}
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
 > > index=20
-> > 8885fd9bead98ebf55379d68ab9c3701981a5150..d1d0b0dd054588a8c20e3386356df=
-a4e9632b8e0=20
+> > 5506d20857c318774cd223272d4b0022cc19ffb8..dd5fbbf8b3d39df6c17a7624edf34=
+4557fffd32c=20
 > > 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -2164,6 +2164,25 @@ TRACE_EVENT(nfsd_ctl_maxblksize,
-> >  	)
-> >  );
+> > --- a/include/linux/sunrpc/svc.h
+> > +++ b/include/linux/sunrpc/svc.h
+> > @@ -446,7 +446,8 @@ struct svc_serv *  svc_create_pooled(struct=20
+> > svc_program *prog,
+> >  				     struct svc_stat *stats,
+> >  				     unsigned int bufsize,
+> >  				     int (*threadfn)(void *data));
+> > -int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int)=
+;
+> > +int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
+> > int);
+> > +int		   svc_set_num_threads(struct svc_serv *, int);
+> >  int		   svc_pool_stats_open(struct svc_info *si, struct file *file);
+> >  void		   svc_process(struct svc_rqst *rqstp);
+> >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
+> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > index=20
+> > 4704dce7284eccc9e2bc64cf22947666facfa86a..3fe5a7f8e57e3fa3837265ec06884=
+b357d5373ff=20
+> > 100644
+> > --- a/net/sunrpc/svc.c
+> > +++ b/net/sunrpc/svc.c
+> > @@ -856,15 +856,12 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
+=20
+> > svc_pool *pool, int nrservs)
+> >  }
 > >=20
-> > +TRACE_EVENT(nfsd_ctl_minthreads,
-> > +	TP_PROTO(
-> > +		const struct net *net,
-> > +		int minthreads
-> > +	),
-> > +	TP_ARGS(net, minthreads),
-> > +	TP_STRUCT__entry(
-> > +		__field(unsigned int, netns_ino)
-> > +		__field(int, minthreads)
-> > +	),
-> > +	TP_fast_assign(
-> > +		__entry->netns_ino =3D net->ns.inum;
-> > +		__entry->minthreads =3D minthreads
-> > +	),
-> > +	TP_printk("minthreads=3D%d",
-> > +		__entry->minthreads
-> > +	)
-> > +);
+> >  /**
+> > - * svc_set_num_threads - adjust number of threads per RPC service
+> > + * svc_set_pool_threads - adjust number of threads per pool
+> >   * @serv: RPC service to adjust
+> > - * @pool: Specific pool from which to choose threads, or NULL
+> > + * @pool: Specific pool from which to choose threads
+> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
+=20
+> > threads)
+> >   *
+> > - * Create or destroy threads to make the number of threads for @serv=
+=20
+> > the
+> > - * given number. If @pool is non-NULL, change only threads in that=20
+> > pool;
+> > - * otherwise, round-robin between all pools for @serv. @serv's
+> > - * sv_nrthreads is adjusted for each thread created or destroyed.
+> > + * Create or destroy threads in @pool to bring it to @nrservs.
+> >   *
+> >   * Caller must ensure mutual exclusion between this and server startup=
+=20
+> > or
+> >   * shutdown.
+> > @@ -873,12 +870,12 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
+=20
+> > svc_pool *pool, int nrservs)
+> >   * starting a thread.
+> >   */
+> >  int
+> > -svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int=
+=20
+> > nrservs)
+> > +svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
+=20
+> > nrservs)
+> >  {
+> >  	if (!pool)
+> > -		nrservs -=3D serv->sv_nrthreads;
+> > -	else
+> > -		nrservs -=3D pool->sp_nrthreads;
+> > +		return -EINVAL;
 > > +
-> >  TRACE_EVENT(nfsd_ctl_time,
-> >  	TP_PROTO(
-> >  		const struct net *net,
-> > diff --git a/include/uapi/linux/nfsd_netlink.h=20
-> > b/include/uapi/linux/nfsd_netlink.h
-> > index=20
-> > e157e2009ea8c1ef805301261d536c82677821ef..e9efbc9e63d83ed25fcd790b7a877=
-c0023638f15=20
-> > 100644
-> > --- a/include/uapi/linux/nfsd_netlink.h
-> > +++ b/include/uapi/linux/nfsd_netlink.h
-> > @@ -35,6 +35,7 @@ enum {
-> >  	NFSD_A_SERVER_GRACETIME,
-> >  	NFSD_A_SERVER_LEASETIME,
-> >  	NFSD_A_SERVER_SCOPE,
-> > +	NFSD_A_SERVER_MIN_THREADS,
+> > +	nrservs -=3D pool->sp_nrthreads;
 > >=20
-> >  	__NFSD_A_SERVER_MAX,
-> >  	NFSD_A_SERVER_MAX =3D (__NFSD_A_SERVER_MAX - 1)
+> >  	if (nrservs > 0)
+> >  		return svc_start_kthreads(serv, pool, nrservs);
+> > @@ -886,6 +883,43 @@ svc_set_num_threads(struct svc_serv *serv, struct=
+=20
+> > svc_pool *pool, int nrservs)
+> >  		return svc_stop_kthreads(serv, pool, nrservs);
+> >  	return 0;
+> >  }
+> > +EXPORT_SYMBOL_GPL(svc_set_pool_threads);
+> > +
+> > +/**
+> > + * svc_set_num_threads - adjust number of threads in serv
+> > + * @serv: RPC service to adjust
+> > + * @nrservs: New number of threads for @serv (0 or less means kill all=
+=20
+> > threads)
+> > + *
+> > + * Create or destroy threads in @serv to bring it to @nrservs. If ther=
+e
+> > + * are multiple pools then the new threads or victims will be=20
+> > distributed
+> > + * evenly among them.
+> > + *
+> > + * Caller must ensure mutual exclusion between this and server startup=
+=20
+> > or
+> > + * shutdown.
+> > + *
+> > + * Returns zero on success or a negative errno if an error occurred=
+=20
+> > while
+> > + * starting a thread.
+> > + */
+> > +int
+> > +svc_set_num_threads(struct svc_serv *serv, int nrservs)
+> > +{
+> > +	int base =3D nrservs / serv->sv_nrpools;
+> > +	int remain =3D nrservs % serv->sv_nrpools;
+> > +	int i, err;
+> > +
+> > +	for (i =3D 0; i < serv->sv_nrpools; ++i) {
+>=20
+> If sv_nrpools happens to be zero, then the loop doesn't
+> execute at all, and err is left containing stack garbage.
+> Is sv_nrpools guaranteed to be non-zero? If not then err
+> needs to be initialized before the loop runs. I see that
+> nfsd_set_nrthreads() in fs/nfsd/nfssvc.c has "int err =3D 0"
+> for a similar loop pattern.
+>=20
+
+sv_nrpools should always be non-zero. There are many places in the rpc
+layer that depend on having at least one pool. From __svc_create:
+
+        serv->sv_nrpools =3D npools;
+        serv->sv_pools =3D
+                kcalloc(serv->sv_nrpools, sizeof(struct svc_pool),
+                        GFP_KERNEL);
+        if (!serv->sv_pools) {
+                kfree(serv);
+                return NULL;
+        }
+
+I think kcalloc returns NULL if you pass it 0 for "n", so creation
+should fail if that happens. None of the in-tree callers ever pass in 0
+for the npools, but maybe that's worth an explicit check in
+__svc_create(). I can add one.
+
+>=20
+> > +		int threads =3D base;
+> > +
+> > +		if (remain) {
+> > +			++threads;
+> > +			--remain;
+> > +		}
+> > +		err =3D svc_set_pool_threads(serv, &serv->sv_pools[i], threads);
+> > +		if (err)
+> > +			break;
+> > +	}
+> > +	return err;
+> > +}
+> >  EXPORT_SYMBOL_GPL(svc_set_num_threads);
+> >=20
+> >  /**
 > >=20
 > > --=20
 > > 2.52.0
->=20
-> Thanks, Neil and Jeff, for pulling all this together. It's good to
-> have something we can noodle on now.
->=20
 
-Definitely. Neil's patches were a great start to this.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
