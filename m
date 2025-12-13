@@ -1,149 +1,85 @@
-Return-Path: <linux-nfs+bounces-17070-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17071-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C0ABCBB183
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 17:44:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2279CBB236
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 19:35:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CD2913005ABD
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 16:44:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BAF773042FC3
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 18:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDB752D7384;
-	Sat, 13 Dec 2025 16:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D390F2E5B05;
+	Sat, 13 Dec 2025 18:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqoBCyuc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6+56Esw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B320428313D;
-	Sat, 13 Dec 2025 16:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DFC15624B;
+	Sat, 13 Dec 2025 18:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765644262; cv=none; b=QZxrEHqQW5/zxWruaNG5NgwoziM5e/lZkgo3SqDxr+8FRDlALH4lMGT2sc63ezWuDl7hbOyQm3iCiMbZxJoFrJ/i1R4uHmZnxpT8FRio52gKxlspTMz3w/iIhvEhZ0clQHQiQ4Ohw5NwS5oieeWvB/12cJtMRJePfDBe/qRT2AQ=
+	t=1765650898; cv=none; b=AdsbzXBMwQvm5DCEz7Xvf+74+ULm6Ayfwm9dthEF0S66csi+XyIopkQtzD06p4kUOkif1NdR8dzly6f936lOfQn2Ppb+DrObbvg4uURkVLgW/rfbCaNUfk6igt/zPE2fShpO1UUHmYxJszFpYhn8a2UQHfux9XlBX7hZu1zej60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765644262; c=relaxed/simple;
-	bh=b8J5h6HSg83nN/DGs1yVUaowCJ6zEDpbJ6pePYqiUW0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=vB5Rn8BnwIbwZ/KL+vjfxm96rfNgcBrlqZH+VBuXyr0C+vbVZWXzbuZ6OxRhwJvqD2Sp1jNrB+xuLBFNbTCSIwdPwLuaT9KHwOkFFdxB6kywxvfwBqhmKKqZ8TYpAFh97iWmyiIAnttBSBQdWW9SiXFrLqdo7PjvCIO5t0mXskM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqoBCyuc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF7E0C113D0;
-	Sat, 13 Dec 2025 16:44:21 +0000 (UTC)
+	s=arc-20240116; t=1765650898; c=relaxed/simple;
+	bh=9ZwQOKtBjSec+04I3oVKV4GYd68ewmRAiioUC+3d7Cw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pmrIXut//kI5Jab1kDFo6UUmsoprLYgAMR20v0nKWWyyR2NUh22lMQVzfyfLE2wtD9MvXrTGCFdUHkG3nhznRPBsLSu2N+Uz1Z7RAxWcvlD/RTIbyffHFTmWZTLJFNmRywm5nkA6uoUhA4ViiTj2vYXZNNFXu0AdsxbvLxh3UJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6+56Esw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817E7C4CEF7;
+	Sat, 13 Dec 2025 18:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765644262;
-	bh=b8J5h6HSg83nN/DGs1yVUaowCJ6zEDpbJ6pePYqiUW0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=RqoBCyuchWDMfGilc82XVw6C7ENgLvZ+nMjruIykWCz7orySDvOgRSHb+TddUlRDm
-	 bmSES7tZ8fBQjQWB5K7qG98HZNgQoE/lsEd2HNumHnHAx9DSVxHdMSUE2wlvhVlJv0
-	 Pd8OsVP1NQv6F9lsuy/OWQi8feLxV+oQrwZclG8jW2UUOLqa2K5jV9tCAjxVWph1z8
-	 1usCy+LJrESiwZwQ8wg4/qSxbe59Fxr2yuYhpfzARrQ+kLPAjhAZ+9IRCZyZ2gfZUS
-	 gwmglQ2y0nf7xJR8awS1SpwbwAVm8fahZAZ1pXUznWMPLUHReFFAT+w9sVK8x7+Lhv
-	 uIpKyLGtKMrXw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C93EDF4007E;
-	Sat, 13 Dec 2025 11:44:20 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 13 Dec 2025 11:44:20 -0500
-X-ME-Sender: <xms:5Jc9aQ9s3WSjqscs3b_GhuvpWTDBFPLeomV7JnLZpq183V0MIzsWbQ>
-    <xme:5Jc9aThQv1wDtIqAKug0YBIZG4QbQWcDzycWHW1LaKOL4dKMTsUeQt0RjfU4unSKS
-    Lndgs_exSbRlNJ6yQNN6UKL1pDSRaGnqviFtefZL0xAJjac1Mkx918>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtoheprgguihhlghgvrhdrkhgvrhhnvghlseguihhlghgvrhdrtggrpdhrtghpthhtoh
-    epsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhihhrohhfuhhmihesmhgrihhlrdhprg
-    hrkhhnvghtrdgtohdrjhhppdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgt
-    phhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhope
-    grlhhmrgiirdgrlhgvgigrnhgurhhovhhitghhsehprghrrghgohhnqdhsohhfthifrghr
-    vgdrtghomhdprhgtphhtthhopehvohhlkhgvrhdrlhgvnhguvggtkhgvsehsvghrnhgvth
-    druggvpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:5Jc9aU7hctJEOAiUsVsqH58WprXxxFxXlnzVvvd8oYaNtgXHpE7pIw>
-    <xmx:5Jc9aVUmpUTFVTn1YP8Hh-ORmlsctH_7BuzzeZ-7x_Zs9Cqcxe9bmA>
-    <xmx:5Jc9aUi1SDuShbeHsVKgeQV7WyIIoqpgQLTEXv0GfFPTj8goA0CCsw>
-    <xmx:5Jc9addS3lK73W93uxBjqOJyQZgysb8qFzaihfZcGhRAkJFxwZDpjQ>
-    <xmx:5Jc9ab3fLThx8ZV10Sib7FVzybJXCsErzmVc1wK8aHEioKui-0-gxvJ_>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A5355780054; Sat, 13 Dec 2025 11:44:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1765650898;
+	bh=9ZwQOKtBjSec+04I3oVKV4GYd68ewmRAiioUC+3d7Cw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U6+56EswufTrm926mkYXaXrzVmx32umZmXov8sYZ68GPgQSlZd3vmszYyxEHrLV0l
+	 dI+BYhC8i4Ero9Zm/t8lLsT2DRgxmKmv8NGyFAtwqcyAkNRq9kTfFLR7wBTeMCWT3O
+	 4LPq7wQ51r3jJClUGDarbHUj+wuBOlbxaT48mpEKuOJpLqn/YiPHGdhOtLtEXByxuV
+	 MA14vrXuEersB5/dfIlLPG9UctUAc5g54tzHfncNmv08WT2COZCOFomVcUwfwAM2rh
+	 89O8lmvrr26Y8LQI/dlPFvoY85O+PlePcI4D280mipWaxPxtUvVMGY+wgJkZixbfUf
+	 7eddG4GdOw2GA==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Chris Mason <clm@meta.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix nfs4_file refcount leak in nfsd_get_dir_deleg()
+Date: Sat, 13 Dec 2025 13:34:53 -0500
+Message-ID: <176564891602.581939.5245628213222165856.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251213-nfsd-6-19-v1-1-8af64b59c14e@kernel.org>
+References: <20251213-nfsd-6-19-v1-1-8af64b59c14e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AG4gnELdBCjJ
-Date: Sat, 13 Dec 2025 11:43:48 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Theodore Tso" <tytso@mit.edu>
-Cc: "Eric Biggers" <ebiggers@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- almaz.alexandrovich@paragon-software.com, adilger.kernel@dilger.ca,
- "Volker Lendecke" <Volker.Lendecke@sernet.de>,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <c727e128-8778-4dec-8750-6c93bd0dda02@app.fastmail.com>
-In-Reply-To: <20251212212354.GA88311@macsyma.local>
-References: <20251211152116.480799-1-cel@kernel.org>
- <20251211152116.480799-2-cel@kernel.org> <20251211234152.GA460739@google.com>
- <9f30d902-2407-4388-805b-b3f928193269@app.fastmail.com>
- <20251212021834.GB65406@macsyma.local>
- <ed9d790a-fea8-4f3e-8118-d3a59d31107b@app.fastmail.com>
- <20251212212354.GA88311@macsyma.local>
-Subject: Re: [PATCH v2 1/6] fs: Add case sensitivity info to file_kattr
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Chuck Lever <chuck.lever@oracle.com>
 
+On Sat, 13 Dec 2025 11:53:17 +0900, Jeff Layton wrote:
+> Claude pointed out that there is nfs4_file refcount leak in
+> nfsd_get_dir_deleg(). Ensure that the reference to "fp" is released
+> before returning.
+> 
+> 
 
-On Fri, Dec 12, 2025, at 4:23 PM, Theodore Tso wrote:
-> On Fri, Dec 12, 2025 at 10:08:18AM -0500, Chuck Lever wrote:
->> The unicode v. ascii case folding information was included just as
->> an example. I don't have any use case for that, and as I told Eric,
->> those specifics can be removed from the API.
->> 
->> The case-insensitivity and case-preserving booleans can be consumed
->> immediately by NFSD. These two booleans have been part of the NFSv3
->> and NFSv4 protocols for decades, in order to support NFS clients on
->> non-POSIX systems.
->
-> I was worried that some clients might be using this information so
-> they could do informed caching --- i,e., if they have "makefile"
-> cached locally because the user typed "more < makefile" into their
-> Windows Command.exe window, and then later on some program tries to
-> access "Makefile" the client OS might decide that they "know" that
-> "makefile" and "Makefile" are the same file.  But if that's the case,
-> then it needs to have more details about whether it's ASCII versus
-> Unicode 1.0 vs Unicode 17.0 case folding that be in use, or there
-> might be "interesting" corner cases.
+Applied to nfsd-testing, thanks!
 
-No current version of the NFS protocol can communicate any more than
-whether or not filenames are case sensitive and case preserving. Thus
-the unicode label idea is nothing NFSD can possibly take advantage of.
+[1/1] nfsd: fix nfs4_file refcount leak in nfsd_get_dir_deleg()
+      commit: 08efc1ef9f6e574de433c4df4899ca07b251fe57
 
-
-> Which is why I've gotten increasingly more sympathetic to Linus's
-> position that case folding is Hot Trash.  If it weren't for the fact
-> that I really wanted to get Android out of using wrapfs (which is an
-> even greater trash fire), I'd be regretting the fact that I helped to
-> add insensitive file name support to Linux...
-
-Well I think "Hot Trash" is the general consensus. I'm not thinking
-of adding more than the NFS protocol can support. I'm only suggesting
-that more /could/ be done if someone has a use case for it.
-
-
--- 
+--
 Chuck Lever
+
 
