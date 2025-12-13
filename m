@@ -1,123 +1,113 @@
-Return-Path: <linux-nfs+bounces-17068-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17069-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4237CCBA385
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 03:53:42 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A137DCBB03D
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 14:57:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8FE8F30170E6
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 02:53:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E9FE530019F3
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 13:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D982EFDB2;
-	Sat, 13 Dec 2025 02:53:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEB3C29B778;
+	Sat, 13 Dec 2025 13:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKLacHMU"
+	dkim=pass (2048-bit key) header.d=thepreventioncoalition-org.20230601.gappssmtp.com header.i=@thepreventioncoalition-org.20230601.gappssmtp.com header.b="ard76ejU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E2C2ECE9B;
-	Sat, 13 Dec 2025 02:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32121CC49
+	for <linux-nfs@vger.kernel.org>; Sat, 13 Dec 2025 13:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765594415; cv=none; b=dOO+umi5ljlOrT0/xU3kS42Zuwzse+OiHBMCEtxbahbH++3kOA3KAR8cCS/y1jMXMhRO989mWiI4VLXMiVlSGM7t75Jwnu0JOB51YhE+IV7T8zC+poXFzWBkP3kp9p3aXRPHiTE/eQTvn74R4+h0P+RbFvgA8q0iRlLs066aUNY=
+	t=1765634259; cv=none; b=fKWpFTXpAVcFc2iOZSBDcLPOcanWRspMpiH5NsQ3c4bJvflIB2n732Zf+R71e4fXddsvoiDy0xoy2eGynyACLD/2qukqppxqHSq9shpif+uiPlIEmj2aNz1VWNtrKXP4aXmOx/HZlUtQ/nwI50kSxp0+xn8YRhW1vUx/xsUNJYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765594415; c=relaxed/simple;
-	bh=YZBKqehDM05OI+wzUkbxGNac+Z/5rqR7JJV9R5qY3zw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pwSRFRO9XpD+S1xiFYMb8X0pcPhFG3dzwtCZHYvtn68GCxOcodpx9JJ3QmVLC4niiOIPsGKbsDm8J2fMnCYssIE5r4/W+/MVmmAMcnDJGuAAUCNAiNtG9METHowHvqCvlyl2qnsfeS+Nl+Q/GND+wQBQHBQLp6HtksIZ+xB8PHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKLacHMU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BDBC4CEF1;
-	Sat, 13 Dec 2025 02:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765594415;
-	bh=YZBKqehDM05OI+wzUkbxGNac+Z/5rqR7JJV9R5qY3zw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FKLacHMUjcPF0gkHcfyZKvMNywk1JHg8gN7DvS0Io0GJvpks5RATHKxt5XI4r0qu6
-	 QkiEsbWmEd0Hj0hrUAew6AFcp2Wt48JNeb8zxcMfpTAswEVinn/N7IfZyT8FP4vUYE
-	 5W3vJz43DG0hNxUKhTlO1/nuWXDLPhrBRvHyXmcrANGyIdRWFEkNDYUaoa5+AfPCmk
-	 8OtW/ZbRvaTfJtMGZ1J5QSJjmgMkI00i3XmSdqlcmhjzkwcL4eCoTSFR3YX7Q3mccX
-	 3nWtEK8qg/OqZp93Y2QEmbyPONo4AqVcD3m7icKpvu9WwOrfaCrfAN45oJKvKtVod6
-	 7Zq6wnWNS0VDQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 13 Dec 2025 11:53:17 +0900
-Subject: [PATCH] nfsd: fix nfs4_file refcount leak in nfsd_get_dir_deleg()
+	s=arc-20240116; t=1765634259; c=relaxed/simple;
+	bh=7/dz5FHwCK4Z0a5CtkwVrVyhgUN7UGKBBda/so3HBuI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=CUNpZP5W2lTOqofqvTzqDZ75S5eNDfXSsv25jrcbjWJM8slDQPQq67wetu7Avz2m1SufStGIuAF6xMlb5Ue8ynIrOB5zt2oPnkSZbA7Dkqv9BuoscJV/gF9Y45BhNWiu+zRky/lEe+al2NAeYoU9uJpjgeDgUbrnAHjFERVfoOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=thepreventioncoalition.org; spf=fail smtp.mailfrom=thepreventioncoalition.org; dkim=pass (2048-bit key) header.d=thepreventioncoalition-org.20230601.gappssmtp.com header.i=@thepreventioncoalition-org.20230601.gappssmtp.com header.b=ard76ejU; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=thepreventioncoalition.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=thepreventioncoalition.org
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b735e278fa1so414939766b.0
+        for <linux-nfs@vger.kernel.org>; Sat, 13 Dec 2025 05:57:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thepreventioncoalition-org.20230601.gappssmtp.com; s=20230601; t=1765634256; x=1766239056; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/dz5FHwCK4Z0a5CtkwVrVyhgUN7UGKBBda/so3HBuI=;
+        b=ard76ejUeMZm66i/pEprMOLUJBocSHEK8+9PRB8IEAVEkkRiF0dpswkS55bza5uwrp
+         AGqAbv9ntesI50nfSfEs99VZh0Nuo24Reojv/sEkk/TONeSjR4iTbcvGSBVtD2jeTcUw
+         rgrTlA1L49qMRMbrfgBQaQoW6Djr/3I0yNL0naDgTIAKhjkoIo1wv3QW/K7j7ezsTL0m
+         xFWxe8kGNqRZZIfe1ex1jyge7Izwoaf77O3fKTn78RftoMQI6uvaBkWzoVfMgp0hcNyC
+         Ulb7a4KqgBiibXaaKFsFOZd7yDWK/kr6so4mtqAdAg8Q/16l67dzoqR4P0Go0XAtYa1g
+         1Sgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765634256; x=1766239056;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7/dz5FHwCK4Z0a5CtkwVrVyhgUN7UGKBBda/so3HBuI=;
+        b=L/S6laYJ0ZHK/P5i5ctILeYQa5+/BZ+iPnPIu4YPX5k/kpUjbNVVXCyIcJhsYWroVx
+         53fQPtlYD7xBs6dh+SenEsGG/faEPBp5IXktZ6GBs2Og0jxOhai8Su3kQlq4+kjA6AK7
+         /hoQ7kNjHghpQky39pZ7tSDlqp5QKMw8lX3KhjY+z38DuB8K0lY6cpoDG4N9NHyiVGYU
+         KrX/HrvzJWQcm5g3RdHnyPYqrG20W3nKpT0i6cZGn6D488yO/9g0+AupRocjlJc4c95a
+         MfYBzdscaSKI75Zkrr841GCgZ5kf3co4CjhgUG5X2MruS7zxrKLybl8edbWvTojJwR85
+         7Dxg==
+X-Gm-Message-State: AOJu0YywtFXb7UkhtTALbBbIW6NufsSbEJc098WCRqtlGPBQPJ8+HzRS
+	r4CyqYOAnY62Ua3sAWWo4JXLhZeHPJSPnzdq7OTOnmsQLlMDjHT559Ei7MYZGGVbs7qR/iG0HhL
+	orMiM3nUeDsEIOLKUlkQ+TkBnmMIEL63j9sAg38LNJ8GW6aWa1ewR
+X-Gm-Gg: AY/fxX7wFV+leaJl1WmTT0GERRhqxSY0E6lGS5qVMvFlf8ngwt4sRrg3J9i1/g2Sh+j
+	4tmfexPQFbceKU1vN1a+tFE0h8t+k4HG9hfh2TlfY+NgPQIIq2eTA/xqBWCVefnLrEVbEnMIMq/
+	KuxJTP4pT7VRJwpUipJUezRDqjBOjuz8U1CZ2pmc6/lMckaZbxZy9cjFeWCFhpoOHUVAS2pUgL+
+	3j6rtp1Kx6/MTft+rbUNf4U2ymBAH1gVSN79VOOJVBbLgnL34yUjXfqYJEFvREwcHWs3roTD5ME
+	mlcxqaIiiMRp54aqIPsx1czbGYs=
+X-Google-Smtp-Source: AGHT+IG2RPvp7xkpOkod2rDrHftIkweWOJaFtMD0kMlHVslgmp1BdNu6yKPA8DmvZaQ7ZHFLp2kJ1HJLJophXQNKdvk=
+X-Received: by 2002:a17:907:94c3:b0:b73:8b79:a31a with SMTP id
+ a640c23a62f3a-b7d23627315mr531088566b.16.1765634255805; Sat, 13 Dec 2025
+ 05:57:35 -0800 (PST)
+Received: from 434128649655 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 13 Dec 2025 07:57:35 -0600
+Received: from 434128649655 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 13 Dec 2025 07:57:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251213-nfsd-6-19-v1-1-8af64b59c14e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDI0Nj3by04hRdM11DS92kREuLZFOjZHPzlEQloPqCotS0zAqwWdGxtbU
- AGr1aUFsAAAA=
-X-Change-ID: 20251213-nfsd-6-19-ba98c52c77da
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Christian Brauner <brauner@kernel.org>
-Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1323; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=YZBKqehDM05OI+wzUkbxGNac+Z/5rqR7JJV9R5qY3zw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpPNUsg9PNCmEapQfLZ+Ny6Hb3OJdA+ZRqO2Y15
- 4ziFpOSxIeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaTzVLAAKCRAADmhBGVaC
- FRHUEACFgat6eIkyhxbgrmGz4O/DJm8UiuF4sInp77XAxdpWkIF48GsDfYPyzWefXferQd4LYDT
- c1BMe7hoNuQncL8634UidboS2x1HhznSHlulhW8fNWD+bMud3sSphLIJPEn/RZlVw63kbhPZL4/
- 8ENjnQpS+5sei7TxxsGMMLZxQRe6pyANrzNXzzl5Md6GsUt5PMllHXFQ3tTgXjG3ETzadSv+LUP
- MvGYQ4gAXsvnqwFMZdOTVuK5AaImNM771JlVZGjFFla62lSs5wywb9DKdDZicGiGWI6aoKUav0Q
- EnCKBhYJfpyYVUu+iqLeYUBIMt8whYtqWFYs5YCO+KVxmFMpanCWwKY2idRew+rY1KkT8a+G1Cm
- EGxO9ewESEQ4/TRqL4PBMffsHR9rQpM5Xy2c2ST6+kOad73wI3zIppbCsl7ptAIZFt34KmlXBME
- zEpY6b07RA2Fg7zQCIj+9RWPrKpTLqeTKncwuTTHVx0bHiPkft37NcR4XBaRKR5rBV1Mgt5bj8K
- n0k/1YVjdyWc3hy5gwnsWWWtPiL6tBMDQ1YI1HZh+XedN+F8K32lUL7mh9QuEMh5Q/misVey5dn
- K5Il3NmbQVushQdKfAJRZBMxZdCQA+m7pOGi6Vl7GC5EE5xHrP9YpOmHVC2TX3ozlNYAyPXK1IQ
- WfxANLyMs39+HEA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+From: Jackie Cortez <jackiecortez@thepreventioncoalition.org>
+Date: Sat, 13 Dec 2025 07:57:35 -0600
+X-Gm-Features: AQt7F2qN4rLHJ6TDBlrgAlLEabgYCDARwnvluAgQWtOeCCMmjzezldkRQ8hdSVI
+Message-ID: <CAH11TdhhZ6SQ2ksAD0782ogvEWnmsDAf4+jvp6rAsBEdJS9Oog@mail.gmail.com>
+Subject: A wonderful idea for your blog!
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Claude pointed out that there is nfs4_file refcount leak in
-nfsd_get_dir_deleg(). Ensure that the reference to "fp" is released
-before returning.
+Hi there,
 
-Cc: Chris Mason <clm@meta.com>
-Fixes: 8b99f6a8c116 ("nfsd: wire up GET_DIR_DELEGATION handling")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+What if improving your health didn=E2=80=99t require a complete overhaul of
+your routine, but instead, small, easy changes that make a big impact?
+We=E2=80=99re writing an article about improving overall health and well-be=
+ing
+without overwhelming your routine. From starting the day with
+stretching to developing a relaxing bedtime routine, the piece also
+covers mindfulness, skincare, dental health, and more, all geared
+toward boosting daily wellness.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 808c24fb5c9a0b432d3271c051b409fcb75970cd..90d355af1a21e6cab14fc1178f249c9716aef441 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -9456,8 +9456,10 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
- 	spin_unlock(&clp->cl_lock);
- 	spin_unlock(&state_lock);
- 
--	if (!status)
-+	if (!status) {
-+		put_nfs4_file(fp);
- 		return dp;
-+	}
- 
- 	/* Something failed. Drop the lease and clean up the stid */
- 	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
-@@ -9465,5 +9467,6 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
- 	nfs4_put_stid(&dp->dl_stid);
- out_delegees:
- 	put_deleg_file(fp);
-+	put_nfs4_file(fp);
- 	return ERR_PTR(status);
- }
+Would you be interested in featuring this article on your website? We
+believe it could really resonate with your audience.
 
----
-base-commit: 187d0801404f415f22c0b31531982c7ea97fa341
-change-id: 20251213-nfsd-6-19-ba98c52c77da
+Looking forward to your thoughts!
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+Many thanks,
+Jackie and Pat from ThePreventionCoalition.org
 
+
+P.S. If you=E2=80=99re interested but would prefer an article on a differen=
+t
+topic, please let us know. We=E2=80=99re happy to accommodate! The articles=
+ we
+create are structured to help your content get noticed on new
+platforms and smart search tools.
 
