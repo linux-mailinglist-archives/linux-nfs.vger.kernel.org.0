@@ -1,58 +1,56 @@
-Return-Path: <linux-nfs+bounces-17086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5366BCBB5A0
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 02:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1649CCBB5A3
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 02:08:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 15B433009FB0
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 01:07:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8B593009FBE
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 01:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B7B2DE1FA;
-	Sun, 14 Dec 2025 01:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC322C21FB;
+	Sun, 14 Dec 2025 01:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJlandWb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhM8zTj3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607CB2C21FB
-	for <linux-nfs@vger.kernel.org>; Sun, 14 Dec 2025 01:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E7A286412
+	for <linux-nfs@vger.kernel.org>; Sun, 14 Dec 2025 01:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765674476; cv=none; b=SUGHW76s6xWMgqneqDlBoPVhtkz0+VrzUpAKmXHfyCFotVegl0bH+jndP7YPUScqHC/QfXct7hcGfUCpi+6o0yYvOWkxaHsl8b1geOUQ8sX9D3q+AnhF9fMUDPkyhpXJ54NNvMyuD/rHJEwvqAHl8VhOrKkr/EaBtktgwvIm3C8=
+	t=1765674490; cv=none; b=qOM6+V54jyxiNizsqXs3XRMjEE0pOqdfM3gRNujGI0ZZpzKaFAwiOMOI9MQlyV5ntTF+xCdiMUNLn5oGnvw9oPsV0oSdlvezXXqrf8xLssM7kl60643SQDUXp/860dW/qEbYfcfGZtDRcX0bx2PSEefQa8IAgW0KzkJX+g4MiwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765674476; c=relaxed/simple;
-	bh=KUO3YdgYO+KxcFAQcTLEuEoPHbwo2X/sYEvZrgiqQxs=;
+	s=arc-20240116; t=1765674490; c=relaxed/simple;
+	bh=Fdg1NdLwXsiZz2ZidIBbTSrUkzH1OXsjUBmNYAEaJQ8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pbVQSYN3aA4AvJzAfFXrSLuF5FhASWH+29RsIIb2V65ebYZWfCn7JrsN2AUIeuplvZn0vsnyUtPkE02cVnv67gtQ8u2fnl5QeLfJOr+dnswnQ9PKh60NFz1dhucCZLx5UP6wz1WITZ63ZsHxLgyAlp2kOvKBH/aUl+GdacPbPGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJlandWb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E443C4CEF7;
-	Sun, 14 Dec 2025 01:07:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ygb+VqeOPVzDEiBhz8JP0L3/ZHNLq1egwDpPct9v25Ngn5CTvFiBNgotgOKq6TnJAVmLS0Iy0ssLE/kBIGjwYR4s/DkPGq492TBArtf4wHOZ0Zox/fliP1QwB6co9mPioHfEZniGGSUWALtMutJsZuaKYFShKc8O+pcZjtc0rA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhM8zTj3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A4EC4CEF7;
+	Sun, 14 Dec 2025 01:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765674475;
-	bh=KUO3YdgYO+KxcFAQcTLEuEoPHbwo2X/sYEvZrgiqQxs=;
+	s=k20201202; t=1765674486;
+	bh=Fdg1NdLwXsiZz2ZidIBbTSrUkzH1OXsjUBmNYAEaJQ8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VJlandWbZiRCkwzbtGf5Naug8iWVdoxy9zKGvPz0Hkd/0hHuIZGJAd/lJfrpoHGk7
-	 kNpXxNABkhTXYuyDbECGO+8pTpZ4L4RGDF3d+qKp2nsd309yHgKUxpPKW8wQSEbvkg
-	 sfeZG7QUIPQ6ClT4gMnfNNv8ou9Nk5mARLjgnSUZgPcQBtSu90jgr4p0FWgpX5ZD5t
-	 HlQBlbHIF6kP3sYMrqvXZhyqgER91PQTGDtpsQ3IXMy+GvQ24I5Ncr7/X9dLFiISrt
-	 MuHPF4os1S1slBm+VgH5ox2C8emIUxoFac/CM3oDo4hG5jRkBQTw+KRl+mL9hPv6kx
-	 gUqJfW3XGOFhw==
-Message-ID: <c7d37b59b359ed1a5f3d33e2a40a2f110080dfe1.camel@kernel.org>
-Subject: Re: [PATCH v3 2/2] nfsd: use workqueue enable/disable APIs for
- v4_end_grace sync
+	b=lhM8zTj3S7leshZIPJb9YYjcn406CS+UeJwfgE/z8mknYVaXvfUMtVXoKHg75fI6j
+	 6gaymriQUF9UZkSDkU9EQDLqwSjZ7p3LH+pKtM/UiSqmhB/ekOiuczeXjyItyITL0c
+	 difAbwgYYYn4Ld+VAYZzKh47LEVLuP4PEV9obue57a7n/l1gy2Ulln2kFBMdsUiBpK
+	 zObzzkvgqajmL87q1WF/sxcFrHpEBHfMasUzaOyFvV4120N78PixAfcrEXYAK0ouMu
+	 lL07O44Tj7Zin8phhIjJ5qsslJjoRzvghXoBMybVoFLFpPrdHx44KLrQl33HumGmoY
+	 zxXNw5TPJPaxg==
+Message-ID: <18b88b15bb51a958d1eb73fbe03bf9d3d17b7344.camel@kernel.org>
+Subject: Re: [PATCH v3 0/2] provide locking for v4_end_grace
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, lilingfeng3@huawei.com, yangerkun@huawei.com,
  	yi.zhang@huawei.com, houtao1@huawei.com, chengzhihao1@huawei.com, 
-	yukuai3@huawei.com
-Date: Sun, 14 Dec 2025 10:07:51 +0900
-In-Reply-To: <20251213184200.585652-3-cel@kernel.org>
+	yukuai3@huawei.com, Chuck Lever <chuck.lever@oracle.com>
+Date: Sun, 14 Dec 2025 10:08:01 +0900
+In-Reply-To: <20251213184200.585652-1-cel@kernel.org>
 References: <20251213184200.585652-1-cel@kernel.org>
-	 <20251213184200.585652-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,114 +135,29 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 13:42 -0500, Chuck Lever wrote:
-> From: NeilBrown <neil@brown.name>
+On Sat, 2025-12-13 at 13:41 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> "nfsd: provide locking for v4_end_grace" introduced a
-> client_tracking_active flag protected by nn->client_lock to prevent
-> the laundromat from being scheduled before client tracking
-> initialization or after shutdown begins. That commit is suitable for
-> backporting to LTS kernels that predate commit 86898fa6b8cd
-> ("workqueue: Implement disable/enable for (delayed) work items").
+> Following up on:
 >=20
-> However, the workqueue subsystem in recent kernels provides
-> enable_delayed_work() and disable_delayed_work_sync() for this
-> purpose. Using this mechanism enable us to remove the
-> client_tracking_active flag and associated spinlock operations
-> while preserving the same synchronization guarantees, which is
-> a cleaner long-term approach.
+> https://lore.kernel.org/linux-nfs/175136659151.565058.6474755472267609432=
+@noble.neil.brown.name/#r
 >=20
-> Signed-off-by: NeilBrown <neil@brown.name>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/netns.h     |  1 -
->  fs/nfsd/nfs4state.c | 22 +++++++++-------------
->  2 files changed, 9 insertions(+), 14 deletions(-)
+> This is now two patches: one that can be backported, and one that
+> simplifies the fix based on mechanisms available only in recent
+> kernels. I've also addressed all the review comments I could find.
 >=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index fe8338735e7c..d83c68872c4c 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -67,7 +67,6 @@ struct nfsd_net {
->  	struct lock_manager nfsd4_manager;
->  	bool grace_ended;
->  	bool grace_end_forced;
-> -	bool client_tracking_active;
->  	time64_t boot_time;
-> =20
->  	struct dentry *nfsd_client_dir;
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 1d307cc533d9..c9be724c48d0 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6619,14 +6619,14 @@ bool nfsd4_force_end_grace(struct nfsd_net *nn)
->  {
->  	if (!nn->client_tracking_ops)
->  		return false;
-> -	spin_lock(&nn->client_lock);
-> -	if (nn->grace_ended || !nn->client_tracking_active) {
-> -		spin_unlock(&nn->client_lock);
-> +	if (READ_ONCE(nn->grace_ended))
->  		return false;
-> -	}
-> +	/* laundromat_work must be initialised now, though it might be disabled=
- */
->  	WRITE_ONCE(nn->grace_end_forced, true);
+> These patches have been compile-tested only.
+>=20
+> NeilBrown (2):
+>   nfsd: provide locking for v4_end_grace
+>   nfsd: use workqueue enable/disable APIs for v4_end_grace sync
+>=20
+>  fs/nfsd/netns.h     |  1 +
+>  fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++++++++++++++++---
+>  fs/nfsd/nfsctl.c    |  3 +--
+>  fs/nfsd/state.h     |  2 +-
+>  4 files changed, 40 insertions(+), 6 deletions(-)
 
-Ahh ok, I get it now. This is much cleaner, but you do need the
-READ/WRITE_ONCE semantics once you get rid of the spinlock. I withdraw
-my objection to patch #1.
-
-> +	/* mod_delayed_work() doesn't queue work after
-> +	 * nfs4_state_shutdown_net() has called disable_delayed_work_sync()
-> +	 */
->  	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> -	spin_unlock(&nn->client_lock);
->  	return true;
->  }
-> =20
-> @@ -8962,7 +8962,6 @@ static int nfs4_state_create_net(struct net *net)
->  	nn->boot_time =3D ktime_get_real_seconds();
->  	nn->grace_ended =3D false;
->  	nn->grace_end_forced =3D false;
-> -	nn->client_tracking_active =3D false;
->  	nn->nfsd4_manager.block_opens =3D true;
->  	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
->  	INIT_LIST_HEAD(&nn->client_lru);
-> @@ -8977,6 +8976,8 @@ static int nfs4_state_create_net(struct net *net)
->  	INIT_LIST_HEAD(&nn->blocked_locks_lru);
-> =20
->  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
-> +	/* Make sure this cannot run until client tracking is initialised */
-> +	disable_delayed_work(&nn->laundromat_work);
->  	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
->  	get_net(net);
-> =20
-> @@ -9044,9 +9045,7 @@ nfs4_state_start_net(struct net *net)
->  	locks_start_grace(net, &nn->nfsd4_manager);
->  	nfsd4_client_tracking_init(net);
->  	/* safe for laundromat to run now */
-> -	spin_lock(&nn->client_lock);
-> -	nn->client_tracking_active =3D true;
-> -	spin_unlock(&nn->client_lock);
-> +	enable_delayed_work(&nn->laundromat_work);
->  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size =3D=3D =
-0)
->  		goto skip_grace;
->  	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
-> @@ -9095,10 +9094,7 @@ nfs4_state_shutdown_net(struct net *net)
-> =20
->  	shrinker_free(nn->nfsd_client_shrinker);
->  	cancel_work_sync(&nn->nfsd_shrinker_work);
-> -	spin_lock(&nn->client_lock);
-> -	nn->client_tracking_active =3D false;
-> -	spin_unlock(&nn->client_lock);
-> -	cancel_delayed_work_sync(&nn->laundromat_work);
-> +	disable_delayed_work_sync(&nn->laundromat_work);
->  	locks_end_grace(&nn->nfsd4_manager);
-> =20
->  	INIT_LIST_HEAD(&reaplist);
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
