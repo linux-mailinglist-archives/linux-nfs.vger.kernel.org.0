@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-17084-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17085-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D927CBB450
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 22:56:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC6F1CBB597
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 02:05:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8E6B630010D0
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Dec 2025 21:56:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 808AF30084E7
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 01:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3909B30ACF1;
-	Sat, 13 Dec 2025 21:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA272D23A6;
+	Sun, 14 Dec 2025 01:05:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cU8QHQLL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXNrv0q6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0D426FDBF;
-	Sat, 13 Dec 2025 21:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A452C286412
+	for <linux-nfs@vger.kernel.org>; Sun, 14 Dec 2025 01:05:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765662958; cv=none; b=hU754Urd3unR8OsDAptjzXt04JHwNHmhv6JKsFmEXNcSZoEzvrn8Z+Z8yf89/nVL4FmK/bAzmnRYPpxPWVWqhyCOfN5DMmjwQShb+Tkwj6nGp90PJISrIvzm+pqS8aFNVlTFeF3LOgCTmrMnJs/tRP8p6hJm0Ecb1HkwJ+3825M=
+	t=1765674348; cv=none; b=UZ9KCzRyaJvev+KBhyPCvD6QvJDNxNpZ4bybNbXEtHmhifBAHDzqbbqHMBjljtYkePJCsdoIHqgebaK+F2q2m5/7csNlb39ca+vw7ReTICOmATSsHQwmfFVWUZ+BoHs+cHJoik69SxmrB25M41UWGb+3AzACQbKrXfG2NUq9Q0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765662958; c=relaxed/simple;
-	bh=2xXDN5GQtvuUy7mVsijHOan3JazOdGgX6Y1+ikFCXH4=;
+	s=arc-20240116; t=1765674348; c=relaxed/simple;
+	bh=5X4JGntKabmvNS19sBXNmWazjJmNutV1SQguqLlMEUY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Bt4w5mNmNn1v04bY4eb99B18Nwm1HTJj8EJzFgzX4rY9xXg8aystowrY/IMaSgprssLAAasMncUKoZMsRvyrKUuqWXcyg1i0GyPRNhO0ciJyNo/E+OClvXunNfmfYhbZh7txOSbDfY5dRVON8YUUPzny0VDjaxPwKpA/lzIZxxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cU8QHQLL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4AAC4CEF7;
-	Sat, 13 Dec 2025 21:55:55 +0000 (UTC)
+	 Content-Type:MIME-Version; b=p5+s+1DfWkA1NYyVI4pbLVkTNHBhxbLeuPCsCcSoTmCNM6nbR3k0W6MZmY+af7uavUnurv0Qst0lvksbJAUF2PWBn1XRtz6q5N1vfYOgjZ+o5OxuxLBIkUzLbfc9OONKbGvFsaOehWh1r/BtWgnnUl/Ot/QVpxRnaWzwRp2MqoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXNrv0q6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3962C4CEF7;
+	Sun, 14 Dec 2025 01:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765662957;
-	bh=2xXDN5GQtvuUy7mVsijHOan3JazOdGgX6Y1+ikFCXH4=;
+	s=k20201202; t=1765674348;
+	bh=5X4JGntKabmvNS19sBXNmWazjJmNutV1SQguqLlMEUY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cU8QHQLLGZ8wh8sPIw7E0u+YqjPxa8+96Arv2e1uCfBzT/AxAw0IZjhxpygAEIc5Y
-	 lChQ5emIns0cyJwpTc8OunmNFMUA4EOYQmyW2Gfvylq5vQaQUfzsd7CGRXVBwThZ0l
-	 KjjOkcIfO/J5+nPMbDvqx63ywqHY4LGfi/PWiNW99s6vvatsKYyrUpmud/GV2ePQEz
-	 kZ6VKWe/Y5H+gujGTaIzc4Q+tUWROJTF4Kjls7hwSJ4YgxUY0BXgljcvK+fsi0k3/0
-	 fRqXj5n0juF3kZCfm5xol1kiFP3xNH0adm7NARaI4B78obpz127hh8kPqv60GrhTmT
-	 nKyFvi3fFaHhw==
-Message-ID: <a5e0fbe428b85327793cac81207042b7d1d3f455.camel@kernel.org>
-Subject: Re: [PATCH RFC 1/6] sunrpc: split svc_set_num_threads() into two
- functions
+	b=IXNrv0q6iD/it1Xek+yrN1BxZr9cBIFV8im2x3WSc+aJQuqf0U6WyDCyvedaEezwD
+	 m2DKDqR1hH+KRbxs6jfedOIHGqLKlurogB1tDM6nNMVtPpEZ5ZI9UpIufBUlPRfaMr
+	 qzeR8WsFfUzsT7qb3IRquuuFoo8Af20j7oisJuPLXfILLtXJX9uvyNYiQOLTaUtBcr
+	 i0lNJZloJbTev90+ozWq8RPWJVfQNuM+lpxYI9/P3kYW2vizG46GO2BrjNyrlnigII
+	 Tx/Zlk4LBJZqwewvi3PB3gwSn/QKENEmvw+J/e32dX/IeyHZAp36LfVpFoJRXIfSJ3
+	 +FDmWehGbnBKg==
+Message-ID: <abbe8923b3a520d572f6580f81a460d50be40237.camel@kernel.org>
+Subject: Re: [PATCH v3 1/2] nfsd: provide locking for v4_end_grace
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 14 Dec 2025 06:55:53 +0900
-In-Reply-To: <587f5358-fdb2-4834-b50e-6d48c9b43214@app.fastmail.com>
-References: <20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org>
-	 <20251213-nfsd-dynathread-v1-1-de755e59cbc4@kernel.org>
-	 <587f5358-fdb2-4834-b50e-6d48c9b43214@app.fastmail.com>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, lilingfeng3@huawei.com, yangerkun@huawei.com,
+ 	yi.zhang@huawei.com, houtao1@huawei.com, chengzhihao1@huawei.com, 
+	yukuai3@huawei.com
+Date: Sun, 14 Dec 2025 10:05:43 +0900
+In-Reply-To: <20251213184200.585652-2-cel@kernel.org>
+References: <20251213184200.585652-1-cel@kernel.org>
+	 <20251213184200.585652-2-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,321 +136,211 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 14:29 -0500, Chuck Lever wrote:
+On Sat, 2025-12-13 at 13:41 -0500, Chuck Lever wrote:
+> From: NeilBrown <neil@brown.name>
 >=20
-> On Fri, Dec 12, 2025, at 5:39 PM, Jeff Layton wrote:
-> > svc_set_num_threads() will set the number of running threads for a give=
-n
-> > pool. If the pool argument is set to NULL however, it will distribute
-> > the threads among all of the pools evenly.
-> >=20
-> > These divergent codepaths complicate the move to dynamic threading.
-> > Simplify the API by splitting these two cases into different helpers:
-> >=20
-> > Add a new svc_set_pool_threads() function that sets the number of
-> > threads in a single, given pool. Modify svc_set_num_threads() to
-> > distribute the threads evenly between all of the pools and then call
-> > svc_set_pool_threads() for each.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/lockd/svc.c             |  4 ++--
-> >  fs/nfs/callback.c          |  8 +++----
-> >  fs/nfsd/nfssvc.c           | 21 ++++++++----------
-> >  include/linux/sunrpc/svc.h |  3 ++-
-> >  net/sunrpc/svc.c           | 54 +++++++++++++++++++++++++++++++++++++-=
---------
-> >  5 files changed, 61 insertions(+), 29 deletions(-)
-> >=20
-> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-> > index=20
-> > d68afa196535a8785bab2931c2b14f03a1174ef9..fbf132b4e08d11a91784c21ee0209=
-fd7c149fd9d=20
-> > 100644
-> > --- a/fs/lockd/svc.c
-> > +++ b/fs/lockd/svc.c
-> > @@ -340,7 +340,7 @@ static int lockd_get(void)
-> >  		return -ENOMEM;
-> >  	}
-> >=20
-> > -	error =3D svc_set_num_threads(serv, NULL, 1);
-> > +	error =3D svc_set_num_threads(serv, 1);
-> >  	if (error < 0) {
-> >  		svc_destroy(&serv);
-> >  		return error;
-> > @@ -368,7 +368,7 @@ static void lockd_put(void)
-> >  	unregister_inet6addr_notifier(&lockd_inet6addr_notifier);
-> >  #endif
-> >=20
-> > -	svc_set_num_threads(nlmsvc_serv, NULL, 0);
-> > +	svc_set_num_threads(nlmsvc_serv, 0);
-> >  	timer_delete_sync(&nlmsvc_retry);
-> >  	svc_destroy(&nlmsvc_serv);
-> >  	dprintk("lockd_down: service destroyed\n");
-> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-> > index=20
-> > c8b837006bb27277ab34fe516f1b63992fee9b7f..44b35b7f8dc022f1d8c069eaf2f7d=
-334c93f77fc=20
-> > 100644
-> > --- a/fs/nfs/callback.c
-> > +++ b/fs/nfs/callback.c
-> > @@ -119,9 +119,9 @@ static int nfs_callback_start_svc(int minorversion,=
-=20
-> > struct rpc_xprt *xprt,
-> >  	if (serv->sv_nrthreads =3D=3D nrservs)
-> >  		return 0;
-> >=20
-> > -	ret =3D svc_set_num_threads(serv, NULL, nrservs);
-> > +	ret =3D svc_set_num_threads(serv, nrservs);
-> >  	if (ret) {
-> > -		svc_set_num_threads(serv, NULL, 0);
-> > +		svc_set_num_threads(serv, 0);
-> >  		return ret;
-> >  	}
-> >  	dprintk("nfs_callback_up: service started\n");
-> > @@ -242,7 +242,7 @@ int nfs_callback_up(u32 minorversion, struct=20
-> > rpc_xprt *xprt)
-> >  	cb_info->users++;
-> >  err_net:
-> >  	if (!cb_info->users) {
-> > -		svc_set_num_threads(cb_info->serv, NULL, 0);
-> > +		svc_set_num_threads(cb_info->serv, 0);
-> >  		svc_destroy(&cb_info->serv);
-> >  	}
-> >  err_create:
-> > @@ -268,7 +268,7 @@ void nfs_callback_down(int minorversion, struct net=
-=20
-> > *net)
-> >  	nfs_callback_down_net(minorversion, serv, net);
-> >  	cb_info->users--;
-> >  	if (cb_info->users =3D=3D 0) {
-> > -		svc_set_num_threads(serv, NULL, 0);
-> > +		svc_set_num_threads(serv, 0);
-> >  		dprintk("nfs_callback_down: service destroyed\n");
-> >  		svc_destroy(&cb_info->serv);
-> >  	}
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index=20
-> > 93f7435cafd2362d9ddb28815277c824067cb370..aafec8ff588b85b0e26d40b76ef00=
-953dc6472b4=20
-> > 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -594,7 +594,7 @@ void nfsd_shutdown_threads(struct net *net)
-> >  	}
-> >=20
-> >  	/* Kill outstanding nfsd threads */
-> > -	svc_set_num_threads(serv, NULL, 0);
-> > +	svc_set_num_threads(serv, 0);
-> >  	nfsd_destroy_serv(net);
-> >  	mutex_unlock(&nfsd_mutex);
-> >  }
-> > @@ -702,12 +702,9 @@ int nfsd_set_nrthreads(int n, int *nthreads,=20
-> > struct net *net)
-> >  	if (nn->nfsd_serv =3D=3D NULL || n <=3D 0)
-> >  		return 0;
-> >=20
-> > -	/*
-> > -	 * Special case: When n =3D=3D 1, pass in NULL for the pool, so that =
-the
-> > -	 * change is distributed equally among them.
-> > -	 */
-> > +	/* Special case: When n =3D=3D 1, distribute threads equally among po=
-ols. */
-> >  	if (n =3D=3D 1)
-> > -		return svc_set_num_threads(nn->nfsd_serv, NULL, nthreads[0]);
-> > +		return svc_set_num_threads(nn->nfsd_serv, nthreads[0]);
-> >=20
-> >  	if (n > nn->nfsd_serv->sv_nrpools)
-> >  		n =3D nn->nfsd_serv->sv_nrpools;
-> > @@ -733,18 +730,18 @@ int nfsd_set_nrthreads(int n, int *nthreads,=20
-> > struct net *net)
-> >=20
-> >  	/* apply the new numbers */
-> >  	for (i =3D 0; i < n; i++) {
-> > -		err =3D svc_set_num_threads(nn->nfsd_serv,
-> > -					  &nn->nfsd_serv->sv_pools[i],
-> > -					  nthreads[i]);
-> > +		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> > +					   &nn->nfsd_serv->sv_pools[i],
-> > +					   nthreads[i]);
-> >  		if (err)
-> >  			goto out;
-> >  	}
-> >=20
-> >  	/* Anything undefined in array is considered to be 0 */
-> >  	for (i =3D n; i < nn->nfsd_serv->sv_nrpools; ++i) {
-> > -		err =3D svc_set_num_threads(nn->nfsd_serv,
-> > -					  &nn->nfsd_serv->sv_pools[i],
-> > -					  0);
-> > +		err =3D svc_set_pool_threads(nn->nfsd_serv,
-> > +					   &nn->nfsd_serv->sv_pools[i],
-> > +					   0);
-> >  		if (err)
-> >  			goto out;
-> >  	}
-> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > index=20
-> > 5506d20857c318774cd223272d4b0022cc19ffb8..dd5fbbf8b3d39df6c17a7624edf34=
-4557fffd32c=20
-> > 100644
-> > --- a/include/linux/sunrpc/svc.h
-> > +++ b/include/linux/sunrpc/svc.h
-> > @@ -446,7 +446,8 @@ struct svc_serv *  svc_create_pooled(struct=20
-> > svc_program *prog,
-> >  				     struct svc_stat *stats,
-> >  				     unsigned int bufsize,
-> >  				     int (*threadfn)(void *data));
-> > -int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int)=
-;
-> > +int		   svc_set_pool_threads(struct svc_serv *, struct svc_pool *,=20
-> > int);
-> > +int		   svc_set_num_threads(struct svc_serv *, int);
-> >  int		   svc_pool_stats_open(struct svc_info *si, struct file *file);
-> >  void		   svc_process(struct svc_rqst *rqstp);
-> >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
-> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > index=20
-> > 4704dce7284eccc9e2bc64cf22947666facfa86a..3fe5a7f8e57e3fa3837265ec06884=
-b357d5373ff=20
-> > 100644
-> > --- a/net/sunrpc/svc.c
-> > +++ b/net/sunrpc/svc.c
-> > @@ -856,15 +856,12 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
-=20
-> > svc_pool *pool, int nrservs)
-> >  }
-> >=20
-> >  /**
-> > - * svc_set_num_threads - adjust number of threads per RPC service
-> > + * svc_set_pool_threads - adjust number of threads per pool
-> >   * @serv: RPC service to adjust
-> > - * @pool: Specific pool from which to choose threads, or NULL
-> > + * @pool: Specific pool from which to choose threads
-> >   * @nrservs: New number of threads for @serv (0 or less means kill all=
-=20
-> > threads)
-> >   *
-> > - * Create or destroy threads to make the number of threads for @serv=
-=20
-> > the
-> > - * given number. If @pool is non-NULL, change only threads in that=20
-> > pool;
-> > - * otherwise, round-robin between all pools for @serv. @serv's
-> > - * sv_nrthreads is adjusted for each thread created or destroyed.
-> > + * Create or destroy threads in @pool to bring it to @nrservs.
-> >   *
-> >   * Caller must ensure mutual exclusion between this and server startup=
-=20
-> > or
-> >   * shutdown.
-> > @@ -873,12 +870,12 @@ svc_stop_kthreads(struct svc_serv *serv, struct=
-=20
-> > svc_pool *pool, int nrservs)
-> >   * starting a thread.
-> >   */
-> >  int
-> > -svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int=
-=20
-> > nrservs)
-> > +svc_set_pool_threads(struct svc_serv *serv, struct svc_pool *pool, int=
-=20
-> > nrservs)
-> >  {
-> >  	if (!pool)
-> > -		nrservs -=3D serv->sv_nrthreads;
-> > -	else
-> > -		nrservs -=3D pool->sp_nrthreads;
-> > +		return -EINVAL;
-> > +
-> > +	nrservs -=3D pool->sp_nrthreads;
-> >=20
-> >  	if (nrservs > 0)
-> >  		return svc_start_kthreads(serv, pool, nrservs);
-> > @@ -886,6 +883,43 @@ svc_set_num_threads(struct svc_serv *serv, struct=
-=20
-> > svc_pool *pool, int nrservs)
-> >  		return svc_stop_kthreads(serv, pool, nrservs);
-> >  	return 0;
-> >  }
-> > +EXPORT_SYMBOL_GPL(svc_set_pool_threads);
-> > +
-> > +/**
-> > + * svc_set_num_threads - adjust number of threads in serv
-> > + * @serv: RPC service to adjust
-> > + * @nrservs: New number of threads for @serv (0 or less means kill all=
-=20
-> > threads)
-> > + *
-> > + * Create or destroy threads in @serv to bring it to @nrservs. If ther=
-e
-> > + * are multiple pools then the new threads or victims will be=20
-> > distributed
-> > + * evenly among them.
-> > + *
-> > + * Caller must ensure mutual exclusion between this and server startup=
-=20
-> > or
-> > + * shutdown.
-> > + *
-> > + * Returns zero on success or a negative errno if an error occurred=
-=20
-> > while
-> > + * starting a thread.
-> > + */
-> > +int
-> > +svc_set_num_threads(struct svc_serv *serv, int nrservs)
-> > +{
-> > +	int base =3D nrservs / serv->sv_nrpools;
-> > +	int remain =3D nrservs % serv->sv_nrpools;
-> > +	int i, err;
-> > +
-> > +	for (i =3D 0; i < serv->sv_nrpools; ++i) {
->=20
-> If sv_nrpools happens to be zero, then the loop doesn't
-> execute at all, and err is left containing stack garbage.
-> Is sv_nrpools guaranteed to be non-zero? If not then err
-> needs to be initialized before the loop runs. I see that
-> nfsd_set_nrthreads() in fs/nfsd/nfssvc.c has "int err =3D 0"
-> for a similar loop pattern.
+> Writing to v4_end_grace can race with server shutdown and result in
+> memory being accessed after it was freed - reclaim_str_hashtbl in
+> particularly.
 >=20
 
-sv_nrpools should always be non-zero. There are many places in the rpc
-layer that depend on having at least one pool. From __svc_create:
+In hindsight, allowing that to be forced from userland was a bad idea.
+The latest nfsdcld slurps in the whole list of clients and can make
+this decision internally. Once we deprecate the legacy client tracking
+upcalls, we should be able to deprecate this control at the same time.
 
-        serv->sv_nrpools =3D npools;
-        serv->sv_pools =3D
-                kcalloc(serv->sv_nrpools, sizeof(struct svc_pool),
-                        GFP_KERNEL);
-        if (!serv->sv_pools) {
-                kfree(serv);
-                return NULL;
-        }
 
-I think kcalloc returns NULL if you pass it 0 for "n", so creation
-should fail if that happens. None of the in-tree callers ever pass in 0
-for the npools, but maybe that's worth an explicit check in
-__svc_create(). I can add one.
-
+> We cannot hold nfsd_mutex across the nfsd4_end_grace() call as that is
+> held while client_tracking_op->init() is called and that can wait for
+> an upcall to nfsdcltrack which can write to v4_end_grace, resulting in a
+> deadlock.
 >=20
-> > +		int threads =3D base;
-> > +
-> > +		if (remain) {
-> > +			++threads;
-> > +			--remain;
-> > +		}
-> > +		err =3D svc_set_pool_threads(serv, &serv->sv_pools[i], threads);
-> > +		if (err)
-> > +			break;
-> > +	}
-> > +	return err;
-> > +}
-> >  EXPORT_SYMBOL_GPL(svc_set_num_threads);
-> >=20
-> >  /**
-> >=20
-> > --=20
-> > 2.52.0
+> nfsd4_end_grace() is also called by the landromat work queue and this
+> doesn't require locking as server shutdown will stop the work and wait
+> for it before freeing anything that nfsd4_end_grace() might access.
+>=20
+> However, we must be sure that writing to v4_end_grace doesn't restart
+> the work item after shutdown has already waited for it.  For this we
+> add a new flag protected with nn->client_lock.  It is set only while it
+> is safe to make client tracking calls, and v4_end_grace only schedules
+> work while the flag is set with the spinlock held.
+>=20
+> So this patch adds a nfsd_net field "client_tracking_active" which is
+> set as described.  Another field "grace_end_forced", is set when
+> v4_end_grace is written.  After this is set, and providing
+> client_tracking_active is set, the laundromat is scheduled.
+> This "grace_end_forced" field bypasses other checks for whether the
+> grace period has finished.
+>=20
+> This resolves a race which can result in use-after-free.
+>=20
+> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+> Closes: https://lore.kernel.org/linux-nfs/20250623030015.2353515-1-neil@b=
+rown.name/T/#t
+> Fixes: 7f5ef2e900d9 ("nfsd: add a v4_end_grace file to /proc/fs/nfsd")
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: NeilBrown <neil@brown.name>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/netns.h     |  2 ++
+>  fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+>  fs/nfsd/nfsctl.c    |  3 +--
+>  fs/nfsd/state.h     |  2 +-
+>  4 files changed, 44 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 3e2d0fde80a7..fe8338735e7c 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -66,6 +66,8 @@ struct nfsd_net {
+> =20
+>  	struct lock_manager nfsd4_manager;
+>  	bool grace_ended;
+> +	bool grace_end_forced;
+> +	bool client_tracking_active;
+>  	time64_t boot_time;
+> =20
+>  	struct dentry *nfsd_client_dir;
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d0efa3e0965f..1d307cc533d9 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -84,7 +84,7 @@ static u64 current_sessionid =3D 1;
+>  /* forward declarations */
+>  static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner =
+*lowner);
+>  static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
+> -void nfsd4_end_grace(struct nfsd_net *nn);
+> +static void nfsd4_end_grace(struct nfsd_net *nn);
+>  static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cp=
+ntf_state *cps);
+>  static void nfsd4_file_hash_remove(struct nfs4_file *fi);
+>  static void deleg_reaper(struct nfsd_net *nn);
+> @@ -6570,7 +6570,7 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_co=
+mpound_state *cstate,
+>  	return nfs_ok;
+>  }
+> =20
+> -void
+> +static void
+>  nfsd4_end_grace(struct nfsd_net *nn)
+>  {
+>  	/* do nothing if grace period already ended */
+> @@ -6603,6 +6603,33 @@ nfsd4_end_grace(struct nfsd_net *nn)
+>  	 */
+>  }
+> =20
+> +/**
+> + * nfsd4_force_end_grace - forcibly end the NFSv4 grace period
+> + * @nn: network namespace for the server instance to be updated
+> + *
+> + * Forces bypass of normal grace period completion, then schedules
+> + * the laundromat to end the grace period immediately. Does not wait
+> + * for the grace period to fully terminate before returning.
+> + *
+> + * Return values:
+> + *   %true: Grace termination schedule
+> + *   %false: No action was taken
+> + */
+> +bool nfsd4_force_end_grace(struct nfsd_net *nn)
+> +{
+> +	if (!nn->client_tracking_ops)
+> +		return false;
+> +	spin_lock(&nn->client_lock);
+> +	if (nn->grace_ended || !nn->client_tracking_active) {
+> +		spin_unlock(&nn->client_lock);
+> +		return false;
+> +	}
+> +	WRITE_ONCE(nn->grace_end_forced, true);
+
+The client_lock is already held here. It it necessary to force this
+store before mod_delayed_work() is called?
+
+I think it'd be simpler to not bother with WRITE_ONCE() here and just
+take the spinlock in clients_still_reclaiming() when checking it. That
+function is only called in the context of the laundromat, which isn't
+performance critical anyway.
+
+> +	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
+> +	spin_unlock(&nn->client_lock);
+> +	return true;
+> +}
+> +
+>  /*
+>   * If we've waited a lease period but there are still clients trying to
+>   * reclaim, wait a little longer to give them a chance to finish.
+> @@ -6612,6 +6639,8 @@ static bool clients_still_reclaiming(struct nfsd_ne=
+t *nn)
+>  	time64_t double_grace_period_end =3D nn->boot_time +
+>  					   2 * nn->nfsd4_lease;
+> =20
+> +	if (READ_ONCE(nn->grace_end_forced))
+> +		return false;
+>  	if (nn->track_reclaim_completes &&
+>  			atomic_read(&nn->nr_reclaim_complete) =3D=3D
+>  			nn->reclaim_str_hashtbl_size)
+> @@ -8932,6 +8961,8 @@ static int nfs4_state_create_net(struct net *net)
+>  	nn->unconf_name_tree =3D RB_ROOT;
+>  	nn->boot_time =3D ktime_get_real_seconds();
+>  	nn->grace_ended =3D false;
+> +	nn->grace_end_forced =3D false;
+> +	nn->client_tracking_active =3D false;
+>  	nn->nfsd4_manager.block_opens =3D true;
+>  	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
+>  	INIT_LIST_HEAD(&nn->client_lru);
+> @@ -9012,6 +9043,10 @@ nfs4_state_start_net(struct net *net)
+>  		return ret;
+>  	locks_start_grace(net, &nn->nfsd4_manager);
+>  	nfsd4_client_tracking_init(net);
+> +	/* safe for laundromat to run now */
+> +	spin_lock(&nn->client_lock);
+> +	nn->client_tracking_active =3D true;
+> +	spin_unlock(&nn->client_lock);
+>  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size =3D=3D =
+0)
+>  		goto skip_grace;
+>  	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
+> @@ -9060,6 +9095,9 @@ nfs4_state_shutdown_net(struct net *net)
+> =20
+>  	shrinker_free(nn->nfsd_client_shrinker);
+>  	cancel_work_sync(&nn->nfsd_shrinker_work);
+> +	spin_lock(&nn->client_lock);
+> +	nn->client_tracking_active =3D false;
+> +	spin_unlock(&nn->client_lock);
+>  	cancel_delayed_work_sync(&nn->laundromat_work);
+>  	locks_end_grace(&nn->nfsd4_manager);
+> =20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 5ce9a49e76ba..242fcbd958f1 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1082,10 +1082,9 @@ static ssize_t write_v4_end_grace(struct file *fil=
+e, char *buf, size_t size)
+>  		case 'Y':
+>  		case 'y':
+>  		case '1':
+> -			if (!nn->nfsd_serv)
+> +			if (!nfsd4_force_end_grace(nn))
+>  				return -EBUSY;
+>  			trace_nfsd_end_grace(netns(file));
+> -			nfsd4_end_grace(nn);
+>  			break;
+>  		default:
+>  			return -EINVAL;
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index b052c1effdc5..848c5383d782 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -849,7 +849,7 @@ static inline void nfsd4_revoke_states(struct net *ne=
+t, struct super_block *sb)
+>  #endif
+> =20
+>  /* grace period management */
+> -void nfsd4_end_grace(struct nfsd_net *nn);
+> +bool nfsd4_force_end_grace(struct nfsd_net *nn);
+> =20
+>  /* nfs4recover operations */
+>  extern int nfsd4_client_tracking_init(struct net *net);
 
 --=20
 Jeff Layton <jlayton@kernel.org>
