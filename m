@@ -1,46 +1,47 @@
-Return-Path: <linux-nfs+bounces-17085-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17086-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC6F1CBB597
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 02:05:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5366BCBB5A0
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 02:07:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 808AF30084E7
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 01:05:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 15B433009FB0
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Dec 2025 01:07:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA272D23A6;
-	Sun, 14 Dec 2025 01:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B7B2DE1FA;
+	Sun, 14 Dec 2025 01:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXNrv0q6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJlandWb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A452C286412
-	for <linux-nfs@vger.kernel.org>; Sun, 14 Dec 2025 01:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607CB2C21FB
+	for <linux-nfs@vger.kernel.org>; Sun, 14 Dec 2025 01:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765674348; cv=none; b=UZ9KCzRyaJvev+KBhyPCvD6QvJDNxNpZ4bybNbXEtHmhifBAHDzqbbqHMBjljtYkePJCsdoIHqgebaK+F2q2m5/7csNlb39ca+vw7ReTICOmATSsHQwmfFVWUZ+BoHs+cHJoik69SxmrB25M41UWGb+3AzACQbKrXfG2NUq9Q0Y=
+	t=1765674476; cv=none; b=SUGHW76s6xWMgqneqDlBoPVhtkz0+VrzUpAKmXHfyCFotVegl0bH+jndP7YPUScqHC/QfXct7hcGfUCpi+6o0yYvOWkxaHsl8b1geOUQ8sX9D3q+AnhF9fMUDPkyhpXJ54NNvMyuD/rHJEwvqAHl8VhOrKkr/EaBtktgwvIm3C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765674348; c=relaxed/simple;
-	bh=5X4JGntKabmvNS19sBXNmWazjJmNutV1SQguqLlMEUY=;
+	s=arc-20240116; t=1765674476; c=relaxed/simple;
+	bh=KUO3YdgYO+KxcFAQcTLEuEoPHbwo2X/sYEvZrgiqQxs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p5+s+1DfWkA1NYyVI4pbLVkTNHBhxbLeuPCsCcSoTmCNM6nbR3k0W6MZmY+af7uavUnurv0Qst0lvksbJAUF2PWBn1XRtz6q5N1vfYOgjZ+o5OxuxLBIkUzLbfc9OONKbGvFsaOehWh1r/BtWgnnUl/Ot/QVpxRnaWzwRp2MqoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXNrv0q6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3962C4CEF7;
-	Sun, 14 Dec 2025 01:05:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=pbVQSYN3aA4AvJzAfFXrSLuF5FhASWH+29RsIIb2V65ebYZWfCn7JrsN2AUIeuplvZn0vsnyUtPkE02cVnv67gtQ8u2fnl5QeLfJOr+dnswnQ9PKh60NFz1dhucCZLx5UP6wz1WITZ63ZsHxLgyAlp2kOvKBH/aUl+GdacPbPGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJlandWb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E443C4CEF7;
+	Sun, 14 Dec 2025 01:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765674348;
-	bh=5X4JGntKabmvNS19sBXNmWazjJmNutV1SQguqLlMEUY=;
+	s=k20201202; t=1765674475;
+	bh=KUO3YdgYO+KxcFAQcTLEuEoPHbwo2X/sYEvZrgiqQxs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IXNrv0q6iD/it1Xek+yrN1BxZr9cBIFV8im2x3WSc+aJQuqf0U6WyDCyvedaEezwD
-	 m2DKDqR1hH+KRbxs6jfedOIHGqLKlurogB1tDM6nNMVtPpEZ5ZI9UpIufBUlPRfaMr
-	 qzeR8WsFfUzsT7qb3IRquuuFoo8Af20j7oisJuPLXfILLtXJX9uvyNYiQOLTaUtBcr
-	 i0lNJZloJbTev90+ozWq8RPWJVfQNuM+lpxYI9/P3kYW2vizG46GO2BrjNyrlnigII
-	 Tx/Zlk4LBJZqwewvi3PB3gwSn/QKENEmvw+J/e32dX/IeyHZAp36LfVpFoJRXIfSJ3
-	 +FDmWehGbnBKg==
-Message-ID: <abbe8923b3a520d572f6580f81a460d50be40237.camel@kernel.org>
-Subject: Re: [PATCH v3 1/2] nfsd: provide locking for v4_end_grace
+	b=VJlandWbZiRCkwzbtGf5Naug8iWVdoxy9zKGvPz0Hkd/0hHuIZGJAd/lJfrpoHGk7
+	 kNpXxNABkhTXYuyDbECGO+8pTpZ4L4RGDF3d+qKp2nsd309yHgKUxpPKW8wQSEbvkg
+	 sfeZG7QUIPQ6ClT4gMnfNNv8ou9Nk5mARLjgnSUZgPcQBtSu90jgr4p0FWgpX5ZD5t
+	 HlQBlbHIF6kP3sYMrqvXZhyqgER91PQTGDtpsQ3IXMy+GvQ24I5Ncr7/X9dLFiISrt
+	 MuHPF4os1S1slBm+VgH5ox2C8emIUxoFac/CM3oDo4hG5jRkBQTw+KRl+mL9hPv6kx
+	 gUqJfW3XGOFhw==
+Message-ID: <c7d37b59b359ed1a5f3d33e2a40a2f110080dfe1.camel@kernel.org>
+Subject: Re: [PATCH v3 2/2] nfsd: use workqueue enable/disable APIs for
+ v4_end_grace sync
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
@@ -48,10 +49,10 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
 Cc: linux-nfs@vger.kernel.org, lilingfeng3@huawei.com, yangerkun@huawei.com,
  	yi.zhang@huawei.com, houtao1@huawei.com, chengzhihao1@huawei.com, 
 	yukuai3@huawei.com
-Date: Sun, 14 Dec 2025 10:05:43 +0900
-In-Reply-To: <20251213184200.585652-2-cel@kernel.org>
+Date: Sun, 14 Dec 2025 10:07:51 +0900
+In-Reply-To: <20251213184200.585652-3-cel@kernel.org>
 References: <20251213184200.585652-1-cel@kernel.org>
-	 <20251213184200.585652-2-cel@kernel.org>
+	 <20251213184200.585652-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,211 +137,113 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-12-13 at 13:41 -0500, Chuck Lever wrote:
+On Sat, 2025-12-13 at 13:42 -0500, Chuck Lever wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> Writing to v4_end_grace can race with server shutdown and result in
-> memory being accessed after it was freed - reclaim_str_hashtbl in
-> particularly.
+> "nfsd: provide locking for v4_end_grace" introduced a
+> client_tracking_active flag protected by nn->client_lock to prevent
+> the laundromat from being scheduled before client tracking
+> initialization or after shutdown begins. That commit is suitable for
+> backporting to LTS kernels that predate commit 86898fa6b8cd
+> ("workqueue: Implement disable/enable for (delayed) work items").
 >=20
-
-In hindsight, allowing that to be forced from userland was a bad idea.
-The latest nfsdcld slurps in the whole list of clients and can make
-this decision internally. Once we deprecate the legacy client tracking
-upcalls, we should be able to deprecate this control at the same time.
-
-
-> We cannot hold nfsd_mutex across the nfsd4_end_grace() call as that is
-> held while client_tracking_op->init() is called and that can wait for
-> an upcall to nfsdcltrack which can write to v4_end_grace, resulting in a
-> deadlock.
+> However, the workqueue subsystem in recent kernels provides
+> enable_delayed_work() and disable_delayed_work_sync() for this
+> purpose. Using this mechanism enable us to remove the
+> client_tracking_active flag and associated spinlock operations
+> while preserving the same synchronization guarantees, which is
+> a cleaner long-term approach.
 >=20
-> nfsd4_end_grace() is also called by the landromat work queue and this
-> doesn't require locking as server shutdown will stop the work and wait
-> for it before freeing anything that nfsd4_end_grace() might access.
->=20
-> However, we must be sure that writing to v4_end_grace doesn't restart
-> the work item after shutdown has already waited for it.  For this we
-> add a new flag protected with nn->client_lock.  It is set only while it
-> is safe to make client tracking calls, and v4_end_grace only schedules
-> work while the flag is set with the spinlock held.
->=20
-> So this patch adds a nfsd_net field "client_tracking_active" which is
-> set as described.  Another field "grace_end_forced", is set when
-> v4_end_grace is written.  After this is set, and providing
-> client_tracking_active is set, the laundromat is scheduled.
-> This "grace_end_forced" field bypasses other checks for whether the
-> grace period has finished.
->=20
-> This resolves a race which can result in use-after-free.
->=20
-> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-> Closes: https://lore.kernel.org/linux-nfs/20250623030015.2353515-1-neil@b=
-rown.name/T/#t
-> Fixes: 7f5ef2e900d9 ("nfsd: add a v4_end_grace file to /proc/fs/nfsd")
-> X-Cc: stable@vger.kernel.org
 > Signed-off-by: NeilBrown <neil@brown.name>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/netns.h     |  2 ++
->  fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++++++++++++++++++++++--
->  fs/nfsd/nfsctl.c    |  3 +--
->  fs/nfsd/state.h     |  2 +-
->  4 files changed, 44 insertions(+), 5 deletions(-)
+>  fs/nfsd/netns.h     |  1 -
+>  fs/nfsd/nfs4state.c | 22 +++++++++-------------
+>  2 files changed, 9 insertions(+), 14 deletions(-)
 >=20
 > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 3e2d0fde80a7..fe8338735e7c 100644
+> index fe8338735e7c..d83c68872c4c 100644
 > --- a/fs/nfsd/netns.h
 > +++ b/fs/nfsd/netns.h
-> @@ -66,6 +66,8 @@ struct nfsd_net {
-> =20
+> @@ -67,7 +67,6 @@ struct nfsd_net {
 >  	struct lock_manager nfsd4_manager;
 >  	bool grace_ended;
-> +	bool grace_end_forced;
-> +	bool client_tracking_active;
+>  	bool grace_end_forced;
+> -	bool client_tracking_active;
 >  	time64_t boot_time;
 > =20
 >  	struct dentry *nfsd_client_dir;
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d0efa3e0965f..1d307cc533d9 100644
+> index 1d307cc533d9..c9be724c48d0 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -84,7 +84,7 @@ static u64 current_sessionid =3D 1;
->  /* forward declarations */
->  static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner =
-*lowner);
->  static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
-> -void nfsd4_end_grace(struct nfsd_net *nn);
-> +static void nfsd4_end_grace(struct nfsd_net *nn);
->  static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cp=
-ntf_state *cps);
->  static void nfsd4_file_hash_remove(struct nfs4_file *fi);
->  static void deleg_reaper(struct nfsd_net *nn);
-> @@ -6570,7 +6570,7 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_co=
-mpound_state *cstate,
->  	return nfs_ok;
->  }
-> =20
-> -void
-> +static void
->  nfsd4_end_grace(struct nfsd_net *nn)
+> @@ -6619,14 +6619,14 @@ bool nfsd4_force_end_grace(struct nfsd_net *nn)
 >  {
->  	/* do nothing if grace period already ended */
-> @@ -6603,6 +6603,33 @@ nfsd4_end_grace(struct nfsd_net *nn)
->  	 */
+>  	if (!nn->client_tracking_ops)
+>  		return false;
+> -	spin_lock(&nn->client_lock);
+> -	if (nn->grace_ended || !nn->client_tracking_active) {
+> -		spin_unlock(&nn->client_lock);
+> +	if (READ_ONCE(nn->grace_ended))
+>  		return false;
+> -	}
+> +	/* laundromat_work must be initialised now, though it might be disabled=
+ */
+>  	WRITE_ONCE(nn->grace_end_forced, true);
+
+Ahh ok, I get it now. This is much cleaner, but you do need the
+READ/WRITE_ONCE semantics once you get rid of the spinlock. I withdraw
+my objection to patch #1.
+
+> +	/* mod_delayed_work() doesn't queue work after
+> +	 * nfs4_state_shutdown_net() has called disable_delayed_work_sync()
+> +	 */
+>  	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
+> -	spin_unlock(&nn->client_lock);
+>  	return true;
 >  }
 > =20
-> +/**
-> + * nfsd4_force_end_grace - forcibly end the NFSv4 grace period
-> + * @nn: network namespace for the server instance to be updated
-> + *
-> + * Forces bypass of normal grace period completion, then schedules
-> + * the laundromat to end the grace period immediately. Does not wait
-> + * for the grace period to fully terminate before returning.
-> + *
-> + * Return values:
-> + *   %true: Grace termination schedule
-> + *   %false: No action was taken
-> + */
-> +bool nfsd4_force_end_grace(struct nfsd_net *nn)
-> +{
-> +	if (!nn->client_tracking_ops)
-> +		return false;
-> +	spin_lock(&nn->client_lock);
-> +	if (nn->grace_ended || !nn->client_tracking_active) {
-> +		spin_unlock(&nn->client_lock);
-> +		return false;
-> +	}
-> +	WRITE_ONCE(nn->grace_end_forced, true);
-
-The client_lock is already held here. It it necessary to force this
-store before mod_delayed_work() is called?
-
-I think it'd be simpler to not bother with WRITE_ONCE() here and just
-take the spinlock in clients_still_reclaiming() when checking it. That
-function is only called in the context of the laundromat, which isn't
-performance critical anyway.
-
-> +	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> +	spin_unlock(&nn->client_lock);
-> +	return true;
-> +}
-> +
->  /*
->   * If we've waited a lease period but there are still clients trying to
->   * reclaim, wait a little longer to give them a chance to finish.
-> @@ -6612,6 +6639,8 @@ static bool clients_still_reclaiming(struct nfsd_ne=
-t *nn)
->  	time64_t double_grace_period_end =3D nn->boot_time +
->  					   2 * nn->nfsd4_lease;
-> =20
-> +	if (READ_ONCE(nn->grace_end_forced))
-> +		return false;
->  	if (nn->track_reclaim_completes &&
->  			atomic_read(&nn->nr_reclaim_complete) =3D=3D
->  			nn->reclaim_str_hashtbl_size)
-> @@ -8932,6 +8961,8 @@ static int nfs4_state_create_net(struct net *net)
->  	nn->unconf_name_tree =3D RB_ROOT;
+> @@ -8962,7 +8962,6 @@ static int nfs4_state_create_net(struct net *net)
 >  	nn->boot_time =3D ktime_get_real_seconds();
 >  	nn->grace_ended =3D false;
-> +	nn->grace_end_forced =3D false;
-> +	nn->client_tracking_active =3D false;
+>  	nn->grace_end_forced =3D false;
+> -	nn->client_tracking_active =3D false;
 >  	nn->nfsd4_manager.block_opens =3D true;
 >  	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
 >  	INIT_LIST_HEAD(&nn->client_lru);
-> @@ -9012,6 +9043,10 @@ nfs4_state_start_net(struct net *net)
->  		return ret;
+> @@ -8977,6 +8976,8 @@ static int nfs4_state_create_net(struct net *net)
+>  	INIT_LIST_HEAD(&nn->blocked_locks_lru);
+> =20
+>  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
+> +	/* Make sure this cannot run until client tracking is initialised */
+> +	disable_delayed_work(&nn->laundromat_work);
+>  	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
+>  	get_net(net);
+> =20
+> @@ -9044,9 +9045,7 @@ nfs4_state_start_net(struct net *net)
 >  	locks_start_grace(net, &nn->nfsd4_manager);
 >  	nfsd4_client_tracking_init(net);
-> +	/* safe for laundromat to run now */
-> +	spin_lock(&nn->client_lock);
-> +	nn->client_tracking_active =3D true;
-> +	spin_unlock(&nn->client_lock);
+>  	/* safe for laundromat to run now */
+> -	spin_lock(&nn->client_lock);
+> -	nn->client_tracking_active =3D true;
+> -	spin_unlock(&nn->client_lock);
+> +	enable_delayed_work(&nn->laundromat_work);
 >  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size =3D=3D =
 0)
 >  		goto skip_grace;
 >  	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
-> @@ -9060,6 +9095,9 @@ nfs4_state_shutdown_net(struct net *net)
+> @@ -9095,10 +9094,7 @@ nfs4_state_shutdown_net(struct net *net)
 > =20
 >  	shrinker_free(nn->nfsd_client_shrinker);
 >  	cancel_work_sync(&nn->nfsd_shrinker_work);
-> +	spin_lock(&nn->client_lock);
-> +	nn->client_tracking_active =3D false;
-> +	spin_unlock(&nn->client_lock);
->  	cancel_delayed_work_sync(&nn->laundromat_work);
+> -	spin_lock(&nn->client_lock);
+> -	nn->client_tracking_active =3D false;
+> -	spin_unlock(&nn->client_lock);
+> -	cancel_delayed_work_sync(&nn->laundromat_work);
+> +	disable_delayed_work_sync(&nn->laundromat_work);
 >  	locks_end_grace(&nn->nfsd4_manager);
 > =20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 5ce9a49e76ba..242fcbd958f1 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1082,10 +1082,9 @@ static ssize_t write_v4_end_grace(struct file *fil=
-e, char *buf, size_t size)
->  		case 'Y':
->  		case 'y':
->  		case '1':
-> -			if (!nn->nfsd_serv)
-> +			if (!nfsd4_force_end_grace(nn))
->  				return -EBUSY;
->  			trace_nfsd_end_grace(netns(file));
-> -			nfsd4_end_grace(nn);
->  			break;
->  		default:
->  			return -EINVAL;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index b052c1effdc5..848c5383d782 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -849,7 +849,7 @@ static inline void nfsd4_revoke_states(struct net *ne=
-t, struct super_block *sb)
->  #endif
-> =20
->  /* grace period management */
-> -void nfsd4_end_grace(struct nfsd_net *nn);
-> +bool nfsd4_force_end_grace(struct nfsd_net *nn);
-> =20
->  /* nfs4recover operations */
->  extern int nfsd4_client_tracking_init(struct net *net);
+>  	INIT_LIST_HEAD(&reaplist);
 
 --=20
 Jeff Layton <jlayton@kernel.org>
