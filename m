@@ -1,191 +1,207 @@
-Return-Path: <linux-nfs+bounces-17103-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17107-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id F26CBCBF5E3
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 19:14:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B8F9CBF797
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 19:59:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 68DC23000B23
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 18:14:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 941FA30084EF
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 18:59:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE72322B86;
-	Mon, 15 Dec 2025 18:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CF426D4DF;
+	Mon, 15 Dec 2025 18:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ffa+vr7e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSGb39cU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FA5322C73
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 18:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBAF26462E
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 18:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765822488; cv=none; b=FATuaS8sGyM2Ga7PXdeBEjX/ttHs8zEutxeUOZkD44LiJzuo/SYJ2GziES/FVCbvSiltikgwepSOXsiSAv4fqfGBiFLGfygzBeSFsckmaGdLF5B9hYs8cwv3eDbmwHKpIKTolmHAtfvA6dxwFYLKj63gPwoMopWApp+qZNr6pjk=
+	t=1765825151; cv=none; b=dQdQ6mlzWgwq8S/yxzFUe8nMzYYGeCOGgug3Nqwo21FHKvIyPvHTNwsEPesuIOwQzKpxUbfgaSaA+2KwUbyW/PPTfguSkj0ugwSR1huaKzML0GcQGKoIsJhk73cIxJR30YSAOQp6wrYyNvRZAPl/IkjTC/bAkdCLPR58HySsgc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765822488; c=relaxed/simple;
-	bh=n9R7xkhn5Ofg7OAe+gTQOA1VAazBPcRpiS+ECBjWFMk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdS4/PSKvFJbhqjVRID3W6hCTLb/95KRvTBCK9N1Iu6sMkPepN5nkhjSATOfIAMhmJseq7IzGudcra9s9BixTNBFZNs4ry8iJakSA7R5bmEGhUaVIbuzmxdsMsuGdzWGFcgq0utC7BeGhdIhwmHezPKjGoTukFU4vRy0w2FHylQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ffa+vr7e; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFFNQ3r2467537;
-	Mon, 15 Dec 2025 18:14:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=TVQ7dpw6+3U+hYs3fEcRbGoQSmGvHqL5Ip3YUvJS07w=; b=
-	Ffa+vr7e9rpxO0w20pO+UIMUt5v7zF45MNuWuWc5vyRLPBiXjr/gRZTt4A9AjiHz
-	+aUgdnhQXaLzC/fYkPnWfWoFuwN69RQs4yjQN49ET0AHVzFlh73SfNk7czw2SAAs
-	3+VWQW9u59BCYE9m47RHTjLHYsSrJCNnf5+2ZtDC/KL/LvzTCy6B08lUP9+/X8xM
-	c2L3URf9/u6SjVYXqOrHGtwJz4CAUlzwh5MCGqb/YlgFSzB6zU6CqO5+Sd7ezJbz
-	0VFqIk2EgQqHGNMvvOwLcga4sJFUJsFVVAzeNY4QY2xh51Q/UDOhYwoctmkPrlPO
-	/1fG32fB9W0j33b1nWX5aQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b0yrujgm6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 18:14:27 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFI0cx8024739;
-	Mon, 15 Dec 2025 18:14:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk98b9k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 18:14:26 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BFIEOYM011653;
-	Mon, 15 Dec 2025 18:14:26 GMT
-Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4b0xk98b7y-4;
-	Mon, 15 Dec 2025 18:14:25 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@ownmail.net,
-        okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSD: Prevent redundant SCSI fencing operations
-Date: Mon, 15 Dec 2025 10:13:35 -0800
-Message-ID: <20251215181418.2201035-4-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251215181418.2201035-1-dai.ngo@oracle.com>
-References: <20251215181418.2201035-1-dai.ngo@oracle.com>
+	s=arc-20240116; t=1765825151; c=relaxed/simple;
+	bh=ANU4TMH/meE0YQ/m/UWEINZvjQGpl5VXmoBd0nO1VJY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XFzLQcHEj54i7LDtqxWb8KL35ORSrpdN55fjERSHHxZDh+JXwU09A7WoPtyKXtN1SXKY09e+eFBPTsB8kxaUmLgNPviqRAadOezlF1SoDiwF4kJtbH1w1aqyMjo85D/xLlFf/Ln1//7w9nTGg6dP38BLAMj6sOli+qFrwiH7Vt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSGb39cU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3D6C116B1;
+	Mon, 15 Dec 2025 18:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765825151;
+	bh=ANU4TMH/meE0YQ/m/UWEINZvjQGpl5VXmoBd0nO1VJY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=GSGb39cUHo973zAsyhZGXeQbLt57byyJ9JUOCdyHoz3tdr1qUa126B7/5/fVtz6hh
+	 5mawABjThuY4wcS4QpqDOvnaFzNFTXAuLABSE6NMWgaf1SxYt1JUa8deaVD4jvP7TH
+	 mFMDWThQQDLCzoQiiNsUE1OAS1VTKlGRxUvkSaUqihTFRuTApHjsVkmX74kXflxdL/
+	 UcXTNOklFfHjW6WxX1+xPvpm1VT7YZL4Of095B5wyg4eV6K/WS5o1Mpzux2VH14OHZ
+	 X/vsYtkHIqKCV5mqWxVD6X2mPuNvzLBcRvLgC1wKzESWHYQp3dNwCQHLlAC22K4v3x
+	 okIYpNouRAH6Q==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3A0F0F4008A;
+	Mon, 15 Dec 2025 13:59:10 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 15 Dec 2025 13:59:10 -0500
+X-ME-Sender: <xms:flpAaUPBxeiVYVpPhIRUvUlaeBuSybq8J6ddIHc6zkMtKbbr-I1jcw>
+    <xme:flpAaVxPKOe1ZK0As9bb4l9A5D4NmvzxNWbULXOV4X2V3IXg2ClrfdwLG0sV6WiFC
+    UGrsm9uF0PmAeoz4S-_eHXsQ6HXgGDW1m7FgxBemfOxnLl_Dd8I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefjeehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epgffhgeeutdeiieevuefgvedtjeefudekvefggefguefgtefgledtteeuleelleetnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlsh
+    htrdguvgdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehnvg
+    hilhgssehofihnmhgrihhlrdhnvghtpdhrtghpthhtohepohhkohhrnhhivghvsehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtth
+    hopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:flpAadi8SEK6MX6iaB1aVyMSrlRUnGrUrw6KHJ92uMlTTcw3E_quQg>
+    <xmx:flpAacCVq26mfh7mgpOWyf1yQcSfnpPN4l4Xim7ce14kvcRci1Ypsg>
+    <xmx:flpAaTvR1_zSPZLFcAyAGeZQa9BKUsTrBoSNQfv8f9ie_cHtY-4DAw>
+    <xmx:flpAaQcW-3oT10S1JJZ9rb4xx52BkShqUwtXAHJLwdO8XAGsTg52Pw>
+    <xmx:flpAaY_76dXXphV7EiCLELvKlt0ygGiXliLV81u2ywthig9fYIZXqca6>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 14E57780054; Mon, 15 Dec 2025 13:59:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-15_04,2025-12-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- bulkscore=0 suspectscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2512150158
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDE1OCBTYWx0ZWRfX42kCzwuHzBr2
- FNC6p4f0VSbx+mTIwxhu6+GTp8j61gH6nfILn2YlWbLAXwYZSKW2LkOD9CpsTKam1KuAQMS0cg3
- XqOuyyBX2NoOTGw565WLoZzfVWPKqYf4ZpQXuizPqfDAATsqPdMu/aUtmo0pkPRgoO1zfqSCuQg
- 1Z7/3ZfEe10MX/NjCdLgDIJ91/N67aVBnYJSXK82VP9I64U6SFVTxJFf/A9i2Bw6POu4n7F8p+J
- PzjD2D6te2hDH6GeYIceKS1QtpDRANcFHWT39TAJDQhxF6gbTlcBL2IiJvUSh7Vw8nAfL33ujyM
- Ga6HtcE2iTLtw/xrPLAmcb8LUTVyMhM0FrBjYeg32XUaEuid5d6je2/RaHpy63iL7BXQBLKJYZz
- IG+jnA4gO3HKY8jELWOdZkJPiNw/oQ==
-X-Authority-Analysis: v=2.4 cv=TL9Iilla c=1 sm=1 tr=0 ts=69405003 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=yPCof4ZbAAAA:8 a=4ijojFApOgc32bb5rJ8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: U6OITMTeOt0EobKPlpFWxW2zcp2uNc7N
-X-Proofpoint-ORIG-GUID: U6OITMTeOt0EobKPlpFWxW2zcp2uNc7N
+X-ThreadId: AEa6kMrq8Ft3
+Date: Mon, 15 Dec 2025 13:58:49 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, neilb@ownmail.net,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <f8b4865f-044c-4a5c-b4a6-6e1ea9e756e4@app.fastmail.com>
+In-Reply-To: <20251215181418.2201035-2-dai.ngo@oracle.com>
+References: <20251215181418.2201035-1-dai.ngo@oracle.com>
+ <20251215181418.2201035-2-dai.ngo@oracle.com>
+Subject: Re: [PATCH 1/3] NFSD: Move clientid_hashval and same_clid to header files
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Update the server’s handling of SCSI persistent registration fencing
-by leveraging the per-namespace SCSI client registration hash table
-to record and check fencing state for each client-device pair.
 
-Implementation details:
 
-When the server issues a persistent registration key to a client, it
-creates a new record containing the client ID, associated SCSI block
-device (dev_t), and initializes the fenced flag to false. This record
-is inserted into the hash table for fast lookups.
+On Mon, Dec 15, 2025, at 1:13 PM, Dai Ngo wrote:
+> As preparation for introducing infrastructure to track SCSI fencing ev=
+ents,
+> relocate the clientid_hashval function from nfs4state.c to nfsd.h and =
+the
+> same_clid function from nfs4state.c to state.h.
+>
+> No functional changes are introduced in this commit=E2=80=94only movem=
+ent of code
+> to improve accessibility for forthcoming enhancements.
+>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 15 ---------------
+>  fs/nfsd/nfsd.h      |  5 +++++
+>  fs/nfsd/state.h     |  5 +++++
+>  3 files changed, 10 insertions(+), 15 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 35004568d43e..13b4dc89b1e8 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1423,15 +1423,6 @@ static void revoke_delegation(struct nfs4_deleg=
+ation *dp)
+>  	destroy_unhashed_deleg(dp);
+>  }
+>=20
+> -/*
+> - * SETCLIENTID state
+> - */
+> -
+> -static unsigned int clientid_hashval(u32 id)
+> -{
+> -	return id & CLIENT_HASH_MASK;
+> -}
+> -
+>  static unsigned int clientstr_hashval(struct xdr_netobj name)
+>  {
+>  	return opaque_hashval(name.data, 8) & CLIENT_HASH_MASK;
+> @@ -2621,12 +2612,6 @@ same_verf(nfs4_verifier *v1, nfs4_verifier *v2)
+>  	return 0 =3D=3D memcmp(v1->data, v2->data, sizeof(v1->data));
+>  }
+>=20
+> -static int
+> -same_clid(clientid_t *cl1, clientid_t *cl2)
+> -{
+> -	return (cl1->cl_boot =3D=3D cl2->cl_boot) && (cl1->cl_id =3D=3D cl2-=
+>cl_id);
+> -}
+> -
+>  static bool groups_equal(struct group_info *g1, struct group_info *g2)
+>  {
+>  	int i;
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 50be785f1d2c..369efe6ed665 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -510,6 +510,11 @@ static inline bool nfsd_attrs_supported(u32=20
+> minorversion, const u32 *bmval)
+>  	return bmval_is_subset(bmval, nfsd_suppattrs[minorversion]);
+>  }
+>=20
+> +static inline unsigned int clientid_hashval(u32 id)
+> +{
+> +	return id & CLIENT_HASH_MASK;
+> +}
+> +
 
-When the server needs to fence a client via nfsd4_scsi_fence_client,
-it first looks up the corresponding record using the client ID and
-device identifier. If the fenced flag in the record is already set,
-the server skips issuing another fence operation and simply returns.
-If the flag is not set, it is updated to true and the fencing operation
-proceeds.
+I can't comment on the overall purpose of this series yet, but
+there are one or two mechanical issues that I see already.
 
-By tracking fencing state in the hash table, the server avoids issuing
-redundant fencing operations for the same client and device, improving
-efficiency and ensuring proper SCSI reservation management.
+Let's not add NFSv4- or pNFS-specific functions to fs/nfsd/nfsd.h.
+Same comment applies to the function declarations this series moves
+in a subsequent patch.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/blocklayout.c | 16 +++++++++++++++-
- fs/nfsd/nfsd.h        |  2 --
- 2 files changed, 15 insertions(+), 3 deletions(-)
+Why can't clientid_hashval() go into fs/nfsd/state.h instead?
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index f2ab264af88e..73961e394311 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -17,7 +17,8 @@
- 
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
- 
--
-+static int nfsd4_scsi_pr_add_client(struct nfs4_client *clp,
-+		struct block_device *blkdev);
- /*
-  * Get an extent from the file system that starts at offset or below
-  * and may be shorter than the requested length.
-@@ -357,6 +358,10 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
- 		goto out_free_dev;
- 	}
- 
-+	ret = nfsd4_scsi_pr_add_client(clp, sb->s_bdev);
-+	if (ret)
-+		goto out_free_dev;
-+
- 	return 0;
- 
- out_free_dev:
-@@ -399,11 +404,20 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
- {
- 	struct nfs4_client *clp = ls->ls_stid.sc_client;
- 	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
-+	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 	int status;
- 
-+	spin_lock(&nn->client_pr_record_hashtbl_lock);
-+	if (!nfsd4_scsi_pr_fence(clp, bdev)) {
-+		spin_unlock(&nn->client_pr_record_hashtbl_lock);
-+		return;
-+	}
-+	spin_unlock(&nn->client_pr_record_hashtbl_lock);
- 	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
- 			nfsd4_scsi_pr_key(clp),
- 			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
-+	if (status)
-+		nfsd4_scsi_pr_add_client(clp, bdev);
- 	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
- }
- 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 4572daa94a79..5a60419395b2 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -574,8 +574,6 @@ extern int nfsd4_scsi_pr_init_hashtbl(struct nfsd_net *net);
- extern void nfsd4_scsi_pr_shutdown(struct nfsd_net *net);
- struct nfs4_client;
- extern void nfsd4_scsi_pr_del_client(struct nfs4_client *clp);
--extern int nfsd4_scsi_pr_add_client(struct nfs4_client *clp,
--		struct block_device *blkdev);
- extern bool nfsd4_scsi_pr_fence(struct nfs4_client *clp,
- 		struct block_device *blkdev);
- 
--- 
-2.47.3
+Also, when a function becomes accessible outside of one source
+file (like a "static inline" function or a callback function),
+it needs to get a kdoc comment that documents its API contract.
 
+
+>  /* These will return ERR_INVAL if specified in GETATTR or READDIR. */
+>  #define NFSD_WRITEONLY_ATTRS_WORD1 \
+>  	(FATTR4_WORD1_TIME_ACCESS_SET   | FATTR4_WORD1_TIME_MODIFY_SET)
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 1e736f402426..b737e8cfe6d5 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -865,6 +865,11 @@ static inline bool try_to_expire_client(struct=20
+> nfs4_client *clp)
+>  	return clp->cl_state =3D=3D NFSD4_EXPIRABLE;
+>  }
+>=20
+> +static inline int same_clid(clientid_t *cl1, clientid_t *cl2)
+> +{
+> +	return (cl1->cl_boot =3D=3D cl2->cl_boot) && (cl1->cl_id =3D=3D cl2-=
+>cl_id);
+> +}
+> +
+>  extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+>  		struct dentry *dentry, struct nfs4_delegation **pdp);
+>  #endif   /* NFSD4_STATE_H */
+> --=20
+> 2.47.3
+
+--=20
+Chuck Lever
 
