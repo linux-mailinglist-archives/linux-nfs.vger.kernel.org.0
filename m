@@ -1,108 +1,120 @@
-Return-Path: <linux-nfs+bounces-17097-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17098-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71CDACBDD41
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 13:35:38 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7389ACBDE9D
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 13:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DBDF4301D589
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 12:30:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 552E1301985B
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 12:55:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E7D1FFC48;
-	Mon, 15 Dec 2025 12:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B3F2DECD2;
+	Mon, 15 Dec 2025 12:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2LFZEa/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Izf1XZQq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D1815ECD7
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 12:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D901C3BF7;
+	Mon, 15 Dec 2025 12:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765801805; cv=none; b=mck9be5R8Fb9B0297BYFNGVMftG/tFUVZ36IZGT1hT8BLnfAQpvAnNbDkKVv4Jw0fbdqxjWox6xfAf0n2hRA1ZnZak5zKmwC3wtBa7G9kDVfEjGf66lsrnxqonsaatJV6VWrKV1Xg3pOQHuxkjul9kAZed6YOgIUEtDXI5NkDPU=
+	t=1765802286; cv=none; b=IY3FgHSDGyZksgp9l+F++W1OHbi9YyHrVfQ22Vk4YzcsN5spDxtlRq27n/jtJOfPfWufT0tTF4P+KIhpL3fQZFdYPGZp8+gyA5uLyrv3hhA46gMD4PNZk5fxqLhNIGiAxY9FwxWoxPxb6gcg5iDmSgeU2Fv1DCwjlJXctsKXyHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765801805; c=relaxed/simple;
-	bh=fvpXKdyI9LbuqrzQ3Xm75v7+VBhj+i4rkLbAWav0Aa4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=N3hrhqwlDxzazEpy03mlrwSnetHSaruPVp5qICXYlQA+leEydx4esGjigg/YsVbD5e9e99pPm1DjIH6SweMuYTb55N/MaeuU2zL0w0rNkm0cdMiyzdkajlspL/uxHFxEbGJDxtIPwq5ACx5nRRiFyTVg3B7vtgMiGoMqZRyQCSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2LFZEa/; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34abc7da414so2267464a91.0
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 04:30:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765801803; x=1766406603; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+wMBpaJWeXhE+lOVOJ5G6E9ae8vbJU+qKlay1AlfhB0=;
-        b=R2LFZEa/XQmmQsZhSiNAIBA9hHNW7oROwdF6vdgtTWvPm1IWcKP0LLSR7fOZDmUae8
-         fbIO+kNm2Sl6E84ZkiGIlHNFw4t6cMyhwr0AV3OOl7hNXwsm0UaXdUNxfrudIjW19w9U
-         2meeN0DcNk48CAvmL82Z0m0e8pvEApOFYonjmEWHlp5VOyYS/JnOfTOWNIjk9QRDHFQ8
-         tLxWBLAK6MYkdjIgMP7OUKFTr+Sg6onNEu7tCywachUnDSdPOcFy/dJaVLOm+x2X1NUh
-         ONB6sB3h91hwcGLEd97alaFomrbZFTKp+kLxR9ASuhL2Vjxb2x5oBKHbrNiBfrc90v24
-         JTOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765801803; x=1766406603;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+wMBpaJWeXhE+lOVOJ5G6E9ae8vbJU+qKlay1AlfhB0=;
-        b=rB/SMb6UodU0cE743xucI0nt5pZ6w586mIfBtdh3fccPr6EqFUYt02TxvFCOfLhraS
-         iGEXAEYFUSJWxWZ+RXEAe8iaMxQK5VIuIWJp5cfwE//gvGCT5ITNe40qx/O7zMqc/guV
-         bSPoyaYkFMRrd7ah2oH9PC9cWcp+oPtl5fGQFrZg16cZ4ihYe+C8otKPzkZJr2oCdR74
-         unElm8En0e6ZcBRh7VgExTdrpnrE0rtXK/aKtlR8fucy19UMH+kCw7vHm1ER19fQnl68
-         HqnOWAI7D1SLvCj3qbazaOYYDLjnx4zU+umBEW2UJrGTo3kQHpgvcFRuhaZfqvUHCho0
-         B9nw==
-X-Gm-Message-State: AOJu0YyQIb3Xun2Tfgda3oVamt9J5PbpfhBflJkI/6w3ebkU3547cEE+
-	IjFGKe9vJ90p48moRdCrnXvwBBwKKvXKEzIxr5N8c5yCzo8AF/AYwdRMrPystjYN2mM/MxFvsvw
-	Luhv0LHZY1URhBGb1EV/fMfZO87oXeTQS3VQ1knM=
-X-Gm-Gg: AY/fxX6B0Zh9uyZdgZFUD82QVsZGQXv4kGvCfUQP5G5iV/PeJupgsjyBBCUJeZp3cus
-	zXq8q/gC6nlWk9EiEjGTfVf/OSB5yw/D0fb6dy0QdosaCHMXDTJg6zIQoKgHXRfKbyfxa2+q6fC
-	6Gyz6nRVItlzriqFl2J/6ODlqMJddVPa1DisLP+YrDOP2IgROWNHRMMyNiD1FgyYmGq+ELVqZqo
-	Upt0ywMagl6H9Bqqk3yQTPybTjKZlUb+3K1Q7jvg2ol5OkT4B1kA/IyY2dWYHAmKccFJS/3TRLy
-	x2OaSPk=
-X-Google-Smtp-Source: AGHT+IE3Cr9h2zuF8Kosy9yDYJ8JsD8MIem/DI8Nny6Uw7sWwylvYxQkTEmrmwVM5Zy35Ec9yCzN3D3FJTInKbnhpi0=
-X-Received: by 2002:a17:90b:380f:b0:340:66f9:381 with SMTP id
- 98e67ed59e1d1-34abd6d873bmr8694240a91.10.1765801802833; Mon, 15 Dec 2025
- 04:30:02 -0800 (PST)
+	s=arc-20240116; t=1765802286; c=relaxed/simple;
+	bh=Xiwt0F7uZg8asci0wopt7blyzkMs/Z1c1ZVQV24taE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rdEfVlrs3T4jLhcAkrPTeaGLaGUvRp7OXYQSq5LvWIhUBF4uaI5r2C5TszHekdffnOk6pdXROsVCyFUTIzxCYftLTr04hOBRhuP191yPjZqwYTXMHb4GrAWdTADQJsTasjdbobNwGAKGmYMQHsCVpMth/foXeMZFqZbqdRK/VhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Izf1XZQq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D73C4CEF5;
+	Mon, 15 Dec 2025 12:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765802285;
+	bh=Xiwt0F7uZg8asci0wopt7blyzkMs/Z1c1ZVQV24taE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Izf1XZQqUXGQ9m1uFJavHM7TYM/1TxOw5krNCVjWI9t+iQJTi0S6oO1B/rTpu/+H+
+	 jCj2NlwCflc8CyOzXYnniNnfSe0CiOhj/iKELmDDLcizX/T5+R9/Yov29Zwp0ogT8l
+	 BFirJqRbzj/7cC0t6W0dKNoRyIiMqI+TJwP7ZXrwnFh8+zpAJxbl7NeQ88Nys3xIEX
+	 5qfTv3MgxyGeidf6p/+1yrXiMXzWHf5LizG61DOH3LPAqiHcvo1eLfshpEQYghojue
+	 DwQv69rkeXleu9DaWw1KUHx/U8wsjtcvGshR113fPEvrQ1BKHad+dpVcE/8jPqV4Y1
+	 qG45VMXN6f3Ng==
+Date: Mon, 15 Dec 2025 13:37:59 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	hirofumi@mail.parknet.co.jp, almaz.alexandrovich@paragon-software.com, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, Volker.Lendecke@sernet.de, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v2 1/6] fs: Add case sensitivity info to file_kattr
+Message-ID: <20251215-genuss-neuer-1e3670000df7@brauner>
+References: <20251211152116.480799-1-cel@kernel.org>
+ <20251211152116.480799-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: krishnanand thommandra <sendtokrishna@gmail.com>
-Date: Mon, 15 Dec 2025 17:59:51 +0530
-X-Gm-Features: AQt7F2qAVqDSWFpmxwEhIlKBI7qW6gd9u6_igd6m5Ip4Z_vFjsbhS8BpIE4fsOY
-Message-ID: <CAH=ewnpN0rBh6vNN_Ey0rr5eK4vEz3kyaM5ctp5Ze6FCjxWQ8A@mail.gmail.com>
-Subject: 5s stall during openat
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251211152116.480799-2-cel@kernel.org>
 
-I'm hitting this delay
-https://elixir.bootlin.com/linux/v6.18/source/fs/nfs/nfs4proc.c#L1803
-when running "git lfs fsck" where the gitconfig is on NFS.
+On Thu, Dec 11, 2025 at 10:21:11AM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Enable upper layers such as NFSD to retrieve case sensitivity
+> information from file systems by adding a case_info field to struct
+> file_kattr.
+> 
+> Add vfs_get_case_info() as a convenience helper for kernel
+> consumers. If a filesystem does not provide a fileattr_get hook, it
+> returns the default POSIX behavior (case-sensitive,
+> case-preserving), which is correct for the majority of Linux
+> file systems implementations.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
 
-Based on my limited debugging, different variants of the following
-sequence are happening -
+Thanks for listening and plumbing this into file_attr() that seems a
+much better place than statx().
 
-1) open request1 sent by client
-2) open request2 sent by client
-The open modes are same and so same nfs4_state is used.
-3) open reply1 is processed and close request1 is sent out
+>  fs/file_attr.c           | 31 +++++++++++++++++++++++++++++++
+>  include/linux/fileattr.h | 23 +++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+> 
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index 1dcec88c0680..609e890b5101 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -94,6 +94,37 @@ int vfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_get);
+>  
+> +/**
+> + * vfs_get_case_info - retrieve case sensitivity info for a filesystem
+> + * @dentry:	the object to retrieve from
+> + * @case_info:	pointer to store result
+> + *
+> + * Call i_op->fileattr_get() to retrieve case sensitivity information.
+> + * If the filesystem does not provide a fileattr_get hook, return
+> + * the default POSIX behavior (case-sensitive, case-preserving).
+> + *
+> + * Return: 0 on success, or a negative error on failure.
+> + */
+> +int vfs_get_case_info(struct dentry *dentry, u32 *case_info)
 
-Since close is async, the nfs_clear_open_stateid_locked  (from close
-reply1) executing in a kworker context races ahead of the open reply2
-processing. The open request2 processing happens in the process
-context (since synchronous). Since the nfs4_state is now closed, it
-can get re-used and the stateid_sequential check in
-nfs_set_open_stateid_locked. keeps failing for open request2.
-Eventually after 5 seconds of sleep, -EAGAIN is returned and things
-return to normal.
+Hm, I would much prefer if we followed the statx() model where we have
+vfs_getattr{_nosec}() that always returns a struct kstat. So we should
+only have vfs_fileattr_get() instead of the special-purpose
+vfs_get_case_info() thing.
 
-I'm not sure if this is expected behavior. This is happening quite
-often in my usecase and so want to confirm if this is some kind of
-trade off for stricter ordered completion processing on the client
-side
+I guess the main reason you did this is so that you can set the default
+without having to touch each filesystem that doesn't do file_attr.
 
-The 5s stall was added in c9399f21c215453b414702758b8c4b7d66605eac
+So just move the default setup of case_info into vfs_fileattr_get()?
+This way it's also available to other callers of this function such as
+overlayfs and ecryptfs. And then just call that in nfsd.
+
+Otherwise I have no complaints about the VFS part.
 
