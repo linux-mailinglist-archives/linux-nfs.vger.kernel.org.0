@@ -1,216 +1,342 @@
-Return-Path: <linux-nfs+bounces-17093-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17094-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E28BCBC8BF
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 06:15:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8BC8CBCC45
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 08:29:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3A9803008E8F
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 05:15:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AF1BE300768D
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 07:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7820E322B76;
-	Mon, 15 Dec 2025 05:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C775231352C;
+	Mon, 15 Dec 2025 07:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="hg4FllG2";
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="hg4FllG2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75831322537;
-	Mon, 15 Dec 2025 05:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C21A8634F
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 07:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765775730; cv=none; b=mNSPL2LGqvKGjxTG4kpBJfjUtXklu0MPf9tbvEwMS3yhMqA4k8a3D6h66UBg1DYwyGI0NNmww6VXQKu6R9sDUdcQBGpRjS5156Gh8E0Fq+aK58UYaFJIQZGogF6EIKD1xd4lcNBRXhuvjXpGLbTMDsF66wXy0iMNqJEnK2682jU=
+	t=1765783750; cv=none; b=BrXgJDbVYqVyagyuMyyj25Nb9DmFzkm+mBSmrSfeXTps+pbxtfurb4YfjE/AWM3xiF/lMhb+9mxLnxrntG4hZdXBbghDIfEMzogwVo6ZbGtrMWQyxywvEGgNKyMfkuLIWRt8Qthws/ZL6R1wIK61x9tAppOvV5EU+lqXdHT9DZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765775730; c=relaxed/simple;
-	bh=axbVRlmpoqHXKy7D9DYTP2RH8Eh/CvptUY+r60J/TOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=He6zUHzYCiKlaxCIrlTtOO7YsD6PqM2XRq4hDJkTx8Iisu2hGUN1PsE0B9A22AQWUXCXnmCkux1ut5t9EsRgHnaAwL8ajQQWGxHmSfMGIf7hptJzPJ6qzMTFFebRX7anPK4VZKNUNwsFCRkMO5/MStdP45aHiaEi8dReODr1Q/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-de-693f996afb50
-Date: Mon, 15 Dec 2025 14:15:17 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
-	dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com, hamohammed.sa@gmail.com,
-	harry.yoo@oracle.com, chris.p.wilson@intel.com,
-	gwan-gyeong.mun@intel.com, max.byungchul.park@gmail.com,
-	boqun.feng@gmail.com, longman@redhat.com, yunseong.kim@ericsson.com,
-	ysk@kzalloc.com, yeoreum.yun@arm.com, netdev@vger.kernel.org,
-	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
-	catalin.marinas@arm.com, bp@alien8.de, x86@kernel.org,
-	hpa@zytor.com, luto@kernel.org, sumit.semwal@linaro.org,
-	gustavo@padovan.org, christian.koenig@amd.com,
-	andi.shyti@kernel.org, arnd@arndb.de, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
-	mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
-	samitolvanen@google.com, paulmck@kernel.org, frederic@kernel.org,
-	neeraj.upadhyay@kernel.org, joelagnelf@nvidia.com,
-	josh@joshtriplett.org, urezki@gmail.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
-	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
-	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
-	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
-	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
-	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
-	yuzhao@google.com, baolin.wang@linux.alibaba.com,
-	usamaarif642@gmail.com, joel.granados@kernel.org,
-	richard.weiyang@gmail.com, geert+renesas@glider.be,
-	tim.c.chen@linux.intel.com, linux@treblig.org,
-	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
-	chenhuacai@kernel.org, francesco@valla.it,
-	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
-	masahiroy@kernel.org, brauner@kernel.org,
-	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
-	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, 2407018371@qq.com, dakr@kernel.org,
-	miguel.ojeda.sandonis@gmail.com, neilb@ownmail.net,
-	bagasdotme@gmail.com, wsa+renesas@sang-engineering.com,
-	dave.hansen@intel.com, geert@linux-m68k.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v18 41/42] SUNRPC: relocate struct rcu_head to the first
- field of struct rpc_xprt
-Message-ID: <20251215051517.GB49936@system.software.com>
-References: <20251205071855.72743-1-byungchul@sk.com>
- <20251205071855.72743-42-byungchul@sk.com>
- <cd65b963dd4edade3afb2e7d27eb33af1c62682e.camel@kernel.org>
+	s=arc-20240116; t=1765783750; c=relaxed/simple;
+	bh=C7HO80YdBoLKJVXCeK3/Xp/0czYhsFLEm7W3PGMoi0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Mwpg8l6qMyi9qpymxNsxJToGjQZ3pxSbHl4/gP9LLFZqMkBbE8Ms1W3tHY9Rh6C4uThR4Q2U4WigYo/vrMrOsOPQgnzUKOqdmA2FWacKwvVRwcPDY1iC2jeBxkq/CDfvqSsswZZSZRCj+tFxaKeO31ZkLeSgnPYDUofqJQys4O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=hg4FllG2; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=hg4FllG2; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=TaubI+cI/z4TLOPQSd4XPIeMAisMipZHGJaCasfqrEQ=;
+	b=hg4FllG2DfzTCA8POlkXc1r75XKpSmJs+HiCRzYocQioXqVKBDbhJ2zmtGKx1tZk4xXgg1QW4
+	9U8LOqQYbTnif3KYITAJOo70TN97oPplRSr0v4KOsKtms9ufOCCJ5i743U3aCW8eyqMTvs/wMvE
+	gPoriSSqU3rnqPfdiFF8fnE=
+Received: from canpmsgout12.his.huawei.com (unknown [172.19.92.144])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4dVBW902Ztz1BG05
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 15:28:37 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=TaubI+cI/z4TLOPQSd4XPIeMAisMipZHGJaCasfqrEQ=;
+	b=hg4FllG2DfzTCA8POlkXc1r75XKpSmJs+HiCRzYocQioXqVKBDbhJ2zmtGKx1tZk4xXgg1QW4
+	9U8LOqQYbTnif3KYITAJOo70TN97oPplRSr0v4KOsKtms9ufOCCJ5i743U3aCW8eyqMTvs/wMvE
+	gPoriSSqU3rnqPfdiFF8fnE=
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dVBSm2KzbznTV6;
+	Mon, 15 Dec 2025 15:26:32 +0800 (CST)
+Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id ED93714027A;
+	Mon, 15 Dec 2025 15:28:46 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemj200013.china.huawei.com (7.202.194.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 15 Dec 2025 15:28:46 +0800
+Message-ID: <569d5af7-1f1b-4bd6-b056-4760b6fe9e32@huawei.com>
+Date: Mon, 15 Dec 2025 15:28:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH v3 1/2] nfsd: provide locking for v4_end_grace
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Jeff Layton
+	<jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+CC: <linux-nfs@vger.kernel.org>, <yangerkun@huawei.com>,
+	<yi.zhang@huawei.com>, <houtao1@huawei.com>, <chengzhihao1@huawei.com>
+References: <20251213184200.585652-1-cel@kernel.org>
+ <20251213184200.585652-2-cel@kernel.org>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <20251213184200.585652-2-cel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cd65b963dd4edade3afb2e7d27eb33af1c62682e.camel@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0yTZxiG837nFko+OpivsOhSJXMaRBe3PMmM29yPfdkfl+3Hkrlk68Y3
-	aTjVFtCaGMtJGauu0xRC67RF6JgrhnHY5NCIzBQZNC0QpTOwFsQKKbCNCKZIZf0gy/jz5M79
-	3M99vT9ejlS2M2mcpqBI1BWo81SMnJLPJzoyc+ve0uw7P/gSjAenabhf2kvB3bEyCoJLVQjW
-	3B4EAf8tElztpQTUzpZS8JfThMAatrEwH+ymIVaTC1fr2xiI1PzNwDOvj4Raix+BY3KChMXZ
-	EIJ2z58I3E1lDDwyd5AwOp0ECy0M2MvcNAwPRRB8b7uIIPzATUBnqIuF4cgqAUFnmIJBc70E
-	ZaDm5y1gqy0n4mOGAEtzNwFR53UWhq6NU+A0ZoDNO0rDVJOVhdXJ/bBmLwTPT49ZuDHvoyES
-	vshAsP8sDb8aQyy4TGESqrqWKGh9eJ+GHvcABVWxJwg8N6cIGO26zICppYMGo+0pDf7eQRoa
-	x4YJmAwFaGjzDpGwfCEdAuZHCC4thNHb2ULlSIwRXFdcSHjSWE4Klea4ahycY4SVpXuM4F62
-	U8Lv9Vho+HqFEL7zZgqd1glWsLcWCxV35mmhrWm3cK1nlhAci0v0B5mfyA9mi3maElGXdehz
-	ec5i+TirvfriyWj3diP6lq9GMg7zB3DFmoeuRty6dj/fJdkUn4HH7sUYSTP8KzgQiJJSJIXf
-	iR8YNdVIzpG8ZRuem1mhpMwL/DHc0mkhJa3gAbtnbpFSSMnbEXbUuNiNRTIeqJtePyDjpatX
-	RtZLST4d//Cc27C34/IO27ot4wU8+41BslP5Hbj3l35CqsT8ggw77/rIjedvxbebApQZJVs3
-	EaybCNb/CdZNBDuiriOlpqAkX63JO7A3x1CgObn3y8L8VhT/y87Tq0dvokX/R32I55AqUeFv
-	P6RR0uoSvSG/D2GOVKUoqgJxS5GtNpwSdYWf6YrzRH0fSuco1RbFa8snspX8MXWRmCuKWlH3
-	35bgZGlGtGeX1p/00PJ0YLL49X9efTfhi/7pZhe7w3TYPJZwPulc8puhUpt4JrIno/qr2+Ej
-	lcffSHy5Qryckko0RHs+ftw/fvTH0760DynXH+zUkRsOx05edkcbeC/fkDV3JrjNxDSMZA1/
-	OnNB8U7dYdbrS0htvjQR5bfqi96P/aaVTXSaM1SUPke9fzep06v/BfYi22nHAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxbZRTH89zn9t5LtcsFcTzZjDOdi2buReNMjlG3GZPxxDizxA/LFhOp
-	2824AwppkVGNSqnName2rqZF2rG1KJVAHW/bFEldAxOdE0YZSMPLgKwyCEwMFrYWCrYsRr6c
-	/M///M8v58MRcMaX3AZB1hZLOq0mX80pWeXbr5i2H6/cIz/fFdgKFvOnMDwaUcAfxiAL81EL
-	C+ca/Bwk3N/zYGmuVMCvA+Us9FysRzA6b0Fwf9GNwdy6wkLC3slDNDbEg8OIYCXQicAZsmMI
-	91zF4L9kZOCfxmUOpjvmEDjGIxxUTBlZmPV9gcA14eZh6udsuDfapoCVkbsMDCzMIPBFlhmI
-	BE8iSDjz4EJ1S3Ld+TcHi103MVQ4ehB4x0cwzE2NIbjUeRtBoLacgz9tlzHciqyDvvlZDq47
-	TnFwL3SOgb8aOfCUBxQQ+n0aQZXbjmBiMMCA6esGDpxVzSy0jv3IQ2h6iYFhp52B+ub9MOqb
-	YOGGrZpJnptMNWWBu8LEJMskA47v2hiI+er4vTWI3jefZmldyxWGmnsTHPWf9yO6GLcjGq0x
-	YWq2JduOmVlMP2s5QWtuzHA0Pt/P0cCCh6W/VRP6zedxhp7t2k5bXSP8gdcPK189KuXLJZJu
-	5+4cZe6caZgvurC+NNa2qQydEa1IEIi4iwSWn7WiNIEVt5CB/gSX0pz4DAmHYzgVyRSfJoNl
-	shUpBSw6niQzk3E2lXlMPEYaWx04pVUikMDkVZwKZYgeRLxOP/9wkE6uV0ZWF3ASunS+dxWK
-	xY3k22Xhob2JmC67V+00kZKpU4aU/bi4mQSv/MLY0DrXGpBrDcj1P8i1BuRBbB3KlLUlBRo5
-	/6Ud+rxcg1Yu3XGksKAZJV/V9/HS2R9Q9FZ2OxIFpH5UFW7bLWcoNCV6Q0E7IgJWZ6os4aSl
-	OqoxfCjpCt/TfZAv6dvRRoFVZ6nePCjlZIjHNMVSniQVSbr/poyQtqEMXfvkq13vW2ZdQWuY
-	dMefe6Ij54j13TdO9598ai5EFofEvvTgcPYd7519fnrxTJWye/Px2sOG17r3+uvWNyTe2jlo
-	Gw9n5WiMRfv3NDnQOx/x3n1jL9tevG3sS1uY8Dy4+WDbCm1K9/Qe3PbIoWis9NqQ8W7Em1Vf
-	LGsLa/UlP52wqVl9ruaFrVin1/wLMb4wZaYDAAA=
-X-CFilter-Loop: Reflected
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj200013.china.huawei.com (7.202.194.25)
 
-On Fri, Dec 05, 2025 at 04:27:52AM -0500, Jeff Layton wrote:
-> On Fri, 2025-12-05 at 16:18 +0900, Byungchul Park wrote:
-> > While compiling Linux kernel with DEPT on, the following error was
-> > observed:
-> >
-> >    ./include/linux/rcupdate.h:1084:17: note: in expansion of macro
-> >    ‘BUILD_BUG_ON’
-> >    1084 | BUILD_BUG_ON(offsetof(typeof(*(ptr)), rhf) >= 4096);        \
-> >         | ^~~~~~~~~~~~
-> >    ./include/linux/rcupdate.h:1047:29: note: in expansion of macro
-> >    'kvfree_rcu_arg_2'
-> >    1047 | #define kfree_rcu(ptr, rhf) kvfree_rcu_arg_2(ptr, rhf)
-> >         |                             ^~~~~~~~~~~~~~~~
-> >    net/sunrpc/xprt.c:1856:9: note: in expansion of macro 'kfree_rcu'
-> >    1856 | kfree_rcu(xprt, rcu);
-> >         | ^~~~~~~~~
-> >     CC net/kcm/kcmproc.o
-> >    make[4]: *** [scripts/Makefile.build:203: net/sunrpc/xprt.o] Error 1
-> >
-> > Since kfree_rcu() assumes 'offset of struct rcu_head in a rcu-managed
-> > struct < 4096', the offest of struct rcu_head in struct rpc_xprt should
-> > not exceed 4096 but does, due to the debug information added by DEPT.
-> >
-> > Relocate struct rcu_head to the first field of struct rpc_xprt from an
-> > arbitrary location to avoid the issue and meet the assumption.
-> >
-> > Reported-by: Yunseong Kim <ysk@kzalloc.com>
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > ---
-> >  include/linux/sunrpc/xprt.h | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-> > index f46d1fb8f71a..666e42a17a31 100644
-> > --- a/include/linux/sunrpc/xprt.h
-> > +++ b/include/linux/sunrpc/xprt.h
-> > @@ -211,6 +211,14 @@ enum xprt_transports {
-> >
-> >  struct rpc_sysfs_xprt;
-> >  struct rpc_xprt {
-> > +     /*
-> > +      * Place struct rcu_head within the first 4096 bytes of struct
-> > +      * rpc_xprt if sizeof(struct rpc_xprt) > 4096, so that
-> > +      * kfree_rcu() can simply work assuming that.  See the comment
-> > +      * in kfree_rcu().
-> > +      */
-> > +     struct rcu_head         rcu;
-> > +
-> >       struct kref             kref;           /* Reference count */
-> >       const struct rpc_xprt_ops *ops;         /* transport methods */
-> >       unsigned int            id;             /* transport id */
-> > @@ -317,7 +325,6 @@ struct rpc_xprt {
-> >  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-> >       struct dentry           *debugfs;               /* debugfs directory */
-> >  #endif
-> > -     struct rcu_head         rcu;
-> >       const struct xprt_class *xprt_class;
-> >       struct rpc_sysfs_xprt   *xprt_sysfs;
-> >       bool                    main; /*mark if this is the 1st transport */
-> 
-> Seems fine to me.
-> 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Hi,
 
-Thank you, Jeff.
+在 2025/12/14 2:41, Chuck Lever 写道:
+> From: NeilBrown <neil@brown.name>
+>
+> Writing to v4_end_grace can race with server shutdown and result in
+> memory being accessed after it was freed - reclaim_str_hashtbl in
+> particularly.
+>
+> We cannot hold nfsd_mutex across the nfsd4_end_grace() call as that is
+> held while client_tracking_op->init() is called and that can wait for
+> an upcall to nfsdcltrack which can write to v4_end_grace, resulting in a
+> deadlock.
+>
+> nfsd4_end_grace() is also called by the landromat work queue and this
+> doesn't require locking as server shutdown will stop the work and wait
+> for it before freeing anything that nfsd4_end_grace() might access.
+>
+> However, we must be sure that writing to v4_end_grace doesn't restart
+> the work item after shutdown has already waited for it.  For this we
+> add a new flag protected with nn->client_lock.  It is set only while it
+> is safe to make client tracking calls, and v4_end_grace only schedules
+> work while the flag is set with the spinlock held.
+>
+> So this patch adds a nfsd_net field "client_tracking_active" which is
+> set as described.  Another field "grace_end_forced", is set when
+> v4_end_grace is written.  After this is set, and providing
+> client_tracking_active is set, the laundromat is scheduled.
+> This "grace_end_forced" field bypasses other checks for whether the
+> grace period has finished.
+>
+> This resolves a race which can result in use-after-free.
+>
+> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+> Closes: https://lore.kernel.org/linux-nfs/20250623030015.2353515-1-neil@brown.name/T/#t
+> Fixes: 7f5ef2e900d9 ("nfsd: add a v4_end_grace file to /proc/fs/nfsd")
+> X-Cc: stable@vger.kernel.org
+> Signed-off-by: NeilBrown <neil@brown.name>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>   fs/nfsd/netns.h     |  2 ++
+>   fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+>   fs/nfsd/nfsctl.c    |  3 +--
+>   fs/nfsd/state.h     |  2 +-
+>   4 files changed, 44 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 3e2d0fde80a7..fe8338735e7c 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -66,6 +66,8 @@ struct nfsd_net {
+>   
+>   	struct lock_manager nfsd4_manager;
+>   	bool grace_ended;
+> +	bool grace_end_forced;
+> +	bool client_tracking_active;
+>   	time64_t boot_time;
+>   
+>   	struct dentry *nfsd_client_dir;
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d0efa3e0965f..1d307cc533d9 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -84,7 +84,7 @@ static u64 current_sessionid = 1;
+>   /* forward declarations */
+>   static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner);
+>   static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
+> -void nfsd4_end_grace(struct nfsd_net *nn);
+> +static void nfsd4_end_grace(struct nfsd_net *nn);
+>   static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cpntf_state *cps);
+>   static void nfsd4_file_hash_remove(struct nfs4_file *fi);
+>   static void deleg_reaper(struct nfsd_net *nn);
+> @@ -6570,7 +6570,7 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>   	return nfs_ok;
+>   }
+>   
+> -void
+> +static void
+>   nfsd4_end_grace(struct nfsd_net *nn)
+>   {
+>   	/* do nothing if grace period already ended */
+> @@ -6603,6 +6603,33 @@ nfsd4_end_grace(struct nfsd_net *nn)
+>   	 */
+>   }
+>   
+> +/**
+> + * nfsd4_force_end_grace - forcibly end the NFSv4 grace period
+> + * @nn: network namespace for the server instance to be updated
+> + *
+> + * Forces bypass of normal grace period completion, then schedules
+> + * the laundromat to end the grace period immediately. Does not wait
+> + * for the grace period to fully terminate before returning.
+> + *
+> + * Return values:
+> + *   %true: Grace termination schedule
+> + *   %false: No action was taken
+> + */
+> +bool nfsd4_force_end_grace(struct nfsd_net *nn)
+> +{
+> +	if (!nn->client_tracking_ops)
+> +		return false;
+> +	spin_lock(&nn->client_lock);
+> +	if (nn->grace_ended || !nn->client_tracking_active) {
+> +		spin_unlock(&nn->client_lock);
+> +		return false;
+> +	}
+> +	WRITE_ONCE(nn->grace_end_forced, true);
+> +	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
+> +	spin_unlock(&nn->client_lock);
+> +	return true;
+> +}
+> +
+>   /*
+>    * If we've waited a lease period but there are still clients trying to
+>    * reclaim, wait a little longer to give them a chance to finish.
+> @@ -6612,6 +6639,8 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
+>   	time64_t double_grace_period_end = nn->boot_time +
+>   					   2 * nn->nfsd4_lease;
+>   
+> +	if (READ_ONCE(nn->grace_end_forced))
+> +		return false;
+>   	if (nn->track_reclaim_completes &&
+>   			atomic_read(&nn->nr_reclaim_complete) ==
+>   			nn->reclaim_str_hashtbl_size)
+> @@ -8932,6 +8961,8 @@ static int nfs4_state_create_net(struct net *net)
+>   	nn->unconf_name_tree = RB_ROOT;
+>   	nn->boot_time = ktime_get_real_seconds();
+>   	nn->grace_ended = false;
+> +	nn->grace_end_forced = false;
+> +	nn->client_tracking_active = false;
+>   	nn->nfsd4_manager.block_opens = true;
+>   	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
+>   	INIT_LIST_HEAD(&nn->client_lru);
+> @@ -9012,6 +9043,10 @@ nfs4_state_start_net(struct net *net)
+>   		return ret;
+>   	locks_start_grace(net, &nn->nfsd4_manager);
+>   	nfsd4_client_tracking_init(net);
+> +	/* safe for laundromat to run now */
+> +	spin_lock(&nn->client_lock);
+> +	nn->client_tracking_active = true;
+> +	spin_unlock(&nn->client_lock);
+>   	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+>   		goto skip_grace;
+>   	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
+> @@ -9060,6 +9095,9 @@ nfs4_state_shutdown_net(struct net *net)
+>   
+>   	shrinker_free(nn->nfsd_client_shrinker);
+>   	cancel_work_sync(&nn->nfsd_shrinker_work);
+> +	spin_lock(&nn->client_lock);
+> +	nn->client_tracking_active = false;
+> +	spin_unlock(&nn->client_lock);
+>   	cancel_delayed_work_sync(&nn->laundromat_work);
+>   	locks_end_grace(&nn->nfsd4_manager);
+>   
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 5ce9a49e76ba..242fcbd958f1 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1082,10 +1082,9 @@ static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t size)
+>   		case 'Y':
+>   		case 'y':
+>   		case '1':
+> -			if (!nn->nfsd_serv)
+> +			if (!nfsd4_force_end_grace(nn))
+>   				return -EBUSY;
+>   			trace_nfsd_end_grace(netns(file));
+> -			nfsd4_end_grace(nn);
+>   			break;
+>   		default:
+>   			return -EINVAL;
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index b052c1effdc5..848c5383d782 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -849,7 +849,7 @@ static inline void nfsd4_revoke_states(struct net *net, struct super_block *sb)
+>   #endif
+>   
+>   /* grace period management */
+> -void nfsd4_end_grace(struct nfsd_net *nn);
+> +bool nfsd4_force_end_grace(struct nfsd_net *nn);
+>   
+>   /* nfs4recover operations */
+>   extern int nfsd4_client_tracking_init(struct net *net);
+Thank you for your patch. I reproduced and verified the issue using the
+following steps:
+mkfs.ext4 -F /dev/sdb
+mount /dev/sdb /mnt/sdb
+echo "/mnt *(rw,no_root_squash,fsid=0)" > /etc/exports
+echo "/mnt/sdb *(rw,no_root_squash,fsid=1)" >> /etc/exports
+systemctl restart nfs-server
+mount -t nfs -o rw,vers=4.2 127.0.0.1:/sdb /mnt/sdbb
+systemctl restart nfs-server
+echo 1 > /proc/fs/nfsd/v4_end_grace &
+echo 0 > /proc/fs/nfsd/threads
 
-	Byungchul
+
+based: master-416f99c3b16f582a3fc6d64a1f77f39d94b76de5
+
+
+diff:
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index b39d4cbdfd35..339718af9be3 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1421,6 +1421,10 @@ nfsd4_cld_grace_done(struct nfsd_net *nn)
+
+         free_cld_upcall(cup);
+  out_err:
++       printk("%s %d\n", __func__, __LINE__);
++       printk("%s sleep before release reclaim...\n", __func__);
++       msleep(5 * 1000);
++       printk("%s sleep before release reclaim done\n", __func__);
+         nfs4_release_reclaim(nn);
+         if (ret)
+                 printk(KERN_ERR "NFSD: Unable to end grace period: 
+%d\n", ret);
+@@ -1454,6 +1458,10 @@ nfs4_cld_state_shutdown(struct net *net)
+
+         nn->track_reclaim_completes = false;
+         kfree(nn->reclaim_str_hashtbl);
++       printk("%s free nn->reclaim_str_hashtbl %px done\n", __func__, 
+nn->reclaim_str_hashtbl);
++       printk("%s sleep after free...\n", __func__);
++       msleep(10 * 1000);
++       printk("%s sleep done\n", __func__);
+  }
+
+  static bool
+
+
+The original problematic execution flow looks like this:
+                 T1                            T2
+// echo 1 > /proc/fs/nfsd/v4_end_grace
+write_v4_end_grace
+  nfsd4_end_grace
+   nfsd4_record_grace_done
+    nfsd4_cld_grace_done
+                                 // echo 0 > /proc/fs/nfsd/threads
+                                 write_threads
+                                  nfsd_svc
+                                   nfsd_destroy_serv
+                                    nfsd_shutdown_net
+                                     nfs4_state_shutdown_net
+                                      nfsd4_client_tracking_exit
+                                       nfsd4_cld_tracking_exit
+                                        nfs4_cld_state_shutdown
+                                         kfree // nn->reclaim_str_hashtbl
+     nfs4_release_reclaim
+      &nn->reclaim_str_hashtbl[i] // UAF
+
+
+This patch moves the handling of nfsd4_end_grace() triggered by writing to
+v4_end_grace into laundromat_work. As a result, the concurrently executing
+T2 path will be blocked by cancel_delayed_work_sync() in
+nfs4_state_shutdown_net(), preventing T2 from freeing reclaim_str_hashtbl
+while laundromat_work is still running.
+
+Tested-by: Li Lingfeng <lilingfeng3@huawei.com>
 
