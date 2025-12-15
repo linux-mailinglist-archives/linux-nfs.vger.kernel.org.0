@@ -1,120 +1,131 @@
-Return-Path: <linux-nfs+bounces-17098-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17099-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7389ACBDE9D
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 13:57:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AA69CBE0DF
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 14:27:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 552E1301985B
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 12:55:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5E229300658C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Dec 2025 13:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B3F2DECD2;
-	Mon, 15 Dec 2025 12:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 820B42F25FD;
+	Mon, 15 Dec 2025 13:25:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Izf1XZQq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKA/X49A"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D901C3BF7;
-	Mon, 15 Dec 2025 12:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773EE1E32D6
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 13:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765802286; cv=none; b=IY3FgHSDGyZksgp9l+F++W1OHbi9YyHrVfQ22Vk4YzcsN5spDxtlRq27n/jtJOfPfWufT0tTF4P+KIhpL3fQZFdYPGZp8+gyA5uLyrv3hhA46gMD4PNZk5fxqLhNIGiAxY9FwxWoxPxb6gcg5iDmSgeU2Fv1DCwjlJXctsKXyHs=
+	t=1765805116; cv=none; b=dj72IEJOyJ7+oRMew67tol4n9prDoztF9LNLdSQ29cU9S0sne+2mwDzsrSVlU7uf7Qt0olVSDsKAitzpssXTG0513NbnQLPLJfwpR9D8Pcv4fx5b0qt1ioCzVYZYdVX0j+Dv0RqR6ETjgxVYsW5VwzgG34W6ytHJEDWVgdkiOlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765802286; c=relaxed/simple;
-	bh=Xiwt0F7uZg8asci0wopt7blyzkMs/Z1c1ZVQV24taE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rdEfVlrs3T4jLhcAkrPTeaGLaGUvRp7OXYQSq5LvWIhUBF4uaI5r2C5TszHekdffnOk6pdXROsVCyFUTIzxCYftLTr04hOBRhuP191yPjZqwYTXMHb4GrAWdTADQJsTasjdbobNwGAKGmYMQHsCVpMth/foXeMZFqZbqdRK/VhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Izf1XZQq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D73C4CEF5;
-	Mon, 15 Dec 2025 12:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765802285;
-	bh=Xiwt0F7uZg8asci0wopt7blyzkMs/Z1c1ZVQV24taE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Izf1XZQqUXGQ9m1uFJavHM7TYM/1TxOw5krNCVjWI9t+iQJTi0S6oO1B/rTpu/+H+
-	 jCj2NlwCflc8CyOzXYnniNnfSe0CiOhj/iKELmDDLcizX/T5+R9/Yov29Zwp0ogT8l
-	 BFirJqRbzj/7cC0t6W0dKNoRyIiMqI+TJwP7ZXrwnFh8+zpAJxbl7NeQ88Nys3xIEX
-	 5qfTv3MgxyGeidf6p/+1yrXiMXzWHf5LizG61DOH3LPAqiHcvo1eLfshpEQYghojue
-	 DwQv69rkeXleu9DaWw1KUHx/U8wsjtcvGshR113fPEvrQ1BKHad+dpVcE/8jPqV4Y1
-	 qG45VMXN6f3Ng==
-Date: Mon, 15 Dec 2025 13:37:59 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	hirofumi@mail.parknet.co.jp, almaz.alexandrovich@paragon-software.com, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, Volker.Lendecke@sernet.de, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v2 1/6] fs: Add case sensitivity info to file_kattr
-Message-ID: <20251215-genuss-neuer-1e3670000df7@brauner>
-References: <20251211152116.480799-1-cel@kernel.org>
- <20251211152116.480799-2-cel@kernel.org>
+	s=arc-20240116; t=1765805116; c=relaxed/simple;
+	bh=nxqUpg7tvUoSSPX6RAQBVgKYhcdHs1acMNVHCihOPCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=XWuzrbo82TfJ9HJTYHhJTFJUdxjzMzXxXTzY+ImlAyQ15H3xvvXZSFc4xDACmVzhNZ44AhiNdsA8I9gYV8wCyUoYUKxSqJJdeuK9wTxJdoIXuUh+FkXAtsT6ObzCI+kl+O1cVlRLIye1yRnUW72IDm5eWfI5qRuY1PwrsxkvWKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKA/X49A; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a09a3bd9c5so15532935ad.3
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 05:25:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765805111; x=1766409911; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jvH6iLSVBk8Uhji2udOit1YWQrLQoWeZLFlpmQZs7gk=;
+        b=UKA/X49AhgHK8bLriarxzdsE2nn5bCuj+RArces7eZZ/dTURia+CAWR94hcY6NDcT6
+         Tqcmql7LBwged6fNOaqr2tPKjDGyOThPGywQDP/AxtBadsntDONj3PA4Js/2XVS89gko
+         RPIcPP2R3jplWF9SyBlZw9OCScyoDbxIL4GTNRaxNSAphk04v+8A5bIOm0Mmp/SGIoe1
+         ORpevj33bTkKiOc5pbXH6S3AhQOMar8DuIOgvL2sHPoMHW+VHrS96yyJDr2JsPHHiwu4
+         Gfvo4FhuBhKSlYeffFJ55CsJ5P795t951xRsw44+PkPKHmcN0gQmwyAccUjBvYV6ob3H
+         Plyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765805111; x=1766409911;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jvH6iLSVBk8Uhji2udOit1YWQrLQoWeZLFlpmQZs7gk=;
+        b=YDEzLaHIduaxXIxkTuHZRLAfYuzd/lkmB3wpLnrxZTFmdLR8QCCca3zLTsiw6t5rlf
+         9k6HvwSripWaEtBhss0cLqVdmWm5yk8NQWU1z/6mT20+JV+0ILKcIyrrsKT5/1Cw5A74
+         ArfwrLwsU1qKKFcqhtVH4GGESn2rVWMqKCYqycVNDVTIecSC1WGre5aOGJNz0i3WWlys
+         wuiGx5CGoJxGTfamFtJHP1aNplIl7Scn/1oHIcU6OYoPTCgocBMYkPCLSCLcTdSwtYr7
+         UA0PwYbPEzexb0g39oWB2ArLVpTGUVMSznZbeKUfNY31/Cj8vsErxRXUgTLyLWWF+ejB
+         sVoQ==
+X-Gm-Message-State: AOJu0YyCMHLmoFoUS4b8yJQtQRh0kV1ux1AbH/EimLPHIpjOO7kSGwgb
+	i5FzIhwfyBqI7QMBOKL5GNN1Jyamrtb8hKREB9q7ZCoanva9X4Ez3tjQsHpzFFjPpeckVWp9S+2
+	B0B43i5UFP95pt0v8wKE7jQUtkaJ+xsF97YVUvhM=
+X-Gm-Gg: AY/fxX4Ngani5/dg4Hewf4TuSr89upQgYWwSDTghN10vKsj7ArgWL79U+f1x7MU2d2w
+	o19T8tXFdgbRW4YWE7sfHbeWPgXllSB+KKep/I/9aFmjeBqHfyNkVf1Dt59dmuqHeFizNEDdoFr
+	moXkmOfm8fYhJPoYNBzvJH0l/3wKefMTGhmi3MPVmfO9mBNu9duk6iXvYjwVk3VBRiyL7tLI8EI
+	0OcZSkO8DW6mNaRtSOw7MfLztnZ4N9MlWC8DOa5v6+Nu91TKt4xrIX/Ri3eeLYToGul3jUUN9EP
+	9GNG8U4=
+X-Google-Smtp-Source: AGHT+IEoEhnQyBzD2mlKiMbtnE/nLJp0p6gZCW6XS1DIabT6NIZqtiBKrapmwd4czOEGbCBXdKI+GeNgbKEv6baFvIo=
+X-Received: by 2002:a17:903:fa7:b0:297:ece8:a3cb with SMTP id
+ d9443c01a7336-29f23e55212mr106792455ad.25.1765805111433; Mon, 15 Dec 2025
+ 05:25:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251211152116.480799-2-cel@kernel.org>
+References: <CAH=ewnpN0rBh6vNN_Ey0rr5eK4vEz3kyaM5ctp5Ze6FCjxWQ8A@mail.gmail.com>
+In-Reply-To: <CAH=ewnpN0rBh6vNN_Ey0rr5eK4vEz3kyaM5ctp5Ze6FCjxWQ8A@mail.gmail.com>
+From: krishnanand thommandra <sendtokrishna@gmail.com>
+Date: Mon, 15 Dec 2025 18:55:00 +0530
+X-Gm-Features: AQt7F2qk0Ii6SQttNka0kgpxBgjl4F94R-28p5D443VZGX8dCNmemjn6OtsBixw
+Message-ID: <CAH=ewnpT6dz+X4NjctU7j2TUphRyA+RnO05Y--xAyqchX1vfDw@mail.gmail.com>
+Subject: Re: 5s stall during openat
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 11, 2025 at 10:21:11AM -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Enable upper layers such as NFSD to retrieve case sensitivity
-> information from file systems by adding a case_info field to struct
-> file_kattr.
-> 
-> Add vfs_get_case_info() as a convenience helper for kernel
-> consumers. If a filesystem does not provide a fileattr_get hook, it
-> returns the default POSIX behavior (case-sensitive,
-> case-preserving), which is correct for the majority of Linux
-> file systems implementations.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
+Additional info
 
-Thanks for listening and plumbing this into file_attr() that seems a
-much better place than statx().
+I'm using NFS4.1 with sec=3Dkrb mount
 
->  fs/file_attr.c           | 31 +++++++++++++++++++++++++++++++
->  include/linux/fileattr.h | 23 +++++++++++++++++++++++
->  2 files changed, 54 insertions(+)
-> 
-> diff --git a/fs/file_attr.c b/fs/file_attr.c
-> index 1dcec88c0680..609e890b5101 100644
-> --- a/fs/file_attr.c
-> +++ b/fs/file_attr.c
-> @@ -94,6 +94,37 @@ int vfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
->  }
->  EXPORT_SYMBOL(vfs_fileattr_get);
->  
-> +/**
-> + * vfs_get_case_info - retrieve case sensitivity info for a filesystem
-> + * @dentry:	the object to retrieve from
-> + * @case_info:	pointer to store result
-> + *
-> + * Call i_op->fileattr_get() to retrieve case sensitivity information.
-> + * If the filesystem does not provide a fileattr_get hook, return
-> + * the default POSIX behavior (case-sensitive, case-preserving).
-> + *
-> + * Return: 0 on success, or a negative error on failure.
-> + */
-> +int vfs_get_case_info(struct dentry *dentry, u32 *case_info)
+While looking through the serialization mechanisms, I came across
+alloc_seqid. I'm not an NFS expert, some googling and LLM-ing
+suggested that seqID based client side serialization is not needed in
+NFSv4.1
 
-Hm, I would much prefer if we followed the statx() model where we have
-vfs_getattr{_nosec}() that always returns a struct kstat. So we should
-only have vfs_fileattr_get() instead of the special-purpose
-vfs_get_case_info() thing.
+But if I change the alloc_seqid in nfs_v4_1_minor_ops to
+nfs_alloc_seqid from nfs_alloc_no_seqid then these stalls don't
+happen. Not sure what the the tradeoff is. I'll continue analyzing
+this further but wanted to share this info, in case it helps.
 
-I guess the main reason you did this is so that you can set the default
-without having to touch each filesystem that doesn't do file_attr.
-
-So just move the default setup of case_info into vfs_fileattr_get()?
-This way it's also available to other callers of this function such as
-overlayfs and ecryptfs. And then just call that in nfsd.
-
-Otherwise I have no complaints about the VFS part.
+On Mon, Dec 15, 2025 at 5:59=E2=80=AFPM krishnanand thommandra
+<sendtokrishna@gmail.com> wrote:
+>
+> I'm hitting this delay
+> https://elixir.bootlin.com/linux/v6.18/source/fs/nfs/nfs4proc.c#L1803
+> when running "git lfs fsck" where the gitconfig is on NFS.
+>
+> Based on my limited debugging, different variants of the following
+> sequence are happening -
+>
+> 1) open request1 sent by client
+> 2) open request2 sent by client
+> The open modes are same and so same nfs4_state is used.
+> 3) open reply1 is processed and close request1 is sent out
+>
+> Since close is async, the nfs_clear_open_stateid_locked  (from close
+> reply1) executing in a kworker context races ahead of the open reply2
+> processing. The open request2 processing happens in the process
+> context (since synchronous). Since the nfs4_state is now closed, it
+> can get re-used and the stateid_sequential check in
+> nfs_set_open_stateid_locked. keeps failing for open request2.
+> Eventually after 5 seconds of sleep, -EAGAIN is returned and things
+> return to normal.
+>
+> I'm not sure if this is expected behavior. This is happening quite
+> often in my usecase and so want to confirm if this is some kind of
+> trade off for stricter ordered completion processing on the client
+> side
+>
+> The 5s stall was added in c9399f21c215453b414702758b8c4b7d66605eac
 
