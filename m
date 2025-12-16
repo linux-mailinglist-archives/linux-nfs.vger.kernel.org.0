@@ -1,235 +1,184 @@
-Return-Path: <linux-nfs+bounces-17113-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17114-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02CCBCC14FC
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Dec 2025 08:33:38 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24BB1CC1A71
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Dec 2025 09:50:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6FF5D30047DB
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Dec 2025 07:33:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 245943020811
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Dec 2025 08:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676B92F12D4;
-	Tue, 16 Dec 2025 07:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8A3F1400C;
+	Tue, 16 Dec 2025 08:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZPNFWjdn";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="B/ay7yfa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f77.google.com (mail-oo1-f77.google.com [209.85.161.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D73C24CEEA
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Dec 2025 07:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B372627
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Dec 2025 08:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765870416; cv=none; b=omyxRoIYAqawU3VI0bmE8n1Zzte9QC2mCP7nHafUJTGb/GrtHcNEL9CyRFwGdOeOxEQvnkDF9Ui0kITmradY+e7y/j4CNtSFnaMPzyNOW39YqLPHDfEFAd5g8rkAe1iuJnAYT+K3avDBVfK/nQZiHnVX0NSormG0QQDJm08ix90=
+	t=1765875056; cv=none; b=FSQdNiMfDJEDSdUCw8ipjC5vBjVpNa+CDCNuNdkeMhrK8pPidNBvektyKTHkAxsJ2mBmOzfOaYu5ioP4cphL6S1qX2mOdJsES4XlAJFn67qKNkDPgjxSLrESdOxOSB4fz/aIomq/qsMHYEtZa1NSynKH2dVgOLwC5C6iyJEgCUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765870416; c=relaxed/simple;
-	bh=8bk7bf2hJaw94COf4YZ9f9wYZqWFUnz034hEHXDRzkg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=noUGDH858DAwwxMNR0OzeXQwFQybqBQHX6uu0CpRAyvJEifZpPim8Af7Y/PNYwCmJOA00cNRnplLnLpKh95tDwmJ5/Fr3Qq7j6nnbwH1vdh5q0Lhm0dHxQnhaoCyQb/7xkn9Xwpy8EdLhxM2fYbSrQf/k2VvCuF1nJqBXqBISV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f77.google.com with SMTP id 006d021491bc7-65b153371efso6839626eaf.1
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Dec 2025 23:33:33 -0800 (PST)
+	s=arc-20240116; t=1765875056; c=relaxed/simple;
+	bh=kZcad+aLeY5hHd5gW8UnVBU2UJS26yYwTOfXYFemjK8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=jBNoYjuPW1AcX87WaXjy7BaQh3AAd/q1CxaKZXxEzAh7L9FPHPrYtreIbLIKL3PaJQKMIfLasa422nNNPouRfeeow6ISVdiyIZUfmmunp3neEZtD9Pwj7+4n7Fou/XFD7puBBuiPv0wHQclN0fU9UJg4SDnltHIZwRJsN6lyPPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZPNFWjdn; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=B/ay7yfa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1765875053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E3IXRuLWyQC4T59q4jPouySi7bisIo5z00s20K17Lxo=;
+	b=ZPNFWjdnq9cgqVur+ElEg2Nfy/j9oxow6vro+BgiQnjyuMySCPAx89g1PnbAH64zLnLhsg
+	5wi+gcpjd3E2AD95xznOd5Z737j1f2M1HGJ2f2+c3e4o55zYoUplNP4JyYFQ10VphupGYw
+	qbp6+W8hAzPxib48P+mz2TEkh//YxKk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-475-TLJ2tuIZPpedTrvVTTIqGA-1; Tue, 16 Dec 2025 03:50:52 -0500
+X-MC-Unique: TLJ2tuIZPpedTrvVTTIqGA-1
+X-Mimecast-MFC-AGG-ID: TLJ2tuIZPpedTrvVTTIqGA_1765875051
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42fb1c2c403so3443101f8f.3
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Dec 2025 00:50:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1765875050; x=1766479850; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E3IXRuLWyQC4T59q4jPouySi7bisIo5z00s20K17Lxo=;
+        b=B/ay7yfaJUxDprhyNhgGlJkkIk0lf7prO49iuNbHDidbw8VN5NIJJBugDKdEk2H684
+         OgTajJyQkPai88OVl5Ei/LmRetBEWB4nrIt7mRdEJcHCCqR8v+buwQfzs9e6Gdzfg5qR
+         RzJeRPdrm3/1y5DNx5mw4GGA5d5LrPdxByge2Tf3doddUIqnAfamHoeP0aN4MpM1chem
+         jnShAInAOZkfVLG4o05WocfQSh6E3BCTnnjiMOoQvfOA4c7E5eN5MTAAVLaqKbFaTchR
+         E9XHo7lFbKez2gM8sxErDRs0z83eLmHv6zfhLnG7OrAKXsgsC4zURnSkl5aF9kuGGE2Z
+         n8Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765870412; x=1766475212;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+5Jv4X+Ic1vAvXVC2xfB9bS8e+3vcdn/MZMSSUDhKXI=;
-        b=dre8c91kHDkLR3xWs7TmSMybd+JpQf1jKzMgku3IqE7zb08aYANZ9SSMHqzP82pIex
-         hftCJKjWd71IoBlGJWVJXIn8cbiAt2cQvItTtRizCnkEXgQkMaawoRNyv+8wDAA9+f0D
-         JfmZmaQMPasTp/iEIzbCnFGMWyoN2U/gqByzXa8qn0fZevZwGTcifPiZ6y5v6PXl1TMK
-         qwCTv3DXpytwDEulMRQ0Mn+mug15ncyMCHymajFYRbth6jX5/mYG60nHRAcvOvbMMMWT
-         cjUxEk5suXfhy/V6ls9UPQjMwgZhXXoBvAp8n1xOWTBrLgsM4OpqsB/7jJdRwpeKr6YA
-         wx+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVmH3RVa7GfBZOi13rS+f26TGtxACXZQ74elgOupUPMZj7baskNDzdEua0kgs+qpT54RiPXIoqYI/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjnQwesbn+rorsaxBWeUPVbb+M+nu8/7e1KrsQtWocxvbMU4CJ
-	65uUANnN8sQ+nDKkzLoS3FqPsRIXrkXezVCULZWW5bp/Ofh4sMPmwRD80tup428uW8UBiSD8sPA
-	bQgk1Jcevs841ElewLNeCREo/6GpDm//5Ls9wLhwKzjKqK39qjw9DSqgj4TY=
-X-Google-Smtp-Source: AGHT+IGlkX+7GEhz2R8PYm4J5CyExc2fCXu7/fcPuR/xgykDxi2plhahOq2Phuk/OrMWwl7xD/wJmjVQ4XQCFqEq2oA/6ueUHPIJ
+        d=1e100.net; s=20230601; t=1765875050; x=1766479850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E3IXRuLWyQC4T59q4jPouySi7bisIo5z00s20K17Lxo=;
+        b=uDCzKFVqhyrLMbY8be6d7bgI6f1ua4op42Ld6/m6Sa6EQkhIlK0H/oMARXg9cNxP6z
+         tO7uw9ulAvLfxS0430S2vVYo859FeUiDsmw8rCXrrHYrBPJehFz8eN3f69X549OwgBVW
+         W1mo2AoMpOd4ntDwM7NbTtWOUgE2OVmefaKrw6AUIWccvk9nc87VUuz0o3tGUf+TEMsY
+         P8kcquavDqGuSZONyyDMvGWZTn16BCF6iYRgORzhAKOykL6cQ4m0jP8Wv9/KquYT2dm4
+         GMQt6GsJaIOH2n1KSmh/w7zR2VmHBAXRK/VUOkN1DSMPpAO3DDkVSjf3xZ0e+yNqP1HL
+         Y0pA==
+X-Gm-Message-State: AOJu0YzqxpaIeoyiqQ6yuf8CE3lN1YyuW5oIG02stXVezlLsFlClAMJz
+	fJaMCPoCT0vxfMqf8r9g1+3RMZMJl7Kb1kelf3/8PHsPVRwkGzU2s0Zk5eAxew1MQlDwrfBaisH
+	nUwyStnUd7gwSw3pwOV/m+WEmKOt3IcAxxJ/xcqVaLyfzdX6EY4Dv+W/VZ9aH6/+rFF9PZVMw4P
+	H3XgJ3q90f7rPOn6FwJ0bfy54BROUxPITJchchIIZlqfJRPsoH3w==
+X-Gm-Gg: AY/fxX7W3wmCskdSfGaIfjWzpv9w8Zi76fY7tktyK0e3tuRT2ecIsHrrKQPkDk3j9en
+	pbx947cZpjqzSq87qfZ2x/zXvhbayj5qwDnUOhfhR3pdc9J3XDPzso5DBM1TedQcVMkubjiQRXh
+	eTXkMJ8QrLthSn9MZlW7Z4zcImsbR6IAJcN2Bsn6EV6EVhijiGwvUZvsg5JI/RBjyisA==
+X-Received: by 2002:a05:6000:310e:b0:430:fcda:4529 with SMTP id ffacd0b85a97d-430fcda47a1mr6994915f8f.61.1765875050656;
+        Tue, 16 Dec 2025 00:50:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE8132JgjO9U9yKi2cDb4jPFP2P0N1djaPlC8N+FCVMiLR6qQpQjrmjUx0MuoJRF25IBbq9q0Mjo2uQA7yzaK8=
+X-Received: by 2002:a05:6000:310e:b0:430:fcda:4529 with SMTP id
+ ffacd0b85a97d-430fcda47a1mr6994895f8f.61.1765875050268; Tue, 16 Dec 2025
+ 00:50:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:4ed1:b0:65b:5553:8e9b with SMTP id
- 006d021491bc7-65b555390bfmr3419018eaf.12.1765870411926; Mon, 15 Dec 2025
- 23:33:31 -0800 (PST)
-Date: Mon, 15 Dec 2025 23:33:31 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69410b4b.a70a0220.104cf0.0347.GAE@google.com>
-Subject: [syzbot] [nfs?] memory leak in percpu_ref_init
-From: syzbot <syzbot+6ee3b889bdeada0a6226@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neil@brown.name, 
-	okorniev@redhat.com, syzkaller-bugs@googlegroups.com, tom@talpey.com
+From: Suhas Athani <sathani@redhat.com>
+Date: Tue, 16 Dec 2025 14:20:37 +0530
+X-Gm-Features: AQt7F2qeF0ZezUH4nqUIoOzf8rNX2CVhkoi5Hvoq7efpx1MD1FRHg_7TxXNrtBo
+Message-ID: <CAHZzugbT9vuoAaR7L7jDoPsLUtrrS3J052i-M=bL9O5nq4auqA@mail.gmail.com>
+Subject: [pynfs] Proposal to fix CB_GETATTR handling in DELEG24 / DELEG25 (_testCbGetattr)
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Cc: Frank Filz <ffilz@redhat.com>, Rajesh Prasad <raprasad@redhat.com>, ffilzlnx@mindspring.com, 
+	calum.mackay@oracle.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-syzbot found the following issue on:
+I am working on NFSv4 delegation testing using pynfs and recently
+encountered a failure in the delegation test cases DELEG24 and
+DELEG25, both of which rely on the helper _testCbGetattr() in
+st_delegation.py.
 
-HEAD commit:    d358e5254674 Merge tag 'for-6.19/dm-changes' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=176f561a580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a0268003e02068d
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ee3b889bdeada0a6226
-compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a6661a580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d4a1b4580000
+After analysis, the failure appears to be caused by two issues in the
+test logic rather than a server-side protocol violation. I would like
+to propose small changes to the test and get feedback from the
+community before proceeding further.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e79f317bb571/disk-d358e525.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cf9e2849af10/vmlinux-d358e525.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/73d80a967038/bzImage-d358e525.xz
+1. Incorrect bit test for OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6ee3b889bdeada0a6226@syzkaller.appspotmail.com
+In _testCbGetattr(), the test checks whether the server supports
+delegated timestamps using:
 
-BUG: memory leak
-unreferenced object (percpu) 0x607e4d6bd360 (size 8):
-  comm "syz.0.17", pid 6093, jiffies 4294942369
-  hex dump (first 8 bytes on cpu 0):
-    00 00 00 00 00 00 00 00                          ........
-  backtrace (crc 0):
-    pcpu_alloc_noprof+0x82c/0xd60 mm/percpu.c:1890
-    percpu_ref_init+0x36/0x1e0 lib/percpu-refcount.c:72
-    nfsd_create_serv+0xbe/0x260 fs/nfsd/nfssvc.c:605
-    nfsd_nl_listener_set_doit+0x62/0xb00 fs/nfsd/nfsctl.c:1882
-    genl_family_rcv_msg_doit+0x11e/0x190 net/netlink/genetlink.c:1115
-    genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-    genl_rcv_msg+0x2fd/0x440 net/netlink/genetlink.c:1210
-    netlink_rcv_skb+0x93/0x1d0 net/netlink/af_netlink.c:2550
-    genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-    netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-    netlink_unicast+0x3a3/0x4f0 net/netlink/af_netlink.c:1344
-    netlink_sendmsg+0x335/0x6b0 net/netlink/af_netlink.c:1894
-    sock_sendmsg_nosec net/socket.c:727 [inline]
-    __sock_sendmsg net/socket.c:742 [inline]
-    ____sys_sendmsg+0x562/0x5a0 net/socket.c:2592
-    ___sys_sendmsg+0xc8/0x130 net/socket.c:2646
-    __sys_sendmsg+0xc7/0x140 net/socket.c:2678
-    do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-    do_syscall_64+0xa4/0xf80 arch/x86/entry/syscall_64.c:94
-    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want &
+        OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
 
-BUG: memory leak
-unreferenced object 0xffff88812a39dfc0 (size 64):
-  comm "syz.0.17", pid 6093, jiffies 4294942369
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 80 80 59 d7 81 ff ff ff ff  .........Y......
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc a2262fc6):
-    kmemleak_alloc_recursive include/linux/kmemleak.h:44 [inline]
-    slab_post_alloc_hook mm/slub.c:4958 [inline]
-    slab_alloc_node mm/slub.c:5263 [inline]
-    __kmalloc_cache_noprof+0x3b2/0x570 mm/slub.c:5771
-    kmalloc_noprof include/linux/slab.h:957 [inline]
-    kzalloc_noprof include/linux/slab.h:1094 [inline]
-    percpu_ref_init+0x94/0x1e0 lib/percpu-refcount.c:76
-    nfsd_create_serv+0xbe/0x260 fs/nfsd/nfssvc.c:605
-    nfsd_nl_listener_set_doit+0x62/0xb00 fs/nfsd/nfsctl.c:1882
-    genl_family_rcv_msg_doit+0x11e/0x190 net/netlink/genetlink.c:1115
-    genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-    genl_rcv_msg+0x2fd/0x440 net/netlink/genetlink.c:1210
-    netlink_rcv_skb+0x93/0x1d0 net/netlink/af_netlink.c:2550
-    genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-    netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-    netlink_unicast+0x3a3/0x4f0 net/netlink/af_netlink.c:1344
-    netlink_sendmsg+0x335/0x6b0 net/netlink/af_netlink.c:1894
-    sock_sendmsg_nosec net/socket.c:727 [inline]
-    __sock_sendmsg net/socket.c:742 [inline]
-    ____sys_sendmsg+0x562/0x5a0 net/socket.c:2592
-    ___sys_sendmsg+0xc8/0x130 net/socket.c:2646
-    __sys_sendmsg+0xc7/0x140 net/socket.c:2678
-    do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-    do_syscall_64+0xa4/0xf80 arch/x86/entry/syscall_64.c:94
-    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+However, oa_share_access_want is defined as a bitmap, and
+OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS represents a bit number,
+not a mask.
 
-BUG: memory leak
-unreferenced object (percpu) 0x607e4d6bd368 (size 8):
-  comm "syz.0.18", pid 6095, jiffies 4294942370
-  hex dump (first 8 bytes on cpu 0):
-    00 00 00 00 00 00 00 00                          ........
-  backtrace (crc 0):
-    pcpu_alloc_noprof+0x82c/0xd60 mm/percpu.c:1890
-    percpu_ref_init+0x36/0x1e0 lib/percpu-refcount.c:72
-    nfsd_create_serv+0xbe/0x260 fs/nfsd/nfssvc.c:605
-    nfsd_nl_listener_set_doit+0x62/0xb00 fs/nfsd/nfsctl.c:1882
-    genl_family_rcv_msg_doit+0x11e/0x190 net/netlink/genetlink.c:1115
-    genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-    genl_rcv_msg+0x2fd/0x440 net/netlink/genetlink.c:1210
-    netlink_rcv_skb+0x93/0x1d0 net/netlink/af_netlink.c:2550
-    genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-    netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-    netlink_unicast+0x3a3/0x4f0 net/netlink/af_netlink.c:1344
-    netlink_sendmsg+0x335/0x6b0 net/netlink/af_netlink.c:1894
-    sock_sendmsg_nosec net/socket.c:727 [inline]
-    __sock_sendmsg net/socket.c:742 [inline]
-    ____sys_sendmsg+0x562/0x5a0 net/socket.c:2592
-    ___sys_sendmsg+0xc8/0x130 net/socket.c:2646
-    __sys_sendmsg+0xc7/0x140 net/socket.c:2678
-    do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-    do_syscall_64+0xa4/0xf80 arch/x86/entry/syscall_64.c:94
-    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The correct test should be:
 
-BUG: memory leak
-unreferenced object 0xffff88812833c840 (size 64):
-  comm "syz.0.18", pid 6095, jiffies 4294942370
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 80 80 59 d7 81 ff ff ff ff  .........Y......
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc a2262fc6):
-    kmemleak_alloc_recursive include/linux/kmemleak.h:44 [inline]
-    slab_post_alloc_hook mm/slub.c:4958 [inline]
-    slab_alloc_node mm/slub.c:5263 [inline]
-    __kmalloc_cache_noprof+0x3b2/0x570 mm/slub.c:5771
-    kmalloc_noprof include/linux/slab.h:957 [inline]
-    kzalloc_noprof include/linux/slab.h:1094 [inline]
-    percpu_ref_init+0x94/0x1e0 lib/percpu-refcount.c:76
-    nfsd_create_serv+0xbe/0x260 fs/nfsd/nfssvc.c:605
-    nfsd_nl_listener_set_doit+0x62/0xb00 fs/nfsd/nfsctl.c:1882
-    genl_family_rcv_msg_doit+0x11e/0x190 net/netlink/genetlink.c:1115
-    genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-    genl_rcv_msg+0x2fd/0x440 net/netlink/genetlink.c:1210
-    netlink_rcv_skb+0x93/0x1d0 net/netlink/af_netlink.c:2550
-    genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-    netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
-    netlink_unicast+0x3a3/0x4f0 net/netlink/af_netlink.c:1344
-    netlink_sendmsg+0x335/0x6b0 net/netlink/af_netlink.c:1894
-    sock_sendmsg_nosec net/socket.c:727 [inline]
-    __sock_sendmsg net/socket.c:742 [inline]
-    ____sys_sendmsg+0x562/0x5a0 net/socket.c:2592
-    ___sys_sendmsg+0xc8/0x130 net/socket.c:2646
-    __sys_sendmsg+0xc7/0x140 net/socket.c:2678
-    do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-    do_syscall_64+0xa4/0xf80 arch/x86/entry/syscall_64.c:94
-    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want &
+        (1 << OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS):
 
-connection error: failed to recv *flatrpc.ExecutorMessageRawT: read tcp 127.0.0.1:36571->127.0.0.1:45172: read: connection reset by peer
+Without this shift, the test may incorrectly assume support for
+delegated timestamps, resulting in mismatched OPEN arguments and
+incorrect expectations in the CB_GETATTR response.
+
+2. Handling of NFS4ERR_DELAY after CB_GETATTR
+
+In DELEG24 / DELEG25, the test currently accepts NFS4ERR_DELAY as a
+valid status for the client=E2=80=99s GETATTR:
+
+check(res, [NFS4_OK, NFS4ERR_DELAY])
+
+However, immediately after this, the test unconditionally accesses:
+
+attrs2 =3D res.resarray[-1].obj_attributes
+
+When the server returns NFS4ERR_DELAY, the compound reply does not
+contain a valid GETATTR result, which leads to an exception in the
+test harness.
+
+From the server side, returning NFS4ERR_DELAY is legal and expected
+behavior while:
+
+- a write delegation is held
+
+- CB_GETATTR has been issued
+
+- delegation-related state is still being resolved
+
+This behavior is commonly observed in asynchronous server implementations.
+
+To make the test robust and protocol-correct, I replaced the
+single-shot GETATTR handling with a simple retry loop:
+
+- If the GETATTR returns NFS4ERR_DELAY, sleep briefly and retry
+
+- Continue until the server returns NFS4_OK
+
+- Only then validate obj_attributes
+
+This matches the intended NFS4ERR_DELAY and reflects how a real NFSv4
+client is expected to behave.
+
+I would appreciate feedback from the community on whether these
+changes are acceptable, or if there is a preferred alternative
+approach.
+
+Thanks for your time and guidance.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Regards,
+Suhas Athani
+NFS-Ganesha Team
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
 
