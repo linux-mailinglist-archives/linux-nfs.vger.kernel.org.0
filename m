@@ -1,211 +1,130 @@
-Return-Path: <linux-nfs+bounces-17141-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17142-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF0A4CC81E5
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Dec 2025 15:16:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 95742CC8059
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Dec 2025 14:58:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 006EF30DD696
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Dec 2025 14:11:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 12B56301B83E
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Dec 2025 13:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9B0350A06;
-	Wed, 17 Dec 2025 12:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98BC382571;
+	Wed, 17 Dec 2025 13:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a56aVGMj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EM2At4C2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a56aVGMj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EM2At4C2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfQL47iO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA147350A0B
-	for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 12:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29E633FE1F
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 13:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765975351; cv=none; b=YHPSCv2W63N0dUEOlmnPaSo1tw7m+yxlMyqIonUMFkCggOdVvMy0PMNWMfgBLoj3k7ajBRq+0F/XP/PBw1AXA5C4pzlt6Y7VQR5Nm/EuXLuLEsPvsitviRXbot92vCwnxOOAeWHuyke+zcrI8g0bv67+OGefoMGlU7RoN/KnfPg=
+	t=1765979697; cv=none; b=jQbNMU2laonitFQ6tdh8EYB8FaiFaSB16Ys5Jkl1dzdXAAkdBJJJ9zppwAY1L1d6OTnJ8A2jkgVtFd95jcyHo8qnJSu/rJEmPyh+MRo1PASB1S9pzaWeErMNK1qJ+1S8GaGhdhyLYR/Tyqa2WB+AoyTbjV1aWCSTX4QquIYu1mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765975351; c=relaxed/simple;
-	bh=BgyZH9Lq6PUbACHJrPVyiXxQg8gNucfjWaGUktOVPvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CC0vIs2+SRu+rH1vhYVeDQWFK3rIXorS6hv9I2bYgF3VDJ+r0YOuBDILIW6IGDl3ldH/Qefa7IPWfZi300xP/N9rayPC0QoKFa+zoh0r6T0KOUmIKEO/gW1tW4rPYCQXM52wQDFXf/f/BpnJTMjnGtTA340Gahjd4gCE5II6dOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a56aVGMj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EM2At4C2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a56aVGMj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EM2At4C2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 186F85BCF8;
-	Wed, 17 Dec 2025 12:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1765975345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MvZL3WPwwLagDUEBdiS3N24cxsJRy97UBGLmu0SgiWg=;
-	b=a56aVGMj0kst528k5fM83MBSiUUP1ExJ6+hm7lKF4DuthbszXMhLRK/4prA/Xi3veetPsL
-	1FxXQGEYI6xeyYruR72CLCodkv7S0DG7gCJocLY2hiU3g32mscOCAVLKTQfytgbtlvc/h3
-	N3zyCJl7agpHI8TlOxMklJ9D7MzAOPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1765975345;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MvZL3WPwwLagDUEBdiS3N24cxsJRy97UBGLmu0SgiWg=;
-	b=EM2At4C2BKWwLeD76Gc7lnI11b5w81+nDNLjgylvh8PQ29xLBA5OEhNJCJw0CzZQrz9PFD
-	EowZTDQSfM684EDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=a56aVGMj;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=EM2At4C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1765975345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MvZL3WPwwLagDUEBdiS3N24cxsJRy97UBGLmu0SgiWg=;
-	b=a56aVGMj0kst528k5fM83MBSiUUP1ExJ6+hm7lKF4DuthbszXMhLRK/4prA/Xi3veetPsL
-	1FxXQGEYI6xeyYruR72CLCodkv7S0DG7gCJocLY2hiU3g32mscOCAVLKTQfytgbtlvc/h3
-	N3zyCJl7agpHI8TlOxMklJ9D7MzAOPA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1765975345;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MvZL3WPwwLagDUEBdiS3N24cxsJRy97UBGLmu0SgiWg=;
-	b=EM2At4C2BKWwLeD76Gc7lnI11b5w81+nDNLjgylvh8PQ29xLBA5OEhNJCJw0CzZQrz9PFD
-	EowZTDQSfM684EDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E58B43EA63;
-	Wed, 17 Dec 2025 12:42:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZTlhNzClQmnEJQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 17 Dec 2025 12:42:24 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3CC90A0927; Wed, 17 Dec 2025 13:42:20 +0100 (CET)
-Date: Wed, 17 Dec 2025 13:42:20 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan Kara <jack@suse.cz>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Carlos Maiolino <cem@kernel.org>, Stefan Roesch <shr@fb.com>, Jeff Layton <jlayton@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gfs2@lists.linux.dev, io-uring@vger.kernel.org, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 08/10] fs: add support for non-blocking timestamp updates
-Message-ID: <2hnq54zc4x2fpxkpuprnrutrwfp3yi5ojntu3e3xfcpeh6ztei@2fwwsemx4y5z>
-References: <20251217061015.923954-1-hch@lst.de>
- <20251217061015.923954-9-hch@lst.de>
+	s=arc-20240116; t=1765979697; c=relaxed/simple;
+	bh=7JnpqBw2FzbOcuSlP94ehTtdCg8zztBauQKdUcXh4fM=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=c+RTu6uJy/BPlcz/BgUnve7NbLGi2MugnAxLeHmfFXWwPyfi17R90+73+SchHsKEtVod30usju9xDDNdLKa2g2QrHGwirSwtzc6nRtigp+ok6G+BO2M0BWLnWCJx/wyPGz2uE5Ua5CNaBdzYsxkutFuBxnpBOk8hVYQM46OglU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfQL47iO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CF2C4CEF5
+	for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 13:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765979697;
+	bh=7JnpqBw2FzbOcuSlP94ehTtdCg8zztBauQKdUcXh4fM=;
+	h=Date:From:To:In-Reply-To:References:Subject:From;
+	b=IfQL47iOb2kQRJF4/8EeiKb+nIqF7TNpiE27BiE0gTXL099EyTaA2Qx5LNP+TEBEc
+	 MJLPJl1H0jAieWeWCkUR9RmAL4jlAtXZ3yXPNyCGpbyA4YTLykRVIBwOxXHyN1VQSr
+	 woOOII94yE4Z8+sfX73X/CPT72hmq8NfxyrN7qmp5MGu2m1LbapGqehVUXSQeX3WSP
+	 Ksl8zzRQBYYzT0nrqQXlvwxFqwT7N/VmoFSBKzQsOzaBEv0VChCkoNvGYfpaadqoKt
+	 I6pqXcqQN3aRFBdYXA8l1ETaZAi5eYqpCVdrrc4WehMypqsXRLy6Jkdgm2y86bl9/w
+	 igUUt772Rxb0A==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 49463F4006F;
+	Wed, 17 Dec 2025 08:54:56 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 17 Dec 2025 08:54:56 -0500
+X-ME-Sender: <xms:MLZCaRRpPS-W7u4va5fqZonu-u1Htny2o99t--0kcBz7eYJ1Zl9bRQ>
+    <xme:MLZCaVmJjFsvn2x_Nnaf_vh4-PmzD1sRGuX2_K7ARM901MjWXAGnlPovTDNCgQ8eR
+    C1ZdxT2ULOaj59qBIDMXE05OokXUxSwIfr7g7uHT_bDgxSt_0oylMPH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegvdejgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgtkhcu
+    nfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    ehheejleegffffiefhudduvedugefhheehfefhgfeuleeuudefteejudfhudekleenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklh
+    gvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleeh
+    ledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilh
+    drtghomhdpnhgspghrtghpthhtohepvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    ohepshhnihhtiigvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnh
+    hfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:MLZCaT89xJE_gDLIcwcWJq0cyjjIPrVv5aghiGGd52i5F3g4EBz_jQ>
+    <xmx:MLZCadr2gp-uWZZ8PyqvT66tUrhVQBodXwtdkgcd-edkHlCIlGrKuA>
+    <xmx:MLZCaYl0SRuG5Eg7u48H5kTh9JLzDQFJ5EzmMOVeqO4bg_j0arXwAw>
+    <xmx:MLZCacKf3XYueaktbuI8D8DsXB6LHDBgsQMlB9a4KyrE8jE-_Woiog>
+    <xmx:MLZCaVwEUhi7UMXGbEL6fXgzIPZou-LszYbyDUtb64mC0EIH6ojbxmK3>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2B63778006C; Wed, 17 Dec 2025 08:54:56 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251217061015.923954-9-hch@lst.de>
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Rspamd-Queue-Id: 186F85BCF8
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,lst.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Level: 
+X-ThreadId: ArbxL3zBnRlc
+Date: Wed, 17 Dec 2025 08:54:36 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Mike Snitzer" <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Message-Id: <cafae1f3-def3-4b64-ae1e-9d4714d91b5c@app.fastmail.com>
+In-Reply-To: <aUHcjxer3GmVcBwG@kernel.org>
+References: <aUHcjxer3GmVcBwG@kernel.org>
+Subject: Re: xdr_stream interface oddities with pages vs stream
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed 17-12-25 07:09:41, Christoph Hellwig wrote:
-> Currently file_update_time_flags unconditionally returns -EAGAIN if any
-> timestamp needs to be updated and IOCB_NOWAIT is passed.  This makes
-> non-blocking direct writes impossible on file systems with granular
-> enough timestamps.
-> 
-> Add a S_NOWAIT to ask for timestamps to not block, and return -EAGAIN in
-> all methods for now.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-...
 
-> @@ -2110,12 +2110,26 @@ int inode_update_timestamps(struct inode *inode, int *flags)
->  		now = inode_set_ctime_current(inode);
->  		if (!timespec64_equal(&now, &ctime))
->  			updated |= S_CTIME;
-> -		if (!timespec64_equal(&now, &mtime)) {
-> -			inode_set_mtime_to_ts(inode, now);
-> +		if (!timespec64_equal(&now, &mtime))
->  			updated |= S_MTIME;
-> +
-> +		if (IS_I_VERSION(inode)) {
-> +			if (*flags & S_NOWAIT) {
-> +				/*
-> +				 * Error out if we'd need timestamp updates, as
-> +				 * the generally requires blocking to dirty the
-> +				 * inode in one form or another.
-> +				 */
-> +				if (updated && inode_iversion_need_inc(inode))
-> +					goto bail;
+On Tue, Dec 16, 2025, at 5:26 PM, Mike Snitzer wrote:
+> Hi,
+>
+> I've been working on enhancing the NFS client and server such that
+> nfs4_{set,set}acl utilities to set/get 4.0 ACLs will work when NFSD
+> v4.1 is reexporting NFS v4.2.  Its soul sucking, but that aside...
+>
+> In my journey I'm finding that xdr_stream_decode_u32() followed by
+> xdr_stream_subsegment() doesn't continue from the point where
+> xdr_stream_decode_u32() advanced xdr_stream's ->p
+>
+> xdr_stream_subsegment() doesn't appear in any way interlocked with the
+> pages offset (->p), it starts with xdr_stream_pos() but  ends with
+> advancing ->p.  So xdr_stream_subsegment() does what it should, I'm
+> concerned about interfaces like xdr_stream_decode_u32() not advancing
+> xdr->nwords
+>
+> Shouldn't both the xdr->p and xdr->nwords be interlocked?  SO that
+> xdr_stream_subsegment() continues from the point where
+> xdr_stream_decode_u32() advanced the stream?
 
-I'm confused here. What the code does is that if S_NOWAIT is set and
-i_version needs increment we bail. However the comment as well as the
-changelog speaks about timestamps needing update and not about i_version.
-And intuitively I agree that if any timestamp is updated, inode needs
-dirtying and thus we should bail regardless of whether i_version is updated
-as well or not. What am I missing?
+From the wasteland that is my memory... I think only one side
+uses nwords, and I'm betting it's the encode side. These aren't
+exactly symmetrical APIs, and the differences can be subtle.
 
-								Honza
 
-> +			} else {
-> +				if (inode_maybe_inc_iversion(inode, updated))
-> +					updated |= S_VERSION;
-> +			}
->  		}
-> -		if (IS_I_VERSION(inode) && inode_maybe_inc_iversion(inode, updated))
-> -			updated |= S_VERSION;
-> +
-> +		if (updated & S_MTIME)
-> +			inode_set_mtime_to_ts(inode, now);
->  	} else {
->  		now = current_time(inode);
->  	}
-> @@ -2131,6 +2145,9 @@ int inode_update_timestamps(struct inode *inode, int *flags)
->  
->  	*flags = updated;
->  	return 0;
-> +bail:
-> +	*flags = 0;
-> +	return -EAGAIN;
->  }
->  EXPORT_SYMBOL(inode_update_timestamps);
->  
+> Could this possibly be a regression due to more recent scratch buffer
+> changes?
+>
+> Anyway.. I'm stabbing/fishing here and hoping someone else knows how
+> things _should_ work.
+>
+> Thanks,
+> Mike
+>
+> ps. I can expound on what I'm seeing, I just don't want to bury people
+> right out of the gate ;)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Chuck Lever
 
