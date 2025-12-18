@@ -1,85 +1,85 @@
-Return-Path: <linux-nfs+bounces-17176-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17177-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0825CCA9C7
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 08:17:43 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5E0CCA9A8
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 08:15:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB54B302B13B
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 07:15:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0CAD93052D54
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 07:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC5B285041;
-	Thu, 18 Dec 2025 07:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3080129B8D9;
+	Thu, 18 Dec 2025 07:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTyEEuEP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVWO6sIq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F9A287505
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 07:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868863C2F
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 07:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766042104; cv=none; b=ukzQLe7Wl4NBAaFDJbojODiLjbAI/nQrbdPLJNaBjaSRDwu62/mV8BBb8WIT35DaFL9MSFzKeN/CugmfbTZrXMAjYZIJc2n1ApmdzUgaZqG6xA9vGHeSZSnY2ppLfNkm/poD0/Ew774CVQftU9V8dijcFQTje4+zD6Vhu6D0p6s=
+	t=1766042106; cv=none; b=koBzvJWTri6EPqJwI85ygSalZQLqxtNzEDL3/WD7QwbiFNSxyxAhOFI7J4cdRoCIPA9Cyg2mGnmVKrq8rwoogQVRpif7ZXxQjpttsHSrRpz4wqzTSoZ28SwAVFdekgJ7lEHbOWUajGka4FYC4e5PxrXCgUyEiTpMdDuHoHe8yTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766042104; c=relaxed/simple;
-	bh=8gwakvXezFb99wt9tySsmTVuUKfgnESJgW+UIyQkFK4=;
+	s=arc-20240116; t=1766042106; c=relaxed/simple;
+	bh=pRns/p8qUGtnC/QC1ZuapNMxuuDZQ6XiKTp/97aIhx0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lfyWgLQ8CHq2No0qeOaPZ55BtsskM3uhgYN2T0XuMxWFLTKL1tFdOJUdUxl2B2/p032HjMmgjkhpxvoj3YjFZJ0tlvjpV4xujgXjX0BcV4DhG1H6MNPck9+0e7HHKciNJNTNxE42bY0IPWcgALqKx9s+jSefxSV0/dmiq6SrD88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTyEEuEP; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=huWhK800r+ETJYZZFhTs9hnqGLm9jM0Ihvzfx0mBXfuMf3ylOQZGmdqPoY2hBOIDRgdLdd6mExkSD9QBWEW1RK7wpDxygt8q42i5JT+DNZcRQh8yRX2Lht/Jr4JUKy5wjcBucGIf+ky50JuPd2YmRV0qn12IV/EdqLNOlnbtKUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVWO6sIq; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2a0ac29fca1so2881105ad.2
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 23:15:02 -0800 (PST)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0bb2f093aso3275875ad.3
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 23:15:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766042102; x=1766646902; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766042104; x=1766646904; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m/pl+Ae4j5ENAjWN1xpeLWK26RMJlTfTPSfhVgHChu8=;
-        b=YTyEEuEPRXAUL/8mr/ufjaeNmDbf2nzJZRSsd5YQejm+BxtQbkczTNxqf+M+4oNAUT
-         MOQcO7LuiOCRoYhGc02OrHb7YAEH4bE3QEVgOPvsa8JtxIooaLQPIkUmAVEZtNUF0dAN
-         0dQphaoEAOcRgEZdyf2S3dGVrBvozT2sFhfUUsaEUPMvvy0GVOYGscYzG6cdivCtLpj1
-         1YUOMqqYpUOT3fq80gYbEzxbkjnjKfW4shZqWXj/xSz87+IkL6IxP6VIhFmjAg3HHNLO
-         ai6hygaijcKnnThoCbmf7U50N1Y2qi5xQgKCsBjepWMiDQqGxOdzNWnKdsVraTMYI6tb
-         MhmQ==
+        bh=CORY8FH/WlBEn3Qb5B7X2Wmd/52aPahj+ZXJLVszXdQ=;
+        b=dVWO6sIqAP3I3v95MkL1iFc7XPv72wXU0kbaY3oE9gThvmfqVSMRuazSSwBlyuC7p0
+         mREszlRLMS+fn4CAly6vZ/S66PIRL0xsS6/dWsV1DlDwDH/9VOkFzzgDjjRs6fyKXj3u
+         5fZEp69XMwcTctiMByplNkpgyZ3nBsJurI1d3fZMKWKmUOEithY429wCpMrQ3ZRYQ3HH
+         y7BrHh1r1fNgp5vInN2rv503GmdW/r7jwR82jhRaBzAL1zizhmMO3NOtv++/Y6R4hF6M
+         mpc1heTdv3iOgXXSGJm362zqdDlaNS42TAcCDENOFYB4B6YF1b9GPVrF0klo7UdBrkMo
+         ojtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766042102; x=1766646902;
+        d=1e100.net; s=20230601; t=1766042104; x=1766646904;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=m/pl+Ae4j5ENAjWN1xpeLWK26RMJlTfTPSfhVgHChu8=;
-        b=IyD4Phj4ZQM7YbGoD6iSidQwDlc7K5h7SztUe4eCvzumKR4Lh72DS7ZfVymXBko7el
-         OfYvWsjzgpO/NZQ8GEv2atRGkYsoDvJR+JVFyNZMq07+JzAxDw0kJTnnkibioPyprzIt
-         /Ck19FKeuY1EHenq8ygwc2y1zCxeFjVTV3yKYdTZ77Dthxstxw5Q93I12zkkVYDaTqHE
-         XyZ/eYWe2r0qESmIKlNId2BRuicDMtY/E80djisdufs2943+a2/Ht5IteeoxV4+tpOCm
-         3QZ/29CvQ866QsgeXQsccC/18VaC5101McrxT1/QQK+QDk3VeSTUvlySS8MQIjRLe/5h
-         AjqQ==
-X-Gm-Message-State: AOJu0YwgvT5znMtO7tBV5Kh+pZHYGVz+G6NMm/mId34DSNxrfUep0FKP
-	ROJSRknTpDfdeC4pgmZDSFuC71aO8gxw6Ksubt1GgudVER7TY4ErcxOyiCn+EA==
-X-Gm-Gg: AY/fxX6T3DMRflmw6jsrVpeJFuKXfzoVSc18r6MfssFBXQpw3r8lmA/ERS+Ih+ItvmA
-	Tml+E13gZZYiixzbMO3A9yhnvo8jVXFyBqPykBMSUhdvKwsTGXfWVvQ5AmlHyZ2SBTre9egWiBl
-	ottH+0aedTY2S/+BC4iALzZixYyLM8Z750yA3r05jU6oDDgHBhw1FxAicC9NYQemOzHrCTaU1Ba
-	c5wvY9Z7AjoHSn/M7TJpZj9NL6fftIkRBmnfsAsIB63zMWRgAdN7sRw30pLc9d6r3n9Iwq/O7BD
-	0c1UefOgdYl/hnpYfCZUg+c5PBk335i3Gkg7Wfn9N03eZEN+1M95SIl7GV71FA608Xybx2xHqfn
-	/fguN6NiE2Medsr49/BbWzeODd+15pG50bzY7ozwUcu09W7Q82RZhCX/Vy7UnFOH2KCclyfw2Hw
-	ppIKARkcvp71shEaAnABIOLJmu79i5DbPo3e47fjwsrNFf+4bRSrmA8TP4Wg6F6+s=
-X-Google-Smtp-Source: AGHT+IHeOORtxSmd2gNudS7Su2gC9pXmnYYZYwt9ydN2SvrR89ykyyOHh5sOsrq9vwa0o7wyNMydTg==
-X-Received: by 2002:a17:902:f78a:b0:2a0:89b8:4686 with SMTP id d9443c01a7336-2a089b84c28mr171296745ad.46.1766042101543;
-        Wed, 17 Dec 2025 23:15:01 -0800 (PST)
+        bh=CORY8FH/WlBEn3Qb5B7X2Wmd/52aPahj+ZXJLVszXdQ=;
+        b=PTKjRmb0iMb0GEz6NX1d5UA/8GDR964apo4es5N1yKWp77PrnvtWkPzHC5VTKAn+r7
+         zsCGX9uQjccH2FCGPQ/5g2DTckElXqBWp7ssB5KdfA9w5XOr3IdtMmz8qKB+HDz/lLD9
+         GnQZXJGiq8Tffw3w8Af3OLKd6XdN27WBNXVsgFhil+/D60Znd789oh2rrQnqfD+9gEVN
+         Cahbm9sRnGAIdmrOX3NorydK/0m9Mht4ORZp3sR/oy3cRnL3cZEKBiq1QHu+bpm0TsX1
+         CeKKx4Hx5LUrGrB4H1ueDRcCbaMCj4t5LFOJdMLwzKacgxotneWhHvJxKINDS48l2Rx/
+         IZgQ==
+X-Gm-Message-State: AOJu0YyR0XTfnUX6EapcLCsQvAPkNicL2JkiVkCju/x54REi7Nd5/Fiq
+	d0axkDc/jTwHaC0/4l/PDQy8psF4uau2Py1y2+YuAA1TF2EdWHCU6UNA
+X-Gm-Gg: AY/fxX40Ab9keYBIOanzRucWCRq9bYNau24U5bwhk5K6kWsCsZi+ag7ZGe8bDLkA9Hl
+	uYpnUxyOCvx4vu5s58B5Quw0HSSZiy5+ljy52GdLBFFY5yomQUkTzuCvZ7rxtN9LGsv7P0iaySu
+	9S2isyCt8pTtEwKJbNHP96mFfcPpXH+CubqOmA6xRneCH5rbbcjaSZQf1aegxKdn4b5f2jj7tiS
+	rLpQkqsyL2QlmETyMdSQ6NVSGh47ZBOvxd2iiMO8lfiC6oKMCl3EcbPWRAV8TGKjJiR2jSg21ca
+	fHKyfi8LXV6FZHLYpg6TKHXNMJVixscml6s8bT0Vo1Rax9Ujr88F61pF3dyc4f6TklTi3K1gC7p
+	DbuZpo5MegVJ1qG2SfOu64ICtoN3XFJs+VH1GtMfQT/b9nhSGE3Vf1BcttyfXEqblQOETiybIL0
+	pgKpdCKvaSbeZsWWoHxNXbEGR6ENeqQw8gbEAqfeZRGt7ufO1RktbAbbsqrEeBMVo=
+X-Google-Smtp-Source: AGHT+IEpCtqKmgyntboZzlk13mTVj9anL/72YuddlxqxylR+RF02+Z22J74u2i33Pf5KClryMqnYVQ==
+X-Received: by 2002:a17:903:2442:b0:2a0:b62e:e016 with SMTP id d9443c01a7336-2a0b62ee12bmr144408405ad.32.1766042103783;
+        Wed, 17 Dec 2025 23:15:03 -0800 (PST)
 Received: from localhost.localdomain ([49.37.176.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d1926aa5sm14688455ad.68.2025.12.17.23.14.59
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d1926aa5sm14688455ad.68.2025.12.17.23.15.01
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 17 Dec 2025 23:15:01 -0800 (PST)
+        Wed, 17 Dec 2025 23:15:03 -0800 (PST)
 From: Suhas Athani <suhas2012athani@gmail.com>
 X-Google-Original-From: Suhas Athani <sathani@redhat.com>
 To: calum.mackay@oracle.com
 Cc: linux-nfs@vger.kernel.org,
 	sathani@redhat.com,
 	Suhas Athani <Suhas.Athani@ibm.com>
-Subject: [PATCH 2/3] pynfs: Retry GETATTR on NFS4ERR_DELAY in CB_GETATTR test
-Date: Thu, 18 Dec 2025 12:44:49 +0530
-Message-ID: <20251218071450.58128-2-sathani@redhat.com>
+Subject: [PATCH 3/3] pynfs: Fix CB_GETATTR completion verification
+Date: Thu, 18 Dec 2025 12:44:50 +0530
+Message-ID: <20251218071450.58128-3-sathani@redhat.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251218071450.58128-1-sathani@redhat.com>
 References: <20251218071450.58128-1-sathani@redhat.com>
@@ -93,54 +93,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Suhas Athani <Suhas.Athani@ibm.com>
 
-The CB_GETATTR helper may receive NFS4ERR_DELAY when a delegation
-callback is still in progress.
+The test previously tracked callback completion using a variable
+captured before retrying GETATTR, which could result in false
+failures if the callback arrived during a retry.
 
-Add a bounded retry loop for the GETATTR operation instead of
-failing immediately. This makes the test more robust against
-transient delays while still failing if progress does not occur.
+Update the verification to check cb.is_set() at the end of the test
+to ensure the callback was actually received.
 
 Signed-off-by: Suhas Athani <Suhas.Athani@ibm.com>
 ---
- nfs4.1/server41tests/st_delegation.py | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ nfs4.1/server41tests/st_delegation.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
-index 1a98200..1d51838 100644
+index 1d51838..a366002 100644
 --- a/nfs4.1/server41tests/st_delegation.py
 +++ b/nfs4.1/server41tests/st_delegation.py
-@@ -1,6 +1,7 @@
- from .st_create_session import create_session
- from .st_open import open_claim4
- from xdrdef.nfs4_const import *
-+import time
+@@ -345,7 +345,7 @@ def _testCbGetattr(t, env, change=0, size=0):
+                                                           1<<FATTR4_TIME_ACCESS | 1<<FATTR4_TIME_MODIFY)])
  
- from .environment import check, fail, create_file, open_file, close_file, do_getattrdict
- from xdrdef.nfs4_type import *
-@@ -346,9 +347,22 @@ def _testCbGetattr(t, env, change=0, size=0):
      # wait for the CB_GETATTR
-     completed = cb.wait(2)
+-    completed = cb.wait(2)
++    cb.wait(2)
      res = sess2.listen(slot)
-+
-+    # Handle NFS4ERR_DELAY - retry until we get NFS4_OK
-+    retry_count = 0
-+    max_retries = 5
-+    while res.status == NFS4ERR_DELAY and retry_count < max_retries:
-+        time.sleep(0.1)
-+        res = sess2.compound([op.putfh(fh), op.getattr(1<<FATTR4_CHANGE | 1<<FATTR4_SIZE |
-+            1<<FATTR4_TIME_ACCESS | 1<<FATTR4_TIME_MODIFY)])
-+        retry_count += 1
-+
-+    if res.status == NFS4ERR_DELAY:
-+        fail(f"GETATTR still returning DELAY after {max_retries} retries")
-+
+ 
+     # Handle NFS4ERR_DELAY - retry until we get NFS4_OK
+@@ -363,7 +363,7 @@ def _testCbGetattr(t, env, change=0, size=0):
      attrs2 = res.resarray[-1].obj_attributes
      sess1.compound([op.putfh(fh), op.delegreturn(deleg.write.stateid)])
--    check(res, [NFS4_OK, NFS4ERR_DELAY])
-+    check(res, [NFS4_OK])
-     if not completed:
+     check(res, [NFS4_OK])
+-    if not completed:
++    if not cb.is_set():
          fail("CB_GETATTR not received")
      return attrs1, attrs2
+ 
 -- 
 2.47.3
 
