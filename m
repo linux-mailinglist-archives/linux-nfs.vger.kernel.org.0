@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-17195-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17196-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB09DCCD7D8
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 21:14:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8390CCCD7E0
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 21:14:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 094FF303C991
+	by sea.lore.kernel.org (Postfix) with ESMTP id ABDF03028F66
 	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 20:13:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EEBB2D8792;
-	Thu, 18 Dec 2025 20:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 866C6263C8C;
+	Thu, 18 Dec 2025 20:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJkwHjO3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/ugQLPn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790C62D8370
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 20:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6112E2C3248
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 20:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766088835; cv=none; b=LtqURwlSEW9IqOAUcxqLvEyDjv1ElHObU4n2mjHDj5TNLMXInrt3Z0EO7L5Dnl53ELjDRaXUxr+0OLvmO6GmKP2UXJv18i2D73iRhWlw5lRy6xeArUlJTVLIDkty37lVZGwOdUbC3PsVkhWLB/i2TrnpOtzvMzfth3zIr6o0wSM=
+	t=1766088836; cv=none; b=f9OB4vM1OGeT7hyBYtm6ps+7MGPQtDE4r4pV0j7gCbz40BvFR1UfOxyaJIIWIv7wUN/dp9eVSkXHpkE8lSI40sGUDAVpfIXxrXJPrg0k/eJilJLszKu/06NFRoLMmQXT7bwR06EzfPohNla4fjHkCt+r8aHSXGqoSDzu8XK42jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766088835; c=relaxed/simple;
-	bh=4IsbP/Pqc2GmyZwMan4MOIQOdBcCjkwp8p9EOlYoUgU=;
+	s=arc-20240116; t=1766088836; c=relaxed/simple;
+	bh=9kdBpq6FQJta2CkT991cJ6wuKPoO0QWkktL+AnSi7Pg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YiZfSkzxDYgaR5BWtkIgM2g2p3HmVMTYiuiSs4KFlNfZpYUrFA5JO214HDxgQvTWWvPinFEf2HLHEt4n+yB/TDVicEghGkw4zcPm2jaMLRxNDvMdKm2l7Ao5PLXDHz1WAiFSzD00frcwCPOIYPO+YkjKK7bPUqlluQ5jq1M7LDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJkwHjO3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DEDC113D0;
-	Thu, 18 Dec 2025 20:13:54 +0000 (UTC)
+	 MIME-Version; b=f6Z28mRTpG2S/X+U4m7Ufq3XRl1A17UN6OlsvL6LugywjYDSZQ8SATiCEltvW3n6JCjEzgwyr0Uiw30e3FRasYAbBI7rXgKE+kWRLMnfRqa67Z2MGGc7NCMzsuQl4nm1KudybL9bxi2nf/Gx+4a4XgXhQ6+M5eypSC+073sQ2YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/ugQLPn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E16CC4CEFB;
+	Thu, 18 Dec 2025 20:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766088835;
-	bh=4IsbP/Pqc2GmyZwMan4MOIQOdBcCjkwp8p9EOlYoUgU=;
+	s=k20201202; t=1766088836;
+	bh=9kdBpq6FQJta2CkT991cJ6wuKPoO0QWkktL+AnSi7Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DJkwHjO3oJW8lDsXoDU/c/lJxM+bO9EA73pkOedgCEO9eug0piNCt+ly0GyfCaVZz
-	 GjXP2Tyye+V4BmDp6QY+7VfL0G9B9426iVFlWy/VORx7g6JR0rYQKmb1Lzi9DlwVcx
-	 eonyy1/flc0ukTiA2VR4A5KeVM+Vx6XlRkomnNH3ATJh6MXnSgljn/L2t8jTLSrLfr
-	 LXWx4MC7Zj109gGeZ+dygVS3ppjLWFGTcnm3ZUlbdDJTOBol17SXfp/GIUgosEkK0w
-	 QyxSYCApEiyBR4P4XkwRem21TvwvMAcRxaZQRdkyP7KTSZzMveT1OtKjkoIjC8FHnI
-	 ChBqbKJjT89zQ==
+	b=s/ugQLPn7fcWaCzWZm1mNm3O9cJZ54wN2yPp5k6C/e7moJj32dutvxQ2k8ELF3nzX
+	 tl5caYireWBcwLBri8fNoZku8Zu90oxyEXq78eq+5uBDO0lii+LG1D9PYve9zCXslx
+	 lEMNHRG1ou+xnachLN88ydpmdYD+3mMwfLbYWp6pkzMwHs4iBvYGf67TgMNCFCGFdB
+	 vij8eD3JLLoRmKrLjnkqz6ocIY+M4c4/FZOAWxFubyPUX+dm0IGhe0tVPpO8YogqW5
+	 jZtV63Icpi+bmbAkfSUYao7PFOPL+gDCN4g+EVNDTup0DJhfxeIPp3iy/eEme4Ot5R
+	 JidmY48zi9SlQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,9 +47,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 07/36] lockd: Remove lockd/debug.h
-Date: Thu, 18 Dec 2025 15:13:17 -0500
-Message-ID: <20251218201346.1190928-8-cel@kernel.org>
+Subject: [PATCH v1 08/36] lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
+Date: Thu, 18 Dec 2025 15:13:18 -0500
+Message-ID: <20251218201346.1190928-9-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251218201346.1190928-1-cel@kernel.org>
 References: <20251218201346.1190928-1-cel@kernel.org>
@@ -63,108 +63,88 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The lockd include structure has unnecessary indirection. The header
-include/linux/lockd/debug.h is consumed only by fs/lockd/lockd.h,
-creating an extra compilation dependency and making the code harder
-to navigate.
+The lockd subsystem unnecessarily exposes internal NLM XDR type
+definitions through the global include path. These definitions are
+not used by any code outside fs/lockd/, making them inappropriate
+for include/linux/lockd/.
 
-Fold the debug.h definitions directly into lockd.h and remove the
-now-redundant header. This reduces the include tree depth and makes
-the debug-related definitions easier to find when working on lockd
-internals.
+Moving xdr.h to fs/lockd/ narrows the API surface and clarifies
+that these types are internal implementation details. The comment
+in linux/lockd/bind.h claiming xdr.h was needed for "xdr-encoded
+error codes" is stale: no lockd API consumers actually use those
+codes. A forward declaration for struct nfs_fh is needed because
+its definition was previously pulled in transitively through xdr.h.
 
-Build-tested with lockd built as module and built-in.
+Built and tested with lockd client/server operations. No functional
+change.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/lockd.h            | 24 +++++++++++++++++++++-
- include/linux/lockd/debug.h | 40 -------------------------------------
- 2 files changed, 23 insertions(+), 41 deletions(-)
- delete mode 100644 include/linux/lockd/debug.h
+ fs/lockd/lockd.h                  | 2 +-
+ {include/linux => fs}/lockd/xdr.h | 8 +++-----
+ include/linux/lockd/bind.h        | 3 +--
+ 3 files changed, 5 insertions(+), 8 deletions(-)
+ rename {include/linux => fs}/lockd/xdr.h (96%)
 
 diff --git a/fs/lockd/lockd.h b/fs/lockd/lockd.h
-index 0b427a725c23..535f752d5de1 100644
+index 535f752d5de1..94345bf2d6ce 100644
 --- a/fs/lockd/lockd.h
 +++ b/fs/lockd/lockd.h
-@@ -16,9 +16,31 @@
+@@ -15,7 +15,7 @@
+ #include <linux/refcount.h>
  #include <linux/utsname.h>
  #include <linux/lockd/bind.h>
- #include <linux/lockd/xdr.h>
--#include <linux/lockd/debug.h>
-+#include <linux/sunrpc/debug.h>
+-#include <linux/lockd/xdr.h>
++#include "xdr.h"
+ #include <linux/sunrpc/debug.h>
  #include <linux/sunrpc/svc.h>
  
-+/*
-+ * Enable lockd debugging.
-+ * Requires RPC_DEBUG.
-+ */
-+#undef ifdebug
-+#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-+# define ifdebug(flag)		if (unlikely(nlm_debug & NLMDBG_##flag))
-+#else
-+# define ifdebug(flag)		if (0)
-+#endif
-+
-+#define NLMDBG_SVC		0x0001
-+#define NLMDBG_CLIENT		0x0002
-+#define NLMDBG_CLNTLOCK		0x0004
-+#define NLMDBG_SVCLOCK		0x0008
-+#define NLMDBG_MONITOR		0x0010
-+#define NLMDBG_CLNTSUBS		0x0020
-+#define NLMDBG_SVCSUBS		0x0040
-+#define NLMDBG_HOSTCACHE	0x0080
-+#define NLMDBG_XDR		0x0100
-+#define NLMDBG_ALL		0x7fff
-+
+diff --git a/include/linux/lockd/xdr.h b/fs/lockd/xdr.h
+similarity index 96%
+rename from include/linux/lockd/xdr.h
+rename to fs/lockd/xdr.h
+index 17d53165d9f2..a8090191434e 100644
+--- a/include/linux/lockd/xdr.h
++++ b/fs/lockd/xdr.h
+@@ -1,14 +1,12 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
  /*
-  * Version string
+- * linux/include/linux/lockd/xdr.h
+- *
+  * XDR types for the NLM protocol
+  *
+  * Copyright (C) 1996 Olaf Kirch <okir@monad.swb.de>
   */
-diff --git a/include/linux/lockd/debug.h b/include/linux/lockd/debug.h
-deleted file mode 100644
-index eede2ab5246f..000000000000
---- a/include/linux/lockd/debug.h
-+++ /dev/null
-@@ -1,40 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * linux/include/linux/lockd/debug.h
-- *
-- * Debugging stuff.
-- *
-- * Copyright (C) 1996 Olaf Kirch <okir@monad.swb.de>
-- */
--
--#ifndef LINUX_LOCKD_DEBUG_H
--#define LINUX_LOCKD_DEBUG_H
--
--#include <linux/sunrpc/debug.h>
--
--/*
-- * Enable lockd debugging.
-- * Requires RPC_DEBUG.
-- */
--#undef ifdebug
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--# define ifdebug(flag)		if (unlikely(nlm_debug & NLMDBG_##flag))
--#else
--# define ifdebug(flag)		if (0)
--#endif
--
--/*
-- * Debug flags
-- */
--#define NLMDBG_SVC		0x0001
--#define NLMDBG_CLIENT		0x0002
--#define NLMDBG_CLNTLOCK		0x0004
--#define NLMDBG_SVCLOCK		0x0008
--#define NLMDBG_MONITOR		0x0010
--#define NLMDBG_CLNTSUBS		0x0020
--#define NLMDBG_SVCSUBS		0x0040
--#define NLMDBG_HOSTCACHE	0x0080
--#define NLMDBG_XDR		0x0100
--#define NLMDBG_ALL		0x7fff
--
--#endif /* LINUX_LOCKD_DEBUG_H */
+ 
+-#ifndef LOCKD_XDR_H
+-#define LOCKD_XDR_H
++#ifndef _LOCKD_XDR_H
++#define _LOCKD_XDR_H
+ 
+ #include <linux/fs.h>
+ #include <linux/filelock.h>
+@@ -112,4 +110,4 @@ bool	nlmsvc_encode_res(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlmsvc_encode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlmsvc_encode_shareres(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ 
+-#endif /* LOCKD_XDR_H */
++#endif /* _LOCKD_XDR_H */
+diff --git a/include/linux/lockd/bind.h b/include/linux/lockd/bind.h
+index be11b9795934..fdb906ae65d2 100644
+--- a/include/linux/lockd/bind.h
++++ b/include/linux/lockd/bind.h
+@@ -11,10 +11,9 @@
+ #define LINUX_LOCKD_BIND_H
+ 
+ #include <linux/lockd/nlm.h>
+-/* need xdr-encoded error codes too, so... */
+-#include <linux/lockd/xdr.h>
+ 
+ /* Dummy declarations */
++struct nfs_fh;
+ struct svc_rqst;
+ struct rpc_task;
+ struct rpc_clnt;
 -- 
 2.52.0
 
