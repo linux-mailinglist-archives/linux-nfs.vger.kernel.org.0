@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-17203-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17204-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D402ECCD7FB
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 21:14:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9779ECCD7C5
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 21:14:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 210A93048D84
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 20:14:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0FFAF305399A
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 20:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDCAF2D7DC1;
-	Thu, 18 Dec 2025 20:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D912D8792;
+	Thu, 18 Dec 2025 20:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJiKQsHS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djhmcfKC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EFE2D739D
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 20:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8483F2D839C
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 20:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766088841; cv=none; b=gcwS7+DgMc7kRvOYQIoduv28qvavVHyF+nONwOactW49tj7mGIc+70FMhWLnVqjqcpFUanJvyI1wtQk7tCiUDkfjoK4IB9jcn9fk+CrHef9tXuDXvtXumjcgV7ByeMhWP1OodCIw3Pa6Fehtoq3VEukwA+PcG56WoRJEzWUrsV0=
+	t=1766088842; cv=none; b=Q+Jl/CN2XuYNDVRFVNxaPzH+4LpZYGpHr3KOqC0SYxciCo3IkVZ3JvFuhcDDtjU09V0ha6JEK/7zfQj/Yoj0NLOvUhLCsoqciFAb8uQlADgs40hp93F1s1AOE3p+0aNmvtQocRdonxx39A5HcQB7zs9tVM5VODxK2Y9BDF9kZ8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766088841; c=relaxed/simple;
-	bh=TSyYM+eFSXkquZRN5VM4pPfmmwf9ljmN0JPiWC/G80M=;
+	s=arc-20240116; t=1766088842; c=relaxed/simple;
+	bh=fLBkvOI2Z8qWLN/rpsvoeASXjdi8THsNotmLV18Wmt0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OFnIx69ZsMLKdylb16HQqmC0aajrnhMiPCj3SuVUrHr7vbq5moZRjnEajjlRA+MMYcwNIzcS41xM8KWY7tg8ZxMlSR9ZbXIH/RIyjy05Og7VFmKwe+1xcna0vvD8tDBEZUM1DCFGzr7tpWpL1P4v3XIFjQ0vQBvVSpc6w7GPgT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJiKQsHS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2CDC116D0;
-	Thu, 18 Dec 2025 20:14:00 +0000 (UTC)
+	 MIME-Version; b=oRGeekDGCR4RLsMbME2JBhT4gac6iwBxyXr2rH62tlxNT05Zh8/Rr4wlTSjLC9DxRBvbRVMVK/TvBkb+avZAOsMas5oG0NxGiyGtwR0E74BBU32lPiN4OovCuEkoxEOmXBYUzD/8bjASPcya73603qrOQSur5gC1jnQVC0gnluA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djhmcfKC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C38C16AAE;
+	Thu, 18 Dec 2025 20:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766088841;
-	bh=TSyYM+eFSXkquZRN5VM4pPfmmwf9ljmN0JPiWC/G80M=;
+	s=k20201202; t=1766088842;
+	bh=fLBkvOI2Z8qWLN/rpsvoeASXjdi8THsNotmLV18Wmt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aJiKQsHSIz2zlmivb2r7Qg5Joegg8apUT6F3bE45dJm5ji7xCoj8/QxiLyGnTGXAh
-	 FPAuy+MPPse+fVQ/LnWOM4LQIgnX4hbj0SlK9Vmjm2PU7iOpzNJDrEu8aw2jPkhVSj
-	 L2dRLj6lyCcaQm/Srfuydtd8ocDe7225VJVfLDUX3lLryRgQ/O6TAKBBl/FoXqf1/K
-	 PgUn2M+5W60twwLgAPAFh6mIZje9I8y/vR2sTyrW7rKq9MyUq405l4wuwBqcsSz+Xq
-	 dOtnqWXp3IuFgBDvQfXnGns8OFa2j68pYjHWTseFEMOX2mfroFqXhitMYGZwIHvwv9
-	 NwDrtO2HNszdA==
+	b=djhmcfKC6g23jj1hiDEjMVzyYr5iZjqXHB1/uZYtk6DnpD495B+9Q6Fe6lCYB+qSR
+	 MR1J+G05BW6qB+pXcEh17v7Wn77JaTjjEx9qdZTJhnZkr37UARTatADg+/xgdsZAS0
+	 pGmgG18g1nV3DqzFIBYU8b0sktnpreETX+SzcFw/WXmWjFQEU+watS0yE+hPVKs5e8
+	 klYjFUL4oeI1kbRfbFlMe77LIRRNuckarbm9SNPah6HtGPcaUKRppxC7DNL6wFxQxE
+	 hAlkOD/Dq5kXS4UFYgq0t/65LR86XwovX6Kjb7AzPaiuIu6aE8g37+vvE9W3lSuUo0
+	 Na+OmY7yg/5Zw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,9 +47,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 15/36] lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
-Date: Thu, 18 Dec 2025 15:13:25 -0500
-Message-ID: <20251218201346.1190928-16-cel@kernel.org>
+Subject: [PATCH v1 16/36] lockd: Refactor nlm4svc_callback()
+Date: Thu, 18 Dec 2025 15:13:26 -0500
+Message-ID: <20251218201346.1190928-17-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251218201346.1190928-1-cel@kernel.org>
 References: <20251218201346.1190928-1-cel@kernel.org>
@@ -63,96 +63,127 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Replace the NLMPROC4_GRANTED entry in the nlm_procedures4 array with
-an entry that uses the xdrgen-built XDR functions for that
-procedure. Helper functions are introduced which will be used here
-and in subsequent patches.
+With xdrgen, each RPC procedure can have a distinct argument struct,
+so each PROC_YADA_MSG procedure needs to sort its own arguments.
 
-The .pc_argzero field is now set to zero for the NLMv4 GRANTED
-procedure. The xdrgen decoders are trusted to initialize all
-arguments in the argp->xdrgen field, making the early defensive
-memset unnecessary. The remaining argp fields are cleared as needed.
+No behavior change is expected.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 54 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 44 insertions(+), 10 deletions(-)
+ fs/lockd/svc4proc.c | 68 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 15 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 22f676df16e8..fc446639095a 100644
+index fc446639095a..0e6ab31733c6 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -545,10 +545,44 @@ __nlm4svc_proc_granted(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	return rpc_success;
+@@ -607,20 +607,13 @@ static const struct rpc_call_ops nlm4svc_callback_ops = {
+  * because we send the callback before the reply proper. I hope this
+  * doesn't break any clients.
+  */
+-static __be32 nlm4svc_callback(struct svc_rqst *rqstp, u32 proc,
+-		__be32 (*func)(struct svc_rqst *,  struct nlm_res *))
++static __be32
++nlm4svc_callback(struct svc_rqst *rqstp, struct nlm_host *host, u32 proc,
++		 __be32 (*func)(struct svc_rqst *,  struct nlm_res *))
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
+-	struct nlm_host	*host;
+ 	struct nlm_rqst	*call;
+ 	__be32 stat;
+ 
+-	host = nlmsvc_lookup_host(rqstp,
+-				  argp->lock.caller,
+-				  argp->lock.len);
+-	if (host == NULL)
+-		return rpc_system_err;
+-
+ 	call = nlm_alloc_call(host);
+ 	nlmsvc_release_host(host);
+ 	if (call == NULL)
+@@ -640,32 +633,77 @@ static __be32 nlm4svc_callback(struct svc_rqst *rqstp, u32 proc,
+ 
+ static __be32 nlm4svc_proc_test_msg(struct svc_rqst *rqstp)
+ {
++	struct nlm_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: TEST_MSG      called\n");
+-	return nlm4svc_callback(rqstp, NLMPROC_TEST_RES, __nlm4svc_proc_test);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlm4svc_callback(rqstp, host, NLMPROC_TEST_RES,
++				__nlm4svc_proc_test);
  }
  
-+/**
-+ * nlm4svc_proc_granted - GRANTED: Blocked lock has been granted
-+ * @rqstp: RPC transaction context
-+ *
-+ * Returns:
-+ *   %rpc_success:		RPC executed successfully.
-+ *
-+ * Permissible procedure status codes:
-+ *   %NLM4_GRANTED:		The requested lock was granted.
-+ *   %NLM4_DENIED:		The server could not allocate the resources
-+ *				needed to process the request.
-+ *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
-+ *				re-establishing existing locks, and is not
-+ *				yet ready to accept normal service requests.
-+ */
- static __be32
- nlm4svc_proc_granted(struct svc_rqst *rqstp)
+ static __be32 nlm4svc_proc_lock_msg(struct svc_rqst *rqstp)
  {
--	return __nlm4svc_proc_granted(rqstp, rqstp->rq_resp);
-+	struct nlm4_testargs_wrapper *argp = rqstp->rq_argp;
-+	struct nlm4_res_wrapper *resp = rqstp->rq_resp;
-+	struct nlm4_lock *alock = &argp->xdrgen.alock;
-+	struct nlm_lock *lock = &argp->lock;
++	struct nlm_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
 +
-+	resp->xdrgen.cookie = argp->xdrgen.cookie;
+ 	dprintk("lockd: LOCK_MSG      called\n");
+-	return nlm4svc_callback(rqstp, NLMPROC_LOCK_RES, __nlm4svc_proc_lock);
 +
-+	resp->xdrgen.stat.stat = nlm_lck_denied;
-+	if (alock->fh.len > NFS_MAXFHSIZE)
-+		goto out;
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
 +
-+	lock->fh.size = alock->fh.len;
-+	memcpy(lock->fh.data, alock->fh.data, alock->fh.len);
-+	lock->svid = alock->svid;
-+	nlm4svc_set_file_lock_range(&lock->fl, alock->l_offset, alock->l_len);
++	return nlm4svc_callback(rqstp, host, NLMPROC_LOCK_RES,
++				__nlm4svc_proc_lock);
+ }
+ 
+ static __be32 nlm4svc_proc_cancel_msg(struct svc_rqst *rqstp)
+ {
++	struct nlm_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
 +
-+	resp->xdrgen.stat.stat = nlmclnt_grant(svc_addr(rqstp), lock);
+ 	dprintk("lockd: CANCEL_MSG    called\n");
+-	return nlm4svc_callback(rqstp, NLMPROC_CANCEL_RES, __nlm4svc_proc_cancel);
 +
-+out:
-+	return rpc_success;
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlm4svc_callback(rqstp, host, NLMPROC_CANCEL_RES,
++				__nlm4svc_proc_cancel);
+ }
+ 
+ static __be32 nlm4svc_proc_unlock_msg(struct svc_rqst *rqstp)
+ {
++	struct nlm_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: UNLOCK_MSG    called\n");
+-	return nlm4svc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlm4svc_proc_unlock);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlm4svc_callback(rqstp, host, NLMPROC_UNLOCK_RES,
++				__nlm4svc_proc_unlock);
+ }
+ 
+ static __be32 nlm4svc_proc_granted_msg(struct svc_rqst *rqstp)
+ {
++	struct nlm_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: GRANTED_MSG   called\n");
+-	return nlm4svc_callback(rqstp, NLMPROC_GRANTED_RES, __nlm4svc_proc_granted);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlm4svc_callback(rqstp, host, NLMPROC_GRANTED_RES,
++				__nlm4svc_proc_granted);
  }
  
  /*
-@@ -843,15 +877,15 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
- 		.pc_xdrressize	= NLM4_nlm4_res_sz,
- 		.pc_name	= "UNLOCK",
- 	},
--	[NLMPROC_GRANTED] = {
--		.pc_func = nlm4svc_proc_granted,
--		.pc_decode = nlm4svc_decode_testargs,
--		.pc_encode = nlm4svc_encode_res,
--		.pc_argsize = sizeof(struct nlm_args),
--		.pc_argzero = sizeof(struct nlm_args),
--		.pc_ressize = sizeof(struct nlm_res),
--		.pc_xdrressize = Ck+St,
--		.pc_name = "GRANTED",
-+	[NLMPROC4_GRANTED] = {
-+		.pc_func	= nlm4svc_proc_granted,
-+		.pc_decode	= nlm4_svc_decode_nlm4_testargs,
-+		.pc_encode	= nlm4_svc_encode_nlm4_res,
-+		.pc_argsize	= sizeof(struct nlm4_testargs_wrapper),
-+		.pc_argzero	= 0,
-+		.pc_ressize	= sizeof(struct nlm4_res_wrapper),
-+		.pc_xdrressize	= NLM4_nlm4_res_sz,
-+		.pc_name	= "GRANTED",
- 	},
- 	[NLMPROC_TEST_MSG] = {
- 		.pc_func = nlm4svc_proc_test_msg,
 -- 
 2.52.0
 
