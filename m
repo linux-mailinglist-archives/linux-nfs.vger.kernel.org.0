@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-17147-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17148-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F895CCA5CB
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 06:51:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 888A6CCA5FB
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 06:56:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2FCDA30245C9
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 05:51:27 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B8C403008499
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 05:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD78C30ACF2;
-	Thu, 18 Dec 2025 05:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A464527F017;
+	Thu, 18 Dec 2025 05:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t0VNFQOa"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wj0F6/a2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836693112B7
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 05:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582DC20DD51
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 05:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766037085; cv=none; b=dIwCz28pQJoYR3a6svulsHcY5MWi7gHQqAkE531b2aD2i+x2Ra9f/5kIjWLZboa79AI3CDruIHGi3/6lu+3LxWV4Drv1EgANdUvDa4sU9V81t66GWmU3v1ei2+OHxLhDKDMF6B6DNhP/pNSapKe7WPnLDJ5XsM/MI0AMfeejXBg=
+	t=1766037401; cv=none; b=sl3CICxHpWtHxZ8AsMvMGHlsM9/LtmrNToiSvVUXJppiE/RAR/oKEaiqpXqwciqSz5//T2wplXq9/cHQzK1W2rIK/peK/MMjWycCVeOWCXCRwjjazagTyC1bhKb9VTKnf4+ivheiBtWVUO0/WVk1rdIIzC7tTHzTUa+m6D5AA3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766037085; c=relaxed/simple;
+	s=arc-20240116; t=1766037401; c=relaxed/simple;
 	bh=57Q0zAiuzozNXDTcj6+40KzI+o5Pdh8TUQJ6biHnS8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PSG3vNOhkgp4OAkMfx0d8LL1CAdhtQXt1ICTe4i71SynsJLNPy2jlT/yXo5kP7h1MpgCXR29cIzunDtCctwMwGg0dBAorfa6NgxVyJeNh55u14LPHo99bbRgEl6TjVK5fw9A3r7aTrBEJSEjCzxzIjPLRmLLJGhNoFnJY0M6IcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t0VNFQOa; arc=none smtp.client-ip=198.137.202.133
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PtvBMDearcz00R1hXUf3PaSpZVRNUa4AslyuDpyW89MdBLoTKUmrEYW34LTXkKNb4ZYFEgb5QMPOzfwIJMwEIHX1lWdo/PfaiI01yyIVNGyIWUgDNgdoL52Nmcge3PjiH6COXMZBZ/LxvqvsP19RDwVSrwCxHxJ1vFwFGxpdmKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wj0F6/a2; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:In-Reply-To:References;
-	bh=dXgViH3CjUKKhWtmueXlRdXj01zWIVWuZjXXPmHiuzA=; b=t0VNFQOa+kdY7FlhWrP9K0bcSb
-	GaG03fpg+2AjNKtcRlhDBkDAvU06mXT72EbIv8bJiOGG+Il1PWi5z7cciZaGuxJwTFX7UxIjj0wzc
-	eJoDGWF45tnf0n9FDXShzxxKQ6o4HeXqqQzoPZJjXto3z08yHfS+WA4bWDThv1f7KtDJNjW2QIj6q
-	TPbmohG8T8nSpH1+NBzoDBpRupDG8UInekNJbVXwtTCrH7TzDvsSFzNW+c8epOTJUxcBbfbWqONDM
-	s+IcQVcJiqDF0kHAenfMtz0zA1kSGgvNDkB56LCXwH3IBzDg8kxpsZMACaay5ZKa/rCLlb3XmRzbP
-	NwJ/ewcg==;
+	bh=dXgViH3CjUKKhWtmueXlRdXj01zWIVWuZjXXPmHiuzA=; b=wj0F6/a2qBIbOJR0V2zf+JVvK6
+	UDfGJpEIctjBXI7gz2x+K4LK3lxMN9+W4w8zt3uDHK+cc1f2z2v30W1l6vRVb+jhOLeQzC8UHASpO
+	0LXXYm9SydAmTv+Xytck9fwfKBEOXwMTD/rw04JOUAUVbH2RL5w039b3MEmSplZ/0pBk+9kGkC2ff
+	Uq5Z3yeWeKOrEoe7v7Hf1TTZPYAYFFGbQGKB/kN87vKaSxAvECQNRZeSGXoG8ONgkuXtLRWRG7R92
+	akmYoS8G9DY7W3HnJdsoUl+nfrV+JEse5mMYBY+lY5Q8R1laPl/iWUQl9XXLbQSCpB8HCDkynK4zH
+	C7XeapxQ==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vW6v4-00000007rF9-1cgg;
-	Thu, 18 Dec 2025 05:51:23 +0000
+	id 1vW709-00000007rOw-1zuF;
+	Thu, 18 Dec 2025 05:56:37 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
 Subject: add a LRU for delegations
-Date: Thu, 18 Dec 2025 06:50:07 +0100
-Message-ID: <20251218055116.1530970-1-hch@lst.de>
+Date: Thu, 18 Dec 2025 06:56:04 +0100
+Message-ID: <20251218055633.1532159-1-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
