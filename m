@@ -1,95 +1,120 @@
-Return-Path: <linux-nfs+bounces-17174-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20459CCA6DD
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 07:19:13 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 152C2CCA9B1
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 08:15:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 03D28301C3D7
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 06:19:10 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1CF2E3000B5D
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 07:15:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B0C31AA9A;
-	Thu, 18 Dec 2025 06:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A607A29898B;
+	Thu, 18 Dec 2025 07:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7+OVI3v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D81C27F732;
-	Thu, 18 Dec 2025 06:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CA4287505
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 07:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766038748; cv=none; b=dbiIt9GGVfa9JnnC/3V3P6PSKlK3du1qhcP20tr/hEKDEJv98OkMjqGxebqnIdwQteCwf9JLIO2lm4XJ03gICuQl8zM6N/ZUXn7HOLXmWoQgCKOLSFOnYAoL+8E4MG/m/tYOUzElj7v0q+k0fSVZO0DZblDmJO9hrz3Y5GNsn9s=
+	t=1766042101; cv=none; b=dzkPNbaNqcd6ppdOljABL6ACY3SVMrG5sBw5ZqwFQREjukSMzjOIj4QgbIuISF5zcRi6PlnlVmmv9skbrNXzSJFfHs6qfkVa8QZEyNcAvQzbgvSTr5PvhCA3uQEt/iOoktjlP15BiDkB5N6kB7lzh5Mlu7+bZjZqa0qZPriWhj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766038748; c=relaxed/simple;
-	bh=JmvjwhEYnkt2EOZtxq/vNq4N+U4ZhJ/hWwGm4zYqqjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CV79iEqteaOskW7Fn4xpraYrGdQsTyDlP+wmojTppuc1FH2+I8zb4EW7pTo1kpnFQD/3KPcwlNxlTNSFbc8+yvVmlfxFvTosb39ecjIm5sykOjMs6XdUJR+Qqn0pF9madcNQ9kj5lB/xGfb1DUSvlXhFMUqh1XZ/pBKcu1CrFX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 742AF227A88; Thu, 18 Dec 2025 07:19:01 +0100 (CET)
-Date: Thu, 18 Dec 2025 07:19:00 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jan Kara <jack@suse.cz>
-Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Carlos Maiolino <cem@kernel.org>, Stefan Roesch <shr@fb.com>,
-	Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev, io-uring@vger.kernel.org,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 08/10] fs: add support for non-blocking timestamp
- updates
-Message-ID: <20251218061900.GB2775@lst.de>
-References: <20251217061015.923954-1-hch@lst.de> <20251217061015.923954-9-hch@lst.de> <2hnq54zc4x2fpxkpuprnrutrwfp3yi5ojntu3e3xfcpeh6ztei@2fwwsemx4y5z>
+	s=arc-20240116; t=1766042101; c=relaxed/simple;
+	bh=/y9MkvADFMcsmYvE1ddsnlJnaePJyAHmGkBSadSkccg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I/mtfRBFD7M5Jn750ravXtRcnYEGxlUr06w3hTyTrNen2q02FqnnVf92iGBZ0KMZwD89opE2T9pCVuwHHpQTv0JgvljxVBJGMrhkO5vmbqWxTeKneqakjOUGEVtOfcEpftIdQ4m/JYKiRwgnQk2oZPq/N3oiWdk7FqvRQRxd+ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7+OVI3v; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-29f30233d8aso4348055ad.0
+        for <linux-nfs@vger.kernel.org>; Wed, 17 Dec 2025 23:14:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766042099; x=1766646899; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdhljbo82J0wYUNTBfNteQUyRiOKz/nKgBkNMfvcmAk=;
+        b=G7+OVI3vL5tfN1BMs4AkPnm0ZUnMbN5GEsJmzdFiOJzXsx5HDgsROnBQsB0QOMDmS8
+         U2EnQSZLVrYCsqhXBXvR05Z4YyVadcP0HJwsF8M+uiqDOpBLbDNmarJK7WpGBz/y2koD
+         LettGn39xsN7EG+GtAiLZA3GH443OM12wUUCb+KtHHkBAZZqMpl4zn/52Gv3esN9WWfw
+         U+WlpsuNFBp1AGLK0S1MN6bhLge0TDjZtKePbDvVtMi/kZOKdtPcofZaDgK4JaN8A10u
+         X5h9g82bRnsh4rS/Rv9cFsfgsY93hpr4PibJvZZ+xAtYvF1x7uPa/0XhmA/FEgqyCRjo
+         hBtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766042099; x=1766646899;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zdhljbo82J0wYUNTBfNteQUyRiOKz/nKgBkNMfvcmAk=;
+        b=LQvFwFtkEQTsZPy72Urrmj/er97S51vdJ3MQsRXx2sQ1/j8OltgEw8hSdJ2OjDnRuR
+         AZAj9pX6hSiFJInFWOrd4kid03iXo1JjYV+rCuSokuApEWuN2lRi8Hyf/8AjAgWeZV8X
+         70JxigHFbxPVRrsoiRHcV+ceNiFWPG2IBDOq6ZIUZYGKA61+9/by4FDz/o/ayzzTRCRA
+         g+h0TuFHMcTr+m8IouCpQH0eUKHHd8ZmUw95xdI9XHVuLlJ8i0HlatmBX10niXdNHy04
+         L6Gy0W0qdkavq7J00D4CuFb2IZXWuOoO3OEKI44tKEbiXnI16SpD6WT7L7ynqO7Hpt8E
+         uPfQ==
+X-Gm-Message-State: AOJu0YzCSA9JlfdHTiAUc3upcgnVZ9bDd1etB8pf4BB/ZTNWja67OxGe
+	X7Xkzx+jp4ZIKQxjGR+AAekBFDJNBGh3incZIVaccggkmjPS4zFE6ooC
+X-Gm-Gg: AY/fxX7eNqHwYwtfW9nAfAGsxhih25SnAowST2Lwao34w2o+KbSQE8z9vLEuWYi+leW
+	ayVg+1oqpQCILtbmwQc5UX7Jqzi2p38OB75nQYgC0LN+AzSHO5Afw44/dIeLveuIIakhxOciSVj
+	EbFxnYGRLRKVcTZZ9KVK2aT6nrYBlxs0meYBS+da531pEO5iI75j0CVjiu7nwaItkUGdfoexHLb
+	ivI3+p8xYtR5Bs71MzAgIQx2FczxYKChTPxDoeugZOFpziP8Dz4cvQmbzTnG31qnLOidlRGI4iX
+	q0MC+vSzslbItWYfAwB/aSBzI9IAFfImm+aqFh6Uh3jZTtRMRFwWa7brtLRlZkggdSReEZ0//+l
+	jwsDzqlMu7hsTLivAvv78pIfk6MOQfKN8buzv264POuenTz/FsawnHCLJHHFKZUG59brsE4zZ+T
+	ZvAvC2+t1cYuoQgPmkupKTut9MnGRyVrEQIO23YNd7wvbqaPdqrsNdOcPe1oXU+Q4=
+X-Google-Smtp-Source: AGHT+IFG9TGixAI7xHXaNvqu3Q9ZlPrOQ55clsFA6OHR09f5uh7HbrAMPnMgKd2YAnsTiaMN23xuCQ==
+X-Received: by 2002:a17:902:cf4a:b0:2a0:cb8d:2edc with SMTP id d9443c01a7336-2a0cb8d31ecmr160202585ad.13.1766042099377;
+        Wed, 17 Dec 2025 23:14:59 -0800 (PST)
+Received: from localhost.localdomain ([49.37.176.170])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d1926aa5sm14688455ad.68.2025.12.17.23.14.57
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 17 Dec 2025 23:14:58 -0800 (PST)
+From: Suhas Athani <suhas2012athani@gmail.com>
+X-Google-Original-From: Suhas Athani <sathani@redhat.com>
+To: calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org,
+	sathani@redhat.com,
+	Suhas Athani <Suhas.Athani@ibm.com>
+Subject: [PATCH 1/3] pynfs: Fix OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS bitmask check
+Date: Thu, 18 Dec 2025 12:44:48 +0530
+Message-ID: <20251218071450.58128-1-sathani@redhat.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2hnq54zc4x2fpxkpuprnrutrwfp3yi5ojntu3e3xfcpeh6ztei@2fwwsemx4y5z>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 17, 2025 at 01:42:20PM +0100, Jan Kara wrote:
-> > @@ -2110,12 +2110,26 @@ int inode_update_timestamps(struct inode *inode, int *flags)
-> >  		now = inode_set_ctime_current(inode);
-> >  		if (!timespec64_equal(&now, &ctime))
-> >  			updated |= S_CTIME;
-> > -		if (!timespec64_equal(&now, &mtime)) {
-> > -			inode_set_mtime_to_ts(inode, now);
-> > +		if (!timespec64_equal(&now, &mtime))
-> >  			updated |= S_MTIME;
-> > +
-> > +		if (IS_I_VERSION(inode)) {
-> > +			if (*flags & S_NOWAIT) {
-> > +				/*
-> > +				 * Error out if we'd need timestamp updates, as
-> > +				 * the generally requires blocking to dirty the
-> > +				 * inode in one form or another.
-> > +				 */
-> > +				if (updated && inode_iversion_need_inc(inode))
-> > +					goto bail;
-> 
-> I'm confused here. What the code does is that if S_NOWAIT is set and
-> i_version needs increment we bail. However the comment as well as the
-> changelog speaks about timestamps needing update and not about i_version.
-> And intuitively I agree that if any timestamp is updated, inode needs
-> dirtying and thus we should bail regardless of whether i_version is updated
-> as well or not. What am I missing?
+From: Suhas Athani <Suhas.Athani@ibm.com>
 
-With lazytime timestamp updates that don't require i_version updates
-are performed in-memory only, and we'll only reach this with S_NOWAIT
-set for those (later in the series, it can't be reached at all as
-of this patch).
+The CB_GETATTR test incorrectly used
+OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS as a mask when checking
+server capabilities.
 
-But yes, this needs to be documented much better.
+Fix this by correctly testing the capability bit using
+(1 << OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS).
+
+Signed-off-by: Suhas Athani <Suhas.Athani@ibm.com>
+---
+ nfs4.1/server41tests/st_delegation.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
+index f27e852..1a98200 100644
+--- a/nfs4.1/server41tests/st_delegation.py
++++ b/nfs4.1/server41tests/st_delegation.py
+@@ -315,7 +315,7 @@ def _testCbGetattr(t, env, change=0, size=0):
+         fail("FATTR4_OPEN_ARGUMENTS not supported")
+ 
+     if caps[FATTR4_SUPPORTED_ATTRS] & FATTR4_OPEN_ARGUMENTS:
+-        if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
++        if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & (1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS):
+             openmask |= 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+ 
+     fh, deleg = __create_file_with_deleg(sess1, env.testname(t), openmask)
+-- 
+2.47.3
 
 
