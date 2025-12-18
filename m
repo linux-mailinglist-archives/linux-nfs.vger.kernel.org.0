@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17158-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17159-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 659D4CCA619
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 06:57:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4015CCA62B
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 06:59:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 140EF301CD18
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 05:57:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 247CA3004187
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Dec 2025 05:57:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF3D314D00;
-	Thu, 18 Dec 2025 05:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F2AF31A06A;
+	Thu, 18 Dec 2025 05:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XFyEosxa"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="33AwzZJW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ED23128D2
-	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 05:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C897327F017
+	for <linux-nfs@vger.kernel.org>; Thu, 18 Dec 2025 05:57:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766037440; cv=none; b=J9KPdvbPT50P+DnHXpKkQWX2/EscvmMeZZ5nhWjTlzDYEbAsQ27qwqiGjyKqcRr12j2YvQ9Em9xh1a+F9ZHbTwN+iGVWVuP0BFh0ri7V2F7DHg0fNOaW6OEHGqpOGtY6LBHLCvdHoUHWeUmnfrivpR4FquK6ez92q4NsUrqRm6Y=
+	t=1766037447; cv=none; b=Rtpm9a7jVi+/afe036SGIkAG874diD3jpZxaSWt+bwa05xmaTCuA3UU02S919lmy0gUxL30FpRjk8MNMdaz4QyDfAHpBuOdUtfD4kUBLfJ/aSWgexlYYbQzIHl9w9P1Zn4jftz6Fs0m2NkC3f+BFLdcc8GKxLLZd5Nl7Bfb72IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766037440; c=relaxed/simple;
-	bh=/LvwrkOLcrb6zFr0suU7Zz2m8oUWSTZ1D50bmG0baxc=;
+	s=arc-20240116; t=1766037447; c=relaxed/simple;
+	bh=YnP/GpA9Hjd9kxsjuSyAh3wm1LskCbjtJwbbfCAlD4g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c17U90hzDApuNusZL8kyncGiGhoz6kvSh9/KwQoAc+yLcVypSUGfGXVkklCG5cm+p4JcSUox7y5d1naCXleZglYZ7x0FaVUGLvfqyFMGc1/I5oet9I+i71G0mdf6o6z54gLS0QjQlXYWb1u52Xdw5P5o/kpYXFOTf0Gvpudf418=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XFyEosxa; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=ZZNWUFh8mWCT+0qpz3L3YIAPrdRHlhikGlOhbYXHJeT9ZIFGWea+baGj4QwtLcWONGp8VzeV0T/d3sSpCcU2mA9o22myXJwnb3EQ7YW5QpiywI080m+U4DlzEY6thoHQIr4qkT4HTY4LAtc3UfGN/jPcqU7ib06xr9grbtJXzEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=33AwzZJW; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=qfiiMPI+K2S+zq1Q6bmAkU1N3NIh8s2JLeWLvwV+jrI=; b=XFyEosxaPPY7w7M46+W1VNeVmD
-	0/RfC+F7ysKsbdirs4CZPpnKxdMdwOV7RttBBCaPQT+QDqcD/K80Z1RnAP4BMGU3jVUOLEhM8wIA4
-	nnj6z7pSEv1khy2Ru/nHm5DyL9DkLUjOqNnPn6v7Bxn9mws/brIJIbtwI3DFll+h4bmC9r2ZAXIBW
-	nPWxxePghwtzMwEqIMfg1e/IaCgloEihP+OKb7DtpYmD2bFpovVKBp3DcrndZLxx9zq8RsHXyfnYx
-	ls/tuHj5v/RCrGjzaQX7LGO5WtxG6VaBecry6fZn0aksqGD3a/mUQoRBR9dQ2qOTntUlkC182lapW
-	t/7wAhwQ==;
+	bh=+X7JTByRyZqYCx8KdUhfrjcaLd1RKUSVHjbctAhECWU=; b=33AwzZJWpnOlehRzlmLly9dZ/8
+	Ymr5qZzbREBdC0jtsRwMNBUTVJQYJZ159n0J/90zQRe7bVUYyEZHzADizeT2UQmugBhiTyvTzzXKp
+	/tKLeA9tE0DW6r5GkBnaFnrVK8j3/c3Ri4JCLajb76uWkt2SeQtRu8itLf8wwmPhUa9TS06IdECZo
+	NCxJkDCcL5C9OShDIlKb1BJ0uBRXXrVmYRgvde69iIDmf8NtII1cUsMrYSfjm7xvZgl4fIS2NnC91
+	O4XrdLsd3r5vHenpB5glVvh/VEjqsN/99Kr3rR+YiXh8FGLyitwjOK+nXuyN4tGHfC0QaHbrCyEDs
+	kJIiHWeQ==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vW70m-00000007rbz-1dWf;
-	Thu, 18 Dec 2025 05:57:17 +0000
+	id 1vW70r-00000007rdn-1ht2;
+	Thu, 18 Dec 2025 05:57:21 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 10/24] NFS: open code nfs_delegation_need_return
-Date: Thu, 18 Dec 2025 06:56:14 +0100
-Message-ID: <20251218055633.1532159-11-hch@lst.de>
+Subject: [PATCH 11/24] NFS: remove nfs_free_delegation
+Date: Thu, 18 Dec 2025 06:56:15 +0100
+Message-ID: <20251218055633.1532159-12-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251218055633.1532159-1-hch@lst.de>
 References: <20251218055633.1532159-1-hch@lst.de>
@@ -62,60 +62,67 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-There is only a single caller, and the function can be condensed into a
-single if statement, making it more clear what is being tested there.
+Open code nfs_free_delegation in the callers, because having a "free"
+function that wraps a revoke and put operation is a bit confusing,
+especially when the __free version does the actual freeing triggered by
+the last put.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/delegation.c | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+ fs/nfs/delegation.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 1ff496147b1e..3c50a1467022 100644
+index 3c50a1467022..96812d599400 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -586,22 +586,6 @@ static int nfs_end_delegation_return(struct inode *inode, struct nfs_delegation
- 	return err;
+@@ -72,13 +72,6 @@ static void nfs_put_delegation(struct nfs_delegation *delegation)
+ 		__nfs_free_delegation(delegation);
  }
  
--static bool nfs_delegation_need_return(struct nfs_delegation *delegation)
+-static void nfs_free_delegation(struct nfs_server *server,
+-		struct nfs_delegation *delegation)
 -{
--	bool ret = false;
--
--	trace_nfs_delegation_need_return(delegation);
--
--	if (test_and_clear_bit(NFS_DELEGATION_RETURN, &delegation->flags))
--		ret = true;
--	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags) ||
--	    test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation->flags) ||
--	    test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
--		ret = false;
--
--	return ret;
+-	nfs_mark_delegation_revoked(server, delegation);
+-	nfs_put_delegation(delegation);
 -}
 -
- static int nfs_server_return_marked_delegations(struct nfs_server *server,
- 		void __always_unused *data)
- {
-@@ -636,11 +620,17 @@ static int nfs_server_return_marked_delegations(struct nfs_server *server,
- 	list_for_each_entry_from_rcu(delegation, &server->delegations, super_list) {
- 		struct inode *to_put = NULL;
+ /**
+  * nfs_mark_delegation_referenced - set delegation's REFERENCED flag
+  * @delegation: delegation to process
+@@ -539,7 +532,8 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 		__nfs_free_delegation(delegation);
+ 	if (freeme != NULL) {
+ 		nfs_do_return_delegation(inode, freeme, 0);
+-		nfs_free_delegation(server, freeme);
++		nfs_mark_delegation_revoked(server, freeme);
++		nfs_put_delegation(freeme);
+ 	}
+ 	return status;
+ }
+@@ -747,7 +741,8 @@ void nfs_inode_evict_delegation(struct inode *inode)
  
--		if (!nfs_delegation_need_return(delegation)) {
-+		trace_nfs_delegation_need_return(delegation);
-+
-+		if (!test_and_clear_bit(NFS_DELEGATION_RETURN, &delegation->flags) ||
-+		    test_bit(NFS_DELEGATION_RETURNING, &delegation->flags) ||
-+		    test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation->flags) ||
-+		    test_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
- 			if (nfs4_is_valid_delegation(delegation, 0))
- 				prev = delegation;
- 			continue;
+ 	set_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+ 	nfs_do_return_delegation(inode, delegation, 1);
+-	nfs_free_delegation(server, delegation);
++	nfs_mark_delegation_revoked(server, delegation);
++	nfs_put_delegation(delegation);
+ }
+ 
+ /**
+@@ -1245,8 +1240,10 @@ static int nfs_server_reap_unclaimed_delegations(struct nfs_server *server,
+ 		rcu_read_unlock();
+ 		if (delegation != NULL) {
+ 			if (nfs_detach_delegation(NFS_I(inode), delegation,
+-						server) != NULL)
+-				nfs_free_delegation(server, delegation);
++						server) != NULL) {
++				nfs_mark_delegation_revoked(server, delegation);
++				nfs_put_delegation(delegation);
++			}
+ 			/* Match nfs_start_delegation_return */
+ 			nfs_put_delegation(delegation);
  		}
-+
- 		inode = nfs_delegation_grab_inode(delegation);
- 		if (inode == NULL)
- 			continue;
 -- 
 2.47.3
 
