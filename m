@@ -1,378 +1,346 @@
-Return-Path: <linux-nfs+bounces-17237-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17238-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 604BFCD0C07
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 17:10:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 403B2CD0DF4
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 17:31:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 271943003B25
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 16:10:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 04A86300AB0E
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 16:31:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC29336C0B3;
-	Fri, 19 Dec 2025 15:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA77C37A3DC;
+	Fri, 19 Dec 2025 15:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="ckuTSi2O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M37SawWp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E46436BCCC
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 15:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FD937A3E0
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 15:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766159948; cv=none; b=DPpEThcMQfhoC8RZYi0laG1bq4lrbmZIUk8f+FpTBNT5x03ssPucITQb3vMgl2kE8TcndFeJiPHcpt4Yh5KV+J3dprml81zTnPM2LQ/Z+EYVotW3vu1aknLCH6h7zI6u6jKgDESgQXl4LoJRxFQZwQAv+ee3Ffs2qBQSH+dn3/0=
+	t=1766159975; cv=none; b=HiT4noyqWHx/Je+PNU2uPSz9ElJkXUWTu7zSONpdtNuPJoW7UNKQXIyd8ZBmrb/1ASdVcpRoE2rM0V1873WEBpbQb/u7FitrYUduM/oXj5C76HDYk5XI1Gy2lhVKsxYurmRjYqab13qFYqpAkC8rs4eKy+CfbS5NA640dgK5Ipg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766159948; c=relaxed/simple;
-	bh=1E7MmYDGWMOe+l2ttMwLxR4y6eJzpT2TAo5nFuApT8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBgUKHMWdOhayjw3EHlfGw+0YhNILfHMNnLqjYU4h+/VJ+qynxy6HeROiPgcyfybwUeJClb/ufPuTBG7y/VnZYr/KBkQEsMSFoaFEr1Jd2OH2cV3So7vD1VSsQrWSb+fjcuRaddGdLXF6UO4cypbesnwLntuUu6FTa64klVE2cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=ckuTSi2O; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+	s=arc-20240116; t=1766159975; c=relaxed/simple;
+	bh=f+xKqI5TOB1sbL4B88Y6ego+jy2mfRCBdXj/LH/7g60=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HaSp4tNV+7u/IEhlLheJFuyESKxInt8e70RjSCyMN2P3kfYAj5tG8vUn4v6Js2fGmv/ANIx/tQ7lM0/1u1TaHEatbduk6wEXeeu4t0jLpWIZGrZttPxEv0BOUErM8qnE8DbqjZjmO1mMtNwdpQe+21q8iNnL/5nj8qcBuS2Tthk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M37SawWp; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-37bbb36c990so24672161fa.0
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 07:59:05 -0800 (PST)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-8887f43b224so26345566d6.1
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 07:59:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1766159943; x=1766764743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rrh7jHERpec8/lw/IMy3jFvFCgQEpQfa0gIi+oTxJ/E=;
-        b=ckuTSi2O2X7BR6ZwSl39ecY0UUnvC+GATdBpUsixxn72VMQYa8eV17KvA7UoweAV/0
-         5ybvqE7cc+sTASgxxetAEWTuRLM11lKHIoY7rwyaLNzOdeyO04Y2Tqe0qEGSuMKE9HNR
-         0nA5aon9QcVk+jOHvSgEVwDR8GMK5YvGy1f7eNO1yvYYZjv1wsd4gyKbo0OZhMuTSpDC
-         G9KSLgvKgyvCdpVnp9A7qkDHj9qs/2AHSPzHAFy2ZHgZwr4tPExwK4Jyl7Z3G+4DtZQc
-         tXThzfAtDxxUJpL3s/7ZnNswKUzoxE3YyBotD1dj0yC0eiLkZ0/CEnRAWDnx/mZePXuH
-         mz3w==
+        d=gmail.com; s=20230601; t=1766159972; x=1766764772; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h3KYWsPrID3ZhW/qP7RERV0M1MqNhnIYODUaqb12wkA=;
+        b=M37SawWpvEKNPVBb8FbwZynfEF7wKJLIJvMM49dAb30U9Mz/QyydOZFP5vW/LgKNqs
+         kIDdkkjL0KmjXknPOjUUH7YBbxqz9FfWoNb+UOCPd3t4Vh9cnIJiaIoenFmghDt/5WKk
+         QRQt/yrGjEws6H9yvuVi2vX/b7pRRqr+mW0keZv6n7L1Pyz3Hn4uiaUZR6qSi04OnYA3
+         HWGnfDByEVf+jS1F36aJA35NWCUzt35u2lQlhcTNbFbB1q+PdjgrsUv7U6RpzASbFFMU
+         9OdE86Zseazz9LEcMG8x5Z/rOXkUQKKAQ9kbYHuv8BNFHabS7zDh/2ABdNVYQCGbwjyj
+         GP6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766159943; x=1766764743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rrh7jHERpec8/lw/IMy3jFvFCgQEpQfa0gIi+oTxJ/E=;
-        b=NQBpWXBR5FLgD+sDH1OcC9CBzZBd85S4LJMoDMpDjW9YBuP6UlCQszCDQTLJePJpI5
-         DNLmISX2AapyGbRjSpJgz9rdveRGv4jhoxieRxJy9h3YcySaRqsKwKF11JedA0+WSt7B
-         lDNV+QzKWoEqnrFfsi6tqKb6NsbBfjcQXfZqW32VCFz9XZJC1mQuyE1+WzglJ+snOoXN
-         lfFSHI8fiZvBBRvWXzhbPll0G4+2zNfyVTNStL47m25VJe/duw02AoTgL59hunCmD+5j
-         r/GcQixCUNktuOW7civbB7lfi/NjhaQzxsRGpXDIu82xSbociMTwelUmZpemwzPIZA50
-         dXQg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Hwt0FAWRAXIzZE0sGQNXxmxUkWmw3EIJA/tNVnQX+dj8kip7G4clAin4G3bEWbnvN+2dUe9YkPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0N0auj4CqENP2Wp1ApUBJHOpuX8xivmz0g/ybXZGYIbiP01QZ
-	kuvSpCJlWtqnjnQKO7nsm9mMbwqRzOz83OJsmH3RIwkVptHa3s85y8ZBXEaX6r/7Q4lvZrb6D0J
-	H84TiT4UZ7cT0KbXf89U2PqgyjlgHUGA=
-X-Gm-Gg: AY/fxX4Vvqb8O+EDN/MFh8wAxjaopYAiJWUC6FfKYdudy9sYbyE5E5GQM/ZgaWXy5PX
-	F38oiQ4G7twsHKtA+IGyVDiu17zjlN3dyiZty0tRG/ePmm2aBjFekqe34MYOWhfSgOdTXP1ppjh
-	1CetewmHfvbuCDRRm0YtxQ20fcmXSAWgX6ugaQNxlS0Z8USm8H0Ksolujo0reLNXgPxNScyZDe3
-	Wsehpfp1uwO5LSS+p2NT0px5U9nEWfXAd2UDu12DLxmSH0rKsFCRt1U6hVuGF9yoX7/vSrYAI2q
-	X7E34xBPGFNHhz90tiXN2Yq9A6dxng==
-X-Google-Smtp-Source: AGHT+IF1hdJMju8LoxAJpnCi39hZ3gi9AWJtDM753Wh1aRc/UZqyoAzCON2d7640WhenuuLr6vzwD1Ot507SaGLqvvQ=
-X-Received: by 2002:a05:651c:3050:b0:376:3792:1a9b with SMTP id
- 38308e7fff4ca-38113295431mr21296221fa.21.1766159943229; Fri, 19 Dec 2025
- 07:59:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1766159972; x=1766764772;
+        h=to:subject:message-id:date:from:reply-to:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h3KYWsPrID3ZhW/qP7RERV0M1MqNhnIYODUaqb12wkA=;
+        b=GIbW9I2kQRLA5K+xaxyaqyFuXl21P8zn58debIPJPJqoGFg3Dd3Yzl7DUN3SmXasRJ
+         yATTU/P2gAxH8hyCJA1Yn1ge++DiYZeqFCMhs5P9ptKiQz0ZXU76LmfwADtHoadP6zBb
+         INehGhko42OXk095COs/liG1sakOW/67YJSkMNoYCZoZiL0Ez/v0EZ5V2HaXfGgEyhxA
+         V0B3yOUJuTur1wEMNjjlw4JA/kPmM2EU34phZTi08RQQ1Jb+fpxjpl/Fgkfw8usc8gwZ
+         VHdCEQMMk/TUwodkh8G+Z/3ZR2praiChaymGTuBY5bG6ttm/rAnUOTW0UY/zIy9U9KaS
+         XAsQ==
+X-Gm-Message-State: AOJu0YytzDZFXrUpU+M2MPzZ9Gc17hVM37SeFmmxrLUiS/OIbUnkg+zi
+	UOMEUlIVlKy8Z0T0diPWzB4a5zKwL/78+YJZ90YSe4rd8U1PfQArQxmkixfVFCJxSZ6CSzO3jw/
+	Sio/YycfoVAeWrY4aNL2Y9ZiGAgtAYmjmOP+k
+X-Gm-Gg: AY/fxX4DCwHojgsLnG5TusIR5XJW5E3bIfj00iXWjYRuQ3p3uP5XHTxkXDVCoNJqyMr
+	Yl6Fw0d/6tLgNVUhcpyc56Ko7WcRXYrkVBcEh5nU3pIk1E5FgjsyalmhpE/QWj+1fZtheMDRSCq
+	Fgq+Ogd3HErDyYCw2Zo/j69VDb11t/WDkCRi5u0YZlU7HeVEapQBZpvSkda0PQpajVci9nxkBEJ
+	yRxxjfhvLiC2OUDEH6zVfdzfui2n+p/Kwu7syivDcb56JvslMJHhK91QFh+Y/SA1Omr4e0cmeHQ
+	sidz/fbchpiD49KEieHziuoeVg==
+X-Google-Smtp-Source: AGHT+IEKPcySe6wZalyLgA5xsOaaS/CeCkkfm921swXgEXC3XokFwdWb5LIJ6v+x7NSHIOpSfW7AlrQROdD7Pl9Eqqc=
+X-Received: by 2002:ad4:4210:0:b0:88a:22fb:38f5 with SMTP id
+ 6a1803df08f44-88d8166a2demr36792866d6.13.1766159971973; Fri, 19 Dec 2025
+ 07:59:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org> <20250730-nfsd-testing-v4-8-7f5730570a52@kernel.org>
-In-Reply-To: <20250730-nfsd-testing-v4-8-7f5730570a52@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Fri, 19 Dec 2025 10:58:51 -0500
-X-Gm-Features: AQt7F2rtPaUaHKhG8VG2lFt-mPN-yzelYal5wYAHVQ-QLjtFmZxg9X3LrdZkiSM
-Message-ID: <CAN-5tyEjYRFrJ7Gc4S8KwAZUuF-uz6ovPa4-_ynt+GGVqJHN_A@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] nfsd: freeze c/mtime updates with outstanding
- WRITE_ATTRS delegation
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@hammerspace.com>, 
-	Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
+Reply-To: mjnowen@gmail.com
+From: Mike Owen <mjnowen@gmail.com>
+Date: Fri, 19 Dec 2025 15:59:20 +0000
+X-Gm-Features: AQt7F2pTsqeN4lcOzZiV73oPXmtrRKIPhHJD3R-o1wwOuKb98ken02H0Lx4pgyE
+Message-ID: <CADFF-zeNJUPLaVcogSBt=s4+o2Lty45-DueSYKJmCgZw6hraEg@mail.gmail.com>
+Subject: fscache/NFS re-export server lockup
+To: linux-nfs@vger.kernel.org, netfs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jeff,
+We are using NFS re-exporting with fscache but have had a number of
+lockups with re-export servers.
 
-I narrowed down the upstream failure for generic/215 and generic/407
-to this commit.
+The NFS re-export servers are running Ubuntu 24.04 with a
+6.14.0-36-generic kernel mounting Isilon and NetApp filers over NFSv3.
 
-Let's consider first where the kernel is compiled with delegated
-attributes off (but it also fails just the same if the delegated
-attributes are compiled in).
+The NFS clients are mounting the re-exported shares over NFSv4 and
+running AlmaLinux 9.6.
 
-I don't understand why the code unconditionally changed to call
-nfsd4_finalize_deleg_timestamps() which I think the main driver behind
-the failure.
+When the re-export server locks up, it is not possible to access the
+/var/cache/fscache directory (separate file system) on the server and
+all clients are hanging on their mounts from the re-export.
 
-Running generic/407 there is an OPEN (which gives out a write
-delegation) and returns a change id, then on this filehandle there is
-a SETATTR (with a getattr) which returns a new changeid. Then there is
-a CLONE where the filehandle is the destination filehandle on which
-there is a getattr which returns unchanged changeid/modify time (bad).
-Then there is a DELEGRETURN (with a getattr) which again returns same
-change id. Test fails.
+When the server is rebooted, most of the contents of the
+/var/cache/fscache directory is missing e.g. the file system contents
+before the lockup may have been a few TBs, but after a reboot only a
+few hundred GBs.
 
-Prior to this commit. The changeid/modify time is different in CLONE
-and DELEGRETURN -- test passes.
+The kern.log (below) from the re-export server reports the following
+when the lockup happens.
 
-Now let me describe what happens with delegated attributes enabled.
-OPEN returns delegated attributes delegation, included getattr return
-a changeid. Then CLONE is done, the included gettattr returns a
-different (from open's) changeid (different time_modify). Then there
-is SETATTR+GEATTR+DELEGRETURN compound from the client (which carries
-a time_deleg_modify value different from above). Server in getattr
-replies with changeid same as in clone and mtime with the value client
-provided. So I'm not sure exactly why the test fails here but that's a
-different problem as my focus is on "delegation attribute off option"
-at the moment.
+We have tried using a more recent 6.17.11 kernel on the re-export
+server and changing the fscache file system from ext4 to xfs, but
+still have the same lockups.
 
-I don't know if this is the correct fix or not but perhaps we
-shouldn't unconditionally be setting this mode? (note this fix only
-fixes the delegattributes off. however i have no claims that this
-patch is what broke 215/407 for delegated attributes on. Something
-else is in play there). If this solution is acceptable, I can send a
-patch.
+Any ideas on what is happening here - and how it may be fixed?
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 81fa7cc6c77b..624cc6ab2802 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6318,7 +6318,8 @@ nfs4_open_delegation(struct svc_rqst *rqstp,
-struct nfsd4_open *open,
-                dp->dl_ctime =3D stat.ctime;
-                dp->dl_mtime =3D stat.mtime;
-                spin_lock(&f->f_lock);
--               f->f_mode |=3D FMODE_NOCMTIME;
-+               if (deleg_ts)
-+                       f->f_mode |=3D FMODE_NOCMTIME;
-                spin_unlock(&f->f_lock);
-                trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
-        } else {
-
-
-On Wed, Jul 30, 2025 at 9:27=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> Instead of allowing the ctime to roll backward with a WRITE_ATTRS
-> delegation, set FMODE_NOCMTIME on the file and have it skip mtime and
-> ctime updates.
->
-> It is possible that the client will never send a SETATTR to set the
-> times before returning the delegation. Add two new bools to struct
-> nfs4_delegation:
->
-> dl_written: tracks whether the file has been written since the
-> delegation was granted. This is set in the WRITE and LAYOUTCOMMIT
-> handlers.
->
-> dl_setattr: tracks whether the client has sent at least one valid
-> mtime that can also update the ctime in a SETATTR.
->
-> When unlocking the lease for the delegation, clear FMODE_NOCMTIME. If
-> the file has been written, but no setattr for the delegated mtime and
-> ctime has been done, update the timestamps to current_time().
->
-> Suggested-by: NeilBrown <neil@brown.name>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/nfs4proc.c  | 26 ++++++++++++++++++++++++--
->  fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/state.h     |  4 +++-
->  3 files changed, 69 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index aacd912a5fbe29ba5ccac206d13243308f36b7fa..bfebe6e25638a76d3607bb79a=
-239bdc92e42e7b5 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1151,7 +1151,9 @@ vet_deleg_attrs(struct nfsd4_setattr *setattr, stru=
-ct nfs4_delegation *dp)
->         if (setattr->sa_bmval[2] & FATTR4_WORD2_TIME_DELEG_MODIFY) {
->                 if (nfsd4_vet_deleg_time(&iattr->ia_mtime, &dp->dl_mtime,=
- &now)) {
->                         iattr->ia_ctime =3D iattr->ia_mtime;
-> -                       if (!nfsd4_vet_deleg_time(&iattr->ia_ctime, &dp->=
-dl_ctime, &now))
-> +                       if (nfsd4_vet_deleg_time(&iattr->ia_ctime, &dp->d=
-l_ctime, &now))
-> +                               dp->dl_setattr =3D true;
-> +                       else
->                                 iattr->ia_valid &=3D ~(ATTR_CTIME | ATTR_=
-CTIME_SET);
->                 } else {
->                         iattr->ia_valid &=3D ~(ATTR_CTIME | ATTR_CTIME_SE=
-T |
-> @@ -1238,12 +1240,26 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd=
-4_compound_state *cstate,
->         return status;
->  }
->
-> +static void nfsd4_file_mark_deleg_written(struct nfs4_file *fi)
-> +{
-> +       spin_lock(&fi->fi_lock);
-> +       if (!list_empty(&fi->fi_delegations)) {
-> +               struct nfs4_delegation *dp =3D list_first_entry(&fi->fi_d=
-elegations,
-> +                                                             struct nfs4=
-_delegation, dl_perfile);
-> +
-> +               if (dp->dl_type =3D=3D OPEN_DELEGATE_WRITE_ATTRS_DELEG)
-> +                       dp->dl_written =3D true;
-> +       }
-> +       spin_unlock(&fi->fi_lock);
-> +}
-> +
->  static __be32
->  nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->             union nfsd4_op_u *u)
->  {
->         struct nfsd4_write *write =3D &u->write;
->         stateid_t *stateid =3D &write->wr_stateid;
-> +       struct nfs4_stid *stid =3D NULL;
->         struct nfsd_file *nf =3D NULL;
->         __be32 status =3D nfs_ok;
->         unsigned long cnt;
-> @@ -1256,10 +1272,15 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_=
-compound_state *cstate,
->         trace_nfsd_write_start(rqstp, &cstate->current_fh,
->                                write->wr_offset, cnt);
->         status =3D nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->cur=
-rent_fh,
-> -                                               stateid, WR_STATE, &nf, N=
-ULL);
-> +                                               stateid, WR_STATE, &nf, &=
-stid);
->         if (status)
->                 return status;
->
-> +       if (stid) {
-> +               nfsd4_file_mark_deleg_written(stid->sc_file);
-> +               nfs4_put_stid(stid);
-> +       }
-> +
->         write->wr_how_written =3D write->wr_stable_how;
->         status =3D nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
->                                 write->wr_offset, &write->wr_payload,
-> @@ -2550,6 +2571,7 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
->         mutex_unlock(&ls->ls_mutex);
->
->         nfserr =3D ops->proc_layoutcommit(inode, rqstp, lcp);
-> +       nfsd4_file_mark_deleg_written(ls->ls_stid.sc_file);
->         nfs4_put_stid(&ls->ls_stid);
->  out:
->         return nfserr;
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 205ee8cc6fa2b9f74d08f7938b323d03bdf8286c..81fa7cc6c77b3cdc5ff22bc60=
-ab0654f95dc258d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1222,6 +1222,42 @@ static void put_deleg_file(struct nfs4_file *fp)
->                 nfs4_file_put_access(fp, NFS4_SHARE_ACCESS_READ);
->  }
->
-> +static void nfsd4_finalize_deleg_timestamps(struct nfs4_delegation *dp, =
-struct file *f)
-> +{
-> +       struct iattr ia =3D { .ia_valid =3D ATTR_ATIME | ATTR_CTIME | ATT=
-R_MTIME };
-> +       struct inode *inode =3D file_inode(f);
-> +       int ret;
-> +
-> +       /* don't do anything if FMODE_NOCMTIME isn't set */
-> +       if ((READ_ONCE(f->f_mode) & FMODE_NOCMTIME) =3D=3D 0)
-> +               return;
-> +
-> +       spin_lock(&f->f_lock);
-> +       f->f_mode &=3D ~FMODE_NOCMTIME;
-> +       spin_unlock(&f->f_lock);
-> +
-> +       /* was it never written? */
-> +       if (!dp->dl_written)
-> +               return;
-> +
-> +       /* did it get a setattr for the timestamps at some point? */
-> +       if (dp->dl_setattr)
-> +               return;
-> +
-> +       /* Stamp everything to "now" */
-> +       inode_lock(inode);
-> +       ret =3D notify_change(&nop_mnt_idmap, f->f_path.dentry, &ia, NULL=
-);
-> +       inode_unlock(inode);
-> +       if (ret) {
-> +               struct inode *inode =3D file_inode(f);
-> +
-> +               pr_notice_ratelimited("Unable to update timestamps on ino=
-de %02x:%02x:%lu: %d\n",
-> +                                       MAJOR(inode->i_sb->s_dev),
-> +                                       MINOR(inode->i_sb->s_dev),
-> +                                       inode->i_ino, ret);
-> +       }
-> +}
-> +
->  static void nfs4_unlock_deleg_lease(struct nfs4_delegation *dp)
->  {
->         struct nfs4_file *fp =3D dp->dl_stid.sc_file;
-> @@ -1229,6 +1265,7 @@ static void nfs4_unlock_deleg_lease(struct nfs4_del=
-egation *dp)
->
->         WARN_ON_ONCE(!fp->fi_delegees);
->
-> +       nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
->         kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
->         put_deleg_file(fp);
->  }
-> @@ -6265,6 +6302,8 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct=
- nfsd4_open *open,
->         memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeo=
-f(dp->dl_stid.sc_stateid));
->
->         if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-> +               struct file *f =3D dp->dl_stid.sc_file->fi_deleg_file->nf=
-_file;
-> +
->                 if (!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp) =
-||
->                                 !nfs4_delegation_stat(dp, currentfh, &sta=
-t)) {
->                         nfs4_put_stid(&dp->dl_stid);
-> @@ -6278,6 +6317,9 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct=
- nfsd4_open *open,
->                 dp->dl_atime =3D stat.atime;
->                 dp->dl_ctime =3D stat.ctime;
->                 dp->dl_mtime =3D stat.mtime;
-> +               spin_lock(&f->f_lock);
-> +               f->f_mode |=3D FMODE_NOCMTIME;
-> +               spin_unlock(&f->f_lock);
->                 trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
->         } else {
->                 open->op_delegate_type =3D deleg_ts && nfs4_delegation_st=
-at(dp, currentfh, &stat) ?
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index bf9436cdb93c5dd5502ecf83433ea311e3678711..b6ac0f37e9cdfcfddde5861c8=
-c0c51bad60101b7 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -217,10 +217,12 @@ struct nfs4_delegation {
->         struct nfs4_clnt_odstate *dl_clnt_odstate;
->         time64_t                dl_time;
->         u32                     dl_type;
-> -/* For recall: */
-> +       /* For recall: */
->         int                     dl_retries;
->         struct nfsd4_callback   dl_recall;
->         bool                    dl_recalled;
-> +       bool                    dl_written;
-> +       bool                    dl_setattr;
->
->         /* for CB_GETATTR */
->         struct nfs4_cb_fattr    dl_cb_fattr;
->
-> --
-> 2.50.1
->
->
+2025-12-03T15:54:24.189530+00:00 ip-172-23-113-43 kernel: netfs:
+fscache_begin_operation: cookie state change wait timed out:
+cookie->state=1 state=1
+2025-12-03T15:54:24.189546+00:00 ip-172-23-113-43 kernel: netfs:
+fscache_begin_operation: cookie state change wait timed out:
+cookie->state=1 state=1
+2025-12-03T15:54:24.189549+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie c=00049c53 [fl=6124 na=1 nA=2 s=L]
+2025-12-03T15:54:24.189550+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie c=0004ddfe [fl=4124 na=1 nA=2 s=L]
+2025-12-03T15:54:24.189551+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie V=0000000a
+[Enfs,4.2,2,108,887517ac,2,,,50,100000,100000,927c0,927c0,927c0,927c0,1]
+2025-12-03T15:54:24.189552+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie V=0000000f
+[Enfs,4.2,2,108,887517ac,3,,,50,100000,100000,927c0,927c0,927c0,927c0,1]
+2025-12-03T15:54:24.189553+00:00 ip-172-23-113-43 kernel: netfs:
+O-key=[56] '0100010c0200000008000000e7ba9075008000002000f360d67b09000000e7ba907508000000ffffffff000000000b00700b010000000000'
+2025-12-03T15:54:24.190876+00:00 ip-172-23-113-43 kernel: netfs:
+O-key=[56] '0100010c03000000070000002fbb9934008000002000f360d67b060000002fbb993407000000ffffffff000000000200c109010000000000'
+2025-12-03T15:54:24.702103+00:00 ip-172-23-113-43 kernel: netfs:
+fscache_begin_operation: cookie state change wait timed out:
+cookie->state=1 state=1
+2025-12-03T15:54:24.702112+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie c=000404b3 [fl=6124 na=1 nA=2 s=L]
+2025-12-03T15:54:24.702113+00:00 ip-172-23-113-43 kernel: netfs:
+O-cookie V=0000000f
+[Enfs,4.2,2,108,887517ac,3,,,50,100000,100000,927c0,927c0,927c0,927c0,1]
+2025-12-03T15:54:24.703856+00:00 ip-172-23-113-43 kernel: netfs:
+O-key=[56] '0100010c03000000070000007ece2438008000002000f360d67b060000007ece243807000000ffffffff000000000200c109010000000000'
+2025-12-03T15:57:25.438905+00:00 ip-172-23-113-43 kernel: INFO: task
+kcompactd0:171 blocked for more than 122 seconds.
+2025-12-03T15:57:25.438921+00:00 ip-172-23-113-43 kernel:
+Tainted: G           OE      6.14.0-36-generic #36~24.04.1-Ubuntu
+2025-12-03T15:57:25.438928+00:00 ip-172-23-113-43 kernel: "echo 0 >
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+2025-12-03T15:57:25.439 is bellow995+00:00 ip-172-23-113-43 kernel:
+task:kcompactd0      state:D stack:0     pid:171   tgid:171   ppid:2
+   task_flags:0x210040 flags:0x00004000
+2025-12-03T15:57:25.440000+00:00 ip-172-23-113-43 kernel: Call Trace:
+2025-12-03T15:57:25.440000+00:00 ip-172-23-113-43 kernel:  <TASK>
+2025-12-03T15:57:25.440003+00:00 ip-172-23-113-43 kernel:
+__schedule+0x2cf/0x640
+2025-12-03T15:57:25.441017+00:00 ip-172-23-113-43 kernel:  schedule+0x29/0xd0
+2025-12-03T15:57:25.441022+00:00 ip-172-23-113-43 kernel:  io_schedule+0x4c/0x80
+2025-12-03T15:57:25.441023+00:00 ip-172-23-113-43 kernel:
+folio_wait_bit_common+0x138/0x310
+2025-12-03T15:57:25.441023+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_wake_page_function+0x10/0x10
+2025-12-03T15:57:25.441024+00:00 ip-172-23-113-43 kernel:
+folio_wait_private_2+0x2c/0x60
+2025-12-03T15:57:25.441025+00:00 ip-172-23-113-43 kernel:
+nfs_release_folio+0xa0/0x120 [nfs]
+2025-12-03T15:57:25.441032+00:00 ip-172-23-113-43 kernel:
+filemap_release_folio+0x68/0xa0
+2025-12-03T15:57:25.441033+00:00 ip-172-23-113-43 kernel:
+split_huge_page_to_list_to_order+0x401/0x970
+2025-12-03T15:57:25.441033+00:00 ip-172-23-113-43 kernel:  ?
+compaction_alloc_noprof+0x1c5/0x2f0
+2025-12-03T15:57:25.441034+00:00 ip-172-23-113-43 kernel:
+split_folio_to_list+0x22/0x70
+2025-12-03T15:57:25.441035+00:00 ip-172-23-113-43 kernel:
+migrate_pages_batch+0x2f2/0xa70
+2025-12-03T15:57:25.441035+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_free+0x10/0x10
+2025-12-03T15:57:25.441038+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_alloc+0x10/0x10
+2025-12-03T15:57:25.441039+00:00 ip-172-23-113-43 kernel:  ?
+__mod_memcg_lruvec_state+0xf4/0x250
+2025-12-03T15:57:25.441039+00:00 ip-172-23-113-43 kernel:  ?
+migrate_pages_batch+0x5e8/0xa70
+2025-12-03T15:57:25.441040+00:00 ip-172-23-113-43 kernel:
+migrate_pages_sync+0x84/0x1e0
+2025-12-03T15:57:25.441040+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_free+0x10/0x10
+2025-12-03T15:57:25.441041+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_alloc+0x10/0x10
+2025-12-03T15:57:25.441044+00:00 ip-172-23-113-43 kernel:
+migrate_pages+0x38f/0x4c0
+2025-12-03T15:57:25.441047+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_free+0x10/0x10
+2025-12-03T15:57:25.441048+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_compaction_alloc+0x10/0x10
+2025-12-03T15:57:25.441048+00:00 ip-172-23-113-43 kernel:
+compact_zone+0x385/0x700
+2025-12-03T15:57:25.441049+00:00 ip-172-23-113-43 kernel:  ?
+isolate_migratepages_range+0xc1/0xf0
+2025-12-03T15:57:25.441049+00:00 ip-172-23-113-43 kernel:
+kcompactd_do_work+0xfc/0x240
+2025-12-03T15:57:25.441050+00:00 ip-172-23-113-43 kernel:  kcompactd+0x43f/0x4a0
+2025-12-03T15:57:25.441052+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_autoremove_wake_function+0x10/0x10
+2025-12-03T15:57:25.441053+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kcompactd+0x10/0x10
+2025-12-03T15:57:25.441053+00:00 ip-172-23-113-43 kernel:  kthread+0xfe/0x230
+2025-12-03T15:57:25.441054+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.441054+00:00 ip-172-23-113-43 kernel:
+ret_from_fork+0x47/0x70
+2025-12-03T15:57:25.441055+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.441057+00:00 ip-172-23-113-43 kernel:
+ret_from_fork_asm+0x1a/0x30
+2025-12-03T15:57:25.441058+00:00 ip-172-23-113-43 kernel:  </TASK>
+2025-12-03T15:57:25.441059+00:00 ip-172-23-113-43 kernel: INFO: task
+jbd2/md127-8:6401 blocked for more than 122 seconds.
+2025-12-03T15:57:25.441059+00:00 ip-172-23-113-43 kernel:
+Tainted: G           OE      6.14.0-36-generic #36~24.04.1-Ubuntu
+2025-12-03T15:57:25.443097+00:00 ip-172-23-113-43 kernel: "echo 0 >
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+2025-12-03T15:57:25.445001+00:00 ip-172-23-113-43 kernel:
+task:jbd2/md127-8    state:D stack:0     pid:6401  tgid:6401  ppid:2
+   task_flags:0x240040 flags:0x00004000
+2025-12-03T15:57:25.445005+00:00 ip-172-23-113-43 kernel: Call Trace:
+2025-12-03T15:57:25.445006+00:00 ip-172-23-113-43 kernel:  <TASK>
+2025-12-03T15:57:25.445006+00:00 ip-172-23-113-43 kernel:
+__schedule+0x2cf/0x640
+2025-12-03T15:57:25.445007+00:00 ip-172-23-113-43 kernel:  schedule+0x29/0xd0
+2025-12-03T15:57:25.445007+00:00 ip-172-23-113-43 kernel:
+jbd2_journal_wait_updates+0x71/0xf0
+2025-12-03T15:57:25.445008+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_autoremove_wake_function+0x10/0x10
+2025-12-03T15:57:25.445008+00:00 ip-172-23-113-43 kernel:
+jbd2_journal_commit_transaction+0x26e/0x1800
+2025-12-03T15:57:25.445009+00:00 ip-172-23-113-43 kernel:  ?
+__update_idle_core+0x58/0x130
+2025-12-03T15:57:25.445010+00:00 ip-172-23-113-43 kernel:  ?
+psi_group_change+0x201/0x4e0
+2025-12-03T15:57:25.445010+00:00 ip-172-23-113-43 kernel:  ?
+psi_task_switch+0x130/0x3a0
+2025-12-03T15:57:25.445011+00:00 ip-172-23-113-43 kernel:  kjournald2+0xaa/0x250
+2025-12-03T15:57:25.445011+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_autoremove_wake_function+0x10/0x10
+2025-12-03T15:57:25.445012+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kjournald2+0x10/0x10
+2025-12-03T15:57:25.445012+00:00 ip-172-23-113-43 kernel:  kthread+0xfe/0x230
+2025-12-03T15:57:25.445015+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.445016+00:00 ip-172-23-113-43 kernel:
+ret_from_fork+0x47/0x70
+2025-12-03T15:57:25.445017+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.445018+00:00 ip-172-23-113-43 kernel:
+ret_from_fork_asm+0x1a/0x30
+2025-12-03T15:57:25.445018+00:00 ip-172-23-113-43 kernel:  </TASK>
+2025-12-03T15:57:25.445019+00:00 ip-172-23-113-43 kernel: INFO: task
+nfsd:6783 blocked for more than 122 seconds.
+2025-12-03T15:57:25.445020+00:00 ip-172-23-113-43 kernel:
+Tainted: G           OE      6.14.0-36-generic #36~24.04.1-Ubuntu
+2025-12-03T15:57:25.445023+00:00 ip-172-23-113-43 kernel: "echo 0 >
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+2025-12-03T15:57:25.447708+00:00 ip-172-23-113-43 kernel: task:nfsd
+        state:D stack:0     pid:6783  tgid:6783  ppid:2
+task_flags:0x240040 flags:0x00004000
+2025-12-03T15:57:25.447713+00:00 ip-172-23-113-43 kernel: Call Trace:
+2025-12-03T15:57:25.447714+00:00 ip-172-23-113-43 kernel:  <TASK>
+2025-12-03T15:57:25.447714+00:00 ip-172-23-113-43 kernel:
+__schedule+0x2cf/0x640
+2025-12-03T15:57:25.447715+00:00 ip-172-23-113-43 kernel:  schedule+0x29/0xd0
+2025-12-03T15:57:25.447716+00:00 ip-172-23-113-43 kernel:
+schedule_preempt_disabled+0x15/0x30
+2025-12-03T15:57:25.447716+00:00 ip-172-23-113-43 kernel:
+rwsem_down_read_slowpath+0x261/0x490
+2025-12-03T15:57:25.447717+00:00 ip-172-23-113-43 kernel:  ?
+mempool_alloc_slab+0x15/0x20
+2025-12-03T15:57:25.447717+00:00 ip-172-23-113-43 kernel:  down_read+0x48/0xd0
+2025-12-03T15:57:25.447718+00:00 ip-172-23-113-43 kernel:
+ext4_llseek+0xfc/0x120
+2025-12-03T15:57:25.447719+00:00 ip-172-23-113-43 kernel:  vfs_llseek+0x1c/0x40
+2025-12-03T15:57:25.447719+00:00 ip-172-23-113-43 kernel:
+cachefiles_do_prepare_read+0xc1/0x3d0 [cachefiles]
+2025-12-03T15:57:25.447720+00:00 ip-172-23-113-43 kernel:
+cachefiles_prepare_read+0x32/0x50 [cachefiles]
+2025-12-03T15:57:25.447720+00:00 ip-172-23-113-43 kernel:
+netfs_read_to_pagecache+0xc1/0x530 [netfs]
+2025-12-03T15:57:25.447721+00:00 ip-172-23-113-43 kernel:
+netfs_readahead+0x169/0x270 [netfs]
+2025-12-03T15:57:25.447735+00:00 ip-172-23-113-43 kernel:
+nfs_netfs_readahead+0x1f/0x40 [nfs]
+2025-12-03T15:57:25.447736+00:00 ip-172-23-113-43 kernel:
+nfs_readahead+0x184/0x2b0 [nfs]
+2025-12-03T15:57:25.447737+00:00 ip-172-23-113-43 kernel:  read_pages+0x85/0x220
+2025-12-03T15:57:25.447737+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_workingset_update_node+0x10/0x10
+2025-12-03T15:57:25.447738+00:00 ip-172-23-113-43 kernel:
+page_cache_ra_unbounded+0x18e/0x240
+2025-12-03T15:57:25.447738+00:00 ip-172-23-113-43 kernel:
+page_cache_sync_ra+0x228/0x230
+2025-12-03T15:57:25.447739+00:00 ip-172-23-113-43 kernel:
+filemap_get_pages+0x133/0x4a0
+2025-12-03T15:57:25.447740+00:00 ip-172-23-113-43 kernel:
+filemap_splice_read+0x155/0x380
+2025-12-03T15:57:25.447740+00:00 ip-172-23-113-43 kernel:  ?
+find_inode+0xd9/0x100
+2025-12-03T15:57:25.447741+00:00 ip-172-23-113-43 kernel:
+nfs_file_splice_read+0xba/0xf0 [nfs]
+2025-12-03T15:57:25.447741+00:00 ip-172-23-113-43 kernel:
+do_splice_read+0x63/0xe0
+2025-12-03T15:57:25.447742+00:00 ip-172-23-113-43 kernel:
+splice_direct_to_actor+0xb1/0x260
+2025-12-03T15:57:25.447743+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_nfsd_direct_splice_actor+0x10/0x10 [nfsd]
+2025-12-03T15:57:25.447743+00:00 ip-172-23-113-43 kernel:
+nfsd_splice_read+0x11b/0x130 [nfsd]
+2025-12-03T15:57:25.447744+00:00 ip-172-23-113-43 kernel:
+nfsd4_encode_splice_read+0x65/0x120 [nfsd]
+2025-12-03T15:57:25.447744+00:00 ip-172-23-113-43 kernel:
+nfsd4_encode_read+0x132/0x170 [nfsd]
+2025-12-03T15:57:25.447745+00:00 ip-172-23-113-43 kernel:
+nfsd4_encode_operation+0xd4/0x350 [nfsd]
+2025-12-03T15:57:25.447745+00:00 ip-172-23-113-43 kernel:
+nfsd4_proc_compound+0x1da/0x7d0 [nfsd]
+2025-12-03T15:57:25.447746+00:00 ip-172-23-113-43 kernel:
+nfsd_dispatch+0xd7/0x220 [nfsd]
+2025-12-03T15:57:25.447746+00:00 ip-172-23-113-43 kernel:
+svc_process_common+0x4c6/0x740 [sunrpc]
+2025-12-03T15:57:25.447747+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_nfsd_dispatch+0x10/0x10 [nfsd]
+2025-12-03T15:57:25.447747+00:00 ip-172-23-113-43 kernel:
+svc_process+0x136/0x1f0 [sunrpc]
+2025-12-03T15:57:25.447748+00:00 ip-172-23-113-43 kernel:
+svc_handle_xprt+0x46e/0x570 [sunrpc]
+2025-12-03T15:57:25.447751+00:00 ip-172-23-113-43 kernel:
+svc_recv+0x184/0x2e0 [sunrpc]
+2025-12-03T15:57:25.447752+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_nfsd+0x10/0x10 [nfsd]
+2025-12-03T15:57:25.447752+00:00 ip-172-23-113-43 kernel:  nfsd+0x90/0xf0 [nfsd]
+2025-12-03T15:57:25.447753+00:00 ip-172-23-113-43 kernel:  kthread+0xfe/0x230
+2025-12-03T15:57:25.447753+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.447754+00:00 ip-172-23-113-43 kernel:
+ret_from_fork+0x47/0x70
+2025-12-03T15:57:25.447756+00:00 ip-172-23-113-43 kernel:  ?
+__pfx_kthread+0x10/0x10
+2025-12-03T15:57:25.447757+00:00 ip-172-23-113-43 kernel:
+ret_from_fork_asm+0x1a/0x30
+2025-12-03T15:57:25.447757+00:00 ip-172-23-113-43 kernel:  </TASK>
 
