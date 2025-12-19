@@ -1,198 +1,378 @@
-Return-Path: <linux-nfs+bounces-17236-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17237-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 862F1CD075A
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 16:12:14 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 604BFCD0C07
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 17:10:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 02E45303DB21
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 15:12:08 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 271943003B25
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 16:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECFBF33AD8D;
-	Fri, 19 Dec 2025 15:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC29336C0B3;
+	Fri, 19 Dec 2025 15:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KI19ArTA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hh7RDHL5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b5aN+xiY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UlK0GM+L"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="ckuTSi2O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32E433B6F3
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 15:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E46436BCCC
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 15:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766157126; cv=none; b=f2OYIqk5kte27iBz+HKcixZMInE8kvDX90ZLnLxo63dJW2OD9cyn/GNV/96LyWwva4MlAKJNu85y0/N/ZcscmbZLaTS27mULRjbQ1nbUgVK159qblnwnsMh25KErtYPeQ1uyI5ecuOyZXdecO3IMFW7AqyLt3i+O9R83V9pBqyY=
+	t=1766159948; cv=none; b=DPpEThcMQfhoC8RZYi0laG1bq4lrbmZIUk8f+FpTBNT5x03ssPucITQb3vMgl2kE8TcndFeJiPHcpt4Yh5KV+J3dprml81zTnPM2LQ/Z+EYVotW3vu1aknLCH6h7zI6u6jKgDESgQXl4LoJRxFQZwQAv+ee3Ffs2qBQSH+dn3/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766157126; c=relaxed/simple;
-	bh=khSk3JMEwC370gokxLVt2+V81u3kcMruZJtN2TvaSFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/jqwLS8vwqx4gQBl4PO0GaN0ANqP4uCJLRoL0yGibgbMqBnPa9brrUymxTQB7ZuR7Z6ymtBCmulylJchUv3S8E+7FS/4igJ68T71fb2AOAZcpITc6DtfghnM/QOlR/7chZJcPzNvBsdaLX3hNEx6VoMRI49AMT9me1GYpUpgww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KI19ArTA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hh7RDHL5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b5aN+xiY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UlK0GM+L; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C6B6233714;
-	Fri, 19 Dec 2025 15:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1766157122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm9StvwwiQFX7seFXlICx2z9FzoyRX/N9SPzI43K0Zg=;
-	b=KI19ArTADje7Ef3OPJV1hLzka/GGmcgxpQRR6RSJ7DHa8xN87n5DpWcUrEuP6zcbKNBkjh
-	jdAHIcOy+pP1KDVylL7DduL0D9Z0djbZqkz/dqZTELixx8ReuUvdb+2z6i1Q55oDKPgAyN
-	F2xzcn95MmmXstBZd5eceTZYnIWCjuE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1766157122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm9StvwwiQFX7seFXlICx2z9FzoyRX/N9SPzI43K0Zg=;
-	b=hh7RDHL5gn+xmIJE6BzwmatN//9gS67udthbyazRkh3JxbChFHIcaQzU79Hl2FV08I6i1R
-	t44ziy3+n6cOEYBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=b5aN+xiY;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=UlK0GM+L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1766157121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm9StvwwiQFX7seFXlICx2z9FzoyRX/N9SPzI43K0Zg=;
-	b=b5aN+xiYhnhbNofq9pLwTKt0OjqkrkmlduPcJsiSUaIIrXwCK2Q9qj5x9rllOIHmzan7Gj
-	lSZylngfV0Tizm6Cb6iQYT6I2X7cikiVJYghY1diH86XV0Tte9zOjItXeuIbMcOMIJ3Y8h
-	+5KI8rTQVHeZlHCTIGuLbkdxU5sGFZY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1766157121;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm9StvwwiQFX7seFXlICx2z9FzoyRX/N9SPzI43K0Zg=;
-	b=UlK0GM+LwMJgyv+MpnfOq7YkH6maQd48o4ODk32s9ZBPNqUpUWpQQ+PhTj8LW2gM7rc5Zn
-	gNkmYnSNDyk1a8Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B9CC53EA63;
-	Fri, 19 Dec 2025 15:12:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EXtULUFrRWmvQgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 19 Dec 2025 15:12:01 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 764A1A090B; Fri, 19 Dec 2025 16:12:01 +0100 (CET)
-Date: Fri, 19 Dec 2025 16:12:01 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Carlos Maiolino <cem@kernel.org>, Stefan Roesch <shr@fb.com>, Jeff Layton <jlayton@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gfs2@lists.linux.dev, io-uring@vger.kernel.org, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 08/10] fs: add support for non-blocking timestamp updates
-Message-ID: <wynhubqgvknr3fl4umfst62xyacck3avmg6qnbp2na6w7ee3qf@odetcif4kozl>
-References: <20251217061015.923954-1-hch@lst.de>
- <20251217061015.923954-9-hch@lst.de>
- <2hnq54zc4x2fpxkpuprnrutrwfp3yi5ojntu3e3xfcpeh6ztei@2fwwsemx4y5z>
- <20251218061900.GB2775@lst.de>
+	s=arc-20240116; t=1766159948; c=relaxed/simple;
+	bh=1E7MmYDGWMOe+l2ttMwLxR4y6eJzpT2TAo5nFuApT8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XBgUKHMWdOhayjw3EHlfGw+0YhNILfHMNnLqjYU4h+/VJ+qynxy6HeROiPgcyfybwUeJClb/ufPuTBG7y/VnZYr/KBkQEsMSFoaFEr1Jd2OH2cV3So7vD1VSsQrWSb+fjcuRaddGdLXF6UO4cypbesnwLntuUu6FTa64klVE2cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=ckuTSi2O; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-37bbb36c990so24672161fa.0
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 07:59:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1766159943; x=1766764743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rrh7jHERpec8/lw/IMy3jFvFCgQEpQfa0gIi+oTxJ/E=;
+        b=ckuTSi2O2X7BR6ZwSl39ecY0UUnvC+GATdBpUsixxn72VMQYa8eV17KvA7UoweAV/0
+         5ybvqE7cc+sTASgxxetAEWTuRLM11lKHIoY7rwyaLNzOdeyO04Y2Tqe0qEGSuMKE9HNR
+         0nA5aon9QcVk+jOHvSgEVwDR8GMK5YvGy1f7eNO1yvYYZjv1wsd4gyKbo0OZhMuTSpDC
+         G9KSLgvKgyvCdpVnp9A7qkDHj9qs/2AHSPzHAFy2ZHgZwr4tPExwK4Jyl7Z3G+4DtZQc
+         tXThzfAtDxxUJpL3s/7ZnNswKUzoxE3YyBotD1dj0yC0eiLkZ0/CEnRAWDnx/mZePXuH
+         mz3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766159943; x=1766764743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rrh7jHERpec8/lw/IMy3jFvFCgQEpQfa0gIi+oTxJ/E=;
+        b=NQBpWXBR5FLgD+sDH1OcC9CBzZBd85S4LJMoDMpDjW9YBuP6UlCQszCDQTLJePJpI5
+         DNLmISX2AapyGbRjSpJgz9rdveRGv4jhoxieRxJy9h3YcySaRqsKwKF11JedA0+WSt7B
+         lDNV+QzKWoEqnrFfsi6tqKb6NsbBfjcQXfZqW32VCFz9XZJC1mQuyE1+WzglJ+snOoXN
+         lfFSHI8fiZvBBRvWXzhbPll0G4+2zNfyVTNStL47m25VJe/duw02AoTgL59hunCmD+5j
+         r/GcQixCUNktuOW7civbB7lfi/NjhaQzxsRGpXDIu82xSbociMTwelUmZpemwzPIZA50
+         dXQg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5Hwt0FAWRAXIzZE0sGQNXxmxUkWmw3EIJA/tNVnQX+dj8kip7G4clAin4G3bEWbnvN+2dUe9YkPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0N0auj4CqENP2Wp1ApUBJHOpuX8xivmz0g/ybXZGYIbiP01QZ
+	kuvSpCJlWtqnjnQKO7nsm9mMbwqRzOz83OJsmH3RIwkVptHa3s85y8ZBXEaX6r/7Q4lvZrb6D0J
+	H84TiT4UZ7cT0KbXf89U2PqgyjlgHUGA=
+X-Gm-Gg: AY/fxX4Vvqb8O+EDN/MFh8wAxjaopYAiJWUC6FfKYdudy9sYbyE5E5GQM/ZgaWXy5PX
+	F38oiQ4G7twsHKtA+IGyVDiu17zjlN3dyiZty0tRG/ePmm2aBjFekqe34MYOWhfSgOdTXP1ppjh
+	1CetewmHfvbuCDRRm0YtxQ20fcmXSAWgX6ugaQNxlS0Z8USm8H0Ksolujo0reLNXgPxNScyZDe3
+	Wsehpfp1uwO5LSS+p2NT0px5U9nEWfXAd2UDu12DLxmSH0rKsFCRt1U6hVuGF9yoX7/vSrYAI2q
+	X7E34xBPGFNHhz90tiXN2Yq9A6dxng==
+X-Google-Smtp-Source: AGHT+IF1hdJMju8LoxAJpnCi39hZ3gi9AWJtDM753Wh1aRc/UZqyoAzCON2d7640WhenuuLr6vzwD1Ot507SaGLqvvQ=
+X-Received: by 2002:a05:651c:3050:b0:376:3792:1a9b with SMTP id
+ 38308e7fff4ca-38113295431mr21296221fa.21.1766159943229; Fri, 19 Dec 2025
+ 07:59:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251218061900.GB2775@lst.de>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Rspamd-Queue-Id: C6B6233714
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
+References: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org> <20250730-nfsd-testing-v4-8-7f5730570a52@kernel.org>
+In-Reply-To: <20250730-nfsd-testing-v4-8-7f5730570a52@kernel.org>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Fri, 19 Dec 2025 10:58:51 -0500
+X-Gm-Features: AQt7F2rtPaUaHKhG8VG2lFt-mPN-yzelYal5wYAHVQ-QLjtFmZxg9X3LrdZkiSM
+Message-ID: <CAN-5tyEjYRFrJ7Gc4S8KwAZUuF-uz6ovPa4-_ynt+GGVqJHN_A@mail.gmail.com>
+Subject: Re: [PATCH v4 8/8] nfsd: freeze c/mtime updates with outstanding
+ WRITE_ATTRS delegation
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@hammerspace.com>, 
+	Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 18-12-25 07:19:00, Christoph Hellwig wrote:
-> On Wed, Dec 17, 2025 at 01:42:20PM +0100, Jan Kara wrote:
-> > > @@ -2110,12 +2110,26 @@ int inode_update_timestamps(struct inode *inode, int *flags)
-> > >  		now = inode_set_ctime_current(inode);
-> > >  		if (!timespec64_equal(&now, &ctime))
-> > >  			updated |= S_CTIME;
-> > > -		if (!timespec64_equal(&now, &mtime)) {
-> > > -			inode_set_mtime_to_ts(inode, now);
-> > > +		if (!timespec64_equal(&now, &mtime))
-> > >  			updated |= S_MTIME;
-> > > +
-> > > +		if (IS_I_VERSION(inode)) {
-> > > +			if (*flags & S_NOWAIT) {
-> > > +				/*
-> > > +				 * Error out if we'd need timestamp updates, as
-> > > +				 * the generally requires blocking to dirty the
-> > > +				 * inode in one form or another.
-> > > +				 */
-> > > +				if (updated && inode_iversion_need_inc(inode))
-> > > +					goto bail;
-> > 
-> > I'm confused here. What the code does is that if S_NOWAIT is set and
-> > i_version needs increment we bail. However the comment as well as the
-> > changelog speaks about timestamps needing update and not about i_version.
-> > And intuitively I agree that if any timestamp is updated, inode needs
-> > dirtying and thus we should bail regardless of whether i_version is updated
-> > as well or not. What am I missing?
-> 
-> With lazytime timestamp updates that don't require i_version updates
-> are performed in-memory only, and we'll only reach this with S_NOWAIT
-> set for those (later in the series, it can't be reached at all as
-> of this patch).
+Hi Jeff,
 
-Ah, I see now. Thanks for explanation. This interplay between filesystem's
-.update_time() helper and inode_update_timestamps() is rather subtle.
-Cannot we move the SB_LAZYTIME checking from .update_time() to
-inode_update_timestamps() to have it all in one function? The hunk you're
-adding to xfs_vn_update_time() later in the series looks like what the
-other filesystems using it will want as well?
+I narrowed down the upstream failure for generic/215 and generic/407
+to this commit.
 
-BTW, I've noticed that ovl_update_time() and fat_update_time() should be
-safe wrt NOWAIT IO so perhaps you don't have to disable it in your patch
-(or maybe reenable explicitly?).
+Let's consider first where the kernel is compiled with delegated
+attributes off (but it also fails just the same if the delegated
+attributes are compiled in).
 
-And I don't really now what orangefs_update_time() is trying to do with its
-__orangefs_setattr() call which just copies the zeroed-out timestamps from
-iattr into the inode? Mike?
+I don't understand why the code unconditionally changed to call
+nfsd4_finalize_deleg_timestamps() which I think the main driver behind
+the failure.
 
-								Honza
+Running generic/407 there is an OPEN (which gives out a write
+delegation) and returns a change id, then on this filehandle there is
+a SETATTR (with a getattr) which returns a new changeid. Then there is
+a CLONE where the filehandle is the destination filehandle on which
+there is a getattr which returns unchanged changeid/modify time (bad).
+Then there is a DELEGRETURN (with a getattr) which again returns same
+change id. Test fails.
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Prior to this commit. The changeid/modify time is different in CLONE
+and DELEGRETURN -- test passes.
+
+Now let me describe what happens with delegated attributes enabled.
+OPEN returns delegated attributes delegation, included getattr return
+a changeid. Then CLONE is done, the included gettattr returns a
+different (from open's) changeid (different time_modify). Then there
+is SETATTR+GEATTR+DELEGRETURN compound from the client (which carries
+a time_deleg_modify value different from above). Server in getattr
+replies with changeid same as in clone and mtime with the value client
+provided. So I'm not sure exactly why the test fails here but that's a
+different problem as my focus is on "delegation attribute off option"
+at the moment.
+
+I don't know if this is the correct fix or not but perhaps we
+shouldn't unconditionally be setting this mode? (note this fix only
+fixes the delegattributes off. however i have no claims that this
+patch is what broke 215/407 for delegated attributes on. Something
+else is in play there). If this solution is acceptable, I can send a
+patch.
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 81fa7cc6c77b..624cc6ab2802 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6318,7 +6318,8 @@ nfs4_open_delegation(struct svc_rqst *rqstp,
+struct nfsd4_open *open,
+                dp->dl_ctime =3D stat.ctime;
+                dp->dl_mtime =3D stat.mtime;
+                spin_lock(&f->f_lock);
+-               f->f_mode |=3D FMODE_NOCMTIME;
++               if (deleg_ts)
++                       f->f_mode |=3D FMODE_NOCMTIME;
+                spin_unlock(&f->f_lock);
+                trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
+        } else {
+
+
+On Wed, Jul 30, 2025 at 9:27=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Instead of allowing the ctime to roll backward with a WRITE_ATTRS
+> delegation, set FMODE_NOCMTIME on the file and have it skip mtime and
+> ctime updates.
+>
+> It is possible that the client will never send a SETATTR to set the
+> times before returning the delegation. Add two new bools to struct
+> nfs4_delegation:
+>
+> dl_written: tracks whether the file has been written since the
+> delegation was granted. This is set in the WRITE and LAYOUTCOMMIT
+> handlers.
+>
+> dl_setattr: tracks whether the client has sent at least one valid
+> mtime that can also update the ctime in a SETATTR.
+>
+> When unlocking the lease for the delegation, clear FMODE_NOCMTIME. If
+> the file has been written, but no setattr for the delegated mtime and
+> ctime has been done, update the timestamps to current_time().
+>
+> Suggested-by: NeilBrown <neil@brown.name>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfsd/nfs4proc.c  | 26 ++++++++++++++++++++++++--
+>  fs/nfsd/nfs4state.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/state.h     |  4 +++-
+>  3 files changed, 69 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index aacd912a5fbe29ba5ccac206d13243308f36b7fa..bfebe6e25638a76d3607bb79a=
+239bdc92e42e7b5 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1151,7 +1151,9 @@ vet_deleg_attrs(struct nfsd4_setattr *setattr, stru=
+ct nfs4_delegation *dp)
+>         if (setattr->sa_bmval[2] & FATTR4_WORD2_TIME_DELEG_MODIFY) {
+>                 if (nfsd4_vet_deleg_time(&iattr->ia_mtime, &dp->dl_mtime,=
+ &now)) {
+>                         iattr->ia_ctime =3D iattr->ia_mtime;
+> -                       if (!nfsd4_vet_deleg_time(&iattr->ia_ctime, &dp->=
+dl_ctime, &now))
+> +                       if (nfsd4_vet_deleg_time(&iattr->ia_ctime, &dp->d=
+l_ctime, &now))
+> +                               dp->dl_setattr =3D true;
+> +                       else
+>                                 iattr->ia_valid &=3D ~(ATTR_CTIME | ATTR_=
+CTIME_SET);
+>                 } else {
+>                         iattr->ia_valid &=3D ~(ATTR_CTIME | ATTR_CTIME_SE=
+T |
+> @@ -1238,12 +1240,26 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd=
+4_compound_state *cstate,
+>         return status;
+>  }
+>
+> +static void nfsd4_file_mark_deleg_written(struct nfs4_file *fi)
+> +{
+> +       spin_lock(&fi->fi_lock);
+> +       if (!list_empty(&fi->fi_delegations)) {
+> +               struct nfs4_delegation *dp =3D list_first_entry(&fi->fi_d=
+elegations,
+> +                                                             struct nfs4=
+_delegation, dl_perfile);
+> +
+> +               if (dp->dl_type =3D=3D OPEN_DELEGATE_WRITE_ATTRS_DELEG)
+> +                       dp->dl_written =3D true;
+> +       }
+> +       spin_unlock(&fi->fi_lock);
+> +}
+> +
+>  static __be32
+>  nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>             union nfsd4_op_u *u)
+>  {
+>         struct nfsd4_write *write =3D &u->write;
+>         stateid_t *stateid =3D &write->wr_stateid;
+> +       struct nfs4_stid *stid =3D NULL;
+>         struct nfsd_file *nf =3D NULL;
+>         __be32 status =3D nfs_ok;
+>         unsigned long cnt;
+> @@ -1256,10 +1272,15 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_=
+compound_state *cstate,
+>         trace_nfsd_write_start(rqstp, &cstate->current_fh,
+>                                write->wr_offset, cnt);
+>         status =3D nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->cur=
+rent_fh,
+> -                                               stateid, WR_STATE, &nf, N=
+ULL);
+> +                                               stateid, WR_STATE, &nf, &=
+stid);
+>         if (status)
+>                 return status;
+>
+> +       if (stid) {
+> +               nfsd4_file_mark_deleg_written(stid->sc_file);
+> +               nfs4_put_stid(stid);
+> +       }
+> +
+>         write->wr_how_written =3D write->wr_stable_how;
+>         status =3D nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+>                                 write->wr_offset, &write->wr_payload,
+> @@ -2550,6 +2571,7 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
+>         mutex_unlock(&ls->ls_mutex);
+>
+>         nfserr =3D ops->proc_layoutcommit(inode, rqstp, lcp);
+> +       nfsd4_file_mark_deleg_written(ls->ls_stid.sc_file);
+>         nfs4_put_stid(&ls->ls_stid);
+>  out:
+>         return nfserr;
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 205ee8cc6fa2b9f74d08f7938b323d03bdf8286c..81fa7cc6c77b3cdc5ff22bc60=
+ab0654f95dc258d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1222,6 +1222,42 @@ static void put_deleg_file(struct nfs4_file *fp)
+>                 nfs4_file_put_access(fp, NFS4_SHARE_ACCESS_READ);
+>  }
+>
+> +static void nfsd4_finalize_deleg_timestamps(struct nfs4_delegation *dp, =
+struct file *f)
+> +{
+> +       struct iattr ia =3D { .ia_valid =3D ATTR_ATIME | ATTR_CTIME | ATT=
+R_MTIME };
+> +       struct inode *inode =3D file_inode(f);
+> +       int ret;
+> +
+> +       /* don't do anything if FMODE_NOCMTIME isn't set */
+> +       if ((READ_ONCE(f->f_mode) & FMODE_NOCMTIME) =3D=3D 0)
+> +               return;
+> +
+> +       spin_lock(&f->f_lock);
+> +       f->f_mode &=3D ~FMODE_NOCMTIME;
+> +       spin_unlock(&f->f_lock);
+> +
+> +       /* was it never written? */
+> +       if (!dp->dl_written)
+> +               return;
+> +
+> +       /* did it get a setattr for the timestamps at some point? */
+> +       if (dp->dl_setattr)
+> +               return;
+> +
+> +       /* Stamp everything to "now" */
+> +       inode_lock(inode);
+> +       ret =3D notify_change(&nop_mnt_idmap, f->f_path.dentry, &ia, NULL=
+);
+> +       inode_unlock(inode);
+> +       if (ret) {
+> +               struct inode *inode =3D file_inode(f);
+> +
+> +               pr_notice_ratelimited("Unable to update timestamps on ino=
+de %02x:%02x:%lu: %d\n",
+> +                                       MAJOR(inode->i_sb->s_dev),
+> +                                       MINOR(inode->i_sb->s_dev),
+> +                                       inode->i_ino, ret);
+> +       }
+> +}
+> +
+>  static void nfs4_unlock_deleg_lease(struct nfs4_delegation *dp)
+>  {
+>         struct nfs4_file *fp =3D dp->dl_stid.sc_file;
+> @@ -1229,6 +1265,7 @@ static void nfs4_unlock_deleg_lease(struct nfs4_del=
+egation *dp)
+>
+>         WARN_ON_ONCE(!fp->fi_delegees);
+>
+> +       nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
+>         kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
+>         put_deleg_file(fp);
+>  }
+> @@ -6265,6 +6302,8 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct=
+ nfsd4_open *open,
+>         memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeo=
+f(dp->dl_stid.sc_stateid));
+>
+>         if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> +               struct file *f =3D dp->dl_stid.sc_file->fi_deleg_file->nf=
+_file;
+> +
+>                 if (!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp) =
+||
+>                                 !nfs4_delegation_stat(dp, currentfh, &sta=
+t)) {
+>                         nfs4_put_stid(&dp->dl_stid);
+> @@ -6278,6 +6317,9 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct=
+ nfsd4_open *open,
+>                 dp->dl_atime =3D stat.atime;
+>                 dp->dl_ctime =3D stat.ctime;
+>                 dp->dl_mtime =3D stat.mtime;
+> +               spin_lock(&f->f_lock);
+> +               f->f_mode |=3D FMODE_NOCMTIME;
+> +               spin_unlock(&f->f_lock);
+>                 trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
+>         } else {
+>                 open->op_delegate_type =3D deleg_ts && nfs4_delegation_st=
+at(dp, currentfh, &stat) ?
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index bf9436cdb93c5dd5502ecf83433ea311e3678711..b6ac0f37e9cdfcfddde5861c8=
+c0c51bad60101b7 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -217,10 +217,12 @@ struct nfs4_delegation {
+>         struct nfs4_clnt_odstate *dl_clnt_odstate;
+>         time64_t                dl_time;
+>         u32                     dl_type;
+> -/* For recall: */
+> +       /* For recall: */
+>         int                     dl_retries;
+>         struct nfsd4_callback   dl_recall;
+>         bool                    dl_recalled;
+> +       bool                    dl_written;
+> +       bool                    dl_setattr;
+>
+>         /* for CB_GETATTR */
+>         struct nfs4_cb_fattr    dl_cb_fattr;
+>
+> --
+> 2.50.1
+>
+>
 
