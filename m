@@ -1,43 +1,44 @@
-Return-Path: <linux-nfs+bounces-17226-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17227-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6208BCCE80F
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 06:21:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 050F9CCE873
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 06:26:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EA380300A55A
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 05:21:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B27DA3035D21
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 05:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DF4222584;
-	Fri, 19 Dec 2025 05:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 474402C08C4;
+	Fri, 19 Dec 2025 05:24:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1781F17E8
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 05:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDF62C237C
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 05:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766121697; cv=none; b=TH7hS80B4wiu7SMOiSwGHJbTS7WJVow1nlS/tok70EvtDZrQkqzABviQ/bFCpYbmp8RuHf5el9L1N0cF7ZVXY7LOiIbXm0nB59lp8VJvIp2sOmaNUQhf+tmhCUi2XfOWfcRtD3cW1/uuZjPTDYw2DQDtv3p48vsl5YfZ08mPAHY=
+	t=1766121884; cv=none; b=TT8eiIF1oUZHVJ8RUQNyBLIQ4qL5AkHGkVFb5G3xhOhbfX1olalPayJflRGwYAm74gPdXQm+WT2lhRRq4UnWA4titm/DjqR+Nq3w994mgwCi2Vv3mCjNkTHsNm9BZyLD+HXYNjXx4P/1mJ7CtQeWztTxAZlEvNLiifxz1Dne3sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766121697; c=relaxed/simple;
-	bh=sItjMJ5cSWIutoL5vTzfF2BvZIonjTLHsPIWPL571Vg=;
+	s=arc-20240116; t=1766121884; c=relaxed/simple;
+	bh=PlgwhZJDX5rlZfrnasBvMsSycpYUgNiG4dVsU9n4S9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pj4a6ceYXed+l5DBvMt4QlqwB4WO5AUiAYSEqaPVxpibCGurHGz2g5w9b+y417AiaV/AbRDhjRUAhFXXhVKbzifkvTK7GMsUABV41TZ2keM9zuq+gs7yqJBNnhpfFQf6gOE/7lEVKBubbHFuF8AC43tU4QE20TBNEVDkt38pbWs=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nn0qeFaIDI/IwWi/YW2jcPCbar7uy+Q3BlW1Mx0Ci/oHTyN3OlaOPwrC6EKvoIO3r/WNGsoU31tKPxf6N2WU+Brq0zir3iCWMXxaL7NOlkAQWJDY591MZYGc2ZaXNhNH2fflEG0pFk7VtCiRj1WVyTYxMc9DyggeNbCOlHBtZPY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id C2DBB227A88; Fri, 19 Dec 2025 06:21:24 +0100 (CET)
-Date: Fri, 19 Dec 2025 06:21:24 +0100
+	id 0208B227A88; Fri, 19 Dec 2025 06:24:36 +0100 (CET)
+Date: Fri, 19 Dec 2025 06:24:35 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 23/24] NFS: return delegations from the end of a LRU
- when over the watermark
-Message-ID: <20251219052124.GA29411@lst.de>
-References: <20251218055633.1532159-1-hch@lst.de> <20251218055633.1532159-24-hch@lst.de> <13891f50-73a1-40ee-aaa2-373dba3886e6@oracle.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, Dai Ngo <dai.ngo@oracle.com>,
+	jlayton@kernel.org, neilb@ownmail.net, okorniev@redhat.com,
+	tom@talpey.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 2/3] NFSD: Add infrastructure for tracking persistent
+ SCSI registration keys
+Message-ID: <20251219052435.GB29411@lst.de>
+References: <20251215181418.2201035-1-dai.ngo@oracle.com> <20251215181418.2201035-3-dai.ngo@oracle.com> <20251218093434.GB9235@lst.de> <ecc09cc9-a0c9-499d-9d47-e90aa1f1815d@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -46,23 +47,23 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13891f50-73a1-40ee-aaa2-373dba3886e6@oracle.com>
+In-Reply-To: <ecc09cc9-a0c9-499d-9d47-e90aa1f1815d@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Dec 18, 2025 at 05:02:26PM -0500, Anna Schumaker wrote:
-> > Pass over referenced delegations during the first pass to give delegations
-> > that aren't in active used by frequently used for stat() or similar another
-> > chance to not be instantly reclaimed.  This scheme works the same as the
-> > referenced flags in the VFS inode and dentry caches.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Thu, Dec 18, 2025 at 11:00:52AM -0500, Chuck Lever wrote:
+> > But taking a step back:  why do we even need a new hash table here?
+> > Can't we jut hang off a list of block device for which a layout
+> > was granted off the nfs4_client structure given that we already
+> > have it available?
 > 
-> I'm seeing fstests hang on generic/013 after applying this patch and running
-> with NFS v4.0. Other versions of NFS still seem to work just fine. Have you
-> seen anything like this in your testing?
+> My question is: how many items will this table need to track,
+> on average? at maximum?
 
-I have to admit I completely ignored NFSv4.0 as usual.  I can reproduce
-the hang, but oddly enough not when running the test standalone, but only
-as part of at least a quick xfstests run.  Looking into it now.
+A good question that I do not have an answer to.  In my experience most
+NFS deployments actually use exactly one export per client, and I don't
+think I've seen a production deployment with more than a dozen exports
+mounted on a single client.  Then again I'm usually pretty well shielded
+from the worst enterprise deployments, so who knows especially in the
+days of containers.  Multiply that by the number of clients.
 
 
