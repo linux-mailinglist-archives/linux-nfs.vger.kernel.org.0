@@ -1,55 +1,54 @@
-Return-Path: <linux-nfs+bounces-17234-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17235-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CCCACD0647
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 15:53:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B9ECD0687
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 15:56:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E3AE730C3409
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 14:48:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93D0C3087D7E
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 14:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C8A33A9C5;
-	Fri, 19 Dec 2025 14:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DC733AD8F;
+	Fri, 19 Dec 2025 14:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SV/jiYrx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jO3nYkeS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9256633A9C1
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 14:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F3633A71F
+	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 14:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766155671; cv=none; b=eXMjW3uO4oV9yeLeg5O8O6z3m+Cs+k0os9Ql9J9FBXpnNKkbY4SNqlvVxkbrC0rbmj3WJopkOxzzaTvJhFpr4yK0FaIyM14bZzhrVgKa8S0jxLM6h7si15mIqFOEJFRyTUaCX5m7lPqddP5vRJB50sKk58z7ymc6dv1TrvvYZZ8=
+	t=1766155871; cv=none; b=Is//FYlotY831W1b6Ngqj3jIkJ091I97rjSb4fYJD6mJ0QBqccmgFF1taJe209E/Dm9xAfTDi0ufaAjAoYSv7kehZ+zHDDhzwoRA0VmnNlgXPUvrZssdO9ijECDqeTo1LTxsCVKS3Ne0ZbMeV9e9YzJePYmCYOLnQ0RlMRcqBKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766155671; c=relaxed/simple;
-	bh=PvlNy9plWSHM5q512RZr8SN3HL4gBdWyKOquj6pcKaA=;
+	s=arc-20240116; t=1766155871; c=relaxed/simple;
+	bh=XsaWKZZY3iGrGkJPQFWgPsgIHRMx0oteO5KeQ8GWimo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YDWYSq3ap/ELbeS4DYJoSRpsLu2HdQtPeR+QcmjHwEoDsWb0WF/K5guyDuTnPimi7CoJ4lW+2zSYlLV0R/GpRSHW4s1ENzuKgrLIPzeKqodGDBGLrVyV0VZU10pVnZ7xbIxEtlqkKYvDaqHxw0LP6zisVsrdxHKakOQrvF9hgA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SV/jiYrx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71633C2BC87;
-	Fri, 19 Dec 2025 14:47:50 +0000 (UTC)
+	 Content-Type:MIME-Version; b=QF0VWqN6mtT8lF4EvXhmBDak8o8peLEQP7/DKwY9eNFsCdR53sz9kpS1jqu7NHyLblRTA53GMrrULTsfw4FMF6NTGHxk+HRdHJtftq5KFxNJyT9NUO6iELQSJOsB9YHteWRn5pixqhUJWF7vHK15WwPNMDx2WcWCNA0kjixyZaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jO3nYkeS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495F0C4CEF1;
+	Fri, 19 Dec 2025 14:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766155671;
-	bh=PvlNy9plWSHM5q512RZr8SN3HL4gBdWyKOquj6pcKaA=;
+	s=k20201202; t=1766155870;
+	bh=XsaWKZZY3iGrGkJPQFWgPsgIHRMx0oteO5KeQ8GWimo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SV/jiYrxPIceVJO2HqxrO0nFDpqI290Bd6VPAf0/7RxJQ1UppTLiDIQ2jOZnhwFae
-	 JeulBg2QxZU2gtdUe3nIChjD6n4C+4bqihcU2rQ/Xg0AUv/KLRLirWzo7U5REhuNug
-	 OBaihyODI3aP7ncxypqUgbjOf1KotaRPujLAdR0KVEtHt6HxBy09W51+1nBLGNCLlA
-	 SE9zNSDzlKo8uVGS2BT1V+P/2VKYyNj3bil0edgsTSzOi35ncEZdKtfm8O/Jd1Sp4m
-	 2Qt+x8s2/JUFpTwFImFZmV3ZAjyinmY5YEVSHoSHPA1pyEQctLRoPhNuFj8qu259ty
-	 j0+knTMix7UnQ==
-Message-ID: <4dab4b231abac5665350b11e56d059f26e380235.camel@kernel.org>
-Subject: Re: [PATCH v1 35/36] lockd: Remove utilities that are no longer used
+	b=jO3nYkeSeVmPtZtT1pNrz0OgKAHAOn5Wxjq7M7wtOoTr4Nxd7JE8IFFirlB6PcJ5K
+	 FINm7FPJiTuzROTHgCDpi7x3VWTSIXCCdwNW7LtAieauMI3XVizpfgPqBSDMvYlEKu
+	 fNw1nziwm9s48a5vf225iFcu+Hdfmfv+wNQuNIND1h+oN9rY1aiXbntF97wbHk3N9U
+	 s4gJnJj8xDeycQrloPEXD4ikYzCVfifkAt/Ioo1WHEylr43G4GCFJwPzJ8CxL1i3RW
+	 KUk6KIEWh4iuUy2aytD2ya9sDCN5xriv5A+OJAY1+zOzbZEdNGk+bUG5ysVX6Uk6EA
+	 K0W0bruUhfqHQ==
+Message-ID: <3dffab431dc12e484826ee9712806bbfafcb03ab.camel@kernel.org>
+Subject: Re: [PATCH v1 00/36] Clarify module API boundaries
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 19 Dec 2025 09:47:48 -0500
-In-Reply-To: <20251218201346.1190928-36-cel@kernel.org>
+Date: Fri, 19 Dec 2025 09:51:07 -0500
+In-Reply-To: <20251218201346.1190928-1-cel@kernel.org>
 References: <20251218201346.1190928-1-cel@kernel.org>
-	 <20251218201346.1190928-36-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,50 +133,124 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-nit: title should probably read "Remove utility defines that are no
-longer used".
-
 On Thu, 2025-12-18 at 15:13 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/lockd/svc4proc.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
+> The first nine patches in this series refactor the lockd code base
+> to clearly separate its public API from internal implementation
+> details.
 >=20
-> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-> index ea5b502e1983..44aa7df36915 100644
-> --- a/fs/lockd/svc4proc.c
-> +++ b/fs/lockd/svc4proc.c
-> @@ -17,8 +17,6 @@
->  #include "nlm4xdr_gen.h"
->  #include "xdr4.h"
-> =20
-> -#define NLMDBG_FACILITY		NLMDBG_CLIENT
-> -
->  static __be32
->  nlm4_netobj_to_cookie(struct nlm_cookie *cookie, netobj *object)
->  {
-> @@ -975,16 +973,9 @@ static __be32 nlm4svc_proc_free_all(struct svc_rqst =
-*rqstp)
-> =20
-> =20
->  /*
-> - * NLM Server procedures.
-> + * NLMv4 Server procedures.
->   */
-> =20
-> -struct nlm_void			{ int dummy; };
-> -
-> -#define	Ck	(1+XDR_QUADLEN(NLM_MAXCOOKIELEN))	/* cookie */
-> -#define	No	(1+1024/4)				/* netobj */
-> -#define	St	1					/* status */
-> -#define	Rg	4					/* range (offset + length) */
-> -
->  const struct svc_procedure nlmsvc_procedures4[24] =3D {
->  	[NLMPROC4_NULL] =3D {
->  		.pc_func	=3D nlm4svc_proc_null,
+> The lockd subsystem currently exposes internal implementation headers
+> through include/linux/lockd/, creating implicit API contracts that
+> complicate maintenance. External consumers such as NFSD and the NFS
+> client have developed dependencies on internal structures like struct
+> nlm_host, and wire protocol constants leak into high-level module
+> interfaces.
+>=20
+> These patches work to establish clean architectural boundaries. The
+> public API in include/linux/lockd/ is reduced to bind.h and nlm.h,
+> which define the contract between lockd and its consumers. Private
+> implementation details including XDR definitions, share management,
+> and host structures are relocated to fs/lockd/ where they belong.
+> Layering violations are corrected: the NFS client now uses accessor
+> helpers instead of dereferencing internal structures, and nlm_fopen()
+> returns errno values instead of wire protocol codes.
+>=20
+> These changes enable subsequent work to modernize the NLMv4 XDR
+> layer using xdrgen without risk of breaking external consumers.
+> This work appears in the remaining patches in this series, which
+> are presented here only to provide context for the API adjustments.
+> No need to review those closely just yet.
+>=20
+> The series is based on commit 771cfff228fc in the public
+> nfsd-testing branch.
+>=20
+>=20
+> Chuck Lever (36):
+>   lockd: Have nlm_fopen() return errno values
+>   lockd: Relocate nlmsvc_unlock API declarations
+>   NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's rpc_clnt
+>   lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
+>   lockd: Move share.h from include/linux/lockd/ to fs/lockd/
+>   lockd: Relocate include/linux/lockd/lockd.h
+>   lockd: Remove lockd/debug.h
+>   lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
+>   Documentation: Add the RPC language description of NLM version 4
+>   lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
+>   lockd: Refactor nlm4svc_callback()
+>   lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
+>   lockd: Convert server-side NLMPROC4_TEST_RES to use xdrgen
+>   lockd: Convert server-side NLMPROC4_LOCK_RES to use xdrgen
+>   lockd: Convert server-side NLMPROC4_CANCEL_RES to use xdrgen
+>   lockd: Convert server-side NLMPROC4_UNLOCK_RES to use xdrgen
+>   lockd: Convert server-side NLMPROC4_GRANTED_RES to use xdrgen
+>   lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
+>   lockd: Convert server-side undefined procedures to xdrgen
+>   lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
+>   lockd: Update share_file helpers
+>   lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
+>   lockd: Remove utilities that are no longer used
+>   lockd: Remove dead code from fs/lockd/xdr4.c
+>=20
+>  Documentation/sunrpc/xdr/nlm4.x     |  211 ++++
+>  fs/lockd/Makefile                   |   21 +-
+>  fs/lockd/clnt4xdr.c                 |    5 +-
+>  fs/lockd/clntlock.c                 |    2 +-
+>  fs/lockd/clntproc.c                 |    2 +-
+>  fs/lockd/clntxdr.c                  |    5 +-
+>  fs/lockd/host.c                     |    2 +-
+>  {include/linux =3D> fs}/lockd/lockd.h |   49 +-
+>  fs/lockd/mon.c                      |    2 +-
+>  fs/lockd/nlm4xdr_gen.c              |  724 +++++++++++++
+>  fs/lockd/nlm4xdr_gen.h              |   32 +
+>  {include/linux =3D> fs}/lockd/share.h |   16 +-
+>  fs/lockd/svc.c                      |    2 +-
+>  fs/lockd/svc4proc.c                 | 1562 +++++++++++++++++----------
+>  fs/lockd/svclock.c                  |    5 +-
+>  fs/lockd/svcproc.c                  |   13 +-
+>  fs/lockd/svcshare.c                 |   40 +-
+>  fs/lockd/svcsubs.c                  |   43 +-
+>  fs/lockd/trace.h                    |    3 +-
+>  fs/lockd/xdr.c                      |    3 +-
+>  {include/linux =3D> fs}/lockd/xdr.h   |   12 +-
+>  fs/lockd/xdr4.c                     |  347 ------
+>  fs/lockd/xdr4.h                     |  104 ++
+>  fs/nfs/sysfs.c                      |   10 +-
+>  fs/nfsd/lockd.c                     |   51 +-
+>  fs/nfsd/nfsctl.c                    |    2 +-
+>  include/linux/lockd/bind.h          |   17 +-
+>  include/linux/lockd/debug.h         |   40 -
+>  include/linux/lockd/xdr4.h          |   43 -
+>  include/linux/sunrpc/xdrgen/nlm4.h  |  231 ++++
+>  30 files changed, 2513 insertions(+), 1086 deletions(-)
+>  create mode 100644 Documentation/sunrpc/xdr/nlm4.x
+>  rename {include/linux =3D> fs}/lockd/lockd.h (94%)
+>  create mode 100644 fs/lockd/nlm4xdr_gen.c
+>  create mode 100644 fs/lockd/nlm4xdr_gen.h
+>  rename {include/linux =3D> fs}/lockd/share.h (63%)
+>  rename {include/linux =3D> fs}/lockd/xdr.h (94%)
+>  delete mode 100644 fs/lockd/xdr4.c
+>  create mode 100644 fs/lockd/xdr4.h
+>  delete mode 100644 include/linux/lockd/debug.h
+>  delete mode 100644 include/linux/lockd/xdr4.h
+>  create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Big pile! I looked over the more interesting bits and didn't see
+anything objectionable. This looks like a nice change that removes a
+pile of stuff from include/ and gets lockd working with xdrgen'ed
+definitions. You can add:
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
