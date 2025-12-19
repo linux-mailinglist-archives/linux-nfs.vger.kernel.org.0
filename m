@@ -1,136 +1,214 @@
-Return-Path: <linux-nfs+bounces-17239-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17240-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5D45CD1065
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 18:02:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7F1ECD1246
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 18:28:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B2D51302C715
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 17:02:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 529AD302E06D
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 17:25:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840B732827D;
-	Fri, 19 Dec 2025 17:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8335233B6E8;
+	Fri, 19 Dec 2025 17:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="w/j2ZItT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4O/0Ac0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CE73009E1
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 17:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DE632B982;
+	Fri, 19 Dec 2025 17:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766163723; cv=none; b=pVvPmZmjpoJEhdOqRVwkl/Q63oHefa+QFag91ZMNkHM704hmTSGnVt0oPn0Stn8uPTES4rePJeBz3xTXYjw/P9LV0n/MKb58zvAXovcvcncOBrelKe6CvVgKPIqDOV6+JfGwAlg60DcqkLAWecTw6Z2WOkKTH4JDwzS2JYrj4l8=
+	t=1766165114; cv=none; b=nzos+yIB3KnrF98G0fagLH/MxTPek5DMcKFpRiDQYg7p9HLFkRsku/aAVk9gWUcZRDixoqHijhubuP2AC8xIi/JE7zv7HFDmHs87BfSJzvoUbktMWdT9RMk2PnPOB8lFwlZvXBuKDJUJ+XXJeQsNu39ThudbZ3ObWqlTIEvcomw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766163723; c=relaxed/simple;
-	bh=4SOBkthImmJzxLZLQ0s6iqP5eBQoze2VaxUSBNu4DVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YXfSTIlRlih6O3PYiHFo7fKfCM49TRoXhfYYshpkkUGvxSV6ZR+ukc/pWivO8+ge/YWxXYxGnr8Bl5vkhcfJseeiYbMig40xM4OigTY6tK/7lFJ7JpV5iymEMtemHHfB8xnlPTP/vCpLelsnGgrP2MUnmUYAVjAZy3nJhrVqTm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=w/j2ZItT; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64baaa754c6so813735a12.3
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 09:02:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1766163720; x=1766768520; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4SOBkthImmJzxLZLQ0s6iqP5eBQoze2VaxUSBNu4DVY=;
-        b=w/j2ZItTxx9ycfBwbQJ/N7/aiw8RgFvV3vfAbUIZZNSEE0bRQrBBqELZQeAJhEuQkQ
-         0jKBTR+4rnywC3LDYCf8oYlSs9EPwhmtybVIV2WffD7H52MhJbFS1zwzh7uJiM5bX3g2
-         iV9SHeIBMcLGIouBJPB2wWJXkJpTEQAgCizy2YwK9+ZCUKcUz0EvxC4ZXWd2isjn4FNj
-         39NCc662DKe8Ana5xhy+lZlOs0IgqSUW2FKatpmsgM2eDmlGXky18SEKfJlrghbpScIa
-         u2sOSfoTs55ZzsoSTKAhMySwVozZ1DgyJMS004juJsT6G8HDL2lv2h/N8EA0AI7isX1v
-         zV2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766163720; x=1766768520;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4SOBkthImmJzxLZLQ0s6iqP5eBQoze2VaxUSBNu4DVY=;
-        b=URZ2GOAMzJ+PIBBuFoGQ/19DUR2SWYhRdxaI95bvu5TgwMW+ylK1MBpSAvFxDjjb5/
-         aQ6EvLhKM8EWTpEqXOqi+Up6hvl56l2JGM1WCgp7UT27f3omG726khUwu8PkpzKVa8al
-         O3be4fClxL8Px/0uYqtO7ru0Drp2bmfbzGKyO0gbImpBJLwN4mAz6Wuax105hzSR4RDT
-         kZV+p99aNUjCQAjKAO63la+D9EIKjDOo8eZJ6vbLYz/KxLnO5dmMw2FGt8/d0GOdbiuO
-         1+RmXTiQBVjcQAYk1fW58vkseYeqzrhCn5AlpPRGTc5Hj5um5HmKISBGlE4IlN9kzyzt
-         B8Ig==
-X-Gm-Message-State: AOJu0Yx396sA8zyLnTQ1NQuoXE23x9adNAuxmXVngecA5PP4E8ZIzXZE
-	3Y/LrQq1HAh2z1W2Zhap8JeUMXUOghncYAtqnxNOzJdYic0yuz05QxuKODG081NR9Ks85Cv5O5U
-	9aXYKHOqSwQ/gXJ51zXxVYP2cMr4VcSUfqjTfcOs9CA==
-X-Gm-Gg: AY/fxX6fWW4VrxjQ9D7dBwvTQ1+zET1nWUW9RrvPmWjftydMzg122jvF/RT0qDKOWCq
-	9to+TdNqiA5kFIIzxM+wF6ncoIvN+4mWVREkbEv85Xzn0IgpH9HHxWvd2uPrirPgOfQdEyy7S5o
-	AaPzIg2l6m8oPHI6r37UFZYHByQGZNMe0vFGGdcfLNryZdCQS6HI9TLno7vWtEpQKOmGLzn5pVz
-	75rAtd4vRyVUObxEf1p1OGgSd9/x8DPUTXy9tm4/iFIBCwWaEzrGrz2SNScc5WlBQxMaw==
-X-Google-Smtp-Source: AGHT+IFYZ+T/DDBxZfTv12nqi2MKs8l2/c/zepK2RVF8SggZrcKR3TLEu57nFKme181aAS6NO8AWiWlcMI4B7+apghM=
-X-Received: by 2002:a05:6402:5108:b0:649:b4d8:7946 with SMTP id
- 4fb4d7f45d1cf-64b8edb3335mr2602774a12.23.1766163719739; Fri, 19 Dec 2025
- 09:01:59 -0800 (PST)
+	s=arc-20240116; t=1766165114; c=relaxed/simple;
+	bh=YEA9BKJF3rVbKK4t9UqRKdF4ELUwp7ZDAniqyWcGzc4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VDxt/7W7VSj+hlGQkPFUksB0eS82j0xMiKPLnhCxMZhFBGTUYjldPfN4AzmuloNK/Cvag1oxOyAobNRB0MqEfIpKb6HcFgRIUvHlcX+w/F+LyxewO1bSuGAbHWNRXwj/4r/XxXadUJ2lEZFo7AuExt88IoiHXg7xG717Xt+ssas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4O/0Ac0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37FABC4CEF1;
+	Fri, 19 Dec 2025 17:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766165113;
+	bh=YEA9BKJF3rVbKK4t9UqRKdF4ELUwp7ZDAniqyWcGzc4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=H4O/0Ac0j/M+NKG+1FrbmYImdH+aDGNUL6FN36h1+RLlJmJFoozTDsGkviMwtLIkJ
+	 1K3Aa2daIwxXPML45p7akZM4zifkFV/yfKJTAyof29lgpW1iWSTRhLoVQlJod15eDZ
+	 R5Eyrmbgsf3nIkiHEDcGVPwd10uGm1LBtXKJsuDG+44TceH5BXgsa4WL7515CzmCKC
+	 30rCK/pDc+J0HrtTkXVuwKF5/og7Pn95Ajpq95R0BJtme7P/hMglpbmdbmpYU1vE5H
+	 hxTIlbzJKBJ6AOHwU6rf0D7Qf9nCjiH8zqhzRhr6GyTo8SlKZ3nu0Y+ok35bj3w330
+	 gBpiYpVrf07Pg==
+Message-ID: <ca86b70c1a4a25c2f084bfce53ed864a557ebfed.camel@kernel.org>
+Subject: Re: [PATCH v4 8/8] nfsd: freeze c/mtime updates with outstanding
+ WRITE_ATTRS delegation
+From: Jeff Layton <jlayton@kernel.org>
+To: Olga Kornievskaia <aglo@umich.edu>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever
+ <chuck.lever@oracle.com>, NeilBrown	 <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Trond Myklebust	 <trondmy@hammerspace.com>, Anna
+ Schumaker <anna@kernel.org>, 	linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+Date: Fri, 19 Dec 2025 12:25:10 -0500
+In-Reply-To: <CAN-5tyEjYRFrJ7Gc4S8KwAZUuF-uz6ovPa4-_ynt+GGVqJHN_A@mail.gmail.com>
+References: <20250730-nfsd-testing-v4-0-7f5730570a52@kernel.org>
+	 <20250730-nfsd-testing-v4-8-7f5730570a52@kernel.org>
+	 <CAN-5tyEjYRFrJ7Gc4S8KwAZUuF-uz6ovPa4-_ynt+GGVqJHN_A@mail.gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADFF-zeNJUPLaVcogSBt=s4+o2Lty45-DueSYKJmCgZw6hraEg@mail.gmail.com>
-In-Reply-To: <CADFF-zeNJUPLaVcogSBt=s4+o2Lty45-DueSYKJmCgZw6hraEg@mail.gmail.com>
-From: Daire Byrne <daire@dneg.com>
-Date: Fri, 19 Dec 2025 17:01:22 +0000
-X-Gm-Features: AQt7F2oOfNfsPv8P8u21bp56Q8bnBK7hqHEOp3yV5u7A9mLHNUlUs2vFNcxWnPo
-Message-ID: <CAPt2mGOV+ZxVLkFFXRKX3Cr9vZ-pd=5QeN=cxwc_msGFtpPN=Q@mail.gmail.com>
-Subject: Re: fscache/NFS re-export server lockup
-To: mjnowen@gmail.com
-Cc: linux-nfs@vger.kernel.org, netfs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 19 Dec 2025 at 16:25, Mike Owen <mjnowen@gmail.com> wrote:
->
-> We are using NFS re-exporting with fscache but have had a number of
-> lockups with re-export servers.
->
-> The NFS re-export servers are running Ubuntu 24.04 with a
-> 6.14.0-36-generic kernel mounting Isilon and NetApp filers over NFSv3.
->
-> The NFS clients are mounting the re-exported shares over NFSv4 and
-> running AlmaLinux 9.6.
->
-> When the re-export server locks up, it is not possible to access the
-> /var/cache/fscache directory (separate file system) on the server and
-> all clients are hanging on their mounts from the re-export.
+On Fri, 2025-12-19 at 10:58 -0500, Olga Kornievskaia wrote:
+> Hi Jeff,
+>=20
+> I narrowed down the upstream failure for generic/215 and generic/407
+> to this commit.
+>=20
+> Let's consider first where the kernel is compiled with delegated
+> attributes off (but it also fails just the same if the delegated
+> attributes are compiled in).
+>=20
+> I don't understand why the code unconditionally changed to call
+> nfsd4_finalize_deleg_timestamps() which I think the main driver behind
+> the failure.
+>=20
+> Running generic/407 there is an OPEN (which gives out a write
+> delegation) and returns a change id, then on this filehandle there is
+> a SETATTR (with a getattr) which returns a new changeid. Then there is
+> a CLONE where the filehandle is the destination filehandle on which
+> there is a getattr which returns unchanged changeid/modify time (bad).
+> Then there is a DELEGRETURN (with a getattr) which again returns same
+> change id. Test fails.
+>=20
+> Prior to this commit. The changeid/modify time is different in CLONE
+> and DELEGRETURN -- test passes.
+>=20
+> Now let me describe what happens with delegated attributes enabled.
+> OPEN returns delegated attributes delegation, included getattr return
+> a changeid. Then CLONE is done, the included gettattr returns a
+> different (from open's) changeid (different time_modify). Then there
+> is SETATTR+GEATTR+DELEGRETURN compound from the client (which carries
+> a time_deleg_modify value different from above). Server in getattr
+> replies with changeid same as in clone and mtime with the value client
+> provided. So I'm not sure exactly why the test fails here but that's a
+> different problem as my focus is on "delegation attribute off option"
+> at the moment.
+>=20
+> I don't know if this is the correct fix or not but perhaps we
+> shouldn't unconditionally be setting this mode? (note this fix only
+> fixes the delegattributes off. however i have no claims that this
+> patch is what broke 215/407 for delegated attributes on. Something
+> else is in play there). If this solution is acceptable, I can send a
+> patch.
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 81fa7cc6c77b..624cc6ab2802 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -6318,7 +6318,8 @@ nfs4_open_delegation(struct svc_rqst *rqstp,
+> struct nfsd4_open *open,
+>                 dp->dl_ctime =3D stat.ctime;
+>                 dp->dl_mtime =3D stat.mtime;
+>                 spin_lock(&f->f_lock);
+> -               f->f_mode |=3D FMODE_NOCMTIME;
+> +               if (deleg_ts)
+> +                       f->f_mode |=3D FMODE_NOCMTIME;
+>                 spin_unlock(&f->f_lock);
+>                 trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
+>         } else {
+>=20
+>=20
 
-That does kind of point to a filesystem problem with /var/cache/fscache itself?
+That patch does look correct to me -- nice catch. Have you validated
+that it fixes 215 and 407?
 
-Can you stop the nfs server and is access to /var/cache/fscache still blocked?
-
-> When the server is rebooted, most of the contents of the
-> /var/cache/fscache directory is missing e.g. the file system contents
-> before the lockup may have been a few TBs, but after a reboot only a
-> few hundred GBs.
-
-I can't say I've ever seen that before... we use ext4 for the fscache
-filesystem mount on /var/cache/fscache.
-
-And I presume there is definitely nothing else that might be
-interacting with that /var/cache/fscache filesystem outside of fscache
-or cachefilesd?
-
-Our /etc/cachefilesd.conf is pretty basic (brun 30%, bcull 10%, bstop 3%).
-
-> The kern.log (below) from the re-export server reports the following
-> when the lockup happens.
->
-> We have tried using a more recent 6.17.11 kernel on the re-export
-> server and changing the fscache file system from ext4 to xfs, but
-> still have the same lockups.
-
-We were running a heavily patched v6.4 kernel for almost 2 years and
-have just updated to v6.18.1 with no patches - so far so good!
-
-We are mostly re-exporting NFSv3 -> NFSv3 (Linux NFS storage servers)
-with a small amount of NFSv3 -> NFSv4.2 (Netapps).
-
-> Any ideas on what is happening here - and how it may be fixed?
-
-Sorry I can't be more helpful.
-
-Daire
+Thanks,
+Jeff
+--=20
+Jeff Layton <jlayton@kernel.org>
 
