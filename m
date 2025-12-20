@@ -1,50 +1,54 @@
-Return-Path: <linux-nfs+bounces-17245-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17246-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B31F5CD1BAB
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 21:17:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCE8CD3256
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 16:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0C0C1308F15D
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Dec 2025 20:13:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07BB730109BB
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 15:41:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8656633F362;
-	Fri, 19 Dec 2025 20:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AF21DD525;
+	Sat, 20 Dec 2025 15:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jf5oHeWD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/DfFNu8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97EB32A3C3
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Dec 2025 20:13:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB2E1C69D
+	for <linux-nfs@vger.kernel.org>; Sat, 20 Dec 2025 15:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766175226; cv=none; b=twMw/rIlPK+EYuQBjg14cYmWV+F28kNYQFxE1nqmFB7Va0vJJ34pNBL/V6bpmvtAjEfEjMSH8jc0SPPdsRmGPVB7MBwHSylULypD6Fg4N4bceg2Sj7a0zfI8tqkcHj2zn8RBJuIHDylk2kmKQM+cEccNAzCUhx/HM2JWVhcgtos=
+	t=1766245274; cv=none; b=BGoTAEBgWgVUEHt9smLF9FwvTK0gfaEs5vjaMGwuRZagI8yHQxyNz9hUdv4VXqwX6nQT5y1yz9yVkRNpxjaWOUNliD1GA5DCWWNk28wm93+sU+TXHxCSIb59Px8P2fEi9SqRQS1u8R9Ri4RCXxBkD68KIYlXQIDFX6q/mlgTjWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766175226; c=relaxed/simple;
-	bh=mjM2shdJxcodvTrZ+OrNqVdAvVgILMspwSUHCDUqCrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BTZk3AiGi3vU+xNMKbTUTZ2imBRp0zo+WL1IExFsBWyirBgfN7rJOAf0+mR0TToPnl32s76nL2qTPTJHbhLf3z9x0UZrla+7/iyO6kH9NS7pnihopMwibIfmK4mwUq6ctbmtn1/6wtyMzCt37lNanyNlVNpRR4dkhFrId7+U0SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jf5oHeWD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95550C116D0;
-	Fri, 19 Dec 2025 20:13:45 +0000 (UTC)
+	s=arc-20240116; t=1766245274; c=relaxed/simple;
+	bh=TzatdKc3pZdlRLVQSvskOM9Zal0iaH+JX38I+17welo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tO6cJALP+7fFI6FZkilCZy7SidNcdM+iU0/60pb38rAxodd4wZUJ6Hn1F04bUtS2cGpbyZknFkSXz4LEAmodru9DLoCh6uo1BWHRTc6USDFmPPjT73eUdw/q0F/2gqAQGetIpPjaoSxObw7zNzMqF9QtUsuv01q1Rm1xbjL0ZiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/DfFNu8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249CCC4CEF5;
+	Sat, 20 Dec 2025 15:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766175225;
-	bh=mjM2shdJxcodvTrZ+OrNqVdAvVgILMspwSUHCDUqCrQ=;
+	s=k20201202; t=1766245273;
+	bh=TzatdKc3pZdlRLVQSvskOM9Zal0iaH+JX38I+17welo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Jf5oHeWDAwHf49UI6dvnYfIz49l0b4p7RgW/42X7Bit8AOo1Iv9S3WIbR6ySdO5l6
-	 UbU4CyFHCvJQTX1+SlL9nS+ffazTHAJO/B9Wi1DmByweHEmJkYhxQaWMIV9D2+rHe4
-	 PLhRe+OVeOl0FxoHqlraMbUrurOjAAgj1XP5sGeXG5AsIlviZt3cfnECQWOBWlL6vj
-	 zI8P040LQtOGWrfr9oPZu3G0+8jxPECy5k+nl1F4mNI07bX53peFx5NA1NHrKfeV98
-	 E6IQO/8sIffFQOop6i1ySOZyMU/51hFcwdsNQ3EGLGHQ8gZbeh6cTMf+Ss79IS2gAw
-	 HHAWSQcla5lOA==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH] NFS: Fix directory delegation verifier checks
-Date: Fri, 19 Dec 2025 15:13:44 -0500
-Message-ID: <20251219201344.380279-1-anna@kernel.org>
+	b=D/DfFNu8Ec/6Ro7y63u2xVMUOQQfCEF1cYM6e14hliH5LkDXsf8iG1kSKTPuxNdRt
+	 Imi3E77Q2IMqy+L7V+kxqVLZMOQ9hoXDCIS24jZrB6jSCMee9Lw5joq10QJQOYUzN4
+	 aE+1IK6Q5BTD2nINxoK3FyOFcmZqf3U/MMwn7k7Hhql1/yEkQbhTFek3PmIZ5R5USL
+	 eOitoQhzNeqxMlzPk7PKEtgNniHFWlKXzGF3XHHyFik01yWK0aOjavnx4QayW7Blb4
+	 BSXmp8guFPczQ2HbBWpgSnVavY7f0moV2rAZXAmRli92b+46UOTTsT/G7PaOK0qS//
+	 Kkhr2SWYFJUJg==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH] SUNRPC: xdrgen: Initialize data pointer for zero-length items
+Date: Sat, 20 Dec 2025 10:41:09 -0500
+Message-ID: <20251220154109.1361512-1-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -54,69 +58,63 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Anna Schumaker <anna.schumaker@oracle.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Doing this check in nfs_check_verifier() resulted in many, many more
-lookups on the wire when running Christoph's delegation benchmarking
-script. After some experimentation, I found that we can treat directory
-delegations exactly the same as having a delegated verifier when we
-reach nfs4_lookup_revalidate() for the best performance.
+The xdrgen decoders for strings and opaque data had an
+optimization that skipped calling xdr_inline_decode() when the
+item length was zero. This left the data pointer uninitialized,
+which could lead to unpredictable behavior when callers access
+it.
 
-Reported-by: Christoph Hellwig <hch@lst.de>
-Fixes: 156b09482933 ("NFS: Request a directory delegation on ACCESS, CREATE, and UNLINK")
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+Remove the zero-length check and always call xdr_inline_decode().
+When passed a length of zero, xdr_inline_decode() returns the
+current buffer position, which is valid and matches the behavior
+of hand-coded XDR decoders throughout the kernel.
+
+Fixes: 4b132aacb076 ("tools: Add xdrgen")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/dir.c | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
+ include/linux/sunrpc/xdrgen/_builtins.h | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 23a78a742b61..c0e9d5a45cd0 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1516,14 +1516,6 @@ static int nfs_check_verifier(struct inode *dir, struct dentry *dentry,
- 	if (!nfs_dentry_verify_change(dir, dentry))
- 		return 0;
- 
--	/*
--	 * If we have a directory delegation then we don't need to revalidate
--	 * the directory. The delegation will either get recalled or we will
--	 * receive a notification when it changes.
--	 */
--	if (nfs_have_directory_delegation(dir))
--		return 0;
--
- 	/* Revalidate nfsi->cache_change_attribute before we declare a match */
- 	if (nfs_mapping_need_revalidate_inode(dir)) {
- 		if (rcu_walk)
-@@ -2216,13 +2208,6 @@ int nfs_atomic_open(struct inode *dir, struct dentry *dentry,
+diff --git a/include/linux/sunrpc/xdrgen/_builtins.h b/include/linux/sunrpc/xdrgen/_builtins.h
+index 52ed9a9151c4..a723fb1da9c8 100644
+--- a/include/linux/sunrpc/xdrgen/_builtins.h
++++ b/include/linux/sunrpc/xdrgen/_builtins.h
+@@ -248,12 +248,10 @@ xdrgen_decode_string(struct xdr_stream *xdr, string *ptr, u32 maxlen)
+ 		return false;
+ 	if (unlikely(maxlen && len > maxlen))
+ 		return false;
+-	if (len != 0) {
+-		p = xdr_inline_decode(xdr, len);
+-		if (unlikely(!p))
+-			return false;
+-		ptr->data = (unsigned char *)p;
+-	}
++	p = xdr_inline_decode(xdr, len);
++	if (unlikely(!p))
++		return false;
++	ptr->data = (unsigned char *)p;
+ 	ptr->len = len;
+ 	return true;
  }
- EXPORT_SYMBOL_GPL(nfs_atomic_open);
- 
--static int
--nfs_lookup_revalidate_delegated_parent(struct inode *dir, struct dentry *dentry,
--				       struct inode *inode)
--{
--	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
--}
--
- static int
- nfs4_lookup_revalidate(struct inode *dir, const struct qstr *name,
- 		       struct dentry *dentry, unsigned int flags)
-@@ -2247,12 +2232,10 @@ nfs4_lookup_revalidate(struct inode *dir, const struct qstr *name,
- 	if (inode == NULL)
- 		goto full_reval;
- 
--	if (nfs_verifier_is_delegated(dentry))
-+	if (nfs_verifier_is_delegated(dentry) ||
-+	    nfs_have_directory_delegation(inode))
- 		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
- 
--	if (nfs_have_directory_delegation(dir))
--		return nfs_lookup_revalidate_delegated_parent(dir, dentry, inode);
--
- 	/* NFS only supports OPEN on regular files */
- 	if (!S_ISREG(inode->i_mode))
- 		goto full_reval;
+@@ -279,12 +277,10 @@ xdrgen_decode_opaque(struct xdr_stream *xdr, opaque *ptr, u32 maxlen)
+ 		return false;
+ 	if (unlikely(maxlen && len > maxlen))
+ 		return false;
+-	if (len != 0) {
+-		p = xdr_inline_decode(xdr, len);
+-		if (unlikely(!p))
+-			return false;
+-		ptr->data = (u8 *)p;
+-	}
++	p = xdr_inline_decode(xdr, len);
++	if (unlikely(!p))
++		return false;
++	ptr->data = (u8 *)p;
+ 	ptr->len = len;
+ 	return true;
+ }
 -- 
 2.52.0
 
