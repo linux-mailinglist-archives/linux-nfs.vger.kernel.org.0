@@ -1,121 +1,96 @@
-Return-Path: <linux-nfs+bounces-17246-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17247-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CCE8CD3256
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 16:41:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AC9ACD3464
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 18:31:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 07BB730109BB
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 15:41:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0689D300E78E
+	for <lists+linux-nfs@lfdr.de>; Sat, 20 Dec 2025 17:31:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AF21DD525;
-	Sat, 20 Dec 2025 15:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EF9E770FE;
+	Sat, 20 Dec 2025 17:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/DfFNu8"
+	dkim=pass (2048-bit key) header.d=thepreventioncoalition-org.20230601.gappssmtp.com header.i=@thepreventioncoalition-org.20230601.gappssmtp.com header.b="L97+3X1r"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB2E1C69D
-	for <linux-nfs@vger.kernel.org>; Sat, 20 Dec 2025 15:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CC2154BE2
+	for <linux-nfs@vger.kernel.org>; Sat, 20 Dec 2025 17:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766245274; cv=none; b=BGoTAEBgWgVUEHt9smLF9FwvTK0gfaEs5vjaMGwuRZagI8yHQxyNz9hUdv4VXqwX6nQT5y1yz9yVkRNpxjaWOUNliD1GA5DCWWNk28wm93+sU+TXHxCSIb59Px8P2fEi9SqRQS1u8R9Ri4RCXxBkD68KIYlXQIDFX6q/mlgTjWI=
+	t=1766251859; cv=none; b=UbmcPdB4+4cRBkSe78vjxVOFUluXZ347ABI37eAOtaIbXY2zRyl+RJjw6P8Fc78oz6MYdn0DcQSuH2YeqgASTpkVzu1Co1x2VJ4NHFl693d7gXCZ5qV56P4sHoGywTAB/mJWabtZubMRTRSY8DHzrR/V+n17zdU96TlJs77mwdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766245274; c=relaxed/simple;
-	bh=TzatdKc3pZdlRLVQSvskOM9Zal0iaH+JX38I+17welo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tO6cJALP+7fFI6FZkilCZy7SidNcdM+iU0/60pb38rAxodd4wZUJ6Hn1F04bUtS2cGpbyZknFkSXz4LEAmodru9DLoCh6uo1BWHRTc6USDFmPPjT73eUdw/q0F/2gqAQGetIpPjaoSxObw7zNzMqF9QtUsuv01q1Rm1xbjL0ZiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/DfFNu8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249CCC4CEF5;
-	Sat, 20 Dec 2025 15:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766245273;
-	bh=TzatdKc3pZdlRLVQSvskOM9Zal0iaH+JX38I+17welo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=D/DfFNu8Ec/6Ro7y63u2xVMUOQQfCEF1cYM6e14hliH5LkDXsf8iG1kSKTPuxNdRt
-	 Imi3E77Q2IMqy+L7V+kxqVLZMOQ9hoXDCIS24jZrB6jSCMee9Lw5joq10QJQOYUzN4
-	 aE+1IK6Q5BTD2nINxoK3FyOFcmZqf3U/MMwn7k7Hhql1/yEkQbhTFek3PmIZ5R5USL
-	 eOitoQhzNeqxMlzPk7PKEtgNniHFWlKXzGF3XHHyFik01yWK0aOjavnx4QayW7Blb4
-	 BSXmp8guFPczQ2HbBWpgSnVavY7f0moV2rAZXAmRli92b+46UOTTsT/G7PaOK0qS//
-	 Kkhr2SWYFJUJg==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH] SUNRPC: xdrgen: Initialize data pointer for zero-length items
-Date: Sat, 20 Dec 2025 10:41:09 -0500
-Message-ID: <20251220154109.1361512-1-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1766251859; c=relaxed/simple;
+	bh=NpfQzPt0w/MCj2Ai7VeKZh8krfTf8QDqeo4PEvFur3s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=GUNd9hPF/FVGJ74xWhiCkb17LZE9ulFJZSEcC8Gegn98eTszqxWoUkeS8FVnas/70l8IgWw6BS95phsHXVdXqyFd6jIR96837KoUdYlbRtnCuXqM2XgYVWJ1aYvLRiCwvrZzlCxJXL17QiK6s+hDxZlqfPI8cFqCkNiENlMTuL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=thepreventioncoalition.org; spf=fail smtp.mailfrom=thepreventioncoalition.org; dkim=pass (2048-bit key) header.d=thepreventioncoalition-org.20230601.gappssmtp.com header.i=@thepreventioncoalition-org.20230601.gappssmtp.com header.b=L97+3X1r; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=thepreventioncoalition.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=thepreventioncoalition.org
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37b9728a353so35411881fa.0
+        for <linux-nfs@vger.kernel.org>; Sat, 20 Dec 2025 09:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thepreventioncoalition-org.20230601.gappssmtp.com; s=20230601; t=1766251855; x=1766856655; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NpfQzPt0w/MCj2Ai7VeKZh8krfTf8QDqeo4PEvFur3s=;
+        b=L97+3X1ramG/jP0aBSQTsRARZaokj7FGszMl+EYqQw2vr7/qA0imPA1p4vpRQHjWMa
+         BMNbscozYfWyJH0NqkEM49Ws1sRLcesGyPgW9iMUVu6K9d9dlDc+tuxhof94HjpZ29yf
+         7eRQJ3lXptpepZBk5RwuTK8dfjviYbmmE2cUeBLT5470VO5pgK0lTmLTWIs/KQrlV/YF
+         BWM0m/X2gscI+FKQM9WOxWzat5MlqBFwOIAZYkhOopuEtBs/h76n+JVUFk4O6zmkeUkX
+         ili+tdWURLJ+ypPwdf0I1IcRQynenr50meGxfndDSDiUGvWWTzPdHeHc/8YwniK0HD2m
+         MbUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766251855; x=1766856655;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpfQzPt0w/MCj2Ai7VeKZh8krfTf8QDqeo4PEvFur3s=;
+        b=c+URtQiggdcxtOaNIebwLb4yrseIbsSfBEZUU+JkvxSrxVr8ivggRmzKCCeQ/8MQGh
+         246fWth4wm1yRc1ioS8tNL4Q2x3fkE0wczw+NCkEoVIJ2Z3mQ1sFXvoUR66+2tfqdGsw
+         w8hIkGqtsleUIzSxVFqSkdF/VENx4JanhNeNo4UVpEx75TyjCz6CIrzOukRE+AVKL8HN
+         rPcJgY1x8SztAuZhXAD8+lHCXMXNjg0Ge6nQhaTnOnc5KwMdTbhm0HSJmYICUK/nDR0r
+         3J3R0D7soHzZUA5ScbqAD/yQi2K9eMUmicu0RYTQK5f33xERj5s7Kh0UNfqGPN3swx9l
+         E9wQ==
+X-Gm-Message-State: AOJu0YzWYNmAUHz3H/zQ4WGaA2W2zm+3kj3+DLYTsVuRt9EDkQ4YqWXo
+	KURv8hoWYKw3JrtYL15tdJoOhDhG0OZ7Jverragh2E9j3VZNCYm5lLv6R37ryP1HIF4eASKOXkf
+	4nC5ljiYXay1o+ziqE1ijxqHyPTxNQSjfa0PC0BSNfMMykffEB3sj
+X-Gm-Gg: AY/fxX7EEKfZsATksGKkfqitwKd37f9LlrGrPRyfrFqeYOR91X5i2gUbip9WB+xMyIi
+	r7qI68xCi7Dl+IjNXmtlqgWQGd+0s0tcVuS4HfuFnChTFSI0C0N2vnTM/bwT/FF+j6RxMYCp97H
+	D5FuYGrfYSHzQAzo4ahipNdulfcfS+Fza3S7xULTg10IAuEQ4z4jAixWp4PB9j7KP9ZhmvfMNHV
+	8L/v83DjqiHXKIgCuzI7b5PhBakWRMex2B27JhDhVQFxnZXK1FZ9mb2YNYeiQD43qnLtrDxvDhG
+	tETt2MjJrB8p+ra9Atsmz+pdnELJnQymjKqgrA==
+X-Google-Smtp-Source: AGHT+IHH21mgkVeNYt299iGZDqgeXbxsR4ToENmsN9JPTAO16aP8SSWTm1q0e19CcsCUhHY/HQmgMUEHvCGxf/LRTls=
+X-Received: by 2002:a05:651c:984:b0:37f:c5ca:7111 with SMTP id
+ 38308e7fff4ca-381216747f0mr16396931fa.42.1766251854898; Sat, 20 Dec 2025
+ 09:30:54 -0800 (PST)
+Received: from 434128649655 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 20 Dec 2025 11:30:54 -0600
+Received: from 434128649655 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 20 Dec 2025 11:30:54 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Jackie Cortez <info@thepreventioncoalition.org>
+Date: Sat, 20 Dec 2025 11:30:54 -0600
+X-Gm-Features: AQt7F2qDz1D79TDNHhVyi0pjvG48beeSkCNImi5wc0M6hVUP_-6F-zwLh4Ncmmo
+Message-ID: <CAF=f=7BjCZ_dM0NZ=V64RUrB=EpbHYh=WEEo9sDkn17YqCu-NQ@mail.gmail.com>
+Subject: Gentle Reminder: Article Collaboration Opportunity
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi there,
 
-The xdrgen decoders for strings and opaque data had an
-optimization that skipped calling xdr_inline_decode() when the
-item length was zero. This left the data pointer uninitialized,
-which could lead to unpredictable behavior when callers access
-it.
+I hope this message finds you well. I'm just following up to see if
+you had a chance to consider the article we proposed about making
+small, impactful changes for better health. We're excited about the
+potential collaboration and would love to hear your thoughts.
 
-Remove the zero-length check and always call xdr_inline_decode().
-When passed a length of zero, xdr_inline_decode() returns the
-current buffer position, which is valid and matches the behavior
-of hand-coded XDR decoders throughout the kernel.
+If you already responded, thanks for that and sorry for the repeat.
 
-Fixes: 4b132aacb076 ("tools: Add xdrgen")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/xdrgen/_builtins.h | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/sunrpc/xdrgen/_builtins.h b/include/linux/sunrpc/xdrgen/_builtins.h
-index 52ed9a9151c4..a723fb1da9c8 100644
---- a/include/linux/sunrpc/xdrgen/_builtins.h
-+++ b/include/linux/sunrpc/xdrgen/_builtins.h
-@@ -248,12 +248,10 @@ xdrgen_decode_string(struct xdr_stream *xdr, string *ptr, u32 maxlen)
- 		return false;
- 	if (unlikely(maxlen && len > maxlen))
- 		return false;
--	if (len != 0) {
--		p = xdr_inline_decode(xdr, len);
--		if (unlikely(!p))
--			return false;
--		ptr->data = (unsigned char *)p;
--	}
-+	p = xdr_inline_decode(xdr, len);
-+	if (unlikely(!p))
-+		return false;
-+	ptr->data = (unsigned char *)p;
- 	ptr->len = len;
- 	return true;
- }
-@@ -279,12 +277,10 @@ xdrgen_decode_opaque(struct xdr_stream *xdr, opaque *ptr, u32 maxlen)
- 		return false;
- 	if (unlikely(maxlen && len > maxlen))
- 		return false;
--	if (len != 0) {
--		p = xdr_inline_decode(xdr, len);
--		if (unlikely(!p))
--			return false;
--		ptr->data = (u8 *)p;
--	}
-+	p = xdr_inline_decode(xdr, len);
-+	if (unlikely(!p))
-+		return false;
-+	ptr->data = (u8 *)p;
- 	ptr->len = len;
- 	return true;
- }
--- 
-2.52.0
-
+Best,
+Jackie and Pat from ThePreventionCoalition.org
 
