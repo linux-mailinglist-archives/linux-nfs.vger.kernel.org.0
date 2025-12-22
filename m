@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-17252-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17253-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E408DCD6031
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Dec 2025 13:41:25 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 753D3CD6135
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Dec 2025 13:58:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 245DB3034615
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Dec 2025 12:41:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9FB61301E9B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Dec 2025 12:56:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9454E29B766;
-	Mon, 22 Dec 2025 12:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094A02D0C89;
+	Mon, 22 Dec 2025 12:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJepizNR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy8t3pw0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F36A29AB1A
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Dec 2025 12:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88A41AA7A6
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Dec 2025 12:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766407263; cv=none; b=cdqXlFMgNFeRPM2CN9A56qWx0xsFES1FIPNKdT409vGBTAaJnFRgqszJbS6RptPIf3dlvTZjRSvqp9mNygHY1xCi0PLUzGAXBe4MhcpcoUYl1OCaN/TJRQQwoGvf6GQEngQNVrfhPV0uED4aBh68SpilqR9vK9HL/4z1nzNFgvY=
+	t=1766407637; cv=none; b=Znd/+ttKzPyCvgFSm1Od5vwwVnu/jQmUrXiYyVY4JxkFvtYYqcnPITlBVSfOBsnbOC+MNWPUTXH2U99QX9nhnsAgKfqRY/zTlP9UwjO6w5UKNi0cGNHQSXYgFX3c/eglgEMPh7/GBdgaLe44VTulJmFDT0WaAgwcxLzjr/yAds4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766407263; c=relaxed/simple;
-	bh=he6oBsQmQR6mw9KBvQtGdwVfMSa1drNLXCfMwwN9AcE=;
+	s=arc-20240116; t=1766407637; c=relaxed/simple;
+	bh=9aeHr0UBYKybdnZ7OonhcZ1hc+us6ZVH81XLigqlmVI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YQ/9KsVXB5TbKy2mpj8jVAplgScHnmxv3s5EYw5IIHpukAqXSEebqm/1FERS70XzF7+IWCbELAEM9agDldOq89HThl6hfrTSMyoSAQMKTNbkY/urzUKS7wJYPNkxOxYh7pY99vxLOniGpjftXRFmvTVYuV9t7I/zXdgxoQi9ZJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJepizNR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293AFC4CEF1;
-	Mon, 22 Dec 2025 12:41:02 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ILEGaIjMRtWMLwkMPHC3EkC9N7g0mp8YBuGjcttbXuEQjQwalxcVPSujKngyhzCPur0z7/PjQntRpbocA3nfSmwmiZkaGhbQIEUImXgIrf0Kb98uq8EmEq5nU9AGwWuJjGmUzed96X9Z7RW4rLBdqWO7S/2DyIHkiR7jvYSyQ2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy8t3pw0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDDBC4CEF1;
+	Mon, 22 Dec 2025 12:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766407262;
-	bh=he6oBsQmQR6mw9KBvQtGdwVfMSa1drNLXCfMwwN9AcE=;
+	s=k20201202; t=1766407637;
+	bh=9aeHr0UBYKybdnZ7OonhcZ1hc+us6ZVH81XLigqlmVI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=vJepizNRsaJp8qrfYME/dNMExary/lWaMgGokge04IEZ9PWpOgO1EMko9wj/h5g6N
-	 aXbMhVDkm/4yqhzZhfcLtWTzq0DyZzPSklF+vPUnvaDe/ttvDLZWvSO+Oy7HWE6fzN
-	 ya9wimwjgK7fC2kWIMdDVtlXIxqEkOEK3Zs0jCD1q1DQipQcQyoVEhdGoiBV9Cl8yw
-	 LNPwor048fV5QEdikpcV9CZO8y1WW5/W6mvks71JuhEjFInvcumRLh9o8M2D2cp99c
-	 Fn6l39oHrZZC6i2WF/P8NBP1qQj5PhNCVMHlpzhogMqFqdryN6kg4Y3O5RIUo4Ctd4
-	 vGuDpccfUoNDQ==
-Message-ID: <7c18c1b0c89860a17e4b1bb7eddb7d2e489cf6f1.camel@kernel.org>
-Subject: Re: [PATCH v2 1/3] NFSD: Track SCSI Persistent Registration Fencing
- per Client with xarray
+	b=cy8t3pw0pI6z1VEeSKS5Eyi2JObgbtA2pdj4c3GSEwuxRBFNTXnnedWnJL9NyFXjM
+	 L484bLmd9weWpGMiKXh6KMIoMIXJ4FQu8rWWg/aRycj7R8i4seuWX0UJBrexaCMy4+
+	 o3dZXsQasWE5qYUI2x8hEiHrVtdDrxwOdRtkaMtE4NDAlI0KIsE7H3ZaZXIoApZK3f
+	 Q9uirMwguXxOpoLdaKOvWqwWrskzR064gGxZoZHBN+V3XCqkjcdBJUi0gxZT8YwYdU
+	 eN1/wnj24j6YL9PSj0H+EtIDiCkG3fbYlVs+YT9M5orLasbir3SVaD8tm1XWV4JMYL
+	 XB0JQ5HGckhew==
+Message-ID: <e8bbc54e23e1c38a1eb2d41a6550c3908f87a215.camel@kernel.org>
+Subject: Re: [PATCH] SUNRPC: xdrgen: Initialize data pointer for zero-length
+ items
 From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@ownmail.net,
- 	okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 22 Dec 2025 07:41:00 -0500
-In-Reply-To: <20251222021002.165582-1-dai.ngo@oracle.com>
-References: <20251222021002.165582-1-dai.ngo@oracle.com>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 22 Dec 2025 07:47:15 -0500
+In-Reply-To: <20251220154109.1361512-1-cel@kernel.org>
+References: <20251220154109.1361512-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,123 +134,67 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-12-21 at 18:09 -0800, Dai Ngo wrote:
-> Update the NFS server to handle SCSI persistent registration fencing on
-> a per-client and per-device basis by utilizing an xarray associated with
-> the nfs4_client structure.
+On Sat, 2025-12-20 at 10:41 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Each xarray entry is indexed by the dev_t of a block device registered
-> by the client. The entry maintains a flag indicating whether this device
-> has already been fenced for the corresponding client.
+> The xdrgen decoders for strings and opaque data had an
+> optimization that skipped calling xdr_inline_decode() when the
+> item length was zero. This left the data pointer uninitialized,
+> which could lead to unpredictable behavior when callers access
+> it.
 >=20
-> When the server issues a persistent registration key to a client, it
-> creates a new xarray entry at the dev_t index with the fenced flag
-> initialized to 0.
+> Remove the zero-length check and always call xdr_inline_decode().
+> When passed a length of zero, xdr_inline_decode() returns the
+> current buffer position, which is valid and matches the behavior
+> of hand-coded XDR decoders throughout the kernel.
 >=20
-> Before performing a fence via nfsd4_scsi_fence_client, the server
-> checks the corresponding entry using the device's dev_t. If the fenced
-> flag is already set, the fence operation is skipped; otherwise, the
-> flag is set to 1 and fencing proceeds.
->=20
-> The xarray is destroyed when the nfs4_client is released in
-> __destroy_client.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Fixes: 4b132aacb076 ("tools: Add xdrgen")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/blocklayout.c | 18 ++++++++++++++++++
->  fs/nfsd/nfs4state.c   |  6 ++++++
->  fs/nfsd/state.h       |  2 ++
->  3 files changed, 26 insertions(+)
+>  include/linux/sunrpc/xdrgen/_builtins.h | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
 >=20
-> V2:
->    . Replace xa_store with xas_set_mark and xas_get_mark to avoid
->      memory allocation in nfsd4_scsi_fence_client.
->    . Remove cl_fence_lock, use xa_lock instead.
->=20
-> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index afa16d7a8013..348083488823 100644
-> --- a/fs/nfsd/blocklayout.c
-> +++ b/fs/nfsd/blocklayout.c
-> @@ -357,6 +357,9 @@ nfsd4_block_get_device_info_scsi(struct super_block *=
-sb,
->  		goto out_free_dev;
->  	}
-> =20
-> +	/* create a record for this client with the fenced flag set to 0 */
-> +	xa_store(&clp->cl_fenced_devs, (unsigned long)sb->s_bdev->bd_dev,
-> +				xa_mk_value(0), GFP_KERNEL);
->  	return 0;
-> =20
->  out_free_dev:
-> @@ -400,10 +403,25 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid =
-*ls, struct nfsd_file *file)
->  	struct nfs4_client *clp =3D ls->ls_stid.sc_client;
->  	struct block_device *bdev =3D file->nf_file->f_path.mnt->mnt_sb->s_bdev=
-;
->  	int status;
-> +	void *entry;
-> +	XA_STATE(xas, &clp->cl_fenced_devs, bdev->bd_dev);
-> +
-> +	xa_lock(&clp->cl_fenced_devs);
-> +	entry =3D xas_load(&xas);
-> +	if (entry && xas_get_mark(&xas, XA_MARK_0)) {
-> +		/* device already fenced */
-> +		xa_unlock(&clp->cl_fenced_devs);
-> +		return;
-> +	}
-> +	/* Set the fenced flag for this device. */
-> +	xas_set_mark(&xas, XA_MARK_0);
-> +	xa_unlock(&clp->cl_fenced_devs);
-> =20
->  	status =3D bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KE=
-Y,
->  			nfsd4_scsi_pr_key(clp),
->  			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
-> +	if (status)
-> +		xas_clear_mark(&xas, XA_MARK_0);
->  	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
+> diff --git a/include/linux/sunrpc/xdrgen/_builtins.h b/include/linux/sunr=
+pc/xdrgen/_builtins.h
+> index 52ed9a9151c4..a723fb1da9c8 100644
+> --- a/include/linux/sunrpc/xdrgen/_builtins.h
+> +++ b/include/linux/sunrpc/xdrgen/_builtins.h
+> @@ -248,12 +248,10 @@ xdrgen_decode_string(struct xdr_stream *xdr, string=
+ *ptr, u32 maxlen)
+>  		return false;
+>  	if (unlikely(maxlen && len > maxlen))
+>  		return false;
+> -	if (len !=3D 0) {
+> -		p =3D xdr_inline_decode(xdr, len);
+> -		if (unlikely(!p))
+> -			return false;
+> -		ptr->data =3D (unsigned char *)p;
+> -	}
+> +	p =3D xdr_inline_decode(xdr, len);
+> +	if (unlikely(!p))
+> +		return false;
+> +	ptr->data =3D (unsigned char *)p;
+>  	ptr->len =3D len;
+>  	return true;
 >  }
-> =20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 808c24fb5c9a..2d4a198fe41d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2381,6 +2381,9 @@ static struct nfs4_client *alloc_client(struct xdr_=
-netobj name,
->  	INIT_LIST_HEAD(&clp->cl_revoked);
->  #ifdef CONFIG_NFSD_PNFS
->  	INIT_LIST_HEAD(&clp->cl_lo_states);
-> +#ifdef CONFIG_NFSD_SCSILAYOUT
-> +	xa_init(&clp->cl_fenced_devs);
-> +#endif
->  #endif
->  	INIT_LIST_HEAD(&clp->async_copies);
->  	spin_lock_init(&clp->async_lock);
-> @@ -2537,6 +2540,9 @@ __destroy_client(struct nfs4_client *clp)
->  		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
->  	atomic_add_unless(&nn->nfs4_client_count, -1, 0);
->  	nfsd4_dec_courtesy_client_count(nn, clp);
-> +#ifdef CONFIG_NFSD_SCSILAYOUT
-> +	xa_destroy(&clp->cl_fenced_devs);
-> +#endif
->  	free_client(clp);
->  	wake_up_all(&expiry_wq);
+> @@ -279,12 +277,10 @@ xdrgen_decode_opaque(struct xdr_stream *xdr, opaque=
+ *ptr, u32 maxlen)
+>  		return false;
+>  	if (unlikely(maxlen && len > maxlen))
+>  		return false;
+> -	if (len !=3D 0) {
+> -		p =3D xdr_inline_decode(xdr, len);
+> -		if (unlikely(!p))
+> -			return false;
+> -		ptr->data =3D (u8 *)p;
+> -	}
+> +	p =3D xdr_inline_decode(xdr, len);
+> +	if (unlikely(!p))
+> +		return false;
+> +	ptr->data =3D (u8 *)p;
+>  	ptr->len =3D len;
+>  	return true;
 >  }
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index b052c1effdc5..8dd6f82e57de 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -527,6 +527,8 @@ struct nfs4_client {
-> =20
->  	struct nfsd4_cb_recall_any	*cl_ra;
->  	time64_t		cl_ra_time;
-> +
-> +	struct xarray		cl_fenced_devs;
->  };
-> =20
->  /* struct nfs4_client_reset
-
-Patch seems sane, but where are patches 2 and 3?
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
