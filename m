@@ -1,123 +1,290 @@
-Return-Path: <linux-nfs+bounces-17283-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17284-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A8B7CD834C
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 06:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E670CD9C82
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 16:33:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BF5FD3021E73
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 05:39:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3C5A6302E05C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 15:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116B42F3C02;
-	Tue, 23 Dec 2025 05:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6DE029ACDB;
+	Tue, 23 Dec 2025 15:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmuGU0S3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWh1+MFP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ABD234973
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Dec 2025 05:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A5029993D
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Dec 2025 15:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766468350; cv=none; b=LlUfCbUuqY5TMuHeuyoFm12w66admgCHQ0929JDPbReM7q1xdIX2oArzjw9GxOtZMM6g6Dd4gSj7qqIYaZppAfN2JzN/IRDxJbBNEKzd1h7rWYldi6Y9Wqar1txO3Ep9xBxa3gZkNUbkMnVDt0hjjrpqT8L94Egsk+PdE4c51Rw=
+	t=1766503987; cv=none; b=Rc8VDzjTXgygQwHEwDjIMxJNPQ2snTxhlZ1UjeqjBHcAl7BSMRoIoaK8uS98KSWO4XFiHklANh5UECbG+TXZF61KWHfQ/ry2myeCHkgaLWUeak2pCsm5J8SxHLp6jYF8Yi7iN48GqQBt7xW1JekV9dW0prJGmtEZs/YmhhLEgjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766468350; c=relaxed/simple;
-	bh=4EYwI5dt6aXRXkl+FSZUrQuoyCBEuH9OaUQ78T0nqW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UyXCFGsWDSXZvkz/M6tmmTCR956I4V627Z6kfFvtmHEbceX0K0bt8QcJsS6wLbTiXqcJoj970QaYSJhAQMWhdMHoKdVX44het/TQi2SA9Kzza5B30cImNCszZH3C0/64F8JirdjGy3+X8h49JDpZA0UQteNw2+iWdJ8sa3BLUt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AmuGU0S3; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2a0a33d0585so43699345ad.1
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Dec 2025 21:39:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766468347; x=1767073147; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V0Oa5NOGMRC1AJFdH7RGft89mUSkkZqf9Qovy9KVtFo=;
-        b=AmuGU0S3tNTq4XtJ8CPVuHsrup5GslR4U1PsfZM5q7Es9j9PRoBOtcmrNZjZY9bYX2
-         UKR+5USfuLaeedQBq8VdFeWlSpdtJwj9cUx0XSPWF6iw2+/Dx0Y5UVucH/qMMErYNCo2
-         DmPMJSCgLNX8OFyioDFMPSDOCAjVz+YVUY/Iz/KUSFGJ2xhlgSyingmuGzIf1Ot4VcrN
-         bRMe9e6HU5DXOTn41IlUPOezYioUBfH4sOmBJ/VJV2wbgRChwx/8WJgiqq1vVmt2UJG1
-         sPq57LHY2hmsktX2yrFZnu8K5GlUfYr80BrqjJruZXf92pssdcqPz8wFkvEzjVdz2E5K
-         tIhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766468347; x=1767073147;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V0Oa5NOGMRC1AJFdH7RGft89mUSkkZqf9Qovy9KVtFo=;
-        b=JM9OxHH5h0S4u0kog8bSy+l5zvi4xJ7Rde5k1H0F2D5VX3HJQDTyT1Y7r6z4BzmnFb
-         4lgFNnjBD+x4YVXs5gLj0iKCY3bOZRoMSqM/sl9jzzJyodSqiWFH5ihRPjXy1GCinUkF
-         Y6MzmgELy9NDOVwkn4hEknCWQ8Y+nZ9fGVOWhuQl1epgRTlGYZM1IQr6ywhDN6k484LF
-         Y8TWvTChmE+BAgVxPjTlwGA8cBVMbmPT0e0B3KsyGm1V8OaOwBnfgPKXP5+IRalbArG3
-         Iq3gonEVWW8J3imxW4MOYYRi90awHLGywzuEQl8FV70iovO+QXM/4BKlB1tTE3rFwwcC
-         SNZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9lEblvHDYAexbVjNv4cTeHeQ2IeFtYXFXcduezqjTTVQ5p5ILmS3ra2CEXgtB9FT3LOgVPlweU9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMMIk963Seop+Upy27ZhZpHAe2snrYIaa7WyCh0GSTz4MZTCEQ
-	/Q39OR2v3xservInoD/x8KV8OFdG5/JCvkQR4pl4tbEELCYK+I+UD2WM
-X-Gm-Gg: AY/fxX6LNgqt1pKL6ZSbSAo0k/oUx9H+X4yhmDIVaotnGwBR40RWOsmoG8lcOal5zYS
-	8/eY1HFf/DFOqF3OniVIEiCcKXf6yyq15eqQGHGJVsZUwuO6g8GE3RwacUFlZERH5nUDQ/WqdpK
-	CY9ZVCMjd3NsMLcCTj+tmHpslaVS7YDoe7/+1MKzW0RNE+sdZH0kAl9gfGKi8Bam7Tg7ZrbyzAl
-	wf2KxCNKUDIsPZrX279FcD14m87ghaVD6q+xS3IVUUpgjWWgourtuqBAlivNNWvYQRrxUR5rre6
-	f70wqnbFjTb/tj4zC/udYTnTAimrLOmozuEJhA5DYciX/3cA8T/rEMP5+WoHFpoQxUzW0HoCjmT
-	sCTf5J3Vbmt0d8eobkukOlsTZpUN4XDV/GbXXBe2SB9Dt805nfEjV+rB2B3s3SD/S5QrhGEbDWi
-	K24Sdv+okQ0knfNkzKkCf5k7NojugFVAYDAmnZkGPVjqmR3WxSasJetzBr4cx/xypZ
-X-Google-Smtp-Source: AGHT+IFzlCLo+BvPmOwaQvXqt6LlTFpUSJebHNJribHXa7k68xn/ydFompByNLrYdKm0zAa3YWAnPw==
-X-Received: by 2002:a05:7022:793:b0:11b:9386:8257 with SMTP id a92af1059eb24-12172302180mr11142291c88.44.1766468347292;
-        Mon, 22 Dec 2025 21:39:07 -0800 (PST)
-Received: from ?IPV6:2600:8802:b00:9ce0:637f:5cdc:9df0:d9ab? ([2600:8802:b00:9ce0:637f:5cdc:9df0:d9ab])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724de268sm40285157c88.8.2025.12.22.21.39.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Dec 2025 21:39:06 -0800 (PST)
-Message-ID: <bc999618-1f1a-4ae7-a81c-57062d57614d@gmail.com>
-Date: Mon, 22 Dec 2025 21:39:05 -0800
+	s=arc-20240116; t=1766503987; c=relaxed/simple;
+	bh=Io3kqIxBK6BGESoICdJDYv23debj8rPPpL7dnJtWnuA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XiX0YivMisuu3GtsHy9aPFeH7Rt9uaEUDHU5+endARC2yi3Tv2CUUmkEZR/bENISx0PUOGNrm3vt0cTvWXLKH9Oklf2+0POpcix0iAjkSAaWL/CbGbo7oL1KtticcWgH/VV1JvUKuG5qOVg0JsuX+2EqblcfvaO4qgZfsqtM3eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWh1+MFP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6898C113D0;
+	Tue, 23 Dec 2025 15:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766503987;
+	bh=Io3kqIxBK6BGESoICdJDYv23debj8rPPpL7dnJtWnuA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pWh1+MFPFR2Mtl2h0uhmTMtNnMKNdh4Ciz9sKKlJ+LqcthLG2TNqiGh56nHxaYnu8
+	 hccoeJb+KqhNW3VPcKhq6pbQ7WRp5eUDtWFpE9ULKdcwjgwRYB6Hflrw/XsiPJFBS3
+	 IuO98oWQWJ3phJgtqEGIVYXaX1mdWRWTI0RRI6XZFl9SgJR7G5ISpotY2eq717bJSP
+	 EWb1RU0ZC5HI3rI38cmxNomL7FW1W5AtpWG4qTHIfEy1AQK/Qrw6GXAQAbOZF6+TmB
+	 O5TC2/PC8i7knefRd1SJevDPWdPybkYYDeIUC4i4kELPywNzn2MtNLFfn1zXVjZfqp
+	 +GdH/2A/jMEig==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id F19ABF4006B;
+	Tue, 23 Dec 2025 10:33:05 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 23 Dec 2025 10:33:05 -0500
+X-ME-Sender: <xms:MbZKadub_-YJPwSGQWYSDorH78VpFSgyasJ-4C7pyrFw106BJq5u9g>
+    <xme:MbZKaRTyTnSi5tPo7GEPVAy4T9OLZfXMFYf3JEdCqA3l_Pe0Pdczk3Y38CI_hFwmf
+    LJZvjVLcv1hD5yuKSTLmgh0aG6GhfZUKXvLGMkyOwb7gkP1zTDHu9E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeitddulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlsh
+    htrdguvgdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehnvg
+    hilhgssehofihnmhgrihhlrdhnvghtpdhrtghpthhtohepohhkohhrnhhivghvsehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtth
+    hopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:MbZKafDKBF5RpTRYJ8scXly6UlxHlsV3B0KIWxyqAnYot8fbc90eEw>
+    <xmx:MbZKafglhwCtbU1zWUvdDi0Q1uYQjecDlr2KbUw52VBFCHl6D4vbZw>
+    <xmx:MbZKaROJht7UCpDDvciQ3U14-d2y6Kyqk6xMNdhFBPnODZiOFEW8vQ>
+    <xmx:MbZKaf9sq1bJdPKEkqiZetJHp9-ZOLdmZjIesFFBU76ZxhW8-Ra0mw>
+    <xmx:MbZKaSfTwQrynh6Fb-lGFKkIHug3SOt-ApR8e-uXKWJxP6p0oHubZao->
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CB61D78006C; Tue, 23 Dec 2025 10:33:05 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] xfs: enable non-blocking timestamp updates
-To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>,
- Jan Kara <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>,
- Martin Brandenburg <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>,
- Stefan Roesch <shr@fb.com>, Jeff Layton <jlayton@kernel.org>,
- linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
- io-uring@vger.kernel.org, devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-References: <20251223003756.409543-1-hch@lst.de>
- <20251223003756.409543-12-hch@lst.de>
-Content-Language: en-US
-From: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-In-Reply-To: <20251223003756.409543-12-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: AqDldx0SSSOk
+Date: Tue, 23 Dec 2025 10:32:44 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, neilb@ownmail.net,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <f6acff74-5276-4ad5-867c-e5236624ff95@app.fastmail.com>
+In-Reply-To: <20251222190735.307006-1-dai.ngo@oracle.com>
+References: <20251222190735.307006-1-dai.ngo@oracle.com>
+Subject: Re: [PATCH v3 1/1] NFSD: Track SCSI Persistent Registration Fencing per Client
+ with xarray
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 12/22/25 16:37, Christoph Hellwig wrote:
-> The lazytime path using the generic helpers can never block in XFS
-> because there is no ->dirty_inode method that could block.  Allow
-> non-blocking timestamp updates for this case by replacing
-> generic_update_time with the open coded version without the S_NOWAIT
-> check.
+Hey Dai -
+
+This is getting closer, so I'm going to give more detailed comments.
+
+On Mon, Dec 22, 2025, at 2:07 PM, Dai Ngo wrote:
+
+The patch description needs to open with explaining why this change
+is needed.
+
+In particular, are you trying to prevent duplicate fencing to
+avoid a protocol error, or is this only a performance optimization?
+
+
+> Update the NFS server to handle SCSI persistent registration fencing on
+> a per-client and per-device basis by utilizing an xarray associated with
+> the nfs4_client structure.
 >
-> Fixes: 66fa3cedf16a ("fs: Add async write file modification handling.")
-> Signed-off-by: Christoph Hellwig<hch@lst.de>
-> Reviewed-by: Jeff Layton<jlayton@kernel.org>
+> Each xarray entry is indexed by the dev_t of a block device registered
+> by the client. The entry maintains a flag indicating whether this device
+> has already been fenced for the corresponding client.
+>
+> When the server issues a persistent registration key to a client, it
+> creates a new xarray entry at the dev_t index with the fenced flag
+> initialized to 0.
+>
+> Before performing a fence via nfsd4_scsi_fence_client, the server
+> checks the corresponding entry using the device's dev_t. If the fenced
+> flag is already set, the fence operation is skipped; otherwise, the
+> flag is set to 1 and fencing proceeds.
+>
+> The xarray is destroyed when the nfs4_client is released in
+> __destroy_client.
+>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/blocklayout.c | 26 ++++++++++++++++++++++++++
+>  fs/nfsd/nfs4state.c   |  6 ++++++
+>  fs/nfsd/state.h       |  2 ++
+>  3 files changed, 34 insertions(+)
+>
+> V2:
+>    . Replace xa_store with xas_set_mark and xas_get_mark to avoid
+>      memory allocation in nfsd4_scsi_fence_client.
+>    . Remove cl_fence_lock, use xa_lock instead.
+> V3:
+>    . handle xa_store error.
+>    . add xa_lock and xa_unlock when calling xas_clear_mark
+>
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index afa16d7a8013..bcacd030d84a 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -318,6 +318,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>  	struct pnfs_block_volume *b;
+>  	const struct pr_ops *ops;
+>  	int ret;
+> +	void *entry;
+> 
+>  	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>  	if (!dev)
+> @@ -357,6 +358,13 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>  		goto out_free_dev;
+>  	}
+> 
+> +	/* create a record for this client with the fenced flag set to 0 */
+> +	entry = xa_store(&clp->cl_fenced_devs, (unsigned long)sb->s_bdev->bd_dev,
+> +				xa_mk_value(0), GFP_KERNEL);
+
+What if there's already an entry for bd_dev in the xarray?
 
 
-Looks good.
+> +	if (xa_is_err(entry)) {
+> +		ret = xa_err(entry);
+> +		goto out_free_dev;
 
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Does this error flow also need to release the newly acquired
+persistent reservation for bd_dev?
 
--ck
+
+> +	}
+>  	return 0;
+
+Perhaps it would be better to check the array first before
+attempting the pr_register call, to see if the device has
+already been registered, since xa_load() will be an atomic
+check. That would avoid a double persistent registration
+(but please confirm that avoids all races... it might not).
 
 
+> 
+>  out_free_dev:
+> @@ -400,10 +408,28 @@ nfsd4_scsi_fence_client(struct 
+> nfs4_layout_stateid *ls, struct nfsd_file *file)
+>  	struct nfs4_client *clp = ls->ls_stid.sc_client;
+>  	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
+>  	int status;
+> +	void *entry;
+> +	XA_STATE(xas, &clp->cl_fenced_devs, bdev->bd_dev);
+> +
+> +	xa_lock(&clp->cl_fenced_devs);
+> +	entry = xas_load(&xas);
+> +	if (entry && xas_get_mark(&xas, XA_MARK_0)) {
+> +		/* device already fenced */
+> +		xa_unlock(&clp->cl_fenced_devs);
+> +		return;
+> +	}
+> +	/* Set the fenced flag for this device. */
+> +	xas_set_mark(&xas, XA_MARK_0);
+> +	xa_unlock(&clp->cl_fenced_devs);
+> 
+>  	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
+>  			nfsd4_scsi_pr_key(clp),
+>  			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
+> +	if (status) {
+> +		xa_lock(&clp->cl_fenced_devs);
+> +		xas_clear_mark(&xas, XA_MARK_0);
+> +		xa_unlock(&clp->cl_fenced_devs);
+
+After the xa_lock is released above, cl_fenced_devs can be altered
+by another process. So you can't trust that "xas" is not stale in
+the error flow.
+
+Actually I don't see a need to open-code the array walk to mark
+the device fenced, unless I've missed something. For setting the
+mark, you could simply do this:
+
+  xa_lock(&clp->cl_fenced_devs);
+  if (xa_get_mark(&clp->cl_fenced_devs, bdev->bd_dev, XA_MARK_0)) {
+  	xa_unlock(&clp->cl_fenced_devs);
+  	return;
+  }
+  __xa_set_mark(&clp->cl_fenced_devs, bdev->bd_dev, XA_MARK_0);
+  xa_unlock(&clp->cl_fenced_devs);
+
+And then just use xa_clear_mark() in the error flow, which has
+its own XA_STATE and does a fresh array walk, instead of
+xas_clear_mark().
+
+And then you won't need XA_STATE at all.
+
+
+> +	}
+>  	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
+>  }
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 808c24fb5c9a..2d4a198fe41d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2381,6 +2381,9 @@ static struct nfs4_client *alloc_client(struct 
+> xdr_netobj name,
+>  	INIT_LIST_HEAD(&clp->cl_revoked);
+>  #ifdef CONFIG_NFSD_PNFS
+>  	INIT_LIST_HEAD(&clp->cl_lo_states);
+> +#ifdef CONFIG_NFSD_SCSILAYOUT
+> +	xa_init(&clp->cl_fenced_devs);
+> +#endif
+>  #endif
+>  	INIT_LIST_HEAD(&clp->async_copies);
+>  	spin_lock_init(&clp->async_lock);
+> @@ -2537,6 +2540,9 @@ __destroy_client(struct nfs4_client *clp)
+>  		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+>  	atomic_add_unless(&nn->nfs4_client_count, -1, 0);
+>  	nfsd4_dec_courtesy_client_count(nn, clp);
+> +#ifdef CONFIG_NFSD_SCSILAYOUT
+> +	xa_destroy(&clp->cl_fenced_devs);
+> +#endif
+>  	free_client(clp);
+>  	wake_up_all(&expiry_wq);
+>  }
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index b052c1effdc5..8dd6f82e57de 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -527,6 +527,8 @@ struct nfs4_client {
+> 
+>  	struct nfsd4_cb_recall_any	*cl_ra;
+>  	time64_t		cl_ra_time;
+> +
+> +	struct xarray		cl_fenced_devs;
+
+Please wrap the definition of cl_fenced_devs with
+"#ifdef CONFIG_NFSD_SCSILAYOUT" followed by "#endif"
+
+
+>  };
+> 
+>  /* struct nfs4_client_reset
+> -- 
+> 2.47.3
+
+-- 
+Chuck Lever
 
