@@ -1,115 +1,241 @@
-Return-Path: <linux-nfs+bounces-17285-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17286-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A273BCD9D66
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 16:46:54 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CA71CD9F8C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 17:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA90530B9CB3
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 15:40:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 977E930022FE
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Dec 2025 16:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8751C29C351;
-	Tue, 23 Dec 2025 15:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE9623A984;
+	Tue, 23 Dec 2025 16:32:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lt4jWtqi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0MlH8Dd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB612989B0;
-	Tue, 23 Dec 2025 15:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FA927A103
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Dec 2025 16:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766504216; cv=none; b=a9eRlxnX1Mtt5xNfWDaq+81+1+DD/45bsDEwq/5e2ZrVxzCMY/C2cFcWSB+nR/KpbZW3QCyp7rlNPjFhQQzcOFAI+ZD4elvc3ZPuSasOq9+7gghFhf6p1lcID02UXwNyKSsU3QQMfWulyfzUfQhW2HqTlguPkEIJ5PxOlR1lULY=
+	t=1766507522; cv=none; b=gZFG2ocHMNv1tw+RnChjkydbW4aXiSncu2zdE84Lerj8aY8tFpPKZv6bymJVccZXkF6IPZaGMRJS0f7Ecss6WAYF6+9j8pS5tYfY7+qa2euLA4qvrK5A9YknSfQMDEihQEk3q4DwfqfpXrsBupm1iODYiyjATf8SaHDQg8Q1oPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766504216; c=relaxed/simple;
-	bh=4xskZ9sB23i7wc0gJ92xb+416qmEl58GferQz5RhbkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nhf2v18Drq3+m4g1X4/UFjScGoWD8ATV0AvPLqBxnVbGEkGJWwDUyZjGZUDfYK6ZOK9MTBRRmJzonfan51Vp9LJReoxteePhlVfQapzSq1d0VtaGIt9qC/LBurvva7MoIVOin0L/ts2vf1WI/+TzOQaGbVBw/CNFF8na1utke1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lt4jWtqi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C3F1C116C6;
-	Tue, 23 Dec 2025 15:36:55 +0000 (UTC)
+	s=arc-20240116; t=1766507522; c=relaxed/simple;
+	bh=rKd0Y+07ufyjtLxVCuIk89AJ2IIDiwSGxh3yvkeoei0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=C+8eBItC/cBsZ8pbeesbU8iwboPyCBULs9QWm8dqfOdClGR0Jb0tu0Qkb67ThIDI6euSa5oiz0mjzr2jssS/86nRRgReMpqCvMn4CoTZzFVw/7Qsyt7FnvNn9GX6fKXEZlpJaBo/vx6uazhBjX0LjDq4hFu+3m0UKQPbwJwCkJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0MlH8Dd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B609C16AAE;
+	Tue, 23 Dec 2025 16:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766504215;
-	bh=4xskZ9sB23i7wc0gJ92xb+416qmEl58GferQz5RhbkM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lt4jWtqiSJj9rFCqBKl3vb5tvzKVLXkI8QF7aDDknde/rwF506cHsGorUV5VkE+4Z
-	 1nvXGvAqTupFLsYdpi5BJZhY02GoFRaWEsJuYW13hreGnXbEytgt0EpstLs84YVL+n
-	 I6bO0hVbKiJFuk+n9K4R7xuukX2s04ePt+cwZsinlH8lLLcjyVBiGP0sxfHw33bS39
-	 Oa9PPtPSSjnRIFUw2x8AOqoENcrMaMCKyzyWWV6pYVsMzjlzt7mc4ujbgiv7YxjUuq
-	 gCIX2xSjmUKPIStOhECHINmJM34ASe5zaa5beRSGTKGc45sQ0q5jFDACyo55Y3hJyF
-	 2UyB4Rju/zfuw==
-From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD fixes for v6.19
-Date: Tue, 23 Dec 2025 10:36:54 -0500
-Message-ID: <20251223153654.1650936-1-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
+	s=k20201202; t=1766507521;
+	bh=rKd0Y+07ufyjtLxVCuIk89AJ2IIDiwSGxh3yvkeoei0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=F0MlH8DdEaw/3UxuDLR2MMSP5fdHD2WWGtE956Fl0GnACvea19zhWKvm4YQcGdqAX
+	 K4Hf+wB6s0apf5VqAJJnyqykWWIRa4h49wZbrkuXKTMqBcp6pc5eU4BloyBnY04lrx
+	 9dPzkwDYK74Ua1ATJlZom+6BbGCCRc7ujOyxV4QUPmyJ3whw0GwAmMXLIFvrawuXxS
+	 CebaYZJXmox4rC2OZklXFXYkFSGm2F0GQzH54ucBIdUB2vUh1v5lS2tZA9Hq4JB8gM
+	 RKfdZBg6jYbNMs+ro08NhuEHVPNzU1X2D4PaLXvK+hCOEcWtsGdxMW6/soMhtxzfs6
+	 RqIjZz/bGrCsw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5316FF40068;
+	Tue, 23 Dec 2025 11:32:00 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 23 Dec 2025 11:32:00 -0500
+X-ME-Sender: <xms:AMRKaaTt4RCto40xlOfCw60hkusTGlwP1OJzBFoYfLTEK1nXjfvpVA>
+    <xme:AMRKaalaclJ2d09NkSAxN-dgsYapc4UlIuex9Rn8OeteoBB0niGabpUluPjez2K3I
+    GPYC6weICGRDxYH6P7mxbZ0zhqQEUIsXYhmsZVh5xIfsRI8qOCPQL4M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeitdefudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlsh
+    htrdguvgdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehnvg
+    hilhgssehofihnmhgrihhlrdhnvghtpdhrtghpthhtohepohhkohhrnhhivghvsehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtth
+    hopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:AMRKaQmZzd1FO5j2P-ScVZx0XyjTKKJgd7wUVf5iUIUU-1K3kMMBKQ>
+    <xmx:AMRKaZ1cPX9_XK5iD1VP5x7f0dUk7GW7epv0H2P7aSvAo5m-w31R_A>
+    <xmx:AMRKaVQLUP3g7MvHrEKfYMWqyXMMCqCwqEXDm73riZHd11DBj5ZlAg>
+    <xmx:AMRKaaxIau91lDo8H7Jueg2ngX8QOP01zsIp7N7zqq7I-1BV4Fzanw>
+    <xmx:AMRKadDJ3hajBlqx8s0-c6WGwfw5Q1B0rvR4rY5MAS36yC-hqEAw8XPk>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3255A78006C; Tue, 23 Dec 2025 11:32:00 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AqDldx0SSSOk
+Date: Tue, 23 Dec 2025 11:31:40 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, neilb@ownmail.net,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <6ffa2b50-c0fc-4532-908e-951b224fcb10@app.fastmail.com>
+In-Reply-To: <20251222190735.307006-1-dai.ngo@oracle.com>
+References: <20251222190735.307006-1-dai.ngo@oracle.com>
+Subject: Re: [PATCH v3 1/1] NFSD: Track SCSI Persistent Registration Fencing per Client
+ with xarray
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit df8c841dd92a7f262ad4fa649aa493b181e02812:
 
-  NFSD: nfsd-io-modes: Separate lists (2025-12-03 09:05:14 -0500)
 
-are available in the Git repository at:
+On Mon, Dec 22, 2025, at 2:07 PM, Dai Ngo wrote:
+> Update the NFS server to handle SCSI persistent registration fencing on
+> a per-client and per-device basis by utilizing an xarray associated with
+> the nfs4_client structure.
+>
+> Each xarray entry is indexed by the dev_t of a block device registered
+> by the client. The entry maintains a flag indicating whether this device
+> has already been fenced for the corresponding client.
+>
+> When the server issues a persistent registration key to a client, it
+> creates a new xarray entry at the dev_t index with the fenced flag
+> initialized to 0.
+>
+> Before performing a fence via nfsd4_scsi_fence_client, the server
+> checks the corresponding entry using the device's dev_t. If the fenced
+> flag is already set, the fence operation is skipped; otherwise, the
+> flag is set to 1 and fencing proceeds.
+>
+> The xarray is destroyed when the nfs4_client is released in
+> __destroy_client.
+>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/blocklayout.c | 26 ++++++++++++++++++++++++++
+>  fs/nfsd/nfs4state.c   |  6 ++++++
+>  fs/nfsd/state.h       |  2 ++
+>  3 files changed, 34 insertions(+)
+>
+> V2:
+>    . Replace xa_store with xas_set_mark and xas_get_mark to avoid
+>      memory allocation in nfsd4_scsi_fence_client.
+>    . Remove cl_fence_lock, use xa_lock instead.
+> V3:
+>    . handle xa_store error.
+>    . add xa_lock and xa_unlock when calling xas_clear_mark
+>
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index afa16d7a8013..bcacd030d84a 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -318,6 +318,7 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>  	struct pnfs_block_volume *b;
+>  	const struct pr_ops *ops;
+>  	int ret;
+> +	void *entry;
+> 
+>  	dev = kzalloc(struct_size(dev, volumes, 1), GFP_KERNEL);
+>  	if (!dev)
+> @@ -357,6 +358,13 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+>  		goto out_free_dev;
+>  	}
+> 
+> +	/* create a record for this client with the fenced flag set to 0 */
+> +	entry = xa_store(&clp->cl_fenced_devs, (unsigned long)sb->s_bdev->bd_dev,
+> +				xa_mk_value(0), GFP_KERNEL);
+> +	if (xa_is_err(entry)) {
+> +		ret = xa_err(entry);
+> +		goto out_free_dev;
+> +	}
+>  	return 0;
+> 
+>  out_free_dev:
+> @@ -400,10 +408,28 @@ nfsd4_scsi_fence_client(struct 
+> nfs4_layout_stateid *ls, struct nfsd_file *file)
+>  	struct nfs4_client *clp = ls->ls_stid.sc_client;
+>  	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
+>  	int status;
+> +	void *entry;
+> +	XA_STATE(xas, &clp->cl_fenced_devs, bdev->bd_dev);
+> +
+> +	xa_lock(&clp->cl_fenced_devs);
+> +	entry = xas_load(&xas);
+> +	if (entry && xas_get_mark(&xas, XA_MARK_0)) {
+> +		/* device already fenced */
+> +		xa_unlock(&clp->cl_fenced_devs);
+> +		return;
+> +	}
+> +	/* Set the fenced flag for this device. */
+> +	xas_set_mark(&xas, XA_MARK_0);
+> +	xa_unlock(&clp->cl_fenced_devs);
+> 
+>  	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
+>  			nfsd4_scsi_pr_key(clp),
+>  			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
+> +	if (status) {
+> +		xa_lock(&clp->cl_fenced_devs);
+> +		xas_clear_mark(&xas, XA_MARK_0);
+> +		xa_unlock(&clp->cl_fenced_devs);
+> +	}
+>  	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
+>  }
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 808c24fb5c9a..2d4a198fe41d 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2381,6 +2381,9 @@ static struct nfs4_client *alloc_client(struct 
+> xdr_netobj name,
+>  	INIT_LIST_HEAD(&clp->cl_revoked);
+>  #ifdef CONFIG_NFSD_PNFS
+>  	INIT_LIST_HEAD(&clp->cl_lo_states);
+> +#ifdef CONFIG_NFSD_SCSILAYOUT
+> +	xa_init(&clp->cl_fenced_devs);
+> +#endif
+>  #endif
+>  	INIT_LIST_HEAD(&clp->async_copies);
+>  	spin_lock_init(&clp->async_lock);
+> @@ -2537,6 +2540,9 @@ __destroy_client(struct nfs4_client *clp)
+>  		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+>  	atomic_add_unless(&nn->nfs4_client_count, -1, 0);
+>  	nfsd4_dec_courtesy_client_count(nn, clp);
+> +#ifdef CONFIG_NFSD_SCSILAYOUT
+> +	xa_destroy(&clp->cl_fenced_devs);
+> +#endif
+>  	free_client(clp);
+>  	wake_up_all(&expiry_wq);
+>  }
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index b052c1effdc5..8dd6f82e57de 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -527,6 +527,8 @@ struct nfs4_client {
+> 
+>  	struct nfsd4_cb_recall_any	*cl_ra;
+>  	time64_t		cl_ra_time;
+> +
+> +	struct xarray		cl_fenced_devs;
+>  };
+> 
+>  /* struct nfs4_client_reset
+> -- 
+> 2.47.3
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.19-1
+Another question is: Can cl_fenced_devs grow without bounds? What
+trims items out of this xarray if the nfs4_client is long-lived?
 
-for you to fetch changes up to 913f7cf77bf14c13cfea70e89bcb6d0b22239562:
+And, let's rename the xarray cl_dev_fences, since it contains
+all devices, not just fenced ones.
 
-  NFSD: NFSv4 file creation neglects setting ACL (2025-12-18 11:19:11 -0500)
 
-----------------------------------------------------------------
-nfsd-6.19 fixes:
-
-A set of NFSD fixes that arrived just a bit late for the 6.19 merge
-window.
-
-Issues reported with v6.19-rc:
-- Mark variable __maybe_unused to avoid W=1 build break
-
-Issues that need expedient stable backports:
-- NFSv4 file creation neglects setting ACL
-- Clear TIME_DELEG in the suppattr_exclcreat bitmap
-- Clear SECLABEL in the suppattr_exclcreat bitmap
-- Fix memory leak in nfsd_create_serv error paths
-- Bound check rq_pages index in inline path
-- Return 0 on success from svc_rdma_copy_inline_range
-- Use rc_pageoff for memcpy byte offset
-- Avoid NULL deref on zero length gss_token in gss_read_proxy_verf
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      nfsd: Mark variable __maybe_unused to avoid W=1 build break
-
-Chuck Lever (3):
-      NFSD: Clear SECLABEL in the suppattr_exclcreat bitmap
-      NFSD: Clear TIME_DELEG in the suppattr_exclcreat bitmap
-      NFSD: NFSv4 file creation neglects setting ACL
-
-Joshua Rogers (4):
-      SUNRPC: svcauth_gss: avoid NULL deref on zero length gss_token in gss_read_proxy_verf
-      svcrdma: use rc_pageoff for memcpy byte offset
-      svcrdma: return 0 on success from svc_rdma_copy_inline_range
-      svcrdma: bound check rq_pages index in inline path
-
-Shardul Bankar (1):
-      nfsd: fix memory leak in nfsd_create_serv error paths
-
- fs/nfsd/export.c                  | 2 +-
- fs/nfsd/nfs4xdr.c                 | 5 +++++
- fs/nfsd/nfsd.h                    | 8 +++++++-
- fs/nfsd/nfssvc.c                  | 5 ++++-
- fs/nfsd/vfs.h                     | 3 ++-
- net/sunrpc/auth_gss/svcauth_gss.c | 3 ++-
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 7 +++++--
- 7 files changed, 26 insertions(+), 7 deletions(-)
+-- 
+Chuck Lever
 
