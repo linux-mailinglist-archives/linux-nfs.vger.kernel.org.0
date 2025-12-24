@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-17295-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17296-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FDB1CDC9DB
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 16:01:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E3BACDCA8D
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 16:18:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5B48A3055B92
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 14:58:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8B42330142C2
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 15:18:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98C933B974;
-	Wed, 24 Dec 2025 14:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7C3274FCB;
+	Wed, 24 Dec 2025 15:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXidrZ5L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKEqHXrN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8351F3358AA
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Dec 2025 14:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB523EA97;
+	Wed, 24 Dec 2025 15:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766588287; cv=none; b=KGisQe/qzI90OoIRzFL7ixBMF+kusTCVrWYjWtqpoXKEcn3/3ubafCrE7DC6GZXTZORe7JogAomOggW+PYma/RYaylOzgKD8O/nK+1bswI8INM+7XHBOs5ikLN7gs/fkIyGNwGOa98ny8g2S9CBIKKLeOepBt98OLM7u8tcvdm4=
+	t=1766589517; cv=none; b=TJKxTdGifw7TgMw78pVkye2YPFvL/jiHTx5RGkHvmNPwbpNlYXKR9t4M/jBFZuEnsKttcHQELiwKk0/0ivfh4H7WYn6tIci96BI5Of33/yt56lWBiFuNbqg2bpue5D2B37/k5iqxF/6uNROnPliYyro2B+2aZQPzsSsIv1tVBFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766588287; c=relaxed/simple;
-	bh=qncIo3RkalqF7BvPvpSWz6IlF3VLGbCpIm+aIdvB7gk=;
+	s=arc-20240116; t=1766589517; c=relaxed/simple;
+	bh=AA4+GcUPZa+VjYKwNGrzqEzsqgbWjmqgz8ZbUPLnpy0=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tp8+SisFSHCnPRTfdOpVvtJRWsmPxBe4ryJ7LzKV7L63WtLcB+sWUoSDtY7WF3QsXLV9fi+jczAdoUB7cjjjHHlGa6d8oH2aTUqvcpfehRIBE2k4S+uaFgq3LZTADMpQhgWRzo+U8kifm/L54ufsGsG+sDB197Hsubei6oEzOKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXidrZ5L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C38C4AF0B;
-	Wed, 24 Dec 2025 14:58:06 +0000 (UTC)
+	 Subject:Content-Type; b=I8ThUFeni/1EiDGWe1d98ToX6o0/PMVd09/IRRdJkJvR2zXeH9zl8vCkpjo2LR84432wISH2mWnrbARIbyW1t/vgrhUwV7iudcz/mRa0T6D153jT4iXsRsSq3v0VrM0aAlSk2nf+6bsYbNWfy11HEbFD/Pq9J76pDQ0ejei8s6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKEqHXrN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652A8C4CEFB;
+	Wed, 24 Dec 2025 15:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766588287;
-	bh=qncIo3RkalqF7BvPvpSWz6IlF3VLGbCpIm+aIdvB7gk=;
+	s=k20201202; t=1766589516;
+	bh=AA4+GcUPZa+VjYKwNGrzqEzsqgbWjmqgz8ZbUPLnpy0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=XXidrZ5LOiLSYpz/4LToWXMsccrOeXSx6Ew4cbHTCXtQBNhFAD0/g7jUdy4m4NcpL
-	 8oKWOEuLGrX2JBK2/T1xJodH3W25+P2SAh0RLbnBZn6Fq8VrLgqXHIyAfmzcE6gEc4
-	 0v9YAsG1BnGu6quXBAmbbM2bNLePx9G4uwKmJ2bat6+ndLCOInn8nruY5A8TyuZlyy
-	 rZPOQgMRmTN2mD0hJsy1M+GfUZyGB4ukhGXa9U33tm04Gt3JgznUk7B9b9YU1YQuDO
-	 YCGTWYPR6IYc6fnQ6QOELKArLwwIl8ScHyeJR5xAObRJVrlRlzQ2K29ib5oqkQ/9k9
-	 /F7SAMJ+ix29g==
+	b=VKEqHXrNU1LI+ulmB+2gNUOK8QOsQS8b1crmavu/xsm0Aaz9zrvzyueVbSYCoUSy1
+	 XatkKgX2jrLCCxW4yfksOUGilQNf6fyzumEiGHH58mShvVnGIQItMXQbo1Zh0tdT3x
+	 FwM93AgfVx/+MU86uMkkWbA6vX6eHxXI1A4l0k9PhQZXFjRQm6qqmyIDxgHDDxCsDR
+	 ciQrJuVbrcu9yllYYTALb6j3cCf5FAQ+riOTrLLJFujP+ugQ/EL/URtTZeM8jPcDhW
+	 hbUFbaQAfmLogJht+w7ihvW2pmkHdEq/cj0xZ+/RKQKppil9DKdlivpZuNylQsn+oV
+	 gXD/2JHp0rbOA==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8220BF40069;
-	Wed, 24 Dec 2025 09:58:05 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 81FE8F4006A;
+	Wed, 24 Dec 2025 10:18:35 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 24 Dec 2025 09:58:05 -0500
-X-ME-Sender: <xms:ff9LaeRYoa1FAXf7oo9QRARijxz0DVXZPx5DngH1k5eGh4qlPdwQGQ>
-    <xme:ff9LaemETmk7jvu-mXyNvNBKOhUg-VFqqOYKKd4jNS3zTK-W_xdACbyEtzKYzxy24
-    BvPskRM-s1A18nHt05N0ey6dtfRGRl7hmP1SHEmbcAqiVItARrxbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeifedttdcutefuodetggdotefrod
+  by phl-compute-10.internal (MEProxy); Wed, 24 Dec 2025 10:18:35 -0500
+X-ME-Sender: <xms:SwRMaSDhpIkFtEHl0sGaB-zXqOCj_F6kYQ-UUcvsLY7sQcMyNFHqsw>
+    <xme:SwRMaXVuheKFgldBgltLD1lFJsE03FCCCCCSWQkCFql_W1N3fT7fRS45sxSzd6Uwc
+    62ORefszS86wPv5WtCDwxx8sPVkHPS1ijYxViQqcLnF4oaXlAh7Hg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeifedtgecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
@@ -56,21 +56,20 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeifedttdcutefuodetgg
     vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
     hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
     heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlsh
-    htrdguvgdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
-    rhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehnvg
-    hilhgssehofihnmhgrihhlrdhnvghtpdhrtghpthhtohepohhkohhrnhhivghvsehrvggu
-    hhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtth
-    hopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:ff9LaUloT4D4kYh9HU9dSArxXIWJKmdWdr681be76t8jUASEcUPeVw>
-    <xmx:ff9Lad0att_t-49-SBPglN379JWeEh3LTl1IuOYqYZWgk8RuaGxaxA>
-    <xmx:ff9LaZSMpm4SpRqq1-oSGY0g2ITDyYQsG6E7bcsOnNlEaGUtcmk07A>
-    <xmx:ff9LaezQXpCf5cpJ_B1ulMqhJ6FoSJKaRPQ8FOGRODy47NibduSiUw>
-    <xmx:ff9LaRBNZmxtWtLomf9-1jvrIFMLOAb2qs-k4nVVpszEl6ElWOYfHVnQ>
+    hlrdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopeiihhgrnhhgjhhirghngeelieeshhhurgifvghirdgtohhmpdhrtghpthhtohepsh
+    htfhhrvghntghhsehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtoheptghhuhgtkhdr
+    lhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhfshes
+    vhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:SwRMaZNEfiNZOwI_VfVwlKeT-XW59rmhV4LkKwLyA8EnvQUSoJqgdA>
+    <xmx:SwRMaU6e30OjH3bZbsKYeDcSM-krD8fjzZXqWqv41a6fVHaRRCHeCw>
+    <xmx:SwRMaT3Dkbj8-5TR200Bmy-PHbefn_aa83k9b7F_zR7WtAZisKwE2Q>
+    <xmx:SwRMaVwwJmXW37-h-KyxrniPhPrVzfr9guVbkhwidaZJ5_otQgEJrg>
+    <xmx:SwRMaduZSAbuk6X86VCpHJE3Ip1aH2k9bAB3JcyiSL3hL91V3zIz2azw>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 612BD78006C; Wed, 24 Dec 2025 09:58:05 -0500 (EST)
+	id 61961780054; Wed, 24 Dec 2025 10:18:35 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -78,81 +77,106 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AqDldx0SSSOk
-Date: Wed, 24 Dec 2025 09:57:37 -0500
+X-ThreadId: A6_whY5CRqgs
+Date: Wed, 24 Dec 2025 10:18:07 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, neilb@ownmail.net,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
- "Christoph Hellwig" <hch@lst.de>
-Cc: linux-nfs@vger.kernel.org
-Message-Id: <492c5f62-e11e-4601-83f6-31aff5f5802f@app.fastmail.com>
-In-Reply-To: <3bf448ee-7e1e-4ed8-93a7-2754084885c5@oracle.com>
-References: <20251222190735.307006-1-dai.ngo@oracle.com>
- <6ffa2b50-c0fc-4532-908e-951b224fcb10@app.fastmail.com>
- <f1448227-ddd8-47cf-9fe3-3e1983520de0@oracle.com>
- <c55508e3-4167-4439-8663-5dd782404893@app.fastmail.com>
- <3bf448ee-7e1e-4ed8-93a7-2754084885c5@oracle.com>
-Subject: Re: [PATCH v3 1/1] NFSD: Track SCSI Persistent Registration Fencing per Client
- with xarray
+To: "zhangjian (CG)" <zhangjian496@huawei.com>, stfrench@microsoft.com,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Message-Id: <8e49b767-f2c7-4cba-8477-d3b329ad9d18@app.fastmail.com>
+In-Reply-To: <b3ef1024-bc81-4436-ae65-f1bdaf07efe8@huawei.com>
+References: <32686cd5-f149-4ea4-a13f-8b1fbb2cca44@huawei.com>
+ <a4435153-eb55-4160-9b46-aa937cffa575@huawei.com>
+ <b3ef1024-bc81-4436-ae65-f1bdaf07efe8@huawei.com>
+Subject: Re: [Question] nfsacl: why deny owner mode when deny user
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
+[ bfields@redhat.com dropped because it's a dead address ]
 
-
-On Tue, Dec 23, 2025, at 5:34 PM, Dai Ngo wrote:
-> On 12/23/25 11:47 AM, Chuck Lever wrote:
->>
->> On Tue, Dec 23, 2025, at 1:54 PM, Dai Ngo wrote:
->>> On 12/23/25 8:31 AM, Chuck Lever wrote:
->>>> On Mon, Dec 22, 2025, at 2:07 PM, Dai Ngo wrote:
->>>>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
->>>>> index b052c1effdc5..8dd6f82e57de 100644
->>>>> --- a/fs/nfsd/state.h
->>>>> +++ b/fs/nfsd/state.h
->>>>> @@ -527,6 +527,8 @@ struct nfs4_client {
->>>>>
->>>>>    	struct nfsd4_cb_recall_any	*cl_ra;
->>>>>    	time64_t		cl_ra_time;
->>>>> +
->>>>> +	struct xarray		cl_fenced_devs;
->>>>>    };
->>>>>
->>>>>    /* struct nfs4_client_reset
->>>>> -- 
->>>>> 2.47.3
->>>> Another question is: Can cl_fenced_devs grow without bounds?
->>> I think it has the same limitation for any xarray. The hard limit
->>> is the availability of memory in the system.
->> My question isn't about how much can any xarray hold, it's how
->> much will NFSD ask /cl_fenced_devs/ to hold. IIUC, the upper
->> bound for each nfs4_client's cl_fenced_devs will be the number
->> of exported block devices, and no more than that.
->>
->> I want to avoid a potential denial of service vector -- NFSD
->> should not be able to create an unlimited number of items
->> in cl_fenced_devs... but sounds like there is a natural limit.
+On Mon, Dec 8, 2025, at 4:56 AM, zhangjian (CG) wrote:
+> When user read bit is denied by nfs4_setfacl, owner read bit is also
+> denied.
+> Example:
 >
-> Oh I see. I did not even think about this DOS since I think this
-> is under the control of the admin on NFSD and a sane admin would
-> not configure a massive amount of exported block devices.
+> [root@localhost ~]# nfs4_getfacl test/a
+> # file: test/a
+> A::OWNER@:rwatTcCy
+> A::1000:rwatcy
+> A::GROUP@:rtcy
+> A::EVERYONE@:rtcy
+>
+> [root@localhost ~]# nfs4_setfacl -a D::1000:r test/a
+> [root@localhost ~]# nfs4_getfacl test/a
+> # file: test/a
+> D::OWNER@:r
+> A::OWNER@:watTcCy
+> D::1000:r
+> A::1000:watcy
+> A::GROUP@:rtcy
+> A::EVERYONE@:rtcy
+>
+> In function process_one_v4_ace, I see read bit is denied for owner:
+> case ACL_USER:
+> 	i = find_uid(state, state->users, ace->who);
+> 	if (ace->type == NFS4_ACE_ACCESS_ALLOWED_ACE_TYPE) {
+> 		allow_bits(&state->users->aces[i].perms, mask);
+> 	} else {
+> 		deny_bits(&state->users->aces[i].perms, mask);
+> 		mask = state->users->aces[i].perms.deny;
+> 		deny_bits(&state->owner, mask);
+> 	}
+> This change is commit in 09229ed. But I wonder why it is implemented
+> like this.
 
-Ultimately, the upper bound on the number entries in cl_fenced_devs
-is indeed under the control of the NFS server administrator,
-indirectly. But looking only at the code in the patch:
+I'm not an ACL expert. But here's a stab at an answer.
 
- - New entries are created in cl_fenced_devs via GETDEVICEINFO,
-   a client (remote host) action
- - There's nothing that removes these entries over time
+NFSD must translate incoming NFSv4 ACLs to POSIX ACLs before
+they can be stored by local POSIX file systems. The root issue
+is the semantic mismatch between NFSv4 ACLs and POSIX ACLs. 
 
-The duplicate checking logic needs to ensure that client actions
-cannot create more entries than that upper bound.
+In particular, NFSv4 ACL evaluation is strictly ordered
+top-to-bottom. A DENY ACE early in the list blocks access even
+if a later ALLOW would grant it.
 
-I think the structure of the new code is good, but maybe the
-kdoc comment for nfsd4_block_get_device_info_scsi() should
-underscore that it does not allow more cl_fenced_dev entries to
-be created for an nfs4_client than there are exported pNFS SCSI
-devices.
+However, POSIX ACL evaluation uses a fixed priority:
+1. If user is the file owner -> use ACL_USER_OBJ entry
+2. Else if user matches a named user -> use that ACL_USER
+   entry (masked)
+3. Else if user's groups match -> use group entries (masked)
+4. Else -> use ACL_OTHER
+
+For example:
+  DENY uid=1000: READ
+  ALLOW OWNER@: READ
+
+Under NFSv4 semantics, if the file owner IS uid=1000, they are
+denied READ (the DENY comes first in the ordered evaluation).
+
+But in POSIX ACL semantics, the owner entry (ACL_USER_OBJ) is
+checked before any named user entries. If the code only denied
+READ to the named user entry without also denying it to the
+owner entry, then when uid=1000 owns the file, they would get
+READ through the owner check -- bypassing the intended denial.
+
+Commit 09229edb68a3 explicitly states:
+> errs on the side of restricting permissions...the posix acl
+> produced should be the most permissive acl that is not more
+> permissive than the given nfsv4 acl.
+
+The algorithm doesn't know at ACL-setting time whether the
+owner might match a named user (or might later via chown), so
+it defensively denies to both. This guarantees the POSIX ACL
+is never more permissive than the NFSv4 ACL was intended to be.
+
+The downside is that when the owner is NOT the named user, the
+owner's permissions are unnecessarily restricted. This is the
+cost of the conservative approach: it may deny more than
+strictly necessary, but it will never allow more than intended.
+
+A "perfect" translation isn't possible because the semantic
+models differ fundamentally. The algorithm  chose correctness
+over permissiveness.
 
 
 -- 
