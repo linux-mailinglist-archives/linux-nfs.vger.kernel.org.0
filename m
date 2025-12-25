@@ -1,49 +1,47 @@
-Return-Path: <linux-nfs+bounces-17300-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17301-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CA0ECDD751
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 08:41:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87B43CDD866
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 09:46:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0B8CE300163A
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 07:41:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 92CD6300DCB0
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 08:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034892E6CDF;
-	Thu, 25 Dec 2025 07:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B817B314A7B;
+	Thu, 25 Dec 2025 08:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="Bo1TrAtZ"
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="BKwhAkJn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF00523AB98;
-	Thu, 25 Dec 2025 07:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC193148AF;
+	Thu, 25 Dec 2025 08:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766648480; cv=none; b=WI/GYmXkyGB7He/6RxGYL0vEX26/mWn5PR7DT+S2fszarF3o5+myy7IuL63HecO0+MnEQESkUDwBPKqPEtBfdOhQMULTg0qjLi/PI0oN0+Uj1PXoFEA+AdjaL8IKs+yHyhRjiVvQJIxNWBLUZlDBfmuaQc6Kl7m8qu3nDoneXHc=
+	t=1766652338; cv=none; b=nyuBg4CKBxMzGYFcuurYjHh9jN2D+ao5jakZZppI5dPOBul0U34Hcd4Xj9Er0xWasVGCpiyeWzDe4r48B4vWmC7/PDb/FEFL4yiZ7s9zs8nj2HL/bcKPE/74ZHFf5UuDTAQ1i2Cpn/0mEnmMrrJuXeVoY2vfTgG8H1auB7EEaE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766648480; c=relaxed/simple;
-	bh=XGPrbHaUaTSW4+70HOZs3oCsdijBz5W8l6Ll0/EXFtc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jafd7DIQBwwFA0cYZiNRWSsMGVMIK9LHZfQpwQWWAy6Y3QbgtoWir6NAiInXtkXbA+DmmToaN/H8snVIdE8sQHpDEoktJUuHBh1thnywAo9lRjmLFr600KgaYpqDHLOwKpMrVHr2OoIXMkiRaWj5sBkWBgV1opR+1ZM8GhTofhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=Bo1TrAtZ; arc=none smtp.client-ip=101.71.155.101
+	s=arc-20240116; t=1766652338; c=relaxed/simple;
+	bh=MSJwn6jPL/HsayrVKKC1fMYkfS3VJfsRt7IkdLX6Zqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KzbLleybCB/e64fMCAfgWfh52oivCPMwLDzFtzAnZiiw5isbRRzO8UzLb1nw4hkTtIClCjHVc7J7CNoTF5AqXV9adtO0x/CBRHmOn9mtKddS6NJOf0hwQIdAvsUfmFvyJfk2bQ6Gg5d3XCA8xHfB2cF5gxlDZcLJcw7ClqlQuNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=BKwhAkJn; arc=none smtp.client-ip=45.254.49.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Received: from LAPTOP-N070L597.localdomain (unknown [58.241.16.34])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2e86e0fe9;
-	Thu, 25 Dec 2025 15:41:06 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2e8990129;
+	Thu, 25 Dec 2025 16:45:29 +0800 (GMT+08:00)
 From: Zilin Guan <zilin@seu.edu.cn>
 To: trondmy@kernel.org
 Cc: anna@kernel.org,
-	jcurley@purestorage.com,
-	jlayton@kernel.org,
-	tigran.mkrtchyan@desy.d,
+	sergeybashirov@gmail.com,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	jianhao.xu@seu.edu.cn,
 	Zilin Guan <zilin@seu.edu.cn>
-Subject: [PATCH] pnfs/flexfiles: Fix memory leak in nfs4_ff_alloc_deviceid_node()
-Date: Thu, 25 Dec 2025 07:41:03 +0000
-Message-Id: <20251225074103.862493-1-zilin@seu.edu.cn>
+Subject: [PATCH] pnfs/blocklayout: Fix memory leak in bl_parse_scsi()
+Date: Thu, 25 Dec 2025 08:45:26 +0000
+Message-Id: <20251225084526.903656-1-zilin@seu.edu.cn>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -52,43 +50,47 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b54744ad203a1kunmf950885f343a0
+X-HM-Tid: 0a9b54af3d5703a1kunmdd8a46ab37d15
 X-HM-MType: 10
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGhlCVh0fTh1CGUxNSx5MHVYeHw5VEwETFhoSFy
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTUJMVh9ISB5JGU1DGR8YSlYeHw5VEwETFhoSFy
 	QUDg9ZV1kYEgtZQVlOQ1VJT0pVSk1VSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0xVSktLVUtZBg
 	++
 DKIM-Signature: a=rsa-sha256;
-	b=Bo1TrAtZyzxmvAESRCo2W6d9EFtSjFlR9VAVezyFCnqXWTWd7WYYu0oh4Ru7PL91v5/7hrgWlAJl81+FPT0ZRWSM/4nTzNuadlHewdkg5csGyxX6/B/nSdFMF8KP7ujXXZjRuJ/ukiKXMPwen5kYNE0Z1ddK5Ok/XoRg9Rv7hz8=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=6ek0Hr2EcbwtmmP43gb3ZGqduvyTEmRIE7YXgVoTyak=;
+	b=BKwhAkJnUTzB5uIZee+eEuA5WsJz6KCM6/ZSjafrcabRBCdvItGwSPhQ7Te928WIEApI2LdD3jqFEJwNhc8p+568r7kqvOZfShQq8xEvFiXoyL8fRCpoRkGQMMCYOJqGd9mAyO0qk01i/D7FMKaDyOReEEQ2n2TOlCbC6EFFp8M=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
+	bh=AtrnAGjoccJO8ys8/FUGv0aMHO1ODfphpRKyMj1h3EA=;
 	h=date:mime-version:subject:message-id:from;
 
-In nfs4_ff_alloc_deviceid_node(), if the allocation for ds_versions fails,
-the function jumps to the out_scratch label without freeing the already
-allocated dsaddrs list, leading to a memory leak.
+In bl_parse_scsi(), if the block device length is zero, the function
+returns immediately without releasing the file reference obtained via
+bl_open_path(), leading to a memory leak.
 
-Fix this by jumping to the out_err_drain_dsaddrs label, which properly
-frees the dsaddrs list before cleaning up other resources.
+Fix this by jumping to the out_blkdev_put label to ensure the file
+reference is properly released.
 
-Fixes: d67ae825a59d6 ("pnfs/flexfiles: Add the FlexFile Layout Driver")
+Fixes: d76c769c8db4c ("pnfs/blocklayout: Don't add zero-length pnfs_block_dev")
 Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
 ---
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/blocklayout/dev.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index c55ea8fa3bfa..c2d8a13a9dbd 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -103,7 +103,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 			      sizeof(struct nfs4_ff_ds_version),
- 			      gfp_flags);
- 	if (!ds_versions)
--		goto out_scratch;
-+		goto out_err_drain_dsaddrs;
+diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+index ab76120705e2..134d7f760a33 100644
+--- a/fs/nfs/blocklayout/dev.c
++++ b/fs/nfs/blocklayout/dev.c
+@@ -417,8 +417,10 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 	d->map = bl_map_simple;
+ 	d->pr_key = v->scsi.pr_key;
  
- 	for (i = 0; i < version_count; i++) {
- 		/* 20 = version(4) + minor_version(4) + rsize(4) + wsize(4) +
+-	if (d->len == 0)
+-		return -ENODEV;
++	if (d->len == 0) {
++		error = -ENODEV;
++		goto out_blkdev_put;
++	}
+ 
+ 	ops = bdev->bd_disk->fops->pr_ops;
+ 	if (!ops) {
 -- 
 2.34.1
 
