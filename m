@@ -1,136 +1,95 @@
-Return-Path: <linux-nfs+bounces-17299-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17300-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0105ACDD05B
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 20:10:10 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CA0ECDD751
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 08:41:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA41A3009A9B
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Dec 2025 19:10:09 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0B8CE300163A
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Dec 2025 07:41:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C352C030E;
-	Wed, 24 Dec 2025 19:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034892E6CDF;
+	Thu, 25 Dec 2025 07:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYMpBQcZ"
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="Bo1TrAtZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9A225F7A5
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Dec 2025 19:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF00523AB98;
+	Thu, 25 Dec 2025 07:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766603408; cv=none; b=dyDBhUOq9FQW1wboVogoyikTZ7HRhcCrhPRwGN95iihWUbkExzwQbQl7YEscZ5+iKYi+aWx4N9LduX40lneCOZPt0QtprfWRwrWV+k2isgdc9l5nyNpbARezdP0J0hkvmSRgizOOHtjw1jOh1B62jOUX7fQuFJ1rkpXipjZY6uA=
+	t=1766648480; cv=none; b=WI/GYmXkyGB7He/6RxGYL0vEX26/mWn5PR7DT+S2fszarF3o5+myy7IuL63HecO0+MnEQESkUDwBPKqPEtBfdOhQMULTg0qjLi/PI0oN0+Uj1PXoFEA+AdjaL8IKs+yHyhRjiVvQJIxNWBLUZlDBfmuaQc6Kl7m8qu3nDoneXHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766603408; c=relaxed/simple;
-	bh=OZj4wyhPB3tvmTrXQ3BvFiyCvxQgJ3qLgNoA8UIle8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rsvw0KZz77nOjtq5C1FyumuUZxgUyXAZLDBVnic0Z6L1YGuXpjXu+wS7BtJ8TTz0QjovuKoA1c1bIQx3qhGoJ1pRfqaDEfMf8jSykpxs0mrRK7CPLeSA+dbH3GVDrzqbwtx+t2yl83Pq8YBJvSKodN5o4Q82JWo5+toWR7md5LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYMpBQcZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB86C4CEF7;
-	Wed, 24 Dec 2025 19:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766603408;
-	bh=OZj4wyhPB3tvmTrXQ3BvFiyCvxQgJ3qLgNoA8UIle8Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rYMpBQcZ34iDmC/CDu07eKOHvOIXBIFSn6XaPZbKNojhk7T7g0IZOoqdlAFIMuJch
-	 NUT2+h5hWmxWWWqMXHvlUdwILuzTqfP0v0Da1Mu/fUgc6aPnlQCExDv4AXWyllJOmp
-	 FcTkqpZG8XoBihDvvZ0h2lJlFSkNoVSjpLZR3aXquHm9DnB/9ue4oa3zhKMHeWS4lB
-	 Nxmjiu9ADxTF2WrFBbF/AQ6V+nMEsbDryp5q9SRQC4BDnzBgLbFHzLU7u7wajqxNLw
-	 J5paSBBBXHWcAyEtBB+OLzaq/USSnZSKGM2o6ARh3BiyoTWhV15Kt8L8mrE/xeRpq5
-	 1vCisLLlfk6tg==
-Message-ID: <2b5a99aa-6bd6-478c-b734-82ea9d440ecd@kernel.org>
-Date: Wed, 24 Dec 2025 14:10:06 -0500
+	s=arc-20240116; t=1766648480; c=relaxed/simple;
+	bh=XGPrbHaUaTSW4+70HOZs3oCsdijBz5W8l6Ll0/EXFtc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jafd7DIQBwwFA0cYZiNRWSsMGVMIK9LHZfQpwQWWAy6Y3QbgtoWir6NAiInXtkXbA+DmmToaN/H8snVIdE8sQHpDEoktJUuHBh1thnywAo9lRjmLFr600KgaYpqDHLOwKpMrVHr2OoIXMkiRaWj5sBkWBgV1opR+1ZM8GhTofhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=Bo1TrAtZ; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+Received: from LAPTOP-N070L597.localdomain (unknown [58.241.16.34])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2e86e0fe9;
+	Thu, 25 Dec 2025 15:41:06 +0800 (GMT+08:00)
+From: Zilin Guan <zilin@seu.edu.cn>
+To: trondmy@kernel.org
+Cc: anna@kernel.org,
+	jcurley@purestorage.com,
+	jlayton@kernel.org,
+	tigran.mkrtchyan@desy.d,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jianhao.xu@seu.edu.cn,
+	Zilin Guan <zilin@seu.edu.cn>
+Subject: [PATCH] pnfs/flexfiles: Fix memory leak in nfs4_ff_alloc_deviceid_node()
+Date: Thu, 25 Dec 2025 07:41:03 +0000
+Message-Id: <20251225074103.862493-1-zilin@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] NFSD: Track SCSI Persistent Registration Fencing
- per Client with xarray
-To: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, neilb@ownmail.net,
- Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey <tom@talpey.com>,
- Christoph Hellwig <hch@lst.de>
-Cc: linux-nfs@vger.kernel.org
-References: <20251222190735.307006-1-dai.ngo@oracle.com>
- <6ffa2b50-c0fc-4532-908e-951b224fcb10@app.fastmail.com>
- <f1448227-ddd8-47cf-9fe3-3e1983520de0@oracle.com>
- <c55508e3-4167-4439-8663-5dd782404893@app.fastmail.com>
- <3bf448ee-7e1e-4ed8-93a7-2754084885c5@oracle.com>
- <492c5f62-e11e-4601-83f6-31aff5f5802f@app.fastmail.com>
- <0bc92d15-09cd-481f-8874-8dcc5a7b9d39@oracle.com>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <0bc92d15-09cd-481f-8874-8dcc5a7b9d39@oracle.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9b54744ad203a1kunmf950885f343a0
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGhlCVh0fTh1CGUxNSx5MHVYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlOQ1VJT0pVSk1VSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0xVSktLVUtZBg
+	++
+DKIM-Signature: a=rsa-sha256;
+	b=Bo1TrAtZyzxmvAESRCo2W6d9EFtSjFlR9VAVezyFCnqXWTWd7WYYu0oh4Ru7PL91v5/7hrgWlAJl81+FPT0ZRWSM/4nTzNuadlHewdkg5csGyxX6/B/nSdFMF8KP7ujXXZjRuJ/ukiKXMPwen5kYNE0Z1ddK5Ok/XoRg9Rv7hz8=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
+	bh=6ek0Hr2EcbwtmmP43gb3ZGqduvyTEmRIE7YXgVoTyak=;
+	h=date:mime-version:subject:message-id:from;
 
-On 12/24/25 12:52 PM, Dai Ngo wrote:
-> 
-> On 12/24/25 6:57 AM, Chuck Lever wrote:
->>
->> On Tue, Dec 23, 2025, at 5:34 PM, Dai Ngo wrote:
->>> On 12/23/25 11:47 AM, Chuck Lever wrote:
->>>> On Tue, Dec 23, 2025, at 1:54 PM, Dai Ngo wrote:
+In nfs4_ff_alloc_deviceid_node(), if the allocation for ds_versions fails,
+the function jumps to the out_scratch label without freeing the already
+allocated dsaddrs list, leading to a memory leak.
 
->>>>>> Another question is: Can cl_fenced_devs grow without bounds?
->>>>> I think it has the same limitation for any xarray. The hard limit
->>>>> is the availability of memory in the system.
->>>> My question isn't about how much can any xarray hold, it's how
->>>> much will NFSD ask /cl_fenced_devs/ to hold. IIUC, the upper
->>>> bound for each nfs4_client's cl_fenced_devs will be the number
->>>> of exported block devices, and no more than that.
->>>>
->>>> I want to avoid a potential denial of service vector -- NFSD
->>>> should not be able to create an unlimited number of items
->>>> in cl_fenced_devs... but sounds like there is a natural limit.
->>> Oh I see. I did not even think about this DOS since I think this
->>> is under the control of the admin on NFSD and a sane admin would
->>> not configure a massive amount of exported block devices.
->> Ultimately, the upper bound on the number entries in cl_fenced_devs
->> is indeed under the control of the NFS server administrator,
->> indirectly. But looking only at the code in the patch:
->>
->>   - New entries are created in cl_fenced_devs via GETDEVICEINFO,
->>     a client (remote host) action
->>   - There's nothing that removes these entries over time
-> 
-> I don't understand why these entries need to be removed over time.
+Fix this by jumping to the out_err_drain_dsaddrs label, which properly
+frees the dsaddrs list before cleaning up other resources.
 
-They don't need to be removed over time. I'm saying you should document
-the assumptions better -- that NFSD indirectly enforces a limit on the
-number of items in this xarray. That isn't clear if a reviewer is
-looking only at the code in nfsd4_block_get_device_info_scsi.
+Fixes: d67ae825a59d6 ("pnfs/flexfiles: Add the FlexFile Layout Driver")
+Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
+---
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-> These entries are created only when the clients accessing NFS exports
-> that use pNFS SCSI layout. So long as the clients still mount these
-> exports, don't we need to keep these entries around?
-> 
->>
->> The duplicate checking logic needs to ensure that client actions
->> cannot create more entries than that upper bound.
-> 
-> How can this happens? repeated GETDEVICEINFO ops of the same device
-> still use the same entry so how do the clients can indirectly create
-> more entries than the number of pNFS exports?
-
-It can happen if a race occurs, for example. A broken or malicious
-client could send two concurrent GETDEVICEINFO operations for the same
-device. If the new code isn't careful, it could unintentionally add two
-copies of the device to that array due to that race.
-
-What I'm saying is that this needs to be documented: why does the
-addition of the device to cl_fenced_devs need to be atomic? Because
-if it isn't, a race could allow an errant client to add extra devices
-to cl_fenced_devs over time. That could cause cl_fenced_devs to grow
-without bound.
-
-
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index c55ea8fa3bfa..c2d8a13a9dbd 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -103,7 +103,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 			      sizeof(struct nfs4_ff_ds_version),
+ 			      gfp_flags);
+ 	if (!ds_versions)
+-		goto out_scratch;
++		goto out_err_drain_dsaddrs;
+ 
+ 	for (i = 0; i < version_count; i++) {
+ 		/* 20 = version(4) + minor_version(4) + rsize(4) + wsize(4) +
 -- 
-Chuck Lever
+2.34.1
+
 
