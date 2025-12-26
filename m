@@ -1,43 +1,43 @@
-Return-Path: <linux-nfs+bounces-17304-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17305-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67CC2CDEC9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 16:15:38 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 152CECDECA5
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 16:19:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA3E43005EBD
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 15:15:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 01E4C3003061
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 15:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C571946BC;
-	Fri, 26 Dec 2025 15:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A553F1DC997;
+	Fri, 26 Dec 2025 15:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao8mhHhF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8cEbbQN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF47215853B;
-	Fri, 26 Dec 2025 15:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8051453E0B
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Dec 2025 15:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766762136; cv=none; b=M/ERJ3qzk6mmRKhJ6uKxmsfop9D0DmTNoFQ3GvgQNwdBTEuCqZTCZ7ofTZrL7c/gg6y6ahuAnIymyHyT6loFI2deYLeEuaAfUd97rXek45DEH25jntnF1L2YA2TSS60aYW7H8RZdkVJ8ozZZFM/v1vK8DUkFLYmeHw3FBTF1FHo=
+	t=1766762378; cv=none; b=fsJzpYOqYtgwDnXL9Q1QsxNq6ZRDK5pVrYK6u6A3cY6jYg+iYJJ06BPK+28RuwjV7+X2WUTf1kts3erq6Y2lh1rS3v5daijYxqTswqZ8lzeSUrhNtJ65laCtRopNKe3v76R28JZD1J3LyEYou63FwLyCvz16oDd2kD2n5BjtghU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766762136; c=relaxed/simple;
-	bh=AiJR4/Gv5Iou63LOX3tJ3AG4YPAHUGlU/cQNJc3NJP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dWsMEFj3UYvM5/v7z+lOh65v9+eujcw/c+XDIPQC2QzLh6U8TWgnAvFwRDwHzrtwq2oCbVA7agGO66cAKM0zY3avZ9gj5RbqyTLLhUPvFE8iZC17eWFVVP/fmVrcgVcOOVMs6L2o3V5VXgZiFNG7HOjYQ1J/knrCiFqwPKo3sBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao8mhHhF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF730C4CEF7;
-	Fri, 26 Dec 2025 15:15:34 +0000 (UTC)
+	s=arc-20240116; t=1766762378; c=relaxed/simple;
+	bh=rjvynIU/pUsNTEgCIA1LJKfu7RKZBCy888QZ455gVMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=txGcyqyJM3TvM+Uh1OYEFX49t8yg977O9LHxpSTSe6loDSag8n3ezMi/9FsOwweled5XiEYo4+ilL/Lca4qk2Ad9KgXF1//70M04cOelRKdBx94Mw023dB29mUU2xFIu6Rb7YO9QA9ST9H0xbsz4ZfCD0x6PV7WF5t8XmK7N6rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8cEbbQN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D4EC4CEF7;
+	Fri, 26 Dec 2025 15:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766762135;
-	bh=AiJR4/Gv5Iou63LOX3tJ3AG4YPAHUGlU/cQNJc3NJP0=;
+	s=k20201202; t=1766762377;
+	bh=rjvynIU/pUsNTEgCIA1LJKfu7RKZBCy888QZ455gVMY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Ao8mhHhFPVzFGO+Y7VwTs/2NDw/lXXwxBKYK4zTgeaeethHUSJLclLhCtS6nHU8oP
-	 0EhXNR3IhMh2zowWII7IvynVx4Pdn3SDXGodcvfgLcpp5Hhf3LU+BEyxhp8Ib/57FG
-	 S6yiSFvGag9MPUe4cBrktBBlXve5Bi6Dpp/sLfyWUD9kG2ewacakweSAsykZVezGlZ
-	 h7JjsnpIj/fsXOBKkeQmEZi0HpyGt7r/iS30R5fewAcJzd0oFfgyKY5jz103vbcCp2
-	 Hr6n293PY3v4PyRO2YTdd6c19ONDdkz2+kwZvgTNHIClmfJpW8u/oIKratpZL4+BYk
-	 e3jPEouCO5FKQ==
+	b=h8cEbbQNVP1y0FnCzPMGwNU+Bzy8DE78bIiyT3nHWmSrBVetUf8LbJ330jR+cSxw1
+	 IKm8zoZ9ogANyzS3tqKjeQRI3lhmejO2aZZrL4ONuJHB5LMpF1K10Hxf4c4qzfbzi8
+	 LQqkGnZPfGUCwzDKVl/GI7zBEa3FV81GD9ZDbf/bO2e3RjDhsMZg7GnNAJc8+D9J6w
+	 eN1soJ3H3xq5IGy4L9/wCr2nlj+gxh1PDwHVyKvz0raIgmMIj/4pma5TRqQwLH78hb
+	 Us9lAfR7nSpGCv1h/jtPM9xUILv3bIAzMlyOuLH6ZzHxn11NSN028fqI6KXyC0M/hL
+	 Gmk9P0kB714dw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -45,12 +45,10 @@ To: NeilBrown <neilb@ownmail.net>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Xingjing Deng <micro6947@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] SUNRPC: auth_gss: fix memory leaks in XDR decoding error paths
-Date: Fri, 26 Dec 2025 10:15:32 -0500
-Message-ID: <20251226151532.440886-1-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 0/3] Three xdrgen short subjects
+Date: Fri, 26 Dec 2025 10:19:32 -0500
+Message-ID: <20251226151935.441045-1-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -62,219 +60,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The gssx_dec_ctx(), gssx_dec_status(), and gssx_dec_name()
-functions allocate memory via gssx_dec_buffer(), which calls
-kmemdup(). When a subsequent decode operation fails, these
-functions return immediately without freeing previously
-allocated buffers, causing memory leaks.
+While working on converting lockd to uses xdrgen, I noticed these
+issues in the xdrgen tool.
 
-The leak in gssx_dec_ctx() is particularly relevant because
-the caller (gssp_accept_sec_context_upcall) initializes several
-buffer length fields to non-zero values, resulting in memory
-allocation:
+Chuck Lever (3):
+  xdrgen: Extend error reporting to AST transformation phase
+  xdrgen: Emit a max_arg_sz macro
+  xdrgen: Add enum value validation to generated decoders
 
-    struct gssx_ctx rctxh = {
-        .exported_context_token.len = GSSX_max_output_handle_sz,
-        .mech.len = GSS_OID_MAX_LEN,
-        .src_name.display_name.len = GSSX_max_princ_sz,
-        .targ_name.display_name.len = GSSX_max_princ_sz
-    };
+ fs/nfsd/nfs4xdr_gen.c                         | 105 ++++++++++++++----
+ fs/nfsd/nfs4xdr_gen.h                         |   2 +-
+ include/linux/sunrpc/xdrgen/nfs4_1.h          |   8 +-
+ tools/net/sunrpc/xdrgen/generators/enum.py    |   9 +-
+ tools/net/sunrpc/xdrgen/generators/program.py |  35 +++++-
+ .../net/sunrpc/xdrgen/subcmds/declarations.py |   8 +-
+ .../net/sunrpc/xdrgen/subcmds/definitions.py  |  10 +-
+ tools/net/sunrpc/xdrgen/subcmds/lint.py       |   8 +-
+ tools/net/sunrpc/xdrgen/subcmds/source.py     |  11 +-
+ .../xdrgen/templates/C/enum/decoder/enum.j2   |  11 ++
+ .../templates/C/enum/decoder/enum_be.j2       |  20 ++++
+ .../templates/C/program/maxsize/max_args.j2   |   3 +
+ tools/net/sunrpc/xdrgen/xdr_ast.py            |   6 +-
+ tools/net/sunrpc/xdrgen/xdr_parse.py          |  54 ++++++++-
+ tools/net/sunrpc/xdrgen/xdrgen                |   6 +
+ 15 files changed, 262 insertions(+), 34 deletions(-)
+ create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/maxsize/max_args.j2
 
-If, for example, gssx_dec_name() succeeds for src_name but
-fails for targ_name, the memory allocated for
-exported_context_token, mech, and src_name.display_name
-remains unreferenced and cannot be reclaimed.
-
-Add error handling with goto-based cleanup to free any
-previously allocated buffers before returning an error.
-
-Reported-by: Xingjing Deng <micro6947@gmail.com>
-Closes: https://lore.kernel.org/linux-nfs/CAK+ZN9qttsFDu6h1FoqGadXjMx1QXqPMoYQ=6O9RY4SxVTvKng@mail.gmail.com/
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
-Cc: stable@vger.kernel.org
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/gss_rpc_xdr.c | 82 ++++++++++++++++++++++++-------
- 1 file changed, 64 insertions(+), 18 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-index 7d2cdc2bd374..f320c0a8e604 100644
---- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-@@ -320,29 +320,47 @@ static int gssx_dec_status(struct xdr_stream *xdr,
- 
- 	/* status->minor_status */
- 	p = xdr_inline_decode(xdr, 8);
--	if (unlikely(p == NULL))
--		return -ENOSPC;
-+	if (unlikely(p == NULL)) {
-+		err = -ENOSPC;
-+		goto out_free_mech;
-+	}
- 	p = xdr_decode_hyper(p, &status->minor_status);
- 
- 	/* status->major_status_string */
- 	err = gssx_dec_buffer(xdr, &status->major_status_string);
- 	if (err)
--		return err;
-+		goto out_free_mech;
- 
- 	/* status->minor_status_string */
- 	err = gssx_dec_buffer(xdr, &status->minor_status_string);
- 	if (err)
--		return err;
-+		goto out_free_major_status_string;
- 
- 	/* status->server_ctx */
- 	err = gssx_dec_buffer(xdr, &status->server_ctx);
- 	if (err)
--		return err;
-+		goto out_free_minor_status_string;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* status->options */
- 	err = dummy_dec_opt_array(xdr, &status->options);
-+	if (err)
-+		goto out_free_server_ctx;
- 
-+	return 0;
-+
-+out_free_server_ctx:
-+	kfree(status->server_ctx.data);
-+	status->server_ctx.data = NULL;
-+out_free_minor_status_string:
-+	kfree(status->minor_status_string.data);
-+	status->minor_status_string.data = NULL;
-+out_free_major_status_string:
-+	kfree(status->major_status_string.data);
-+	status->major_status_string.data = NULL;
-+out_free_mech:
-+	kfree(status->mech.data);
-+	status->mech.data = NULL;
- 	return err;
- }
- 
-@@ -505,28 +523,35 @@ static int gssx_dec_name(struct xdr_stream *xdr,
- 	/* name->name_type */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* name->exported_name */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* name->exported_composite_name */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* we assume we have no attributes for now, so simply consume them */
- 	/* name->name_attributes */
- 	err = dummy_dec_nameattr_array(xdr, &dummy_name_attr_array);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* name->extensions */
- 	err = dummy_dec_opt_array(xdr, &dummy_option_array);
-+	if (err)
-+		goto out_free_display_name;
- 
-+	return 0;
-+
-+out_free_display_name:
-+	kfree(name->display_name.data);
-+	name->display_name.data = NULL;
- 	return err;
- }
- 
-@@ -649,32 +674,34 @@ static int gssx_dec_ctx(struct xdr_stream *xdr,
- 	/* ctx->state */
- 	err = gssx_dec_buffer(xdr, &ctx->state);
- 	if (err)
--		return err;
-+		goto out_free_exported_context_token;
- 
- 	/* ctx->need_release */
- 	err = gssx_dec_bool(xdr, &ctx->need_release);
- 	if (err)
--		return err;
-+		goto out_free_state;
- 
- 	/* ctx->mech */
- 	err = gssx_dec_buffer(xdr, &ctx->mech);
- 	if (err)
--		return err;
-+		goto out_free_state;
- 
- 	/* ctx->src_name */
- 	err = gssx_dec_name(xdr, &ctx->src_name);
- 	if (err)
--		return err;
-+		goto out_free_mech;
- 
- 	/* ctx->targ_name */
- 	err = gssx_dec_name(xdr, &ctx->targ_name);
- 	if (err)
--		return err;
-+		goto out_free_src_name;
- 
- 	/* ctx->lifetime */
- 	p = xdr_inline_decode(xdr, 8+8);
--	if (unlikely(p == NULL))
--		return -ENOSPC;
-+	if (unlikely(p == NULL)) {
-+		err = -ENOSPC;
-+		goto out_free_targ_name;
-+	}
- 	p = xdr_decode_hyper(p, &ctx->lifetime);
- 
- 	/* ctx->ctx_flags */
-@@ -683,17 +710,36 @@ static int gssx_dec_ctx(struct xdr_stream *xdr,
- 	/* ctx->locally_initiated */
- 	err = gssx_dec_bool(xdr, &ctx->locally_initiated);
- 	if (err)
--		return err;
-+		goto out_free_targ_name;
- 
- 	/* ctx->open */
- 	err = gssx_dec_bool(xdr, &ctx->open);
- 	if (err)
--		return err;
-+		goto out_free_targ_name;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* ctx->options */
- 	err = dummy_dec_opt_array(xdr, &ctx->options);
-+	if (err)
-+		goto out_free_targ_name;
- 
-+	return 0;
-+
-+out_free_targ_name:
-+	kfree(ctx->targ_name.display_name.data);
-+	ctx->targ_name.display_name.data = NULL;
-+out_free_src_name:
-+	kfree(ctx->src_name.display_name.data);
-+	ctx->src_name.display_name.data = NULL;
-+out_free_mech:
-+	kfree(ctx->mech.data);
-+	ctx->mech.data = NULL;
-+out_free_state:
-+	kfree(ctx->state.data);
-+	ctx->state.data = NULL;
-+out_free_exported_context_token:
-+	kfree(ctx->exported_context_token.data);
-+	ctx->exported_context_token.data = NULL;
- 	return err;
- }
- 
 -- 
 2.52.0
 
