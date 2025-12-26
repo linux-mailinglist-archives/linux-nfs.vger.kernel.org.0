@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-17307-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17308-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28024CDECAB
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 16:19:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A86AECDECAE
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 16:19:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6EBFE30062C5
+	by sea.lore.kernel.org (Postfix) with ESMTP id ECEA93005FD9
 	for <lists+linux-nfs@lfdr.de>; Fri, 26 Dec 2025 15:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B69D2459F3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E654C24C076;
 	Fri, 26 Dec 2025 15:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCTvH9g9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8sdKDeL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF953E0B
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Dec 2025 15:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C232B53E0B
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Dec 2025 15:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766762380; cv=none; b=f5wgglpH5+vF+9Cnx9VA0oAzIDbuLXDDxjQz54AW52Xs+KYOWJztWwJfJxEBBmVYsKRhP5NTDDD/fwQJSoRJQ3BtO0bC/cGzOdlNRNnX4axcMQ3OsCWqCNFW2YDRpmorAl1muL56sp7FrpA50WpTYhGNpu13ivpDhejPcY6kzHY=
+	t=1766762380; cv=none; b=osGHaKLGq78NM6m7c5tWay2TVrT3H6Q8fpgwm/++n5xnfNmZGTg2lUZZENy3r2KWWfcjRcco67nw6oESEIVV20NtlBAYVZV4WOroLKVjsbkG3u141koEFM3zirSu0wz+lM896e/mAQTHe8Oz25lvCs5QtPANWJ8NCscjrwDNjvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766762380; c=relaxed/simple;
-	bh=u6OeNFMfOujui3XJ3PwKlU9LbiqheZPd5LGuAyTisVE=;
+	bh=1o2Cl1e8s551BUZURQqiZ6dwwe/NFQOjyx/CTAlprag=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=smBtSvZYegyWPAL+YO+kG+RrLwWFalJlC7sue7L0+/QVvNfyeXIzzs2BzNFp2jWaO2rXAd8tpa2knNbHuQZOpe+swOf81Z1hCn0/yPqOVyF5Y5C70pUSRbgKvl/i9nZe4JGkc3kMFKNDJAEX9xZCgBQNG4o2azqOtuEQeNob22k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCTvH9g9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF589C4CEF7;
-	Fri, 26 Dec 2025 15:19:38 +0000 (UTC)
+	 MIME-Version; b=M3hdi64P1DPMaQMwnhsgfCNmkJ57GVkxqv6zNUNwxHp8pVJQSGzpr8kBSN99vNdaBGsOrfmfvLpigVcHAUOC1BeRYJszhuoXz77B782ewoNReCHd91c5i7T6OCwLS/ham734IlA7EuvRnWV3KrMPP/KoAD3ESlksOEIqlbATELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8sdKDeL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE89EC116D0;
+	Fri, 26 Dec 2025 15:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766762379;
-	bh=u6OeNFMfOujui3XJ3PwKlU9LbiqheZPd5LGuAyTisVE=;
+	s=k20201202; t=1766762380;
+	bh=1o2Cl1e8s551BUZURQqiZ6dwwe/NFQOjyx/CTAlprag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HCTvH9g9fi5AyVyNWRZV7dFRmxCI6VJAgc0uU1Voa2Nevgxt9X1KuEZohpk0zzbeO
-	 M2q2xFPpiHHjm0FEshQpOyXmY7m7qIZLd7b93T7uQ/HA1KVYw789A7a/coTvTPfzbE
-	 6VqmulYc9DEcoWGuDivYKMEmPfCQpxAuezmbGdU3Ep6bnBnR6w1jRx6JX2gemHyh4n
-	 7gh95oZsczjyO8ek0epKtOS1mtj6lg+QeOMZq7vKMzFX2zKqEg6UEj6rAJ3gKbLwcM
-	 SPGKO9bLQOWXC5URyJ0DFW4coKNZs1teTxCt+hzDbyA42gC+tEA9vrwheas+AQc/rd
-	 xbfVjOdtB85/g==
+	b=t8sdKDeLhd1Ytt3DKcsIvF5NMEnTZB+hWqgQNue/z1f3AwJyz+aGxwsxOz9b2OBqj
+	 BlReaPjjJ7i/CBLtDIBsIAugKr3CrMC+ZFG+hPto7LQmjLmtBFtc4Lwqe0D3/bFmBF
+	 Sc3qpdZFMir0Vq+Wp8178RHTLBmkaSwQ/Am8C4A5ZuB5+zkRMOn0VMSWwibGcpN47h
+	 uS+3YleFKdTpXxnjLMXSjjfI76+XL+lKcpjzMleijGawPlfn2r7c8wSoOY4uTr3elO
+	 1Or7+6m/YohTxdPnhAQSGX2Kgh845JcJXHv/wjq27tRqqxDjQzqDlC83nLjvUphXYs
+	 wUMUtGX5E9G6w==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,9 +47,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 2/3] xdrgen: Emit a max_arg_sz macro
-Date: Fri, 26 Dec 2025 10:19:34 -0500
-Message-ID: <20251226151935.441045-3-cel@kernel.org>
+Subject: [PATCH 3/3] xdrgen: Add enum value validation to generated decoders
+Date: Fri, 26 Dec 2025 10:19:35 -0500
+Message-ID: <20251226151935.441045-4-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251226151935.441045-1-cel@kernel.org>
 References: <20251226151935.441045-1-cel@kernel.org>
@@ -63,106 +63,561 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-struct svc_service has a .vs_xdrsize field that is filled in by
-servers for each of their RPC programs. This field is supposed to
-contain the size of the largest procedure argument in the RPC
-program. This value is also sometimes used to size network
-transport buffers.
+XDR enum decoders generated by xdrgen do not verify that incoming
+values are valid members of the enum. Incoming out-of-range values
+from malicious or buggy peers propagate through the system
+unchecked.
 
-Currently, server implementations must manually calculate and
-hard-code this value, which is error-prone and requires updates
-when procedure arguments change.
+Add validation logic to generated enum decoders using a switch
+statement that explicitly lists valid enumerator values. The
+compiler optimizes this to a simple range check when enum values
+are dense (contiguous), while correctly rejecting invalid values
+for sparse enums with gaps in their value ranges.
 
-Update xdrgen to determine which procedure argument structure is
-largest, and emit a macro with a well-known name that contains
-the size of that structure. Server code then uses this macro when
-initializing the .vs_xdrsize field.
+The --no-enum-validation option on the source subcommand disables
+this validation when not needed.
 
-For NLM version 4, xdrgen now emits:
-
-    #define NLM4_MAX_ARGS_SZ (NLM4_nlm4_lockargs_sz)
+The minimum and maximum fields in _XdrEnum, which were previously
+unused placeholders for a range-based validation approach, have
+been removed since the switch-based validation handles both dense
+and sparse enums correctly.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- tools/net/sunrpc/xdrgen/generators/program.py | 35 ++++++++++++++++++-
- .../net/sunrpc/xdrgen/subcmds/definitions.py  |  2 ++
- .../templates/C/program/maxsize/max_args.j2   |  3 ++
- 3 files changed, 39 insertions(+), 1 deletion(-)
- create mode 100644 tools/net/sunrpc/xdrgen/templates/C/program/maxsize/max_args.j2
+ fs/nfsd/nfs4xdr_gen.c                         | 105 ++++++++++++++----
+ fs/nfsd/nfs4xdr_gen.h                         |   2 +-
+ include/linux/sunrpc/xdrgen/nfs4_1.h          |   8 +-
+ tools/net/sunrpc/xdrgen/generators/enum.py    |   9 +-
+ tools/net/sunrpc/xdrgen/subcmds/source.py     |   3 +-
+ .../xdrgen/templates/C/enum/decoder/enum.j2   |  11 ++
+ .../templates/C/enum/decoder/enum_be.j2       |  20 ++++
+ tools/net/sunrpc/xdrgen/xdr_ast.py            |   6 +-
+ tools/net/sunrpc/xdrgen/xdr_parse.py          |  14 +++
+ tools/net/sunrpc/xdrgen/xdrgen                |   6 +
+ 10 files changed, 156 insertions(+), 28 deletions(-)
 
-diff --git a/tools/net/sunrpc/xdrgen/generators/program.py b/tools/net/sunrpc/xdrgen/generators/program.py
-index decb092ef02c..c0cb3f6d3319 100644
---- a/tools/net/sunrpc/xdrgen/generators/program.py
-+++ b/tools/net/sunrpc/xdrgen/generators/program.py
-@@ -5,8 +5,9 @@
+diff --git a/fs/nfsd/nfs4xdr_gen.c b/fs/nfsd/nfs4xdr_gen.c
+index a17b5d8e60b3..1e5e2243625c 100644
+--- a/fs/nfsd/nfs4xdr_gen.c
++++ b/fs/nfsd/nfs4xdr_gen.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Generated by xdrgen. Manual edits will be lost.
+ // XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x
+-// XDR specification modification time: Mon Oct 14 09:10:13 2024
++// XDR specification modification time: Thu Dec 25 13:44:43 2025
  
- from jinja2 import Environment
+ #include <linux/sunrpc/svc.h>
  
--from generators import SourceGenerator, create_jinja2_environment
-+from generators import SourceGenerator, create_jinja2_environment, get_jinja2_template
- from xdr_ast import _RpcProgram, _RpcVersion, excluded_apis
-+from xdr_ast import max_widths, get_header_name
+@@ -11,13 +11,13 @@ static bool __maybe_unused
+ xdrgen_decode_int64_t(struct xdr_stream *xdr, int64_t *ptr)
+ {
+ 	return xdrgen_decode_hyper(xdr, ptr);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_uint32_t(struct xdr_stream *xdr, uint32_t *ptr)
+ {
+ 	return xdrgen_decode_unsigned_int(xdr, ptr);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
+@@ -28,7 +28,7 @@ xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
+ 		if (!xdrgen_decode_uint32_t(xdr, &ptr->element[i]))
+ 			return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
+@@ -38,13 +38,13 @@ xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
+ 	if (!xdrgen_decode_uint32_t(xdr, &ptr->nseconds))
+ 		return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_fattr4_offline(struct xdr_stream *xdr, fattr4_offline *ptr)
+ {
+ 	return xdrgen_decode_bool(xdr, ptr);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_open_arguments4(struct xdr_stream *xdr, struct open_arguments4 *ptr)
+@@ -60,7 +60,7 @@ xdrgen_decode_open_arguments4(struct xdr_stream *xdr, struct open_arguments4 *pt
+ 	if (!xdrgen_decode_bitmap4(xdr, &ptr->oa_create_mode))
+ 		return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_open_args_share_access4(struct xdr_stream *xdr, open_args_share_access4 *ptr)
+@@ -69,6 +69,15 @@ xdrgen_decode_open_args_share_access4(struct xdr_stream *xdr, open_args_share_ac
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_ARGS_SHARE_ACCESS_READ:
++	case OPEN_ARGS_SHARE_ACCESS_WRITE:
++	case OPEN_ARGS_SHARE_ACCESS_BOTH:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -80,6 +89,16 @@ xdrgen_decode_open_args_share_deny4(struct xdr_stream *xdr, open_args_share_deny
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_ARGS_SHARE_DENY_NONE:
++	case OPEN_ARGS_SHARE_DENY_READ:
++	case OPEN_ARGS_SHARE_DENY_WRITE:
++	case OPEN_ARGS_SHARE_DENY_BOTH:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -91,6 +110,19 @@ xdrgen_decode_open_args_share_access_want4(struct xdr_stream *xdr, open_args_sha
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
++	case OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -102,6 +134,19 @@ xdrgen_decode_open_args_open_claim4(struct xdr_stream *xdr, open_args_open_claim
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_ARGS_OPEN_CLAIM_NULL:
++	case OPEN_ARGS_OPEN_CLAIM_PREVIOUS:
++	case OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR:
++	case OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV:
++	case OPEN_ARGS_OPEN_CLAIM_FH:
++	case OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH:
++	case OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -113,6 +158,16 @@ xdrgen_decode_open_args_createmode4(struct xdr_stream *xdr, open_args_createmode
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_ARGS_CREATEMODE_UNCHECKED4:
++	case OPEN_ARGS_CREATE_MODE_GUARDED:
++	case OPEN_ARGS_CREATEMODE_EXCLUSIVE4:
++	case OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -121,19 +176,19 @@ bool
+ xdrgen_decode_fattr4_open_arguments(struct xdr_stream *xdr, fattr4_open_arguments *ptr)
+ {
+ 	return xdrgen_decode_open_arguments4(xdr, ptr);
+-};
++}
+ 
+ bool
+ xdrgen_decode_fattr4_time_deleg_access(struct xdr_stream *xdr, fattr4_time_deleg_access *ptr)
+ {
+ 	return xdrgen_decode_nfstime4(xdr, ptr);
+-};
++}
+ 
+ bool
+ xdrgen_decode_fattr4_time_deleg_modify(struct xdr_stream *xdr, fattr4_time_deleg_modify *ptr)
+ {
+ 	return xdrgen_decode_nfstime4(xdr, ptr);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_decode_open_delegation_type4(struct xdr_stream *xdr, open_delegation_type4 *ptr)
+@@ -142,6 +197,18 @@ xdrgen_decode_open_delegation_type4(struct xdr_stream *xdr, open_delegation_type
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++	case OPEN_DELEGATE_NONE:
++	case OPEN_DELEGATE_READ:
++	case OPEN_DELEGATE_WRITE:
++	case OPEN_DELEGATE_NONE_EXT:
++	case OPEN_DELEGATE_READ_ATTRS_DELEG:
++	case OPEN_DELEGATE_WRITE_ATTRS_DELEG:
++		break;
++	default:
++		return false;
++	}
+ 	*ptr = val;
+ 	return true;
+ }
+@@ -150,13 +217,13 @@ static bool __maybe_unused
+ xdrgen_encode_int64_t(struct xdr_stream *xdr, const int64_t value)
+ {
+ 	return xdrgen_encode_hyper(xdr, value);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_uint32_t(struct xdr_stream *xdr, const uint32_t value)
+ {
+ 	return xdrgen_encode_unsigned_int(xdr, value);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
+@@ -167,7 +234,7 @@ xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
+ 		if (!xdrgen_encode_uint32_t(xdr, value.element[i]))
+ 			return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *value)
+@@ -177,13 +244,13 @@ xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *value)
+ 	if (!xdrgen_encode_uint32_t(xdr, value->nseconds))
+ 		return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_fattr4_offline(struct xdr_stream *xdr, const fattr4_offline value)
+ {
+ 	return xdrgen_encode_bool(xdr, value);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_open_arguments4(struct xdr_stream *xdr, const struct open_arguments4 *value)
+@@ -199,7 +266,7 @@ xdrgen_encode_open_arguments4(struct xdr_stream *xdr, const struct open_argument
+ 	if (!xdrgen_encode_bitmap4(xdr, value->oa_create_mode))
+ 		return false;
+ 	return true;
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_open_args_share_access4(struct xdr_stream *xdr, open_args_share_access4 value)
+@@ -235,19 +302,19 @@ bool
+ xdrgen_encode_fattr4_open_arguments(struct xdr_stream *xdr, const fattr4_open_arguments *value)
+ {
+ 	return xdrgen_encode_open_arguments4(xdr, value);
+-};
++}
+ 
+ bool
+ xdrgen_encode_fattr4_time_deleg_access(struct xdr_stream *xdr, const fattr4_time_deleg_access *value)
+ {
+ 	return xdrgen_encode_nfstime4(xdr, value);
+-};
++}
+ 
+ bool
+ xdrgen_encode_fattr4_time_deleg_modify(struct xdr_stream *xdr, const fattr4_time_deleg_modify *value)
+ {
+ 	return xdrgen_encode_nfstime4(xdr, value);
+-};
++}
+ 
+ static bool __maybe_unused
+ xdrgen_encode_open_delegation_type4(struct xdr_stream *xdr, open_delegation_type4 value)
+diff --git a/fs/nfsd/nfs4xdr_gen.h b/fs/nfsd/nfs4xdr_gen.h
+index 41a0033b7256..47437876e803 100644
+--- a/fs/nfsd/nfs4xdr_gen.h
++++ b/fs/nfsd/nfs4xdr_gen.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by xdrgen. Manual edits will be lost. */
+ /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
+-/* XDR specification modification time: Mon Oct 14 09:10:13 2024 */
++/* XDR specification modification time: Thu Dec 25 13:44:43 2025 */
+ 
+ #ifndef _LINUX_XDRGEN_NFS4_1_DECL_H
+ #define _LINUX_XDRGEN_NFS4_1_DECL_H
+diff --git a/include/linux/sunrpc/xdrgen/nfs4_1.h b/include/linux/sunrpc/xdrgen/nfs4_1.h
+index cf21a14aa885..352bffda08f7 100644
+--- a/include/linux/sunrpc/xdrgen/nfs4_1.h
++++ b/include/linux/sunrpc/xdrgen/nfs4_1.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by xdrgen. Manual edits will be lost. */
+ /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
+-/* XDR specification modification time: Mon Oct 14 09:10:13 2024 */
++/* XDR specification modification time: Thu Dec 25 13:44:43 2025 */
+ 
+ #ifndef _LINUX_XDRGEN_NFS4_1_DEF_H
+ #define _LINUX_XDRGEN_NFS4_1_DEF_H
+@@ -40,6 +40,7 @@ enum open_args_share_access4 {
+ 	OPEN_ARGS_SHARE_ACCESS_WRITE = 2,
+ 	OPEN_ARGS_SHARE_ACCESS_BOTH = 3,
+ };
++
+ typedef enum open_args_share_access4 open_args_share_access4;
+ 
+ enum open_args_share_deny4 {
+@@ -48,6 +49,7 @@ enum open_args_share_deny4 {
+ 	OPEN_ARGS_SHARE_DENY_WRITE = 2,
+ 	OPEN_ARGS_SHARE_DENY_BOTH = 3,
+ };
++
+ typedef enum open_args_share_deny4 open_args_share_deny4;
+ 
+ enum open_args_share_access_want4 {
+@@ -59,6 +61,7 @@ enum open_args_share_access_want4 {
+ 	OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 20,
+ 	OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21,
+ };
++
+ typedef enum open_args_share_access_want4 open_args_share_access_want4;
+ 
+ enum open_args_open_claim4 {
+@@ -70,6 +73,7 @@ enum open_args_open_claim4 {
+ 	OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH = 5,
+ 	OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6,
+ };
++
+ typedef enum open_args_open_claim4 open_args_open_claim4;
+ 
+ enum open_args_createmode4 {
+@@ -78,6 +82,7 @@ enum open_args_createmode4 {
+ 	OPEN_ARGS_CREATEMODE_EXCLUSIVE4 = 2,
+ 	OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1 = 3,
+ };
++
+ typedef enum open_args_createmode4 open_args_createmode4;
+ 
+ typedef struct open_arguments4 fattr4_open_arguments;
+@@ -124,6 +129,7 @@ enum open_delegation_type4 {
+ 	OPEN_DELEGATE_READ_ATTRS_DELEG = 4,
+ 	OPEN_DELEGATE_WRITE_ATTRS_DELEG = 5,
+ };
++
+ typedef enum open_delegation_type4 open_delegation_type4;
+ 
+ #define NFS4_int64_t_sz                 \
+diff --git a/tools/net/sunrpc/xdrgen/generators/enum.py b/tools/net/sunrpc/xdrgen/generators/enum.py
+index e62f715d3996..b4ed3ed6431e 100644
+--- a/tools/net/sunrpc/xdrgen/generators/enum.py
++++ b/tools/net/sunrpc/xdrgen/generators/enum.py
+@@ -5,6 +5,7 @@
+ 
+ from generators import SourceGenerator, create_jinja2_environment
+ from xdr_ast import _XdrEnum, public_apis, big_endian, get_header_name
++from xdr_parse import get_xdr_enum_validation
  
  
- def emit_version_definitions(
-@@ -169,3 +170,35 @@ class XdrProgramGenerator(SourceGenerator):
-                     emit_version_argument_encoders(
-                         self.environment, program, version,
-                     )
-+
-+    def emit_maxsize(self, node: _RpcProgram) -> None:
-+        """Emit maxsize macro for maximum RPC argument size"""
-+        header = get_header_name().upper()
-+
-+        # Find the largest argument across all versions
-+        max_arg_width = 0
-+        max_arg_name = None
-+        for version in node.versions:
-+            for procedure in version.procedures:
-+                if procedure.name in excluded_apis:
-+                    continue
-+                arg_name = procedure.argument.type_name
-+                if arg_name == "void":
-+                    continue
-+                if arg_name not in max_widths:
-+                    continue
-+                if max_widths[arg_name] > max_arg_width:
-+                    max_arg_width = max_widths[arg_name]
-+                    max_arg_name = arg_name
-+
-+        if max_arg_name is None:
-+            return
-+
-+        macro_name = header + "_MAX_ARGS_SZ"
-+        template = get_jinja2_template(self.environment, "maxsize", "max_args")
+ class XdrEnumGenerator(SourceGenerator):
+@@ -42,7 +43,13 @@ class XdrEnumGenerator(SourceGenerator):
+             template = self.environment.get_template("decoder/enum_be.j2")
+         else:
+             template = self.environment.get_template("decoder/enum.j2")
+-        print(template.render(name=node.name))
 +        print(
 +            template.render(
-+                macro=macro_name,
-+                width=header + "_" + max_arg_name + "_sz",
++                name=node.name,
++                enumerators=node.enumerators,
++                validate=get_xdr_enum_validation(),
 +            )
 +        )
-diff --git a/tools/net/sunrpc/xdrgen/subcmds/definitions.py b/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-index d6c2dcd6f78f..b17526a03dda 100644
---- a/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-+++ b/tools/net/sunrpc/xdrgen/subcmds/definitions.py
-@@ -66,6 +66,8 @@ def emit_header_maxsize(root: Specification, language: str, peer: str) -> None:
-             gen = XdrStructGenerator(language, peer)
-         elif isinstance(definition.value, _XdrUnion):
-             gen = XdrUnionGenerator(language, peer)
-+        elif isinstance(definition.value, _RpcProgram):
-+            gen = XdrProgramGenerator(language, peer)
-         else:
-             continue
-         gen.emit_maxsize(definition.value)
-diff --git a/tools/net/sunrpc/xdrgen/templates/C/program/maxsize/max_args.j2 b/tools/net/sunrpc/xdrgen/templates/C/program/maxsize/max_args.j2
-new file mode 100644
-index 000000000000..9f3bfb47d2f4
---- /dev/null
-+++ b/tools/net/sunrpc/xdrgen/templates/C/program/maxsize/max_args.j2
-@@ -0,0 +1,3 @@
-+{# SPDX-License-Identifier: GPL-2.0 #}
-+#define {{ '{:<31}'.format(macro) }} \
-+	({{ width }})
+ 
+     def emit_encoder(self, node: _XdrEnum) -> None:
+         """Emit one encoder function for an XDR enum type"""
+diff --git a/tools/net/sunrpc/xdrgen/subcmds/source.py b/tools/net/sunrpc/xdrgen/subcmds/source.py
+index 08c883f547d7..6508563494fe 100644
+--- a/tools/net/sunrpc/xdrgen/subcmds/source.py
++++ b/tools/net/sunrpc/xdrgen/subcmds/source.py
+@@ -22,7 +22,7 @@ from xdr_ast import transform_parse_tree, _RpcProgram, Specification
+ from xdr_ast import _XdrAst, _XdrEnum, _XdrPointer
+ from xdr_ast import _XdrStruct, _XdrTypedef, _XdrUnion
+ 
+-from xdr_parse import xdr_parser, set_xdr_annotate
++from xdr_parse import xdr_parser, set_xdr_annotate, set_xdr_enum_validation
+ from xdr_parse import make_error_handler, XdrParseError
+ from xdr_parse import handle_transform_error
+ 
+@@ -98,6 +98,7 @@ def subcmd(args: Namespace) -> int:
+     """Generate encoder and decoder functions"""
+ 
+     set_xdr_annotate(args.annotate)
++    set_xdr_enum_validation(not args.no_enum_validation)
+     parser = xdr_parser()
+     with open(args.filename, encoding="utf-8") as f:
+         source = f.read()
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum.j2 b/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum.j2
+index 6482984f1cb7..735a34157fdf 100644
+--- a/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum.j2
++++ b/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum.j2
+@@ -14,6 +14,17 @@ xdrgen_decode_{{ name }}(struct xdr_stream *xdr, {{ name }} *ptr)
+ 
+ 	if (xdr_stream_decode_u32(xdr, &val) < 0)
+ 		return false;
++{% if validate and enumerators %}
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++{% for e in enumerators %}
++	case {{ e.name }}:
++{% endfor %}
++		break;
++	default:
++		return false;
++	}
++{% endif %}
+ 	*ptr = val;
+ 	return true;
+ }
+diff --git a/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum_be.j2 b/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum_be.j2
+index 44c391c10b42..82782a510d47 100644
+--- a/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum_be.j2
++++ b/tools/net/sunrpc/xdrgen/templates/C/enum/decoder/enum_be.j2
+@@ -10,5 +10,25 @@ static bool __maybe_unused
+ {% endif %}
+ xdrgen_decode_{{ name }}(struct xdr_stream *xdr, {{ name }} *ptr)
+ {
++{% if validate and enumerators %}
++	__be32 raw;
++	u32 val;
++
++	if (xdr_stream_decode_be32(xdr, &raw) < 0)
++		return false;
++	val = be32_to_cpu(raw);
++	/* Compiler may optimize to a range check for dense enums */
++	switch (val) {
++{% for e in enumerators %}
++	case {{ e.name }}:
++{% endfor %}
++		break;
++	default:
++		return false;
++	}
++	*ptr = raw;
++	return true;
++{% else %}
+ 	return xdr_stream_decode_be32(xdr, ptr) == 0;
++{% endif %}
+ }
+diff --git a/tools/net/sunrpc/xdrgen/xdr_ast.py b/tools/net/sunrpc/xdrgen/xdr_ast.py
+index 2b5d160a0a60..dc2fa9fd8ec2 100644
+--- a/tools/net/sunrpc/xdrgen/xdr_ast.py
++++ b/tools/net/sunrpc/xdrgen/xdr_ast.py
+@@ -330,8 +330,6 @@ class _XdrEnum(_XdrAst):
+     """An XDR enum definition"""
+ 
+     name: str
+-    minimum: int
+-    maximum: int
+     enumerators: List[_XdrEnumerator]
+ 
+     def max_width(self) -> int:
+@@ -572,8 +570,6 @@ class ParseToAst(Transformer):
+         value = children[1].value
+         return _XdrConstant(name, value)
+ 
+-    # cel: Python can compute a min() and max() for the enumerator values
+-    #      so that the generated code can perform proper range checking.
+     def enum(self, children):
+         """Instantiate one _XdrEnum object"""
+         enum_name = children[0].symbol
+@@ -587,7 +583,7 @@ class ParseToAst(Transformer):
+             enumerators.append(_XdrEnumerator(name, value))
+             i = i + 2
+ 
+-        return _XdrEnum(enum_name, 0, 0, enumerators)
++        return _XdrEnum(enum_name, enumerators)
+ 
+     def fixed_length_opaque(self, children):
+         """Instantiate one _XdrFixedLengthOpaque declaration object"""
+diff --git a/tools/net/sunrpc/xdrgen/xdr_parse.py b/tools/net/sunrpc/xdrgen/xdr_parse.py
+index 38724ad5aea2..241e96c1fdd9 100644
+--- a/tools/net/sunrpc/xdrgen/xdr_parse.py
++++ b/tools/net/sunrpc/xdrgen/xdr_parse.py
+@@ -13,6 +13,9 @@ from lark.exceptions import UnexpectedInput, UnexpectedToken, VisitError
+ # Set to True to emit annotation comments in generated source
+ annotate = False
+ 
++# Set to True to emit enum value validation in decoders
++enum_validation = True
++
+ # Map internal Lark token names to human-readable names
+ TOKEN_NAMES = {
+     "__ANON_0": "identifier",
+@@ -49,6 +52,17 @@ def get_xdr_annotate() -> bool:
+     return annotate
+ 
+ 
++def set_xdr_enum_validation(set_it: bool) -> None:
++    """Set 'enum_validation' based on command line options"""
++    global enum_validation
++    enum_validation = set_it
++
++
++def get_xdr_enum_validation() -> bool:
++    """Return True when enum validation is enabled for decoder generation"""
++    return enum_validation
++
++
+ def make_error_handler(source: str, filename: str) -> Callable[[UnexpectedInput], bool]:
+     """Create an error handler that reports the first parse error and aborts.
+ 
+diff --git a/tools/net/sunrpc/xdrgen/xdrgen b/tools/net/sunrpc/xdrgen/xdrgen
+index e22638f8324b..b2fb43f4a2ec 100755
+--- a/tools/net/sunrpc/xdrgen/xdrgen
++++ b/tools/net/sunrpc/xdrgen/xdrgen
+@@ -123,6 +123,12 @@ There is NO WARRANTY, to the extent permitted by law.""",
+         help="Generate code for client or server side",
+         type=str,
+     )
++    source_parser.add_argument(
++        "--no-enum-validation",
++        action="store_true",
++        default=False,
++        help="Disable enum value validation in decoders",
++    )
+     source_parser.add_argument("filename", help="File containing an XDR specification")
+     source_parser.set_defaults(func=source.subcmd)
+ 
 -- 
 2.52.0
 
