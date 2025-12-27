@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-17325-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17326-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 491FACDFFFA
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 18:05:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27671CE0006
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 18:05:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9F6DD3012949
+	by sea.lore.kernel.org (Postfix) with ESMTP id E359F3028FCC
 	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 17:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394E23126C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C970E8834;
 	Sat, 27 Dec 2025 17:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="cdhGKGsN"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Uk9ylBp1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020092.outbound.protection.outlook.com [52.101.193.92])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022078.outbound.protection.outlook.com [40.107.200.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CBE3168F1
-	for <linux-nfs@vger.kernel.org>; Sat, 27 Dec 2025 17:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF3532572C
+	for <linux-nfs@vger.kernel.org>; Sat, 27 Dec 2025 17:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766855110; cv=fail; b=AkB1i5SXCZICM6QQmTnmbLQUQVk/IgQnW5GqaDpzXM8x3GdeSuYsa4mGOlFUriNkMQfgo2nOeMidQ94wiOiCkqfySn72fp5aNkxXWByDTE8Rn++KnUeh6/jm10g8yiP08wLSOqyu9c8tQxEB+n8W0tR5vIWfJFvR6bJFfWmOfSs=
+	t=1766855110; cv=fail; b=Uaa7GBIbVDH3mQHrdGiPm1xYxO1rAO4HVX7whPH9gT2jFKZ4DVvH8QnnnHxi6ZhAmCFvfuhi8CHL5IdeJ/JeVVvDNTf2cxk3aQpVzA7sdKzlGxCfcY7au1l+yGYF29paJzaA3hDq26h+xlzgdiWOqkW4jHFv9vT38TE0Axe83w4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766855110; c=relaxed/simple;
-	bh=foutVDuj9HK1aTdP6oLD4KKhOwnRzwgPIIoV51KhpQQ=;
+	bh=ThoHRZlORJyiQzN/7BCpnhgqGxtstm3aBD/otrxHxV0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HBIMhkeSVsBoTUg9XIXsPhFg1C3dJLpD1XdUziXgwQkroNejBmsULnV06gqQwOz1srOIuDX2Kb2vUUh9tRtg6i9TCxMFcXkeMocWRutPwpjQ8ONHnMO1PGidKY3M/ZirODutQDd5I9glPTyXcjHWlCvLxAXsZqGtg4bCX0JcTEE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=cdhGKGsN; arc=fail smtp.client-ip=52.101.193.92
+	 Content-Type:MIME-Version; b=GJnV7373FcJFrBLhtY3yYFbhAZfBbV6ilTL5A3f7zkvR7Ai5KU2HHrX6O5jOiaRcdkU3up1c55NKy/svzNeYx0qT41B4GKU3MU6RS2GWkCT15RVnf7JzSRi45GfaN/3h8wwwHjnkxzAOgy9Iiu+0Ve/peeL60HDlfMc4/0Qx0Xw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Uk9ylBp1; arc=fail smtp.client-ip=40.107.200.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S2cyPR0g+tzMlUV3Jj+Ze+nJPE/XgA9sZSwgnwezHPP817GvFn5kVlX2QaXl6ffAFoWI3s964rzxyxE1lvAWgtEdJ+ogo1N9QCx4gJqzSgLMAS+YzYa1IIunFZgzU7BJSbXPpjCB/WGIoTazxXjuMHnj98aAoq1Gb/QXL9UZ33Kt+fo0OC/NyQcNm8f4cJZ2KrElEqDKvFnc7fb8qyt6VZZptIUo2IymiJLv8fpdEAXd5jWNtNgI28X62S8sFJ7mEXOSrq8tHe2QD+CMdXZDqd7w2cAGCXY3u1PgRBacZivt+XAnIx3CnLfEAM5+dv19ACf0VjGA4cXw657pHQbTig==
+ b=RUYOhzlZw9j+opNSeLPckunJw2ynWbH8ImmpzULonLBkJ5HDsehxTZhsrgOFVP33RNyP/IGEknhIkxwhiTsIm85qLpB0D3AZv15sY81B1tyPlw+yxEQhujQRzMNPO09LD+gX7O/Ha1HZ9jNaQg0efZstWATIvMG6uu3LQzLEw46dzhj+NeLMa4y+HK34UwB9cQkTq72waKRrZ0JFx6YIKdbc1+a2R9Dw+6vdrx6nwd9TAQ+CZ8bfeyIc6cOS+dmXaGeQD8gML3jcDK4TD3bPzx+p0xkQqH5ihVm4ZkRYqBm0M8t5f9DkN+nKOjyiyzyEW22uKXc36R+lVpSdEX2+Zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wc2ajM8gonvs/dzz+LdmwoHs1kIJ1u7SQaG3P4BuDFI=;
- b=MYyvP+XmJJsiWDXpAcAksGxXecnmSkG0eA1BgD/mApIoq1DEa1l6OESAE7mXHhLiQOIYWqXV/xsqm37hFJTdxYLpv6dyGz+jjwumwWKW5DvG3P61ulPiyrIXOk1RBhDDqW+SyNxZL0Y/Eh26BmOuAuklaYmpCxmwj3A/JD4+gpWvcSwI17MGiSIZac881oi8tvrD3ilCgaM1xzDSPH0iG+uxIpHTsYfB2s6Za4fIShSWcWYUBNXVukCFBynkggbhXjwW4e8Ty1x9ZsOJcRieL1ViMG49Udmprk6eMtEFJWukvJDe+47vQ6mkb8x7wp6qFE5U+OKP37mDWCkd6ofM3w==
+ bh=9hbwRqRX0SOY/hdQvqY4vSwOnFA1jdb2caXTtT+RiNc=;
+ b=m6mSfK2v8w/d1jJ2Yc2wVkHirtbYJy3z43/aHhy0a46ULoWTu4r0barTuFvWXZ9rDJ7B2c6Mk18RTjuw0c5vYVQw6iBgpcdiqTrxD7zMzis9xsm06TaS9ju0EAvwAYTNRR489ipAxA6x7u3TZ0z7SoAFrEOCgRDZmgLAaqyvIbLmWzqR0ePkJ5dLdXUUq5y/yh9sTNVvndBUYJW8pWnCnXl7rIFwiMsh38Y7R/B5DZ3PojVJx0Jt9r2qVwW9dz+2Q2WsDCPYJ/JQWLXrGTioMg9zrieWUIXW5iOOPoTpQ2t7b3ajCjGGBAib7fFgcbKkRFkqPVqMX4qKiGxCjp3Taw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=hammerspace.com; dmarc=pass action=none
  header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wc2ajM8gonvs/dzz+LdmwoHs1kIJ1u7SQaG3P4BuDFI=;
- b=cdhGKGsNKkf9wiepWAqi/zPcNUBwf1xLuDAIMJ0byXvdNVIrnas56x0xQYcYD3sulHZW/iYcdI3lMVDnkHOwzwhYSzyEcRm7/z3uqqCtJLU7phViWR1dLzBW0FAhOgtBKYWErAxvLf98sJ+a+Znmmt/IgPKzWp0Q+0wc2b3lE6o=
+ bh=9hbwRqRX0SOY/hdQvqY4vSwOnFA1jdb2caXTtT+RiNc=;
+ b=Uk9ylBp12uRfbXTUOsmskaJtXxH/soE5p3vxZXXRF/7bm6Zd7J0KMgB9it50mRtYfVMKUk6TwjzWAHZu/cyhn8WVLWwCxOT/TzktfG1KXnrAkmSnKm+asnX3KBSCjS7osPBZNR4CrreGh2hqLZ727O19LBUMHg3+Qqr78/tkSUM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=hammerspace.com;
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com (2603:10b6:806:3e7::10)
  by SA0PR13MB4061.namprd13.prod.outlook.com (2603:10b6:806:99::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.14; Sat, 27 Dec
- 2025 17:05:01 +0000
+ 2025 17:05:02 +0000
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4]) by SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4%3]) with mapi id 15.20.9456.013; Sat, 27 Dec 2025
- 17:05:01 +0000
+ 17:05:02 +0000
 From: Benjamin Coddington <bcodding@hammerspace.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -63,9 +63,9 @@ To: Chuck Lever <chuck.lever@oracle.com>,
 	Anna Schumaker <anna@kernel.org>,
 	Benjamin Coddington <bcodding@hammerspace.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v1 3/7] nfsd/sunrpc: add per-thread crypto context pointer
-Date: Sat, 27 Dec 2025 12:04:51 -0500
-Message-ID: <531eb4d2ba409f85599ac74369d2788634b7bfb9.1766848778.git.bcodding@hammerspace.com>
+Subject: [PATCH v1 4/7] NFSD: Add a per-knfsd reusable encfh_buf
+Date: Sat, 27 Dec 2025 12:04:52 -0500
+Message-ID: <5b7bf494b1ec816111ab34416dcde85c0bc01a0a.1766848778.git.bcodding@hammerspace.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <cover.1766848778.git.bcodding@hammerspace.com>
 References: <cover.1766848778.git.bcodding@hammerspace.com>
@@ -82,138 +82,376 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|SA0PR13MB4061:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75a36340-2b67-42d9-5d1c-08de456a127b
+X-MS-Office365-Filtering-Correlation-Id: f858ca19-3177-4a8c-f4f1-08de456a132a
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mKZMZIC34m4zpsDhIYBUIdzNYdSe/2FhXJFgExb+wgcCbv4rka7PE9Xba0Cs?=
- =?us-ascii?Q?3bxLQURErpMwvyivmqYC7/cfsOzngzmWUkixk79/Mz+dYVyZPiSGoxO9Oa9u?=
- =?us-ascii?Q?pD+5y1VWf0hvPG9UpWCjmDmnG3YidAvxHMr4Oi8OoH8fkFTMIzWPlz5Cutyy?=
- =?us-ascii?Q?T+KoM0eehip0pamVwrsauYRSDE9BYWBFiIT2S8PqnkMKyk/NXp3VhWi+KKZX?=
- =?us-ascii?Q?hPezFt5BAijfWtyqmDJSczCCmoEG44qqJR0UniMNS9bWtGajyywmZ5abQddD?=
- =?us-ascii?Q?oKc55W7mrlGZUtXYFupzbgfHW6glHPteuxbBD0mSmnKQzk097KAYMVEm7sTP?=
- =?us-ascii?Q?V/JyoWj8y/XLtKhZqScCx4WifQ7CGaIxNeUplwXuwAyhIUWaY1v+cIh4mC4R?=
- =?us-ascii?Q?JwygJIbWzIOaW0zYHJI2wM9b8Ic10zC4z5a8f+EbstbvYcVgOZCpXVpRr2fq?=
- =?us-ascii?Q?jeMtRht0GAvelE3QSobuRrIf08GdehS21qeTHnj1ZyiEJFie53ax3+7k4Uy7?=
- =?us-ascii?Q?aSKuhsKIVWD6hHmwwQM5m4Kq1eLwXmLionhvRCyP0e78QR2mBJXtNQ2gvmIA?=
- =?us-ascii?Q?SHD2k2gMWs1WvQ9RmN4NB/NPvPfljSFkws31Mg4NoQhdvM7yCey4gVE4vxK/?=
- =?us-ascii?Q?ovUFx+Hb9iS71ZVQLfBdutBm0VP6uQDS0ZMQ+OhGe0qpbngb+j6u2yzM+hq4?=
- =?us-ascii?Q?q5oto19AM0ELR7Dr7/HpRuJodljTNAaNXsQ+v92iWGmk4WjVVfN88Sj6fXMY?=
- =?us-ascii?Q?d/m92XARTPUxSKMGQK4pDXIFYwzgB0bBIzpbBRsSmGGIFYgEODD6nxdbLLl5?=
- =?us-ascii?Q?y174lMv+mgjneP6qfjhU48BcPmn3iVNVAOuvUMnEn2+243lclvkNhF5yVXB/?=
- =?us-ascii?Q?IUmG+jT2V0ZdAsXivAWtsX/RSUPP+/wvUIjSZnmjSVIxSZoVmVkG86bbgfY8?=
- =?us-ascii?Q?03pyVs+X1pKRBQJkg+N9oUFScnTF1uySOodGZs4VD4b3mafbzu+mGlSRE8PH?=
- =?us-ascii?Q?QCdEC8j0zCW9h4rVR8Gl73WJnavmLp5dC/rOK4szygY+2G41FiX1avoTWFCw?=
- =?us-ascii?Q?1+PgiVbqdaWaXOCGFdQh6r5SMewhl+qbVPI+yZMjQbZakL8bw0fs1A+LLmqU?=
- =?us-ascii?Q?ak70KYwnoWome9M3JkKCe2XsIRjWs82qBknkocJNqG3ZxuWK3x+gFnW3mZHh?=
- =?us-ascii?Q?Qb9u498ok3nQKBgcQMy87KWhjKNugXhbkTITjH9NLbxGeYSXB1DR71H3xvfx?=
- =?us-ascii?Q?4em8BHVPkMvDpmmhOxYqS8Tf90sz+l2qZ25lxfeRoyNhHaoHWRBW3WqmxXcg?=
- =?us-ascii?Q?1Ma4wWSXwyBoS1ry++EezCsvjPvtV/4hZNmRiSIN4hpZqjbUkQAIN7GQ1TZe?=
- =?us-ascii?Q?eLoVHY/0k6c9QbGifFekuHppnxIBLlFT8rV7p9qkBAVMoEWNeQKpsuhaL9Go?=
- =?us-ascii?Q?Uc57VIs+/xzjYOqblCit572pEcX+c5Il?=
+	=?us-ascii?Q?fEO6bjjhF5eetHyX+FNBbwHS69Iv7/GGcCkpWOavTTeTJVPEgM7Es/xsIHqr?=
+ =?us-ascii?Q?xSRsKshm3/ZrYQ9x0kz0fNp3OiXlgsBH+oodTdLYDVZBTqEXkLywCqMKwclm?=
+ =?us-ascii?Q?bolICUPLXx+VbdmfgnZjmjJokqKPwKyF31KEoaEMxWvWx/RGs+3/XEL1kedI?=
+ =?us-ascii?Q?CwGK1DmqZef7GQGsxtLdvm0nr3naKe6S7D8bWAztIPQgqsEaVn49Ul0VjnT5?=
+ =?us-ascii?Q?ERLvE0eaLoGjscZbJx4YFFoMKfIwAzoFWhhInmhQKMK9v+I0d278TZfpVtAs?=
+ =?us-ascii?Q?+JBZr4VM+0ZDI5sYpZZMij1/FVFf5PFGej9nudwD5ftqCg+eKO9Po8qbU3FZ?=
+ =?us-ascii?Q?TPAsG/kJVwRD2wgSZLXt5d/y3r20+VIXPykfV+4NFOuKRSJ5b2apegpsLios?=
+ =?us-ascii?Q?Svtzpli4XKQbSW2m73FcrIo98wyhjma4OxYuvp2k1oJgQMACVagElnknJeuh?=
+ =?us-ascii?Q?4jWTaL0Vwe4Ue5gphwOvGygHEEeXN7sFc72erj/EBeSD8+bAyiUl1RDhdvzk?=
+ =?us-ascii?Q?xy6pS0Rj07uygYTN4JnIQGzYjObNgo5TOaLVafEF2aWRGO5hSafXDduyooZB?=
+ =?us-ascii?Q?kU7JrkXFWdJg8mpgKgi9yzPM5CFL39EWg3AsM8IcPOt86iNEjcehZnmjrtqN?=
+ =?us-ascii?Q?Jj7pr3AdT7IVnTY1yZbuHdUcZsetXw2dmzzT9IjOq9LhvchZiSLSOd7D2Bt6?=
+ =?us-ascii?Q?FwFsZNpL0+YLrnBohhTfQOL5H3iIihNZl/h+EBP7RoaSwnczblPBj9QfD6b0?=
+ =?us-ascii?Q?J7NTEW2/AkOLpKKxG5MvFSoSQO62L5yOzCLEb9wEbc9oyqe4FJQ9eE+AuLq6?=
+ =?us-ascii?Q?8ksbL5AxP68jrkMLZsr0Uutv2ZVEhRxbJp4Zdfy/NNLpa7xiui1wqO+4K/SU?=
+ =?us-ascii?Q?E0WVRvtTaqsRlzyODOZ2LWU8CBmb4CSwsd3kUTglXPukkPUcQUX7OuUAgBV9?=
+ =?us-ascii?Q?CVHGEinm+KGZ5YszhQkIN43UfNMtlyYZZzYg471e3jH9hHdu3KOQAWaJeR0N?=
+ =?us-ascii?Q?ip7XC18LXj9aE+2e5sIysI+nq2GeaUEY1zQ5ru0j0lk0A3jIhngr7hWbdvLx?=
+ =?us-ascii?Q?wmdLyHdmifMsCC5sDYPtdg4CPXeEjn1ivspiIYjwNCHU6UNqOv/EypmTQwSB?=
+ =?us-ascii?Q?2AO7pbGEqolAnod63XqdeP7cob+pYWqFF0bKpn8Piq/fdfr6WlWW8pbpAT3r?=
+ =?us-ascii?Q?Vu8bueEFOI5FR0KaQ3p6Yfpy5O7ZnBc6mgRY3OnmQanDiXgoJPf1O8gsFPoz?=
+ =?us-ascii?Q?hAlE20fNuKrZhWvswSQ5QF2thOn3gbX4U8bae+jXzZL/RAr28z70ORZRsNAJ?=
+ =?us-ascii?Q?tG2GRAeRR6e65J0rdlaF7jpl7tReZWmeivNq5tHK0+hqMiZMphrtV5k+jvum?=
+ =?us-ascii?Q?5rMFSKTaqzXiWVw2QNJ3TEVv8cx/qefoVlPeVajboNlXlVdyQOt2/EeGcRTd?=
+ =?us-ascii?Q?QVw9My4qDAKWN/WcMufObUxgyKMi3AjE?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?N+qCVQhFZt+p5Hg4KBycwRAGhedYUS7Jdn/q/lNZPHwfXzyXYIQ9JFVHwUjp?=
- =?us-ascii?Q?NuHHEOMDWGX/ntK5ql2E0NTOCWPlxwxXZ6km1NKr4SXOLp2DgGL/wS8TnsDX?=
- =?us-ascii?Q?8Tvz5Ujotaah3m9h0n8RDOjLAHRhwfDDGtUi8/e1qBK1i/yUZYlNrh7cDoWg?=
- =?us-ascii?Q?2g1kqDpXckR1eylsGYsdZlU8u5SLbGjjyE9OD9VdwuxdVfdxVIaZiRnBasSp?=
- =?us-ascii?Q?SCO6of26A7zPu6JDYxZCIjhGcvE8MoGg4hNQ65W9L16E3vIk7gLRMQuIqJmm?=
- =?us-ascii?Q?QBmw4ZENSGAZn6FhlTA1qqvAzeamvd0x5DbtHt2DxHtkwFbUJM8t1GH2Jaoh?=
- =?us-ascii?Q?eMdx7JHIghnV0DJoapYy/yMCa8WFYblTjntDrpFLafV+2T27/OVB+Yn3NPCh?=
- =?us-ascii?Q?MyZFavuMktQ8hEo9rVCAFR2U3CUOlsqA3sUNaR229obIn4cTQ/MG3se80udF?=
- =?us-ascii?Q?mTiALn+BTdtPCDyZSX8LUfY9qb2Z02UPurzSL9iDV7X2ahAE1tL35bxzAQ2n?=
- =?us-ascii?Q?rjFe5L2kylBTRzDJwJFdfP7lCnejFk8a+AVMfULieGqQ9+uvc/NbpIwQl7s7?=
- =?us-ascii?Q?A5n3ywJG/YmIauLUwIuNvrLv/5wKGJ4XKvlfMNub2XSIBTtkNQbgRwuo4v2O?=
- =?us-ascii?Q?0za+dk0HisoKVyFGRc5iND5ZipGCxO9yNcSSBYk/Z+9yHxWQaQeeF+vDdcWU?=
- =?us-ascii?Q?rI3IhXzhX9dTzc0sqSd43PwS8wk6hWAK9wQKsSSlajIvcWd7BwEBvNKKTqsh?=
- =?us-ascii?Q?ZL7Nr1GXFqkpMD02BN2KIc/0d2QKcwWhg6RalVPvEXxd/Ra1EulEyy7L3Dq+?=
- =?us-ascii?Q?JXvwvoTXwSRbUBAIfqlvrSXkCoobpisN5KUeQCMdIHCq1GDt8silDbPY8TL2?=
- =?us-ascii?Q?vZO2QF+NrNnYoO4s49JEeeHmoVL8LAsrl2ur+FCTfzMDt8pGs8A78/ORSgZS?=
- =?us-ascii?Q?bAYEuel8qZJETmCHl5CwQmdu4xGAIb7g06UXMTLNbHjzR3Oddx9yWIOzG3ji?=
- =?us-ascii?Q?ljVVQVxkpPcetq7BoFGnPXrd7AkTTve3O2w5wFNKqFj9OFo/BUHL/aeYbU9Q?=
- =?us-ascii?Q?kYX76+bFXHpJvpaK6pzF/y9FyG9FvGFPl+koy4imd8ap3JdGejKWK7ppQn4W?=
- =?us-ascii?Q?i9yoH17DuwUGjRsXXtApMUlSm0ZoJXpx5+p2XRdkC/BlG3rj7NTF8afWqyJ8?=
- =?us-ascii?Q?73e8mlQ7H3QQ58gDT5SVLhQsk3551sAnQpGKrvPMJ7ot9go4Ds46wEAa3ci2?=
- =?us-ascii?Q?LyJozI1eU2p9k4OSAn0D/3X2cwEeFAGRlbA54G+Ti9UyPn2+dWFw54G3pWrR?=
- =?us-ascii?Q?WBWsYmE8HBI2le0ZJA8gTs8yiKm7vlTMu5ZjvJ0khTzKybVb73+GU8IPt4d1?=
- =?us-ascii?Q?LlLOCopXOG9sSxdfcEFFvgbaS5/H6L+JFjkadHU0P2+fCEGTlCaEvXvBHxZb?=
- =?us-ascii?Q?OyQup4M2rkG1Cub5idv9C5ltWTDhFIXPAYLypHiAKtk3LsVXaJxbf2ffwnpR?=
- =?us-ascii?Q?HB9kD6ubNKVr6a6FrhnroRrgJshb9KME8lqynuEuG2uKFyO/dpM1yagUVL+2?=
- =?us-ascii?Q?DvKrqtcIbhRGTMe1xBga29ZbUb1xj4qcFjFA0sxzSGAG4QKKH6iXfSCt2PL2?=
- =?us-ascii?Q?usldYwRDViajxfy8hjMUzzRY4UhjUp1RuS9w+CQtKCaqVzmSOj9wKWwzcSVX?=
- =?us-ascii?Q?bd6icCWYflO3eQEppRsjs5+tJnNHd0r5HnDPe9Fop9ikBG2DrKl9rTJf4Erx?=
- =?us-ascii?Q?W0NxBWtOkWyol8h+wFkDW+n+8WTAIqI=3D?=
+	=?us-ascii?Q?YL3OMIecfMmfbZ4KgNw9pXC2xIxV/Fli7EkCGQYivLwlAeKuOVOZ+9vhCSkC?=
+ =?us-ascii?Q?PcaiqkOghRQ2fiGlo+C6ySbQb09R+UnauIa/lolooUJ0FdndBsubI4W3q3Sd?=
+ =?us-ascii?Q?L3HgLV3fXjKFvPxWJCEl0OVCNgVe8Q5Jl+ZU3Thwqui6uQ38K63m8LYFTzhi?=
+ =?us-ascii?Q?nxycZuMYnM2DDckY/YYgovkVHLeEZlBsuZ3wOIMTgy7n4IIQq6emfrIXapNZ?=
+ =?us-ascii?Q?lVyIu4c6GENjCJDg2V3W4zyfXYLxWx4P5bC3Qoa2+DpRQjHGzFMAfATTYrrn?=
+ =?us-ascii?Q?UJugPdH5j6txMWRBfIcwOK+4QJ2+xaBoPWW317EXfeWgtHgwOfHbsTBV8k7h?=
+ =?us-ascii?Q?lxFciJBF0666y+Pbrso+otaD1r1cRdu5ly3qxfAi+p27GmHp6mPECCgbNgJx?=
+ =?us-ascii?Q?P5X4mdfLYxR3hbOyHU0zJ1bIZMuiN3lu7XRbD3YAXlT2kg0+nfcZdYxCMc56?=
+ =?us-ascii?Q?wPgLU01CshuRkzbb0tZqWsCSEcultdibQfeQ9iZ4T3dGFEQseUNEewj06VLt?=
+ =?us-ascii?Q?K49SSGLyseB91APz8TU+B7P0rojr+8hgtuR2oeuBNL1nBemGdziMbamlgWAZ?=
+ =?us-ascii?Q?REqeCtibFSPlw0Zbz7HZvRUN0w9qa1boKMzvhH6a+CtuUUPW92zTUr/WHqNC?=
+ =?us-ascii?Q?yw/X5i4tI9AALIgMmBTgVYt8zjbcrOEyrwUtiu9BxOMgaklM5xXNSUDGioDz?=
+ =?us-ascii?Q?fJL2qUeBvNZt/orbD3doDrUtO+9kfdHMczLKt0zX6/crzMJhLectKYrth6RT?=
+ =?us-ascii?Q?D6K78LJ+79uACRZzVUIdLyzXHdfdMhn8HR/A36I5dqgl7ZiLVwwDtszfEXzY?=
+ =?us-ascii?Q?t2qowANR9Ha62f0qSzZxWmwknMZPbMEfXuRxG/VQ2upoTL7fMMKCubRSTWuJ?=
+ =?us-ascii?Q?9VT3QxSDICGphdhLfTEjFMx5EDxSNQ+YW7a4yK/V690o/cBi/l6XF3L1wNnN?=
+ =?us-ascii?Q?eWuwbw6JqbbaSyZVErBo8QfWRYCY2MLiaAQwQmXZWZ6938EjiQEg3GQP4sO+?=
+ =?us-ascii?Q?UgZXsVme73KtPkn47zKXacRGe8FcR6f0GlC6GDjz5e3R+MbSYobMaYfc/vEG?=
+ =?us-ascii?Q?axPPl7TpVp/eGRB7RA212P5BIn0uyhxJu49jBmULdiguQj4Ij3hUrY2V15PT?=
+ =?us-ascii?Q?9Q54p3dNbqmcjnIIaOz/2MaFvsvcg9Xa6i2Owk9fbiBBEMb1q8am7Oq3OuQN?=
+ =?us-ascii?Q?MIWkjfAeecqrcLwNuz8N6z03FPZYXnU4g3y1fDHoczyc95JWqGs5FPinjh9o?=
+ =?us-ascii?Q?chHNqDvw8Od1bAZPdPT1xyaytGcihUIHUxD2HO3ch8taSiFIKPUTssLIBN0g?=
+ =?us-ascii?Q?CtNOjZoINiNY4orNZY9zuvLEHnLvQp4DoIyvl2QpomiF3hl13C0fqHnB+OmR?=
+ =?us-ascii?Q?CqBM+m12wYY5yLbfCOUAVUAYyECkEqb33O8Y+MrMvGlXowBCqrPeShTGvElx?=
+ =?us-ascii?Q?g51BsasHf1j8ZKFJfPuY/kp86yEM6kCMN413t2QM1NISSQ3FJ/Hri1l3610M?=
+ =?us-ascii?Q?xP5Jfkx/d9GHfseTO5T2Hb6Yr0qEOzj06mDLAVcvI3epiQ53eqMFzQBpNVOo?=
+ =?us-ascii?Q?S5kn2+OyYqS1mFNxl9BdM8UNYwdSxSrK0D4/6CgY6oUmE7PoXXrdfcsJUMED?=
+ =?us-ascii?Q?uygCXl++ujhNtsvIpAikKwldIi/RvsqFwYd03Dp9ChZWSpXVvplw2tWeplEv?=
+ =?us-ascii?Q?OQHMTpbKKOqDDtAdhRDyqSPdos3cvJwSb/jzg7SzXNQOIAIxqYRFZNstkXSX?=
+ =?us-ascii?Q?ExnOKXJELT39ABCbzUYDdgbstHfi5Uc=3D?=
 X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75a36340-2b67-42d9-5d1c-08de456a127b
+X-MS-Exchange-CrossTenant-Network-Message-Id: f858ca19-3177-4a8c-f4f1-08de456a132a
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB6648.namprd13.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2025 17:05:01.3476
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2025 17:05:02.4135
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QIF5dsCM1+E9ELyYr1921R/47LYRemMxPrdvLKqbXiJAn6W4e4WrACgLlHjIW1UzluT/SgwrrOTOV4TxygBKTQc2aOxGMYhKjaPPHlkECfM=
+X-MS-Exchange-CrossTenant-UserPrincipalName: SK6vqbV3iZwesQCP3Fotew1YP8VvA5/GhmNvm9ibZoevCFr/wv61EF9kKk+u+o4bS4LMAdlzoZh004777EP/Nn03wTuUZQjVHn5ZUjoWTsQ=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR13MB4061
 
-Move rq_err up to fill a 4-byte hole (arm64), and add a pointer to store
-per-thread encryption objects for encrypting filehandles.  This allows nfsd
-to only perform the memory allocations and skcipher request setup once
-per-knfsd thread rather than using stack memory or doing multiple
-allocations for every encrypt/decrypt cycle.
+The encfh_buf contains two NFS4_FHSIZE buffers, used interchangeably as
+source or destination during filehandle encryption.  It also holds a
+reusable skcipher_request.
+
+Assign a pointer to this buffer into filehandles when calling fh_init().
+Once allocated, nfsd can access the per-knfsd encfh_buf via the filehandle
+itself.
+
+Note - there's probably another approach: rather than assigning the buffer
+pointer during fh_init(), it is probably just as easy to plumb ths svc_rqst
+into the call paths for filehandle encryption/decryption.  I will probably
+refactor this work in that direction.
 
 Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
 ---
- include/linux/sunrpc/svc.h | 9 +++++----
- net/sunrpc/svc.c           | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ fs/nfsd/export.c           |  2 +-
+ fs/nfsd/localio.c          |  2 +-
+ fs/nfsd/lockd.c            |  2 +-
+ fs/nfsd/nfs3proc.c         | 10 +++++-----
+ fs/nfsd/nfs3xdr.c          |  4 ++--
+ fs/nfsd/nfs4proc.c         | 10 +++++-----
+ fs/nfsd/nfs4xdr.c          |  2 +-
+ fs/nfsd/nfsfh.h            | 12 +++++++++++-
+ fs/nfsd/nfsproc.c          |  8 ++++----
+ include/linux/sunrpc/svc.h |  3 +++
+ 10 files changed, 34 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 5506d20857c3..479a52a755af 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -228,6 +228,10 @@ struct svc_rqst {
- 	int			rq_reserved;	/* space on socket outq
- 						 * reserved for this request
- 						 */
-+	int			rq_err;		/* Thread sets this to inidicate
-+						 * initialisation success.
-+						 */
-+
- 	ktime_t			rq_stime;	/* start time */
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 9d55512d0cc9..5a53e1af88d2 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -1050,7 +1050,7 @@ exp_rootfh(struct net *net, struct auth_domain *clp, char *name,
+ 	/*
+ 	 * fh must be initialized before calling fh_compose
+ 	 */
+-	fh_init(&fh, maxsize);
++	fh_init(&fh, maxsize, NULL);
+ 	if (fh_compose(&fh, exp, path.dentry, NULL))
+ 		err = -EINVAL;
+ 	else
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index be710d809a3b..6e1a0e5e96c4 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -68,7 +68,7 @@ nfsd_open_local_fh(struct net *net, struct auth_domain *dom,
+ 		return localio;
  
- 	struct cache_req	rq_chandle;	/* handle passed to caches for 
-@@ -241,14 +245,11 @@ struct svc_rqst {
- 						 * net namespace
- 						 */
+ 	/* nfs_fh -> svc_fh */
+-	fh_init(&fh, NFS4_FHSIZE);
++	fh_init(&fh, NFS4_FHSIZE, NULL);
+ 	fh.fh_handle.fh_size = nfs_fh->size;
+ 	memcpy(fh.fh_handle.fh_raw, nfs_fh->data, nfs_fh->size);
  
--	int			rq_err;		/* Thread sets this to inidicate
--						 * initialisation success.
--						 */
--
- 	unsigned long		bc_to_initval;
- 	unsigned int		bc_to_retries;
- 	unsigned int		rq_status_counter; /* RPC processing counter */
- 	void			**rq_lease_breaker; /* The v4 client breaking a lease */
-+	void *			rq_crypto; /* handle for per-thread cryptography context */
- };
+diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
+index c774ce9aa296..e6f1c4be5cdb 100644
+--- a/fs/nfsd/lockd.c
++++ b/fs/nfsd/lockd.c
+@@ -33,7 +33,7 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct file **filp,
+ 	struct svc_fh	fh;
  
- /* bits for rq_flags */
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 4704dce7284e..eade597c9aae 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -674,6 +674,7 @@ svc_rqst_free(struct svc_rqst *rqstp)
- 	kfree(rqstp->rq_resp);
- 	kfree(rqstp->rq_argp);
- 	kfree(rqstp->rq_auth_data);
-+	kfree(rqstp->rq_crypto);
- 	kfree_rcu(rqstp, rq_rcu_head);
+ 	/* must initialize before using! but maxsize doesn't matter */
+-	fh_init(&fh,0);
++	fh_init(&fh, 0, NULL);
+ 	fh.fh_handle.fh_size = f->size;
+ 	memcpy(&fh.fh_handle.fh_raw, f->data, f->size);
+ 	fh.fh_export = NULL;
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 42adc5461db0..3cdeb9e1bb20 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -123,7 +123,7 @@ nfsd3_proc_lookup(struct svc_rqst *rqstp)
+ 				argp->name);
+ 
+ 	fh_copy(&resp->dirfh, &argp->fh);
+-	fh_init(&resp->fh, NFS3_FHSIZE);
++	fh_init(&resp->fh, NFS3_FHSIZE, rqstp);
+ 
+ 	resp->status = nfsd_lookup(rqstp, &resp->dirfh,
+ 				   argp->name, argp->len,
+@@ -378,7 +378,7 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+ 	svc_fh *dirfhp, *newfhp;
+ 
+ 	dirfhp = fh_copy(&resp->dirfh, &argp->fh);
+-	newfhp = fh_init(&resp->fh, NFS3_FHSIZE);
++	newfhp = fh_init(&resp->fh, NFS3_FHSIZE, rqstp);
+ 
+ 	resp->status = nfsd3_create_file(rqstp, dirfhp, newfhp, argp);
+ 	resp->status = nfsd3_map_status(resp->status);
+@@ -399,7 +399,7 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+ 
+ 	argp->attrs.ia_valid &= ~ATTR_SIZE;
+ 	fh_copy(&resp->dirfh, &argp->fh);
+-	fh_init(&resp->fh, NFS3_FHSIZE);
++	fh_init(&resp->fh, NFS3_FHSIZE, rqstp);
+ 	resp->status = nfsd_create(rqstp, &resp->dirfh, argp->name, argp->len,
+ 				   &attrs, S_IFDIR, 0, &resp->fh);
+ 	resp->status = nfsd3_map_status(resp->status);
+@@ -433,7 +433,7 @@ nfsd3_proc_symlink(struct svc_rqst *rqstp)
+ 	}
+ 
+ 	fh_copy(&resp->dirfh, &argp->ffh);
+-	fh_init(&resp->fh, NFS3_FHSIZE);
++	fh_init(&resp->fh, NFS3_FHSIZE, rqstp);
+ 	resp->status = nfsd_symlink(rqstp, &resp->dirfh, argp->fname,
+ 				    argp->flen, argp->tname, &attrs, &resp->fh);
+ 	kfree(argp->tname);
+@@ -457,7 +457,7 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+ 	dev_t	rdev = 0;
+ 
+ 	fh_copy(&resp->dirfh, &argp->fh);
+-	fh_init(&resp->fh, NFS3_FHSIZE);
++	fh_init(&resp->fh, NFS3_FHSIZE, rqstp);
+ 
+ 	if (argp->ftype == NF3CHR || argp->ftype == NF3BLK) {
+ 		rdev = MKDEV(argp->major, argp->minor);
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index ef4971d71ac4..854ee536e338 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -90,7 +90,7 @@ svcxdr_decode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp)
+ 	p = xdr_inline_decode(xdr, size);
+ 	if (!p)
+ 		return false;
+-	fh_init(fhp, NFS3_FHSIZE);
++	fh_init(fhp, NFS3_FHSIZE, ARGSTRM_RQST(xdr));
+ 	fhp->fh_handle.fh_size = size;
+ 	memcpy(&fhp->fh_handle.fh_raw, p, size);
+ 
+@@ -1111,7 +1111,7 @@ svcxdr_encode_entry3_plus(struct nfsd3_readdirres *resp, const char *name,
+ 	bool result;
+ 
+ 	result = false;
+-	fh_init(fhp, NFS3_FHSIZE);
++	fh_init(fhp, NFS3_FHSIZE, resp->rqstp);
+ 	if (compose_entry_fh(resp, fhp, name, namlen, ino) != nfs_ok)
+ 		goto out_noattrs;
+ 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index b74800917583..18526542b542 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -425,7 +425,7 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
+ 	*resfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
+ 	if (!*resfh)
+ 		return nfserr_jukebox;
+-	fh_init(*resfh, NFS4_FHSIZE);
++	fh_init(*resfh, NFS4_FHSIZE, rqstp);
+ 	open->op_truncate = false;
+ 
+ 	if (open->op_create) {
+@@ -785,7 +785,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	__be32 status;
+ 	dev_t rdev;
+ 
+-	fh_init(&resfh, NFS4_FHSIZE);
++	fh_init(&resfh, NFS4_FHSIZE, rqstp);
+ 
+ 	status = fh_verify(rqstp, &cstate->current_fh, S_IFDIR, NFSD_MAY_NOP);
+ 	if (status)
+@@ -910,7 +910,7 @@ static __be32 nfsd4_do_lookupp(struct svc_rqst *rqstp, struct svc_fh *fh)
+ 	struct svc_fh tmp_fh;
+ 	__be32 ret;
+ 
+-	fh_init(&tmp_fh, NFS4_FHSIZE);
++	fh_init(&tmp_fh, NFS4_FHSIZE, rqstp);
+ 	ret = exp_pseudoroot(rqstp, &tmp_fh);
+ 	if (ret)
+ 		return ret;
+@@ -2883,8 +2883,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 	resp->tag = args->tag;
+ 	resp->rqstp = rqstp;
+ 	cstate->minorversion = args->minorversion;
+-	fh_init(current_fh, NFS4_FHSIZE);
+-	fh_init(save_fh, NFS4_FHSIZE);
++	fh_init(current_fh, NFS4_FHSIZE, rqstp);
++	fh_init(save_fh, NFS4_FHSIZE, rqstp);
+ 	/*
+ 	 * Don't use the deferral mechanism for NFSv4; compounds make it
+ 	 * too hard to avoid non-idempotency problems.
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 30ce5851fe4c..a45ab840ecd4 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3675,7 +3675,7 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		status = nfserr_jukebox;
+ 		if (!tempfh)
+ 			goto out;
+-		fh_init(tempfh, NFS4_FHSIZE);
++		fh_init(tempfh, NFS4_FHSIZE, rqstp);
+ 		status = fh_compose(tempfh, exp, dentry, NULL);
+ 		if (status)
+ 			goto out;
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 5ef7191f8ad8..f29bb09af242 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -13,6 +13,7 @@
+ #include <linux/iversion.h>
+ #include <linux/exportfs.h>
+ #include <linux/nfs4.h>
++#include <crypto/skcipher.h>
+ 
+ #include "export.h"
+ 
+@@ -74,6 +75,13 @@ static inline ino_t u32_to_ino_t(__u32 uino)
+ 	return (ino_t) uino;
  }
  
++/* filehandle crypto buckets allocated per-knfsd */
++struct encfh_buf {
++	u8 a_buf[NFS4_FHSIZE];
++	u8 b_buf[NFS4_FHSIZE];
++	struct skcipher_request req;
++};
++
+ /*
+  * This is the internal representation of an NFS handle used in knfsd.
+  * pre_mtime/post_version will be used to support wcc_attr's in NFSv3.
+@@ -83,6 +91,7 @@ typedef struct svc_fh {
+ 	int			fh_maxsize;	/* max size for fh_handle */
+ 	struct dentry *		fh_dentry;	/* validated dentry */
+ 	struct svc_export *	fh_export;	/* export pointer */
++	struct svc_rqst	*	fh_rqstp;	/* access per-knfsd buffer for encfh_buf */
+ 
+ 	bool			fh_want_write;	/* remount protection taken */
+ 	bool			fh_no_wcc;	/* no wcc data needed */
+@@ -244,10 +253,11 @@ fh_copy_shallow(struct knfsd_fh *dst, const struct knfsd_fh *src)
+ }
+ 
+ static __inline__ struct svc_fh *
+-fh_init(struct svc_fh *fhp, int maxsize)
++fh_init(struct svc_fh *fhp, int maxsize, struct svc_rqst *rqstp)
+ {
+ 	memset(fhp, 0, sizeof(*fhp));
+ 	fhp->fh_maxsize = maxsize;
++	fhp->fh_rqstp = rqstp;
+ 	return fhp;
+ }
+ 
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 481e789a7697..83e1bb2a9a7e 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -162,7 +162,7 @@ nfsd_proc_lookup(struct svc_rqst *rqstp)
+ 	dprintk("nfsd: LOOKUP   %s %.*s\n",
+ 		SVCFH_fmt(&argp->fh), argp->len, argp->name);
+ 
+-	fh_init(&resp->fh, NFS_FHSIZE);
++	fh_init(&resp->fh, NFS_FHSIZE, rqstp);
+ 	resp->status = nfsd_lookup(rqstp, &argp->fh, argp->name, argp->len,
+ 				   &resp->fh);
+ 	fh_put(&argp->fh);
+@@ -312,7 +312,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 		resp->status = nfserrno(PTR_ERR(dchild));
+ 		goto out_write;
+ 	}
+-	fh_init(newfhp, NFS_FHSIZE);
++	fh_init(newfhp, NFS_FHSIZE, rqstp);
+ 	resp->status = fh_compose(newfhp, dirfhp->fh_export, dchild, dirfhp);
+ 	if (!resp->status && d_really_is_negative(dchild))
+ 		resp->status = nfserr_noent;
+@@ -502,7 +502,7 @@ nfsd_proc_symlink(struct svc_rqst *rqstp)
+ 		goto out;
+ 	}
+ 
+-	fh_init(&newfh, NFS_FHSIZE);
++	fh_init(&newfh, NFS_FHSIZE, rqstp);
+ 	resp->status = nfsd_symlink(rqstp, &argp->ffh, argp->fname, argp->flen,
+ 				    argp->tname, &attrs, &newfh);
+ 
+@@ -533,7 +533,7 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+ 	}
+ 
+ 	argp->attrs.ia_valid &= ~ATTR_SIZE;
+-	fh_init(&resp->fh, NFS_FHSIZE);
++	fh_init(&resp->fh, NFS_FHSIZE, rqstp);
+ 	resp->status = nfsd_create(rqstp, &argp->fh, argp->name, argp->len,
+ 				   &attrs, S_IFDIR, 0, &resp->fh);
+ 	fh_put(&argp->fh);
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 479a52a755af..109840dda93c 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -264,6 +264,9 @@ enum {
+ 
+ #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+ 
++#define ARGSTRM_RQST(xdr_stream) (container_of(xdr_stream, struct svc_rqst, rq_arg_stream))
++#define RESSTRM_RQST(xdr_stream) (container_of(xdr_stream, struct svc_rqst, rq_res_stream))
++
+ /*
+  * Rigorous type checking on sockaddr type conversions
+  */
 -- 
 2.50.1
 
