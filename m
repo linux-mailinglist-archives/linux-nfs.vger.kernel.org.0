@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-17328-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17329-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02D50CE0000
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 18:05:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDDC2CE0003
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 18:05:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 12E24300FA16
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 17:05:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 57D923010E49
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Dec 2025 17:05:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16463168F1;
-	Sat, 27 Dec 2025 17:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ACA721A459;
+	Sat, 27 Dec 2025 17:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="RIR2ocuU"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Ly0+gLBH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022078.outbound.protection.outlook.com [40.107.200.78])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020092.outbound.protection.outlook.com [52.101.193.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB04032571B
-	for <linux-nfs@vger.kernel.org>; Sat, 27 Dec 2025 17:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0E724A076
+	for <linux-nfs@vger.kernel.org>; Sat, 27 Dec 2025 17:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766855112; cv=fail; b=a0fSfZ4SX4b7RCYIJuzV7W1/yYVxWucpJ9wwZVBu150Yb/fJnyTznjU3hhKxSfOIYkLXU06w0d5LihN7YvlMifwUcpbsSD2D+qVHcPjnVBqumIEq0zeaBUm0AM9bsB2JLwEWP+xzbchvFArO53p/A3P20Mg7NFkh47P4bQdM0YY=
+	t=1766855113; cv=fail; b=urwNj7kp8ZzDEMWkDuhwyUHs/HqghkZZgm84HulikmyOSMS4iV9sYWdGPBwvDnAapeB/ymuhuGpVyWiV5I/SwB0ipBjkg4UsEO1inolerpU1rOLkK6/a9StE4NSRsqQLuT+gef2Z+KHiLTAuaMK4N+dd/8C8fMqSEYGkaiTqJU0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766855112; c=relaxed/simple;
-	bh=Uwcm9xOjX58SI9Af7KbQZsSrT1lwVgXiuFy1jjdXTjo=;
+	s=arc-20240116; t=1766855113; c=relaxed/simple;
+	bh=60Wl3qJowBy3ec1YMlqF+Ej/Bo8G5ENBLUVLlArI7rA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DaSMvEMLHgEFlgkqiNMgpdzPXobYRRTOckjfxeA57MxhwWX+YTwJEw0tTuLz9w2vH5bXhqVTftyucnwXG/F4/C/v5SZbCU1ZDk/lNeb3r8AbOF2d5CZ9cBarsIMv3tEaDbFVgEht6cMeImlhF84IU5AAN5KHJG/mp9p6F3pDRAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=RIR2ocuU; arc=fail smtp.client-ip=40.107.200.78
+	 Content-Type:MIME-Version; b=PZ0jCPaOxMdQORq75cIz8oYgUY6Djik4K1lJ1wNIkIHX2UrfYb18tM2M0KiQlfxCzjmdxzW+XLdUfeec8YA60dA0VVqhyfGcc/K0dIQu4xquAZe7l8uaB4dVJWCKcWTK78PhEsxSHeIK3UG1I4y8RHNZEvyyHPu1qy+/aCi+5o8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Ly0+gLBH; arc=fail smtp.client-ip=52.101.193.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t831G5nCeJ+ixISlP9Z6mnJjYrIILLAQNtVw3JyuctvrdO+UYMOz5YIMQruq074yExkdTfuND9tJKOU2EYRDohCfFUtUKvAElEXtfit4LFZj27S/SNGNAD/ddgIBmlkbiHQhIUyTiFOTFUgKdiD9JkKn91AbMM0yJn+Mpf1tK1x1vHJtP7zzATnqUlkriBQMBD8pDIsW4s6te0bVRxRl/LV29GeHj0YfaBr+cgxUeqTzzmmZyGLmw80BQ00pmfRCHj8hwmtKJDX21hwGNHW9DufD5yy0dWqA3ukihMcrRLxQJZXMC2uIXCgfWcueD+zu3QDwopO1Q4PQy6wqm38RHg==
+ b=zD67p3vxIFiYZjiBa6Gy3uz6rs4QQliXsc1GSJU6LcDOgVG6TSLEYuHMLPc8UhxTnrc9qYkTF2iiQmqh1LxzQL1fxbItPo0x244tOhSMZiNTJwJ1GIJfYZ9djm2zkwlMVW2yEgTjoNMS4uS0cqdCKlWu0DEjDrNL9kMX9Hy6ZrLAd/PbOTObijPtt72ZYNNzGWcj4gyWOGXfs/UglETy952xIvBenbjI1okcwSh6FU8t7tqmiXB5+bavHLyqUKXCH7WbAXjIm3s1YU9zZ1bAk2GPMwcunKWtF2aIgTUk6yN63wBckIO2epN2C8UrYgbZtcT5FsCtgMhlRYzo8vh6xw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8W81y5YvSREQ/o3fD5+nCi+S06yzvAyndAwGG9Qq+to=;
- b=B1w2A5j1DSFvCTfO+25qOjRjdiI6N4VKEh/3dOpoG49MPEzakbybKAH4twkzROIm0o0FF76bG+z9hV7oYiG5d/00T3AFwHLMgPDKugTGglyTBj7zDMZ4+Za9ExJnRGq4MFx4r99NI+OcXiyPOEyYQWQH2HdwQ3X7Ncd3BjLuZvhnvQrNnYT7FemxVzhM6erw3vhOS2hs9eAhYQWu48NSmcWjmou8m/3ta2VWdogmJ7OMpYvYGhd88BGQ8Dx9AQOjSyKqOUfs9KLClzQil/GMiOklq6qhqXglpJHeR8r+EJvJU8iIJ8J099UbyNMtTSWXROn0yY4f2aa0dEv+XDs4ug==
+ bh=12gr0WwVJKRRxfHYzDTfEtTT/UQVk4dq8B6oZqpljSQ=;
+ b=VTv6wYMqzG/co/Qn5U7Thgiqs3ii/LgoQkPUsdIJqhVRxnr+Smj1YQ/LmtXzcxXe7Wrm1yC+HH4B99lhsVyr5VrNt1wnykf86FEhY/5EjEIIPpfY2CUdFRSfKjVtkFLiG/nAu3VP4UN8Zsqc3pZp+90KxUPf3e9T6+to1Ley6GAyoeBUklaMIpbNzlxG5zIApszRSBYRvEF8hZzg48aHoKMMs58jlCjUhlvJgMOyS9yjETcEnquGuFuHHvlh4s/xo0nrEhqALiwj6VKMaAyfLvM2+mBoB5FKyrnnuLVEYfiTTMTG2qjd74MEoKKcIHPk7Mola9I1PbUvLhjNGQCY3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=hammerspace.com; dmarc=pass action=none
  header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8W81y5YvSREQ/o3fD5+nCi+S06yzvAyndAwGG9Qq+to=;
- b=RIR2ocuUzK1ORdnC5fd6txYZ9Un0nmwgHMh+hSPCK0mCj02xyl3WyTQdcdS0H6H6m9gb3GhVSaBhhjd93PF5h7U+IreDwPuIMOzxBXKHvXh7FcyZ2b+2D8mMMs7aNo3xuZre6CgusEQWu7JVCGcWA7E1hmLYIu5Gzn1swzSZh/c=
+ bh=12gr0WwVJKRRxfHYzDTfEtTT/UQVk4dq8B6oZqpljSQ=;
+ b=Ly0+gLBHKV28OHvER3Y0sKq2yCKnpURVkeHbYXolOdyyZPg++/Ov/iIYyxBZhR5vpnNfSoupwTASQ7+Gvf+S8CoqaV2Xm6kx8z8WNn1yhgI1TEuyOtJUR2gmPbJnKBYfjlCNRf9e89lT7rM9CJGrVxlCzSz+vYkRpmlIznQYowA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=hammerspace.com;
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com (2603:10b6:806:3e7::10)
  by SA0PR13MB4061.namprd13.prod.outlook.com (2603:10b6:806:99::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.14; Sat, 27 Dec
- 2025 17:05:04 +0000
+ 2025 17:05:05 +0000
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4]) by SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4%3]) with mapi id 15.20.9456.013; Sat, 27 Dec 2025
- 17:05:04 +0000
+ 17:05:05 +0000
 From: Benjamin Coddington <bcodding@hammerspace.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -63,9 +63,9 @@ To: Chuck Lever <chuck.lever@oracle.com>,
 	Anna Schumaker <anna@kernel.org>,
 	Benjamin Coddington <bcodding@hammerspace.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
-Date: Sat, 27 Dec 2025 12:04:54 -0500
-Message-ID: <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
+Subject: [PATCH v1 7/7] NFSD: Enable filehandle encryption
+Date: Sat, 27 Dec 2025 12:04:55 -0500
+Message-ID: <9c444871bf7bbce9d5ba3ac628d3f0d0a359b21b.1766848778.git.bcodding@hammerspace.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <cover.1766848778.git.bcodding@hammerspace.com>
 References: <cover.1766848778.git.bcodding@hammerspace.com>
@@ -82,325 +82,214 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|SA0PR13MB4061:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb5661a4-31fc-40b5-d4b2-08de456a1477
+X-MS-Office365-Filtering-Correlation-Id: 13d19974-51b0-4228-ed48-08de456a1523
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7142099003;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TUGCMVadcoNe3zCvcxx/nmtZrDDP2lxZqmIqPXsR1fm/gnM4eBdEoSnyfRhv?=
- =?us-ascii?Q?uWChEgK6t0aJtGL2Znd1/36S4NJtl/34tz9za/jfQIJ/9RovYupxUlIYfRN/?=
- =?us-ascii?Q?V82LihfEmGy7kQzWAHtaGC1S+UF08qT8/eOI392kf0fX0Uoz/HlavomIOjZe?=
- =?us-ascii?Q?48WJaXgN8nwH/ZMv2MVERAuotYaTt0CGmFjbMXb6RDPFVmcl1NbhX00mFKrt?=
- =?us-ascii?Q?8BSLtkMqWNd68MESzD+D+2E4nN9ia69oz5oF1p0GH0/Ho7YNSPv94HQ+QfD/?=
- =?us-ascii?Q?hwivQhCL+9Y+YbYheZPJVLmv6BlqjyDemXqsR63O4YQIDcagKR3XKRsegDMa?=
- =?us-ascii?Q?X+SO+4mTml4v1ihieh3rOcMHuSD53Yh39IutqTJhx7MbEHd7ozCZLg5nIm2O?=
- =?us-ascii?Q?yRTAhUlGSjXHmmMdIJ3EPTUOLFTFlnhvOHtpjOfFIXTMmDBzl5iUzuydv2JN?=
- =?us-ascii?Q?LLBeqzO0DmecZQ9wWEmPYZ7PHCQmyxyJUDSBcN8kQEIVBmOL0aJ1UR2EbOWq?=
- =?us-ascii?Q?udwPntURM3CVzxzUzoSvhAAu+SsC1UR1v7wOpIwGLmqrbLw4l0GDQ4FhCe0j?=
- =?us-ascii?Q?Yo4H99LBk5zu5+QLY9V3as2PonD24Ca6SKzh6frGm3leQNh40Iu0zEu6Dm57?=
- =?us-ascii?Q?OVvQfS1iiH/Um7aMY0UhzSJLkMl1K9L5KD9mc8ei/Oys+PgCTcEWtDYKm02c?=
- =?us-ascii?Q?P6IWueFymU5xc+r6DvjNxJGahRQuhUwIEKbZmhCjPQQl42JwwqRMZkxPteaD?=
- =?us-ascii?Q?sUpoYar4QEucynWSXPErx456NJCwZTipokhAf+MOqM2fL/cVZwY5qjjivjXR?=
- =?us-ascii?Q?kL7WQ6MashGYfKQwyIjmy3c1VyrbzQ3cEDfuKtGYEhWDAi3jrTdlbh9i/mz/?=
- =?us-ascii?Q?T7m278z3RR/hvzg9xKci+mSvqscZUy3dnD8M0aWBttjIpm8wGAe9hsF6iP9A?=
- =?us-ascii?Q?XGSJlscOll05FX0KIF74JVFz5EdI5b1nSbWQZ8OFEiCabNtzOOqZ7qR2rvpl?=
- =?us-ascii?Q?jI/H+HYJG4IBEowPc/6dFcs7NRPYwkVlogjSejgkmL8BChZbj3RM9UO952SU?=
- =?us-ascii?Q?Pme5vfcjqQPqddWOrVxW3xfa8tbi8ph4HsNov2Ul0PgPz4MDghW1tivoOuFC?=
- =?us-ascii?Q?m20ULIkt/CHL6yQ3QVsTBXCELj9DjIgRHbglR0ikfoJjWKe6YB8P3wTL+3wF?=
- =?us-ascii?Q?uYhG+VtADJqniiCBiNxqT3wzzpC8K3MnfwR8Y6Ql6BCO4j1zD/sZLYaK8cRJ?=
- =?us-ascii?Q?w9qr1tjPTsV277LmTwjeqm+uGd6/SE+Wo5iGzht96SW8UMrKitTOus5LqhhK?=
- =?us-ascii?Q?sP1qkyWyCJkkoxrDmtS5dClOTGp6h76krORjq0I6F576Xdm9yugnOglgQmQ9?=
- =?us-ascii?Q?9pt6eV3NxAs2woLL9Q/nDhA419lHezoiTAG/YAsffD4jBLV7oC7Vf2FZjAIB?=
- =?us-ascii?Q?mTktJI46ilc76c21lKk5pCSOEjyeqgA2?=
+	=?us-ascii?Q?AvpcoFgOlGKDlqjfUAZh5ekuH44++6K6KCfhoBUfdUDb6VmPq0TpIru6F+3I?=
+ =?us-ascii?Q?zLSvGbtySg7dcsFsSTKLXwWn1y+3QehaVr9NfYxcBYtiO17Fppx/J1Zv2J34?=
+ =?us-ascii?Q?m+4gurjO8I42azzL6N3HfqYtBPE7YWvhYtStaoycTfeiVvFnFF6FAts4LPPF?=
+ =?us-ascii?Q?pha/IYNIE8g3MtEKTf0mUXhsGuNapVS+HeI8i7p5aCzcLM04ddIriOJ9P8Fm?=
+ =?us-ascii?Q?RQI6E74vm+gW38cT1yX7LMVbKA2/LF+wyx6geXv2coAo/70O22GmL45XV6fc?=
+ =?us-ascii?Q?pOkoIp4EYP4k4mCmVkM2+dmrGlnzhfzexrgX52pi06XKG4Jd5Ka0tWbxBjfk?=
+ =?us-ascii?Q?yE8vg9nZ2uZBj75JyiHYxM+IJU84Nl7emj+Mly+5v4oYRPRiMO8hSOzVyUzA?=
+ =?us-ascii?Q?EtSVo01yiuTLFFkznDRQ1Lb/xYxNJDrOWFaJwcAAGhM7ezhKsTvKN1Lv8FCB?=
+ =?us-ascii?Q?DgPiAm/oVVvJ7elCx48cKO1zt4+LdIg/n2DjzvsTF8UiVyV3oU7GGobil3Ew?=
+ =?us-ascii?Q?F5gD6fKCFlK3cSX6/QjGPerxvxJTpfEu2pv6NlraftRXjsPggZ/e9Qar11LU?=
+ =?us-ascii?Q?7WY8Q612/Fq088UhBbn50/D9hy97O/VRSFvVvM880gcNtIpODAXQa6+NROyE?=
+ =?us-ascii?Q?7GUERx0Ehqda76XV5fHMEXDoQrONMV9g5dwdOoccZl7/oyxm+Tx/YnxvR1qc?=
+ =?us-ascii?Q?2w++vH387jsa38WCE3to3r7TguHysJXeFC+6jTk7r4hieP/4XMSy2Pngpt6X?=
+ =?us-ascii?Q?G/KWUkkfu+w2thUf89owSTfXq4Vo9X600TDiK1Gm7BbYbHK9qEEDf16tAGSk?=
+ =?us-ascii?Q?8hHRI+fQu4iutlJHb8GF/z3vtLs1GhR71H6Ht4qyjT/JRxRihzVpmRihX3b7?=
+ =?us-ascii?Q?u3w+32uM0QrlVBDiPNPbV9r+Q71l5YoAwLphfdN8BzuOLWfzQe391S6tPFhH?=
+ =?us-ascii?Q?AR6PhKflSrZ7v0f6+AuxFcjVFPtDhe8TA8nMbAcuOUCL6icpBkwMRypdsn0R?=
+ =?us-ascii?Q?94jlU2FcxQFkSpkxCA1d9KW4CtohaOJBDwi8rLlfc4fN8Kp4mJqWh7tm0Mw5?=
+ =?us-ascii?Q?9NuORlwXN4D3WEFx0T6CJyCeld0SWUc+sUxsi2tWq0CB2BCAQwqw+SX4D/8K?=
+ =?us-ascii?Q?sVHx2pqy2N6CY3V3617VaOl229JKc7bc1wE8ML08n7p8NYH9AzBjtFA5XTEk?=
+ =?us-ascii?Q?QK1G2nDxLbMcgHrwtEVuwhVzeUB4uerjV6Yul95pWbghd+pdOxlGzgMlb+t6?=
+ =?us-ascii?Q?i28ItrUYF667CiUBHXSFEqQfF6HD9aqUUgcSQ3zJqAcM7+xICaaxXGC3haT9?=
+ =?us-ascii?Q?URMkdmSR7vUKcH5TiuAoirvAYoYIpF+cwRjt+mqIZuwQTYWPwMpXoAvhVzwD?=
+ =?us-ascii?Q?ZyYrZPO80lOH3KNdfebO2FUzsHMcxpDtbxM6cIdyAxxeWFC339UrgqtFK1sO?=
+ =?us-ascii?Q?CAZF/jOqG8ht/iPPwUpkwOyQ3tQvEXLZ?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7142099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?A91JOB/Mygo/7XBYvcyKSlqhRr9qlTy78M1GHqPbJqP8d8PPY15ePbL5RSrK?=
- =?us-ascii?Q?mxR1rdRw+BAly1te/Fp/m09hLZaRlaIy1vR3RzLN+8I2EFbeV7tnMgkhyLKI?=
- =?us-ascii?Q?YxOgUPq/LZ6DHE/V34/qH+iVub6StCzz+x9z6n3Wm9YxIFL8Bd+h/eg5NpFK?=
- =?us-ascii?Q?h0ke90r9KiD/eWdaK0PFu5z2gGkq+rOXyHwPuKszamDe34KEwnurCrIo3pFu?=
- =?us-ascii?Q?om82HQdtBePTXdo3Ez6XhnLFnvgYwy3uvFzFq0dY5ejkFhPu3LqZ55yy7FPd?=
- =?us-ascii?Q?Kj4/Pnul1ypTHd7nICqwKWJTPnySkyHq4xztFAczhl81lq9g/FasqE0kDCgJ?=
- =?us-ascii?Q?MhFtlkF1eXT69UKgLcj0oNJku81l5jIXElP9EYnex/7JKv2EYH9eJTLmu/Ro?=
- =?us-ascii?Q?wBDmFn4ZM64kNvZpsyM/5IIr9p7bIFq4b37n+EiMJwamNWBDh/GyEbYDs5pU?=
- =?us-ascii?Q?H6bMz12fsnVxYDBOhZboQUHKyTApBOgVuAfPwM+Nqt30KWZ9oHb+YDZppV5D?=
- =?us-ascii?Q?N3AFy2qdSvmOv6OhjKp6cShCUal81r+SJK9M1rn5oEmps/Ym0Y1oW1tskpGJ?=
- =?us-ascii?Q?FTVUqJG4u8iO4KNpliQx9+GvVJA4NkgNxrrabEEefFdl2InKFitKppxOJrub?=
- =?us-ascii?Q?GDUKfr3F/f8cMvs9WXBevznUFEsqnNofWpPdqxS0l7Lf2FxdBgALP9Nh8+/r?=
- =?us-ascii?Q?qGF1NPN233IdmmX7bT/wEpDRU6ypuYRLs39I4JQaO7GsCp1QeRDu4hu2G8cC?=
- =?us-ascii?Q?XBGJzOvtkuB4olp2dahsUJpYsSIiB8h8M9MM7+Ub00HNIWKQdhTnjsAvIkfG?=
- =?us-ascii?Q?8zWv1lF5lvWAGQuAqQ6YTX25Jc2EtCiwPMjoHmXrJHqAEQvuQi9h4kIVVpbz?=
- =?us-ascii?Q?5+LnPSgQ6JibIN4eY+QaeHTWi7K4BzrHq6cCuHFJOPJt/mRy0lZTfzkhcRWS?=
- =?us-ascii?Q?V58DJE0VB6Nu6BT8cU8IMiIHN03XJxsUwNSIOw0dcG/NDiDhmjZjA+6N3weR?=
- =?us-ascii?Q?ndNqRWHBZMfYm7Jf+8kWyzC+WI/S1oAzELK/2/6XQmGxhfGogBZzZG2YQyPh?=
- =?us-ascii?Q?Z0mGaPirV+pfkjq/o6XikDJ+SRT3ERx+Y/AbUMMW4whUt2k9Ys0UqjaGJ2xi?=
- =?us-ascii?Q?PYZ0IMJIzrspDiNDsgoD7VzEtjoLfnMPBUMt07aadnpyF1+1vqQHQq/lLP4O?=
- =?us-ascii?Q?x1CmhTcnnbfFO6UMaDHS9Aj482N3zdU6zUroSHX+JvteZMJ4oKKTzUlBcFtU?=
- =?us-ascii?Q?7WN39NwtmXC2ULCqQRsIYC99EBQWJGbQfJwZMBeCYe2IKz75ZcVpBM5XFl4O?=
- =?us-ascii?Q?c9CCBQqBHbY+7k0sBFX2wIyr0pbwjvddbhcoYPQH+IIW/xx8OqHCFSwrl3Vv?=
- =?us-ascii?Q?sklLBIWYMSue4Cga9X0o+V6D5ZQdtWaZHTrQGyyaj6UVyL0484TsFiNOMhQ2?=
- =?us-ascii?Q?SxLn64U91wFsOTP+HLcLw4jQUdMfm1PQJux4xUTyfmaCXlDEQ/hoat1Fw+LK?=
- =?us-ascii?Q?o4MW1rZyAJvHxDJUpi1NP8RYYrNllLaCEV6ICzXnUaTeRsSOEUI6UEt6lYuI?=
- =?us-ascii?Q?r5H5uA9b8+qIeTiEKupiReqqrK2SosQywxQNZojkPLkGjx1Gdr3lbVh/NC6/?=
- =?us-ascii?Q?0OHKlfUk3KCmVVmz/Qe7sJ2cDDQD9BwSDEpxNMXb1yahWakJRhU/AqpB6Jyz?=
- =?us-ascii?Q?u1HEX+UGhyjYQhU0fYoRlxOGDjpiv84xOsJLPq2CbCZDC8oHimXhaIDk8nC7?=
- =?us-ascii?Q?FlUMC4oiHW/Majte9wcts2Ko/OQhCec=3D?=
+	=?us-ascii?Q?nn/mTPWYy+vmsLgdYi3GfNkMscYkFstsCzvlHKMYyHmAN+hgFYKEU2i5zN1I?=
+ =?us-ascii?Q?c71ddM/i5PN29uaPtA4JK9LPGVyO/E7hgdYBVTiNW/g5EmlpX6b/Aij0ZtOo?=
+ =?us-ascii?Q?l9ZIyQDPp/H4iuN4SDJTYJjPkvzjncJQRqUEa3XVqFBel5q77/Oh1xXijvJV?=
+ =?us-ascii?Q?iTXDJGelfEmD2yXsAiB8KiK5qN6qktODvUxz6o0kPfa7FQFV7+VXlONhfRou?=
+ =?us-ascii?Q?jyVb0G7FFnJrTLmQ2FAWSZIOfi797ZjltW0IkfxmSu1Ctq7HmTf+UvdQR/L1?=
+ =?us-ascii?Q?F3T4x3EprwcW0FqMmZtLNvlAHQKMuznOPDtTM+nTWYhPsTqfv4VFM+bpBI0u?=
+ =?us-ascii?Q?pLzuwEbW4tRz5v3miX4CMgmhEq8lNBJNhDq/TTab5EjTSFE1XJVKpYLMMNJ9?=
+ =?us-ascii?Q?FkACCW1cu1AdmN6UhTf02LI6rtaffSKKcMCRIG/DXqR6owdHVx5V7ZWyCu7M?=
+ =?us-ascii?Q?Fll2D9PKOM/E5s5x7w61zXaxuAnz6fRDKToLzE9sdz/sa0bcrOP2k9iDd5xl?=
+ =?us-ascii?Q?KLNVwX5r6OrXgIgnCqSPZvPPd39ASS/2czoV9aYxm9isHazaqoulV5p8ATg/?=
+ =?us-ascii?Q?m/Qw3SiOWQHhoQOeerhT3tvCxyztnrv1naoyB/TCBueSPG1rVOwjCFLO1y7F?=
+ =?us-ascii?Q?qAWDVmrr7+2redXG+4krBH0DfJokyBBr30CkiEBVUt0p3N7srh/jxiou/Sfp?=
+ =?us-ascii?Q?GOYC0syQmIFhHUeHc1/qvFykamiKctjBrngd9d+sYy8Ok7K4uJdy8W3YGf5u?=
+ =?us-ascii?Q?K6FQVoyosB+DyOPO5rxAolxW8IHeMkdnPYoMTvJDpjMlrpIxPLD7zPc757hW?=
+ =?us-ascii?Q?0kBsTcRjPoHwxgW1FXN47J/Szjc3gkj89kQOaOOnqfkoks+b25vm1bvvtedr?=
+ =?us-ascii?Q?3cuXqC1YObpEwbdX4mbRCSrza4y7EHWLzBE5O7zoZ7HzjudTHZWpmacIWdrT?=
+ =?us-ascii?Q?Y5gqobaD6pLjCx+k2O/3mJSgzyIzHfmZ83dRpNfRnMhkGJGZzksOsSg/CCmG?=
+ =?us-ascii?Q?SLgFoC6s9/fNIP3SJ59O0Ii0clOFDgJZm2QWQsDTTLTNKsBJ5hMFfqT0HV8G?=
+ =?us-ascii?Q?TjofzDm/m+hDenlwU6aXyQ0qTwer62FGvWW1sGfWBcAwwQASIKCZ7CUfqjpB?=
+ =?us-ascii?Q?6DAmv072Q1tJyxelStGJMojVvRZjdB9pQFjDVdDZjifKhxVTeERYJCFudACd?=
+ =?us-ascii?Q?MVJwdrAEk5hd4j9HVaSOxj0Km/ekBM4CqkbNXOv+vVIdYjSd1ggzxxb8OAYT?=
+ =?us-ascii?Q?Y269VURnqvL/QFSH7PSkV47iLYIyTy4DJ/GW9Q/L0nnct6dDrc4IVHAJblTz?=
+ =?us-ascii?Q?MVolbTtp1qT8A/VMb+fyCRwf9sPrWGTAwY2WNg27yHgp1dugON9ovlXhpqIi?=
+ =?us-ascii?Q?NDVn9jQDiTiAT2Q2y+dGJl31e42xyGN8F/E9MtDh/e5gy0zqmvDm4rx+Vpco?=
+ =?us-ascii?Q?MbCP/Q2uw/+WmeIGKrfjxqyffb9L/KIH1nz9Zz/se43AXmnf1iZ2uGpZ6aUH?=
+ =?us-ascii?Q?Dt4J1yC/OwnHlVaI+DZYXfoCXcdzyUyYqS2Y7Lk7H3IxveiZMu9eIQCNQiT0?=
+ =?us-ascii?Q?LAqcqWnOaBWuG3bRmr3xqAK0hgcAsQEqyHp8Lj2vL7qFLpwp6f6zLfwzTeHv?=
+ =?us-ascii?Q?/xoYpGt2RSlZEHHrl1oe+CyLeKH/5e00hPy587F5v9q/Ke/WdcCpD/4Z3V09?=
+ =?us-ascii?Q?5s0G4tkBPIfhpvOpOiRrTh31+AIB/wFdaK0+g3wKN8jfHwOj3QmI1vNur81H?=
+ =?us-ascii?Q?qXdZUiNXIsbkcyQCu4l9czo3vYethTw=3D?=
 X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb5661a4-31fc-40b5-d4b2-08de456a1477
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13d19974-51b0-4228-ed48-08de456a1523
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB6648.namprd13.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2025 17:05:04.6631
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2025 17:05:05.7946
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pcYZWk/qgLA78kMlQdqUk57pqGVXo8PJdq8fNisIIDiQl94aQ08AWADLli/zBoCecqdJ4g+Zss1YSvBVBqIl6ttqH2EzdL/GGW6rtTZl6cM=
+X-MS-Exchange-CrossTenant-UserPrincipalName: drdEOodHgp+mN4kLpuF0PNTWiZtuEyIxeI5biNBPd/xHA8Ua/FS3H/9FPgwwnlHT6u1PZVJsFNZiWbgW27vXLozyfTSmQOb4PcYUG47dFEo=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR13MB4061
 
-In order to improve the security of knfsd servers, create a method to
-encrypt and decrypt filehandles.
+Add calls to fh_encrypt() and fh_decrypt() to allow the server to encrypt
+and decrypt filehandles.  The fh_encrypt() calls are from the xdr encoders
+instead of within fh_compose() because callers of fh_compose() may later
+call fh_update() after file creation.  Doing encryption during fh_compose()
+would scramble the raw filehandle information fh_update() requires.
 
-Filehandle encryption begins by checking for an allocated encfh_buf for
-each knfsd thread.  It not yet allocated, nfsd performs JIT alloation and
-proceeds to encrypt or decrypt.
-
-In order to increase entropy, filehandles are encrypted in two passes.  In
-the first pass, the fileid is expanded to the AES block size and encrypted
-with the server's key and a salt from the fsid.  In the second pass, the
-entirety of the filehandle is encrypted starting with the block containing
-the results of the first pass.  Decryption reverses this operation.
-
-This approach ensures that the same fileid values are encrypted differently
-for differing fsid values.  This protects against comparisons between the
-same fileids across different exports that may not be encrypted, which
-could ease the discovery of the server's private key.  Additionally, it
-allows the fsid to be encrypted uniquely for each filehandle.
-
-The filehandle's auth_type is used to indicate that a filehandle has been
-encrypted.
+NFSD can call fh_decrypt() from a single location - when it needs to
+resolve a dentry from the filehandle: nfsd_set_fh_dentry().
 
 Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
 ---
- fs/nfsd/nfsfh.c | 165 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfsfh.h |  13 ++++
- 2 files changed, 178 insertions(+)
+ fs/nfsd/nfs3xdr.c | 10 +++++++---
+ fs/nfsd/nfs4xdr.c | 12 ++++++++----
+ fs/nfsd/nfsfh.c   | 14 ++++++++++++--
+ fs/nfsd/nfsfh.h   |  1 +
+ 4 files changed, 28 insertions(+), 9 deletions(-)
 
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 854ee536e338..b2d3c0e95e86 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -120,11 +120,15 @@ svcxdr_encode_nfsstat3(struct xdr_stream *xdr, __be32 status)
+ }
+ 
+ static bool
+-svcxdr_encode_nfs_fh3(struct xdr_stream *xdr, const struct svc_fh *fhp)
++svcxdr_encode_nfs_fh3(struct xdr_stream *xdr, struct svc_fh *fhp)
+ {
+-	u32 size = fhp->fh_handle.fh_size;
++	u32 size;
+ 	__be32 *p;
+ 
++	if (fh_encrypt(fhp))
++		return false;
++	size = fhp->fh_handle.fh_size;
++
+ 	p = xdr_reserve_space(xdr, XDR_UNIT + size);
+ 	if (!p)
+ 		return false;
+@@ -137,7 +141,7 @@ svcxdr_encode_nfs_fh3(struct xdr_stream *xdr, const struct svc_fh *fhp)
+ }
+ 
+ static bool
+-svcxdr_encode_post_op_fh3(struct xdr_stream *xdr, const struct svc_fh *fhp)
++svcxdr_encode_post_op_fh3(struct xdr_stream *xdr, struct svc_fh *fhp)
+ {
+ 	if (xdr_stream_encode_item_present(xdr) < 0)
+ 		return false;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index a45ab840ecd4..7af8cbaf401b 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2563,9 +2563,13 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
+ }
+ 
+ static __be32 nfsd4_encode_nfs_fh4(struct xdr_stream *xdr,
+-				   struct knfsd_fh *fh_handle)
++					struct svc_fh *fhp)
+ {
+-	return nfsd4_encode_opaque(xdr, fh_handle->fh_raw, fh_handle->fh_size);
++	if (fh_encrypt(fhp))
++		return nfserr_resource;
++
++	return nfsd4_encode_opaque(xdr, fhp->fh_handle.fh_raw,
++		fhp->fh_handle.fh_size);
+ }
+ 
+ /* This is a frequently-encoded type; open-coded for speed */
+@@ -3134,7 +3138,7 @@ static __be32 nfsd4_encode_fattr4_acl(struct xdr_stream *xdr,
+ static __be32 nfsd4_encode_fattr4_filehandle(struct xdr_stream *xdr,
+ 					     const struct nfsd4_fattr_args *args)
+ {
+-	return nfsd4_encode_nfs_fh4(xdr, &args->fhp->fh_handle);
++	return nfsd4_encode_nfs_fh4(xdr, args->fhp);
+ }
+ 
+ static __be32 nfsd4_encode_fattr4_fileid(struct xdr_stream *xdr,
+@@ -4119,7 +4123,7 @@ nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	struct svc_fh *fhp = u->getfh;
+ 
+ 	/* object */
+-	return nfsd4_encode_nfs_fh4(xdr, &fhp->fh_handle);
++	return nfsd4_encode_nfs_fh4(xdr, fhp);
+ }
+ 
+ static __be32
 diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index ed85dd43da18..86bdced0f905 100644
+index 86bdced0f905..c0657b378434 100644
 --- a/fs/nfsd/nfsfh.c
 +++ b/fs/nfsd/nfsfh.c
-@@ -11,6 +11,7 @@
- #include <linux/exportfs.h>
+@@ -319,7 +319,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
+ 	struct dentry *dentry;
+ 	int fileid_type;
+ 	int data_left = fh->fh_size/4;
+-	int len;
++	int len, ret;
+ 	__be32 error;
  
- #include <linux/sunrpc/svcauth_gss.h>
-+#include <crypto/skcipher.h>
- #include "nfsd.h"
- #include "vfs.h"
- #include "auth.h"
-@@ -137,6 +138,170 @@ static inline __be32 check_pseudo_root(struct dentry *dentry,
- 	return nfs_ok;
- }
+ 	error = nfserr_badhandle;
+@@ -331,8 +331,18 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
  
-+static int fh_crypto_init(struct svc_rqst *rqstp)
-+{
-+	struct encfh_buf *fh_encfh = (struct encfh_buf *)rqstp->rq_crypto;
+ 	if (--data_left < 0)
+ 		return error;
+-	if (fh->fh_auth_type != 0)
 +
-+	/* This knfsd has not allocated buffers and reqest yet: */
-+	if (!fh_encfh) {
-+		struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
++	/* either FH_AT_PLAIN or FH_AT_ENCRYPTED: */
++	if (fh->fh_auth_type > 1)
++		return error;
 +
-+		fh_encfh = kmalloc(sizeof(struct encfh_buf), GFP_KERNEL);
-+		if (!fh_encfh)
-+			return -ENOMEM;
-+
-+		skcipher_request_set_sync_tfm(&fh_encfh->req, nn->encfh_tfm);
-+		rqstp->rq_crypto = fh_encfh;
++	ret = fh_decrypt(fhp);
++	if (ret) {
++		/* probably should modify this tracepoint */
++		trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp, ret);;
+ 		return error;
 +	}
-+	memset(fh_encfh->a_buf, 0, NFS4_FHSIZE);
-+	memset(fh_encfh->b_buf, 0, NFS4_FHSIZE);
-+	return 0;
-+}
 +
-+static int fh_crypto(struct svc_fh *fhp, bool encrypting)
-+{
-+	struct encfh_buf *encfh = (struct encfh_buf *)fhp->fh_rqstp->rq_crypto;
-+	int err, pad, hash_size, fileid_offset;
-+	struct knfsd_fh *fh = &fhp->fh_handle;
-+	struct scatterlist fh_sgl[2];
-+	struct scatterlist hash_sg;
-+	u8 *a_buf = encfh->a_buf;
-+	u8 *b_buf = encfh->b_buf;
-+	u8 iv[16];
-+
-+	/* blocksize */
-+	int bs = crypto_sync_skcipher_blocksize(
-+				crypto_sync_skcipher_reqtfm(&encfh->req));
-+
-+	/* always renew as it gets transformed: */
-+	memset(iv, 0, sizeof(iv));
-+
-+	fileid_offset = fh_fileid_offset(fh);
-+	sg_init_table(fh_sgl, 2);
-+
-+	if (encrypting) {
-+		/* encryption */
-+		memcpy(&a_buf[fileid_offset], &fh->fh_raw[fileid_offset],
-+				fh->fh_size - fileid_offset);
-+		memcpy(b_buf, fh->fh_raw, fileid_offset);
-+
-+		/* encrypt the fileid using the fsid as iv: */
-+		memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
-+
-+		/* pad out the fileid to block size */
-+		hash_size = fh_fileid_len(fh);
-+		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-+		hash_size += pad;
-+
-+		sg_set_buf(&fh_sgl[0], &a_buf[fileid_offset], hash_size);
-+		sg_mark_end(&fh_sgl[1]);  /* don't need sg1 yet */
-+		sg_init_one(&hash_sg, &b_buf[fileid_offset], hash_size);
-+
-+		skcipher_request_set_crypt(&encfh->req, fh_sgl, &hash_sg, hash_size, iv);
-+		err = crypto_skcipher_encrypt(&encfh->req);
-+		if (err)
-+			goto out;
-+
-+		/* encrypt the fsid + fileid with zero iv, starting with the last
-+		 * block of the hashed fileid */
-+		memset(iv, 0, sizeof(iv));
-+
-+		/* calculate the new padding: */
-+		hash_size += key_len(fh->fh_fsid_type) + 4;
-+		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-+		hash_size += pad;
-+
-+		sg_unmark_end(&fh_sgl[1]); /* now we use it */
-+		sg_set_buf(&fh_sgl[0], &b_buf[hash_size-bs], bs);
-+		sg_set_buf(&fh_sgl[1], b_buf, hash_size-bs);
-+		sg_init_one(&hash_sg, a_buf, hash_size);
-+
-+		skcipher_request_set_crypt(&encfh->req, fh_sgl, &hash_sg, hash_size, iv);
-+		err = crypto_skcipher_encrypt(&encfh->req);
-+
-+		if (!err) {
-+			memcpy(&fh->fh_raw[4], a_buf, hash_size);
-+			fh->fh_auth_type = FH_AT_ENCRYPTED;
-+			fh->fh_fileid_type = fh->fh_size; /* we'll use this in decryption */
-+			fh->fh_size = hash_size + 4;
-+		}
-+	} else {
-+		/* decryption */
-+		int fh_size = fh->fh_size - 4;
-+		memcpy(b_buf, &fh->fh_raw[4], fh_size);
-+
-+		/* first, we decode starting with the last hashed block and zero iv */
-+		hash_size = fh_size;
-+		sg_set_buf(&fh_sgl[0], &a_buf[fh_size - bs], bs);
-+		sg_set_buf(&fh_sgl[1], a_buf, fh_size - bs);
-+		sg_init_one(&hash_sg, b_buf, fh_size);
-+
-+		skcipher_request_set_crypt(&encfh->req, &hash_sg, fh_sgl, hash_size, iv);
-+		err = crypto_skcipher_decrypt(&encfh->req);
-+		if (err)
-+			goto out;
-+
-+		/* Now we're dealing with the original fh_size: */
-+		fh_size = fh->fh_fileid_type;
-+
-+		/* a_buf now has the decrypted fsid and header: */
-+		memcpy(fh->fh_raw, a_buf, fileid_offset);
-+
-+		/* now we set the iv to the decrypted fsid value */
-+		memset(iv, 0, sizeof(iv));;
-+		memcpy(iv, &a_buf[4], min(sizeof(iv), key_len(fh->fh_fsid_type)));
-+
-+		/* align to block size */
-+		hash_size = fh_size - fileid_offset;
-+		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-+		hash_size += pad;
-+
-+		/* decrypt only the fileid: */
-+		sg_set_buf(&fh_sgl[0], &b_buf[fileid_offset], hash_size);
-+		sg_mark_end(&fh_sgl[1]);
-+		sg_init_one(&hash_sg, &a_buf[fileid_offset], hash_size);
-+
-+		skcipher_request_set_crypt(&encfh->req, &hash_sg, fh_sgl, hash_size, iv);
-+		err = crypto_skcipher_decrypt(&encfh->req);
-+
-+		if (!err) {
-+			fh->fh_size = fh_size;
-+			/* copy in the fileid */
-+			memcpy(&fh->fh_raw[fileid_offset], &b_buf[fileid_offset], hash_size);
-+			/* trim the leftover hash padding */
-+			memset(&fh->fh_raw[fh->fh_size], 0, NFS4_FHSIZE - fh->fh_size);
-+		}
-+	}
-+	// add a tracepoint to show the error;
-+	// if decrypting, we want nfserr_badhandle
-+out:
-+	return err;
-+}
-+
-+/* we should never get here without calling fh_init first */
-+int fh_encrypt(struct svc_fh *fhp)
-+{
-+	if (!(fhp->fh_export->ex_flags & NFSEXP_ENCRYPT_FH))
-+		return 0;
-+
-+	if (fh_crypto_init(fhp->fh_rqstp))
-+		return -ENOMEM;
-+
-+	return fh_crypto(fhp, true);
-+}
-+
-+/* Lets try to decrypt, no matter the export setting */
-+static int fh_decrypt(struct svc_fh *fhp)
-+{
-+	if (fhp->fh_handle.fh_auth_type != FH_AT_ENCRYPTED)
-+		return 0;
-+
-+	if (fh_crypto_init(fhp->fh_rqstp))
-+		return -ENOMEM;
-+
-+	return fh_crypto(fhp, false);
-+}
-+
- /*
-  * Use the given filehandle to look up the corresponding export and
-  * dentry.  On success, the results are used to set fh_export and
+ 	len = key_len(fh->fh_fsid_type) / 4;
+ 	if (len == 0)
+ 		return error;
 diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index f29bb09af242..786f34e72304 100644
+index 786f34e72304..e94bf96c3340 100644
 --- a/fs/nfsd/nfsfh.h
 +++ b/fs/nfsd/nfsfh.h
-@@ -60,6 +60,9 @@ struct knfsd_fh {
- #define fh_fsid_type		fh_raw[2]
- #define fh_fileid_type		fh_raw[3]
+@@ -238,6 +238,7 @@ __be32	fh_getattr(const struct svc_fh *fhp, struct kstat *stat);
+ __be32	fh_compose(struct svc_fh *, struct svc_export *, struct dentry *, struct svc_fh *);
+ __be32	fh_update(struct svc_fh *);
+ void	fh_put(struct svc_fh *);
++int	fh_encrypt(struct svc_fh *);
  
-+#define FH_AT_PLAIN		0
-+#define FH_AT_ENCRYPTED	1
-+
- static inline u32 *fh_fsid(const struct knfsd_fh *fh)
- {
- 	return (u32 *)&fh->fh_raw[4];
-@@ -284,6 +287,16 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
- 	return true;
- }
- 
-+static inline size_t fh_fileid_offset(const struct knfsd_fh *fh)
-+{
-+	return key_len(fh->fh_fsid_type) + 4;
-+}
-+
-+static inline size_t fh_fileid_len(const struct knfsd_fh *fh)
-+{
-+	return fh->fh_size - fh_fileid_offset(fh);
-+}
-+
- /**
-  * fh_want_write - Get write access to an export
-  * @fhp: File handle of file to be written
+ static __inline__ struct svc_fh *
+ fh_copy(struct svc_fh *dst, const struct svc_fh *src)
 -- 
 2.50.1
 
