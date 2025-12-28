@@ -1,356 +1,179 @@
-Return-Path: <linux-nfs+bounces-17334-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17335-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 236E5CE479A
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 02:35:14 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1337CE4941
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 06:17:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D9193013EC6
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 01:35:12 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 85FBF30019C6
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 05:17:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8C154652;
-	Sun, 28 Dec 2025 01:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCB51EB5E1;
+	Sun, 28 Dec 2025 05:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8MO9Mbi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUnLHpVb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5BA1F956
-	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 01:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FCD20ED
+	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 05:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766885711; cv=none; b=mA0AOHedQhgrok7b18DOKxb8neCedNGwMlI604o+U+2eti5qFz8wAVpFoW3K5/+CxgyTkgFkox/xUWJ9Db5O+CAXYQO9v1qVVyKoejkAzwtVMfQJqlYJAdTI+U7wRMc5CVOGvkJcX6beuGzaykVwX62dB/bq0FQjpgXduL1Fd3g=
+	t=1766899075; cv=none; b=nxCv9oxSDu8RCeJboAaK1UlmA+Y+iSxBrx71c13ys9FygCfT99cRhOa9W5RjLaTAkrBJUi+tbZekXLdwGoTmm8sA3DcUga91Nj10Spq0tiZgYqjaXvbrRVGanPXI0IQCMrEWOKd122dskprk5ZQoccY94yjxNcrfovYcSJL4AS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766885711; c=relaxed/simple;
-	bh=fmmL9HWmaEP0RpNRgy/s+tq2xpNI8J68pezMwOFzmxI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=loBxKswbH7gSJMKAVAaXQ33sLVLn8HiTdzGy1+sp4gN+2jsSUT9WIBUDtezi5xktHdP6txVv5wglh840F9nncqhy66oRcD5FhqqJxxQQaLkfXTh6y5VQ8sbE0i1RqrQAP00d9oRANsWbOvUUerV1jqaQOM9unPeCRniTJrJU7s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8MO9Mbi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B84C116C6;
-	Sun, 28 Dec 2025 01:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766885710;
-	bh=fmmL9HWmaEP0RpNRgy/s+tq2xpNI8J68pezMwOFzmxI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Q8MO9Mbi7XByFoaz2a7mljf25Df9eQB4eBBoZh4FpC5aOcCciBhX/Jk2ZbGh9q0Cw
-	 SG+hVyLS5CZGRSXc755xUUAjL6swepGU7J6BU2UFAA5O1ms0nt2H4eXDsmOr3qOJVt
-	 KHoST4X6W/TykEw1n7/ZB+e+e5fuxCy3KpDafr1NgbWMhzSnLY4Jvnk54MXI7AL5zi
-	 0kqwWq6gPg+2ymeVdmcpZ8hZ0vDnZEakMxVOOSl0QOPe8OeRdLwQ6yDHeaGoRdFKU9
-	 d3LY0boRst6Ys7KJCS4stESyRc5WK8rZg5vh0vDc2vCY0Ub6Ko9VVO9dfHilOssixs
-	 QG8WXohOdU9yw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5E8FFF4006D;
-	Sat, 27 Dec 2025 20:35:09 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 27 Dec 2025 20:35:09 -0500
-X-ME-Sender: <xms:TYlQaS-WyhfecsiVxzdTx1uLzxMx5e8UH4r4rjRSjxcO5r_gpWt_FA>
-    <xme:TYlQadj_EjV93WhkBb3jj09JXh4am0_-49eu7_1BzFYgoUe7X0aMZe8TRWExYmtMk
-    lTBKdGqJ0zWYPUdPr390DgmIXmV7IGYU_FMRczrlnHUDno9i7niw6cl>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejvdelhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepsggtohguughinhhgse
-    hhrghmmhgvrhhsphgrtggvrdgtohhmpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhl
-    vghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdgtrhihphhtoh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:TYlQacePlnO67dou49AyNRundh8Ey-3nEmKXyQ-3QmrFMACxRB-lWg>
-    <xmx:TYlQaaP_c3p4LvTHX8dfK0uwj7zldYoDvHxjWSjGyYFASH-zBCPPag>
-    <xmx:TYlQafuaF-Lrq8eeX7CJxU1Ggbsat6cpEgfJJ7nOAun0AggZht0RfA>
-    <xmx:TYlQaTBfYjVYbvo5Gzt2DYRQGKV_bom3R9LCz224Qpef_g3HpKj-iw>
-    <xmx:TYlQaWZ8xQOsokuRklQXTQXWnZ9ZOnnsQwyy-0xfrKbsP9CQFoq2ck6X>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 37CBB780054; Sat, 27 Dec 2025 20:35:09 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1766899075; c=relaxed/simple;
+	bh=8SPQGL4UPSiR/d26uvQjzey7vqt1cAI7qHZE6oLjAgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HUM5r+QkZmeTd5N8sxEThKiFvtAospOz1bttDGwRQaCX2tMMii7q4AjXWS3tLPrJ6pKlfGRi8I8A70vMqJDUxbSHB4dtEb1kD/uKNGBkCh4+zCUhIHSLpD6dEd1L1PvsCyMwsZ3+rJ2xUkOX/BlUQuWIwudJtZDn3IkwyNIzwv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUnLHpVb; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766899074; x=1798435074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8SPQGL4UPSiR/d26uvQjzey7vqt1cAI7qHZE6oLjAgA=;
+  b=XUnLHpVbKkFU1tBiJvprw6i7aCb99KfBypa7K+7Dksu1yDSEyNaBISmR
+   LSpA1vCs26n6G3hMxGSUVg21MqZdv206gAp3VCbdGL9wVcHgIbhlmcbSP
+   Cn59T2vxZ+y5RRL4Iu7fSn6hjyj0BHm/OP9MjdSHNra7X/aSyjcnbboRc
+   TaqEqEc4FSVueQqDPA2/ezui/F/z+L+vExeoi6TDta3FijXuZYXev4+QX
+   MgETvUqVzMyBcxvwR/1Lk6XdgmJ/rFx7OHFd8TpWuQn/qsljlmnZ3lzjZ
+   r0Nh3+Kv8RcqZA55Fu0i2IJyFnSH9asm2XhWFxhqeTX1ZVRLHSNgW65tJ
+   A==;
+X-CSE-ConnectionGUID: 4v6l5XHSQ8+C2eXTe64RAw==
+X-CSE-MsgGUID: PJ7MA1rqR7qbJDl9zXcBOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11654"; a="72415533"
+X-IronPort-AV: E=Sophos;i="6.21,183,1763452800"; 
+   d="scan'208";a="72415533"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 21:17:53 -0800
+X-CSE-ConnectionGUID: ESaTSnn2SQuim7KbBrkvtg==
+X-CSE-MsgGUID: 8LHZkiokTBOXuqq3KgiJ4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,183,1763452800"; 
+   d="scan'208";a="231324218"
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 27 Dec 2025 21:17:51 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vZjA4-000000006GX-3Zh8;
+	Sun, 28 Dec 2025 05:17:48 +0000
+Date: Sun, 28 Dec 2025 13:17:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Benjamin Coddington <bcodding@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
+Message-ID: <202512281330.lPQZAymu-lkp@intel.com>
+References: <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AvjXdGNJ2cw-
-Date: Sat, 27 Dec 2025 20:34:18 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Benjamin Coddington" <bcodding@hammerspace.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org
-Message-Id: <bc74d1a3-d128-486e-939a-f7b3dc560931@app.fastmail.com>
-In-Reply-To: 
- <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
-References: <cover.1766848778.git.bcodding@hammerspace.com>
- <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
-Subject: Re: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
+
+Hi Benjamin,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on brauner-vfs/vfs.all]
+[also build test ERROR on trondmy-nfs/linux-next linus/master v6.19-rc2 next-20251219]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/nfsd-Convert-export-flags-to-use-BIT-macro/20251228-010753
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding%40hammerspace.com
+patch subject: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
+config: arm-randconfig-004-20251228 (https://download.01.org/0day-ci/archive/20251228/202512281330.lPQZAymu-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251228/202512281330.lPQZAymu-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512281330.lPQZAymu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   fs/nfsd/nfsfh.c:282:5: warning: no previous prototype for 'fh_encrypt' [-Wmissing-prototypes]
+     282 | int fh_encrypt(struct svc_fh *fhp)
+         |     ^~~~~~~~~~
+   fs/nfsd/nfsfh.c:294:12: warning: 'fh_decrypt' defined but not used [-Wunused-function]
+     294 | static int fh_decrypt(struct svc_fh *fhp)
+         |            ^~~~~~~~~~
+   In file included from include/linux/string.h:386,
+                    from include/linux/bitmap.h:13,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/sched.h:37,
+                    from include/linux/sunrpc/svcauth_gss.h:12,
+                    from fs/nfsd/nfsfh.c:13:
+   fs/nfsd/nfsfh.c: In function 'fh_crypto.constprop':
+>> include/linux/compiler_types.h:630:45: error: call to '__compiletime_assert_1035' declared with attribute error: min(sizeof(iv), key_len(fh->fh_raw[2])) signedness error
+     630 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                                             ^
+   include/linux/fortify-string.h:627:48: note: in definition of macro '__fortify_memcpy_chk'
+     627 |         const size_t __fortify_size = (size_t)(size);                   \
+         |                                                ^~~~
+   fs/nfsd/nfsfh.c:189:17: note: in expansion of macro 'memcpy'
+     189 |                 memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
+         |                 ^~~~~~
+   include/linux/compiler_types.h:618:9: note: in expansion of macro '__compiletime_assert'
+     618 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ^~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:630:9: note: in expansion of macro '_compiletime_assert'
+     630 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:93:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+      93 |         BUILD_BUG_ON_MSG(!__types_ok(ux, uy),           \
+         |         ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:98:9: note: in expansion of macro '__careful_cmp_once'
+      98 |         __careful_cmp_once(op, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:105:25: note: in expansion of macro '__careful_cmp'
+     105 | #define min(x, y)       __careful_cmp(min, x, y)
+         |                         ^~~~~~~~~~~~~
+   fs/nfsd/nfsfh.c:189:41: note: in expansion of macro 'min'
+     189 |                 memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
+         |                                         ^~~
 
 
+vim +/__compiletime_assert_1035 +630 include/linux/compiler_types.h
 
-On Sat, Dec 27, 2025, at 12:04 PM, Benjamin Coddington wrote:
-> In order to improve the security of knfsd servers, create a method to
-> encrypt and decrypt filehandles.
->
-> Filehandle encryption begins by checking for an allocated encfh_buf for
-> each knfsd thread.  It not yet allocated, nfsd performs JIT alloation and
-> proceeds to encrypt or decrypt.
->
-> In order to increase entropy, filehandles are encrypted in two passes.  In
-> the first pass, the fileid is expanded to the AES block size and encrypted
-> with the server's key and a salt from the fsid.  In the second pass, the
-> entirety of the filehandle is encrypted starting with the block containing
-> the results of the first pass.  Decryption reverses this operation.
->
-> This approach ensures that the same fileid values are encrypted differently
-> for differing fsid values.  This protects against comparisons between the
-> same fileids across different exports that may not be encrypted, which
-> could ease the discovery of the server's private key.  Additionally, it
-> allows the fsid to be encrypted uniquely for each filehandle.
->
-> The filehandle's auth_type is used to indicate that a filehandle has been
-> encrypted.
->
-> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-> ---
->  fs/nfsd/nfsfh.c | 165 ++++++++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/nfsfh.h |  13 ++++
->  2 files changed, 178 insertions(+)
->
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index ed85dd43da18..86bdced0f905 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -11,6 +11,7 @@
->  #include <linux/exportfs.h>
-> 
->  #include <linux/sunrpc/svcauth_gss.h>
-> +#include <crypto/skcipher.h>
->  #include "nfsd.h"
->  #include "vfs.h"
->  #include "auth.h"
-> @@ -137,6 +138,170 @@ static inline __be32 check_pseudo_root(struct 
-> dentry *dentry,
->  	return nfs_ok;
->  }
-> 
-> +static int fh_crypto_init(struct svc_rqst *rqstp)
-> +{
-> +	struct encfh_buf *fh_encfh = (struct encfh_buf *)rqstp->rq_crypto;
-> +
-> +	/* This knfsd has not allocated buffers and reqest yet: */
-> +	if (!fh_encfh) {
-> +		struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
-> +
-> +		fh_encfh = kmalloc(sizeof(struct encfh_buf), GFP_KERNEL);
-> +		if (!fh_encfh)
-> +			return -ENOMEM;
-> +
-> +		skcipher_request_set_sync_tfm(&fh_encfh->req, nn->encfh_tfm);
-> +		rqstp->rq_crypto = fh_encfh;
-> +	}
-> +	memset(fh_encfh->a_buf, 0, NFS4_FHSIZE);
-> +	memset(fh_encfh->b_buf, 0, NFS4_FHSIZE);
-> +	return 0;
-> +}
-> +
-> +static int fh_crypto(struct svc_fh *fhp, bool encrypting)
-> +{
-> +	struct encfh_buf *encfh = (struct encfh_buf *)fhp->fh_rqstp->rq_crypto;
-> +	int err, pad, hash_size, fileid_offset;
-> +	struct knfsd_fh *fh = &fhp->fh_handle;
-> +	struct scatterlist fh_sgl[2];
-> +	struct scatterlist hash_sg;
-> +	u8 *a_buf = encfh->a_buf;
-> +	u8 *b_buf = encfh->b_buf;
-> +	u8 iv[16];
-> +
-> +	/* blocksize */
-> +	int bs = crypto_sync_skcipher_blocksize(
-> +				crypto_sync_skcipher_reqtfm(&encfh->req));
-> +
-> +	/* always renew as it gets transformed: */
-> +	memset(iv, 0, sizeof(iv));
-> +
-> +	fileid_offset = fh_fileid_offset(fh);
-> +	sg_init_table(fh_sgl, 2);
-> +
-> +	if (encrypting) {
-> +		/* encryption */
-> +		memcpy(&a_buf[fileid_offset], &fh->fh_raw[fileid_offset],
-> +				fh->fh_size - fileid_offset);
-> +		memcpy(b_buf, fh->fh_raw, fileid_offset);
-> +
-> +		/* encrypt the fileid using the fsid as iv: */
-> +		memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
-> +
-> +		/* pad out the fileid to block size */
-> +		hash_size = fh_fileid_len(fh);
-> +		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-> +		hash_size += pad;
-> +
-> +		sg_set_buf(&fh_sgl[0], &a_buf[fileid_offset], hash_size);
-> +		sg_mark_end(&fh_sgl[1]);  /* don't need sg1 yet */
-> +		sg_init_one(&hash_sg, &b_buf[fileid_offset], hash_size);
-> +
-> +		skcipher_request_set_crypt(&encfh->req, fh_sgl, &hash_sg, hash_size, iv);
-> +		err = crypto_skcipher_encrypt(&encfh->req);
-> +		if (err)
-> +			goto out;
-> +
-> +		/* encrypt the fsid + fileid with zero iv, starting with the last
-> +		 * block of the hashed fileid */
-> +		memset(iv, 0, sizeof(iv));
-> +
-> +		/* calculate the new padding: */
-> +		hash_size += key_len(fh->fh_fsid_type) + 4;
-> +		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-> +		hash_size += pad;
-> +
-> +		sg_unmark_end(&fh_sgl[1]); /* now we use it */
-> +		sg_set_buf(&fh_sgl[0], &b_buf[hash_size-bs], bs);
-> +		sg_set_buf(&fh_sgl[1], b_buf, hash_size-bs);
-> +		sg_init_one(&hash_sg, a_buf, hash_size);
-> +
-> +		skcipher_request_set_crypt(&encfh->req, fh_sgl, &hash_sg, hash_size, iv);
-> +		err = crypto_skcipher_encrypt(&encfh->req);
-> +
-> +		if (!err) {
-> +			memcpy(&fh->fh_raw[4], a_buf, hash_size);
-> +			fh->fh_auth_type = FH_AT_ENCRYPTED;
-> +			fh->fh_fileid_type = fh->fh_size; /* we'll use this in decryption */
-> +			fh->fh_size = hash_size + 4;
-> +		}
-> +	} else {
-> +		/* decryption */
-> +		int fh_size = fh->fh_size - 4;
-> +		memcpy(b_buf, &fh->fh_raw[4], fh_size);
-> +
-> +		/* first, we decode starting with the last hashed block and zero iv */
-> +		hash_size = fh_size;
-> +		sg_set_buf(&fh_sgl[0], &a_buf[fh_size - bs], bs);
-> +		sg_set_buf(&fh_sgl[1], a_buf, fh_size - bs);
-> +		sg_init_one(&hash_sg, b_buf, fh_size);
-> +
-> +		skcipher_request_set_crypt(&encfh->req, &hash_sg, fh_sgl, hash_size, iv);
-> +		err = crypto_skcipher_decrypt(&encfh->req);
-> +		if (err)
-> +			goto out;
-> +
-> +		/* Now we're dealing with the original fh_size: */
-> +		fh_size = fh->fh_fileid_type;
-> +
-> +		/* a_buf now has the decrypted fsid and header: */
-> +		memcpy(fh->fh_raw, a_buf, fileid_offset);
-> +
-> +		/* now we set the iv to the decrypted fsid value */
-> +		memset(iv, 0, sizeof(iv));;
-> +		memcpy(iv, &a_buf[4], min(sizeof(iv), key_len(fh->fh_fsid_type)));
-> +
-> +		/* align to block size */
-> +		hash_size = fh_size - fileid_offset;
-> +		pad = (bs - (hash_size & (bs - 1))) & (bs - 1);
-> +		hash_size += pad;
-> +
-> +		/* decrypt only the fileid: */
-> +		sg_set_buf(&fh_sgl[0], &b_buf[fileid_offset], hash_size);
-> +		sg_mark_end(&fh_sgl[1]);
-> +		sg_init_one(&hash_sg, &a_buf[fileid_offset], hash_size);
-> +
-> +		skcipher_request_set_crypt(&encfh->req, &hash_sg, fh_sgl, hash_size, iv);
-> +		err = crypto_skcipher_decrypt(&encfh->req);
-> +
-> +		if (!err) {
-> +			fh->fh_size = fh_size;
-> +			/* copy in the fileid */
-> +			memcpy(&fh->fh_raw[fileid_offset], &b_buf[fileid_offset], hash_size);
-> +			/* trim the leftover hash padding */
-> +			memset(&fh->fh_raw[fh->fh_size], 0, NFS4_FHSIZE - fh->fh_size);
-> +		}
-> +	}
-> +	// add a tracepoint to show the error;
-> +	// if decrypting, we want nfserr_badhandle
-> +out:
-> +	return err;
-> +}
-> +
-> +/* we should never get here without calling fh_init first */
-> +int fh_encrypt(struct svc_fh *fhp)
-> +{
-> +	if (!(fhp->fh_export->ex_flags & NFSEXP_ENCRYPT_FH))
-> +		return 0;
-> +
-> +	if (fh_crypto_init(fhp->fh_rqstp))
-> +		return -ENOMEM;
-> +
-> +	return fh_crypto(fhp, true);
-> +}
-> +
-> +/* Lets try to decrypt, no matter the export setting */
-> +static int fh_decrypt(struct svc_fh *fhp)
-> +{
-> +	if (fhp->fh_handle.fh_auth_type != FH_AT_ENCRYPTED)
-> +		return 0;
-> +
-> +	if (fh_crypto_init(fhp->fh_rqstp))
-> +		return -ENOMEM;
-> +
-> +	return fh_crypto(fhp, false);
-> +}
-> +
->  /*
->   * Use the given filehandle to look up the corresponding export and
->   * dentry.  On success, the results are used to set fh_export and
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index f29bb09af242..786f34e72304 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -60,6 +60,9 @@ struct knfsd_fh {
->  #define fh_fsid_type		fh_raw[2]
->  #define fh_fileid_type		fh_raw[3]
-> 
-> +#define FH_AT_PLAIN		0
-> +#define FH_AT_ENCRYPTED	1
-> +
->  static inline u32 *fh_fsid(const struct knfsd_fh *fh)
->  {
->  	return (u32 *)&fh->fh_raw[4];
-> @@ -284,6 +287,16 @@ static inline bool fh_fsid_match(const struct 
-> knfsd_fh *fh1,
->  	return true;
->  }
-> 
-> +static inline size_t fh_fileid_offset(const struct knfsd_fh *fh)
-> +{
-> +	return key_len(fh->fh_fsid_type) + 4;
-> +}
-> +
-> +static inline size_t fh_fileid_len(const struct knfsd_fh *fh)
-> +{
-> +	return fh->fh_size - fh_fileid_offset(fh);
-> +}
-> +
->  /**
->   * fh_want_write - Get write access to an export
->   * @fhp: File handle of file to be written
-> -- 
-> 2.50.1
-
-I'd feel more comfortable if the crypto community had a look
-to ensure that we're utilizing the APIs in the most efficient
-way possible. Adding linux-crypto ...
-
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  616  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  617  #define _compiletime_assert(condition, msg, prefix, suffix) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  618  	__compiletime_assert(condition, msg, prefix, suffix)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  619  
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  620  /**
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  621   * compiletime_assert - break build and emit msg if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  622   * @condition: a compile-time constant condition to check
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  623   * @msg:       a message to emit if condition is false
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  624   *
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  625   * In tradition of POSIX assert, this macro will break the build if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  626   * supplied condition is *false*, emitting the supplied error message if the
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  627   * compiler has support to do so.
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  628   */
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  629  #define compiletime_assert(condition, msg) \
+eb5c2d4b45e3d2 Will Deacon 2020-07-21 @630  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+eb5c2d4b45e3d2 Will Deacon 2020-07-21  631  
 
 -- 
-Chuck Lever
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
