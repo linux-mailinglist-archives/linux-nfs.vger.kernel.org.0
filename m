@@ -1,179 +1,201 @@
-Return-Path: <linux-nfs+bounces-17335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1337CE4941
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 06:17:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 864DACE4955
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 06:34:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 85FBF30019C6
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 05:17:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E55AF3009A8B
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 05:34:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCB51EB5E1;
-	Sun, 28 Dec 2025 05:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44427188CC9;
+	Sun, 28 Dec 2025 05:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUnLHpVb"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="w83zi0Jj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N11zyoVD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FCD20ED
-	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 05:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542F3146588
+	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 05:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766899075; cv=none; b=nxCv9oxSDu8RCeJboAaK1UlmA+Y+iSxBrx71c13ys9FygCfT99cRhOa9W5RjLaTAkrBJUi+tbZekXLdwGoTmm8sA3DcUga91Nj10Spq0tiZgYqjaXvbrRVGanPXI0IQCMrEWOKd122dskprk5ZQoccY94yjxNcrfovYcSJL4AS0=
+	t=1766900048; cv=none; b=P6tHnfSfr4nKP778j888tytaLD/Eqsgl/WoTMwt8I/zPwAxeomStwZ5KJ+nkWQSZf/sFyDNhFpDU0j2MS27294scWbC5zjTalNo1aLzjmJcEwbl0Dnw5dN0hBvKMxhlrazFo/f3ENmLxztp/UYO9CAl663heyHxSv0UyHID1Z6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766899075; c=relaxed/simple;
-	bh=8SPQGL4UPSiR/d26uvQjzey7vqt1cAI7qHZE6oLjAgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HUM5r+QkZmeTd5N8sxEThKiFvtAospOz1bttDGwRQaCX2tMMii7q4AjXWS3tLPrJ6pKlfGRi8I8A70vMqJDUxbSHB4dtEb1kD/uKNGBkCh4+zCUhIHSLpD6dEd1L1PvsCyMwsZ3+rJ2xUkOX/BlUQuWIwudJtZDn3IkwyNIzwv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUnLHpVb; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766899074; x=1798435074;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8SPQGL4UPSiR/d26uvQjzey7vqt1cAI7qHZE6oLjAgA=;
-  b=XUnLHpVbKkFU1tBiJvprw6i7aCb99KfBypa7K+7Dksu1yDSEyNaBISmR
-   LSpA1vCs26n6G3hMxGSUVg21MqZdv206gAp3VCbdGL9wVcHgIbhlmcbSP
-   Cn59T2vxZ+y5RRL4Iu7fSn6hjyj0BHm/OP9MjdSHNra7X/aSyjcnbboRc
-   TaqEqEc4FSVueQqDPA2/ezui/F/z+L+vExeoi6TDta3FijXuZYXev4+QX
-   MgETvUqVzMyBcxvwR/1Lk6XdgmJ/rFx7OHFd8TpWuQn/qsljlmnZ3lzjZ
-   r0Nh3+Kv8RcqZA55Fu0i2IJyFnSH9asm2XhWFxhqeTX1ZVRLHSNgW65tJ
-   A==;
-X-CSE-ConnectionGUID: 4v6l5XHSQ8+C2eXTe64RAw==
-X-CSE-MsgGUID: PJ7MA1rqR7qbJDl9zXcBOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11654"; a="72415533"
-X-IronPort-AV: E=Sophos;i="6.21,183,1763452800"; 
-   d="scan'208";a="72415533"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 21:17:53 -0800
-X-CSE-ConnectionGUID: ESaTSnn2SQuim7KbBrkvtg==
-X-CSE-MsgGUID: 8LHZkiokTBOXuqq3KgiJ4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,183,1763452800"; 
-   d="scan'208";a="231324218"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 27 Dec 2025 21:17:51 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vZjA4-000000006GX-3Zh8;
-	Sun, 28 Dec 2025 05:17:48 +0000
-Date: Sun, 28 Dec 2025 13:17:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Benjamin Coddington <bcodding@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
-Message-ID: <202512281330.lPQZAymu-lkp@intel.com>
-References: <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
+	s=arc-20240116; t=1766900048; c=relaxed/simple;
+	bh=U/RPkgTPRkle0TZSpoJ2EncfQVITJSFj/uZbKy7wU4k=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=d0Pe1ZCtc8zv/N/I6kOo3CFejFkttR6Np3sopGtezbC7YJD/zt1v/+z+hzmBEdV2shtXwIhuRtXAYbZCelIjVFu9DnGHvYVkOH5SH5kxhjAYMlcF9xrgni5WYnhB2sykZvG579LKz2TsqkKeGI+fL2nxNgjwZv5FTGT+3/7xD8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=w83zi0Jj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N11zyoVD; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 70E6D1400223;
+	Sun, 28 Dec 2025 00:34:04 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Sun, 28 Dec 2025 00:34:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1766900044; x=1766986444; bh=V07nBwuAS/3AmiaYXxH0LTwWP4lr17XxA+l
+	grbrNFDk=; b=w83zi0JjTtIJRgCkASHq0isUkAxSMoUj9OIvUP6OBkxahdyg1K9
+	zGuKF8uYwAAjY6+oaFUKFrMCkf41z0ErNnVWN9gUh6qp03YvF9bi+1X0rbEZZab+
+	iiy14PjOjMoGe6U9tzd1Xy218RvFPjRx08Z5S7o7dppYRDMr0e/oCsYP3JsPSp+c
+	3VSsaq2i+gx94aFKr1ZyCN2Vd+fCPnO8oKTQcyWJl121xDhupQdyIMzI9Ba9RnAY
+	xlhkbgcW6NC8KxT9z8VaI21vkYLs7o0dmD8MjzInoYo5IX5peJIF2NBgUhQs77fd
+	Bpp9O4tTpO5/5ZSl29r6cN2X8J7Pupg4+qA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766900044; x=
+	1766986444; bh=V07nBwuAS/3AmiaYXxH0LTwWP4lr17XxA+lgrbrNFDk=; b=N
+	11zyoVD0dhXkGx2K3H8w7ioXqM7XIeP4bbcXcD6xRjLWOs4aHOr7vXDIz4hORmWb
+	V+fiGxVF38qR6MptIycR3W6ttnhEH0sQkhOQxLqNIePasR4lafJNCfhhptXmVxeL
+	fliOomvze5sr/WEO+7c7bQq4DYHLwGlxQidRaOqdGoc9kOtlFxMelZaq60kKy8DD
+	CMJYyFK7FER0wAGHQGIi2rQAWVKJ9qfPS0C7im8iRUel4c+/7Vzr9pR4LV3YF0qD
+	wYAw6GTeB28kf1ncIKCctA47ISWIxoaUgcMx4QhGLjumn8viAZznWlMTVH4v1FDA
+	XWW3YsFXzCtBlbZhl/TGg==
+X-ME-Sender: <xms:TMFQac9TDMSCkqTxG5tWogBketeM2PuEGZ9ufiCG_IMc5tD4ln1idg>
+    <xme:TMFQaYbq0EizPTBtft-jWQA9NuhaH672VoX9ydAaVcrK8W1Gbz8yR8vI-M52qmVce
+    EWgPqA-013aNIKgsnmtfSnVl5X2xe-XDhSLFGt0I2d6h78>
+X-ME-Received: <xmr:TMFQab2Z82N4qnQtNtGPbiySCeV06wZ1eV2e6MaqkSigH9QBaH16NaNGq2WCwvpXSI5Vb-wHtiO6lqiLa1ZUa7-hlffDDQze6hcJeB6nQjvt>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejfeegvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthht
+    ohepthhrohhnughmhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopegstghougguihhngheshhgrmhhmvghrshhprggtvgdrtghomh
+X-ME-Proxy: <xmx:TMFQaTazAe_hkIob6TEpjfhgxjVohjvUfzaaqh8sWkd1y2tchmzvWg>
+    <xmx:TMFQaTKh-bpRvyoOGcndDtv1_AgxNlfpALkZUrCr4_a3Ak8EFAZNOw>
+    <xmx:TMFQaSGtZGg6fH5fl9tHyqc17eUglVQOXFbpqUrhFfqZwZk6eBi_oA>
+    <xmx:TMFQaavT3Sz4BlBtG6-RU-WCPfqhAwY3MsxWQoq5S9ggW9--GMMCug>
+    <xmx:TMFQaUvzin83Lu66i-WQHMrc3ADCcF86q8i1g4ocaUaKFw5LUslLgGFj>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 28 Dec 2025 00:34:02 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
+From: NeilBrown <neilb@ownmail.net>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Benjamin Coddington" <bcodding@hammerspace.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 1/7] nfsd: Convert export flags to use BIT() macro
+In-reply-to: =?utf-8?q?=3C55ef75dd1010f20a449117405b281c0e9318fd43=2E1766848?=
+ =?utf-8?q?778=2Egit=2Ebcodding=40hammerspace=2Ecom=3E?=
+References: <cover.1766848778.git.bcodding@hammerspace.com>, =?utf-8?q?=3C55?=
+ =?utf-8?q?ef75dd1010f20a449117405b281c0e9318fd43=2E1766848778=2Egit=2Ebcodd?=
+ =?utf-8?q?ing=40hammerspace=2Ecom=3E?=
+Date: Sun, 28 Dec 2025 16:33:54 +1100
+Message-id: <176690003439.16766.6214649554459236248@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-Hi Benjamin,
+On Sun, 28 Dec 2025, Benjamin Coddington wrote:
+> Simplify these defines for consistency, readability, and clarity.
+>=20
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  fs/nfsd/nfsctl.c                 |  2 +-
+>  include/uapi/linux/nfsd/export.h | 36 ++++++++++++++++----------------
+>  2 files changed, 19 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 5ce9a49e76ba..ad1f3af8d682 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -166,7 +166,7 @@ static const struct file_operations exports_nfsd_operat=
+ions =3D {
+> =20
+>  static int export_features_show(struct seq_file *m, void *v)
+>  {
+> -	seq_printf(m, "0x%x 0x%x\n", NFSEXP_ALLFLAGS, NFSEXP_SECINFO_FLAGS);
+> +	seq_printf(m, "0x%x 0x%lx\n", NFSEXP_ALLFLAGS, NFSEXP_SECINFO_FLAGS);
+>  	return 0;
+>  }
+> =20
+> diff --git a/include/uapi/linux/nfsd/export.h b/include/uapi/linux/nfsd/exp=
+ort.h
+> index a73ca3703abb..aac57180c5c4 100644
+> --- a/include/uapi/linux/nfsd/export.h
+> +++ b/include/uapi/linux/nfsd/export.h
+> @@ -26,22 +26,22 @@
+>   * Please update the expflags[] array in fs/nfsd/export.c when adding
+>   * a new flag.
+>   */
+> -#define NFSEXP_READONLY		0x0001
+> -#define NFSEXP_INSECURE_PORT	0x0002
+> -#define NFSEXP_ROOTSQUASH	0x0004
+> -#define NFSEXP_ALLSQUASH	0x0008
+> -#define NFSEXP_ASYNC		0x0010
+> -#define NFSEXP_GATHERED_WRITES	0x0020
+> -#define NFSEXP_NOREADDIRPLUS    0x0040
+> -#define NFSEXP_SECURITY_LABEL	0x0080
+> -/* 0x100 currently unused */
+> -#define NFSEXP_NOHIDE		0x0200
+> -#define NFSEXP_NOSUBTREECHECK	0x0400
+> -#define	NFSEXP_NOAUTHNLM	0x0800		/* Don't authenticate NLM requests - just=
+ trust */
+> -#define NFSEXP_MSNFS		0x1000	/* do silly things that MS clients expect; no=
+ longer supported */
+> -#define NFSEXP_FSID		0x2000
+> -#define	NFSEXP_CROSSMOUNT	0x4000
+> -#define	NFSEXP_NOACL		0x8000	/* reserved for possible ACL related use */
+> +#define NFSEXP_READONLY			BIT(0)
+> +#define NFSEXP_INSECURE_PORT	BIT(1)
+> +#define NFSEXP_ROOTSQUASH		BIT(2)
+> +#define NFSEXP_ALLSQUASH		BIT(3)
+> +#define NFSEXP_ASYNC			BIT(4)
+> +#define NFSEXP_GATHERED_WRITES	BIT(5)
+> +#define NFSEXP_NOREADDIRPLUS    BIT(6)
+> +#define NFSEXP_SECURITY_LABEL	BIT(7)
+> +/* BIT(8) currently unused */
+> +#define NFSEXP_NOHIDE			BIT(9)
+> +#define NFSEXP_NOSUBTREECHECK	BIT(10)
+> +#define NFSEXP_NOAUTHNLM		BIT(11)	/* Don't authenticate NLM requests - jus=
+t trust */
+> +#define NFSEXP_MSNFS			BIT(12)	/* do silly things that MS clients expect; =
+no longer supported */
+> +#define NFSEXP_FSID				BIT(13)
+> +#define NFSEXP_CROSSMOUNT		BIT(14)
+> +#define NFSEXP_NOACL			BIT(15)	/* reserved for possible ACL related use */
+>  /*
+>   * The NFSEXP_V4ROOT flag causes the kernel to give access only to NFSv4
+>   * clients, and only to the single directory that is the root of the
+> @@ -51,8 +51,8 @@
+>   * pseudofilesystem, which provides access only to paths leading to each
+>   * exported filesystem.
+>   */
+> -#define	NFSEXP_V4ROOT		0x10000
+> -#define NFSEXP_PNFS		0x20000
+> +#define NFSEXP_V4ROOT			BIT(16)
+> +#define NFSEXP_PNFS				BIT(17)
+> =20
+>  /* All flags that we claim to support.  (Note we don't support NOACL.) */
+>  #define NFSEXP_ALLFLAGS		0x3FEFF
 
-kernel test robot noticed the following build errors:
+Could we make this:
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on trondmy-nfs/linux-next linus/master v6.19-rc2 next-20251219]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+  #define NFSEXP_ALLFLAGS ((BIT(18)-1) - NFSEXP_NOACL)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/nfsd-Convert-export-flags-to-use-BIT-macro/20251228-010753
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding%40hammerspace.com
-patch subject: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
-config: arm-randconfig-004-20251228 (https://download.01.org/0day-ci/archive/20251228/202512281330.lPQZAymu-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251228/202512281330.lPQZAymu-lkp@intel.com/reproduce)
+Or something like that?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512281330.lPQZAymu-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   fs/nfsd/nfsfh.c:282:5: warning: no previous prototype for 'fh_encrypt' [-Wmissing-prototypes]
-     282 | int fh_encrypt(struct svc_fh *fhp)
-         |     ^~~~~~~~~~
-   fs/nfsd/nfsfh.c:294:12: warning: 'fh_decrypt' defined but not used [-Wunused-function]
-     294 | static int fh_decrypt(struct svc_fh *fhp)
-         |            ^~~~~~~~~~
-   In file included from include/linux/string.h:386,
-                    from include/linux/bitmap.h:13,
-                    from include/linux/cpumask.h:11,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/spinlock.h:63,
-                    from include/linux/sched.h:37,
-                    from include/linux/sunrpc/svcauth_gss.h:12,
-                    from fs/nfsd/nfsfh.c:13:
-   fs/nfsd/nfsfh.c: In function 'fh_crypto.constprop':
->> include/linux/compiler_types.h:630:45: error: call to '__compiletime_assert_1035' declared with attribute error: min(sizeof(iv), key_len(fh->fh_raw[2])) signedness error
-     630 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/fortify-string.h:627:48: note: in definition of macro '__fortify_memcpy_chk'
-     627 |         const size_t __fortify_size = (size_t)(size);                   \
-         |                                                ^~~~
-   fs/nfsd/nfsfh.c:189:17: note: in expansion of macro 'memcpy'
-     189 |                 memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
-         |                 ^~~~~~
-   include/linux/compiler_types.h:618:9: note: in expansion of macro '__compiletime_assert'
-     618 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:630:9: note: in expansion of macro '_compiletime_assert'
-     630 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/minmax.h:93:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      93 |         BUILD_BUG_ON_MSG(!__types_ok(ux, uy),           \
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/minmax.h:98:9: note: in expansion of macro '__careful_cmp_once'
-      98 |         __careful_cmp_once(op, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/minmax.h:105:25: note: in expansion of macro '__careful_cmp'
-     105 | #define min(x, y)       __careful_cmp(min, x, y)
-         |                         ^~~~~~~~~~~~~
-   fs/nfsd/nfsfh.c:189:41: note: in expansion of macro 'min'
-     189 |                 memcpy(iv, fh_fsid(fh), min(sizeof(iv), key_len(fh->fh_fsid_type)));
-         |                                         ^~~
-
-
-vim +/__compiletime_assert_1035 +630 include/linux/compiler_types.h
-
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  616  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  617  #define _compiletime_assert(condition, msg, prefix, suffix) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  618  	__compiletime_assert(condition, msg, prefix, suffix)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  619  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  620  /**
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  621   * compiletime_assert - break build and emit msg if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  622   * @condition: a compile-time constant condition to check
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  623   * @msg:       a message to emit if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  624   *
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  625   * In tradition of POSIX assert, this macro will break the build if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  626   * supplied condition is *false*, emitting the supplied error message if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  627   * compiler has support to do so.
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  628   */
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  629  #define compiletime_assert(condition, msg) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21 @630  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  631  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+NeilBrown
 
