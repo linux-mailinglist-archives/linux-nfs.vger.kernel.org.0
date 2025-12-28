@@ -1,217 +1,268 @@
-Return-Path: <linux-nfs+bounces-17338-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17339-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD6F6CE5360
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 18:05:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B9BACE5363
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 18:09:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DFB183001E0E
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 17:05:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D7F2E3009ABD
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Dec 2025 17:09:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7529E1DF965;
-	Sun, 28 Dec 2025 17:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3710F1D86FF;
+	Sun, 28 Dec 2025 17:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpHMoGPp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmUxHpKH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906441D86FF
-	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 17:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104B01C8616
+	for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 17:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766941523; cv=none; b=rR3z/d5Af0RvHzdzQg6jT8ZnMqeyMihxCxCkGp8brW1ryofUlM5nFSO4bvoBSaK+4XBVD9Tn4yiZ/t2bzkmXe3GPn4aP2E15x6SY6XAzaSwikohcIeW5OJsujaf11p4laHyCmKUzHAwUXGor4Yi0JhccrTmbdwoKei9rm+mAncs=
+	t=1766941777; cv=none; b=FvesTxvdOteJZG2XVxZyA+06iBQhislfBkonTn9F6TyeG+xdNBw58OG8LS4IioSEUnzQBdadqsZ7/hJtj+PbtfAMdtUFDl2n++m5H+nfszs5H974OowIpcCdMtOoYiA4NuBLoLZXf8fe27iAbORF5H+F9hM/hKVRXG1L1ozEqdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766941523; c=relaxed/simple;
-	bh=3DucbGtPZ5felzBOWpgi8qJAMXnk2PlVKt5A0DI2aZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FrVgi9d/UB9wFnnLtxroRjVYf3gqWjGMt1/tFHUSeoJxkqIJn4hClJp0bNDaUyO/dTeehVSr8mOxaf52iExCSh0dND1Y6cCbPURB66LMNMy77+dC/AfDy/3x8xWGQzxTOpvieJElYm8Kg0cLZr1GUQGtd0Av41KMoB8Ph/rk86A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpHMoGPp; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64b8e5d1611so10527903a12.3
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Dec 2025 09:05:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766941520; x=1767546320; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0XANfucacFTgLRA0k5oWd0No86MnElqAyTe2hgmnvD8=;
-        b=gpHMoGPpIBimDIJaZ9iHLvBgPyd2MgGxYyyeRpHSeXZAXsHXf2T8FN5ptlZ9AfJvsb
-         bYw6ia2RZ1/0ECsvxFLJ4qwsD4RsPV7Fkch+TOnmCQgiFf6Soaev6rj+5/ziWXlCOHdR
-         Zuc75qgkhIvEevGdZTNRCGXGAl2YskmCVAbSmilz8xKymqwp+wsLDu/1pwmkFSgGGJED
-         KZPJdhfECSLOK5od69cmhyoLFQSHnCKeW23n222g1r9+Hq/AoULrDPgnUd7H+sGki3Ao
-         s8kKHlDLJYt84/crJRy1TN2llFM97HJdRomJAlcvTcCUOJtFvAB/8l1OYVhtRKsHzEbY
-         joXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766941520; x=1767546320;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0XANfucacFTgLRA0k5oWd0No86MnElqAyTe2hgmnvD8=;
-        b=bitCxcTyBZsFmv0iiYwOfrNCU68bNFcKRoZ7e6fFM3EmY0HYd0oSkIDlmrQCwFU55e
-         JorpvognyER889RQI/8Mt2k3U6S1utSULBIYCXKtjrs+YFfYPBuRsGu9YGo/LtBIVINf
-         8loXXLahxVyxe2qycD+Lw9E1d70QJlnmUlHvf0/5DPwA8KU5QJHqETbbGdTYQ8zhaigB
-         Vf30g7Dim9p8hiTtFj5XI4n1L1gjr4NJdMJQal9VgVTH8E57qT0iOleDdVBX6qZDJXfp
-         qE3mlbvnF1XUav1+4d58D8yyilRjKQ4JrmtuC9fobyh5C43cEqSTOqJYgJb5Xqsy8lfJ
-         icdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXj8z+xE4X5In/wtRO/QR9d62Pw15jXoljR1g8vBfvy+OK1wlsdUL2k2rtOYR4gXb+bHaV960fshq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaRpnkqWN0LOvoIl9kpSoyCT90OCgOPv6qcvOKZMBrJsApdP7F
-	ySZ2feRap7gmKRWKjw6crkgd+gVadZuVyjGfy9VN9rwkJp/a++F6HXs3UqJFIl03FQJ1fPLtSF2
-	qGrS+ulToBljK6/kt3pfPWOOzx+kQWQ==
-X-Gm-Gg: AY/fxX7ukNDnNy6TRBTFlAWxeV1Gr9Sxo3iXhq2nVpHXBK5eWGu8umVrAK+2fciF1Nl
-	GptUUb2nsjeg4gNJ3O6mDgrNW+7iW7+HsNJPR6txyGZouay0XUhg93YTMb7NhaQBDmv9Wz15Cbo
-	nZM/u5PNGwvfIAUJjrJkh6MuDzLzu6q7KCU0dXkTpzzECEivdaK2jAW6tBVrxs2diaa2U+vF1OJ
-	QA18Tgp9iGN0XpmgHy3EZYNf7WWEGK5gHlrLNQM62eq5B2EMpxp3fsK0hJfXoLwmCQv489LMycV
-	q+DPAGwoo52ahbDkWwD+/F2FUfo7nX8s2rc//w==
-X-Google-Smtp-Source: AGHT+IFyutZBps6Z6yMfgVmMeuzjCUV3vXv7qLL9H8KvjW9DALo4tWDOqs8pfZDycvBssp/aVnfeC9vhx9oy7X4iMDI=
-X-Received: by 2002:a05:6402:13cc:b0:64d:1762:9bb2 with SMTP id
- 4fb4d7f45d1cf-64d1762a6bfmr22343162a12.11.1766941519566; Sun, 28 Dec 2025
- 09:05:19 -0800 (PST)
+	s=arc-20240116; t=1766941777; c=relaxed/simple;
+	bh=0Q1/cON8sQI5W2fqxNkehpViDnPejvjNhvkajtorNcI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mqipQ6s2WrjzRfZ/g1yGzYdE5W1vRp8kTt3lme6qup6nRbOL5uQ1nrsN5GEVLmEDxkk/EEAcGU5/KEPh1w+y9wM0UUCAb8lX4PSjXs8HRioYTP9XdAz5usBBImyTehkwa+LW3ii7Oh9jZbzlR8kwsCq3Fyc+XKeDShPm/AD6jEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmUxHpKH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742E7C4CEFB;
+	Sun, 28 Dec 2025 17:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766941776;
+	bh=0Q1/cON8sQI5W2fqxNkehpViDnPejvjNhvkajtorNcI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=GmUxHpKHGajW0D9iFcY5HsijTw0RvqbL1tMbmL76yPE8QCoTsTLrvCY1qvkhVn5ab
+	 +xoMW5KOGWEIhBTg9Uyddnf+Xl5/l07TCwzDfswpW8QPmb4C4i3+9cXV+syF98402w
+	 q184rq9mby2ZNJ/l7ghKDc9LDvIT0k2n2QMPmDzV8TuIZ7qUbDUOgzj2yAoh4zYyvs
+	 MIGDmsR6YU7nthvStyvKzMYLJNXv5580LfJY4DxL4yy9LgC6yoi8jsfpXMI056eU6W
+	 UZO55UNjzGgJ9lDrADTdMcANtp/yI2tr60x+VaXBmY3mADnt201VzlHiKu51c31fnW
+	 0kz6R0HTLpDvA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7D3C6F40082;
+	Sun, 28 Dec 2025 12:09:35 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Sun, 28 Dec 2025 12:09:35 -0500
+X-ME-Sender: <xms:T2RRacunvN3UIgtlRyqH0xuQsEQedcZnvPNYZ3ZeQIU4GMJssBiJXQ>
+    <xme:T2RRaUSnxnwHAdtSTm0kcDmfSzMly9Sa6YeEamUyWqn2ektPcPrLC2KXHE05y7C3Z
+    BwZrQL4ESheJdwgxjlLhHXdtBGrmi4uAhpjZ99RuCyy6dtlPfNnHpQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejgeekfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epgeehudeiieevveehleehleeugefhhfdttdehlefhuddttdehieelteekleevtdejnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhdomhgvshhmthhprghuthhh
+    phgvrhhsohhnrghlihhthidqudeifeegleelleehledqfedvleekgeegvdefqdgtvghlpe
+    epkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthhtohep
+    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhgvihhlsegsrhhofihnrdhnrg
+    hmvgdprhgtphhtthhopegstghougguihhngheshhgrmhhmvghrshhprggtvgdrtghomhdp
+    rhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihth
+    honheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhrohhnughmhieskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpd
+    hrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:T2RRaeH8O9Dsc4ToD-NZOR8vBS82q_YVm9KrEaURmkvxwOULynW-zw>
+    <xmx:T2RRaQBA2Fq-qRN3bELw-oe5A9R8EclMy9Dh17xWpkUF451eGSYhdA>
+    <xmx:T2RRaWUUSD8Kg0RKl2mzhonJGrcKjIe7j8rN0SBzlFmD41oeNM9hgw>
+    <xmx:T2RRacrMbGlud4FMkAYN_0tlB-a8pOMgvMIQv7FSEdSCH5y914zvnw>
+    <xmx:T2RRaaQJYw12UUAxUEjzTRi2m0my59DbeeLKGiHtWTYtCq1E_KpjCPPX>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 58A64780054; Sun, 28 Dec 2025 12:09:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: AhR4-OOkCaFZ
+Date: Sun, 28 Dec 2025 12:09:04 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
+In-Reply-To: <cover.1766848778.git.bcodding@hammerspace.com>
 References: <510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com>
- <cover.1766848778.git.bcodding@hammerspace.com> <176687677481.16766.96858908648989415@noble.neil.brown.name>
- <A70E7B41-A5C0-443C-BD16-00E40F145FD2@hammerspace.com> <176690096534.16766.12693781635285919555@noble.neil.brown.name>
-In-Reply-To: <176690096534.16766.12693781635285919555@noble.neil.brown.name>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sun, 28 Dec 2025 09:05:07 -0800
-X-Gm-Features: AQt7F2rl_NX4bN9SnIzdm18iN3EokydKnoRBdxm8-2k11KgOfKErokYndstpYLA
-Message-ID: <CAM5tNy6Xk4KP6NhCYJA-S4HOorYDa3v7JBo7jq7dFpwvfFMOYg@mail.gmail.com>
+ <cover.1766848778.git.bcodding@hammerspace.com>
 Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
-To: NeilBrown <neil@brown.name>
-Cc: Benjamin Coddington <bcodding@hammerspace.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 27, 2025 at 9:49=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrote=
-:
->
-> On Sun, 28 Dec 2025, Benjamin Coddington wrote:
-> > On 27 Dec 2025, at 18:06, NeilBrown wrote:
-> >
-> > > On Sun, 28 Dec 2025, Benjamin Coddington wrote:
-> > >> In order to harden kNFSD against various filehandle manipulation tec=
-hniques
-> > >> the following patches implement a method of reversibly encrypting fi=
-lehandle
-> > >> contents.
-> > >>
-> > >> Using the kernel's skcipher AES-CBC, filehandles are encrypted by fi=
-rstly
-> > >> hashing the fileid using the fsid as a salt, then using the hashed f=
-ileid as
-> > >> the first block to finally hash the fsid.
-> > >>
-> > >> The first attempts at this used stack-allocated buffers, but I ran i=
-nto many
-> > >> memory alignment problems on my arm64 machine that sent me back to u=
-sing
-> > >> GFP_KERNEL allocations (here's to you /include/linux/scatterlist.h:2=
-10).  In
-> > >> order to avoid constant allocation/freeing, the buffers are allocate=
-d once
-> > >> for every knfsd thread.  If anyone has suggestions for reducing the =
-number
-> > >> of buffers required and their memcpy() operations, I am all ears.
-> > >>
-> > >> Currently the code overloads filehandle's auth_type byte.  This seem=
-s
-> > >> appropriate for this purpose, but this implementation does not actua=
-lly
-> > >> reject unencrypted filehandles on an export that is giving out encry=
-pted
-> > >> ones.  I expect we'll want to tighten this up in a future version.
-> > >>
-> > >> Comments and critique welcome.
-> > >
-> > > Can you say more about the threat-model you are trying to address?
-> > >
-> > > I never pursued this idea (despite adding the auth_type byte to the
-> > > filehandle) because I couldn't think of a scenario where it made a
-> > > useful difference.
-> > >
-> > > If an attacker can inject arbitrary RPC packets into the network in a
-> > > way that the server will trust them, then it is very likely to be abl=
-e
-> > > to snoop filehandles and do a similar amount of damage...  though I'm
-> > > having trouble remembering that damage that would be?
-> >
-> > Filehandles are usually pretty easy to reverse engineer.  Once you've s=
-een a
-> > few, the number of bits you need to manipulate to find new things on th=
-e
-> > filesystem is pretty small.  That means that (forget about MITM - thoug=
-h
-> > that is still a real threat) even a trusted client might be able to acc=
-ess
-> > objects outside the export root on the same filesystem.
->
-> So this is only seen to be useful when for sub-directory export?
-If this is the case, I'll ask..
+Hi Ben -
 
-If a malicious entity can perform RPCs on the server with faked file
-handles, what stops that malicious entity from doing a
-LOOKUP ".."/LOOKUPP at the root of the subdirectory mount
-to get out of the subtree?
+Thanks for getting this started.
 
->
-> >
-> > This problem is further exacerbated when using kNFSD as a DS for a flex=
-files
-> > setup - the MDS may be performing access checks for objects that the DS=
- does
-> > not.  Manipulating filehandles to a DS can circumvent those access chec=
-ks.
-I'm not sure why a DS is more vulnerable that any other NFSv3 server.
-(Either the client can be "trusted" to access the DS or it is not. That's w=
-hat
-exports do.)
+I tried to pull in the kernel patches as follows:
 
-An additional concern I'll mention (not knowing how Linux handles this)
-is that file handles (NFSv3 and NFSv4 persistent) are expected to be T-stab=
-le,
-which implies that the key cannot change for a very long time, including
-after a server reboot (or even a server reboot after a software upgrade).
+cel@morisot:~/src/linux/for-korg$ b4 am https://lore.kernel.org/linux-nf=
+s/176690096534.16766.12693781635285919555@noble.neil.brown.name/T/#u
+Grabbing thread from lore.kernel.org/all/176690096534.16766.126937816352=
+85919555@noble.neil.brown.name/t.mbox.gz
+Analyzing 19 messages in the thread
+WARNING: duplicate messages found at index 2
+   Subject 1: exportfs: Add support for export option encrypt_fh
+   Subject 2: nfsd: Add a symmetric-key cipher for encrypted filehandles
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 1
+   Subject 1: nfsdctl: Add support for passing encrypted filehandle key
+   Subject 2: nfsd: Convert export flags to use BIT() macro
+  2 is not a reply... assume additional patch
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  =E2=9C=93 [PATCH v1 1/2] nfsdctl: Add support for passing encrypted fi=
+lehandle key
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 1/7] nfsd: Convert export flags to use BIT() macro
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 2/7] nfsd: Add a symmetric-key cipher for encrypte=
+d filehandles
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 4/7] NFSD: Add a per-knfsd reusable encfh_buf
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 5/7] NFSD/export: Add encrypt_fh export option
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 6/7] NFSD: Add filehandle crypto functions and hel=
+pers
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  =E2=9C=93 [PATCH v1 7/7] NFSD: Enable filehandle encryption
+    =E2=9C=93 Signed: DKIM/hammerspace.com
+  ERROR: missing [8/2]!
+  ERROR: missing [9/2]!
 
-rick
 
+Whatever you did to post these seems to badly confuse b4. I recommend
+posting nfs-utils and kernel patches as entirely separate threads.
+
+Also, the cover letters for both series should mention the base commit
+for your series. Typically for NFSD patches, base your series on the cel
+nfsd-testing branch. But any base is workable as long as you mention the
+base commit in the cover letter.
+
+More below.
+
+
+On Sat, Dec 27, 2025, at 12:04 PM, Benjamin Coddington wrote:
+> In order to harden kNFSD against various filehandle manipulation techn=
+iques
+> the following patches implement a method of reversibly encrypting file=
+handle
+> contents.
+
+"various filehandle manipulation techniques" is pretty vague. Reviewers
+will need to know which specific attack vectors you are guarding against
+in order to evaluate whether your proposal addresses those attacks.
+
+Also, next posting should copy both linux-crypto and probably linux-fsde=
+vel
+too, as the FUSE and exportfs folks hang out there and might be interest=
+ed
+in this work. There are other consumers of filehandles in the kernel.
+
+
+> Using the kernel's skcipher AES-CBC, filehandles are encrypted by firs=
+tly
+> hashing the fileid using the fsid as a salt, then using the hashed fil=
+eid as
+> the first block to finally hash the fsid.
+
+Is the FSID possibly exposed on the wire via NFSv3 FSINFO and certain
+NFSv4 GETATTR operations? It's not clear to me from this description
+whether these values are otherwise unknown to network systems.
+
+Can you elaborate on why you selected AES-CBC? An enumeration of the
+cryptography requirements would be great to see, either in the cover
+letter or as a new file under Documentation/fs/nfs/ .
+
+The use of a symmetric cipher is surprising. I thought there was going
+to be a cache of file handles so that file handle decryption operations
+for each I/O would not be necessary.
+
+
+> The first attempts at this used stack-allocated buffers, but I ran int=
+o many
+> memory alignment problems on my arm64 machine that sent me back to usi=
+ng
+> GFP_KERNEL allocations (here's to you /include/linux/scatterlist.h:210=
+).  In
+> order to avoid constant allocation/freeing, the buffers are allocated =
+once
+> for every knfsd thread.  If anyone has suggestions for reducing the nu=
+mber
+> of buffers required and their memcpy() operations, I am all ears.
+
+The required use of dynamically allocated buffers is a well-known
+constraint of the crypto API. That would be another reason to consider
+not using one of the kernel's crypto APIs.
+
+I'd rather avoid hanging anything NFSD-related off of svc_rqst, which
+is really an RPC layer object. I know we still have some NFSD-specific
+fields in there, but those are really technical debt.
+
+
+> Currently the code overloads filehandle's auth_type byte.  This seems
+> appropriate for this purpose, but this implementation does not actually
+> reject unencrypted filehandles on an export that is giving out encrypt=
+ed
+> ones.  I expect we'll want to tighten this up in a future version.
+
+I recall one purported reason to encrypt file handles on the wire is to
+mitigate file handle guessing attacks... so operations on an export that
+uses encrypted file handles really should return NFSERR_STALE when a
+non-encrypted FH is presented, from day-zero, unless I misunderstand.
+
+Can you elaborate more on the size of an encrypted file handle? I assume
+these are fixed in size. An NFSv3 on-the-wire file handle can be up to
+64 octets, but NFSv4 file handles can be up to 128. Are both going to be
+encrypted to the same size?
+
+Can the cover letter or other documentation include a bit diagram that
+graphically shows the proposed layout of an encrypted file handle on the
+wire?
+
+
+> Comments and critique welcome.
 >
-> Not being familiar with flexfiles and don't know what that means -
-> though I can imagine that pNFS could add extra complications.
+> Benjamin Coddington (7):
+>   nfsd: Convert export flags to use BIT() macro
+>   nfsd: Add a symmetric-key cipher for encrypted filehandles
+>   nfsd/sunrpc: add per-thread crypto context pointer
+>   NFSD: Add a per-knfsd reusable encfh_buf
+>   NFSD/export: Add encrypt_fh export option
+>   NFSD: Add filehandle crypto functions and helpers
+>   NFSD: Enable filehandle encryption
 >
-> >
-> > I can absolutely add more information on this for subsequent postings.
+>  Documentation/netlink/specs/nfsd.yaml |  12 ++
+>  fs/nfsd/export.c                      |   7 +-
+>  fs/nfsd/localio.c                     |   2 +-
+>  fs/nfsd/lockd.c                       |   2 +-
+>  fs/nfsd/netlink.c                     |  15 +++
+>  fs/nfsd/netlink.h                     |   1 +
+>  fs/nfsd/netns.h                       |   1 +
+>  fs/nfsd/nfs3proc.c                    |  10 +-
+>  fs/nfsd/nfs3xdr.c                     |  14 +-
+>  fs/nfsd/nfs4proc.c                    |  10 +-
+>  fs/nfsd/nfs4xdr.c                     |  14 +-
+>  fs/nfsd/nfsctl.c                      |  40 +++++-
+>  fs/nfsd/nfsfh.c                       | 179 +++++++++++++++++++++++++-
+>  fs/nfsd/nfsfh.h                       |  26 +++-
+>  fs/nfsd/nfsproc.c                     |   8 +-
+>  fs/nfsd/trace.h                       |  19 +++
+>  include/linux/sunrpc/svc.h            |  12 +-
+>  include/uapi/linux/nfsd/export.h      |  36 +++---
+>  include/uapi/linux/nfsd_netlink.h     |   2 +
+>  net/sunrpc/svc.c                      |   1 +
+>  20 files changed, 356 insertions(+), 55 deletions(-)
 >
-> That would be helpful - thank.
->
-> Next question: why are you encrypting the filehandle?  Is there
-> something you want to hide?
->
-> Normally encryption is for privacy and a MAC (message authentication
-> code) is used for integrity.  Why are you not simply adding a MAC?
->
-> With pure encryption you are relying on the fact that changing (or
-> synthesising) a filehandle will probably produce a badly formatted
-> handle  - except that you are only encrypting the bytes after the fsid.
-> So there is less redundancy....  Maybe the generation number is enough
-> to ensure decrypted garbage will never be valid - by it doesn't feel
-> clean.
->
-> If we are using encryption it would be nice to encrypt the whole fh.
-> Then you would have a single key for the server rather than
-> per-export....
->
-> As Chuck suggested: getting review from someone with crypto design
-> expertise would be a good thing.
->
-> Thanks,
-> NeilBrown
->
+> --=20
+> 2.50.1
+
+--=20
+Chuck Lever
 
