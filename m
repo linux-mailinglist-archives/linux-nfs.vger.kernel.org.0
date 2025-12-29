@@ -1,77 +1,79 @@
-Return-Path: <linux-nfs+bounces-17346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17347-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0654CE6DF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Dec 2025 14:23:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B4E9CE6E53
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Dec 2025 14:39:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F5D03004B80
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Dec 2025 13:23:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EFD233005496
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Dec 2025 13:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDD8310640;
-	Mon, 29 Dec 2025 13:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 701DE31281F;
+	Mon, 29 Dec 2025 13:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Hq2pG8po"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="cj7G+Lre"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021143.outbound.protection.outlook.com [52.101.62.143])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023098.outbound.protection.outlook.com [40.93.201.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E030FF32
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Dec 2025 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AC030CD89;
+	Mon, 29 Dec 2025 13:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.98
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767014594; cv=fail; b=BtndP8zMs39JSayqn4qunLJc6Mb7xiXZ9nExk3yCw7C4Hk5Ph4dUnYxnWOc/CAxdreLs9V3FCSvsz+iho1kRishuRU+uRq21SwiSPT+dAVDUKScry1HtPv+eGfAD4aWeQ1U5Qju0cg9TzXoJWveqsfB7gmILFhEmWzsysZVYgvU=
+	t=1767015580; cv=fail; b=foPR8ekDWpfuU1syGopN89VWwEXEYDYWGqf7a8qEkUjBIVyoD40EOz+5VMDMJ+t3FxngReZhKSl91UcAlc0TB94yS7CglwbemXQAXvue206b4vCO8utxA2E1THWGnOiWt6M7etRhlgbV+uCfVhcVEAX4AwFcdKhXK/uyJnyKKFY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767014594; c=relaxed/simple;
-	bh=bfKhrajC7iz9514iLQlFEwAZPjIcRRauxvMA6mx17PA=;
+	s=arc-20240116; t=1767015580; c=relaxed/simple;
+	bh=GU0QYWRnBMnpl7Ol+AUVDegjmP/118X3AR3ga97Uqs8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aHTYbaE0JXxnBdvnj2nHag2/1wl4BDGcxJc18Xgk+ZpsnxWOUYPN8uKXWXH501dHZ2jFFMYfa8WtGeyUe8UZCEuYwOeLVPVbCrWBcxPOUEcd7y1Mo9OR1BmX7+09sN3NF9gFj4oybHgOuAKiQZKu9YZ7SD6Yc4wfroJrGbYdFAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Hq2pG8po; arc=fail smtp.client-ip=52.101.62.143
+	 Content-Type:MIME-Version; b=O+pKYm6eMSdb12QhngpIkraOvekmSCaWqD430dLNXIoCiPC/ayeRTw+jXqPbpF3KuqJ3Km6+jCgkyIk5IHnFN/FV3pHXSiKX1E5DlqWpy/zcCaZJJ23dXkxTeUS9MuqvYHBEJGeKlHgpLMk+XfBF8kfTQadMrFsIVgnMxT9Q8Is=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=cj7G+Lre; arc=fail smtp.client-ip=40.93.201.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kvHPYFF4OhhulueWPqfDnJrUi2IZSGNwjsy3zjW2f9vAfaPcUnPBs1umNH7QzhUDGtVWspvBORNXJzhfwujH5qktMT+Z9mmXgkxPLbQpaxxnd/rqrqOnTEDpmEfjHfHRUqGnjtbjvp1JoNLrR4ZZWY6kpw503BAx/pmNL6mT/MrMGLrLwQi/ITjL0N125JAzSvzolExry1BU7f3TQc1DUByFZiw3qfpGYr9X12nX5GaPYdNnopM2y3bojpAdMA7c39SC2SNdefShulMpD8Iw1yjFjPwUCbuz6uA09YIiubsGkaVdJaDe8tacGCINXICshy9jnoiIrsgF+x31U8PErg==
+ b=nxB0vpudJsrF/gDbG7PpY130z/5Nwbd35Zi35KXaW/b3V6P9fOcxWQNVTtLsVXXWvrah0+gMkhsGYeTF3CMzxe3XV/WrM8zhtmBGlQgL0H7N4ZnxPayS5LHp458lijbLTonaY2UxKEXkE2EOEQJGGCqkzf+wR7dkEiavgeZf+zuR8kO1ImGVuVxZDhMhdygEgapJblb8tixRrB+sBDkbozJIlx20Tpwd8di8oFSeR6Cpxu3MX4Gfn/Cz1IExRq8cgqiNp0QcrEYMPPRxtB2g78v2YIN78P7GRI0rzX2iNo9u8H3RsCNlTrPSGnIWg2H8VcQVnNHHMvpUvHVNltWaNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=URlSlifXR0xRQDRU7chCuakXc1FEg1v0zfUpbe1BBdk=;
- b=sbY+9TUagZOSQeT6LpVDVERMjjCdI4wo9Cfp9i8Pw6ko49exl/4iRbbo5YK9ldeUso5+PxwVs1bDSd+mJy01oOQ4ApznElO4qEfCbfHslxtQiSAoCju5dRMyCtY90C19JKWLXZbFVw8OfrBYueSoB5+cKlFy736lWqG8Yhq5jdcwpOoMEunz33EXz5aD7QIeAT78OXEy0TrwvOWxZp2A7xxFCB8898zVXGmk5XI7txqzF3y5F0VkTXmKfceh4FmdwQMyxdS4lV7C0fc52CyXNxFh04x9T2OcAjRtJLwrQ9EmhErt4gyiMyzs9rj+TuCfmV+nyTOyQR1wGjefKV06Bg==
+ bh=4GTrbUyPoBlpW3pWEwmW4Aj9QVgPTwMsL3ile4fBelM=;
+ b=koZaCSn5PqvVf7bugpla0KIHFJ7Wj9ZYFIeLtCFN258v5hNLUrVKENxGQWHbbEZUC22q3DTYLLAHuGn062htpT9oHf9csyVOEMjMzR7Cyc7RkWiTQcNqLF5rmlbI9hHU/HDapOr9gmhSF0qreh3VUf/Lfc8+8LKcewVVyLRyfXMQDSSzL2SU/IM9oqjKfTKXDO9RtQSWcAAnYzDkMIPxMDjB9D/GWpe80eTU65PYZG/psssljfYD3oNDVcG4qJ7ur2eG0fQFGoIz6Mu+OX8wezMEAeuwZ0/9svvmPH8gheyME9954tM0j9znJCI+/6qQ/au1otyul6rQx8zWvm0PVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=hammerspace.com; dmarc=pass action=none
  header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=URlSlifXR0xRQDRU7chCuakXc1FEg1v0zfUpbe1BBdk=;
- b=Hq2pG8pojZxZvfwt+q9BQ521wDPSK/m8W4AKNXvPqyY/xIObxzy0mkHfWkpdqhJZwbEbYKErep6dcUxqT9F/93Xzp3xgPMX+aHDJ8p14xDE7D5xVWtX8QR1KujSXhdPvs8rrm3S5QnFQIxdnLNAPHVkVtqVV34JfU80j9p2hkMY=
+ bh=4GTrbUyPoBlpW3pWEwmW4Aj9QVgPTwMsL3ile4fBelM=;
+ b=cj7G+Lrea/qGk5RYJH24jbOfLkJVVy2eeZjWUOFhEiz5WWPaRnGzdYGv2mQSS4rBk1PldW6qOiu6iplYFgEhWEe4mm9jz/RNEUKqrRuD2kZUTuqCGR48fg4OflW4lNnxY//J2huM+D8cMYlKh/bYlDy1QmcRU28xT/6X06IVeOU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=hammerspace.com;
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com (2603:10b6:806:3e7::10)
- by CH3PR13MB6316.namprd13.prod.outlook.com (2603:10b6:610:1a7::8) with
+ by LV3PR13MB6527.namprd13.prod.outlook.com (2603:10b6:408:1a0::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.14; Mon, 29 Dec
- 2025 13:23:06 +0000
+ 2025 13:39:36 +0000
 Received: from SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4]) by SA1PR13MB6648.namprd13.prod.outlook.com
  ([fe80::c48a:c42a:aa18:2ef4%3]) with mapi id 15.20.9456.013; Mon, 29 Dec 2025
- 13:23:06 +0000
+ 13:39:36 +0000
 From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
-Date: Mon, 29 Dec 2025 08:23:03 -0500
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v1 6/7] NFSD: Add filehandle crypto functions and helpers
+Date: Mon, 29 Dec 2025 08:39:32 -0500
 X-Mailer: MailMate (2.0r6272)
-Message-ID: <2DB9B1FF-B740-48E4-9528-630D10E21613@hammerspace.com>
-In-Reply-To: <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
-References: <510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com>
- <cover.1766848778.git.bcodding@hammerspace.com>
- <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <1C32912B-C265-4D1E-895B-88E38603E956@hammerspace.com>
+In-Reply-To: <20251228204514.GC2431@quark>
+References: <cover.1766848778.git.bcodding@hammerspace.com>
+ <0688787cf4764d5add06c8ef1fecc9ea549573d7.1766848778.git.bcodding@hammerspace.com>
+ <bc74d1a3-d128-486e-939a-f7b3dc560931@app.fastmail.com>
+ <20251228204514.GC2431@quark>
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: PH8P221CA0061.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:349::17) To SA1PR13MB6648.namprd13.prod.outlook.com
+X-ClientProxiedBy: PH0PR07CA0061.namprd07.prod.outlook.com
+ (2603:10b6:510:f::6) To SA1PR13MB6648.namprd13.prod.outlook.com
  (2603:10b6:806:3e7::10)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -80,304 +82,212 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|CH3PR13MB6316:EE_
-X-MS-Office365-Filtering-Correlation-Id: df184e34-cb4e-4b43-c45b-08de46dd6734
+X-MS-TrafficTypeDiagnostic: SA1PR13MB6648:EE_|LV3PR13MB6527:EE_
+X-MS-Office365-Filtering-Correlation-Id: 428ddd2b-9b16-468a-d3de-08de46dfb4fc
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7142099003;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7142099003;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bWZmYzFrbGN2NGpXYlNFY3FhQU5uRzUxU2k5dUhzUlVxcnVxa0orZTRDVGc2?=
- =?utf-8?B?QUxnazZZakNiSWk2d1BVNkpGV3NyK0grTkIwNnp0MXdhVVJVMi9Wbll2bHY2?=
- =?utf-8?B?U0xnRm1JUWhXWHoyYUt1VjFMTGs3REFFZVR0OWxGZUM2SnpkZ0Z3bERPb25x?=
- =?utf-8?B?cHRrSHhhOTFhQ0ZhMzA1K2k4TTc0YlVBd2QyOU5yeWp4cjlIVElqc0EzblFm?=
- =?utf-8?B?S0gxOE02ZlUva3dSSjBHUHNNWkE2QkM2UitlbW5sUTk1di9lVklaKzFLdm92?=
- =?utf-8?B?aTZ3VW5kSzBYbW1xOGd5bmNJM1JhSU5ZaFYvK2RBdU5jcFhNNzVLVzQ0U2Ft?=
- =?utf-8?B?eGhabjVFVFhHLzlZekUrOTFCK3Z4SUdHblFQY0lNNXQ5YitqMU9aaGt6L3BG?=
- =?utf-8?B?cWZhNEVhNG15a2R6RmJFcTVnbGptcElVRktYRmVaeUNUbHR5dzlla3hjaU8r?=
- =?utf-8?B?UjU4QU5LQTQ3Z2dlejQrV2NZZmQ1WDgwZ2pQWHBiY1BxZlBIemVIbGdWUXgw?=
- =?utf-8?B?V0UyMCt3YVB1YXIzczlaUWtKbmRoYzlSWUZ1R25KUkNLUjRLMnVyQjN6M29U?=
- =?utf-8?B?aE9Vak9xN3RvQXRoWnhpV0YrNW5JYXhUUGJkL2gvcW5RR1ZaVlFYcVNsNlhQ?=
- =?utf-8?B?R3NxRFpJWjlrWjNpY1ROaDV0cTZpazR5SnFscndUV0RYNTdkS3VJdlFZYm1y?=
- =?utf-8?B?Y2JYQTdnVVR3UGczUVlnbWVkMzNxazFVN0FLTmhwVVV5aURKSnRieUVtcys0?=
- =?utf-8?B?L05CTExqQXFPNloyNE1yYmxxOG95U1NqM0VUSXRoM3Z3QlZacjBsdWlCU0Nt?=
- =?utf-8?B?ZFdNVldSVVJid2lMV0tRblpuSHNFTDNFNFFlTE50c0xpdUpHY3NGZDB2eGJO?=
- =?utf-8?B?L0RZTjNGQUZMSmI0d2dWd0p6L3A2eHByb0JhM1dPOXhsZTVKVzNoUWtVcW1w?=
- =?utf-8?B?eVo5Y3lmbCsrdnYvOERHTXFZOTN6SkpuMU56bUxiTlZUTko3dkNDeXN5N20x?=
- =?utf-8?B?NWQ3SWVndUQyK2p5bzAzQStreUUyUi9XRHFNWUhJeXFSaXJ5a2dvWEJleEtv?=
- =?utf-8?B?T2syOFE5cXRrdXFyYm9ncXZQSDBTMHdjTFZENTRxYkYxNFZqSEVZSldVOEFC?=
- =?utf-8?B?NmUyTHRTb2xlMTk4bW5SY2hiKzh3cjdZZ3FUZHFrbktWN1lleHRaR0UvVjZW?=
- =?utf-8?B?MXl1M1BlVXM5b0t6WFA5VjBocTVGUkNmNk92azBNUjgzMkJXWUtwMFJDNVhU?=
- =?utf-8?B?ZERpUFJSSlJzeUtyODY5Z0FXVmNrSG9DdnBQSTlhMytvTEpVcE1Wa1l5bTJL?=
- =?utf-8?B?RTcxaUtNZGF6c0lSOExVTWlkN2wrNzlieW9iRUo2S2hrUnBWdW5SOVhKZFNK?=
- =?utf-8?B?RXNNSUZCUm92VmJxWHljZ2c0US9kV205cDZyeXR5Ymc3bk04SXg1MXFUNzhn?=
- =?utf-8?B?S3FNUHgyWWcydm1yQmdKMWVZVU9CL0xCOWhUemcxeE9qN0J5dlhMc0V4SkEz?=
- =?utf-8?B?d1d4R24rWVVnU1h6RHJjZGlaN1N3RXdyNE93dVlDMG0xV29Rbm1FdEhOeUZo?=
- =?utf-8?B?T0pVK21qVm00N3ZRemlkbFlyWmVjVDRsdUd6M0loMm8yb3dyQ08zWGU1ak03?=
- =?utf-8?B?VSsrNk1xb0MyZUtPdXhockxwN1Bma01LQ2VDcldacDNiZ21aRWo4c0VyRjQ1?=
- =?utf-8?B?alRXa2Q3SndrU2Y1cFVQSkJUWno0bllnaUp2U0EzekJSTm1zV3lleElNejNQ?=
- =?utf-8?B?WDZPZ3hhYXY4M3hpZkNKWmU2R2hGOVNxMXVMNEJhcDZCU3ljVkZaV2VMOHUz?=
- =?utf-8?B?eHFnRmN2UFBIVG0rUDB5Z3p4aElpaGE0a1NOcGxETjBFdjhweWVvWnBTTjdV?=
- =?utf-8?B?ZWNrWE5Fd0xPZWtURlRTaHNUeVFpYVVud3BhUk1VV2FLVHc9PQ==?=
+	=?us-ascii?Q?nm6+Syoep0wVegp2VA5vRRdxt2VtUeekaePQfrbsPLpJxvTkfbASTcZWGNay?=
+ =?us-ascii?Q?+V/OFjBY7TMz5hD6tt62sbXBhmxIT6+igYvoAROs1st1ZLOM013wvBEKM09E?=
+ =?us-ascii?Q?SWzpJF00WEx6rd5+HHE3B+fpXycP54YyHExTNl6nTID9j2G8zYxcZ4WEQuei?=
+ =?us-ascii?Q?iyTbPHVP0BSDv100mwOJ8DSrq5ICdHfvSsDfG09IyEfdTqdFW2vBAoo4d1Ot?=
+ =?us-ascii?Q?iKq1rZPGNoltRNoY4ZZKdz2Tb1qvRBk2RamxIidY+J8pdVdrUnUemeyUU2Yp?=
+ =?us-ascii?Q?T7XTZUfzPIO/OvzhDhvADH5pCJ4FFCCUKkZTaQjnzJFsjeswG9/nhBzYDoC0?=
+ =?us-ascii?Q?wG0qsZ3cGShojDJA9KQldLyY1szez6V6r3dayNOkaV0QNcl6SwrxNuVTXJdJ?=
+ =?us-ascii?Q?PI0Xwr4sJG7TSJ5FIpwjl2gFJWSMjMgTdPQlofPoT+xYFkneCBosJ9ifJz13?=
+ =?us-ascii?Q?/EVzRRsbE0H/daQs6PQStCjJWPRIXqNY0cX9We1Nw+XaZCnOxiJSU1FDIA9z?=
+ =?us-ascii?Q?PJJAJzUE6QIaQZhwjHn2mUhKkSbw21qJm9hvNypsPCqhxPKmclzLnGGZXYOR?=
+ =?us-ascii?Q?iYZKPyoascv3sIst9u0M6FmKXlbZv+RUVf9xgmynp+t287lPbNBdRFo4H/8F?=
+ =?us-ascii?Q?20P5emuAhyiTXg4OVdhtE7MYKhpO6voIHlPABgoswaJ2vGw0py7a6iEiw3U2?=
+ =?us-ascii?Q?9n6zq74qoMnbH1OArVTiThx+C0SBmBfkrImPKNZTOMVJWX7YnuKeylklcyOD?=
+ =?us-ascii?Q?PGkIy8oSATKLfMmD0ikU4oCzyIfkzZStHM7allspAm104dzyfW4orAvMTlbU?=
+ =?us-ascii?Q?Rxpjx8zwxgDKUlNPgbzEou7wPY8tHPJGJD4vsGpc5JNg1sAlTNdiYx41s1OL?=
+ =?us-ascii?Q?37/RhdzJwAvOULXMZnteZHW6B3aGRxsp1CXpbF2WPLAEF4zUmkayqxXcbtiz?=
+ =?us-ascii?Q?z1fXkPwKbQDpU3F/0QezulQa1Sfe4VAbnjlCvvWjs0xAyGYZkg8CSzggQYfV?=
+ =?us-ascii?Q?bzYT/RL+UJGcUKCBxSB2/BqnXfIsruDiMeZH6IWQz4GR70kaLeRWimUpt84b?=
+ =?us-ascii?Q?GAORp5FiE2HuTuhr1LIkJMddD4HSnc3RJ7V/TLNtA+vE7lbBtnBc07XjLN81?=
+ =?us-ascii?Q?V5bziC7YvVXZxWvmFNkV5gquSsqLCAg36jp98QSjrVGI4wVDOq87/4JphHrE?=
+ =?us-ascii?Q?O5jDZNfwWIKMu5Ha23M1lCwOxJ27KXNR0W081456t0qHLxfGP1kxAM7zwYld?=
+ =?us-ascii?Q?BGeWywK/xJmibWz6n+Kk7XspibwtcP5brRzv/ce4AR7W25OE0AoSfGesd+YG?=
+ =?us-ascii?Q?0JfpjI+/odReykm6QVhJ87fx9gdiM7a12GFKvWI5dyjSNaNPwHGRpKBdogPQ?=
+ =?us-ascii?Q?Y6Kn0rfoYnQFe2wHdXcAh05pUlvQgzFc0AVnidzyGYqdpPvilBT9GKU3/L6L?=
+ =?us-ascii?Q?itG2tvW87uPwxKBfOTNLaFuaiGOQnpGSo3EqciQFIbTdjKtFcuUPwQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7142099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB6648.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7142099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bmhXVEdTK1JtbzdPUUwwamZ4Yy9mZmNRZXVEYjNINGlha0JCQ2VjRG45QktO?=
- =?utf-8?B?aHZLZDQyV09LOXNZVkRTSGpTQ01WZmhRQ0xZWGNqcXhJMzY2TzVaVXVkTGN2?=
- =?utf-8?B?bzd0QXlCdkduVVBkSGpKUVB1L3g2QTVKUG44OWdzUXRoVnJ6Ykt2ZWVkM1dT?=
- =?utf-8?B?aE5NV1MzRzg5SHprQkhMeEFvbUdzRFlyMEEvWW9TOXN0OXMvK2o0Y05JODI5?=
- =?utf-8?B?ZWlxU0U4WFVSTnYyRWNBUHUyNlEwQWQ4akpEeDdRWWhDSzlFUGllcTlXa2Iw?=
- =?utf-8?B?VU1GUVpPTVY5ejFrTkR0U1lGMFhnYmNhUFRxTU9lUEdoTGpadUEyZmZIZWZF?=
- =?utf-8?B?MWt0d1h6VWdjbnMrc2tYM1JvY1RkekVTQjZGeTNVdVptUURLc1RpTjVaeTda?=
- =?utf-8?B?Smlac2lHcTAvckJ2Q2x2ditHUGtHZldERW5Ca1FYdHdrNVc4a2sxUSt5MmV1?=
- =?utf-8?B?TTFhNXBXMC9OM1ovV1ZnZ1Z1UGxYS2FIRmd5TExKenhFMTZQc01VdXJidjF3?=
- =?utf-8?B?TGFEdW52a2srS2JUT1BJcWZ3MXEvV1dzU1ZiLzRYZldoOUpiR0w3MEFCU25x?=
- =?utf-8?B?T0NtUDhwUTNwRktiOThLeWNMWVNndnhTV0dHYk1mS0dzWGNCR0draWxYOGRK?=
- =?utf-8?B?NVhTMk1WaU9jTXNVVHUwNnRzL3VXVW9JaHRoQVVTenVMU1JHbisrdFZRcGl3?=
- =?utf-8?B?ZzBVNi9vcUVXK3NxTEFDVkNWRzBVc3NwOXFLblFhNWMzanB1ZkJaQ1IzbEwy?=
- =?utf-8?B?YVBXR3pEVlp0SzlHUzBmNHdlMCtHU3M0ZFdxU0lWZWZwVEppdk50ZHV1aE1B?=
- =?utf-8?B?REsvaW9qblZ5WFppMFRKeEVNWnU1TFdKWFFwbE9QL3N6NFBlbDFnUVVlVVVp?=
- =?utf-8?B?M2thSnZ6bml6T2RmR0J5RTZsd2YvVncvN0pJMUtLWFNtNGtaSGdWZUpxUzN2?=
- =?utf-8?B?QTVGd0czTy9Hd1pCY2UvTlhLYXROZnVRcHh0WTczdEpTdThnTXZ5UXdRdEpX?=
- =?utf-8?B?QjZNRGVkY2Evb0dyQ1RtTWFJMWpGTzRMUi8zRGp0SUhYMDFkRmdkOHFUK1Az?=
- =?utf-8?B?ZTRleXNudUxTSG1MYll0OTZGaEhuS3pIdjQ5bFVRS1dia2NwZWhCNzVwQnJ4?=
- =?utf-8?B?UVc0cUJtczNqdm5ZMlhXeFpVVUc1LzBGTE5qVkdKL2lIeFlhOVdlMWF4NVdL?=
- =?utf-8?B?TFZ1VlpqQnpDeWFBcTVodjIwcG8vS3gvSGcwTjJ5cW9SQ1FZaWNPbHNkb2dy?=
- =?utf-8?B?YzVrZEhubkU3WWJUZTZPWGFPUWxzbUJ1eS9zOFR0ZjJabzJaQ1lDZEhrNmh2?=
- =?utf-8?B?bVpIcnFYRDB3OU14Qi9Zb1lhYUdhQ1V6eXBpbWh1R0N5cnU2c0dpWnhwWDFL?=
- =?utf-8?B?QW5leURLdWxwanVVRmZYWEpUZ3hFU2RuMTlTK3hQQzZ4eU9iaDhLblZXVDlR?=
- =?utf-8?B?SkVWR25VMnZnK3BWS1Z0M002cTUyMW4xblVvc251S2Q4T2wwcHE5Rm54WGE0?=
- =?utf-8?B?Ukt2RzVrLzVma0x1L0d5azBMbU56akJBUmI4S3d5ZkFON244Sm5GS2NWOTJL?=
- =?utf-8?B?ZjVLREE5S0VJbnlMUERBNG9rQ2lJZVZLQXhpeXNtVEVqNEdTS21tajl1OVUw?=
- =?utf-8?B?YjZ0SHRha1F4ZTdFSHAxc3JRME5VWm9KcjN3QWZMb0pweU03RDZtMEwrWGJl?=
- =?utf-8?B?TDJ5MDAxUmpCbThNSFNFYm1TZVZMQlFiaEhvazNhNjdwd1h5QzZvTmNibkRN?=
- =?utf-8?B?WWkvQWp5RDZycnpaeWNpUzZsSzNxK1ExaERxUklESlpsYXZHRHM0cnpYQ0Nj?=
- =?utf-8?B?cDdEMUs2V2ZzZ1JwZWs1MkpEaEJSNlZ2ODlZZmtjUXlNWksvY2YwZ3ZDa3Zj?=
- =?utf-8?B?WmVrY0hFNUV6c3QvYlkwYjQxT1ZOOUJQVk5yVFo2WEpEUkNOb05EVXZ2TW83?=
- =?utf-8?B?eUNIUnNla2grc0wzck1NT0EwTXdMM2kwVHNEL1N6cXA5aGxoMlFRU213TWxW?=
- =?utf-8?B?WkNqaVVPSGM4L0JRaXhHbU9oMzRiZ0Y4dERFSVNwU0RNQ1AxS3pWa0NIZWcw?=
- =?utf-8?B?WWx3eWp6eTNwYzcwZWR5d1Y3QlgxL1ZaNnc2QUlmN0hHRkZPZjlCaUExd0pN?=
- =?utf-8?B?S1V6cFFmVUowRHlxbzh3NlBEczNzb0J4S3FlTHEyUGlXb0dwTkJxVGQ1U0E4?=
- =?utf-8?B?TDRMYm54R3FaNXFIaWFMZzZhRlgyb1ZiM2tlc3lGWUpIYUZFeGRKRzcyME9N?=
- =?utf-8?B?eSttR05vbVF6Wm1mRTk3cGRLTFVNcHFLK0tya1d1WHJLS2VBNTM5SVF5ZFlU?=
- =?utf-8?B?SjA1bDRCV3hrMFFGbzNXcnlCTnM3WGZaQnZJVUY5Q3p2dmdDU2ttbU5pM3Nh?=
- =?utf-8?Q?D2uoMi2TBgb3tNVQ=3D?=
+	=?us-ascii?Q?WkVMedoEmxM2ggjrsRky3qCsJQCg5uflcLq3l6IH/sDhNFEF8FfbBqw0KY+x?=
+ =?us-ascii?Q?PDja4F4GQpvE6G+Xvcxem51B2ksD01+6jRIXLTvxnReJeq3ln0iHE6pW4Jgh?=
+ =?us-ascii?Q?FuBdpp6dT8xUZELO45q5kDa8i1oSHlitYAbGJ6LqRAxRSYutteoQraWqgZ9C?=
+ =?us-ascii?Q?DuPYC9e5Tr/rJzb6F1YTB4X16Yb8HHA/nRPxO5yPUSJajjY3AZTZAKGC5LBe?=
+ =?us-ascii?Q?NmiTYoRr1RFITlKFCD0w36xJXG73IMt7MXPbKIeNndVGLTDnAbPR1QuctI6D?=
+ =?us-ascii?Q?flSMXyCyKSI3OJ1P6WcP1yKCcqFvfw/KbZd7D7h0q/UEPQ+Lv3qWqXWGltpk?=
+ =?us-ascii?Q?jnYdKXM6cFfZONTb8Cb1ZR00NUhqEWvGtn2CTI80rtQDTl8Ngbn2eYH5OEX4?=
+ =?us-ascii?Q?VMCX+wN09DskeBz+nb+0icuxJ/x/CpwWJbS46wjN9eOkCEdfedm03GE/4yg+?=
+ =?us-ascii?Q?hmAe0/MgdNblXvJH0YrtuVR3XYIZMs9G7kHjjW3AUNyOjXmBAnmIR1YR8Oz+?=
+ =?us-ascii?Q?hdafIIik2ctZuM+h5vDUZSK9rddKx2f9juvmokRUeC3ClNdmqTjwTYfJR4rt?=
+ =?us-ascii?Q?l6D+Ika3L/vd+6YQ55qDXiQ9rhl0pOI7lNhM4i4nUGKHX/xDwooofMWjI6gB?=
+ =?us-ascii?Q?52ID47DGX7udZU2qleziyMAo3sqTr3darBoWhgYRSstQU7Y/0zNzJmtlIeu/?=
+ =?us-ascii?Q?O7C3p24szCuAcbvq1KxAV8VyMzHI5sJejfAto2l8rS6knlTvzUtFlnuW3r4s?=
+ =?us-ascii?Q?P8hHdJ8wbSrGNyK78ZJ4pM48OG9cSzVW4017Pfsv4oBXJFFvTCPK42tRVp8L?=
+ =?us-ascii?Q?9QcvDkZHXzAQdF3gCV/tunUPT1OI9/xt20rZIzubH/QHGplx4ScVeJaxttlP?=
+ =?us-ascii?Q?hEQeq4uewnoHUnrJKkGq6hqzHaAVmYvKaQGnx3aoiYfgC+NgTrFBgmF5+XlG?=
+ =?us-ascii?Q?zfw3+uCEKDkIM4eO1PsYDUo+HkM0lA2SWT72jq5b476k2I3g1ns4dpNuLH82?=
+ =?us-ascii?Q?+MT5mbljWpZbvNL6mvo8MM/oFxjT3+BXJbkzmX02TL7R+4VFm1TznyLPSrgp?=
+ =?us-ascii?Q?75pwBI/OPzJh3mydeeW2KiAlZtXTdBsrHPdewcDvuxvJAuGrq9I0Bf/0gCWz?=
+ =?us-ascii?Q?xW2hqn46LAFDQlgvYDkO2wUz3RNJpbsPfWBLP64+fH/eFZQAZDEG9KMCXkLQ?=
+ =?us-ascii?Q?w8isDEvHSB3dpzmao5ebLRLdNI72uayci5CMEIMGwWOO2uSWMkzxBgedU087?=
+ =?us-ascii?Q?/M4/zhUiOjs8igf/+WWWeLupI8FKP9AlihlJJiSG5s57j4SfH17i5Rn5YsYz?=
+ =?us-ascii?Q?xcjnRBnsCoLHeEtyXM/8/QwrOh/EEitmbWRGy47tjsn4mX4hYFw8b9YOF3V1?=
+ =?us-ascii?Q?cGARiknWjVUjAnagmo54LUYBYrG2j8zsOaLZR9sdomtX090FTmBkCZIXSAMa?=
+ =?us-ascii?Q?jhyFrHo9HGea17+qAlHv1QQ+79u3dH4jN7EU6BcNn8Hap9U/K4P8bKRCSsMl?=
+ =?us-ascii?Q?C2JXnVI2IDni7FwlglzlXyOZ4d982UJv3vSfy/WQSz5067C4lXbttLkcLCet?=
+ =?us-ascii?Q?ykWqXFVkwnrdUSY3pn2RVl2TiB4KkrgnEc7eb7BzaZKc22IgDYvWJ53TpobE?=
+ =?us-ascii?Q?XnFH8yrYEhLs9PzzBT8kZh/pRjXe6OgiuYmj/uWPdCr6in5pl2kUIqt4Qj6C?=
+ =?us-ascii?Q?kwpjeHw2xSnGSY+naW0bcGp6jzvgDvBWdmhiiMJ74e+Nol/8T9t9JPVkBVR1?=
+ =?us-ascii?Q?172Z9ZoXgnlGQxCQnHVNa1GOW1r16YY=3D?=
 X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df184e34-cb4e-4b43-c45b-08de46dd6734
+X-MS-Exchange-CrossTenant-Network-Message-Id: 428ddd2b-9b16-468a-d3de-08de46dfb4fc
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB6648.namprd13.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2025 13:23:06.7038
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2025 13:39:36.1883
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: arPPp/iItk9mRkw7kPmbk9iyzhH4NGS4y/Q8PtfuuKHdW1J8WdPEA0+DqjsApxuPMBWI3cn1nvpvJfvBaAgiSMzJx4N2JtDoj1NElRzAGwM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR13MB6316
+X-MS-Exchange-CrossTenant-UserPrincipalName: uea9bH2kv2poszK3SBgPlWJ4OxMwZashYDmSw6CTfFOWSnixdBmiVBb6D3WwpTyOxZoS/kvaUASJ3/BS72Ex0mmQa+HmUh9/r5w191je47M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR13MB6527
 
-On 28 Dec 2025, at 12:09, Chuck Lever wrote:
+On 28 Dec 2025, at 15:45, Eric Biggers wrote:
 
-> Hi Ben -
+> On Sat, Dec 27, 2025 at 08:34:18PM -0500, Chuck Lever wrote:
+>> I'd feel more comfortable if the crypto community had a look
+>> to ensure that we're utilizing the APIs in the most efficient
+>> way possible. Adding linux-crypto ...
 >
-> Thanks for getting this started.
-
-Hi Chuck,
-
-Thanks for all the advice here - I'll do my best to fix things up in the
-next version, and I'll respond to a few things inline here:
-
+> Many crypto algorithms (especially hash algorithms and MACs) have
+> library APIs now.  They're much easier to use than the traditional APIs=
+=2E
 >
-> I tried to pull in the kernel patches as follows:
->
-> cel@morisot:~/src/linux/for-korg$ b4 am https://lore.kernel.org/linux-nfs=
-/176690096534.16766.12693781635285919555@noble.neil.brown.name/T/#u
-> Grabbing thread from lore.kernel.org/all/176690096534.16766.1269378163528=
-5919555@noble.neil.brown.name/t.mbox.gz
-> Analyzing 19 messages in the thread
-> WARNING: duplicate messages found at index 2
->    Subject 1: exportfs: Add support for export option encrypt_fh
->    Subject 2: nfsd: Add a symmetric-key cipher for encrypted filehandles
->   2 is not a reply... assume additional patch
-> WARNING: duplicate messages found at index 1
->    Subject 1: nfsdctl: Add support for passing encrypted filehandle key
->    Subject 2: nfsd: Convert export flags to use BIT() macro
->   2 is not a reply... assume additional patch
-> Analyzing 0 code-review messages
-> Checking attestation on all messages, may take a moment...
-> ---
->   =E2=9C=93 [PATCH v1 1/2] nfsdctl: Add support for passing encrypted fil=
-ehandle key
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 1/7] nfsd: Convert export flags to use BIT() macro
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 2/7] nfsd: Add a symmetric-key cipher for encrypted=
- filehandles
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 4/7] NFSD: Add a per-knfsd reusable encfh_buf
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 5/7] NFSD/export: Add encrypt_fh export option
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 6/7] NFSD: Add filehandle crypto functions and help=
-ers
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   =E2=9C=93 [PATCH v1 7/7] NFSD: Enable filehandle encryption
->     =E2=9C=93 Signed: DKIM/hammerspace.com
->   ERROR: missing [8/2]!
->   ERROR: missing [9/2]!
->
->
-> Whatever you did to post these seems to badly confuse b4. I recommend
-> posting nfs-utils and kernel patches as entirely separate threads.
+> But it's too soon to be discussing which API to use.  Looking at the
+> whole series in lore, there doesn't seem to be any explanation of what
+> problem this series is trying to solve and how cryptography is being
+> used to solve that problem.
 
-I only told git-send-email to add "In-Reply-To" and "References" headers to
-the first message.  I guess b4 uses those headers to climb up the email cha=
-in
-rather than pay attention to the "[PATCH vn n/n]" subjects.
+Hi Eric, thanks for the look.  Agree I could have done a better job
+explaining the problem.
 
-> Also, the cover letters for both series should mention the base commit
-> for your series. Typically for NFSD patches, base your series on the cel
-> nfsd-testing branch. But any base is workable as long as you mention the
-> base commit in the cover letter.
+I've done a bit more explaining here:
+https://lore.kernel.org/linux-nfs/706F9EDB-D98E-41D9-92DD-5172A34A278F@ha=
+mmerspace.com/
 
-Oh yeah - I will do so next time.  The kernel thread is on v6.19-rc1
-(8f0b4cce4481), and nfs-utils is on version 2.8.4 (612e407c46b8).
+=2E. summarized:
 
-> More below.
->
->
-> On Sat, Dec 27, 2025, at 12:04 PM, Benjamin Coddington wrote:
->> In order to harden kNFSD against various filehandle manipulation techniq=
-ues
->> the following patches implement a method of reversibly encrypting fileha=
-ndle
->> contents.
->
-> "various filehandle manipulation techniques" is pretty vague. Reviewers
-> will need to know which specific attack vectors you are guarding against
-> in order to evaluate whether your proposal addresses those attacks.
->
-> Also, next posting should copy both linux-crypto and probably linux-fsdev=
-el
-> too, as the FUSE and exportfs folks hang out there and might be intereste=
-d
-> in this work. There are other consumers of filehandles in the kernel.
+    I am targeting a very specific problem, but I've been a little too ge=
+neral
+    in my cover letter explaining how this work benefits everyone.  That'=
+s my
+    mistake - you guys are too sharp to let it go by.  :)
 
-Roger, I can do, though I think the chance this provides value to them is
-small.
+    In a flexfiles setup with a knfsd v3 DS, the MDS can give filehandles=
+ to a
+    client in its ff_data_server4 that the client can't normally discover=
+ on its
+    own because it cannot walk the tree to those files.  The tree will ha=
+ve a
+    directory with search-only perms: rwx--x--x and root ownership, and r=
+oot is
+    squashed for that client.  Files that are linked below this directory=
+ can't
+    be looked up by the client while the MDS (by not having root squashed=
+) can
+    look them up and selectively give out filehandles for them.
 
->> Using the kernel's skcipher AES-CBC, filehandles are encrypted by firstl=
-y
->> hashing the fileid using the fsid as a salt, then using the hashed filei=
-d as
->> the first block to finally hash the fsid.
->
-> Is the FSID possibly exposed on the wire via NFSv3 FSINFO and certain
-> NFSv4 GETATTR operations? It's not clear to me from this description
-> whether these values are otherwise unknown to network systems.
+    In this setup, the MDS can have control over which clients access whi=
+ch
+    files on the DS.
 
-Yes, the FSID and inode numbers for file can absolutely still be derived fo=
-r a
-given file.
+    Exposing information about the fsid and fileid within the filehandles=
 
-> Can you elaborate on why you selected AES-CBC? An enumeration of the
-> cryptography requirements would be great to see, either in the cover
-> letter or as a new file under Documentation/fs/nfs/ .
-
-I chose AES because many CPUs have native instructions for them and I wante=
-d
-to minimize the performance impact.  I chose CBC because I know that most
-filehandles will fit into just a couple 16-byte blocks, and I can use the
-standard way that filehandles are composed to arrange to have the most
-entropy for a given complete filehandle.  By having each block depend on th=
+    themselves and then allowing clients to construct their own acceptabl=
 e
-hash output of the previous block, a complete filehandle can be have a
-unique hashed result by starting with the fileid.  The actual implementatio=
-n
-is a little more nuanced, but that was my original thinking when I chose th=
+    filehandles circumvents this arrangement.
+
+
+> The choice of AES-CBC encryption is unusual.  It's unlikely to be an
+> appropriate choice for the problem.
+
+Good to know - I'll do my best to help you make a better recommendation. =
+ In
+a different thread responding to Chuck Lever:
+https://lore.kernel.org/linux-nfs/2DB9B1FF-B740-48E4-9528-630D10E21613@ha=
+mmerspace.com/
+=2E. I wrote:
+
+    > Can you elaborate on why you selected AES-CBC? An enumeration of th=
 e
-CBC method.
-
-> The use of a symmetric cipher is surprising. I thought there was going
-> to be a cache of file handles so that file handle decryption operations
-> for each I/O would not be necessary.
-
-Oh, I never thought about this - but it sounds like it would have all the
-problems that cache invalidation does today.  I can't imagine having to mak=
-e
-the server persistenly store that cache or figure out how to trim it.
-
->> The first attempts at this used stack-allocated buffers, but I ran into =
-many
->> memory alignment problems on my arm64 machine that sent me back to using
->> GFP_KERNEL allocations (here's to you /include/linux/scatterlist.h:210).=
-  In
->> order to avoid constant allocation/freeing, the buffers are allocated on=
-ce
->> for every knfsd thread.  If anyone has suggestions for reducing the numb=
-er
->> of buffers required and their memcpy() operations, I am all ears.
->
-> The required use of dynamically allocated buffers is a well-known
-> constraint of the crypto API. That would be another reason to consider
-> not using one of the kernel's crypto APIs.
-
-I'm not sure that we'd benefit spinning our own thing.. I'm much more
-comfortable using the crypto API.  I'm pretty sure you'd agree, so I think
-I'm not understanding you here.
-
-> I'd rather avoid hanging anything NFSD-related off of svc_rqst, which
-> is really an RPC layer object. I know we still have some NFSD-specific
-> fields in there, but those are really technical debt.
-
-Doh, ok - good to know.  How would you recommend I approach creating
-per-thread objects?
-
->> Currently the code overloads filehandle's auth_type byte.  This seems
->> appropriate for this purpose, but this implementation does not actually
->> reject unencrypted filehandles on an export that is giving out encrypted
->> ones.  I expect we'll want to tighten this up in a future version.
->
-> I recall one purported reason to encrypt file handles on the wire is to
-> mitigate file handle guessing attacks... so operations on an export that
-> uses encrypted file handles really should return NFSERR_STALE when a
-> non-encrypted FH is presented, from day-zero, unless I misunderstand.
-
-Yes I agree completely.  What I didn't want to happen is for someone to jus=
-t
-"kick tyres" on this and break an existing setup, there's some missing
-necessary BIG WARNINGS that will exist in future versions.  I also think
-that the community can discuss what those warnings should look like.
-
-> Can you elaborate more on the size of an encrypted file handle? I assume
-> these are fixed in size. An NFSv3 on-the-wire file handle can be up to
-> 64 octets, but NFSv4 file handles can be up to 128. Are both going to be
-> encrypted to the same size?
-
-No.  As you know, filehandles can be variable based on the fsid len and the
-fileid len.  Also, AES-CBC wants 16-byte boundaries, so currently some
-padding gets added in encryption.  I've tested max/max, max/min, min/min,
-and min/max for each.  Depending on size for each, the filehandles typicall=
-y
-grow a bit from their original sizes.
-
-The NFS3_FH size might be a problem - I admit I haven't made sure we don't
-blow that 64 bytes for the larger cases.  I will do that.  Now that I think
-about it, it might be possible to avoid having to pad out the blocks.. more
-investigation is needed.
-
-One thing I can do is produce a table for the resulting crypted FH sizes fo=
+    > cryptography requirements would be great to see, either in the cove=
 r
-each given fsid/fileid length..
+    > letter or as a new file under Documentation/fs/nfs/ .
 
-> Can the cover letter or other documentation include a bit diagram that
-> graphically shows the proposed layout of an encrypted file handle on the
-> wire?
+    I chose AES because many CPUs have native instructions for them and I=
+ wanted
+    to minimize the performance impact.  I chose CBC because I know that =
+most
+    filehandles will fit into just a couple 16-byte blocks, and I can use=
+ the
+    standard way that filehandles are composed to arrange to have the mos=
+t
+    entropy for a given complete filehandle.  By having each block depend=
+ on the
+    hash output of the previous block, a complete filehandle can be have =
+a
+    unique hashed result by starting with the fileid.  The actual impleme=
+ntation
+    is a little more nuanced, but that was my original thinking when I ch=
+ose the
+    CBC method.
 
-Haha - yes, but the result is going to look pretty basic: something like:
+> I suspect you're really looking to protect the authenticity of the file=
 
-16 bytes block 1 | 16 bytes block 2 | ...
+> handles, not their confidentiality; i.e., you'd like to prevent clients=
 
-Thanks for the look and your time to comment Chuck.
+> from constructing their own file handles.  In that case you'd probably
+> need a MAC, such as SipHash or HMAC-SHA256.  This would be similar to
+> the kernel's existing implementations of TCP SYN and SCTP cookies: the
+> system sends out cookies that encode some information, and it uses a MA=
+C
+> to verify that any received cookie is a previously sent one.
+>
+> But that's just what I suspect.  I can't know for sure since this serie=
+s
+> doesn't provide any context about what it's trying to achieve.
+
+In another excerpt from that first thread linked above, I responded to
+Neil's inquiry about why not MAC:
+
+    >> Normally encryption is for privacy and a MAC (message authenticati=
+on
+    >> code) is used for integrity.  Why are you not simply adding a MAC?=
+
+
+    Good question - I'll have to think more about why a MAC wouldn't do t=
+he job.
+    So far, I've been thinking about this as I want to give clients an ab=
+solute
+    minimum amount of information about the filesystem on the DS.  Less i=
+s more
+    here - but I can see how a MAC could do the same job and possibly be =
+less
+    work for the server.
+
+So (trying not to be too wordy), I wonder if that's still too vague.
+
+Thanks for your response here, and sorry for the chopped up reply.  If th=
+is
+doesn't make sense, I'll try again without the reference noise.
 
 Ben
 
