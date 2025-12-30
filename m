@@ -1,69 +1,69 @@
-Return-Path: <linux-nfs+bounces-17359-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17360-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2861CCEAD9C
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 00:18:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C4E7CEADE3
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 00:34:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1EC3300F31E
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Dec 2025 23:18:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A72733010A94
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Dec 2025 23:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B430242D9D;
-	Tue, 30 Dec 2025 23:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64EE41DF736;
+	Tue, 30 Dec 2025 23:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="MCgpFzpu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AH6bGM6+"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="bpAdzVhJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DfdsULdQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8402165EA
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 23:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896E42C9D
+	for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 23:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767136698; cv=none; b=bK++ieODvLbPQ3arSO22tlZbcsa8qLxQVpqYUAxJbwccXhjcPqhYtyszVNXf6C+7yxMYPGX8qDMSZZfMtJad+nHXtmQW5g8+H2vzHEmqh3rPKzPpGracp1jF2KI7Imp5RNgZg8V8E4tRAUmQ5e3vSZdh5+QqoucoPdxnOhwlVLM=
+	t=1767137672; cv=none; b=MRa7EyHbfeR7JxvjUIoDl9MsHn5sL5Fd+AkPyKx8kYEuvgJuFdiNUIBcbNIuo97FivBiWDFoxHikbZOCpdm5nm/KZob5sqJN5ITG8e2zkt/nZC5aCwRlhAQLuHr3mKvsbTKUq6LzN4ROV9G+Ui/kqfnqC1BZ+Xlm9cJ8g1Et+dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767136698; c=relaxed/simple;
-	bh=lPbuU02gPK5K1UhVIYkNwsDvsLvsb26SK/vsFjYAUEk=;
+	s=arc-20240116; t=1767137672; c=relaxed/simple;
+	bh=lTAZhq7iUKmPuEpiU8MjBOM+Cm75RLNXo8ojNEs5QZ4=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=TeX3PHvhmvm5H8CUMYT1lGF6vt9IGCBcvthnSrg0jkzg9pESB5sTdjdSW8Yf7JH2ai8RH7Ss0BFEqIbQUPwtz0FNFzcocrPfvJWOxbSKVYkxAPtSNRSryn8xMfDikyVq9EOkJfQDbZWh4AZchOGY+K728oYv38ickD25IQyrIMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=MCgpFzpu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AH6bGM6+; arc=none smtp.client-ip=202.12.124.152
+	 References:Date:Message-id; b=r24SFeykvQzg5txlfLOV6/6pIl5HHq8fsX8XxSs3SvgvAJf3YfS9ilZBPCy6dqDvv6pi7uRRYdp7pJZZwhlLy7LTAwHHub2288+iTCT6+Bl9bplvv1VKw615xk5oXPkvNcF13i9UQXBX3yyirraVjlKVVKuhen3Tkj3RtDwsw2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=bpAdzVhJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DfdsULdQ; arc=none smtp.client-ip=202.12.124.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 2F3047A00AF;
-	Tue, 30 Dec 2025 18:18:16 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 30 Dec 2025 18:18:16 -0500
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id BDEA71D00153;
+	Tue, 30 Dec 2025 18:34:29 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Tue, 30 Dec 2025 18:34:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1767136696; x=1767223096; bh=54I3nXFiuB4cXceXzghWoDzWSj64JEv/QcX
-	S3/PCQAQ=; b=MCgpFzpuH1pgvHIFl4iSIbPWP7WZXGQtrC1t87ZvFLxmjpl9sQ3
-	WTG4lDLF+7iDHzmuaE3dH+yYfIMdAxEMQqMpxPfHeey9Q6sPvAClP5yW2WxiA6DO
-	/H2HvrEqFrbd7Clnq3NaVS/atyNj/2URb6bQfcBovoGUZMtxJ6COQO4t9FzSCrSw
-	3TUhg+kQ+r1rtoV3FMhjuTYtgqAtcE4iwkkJ5fu1dalxPAUkTNk58XQkmobDNF8C
-	Qv6mKvQGL6FAFsXKw+NUOxixTqGxIvRv8BE0fPUAiDy2MZ/cPVEjzd0U3lpl48b2
-	ABfq1sy1H6AfLFIvdqjlzm9XAOO7z5LOnDA==
+	1767137669; x=1767224069; bh=HS46iCgbgKIpzpHue/7+HPQUVLxxHMS++oj
+	VDIXUO88=; b=bpAdzVhJ64WE4R1+0NNNrjo//ZoxykGKgxM4IslaEPdF4HVKWUT
+	kCEcbFcHzZJHFelnDp2633E5aHdYjIZStphreB0wWavHEOHLGwThLov1pOjyEZR5
+	8VVTLIyGj0xYBL0lD+pDV80pk3ig+XQ9+ybXkBOlN76tfLFC/AFtG2F+KpFKVR3o
+	9fLGra/b2q2Brn8UefwswuzdXqvil9B9xOsm9Iper+iparK0GTmWBpiEkbLXuiDi
+	bZU/0ONUt+vdSana0bMoOdL/mMlHtsV8Hn5kFtFdnR3XEt31FXz8kepRdSlzvP+6
+	bZguxkk0jd47k5O9b1zYzzDvNDIbWktuJGQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767136696; x=
-	1767223096; bh=54I3nXFiuB4cXceXzghWoDzWSj64JEv/QcXS3/PCQAQ=; b=A
-	H6bGM6++8r+uk21xNe+K7gouG8BRTa9KIYXI12Ka6yt2oP/Z3ChSxA6Hdws50kCi
-	oKpQf2WNmjfWTkcgr/2muHr6B4dKFcixgc6XRPs76pv2fYy5n7WTqOWN0d6Vw3Bk
-	mqNQxTgf6wZJJxROozOlaDUU/SAsbyGZoD6fJYCLHQr5/yS1BXxzlrwEWdIg+mbB
-	wfFUnqLQW1/hTdQrIuJeEHu82V0BEY57+spWoDN9JnQt5F2PiQtzWxVn07XoG/VO
-	Od0g03feKDPlD0uQVRruB9Eys6hcIcXUgtt7ZR4Q3wegmayK2ZaqWcRSRUQyBp5f
-	hA7k3Mi1rmLH9C0Tr0ThA==
-X-ME-Sender: <xms:t11UafVNCtvA-25Li4BB8m9QrmV48HGqiKH638FxRPJccP4DbLbYmA>
-    <xme:t11UaVIrjcTY0r43fr1g6J6c4vM8ODTfhD6fnXc6__TRC8K3QomVMLkNzTZa98hBg
-    nhS4UWAD5n7cSV9QM4C1DAP6QbNJRVgE8yg_fqXl4uqpjjpqg>
-X-ME-Received: <xmr:t11UaR2MTh_MMoMK7PSxxKkZ2A9KJt49Qf8i-ieUe54O-VRdQTcHZTkfKseuVq5AY5YDEzcKORGs8jQE4GUgKDJ56Oja3922678QpOmCoX4o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudefvdcutefuodetggdotefrod
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767137669; x=
+	1767224069; bh=HS46iCgbgKIpzpHue/7+HPQUVLxxHMS++ojVDIXUO88=; b=D
+	fdsULdQuPDPNMHkameU7kPKwPlWSjCXa2j0wZwBWr7L4ImHMATH9CjkHS8bjucpZ
+	n9OPDvK3ngzKeuH5DXTzkV8FPRvZROYytxMuX8VUzAiL16dGI2JIeoxXQKYq06gH
+	rLh6NTmtIMZKIGXPQe6L+CMp1Lys3vQRXCrXJDFG3dXsvvEzyedpnfPmvmcIRYsq
+	WsXONLO/h7+THfxdtTa7VMWLq5y4mYuTh4vEWFdNfavX4rqhwp0xYTI2U52nmRXQ
+	DxMBkbEqazsgaTtXA/kRLcVVl2NmFK5ZxthZQ3KV5k2F/SCuT6fXouTqoeY6vnYc
+	fAfGYtXDfNkanBSN1kGDQ==
+X-ME-Sender: <xms:hWFUaQIKe5FkhSmhRrhOx2S_-WzP8y32J4NuMN7YOkoTmJtyLu4ufA>
+    <xme:hWFUaSYTB3GJ4-W7cSXT4Xl3S44Wm6Uz7tlmtKXMPIXwUCWh0EYWtNP2fNK__oVM3
+    BtzUsUroDoZXWd8VdQ1oSqffJ16gIwagqDqxQ-JwR0ZwG61gw>
+X-ME-Received: <xmr:hWFUaS8ngwE7dspQn8qCv-pZqDVVoNZPBUq9oMo65zEjXS9REbdk7bGyGjiw3qfkvGvlxCH0hSV2jZ_f6AXFEJLlrsVfIhaVTq6xzunItHoy>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudefhecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpegtgfgghffvvefujghffffkrhesthejredttddtjeenucfhrhhomheppfgvihhluehr
@@ -77,14 +77,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudefvdcutefuodetgg
     drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
     rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvg
     hlsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:t11Uab6KxH4-6jAhf_JtQGvjMeQMjGtgL7n62jJ8kWJWlMPpBXcoHw>
-    <xmx:t11Uaa8my4suy7Fp_v1Sd4IW1daLq0XWK6PcfgZxum6rTbhssu3f3A>
-    <xmx:t11UaSUOb-mR4r_lIxmRADOuy9IDfrGju1yw5zSaJIgSbEWAZUL40A>
-    <xmx:t11Uado-g9lEVw-BTZ9rNl7kv78xF4JzLLYBE21BDOJutLtU52pj9g>
-    <xmx:uF1UaaqFs-qlnreYbHvPxCPCZnq3QsmfKNtqQ_mMnQxDu2tm2r78_UuX>
+X-ME-Proxy: <xmx:hWFUaTZXD-pZnf2hy8U6oNi-TrmmejzqmyuVAvVX7Jl7E61TrytMkg>
+    <xmx:hWFUaWN6X_ItA8XUkkmxbeBJ_LQA6dtUMzXR4KSFmtPWl0mh4D6vhQ>
+    <xmx:hWFUafBtLfrwpdl2ts8qsGvij-5dmOeW5CObOIiXy1qH_IFnEWRbBw>
+    <xmx:hWFUadLKN0MDxbAv7KPu6vnYRzFfb2iIN_JTtoTmAgnET7ObLET97Q>
+    <xmx:hWFUaWGkFwsUZQTaLkpjUMDcUEiHyqLlukduBVUnBhAOwT_93S5MbhEc>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Dec 2025 18:18:13 -0500 (EST)
+ 30 Dec 2025 18:34:27 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -99,105 +99,65 @@ Cc: "Jeff Layton" <jlayton@kernel.org>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
  "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v1 2/5] fs: export pin_insert and pin_remove for modular
- filesystems
-In-reply-to: <20251230141838.2547848-3-cel@kernel.org>
+Subject:
+ Re: [PATCH v1 3/5] fs: add pin_insert_group() for superblock-only pins
+In-reply-to: <20251230141838.2547848-4-cel@kernel.org>
 References: <20251230141838.2547848-1-cel@kernel.org>,
- <20251230141838.2547848-3-cel@kernel.org>
-Date: Wed, 31 Dec 2025 10:18:11 +1100
-Message-id: <176713669193.16766.11542285794353517327@noble.neil.brown.name>
+ <20251230141838.2547848-4-cel@kernel.org>
+Date: Wed, 31 Dec 2025 10:34:24 +1100
+Message-id: <176713766499.16766.6367874200271543647@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
 On Wed, 31 Dec 2025, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Modular filesystems currently have no notification mechanism for
-> mount teardown. When an NFS export is unexported then unmounted,
-> NFSD cannot detect this event to revoke associated state, state
-> which holds open file references that pin the mount.
+> Filesystems using fs_pin currently receive callbacks from both
+> group_pin_kill() (during remount read-only) and mnt_pin_kill()
+> (during mount teardown). Some filesystems require callbacks only
+> from the former.
 > 
-> The existing fs_pin infrastructure provides unmount callbacks, but
-> pin_insert() and pin_remove() lack EXPORT_SYMBOL_GPL(), restricting
-> this facility to built-in subsystems. This restriction appears
-> historical rather than intentional; fs_pin.h is already a public
-> header, and the mechanism's purpose (coordinating mount lifetimes
-> with filesystem state) applies equally to modular subsystems.
+> NFSD maintains NFSv4 client state associated with the superblocks
+> of exported filesystems. Revoking this state during unmount requires
+> lock ordering that conflicts with mnt_pin_kill() context:
+> mnt_pin_kill() runs during cleanup_mnt() with namespace locks held,
+> but NFSD's state revocation path acquires these same locks for mount
+> table lookups, creating AB-BA deadlock potential.
 > 
-> Export both symbols with EXPORT_SYMBOL_GPL() to permit modular
-> filesystems to register fs_pin callbacks. NFSD requires this to
-> revoke NFSv4 delegations, layouts, and open state when the
-> underlying filesystem is unmounted, preventing use-after-free
-> conditions in the state tracking layer.
+> Add pin_insert_group() to register pins on the superblock's s_pins
+> list only. The function name derives from group_pin_kill(), which
+> iterates s_pins during remount read-only. Pins registered this way
+> do not receive mnt_pin_kill() callbacks during mount teardown.
 > 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> After pin insertion, checking SB_ACTIVE detects racing unmounts.
+> When the superblock remains active, normal unmount cleanup occurs
+> through the subsystem's own shutdown path (outside the problematic
+> locking context) without pin callbacks.
 
-Seems reasonable.
-Reviewed-by: NeilBrown <neil@brown.name>
+Maybe I'm missing something here...
+
+We want "unmount" of a non-exported filesystem to cancel all active
+state (locks, opens, copies ...).
+But you are providing, and in the next patch with use,
+pin_insert_group() which doesn't related to "unmount", only to
+remount-readonly.
+
+So if I'm reading things properly, then
+
+ exportfs -u client:/path
+ umount /path
+
+will still fail and we will need
+
+ exportfs -u client:/path
+ mount -o remount,ro /path
+ umount /path
+
+to successfully unmount.
+
+What am I missing?
+
+(patch generally seems sensible, though a better name might be nice)
 
 Thanks,
 NeilBrown
-
-
-> ---
->  fs/fs_pin.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/fs/fs_pin.c b/fs/fs_pin.c
-> index 47ef3c71ce90..972f34558b97 100644
-> --- a/fs/fs_pin.c
-> +++ b/fs/fs_pin.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <linux/export.h>
->  #include <linux/fs.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
-> @@ -7,6 +8,15 @@
->  
->  static DEFINE_SPINLOCK(pin_lock);
->  
-> +/**
-> + * pin_remove - detach an fs_pin from its mount and superblock
-> + * @pin: the pin to remove
-> + *
-> + * Removes @pin from the mount and superblock pin lists and marks it
-> + * done. Must be called from the pin's kill callback before returning.
-> + * The caller must keep @pin valid until this function returns; after
-> + * that, VFS will not reference @pin again.
-> + */
->  void pin_remove(struct fs_pin *pin)
->  {
->  	spin_lock(&pin_lock);
-> @@ -18,7 +28,17 @@ void pin_remove(struct fs_pin *pin)
->  	wake_up_locked(&pin->wait);
->  	spin_unlock_irq(&pin->wait.lock);
->  }
-> +EXPORT_SYMBOL_GPL(pin_remove);
->  
-> +/**
-> + * pin_insert - register an fs_pin for unmount notification
-> + * @pin: the pin to register (must be initialized with init_fs_pin())
-> + * @m: the vfsmount to monitor
-> + *
-> + * Registers @pin to receive notification when @m is unmounted. When
-> + * unmount occurs, the pin's kill callback is invoked with the RCU
-> + * read lock held. The callback must call pin_remove() before returning.
-> + */
->  void pin_insert(struct fs_pin *pin, struct vfsmount *m)
->  {
->  	spin_lock(&pin_lock);
-> @@ -26,6 +46,7 @@ void pin_insert(struct fs_pin *pin, struct vfsmount *m)
->  	hlist_add_head(&pin->m_list, &real_mount(m)->mnt_pins);
->  	spin_unlock(&pin_lock);
->  }
-> +EXPORT_SYMBOL_GPL(pin_insert);
->  
->  void pin_kill(struct fs_pin *p)
->  {
-> -- 
-> 2.52.0
-> 
-> 
-> 
-
 
