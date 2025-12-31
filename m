@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-17378-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17379-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB3A2CEB0B5
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7444ACEB0C1
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2025D30094C2
+	by sea.lore.kernel.org (Postfix) with ESMTP id 827CA301E1AD
 	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E922D7D27;
-	Wed, 31 Dec 2025 02:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7A71FC0EA;
+	Wed, 31 Dec 2025 02:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fG+sDFAf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqUkbhnp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD74E23C4F3
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A952E36F1
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767147750; cv=none; b=Kn5mZlJjGNf4iEYcD52ZUwup4c2QX4ruPYAR4Buv27pNZNY5yh+BuFFsIxzQCULE2mV1h/GtKx1yk+mRqJ/DtkooPRIfO0d0HjHlwXjN+YbU1yNvh9tt8z9GC2WPdiO99SxEuGXXAa5e6lPvtNugn6fioJyb5KfRwQNUVhzoOW8=
+	t=1767147752; cv=none; b=WK/w2tAejMWoVGbbashDwfZ0fO9TmN2z7g3b+N8KXyzkduUVo7CUe5O8eTnYPWSZK4WhRF7sFwRuCCDP+aKK6nXmPx0ukOLjB6RzexkRH/02knjegz0JacrarXbwvFGH5nBZBZdP97OuceSpNdaJL/JJirPxmurAaEbEio/e/RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767147750; c=relaxed/simple;
-	bh=hFvW+GmtK4d1w2vlgVE7uobzZtVHug5nN8ia2HnXWHw=;
+	s=arc-20240116; t=1767147752; c=relaxed/simple;
+	bh=Cvc3+ka7sRLiCyA2tt1vqABo1XxXqSLGBD+SjCTh3xI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ELLN7j6GbBFdh7hXopYw8ehS7BjsC8UIJ4XAlGZ7ZfKaQK5pm7FRZwFmhEbLZy6HtPaRzwSbYIEC1UQYpcVv7Wxx768b1EUDfjTyASfNRFuIDU7Oev5L/nSfnGJba41kteOs0VZgHY49Q/5OJfaW7yhGDHDYNQ7QhZJxSdJUFwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fG+sDFAf; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=kEjvHxb18Js2YkeVEtsSkotQqQm46ySznOUeLT2mkaM7MqYkUb50GOuPdS7aEDsrY5LDIRsZo21lNBLW5u/sNV/ptkhfFo1W68Ae6GWRsL391dWXSJz6ORamWkdwALnM2TENk7NWckSsIvvZFepdMHiBaUQbkuLZAbRbPW9U5y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KqUkbhnp; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7f216280242so3201309b3a.1
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:28 -0800 (PST)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7a9c64dfa8aso7986851b3a.3
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767147748; x=1767752548; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767147750; x=1767752550; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JxNsV6Y2kDYR/rU9QuLklWwQeSTNoyNdTD0AYqr/pNk=;
-        b=fG+sDFAfLUhQ1/mwQbfYMNgij1LwAF9BPeT6WeXE1t87jN/T6clKfzRXoMpFNSmTZN
-         jwWtryq+Jo+Clgoq0SKa2/oXswH9qMMHISKRo/i3VBrToRPUaPeKjVTdu/kaU+LRg0bR
-         CHoXCSwzktCHLtd8+zs8hg38kkdh6EEqZjPjLa4ku5BnAJBAA1VajVLl90S2klFdzIcr
-         2FOOEd8XG3w+uywCUEaVL8GiqHHng078VKAUee1cvgsnnYS+1c5O0XX8m6W0Q2S/fB2p
-         2mXZjUXSJyPPVIZkpGhRJhyaVhNzzoWTfG8gqTg9VZyGodfR3HzuYX+NmsmiLGHVjhjh
-         N8jw==
+        bh=R/wV9c8MwvgdjHjUdKqV3TOqq+5E4ggDI49Mhm6WG8M=;
+        b=KqUkbhnptUVsayZfnb+AwiZ67iPUHnyv6WLaKm/WnyBNcq/iakO2UIqS08xDcz2jwt
+         ITz4wDzvMxsWXWGsI5GtmdEU6TZ4BXaKcxLkyQZQDBVyZNgcQwxNOxVR6tmsYtbnRh7X
+         ixgrujk4XOk2L8f1wHBZ3mI4VjsNg4VYSGSCnqI3MjW5U23ApkVAN0qMEcC2JnhdT+uS
+         WPRC1EMXmD9Ml3S78osmS2jIjcYbJ9UhssgC/jdUoZG2xvXxNO/NeFCyOOaF0aUDTwy5
+         W0/RmgpDgMOANY/L0eK41dnxfCbXPNcuRD8OumbdgXS1eOUpwU+l2UdfFJ8YtP1H+qjI
+         H0Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767147748; x=1767752548;
+        d=1e100.net; s=20230601; t=1767147750; x=1767752550;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=JxNsV6Y2kDYR/rU9QuLklWwQeSTNoyNdTD0AYqr/pNk=;
-        b=dNz/KOEl3bMnOQtBq21byAM5KQ/3MkLwqxr5DCrGzt7MAn0uTz64SnkOrsEjleTW6A
-         jOLG/tQ/GpsQgguOgy3Zd61y0LfHUZpTrX366wNokz25yKdYoHnYDk8ay7EdnqlyxgKj
-         xBCJJ99nKVwW/namolHBSh0VsSZBe5UowMX1e9e+zMftdBmU6yXXR2wOMaZopk1qYGze
-         vdFSHrRnaW7vGkFjDn8XBNM08A9ccO47MqNfyT1yCV47vbw/Dr5Y6IAzTopjfC5nwbLq
-         UYP5tLiFm7lULg2M/LDB4G93KcjEUKVmzzchCT6wbaGn+Xk5VUlPun0tas7FSXDpvAuW
-         EIyQ==
-X-Gm-Message-State: AOJu0YxkPRU1GUH4/DUfIyWV16S47p+S+Btv73BG7gvb5dNIl6uawpLe
-	SrCX6zII5yXBCqqrKC3qYcRwxK7GbMg9wJOcAUnqaoEAU/BN7+s9bcGeBzTp24Y=
-X-Gm-Gg: AY/fxX6kNg7lCs48R95AXhsKegLCTWd9121FHL0EJaCPR1cKP2ILya3v3oyOHyOl0b6
-	dcG2EBGbghOIWBHijd2xs6AsEvuGyoUqXfHPMHGeFemFyQWxRefrdYGIIaOyZLxhTnfNARqMinH
-	vhevlOXfkiKCSg6nvRi/w/GkCW4z5+LrouxtExXevymcRpJeDOCjYqTFktkEeNNTU10ZW6MRaD7
-	VzU8GVBNgGRuSO+7UKve7zJRdYurviRC4a6BQepZNCnFnE81+SaBsOdgiwX9gBBDxB5wO/HDv/f
-	kV6I/d+3wAKkinU7QgCzcOB/Cto+zhshr3w42SsZGQ1/c9VwHfC3OdHcc3rUIVCArK0bUkLIkeL
-	R1u9PCvihhyZqzj+yQAgTWbItfkx+B5JdvLZiRxmIiy25m2StCg8VIw+E+plTpMZO19Ndy68yy+
-	QpZNgtAOCGAXl94TxBSeQCGK8RB+JEOXcqtewYLceZ20/j2WxifQ19CPsD
-X-Google-Smtp-Source: AGHT+IHvgEkvEok2WmZoWewIHz5LL8IidZ25VO/DB7Zf4KsbsB4l8/duXJYFp8uSMMfEfGRntm/hmA==
-X-Received: by 2002:a05:6a00:a90e:b0:7e8:3fcb:bc4a with SMTP id d2e1a72fcca58-7ff551da6b4mr28157200b3a.31.1767147747924;
-        Tue, 30 Dec 2025 18:22:27 -0800 (PST)
+        bh=R/wV9c8MwvgdjHjUdKqV3TOqq+5E4ggDI49Mhm6WG8M=;
+        b=RSRpLJMEyJhX/BddIlQa0CEmkSV+HVYe/9GUR33AeuOumj2qZj51Uzj+0MQqsXm0tm
+         oWihGu8zLjYX2mwlf2ohwwqB1pkFe57Qpa5ZtkPnrG4fDEHWpFc19RmEsbeVEKjLHBOt
+         eoa+hZsU+cNaZhF+c2ynrYGyZMJuKVjcDS5GGQrAB6a5jmwKjoiNoukM6EPBf6WVmMBe
+         GGV2J7ZFKSdaL9v7pKtmXBZR8sknTxZU0KifkFBwsdhWZz28lrRVbPDIOFTXEc/Xd3EY
+         qlu/HHcHAmYu/Smsi7DIWoWcoKbYWFnBwZBQi9bt0GV1VxXV2KDHF72bo4EN+KcXHn52
+         u3lg==
+X-Gm-Message-State: AOJu0YyjJWyJIBSdIs2aCLotlYnWKKvOLo5g2bqpHz0fyq36azvjL5Iv
+	4CohtoLT+QAhkqEvbsuvcJBvNHq/ZbtNwDd9FWCDxExN2gj7FPiuf36Rk016VRI=
+X-Gm-Gg: AY/fxX4lM+wUXrzA4z4gmDOoGAHykbNUWXvp/G5J+0tU1ULYUoO/Oe+chh2y/ioIddl
+	PIN6lapepXE+VDwoHXSnjZ8t8mBl9NWGanVV1pZcdH7pB+RsAyCyBqqo1eLTy2Adlkp3qlBI7qh
+	IiY1eNe3WshWy4GF/ud22ek1hybkurb/Eq+j66n7ZIh3r4Lt8u52pZHpY+kXDYGceOTgbXB4Hxc
+	cnqPddPF1+e2BMibF1P/WiXrFmTk2nTdMgno8HxZ9aZu1vJRi4B3vaBZDU3UHsrHuKlFS7dQVXW
+	rl2ReUs0so3kIh5I3ZoubOcWT1y8IE4BYl5vl8FJA+2r1SzkI1rMXSjy+PL4HByv+BLgHyUereW
+	udjNs9etowLSLJMjFBOA8XgNuBFO0BO/n6ebuqJs5g5AIisASjMllTJjruA7aLHZQJbum8QksAa
+	YAODYcraXBaBLZ0j7ml5fRB0tTyfZ3lOc9Sc+P+W/Ll2a5cqSoyh5ApBNp
+X-Google-Smtp-Source: AGHT+IH/TBqUw5S9wcATy+yfq3P3XQ/+zB3XKd/6qIWyg4b/VsPLZALpzzYLYOs5kGb7UGhmiZyMrQ==
+X-Received: by 2002:a05:6a00:450c:b0:7e8:43f5:bd3e with SMTP id d2e1a72fcca58-7ff66d5fc16mr34440137b3a.42.1767147750102;
+        Tue, 30 Dec 2025 18:22:30 -0800 (PST)
 Received: from nfsv4-laptop2.cgocable.net (d75-157-27-199.bchsia.telus.net. [75.157.27.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.27
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Dec 2025 18:22:27 -0800 (PST)
+        Tue, 30 Dec 2025 18:22:29 -0800 (PST)
 From: rick.macklem@gmail.com
 To: linux-nfs@vger.kernel.org
 Cc: Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v1 11/17] Make sort_pacl_range() global
-Date: Tue, 30 Dec 2025 18:21:13 -0800
-Message-ID: <20251231022119.1714-12-rick.macklem@gmail.com>
+Subject: [PATCH v1 12/17] Call sort_pacl_range() for decoded POSIX draft ACLs
+Date: Tue, 30 Dec 2025 18:21:14 -0800
+Message-ID: <20251231022119.1714-13-rick.macklem@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20251231022119.1714-1-rick.macklem@gmail.com>
 References: <20251231022119.1714-1-rick.macklem@gmail.com>
@@ -90,38 +90,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Macklem <rmacklem@uoguelph.ca>
 
-nfsd4_decode_posix_acl() needs to call sort_pacl_range() to sort
-the ACEs in a decoded POSIX draft ACL attribute.
+posix_valid_check() expects the ACEs in a POSIX draft ACL
+to be sorted, so sort them.  Since sort_pacl_range() uses bubble
+sort, it will only make a single pass through the ACEs if they
+are already sorted, which will often be the case.
 
 Signed-off-by: Rick Macklem <rmacklem@uoguelph.ca>
 ---
- fs/nfsd/acl.h     | 1 +
- fs/nfsd/nfs4acl.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4xdr.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/nfsd/acl.h b/fs/nfsd/acl.h
-index 213774cebeeb..7e061fee2eea 100644
---- a/fs/nfsd/acl.h
-+++ b/fs/nfsd/acl.h
-@@ -51,5 +51,6 @@ int nfsd4_get_posix_acl(struct svc_rqst *rqstp, struct dentry *dentry,
- 		struct posix_acl **pacl_ret, struct posix_acl **dpacl_ret);
- __be32 nfsd4_acl_to_attr(enum nfs_ftype4 type, struct nfs4_acl *acl,
- 			 struct nfsd_attrs *attr);
-+void sort_pacl_range(struct posix_acl *pacl, int start, int end);
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index d12e479c18d3..72530203e985 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -483,6 +483,16 @@ nfsd4_decode_posix_acl(struct nfsd4_compoundargs *argp, struct posix_acl **acl)
+ 		}
+ 	}
  
- #endif /* LINUX_NFS4_ACL_H */
-diff --git a/fs/nfsd/nfs4acl.c b/fs/nfsd/nfs4acl.c
-index 0a184b345f8c..84bef41848ca 100644
---- a/fs/nfsd/nfs4acl.c
-+++ b/fs/nfsd/nfs4acl.c
-@@ -402,7 +402,7 @@ pace_gt(struct posix_acl_entry *pace1, struct posix_acl_entry *pace2)
- 	return false;
++	/*
++	 * posix_acl_valid() requires the ACEs to be sorted.
++	 * If they are already sorted, sort_pacl_range() will return
++	 * after one pass through the ACEs, since it implements bubble sort.
++	 * Note that a count == 0 is used to delete a POSIX ACL and a count
++	 * of 1 or 2 will always be found invalid by posix_acl_valid().
++	 */
++	if (count >= 3)
++		sort_pacl_range(*acl, 0, count - 1);
++
+ 	return nfs_ok;
  }
- 
--static void
-+void
- sort_pacl_range(struct posix_acl *pacl, int start, int end) {
- 	int sorted = 0, i;
  
 -- 
 2.49.0
