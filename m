@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-17372-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17373-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE1D5CEB0A3
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A9E1CEB0AC
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C6CC83008791
+	by sea.lore.kernel.org (Postfix) with ESMTP id CBCD530221A9
 	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502DF2D7DCE;
-	Wed, 31 Dec 2025 02:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F27A2E36F1;
+	Wed, 31 Dec 2025 02:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2Y8Sk+E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlN8IJ3t"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF002E22AA
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8331FC0EA
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767147738; cv=none; b=a/3OG3262ynDWXxnGvsBMlObS41TXxzt2CnM6evHjqJLF7PYLVT5Ag4WVm6UfeRzTl3sbB94jJsFKrW16fFfgtmla/EwSLwMYxhqN7P8QXCz9vrEukuGwJw920KksJ+tzCMudTfGEgzwmvEWxRpWmClEGer8zk6ShK71xACIpz0=
+	t=1767147739; cv=none; b=YZIgufVNnF5rUfTYYAX6nEtZI8WchX8LhzzuhbT1iCSDllgCY1Y8vexYvEqF6tInaOReulf1m10Ab6V75GuH2fdYq7fawu7YAHWSFT8kBtdPN6cVR+c8j5QyxPpcKP67N9ychkwf/vMRMr/IN7vOO6WPBNUVXRyofustT1aSZBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767147738; c=relaxed/simple;
-	bh=oqf4R2knTZm4vlXy9s4o+y3Aaui76wiv75ZUkvQdLbk=;
+	s=arc-20240116; t=1767147739; c=relaxed/simple;
+	bh=zIu/002ghKFl3vk2NgM1rhExThv76+lwWD/Hmqb+ISU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=teJNX8b0dDHgx4d+nVFEOFT9UF8nFRCB0fOx+hlr0tXtY7pE9U0SGJHDKvW5Rb7toa22vt2vPTZ4rOi1GgBpOPOQxsez70/FD37ynnpypZbrx3YfhTwPNcdNrBNcMhsDOPXPomdkssKYf5MtIUEK81+D/cUSd4M8CeBJ2hy9Mr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P2Y8Sk+E; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=iUIafVthkCEa+4eMMTQibjEqozU1/wOQr5PBVV6fyiIjDHzXyDlGOepyUmpaHJK676khRubHx0ZjwBa3JbLjyW9a3lrB/GPJuj7v+vLps6GntKfuEQARRQYzsbt2h6F8j48bdIaHy7I8IKKQPrL+luqL7CDpwusNHSgiqzRaHME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YlN8IJ3t; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b6dd81e2d4so10779983b3a.0
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:15 -0800 (PST)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7a9c64dfa8aso7986794b3a.3
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767147735; x=1767752535; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767147737; x=1767752537; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Im5awB1FTEmpukw7QHbyQNN7Hry4+njONw8NytkaUI4=;
-        b=P2Y8Sk+Ec4g3LJ+m29lFc4jNtUSZL9Yca39Kv8NJQsh4xHMBieZuWyaqvR/0NqEss4
-         kmJcf/oWXTalmfdXJjB9c8oPnm+RnGya7IAMpEfRZRzrhpW3csF7VUaWzYzriCrgLAw5
-         SZNJi5zerp6bozkhe587YZsSo5nte2Scv0HtrkjrZHJbyMZCaMCz3IPPxGkDfhBv767Y
-         xVgyzBb2nm/HISemVCwDM5EGlVxs+kFVi4hjOQzZ79DyLrgSa7ZzjepNALTuXRcpdr8u
-         x7Y2LA1ykibzZrTchaC/1jKyl9WfLDJV0bBJMWA4ZH/AvheVWXSaYGYbop8bqDV1Kxwz
-         frRQ==
+        bh=yPqpTeJYvne9S/rzjND4X66lSSHyyvDhex1XtaZ6drY=;
+        b=YlN8IJ3tObMOzvR+5ARd30meMcGQHDnBGX8GAc/dmKRb7HlawF5dhYBghm5Fm8vPkM
+         KX73V6xqW2W6Dfpshjv5jEDHyRXloTbdQ98Bj8M1abWzim3TyCObCtfj/a0WKpjxfxK8
+         yjnGBhdYPdNE3gVIe748CJ1aT9hw0IVKPCwra/zn5d9HFXwwcwe4cpTG3rTEBlR5cxbd
+         Zp5vIQSRbFo019LNp0gWrqZOdtdYApYPZvP0DK7J7n29SMzN1tdfcrI+YHt+fkL9X+HF
+         3KNV2msaf1N5Rztr/JyoSATP1HD1lW3eSewK7kXztneIS8JPrvdYYAeHumMNvTDPEY+1
+         Cv3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767147735; x=1767752535;
+        d=1e100.net; s=20230601; t=1767147737; x=1767752537;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Im5awB1FTEmpukw7QHbyQNN7Hry4+njONw8NytkaUI4=;
-        b=YFKpXaXRzY8mb64vB84tq8UIJsT7grg6iy4kdvuegazGf2AwW1hMiX3+JkCgBCmzZt
-         Uneo/a1PLd03wbJjUbckPt65lUOwbUL3gI2PK1+E+KavssxKaKDoDPiNd+KsPy/SWOdm
-         K2JoWY4r0sc89z6ZvPTVdUmANFcXCJeVjtWg5q5kx5w16q16K6QGXAEsB8QPn2PEr4Uz
-         OhwKIu71JLh+7PIN1TyajaYfKaN29GQlUjXUTOjet6mEyjIdDLS3vi8s0gPC7+23v8Vv
-         b/D5/J0Lc3dvCZtkr93u8vpkhE2aqjvqXEDzF+hIoTpIZexGiJtJGEfp0c7DHAQUtujb
-         oiig==
-X-Gm-Message-State: AOJu0YzzVLbLBwWGeMADx/5Tp72Vl9B2KGX+7XFRLtrWllZ3YdEugWL1
-	8ezllc96d5ZuzTkgVt1BNW1qiKukzVXmdTLgSoMz4c8TVzLrqnrmxqbRwYW5c4Q=
-X-Gm-Gg: AY/fxX5M/EPGS/u4Cg7SGCNJpbprKsYEk5rQwrORVf0sQBk83tyCtgmiOxQb4YkAAW3
-	6yaFm72bocUIlfB4JLjVSxDiSYgA8IFFBzV6JhZ90bj/MsziuqEH0IhTeG0IrJHH3Ti2DckAOQk
-	HIyTc1sCpav+KFS9fj6fXi/C28LMXzIFd80ElEodpY9OTE0op9wTDcabh3/2f1KuBJ3lu3a+Gom
-	imI0uihzHv4xMIuEZkdAze4Lm4RY9cTysdPFM2BpF5/G15DtS7qF4bXOV76T+KhnHXMjpxOVGRV
-	8rAtRXQd164KveHGme2LEtVh7CyTb0AjojDZHC821Fk4Jh8OBgPhk9fHb/tZ6sJ7mRsZmsSU8Vp
-	cZDhXNMt31hz1/sPkEWQSlS+Sd1P4jPm0uKfUArNpscBeUt5lR8ovxmvOInoIArbvzTCcXZfxEp
-	OYN0ZznnDZQ3FJRAu7S9gqIwF1NTUF8lC1N6Li4JKqNz5oIz6doRLvlUoS
-X-Google-Smtp-Source: AGHT+IE1aAPCtT4uUatAELH4it+r9jmvHYjEF5mLAiyWHcW/DOD/EfMkwtL64mmXrs1/JeOmLfWYUg==
-X-Received: by 2002:a05:6a00:e12:b0:7f6:2b06:7134 with SMTP id d2e1a72fcca58-7ff66175a58mr29060041b3a.32.1767147734921;
-        Tue, 30 Dec 2025 18:22:14 -0800 (PST)
+        bh=yPqpTeJYvne9S/rzjND4X66lSSHyyvDhex1XtaZ6drY=;
+        b=BH+KU0DzjtJy/f/JI02rtv3e+r8rjP13nfOctw+HTKq9uRPEoVyRjIZ79x6fZi+P+c
+         I3IJYCDQDbBkCtmjvOyRCkZQDkAAckGtlqGSNPGe3T120kvso5HJcQh5Q04PjthbXDFI
+         mroseO8M+ajmFS9x/8K3Ei2Pb79L0TfSpWbYM7VEn/YKf80yAcZ9S9ninWjhSq4FnofU
+         xg3EmCcq4JMEWjMSy82O7sC6TZqqED6BgmAf0jvbqAn9V2IF6JxxjmIb33h9wwpZlQQh
+         0+V5nBZIBnmSHKBS0BY/c5hwaDMxG/ioVk12UkJZdAbsus/GVKvmIe6uwTJuwC4TGk1x
+         WS9Q==
+X-Gm-Message-State: AOJu0Yym/TOb+SqgpESRvKxYPLlrvptAp7arJFYuCs+y1U+LlpR+mgUA
+	h6ptyfktrHAQGWHLGmqKjfovuctW0dEJqjbsILAzUCPQIHs/5SmMRX5xVtnctv0=
+X-Gm-Gg: AY/fxX4ZnBhn8KqOSF2sm+lMisjLa4L4Fgc+G6e3E7/cmagO0JTMpPvlro8TZOoO39j
+	pw71GQYi4V6KlZbNHFuyhgdEjWMaIoTkrCyURTmPkMwux3/JQrS+E20JdW5jHfWw5aSUpXZa5bD
+	cf+/0ML5mJ8iqtgPIYI7CVa8E5v3C0sk908i1LcaDtwvZ1t3wK1SzCL/CFRlxj296yL9YnVXxIP
+	ja4TrSIyriom4DHiALeYgxe+KrNOwtPTDu51mUJhwz/o/XtEcKv4sesYxQa51oDglBj8yzWeHWV
+	DpwbKYZZVxMnjlpp1iEsJLG6U83fabZzXMzMgjCcNozq//g5m7j+tJ0Lhg5gWwYSEnv4FveNyVe
+	CEZA4aUgYD2R7uptEcBieibBbzi3nn43wj7Z/j07bTVPgJz+JAvTV5fUJe8Emg62PIYCWYm3J4M
+	qjbd5emSY39faxX5f4fM9WJORzojOo0RqJygVnwdeXMEsBxJyz/LSwRzqr
+X-Google-Smtp-Source: AGHT+IGyqjedNIcdhrNOPQMykBtYGSBZBMo3zQWu4uuLWxmp4pHh5GTsDxKfzTYPUlgke1V6yGUhZQ==
+X-Received: by 2002:a05:6a00:3022:b0:7e8:43f5:bd49 with SMTP id d2e1a72fcca58-7ff6725883dmr33131727b3a.53.1767147737094;
+        Tue, 30 Dec 2025 18:22:17 -0800 (PST)
 Received: from nfsv4-laptop2.cgocable.net (d75-157-27-199.bchsia.telus.net. [75.157.27.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.14
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Dec 2025 18:22:14 -0800 (PST)
+        Tue, 30 Dec 2025 18:22:16 -0800 (PST)
 From: rick.macklem@gmail.com
 To: linux-nfs@vger.kernel.org
 Cc: Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v1 05/17] Add a check for both POSIX and NFSv4 ACLs being set
-Date: Tue, 30 Dec 2025 18:21:07 -0800
-Message-ID: <20251231022119.1714-6-rick.macklem@gmail.com>
+Subject: [PATCH v1 06/17] Add na_dpaclerr and na_paclerr for file creation
+Date: Tue, 30 Dec 2025 18:21:08 -0800
+Message-ID: <20251231022119.1714-7-rick.macklem@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20251231022119.1714-1-rick.macklem@gmail.com>
 References: <20251231022119.1714-1-rick.macklem@gmail.com>
@@ -90,75 +90,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Macklem <rmacklem@uoguelph.ca>
 
-Check that both POSIX and NFSv4 ACLs are not being set by
-the same SETATTR.
-While here, fix posix_acl_release() for a couple of error cases
-by adding a new out_err label, so the POSIX ACLs are released
-before returning status.  Note that posix_acl_release() checks
-for a NULL argument and just returns for that case.
+When new file objects are created, a client might choose to specify
+POSIX draft ACLs for it.  If the set_posix_acl() fails, note the
+failure in these fields.  The file object has already been created,
+so the creation cannot now fail, but the attribute bits can be cleared
+in the reply.
 
 Signed-off-by: Rick Macklem <rmacklem@uoguelph.ca>
 ---
- fs/nfsd/nfs4proc.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ fs/nfsd/vfs.c | 6 +++---
+ fs/nfsd/vfs.h | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index b92477c87db1..71e9749375c1 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1215,7 +1215,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 				&cstate->current_fh, &setattr->sa_stateid,
- 				flags, NULL, &st);
- 		if (status)
--			return status;
-+			goto out_err;
- 	}
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 168d3ccc8155..146483bf8a65 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -597,12 +597,12 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		attr->na_labelerr = security_inode_setsecctx(dentry,
+ 			attr->na_seclabel->data, attr->na_seclabel->len);
+ 	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl)
+-		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
++		attr->na_paclerr = set_posix_acl(&nop_mnt_idmap,
+ 						dentry, ACL_TYPE_ACCESS,
+ 						attr->na_pacl);
+ 	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
+-	    !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))
+-		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
++				attr->na_dpacl && S_ISDIR(inode->i_mode))
++		attr->na_dpaclerr = set_posix_acl(&nop_mnt_idmap,
+ 						dentry, ACL_TYPE_DEFAULT,
+ 						attr->na_dpacl);
+ out_fill_attrs:
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index e192dca4a679..26c4b396558a 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -54,6 +54,8 @@ struct nfsd_attrs {
  
- 	if (deleg_attrs) {
-@@ -1233,17 +1233,24 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	if (st)
- 		nfs4_put_stid(st);
- 	if (status)
--		return status;
-+		goto out_err;
+ 	int			na_labelerr;	/* output */
+ 	int			na_aclerr;	/* output */
++	int			na_dpaclerr;	/* output */
++	int			na_paclerr;	/* output */
+ };
  
- 	err = fh_want_write(&cstate->current_fh);
--	if (err)
--		return nfserrno(err);
-+	if (err) {
-+		status = nfserrno(err);
-+		goto out_err;
-+	}
- 	status = nfs_ok;
- 
- 	status = check_attr_support(cstate, setattr->sa_bmval, nfsd_attrmask);
- 	if (status)
- 		goto out;
- 
-+	if (setattr->sa_acl && (setattr->sa_dpacl || setattr->sa_pacl)) {
-+		status = nfserr_inval;
-+		goto out;
-+	}
-+
- 	inode = cstate->current_fh.fh_dentry->d_inode;
- 	status = nfsd4_acl_to_attr(S_ISDIR(inode->i_mode) ? NF4DIR : NF4REG,
- 				   setattr->sa_acl, &attrs);
-@@ -1262,12 +1269,11 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	if (!status)
- 		status = nfserrno(attrs.na_aclerr);
- out:
--	if (setattr->sa_dpacl != NULL)
--		posix_acl_release(setattr->sa_dpacl);
--	if (setattr->sa_pacl != NULL)
--		posix_acl_release(setattr->sa_pacl);
- 	nfsd_attrs_free(&attrs);
- 	fh_drop_write(&cstate->current_fh);
-+out_err:
-+	posix_acl_release(setattr->sa_dpacl);
-+	posix_acl_release(setattr->sa_pacl);
- 	return status;
- }
- 
+ static inline void nfsd_attrs_free(struct nfsd_attrs *attrs)
 -- 
 2.49.0
 
