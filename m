@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-17362-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17363-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EBA8CEAF48
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 01:16:26 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859D0CEAF64
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 01:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6B9323016351
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 00:16:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 034C83008477
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 00:28:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D450B1E49F;
-	Wed, 31 Dec 2025 00:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826EF19E819;
+	Wed, 31 Dec 2025 00:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Nj/TJaED";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lx8M387N"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="et+nASBk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xbSr43/S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5801DFF7
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 00:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC0419F13F
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 00:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767140183; cv=none; b=jBtP5plIy/jKSFLBPYtw6l3TU3kJS7hRQEYT6mOdLgxv1rwVLclD5+iWWJAca6lKyuUz80fG5znzSnt/yNNz8XV5AboCdmgRJzBECJdawYEZL6GptdSvHtFgrO2MD8l5gQzsxJ+9SfhrLta9KtWknh1/6gE3uQr7eHRBvywd6Lk=
+	t=1767140893; cv=none; b=ruo9yCva30h+jgOyIuKyxjktMSivqiAeWP/I3bKahTl3RAOT/aOxb44Ui5OuTWKFSCzz4r2TCvuKZpcRN67dOUEY2PmBwz71jGJdA+12mQiG1i/ku4/9/cxDRa++roc3aJC9uSrj9wmV8bKAm+5yFF6+iWu42D0VPxpRJDp3IP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767140183; c=relaxed/simple;
-	bh=YFQEUGnUO1C/G+g410qawP0msPEbctUaJ8rl/9sl5YY=;
+	s=arc-20240116; t=1767140893; c=relaxed/simple;
+	bh=aDvARoBvcVfWcH2pZ6y6thyEpLPQjXvX71PHWY6gtLk=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=LJAYiS+wlKRipmhrjpzMLw8Ya+7q2iMKp6enkYtoUumM367Ink1V53N3+8Beg8a0P48YGatZZrGn9q3bPUelye9U+D3fSLHGvdoblYDCGjUewbirXJCugLWb/XpeEYHvA0KzR/k/fhwvIu7Y+LL9KEO/FwzdVb4EDM9fzoTPPpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Nj/TJaED; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lx8M387N; arc=none smtp.client-ip=103.168.172.154
+	 References:Date:Message-id; b=K6WpP4SEg0MR4qeXvi6vb/cOqpiYjlVNStyc1iaQxrZzp68ce+ziMZxpTS3UBUy9QYZGsvLk3c/ks8lfxfu+IJ1lW4zEvpWIWIM3prTP84gKP93vYsupnH4awNJrLmZhsoMP6mYbsy2Gmo6NmfDpW8UXOxJBgkIFr51IECqY9l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=et+nASBk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xbSr43/S; arc=none smtp.client-ip=103.168.172.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8010B1400100;
-	Tue, 30 Dec 2025 19:16:20 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Tue, 30 Dec 2025 19:16:20 -0500
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.phl.internal (Postfix) with ESMTP id C9E0EEC00CD;
+	Tue, 30 Dec 2025 19:28:10 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Tue, 30 Dec 2025 19:28:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1767140180; x=1767226580; bh=yRQaQloQjKM4x/5sLXoUtLk6mK3QeKWNfA3
-	qr5EwSgI=; b=Nj/TJaEDliNqWOnnXvwXHDuJ9/qqfX8eKN+LKVuz+w2qWxOIlHo
-	ivk1EG4c4Apk3x87Nj3ip0V4Vkg/4fHgryQk8XsMDIj/sl1wnwGbkIUdhsA2Ltaw
-	4z9fGbL70jweBeLFm8t+PTG66cKTKPxP6akZt2Ttu9g2yyn7K/qVzOdk0Eu3KVok
-	46zpnhVh6hv+sjrLYPHuEkQtODL13SFbuqOuX5dPkX3EDQrol/6A5ksMM5xO6MdR
-	4QR5+3gALoFtoVSk10JRhyvqzbI2sTVncTByC7DlEwVyRnwprPhXyoMFRlFL+GWw
-	KTh7/3/MX6iBAQSz/crx/qpzqZOUewGN0uQ==
+	1767140890; x=1767227290; bh=7W79QEKY5pm9nMxJEVsXYtFVvTBQ8wyuuZf
+	i8P6G/qc=; b=et+nASBkPBaIXDBwWY2O4NspytXsCbvtXjhmZ1nrXMk/LwRq/MT
+	6I/Fm2SmeGZk7EPi0m3oSd8MhQXG27H9q5Bl9FpuJpjpETQrzFXj+Uw3utSgWgca
+	3xNmjsME94ZQ4fbw3kFUyO4bWX/g+N3gd2yw4TKfQggaCHRzTo/WLB2SbOzBI6Va
+	fWNHz2dvRUQm/UBHQqXim518PnOPjhujGgdS7HDcZ4muc3cc3Qrs/Qy0AgmmDldX
+	TdQWhBXmas6WkYEEt2zyp1dwbWuJUYg1cEDfXw6tgQoqtCgmC4jjwQKvUsFZuA0d
+	uzfUNEswmef7tH98iK770y5OMjJ1/UtcsDA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767140180; x=
-	1767226580; bh=yRQaQloQjKM4x/5sLXoUtLk6mK3QeKWNfA3qr5EwSgI=; b=l
-	x8M387NVdHeQCvZVG1hI3prjYlXwLzYJ4SWPwiLoGlDqbYq97DldCggwMPB5gALd
-	m2KXg1IizlHm7cp4CFmysk6kjGSMObz4gelNLgZxpA/uRGPmHUvTdQZfCAlN07Xy
-	PdF0VeTMRUc7TVTmudnsn1NUiBQlaqpdCKxuqZObWUckiuJEy90zNVzf/Dy1jaP+
-	FOZ0dEBt/kol+u4CPti0cJqe+ohyp2fj8F8g9OC9BX2sWkFRSobsINOVidJEr8u2
-	HFMNX8xFwZCbxRuj5Y8DpDJagh2qWdGSbgsTGzLSXco5LlSkBsLhIBMIotRiZl6p
-	EVDqKaOE8whFQiQABKYbg==
-X-ME-Sender: <xms:VGtUabm501dAt2vL_jLRn1eSKNHPIB6w93F0fe6Ezxs2yQraeg0GNA>
-    <xme:VGtUaRFOXEE6ef7Ldih3L_P9t8VDiAow1OujozYhp1Qmmdf2eR4ui8mKE5mCJV6y0
-    JZ4ZDDdcJ-OTXvoRB1pPEyF1sLRAo21K77-fX_XmldJw9zgAA>
-X-ME-Received: <xmr:VGtUaT5fYGOLH4yIG1dcIp1TNbPgiYLaxKNQ7KXqlSFYJwK37MHZ75hAQhrxUJCh4dR752LhKtq7K_aE5ggglxSsWPC9DTzQcqjt8yYZ6_7t>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudeggecutefuodetggdotefrod
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767140890; x=
+	1767227290; bh=7W79QEKY5pm9nMxJEVsXYtFVvTBQ8wyuuZfi8P6G/qc=; b=x
+	bSr43/S3BAC9n9TXBMqdeJGC1HZ2LexBaOmKpHIUUUED8Jxa8s101sBf7T70KjAo
+	D6T4NShC3wqXYwIlMwF+o7jQfUJaZt2957n9oEIHDdKHD64Yd0D5Z3OpgAwwNCgB
+	ta6CQex7nscD11Rre7OM7RYb4tScyM5D/lu1u/7A7S+emgcC8JIY79gzdxLnrkyW
+	KyuYfeIIvS4revVH52YTCgVEynsxkIzezNpL9yEXUtrn4Jw7k8MGQn+tAKf6oeUt
+	ON1pRoB4eb1YbLlQ69doTSSg5nY5xXQuKjfonCaZUFRvubH9eP7Mc+O18jHEcGOL
+	ZSBxzmgNj3CpRULfbHs0Q==
+X-ME-Sender: <xms:Gm5UaWPqanUePrkx0yQyDUuvSOD_iW3DR9F-frAtHnmUaFVd9co4Aw>
+    <xme:Gm5UaXPCLPka4vNfn527M24TSObB2ZLP520R0IXGgiXIG5v_OQn4aJp-c8Yfc_t5_
+    kG4WBqnVXsaZoxr-npxl_FjRl5yWhyBY5jXa_RbZ7bE7AZLsg>
+X-ME-Received: <xmr:Gm5Uafj4CTZVQTgnKbuLFxR-mnq2UqM6Mx3w06iYbtrVXKe4HK6wJ6QZPcjwOcNw-vOdNUM1Q_Uhz9OxKevO_nC18xoMKe9hSKo0Gd3WTabN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudegiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    hrpegtgfgghffvvefujghffffkrhesthejredttddtjeenucfhrhhomheppfgvihhluehr
     ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    duteefhfduveehvdefueefvdffkeevkefgtdefgffgkeehjeeghfetiefhgffgleenucev
     lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
     hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhu
     thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
@@ -77,16 +77,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudeggecutefuodetgg
     drtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
     rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvg
     hlsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:VGtUaZmvcQVGUj246Q94eBWZUwKsF7P5QeHIurWCHDe9_93yQEZdeQ>
-    <xmx:VGtUaYoO7EtYrLWfyTQ8e_BigDJ8JAgYF6M4xlrdoXdlralxxo0x0Q>
-    <xmx:VGtUaYuMF85HxhtOGOqRnFyjumptKD_6QDaUpvA7qSfHrqDcgksqYQ>
-    <xmx:VGtUadEUSnaFkyHCznI69nvRgw3Ez2QNjT0FDkeSwHQ9ITnOUoRJ-w>
-    <xmx:VGtUaQyTYKDB0S11m-lDN2s55p2uEWkXHFIwCXLkBm6qQVIdniuruEN2>
+X-ME-Proxy: <xmx:Gm5Uacs_PRu37unH-JGL0GTPie3e9lKaVtbEL45ptgjTyEvtPavPIw>
+    <xmx:Gm5UadRfPcFoTV1viH5-6_gGbOkeJzJ1ZeaZ-86mmjyeTdO4hW7nmw>
+    <xmx:Gm5UaQ2l9-yJ0HbnqDqbBYL83KG-oy97ufaQEBPy8dSO_HeqUWjfvw>
+    <xmx:Gm5UaStQkUXcglbs16_u2ABYXXjIsgY8alHzosSJcjgMIPQ4JrD7ZQ>
+    <xmx:Gm5Uae6VB2Cqco_nxNEPwrj68r74GDRMhkvc-8SqgHn_KrdQZNTCNZPE>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Dec 2025 19:16:18 -0500 (EST)
+ 30 Dec 2025 19:28:08 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,145 +99,99 @@ Cc: "Jeff Layton" <jlayton@kernel.org>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
  "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v1 5/5] nfsd: close cached files on filesystem unmount
-In-reply-to: <20251230141838.2547848-6-cel@kernel.org>
-References: <20251230141838.2547848-1-cel@kernel.org>,
- <20251230141838.2547848-6-cel@kernel.org>
-Date: Wed, 31 Dec 2025 11:16:16 +1100
-Message-id: <176714017638.16766.126850013779418280@noble.neil.brown.name>
+Subject:
+ Re: [PATCH v1 0/5] Automatic NFSv4 state revocation on filesystem unmount
+In-reply-to: <20251230141838.2547848-1-cel@kernel.org>
+References: <20251230141838.2547848-1-cel@kernel.org>
+Date: Wed, 31 Dec 2025 11:28:06 +1100
+Message-id: <176714088647.16766.1296067005074563041@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
 On Wed, 31 Dec 2025, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> When a filesystem is unmounted while NFS is exporting it, the
-> unmount can fail with EBUSY even after NFSv4 state has been revoked.
-> This is because the nfsd_file cache can hold open NFSv2/3 file
-> handles that pin the filesystem, preventing the unmount from
-> completing.
->=20
-> Extend the mechanism that revokes NFSv4 state on unmount to also
-> close cached file handles. nfsd_file_close_sb() walks the nfsd_file
-> cache and disposes of entries belonging to the target superblock.
-> It runs after NFSv4 state revocation, so it handles only NFSv2/3
-> file handles that remain in the cache.
->=20
-> Entries still under construction (with nf_file not yet set) are
-> skipped; these have no open file to close.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/filecache.c | 39 +++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/filecache.h |  1 +
->  fs/nfsd/pin.c       |  6 ++++--
->  3 files changed, 44 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 93798575b807..bbef58c1caa9 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -894,6 +894,45 @@ __nfsd_file_cache_purge(struct net *net)
->  	nfsd_file_dispose_list(&dispose);
->  }
-> =20
-> +/**
-> + * nfsd_file_close_sb - close GC-managed cached files for a superblock
-> + * @sb: target superblock
-> + *
-> + * Walk the nfsd_file cache and close out GC-managed entries (those
-> + * acquired via nfsd_file_acquire_gc) that belong to @sb. Called during
-> + * filesystem unmount after NFSv4 state revocation to release remaining
-> + * cached file handles that may be pinning the filesystem.
-> + */
-> +void nfsd_file_close_sb(struct super_block *sb)
-> +{
-> +	struct rhashtable_iter iter;
-> +	struct nfsd_file *nf;
-> +	LIST_HEAD(dispose);
-> +
-> +	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 0)
-> +		return;
+> 
+> When an NFS server exports a filesystem and clients hold NFSv4 state
+> (opens, locks, delegations), unmounting the underlying filesystem
+> fails with EBUSY. The /proc/fs/nfsd/unlock_fs interface exists for
+> administrators to manually revoke state before retrying the unmount,
+> but this approach has significant operational drawbacks.
+> 
+> Manual intervention breaks automation workflows. Containerized NFS
+> servers, orchestration systems, and unattended maintenance scripts
+> cannot reliably unmount exported filesystems without implementing
+> custom logic to detect the failure and invoke unlock_fs. System
+> administrators managing many exports face tedious, error-prone
+> procedures when decommissioning storage.
 
-It is only valid to test NFSD_FILE_CACHE_UP while holding nfsd_mutex.
+Thanks for working on this.  Making automated workflows more reliable
+is certainly a worthy goal.  It has been explored before but never got
+to a working state.  Hopefully this time it will.
 
-Otherwise this patch looks good.
+> 
+> The server also provides no notification to NFS clients when their
+> state becomes invalid due to filesystem removal. Clients continue
+> using stale state until they encounter errors, potentially
+> corrupting data or experiencing mysterious failures long after the
+> underlying storage disappeared.
+
+I don't understand this claim.  You code uses exactly the same internal
+mechanisms, which trigger ADMIN_REVOKED errors to the extent supported
+by the protocol (v4.1 does this better than v4.0).
+How is this para relevant?
+
+> 
+> This series enables the NFS server to detect filesystem unmount
+> events and automatically revoke associated state. The mechanism
+> uses the kernel's existing fs_pin infrastructure, which provides
+> callbacks during mount lifecycle transitions. When a filesystem
+> is unmounted, all NFSv4 opens, locks, and delegations referencing
+> it are revoked, async COPY operations are cancelled with
+> NFS4ERR_ADMIN_REVOKED sent to clients, NLM locks are released,
+> and cached file handles are closed.
+
+As I said in response to the relevant patch, I think you aren't catching
+umount, only "mount -o remount,ro"
+
+You said there are lock-ordering problems with revoking state from a
+unmount-time callback.  Maybe can initiate the unpin callback from
+somewhere else, before those locks are taken?
 
 Thanks,
 NeilBrown
 
 
-> +
-> +	rhltable_walk_enter(&nfsd_file_rhltable, &iter);
-> +	do {
-> +		rhashtable_walk_start(&iter);
-> +
-> +		nf =3D rhashtable_walk_next(&iter);
-> +		while (!IS_ERR_OR_NULL(nf)) {
-> +			if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 0)
-> +				goto next;
-> +			if (nf->nf_file && file_inode(nf->nf_file)->i_sb =3D=3D sb)
-> +				nfsd_file_cond_queue(nf, &dispose);
-> +next:
-> +			nf =3D rhashtable_walk_next(&iter);
-> +		}
-> +
-> +		rhashtable_walk_stop(&iter);
-> +	} while (nf =3D=3D ERR_PTR(-EAGAIN));
-> +	rhashtable_walk_exit(&iter);
-> +
-> +	nfsd_file_dispose_list(&dispose);
-> +}
-> +
->  static struct nfsd_fcache_disposal *
->  nfsd_alloc_fcache_disposal(void)
->  {
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index b383dbc5b921..66ca7fc6189b 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -70,6 +70,7 @@ struct net *nfsd_file_put_local(struct nfsd_file __rcu **=
-nf);
->  struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
->  struct file *nfsd_file_file(struct nfsd_file *nf);
->  void nfsd_file_close_inode_sync(struct inode *inode);
-> +void nfsd_file_close_sb(struct super_block *sb);
->  void nfsd_file_net_dispose(struct nfsd_net *nn);
->  bool nfsd_file_is_cached(struct inode *inode);
->  __be32 nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> diff --git a/fs/nfsd/pin.c b/fs/nfsd/pin.c
-> index f8d0d7cda404..0c1de8fd0e43 100644
-> --- a/fs/nfsd/pin.c
-> +++ b/fs/nfsd/pin.c
-> @@ -19,6 +19,7 @@
->  #include "nfsd.h"
->  #include "netns.h"
->  #include "state.h"
-> +#include "filecache.h"
-> =20
->  #define NFSDDBG_FACILITY	NFSDDBG_PROC
-> =20
-> @@ -49,8 +50,8 @@ static void nfsd_fs_pin_free_rcu(struct rcu_head *rcu)
-> =20
->  /*
->   * Work function for nfsd_fs_pin - runs in process context.
-> - * Cancels async COPYs, releases NLM locks, and revokes NFSv4 state for
-> - * the superblock.
-> + * Cancels async COPYs, releases NLM locks, revokes NFSv4 state, and closes
-> + * cached NFSv2/3 files for the superblock.
->   */
->  static void nfsd_fs_pin_work(struct work_struct *work)
->  {
-> @@ -63,6 +64,7 @@ static void nfsd_fs_pin_work(struct work_struct *work)
->  	/* Errors are logged by lockd; no recovery is possible. */
->  	(void)nlmsvc_unlock_all_by_sb(p->sb);
->  	nfsd4_revoke_states(nn, p->sb);
-> +	nfsd_file_close_sb(p->sb);
-> =20
->  	pr_info("nfsd: state revocation for %s complete\n", p->sb->s_id);
-> =20
-> --=20
+> 
+> With automatic revocation, unmount operations complete without
+> administrator intervention once the brief state cleanup finishes.
+> Clients receive immediate notification of state loss through
+> standard NFSv4 error codes, allowing applications to handle the
+> situation appropriately rather than encountering silent failures.
+> 
+> Chuck Lever (5):
+>   nfsd: cancel async COPY operations when admin revokes filesystem state
+>   fs: export pin_insert and pin_remove for modular filesystems
+>   fs: add pin_insert_group() for superblock-only pins
+>   nfsd: revoke NFSv4 state when filesystem is unmounted
+>   nfsd: close cached files on filesystem unmount
+> 
+>  fs/fs_pin.c            |  50 ++++++++
+>  fs/nfsd/Makefile       |   2 +-
+>  fs/nfsd/filecache.c    |  39 ++++++
+>  fs/nfsd/filecache.h    |   1 +
+>  fs/nfsd/netns.h        |   4 +
+>  fs/nfsd/nfs4proc.c     | 124 +++++++++++++++++--
+>  fs/nfsd/nfs4state.c    |  44 +++++--
+>  fs/nfsd/nfsctl.c       |  11 +-
+>  fs/nfsd/pin.c          | 272 +++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/state.h        |   9 ++
+>  fs/nfsd/xdr4.h         |   1 +
+>  include/linux/fs_pin.h |   1 +
+>  12 files changed, 537 insertions(+), 21 deletions(-)
+>  create mode 100644 fs/nfsd/pin.c
+> 
+> -- 
 > 2.52.0
->=20
->=20
+> 
+> 
 
 
