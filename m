@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-17371-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17372-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8325CEB0A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:21 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE1D5CEB0A3
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:22:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 84A95301B81D
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:22:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C6CC83008791
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84578257851;
-	Wed, 31 Dec 2025 02:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502DF2D7DCE;
+	Wed, 31 Dec 2025 02:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqKCB45D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2Y8Sk+E"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9402E22AA
-	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF002E22AA
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767147735; cv=none; b=lW3IGoyLcUDh2l0qQ48xnwex+tgUUiOdzCLDfDxK+kYvHR8c+AlmHmmfe/pPjBWIdDQwfyGffGeRUQAFsxlmLCT0Jod10NhUMVAPF+gVrGGQ0OrkBpAYZeZdtzfuNHylNL4HEoPPGdO3XZFlWUhofgT/cS9kbnl+bkKIvAxVvYA=
+	t=1767147738; cv=none; b=a/3OG3262ynDWXxnGvsBMlObS41TXxzt2CnM6evHjqJLF7PYLVT5Ag4WVm6UfeRzTl3sbB94jJsFKrW16fFfgtmla/EwSLwMYxhqN7P8QXCz9vrEukuGwJw920KksJ+tzCMudTfGEgzwmvEWxRpWmClEGer8zk6ShK71xACIpz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767147735; c=relaxed/simple;
-	bh=VCfD2JibYb6Cp2562cntWYHLDErpiuK4p/zRu7AKbhQ=;
+	s=arc-20240116; t=1767147738; c=relaxed/simple;
+	bh=oqf4R2knTZm4vlXy9s4o+y3Aaui76wiv75ZUkvQdLbk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dBZV/va6p1xzPwdhKncn21O7qoyqCoWsnDC9TKeiB74GgS091sJSwMxrwewZxdq+Tf5dOAlDkfPpLu/5R+e4nRWb4cnUmPr1oEOoqYHJWsESRIQd5qb+8y1NeNOTHkU1pFf4+B0l8Lu/G73n36c0dgluwzljvXH4eNKe6hY7OkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqKCB45D; arc=none smtp.client-ip=209.85.210.169
+	 MIME-Version; b=teJNX8b0dDHgx4d+nVFEOFT9UF8nFRCB0fOx+hlr0tXtY7pE9U0SGJHDKvW5Rb7toa22vt2vPTZ4rOi1GgBpOPOQxsez70/FD37ynnpypZbrx3YfhTwPNcdNrBNcMhsDOPXPomdkssKYf5MtIUEK81+D/cUSd4M8CeBJ2hy9Mr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P2Y8Sk+E; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7bab7c997eeso12345893b3a.0
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:13 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b6dd81e2d4so10779983b3a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767147733; x=1767752533; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767147735; x=1767752535; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QzOSstUx8vcD33PI39CSCZYHFc5KXl+2lc+4W3n8GZc=;
-        b=aqKCB45D+moYTmU0pXtY9Eo9jERcucvMn1nm980a/aiY6bSAqAHD1TKhtp9mNOXSdi
-         StCJzUd7u86nzfopiE/oSkjUuy9xd1GolhL+ckiMotSyyA21iWsHK5pk4lwFtXijgzjz
-         BP6USOSQUU9aBOUCrCDqsqGaDziFEDZjKH2j/2WHaKISzlgLCaJGTu9FvrR2SUwudGUi
-         238G7aXvl3t54MrYn1L/lwe6QKhWOODXRTk6WgS5hS7nbhKLX36Lt87NAtnriuII2rZz
-         LC0lKIwDzDmqo/6jdKhfygB0aHNMUkSAYEI+AiB5WjSrvEnhdbhyju8Fss8bsnsMFH7j
-         tlNA==
+        bh=Im5awB1FTEmpukw7QHbyQNN7Hry4+njONw8NytkaUI4=;
+        b=P2Y8Sk+Ec4g3LJ+m29lFc4jNtUSZL9Yca39Kv8NJQsh4xHMBieZuWyaqvR/0NqEss4
+         kmJcf/oWXTalmfdXJjB9c8oPnm+RnGya7IAMpEfRZRzrhpW3csF7VUaWzYzriCrgLAw5
+         SZNJi5zerp6bozkhe587YZsSo5nte2Scv0HtrkjrZHJbyMZCaMCz3IPPxGkDfhBv767Y
+         xVgyzBb2nm/HISemVCwDM5EGlVxs+kFVi4hjOQzZ79DyLrgSa7ZzjepNALTuXRcpdr8u
+         x7Y2LA1ykibzZrTchaC/1jKyl9WfLDJV0bBJMWA4ZH/AvheVWXSaYGYbop8bqDV1Kxwz
+         frRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767147733; x=1767752533;
+        d=1e100.net; s=20230601; t=1767147735; x=1767752535;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=QzOSstUx8vcD33PI39CSCZYHFc5KXl+2lc+4W3n8GZc=;
-        b=b2bCJlZdaD4PbK3HMJ+PFCcTPUb/Kf8SMV2ANsThmw0Q+iR4tAv2vZGfCgneW5HFc2
-         bem0tDdj9eC2WDQh1bIwyitVJOpJBc9Py+D+9j8/1l4zOpLRPKdS14xSgJOFs7KNLyTs
-         bz/H/cYt15925TQlgG6HCDEuf/KJ8jax6SEuUkPAy9aU2L8d1IMytx8iMmlCf8BhOZH5
-         Ncd4hQzJLoGYHEMeGDljBWAX4oHPzRYn9EzV89z8Mt5C2DQXs/+NGobcTH9elHiH0KWM
-         iiDddlQqylFywGjx+ENMOmsjofDMV/nti3sB/MZ7ezW2YpW++3yd/HkUt/0vQkRe7+v1
-         Wd2A==
-X-Gm-Message-State: AOJu0YzqZiAjOlyG2h0pEpRt/YGHBAqnIrvpAHIV+HwuOqgDihA1Okmo
-	hVtFQ3XWdUtr7yFc4AURL2OpWWSBcOIYxtcuy/kD9UzMs0KPQZ68dpqwMXdjrbQ=
-X-Gm-Gg: AY/fxX4PX1xR/pJxoTGBoWAXwp0+fAV/L0NCXrAEfVMAeCXyQ3nV03u6q7xiYBNIqog
-	+qGHLY9TaGvjLcakTsQwVv2UbdQY6SfjyG+dV6bENk1o2yrR78be+gSV7O9HmYFKM/UUNvxJWJ+
-	HTrKTsxtKES7Lyu1KYy+nebShLlQBd+Z9QlJ2AacC/N/sjYlOzgmoHRI6qh/NvjgI4BxqyWekDG
-	uz5oDDk5Xn9uPqajzdSBoEPsK7tXpR3iFqEAeayhvVQJax5UzfYLuPGylhToAVEb0BEbyPrNa36
-	HT5jjB5E8IJ5XiqQoMPployx+iWRkT01B3/hbabx6xB198wtw1P9cKqY2D4IHwizmhyJnYz9cAo
-	VF1+9HdOcttuRWOxjbuiWnxdkz3ZRWMgvKYygyELKvU5kChsp+dtZVuF/yJZKaocrT8z3ShVHOv
-	tSBvoCziPKL9gGXN0mPnIrByC2FUOik2Lsq0spRhIe1c4GeOr1YodbX1l4
-X-Google-Smtp-Source: AGHT+IF4utqBOpPYPNEY7g3mel/fWCR/+0hslrlCUmLPl/lieKbVV6jgdJZbDCHsYrvMkpRmkX/NMg==
-X-Received: by 2002:a05:6a00:2a0c:b0:7f7:1cce:d7b4 with SMTP id d2e1a72fcca58-7ff657a1000mr30533279b3a.1.1767147732798;
-        Tue, 30 Dec 2025 18:22:12 -0800 (PST)
+        bh=Im5awB1FTEmpukw7QHbyQNN7Hry4+njONw8NytkaUI4=;
+        b=YFKpXaXRzY8mb64vB84tq8UIJsT7grg6iy4kdvuegazGf2AwW1hMiX3+JkCgBCmzZt
+         Uneo/a1PLd03wbJjUbckPt65lUOwbUL3gI2PK1+E+KavssxKaKDoDPiNd+KsPy/SWOdm
+         K2JoWY4r0sc89z6ZvPTVdUmANFcXCJeVjtWg5q5kx5w16q16K6QGXAEsB8QPn2PEr4Uz
+         OhwKIu71JLh+7PIN1TyajaYfKaN29GQlUjXUTOjet6mEyjIdDLS3vi8s0gPC7+23v8Vv
+         b/D5/J0Lc3dvCZtkr93u8vpkhE2aqjvqXEDzF+hIoTpIZexGiJtJGEfp0c7DHAQUtujb
+         oiig==
+X-Gm-Message-State: AOJu0YzzVLbLBwWGeMADx/5Tp72Vl9B2KGX+7XFRLtrWllZ3YdEugWL1
+	8ezllc96d5ZuzTkgVt1BNW1qiKukzVXmdTLgSoMz4c8TVzLrqnrmxqbRwYW5c4Q=
+X-Gm-Gg: AY/fxX5M/EPGS/u4Cg7SGCNJpbprKsYEk5rQwrORVf0sQBk83tyCtgmiOxQb4YkAAW3
+	6yaFm72bocUIlfB4JLjVSxDiSYgA8IFFBzV6JhZ90bj/MsziuqEH0IhTeG0IrJHH3Ti2DckAOQk
+	HIyTc1sCpav+KFS9fj6fXi/C28LMXzIFd80ElEodpY9OTE0op9wTDcabh3/2f1KuBJ3lu3a+Gom
+	imI0uihzHv4xMIuEZkdAze4Lm4RY9cTysdPFM2BpF5/G15DtS7qF4bXOV76T+KhnHXMjpxOVGRV
+	8rAtRXQd164KveHGme2LEtVh7CyTb0AjojDZHC821Fk4Jh8OBgPhk9fHb/tZ6sJ7mRsZmsSU8Vp
+	cZDhXNMt31hz1/sPkEWQSlS+Sd1P4jPm0uKfUArNpscBeUt5lR8ovxmvOInoIArbvzTCcXZfxEp
+	OYN0ZznnDZQ3FJRAu7S9gqIwF1NTUF8lC1N6Li4JKqNz5oIz6doRLvlUoS
+X-Google-Smtp-Source: AGHT+IE1aAPCtT4uUatAELH4it+r9jmvHYjEF5mLAiyWHcW/DOD/EfMkwtL64mmXrs1/JeOmLfWYUg==
+X-Received: by 2002:a05:6a00:e12:b0:7f6:2b06:7134 with SMTP id d2e1a72fcca58-7ff66175a58mr29060041b3a.32.1767147734921;
+        Tue, 30 Dec 2025 18:22:14 -0800 (PST)
 Received: from nfsv4-laptop2.cgocable.net (d75-157-27-199.bchsia.telus.net. [75.157.27.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm33659267b3a.33.2025.12.30.18.22.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Dec 2025 18:22:12 -0800 (PST)
+        Tue, 30 Dec 2025 18:22:14 -0800 (PST)
 From: rick.macklem@gmail.com
 To: linux-nfs@vger.kernel.org
 Cc: Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v1 04/17] Add support for encoding/decoding POSIX draft ACLs
-Date: Tue, 30 Dec 2025 18:21:06 -0800
-Message-ID: <20251231022119.1714-5-rick.macklem@gmail.com>
+Subject: [PATCH v1 05/17] Add a check for both POSIX and NFSv4 ACLs being set
+Date: Tue, 30 Dec 2025 18:21:07 -0800
+Message-ID: <20251231022119.1714-6-rick.macklem@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20251231022119.1714-1-rick.macklem@gmail.com>
 References: <20251231022119.1714-1-rick.macklem@gmail.com>
@@ -90,411 +90,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Macklem <rmacklem@uoguelph.ca>
 
-This patch adds encoding/decoding of the new attributes described
-by the internet draft "POSIX Draft ACL support for Network
-File System Version 4, Minor Version 2".
+Check that both POSIX and NFSv4 ACLs are not being set by
+the same SETATTR.
+While here, fix posix_acl_release() for a couple of error cases
+by adding a new out_err label, so the POSIX ACLs are released
+before returning status.  Note that posix_acl_release() checks
+for a NULL argument and just returns for that case.
 
 Signed-off-by: Rick Macklem <rmacklem@uoguelph.ca>
 ---
- fs/nfsd/nfs4xdr.c | 292 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 287 insertions(+), 5 deletions(-)
+ fs/nfsd/nfs4proc.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 5065727204b9..5f996b3a4ce4 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -43,6 +43,7 @@
- #include <linux/sunrpc/addr.h>
- #include <linux/xattr.h>
- #include <linux/vmalloc.h>
-+#include <linux/nfsacl.h>
- 
- #include <uapi/linux/xattr.h>
- 
-@@ -377,16 +378,123 @@ nfsd4_decode_security_label(struct nfsd4_compoundargs *argp,
- 	return nfs_ok;
- }
- 
-+static __be32
-+nfsacl4_posix_xdrtotag(struct xdr_stream *xdr, u32 *tag)
-+{
-+	u32 type;
-+
-+	if (xdr_stream_decode_u32(xdr, &type) < 0)
-+		return nfserr_bad_xdr;
-+	switch(type) {
-+	case POSIXACE4_TAG_USER_OBJ:
-+		*tag = ACL_USER_OBJ;
-+		break;
-+	case POSIXACE4_TAG_GROUP_OBJ:
-+		*tag = ACL_GROUP_OBJ;
-+		break;
-+	case POSIXACE4_TAG_USER:
-+		*tag = ACL_USER;
-+		break;
-+	case POSIXACE4_TAG_GROUP:
-+		*tag = ACL_GROUP;
-+		break;
-+	case POSIXACE4_TAG_MASK:
-+		*tag = ACL_MASK;
-+		break;
-+	case POSIXACE4_TAG_OTHER:
-+		*tag = ACL_OTHER;
-+		break;
-+	default:
-+		return nfserr_bad_xdr;
-+	}
-+	return nfs_ok;
-+}
-+
-+static __be32
-+nfsd4_decode_posixace4(struct nfsd4_compoundargs *argp,
-+			struct posix_acl_entry *ace)
-+{
-+	u32 val;
-+	__be32 *p, status;
-+
-+	status = nfsacl4_posix_xdrtotag(argp->xdr, &val);
-+	if (status != nfs_ok)
-+		return status;
-+	ace->e_tag = val;
-+	if (xdr_stream_decode_u32(argp->xdr, &val) < 0)
-+		return nfserr_bad_xdr;
-+	if (val & ~S_IRWXO)
-+		return nfserr_bad_xdr;
-+	ace->e_perm = val;
-+
-+	if (xdr_stream_decode_u32(argp->xdr, &val) < 0)
-+		return nfserr_bad_xdr;
-+	p = xdr_inline_decode(argp->xdr, val);
-+	if (!p)
-+		return nfserr_bad_xdr;
-+	switch(ace->e_tag) {
-+	case ACL_USER:
-+		status = nfsd_map_name_to_uid(argp->rqstp,
-+				(char *)p, val, &ace->e_uid);
-+		break;
-+	case ACL_GROUP:
-+		status = nfsd_map_name_to_gid(argp->rqstp,
-+				(char *)p, val, &ace->e_gid);
-+	}
-+
-+	return status;
-+}
-+
-+static noinline __be32
-+nfsd4_decode_posix_acl(struct nfsd4_compoundargs *argp, struct posix_acl **acl)
-+{
-+	struct posix_acl_entry *ace;
-+	__be32 status;
-+	u32 count;
-+
-+	if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
-+		return nfserr_bad_xdr;
-+
-+	if (count > xdr_stream_remaining(argp->xdr) / 16)
-+		/*
-+		 * Even with 4-byte names there wouldn't be
-+		 * space for that many aces; something fishy is
-+		 * going on:
-+		 */
-+		return nfserr_fbig;
-+
-+	*acl = posix_acl_alloc(count, GFP_NOFS);
-+	if (*acl == NULL)
-+		return nfserr_resource;
-+
-+	(*acl)->a_count = count;
-+	for (ace = (*acl)->a_entries; ace < (*acl)->a_entries + count; ace++) {
-+		status = nfsd4_decode_posixace4(argp, ace);
-+		if (status) {
-+			posix_acl_release(*acl);
-+			*acl = NULL;
-+			return status;
-+		}
-+	}
-+
-+	return nfs_ok;
-+}
-+
- static __be32
- nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
- 		    struct iattr *iattr, struct nfs4_acl **acl,
--		    struct xdr_netobj *label, int *umask)
-+		    struct xdr_netobj *label, int *umask,
-+		    struct posix_acl **dpaclp, struct posix_acl **paclp)
- {
- 	unsigned int starting_pos;
- 	u32 attrlist4_count;
- 	__be32 *p, status;
- 
- 	iattr->ia_valid = 0;
-+	if (dpaclp)
-+		*dpaclp = NULL;
-+	if (paclp)
-+		*paclp = NULL;
- 	status = nfsd4_decode_bitmap4(argp, bmval, bmlen);
- 	if (status)
- 		return nfserr_bad_xdr;
-@@ -542,6 +650,28 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
- 		iattr->ia_valid |= ATTR_CTIME | ATTR_CTIME_SET |
- 				   ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
- 	}
-+	if (bmval[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL) {
-+		struct posix_acl *dpacl;
-+
-+		status = nfsd4_decode_posix_acl(argp, &dpacl);
-+		if (status)
-+			return status;
-+		if (dpaclp)
-+			*dpaclp = dpacl;
-+		else
-+			posix_acl_release(dpacl);
-+	}
-+	if (bmval[2] & FATTR4_WORD2_POSIX_ACCESS_ACL) {
-+		struct posix_acl *pacl;
-+
-+		status = nfsd4_decode_posix_acl(argp, &pacl);
-+		if (status)
-+			return status;
-+		if (paclp)
-+			*paclp = pacl;
-+		else
-+			posix_acl_release(pacl);
-+	}
- 
- 	/* request sanity: did attrlist4 contain the expected number of words? */
- 	if (attrlist4_count != xdr_stream_pos(argp->xdr) - starting_pos)
-@@ -849,7 +979,8 @@ nfsd4_decode_create(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
- 	status = nfsd4_decode_fattr4(argp, create->cr_bmval,
- 				    ARRAY_SIZE(create->cr_bmval),
- 				    &create->cr_iattr, &create->cr_acl,
--				    &create->cr_label, &create->cr_umask);
-+				    &create->cr_label, &create->cr_umask,
-+				    NULL, NULL);
- 	if (status)
- 		return status;
- 
-@@ -1000,7 +1131,8 @@ nfsd4_decode_createhow4(struct nfsd4_compoundargs *argp, struct nfsd4_open *open
- 		status = nfsd4_decode_fattr4(argp, open->op_bmval,
- 					     ARRAY_SIZE(open->op_bmval),
- 					     &open->op_iattr, &open->op_acl,
--					     &open->op_label, &open->op_umask);
-+					     &open->op_label, &open->op_umask,
-+					     NULL, NULL);
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index b92477c87db1..71e9749375c1 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1215,7 +1215,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 				&cstate->current_fh, &setattr->sa_stateid,
+ 				flags, NULL, &st);
  		if (status)
- 			return status;
- 		break;
-@@ -1018,7 +1150,8 @@ nfsd4_decode_createhow4(struct nfsd4_compoundargs *argp, struct nfsd4_open *open
- 		status = nfsd4_decode_fattr4(argp, open->op_bmval,
- 					     ARRAY_SIZE(open->op_bmval),
- 					     &open->op_iattr, &open->op_acl,
--					     &open->op_label, &open->op_umask);
-+					     &open->op_label, &open->op_umask,
-+					     NULL, NULL);
- 		if (status)
- 			return status;
- 		break;
-@@ -1345,7 +1478,8 @@ nfsd4_decode_setattr(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
- 	return nfsd4_decode_fattr4(argp, setattr->sa_bmval,
- 				   ARRAY_SIZE(setattr->sa_bmval),
- 				   &setattr->sa_iattr, &setattr->sa_acl,
--				   &setattr->sa_label, NULL);
-+				   &setattr->sa_label, NULL, &setattr->sa_dpacl,
-+				   &setattr->sa_pacl);
- }
- 
- static __be32
-@@ -2930,6 +3064,8 @@ struct nfsd4_fattr_args {
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	struct lsm_context	context;
- #endif
-+	struct posix_acl	*dpacl;
-+	struct posix_acl	*pacl;
- 	u32			rdattr_err;
- 	bool			contextsupport;
- 	bool			ignore_crossmnt;
-@@ -3470,6 +3606,128 @@ static __be32 nfsd4_encode_fattr4_open_arguments(struct xdr_stream *xdr,
- 	return nfs_ok;
- }
- 
-+static __be32 nfsd4_encode_fattr4_acl_trueform(struct xdr_stream *xdr,
-+					const struct nfsd4_fattr_args *args)
-+{
-+
-+	return nfsd4_encode_uint32_t(xdr, ACL_MODEL_POSIX_DRAFT);
-+}
-+
-+static __be32 nfsd4_encode_fattr4_acl_trueform_scope(struct xdr_stream *xdr,
-+					const struct nfsd4_fattr_args *args)
-+{
-+
-+	return nfsd4_encode_uint32_t(xdr, ACL_SCOPE_FILE_SYSTEM);
-+}
-+
-+static int nfsacl4_posix_tagtotype(u32 tag)
-+{
-+	int type;
-+
-+	switch(tag) {
-+	case ACL_USER_OBJ:
-+		type = POSIXACE4_TAG_USER_OBJ;
-+		break;
-+	case ACL_GROUP_OBJ:
-+		type = POSIXACE4_TAG_GROUP_OBJ;
-+		break;
-+	case ACL_USER:
-+		type = POSIXACE4_TAG_USER;
-+		break;
-+	case ACL_GROUP:
-+		type = POSIXACE4_TAG_GROUP;
-+		break;
-+	case ACL_MASK:
-+		type = POSIXACE4_TAG_MASK;
-+		break;
-+	case ACL_OTHER:
-+		type = POSIXACE4_TAG_OTHER;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return type;
-+}
-+
-+static __be32 xdr_nfs4ace_stream_encode(struct xdr_stream *xdr,
-+				struct svc_rqst *rqstp,
-+				struct posix_acl_entry *acep)
-+{
-+	__be32 status;
-+	int type;
-+
-+	type = nfsacl4_posix_tagtotype(acep->e_tag);
-+	if (type < 0)
-+		return nfserr_resource;
-+	if (xdr_stream_encode_u32(xdr, type) != XDR_UNIT)
-+		return nfserr_resource;
-+	if (xdr_stream_encode_u32(xdr, acep->e_perm) != XDR_UNIT)
-+		return nfserr_resource;
-+	switch(acep->e_tag) {
-+	case ACL_USER_OBJ:
-+	case ACL_GROUP_OBJ:
-+	case ACL_MASK:
-+	case ACL_OTHER:
-+		if (xdr_stream_encode_u32(xdr, 0) != XDR_UNIT)
-+			return nfserr_resource;
-+		break;
-+	case ACL_USER:
-+		status = nfsd4_encode_user(xdr, rqstp, acep->e_uid);
-+		if (status != nfs_ok)
-+			return status;
-+		break;
-+	case ACL_GROUP:
-+		status = nfsd4_encode_group(xdr, rqstp, acep->e_gid);
-+		if (status != nfs_ok)
-+			return status;
-+		break;
-+	default:
-+		return nfserr_resource;
-+	}
-+	return nfs_ok;
-+}
-+
-+static __be32 encode_stream_posixacl(struct xdr_stream *xdr,
-+				struct posix_acl *acl,
-+				struct svc_rqst *rqstp)
-+{
-+	__be32 status;
-+	int cnt;
-+
-+	if (acl == NULL) {
-+		if (xdr_stream_encode_u32(xdr, 0) != XDR_UNIT)
-+			return nfserr_resource;
-+		return nfs_ok;
-+	}
-+	if (acl->a_count > NFS_ACL_MAX_ENTRIES)
-+		return nfserr_resource;
-+	if (xdr_stream_encode_u32(xdr, acl->a_count) != XDR_UNIT)
-+		return nfserr_resource;
-+
-+	for (cnt = 0; cnt < acl->a_count; cnt++) {
-+		status = xdr_nfs4ace_stream_encode(xdr, rqstp,
-+						&acl->a_entries[cnt]);
-+		if (status != nfs_ok)
-+			return status;
-+	}
-+
-+	return nfs_ok;
-+}
-+
-+static __be32 nfsd4_encode_fattr4_posix_default_acl(struct xdr_stream *xdr,
-+				      const struct nfsd4_fattr_args *args)
-+{
-+
-+	return encode_stream_posixacl(xdr, args->dpacl, args->rqstp);
-+}
-+
-+static __be32 nfsd4_encode_fattr4_posix_access_acl(struct xdr_stream *xdr,
-+				      const struct nfsd4_fattr_args *args)
-+{
-+
-+	return encode_stream_posixacl(xdr, args->pacl, args->rqstp);
-+}
-+
- static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
- 	[FATTR4_SUPPORTED_ATTRS]	= nfsd4_encode_fattr4_supported_attrs,
- 	[FATTR4_TYPE]			= nfsd4_encode_fattr4_type,
-@@ -3573,6 +3831,10 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
- 	[FATTR4_TIME_DELEG_ACCESS]	= nfsd4_encode_fattr4__inval,
- 	[FATTR4_TIME_DELEG_MODIFY]	= nfsd4_encode_fattr4__inval,
- 	[FATTR4_OPEN_ARGUMENTS]		= nfsd4_encode_fattr4_open_arguments,
-+	[FATTR4_ACL_TRUEFORM]		= nfsd4_encode_fattr4_acl_trueform,
-+	[FATTR4_ACL_TRUEFORM_SCOPE]	= nfsd4_encode_fattr4_acl_trueform_scope,
-+	[FATTR4_POSIX_DEFAULT_ACL]	= nfsd4_encode_fattr4_posix_default_acl,
-+	[FATTR4_POSIX_ACCESS_ACL]	= nfsd4_encode_fattr4_posix_access_acl,
- };
- 
- /*
-@@ -3610,6 +3872,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	args.dentry = dentry;
- 	args.ignore_crossmnt = (ignore_crossmnt != 0);
- 	args.acl = NULL;
-+	args.pacl = NULL;
-+	args.dpacl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	args.context.context = NULL;
- #endif
-@@ -3699,6 +3963,20 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 			goto out_nfserr;
+-			return status;
++			goto out_err;
  	}
  
-+	if (attrmask[2] & (FATTR4_WORD2_POSIX_DEFAULT_ACL |
-+					FATTR4_WORD2_POSIX_ACCESS_ACL)) {
-+		err = nfsd4_get_posix_acl(rqstp, dentry, &args.pacl,
-+					&args.dpacl);
-+		if (err == -EOPNOTSUPP)
-+			attrmask[2] &= ~(FATTR4_WORD2_POSIX_DEFAULT_ACL |
-+						FATTR4_WORD2_POSIX_ACCESS_ACL);
-+		else if (err == -EINVAL) {
-+			status = nfserr_attrnotsupp;
-+			goto out;
-+		} else if (err != 0)
-+			goto out_nfserr;
+ 	if (deleg_attrs) {
+@@ -1233,17 +1233,24 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (st)
+ 		nfs4_put_stid(st);
+ 	if (status)
+-		return status;
++		goto out_err;
+ 
+ 	err = fh_want_write(&cstate->current_fh);
+-	if (err)
+-		return nfserrno(err);
++	if (err) {
++		status = nfserrno(err);
++		goto out_err;
++	}
+ 	status = nfs_ok;
+ 
+ 	status = check_attr_support(cstate, setattr->sa_bmval, nfsd_attrmask);
+ 	if (status)
+ 		goto out;
+ 
++	if (setattr->sa_acl && (setattr->sa_dpacl || setattr->sa_pacl)) {
++		status = nfserr_inval;
++		goto out;
 +	}
 +
- 	args.contextsupport = false;
+ 	inode = cstate->current_fh.fh_dentry->d_inode;
+ 	status = nfsd4_acl_to_attr(S_ISDIR(inode->i_mode) ? NF4DIR : NF4REG,
+ 				   setattr->sa_acl, &attrs);
+@@ -1262,12 +1269,11 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (!status)
+ 		status = nfserrno(attrs.na_aclerr);
+ out:
+-	if (setattr->sa_dpacl != NULL)
+-		posix_acl_release(setattr->sa_dpacl);
+-	if (setattr->sa_pacl != NULL)
+-		posix_acl_release(setattr->sa_pacl);
+ 	nfsd_attrs_free(&attrs);
+ 	fh_drop_write(&cstate->current_fh);
++out_err:
++	posix_acl_release(setattr->sa_dpacl);
++	posix_acl_release(setattr->sa_pacl);
+ 	return status;
+ }
  
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-@@ -3747,6 +4025,10 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		security_release_secctx(&args.context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(args.acl);
-+	if (args.pacl)
-+		posix_acl_release(args.pacl);
-+	if (args.dpacl)
-+		posix_acl_release(args.dpacl);
- 	if (tempfh) {
- 		fh_put(tempfh);
- 		kfree(tempfh);
 -- 
 2.49.0
 
