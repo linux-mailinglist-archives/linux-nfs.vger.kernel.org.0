@@ -1,52 +1,81 @@
-Return-Path: <linux-nfs+bounces-17364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAB06CEB014
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:40:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AA00CEB050
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 03:00:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C80703009240
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 01:40:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B1ACB301585C
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Dec 2025 02:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7066C2D77E5;
-	Wed, 31 Dec 2025 01:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBEE854763;
+	Wed, 31 Dec 2025 02:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pH5HdtW5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nlo9el3W"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C202D592E;
-	Wed, 31 Dec 2025 01:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EDA4C97
+	for <linux-nfs@vger.kernel.org>; Wed, 31 Dec 2025 02:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767145220; cv=none; b=HM6tLqKuTTvqIWmecihdRGvs/jyQg+xpI0pHjm+9VAe2M+ZYwfTE3JvCkt7CKm4a3ax0De5Dp1GCcA6FWn3ZwccYltm6TXp7se/3kkPAKkPhN+BVFHjamikZ2KHkLxwubRkb4JVIwgjfkqWE9tbYL3AoCGg4k4olhkGOTOzu2Yc=
+	t=1767146453; cv=none; b=jcOv8vWP7DtnPzn6i4IqLRDJhIkFoytKk+ZcZa96yfP5CQ8DfNTWn7adSr6HGJO0F/kd+BjPOIopeQwuslYX32VltGNtSSQ1hvhoxrL9QOMd9+PBDSpqxhJ2kq95TiAVFheZPmnGX8h3XTqcZWWUqfyZXyzNXdgNSwPVPN2jXTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767145220; c=relaxed/simple;
-	bh=K21ek2NGsbvUG71baaR/ZsC/6OCfNmTq/pwToSDPgnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oVg0jFO2IHfL0rr/XV94aYSu7JKQpstCPt1Lw3+6pqSQLN8iTpL0AoAqCvoBxmf6pMHDSpz/MXnAKSb3w2FA9hEh7HjSKVpTrfCtO6c85zR2X3U62TJKPplSuKB9QpeQUwUGunLHp6b6kKQ7Q4FW0X/9Cdnzv0iixM3fwvRlgyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pH5HdtW5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B2E5C116C6;
-	Wed, 31 Dec 2025 01:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767145219;
-	bh=K21ek2NGsbvUG71baaR/ZsC/6OCfNmTq/pwToSDPgnA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pH5HdtW5Jea/yVhjZHbnOZtsGiEkGxH4oP21I1ckIv+bTus8wYvZsyU5PZ1mT6yMu
-	 Modq/eMuo9Z0pnNkDP886rv3BFWk97X9BBjt9BOeOYn/6vpxBJdkYUIBd0/O4JXogZ
-	 MFoar+Qu6yGNIOJfbFoY01HMOXHJaMFTfEyONwqn2POF6ettCWQbCUKYT+Rdtk02c9
-	 2yOJx9L6O88gw/o2R81X0k/jMcaZX/MZQ6rt5QWhLnoLZN71zzTM5IPa5lTsK4zz0x
-	 +8ajyhOJOW2UH0NX8ec3YTe/iSeO8MiQji39eFSfrZIjnNu8MRuUfneV1D+5yh7Eu0
-	 Nz9JYWhSOhuOg==
-From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] More NFSD fixes for v6.19-rc
-Date: Tue, 30 Dec 2025 20:40:18 -0500
-Message-ID: <20251231014018.2635778-1-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1767146453; c=relaxed/simple;
+	bh=qcEKullHtwBfYH1V1OhAqOMeVi19kDwW09TvJzTNyKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=riC60j3aXzVtPzB2SCqUymjA2JB2/AyPIyPJK74cKox0Cus4LB5Sx5mPtRakPsjR2a8tzmgbqJcDtRB1+eIfJE6EgNNHQPyiH9XAa+s35sAWCZAgKw/He6buCaFLDYDmK2IsN/2GhwfFk1sRaBN1j8DW/8dgv9QHGgZu6l5gII4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nlo9el3W; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-29f1bc40b35so181189955ad.2
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Dec 2025 18:00:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767146452; x=1767751252; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1b7z7x2mFl+2D+PHUfV3mbEgZQlPkQ/9B1xt6Gy0EEw=;
+        b=Nlo9el3W1cJR6PwOiGSIr6gNRoX2L9xA/ljXkAidh6Uz/Nj3gUS74npzg71qxb2O7G
+         /IB+nuaH620KLqoUd7L4Hcn49Jpu7WatK+tBUAkru+z2/pCh0piBxWzYteQRbFfbK1oN
+         LFSUELEpyDS1Y1fk4zKemcSuDhgXJfPH5EMif+OEmfDk+N+x5tzo+qJI7FS7Xt4Bd9Pi
+         ecCnXb9arn9earEpnBJFzPVo3Zt6GtZ0ETFS0hOOILzf+H5as1eFtf+b7HVJAEbHzZAK
+         h+gWBOndEo7wTQSqFP+bslfimK0TpuIjVj6mqti7tROYSk9x1lTCdRwRoYBTnzcUNxYn
+         vuow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767146452; x=1767751252;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1b7z7x2mFl+2D+PHUfV3mbEgZQlPkQ/9B1xt6Gy0EEw=;
+        b=m+vpTAz2FHvBMigmjlCbzmQYCToWgerGmMjQxzuM2yXVosaIM22Wik22JK8SP6umRb
+         4Tr+FJ2Fte+3G3hwGVt/RwyNFW91iBmo5kyJVXiDV6J+ZJZlmSL461uWze8HcnXwDyBx
+         aNw03mq0GdAfYcBxe1OuNlR52NHhuh8/ofTVuxlcXaHAplPXYaiUPftEZ1Q6UDKJ0HHG
+         4QQzvvTCnYcXrl6ohHMDWL9I3f6no+pfk9dXmUyZgGD18OY5Tqt8w196VpjtdLljBh2T
+         L4O3VhUrKRSJO0qEEWF+5yLZTeMSImIVDUz0OD/7YwUclGPxyFIv94oVSL2jSKeTJNBE
+         ZrKw==
+X-Gm-Message-State: AOJu0Yzy1J2JHEzwjQbBe7/uUX/a/gKu85sKnyABKgCVRYbxrmF8X9Us
+	pyfE4P3DUkhRHkq/nFeoBLikUwzOrF6iObVEdxSC0QVm0UiHDoJu8WNpMSY1DXs=
+X-Gm-Gg: AY/fxX4fmcUA2Ns4bPfTSnJfWJOIY/eCTnQ5Ep0dLocHQmtAmICt66Wpn36Xz7+KQd7
+	nSabvwo6s3ZwKOFPmxyaLSQIolgky5LwHhur/CZqIglf6FnY2aSwwcQ5a+67jLpMarZeHuXzXAc
+	pbNpAGYrdW8yQGaRTmYrnuAefywZXUBs2EjF14s2ESpAyAAEte29b3s9iz8U355SkznWjqaoIed
+	6ur9XWhdZHlgKz5krihh0rJ8ZIgATfkuNEXZh5STtr9RsDzLLa1W9hLMlF7HVj5pEjTB1whcS9e
+	NGTwfBBcrlyg4Cjx9dZjUYpXP8WJuDSGVddmOpp43qUC3Ww3mFPASJD9xNOzHyQpO7gsg2QqxDX
+	5NdmrBMBHWD1OJXrIG+5I3JPlpJ7RH6XYfIzcysDBcLhYIzM589a35mKBpzKYS6vzi2PIBF1UYY
+	4MoRbnkz6pdheLQjlmtpDGj6XWaXzhMlcKCO3dUp6TWvFf5JSbyyNul8YX
+X-Google-Smtp-Source: AGHT+IHvV0j3mviMj+vRFJK4WCsDlm4qbN3fudK9IkhqwxmLjMPNZ0S7Z7DI2UOagOIHwWm7KHa8Qg==
+X-Received: by 2002:a17:902:f542:b0:2a0:c20e:e4d6 with SMTP id d9443c01a7336-2a2f283de1amr321032905ad.39.1767146451587;
+        Tue, 30 Dec 2025 18:00:51 -0800 (PST)
+Received: from nfsv4-laptop2.cgocable.net (d75-157-27-199.bchsia.telus.net. [75.157.27.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3d4cbcfsm315979555ad.50.2025.12.30.18.00.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Dec 2025 18:00:51 -0800 (PST)
+From: rick.macklem@gmail.com
+To: linux-nfs@vger.kernel.org
+Cc: Rick Macklem <rmacklem@uoguelph.ca>
+Subject: [PATCH v1 00/17] A test message
+Date: Tue, 30 Dec 2025 18:00:07 -0800
+Message-ID: <20251231020007.1684-1-rick.macklem@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,49 +84,41 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following changes since commit 913f7cf77bf14c13cfea70e89bcb6d0b22239562:
+From: Rick Macklem <rmacklem@uoguelph.ca>
 
-  NFSD: NFSv4 file creation neglects setting ACL (2025-12-18 11:19:11 -0500)
+Just a test. Please ignore.
 
-are available in the Git repository at:
+Rick Macklem (17):
+  Add definitions for the POSIX draft ACL attributes
+  Add a new function to acquire the POSIX draft ACLs
+  Add a function to set POSIX ACLs
+  Add support for encoding/decoding POSIX draft ACLs
+  Add a check for both POSIX and NFSv4 ACLs being set
+  Add na_dpaclerr and na_paclerr for file creation
+  Add support for POSIX draft ACLs for file creation
+  Add the arguments for decoding of POSIX ACLs
+  Fix a couple of bugs in POSIX ACL decoding
+  Improve correctness for the ACL_TRUEFORM attribute
+  Make sort_pacl_range() global
+  Call sort_pacl_range() for decoded POSIX draft ACLs
+  Fix handling of POSIX ACLs with zero ACEs
+  Fix handling of zero length ACLs for file creation
+  Do not allow (N)VERIFY to check POSIX ACL attributes
+  Set the POSIX ACL attributes supported
+  Change a bunch of function prefixes to nfsd42_
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.19-2
+ fs/nfsd/acl.h        |   3 +
+ fs/nfsd/nfs4acl.c    |  35 ++++-
+ fs/nfsd/nfs4proc.c   | 126 +++++++++++++++--
+ fs/nfsd/nfs4xdr.c    | 312 ++++++++++++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfsd.h       |   8 +-
+ fs/nfsd/vfs.c        |  34 ++++-
+ fs/nfsd/vfs.h        |   2 +
+ fs/nfsd/xdr4.h       |   6 +
+ include/linux/nfs4.h |  37 +++++
+ 9 files changed, 536 insertions(+), 27 deletions(-)
 
-for you to fetch changes up to 1f941b2c23fd34c6f3b76d36f9d0a2528fa92b8f:
+-- 
+2.49.0
 
-  nfsd: Drop the client reference in client_states_open() (2025-12-24 21:33:12 -0500)
-
-----------------------------------------------------------------
-nfsd-6.19 fixes:
-
-A set of NFSD fixes that arrived just a bit late for the 6.19 merge
-window.
-
-Issues reported with v6.19-rc:
-- Avoid unnecessarily breaking a timestamp delegation
-
-Issues that need expedient stable backports:
-- Fix a crasher in nlm4svc_proc_test()
-- Fix nfsd_file reference leak during write delegation
-- Fix error flow in client_states_open()
-
-----------------------------------------------------------------
-Chuck Lever (1):
-      nfsd: fix nfsd_file reference leak in nfsd4_add_rdaccess_to_wrdeleg()
-
-Haoxiang Li (1):
-      nfsd: Drop the client reference in client_states_open()
-
-Jeff Layton (1):
-      nfsd: use ATTR_DELEG in nfsd4_finalize_deleg_timestamps()
-
-NeilBrown (1):
-      lockd: fix vfs_test_lock() calls
-
- fs/lockd/svc4proc.c |  4 +---
- fs/lockd/svclock.c  | 21 ++++++++++++---------
- fs/lockd/svcproc.c  |  5 +----
- fs/locks.c          | 12 ++++++++++--
- fs/nfsd/nfs4state.c | 20 ++++++++++++++------
- 5 files changed, 38 insertions(+), 24 deletions(-)
 
