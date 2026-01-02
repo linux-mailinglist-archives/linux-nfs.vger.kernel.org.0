@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-17402-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17403-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 358D6CEF78D
-	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 00:30:40 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42030CEF78A
+	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 00:30:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 45F363010982
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jan 2026 23:30:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3ABB93009F1B
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jan 2026 23:30:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26951A08BC;
-	Fri,  2 Jan 2026 23:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E526D1F8AC8;
+	Fri,  2 Jan 2026 23:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZJH9KJQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtAapF4C"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B00279358
-	for <linux-nfs@vger.kernel.org>; Fri,  2 Jan 2026 23:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569DF288514
+	for <linux-nfs@vger.kernel.org>; Fri,  2 Jan 2026 23:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767396635; cv=none; b=WZGexzspZ38pPL9Nc6EhEy9nRQ4yJhnaYYxP1u+cLt70l+52gNmwJKCGo6w9ww7KywoVBx3lRG0G71c4X1RXN18cXyX2wIvNI3IbukDMUhqAKNvNqGQXynvO9RSHYkqrtZzPZALXU6HIfv07BbVDKEtDTYZnFqvrVPrKf0O2/x4=
+	t=1767396637; cv=none; b=VkP9UFuAB76y2BS0G5UUl+9U1mD9HEijnHVaAUgPDF9+pC7teq/hxMC3YpdtwnSxzrb4BLSQdPj6t6RDTcaH5FKSurngdrRB++3cmyL/OLsanxl0TCmwIgvv134fod7E/05YWR4ZrsF9NmOkd0QjHwk7/VcLriqqvgqx+EivNnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767396635; c=relaxed/simple;
-	bh=Wiu5BBgWRUVOKhxtFS2/4yrKD8Z1DN39gecLW7cGEso=;
+	s=arc-20240116; t=1767396637; c=relaxed/simple;
+	bh=rUjSI6Onvd1J0UVmSWZdLBsHzaKJcJ4lBhkGc20jNaY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RiUMq+5SfVtU0tYS4T/fFQr9+GEkF7uZ/8MX7UJSvf1IslkZapS0WH6Kw+jHIfZ8+J510nn756jPwq2DY9PQ+ckNxbQC4kuVl4hAqcTVAFMH5BRYpxzcRE3s2LntKT/wH0hmSK+838XnGakPKWnUfXB/alEp8i3u9iOeBfutQKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EZJH9KJQ; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=nhZiUO7ibqZzIy96iD+5R3l8cJSt4hy3OqwETlOiueLC7gOds2Za4o/fIv6KVlbwEuo1oa8q+HIn2eFBpXa9JX2aivcFDTaR+Yi9sAu/z5deWGpbxlpb3xELur7JcIkS0PMPSKm3juaac2fhLJG5CHcRHJT4jj2ymTHXCKVG3p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtAapF4C; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2a0d5c365ceso165724475ad.3
-        for <linux-nfs@vger.kernel.org>; Fri, 02 Jan 2026 15:30:34 -0800 (PST)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a081c163b0so113762895ad.0
+        for <linux-nfs@vger.kernel.org>; Fri, 02 Jan 2026 15:30:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767396634; x=1768001434; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767396636; x=1768001436; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rchuhALNmPqQKjGXCirCs+iFGn89fglZcFpKBuxrnpI=;
-        b=EZJH9KJQ9EquRLShaBHUMGy3X3WVs5QVE1G8uqQM2xabV7YcLvPEE6qb4rL1J9mFat
-         F+r58XpE1ABukFIJOetorU95YQGHHwvJ9sClxpzoE9PLpI1jJkMUOvUvF4m4ccKS1HBc
-         0eok/ywWudyEoGiQpw3W5dSXZDU/UhTtxUvHrxgj919WruCEHccuVJsxeHNpGRCULhcV
-         +SuS3N8UgPsnO3V69yv0owmjGfsnPzQhgxc95eQcH1dtaXdPgYmFxeM1jAX6+hjzHx4l
-         Ecs1GfRA+fAxJsrvXtnDgwTs75gJ/ILetYOlFQk+cT9DKIo/NqUY/i3sbzBZga7StaG+
-         td4w==
+        bh=qhhtwk+QsfgjLiFEziuVlErgGkl5GmJlgUVG7kF0ePI=;
+        b=BtAapF4CrmH1jKOqaP3Wh3soEI8+OZJ5TdQVhuyc38ZoWlUl25zX+11l4KIFDjOpZU
+         O5mvwbqKhc2K++52+H8CW1G1h6ySOZdlLRM2EeLz24AZgNhuAhFym6b013oWlmPvH9Jo
+         +dlhGMs1qyBXZuSxi0GM7KIJfqfojsi7tfGJ7dlb4h4IYL8g4nvbOCgho2Qvxwar4kv5
+         kiHfoq3Qp1kjA//VGlZT2gScsnoeOsvjeDJ3s3GaDd94Q+ZWZwv6Vawey2cDDyxc99Ml
+         mWrmISOV+929cVggViV+Jih75fksK69WCgjdLAT2/a7EuCLESjbomWnPGVEdpe+J/6Xd
+         wpVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767396634; x=1768001434;
+        d=1e100.net; s=20230601; t=1767396636; x=1768001436;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rchuhALNmPqQKjGXCirCs+iFGn89fglZcFpKBuxrnpI=;
-        b=MrIkIcI5Sn3PJRmH5qjEV9VdPFXZ+Tf/KNBqZyyJsv7i2DNybIvdPw7G4yVbz3ZP0V
-         5ytlPxvqr40Yiu8eO+c5aI5PUvuE6xXIwLeMHkNkT1ldLw9WDjQcqnAD4FvvAMhNMBI1
-         rsHTVrIGxcxrI3OelXWtRLADmcPgCA0K27udS6C4vPor8r1Aw7pfSEunUDIfRJZ4ALDS
-         hIPLw+qPSqWpVag6DsywJwByyJEeis0ey/nYyyPODQ2ivantXapSl2IvoGMBA9ROmeNC
-         D+hUU4haQLrzx7GNwPCuA/U1H/rRdy7lg7o00kuahVDkBomYqYnlM+u/cd6xx9674dSl
-         eq4w==
-X-Gm-Message-State: AOJu0Ywh/Up8iPcgxxK9Xso7DyK6n8L6c5V1jKGyDRk0awrIiUTYXeeF
-	qVXQSC1FOgOjLr1f3Z/ieFp4JKUyhoYpJK5iLqQWoOVNeB2LBrI2qOiV9BBYTxo=
-X-Gm-Gg: AY/fxX4hWit7+fOkHBJjlsjt5H0un/17RJFzsGYVUsgFbv5TKp6dEdEr06mOvaTD1Qf
-	fHgvlTTlLhQYdtg39JU0pq1SyGBBRJsAojx/lZBuOOdb4NUuJu0vRTRtiw9yQouKbY4Y+2wk8uU
-	wyw7bST9QfkaoW0FpfYl/O+hDKjkSVuL1BDofzAnTFIiHatxQh+8L2koLLmV6KfdYzc5AQ1+Ywv
-	MT62MLzG4l0eoVZIFkO+BS0qsX1K99m0l8kNGeAYgzI1vOM+iJNz135xJyXQCqc4Qjqa/PgLdOv
-	0yS4PLz++au7u1Iv80F1E2KQ1c25u4RxensCnQdVIht+4ZlImvBWLnetMA7oPuueideNUPALmhi
-	6jGyOiT5cvSmUbBGJkzZsiFWqpZHQ39AcPMHiuNXZUn9MjD9wHQd4iw9keLP4vvCaMUgisA9U1w
-	EQ0HpymsKngZRtfWArM7/cMmg8TitLZAdSi5oDVtP2PiUj6GlD2kVhpowS
-X-Google-Smtp-Source: AGHT+IGA1DVbjEWN7/mXcydjcXq0Wiv33L/HHdPqQFhliosaDMtSJo+w1mJsPwKuaOFTDB0hdHHA1w==
-X-Received: by 2002:a17:902:e74c:b0:297:f09a:51cd with SMTP id d9443c01a7336-2a2f2214860mr458864405ad.14.1767396633487;
-        Fri, 02 Jan 2026 15:30:33 -0800 (PST)
+        bh=qhhtwk+QsfgjLiFEziuVlErgGkl5GmJlgUVG7kF0ePI=;
+        b=AiIv2QYEZJa151+SMgY+09QXda6DyyFu/5Z7pdJtTj+qXmb8SqHVCmZQQG7gvSwpBG
+         lPid++KDVd1HOnqcXN8ii0JtOBnYGfPK8hqFLUx3sc/bIQDxMubpQZ55LTrUzsaxISFK
+         aXGyDv3Jk5lQ11mJLGxgCrt2jIicZ6+cj8nTz7mnLLr35ysoOwsrpKIAiVXIAXVz+jeq
+         a5fg5O7adG5o+0F7eEPcZzKBqrd+cnJRGUNyAPLPQ+Tu0pFvbEcFpayBQz8eshxyrF0s
+         Bq+kHSU0qdCvTh5ncuLtZgT8LUuoQSKuoeKzKPDJj8Y3zyTxgFAUslSwDvzGDLwRsiaN
+         +kVQ==
+X-Gm-Message-State: AOJu0Yxc6M+ljIsG+8vDc/q2N/YskD1ZMlc2eC1LMjyvzaNiioF2VsiK
+	ZXE677PEBHH8kay7XOqP4ysWsItWk8duSDxitNVVPy3rkHtn4gslWxPMdBYD4qw=
+X-Gm-Gg: AY/fxX5cStE9+lX2V7+OW0Vub4EiP+PRiqA+mEqgflJjbm0wI+xeFrXZVD51s7z9SFR
+	dfBm37XXf7NrSJT25KPWy0QwwnnJRY3Oc8Tz9gG2rq3h0IT64xtZx8/8cSfmaA6hUVGnirew85k
+	hEUI9B+hAPiTvcD1Gg+AeibHUPsUQusAEjsm/Mf+OgRgJD1cqezItfrd9NbHBuxBvxGcWYV3e+5
+	U69exFmwOa/wWpK+1ydySdFp7ARW1dWOXTAEVYUkyh24yCt4TvbpXZq2TkImNGx00xk5hDkfpF0
+	1/YMA+f7bTSLsropIyyUzKOh+PmH8dGSgR+RM+UquReTaRjZeoIzVm8bFR3493P+16zctWNgVKs
+	EeUGVWDxoqJ/58Qouf5QXc6pA/8kuttWo63hRKrQxyP4qTltnmAzELnypR6ZExQzS99pWvaz0xQ
+	EUkbL+mPSVJjqjDIYxMp+v0aj/47dqENWdlLVq0MB05ak+KxVk4zZk/Aax0Yc9dJCh4+s=
+X-Google-Smtp-Source: AGHT+IHwRGsk/X/BkHWrc3xZXXOm8khW70+tS7gn+fT8W96KsJVr4tAxanuuPHL/32EMj8MaCv98Sg==
+X-Received: by 2002:a17:902:d2c4:b0:2a0:d662:7285 with SMTP id d9443c01a7336-2a2f1f789ffmr455127055ad.0.1767396635451;
+        Fri, 02 Jan 2026 15:30:35 -0800 (PST)
 Received: from nfsv4-laptop2.cgocable.net (d75-157-27-199.bchsia.telus.net. [75.157.27.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c71853sm391508805ad.19.2026.01.02.15.30.32
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c71853sm391508805ad.19.2026.01.02.15.30.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jan 2026 15:30:32 -0800 (PST)
+        Fri, 02 Jan 2026 15:30:34 -0800 (PST)
 From: rick.macklem@gmail.com
 To: linux-nfs@vger.kernel.org
 Cc: Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v1 4/7] Make three functions global and move them to acl.c
-Date: Fri,  2 Jan 2026 15:29:31 -0800
-Message-ID: <20260102232934.1560-5-rick.macklem@gmail.com>
+Subject: [PATCH v1 5/7] Make nfs4_server_supports_acls() global
+Date: Fri,  2 Jan 2026 15:29:32 -0800
+Message-ID: <20260102232934.1560-6-rick.macklem@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20260102232934.1560-1-rick.macklem@gmail.com>
 References: <20260102232934.1560-1-rick.macklem@gmail.com>
@@ -90,180 +90,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Macklem <rmacklem@uoguelph.ca>
 
-The three functions:
-nfs3_prepare_get_acl()
-nfs3_complete_get_acl()
-nfs3_abort_get_acl()
-have been moved to a new file called nfs34acl.c and renamed nfs34_XXX(),
-so that they can be called from the NFSv4.2 client code
-implementing the POSIX draft ACL attributes.
+Add support for the POSIX draft ACL attributes to
+nfs4_server_supports_acls() and make it global,
+so that support for POSIX draft ACLs can be checked
+in nfs4proc.c.
 
 Signed-off-by: Rick Macklem <rmacklem@uoguelph.ca>
 ---
- fs/nfs/Makefile   |  2 +-
- fs/nfs/nfs.h      |  3 +++
- fs/nfs/nfs34acl.c | 40 ++++++++++++++++++++++++++++++++++++++++
- fs/nfs/nfs3acl.c  | 44 +++++++-------------------------------------
- 4 files changed, 51 insertions(+), 38 deletions(-)
- create mode 100644 fs/nfs/nfs34acl.c
+ fs/nfs/nfs4_fs.h        | 2 ++
+ fs/nfs/nfs4proc.c       | 6 +++++-
+ include/linux/nfs_xdr.h | 2 ++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
-index 9fb2f2cac87e..afb84c44a019 100644
---- a/fs/nfs/Makefile
-+++ b/fs/nfs/Makefile
-@@ -9,7 +9,7 @@ CFLAGS_nfstrace.o += -I$(src)
- nfs-y 			:= client.o dir.o file.o getroot.o inode.o super.o \
- 			   io.o direct.o pagelist.o read.o symlink.o unlink.o \
- 			   write.o namespace.o mount_clnt.o nfstrace.o \
--			   export.o sysfs.o fs_context.o
-+			   export.o sysfs.o fs_context.o nfs34acl.o
- nfs-$(CONFIG_ROOT_NFS)	+= nfsroot.o
- nfs-$(CONFIG_SYSCTL)	+= sysctl.o
- nfs-$(CONFIG_NFS_FSCACHE) += fscache.o
-diff --git a/fs/nfs/nfs.h b/fs/nfs/nfs.h
-index 8a5f51be013a..b5d1cfb92ab1 100644
---- a/fs/nfs/nfs.h
-+++ b/fs/nfs/nfs.h
-@@ -26,5 +26,8 @@ int get_nfs_version(struct nfs_subversion *);
- void put_nfs_version(struct nfs_subversion *);
- void register_nfs_version(struct nfs_subversion *);
- void unregister_nfs_version(struct nfs_subversion *);
-+void nfs34_prepare_get_acl(struct posix_acl **);
-+void nfs34_complete_get_acl(struct posix_acl **, struct posix_acl *);
-+void nfs34_abort_get_acl(struct posix_acl **);
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index c34c89af9c7d..19e3398d50f7 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -337,6 +337,8 @@ extern void nfs4_update_changeattr(struct inode *dir,
+ 				   struct nfs4_change_info *cinfo,
+ 				   unsigned long timestamp,
+ 				   unsigned long cache_validity);
++extern bool nfs4_server_supports_acls(const struct nfs_server *server,
++				      enum nfs4_acl_type type);
+ extern int nfs4_buf_to_pages_noslab(const void *buf, size_t buflen,
+ 				    struct page **pages);
  
- #endif /* __LINUX_INTERNAL_NFS_H */
-diff --git a/fs/nfs/nfs34acl.c b/fs/nfs/nfs34acl.c
-new file mode 100644
-index 000000000000..e3322f222c53
---- /dev/null
-+++ b/fs/nfs/nfs34acl.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/fs.h>
-+#include <linux/nfs_fs.h>
-+#include <linux/posix_acl.h>
-+
-+#include "nfs.h"
-+
-+/*
-+ * nfs34_prepare_get_acl, nfs34_complete_get_acl, nfs34_abort_get_acl: Helpers
-+ * for caching get_acl results in a race-free way. See fs/posix_acl.c:get_acl()
-+ * for explanations.
-+ */
-+void nfs34_prepare_get_acl(struct posix_acl **p)
-+{
-+	struct posix_acl *sentinel = uncached_acl_sentinel(current);
-+
-+	/* If the ACL isn't being read yet, set our sentinel. */
-+	cmpxchg(p, ACL_NOT_CACHED, sentinel);
-+}
-+EXPORT_SYMBOL_GPL(nfs34_prepare_get_acl);
-+
-+void nfs34_complete_get_acl(struct posix_acl **p, struct posix_acl *acl)
-+{
-+	struct posix_acl *sentinel = uncached_acl_sentinel(current);
-+
-+	/* Only cache the ACL if our sentinel is still in place. */
-+	posix_acl_dup(acl);
-+	if (cmpxchg(p, sentinel, acl) != sentinel)
-+		posix_acl_release(acl);
-+}
-+EXPORT_SYMBOL_GPL(nfs34_complete_get_acl);
-+
-+void nfs34_abort_get_acl(struct posix_acl **p)
-+{
-+	struct posix_acl *sentinel = uncached_acl_sentinel(current);
-+
-+	/* Remove our sentinel upon failure. */
-+	cmpxchg(p, sentinel, ACL_NOT_CACHED);
-+}
-+EXPORT_SYMBOL_GPL(nfs34_abort_get_acl);
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index a126eb31f62f..61aa56a632e3 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -8,41 +8,11 @@
- #include <linux/nfsacl.h>
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index ec1ce593dea2..3057622ed61a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6069,7 +6069,7 @@ static int nfs4_proc_renew(struct nfs_client *clp, const struct cred *cred)
+ 	return 0;
+ }
  
- #include "internal.h"
-+#include "nfs.h"
- #include "nfs3_fs.h"
- 
- #define NFSDBG_FACILITY	NFSDBG_PROC
- 
--/*
-- * nfs3_prepare_get_acl, nfs3_complete_get_acl, nfs3_abort_get_acl: Helpers for
-- * caching get_acl results in a race-free way.  See fs/posix_acl.c:get_acl()
-- * for explanations.
-- */
--static void nfs3_prepare_get_acl(struct posix_acl **p)
--{
--	struct posix_acl *sentinel = uncached_acl_sentinel(current);
--
--	/* If the ACL isn't being read yet, set our sentinel. */
--	cmpxchg(p, ACL_NOT_CACHED, sentinel);
--}
--
--static void nfs3_complete_get_acl(struct posix_acl **p, struct posix_acl *acl)
--{
--	struct posix_acl *sentinel = uncached_acl_sentinel(current);
--
--	/* Only cache the ACL if our sentinel is still in place. */
--	posix_acl_dup(acl);
--	if (cmpxchg(p, sentinel, acl) != sentinel)
--		posix_acl_release(acl);
--}
--
--static void nfs3_abort_get_acl(struct posix_acl **p)
--{
--	struct posix_acl *sentinel = uncached_acl_sentinel(current);
--
--	/* Remove our sentinel upon failure. */
--	cmpxchg(p, sentinel, ACL_NOT_CACHED);
--}
--
- struct posix_acl *nfs3_get_acl(struct inode *inode, int type, bool rcu)
+-static bool nfs4_server_supports_acls(const struct nfs_server *server,
++bool nfs4_server_supports_acls(const struct nfs_server *server,
+ 				      enum nfs4_acl_type type)
  {
- 	struct nfs_server *server = NFS_SERVER(inode);
-@@ -91,9 +61,9 @@ struct posix_acl *nfs3_get_acl(struct inode *inode, int type, bool rcu)
- 		return ERR_PTR(-ENOMEM);
- 
- 	if (args.mask & NFS_ACL)
--		nfs3_prepare_get_acl(&inode->i_acl);
-+		nfs34_prepare_get_acl(&inode->i_acl);
- 	if (args.mask & NFS_DFACL)
--		nfs3_prepare_get_acl(&inode->i_default_acl);
-+		nfs34_prepare_get_acl(&inode->i_default_acl);
- 
- 	status = rpc_call_sync(server->client_acl, &msg, 0);
- 	dprintk("NFS reply getacl: %d\n", status);
-@@ -131,12 +101,12 @@ struct posix_acl *nfs3_get_acl(struct inode *inode, int type, bool rcu)
+ 	switch (type) {
+@@ -6079,6 +6079,10 @@ static bool nfs4_server_supports_acls(const struct nfs_server *server,
+ 		return server->attr_bitmask[1] & FATTR4_WORD1_DACL;
+ 	case NFS4ACL_SACL:
+ 		return server->attr_bitmask[1] & FATTR4_WORD1_SACL;
++	case NFS4ACL_POSIXDEFAULT:
++		return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL;
++	case NFS4ACL_POSIXACCESS:
++		return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_ACCESS_ACL;
  	}
+ }
  
- 	if (res.mask & NFS_ACL)
--		nfs3_complete_get_acl(&inode->i_acl, res.acl_access);
-+		nfs34_complete_get_acl(&inode->i_acl, res.acl_access);
- 	else
- 		forget_cached_acl(inode, ACL_TYPE_ACCESS);
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 5ff8ab3f0f84..3b656086b452 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -832,6 +832,8 @@ enum nfs4_acl_type {
+ 	NFS4ACL_ACL,
+ 	NFS4ACL_DACL,
+ 	NFS4ACL_SACL,
++	NFS4ACL_POSIXDEFAULT,
++	NFS4ACL_POSIXACCESS,
+ };
  
- 	if (res.mask & NFS_DFACL)
--		nfs3_complete_get_acl(&inode->i_default_acl, res.acl_default);
-+		nfs34_complete_get_acl(&inode->i_default_acl, res.acl_default);
- 	else
- 		forget_cached_acl(inode, ACL_TYPE_DEFAULT);
- 
-@@ -150,8 +120,8 @@ struct posix_acl *nfs3_get_acl(struct inode *inode, int type, bool rcu)
- 	}
- 
- getout:
--	nfs3_abort_get_acl(&inode->i_acl);
--	nfs3_abort_get_acl(&inode->i_default_acl);
-+	nfs34_abort_get_acl(&inode->i_acl);
-+	nfs34_abort_get_acl(&inode->i_default_acl);
- 	posix_acl_release(res.acl_access);
- 	posix_acl_release(res.acl_default);
- 	nfs_free_fattr(res.fattr);
+ struct nfs_setaclargs {
 -- 
 2.49.0
 
