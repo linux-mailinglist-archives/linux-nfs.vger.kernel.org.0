@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-17414-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17415-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0F15CF032C
-	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 18:15:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06FA5CF032F
+	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 18:15:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0378130213EE
+	by sea.lore.kernel.org (Postfix) with ESMTP id B3D743027D98
 	for <lists+linux-nfs@lfdr.de>; Sat,  3 Jan 2026 17:15:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9D81F0994;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEECA30C348;
 	Sat,  3 Jan 2026 17:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzJEm9Nj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DK2t6R7O"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1681F2D1F5E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B7123E33D
 	for <linux-nfs@vger.kernel.org>; Sat,  3 Jan 2026 17:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767460504; cv=none; b=JdqLCy2Ag5FKIciebgtsSX83x+0nLgh1kRE9UZe11nfE4Ot6k8GuQvNOqSdSLyeTUVgrzihf4Of3rludIyyNWqTWMb94Je474UsTCJ+YtT4qG3WJksbIsMOpda4x2wqeD+2JPcHsiCbeir0CaUDQdV0nA1IWMIiilT92ZlN3riE=
+	t=1767460504; cv=none; b=Bm3zGkSyyFQi6BkxdP+mkBR193EjGkCC47omqUIyZe8VLZmSe1pPeifOUtNVErL0T1cYPlBJ8b2bycx4uZACquWkt+UvzR1eciljoVRcWlysUGmOcBlVUhIWYYl5ViJH0AvWZR513YaVp4DUK58KT2gRLzJLXEYgNrYLUl9kB6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767460504; c=relaxed/simple;
-	bh=xgVxyisgmK9mNwtHkpvWdmXxEeab3lRYukQ39+9TgGc=;
+	bh=yhC5I2CFN2j0GMWjY5CdBMs4D6DVYWrl4n/DFWnNBBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t9oXahY0y+m+/VX2g1/0uULFYqIVwxqy0Tt5yqsCRwUtEht60a2iXlfMlt/XM/ilIkv/FSOMWGVqLJY7rxFBgajaYR3pfsxg3UeQ2MJnNu8kvlu1YXushFTzZ00VjBUQvfEszHsVGMshuX2YXERhXZAhBdFTDmhERwjBKBUBP14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzJEm9Nj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16F1C116C6;
-	Sat,  3 Jan 2026 17:15:03 +0000 (UTC)
+	 MIME-Version; b=o4eqyq3bW9nI8Uk3TG7SnLpysjO6dAMBZioSDEoXfZw4KrVjnf3L6sersoPj+679siKFdKZl0Ps0INz2lM0ayEDPaf5NQUjbQbuNkqLQ2CRV6f2QLAnqzZR5tPn9b5GfdhZwSWIS5Ya/0lR2GY3C21oCtHVkFNflRKUOlx5OJzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DK2t6R7O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279B0C19422;
+	Sat,  3 Jan 2026 17:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767460503;
-	bh=xgVxyisgmK9mNwtHkpvWdmXxEeab3lRYukQ39+9TgGc=;
+	s=k20201202; t=1767460504;
+	bh=yhC5I2CFN2j0GMWjY5CdBMs4D6DVYWrl4n/DFWnNBBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XzJEm9Nj2gg4XtKGRB6ry/bjMYXExrZzwdtGcK+tWE9w4cyotYUIuw5c0m9j4AvHp
-	 siWqz9Yg+DGJoo7fgWwGYKU2gxfCjyrY9x9I7LobzQ7ELxOCiyRifVOi/gHpVuEAXu
-	 JNNnzVqYbznAq0Obl6vOI4IswIeEzyHoGsF7lIHZXrca59q4pJ8QaS9omtTsi/MYlA
-	 MKIukPKnKx845mNmmVtl3Py+AYuzIuFXSAI30D63FUhwTaNwXtibj0MllCfXvGJxqQ
-	 e4auYRxlvFy8cBPfQamslIvQ/ldP8S7+wkEQjJ9d6rg4d6MhiP354dAJOAamEUKtCU
-	 jwnLyeXHsYb6Q==
+	b=DK2t6R7OIqh1kYmIXQRaGaoTGGb1Pi6tgQKbKI+4ahbwiByE/79z0ubuVM3ctaArC
+	 OtGcD+8CPqX99g/5y93a4Fap1M2GVoUfOT4iuLPS10ZBUNMsWano+6HwHI0ZuCOV27
+	 X2cuoLZK/yPBQBdciqPe325bdHt3wgDdzCMcXdJdPRFC0rkSaFtCuaKs6JKTHSDFwM
+	 l6/+IhsR9y6jq9jatt+CYXOyeGqAfd8Bn8jd6iTmjx2a1V7BP4cTa3e5IUApwwkw5R
+	 xAuewl3KyOJAjIgBBx3d6m8RaXvmXi678axwUvtUwzZ5sKatbeAMraH47hazPGQfsc
+	 U7m5kbDR1nxzg==
 From: Trond Myklebust <trondmy@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 3/4] NFS/localio: Handle short writes by retrying
-Date: Sat,  3 Jan 2026 12:14:59 -0500
-Message-ID: <aad94ed780fd5ea5deee8967261e5cfeb17b4c04.1767459435.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH 4/4] NFS/localio: Cleanup the nfs_local_pgio_done() parameters
+Date: Sat,  3 Jan 2026 12:15:00 -0500
+Message-ID: <bf5a9581839ebeebbd3bd004a174fea9afa19dcb.1767459435.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1767459435.git.trond.myklebust@hammerspace.com>
 References: <cover.1767459435.git.trond.myklebust@hammerspace.com>
@@ -58,112 +58,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The current code for handling short writes in localio just truncates the
-I/O and then sets an error. While that is close to how the ordinary NFS
-code behaves, it does mean there is a chance the data that got written
-is lost because it isn't persisted.
-To fix this, change localio so that the upper layers can direct the
-behaviour to persist any unstable data by rewriting it, and then
-continuing writing until an ENOSPC is hit.
+Remove the redundant 'force' parameter.
 
-Fixes: 70ba381e1a43 ("nfs: add LOCALIO support")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/localio.c | 64 +++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 17 deletions(-)
+ fs/nfs/localio.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
 diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index c5f975bb5a64..87abebbedbab 100644
+index 87abebbedbab..8caf2ffc7e43 100644
 --- a/fs/nfs/localio.c
 +++ b/fs/nfs/localio.c
-@@ -58,6 +58,11 @@ struct nfs_local_fsync_ctx {
- static bool localio_enabled __read_mostly = true;
- module_param(localio_enabled, bool, 0644);
- 
-+static int nfs_local_do_read(struct nfs_local_kiocb *iocb,
-+			     const struct rpc_call_ops *call_ops);
-+static int nfs_local_do_write(struct nfs_local_kiocb *iocb,
-+			      const struct rpc_call_ops *call_ops);
-+
- static inline bool nfs_client_is_local(const struct nfs_client *clp)
- {
- 	return !!rcu_access_pointer(clp->cl_uuid.net);
-@@ -542,13 +547,50 @@ nfs_local_iocb_release(struct nfs_local_kiocb *iocb)
- 	nfs_local_iocb_free(iocb);
+@@ -517,8 +517,7 @@ nfs_local_pgio_init(struct nfs_pgio_header *hdr,
+ 		hdr->task.tk_start = ktime_get();
  }
  
--static void
--nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
-+static void nfs_local_pgio_restart(struct nfs_local_kiocb *iocb,
-+				   struct nfs_pgio_header *hdr)
-+{
-+	int status = 0;
-+
-+	iocb->kiocb.ki_pos = hdr->args.offset;
-+	iocb->kiocb.ki_flags &= ~(IOCB_DSYNC | IOCB_SYNC | IOCB_DIRECT);
-+	iocb->kiocb.ki_complete = NULL;
-+	iocb->aio_complete_work = NULL;
-+	iocb->end_iter_index = -1;
-+
-+	switch (hdr->rw_mode) {
-+	case FMODE_READ:
-+		nfs_local_iters_init(iocb, ITER_DEST);
-+		status = nfs_local_do_read(iocb, hdr->task.tk_ops);
-+		break;
-+	case FMODE_WRITE:
-+		nfs_local_iters_init(iocb, ITER_SOURCE);
-+		status = nfs_local_do_write(iocb, hdr->task.tk_ops);
-+		break;
-+	default:
-+		status = -EOPNOTSUPP;
-+	}
-+
-+	if (status != 0) {
-+		nfs_local_iocb_release(iocb);
-+		hdr->task.tk_status = status;
-+		nfs_local_hdr_release(hdr, hdr->task.tk_ops);
-+	}
-+}
-+
-+static void nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
+-static bool
+-nfs_local_pgio_done(struct nfs_local_kiocb *iocb, long status, bool force)
++static bool nfs_local_pgio_done(struct nfs_local_kiocb *iocb, long status)
  {
  	struct nfs_pgio_header *hdr = iocb->hdr;
-+	struct rpc_task *task = &hdr->task;
-+
-+	task->tk_action = NULL;
-+	task->tk_ops->rpc_call_done(task, hdr);
  
--	nfs_local_iocb_release(iocb);
--	nfs_local_hdr_release(hdr, hdr->task.tk_ops);
-+	if (task->tk_action == NULL) {
-+		nfs_local_iocb_release(iocb);
-+		task->tk_ops->rpc_release(hdr);
-+	} else
-+		nfs_local_pgio_restart(iocb, hdr);
- }
- 
- /*
-@@ -776,19 +818,7 @@ static void nfs_local_write_done(struct nfs_local_kiocb *iocb)
- 		pr_info_ratelimited("nfs: Unexpected direct I/O write alignment failure\n");
+@@ -533,9 +532,6 @@ nfs_local_pgio_done(struct nfs_local_kiocb *iocb, long status, bool force)
+ 		hdr->task.tk_status = status;
  	}
  
--	/* Handle short writes as if they are ENOSPC */
--	status = hdr->res.count;
--	if (status > 0 && status < hdr->args.count) {
--		hdr->mds_offset += status;
--		hdr->args.offset += status;
--		hdr->args.pgbase += status;
--		hdr->args.count -= status;
--		nfs_set_pgio_error(hdr, -ENOSPC, hdr->args.offset);
--		status = -ENOSPC;
--		/* record -ENOSPC in terms of nfs_local_pgio_done */
--		(void) nfs_local_pgio_done(iocb, status, true);
--	}
--	if (hdr->task.tk_status < 0)
-+	if (status < 0)
- 		nfs_reset_boot_verifier(hdr->inode);
+-	if (force)
+-		return true;
+-
+ 	BUG_ON(atomic_read(&iocb->n_iters) <= 0);
+ 	return atomic_dec_and_test(&iocb->n_iters);
  }
+@@ -651,7 +647,7 @@ static void nfs_local_read_aio_complete(struct kiocb *kiocb, long ret)
+ 		container_of(kiocb, struct nfs_local_kiocb, kiocb);
  
+ 	/* AIO completion of DIO read should always be last to complete */
+-	if (unlikely(!nfs_local_pgio_done(iocb, ret, false)))
++	if (unlikely(!nfs_local_pgio_done(iocb, ret)))
+ 		return;
+ 
+ 	nfs_local_pgio_aio_complete(iocb); /* Calls nfs_local_read_aio_complete_work */
+@@ -684,7 +680,7 @@ static void nfs_local_call_read(struct work_struct *work)
+ 		if (status == -EIOCBQUEUED)
+ 			continue;
+ 		/* Break on completion, errors, or short reads */
+-		if (nfs_local_pgio_done(iocb, status, false) || status < 0 ||
++		if (nfs_local_pgio_done(iocb, status) || status < 0 ||
+ 		    (size_t)status < iov_iter_count(&iocb->iters[i])) {
+ 			nfs_local_read_iocb_done(iocb);
+ 			break;
+@@ -843,7 +839,7 @@ static void nfs_local_write_aio_complete(struct kiocb *kiocb, long ret)
+ 		container_of(kiocb, struct nfs_local_kiocb, kiocb);
+ 
+ 	/* AIO completion of DIO write should always be last to complete */
+-	if (unlikely(!nfs_local_pgio_done(iocb, ret, false)))
++	if (unlikely(!nfs_local_pgio_done(iocb, ret)))
+ 		return;
+ 
+ 	nfs_local_pgio_aio_complete(iocb); /* Calls nfs_local_write_aio_complete_work */
+@@ -879,7 +875,7 @@ static void nfs_local_call_write(struct work_struct *work)
+ 		if (status == -EIOCBQUEUED)
+ 			continue;
+ 		/* Break on completion, errors, or short writes */
+-		if (nfs_local_pgio_done(iocb, status, false) || status < 0 ||
++		if (nfs_local_pgio_done(iocb, status) || status < 0 ||
+ 		    (size_t)status < iov_iter_count(&iocb->iters[i])) {
+ 			nfs_local_write_iocb_done(iocb);
+ 			break;
 -- 
 2.52.0
 
