@@ -1,177 +1,198 @@
-Return-Path: <linux-nfs+bounces-17408-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17409-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FE65CF02BE
-	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 17:05:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C654BCF02CD
+	for <lists+linux-nfs@lfdr.de>; Sat, 03 Jan 2026 17:26:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C66533002D07
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Jan 2026 16:05:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 038CD300C29B
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Jan 2026 16:26:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ECC3223DEF;
-	Sat,  3 Jan 2026 16:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1632165EA;
+	Sat,  3 Jan 2026 16:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AT6rV5wB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NGO6C6XH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698D43C1F
-	for <linux-nfs@vger.kernel.org>; Sat,  3 Jan 2026 16:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71FD6FC5
+	for <linux-nfs@vger.kernel.org>; Sat,  3 Jan 2026 16:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767456302; cv=none; b=Zhz+S9wkDHx/BG1iR6q0QsdW2SiYcp5rAlGomC6tQGragl4KrhxhBFNNrhKXwoxR/jyJv1cl2BrX+K79Pnjy5CWWviu9YnQ796doOfWci5RQHMyxv2G98JSRwDMLMS7WuGM0/UK723G9TkkBFyTmEbhRxOMaBXO1pfWPFBrgbGs=
+	t=1767457585; cv=none; b=CNPxNboz6TDnM6ZBptN6PL+CkmJUfjhT9exFdeBSFkiPSGuR5EPuO6wFBhpMzlnUM0alRsp6wW38WhVtNeSiLRWyz627rLTP+vKaL2bmfkyITSlENQ5B/BOGo6HeXY1m0IgKk4Pl3hxxGqpslF255VGYz3iF3iAXStI8JEOqHOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767456302; c=relaxed/simple;
-	bh=qRHbeiv/A6I0MACeJQn78sbIYRJnfphXgKW/rlUw7yA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fcg5lBVqgJ3fKQChAFeQxzs2LFX9xJyXzSWtfc7pHV5m2fGztQPGRwiFfKl9haLqHSH69kN3rz1WIxiJlR0qVL5vW4LKdcSVtAkDi7AuUyw0U009mq1KvThuivnLScCdUr1ymj/Q+ldQ5pGyV0eAGqEADAPVmlK2dUMy/BjMlM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AT6rV5wB; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-64d80a47491so1612636a12.1
-        for <linux-nfs@vger.kernel.org>; Sat, 03 Jan 2026 08:05:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767456299; x=1768061099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LFLKr5spITWdnAr0PoMW7AEp5ipESSDuj+EKefkgI38=;
-        b=AT6rV5wBc231Znxmn+24d6Nd17QG5RQ2O1RR8Ttaz8Qz+MSWE/0Uc9kzs6QwK4UtYL
-         gpN6o/QVKdFr6wye0RG7aWVp1HOjtrQEr8GVSjD63OKSw75zMv9rdJJgQg75qRKKfyIv
-         g48ByBFk86kWH3wDoANLsK0wxM0H7gh835DfhFW9H8jmQzdmy/SYaF7LlkfmdW0IKsLd
-         SzSltyfWMaR95dCQS3QHJzccnkd8B7p9V37e9ITTo0TMhFYy39QcSJ1fyEOcpxrV/64O
-         Uv4w1fPvFVg4peJQ/ZLNspzu+/IyNhbYLH5wssdH5dCoz01UyHS2OEmMl7r+nlJOnDJJ
-         Nuxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767456299; x=1768061099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LFLKr5spITWdnAr0PoMW7AEp5ipESSDuj+EKefkgI38=;
-        b=AfTBCnXbRktSc6/Kp9E1i5NitKo4zBhghSONKI/DmuOo5JLSw+LXkXqglpBjVFSljW
-         fdu2w5sctRwywQRMkbFZlFuOIcxWR4CKChtf3xNWMrXrxB+KrEykErJ6YogF4+4mvkhl
-         JkWbHE35kWekPKM5gX/aNvjqu37VKjTchzRudWyxAbNob7jYhE+KYi/bxGYzj4V48xJh
-         3Cv2D0gxi53lgVg5DYM5TyV5wMj7y1gqEy52Nk+bKx3cboHFf5Wgi+6EvqbVoHv6B1y0
-         0zUdHQEFfnFx1p9R1Dw5HXK4CNM5kAwF7uQRN68rDiGKyt3sHkMRWAXwjQa+iR6hkSm7
-         xaiA==
-X-Gm-Message-State: AOJu0YzCvMXgxRT0rPRB5GkLMwVuycB+ZUzUQ/vrNnbmtk99AibdODsg
-	l8WnKSt+673atvAz2mHdmI6cMCL8kPgybOWWyyjaNCShoysf+dB1GI4QlOM8ZBE72j+WxF0dV8S
-	C/EeVlge54rP9q3k1QaNXSXQPzVbfmw==
-X-Gm-Gg: AY/fxX7GZhbwuyDGhzyhVXUit8H5hbSN2T5qaNMGSpEtrRO//HMxvwPTwhEoow2QBDb
-	sj/3WL31acEJmEiOZaE7EiF+NIBMS1QwcAZsRLSlpj49kOlFm/bEW450RasrbywAnCHAD1X5QEK
-	2lqcvuiqbjyOtPffd//T6KWKWUpMRs9+DFB4Cuc08tEFeSEzlxyh7bomZ4GGThHizaxgJwvNXd0
-	sjGgMIHV5p1zJNa8GQ3tS2wcm5sbGvbi7s7omfr6pzjsA8cYGIiF87+dlGDX8ddTqRsJRV2YURP
-	jXqNJBJQnVQNOVx/+sED2D01DGjOTRALyYtE
-X-Google-Smtp-Source: AGHT+IH4x1nhpw0xpZLa5d8lfcMRteEnYH5oS+qlteZuWyB6bCwtlDmvUEYjc2hO8vNFFTMEM/Iol8GNJL2/0R3hzzM=
-X-Received: by 2002:a05:6402:2706:b0:64b:5851:5e7b with SMTP id
- 4fb4d7f45d1cf-64fd4a43a4dmr2736375a12.14.1767456298512; Sat, 03 Jan 2026
- 08:04:58 -0800 (PST)
+	s=arc-20240116; t=1767457585; c=relaxed/simple;
+	bh=OWxOb6VTnRAAgbI2d9BeFgE9kL6fOd6E2WPvb6X/EsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mz7Eh53dRhTXi6GtYGPO6nbwsU7eTev8gxWxsVq8xITFsQs1A2aJiKfw1UFhhL8+iw6hq4myJ9jKyHOGVXkjW/qfoL/nSWyquShWgFtS79/KucyfztIlgpB18v6/bPRgLmvptEQsQhuxNWLQC8kbChD+XXkJpT8b1wL0jEh/Srw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NGO6C6XH; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767457582; x=1798993582;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OWxOb6VTnRAAgbI2d9BeFgE9kL6fOd6E2WPvb6X/EsE=;
+  b=NGO6C6XHn0A41kQLc4RJipFSFJbAlccrKOFGg/GdfQz7iKpglTweXys7
+   4OLOa/ezlPkgzBBqvivKpWSN/lrkYZZFeLc08sV3HpUWvxPp1bu7ZLYR9
+   Awrccsft/AF6+L9vMzuYP+8RBDsIwp7eyawGp4D47krdlbW3Y6+bd2cnl
+   zCbj0xz7Dq9M5PHe1uG1JxhQari+fhwMvJuctXePJE2s+YJzXPmbYoJwr
+   lEbLUdIHJ7CLs4uuDCoBRVtbFieUp5Avb5HXcpgQkZGfuYuwIMpqFDpgw
+   TyGTfb1yAmyRXKb2+/wLZYvlEaNXSIBKnQQRGF9COjpvh0econe6TL8MJ
+   Q==;
+X-CSE-ConnectionGUID: QMnsQM4NQeSDAIjyq/ppnw==
+X-CSE-MsgGUID: 15nOkIuSSui+PItkXziNGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="68805906"
+X-IronPort-AV: E=Sophos;i="6.21,198,1763452800"; 
+   d="scan'208";a="68805906"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 08:26:21 -0800
+X-CSE-ConnectionGUID: K1BT0t4VR6iqr50bA7RJig==
+X-CSE-MsgGUID: QNAldfiQT+aaYDB82W4f6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,198,1763452800"; 
+   d="scan'208";a="202493010"
+Received: from igk-lkp-server01.igk.intel.com (HELO 92b2e8bd97aa) ([10.211.93.152])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Jan 2026 08:26:19 -0800
+Received: from kbuild by 92b2e8bd97aa with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vc4SH-000000000jB-1TBA;
+	Sat, 03 Jan 2026 16:26:17 +0000
+Date: Sat, 3 Jan 2026 17:25:38 +0100
+From: kernel test robot <lkp@intel.com>
+To: rick.macklem@gmail.com, linux-nfs@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Rick Macklem <rmacklem@uoguelph.ca>
+Subject: Re: [PATCH v1 6/7] Set SB_POSIXACL if the server supports the
+ extension
+Message-ID: <202601031746.QiLqxADW-lkp@intel.com>
+References: <20260102232934.1560-7-rick.macklem@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260102232934.1560-6-rick.macklem@gmail.com> <202601031506.MX594pma-lkp@intel.com>
-In-Reply-To: <202601031506.MX594pma-lkp@intel.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sat, 3 Jan 2026 08:04:46 -0800
-X-Gm-Features: AQt7F2ocQPosiLJho2njFNk1mj6fnJMMVq9pBA9JF7oTe097MVdvaQQLXJx9yoY
-Message-ID: <CAM5tNy7QUweys+yXO=KZ5TFLDVnBr-Jsd2zrmCL0H7EdJU72PQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/7] Make nfs4_server_supports_acls() global
-To: kernel test robot <lkp@intel.com>
-Cc: linux-nfs@vger.kernel.org, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, Rick Macklem <rmacklem@uoguelph.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260102232934.1560-7-rick.macklem@gmail.com>
 
-The reason this happens is that this patch series requires
-the 0001 patch from the server series.
+Hi,
 
-Should I repost with that patch including in this set as well?
+kernel test robot noticed the following build errors:
 
-rick
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on v6.16-rc1 next-20251219]
+[cannot apply to linus/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-On Sat, Jan 3, 2026 at 6:37=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on trondmy-nfs/linux-next]
-> [also build test ERROR on linus/master v6.16-rc1 next-20251219]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/rick-macklem-gmail=
--com/Add-entries-to-the-predefined-client-operations-enum/20260103-073239
-> base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-> patch link:    https://lore.kernel.org/r/20260102232934.1560-6-rick.mackl=
-em%40gmail.com
-> patch subject: [PATCH v1 5/7] Make nfs4_server_supports_acls() global
-> config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260103/20=
-2601031506.MX594pma-lkp@intel.com/config)
-> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0=
-227cb60147a26a1eeb4fb06e3b505e9c7261)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20260103/202601031506.MX594pma-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202601031506.MX594pma-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
-> >> fs/nfs/nfs4proc.c:6083:36: error: use of undeclared identifier 'FATTR4=
-_WORD2_POSIX_DEFAULT_ACL'
->     6083 |                 return server->attr_bitmask[2] & FATTR4_WORD2_=
-POSIX_DEFAULT_ACL;
->          |                                                  ^
-> >> fs/nfs/nfs4proc.c:6085:36: error: use of undeclared identifier 'FATTR4=
-_WORD2_POSIX_ACCESS_ACL'
->     6085 |                 return server->attr_bitmask[2] & FATTR4_WORD2_=
-POSIX_ACCESS_ACL;
->          |                                                  ^
->    fs/nfs/nfs4proc.c:9630:12: warning: variable 'ptr' set but not used [-=
-Wunused-but-set-variable]
->     9630 |         unsigned *ptr;
->          |                   ^
->    1 warning and 2 errors generated.
->
->
-> vim +/FATTR4_WORD2_POSIX_DEFAULT_ACL +6083 fs/nfs/nfs4proc.c
->
->   6071
->   6072  bool nfs4_server_supports_acls(const struct nfs_server *server,
->   6073                                        enum nfs4_acl_type type)
->   6074  {
->   6075          switch (type) {
->   6076          default:
->   6077                  return server->attr_bitmask[0] & FATTR4_WORD0_ACL=
-;
->   6078          case NFS4ACL_DACL:
->   6079                  return server->attr_bitmask[1] & FATTR4_WORD1_DAC=
-L;
->   6080          case NFS4ACL_SACL:
->   6081                  return server->attr_bitmask[1] & FATTR4_WORD1_SAC=
-L;
->   6082          case NFS4ACL_POSIXDEFAULT:
-> > 6083                  return server->attr_bitmask[2] & FATTR4_WORD2_POS=
-IX_DEFAULT_ACL;
->   6084          case NFS4ACL_POSIXACCESS:
-> > 6085                  return server->attr_bitmask[2] & FATTR4_WORD2_POS=
-IX_ACCESS_ACL;
->   6086          }
->   6087  }
->   6088
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+url:    https://github.com/intel-lab-lkp/linux/commits/rick-macklem-gmail-com/Add-entries-to-the-predefined-client-operations-enum/20260103-073239
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20260102232934.1560-7-rick.macklem%40gmail.com
+patch subject: [PATCH v1 6/7] Set SB_POSIXACL if the server supports the extension
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260103/202601031746.QiLqxADW-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260103/202601031746.QiLqxADW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601031746.QiLqxADW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> fs/nfs/super.c:1356:33: error: use of undeclared identifier 'FATTR4_WORD2_POSIX_DEFAULT_ACL'
+    1356 |         if ((server->attr_bitmask[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL) &&
+         |                                        ^
+>> fs/nfs/super.c:1357:33: error: use of undeclared identifier 'FATTR4_WORD2_POSIX_ACCESS_ACL'
+    1357 |             (server->attr_bitmask[2] & FATTR4_WORD2_POSIX_ACCESS_ACL))
+         |                                        ^
+   2 errors generated.
+
+
+vim +/FATTR4_WORD2_POSIX_DEFAULT_ACL +1356 fs/nfs/super.c
+
+  1299	
+  1300	int nfs_get_tree_common(struct fs_context *fc)
+  1301	{
+  1302		struct nfs_fs_context *ctx = nfs_fc2context(fc);
+  1303		struct super_block *s;
+  1304		int (*compare_super)(struct super_block *, struct fs_context *) = nfs_compare_super;
+  1305		struct nfs_server *server = ctx->server;
+  1306		int error;
+  1307	
+  1308		ctx->server = NULL;
+  1309		if (IS_ERR(server))
+  1310			return PTR_ERR(server);
+  1311	
+  1312		if (server->flags & NFS_MOUNT_UNSHARED)
+  1313			compare_super = NULL;
+  1314	
+  1315		/* -o noac implies -o sync */
+  1316		if (server->flags & NFS_MOUNT_NOAC)
+  1317			fc->sb_flags |= SB_SYNCHRONOUS;
+  1318	
+  1319		/* Get a superblock - note that we may end up sharing one that already exists */
+  1320		fc->s_fs_info = server;
+  1321		s = sget_fc(fc, compare_super, nfs_set_super);
+  1322		fc->s_fs_info = NULL;
+  1323		if (IS_ERR(s)) {
+  1324			error = PTR_ERR(s);
+  1325			nfs_errorf(fc, "NFS: Couldn't get superblock");
+  1326			goto out_err_nosb;
+  1327		}
+  1328	
+  1329		if (s->s_fs_info != server) {
+  1330			nfs_free_server(server);
+  1331			server = NULL;
+  1332		} else {
+  1333			error = super_setup_bdi_name(s, "%u:%u", MAJOR(server->s_dev),
+  1334						     MINOR(server->s_dev));
+  1335			if (error)
+  1336				goto error_splat_super;
+  1337			s->s_bdi->io_pages = server->rpages;
+  1338			server->super = s;
+  1339		}
+  1340	
+  1341		if (!s->s_root) {
+  1342			/* initial superblock/root creation */
+  1343			nfs_fill_super(s, ctx);
+  1344			error = nfs_get_cache_cookie(s, ctx);
+  1345			if (error < 0)
+  1346				goto error_splat_super;
+  1347		}
+  1348	
+  1349		error = nfs_get_root(s, fc);
+  1350		if (error < 0) {
+  1351			nfs_errorf(fc, "NFS: Couldn't get root dentry");
+  1352			goto error_splat_super;
+  1353		}
+  1354	
+  1355		/* Set SB_POSIXACL if the server supports the NFSv4.2 extension. */
+> 1356		if ((server->attr_bitmask[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL) &&
+> 1357		    (server->attr_bitmask[2] & FATTR4_WORD2_POSIX_ACCESS_ACL))
+  1358			s->s_flags |= SB_POSIXACL;
+  1359	
+  1360		s->s_flags |= SB_ACTIVE;
+  1361		error = 0;
+  1362	
+  1363	out:
+  1364		return error;
+  1365	
+  1366	out_err_nosb:
+  1367		nfs_free_server(server);
+  1368		goto out;
+  1369	error_splat_super:
+  1370		deactivate_locked_super(s);
+  1371		goto out;
+  1372	}
+  1373	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
