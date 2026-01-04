@@ -1,171 +1,132 @@
-Return-Path: <linux-nfs+bounces-17433-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17435-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00E0ECF11B9
-	for <lists+linux-nfs@lfdr.de>; Sun, 04 Jan 2026 16:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA1B3CF11E0
+	for <lists+linux-nfs@lfdr.de>; Sun, 04 Jan 2026 17:10:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ADBB83007267
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Jan 2026 15:36:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79B533009FBC
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Jan 2026 16:10:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F84226F288;
-	Sun,  4 Jan 2026 15:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D944400;
+	Sun,  4 Jan 2026 16:10:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXl9+wOl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBnfrtT1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC5526ED41
-	for <linux-nfs@vger.kernel.org>; Sun,  4 Jan 2026 15:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E9323535E
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Jan 2026 16:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767541010; cv=none; b=UoKhuzwkgDbSCQpgFYGRPEms8v2FSFfpJwZMHr+7/uKa4WPUM14QD6yAt4e23Cxm00QYL40SjAX9mVNUZ1Yrya5Zxyw+gwCkaLElHlBUtwprZgqG4d3iOOSZxms2tYyZNYZL42zrjHxJygz6zdB7Ye5ogmFC5PR93eu3MYgWUGs=
+	t=1767543024; cv=none; b=BEfzDrvOAt+Y+BNpYWoz7kOcujlnK7boQuJCPK4RFXGdOTOfGtRBwFhLdLP0iu5vjgVNXxXgh/oRFf+NKQ4ExEleu9WpvHjsJtcavjshUCrJsASXwQzF8DU9OiyMZBWtnMpVxRyVOtbxfEQ6WgBlrmrRnJSazFgik54B4BE743E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767541010; c=relaxed/simple;
-	bh=hIgu4FAjsSL6HZFXgdjEX7xf9ozKV9cpQtmHqyFXYM8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZjYfdzcLnXHN63++CtWSju3TVdmjz7ewQHQ5DzRdbvlIXic/6jT22FFWoNrqk1dTuipH61G01TXeiKEt7k48PcmRn3x6pnmSGddWqW9q5fHWfJB1HZFxVmpMugoWEN+lbmVUaGr/gr2gnTeBkVBhygEZMaEfA507rs/j1Z7K/MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXl9+wOl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A74C4CEF7;
-	Sun,  4 Jan 2026 15:36:49 +0000 (UTC)
+	s=arc-20240116; t=1767543024; c=relaxed/simple;
+	bh=IFyIe0m+yAIpXlrr/8Fs2XLks4mh51jdapS7piAplw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gb8X6J0NNmhOUVM1Q2SZWP4JZ+EkCgtkHAB1p2/7oN30B0FZ+v+VLZhma8WkYxqxFYEah3ZHp23fxS84QDFddPSFKHSHr4j73WIbx4qU5VwEpOkP8S9Wu02lkeXdgbsMf4zwpqxmK3AO7H4u73bIFajKZ3M7OOA/h7616quWZmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBnfrtT1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFFDC4CEF7;
+	Sun,  4 Jan 2026 16:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767541010;
-	bh=hIgu4FAjsSL6HZFXgdjEX7xf9ozKV9cpQtmHqyFXYM8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nXl9+wOlvTrbpETL1DZSpiaEO1DBdPaHFUSti6WSoLxZrmgNhqGclC/EGOra5+Yng
-	 b97vxmChrXCseaqGuZlcx+twA8PGPjzA4wEyy8PkhSgIS4k2ZtGR5wnYHB72hMG1zf
-	 qZPIkgiuEpgl9M65lQQ/C+gqVno2pQ+ZmFacNpsuSNMkofwECnlpWRmvT8dcSxRW6B
-	 BnSKiOKstFLDP1l2dzjtPxbHgXZSwCz/di96q5X08YcHJO+sTMOhX+OYv2DmVkmT+D
-	 rmLCwmOD+0ZNlkEZUpYqNk1VjH1fPGEt0Gg3yaip2o3amwQqIcp8LHjNwO4FQzg466
-	 a6+1Q+iouN9UA==
-Message-ID: <43278ef7e260f46de5a7130331f30e12b916f89a.camel@kernel.org>
-Subject: Re: Possible regression after NFS eof page pollution fix (ext4
- checksum errors)
-From: Trond Myklebust <trondmy@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: Linoy Ganti <lganti@nvidia.com>, Bar Friedman <bfriedman@nvidia.com>, 
-	linux-nfs@vger.kernel.org, Maor Gottlieb <maorg@nvidia.com>
-Date: Sun, 04 Jan 2026 10:36:48 -0500
-In-Reply-To: <447f41f0-f3ab-462a-8b59-e27bb2dfcbc0@nvidia.com>
-References: <447f41f0-f3ab-462a-8b59-e27bb2dfcbc0@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1767543022;
+	bh=IFyIe0m+yAIpXlrr/8Fs2XLks4mh51jdapS7piAplw0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oBnfrtT1epNC0cHpK7X7LfMrjZ/AUoQdfctaQJcsVfgY6UKHUDdvezWlU4QkjtWdx
+	 tWBiYb/FGJNTe4QO+YIc1AxfhSSUU8YmNGMMIYNz+KgCy0fCUdjFQZ1tS2UArnLAVb
+	 4DCjl/bgEKUSc1Qx2KE4uL55l3ien+XN2oKOu2NsCFWh0fpS2pE0TpsGbRX23gfWMY
+	 lXvL2UpyF6q+5PlnkSREppXJXkMsi8MRm2pzwcsQwqW0RxWsQQREPoQ/f6sY1AVFCo
+	 G+Ni+xINyLmNzh3dfsjec8+sNlhK7ItuOelnWcE+gPmyWqeDMgdYeacBQSsBbkAYqN
+	 RPCegwFlKTf7g==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2 00/12] Add NFSv4.2 POSIX ACL support
+Date: Sun,  4 Jan 2026 11:10:10 -0500
+Message-ID: <20260104161019.3404489-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2026-01-04 at 11:16 +0200, Mark Bloch wrote:
-> Hi Trond,
->=20
-> We=E2=80=99ve recently started seeing filesystem issues in our internal
-> regression runs, and we were able to bisect the problem down to
-> the following commit:
->=20
-> commit b1817b18ff20e69f5accdccefaf78bf5454bede2
-> Author: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Date:=C2=A0=C2=A0 Thu Sep 4 18:46:16 2025 -0400
->=20
-> =C2=A0=C2=A0=C2=A0 NFS: Protect against 'eof page pollution'
->=20
-> =C2=A0=C2=A0=C2=A0 This commit fixes the failing xfstest 'generic/363'.
->=20
-> =C2=A0=C2=A0=C2=A0 When the user mmaps() an area that extends beyond the =
-end of
-> file, and
-> =C2=A0=C2=A0=C2=A0 proceeds to write data into the folio that straddles t=
-hat eof,
-> we're
-> =C2=A0=C2=A0=C2=A0 required to discard that folio data if the user calls =
-some
-> function that
-> =C2=A0=C2=A0=C2=A0 extends the file length.
->=20
-> =C2=A0=C2=A0=C2=A0 Signed-off-by: Trond Myklebust <trond.myklebust@hammer=
-space.com>
->=20
->=20
-> After this change, we intermittently see EXT4 checksum-related errors
-> during boot.
-> A representative dmesg excerpt is below:
->=20
-> =C2=A0[ 1908.365537] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #263414: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1908.375449] EXT4-fs error (device vda2): __ext4_find_entry:1624:
-> inode #263414: comm updatedb: checksumming directory block 0
-> =C2=A0[ 1908.382985] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #263414: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1908.389289] EXT4-fs error (device vda2): __ext4_find_entry:1624:
-> inode #263414: comm updatedb: checksumming directory block 0
-> =C2=A0[ 1909.598811] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423753: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1909.604308] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423753: comm updatedb: Directory
-> block failed checksum
-> =C2=A0[ 1909.958470] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423759: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1909.963825] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423759: comm updatedb: Directory
-> block failed checksum
-> =C2=A0[ 1909.985956] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #303617: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1909.991371] EXT4-fs error (device vda2): __ext4_find_entry:1624:
-> inode #303617: comm updatedb: checksumming directory block 0
-> =C2=A0[ 1910.156415] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423761: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1910.161959] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423761: comm updatedb: Directory
-> block failed checksum
-> =C2=A0[ 1910.171364] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423735: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1910.177292] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423735: comm updatedb: Directory
-> block failed checksum
-> =C2=A0[ 1910.267721] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423744: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1910.281838] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423744: comm updatedb: Directory
-> block failed checksum
-> =C2=A0[ 1910.476906] EXT4-fs warning (device vda2):
-> ext4_dirblock_csum_verify:375: inode #423751: comm updatedb: No space
-> for directory leaf checksum. Please run e2fsck -D.
-> =C2=A0[ 1910.482403] EXT4-fs error (device vda2):
-> htree_dirblock_to_tree:1051: inode #423751: comm updatedb: Directory
-> block failed checksum
->=20
-> The issue has so far only been observed in tests that use a nested VM
-> setup.
-> It does not reproduce deterministically, roughly half of the nested
-> VM boots trigger the problem.
->=20
-> Would you mind taking a look or pointing us in the right direction?
-> Please let us know if additional information, testing,
-> or instrumentation would be helpful.
->=20
-> Thanks,
-> Mark
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I'm having trouble seeing how those issues can be related unless ext4
-and NFS are somehow sharing the same folios. Does reverting just=20
-commit b1817b18ff20 and b2036bb65114 actually fix the ext4 problem?
+The Internet draft "POSIX Draft ACL support for Network File
+System Version 4, Minor Version 2":
 
-What does "nested VM" mean in this situation, and what is the storage
-for the ext4 filesystem that is being corrupted?
+  https://datatracker.ietf.org/doc/draft-ietf-nfsv4-posix-acls/
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+defines an extension to NFSv4.2 that enables POSIX draft ACLs
+to be retrieved and set directly, without the lossy
+NFSv4->POSIX draft mapping algorithm. The extension adds four
+new attributes to the protocol.
+
+This patch series implements the server side of this extension
+for knfsd. The mechanism is analogous to the NFS_ACL sideband
+protocol used with NFSv2/3, enabling POSIX draft ACLs to be
+manipulated directly by getfacl(1) and setfacl(1).
+
+The current implementation does not support "per file" scope,
+where individual file objects store either an NFSv4 ACL or a
+POSIX draft ACL. Instead, the implementation assumes POSIX
+draft ACLs apply to an entire file system when support for
+POSIX draft ACLs is indicated.
+
+Based on the nfsd-testing branch from:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+
+Changes since v1:
+- Fold the patches with fixes into the first 8 patches
+- Ensure the series is bisect-able
+- Add CONFIG_NFSD_V4_POSIX_ACLS -- this feature is experimental
+- Set "SUPPATTR" bits only at the end of series
+- Use xdrgen, where practical, instead of hand-coded XDR
+- Refactor SETATTR/CREATE to integrate better with existing APIs
+
+
+Chuck Lever (3):
+  NFSD: Add a Kconfig setting to enable support for NFSv4 POSIX ACLs
+  Add RPC language definition of NFSv4 POSIX ACL extension
+  NFSD: Add POSIX ACL file attributes to SUPPATTR bitmasks
+
+Rick Macklem (9):
+  NFSD: Add nfsd4_encode_fattr4_acl_trueform
+  NFSD: Add nfsd4_encode_fattr4_acl_trueform_scope
+  NFSD: Add nfsd4_encode_fattr4_posix_default_acl
+  NFSD: Add nfsd4_encode_fattr4_posix_access_acl
+  NFSD: Do not allow NFSv4 (N)VERIFY to check POSIX ACL attributes
+  NFSD: Refactor nfsd_setattr()'s ACL error reporting
+  NFSD: Add support for XDR decoding POSIX draft ACLs
+  NFSD: Add support for POSIX draft ACLs for file creation
+  NFSD: Add POSIX draft ACL support to the NFSv4 SETATTR operation
+
+ Documentation/sunrpc/xdr/nfs4_1.x    |  56 +++++
+ fs/nfsd/Kconfig                      |  19 ++
+ fs/nfsd/acl.h                        |   1 +
+ fs/nfsd/nfs4acl.c                    |  17 +-
+ fs/nfsd/nfs4proc.c                   |  96 ++++++--
+ fs/nfsd/nfs4xdr.c                    | 356 ++++++++++++++++++++++++++-
+ fs/nfsd/nfs4xdr_gen.c                | 167 ++++++++++++-
+ fs/nfsd/nfs4xdr_gen.h                |  12 +-
+ fs/nfsd/nfsd.h                       |  17 +-
+ fs/nfsd/vfs.c                        |  34 ++-
+ fs/nfsd/vfs.h                        |   3 +-
+ fs/nfsd/xdr4.h                       |   6 +
+ include/linux/nfs4.h                 |   4 +
+ include/linux/sunrpc/xdrgen/nfs4_1.h |  73 +++++-
+ 14 files changed, 822 insertions(+), 39 deletions(-)
+
+-- 
+2.52.0
+
 
