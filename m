@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-17442-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17443-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EBABCF11E9
-	for <lists+linux-nfs@lfdr.de>; Sun, 04 Jan 2026 17:10:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE92DCF11F8
+	for <lists+linux-nfs@lfdr.de>; Sun, 04 Jan 2026 17:10:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7F83B3000903
-	for <lists+linux-nfs@lfdr.de>; Sun,  4 Jan 2026 16:10:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0FA6C3008D69
+	for <lists+linux-nfs@lfdr.de>; Sun,  4 Jan 2026 16:10:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F5D61E0DE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB50323535E;
 	Sun,  4 Jan 2026 16:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouoCVEAg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MedoNYdR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD51223535E
-	for <linux-nfs@vger.kernel.org>; Sun,  4 Jan 2026 16:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A770C4400
+	for <linux-nfs@vger.kernel.org>; Sun,  4 Jan 2026 16:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767543028; cv=none; b=Aezed5cQwEZzJABBY4GNCCp9dVUQkzKeA280SK2/djyrwWlIwdinfpl/LT2NBN+mMK9f8xB4CWAbz9GkLNJYZ+YkwQXq5vM7LeJJvchGtz97BgFIUp3w/CdOYw98SMhT7PDf93tH6/HVav2yyrQrsloAG/OSkwqp05CQC1yGgTc=
+	t=1767543029; cv=none; b=ZgobDAxQ/2z+fxQ8YsXaj2GyA9MaGF9Uwj0v+sUu6b0HSKjPoLEXEZNCaw6+92J4f3yZO3jxBYAHZ8UyhfY8Kxe4lcAVDxuVFoTGixME/V4pufajj/c+PRhbTP2JbLgNBQfeBR444VlEAa2IqUXW8AO6RG556/+v7d/os51Mvis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767543028; c=relaxed/simple;
-	bh=efckXbyQzXOILyByBvIvFNGydMIVHg28+vkhCfmQ4UQ=;
+	s=arc-20240116; t=1767543029; c=relaxed/simple;
+	bh=EymsZYPuGGDGxGBave6tOF5uTBWH6PrwFKZxhFMfWTs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f6f0eonmJnzoGmM/8IiyrulUSN+BIjHZ7QuT51v4m7hz3BTFDJK3pFOiio/Wet1i6sqzJ/sLeKA0O+kWie1v6Zru28sWXhc1WxT5JTWQ4zttLIJXhuG0i+Pkp0DbtY8/DFZy37Fp4gLDo96oIS3efD7YfHxXwo2/ZyYnrrheQwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouoCVEAg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32920C19421;
+	 MIME-Version; b=tY/Db3LhcbPhi32bACCq+cKw80Gt9a6039STh1vaaphNybcAB3mk9tJRCc2M2L4WyV+jHlcveWuAnkzAzr6zo7EVxbOF7YgHNxceipDjPmooiDUlAp1C97aBmP/iMzd/rb8Y3Tvub9ELEoXCPlI0Rv4yP/8cKzvKaDdQVvVvpeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MedoNYdR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C92C2BC86;
 	Sun,  4 Jan 2026 16:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767543028;
-	bh=efckXbyQzXOILyByBvIvFNGydMIVHg28+vkhCfmQ4UQ=;
+	s=k20201202; t=1767543029;
+	bh=EymsZYPuGGDGxGBave6tOF5uTBWH6PrwFKZxhFMfWTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ouoCVEAgh+8Y+NaOF+XrtLznd24FEvnA9UC/XebCYYMOY1gb5081vFRufFj5Sd4cX
-	 E5KPH6yOUHV2riBLn6b6UZCSWDe+1FYGn/YtBrqiptwSHHbZPyQideD7n4j21iPG3F
-	 W76e3Gmf7DQkBCg/udO9GMtzlbHCZ+o7zdtLdHf1iqDEjI5xg6ENVusNBDldVeKnTu
-	 q3V7qIP1916EUrdIFEqM2JOOLfjCVviHjvxiOdvDVz7/uHtk8VnufYjPNEBKFbmtj+
-	 BaHVcSi4M3aPYOGCHMTIDg/lBJ1huPWjYG0njSKqwX2jRNDBX+AXQh/EKFpSprHBwU
-	 987T+JdWH0UVw==
+	b=MedoNYdRo6c7neEONVkRm3g/DIdjLh2k4LgFg1HT5XZWk7FL7NuBGbVwwPdFyAYzL
+	 gwGMJjw/pZr69+TJoT1DqRpkzK20ALGzvZImtRyPOQLnQFCTTuTUupWSqn5U3PrkRS
+	 RgXb9YLa/QID+QD4IUtYpBCekXW5f12yk+MTDWTUpZ8w34dc2OFwS5OT+xHPtQPMus
+	 5+7rWD8Gx4EMWpeXiz2CNqInDXN5GtIBMfOisklVlG/zd5ZgfS+/EUAR2lf5B2OFQU
+	 pkP4kid9XXT8ykk+QxQ+0W3Ys9ippMugsHslnGdGCkwpGPh4P9GZU+odna2iMsBQci
+	 lGnH880Lkt16A==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -47,9 +47,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v2 08/12] NFSD: Refactor nfsd_setattr()'s ACL error reporting
-Date: Sun,  4 Jan 2026 11:10:18 -0500
-Message-ID: <20260104161019.3404489-9-cel@kernel.org>
+Subject: [PATCH v2 09/12] NFSD: Add support for XDR decoding POSIX draft ACLs
+Date: Sun,  4 Jan 2026 11:10:19 -0500
+Message-ID: <20260104161019.3404489-10-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260104161019.3404489-1-cel@kernel.org>
 References: <20260104161019.3404489-1-cel@kernel.org>
@@ -63,132 +63,305 @@ Content-Transfer-Encoding: 8bit
 
 From: Rick Macklem <rmacklem@uoguelph.ca>
 
-Support for FATTR4_POSIX_ACCESS_ACL and FATTR4_POSIX_DEFAULT_ACL
-attributes in subsequent patches allows clients to set both ACL
-types simultaneously during SETATTR and file creation. Each ACL
-type can succeed or fail independently, requiring the server to
-clear individual attribute bits in the reply bitmap when one
-fails while the other succeeds.
+The POSIX ACL extension to NFSv4 defines FATTR4_POSIX_ACCESS_ACL
+and FATTR4_POSIX_DEFAULT_ACL for setting access and default ACLs
+via CREATE, OPEN, and SETATTR operations. This patch adds the XDR
+decoders for those attributes.
 
-The existing na_aclerr field cannot distinguish which ACL type
-encountered an error. Separate error fields (na_paclerr for
-access ACLs, na_dpaclerr for default ACLs) enable the server to
-report per-ACL-type failures accurately.
-
-This refactoring also adds validation previously absent: default
-ACL processing rejects non-directory targets with EINVAL and
-passes NULL to set_posix_acl() when a_count is zero to delete
-the ACL. Access ACL processing rejects zero a_count with EINVAL
-for ACL_SCOPE_FILE_SYSTEM semantics (the only scope currently
-supported).
-
-The changes preserve compatibility with existing NFSv4 ACL code.
-NFSv4 ACL conversion (nfs4_acl_nfsv4_to_posix()) never produces
-POSIX ACLs with a_count == 0, so the new validation logic only
-affects future POSIX ACL attribute handling.
+The nfsd4_decode_fattr4() function gains two additional parameters
+for receiving decoded POSIX ACLs. CREATE, OPEN, and SETATTR
+decoders pass pointers to these new parameters, enabling clients
+to set POSIX ACLs during object creation or modification.
 
 Signed-off-by: Rick Macklem <rmacklem@uoguelph.ca>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c |  8 +++++---
- fs/nfsd/vfs.c      | 34 +++++++++++++++++++++++++++-------
- fs/nfsd/vfs.h      |  3 ++-
- 3 files changed, 34 insertions(+), 11 deletions(-)
+ fs/nfsd/acl.h     |   1 +
+ fs/nfsd/nfs4acl.c |  17 +++--
+ fs/nfsd/nfs4xdr.c | 157 ++++++++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/xdr4.h    |   6 ++
+ 4 files changed, 171 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index d3f016f9d9e6..7ba4f193852d 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -377,7 +377,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+diff --git a/fs/nfsd/acl.h b/fs/nfsd/acl.h
+index 4b7324458a94..2003523d0e65 100644
+--- a/fs/nfsd/acl.h
++++ b/fs/nfsd/acl.h
+@@ -49,5 +49,6 @@ int nfsd4_get_nfs4_acl(struct svc_rqst *rqstp, struct dentry *dentry,
+ 		struct nfs4_acl **acl);
+ __be32 nfsd4_acl_to_attr(enum nfs_ftype4 type, struct nfs4_acl *acl,
+ 			 struct nfsd_attrs *attr);
++void sort_pacl_range(struct posix_acl *pacl, int start, int end);
  
- 	if (attrs.na_labelerr)
- 		open->op_bmval[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
--	if (attrs.na_aclerr)
-+	if (attrs.na_paclerr || attrs.na_dpaclerr)
- 		open->op_bmval[0] &= ~FATTR4_WORD0_ACL;
- out:
- 	end_creating(child);
-@@ -858,7 +858,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ #endif /* LINUX_NFS4_ACL_H */
+diff --git a/fs/nfsd/nfs4acl.c b/fs/nfsd/nfs4acl.c
+index 936ea1ad9586..2c2f2fd89e87 100644
+--- a/fs/nfsd/nfs4acl.c
++++ b/fs/nfsd/nfs4acl.c
+@@ -369,12 +369,21 @@ pace_gt(struct posix_acl_entry *pace1, struct posix_acl_entry *pace2)
+ 	return false;
+ }
  
- 	if (attrs.na_labelerr)
- 		create->cr_bmval[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
--	if (attrs.na_aclerr)
-+	if (attrs.na_paclerr || attrs.na_dpaclerr)
- 		create->cr_bmval[0] &= ~FATTR4_WORD0_ACL;
- 	set_change_info(&create->cr_cinfo, &cstate->current_fh);
- 	fh_dup2(&cstate->current_fh, &resfh);
-@@ -1232,7 +1232,9 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	if (!status)
- 		status = nfserrno(attrs.na_labelerr);
- 	if (!status)
--		status = nfserrno(attrs.na_aclerr);
-+		status = nfserrno(attrs.na_dpaclerr);
-+	if (!status)
-+		status = nfserrno(attrs.na_paclerr);
- out:
- 	nfsd_attrs_free(&attrs);
- 	fh_drop_write(&cstate->current_fh);
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 168d3ccc8155..c884c3f34afb 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -596,15 +596,35 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (attr->na_seclabel && attr->na_seclabel->len)
- 		attr->na_labelerr = security_inode_setsecctx(dentry,
- 			attr->na_seclabel->data, attr->na_seclabel->len);
--	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl)
--		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
--						dentry, ACL_TYPE_ACCESS,
--						attr->na_pacl);
--	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) &&
--	    !attr->na_aclerr && attr->na_dpacl && S_ISDIR(inode->i_mode))
--		attr->na_aclerr = set_posix_acl(&nop_mnt_idmap,
-+	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_dpacl) {
-+		if (!S_ISDIR(inode->i_mode))
-+			attr->na_dpaclerr = -EINVAL;
-+		else if (attr->na_dpacl->a_count > 0)
-+			/* a_count == 0 means delete the ACL. */
-+			attr->na_dpaclerr = set_posix_acl(&nop_mnt_idmap,
- 						dentry, ACL_TYPE_DEFAULT,
- 						attr->na_dpacl);
-+		else
-+			attr->na_dpaclerr = set_posix_acl(&nop_mnt_idmap,
-+						dentry, ACL_TYPE_DEFAULT,
-+						NULL);
+-static void
+-sort_pacl_range(struct posix_acl *pacl, int start, int end) {
++/**
++ * sort_pacl_range - sort a range of POSIX ACL entries by tag and id
++ * @pacl: POSIX ACL containing entries to sort
++ * @start: starting index of range to sort
++ * @end: ending index of range to sort (inclusive)
++ *
++ * Sorts ACL entries in place so that USER entries are ordered by UID
++ * and GROUP entries are ordered by GID. Required before calling
++ * posix_acl_valid().
++ */
++void sort_pacl_range(struct posix_acl *pacl, int start, int end)
++{
+ 	int sorted = 0, i;
+ 
+-	/* We just do a bubble sort; easy to do in place, and we're not
+-	 * expecting acl's to be long enough to justify anything more. */
++	/* Bubble sort: acceptable here because ACLs are typically short. */
+ 	while (!sorted) {
+ 		sorted = 1;
+ 		for (i = start; i < end; i++) {
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 358fa014be15..9a94b8434009 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -378,10 +378,120 @@ nfsd4_decode_security_label(struct nfsd4_compoundargs *argp,
+ 	return nfs_ok;
+ }
+ 
++#ifdef CONFIG_NFSD_V4_POSIX_ACLS
++
++static short nfsd4_posixacetag4_to_tag(posixacetag4 tag)
++{
++	switch (tag) {
++	case POSIXACE4_TAG_USER_OBJ:	return ACL_USER_OBJ;
++	case POSIXACE4_TAG_GROUP_OBJ:	return ACL_GROUP_OBJ;
++	case POSIXACE4_TAG_USER:	return ACL_USER;
++	case POSIXACE4_TAG_GROUP:	return ACL_GROUP;
++	case POSIXACE4_TAG_MASK:	return ACL_MASK;
++	case POSIXACE4_TAG_OTHER:	return ACL_OTHER;
 +	}
-+	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl) {
-+		/*
-+		 * For any file system that is not ACL_SCOPE_FILE_OBJECT,
-+		 * a_count == 0 MUST reply nfserr_inval.
-+		 * For a file system that is ACL_SCOPE_FILE_OBJECT,
-+		 * a_count == 0 deletes the ACL.
-+		 * XXX File systems that are ACL_SCOPE_FILE_OBJECT
-+		 * are not yet supported.
-+		 */
-+		if (attr->na_pacl->a_count > 0)
-+			attr->na_paclerr = set_posix_acl(&nop_mnt_idmap,
-+							dentry, ACL_TYPE_ACCESS,
-+							attr->na_pacl);
++	return ACL_OTHER;
++}
++
++static __be32
++nfsd4_decode_posixace4(struct nfsd4_compoundargs *argp,
++		       struct posix_acl_entry *ace)
++{
++	posixaceperm4 perm;
++	__be32 *p, status;
++	posixacetag4 tag;
++	u32 len;
++
++	if (!xdrgen_decode_posixacetag4(argp->xdr, &tag))
++		return nfserr_bad_xdr;
++	ace->e_tag = nfsd4_posixacetag4_to_tag(tag);
++
++	if (!xdrgen_decode_posixaceperm4(argp->xdr, &perm))
++		return nfserr_bad_xdr;
++	if (perm & ~S_IRWXO)
++		return nfserr_bad_xdr;
++	ace->e_perm = perm;
++
++	if (xdr_stream_decode_u32(argp->xdr, &len) < 0)
++		return nfserr_bad_xdr;
++	p = xdr_inline_decode(argp->xdr, len);
++	if (!p)
++		return nfserr_bad_xdr;
++	switch (tag) {
++	case POSIXACE4_TAG_USER:
++		if (len > 0)
++			status = nfsd_map_name_to_uid(argp->rqstp,
++					(char *)p, len, &ace->e_uid);
 +		else
-+			attr->na_paclerr = -EINVAL;
++			status = nfserr_bad_xdr;
++		break;
++	case POSIXACE4_TAG_GROUP:
++		if (len > 0)
++			status = nfsd_map_name_to_gid(argp->rqstp,
++					(char *)p, len, &ace->e_gid);
++		else
++			status = nfserr_bad_xdr;
++		break;
++	default:
++		status = nfs_ok;
 +	}
- out_fill_attrs:
- 	/*
- 	 * RFC 1813 Section 3.3.2 does not mandate that an NFS server
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index e192dca4a679..702a844f2106 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -53,7 +53,8 @@ struct nfsd_attrs {
- 	struct posix_acl	*na_dpacl;	/* input */
++
++	return status;
++}
++
++static noinline __be32
++nfsd4_decode_posixacl(struct nfsd4_compoundargs *argp, struct posix_acl **acl)
++{
++	struct posix_acl_entry *ace;
++	__be32 status;
++	u32 count;
++
++	if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
++		return nfserr_bad_xdr;
++
++	/*
++	 * Even with zero-length who strings, the XDR stream must
++	 * contain at least 12 bytes per ACE (tag, perm, who length).
++	 * A count exceeding this or NFS_ACL_MAX_ENTRIES is malformed.
++	 */
++	if (count > NFS_ACL_MAX_ENTRIES ||
++	    count > xdr_stream_remaining(argp->xdr) / (3 * XDR_UNIT))
++		return nfserr_fbig;
++
++	*acl = posix_acl_alloc(count, GFP_KERNEL);
++	if (*acl == NULL)
++		return nfserr_resource;
++
++	(*acl)->a_count = count;
++	for (ace = (*acl)->a_entries; ace < (*acl)->a_entries + count; ace++) {
++		status = nfsd4_decode_posixace4(argp, ace);
++		if (status) {
++			posix_acl_release(*acl);
++			*acl = NULL;
++			return status;
++		}
++	}
++
++	/*
++	 * posix_acl_valid() requires the ACEs to be sorted.
++	 * If they are already sorted, sort_pacl_range() will return
++	 * after one pass through the ACEs, since it implements bubble sort.
++	 * Note that a count == 0 is used to delete a POSIX ACL and a count
++	 * of 1 or 2 will always be found invalid by posix_acl_valid().
++	 */
++	if (count >= 3)
++		sort_pacl_range(*acl, 0, count - 1);
++
++	return nfs_ok;
++}
++
++#endif /* CONFIG_NFSD_V4_POSIX_ACLS */
++
+ static __be32
+ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 		    struct iattr *iattr, struct nfs4_acl **acl,
+-		    struct xdr_netobj *label, int *umask)
++		    struct xdr_netobj *label, int *umask,
++		    struct posix_acl **dpaclp, struct posix_acl **paclp)
+ {
+ 	unsigned int starting_pos;
+ 	u32 attrlist4_count;
+@@ -544,9 +654,40 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
+ 				   ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
+ 	}
  
- 	int			na_labelerr;	/* output */
--	int			na_aclerr;	/* output */
-+	int			na_dpaclerr;	/* output */
-+	int			na_paclerr;	/* output */
++	*dpaclp = NULL;
++	*paclp = NULL;
++#ifdef CONFIG_NFSD_V4_POSIX_ACLS
++	if (bmval[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL) {
++		struct posix_acl *dpacl;
++
++		status = nfsd4_decode_posixacl(argp, &dpacl);
++		if (status)
++			return status;
++		*dpaclp = dpacl;
++	}
++	if (bmval[2] & FATTR4_WORD2_POSIX_ACCESS_ACL) {
++		struct posix_acl *pacl;
++
++		status = nfsd4_decode_posixacl(argp, &pacl);
++		if (status) {
++			posix_acl_release(*dpaclp);
++			*dpaclp = NULL;
++			return status;
++		}
++		*paclp = pacl;
++	}
++#endif /* CONFIG_NFSD_V4_POSIX_ACLS */
++
+ 	/* request sanity: did attrlist4 contain the expected number of words? */
+-	if (attrlist4_count != xdr_stream_pos(argp->xdr) - starting_pos)
++	if (attrlist4_count != xdr_stream_pos(argp->xdr) - starting_pos) {
++#ifdef CONFIG_NFSD_V4_POSIX_ACLS
++		posix_acl_release(*dpaclp);
++		posix_acl_release(*paclp);
++		*dpaclp = NULL;
++		*paclp = NULL;
++#endif
+ 		return nfserr_bad_xdr;
++	}
+ 
+ 	return nfs_ok;
+ }
+@@ -850,7 +991,8 @@ nfsd4_decode_create(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+ 	status = nfsd4_decode_fattr4(argp, create->cr_bmval,
+ 				    ARRAY_SIZE(create->cr_bmval),
+ 				    &create->cr_iattr, &create->cr_acl,
+-				    &create->cr_label, &create->cr_umask);
++				    &create->cr_label, &create->cr_umask,
++				    &create->cr_dpacl, &create->cr_pacl);
+ 	if (status)
+ 		return status;
+ 
+@@ -1001,7 +1143,8 @@ nfsd4_decode_createhow4(struct nfsd4_compoundargs *argp, struct nfsd4_open *open
+ 		status = nfsd4_decode_fattr4(argp, open->op_bmval,
+ 					     ARRAY_SIZE(open->op_bmval),
+ 					     &open->op_iattr, &open->op_acl,
+-					     &open->op_label, &open->op_umask);
++					     &open->op_label, &open->op_umask,
++					     &open->op_dpacl, &open->op_pacl);
+ 		if (status)
+ 			return status;
+ 		break;
+@@ -1019,7 +1162,8 @@ nfsd4_decode_createhow4(struct nfsd4_compoundargs *argp, struct nfsd4_open *open
+ 		status = nfsd4_decode_fattr4(argp, open->op_bmval,
+ 					     ARRAY_SIZE(open->op_bmval),
+ 					     &open->op_iattr, &open->op_acl,
+-					     &open->op_label, &open->op_umask);
++					     &open->op_label, &open->op_umask,
++					     &open->op_dpacl, &open->op_pacl);
+ 		if (status)
+ 			return status;
+ 		break;
+@@ -1346,7 +1490,8 @@ nfsd4_decode_setattr(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
+ 	return nfsd4_decode_fattr4(argp, setattr->sa_bmval,
+ 				   ARRAY_SIZE(setattr->sa_bmval),
+ 				   &setattr->sa_iattr, &setattr->sa_acl,
+-				   &setattr->sa_label, NULL);
++				   &setattr->sa_label, NULL, &setattr->sa_dpacl,
++				   &setattr->sa_pacl);
+ }
+ 
+ static __be32
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index ae75846b3cd7..1ec6365c977d 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -245,6 +245,8 @@ struct nfsd4_create {
+ 	int		cr_umask;           /* request */
+ 	struct nfsd4_change_info  cr_cinfo; /* response */
+ 	struct nfs4_acl *cr_acl;
++	struct posix_acl *cr_dpacl;
++	struct posix_acl *cr_pacl;
+ 	struct xdr_netobj cr_label;
+ };
+ #define cr_datalen	u.link.datalen
+@@ -397,6 +399,8 @@ struct nfsd4_open {
+ 	struct nfs4_ol_stateid *op_stp;	    /* used during processing */
+ 	struct nfs4_clnt_odstate *op_odstate; /* used during processing */
+ 	struct nfs4_acl *op_acl;
++	struct posix_acl *op_dpacl;
++	struct posix_acl *op_pacl;
+ 	struct xdr_netobj op_label;
+ 	struct svc_rqst *op_rqstp;
+ };
+@@ -483,6 +487,8 @@ struct nfsd4_setattr {
+ 	struct iattr	sa_iattr;           /* request */
+ 	struct nfs4_acl *sa_acl;
+ 	struct xdr_netobj sa_label;
++	struct posix_acl *sa_dpacl;
++	struct posix_acl *sa_pacl;
  };
  
- static inline void nfsd_attrs_free(struct nfsd_attrs *attrs)
+ struct nfsd4_setclientid {
 -- 
 2.52.0
 
