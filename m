@@ -1,166 +1,108 @@
-Return-Path: <linux-nfs+bounces-17456-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17457-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 318ABCF53EF
-	for <lists+linux-nfs@lfdr.de>; Mon, 05 Jan 2026 19:30:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F0A4CF5877
+	for <lists+linux-nfs@lfdr.de>; Mon, 05 Jan 2026 21:33:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 26CFE3008C51
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jan 2026 18:30:47 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 731233009D73
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jan 2026 20:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C4D238C33;
-	Mon,  5 Jan 2026 18:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4632A1DF25C;
+	Mon,  5 Jan 2026 20:33:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIY0FPam"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7Ctc05J"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF8D19C54E
-	for <linux-nfs@vger.kernel.org>; Mon,  5 Jan 2026 18:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175F23D561;
+	Mon,  5 Jan 2026 20:33:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767637845; cv=none; b=tmAZ/ayP/uarhQsEhe2VdakqdeZLAer0IFEbX3wmFqqCwAGLCRv30mvZRLha/UVZTMQO3Pl3oC4GkiRJKFjkfmN3B9jz9icPNjF6jgEkq6ho2uS0iDu4aQXmhqO4CQQh/bjiGu6lTi7KmHsuoVCmTcRCpAWrYE7evTwm1bDPJQE=
+	t=1767645194; cv=none; b=kXRtupoX7nXQ2BoARNwZwJwe8stjsTyzdRSwt3z0OUw8xklnN2yZZNTrr7th52+L73SZGMhLafW7jyKzVUWiiNXnRuIFBz+aDjzFF/i7clKGHt8i8KQSM0XMQ1ad7+INqyNGVuNLQ16r/v+YSWPCCAAFNtgAbo1LaI9oji1wSfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767637845; c=relaxed/simple;
-	bh=LHGFMnUOGUmZd/SAA6rTtAkmhFagMW7hTMRuJicxYmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJ+NSOsswQ+zrn7uNUzVW1kC2U6CYq2QkFdHtX0IZMZUjKeCnVO4pwBABHemeEszo2xV1e8XyGIc19Qf1FdMl8ZdeW9dBOBOwPJ8n0P39K/7MIOtwrtPzxiWizDaSigz0V4V2Cp/Nisn/nWJCcmNNtZYEbSL93vGB/mWxOrY1DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIY0FPam; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABADC116D0;
-	Mon,  5 Jan 2026 18:30:44 +0000 (UTC)
+	s=arc-20240116; t=1767645194; c=relaxed/simple;
+	bh=43e6AFEK5pwFVuGG/J7sxOO7pJKtJHUPE+Eebltgv/g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IXmis8De1uxOrA2L3HHNTsUZ6LEgiJnDTmJFUNMajmpjVTR1KUCQ7qBf1cupOU7dyMk0jNWAiBa2KFBWMX6qnK5Svg9F/0L7zPq9vaxEZ7raRzFO9BHTInsDrboURKlOgS4zNT2n2y8cNMeSZmDL4WSZ840s65iOyV1e8RWjWT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7Ctc05J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17632C116D0;
+	Mon,  5 Jan 2026 20:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767637845;
-	bh=LHGFMnUOGUmZd/SAA6rTtAkmhFagMW7hTMRuJicxYmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mIY0FPamkRNLy9t8uLMe5DsAlRWTEWOj4++zLJGTor3hWmdTVUEPw3z2GwMjLnrwH
-	 G7IbcmgHXt9e/e3K9c7ahUAa8NHaOkOHNwcNDbtf2/yhsjIWQ1k1nykD05Ck32PvYa
-	 KeUxIt4f988AyyXIB1i8VLkWNDgytobcMzK1z1faM5fILBfwAcbV32mbu/J4wvRBqn
-	 kqt8Py+mEhVUxQCbYqaXMjmASmrPk3UfyFVP/wRx2dPLv60n7UPid4P9tzlUhfAcdW
-	 rHLcHjV+BRxLk/de09nC80BIeEN2MPxivgVPV4m1hW6JUrr7yWTEUYjeMEsS6qfPXF
-	 nZ87V3O0Pidnw==
-Date: Mon, 5 Jan 2026 13:30:43 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 3/4] NFS/localio: Handle short writes by retrying
-Message-ID: <aVwDU3WuZfzIovt2@kernel.org>
-References: <cover.1767459435.git.trond.myklebust@hammerspace.com>
- <aad94ed780fd5ea5deee8967261e5cfeb17b4c04.1767459435.git.trond.myklebust@hammerspace.com>
- <aVv9NqgOeEWJDfnk@kernel.org>
- <2a48660a6da0f53e5d36c4c34050c0f920a8b586.camel@kernel.org>
+	s=k20201202; t=1767645193;
+	bh=43e6AFEK5pwFVuGG/J7sxOO7pJKtJHUPE+Eebltgv/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=q7Ctc05JucVEbroM4Unk57KXhIdPgF+mW1mlfEBgjlN8CiOf082rSuswva/w2cVGr
+	 bmgRW96RN/uzwuhTjzyq5gLX2YLPm3EzJ3lqrFbZuMVznoT/CBwy8ylpbQGxKht3H5
+	 /OquvzbJ9RB8GR5HOHkiEwYBA2dHfo9mf4LQtMPyAt2+34Nk1xJlFNkRbwsJK7sAQD
+	 H0vRDBkZZhrZMUC6Fwyw4UBZ/dxCUnmkSuDMUkVM2fwxlPP1Z2PXOK2UnhbGWxkZf0
+	 tLrp5ASJQk0hqKgrJyAkomI9nphGh5b2yXqUyak8MrMXcOtbCl8gQ2wDCiZfiTZs/k
+	 8Hpbg3Ggnxqog==
+From: Chuck Lever <cel@kernel.org>
+To: <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	<linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Aurelien Couderc <aurelien.couderc2002@gmail.com>
+Subject: [PATCH 6.1.y] NFSD: NFSv4 file creation neglects setting ACL
+Date: Mon,  5 Jan 2026 15:33:11 -0500
+Message-ID: <20260105203311.3562329-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <2025122941-crusher-hamstring-d100@gregkh>
+References: <2025122941-crusher-hamstring-d100@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a48660a6da0f53e5d36c4c34050c0f920a8b586.camel@kernel.org>
 
-On Mon, Jan 05, 2026 at 01:09:50PM -0500, Trond Myklebust wrote:
-> On Mon, 2026-01-05 at 13:04 -0500, Mike Snitzer wrote:
-> > On Sat, Jan 03, 2026 at 12:14:59PM -0500, Trond Myklebust wrote:
-> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > 
-> > > The current code for handling short writes in localio just
-> > > truncates the
-> > > I/O and then sets an error. While that is close to how the ordinary
-> > > NFS
-> > > code behaves, it does mean there is a chance the data that got
-> > > written
-> > > is lost because it isn't persisted.
-> > > To fix this, change localio so that the upper layers can direct the
-> > > behaviour to persist any unstable data by rewriting it, and then
-> > > continuing writing until an ENOSPC is hit.
-> > > 
-> > > Fixes: 70ba381e1a43 ("nfs: add LOCALIO support")
-> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > 
-> > This is a pretty subtle fix in that it depends on rpc_call_done
-> > conditionally setting task->tk_action -- is it worth adding a
-> > relevant
-> > code comment in nfs_local_pgio_release()?
-> > 
-> 
-> That's how restarts work in the RPC code: after the rpc_call_done
-> callback is done, rpc_exit_task() will check for whether or not the
-> task->tk_action got reset, and if so, it will prepare a new RPC call.
-> 
-> > Additional inline review comment below.
-> > 
-> > > ---
-> > >  fs/nfs/localio.c | 64 +++++++++++++++++++++++++++++++++++---------
-> > > ----
-> > >  1 file changed, 47 insertions(+), 17 deletions(-)
-> > > 
-> > > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> > > index c5f975bb5a64..87abebbedbab 100644
-> > > --- a/fs/nfs/localio.c
-> > > +++ b/fs/nfs/localio.c
-> > > @@ -58,6 +58,11 @@ struct nfs_local_fsync_ctx {
-> > >  static bool localio_enabled __read_mostly = true;
-> > >  module_param(localio_enabled, bool, 0644);
-> > >  
-> > > +static int nfs_local_do_read(struct nfs_local_kiocb *iocb,
-> > > +			     const struct rpc_call_ops *call_ops);
-> > > +static int nfs_local_do_write(struct nfs_local_kiocb *iocb,
-> > > +			      const struct rpc_call_ops
-> > > *call_ops);
-> > > +
-> > >  static inline bool nfs_client_is_local(const struct nfs_client
-> > > *clp)
-> > >  {
-> > >  	return !!rcu_access_pointer(clp->cl_uuid.net);
-> > > @@ -542,13 +547,50 @@ nfs_local_iocb_release(struct nfs_local_kiocb
-> > > *iocb)
-> > >  	nfs_local_iocb_free(iocb);
-> > >  }
-> > >  
-> > > -static void
-> > > -nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
-> > > +static void nfs_local_pgio_restart(struct nfs_local_kiocb *iocb,
-> > > +				   struct nfs_pgio_header *hdr)
-> > > +{
-> > > +	int status = 0;
-> > > +
-> > > +	iocb->kiocb.ki_pos = hdr->args.offset;
-> > > +	iocb->kiocb.ki_flags &= ~(IOCB_DSYNC | IOCB_SYNC |
-> > > IOCB_DIRECT);
-> > > +	iocb->kiocb.ki_complete = NULL;
-> > > +	iocb->aio_complete_work = NULL;
-> > > +	iocb->end_iter_index = -1;
-> > > +
-> > > +	switch (hdr->rw_mode) {
-> > > +	case FMODE_READ:
-> > > +		nfs_local_iters_init(iocb, ITER_DEST);
-> > > +		status = nfs_local_do_read(iocb, hdr-
-> > > >task.tk_ops);
-> > > +		break;
-> > > +	case FMODE_WRITE:
-> > > +		nfs_local_iters_init(iocb, ITER_SOURCE);
-> > > +		status = nfs_local_do_write(iocb, hdr-
-> > > >task.tk_ops);
-> > > +		break;
-> > > +	default:
-> > > +		status = -EOPNOTSUPP;
-> > > +	}
-> > 
-> > If this is a restart, then hdr->rw_mode will never not be FMODE_READ
-> > or FMODE_WRITE.  As such, hdr->task.tk_ops will have been initialized
-> > (as a side-effect of the original nfs_local_do_{read,write}) _and_
-> > reinitialized by the above new calls to them.
-> > 
-> > My point: "default" case shouldn't ever be possible.  So should a
-> > comment be added?  Switch to BUG_ON?  Do nothing about it?
-> > 
-> 
-> I considered a BUG_ON(), but it shouldn't really matter. All this does
-> now is cancel the restart.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-OK, thanks.
+[ Upstream commit 913f7cf77bf14c13cfea70e89bcb6d0b22239562 ]
 
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+An NFSv4 client that sets an ACL with a named principal during file
+creation retrieves the ACL afterwards, and finds that it is only a
+default ACL (based on the mode bits) and not the ACL that was
+requested during file creation. This violates RFC 8881 section
+6.4.1.3: "the ACL attribute is set as given".
+
+The issue occurs in nfsd_create_setattr(). On 6.1.y, the check to
+determine whether nfsd_setattr() should be called is simply
+"iap->ia_valid", which only accounts for iattr changes. When only
+an ACL is present (and no iattr fields are set), nfsd_setattr() is
+skipped and the POSIX ACL is never applied to the inode.
+
+Subsequently, when the client retrieves the ACL, the server finds
+no POSIX ACL on the inode and returns one generated from the file's
+mode bits rather than returning the originally-specified ACL.
+
+Reported-by: Aurelien Couderc <aurelien.couderc2002@gmail.com>
+Fixes: c0cbe70742f4 ("NFSD: add posix ACLs to struct nfsd_attrs")
+Cc: stable@vger.kernel.org
+[ cel: Adjust nfsd_create_setattr() instead of nfsd_attrs_valid() ]
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/vfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index cdf73700d053..87a596fc6654 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1320,7 +1320,7 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	 * Callers expect new file metadata to be committed even
+ 	 * if the attributes have not changed.
+ 	 */
+-	if (iap->ia_valid)
++	if (iap->ia_valid || attrs->na_pacl || attrs->na_dpacl)
+ 		status = nfsd_setattr(rqstp, resfhp, attrs, 0, (time64_t)0);
+ 	else
+ 		status = nfserrno(commit_metadata(resfhp));
+-- 
+2.52.0
+
 
