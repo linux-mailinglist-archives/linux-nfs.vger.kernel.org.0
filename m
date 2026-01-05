@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-17450-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17451-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 742AECF4F69
-	for <lists+linux-nfs@lfdr.de>; Mon, 05 Jan 2026 18:19:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDE49CF4FFC
+	for <lists+linux-nfs@lfdr.de>; Mon, 05 Jan 2026 18:29:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 95886301D953
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jan 2026 17:19:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 429BE3035243
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jan 2026 17:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2A6733ADAC;
-	Mon,  5 Jan 2026 17:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6421309DA5;
+	Mon,  5 Jan 2026 17:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzbclifW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oERYNe9F"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1771338939
-	for <linux-nfs@vger.kernel.org>; Mon,  5 Jan 2026 17:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B185E29DB65
+	for <linux-nfs@vger.kernel.org>; Mon,  5 Jan 2026 17:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767633563; cv=none; b=vFL0i80ZVOOJQxOBHBr5Eh43P7fTFhimGMucux0NJiXihCdxJQRstYEL9I7HHXOdZC7agXasAcXopdxXuLiIHk3BCTLt6hFYDt4IszlHcjrwOJHiZ22TfsGeYmShSUeF2P+Kke7wyXKzDyOrhyY8Bthi6/xp68pEeepYXXQLQEE=
+	t=1767633884; cv=none; b=nleNG0BAOKZu/cdY9pP6zaKbsLhT4GiHSkRzoCofQcIYzQdQY8IdG08kXfwp9ENa/ugoYYn2CCi6+3ZFXCCQ/br4e/Qe3oEsv/QNXb2Wkw5nPnEKs6n/wsyTBLS2/FgnXqhoKrgk5JYuKpR3yVAw7tcN+koytyKX9lJgk7xxZTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767633563; c=relaxed/simple;
-	bh=p/67lIYhAEK+7x5UY/L2TVYHOmaObGCqXvvBBf0XioE=;
+	s=arc-20240116; t=1767633884; c=relaxed/simple;
+	bh=s1s2ErUD4B/BWmbYzfZB1ZhY+z8D4PatJw6k54QSCF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pufRWqI5uflxtGheZTNETiUEWPSOzlfJaH8cOsqNCIX/ZcBm7qzIRKczuuFSvTx9Qt3OeeaVlJWNZ7y7H9snsTgOd7su9yJOf4tIKuFfRQVu2EVu+U/u4qetvRJwC2ntjX5SKZoO66oxSp4e2gAb5QTl/fZhOj8BKtSWnMBxqiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzbclifW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3609BC116D0;
-	Mon,  5 Jan 2026 17:19:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgJ4Wudz17rmgKLeCYQcb3/1mIzKvkByC+TG1arqStdNnaahQ001kmthjRqvacYu/wo200LAL8qZHQYpTZydezF010f58ImExva2aBUt6HOQneekUZ9SOI0NFiyydekIIWdBY2WAFNlIWT5lFFMZdbCwYQ8XGO1aclIcX4471nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oERYNe9F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFE5C19421;
+	Mon,  5 Jan 2026 17:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767633560;
-	bh=p/67lIYhAEK+7x5UY/L2TVYHOmaObGCqXvvBBf0XioE=;
+	s=k20201202; t=1767633884;
+	bh=s1s2ErUD4B/BWmbYzfZB1ZhY+z8D4PatJw6k54QSCF4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hzbclifW+Kve2Vgt6UVj2vqtwdA2TmCngxmMc0sAvpul2i/P/8f6xxetu8TdVmpZc
-	 lwsf3NzP2c6F42LqdT+M/GyScJauIUyCFR9E5w5DXBt+p+bs+A23wfCchtzEvw+zqQ
-	 5bBBVX9N0YCX/6DTJCIJKlIBaJB7WcirFTFxHwUlC1PL79EGoxMm/DELJJJgLv3HYl
-	 z0sigmsCPxdrsK8aMOh+CH3uoLIPtqn0I+UqkBOShW5rqCVidGCTDCRnYRcLI1hEwQ
-	 4dGGg3Q9Vq3L23n1GEeQTtal+Hc6d+UOPPrBhGWHUSboSDat0jZNK7Uj1gA1JWOVXG
-	 RE2FDYwux6xGA==
-Date: Mon, 5 Jan 2026 12:19:19 -0500
+	b=oERYNe9FJ0KWO+cGYtW4eEYipB2MP4GPdn8UZEGjW2z1y8/a7Xe52yX8sja3YvbZ6
+	 cXMBFtXGCxmAhfhRuqpt1+skdU0MqX0UdDnAQCE5hurKtQlOUOlz97F4mViXLQy6lh
+	 sVqu9e/hfz27Flapn42GcTC048mHzUm0yQDL07d8BzKyEqA4pN7PszFVDxkpLtw+hX
+	 JLtLGRqXLJoO+24qi4eCsRZhGGjhI0rZQ6tX/QoEelGibTpC71u3/jKOAwBCYWr0lw
+	 lF61QpYBPDvWz0cLeXLIu9bml0DXvlx8bHnds8yOVDDs7kksLQo/L4AastMinWSczu
+	 +UdUK/I5Cwf7A==
+Date: Mon, 5 Jan 2026 12:24:42 -0500
 From: Mike Snitzer <snitzer@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/4] NFS/localio: Stop further I/O upon hitting an error
-Message-ID: <aVvyl52wfhyeNGvp@kernel.org>
+Subject: Re: [PATCH 4/4] NFS/localio: Cleanup the nfs_local_pgio_done()
+ parameters
+Message-ID: <aVvz2mPW2qN1e0rA@kernel.org>
 References: <cover.1767459435.git.trond.myklebust@hammerspace.com>
- <d0d1748668398cd6adfb079fed60409b29167ff2.1767459435.git.trond.myklebust@hammerspace.com>
+ <bf5a9581839ebeebbd3bd004a174fea9afa19dcb.1767459435.git.trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,110 +56,14 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d0d1748668398cd6adfb079fed60409b29167ff2.1767459435.git.trond.myklebust@hammerspace.com>
+In-Reply-To: <bf5a9581839ebeebbd3bd004a174fea9afa19dcb.1767459435.git.trond.myklebust@hammerspace.com>
 
-On Sat, Jan 03, 2026 at 12:14:57PM -0500, Trond Myklebust wrote:
+On Sat, Jan 03, 2026 at 12:15:00PM -0500, Trond Myklebust wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 > 
-> If the call into the filesystem results in an I/O error, then the next
-> chunk of data won't be contiguous with the end of the last successful
-> chunk. So break out of the I/O loop and report the results.
-> Currently the localio code will do this for a short read/write, but not
-> for an error.
+> Remove the redundant 'force' parameter.
 > 
-> Fixes: 6a218b9c3183 ("nfs/localio: do not issue misaligned DIO out-of-order")
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Thanks, definitely cleaner to not have the awkward force_done flag,
-sorry for that nastiness.
-
-But this one needs to be rebased on tip of linus' master due to commit
-3af870aedbff ("nfs/localio: fix regression due to out-of-order
-__put_cred") which landed after the 6.19 merge.
-
-Like so:
-
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
-Date: Sat, 3 Jan 2026 12:14:57 -0500
-Subject: [PATCH] NFS/localio: Stop further I/O upon hitting an error
-
-If the call into the filesystem results in an I/O error, then the next
-chunk of data won't be contiguous with the end of the last successful
-chunk. So break out of the I/O loop and report the results.
-Currently the localio code will do this for a short read/write, but not
-for an error.
-
-Fixes: 6a218b9c3183 ("nfs/localio: do not issue misaligned DIO out-of-order")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Reviewed-by: Mike Snitzer <snitzer@kernel.org>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/localio.c | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index ed2a7efaf8f20..97e4733d04714 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -619,7 +619,6 @@ static void nfs_local_call_read(struct work_struct *work)
- 		container_of(work, struct nfs_local_kiocb, work);
- 	struct file *filp = iocb->kiocb.ki_filp;
- 	const struct cred *save_cred;
--	bool force_done = false;
- 	ssize_t status;
- 	int n_iters;
- 
-@@ -639,13 +638,13 @@ static void nfs_local_call_read(struct work_struct *work)
- 		status = filp->f_op->read_iter(&iocb->kiocb, &iocb->iters[i]);
- 		revert_creds(save_cred);
- 
--		if (status != -EIOCBQUEUED) {
--			if (unlikely(status >= 0 && status < iocb->iters[i].count))
--				force_done = true; /* Partial read */
--			if (nfs_local_pgio_done(iocb, status, force_done)) {
--				nfs_local_read_iocb_done(iocb);
--				break;
--			}
-+		if (status == -EIOCBQUEUED)
-+			continue;
-+		/* Break on completion, errors, or short reads */
-+		if (nfs_local_pgio_done(iocb, status, false) || status < 0 ||
-+		    (size_t)status < iov_iter_count(&iocb->iters[i])) {
-+			nfs_local_read_iocb_done(iocb);
-+			break;
- 		}
- 	}
- }
-@@ -824,7 +823,6 @@ static void nfs_local_call_write(struct work_struct *work)
- 	struct file *filp = iocb->kiocb.ki_filp;
- 	unsigned long old_flags = current->flags;
- 	const struct cred *save_cred;
--	bool force_done = false;
- 	ssize_t status;
- 	int n_iters;
- 
-@@ -847,13 +845,13 @@ static void nfs_local_call_write(struct work_struct *work)
- 		status = filp->f_op->write_iter(&iocb->kiocb, &iocb->iters[i]);
- 		revert_creds(save_cred);
- 
--		if (status != -EIOCBQUEUED) {
--			if (unlikely(status >= 0 && status < iocb->iters[i].count))
--				force_done = true; /* Partial write */
--			if (nfs_local_pgio_done(iocb, status, force_done)) {
--				nfs_local_write_iocb_done(iocb);
--				break;
--			}
-+		if (status == -EIOCBQUEUED)
-+			continue;
-+		/* Break on completion, errors, or short writes */
-+		if (nfs_local_pgio_done(iocb, status, false) || status < 0 ||
-+		    (size_t)status < iov_iter_count(&iocb->iters[i])) {
-+			nfs_local_write_iocb_done(iocb);
-+			break;
- 		}
- 	}
- 	file_end_write(filp);
--- 
-2.44.0
-
 
