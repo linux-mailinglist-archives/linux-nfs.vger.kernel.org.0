@@ -1,48 +1,48 @@
-Return-Path: <linux-nfs+bounces-17507-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17509-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D8C8CFAB6C
-	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 20:39:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4B32CFAB72
+	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 20:39:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3610D329BCB5
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 19:00:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF9043368DB6
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 19:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9132308F1D;
-	Tue,  6 Jan 2026 19:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF7BA3358AF;
+	Tue,  6 Jan 2026 19:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3aoWdUN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j82ynTYi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F90F307494;
-	Tue,  6 Jan 2026 19:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B518133B6DF;
+	Tue,  6 Jan 2026 19:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767726006; cv=none; b=WDmZFHq5k2awgnIPr3+K7bAUUQ9P9j/Z+Wb1EKY3vkWB2TsfWB64sahKm4hW4uIImn5GI8pv64THciD18SotnorfSt6ouV7q7a9v60A6FEaDI1iYrjzIiccDirCPJCJ01PT0oreIBHaVZn9NT1nhH/n5m/rLLgQnKC1UpYv7tA8=
+	t=1767726008; cv=none; b=ctbJM2hjE7QT3akmWcIy8/2q/cWm3LK/TusNl12cHWW33KLFpkPAG+H/uVu2vXmKB7381wKapbGial1pWYq8OT8/5aHyiEXcyWC4JCeW4xsrk0ndlGSEWMRehdnWmax71o9/VJculgiFf+80IXmqoUpCmSosCgcRR/2Y7b1YaXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767726006; c=relaxed/simple;
-	bh=YYSOhkEyEYNamkhnpuW1P5bAfn5jV8rLxqgNSeB4haY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PKej3OBPAMLpQ1/RS5O9PZp6uDsHKeDmx/e0LRFMUO9JTGBTU6l77/inU9J9Tf2VZjX+F2bIo/Hs8azQps25pEDIn9qpdHq77IuIBpMxW45G5/SXfXqjCvUCw8w/vGkI8yiwGsv/y0jEvY4q5K/4m4LVSLW0m6fNI/v4LNpD6f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3aoWdUN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F99C116C6;
-	Tue,  6 Jan 2026 19:00:05 +0000 (UTC)
+	s=arc-20240116; t=1767726008; c=relaxed/simple;
+	bh=mwyhhRH6pzQr7weMb5AqsaR4ToxswDBoGg+67XdCruw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OzQD+0IHFCJSs6B1Yt+4OJosMbWMjCNsD0d55q55NAkPIvRe/zrO6IpaIrr12k825pC6jWys95oryBB+qGNkHwf9TS/m0uiisqkmQrXhPv+5Hkz9s+pKNAP8pBl8lDhKVXyhds4L7G61ysIDcx1xXW5VwS8NOy/VmCFTg3nsO1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j82ynTYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6FF6C2BC86;
+	Tue,  6 Jan 2026 19:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767726006;
-	bh=YYSOhkEyEYNamkhnpuW1P5bAfn5jV8rLxqgNSeB4haY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=q3aoWdUNmHLL+ozyBuhXRVgB0tesfBh5RfDDtFvGcNujYFF6SJw4kVASAmPvFeJs3
-	 nu9UytKQv57vFPMvZ7C6yLxQlhnJRJNTyKZrZ7L3xrkNMlm7AUD7BLz+RmQ5ZrGrbg
-	 jRjgI0Xrru8I+x222kc7+nKqL0xLcernRtXTmjfesPOWmhVa8bmb730TfJNk03Lqkq
-	 gsue/mL/FsEGx2DnZo09ABD2rsWKhjLrM5VnIIJRwK+Al+Zo3Ktd1Ch58MBEL9/Q/C
-	 G/lpTKrnEE2rY+0T7ZDxkv1CSXPSgGGUWrINBjPso4Q6WxKrB44498fYAyVmBOvYbD
-	 7J3gvQyNFs3gw==
+	s=k20201202; t=1767726008;
+	bh=mwyhhRH6pzQr7weMb5AqsaR4ToxswDBoGg+67XdCruw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=j82ynTYivl2axbCzDQr6S3a1d+0Jb1ZSrdgRkyzCP+9rhxg+KNxqYA3rGK2rOlPoX
+	 mxwOXFqiUglG+0ceddxAZVe2Trefi/J7E5taGcD6JyPmk0W05lD8/fGr8hBcBHIl17
+	 wnrYa0sjZaKM2XEZKNmyBwioGgKb2zrzcBueGGWnKWIRDoEx+KYtMkqxCL0/HFmojj
+	 oCKBAJ9qqBYdQmQY3l7EukCDEKTdI5KmNMIipSrgJS8l9kjfZS5CL+IUDbAmTzPiCX
+	 5WQCKLJFbXtKOJ/IzzR+GUOzlx68e2dDsF+ggJyhQY9JB/dvfwfW6CzNH5s8/SNqDJ
+	 gNKL6RCSnzo/w==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/8] nfsd, sunrpc: allow for a dynamically-sized
- threadpool
-Date: Tue, 06 Jan 2026 13:59:42 -0500
-Message-Id: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
+Date: Tue, 06 Jan 2026 13:59:44 -0500
+Subject: [PATCH v2 2/8] sunrpc: remove special handling of NULL pool from
+ svc_start/stop_kthreads()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -51,11 +51,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WNwQrDIBAFfyXsuRY1FUlP/Y+Qg9U1Sospa5CG4
- L/XBnrqcQbevB0yUsQM124HwhJzXFIDeerABpNmZNE1BsmlElJIlnx2zG3JrIHQODZ4bXohtOR
- cQVu9CH18H8VxahxiXhfajoMivvbX6v9aRTDOHGqlUA32bi+3B1LC53mhGaZa6weiHmI+rwAAA
- A==
-X-Change-ID: 20251212-nfsd-dynathread-9f7a31172005
+Message-Id: <20260106-nfsd-dynathread-v2-2-416e5f27b2b6@kernel.org>
+References: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
+In-Reply-To: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
@@ -63,90 +61,124 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3220; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=YYSOhkEyEYNamkhnpuW1P5bAfn5jV8rLxqgNSeB4haY=;
- b=kA0DAAoBAA5oQRlWghUByyZiAGldW7KhFmio9G7ArgCyERHCdl+gSk+/5CtIdJhQ8vA7jFO9K
- IkCMwQAAQoAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJpXVuyAAoJEAAOaEEZVoIVNtoP/iO2
- fuHfdwFUXT8a2FdOKaDRkEDRkjeT+TllPLYwAcYz3HuuzLKfQrhcRcGPVGmPZi+lG7EH8uQ/Vou
- i3zaSwxtpNosszQu6a/g5kr8vode21EFGnMjpYroAFRBcmw/J6ZBIWZxfq8bKNn8HuyxwscIg0X
- skhRljAW6CuDJ9oLM2TmZTlxJ71QSMAJqCuynA+66w8i6Hxh1IZ0v8iUVMn94KSx6gNm4RwpJ9t
- ZXkp7hAj1VwDsWVs60XaMKG5qzQ7xwIWmF0oGnE6W4yCvHjwDjBkk8EbvJYFQjoq+OdOYmq7ARP
- o2FQeLtuzO7hAx2r++jsPOCFdVO1ESxxQEarhGevtjU9i6DMEBDd9sMJPkOSyvqxK490uTr3ijL
- 5tK/RvkhZgEUY8MOQBtsdvr2abn6wmvWRt+xLeRbd7AbDs7ZClAbN4ZZ3D2jGHOfN4HRPZFBSnI
- +nxx2EK2F+2dfjr5gecLqR13fNPDSsr+MzzKdTnpALOAnTtKtx44oma6X9gvouHv4Z9Q6uFeymy
- pJ3Ot/OYpn+206tI3EsLpQk95Bef9Zl1zAc8K4NPrlFMPXtUUp3NjDDswHPj6iOEdrPsjUfQwu3
- y5siQyr29XN1CnFSJZqhMU7r7IxW9i7MOFP7QZdZxSIfAq9k8Qjjio3aJlMq4LXmrePiIzUDi+a
- YvvPJ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3170; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=mwyhhRH6pzQr7weMb5AqsaR4ToxswDBoGg+67XdCruw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpXVuzJwJR8dFZGRgn3/gunxOR50q1i+lAiHiPl
+ R+dADE224OJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaV1bswAKCRAADmhBGVaC
+ Fa8DD/0Wcf+cMqSybon9tjXNQnF8UUr/x1boMjTxxpDE18wOTzUO6u+7wFK7FyCNiDYkd1y1cxH
+ p5svI8gLP5iszH+qRob2udNLhs4OPIgoKCbF2w0FA6w85ER1FxRuZi/skz57qKkqVJzhG+e8dlk
+ PS+o8uYN2reWDd9sqbJWRq75WX8uwf0typowzUxy3z44lpBapdovssdgaYr+1dQwUPzETFNgJu9
+ IrSwAYXAdV+9jtYniRMSrvmGrEPh6piPHkvfmlcvxt5gDyCb3qyxVy9xryMdDMQM90f+XBiMbCi
+ mt6AmIi3MMb/3l7R2ZQ5iX6Igx6GVlifH8GMIHp+I/3/Wuv5HI827hfoVpG+xNQ80TZeVALiXI2
+ k+CxZYOQqh/tAgQzWOivcB+22xRvJoBbMqA5xBTtztaXlOe7irnfx15WBkzjVmQQIojeq4/Z4IY
+ 3WcSgo+swxqW0oOlbTYcrSbL64p7Vpzk1wgJB/rx2dyFLdvqLv7V/TcCKlyQLFbSkxeuDmJsx/U
+ 6JVdRiSs3NdqL66jneK1T6+rb222Bk1193qCzj9BdQavmA/WQ9aTyvTZQLeBelXiiyE+UyD2c1p
+ fmkNBp3+7xSIOUUA0pu0jqSMhor4CeficT6H+jAqsG/0SA87v+3YvQDQ1mqjAPzXfwuUhGOFZWG
+ bgOb9WZvI2AEo9w==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This version of the patchset fixes a number of warts in the first, and
-hopefully gets this closer to something mergeable.
-
-This patchset allows nfsd to dynamically size its threadpool as needed.
-The main user-visible change is the addition of new controls that allow
-the admin to set a minimum number of threads.
-
-When the minimum is set to a non-zero value, the traditional "threads"
-setting is interpreted as a maximum number of threads instead of a
-static count. The server will start the minimum number of threads, and
-then ramp up the thread count as needed. When the server is idle, it
-will gradually ramp down the thread count.
-
-This control scheme should allow us to sanely switch between kernels
-that do and do not support dynamic threading. In the case where dynamic
-threading is not supported, the user will just get the static maximum
-number of threads, just like they do today.
-
-So far this is only lightly tested, but it seems to work well. I
-still need to do some benchmarking to see whether this affects
-performance, so I'm posting this as an RFC for now.
-
-Does this approach look sane to everyone?
+Now that svc_set_num_threads() handles distributing the threads among
+the available pools, remove the special handling of a NULL pool pointer
+from svc_start_kthreads() and svc_stop_kthreads().
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- svc_recv() now takes a timeout parameter. This should mean that
-  non-dynamic RPC services are unaffected by these changes.
-- if min_threads is larger than the max, then clamp it to the max
-- simplify SP_TASK_STARTING usage. Have same task set and clear it.
-- rework thread starting logic (EBUSY handling)
-- reorder arguments to svc_set_num_threads() and svc_set_pool_threads()
-- break up larger patches
-- Link to v1: https://lore.kernel.org/r/20251213-nfsd-dynathread-v1-0-de755e59cbc4@kernel.org
+ net/sunrpc/svc.c | 53 +++++++----------------------------------------------
+ 1 file changed, 7 insertions(+), 46 deletions(-)
 
----
-Jeff Layton (8):
-      sunrpc: split svc_set_num_threads() into two functions
-      sunrpc: remove special handling of NULL pool from svc_start/stop_kthreads()
-      sunrpc: track the max number of requested threads in a pool
-      sunrpc: introduce the concept of a minimum number of threads per pool
-      sunrpc: split new thread creation into a separate function
-      sunrpc: allow svc_recv() to return -ETIMEDOUT and -EBUSY
-      nfsd: adjust number of running nfsd threads based on activity
-      nfsd: add controls to set the minimum number of threads per pool
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index cd9d4f8b75aeb6ffa08ce84a0b82da7fd37e6fbf..fd52ebec0655f2289d792f4aac02859d90d290fd 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -763,53 +763,19 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
+ }
+ EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+ 
+-static struct svc_pool *
+-svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
+-{
+-	return pool ? pool : &serv->sv_pools[(*state)++ % serv->sv_nrpools];
+-}
+-
+-static struct svc_pool *
+-svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
+-		unsigned int *state)
+-{
+-	struct svc_pool *pool;
+-	unsigned int i;
+-
+-	pool = target_pool;
+-
+-	if (!pool) {
+-		for (i = 0; i < serv->sv_nrpools; i++) {
+-			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
+-			if (pool->sp_nrthreads)
+-				break;
+-		}
+-	}
+-
+-	if (pool && pool->sp_nrthreads) {
+-		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+-		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
+-		return pool;
+-	}
+-	return NULL;
+-}
+-
+ static int
+ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ {
+ 	struct svc_rqst	*rqstp;
+ 	struct task_struct *task;
+-	struct svc_pool *chosen_pool;
+-	unsigned int state = serv->sv_nrthreads-1;
+ 	int node;
+ 	int err;
+ 
+ 	do {
+ 		nrservs--;
+-		chosen_pool = svc_pool_next(serv, pool, &state);
+-		node = svc_pool_map_get_node(chosen_pool->sp_id);
++		node = svc_pool_map_get_node(pool->sp_id);
+ 
+-		rqstp = svc_prepare_thread(serv, chosen_pool, node);
++		rqstp = svc_prepare_thread(serv, pool, node);
+ 		if (!rqstp)
+ 			return -ENOMEM;
+ 		task = kthread_create_on_node(serv->sv_threadfn, rqstp,
+@@ -821,7 +787,7 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ 
+ 		rqstp->rq_task = task;
+ 		if (serv->sv_nrpools > 1)
+-			svc_pool_map_set_cpumask(task, chosen_pool->sp_id);
++			svc_pool_map_set_cpumask(task, pool->sp_id);
+ 
+ 		svc_sock_update_bufs(serv);
+ 		wake_up_process(task);
+@@ -840,16 +806,11 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ static int
+ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ {
+-	unsigned int state = serv->sv_nrthreads-1;
+-	struct svc_pool *victim;
+-
+ 	do {
+-		victim = svc_pool_victim(serv, pool, &state);
+-		if (!victim)
+-			break;
+-		svc_pool_wake_idle_thread(victim);
+-		wait_on_bit(&victim->sp_flags, SP_VICTIM_REMAINS,
+-			    TASK_IDLE);
++		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
++		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
++		svc_pool_wake_idle_thread(pool);
++		wait_on_bit(&pool->sp_flags, SP_VICTIM_REMAINS, TASK_IDLE);
+ 		nrservs++;
+ 	} while (nrservs < 0);
+ 	return 0;
 
- Documentation/netlink/specs/nfsd.yaml |   5 +
- fs/lockd/svc.c                        |   6 +-
- fs/nfs/callback.c                     |  10 +-
- fs/nfsd/netlink.c                     |   5 +-
- fs/nfsd/netns.h                       |   6 +
- fs/nfsd/nfsctl.c                      |  50 ++++++++
- fs/nfsd/nfssvc.c                      |  63 +++++++---
- fs/nfsd/trace.h                       |  54 +++++++++
- include/linux/sunrpc/svc.h            |  13 ++-
- include/linux/sunrpc/svcsock.h        |   2 +-
- include/uapi/linux/nfsd_netlink.h     |   1 +
- net/sunrpc/svc.c                      | 210 ++++++++++++++++++++--------------
- net/sunrpc/svc_xprt.c                 |  44 +++++--
- 13 files changed, 349 insertions(+), 120 deletions(-)
----
-base-commit: 83f633515af9382e7201e205112e18b995a80f70
-change-id: 20251212-nfsd-dynathread-9f7a31172005
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.52.0
 
 
