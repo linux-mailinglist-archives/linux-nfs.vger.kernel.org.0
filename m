@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-17494-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17495-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26B7ECF8BDC
-	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 15:21:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 146DBCF8931
+	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 14:46:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E99833011EC6
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 14:21:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B19B93042B5D
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 13:46:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69021343D78;
-	Tue,  6 Jan 2026 13:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A02255F57;
+	Tue,  6 Jan 2026 13:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuGh4dkn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRJe6ALB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43983343D72
-	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 13:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD59326FD9A
+	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 13:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767707045; cv=none; b=fEsbtEWsP3ch4IJVZK/YFZ0m6EwYVr59u49cOzwT+Ji2pkv3ljEVuuh7z3Yob2Jz81lK9oO+fhqXJM2hFleGi9mzXr+sTULGkhMFyZUdtG7E5gCPLpROQ6onhIdDq3oBEYC4/QeyMhe9azcXAYoVe927c4RSK4wOwfLYf3rqjeE=
+	t=1767707189; cv=none; b=ipl0vU9HAhRi4SuDrin3L70PU6AFAhWaC/+jMIaOW3ksAx9N9PBtZWd7TP2H+EWYVVvGQnxDlMyP7FrdibDl6+7urXy8jAhw/9+K0Yoj2s0h8dBBTfTONDnfU/F59/q+4tOWw62HSx/II8P5ZuWeSrZGqRHYTQWkneoYObG8D5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767707045; c=relaxed/simple;
-	bh=n/Mr3K+3MpHYwklz9QZlGQVvOmPXHxOg9spBieFs1mA=;
+	s=arc-20240116; t=1767707189; c=relaxed/simple;
+	bh=VOyGy/4moj+FHxGYGYU4qSPLPTGuvNe5cwQqaeg46to=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VcffDG7TSe7hEUza5n1Fc1lF4T1z3UHNXyux63rnltLFQAk2LJJm9pL6l0oK+aEU5y1uINy9vcsM50O0chJWiiXpbj8hvN4FuuYK76Ck5EXVuzxuqI+Ae4d8e4CAb33NeOCBWWxIEcUtAXJva0ZoEE+jy1OKhieSCbeGWSPE8Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuGh4dkn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2663FC116C6;
-	Tue,  6 Jan 2026 13:44:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=feX/Gz1xsORSVvdQr0ks0bjYZLyAjit4EiLbcsKBIiLysRo2A/BZKnLq45GVMXoY1mJyKw8NX+hj2pfrMmedKd1YWcmQozm611fcTEgfqk1MHudH417tDrhI56lxbHzxrK0xl4wsHX5sMEcYrxelebjgNro+f/eOwXk4ZeTOCME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRJe6ALB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA43DC19424;
+	Tue,  6 Jan 2026 13:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767707044;
-	bh=n/Mr3K+3MpHYwklz9QZlGQVvOmPXHxOg9spBieFs1mA=;
+	s=k20201202; t=1767707189;
+	bh=VOyGy/4moj+FHxGYGYU4qSPLPTGuvNe5cwQqaeg46to=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WuGh4dknBHvPscESbHR7Qju1hppV9ToIO8bZAVV9XhfDDdY3qpztBTvqqmhMzuv+U
-	 RwatdFNU0cC2Logac1Ky8+37H0K/TpeDtvefeI/Z/7pPl/kQlIazktzBO22IDYzBbW
-	 SWp5grwhUU6gdlwEHykqRAgf90/NpIiar6ibwsuc7ThviXdHg7If6RCF0EwIoys+II
-	 F26W9ohtCOgeXIdNDado0izaXwFiMJraKfpLJ74Ja2aYPhZaKQYSdZmrmlQ13EqHZQ
-	 bXo21GM8NgQuNprNAl6NCnrWacI7LITV4DSlP2oGi/hi+skHSaqCR0kAaMj6aDeN0u
-	 O8R7C65vlLqjQ==
-Message-ID: <d6813d52a0e6eb3e2b11dbc01cef5d1a4b1df55a.camel@kernel.org>
-Subject: Re: [PATCH v1 1/5] nfsd: cancel async COPY operations when admin
- revokes filesystem state
+	b=YRJe6ALBIcnex98m+xMe5JSXbtGeRrIdQ63jh/+V4GHnfNIzean0PPocgGCTQuO7E
+	 /cj4/f/f6avnvxKgYBo9Jlukn3cCh+fXmV3SjK7VOEdghjxkzRgV8CbzTrUcwN+fY0
+	 jHuT7ICsYd5HH9J0pKPSqkAbeaYMLk7GWX2/BCBtfQ2clFBIwE1MOZIqkOpKBdFD/d
+	 /lTq5ZOMRTZNS7ZpTHTG1Je8L263f/DBlYWJlcbquXzbvTR3wBfj1Y5ZwXkG1hgycB
+	 pv8CHUMFkQaHuWOGWnLz2TVlZfaobJ0avrIKOnajrDd3u31kWXtvz16q/UQGtRgYGQ
+	 eKe70OZVz2iFQ==
+Message-ID: <441d9b90073dcc5046b56e4d1e16bafd11f98a12.camel@kernel.org>
+Subject: Re: [PATCH v1 2/5] fs: export pin_insert and pin_remove for modular
+ filesystems
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 06 Jan 2026 08:44:02 -0500
-In-Reply-To: <20251230141838.2547848-2-cel@kernel.org>
+Date: Tue, 06 Jan 2026 08:46:27 -0500
+In-Reply-To: <20251230141838.2547848-3-cel@kernel.org>
 References: <20251230141838.2547848-1-cel@kernel.org>
-	 <20251230141838.2547848-2-cel@kernel.org>
+	 <20251230141838.2547848-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,27 +138,32 @@ MIME-Version: 1.0
 On Tue, 2025-12-30 at 09:18 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Async COPY operations hold copy stateids that represent NFSv4 state.
-> Thus, when the NFS server administrator revokes all NFSv4 state for
-> a filesystem via the unlock_fs interface, ongoing async COPY
-> operations referencing that filesystem must also be canceled.
+> Modular filesystems currently have no notification mechanism for
+> mount teardown. When an NFS export is unexported then unmounted,
+> NFSD cannot detect this event to revoke associated state, state
+> which holds open file references that pin the mount.
 >=20
-> Each cancelled copy triggers a CB_OFFLOAD callback carrying the
-> NFS4ERR_ADMIN_REVOKED status to notify the client that the server
-> terminated the operation.
+> The existing fs_pin infrastructure provides unmount callbacks, but
+> pin_insert() and pin_remove() lack EXPORT_SYMBOL_GPL(), restricting
+> this facility to built-in subsystems. This restriction appears
+> historical rather than intentional; fs_pin.h is already a public
+> header, and the mechanism's purpose (coordinating mount lifetimes
+> with filesystem state) applies equally to modular subsystems.
+>=20
+> Export both symbols with EXPORT_SYMBOL_GPL() to permit modular
+> filesystems to register fs_pin callbacks. NFSD requires this to
+> revoke NFSv4 delegations, layouts, and open state when the
+> underlying filesystem is unmounted, preventing use-after-free
+> conditions in the state tracking layer.
 >=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4proc.c  | 124 ++++++++++++++++++++++++++++++++++++++++----
->  fs/nfsd/nfs4state.c |  20 ++++---
->  fs/nfsd/nfsctl.c    |   1 +
->  fs/nfsd/state.h     |   2 +
->  fs/nfsd/xdr4.h      |   1 +
->  5 files changed, 130 insertions(+), 18 deletions(-)
+>  fs/fs_pin.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 >=20
 
-Looks reasonable, and seems like the right thing to do if the state is
-cancelled.
+This seems like it was probably just a case of no having needed it
+until now.=20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
