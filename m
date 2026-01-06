@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-17495-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17496-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 146DBCF8931
-	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 14:46:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0572DCF910C
+	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 16:29:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B19B93042B5D
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 13:46:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D032F3037519
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 15:22:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A02255F57;
-	Tue,  6 Jan 2026 13:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5790429BD9A;
+	Tue,  6 Jan 2026 15:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRJe6ALB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dy3PiIqb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD59326FD9A
-	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 13:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EF3345740
+	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 15:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767707189; cv=none; b=ipl0vU9HAhRi4SuDrin3L70PU6AFAhWaC/+jMIaOW3ksAx9N9PBtZWd7TP2H+EWYVVvGQnxDlMyP7FrdibDl6+7urXy8jAhw/9+K0Yoj2s0h8dBBTfTONDnfU/F59/q+4tOWw62HSx/II8P5ZuWeSrZGqRHYTQWkneoYObG8D5I=
+	t=1767712959; cv=none; b=uz8jxqFDBrn2JsUUn3aNPNlhn16/kdCrqEXE5suqW9u+1vt7MVp298SKlB9135aAWPSGch8bBKRc8RISyqqaQU3RISGxrP1SMFo9fVBhGiFv0VzNPqsYpPMkUvL8nVQjOwTO44l7B2luduFhtEN4ks7n3G3fS7AY88nHdv2JTPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767707189; c=relaxed/simple;
-	bh=VOyGy/4moj+FHxGYGYU4qSPLPTGuvNe5cwQqaeg46to=;
+	s=arc-20240116; t=1767712959; c=relaxed/simple;
+	bh=eQhSeEFrZKd6LDSgEGyFC7kMYe/5Ur7qbnRx60ByCng=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=feX/Gz1xsORSVvdQr0ks0bjYZLyAjit4EiLbcsKBIiLysRo2A/BZKnLq45GVMXoY1mJyKw8NX+hj2pfrMmedKd1YWcmQozm611fcTEgfqk1MHudH417tDrhI56lxbHzxrK0xl4wsHX5sMEcYrxelebjgNro+f/eOwXk4ZeTOCME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRJe6ALB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA43DC19424;
-	Tue,  6 Jan 2026 13:46:28 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HVbt2fYqHdAz6FgkxYGit5c2a+qOt67eK47EZTUajTmIuWQAeSfn4jgPwqpbVlzoBW4NonfNY5EUxXeZgBy/4WkSsL7O92y5DWbBiO22vPmvGYdPGPI9zpSLk1eBC6Gw6nTN9yIIf6gUrqnkLPYAKyoXDrui5y684QAQUaSmtj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dy3PiIqb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2704DC116C6;
+	Tue,  6 Jan 2026 15:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767707189;
-	bh=VOyGy/4moj+FHxGYGYU4qSPLPTGuvNe5cwQqaeg46to=;
+	s=k20201202; t=1767712958;
+	bh=eQhSeEFrZKd6LDSgEGyFC7kMYe/5Ur7qbnRx60ByCng=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YRJe6ALBIcnex98m+xMe5JSXbtGeRrIdQ63jh/+V4GHnfNIzean0PPocgGCTQuO7E
-	 /cj4/f/f6avnvxKgYBo9Jlukn3cCh+fXmV3SjK7VOEdghjxkzRgV8CbzTrUcwN+fY0
-	 jHuT7ICsYd5HH9J0pKPSqkAbeaYMLk7GWX2/BCBtfQ2clFBIwE1MOZIqkOpKBdFD/d
-	 /lTq5ZOMRTZNS7ZpTHTG1Je8L263f/DBlYWJlcbquXzbvTR3wBfj1Y5ZwXkG1hgycB
-	 pv8CHUMFkQaHuWOGWnLz2TVlZfaobJ0avrIKOnajrDd3u31kWXtvz16q/UQGtRgYGQ
-	 eKe70OZVz2iFQ==
-Message-ID: <441d9b90073dcc5046b56e4d1e16bafd11f98a12.camel@kernel.org>
-Subject: Re: [PATCH v1 2/5] fs: export pin_insert and pin_remove for modular
- filesystems
+	b=dy3PiIqb945ZmMOntyiGMVNnZi4y+niVbsFvS36Inx8sk0Qgk8rzwcTO1F+sPh4sB
+	 nQqYaIVKRNZl1HhHB19aMh8Za4pd2fsleFRLtWY3JQPiEy0DyhHsUasHV6tFzXv6CF
+	 CqO8aw5eQ5dYZhEh8l8KyE7eG3x2xIDGjXqsFVHh4LLUikUckEIdpe/+pTD6sB+bg9
+	 TwAMT1M2hUDkcMB3rLPnWrlrcWXIF+D5RVdUdvsGgRTrqkoSaOn6EPj4CY3o4eH/wj
+	 6kltythfMBeP9S6+Gdx5vxtqdBMm6eBztbkat4kSdx3S+6qlbsDWp9vkUcFJu3MUUs
+	 iIdoilY4mpizQ==
+Message-ID: <0ba142a609b8ce5462b0ec4658886624ae3dcf0b.camel@kernel.org>
+Subject: Re: [PATCH v1 3/5] fs: add pin_insert_group() for superblock-only
+ pins
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 06 Jan 2026 08:46:27 -0500
-In-Reply-To: <20251230141838.2547848-3-cel@kernel.org>
+Date: Tue, 06 Jan 2026 10:22:36 -0500
+In-Reply-To: <20251230141838.2547848-4-cel@kernel.org>
 References: <20251230141838.2547848-1-cel@kernel.org>
-	 <20251230141838.2547848-3-cel@kernel.org>
+	 <20251230141838.2547848-4-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,32 +138,106 @@ MIME-Version: 1.0
 On Tue, 2025-12-30 at 09:18 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Modular filesystems currently have no notification mechanism for
-> mount teardown. When an NFS export is unexported then unmounted,
-> NFSD cannot detect this event to revoke associated state, state
-> which holds open file references that pin the mount.
+> Filesystems using fs_pin currently receive callbacks from both
+> group_pin_kill() (during remount read-only) and mnt_pin_kill()
+> (during mount teardown). Some filesystems require callbacks only
+> from the former.
 >=20
-> The existing fs_pin infrastructure provides unmount callbacks, but
-> pin_insert() and pin_remove() lack EXPORT_SYMBOL_GPL(), restricting
-> this facility to built-in subsystems. This restriction appears
-> historical rather than intentional; fs_pin.h is already a public
-> header, and the mechanism's purpose (coordinating mount lifetimes
-> with filesystem state) applies equally to modular subsystems.
+
+This is a little misleading. Filesystems don't really use fs_pin,
+AFAICT. It's only currently used by BSD process accounting to kill
+accounting when the filesystem is unmounted.
+
+Having nfsd as another user of the fs_pin infrastructure seems like a
+reasonable thing to do, but I wonder if the VFS maintainers might
+rather we use something different here (notifiers maybe?). I'd loop
+them and fsdevel in on the next posting.
+
+> NFSD maintains NFSv4 client state associated with the superblocks
+> of exported filesystems. Revoking this state during unmount requires
+> lock ordering that conflicts with mnt_pin_kill() context:
+> mnt_pin_kill() runs during cleanup_mnt() with namespace locks held,
+> but NFSD's state revocation path acquires these same locks for mount
+> table lookups, creating AB-BA deadlock potential.
 >=20
-> Export both symbols with EXPORT_SYMBOL_GPL() to permit modular
-> filesystems to register fs_pin callbacks. NFSD requires this to
-> revoke NFSv4 delegations, layouts, and open state when the
-> underlying filesystem is unmounted, preventing use-after-free
-> conditions in the state tracking layer.
+> Add pin_insert_group() to register pins on the superblock's s_pins
+> list only. The function name derives from group_pin_kill(), which
+> iterates s_pins during remount read-only. Pins registered this way
+> do not receive mnt_pin_kill() callbacks during mount teardown.
 >=20
+> After pin insertion, checking SB_ACTIVE detects racing unmounts.
+> When the superblock remains active, normal unmount cleanup occurs
+> through the subsystem's own shutdown path (outside the problematic
+> locking context) without pin callbacks.
+>=20
+
+This is going to have some interesting behaviors around exported bind
+mounts. I guess with this scheme you won't get any state revocation if
+you unexport and unmount a bind mount?
+
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/fs_pin.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  fs/fs_pin.c            | 29 +++++++++++++++++++++++++++++
+>  include/linux/fs_pin.h |  1 +
+>  2 files changed, 30 insertions(+)
 >=20
+> diff --git a/fs/fs_pin.c b/fs/fs_pin.c
+> index 972f34558b97..93da2e710abc 100644
+> --- a/fs/fs_pin.c
+> +++ b/fs/fs_pin.c
+> @@ -48,6 +48,35 @@ void pin_insert(struct fs_pin *pin, struct vfsmount *m=
+)
+>  }
+>  EXPORT_SYMBOL_GPL(pin_insert);
+> =20
+> +/**
+> + * pin_insert_group - register an fs_pin for superblock-only notificatio=
+n
+> + * @pin: the pin to register (must be initialized with init_fs_pin())
+> + * @m: the vfsmount whose superblock to monitor
+> + *
+> + * Registers @pin on the superblock's s_pins list only. Callbacks arrive
+> + * only from group_pin_kill() (invoked during remount read-only), not
+> + * from mnt_pin_kill() (invoked during mount namespace teardown).
+> + *
+> + * Use this instead of pin_insert() when mnt_pin_kill() callbacks would
+> + * execute in problematic locking contexts. Because mnt_pin_kill() runs
+> + * during cleanup_mnt(), callbacks cannot acquire locks also taken durin=
+g
+> + * mount table operations without risking AB-BA deadlock.
+> + *
+> + * After insertion, check SB_ACTIVE to detect racing unmounts. If clear,
+> + * call pin_remove() and abort. Normal unmount cleanup then occurs throu=
+gh
+> + * subsystem-specific shutdown paths without pin callback involvement.
+> + *
+> + * The callback must call pin_remove() before returning. Callbacks execu=
+te
+> + * with the RCU read lock held.
+> + */
+> +void pin_insert_group(struct fs_pin *pin, struct vfsmount *m)
+> +{
+> +	spin_lock(&pin_lock);
+> +	hlist_add_head(&pin->s_list, &m->mnt_sb->s_pins);
+> +	spin_unlock(&pin_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(pin_insert_group);
+> +
+>  void pin_kill(struct fs_pin *p)
+>  {
+>  	wait_queue_entry_t wait;
+> diff --git a/include/linux/fs_pin.h b/include/linux/fs_pin.h
+> index bdd09fd2520c..379e13bc72db 100644
+> --- a/include/linux/fs_pin.h
+> +++ b/include/linux/fs_pin.h
+> @@ -21,4 +21,5 @@ static inline void init_fs_pin(struct fs_pin *p, void (=
+*kill)(struct fs_pin *))
+> =20
+>  void pin_remove(struct fs_pin *);
+>  void pin_insert(struct fs_pin *, struct vfsmount *);
+> +void pin_insert_group(struct fs_pin *, struct vfsmount *);
+>  void pin_kill(struct fs_pin *);
 
-This seems like it was probably just a case of no having needed it
-until now.=20
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
