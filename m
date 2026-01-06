@@ -1,54 +1,56 @@
-Return-Path: <linux-nfs+bounces-17493-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17494-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CA2BCF8569
-	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 13:36:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26B7ECF8BDC
+	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 15:21:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1270D3043F1B
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 12:27:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E99833011EC6
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 14:21:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909C03A1E88;
-	Tue,  6 Jan 2026 12:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69021343D78;
+	Tue,  6 Jan 2026 13:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFRTcRTa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuGh4dkn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F972EFD86
-	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 12:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43983343D72
+	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 13:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767702420; cv=none; b=qJmSdpzxS0vdpEymh0+lDXIsehCtqoI30dYwcVPZ1LYDf2fai7b+RcuXdiNkLBl9zCnfXSB+Z4MTCEhZh9ZQsmO2kcwb/LPRknO7YOMr39RRsHeTfDYj7DLNSL5l+5S/MfhdDUrwN8gWggQNSxX6eirOJQSPsCFiaJoZsP1RKI8=
+	t=1767707045; cv=none; b=fEsbtEWsP3ch4IJVZK/YFZ0m6EwYVr59u49cOzwT+Ji2pkv3ljEVuuh7z3Yob2Jz81lK9oO+fhqXJM2hFleGi9mzXr+sTULGkhMFyZUdtG7E5gCPLpROQ6onhIdDq3oBEYC4/QeyMhe9azcXAYoVe927c4RSK4wOwfLYf3rqjeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767702420; c=relaxed/simple;
-	bh=VEPxrV9XYFNCh1PCqyzulyWzITwiXps4ebQjAJ6mJRU=;
+	s=arc-20240116; t=1767707045; c=relaxed/simple;
+	bh=n/Mr3K+3MpHYwklz9QZlGQVvOmPXHxOg9spBieFs1mA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B/DdoKiqIzKvoqHQERvinItwTYAv+GsgPsqt9Fy0UNAYYRFZWdsp9ig5rsPWX1MR5wGyUyGt1DqxBsYruf5hf7gyl7O3NByUBHD6SVbTQqw2t5+LH6T764AG4uahX4FsBgTiRu2s9m7obK5+voxzl0+sWj7Nx6n+iGY8mLWs7nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFRTcRTa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56334C116C6;
-	Tue,  6 Jan 2026 12:26:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=VcffDG7TSe7hEUza5n1Fc1lF4T1z3UHNXyux63rnltLFQAk2LJJm9pL6l0oK+aEU5y1uINy9vcsM50O0chJWiiXpbj8hvN4FuuYK76Ck5EXVuzxuqI+Ae4d8e4CAb33NeOCBWWxIEcUtAXJva0ZoEE+jy1OKhieSCbeGWSPE8Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuGh4dkn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2663FC116C6;
+	Tue,  6 Jan 2026 13:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767702420;
-	bh=VEPxrV9XYFNCh1PCqyzulyWzITwiXps4ebQjAJ6mJRU=;
+	s=k20201202; t=1767707044;
+	bh=n/Mr3K+3MpHYwklz9QZlGQVvOmPXHxOg9spBieFs1mA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IFRTcRTalXXAr37IHwxOTCBg4VbT6H5lPCOGY0V2F2D3DzxsU1kGhvTG4qwqRq+SZ
-	 yN1piW38YtYTzBiwTO4XcR8jiPDUxKiEtJEgPFllJOb0f8sPOi1OCF3j9ImzYOQa4h
-	 V0mg80Lh4qq8IMCgxzm/BmJ/AG5njVHNiGx3j1VHwtKF7xilXKs8xqUCIzrk7RvA6i
-	 VdsF388FkaYTmPlb+TRwpMGfyo+wD9TuN2p/pU1w9amxufDYF8GIaEnTgFwu1xN9VD
-	 l1XVAmmfhYqFmxq82WHs5FfEaeuV8MsDZuTDkbLB/KZS9ynYHaXIJBl5iIblfMqCXZ
-	 cJtXBL/99ms4Q==
-Message-ID: <d577c7dcac1753ee8d0fc30b30b41275eeb02948.camel@kernel.org>
-Subject: Re: [PATCH v2 00/12] Add NFSv4.2 POSIX ACL support
+	b=WuGh4dknBHvPscESbHR7Qju1hppV9ToIO8bZAVV9XhfDDdY3qpztBTvqqmhMzuv+U
+	 RwatdFNU0cC2Logac1Ky8+37H0K/TpeDtvefeI/Z/7pPl/kQlIazktzBO22IDYzBbW
+	 SWp5grwhUU6gdlwEHykqRAgf90/NpIiar6ibwsuc7ThviXdHg7If6RCF0EwIoys+II
+	 F26W9ohtCOgeXIdNDado0izaXwFiMJraKfpLJ74Ja2aYPhZaKQYSdZmrmlQ13EqHZQ
+	 bXo21GM8NgQuNprNAl6NCnrWacI7LITV4DSlP2oGi/hi+skHSaqCR0kAaMj6aDeN0u
+	 O8R7C65vlLqjQ==
+Message-ID: <d6813d52a0e6eb3e2b11dbc01cef5d1a4b1df55a.camel@kernel.org>
+Subject: Re: [PATCH v1 1/5] nfsd: cancel async COPY operations when admin
+ revokes filesystem state
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 06 Jan 2026 07:26:58 -0500
-In-Reply-To: <20260104161019.3404489-1-cel@kernel.org>
-References: <20260104161019.3404489-1-cel@kernel.org>
+Date: Tue, 06 Jan 2026 08:44:02 -0500
+In-Reply-To: <20251230141838.2547848-2-cel@kernel.org>
+References: <20251230141838.2547848-1-cel@kernel.org>
+	 <20251230141838.2547848-2-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,76 +135,30 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2026-01-04 at 11:10 -0500, Chuck Lever wrote:
+On Tue, 2025-12-30 at 09:18 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> The Internet draft "POSIX Draft ACL support for Network File
-> System Version 4, Minor Version 2":
+> Async COPY operations hold copy stateids that represent NFSv4 state.
+> Thus, when the NFS server administrator revokes all NFSv4 state for
+> a filesystem via the unlock_fs interface, ongoing async COPY
+> operations referencing that filesystem must also be canceled.
 >=20
->   https://datatracker.ietf.org/doc/draft-ietf-nfsv4-posix-acls/
+> Each cancelled copy triggers a CB_OFFLOAD callback carrying the
+> NFS4ERR_ADMIN_REVOKED status to notify the client that the server
+> terminated the operation.
 >=20
-> defines an extension to NFSv4.2 that enables POSIX draft ACLs
-> to be retrieved and set directly, without the lossy
-> NFSv4->POSIX draft mapping algorithm. The extension adds four
-> new attributes to the protocol.
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4proc.c  | 124 ++++++++++++++++++++++++++++++++++++++++----
+>  fs/nfsd/nfs4state.c |  20 ++++---
+>  fs/nfsd/nfsctl.c    |   1 +
+>  fs/nfsd/state.h     |   2 +
+>  fs/nfsd/xdr4.h      |   1 +
+>  5 files changed, 130 insertions(+), 18 deletions(-)
 >=20
-> This patch series implements the server side of this extension
-> for knfsd. The mechanism is analogous to the NFS_ACL sideband
-> protocol used with NFSv2/3, enabling POSIX draft ACLs to be
-> manipulated directly by getfacl(1) and setfacl(1).
->=20
-> The current implementation does not support "per file" scope,
-> where individual file objects store either an NFSv4 ACL or a
-> POSIX draft ACL. Instead, the implementation assumes POSIX
-> draft ACLs apply to an entire file system when support for
-> POSIX draft ACLs is indicated.
->=20
-> Based on the nfsd-testing branch from:
->=20
->   https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
->=20
-> Changes since v1:
-> - Fold the patches with fixes into the first 8 patches
-> - Ensure the series is bisect-able
-> - Add CONFIG_NFSD_V4_POSIX_ACLS -- this feature is experimental
-> - Set "SUPPATTR" bits only at the end of series
-> - Use xdrgen, where practical, instead of hand-coded XDR
-> - Refactor SETATTR/CREATE to integrate better with existing APIs
->=20
->=20
-> Chuck Lever (3):
->   NFSD: Add a Kconfig setting to enable support for NFSv4 POSIX ACLs
->   Add RPC language definition of NFSv4 POSIX ACL extension
->   NFSD: Add POSIX ACL file attributes to SUPPATTR bitmasks
->=20
-> Rick Macklem (9):
->   NFSD: Add nfsd4_encode_fattr4_acl_trueform
->   NFSD: Add nfsd4_encode_fattr4_acl_trueform_scope
->   NFSD: Add nfsd4_encode_fattr4_posix_default_acl
->   NFSD: Add nfsd4_encode_fattr4_posix_access_acl
->   NFSD: Do not allow NFSv4 (N)VERIFY to check POSIX ACL attributes
->   NFSD: Refactor nfsd_setattr()'s ACL error reporting
->   NFSD: Add support for XDR decoding POSIX draft ACLs
->   NFSD: Add support for POSIX draft ACLs for file creation
->   NFSD: Add POSIX draft ACL support to the NFSv4 SETATTR operation
->=20
->  Documentation/sunrpc/xdr/nfs4_1.x    |  56 +++++
->  fs/nfsd/Kconfig                      |  19 ++
->  fs/nfsd/acl.h                        |   1 +
->  fs/nfsd/nfs4acl.c                    |  17 +-
->  fs/nfsd/nfs4proc.c                   |  96 ++++++--
->  fs/nfsd/nfs4xdr.c                    | 356 ++++++++++++++++++++++++++-
->  fs/nfsd/nfs4xdr_gen.c                | 167 ++++++++++++-
->  fs/nfsd/nfs4xdr_gen.h                |  12 +-
->  fs/nfsd/nfsd.h                       |  17 +-
->  fs/nfsd/vfs.c                        |  34 ++-
->  fs/nfsd/vfs.h                        |   3 +-
->  fs/nfsd/xdr4.h                       |   6 +
->  include/linux/nfs4.h                 |   4 +
->  include/linux/sunrpc/xdrgen/nfs4_1.h |  73 +++++-
->  14 files changed, 822 insertions(+), 39 deletions(-)
 
-This all looks pretty reasonable. Nice work!
+Looks reasonable, and seems like the right thing to do if the state is
+cancelled.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
