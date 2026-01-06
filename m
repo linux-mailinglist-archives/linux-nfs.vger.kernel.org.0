@@ -1,62 +1,54 @@
-Return-Path: <linux-nfs+bounces-17492-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17493-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C719CF842D
-	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 13:15:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CA2BCF8569
+	for <lists+linux-nfs@lfdr.de>; Tue, 06 Jan 2026 13:36:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E5EC9304BB7E
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 12:15:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1270D3043F1B
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 12:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A918C2F616E;
-	Tue,  6 Jan 2026 12:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909C03A1E88;
+	Tue,  6 Jan 2026 12:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+hWTwZz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFRTcRTa"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DA840855;
-	Tue,  6 Jan 2026 12:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F972EFD86
+	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 12:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767701709; cv=none; b=qenrB4lqAr1t2iDWEyCzWrk66sE/P4inlEIftaz34FFvsfrU3q5IhTxaGnF04FEZoWPlHB2Bp7Li+44Ft6hDeinzOVQVVeiPAtAGpMh30H15Xy8dKi+q6kzvrCw/1K2UIn0u/dSSQeRtVtwaLBObjz6ONdQtubpDdpv52a+/lRc=
+	t=1767702420; cv=none; b=qJmSdpzxS0vdpEymh0+lDXIsehCtqoI30dYwcVPZ1LYDf2fai7b+RcuXdiNkLBl9zCnfXSB+Z4MTCEhZh9ZQsmO2kcwb/LPRknO7YOMr39RRsHeTfDYj7DLNSL5l+5S/MfhdDUrwN8gWggQNSxX6eirOJQSPsCFiaJoZsP1RKI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767701709; c=relaxed/simple;
-	bh=QgwQtu+7iHBgGqGElEDElm2KoBeOrZqPOWk0Vk79mm8=;
+	s=arc-20240116; t=1767702420; c=relaxed/simple;
+	bh=VEPxrV9XYFNCh1PCqyzulyWzITwiXps4ebQjAJ6mJRU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GuyMFI38ClRs+bkcKQj4cQW9/qYfr7vHi/kRnqlschVKzRzBHBzGKVAYKq3e3tik2teEfleQagEj7OUfckMdnxJ4kipOHMkNBciwOvrwD40wDio0QnmZ19NztAjs89QG8XZ8BbUtLKW5gQncWbtmNeyY2g+CBC0gHKMz9rjiAoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+hWTwZz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D91C116C6;
-	Tue,  6 Jan 2026 12:15:03 +0000 (UTC)
+	 Content-Type:MIME-Version; b=B/DdoKiqIzKvoqHQERvinItwTYAv+GsgPsqt9Fy0UNAYYRFZWdsp9ig5rsPWX1MR5wGyUyGt1DqxBsYruf5hf7gyl7O3NByUBHD6SVbTQqw2t5+LH6T764AG4uahX4FsBgTiRu2s9m7obK5+voxzl0+sWj7Nx6n+iGY8mLWs7nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFRTcRTa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56334C116C6;
+	Tue,  6 Jan 2026 12:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767701705;
-	bh=QgwQtu+7iHBgGqGElEDElm2KoBeOrZqPOWk0Vk79mm8=;
+	s=k20201202; t=1767702420;
+	bh=VEPxrV9XYFNCh1PCqyzulyWzITwiXps4ebQjAJ6mJRU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=o+hWTwZzOHzPg+ACzpyvVs3891G83lw6vDVmkwazFkR/pF5AhkimrMWvmgbIuLi0R
-	 YPWdtAPCyz4Nwn/owqbkpNODN3srDrBZh3JvzY1w5vRo4o4/HN2/YYtC5KlQAkOD1S
-	 6Epnm9OeDxtBI1qeG6NpSAAvzWki3dWJy+KtWg83Exoh5ODy0D+xKmnC3y7hYXaI9n
-	 D0IIUHAxkfFV8BsOsIr1kN8fTQZFIOBaN/Ca0DEIORdLLGTDaG+KW86c2Wq6lViqVZ
-	 k72lI8ny8/JPiuvkgY8Uz5mPDpJk8TOoOAgaziOwAaRsC4wNhQBcDxGvrkMHnB9c8c
-	 5BSpTmqNhMgUw==
-Message-ID: <e33dbefe18eab49f394afb1989303aab57930adb.camel@kernel.org>
-Subject: Re: [PATCH 09/11] fs: refactor file_update_time_flags
+	b=IFRTcRTalXXAr37IHwxOTCBg4VbT6H5lPCOGY0V2F2D3DzxsU1kGhvTG4qwqRq+SZ
+	 yN1piW38YtYTzBiwTO4XcR8jiPDUxKiEtJEgPFllJOb0f8sPOi1OCF3j9ImzYOQa4h
+	 V0mg80Lh4qq8IMCgxzm/BmJ/AG5njVHNiGx3j1VHwtKF7xilXKs8xqUCIzrk7RvA6i
+	 VdsF388FkaYTmPlb+TRwpMGfyo+wD9TuN2p/pU1w9amxufDYF8GIaEnTgFwu1xN9VD
+	 l1XVAmmfhYqFmxq82WHs5FfEaeuV8MsDZuTDkbLB/KZS9ynYHaXIJBl5iIblfMqCXZ
+	 cJtXBL/99ms4Q==
+Message-ID: <d577c7dcac1753ee8d0fc30b30b41275eeb02948.camel@kernel.org>
+Subject: Re: [PATCH v2 00/12] Add NFSv4.2 POSIX ACL support
 From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Jan
- Kara <jack@suse.cz>, Mike Marshall <hubcap@omnibond.com>, Martin
- Brandenburg	 <martin@omnibond.com>, Carlos Maiolino <cem@kernel.org>,
- Stefan Roesch	 <shr@fb.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Trond Myklebust	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
- io-uring@vger.kernel.org, 	devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, 	linux-mtd@lists.infradead.org,
- linux-xfs@vger.kernel.org, 	linux-nfs@vger.kernel.org
-Date: Tue, 06 Jan 2026 07:15:02 -0500
-In-Reply-To: <20260106075008.1610195-10-hch@lst.de>
-References: <20260106075008.1610195-1-hch@lst.de>
-	 <20260106075008.1610195-10-hch@lst.de>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 06 Jan 2026 07:26:58 -0500
+In-Reply-To: <20260104161019.3404489-1-cel@kernel.org>
+References: <20260104161019.3404489-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,70 +133,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2026-01-06 at 08:50 +0100, Christoph Hellwig wrote:
-> Split all the inode timestamp flags into a helper.  This not only
-> makes the code a bit more readable, but also optimizes away the
-> further checks as soon as know we need an update.
+On Sun, 2026-01-04 at 11:10 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/inode.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
+> The Internet draft "POSIX Draft ACL support for Network File
+> System Version 4, Minor Version 2":
 >=20
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 01e4f6b9b46e..d2bfe302e647 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -2378,31 +2378,30 @@ struct timespec64 current_time(struct inode *inod=
-e)
->  }
->  EXPORT_SYMBOL(current_time);
-> =20
-> +static inline bool need_cmtime_update(struct inode *inode)
-> +{
-> +	struct timespec64 now =3D current_time(inode), ts;
-> +
-> +	ts =3D inode_get_mtime(inode);
-> +	if (!timespec64_equal(&ts, &now))
-> +		return true;
-> +	ts =3D inode_get_ctime(inode);
-> +	if (!timespec64_equal(&ts, &now))
-> +		return true;
-> +	return IS_I_VERSION(inode) && inode_iversion_need_inc(inode);
-> +}
-> +
->  static int file_update_time_flags(struct file *file, unsigned int flags)
->  {
->  	struct inode *inode =3D file_inode(file);
-> -	struct timespec64 now, ts;
-> -	bool need_update =3D false;
-> -	int ret =3D 0;
-> +	int ret;
-> =20
->  	/* First try to exhaust all avenues to not sync */
->  	if (IS_NOCMTIME(inode))
->  		return 0;
->  	if (unlikely(file->f_mode & FMODE_NOCMTIME))
->  		return 0;
-> -
-> -	now =3D current_time(inode);
-> -
-> -	ts =3D inode_get_mtime(inode);
-> -	if (!timespec64_equal(&ts, &now))
-> -		need_update =3D true;
-> -	ts =3D inode_get_ctime(inode);
-> -	if (!timespec64_equal(&ts, &now))
-> -		need_update =3D true;
-> -	if (IS_I_VERSION(inode) && inode_iversion_need_inc(inode))
-> -		need_update =3D true;
-> -
-> -	if (!need_update)
-> +	if (!need_cmtime_update(inode))
->  		return 0;
-> =20
->  	flags &=3D IOCB_NOWAIT;
+>   https://datatracker.ietf.org/doc/draft-ietf-nfsv4-posix-acls/
+>=20
+> defines an extension to NFSv4.2 that enables POSIX draft ACLs
+> to be retrieved and set directly, without the lossy
+> NFSv4->POSIX draft mapping algorithm. The extension adds four
+> new attributes to the protocol.
+>=20
+> This patch series implements the server side of this extension
+> for knfsd. The mechanism is analogous to the NFS_ACL sideband
+> protocol used with NFSv2/3, enabling POSIX draft ACLs to be
+> manipulated directly by getfacl(1) and setfacl(1).
+>=20
+> The current implementation does not support "per file" scope,
+> where individual file objects store either an NFSv4 ACL or a
+> POSIX draft ACL. Instead, the implementation assumes POSIX
+> draft ACLs apply to an entire file system when support for
+> POSIX draft ACLs is indicated.
+>=20
+> Based on the nfsd-testing branch from:
+>=20
+>   https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>=20
+> Changes since v1:
+> - Fold the patches with fixes into the first 8 patches
+> - Ensure the series is bisect-able
+> - Add CONFIG_NFSD_V4_POSIX_ACLS -- this feature is experimental
+> - Set "SUPPATTR" bits only at the end of series
+> - Use xdrgen, where practical, instead of hand-coded XDR
+> - Refactor SETATTR/CREATE to integrate better with existing APIs
+>=20
+>=20
+> Chuck Lever (3):
+>   NFSD: Add a Kconfig setting to enable support for NFSv4 POSIX ACLs
+>   Add RPC language definition of NFSv4 POSIX ACL extension
+>   NFSD: Add POSIX ACL file attributes to SUPPATTR bitmasks
+>=20
+> Rick Macklem (9):
+>   NFSD: Add nfsd4_encode_fattr4_acl_trueform
+>   NFSD: Add nfsd4_encode_fattr4_acl_trueform_scope
+>   NFSD: Add nfsd4_encode_fattr4_posix_default_acl
+>   NFSD: Add nfsd4_encode_fattr4_posix_access_acl
+>   NFSD: Do not allow NFSv4 (N)VERIFY to check POSIX ACL attributes
+>   NFSD: Refactor nfsd_setattr()'s ACL error reporting
+>   NFSD: Add support for XDR decoding POSIX draft ACLs
+>   NFSD: Add support for POSIX draft ACLs for file creation
+>   NFSD: Add POSIX draft ACL support to the NFSv4 SETATTR operation
+>=20
+>  Documentation/sunrpc/xdr/nfs4_1.x    |  56 +++++
+>  fs/nfsd/Kconfig                      |  19 ++
+>  fs/nfsd/acl.h                        |   1 +
+>  fs/nfsd/nfs4acl.c                    |  17 +-
+>  fs/nfsd/nfs4proc.c                   |  96 ++++++--
+>  fs/nfsd/nfs4xdr.c                    | 356 ++++++++++++++++++++++++++-
+>  fs/nfsd/nfs4xdr_gen.c                | 167 ++++++++++++-
+>  fs/nfsd/nfs4xdr_gen.h                |  12 +-
+>  fs/nfsd/nfsd.h                       |  17 +-
+>  fs/nfsd/vfs.c                        |  34 ++-
+>  fs/nfsd/vfs.h                        |   3 +-
+>  fs/nfsd/xdr4.h                       |   6 +
+>  include/linux/nfs4.h                 |   4 +
+>  include/linux/sunrpc/xdrgen/nfs4_1.h |  73 +++++-
+>  14 files changed, 822 insertions(+), 39 deletions(-)
 
-Nice cleanup.
+This all looks pretty reasonable. Nice work!
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
