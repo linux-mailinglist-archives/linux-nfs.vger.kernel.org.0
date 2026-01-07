@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17542-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17543-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A803DCFC5D3
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:32:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CA4DCFC5F1
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:33:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8EBCD303A091
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:29:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 60C2530D2670
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 511682848BB;
-	Wed,  7 Jan 2026 07:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E441287517;
+	Wed,  7 Jan 2026 07:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uioWkpCz"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TJe9l/3C"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BC627F727
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52CA286405
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767770922; cv=none; b=cjw37iBfqVwnJfZyT6bfbZAtP7ZpJWkwEpIndCXJ2cMHi6BCScA/2HAA3jJaXjtwdVpzPBrlaDPBzvq0pMF7nq57pPT/mbK8GKsq2MUWzW3/ASWRbpP50gIzgBFokuzUhw8UQGJVR7rHfV0RnfP+T7t1ZRgqwWhLKiAJqNtVnpI=
+	t=1767770925; cv=none; b=iyMGbcsIwTu/wasSxVk1nT1lUKaE+71u+CtodUpZUalBgNHKYz6hxT8zPPfSwHflBBLBz0pEhLZQSH/GSRWk3mvxUNbdqaYJPrPamm67t7jpj8CePwsjIKWzbPf67Dc08ihQ62DyspomVYGPz3Lcd2oepgrnBydp+g1baEPrXyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767770922; c=relaxed/simple;
-	bh=r8C3UE6KMhb/eOhpoH6l+TVCmvaqvxXs2DYgEBU0YKI=;
+	s=arc-20240116; t=1767770925; c=relaxed/simple;
+	bh=8e2wPJ69MRFuxTv+VoP9aJg3ZUNFy97Ue107zvFagHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A7CklO8kptnELnzDYs/Mj3OriOD07cM3T29JLGutydfMjtLm5E5IgoqmPVtOxKkYp9MXdnmtYgwiQoyWEDkisIHOFwKrf3rkly9eB3nmT2MI27WKc3eIfiK7FndkwePU/STBkv5CeuOK7YTaALnq4hNu6wIiMlbDK557cYg74E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uioWkpCz; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=kzyEDfkZeTeiAO2kRvUHJoAP2f+qjIsxxaZSfJISYWVVvC2OWVNDkFz/0gg+mmd6L17xMwMDoAm1prMid5l/ikRKN8E9Nt42gJ8o/d/kz176T7MYATdP9YEahadt51PBce0K7LSKvsgV2OcD4Rbo7Lou/DJZ9I+udkpkqnKeDp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TJe9l/3C; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=GAAkH74hbo1RU14IbNFPzeXFNeS5ZGi0JELnYMWbV60=; b=uioWkpCzqBwsAq9B0mK2wLyikf
-	43/o9775qGgtIQkBqb4+5dXVKNYR2vE9cfwLF8SJX4RsyHSKgGcIkH0H9p3nICmdju+xrVRCfzNra
-	1ZkfWkOwt4LWmFmHeNtMv2wKbEaXTkMGg9eYfSg8zcXrY6p9JUoJdFnHqvLgyHPmrbVBQyFMumMUN
-	aK8oLQRA1hEwDRiTfzEUrRSOkAy7V2Z6V76gs7eLM+IXroPcvDHbQJARHPNTgeS3KIR3eRcmG+rG0
-	CsNPzIhvqItok6tMl1i/2btUkDa29+KIp+LxHftnN177DmF2a0S25r+LDnwinF5Ar04aL87TSSMvz
-	29/f5enw==;
+	bh=N6OsPW9fsqOZTRskFrNqn3icvTFqh2vMZbmfmQML7mI=; b=TJe9l/3C8TqsFjoVyYSb2aA3uo
+	kVKRwBPlsESNhby59FamgEPUbs5RnGPbQCaEoWmmuBNnHc8A3FREbdwWuuKA0V8vwpqzvd/RhILyP
+	F7XgHlZP9bsihONOfQdnoo7WxLsKXFjT+PN96wWFQ7pb+Sf11xbpc/tgn9VNJDWSpnNbuS5JclCrb
+	V3DNdEE6hHNWV0HhFZ4xqQPUdoN9tCLjxhKY72aHk/UmM9CaXgQSGoPbG6K83aWHYuNLG956NXh9V
+	whbzy7JjLIMcIXt/PvF9ghrxQQuvk9yWraa6ldME3Nhc2orfk2E5JAFGHMus/UlVYH5IepaN19kZC
+	4oMPx9jg==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdNyC-0000000EHsV-0emW;
-	Wed, 07 Jan 2026 07:28:40 +0000
+	id 1vdNyF-0000000EHt1-0uUI;
+	Wed, 07 Jan 2026 07:28:43 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 20/24] NFS: use a local RCU critical section in nfs_start_delegation_return
-Date: Wed,  7 Jan 2026 08:27:11 +0100
-Message-ID: <20260107072720.1744129-21-hch@lst.de>
+Subject: [PATCH 21/24] NFS: reformat nfs_mark_delegation_revoked
+Date: Wed,  7 Jan 2026 08:27:12 +0100
+Message-ID: <20260107072720.1744129-22-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
 References: <20260107072720.1744129-1-hch@lst.de>
@@ -62,47 +62,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Nested RCU critical sections are fine and very cheap.  Have a local one
-in nfs_start_delegation_return so that the function is self-contained
-and to prepare for simplifying the callers.
+Remove a level of indentation for the main code path.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/delegation.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ fs/nfs/delegation.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 5d9dba7ab430..2ac897f67b01 100644
+index 2ac897f67b01..f46799448a0a 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -309,11 +309,13 @@ nfs_start_delegation_return(struct nfs_inode *nfsi)
- 	struct nfs_delegation *delegation;
- 	bool return_now = false;
+@@ -52,12 +52,13 @@ static void __nfs_free_delegation(struct nfs_delegation *delegation)
+ static void nfs_mark_delegation_revoked(struct nfs_server *server,
+ 		struct nfs_delegation *delegation)
+ {
+-	if (!test_and_set_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
+-		delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
+-		atomic_long_dec(&server->nr_active_delegations);
+-		if (!test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
+-			nfs_clear_verifier_delegated(delegation->inode);
+-	}
++	if (test_and_set_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
++		return;
++
++	delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
++	atomic_long_dec(&server->nr_active_delegations);
++	if (!test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
++		nfs_clear_verifier_delegated(delegation->inode);
+ }
  
--	lockdep_assert_in_rcu_read_lock();
--
-+	rcu_read_lock();
- 	delegation = rcu_dereference(nfsi->delegation);
--	if (!delegation || !refcount_inc_not_zero(&delegation->refcount))
-+	if (!delegation || !refcount_inc_not_zero(&delegation->refcount)) {
-+		rcu_read_unlock();
- 		return NULL;
-+	}
-+	rcu_read_unlock();
- 
- 	spin_lock(&delegation->lock);
- 	if (delegation->inode &&
-@@ -762,10 +764,7 @@ int nfs4_inode_return_delegation(struct inode *inode)
- 	struct nfs_delegation *delegation;
- 	int err;
- 
--	rcu_read_lock();
- 	delegation = nfs_start_delegation_return(nfsi);
--	rcu_read_unlock();
--
- 	if (!delegation)
- 		return 0;
- 
+ void nfs_put_delegation(struct nfs_delegation *delegation)
 -- 
 2.47.3
 
