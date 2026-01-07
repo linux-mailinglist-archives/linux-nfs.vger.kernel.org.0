@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17545-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17546-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA055CFC606
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:34:25 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88CD6CFC61E
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:35:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7992330EA2C6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:29:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5437C3009FFB
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7773D28C00D;
-	Wed,  7 Jan 2026 07:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2AD27A461;
+	Wed,  7 Jan 2026 07:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cYUrzkPF"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xuayk93N"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF60F296BBA
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FA0299947
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767770934; cv=none; b=gmktlsosps/bhJ6iFL4Z48PZQe6h2oloS3hvjSvOo9HmSsY3O1377hqrKjO/wMkoEFtPZ/jWSN/bcMJEx36ZmaqyMolsrk5Jp0fXNbnCDcbAY/odMHmUsQB0Reb+GK390wnnEkCVuqiuy2oAQfjzRQMR+0HYRqFx7v19cucEMxQ=
+	t=1767770937; cv=none; b=hmN2vpbqfMmqvwQ3Jbnhr9dtXguLdtitVeAxtusGGv1BF/sBB+kz1sb7uKnoz2fqSYoN5/1VoQShfmElAN4Di0YFns2kJFYTCOkyJFv05e3Qk+tUe5euoqN965YR1kylEUkLcw0q3Yd4oiFoIiOz9mvKKsx5jdUCxY6fOm3AnOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767770934; c=relaxed/simple;
-	bh=/NKCbVFF+AzVJY3x+XEyqfj5W6XSy6PBqjJOD2LqDFU=;
+	s=arc-20240116; t=1767770937; c=relaxed/simple;
+	bh=sEmBWo21PvKN0z9Z2zRXJfG/83/r+c/8dCJ9IoqaLbU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dlo5qFx7eigFe+bkSyXt7Jvw1TeOvuQaJTrkMnn9uJcKNLH2owgZ3O1L0ekgwLB9q5wmlqcFOOQ+aqo2lC7/Pyr/+V91fQjLUX8zfkDM3wLlNocFZ4+6bX5uCp3A1Uo7z0M8IUrs9Ec9LO34LS87RBC4uEaLby03nb3JTgNFeg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cYUrzkPF; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=pVf2rorT/b2vye1Z2bJwdFawkMlrvltY2KS78Zna8ZY4v5AKC44kCHRvcgWsT2XRKHVePSbz7DdG7H4oKdo1sEP77RnsYKGRqbdPMO1X022V4zNtK+HDyLm/AFEK30qqJD78ttuusOswvfR/fY7n4lSPcOWr97Oh3sZVkQD0urk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xuayk93N; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dGI7mU+JYGU19iSZS5Yd8xYgvtHkUQ3+JqsJvMdZjSo=; b=cYUrzkPFrIdTQku5D0yT+/kSDv
-	cyZ447Awu9F/FVTZ1CrR/QJ8WUgBLfen5twDfTBPe8I4NxrcgXcJdl8B1N1JUF+JhQ7uxQvAJMOIP
-	Dm+3FBSp3owq+9/lFDe0m5xep6YQLo+XurW8shldtuQ6A9l/Y0i3px2u48yk69I8V9SqC6BcLgiU2
-	VbIn/uh2CptvfHnddsvbk8o23ZkBpPUZusxQ7/FNIVD6Yx0Sqog2pIHkLJAJBc/vMioMbmZhbv6Fk
-	ngmsMGTC5S62VHEUYMnKy3aQ5qRYXUvaPXAgnXC/HAN63RXVv3OQ21pZ6Riiin4hwyYtgfQ1F3IJ6
-	scA3dyDA==;
+	bh=WJdTKSSYQyzQpQY8QRaaoDvV75cJkFPIjnC7+iP+6PI=; b=Xuayk93NW2C3Ir69jGvWz10FSo
+	Hyy9R6xYcNABMZw6/QBSuAFiWOYKJNRvNZAx83gZNR5uzVqKyqre5s9HnvzDquSa3yHsK/hYlZoHJ
+	ay0TwGu+ZkAj5r/xTdILTugntzmKqHKtf4btwZd2PnTEO8q/ffDNbAFcfjQdv2kk2B0MdpnCqF3jW
+	vvcbdHzP2gi/gsnbahfHmZYPOocjpdfpuYCa6KTvzYjkdXkG4Di5+B/Wd3k6f+s9yllaegpqa090J
+	rIP7+gr59gEMFvS6cweF1xCAK0f89NSKWztCeOyPVLPxJsJI/bm3FJ7Mhcm22hH21sz9s7oeyokOo
+	J6IS5i6A==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdNyN-0000000EHug-3rfa;
-	Wed, 07 Jan 2026 07:28:52 +0000
+	id 1vdNyR-0000000EHvK-21ox;
+	Wed, 07 Jan 2026 07:28:55 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 23/24] NFS: return delegations from the end of a LRU when over the watermark
-Date: Wed,  7 Jan 2026 08:27:14 +0100
-Message-ID: <20260107072720.1744129-24-hch@lst.de>
+Subject: [PATCH 24/24] NFS: make nfs_mark_return_unreferenced_delegations less aggressive
+Date: Wed,  7 Jan 2026 08:27:15 +0100
+Message-ID: <20260107072720.1744129-25-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
 References: <20260107072720.1744129-1-hch@lst.de>
@@ -62,141 +62,75 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Directly returning delegations on close when over the watermark is
-rather suboptimal as these delegations are much more likely to be reused
-than those that have been unused for a long time.  Switch to returning
-unused delegations from a new LRU list when we are above the threshold and
-there are reclaimable delegations instead.
+Currently nfs_mark_return_unreferenced_delegations marks all open but
+not referenced delegations (i.e., those were found by a previous pass)
+as return on close, which means that we'll return them on close without
+a way out.
 
-Pass over referenced delegations during the first pass to give delegations
-that aren't in active used by frequently used for stat() or similar another
-chance to not be instantly reclaimed.  This scheme works the same as the
-referenced flags in the VFS inode and dentry caches.
+Replace this with only iterating delegations that are on the LRU list,
+and avoid delegations that are in use by an open files to avoid this.
+
+Delegations that were never referenced while open still are be prime
+candidates for return from the LRU if the number of delegations is over
+the watermark, or otherwise will be returned by the next
+nfs_mark_return_unreferenced_delegations pass after they are closed.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/client.c           |  1 +
- fs/nfs/delegation.c       | 61 +++++++++++++++++++++++++++++++++++++--
- include/linux/nfs_fs_sb.h |  1 +
- 3 files changed, 60 insertions(+), 3 deletions(-)
+ fs/nfs/delegation.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 65b3de91b441..62aece00f810 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -1062,6 +1062,7 @@ struct nfs_server *nfs_alloc_server(void)
- 	INIT_LIST_HEAD(&server->delegations);
- 	spin_lock_init(&server->delegations_lock);
- 	INIT_LIST_HEAD(&server->delegations_return);
-+	INIT_LIST_HEAD(&server->delegations_lru);
- 	INIT_LIST_HEAD(&server->layouts);
- 	INIT_LIST_HEAD(&server->state_owners_lru);
- 	INIT_LIST_HEAD(&server->ss_copies);
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index f0540c9843b3..0b256f461fe4 100644
+index 0b256f461fe4..6497fdbd9516 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -655,6 +655,60 @@ static int nfs_server_return_marked_delegations(struct nfs_server *server,
- 	return err;
+@@ -1124,15 +1124,21 @@ void nfs_remove_bad_delegation(struct inode *inode,
  }
+ EXPORT_SYMBOL_GPL(nfs_remove_bad_delegation);
  
-+static inline bool nfs_delegations_over_limit(struct nfs_server *server)
-+{
-+	return !list_empty_careful(&server->delegations_lru) &&
-+		atomic_long_read(&server->nr_active_delegations) >
-+		nfs_delegation_watermark;
-+}
-+
-+static void nfs_delegations_return_from_lru(struct nfs_server *server)
-+{
+-static void nfs_mark_return_unreferenced_delegations(struct nfs_server *server)
++static bool nfs_mark_return_unreferenced_delegations(struct nfs_server *server)
+ {
+-	struct nfs_delegation *delegation;
 +	struct nfs_delegation *d, *n;
-+	unsigned int pass = 0;
-+	bool moved = false;
-+
-+retry:
++	bool marked = false;
+ 
+-	list_for_each_entry_rcu(delegation, &server->delegations, super_list) {
+-		if (test_and_clear_bit(NFS_DELEGATION_REFERENCED, &delegation->flags))
 +	spin_lock(&server->delegations_lock);
 +	list_for_each_entry_safe(d, n, &server->delegations_lru, entry) {
-+		if (!nfs_delegations_over_limit(server))
-+			break;
-+		if (pass == 0 && test_bit(NFS_DELEGATION_REFERENCED, &d->flags))
-+			continue;
++		if (test_and_clear_bit(NFS_DELEGATION_REFERENCED, &d->flags))
+ 			continue;
+-		nfs_mark_return_if_closed_delegation(server, delegation);
 +		list_move_tail(&d->entry, &server->delegations_return);
-+		moved = true;
-+	}
-+	spin_unlock(&server->delegations_lock);
-+
-+	/*
-+	 * If we are still over the limit, try to reclaim referenced delegations
-+	 * as well.
-+	 */
-+	if (pass == 0 && nfs_delegations_over_limit(server)) {
-+		pass++;
-+		goto retry;
-+	}
-+
-+	if (moved) {
-+		set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client->cl_state);
-+		nfs4_schedule_state_manager(server->nfs_client);
-+	}
-+}
-+
-+static void nfs_delegation_add_lru(struct nfs_server *server,
-+		struct nfs_delegation *delegation)
-+{
-+	spin_lock(&server->delegations_lock);
-+	if (list_empty(&delegation->entry)) {
-+		list_add_tail(&delegation->entry, &server->delegations_lru);
-+		refcount_inc(&delegation->refcount);
-+	}
-+	spin_unlock(&server->delegations_lock);
-+
-+	if (nfs_delegations_over_limit(server))
-+		nfs_delegations_return_from_lru(server);
-+}
-+
- static bool nfs_server_clear_delayed_delegations(struct nfs_server *server)
- {
- 	struct nfs_delegation *d;
-@@ -820,6 +874,7 @@ void nfs4_inode_set_return_delegation_on_close(struct inode *inode)
-  */
- void nfs4_inode_return_delegation_on_close(struct inode *inode)
- {
-+	struct nfs_server *server = NFS_SERVER(inode);
- 	struct nfs_delegation *delegation;
- 	bool return_now = false;
- 
-@@ -827,9 +882,7 @@ void nfs4_inode_return_delegation_on_close(struct inode *inode)
- 	if (!delegation)
- 		return;
- 
--	if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags) ||
--	    atomic_long_read(&NFS_SERVER(inode)->nr_active_delegations) >=
--	    nfs_delegation_watermark) {
-+	if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags)) {
- 		spin_lock(&delegation->lock);
- 		if (delegation->inode &&
- 		    list_empty(&NFS_I(inode)->open_files) &&
-@@ -843,6 +896,8 @@ void nfs4_inode_return_delegation_on_close(struct inode *inode)
- 	if (return_now) {
- 		nfs_clear_verifier_delegated(inode);
- 		nfs_end_delegation_return(inode, delegation, 0);
-+	} else {
-+		nfs_delegation_add_lru(server, delegation);
++		marked = true;
  	}
- 	nfs_put_delegation(delegation);
++	spin_unlock(&server->delegations_lock);
++
++	return marked;
  }
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index e377b8c7086e..bb13a294b69e 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -261,6 +261,7 @@ struct nfs_server {
- 	struct list_head	delegations;
- 	spinlock_t		delegations_lock;
- 	struct list_head	delegations_return;
-+	struct list_head	delegations_lru;
- 	atomic_long_t		nr_active_delegations;
- 	unsigned int		delegation_hash_mask;
- 	struct hlist_head	*delegation_hash_table;
+ 
+ /**
+@@ -1143,13 +1149,17 @@ static void nfs_mark_return_unreferenced_delegations(struct nfs_server *server)
+ void nfs_expire_unreferenced_delegations(struct nfs_client *clp)
+ {
+ 	struct nfs_server *server;
++	bool marked = false;
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link)
+-		nfs_mark_return_unreferenced_delegations(server);
++		marked |= nfs_mark_return_unreferenced_delegations(server);
+ 	rcu_read_unlock();
+ 
+-	nfs_delegation_run_state_manager(clp);
++	if (marked) {
++		set_bit(NFS4CLNT_DELEGRETURN, &clp->cl_state);
++		nfs4_schedule_state_manager(clp);
++	}
+ }
+ 
+ /**
 -- 
 2.47.3
 
