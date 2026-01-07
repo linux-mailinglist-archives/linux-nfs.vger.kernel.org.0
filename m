@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17527-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17528-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BB73CFC582
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:29:18 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1891CFC56A
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:27:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 321F73041A5B
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:27:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3721830034A7
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D70527AC41;
-	Wed,  7 Jan 2026 07:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3EEF27A461;
+	Wed,  7 Jan 2026 07:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JjOMECcM"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OzpWwaU7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2B230BCC
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555F827991E
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767770861; cv=none; b=cQp21b+u2fFO6t6yrHO+X780y3o5N6VcVBPk+TwjCmvLP+mJdAsceLKnL77iJC4XLIiEh+xK31iyDUvjf/LC/IQdHE51Oo4K0aq65PWgltMFX/kWmzIgoZtebg/vUK4X8WUBkAYZYwUBeSTGgwrnGsVSQXrcNaBhOeRSp1ALox4=
+	t=1767770865; cv=none; b=RQy2AEseKjQjAXDDr1yaepVqIN+0DbMdDK7Ou9DXa3O2D322sUsUah9m6MWS6SkUB3+ZlPgIV3RhbPggNPuVAhmlL3LrEbAU2vdYOZuCKx7+duWkIsxfGLS1ZomKtzMSeC0HLUyVddRfjc4cyMLlqqD+Q0cMj1gC4Ea//bmPFq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767770861; c=relaxed/simple;
-	bh=XKW7Njwx4ck2czFwcYNY0T/LSNyMqkKwlInzWyLAujw=;
+	s=arc-20240116; t=1767770865; c=relaxed/simple;
+	bh=WSf/NaWBcbUiGLD9bP63TC9OCVFY8Q53Gxv4wSoo/Ww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IVqSxrY3ZHB0Ua29pVbse8M4cvS+77yPg47B23V4rufwoB14OOr84p8VXwZY/KooLWoQbmYLlwfhcK7JPQKjAkbHYlZ8fMGULkwZCaB6Jj+QS8p3FzZAnhkEMBLoNh1RIJadEx0Tfu2nb4ROpwROCwSBxnj/fdsvSc45xkQyEZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JjOMECcM; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=SZ3MLLnkYWRNohkmQwEfybZqSVDTDAPwcSvHBsJ3lCZZy3c1pvXkEdJNQgkJMHmyc++KVEfVy6QahQ7zETM+nLZ8FFWPF6Wc25hYH/PvNvFLioGeejP+A6SJsG6EBT6gv5pspZ+uv26znyWc634qy8vmwetepxPyE+szzDvOGoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OzpWwaU7; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=DpW0hH+iczYkbEUubbEf6TeFkw0vln8xHLjwg5wAOLA=; b=JjOMECcM8Hx0F0k/5iF42gbB65
-	ANRK42eY+g1KhQgLptZu2ClCuY+ddF4PwMeY4S4J+4IwRow2AQ5ANUicflf9qKsWeQAn6368xJxem
-	s/mAYlB/dSAEAFZxiNT46vi2ytpqk/ooGZGgxvvHULuLzhFHOXHTt4FjCFLYcXFxIdkED1uodNvPH
-	5dzVCv9HzTVRipoUYPDtLP0F78u0LyqFa2sMlHRobS4k+12Pgyo7gT8Q2yZ9OqXtdFzCG+H3LDb1Z
-	0rPjKzwYGxD+lM/e0jf4p/U1Kbm1AEBjEJ0MhZy/v68OhZ4yNzh1DPDsVWoDd759IiAsVg7Y+MxSA
-	BccDv5jg==;
+	bh=0TsBK5XY9byDTE44ffjydAaXEAe6Sj/myv6/vEWLCSs=; b=OzpWwaU7kUB0b4tifjdattbUtI
+	zXUXo8A255HQ7/E3M705JIt0X/rxVfSSyJz0uQpIOa0Ebb/oKJ+ilbM1I2uB1m6DH+y6IAtQLEjaS
+	ox4czdDXThw1J5w/OkTRoGlM4Rkhcfwn+UHbYYOWMrYjTx9w+4XCU1jw+HUWhHBklMxDFKnx57842
+	bsH7lUXev0e31hqyF9qZLFo7ct4mtNGZHhOaMCIWaSEfhHaBNMvB4v77CiWjAIpRiJqNoDs9t5VsX
+	DL0TNuI6ljsbwXl+R8NQz5vRnOIaNR/SnQjc/znIDit2KfVOuvIEYO8PkI3jEBgdCC+BX58aArAjX
+	d8tFgnsw==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdNxD-0000000EHkY-3UU3;
-	Wed, 07 Jan 2026 07:27:40 +0000
+	id 1vdNxH-0000000EHkg-0su9;
+	Wed, 07 Jan 2026 07:27:43 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 05/24] NFS: remove nfs_inode_detach_delegation
-Date: Wed,  7 Jan 2026 08:26:56 +0100
-Message-ID: <20260107072720.1744129-6-hch@lst.de>
+Subject: [PATCH 06/24] NFS: remove nfs_start_delegation_return
+Date: Wed,  7 Jan 2026 08:26:57 +0100
+Message-ID: <20260107072720.1744129-7-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
 References: <20260107072720.1744129-1-hch@lst.de>
@@ -62,67 +62,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Fold it into the only caller.
+There is only one caller, so fold it into that.  With that,
+nfs_start_delegation_return
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/delegation.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ fs/nfs/delegation.c | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index b44e39a50499..cf01ebd3b3c5 100644
+index cf01ebd3b3c5..ec87463f196d 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -402,21 +402,6 @@ static struct nfs_delegation *nfs_detach_delegation(struct nfs_inode *nfsi,
- 	return delegation;
+@@ -336,17 +336,6 @@ nfs_start_delegation_return_locked(struct nfs_inode *nfsi)
+ 	return ret;
  }
  
 -static struct nfs_delegation *
--nfs_inode_detach_delegation(struct inode *inode)
+-nfs_start_delegation_return(struct nfs_inode *nfsi)
 -{
--	struct nfs_inode *nfsi = NFS_I(inode);
--	struct nfs_server *server = NFS_SERVER(inode);
 -	struct nfs_delegation *delegation;
 -
 -	rcu_read_lock();
--	delegation = rcu_dereference(nfsi->delegation);
--	if (delegation != NULL)
--		delegation = nfs_detach_delegation(nfsi, delegation, server);
+-	delegation = nfs_start_delegation_return_locked(nfsi);
 -	rcu_read_unlock();
 -	return delegation;
 -}
 -
- static void
- nfs_update_delegation_cred(struct nfs_delegation *delegation,
- 		const struct cred *cred)
-@@ -769,15 +754,23 @@ int nfs_client_return_marked_delegations(struct nfs_client *clp)
-  */
- void nfs_inode_evict_delegation(struct inode *inode)
+ static void nfs_abort_delegation_return(struct nfs_delegation *delegation,
+ 					struct nfs_server *server, int err)
  {
-+	struct nfs_inode *nfsi = NFS_I(inode);
-+	struct nfs_server *server = NFS_SERVER(inode);
+@@ -788,15 +777,18 @@ int nfs4_inode_return_delegation(struct inode *inode)
+ 	struct nfs_inode *nfsi = NFS_I(inode);
  	struct nfs_delegation *delegation;
  
--	delegation = nfs_inode_detach_delegation(inode);
+-	delegation = nfs_start_delegation_return(nfsi);
 -	if (delegation != NULL) {
--		set_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
--		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
--		nfs_do_return_delegation(inode, delegation, 1);
--		nfs_free_delegation(NFS_SERVER(inode), delegation);
+-		/* Synchronous recall of any application leases */
+-		break_lease(inode, O_WRONLY | O_RDWR);
+-		if (S_ISREG(inode->i_mode))
+-			nfs_wb_all(inode);
+-		return nfs_end_delegation_return(inode, delegation, 1);
 -	}
+-	return 0;
 +	rcu_read_lock();
-+	delegation = rcu_dereference(nfsi->delegation);
-+	if (delegation)
-+		delegation = nfs_detach_delegation(nfsi, delegation, server);
++	delegation = nfs_start_delegation_return_locked(nfsi);
 +	rcu_read_unlock();
 +
 +	if (!delegation)
-+		return;
++		return 0;
 +
-+	set_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
-+	set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
-+	nfs_do_return_delegation(inode, delegation, 1);
-+	nfs_free_delegation(server, delegation);
++	/* Synchronous recall of any application leases */
++	break_lease(inode, O_WRONLY | O_RDWR);
++	if (S_ISREG(inode->i_mode))
++		nfs_wb_all(inode);
++	return nfs_end_delegation_return(inode, delegation, 1);
  }
  
  /**
