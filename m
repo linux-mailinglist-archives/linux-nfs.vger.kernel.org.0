@@ -1,135 +1,169 @@
-Return-Path: <linux-nfs+bounces-17583-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17584-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE1F2CFFEDA
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 21:09:19 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BDB0CFFE68
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 21:03:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 774B83135CE4
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 19:50:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2B5AC300E82F
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 20:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDEC5342CAD;
-	Wed,  7 Jan 2026 19:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF04329E7F;
+	Wed,  7 Jan 2026 20:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9FNnZdG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fx7DRgq0";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="YRF5tVBf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315EA327C19
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 19:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC994332904
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 20:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767814855; cv=none; b=qRw9N+aVeiTtS9MyW9xmsB6tKOx8Gj8biO2DjgnLV5B7MfRpRDWW2MJKx9hdWIbIkBdqHey0QfqgavCdRlH8fukLTzFXeIXrQKWz15hN8yEP4xNeoM59oaRX1PLU7dggLz0DVC0dweClGJna+C7J/91u+Ps69dykpegs1XkHrzs=
+	t=1767816180; cv=none; b=peOSBN94M74bsJTiyfQyRteywgrUTy6OcL2KQskuKL9q0izrdsbL0b89JcCVmkYazVrwGTb1TJ2TUJ+qG5c91ziQHMhpvv3I1Ipms6wXE+J9uzDZaYNNOsuPSAGMKIPfCUVoEdRzvofuOUmGPvWn7bimLvBfE639V+Ev4lM2oLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767814855; c=relaxed/simple;
-	bh=qRtWmWqx16YvB31e07lKlGV9NR1dsgpHTNlz3eQIZcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0Ql3nISb6Phz00eyZfeQ7wU9gnOg5O7exVrFQCB6ZJlRABRNdDQ50UU/mxcKxplQKctyxQBBQ5SpnYOCUI+5ssDZvbpOK8pQ3zobjR3A6KwVyjKYcJru1Ia5ujtSMsHaezyTOCE5Wu+jwIxBVQvWANRvdrQo8f2R/b1vRhQJIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9FNnZdG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB8CC19422;
-	Wed,  7 Jan 2026 19:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767814854;
-	bh=qRtWmWqx16YvB31e07lKlGV9NR1dsgpHTNlz3eQIZcU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J9FNnZdGNMadrWmXcutouRFrm6A7CJTvDO6HQIsCL45Ep8EuJ7/gLbm8hFqfAW924
-	 yjDX7QYuNJlkSpXPG+Z4t32YkHvr8a6o+cFAiPqXzLrsl651gCgkn23BaTlpS668ro
-	 lB7iIm1Pf03qxVsbV/dWIx5XtXGQoz/pjYr+5FUaawRkWEOxk+5KdCDtdC1cGU+zhM
-	 EkTinDdLsz5DypM8HHAP9+puoYCU6vBH8exsVieN5oJWr63/HVw6Y4BCMS1gd6rmVD
-	 CMI4GJhLVL4uMXKB84cejv8RjhNugmba9z5e8vIMjA7ZGgwtxPTsmNuzCTkFiQYxqj
-	 mNkpQyGQVL22w==
-Date: Wed, 7 Jan 2026 14:40:53 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, linux-nfs@vger.kernel.org,
-	Chuck Lever <chuck.lever@oracle.com>,
-	jonathan.flynn@hammerspace.com
-Subject: Re: [RFC PATCH 2/2] NFSD: Add asynchronous write throttling support
-Message-ID: <aV62xd40mPWF6-_e@kernel.org>
-References: <20251219141105.1247093-1-cel@kernel.org>
- <20251219141105.1247093-3-cel@kernel.org>
- <20260107080057.GB19005@lst.de>
- <cc3a3e80-7b2b-4652-811b-c2a126daf9c7@kernel.org>
+	s=arc-20240116; t=1767816180; c=relaxed/simple;
+	bh=C56IoC/7pKu7IOe+bmIo3KG0TqDEmn/tNomGMdAluCU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VBLHQ7R07U3o0KZt5XvZjgPCStQsB414i26c0GBbxFUXgB5s8I5SxAPiXxhcCf/wq3MEiZhBrcqbVsa53BrFK+EWZMbCImOXh0/doMWaOzxyMkaIdkX58XhGxj2Fx+u8Xe4AlMW06ViXUKgUY2vLSDCuZ34rmAAy0mIziZtqkGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fx7DRgq0; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=YRF5tVBf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767816174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iu+APFi4DB1BEixYf1NERY7bmC13ljDpUozQin2rblQ=;
+	b=fx7DRgq0aRftvVxmFO7vKuj1KsVZde4v1libfEZMdoD9L+gYzFLiODi1qbQTOWca2LTDbF
+	Kd3yqWncnDze4xMKsAFm7ySOOKwdFQtoeCO3OV/8TJD/o1uom1QmR/FpINyok/ymYVQKx0
+	lXpmn7fdSXgRtBgtFowNbGBfbwJ6K/Y=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-167-OZ6xa6JNP3iNlyeiCxhYxQ-1; Wed, 07 Jan 2026 15:02:53 -0500
+X-MC-Unique: OZ6xa6JNP3iNlyeiCxhYxQ-1
+X-Mimecast-MFC-AGG-ID: OZ6xa6JNP3iNlyeiCxhYxQ_1767816172
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-790b7b3e56cso14077427b3.2
+        for <linux-nfs@vger.kernel.org>; Wed, 07 Jan 2026 12:02:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1767816172; x=1768420972; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Iu+APFi4DB1BEixYf1NERY7bmC13ljDpUozQin2rblQ=;
+        b=YRF5tVBf9i7M3G5iQCY/sPLkSHWaxqfgtZHG8OxXCLDNiRf2uHMROuL5CqDEiVHU2w
+         c5WLUpgAZQtP/0Aft0cnGSHfWsTEJ5NADIgYAPMwYDio7aQR+iSwtQXOzzQXmIKlHu2C
+         qmll2rAppmwYq6Smi+BjH91cYp7fYx/w28rRO1ESkHG04jCpbZUqaC0WxJgFjTUqAKga
+         QzG81ANGW42MdRv9UUNnDSTbJeFU/06DUzysqWRbCz+R2NjgAH0UFQEp2MF6am+xAaQp
+         0t8phTolrASVZMQx2X8tczyqD6LmGTzrW8zHsyeGqnbUMLMoWPhTDWMtQx1voGAyKkdJ
+         +09w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767816172; x=1768420972;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Iu+APFi4DB1BEixYf1NERY7bmC13ljDpUozQin2rblQ=;
+        b=gnBkzVCDWfxBQdeIF2VVwr1bY+g5fEdDNUiUil9qhjccnjArVblEpIisJ/U2tSooFf
+         KvrQm0fBqBO03H2f2UgMS+kAWLTw9Npr5SQq6N2tgzCS36b1kx0mNDWQNyp7iZMTG7cF
+         q/Ssqe9xqMUcw9OeuEfSq/Ns04gNTpkMY9otUrTQDZL0SmDcaor22t28R+DVJg8+Qyot
+         adE94MR7SRB0SY47iYuxQfzuxVCn9CIzM8XqBiYwwjbe3u362NLGODcL+3WYEOip5Tw0
+         NhZ1Dq05uuxoWCuVtIOGqm/z1iCm467slla8BE+D4ypr6Ukd+Wz1NH7ziDtM0APEmnKY
+         W78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX0zEMa9L/cjBOFDL1pvjtk+1M/nFqLoPsk6joTURi9PKPsCqujOJ9nU6zh9vZXwonNqplufMUMd8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxufCD6JEmGYDUcXYtmj253sPqtkZrzeYkXxO/EmmBOG5POthNE
+	Sfj+G2qigSpaI81YfCEDscxEAb7X9c7Au/uFS2y5e1JnrB02/EOsPmKx2gla3ZplejNnna9P6Z5
+	Qtzxy18SZ6YwguDaMHNQvS22Xq3AghWtbAqnVsArKVk4+7d5F/xHaKn1KPRWKNA==
+X-Gm-Gg: AY/fxX45xyGS+fcCeKCKTwLyjmcgiOsiJMLm4m/CD6AUt2FwHt1sS2nQ3sGTXmnnjRt
+	qRK+5/JWe751M+1gaIFQ2+1KMUXpAhinypV8BJdKu2Oj357ik/CX2YFwEf60/TRux9vWR8hByaX
+	0izK8paszkf5/zec68eImszYG27cGz6rcsx3HZFvGZXo73gq+SJjKRQKM03FPZB4TeGiCPhiwdd
+	5ahEacdJQWQRjnXRnGy3dyMZgpxBv0J/wSfoqei59jn4MYt5CBOpsv4kBFRN0qn7o4fTDWvRHuV
+	dNSCvZ1sKFpzPkeuPwfHrsw3fGmfSAmZpy2QXvTiGNzk31IMZetBsSaBvL0DqNVgRYQsyW15sao
+	YRxaOzuny1yripNKwVhEVI+54x2p1RnIW8mkQt93v
+X-Received: by 2002:a05:690c:6002:b0:78c:8cf2:e1a8 with SMTP id 00721157ae682-790b57fd697mr35186717b3.41.1767816172489;
+        Wed, 07 Jan 2026 12:02:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFtanv8xfnFTTRT6tEbrRIY8LovgzhbuRiJibqFx8Wg+Ad59na27viUk0nz6iFz80kLE3f9Q==
+X-Received: by 2002:a05:690c:6002:b0:78c:8cf2:e1a8 with SMTP id 00721157ae682-790b57fd697mr35186317b3.41.1767816172118;
+        Wed, 07 Jan 2026 12:02:52 -0800 (PST)
+Received: from li-4c4c4544-0032-4210-804c-c3c04f423534.ibm.com ([2600:1700:6476:1430::41])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-790aa5534f2sm22153297b3.10.2026.01.07.12.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 12:02:51 -0800 (PST)
+Message-ID: <591f69efdf89ba02c36b042faa3486eca0cec76d.camel@redhat.com>
+Subject: Re: [EXTERNAL] [PATCH 5/6] ceph: don't allow delegations to be set
+ on directories
+From: Viacheslav Dubeyko <vdubeyko@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>, Christian Brauner
+ <brauner@kernel.org>,  Al Viro <viro@zeniv.linux.org.uk>, Jan Kara
+ <jack@suse.cz>, Steve French <sfrench@samba.org>,  Paulo Alcantara	
+ <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam
+ Prasad N	 <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Bharath SM	
+ <bharathsm@microsoft.com>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker	 <anna@kernel.org>, Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov	 <lucho@ionkov.net>, Dominique Martinet
+ <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>,
+ Andreas Gruenbacher <agruenba@redhat.com>, Xiubo Li	 <xiubli@redhat.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Hans de Goede	 <hansg@kernel.org>,
+ NeilBrown <neil@brown.name>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, gfs2@lists.linux.dev, 
+	ceph-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date: Wed, 07 Jan 2026 12:02:49 -0800
+In-Reply-To: <20260107-setlease-6-19-v1-5-85f034abcc57@kernel.org>
+References: <20260107-setlease-6-19-v1-0-85f034abcc57@kernel.org>
+	 <20260107-setlease-6-19-v1-5-85f034abcc57@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc3a3e80-7b2b-4652-811b-c2a126daf9c7@kernel.org>
 
-On Wed, Jan 07, 2026 at 09:42:58AM -0500, Chuck Lever wrote:
-> On 1/7/26 3:00 AM, Christoph Hellwig wrote:
-> > On Fri, Dec 19, 2025 at 09:11:05AM -0500, Chuck Lever wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> When memory pressure occurs during buffered writes, the traditional
-> >> approach is for balance_dirty_pages() to put the writing thread to
-> >> sleep until dirty pages are flushed. For NFSD, this means server
-> >> threads block waiting for I/O, reducing overall server throughput.
-> >>
-> >> Add support for asynchronous write throttling using the BDP_ASYNC
-> >> flag to balance_dirty_pages_ratelimited_flags(). When enabled via:
-> >>
-> >>   /sys/kernel/debug/nfsd/write_async_throttle
-> > 
-> > Let me reiterate that I really, really hate all this magic debugs-fs
-> > enabled features.  Either they are gnuinely useful (think this would
-> > be such a thing) and they should be enabled unconditionally, or they
-> > are tradeoffs and should have a proper tunable not hidden in debugfs.
-> 
-> The use of debugfs here is because we don't yet have a coherent design
-> in mind -- this new facility is entirely experimental, and we need a
-> way to enable and disable it to make good comparisons, without making
-> immutable changes to the actual NFSD administrative interface.
-> 
-> "The RFC sign out front should have told ya."
-> 
-> But I agree, in the long term I most prefer no new administrative
-> controls -- it should just work if at all possible.
-> 
-> 
-> >> NFSD checks memory pressure before attempting buffered writes. If
-> >> balance_dirty_pages_ratelimited_flags() returns -EAGAIN (indicating
-> >> memory exhaustion), NFSD returns NFS4ERR_DELAY (or NFSERR_JUKEBOX for
-> >> NFSv3) to the client instead of blocking.
-> >>
-> >> This allows clients to back off and retry rather than having server
-> >> threads tied up waiting for writeback. The setting defaults to 0
-> >> (synchronous throttling) and can be combined with write_throttle for
-> >> layered throttling strategies.
-> >>
-> >> Note: NFSv2 does not support NFSERR_JUKEBOX, so async throttling is
-> >> automatically disabled for NFSv2 requests regardless of the setting.
-> > 
-> > This all seems very useful to me.  But it really needs to show numbers
-> > on how it helps.
-> 
-> Well if I can get this into operational shape, perhaps J. Flynn would
-> be interested in trying it out for us.
-> 
-> I'm happy to run with this one and drop (or postpone) 1/2, if that is
-> your assessment.
+On Wed, 2026-01-07 at 09:20 -0500, Jeff Layton wrote:
+> With the advent of directory leases, it's necessary to set the
+> ->setlease() handler in directory file_operations to properly deny them.
+>=20
+> Fixes: e6d28ebc17eb ("filelock: push the S_ISREG check down to ->setlease=
+ handlers")
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/ceph/dir.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> index 86d7aa594ea99335af3e91a95c0a418fdc1b8a8a..804588524cd570078ba59bf38=
+d2460950ca67daf 100644
+> --- a/fs/ceph/dir.c
+> +++ b/fs/ceph/dir.c
+> @@ -2214,6 +2214,7 @@ const struct file_operations ceph_dir_fops =3D {
+>  	.fsync =3D ceph_fsync,
+>  	.lock =3D ceph_lock,
+>  	.flock =3D ceph_flock,
+> +	.setlease =3D simple_nosetlease,
+>  };
+> =20
+>  const struct file_operations ceph_snapdir_fops =3D {
+> @@ -2221,6 +2222,7 @@ const struct file_operations ceph_snapdir_fops =3D =
+{
+>  	.llseek =3D ceph_dir_llseek,
+>  	.open =3D ceph_open,
+>  	.release =3D ceph_release,
+> +	.setlease =3D simple_nosetlease,
+>  };
+> =20
+>  const struct inode_operations ceph_dir_iops =3D {
 
-Probably a good start.  Definitely looks useful and worth measuring to
-see if buffered IO improves.
+Looks good.
 
-I can include it in a test kernel for Jon Flynn once you're happy with
-the patch and would like further testing (fyi I've rebased to latest
-6.18-stable but Jon hasn't done baseline testing of it yet, so we
-could kill 2 birds once ready).
+Reviewed-by: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
 
 Thanks,
-Mike
+Slava.
 
-ps. Jon, for further context see Chuck's original 2/2 patch:
-https://lore.kernel.org/linux-nfs/20251219141105.1247093-3-cel@kernel.org/
-
-And his cover letter:
-https://lore.kernel.org/linux-nfs/20251219141105.1247093-1-cel@kernel.org/
-Also patch 1/2, but consensus seems to be "focus on 2/2 first":
-https://lore.kernel.org/linux-nfs/20251219141105.1247093-2-cel@kernel.org/
 
