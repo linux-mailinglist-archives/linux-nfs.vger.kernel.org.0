@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17538-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17539-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAB30CFC5B5
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:31:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B7DCCFC5B8
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B4A3530AAD0E
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:28:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 516423026AB8
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CCA13AA2F;
-	Wed,  7 Jan 2026 07:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE19D1A9F9F;
+	Wed,  7 Jan 2026 07:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UdnfVq7D"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xdT1xB/X"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17C71A9F9F
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD6213AA2F
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767770907; cv=none; b=fKUGfAapG/dN2PzYmRcQFEPkYDLGrFOX91MQ2Xc8eg9d+h4GwjRZzgKeDhPijQ8hmlEBNdQNQWZfC6/wwXRIOyaXjxmqnc7P4p79mnOkpePx2OfzL3h35mUtMCaoRmYeRT9HSC0uCcTMvkACfbGbB1toOHdA8aZoKyy8rIFhbR0=
+	t=1767770910; cv=none; b=XiTTwDphIKzvHJh3LODpnihSc8iteAaIB3BqFHLyi3rmvN9X/25izR+OSuL1N94wYboNOzp0suMjAjbilYiJ5zKarNYuqflY0EmVBeDLb02gq26Nwt68TD1bzeGOOy4hzDDSjGzF1E+4gbAPILFmRlAd8pGT5mFnFtxf2Bg1lRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767770907; c=relaxed/simple;
-	bh=lD86xC0FVhIQzEDJZCGJH9lyHL5pKqwPP4KLUsGZ+Cs=;
+	s=arc-20240116; t=1767770910; c=relaxed/simple;
+	bh=m9QgKLe8h1bv3pHvhvM9nql2gJQ1NaTpeu4uqqZd98g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dHo8kq6S33rPM1E0Lb28+0v1aNbTQDg8z6CVMliDeYboDPOU/+OrQ4h2NwOA1kjZNWysr1OIlcEUhR6QivwaR2IJlVk+zootTNjTkacyz827Npzs+T+bCMix6eiFq2Luj6zE8ebYUIpGoAGonQdjulruM28qexZ6gU1UtBiCPlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UdnfVq7D; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=lV9xXKBG6NnI4kWIiih9YPgNT+TtQIr0SbeAv3itNdmeO2HEFdiJMKSphaivs3SuYzW3LxsC/p20Pdkz7UfnlqaLDOCRPJX/bRb2elZ28wdkX7/EmSrrslL2KqLp1I3EWpbP6HwMM61ehgXVC7MgXtAe0cmQDxhdpnd5qZKCObg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xdT1xB/X; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=97RDJdsFx3pXS0tJj474K13BuECSQd8mDNi0uDkWbCM=; b=UdnfVq7DoVNwCTxQpHj0JR0fg6
-	rPfbEfm3HEHlsw9/FFe3IGMURRDNYgR5ni16fWZQjIkXB/4sBBSx3i+NVz+4O7LBScCpb9Lm5GRIA
-	f5E9uFxGg/YrsJF0z5chsPhOf0FUlOUZWwVmLKXlExbDbH0ul15jgtaJtHQ9mO3mAkHiUz7aPgoFt
-	EuwF4b8C/g5CfpkebGUEQDDUtCUeImHcHjZHeXOA8R7+9MsYZrEhbs/BQ4dvWznAzgUM32N8xUOvx
-	vUWfefVuF61zynVmMlT0iCVVegbJUuRbPDxpGgoc3s95YeDZKRsDD4vlF8o0ktqo+RRRpUN2RrpE/
-	XAVS79ww==;
+	bh=cKoFTt3vkxqRYnbs43q5VOjAUUvAoKeuY0dnUGCwgUg=; b=xdT1xB/Xyq8sGUi2mUZueT3r9y
+	CvWwlQZ7Yy61aL4FMKwPHIlV4lselZ4tmlnWmTOHA8DsMgFV3ZGORizJE6L6zrA5EQCCRIcmWk5pU
+	m2KrdUjm2pcmgzSQJSiZGvUhoajnI06efwmLlYLsMHvL3SvNjsl169mp9QYB7Lrdvl2lchuh7PLMY
+	VY53uW1gJ6xPTLiOhw1duff6Ikt7zJBGq0jrL+rVWceYpzhSmxYgm92v7wwlgzdy8izV4YFnhuVt2
+	FOGFBzYwv8j8gZlCs1rUVqkjgJw5ysuKgNBpmFq3QLQn4mVpUKBV9EcQuezZobWXj3j+PQIHGWu/8
+	slKG/y9A==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdNxw-0000000EHpY-2qFn;
-	Wed, 07 Jan 2026 07:28:25 +0000
+	id 1vdNy0-0000000EHqM-1o2l;
+	Wed, 07 Jan 2026 07:28:28 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 16/24] NFS: simplify the detached delegation check in update_open_stateid
-Date: Wed,  7 Jan 2026 08:27:07 +0100
-Message-ID: <20260107072720.1744129-17-hch@lst.de>
+Subject: [PATCH 17/24] NFS: take a delegation reference in nfs4_get_valid_delegation
+Date: Wed,  7 Jan 2026 08:27:08 +0100
+Message-ID: <20260107072720.1744129-18-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
 References: <20260107072720.1744129-1-hch@lst.de>
@@ -62,39 +62,285 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-When nfs_detach_delegation_locked detaches a delegation from an inode,
-it clears both nfsi->delegation and delegation->inode.  Use the later
-in update_open_stateid to check for a detached inode, as that avoids
-an extra local variable, and removes the need for a RCU derefernence
-as we already hold the lock in the delegation.  This prepares for
-removing the surrounding RCU critical section.
+Currently most work on struct nfs_delegation happens directly under RCU
+protection.  This is generally fine, despite that long RCU sections are
+not good for performance.  But for operations later taking a reference
+to the delegation to perform blocking work, refcount_inc is used, which
+can be racy against dropping the last reference and thus lead to use
+after frees in extremely rare cases.
+
+Fix this by taking a reference in nfs4_get_valid_delegation using
+refcount_inc_not_zero so that the callers have a stabilized reference
+they can work with and can be moved outside the RCU critical section.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/nfs4proc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/callback_proc.c | 13 ++++++---
+ fs/nfs/delegation.c    | 62 ++++++++++++++++++++++--------------------
+ fs/nfs/delegation.h    |  1 +
+ fs/nfs/nfs4proc.c      | 26 +++++++++---------
+ 4 files changed, 56 insertions(+), 46 deletions(-)
 
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index 8397c43358bd..57550020c819 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -51,12 +51,18 @@ __be32 nfs4_callback_getattr(void *argp, void *resp,
+ 				-ntohl(res->status));
+ 		goto out;
+ 	}
+-	rcu_read_lock();
++
+ 	delegation = nfs4_get_valid_delegation(inode);
+-	if (delegation == NULL || (delegation->type & FMODE_WRITE) == 0)
++	if (!delegation)
+ 		goto out_iput;
+-	res->size = i_size_read(inode);
++	if ((delegation->type & FMODE_WRITE) == 0) {
++		nfs_put_delegation(delegation);
++		goto out_iput;
++	}
+ 	res->change_attr = delegation->change_attr;
++	nfs_put_delegation(delegation);
++
++	res->size = i_size_read(inode);
+ 	if (nfs_have_writebacks(inode))
+ 		res->change_attr++;
+ 	res->atime = inode_get_atime(inode);
+@@ -71,7 +77,6 @@ __be32 nfs4_callback_getattr(void *argp, void *resp,
+ 			  FATTR4_WORD2_TIME_DELEG_MODIFY) & args->bitmap[2];
+ 	res->status = 0;
+ out_iput:
+-	rcu_read_unlock();
+ 	trace_nfs4_cb_getattr(cps->clp, &args->fh, inode, -ntohl(res->status));
+ 	nfs_iput_and_deactive(inode);
+ out:
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index f7d5622c625a..811e84b559ee 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -66,7 +66,7 @@ static struct nfs_delegation *nfs_get_delegation(struct nfs_delegation *delegati
+ 	return delegation;
+ }
+ 
+-static void nfs_put_delegation(struct nfs_delegation *delegation)
++void nfs_put_delegation(struct nfs_delegation *delegation)
+ {
+ 	if (refcount_dec_and_test(&delegation->refcount))
+ 		__nfs_free_delegation(delegation);
+@@ -104,10 +104,14 @@ struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode)
+ {
+ 	struct nfs_delegation *delegation;
+ 
++	rcu_read_lock();
+ 	delegation = rcu_dereference(NFS_I(inode)->delegation);
+-	if (nfs4_is_valid_delegation(delegation, 0))
+-		return delegation;
+-	return NULL;
++	if (!nfs4_is_valid_delegation(delegation, 0) ||
++	    !refcount_inc_not_zero(&delegation->refcount))
++		delegation = NULL;
++	rcu_read_unlock();
++
++	return delegation;
+ }
+ 
+ static int nfs4_do_check_delegation(struct inode *inode, fmode_t type,
+@@ -789,10 +793,11 @@ void nfs4_inode_set_return_delegation_on_close(struct inode *inode)
+ 
+ 	if (!inode)
+ 		return;
+-	rcu_read_lock();
++
+ 	delegation = nfs4_get_valid_delegation(inode);
+ 	if (!delegation)
+-		goto out;
++		return;
++
+ 	spin_lock(&delegation->lock);
+ 	if (!delegation->inode)
+ 		goto out_unlock;
+@@ -806,8 +811,7 @@ void nfs4_inode_set_return_delegation_on_close(struct inode *inode)
+ 	spin_unlock(&delegation->lock);
+ 	if (ret)
+ 		nfs_clear_verifier_delegated(inode);
+-out:
+-	rcu_read_unlock();
++	nfs_put_delegation(delegation);
+ 	nfs_end_delegation_return(inode, ret, 0);
+ }
+ 
+@@ -823,10 +827,10 @@ void nfs4_inode_return_delegation_on_close(struct inode *inode)
+ 	struct nfs_delegation *delegation;
+ 	struct nfs_delegation *ret = NULL;
+ 
+-	rcu_read_lock();
+ 	delegation = nfs4_get_valid_delegation(inode);
+ 	if (!delegation)
+-		goto out;
++		return;
++
+ 	if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags) ||
+ 	    atomic_long_read(&NFS_SERVER(inode)->nr_active_delegations) >=
+ 	    nfs_delegation_watermark) {
+@@ -842,8 +846,8 @@ void nfs4_inode_return_delegation_on_close(struct inode *inode)
+ 		if (ret)
+ 			nfs_clear_verifier_delegated(inode);
+ 	}
+-out:
+-	rcu_read_unlock();
++
++	nfs_put_delegation(delegation);
+ 	nfs_end_delegation_return(inode, ret, 0);
+ }
+ 
+@@ -858,17 +862,17 @@ void nfs4_inode_return_delegation_on_close(struct inode *inode)
+ int nfs4_inode_make_writeable(struct inode *inode)
+ {
+ 	struct nfs_delegation *delegation;
++	int error = 0;
+ 
+-	rcu_read_lock();
+ 	delegation = nfs4_get_valid_delegation(inode);
+-	if (delegation == NULL ||
+-	    (nfs4_has_session(NFS_SERVER(inode)->nfs_client) &&
+-	     (delegation->type & FMODE_WRITE))) {
+-		rcu_read_unlock();
++	if (!delegation)
+ 		return 0;
+-	}
+-	rcu_read_unlock();
+-	return nfs4_inode_return_delegation(inode);
++
++	if (!nfs4_has_session(NFS_SERVER(inode)->nfs_client) ||
++	    !(delegation->type & FMODE_WRITE))
++		error = nfs4_inode_return_delegation(inode);
++	nfs_put_delegation(delegation);
++	return error;
+ }
+ 
+ static void
+@@ -1111,24 +1115,24 @@ int nfs_async_inode_return_delegation(struct inode *inode,
+ 	struct nfs_client *clp = server->nfs_client;
+ 	struct nfs_delegation *delegation;
+ 
+-	rcu_read_lock();
+ 	delegation = nfs4_get_valid_delegation(inode);
+-	if (delegation == NULL)
+-		goto out_enoent;
++	if (!delegation)
++		return -ENOENT;
++
+ 	if (stateid != NULL &&
+-	    !clp->cl_mvops->match_stateid(&delegation->stateid, stateid))
+-		goto out_enoent;
++	    !clp->cl_mvops->match_stateid(&delegation->stateid, stateid)) {
++		nfs_put_delegation(delegation);
++		return -ENOENT;
++	}
++
+ 	nfs_mark_return_delegation(server, delegation);
+-	rcu_read_unlock();
++	nfs_put_delegation(delegation);
+ 
+ 	/* If there are any application leases or delegations, recall them */
+ 	break_lease(inode, O_WRONLY | O_RDWR | O_NONBLOCK);
+ 
+ 	nfs_delegation_run_state_manager(clp);
+ 	return 0;
+-out_enoent:
+-	rcu_read_unlock();
+-	return -ENOENT;
+ }
+ 
+ static struct inode *
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index fef1f4126e8f..d1c5da3e66ea 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -80,6 +80,7 @@ bool nfs4_copy_delegation_stateid(struct inode *inode, fmode_t flags, nfs4_state
+ bool nfs4_refresh_delegation_stateid(nfs4_stateid *dst, struct inode *inode);
+ 
+ struct nfs_delegation *nfs4_get_valid_delegation(const struct inode *inode);
++void nfs_put_delegation(struct nfs_delegation *delegation);
+ void nfs_mark_delegation_referenced(struct nfs_delegation *delegation);
+ int nfs4_have_delegation(struct inode *inode, fmode_t type, int flags);
+ int nfs4_check_delegation(struct inode *inode, fmode_t type);
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 3b4758e887e4..6be300e8551a 100644
+index 6be300e8551a..5fe5b503dd89 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -1907,7 +1907,6 @@ int update_open_stateid(struct nfs4_state *state,
- {
- 	struct nfs_server *server = NFS_SERVER(state->inode);
- 	struct nfs_client *clp = server->nfs_client;
--	struct nfs_inode *nfsi = NFS_I(state->inode);
- 	struct nfs_delegation *deleg_cur;
- 	nfs4_stateid freeme = { };
- 	int ret = 0;
-@@ -1926,7 +1925,7 @@ int update_open_stateid(struct nfs4_state *state,
- 		goto no_delegation;
+@@ -1615,10 +1615,11 @@ static bool can_open_delegated(const struct inode *inode, fmode_t fmode,
+ 	struct nfs_delegation *delegation;
+ 	bool ret = false;
  
- 	spin_lock(&deleg_cur->lock);
--	if (rcu_dereference(nfsi->delegation) != deleg_cur ||
-+	if (!deleg_cur->inode ||
- 	   test_bit(NFS_DELEGATION_RETURNING, &deleg_cur->flags) ||
- 	    (deleg_cur->type & fmode) != fmode)
- 		goto no_delegation_unlock;
+-	rcu_read_lock();
+ 	delegation = nfs4_get_valid_delegation(inode);
+-	if (!delegation || (delegation->type & fmode) != fmode)
+-		goto out_unlock;
++	if (!delegation)
++		return false;
++	if ((delegation->type & fmode) != fmode)
++		goto out_put_delegation;
+ 
+ 	switch (claim) {
+ 	case NFS4_OPEN_CLAIM_PREVIOUS:
+@@ -1637,8 +1638,8 @@ static bool can_open_delegated(const struct inode *inode, fmode_t fmode,
+ 		break;
+ 	}
+ 
+-out_unlock:
+-	rcu_read_unlock();
++out_put_delegation:
++	nfs_put_delegation(delegation);
+ 	return ret;
+ }
+ 
+@@ -1913,10 +1914,11 @@ int update_open_stateid(struct nfs4_state *state,
+ 
+ 	fmode &= (FMODE_READ|FMODE_WRITE);
+ 
+-	rcu_read_lock();
+ 	spin_lock(&state->owner->so_lock);
+ 	if (open_stateid != NULL) {
++		rcu_read_lock();
+ 		nfs_state_set_open_stateid(state, open_stateid, fmode, &freeme);
++		rcu_read_unlock();
+ 		ret = 1;
+ 	}
+ 
+@@ -1940,11 +1942,11 @@ int update_open_stateid(struct nfs4_state *state,
+ 	ret = 1;
+ no_delegation_unlock:
+ 	spin_unlock(&deleg_cur->lock);
++	nfs_put_delegation(deleg_cur);
+ no_delegation:
+ 	if (ret)
+ 		update_open_stateflags(state, fmode);
+ 	spin_unlock(&state->owner->so_lock);
+-	rcu_read_unlock();
+ 
+ 	if (test_bit(NFS_STATE_RECLAIM_NOGRACE, &state->flags))
+ 		nfs4_schedule_state_manager(clp);
+@@ -1978,14 +1980,12 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
+ 	struct nfs_delegation *delegation;
+ 
+ 	fmode &= FMODE_READ|FMODE_WRITE;
+-	rcu_read_lock();
+ 	delegation = nfs4_get_valid_delegation(inode);
+-	if (delegation == NULL || (delegation->type & fmode) == fmode) {
+-		rcu_read_unlock();
++	if (!delegation)
+ 		return;
+-	}
+-	rcu_read_unlock();
+-	nfs4_inode_return_delegation(inode);
++	if ((delegation->type & fmode) != fmode)
++		nfs4_inode_return_delegation(inode);
++	nfs_put_delegation(delegation);
+ }
+ 
+ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
 -- 
 2.47.3
 
