@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-17535-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17536-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58BCECFC5A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21F46CFC5B2
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 08:31:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1CEC3082D06
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:28:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30C3D30A7C00
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 07:28:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AF72765F8;
-	Wed,  7 Jan 2026 07:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95119250BEC;
+	Wed,  7 Jan 2026 07:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TwAoasac"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dllUSKZk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284DF27C162
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243A9280332
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 07:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767770893; cv=none; b=PVTEuW/jwcQoV8ydvdHL2Mk5SkxP3lB5UiRlUBHC622DlnzEXt79ABvTVr/nLBwOQtv2LcTN8BAnfQhMcRDjLmSVP3/WNwvS9hDukb/UGy+I8F4ZF816O3yJy/yZfRC8GNLBUr25UPBPgEnMKPrXXVO+MAMHpkllhijvZ8o2JZg=
+	t=1767770897; cv=none; b=orMsPP1L9PiXLMYD1f2iJ/DcXYTS3TQQQQQ6leDxC0r/KZYwS5kO4tKP2qaXEUL8Y7/tzQfZlYfvybZBM6C7KJo1v8wpoHEEGC4Y0dWm6CuUQNr16IBVpoeRqeEFiJi31vnZywIt7tOR7vbARAYxGFo5TWutSeiWDWN9ZmCewHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767770893; c=relaxed/simple;
-	bh=k3+19SG2VYcqni1VP6BYrzHvBF0WVrcZU2zgiHcNDAw=;
+	s=arc-20240116; t=1767770897; c=relaxed/simple;
+	bh=flU3GauvlQ6EwG7uHSGRzVN+UkFNRe7OndK8ercjFzE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tFF/R07YjfVEQNw2ukESPZaxICr1JXipAsGil6lr1JbQ79YJ76G1CE/qox18P3PgB2q3yoHlvlyIqecRCAaI/1n8Lupf+Ye37UaAFnjhZ6Y5rC7l9+seGbYpsT8pQ7lT+LC9DuTboBp0TA2lMUKwXQit6vIidmJ7bK5x6mjfCgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TwAoasac; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=RRuptF5lZt2R6AIb3QJw0lQAeGeT5nrbWttQfsj6R64NxDCWE2lutMmWiWTNJm0tBP4LyEQ1M5hBo+/VSpw/W9fIKbXrUQbBPPfdqOOvog4b2aiMbvTr4IIvqP7LXE2J6Px8cSFrcSdKUlhrFQ3oQPH4likyALG1VfFb9nLjnDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dllUSKZk; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=3asxI+gFl1gMSxE22oNIY9XgyJADEY/5BV3nZO569ng=; b=TwAoasac3u4BCWeKPxmVzMxxeM
-	OpSvdCpYtzDJPHOV3Fm44+SIk4kptdmm02Zn5omYK5dDryJb7Qvkvjsu3t9/Q55/+PO83ZuhXvidF
-	Qhzt61vCXB41qWQTkuR06jR4HJmneql7/75kNKAFjI5pIrokFJ9NiznY3PcacVYZnFy2hEk+pbhs/
-	jhgsCUQAxQoATafRPwuXSlQn4x01XzcGQ8mBLgLLStHUDA+eRLU8ETiBdhvCIPkzrAAdU4w6yGZnH
-	EUVyMvUBy3j5pKPWASEw4LzYcZMwwHNzA38I+eajXfyWiTemQITTzHnQ+5JrDbYhI0OYNzp9hL0ja
-	cSxYj5+g==;
+	bh=C9V4AqoH893EcmxxBgVz71lLnnKCpqTMA956yiGcZCE=; b=dllUSKZkmAicA0cCquOS6eVd+m
+	9mQoWDavkj9mMak/Mu8VxMj2o/3D4IpCgDOFVOxEdDjjM/tasbyHyvil/1vTX3wGECM0viN0P2AdG
+	cQGQpIvlDcRNDE1Qa2cs5dVPzTnRlENbiDO3VPu8awX42hdZrqSwvyPOmZ2U41iTbVswgIGg4RcZG
+	2YcRw/rRDbb0vTkzdAcAADnMvvFviY5EG8bYiiOPGGX8GRdjWxaLVl6wgzWhGo/HJJUarqeLwvAd0
+	lupUbVvap6sn0IEhITgAJw1+u/+tf9Avll1HHKxgRfICl6DPEYpJcaIdWluwt6CHOMQBe17NRTmxn
+	4ObSRxkw==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdNxj-0000000EHmx-115q;
-	Wed, 07 Jan 2026 07:28:11 +0000
+	id 1vdNxn-0000000EHnG-0BwX;
+	Wed, 07 Jan 2026 07:28:15 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 13/24] NFS: move delegation lookup into can_open_delegated
-Date: Wed,  7 Jan 2026 08:27:04 +0100
-Message-ID: <20260107072720.1744129-14-hch@lst.de>
+Subject: [PATCH 14/24] NFS: return bool from nfs_detach_delegation{,_locked}
+Date: Wed,  7 Jan 2026 08:27:05 +0100
+Message-ID: <20260107072720.1744129-15-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
 References: <20260107072720.1744129-1-hch@lst.de>
@@ -62,129 +62,101 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Keep the delegation handling in a single place, and just return the
-stateid in an optional argument.
+nfs_detach_delegation always returns either the passed in delegation
+or NULL, simplify this to a bool return.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/nfs4proc.c | 65 ++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 32 deletions(-)
+ fs/nfs/delegation.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ec1ce593dea2..3b4758e887e4 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1609,26 +1609,37 @@ static int can_open_cached(struct nfs4_state *state, fmode_t mode,
- 	return ret;
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 5141f6e5def1..6946b48584f8 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -345,7 +345,7 @@ static void nfs_abort_delegation_return(struct nfs_delegation *delegation,
+ 	spin_unlock(&delegation->lock);
  }
  
--static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
--		enum open_claim_type4 claim)
-+static bool can_open_delegated(const struct inode *inode, fmode_t fmode,
-+		enum open_claim_type4 claim, nfs4_stateid *stateid)
- {
--	if (delegation == NULL)
--		return 0;
--	if ((delegation->type & fmode) != fmode)
--		return 0;
-+	struct nfs_delegation *delegation;
-+	bool ret = false;
-+
-+	rcu_read_lock();
-+	delegation = nfs4_get_valid_delegation(inode);
-+	if (!delegation || (delegation->type & fmode) != fmode)
-+		goto out_unlock;
-+
- 	switch (claim) {
--	case NFS4_OPEN_CLAIM_NULL:
--	case NFS4_OPEN_CLAIM_FH:
--		break;
- 	case NFS4_OPEN_CLAIM_PREVIOUS:
--		if (!test_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags))
-+		if (test_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags))
- 			break;
- 		fallthrough;
-+	case NFS4_OPEN_CLAIM_NULL:
-+	case NFS4_OPEN_CLAIM_FH:
-+		nfs_mark_delegation_referenced(delegation);
-+		/* Save the delegation stateid */
-+		if (stateid)
-+			nfs4_stateid_copy(stateid, &delegation->stateid);
-+		ret = true;
-+		break;
- 	default:
--		return 0;
-+		break;
+-static struct nfs_delegation *
++static bool
+ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
+ 		struct nfs_delegation *delegation,
+ 		struct nfs_client *clp)
+@@ -356,13 +356,13 @@ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
+ 
+ 	trace_nfs4_detach_delegation(&nfsi->vfs_inode, delegation->type);
+ 
+-	if (deleg_cur == NULL || delegation != deleg_cur)
+-		return NULL;
++	if (delegation != deleg_cur)
++		return false;
+ 
+ 	spin_lock(&delegation->lock);
+ 	if (!delegation->inode) {
+ 		spin_unlock(&delegation->lock);
+-		return NULL;
++		return false;
  	}
--	nfs_mark_delegation_referenced(delegation);
--	return 1;
-+
-+out_unlock:
-+	rcu_read_unlock();
+ 	hlist_del_init_rcu(&delegation->hash);
+ 	list_del_rcu(&delegation->super_list);
+@@ -370,19 +370,20 @@ nfs_detach_delegation_locked(struct nfs_inode *nfsi,
+ 	rcu_assign_pointer(nfsi->delegation, NULL);
+ 	spin_unlock(&delegation->lock);
+ 	clear_bit(NFS_INO_REQ_DIR_DELEG, &nfsi->flags);
+-	return delegation;
++	return true;
+ }
+ 
+-static struct nfs_delegation *nfs_detach_delegation(struct nfs_inode *nfsi,
++static bool nfs_detach_delegation(struct nfs_inode *nfsi,
+ 		struct nfs_delegation *delegation,
+ 		struct nfs_server *server)
+ {
+ 	struct nfs_client *clp = server->nfs_client;
++	bool ret;
+ 
+ 	spin_lock(&clp->cl_lock);
+-	delegation = nfs_detach_delegation_locked(nfsi, delegation, clp);
++	ret = nfs_detach_delegation_locked(nfsi, delegation, clp);
+ 	spin_unlock(&clp->cl_lock);
+-	return delegation;
 +	return ret;
  }
  
- static void update_open_stateflags(struct nfs4_state *state, fmode_t fmode)
-@@ -1981,7 +1992,6 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
- static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- {
- 	struct nfs4_state *state = opendata->state;
--	struct nfs_delegation *delegation;
- 	int open_mode = opendata->o_arg.open_flags;
- 	fmode_t fmode = opendata->o_arg.fmode;
- 	enum open_claim_type4 claim = opendata->o_arg.claim;
-@@ -1996,15 +2006,10 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
- 			goto out_return_state;
- 		}
- 		spin_unlock(&state->owner->so_lock);
--		rcu_read_lock();
--		delegation = nfs4_get_valid_delegation(state->inode);
--		if (!can_open_delegated(delegation, fmode, claim)) {
--			rcu_read_unlock();
-+
-+		if (!can_open_delegated(state->inode, fmode, claim, &stateid))
- 			break;
--		}
--		/* Save the delegation */
--		nfs4_stateid_copy(&stateid, &delegation->stateid);
--		rcu_read_unlock();
-+
- 		nfs_release_seqid(opendata->o_arg.seqid);
- 		if (!opendata->is_recover) {
- 			ret = nfs_may_open(state->inode, state->owner->so_cred, open_mode);
-@@ -2556,16 +2561,14 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
- 	 * a delegation instead.
- 	 */
- 	if (data->state != NULL) {
--		struct nfs_delegation *delegation;
--
- 		if (can_open_cached(data->state, data->o_arg.fmode,
- 					data->o_arg.open_flags, claim))
- 			goto out_no_action;
--		rcu_read_lock();
--		delegation = nfs4_get_valid_delegation(data->state->inode);
--		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
--			goto unlock_no_action;
--		rcu_read_unlock();
-+		if (can_open_delegated(data->state->inode, data->o_arg.fmode,
-+				claim, NULL)) {
-+			trace_nfs4_cached_open(data->state);
-+			goto out_no_action;
-+		}
+ static void
+@@ -492,9 +493,9 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
+ 					&old_delegation->flags))
+ 			goto out;
  	}
- 	/* Update client id. */
- 	data->o_arg.clientid = clp->cl_clientid;
-@@ -2601,9 +2604,7 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
- 			data->o_arg.createmode = NFS4_CREATE_GUARDED;
- 	}
- 	return;
--unlock_no_action:
--	trace_nfs4_cached_open(data->state);
--	rcu_read_unlock();
-+
- out_no_action:
- 	task->tk_action = NULL;
- out_wait:
+-	freeme = nfs_detach_delegation_locked(nfsi, old_delegation, clp);
+-	if (freeme == NULL)
++	if (!nfs_detach_delegation_locked(nfsi, old_delegation, clp))
+ 		goto out;
++	freeme = old_delegation;
+ add_new:
+ 	/*
+ 	 * If we didn't revalidate the change attribute before setting
+@@ -732,8 +733,8 @@ void nfs_inode_evict_delegation(struct inode *inode)
+ 
+ 	rcu_read_lock();
+ 	delegation = rcu_dereference(nfsi->delegation);
+-	if (delegation)
+-		delegation = nfs_detach_delegation(nfsi, delegation, server);
++	if (delegation && !nfs_detach_delegation(nfsi, delegation, server))
++		delegation = NULL;
+ 	rcu_read_unlock();
+ 
+ 	if (!delegation)
+@@ -1240,7 +1241,7 @@ static int nfs_server_reap_unclaimed_delegations(struct nfs_server *server,
+ 		rcu_read_unlock();
+ 		if (delegation != NULL) {
+ 			if (nfs_detach_delegation(NFS_I(inode), delegation,
+-						server) != NULL) {
++					server)) {
+ 				nfs_mark_delegation_revoked(server, delegation);
+ 				nfs_put_delegation(delegation);
+ 			}
 -- 
 2.47.3
 
