@@ -1,175 +1,117 @@
-Return-Path: <linux-nfs+bounces-17520-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17521-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 127BFCFB5F3
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 00:44:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0460FCFC0F1
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 06:23:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 389F430006ED
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jan 2026 23:44:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3D0C43002D17
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 05:23:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7486D317704;
-	Tue,  6 Jan 2026 23:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADD271A256B;
+	Wed,  7 Jan 2026 05:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+H+Amk1"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kRtq2YhZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B67313283
-	for <linux-nfs@vger.kernel.org>; Tue,  6 Jan 2026 23:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D38D1F94A
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 05:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767743061; cv=none; b=Dzw9OR3ny0PUoMVq9Cc8bcx2xAhgcsp+NdfBh1/WbAGcQ4ZXIb/ZVzie1TIA/Txus9BXAYIuh+KTU6E0xdymFKVzeShP0SCfgQ00HOmjuzokh76Re8SaLXHzYCw2Ju/rH6VbqUTK6fBNBmv+n8W+yVUEgMn0BYjqZm8k6hkxoe8=
+	t=1767763396; cv=none; b=hucxgXDBdn2H5HqJuMiZSqaNBk8SLfBwr1k66QIZEVHWL3Vh2fqZupdHHy+llyPfFyAQbTkzr8u7Q13i23Qygd88qCyJG6lJXYlMAgeb45vVHMUM50enQhYwJ8PRasXXGlNy0VcRhQRnkX5RYNyaew94LAkHVgsg/iUUxEa4Uk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767743061; c=relaxed/simple;
-	bh=4oIBw8vquVvkC3JSkAxhLFrQxF7OfwD9hi6LKxFsZzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPrJOUNi/pPbetCEb/DuHgl40E0aR/ia+BbLxVMHChMpszb7SM1mAN3+ba2PvtEs7pe1/4EohhNtEF72Qj1Ecu56vcYo2OyuaNvaKF5HSGk88BFs/GAZsNv01x27Uz5ALJOf3JA19FeU5n1DYVJF2G8glt4mj542VL1qJyts4IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+H+Amk1; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64b83949fdaso2352408a12.2
-        for <linux-nfs@vger.kernel.org>; Tue, 06 Jan 2026 15:44:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767743054; x=1768347854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VlV06R+ePSmgAvtLnRpm9eK8uOIviZZ52WXgAw6QoxI=;
-        b=T+H+Amk18fVMjKFlCH4dTMYteFxJCYEDxtvJkM85USYpgVQ3xmgSNKb5sY/D7XKkJC
-         28XYkT9kHRTJsdr3mp6PsS1ERvw22+exX/3C2YDbFXu1glPjrbiYUD+58a2jqTD2EBKW
-         K/z8Nk3tCSRY2OS4GZzyZRsFWA6ML5ag/VwrX4Wi2d3M2zDOdF121Fb6XQ5zW/pfMLBy
-         vThUtrpbQUTd4al2Wmz8OlS7q3TCgWc6EZ8nawo2OvUGyi9e3F7qD44Hgmmx8Irtlxh+
-         Uzq+15FQ6H7op1k10yIhWIeey9bEFPO+feRKShhI8pQ4lwe9Yw+HIXJOxK7xy8d++VF7
-         J+OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767743054; x=1768347854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VlV06R+ePSmgAvtLnRpm9eK8uOIviZZ52WXgAw6QoxI=;
-        b=eBRatttACLqk2s1UIu+rRVz3NPGw8VNmIiN6WM2pybZOMDAwM4eZt0DGIU2UXrPhp2
-         6AHmHVJ2Dvbsp5ayU3N90aLSCfshQgDs2UZzBwTUeKBXj0ndYS48tKndzjjPMG/5+rae
-         f0mtr+iWCK0+2YPFTj3HjWaw2F3mT95NCHF0DET7KAg5zIh0n7z62goXQQf4z2bkq9PM
-         8TVPxUopjgLBeSoxXeIOahyxwEG2ZNEgJLDYTvUA1SwlYxNVtkwGyEDfKK0apzxLPbyM
-         6uSshWYVI0+Pvq+w8a1RpHIp58lecXoUrgFAKOA2jItNt+Z5TSiyklyAfJ77kqZGezEr
-         F0KQ==
-X-Gm-Message-State: AOJu0YzpgbYtVEXPMivcOChkBMwxA+b9OYMb+9RmWPTAWX5s5rnlmiLJ
-	jfqxVICEXyxY9nvqaUsKLVL1aKoMnaqo3/Ks+XBbwYT58PSSgWNNZfWSRGeymNdu14B4SP1O0mJ
-	t6cO9ctywpsotYihNKPvp/f6+/pMkMmFSLCE=
-X-Gm-Gg: AY/fxX4gtwMKjbNS8MIuA5wlACn/p0eIjjU9MqvfknKsCDVX3H9S+yBh6Rm/gbNipdO
-	Cs2+9Pnr8QB7+fSkAwGEnayG3mWqh+Dl6lTTLy9RHviNaj3LfjFkV0TRdicy+EK1Q3YGxPcqSIA
-	fPZyB1jWtQbR/mVADOuU1SBg/AlNMlCxPQMCY9HW4Avw7VbHoCKQFiX0LuUzKotQq5vQ6SSC2WV
-	sSx1X/I+TX8MMDtDNfV/0Bqm5G+qHRsBRak5nY4guLArQlEXpPWB3yED+/GvFGeHmFxjRHCFLKd
-	Kn2J4I2CNhK6++t1qd8jVP186IA=
-X-Google-Smtp-Source: AGHT+IFl5qWyEcA5dlE1Dp5y5vyGjF2k3RRy0Y6Pc5a4lLjaWHK57oqTHJWZHBd376OTKezCbds+SSWVvxnT6fHRF5Q=
-X-Received: by 2002:a05:6402:42c7:b0:64d:498b:aeec with SMTP id
- 4fb4d7f45d1cf-65097df8139mr654186a12.12.1767743054342; Tue, 06 Jan 2026
- 15:44:14 -0800 (PST)
+	s=arc-20240116; t=1767763396; c=relaxed/simple;
+	bh=VyBLTkOhh5AkMS/gSXiV58owvakwYOY939hTfpHhuwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fbVcfsKgb3sXjWH8xoko2PT41Fs3mSOUm5Chc93WccQ8MqQPWqlMAJrX7YN7xjyxzvN5Fstsrm3aBFjd4J54+s1NIdUvnOyq0+E+eLIOKXhPzfyrSpSVi3+8Oudnp+qjnjuXlSphAop29wQmcM628dOy6tsTBvaI0qpXyQSpz/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kRtq2YhZ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=F3BhaX5X+5amMTHmj1JVgN5gQNPiYioGK3Bt1bQ7ncs=; b=kRtq2YhZ1dYHTCFKbPYsLx4b92
+	vuvuQksff77ULJ/6wRzUzGFHeINRtJItjNCTJ/odiiFiiNcD5RouxXoPs6+OFPAoY/IxuOlK5ZDnL
+	UC7kTyrmDrlAxeO5CYOTrfUolMjfKiWesf9inTitDSxpBi9jM/bC3HzTLzQFZRdbeFpTGfrnwUDci
+	5mmJQunFQGd5TfI7sls7Q/Uf8T1k8QVI0kOR+3TwNbAByavERW8BxYuvmE5BkowCYNuOKefpj9YL9
+	qWbW9XZhzi9nS8JmKc88+9sEfKmWKPzfwoFKXkIiEdQyFALJhjCpbaXp+rkn/eOBJp33INWsjOXLB
+	cD/PlTNw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vdM0b-0000000EAz1-0UFp;
+	Wed, 07 Jan 2026 05:23:01 +0000
+Date: Tue, 6 Jan 2026 21:23:01 -0800
+From: "hch@infradead.ori" <hch@infradead.org>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: "hch@infradead.ori" <hch@infradead.org>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFS: Fix directory delegation verifier checks
+Message-ID: <aV3ttYmT2vAtPDws@infradead.org>
+References: <20251219201344.380279-1-anna@kernel.org>
+ <aUnHnlnDtwMJGP3u@infradead.org>
+ <aUnq_d93Wo9e-oUD@infradead.org>
+ <53d40f4781783f9b79196bb30975b788be8bb969.camel@hammerspace.com>
+ <aVyp3SIddHB5sMhp@infradead.org>
+ <1df4bb7ff3e6fd607c1811d75fcd6dcb860e320e.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy4Waqfaqu7kgtnSNrdyR0jBSzJ76tMTbGJPq4HGbBKHiQ@mail.gmail.com>
- <679b3c2a-b70c-4364-a362-fa5eefbf3af3@app.fastmail.com>
-In-Reply-To: <679b3c2a-b70c-4364-a362-fa5eefbf3af3@app.fastmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Tue, 6 Jan 2026 15:44:02 -0800
-X-Gm-Features: AQt7F2qyPO-AZclRnwenZqVDTO4EKW6sQT7B9GLxn13vxNBDLTYd9btFJOTqsbE
-Message-ID: <CAM5tNy5KjQSgRxiOiFHe_3ZCu5v8-ibQ8GfDkscVohLNjgnABA@mail.gmail.com>
-Subject: Re: Limit on # of ACEs in a POSIX draft ACL
-To: Chuck Lever <cel@kernel.org>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1df4bb7ff3e6fd607c1811d75fcd6dcb860e320e.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jan 6, 2026 at 8:37=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
->
->
->
-> On Tue, Jan 6, 2026, at 11:02 AM, Rick Macklem wrote:
-> > Hi,
-> >
-> > When I did the POSIX draft ACL patches, I mistakenly
-> > thought that NFS_MAX_ACL_ENTRIES was a generic
-> > limit that the code should follow.
-> > Chuck informed me that it is the limit for the NFS_ACL
-> > protocol.
-> >
-> > For the server side, the limit seems to be whatever the
-> > server file system can handle, which is detected
-> > later when a setting the ACL is done.
-> > For encoding, there is the generic limit, which is
-> > the maximum size an RPC messages can be (for NFSv4.2).
-> >
-> > For the client, the limit is more important, since it sets
-> > the number of pages to allocate for a large ACL which
-> > cannot be encoded inline.
-> >
-> > So, I think having a sanity limit is needed, at least for
-> > the client.
->
-> The Linux client does something special with ACL operations:
-> the transport/XDR layer allocates the pages as the reply is
-> read from the transport. It already does this for both
-> NFS_ACL and NFSv4.
->
-> I don't think there's anything different needed for this case.
-There may be a better way (and I coded this some time ago),
-but I needed an array for the page references, so I could free
-them.
+On Tue, Jan 06, 2026 at 01:32:54PM -0500, Trond Myklebust wrote:
+> Sigh... One last patch on top of all the previous ones, but if we hit
+> another issue I think we need to consider just disabling directory
+> delegations on the client until all the remaining issues can be fixed
+> in the next release.
 
-If you take a look for NFS4_ACL_MAXPAGES in patch #8
-for the client stuff, you'll see what I mean.
+This still crasheѕ generic/633:
 
-NFS4_ACL_MAXPAGES is calculated from NFS_ACL_MAX_ENTRIES
-and IDMAP_NAMESZ in patch #3.
-
-I don't think the client code "grows" the page array, although you are
-correct that it adds pages as required.
-
-Maybe one of the NFS client wizards will have a better way
-of doing this?
-
-rick
-
->
->
-> > If there is a sanity limit, I can see having the same
-> > one as the NFS_ACL protocol will avoid any possible
-> > future confusion where an ACL can be handled by
-> > NFSv4.2, but not NFSv3.
-> > (The counter argument is NFSv4.2 is the newer
-> > protocol and, maybe, shouldn't be limited by the
-> > NFSv3 related NFS_ACL protocol.)
-> >
-> > To be honest, NFS_MAX_ACL_ENTRIES is 1024,
-> > which is a pretty generous limit.
-> >
-> > So, what do others think w.r.t. a sanity limit on
-> > the # of ACEs.
-> >
-> > Thanks in advance for any comments, rick
-> > ps: When wearing my internet draft author hat, I
-> >       lean to "no limit in the draft", since that is what
-> >       the RFCs do w.r.t. NFSv4 ACLs, but that doesn't
-> >       mean implementations will handle any number
-> >       of them. Maybe I'll add a sentence to the draft
-> >       noting that the limit of # of ACEs is server file
-> >       system dependent?
->
-> IMHO generally speaking, implementation guidance is reasonable
-> to put in an Internet standard, especially if it directs
-> implementers to address a subtle security issue such as a
-> denial of service.
->
-> Something like "Client implementations should be prepared to
-> handle ACLs with many ACEs and large 'who' fields."
->
->
-> --
-> Chuck Lever
+generic/633  4s ... [   73.075526] run fstests generic/633 at 2026-01-07 05:21:37
+[   73.286318] process 'vfstest' launched '/dev/fd/4/file1' with NULL argv: empty string added
+[   73.314625] Oops: general protection fault, probably for non-canonical address 0xcccccccccccccd50: 0000 [#1] SMP NOPTI
+[   73.315391] CPU: 1 UID: 0 PID: 100 Comm: kworker/u8:3 Tainted: G                 N  6.19.0-rc4+ #4540 PREEMPT(full) 
+[   73.316043] Tainted: [N]=TEST
+[   73.316229] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   73.316786] Workqueue: rpciod rpc_async_schedule
+[   73.317066] RIP: 0010:nfs_inode_find_state_and_recover+0x9c/0x260
+[   73.317430] Code: 01 0f 85 83 00 00 00 49 8b 84 24 80 00 00 00 4c 8d 60 80 48 39 c3 0f 84 68 01 00 00 4d 8b 7c 24 60 4d 85 ff 74 e1 48 8b 7d 00 <49> 39 bf 84 00 00 00 75 af 8b 4d 08 41 39 8f 8c 00 00 00 75 a3 48
+[   73.318513] RSP: 0018:ffffc900001bfd00 EFLAGS: 00010286
+[   73.318868] RAX: ffff88810cfb98e0 RBX: ffff8881d68d8c50 RCX: 0000000000000000
+[   73.319354] RDX: ffff88810330a0c0 RSI: ffff88811a86d914 RDI: b6162427695ded30
+[   73.319832] RBP: ffff88811a86d918 R08: ffff88810c685100 R09: ffff88810c685130
+[   73.320270] R10: 0000000000000003 R11: fefefefefefefeff R12: ffff88810cfb9860
+[   73.320698] R13: ffff8881179b2800 R14: 0000000000000000 R15: cccccccccccccccc
+[   73.321135] FS:  0000000000000000(0000) GS:ffff8882b363d000(0000) knlGS:0000000000000000
+[   73.321640] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   73.321994] CR2: 0000559277cef238 CR3: 0000000161792002 CR4: 0000000000772ef0
+[   73.322422] PKRU: 55555554
+[   73.322592] Call Trace:
+[   73.322749]  <TASK>
+[   73.322889]  nfs4_delegreturn_done+0x1b7/0x380
+[   73.323173]  ? __pfx_rpc_exit_task+0x10/0x10
+[   73.323475]  rpc_exit_task+0x5c/0x170
+[   73.323755]  __rpc_execute+0xb1/0x490
+[   73.324000]  rpc_async_schedule+0x2a/0x40
+[   73.324257]  process_one_work+0x16c/0x330
+[   73.324515]  worker_thread+0x254/0x3a0
+[   73.324762]  ? __pfx_worker_thread+0x10/0x10
+[   73.325042]  kthread+0x117/0x230
+[   73.325303]  ? __pfx_kthread+0x10/0x10
+[   73.325557]  ? __pfx_kthread+0x10/0x10
+[   73.325812]  ret_from_fork+0x1b6/0x200
+[   73.326045]  ? __pfx_kthread+0x10/0x10
+[   73.326278]  ret_from_fork_asm+0x1a/0x30
+[   73.326535]  </TASK>
+[   73.326681] Modules linked in: kvm_intel kvm irqbypass
+[   73.327046] ---[ end trace 0000000000000000 ]---
 
