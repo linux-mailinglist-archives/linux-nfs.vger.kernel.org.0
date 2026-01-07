@@ -1,117 +1,82 @@
-Return-Path: <linux-nfs+bounces-17569-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17570-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81FCFCFE8DB
-	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 16:24:47 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 528AFCFEAC7
+	for <lists+linux-nfs@lfdr.de>; Wed, 07 Jan 2026 16:48:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4B0E23089610
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 15:19:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3FB0B3015D07
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jan 2026 15:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B3E376BE4;
-	Wed,  7 Jan 2026 15:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19543016F2;
+	Wed,  7 Jan 2026 15:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pd5NVeVc"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g739Mgzx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D53A376BE2
-	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 15:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2738E5C4
+	for <linux-nfs@vger.kernel.org>; Wed,  7 Jan 2026 15:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767799106; cv=none; b=FGAQW2q29/Inzco/XZAq6TnL1RDy36qFE+ZuQFL2NrKED8OOdcS8dYJTleNY5Rk848JYOA4oJ5Ow48BpFWi0SPTeNlmKuLC+I5PQ76liA9qrBgJ+DfxZpZFnW2syJVpdj5wMckcBTZyZKxevkq7vuODBPaiyw30weziO1MeQdWk=
+	t=1767799851; cv=none; b=XOqyEIoffn/VvoPbVqWePNIHxufDJqIdPtYGd4XXq8h5PBDf+NVuMAeRnqAR0wIhQBnuBpNvkNGE9rPs5TrV4I2cPRZth71xc4YTLS6OWsF/OHFh4JkKDerO0ncTFmRvHzxSeTwDRgE5YJi9iFg7CQPc0Znb4gMmpl3XZ4XqHoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767799106; c=relaxed/simple;
-	bh=NrBCNmNdGbigwTOQ3lWrohk2DdXWhhFBrA46fhHZLHc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PZvA5N2f3v+eQKsqgNlw35HDue/uW9+m46g+CGM7/LCF6HGtewRVM101/SabM2SaSRWgCO2fdJY0kxz4pKdnS8tIIlOk5hDcYsDYrhf85ENabzLTFzquvRXI89vCuHLN7WALDVDYO/vbhgQomt8ekJ8eLfDqum/nRrSNlj0/z8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pd5NVeVc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B1FC4CEF7;
-	Wed,  7 Jan 2026 15:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767799105;
-	bh=NrBCNmNdGbigwTOQ3lWrohk2DdXWhhFBrA46fhHZLHc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Pd5NVeVcFURjAxcn6T3DlJTIVAn5xQ2osrF5fkL763oOV8xKeVjIVOJkCsQTLIPdw
-	 mWp3RJ+Trh1C8Tu493VbfCxMnaIin46U8RAk+zR5ibzY53lexwHiGYPTGTfqy1M5vc
-	 4srfz9DTPMiW7zTjBl2vDgfTEMOO6tcWPig8imvl1dXBslkH1LGqwNXGtGzrpuZN6R
-	 32P3ayUfBhJr/1E1Wedk/w1tKEF/48RnFBb75SwhGxJgtxXpya4HXVkWGPigy7uGWR
-	 Im9w23YLGbkGsDTupW2s8NvxD35LjzaaRqWEphdHMcPR339ehOerU+7OGsejdVWMvN
-	 Udej8AXjoz2xw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 978FBF4006A;
-	Wed,  7 Jan 2026 10:18:24 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 07 Jan 2026 10:18:24 -0500
-X-ME-Sender: <xms:QHleaRvIHtp8rfQRoM8jucO1fkuN4nn1xde1WU8y3pciTm9oKyjSNw>
-    <xme:QHleaVRJVkVyQTguIEuhEdeLyIjNs646nWfHr82iuXW8d0N5Jo4Z-jEbN_FrcCX70
-    Bx823uYtU86ME7D4SpFrkHsdPsjekPzkfpom_knO1dnRYYhHgmqF97A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdefgedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtrhhonhgumhihse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthho
-    pehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:QHleaZWz6xlvl7aYbcCjVQjUsnu-k8qRnbBydAXxKwc9eN9-lFrIxA>
-    <xmx:QHleaXZiL2nZ4khBvwWEkJTe_nMk-KkH1dn7fp6DrH-Q2ByhqkfVkQ>
-    <xmx:QHleaf0lrCGHnykLzxgwGCSGHzJPx3uDdSktZWhVgbL4mQictWjQSA>
-    <xmx:QHleaZjIP7r_7qPj9J3LYxLmYp5aoxJYSRe3ZmmTR1hezbgWPZovSw>
-    <xmx:QHleaTYMbN9Pc88q0Slx0P6GmLlmtrOg1cRvC3r16fxGyOluPuZMsIfm>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7D6AC780054; Wed,  7 Jan 2026 10:18:24 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1767799851; c=relaxed/simple;
+	bh=7cSmkhOeAHyj9gLhtUsS5O3yJxZZafu27kcsCGB4Bwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AVLb5gYJsiLdtp9dy8eGVcBUYzb4Z0cGru6EQ3fSsqyF7Oz3R8/XzDFCMVMRTO9O9zn8UV6Nfl+HhDq93sDgClVzhLerk2qO4NiMV5KvBOyrs52/+M+aqyRnedMntOWQk286gMwzSOpELOJydOcG5IGTFvZJBNVb13cziSlOoOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g739Mgzx; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RJq7nI2t0Y/JvV7wiPLkhzBIeEgQIKRKIYYB0WbC2o4=; b=g739MgzxKccEQlbGUIt2+1U0BL
+	LTXHNmUCKiOAm5SKoNTqDdWos8EfkY+K4/aH+XGGHw5ghaos26DGtvwhj8EKsFDHEGLT77Ds0069g
+	uoP5otaxz+OW525DVpZAuoGv2T4XAFJhO9OkZZSTXDPj/LA4Imdcx2izxc4zkH74wuRENa5xgQ0Dp
+	WwtkKZPNtsp2oM/NID+FwC13TgRgakxqPCsQDhhEpIPZWvCh6YUX9t3bQuwwHbp56EN/9RVqtoS4J
+	iNcLX2xc5J9le1yDbfKyxmyk3pF4W0oCVhT5H5y6fy+Ry4x67xLUHBFr7zAqjjd+F7MczRtHt8E+r
+	scD7weAA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vdVUm-0000000FB2N-2GS9;
+	Wed, 07 Jan 2026 15:30:48 +0000
+Date: Wed, 7 Jan 2026 07:30:48 -0800
+From: "hch@infradead.ori" <hch@infradead.org>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: "hch@infradead.ori" <hch@infradead.org>,
+	"anna@kernel.org" <anna@kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFS: Fix directory delegation verifier checks
+Message-ID: <aV58KBha24bpbLUf@infradead.org>
+References: <20251219201344.380279-1-anna@kernel.org>
+ <aUnHnlnDtwMJGP3u@infradead.org>
+ <aUnq_d93Wo9e-oUD@infradead.org>
+ <53d40f4781783f9b79196bb30975b788be8bb969.camel@hammerspace.com>
+ <aVyp3SIddHB5sMhp@infradead.org>
+ <1df4bb7ff3e6fd607c1811d75fcd6dcb860e320e.camel@kernel.org>
+ <aV3ttYmT2vAtPDws@infradead.org>
+ <d8ddd23a18985ae360855931f185d0e24c466310.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ASCMS0S-oO03
-Date: Wed, 07 Jan 2026 10:18:04 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Christoph Hellwig" <hch@lst.de>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Message-Id: <0b0b21c1-0bfd-4e2e-9deb-f368a66f5e9c@app.fastmail.com>
-In-Reply-To: <20260107072720.1744129-1-hch@lst.de>
-References: <20260107072720.1744129-1-hch@lst.de>
-Subject: Re: add a LRU for delegations
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8ddd23a18985ae360855931f185d0e24c466310.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Wed, Jan 07, 2026 at 10:07:55AM -0500, Trond Myklebust wrote:
+> Thanks for doing all this testing, Christoph. I really appreciate it.
+> The previous patch was incomplete. This is incremental to yesterday's
+> patch, but I'll squash them together in the testing branch, since
+> they're both about blocking state recovery in the non-regular file
+> case.
 
+This fixes generic/633.  I've kicked off a full xfstests run and will
+report back.
 
-On Wed, Jan 7, 2026, at 2:26 AM, Christoph Hellwig wrote:
-> Hi all,
->
-> currently the NFS client is rather inefficient at managing delegations
-> not associated with an open file.  If the number of delegations is above
-> the watermark, the delegation for a free file is immediately returned,
-> even if delegations that were unused for much longer would be available.
-> Also the periodic freeing marks delegations as not referenced for return,
-> even if the file was open and thus force the return on close.
->
-> This series reworks the code to introduce an LRU and return the least
-> used delegations instead.
-
-I'm curious if you tried other methodologies like LFU to decide which
-delegation to return?
-
-
-> For a workload simulating repeated runs of a python program importing a
-> lot of modules, this leads to a 97% reduction of on-the-wire operations,
-> and ~40% speedup even for a fast local NFS server.  A reproducer script
-> is attached.
-
--- 
-Chuck Lever
 
