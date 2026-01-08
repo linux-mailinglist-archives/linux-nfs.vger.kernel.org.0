@@ -1,102 +1,130 @@
-Return-Path: <linux-nfs+bounces-17587-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17589-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B3FCD00770
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 01:29:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C8DCD0079D
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 01:40:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 074F63012278
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 00:28:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 18CC830275D0
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 00:40:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0873D199FB0;
-	Thu,  8 Jan 2026 00:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A2B61D86DC;
+	Thu,  8 Jan 2026 00:40:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T15BA2G7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8R8efoU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D389513E02A;
-	Thu,  8 Jan 2026 00:28:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008F91D5CFE;
+	Thu,  8 Jan 2026 00:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767832135; cv=none; b=klrSeoWmJn01zZ+XQYN1owRW6eHhbEcE4vkow8EmXySaJM8Fty0FXsEFJWOWvMUoz1oSvlaNCvv6Amr6ncbrxXnOLoApFUaCvbiT3FmX6c2+iX7iUiGZUDvpdxVtBw7czLvTl3TbqqA0jAuMRnvBF3yPk2uRrps4zWuwrb6j2o0=
+	t=1767832823; cv=none; b=L4vtnWMri5J1BY65ZKPnfrxBjhA+AuIxdbAEPhiLA+BDAbtlYj1ktDQrUooVRd0s+4zO6VKtY+gn3K60o4i/pn8nhKxG7MV2ZmqDScyID8uHA8j+2BE2TgFSa7PvjIB7gv2W0WsRt77puFVH6ZJmRe2hRNOwFFFNpORpAsTGFDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767832135; c=relaxed/simple;
-	bh=dilqyGF+66/wOjxQew1lwSNg437K+ZeGUCd0+jqqBHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M4QQRQSkUPGfFiU5dkb7WTETDNWDE83r+5KusSk8X36mbqT4Xny4NAkEENWfiokR6AIzaRUZq/WFXwXjbbAPSn4JpQRIaCxpWFi18K0fyLWZ7jWtkJzsRdJZAMEU3CzLLCHj1t4MnUz76S9ESFqmeHjxzX7qLn+1zkm8v/5N/z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T15BA2G7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8671DC4CEF1;
-	Thu,  8 Jan 2026 00:28:54 +0000 (UTC)
+	s=arc-20240116; t=1767832823; c=relaxed/simple;
+	bh=lCr25JyiroJH9anX4xgULqRLmslXynO4tD06DKJ6+m4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wdw1yNoTsohKMpoiIer0zg5dEIRPAApZuA5QCqgEvzU5TYT7Z34KCT7KwKaaBt5Lfpwc4PDCq98jeSJDcBp/wJoCqGtTfxmAgZU8FleoQsgfWxkc7Et7J2ECPRBJwkcyP0cCpvyD8kpZN+rgiTH/ugiKgxwPIaJlxFA2IsV6MSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8R8efoU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7177AC4CEF1;
+	Thu,  8 Jan 2026 00:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767832135;
-	bh=dilqyGF+66/wOjxQew1lwSNg437K+ZeGUCd0+jqqBHE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T15BA2G7TNpp+j1/Wwp783DlBWnfPd0eARBwBszk4KKVTreo4r7NDIIf/GLwJzr6J
-	 9aa8qmwiipoRuQUhCyreGNBSXRwUfq/PZ9ixOpQUvnv4Gf1gz6fslL6Br1eHT8xPxC
-	 rHRa4Mz+7sO49SqzbIYFCJQXXFumYx3EBDk79dp/XxsCM0eA3mb+tjDrlao+KKu/mY
-	 3uQQi7qP0zoSzWDzmSMG+jUv0mmCpha9jTjSoaNVNfU0YgnTSmr6DFzr3RMqOpGTzh
-	 k6W2LZJDBNhomD80Tv5j1HNXY0TqEyqY/rV6kcE+8hA0qSlX+SJZVZigyhHPbFIrqS
-	 uSomnoIgaR71w==
+	s=k20201202; t=1767832821;
+	bh=lCr25JyiroJH9anX4xgULqRLmslXynO4tD06DKJ6+m4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=l8R8efoUE8nGyhbuO8Umg4YjMmNgZeYb5NwJjC3xSR5IaBfva/SjiFHTzY+c/5OIT
+	 ZfqVrT6S1yJ4H4P03DAYc/NK834Ocl9U3Zgd1SPf6NUXI9H4iBK0rp2EJsGoyImHpT
+	 l5Kj7s8/GbuqXd0W18mO++/6TpqMzEPs6OxnMLBLdYEcPKlsjPUx9A+vM3OQL9YRvm
+	 rMEc5VB32dQDFUDcPpSl0ATe7GkBcSTTuP9/SOPb59qSVm0DpnevMBghED1nsR1d2c
+	 hDb4vpwiz4Hpe+ypDNApdPj2dBuxOzOBOeYtnC90uy38g4JMmbwtoXkhDslsWkWUwp
+	 nAG8rVG1sJeWA==
 From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
+To: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] nfsd, sunrpc: allow for a dynamically-sized threadpool
-Date: Wed,  7 Jan 2026 19:28:51 -0500
-Message-ID: <176783211844.3906223.2883879157306428101.b4-ty@oracle.com>
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2 0/6] Automatic NFSv4 state revocation on filesystem unmount
+Date: Wed,  7 Jan 2026 19:40:10 -0500
+Message-ID: <20260108004016.3907158-1-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
-References: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Tue, 06 Jan 2026 13:59:42 -0500, Jeff Layton wrote:
-> This version of the patchset fixes a number of warts in the first, and
-> hopefully gets this closer to something mergeable.
-> 
-> This patchset allows nfsd to dynamically size its threadpool as needed.
-> The main user-visible change is the addition of new controls that allow
-> the admin to set a minimum number of threads.
-> 
-> [...]
+When an NFS server exports a filesystem and clients hold NFSv4 state
+(opens, locks, delegations), unmounting the underlying filesystem
+fails with EBUSY. The /proc/fs/nfsd/unlock_fs interface exists for
+administrators to manually revoke state before retrying the unmount,
+but this approach has significant operational drawbacks.
 
-Applied to nfsd-testing, thanks!
+Manual intervention breaks automation workflows. Containerized NFS
+servers, orchestration systems, and unattended maintenance scripts
+cannot reliably unmount exported filesystems without implementing
+custom logic to detect the failure and invoke unlock_fs. System
+administrators managing many exports face tedious, error-prone
+procedures when decommissioning storage.
 
-[1/8] sunrpc: split svc_set_num_threads() into two functions
-      commit: 039d0b7837eaad0d904631df3ec26b4961ee740a
-[2/8] sunrpc: remove special handling of NULL pool from svc_start/stop_kthreads()
-      commit: 040f69a4bff8ba6236d69bca06c62adb7588268b
-[3/8] sunrpc: track the max number of requested threads in a pool
-      commit: 2672a852bfc6d7597a8b202cf5ee813a4a04b1b8
-[4/8] sunrpc: introduce the concept of a minimum number of threads per pool
-      commit: 80099415fa314dec028bbb3e904ed57ddea55d1c
-[5/8] sunrpc: split new thread creation into a separate function
-      commit: ad23853b5e7bc156652fd957425d6891dd864ea1
-[6/8] sunrpc: allow svc_recv() to return -ETIMEDOUT and -EBUSY
-      commit: a37178a2642f98fd6cbed39fa0c508dce3bd7bf8
-[7/8] nfsd: adjust number of running nfsd threads based on activity
-      commit: f375bafd744fa40cdc48d252e5f5db1242100881
-[8/8] nfsd: add controls to set the minimum number of threads per pool
-      commit: fe054be1747e1754bc81ea3dabbf85dfab2bed27
+This series enables the NFS server to detect filesystem unmount
+events and automatically revoke associated state. The mechanism
+uses the kernel's existing fs_pin infrastructure, which provides
+callbacks during mount lifecycle transitions. When a filesystem
+is unmounted, all NFSv4 opens, locks, and delegations referencing
+it are revoked, async COPY operations are cancelled with
+NFS4ERR_ADMIN_REVOKED sent to clients, NLM locks are released,
+and cached file handles are closed.
 
---
-Chuck Lever
+With automatic revocation, unmount operations complete without
+administrator intervention once the brief state cleanup finishes.
+Clients receive immediate notification of state loss through
+standard NFSv4 error codes, allowing applications to handle the
+situation appropriately rather than encountering silent failures.
+
+Based on the nfsd-testing branch of:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/
+
+Changes since v1:
+- Explain why drop_client() is being renamed
+- Finish implementing revocation on umount
+- Rename pin_insert_group
+- Clarified log output and code comments
+- Hold nfsd_mutex while closing nfsd_files
+
+Chuck Lever (6):
+  nfsd: cancel async COPY operations when admin revokes filesystem state
+  fs: export pin_insert and pin_remove for modular filesystems
+  fs: add pin_insert_sb() for superblock-only pins
+  fs: invoke group_pin_kill() during mount teardown
+  nfsd: revoke NFSv4 state when filesystem is unmounted
+  nfsd: close cached files on filesystem unmount
+
+ fs/fs_pin.c            |  50 ++++++++
+ fs/namespace.c         |   2 +
+ fs/nfsd/Makefile       |   2 +-
+ fs/nfsd/filecache.c    |  44 +++++++
+ fs/nfsd/filecache.h    |   1 +
+ fs/nfsd/netns.h        |   4 +
+ fs/nfsd/nfs4proc.c     | 124 +++++++++++++++++--
+ fs/nfsd/nfs4state.c    |  46 +++++--
+ fs/nfsd/nfsctl.c       |  11 +-
+ fs/nfsd/pin.c          | 274 +++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/state.h        |   9 ++
+ fs/nfsd/xdr4.h         |   1 +
+ include/linux/fs_pin.h |   1 +
+ 13 files changed, 548 insertions(+), 21 deletions(-)
+ create mode 100644 fs/nfsd/pin.c
+
+-- 
+2.52.0
 
 
