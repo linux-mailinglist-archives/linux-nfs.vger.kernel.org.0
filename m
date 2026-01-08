@@ -1,236 +1,113 @@
-Return-Path: <linux-nfs+bounces-17670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DE40D06561
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 22:34:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 895A7D0669A
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 23:17:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 873AB303F4BB
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 21:33:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 38809300D41A
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 22:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CED33D4E3;
-	Thu,  8 Jan 2026 21:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941CF19E7F7;
+	Thu,  8 Jan 2026 22:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJKGRbue"
+	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="UzLJ+vl/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FE233D4F6
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 21:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CA219EB
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 22:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767907996; cv=none; b=b4hHPy1qiy3P5YhZ/2GVhB7XQ5PK2B9sJxkPn95quhuM55dYWAmY3TvV1v4VDFSoMzrB85+U07DH3yyoGOibMeOmUUvaZFBW4sZMZpZkGR6r7u3eU/8uO39TBDgvfUEvbUc2xh33gLwJe1Ki4yIALW+/1zGA720DKEVzHKCtqrY=
+	t=1767910624; cv=none; b=Q6arwEoQSKy0qieIClZrUneDYtcYjxkky7Uj5XLReESMLgZNiqqC9Qsfj+tUxjmy4pagY2BdT/JCvHBHRRs6yd94NZnR3mFTM/7iq7137IIeJJ6mowqhY6rbJR4/ugDT3QeV904run/0CrdYdrpYn9Ky6lgSe0lrS+iloxcp55M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767907996; c=relaxed/simple;
-	bh=gswua7H0wJtAB95PRBRgb+NCeLhc33UUh+kpx4SNvHE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pyew2yZu8T5WQNjuFU+d8eGqiY6K3fo9rzRTziVTKJJU+QV+d9XxbnEsJRVqkZ/sUE5T9VuPphFD+q8VzZ41lxwFET4S8BjEfjJ3CuUR/Ir9yoaCXfYSOgTATINkhcR2/TqxDlNLp6/DXV4L9ob995QRVWc/Zh8P9sjJF54/wCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJKGRbue; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21418C116C6
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 21:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767907996;
-	bh=gswua7H0wJtAB95PRBRgb+NCeLhc33UUh+kpx4SNvHE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=iJKGRbuelyn4oFYBXl4nbFY0S3Jn8xI9Dmq6ULnEHZf6U7uOjokKQRlLGWclrV2Mb
-	 QPQZddIrk1yOXxOx/ialtAA3FV9VS6oC56mfuxcrukXr2RrGVwMlMmopvEnziqXzi4
-	 udqKHETMBrzcSyqSbQ8cv6WcQ+0ZE0h05W/MNY/X7oAIUej5EizyueFT9yhFghqhB0
-	 CNo/RqQYPZNbHGTUSIhVqU+WtRv9n2i6lxYUKJPHRQXjmyt21vp8Xss2aZCdUgOIfD
-	 MePhWMOqDyt+wrL2QCpu5MYYktHOA5U0WrppoMGuvA0h5xz8GtxgZdfB1S03eU1cJK
-	 XdapgllnpspvA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 321BFF40069;
-	Thu,  8 Jan 2026 16:33:15 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 08 Jan 2026 16:33:15 -0500
-X-ME-Sender: <xms:myJgaTzq49qGMxJ5yGYs23qOHxmFpM40hOGsZ4nUo7JR8edOpgViCg>
-    <xme:myJgaWF3W8ooY5oWwtdN96zAGKh8mOAUGpUADdxN_aGbw5v1tQ5JO_R7fsuJdKr3S
-    JBHGYOB5fxAmiwxqU6hPY6nItshle4w3qASbyUdK--EyNgE9lmCLx91>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdejtdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
-    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
-    pedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghirhgvsegunhgvghdrtg
-    homhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:myJgaWdYLfpLvboeoyIFafspQeSIIvXo0qdV87RiWdBREtMC2HcbTw>
-    <xmx:myJgaeJ2iTtuNg71wyNtHwk2w5oTL2TjS7-pcERH52SmcjToBZq7Wg>
-    <xmx:myJgafEndVi-w7W20aqhKIw8qfbDQjKQSOY9pCogOBdbTFy96G-Rbw>
-    <xmx:myJgaQpziFl-qYh2aYdHSB4JLsCrZ15lSyQ5WkQaCZKfGdfoHob-Ug>
-    <xmx:myJgaQSqQEstYfQwZYeB9gHACCiHqWIfoWTbmiJGn7WA20DvXoxkLBGq>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 12543780054; Thu,  8 Jan 2026 16:33:15 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1767910624; c=relaxed/simple;
+	bh=D5r6tAvO1s/D8zVta3UKr2jopuoPB4Bh3UIWazy5H5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dzh0ZZNzop9SwXxkFi/etHGyYR/JzqiH65C9XauUPAYUyOgyuQAylfC3QNyB+JbGrmNEws3ulKr1G20cJCoVbsmsSvRQI24QQW+Dv3mooxHDctmTTe0vxJ44Y1FTCw108Qk++L5TCAM3Lo5GyBGjsczgtuDF9lXRKPhWhUXtCvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=UzLJ+vl/; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64dfb22c7e4so4175534a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 08 Jan 2026 14:17:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1767910621; x=1768515421; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sTffpgMTspsgVSErmQhZ7AOvBCm4aXbt53XXekDy5IA=;
+        b=UzLJ+vl/7dG4pzn0v11lztYuVcFVbSwNGc+lRG2CSSO3aQYQ+o62Lfi5LWlOLztSwZ
+         8ouv7KucDpOwpuPNk7F1CwtjdNUdrSAo+EAumjFQxOROkfPGcEBGtwRKwa8DwKP3iHic
+         WTZEWBQI7b68e/ComywrulaHfJjB0bgKdHhf6BftFomhRXlyf+RlZjxIVxdxwqw8Gspd
+         m4LUV+nnbit1TZPVMQwoHXFrtiUZd+QcStZ1Knr1HqQp9/gC6zP9Y/XlFWn4J4xHm2/q
+         rbNw8nTiOQiiMjskhIMS7SlV9LsqPORkg50ysMnnUTwyJ65p4OmCK0Xgg5zwPHQczXx1
+         gatQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767910621; x=1768515421;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sTffpgMTspsgVSErmQhZ7AOvBCm4aXbt53XXekDy5IA=;
+        b=lf7zdrbTQWpOo0AY8tac6NIpyb/fhwCxplWWsM+bXo5BOiBJzLjpA3NTgP55cwZJtr
+         RsUzwbYWYb+2rIIj3jAMVikG9KQ7JygxOmeErGpc96pR2UneM0EASwgDZBlkUceQT2FW
+         VeqEwWLt6nYngLAJNmDe6M+tiV/2bEi85POQTy4ECaAmbSg4Ye4Uv8zEvaUPMqwRAAda
+         4i5RaVHCGawnyPmllh0fFZCeQ3V9n8WHOerlY+HxPbumWtwus9sDXo8DCjafeGJ3rFbg
+         9j9NHiTec7NvZa0QlwEN5NGfViFAt2vpBgT1RTzZskJY6iY0DboS4GX/wwCnplM3Dpnb
+         MXGw==
+X-Gm-Message-State: AOJu0YxdDYMmllaR7st7FPlbEhtHCH2Jjl6YUKxt7Z9RddYi45xyYrXu
+	o50y0LDb9q0ByoXZZk5QLWhPy0i73NuraYSESRC8Oz476bV67WQGWRAh/uGyXhAzJTrtoc7Ho/F
+	x8easFT6kU8OQ9x+yc7FDCnhQmhrQldYv8Kx1AjgXitAKXISZdHe5C1E=
+X-Gm-Gg: AY/fxX5HPedpsR2Z5dYkclb+ECmeUHdLRgd1nGsS3paSybn/6xMk4ILO0KqSdxkttv+
+	q6ASaJ9TqGeknl6S+AC6K0Nlwd56CLo4A9BhNT3gm5iUHO7OFUh6L6CRtUKKbI7gWOw260oAejC
+	Q/RpO0A/93pZt5M1M4nyf8asRzC89dn4ij5ao7CHTrv+X9dBKnAO3zCZIhc+TaEu6SpIS5dbGG6
+	3VisS63uoimNZvNBGiE8V4eYkSvTIxXaXCXBAVoQjNTKG5cVR5YQ7zZG+nWn8NMYB8NIg==
+X-Google-Smtp-Source: AGHT+IGt903qK6ZM+w3Qj5StmP/jizUP/qmAtpjcHHZZvbrFUc5I6Yxb5MveL20p0fFj3xoSwTV0CEQ7082UB3u9398=
+X-Received: by 2002:a17:906:aa43:b0:b73:6695:cae6 with SMTP id
+ a640c23a62f3a-b84298aad06mr861551266b.10.1767910621255; Thu, 08 Jan 2026
+ 14:17:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A9aTQCeeGJYs
-Date: Thu, 08 Jan 2026 16:32:54 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Daire Byrne" <daire@dneg.com>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>
-Message-Id: <dcba5f89-7603-4abb-821f-f5322e964c40@app.fastmail.com>
-In-Reply-To: <89582fe2-2ee0-452a-9226-063f4b20ef5a@app.fastmail.com>
-References: 
- <CAPt2mGPafo29KgjW9Rb17OhBDLnB-3fZn18zFQEhYk7Eitf6BA@mail.gmail.com>
- <f760b3a2-6e53-4143-9bb4-e56b030c6bba@app.fastmail.com>
- <CAPt2mGOy+ThM7tJDddrWRqFPq5Ljt1hhu==ydArdT7RYK82OBw@mail.gmail.com>
+References: <CAPt2mGPafo29KgjW9Rb17OhBDLnB-3fZn18zFQEhYk7Eitf6BA@mail.gmail.com>
+ <f760b3a2-6e53-4143-9bb4-e56b030c6bba@app.fastmail.com> <CAPt2mGOy+ThM7tJDddrWRqFPq5Ljt1hhu==ydArdT7RYK82OBw@mail.gmail.com>
  <CAPt2mGO_gSfO4He7XeeENKuWD_+rbxa_z+hRJxNgQ8eC0XzZWw@mail.gmail.com>
- <89582fe2-2ee0-452a-9226-063f4b20ef5a@app.fastmail.com>
+ <89582fe2-2ee0-452a-9226-063f4b20ef5a@app.fastmail.com> <dcba5f89-7603-4abb-821f-f5322e964c40@app.fastmail.com>
+In-Reply-To: <dcba5f89-7603-4abb-821f-f5322e964c40@app.fastmail.com>
+From: Daire Byrne <daire@dneg.com>
+Date: Thu, 8 Jan 2026 22:16:25 +0000
+X-Gm-Features: AQt7F2oopf8mPgKBNrFxPa4NIHIEiP7KAVx_PCZNbo2Rt5tDi2QdSMCn86Qo0ek
+Message-ID: <CAPt2mGNXuktDMYeh4dhs9Em6Jjb8k5pcRGaYEjmFgSszUz9wjQ@mail.gmail.com>
 Subject: Re: refcount_t underflow (nfsd4_sequence_done?) with v6.18 re-export
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 8 Jan 2026 at 21:33, Chuck Lever <cel@kernel.org> wrote:
+>
+>
+> This fix:
+>
+>   cbfd91d22776 ("nfsd: never defer requests during idmap lookup")
+>
+> has the possibility of being highly relevant. It's in the nfsd-testing
+> branch of:
 
+Yea, that looks interesting.
 
-On Thu, Jan 8, 2026, at 2:40 PM, Chuck Lever wrote:
-> On Thu, Jan 8, 2026, at 12:59 PM, Daire Byrne wrote:
->> Hi,
->>
->> So I have had a couple more of these, but I'm not entirely sure what
->> to do with the ftrace buffer output - it's somewhat larger (8MB of
->> text) than I anticipated.
->>
->> Also, I presume it's the end of the buffer that would be most
->> interesting here? But it seems that after around 9 minutes of dumping
->> to the console, the VM resets itself before it gets to the end:
->>
->> [373929.678198] Dumping ftrace buffer:
->> [373929.680009] ---------------------------------
->> [373929.683722] CPU:9 [LOST 4084645 EVENTS]
->> [373929.683722]     nfsd-5995      9...1. 369589930108us :
->> nfsd_slot_seqid_sequence: addr=10.25.251.103:0 client
->> 694c76e1:df8970b5 idx=0 seqid=38846 slot_seqid=38845
->> flags=CACHETHIS|INITIALIZED|CACHED
->> [373929.693526]     nfsd-5995      9...1. 369589935540us :
->> nfsd_slot_seqid_sequence: addr=10.25.255.193:0 client
->> 694c76e1:df89721f idx=0 seqid=25008 slot_seqid=25007
->> flags=CACHETHIS|INITIALIZED|CACHED
->> [373929.701570]     nfsd-6048      9...1. 369589944806us :
->> nfsd_slot_seqid_sequence: addr=10.25.251.103:0 client
->> 694c76e1:df8970b5 idx=0 seqid=38874 slot_seqid=38873 flags=INITIALIZED
->> ..
->> ..
->> 8MB of same stuff...
->> ..
->> ..
->> [374235.603197]     nfsd-5502     47...1. 371173457457us :
->> nfsd_slot_seqid_sequence: addr=10.25.252.35:0 client 694c76e1:df896f53
->> idx=0 seqid=49997 slot_seqid=49996 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.610319]     nfsd-5636     27...1. 371173457503us :
->> nfsd_slot_seqid_sequence: addr=10.25.243.158:0 client
->> 694c76e1:df896f81 idx=0 seqid=51589 slot_seqid=51588 flags=INITIALIZED
->> [374235.616973]     nfsd-6011     19...1. 371173457522us :
->> nfsd_slot_seqid_sequence: addr=10.25.250.68:0 client 694c76e1:df896e6b
->> idx=0 seqid=76242 slot_seqid=76241 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.623915]     nfsd-5534      6.N.1. 371173457616us :
->> nfsd_slot_seqid_sequence: addr=10.25.244.14:0 client 694c76e1:df8971f3
->> idx=0 seqid=58885 slot_seqid=58884 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.631177]     nfsd-5502     47...1. 371173457623us :
->> nfsd_slot_seqid_sequence: addr=10.25.245.95:0 client 694c76e1:df896d75
->> idx=0 seqid=79933 slot_seqid=79932 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.638289]     nfsd-5184     28...1. 371173457705us :
->> nfsd_slot_seqid_sequence: addr=10.25.245.31:0 client 694c76e1:df896ef1
->> idx=0 seqid=70061 slot_seqid=70060 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.645342]     nfsd-6031      6...1. 371173457731us :
->> nfsd_slot_seqid_sequence: addr=10.25.240.198:0 client
->> 694c76e1:df897179 idx=0 seqid=38040 slot_seqid=38039
->> flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.652425]     nfsd-5957     37...1. 371173457767us :
->> nfsd_slot_seqid_sequence: addr=10.25.244.86:0 client 694c76e1:df896fe7
->> idx=0 seqid=30158 slot_seqid=30157 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.659511]     nfsd-6028     55...1. 371173457829us :
->> nfsd_slot_seqid_sequence: addr=10.25.255.66:0 client 694c76e1:df8970a1
->> idx=0 seqid=25932 slot_seqid=25931 flags=CACHETHIS|INITIALIZED|CACHED
->> [374235.666430]     nfsd-5541     57...1. 371173457905us :
->> nfsd_slot_seqid_sequence: addr=10.25.254.129:0 client 694c76e1:df8
->>
->> REBOOT
->>
->> Any more pointers on how I can compress this down to something more
->> useful for debugging?
->>
->> Maybe there is useful info in there so I'm happy to compress and
->> upload the entire log somewhere if that is useful?
->
-> The "LOST 4084645 EVENTS" message strongly suggests the trace data
-> is incomplete -- the events immediately preceding the crash were
-> likely among those lost. The nfsd_slot_seqid_sequence tracepoint
-> fires on every NFSv4.1+ compound, which at 50 Gbps throughput
-> will saturate any reasonably-sized buffer.
->
-> Here are some suggestions for capturing useful data on the next
-> occurrence. Try one or all of these:
->
-> 1. Increase buffer size and filter out the noisy tracepoint:
->
-> # Allocate much larger buffers (200MB per CPU)
-> echo 200000 > /sys/kernel/debug/tracing/buffer_size_kb
->
-> # Disable the high-volume tracepoint
-> echo 0 > /sys/kernel/tracing/events/nfsd/nfsd_slot_seqid_sequence/enable
->
-> # Keep only client lifecycle events
-> echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_clid_expired/enable
-> echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_clid_destroyed/enable
->
-> 2. Dump only the triggering CPU's buffer:
->
-> echo orig_cpu > /proc/sys/kernel/ftrace_dump_on_oops
->
-> This avoids the multi-gigabyte dump that caused the reboot timeout.
->
-> 3. Add a kprobe to catch the refcount underflow directly:
->
-> echo 'p:kprobes/refcount_warn refcount_warn_saturate' \
->     > /sys/kernel/debug/tracing/kprobe_events
-> echo 1 > /sys/kernel/debug/tracing/events/kprobes/refcount_warn/enable
->
-> 4. Extend panic timeout:
->
-> echo 300 > /proc/sys/kernel/panic
->
-> ---
->
-> I'm trying to hold off on a bisect, as that seems like a lot of time
-> and work. But regarding the session slot rework: the major changes
-> landed in the v6.13/v6.14 timeframe:
->
-> - 0b6e14242630 ("nfsd: use an xarray to store v4.1 session slots")
-> - 60aa6564317d ("nfsd: allocate new session-based DRC slots on demand")
-> - fc8738c68d0b ("nfsd: add support for freeing unused session-DRC 
-> slots")
-> - 35e34642b599 ("nfsd: add shrinker to reduce number of slots allocated 
-> per session")
->
-> If bisection becomes necessary, I would start with the slot freeing
-> and shrinker commits (fc8738c68d0b and 35e34642b599) as the most likely
-> candidates given they add the most complexity to slot lifecycle
-> management.
->
-> If you haven't already, I recommend upgrading to the latest stable
-> release of v6.18 (which is ... v6.18.4, I think?)
+I've applied (all) your recent ftrace debug suggestions so let's see
+if I can capture anything useful first and then I will try again with
+those patches to see if it makes any odds.
 
-This fix:
+Thanks again for your guidance.
 
-  cbfd91d22776 ("nfsd: never defer requests during idmap lookup")
+Daire
 
-has the possibility of being highly relevant. It's in the nfsd-testing
-branch of:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-
-
--- 
-Chuck Lever
+>   https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>
+>
+> --
+> Chuck Lever
 
