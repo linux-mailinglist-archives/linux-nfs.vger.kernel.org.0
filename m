@@ -1,63 +1,51 @@
-Return-Path: <linux-nfs+bounces-17598-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17600-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EC79D03FEB
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 16:46:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B97ED03B86
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 16:16:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 11F4330239C7
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 15:34:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACBFE30DD8B1
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 14:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40F23ED124;
-	Thu,  8 Jan 2026 09:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9033546524A;
+	Thu,  8 Jan 2026 12:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mAQP0quk"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WtBzGRd4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354F389E1E
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 09:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6685C461DC9;
+	Thu,  8 Jan 2026 12:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767864401; cv=none; b=XVV811GeSle82ubKEbwRLHWhB25K8DKFd9vcy6mhUn5A/slCsaW/BgaU2FVKF7z07iVxPK6Ri3OeHWlkkqzY4mo2FIOCeYWpiBCOBCAZz+von9LlJBFWrmttNbcRYtqJlr00TAN2kCCr+ZGqH9trvBBcVEhiBkQ2rrfuxrEdYFw=
+	t=1767875621; cv=none; b=DOyGX9dGIObFwRNBbCcBsr5w4pKLeIDl5d37rlf785gNgcK7O0kVrgCJIuz8wFiT59BQ0kEuOv6VcJ6gnYzbDblzR/GQ6HJhzRMPP39gyQ0B1VKkiMGyfJ3e/ZHJAyX6MDE0LpTdhMTg6qKvDQqRyVHW75t1t9QusCTOx7zhbhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767864401; c=relaxed/simple;
-	bh=3ENjzjjPPd94IkahyeP0CH1b3olon0SOAtCdPGjP63k=;
+	s=arc-20240116; t=1767875621; c=relaxed/simple;
+	bh=cJFaIr4HGB3WP3VVwcBCTmnx7s1FJJHpbeS1/rfSLpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I04mM0/SXcwxx6tBfBZuDb6KnzlK9cEtwlVbvOjyjdfJ5VDK5tuXlP6efEqz9EL2bPjX+R6dqT275nWQnR0ZgTP+aoRukBmw1YKtwAe9euaViCVAGRdE+n5G557LmKnNTJARBAt9HhcmGykRy1JNprne+1l+nQBUwDlfKP64T9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mAQP0quk; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4RLXqXBKFRlBzUZ5Cyif1n5sbWegRhfwmjKUo2zL7Ag=; b=mAQP0qukxunv17b8O4Ty00zeqd
-	TVLc4moedheBFNA21bEGjNoxiNHPHexglr6PsHs4aWjtINejSi90TdXAkDS8l07UC6Nac4m5w7MS3
-	uG6fHDt9gR4fnQ5b4J9Z0I9VmAJOnDiQpbC3VH7gav5g/k9FMX4dB7Q0+he58zuzn+GRjgX1lAeAk
-	c47sqK3xRBUC9pempb2RwAn18MT55KiNEcrTeJGRbLvTd61O7RnLbCg5/A22laXJE7xhWShb7XCIC
-	wFblOxMPqiODtn+QPs5HEW0QNgCGthu3BSBw89dZ4wWX3wiWDleCRx2+1oBJFuiO/A82kOPfQRW/m
-	+mIqB3iQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdmHl-0000000GSK2-22Mh;
-	Thu, 08 Jan 2026 09:26:29 +0000
-Date: Thu, 8 Jan 2026 01:26:29 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <cel@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: Re: [PATCH v5] NFSD: Track SCSI Persistent Registration Fencing per
- Client with xarray
-Message-ID: <aV94RS0QkITrBdIC@infradead.org>
-References: <20251227042437.671409-1-cel@kernel.org>
- <aV6HHwrkoR4OE5qc@infradead.org>
- <9e127bfa-e4c9-4e06-b5ad-bb375e7d8e2b@app.fastmail.com>
- <176783380243.16766.17752014824707434037@noble.neil.brown.name>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tx+Dav6rriS1/VrmD6p12tU4yuof4J71K7SmXlyuGakFXtdgD/BQ+g5tL7NMfzvzcezqBoPG1/18EKHMBMJ0f2Ub7abxpOaZ4yaAWNsAMRHhlyfkq2k1bwA9NVFBRoWkrM8jvSbf27zHaiui7S7R/ud25n3e115E0IicNh++/jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WtBzGRd4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5091C116C6;
+	Thu,  8 Jan 2026 12:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1767875621;
+	bh=cJFaIr4HGB3WP3VVwcBCTmnx7s1FJJHpbeS1/rfSLpQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WtBzGRd4GkpAfxa0Ap64aeGxR6W3E95s+gm86vHz5c9Ded+kZCwFgqtyKhuOhglwg
+	 4IUO8llzJxZXXRWB12Ve+Z65OmOteDKaJ354a1V6uLxA7VIHwyJne1I5aJ8uYkM9i1
+	 W5zwQSOd2VuqUAkKIHxLVDVD6THFrzQGZW6LlMv8=
+Date: Thu, 8 Jan 2026 13:33:38 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH 6.6.y 1/4] nfsd: convert to new timestamp accessors
+Message-ID: <2026010810-obsessed-superior-9b56@gregkh>
+References: <20260103193854.2954342-1-cel@kernel.org>
+ <20260103193854.2954342-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -66,19 +54,23 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176783380243.16766.17752014824707434037@noble.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260103193854.2954342-2-cel@kernel.org>
 
-On Thu, Jan 08, 2026 at 11:56:42AM +1100, NeilBrown wrote:
-> > > Only in the most abstract way, xa_store actually stores the new
-> > > entry/value and returns the old one.  In other words, this does
-> > > quite a bit of work for the non-initial GETDEVICEINFO.
-> > 
-> > The comment is misleading then, and should be clarified.
-> > 
-> > But should the code use xa_insert instead of xa_store ?
+On Sat, Jan 03, 2026 at 02:38:51PM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> or xa_cmpxchg() to replace NULL with a value??
+> [ Upstream commit 335a7be84b526861f3deb4fdd5d5c2a48cf1feef ]
+> 
+> [ cel: adjust to the 6.6.y version of fs/nfsd/blocklayout.c ]
+> Stable-dep-of: 24d92de9186e ("nfsd: Fix NFSv3 atomicity bugs in nfsd_setattr()")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
 
-xa_insert seems like a lot less heavy handed.
+Is this really commit 11fec9b9fb04 ("nfsd: convert to new timestamp
+accessors")?  if so, what happened to the original authorship and other
+signed-off-by lines?
+
+thanks,
+
+greg k-h
 
