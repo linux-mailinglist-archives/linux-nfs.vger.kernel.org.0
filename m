@@ -1,307 +1,342 @@
-Return-Path: <linux-nfs+bounces-17655-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17656-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AA82D0596E
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 19:36:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 322BCD0559E
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 19:07:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C6E1C308055A
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 17:40:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3088E30E0264
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 18:02:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37C92F6900;
-	Thu,  8 Jan 2026 17:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F23E2EB5BA;
+	Thu,  8 Jan 2026 18:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v6o0xZII";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iQxzzizV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v6o0xZII";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iQxzzizV"
+	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="DN7kcR55"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237A22E5B3D
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 17:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA5A2FBDF5
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 17:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767894013; cv=none; b=siwzTo/jCakyrmyI+XgSnt545yVYhh0ml7yzFmlU25uwDBXbLVF4ucEPxaS/V+bTAp15MySsuXfG0/OkMfjJ/hh1ha1PSGOd3+4LIlYAuNCOZ491wAki4+sLZVcQQJk7R2upwAJ5Qx7n70HUe8ME+dPOFcDggcR3xGVxwvQMSTY=
+	t=1767895206; cv=none; b=mWmAEpxRGd1aHxBPv7M07k95QG1j/gam5t1MWmDppHJVYJ9BgtsFVwXUS3fpw+WG20n8nfAcGlMqwhepEI3/lLKzpXQpW+afg1Z3U9oJ7oCWhzQmALOwul54rBIFSAP2GoXW2rzr2yE4UzUnMCVSTgqoh1SmquCmTDN4GN9zaus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767894013; c=relaxed/simple;
-	bh=9ISoZ8/AESNCpXRzK2y7Gh8rToQ7FulDj9jwvBYDW5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZkqFbWOl+UnDLIIlurFrLhoRH2HQUTACcdrbYxn7xnY1kAu5+3tFC4PAunxxO44bqVOCurN8IQyw5g1P6Px3YzdBCAksBD4IZOvd+jKN62cWbCGNKCRCcceOm/xeZfgDDO7QkACJY49uqDbo4TGcVTy7i+xjTj0o+VtRSoShTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v6o0xZII; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iQxzzizV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v6o0xZII; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iQxzzizV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 722E55CBEB;
-	Thu,  8 Jan 2026 17:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767894008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=v6o0xZIIolBq3Kc+VF6+9Ya5E6t2G34FsAJ4qlruIPlrp3yRFZ1mosmLKssOtf8GopFPv6
-	pdM5KNdg6uqkpzJC2OCiQs93p2MdVtM1C1AsH2TngC8tV9OjZ7anbkGl2iE3fhCSU9mvhX
-	K1VxnfPudBQRQJ1Q1ovU0oM49Yj5Rmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767894008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=iQxzzizVuPHl0WVwxtpKrivs8r+dbY1HBg67emHdQ+8PTu3CciNeemY/i1L/NaN8QOR0LX
-	w4waIzEE2aIOLGCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767894008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=v6o0xZIIolBq3Kc+VF6+9Ya5E6t2G34FsAJ4qlruIPlrp3yRFZ1mosmLKssOtf8GopFPv6
-	pdM5KNdg6uqkpzJC2OCiQs93p2MdVtM1C1AsH2TngC8tV9OjZ7anbkGl2iE3fhCSU9mvhX
-	K1VxnfPudBQRQJ1Q1ovU0oM49Yj5Rmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767894008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=iQxzzizVuPHl0WVwxtpKrivs8r+dbY1HBg67emHdQ+8PTu3CciNeemY/i1L/NaN8QOR0LX
-	w4waIzEE2aIOLGCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5CF653EA65;
-	Thu,  8 Jan 2026 17:40:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TDitFvjrX2kXBAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 08 Jan 2026 17:40:08 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0782CA0B23; Thu,  8 Jan 2026 18:40:08 +0100 (CET)
-Date: Thu, 8 Jan 2026 18:40:07 +0100
-From: Jan Kara <jack@suse.cz>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, Nicolas Pitre <nico@fluxnic.net>, 
-	Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>, Anders Larsen <al@alarsen.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
-	Dave Kleikamp <shaggy@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	Yuezhang Mo <yuezhang.mo@sony.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev, 
-	linux-doc@vger.kernel.org, v9fs@lists.linux.dev, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+	s=arc-20240116; t=1767895206; c=relaxed/simple;
+	bh=NHLpoMMSJPe9yT7Ee56C3On7AfBSSMn0+HCxuQNOq4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JdQUw4NurTOfLcYSZ2crV1z18qMptDoAQFeWtZxQLPWm94jTzSTUTl/RkrzdtZ36FUvoQxnq67jhyTDlsC9I0YR0oBikzMMLcRZa68aPhW1VsJk/VgH9hzTfROdPtytzg0Bo09mRSJLXboHu510B2tjs2ctYvKQu/Ma06XHuS38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=DN7kcR55; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-64b4b35c812so5537112a12.0
+        for <linux-nfs@vger.kernel.org>; Thu, 08 Jan 2026 09:59:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1767895197; x=1768499997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Tb43jZY7zcOhqYE0sPDUbea0qXplZLL8Q9HjNmqDco=;
+        b=DN7kcR550dx/vAaV83DtDYjwsECi6RCX+dIdyRkn/dKBO0KCEuhOuhRsdd0FA+KDxn
+         OOVUePNQBu46Bu1qqRtyNPRQy01buyHXSA9zp4dpAWput4jtsc8rd187pv9XpUOIhTv7
+         6LLbBeu6N/DpsRRWaEhmwXv1TTQ6SZrfhmb0avpuL/OcSl/jWZvfodetJ7KXk9xmarw6
+         G+5m09LjRMUy6u8jDOdPwttjqQAayqteBKUVl98zfyihEVdVPIzj7pIhw5KyokFbExs/
+         MX//5VsWtHll0dzMt0/EHJBI7S3GU9bQhyxIk3pKhgi9FQ4jo0LuhodHDb2msxclxOS9
+         7JsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767895197; x=1768499997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0Tb43jZY7zcOhqYE0sPDUbea0qXplZLL8Q9HjNmqDco=;
+        b=ePVbTnNBLr8nw+reNF5bfSj7xqNQAR61MdltCp/F9DEqJB/6APv2Z1tSLfnWkdHfsz
+         6JneDGO/ZWEX4xUWQh7mQqL4LytnsJEO8aaBuc1yTtOBWVfD6HS5Bf+4KP1sYIUU6kBX
+         tyRY1KprbNP0vdxdulkrB798NbQDL1+MN2BuU42GB/AgwDuG2IDoghozrmH4Buu4g4vp
+         /YoqO0n++DnMqfgsIPvm0hUocmuHt7fv6h/LQ5XkvpzgvD7I13U8KtgEJ5eHxFdEFE3u
+         3ZSi0XckMNeczhv0J261H+rq3iMuxNNj51TDQ8DEcAR8psTfSqpuib/Rhndc1nJwFrqs
+         ii7w==
+X-Gm-Message-State: AOJu0Yxvdkv964qPiIQXs8XflEaqT4KA3ql3Xs25V4uzXFEzwOBDOjgA
+	+i+pB+B+FtqyP/Sfps4GLGyKbLDiPLnA/TQnHLXcnCCf2Ujm7sqGNSfe0No0XjLTslsduQRtALu
+	qDXIR/vLXkqnpJvgUxT1ywpB5QK37UyYC+s0gOW5R/oPIwL8v/hgT3WjvnA==
+X-Gm-Gg: AY/fxX6XjCx8fzpRVgUHoM/a4b4FTthZqpV5xu/1ivm2l7PnSfN71DSTrinq3E1t99v
+	A40fHlgIIg+L9f5o2Mnucnep9ZAV0L8eAqMP/ba0/9dGj0GfsTpei4DEpnF7g0TGJrm7ZQwVbbM
+	OFi2TzlhU+dDn5JHI/A1rTiBinfK0HAenNwx9uQlU4pZUzP0j23UpbD0247SKVy3fYoMb2uzO6d
+	ICr1vcBJqPfgz0dFdjfTzEkcnqwFkAePv3lEB5IPx+QctS2arDhZE4PuyNZVuw0s8w3zw==
+X-Google-Smtp-Source: AGHT+IF3estJ28BV/fiyI82PTlv2+iPbbcG+a6jcNJCz3Iy+07rmJHiz3Zw91ThzH9MTialm4S90ze9BM11TVktFH3Y=
+X-Received: by 2002:a17:907:84e:b0:b80:402e:6e77 with SMTP id
+ a640c23a62f3a-b84453ddd9bmr610196866b.54.1767895196759; Thu, 08 Jan 2026
+ 09:59:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,fluxnic.net,infradead.org,suse.cz,alarsen.net,zeniv.linux.org.uk,suse.com,fb.com,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,mail.parknet.co.jp,nod.at,dubeyko.com,paragon-software.com,fasheh.com,evilplan.org,omnibond.com,szeredi.hu,squashfs.org.uk,linux-foundation.org,samsung.com,sony.com,oracle.com,redhat.com,lwn.net,ionkov.net,codewreck.org,crudebyte.com,samba.org,manguebit.org,microsoft.com,talpey.com,vger.kernel.org,lists.ozlabs.org,lists.sourceforge.net,lists.infradead.org,lists.linux.dev,lists.orangefs.org,kvack.org,lists.samba.org];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLwapsqjcu3srfensh8n36bg4p)];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[86];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
+References: <CAPt2mGPafo29KgjW9Rb17OhBDLnB-3fZn18zFQEhYk7Eitf6BA@mail.gmail.com>
+ <f760b3a2-6e53-4143-9bb4-e56b030c6bba@app.fastmail.com> <CAPt2mGOy+ThM7tJDddrWRqFPq5Ljt1hhu==ydArdT7RYK82OBw@mail.gmail.com>
+In-Reply-To: <CAPt2mGOy+ThM7tJDddrWRqFPq5Ljt1hhu==ydArdT7RYK82OBw@mail.gmail.com>
+From: Daire Byrne <daire@dneg.com>
+Date: Thu, 8 Jan 2026 17:59:20 +0000
+X-Gm-Features: AQt7F2ocFJ5B_vAF-YQmsmEkM2vjUZaDQyTfaXINX6zlz0kDF7fG1C2jSwTyRvk
+Message-ID: <CAPt2mGO_gSfO4He7XeeENKuWD_+rbxa_z+hRJxNgQ8eC0XzZWw@mail.gmail.com>
+Subject: Re: refcount_t underflow (nfsd4_sequence_done?) with v6.18 re-export
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 08-01-26 12:12:55, Jeff Layton wrote:
-> Yesterday, I sent patches to fix how directory delegation support is
-> handled on filesystems where the should be disabled [1]. That set is
-> appropriate for v6.19. For v7.0, I want to make lease support be more
-> opt-in, rather than opt-out:
-> 
-> For historical reasons, when ->setlease() file_operation is set to NULL,
-> the default is to use the kernel-internal lease implementation. This
-> means that if you want to disable them, you need to explicitly set the
-> ->setlease() file_operation to simple_nosetlease() or the equivalent.
-> 
-> This has caused a number of problems over the years as some filesystems
-> have inadvertantly allowed leases to be acquired simply by having left
-> it set to NULL. It would be better if filesystems had to opt-in to lease
-> support, particularly with the advent of directory delegations.
-> 
-> This series has sets the ->setlease() operation in a pile of existing
-> local filesystems to generic_setlease() and then changes
-> kernel_setlease() to return -EINVAL when the setlease() operation is not
-> set.
-> 
-> With this change, new filesystems will need to explicitly set the
-> ->setlease() operations in order to provide lease and delegation
-> support.
-> 
-> I mainly focused on filesystems that are NFS exportable, since NFS and
-> SMB are the main users of file leases, and they tend to end up exporting
-> the same filesystem types. Let me know if I've missed any.
+Hi,
 
-So, what about kernfs and fuse? They seem to be exportable and don't have
-.setlease set...
+So I have had a couple more of these, but I'm not entirely sure what
+to do with the ftrace buffer output - it's somewhat larger (8MB of
+text) than I anticipated.
 
-								Honza
+Also, I presume it's the end of the buffer that would be most
+interesting here? But it seems that after around 9 minutes of dumping
+to the console, the VM resets itself before it gets to the end:
 
-> 
-> [1]: https://lore.kernel.org/linux-fsdevel/20260107-setlease-6-19-v1-0-85f034abcc57@kernel.org/
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> Jeff Layton (24):
->       fs: add setlease to generic_ro_fops and read-only filesystem directory operations
->       affs: add setlease file operation
->       btrfs: add setlease file operation
->       erofs: add setlease file operation
->       ext2: add setlease file operation
->       ext4: add setlease file operation
->       exfat: add setlease file operation
->       f2fs: add setlease file operation
->       fat: add setlease file operation
->       gfs2: add a setlease file operation
->       jffs2: add setlease file operation
->       jfs: add setlease file operation
->       nilfs2: add setlease file operation
->       ntfs3: add setlease file operation
->       ocfs2: add setlease file operation
->       orangefs: add setlease file operation
->       overlayfs: add setlease file operation
->       squashfs: add setlease file operation
->       tmpfs: add setlease file operation
->       udf: add setlease file operation
->       ufs: add setlease file operation
->       xfs: add setlease file operation
->       filelock: default to returning -EINVAL when ->setlease operation is NULL
->       fs: remove simple_nosetlease()
-> 
->  Documentation/filesystems/porting.rst |  9 +++++++++
->  Documentation/filesystems/vfs.rst     |  9 ++++++---
->  fs/9p/vfs_dir.c                       |  2 --
->  fs/9p/vfs_file.c                      |  2 --
->  fs/affs/dir.c                         |  2 ++
->  fs/affs/file.c                        |  2 ++
->  fs/befs/linuxvfs.c                    |  2 ++
->  fs/btrfs/file.c                       |  2 ++
->  fs/btrfs/inode.c                      |  2 ++
->  fs/ceph/dir.c                         |  2 --
->  fs/ceph/file.c                        |  1 -
->  fs/cramfs/inode.c                     |  2 ++
->  fs/efs/dir.c                          |  2 ++
->  fs/erofs/data.c                       |  2 ++
->  fs/erofs/dir.c                        |  2 ++
->  fs/exfat/dir.c                        |  2 ++
->  fs/exfat/file.c                       |  2 ++
->  fs/ext2/dir.c                         |  2 ++
->  fs/ext2/file.c                        |  2 ++
->  fs/ext4/dir.c                         |  2 ++
->  fs/ext4/file.c                        |  2 ++
->  fs/f2fs/dir.c                         |  2 ++
->  fs/f2fs/file.c                        |  2 ++
->  fs/fat/dir.c                          |  2 ++
->  fs/fat/file.c                         |  2 ++
->  fs/freevxfs/vxfs_lookup.c             |  2 ++
->  fs/fuse/dir.c                         |  1 -
->  fs/gfs2/file.c                        |  3 +--
->  fs/isofs/dir.c                        |  2 ++
->  fs/jffs2/dir.c                        |  2 ++
->  fs/jffs2/file.c                       |  2 ++
->  fs/jfs/file.c                         |  2 ++
->  fs/jfs/namei.c                        |  2 ++
->  fs/libfs.c                            | 20 ++------------------
->  fs/locks.c                            |  3 +--
->  fs/nfs/dir.c                          |  1 -
->  fs/nfs/file.c                         |  1 -
->  fs/nilfs2/dir.c                       |  3 ++-
->  fs/nilfs2/file.c                      |  2 ++
->  fs/ntfs3/dir.c                        |  3 +++
->  fs/ntfs3/file.c                       |  3 +++
->  fs/ocfs2/file.c                       |  5 +++++
->  fs/orangefs/dir.c                     |  4 +++-
->  fs/orangefs/file.c                    |  1 +
->  fs/overlayfs/file.c                   |  2 ++
->  fs/overlayfs/readdir.c                |  2 ++
->  fs/qnx4/dir.c                         |  2 ++
->  fs/qnx6/dir.c                         |  2 ++
->  fs/read_write.c                       |  2 ++
->  fs/smb/client/cifsfs.c                |  1 -
->  fs/squashfs/dir.c                     |  2 ++
->  fs/squashfs/file.c                    |  4 +++-
->  fs/udf/dir.c                          |  2 ++
->  fs/udf/file.c                         |  2 ++
->  fs/ufs/dir.c                          |  2 ++
->  fs/ufs/file.c                         |  2 ++
->  fs/vboxsf/dir.c                       |  1 -
->  fs/vboxsf/file.c                      |  1 -
->  fs/xfs/xfs_file.c                     |  3 +++
->  include/linux/fs.h                    |  1 -
->  mm/shmem.c                            |  2 ++
->  61 files changed, 116 insertions(+), 42 deletions(-)
-> ---
-> base-commit: 731ce71a6c8adb8b8f873643beacaeedc1564500
-> change-id: 20260107-setlease-6-20-299eb5695c5a
-> 
-> Best regards,
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+[373929.678198] Dumping ftrace buffer:
+[373929.680009] ---------------------------------
+[373929.683722] CPU:9 [LOST 4084645 EVENTS]
+[373929.683722]     nfsd-5995      9...1. 369589930108us :
+nfsd_slot_seqid_sequence: addr=3D10.25.251.103:0 client
+694c76e1:df8970b5 idx=3D0 seqid=3D38846 slot_seqid=3D38845
+flags=3DCACHETHIS|INITIALIZED|CACHED
+[373929.693526]     nfsd-5995      9...1. 369589935540us :
+nfsd_slot_seqid_sequence: addr=3D10.25.255.193:0 client
+694c76e1:df89721f idx=3D0 seqid=3D25008 slot_seqid=3D25007
+flags=3DCACHETHIS|INITIALIZED|CACHED
+[373929.701570]     nfsd-6048      9...1. 369589944806us :
+nfsd_slot_seqid_sequence: addr=3D10.25.251.103:0 client
+694c76e1:df8970b5 idx=3D0 seqid=3D38874 slot_seqid=3D38873 flags=3DINITIALI=
+ZED
+..
+..
+8MB of same stuff...
+..
+..
+[374235.603197]     nfsd-5502     47...1. 371173457457us :
+nfsd_slot_seqid_sequence: addr=3D10.25.252.35:0 client 694c76e1:df896f53
+idx=3D0 seqid=3D49997 slot_seqid=3D49996 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.610319]     nfsd-5636     27...1. 371173457503us :
+nfsd_slot_seqid_sequence: addr=3D10.25.243.158:0 client
+694c76e1:df896f81 idx=3D0 seqid=3D51589 slot_seqid=3D51588 flags=3DINITIALI=
+ZED
+[374235.616973]     nfsd-6011     19...1. 371173457522us :
+nfsd_slot_seqid_sequence: addr=3D10.25.250.68:0 client 694c76e1:df896e6b
+idx=3D0 seqid=3D76242 slot_seqid=3D76241 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.623915]     nfsd-5534      6.N.1. 371173457616us :
+nfsd_slot_seqid_sequence: addr=3D10.25.244.14:0 client 694c76e1:df8971f3
+idx=3D0 seqid=3D58885 slot_seqid=3D58884 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.631177]     nfsd-5502     47...1. 371173457623us :
+nfsd_slot_seqid_sequence: addr=3D10.25.245.95:0 client 694c76e1:df896d75
+idx=3D0 seqid=3D79933 slot_seqid=3D79932 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.638289]     nfsd-5184     28...1. 371173457705us :
+nfsd_slot_seqid_sequence: addr=3D10.25.245.31:0 client 694c76e1:df896ef1
+idx=3D0 seqid=3D70061 slot_seqid=3D70060 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.645342]     nfsd-6031      6...1. 371173457731us :
+nfsd_slot_seqid_sequence: addr=3D10.25.240.198:0 client
+694c76e1:df897179 idx=3D0 seqid=3D38040 slot_seqid=3D38039
+flags=3DCACHETHIS|INITIALIZED|CACHED
+[374235.652425]     nfsd-5957     37...1. 371173457767us :
+nfsd_slot_seqid_sequence: addr=3D10.25.244.86:0 client 694c76e1:df896fe7
+idx=3D0 seqid=3D30158 slot_seqid=3D30157 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.659511]     nfsd-6028     55...1. 371173457829us :
+nfsd_slot_seqid_sequence: addr=3D10.25.255.66:0 client 694c76e1:df8970a1
+idx=3D0 seqid=3D25932 slot_seqid=3D25931 flags=3DCACHETHIS|INITIALIZED|CACH=
+ED
+[374235.666430]     nfsd-5541     57...1. 371173457905us :
+nfsd_slot_seqid_sequence: addr=3D10.25.254.129:0 client 694c76e1:df8
+
+REBOOT
+
+Any more pointers on how I can compress this down to something more
+useful for debugging?
+
+Maybe there is useful info in there so I'm happy to compress and
+upload the entire log somewhere if that is useful?
+
+Daire
+
+On Wed, 24 Dec 2025 at 11:18, Daire Byrne <daire@dneg.com> wrote:
+>
+> Thanks for the pointers!
+>
+> I have put this all in place so now we wait...
+>
+> Hopefully we'll net something more useful over the next couple of
+> weeks with our production workloads.
+>
+> Cheers,
+>
+> Daire
+>
+>
+> On Wed, 24 Dec 2025 at 01:42, Chuck Lever <cel@kernel.org> wrote:
+> >
+> >
+> >
+> > On Tue, Dec 23, 2025, at 6:25 PM, Daire Byrne wrote:
+> > > Hi,
+> > >
+> > > We recently upgraded our NFS re-export servers from a heavily patched
+> > > (but stable) v6.4 kernel to pretty virgin v6.18.0.
+> > >
+> > > But we have started to record a fairly infrequent (once every 2 weeks=
+)
+> > > crash of the form:
+> > >
+> > > [1235524.634962] ------------[ cut here ]------------
+> > > [1235524.636805] refcount_t: underflow; use-after-free.
+> > > [1235524.638522] WARNING: CPU: 21 PID: 5048 at lib/refcount.c:28
+> > > refcount_warn_saturate+0xba/0x110
+> > > [1235524.642158] Modules linked in: btrfs(E) blake2b_generic(E) xor(E=
+)
+> > > zstd_compress(E) raid6_pq(E) ufs(E) hfsplus(E) cdrom(E) msdos(E)
+> > > 8021q(E) garp(E) mrp(E) rpcsec_gss_krb5(E) nfsv3(E) tcp_diag(E)
+> > > inet_diag(E) nfs(E) xt_CHECKSUM(E) xt_MASQUERADE(E) xt_conntrack(E)
+> > > ipt_REJECT(E) nf_reject_ipv4(E) nft_compat(E) nft_chain_nat(E)
+> > > nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
+> > > nf_tables(E) bonding(E) nfnetlink(E) tls(E) cachefiles(E) bridge(E)
+> > > stp(E) llc(E) netfs(E) rfkill(E) vfat(E) fat(E) ext4(E) crc16(E)
+> > > mbcache(E) jbd2(E) intel_rapl_msr(E) intel_rapl_common(E) rpcrdma(E)
+> > > rdma_ucm(E) ib_srpt(E) ib_isert(E) iscsi_target_mod(E)
+> > > target_core_mod(E) ib_iser(E) ib_umad(E) rdma_cm(E) iw_cm(E)
+> > > ib_ipoib(E) libiscsi(E) kvm_amd(E) scsi_transport_iscsi(E) ib_cm(E)
+> > > ccp(E) mlx5_vdpa(E) vringh(E) iTCO_wdt(E) vhost_iotlb(E) kvm(E)
+> > > intel_pmc_bxt(E) vdpa(E) irqbypass(E) iTCO_vendor_support(E)
+> > > polyval_clmulni(E) ghash_clmulni_intel(E) i2c_i801(E) mlx5_ib(E)
+> > > joydev(E) i2c_smbus(E) ib_uverbs(E) ib_core(E) lpc_ich(E) nfsd(E)
+> > > [1235524.642267]  auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E)
+> > > sch_fq(E) tcp_bbr(E) binfmt_misc(E) dm_mod(E) sunrpc(E) xfs(E)
+> > > bochs(E) drm_client_lib(E) sd_mod(E) ahci(E) drm_shmem_helper(E) sg(E=
+)
+> > > drm_kms_helper(E) libahci(E) mlx5_core(E) mlxfw(E) libata(E) drm(E)
+> > > serio_raw(E) virtio_blk(E) psample(E) virtio_scsi(E) fuse(E)
+> > > [1235524.681918] CPU: 21 UID: 0 PID: 5048 Comm: nfsd Kdump: loaded
+> > > Tainted: G            E       6.18.0-3.dneg.x86_64 #1
+> > > PREEMPT(voluntary)
+> > > [1235524.686112] Tainted: [E]=3DUNSIGNED_MODULE
+> > > [1235524.687686] Hardware name: Red Hat dneg/RHEL, BIOS
+> > > edk2-20241117-2.el9 11/17/2024
+> > > [1235524.690523] RIP: 0010:refcount_warn_saturate+0xba/0x110
+> > > [1235524.692572] Code: 01 01 e8 39 b6 a5 ff 0f 0b e9 fd 5a 8a ff 80 3=
+d
+> > > ee 98 8e 01 00 75 85 48 c7 c7 e0 56 93 a1 c6 05 de 98 8e 01 01 e8 16
+> > > b6 a5 ff <0f> 0b e9 da 5a 8a ff 80 3d c9 98 8e 01 00 0f 85 5e ff ff f=
+f
+> > > 48 c7
+> > > [1235524.699284] RSP: 0018:ff314a5f895efd80 EFLAGS: 00010286
+> > > [1235524.701351] RAX: 0000000000000000 RBX: ff2971f27ea6e000 RCX:
+> > > 0000000000000000
+> > > [1235524.703999] RDX: ff2972d37f16a780 RSI: 0000000000000001 RDI:
+> > > ff2972d37f15cd40
+> > > [1235524.706589] RBP: ff29715e2ab4c000 R08: 0000000000000000 R09:
+> > > 0000000000000003
+> > > [1235524.709218] R10: ff314a5f895efc28 R11: ffffffffa23e04a8 R12:
+> > > ff2971f27ea6e008
+> > > [1235524.711976] R13: ff29715e2ab37298 R14: ff29715e2ab37240 R15:
+> > > 000000000000002d
+> > > [1235524.714573] FS:  0000000000000000(0000) GS:ff2972d3dc291000(0000=
+)
+> > > knlGS:0000000000000000
+> > > [1235524.717486] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [1235524.719667] CR2: 00007f6564087780 CR3: 000001020c2f1003 CR4:
+> > > 0000000000771ef0
+> > > [1235524.722249] PKRU: 55555554
+> > > [1235524.723471] Call Trace:
+> > > [1235524.724964]  <TASK>
+> > > [1235524.726034]  nfsd4_sequence_done+0x1d6/0x210 [nfsd]
+> > > [1235524.727957]  nfs4svc_encode_compoundres+0x50/0x60 [nfsd]
+> > > [1235524.729973]  nfsd_dispatch+0x111/0x210 [nfsd]
+> > > [1235524.731750]  svc_process_common+0x4e7/0x6f0 [sunrpc]
+> > > [1235524.733741]  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
+> > > [1235524.735707]  ? __pfx_nfsd+0x10/0x10 [nfsd]
+> > > [1235524.737459]  svc_process+0x141/0x200 [sunrpc]
+> > > [1235524.739176]  svc_handle_xprt+0x483/0x580 [sunrpc]
+> > > [1235524.741066]  ? __pfx_nfsd+0x10/0x10 [nfsd]
+> > > [1235524.742784]  svc_recv+0xe0/0x1f0 [sunrpc]
+> > > [1235524.744457]  nfsd+0x8b/0xe0 [nfsd]
+> > > [1235524.745923]  kthread+0xfa/0x210
+> > > [1235524.747343]  ? __pfx_kthread+0x10/0x10
+> > > [1235524.748956]  ret_from_fork+0xee/0x110
+> > > [1235524.750504]  ? __pfx_kthread+0x10/0x10
+> > > [1235524.752078]  ret_from_fork_asm+0x1a/0x30
+> > > [1235524.753695]  </TASK>
+> > > [1235524.754738] ---[ end trace 0000000000000000 ]---
+> > >
+> > > Some of these servers are pretty heavily loaded and churn through lot=
+s
+> > > of data (constant 50gbit) so I think this must be a pretty rare corne=
+r
+> > > case.
+> > >
+> > > These re-export servers export many different NFS server mounts which
+> > > include some Netapps mounted as NFSv3 and re-exported to Linux client=
+s
+> > > as NFSv4. Because these are the only filesystems that are re-exported
+> > > NFSv4 (all our Linux NFS server are mounted and re-exported NFSv3),
+> > > the Netapps must be the ones involved in this nfsd4_sequence_done
+> > > stack trace.
+> > >
+> > > Having moved from v6.4 to v6.18, there is a lot of churn to get
+> > > through to bisect, build, install and wait for a crash so any
+> > > suggestions narrowing down where to look with this one would be
+> > > greatly appreciated.
+> > >
+> > > Like I said, fairly rare for us atm and the brief outage and
+> > > disruption is manageable so we have time to step through the bisect
+> > > process if required.
+> >
+> > Thanks for the detailed report.
+> >
+> > Given the two-week reproduction window, bisecting would be painful,
+> > especially because it=E2=80=99s difficult to tell if the problem is pre=
+sent and just not
+> > triggering. Instead, could you rebuild with these debugging options ena=
+bled?
+> >
+> >   CONFIG_DEBUG_OBJECTS=3Dy
+> >   CONFIG_DEBUG_OBJECTS_FREE=3Dy
+> >   CONFIG_KFENCE=3Dy
+> >
+> > If you're willing to accept some tracing overhead, these tracepoints wo=
+uld
+> > help narrow down the sequence of events:
+> >
+> >   echo 1 > /sys/kernel/debug/tracing/events/nfsd/nfsd_slot_seqid_sequen=
+ce/enable
+> >   echo 1 > /sys/kernel/debug/tracing/events/nfsd/nfsd_mark_client_expir=
+ed/enable
+> >   echo 1 > /sys/kernel/debug/tracing/events/nfsd/nfsd_clid_destroyed/en=
+able
+> >
+> > The nfsd_mark_client_expired tracepoint captures cl_rpc_users, which
+> > is the client refcount that appears to be underflowing.
+> >
+> > To automatically dump the trace buffer on oops:
+> >
+> >   echo 1 > /proc/sys/kernel/ftrace_dump_on_oops
+> >
+> > This writes recent trace events to the kernel log, so they'll appear
+> > in dmesg output immediately following the oops. If the system remains
+> > accessible after the warning, you can also extract the full buffer:
+> >
+> >   cat /sys/kernel/debug/tracing/trace > /tmp/nfsd-trace.txt
+> >
+> > Looking at changes between v6.4 and v6.18, the session slot handling
+> > was significantly reworked (xarray storage, on-demand allocation,
+> > shrinker support). If the next crash provides more context, that
+> > would help focus the investigation, and could reduce the span of
+> > commits that would need to be bisected.
+> >
+> >
+> > --
+> > Chuck Lever
 
