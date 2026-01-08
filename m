@@ -1,126 +1,102 @@
-Return-Path: <linux-nfs+bounces-17586-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17587-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14451D00767
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 01:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B3FCD00770
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 01:29:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A174B301C900
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 00:26:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 074F63012278
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 00:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E82319A2A3;
-	Thu,  8 Jan 2026 00:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0873D199FB0;
+	Thu,  8 Jan 2026 00:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOG83wiP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T15BA2G7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498A9199FB0
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 00:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D389513E02A;
+	Thu,  8 Jan 2026 00:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767832010; cv=none; b=hDckWkYD0DyAWKBNLQ5XGhhXQ6CroXfjNTLXQYXwc0TwUbtqaHbhHqhC3DFfBme90NpwMk2WAK0LI5HWAb0YTB5YMp7Tp8Fu1sFKNIxi/dqHkawxQCo378DOnPsxBjdtRF56ilAPEKh3/PotR0C9XXtjqpXyzT2dqMufB7mwCGU=
+	t=1767832135; cv=none; b=klrSeoWmJn01zZ+XQYN1owRW6eHhbEcE4vkow8EmXySaJM8Fty0FXsEFJWOWvMUoz1oSvlaNCvv6Amr6ncbrxXnOLoApFUaCvbiT3FmX6c2+iX7iUiGZUDvpdxVtBw7czLvTl3TbqqA0jAuMRnvBF3yPk2uRrps4zWuwrb6j2o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767832010; c=relaxed/simple;
-	bh=FMm6znQEgmQsGoE7OEJXQvl+VcGJ4oanpicJW4OIflA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=B3KUhTXgwt38LsatNLz4XuDdW2Z6+Ogx6gAekvroo/lEshWmmbM3ulwcs7Sn2IzKENgn1hWrfB8e1v06el+OLeu1W3O3R45/vGbmp9IcqZYOAbavbr/iZv5DlSKR4Olnl/uT4CzCpdtrfdYxsNB/nYgBJQweXRP8UlBxLBPqfTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOG83wiP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF99C19421
-	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 00:26:48 +0000 (UTC)
+	s=arc-20240116; t=1767832135; c=relaxed/simple;
+	bh=dilqyGF+66/wOjxQew1lwSNg437K+ZeGUCd0+jqqBHE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M4QQRQSkUPGfFiU5dkb7WTETDNWDE83r+5KusSk8X36mbqT4Xny4NAkEENWfiokR6AIzaRUZq/WFXwXjbbAPSn4JpQRIaCxpWFi18K0fyLWZ7jWtkJzsRdJZAMEU3CzLLCHj1t4MnUz76S9ESFqmeHjxzX7qLn+1zkm8v/5N/z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T15BA2G7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8671DC4CEF1;
+	Thu,  8 Jan 2026 00:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767832008;
-	bh=FMm6znQEgmQsGoE7OEJXQvl+VcGJ4oanpicJW4OIflA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=AOG83wiPXa9+3Nvmnr0OwtTVd1/yOd1deWw297NGThMYnZ9ZJhmtGkn94JSiWOQ91
-	 YpWh+Qyh/O8Gp3oBOgUB1fsY9hT/3JmTAmj6Hs8+6ZQjDEr+v8qochujd3y0P2TuPn
-	 L7HMR5COiF0pWTk0wZznMtWukm+mScQC+/XUTpUnQah6C8ZHL/HzQDw/1EfvHC34XI
-	 FbRhXUh0YbSDEQTB3vTcCFITC6BJB7DVaCFJVhi+E2M5xhB5WRnP9sztqewH8ag4Cy
-	 fQsjs/YCVL1Y9V2wOR0VcqqGBvENnJLqBXlAL1NCfeC3RYntFtjweIn1AP3ioxkz/Z
-	 iXOgPCWNqVoXg==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C1131F40069;
-	Wed,  7 Jan 2026 19:26:47 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 07 Jan 2026 19:26:47 -0500
-X-ME-Sender: <xms:x_leaUSUnzI3QVTe2AmU9XaTfS_Fy6K06VOSk_pR8bncrExOveYOPA>
-    <xme:x_leackMZm_aIG1R3829WcZPeCKpVVRQoTlnVF1LGxxSnsbehdtlj6uqDY6kHkkUG
-    soJKCKy7gZJPQ7559_6Sb_X7uIRIJDcZ4Dn3wwgBoxSNO8YV6YPUCg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdeghedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopeifihhllhihse
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpth
-    htohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphhtthhopehokhhorhhnihgv
-    vhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpd
-    hrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:x_leaalB8VgO4UDk3YamtHQJPsIv1KLDTicXzjTihj6etHsa8Xp10Q>
-    <xmx:x_leab3oayo0_RMnDJ1VzsLAR0daQhbAHLe6YKLUygqpOIJS1g6ULA>
-    <xmx:x_leafR0hp8vrT4V2xzVbFHGiHylPTPaap4-JfXboLIL3zz407MHjw>
-    <xmx:x_leacwB-wJUMYKKSLszClR6oUUkuMuW2X3pk24Xpi5DB5BY-Nzv2Q>
-    <xmx:x_leaXBcUNs1PHWCW4Pj7fdXkDWfYdkbnm0LvInvMFjRjyZ5xIyvjXKR>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A1756780054; Wed,  7 Jan 2026 19:26:47 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1767832135;
+	bh=dilqyGF+66/wOjxQew1lwSNg437K+ZeGUCd0+jqqBHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=T15BA2G7TNpp+j1/Wwp783DlBWnfPd0eARBwBszk4KKVTreo4r7NDIIf/GLwJzr6J
+	 9aa8qmwiipoRuQUhCyreGNBSXRwUfq/PZ9ixOpQUvnv4Gf1gz6fslL6Br1eHT8xPxC
+	 rHRa4Mz+7sO49SqzbIYFCJQXXFumYx3EBDk79dp/XxsCM0eA3mb+tjDrlao+KKu/mY
+	 3uQQi7qP0zoSzWDzmSMG+jUv0mmCpha9jTjSoaNVNfU0YgnTSmr6DFzr3RMqOpGTzh
+	 k6W2LZJDBNhomD80Tv5j1HNXY0TqEyqY/rV6kcE+8hA0qSlX+SJZVZigyhHPbFIrqS
+	 uSomnoIgaR71w==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] nfsd, sunrpc: allow for a dynamically-sized threadpool
+Date: Wed,  7 Jan 2026 19:28:51 -0500
+Message-ID: <176783211844.3906223.2883879157306428101.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
+References: <20260106-nfsd-dynathread-v2-0-416e5f27b2b6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AJTYT3n31L2N
-Date: Wed, 07 Jan 2026 19:26:26 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Christoph Hellwig" <hch@infradead.org>
-Cc: NeilBrown <neilb@ownmail.net>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Message-Id: <9e127bfa-e4c9-4e06-b5ad-bb375e7d8e2b@app.fastmail.com>
-In-Reply-To: <aV6HHwrkoR4OE5qc@infradead.org>
-References: <20251227042437.671409-1-cel@kernel.org>
- <aV6HHwrkoR4OE5qc@infradead.org>
-Subject: Re: [PATCH v5] NFSD: Track SCSI Persistent Registration Fencing per Client
- with xarray
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Chuck Lever <chuck.lever@oracle.com>
 
+On Tue, 06 Jan 2026 13:59:42 -0500, Jeff Layton wrote:
+> This version of the patchset fixes a number of warts in the first, and
+> hopefully gets this closer to something mergeable.
+> 
+> This patchset allows nfsd to dynamically size its threadpool as needed.
+> The main user-visible change is the addition of new controls that allow
+> the admin to set a minimum number of threads.
+> 
+> [...]
 
-On Wed, Jan 7, 2026, at 11:17 AM, Christoph Hellwig wrote:
-> On Fri, Dec 26, 2025 at 11:24:37PM -0500, Chuck Lever wrote:
->
->> @@ -342,6 +343,20 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
->>  		goto out_free_dev;
->>  	}
->>  
->> +	/*
->> +	 * xa_store() is idempotent -- the device is added exactly once
->> +	 * to a client's cl_dev_fences no matter how many times
->> +	 * nfsd4_block_get_device_info_scsi() is invoked. This prevents
->> +	 * adding more entries to cl_dev_fences than there are devices on
->> +	 * the server. XA_MARK_0 tracks whether the device has been fenced.
->> +	 */
->
-> Only in the most abstract way, xa_store actually stores the new
-> entry/value and returns the old one.  In other words, this does
-> quite a bit of work for the non-initial GETDEVICEINFO.
+Applied to nfsd-testing, thanks!
 
-The comment is misleading then, and should be clarified.
+[1/8] sunrpc: split svc_set_num_threads() into two functions
+      commit: 039d0b7837eaad0d904631df3ec26b4961ee740a
+[2/8] sunrpc: remove special handling of NULL pool from svc_start/stop_kthreads()
+      commit: 040f69a4bff8ba6236d69bca06c62adb7588268b
+[3/8] sunrpc: track the max number of requested threads in a pool
+      commit: 2672a852bfc6d7597a8b202cf5ee813a4a04b1b8
+[4/8] sunrpc: introduce the concept of a minimum number of threads per pool
+      commit: 80099415fa314dec028bbb3e904ed57ddea55d1c
+[5/8] sunrpc: split new thread creation into a separate function
+      commit: ad23853b5e7bc156652fd957425d6891dd864ea1
+[6/8] sunrpc: allow svc_recv() to return -ETIMEDOUT and -EBUSY
+      commit: a37178a2642f98fd6cbed39fa0c508dce3bd7bf8
+[7/8] nfsd: adjust number of running nfsd threads based on activity
+      commit: f375bafd744fa40cdc48d252e5f5db1242100881
+[8/8] nfsd: add controls to set the minimum number of threads per pool
+      commit: fe054be1747e1754bc81ea3dabbf85dfab2bed27
 
-But should the code use xa_insert instead of xa_store ?
-
-
--- 
+--
 Chuck Lever
+
 
