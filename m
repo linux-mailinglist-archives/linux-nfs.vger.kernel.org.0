@@ -1,135 +1,102 @@
-Return-Path: <linux-nfs+bounces-17613-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17614-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9076CD03FDA
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 16:46:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55A64D03CB8
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 16:24:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D54F631DDB90
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 15:24:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 40D45306BC96
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 15:19:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F391454D8C;
-	Thu,  8 Jan 2026 14:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BFA4508342;
+	Thu,  8 Jan 2026 14:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RdRZM0th"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTaUP8Az"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125544E035;
-	Thu,  8 Jan 2026 14:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A7A50833A;
+	Thu,  8 Jan 2026 14:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767882109; cv=none; b=j9BS5IawZMIFyKlUB6gFrC/sV9/7Oq49WvZYyaWi9Hrkag9IbfHADZhNvzvfhcj+uBlW59ur9u6JkkQBSrX7qkvCpqG6l8s6qMnW6Zuvnb3E9AfxDXvhAJ4JHVBKy+Z7bG/LeAkXyKrXKdkWOqJi9tLsdUWl7prWx+LFD9HSihU=
+	t=1767882358; cv=none; b=uPoZiomsEZDajo0suye3kRjZKptPKozKuYfDs8O+58o9f6ATFjjjoZ0YFLsNxcA/lu4WrYDU4veMj3m0/PVY6I9gxwxwDf3y3XWzcpKBgzmo6SCaNpDp8GGfADjl3POmhVq2mCAY/vLHKwK9fLiRxVgrOVJZfoT08c34Ru7C09Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767882109; c=relaxed/simple;
-	bh=5tJepZdBm4NT9tyjBB7PXASujyH9KkjsFzRaJR+9pl4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W+llRZnGXSf+K9YKqCtF9pGFHXJLvxavY8wVuvpXZMPCd+QSl+nTM6md7GZgBaATRBbD6UMPlkXTUlmeMQPBkI0yjx6T+dnnB6LlO9aeZsl3SwuVrldzr0ApwWMpdlQh7GiGh/dw0SIBiYAPdiJGTJm93uPH6ZAARbIULeoshB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RdRZM0th; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dwwZ/yOU7SW1prK7b5bp9EkEBz6f02bqYmxcFFUDJQk=; b=RdRZM0th3MexAdg4BYXcprKzWL
-	qKIf8k9FWj0refwqaCOxEeK161s0QQWu6adggTvMzXXz4jgeeG7h0EhYHIR8nRKP1UBSHMmRIHA00
-	LJbOboxA6kJnns/yUZupNt9rwQ8SaGp8L6t7GGiyIkTIcdMF+r51XiSLKk1ARgg8OADVZi+RZqpWI
-	tRMOzKvd+PbqGPggfemC26C3oDDF4jiqIImlOFcF7BCgIvepUgKqFa8JcUa1WrZAas9EF7OFhuxXX
-	DooT3+wFQACjnht3zV4nWfWpAgjnTg2d/RlchvtRCAPmnvGbl6QKHGZae27DW3FwgNzEtGb/giJzU
-	6TOiZyrA==;
-Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdqtU-0000000HK5r-0Aie;
-	Thu, 08 Jan 2026 14:21:44 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	David Sterba <dsterba@suse.com>,
-	Jan Kara <jack@suse.cz>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Carlos Maiolino <cem@kernel.org>,
-	Stefan Roesch <shr@fb.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev,
-	io-uring@vger.kernel.org,
-	devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-xfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH 11/11] xfs: enable non-blocking timestamp updates
-Date: Thu,  8 Jan 2026 15:19:11 +0100
-Message-ID: <20260108141934.2052404-12-hch@lst.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260108141934.2052404-1-hch@lst.de>
-References: <20260108141934.2052404-1-hch@lst.de>
+	s=arc-20240116; t=1767882358; c=relaxed/simple;
+	bh=NRKSjfeKxnpLmERNVN4nrPDXNns3sLlBpJndOnpYE9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SQqgI1b/5RdngOfp1q1x/lLWDkI7IbbtMC+1G/jPZhwE/fCMihdSkcTv4k/kD86V+I0AkpmZptxfWi9dbnZelArMWHAijTNVgLhVg0xlFYJe/SLCoXU0/c2xN3lApIJ6UzWiLZtmTycHaEjDsfDhotvFgVJrn5GZ4KLgRTVDrIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTaUP8Az; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04410C116C6;
+	Thu,  8 Jan 2026 14:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767882358;
+	bh=NRKSjfeKxnpLmERNVN4nrPDXNns3sLlBpJndOnpYE9A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pTaUP8Az8/EIcpthQlP6N7+Tx5crWVO8KQ1mCD/wRQeDQ/JfIrazkNdJlWe0F1J/j
+	 sZLzd4n8+KjUo/dDUFkJSVBRsWWJsA/oC5MQzjoXhIEB0Cvv08d5E+EtReRajuuxdv
+	 ZhurRSk3/Mdg/KOdG0nzLXntADgBIE4ZarnO7rtjvXh6U/6XFRbXIUOLfJIbDWcPXo
+	 Jg4ezniSL5nxt/lYR2vty8PJqYmY+5c+K3oZyZSPryIuUHfJgETTpUsGDbLMf1yZNl
+	 tN+jPOwVzHdXfjyEYgEUwPbkD4z3VS4CIDDekxOPhJpj2EK9+Hk6lUZaAOEMS0E9A+
+	 IZPT1KYt6muyA==
+Message-ID: <ff54b6fb-6c82-4994-b9ff-715f9645d75c@kernel.org>
+Date: Thu, 8 Jan 2026 09:25:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6.y 1/4] nfsd: convert to new timestamp accessors
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org,
+ Sasha Levin <sashal@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+References: <20260103193854.2954342-1-cel@kernel.org>
+ <20260103193854.2954342-2-cel@kernel.org>
+ <2026010808-subwoofer-diabetic-e54e@gregkh>
+From: Chuck Lever <cel@kernel.org>
+Content-Language: en-US
+Organization: kernel.org
+In-Reply-To: <2026010808-subwoofer-diabetic-e54e@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The lazytime path using the generic helpers can never block in XFS
-because there is no ->dirty_inode method that could block.  Allow
-non-blocking timestamp updates for this case by replacing
-generic_update_time with the open coded version without the S_NOWAIT
-check.
+On 1/8/26 6:03 AM, Greg Kroah-Hartman wrote:
+> On Sat, Jan 03, 2026 at 02:38:51PM -0500, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> [ Upstream commit 335a7be84b526861f3deb4fdd5d5c2a48cf1feef ]
+> 
+> I don't see this git id anywhere in Linus's tree, are you sure it is
+> correct?
+> 
+> thanks,
+> 
+> greg k-h
 
-Fixes: 66fa3cedf16a ("fs: Add async write file modification handling.")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
----
- fs/xfs/xfs_iops.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+If I start from the current upstream master, I find this instead:
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 338f3113f674..1cdd8a360510 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1195,16 +1195,22 @@ xfs_vn_update_time(
- 
- 	trace_xfs_update_time(ip);
- 
--	if (flags & IOCB_NOWAIT)
--		return -EAGAIN;
--
- 	if (inode->i_sb->s_flags & SB_LAZYTIME) {
--		if (type == FS_UPD_ATIME ||
--		    !inode_maybe_inc_iversion(inode, false))
--			return generic_update_time(inode, type, flags);
-+		int dirty;
-+
-+		dirty = inode_update_time(inode, type, flags);
-+		if (dirty <= 0)
-+			return dirty;
-+		if (dirty == I_DIRTY_TIME) {
-+			__mark_inode_dirty(inode, I_DIRTY_TIME);
-+			return 0;
-+		}
- 
- 		/* Capture the iversion update that just occurred */
- 		log_flags |= XFS_ILOG_CORE;
-+	} else {
-+		if (flags & IOCB_NOWAIT)
-+			return -EAGAIN;
- 	}
- 
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
+commit 11fec9b9fb04fd1b3330a3b91ab9dcfa81ad5ad3
+Author:     Jeff Layton <jlayton@kernel.org>
+AuthorDate: Wed Oct 4 14:52:37 2023 -0400
+Commit:     Christian Brauner <brauner@kernel.org>
+CommitDate: Wed Oct 18 14:08:24 2023 +0200
+
+    nfsd: convert to new timestamp accessors
+
+    Convert to using the new inode timestamp accessor functions.
+
+    Signed-off-by: Jeff Layton <jlayton@kernel.org>
+    Link:
+https://lore.kernel.org/r/20231004185347.80880-50-jlayton@kernel.org
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+I picked up 335a7be84b526861f3deb4fdd5d5c2a48cf1feef from an
+nfsd-related tag by mistake. Do you want to drop this series and I can
+rework it properly?
+
+
 -- 
-2.47.3
-
+Chuck Lever
 
