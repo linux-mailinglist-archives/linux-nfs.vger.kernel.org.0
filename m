@@ -1,53 +1,43 @@
-Return-Path: <linux-nfs+bounces-17619-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17620-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAF44D04213
-	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 17:02:53 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE414D03FBB
+	for <lists+linux-nfs@lfdr.de>; Thu, 08 Jan 2026 16:46:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7E7DF34AE47A
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 15:42:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 835883024B9E
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jan 2026 15:44:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FBD250096F;
-	Thu,  8 Jan 2026 15:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="o92+nerY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED9A1DF736;
+	Thu,  8 Jan 2026 15:35:54 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB2422127B;
-	Thu,  8 Jan 2026 15:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694F62DB791
+	for <linux-nfs@vger.kernel.org>; Thu,  8 Jan 2026 15:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767886031; cv=none; b=DkkeVRQdvdfET/hZ+B4JtktXir7rMVGJ7Ndya0C18oJHCF3eMyCYPfAn1iq9ISdIZs55RgT3KG1cEPhRpYKq1nu5VcucbPoF8mgHsUGz6W+Y1VSPExuxscG1/spqxIEDu9JVGwEQkvUs7ctyUX632S7MvhNe7/4se4JgnZT2GqE=
+	t=1767886554; cv=none; b=dtJKdkgb1vmuoDy+Us+NyXWecDghptkUy7VYPnvU1Xnd80NTf3ngR+E9cAKB/7HaSUK4e+asG3yKpks54jfgFcOJxjtoCQwehMyXR9sX0z5p+H9bIK7M/DiOYENKKK0E34erMHqD3bkk+oyBfuD6PWGxuvB5hogY9TtVvQiO8gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767886031; c=relaxed/simple;
-	bh=4+GIdESyTpcoiGh3FY5yXiJkQq4EfGozENLDb8ueXlI=;
+	s=arc-20240116; t=1767886554; c=relaxed/simple;
+	bh=hW+Vui6mROgnB2D8+UB1HP7nqJ5ZaH0GN9WoITM/W3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lj43zMe2wbK45ks8zIJyZVAHRKgrvS646lsZEgTofMuKK3XxHM7rjCA9uwISA5kAA3tvwkY3vq3WOSqt+7f+IuIl0j1X1cpdKjidr9bz1DRlDunkmDb0WNdpOHLDTllB8/bS3X9AtlBjyiwDc/rW8wIb+sTXt7Qjnkhvej27jxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=o92+nerY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D369EC116C6;
-	Thu,  8 Jan 2026 15:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1767886030;
-	bh=4+GIdESyTpcoiGh3FY5yXiJkQq4EfGozENLDb8ueXlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o92+nerYl7oPMCLXKEQ0JQGv4ifrjFlRgiHeUrClTKC27Wp4RDb05cDMih6kueYiH
-	 wyH45kTm4zY6zokaKrdeyBCbxO9fmN5AxS79Ou2Ja3tBqCRqgUH4Hq/F6RVMCxnhkV
-	 SU/qPcMvPeQnjjifjGq9NhXJvXPbZX8eSEjOGKSw=
-Date: Thu, 8 Jan 2026 16:27:06 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=J08uS3H1h8ka87ZMKjUivk5ZNO2zyIEYG+XJ2idAVhi8WF4xmVA9KqRPjb5ohqdzTX8Nu912VtOaMX0Afa9RH+vw1UbHid8yjP4i50XBIA4mVBulT/C+vxwYYY7aqVLocz3v3/0C69T3AHbkSlDN3xAlifBNuZ8bkprC54XM4lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 3716B67373; Thu,  8 Jan 2026 16:35:46 +0100 (CET)
+Date: Thu, 8 Jan 2026 16:35:46 +0100
+From: Christoph Hellwig <hch@lst.de>
 To: Chuck Lever <cel@kernel.org>
-Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 6.6.y 1/4] nfsd: convert to new timestamp accessors
-Message-ID: <2026010856-getaway-ungodly-4551@gregkh>
-References: <20260103193854.2954342-1-cel@kernel.org>
- <20260103193854.2954342-2-cel@kernel.org>
- <2026010808-subwoofer-diabetic-e54e@gregkh>
- <ff54b6fb-6c82-4994-b9ff-715f9645d75c@kernel.org>
+Cc: Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: add a LRU for delegations
+Message-ID: <20260108153546.GA7623@lst.de>
+References: <20260107072720.1744129-1-hch@lst.de> <0b0b21c1-0bfd-4e2e-9deb-f368a66f5e9c@app.fastmail.com> <20260107162202.GA23066@lst.de> <ea31c230-1ace-4721-872e-2313b497214f@grimberg.me> <45ba87f3-2322-424b-95b1-9129a2537545@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,44 +46,24 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff54b6fb-6c82-4994-b9ff-715f9645d75c@kernel.org>
+In-Reply-To: <45ba87f3-2322-424b-95b1-9129a2537545@app.fastmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jan 08, 2026 at 09:25:57AM -0500, Chuck Lever wrote:
-> On 1/8/26 6:03 AM, Greg Kroah-Hartman wrote:
-> > On Sat, Jan 03, 2026 at 02:38:51PM -0500, Chuck Lever wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> [ Upstream commit 335a7be84b526861f3deb4fdd5d5c2a48cf1feef ]
-> > 
-> > I don't see this git id anywhere in Linus's tree, are you sure it is
-> > correct?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On Thu, Jan 08, 2026 at 09:34:28AM -0500, Chuck Lever wrote:
+> The server and client have orthogonal interests here, IMO.
 > 
-> If I start from the current upstream master, I find this instead:
+> The server is concerned with resource utilization -- memory consumed,
+> slots in tables, and so on -- that other active clients might benefit
+> from having freed. The server doesn't really care which delegations
+> are returned.
 > 
-> commit 11fec9b9fb04fd1b3330a3b91ab9dcfa81ad5ad3
-> Author:     Jeff Layton <jlayton@kernel.org>
-> AuthorDate: Wed Oct 4 14:52:37 2023 -0400
-> Commit:     Christian Brauner <brauner@kernel.org>
-> CommitDate: Wed Oct 18 14:08:24 2023 +0200
-> 
->     nfsd: convert to new timestamp accessors
-> 
->     Convert to using the new inode timestamp accessor functions.
-> 
->     Signed-off-by: Jeff Layton <jlayton@kernel.org>
->     Link:
-> https://lore.kernel.org/r/20231004185347.80880-50-jlayton@kernel.org
->     Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> I picked up 335a7be84b526861f3deb4fdd5d5c2a48cf1feef from an
-> nfsd-related tag by mistake. Do you want to drop this series and I can
-> rework it properly?
+> A client wants to keep delegation state that applications are using,
+> and it knows best which ones those are. It can identify specific
+> delegations that are not being actively used and return those.
 
-Now dropped, please rework, thanks!
+Yes.  A good way to deal with that is implementing RECALLY_ANY as I
+mentioned, which with these changes could reclaim off the end of the LRU.
+But as this series is a big change already, and doing fine grained
+recalls is another huge one I'd rather wait a bit before going there.
 
-greg k-h
 
