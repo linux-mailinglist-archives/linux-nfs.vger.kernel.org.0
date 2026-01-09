@@ -1,135 +1,165 @@
-Return-Path: <linux-nfs+bounces-17679-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17680-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6C1AD07B0C
-	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 09:03:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45165D07E3B
+	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 09:42:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1D2CD3042FEC
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 08:03:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6D17D3049E19
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 08:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC7F2F8BCA;
-	Fri,  9 Jan 2026 08:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0B01352C36;
+	Fri,  9 Jan 2026 08:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="u/G6UHBR"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="TQHp8WwD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C557VQp8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A4D1925BC;
-	Fri,  9 Jan 2026 08:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B22352930;
+	Fri,  9 Jan 2026 08:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767945792; cv=none; b=NPFuhy7trER1m13xTajMQ721luRbtDhCkGAsqD4+7zdW/DgJpanYJSdfCQjHW68fKpzhNIticsD6NBlh4inqA9Oj3yBbXgBeh0dUzuKOEhXrJUpvVylqmOksOlvcpun12NFv+PoN5gKUP5HzaRcG6A+1tHRgnfAQIzrEeO2RB0I=
+	t=1767947936; cv=none; b=O7WaQy9o75TNe2/xF1tEDkM+16OSsgOcswOfmzVAHwl721lt6vg0IAnDhIkJpV5xpvUlzT667m5zhcbQ2IzcE/qnTyZVKtUsCfZj3aBLkR5aEBtuDYRMeW5gQuRSbuqIpdN7+OX7QtiRtKNr10nfnusSK06lafORpDaYVxKjVOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767945792; c=relaxed/simple;
-	bh=qpKkiEmSndwjicxjhbSkEm+OqKkOEZYFr+38yoapT18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXpKSllX8aiJvAicU/q+DdrvPlphcBnED/1HDhRWomNotq/D3prUIdgqthJNnHQZbcecKgW7Ji8y5uPFJoOp7Yk6q7QP79bh+NJnyX4uHt1fnnuzTYyoyESjvxNegiUicGphXcC85fmnJ1cWsDw8N/85v79rS1TyIyIAkB1F2G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=u/G6UHBR; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qpKkiEmSndwjicxjhbSkEm+OqKkOEZYFr+38yoapT18=; b=u/G6UHBR+5ow337c1JghYNJWDu
-	469UvSVDGO6+YNoToIhvNpY/ayIALEDFf83grTS2D6y7ywOIZRCy3/iCq0ZM8cD9AQ7+fvI6fMS/l
-	VjLYtprYxFtgUJOLkBpfkNoCRVxT2oFQ6XhbJajtpb60QimL+reK7hwOJ+F5oKdDQQZtNH32mdj0Y
-	NYtK4gqyLHxfqzyBhdXj9XmvkLhDu8ED96O2oCUUKK/NOkC2O3HxcO7BSos4TaDLom8xvGFiEVG6n
-	uXxgBBpevz0vRplri8JSg/0oY1M5QY6lVD/kkliK7tKRqWXLpEXX/jLge7VyyPvx2QBNIuYZ8+750
-	dpDI5izw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.99 #2 (Red Hat Linux))
-	id 1ve7TD-0000000F7AZ-0jA4;
-	Fri, 09 Jan 2026 08:03:43 +0000
-Date: Fri, 9 Jan 2026 08:03:43 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	Nicolas Pitre <nico@fluxnic.net>,
-	Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	Anders Larsen <al@alarsen.net>,
-	Christian Brauner <brauner@kernel.org>,
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Phillip Lougher <phillip@squashfs.org.uk>,
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
-	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <20260109080343.GA3634291@ZenIV>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+	s=arc-20240116; t=1767947936; c=relaxed/simple;
+	bh=YDiW3zmkxJhMUBIqx+aDvPSb26J54N9ldD3AuKBjvho=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Hxl5ZFWeUWChQ2yKnzGOXUr5KLOehcOVUn4v1q90gta6GtskTlVxOnGpaGh8etRXbHuHiojzeG0ngS4dHfSj2cZs1AluW0q1QtPd4GcKQIKXKfAtVIHZyQGopgGXe4jZJvoKbUB78bUAzE/zFITBrAOPjfm2Lsnvv4JnOcd07Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=TQHp8WwD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=C557VQp8; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0CAFB14000CE;
+	Fri,  9 Jan 2026 03:38:50 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Fri, 09 Jan 2026 03:38:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1767947930; x=1768034330; bh=G+blVvHVnXAizB4d/NX7cQRXgKclEbrkiyx
+	jrZa2eTU=; b=TQHp8WwDLTskSd7syZBLWN7JeKJbeHEpgW/SHL/ksKnl8ORPHki
+	X03IcMVyD10MNZWgLQTr4OYxJh21mhN22NqlggYh8PycECLYxleWem27ijzN2Ay8
+	nTG+obK93do133Tgl/zi3XXqUdab+8pSmp6m+YRTngAWdux/21rh5UEOjlpqEdhB
+	0+MavjgB+ZBAU0ZbvUcE+2VY+h6QjTxcV1vaIlziatk/qnIp/l9Ou8R6u7dHQxYN
+	/MKUuqoBwuf6MDW5rqSbO1X1QRht26O1165nw+1bpgHOs145nh051eP0gsxp6Yai
+	z5DgavabNqTqy4PRj0XEv5fv2BrV7oj1ihg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767947930; x=
+	1768034330; bh=G+blVvHVnXAizB4d/NX7cQRXgKclEbrkiyxjrZa2eTU=; b=C
+	557VQp8zEfF6TA+36uvueDC3PMGbz+brqfu4P/omiLVl2QdjGpKY/HyRgNW0soLz
+	h7Y9nrrJxNGAWB33uMmssABaWbupRyU8kbtumxvSgt/UBdvJPxyCcdw//iq0XsFG
+	G/kSpMJPU4v5gd/8CzuDlfrWT4oFyFR/9moXtciYH4kJjPwsjIFfDfyc7n2U/a7l
+	qFucWGFJbIr5hp5VPGGmuKkHcfjbA5bMBmJcc/9hkFcs+XIXgyRAW/5T2YgMREcG
+	V1Zio/v5h60foYs841VfjsJ2hcb4WtAssnnXnJnRP2OhLc+ow0RCNreDeTZ2jpeE
+	y2hFAdo1AuTmpqwvwZdzw==
+X-ME-Sender: <xms:mb5gaXLWyaLPTK3ho3EeiIkSz6JBPxfpF_HbUXgbfjM7us1ijI5DhA>
+    <xme:mb5gaVLYm6gPbNjJggxRR7fkhMDtxIGa5p7Q3eqyj1mrPID9JUKRnZOPG5y1bZmfA
+    4ZzveFELnw-UHXjFd1rtw25YcZKilytMAb-loPCEf_D3Bvc>
+X-ME-Received: <xmr:mb5gaWVVi35h5ta5p0vjbTP1uXiMBz-Qn6b-ZXcB_P4srR7gj4hA71rLwS_ZqHzwJ2qpd4Q7_atKDv0JWJgvE8ob0_5J14p3ckrc8heP7h90>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdekfeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepohhkoh
+    hrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgr
+    tghlvgdrtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtg
+    homhdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegtvghlsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:mb5gaekX4D9Vx3EiRoGoCCWEoq66e1-OmWdW8ziOsaZo4rSabhmFWw>
+    <xmx:mb5gacnUdCPAaKce23s7o-Ac1YVfg9VrW1dHuMokYTDUOtLGbAxJiA>
+    <xmx:mb5gaeYP67nVPI5xA9yRnACVgsIw2BWkSb6Z3rr1zFrQBKboHbj-jA>
+    <xmx:mb5gaeQ9hPx0mrvdtbGq9c6C1BsyGdFWWSvUzKRnh3NyNq6BzIuX6g>
+    <xmx:mr5gaXU_Vj1RRGesbjp88tenR70KdZfQo9UHGf8lPMmut06JENvekUIK>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 9 Jan 2026 03:38:47 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
+Subject: Re: [PATCH v2 4/6] fs: invoke group_pin_kill() during mount teardown
+In-reply-to: <20260108004016.3907158-5-cel@kernel.org>
+References: <20260108004016.3907158-1-cel@kernel.org>,
+ <20260108004016.3907158-5-cel@kernel.org>
+Date: Fri, 09 Jan 2026 19:38:43 +1100
+Message-id: <176794792304.16766.452897252089076592@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Thu, Jan 08, 2026 at 12:12:55PM -0500, Jeff Layton wrote:
+On Thu, 08 Jan 2026, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> The group_pin_kill() function iterates the superblock's s_pins list
+> and invokes each pin's kill callback. Previously, this function was
+> called only during remount read-only (in reconfigure_super).
+> 
+> Add a group_pin_kill() call in cleanup_mnt() so that pins registered
+> via pin_insert_sb() receive callbacks during mount teardown as
+> well. This call runs after mnt_pin_kill() processes the per-mount
+> m_list, ensuring:
+> 
+>  - Pins registered via pin_insert() receive their callback from
+>    mnt_pin_kill() (which also removes them from s_list via
+>    pin_remove()), so group_pin_kill() skips them.
+> 
+>  - Pins registered via pin_insert_sb() are only on s_list, so
+>    mnt_pin_kill() skips them and group_pin_kill() invokes their
+>    callback.
+> 
+> This enables subsystems to use pin_insert_sb() for receiving
+> unmount notifications while avoiding any problematic locking context
+> that mnt_pin_kill() callbacks must handle.
 
-> I mainly focused on filesystems that are NFS exportable, since NFS and
-> SMB are the main users of file leases, and they tend to end up exporting
-> the same filesystem types. Let me know if I've missed any.
+I still don't understand.
+In your code:
+>  	if (unlikely(mnt->mnt_pins.first))
+>  		mnt_pin_kill(mnt);
+> +	if (unlikely(!hlist_empty(&mnt->mnt.mnt_sb->s_pins)))
+> +		group_pin_kill(&mnt->mnt.mnt_sb->s_pins);
 
-Series looks sane and I don't see any obvious gaps.
+mnt_pin_kill and group_pin_kill() are  called in exactly the same locking
+context.
+Inside these functions the only extra lock taken before invoking the
+callback is rcu_read_lock(), and it is the same in both cases.
 
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+So if mnt_pin_kill() callbacks must handle problematic locking, then so
+must group_pin_kill() callbacks.
+
+> 
+> Because group_pin_kill() operates on the superblock's s_pins list,
+> unmounting any mount of a filesystem--including bind mounts--triggers
+> callbacks for all pins registered on that superblock. For NFSD, this
+> means unmounting an exported bind mount revokes NFSv4 state for the
+> entire filesystem, even if other mounts remain.
+
+That doesn't sound like a result that we want.
+
+Can you be more explicit about the problems of the locking context that
+nfsd would need to face if it used pin_insert() ?
+
+Thanks,
+NeilBrown
+
 
