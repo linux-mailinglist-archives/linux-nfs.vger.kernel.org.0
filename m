@@ -1,87 +1,143 @@
-Return-Path: <linux-nfs+bounces-17711-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17712-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8CC4D0C329
-	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 21:41:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 979F8D0C453
+	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 22:15:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A5843010CCF
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 20:41:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B55B302D2AB
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 21:14:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 714BA19D8BC;
-	Fri,  9 Jan 2026 20:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D68072631;
+	Fri,  9 Jan 2026 21:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2PB3ywv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fM+ZPXCa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9A11A285
-	for <linux-nfs@vger.kernel.org>; Fri,  9 Jan 2026 20:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814A031D735
+	for <linux-nfs@vger.kernel.org>; Fri,  9 Jan 2026 21:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767991276; cv=none; b=tnxMXOtcuT75ptJCVV8AjjX4hPKd5xqomZzI9VbVqQrEdC/Ed69wtgHCqTrJo3LpM3/OvXoRe4Q56iFr3jzitxevqt7oWE3VVkSEeshuGZpzKUieHeBuyxeZgb72F0OT6Vd5s5b1sPr4nx06kvhBZzUPB1xza7e+wC5Sn+I51aw=
+	t=1767993287; cv=none; b=Vo/aLKCmmeVYmsjGNMVnVNu5ErtlEuBISLIEYSZbJNlughkOP1RuJJcgEsShZmfzCoYFCSK56G8DxmmoQ2cAItxsaqK2+utQd3nKzURJ/2LbcwiVpN5Ufrk6kzF/ae/x2U93GoaqetjsI/o0etx27WZd7EtiPFH0K/Va4Ai6lSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767991276; c=relaxed/simple;
-	bh=hSX/y/RcBz2ZX0QMRyv+gbLoQ7F/ofZgbF588OMEjdE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TQDe9zISUQYvXfNLiFVTWw2LmEG1JU02LiOu68F9l4o/xYDnMlCdkuLecdq9tExKnrFl4+OkzoKNXzKdI+BCnhj+O8/jKvQsSa4S/3r+GcGzYmrBzA6O6prmt7jYnwHnUUP09cYjTayWpkWSXUVujwgNKN7IZj5ZPuad8BbW9KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2PB3ywv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB90C4CEF1;
-	Fri,  9 Jan 2026 20:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767991275;
-	bh=hSX/y/RcBz2ZX0QMRyv+gbLoQ7F/ofZgbF588OMEjdE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=t2PB3ywvJPzvznN0qIOV3KnM1zKRT86gjRk6ARW1N3KGm8z4q6u7QWXvHf0vqA/wZ
-	 ouAxRdUYkZxzfLX08QJHy9hw4xQemypvX8m8czvndGgIblcdGrKmm0xbtwaLWm8HHu
-	 nH2Vpzv0s9FzOYEtkXJzSzgaOEpw9tAR6slcD/zbnERDls7xPOt3xBozhsLDwM4xNZ
-	 KUwtO2TldUAZoEzhvogCpkTDbjiQdHyh4Z9JhvK+FKpVAljbS48HsbrGyh+SJ1ahEs
-	 etaAP1My9vI9/raTqvu3VqexWcZT/lnvrHvjR1paKSD/U91VodYW/ziio9tkHZQge9
-	 64wi6wZs6V7og==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH] NFS: Don't immediately return directory delegations when disabled
-Date: Fri,  9 Jan 2026 15:41:14 -0500
-Message-ID: <20260109204114.390304-1-anna@kernel.org>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1767993287; c=relaxed/simple;
+	bh=uXj3V04W9NErkTksKPhD6kasE5KK4IVeJr//78OCCFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgvF64xe0UcC3wFFM2Q6SjmNtok4nh21Ze6GUhsRtsOlrbre8/7IEIAMTwUWNxXn8WHGVagqEA6RfAIIkaxhrOEyoL+8rUiiLmO5dCS7u758f/PT3RLnr2xH7uzrsLtLaDT6CsA8WP/RL/E994l/w7ynh7Hxo7DTWELmFMkefks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fM+ZPXCa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767993287; x=1799529287;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uXj3V04W9NErkTksKPhD6kasE5KK4IVeJr//78OCCFo=;
+  b=fM+ZPXCajJ0IRlvqgPNAlKrXTVTf8Wq3yPsHyjehYREG3W7/WnSW4lwY
+   V+qw5sv8l8qwTCGtn/Sdwx2DCHdXsqwFMkUZV/ydBpLN0PZdGCTc7aA2u
+   gtF0WZUci6AFz/z4T+BiB7Dgf81HFCriewvJ5nhfGmYYtd+vy4DeefyHR
+   Rp/7c9E5bUJ88haGM3VKGKVkYqOJRqHjAQFwiN+Uyk6nZ2gnRl/ZQ4nr7
+   Bg5798OwE1oDBD3j0vDOK3aXav2bQXn4Fgtt3J3eBCTHRONhruveeKPN9
+   61mRH6jIEnAFVL85+I2QAM86rEc3sZhFbORoPmnZC1ReXxFXzWChqKA4I
+   Q==;
+X-CSE-ConnectionGUID: DXvVnffLRN2i+17h6RYNvQ==
+X-CSE-MsgGUID: d00+gKo1Qk6cbKyc825rEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="56930550"
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="56930550"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 13:14:46 -0800
+X-CSE-ConnectionGUID: uR6ka200TgarzR72ollcow==
+X-CSE-MsgGUID: WcK6dYxlRJyBqpPc25XT9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="234765394"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 09 Jan 2026 13:14:45 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1veJog-000000007jc-2sdM;
+	Fri, 09 Jan 2026 21:14:42 +0000
+Date: Sat, 10 Jan 2026 05:14:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: rick.macklem@gmail.com, linux-nfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Rick Macklem <rmacklem@uoguelph.ca>
+Subject: Re: [PATCH v1 5/7] Make nfs4_server_supports_acls() global
+Message-ID: <202601100435.4dwE5mYV-lkp@intel.com>
+References: <20260102232934.1560-6-rick.macklem@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260102232934.1560-6-rick.macklem@gmail.com>
 
-From: Anna Schumaker <anna.schumaker@oracle.com>
+Hi,
 
-The function nfs_inode_evict_delegation() immediately and synchronously
-returns a delegation when called. This means we can't call it from
-nfs4_have_delegation(), since that function could be called under a
-lock. Instead we should mark the delegation for return and let the state
-manager handle it for us.
+kernel test robot noticed the following build warnings:
 
-Fixes: b6d2a520f463 ("NFS: Add a module option to disable directory delegations")
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
----
- fs/nfs/delegation.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.19-rc4 next-20260109]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index c9fa4c1f68fc..8a3857a49d84 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -149,7 +149,7 @@ static int nfs4_do_check_delegation(struct inode *inode, fmode_t type,
- int nfs4_have_delegation(struct inode *inode, fmode_t type, int flags)
- {
- 	if (S_ISDIR(inode->i_mode) && !directory_delegations)
--		nfs_inode_evict_delegation(inode);
-+		nfs4_inode_set_return_delegation_on_close(inode);
- 	return nfs4_do_check_delegation(inode, type, flags, true);
- }
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/rick-macklem-gmail-com/Add-entries-to-the-predefined-client-operations-enum/20260103-073239
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20260102232934.1560-6-rick.macklem%40gmail.com
+patch subject: [PATCH v1 5/7] Make nfs4_server_supports_acls() global
+config: um-allyesconfig (https://download.01.org/0day-ci/archive/20260110/202601100435.4dwE5mYV-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260110/202601100435.4dwE5mYV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601100435.4dwE5mYV-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   fs/nfs/nfs4proc.c: In function 'nfs4_server_supports_acls':
+   fs/nfs/nfs4proc.c:6083:50: error: 'FATTR4_WORD2_POSIX_DEFAULT_ACL' undeclared (first use in this function)
+    6083 |                 return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL;
+         |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/nfs4proc.c:6083:50: note: each undeclared identifier is reported only once for each function it appears in
+   fs/nfs/nfs4proc.c:6085:50: error: 'FATTR4_WORD2_POSIX_ACCESS_ACL' undeclared (first use in this function); did you mean 'FATTR4_WORD1_TIME_ACCESS_SET'?
+    6085 |                 return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_ACCESS_ACL;
+         |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                  FATTR4_WORD1_TIME_ACCESS_SET
+>> fs/nfs/nfs4proc.c:6087:1: warning: control reaches end of non-void function [-Wreturn-type]
+    6087 | }
+         | ^
+
+
+vim +6087 fs/nfs/nfs4proc.c
+
+^1da177e4c3f41 Linus Torvalds  2005-04-16  6071  
+2f4c5fc884fcb1 Rick Macklem    2026-01-02  6072  bool nfs4_server_supports_acls(const struct nfs_server *server,
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6073  				      enum nfs4_acl_type type)
+aa1870af92d8f6 J. Bruce Fields 2005-06-22  6074  {
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6075  	switch (type) {
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6076  	default:
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6077  		return server->attr_bitmask[0] & FATTR4_WORD0_ACL;
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6078  	case NFS4ACL_DACL:
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6079  		return server->attr_bitmask[1] & FATTR4_WORD1_DACL;
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6080  	case NFS4ACL_SACL:
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6081  		return server->attr_bitmask[1] & FATTR4_WORD1_SACL;
+2f4c5fc884fcb1 Rick Macklem    2026-01-02  6082  	case NFS4ACL_POSIXDEFAULT:
+2f4c5fc884fcb1 Rick Macklem    2026-01-02  6083  		return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_DEFAULT_ACL;
+2f4c5fc884fcb1 Rick Macklem    2026-01-02  6084  	case NFS4ACL_POSIXACCESS:
+2f4c5fc884fcb1 Rick Macklem    2026-01-02  6085  		return server->attr_bitmask[2] & FATTR4_WORD2_POSIX_ACCESS_ACL;
+7b8b44eb7710e3 Trond Myklebust 2022-05-14  6086  	}
+aa1870af92d8f6 J. Bruce Fields 2005-06-22 @6087  }
+aa1870af92d8f6 J. Bruce Fields 2005-06-22  6088  
+
 -- 
-2.52.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
