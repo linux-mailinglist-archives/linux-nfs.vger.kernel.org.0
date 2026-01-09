@@ -1,144 +1,109 @@
-Return-Path: <linux-nfs+bounces-17687-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17688-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CA67D0A8F6
-	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 15:09:44 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9361FD0AAB3
+	for <lists+linux-nfs@lfdr.de>; Fri, 09 Jan 2026 15:39:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BA90D301AFF9
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 14:09:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0ECE6301D68A
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jan 2026 14:39:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC95135BDC4;
-	Fri,  9 Jan 2026 14:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4166E35CBDF;
+	Fri,  9 Jan 2026 14:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPmHRlT7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYPghKvu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984D635BDAF;
-	Fri,  9 Jan 2026 14:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E75F320A24;
+	Fri,  9 Jan 2026 14:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767967782; cv=none; b=SJZthsbfSeTaRn05PxNDL+BrjZB9xU72FffGUv7wIU0cVor2EO+o78Dzc4knUJ+JJoDWFiTyAfhucGZ3Gkk+P/f1D+f1s2yVcwZVzgaIrTFLdzr8NwLverRDtlD4rWcxNi4FizVI7r3HeWNY8V7uG4Fw1KqeMy6vy9poO31FQ40=
+	t=1767969589; cv=none; b=tdt8n8RZtVTJ7wYxY8aDF/VGAYUVJlW07FtaT7S1KFSCAn7H1ApT+gO2b894SrgYBfJiw5c73k3qTTEhU62MK4DCU/jIOOfwi9gJ5+zy3VJWtK24zYDJiwdOsSibXFZYWxtsLu32tH6xt2n+5Nrr9XipBSwcbah1f0RcNAyrx8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767967782; c=relaxed/simple;
-	bh=NcivEdZVRpZhLaS1QCCFRLsO+KkPaLEaUpYHu9tWpAg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=O+5X+oJMc899fRf2SP3+7y2nbfZ/fH2goXlWTz2eC04m5Xa2UDXfCqB/nMA5e71EX7/k1hE6wexZYs0CHtdcfPculbDyMFbN+KwjRFhLNqZlwxS4bsIT6yPdPCJB//CeGVU+kVmCz6Siw9//lnO0yuvt4/DMcFfYrDS6HFa8ntA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPmHRlT7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1701C19422;
-	Fri,  9 Jan 2026 14:09:41 +0000 (UTC)
+	s=arc-20240116; t=1767969589; c=relaxed/simple;
+	bh=lJy0/muq9IgSUqyMor6I7HDIsKq3tf3N75EdYor3cmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UyodJx9nh7ajxyhLe7t5BkztixIz0PJjPLW6V8dJ3TAIFHSpBpP5bR7r5W+vBNV7lP8wdiU4zhZ0x4Ygxg5DYeVgNRG3RO3ngTUZqCi63xqF6bWQLB6b59oP/ZAnumwJTBNYLJ1UiBUSi4dCISf/pKhOaSO8VnOXf1wnBMw3jYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYPghKvu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB9AC4CEF1;
+	Fri,  9 Jan 2026 14:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767967782;
-	bh=NcivEdZVRpZhLaS1QCCFRLsO+KkPaLEaUpYHu9tWpAg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=WPmHRlT7Ya4cqT0paVBAI/n4oUDVzGvnFs3SSkALaI9fvlZ3K4zpudJf9fmU1ZJZ7
-	 yys42MenIt2gEtoXyghkNwsA5hEAzw7rYgoO47JeJdUOP2T0zFXbvHeCLUJV+8jeJx
-	 +0MistcSMgvZNomL2mug9WqkWyZg2wKohalwIgX/s3lBlJwyyjxEq2j3Rro+uQwglc
-	 pkov0JCnyIZ38Mxe50rAluUJ6mPNWAAfegZhnTLIaydCprLBhZd/HSsAJl8o8+61ps
-	 2kvDHvYfwffKLj6oBPfoE2zBAlsZW14U7ujKLVSUaf5EMBPVimQCkcTqtjUOCsw/5T
-	 vefKmyiotqcPQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E5CB2F40069;
-	Fri,  9 Jan 2026 09:09:40 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 09 Jan 2026 09:09:40 -0500
-X-ME-Sender: <xms:JAxhaXAEEVx_j-mGrTzcHvzpg_lYvZoKzyY0e4qc8c9wG-1Y2izEmg>
-    <xme:JAxhaYVXCpBR0OkMQQw4iPsFjAbWcqfGTI_HI8rGk_YMCmZ8RrqQKNtK1IdCKmBG0
-    sfHMjkOtX1Qnn5k7KbQGEYrVvHYpvXaJUjwojrc68_Wqfm96BXXefM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdeltddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeegheduieeiveevheelheelueeghffhtddtheelhfdutddtheeileetkeelvedtjeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
-    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
-    peehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehsrghshhgrlheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpth
-    htoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:JAxhaeO0wQqlyusxheGuhp4Dgq2iOlZcEre6bGdMfJicaCXGiboIfw>
-    <xmx:JAxhaV5QPjyRoqqS4O81K0AqXn_1TFuoFjuMc7PWwF1KgYP9lMrD2A>
-    <xmx:JAxhaQ30nZNCmrTeK4HIkf_JaHvFgNqU3Nzv8c6bpTaOL4X-FXabKA>
-    <xmx:JAxhaezY8fytGuif8O35kOzvjS7ztQw51oSBrP0WxKJ2Ds0RQP6_TA>
-    <xmx:JAxhaSu_MOZoopBjrvl9Yj_Tb59WsKwsUoWXBjlsxWxlPTYri4pvN8sx>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C7FFF780054; Fri,  9 Jan 2026 09:09:40 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1767969588;
+	bh=lJy0/muq9IgSUqyMor6I7HDIsKq3tf3N75EdYor3cmo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZYPghKvurwEUTI/TUeh9HrIr2fy2ju0AdywWgLK0ngHBTAyieNj5fvMi19sspih2f
+	 PKc0i3YJHPdtlbN8SS6D00ftNeoKtjrhQmn9iFb/SW5lYmqmtJfUng4Q8gPRnLookq
+	 1mjIODPoi9cYviO0W9h9tRtrP1dH1anPB7eRjmPxtdLjjenqLYZZvzvVuTEx+7Bfws
+	 4bxxqH1VsUcfJ6Um6npnLDRVNfnv3qZvv/3Cd2C7cfvpbZlR80Nuvqzy5Vu6G/9H2o
+	 eJh5f6t4tptnsowyrKob/DWN4CWBZlAHIy+ZPdyKuq/loYQlphWOpzlUH2XFKpmiNf
+	 GVOIjtCy9hwrw==
+From: Chuck Lever <cel@kernel.org>
+To: <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	<linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 6.6.y v3 0/4] NFSD: NFSv4 file creation neglects setting ACL
+Date: Fri,  9 Jan 2026 09:39:42 -0500
+Message-ID: <20260109143946.4173043-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <2025122941-civic-revered-b250@gregkh>
+References: <2025122941-civic-revered-b250@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AUhaZbciXRC-
-Date: Fri, 09 Jan 2026 09:09:20 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, "Sasha Levin" <sashal@kernel.org>,
- linux-nfs@vger.kernel.org, "Jeff Layton" <jlayton@kernel.org>
-Message-Id: <f664b380-29cb-4a77-b0da-32c36e105089@app.fastmail.com>
-In-Reply-To: <2026010958-defiance-equate-955f@gregkh>
-References: <2025122941-civic-revered-b250@gregkh>
- <20260108191002.4071603-2-cel@kernel.org>
- <2026010958-defiance-equate-955f@gregkh>
-Subject: Re: [PATCH 6.6.y v2 1/4] nfsd: convert to new timestamp accessors
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+From: Chuck Lever <chuck.lever@oracle.com>
+
+I received an automated report that patch "NFSD: NFSv4 file creation
+neglects setting ACL" failed to apply to the 6.6-stable tree. This
+series is my attempt to address that failure.
+
+- First, applied several pre-requisite patches
+- LLM agent review for possible regressions reported no issues
+- CI testing reported no regressions
+
+Changes since v2:
+- Add a Signed-off-by to 1/4
+- Address a build warning introduced in 1/4
+- Fix the In-Reply-To header
+
+Changes since v1:
+- Replace 1/4 with the upstreamed version of that commit
 
 
+Chuck Lever (1):
+  NFSD: NFSv4 file creation neglects setting ACL
 
-On Fri, Jan 9, 2026, at 4:55 AM, Greg Kroah-Hartman wrote:
-> On Thu, Jan 08, 2026 at 02:09:59PM -0500, Chuck Lever wrote:
->> From: Jeff Layton <jlayton@kernel.org>
->>=20
->> [ Upstream commit 11fec9b9fb04fd1b3330a3b91ab9dcfa81ad5ad3 ]
->>=20
->> Convert to using the new inode timestamp accessor functions.
->>=20
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> Link: https://lore.kernel.org/r/20231004185347.80880-50-jlayton@kerne=
-l.org
->> Stable-dep-of: 24d92de9186e ("nfsd: Fix NFSv3 atomicity bugs in nfsd_=
-setattr()")
->> Signed-off-by: Christian Brauner <brauner@kernel.org>
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->>  fs/nfsd/blocklayout.c | 4 +++-
->>  fs/nfsd/nfs3proc.c    | 4 ++--
->>  fs/nfsd/nfs4proc.c    | 8 ++++----
->>  fs/nfsd/nfsctl.c      | 2 +-
->>  fs/nfsd/vfs.c         | 2 +-
->>  5 files changed, 11 insertions(+), 9 deletions(-)
->
-> Adds a build warning, which breaks the build:
->
-> fs/nfsd/blocklayout.c: In function =E2=80=98nfsd4_block_commit_blocks=E2=
-=80=99:
-> fs/nfsd/blocklayout.c:123:16: error: unused variable =E2=80=98new_size=
-=E2=80=99=20
-> [-Werror=3Dunused-variable]
->   123 |         loff_t new_size =3D lcp->lc_last_wr + 1;
->       |                ^~~~~~~~
-> cc1: all warnings being treated as errors
->
-> try a 3rd version?
->
-> thanks,
->
-> greg k-h
+Jeff Layton (1):
+  nfsd: convert to new timestamp accessors
 
-Harumph. I didn't see any warnings before I posted yesterday.
+Stephen Smalley (1):
+  nfsd: set security label during create operations
 
-/me trudges back to his drawing board.
+Trond Myklebust (1):
+  nfsd: Fix NFSv3 atomicity bugs in nfsd_setattr()
 
+ fs/nfsd/blocklayout.c |  3 ++-
+ fs/nfsd/nfs3proc.c    | 10 ++++++----
+ fs/nfsd/nfs3xdr.c     |  5 +----
+ fs/nfsd/nfs4proc.c    | 11 +++++------
+ fs/nfsd/nfs4state.c   |  2 +-
+ fs/nfsd/nfsctl.c      |  2 +-
+ fs/nfsd/nfsproc.c     |  6 +++---
+ fs/nfsd/vfs.c         | 22 ++++++++++++++--------
+ fs/nfsd/vfs.h         | 11 ++++++++++-
+ fs/nfsd/xdr3.h        |  2 +-
+ 10 files changed, 44 insertions(+), 30 deletions(-)
 
---=20
-Chuck Lever
+-- 
+2.52.0
+
 
