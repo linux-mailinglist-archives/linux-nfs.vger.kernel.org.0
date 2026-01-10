@@ -1,225 +1,150 @@
-Return-Path: <linux-nfs+bounces-17721-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17722-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C75DD0CFDD
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 06:30:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 282CDD0D3DA
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 10:20:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61B5B3020498
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 05:30:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4252F3013ECC
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 09:20:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07BE1DF736;
-	Sat, 10 Jan 2026 05:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC8DE1A5BB4;
+	Sat, 10 Jan 2026 09:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="cqnvERNT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FADzBS12"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDmXR6Vt";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="MkFMohqi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B899C248867
-	for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 05:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5564950097C
+	for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 09:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768023019; cv=none; b=H0H/HXCnjJyT152655XDbt978J6dbe0EQGdwTKlfzoA2UyeT/I+RktR9BK6DhvaTh6AyuTKGO5ocvcjBKLIJDCM7HVww1ATvxrJIYv8wM4bhXxUA8eazd74b20MaiiR2Sq5O0Uw7gemWhkxZGCMlJhUVrOoR3ECF+lDyJdTkT8Y=
+	t=1768036826; cv=none; b=JniZKchDsEBqPW4CU5oEgFnPR2xYAQkM5WJowRgFYOm1bb4CQxn/iuKf8ell+ELokz4nc+sV6jQJL7mGys9RFult8Rt0mkNBvs6GD0qWzrZrNytB5oUFUxAxXwvlT+6uPcsq2yM3Uos8cav6XVcsakkEaSsszFuepzWokW7MC7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768023019; c=relaxed/simple;
-	bh=wVPyIUhzKPXUabt6OgFLtJB72HjfkCj3Jt4nB7JuR3I=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=stdpgMSOfXF/z7g8KBHLYrRmPP1gbUqnexmWXCbm0iBvktY9xbD/rvCqtzu/lxKjMQx5XmBJlf5LcsxI9gTPswkz84EEblfMmExC24c1DDoCAncaL4ZhXD8a4fOvY27YlFMVALjdMS2XVtWTXY7PEnn7pEYQRojjVdQAZ8jpUKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=cqnvERNT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FADzBS12; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CE11614000B3;
-	Sat, 10 Jan 2026 00:30:16 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Sat, 10 Jan 2026 00:30:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1768023016; x=1768109416; bh=spgHAZhdHMi1QNakbZeeBihuF6rmw61AB3r
-	Vk0/XYP4=; b=cqnvERNT6X+4RGCwbVM85HvdBzfhbHQHT8mHyozRAatU04Nt5xx
-	NCogImSmmw/LK4b4hDb4bf2pe7R1UT66vEloUHXxoZFly00Irb43KIc4lUg30PVY
-	mlqeICBW/gBMTpKERJEflbMP+0b4lRjxnlRJqOJ889vxYDUcB1wr5HxCs/034Odm
-	wCUzZCD0f8aFmTYa5lZBDbkRIdJ+zytHfQrJ5tqvAPrzcKHhjfNbnCWU4VcRQ0FJ
-	NQm97gmXqPZZwvPTl+i00sjyQiFYQDuuW6HxtOV+P1YC0GGAmJPfpaG511V2IsIC
-	J07PlUNf7iyakhBse8QwdNpGdc6ZHIZ0Ouw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768023016; x=
-	1768109416; bh=spgHAZhdHMi1QNakbZeeBihuF6rmw61AB3rVk0/XYP4=; b=F
-	ADzBS12bU1dDGyn1b1f0x4fNNxNQFvKpmgikKmOmLhrWkt1DpLw1SShgb7dROgGD
-	OquaHKidMSyYrG1KuIv5t7NCEXgmJWZD/wGheDdbwtJt+VKlejlcZhdhQo/mSs7o
-	7YK9EWCUn038ToYMvZ8pLp4QCRU2SNfBX4bKAjZQn/LaI+cA3Qu/duPtddft1++2
-	hi8Mm1fgp+0Zg5MLqlX4asQ61Cu8orclzEJaCHybG1SytOwsvyJoEPZSq0idywup
-	2mnwkhvFIwbBkJ+92ML/J2K8KBQ7Mc3v82lT2E4lA1jjG8S/QNQ5LJnnkwJjYeFN
-	pSPS1OXY6gO6sM/7RCMoQ==
-X-ME-Sender: <xms:6ONhafDRvYltIW4RkwMkvdlMv0qrSJtb5uaYGQt9wf5-JEBxGkR35w>
-    <xme:6ONhaYHjYwzD9Fy2yPkmBSjqzp_W1kPiIP1R-dxQyw2b5RhZJSZ9J8ZBfAe7Z2F09
-    s9C4JQMP37e-aHXq0XgG0wye2q0ZeNYk2EJX2eV28AkQr4heQ>
-X-ME-Received: <xmr:6ONhaeOY9ySerDDVEOtOiyGoL0aueXFALJlGojFNKOycD9JVpS5WO7bkdSrzQgl_W0ifyynUiRzKVSEsBhCqZnlVypeLXCMpEmUZ4IqcWe1J>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduuddtkeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehokhhorhhn
-    ihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
-    gvrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthhtohepshhnihhtiigvrheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:6ONhaR7AmAlhJAH-XL-DHb7kn-G-vVsfWDU-tWodYpDzLRPSkUlVcA>
-    <xmx:6ONhaZjwzPOmZu3C4T7-TPyCBlwVa0ubryszKr6McKwvFe9-OLjg6A>
-    <xmx:6ONhaee2LJxsiqbii6LaM5FREqwFJIDxrDeAdmOV_FsVR3ijQ4gWjA>
-    <xmx:6ONhaZxmWGOp_lL9yKehh-NeJyqe7OSVWfi3wRSvvlwYc4uBjgGmbg>
-    <xmx:6ONhacGuy9_oNNzkI9Caodx5CCWZB87D75T86PlJSp_g-XdafcQsgzxX>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 10 Jan 2026 00:30:13 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1768036826; c=relaxed/simple;
+	bh=xXH8lEb+Ca5HUsTNPR+fNA0rcbqpdx0LKOruCqMOCPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=azvPf1YlZVR2SdmGG4I6OZP6/p6M2vdwzblEQIAyslZWmlpP29hkRW/QOqppoYcUepRki3ZTybv2pSPha1NcWoTaL8pd7V26YMrxB/gJK6pLxXwPfEZ2RlG/O/o+UEkFLj0heH9NPTNYYzGvLvZhuftliE+pkrrWgab2oAo3MWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WDmXR6Vt; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=MkFMohqi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768036824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
+	b=WDmXR6Vtr8lcyU8AZ2rkiCZucCsoXgl2Q+48wCH2VTRgZ307Fi9Z1Df64R/gUUkTATqcYA
+	EWEOhW4bdA6QIz3qf1HfAVwOMjb/i9NEptEGRZ1je5O+a3YgEJcmLc9mMRWM5JR6vn/BO7
+	i9SPEeEU7D1OkhrKnNRoOVO7vB2gfrg=
+Received: from mail-ua1-f71.google.com (mail-ua1-f71.google.com
+ [209.85.222.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-y10MlszHMBKqWXJMcMKgHA-1; Sat, 10 Jan 2026 04:20:22 -0500
+X-MC-Unique: y10MlszHMBKqWXJMcMKgHA-1
+X-Mimecast-MFC-AGG-ID: y10MlszHMBKqWXJMcMKgHA_1768036822
+Received: by mail-ua1-f71.google.com with SMTP id a1e0cc1a2514c-93f550cdb2dso7111364241.1
+        for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 01:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1768036822; x=1768641622; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
+        b=MkFMohqiKnAhox0J418tI5pVuqnf+YOiIuamGer+2efLS1Ex52sPhD/MVMpc/3YeeH
+         ECaDZca+5pMYXd/IEw4C3Lvwai0Zhps7kwWk2p+cBt8d2Hiu+7tJ3MhpcirvCz8wrimS
+         ffM8hFkoG7F817UFV1KfEYyFwStDocfc86UVw+AQ8aE0pQfpxKkQj8TpApWiMbb32Vkm
+         sND3F43MlIYEObroBty+v7TSmdSEyBrJmttTrlf4XCUc7R5Tqy50agq0grTQVEH277oB
+         6IvVKqC67OaYY5v5cVCqKoFeUzHbNVeULNQM5DkmqUhxLufdf4Mdpt1hh+l7cdc87HPC
+         IOqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768036822; x=1768641622;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
+        b=F6OoIUe2bZ3ofXRjo4E7fXwu3aq/2eBW8d+CvVz9SfbHiUa/LMRRQ19qustv2xReoN
+         KX+ZY0oK9AGjCwtwrwnJIRYMxQxAbag46vlI9NkRE/DjZUy9uG4zeoR6V4m2tF3g5170
+         MKbVFcWK9s1J1HxmZWa0guxQfEs1IdCJyosd/Dm6C8ACQpGqRiM0W9SMdhTD+ZJVxYV+
+         Aq0f4nlBAivtrf6XkJl8HH1rX59V9v/EkK63EsADw9o32lxrK26m1s4kkHnTzGMHMs3W
+         4DaOL5y7BcKtUUrm0a70snKztq7vxe+oUatfv/kc4FUTFJi7/aRXnFZtQ28+hR9Iy/yn
+         iXJw==
+X-Gm-Message-State: AOJu0Yw2lBy6oAFLOuxda5OSL5RQoecBZm54hIJ7RINug1vQX/JrKpOp
+	pQBNLBBW75fKW9jJR7Wt4/O2ZM7s1MNpizqi6/f0InwpeBNO0pmgOJozUyDz0eyU/srljsKThZ5
+	3KrwgUb9cotEvDrhDb9Qzi+yw8yx4hk1Vg4zE35uzk0QItICKtHEgwf315SqfeJOlAr72Dw==
+X-Gm-Gg: AY/fxX5cnxki4yGmValsVxgq6WNkQUq60uX4KSTC+JYOpZI+OOg80Tg6qwWojVRLvIQ
+	hGAMCJSUjspUmgVeDw+mtLply0WMYr/NFjd6mBwjHuCl5TeDoqokO+CaObYjAXeKIPKPyaRPEYO
+	W350NtOfnXwW/NBABdAuIDlDYBlxFW3VCnb8BJ/W/5N1XfwmeOtAhoVTpaaFOQ26BBHa31JIrw5
+	zjoRqc9kMH4PRiPb62h2cz1oLCpZCWxF59TIHFuvbv5lBzUVbFBSADxLB7fiEYLoREINzrCWNtJ
+	DX9PPKxJZLwJNMUEpods2vkadYi7u8BcUWMjfUR+CLSGnH+/jyoBP7rojBDyWJRWKGxSSJ7yf0O
+	uj22ayP0w
+X-Received: by 2002:a05:6122:2210:b0:55e:76ed:e6c with SMTP id 71dfb90a1353d-56347d4b3cemr4448089e0c.7.1768036821695;
+        Sat, 10 Jan 2026 01:20:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFTY6Eg9ULxNdB5FlGoQv0gw+S+QzrH0RCwY+Q7kS6daBhcXkCuqg4oPZSPZwVp8+g9rB7kUQ==
+X-Received: by 2002:a05:6122:2210:b0:55e:76ed:e6c with SMTP id 71dfb90a1353d-56347d4b3cemr4448087e0c.7.1768036821375;
+        Sat, 10 Jan 2026 01:20:21 -0800 (PST)
+Received: from [172.31.1.12] ([70.105.242.59])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5634e959afbsm9429181e0c.1.2026.01.10.01.20.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 Jan 2026 01:20:20 -0800 (PST)
+Message-ID: <46742bfa-767b-470d-a123-893f8c574b2e@redhat.com>
+Date: Sat, 10 Jan 2026 04:20:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Mike Snitzer" <snitzer@kernel.org>,
- "Christoph Hellwig" <hch@lst.de>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH v2] NFSD: Add asynchronous write throttling support
- for UNSTABLE WRITEs
-In-reply-to: <20260109215613.25250-1-cel@kernel.org>
-References: <20260109215613.25250-1-cel@kernel.org>
-Date: Sat, 10 Jan 2026 16:30:10 +1100
-Message-id: <176802301025.16766.5819430775313248993@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-
-On Sat, 10 Jan 2026, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> When memory pressure occurs during buffered writes, the traditional
-> approach is for balance_dirty_pages() to put the writing thread to
-> sleep until dirty pages are flushed. For NFSD, this means server
-> threads block waiting for I/O, reducing overall server throughput.
->=20
-> Add asynchronous write throttling for UNSTABLE writes using the
-> BDP_ASYNC flag to balance_dirty_pages_ratelimited_flags(). NFSD
-> checks memory pressure before attempting a buffered write. If the
-> call returns -EAGAIN (indicating memory exhaustion), NFSD returns
-> NFS4ERR_DELAY (or NFSERR_JUKEBOX for NFSv3) to the client instead
-> of blocking.
->=20
-> Clients then wait and retry, rather than tying up server memory with
-> a cached uncommitted write payload.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/vfs.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> Compile tested only.
->=20
-> Changes since RFC v1:
-> - Remove the experimental debugfs setting
-> - Enforce throttling specifically only for UNSTABLE WRITEs
->=20
->=20
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 168d3ccc8155..c4550105234e 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1458,6 +1458,30 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh=
- *fhp,
->  		}
->  	}
-> =20
-> +	/*
-> +	 * Throttle buffered writes under memory pressure. When dirty
-> +	 * page limits are exceeded, BDP_ASYNC causes -EAGAIN to be
-> +	 * returned rather than blocking the thread. This -EAGAIN
-> +	 * maps to nfserr_jukebox, signaling the client to back off
-> +	 * and retry rather than tying up a server thread during
-> +	 * writeback.
-> +	 *
-> +	 * NFSv2 writes commit to stable storage before reply; no
-> +	 * dirty pages accumulate, so throttling is unnecessary.
-> +	 * FILE_SYNC and DATA_SYNC writes flush immediately and do
-> +	 * not leave uncommitted dirty pages behind.
-> +	 * Direct I/O and DONTCACHE bypass the page cache entirely.
-> +	 */
-> +	if (rqstp->rq_vers > 2 &&
-> +	    stable =3D=3D NFS_UNSTABLE &&
-> +	    nfsd_io_cache_write =3D=3D NFSD_IO_BUFFERED) {
-> +		host_err =3D
-> +			balance_dirty_pages_ratelimited_flags(file->f_mapping,
-> +							      BDP_ASYNC);
-> +		if (host_err =3D=3D -EAGAIN)
-> +			goto out_nfserr;
-
-I doubt that this will do what you want - at least not reliably.
-
-balance_dirty_pages_ratelimited_flags() assumes it will be called
-repeatedly by the same task and it lets that task write for a while,
-then blocks it, then lets it write some more.
-
-The way you have integrated it into nfsd could result in the write load
-bouncing around among different threads and behaving inconsistently.
-
-Also the delay imposed is (for a Linux client) between 100ms and
-15seconds.
-I suspect that is often longer than we would want.  The actual pause
-imposed by page-writeback.c is variable based on the measured throughput
-of the backing device.
-
-What we really want, I think, is to be able to push back on the client
-by limiting the number of bytes in unacknowledged writes, but I don't
-think NFS has any mechanism for that.
-
-I cannot immediately think of any approach that really shows promise,
-but I suspect that it will involves a deeper interaction with the
-writeback code in a way that abstracts out the task state so that nfsd
-can appear to be one-task-per-client (or similar).
-
-Possibly the best approach for throttling the client is to somehow delay
-the reply (without tying up a thread) so that it sees a fairly precise
-latency....=20
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] nfsd/nfsdctl: default to starting with v4.0 servers
+ disabled
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+References: <20251008-master-v1-0-c879be4973c8@kernel.org>
+ <d71e37c054c51428f34a51b6a980a62bc07a68e7.camel@kernel.org>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <d71e37c054c51428f34a51b6a980a62bc07a68e7.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-But maybe I'm seeing problems that don't exist.  Testing would help, but
-finding a mix of loads that properly stress the system would be a
-challenge.
 
-And maybe just allowing the thread pool to grow will make this a
-non-problem?=20
+On 1/9/26 2:04 PM, Jeff Layton wrote:
+> On Wed, 2025-10-08 at 16:13 -0400, Jeff Layton wrote:
+>> At this week's NFS Bakeathon, we had a discussion around deprecating the
+>> NFSv4.0 protocol. To prepare for that eventuality, make the NFS server
+>> only accept NFSv4.0 if it was explicitly requested in the config file or
+>> in command-line options.
+>>
+>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>> ---
+>> Jeff Layton (2):
+>>        nfsd: disable v4.0 by default
+>>        nfsdctl: disable v4.0 by default
+>>
+>>   utils/nfsd/nfsd.c       | 5 +++--
+>>   utils/nfsdctl/nfsdctl.c | 2 +-
+>>   2 files changed, 4 insertions(+), 3 deletions(-)
+>> ---
+>> base-commit: 612e407c46b848932c32be00b835a7b5317e3d08
+>> change-id: 20251008-master-724587cca99a
+>>
+>> Best regards,
+> 
+> Steved, ping?
+Working on it...
 
-Thanks,
-NeilBrown
+steved.
 
-
-> +	}
-> +
->  	nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> =20
->  	since =3D READ_ONCE(file->f_wb_err);
-> --=20
-> 2.52.0
->=20
->=20
->=20
+> 
+> Also, if anyone else wants to send an Acked-by for this, I wouldn't
+> complain.
+> 
+> Cheers,
 
 
