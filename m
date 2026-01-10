@@ -1,150 +1,196 @@
-Return-Path: <linux-nfs+bounces-17722-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17723-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 282CDD0D3DA
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 10:20:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C814FD0D42F
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 10:48:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4252F3013ECC
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 09:20:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A54B730204B1
+	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 09:48:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC8DE1A5BB4;
-	Sat, 10 Jan 2026 09:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6C021257A;
+	Sat, 10 Jan 2026 09:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDmXR6Vt";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="MkFMohqi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc8eccxX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5564950097C
-	for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 09:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DDD11713;
+	Sat, 10 Jan 2026 09:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768036826; cv=none; b=JniZKchDsEBqPW4CU5oEgFnPR2xYAQkM5WJowRgFYOm1bb4CQxn/iuKf8ell+ELokz4nc+sV6jQJL7mGys9RFult8Rt0mkNBvs6GD0qWzrZrNytB5oUFUxAxXwvlT+6uPcsq2yM3Uos8cav6XVcsakkEaSsszFuepzWokW7MC7w=
+	t=1768038517; cv=none; b=YKyhX1+pLHz2Mf5wWeIhfujCPCz5PN28DJBbedG3DikS5xJu8k58FedUWHG9U8HEMPL5nCK2CBdNebhSKzfz7wEovahuAcuBXoXmWDvCZddIRdOGIbRV/0VVdEPYsYwLL7HBg1EmX2Pry3YCZW8SEeDeV0ztM6aB8wt6oY7leU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768036826; c=relaxed/simple;
-	bh=xXH8lEb+Ca5HUsTNPR+fNA0rcbqpdx0LKOruCqMOCPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=azvPf1YlZVR2SdmGG4I6OZP6/p6M2vdwzblEQIAyslZWmlpP29hkRW/QOqppoYcUepRki3ZTybv2pSPha1NcWoTaL8pd7V26YMrxB/gJK6pLxXwPfEZ2RlG/O/o+UEkFLj0heH9NPTNYYzGvLvZhuftliE+pkrrWgab2oAo3MWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WDmXR6Vt; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=MkFMohqi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768036824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
-	b=WDmXR6Vtr8lcyU8AZ2rkiCZucCsoXgl2Q+48wCH2VTRgZ307Fi9Z1Df64R/gUUkTATqcYA
-	EWEOhW4bdA6QIz3qf1HfAVwOMjb/i9NEptEGRZ1je5O+a3YgEJcmLc9mMRWM5JR6vn/BO7
-	i9SPEeEU7D1OkhrKnNRoOVO7vB2gfrg=
-Received: from mail-ua1-f71.google.com (mail-ua1-f71.google.com
- [209.85.222.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-y10MlszHMBKqWXJMcMKgHA-1; Sat, 10 Jan 2026 04:20:22 -0500
-X-MC-Unique: y10MlszHMBKqWXJMcMKgHA-1
-X-Mimecast-MFC-AGG-ID: y10MlszHMBKqWXJMcMKgHA_1768036822
-Received: by mail-ua1-f71.google.com with SMTP id a1e0cc1a2514c-93f550cdb2dso7111364241.1
-        for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 01:20:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768036822; x=1768641622; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
-        b=MkFMohqiKnAhox0J418tI5pVuqnf+YOiIuamGer+2efLS1Ex52sPhD/MVMpc/3YeeH
-         ECaDZca+5pMYXd/IEw4C3Lvwai0Zhps7kwWk2p+cBt8d2Hiu+7tJ3MhpcirvCz8wrimS
-         ffM8hFkoG7F817UFV1KfEYyFwStDocfc86UVw+AQ8aE0pQfpxKkQj8TpApWiMbb32Vkm
-         sND3F43MlIYEObroBty+v7TSmdSEyBrJmttTrlf4XCUc7R5Tqy50agq0grTQVEH277oB
-         6IvVKqC67OaYY5v5cVCqKoFeUzHbNVeULNQM5DkmqUhxLufdf4Mdpt1hh+l7cdc87HPC
-         IOqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768036822; x=1768641622;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vm8E5bPinOAt84jeeiC4Dw54UlBaLugWpv17FVubOto=;
-        b=F6OoIUe2bZ3ofXRjo4E7fXwu3aq/2eBW8d+CvVz9SfbHiUa/LMRRQ19qustv2xReoN
-         KX+ZY0oK9AGjCwtwrwnJIRYMxQxAbag46vlI9NkRE/DjZUy9uG4zeoR6V4m2tF3g5170
-         MKbVFcWK9s1J1HxmZWa0guxQfEs1IdCJyosd/Dm6C8ACQpGqRiM0W9SMdhTD+ZJVxYV+
-         Aq0f4nlBAivtrf6XkJl8HH1rX59V9v/EkK63EsADw9o32lxrK26m1s4kkHnTzGMHMs3W
-         4DaOL5y7BcKtUUrm0a70snKztq7vxe+oUatfv/kc4FUTFJi7/aRXnFZtQ28+hR9Iy/yn
-         iXJw==
-X-Gm-Message-State: AOJu0Yw2lBy6oAFLOuxda5OSL5RQoecBZm54hIJ7RINug1vQX/JrKpOp
-	pQBNLBBW75fKW9jJR7Wt4/O2ZM7s1MNpizqi6/f0InwpeBNO0pmgOJozUyDz0eyU/srljsKThZ5
-	3KrwgUb9cotEvDrhDb9Qzi+yw8yx4hk1Vg4zE35uzk0QItICKtHEgwf315SqfeJOlAr72Dw==
-X-Gm-Gg: AY/fxX5cnxki4yGmValsVxgq6WNkQUq60uX4KSTC+JYOpZI+OOg80Tg6qwWojVRLvIQ
-	hGAMCJSUjspUmgVeDw+mtLply0WMYr/NFjd6mBwjHuCl5TeDoqokO+CaObYjAXeKIPKPyaRPEYO
-	W350NtOfnXwW/NBABdAuIDlDYBlxFW3VCnb8BJ/W/5N1XfwmeOtAhoVTpaaFOQ26BBHa31JIrw5
-	zjoRqc9kMH4PRiPb62h2cz1oLCpZCWxF59TIHFuvbv5lBzUVbFBSADxLB7fiEYLoREINzrCWNtJ
-	DX9PPKxJZLwJNMUEpods2vkadYi7u8BcUWMjfUR+CLSGnH+/jyoBP7rojBDyWJRWKGxSSJ7yf0O
-	uj22ayP0w
-X-Received: by 2002:a05:6122:2210:b0:55e:76ed:e6c with SMTP id 71dfb90a1353d-56347d4b3cemr4448089e0c.7.1768036821695;
-        Sat, 10 Jan 2026 01:20:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFTY6Eg9ULxNdB5FlGoQv0gw+S+QzrH0RCwY+Q7kS6daBhcXkCuqg4oPZSPZwVp8+g9rB7kUQ==
-X-Received: by 2002:a05:6122:2210:b0:55e:76ed:e6c with SMTP id 71dfb90a1353d-56347d4b3cemr4448087e0c.7.1768036821375;
-        Sat, 10 Jan 2026 01:20:21 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.242.59])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5634e959afbsm9429181e0c.1.2026.01.10.01.20.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jan 2026 01:20:20 -0800 (PST)
-Message-ID: <46742bfa-767b-470d-a123-893f8c574b2e@redhat.com>
-Date: Sat, 10 Jan 2026 04:20:16 -0500
+	s=arc-20240116; t=1768038517; c=relaxed/simple;
+	bh=2pMUr17XpgrQhSuv59gTKcLq65rE5CC2s3p54E+p6l4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gM+BUT8da0NiuGDiJoPAHOzCD7JN3vWUZlbc3hAxjHA8E3zC4TdY3XtdZXJ7tZNu84IfDOS8J9Q7d97aZYtFSH1BbQNbIy1WvN2GW7OV96yAiORGQWHZ/KnnQyYJRna/zYxD6bDcx/4RySHztyXQcrEjTnZ3IvR6RouYOYdi4No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc8eccxX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5AAC4CEF1;
+	Sat, 10 Jan 2026 09:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768038517;
+	bh=2pMUr17XpgrQhSuv59gTKcLq65rE5CC2s3p54E+p6l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kc8eccxXoin+36nV3T3wmYJQ4cnmOJchuWsxLtILe1eAXvTaIIdWJRJJQIFtgdeAk
+	 GAaAjJU7yxqOO900A+IKMct4GxEiA1iTmFJhRfcZow50U7qYdJ2PTqdft00xkPJ5wj
+	 FQj3tbqPv3Y+RzdBddGueGFlTrfN3ubDjIUAHnHCgHzVFO6I5sicixCsS6JfeGDNaN
+	 HxGspFG1tgfLisGScVUci0KT2i7u6RQe6tifmHFIrA4XgMRhcPqbkj3B+nKuUIrLzP
+	 IrKiNNso4Aba7O21Ighvq4zRFwRqp12s8GXcLkmk8/+LbrxvMt+gPP0JsnYAtneagM
+	 eFFjGTp4p7YkQ==
+Date: Sat, 10 Jan 2026 04:48:36 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Mike Owen <mjnowen@gmail.com>
+Cc: Daire Byrne <daire@dneg.com>, dhowells@redhat.com,
+	linux-nfs@vger.kernel.org, netfs@lists.linux.dev,
+	trondmy@hammerspace.com, okorniev@redhat.com
+Subject: Re: fscache/NFS re-export server lockup
+Message-ID: <aWIgdDImfFg6fgxn@kernel.org>
+References: <CADFF-zeNJUPLaVcogSBt=s4+o2Lty45-DueSYKJmCgZw6hraEg@mail.gmail.com>
+ <CAPt2mGOV+ZxVLkFFXRKX3Cr9vZ-pd=5QeN=cxwc_msGFtpPN=Q@mail.gmail.com>
+ <CADFF-zcFgycZ7c0KC_5eUafjvba_ZxhzED0a7yDR4oip4_KxbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] nfsd/nfsdctl: default to starting with v4.0 servers
- disabled
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-References: <20251008-master-v1-0-c879be4973c8@kernel.org>
- <d71e37c054c51428f34a51b6a980a62bc07a68e7.camel@kernel.org>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <d71e37c054c51428f34a51b6a980a62bc07a68e7.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADFF-zcFgycZ7c0KC_5eUafjvba_ZxhzED0a7yDR4oip4_KxbA@mail.gmail.com>
 
+Hi Mike,
 
-
-On 1/9/26 2:04 PM, Jeff Layton wrote:
-> On Wed, 2025-10-08 at 16:13 -0400, Jeff Layton wrote:
->> At this week's NFS Bakeathon, we had a discussion around deprecating the
->> NFSv4.0 protocol. To prepare for that eventuality, make the NFS server
->> only accept NFSv4.0 if it was explicitly requested in the config file or
->> in command-line options.
->>
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> ---
->> Jeff Layton (2):
->>        nfsd: disable v4.0 by default
->>        nfsdctl: disable v4.0 by default
->>
->>   utils/nfsd/nfsd.c       | 5 +++--
->>   utils/nfsdctl/nfsdctl.c | 2 +-
->>   2 files changed, 4 insertions(+), 3 deletions(-)
->> ---
->> base-commit: 612e407c46b848932c32be00b835a7b5317e3d08
->> change-id: 20251008-master-724587cca99a
->>
->> Best regards,
+On Fri, Jan 09, 2026 at 09:45:47PM +0000, Mike Owen wrote:
+> Hi Daire, thanks for the comments.
 > 
-> Steved, ping?
-Working on it...
-
-steved.
-
+> > Can you stop the nfs server and is access to /var/cache/fscache still blocked?
+> As the machine is deadlocked, after reboot (so the nfs server is
+> definitely stopped), the actual data is gone/corrupted.
 > 
-> Also, if anyone else wants to send an Acked-by for this, I wouldn't
-> complain.
+> >And I presume there is definitely nothing else that might be
+> interacting with that /var/cache/fscache filesystem outside of fscache
+> or cachefilesd?
+> Correct. Machine is dedicated to KNFSD caching duties.
 > 
-> Cheers,
+> > Our /etc/cachefilesd.conf is pretty basic (brun 30%, bcull 10%, bstop 3%).
+> Similar settings here:
+> brun 20%
+> bcull 7%
+> bstop 3%
+> frun 20%
+> fcull 7%
+> fstop 3%
+> Although I should note that the issue happens when only ~10-20% of the
+> NVMe capacity is used, so culling has never had to run at this point.
+> 
+> We did try running 6.17.0 but made no difference. I see another thread
+> of yours with Chuck: "refcount_t underflow (nfsd4_sequence_done?) with
+> v6.18 re-export"
+> and suggested commits to investigate, incl: cbfd91d22776 ("nfsd: never
+> defer requests during idmap lookup") as well as try using 6.18.4, so
+> it's possible there is a cascading issue here and we are in need of
+> some NFS patches.
+> 
+> I'm hoping @dhowells might have some suggestions on how to further
+> debug this issue, given the below stack we are seeing when it
+> deadlocks?
+> 
+> Thanks,
+> -Mike
 
+This commit from Trond, which he'll be sending to Linus soon as part
+of his 6.19-rc NFS client fixes pull request, should fix the NFS
+re-export induced nfs_release_folio deadlock reflected in your below
+stack trace:
+https://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=cce0be6eb4971456b703aaeafd571650d314bcca
+
+Here is more context for why I know that to be likely, it fixed my
+nasty LOCALIO-based reexport deadlock situation too:
+https://lore.kernel.org/linux-nfs/20260107160858.6847-1-snitzer@kernel.org/
+
+I'm doing my part to advocate that Red Hat (Olga cc'd) take this
+fix into RHEL 10.2 (and backport as needed).
+
+Good luck getting Ubuntu to include this fix in a timely manner (we'll
+all thank you for that if you can help shake the Canonical tree).
+
+BTW, you'd do well to fix your editor/email so that it doesn't line
+wrap when you share logs on Linux mailing lists:
+
+> 2025-12-03T15:57:25.438905+00:00 ip-172-23-113-43 kernel: INFO: task
+> kcompactd0:171 blocked for more than 122 seconds.
+> 2025-12-03T15:57:25.438921+00:00 ip-172-23-113-43 kernel:
+> Tainted: G           OE      6.14.0-36-generic #36~24.04.1-Ubuntu
+> 2025-12-03T15:57:25.438928+00:00 ip-172-23-113-43 kernel: "echo 0 >
+> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> 2025-12-03T15:57:25.439 is bellow995+00:00 ip-172-23-113-43 kernel:
+> task:kcompactd0      state:D stack:0     pid:171   tgid:171   ppid:2
+>    task_flags:0x210040 flags:0x00004000
+> 2025-12-03T15:57:25.440000+00:00 ip-172-23-113-43 kernel: Call Trace:
+> 2025-12-03T15:57:25.440000+00:00 ip-172-23-113-43 kernel:  <TASK>
+> 2025-12-03T15:57:25.440003+00:00 ip-172-23-113-43 kernel:
+> __schedule+0x2cf/0x640
+> 2025-12-03T15:57:25.441017+00:00 ip-172-23-113-43 kernel:  schedule+0x29/0xd0
+> 2025-12-03T15:57:25.441022+00:00 ip-172-23-113-43 kernel:  io_schedule+0x4c/0x80
+> 2025-12-03T15:57:25.441023+00:00 ip-172-23-113-43 kernel:
+> folio_wait_bit_common+0x138/0x310
+> 2025-12-03T15:57:25.441023+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_wake_page_function+0x10/0x10
+> 2025-12-03T15:57:25.441024+00:00 ip-172-23-113-43 kernel:
+> folio_wait_private_2+0x2c/0x60
+> 2025-12-03T15:57:25.441025+00:00 ip-172-23-113-43 kernel:
+> nfs_release_folio+0xa0/0x120 [nfs]
+> 2025-12-03T15:57:25.441032+00:00 ip-172-23-113-43 kernel:
+> filemap_release_folio+0x68/0xa0
+> 2025-12-03T15:57:25.441033+00:00 ip-172-23-113-43 kernel:
+> split_huge_page_to_list_to_order+0x401/0x970
+> 2025-12-03T15:57:25.441033+00:00 ip-172-23-113-43 kernel:  ?
+> compaction_alloc_noprof+0x1c5/0x2f0
+> 2025-12-03T15:57:25.441034+00:00 ip-172-23-113-43 kernel:
+> split_folio_to_list+0x22/0x70
+> 2025-12-03T15:57:25.441035+00:00 ip-172-23-113-43 kernel:
+> migrate_pages_batch+0x2f2/0xa70
+> 2025-12-03T15:57:25.441035+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_free+0x10/0x10
+> 2025-12-03T15:57:25.441038+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_alloc+0x10/0x10
+> 2025-12-03T15:57:25.441039+00:00 ip-172-23-113-43 kernel:  ?
+> __mod_memcg_lruvec_state+0xf4/0x250
+> 2025-12-03T15:57:25.441039+00:00 ip-172-23-113-43 kernel:  ?
+> migrate_pages_batch+0x5e8/0xa70
+> 2025-12-03T15:57:25.441040+00:00 ip-172-23-113-43 kernel:
+> migrate_pages_sync+0x84/0x1e0
+> 2025-12-03T15:57:25.441040+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_free+0x10/0x10
+> 2025-12-03T15:57:25.441041+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_alloc+0x10/0x10
+> 2025-12-03T15:57:25.441044+00:00 ip-172-23-113-43 kernel:
+> migrate_pages+0x38f/0x4c0
+> 2025-12-03T15:57:25.441047+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_free+0x10/0x10
+> 2025-12-03T15:57:25.441048+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_compaction_alloc+0x10/0x10
+> 2025-12-03T15:57:25.441048+00:00 ip-172-23-113-43 kernel:
+> compact_zone+0x385/0x700
+> 2025-12-03T15:57:25.441049+00:00 ip-172-23-113-43 kernel:  ?
+> isolate_migratepages_range+0xc1/0xf0
+> 2025-12-03T15:57:25.441049+00:00 ip-172-23-113-43 kernel:
+> kcompactd_do_work+0xfc/0x240
+> 2025-12-03T15:57:25.441050+00:00 ip-172-23-113-43 kernel:  kcompactd+0x43f/0x4a0
+> 2025-12-03T15:57:25.441052+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_autoremove_wake_function+0x10/0x10
+> 2025-12-03T15:57:25.441053+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_kcompactd+0x10/0x10
+> 2025-12-03T15:57:25.441053+00:00 ip-172-23-113-43 kernel:  kthread+0xfe/0x230
+> 2025-12-03T15:57:25.441054+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_kthread+0x10/0x10
+> 2025-12-03T15:57:25.441054+00:00 ip-172-23-113-43 kernel:
+> ret_from_fork+0x47/0x70
+> 2025-12-03T15:57:25.441055+00:00 ip-172-23-113-43 kernel:  ?
+> __pfx_kthread+0x10/0x10
+> 2025-12-03T15:57:25.441057+00:00 ip-172-23-113-43 kernel:
+> ret_from_fork_asm+0x1a/0x30
+> 2025-12-03T15:57:25.441058+00:00 ip-172-23-113-43 kernel:  </TASK>
 
