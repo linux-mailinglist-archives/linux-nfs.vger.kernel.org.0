@@ -1,152 +1,200 @@
-Return-Path: <linux-nfs+bounces-17734-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17735-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8629FD0E212
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 08:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A166D0F174
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 15:18:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BF42E3004403
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 07:46:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3D05E3023D06
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 14:17:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D3612D5432;
-	Sun, 11 Jan 2026 07:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CD6346AC8;
+	Sun, 11 Jan 2026 14:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQ9EZE/t"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE4F285056
-	for <linux-nfs@vger.kernel.org>; Sun, 11 Jan 2026 07:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E28F346AE2
+	for <linux-nfs@vger.kernel.org>; Sun, 11 Jan 2026 14:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768117611; cv=none; b=rDHZz/Utwor2N0z28dmgRu/IAhx2pTIF324T94NT0ahQMAX4YL4s2KGXSmwFUsw8LT22jAm2ZzMVMRHhP3xYpSxY8P4hbWhpdp/G2/GM14fFPYKYS+JltjYMUQiFY540m1ArbZQV4OYaSYzX/hEBf5Of1EGT2teiHRRQCjz4tFg=
+	t=1768141051; cv=none; b=XqlQQAPX78fcdLFRmwyK7VTL6rU0c+PinSfSDJKZHr5fhkpGC8ba81u1aa33DMbxT+fQEPpqcF6/Du9jpmgrKL1M9jow4pNQF/rS/jBTG5kHT6YTqvsV8XlWHmrF9w/Arficpyf7HgIQl3O66nCzw4UFb+XD/nzOYlBnPu47ZDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768117611; c=relaxed/simple;
-	bh=u+N0Cj3T1mjGx7DZPKVURX/1BC8y5ScGbF0Aat8fMIg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VllIf7CCAXUJj6ROg7unlJVucv+Wiw2NU3w4ltvGik2oBhnrjxJpbpWsHxdVdFZvCcVX62ex2hfhUX48zw2UCBnvlwfV566CQO6ooQi7Nf4XroqtmvK7fu6U0tjYFN5NXeZGCJUea80QR05YlyDRpstYwrco7P2QKFGXgSAI/Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+	s=arc-20240116; t=1768141051; c=relaxed/simple;
+	bh=tPGQ4me3lNATYqYpvKIOt8bNRssCWMiTnFFzIPiABCU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gOTz6tWK1DGkvxALlA8RFvBhktocBVbpSRk1rQXkaLUfQuYMeRC0d911zv8K/yl4nweEO8SEl5W7azWSCDcHanrLine3xfTqVeKSBhh5u3Mcz3YavMPI382rsK/G6btgxWvnbInuz1iQTwzW64Dg5D462JrNsknzPnLQ6ZBLbhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQ9EZE/t; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so50139475e9.3
-        for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 23:46:49 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47d182a8c6cso34085545e9.1
+        for <linux-nfs@vger.kernel.org>; Sun, 11 Jan 2026 06:17:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768141047; x=1768745847; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:to:from:date:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P5lgTSMbCJ+kAWtXt6KlwM7Lxkcfb9mdFUwob+Lc1Vs=;
+        b=IQ9EZE/tpvrEBjqvGt+aB0JdYUapP0538DxgTwqn4soQFiXjyd1dqIqtlCXPqtpk4D
+         eDwCxtZ+Qhwguwkyb2z31OEOdYhLz96jil+eEAikX6theHEeozc4E8ggb9ZTdTwq5RG4
+         VDTbjxqbKwmgPClbtLaQEm0uz2FRFA5jfJ2R4dljpNQ1tQb1rqG+UaudzmizkjifguZk
+         t5QjFegH93KEUrYrCQU8x18WaT9rqFvun7Fz4RWD5UdWH0Tv20eJ1Q9+mttUjh6R/aK/
+         UfbqiyuMDwrsYsvqforvnOp8wiVQ+PrPW02A7xmtINAk3YakbcyqE4u5ZCOsP0l/+z1E
+         9KSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768117608; x=1768722408;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JHex1ROU70P4fXX0pMSOXqcnXAZAa5hNamI9rCPnzsU=;
-        b=cs9BeuAvSxUp7oBlXDlaZKDa6WNsoC3H1lE6LM+s1BOwDdCCReH+7A+U55BYAtA2WY
-         /gGoFmhdXBfj33Ov26hUCkENorGC/2DwArICjsEgj97f+3zVbYv8fV3FDO9eSCuBvR3K
-         dirv5yv5sz/CUVeZ1Ris+GywpCQGjBvo0YTtUWDwpK5G7oh9zwUenAhwXYLYn5e+Fghc
-         ikN7XZPgS5KOXOBn8nYRmWPmXAbXKRHw2DRulNYPVgJ0v3h8PKOwPO5mJRDrBwmGl9HM
-         a4q4ATef9xT7XRLGS/EI3QAlee8sYDEr25G12+qaIYgpANgUjscFU6bOoe6bzzifiYck
-         OyTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJxovLzVdDqBgP13USGUdPduusFgB7Ga0MPOIFxtfWrkB55JEFY3XyEk8sdDXRU+vhacVF94jmCEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR1WerAnTRQI8vEhmXYPzW4mrTzvm/bpi5RY0Q7RsxUpym3Yvt
-	bRmh6xGF11tb3Yw1/aJWSkbFFNafGl3POnEDoh2oNRPlgvxHCzaaDM3fduCcHw==
-X-Gm-Gg: AY/fxX6EeWpxzVY/23LNi+i/gLysOYTzyrIhIvM6YFD28+5MAu7h3SB/yPDjzHvdZwC
-	4XBMcTuJTWtgGAGAlVFt5EvowaxHfKpy2N2FNPPm1P/AsCRuIYX2aVun6qRhG2V9M+qGJDrYn/e
-	YGdxVZ2nP9IFNgKetI/3x2Q4zopIkJTdYiZTTd+4AhZkK6n7PeboUwNOdXCwojVWNgKKg32W3EC
-	bcasURYBTvS0E1WXnxUEym9cJMH+Sm53sWxirJ3Eikwf48D4/AJFFtdNCTW26zrgg4kef/IU9Yu
-	XzhlekBeGCVfMBhEag3nmJHGAA4yJQu8dPTV+86AhzvLTTgCSy4KJGPu0D3VAApdRfmIHMJCBrn
-	F7Yqd4E2okqy8gDEAJqzGWgQZhkTlFS/Mjg5YmRrca0O4jjaoUlShAfk5UqOUFy5LoAGvVW+gzQ
-	Po2Yij84jodxtZK5hn4ZY7FHRIMtbrM1ffTXtGKX+CLtG+RQOjHA==
-X-Google-Smtp-Source: AGHT+IFQy6BIcUW8msfdUdmQtRfNtGM1NPFpHGwie+tcyyLQOcEJyO66v4tQP4DENZn5w8zQeEsIIg==
-X-Received: by 2002:a05:600c:45ca:b0:45d:f81d:eae7 with SMTP id 5b1f17b1804b1-47d84b39832mr142200215e9.28.1768117607606;
-        Sat, 10 Jan 2026 23:46:47 -0800 (PST)
-Received: from [10.50.5.3] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f7035f2sm278894505e9.12.2026.01.10.23.46.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jan 2026 23:46:47 -0800 (PST)
-Message-ID: <2b1e83fc-4765-4e8c-93dd-a74698a3fe03@grimberg.me>
-Date: Sun, 11 Jan 2026 09:46:45 +0200
+        d=1e100.net; s=20230601; t=1768141047; x=1768745847;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:to:from:date:sender:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P5lgTSMbCJ+kAWtXt6KlwM7Lxkcfb9mdFUwob+Lc1Vs=;
+        b=YXWXZ2gYU0AFDEkZbS5wBiPifZBLKUKS/FnKM6lEzcp9UkcRyHoOZtjYwnI3eN5c8G
+         g2piajsMwObWFQ5yP/u276xic9GG/bcl/icM47SBNxOCx+L6G0p+Yu+6WLNDMb9fEdmB
+         SP9cFx+92mh5RaFXnDeh6W0TkKWu3OqIvcf+Ps6v/7kcMy3Dkstz1teUlkAu1sT92ZGF
+         UVeBHHpwFD405EMdoi2He4VasmJI5/5pOid8TaUbyFv5tZKB+gvwGr1wWD7Pg8jiM+mQ
+         fWR/AfKzfu1iJJZZ0CVRdO/hvQVZQuHqLCjp22DIFpbQkSCEGtB475u0YCW5b8JRgG2m
+         NhBg==
+X-Gm-Message-State: AOJu0YzpvXECccpDV7+axEsFN0WvtAC/89UtEtmbljbPeHEeIyDXgYCS
+	QiO0b3MwJOzRyGBT28fnJI3n12E6ly6Jeq5KzFUBfwG3aiVUYpdrREnT
+X-Gm-Gg: AY/fxX5TWn23Gaywk3697L8vWbGFb/X2ael8bDhvpLkHIUNGyfBco09zMj8KGFKGhrg
+	S6JTUWTO8kwAJBq7kRs2sGYaO2Q4iHbaH9L8oNoJVYMblP8tkoeEnob9upGpCpG+Tg829xHCx5x
+	HXhcNJWmPv218FIQ+mHSBdgvTZr3nuc7IXWbV0UY/5sCaQbSFOoY8F6vLFBbhqGscW99iLz329K
+	mziokT4O2AMC2Z+j7aEtcoFEg3sNrUKH4pjVQx95ugrelu2oVATm+YlCtFNZwTYwGe7HywijV0X
+	pG4g2YQ8aKls+3RtW8cs19tw6cpbMo6L3O6pdl1oyyplq17F3vTyUjsPQkGqN5LkwNS+wCIaCt5
+	JVW1EM7YYFmFYhQGlVjiLQ5aYpBlgczxmpmN3Je2kyL8BI7969jnyFC4J+CpehLkNp/MaAj+Fo+
+	VDTFzYqAPWcmueM4nRdxpKua+f2wIa6Ggvuk1fCw1O2Vu+tiKpddtlDNI=
+X-Google-Smtp-Source: AGHT+IHD1vrInrR8Tngmz4iQNEZuEPPcg//WAtu8RBIQ3jMqIaXzk4UEebfcfAfZf9fTGGfosIa4Uw==
+X-Received: by 2002:a05:600c:1d0c:b0:471:700:f281 with SMTP id 5b1f17b1804b1-47d84b4093cmr152063245e9.25.1768141046248;
+        Sun, 11 Jan 2026 06:17:26 -0800 (PST)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e1adbsm33847868f8f.17.2026.01.11.06.17.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Jan 2026 06:17:25 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 1FDBEBE2EE7; Sun, 11 Jan 2026 15:17:24 +0100 (CET)
+Date: Sun, 11 Jan 2026 15:17:24 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: linux-nfs@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+	Steve Dickson <steved@redhat.com>
+Subject: [nfs-utils] "blkmapd open pipe file /run/rpc_pipefs/nfs/blocklayout
+ failed" and handling of nfs-blkmap.service service
+Message-ID: <176814099134.689475.12160936392296863650@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: add a LRU for delegations
-To: Trond Myklebust <trondmy@kernel.org>, Chuck Lever <cel@kernel.org>,
- Christoph Hellwig <hch@lst.de>
-Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-References: <20260107072720.1744129-1-hch@lst.de>
- <0b0b21c1-0bfd-4e2e-9deb-f368a66f5e9c@app.fastmail.com>
- <20260107162202.GA23066@lst.de>
- <ea31c230-1ace-4721-872e-2313b497214f@grimberg.me>
- <45ba87f3-2322-424b-95b1-9129a2537545@app.fastmail.com>
- <5ae5ed3a-5351-4dc1-98e4-0f31653ee2b6@grimberg.me>
- <8598e161ce18337022eefce71e7b8d35753cc735.camel@kernel.org>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <8598e161ce18337022eefce71e7b8d35753cc735.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
->> Yes, I agree to some extent. However arguably the client may want
->> keep
->> delegation
->> states around for as long as it can "just in case" the application
->> opens
->> the file again (the client
->> doesn't know the nature of the workload) assuming they fit in client
->> memory. It doesn't know
->> anything about other clients nor the server resources.
->>
->> The server on the other hand, has the knowledge of what delegations
->> conflict (or may conflict)
->> and act accordingly (not grant or recall).
+Hi all,
 
-Hey Trond,
+This is triggered by an older bugreport in Debian found at
+https://bugs.debian.org/1009106 . 
 
-> You can't just assume this: it really depends heavily on the workload.
-> Imagine an 'rm -rf' operation if you have to recall delegations from
-> various clients on all the files in the tree because they are caching
-> read delegations 'just in case'.
+In Debian we ship packages with nfs-blkmap.service installed and
+enabled via the nfs-common package to be used on NFS clients. The
+manpage of nfs.systemd(7) states:
 
-I don't disagree that this can happen, but the scenario you are 
-describing can happen regardless no?
-Isn't that a concern of the server though? IMO the server should be the 
-one that
-can both track and account for other clients. Seems to me that giving up the
-delegation just because some other client may modify the file is an 
-assumption that the nfs client
-takes without basing it on real data.
+       nfs-blkmap.service
+              The blkmapd daemon is only required on NFS clients which are  us‐
+              ing  pNFS  (parallel NFS), and particularly using the blocklayout
+              layout protocol.  If you might use this particular  extension  to
+              NFS, the nfs-blkmap.service unit should be enabled.
 
-I'd think that the client should rely on the server to account cross 
-clients state since
-it has the awareness of what other clients are doing.
+In Debian we ship this enabled by default as the following holds: The
+systemd service even one does not use pNFS, without the blocklayout
+module layouut protocol still starts without problem:
 
->
-> The current behaviour is based on the assumption that if your
-> application has not locally reopened the file for several minutes, then
-> that RPC call to reopen it on the server is by comparison not
-> particularly expensive.
+root@sid:~# systemctl status nfs-blkmap.service 
+● nfs-blkmap.service - pNFS block layout mapping daemon
+     Loaded: loaded (/usr/lib/systemd/system/nfs-blkmap.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2026-01-11 14:56:12 CET; 29s ago
+ Invocation: 6bb055c1850a40d8bd2cc5841e92c3b9
+       Docs: man:blkmapd(8)
+    Process: 880 ExecStart=/usr/sbin/blkmapd (code=exited, status=0/SUCCESS)
+   Main PID: 898 (blkmapd)
+      Tasks: 1 (limit: 4668)
+     Memory: 388K (peak: 2M)
+        CPU: 4ms
+     CGroup: /system.slice/nfs-blkmap.service
+             └─898 /usr/sbin/blkmapd
 
-That is reasonable, I agree. The use-case where I think this assumption does
-not hold is when the client does not open the file, but rather stat it. 
-Perhaps that case can
-be mitigated if the client can add an opportunistic WANT_DELEG in the 
-GETATTR compound
-to ask for a read delegation. The server can always choose not to grant 
-one...
+Jan 11 14:56:12 sid systemd[1]: Starting nfs-blkmap.service - pNFS block layout mapping daemon...
+Jan 11 14:56:12 sid blkmapd[898]: open pipe file /run/rpc_pipefs/nfs/blocklayout failed: No such file or directory
+Jan 11 14:56:12 sid systemd[1]: Started nfs-blkmap.service - pNFS block layout mapping daemon.
+root@sid:~#
 
-> Yes, there are some exceptions to that rule too, but by and large it is
-> a reasonable expectation, particularly so since the clients can all
-> still cache the file data for as long as the change attribute remains
-> the same. Any attempts to change the file would in any case trigger
-> delegation recalls, with delays to the writer while the server waits
-> for those recalls to complete.
+The service an the blkmapd deamon is started.
 
-Yes.
+What though seems irritating people is the error level message:
 
->
-> IOW: Before agreeing to change the delegation expiration times, I'd
-> like to see actual data that justifies caching for longer as a general
-> rule, rather than just relying on peoples' assumptions that this is the
-> case.
+blkmapd[806]: open pipe file /run/rpc_pipefs/nfs/blocklayout failed: No such file or directory
 
-That makes perfect sense to me Trond.
+As far I understand though this is mostly "harmless", because
+42a065968d0f ("blkmapd: allow blocklayoutdriver module to
+load/unload") did allow to blocklayoutdriver module to load/unload,
+and if that is done the the pipe file is created or deleted
+accordinly:
+
+root@sid:~# modprobe blocklayoutdriver 
+root@sid:~# ls -l /run/rpc_pipefs/nfs/blocklayout 
+prw------- 1 root root 0 Jan 11 14:57 /run/rpc_pipefs/nfs/blocklayout
+root@sid:~# systemctl status nfs-blkmap.service 
+● nfs-blkmap.service - pNFS block layout mapping daemon
+     Loaded: loaded (/usr/lib/systemd/system/nfs-blkmap.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2026-01-11 14:56:12 CET; 1min 27s ago
+ Invocation: 6bb055c1850a40d8bd2cc5841e92c3b9
+       Docs: man:blkmapd(8)
+    Process: 880 ExecStart=/usr/sbin/blkmapd (code=exited, status=0/SUCCESS)
+   Main PID: 898 (blkmapd)
+      Tasks: 1 (limit: 4668)
+     Memory: 640K (peak: 2M)
+        CPU: 4ms
+     CGroup: /system.slice/nfs-blkmap.service
+             └─898 /usr/sbin/blkmapd
+
+Jan 11 14:56:12 sid systemd[1]: Starting nfs-blkmap.service - pNFS block layout mapping daemon...
+Jan 11 14:56:12 sid blkmapd[898]: open pipe file /run/rpc_pipefs/nfs/blocklayout failed: No such file or directory
+Jan 11 14:56:12 sid systemd[1]: Started nfs-blkmap.service - pNFS block layout mapping daemon.
+Jan 11 14:57:21 sid blkmapd[898]: blocklayout pipe file created
+root@sid:~#
+
+(if the module is unloaded, then accordingly the pipe file will be
+deleted and the service keeps running, and loading the
+blocklayoutdriver will create the pipe if I understand the upstream
+Linux change fe0a9b740881 ("pnfsblock: add device operations")
+correctly, which is in since 3.1-rc1).
+
+In utils/blkmapd/device-discovery.c 
+
+555     /* open pipe file */
+556     bl_watch_dir(rpcpipe_dir, &rpc_pipedir_wfd);
+557     bl_watch_dir(nfspipe_dir, &nfs_pipedir_wfd);
+558
+559     bl_pipe_fd = open(bl_pipe_file, O_RDWR);
+560     if (bl_pipe_fd < 0)
+561         BL_LOG_ERR("open pipe file %s failed: %s\n", bl_pipe_file, strerror(errno));
+
+As the pipe is created and deleted when the blocklayoutdriver is
+loaded or unloaded, should the above really be ad error log level? Is
+it needed at all?
+
+For Debian purposes at least I would like to make things bit less
+irritating for users, keep ideally the service enabled by default, so
+that administraors whant to make use of pNFS setup with the
+blocklayout layout protocol, they just need to make the module load.
+
+Does that sound sensible? It looks at least Ubuntu is handling it
+similarly (but the package is mostly synced from Debian here, with
+some Ubuntu specific modification, but not in the handling of the 
+nfs-blkmap.service  service). As far I understand Fedora ships the
+service in the nfsv4-client-utils specific package.
+
+Regards,
+Salvatore
 
