@@ -1,239 +1,244 @@
-Return-Path: <linux-nfs+bounces-17731-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17732-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF372D0DF4C
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 00:35:10 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 318B3D0E019
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 01:24:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9D549301F274
-	for <lists+linux-nfs@lfdr.de>; Sat, 10 Jan 2026 23:34:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 300253004855
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jan 2026 00:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3537625A659;
-	Sat, 10 Jan 2026 23:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1536912CDA5;
+	Sun, 11 Jan 2026 00:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXoft1+5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+ZRGBNj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1215550095C
-	for <linux-nfs@vger.kernel.org>; Sat, 10 Jan 2026 23:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70193BB44
+	for <linux-nfs@vger.kernel.org>; Sun, 11 Jan 2026 00:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768088099; cv=none; b=oShSmpCkaKbip3BWnoENUtHBHVvCSwWgHJDnqRJod9xjHgMi8FHTIzLdDjsgFVLws/Ft+LviuyA9CPcxPLatecjJn3cDYZ90GQ6GPMLSB86DLYf8YcFfplSqPPf75uYmGjJBmrYcUt+Y0VKSz3LkWg3S6zuQLgtjzOScupO2zrE=
+	t=1768091081; cv=none; b=adibFs++H8tbfUQA93rudt4r8IoFjBM7X8PDcPCZ2cH6/gOIGkjq3F6gpPlkQrC1enorLKwTlguFCU73/Q1VzXEnSKrLtUWozKm6f1u1dKTtm/fW7WyVO1BGETizNgV4NpHduWoaN5AZxAI7wqtJ7xogIIx6AExQSd5xqTN0apk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768088099; c=relaxed/simple;
-	bh=Jqg9249WAhbP+z8PF0JaQL66dZSlUPQZESYtp3r39hs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=iI1Ww5PuLegCRWxbKoZvpvUgzM+pA1DWP4GmOx2aoB8QETMHF1VYHvWu1IU9WJbP+BRaO/w3JhCGQnShOsHWyBgQKPN+jHSCsbsP73M6XEra/xZtncGcr+BgzGfjuA9LXMw4VljH396+Zy+WCT+XbPInA3pELCrm/Eh6LeLpsmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXoft1+5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95395C116C6;
-	Sat, 10 Jan 2026 23:34:58 +0000 (UTC)
+	s=arc-20240116; t=1768091081; c=relaxed/simple;
+	bh=wmyGBP7sjZR+u4coFvApsiid1YRrInflqqnyzmHfLSE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Rv0J8vpngOHRLej4aG18LLDxb5X/C9wNEuXGSto5kaOnSn/4Ox379E0vWA2aw7qe5Gh3QeTLsDnFKqHIhbhjibASDj4RiK+fozuBZeAxIPJ1Y7pBNuOzDUzW5ng+znlTG4pQzM9zSO01KUsm4GkbKq+IDafq0mMgRaM2IB2b3M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+ZRGBNj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17952C4CEF1;
+	Sun, 11 Jan 2026 00:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768088098;
-	bh=Jqg9249WAhbP+z8PF0JaQL66dZSlUPQZESYtp3r39hs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=rXoft1+5ZurLhpyr15JTuo6rbQH/XUFO19+eM+q22LB5XlzN+WH7Y+kKx7v7yhftZ
-	 JJBGYvaxL4l5j1tbL6kc/mAGVTth1Y4dazRo3OPN9M6LWzWENZ0dHiF5l2X3SYR+5U
-	 20wYQHwmNygOdXUpSByQErm4pXOYDwopjWGl6KvaJ/rbndJbgeEUytataTkZVSh5C3
-	 4W5+hPP+H8etVGoYndLg6QJU+Qvu0DXaTTJhz4FQJLQKeQfyhGb3GwFUC4iEgr3Ziv
-	 xHNW8aKoiswdVlzJyT4s0FYmR8kppuDpVUWDYAUMAuxLXPoacoz0JkZQWHT1NX80R+
-	 JlMaERqXwyM7g==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A3AD7F40068;
-	Sat, 10 Jan 2026 18:34:57 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 10 Jan 2026 18:34:57 -0500
-X-ME-Sender: <xms:IeJiaQ32jxGa9HH-GZoYDCYr_ArRhKVIQd4k_QDXVhd8Lc0ql0gC3Q>
-    <xme:IeJiaV5F5sbg9JMlH-ZFgcHzsFJR0_W3784WianI_gzEDuKarcK0Umtv0hhNRtzxC
-    q2ei7S1iPpAXv_ZlIAIsChDHpoSWhUusGasXX3AgjyH-4Essyyc7hk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduudeftdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehsnhhithiivghrsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopegthhhutghkrdhlvg
-    hvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghl
-    vgdrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhf
-    shesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:IeJiabS8EdElriH6xveTmqLdtjw_u_fixJgbA8GqaZFBEQqc8ISYNA>
-    <xmx:IeJiaRvGkw8tKKwi7booVgT0Prhs-dgTYC8r0AHete8QQ5dH524Gzw>
-    <xmx:IeJiaVHLS_KrnyF_Vi-pmsDeOCOEwy1mduUJJsfM6YcIDRrVXlrvHA>
-    <xmx:IeJiaawNPgG4Xh-i0JSR31xN5A3-aNOLgCn5bNLH-b3Fq8amxN7dVg>
-    <xmx:IeJiaX1WS9Mnv73H88-Rqw5VbWI8h0VG7vBViXj4a3I9h9diPXbDvbfA>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7DB01780054; Sat, 10 Jan 2026 18:34:57 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1768091080;
+	bh=wmyGBP7sjZR+u4coFvApsiid1YRrInflqqnyzmHfLSE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=l+ZRGBNjPVD36vZwekz88z4YUO0NlvIepHh9EXpmVK3jCCEQY6Voor4Iuu5pTlaGb
+	 7Q3zAXAB/O6ZbJta8PO34ng/ktoexG4Zi+AJoQ3XmV0cegmacEYntMuckQidx6B781
+	 TVvdHGgW5sOvGUaqUmh3OJWzxqY8xfkjn+ZCtbbMVLR4bGi8EYYyyr6ZysrdRNb0Ik
+	 dLv0Bdru7fYcRC2QIxnsjSUwS17FMGAXpitw/IaS+wu1FeMej9jjYVJ/rYyLnapuEQ
+	 VKNPEUwugJraM89FUVL4zT08GnWkzUUUnmfVhxeSpP9cCpchSq7JCZj+REdpwkkqwH
+	 3+Aq8F88T7zPA==
+Message-ID: <211e07b8129353fbec59b44f4859ce22947f222b.camel@kernel.org>
+Subject: Re: Possible regression after NFS eof page pollution fix (ext4
+ checksum errors)
+From: Trond Myklebust <trondmy@kernel.org>
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: Linoy Ganti <lganti@nvidia.com>, Bar Friedman <bfriedman@nvidia.com>, 
+	linux-nfs@vger.kernel.org, Maor Gottlieb <maorg@nvidia.com>
+Date: Sat, 10 Jan 2026 19:24:38 -0500
+In-Reply-To: <d6419d6b1e24c2a704a44f6347bfcfa59fa195c2.camel@kernel.org>
+References: <447f41f0-f3ab-462a-8b59-e27bb2dfcbc0@nvidia.com>
+		 <43278ef7e260f46de5a7130331f30e12b916f89a.camel@kernel.org>
+		 <3e7d4222-9326-4761-819f-114831919c80@nvidia.com>
+	 <d6419d6b1e24c2a704a44f6347bfcfa59fa195c2.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A1CkIJRtWFaZ
-Date: Sat, 10 Jan 2026 18:33:59 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Mike Snitzer" <snitzer@kernel.org>,
- "Christoph Hellwig" <hch@lst.de>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <eaac3112-eafc-4bc5-974f-752edf868788@app.fastmail.com>
-In-Reply-To: <176808109160.2462021.5788018456330144196@noble.neil.brown.name>
-References: <20260109215613.25250-1-cel@kernel.org>
- <176802301025.16766.5819430775313248993@noble.neil.brown.name>
- <63566a53-ed5a-4c0b-920d-22219c750354@app.fastmail.com>
- <176808109160.2462021.5788018456330144196@noble.neil.brown.name>
-Subject: Re: [RFC PATCH v2] NFSD: Add asynchronous write throttling support for
- UNSTABLE WRITEs
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
+Hi Mark,
 
+On Mon, 2026-01-05 at 10:20 -0500, Trond Myklebust wrote:
+>=20
+> OK so if I'm understanding correctly, this is organised as ext4
+> partitions that are stored in qcow2 images that are again stored on a
+> NFSv4.2 partition.
+>=20
+> Do these qcow2 images have a file size that is fixed at creation
+> time,
+> or is the file size dynamic?
+> Also, does changing the "discard" option from "unmap" to "ignore"
+> make
+> any difference to the outcome?
 
-On Sat, Jan 10, 2026, at 4:38 PM, NeilBrown wrote:
-> On Sun, 11 Jan 2026, Chuck Lever wrote:
->> 
->> On Sat, Jan 10, 2026, at 12:30 AM, NeilBrown wrote:
->> > On Sat, 10 Jan 2026, Chuck Lever wrote:
->> >> From: Chuck Lever <chuck.lever@oracle.com>
->> >> 
->> >> When memory pressure occurs during buffered writes, the traditional
->> >> approach is for balance_dirty_pages() to put the writing thread to
->> >> sleep until dirty pages are flushed. For NFSD, this means server
->> >> threads block waiting for I/O, reducing overall server throughput.
->> >> 
->> >> Add asynchronous write throttling for UNSTABLE writes using the
->> >> BDP_ASYNC flag to balance_dirty_pages_ratelimited_flags(). NFSD
->> >> checks memory pressure before attempting a buffered write. If the
->> >> call returns -EAGAIN (indicating memory exhaustion), NFSD returns
->> >> NFS4ERR_DELAY (or NFSERR_JUKEBOX for NFSv3) to the client instead
->> >> of blocking.
->> >> 
->> >> Clients then wait and retry, rather than tying up server memory with
->> >> a cached uncommitted write payload.
->> >> 
->> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> >> ---
->> >>  fs/nfsd/vfs.c | 24 ++++++++++++++++++++++++
->> >>  1 file changed, 24 insertions(+)
->> >> 
->> >> Compile tested only.
->> >> 
->> >> Changes since RFC v1:
->> >> - Remove the experimental debugfs setting
->> >> - Enforce throttling specifically only for UNSTABLE WRITEs
->> >> 
->> >> 
->> >> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
->> >> index 168d3ccc8155..c4550105234e 100644
->> >> --- a/fs/nfsd/vfs.c
->> >> +++ b/fs/nfsd/vfs.c
->> >> @@ -1458,6 +1458,30 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
->> >>  		}
->> >>  	}
->> >>  
->> >> +	/*
->> >> +	 * Throttle buffered writes under memory pressure. When dirty
->> >> +	 * page limits are exceeded, BDP_ASYNC causes -EAGAIN to be
->> >> +	 * returned rather than blocking the thread. This -EAGAIN
->> >> +	 * maps to nfserr_jukebox, signaling the client to back off
->> >> +	 * and retry rather than tying up a server thread during
->> >> +	 * writeback.
->> >> +	 *
->> >> +	 * NFSv2 writes commit to stable storage before reply; no
->> >> +	 * dirty pages accumulate, so throttling is unnecessary.
->> >> +	 * FILE_SYNC and DATA_SYNC writes flush immediately and do
->> >> +	 * not leave uncommitted dirty pages behind.
->> >> +	 * Direct I/O and DONTCACHE bypass the page cache entirely.
->> >> +	 */
->> >> +	if (rqstp->rq_vers > 2 &&
->> >> +	    stable == NFS_UNSTABLE &&
->> >> +	    nfsd_io_cache_write == NFSD_IO_BUFFERED) {
->> >> +		host_err =
->> >> +			balance_dirty_pages_ratelimited_flags(file->f_mapping,
->> >> +							      BDP_ASYNC);
->> >> +		if (host_err == -EAGAIN)
->> >> +			goto out_nfserr;
->> >
->> > I doubt that this will do what you want - at least not reliably.
->> >
->> > balance_dirty_pages_ratelimited_flags() assumes it will be called
->> > repeatedly by the same task and it lets that task write for a while,
->> > then blocks it, then lets it write some more.
->> >
->> > The way you have integrated it into nfsd could result in the write load
->> > bouncing around among different threads and behaving inconsistently.
->> >
->> > Also the delay imposed is (for a Linux client) between 100ms and
->> > 15seconds.
->> > I suspect that is often longer than we would want.  The actual pause
->> > imposed by page-writeback.c is variable based on the measured throughput
->> > of the backing device.
->> 
->> These are UNSTABLE WRITEs. I can understand delaying the COMMIT because
->> that's where NFSD requests synchronous interaction with the backing
->> device. But nothing delays an UNSTABLE WRITE if the backing device is
->> slow.
->
-> That isn't correct.  If the "dirty threshold" is reached (e.g.  10% of
-> memory dirty) then balance_dirty_pages() will delay all writes to avoid
-> exceeding the dirty page limit.
+I've been staring at this for several days now, and the only candidate
+for a bug in the NFS client that I can see is this one. Can you please
+check if the following patch helps?
 
-That doesn't seem to be happening in some cases. Or perhaps, it is
-happening, but the added delay is not aggressive enough.
+Thanks
+  Trond
 
+8<------------------------------------------------------------------
+From 18acd9e2652d44bcb8a48bc4643ab006787b809a Mon Sep 17 00:00:00 2001
+Message-ID: <18acd9e2652d44bcb8a48bc4643ab006787b809a.1768091015.git.trond.=
+myklebust@hammerspace.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Date: Sat, 10 Jan 2026 18:53:34 -0500
+Subject: [PATCH] NFSv4.2: Fix size read races in fallocate and copy offload
 
->> > But maybe I'm seeing problems that don't exist.  Testing would help, but
->> > finding a mix of loads that properly stress the system would be a
->> > challenge.
->> >
->> > And maybe just allowing the thread pool to grow will make this a
->> > non-problem? 
->> 
->> I think allowing the thread pool to grow could make the memory problem
->> worse.
->
-> At 4(?) pages per thread?
+If the pre-operation file size is read before locking the inode and
+quiescing O_DIRECT writes, then nfs_truncate_last_folio() might end up
+overwriting valid file data.
 
-I'm talking about the WRITE payloads, not the thread footprint.
+Fixes: b1817b18ff20 ("NFS: Protect against 'eof page pollution'")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/io.c        |  2 ++
+ fs/nfs/nfs42proc.c | 29 +++++++++++++++++++----------
+ 2 files changed, 21 insertions(+), 10 deletions(-)
 
-More threads means capacity to handle a higher rate of ingress UNSTABLE
-WRITE traffic. I think we need a way for NFSD to complete those requests
-quickly (with NFS4ERR_DELAY, for example) when the server is under duress
-so that WRITE payloads pending on the transport queue or waiting to be
-committed do not consume server memory until the server has the resources
-to process the WRITEs.
+diff --git a/fs/nfs/io.c b/fs/nfs/io.c
+index d275b0a250bf..8337f0ae852d 100644
+--- a/fs/nfs/io.c
++++ b/fs/nfs/io.c
+@@ -84,6 +84,7 @@ nfs_start_io_write(struct inode *inode)
+ 		nfs_file_block_o_direct(NFS_I(inode));
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(nfs_start_io_write);
+=20
+ /**
+  * nfs_end_io_write - declare that the buffered write operation is done
+@@ -97,6 +98,7 @@ nfs_end_io_write(struct inode *inode)
+ {
+ 	up_write(&inode->i_rwsem);
+ }
++EXPORT_SYMBOL_GPL(nfs_end_io_write);
+=20
+ /* Call with exclusively locked inode->i_rwsem */
+ static void nfs_block_buffered(struct nfs_inode *nfsi, struct inode *inode=
+)
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index d537fb0c230e..c08520828708 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -114,7 +114,6 @@ static int nfs42_proc_fallocate(struct rpc_message *msg=
+, struct file *filep,
+ 	exception.inode =3D inode;
+ 	exception.state =3D lock->open_context->state;
+=20
+-	nfs_file_block_o_direct(NFS_I(inode));
+ 	err =3D nfs_sync_inode(inode);
+ 	if (err)
+ 		goto out;
+@@ -138,13 +137,17 @@ int nfs42_proc_allocate(struct file *filep, loff_t of=
+fset, loff_t len)
+ 		.rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_ALLOCATE],
+ 	};
+ 	struct inode *inode =3D file_inode(filep);
+-	loff_t oldsize =3D i_size_read(inode);
++	loff_t oldsize;
+ 	int err;
+=20
+ 	if (!nfs_server_capable(inode, NFS_CAP_ALLOCATE))
+ 		return -EOPNOTSUPP;
+=20
+-	inode_lock(inode);
++	err =3D nfs_start_io_write(inode);
++	if (err)
++		return err;
++
++	oldsize =3D i_size_read(inode);
+=20
+ 	err =3D nfs42_proc_fallocate(&msg, filep, offset, len);
+=20
+@@ -155,7 +158,7 @@ int nfs42_proc_allocate(struct file *filep, loff_t offs=
+et, loff_t len)
+ 		NFS_SERVER(inode)->caps &=3D ~(NFS_CAP_ALLOCATE |
+ 					     NFS_CAP_ZERO_RANGE);
+=20
+-	inode_unlock(inode);
++	nfs_end_io_write(inode);
+ 	return err;
+ }
+=20
+@@ -170,7 +173,9 @@ int nfs42_proc_deallocate(struct file *filep, loff_t of=
+fset, loff_t len)
+ 	if (!nfs_server_capable(inode, NFS_CAP_DEALLOCATE))
+ 		return -EOPNOTSUPP;
+=20
+-	inode_lock(inode);
++	err =3D nfs_start_io_write(inode);
++	if (err)
++		return err;
+=20
+ 	err =3D nfs42_proc_fallocate(&msg, filep, offset, len);
+ 	if (err =3D=3D 0)
+@@ -179,7 +184,7 @@ int nfs42_proc_deallocate(struct file *filep, loff_t of=
+fset, loff_t len)
+ 		NFS_SERVER(inode)->caps &=3D ~(NFS_CAP_DEALLOCATE |
+ 					     NFS_CAP_ZERO_RANGE);
+=20
+-	inode_unlock(inode);
++	nfs_end_io_write(inode);
+ 	return err;
+ }
+=20
+@@ -189,14 +194,17 @@ int nfs42_proc_zero_range(struct file *filep, loff_t =
+offset, loff_t len)
+ 		.rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_ZERO_RANGE],
+ 	};
+ 	struct inode *inode =3D file_inode(filep);
+-	loff_t oldsize =3D i_size_read(inode);
++	loff_t oldsize;
+ 	int err;
+=20
+ 	if (!nfs_server_capable(inode, NFS_CAP_ZERO_RANGE))
+ 		return -EOPNOTSUPP;
+=20
+-	inode_lock(inode);
++	err =3D nfs_start_io_write(inode);
++	if (err)
++		return err;
+=20
++	oldsize =3D i_size_read(inode);
+ 	err =3D nfs42_proc_fallocate(&msg, filep, offset, len);
+ 	if (err =3D=3D 0) {
+ 		nfs_truncate_last_folio(inode->i_mapping, oldsize,
+@@ -205,7 +213,7 @@ int nfs42_proc_zero_range(struct file *filep, loff_t of=
+fset, loff_t len)
+ 	} else if (err =3D=3D -EOPNOTSUPP)
+ 		NFS_SERVER(inode)->caps &=3D ~NFS_CAP_ZERO_RANGE;
+=20
+-	inode_unlock(inode);
++	nfs_end_io_write(inode);
+ 	return err;
+ }
+=20
+@@ -416,7 +424,7 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+ 	struct nfs_server *src_server =3D NFS_SERVER(src_inode);
+ 	loff_t pos_src =3D args->src_pos;
+ 	loff_t pos_dst =3D args->dst_pos;
+-	loff_t oldsize_dst =3D i_size_read(dst_inode);
++	loff_t oldsize_dst;
+ 	size_t count =3D args->count;
+ 	ssize_t status;
+=20
+@@ -461,6 +469,7 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+ 		&src_lock->open_context->state->flags);
+ 	set_bit(NFS_CLNT_DST_SSC_COPY_STATE,
+ 		&dst_lock->open_context->state->flags);
++	oldsize_dst =3D i_size_read(dst_inode);
+=20
+ 	status =3D nfs4_call_sync(dst_server->client, dst_server, &msg,
+ 				&args->seq_args, &res->seq_res, 0);
+--=20
+2.52.0
 
-Flow control, essentially.
-
-
-> What exactly is "the memory problem"?  Do you have specific symptoms you
-> are trying to address?  Have you had NFS server run out of memory and
-> grind to a halt?
-
-Review the past 9 months of Mike's work on direct I/O, published on
-this mailing list. Hammerspace has measured this misbehavior and
-experienced server melt-down. Their solution is to avoid using the
-page cache entirely.
-
-But even so there still seems to be an effective denial-of-service
-vector by overloading NFSD with UNSTABLE WRITE traffic faster than
-it can push it to persistence.
-
-Perhaps we need better observability first.
-
-
--- 
-Chuck Lever
 
