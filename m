@@ -1,81 +1,130 @@
-Return-Path: <linux-nfs+bounces-17746-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17747-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DE38D122E4
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 12:09:11 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 443CED12AAD
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 14:02:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BC8D6302427B
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 11:08:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D369B30021D9
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 13:02:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5839431D38F;
-	Mon, 12 Jan 2026 11:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 925A935770E;
+	Mon, 12 Jan 2026 13:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="woMncY0+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuBawYgi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3543928F948;
-	Mon, 12 Jan 2026 11:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF522D47E3;
+	Mon, 12 Jan 2026 13:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768216126; cv=none; b=ez1Fi448HV4m87N+ajOj0aXS5juusyB7dY9agHi5x/KCvkvvCQjULRwU69WN2KP9CD7IuSLsLBkLRlyszEdBNxLLNB67I7+Zf3oPQwtLVxK/ro47Lkds1BmjpJ+aEB1LMHYhvVqE33vP/mf5v76aLZDwjI7dUT5WxwalVfqBoEQ=
+	t=1768222932; cv=none; b=Rekm7lgVLXBgiAAMQ+om4GvmNEqGwDMrGEcoOPYQkAQB6J1eLtUeH1KwGlQqPLBNDdaXzmAwLeJ/HYiheTPATAj932eKnQa5PR0ZvypZURKgJp5zlaQpNfbFc6BKgAJI/fFNLiyMmJDrJVv+hOO4c7EQ32FjaxQ1B/BhBPE6qB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768216126; c=relaxed/simple;
-	bh=ezyFA+DELTx6yBVExaP0BltWre5xkgvONKti9hcWwBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKPtaw4oQLEcmZkeBGULtZksqLAd60EHS/T4XAWyrUy8oFcXnmzB1AfphrX6WFCLGJjHDyjcInTev9UHOLOjXvSsLxIeHpK1kXzdCATqvzU4wZjK0/q0E9N3GIpKsPvcoUxbBZXEDNl4tWdsM6+DQi6GawnGlduyBuhC6ooK+i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=woMncY0+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9092BC16AAE;
-	Mon, 12 Jan 2026 11:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1768216125;
-	bh=ezyFA+DELTx6yBVExaP0BltWre5xkgvONKti9hcWwBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=woMncY0+NDEwaqCjKsEe+u45dFCR1AJRgSOJ49ezvyHOebTQacvqkgdJloh2X5nKa
-	 1owUoedbaMlLy8ls059MLe7gxJab7xRwaeoOtfgSIpWwtrHX22I7G6i/qPbXcm6s/L
-	 p8CT/5sKn/7ENJSmXz20OKJlGTpZSWWGZZtV2Pc4=
-Date: Mon, 12 Jan 2026 12:08:43 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 6.6.y v3 0/4] NFSD: NFSv4 file creation neglects setting
- ACL
-Message-ID: <2026011235-coma-sullen-3b13@gregkh>
-References: <2025122941-civic-revered-b250@gregkh>
- <20260109143946.4173043-1-cel@kernel.org>
+	s=arc-20240116; t=1768222932; c=relaxed/simple;
+	bh=RIH5DGw9iaODSe+GboFTs0O7c0cEBRdRfN8567Qvz9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pOdeLo4ZbMxZPciLiPUTxU9M4D5eXoSJujLY5srCHZjYqK7q9yjLCK8ERKKfwMOzFzgrSm3Gt3Rtv1r2wcEkzKy1wr7lPzdMK5QJTm5knd7IxPVTio/m1vyhqgx98T/YNe0fBtqOgy2IQMPxWGzmrojMTfIBxE3u4CiE0CNjj+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuBawYgi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34EF4C16AAE;
+	Mon, 12 Jan 2026 13:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768222932;
+	bh=RIH5DGw9iaODSe+GboFTs0O7c0cEBRdRfN8567Qvz9A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GuBawYgiub2dv2qsF9RKZVhe0V/aSnkEu4nPJWorZt+trDE7QgUWV0DL+v3F9lYFb
+	 S8jkjZescwZ86TegZq0zHtZhaq9OiP/XT4Ek5oC6djgknJE1zX7QEA/iqpuP2EIHYd
+	 i/AUasa7Z7UImS/J0tHpsy/U9HlOS5XOAxCNzfi5lx8vhyf2Wb4IsdXz0HYl/2ybgd
+	 zyMbLaIzdD+bTqh0IYPV9h+8sw3TKlpbpGyacEvIK+RA3MswzE5pZ8VVVdUD7aZwhB
+	 Xj9stBjtg4cBkuHHRQP3fuSvhrKmcBkeAARfw51Fmp9ppfpQRplOXvMpP4uYYgpMYD
+	 hcqUp5Kh8q71w==
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	David Sterba <dsterba@suse.com>,
+	Jan Kara <jack@suse.cz>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Stefan Roesch <shr@fb.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	gfs2@lists.linux.dev,
+	io-uring@vger.kernel.org,
+	devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-xfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: re-enable IOCB_NOWAIT writes to files v6
+Date: Mon, 12 Jan 2026 14:02:02 +0100
+Message-ID: <20260112-geben-ausrichten-20a6cad7e163@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260108141934.2052404-1-hch@lst.de>
+References: <20260108141934.2052404-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260109143946.4173043-1-cel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2358; i=brauner@kernel.org; h=from:subject:message-id; bh=RIH5DGw9iaODSe+GboFTs0O7c0cEBRdRfN8567Qvz9A=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSmfDgTzOJR2bBdxfHs4lPvNzr2Vs6TUNwx6US+esA93 wOa+bFsHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABN5dI2R4ZP6ftH/fWt4PbWW uef2Z5wtW9WpnhlzeM35ddH5pfqvghj+lxkqrN5Xtz+j/JXujQs9eTrzbzdP4Od/964lr1hHb7E MCwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 09, 2026 at 09:39:42AM -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 08 Jan 2026 15:19:00 +0100, Christoph Hellwig wrote:
+> commit 66fa3cedf16a ("fs: Add async write file modification handling.")
+> effectively disabled IOCB_NOWAIT writes as timestamp updates currently
+> always require blocking, and the modern timestamp resolution means we
+> always update timestamps.  This leads to a lot of context switches from
+> applications using io_uring to submit file writes, making it often worse
+> than using the legacy aio code that is not using IOCB_NOWAIT.
 > 
-> I received an automated report that patch "NFSD: NFSv4 file creation
-> neglects setting ACL" failed to apply to the 6.6-stable tree. This
-> series is my attempt to address that failure.
-> 
-> - First, applied several pre-requisite patches
-> - LLM agent review for possible regressions reported no issues
-> - CI testing reported no regressions
-> 
-> Changes since v2:
-> - Add a Signed-off-by to 1/4
-> - Address a build warning introduced in 1/4
-> - Fix the In-Reply-To header
-> 
-> Changes since v1:
-> - Replace 1/4 with the upstreamed version of that commit
+> [...]
 
-Nice, this worked, thanks!
+Applied to the vfs-7.0.nonblocking_timestamps branch of the vfs/vfs.git tree.
+Patches in the vfs-7.0.nonblocking_timestamps branch should appear in linux-next soon.
 
-greg k-h
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-7.0.nonblocking_timestamps
+
+[01/11] fs: remove inode_update_time
+        https://git.kernel.org/vfs/vfs/c/20b781834ea0
+[02/11] fs: allow error returns from generic_update_time
+        https://git.kernel.org/vfs/vfs/c/dc9629faef0a
+[03/11] nfs: split nfs_update_timestamps
+        https://git.kernel.org/vfs/vfs/c/b8b3002fbfef
+[04/11] fat: cleanup the flags for fat_truncate_time
+        https://git.kernel.org/vfs/vfs/c/1cbc82281675
+[05/11] fs: refactor ->update_time handling
+        https://git.kernel.org/vfs/vfs/c/761475268fa8
+[06/11] fs: factor out a sync_lazytime helper
+        https://git.kernel.org/vfs/vfs/c/188344c8ac0b
+[07/11] fs: add a ->sync_lazytime method
+        https://git.kernel.org/vfs/vfs/c/5cf06ea56ee6
+[08/11] fs: add support for non-blocking timestamp updates
+        https://git.kernel.org/vfs/vfs/c/85c871a02b03
+[09/11] fs: refactor file_update_time_flags
+        https://git.kernel.org/vfs/vfs/c/2d72003ba244
+[10/11] xfs: implement ->sync_lazytime
+        https://git.kernel.org/vfs/vfs/c/f92f8eddbbfb
+[11/11] xfs: enable non-blocking timestamp updates
+        https://git.kernel.org/vfs/vfs/c/08489c4f4133
 
