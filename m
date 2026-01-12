@@ -1,357 +1,229 @@
-Return-Path: <linux-nfs+bounces-17755-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17756-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2AEAD1455D
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 18:26:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C083D147A3
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 18:46:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9FD7030F89BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 17:14:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 194143009249
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 17:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA30E374161;
-	Mon, 12 Jan 2026 17:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD9D37F0F9;
+	Mon, 12 Jan 2026 17:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejKhFjLV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9S2WVf5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06887374184
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Jan 2026 17:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF8030F7F9;
+	Mon, 12 Jan 2026 17:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768238046; cv=none; b=pMzT0lf7acoBnZ4FZyqxbvlz+qt5qsby3l6TTw7y5BEuMH0HNgrXYF55FYE5dmuLrWVQa1shVATWPO2IIkSXBPYwyl08C2XAnakls1J3+HJxM3/D47up1UXZ3XPlZjzs39R6B9TykMWobRbGw3Nk1T3GIxSt0A7xJkPiX50vBT4=
+	t=1768240001; cv=none; b=AXZ+QoaAY3rOo2zBGYSDNAYIkipYtOE9khPa7p6K4tNH9ua9DcWH3nCHwc01neOl4BAZe9uG9gnU/o8ZHV5l8lr06qDVmMltIXW3kFniGP5oZBzZvXL2V6SM5d6mMJeODWvgREyN0RET7gMms0crYkxMqH3KGQQCZWNgTaw+ews=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768238046; c=relaxed/simple;
-	bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uGu6PeHmeZB7gfl6C9ciSSWWO/VKxd264Z8uWL63vSnkubU3JYhAfZ6biP4nwpPRs9eAeL0tptBK11siSzOFgQ5K0i8f6PGIYMNLV2P2Z9awYC4UImekWjcF/b5JRZG0dahVdAHpVtSRrnBUr5b/FZUuLJy8soYTLtbq2JM4TEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejKhFjLV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4CCC19424;
-	Mon, 12 Jan 2026 17:14:03 +0000 (UTC)
+	s=arc-20240116; t=1768240001; c=relaxed/simple;
+	bh=Vhd/gJtrTHzGsQ/Fg40yOnQHfXkavG5IIk9pHgkRG+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BDZleCyTsHm1xschbuBZkW9Nqo+KoB8k1SJuSCLGQLz6Bf1uNdiiy1+S6TL2a538e7gbhOhBzX56meoVwKg6q7YXobAuagiOPqcl9Ayy7b6rdU0zWT1XPsp8JQnCDQFfcU9H+WEoZ+hSBw4nHNbGN06TzbnUhgyYloDNxINXULA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9S2WVf5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D988C2BCB3;
+	Mon, 12 Jan 2026 17:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768238044;
-	bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ejKhFjLVpI1Gim+DQyTkn5gH+yV5nEAScg5aS9IFkobkTYEYkiCo8qQizJQCc8ITY
-	 OqBt/JtZOzTH3GJRwt3sgmifUmour45XtQAP1P1wf3GvxR4JY5FOZRd5QCIl2wdU8H
-	 kdeukfLWta969caiquVo4z1piL46+00YQSqzVgXzRlDu6BzY6FGr+9Lte1eXCq8NaP
-	 1oWv2FxJAmZj0GMckDBTq/nDCVrTjssloKRTnMxMaqpllG73zw6E0p5C8cczP33zE2
-	 aJi745W/9tHNRs5CM1GqQzirnzrsjof+TbN4+b7py9py2392+nQa7pDpLYgYBC0TIB
-	 RUe/tahwsV/lg==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 12 Jan 2026 12:13:51 -0500
-Subject: [PATCH] nfsdctl: add support for min-threads parameter
+	s=k20201202; t=1768239996;
+	bh=Vhd/gJtrTHzGsQ/Fg40yOnQHfXkavG5IIk9pHgkRG+A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=q9S2WVf5sUkHZ/fiYUqo+pNTFpgLuS1m1+j82so5SM1uWC1GzuEK4i8ZZJlhb8XYs
+	 xYdz+HG/47VRihARGgXP9b60kDGjaUh+2CaeSY2yrJp5Qx0V9Z3xklgbjMfRGK4FvM
+	 CxHqE9pGlVsjK07Slg6rVRYUVM+4wr9/bBtdInQotDAjQS6I82prq2zdaP2HBmdkTZ
+	 DRXBnyd6HpfQ1vmh6tmyBSKu6xHOx81rluCTMBlqatLn6JGd2PmUebbun3Xqp558VE
+	 JcdZGc4LcvSdMpVYk9fh9uoDGukookDopcit0KedCxOPE3+5QShDfoORlkdKB01orT
+	 w0A+HlWUE/83A==
+From: Chuck Lever <cel@kernel.org>
+To: vira@web.codeaurora.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	<linux-nfs@vger.kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	hirofumi@mail.parknet.co.jp,
+	linkinjeon@kernel.org,
+	sj1557.seo@samsung.com,
+	yuezhang.mo@sony.com,
+	almaz.alexandrovich@paragon-software.com,
+	slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	frank.li@vivo.com,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	cem@kernel.org,
+	sfrench@samba.org,
+	pc@manguebit.org,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	hansg@kernel.org,
+	senozhatsky@chromium.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v3 00/16] Exposing case folding behavior
+Date: Mon, 12 Jan 2026 12:46:13 -0500
+Message-ID: <20260112174629.3729358-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260112-minthreads-v1-1-30c5f4113720@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDQwNL3dzMvJKMotTElGJdc0sDs9TU5NSUNEtLJaCGgqLUtMwKsGHRsbW
- 1ADj632BcAAAA
-X-Change-ID: 20260109-minthreads-7906eecedf99
-To: Steve Dickson <steved@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10060; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpZSvbuKWZ+Z3DZLOz/+QdwfFibJamkhhlEg9Hg
- p/RIAVUlPiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWUr2wAKCRAADmhBGVaC
- FStEEACdTmgXAwG9+SJineb4PgXTXDI1xWjjGA7v4CqnlZHXCNoH/UvBM/QUR8THQaLP1utLJB/
- DQX6An6bmo5mRFA1ZJi+Y9v3NsiENHwiJA56jM8nKm816hNLAwgohsd9dZU3XWm3upIPwk52xF+
- kJ839d3DggdtTXZprixxqiV7vZfz7xuiBs0YGcdrlnDa0hQ5xjoD8G/OV+iLiwoXOfcO8VvOCbh
- IgIe9xi8+Uv2oEh6J7mZHqSRKPrWHZldkF4hNCRvI5JK79vyqSbOZpSgpFKZQABJnmAk4FtUzNT
- bqn0VxKZhiqTVY4gfsg0tHJdvwOgz2NUsz2d2nDnh380eqwGgOponUgluFfL5md6CFW4DiQDQE1
- ARngsEmXez0ySRyaYLsIFDag62aOtJIrr5rAXiTryyRZ+4DzuuRhMxHuMB113wUC6rP2u54Ouq6
- UhAXibUCdN2pOw/Q8Jc+QjDqs/MbuUSiCaRscvhPrIAj+HP1bG4BM75eZjB39anB8dd3/ge1Zr7
- w+B7E6yfHfDTwQq3PH2Ux782pYb3DJuEW7IRBToeLs29XhOy8wkRghGj06FW3QaBIMg4cC+0YLT
- 3msOjSAjoRTGFZ6Fcat7DJ9AuaclxKjs6WcuM2EYv5cpym22M1Tl43tSmStFqYXstxlPWWb4O3c
- AENFoJU+1D06+ug==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-This patch adds proper support to nfsdctl to manage nfsd's new dynamic
-threading when NFSD_A_SERVER_MIN_THREADS is defined in the header:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-If the user sets min-threads, and has a new enough kernel, the
-traditional threads parameters will represent the max number of threads.
-The min-threads value represents the minimum number of threads to run in
-each pool. The kernel will start the minimum number of threads at
-startup time, and the thread count will dynamically fluctuate between
-the min and max based on load.
+Following on from
 
-Allow the "autostart" subcommand to find the "min-threads" parameter in
-nfs.conf and set it in the netlink call appropriately. If it's not set,
-then assume that it's 0, which will disable dynamic threading.
+https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
 
-For the "threads" subcommand, add a new command-line option. If it's not
-set, then don't send it in the netlink command at all. That allows the
-kernel's existing setting to remain as-is, unless explicitly changed.
+I'm attempting to implement enough support in the Linux VFS to
+enable file services like NFSD and ksmbd (and user space
+equivalents) to provide the actual status of case folding support
+in local file systems. The default behavior for local file systems
+not explicitly supported in this series is to reflect the usual
+POSIX behaviors:
 
-Also, update the documentation with info about min-threads.
+  case-insensitive = false
+  case-preserving = true
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Consider this a starting point for discussion. The userland interface
-can be different from the kernel's min-threads interface.
+The case-insensitivity and case-preserving booleans can be consumed
+immediately by NFSD. These two booleans have been part of the NFSv3
+and NFSv4 protocols for decades, in order to support NFS clients on
+non-POSIX systems.
 
-One alternative idea:
+Support for user space file servers is why this series exposes case
+folding information via a user-space API. I don't know of any other
+category of user-space application that requires access to case
+folding info.
 
-We could just expose dynamic threading in the config file and
-command-line interface as a bool. If enabled, we'd set min-threads to 1.
-If disabled, set it to 0.
 
-I guess we could also do both as well...
----
- configure.ac               |  3 ++-
- systemd/nfs.conf.man       |  3 ++-
- utils/nfsdctl/nfsdctl.8    | 20 ++++++++++++++++++--
- utils/nfsdctl/nfsdctl.adoc | 13 +++++++++++++
- utils/nfsdctl/nfsdctl.c    | 43 +++++++++++++++++++++++++++++++++++++------
- 5 files changed, 72 insertions(+), 10 deletions(-)
+The Linux NFS community has a growing interest in supporting NFS
+clients on Windows and MacOS platforms, where file name behavior does
+not align with traditional POSIX semantics.
 
-diff --git a/configure.ac b/configure.ac
-index 6da23915836d34ff4d9bdef79af13499990688f9..33866e869666d8ebdebc8d7b5b08bf6ffbe92aa2 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -262,6 +262,8 @@ AC_ARG_ENABLE(nfsdctl,
- 		PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
- 		PKG_CHECK_MODULES(LIBREADLINE, readline)
- 		AC_CHECK_HEADERS(linux/nfsd_netlink.h)
-+		AC_CHECK_DECLS([NFSD_A_SERVER_MIN_THREADS], , ,
-+			       [#include <linux/nfsd_netlink.h>])
- 
- 		# ensure we have the pool-mode commands
- 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
-@@ -620,7 +622,6 @@ AC_CHECK_SIZEOF(socklen_t,, [AC_INCLUDES_DEFAULT
-                              # include <sys/socket.h>
-                              #endif])
- 
--
- dnl *************************************************************
- dnl Export some path names to config.h
- dnl *************************************************************
-diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index e6a84a9725da5a3cc40611f45d343a670fdb94ca..484de2c086db91ede38490e49411e1514a5da754 100644
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -162,6 +162,7 @@ option.
- .B nfsd
- Recognized values:
- .BR threads ,
-+.BR min-threads ,
- .BR host ,
- .BR scope ,
- .BR port ,
-@@ -179,7 +180,7 @@ Recognized values:
- Version and protocol values are Boolean values as described above,
- and are also used by
- .BR rpc.mountd .
--Threads and the two times are integers.
-+Threads, min-threads and the two times are integers.
- .B port
- and
- .B rdma
-diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
-index d69922448eb17fb155f05dc4ddc9aefffbf966e4..a86ffe8e1f4d39ef7041ac0f6867792466c40af0 100644
---- a/utils/nfsdctl/nfsdctl.8
-+++ b/utils/nfsdctl/nfsdctl.8
-@@ -2,12 +2,12 @@
- .\"     Title: nfsdctl
- .\"    Author: Jeff Layton
- .\" Generator: Asciidoctor 2.0.20
--.\"      Date: 2025-01-09
-+.\"      Date: 2026-01-12
- .\"    Manual: \ \&
- .\"    Source: \ \&
- .\"  Language: English
- .\"
--.TH "NFSDCTL" "8" "2025-01-09" "\ \&" "\ \&"
-+.TH "NFSDCTL" "8" "2026-01-12" "\ \&" "\ \&"
- .ie \n(.g .ds Aq \(aq
- .el       .ds Aq '
- .ss \n[.ss] 0
-@@ -147,6 +147,22 @@ value of 0 will shut down the NFS server. Run this without arguments to
- get the current number of running threads in each pool.
- .RE
- .sp
-+.if n .RS 4
-+.nf
-+.fam C
-+These options are specific to the "threads" subcommand:
-+
-+\-m, \-\-min\-threads=
-+    If set to a positive, non\-zero value, then dynamic threading is enabled for
-+    nfsd.  In this mode, the traditional "threads" values are treated as a maximum
-+    number of threads. This specifies the minimum number of threads per pool. The
-+    kernel will start the minimum number and dynamically start and stop threads as
-+    needed. If the minimum is larger than the maximum, then dynamic threadis is
-+    disabled, and the maximum number is started.
-+.fam
-+.fi
-+.if n .RE
-+.sp
- \fBversion\fP
- .RS 4
- Get/set the enabled NFS versions for the server. Run without arguments to
-diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
-index 0207eff6118d2dcc5a794d2013c039d9beb11ddc..e85348e29ed815470d35b6365a212d8872cf645c 100644
---- a/utils/nfsdctl/nfsdctl.adoc
-+++ b/utils/nfsdctl/nfsdctl.adoc
-@@ -84,6 +84,19 @@ Each subcommand can also accept its own set of options and arguments. The
-   value of 0 will shut down the NFS server. Run this without arguments to
-   get the current number of running threads in each pool.
- 
-+[source,bash]
-+----
-+These options are specific to the "threads" subcommand:
-+
-+-m, --min-threads=
-+    If set to a positive, non-zero value, then dynamic threading is enabled for
-+    nfsd.  In this mode, the traditional "threads" values are treated as a maximum
-+    number of threads. This specifies the minimum number of threads per pool. The
-+    kernel will start the minimum number and dynamically start and stop threads as
-+    needed. If the minimum is larger than the maximum, then dynamic threadis is
-+    disabled, and the maximum number is started.
-+----
-+
- *version*::
- 
-   Get/set the enabled NFS versions for the server. Run without arguments to
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index e7a0e12495277d2e98a6c21c7cee29fe459f37cc..67cf27b04ca39e42459bc8188e5ae527166a74d1 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -19,6 +19,7 @@
- #include <string.h>
- #include <sched.h>
- #include <sys/queue.h>
-+#include <limits.h>
- 
- #include <netlink/genl/family.h>
- #include <netlink/genl/ctrl.h>
-@@ -323,6 +324,11 @@ static void parse_threads_get(struct genlmsghdr *gnlh)
- 		case NFSD_A_SERVER_THREADS:
- 			pool_threads[i++] = nla_get_u32(attr);
- 			break;
-+#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
-+		case NFSD_A_SERVER_MIN_THREADS:
-+			printf("min-threads: %u\n", nla_get_u32(attr));
-+			break;
-+#endif
- 		default:
- 			break;
- 		}
-@@ -518,7 +524,7 @@ out:
- }
- 
- static int threads_doit(struct nl_sock *sock, int cmd, int grace, int lease,
--			int pool_count, int *pool_threads, char *scope)
-+			int pool_count, int *pool_threads, char *scope, int minthreads)
- {
- 	struct genlmsghdr *ghdr;
- 	struct nlmsghdr *nlh;
-@@ -540,6 +546,10 @@ static int threads_doit(struct nl_sock *sock, int cmd, int grace, int lease,
- 			nla_put_u32(msg, NFSD_A_SERVER_LEASETIME, lease);
- 		if (scope)
- 			nla_put_string(msg, NFSD_A_SERVER_SCOPE, scope);
-+#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
-+		if (minthreads >= 0)
-+			nla_put_u32(msg, NFSD_A_SERVER_MIN_THREADS, minthreads);
-+#endif
- 		for (i = 0; i < pool_count; ++i)
- 			nla_put_u32(msg, NFSD_A_SERVER_THREADS, pool_threads[i]);
- 	}
-@@ -580,23 +590,43 @@ out:
- 
- static void threads_usage(void)
- {
--	printf("Usage: %s threads [ pool0_count ] [ pool1_count ] ...\n", taskname);
-+	printf("Usage: %s threads { --min-threads=X } [ pool0_count ] [ pool1_count ] ...\n", taskname);
-+	printf("    --min-threads= set the minimum thread count per pool to value\n");
- 	printf("    pool0_count: thread count for pool0, etc...\n");
- 	printf("Omit any arguments to show current thread counts.\n");
- }
- 
-+#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
-+static const struct option threads_options[] = {
-+	{ "help", no_argument, NULL, 'h' },
-+	{ "min-threads", required_argument, NULL, 'm' },
-+	{ },
-+};
-+#else
-+#define threads_options help_only_options
-+#endif
-+
- static int threads_func(struct nl_sock *sock, int argc, char **argv)
- {
- 	uint8_t cmd = NFSD_CMD_THREADS_GET;
- 	int *pool_threads = NULL;
-+	int minthreads = -1;
- 	int opt, pools = 0;
- 
- 	optind = 1;
--	while ((opt = getopt_long(argc, argv, "h", help_only_options, NULL)) != -1) {
-+	while ((opt = getopt_long(argc, argv, "h", threads_options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'h':
- 			threads_usage();
- 			return 0;
-+		case 'm':
-+			errno = 0;
-+			minthreads = strtoul(optarg, NULL, 0);
-+			if (minthreads == ULONG_MAX && errno != 0) {
-+				fprintf(stderr, "Bad --min-threads value.");
-+				return 1;
-+			}
-+			break;
- 		}
- 	}
- 
-@@ -624,7 +654,7 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
- 			}
- 		}
- 	}
--	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL);
-+	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL, minthreads);
- }
- 
- /*
-@@ -1578,7 +1608,7 @@ static void autostart_usage(void)
- 
- static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- {
--	int *threads, grace, lease, idx, ret, opt, pools;
-+	int *threads, grace, lease, idx, ret, opt, pools, minthreads;
- 	struct conf_list *thread_str;
- 	struct conf_list_node *n;
- 	char *scope, *pool_mode;
-@@ -1659,9 +1689,10 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- 
- 	lease = conf_get_num("nfsd", "lease-time", 0);
- 	scope = conf_get_str("nfsd", "scope");
-+	minthreads = conf_get_num("nfsd", "min-threads", 0);
- 
- 	ret = threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, pools,
--			   threads, scope);
-+			   threads, scope, minthreads);
- out:
- 	free(threads);
- 	return ret;
+One example of a Windows-based NFS client is [1]. This client
+implementation explicitly requires servers to report
+FATTR4_WORD0_CASE_INSENSITIVE = TRUE for proper operation, a hard
+requirement for Windows client interoperability because Windows
+applications expect case-insensitive behavior. When an NFS client
+knows the server is case-insensitive, it can avoid issuing multiple
+LOOKUP/READDIR requests to search for case variants, and applications
+like Win32 programs work correctly without manual workarounds or
+code changes.
+
+Even the Linux client can take advantage of this information. Trond
+merged patches 4 years ago [2] that introduce support for case
+insensitivity, in support of the Hammerspace NFS server. In
+particular, when a client detects a case-insensitive NFS share,
+negative dentry caching must be disabled (a lookup for "FILE.TXT"
+failing shouldn't cache a negative entry when "file.txt" exists)
+and directory change invalidation must clear all cached case-folded
+file name variants.
+
+Hammerspace servers and several other NFS server implementations
+operate in multi-protocol environments, where a single file service
+instance caters to both NFS and SMB clients. In those cases, things
+work more smoothly for everyone when the NFS client can see and adapt
+to the case folding behavior that SMB users rely on and expect. NFSD
+needs to support the case-insensitivity and case-preserving booleans
+properly in order to participate as a first-class citizen in such
+environments.
+
+Series based on v6.19-rc5.
+
+[1] https://github.com/kofemann/ms-nfs41-client
+
+[2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.439352-1-trondmy@kernel.org/
 
 ---
-base-commit: 0e71be58cdead21b7bc0285fa6afbf1d0eca3049
-change-id: 20260109-minthreads-7906eecedf99
 
-Best regards,
+Changes since v2:
+- Remove unicode labels
+- Replace vfs_get_case_info
+- Add support for several more local file system implementations
+- Add support for in-kernel SMB server
+
+Changes since RFC:
+- Use file_getattr instead of statx
+- Postpone exposing Unicode version until later
+- Support NTFS and ext4 in addition to FAT
+- Support NFSv4 fattr4 in addition to NFSv3 PATHCONF
+
+
+Chuck Lever (16):
+  fs: Add case sensitivity info to file_kattr
+  fat: Implement fileattr_get for case sensitivity
+  exfat: Implement fileattr_get for case sensitivity
+  ntfs3: Implement fileattr_get for case sensitivity
+  hfs: Implement fileattr_get for case sensitivity
+  hfsplus: Report case sensitivity in fileattr_get
+  ext4: Report case sensitivity in fileattr_get
+  xfs: Report case sensitivity in fileattr_get
+  cifs: Implement fileattr_get for case sensitivity
+  nfs: Implement fileattr_get for case sensitivity
+  f2fs: Add case sensitivity reporting to fileattr_get
+  vboxsf: Implement fileattr_get for case sensitivity
+  isofs: Implement fileattr_get for case sensitivity
+  nfsd: Report export case-folding via NFSv3 PATHCONF
+  nfsd: Implement NFSv4 FATTR4_CASE_INSENSITIVE and
+    FATTR4_CASE_PRESERVING
+  ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
+
+ fs/exfat/exfat_fs.h      |  2 ++
+ fs/exfat/file.c          | 17 +++++++++++++++--
+ fs/exfat/namei.c         |  1 +
+ fs/ext4/ioctl.c          |  8 ++++++++
+ fs/f2fs/file.c           |  8 ++++++++
+ fs/fat/fat.h             |  3 +++
+ fs/fat/file.c            | 18 ++++++++++++++++++
+ fs/fat/namei_msdos.c     |  1 +
+ fs/fat/namei_vfat.c      |  1 +
+ fs/file_attr.c           | 10 ++++++++++
+ fs/hfs/dir.c             |  1 +
+ fs/hfs/hfs_fs.h          |  2 ++
+ fs/hfs/inode.c           | 13 +++++++++++++
+ fs/hfsplus/inode.c       |  9 +++++++++
+ fs/isofs/dir.c           | 11 +++++++++++
+ fs/nfs/client.c          |  9 +++++++--
+ fs/nfs/inode.c           | 18 ++++++++++++++++++
+ fs/nfs/internal.h        |  3 +++
+ fs/nfs/nfs3proc.c        |  2 ++
+ fs/nfs/nfs3xdr.c         |  7 +++++--
+ fs/nfs/nfs4proc.c        |  2 ++
+ fs/nfs/proc.c            |  3 +++
+ fs/nfs/symlink.c         |  3 +++
+ fs/nfsd/nfs3proc.c       | 18 ++++++++++--------
+ fs/nfsd/nfs4xdr.c        | 30 ++++++++++++++++++++++++++----
+ fs/nfsd/vfs.c            | 25 +++++++++++++++++++++++++
+ fs/nfsd/vfs.h            |  2 ++
+ fs/ntfs3/file.c          | 23 +++++++++++++++++++++++
+ fs/ntfs3/inode.c         |  1 +
+ fs/ntfs3/namei.c         |  2 ++
+ fs/ntfs3/ntfs_fs.h       |  1 +
+ fs/smb/client/cifsfs.c   | 19 +++++++++++++++++++
+ fs/smb/server/smb2pdu.c  | 30 ++++++++++++++++++++++++------
+ fs/vboxsf/dir.c          |  1 +
+ fs/vboxsf/file.c         |  6 ++++--
+ fs/vboxsf/super.c        |  4 ++++
+ fs/vboxsf/utils.c        | 31 +++++++++++++++++++++++++++++++
+ fs/vboxsf/vfsmod.h       |  6 ++++++
+ fs/xfs/xfs_ioctl.c       |  7 +++++++
+ include/linux/fileattr.h |  3 +++
+ include/linux/nfs_xdr.h  |  2 ++
+ 41 files changed, 337 insertions(+), 26 deletions(-)
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.52.0
 
 
