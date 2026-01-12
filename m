@@ -1,251 +1,357 @@
-Return-Path: <linux-nfs+bounces-17754-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17755-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 918D8D14584
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 18:27:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2AEAD1455D
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 18:26:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 106C53082FE9
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 17:09:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9FD7030F89BA
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 17:14:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D6D376BC7;
-	Mon, 12 Jan 2026 17:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA30E374161;
+	Mon, 12 Jan 2026 17:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1x7JlKG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejKhFjLV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68D430C35E
-	for <linux-nfs@vger.kernel.org>; Mon, 12 Jan 2026 17:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06887374184
+	for <linux-nfs@vger.kernel.org>; Mon, 12 Jan 2026 17:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768237641; cv=none; b=YkAFbcqtRR74ZZNxIv6/j8dhYWWsmbSsVB6G9AEUNz3NoWSGSd3D5gWnA38gjx4eUjYTFgQAe4QM1nDH/OeBbm1Bm+V4Fieyvk096LR6KcPDiahxrLiuff7ye9Zsb8Ftwh4ZWd833NBUmpeCDsDMdxJZW9FBqrnfJsklIxM/KZ4=
+	t=1768238046; cv=none; b=pMzT0lf7acoBnZ4FZyqxbvlz+qt5qsby3l6TTw7y5BEuMH0HNgrXYF55FYE5dmuLrWVQa1shVATWPO2IIkSXBPYwyl08C2XAnakls1J3+HJxM3/D47up1UXZ3XPlZjzs39R6B9TykMWobRbGw3Nk1T3GIxSt0A7xJkPiX50vBT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768237641; c=relaxed/simple;
-	bh=ORP9fu9hnmn1attsezJPhF2UpAS2UsF7OL3mTpACml0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=SXCxvnwN+qArfVEaNhafVp9LLRWeVWvBaf238Ez71QFJpSKhLpOEwMtxiGttiLXHvVSPyLYGGHpuI+BBNeSTOrvZNEvfuRI8CPKSya4Eb3I+JIdaiTOQyWt69M+aRG7c1xz/U4V/7GQNu0WEc1/Pbu2DabTVoSbhRDXFRYmaczE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1x7JlKG; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b8715a4d9fdso166586566b.0
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jan 2026 09:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768237638; x=1768842438; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=84SbeOtD+TvMtLVsw4ByQCJt1Hto7piM99bLKRQ7Tf4=;
-        b=c1x7JlKGNdKfWfBQGUhsVow6g3NAYHyTNRDTFg5CQfqe3DoIAgQJ6F6I9jZ3Clzn4r
-         0pVrsl0ktb81PWJbaELYWTuNh2+7FTrAlBYpVu+RODBZKbHOZ4GpbKEfGy30NSizFQH4
-         sk5687Ui+9zuW0n+RHiFVBD6iso+1dSB5kB6nk8CFJWabQo3ZULPn+OnXLAY6n+jpFUA
-         QuV0AURNfPSxBUo7TSmNEa/UzUUFKtgL05bwnnIVISOwtlNkNl6aEMCqHC12gABVQOmC
-         +ggJ859i1ZLfQHCNGLAYw/HKzEH0U5DdwGScbSnZbhyvdsFDOTl1khqQMFbtikXgcvqS
-         bkgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768237638; x=1768842438;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=84SbeOtD+TvMtLVsw4ByQCJt1Hto7piM99bLKRQ7Tf4=;
-        b=kcbYL/ATtZvQIPIuFYBgGPP7GZSZvdBbv5L0g0AdtV6qWS1F+gERyP8UnGscrFA3wX
-         rZoT4lzZftdGzDWuTbYps0THNx/bOvIIWe7xoLJu6Sh3TFnbu2X2LdM21Y/WK5w4H2/B
-         G2DprHtFfNlHRL6JH9rQImPR2/4qHuwNaz/OOlEZaX/08BFJF/tkweY9k2MxE4F5DIaM
-         b4mLHvcFeJqy014LQNZSmgwC26nSPuUi6JOLF7/bzlh0LbdCVN6KZlAlTTTfLt2tUc4V
-         qZ0PPiqBK5tBqxqNCBNDXkzWq00rePYV5N4XfHVa54CZZ4Rzkm/TVHyXtAkx3lzqI2qu
-         iNdg==
-X-Gm-Message-State: AOJu0Yypw3eqvNrjPgzHggLoJvuzPEUmAs2Qm3JwyLAC901D6bULi6ci
-	d5luH3StujF4I5qT9cNpORDLycLx5RdJ3j+Yelo6ztA7x0gCi0S6NBWrTFU4/VO+0D2Z1FH1fjG
-	f0ZKFW/42rWaWzLIDY5Fxa8Md96JOk/QTb8QS
-X-Gm-Gg: AY/fxX7CzvidOr8o4C3A6FdGnAy207WNum+Aq/CUBLtntqh41ubfDRvKTEgKyiVeB72
-	D/7Lk2ER1sLGnI05W/1cRgtk6MA8yUKoQ0ilXJsxic/lIWdn+qqrNaM9kJcxHi8OM1OaHU0bUUs
-	tdQUzo71gbDxJulrYfiB8BsXP+3YS+LPe7dVYG7iOA/7XA2TZmOV6n7DwLqV0sJswrT8FkdVqUX
-	IbFhMqKnhm9k9Wjq7Ky+Fj5cBVkxTSpjjjNHHtQsosuoWvTPqcqa6GohsNPkinUd3NteZI=
-X-Google-Smtp-Source: AGHT+IFzitP7JjcNikjx9YMpCj8L0qm6zP6XYhLhkJcP+sE5WF1MLjbiGn0ZtsUXLsqksIbzP2BKiD3snSQbrDO6WS4=
-X-Received: by 2002:a17:907:7291:b0:b87:2f29:205c with SMTP id
- a640c23a62f3a-b872f293a41mr130780466b.26.1768237637814; Mon, 12 Jan 2026
- 09:07:17 -0800 (PST)
+	s=arc-20240116; t=1768238046; c=relaxed/simple;
+	bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uGu6PeHmeZB7gfl6C9ciSSWWO/VKxd264Z8uWL63vSnkubU3JYhAfZ6biP4nwpPRs9eAeL0tptBK11siSzOFgQ5K0i8f6PGIYMNLV2P2Z9awYC4UImekWjcF/b5JRZG0dahVdAHpVtSRrnBUr5b/FZUuLJy8soYTLtbq2JM4TEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejKhFjLV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4CCC19424;
+	Mon, 12 Jan 2026 17:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768238044;
+	bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ejKhFjLVpI1Gim+DQyTkn5gH+yV5nEAScg5aS9IFkobkTYEYkiCo8qQizJQCc8ITY
+	 OqBt/JtZOzTH3GJRwt3sgmifUmour45XtQAP1P1wf3GvxR4JY5FOZRd5QCIl2wdU8H
+	 kdeukfLWta969caiquVo4z1piL46+00YQSqzVgXzRlDu6BzY6FGr+9Lte1eXCq8NaP
+	 1oWv2FxJAmZj0GMckDBTq/nDCVrTjssloKRTnMxMaqpllG73zw6E0p5C8cczP33zE2
+	 aJi745W/9tHNRs5CM1GqQzirnzrsjof+TbN4+b7py9py2392+nQa7pDpLYgYBC0TIB
+	 RUe/tahwsV/lg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 12 Jan 2026 12:13:51 -0500
+Subject: [PATCH] nfsdctl: add support for min-threads parameter
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQmC-rUcPaA+cyG7ssqk4EbKKgtOeQrG6kx=ewmqaGtspw@mail.gmail.com>
-In-Reply-To: <CAKAoaQmC-rUcPaA+cyG7ssqk4EbKKgtOeQrG6kx=ewmqaGtspw@mail.gmail.com>
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Mon, 12 Jan 2026 18:06:41 +0100
-X-Gm-Features: AZwV_QitBh-DOuU6OgD3X3gDq01I2UOA0iRRBqi9FLPLwWI_kLFixSKBIWrLCFQ
-Message-ID: <CANH4o6P-TU8S00EL=hWH5uooiaSgVOooHMO1=8t4QTHNNEadMw@mail.gmail.com>
-Subject: Fwd: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1
- filesystem client Windows driver binaries for Windows 10/11+WindowsServer
- 2019/2022/2025 for testing, 2026-01-12 ...
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260112-minthreads-v1-1-30c5f4113720@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDQwNL3dzMvJKMotTElGJdc0sDs9TU5NSUNEtLJaCGgqLUtMwKsGHRsbW
+ 1ADj632BcAAAA
+X-Change-ID: 20260109-minthreads-7906eecedf99
+To: Steve Dickson <steved@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10060; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ifYk9tmArHSUC/OJfspg5a36nJqod5WTaQoGFNoFXWM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpZSvbuKWZ+Z3DZLOz/+QdwfFibJamkhhlEg9Hg
+ p/RIAVUlPiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWUr2wAKCRAADmhBGVaC
+ FStEEACdTmgXAwG9+SJineb4PgXTXDI1xWjjGA7v4CqnlZHXCNoH/UvBM/QUR8THQaLP1utLJB/
+ DQX6An6bmo5mRFA1ZJi+Y9v3NsiENHwiJA56jM8nKm816hNLAwgohsd9dZU3XWm3upIPwk52xF+
+ kJ839d3DggdtTXZprixxqiV7vZfz7xuiBs0YGcdrlnDa0hQ5xjoD8G/OV+iLiwoXOfcO8VvOCbh
+ IgIe9xi8+Uv2oEh6J7mZHqSRKPrWHZldkF4hNCRvI5JK79vyqSbOZpSgpFKZQABJnmAk4FtUzNT
+ bqn0VxKZhiqTVY4gfsg0tHJdvwOgz2NUsz2d2nDnh380eqwGgOponUgluFfL5md6CFW4DiQDQE1
+ ARngsEmXez0ySRyaYLsIFDag62aOtJIrr5rAXiTryyRZ+4DzuuRhMxHuMB113wUC6rP2u54Ouq6
+ UhAXibUCdN2pOw/Q8Jc+QjDqs/MbuUSiCaRscvhPrIAj+HP1bG4BM75eZjB39anB8dd3/ge1Zr7
+ w+B7E6yfHfDTwQq3PH2Ux782pYb3DJuEW7IRBToeLs29XhOy8wkRghGj06FW3QaBIMg4cC+0YLT
+ 3msOjSAjoRTGFZ6Fcat7DJ9AuaclxKjs6WcuM2EYv5cpym22M1Tl43tSmStFqYXstxlPWWb4O3c
+ AENFoJU+1D06+ug==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hello,
+This patch adds proper support to nfsdctl to manage nfsd's new dynamic
+threading when NFSD_A_SERVER_MIN_THREADS is defined in the header:
 
-Please test the binaries. The NFSv4.2/4.1 client is for Windows 10/11
-ARM64+AMD64+x86 and Windows Server 2019+2022+2025/AMD64, but
-interoperability feedback with NFSv4.1/NFSv4.2 servers based on Linux
-6.6+ LTS and 6.17+ would be great.
+If the user sets min-threads, and has a new enough kernel, the
+traditional threads parameters will represent the max number of threads.
+The min-threads value represents the minimum number of threads to run in
+each pool. The kernel will start the minimum number of threads at
+startup time, and the thread count will dynamically fluctuate between
+the min and max based on load.
 
-News:
-See announcement below; Windows Alternate Streams (Win32 streams)
-support was added, xcopy.exe/cmd.exe copy/MS Explorer file copy
-acceleration via NFS server side copies and copy-by-block-cloning are
-IMO the most interesting new features (cloning now works with FreeBSD
-14.3/15.0 nfsd and Linux nfsd exporting btrfs&xfs filesystems, server
-side copy with FreeBSD+Linux with all filesystems), because it's "on"
-by default for all Windows 11 applications which copy files, followed
-by wings.exe (Linux users read man sg(1)) with powershell support.
+Allow the "autostart" subcommand to find the "min-threads" parameter in
+nfs.conf and set it in the netlink call appropriately. If it's not set,
+then assume that it's 0, which will disable dynamic threading.
 
-Thanks,
-Martin
+For the "threads" subcommand, add a new command-line option. If it's not
+set, then don't send it in the netlink command at all. That allows the
+kernel's existing setting to remain as-is, unless explicitly changed.
 
----------- Forwarded message ---------
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Mon, Jan 12, 2026 at 1:09=E2=80=AFPM
-Subject: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1
-filesystem client Windows driver binaries for Windows
-10/11+WindowsServer 2019/2022/2025 for testing, 2026-01-12 ...
-To: <ms-nfs41-client-devel@lists.sourceforge.net>
+Also, update the documentation with info about min-threads.
 
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Consider this a starting point for discussion. The userland interface
+can be different from the kernel's min-threads interface.
 
-Hi!
+One alternative idea:
 
+We could just expose dynamic threading in the config file and
+command-line interface as a bool. If enabled, we'd set min-threads to 1.
+If disabled, set it to 0.
 
-----
+I guess we could also do both as well...
+---
+ configure.ac               |  3 ++-
+ systemd/nfs.conf.man       |  3 ++-
+ utils/nfsdctl/nfsdctl.8    | 20 ++++++++++++++++++--
+ utils/nfsdctl/nfsdctl.adoc | 13 +++++++++++++
+ utils/nfsdctl/nfsdctl.c    | 43 +++++++++++++++++++++++++++++++++++++------
+ 5 files changed, 72 insertions(+), 10 deletions(-)
 
-We've created a set of test binaries for the NFSv4.2/NFSv4.1
-filesystem client driver for Windows 10 (32bit x86, x86-64, ARM64),
-Windows 11 (x86-64, ARM64)+Windows Server 2019/2022/2025 (x86-64,
-ARM64), based on https://github.com/kofemann/ms-nfs41-client (commit
-id #ac375d7f91f70f142544fc59eb18a911ea3ba453, git bundle in tarball),
-for testing and feedback.
+diff --git a/configure.ac b/configure.ac
+index 6da23915836d34ff4d9bdef79af13499990688f9..33866e869666d8ebdebc8d7b5b08bf6ffbe92aa2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -262,6 +262,8 @@ AC_ARG_ENABLE(nfsdctl,
+ 		PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
+ 		PKG_CHECK_MODULES(LIBREADLINE, readline)
+ 		AC_CHECK_HEADERS(linux/nfsd_netlink.h)
++		AC_CHECK_DECLS([NFSD_A_SERVER_MIN_THREADS], , ,
++			       [#include <linux/nfsd_netlink.h>])
+ 
+ 		# ensure we have the pool-mode commands
+ 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
+@@ -620,7 +622,6 @@ AC_CHECK_SIZEOF(socklen_t,, [AC_INCLUDES_DEFAULT
+                              # include <sys/socket.h>
+                              #endif])
+ 
+-
+ dnl *************************************************************
+ dnl Export some path names to config.h
+ dnl *************************************************************
+diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+index e6a84a9725da5a3cc40611f45d343a670fdb94ca..484de2c086db91ede38490e49411e1514a5da754 100644
+--- a/systemd/nfs.conf.man
++++ b/systemd/nfs.conf.man
+@@ -162,6 +162,7 @@ option.
+ .B nfsd
+ Recognized values:
+ .BR threads ,
++.BR min-threads ,
+ .BR host ,
+ .BR scope ,
+ .BR port ,
+@@ -179,7 +180,7 @@ Recognized values:
+ Version and protocol values are Boolean values as described above,
+ and are also used by
+ .BR rpc.mountd .
+-Threads and the two times are integers.
++Threads, min-threads and the two times are integers.
+ .B port
+ and
+ .B rdma
+diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
+index d69922448eb17fb155f05dc4ddc9aefffbf966e4..a86ffe8e1f4d39ef7041ac0f6867792466c40af0 100644
+--- a/utils/nfsdctl/nfsdctl.8
++++ b/utils/nfsdctl/nfsdctl.8
+@@ -2,12 +2,12 @@
+ .\"     Title: nfsdctl
+ .\"    Author: Jeff Layton
+ .\" Generator: Asciidoctor 2.0.20
+-.\"      Date: 2025-01-09
++.\"      Date: 2026-01-12
+ .\"    Manual: \ \&
+ .\"    Source: \ \&
+ .\"  Language: English
+ .\"
+-.TH "NFSDCTL" "8" "2025-01-09" "\ \&" "\ \&"
++.TH "NFSDCTL" "8" "2026-01-12" "\ \&" "\ \&"
+ .ie \n(.g .ds Aq \(aq
+ .el       .ds Aq '
+ .ss \n[.ss] 0
+@@ -147,6 +147,22 @@ value of 0 will shut down the NFS server. Run this without arguments to
+ get the current number of running threads in each pool.
+ .RE
+ .sp
++.if n .RS 4
++.nf
++.fam C
++These options are specific to the "threads" subcommand:
++
++\-m, \-\-min\-threads=
++    If set to a positive, non\-zero value, then dynamic threading is enabled for
++    nfsd.  In this mode, the traditional "threads" values are treated as a maximum
++    number of threads. This specifies the minimum number of threads per pool. The
++    kernel will start the minimum number and dynamically start and stop threads as
++    needed. If the minimum is larger than the maximum, then dynamic threadis is
++    disabled, and the maximum number is started.
++.fam
++.fi
++.if n .RE
++.sp
+ \fBversion\fP
+ .RS 4
+ Get/set the enabled NFS versions for the server. Run without arguments to
+diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
+index 0207eff6118d2dcc5a794d2013c039d9beb11ddc..e85348e29ed815470d35b6365a212d8872cf645c 100644
+--- a/utils/nfsdctl/nfsdctl.adoc
++++ b/utils/nfsdctl/nfsdctl.adoc
+@@ -84,6 +84,19 @@ Each subcommand can also accept its own set of options and arguments. The
+   value of 0 will shut down the NFS server. Run this without arguments to
+   get the current number of running threads in each pool.
+ 
++[source,bash]
++----
++These options are specific to the "threads" subcommand:
++
++-m, --min-threads=
++    If set to a positive, non-zero value, then dynamic threading is enabled for
++    nfsd.  In this mode, the traditional "threads" values are treated as a maximum
++    number of threads. This specifies the minimum number of threads per pool. The
++    kernel will start the minimum number and dynamically start and stop threads as
++    needed. If the minimum is larger than the maximum, then dynamic threadis is
++    disabled, and the maximum number is started.
++----
++
+ *version*::
+ 
+   Get/set the enabled NFS versions for the server. Run without arguments to
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index e7a0e12495277d2e98a6c21c7cee29fe459f37cc..67cf27b04ca39e42459bc8188e5ae527166a74d1 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -19,6 +19,7 @@
+ #include <string.h>
+ #include <sched.h>
+ #include <sys/queue.h>
++#include <limits.h>
+ 
+ #include <netlink/genl/family.h>
+ #include <netlink/genl/ctrl.h>
+@@ -323,6 +324,11 @@ static void parse_threads_get(struct genlmsghdr *gnlh)
+ 		case NFSD_A_SERVER_THREADS:
+ 			pool_threads[i++] = nla_get_u32(attr);
+ 			break;
++#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
++		case NFSD_A_SERVER_MIN_THREADS:
++			printf("min-threads: %u\n", nla_get_u32(attr));
++			break;
++#endif
+ 		default:
+ 			break;
+ 		}
+@@ -518,7 +524,7 @@ out:
+ }
+ 
+ static int threads_doit(struct nl_sock *sock, int cmd, int grace, int lease,
+-			int pool_count, int *pool_threads, char *scope)
++			int pool_count, int *pool_threads, char *scope, int minthreads)
+ {
+ 	struct genlmsghdr *ghdr;
+ 	struct nlmsghdr *nlh;
+@@ -540,6 +546,10 @@ static int threads_doit(struct nl_sock *sock, int cmd, int grace, int lease,
+ 			nla_put_u32(msg, NFSD_A_SERVER_LEASETIME, lease);
+ 		if (scope)
+ 			nla_put_string(msg, NFSD_A_SERVER_SCOPE, scope);
++#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
++		if (minthreads >= 0)
++			nla_put_u32(msg, NFSD_A_SERVER_MIN_THREADS, minthreads);
++#endif
+ 		for (i = 0; i < pool_count; ++i)
+ 			nla_put_u32(msg, NFSD_A_SERVER_THREADS, pool_threads[i]);
+ 	}
+@@ -580,23 +590,43 @@ out:
+ 
+ static void threads_usage(void)
+ {
+-	printf("Usage: %s threads [ pool0_count ] [ pool1_count ] ...\n", taskname);
++	printf("Usage: %s threads { --min-threads=X } [ pool0_count ] [ pool1_count ] ...\n", taskname);
++	printf("    --min-threads= set the minimum thread count per pool to value\n");
+ 	printf("    pool0_count: thread count for pool0, etc...\n");
+ 	printf("Omit any arguments to show current thread counts.\n");
+ }
+ 
++#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
++static const struct option threads_options[] = {
++	{ "help", no_argument, NULL, 'h' },
++	{ "min-threads", required_argument, NULL, 'm' },
++	{ },
++};
++#else
++#define threads_options help_only_options
++#endif
++
+ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ {
+ 	uint8_t cmd = NFSD_CMD_THREADS_GET;
+ 	int *pool_threads = NULL;
++	int minthreads = -1;
+ 	int opt, pools = 0;
+ 
+ 	optind = 1;
+-	while ((opt = getopt_long(argc, argv, "h", help_only_options, NULL)) != -1) {
++	while ((opt = getopt_long(argc, argv, "h", threads_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'h':
+ 			threads_usage();
+ 			return 0;
++		case 'm':
++			errno = 0;
++			minthreads = strtoul(optarg, NULL, 0);
++			if (minthreads == ULONG_MAX && errno != 0) {
++				fprintf(stderr, "Bad --min-threads value.");
++				return 1;
++			}
++			break;
+ 		}
+ 	}
+ 
+@@ -624,7 +654,7 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ 			}
+ 		}
+ 	}
+-	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL);
++	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL, minthreads);
+ }
+ 
+ /*
+@@ -1578,7 +1608,7 @@ static void autostart_usage(void)
+ 
+ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ {
+-	int *threads, grace, lease, idx, ret, opt, pools;
++	int *threads, grace, lease, idx, ret, opt, pools, minthreads;
+ 	struct conf_list *thread_str;
+ 	struct conf_list_node *n;
+ 	char *scope, *pool_mode;
+@@ -1659,9 +1689,10 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ 
+ 	lease = conf_get_num("nfsd", "lease-time", 0);
+ 	scope = conf_get_str("nfsd", "scope");
++	minthreads = conf_get_num("nfsd", "min-threads", 0);
+ 
+ 	ret = threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, pools,
+-			   threads, scope);
++			   threads, scope, minthreads);
+ out:
+ 	free(threads);
+ 	return ret;
 
-** FULL release readme:
-- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
-/msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d7.readme
-- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
-/msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d7.html
+---
+base-commit: 0e71be58cdead21b7bc0285fa6afbf1d0eca3049
+change-id: 20260109-minthreads-7906eecedf99
 
-** Download URL (all architectures+platforms):
-- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
-/msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d7.tar.bz=
-2
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-** Download hash sums:
-SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d=
-7.html)=3D
-e6c57cffeb0c095ec1b1dd582d85a931d57ebb783bcebdb728b83f209d4eb7a9
-SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d=
-7.readme)=3D
-511c9aa1008a74d7a49aa0846f1b0fa12e890f8419c2dde5c80a0162c1e55c72
-SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260112_12h18m_gitac375d=
-7.tar.bz2)=3D
-1ee4ef852c98d9f8e3e030bfdbf90579ae91ce689fecd3c1e0c8c076895479ce
-
-** Major changes since the last release:
-- Support for Win32 named streams/Alternate Data Streams (ADS), if the
-NFSv4.x server support NFS named attributes (e.g. Solaris >=3D 11.4,
-Illumos, FreeBSD >=3D 15.0, ...)
-- Support for Windows "SRVOpen collapsing", which enables file handles
-with the access/permission/etc attributes to share one NFS file handle
-(saving open/close round trips to the NFS server)
-- Added support for Windows Server 2025
-- Symlinks are now using the group defined by Win32 PrimaryGroup
-(which can be set via Cygwin newgrp(1)/|setgid()| or winsg(1))
-- Added a new standalone tool called catdbgprint.exe which can be used
-to listen to Windows kernel |DbgPrint()| debug messages (DbgView.exe
-from Windows Internals still works, but this avoids installing an
-extra tool)
-- Added support for Windows "Extended Create Parameters" ECP
-QUERY_ON_CREATE |QoCFileStatInformation| and |QoCFileLxInformation|
-- Added support for setting a file's ACL at file creation time
-- Bugfixes for FreeBSD NFS server
-- Fixed issues probing sparse files when using the nfs-ganesha NFS server
-- Disk and CDROM/DVD images can now be mounted via
-https://github.com/gisburn/filedisk-sparse/
-- UNC path format changed to <hostname>@<protocol>@<port>, e.g.
-ournfsserver@NFS@2049, to support future transport+mount options (e.g.
-RDMA , TLS/SSL etc.)
-- Window 11/ARM64 is now supported (native aarch64 kernel module and
-nfs*.exe userland utilities)
-- /sbin/nfs_globalmount, a new tool for Administrators to manage
-global/machine-wide mounts which are available to all Windows
-users/services/logons
-- New "nfsclientdctl" utility to change the NFS client daemon
-parameters at runtime
-- support for case-insensitive filesystems (e.g. Windows Server NTFS)
-- NFS referrals now work with custom (non-TCP/2049) port numbers
-- Implemented |FSCTL_OFFLOAD_READ|+|FSCTL_OFFLOAD_WRITE| (e.g. used by
-Windows 10 xcopy, Windows Explorer etc) for server-side NFSv4.2 COPY
-- Better FreeBSD 14 nfsd compatibility
-- DFS service no longer needs to be disabled
-- More software tested for compatibility: MariaDB, Microsoft Office
-2016, Visual Studio 2022 work with msnfs41client
-- Volume label is now the nfs://-URL to the server (up to 31
-characters for Windows Explorer compatibility)
-- Support for user and group names with non-ASCII (e.g. Unicode) names
-(like German umlauts) in ms-nfs41-client, winsg.exe etc.
-- winsg.exe now has a /P option to run powershell.exe with the requested gr=
-oup
-- nfs_mount.exe now enforces that normal mounts need nfs://-URLs with
-absolute paths, and "public NFS" mounts need relative paths in a
-nfs://-URL
-- sec=3Dnone support
-- Improved /sbin/cygwinaccount2nfs4account script to better handle
-creation of Windows Domain accounts on the NFS server side
-- *.(exe|dll) executables are now signed with a WDK test signature,
-helping with *rare* cases that Windows Defender with paranoid settings
-wrongly recognising the binaries as potential threads. A *.cer
-certificate file is supplied which can be imported into the Windows
-Defender to whitelist the binaries if this happens.
-- Support for FSCTL_DUPLICATE_EXTENTS_TO_FILE, which allows Windows 11
-applications which use |CopyFile2()| (like cmd.exe  copy, xcopy.exe
-etc) to copy files via block cloning. Requires NFSv4.2 NFS server with
-{ CLONE, SEEK, DEALLOCATE } support, exporting a filesystem which
-supports block cloning (e.g. btrfs, xfs). This includes correct
-cloning of sparse files.
-- Sparse file support (requires NFSv4.2 server { SEEK, ALLOCATE,
-DEALLOCATE } and the |FATTR4_WORD1_SPACE_USED| attr), including
-hole/data range enumeration, punching holes etc., e.g. $ fsutil sparse
-queryrange mysparsefile #
-- Improved Windows Extended Attribute (EA) support (requires NFS >=3D
-v4.1 server with "Named Attribute" support ("OPENATTR")), including
-create/read/write/delete
-- Improved WSL support
-- Support for Storage32-API (e.g. enables use of *.msi installer files
-on NFS filesystems)
-- Cygwin /usr/bin/svn and Windows '/cygdrive/c/Program
-Files/Git/cmd/git' now work
-- Illumos NFSv4.2 server is now supported
-- Solaris 11.4 NFSv4.1 server is now supported
-- Windows Server 2022 NFSv4.1 server is now supported (compared to
-WS2019 this NFS server version has ACL support)
-
-** Please send comments, bugs, test reports, complaints etc. to the
-MailMan mailing list at
-https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-deve=
-l
-
-----
-
-Bye,
-Roland
---
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /=3D=3D\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
-
-
-_______________________________________________
-Ms-nfs41-client-devel mailing list
-Ms-nfs41-client-devel@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
 
