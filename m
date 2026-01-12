@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-17745-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17746-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA043D11BBD
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 11:10:07 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE38D122E4
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 12:09:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98CD430AEC5F
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 10:06:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BC8D6302427B
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jan 2026 11:08:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB5328CF5F;
-	Mon, 12 Jan 2026 10:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5839431D38F;
+	Mon, 12 Jan 2026 11:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="woMncY0+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E36526A0A7;
-	Mon, 12 Jan 2026 10:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3543928F948;
+	Mon, 12 Jan 2026 11:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768212372; cv=none; b=gCHr5clbbO11e3QGOGEbXNCSdr3TXt4Msbqubs9MlU2uS6+Ytz4ZBrEn+UjVNuhKi7EK4exNEfhdqZja4XOA4XY+n7g8RcftQRAz4ibB87vqdSM2+dVjcGORIXCGv/vlZJVEzyuYBkhErFr11rsdA1SC6CzdpaaF847b3OkUMi8=
+	t=1768216126; cv=none; b=ez1Fi448HV4m87N+ajOj0aXS5juusyB7dY9agHi5x/KCvkvvCQjULRwU69WN2KP9CD7IuSLsLBkLRlyszEdBNxLLNB67I7+Zf3oPQwtLVxK/ro47Lkds1BmjpJ+aEB1LMHYhvVqE33vP/mf5v76aLZDwjI7dUT5WxwalVfqBoEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768212372; c=relaxed/simple;
-	bh=0L66puMBFlXoIMOy/5TP3WD0noDEOHxqIpJ/hhFD0iQ=;
+	s=arc-20240116; t=1768216126; c=relaxed/simple;
+	bh=ezyFA+DELTx6yBVExaP0BltWre5xkgvONKti9hcWwBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiVW/VDas2AbTAbDXVmBJpNnzTXNdWGUGMVTrN+mtLmT96XmUYXcwNa145T5SaKhn7CPWKcVBCRd8Tyck6fWSPj1TM/FS0gAYNiz9rdMxNR5NKvySgukP99YftSF914FMRxp0wbaem/LbJjf7L2KwQ+nhBNUoroX+sWiWIVy3/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 09124227A8E; Mon, 12 Jan 2026 11:05:59 +0100 (CET)
-Date: Mon, 12 Jan 2026 11:05:58 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-	David Sterba <dsterba@suse.com>, Jan Kara <jack@suse.cz>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Carlos Maiolino <cem@kernel.org>, Stefan Roesch <shr@fb.com>,
-	Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	gfs2@lists.linux.dev, io-uring@vger.kernel.org,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: re-enable IOCB_NOWAIT writes to files v4
-Message-ID: <20260112100558.GA7670@lst.de>
-References: <20251223003756.409543-1-hch@lst.de> <20251224-zusah-emporsteigen-764a9185a0a1@brauner> <20260106062409.GA16998@lst.de> <20260106-bequem-albatros-3c747261974f@brauner> <20260107073247.GA17448@lst.de> <20260112-adelstitel-propaganda-ef80e3d2f8ca@brauner>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKPtaw4oQLEcmZkeBGULtZksqLAd60EHS/T4XAWyrUy8oFcXnmzB1AfphrX6WFCLGJjHDyjcInTev9UHOLOjXvSsLxIeHpK1kXzdCATqvzU4wZjK0/q0E9N3GIpKsPvcoUxbBZXEDNl4tWdsM6+DQi6GawnGlduyBuhC6ooK+i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=woMncY0+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9092BC16AAE;
+	Mon, 12 Jan 2026 11:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1768216125;
+	bh=ezyFA+DELTx6yBVExaP0BltWre5xkgvONKti9hcWwBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=woMncY0+NDEwaqCjKsEe+u45dFCR1AJRgSOJ49ezvyHOebTQacvqkgdJloh2X5nKa
+	 1owUoedbaMlLy8ls059MLe7gxJab7xRwaeoOtfgSIpWwtrHX22I7G6i/qPbXcm6s/L
+	 p8CT/5sKn/7ENJSmXz20OKJlGTpZSWWGZZtV2Pc4=
+Date: Mon, 12 Jan 2026 12:08:43 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH 6.6.y v3 0/4] NFSD: NFSv4 file creation neglects setting
+ ACL
+Message-ID: <2026011235-coma-sullen-3b13@gregkh>
+References: <2025122941-civic-revered-b250@gregkh>
+ <20260109143946.4173043-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,26 +54,28 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260112-adelstitel-propaganda-ef80e3d2f8ca@brauner>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20260109143946.4173043-1-cel@kernel.org>
 
-On Mon, Jan 12, 2026 at 11:04:17AM +0100, Christian Brauner wrote:
-> On Wed, Jan 07, 2026 at 08:32:47AM +0100, Christoph Hellwig wrote:
-> > On Tue, Jan 06, 2026 at 10:43:49PM +0100, Christian Brauner wrote:
-> > > > Umm, as in my self reply just before heading out for vacation, Julia
-> > > > found issues in it using static type checking tools.  I have a new
-> > > > version that fixes that and sorts out the S_* mess.  So please drop
-> > > > it again for now, I'll resend the fixed version ASAP.
-> > > 
-> > > It has never been pushed nor applied as I saw your mail right before all
-> > > of that.
-> > 
-> > Thanks.  But maybe you can fix up the applied messages to be more
-> > specific?  We had various issues in the past with them, where they
-> > were sent, but things did not end up in the tree for various reasons.
+On Fri, Jan 09, 2026 at 09:39:42AM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> What are you thinking of exactly?
+> I received an automated report that patch "NFSD: NFSv4 file creation
+> neglects setting ACL" failed to apply to the 6.6-stable tree. This
+> series is my attempt to address that failure.
+> 
+> - First, applied several pre-requisite patches
+> - LLM agent review for possible regressions reported no issues
+> - CI testing reported no regressions
+> 
+> Changes since v2:
+> - Add a Signed-off-by to 1/4
+> - Address a build warning introduced in 1/4
+> - Fix the In-Reply-To header
+> 
+> Changes since v1:
+> - Replace 1/4 with the upstreamed version of that commit
 
-Only send out the applied message when something is actually pushed
-to the public tree?
+Nice, this worked, thanks!
+
+greg k-h
 
