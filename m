@@ -1,150 +1,108 @@
-Return-Path: <linux-nfs+bounces-17780-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17781-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FB6FD16839
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 04:34:24 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14546D175BA
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 09:45:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1318A302A465
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 03:33:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EFF35300162F
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 08:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C056C2F39A4;
-	Tue, 13 Jan 2026 03:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCE0B26738C;
+	Tue, 13 Jan 2026 08:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpmp715a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxMmrpjC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB9423D294;
-	Tue, 13 Jan 2026 03:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BBEEBB;
+	Tue, 13 Jan 2026 08:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768275213; cv=none; b=ft+HZIf6YaFtVrDz1/Ir6oTRVgA+Xlv+u7CQbfbxtc5isDtOHaqaijWY1ZVwENPg38xE0I4DtQ6hlAXGVP6oJOzrabSEZoAFJjIqSxrfa4tasGdzkXx9tVovsPhsYZqyKyzynTq1ffazwgcE9ClqWLhwTf48H6oRyEir6UpZ3NA=
+	t=1768293931; cv=none; b=rF3pzhB4iIdPn5qNiTyC2ME4MuWHBW2I1y0U923RyLUIS6QsQZJXceDAFbtZ0tvLa+7bBtD+yMq1fZgcGR5S+UWKUgxnXMgbRRsrOUaaJ0Dl1uFNOeg5KW26f/rUDQpnvosTcVpa/peGQEGux+EbEgJugShP24B78H/Gaa43iAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768275213; c=relaxed/simple;
-	bh=sgTKCfGG+ujwKC4Dd64UEjm0eoToqgRObMoSTSjLZXI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=t2b7Dj2EPA5xhyfLouDgq2zHJuZuvbra/66hdgn56aPHKeDgEV6p0c2zAG8MxwwlDCQppdvvHbgwp0JD5kYYho5a1spPyw8G8U//axnD07U6BPDn2M04a87pCIsb/vwpbt1kOabyUaWpsmqFLbSrbRvJom06eDUKDH3tRTexFnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpmp715a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9303C16AAE;
-	Tue, 13 Jan 2026 03:33:32 +0000 (UTC)
+	s=arc-20240116; t=1768293931; c=relaxed/simple;
+	bh=6sxlwd/nbX4EZ0nsyiBG5EL0XzNqgxa2bnQd92SD4FE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bI8uVV87QzdW99mLRC/hfU0B27yUBBKZIARYTJUSWVlWzdMEqW8RcUUHpqZ4gT9RxsTAPQebKdtsdVV+WuavPuUsWUhUxNsbgUEF6fxiahM2meS/7cTjlVQzw3SKNzKEajGrj7uYOYTx2Ctyvk+r9OV8bLc2RhLWcu8vcLamdV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxMmrpjC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB7DC116C6;
+	Tue, 13 Jan 2026 08:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768275213;
-	bh=sgTKCfGG+ujwKC4Dd64UEjm0eoToqgRObMoSTSjLZXI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=gpmp715aEfjdGQRP1Lsy2r9WnRwxooF4LBHteETys7E9S/B4AasmzbM9fCX6h+3sG
-	 mx+e2/0p7Drd8yIuHQZFr1ulX314ftQQqLwD9zVG5P7rS3XnOhA0AF2jiawsCSmcl3
-	 vfR5mn0VnFPR8lGZy1csRlIAU84Mz27Lg8HaO/tXRO/aXyMxst5MC1reJS9E55YnIe
-	 ufSLK3aXwEchtOBEMHe+xnG8RegKllS1ZXNu8I0CxBJ3aAXaPyO8gQZplqnX6kQwVp
-	 O0RIDZOTjlSCeamfAwdPviopfRpZNcfSn9TxofFA0k+eFJd+ylTEPlMWCG1nQT/Upw
-	 iLtQVk4ax3o6g==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id DF59FF40068;
-	Mon, 12 Jan 2026 22:33:31 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 12 Jan 2026 22:33:31 -0500
-X-ME-Sender: <xms:C71laZTSvFftyQUq7Fso7o5Q4dyoUTE-4uhN5qTY6WsLIadic9rAuA>
-    <xme:C71ladl0lVRJEtiaQ2kMNsU9UPlgPiOOc3YeANP_pNL_b-Zo_mMEp3GUiqHbZIN_e
-    YBU0cqLZffQ7nXHdzMYNBUX2hCua-ogzwXOGy66PgaqhfKkT4TNvg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduudelvdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtoheprghmihhrjeefih
-    hlsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvggrlhhmvghiugesihhgrghl
-    ihgrrdgtohhmpdhrtghpthhtohepkhgvrhhnvghlqdguvghvsehighgrlhhirgdrtghomh
-    dprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrrghu
-    nhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepthhrohhnughmhieskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheptghorhgsvghtsehlfihnrdhnvght
-X-ME-Proxy: <xmx:C71laX12KT62jCgJVH1DIh3MjTLZqmVvD7KKznDP-_MfRQvSvwD_JQ>
-    <xmx:C71laUeryqxK-dQw6SWpNK8ZYdAb-Yay47668xkP5zFLem9ILWbMkw>
-    <xmx:C71laT5wDJuAa36sVzQWEcl8ELv0IbbgbfxZfLseOECNaZL1dX5gxw>
-    <xmx:C71laf8Upy7a_7AaLZ1nTEfYaFx87F05uNvr_-bs8VXWCSx_CQ14Zg>
-    <xmx:C71laSIs34B4Pu6cEkSUTR-BMI_avWjiKs710G9gCqzctDGwpMgQ3ZyJ>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ADA6E780054; Mon, 12 Jan 2026 22:33:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1768293931;
+	bh=6sxlwd/nbX4EZ0nsyiBG5EL0XzNqgxa2bnQd92SD4FE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FxMmrpjC+hfKXh11mMDuyOYAhmdyt5813G5Ku4a46lfmknefA9mjBiLlU2W/mG28e
+	 dTMvY2EMBHekbmcb67kL4PP224nWh5XhAGiSas9SW8RwAxJ7OCgnYSXc31PGaRlSw0
+	 vok8ujJyIdvRNXrzGODam/EpzDNHqN+lyQMdGg25/nJlybU8K2X3UUA4Dv+YEntwsX
+	 nWadPWYb4zwrNAhBjDtoGB6HffqQNpitS/I1gsO7A0eSF4PxNWcUcresLHxEYGoin1
+	 kv8uwDlpg0NwogYPRAKMlbZGTTmKq+1xYMEFMl4zSG+71fyYEw83hHwUSNZaf0m1Mh
+	 JIQOELckEn0/w==
+From: Christian Brauner <brauner@kernel.org>
+To: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/4] exportfs: Some kernel-doc fixes
+Date: Tue, 13 Jan 2026 09:45:17 +0100
+Message-ID: <20260113-gestochen-campen-1d3a663928df@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
+References: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AkghU2ftp2PN
-Date: Mon, 12 Jan 2026 22:33:11 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com
-Message-Id: <7ac583b8-3480-4a54-bcd7-9b1a8689a7f7@app.fastmail.com>
-In-Reply-To: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
-References: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
-Subject: Re: [PATCH 0/4] exportfs: Some kernel-doc fixes
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1291; i=brauner@kernel.org; h=from:subject:message-id; bh=6sxlwd/nbX4EZ0nsyiBG5EL0XzNqgxa2bnQd92SD4FE=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSmsSl35KxlL4l8yscpp+fjIbVL/9Mldr57bRv2vDnK9 WpW/+wJHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABO5s4Hhf56wlV7bvUV35fq+ zt1m4Xrqquru+geVDdyPt8vOuW+Y08zwV+TwhVUBE76/1+b5IXdNJPsFd6HBQp0SfqbJK8t04vq d2QA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-
-
-On Mon, Jan 12, 2026, at 8:51 PM, Andr=C3=A9 Almeida wrote:
-> This short series removes some duplicated documentation and address so=
-me
+On Mon, 12 Jan 2026 22:51:23 -0300, André Almeida wrote:
+> This short series removes some duplicated documentation and address some
 > kernel-doc issues:
->
-> WARNING: ../include/linux/exportfs.h:289 struct member 'get_uuid' not=20
-> described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'map_blocks' no=
-t=20
-> described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'commit_blocks'=20
-> not described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'permission' no=
-t=20
-> described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'open' not=20
-> described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'flags' not=20
-> described in 'export_operations'
->
-> ---
-> Andr=C3=A9 Almeida (4):
->       exportfs: Fix kernel-doc output for get_name()
->       exportfs: Mark struct export_operations functions at kernel-doc
->       exportfs: Complete kernel-doc for struct export_operations
->       docs: exportfs: Use source code struct documentation
->
->  Documentation/filesystems/nfs/exporting.rst | 42 ++++----------------=
----------
->  include/linux/exportfs.h                    | 33 ++++++++++++++++----=
----
->  2 files changed, 28 insertions(+), 47 deletions(-)
-> ---
-> base-commit: 9c7ef209cd0f7c1a92ed61eed3e835d6e4abc66c
-> change-id: 20260112-tonyk-fs_uuid-973d5fdfc76f
->
-> Best regards,
-> --=20
-> Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+> 
+> 
 
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Applied to the vfs-7.0.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-7.0.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
---=20
-Chuck Lever
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-7.0.misc
+
+[1/4] exportfs: Fix kernel-doc output for get_name()
+      https://git.kernel.org/vfs/vfs/c/c9ae970f7c11
+[2/4] exportfs: Mark struct export_operations functions at kernel-doc
+      https://git.kernel.org/vfs/vfs/c/69639fccd6e3
+[3/4] exportfs: Complete kernel-doc for struct export_operations
+      https://git.kernel.org/vfs/vfs/c/66982f431798
+[4/4] docs: exportfs: Use source code struct documentation
+      https://git.kernel.org/vfs/vfs/c/4e9076eaa1a9
 
