@@ -1,146 +1,170 @@
-Return-Path: <linux-nfs+bounces-17806-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17805-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC30BD1A69E
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 17:52:14 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDD5DD1A5E0
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 17:43:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 426C13008145
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 16:51:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3C0FA300DB1D
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 16:43:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A3A34D938;
-	Tue, 13 Jan 2026 16:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD1C32BF5B;
+	Tue, 13 Jan 2026 16:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmxGDZSU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC6533CE86
-	for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 16:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D72032AAB0
+	for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 16:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768323106; cv=none; b=ts51ssv1wviAi1HPeV0JBqT0mLdM6+fDsCozLCS9lDHEN7TasMTT2LgCdcGw8pda/vU+cEb7hm2iKrOLt5rT9zuIdj/ohm8PNg1GtZb/MMbBZe+RlkI4ulOcVRmIPaj6plPfMYaLNtNbJE4tMpi4PqEtGtg76FUc4Etxr6G+BRs=
+	t=1768322636; cv=none; b=eTK3yJhnZ/z+Bv7Js1UJZLOciTvsYkiWPlPsIfKAyNE8fvYObcgIH2ZnidG/R7Q52Q1BkfRdbNyS8wQGwOYjaEYGRkOnc9+XLYBiV6E5SP/BIEQSLzorTExXYP+SVCAVG21s2CgfH4WfDGZsVt0bRm5jjjeVSX5oxK2b9GRBz4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768323106; c=relaxed/simple;
-	bh=Hm+hFkCxE6lVbQx4eQObQxXAcvrq9lVQw90Wa4bRafg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AF7BzOG5rUDtB5zwZ8ucPwnsHm0tLtBHPJt/O6vYBM/tg8yP9Tzon/MaLYl2kDjCZxPSGa77CE0EIzUls4mji8sdf5Z68VnL97DF9YkcBNCe5OEtkLogJeIWhDiT6fV5VXep5zyWbH0lPbUG9q4Hc7ME92coIoZuxDJxJkAYMPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7cfb21a52a8so1494476a34.2
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 08:51:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768323104; x=1768927904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gc7yqO7D0eseyKYDyefBFLldfXSHU35zlyHiXIvs8J4=;
-        b=xS8TQm5qK6j00xn+/IuMkWFodK6eIsvYv6mEmUnTcRREOk1TZ/FsjHVrxWCKoenFPr
-         NU4ZvL1KH7KytBdEDymFFDFnBOhhAgnJt+9EDYK1g0ecpc2CsvJ0rDmIBc4RsEA9aVxj
-         +JwmzFgi3tFSheLnCd0RSEMnwOKJIb0eNaJb1bRhUcukm+c2KpbOGqqHGUtErKAq6lhD
-         nCsLqYkKYBvPQOBHXYAem+rIX6TuWI4heuLtQSIc0g90J/QvfLNPpgEaMWjA8OdmfXRQ
-         YFOLsIrOlD2zk5LS9Rw8Hxm9p0nEF4imkUTTOoeE/h3OcXndNX8bTgS5OLn5Eub4F2AE
-         6JlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCp+zEKdo9j9jMyWWS9cDKocpbmWhSlD/h3XWbLaQpzESbh/lgdruxQ1Xaud2RkF7ymV7Bcpkgrp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRNz47ISjHPapfd5c7ZPDNeMiUk1gnL0rZs4Pk98MgbLAJMu5B
-	Xt9b7fpN5bDP/LbpEhZyAqhN3baSLnJpb2DhuQhnxJkG7Y7+8zzeS5UwzFSHOg==
-X-Gm-Gg: AY/fxX7v1Bws/NZ+NCr87BvqxMYY2oplc7YA+6/e6uGOC2D95tAltzNYOrE0hwVk7fW
-	WpEYbuED67RSHc4HkFuiKFUq2f4frl30D3usMUP4PyB7dzGo7JHqkAG74+LdCqn+uawRhn6x7+Z
-	3akuVZ7ztsegbiQz+DdsPJ00EZZt3R/I2YY7BvrEmnS+iz7NPoMd2h+gVNSC0s0YaQDeD5+GXTK
-	EeQImOzf2xQC9BZGd3aLollzJgJ2uVKHuwk2hyS2V32aN/+htbOIvsuEMbRj5xTwKPAH0Wv0K+C
-	bxq+x9VXs2HjMdCs270gbSobYPP/5tI70ia/XF4oKFYkDbUIVrUSFleE1+2jIpoXlpC11kWPj+B
-	GUrJjzD5VSQ3FJbUR/rEsKmr60cSdq/i+zw4fQIQV9Td4cZC1ltKGGn7gzjX+4BZnwe0NKCjXfE
-	hFJU7f5nZqVGEMtPxmJJk/GsmRWPYa03UDnpho1hLBjJAWADDyzwUQp6sjAFEXpj0RwbYTWE6d
-X-Google-Smtp-Source: AGHT+IEbTu1pKr+FF+9S7Jnjn2Vrn9Yg1KrndrjtnD1QKwbTDF9/aQBTjkB8haRBbCJpxuuUB7jTRw==
-X-Received: by 2002:a05:6830:3116:b0:7c7:4bd:d527 with SMTP id 46e09a7af769-7ce50a29cd7mr10547341a34.21.1768323104359;
-        Tue, 13 Jan 2026 08:51:44 -0800 (PST)
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com. [209.85.160.49])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cfb21a150asm5203509a34.31.2026.01.13.08.51.44
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jan 2026 08:51:44 -0800 (PST)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-3ec4d494383so5593368fac.3
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 08:51:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXr9yNhsiWQYuSkEHltNL2qTROpCSSpluP6oEqxyPL3EMW712NmT7SRbolxlmzp7TYW+iz+a8DiDrA=@vger.kernel.org
-X-Received: by 2002:a05:6830:2e04:b0:7bb:7a28:51ba with SMTP id
- 46e09a7af769-7ce50a6def5mr10521137a34.26.1768322616531; Tue, 13 Jan 2026
- 08:43:36 -0800 (PST)
+	s=arc-20240116; t=1768322636; c=relaxed/simple;
+	bh=qaaOKVht51r2C2pHStyY0x0esZTfVius3WNmqXtclh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OVt2wEDfS00otBUxwnipMueqVN+dR5rx8GFBqyZ7za6clJFig83BWaPf130+Rm0O+mBXM9W43ilXh1Lcfs3TBqzTB69m6/hmgwEUNbvuP6N3IIyjpM4EDaT4owrsMMilpG6eCaP4Ys+w9OlcosrCJLi0YC2xeb467+CiO/pjyAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmxGDZSU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7E4C116C6;
+	Tue, 13 Jan 2026 16:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768322636;
+	bh=qaaOKVht51r2C2pHStyY0x0esZTfVius3WNmqXtclh0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XmxGDZSUfl/fVm/ClqxdDzFrqvx4HXM7SftTXavjUuv5ZFcZfGQG1GTRI+k8ihm6G
+	 r0Fi636nPDpXEKNFyK6lCUASZFbO15cgl/TV7FIN5+rRDWdc3HCdRMS06aet6gM6py
+	 PmSAVZe0iVMM8EAFjONJs71d2gHleQsYUO4donGRAq9CttzWBmlK23zFNG944zmDD2
+	 YPCSLc2rO4M1c0tzQxdEvZHyMhgsJteMI2rljzR85uw2hj5sJkGI78U7naWsiNs0kL
+	 IThVaqbii0JI09FX0t1hWmK9+KrU+Oc7lImJgUDjsxiV1X/JpWUzB2c2hY4DFrGt9f
+	 JqmhFE4qPi8AQ==
+Message-ID: <bf09e1e1-d397-405b-aef8-38c44e6c2840@kernel.org>
+Date: Tue, 13 Jan 2026 11:43:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260112174629.3729358-1-cel@kernel.org> <20260112174629.3729358-9-cel@kernel.org>
- <20260113160223.GA15522@frogsfrogsfrogs>
-In-Reply-To: <20260113160223.GA15522@frogsfrogsfrogs>
-From: Neal Gompa <neal@gompa.dev>
-Date: Tue, 13 Jan 2026 11:43:00 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je8LGZGGAQ3XLMQg8=XmJjvvJNShT3zkE-o2t2fv=VGeHw@mail.gmail.com>
-X-Gm-Features: AZwV_QiAh8VN4kaDD2E2Q52MaqDS5cW88U1qWaL9kDfC-E_siYu-7adEi4A7eM4
-Message-ID: <CAEg-Je8LGZGGAQ3XLMQg8=XmJjvvJNShT3zkE-o2t2fv=VGeHw@mail.gmail.com>
-Subject: Re: [PATCH v3 08/16] xfs: Report case sensitivity in fileattr_get
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Chuck Lever <cel@kernel.org>, vira@web.codeaurora.org, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
-	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
-	almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
-	glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
-	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, 
-	anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, 
-	senozhatsky@chromium.org, Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
+To: Benjamin Coddington <bcodding@hammerspace.com>,
+ Eric Biggers <ebiggers@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+References: <510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com>
+ <cover.1766848778.git.bcodding@hammerspace.com>
+ <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
+ <2DB9B1FF-B740-48E4-9528-630D10E21613@hammerspace.com>
+ <7F8B576A-465B-4DCE-95F9-9F877513DF2A@hammerspace.com>
+ <1e92e144-d436-44dd-956f-3125403dfdc8@kernel.org>
+ <ECE1341F-BA8A-4DC7-BC9D-BDD6F10F6013@hammerspace.com>
+ <dc3d8ff3-f68f-4200-a546-605f0f2e3611@kernel.org>
+ <A3F6E0BB-523F-4B99-B583-D6D80E9D7BFB@hammerspace.com>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <A3F6E0BB-523F-4B99-B583-D6D80E9D7BFB@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 13, 2026 at 11:02=E2=80=AFAM Darrick J. Wong <djwong@kernel.org=
-> wrote:
->
-> On Mon, Jan 12, 2026 at 12:46:21PM -0500, Chuck Lever wrote:
-> > From: Chuck Lever <chuck.lever@oracle.com>
-> >
-> > Upper layers such as NFSD need to query whether a filesystem is
-> > case-sensitive. Populate the case_insensitive and case_preserving
-> > fields in xfs_fileattr_get(). XFS always preserves case. XFS is
-> > case-sensitive by default, but supports ASCII case-insensitive
-> > lookups when formatted with the ASCIICI feature flag.
-> >
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->
-> Well as a pure binary statement of xfs' capabilities, this is correct so:
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
->
-> [add ngompa]
->
-> But the next obvious question I would have as a userspace programmer is
-> "case insensitive how, exactly?", which was the topic of the previous
-> revision.  Somewhere out there there's a program / emulation layer that
-> will want to know the exact transformation when doing a non-memcmp
-> lookup.  Probably Winderz casefolding has behaved differently every
-> release since the start of NTFS, etc.
->
+On 1/13/26 11:05 AM, Benjamin Coddington wrote:
+> On 13 Jan 2026, at 10:18, Chuck Lever wrote:
+> 
+>> On 1/13/26 10:07 AM, Benjamin Coddington wrote:
+>>> On 13 Jan 2026, at 9:08, Chuck Lever wrote:
+>>>
+>>>> On 1/13/26 6:51 AM, Benjamin Coddington wrote:
+>>>>> Hi Chuck - I'm back working on this, hoping you'll advise:
+>>>>>
+>>>>> On 29 Dec 2025, at 8:23, Benjamin Coddington wrote:
+>>>>>
+>>>>>> On 28 Dec 2025, at 12:09, Chuck Lever wrote:
+>>>>>>
+>>>>>>> Hi Ben -
+>>>>>>>
+>>>>>>> Thanks for getting this started.
+>>>>>>
+>>>>>> Hi Chuck,
+>>>>>>
+>>>>>> Thanks for all the advice here - I'll do my best to fix things up in the
+>>>>>> next version, and I'll respond to a few things inline here:
+>>>>>>
+>>>>> ...
+>>>>>
+>>>>>>> I'd rather avoid hanging anything NFSD-related off of svc_rqst, which
+>>>>>>> is really an RPC layer object. I know we still have some NFSD-specific
+>>>>>>> fields in there, but those are really technical debt.
+>>>>>>
+>>>>>> Doh, ok - good to know.  How would you recommend I approach creating
+>>>>>> per-thread objects?
+>>>>>
+>>>>> Though the svc_rqst is an RPC object, it's really the only place for
+>>>>> marshaling per-thread objects.  I coould use a static xarray for the buffers,
+>>>>> but freeing them still needs some connection to the RPC layer.  Would you
+>>>>> object to adding a function pointer to svc_rqst that can be called from
+>>>>> svc_exit_thread?
+>>>> Forgive me, but at this point I don't recall what you're tracking per
+>>>> thread and whether it makes sense to do per-thread tracking. Can you
+>>>> summarize? What problem are you trying to solve?
+>>>
+>>> I need small, dynamically allocated buffers for hashing the filehandles, and
+>>> it makes the most sense to have them per-thread as that's the scope of
+>>> contention.  I want to allocate them once when(if) they are needed, and free
+>>> them when the thread exits.
+>> I'm asking what are these buffers for. Because this could be a premature
+>> optimization, or even entirely unneeded, but I can't really tell at this
+>> level of detail.
+>>
+>> So is this because you need a dynamically allocated buffer for calling
+>> the sync crypto API?
+> 
+> Yes.
+> 
+>> If so, Eric has already explained that there is a better API to use for
+>> that, that perhaps would not require the use of a dynamically-allocated
+>> buffer.
+> 
+> If he did, please show me where - I only received one message from him which
+> lamented my lack of my problem explanation.  I responded with much more
+> detail, and nothing further came from that.  V2 will do better.  I missed
+> any assertion that we wouldn't need dynamically-allocated buffers.
+> 
+> True - we could use siphash or HMAC-SHA256 as he suggested, but both would
+> still expose detailed filesystem information to the clients which was
+> counter to my design goal of hiding as much of this information as possible.
 
-NTFS itself is case preserving and has a namespace for Win32k entries
-(case-insensitive) and SFU/SUA/LXSS entries (case-sensitive). I'm not
-entirely certain of the nature of *how* those entries are managed, but
-I *believe* it's from the personalities themselves.
+We need to understand your threat model before deciding whether
+completely obscuring the file handles is more secure than making a
+cryptographic hash part of the on-the-wire handle.
 
-> I don't know how to solve that, other than the fs compiles its
-> case-flattening code into a bpf program and exports that where someone
-> can read() it and run/analyze/reverse engineer it.  But ugh, Linus is
-> right that this area is a mess. :/
->
-
-The biggie is that it has to be NLS aware. That's where it gets
-complicated since there are different case rules for different
-languages.
+As far as I can tell, your proposal attempts to hide information that is
+already available via other means. What you really want to do is prevent
+a remote client (maliciously or accidentally) from fabricating a file
+handle that can be used to access areas of the exported file system that
+have explicitly not been shared. A hash that cannot be fabricated
+without the server's secret key would accomplish that, ISTM.
 
 
+> Using a MAC may have the advantage of sometimes resulting in smaller
+> filehandles (siphash would add 8 bytes to _every_ filehandle).  But it also
+> may not result in smaller filehandles when the unhashed size lands on or
+> just under the 16 byte blocks that AES wants.
+> 
+> What would you like to see used here?  I do not think that allocating 32
+> bytes for each knfsd thread for this optional feature to be a problem.
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+I would like to not add yet another layering violation between SunRPC
+and NFSD, especially because there has been no evidence that AES or
+anything like it is going to provide any meaningful benefit.
+
+Let's stick with the simplest hash/encryption approaches until we
+can see that hardware optimization is necessary. That already leaves
+out the need to dynamically allocate buffers.
+
+
+-- 
+Chuck Lever
 
