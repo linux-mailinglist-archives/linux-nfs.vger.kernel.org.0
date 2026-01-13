@@ -1,195 +1,192 @@
-Return-Path: <linux-nfs+bounces-17788-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17789-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02568D18927
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 12:50:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 165BED1893F
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 12:51:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A7E2230049EA
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 11:50:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CA9CD301586A
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 11:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC45338E10C;
-	Tue, 13 Jan 2026 11:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720AE346AF7;
+	Tue, 13 Jan 2026 11:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ybfTbTlO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WR78M5pV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ybfTbTlO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WR78M5pV"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Bh1CvfkO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11020111.outbound.protection.outlook.com [52.101.201.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2717D38BF6A
-	for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 11:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768305021; cv=none; b=nrJaVxYM6NE5/n68blWm+sJJYxcMHIgAJd/7Nc+B2wjSJQgtR8cXiQ6YYqikgK6cwR1K6DF5vp98nF6Cy7kpDsvQyg+zKXgB0+hfoeOw1A+TYhmllW7YHMRLeLSEBcZmGZjjemiKSyGFCSs/XnHAIg0SGYsJe3QDnMBT8wCjMpQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768305021; c=relaxed/simple;
-	bh=64fWHMTVbg6ilRs9vJOrLHCWPXz1/YG17gH59/Gq9z8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAO4fVeGFAWWt9ykF5Jdl2QZJR3KgjzcWud+yviKVunEv71IsDIzLn52+ng2N8h2qrBVvmP1R7hWk69/2rZng1/1uWiUGCR71mUeUGCSDVRRz97GkfgiqY0iO5lplucZncEdUTgAzRcw30AIe9EU4T8Owm4CcjeRiHR06/yyfwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ybfTbTlO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WR78M5pV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ybfTbTlO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WR78M5pV; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6C99E33684;
-	Tue, 13 Jan 2026 11:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768305018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EgNRi+aV6jB9u6bCyM5aaBQD8Pz1HwmkA+frhGt+2U8=;
-	b=ybfTbTlOs0mjZYU+kOegPaJWwwsyWdZJFvh/IhjhtlM+NswaBFD0Tcq3sXMo6UKipzVpMG
-	FOEApY0GPyhr2lPsXDFcfVvt5o0XanTfz9/NW6c8E+QvjvxXUjBcPOUbL1nx8qBShfURNv
-	jgrkqpn6HBCaqCUIco8/Ufm4pyyN7Co=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768305018;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EgNRi+aV6jB9u6bCyM5aaBQD8Pz1HwmkA+frhGt+2U8=;
-	b=WR78M5pVO0K7T2BZI6ht+0pgqH5o/ONc4tEDfRjHT2gRrEdfy2XRdboRvibOPeAsXlQzdJ
-	lPGJ8C+NLCo8x1Aw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ybfTbTlO;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WR78M5pV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768305018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EgNRi+aV6jB9u6bCyM5aaBQD8Pz1HwmkA+frhGt+2U8=;
-	b=ybfTbTlOs0mjZYU+kOegPaJWwwsyWdZJFvh/IhjhtlM+NswaBFD0Tcq3sXMo6UKipzVpMG
-	FOEApY0GPyhr2lPsXDFcfVvt5o0XanTfz9/NW6c8E+QvjvxXUjBcPOUbL1nx8qBShfURNv
-	jgrkqpn6HBCaqCUIco8/Ufm4pyyN7Co=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768305018;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EgNRi+aV6jB9u6bCyM5aaBQD8Pz1HwmkA+frhGt+2U8=;
-	b=WR78M5pVO0K7T2BZI6ht+0pgqH5o/ONc4tEDfRjHT2gRrEdfy2XRdboRvibOPeAsXlQzdJ
-	lPGJ8C+NLCo8x1Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EC433EA63;
-	Tue, 13 Jan 2026 11:50:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7oscF3oxZmnSLgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 13 Jan 2026 11:50:18 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 27F84A08CF; Tue, 13 Jan 2026 12:50:18 +0100 (CET)
-Date: Tue, 13 Jan 2026 12:50:18 +0100
-From: Jan Kara <jack@suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7011EB5FD
+	for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 11:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768305076; cv=fail; b=QJX7A/WQWqwq6cDwmj4JhtrGHox6bq7WDmBX92G8eOzL7vHdJt7e2vAntzNWD9xYh+kt8pHmMOmNtAunJ0j+sH+adlJ+niRGUrf62Sv62goruCfi2sUehDPGL2zNbzX7AtRsc07inZZFl1Qk62UaiRiHD9lQviZKTaV3IdK+gyY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768305076; c=relaxed/simple;
+	bh=TQ/O7mDePZNLlZPGnllVKskaQouxcyo/kz16vkFYWNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bEGDioN+S6FrPdw9RSe/vgD/RM/qADkE7h5Rkccf/wi/E8G6TJJ4vovNJFPDyUu+TwSRbfR+JDSSM941UXIUHeD9QqpmuvuMxR3dUc7/EmHRWZOHaRqi+pAgPkcqnD0YkaZ8J/n1MwG8SrfV0DwQUc7sGhFYafAFNYH84E+t7RA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Bh1CvfkO; arc=fail smtp.client-ip=52.101.201.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=t1s5Y87QHt5pAlV1dEDppGTixkAr06loc4xEREdYgCOMJZJuqN544BVjQZ0lc9tZO+4qjPjZ18tlOE6psrd3rX2llZxIuhYO7bs4eXeL8G1HB6FJ1hiRwIdFfyoGlg/V9IsENP8IxId0mXXtEUrSbPn/RX/r7Wp2YSRhCsQwnGC3A1KkIZik8mFP9gtKvTTleIJh/JJ7HITkYDTvV4C0G9GQbD7MfVHGCAvYNgFsWTYOQdCxmHEyDeFJ3g01uAliVcRGfrbaEc9veeOllgPGrX4KzeXa5bxSsgMaWOq7cYpsYgPovG1NViE1VQKfj1NYZFcy5m/zPyd8pSFKrFxj+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AaF01XJ3MwjV5mzDsUgB+kDRRuds6astTfVLvPAHtt8=;
+ b=AGXeIbyaBDPmP+P6iI0BLp41MzMXPK3D9KKiLJfy2axEaxkbtu2YM1LslmJqC+gwnR+9N9lgRZONvVshFlV0y/mBn0pwjtOMo3SbAzwhUrN2qt9r1WAEOI53SeYYwdvdDXcq/VmNhbSwFHeuQudtkri5pw3y1UMMgHNL8o7kD+o2AjUaOIv++cKjqnWkmfxPPWaN8L7Wixuew9XBjV4GQ1poeJj4MKUcag2HJzLZs7fY0GmR0uV7O3OtNXAZWDBj73hAh6/GMQRjyGHY+U5MkhU1b0kISHpGlWfzMk4WhYGF0ctDZ6lua53aNrN7NMTqVpDPrQFSqQgnGjjAh1CqyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AaF01XJ3MwjV5mzDsUgB+kDRRuds6astTfVLvPAHtt8=;
+ b=Bh1CvfkO5XfK0NIXHTnfk0JJbZUUnBtyn+qXJ+xy1zm0bejRhW4WfPUKTcdz96OnXsM0bd/fjkLn5kUcHxEHE5qwcDueoOUtzO8m4udqU4In0zajoij4XvfneQi/x1XEpalJ68XSN3WqqqgdeJkJKk494UOBCs14kgapJuDQfik=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
+ SN7PR13MB6101.namprd13.prod.outlook.com (2603:10b6:806:321::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 11:51:10 +0000
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9520.005; Tue, 13 Jan 2026
+ 11:51:10 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
 To: Chuck Lever <cel@kernel.org>
-Cc: vira@imap.suse.de, Christian Brauner <brauner@kernel.org>, 
-	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org, 
-	sj1557.seo@samsung.com, yuezhang.mo@sony.com, almaz.alexandrovich@paragon-software.com, 
-	slava@dubeyko.com, glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
-	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, anna@kernel.org, 
-	jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org, 
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3 07/16] ext4: Report case sensitivity in fileattr_get
-Message-ID: <76zoosya47hgvau4bajvpqupogjpbx5wtljtwltp7pzggkyj7m@lco5on2kmf7g>
-References: <20260112174629.3729358-1-cel@kernel.org>
- <20260112174629.3729358-8-cel@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
+Date: Tue, 13 Jan 2026 06:51:06 -0500
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <7F8B576A-465B-4DCE-95F9-9F877513DF2A@hammerspace.com>
+In-Reply-To: <2DB9B1FF-B740-48E4-9528-630D10E21613@hammerspace.com>
+References: <510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com>
+ <cover.1766848778.git.bcodding@hammerspace.com>
+ <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
+ <2DB9B1FF-B740-48E4-9528-630D10E21613@hammerspace.com>
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P223CA0016.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:510:2db::35) To DM8PR13MB5239.namprd13.prod.outlook.com
+ (2603:10b6:5:314::5)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260112174629.3729358-8-cel@kernel.org>
-X-Spam-Score: -4.01
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLa77mm4gi8mw7uppieotozii3)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[imap.suse.de,kernel.org,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.com:email]
-X-Spam-Level: 
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 6C99E33684
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|SN7PR13MB6101:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4c3bbf35-1fd5-4d07-ae6b-08de529a0b63
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bdzlHWPHptYEX3UYJKbVKVftu0vEpObTRYsM12yHC9UAR90jlZg/RpTz3r0v?=
+ =?us-ascii?Q?RdXop1wmio3xKpd3n+23iLPVvlS+O5eqLaeKMHaA/laRdXG5cWbKlftuDxc4?=
+ =?us-ascii?Q?O4HB0t1nXPMag1WOpza1+xGFguyQHisSDJlHH680ANMD9RrswV+LEISdE7dJ?=
+ =?us-ascii?Q?wnLGBYGVnd2efHQjkMK4o2fZzbbkFX+SwyNDZTKvzDAwczh/jn3+I4wyOcJt?=
+ =?us-ascii?Q?NeyLHXDavaE+fnu9DfDQ+HEV5SFmOa7EKUxnOdVNP/7E5GzKLixi2vV7ZROH?=
+ =?us-ascii?Q?/kjohoyeDNJGhGvS9NvP4Kv0sqgKUGVxCIOI9eBZLLkMvl7DhXaAu8kMh8GF?=
+ =?us-ascii?Q?93SN+FFS/Eww2HzgCxLmUFmD/eM0mhjTCrjqmEdhZbPxBT8FpQPHB8fa/0Nz?=
+ =?us-ascii?Q?Dx/LIvCQlupUmFJ3kiprz4GoiFg3REtRCso4WgmqqkNUzt8yMXClUPpLB5jw?=
+ =?us-ascii?Q?BjO2kx6M3+fAJwDQpvyjc996qrunlfMIHjGNDKJi6d0xl86HrCRV212vuwyI?=
+ =?us-ascii?Q?aO+RtjW51Ll7cjE6AB+4UnX3Yc9jJuorE6R0bmE7FS1jW/QUI6LIOdkUo08p?=
+ =?us-ascii?Q?1tCW7wraDBdSg1FMCEM9nUNb2PMVAyqPUa1rTADXbPSpCKcLUKmAvQxdzKrS?=
+ =?us-ascii?Q?OFfoWixf82+O36zx876UxRcpAwXzK7OnngTkRGgTb9/NIjkOZVZqA5HuHhqU?=
+ =?us-ascii?Q?GThS7xmj7nr+MelDOdVx0oNLg8K9Su9UmdFcB4rYPmjpzFhfWwyYWsXJm5nX?=
+ =?us-ascii?Q?F3KJ/hLowJyXuHaLLggtmxMcR4S85s9sN8DZGoti6LqGKuuQNh9KQX1qjxPA?=
+ =?us-ascii?Q?Aa8+TmE6WxtBRHVZ3CmYZrfBn8T6EmOyNaW+dvs/H7nt7Lhs7969EL4oJqCn?=
+ =?us-ascii?Q?hf/3TPuKU03+Pi4DxmN5rYybSMybkrHg6NZfqpdrBhajGfmeDcwvJ7JrT7TD?=
+ =?us-ascii?Q?QAwBNEnKVgiUBcDYL1LiWulgYD3cYFtdh8l8MSRAWpOKX8RFPTOahQI4VhGL?=
+ =?us-ascii?Q?KlESn1JVsAM6mL5MhSlvcpM6WOiPF5qup3fSFqezP+MX3A7tn3Mt0I+KnAGu?=
+ =?us-ascii?Q?w745PPTTnCu7nClNiSalFmMjRN0wr/p2PQd1eiNLHgvDQn+TVb+er93mZa9g?=
+ =?us-ascii?Q?or7M0pRGIVkwJmvcEijXQoCgXikmSFvAm1E9mL1B7CQmMUVnFB/dV4sjEaXP?=
+ =?us-ascii?Q?uYKBGeeeO/iifGe9HdI5tbnYqXHZleH8NYxHUxByZKI+y9PwH7l70eu1+TQ+?=
+ =?us-ascii?Q?f2+9lqBARg1nGDWAZxqOjL+d/qMUcswwPK3/FR4sMv4Mk7sPmBCSMtpGlnFr?=
+ =?us-ascii?Q?YFMwAmSAwqMdgPiV5wZq0bkM9Ock1RfOWqdEpl4P6AEFKjLPKruH8IbqwLVt?=
+ =?us-ascii?Q?UPabwFIe3sK18ZCytNWFnw4266xY8z1pbyOamN4GZSlk4WUMFmgU8AHjFwsl?=
+ =?us-ascii?Q?PLCv/XrI96cZ7Yy/4mVF4lB698JgUXBJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?CNEKFmKGMVoHmjG66A8LZA6eMgGxmahVKROUmhtoOPz5za2yjAZFY1T+CG9U?=
+ =?us-ascii?Q?MO3p2ItV0gxRyIQklmwxxsDJ//5kXTYdte/BOJ+7TIAp5pWwsXRYmbXVdNQJ?=
+ =?us-ascii?Q?Hg82LWezDws97ydK9eUVOe+MXlgVFq1V2EgAl86NPnltWiXX9vBlNRlzP1RG?=
+ =?us-ascii?Q?J+MkOAvH2yJ+aYpcASu4/Q9Ylb6HNrzclJQk/d5JxrRA/Ucm7TI87Hn1CT5v?=
+ =?us-ascii?Q?ekLwF0Dvk1PrJGwF+r1qqwIka08eLGTOkh1DWFyrnany8wIkFBEqx8h5cs+H?=
+ =?us-ascii?Q?jSARMo61v8bKSVYT9uCzkwOx/gzDAjGMOEE7/OxBdQXvCR+yKEHudRAkxOvZ?=
+ =?us-ascii?Q?gHFnkTqtyrmkc3H5cUxSTUcCz1s9UcdY2It6DjcLPcaF+fB5zxT7C5CTkoDC?=
+ =?us-ascii?Q?H3cbC22py4rKpsGZ2+3x5l7Mvq5ch38dt9ZsM4z39UK7KFAoLghw+0SqFNOy?=
+ =?us-ascii?Q?hgFyBUSnazDzvdCSL8p8fBsT49kMi/bX4C+tquDVqHca6XxxajwBXYilttBx?=
+ =?us-ascii?Q?nqNlT1vt4fe2Sv4eHEZoh1B2F0E4OzXIhfBfgyVTXmCicoo7pbTz1XkQ5Twg?=
+ =?us-ascii?Q?5FlQA75+9ozbUQm8HdciJpllU5/MRTEXSdvl+5O8Xc91VdTmJIFF3eGJkXNT?=
+ =?us-ascii?Q?TZBusTSzOWWXKMN6fIuDTlpUrpkOBW9CNrmOZ34pweEufCwgc+NH2Hg1x15K?=
+ =?us-ascii?Q?ij0iK4UHav0Mo9fTbzvtcQgTCX8UZDIrtIoE6XcnzR6EpEmb+1l7fFouQtwK?=
+ =?us-ascii?Q?Thr2I0XFfLCiDNoBYgEfgRmwk3fvFweS4c1P2qwQWy0OUgVMBRWKrnpdlz0f?=
+ =?us-ascii?Q?8PJYK82Ap+XetWAiPD2uDmha8LY1oD1mslwEKrcNHIbYW+6kVsZYRZHjzvu9?=
+ =?us-ascii?Q?XIMgQC71gqny5mEdaDlt9lkF6JZixS1H7We5v1Dl6+tS837ZEW17qiAWJCEO?=
+ =?us-ascii?Q?SswJzQeMpCg5Vd88NMRiBIt2q5MJFxIOSusExUnMpDyZ5gH7aoFvrrOW+G22?=
+ =?us-ascii?Q?q2Vbfhz49L9YAD/WaKZbQ+5/5OJJxgGx5HrGdP8UuSPxPDCL3EThJrRqh1xo?=
+ =?us-ascii?Q?K+KYwyAynlOwJGCKbFdeiKoSCtXXLTvHSPkf1EbpcAWN/OTahf7iIY8n/XhJ?=
+ =?us-ascii?Q?tXTvC4+3RGiEPXBBb/JzMbo0guX1iWS9GhlO00fyNNKUFuxZM4SwfwpU6pKU?=
+ =?us-ascii?Q?hwFSSbSo0b20migpSjvsoVpXzM1OFmnpCoVOOZRRW3YPOoWELD5VbmgxSafn?=
+ =?us-ascii?Q?f5G+BMaXeQPq8Jw7oWvdDAtn7x13q/rjFQ3nFa/jX/3MfZkB15xXQ9wxx0Ye?=
+ =?us-ascii?Q?n6MbB+aPdo17mGNRJI3bFI2Kj+gnfp+TB0YDtPkcCtp15Txh+AZtpqaX9cta?=
+ =?us-ascii?Q?MPFmifeFEUTJW/ob4IxBLr+21bggCTmpgWp9rBfAWOq2qV2mBvsqW5cNVgFd?=
+ =?us-ascii?Q?L2ed/HA8AX5KIiUOGcli6WY2HysRHmaddCek+Ux0MGlNJN2/760j+z3/Q+A4?=
+ =?us-ascii?Q?GVyOIC0F2kqkEQWEwdFCpnFw6PI9rrrV0PqtYWOx5hKgKGd8mTlJ7qm9la0g?=
+ =?us-ascii?Q?E2/BR/8jQ9WMsWMVGgv0N1eMi5bX5g03h+v8Wkxl18MUMnzsSG9AjtOa8ZWD?=
+ =?us-ascii?Q?X0UJcbwpjk0cEzb2d08Pl0WKlU3Ib6+ZFrJ5IOjQ3bDC+5aGcE2RB0JLgYxv?=
+ =?us-ascii?Q?Tg2XjP2u1STRd2EDBhQOELpspk5I5BmrJWRB4nWV9L/f02ynvhVQ5vY5mfWE?=
+ =?us-ascii?Q?NkiMKvHKleGIsWoOWGFl6+zDEo+miX4=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c3bbf35-1fd5-4d07-ae6b-08de529a0b63
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 11:51:10.4567
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /1fsQS3szEtkoh+etK+2SMFiZJr1rRqZa6mH++S9r0Vztm+VkfvtgoAV329WDjsw9VyVXuGNlkye15cRQi/EUeqXXNKxmklbKSoZzTmgXzc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR13MB6101
 
-On Mon 12-01-26 12:46:20, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Report ext4's case sensitivity behavior via file_kattr boolean
-> fields. ext4 always preserves case at rest.
-> 
-> Case sensitivity is a per-directory setting in ext4. If the queried
-> inode is a casefolded directory, report case-insensitive; otherwise
-> report case-sensitive (standard POSIX behavior).
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Hi Chuck - I'm back working on this, hoping you'll advise:
 
-Looks good. Feel free to add:
+On 29 Dec 2025, at 8:23, Benjamin Coddington wrote:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> On 28 Dec 2025, at 12:09, Chuck Lever wrote:
+>
+>> Hi Ben -
+>>
+>> Thanks for getting this started.
+>
+> Hi Chuck,
+>
+> Thanks for all the advice here - I'll do my best to fix things up in the
+> next version, and I'll respond to a few things inline here:
+>
+...
 
-								Honza
+>> I'd rather avoid hanging anything NFSD-related off of svc_rqst, which
+>> is really an RPC layer object. I know we still have some NFSD-specific
+>> fields in there, but those are really technical debt.
+>
+> Doh, ok - good to know.  How would you recommend I approach creating
+> per-thread objects?
 
-> ---
->  fs/ext4/ioctl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 7ce0fc40aec2..653035017c7f 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -996,6 +996,14 @@ int ext4_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
->  	if (ext4_has_feature_project(inode->i_sb))
->  		fa->fsx_projid = from_kprojid(&init_user_ns, ei->i_projid);
->  
-> +	/*
-> +	 * ext4 always preserves case. If this inode is a casefolded
-> +	 * directory, report case-insensitive; otherwise report
-> +	 * case-sensitive (standard POSIX behavior).
-> +	 */
-> +	fa->case_insensitive = IS_CASEFOLDED(inode);
-> +	fa->case_preserving = true;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.52.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Though the svc_rqst is an RPC object, it's really the only place for
+marshaling per-thread objects.  I coould use a static xarray for the buffers,
+but freeing them still needs some connection to the RPC layer.  Would you
+object to adding a function pointer to svc_rqst that can be called from
+svc_exit_thread?
+
+Ben
 
