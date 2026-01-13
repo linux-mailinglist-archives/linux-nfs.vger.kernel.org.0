@@ -1,123 +1,83 @@
-Return-Path: <linux-nfs+bounces-17800-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17801-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 891BED19D6B
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 16:22:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2715FD19D59
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 16:21:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 580C6300EDC3
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 15:18:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9AFD6300943C
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 15:21:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 235CF2D7813;
-	Tue, 13 Jan 2026 15:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 147C938FEE8;
+	Tue, 13 Jan 2026 15:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZVDhVyb"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xomA14eV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0157F22083
-	for <linux-nfs@vger.kernel.org>; Tue, 13 Jan 2026 15:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824472EA490;
+	Tue, 13 Jan 2026 15:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768317493; cv=none; b=MjRsnuz0ieiBzpVIXeU2CnKN7BJg0UzsH0wwQKmh+40br2zy+wesXonql6zNniYQ5DtIlbNQrGu6VD+JxzVnsPC9bWrdPEIuzDxjDkzQwxb/Ig+GSa6OodQnCMTrLDrAWowy9LuJWeCMKC4g2Tp6H9NIzsA0vH8U6hm2a/y5EaY=
+	t=1768317706; cv=none; b=VMZdR22kG8ITdpdYbU0ohlAiFExM3xFJjwdgIwXQOh8rSg/5ZyuK4gNXsO7NJtF6Erdy/LartRqaq2D7R47Is9Z4n3e/CJGzBWnZZVEMB9L46acsiAj17bxYmHjn1/oeUKAwVN/YrsI7VjV+3LnBEJDwKaiSC9IDmq2azsHnsaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768317493; c=relaxed/simple;
-	bh=4gr6JaD+6p8sJHw7d2tdtUTX519l1rGkU1agpJ/9BsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AYtG1LxRhoBxjKPHwUNXJIxTpy7PWgwy0fC4aX2RchtWVIb7l8m93hqfLmZ9vsqAHtVxJfZYoprT9G+i0UYQ3QVdGYOszwoBy/8v7gj2FCfS6aJFwTAt6VxbfrGV9qgPBcxAL3a/eHavXLrWBzmpVyjUOGB5hEC9wN0yS+lQZek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZVDhVyb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB45C19421;
-	Tue, 13 Jan 2026 15:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768317492;
-	bh=4gr6JaD+6p8sJHw7d2tdtUTX519l1rGkU1agpJ/9BsA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cZVDhVybVt1XgGROxRQixTlCddMjnJ0EeG8HIdumL/Rwi5Lk2sPQDJd3bYTdg6dfE
-	 7XTLnzTcvhfT+AnQds7wrS0MlW2uloUxYTWaVrCZqGJ/qJfjkb25yD5oSNmpIDUrJ6
-	 M5Lswp0FbnYVcC6HxvSPOjSfU4hseNgq+0iQOrcSH1/KgZWMn7V9wnSodw4ne51gGH
-	 AQEEgYPY8gtFmJtD/3XYFeVMzKFh5TlHXU4UT1J5MJUkU9O1j/SfdrClJIbvaKGMdw
-	 HuG9n2yVkKtbIw99rYd10yNra6BgzvzUP6e8x4fiJnfXQGS0rbwfgs1tA85SCxqB1z
-	 29mJyfwi90zEg==
-Message-ID: <dc3d8ff3-f68f-4200-a546-605f0f2e3611@kernel.org>
-Date: Tue, 13 Jan 2026 10:18:04 -0500
+	s=arc-20240116; t=1768317706; c=relaxed/simple;
+	bh=XnG8cD3+5qeXbAUh8AXkTzn9ig3HRSOVhXL6ED+SMiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E7k1mA/1Yw9wj59pOYEX29tLJunrF6TGVzqTKmeyGgaDZpD6eagJCjTSDsNwJ/7QN8pRh3x2XyaWVzyWNauBKjzW3jy/11brVUJa91F9OXfnROImeP0NWQR0ljVpjan2Xlov1D6mj4JSrzo2EYZpOss2wxVEUlXdxQi6kib+40M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xomA14eV; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PkHPcgL/r2/sQCYYk7Tbgs3xv2a7+rqN3EI5OmY8q6A=; b=xomA14eVXNDIQFtdd0HHQoTB7E
+	zdCyAopaRYT/ZMC1HRDd52yie0ZY9djWOaiJeSSd3JNvbC1NEWAZcsjGHwHmvcGycvYjYLSUAcSze
+	tXHmc9c0Fki49NonLagV8PsJ/iPuhUOgcmQb0ASFXPOgGlBUjJ+8kRLLmG301tJmrH/G0bLxaLert
+	UC9c6sXNj9n/Ja0qaa3jrPPzv2+Ea5ytTE61XOYk1fawrjxrVkCJb801hU6hRAH+/pVS7dYZkqkLL
+	fw96oO4yE2lV/mG64uT0zCNM0k7/uphOCi77birTY2ROcuPQDd7ghnbA71Zf8M5tzKCQHyNI9+r4X
+	C8S7fIvw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vfgDC-00000007M9V-0lHF;
+	Tue, 13 Jan 2026 15:21:38 +0000
+Date: Tue, 13 Jan 2026 07:21:38 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: vira@web.codeaurora.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp,
+	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com,
+	almaz.alexandrovich@paragon-software.com, slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu,
+	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org,
+	pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com,
+	trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org,
+	chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 01/16] fs: Add case sensitivity info to file_kattr
+Message-ID: <aWZjAi5rCJk6iVKw@infradead.org>
+References: <20260112174629.3729358-1-cel@kernel.org>
+ <20260112174629.3729358-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
-To: Benjamin Coddington <bcodding@hammerspace.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-References: <510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com>
- <cover.1766848778.git.bcodding@hammerspace.com>
- <aac7f668-5fc6-41cd-8545-a273ca7bfadf@app.fastmail.com>
- <2DB9B1FF-B740-48E4-9528-630D10E21613@hammerspace.com>
- <7F8B576A-465B-4DCE-95F9-9F877513DF2A@hammerspace.com>
- <1e92e144-d436-44dd-956f-3125403dfdc8@kernel.org>
- <ECE1341F-BA8A-4DC7-BC9D-BDD6F10F6013@hammerspace.com>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <ECE1341F-BA8A-4DC7-BC9D-BDD6F10F6013@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260112174629.3729358-2-cel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 1/13/26 10:07 AM, Benjamin Coddington wrote:
-> On 13 Jan 2026, at 9:08, Chuck Lever wrote:
-> 
->> On 1/13/26 6:51 AM, Benjamin Coddington wrote:
->>> Hi Chuck - I'm back working on this, hoping you'll advise:
->>>
->>> On 29 Dec 2025, at 8:23, Benjamin Coddington wrote:
->>>
->>>> On 28 Dec 2025, at 12:09, Chuck Lever wrote:
->>>>
->>>>> Hi Ben -
->>>>>
->>>>> Thanks for getting this started.
->>>>
->>>> Hi Chuck,
->>>>
->>>> Thanks for all the advice here - I'll do my best to fix things up in the
->>>> next version, and I'll respond to a few things inline here:
->>>>
->>> ...
->>>
->>>>> I'd rather avoid hanging anything NFSD-related off of svc_rqst, which
->>>>> is really an RPC layer object. I know we still have some NFSD-specific
->>>>> fields in there, but those are really technical debt.
->>>>
->>>> Doh, ok - good to know.  How would you recommend I approach creating
->>>> per-thread objects?
->>>
->>> Though the svc_rqst is an RPC object, it's really the only place for
->>> marshaling per-thread objects.  I coould use a static xarray for the buffers,
->>> but freeing them still needs some connection to the RPC layer.  Would you
->>> object to adding a function pointer to svc_rqst that can be called from
->>> svc_exit_thread?
->> Forgive me, but at this point I don't recall what you're tracking per
->> thread and whether it makes sense to do per-thread tracking. Can you
->> summarize? What problem are you trying to solve?
-> 
-> I need small, dynamically allocated buffers for hashing the filehandles, and
-> it makes the most sense to have them per-thread as that's the scope of
-> contention.  I want to allocate them once when(if) they are needed, and free
-> them when the thread exits.
-I'm asking what are these buffers for. Because this could be a premature
-optimization, or even entirely unneeded, but I can't really tell at this
-level of detail.
+> +	/* case sensitivity behavior: */
+> +	bool	case_insensitive:1;
+> +	bool	case_preserving:1;
 
-So is this because you need a dynamically allocated buffer for calling
-the sync crypto API? If so, Eric has already explained that there is
-a better API to use for that, that perhaps would not require the use
-of a dynamically-allocated buffer.
+Given that not case preserving is by far the exception, maybe have
+a flag for that instead?
 
-
--- 
-Chuck Lever
 
