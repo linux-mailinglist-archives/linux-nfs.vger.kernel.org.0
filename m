@@ -1,60 +1,104 @@
-Return-Path: <linux-nfs+bounces-17785-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17786-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6747D186A6
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 12:19:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B704AD188A1
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 12:45:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 055893007291
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 11:19:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 26D65303ACF7
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jan 2026 11:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B7138A9B4;
-	Tue, 13 Jan 2026 11:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D7338E103;
+	Tue, 13 Jan 2026 11:45:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtyU9CFA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPYUnVvi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9B350A1E;
-	Tue, 13 Jan 2026 11:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E89638B9BD;
+	Tue, 13 Jan 2026 11:45:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768303163; cv=none; b=e9HwlCBdSNnEg+tJNzmKvZ83to/YtZ8qVcTCO+kMl02qtNZaHPjWVgp87bDEHs7BPzm5PvoIPoAXnTBcKyuuF5KhE0bIp6cCKEEQWrorVFwOP2kun9OVQtNT0/8jvrImXjz/TM0H/4Pya9TdhTLr35Fyci5eR4J9IozKzLjkkZw=
+	t=1768304726; cv=none; b=IQL2FVasGrNJLzSLMxdPm7NjH7DLgyiVEmbD3mQCRvmivGW2xTrzrTUOmFzbsriRW3YqFte5q2mUzCCWR5n800FAs7OK4kCWSEYqVwjsvuRJ58mufxgizX7ysrmspyDnOouo6vsjpWCPJroiCwHtbpxaNzKQlBy1WWkP4JwW74E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768303163; c=relaxed/simple;
-	bh=MNEBD+TPfW97QTkNg9SJMBMMWBOymNuvORTNg0AYi0k=;
+	s=arc-20240116; t=1768304726; c=relaxed/simple;
+	bh=r3fAgtqWrYOpjEcc0WPFdPe/AdLRyr0xvdFog2RxOIc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jsWzs/6y6NuN9s31JOnRkCay61l/M4U17UGwAim5mJyAW90Us6W4Qw/EFiWgQ2U3SHXkf5Okf9nn3G564FOLV3O75b/fni3OtgA+RHEmI0iAWRbwwWa8gCCAD9LOnv7UuG3ppS9AzHaNq0ImNVFJLufkdWew8GidF9+sNJMk+RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtyU9CFA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66FBCC116C6;
-	Tue, 13 Jan 2026 11:19:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=hAeb8NiyFyHFK2jjJGdZv0oQGPQA8WRzU2RHz36YUGDziqNFncIDUWga+2l6pN8bhxzMDjoJyz4G2yd2SWmuIQ6kr4OZMtzIYAc0wwsJWnOH0B4ETAwvCK9QinTQcSkwct0KdI1PKyTk9U38roRqF5mofx2F4aM7eWO7LpMV9u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPYUnVvi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A32C116C6;
+	Tue, 13 Jan 2026 11:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768303163;
-	bh=MNEBD+TPfW97QTkNg9SJMBMMWBOymNuvORTNg0AYi0k=;
+	s=k20201202; t=1768304726;
+	bh=r3fAgtqWrYOpjEcc0WPFdPe/AdLRyr0xvdFog2RxOIc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FtyU9CFA71lvxnKy+jp3mo40i0bt/sGThTc2/UR6xyhA7D9Sld1K9bTE9DNUWDmbH
-	 CHoUUng4h6UGu12KkLEEYDIIQoRe/iA3i2ruiex3Q9eT/uUlJ+LPaU1j+F/jsf4s9j
-	 S9UW26et08VQV6J1tTs8XfGhLoNvT8EVQ00JK1EYGnvNI1CLY32VnTMFG6yM78/B9f
-	 bUbRwgP5IQBl38Pwnf1k55GyWPl2I3eutHfffij98QnPh4EjXawzUwBVFq7oC8QKsN
-	 /jgwdZ0LpWyeu7hkbiVWdVo8OiQhrAU8J9S8uDzHn/9j9NYLzWUy7CFjUHeITFp/lv
-	 Mx1MiU64SxZTg==
-Message-ID: <45115f6f2acbe9f498b94b1fbf8133ef0052053a.camel@kernel.org>
-Subject: Re: [PATCH 0/4] exportfs: Some kernel-doc fixes
+	b=hPYUnVvi9v+0Bh+aUO7p89euuKcL1XxxPaQFiv1yFEfuuQrV9ma8ZqGy9IGWR0Hg2
+	 nGb0xKIRdckHGuAv6pDfw1L6dnPw+sKxpoFEU1i8FIolyU6IeDrULm5dKoLINaYp/f
+	 lPrwPJp9HcPXX4GOUuPEu5HtSIzYDfCSS/JXhg1NiKHM+ShGiT3IwwkbUBCVovAIRE
+	 xomxTEJ/oYJgVGZYTvc/zcfr/Sqq4CEQ75ONFS/TUXLurVleTTrpavEvncOqd97kb9
+	 M1tQQZ35vEFp6JlLZgDpwcytMAbG40LYkViD6uH7yyE3+w/MdhuXa5ZESoU6U4+6R2
+	 jlclfIVBJ/ubA==
+Message-ID: <4a38de737a64e9b32092ea1f8a25a61b33705034.camel@kernel.org>
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
+ lease support
 From: Jeff Layton <jlayton@kernel.org>
-To: =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>, Chuck Lever
-	 <chuck.lever@oracle.com>, Amir Goldstein <amir73il@gmail.com>, NeilBrown
-	 <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Jonathan Corbet
-	 <corbet@lwn.net>, Christian Brauner <brauner@kernel.org>, Alexander Viro
-	 <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com
-Date: Tue, 13 Jan 2026 06:19:20 -0500
-In-Reply-To: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
-References: <20260112-tonyk-fs_uuid-v1-0-acc1889de772@igalia.com>
+To: Christian Brauner <brauner@kernel.org>, Amir Goldstein
+ <amir73il@gmail.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>, Luis de
+ Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
+ Nicolas Pitre <nico@fluxnic.net>,  Christoph Hellwig	 <hch@infradead.org>,
+ Anders Larsen <al@alarsen.net>, Alexander Viro	 <viro@zeniv.linux.org.uk>,
+ David Sterba <dsterba@suse.com>, Chris Mason	 <clm@fb.com>, Gao Xiang
+ <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu	
+ <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale	 <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, Chunhai
+ Guo	 <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, Theodore Ts'o
+ <tytso@mit.edu>,  Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim
+ <jaegeuk@kernel.org>, OGAWA Hirofumi	 <hirofumi@mail.parknet.co.jp>, David
+ Woodhouse <dwmw2@infradead.org>,  Richard Weinberger	 <richard@nod.at>,
+ Dave Kleikamp <shaggy@kernel.org>, Ryusuke Konishi	
+ <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh
+ <mark@fasheh.com>, Joel Becker	 <jlbec@evilplan.org>, Joseph Qi
+ <joseph.qi@linux.alibaba.com>, Mike Marshall	 <hubcap@omnibond.com>, Martin
+ Brandenburg <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>,
+ Phillip Lougher <phillip@squashfs.org.uk>, Carlos Maiolino	
+ <cem@kernel.org>, Hugh Dickins <hughd@google.com>, Baolin Wang	
+ <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
+  Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo
+ <sj1557.seo@samsung.com>, Yuezhang Mo	 <yuezhang.mo@sony.com>, Alexander
+ Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)"	
+ <willy@infradead.org>, Eric Van Hensbergen <ericvh@kernel.org>, Latchesar
+ Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck	 <linux_oss@crudebyte.com>, Xiubo Li
+ <xiubli@redhat.com>, Ilya Dryomov	 <idryomov@gmail.com>, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker	 <anna@kernel.org>, Steve French
+ <sfrench@samba.org>, Paulo Alcantara	 <pc@manguebit.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>, Shyam Prasad N	 <sprasad@microsoft.com>, Tom
+ Talpey <tom@talpey.com>, Bharath SM	 <bharathsm@microsoft.com>, Hans de
+ Goede <hansg@kernel.org>, 	linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, 	linux-btrfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, 	linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, 	linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, 	linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev, 
+	linux-doc@vger.kernel.org, v9fs@lists.linux.dev,
+ ceph-devel@vger.kernel.org, 	linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, 	samba-technical@lists.samba.org
+Date: Tue, 13 Jan 2026 06:45:17 -0500
+In-Reply-To: <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
+References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+	 <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
+	 <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
+	 <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
+	 <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
+	 <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
+	 <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+	 <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,41 +183,193 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2026-01-12 at 22:51 -0300, Andr=C3=A9 Almeida wrote:
-> This short series removes some duplicated documentation and address some
-> kernel-doc issues:
+On Tue, 2026-01-13 at 09:54 +0100, Christian Brauner wrote:
+> On Mon, Jan 12, 2026 at 09:50:20AM -0500, Jeff Layton wrote:
+> > On Mon, 2026-01-12 at 09:31 -0500, Chuck Lever wrote:
+> > > On 1/12/26 8:34 AM, Jeff Layton wrote:
+> > > > On Fri, 2026-01-09 at 19:52 +0100, Amir Goldstein wrote:
+> > > > > On Thu, Jan 8, 2026 at 7:57=E2=80=AFPM Jeff Layton <jlayton@kerne=
+l.org> wrote:
+> > > > > >=20
+> > > > > > On Thu, 2026-01-08 at 18:40 +0100, Jan Kara wrote:
+> > > > > > > On Thu 08-01-26 12:12:55, Jeff Layton wrote:
+> > > > > > > > Yesterday, I sent patches to fix how directory delegation s=
+upport is
+> > > > > > > > handled on filesystems where the should be disabled [1]. Th=
+at set is
+> > > > > > > > appropriate for v6.19. For v7.0, I want to make lease suppo=
+rt be more
+> > > > > > > > opt-in, rather than opt-out:
+> > > > > > > >=20
+> > > > > > > > For historical reasons, when ->setlease() file_operation is=
+ set to NULL,
+> > > > > > > > the default is to use the kernel-internal lease implementat=
+ion. This
+> > > > > > > > means that if you want to disable them, you need to explici=
+tly set the
+> > > > > > > > ->setlease() file_operation to simple_nosetlease() or the e=
+quivalent.
+> > > > > > > >=20
+> > > > > > > > This has caused a number of problems over the years as some=
+ filesystems
+> > > > > > > > have inadvertantly allowed leases to be acquired simply by =
+having left
+> > > > > > > > it set to NULL. It would be better if filesystems had to op=
+t-in to lease
+> > > > > > > > support, particularly with the advent of directory delegati=
+ons.
+> > > > > > > >=20
+> > > > > > > > This series has sets the ->setlease() operation in a pile o=
+f existing
+> > > > > > > > local filesystems to generic_setlease() and then changes
+> > > > > > > > kernel_setlease() to return -EINVAL when the setlease() ope=
+ration is not
+> > > > > > > > set.
+> > > > > > > >=20
+> > > > > > > > With this change, new filesystems will need to explicitly s=
+et the
+> > > > > > > > ->setlease() operations in order to provide lease and deleg=
+ation
+> > > > > > > > support.
+> > > > > > > >=20
+> > > > > > > > I mainly focused on filesystems that are NFS exportable, si=
+nce NFS and
+> > > > > > > > SMB are the main users of file leases, and they tend to end=
+ up exporting
+> > > > > > > > the same filesystem types. Let me know if I've missed any.
+> > > > > > >=20
+> > > > > > > So, what about kernfs and fuse? They seem to be exportable an=
+d don't have
+> > > > > > > .setlease set...
+> > > > > > >=20
+> > > > > >=20
+> > > > > > Yes, FUSE needs this too. I'll add a patch for that.
+> > > > > >=20
+> > > > > > As far as kernfs goes: AIUI, that's basically what sysfs and re=
+sctrl
+> > > > > > are built on. Do we really expect people to set leases there?
+> > > > > >=20
+> > > > > > I guess it's technically a regression since you could set them =
+on those
+> > > > > > sorts of files earlier, but people don't usually export kernfs =
+based
+> > > > > > filesystems via NFS or SMB, and that seems like something that =
+could be
+> > > > > > used to make mischief.
+> > > > > >=20
+> > > > > > AFAICT, kernfs_export_ops is mostly to support open_by_handle_a=
+t(). See
+> > > > > > commit aa8188253474 ("kernfs: add exportfs operations").
+> > > > > >=20
+> > > > > > One idea: we could add a wrapper around generic_setlease() for
+> > > > > > filesystems like this that will do a WARN_ONCE() and then call
+> > > > > > generic_setlease(). That would keep leases working on them but =
+we might
+> > > > > > get some reports that would tell us who's setting leases on the=
+se files
+> > > > > > and why.
+> > > > >=20
+> > > > > IMO, you are being too cautious, but whatever.
+> > > > >=20
+> > > > > It is not accurate that kernfs filesystems are NFS exportable in =
+general.
+> > > > > Only cgroupfs has KERNFS_ROOT_SUPPORT_EXPORTOP.
+> > > > >=20
+> > > > > If any application is using leases on cgroup files, it must be so=
+me
+> > > > > very advanced runtime (i.e. systemd), so we should know about the
+> > > > > regression sooner rather than later.
+> > > > >=20
+> > > >=20
+> > > > I think so too. For now, I think I'll not bother with the WARN_ONCE=
+().
+> > > > Let's just leave kernfs out of the set until someone presents a rea=
+l
+> > > > use-case.
+> > > >=20
+> > > > > There are also the recently added nsfs and pidfs export_operation=
+s.
+> > > > >=20
+> > > > > I have a recollection about wanting to be explicit about not allo=
+wing
+> > > > > those to be exportable to NFS (nsfs specifically), but I can't se=
+e where
+> > > > > and if that restriction was done.
+> > > > >=20
+> > > > > Christian? Do you remember?
+> > > > >=20
+> > > >=20
+> > > > (cc'ing Chuck)
+> > > >=20
+> > > > FWIW, you can currently export and mount /sys/fs/cgroup via NFS. Th=
+e
+> > > > directory doesn't show up when you try to get to it via NFSv4, but =
+you
+> > > > can mount it using v3 and READDIR works. The files are all empty wh=
+en
+> > > > you try to read them. I didn't try to do any writes.
+> > > >=20
+> > > > Should we add a mechanism to prevent exporting these sorts of
+> > > > filesystems?
+> > > >=20
+> > > > Even better would be to make nfsd exporting explicitly opt-in. What=
+ if
+> > > > we were to add a EXPORT_OP_NFSD flag that explicitly allows filesys=
+tems
+> > > > to opt-in to NFS exporting, and check for that in __fh_verify()? We=
+'d
+> > > > have to add it to a bunch of existing filesystems, but that's fairl=
+y
+> > > > simple to do with an LLM.
+> > >=20
+> > > What's the active harm in exporting /sys/fs/cgroup ? It has to be don=
+e
+> > > explicitly via /etc/exports, so this is under the NFS server admin's
+> > > control. Is it an attack surface?
+> > >=20
+> >=20
+> > Potentially?
+> >=20
+> > I don't see any active harm with exporting cgroupfs. It doesn't work
+> > right via nfsd, but it's not crashing the box or anything.
+> >=20
+> > At one time, those were only defined by filesystems that wanted to
+> > allow NFS export. Now we've grown them on filesystems that just want to
+> > provide filehandles for open_by_handle_at() and the like. nfsd doesn't
+> > care though: if the fs has export operations, it'll happily use them.
+> >=20
+> > Having an explicit "I want to allow nfsd" flag see ms like it might
+> > save us some headaches in the future when other filesystems add export
+> > ops for this sort of filehandle use.
 >=20
-> WARNING: ../include/linux/exportfs.h:289 struct member 'get_uuid' not des=
-cribed in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'map_blocks' not d=
-escribed in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'commit_blocks' no=
-t described in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'permission' not d=
-escribed in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'open' not describ=
-ed in 'export_operations'
-> WARNING: ../include/linux/exportfs.h:289 struct member 'flags' not descri=
-bed in 'export_operations'
+> So we are re-hashing a discussion we had a few months ago (Amir was
+> involved at least).
 >=20
-> ---
-> Andr=C3=A9 Almeida (4):
->       exportfs: Fix kernel-doc output for get_name()
->       exportfs: Mark struct export_operations functions at kernel-doc
->       exportfs: Complete kernel-doc for struct export_operations
->       docs: exportfs: Use source code struct documentation
->=20
->  Documentation/filesystems/nfs/exporting.rst | 42 ++++-------------------=
-------
->  include/linux/exportfs.h                    | 33 ++++++++++++++++-------
->  2 files changed, 28 insertions(+), 47 deletions(-)
-> ---
-> base-commit: 9c7ef209cd0f7c1a92ed61eed3e835d6e4abc66c
-> change-id: 20260112-tonyk-fs_uuid-973d5fdfc76f
->=20
-> Best regards,
 
-LGTM:
+Yep, I was lurking on it, but didn't have a lot of input at the time.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> I don't think we want to expose cgroupfs via NFS that's super weird.
+> It's like remote partial resource management and it would be very
+> strange if a remote process suddenly would be able to move things around
+> in the cgroup tree. So I would prefer to not do this.
+>
+> So my preference would be to really sever file handles from the export
+> mechanism so that we can allow stuff like pidfs and nsfs and cgroupfs to
+> use file handles via name_to_handle_at() and open_by_handle_at() without
+> making them exportable.
+
+Agreed. I think we want to make NFS export be a deliberate opt-in
+decision that filesystem developers make. How we do that is up for
+debate, of course.
+
+An export ops flag would be fairly simple to implement, but it sounds
+like you're thinking that we should split some export_operations into
+struct file_handle_operations and then add a pointer for that to
+super_block (and maybe to export_operations too)?
+
+This would be a good LSF/MM topic, but I'm hoping we can come to a
+consensus before then.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
