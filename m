@@ -1,362 +1,201 @@
-Return-Path: <linux-nfs+bounces-17873-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17874-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0ED4D1F850
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:40:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2D55D1F8CE
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:53:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E356E3047D96
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:40:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B88233051AC6
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:53:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C4937F8D5;
-	Wed, 14 Jan 2026 14:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B717930E84A;
+	Wed, 14 Jan 2026 14:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIV4npLW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZ4y7792"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293722E3E9;
-	Wed, 14 Jan 2026 14:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EBE30C631;
+	Wed, 14 Jan 2026 14:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768401597; cv=none; b=SgCae6lGtJKEDyw3gEAJuORv8p/RNBHqP+S0n0LcC0zQdLRXA9nKOUQFKLZVVVyRCkomBJMs7aiSSMl7tg5q/i7MlyzzGYFutwEXKPG8ZSjhkcXK8m6026bi09TJxiwKnULeXvXIs+eYK1AZj2fgeF9Al1m+LsPjOQ4a96y6Bgk=
+	t=1768402384; cv=none; b=djbru0v6EVlR8oJZyOhXNchLMX8Nb2+hCMsevEpzhsF33yY+mNoek/CfPY2ycMyZuFFztoYxMwPGoUQgPcWvMq5D9Zx0eHExcVfLstvlt1g4eyqgCDfAqz2Hb8rJMamFPRMUR80Rf81X8H3fwq9tjwXeYmRDwcnsuWvAEBlJGsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768401597; c=relaxed/simple;
-	bh=SxP1Qk5rwNRQnVWiD0IFT1q6SAWqJZACXSx+axpfOjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jVtT2CosPuPOBAVaa3tmgiyr/hp93L7K+ztBHRTnUBn/IoCEI8v6wm3lRrb4KctNABzTjTDI0YY/cTEBI7xtXzh3ScNDqOQRvbQZqQkApmy9/wjso8t7GOo2hM6S20JU/ruhid+PBNPykc8RSX8QDKyfSQQuu9LdRsZhLVeURA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIV4npLW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D67C4CEF7;
-	Wed, 14 Jan 2026 14:39:55 +0000 (UTC)
+	s=arc-20240116; t=1768402384; c=relaxed/simple;
+	bh=xKp2mRX639Xrl1hAH25cMUgzI8E+8kaOkrWTmDZ9gJI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YMmya/k8dSEAnCSie24RsVRkb2damN2yIE+Mee+yAAb743cqIc6k7NuTzmHOJGL9Vsmg9quykgnFpBsmjtGImafLlIZyOFVHlr6STsKURmT4mb+NhgG7LwG+onz4B5yKF51v478RU/dfmnl481NpDh8wgu3cvpwu50mK03SdHRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZ4y7792; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A572C4CEF7;
+	Wed, 14 Jan 2026 14:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768401596;
-	bh=SxP1Qk5rwNRQnVWiD0IFT1q6SAWqJZACXSx+axpfOjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eIV4npLWHURm8xwNe3Xf0JuuWnF+Fl5Nti0Nab0iWPwJqOGUIY5tEAwAoYNsywXN9
-	 Eyd9JmmF+bH9nxTVCUtN2AFXdyEn1NPxM2jHU+0p3SsoKdAzY1HvbgsnG6RNneoqpo
-	 bCXPTNb1cMgOP0qwv+I97cypUflUVXML8kiIWRef2+G6qmxZfz4NS7+LHmMmqpNrxh
-	 HTdW814Pl21xi9TC0+KzJYfWhlADAfZlRX+JwsT7eJOe5FO6+rYA/YugP7fpdcX/ol
-	 hXJKZwAIyy8FY2xAo2EVUzXenLLCi6vWUOVglMPFSHVTP6F2P8EFisRpM6GqkTmsUR
-	 jWKT63yJYAlYw==
-From: Chuck Lever <cel@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>
-Cc: <linux-rdma@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 4/4] svcrdma: use bvec-based RDMA read/write API
-Date: Wed, 14 Jan 2026 09:39:48 -0500
-Message-ID: <20260114143948.3946615-5-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260114143948.3946615-1-cel@kernel.org>
-References: <20260114143948.3946615-1-cel@kernel.org>
+	s=k20201202; t=1768402384;
+	bh=xKp2mRX639Xrl1hAH25cMUgzI8E+8kaOkrWTmDZ9gJI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=DZ4y7792kI2/4eE5VVTlEy1lwDXzIzeNr2iEGyaqqLMYTsvcSbwt8Bo54fNz4FJrn
+	 0CjwDI0jj4BZuie48fZ7X8+pogo2m9xuuz5ZkTKqUIWIWMb2aIahe3YDQ1OihTAsyY
+	 /kSWP/W66gnEfc8gA/3bKKHjBBbzoJWIQmXxEVECLl86oIEVeZwN3rPLewdZXpBLNQ
+	 4fSATB6J5Q9DEK8WPOow5IHJKdW2q5kckZv1zfwvc/Rackn2AgyYEGYSEHyTHq4m0k
+	 xzDo6EcWHnQhpPR7xCjV8fvC1tdohxaCsjAOcYPGoYZ1/+HzD4MzDToJBxFdCh/tru
+	 OSjQsEWq0CzTg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 32C9EF4006B;
+	Wed, 14 Jan 2026 09:53:02 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 14 Jan 2026 09:53:02 -0500
+X-ME-Sender: <xms:zq1naRMKLB-vQH7IFdq2onnRojQkLatu-C-zvbT0T438TRsV4tP_4A>
+    <xme:zq1naewv4HVLitXOfBmI7UE_Y2gurDnKovxNhXptVvlpsUh9pO0bvYw7t9SjEJlzT
+    sLy2LuSF83BZ36FBNWcuJt0cuqdzsP2xJUgTbLRAhgnTSmlJulk9m0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdefgeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepfeeipdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehlihhnuhigqdhfvdhfshdquggvvhgvlheslhhishhtshdrshhouhhrtggvfh
+    horhhgvgdrnhgvthdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphht
+    thhopehhihhrohhfuhhmihesmhgrihhlrdhprghrkhhnvghtrdgtohdrjhhppdhrtghpth
+    htohepphgtsehmrghnghhuvggsihhtrdhorhhgpdhrtghpthhtohepsghhrghrrghthhhs
+    mhesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehsphhrrghsrggusehmihgtrh
+    hoshhofhhtrdgtohhmpdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphht
+    thhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehhuhgstggrphesohhmnh
+    hisghonhgurdgtohhm
+X-ME-Proxy: <xmx:zq1naTkRbv9ZdmB81QztDlnhdErqtX9JaPCkPbhVF7A2EF4siXWTKA>
+    <xmx:zq1naQMdIxjnxtmT6iFO3dvBra_cikPt2rs9udjIX9hM3quVc1o8wg>
+    <xmx:zq1naSyL6jo-51wpIBye7R4H1uQkRJTayNYX4HLBSWa4OjKE3tRIjg>
+    <xmx:zq1naen3U34rfR84UbpLxCNVQHHeUcJBEJes8dFgznAte5TxzT705Q>
+    <xmx:zq1nab_H0tCK8W4yIFxCou46A5ZL-g9ECWVg-JI1en9AksHOVnvPNIgI>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F2C75780070; Wed, 14 Jan 2026 09:53:01 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: ArEQL-Tet5yZ
+Date: Wed, 14 Jan 2026 09:52:34 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Amir Goldstein" <amir73il@gmail.com>, "Jeff Layton" <jlayton@kernel.org>
+Cc: "Christoph Hellwig" <hch@infradead.org>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jan Kara" <jack@suse.cz>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Nicolas Pitre" <nico@fluxnic.net>, "Anders Larsen" <al@alarsen.net>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "David Sterba" <dsterba@suse.com>, "Chris Mason" <clm@fb.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Jan Kara" <jack@suse.com>, "Theodore Tso" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Dave Kleikamp" <shaggy@kernel.org>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Phillip Lougher" <phillip@squashfs.org.uk>,
+ "Carlos Maiolino" <cem@kernel.org>, "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sungjong Seo" <sj1557.seo@samsung.com>,
+ "Yuezhang Mo" <yuezhang.mo@sony.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ "Eric Van Hensbergen" <ericvh@kernel.org>,
+ "Latchesar Ionkov" <lucho@ionkov.net>,
+ "Dominique Martinet" <asmadeus@codewreck.org>,
+ "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+ "Xiubo Li" <xiubli@redhat.com>, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Hans de Goede" <hansg@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev,
+ linux-doc@vger.kernel.org, v9fs@lists.linux.dev,
+ ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
+Message-Id: <5a1730f3-30ff-403c-a460-09a81f9616c5@app.fastmail.com>
+In-Reply-To: 
+ <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
+References: <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
+ <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
+ <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
+ <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
+ <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+ <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
+ <aWZcoyQLvbJKUxDU@infradead.org>
+ <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
+ <aWc3mwBNs8LNFN4W@infradead.org>
+ <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
+ <aWeUv2UUJ_NdgozS@infradead.org>
+ <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
+ <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to lease
+ support
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuck Lever <chuck.lever@oracle.com>
 
-Convert svcrdma to the bvec-based RDMA API introduced earlier in
-this series.
 
-The bvec-based RDMA API eliminates the intermediate scatterlist
-conversion step, allowing direct DMA mapping from bio_vec arrays.
-This simplifies the svc_rdma_rw_ctxt structure by removing the
-inline scatterlist and chained SG table management.
+On Wed, Jan 14, 2026, at 9:14 AM, Amir Goldstein wrote:
+> On Wed, Jan 14, 2026 at 2:41=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
+g> wrote:
 
-The structure size reduction is significant: the previous inline
-scatterlist array of RPCSVC_MAXPAGES entries (4KB or more) is
-replaced with a pointer to a dynamically allocated bvec array,
-bringing the fixed structure size down to approximately 100 bytes.
+> Very well then.
+> How about EXPORT_OP_PERSISTENT_HANDLES?
+>
+> This terminology is from the NFS protocol spec and it is also used
+> to describe the same trait in SMB protocol.
+>
+>> The problem there is that we very much do want to keep tmpfs
+>> exportable, but it doesn't have stable handles (per-se).
+>
+> Thinking out loud -
+> It would be misguided to declare tmpfs as
+> EXPORT_OP_PERSISTENT_HANDLES
+> and regressing exports of tmpfs will surely not go unnoticed.
+>
+> How about adding an exportfs option "persistent_handles",
+> use it as default IFF neither options fsid=3D, uuid=3D are used,
+> so that at least when exporting tmpfs, exportfs -v will show
+> "no_persistent_handles" explicitly?
 
-The bvec API handles all device types internally, including iWARP
-devices which require memory registration. No explicit fallback
-path is needed.
+I think we need to be careful. tmpfs filehandles align quite
+well with the traditional definition of persistent filehandles.
+tmpfs filehandles live as long as tmpfs files do, and that is
+all that is required to be considered "persistent".
 
-Signed-off-by: cel@kernel.org
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 115 ++++++++++++++----------------
- 1 file changed, 55 insertions(+), 60 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 310de7a80be5..fac83a78282b 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -5,6 +5,7 @@
-  * Use the core R/W API to move RPC-over-RDMA Read and Write chunks.
-  */
- 
-+#include <linux/bvec.h>
- #include <rdma/rw.h>
- 
- #include <linux/sunrpc/xdr.h>
-@@ -21,29 +22,27 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
-  * Write Work Requests.
-  *
-  * Each WR chain handles a single contiguous server-side buffer,
-- * because scatterlist entries after the first have to start on
-+ * because bio_vec entries after the first have to start on
-  * page alignment. xdr_buf iovecs cannot guarantee alignment.
-  *
-  * Each WR chain handles only one R_key. Each RPC-over-RDMA segment
-  * from a client may contain a unique R_key, so each WR chain moves
-  * up to one segment at a time.
-  *
-- * The scatterlist makes this data structure over 4KB in size. To
-- * make it less likely to fail, and to handle the allocation for
-- * smaller I/O requests without disabling bottom-halves, these
-- * contexts are created on demand, but cached and reused until the
-- * controlling svcxprt_rdma is destroyed.
-+ * These contexts are created on demand, but cached and reused until
-+ * the controlling svcxprt_rdma is destroyed.
-  */
- struct svc_rdma_rw_ctxt {
- 	struct llist_node	rw_node;
- 	struct list_head	rw_list;
- 	struct rdma_rw_ctx	rw_ctx;
- 	unsigned int		rw_nents;
--	unsigned int		rw_first_sgl_nents;
--	struct sg_table		rw_sg_table;
--	struct scatterlist	rw_first_sgl[];
-+	struct bio_vec		*rw_bvec;
- };
- 
-+static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-+				 struct svc_rdma_rw_ctxt *ctxt);
-+
- static inline struct svc_rdma_rw_ctxt *
- svc_rdma_next_ctxt(struct list_head *list)
- {
-@@ -52,10 +51,9 @@ svc_rdma_next_ctxt(struct list_head *list)
- }
- 
- static struct svc_rdma_rw_ctxt *
--svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
-+svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int nr_bvec)
- {
- 	struct ib_device *dev = rdma->sc_cm_id->device;
--	unsigned int first_sgl_nents = dev->attrs.max_send_sge;
- 	struct svc_rdma_rw_ctxt *ctxt;
- 	struct llist_node *node;
- 
-@@ -65,33 +63,35 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 	if (node) {
- 		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
- 	} else {
--		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, first_sgl_nents),
--				    GFP_KERNEL, ibdev_to_node(dev));
-+		ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL,
-+				    ibdev_to_node(dev));
- 		if (!ctxt)
- 			goto out_noctx;
- 
- 		INIT_LIST_HEAD(&ctxt->rw_list);
--		ctxt->rw_first_sgl_nents = first_sgl_nents;
- 	}
- 
--	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
--	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
--				   ctxt->rw_sg_table.sgl,
--				   first_sgl_nents))
-+	ctxt->rw_bvec = kmalloc_array_node(nr_bvec, sizeof(*ctxt->rw_bvec),
-+					   GFP_KERNEL, ibdev_to_node(dev));
-+	if (!ctxt->rw_bvec)
- 		goto out_free;
- 	return ctxt;
- 
- out_free:
--	kfree(ctxt);
-+	if (node)
-+		svc_rdma_put_rw_ctxt(rdma, ctxt);
-+	else
-+		kfree(ctxt);
- out_noctx:
--	trace_svcrdma_rwctx_empty(rdma, sges);
-+	trace_svcrdma_rwctx_empty(rdma, nr_bvec);
- 	return NULL;
- }
- 
- static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
- 				   struct llist_head *list)
- {
--	sg_free_table_chained(&ctxt->rw_sg_table, ctxt->rw_first_sgl_nents);
-+	kfree(ctxt->rw_bvec);
-+	ctxt->rw_bvec = NULL;
- 	llist_add(&ctxt->rw_node, list);
- }
- 
-@@ -105,6 +105,8 @@ static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-  * svc_rdma_destroy_rw_ctxts - Free accumulated R/W contexts
-  * @rdma: transport about to be destroyed
-  *
-+ * Cached contexts have rw_bvec set to NULL because
-+ * __svc_rdma_put_rw_ctxt() frees the bvec array before caching.
-  */
- void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
- {
-@@ -135,9 +137,10 @@ static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
- {
- 	int ret;
- 
--	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp, rdma->sc_port_num,
--			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
--			       0, offset, handle, direction);
-+	ret = rdma_rw_ctx_init_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+				    rdma->sc_port_num,
-+				    ctxt->rw_bvec, ctxt->rw_nents,
-+				    0, offset, handle, direction);
- 	if (unlikely(ret < 0)) {
- 		trace_svcrdma_dma_map_rw_err(rdma, offset, handle,
- 					     ctxt->rw_nents, ret);
-@@ -183,9 +186,9 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- 	while ((ctxt = svc_rdma_next_ctxt(&cc->cc_rwctxts)) != NULL) {
- 		list_del(&ctxt->rw_list);
- 
--		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
--				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
--				    ctxt->rw_nents, dir);
-+		rdma_rw_ctx_destroy_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+					 rdma->sc_port_num,
-+					 ctxt->rw_bvec, ctxt->rw_nents, dir);
- 		__svc_rdma_put_rw_ctxt(ctxt, &free);
- 
- 		ctxt->rw_node.next = first;
-@@ -414,29 +417,25 @@ static int svc_rdma_post_chunk_ctxt(struct svcxprt_rdma *rdma,
- 	return -ENOTCONN;
- }
- 
--/* Build and DMA-map an SGL that covers one kvec in an xdr_buf
-+/* Build a bvec that covers one kvec in an xdr_buf.
-  */
--static void svc_rdma_vec_to_sg(struct svc_rdma_write_info *info,
--			       unsigned int len,
--			       struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_vec_to_bvec(struct svc_rdma_write_info *info,
-+				 unsigned int len,
-+				 struct svc_rdma_rw_ctxt *ctxt)
- {
--	struct scatterlist *sg = ctxt->rw_sg_table.sgl;
--
--	sg_set_buf(&sg[0], info->wi_base, len);
-+	bvec_set_virt(&ctxt->rw_bvec[0], info->wi_base, len);
- 	info->wi_base += len;
--
- 	ctxt->rw_nents = 1;
- }
- 
--/* Build and DMA-map an SGL that covers part of an xdr_buf's pagelist.
-+/* Build a bvec array that covers part of an xdr_buf's pagelist.
-  */
--static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
--				    unsigned int remaining,
--				    struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_pagelist_to_bvec(struct svc_rdma_write_info *info,
-+				      unsigned int remaining,
-+				      struct svc_rdma_rw_ctxt *ctxt)
- {
--	unsigned int sge_no, sge_bytes, page_off, page_no;
-+	unsigned int bvec_idx, sge_bytes, page_off, page_no;
- 	const struct xdr_buf *xdr = info->wi_xdr;
--	struct scatterlist *sg;
- 	struct page **page;
- 
- 	page_off = info->wi_next_off + xdr->page_base;
-@@ -444,21 +443,19 @@ static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
- 	page_off = offset_in_page(page_off);
- 	page = xdr->pages + page_no;
- 	info->wi_next_off += remaining;
--	sg = ctxt->rw_sg_table.sgl;
--	sge_no = 0;
-+	bvec_idx = 0;
- 	do {
- 		sge_bytes = min_t(unsigned int, remaining,
- 				  PAGE_SIZE - page_off);
--		sg_set_page(sg, *page, sge_bytes, page_off);
--
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx], *page, sge_bytes,
-+			      page_off);
- 		remaining -= sge_bytes;
--		sg = sg_next(sg);
- 		page_off = 0;
--		sge_no++;
-+		bvec_idx++;
- 		page++;
- 	} while (remaining);
- 
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = bvec_idx;
- }
- 
- /* Construct RDMA Write WRs to send a portion of an xdr_buf containing
-@@ -535,7 +532,7 @@ static int svc_rdma_iov_write(struct svc_rdma_write_info *info,
- 			      const struct kvec *iov)
- {
- 	info->wi_base = iov->iov_base;
--	return svc_rdma_build_writes(info, svc_rdma_vec_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_vec_to_bvec,
- 				     iov->iov_len);
- }
- 
-@@ -559,7 +556,7 @@ static int svc_rdma_pages_write(struct svc_rdma_write_info *info,
- {
- 	info->wi_xdr = xdr;
- 	info->wi_next_off = offset - xdr->head[0].iov_len;
--	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_bvec,
- 				     length);
- }
- 
-@@ -734,29 +731,27 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- {
- 	struct svcxprt_rdma *rdma = svc_rdma_rqst_rdma(rqstp);
- 	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
--	unsigned int sge_no, seg_len, len;
-+	unsigned int bvec_idx, nr_bvec, seg_len, len;
- 	struct svc_rdma_rw_ctxt *ctxt;
--	struct scatterlist *sg;
- 	int ret;
- 
- 	len = segment->rs_length;
--	sge_no = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
--	ctxt = svc_rdma_get_rw_ctxt(rdma, sge_no);
-+	nr_bvec = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
-+	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_bvec);
- 	if (!ctxt)
- 		return -ENOMEM;
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = nr_bvec;
- 
--	sg = ctxt->rw_sg_table.sgl;
--	for (sge_no = 0; sge_no < ctxt->rw_nents; sge_no++) {
-+	for (bvec_idx = 0; bvec_idx < ctxt->rw_nents; bvec_idx++) {
- 		seg_len = min_t(unsigned int, len,
- 				PAGE_SIZE - head->rc_pageoff);
- 
- 		if (!head->rc_pageoff)
- 			head->rc_page_count++;
- 
--		sg_set_page(sg, rqstp->rq_pages[head->rc_curpage],
--			    seg_len, head->rc_pageoff);
--		sg = sg_next(sg);
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx],
-+			      rqstp->rq_pages[head->rc_curpage],
-+			      seg_len, head->rc_pageoff);
- 
- 		head->rc_pageoff += seg_len;
- 		if (head->rc_pageoff == PAGE_SIZE) {
--- 
-2.52.0
-
+--=20
+Chuck Lever
 
