@@ -1,180 +1,150 @@
-Return-Path: <linux-nfs+bounces-17840-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17841-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D368ED1D9BC
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 10:39:36 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0561DD1DF69
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 11:19:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 88DC4304BD2E
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 09:34:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7812430B5AA1
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 10:12:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 411C0389455;
-	Wed, 14 Jan 2026 09:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A67C38A728;
+	Wed, 14 Jan 2026 10:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4R9ZtWz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0GWDWjw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADA538944C
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 09:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7A438A9C2
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 10:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768383261; cv=none; b=Dp+PQi+5hBPMiC51pIE0lllid6hkGLmK40jinXBMHMPpZWilVfUk6mfhoBJPGcuHxWNY1bylvlOw7DQ5FSQ5QqGcXpFyM3Hk7qZRNIuetnWXGNiJT8y2eHVnxxdyL7DkslDctLrr3ruKx1h4KWEsBkb17VIFiC3Lw9mmbfkAyo4=
+	t=1768385552; cv=none; b=MxJWneBrbnDc46dxsEcwNXqg7gAe2gbEW0x8m78Z6ldWcdHby9iOWlhw0H2Pv+o6souwFYynP+ogejLB59KYnZbQKF2EHQ9lR3pma+L6Q7l89GQ9tpUdkGZ8sPOaFUkF1PF+x1Japh6BkBGIE3XqiQntY8wm59R4r8bnWi9snX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768383261; c=relaxed/simple;
-	bh=1et5czBbAtdqXmgJG4CYdcCCm2KxQaiqpQUINwrSInw=;
+	s=arc-20240116; t=1768385552; c=relaxed/simple;
+	bh=1Va9HwjDwq32lvAhriwO6nDAQNuts6JUwi90oTJOako=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JCSxhdmoPCmagTWEa4Rp8dr1cf0xRjFzS+qg04UqvuDzXS+fQ5JMw2es69tAqqwwJXz05D+vkL4TkDWe9464Bxdre92GVzWdZJMmeZRIgFm6gmOoVTsoFgD58EsVV+20blHLFJnA8WJduuT9rvaqJDj5J7N4uh80wKIQvSvdPvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4R9ZtWz; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=vFloXZHjYtVlbcj+EAjmkZr8Vd45+qNFo+FxnrqRh5oPQoJYif4JvKOFcwts/am1hSEEZvdHdixY3TEmt6eJ4AULiSiXe1IA3cptoerrJzo4xhoToxEePzGzLPwn2QGNgDVXZg1/ohKPc7nbP2qB5QXIz4eeDwI27Qjms+rHSA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0GWDWjw; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b86f3e88d4dso533682266b.0
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 01:34:18 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64d30dc4ed7so16763289a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 02:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768383257; x=1768988057; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768385549; x=1768990349; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cV5qgJhr5qbvOPleJHxrmxwzjsLTEkwpqcVKyAw90ng=;
-        b=l4R9ZtWzmll6jo5HBanFLByjlkqXQwG+AsCW4DICvdDo4WF3sDvpj2eJOv3dVPo/iF
-         B9OPR6yzN5WOr9LnfVQVQPIaZ5dKfwxv8IoCz8sH0q4qgpIQmlJCiHMiUEgcCYj9cDi3
-         LUVEmz63xFT6TSr8KIUhYDMH7bf7fdIC3g1PgC+HFxSzGLjU2b9M5xwvJkmhU9BDl/Ac
-         KA0NrfmQQjuFePgQk3BZMgWoAsJUycNFL5UQClkJzuN2LaTt6y/8PyOUMhcfHveom8Vj
-         eUcATSwIrI17h12uKrpWWvmBOsQosxRHCi9c46TCRMyvB+pTweoBAZ9/mhr3kiRYuQZf
-         09Vg==
+        bh=u+HzLLUUKSv2yBuAl8H2ycC6BaMQEOnY1RWDw/qbh/E=;
+        b=D0GWDWjwU7OJ/4/VVBouMgukCNGKVkzv7ClFB4kBC6nXsk+XPr792LtaLB60kz63Sk
+         fSVwCAe2eOzhkpJFz1Lh0gvg9zsqdkbADBqKpAblP8uoq9nhd64r4ZGdN06Ig9slrnHw
+         VuSBf21exwtBRmMfVbtZ331eoCJXdOXg9krgTGWucPa8/Mq2IIbIhRQWx1jOk2Bfrw/+
+         HDlsJ+9uLt11bVNQmyXFA4pVgI432q9HCPZvWqaPhBb206bV6Ely0uPU4l1WDY9JFMWA
+         5c6t5GyxSDSDDLwVDIM2tXVJdqw9QwwdjveSzKCKkFY81GK4qG4G8X4ZpVV5+A5AV7QN
+         WwRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768383257; x=1768988057;
+        d=1e100.net; s=20230601; t=1768385549; x=1768990349;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cV5qgJhr5qbvOPleJHxrmxwzjsLTEkwpqcVKyAw90ng=;
-        b=N8IWs2wNFNO/xzc6nkVE7IT5mJV/pfllasoAlTsJM419b0IyQxT0xjrMXCvUrOOCnY
-         gNMZDnazm5mIv5elu606M2PPwHLnEO0H1GUZRJkanEDgtvY1t9xXYpam+GKF6u9Av+zQ
-         LLb6f0uNfQnUnCXzgpsc8MlDv5ElTvdUdL+oFDU7RYvPeb51mZLEsqHDCCEYZjezv2Dl
-         Kct8TR8YOzBDNJJ6UnxALAkTw1607BMMiTe9j5YWfaV45zQoxhl5p75HLsUIDDCGUA2E
-         F2zgR3/pDRw1ubD71TgHJCWCnQ+oriIjNI99sjgr8BSjI2cO0QKOsx2Oo4FlTTbQsML9
-         SnPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZVU74onDPX0vu6GIyPLqm/Yozg3eB7Ezi6PHqTgvlrcxjAK3yasyTFmVSxGuk6QXwB7a5kEgabfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3a+b8jPrOQ1EVJGn1Sem2mge7lmyosDqZWZSpUhO+Aj8pOJTP
-	v/rv+9xxU0z0SbpSoiqIc+wUrlw04m3a/EdPsDwZzZ8zcqs34+duU+gWpNGfruGCySWFJNBMuca
-	XJvpzRzJbNy2KfC/7oh+EkldEEBnK4QQ=
-X-Gm-Gg: AY/fxX7rFh9zaqjIkF8uF9sMAOemeixC9gFUinND7ERKdsQUk+8bQ6gTmd7Yn3uI4uy
-	vIBjgl3V9rXv6+FMRYNmLDUxdz15bloMbhC8wzZJQjjGRtlSML9fLG3LnhV/q6ATby3ZAnWsU3Q
-	YHsbzp6PJcIShSKkOo0O2yfta5dhQu9QuMEYDVN5XiE4J4U5CfDnqmFMyMRkMKWiw5OaVBTxlcD
-	4K1PA2uHw10Y1F+kfC8P9/QUXlE9bHVVlMS1GyQA3P3e9rOqKZcO+RL4WQrGbOJhuHsyrdan5BO
-	xaVZFJn6RzGHbXAIpOTM4qWUxBd9Ms4PFV63BhsS
-X-Received: by 2002:a17:906:6a02:b0:b87:25a6:a906 with SMTP id
- a640c23a62f3a-b87677e0680mr108491266b.46.1768383255915; Wed, 14 Jan 2026
- 01:34:15 -0800 (PST)
+        bh=u+HzLLUUKSv2yBuAl8H2ycC6BaMQEOnY1RWDw/qbh/E=;
+        b=N32urB1lOtBfRvIXmWdx3PLQXoVnDbA9iC3yjliuootMPLzPDXjiJRNAMr/o9wt+Z+
+         QffKbPUhC70jcVTqZSrVdUDzisbUZ0n+SKW/rHc+4Y5rqoUmSTH10ppLSDmKFT0F68/J
+         tXcwQQ7gPlv1kRv70SLjWy9NFtqrWNrv/e3PRZYs9US7754PPSLG44+jlu4S0KOwJ4uG
+         OHwPwLaCJvIxO13mfxyk3sO7Ir8SB+NrkDCKZlne6krjzTdnePVEFhPyGktGBgC7DbSn
+         VZQrUsAww9MvH1nwIgKRtZRyiDi+Uv5ILZKYCI2WRjZDk5brZSz1fUz1w4qzoYhXX9Tj
+         LCTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlinBsCxKBZ62AZKcZneNGNssDbNwwdiDJq68HlTPu1WvTmCqaBmV/qU5/7qVYkwcSG9FG8N/UXhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9h8mGZ353mmZjAp9/8w11120UusAZHX5EkjXZLJXGlnNawimf
+	lbUP9EM+FralpDxm1wevGPjUdJs7TlsK4v9/P3W4UGQOtxYRQDpjwTtJborAzsOxuJihxS1wSyR
+	ByD5LdJzYVEsRkOzHRRO9+QMuhF6YdzQ=
+X-Gm-Gg: AY/fxX5vwUvXc+n/gfJXn61FdKJRXrcnebCPYTd2snk6m7Kc8vPLhfMB/syRbys41NM
+	F/P7w7U6pmPFn8Cbd1L7w/a4+Q5yIUzzVf8waActXvaHu8rykTW06MUSdMLhSzy/mFJtmQumPd0
+	cMY10phdogh1t49C2nheM3y0LgWxr7pLUQAarRp8irrPnmLIDA1A/Dt9XJ5xu9++bZw4r58lk3w
+	fL0bdaZxdU1r03nieBgSSzvYdQYCCdWSC/mFox0O3q75lDMYwkGU3yR7VnW2SbS+Ww3PlmrTvFi
+	p1rQeEMptesnLBLPNdstSwfrbC3tYA==
+X-Received: by 2002:a05:6402:40c7:b0:64b:5c4e:e695 with SMTP id
+ 4fb4d7f45d1cf-653ec45d439mr1545967a12.29.1768385548495; Wed, 14 Jan 2026
+ 02:12:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
- <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
- <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
- <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
- <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
- <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com> <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
- <20260113-mondlicht-raven-82fc4eb70e9d@brauner> <aWZcoyQLvbJKUxDU@infradead.org>
- <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org> <aWc3mwBNs8LNFN4W@infradead.org>
-In-Reply-To: <aWc3mwBNs8LNFN4W@infradead.org>
+References: <20260114-tonyk-get_disk_uuid-v1-0-e6a319e25d57@igalia.com>
+ <20260114-tonyk-get_disk_uuid-v1-1-e6a319e25d57@igalia.com>
+ <20260114061028.GF15551@frogsfrogsfrogs> <20260114062424.GA10805@lst.de>
+In-Reply-To: <20260114062424.GA10805@lst.de>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 14 Jan 2026 10:34:04 +0100
-X-Gm-Features: AZwV_QjTKvsgUAM6BTw2rpBHAs0ymZXhE-dNbh6dt2ll27JlZs1InITXkkYC5Xs
-Message-ID: <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>, 
-	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
-	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
-	"Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	Yuezhang Mo <yuezhang.mo@sony.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, Xiubo Li <xiubli@redhat.com>, 
-	Ilya Dryomov <idryomov@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, 
+Date: Wed, 14 Jan 2026 11:12:17 +0100
+X-Gm-Features: AZwV_QiTt3Px0boynH_rJNetCq_d0KXad0zWlO9wTho0QtDj_6Kcir8fJr34DLs
+Message-ID: <CAOQ4uxjUKnD3-PHW5fOiTCeFVEvLkbVuviLAQc7tsKrN36Rm+A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] exportfs: Rename get_uuid() to get_disk_uuid()
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Carlos Maiolino <cem@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, linux-mm@kvack.org, 
-	gfs2@lists.linux.dev, linux-doc@vger.kernel.org, v9fs@lists.linux.dev, 
-	ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
+	linux-unionfs@vger.kernel.org, kernel-dev@igalia.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 14, 2026 at 7:28=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
+On Wed, Jan 14, 2026 at 7:24=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrot=
+e:
 >
-> On Tue, Jan 13, 2026 at 12:06:42PM -0500, Jeff Layton wrote:
-> > Fair point, but it's not that hard to conceive of a situation where
-> > someone inadvertantly exports cgroupfs or some similar filesystem:
+> On Tue, Jan 13, 2026 at 10:10:28PM -0800, Darrick J. Wong wrote:
+> > On Wed, Jan 14, 2026 at 01:31:41AM -0300, Andr=C3=A9 Almeida wrote:
+> > > To make clear which UUID is being returned, rename get_uuid() to
+> > > get_disk_uuid(). Expand the function documentation to note that this
+> > > function can be also used for filesystem that supports cloned devices
+> > > that might have different UUIDs for userspace tools, while having the
+> > > same UUID for internal usage.
+> >
+> > I'm not sure what a "disk uuid" is -- XFS can store two of them in the
+> > ondisk superblock: the admin-modifiable one that blkid reports, and the
+> > secret one that's stamped in all the metadata and cannot change.
 >
-> Sure.  But how is this worse than accidentally exporting private data
-> or any other misconfiguration?
+> It isn't.  Totally independent of the rest of the discussion, the
+> get_uuid exportfs operation is not useful for anything but the original
+> pNFS block layout.  Which is actually pretty broken and should be slowly
+> phased out.
+>
+> > IIRC XFS only shares the user-visible UUID, but they're both from the
+> > disk.   Also I'm not sure what a non-disk filesystem is supposed to
+> > provide here?
+>
+> Yeah.
 >
 
-My POV is that it is less about security (as your question implies), and
-more about correctness.
+OK. I agree that "disk uuid" is not the best name, but there is a concept
+here, which is a uuid that helps to identify the domain of the file handle.
 
-The special thing about NFS export, as opposed to, say, ksmbd, is
-open by file handle, IOW, the export_operations.
+In the context of overlayfs index and "origin" xattr, this is exactly what =
+is
+needed - to validate that the object's copy up source is reliable for
+the generation of a unique overlayfs object id.
 
-I perceive this as a very strange and undesired situation when NFS
-file handles do not behave as persistent file handles.
+The domain of the file handles is invariant to brtfs clones/snapshots.
+Specifically, for btrfs, file handles contain an id of the snapshot,
+so the domain of btrfs file handles is logically the uuid of the root fs.
 
-FUSE will gladly open a completely different object, sometimes
-a different object type from an NFS client request after server restart.
+TBH, I am not sure if the file handle domain is invariant to XFS admin
+change of uuid. How likely it is to get an identical file handles for two
+different objects, with XFS fs which have diverged by an LVM clone?
+I think it's quite likely.
 
-I suppose that the same could happen with tmpfs and probably some
-other fs.
+Naming is hard - we could maybe use get_domain_uuid() and document
+what it means.
 
-This problem is old and welded into the system, but IMO adding more
-kernel filesystems, which consciously export file handles that do not
-survive server reboot does not serve users interests well.
-
-One could claim that this is a bug that can be fixed by adding boot_id
-to said file handles, but why fix something that nobody asked for?
-
-cgroupfs, pidfs, nsfs, all gained open_by_handle_at() capability for
-a known reason, which was NOT NFS export.
-
-If the author of open_by_handle_at() support (i.e. brauner) does not
-wish to imply that those fs should be exported to NFS, why object?
-
-We could have the opt-in/out of NFS export fixes per EXPORT_OP_
-flags and we could even think of allowing admin to make this decision
-per vfsmount (e.g. for cgroupfs).
-
-In any case, I fail to see how objecting to the possibility of NFS export
-opt-out serves anyone.
+Whether or not we should repurpose the existing get_uuid() I don't
+know - that depends whether pNFS expects the same UUID from an
+"xfs clone" as overlayfs would.
 
 Thanks,
 Amir.
