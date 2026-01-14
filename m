@@ -1,201 +1,168 @@
-Return-Path: <linux-nfs+bounces-17874-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17875-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2D55D1F8CE
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EBB5D1F8F8
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:56:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B88233051AC6
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:53:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 69A673025584
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:53:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B717930E84A;
-	Wed, 14 Jan 2026 14:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7502DCF61;
+	Wed, 14 Jan 2026 14:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZ4y7792"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5WabPJg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EBE30C631;
-	Wed, 14 Jan 2026 14:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCA3238D42
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 14:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768402384; cv=none; b=djbru0v6EVlR8oJZyOhXNchLMX8Nb2+hCMsevEpzhsF33yY+mNoek/CfPY2ycMyZuFFztoYxMwPGoUQgPcWvMq5D9Zx0eHExcVfLstvlt1g4eyqgCDfAqz2Hb8rJMamFPRMUR80Rf81X8H3fwq9tjwXeYmRDwcnsuWvAEBlJGsw=
+	t=1768402429; cv=none; b=RPE+LKAYMyP5KsdbSk6Tt1NCexiwd4jGDeQV6L5VTYJzNfvJQ/2QTcX8loPO46d0IpITWPOEHY3K5RQUhJoSOteST+q5x5Pm0E3hwI6ttIl+AKFhG2xpCfHyLxux8FAOSXxcIigah5SATDxeikjmzqV93tdqGiOsDSJS0/rzXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768402384; c=relaxed/simple;
-	bh=xKp2mRX639Xrl1hAH25cMUgzI8E+8kaOkrWTmDZ9gJI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YMmya/k8dSEAnCSie24RsVRkb2damN2yIE+Mee+yAAb743cqIc6k7NuTzmHOJGL9Vsmg9quykgnFpBsmjtGImafLlIZyOFVHlr6STsKURmT4mb+NhgG7LwG+onz4B5yKF51v478RU/dfmnl481NpDh8wgu3cvpwu50mK03SdHRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZ4y7792; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A572C4CEF7;
-	Wed, 14 Jan 2026 14:53:03 +0000 (UTC)
+	s=arc-20240116; t=1768402429; c=relaxed/simple;
+	bh=dKXqtMDrfowS5PM8F4WnvcqTFqJ9faO1wS2Eh9+ozYM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Jja/3eqXmaMzM/yOdvVOSbRLN1QC/+Ta0Xwj9p5LHAb4EAMS+pxMxUUNr1zHSWP9MKlHq2OLl5/g1KOVpV9FGxFhaQhM/mHz0kXJF/xrHIZiXbWDGt5TYALtJIo7uGx5+ApknSsg4+n66mWGsXtOo7xyNCSeZ9L06XSwZz8Fxrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5WabPJg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70F07C4CEF7;
+	Wed, 14 Jan 2026 14:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768402384;
-	bh=xKp2mRX639Xrl1hAH25cMUgzI8E+8kaOkrWTmDZ9gJI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=DZ4y7792kI2/4eE5VVTlEy1lwDXzIzeNr2iEGyaqqLMYTsvcSbwt8Bo54fNz4FJrn
-	 0CjwDI0jj4BZuie48fZ7X8+pogo2m9xuuz5ZkTKqUIWIWMb2aIahe3YDQ1OihTAsyY
-	 /kSWP/W66gnEfc8gA/3bKKHjBBbzoJWIQmXxEVECLl86oIEVeZwN3rPLewdZXpBLNQ
-	 4fSATB6J5Q9DEK8WPOow5IHJKdW2q5kckZv1zfwvc/Rackn2AgyYEGYSEHyTHq4m0k
-	 xzDo6EcWHnQhpPR7xCjV8fvC1tdohxaCsjAOcYPGoYZ1/+HzD4MzDToJBxFdCh/tru
-	 OSjQsEWq0CzTg==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 32C9EF4006B;
-	Wed, 14 Jan 2026 09:53:02 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 14 Jan 2026 09:53:02 -0500
-X-ME-Sender: <xms:zq1naRMKLB-vQH7IFdq2onnRojQkLatu-C-zvbT0T438TRsV4tP_4A>
-    <xme:zq1naewv4HVLitXOfBmI7UE_Y2gurDnKovxNhXptVvlpsUh9pO0bvYw7t9SjEJlzT
-    sLy2LuSF83BZ36FBNWcuJt0cuqdzsP2xJUgTbLRAhgnTSmlJulk9m0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdefgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepfeeipdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehlihhnuhigqdhfvdhfshdquggvvhgvlheslhhishhtshdrshhouhhrtggvfh
-    horhhgvgdrnhgvthdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphht
-    thhopehhihhrohhfuhhmihesmhgrihhlrdhprghrkhhnvghtrdgtohdrjhhppdhrtghpth
-    htohepphgtsehmrghnghhuvggsihhtrdhorhhgpdhrtghpthhtohepsghhrghrrghthhhs
-    mhesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehsphhrrghsrggusehmihgtrh
-    hoshhofhhtrdgtohhmpdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphht
-    thhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehhuhgstggrphesohhmnh
-    hisghonhgurdgtohhm
-X-ME-Proxy: <xmx:zq1naTkRbv9ZdmB81QztDlnhdErqtX9JaPCkPbhVF7A2EF4siXWTKA>
-    <xmx:zq1naQMdIxjnxtmT6iFO3dvBra_cikPt2rs9udjIX9hM3quVc1o8wg>
-    <xmx:zq1naSyL6jo-51wpIBye7R4H1uQkRJTayNYX4HLBSWa4OjKE3tRIjg>
-    <xmx:zq1naen3U34rfR84UbpLxCNVQHHeUcJBEJes8dFgznAte5TxzT705Q>
-    <xmx:zq1nab_H0tCK8W4yIFxCou46A5ZL-g9ECWVg-JI1en9AksHOVnvPNIgI>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F2C75780070; Wed, 14 Jan 2026 09:53:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1768402429;
+	bh=dKXqtMDrfowS5PM8F4WnvcqTFqJ9faO1wS2Eh9+ozYM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=o5WabPJgqYxHaQXjn4NV4ZslMafXrHcGWrM8vKdV8ieRaAilLzRj0l4co/eUuRluo
+	 0bIggp4MdmM+IDVHLjr6N7ZxQJqLjKQ1guqF/0j1Aefo6lPwAwG9KgQn1E4BN4k0vM
+	 zv54PEE4ODbuHi/SIqRQkiOISB444wQey7zYwMZSpm/PYa6wpBA1N39xOngVaROUju
+	 FTQ6ra1tPNO4hdRSpBcwv2/tbY5L/jTdNKKqGJJreyrxI77rlGQobfwFQvkaY7AjrQ
+	 WcQYbLbZT4fm2KyuFCKDxVWzamt0f8CI2IN0JUGvajQJoa7m4VjrjYQyy7zpEbGY2X
+	 2T1Gd0Gh2HwHg==
+Message-ID: <a78cf4e4274f8b4e69a3c7bf3aa778ce7cc25f72.camel@kernel.org>
+Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
+From: Trond Myklebust <trondmy@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>, Benjamin
+ Coddington <bcodding@hammerspace.com>, Eric Biggers <ebiggers@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Anna
+ Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+Date: Wed, 14 Jan 2026 09:53:47 -0500
+In-Reply-To: <c8ad96c5-1da1-4aeb-8999-2a8b63021a23@kernel.org>
+References: <1e92e144-d436-44dd-956f-3125403dfdc8@kernel.org>
+	 <ECE1341F-BA8A-4DC7-BC9D-BDD6F10F6013@hammerspace.com>
+	 <dc3d8ff3-f68f-4200-a546-605f0f2e3611@kernel.org>
+	 <A3F6E0BB-523F-4B99-B583-D6D80E9D7BFB@hammerspace.com>
+	 <bf09e1e1-d397-405b-aef8-38c44e6c2840@kernel.org>
+	 <BCFA2167-C883-40C8-A718-10B481533943@hammerspace.com>
+	 <1c5569bd-fcac-4b55-8e84-3fbc096cdff3@kernel.org>
+	 <86B6E978-C67B-4C78-9E5F-6F171FD62F3E@hammerspace.com>
+	 <e711e1cb-eb8a-4723-a9af-39ce7d9658dd@app.fastmail.com>
+	 <C79886E5-3064-4202-9813-0D79091F78DF@hammerspace.com>
+	 <20260114004205.GC2178@quark>
+	 <834DBCBA-1CD8-4BA9-81E8-09E621B3F176@hammerspace.com>
+	 <a092bf21127a679a32ac9f9c476e7d070667c36b.camel@kernel.org>
+	 <c8ad96c5-1da1-4aeb-8999-2a8b63021a23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ArEQL-Tet5yZ
-Date: Wed, 14 Jan 2026 09:52:34 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Amir Goldstein" <amir73il@gmail.com>, "Jeff Layton" <jlayton@kernel.org>
-Cc: "Christoph Hellwig" <hch@infradead.org>,
- "Christian Brauner" <brauner@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jan Kara" <jack@suse.cz>,
- "Luis de Bethencourt" <luisbg@kernel.org>,
- "Salah Triki" <salah.triki@gmail.com>,
- "Nicolas Pitre" <nico@fluxnic.net>, "Anders Larsen" <al@alarsen.net>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "David Sterba" <dsterba@suse.com>, "Chris Mason" <clm@fb.com>,
- "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
- "Sandeep Dhavale" <dhavale@google.com>,
- "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
- "Jan Kara" <jack@suse.com>, "Theodore Tso" <tytso@mit.edu>,
- "Andreas Dilger" <adilger.kernel@dilger.ca>,
- "Jaegeuk Kim" <jaegeuk@kernel.org>,
- "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- "David Woodhouse" <dwmw2@infradead.org>,
- "Richard Weinberger" <richard@nod.at>,
- "Dave Kleikamp" <shaggy@kernel.org>,
- "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
- "Viacheslav Dubeyko" <slava@dubeyko.com>,
- "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
- "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
- "Joseph Qi" <joseph.qi@linux.alibaba.com>,
- "Mike Marshall" <hubcap@omnibond.com>,
- "Martin Brandenburg" <martin@omnibond.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Phillip Lougher" <phillip@squashfs.org.uk>,
- "Carlos Maiolino" <cem@kernel.org>, "Hugh Dickins" <hughd@google.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Sungjong Seo" <sj1557.seo@samsung.com>,
- "Yuezhang Mo" <yuezhang.mo@sony.com>,
- "Alexander Aring" <alex.aring@gmail.com>,
- "Andreas Gruenbacher" <agruenba@redhat.com>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- "Eric Van Hensbergen" <ericvh@kernel.org>,
- "Latchesar Ionkov" <lucho@ionkov.net>,
- "Dominique Martinet" <asmadeus@codewreck.org>,
- "Christian Schoenebeck" <linux_oss@crudebyte.com>,
- "Xiubo Li" <xiubli@redhat.com>, "Ilya Dryomov" <idryomov@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>, "Tom Talpey" <tom@talpey.com>,
- "Bharath SM" <bharathsm@microsoft.com>,
- "Hans de Goede" <hansg@kernel.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org,
- jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org,
- ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev,
- linux-doc@vger.kernel.org, v9fs@lists.linux.dev,
- ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Message-Id: <5a1730f3-30ff-403c-a460-09a81f9616c5@app.fastmail.com>
-In-Reply-To: 
- <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
-References: <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
- <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
- <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
- <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
- <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
- <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
- <aWZcoyQLvbJKUxDU@infradead.org>
- <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
- <aWc3mwBNs8LNFN4W@infradead.org>
- <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
- <aWeUv2UUJ_NdgozS@infradead.org>
- <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
- <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to lease
- support
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
+On Wed, 2026-01-14 at 09:19 -0500, Chuck Lever wrote:
+> On 1/14/26 8:19 AM, Jeff Layton wrote:
+> > On Wed, 2026-01-14 at 07:39 -0500, Benjamin Coddington wrote:
+> > > On 13 Jan 2026, at 19:42, Eric Biggers wrote:
+> > >=20
+> > > > On Tue, Jan 13, 2026 at 05:33:37PM -0500, Benjamin Coddington
+> > > > wrote:
+> > > > > > - Individual filehandles are small, on the order of 32- or
+> > > > > > 64-bytes
+> > > > > >=20
+> > > > > > - But there are a lot of filehandles, perhaps billions,
+> > > > > > that would
+> > > > > > =C2=A0 be encrypted or signed by the same key
+> > > > > >=20
+> > > > > > - The filehandle plaintext is predictable
+> > > > >=20
+> > > > > Mostly, yes.=C2=A0 I think a strength of the AES-CBC
+> > > > > implementation is that each
+> > > > > 16-byte block is hashed with the results of the previous
+> > > > > block.=C2=A0 So, by
+> > > > > starting with the fileid (unique per-file) and then
+> > > > > proceeding to the less
+> > > > > unique block (fsid + fileid again), the total entropy for
+> > > > > each encrypted
+> > > > > filehandle is increased.
+> > > >=20
+> > > > This sort of comment shows that the choice of AES-CBC still
+> > > > isn't well
+> > > > motivated.=C2=A0 AES-CBC is an unauthenticated encryption algorithm
+> > > > that
+> > > > protects a message's confidentiality.=C2=A0 It isn't a hash
+> > > > function, it
+> > > > isn't a MAC, and it doesn't protect a message's authenticity.=C2=A0
+> > > > AES-CBC
+> > > > will successfully decrypt any ciphertext, even one tampered
+> > > > with by an
+> > > > attacker, into some plaintext.=C2=A0 You may be confusing AES-CBC
+> > > > with
+> > > > AES-CBC-MAC.
+> > >=20
+> > > I'm not confusing them, and you're absolutely correct - if an
+> > > encrypted
+> > > filehandle were tampered with we'd be relying on the decoded
+> > > filehandle
+> > > being garbage - the routines to decode the fsid and fileid would
+> > > return
+> > > errors, because a filehandle's data is meaningful and well-
+> > > structured.
+> > >=20
+> > > That's a big difference from what using a MAC would provide -
+> > > immediate
+> > > knowledge the filehandle had been modified.
+> > >=20
+> >=20
+> > I think a MAC is a better idea here too:
+> >=20
+> > One thing that people keep pointing out is that you could
+> > potentially
+> > sniff traffic and just nab the encrypted filehandles, and match
+> > them
+> > with inode numbers, etc.
+> >=20
+> > If you append a MAC though and check it on the server, you could
+> > give
+> > out filehandles that are limited-use. For instance, with v4, you
+> > could
+> > salt the hash with the long-form clientid and ensure that that
+> > filehandle is only usable by that client. Anyone else gets back
+> > NFS4ERR_STALE.
+> >=20
+> > Couple that with TLS and you'd have a pretty decent guard against
+> > sniffing and filehandle guessing attacks.
+>=20
+> A sniffing attack is easier than guessing a file handle or
+> constructing
+> one. Neither encrypting a filehandle nor signing it protects against
+> sniffing attacks. But using full in-transit encryption does, and we
+> have that implemented already.
+>=20
+> With full in-transit encryption, the plaintext is much much less
+> predictable as well.
+>=20
+> Just sayin'
+>=20
 
-
-On Wed, Jan 14, 2026, at 9:14 AM, Amir Goldstein wrote:
-> On Wed, Jan 14, 2026 at 2:41=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-
-> Very well then.
-> How about EXPORT_OP_PERSISTENT_HANDLES?
->
-> This terminology is from the NFS protocol spec and it is also used
-> to describe the same trait in SMB protocol.
->
->> The problem there is that we very much do want to keep tmpfs
->> exportable, but it doesn't have stable handles (per-se).
->
-> Thinking out loud -
-> It would be misguided to declare tmpfs as
-> EXPORT_OP_PERSISTENT_HANDLES
-> and regressing exports of tmpfs will surely not go unnoticed.
->
-> How about adding an exportfs option "persistent_handles",
-> use it as default IFF neither options fsid=3D, uuid=3D are used,
-> so that at least when exporting tmpfs, exportfs -v will show
-> "no_persistent_handles" explicitly?
-
-I think we need to be careful. tmpfs filehandles align quite
-well with the traditional definition of persistent filehandles.
-tmpfs filehandles live as long as tmpfs files do, and that is
-all that is required to be considered "persistent".
-
+Protection against sniffing and protection against spoofing are two
+completely orthogonal problems. Please don't muddle the already murky
+waters in this thread by confusing the two.
 
 --=20
-Chuck Lever
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
