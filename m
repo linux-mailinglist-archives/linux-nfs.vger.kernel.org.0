@@ -1,167 +1,89 @@
-Return-Path: <linux-nfs+bounces-17887-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17888-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCC81D20F39
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 20:02:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DCD3D210C7
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 20:33:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0E083300FEE3
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 19:01:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 87B0D3029D19
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 19:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C7F342173;
-	Wed, 14 Jan 2026 19:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826D32C08D0;
+	Wed, 14 Jan 2026 19:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmSzr7lh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cK1KQ8Lx"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD95341653;
-	Wed, 14 Jan 2026 19:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF0823184F;
+	Wed, 14 Jan 2026 19:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768417304; cv=none; b=teNQ/v3HHl+15alRpgDX59rbM6quxMHjmr5D2sqbF8bJhXi9Ke7MT4FcjlF1s5UCOEK44pCIqBb8G+g5y8gkTR1LQgDgQY6fl5yoQ8b6gjRPSlnXeZCZMeC3thUlcVWk7SDsMLmq0EJBNEIQyp5YE7URq8fDpx8MkdpSZ41RN3E=
+	t=1768419229; cv=none; b=Jts/uEVnQqmJsZZBfKtTwiXYS6jaKNuLPCZUcT8UZc2iGpGdJYtz+B9r0xDfmAZZvpPI6BZNUXeKPRNMtFXWWrM03I2kbtExoEm3M02YkeAFYJRK304g7QCtaMDAM1h93TXiv8TygKBVIyF9oZWKpQk7x2Z3DQkp7x7OxH3sgxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768417304; c=relaxed/simple;
-	bh=g3HtMKjfyATIBUdWx1OR9FO8cTMPuWSW1+k1E5kr5Ro=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VxN6TBibbkIrQkKVkvjApUwvcyb3T9Sh/y/CHq+xiLRLtvkwHeHEJvtSu+JQWjC2UgeGFCD237AclxPYGofMsvlW01qqh0zgER3Aq9nnMfDKUYWlhC43bMS0FJnbp4FnE3u9smwUWna7UhhksGZsEPlKF8bbMxOIGOTTuNXeBaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmSzr7lh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D634C4AF09;
-	Wed, 14 Jan 2026 19:01:43 +0000 (UTC)
+	s=arc-20240116; t=1768419229; c=relaxed/simple;
+	bh=xY3iIzPhtaiF+EsMrQLvAloewetnMcqRE6PH9WSOtVY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IRbgKpo9V4emIVe7r1cqL9NAN5qDqamWl+6x6pOV1JYJstcEHKQNPHein/s7Ts08PWa+W/8oL4OTNxkPmPsThF7PHboQLn6ysKKCgXoC8yK4eFYZzQQiQrcZlCHvb7yO0kcXcJkQFTEBIvjMXg0B/uITW/LmCO/ZCWPhD93eJU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cK1KQ8Lx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F113EC4CEF7;
+	Wed, 14 Jan 2026 19:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768417303;
-	bh=g3HtMKjfyATIBUdWx1OR9FO8cTMPuWSW1+k1E5kr5Ro=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=RmSzr7lhjh+SuI9fbDFJqw3m4IxQqe0Vaw/b4gJyKK720wWjau1KqfMxKznmVkrZF
-	 2N4O6Bc0hb3WeXj4ciDmf782K3DI5ihFjeykVR4v9aMYRWzgIvLCPlEU/VYFogjxxd
-	 TwYC1zhLfa6RMe5c0zdIa7aho1huL0kXcWrQilKkAodh38mBiyLoXi8jbO4A6/cYKq
-	 kb9KdmvOiYoOkyCHYk0p3k/a89l8lKnHoutJdPmPnYoP/vPV7lMSZwo9bj4hOplvIK
-	 3yCvPqJcuulNZMjplUve1lfq9qmXEN1Xfq94K31oj6Pp0Il2HBvbUSiGlGVM0IPhZy
-	 GckkrZ4BzTQlw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 18121F40069;
-	Wed, 14 Jan 2026 14:01:42 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 14 Jan 2026 14:01:42 -0500
-X-ME-Sender: <xms:FehnaUaTdCeNbFj2CKINFlp9fPSNczpMhRHj7Olxm8fSeDvjCeuchg>
-    <xme:FehnaaNsCt3HngjIzva8RqVGiR2aFvCG4ua1a4ChD9d6wRY_elyhnSAD9Bxz6nOsX
-    hiVfoVAp2xsUW290HXq3DGZGHK9bEWtNGj4xg8AHTCkmQfG6UfCGo0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdefleeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehsvghnohiihhgrthhskhihsegthhhrohhmihhumhdrohhrghdprhgtphhtth
-    hopegrughilhhgvghrrdhkvghrnhgvlhesughilhhgvghrrdgtrgdprhgtphhtthhopehs
-    lhgrvhgrseguuhgsvgihkhhordgtohhmpdhrtghpthhtoheprhhonhhnihgvshgrhhhlsg
-    gvrhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhirhgrsehimhgrphdrshhushgv
-    rdguvgdprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsg
-    hrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvmheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheptghhrghosehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:FuhnaWW-M5daRxCF30M52eDLwDirM00lmSqE5Xc12ecFyTnNlLY56w>
-    <xmx:FuhnafvkpwPyPR2KRXo5eKd8vRsR0YkZIXmsZrE6ry1YE33KuXSRkw>
-    <xmx:Fuhnaa3oCsZSMQFQkIpOksUyk4s72_d3YiPbjNg3YdxOmFSZRimCGQ>
-    <xmx:FuhnaeUABkFkasQSrfCIVLfMKlSjqShOkGxbIUShzGsCY5K1wb-Kog>
-    <xmx:FuhnaYPaF8tb8lmdcQNpcC4_UvYC2VoD3Kzk5nif1Pt2r8jOSw-dObLv>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DE8C8780070; Wed, 14 Jan 2026 14:01:41 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1768419228;
+	bh=xY3iIzPhtaiF+EsMrQLvAloewetnMcqRE6PH9WSOtVY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cK1KQ8LxDz6aSiavo1+WwokRwj434qzgFfG60IpQW4EDTFcqnY7doUiRI9qOaEupj
+	 857aKtHZ/03RPlw6rIG77FxR2BpQBVEyVchKGeoh2DyEXaFeEdkbJUKheLYcmygygc
+	 nNDvkx2owsr2xK0rgRLKeXzIKx5QkUCX9eqFMp9l48TPa2VJu9hcGvFgPMue0P5nM9
+	 Hm5YDZkB1EF0GnDKdAtuuycghKA8Y80v23YjuF32QFXL1jl0RUFg+R5gbn59sS1ao8
+	 KrzqnvXTFsQVY4cG+pzRuEy3tXUGJCPAgR9MJ3C5z/R2j0Z3AEzzVtx6D3m42op83e
+	 I7gOcANJWRZNg==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Ben Coddington <bcodding@hammerspace.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] nfsd/sunrpc: fix up some layering violations
+Date: Wed, 14 Jan 2026 14:33:44 -0500
+Message-ID: <176841919290.418760.6153318776379161550.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260113-rq_private-v1-0-88ed308364e6@kernel.org>
+References: <20260113-rq_private-v1-0-88ed308364e6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AOV0ZFhAWQu-
-Date: Wed, 14 Jan 2026 14:01:14 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jan Kara" <jack@suse.cz>
-Cc: vira@imap.suse.de, "Christian Brauner" <brauner@kernel.org>,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Sungjong Seo" <sj1557.seo@samsung.com>,
- "Yuezhang Mo" <yuezhang.mo@sony.com>,
- almaz.alexandrovich@paragon-software.com,
- "Viacheslav Dubeyko" <slava@dubeyko.com>, glaubitz@physik.fu-berlin.de,
- frank.li@vivo.com, "Theodore Tso" <tytso@mit.edu>,
- adilger.kernel@dilger.ca, "Carlos Maiolino" <cem@kernel.org>,
- "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Jaegeuk Kim" <jaegeuk@kernel.org>,
- "Chao Yu" <chao@kernel.org>, "Hans de Goede" <hansg@kernel.org>,
- senozhatsky@chromium.org, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <7b6aa90f-79dc-443a-8e5f-3c9b88892271@app.fastmail.com>
-In-Reply-To: 
- <3kq2tbdcoxxw3y2gseg7vtnhnze5ee536fu4rnsn22yjrpsmb4@fpfueqqiji5q>
-References: <20260114142900.3945054-1-cel@kernel.org>
- <20260114142900.3945054-2-cel@kernel.org>
- <3kq2tbdcoxxw3y2gseg7vtnhnze5ee536fu4rnsn22yjrpsmb4@fpfueqqiji5q>
-Subject: Re: [PATCH v4 01/16] fs: Add case sensitivity info to file_kattr
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Chuck Lever <chuck.lever@oracle.com>
 
+On Tue, 13 Jan 2026 13:37:38 -0500, Jeff Layton wrote:
+> The rq_lease_breaker and rq_cachetype fields are only used by nfsd.
+> These patches shrink struct svc_rqst slightly and makes the layering
+> between the two a little cleaner. In the case of rq_lease_breaker, I
+> think this also gives us a little more type safety.
+> 
+> 
 
-On Wed, Jan 14, 2026, at 1:11 PM, Jan Kara wrote:
-> On Wed 14-01-26 09:28:44, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->> 
->> Enable upper layers such as NFSD to retrieve case sensitivity
->> information from file systems by adding case_insensitive and
->> case_nonpreserving boolean fields to struct file_kattr.
->> 
->> These fields default to false (POSIX semantics: case-sensitive and
->> case-preserving), allowing filesystems to set them only when
->> behavior differs from the default.
->> 
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ...
->> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
->> index 66ca526cf786..07286d34b48b 100644
->> --- a/include/uapi/linux/fs.h
->> +++ b/include/uapi/linux/fs.h
->> @@ -229,10 +229,20 @@ struct file_attr {
->>  	__u32 fa_nextents;	/* nextents field value (get)   */
->>  	__u32 fa_projid;	/* project identifier (get/set) */
->>  	__u32 fa_cowextsize;	/* CoW extsize field value (get/set) */
->> +	/* VER1 additions: */
->> +	__u32 fa_case_behavior;	/* case sensitivity (get) */
->> +	__u32 fa_reserved;
->>  };
->>  
->>  #define FILE_ATTR_SIZE_VER0 24
->> -#define FILE_ATTR_SIZE_LATEST FILE_ATTR_SIZE_VER0
->> +#define FILE_ATTR_SIZE_VER1 32
->> +#define FILE_ATTR_SIZE_LATEST FILE_ATTR_SIZE_VER1
->> +
->> +/*
->> + * Case sensitivity flags for fa_case_behavior
->> + */
->> +#define FS_CASE_INSENSITIVE	0x00000001	/* case-insensitive lookups */
->> +#define FS_CASE_NONPRESERVING	0x00000002	/* case not preserved */
->
-> This is a matter of taste so not sure what others think about it but
-> file_attr already have fa_xflags field and there is already one flag which
-> doesn't directly correspond to on-disk representation (FS_XFLAG_HASATTR) so
-> we could also put the two new flags in there... I have hard time imagining
-> fa_case_behavior would grow past the two flags you've introduced so u32
-> seems a bit wasteful.
+Applied to nfsd-testing, thanks!
 
-No problem. I'll wait for additional guidance on this.
+[1/2] nfsd/sunrpc: add svc_rqst->rq_private pointer and remove rq_lease_breaker
+      commit: 2f9a5cd51d92cd95270edfa45c11ddfce1f8e169
+[2/2] nfsd/sunrpc: move rq_cachetype into struct nfsd_thread_local_info
+      commit: a5428a9e04ffc2b7907cd976202d9fc28c7455f1
 
-
--- 
+--
 Chuck Lever
+
 
