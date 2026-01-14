@@ -1,141 +1,233 @@
-Return-Path: <linux-nfs+bounces-17851-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17852-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C8DFD1F613
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:20:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 274D8D1F6B8
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:29:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9226A3016DC2
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:19:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 26795300BEC2
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:29:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2933D1A9F90;
-	Wed, 14 Jan 2026 14:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1612D6E73;
+	Wed, 14 Jan 2026 14:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbcZ3uUQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOcb1eLo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062AE3D3B3
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 14:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153FF280331;
+	Wed, 14 Jan 2026 14:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768400383; cv=none; b=YtiOLDJVU1B/c2LjRZD9PWHmcErH6AVlZXXBW52PMWr9D+MHTVLkuuxIuEVD6WGfdX/C6otVAwN4/CvDcsfLv6ktzG8n9OqhMQxWH+u0B7LZE5JHsxRc7QOzB6eKq5qopVl9igftNTFUw/9GWBzMNNQH3anClwXNQvh0Z/opVH0=
+	t=1768400945; cv=none; b=l0KL2Y1ROfKsUJWW6dFQ53DIX4jK+0FmNyfjLDqXdZ04eNvDyZJpHcWAs3rrb1HGkia8zAQfkAJbtumwyr2pXCqkAm6uOJ7JXkfCLRdDd8hqKv4pabCWmz/lOqFkwsxKlgBsxpQnI6TJXctZHGvnfMbrpOLWFAKiL6KTcF2+TWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768400383; c=relaxed/simple;
-	bh=qkKSbwZXtD8Jk9zgzKmL6i6WzGxa3gGh9iVh8ubyn38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCAL44w1hunyi8nLhF0FYNOf/46Dl7SoO/V0FzU/F1uVl75mdISMRzkmJk+RUuayphcK+jyuiNworf3tHNC9OpkWeo+AUefiqYT9HrAnYZstwGs5+RVnCaES5XVz2EpJD0fWsbJ0FMOb/BaEmo8sPHvleINeVvjg/dy0uLbo2LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbcZ3uUQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049B2C4CEF7;
-	Wed, 14 Jan 2026 14:19:41 +0000 (UTC)
+	s=arc-20240116; t=1768400945; c=relaxed/simple;
+	bh=lG4dAfkVc8RtTo/QiqdyMm8AEyoqFXxos9P3jbZVgMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pD63JiyE4Lv9mSt/FnH7A97+/iTZaZ5Xt9B63w1Z82emm5AqnQZm02VUctDuGcL+wpTYAr/PSfZ7oet0g56D6Tob5LHC61czXOewIE16m+aGEtiirr/2krOdCQeF5E4s+OHiZS+VTzPFUNFr5a0oA21WET+IqdHUqcBXeWQLYkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOcb1eLo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847DDC4CEF7;
+	Wed, 14 Jan 2026 14:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768400382;
-	bh=qkKSbwZXtD8Jk9zgzKmL6i6WzGxa3gGh9iVh8ubyn38=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QbcZ3uUQCoRu+yvUaNbvfaJs1ju0beAvachvPiUTTA7Y3tEd9YO9AXanE7iTjvM9Q
-	 fQ1h3EpnL9qFNHWOiXwZzGaIuuiy8lJTBSGGj9uslM8FZc2YX1HAc2ubcM4dRR/zi1
-	 1Ln0yw8jCS43wUbfpGexsizd8JwQF5gETc/hniaQFwKe0x/siq8yZugtaRdSMVVSi7
-	 ZEnUPORJT7kVpiZJbCCGlgy5OkDYVPpi+PtBV0DxL8EQx5gNPQmiLAI0N1N6kJ+g91
-	 oXUp54xqwQAX7ZfxFP2LqQLT6yGdya+5Kl77TlK7UbaspaDUK9l438icPo+5gdfO3a
-	 IeesGW84WSzjA==
-Message-ID: <c8ad96c5-1da1-4aeb-8999-2a8b63021a23@kernel.org>
-Date: Wed, 14 Jan 2026 09:19:33 -0500
+	s=k20201202; t=1768400944;
+	bh=lG4dAfkVc8RtTo/QiqdyMm8AEyoqFXxos9P3jbZVgMU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oOcb1eLoFA29/NdZIGcLa8fT0tcT+hmajcwbpxx/gLhTctESeAKQ++wCgmr7K56T1
+	 lbzMBShoUEscWtddNyAy3fAysiy4FcdV9TyUbEZxb5FNktoXUe8XvhAhnU4QKhWkrA
+	 yclq6pTcuNQ/mgRfZp3rbErQHWmRxzRFYdMeduS6MKz2XXrQudTwNgzUAQURcKO1eU
+	 LevwmvQG+ei6MIDKNo4CJEP9saopuQGCtHVhXj39ftcRAHA+hWrUk5gM9oi/IZS2rj
+	 0P9PhIwZJPsRhC+rN2o8rn8oXNc+qjpOR1AFloAIvYoUXiUjhvTwcAe9hF8gReVlpq
+	 sL8KIsJeB1dtQ==
+From: Chuck Lever <cel@kernel.org>
+To: vira@web.codeaurora.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	<linux-nfs@vger.kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	hirofumi@mail.parknet.co.jp,
+	linkinjeon@kernel.org,
+	sj1557.seo@samsung.com,
+	yuezhang.mo@sony.com,
+	almaz.alexandrovich@paragon-software.com,
+	slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	frank.li@vivo.com,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	cem@kernel.org,
+	sfrench@samba.org,
+	pc@manguebit.org,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	hansg@kernel.org,
+	senozhatsky@chromium.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v4 00/16] Exposing case folding behavior
+Date: Wed, 14 Jan 2026 09:28:43 -0500
+Message-ID: <20260114142900.3945054-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/7] kNFSD Encrypted Filehandles
-To: Jeff Layton <jlayton@kernel.org>,
- Benjamin Coddington <bcodding@hammerspace.com>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org
-References: <1e92e144-d436-44dd-956f-3125403dfdc8@kernel.org>
- <ECE1341F-BA8A-4DC7-BC9D-BDD6F10F6013@hammerspace.com>
- <dc3d8ff3-f68f-4200-a546-605f0f2e3611@kernel.org>
- <A3F6E0BB-523F-4B99-B583-D6D80E9D7BFB@hammerspace.com>
- <bf09e1e1-d397-405b-aef8-38c44e6c2840@kernel.org>
- <BCFA2167-C883-40C8-A718-10B481533943@hammerspace.com>
- <1c5569bd-fcac-4b55-8e84-3fbc096cdff3@kernel.org>
- <86B6E978-C67B-4C78-9E5F-6F171FD62F3E@hammerspace.com>
- <e711e1cb-eb8a-4723-a9af-39ce7d9658dd@app.fastmail.com>
- <C79886E5-3064-4202-9813-0D79091F78DF@hammerspace.com>
- <20260114004205.GC2178@quark>
- <834DBCBA-1CD8-4BA9-81E8-09E621B3F176@hammerspace.com>
- <a092bf21127a679a32ac9f9c476e7d070667c36b.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <a092bf21127a679a32ac9f9c476e7d070667c36b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/14/26 8:19 AM, Jeff Layton wrote:
-> On Wed, 2026-01-14 at 07:39 -0500, Benjamin Coddington wrote:
->> On 13 Jan 2026, at 19:42, Eric Biggers wrote:
->>
->>> On Tue, Jan 13, 2026 at 05:33:37PM -0500, Benjamin Coddington wrote:
->>>>> - Individual filehandles are small, on the order of 32- or 64-bytes
->>>>>
->>>>> - But there are a lot of filehandles, perhaps billions, that would
->>>>>   be encrypted or signed by the same key
->>>>>
->>>>> - The filehandle plaintext is predictable
->>>>
->>>> Mostly, yes.  I think a strength of the AES-CBC implementation is that each
->>>> 16-byte block is hashed with the results of the previous block.  So, by
->>>> starting with the fileid (unique per-file) and then proceeding to the less
->>>> unique block (fsid + fileid again), the total entropy for each encrypted
->>>> filehandle is increased.
->>>
->>> This sort of comment shows that the choice of AES-CBC still isn't well
->>> motivated.  AES-CBC is an unauthenticated encryption algorithm that
->>> protects a message's confidentiality.  It isn't a hash function, it
->>> isn't a MAC, and it doesn't protect a message's authenticity.  AES-CBC
->>> will successfully decrypt any ciphertext, even one tampered with by an
->>> attacker, into some plaintext.  You may be confusing AES-CBC with
->>> AES-CBC-MAC.
->>
->> I'm not confusing them, and you're absolutely correct - if an encrypted
->> filehandle were tampered with we'd be relying on the decoded filehandle
->> being garbage - the routines to decode the fsid and fileid would return
->> errors, because a filehandle's data is meaningful and well-structured.
->>
->> That's a big difference from what using a MAC would provide - immediate
->> knowledge the filehandle had been modified.
->>
-> 
-> I think a MAC is a better idea here too:
-> 
-> One thing that people keep pointing out is that you could potentially
-> sniff traffic and just nab the encrypted filehandles, and match them
-> with inode numbers, etc.
-> 
-> If you append a MAC though and check it on the server, you could give
-> out filehandles that are limited-use. For instance, with v4, you could
-> salt the hash with the long-form clientid and ensure that that
-> filehandle is only usable by that client. Anyone else gets back
-> NFS4ERR_STALE.
-> 
-> Couple that with TLS and you'd have a pretty decent guard against
-> sniffing and filehandle guessing attacks.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-A sniffing attack is easier than guessing a file handle or constructing
-one. Neither encrypting a filehandle nor signing it protects against
-sniffing attacks. But using full in-transit encryption does, and we
-have that implemented already.
+Following on from
 
-With full in-transit encryption, the plaintext is much much less
-predictable as well.
+https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
 
-Just sayin'
+I'm attempting to implement enough support in the Linux VFS to
+enable file services like NFSD and ksmbd (and user space
+equivalents) to provide the actual status of case folding support
+in local file systems. The default behavior for local file systems
+not explicitly supported in this series is to reflect the usual
+POSIX behaviors:
 
+  case-insensitive = false
+  case-nonpreserving = false
+
+The case-insensitivity and case-nonpreserving booleans can be
+consumed immediately by NFSD. These two attributes have been part of
+the NFSv3 and NFSv4 protocols for decades, in order to support NFS
+client implementations on non-POSIX systems.
+
+Support for user space file servers is why this series exposes case
+folding information via a user-space API. I don't know of any other
+category of user-space application that requires access to case
+folding info.
+
+
+The Linux NFS community has a growing interest in supporting NFS
+clients on Windows and MacOS platforms, where file name behavior does
+not align with traditional POSIX semantics.
+
+One example of a Windows-based NFS client is [1]. This client
+implementation explicitly requires servers to report
+FATTR4_WORD0_CASE_INSENSITIVE = TRUE for proper operation, a hard
+requirement for Windows client interoperability because Windows
+applications expect case-insensitive behavior. When an NFS client
+knows the server is case-insensitive, it can avoid issuing multiple
+LOOKUP/READDIR requests to search for case variants, and applications
+like Win32 programs work correctly without manual workarounds or
+code changes.
+
+Even the Linux client can take advantage of this information. Trond
+merged patches 4 years ago [2] that introduce support for case
+insensitivity, in support of the Hammerspace NFS server. In
+particular, when a client detects a case-insensitive NFS share,
+negative dentry caching must be disabled (a lookup for "FILE.TXT"
+failing shouldn't cache a negative entry when "file.txt" exists)
+and directory change invalidation must clear all cached case-folded
+file name variants.
+
+Hammerspace servers and several other NFS server implementations
+operate in multi-protocol environments, where a single file service
+instance caters to both NFS and SMB clients. In those cases, things
+work more smoothly for everyone when the NFS client can see and adapt
+to the case folding behavior that SMB users rely on and expect. NFSD
+needs to support the case-insensitivity and case-nonpreserving
+booleans properly in order to participate as a first-class citizen
+in such environments.
+
+[1] https://github.com/kofemann/ms-nfs41-client
+
+[2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.439352-1-trondmy@kernel.org/
+
+---
+
+Changes since v3:
+- Change fa->case_preserving to fa_case_nonpreserving
+- VFAT is case preserving
+- Make new fields available to user space
+
+Changes since v2:
+- Remove unicode labels
+- Replace vfs_get_case_info
+- Add support for several more local file system implementations
+- Add support for in-kernel SMB server
+
+Changes since RFC:
+- Use file_getattr instead of statx
+- Postpone exposing Unicode version until later
+- Support NTFS and ext4 in addition to FAT
+- Support NFSv4 fattr4 in addition to NFSv3 PATHCONF
+
+
+Chuck Lever (16):
+  fs: Add case sensitivity info to file_kattr
+  fat: Implement fileattr_get for case sensitivity
+  exfat: Implement fileattr_get for case sensitivity
+  ntfs3: Implement fileattr_get for case sensitivity
+  hfs: Implement fileattr_get for case sensitivity
+  hfsplus: Report case sensitivity in fileattr_get
+  ext4: Report case sensitivity in fileattr_get
+  xfs: Report case sensitivity in fileattr_get
+  cifs: Implement fileattr_get for case sensitivity
+  nfs: Implement fileattr_get for case sensitivity
+  f2fs: Add case sensitivity reporting to fileattr_get
+  vboxsf: Implement fileattr_get for case sensitivity
+  isofs: Implement fileattr_get for case sensitivity
+  nfsd: Report export case-folding via NFSv3 PATHCONF
+  nfsd: Implement NFSv4 FATTR4_CASE_INSENSITIVE and
+    FATTR4_CASE_PRESERVING
+  ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
+
+ fs/exfat/exfat_fs.h      |  2 ++
+ fs/exfat/file.c          | 16 ++++++++++++++--
+ fs/exfat/namei.c         |  1 +
+ fs/ext4/ioctl.c          |  6 ++++++
+ fs/f2fs/file.c           |  6 ++++++
+ fs/fat/fat.h             |  3 +++
+ fs/fat/file.c            | 19 +++++++++++++++++++
+ fs/fat/namei_msdos.c     |  1 +
+ fs/fat/namei_vfat.c      |  1 +
+ fs/file_attr.c           | 14 ++++++++++++++
+ fs/hfs/dir.c             |  1 +
+ fs/hfs/hfs_fs.h          |  2 ++
+ fs/hfs/inode.c           | 12 ++++++++++++
+ fs/hfsplus/inode.c       |  7 +++++++
+ fs/isofs/dir.c           | 11 +++++++++++
+ fs/nfs/client.c          |  9 +++++++--
+ fs/nfs/inode.c           | 18 ++++++++++++++++++
+ fs/nfs/internal.h        |  3 +++
+ fs/nfs/nfs3proc.c        |  2 ++
+ fs/nfs/nfs3xdr.c         |  7 +++++--
+ fs/nfs/nfs4proc.c        |  2 ++
+ fs/nfs/proc.c            |  3 +++
+ fs/nfs/symlink.c         |  3 +++
+ fs/nfsd/nfs3proc.c       | 18 ++++++++++--------
+ fs/nfsd/nfs4xdr.c        | 30 ++++++++++++++++++++++++++----
+ fs/nfsd/vfs.c            | 25 +++++++++++++++++++++++++
+ fs/nfsd/vfs.h            |  2 ++
+ fs/ntfs3/file.c          | 22 ++++++++++++++++++++++
+ fs/ntfs3/inode.c         |  1 +
+ fs/ntfs3/namei.c         |  2 ++
+ fs/ntfs3/ntfs_fs.h       |  1 +
+ fs/smb/client/cifsfs.c   | 18 ++++++++++++++++++
+ fs/smb/server/smb2pdu.c  | 25 +++++++++++++++++++------
+ fs/vboxsf/dir.c          |  1 +
+ fs/vboxsf/file.c         |  6 ++++--
+ fs/vboxsf/super.c        |  4 ++++
+ fs/vboxsf/utils.c        | 30 ++++++++++++++++++++++++++++++
+ fs/vboxsf/vfsmod.h       |  6 ++++++
+ fs/xfs/xfs_ioctl.c       |  6 ++++++
+ include/linux/fileattr.h |  3 +++
+ include/linux/nfs_xdr.h  |  2 ++
+ include/uapi/linux/fs.h  | 12 +++++++++++-
+ 42 files changed, 336 insertions(+), 27 deletions(-)
 
 -- 
-Chuck Lever
+2.52.0
+
 
