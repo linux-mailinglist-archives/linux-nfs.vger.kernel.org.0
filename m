@@ -1,129 +1,188 @@
-Return-Path: <linux-nfs+bounces-17885-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17886-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5ED9D20B29
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 18:59:00 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 770E6D20BB1
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 19:11:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8FCC9300B989
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 17:58:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 37D2D3016EE7
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 18:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D4B327C1D;
-	Wed, 14 Jan 2026 17:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69FC5331A40;
+	Wed, 14 Jan 2026 18:11:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRvwE28I"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iS7tUH/Y";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MR0/rtm6";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OZSxcWIV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y7oOVPk1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D282D32BF3A
-	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 17:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3B4331229
+	for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 18:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768413538; cv=none; b=FRnutDemUoV3jv38PuS1bvzLeMFs8IFP1G6iWm/Yv6fO3VTLSwDQee8md/bZrA+Zrr9h3oNChen0MsYZLMHs0SMKkT1SWY82Mcrf3/mqS2+MhJBdR7eKV3Yrq+PAJokA5Mgktfbd9PTuzkf21tqae7O3D5SPz1oK9PMiulSpdDE=
+	t=1768414317; cv=none; b=FAVQMOTAOUPpid+cgm5uyDPv5zAc3d7JjNEoC4wPNu2986uUax3esYVXGqu2E4Zi0KqZ42Rj4Q9L7MFNx0zXt55pz1+lcCpCe/y/B9VyyUP0zl8OmuT9mfnOdq8bkKtUcJW5lHwCN09XLen74wZFZu2IzWJeqNhlvBJvw265FlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768413538; c=relaxed/simple;
-	bh=yWpDrIQWhEKP9JAmcupJ8D6CB2U/lTqd7ZDrYHveKM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kTAt8C0dvQ5h6IWvJrpebAC4i2EQtj4fV0aCbhZsHeIRaAauB2nuvbJY1ft4tfKkGPCe1+IChnEoCsaYg71eGk412vd8TNBWg+XkHHg4i+CS901DcCOuwNxEjTCrSLoqt6RsOGhinj6Fd0+CpTmH0dtQIDT281qZhRDZe4y4ZZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRvwE28I; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64ba9a00b5aso25116a12.2
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jan 2026 09:58:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768413535; x=1769018335; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yWpDrIQWhEKP9JAmcupJ8D6CB2U/lTqd7ZDrYHveKM4=;
-        b=CRvwE28IdVjH9TDH6dB8Us7j3fQ/OHtp+URPhd3kv9FaVQw8KMzJLhXmlm4jBzqebG
-         6bq6oyGPNjDb41yl9tFXBVZcq3QDHqhGTni1gDNhuTa3gINO+NOJVrVVcMj/tp1Lbon/
-         fhrv+jDscoRxKQGQWL47mGTg68s10PRprySXdXH5OS1tKmjNr+EGAQnx/HqoaaFXqaRV
-         mHFivi+ntx8gIgggDrovfT1FDUCRi2/6OCX2TQvKIpIW2jlviECShQ9BzRmAZN7/9UHF
-         CdO34AMlb7bgy/lIEdXzuXFj1Loj00HbU7P78E+w8bLBoZJc4FOJKGfhv7hTSkvkDNR4
-         G5Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768413535; x=1769018335;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yWpDrIQWhEKP9JAmcupJ8D6CB2U/lTqd7ZDrYHveKM4=;
-        b=L/I4vEX9Hs1YdZ2JoSE+dBPq3KKXPW7Wc/IFEndqZfTEgVzpdqSfAHCdQVCVnlCIJ3
-         uay2QFSrOOsyIH2KoNDfk3QHNrOU9ZYX+3FYzAffIl7GNcTnm97h+pwUTU14oLl6K/49
-         oesayOfpUHBT55rMQd6JfMYrtoUQ7V0eUKy7dEP7JVEZ65xwxC4gqaUewxY/2EGWeRkd
-         397RlSqJHPmOc816fr0GSukf0LGMUNkoPPebm+3CXRqkaO1PmHsOxIMO53ojfb1qwL1e
-         JGPYrqPgGTSSPK9r5+3swzA09H2ZVi0HQw3e+2tT3D0HTSoVMRNiePFDPTPBPrX2ov/t
-         vuyw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8677/jrWJJxxKHFMiz/m/UTPTWfa49q/XKNSXyPKKm3hwA6RF/fsUj96VP/6dQkI2gYPoS0G2F4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk6LkuuAM8whKjgSBOcav/Pr+o/9x4WBd5jg+Ivvd39Dmy1Asv
-	NgN5ewdZrE5JJATAmcjPhxJ3lRcJhinQYShWsHJqXeRQXDARARiZvLFTlCKVr/fW7rPAefAA3qC
-	nBXektLUrzOXF8Hmkq4tLpD00tZbMQbc=
-X-Gm-Gg: AY/fxX5uuxrjwWRUhZo83YnOk1kYi0DcD8v+95vF2yaAwgcY8++noLMVc8OQecnSVrP
-	bIlW54kOmemp3FG+8mEkt8SmdyGNijcS3dYuVXJhYyEDefN9i4DdBZDszaDynCAivI0lZwYvYZy
-	ZPaXhpSu/Hg4SQ1DOOeL5lQqSV9uz1Jfxq/OWNY13OBJ5kbMGvnrB4HVMAKmdoW9zcgeYf5UTGi
-	QZaW6J7CQYzq896Ae4Inq7gokfBbv2fO7dnvmkJjke0XfO3A8fPeR/KWp2CrP52G17qGshfNxbw
-	UBLf7lLXT2iBnLXmAhUghnmwxj2xOg==
-X-Received: by 2002:a05:6402:13c5:b0:64e:f50d:ec9a with SMTP id
- 4fb4d7f45d1cf-653ec462b15mr2849227a12.30.1768413535030; Wed, 14 Jan 2026
- 09:58:55 -0800 (PST)
+	s=arc-20240116; t=1768414317; c=relaxed/simple;
+	bh=Ew1704AjUhIBECUWZm25+SYbyVxT3VpjR93JUzjFUHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWTKLli8CEMPOSUia1JOovZWLdfueMjOqGWZeOUbESYZ+iYQuzRJd+F3292DBS5FFve+bNuGcUARoOHxnnLEzQ1hWu8hYcq7dqsNvbavyxcO8APmj8ZcNQ3jifCy3T7qZ0+IIxjJIjnXDYXaxtb+TrRNP1yeIxPBxjeqI1MSqhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iS7tUH/Y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MR0/rtm6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OZSxcWIV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y7oOVPk1; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EEBCD34A19;
+	Wed, 14 Jan 2026 18:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1768414314; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xo9ryw1mNS44QarmajvRPRZ+yW3faNEvj358UoC9dhs=;
+	b=iS7tUH/YOVxSh4z+OZrakGrtN6XHw3nBLnAxQyGHRRcDkM9IJTXs0s5ERNzTD6pyF+L0bH
+	uSwLh8J0cyq2Y3TKi3vc81qxNL+XqtOL8oOo9PESeiRBI5D2uoB2rm2OYnKgIMquzPTPku
+	viZbKCQe/6B8VMRSLiKTNd7yHPf761I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1768414314;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xo9ryw1mNS44QarmajvRPRZ+yW3faNEvj358UoC9dhs=;
+	b=MR0/rtm67S7zK5Gaw2gaKMuuUuFkv6QZraFcDAoZA5Iyg3WJ+BCDish25xa0np61mTVPhT
+	gt/CmQlc/UXyiXCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1768414313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xo9ryw1mNS44QarmajvRPRZ+yW3faNEvj358UoC9dhs=;
+	b=OZSxcWIVOJ/2w7sK+y/z5zIQ4PTncZsxIyA7Z1YcAx5jHdw5b0w73Z9rstYZxjhVWtpkZx
+	VXES6xbnfRccGtJbARuNNvoDgBEVKRgwZfHU/f3cndhwktoKlpInCRciG6TCeECY1YavoG
+	2QPdcHpY+IXIAb7NOF4NqZYhpJWFkbk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1768414313;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xo9ryw1mNS44QarmajvRPRZ+yW3faNEvj358UoC9dhs=;
+	b=Y7oOVPk11qf+qOKc4Tcuncg8zBkZeMC3EpyXNrm5aqSn07P/vM7bNZOq0IlEYcRShrW60k
+	GHs2RrDmzRIu7tCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DBFCA3EA63;
+	Wed, 14 Jan 2026 18:11:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LB0CNWncZ2nsLwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 14 Jan 2026 18:11:53 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 982DAA0BFB; Wed, 14 Jan 2026 19:11:49 +0100 (CET)
+Date: Wed, 14 Jan 2026 19:11:49 +0100
+From: Jan Kara <jack@suse.cz>
+To: Chuck Lever <cel@kernel.org>
+Cc: vira@imap.suse.de, Christian Brauner <brauner@kernel.org>, 
+	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org, 
+	sj1557.seo@samsung.com, yuezhang.mo@sony.com, almaz.alexandrovich@paragon-software.com, 
+	slava@dubeyko.com, glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
+	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, anna@kernel.org, 
+	jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v4 01/16] fs: Add case sensitivity info to file_kattr
+Message-ID: <3kq2tbdcoxxw3y2gseg7vtnhnze5ee536fu4rnsn22yjrpsmb4@fpfueqqiji5q>
+References: <20260114142900.3945054-1-cel@kernel.org>
+ <20260114142900.3945054-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114-tonyk-get_disk_uuid-v1-0-e6a319e25d57@igalia.com>
- <20260114-tonyk-get_disk_uuid-v1-1-e6a319e25d57@igalia.com>
- <20260114061028.GF15551@frogsfrogsfrogs> <20260114062424.GA10805@lst.de>
- <CAOQ4uxjUKnD3-PHW5fOiTCeFVEvLkbVuviLAQc7tsKrN36Rm+A@mail.gmail.com> <cb5a8880-ed0c-495f-b216-090ee8ff1425@igalia.com>
-In-Reply-To: <cb5a8880-ed0c-495f-b216-090ee8ff1425@igalia.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 14 Jan 2026 18:58:43 +0100
-X-Gm-Features: AZwV_Qh1UWpllsM24ezXDnsedohpjUB85HiNzPlW4l6pscviv_fH3BWANqTQD24
-Message-ID: <CAOQ4uxh80eLc5jARydpayXMA7Wx8b__CR5BRLbkG5KjLy1j_sA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] exportfs: Rename get_uuid() to get_disk_uuid()
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Carlos Maiolino <cem@kernel.org>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	kernel-dev@igalia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114142900.3945054-2-cel@kernel.org>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLmzfjx67n53eyz9asjm8u3pcw)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[imap.suse.de,kernel.org,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-On Wed, Jan 14, 2026 at 5:38=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid@iga=
-lia.com> wrote:
->
-> Em 14/01/2026 07:12, Amir Goldstein escreveu:
->
-> [...]
->
-> >
-> > Whether or not we should repurpose the existing get_uuid() I don't
-> > know - that depends whether pNFS expects the same UUID from an
-> > "xfs clone" as overlayfs would.
-> >
->
-> If we go in that direction, do you think it would be reasonable to have
-> this as a super_block member/helper?
+On Wed 14-01-26 09:28:44, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Enable upper layers such as NFSD to retrieve case sensitivity
+> information from file systems by adding case_insensitive and
+> case_nonpreserving boolean fields to struct file_kattr.
+> 
+> These fields default to false (POSIX semantics: case-sensitive and
+> case-preserving), allowing filesystems to set them only when
+> behavior differs from the default.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+...
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index 66ca526cf786..07286d34b48b 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -229,10 +229,20 @@ struct file_attr {
+>  	__u32 fa_nextents;	/* nextents field value (get)   */
+>  	__u32 fa_projid;	/* project identifier (get/set) */
+>  	__u32 fa_cowextsize;	/* CoW extsize field value (get/set) */
+> +	/* VER1 additions: */
+> +	__u32 fa_case_behavior;	/* case sensitivity (get) */
+> +	__u32 fa_reserved;
+>  };
+>  
+>  #define FILE_ATTR_SIZE_VER0 24
+> -#define FILE_ATTR_SIZE_LATEST FILE_ATTR_SIZE_VER0
+> +#define FILE_ATTR_SIZE_VER1 32
+> +#define FILE_ATTR_SIZE_LATEST FILE_ATTR_SIZE_VER1
+> +
+> +/*
+> + * Case sensitivity flags for fa_case_behavior
+> + */
+> +#define FS_CASE_INSENSITIVE	0x00000001	/* case-insensitive lookups */
+> +#define FS_CASE_NONPRESERVING	0x00000002	/* case not preserved */
 
-IDK. maybe.
+This is a matter of taste so not sure what others think about it but
+file_attr already have fa_xflags field and there is already one flag which
+doesn't directly correspond to on-disk representation (FS_XFLAG_HASATTR) so
+we could also put the two new flags in there... I have hard time imagining
+fa_case_behavior would grow past the two flags you've introduced so u32
+seems a bit wasteful.
 
-> Also do you know any other fs that require this type of workaround on ovl=
-?
-
-Not really.
-There are a bunch of fs without UUID for which the mount options
-"uuid=3Doff" and "uuid=3Dnull" were implemented.
-I think we support index with those fs where there is a single lower
-layer, so you could use the same trick, but not sure.
-
-Thanks,
-Amir.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
