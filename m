@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-17872-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17873-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF52D1F847
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:40:30 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0ED4D1F850
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 15:40:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 97CF2304276D
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:40:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E356E3047D96
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jan 2026 14:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F4D3557E8;
-	Wed, 14 Jan 2026 14:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C4937F8D5;
+	Wed, 14 Jan 2026 14:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fv1CKy2q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIV4npLW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324322E3E9;
-	Wed, 14 Jan 2026 14:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293722E3E9;
+	Wed, 14 Jan 2026 14:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768401595; cv=none; b=T3M88FbmxHiC3e5vgTXMGFDqywzl/iaVOHyOjcjtwG8Vt+byT1bxuIUkGbIEHL4hCIEz23HnUkqFesrLGoVMT1+m2ZstkFSgpVMDDqQA1Ibx2PnDCPcTmzF2Xm2d3vyZDaAG7mmQVgh4j8wU2jcrlt8iA7EDMRofVu3o2a4WNOo=
+	t=1768401597; cv=none; b=SgCae6lGtJKEDyw3gEAJuORv8p/RNBHqP+S0n0LcC0zQdLRXA9nKOUQFKLZVVVyRCkomBJMs7aiSSMl7tg5q/i7MlyzzGYFutwEXKPG8ZSjhkcXK8m6026bi09TJxiwKnULeXvXIs+eYK1AZj2fgeF9Al1m+LsPjOQ4a96y6Bgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768401595; c=relaxed/simple;
-	bh=p3Y5D+B6vEMejp+prFUEstoVGvONTYcbQemFctvwW6s=;
+	s=arc-20240116; t=1768401597; c=relaxed/simple;
+	bh=SxP1Qk5rwNRQnVWiD0IFT1q6SAWqJZACXSx+axpfOjA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cU/iHc5t3odVQYCe5ijOTdF1jpC4uDVwGH/p2p+XKojruR8Hfm6vHF9FiQxcLvM/Hv6P4mbOzds+1+aw3xQWLvRPpR2GINnMSDJoKzitzJ7WuczMv4SVbqJBUHOiVZP8XhODICQEIUOmK7OpR4SLgJ1u9sgl3wPRBu55H6s3N5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fv1CKy2q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A5CC19423;
-	Wed, 14 Jan 2026 14:39:54 +0000 (UTC)
+	 MIME-Version; b=jVtT2CosPuPOBAVaa3tmgiyr/hp93L7K+ztBHRTnUBn/IoCEI8v6wm3lRrb4KctNABzTjTDI0YY/cTEBI7xtXzh3ScNDqOQRvbQZqQkApmy9/wjso8t7GOo2hM6S20JU/ruhid+PBNPykc8RSX8QDKyfSQQuu9LdRsZhLVeURA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIV4npLW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D67C4CEF7;
+	Wed, 14 Jan 2026 14:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768401595;
-	bh=p3Y5D+B6vEMejp+prFUEstoVGvONTYcbQemFctvwW6s=;
+	s=k20201202; t=1768401596;
+	bh=SxP1Qk5rwNRQnVWiD0IFT1q6SAWqJZACXSx+axpfOjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fv1CKy2qXQko1odYIzElkJ6QFfAJgFwVyGoY5xKZ8+PR9fSRt/Z+livZWlzqNnDNp
-	 vzyaOwuUG1SRn0UixXCwSt9GVt3eGymU892f26JCWz6ml5SKWWrIG9wSRiYTBbdCGj
-	 /1uMFRtIE20MjFS6EK9aRvX6XvqCPu3vlGro6ueNDnQjNVrd38Lc2wiLRMRu+uc1Xg
-	 Z9EnxPm26M1Kfdtv+hrOj0lQuKXwnKmNefVCPJ4i7ZKzXi+HUalavIcup/qK+IO/YX
-	 R1BhZOC9r0VuY8s38/1U0rqKyvGnYgv73cVjEg7hdkIho6+YIOVx9i9Oi06oaNdVyM
-	 Lu8l93RdwQxwA==
+	b=eIV4npLWHURm8xwNe3Xf0JuuWnF+Fl5Nti0Nab0iWPwJqOGUIY5tEAwAoYNsywXN9
+	 Eyd9JmmF+bH9nxTVCUtN2AFXdyEn1NPxM2jHU+0p3SsoKdAzY1HvbgsnG6RNneoqpo
+	 bCXPTNb1cMgOP0qwv+I97cypUflUVXML8kiIWRef2+G6qmxZfz4NS7+LHmMmqpNrxh
+	 HTdW814Pl21xi9TC0+KzJYfWhlADAfZlRX+JwsT7eJOe5FO6+rYA/YugP7fpdcX/ol
+	 hXJKZwAIyy8FY2xAo2EVUzXenLLCi6vWUOVglMPFSHVTP6F2P8EFisRpM6GqkTmsUR
+	 jWKT63yJYAlYw==
 From: Chuck Lever <cel@kernel.org>
 To: Jason Gunthorpe <jgg@nvidia.com>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -51,9 +51,9 @@ Cc: <linux-rdma@vger.kernel.org>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 3/4] RDMA/core: add MR support for bvec-based RDMA operations
-Date: Wed, 14 Jan 2026 09:39:47 -0500
-Message-ID: <20260114143948.3946615-4-cel@kernel.org>
+Subject: [PATCH v1 4/4] svcrdma: use bvec-based RDMA read/write API
+Date: Wed, 14 Jan 2026 09:39:48 -0500
+Message-ID: <20260114143948.3946615-5-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260114143948.3946615-1-cel@kernel.org>
 References: <20260114143948.3946615-1-cel@kernel.org>
@@ -67,241 +67,295 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The bvec-based RDMA API currently returns -EOPNOTSUPP when Memory
-Region registration is required. This prevents iWARP devices from
-using the bvec path, since iWARP requires MR registration for RDMA
-READ operations. The force_mr debug parameter is also unusable with
-bvec input.
+Convert svcrdma to the bvec-based RDMA API introduced earlier in
+this series.
 
-Add rdma_rw_init_mr_wrs_bvec() to handle MR registration for bvec
-arrays. The approach creates a synthetic scatterlist populated with
-DMA addresses from the bvecs, then reuses the existing ib_map_mr_sg()
-infrastructure. This avoids driver changes while keeping the
-implementation small.
+The bvec-based RDMA API eliminates the intermediate scatterlist
+conversion step, allowing direct DMA mapping from bio_vec arrays.
+This simplifies the svc_rdma_rw_ctxt structure by removing the
+inline scatterlist and chained SG table management.
 
-The synthetic scatterlist is stored in the rdma_rw_ctx for cleanup.
-On destroy, the MRs are returned to the pool and the bvec DMA
-mappings are released using the stored addresses.
+The structure size reduction is significant: the previous inline
+scatterlist array of RPCSVC_MAXPAGES entries (4KB or more) is
+replaced with a pointer to a dynamically allocated bvec array,
+bringing the fixed structure size down to approximately 100 bytes.
 
+The bvec API handles all device types internally, including iWARP
+devices which require memory registration. No explicit fallback
+path is needed.
+
+Signed-off-by: cel@kernel.org
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- drivers/infiniband/core/rw.c | 157 +++++++++++++++++++++++++++++++++--
- include/rdma/rw.h            |   8 ++
- 2 files changed, 159 insertions(+), 6 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_rw.c | 115 ++++++++++++++----------------
+ 1 file changed, 55 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
-index 36038e5f9197..610f5c946567 100644
---- a/drivers/infiniband/core/rw.c
-+++ b/drivers/infiniband/core/rw.c
-@@ -193,6 +193,140 @@ static int rdma_rw_init_mr_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 	return ret;
- }
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 310de7a80be5..fac83a78282b 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -5,6 +5,7 @@
+  * Use the core R/W API to move RPC-over-RDMA Read and Write chunks.
+  */
  
-+static int rdma_rw_init_mr_wrs_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
-+		u32 port_num, const struct bio_vec *bvec, u32 nr_bvec,
-+		u32 offset, u64 remote_addr, u32 rkey,
-+		enum dma_data_direction dir)
-+{
-+	struct ib_device *dev = qp->pd->device;
-+	struct rdma_rw_reg_ctx *prev = NULL;
-+	u32 pages_per_mr = rdma_rw_fr_page_list_len(dev, qp->integrity_en);
-+	struct scatterlist *sgl;
-+	int i, j, ret = 0, count = 0;
-+	u32 sg_idx = 0;
-+
-+	ctx->nr_ops = DIV_ROUND_UP(nr_bvec, pages_per_mr);
-+	ctx->reg = kcalloc(ctx->nr_ops, sizeof(*ctx->reg), GFP_KERNEL);
-+	if (!ctx->reg)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Allocate synthetic scatterlist to hold DMA addresses.
-+	 * ib_map_mr_sg() extracts sg_dma_address/len, so the page
-+	 * pointer is unused.
-+	 */
-+	sgl = kmalloc_array(nr_bvec, sizeof(*sgl), GFP_KERNEL);
-+	if (!sgl) {
-+		ret = -ENOMEM;
-+		goto out_free_reg;
-+	}
-+	sg_init_table(sgl, nr_bvec);
-+
-+	/*
-+	 * DMA map all bvecs and populate the synthetic scatterlist.
-+	 */
-+	for (i = 0; i < nr_bvec; i++) {
-+		const struct bio_vec *bv = &bvec[i];
-+		struct bio_vec adjusted;
-+		u64 dma_addr;
-+		u32 len;
-+
-+		if (i == 0 && offset) {
-+			adjusted = *bv;
-+			adjusted.bv_offset += offset;
-+			adjusted.bv_len -= offset;
-+			bv = &adjusted;
-+		}
-+		len = bv->bv_len;
-+
-+		dma_addr = ib_dma_map_bvec(dev, bv, dir);
-+		if (ib_dma_mapping_error(dev, dma_addr)) {
-+			ret = -ENOMEM;
-+			goto out_unmap;
-+		}
-+
-+		/*
-+		 * Populate sg entry with DMA address. sg_set_page() is
-+		 * called to initialize the entry, but the page pointer
-+		 * is unused by ib_map_mr_sg().
-+		 */
-+		sg_set_page(&sgl[i], bv->bv_page, len, bv->bv_offset);
-+		sg_dma_address(&sgl[i]) = dma_addr;
-+		sg_dma_len(&sgl[i]) = len;
-+	}
-+
-+	/*
-+	 * Build MR chain using the synthetic scatterlist.
-+	 */
-+	for (i = 0; i < ctx->nr_ops; i++) {
-+		struct rdma_rw_reg_ctx *reg = &ctx->reg[i];
-+		u32 nents = min(nr_bvec - sg_idx, pages_per_mr);
-+
-+		ret = rdma_rw_init_one_mr(qp, port_num, reg, &sgl[sg_idx],
-+					  nents, 0);
-+		if (ret < 0)
-+			goto out_free_mrs;
-+		count += ret;
-+
-+		if (prev) {
-+			if (reg->mr->need_inval)
-+				prev->wr.wr.next = &reg->inv_wr;
-+			else
-+				prev->wr.wr.next = &reg->reg_wr.wr;
-+		}
-+
-+		reg->reg_wr.wr.next = &reg->wr.wr;
-+
-+		reg->wr.wr.sg_list = &reg->sge;
-+		reg->wr.wr.num_sge = 1;
-+		reg->wr.remote_addr = remote_addr;
-+		reg->wr.rkey = rkey;
-+
-+		if (dir == DMA_TO_DEVICE) {
-+			reg->wr.wr.opcode = IB_WR_RDMA_WRITE;
-+		} else if (!rdma_cap_read_inv(qp->device, port_num)) {
-+			reg->wr.wr.opcode = IB_WR_RDMA_READ;
-+		} else {
-+			reg->wr.wr.opcode = IB_WR_RDMA_READ_WITH_INV;
-+			reg->wr.wr.ex.invalidate_rkey = reg->mr->lkey;
-+		}
-+		count++;
-+
-+		remote_addr += reg->sge.length;
-+		sg_idx += nents;
-+		prev = reg;
-+	}
-+
-+	if (prev)
-+		prev->wr.wr.next = NULL;
-+
-+	ctx->type = RDMA_RW_MR;
-+	ctx->mr_sgl = sgl;
-+	ctx->mr_sg_cnt = nr_bvec;
-+	return count;
-+
-+out_free_mrs:
-+	while (--i >= 0)
-+		ib_mr_pool_put(qp, &qp->rdma_mrs, ctx->reg[i].mr);
-+	/* All bvecs were mapped successfully, unmap them all */
-+	for (j = 0; j < nr_bvec; j++)
-+		ib_dma_unmap_bvec(dev, sg_dma_address(&sgl[j]),
-+				  sg_dma_len(&sgl[j]), dir);
-+	kfree(sgl);
-+	kfree(ctx->reg);
-+	return ret;
-+
-+out_unmap:
-+	/* Unmap bvecs that were successfully mapped (0 through i-1) */
-+	for (j = 0; j < i; j++)
-+		ib_dma_unmap_bvec(dev, sg_dma_address(&sgl[j]),
-+				  sg_dma_len(&sgl[j]), dir);
-+	kfree(sgl);
-+out_free_reg:
-+	kfree(ctx->reg);
-+	return ret;
-+}
-+
- static int rdma_rw_init_map_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		struct scatterlist *sg, u32 sg_cnt, u32 offset,
- 		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
-@@ -606,9 +740,8 @@ EXPORT_SYMBOL(rdma_rw_ctx_init);
-  * @rkey:	remote key to operate on
-  * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
++#include <linux/bvec.h>
+ #include <rdma/rw.h>
+ 
+ #include <linux/sunrpc/xdr.h>
+@@ -21,29 +22,27 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
+  * Write Work Requests.
   *
-- * Maps the bio_vec array directly using dma_map_phys(), avoiding the
-- * intermediate scatterlist conversion. Does not support the MR registration
-- * path (iWARP devices or force_mr=1).
-+ * Maps the bio_vec array directly, avoiding intermediate scatterlist
-+ * conversion. Supports MR registration for iWARP devices and force_mr mode.
+  * Each WR chain handles a single contiguous server-side buffer,
+- * because scatterlist entries after the first have to start on
++ * because bio_vec entries after the first have to start on
+  * page alignment. xdr_buf iovecs cannot guarantee alignment.
   *
-  * Returns the number of WQEs that will be needed on the workqueue if
-  * successful, or a negative error code.
-@@ -618,14 +751,16 @@ int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		u32 offset, u64 remote_addr, u32 rkey,
- 		enum dma_data_direction dir)
- {
-+	struct ib_device *dev = qp->pd->device;
- 	int ret;
- 
- 	if (nr_bvec == 0 || offset > bvec[0].bv_len)
- 		return -EINVAL;
- 
--	/* MR path not supported for bvec - reject iWARP and force_mr */
--	if (rdma_rw_io_needs_mr(qp->device, port_num, dir, nr_bvec))
--		return -EOPNOTSUPP;
-+	if (rdma_rw_io_needs_mr(dev, port_num, dir, nr_bvec))
-+		return rdma_rw_init_mr_wrs_bvec(ctx, qp, port_num, bvec,
-+						nr_bvec, offset, remote_addr,
-+						rkey, dir);
- 
- 	if (nr_bvec == 1)
- 		return rdma_rw_init_single_wr_bvec(ctx, qp, bvec, offset,
-@@ -921,6 +1056,16 @@ void rdma_rw_ctx_destroy_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 	u32 i;
- 
- 	switch (ctx->type) {
-+	case RDMA_RW_MR:
-+		for (i = 0; i < ctx->nr_ops; i++)
-+			ib_mr_pool_put(qp, &qp->rdma_mrs, ctx->reg[i].mr);
-+		kfree(ctx->reg);
-+		/* Unmap bvecs using stored DMA addresses */
-+		for (i = 0; i < ctx->mr_sg_cnt; i++)
-+			ib_dma_unmap_bvec(dev, sg_dma_address(&ctx->mr_sgl[i]),
-+					  sg_dma_len(&ctx->mr_sgl[i]), dir);
-+		kfree(ctx->mr_sgl);
-+		break;
- 	case RDMA_RW_IOVA:
- 		dma_iova_destroy(dev->dma_device, &ctx->iova.state,
- 				 ctx->iova.mapped_len, dir, 0);
-diff --git a/include/rdma/rw.h b/include/rdma/rw.h
-index 8a2012f03667..c73dc6955e07 100644
---- a/include/rdma/rw.h
-+++ b/include/rdma/rw.h
-@@ -48,6 +48,14 @@ struct rdma_rw_ctx {
- 			struct ib_mr		*mr;
- 		} *reg;
- 	};
-+
-+	/*
-+	 * For bvec MR path: store synthetic scatterlist with DMA addresses
-+	 * for cleanup. Only valid when type == RDMA_RW_MR and initialized
-+	 * via rdma_rw_ctx_init_bvec().
-+	 */
-+	struct scatterlist	*mr_sgl;
-+	u32			mr_sg_cnt;
+  * Each WR chain handles only one R_key. Each RPC-over-RDMA segment
+  * from a client may contain a unique R_key, so each WR chain moves
+  * up to one segment at a time.
+  *
+- * The scatterlist makes this data structure over 4KB in size. To
+- * make it less likely to fail, and to handle the allocation for
+- * smaller I/O requests without disabling bottom-halves, these
+- * contexts are created on demand, but cached and reused until the
+- * controlling svcxprt_rdma is destroyed.
++ * These contexts are created on demand, but cached and reused until
++ * the controlling svcxprt_rdma is destroyed.
+  */
+ struct svc_rdma_rw_ctxt {
+ 	struct llist_node	rw_node;
+ 	struct list_head	rw_list;
+ 	struct rdma_rw_ctx	rw_ctx;
+ 	unsigned int		rw_nents;
+-	unsigned int		rw_first_sgl_nents;
+-	struct sg_table		rw_sg_table;
+-	struct scatterlist	rw_first_sgl[];
++	struct bio_vec		*rw_bvec;
  };
  
- int rdma_rw_ctx_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u32 port_num,
++static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
++				 struct svc_rdma_rw_ctxt *ctxt);
++
+ static inline struct svc_rdma_rw_ctxt *
+ svc_rdma_next_ctxt(struct list_head *list)
+ {
+@@ -52,10 +51,9 @@ svc_rdma_next_ctxt(struct list_head *list)
+ }
+ 
+ static struct svc_rdma_rw_ctxt *
+-svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
++svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int nr_bvec)
+ {
+ 	struct ib_device *dev = rdma->sc_cm_id->device;
+-	unsigned int first_sgl_nents = dev->attrs.max_send_sge;
+ 	struct svc_rdma_rw_ctxt *ctxt;
+ 	struct llist_node *node;
+ 
+@@ -65,33 +63,35 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
+ 	if (node) {
+ 		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
+ 	} else {
+-		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, first_sgl_nents),
+-				    GFP_KERNEL, ibdev_to_node(dev));
++		ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL,
++				    ibdev_to_node(dev));
+ 		if (!ctxt)
+ 			goto out_noctx;
+ 
+ 		INIT_LIST_HEAD(&ctxt->rw_list);
+-		ctxt->rw_first_sgl_nents = first_sgl_nents;
+ 	}
+ 
+-	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
+-	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
+-				   ctxt->rw_sg_table.sgl,
+-				   first_sgl_nents))
++	ctxt->rw_bvec = kmalloc_array_node(nr_bvec, sizeof(*ctxt->rw_bvec),
++					   GFP_KERNEL, ibdev_to_node(dev));
++	if (!ctxt->rw_bvec)
+ 		goto out_free;
+ 	return ctxt;
+ 
+ out_free:
+-	kfree(ctxt);
++	if (node)
++		svc_rdma_put_rw_ctxt(rdma, ctxt);
++	else
++		kfree(ctxt);
+ out_noctx:
+-	trace_svcrdma_rwctx_empty(rdma, sges);
++	trace_svcrdma_rwctx_empty(rdma, nr_bvec);
+ 	return NULL;
+ }
+ 
+ static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
+ 				   struct llist_head *list)
+ {
+-	sg_free_table_chained(&ctxt->rw_sg_table, ctxt->rw_first_sgl_nents);
++	kfree(ctxt->rw_bvec);
++	ctxt->rw_bvec = NULL;
+ 	llist_add(&ctxt->rw_node, list);
+ }
+ 
+@@ -105,6 +105,8 @@ static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
+  * svc_rdma_destroy_rw_ctxts - Free accumulated R/W contexts
+  * @rdma: transport about to be destroyed
+  *
++ * Cached contexts have rw_bvec set to NULL because
++ * __svc_rdma_put_rw_ctxt() frees the bvec array before caching.
+  */
+ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
+ {
+@@ -135,9 +137,10 @@ static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
+ {
+ 	int ret;
+ 
+-	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp, rdma->sc_port_num,
+-			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
+-			       0, offset, handle, direction);
++	ret = rdma_rw_ctx_init_bvec(&ctxt->rw_ctx, rdma->sc_qp,
++				    rdma->sc_port_num,
++				    ctxt->rw_bvec, ctxt->rw_nents,
++				    0, offset, handle, direction);
+ 	if (unlikely(ret < 0)) {
+ 		trace_svcrdma_dma_map_rw_err(rdma, offset, handle,
+ 					     ctxt->rw_nents, ret);
+@@ -183,9 +186,9 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
+ 	while ((ctxt = svc_rdma_next_ctxt(&cc->cc_rwctxts)) != NULL) {
+ 		list_del(&ctxt->rw_list);
+ 
+-		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
+-				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
+-				    ctxt->rw_nents, dir);
++		rdma_rw_ctx_destroy_bvec(&ctxt->rw_ctx, rdma->sc_qp,
++					 rdma->sc_port_num,
++					 ctxt->rw_bvec, ctxt->rw_nents, dir);
+ 		__svc_rdma_put_rw_ctxt(ctxt, &free);
+ 
+ 		ctxt->rw_node.next = first;
+@@ -414,29 +417,25 @@ static int svc_rdma_post_chunk_ctxt(struct svcxprt_rdma *rdma,
+ 	return -ENOTCONN;
+ }
+ 
+-/* Build and DMA-map an SGL that covers one kvec in an xdr_buf
++/* Build a bvec that covers one kvec in an xdr_buf.
+  */
+-static void svc_rdma_vec_to_sg(struct svc_rdma_write_info *info,
+-			       unsigned int len,
+-			       struct svc_rdma_rw_ctxt *ctxt)
++static void svc_rdma_vec_to_bvec(struct svc_rdma_write_info *info,
++				 unsigned int len,
++				 struct svc_rdma_rw_ctxt *ctxt)
+ {
+-	struct scatterlist *sg = ctxt->rw_sg_table.sgl;
+-
+-	sg_set_buf(&sg[0], info->wi_base, len);
++	bvec_set_virt(&ctxt->rw_bvec[0], info->wi_base, len);
+ 	info->wi_base += len;
+-
+ 	ctxt->rw_nents = 1;
+ }
+ 
+-/* Build and DMA-map an SGL that covers part of an xdr_buf's pagelist.
++/* Build a bvec array that covers part of an xdr_buf's pagelist.
+  */
+-static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
+-				    unsigned int remaining,
+-				    struct svc_rdma_rw_ctxt *ctxt)
++static void svc_rdma_pagelist_to_bvec(struct svc_rdma_write_info *info,
++				      unsigned int remaining,
++				      struct svc_rdma_rw_ctxt *ctxt)
+ {
+-	unsigned int sge_no, sge_bytes, page_off, page_no;
++	unsigned int bvec_idx, sge_bytes, page_off, page_no;
+ 	const struct xdr_buf *xdr = info->wi_xdr;
+-	struct scatterlist *sg;
+ 	struct page **page;
+ 
+ 	page_off = info->wi_next_off + xdr->page_base;
+@@ -444,21 +443,19 @@ static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
+ 	page_off = offset_in_page(page_off);
+ 	page = xdr->pages + page_no;
+ 	info->wi_next_off += remaining;
+-	sg = ctxt->rw_sg_table.sgl;
+-	sge_no = 0;
++	bvec_idx = 0;
+ 	do {
+ 		sge_bytes = min_t(unsigned int, remaining,
+ 				  PAGE_SIZE - page_off);
+-		sg_set_page(sg, *page, sge_bytes, page_off);
+-
++		bvec_set_page(&ctxt->rw_bvec[bvec_idx], *page, sge_bytes,
++			      page_off);
+ 		remaining -= sge_bytes;
+-		sg = sg_next(sg);
+ 		page_off = 0;
+-		sge_no++;
++		bvec_idx++;
+ 		page++;
+ 	} while (remaining);
+ 
+-	ctxt->rw_nents = sge_no;
++	ctxt->rw_nents = bvec_idx;
+ }
+ 
+ /* Construct RDMA Write WRs to send a portion of an xdr_buf containing
+@@ -535,7 +532,7 @@ static int svc_rdma_iov_write(struct svc_rdma_write_info *info,
+ 			      const struct kvec *iov)
+ {
+ 	info->wi_base = iov->iov_base;
+-	return svc_rdma_build_writes(info, svc_rdma_vec_to_sg,
++	return svc_rdma_build_writes(info, svc_rdma_vec_to_bvec,
+ 				     iov->iov_len);
+ }
+ 
+@@ -559,7 +556,7 @@ static int svc_rdma_pages_write(struct svc_rdma_write_info *info,
+ {
+ 	info->wi_xdr = xdr;
+ 	info->wi_next_off = offset - xdr->head[0].iov_len;
+-	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_sg,
++	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_bvec,
+ 				     length);
+ }
+ 
+@@ -734,29 +731,27 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
+ {
+ 	struct svcxprt_rdma *rdma = svc_rdma_rqst_rdma(rqstp);
+ 	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
+-	unsigned int sge_no, seg_len, len;
++	unsigned int bvec_idx, nr_bvec, seg_len, len;
+ 	struct svc_rdma_rw_ctxt *ctxt;
+-	struct scatterlist *sg;
+ 	int ret;
+ 
+ 	len = segment->rs_length;
+-	sge_no = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
+-	ctxt = svc_rdma_get_rw_ctxt(rdma, sge_no);
++	nr_bvec = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
++	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_bvec);
+ 	if (!ctxt)
+ 		return -ENOMEM;
+-	ctxt->rw_nents = sge_no;
++	ctxt->rw_nents = nr_bvec;
+ 
+-	sg = ctxt->rw_sg_table.sgl;
+-	for (sge_no = 0; sge_no < ctxt->rw_nents; sge_no++) {
++	for (bvec_idx = 0; bvec_idx < ctxt->rw_nents; bvec_idx++) {
+ 		seg_len = min_t(unsigned int, len,
+ 				PAGE_SIZE - head->rc_pageoff);
+ 
+ 		if (!head->rc_pageoff)
+ 			head->rc_page_count++;
+ 
+-		sg_set_page(sg, rqstp->rq_pages[head->rc_curpage],
+-			    seg_len, head->rc_pageoff);
+-		sg = sg_next(sg);
++		bvec_set_page(&ctxt->rw_bvec[bvec_idx],
++			      rqstp->rq_pages[head->rc_curpage],
++			      seg_len, head->rc_pageoff);
+ 
+ 		head->rc_pageoff += seg_len;
+ 		if (head->rc_pageoff == PAGE_SIZE) {
 -- 
 2.52.0
 
