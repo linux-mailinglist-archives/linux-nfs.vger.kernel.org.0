@@ -1,77 +1,78 @@
-Return-Path: <linux-nfs+bounces-17950-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17951-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D993D27BA9
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 19:44:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69A45D27D75
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 19:56:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AECD53065975
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 18:31:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E24183142F02
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 18:32:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A4F3C0080;
-	Thu, 15 Jan 2026 18:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CF743BFE4B;
+	Thu, 15 Jan 2026 18:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASQojbZP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9sGnGZH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CE22D948A;
-	Thu, 15 Jan 2026 18:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C613B95EA;
+	Thu, 15 Jan 2026 18:32:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768501812; cv=none; b=fkcLXhuEr5QHHQaQeP6hPtYJUvt7C2wVEUO+GgIov9jV98MMvSYehbk9JR4IxZS7fJQwEe1/5nCq3vib1yKwfzklNg5ijstUQsGtQnuPFXqy4c3FKMC67QVRnACueJZHsCQhkdVH7q/4w8B7XFtfjBGUdXl3bwFFy6OAgYhaEVQ=
+	t=1768501947; cv=none; b=am9sAW8cxzkYXxCzE+wrJLG8cS7eRUKm3+H1TdTe906JdeRwW1Qx0090KJ3hSR+OmpDEaXnd44rNGudX3plHV0ayVqRvPOtmlETc9/ppFauXAJAHEaNyxqdZxno629v9IF4hfAkMATWYn+jSHKQzmscI4XlWu05mnXQ9ojqhac4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768501812; c=relaxed/simple;
-	bh=D/cyD+UjPBaw5gPSvQNi/7c1SdeoE2VveN1I1UXAVBo=;
+	s=arc-20240116; t=1768501947; c=relaxed/simple;
+	bh=mu/jwyuzs1woV3EsPbDGdDC5dwANFYIHrH4NaGlTLGQ=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=STIPQ3vSXs+t8boWfmSB+vUKz3RKqwRYuJ16ELOpWfPvWCKqGhWn52B/Lbjo169jGFJvkiYvu4q/bcvU2uqRrKsBZa+LbuFdGuXTfJVFsObCrqAoa76uj2tsf/bCS3hurLmCGelva2GnPpKS+nVdecRm02NxUdUyFsf+R9oCYUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASQojbZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E04C116D0;
-	Thu, 15 Jan 2026 18:30:11 +0000 (UTC)
+	 Subject:Content-Type; b=IUhpPsI1KeRLPaeAF0SBbhD17sgeJA1F7dDw0O+lBD0vk53CP7DGTwlaniiR1r6rAq5UrYpvceJxnDFWrV4cMCmN/EYFGjI+JFBmrXH/9f4OosLH0hv9mtA+RKq3FFnbgnSL47Ge7m/A/dn75FwQTc6MJP1scsn89Ut0CObiRjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9sGnGZH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52582C19425;
+	Thu, 15 Jan 2026 18:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768501812;
-	bh=D/cyD+UjPBaw5gPSvQNi/7c1SdeoE2VveN1I1UXAVBo=;
+	s=k20201202; t=1768501947;
+	bh=mu/jwyuzs1woV3EsPbDGdDC5dwANFYIHrH4NaGlTLGQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ASQojbZPxfa8rtYN+qckEbufJvSlgPd3rdWRAtno9nCX9LsDJiO46YUIU++xOtNxd
-	 bHri3X7o9gPC24bG6aEgKJwiQMmo4VzbRO0MMmA/5ThIw2lpA23BnZVpY7oeCISJ8a
-	 rLJVzmAoZuzB6XaAa8jhtN89Lq0FO2EBK5VVkuYZbai5EvcCAshkjkWNG6j9c+W4Bm
-	 eHssSsJ7QTHmIXFUSob3aMyvmNHNkJzdSj4ooeTDiODDeMl9KS8kf1Jn32YM/Jrqc8
-	 DiftKDiMyfvTZHAwyU/FzRHQVJDRZhf4sY8q0DtdVX/0dG4jbDP9JAH/vNJ7uF9+Kw
-	 5aiJhN+9eB6nw==
+	b=G9sGnGZHrQX8Py4KAlmLNGCj84evUTtPWpI0OS0q9xnBsK6HoqJ9r8k3RoRYPTAcs
+	 dKywez4yA4fFtyxHzR0fZNCFuS18YpqsdG+dwnYZYTLrQiMxCX+dFVTuWs4vq+DzQh
+	 AH6ncgzpyM5N289efGIGJ9Brgc8HkLGVcxqQ5aWDWAB356igSFZFTtM+DEJ3lJK1S3
+	 vBLW+TOFHi4t9uHXSsfiThY58trbJsC6WSdqDTUXWiyWYJ7VHOgEQvJv6FSugBzFBT
+	 ch87ZiNjAoI02FRZKay/K5tcBz2P4MFR2uvy8rr1JiNjhQqZylMHcSTEm8NQUjT3QY
+	 5WmIIwSvnHsjw==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C3217F4006A;
-	Thu, 15 Jan 2026 13:30:10 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3EF58F40068;
+	Thu, 15 Jan 2026 13:32:25 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 15 Jan 2026 13:30:10 -0500
-X-ME-Sender: <xms:MjJpacDzWE66h8HQ61g_NmEzskrnf1VSLT780nvGM3OrHsXMBp0jAQ>
-    <xme:MjJpaZUcbVftJBHKvRNV1bbg0xvUx0lt33LmJtsKeTuOo1M4jBnh0djk6sfVgRUFP
-    cGPPH_Jjh1ggU_NAtt7sBoZVUgPamY0vWqk0htQjzlGjifpZt883kE>
+  by phl-compute-10.internal (MEProxy); Thu, 15 Jan 2026 13:32:25 -0500
+X-ME-Sender: <xms:uTJpabj27YqeJsPpWzmP6lJHqZHM3xS6NXnxyt-02KY4d58e4ljHdg>
+    <xme:uTJpaS0wKtDO4nEoZbGKz2Irlr7mINYj63JF8UxM1vZDtrQVL_Ytd9AjmbXLoprna
+    vZtOi2ALzu_3ePSs7_iOEZY8bK3zSCbuAnKdzUSWhW6Gfe9XoODe10>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdeijeekucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
     khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghonh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthht
-    ohepjhhgghesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrh
-    esohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgt
-    ohhmpdhrtghpthhtohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphhtthhope
-    hokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhp
-    vgihrdgtohhm
-X-ME-Proxy: <xmx:MjJpaQuS4neq3Xe55V6KggiZeZTFndTNE4Eoj2xto6SjGrbTIZKhgg>
-    <xmx:MjJpacornZZr2neYxTXK5y_mKqgYUHc9NUAXJeK6ZUkT8R1t_8hlEA>
-    <xmx:MjJpaeeLrJ1yCJ84OP-Zn_YDukDQBwmSK9m1aWOcxaccjmzbZfKFUw>
-    <xmx:MjJpaclUbju8burk9DPlozF_3Zfob0hvh09v5qKNMj3LsXXzDZx7Xg>
-    <xmx:MjJpadbsIBiEXaqQIA4H6CdUTPN7ydLVuTucQ2dWOyR5rMOqKyjnPT_F>
+    hnpeegheduieeiveevheelheelueeghffhtddtheelhfdutddtheeileetkeelvedtjeen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
+    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
+    pedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrh
+    esohhrrggtlhgvrdgtohhmpdhrtghpthhtoheprghlmhgriidrrghlvgigrghnughrohhv
+    ihgthhesphgrrhgrghhonhdqshhofhhtfigrrhgvrdgtohhmpdhrtghpthhtoheprghgrh
+    huvghnsggrsehrvgguhhgrthdrtghomhdprhgtphhtthhopegrmhgrrhhkuhiivgesrhgv
+    ughhrghtrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomh
+    dprhgtphhtthhopehsfhhrvghntghhsehsrghmsggrrdhorhhgpdhrtghpthhtohepphhh
+    ihhllhhiphesshhquhgrshhhfhhsrdhorhhgrdhukhdprhgtphhtthhopegushhtvghrsg
+    grsehsuhhsvgdrtghomhdprhgtphhtthhopehjrggtkhesshhushgvrdgtohhm
+X-ME-Proxy: <xmx:uTJpaXjYEHydm0-mu6GJjOWkuY79d7YwA39dQa4yBpumpcrJjyZpBA>
+    <xmx:uTJpadUspoWOoXgw6wz0Y-rauyDPCjUBX2Bv-lCfOP5KPVWq27YUvw>
+    <xmx:uTJpafHdNYgz0ummJq2lkUsN0RmWNdLFj15LzfLEpujlJEEqeqsY4Q>
+    <xmx:uTJpad9kkUBSM2-YMJbN3h4r5tNwg8XpVUFGLMjb4EHYpOn_qA6EYA>
+    <xmx:uTJpaf32DSIZ0QbXG9Ym4mQcyBvW1vqcIAYpTFxwKSraJ47KfAgzWPHb>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A2B93780075; Thu, 15 Jan 2026 13:30:10 -0500 (EST)
+	id 155C8780070; Thu, 15 Jan 2026 13:32:25 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,64 +80,102 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AytU4w2KIidk
-Date: Thu, 15 Jan 2026 13:29:41 -0500
+X-ThreadId: A7-j_yKLHrMN
+Date: Thu, 15 Jan 2026 13:31:54 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Christoph Hellwig" <hch@lst.de>
-Cc: "Jason Gunthorpe" <jgg@nvidia.com>, "Leon Romanovsky" <leon@kernel.org>,
- linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
- NeilBrown <neilb@ownmail.net>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <e85b5f0f-dbe1-4b4a-8e1c-56ecfe5853ea@app.fastmail.com>
-In-Reply-To: <20260115162929.GC17257@lst.de>
-References: <20260114143948.3946615-1-cel@kernel.org>
- <20260114143948.3946615-5-cel@kernel.org> <20260115162929.GC17257@lst.de>
-Subject: Re: [PATCH v1 4/4] svcrdma: use bvec-based RDMA read/write API
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+To: "Amir Goldstein" <amir73il@gmail.com>, "Jeff Layton" <jlayton@kernel.org>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Theodore Tso" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Carlos Maiolino" <cem@kernel.org>, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>, "Chris Mason" <clm@fb.com>,
+ "David Sterba" <dsterba@suse.com>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Phillip Lougher" <phillip@squashfs.org.uk>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Dave Kleikamp" <shaggy@kernel.org>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>, "Jan Kara" <jack@suse.cz>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>,
+ "Christoph Hellwig" <hch@infradead.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
+ linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+ linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
+ linux-f2fs-devel@lists.sourceforge.net
+Message-Id: <d486fdb8-686c-4426-9fac-49b7dbc28765@app.fastmail.com>
+In-Reply-To: 
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to nfsd export
+ support
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On Thu, Jan 15, 2026, at 11:29 AM, Christoph Hellwig wrote:
-> On Wed, Jan 14, 2026 at 09:39:48AM -0500, Chuck Lever wrote:
->> The structure size reduction is significant: the previous inline
->> scatterlist array of RPCSVC_MAXPAGES entries (4KB or more) is
->> replaced with a pointer to a dynamically allocated bvec array,
->> bringing the fixed structure size down to approximately 100 bytes.
+On Thu, Jan 15, 2026, at 1:17 PM, Amir Goldstein wrote:
+> On Thu, Jan 15, 2026 at 6:48=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
+g> wrote:
+>>
+>> In recent years, a number of filesystems that can't present stable
+>> filehandles have grown struct export_operations. They've mostly done
+>> this for local use-cases (enabling open_by_handle_at() and the like).
+>> Unfortunately, having export_operations is generally sufficient to ma=
+ke
+>> a filesystem be considered exportable via nfsd, but that requires that
+>> the server present stable filehandles.
 >
-> Can you explain why this switches to the dynamic allocation?
-> To me that seems like a separate trade-off to bvec vs scatterlist.
-
-The current implementation keeps a "default size" SGL in the
-context, and chains more on if a larger SGL size is needed.
-This keeps the size of the context reasonable while still
-enabling large requests.
-
-For bvec support, there's no concept of bvec array chaining.
-We always have to allocate the exact size of the bvec array
-that is needed for the request, otherwise we'd have to keep
-a maximum-sized biovec array in every context.
-
-Now, I suppose that later on we will be able to adopt the use of
-the rqstp->rq_bvec, when the full NFSD stack supports biovecs,
-and this allocation could be replaced, at least in some cases.
-
-
->>   * Each WR chain handles a single contiguous server-side buffer,
->> - * because scatterlist entries after the first have to start on
->> + * because bio_vec entries after the first have to start on
->>   * page alignment. xdr_buf iovecs cannot guarantee alignment.
+> Where does the term "stable file handles" come from? and what does it =
+mean?
+> Why not "persistent handles", which is described in NFS and SMB specs?
 >
-> For both the old and new version, can you explain they have to
-> start on a page boundary?  Because that's not how scatterlists or
-> bvecs work in general.  I guess this just documents the sunrpc
-> limits, but somehow projects it to these structures?
+> Not to mention that EXPORT_OP_PERSISTENT_HANDLES was Acked
+> by both Christoph and Christian:
+>
+> https://lore.kernel.org/linux-fsdevel/20260115-rundgang-leihgabe-12018=
+e93c00c@brauner/
+>
+> Am I missing anything?
 
-It's historic, and probably related to the sunrpc implementation.
-I didn't question it when doing the conversion, so I'll have to
-try to remember exactly why.
+PERSISTENT generally implies that the file handle is saved on
+persistent storage. This is not true of tmpfs.
 
--- 
+The use of "stable" means that the file handle is stable for
+the life of the file. This /is/ true of tmpfs.
+
+--=20
 Chuck Lever
 
