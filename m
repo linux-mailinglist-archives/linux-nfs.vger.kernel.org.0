@@ -1,127 +1,120 @@
-Return-Path: <linux-nfs+bounces-17901-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17902-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65771D23522
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 10:00:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 926BED23B3E
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 10:50:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E6ACE301699E
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 08:59:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 14589300EE6C
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 09:50:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1295033ADA7;
-	Thu, 15 Jan 2026 08:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C012735EDA3;
+	Thu, 15 Jan 2026 09:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="OYfw2Sur";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="ArK7qpn4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH+ihF/S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532F626A1B9;
-	Thu, 15 Jan 2026 08:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C40735E554;
+	Thu, 15 Jan 2026 09:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768467545; cv=none; b=Cs+hEsdr2pQjfz2FoOEvXclhoU0Uw3MkrD/RYrQxaLEw5uiV33YQMUuw0VKtuS7yTUGLZz92PB6EFFSvi/JeTJc5f1MbBMWlIMajw81H/zasyAbcVwzLFFn6rWdPVXbnMIgztB0y5nXQibk0vw1pK+rIjKDl9jtMPcSDTXl8OeI=
+	t=1768470605; cv=none; b=fczPcT51xjPQHtGQo//qMWzdPj0EsjlOJQ9/B9Be9bx6R9pcP5BPWwO1+vqyl10ERFYj1CNuVlqy+KE6D0O/WaC3iJrLUILKNqwprb62EKe+wYA7KgLVxAOhPiIHKGh6WN5sztxLhk5MF6mbQq1/Qr/i5ODPmhm/d3zJa9TToSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768467545; c=relaxed/simple;
-	bh=8YPpj0NEeIuqe+udAz3jb2y7qjyI7ASecGv0DFM4yLU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XaWtVm0fFk92nSoEUREI11wjHS9/BbhQCVfNA62rCwoRqK7kXYduMnmKzXygK85hw/ZC59Mp/2MaeRfxFl9YiLbDn8MVJ/g0vA0yUsYu28/lsvDIMckAQoyuf+ieB2UzQldBmeN2UPx2dCNNZlAAbsNe2BmLcwOwHAtEJSrDhrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=OYfw2Sur; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=ArK7qpn4; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 59948209655C;
-	Thu, 15 Jan 2026 17:58:53 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1768467533;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=239oZ275b6smCS74K1tWdjRS0BNLiePy77vuyzqmFog=;
-	b=OYfw2Sur1UuFe52+b+QneplE8FQ8rN3ZPZNmHUjXZ8I3EUbVeENQa9S7UE9y2K/+XwV3SQ
-	I/ZZv2vblo2O4gCBhhbii9EMgTIhTnJ/l+EBkDsJz7Ar+ySVu32QBZ6Gv6ZPTUT/orvUyF
-	1QfiBPAonvwEk/e0naEnhF3vz9jWm+xYwR6FdzXz0RU8n3PI0yjEuiVMmzDnXYu3FOUwsO
-	ju7euX7+j6w8JoZ6Ylar2ikJfzTuIaPaPoZvjemwpemy6GSLCFLAZkIp5MRiF8qr7GeUC3
-	Po5ictZNHCSisTuUNKKDZ7KlEQmc0+zpktZuVHakaOIbuZMCSLmk2ou/QrzuiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1768467533;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=239oZ275b6smCS74K1tWdjRS0BNLiePy77vuyzqmFog=;
-	b=ArK7qpn4FSYfiTqDwLBIMwdc8g0BdjAmYQzNjX9MTC6w813MFWfk5weBlFC8Egh9ZmVWC0
-	pvksDNyaiFFxs1Dg==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-7) with ESMTPS id 60F8wqQB134411
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 15 Jan 2026 17:58:53 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-7) with ESMTPS id 60F8wpYn351446
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 15 Jan 2026 17:58:51 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 60F8wnRr351445;
-	Thu, 15 Jan 2026 17:58:49 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+	s=arc-20240116; t=1768470605; c=relaxed/simple;
+	bh=nWpTNQTecvtAu2Rp9pmV5c6Brq1O6zAz3WjevSE/eVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTTfiWsf+z6fqyYkhi3V8GdPXV99L/oeeffvA8o2G0Tw4tPoBBS7/yxsjBCv3KYIvNIgk3JYvUiLeVk//K8bcH1IiGcWT7FJiRkD458rhzYW6oVAJjeB9qpgOYgM1P2p0VS3Hz3OeArMNoMTQ0nnvZhqbcmcXt8aIY4eyZ/oHpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH+ihF/S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72086C116D0;
+	Thu, 15 Jan 2026 09:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768470605;
+	bh=nWpTNQTecvtAu2Rp9pmV5c6Brq1O6zAz3WjevSE/eVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BH+ihF/S/kDKyRJEQnALQoazoUbe53m4KZI3zKvg7ysQoiyiuOzqf6JNyNbVun2LP
+	 T4NO+sTd205FcJEz7jyY3pHSNabDPZVHXzN3jlcFeae/eCdfwH4xMBoWThahpoXNYG
+	 Ojy0wEmRppDj0yI38z7xz/r/MCG4ueUEww6YRZGhpGlzRSuu7kKxO7ZjV1HcuihvQz
+	 jZ6HkIlHQQ8wA4mbg5qe8rYy9Ed+q/NJWA5PumdZeDw2hrL9hMVBkxD4PwQkpzKWCp
+	 1WoEErpYDi3t+eO8kkygyMUtBNREdoANZjs97IJAao2kSNPREL29Hzh0nCx0kSr0Za
+	 qdMtjBMDpG4BA==
+Date: Thu, 15 Jan 2026 11:50:00 +0200
+From: Leon Romanovsky <leon@kernel.org>
 To: Chuck Lever <cel@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        <linux-fsdevel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        <linux-nfs@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
-        linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com,
-        almaz.alexandrovich@paragon-software.com, slava@dubeyko.com,
-        glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org,
-        pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com,
-        trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org,
-        chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org,
-        Chuck
- Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 02/16] fat: Implement fileattr_get for case sensitivity
-In-Reply-To: <20260114142900.3945054-3-cel@kernel.org>
-References: <20260114142900.3945054-1-cel@kernel.org>
-	<20260114142900.3945054-3-cel@kernel.org>
-Date: Thu, 15 Jan 2026 17:58:49 +0900
-Message-ID: <874ionw8ty.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@lst.de>,
+	linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
+	NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v1 0/4] Add a bio_vec based API to core/rw.c
+Message-ID: <20260115095000.GA14359@unreal>
+References: <20260114143948.3946615-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260114143948.3946615-1-cel@kernel.org>
 
-Chuck Lever <cel@kernel.org> writes:
+On Wed, Jan 14, 2026 at 09:39:44AM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> This series introduces a bio_vec based API for RDMA read and write
+> operations in the RDMA core, eliminating unnecessary scatterlist
+> conversions for callers that already work with bvecs.
+> 
+> Current users of rdma_rw_ctx_init() must convert their native data
+> structures into scatterlists. For subsystems like svcrdma that
+> maintain data in bvec format, this conversion adds overhead both in
+> CPU cycles and memory footprint. The new API accepts bvec arrays
+> directly.
+> 
+> For hardware RDMA devices, the implementation uses the IOVA-based
+> DMA mapping API to reduce IOTLB synchronization overhead from O(n)
+> per-page syncs to a single O(1) sync after all mappings complete.
+> Software RDMA devices (rxe, siw) continue using virtual addressing.
+> 
+> The series includes MR registration support for bvec arrays,
+> enabling iWARP devices and the force_mr debug parameter. The MR
+> path reuses existing ib_map_mr_sg() infrastructure by constructing
+> a synthetic scatterlist from the bvec DMA addresses.
+> 
+> The final patch adds the first consumer for the new API: svcrdma.
+> It replaces its scatterlist conversion code, significantly reducing
+> the svc_rdma_rw_ctxt structure size. The previous implementation
+> embedded a scatterlist array of RPCSVC_MAXPAGES entries (4KB or
+> more per context); the new implementation uses a pointer to a
+> dynamically allocated bvec array.
+> 
+> Based on v6.19-rc5.
+> 
+> Chuck Lever (4):
+>   RDMA/core: add bio_vec based RDMA read/write API
+>   RDMA/core: use IOVA-based DMA mapping for bvec RDMA operations
+>   RDMA/core: add MR support for bvec-based RDMA operations
+>   svcrdma: use bvec-based RDMA read/write API
 
-> +int fat_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
-> +{
-> +	struct msdos_sb_info *sbi = MSDOS_SB(dentry->d_sb);
-> +
-> +	/*
-> +	 * FAT filesystems are case-insensitive by default. MSDOS
-> +	 * supports a 'nocase' mount option for case-sensitive behavior.
-> +	 *
-> +	 * VFAT long filename entries preserve case. Without VFAT, only
-> +	 * uppercased 8.3 short names are stored.
-> +	 */
-> +	fa->case_insensitive = !sbi->options.nocase;
-> +	fa->case_nonpreserving = !sbi->options.isvfat;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(fat_fileattr_get);
+Amazing, thanks a lot.
 
-Hm, if "nocase" option is specified for msdos, it would be the case
-preserving (ignores/breaks the spec though).
-
-I.e. on msdos mount with "nocase" works like the following
-
-    $ touch aAa.txT
-    $ ls
-    aAa.txT
+I haven’t done a deep‑dive review yet, but from what I’ve seen so far  
+it looks solid and well put together.
 
 Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+
+> 
+>  drivers/infiniband/core/rw.c      | 492 ++++++++++++++++++++++++++++++
+>  include/rdma/ib_verbs.h           |  35 +++
+>  include/rdma/rw.h                 |  26 ++
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c | 115 ++++---
+>  4 files changed, 608 insertions(+), 60 deletions(-)
+> 
+> -- 
+> 2.52.0
+> 
 
