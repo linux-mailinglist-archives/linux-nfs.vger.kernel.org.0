@@ -1,75 +1,204 @@
-Return-Path: <linux-nfs+bounces-17916-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17917-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88B40D25C11
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 17:29:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AFBD2793E
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 19:32:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1232F300C61B
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 16:29:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AFBA132B9160
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 17:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F85A3B9607;
-	Thu, 15 Jan 2026 16:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979853BF309;
+	Thu, 15 Jan 2026 17:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv2wZs8W"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC12F1E5B9E;
-	Thu, 15 Jan 2026 16:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DCE3BF2F6;
+	Thu, 15 Jan 2026 17:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768494577; cv=none; b=Z/pCrvlC8qL9HjT0WHgMg6HCeQWbHiC1ck6c4FfGKWxBo/qckbTGFIlm/vNJGewUmBTfrBqsThGH8iBql9xyprGvDzxc2/RMPXibDPL0Glq9vo1wBt8zY0+RdNdsEfRHRVLO2HcA8CPXyba/5IJXYSSSty5bsBus08naFtcSKz8=
+	t=1768499282; cv=none; b=LH8vQq7prCvD+4iih/TJR9/uUEZaH0rW97MRLW8iZM8BTRNHbNHNkQsI0HWUFlxSm+lP3t+mpKl1msd2yFfQfsJ96MerBwvsozic+cTOz4F+uhT7Fqk7HAnC/U8t93J2LtCr56yKkt7M0uDxIvn1m9kvEJb7ctySHqGN/MdelHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768494577; c=relaxed/simple;
-	bh=m+/097ygvy4jrqQmjW4fnEnVzQnpjKEIpum4XT7Y674=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6s4zxGRZ4gU4efYtJIsZjTH79IvF1XeJT/c02hrFPKeIJ7O1sljPoBAUdkzdE8SlEbjZPiueHrTxApTMUkxacDGtPDMz7/EoIdNR6CJDTDKIt7j5l3krJr0m/23HjMdcF8vTgzdgZe4PWVlMtSyK3oAkdf9alsyLGmtzx/WKgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C7E31227AAF; Thu, 15 Jan 2026 17:29:29 +0100 (CET)
-Date: Thu, 15 Jan 2026 17:29:29 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Chuck Lever <cel@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, linux-rdma@vger.kernel.org,
-	linux-nfs@vger.kernel.org, NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v1 4/4] svcrdma: use bvec-based RDMA read/write API
-Message-ID: <20260115162929.GC17257@lst.de>
-References: <20260114143948.3946615-1-cel@kernel.org> <20260114143948.3946615-5-cel@kernel.org>
+	s=arc-20240116; t=1768499282; c=relaxed/simple;
+	bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CujYPFGutf/UKSzzB9mUg8xSAjsxk+hfR2VTrWMsOrY1IWpDdpjgpZEid4pkF5DXxUmxBjenSGlV7d97fBc/otdENxEaIuYjPrUqHYVmrmnk6dZsEaFyc5892YFXpC7UBbBx98oGimLga8BDcCxIxxKfYFlR8T4l9toyOStidIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv2wZs8W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6A44C16AAE;
+	Thu, 15 Jan 2026 17:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768499282;
+	bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=sv2wZs8WpKeI0wpddsdCzx5FPuJfiv0htyo+0abzJrCCFK9q4146ZE28BG441jorg
+	 Qo1tIee7N/1MnShJaAey62z4lfLsmhIXMLkZMLSEMlmEhDwdr2qsSYaFrVZPxb77cF
+	 i3aSCJl0gIo+M7JBkTxdAg7VvCpYnqzbG7R2Ohvdin1j12CbILNcI3w/DNWL7f9jbe
+	 DBukUrRoDDoNluFnmhgrGDxPlIkvSUMcrjLUpjjJ1T7VqZOaz0YENa8tKyKu6CaX47
+	 KOmCoEsEsYyGz5wli5gj5MnM7JWLaAPtkHWHG4sSZOBoGuAC5psY5ECRaP4FTl6A5n
+	 5/8prxsy2NgBw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 00/29] fs: require filesystems to explicitly opt-in to nfsd
+ export support
+Date: Thu, 15 Jan 2026 12:47:31 -0500
+Message-Id: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114143948.3946615-5-cel@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqAIBBA0avErBMcyaKuEi0kx5qNhhMRiHdPW
+ r7F/wWEMpPA0hXI9LBwig3Yd7CfLh6k2DeD0WbUiIOi90r5DqJiEK/QWLR6MjS7GVpzZQr8/r9
+ 1q/UDI1yMc18AAAA=
+X-Change-ID: 20260114-exportfs-nfsd-12515072e9a9
+To: Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Amir Goldstein <amir73il@gmail.com>, 
+ Hugh Dickins <hughd@google.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
+ Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>, 
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
+ Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
+ David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
+ Salah Triki <salah.triki@gmail.com>, 
+ Phillip Lougher <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, 
+ Paulo Alcantara <pc@manguebit.org>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, 
+ Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+ Mike Marshall <hubcap@omnibond.com>, 
+ Martin Brandenburg <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Dave Kleikamp <shaggy@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
+ Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, 
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+ Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ linux-unionfs@vger.kernel.org, devel@lists.orangefs.org, 
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
+ linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+ linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
+ linux-f2fs-devel@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4009; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaSg9V9dGf/ZUraP4b1Pq5RtyBLPKPHN6qkaxn
+ 8S9nULay2GJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoPQAKCRAADmhBGVaC
+ FU2HEACr1dom+IcUewiIOnk7xEbGWbqcKSzh/u8bfD7LubFnaY7GNt5n6p3PgjmIFAgE/Lfk2v+
+ Do5G648LuI9AgNBffpq3Rou0EGw9+wxjXyRaSItdEWDshxbLnMS5D2dtmXeB4x2mF6Xo8wPho9c
+ ncOUEwjZL61T/UOLGxpSOojluUsBXenixeUCTgPYWeDSKZSd1PrbfIIvNT3wwmmIpQAv0lasork
+ Zl4qe+BiG1G0IPtketcJGFYIgXNp76Hnll+P8/EqVrDG+4nPn8MGAy3xqMQyq4+dCzENDy0DmS3
+ AJMlGepQMU/y0tAmS4R1R2P27jpCMwpBj8HhdNo0JThYFgmCYeGwPxsTOTNG8XmrWn4zye1BAl9
+ Oz/kXfQnSFwMzweZ9J7fT16IxYVpb12aXvYdwcnZ+IE/Suh66Nx8n52d4tuSwNkKYQf6d05G1bU
+ I+lA7kAnXjIh/p4o4pNnALEld2Rn49OAx/yxtN5VOYrjpBIK6yRyYTXjz0PnCRFsn3V65+xhhPM
+ CJTSVK9ZzU4nspmDSK5hdCvs1pnGqYR9dLF7QV60eUBpiDYnfsiOG+KZmrsLuWOd2/7/8V8giqf
+ SBbuLOXJmeBQ1IbyaaZbzwsaK+7PAPY92+HTJ8jsZ6+vQhAXLJ40Y1ug6UAG1bGirhSbW+Ru3JH
+ SgoO6jBDoISNHpA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, Jan 14, 2026 at 09:39:48AM -0500, Chuck Lever wrote:
-> The structure size reduction is significant: the previous inline
-> scatterlist array of RPCSVC_MAXPAGES entries (4KB or more) is
-> replaced with a pointer to a dynamically allocated bvec array,
-> bringing the fixed structure size down to approximately 100 bytes.
+In recent years, a number of filesystems that can't present stable
+filehandles have grown struct export_operations. They've mostly done
+this for local use-cases (enabling open_by_handle_at() and the like).
+Unfortunately, having export_operations is generally sufficient to make
+a filesystem be considered exportable via nfsd, but that requires that
+the server present stable filehandles.
 
-Can you explain why this switches to the dynamic allocation?
-To me that seems like a separate trade-off to bvec vs scatterlist.
+This patchset declares a new EXPORT_OP_STABLE_HANDLES flag, adds it to
+all of the filesystems that have stable filehandles, and then adds a
+check in nfsd to ensure that that flag is set for any filesystem to
+which it has been presented a handle. When a filesystem doesn't have
+this flag, it will treat the filehandle as stale.
 
->   * Each WR chain handles a single contiguous server-side buffer,
-> - * because scatterlist entries after the first have to start on
-> + * because bio_vec entries after the first have to start on
->   * page alignment. xdr_buf iovecs cannot guarantee alignment.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (29):
+      exportfs: add new EXPORT_OP_STABLE_HANDLES flag
+      tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext4: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      erofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      efs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      xfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ceph: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      btrfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      befs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ufs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      udf: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      affs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      squashfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      smb/client: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ovl: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      orangefs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ocfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ntfs3: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nilfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jffs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      isofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      gfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fuse: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fat: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      f2fs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfsd: only allow filesystems that set EXPORT_OP_STABLE_HANDLES
 
-For both the old and new version, can you explain they have to
-start on a page boundary?  Because that's not how scatterlists or
-bvecs work in general.  I guess this just documents the sunrpc
-limits, but somehow projects it to these structures?
+ fs/affs/namei.c          |  1 +
+ fs/befs/linuxvfs.c       |  1 +
+ fs/btrfs/export.c        |  1 +
+ fs/ceph/export.c         |  1 +
+ fs/efs/super.c           |  1 +
+ fs/erofs/super.c         |  1 +
+ fs/ext2/super.c          |  1 +
+ fs/ext4/super.c          |  1 +
+ fs/f2fs/super.c          |  1 +
+ fs/fat/nfs.c             |  2 ++
+ fs/fuse/inode.c          |  2 ++
+ fs/gfs2/export.c         |  1 +
+ fs/isofs/export.c        |  1 +
+ fs/jffs2/super.c         |  1 +
+ fs/jfs/super.c           |  1 +
+ fs/nfs/export.c          |  3 ++-
+ fs/nfsd/nfsfh.c          |  4 ++++
+ fs/nilfs2/namei.c        |  1 +
+ fs/ntfs3/super.c         |  1 +
+ fs/ocfs2/export.c        |  1 +
+ fs/orangefs/super.c      |  1 +
+ fs/overlayfs/export.c    |  2 ++
+ fs/smb/client/export.c   |  1 +
+ fs/squashfs/export.c     |  3 ++-
+ fs/udf/namei.c           |  1 +
+ fs/ufs/super.c           |  1 +
+ fs/xfs/xfs_export.c      |  1 +
+ include/linux/exportfs.h | 16 +++++++++-------
+ mm/shmem.c               |  1 +
+ 29 files changed, 45 insertions(+), 9 deletions(-)
+---
+base-commit: c537e12daeecaecdcd322c56a5f70659d2de7bde
+change-id: 20260114-exportfs-nfsd-12515072e9a9
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
