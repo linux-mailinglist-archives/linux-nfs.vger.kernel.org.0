@@ -1,208 +1,142 @@
-Return-Path: <linux-nfs+bounces-17949-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-17950-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8684D27AC3
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 19:39:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D993D27BA9
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 19:44:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 449763185515
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 18:30:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AECD53065975
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Jan 2026 18:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745283C1995;
-	Thu, 15 Jan 2026 18:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A4F3C0080;
+	Thu, 15 Jan 2026 18:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oD4BqoeH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASQojbZP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DAA3C00BB;
-	Thu, 15 Jan 2026 18:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CE22D948A;
+	Thu, 15 Jan 2026 18:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768501789; cv=none; b=QsMMawp0xUv66yy59VYWqVxkqA2A/2Vb2INz3ShvDPo7x1Psi2sNV83ejdw77ScmWhcV85FB9PxElFPUPmw/TvlUawXJt+WfwzTEQSsOhfvLsbHGGWPluKYhf5rhhhHpwaY0C4Tt/uuhRTpedoaMQQgkQop/EPVrfd0TyiyyJIo=
+	t=1768501812; cv=none; b=fkcLXhuEr5QHHQaQeP6hPtYJUvt7C2wVEUO+GgIov9jV98MMvSYehbk9JR4IxZS7fJQwEe1/5nCq3vib1yKwfzklNg5ijstUQsGtQnuPFXqy4c3FKMC67QVRnACueJZHsCQhkdVH7q/4w8B7XFtfjBGUdXl3bwFFy6OAgYhaEVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768501789; c=relaxed/simple;
-	bh=YJUwpUc45Oiig1PgeO+sGSqGRRsfBtkg12WLTtqgjM0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YXpdev8owl3t7C32FOpeDxGlvWRYXWyNfEf26vrwUXWGO5PrVT5tp+CHYEFbUT2W1pDgBlmnvIzDhD7ZnwvhMcuQQMCwDYhuYXTs3ktS8NnjG45EE1uEhUQ+IAGi9nyC6ryfCdJp2T4REQjSuBRFf662mXsYy2bOY/20MHLPWlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oD4BqoeH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52629C19422;
-	Thu, 15 Jan 2026 18:29:42 +0000 (UTC)
+	s=arc-20240116; t=1768501812; c=relaxed/simple;
+	bh=D/cyD+UjPBaw5gPSvQNi/7c1SdeoE2VveN1I1UXAVBo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=STIPQ3vSXs+t8boWfmSB+vUKz3RKqwRYuJ16ELOpWfPvWCKqGhWn52B/Lbjo169jGFJvkiYvu4q/bcvU2uqRrKsBZa+LbuFdGuXTfJVFsObCrqAoa76uj2tsf/bCS3hurLmCGelva2GnPpKS+nVdecRm02NxUdUyFsf+R9oCYUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASQojbZP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E04C116D0;
+	Thu, 15 Jan 2026 18:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768501788;
-	bh=YJUwpUc45Oiig1PgeO+sGSqGRRsfBtkg12WLTtqgjM0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oD4BqoeHcY2D9lGD7DZ3JkRCa0etBfHfBKe+2G2b7u7Qo+C41AyXcw62I2rIzw78K
-	 JhB9l/0/J6ilYAa69I8b7fww8XZFEqOir5lBIE2UdSkmpRVv/hXFxiOU+LtDAjFXR6
-	 BNE6R8L6dKY0UtY62cDEp8T1NZC6IK+QrzBnhVQPbtXSZ2RbkhJJ5Xlh6Q8pw3shuL
-	 6BvYBuNu4w1u+CtSec6A7GYdzxcGnBdiKl2POm27xEPFdCmzt6sqGM5XBC0tQhtIJ6
-	 65IfjuFS7GtCyIgOWgwaid7bZE2IFVOd9iIpDkcd3LlTfzzNh/Mb4MwPEBNMh7gQ2D
-	 Zad5rVsjaOezQ==
-Message-ID: <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
-Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
- nfsd export support
-From: Jeff Layton <jlayton@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro	
- <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, NeilBrown	
- <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo	
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Hugh Dickins
- <hughd@google.com>,  Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew
- Morton <akpm@linux-foundation.org>, Theodore Ts'o	 <tytso@mit.edu>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Gao Xiang
- <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu	
- <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale	 <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, Chunhai
- Guo	 <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>, Ilya Dryomov	
- <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, Viacheslav
- Dubeyko	 <slava@dubeyko.com>, Chris Mason <clm@fb.com>, David Sterba
- <dsterba@suse.com>,  Luis de Bethencourt	 <luisbg@kernel.org>, Salah Triki
- <salah.triki@gmail.com>, Phillip Lougher	 <phillip@squashfs.org.uk>, Steve
- French <sfrench@samba.org>, Paulo Alcantara	 <pc@manguebit.org>, Ronnie
- Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N	
- <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, Miklos
- Szeredi	 <miklos@szeredi.hu>, Mike Marshall <hubcap@omnibond.com>, Martin
- Brandenburg	 <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, Joel
- Becker	 <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Ryusuke
- Konishi <konishi.ryusuke@gmail.com>,  Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, David
- Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan
- Kara <jack@suse.cz>,  Andreas Gruenbacher	 <agruenba@redhat.com>, OGAWA
- Hirofumi <hirofumi@mail.parknet.co.jp>, Jaegeuk Kim <jaegeuk@kernel.org>,
- Christoph Hellwig <hch@infradead.org>, 	linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	linux-unionfs@vger.kernel.org, devel@lists.orangefs.org, 
-	ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
- linux-nilfs@vger.kernel.org, 	jfs-discussion@lists.sourceforge.net,
- linux-mtd@lists.infradead.org, 	gfs2@lists.linux.dev,
- linux-f2fs-devel@lists.sourceforge.net
-Date: Thu, 15 Jan 2026 13:29:41 -0500
-In-Reply-To: <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
-References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
-	 <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1768501812;
+	bh=D/cyD+UjPBaw5gPSvQNi/7c1SdeoE2VveN1I1UXAVBo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ASQojbZPxfa8rtYN+qckEbufJvSlgPd3rdWRAtno9nCX9LsDJiO46YUIU++xOtNxd
+	 bHri3X7o9gPC24bG6aEgKJwiQMmo4VzbRO0MMmA/5ThIw2lpA23BnZVpY7oeCISJ8a
+	 rLJVzmAoZuzB6XaAa8jhtN89Lq0FO2EBK5VVkuYZbai5EvcCAshkjkWNG6j9c+W4Bm
+	 eHssSsJ7QTHmIXFUSob3aMyvmNHNkJzdSj4ooeTDiODDeMl9KS8kf1Jn32YM/Jrqc8
+	 DiftKDiMyfvTZHAwyU/FzRHQVJDRZhf4sY8q0DtdVX/0dG4jbDP9JAH/vNJ7uF9+Kw
+	 5aiJhN+9eB6nw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C3217F4006A;
+	Thu, 15 Jan 2026 13:30:10 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 15 Jan 2026 13:30:10 -0500
+X-ME-Sender: <xms:MjJpacDzWE66h8HQ61g_NmEzskrnf1VSLT780nvGM3OrHsXMBp0jAQ>
+    <xme:MjJpaZUcbVftJBHKvRNV1bbg0xvUx0lt33LmJtsKeTuOo1M4jBnh0djk6sfVgRUFP
+    cGPPH_Jjh1ggU_NAtt7sBoZVUgPamY0vWqk0htQjzlGjifpZt883kE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdeijeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghonh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthht
+    ohepjhhgghesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrh
+    esohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgt
+    ohhmpdhrtghpthhtohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphhtthhope
+    hokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhp
+    vgihrdgtohhm
+X-ME-Proxy: <xmx:MjJpaQuS4neq3Xe55V6KggiZeZTFndTNE4Eoj2xto6SjGrbTIZKhgg>
+    <xmx:MjJpacornZZr2neYxTXK5y_mKqgYUHc9NUAXJeK6ZUkT8R1t_8hlEA>
+    <xmx:MjJpaeeLrJ1yCJ84OP-Zn_YDukDQBwmSK9m1aWOcxaccjmzbZfKFUw>
+    <xmx:MjJpaclUbju8burk9DPlozF_3Zfob0hvh09v5qKNMj3LsXXzDZx7Xg>
+    <xmx:MjJpadbsIBiEXaqQIA4H6CdUTPN7ydLVuTucQ2dWOyR5rMOqKyjnPT_F>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A2B93780075; Thu, 15 Jan 2026 13:30:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: AytU4w2KIidk
+Date: Thu, 15 Jan 2026 13:29:41 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Christoph Hellwig" <hch@lst.de>
+Cc: "Jason Gunthorpe" <jgg@nvidia.com>, "Leon Romanovsky" <leon@kernel.org>,
+ linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
+ NeilBrown <neilb@ownmail.net>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <e85b5f0f-dbe1-4b4a-8e1c-56ecfe5853ea@app.fastmail.com>
+In-Reply-To: <20260115162929.GC17257@lst.de>
+References: <20260114143948.3946615-1-cel@kernel.org>
+ <20260114143948.3946615-5-cel@kernel.org> <20260115162929.GC17257@lst.de>
+Subject: Re: [PATCH v1 4/4] svcrdma: use bvec-based RDMA read/write API
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2026-01-15 at 19:17 +0100, Amir Goldstein wrote:
-> On Thu, Jan 15, 2026 at 6:48=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
-wrote:
-> >=20
-> > In recent years, a number of filesystems that can't present stable
-> > filehandles have grown struct export_operations. They've mostly done
-> > this for local use-cases (enabling open_by_handle_at() and the like).
-> > Unfortunately, having export_operations is generally sufficient to make
-> > a filesystem be considered exportable via nfsd, but that requires that
-> > the server present stable filehandles.
->=20
-> Where does the term "stable file handles" come from? and what does it mea=
-n?
-> Why not "persistent handles", which is described in NFS and SMB specs?
->=20
-> Not to mention that EXPORT_OP_PERSISTENT_HANDLES was Acked
-> by both Christoph and Christian:
->=20
-> https://lore.kernel.org/linux-fsdevel/20260115-rundgang-leihgabe-12018e93=
-c00c@brauner/
->=20
-> Am I missing anything?
->=20
 
-This was Chuck's suggested name. His point was that STABLE means that
-the FH's don't change during the lifetime of the file.
 
-I don't much care about the flag name, so if everyone likes PERSISTENT
-better I'll roll with that.
+On Thu, Jan 15, 2026, at 11:29 AM, Christoph Hellwig wrote:
+> On Wed, Jan 14, 2026 at 09:39:48AM -0500, Chuck Lever wrote:
+>> The structure size reduction is significant: the previous inline
+>> scatterlist array of RPCSVC_MAXPAGES entries (4KB or more) is
+>> replaced with a pointer to a dynamically allocated bvec array,
+>> bringing the fixed structure size down to approximately 100 bytes.
+>
+> Can you explain why this switches to the dynamic allocation?
+> To me that seems like a separate trade-off to bvec vs scatterlist.
 
-Also, on the ovl patch: will fix...
+The current implementation keeps a "default size" SGL in the
+context, and chains more on if a larger SGL size is needed.
+This keeps the size of the context reasonable while still
+enabling large requests.
 
-Thanks for the review!
---=20
-Jeff Layton <jlayton@kernel.org>
+For bvec support, there's no concept of bvec array chaining.
+We always have to allocate the exact size of the bvec array
+that is needed for the request, otherwise we'd have to keep
+a maximum-sized biovec array in every context.
+
+Now, I suppose that later on we will be able to adopt the use of
+the rqstp->rq_bvec, when the full NFSD stack supports biovecs,
+and this allocation could be replaced, at least in some cases.
+
+
+>>   * Each WR chain handles a single contiguous server-side buffer,
+>> - * because scatterlist entries after the first have to start on
+>> + * because bio_vec entries after the first have to start on
+>>   * page alignment. xdr_buf iovecs cannot guarantee alignment.
+>
+> For both the old and new version, can you explain they have to
+> start on a page boundary?  Because that's not how scatterlists or
+> bvecs work in general.  I guess this just documents the sunrpc
+> limits, but somehow projects it to these structures?
+
+It's historic, and probably related to the sunrpc implementation.
+I didn't question it when doing the conversion, so I'll have to
+try to remember exactly why.
+
+-- 
+Chuck Lever
 
