@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18041-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18042-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA3ABD3864B
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 20:57:09 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDEA6D38659
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 21:00:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6E85330437B9
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 19:56:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A5EB330463AA
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 20:00:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 907F139C643;
-	Fri, 16 Jan 2026 19:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3752F0C7F;
+	Fri, 16 Jan 2026 20:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMc4Qfmq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7ng3d1V"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D45D34DCD7
-	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 19:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3261FECCD
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 20:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768593393; cv=none; b=Rw1gRGpRn+KFL3pmcYvBxoeex3H18vCWNbX2ERjsATkqjXcV1pPOqBApnXtH3mIAy2HsO+VqMc8gWQpb6S0jT+uDuDUeVBiqZ3R/rU6WJ0aC1Mmk4Dj3t7OjV5z2IiG5mGIZUjcFFpvLBVCk54J7OymqcRWE2b0/a+fnIf+Ay5E=
+	t=1768593648; cv=none; b=gaW6ba/LLccPwkfSG1LKJUWHN8rh80PwhrHPGat6vDmdlcfC3RAkEWqFuJOBNXAe7B6lb4FC/AhSSrFOL+GgCcm4rrIq4zGTEvQi+TJuTQXjjvim7eJFtPvhv8m9U36RD2cTELJsAsG2rUEspIQ3W6mEoHXpRVsgcPax/Zettm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768593393; c=relaxed/simple;
-	bh=eYO3M2+xPQR000yZFl395HW9kp0UOalDe5aIv2leix8=;
+	s=arc-20240116; t=1768593648; c=relaxed/simple;
+	bh=oIff1+l5OhAQ9j4VFtfndFDdcZdV/d2txkO6d4FsX6A=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=SewOC1YpLEbep2aS5r3oo85ypWO9A3zQx2xQWacLoToT/0fKpIcwvereRbCwYPWEOapUHqYGMWVBEaikchpcAOSn4NLudixrOumD2VUlMT+LUuiaq7ekxtUDLCjSXxfAYGj5vXJszkva3oazfSzoiKJ9Ct7jZF0K/Rw+bOHnwJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMc4Qfmq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2705C116C6;
-	Fri, 16 Jan 2026 19:56:32 +0000 (UTC)
+	 Subject:Content-Type; b=CE0Oqn+v33CLNabQhcy/vOsU4LHELzcFNnOfe71jvmI787Zj8mkXQXTKSN2R2Ao1av3ElPUU+5jrK7N0cctcPRPdDDDU+D8ajfGjDBx0Yf3UdCwq7a9tS689L6UStBjc3AybKkEb+kwhHJwSPX8bFgt3poSKGQ9X/KLi4DJodKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7ng3d1V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34EE3C19424
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 20:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768593393;
-	bh=eYO3M2+xPQR000yZFl395HW9kp0UOalDe5aIv2leix8=;
+	s=k20201202; t=1768593648;
+	bh=oIff1+l5OhAQ9j4VFtfndFDdcZdV/d2txkO6d4FsX6A=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=rMc4QfmqOECN+7BNOobaFVYs7AxpXChyrU5/TswC+stPUz5mA0z/i+7XLTxaes1cP
-	 YthrKnsuUm4ZKmD2we8F7we35TijGN52ulMxxlb90yoaJuy0xfotQsOb4cNj9Vf+9a
-	 9FxIYcOymsSsR2Tq3SDF7wBKtY8o4rycKCAOl9XXvEywbSqQdUnM8J8OE49FI9Mqpr
-	 QFsvO6bPqHA2juSxHO/pu+urihN2ezJRDXg8hDavWj9NXjxvre496CBHqkKjp3ezXM
-	 AU0lp+fh9uBk+M6s9Qpqq5ZFVnnYmU9nRQGIW3e2NOaJyKgU0I56UXgoooM2dHhtPr
-	 2MzpV9ShrsbKQ==
+	b=j7ng3d1VQX49uxWfMGzCqUwWFzXtd/cBnBu5lmwH2+srTTBFGe3bKOV0hkP9WwnvU
+	 u8eySBbakUR7CQpZh+mZd32972qwg8mGnzUXX8JD08lJqmvpcCmZw9SKnfHgKxo9ff
+	 ITFPA60rp+4U0V1EFXtX5aLVDP6D+4lfFAdxNILMUgE8OVcw2rhFueUWfG01AU4dKW
+	 z3rP1EqszQWjXSufGI01WoHkpAsHLujVzFqcdefQIuX4j2VC/pNWCV4wlD19+IypQO
+	 fSaMR3SFE5/NxZlPGe3gVImxFKW98NdPkuww1+k5iKp+loCDzujK7l5Itr/Z+Bbuq9
+	 mpp6zcjQpANgw==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C5328F4007B;
-	Fri, 16 Jan 2026 14:56:31 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 2E74DF4007A;
+	Fri, 16 Jan 2026 15:00:47 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 16 Jan 2026 14:56:31 -0500
-X-ME-Sender: <xms:75dqaQQ9QMSbS2HUk-5DUCMP17fTUwahWOWof4rw57gaKpwdRviviQ>
-    <xme:75dqaYlmatl-DNy5Qerk1L0vgn92FYvx9t9P3MhPlg8FVq7wCbA4_uV0axcV-kETl
-    mhmb6ThPTPEHEP-uNtI-gt6QNSLWAzPsyXfzZQxIxDmZilU0GgvyaY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelkeefucetufdoteggodetrf
+  by phl-compute-10.internal (MEProxy); Fri, 16 Jan 2026 15:00:47 -0500
+X-ME-Sender: <xms:75hqaf2HG_ztY2e0vvBlO0M9XtUq5zLYEZ6xkMp8ecOg7hYO-XLe4w>
+    <xme:75hqaY4IsbL1J4celZ7knMvRBpviInSmSf2Uam_wYkFsTlNw9tyy4qV-DK37tL-H9
+    qJC5Kk6WE0r7348LvHfzP_HAyBcCUWlF8qC4nBd-CAtVPB5AucbznI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelkeegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
@@ -56,23 +56,17 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelkeefucetufdote
     ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
     hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
     leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtoheprhhitghkrdhmrg
-    gtkhhlvghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsggtohguughinhhgsehhrghm
-    mhgvrhhsphgrtggvrdgtohhmpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    jhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhrohhnughmhieskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgv
-    rdgtohhmpdhrtghpthhtoheplhhinhhugidqtghrhihpthhosehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhg
-X-ME-Proxy: <xmx:75dqaS4d8RE2ipNZzNy4pBVTeF0KDEycDkBTV9v7Yqq6njkm3gHQZQ>
-    <xmx:75dqaXsresvI_Q6s6N9_o6Qdd9GeSlG1y10Wq9bB_oJCMRBto3gP5Q>
-    <xmx:75dqac0-yu0WA-M-85ovAcrqsjz4pvOxpceAq5kWAkv9P8qsiGf_4g>
-    <xmx:75dqaYooM9GFsm1jsfdlEvY6vW-3QHCpiF1BDHSMHHSz1FXCmAJ4mg>
-    <xmx:75dqaULV9lqBcEc3fqilH0r9ZWIiN0JTdBbEYCEDZ64mp3C-ayTkasOt>
+    hilhdrtghomhdpnhgspghrtghpthhtohepvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugi
+    dqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:75hqaWjo-7P8EKnnPEC9ziCjU4Qjko9ZiMBxW01q8wVxZcwoOt3HBQ>
+    <xmx:75hqaU-tyYwlOlxuBBAW0Qv6iNhB5SwtgNXH283bX_R1n6YeSwFHFA>
+    <xmx:75hqaVpCLlQS65jgWdrHXff15G_Fm9IjWPK4T9voJ1RiIOiMcgGW9w>
+    <xmx:75hqab8H3zuyxBKTaKfVIhvaS-mDg_tVNLPraoixHvEimXNpsqmRng>
+    <xmx:75hqaRWZlIC-qcQj4hYCOSzzGz7ya3JmSUJjC05gBIv6CF0y5f2boKWz>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A46FC780070; Fri, 16 Jan 2026 14:56:31 -0500 (EST)
+	id 15E4B780070; Fri, 16 Jan 2026 15:00:47 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -80,44 +74,33 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AO3h44zqd9zZ
-Date: Fri, 16 Jan 2026 14:55:47 -0500
+X-ThreadId: Ari2zWJUXQbN
+Date: Fri, 16 Jan 2026 15:00:15 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Benjamin Coddington" <bcodding@hammerspace.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Eric Biggers" <ebiggers@kernel.org>,
- "Rick Macklem" <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
-Message-Id: <7951f103-8e2a-49f9-a053-5c9df12aeedf@app.fastmail.com>
-In-Reply-To: <4A6213D5-BEFD-4090-9134-8D397C3F2ECE@hammerspace.com>
-References: <cover.1768573690.git.bcodding@hammerspace.com>
- <c49d28aade36c044f0533d03b564ff65e00d9e05.1768573690.git.bcodding@hammerspace.com>
- <bb62acdd-4185-41ed-8e91-001f96c78602@app.fastmail.com>
- <4A6213D5-BEFD-4090-9134-8D397C3F2ECE@hammerspace.com>
-Subject: Re: [PATCH v1 2/4] nfsd: Add a key for signing filehandles
+To: "Dai Ngo" <dai.ngo@oracle.com>
+Cc: "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Message-Id: <a1442149-fdc2-4f66-b73a-499a2e192960@app.fastmail.com>
+In-Reply-To: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
+References: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
+Subject: Re: Bug in nfsd4_block_get_device_info_scsi in nfsd-testing branch
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
-On Fri, Jan 16, 2026, at 11:42 AM, Benjamin Coddington wrote:
-> On 16 Jan 2026, at 11:11, Chuck Lever wrote:
->> To save an extra pointer dereference on the hotter paths, maybe
->> fh_key should be the actual key rather than a pointer. You can
->> use kfree_sensitive() when freeing the whole struct nfsd_net, or
->> just memset the fh_key field before freeing nfsd_net.
->>
->> Just a random thought.
+On Fri, Jan 16, 2026, at 12:15 PM, Dai Ngo wrote:
+> After the entry in the xarray was marked with XA_MARK_0, xa_insert
+> will not update the entry when nfsd4_block_get_device_info_scsi is
+> called again leaving the entry with XA_MARK_0.
 >
-> Could do!  ..but its easier to check if a pointer is NULL than to check two
-> u64's being unset.  That said, having half the key be zero is probably
-> insane odds.  I also figured to minimize the size of nfsd_net when this is
-> not used.  I think I like the pointer better, if that's acceptable.
+> When the server needs to fence the client again, since the entry
+> still has XA_MARK_0, it skips the fence operation.
 
-Agreed, the pointer has the benefit of showing whether the fh_key
-has been set or not.
+The mark is cleared only when a pr_unregister is done. I didn't think
+that an additional GETDEVICEINFO should clear an existing registration.
+
+So, did I misunderstand the API contract?
+
 
 -- 
 Chuck Lever
