@@ -1,130 +1,130 @@
-Return-Path: <linux-nfs+bounces-18049-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18050-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C20A3D388E3
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 22:49:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E241D388FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 22:52:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0A3FF30183A3
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 21:49:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 334D3301B4A5
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 21:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51F9306B0A;
-	Fri, 16 Jan 2026 21:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B693A30B535;
+	Fri, 16 Jan 2026 21:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxFyOg5l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjfX25xy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A02301004;
-	Fri, 16 Jan 2026 21:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932CC3064AF
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 21:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768600179; cv=none; b=JhR31dM3h6mKeI8vy8o/dxm/3W2Eopc59oCuRmHvHNJi9ajoYMYauVaPOwCE3hn69AdClGqBrolvCN1WAjVWnJdDWHrURg1xs5XDfZOzW4lXxgBBlw9ciYDf3IQHBtwEx4rKpYNzQTpVD67lfN3ggrFGi6DzvF28EKXDTXRtJRQ=
+	t=1768600297; cv=none; b=JxLXzCkTt46J+b3STkpDU8J18uOPKU9RehohzLuBf6yk6EqI+sk+pwRCYKqzFL2yGJGy7rhhJ0RORYMu/HwdLDhuYWj1CiWixhUj/kXDpqGA4/kar2q4l0MAUattt0o5WuHtC1gdiMkvOwSpyxrktnil16nD6RcwKXJ1OhK9Vr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768600179; c=relaxed/simple;
-	bh=V4Z1YjzfcfPOXECNNLD7426cyFb4hwdvDUWsIjkBzCE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gERgv4JGmaJjsyDDJ9lH7otqVTwa0zi5CiK4HW4aMZATNEVh+aSgWsy54aTnoonTta/AF64jVZ5HKnVsW6D/l+HStikTzn9pSfh4i4RiI/nLJm878ccsws2bWF/KWOkqRiJXRcp4Hv/M2zx2zyXpufNXGfofjDSYM3JnhhLwkuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxFyOg5l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6E3C116C6;
-	Fri, 16 Jan 2026 21:49:38 +0000 (UTC)
+	s=arc-20240116; t=1768600297; c=relaxed/simple;
+	bh=kv6PTYUMXRi16z3ekUCwQwM1tfiVJ/Mg+mk9vx+x8j4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KL0IsVnY5iHcaUyrfB6vFrmlz4gmYJ+U5TaS2us+hd5hxBZhXAR/gxnopvWoZ6KIHxtJTFTKJ17GlFduFDxmwLxWle27SFStXWzkKoeec8si/9/ZVNcJGRoVPoh9z08oUHRkauh/I+wu6GOPvhF7ITaL+ob56/TFNaUTtXKdyxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjfX25xy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B7BC116C6;
+	Fri, 16 Jan 2026 21:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768600179;
-	bh=V4Z1YjzfcfPOXECNNLD7426cyFb4hwdvDUWsIjkBzCE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=CxFyOg5lDcPZ5dSLU1tp5b9KgetLhlLMJ1/Vv1L6ErK24+h/JjTpgl8mM01BpP+Pw
-	 /k7E4V4mJMpupfmMLqDY3q7tn82sdKYx18P9LyijbHnj4p2VfENTH8rR7yjgyeTFpG
-	 8pFeyoCKmhonSKAUu+zPunmGbGgtdI5lqsBRN9SfhyzutPsTwlwhUSs0mfzSUovfYZ
-	 b2Mkt/nR74H2q2cYjZnsF+aKQa0YO0zaDTISabFDY31tgYhlxEL6N53nh1AKowaAe8
-	 Wdv0SwANZFd3f5xduNFePAeGPsheDBhM8g0eBGu8I8I5Q4aUEVtOfRV8uxDsHG5q4o
-	 kQDUE4K8SXkRg==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 87C81F40068;
-	Fri, 16 Jan 2026 16:49:37 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 16 Jan 2026 16:49:37 -0500
-X-ME-Sender: <xms:cbJqaYlRdQeZYXpMkEYLvgQob_mDgyHUzlPIGAavOpzm8Q8ia38anQ>
-    <xme:cbJqaSqhD2iXZye4kUAtogeNvRpUkcjnR9muqcpkc0CZLQrSC4hpznKLRf6qDdb3N
-    JBgqmLJQAXMBVylv-aW3hdYYvByCLSq2vEQJcTil9IOyPoobCXVF5A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufedttdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghonh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthht
-    ohepjhhgghesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrh
-    esohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgt
-    ohhmpdhrtghpthhtohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphhtthhope
-    hokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhp
-    vgihrdgtohhm
-X-ME-Proxy: <xmx:cbJqaYKn2kyhRdqYb8ZDLF-N_f2V7I8I7bDm1KUpwksqZRq_Wq6C6Q>
-    <xmx:cbJqaUDxVEra_CFnqOTU4EzEpVKnLjLPzKmjFIRIsc-4F0Wtu07eyQ>
-    <xmx:cbJqaVtTta1aneAL1_TMmfgXRcNKQMou5lLOns3wxAZEgwnRkx2rGg>
-    <xmx:cbJqaaSqLV7z2T0cQP32Q5Kmf6ImCrHQDp5DNPkERZqVqMbdwsZw2Q>
-    <xmx:cbJqaUI5QnATgImkq6REZEzM3msBZj3w1nt63qZNkkYOSPR7WBa2ljru>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 672EB780070; Fri, 16 Jan 2026 16:49:37 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1768600297;
+	bh=kv6PTYUMXRi16z3ekUCwQwM1tfiVJ/Mg+mk9vx+x8j4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RjfX25xym1UMjDv3+J9n/vrjG4nT0PY+QJB/5JayXOKN1RUjVxrUCwQljHMPfY8Nw
+	 Un00oagJM2B7JyX8aquyOw3BTDYUK2jtTlB3K0CDDN69XSNz4XCTk3+fpTNygGP0pj
+	 pEkpEMLJ7cSo42NGsBp6k7LpqPmW+dYVhODgz44acQsWO8+UimTOziP3FtQYDjSTr5
+	 xfDQLf3zPU82uUscoLvLCKnV9BqC0QuKY6x37wDAKEhAybU0APjemW6OxyPH6QvxbA
+	 8guKquWGc8qC8KRZiIbask+R8kGsTGHOnX4z8onmokX5/kHeEk7pE2EjGJ7OfgHVat
+	 TPp8VldpBoMjw==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	trond.myklebust@hammerspace.com
+Cc: anna@kernel.org
+Subject: [PATCH v1 00/14] NFS: Make NFS v4.0 KConfig-urable
+Date: Fri, 16 Jan 2026 16:51:21 -0500
+Message-ID: <20260116215135.846062-1-anna@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AJuicIy6M5dZ
-Date: Fri, 16 Jan 2026 16:49:06 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Leon Romanovsky" <leon@kernel.org>, "Christoph Hellwig" <hch@lst.de>
-Cc: "Jason Gunthorpe" <jgg@nvidia.com>, linux-rdma@vger.kernel.org,
- linux-nfs@vger.kernel.org, NeilBrown <neilb@ownmail.net>,
- "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <bad1a0d2-6408-4d0b-a421-f1e35265ac28@app.fastmail.com>
-In-Reply-To: <20260116212425.GJ14359@unreal>
-References: <20260114143948.3946615-1-cel@kernel.org>
- <20260114143948.3946615-2-cel@kernel.org> <20260115155334.GB14083@lst.de>
- <20260116212425.GJ14359@unreal>
-Subject: Re: [PATCH v1 1/4] RDMA/core: add bio_vec based RDMA read/write API
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+From: Anna Schumaker <anna.schumaker@oracle.com>
+
+A desire to deprecate NFS v4.0 came up as a discussion topic during the
+October Bake-a-thon last year. This patchset takes the first step by
+moving NFS v4.0 only code into new files prefixed with "nfs40" and
+introducing a KConfig option to compile without NFS v4.0 support.
+
+At the same time, I promote NFS v4.1 to be the default NFSv4
+minorversion included in the kernel to prevent the situation where we
+have NFS v4 enabled without any minor versions.
+
+I'm sure I missed a bunch of stuff in nfs4proc.c that can be moved over
+to nfs40proc.c, but I figure I should get some eyes on this before going
+any farther incase I need to take a different approach somewhere.
+
+Thoughts?
+Anna
 
 
+Anna Schumaker (14):
+  NFS: Move nfs40_call_sync_ops into nfs40proc.c
+  NFS: Split out the nfs40_reboot_recovery_ops into nfs40client.c
+  NFS: Split out the nfs40_nograce_recovery_ops into nfs40proc.c
+  NFS: Split out the nfs40_state_renewal_ops into nfs40proc.c
+  NFS: Split out the nfs40_mig_recovery_ops to nfs40proc.c
+  NFS: Move the NFS v4.0 minor version ops into nfs40proc.c
+  NFS: Make the various NFS v4.0 operations static again
+  NFS: Move nfs40_shutdown_client into nfs40client.c
+  NFS: Move nfs40_init_client into nfs40client.c
+  NFS: Move NFS v4.0 pathdown recovery into nfs40client.c
+  NFS: Pass a struct nfs_client to nfs4_init_sequence()
+  NFS: Move sequence slot operations into minorversion operations
+  NFS: Add a way to disable NFS v4.0 via KConfig
+  NFS: Merge CONFIG_NFS_V4_1 with CONFIG_NFS_V4
 
-On Fri, Jan 16, 2026, at 4:24 PM, Leon Romanovsky wrote:
-> On Thu, Jan 15, 2026 at 04:53:34PM +0100, Christoph Hellwig wrote:
->> > +static int rdma_rw_init_single_wr_bvec(struct rdma_rw_ctx *ctx,
->> > +		struct ib_qp *qp, const struct bio_vec *bvec, u32 offset,
->> > +		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
->> > +{
->> > +	struct ib_device *dev = qp->pd->device;
->> > +	struct ib_rdma_wr *rdma_wr = &ctx->single.wr;
->> > +	struct bio_vec adjusted = *bvec;
->> > +	u64 dma_addr;
->> > +
->> > +	ctx->nr_ops = 1;
->> > +
->> > +	if (offset) {
->> > +		adjusted.bv_offset += offset;
->> > +		adjusted.bv_len -= offset;
->> > +	}
->> 
->> Hmm, if we need to split/adjust bvecs, it might be better to
->> pass a bvec_iter and let the iter handle the iteration?
->
-> It would also be worthwhile to support P2P scenarios in this flow.
-
-I can add some code to this series to do that, but I don't believe
-I have facilities to test it.
+ fs/nfs/Kconfig            |  26 +-
+ fs/nfs/Makefile           |   4 +-
+ fs/nfs/callback.c         |  13 +-
+ fs/nfs/callback.h         |   3 -
+ fs/nfs/callback_proc.c    |   3 -
+ fs/nfs/callback_xdr.c     |  21 --
+ fs/nfs/client.c           |   8 +-
+ fs/nfs/fs_context.c       |   3 +-
+ fs/nfs/internal.h         |  15 +-
+ fs/nfs/netns.h            |   4 +-
+ fs/nfs/nfs40.h            |  19 ++
+ fs/nfs/nfs40client.c      | 247 ++++++++++++++
+ fs/nfs/nfs40proc.c        | 395 ++++++++++++++++++++++
+ fs/nfs/nfs42proc.c        |  13 +-
+ fs/nfs/nfs4_fs.h          |  83 ++---
+ fs/nfs/nfs4client.c       | 193 +----------
+ fs/nfs/nfs4proc.c         | 682 +++++++-------------------------------
+ fs/nfs/nfs4session.c      |   4 -
+ fs/nfs/nfs4session.h      |  23 --
+ fs/nfs/nfs4state.c        |  91 +----
+ fs/nfs/nfs4trace.c        |   2 -
+ fs/nfs/nfs4trace.h        |  16 -
+ fs/nfs/nfs4xdr.c          |  87 -----
+ fs/nfs/pnfs.h             |   6 +-
+ fs/nfs/read.c             |   4 +-
+ fs/nfs/super.c            |  16 +-
+ fs/nfs/sysfs.c            |  10 +-
+ fs/nfs/write.c            |   2 +-
+ include/linux/nfs_fs_sb.h |   2 -
+ include/linux/nfs_xdr.h   |   7 +-
+ 30 files changed, 881 insertions(+), 1121 deletions(-)
+ create mode 100644 fs/nfs/nfs40.h
+ create mode 100644 fs/nfs/nfs40client.c
+ create mode 100644 fs/nfs/nfs40proc.c
 
 -- 
-Chuck Lever
+2.52.0
+
 
