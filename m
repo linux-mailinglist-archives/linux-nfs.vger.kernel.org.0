@@ -1,59 +1,60 @@
-Return-Path: <linux-nfs+bounces-18034-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18036-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3D3D3841F
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 19:18:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96258D38420
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 19:18:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D6A0C30213E5
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 18:18:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E021B30C759F
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 18:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 304CC344055;
-	Fri, 16 Jan 2026 18:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FECC39C634;
+	Fri, 16 Jan 2026 18:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="O/W/xDMu"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="F40pmVsr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020136.outbound.protection.outlook.com [52.101.193.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1F7338906
-	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 18:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DC83590D4
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 18:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.136
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768587491; cv=fail; b=uDOSfV7ISCiDKx6xRUw9CyAKko68sxCU04vTUjllht4ueQTtU5GahKhNXyjv6apfZO2ixtOpofzXai2MgPzqZS8/SgzPmSHQxSmFwZOotQvKsinOcadZZGal2H8wkF7WIf2M4fWPkeCleMh55CNgukuOCkjXnwCCdhZjTdcKXVY=
+	t=1768587494; cv=fail; b=VetL5OKUAg/yOrzN3BqCe68YW59R4EA/6zWp7FZxfcKZ4r56RvxZ7gYKGlSI0rFTMlrDPfHPgdk4qCx7w3nPAN6WSJN9t4dazP/ikss63NwT7iFpo4wgVwYlTrieP2Qt57jNV3IwqsMw2gnbbRbH7GGi33LYvKpZ8UI9NEv2H8A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768587491; c=relaxed/simple;
-	bh=ujZpE3ZzHMXu70ZK9VMTVOeMY3eQYzN+vnszCmFZnZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FJA9tUH6wXFexSnqNNhUZCdnlbmNrdQE7ir7WucE8fZ4wjfRppw/nwxicRlWaMqj5MM/3jpyvKpafuUzk9JTmyP48ZmPax86nOg9X9AOgh55X3FdpcZW8KVgKWX/vbh1N0mPBa5Ill+qzxnvMIwxtZ3pLpNcruCHktuGM/hi4R4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=O/W/xDMu; arc=fail smtp.client-ip=52.101.193.136
+	s=arc-20240116; t=1768587494; c=relaxed/simple;
+	bh=CjHOnwzc3LixupAjKQF6G65jU9dSDlxzlmh5OZtLuNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W/HiK/GKgYjWUOFJjtGQ3usK+qhaTXnf42p7OIbb4phjG6Wq8MVWA4gRrnqwS4y2F1dlEqffA+/rBxJhG3JCGbNX6ZU4mB9BDiHWLu9rCeKm5f9y+tHtcenKnlLdoQZL537JI1jQyZXckb8OOKrW2hTq0bpT7ThswU4KTHbMxWk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=F40pmVsr; arc=fail smtp.client-ip=52.101.193.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CXOQTWWUZrDg3iXQtYBr1RhL0vYiYHCuAPMjrYO74DWTfAeP1e7jn5ecnGePma7X9GlZu5IJvSC8Zq7/Mu5MOJo0bugCJKtAr2lk9HewNXvALmdq0yIbQVRX9pswRxqI5s+CgCtIZvEiiwrqU7Nc7h5pD0ku8Zg9e1UY15FwL4gGejIFn9di17H3JUrYPor/HClIaGTnRFU6pyL6qE12gQ4JGpwgdo+vekvIPhdMZzShG+jYn0bOexN+vG8zLgy6TgYF55+ijw3FZhVuEiI+sXDfyal2Fu2IYVln7DjVjoKQuynvOR39Oczb5aUBrAaeKKqday0kfybV4gTjUnq7nQ==
+ b=J8ZAT6osF69Qm+pf/yTjizstManqV+6bYLGx02R+BwikKA5s9pH3cv4ZkV3pZipv6Z35+CtSC4+aZRoFVX8keD1iXypE7VfSXOOkO3DT1hNCe8udwMgAFJTBnWnGb2+IHgOqNlnB+p35k/0fFBzMmhjfa3txUDcxlMcXLGp9WDeQWlbwQDE6+4AL0a1z7j8x6+7rhk2ZK/gi14nQCYZ0aAtUrfUcXuExtZ0/8r4tOrCZdGeXyR5opEJ3CCt58b++G4g02WZaUCEqV1+jAsdQE8xJI2dk/tD5ltDc5NjokK1W1QPek3Kip7JKif/3OSptcFfS5hQPUm3YJ0zqqjaGxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tRZwHR1cTB0OVOYS6BwEn3+2+mM/quQep/9Be+u3oSo=;
- b=aPwWo0xi3mfhVsurWM8CEmmBDdSfwEkLo5FXSHOnE6MA9kDZG+y4QjUHgIqlgyUcqVXcZjQOKLI53KUeP2QazQsL1MWVUQ67I/FLEeG+PxyuEwOevuvCgEMeVnxCBWAWj/+KhrNN44agKme/GJviS1d9i852FWnbyopvyBk1kLCPfSCiqeUMUJk93ILKMXiC6zpONN3oh9aZZfpISnvwPERrh9mUqTTjWdNQXWMVrU+4UbDMv+UQOUIZGzbjju4vm27qjgb0aO7wGcD+caU9kfjBH8l6yjKxt9sNcoOqVfm67VYJaoZGIWfCwVWhbTnEl17JjNog0n77d1S/X4yfKg==
+ bh=P83U8uHc9N1/ekz/8qW5Bs9BhyODAPsYlS3UHq9fA+Y=;
+ b=AdiB4NQEZC6IsEmXUrkegU8k+b6oNZyMpj5qUIGhA2+3r2wLijkK92GDruAfs20ienF6cgiZL9nkgJSsyrCmZJ4lzT1GyaUwZQBEr05X00UTpva8UBFMndyeyO4X5hegk6WXb5UHQzz61AwsGmj+N4aNUjiheE6YXcfIVw63coV9W4FuJSUyy6brAJzm5QyCfNGn1+ulsRRsKfnoLj76cre9cIJRMy9nzJDZnY0vcuk90m1aOtAGAN7nP/FIclv9SSmFyTag6zOMb4yYGu91H9mkuD6dhl67EahMza2vFhNwrDMQYPrT1vplEo1P1XBHmMzejRibnCMzAkvS992msA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=hammerspace.com; dmarc=pass action=none
  header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tRZwHR1cTB0OVOYS6BwEn3+2+mM/quQep/9Be+u3oSo=;
- b=O/W/xDMu6kIcWibTZB3Pwm0kneKn7EN9UZl2nJHcSoWsP2RFiz4k6d3i80hcYt6qDvCfxWELU+KYbvNgj5DZs1MpNNePZX3qmOlUIPpvIdwA69+Hd0+eTVW+hmGgbPKGe/vyGDuJGKJ2AYd1RSY6mMmdd7VpkfkxmCbMNVB/61o=
+ bh=P83U8uHc9N1/ekz/8qW5Bs9BhyODAPsYlS3UHq9fA+Y=;
+ b=F40pmVsrmwyvxKatJDvfEdT1ClpWyGdICNfy9TaYhAJqm88W0kMmWHveYaqTOmt/SFbXzSYmbCqSswcokhHYwkJ07OKoeVhWgq5+YTNb3cbMu39yqP9fEvltsTEr96FsUvb53nuT49/wuY8+/H4WJD4ZqcchORTtYYP/Ruw5GUc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=hammerspace.com;
 Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
  IA3PR13MB6935.namprd13.prod.outlook.com (2603:10b6:208:521::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Fri, 16 Jan
- 2026 18:18:06 +0000
+ 2026 18:18:07 +0000
 Received: from DM8PR13MB5239.namprd13.prod.outlook.com
  ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
  ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9520.005; Fri, 16 Jan 2026
- 18:18:05 +0000
+ 18:18:07 +0000
 From: Benjamin Coddington <bcodding@hammerspace.com>
 To: Steve Dickson <steved@redhat.com>,
 	Benjamin Coddington <bcodding@hammerspace.com>
@@ -61,10 +62,12 @@ Cc: linux-nfs@vger.kernel.org,
 	Chuck Lever <chuck.lever@oracle.com>,
 	NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v1 0/2] nfs-utils: signed filehandle support
-Date: Fri, 16 Jan 2026 13:18:01 -0500
-Message-ID: <cover.1768586942.git.bcodding@hammerspace.com>
+Subject: [PATCH v1 1/2] nfsdctl/rpc.nfsd: Add support for passing encrypted filehandle key
+Date: Fri, 16 Jan 2026 13:18:02 -0500
+Message-ID: <90fad47b2b34117ae30373569a5e5a87ef63cec7.1768586942.git.bcodding@hammerspace.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <cover.1768586942.git.bcodding@hammerspace.com>
+References: <cover.1768586942.git.bcodding@hammerspace.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: MN0P222CA0021.NAMP222.PROD.OUTLOOK.COM
@@ -78,128 +81,423 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|IA3PR13MB6935:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b9e94c0-a4ef-4dfe-1cc3-08de552b9788
+X-MS-Office365-Filtering-Correlation-Id: a5a054f5-842d-446d-6a2e-08de552b97ec
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7142099003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fNoYh1iqKVADbyZTTtpfgatoSPuXzXkO71YYQIRWSDmzYjXTV6VZ7PYWqNtn?=
- =?us-ascii?Q?8Junnmr6YahunyVucLA0D0kEQ1gLem86JC+xCvd3CbPbgrx7hewPWp+letw/?=
- =?us-ascii?Q?kJ96mwNhPnvI2+kXQlb3TMpunCCo/60c4qpZjSCarUw3J1zrIgqVPPckGiTI?=
- =?us-ascii?Q?wj2yDCacOXk5vTVVBDXuuY/FJFimGDY3N3npsySgreltRk9a77WJ4u4KxH2A?=
- =?us-ascii?Q?zBpAlcDR+S8VGDyrJGIS+JZpnSagGfIPDtIjGgD70RcoGRbJAO1vvln6mn06?=
- =?us-ascii?Q?ajF98Sc0Gc2iSVrk/gS0MfWXWbJofGGesKQnhmDYQVYHKPgY8YKTw82A5UsN?=
- =?us-ascii?Q?UNxBGXtt430N2LbEUIen5W77V4coICCXEhgBo3w+kYFjYJCTgL3ZbfvpRUiZ?=
- =?us-ascii?Q?+VOuKdztyMUxUlme7RSmMKm35gX29NuQ35f3pvtMVwxYSBvypMi6S/3dw9cd?=
- =?us-ascii?Q?hlVm+H4MiTiY7VdAqZwK3JHFCU6pgiifQJXpmP1Re7SmjIpAKSQiS2ZCx1TG?=
- =?us-ascii?Q?6COG7DnUO09GeB7QDlrrm2zsWNbXBT+0ENhrxpnDbD8RHx+H3giE89nOAj6S?=
- =?us-ascii?Q?PR1Wd9LVs4ilKSeeCEFUlec8izglTAZ+eEBHL38ufuY5HCTLCPtCwOnWEkx4?=
- =?us-ascii?Q?E9oLl152nO4epTDuIjt7+/cPjkHAp905K1kErkH9HB+9vPkevrECLPcucH28?=
- =?us-ascii?Q?IoXpfMXSz3VV2c6zhAYYnrdrLwsb6zSnx4PqUt/WT8jrCS5IYfqTXgk0h1uZ?=
- =?us-ascii?Q?RKjpxSpF411eoDDZAb6iGjEvLbYwRC3brMMuDjt6/5k7Y+tJLpjQwvpIzxkw?=
- =?us-ascii?Q?ikuycpKvPi9Z3W0+ye84gSurv0xMIM1ysc12b9hzYFX4z4eqMpp8wReuVxvc?=
- =?us-ascii?Q?cwe3p4SXVy91LobCW99DNpVCp7SDQ3CmpnT8abkjY0LLybHh8sX6JlNskYxC?=
- =?us-ascii?Q?BiTYSwi9FxalffNQCl+VYAu1HXgZq0tiEAyFen3tQTAOwSaLIO16gByKl+F2?=
- =?us-ascii?Q?WOxoyZDdLMPwZ9EHpdaY3/YYeCeD1YlIKQVlfAm5PrDlQDozZP3ePeD9LmNZ?=
- =?us-ascii?Q?ErH5vE+dI/7DU0fVpSCuGDTTJOlZ5baUew8rnmHbgVj8VAwc8EUafkEzV+EY?=
- =?us-ascii?Q?/qxjv5PBApU6sZinpZxQ5VrwPlL6vKAxEWZ7jq9Tw3dJtc28uYkIFlbTPU01?=
- =?us-ascii?Q?XwPNY0uCtkbKo8mxRRVhApGYZbtzb3bNrAGFSis8IXdcvHNplWVwop20/NCa?=
- =?us-ascii?Q?VGHJ8Sopqp1QSuQBhj2600QYx5P+0npC1SmYH1h/x5TKuVRpRdh0YzaQaee3?=
- =?us-ascii?Q?1RY71MRyNBs8ZPXV9m0vJYJ9oOO/vNomq/0+yD9NEfGQarqNv9+RWrSluCbk?=
- =?us-ascii?Q?mHJi5o6U5Y5T05Z00cpDm1aomPlCbFOxNwJl9EfX+MdRadmXHHvbGTWRPrsI?=
- =?us-ascii?Q?ujPb6uZOGQ8qCBQ6Em2jp7fqnMTaTdCkL6mFsxwsZt7MiAOcHQ7f1M9SYCcM?=
- =?us-ascii?Q?0nUbmMUzfd8+pYrZGF7CQUhzVy/8cKyCMvLC?=
+	=?us-ascii?Q?3lsxrqRrz0qdL3xSaAV17vpCqNkWEYoTvALRfGU/H085uj+/ji8FIHUa/WS7?=
+ =?us-ascii?Q?IdpUIhAjBLDhI8KWBLqD/lvAxeVC4VG6OxJlefjoZqdnGcsp6lpGur9oa9uV?=
+ =?us-ascii?Q?/WsDybE/y2gBFMZ7nVH1ZbBhemSB0BuY382y6QEa1Hty9c26xSxzPe4HRXUv?=
+ =?us-ascii?Q?H7olR/RICa4ad4iuf1NL8uBTtHufTkJOXzjHXWgXI5e73PwPGoMLFbhSurAJ?=
+ =?us-ascii?Q?qzDsPFOzULFjGJfdTGblkV6/yK19yTpvirw/VVccWUenvdqiCdT8mDImxjIJ?=
+ =?us-ascii?Q?btstoGSN4CynbXdGefadcNSan3rwH4aiy2a2SfsavSr4RhXpuiOyyHjpKNac?=
+ =?us-ascii?Q?IJDEjnNgTmyBBUXaGSbPrDmU6NzRr8WF4QXIFW2c4QgO+rIwD1Own4jzJnal?=
+ =?us-ascii?Q?DVAypW2IYQPDH9W0d7l1iE3+ZgwmIB1etmPYubrM0vYIATugtVvqKOZtogGG?=
+ =?us-ascii?Q?ivBVM56UnPqLPLyFScc7WW1Vvn6VPV1J7YvZVEPdIuWy3kO/Wqhlw9L8mtn8?=
+ =?us-ascii?Q?hqtjalaptbAFmNGCJDFP6y6RHdbKq/Kewdmx0OJAUzZuWhbFsnq1I1ZurReM?=
+ =?us-ascii?Q?I6NykFxgVbkNMxsc050ZngqnXUdChEDrRU/bqzmeTiW82s82dN3xOWPxcaQp?=
+ =?us-ascii?Q?ESBwu8Ajz72Y9kjr2Y8I/pQrbrkM8N3wU3g1KO95oGzc3Ce/yhxfEjTpGAeW?=
+ =?us-ascii?Q?OEBuL4zT2Wdw22X7Y9OAq9jcC/5/SbfwMCRErHximrmaJsEM+zdAP4ZNwruV?=
+ =?us-ascii?Q?8n/RirmTQjVy6/JxK2DXfRU4CsDq0n0pj+RSyoJv5yGaShJ3F9OmY5CZ9bQr?=
+ =?us-ascii?Q?sr3TwtyY97vTcskcZxSi79AgDeTxFgibO5pu33Iam+RLOEyD2J1yeitKt4kN?=
+ =?us-ascii?Q?iX9YYXGmNNhmM2VJ5VmTcqhZ63Mda6o4hdCtlmgtSN+4qCWR5lhPWZYZNI7P?=
+ =?us-ascii?Q?Ghr7gy92juApUkO0iGGyhK0Ni8q6dx+pDscRJ/BFCN6rZT7K3ZLTtmOSgtQp?=
+ =?us-ascii?Q?d6ZDJwZ68tnBeAyrF9+z2R52kRpS0uNm/fGMbuspnNobeDfJIWCvY8hIOBYz?=
+ =?us-ascii?Q?eb1OLC9V+2lt1DWp3nWllhiyQ5y/WW1Z0uRTFfs/TNVgWV08iL+ZQqyXbA1M?=
+ =?us-ascii?Q?vIfoyT1eKk04J9FUhqSJNqoVWFeb9zAps+tQ/PzOr6dxqON25u2EHccLltsp?=
+ =?us-ascii?Q?wf6f5ZXXAynTVZAvnETLbk7HxzgxdmIREjkWEoZ7TuFv9y9Ssxfdayt72xK7?=
+ =?us-ascii?Q?26B+k+imh5pypRsbH3Mmh1rowWomH/YkDDYF/VRBo4niZJSQ89uAaz5oens2?=
+ =?us-ascii?Q?ZbpYSq57KKuR2B/77+w/inG9q1c9ukwESGmK30XmezXYguWjiH72p6rX2JtZ?=
+ =?us-ascii?Q?Vyv12qlpZOwAxHBWSr6F20XZKR3QZrQ5SLMm1r1sHE7p+6iQcdFV+lyxvE1k?=
+ =?us-ascii?Q?DuvfARrEeoMvZZeFfZVz06mkkPa2oOAmhxwBCwlEz+M8k5LJN9geBeCMeSIY?=
+ =?us-ascii?Q?HBt+1N/xn4/V0UQpJbBVqH/1I7/6TQQYi2d4xFZ9eEqk97kothY+k1w7AqcW?=
+ =?us-ascii?Q?/4VXcs9KA2pfwPpTEEg=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7142099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EYFzTLpC1NDeDAyntox4gOUQCxlL2/S6PpvMNGnilRfc8lj8oWCv9KCVeEvK?=
- =?us-ascii?Q?P1OztO58qznS4zRPYMsobXqHCFKBBHHITwhFVBIkgECPc0rY3CBgOf/vK48D?=
- =?us-ascii?Q?SsYQuX6r1SMXAp0NypAvs9JmzXcC6PBj4KipoFvahJkGHyBlDwvlgCtERz1Y?=
- =?us-ascii?Q?V/9vaXqow1U+uRRsKiKu9bMzxUv6Uivk+5WynLvEWnRGxBfbhdwbYUmO4fWb?=
- =?us-ascii?Q?Wpsy4z85ovuq5LQNaQit2XudQCuhyNr/dLcdIn/9MAyq96/+lMvaOoQykRdd?=
- =?us-ascii?Q?k/Io7tUCDk1XVJSZza9W/AyLgWJvXKm50sFAu7O9dsYpJAITZ34rEqFqLrZb?=
- =?us-ascii?Q?GPpLmFv9nBk2238cFSP0q+irHKZNsbdb0DPeaMfLKX5g2JIRmDaxiPinp5Ss?=
- =?us-ascii?Q?Ru/FWSr+lZXl6laEZ/ImvttgVgqlM9Y65r4udVVIvSiObh+SgGRLNoZMBr7b?=
- =?us-ascii?Q?BldZpos6yq5AjnPlonyam6kh72ZOBk/X6zRcia4R44n5Oid1fqqRU+Qkt/xZ?=
- =?us-ascii?Q?79F53ePsdBO+5RLyhrBw8j9ajgrqYe9jO9kxExi4Jzx438iXFaodWh2MvTQD?=
- =?us-ascii?Q?MOmRCk74UCH4Ylv7+YeH6UdcQ2YFKTCLK5Y0xnVUcANnt3YiQOaW6fIp54rn?=
- =?us-ascii?Q?nHI6da0HU2Z3nFA9AK5b7FUCWtG2iq6ihedUpekFmtKQ1sduokXskMNprPOY?=
- =?us-ascii?Q?fQAOzd7uWiPEaQoG8mT3PK4Mk8UTXbXcODeyu1mhGlgdG/5UOUBqvMpyueiE?=
- =?us-ascii?Q?PCcHck9n6IP1ZGVg9Y/w6/S2zvkbXkGH/O+DrajJ1qUXIA8oYzZZ7tAMyWSO?=
- =?us-ascii?Q?vSB80MCsx3ppROq5RNmGC+pUOFoofEQBkAe/uM4xpp4NoDMAGRjBQbBpydC9?=
- =?us-ascii?Q?kxokmSFKneI/+JtwjFxM2k7JcoJGXCocsYbHjm9Qh/c7aomg9g4+XZj9RIXy?=
- =?us-ascii?Q?+IeD7rS7bZLsu2p67FS739xm94HbSbs+4ndQcieM52ReitzzBTrDD60HoCLY?=
- =?us-ascii?Q?kQl+Iwd9/xNAQedEhr4r4JUqOifoK4JfPbwg7/B9PYa1QO1U+XQfA53z0CGa?=
- =?us-ascii?Q?Bu/6d80Lo1EqpALqSoq61b+IXk1nWz29FIEB9YHpzbS4zd5mcu4c3ITlTWFY?=
- =?us-ascii?Q?X9Qag+lwTDLZ6qtvfNUOnGMHI71mnqY7vamysDqaWub3fRDxoxMeNVE08Z0U?=
- =?us-ascii?Q?tAybcCytX1sF2XD0MCSu4Tl+VpN5gexmZqy1ic4+tH9Kct1Wr7stlhHOJrAP?=
- =?us-ascii?Q?Re4LhVa7QxsfexK3qjftdjzn/Z90yZXvp/D1/OGRmN+2kZHTwCUT1I5VBVTy?=
- =?us-ascii?Q?1Nv+x9jy56oaOgBCoiz013qYWafAvn6uYZLI/o3SWAHXti9RbmvWXAqeFnMO?=
- =?us-ascii?Q?7WrRH1P9oluNDZYV9x8LODqw74zZmhtmfkqMA7ZloOr5fgZnjcKEvu6GhYXy?=
- =?us-ascii?Q?wXjLpHfXDbq9byazYuW/Xl9iqvHwmmkpv/b2md8tPJyfp7+TbMJV53dDegnf?=
- =?us-ascii?Q?0RaO4e/UfME8edz0IMdkLWl6mEUjiqlq6QlyAjWa1JFZjtMhuJEMhcmkTbS8?=
- =?us-ascii?Q?Q9EMHFrlz4Ol0q2Aq/cmuRH7rCvWDApHvfK4/NPWta8bAOHqtfZulUrs9qQ/?=
- =?us-ascii?Q?oSj81SMX13Qk74UXJPGdZ92T9lf5W75sRHnXZ0qODSLBN28rUaoKU1AT68t9?=
- =?us-ascii?Q?JHUv0oLZI+xPG/dbwvGJbI0hctfV9XxTg13Egul7lKKqu1DdbqffSAfIRZO9?=
- =?us-ascii?Q?TsfiABE/AV5jxfadq3CuJWwxJnIp0/c=3D?=
+	=?us-ascii?Q?zWC6RI4Mx7hfWsy/M3cO5dCaqLRGT2N0vjiAvD1OzUnfLFBKQO1guWMRp01m?=
+ =?us-ascii?Q?5W+eUyEhDYfHuunEJf/uRaFZ+mzcIUkxsztb3NXjj7MP10ohS+1rSG7nu1fl?=
+ =?us-ascii?Q?+9DkvoWtu6/GRmyzt+9QoL7yH3xNHTC7IH/cK5FAbMoMi/juy+OHogTGDkFo?=
+ =?us-ascii?Q?UKddAk7yYaZbe2Dmbsqe1kffBsqkIWQQArTx7scE/0HqjzzqgLMNXENb4Vwm?=
+ =?us-ascii?Q?AzUq8X/qGtapnyt/RtuJeKyxkZ9iHw4aUuwGAOM85F1psvCytjRBIFcUrZSe?=
+ =?us-ascii?Q?fpz+Jjfk4zGIQH1/2GKSx8IY9VtAv53y0xNrGysKmPLb5J5W7VZMj2F4dRjd?=
+ =?us-ascii?Q?E1d7rEkE6sERII8JyUSyqs01/QBzBfWOkjYKcH+tJL4YvzwQz74PlbCOdL4N?=
+ =?us-ascii?Q?LUpojBTm8rpeA2CPKZT7kza6uf9aG3nOicsuVhi7AkzgQcpF5sC9l7SBbofK?=
+ =?us-ascii?Q?xReHu9WItLhwJYiG9Lpj0aBKgM9p1pTXowUGf/n5K5Tv0T0ri0/8eGeE5RmU?=
+ =?us-ascii?Q?IQ4Yzv1BAWaM6VXkWm5FGk/2f8ZL5W5iLUpjTy8/Xs5SKL8Y8AacuX/KufxM?=
+ =?us-ascii?Q?/rxQrPEjXwgMuH2Uv/vdnjlqXhh2JuULhN/gTXtXDeXEJtzySTBlIedeSENY?=
+ =?us-ascii?Q?MwmY53dkiIHI98jZa/0ECMdqC7oul9kEQiLEtm/jCuyxMjbU9Qm1xu7lD4kC?=
+ =?us-ascii?Q?BPB96lua2t8HLGZpXEXfnzYq4KST85pi8DKfV538C1Hwkcim2G1ZMtjcmfm0?=
+ =?us-ascii?Q?TQE5j0FLhtCtj0OT4UbtNa5QyycA4S/y42iZNhnowKmSy2U+/Fj96XkVoH7w?=
+ =?us-ascii?Q?wN61jdm57B3rci981rC6XRb1zzuZJza70lz7ifJVPX2Xps0CoToOaREd1X57?=
+ =?us-ascii?Q?7Nhtz6ylHcN84L/ce1ERkPGyXYReubSFJWM3i1ku1HwVUgy5cxbuyzKa23yM?=
+ =?us-ascii?Q?3AWuZhflybZ19FvBUzT7jeV1lpQk1DUUcTSS6PDgq0oo9i1xQpqKdufhXKiY?=
+ =?us-ascii?Q?hqK36/L7S+0BCgCGvV2ePPOlnQAfc8StnwEDHZrLSfiT3wYZrAjMhpaGu/AA?=
+ =?us-ascii?Q?Z/czgRQHhAc3VHDaq4lF/5aISwOlS9LcEi7uklkbKFMXn4g3pPHJRRmw3L8M?=
+ =?us-ascii?Q?h/dIR4yyo2y5RHWZmAvqo6rzTR58Nt2ICZ7649D6pcfU9CNrwPslags37R97?=
+ =?us-ascii?Q?5oxydKjemIUUF5XMHtHETIhyBBGyxorvy2jcSQDGdvtlMPblnEzjv12rpRBS?=
+ =?us-ascii?Q?oiyz4p45M9M2hMYWVnwgzP0qBq7csqBOY9BLO2KxuqEp2DCaX5ibJ/SAEzFA?=
+ =?us-ascii?Q?+BcOm1XXoUjES7E2Qv3v/f7lI5MMFe24zwQOGkbj0mvy5ER8O86+UDnBWfKO?=
+ =?us-ascii?Q?C2T+/BIapTMFBllrLe6CSJDWiun1yfKiFCyK5Ynatn/QUcXrlvyRUe7Q1Wb7?=
+ =?us-ascii?Q?7X7HFoN0CjBWqtO4e4qzNG+wlXA9Cl8szV3rOY8kqaxu+hbacEUUiqi9Fdm/?=
+ =?us-ascii?Q?YRoevbFGqxig2gqw0lhWQE+PQOcwqR7Fjm3amMd8Adti0yW4g3MY0cOAbQLp?=
+ =?us-ascii?Q?rNdwWW7NRmWrQ9RehcBMpI+bce5fVn9x7Z88ubNINBUel3YIGq6pzHzpHlMG?=
+ =?us-ascii?Q?n558lZsT7aSAn7wW34yRxPUWA+ZCdgjAaxZrRLPTkdKkwaruwGUVWAgJKml6?=
+ =?us-ascii?Q?2JHRWPqf1sMH24/1vLAWQHkxHtphyTbCV8KGF0bGA7mqMvECJ7k8GtS9/0+k?=
+ =?us-ascii?Q?H/BPqZh9SOteCuPiadSlZP0rf3qou2s=3D?=
 X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b9e94c0-a4ef-4dfe-1cc3-08de552b9788
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5a054f5-842d-446d-6a2e-08de552b97ec
 X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 18:18:04.8638
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 18:18:06.4800
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G/BQ988LWIAwfwurv67m4i7mrDoGc1BWWDNxMOYCC8+Fsm/rN6jXwpuQ27mz7GzBaBmFXZ2UtX/uysdL5E9lmczzScQnkiDKAvOtgJe7/oA=
+X-MS-Exchange-CrossTenant-UserPrincipalName: mLb9dufYCHS6hgIjF8AeQsWAS22f97RTJo5x56JBL4cqG1gjZPydW6Nj3r4wYX67wMm4LmV0N6l0FMIZyHNSQ9+KcYEaHhC+HjIRtXkVf0M=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR13MB6935
 
-Here are two patches allowing userspace to set a secret key for kNFSD to
-sign filehandles, and also set the option to sign filehandles for an
-export.
+If fh-key-file=<path> is set in nfs.conf, the "nfsdctl autostart" command
+will hash the contents of the file with libuuid's uuid_generate_sha1 and
+send the first 16 bytes into the kernel via NFSD_CMD_FH_KEY_SET.
 
-The secret key passed to the server is the first 128 bits of a sha1 hash of
-the contents of a file configured via the nfs.conf server section
-"fh_key_file".  Exports that have the option "sign_fh" set will cause the
-server to use this key to append an 8-byte siphash of the filehandle onto
-each filehandle.
+If fh-key-file=<path> is set in nfs.conf, rpc.nfsd will also hash the
+contents of the file with libuuid's uuid_generate_sha1 and write the
+resulting uuid into nfsdfs's ./fh_key_file entry.
 
-This version of the userspace patches correspond with the v1 of the kernel
-changes which have been posted here:
-https://lore.kernel.org/linux-nfs/C69B1F13-7248-4CAF-977C-5F0236B0923A@hammerspace.com/T/#t
+A compatible kernel can use this key to sign filehandles.
 
-This work is based on a branch that includes Jeff Layton's patch for
-min-threads:
-https://lore.kernel.org/linux-nfs/20260112-minthreads-v1-1-30c5f4113720@kernel.org/
-
-Comments and critique welcomed.
-
-Benjamin Coddington (2):
-  nfsdctl/rpc.nfsd: Add support for passing encrypted filehandle key
-  exportfs: Add support for export option sign_fh
-
+Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+---
  configure.ac                 |  4 +-
  nfs.conf                     |  1 +
- support/include/nfs/export.h |  2 +-
  support/include/nfslib.h     |  2 +
  support/nfs/Makefile.am      |  4 +-
- support/nfs/exports.c        |  4 ++
  systemd/nfs.conf.man         |  1 +
- utils/exportfs/exportfs.c    |  2 +
- utils/exportfs/exports.man   |  9 ++++
  utils/nfsd/nfsd.c            | 16 ++++++-
  utils/nfsd/nfssvc.c          | 26 +++++++++++
  utils/nfsd/nfssvc.h          |  1 +
  utils/nfsdctl/nfsd_netlink.h |  2 +
  utils/nfsdctl/nfsdctl.c      | 86 +++++++++++++++++++++++++++++++++++-
- 14 files changed, 153 insertions(+), 7 deletions(-)
+ 10 files changed, 137 insertions(+), 6 deletions(-)
 
-
-base-commit: 612e407c46b848932c32be00b835a7b5317e3d08
-prerequisite-patch-id: cc4d768b1f6935b3c94ae87bd0389270717bc5b0
-prerequisite-patch-id: c1ef8324c84a18d3ba29a971cb43b16798d71166
+diff --git a/configure.ac b/configure.ac
+index 33866e869666..db027ddbd995 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -265,9 +265,9 @@ AC_ARG_ENABLE(nfsdctl,
+ 		AC_CHECK_DECLS([NFSD_A_SERVER_MIN_THREADS], , ,
+ 			       [#include <linux/nfsd_netlink.h>])
+ 
+-		# ensure we have the pool-mode commands
++		# ensure we have the fh-key commands
+ 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
+-				                   [[int foo = NFSD_CMD_POOL_MODE_GET;]])],
++				                   [[int foo = NFSD_CMD_FH_KEY_SET;]])],
+ 				   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
+ 					      ["Use system's linux/nfsd_netlink.h"])])
+ 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
+diff --git a/nfs.conf b/nfs.conf
+index 3cca68c3530d..39068c19d7df 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -76,6 +76,7 @@
+ # vers4.2=y
+ rdma=y
+ rdma-port=20049
++# fh-key-file=/etc/nfs_fh.key
+ 
+ [statd]
+ # debug=0
+diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+index eff2a486307f..c8601a156cba 100644
+--- a/support/include/nfslib.h
++++ b/support/include/nfslib.h
+@@ -22,6 +22,7 @@
+ #include <paths.h>
+ #include <rpcsvc/nfs_prot.h>
+ #include <nfs/nfs.h>
++#include <uuid/uuid.h>
+ #include "xlog.h"
+ 
+ #ifndef _PATH_EXPORTS
+@@ -132,6 +133,7 @@ struct rmtabent *	fgetrmtabent(FILE *fp, int log, long *pos);
+ void			fputrmtabent(FILE *fp, struct rmtabent *xep, long *pos);
+ void			fendrmtabent(FILE *fp);
+ void			frewindrmtabent(FILE *fp);
++int				hash_fh_key_file(const char *fh_key_file, uuid_t hash);
+ 
+ _Bool state_setup_basedir(const char *, const char *);
+ int setup_state_path_names(const char *, const char *, const char *, const char *, struct state_paths *);
+diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
+index 2e1577cc12df..775bccc6c5ea 100644
+--- a/support/nfs/Makefile.am
++++ b/support/nfs/Makefile.am
+@@ -7,8 +7,8 @@ libnfs_la_SOURCES = exports.c rmtab.c xio.c rpcmisc.c rpcdispatch.c \
+ 		   xcommon.c wildmat.c mydaemon.c \
+ 		   rpc_socket.c getport.c \
+ 		   svc_socket.c cacheio.c closeall.c nfs_mntent.c \
+-		   svc_create.c atomicio.c strlcat.c strlcpy.c
+-libnfs_la_LIBADD = libnfsconf.la
++		   svc_create.c atomicio.c strlcat.c strlcpy.c fh_key_file.c
++libnfs_la_LIBADD = libnfsconf.la -luuid
+ libnfs_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
+ 
+ libnfsconf_la_SOURCES = conffile.c xlog.c
+diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+index 484de2c086db..1fb5653042d3 100644
+--- a/systemd/nfs.conf.man
++++ b/systemd/nfs.conf.man
+@@ -176,6 +176,7 @@ Recognized values:
+ .BR vers4.1 ,
+ .BR vers4.2 ,
+ .BR rdma ,
++.BR fh-key-file ,
+ 
+ Version and protocol values are Boolean values as described above,
+ and are also used by
+diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+index a405649976c2..08a7eaed4906 100644
+--- a/utils/nfsd/nfsd.c
++++ b/utils/nfsd/nfsd.c
+@@ -69,7 +69,7 @@ int
+ main(int argc, char **argv)
+ {
+ 	int	count = NFSD_NPROC, c, i, j, error = 0, portnum, fd, found_one;
+-	char *p, *progname, *port, *rdma_port = NULL;
++	char *p, *progname, *port, *fh_key_file, *rdma_port = NULL;
+ 	char **haddr = NULL;
+ 	char *scope = NULL;
+ 	int hcounter = 0;
+@@ -134,6 +134,8 @@ main(int argc, char **argv)
+ 		}
+ 	}
+ 
++	fh_key_file = conf_get_str("nfsd", "fh-key-file");
++
+ 	/* We assume the kernel will default all minor versions to 'on',
+ 	 * and allow the config file to disable some.
+ 	 */
+@@ -380,6 +382,18 @@ main(int argc, char **argv)
+ 		goto set_threads;
+ 	}
+ 
++	if (fh_key_file) {
++		error = nfssvc_setfh_key(fh_key_file);
++		if (error) {
++			/* Common case: key is already set */
++			if (error != -EEXIST) {
++				xlog(L_ERROR, "Unable to set fh_key_file, error %d", error);
++				goto out;
++			}
++			xlog(L_NOTICE, "fh_key_file already set");
++		}
++	}
++
+ 	/*
+ 	 * Must set versions before the fd's so that the right versions get
+ 	 * registered with rpcbind. Note that on older kernels w/o the right
+diff --git a/utils/nfsd/nfssvc.c b/utils/nfsd/nfssvc.c
+index 9650cecee986..4f3088b74285 100644
+--- a/utils/nfsd/nfssvc.c
++++ b/utils/nfsd/nfssvc.c
+@@ -34,6 +34,7 @@
+ #define NFSD_PORTS_FILE   NFSD_FS_DIR "/portlist"
+ #define NFSD_VERS_FILE    NFSD_FS_DIR "/versions"
+ #define NFSD_THREAD_FILE  NFSD_FS_DIR "/threads"
++#define NFSD_FH_KEY_FILE  NFSD_FS_DIR "/fh_key"
+ 
+ /*
+  * declaring a common static scratch buffer here keeps us from having to
+@@ -414,6 +415,31 @@ out:
+ 	return;
+ }
+ 
++int
++nfssvc_setfh_key(const char *fh_key_file)
++{
++	char uuid_str[37];
++	uuid_t hash;
++	int fd, ret;
++
++	ret = hash_fh_key_file(fh_key_file, hash);
++	if (ret)
++		return ret;
++
++	uuid_unparse(hash, uuid_str);
++
++	fd = open(NFSD_FH_KEY_FILE, O_WRONLY);
++	if (fd < 0)
++		return fd;
++
++	ret = write(fd, uuid_str, 37);
++	close(fd);
++	if (ret < 0)
++		return -errno;
++
++	return 0;
++}
++
+ int
+ nfssvc_threads(const int nrservs)
+ {
+diff --git a/utils/nfsd/nfssvc.h b/utils/nfsd/nfssvc.h
+index 4d53af1a8bc3..463110cac804 100644
+--- a/utils/nfsd/nfssvc.h
++++ b/utils/nfsd/nfssvc.h
+@@ -30,3 +30,4 @@ void	nfssvc_setvers(unsigned int ctlbits, unsigned int minorvers4,
+ 		       unsigned int minorvers4set, int force4dot0);
+ int	nfssvc_threads(int nrservs);
+ void	nfssvc_get_minormask(unsigned int *mask);
++int nfssvc_setfh_key(const char *fh_key_file);
+diff --git a/utils/nfsdctl/nfsd_netlink.h b/utils/nfsdctl/nfsd_netlink.h
+index 887cbd12b695..f7e7f5576774 100644
+--- a/utils/nfsdctl/nfsd_netlink.h
++++ b/utils/nfsdctl/nfsd_netlink.h
+@@ -34,6 +34,7 @@ enum {
+ 	NFSD_A_SERVER_GRACETIME,
+ 	NFSD_A_SERVER_LEASETIME,
+ 	NFSD_A_SERVER_SCOPE,
++	NFSD_A_SERVER_FH_KEY,
+ 
+ 	__NFSD_A_SERVER_MAX,
+ 	NFSD_A_SERVER_MAX = (__NFSD_A_SERVER_MAX - 1)
+@@ -88,6 +89,7 @@ enum {
+ 	NFSD_CMD_LISTENER_GET,
+ 	NFSD_CMD_POOL_MODE_SET,
+ 	NFSD_CMD_POOL_MODE_GET,
++	NFSD_CMD_FH_KEY_SET,
+ 
+ 	__NFSD_CMD_MAX,
+ 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index 48b3ba0b276c..efd4c1cf6d8a 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -29,6 +29,7 @@
+ 
+ #include <readline/readline.h>
+ #include <readline/history.h>
++#include <uuid/uuid.h>
+ 
+ #ifdef USE_SYSTEM_NFSD_NETLINK_H
+ #include <linux/nfsd_netlink.h>
+@@ -42,6 +43,7 @@
+ #include "lockd_netlink.h"
+ #endif
+ 
++#include "nfslib.h"
+ #include "nfsdctl.h"
+ #include "conffile.h"
+ #include "xlog.h"
+@@ -1597,6 +1599,81 @@ static int configure_listeners(void)
+ 	return ret;
+ }
+ 
++static int fh_key_file_doit(struct nl_sock *sock, const char *fh_key_file)
++{
++	struct genlmsghdr *ghdr;
++	struct nlmsghdr *nlh;
++	struct nl_data *data;
++	struct nl_msg *msg;
++	struct nl_cb *cb;
++	int ret;
++	uuid_t hash;
++
++	ret = hash_fh_key_file(fh_key_file, hash);
++	if (ret)
++		return ret;
++
++	msg = netlink_msg_alloc(sock, NFSD_FAMILY_NAME);
++	if (!msg) {
++		xlog(L_ERROR, "failed to allocate netlink msg");
++		return 1;
++	}
++
++	data = nl_data_alloc(hash, sizeof(hash));
++	if (!data) {
++		xlog(L_ERROR, "failed to allocate netlink data");
++		ret = 1;
++		goto out;
++	}
++
++	nla_put_data(msg, NFSD_A_SERVER_FH_KEY, data);
++	nlh = nlmsg_hdr(msg);
++	ghdr = nlmsg_data(nlh);
++	ghdr->cmd = NFSD_CMD_FH_KEY_SET;
++	cb = nl_cb_alloc(NL_CB_CUSTOM);
++	if (!cb) {
++		xlog(L_ERROR, "failed to allocate netlink callbacks");
++		ret = 1;
++		goto out_data;
++	}
++
++	ret = nl_send_auto(sock, msg);
++	if (ret < 0) {
++		xlog(L_ERROR, "send failed (%d)!", ret);
++		goto out_cb;
++	}
++
++	ret = 1;
++	nl_cb_err(cb, NL_CB_CUSTOM, error_handler, &ret);
++	nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, finish_handler, &ret);
++	nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, ack_handler, &ret);
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, recv_handler, NULL);
++
++	while (ret > 0)
++		nl_recvmsgs(sock, cb);
++	if (ret < 0) {
++		if (ret == -EOPNOTSUPP) {
++			xlog(L_ERROR, "Kernel does not support encrypted filehandles: %s",
++						strerror(-ret));
++			ret = 0;
++		} else if (ret == -EEXIST) {
++			xlog(L_ERROR, "fh_key_file already set: %s", strerror(-ret));
++			ret = 0;
++		} else {
++			xlog(L_ERROR, "Error setting encrypted filehandle key: %s",
++						strerror(-ret));
++			ret = 1;
++		}
++	}
++out_cb:
++	nl_cb_put(cb);
++out_data:
++	nl_data_free(data);
++out:
++	nlmsg_free(msg);
++	return ret;
++}
++
+ static void autostart_usage(void)
+ {
+ 	printf("Usage: %s autostart\n", taskname);
+@@ -1611,7 +1688,7 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ 	int *threads, grace, lease, idx, ret, opt, pools, minthreads;
+ 	struct conf_list *thread_str;
+ 	struct conf_list_node *n;
+-	char *scope, *pool_mode;
++	char *scope, *pool_mode, *fh_key_file;
+ 	bool failed_listeners = false;
+ 
+ 	optind = 1;
+@@ -1683,6 +1760,13 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ 		threads[0] = DEFAULT_AUTOSTART_THREADS;
+ 	}
+ 
++	fh_key_file = conf_get_str("nfsd", "fh-key-file");
++	if (fh_key_file) {
++		ret = fh_key_file_doit(sock, fh_key_file);
++		if (ret)
++			return ret;
++	}
++
+ 	lease = conf_get_num("nfsd", "lease-time", 0);
+ 	scope = conf_get_str("nfsd", "scope");
+ 	minthreads = conf_get_num("nfsd", "min-threads", 0);
 -- 
 2.50.1
 
