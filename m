@@ -1,203 +1,183 @@
-Return-Path: <linux-nfs+bounces-18039-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18040-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27807D3846F
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 19:35:14 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 756A4D3862B
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 20:44:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AAEE3302AE06
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 18:35:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BC4FA301E6FC
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 19:44:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37EF133C538;
-	Fri, 16 Jan 2026 18:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46CF3A1E6A;
+	Fri, 16 Jan 2026 19:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emxY1FlW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7qWBHHL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C451F3D56;
-	Fri, 16 Jan 2026 18:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA763A1E60;
+	Fri, 16 Jan 2026 19:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768588512; cv=none; b=T8QsjoLGGjYnFcoUmcV4AE07kAUnv522Vpb+LFsexU6oz126NY5DJDCAmwY1kyqIxno4pBinX+b9+QRRAm8Jgnv+9vs/7GDJpkJxU8VV/OTifb5TqMcO3un5azGsWxT1NTWlj1Nn8Pfw9nMBQMVI5MyUtp3PDQOr4wqboJCGPao=
+	t=1768592642; cv=none; b=Kv+uOzZSR5F3A03mycgAdVG+l7TASU5heHm0XQlhch2cNSnr7byFU9DNLtuoxWClkUwylxOkdplMVKpB3dOT5KUGk77X5Xickb143t/ZIUfX6vIpE9fd3t4eg2c0dOOUE14Kfmw/7juyvHO+WolPkc8YSNFyD3YrKnDwc3xY0m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768588512; c=relaxed/simple;
-	bh=BduuunRIrRrpujEbFLJpjG0uQ7tb8xG+8DWRUUOslXA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BWFmosK51xCzYF3/3V+4SxpOGYkorauf3rZF9jsKBDWB5+pLvUyyZ4S6TC88t3fXa9/4TDUCBUmxWwwrAfto1dWxdga86lf1ltcab55JR+PiCj8G1COrR5ENynweyCHi8aeR3VgJp2LT0NWlbRNMoqbaaZSGMaCQsExz2jqhIa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emxY1FlW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01976C116C6;
-	Fri, 16 Jan 2026 18:35:10 +0000 (UTC)
+	s=arc-20240116; t=1768592642; c=relaxed/simple;
+	bh=fowYOJgvzlLvh5gpFBgGukEbk2TOO3O7OzynWJwjMOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLqjrb+BFFPekZW2Emgu3IN6QMv0KB9KAveK2L8fgl2mV+BX/3QMlJYd+DXkpzJ1hxn/hHQuk3TmBvl9kFbD074SBAmifKE17Mfaje747orhIp/MEncA/CIb4g7JjucYqzVgiX+B/59+iKZHQExWp/z1bb+rHUn1/38usHHfQng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7qWBHHL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E871C19422;
+	Fri, 16 Jan 2026 19:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768588511;
-	bh=BduuunRIrRrpujEbFLJpjG0uQ7tb8xG+8DWRUUOslXA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=emxY1FlW1DxsyLskm3AGtm7FzUj78fR2ZN8KpGnc66+xAzV63wB1nyjekfe+PiBNE
-	 7yAee4wFrNjv0ojKwr0YaAVkFH0go9YBRSkaj7CcGTZGXj4fF7Uo2ClV9dMWklvMqU
-	 kKjxHETuiFTdW/XZfWpQ3yXl1sQnmV7OZyGlm8jktrYiXEoSB5bSFqXIE3x3QdNpHA
-	 AISUsO9aBifsi+qnZQxjHq0aK5lHHfghnZHeLiBxm3jB6TKDRDdZ+whrHdKDfsFKpg
-	 +bQH9FSyCh453uIl+LnQGhZAyPay6zzZtzdW/XvbjzRKTim4u3zG2cDK0NdQ80i66p
-	 U4iS9so8rN8pA==
-Message-ID: <c0f81eef4e8448818361772de4e22b6b6502ab73.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fix NULL pointer dereference in check_export()
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 16 Jan 2026 13:35:09 -0500
-In-Reply-To: <20260116-nfsd-fixes-v1-1-019689b72747@kernel.org>
-References: <20260116-nfsd-fixes-v1-1-019689b72747@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1768592642;
+	bh=fowYOJgvzlLvh5gpFBgGukEbk2TOO3O7OzynWJwjMOM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=P7qWBHHLohHNVLhF4wKxbIwjBh4GFRad1Y4i0CrXocC7IIB56DGhI0skdKR/DPTC4
+	 iYgI7aLccgOlmYb79Y2NctD/2IncTgcXy1PlBGtEEDwMxDn0ZFi9T2oCkqnlku0Tqn
+	 7WPVheWI3Y1GeHVpLQPo+FDP9Zh+m4nt5OdWC9Sr4P4WyYkdJkrdOwF/7/fqOxnY0M
+	 e9RRXyDPYeZkflUY+DMJrLd45kTY0BtzPiCwjq0Er7qV0GZ8aAYLmNoCw/AGY8ryls
+	 ZwiT3mEyftUf5V0aoFDaPcyUan5TzxS/GhVQpLjA+727OFMMMZu/Id6k+SH3OajIMV
+	 LWNrgyfeDtoyg==
+Message-ID: <683798bf-b7f3-4418-99ce-b15b0788c960@kernel.org>
+Date: Fri, 16 Jan 2026 14:43:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
+To: Benjamin Coddington <bcodding@hammerspace.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+ Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+References: <cover.1768573690.git.bcodding@hammerspace.com>
+ <f8e2d466-7280-4a21-ad71-21bf1e546300@app.fastmail.com>
+ <C69B1F13-7248-4CAF-977C-5F0236B0923A@hammerspace.com>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <C69B1F13-7248-4CAF-977C-5F0236B0923A@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2026-01-16 at 13:22 -0500, Jeff Layton wrote:
-> Given the right export table, it's possible to trigger a NULL pointer
-> dereference when mountd sends a path that has no export operations.
-> Check that the export_ops are set and just return -EINVAL if not.
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> Triggering this required a rather pathological export table (I just
-> exported "/"). Given that, I'm on the fence as to whether we want to
-> send this to stable.
-> ---
->  fs/nfsd/export.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index 2a1499f2ad196a6033787260881e451146283bdc..4187c109d84985d33a69e1929=
-1edbf2b27b257d8 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -405,6 +405,7 @@ static struct svc_export *svc_export_lookup(struct sv=
-c_export *);
->  static int check_export(const struct path *path, int *flags, unsigned ch=
-ar *uuid)
->  {
->  	struct inode *inode =3D d_inode(path->dentry);
-> +	struct export_operations *export_op =3D inode->i_sb->s_export_op;
-> =20
->  	/*
->  	 * We currently export only dirs, regular files, and (for v4
-> @@ -422,14 +423,20 @@ static int check_export(const struct path *path, in=
-t *flags, unsigned char *uuid
->  	if (*flags & NFSEXP_V4ROOT)
->  		*flags |=3D NFSEXP_READONLY;
-> =20
-> -	/* There are two requirements on a filesystem to be exportable.
-> -	 * 1:  We must be able to identify the filesystem from a number.
-> +	/* There are four requirements on a filesystem to be exportable:
-> +	 * 1: It must define sb->s_export_op
-> +	 * 2: We must be able to identify the filesystem from a number.
->  	 *       either a device number (so FS_REQUIRES_DEV needed)
->  	 *       or an FSID number (so NFSEXP_FSID or ->uuid is needed).
-> -	 * 2:  We must be able to find an inode from a filehandle.
-> +	 * 3: We must be able to find an inode from a filehandle.
->  	 *       This means that s_export_op must be set.
-> -	 * 3: We must not currently be on an idmapped mount.
-> +	 * 4: We must not currently be on an idmapped mount.
->  	 */
-> +	if (!export_op) {
-> +		dprintk("%s: fs doesn't define export_operations!\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
->  	if (!(inode->i_sb->s_type->fs_flags & FS_REQUIRES_DEV) &&
->  	    !(*flags & NFSEXP_FSID) &&
->  	    uuid =3D=3D NULL) {
-> @@ -437,7 +444,7 @@ static int check_export(const struct path *path, int =
-*flags, unsigned char *uuid
->  		return -EINVAL;
->  	}
-> =20
-> -	if (!exportfs_can_decode_fh(inode->i_sb->s_export_op)) {
-> +	if (!exportfs_can_decode_fh(export_op)) {
+On 1/16/26 12:17 PM, Benjamin Coddington wrote:
+> On 16 Jan 2026, at 11:56, Chuck Lever wrote:
+> 
+>> On Fri, Jan 16, 2026, at 9:32 AM, Benjamin Coddington wrote:
+>>> The following series enables the linux NFS server to add a Message
+>>> Authentication Code (MAC) to the filehandles it gives to clients.  This
+>>> provides additional protection to the exported filesystem against filehandle
+>>> guessing attacks.
+>>>
+>>> Filesystems generate their own filehandles through the export_operation
+>>> "encode_fh" and a filehandle provides sufficient access to open a file
+>>> without needing to perform a lookup.  An NFS client holding a valid
+>>> filehandle can remotely open and read the contents of the file referred to
+>>> by the filehandle.
+>>
+>> "open, read, or modify the contents of the file"
+>>
+>> Btw, referring to "open" here is a little confusing, since NFSv3 does
+>> not have an on-the-wire OPEN operation. I'm not sure how to clarify.
+>>
+>>
+>>> In order to acquire a filehandle, you must perform lookup operations on the
+>>> parent directory(ies), and the permissions on those directories may
+>>> prohibit you from walking into them to find the files within.  This would
+>>> normally be considered sufficient protection on a local filesystem to
+>>> prohibit users from accessing those files, however when the filesystem is
+>>> exported via NFS those files can still be accessed by guessing the correct,
+>>> valid filehandles.
+>>
+>> Instead: "an exported file can be accessed whenever the NFS server is
+>> presented with the correct filehandle, which can be guessed or acquired
+>> by means other than LOOKUP."
+>>
+>>
+>>> Filehandles are easy to guess because they are well-formed.  The
+>>> open_by_handle_at(2) man page contains an example C program
+>>> (t_name_to_handle_at.c) that can display a filehandle given a path.  Here's
+>>> an example filehandle from a fairly modern XFS:
+>>>
+>>> # ./t_name_to_handle_at /exports/foo
+>>> 57
+>>> 12 129    99 00 00 00 00 00 00 00 b4 10 0b 8c
+>>>
+>>>           ^---------  filehandle  ----------^
+>>>           ^------- inode -------^ ^-- gen --^
+>>>
+>>> This filehandle consists of a 64-bit inode number and 32-bit generation
+>>> number.  Because the handle is well-formed, its easy to fabricate
+>>> filehandles that match other files within the same filesystem.  You can
+>>> simply insert inode numbers and iterate on the generation number.
+>>> Eventually you'll be able to access the file using open_by_handle_at(2).
+>>> For a local system, open_by_handle_at(2) requires CAP_DAC_READ_SEARCH, which
+>>> protects against guessing attacks by unprivileged users.
+>>>
+>>> In contrast to a local user using open_by_handle(2), the NFS server must
+>>> permissively allow remote clients to open by filehandle without being able
+>>> to check or trust the remote caller's access.
 
-Hrm, actually exportfs_can_decode_fh() already checks this. You can
-disregard this patch.=20
---=20
-Jeff Layton <jlayton@kernel.org>
+Btw, "allow ... clients to open by filehandle" is another confusion.
+
+NFSv4 OPEN does do access checking and authorization.
+
+Again, it's NFS READ and WRITE that are not blocked.
+
+NFSv3 READ and WRITE do an intrinsic open.
+
+NFSv4 READ and WRITE permit the use of a special stateid so that an OPEN
+isn't necessary to do the I/O (IIRC).
+
+
+>>> Therefore additional
+>>> protection against this attack is needed for NFS case.  We propose to sign
+>>> filehandles by appending an 8-byte MAC which is the siphash of the
+>>> filehandle from a key set from the nfs-utilities.  NFS server can then
+>>> ensure that guessing a valid filehandle+MAC is practically impossible
+>>> without knowledge of the MAC's key.  The NFS server performs optional
+>>> signing by possessing a key set from userspace and having the "sign_fh"
+>>> export option.
+>>
+>> OK, I guess this is where I got the idea this would be an export option.
+>>
+>> But I'm unconvinced that this provides any real security. There are
+>> other ways of obtaining a filehandle besides guessing, and nothing
+>> here suggests that guessing is the premier attack methodology.
+> 
+> Help me understand you - you're unconvinced that having the server sign
+> filehandles and verify filehandles prevents clients from fabricating valid
+> ones?
+
+The rationale provided here doesn't convince me that fabrication is the
+biggest threat and will give us the biggest bang for our buck if it is
+mitigated.
+
+In order to carry out this attack, the attacker has to have access to
+the filehandles on an NFS client to examine them. She has to have
+access to a valid client IP address to send NFS requests from. Maybe
+you can bridge the gap by explaining how a /non-root/ user on an NFS
+client might leverage FH fabrication to gain access to another user's
+files. I think only the root user has this ability.
+
+I've also tried to convince myself that cryptographic FH validation
+could mitigate misdirected WRITEs or READs. An attacker could replace
+the FH in a valid NFS request, for example, or a client might send
+garbage in an FH. I'm not sure those are real problems, though.
+
+I am keeping in mind that everything here is using AUTH_SYS anyway, so
+maybe I'm just an old man yelling at a cloud. Nothing here is blocking
+yet, but I want the feature to provide meaningful value (as I think you
+do).
+
+Thank you for bearing with me.
+
+
+-- 
+Chuck Lever
 
