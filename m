@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18025-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18026-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69F07D336EF
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 17:17:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62933D337FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 17:29:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5F3323011EFD
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 16:17:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F0FF230D4ACF
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Jan 2026 16:27:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B881341062;
-	Fri, 16 Jan 2026 16:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D271C341063;
+	Fri, 16 Jan 2026 16:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nv3FWzI2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGPOT19X"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C1833B6E5
-	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 16:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA7633B951
+	for <linux-nfs@vger.kernel.org>; Fri, 16 Jan 2026 16:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768580272; cv=none; b=NjnlOiIKtEfaU5i3XoRtf/ZtjWhY3k3GOFkydL2BaK5Y07lDONdrW4wQ/e9zvq0n0Gx5BTYlLjz/+Y3AH21vwMbij49aEuCnUF+Fr1R99M8iWnUUEfWmcWE295MsTJw/6+dAkx2FAn23lEv4ZQBzwPUCU+8xSxXG3V+yp6HXPek=
+	t=1768580845; cv=none; b=hcOKEQlwXu1ICwGaKJk+GtjLLq66xZrr3xiptcoXQZnDKGgD5TvQQPZEyDDBzvj1IQTg5B/PrPxdQgrgMqNSx0hHVx4+CkKKg42EnkH3WYCsFRS+rxdybg/RipiBydhS3N2yUVtNqFnPF7wabhB4BhLPe1GDjse/50oS15AXvcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768580272; c=relaxed/simple;
-	bh=f3hvzZ0GFg+2KzCInNRLS4gl1zjs7AkTUdV7NJs0uK8=;
+	s=arc-20240116; t=1768580845; c=relaxed/simple;
+	bh=AL6Giw38F2WPJ/EkNqVNcsYBG8zOQZ5DGnyd9MVyZWA=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AV3vTsz86EW1VPfsmm19/00FXSKcJOFqRKWoRBk7MYHzD92ptKCdOQAY6rNX9NxfpNnzEjvEZ1PilgWp3l3+apX/puXSTQ8BQR4ILb0/SuVrJau1zXb8wZed8HJACbbCNrPCX+JmDriDxuSME3sj5XOgvKRJ5H/izVBa+DprUiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nv3FWzI2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC114C4AF0B;
-	Fri, 16 Jan 2026 16:17:51 +0000 (UTC)
+	 Subject:Content-Type; b=BmbFxfQJRcZqUQGe5zqBpMOeXKD9tKo5fvcUVAhbQZMryczQFA4rkPwO3a558uSqITxCrnH9ZZ3Kmyvrbeal4NaKil+0tFdUB93BLaf91LaXEUOrtMDoxaDypOSHnxi7AMId6TfqzCtjLqdOLNkQEViLwXbKwT0kKN1qLx4s1pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGPOT19X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F556C4AF09;
+	Fri, 16 Jan 2026 16:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768580272;
-	bh=f3hvzZ0GFg+2KzCInNRLS4gl1zjs7AkTUdV7NJs0uK8=;
+	s=k20201202; t=1768580845;
+	bh=AL6Giw38F2WPJ/EkNqVNcsYBG8zOQZ5DGnyd9MVyZWA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Nv3FWzI2v2kOJUiLi2qwpw+VWUgCSERTW0hYLorAXOH9nM5FbpygT58dd/gwQYzkj
-	 uR/qjzFNvdJLWTIDiKcRN1ApnKfSmxbOSU8dCziGP2XCXKwLtsD24o1EjroNqojwY7
-	 Pkz2yVX3hvcR6hf+76AikHMin4oeYCBU0lQw1EirVDlS7qFsSA7OYx6eVYLj0dDaEK
-	 2rPY/PypkRUL4ekC0Tr6k9ujHzedCtlmgFNw9/KUgYg+XWphPXm+CIvT1HGHRiOQ58
-	 Mo5WbuAO6ITbDcQ8NhsWws6ktbAznkJzc6z99z0a7oSuEstJj28f4WIS+PqxrPQBqd
-	 /JjQJjpok4Qgg==
+	b=nGPOT19XcOyAX7o2K95ZBZwx32RNQClc0dMiYJfUnoKkjEFHuQ5dR8dPQWo7zK9E0
+	 6H1OfOoBS0J597a/YXlF2VuIC19SG6tGFU82mdUT8FAUUWi4bJKrOjNTONqMdhaesw
+	 qBnMULr8VrbvPJ2G47ySiwM762dq7g8Cne/knJg99ssoZ0+s2TthXutOHIhxp3i/9+
+	 Y0kBG93KJA0mk3ncgFrrj/imIazAspVBnXLcE+c6Esmpe8Wtjq/LxU6Qkyy6dcDo+M
+	 DtntfpmENjs/Q4JaOecuTe3zhscJvcKi/eVCcM1+wDgAbfLacPNQy1YYDuOAY4mGk/
+	 OQ4NZ7AuxajJw==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C1D44F40087;
-	Fri, 16 Jan 2026 11:17:50 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6BA72F4008A;
+	Fri, 16 Jan 2026 11:27:24 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 16 Jan 2026 11:17:50 -0500
-X-ME-Sender: <xms:rmRqaX0dnJoyBfBhK8zDEPdjCXGq1uVwQvZ9_bqTuV7yI9Is-ooU7A>
-    <xme:rmRqaQ6wwYdyzKBb8iw0TOhwZic4peCRS6JaumJhTpPGGSG0eCH6yodXsq26hjmgU
-    70OxkMkaRN_TuLaX7o57UIrQyEP3zGAuCLLn6fEzHRJ2-6x1KtwPlg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelfeelucetufdoteggodetrf
+  by phl-compute-10.internal (MEProxy); Fri, 16 Jan 2026 11:27:24 -0500
+X-ME-Sender: <xms:7GZqaXuh3VOeTjhS5bAsZhCI309xf5mHXVxwVYgQKEGLtc-f86-kow>
+    <xme:7GZqaTQXZTdq0xH7b7z3BOTnt_Nw7ZCAfJTkv66XhUS5WySByyaI69yQLr08gFuqt
+    FcgN6h35wI2G42Y58Kr2HUZgwUykUqN0gt501rUWQASie4pvM3GzfTo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelgeduucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
@@ -65,14 +65,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdelfeelucetufdote
     gvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgv
     rdgtohhmpdhrtghpthhtoheplhhinhhugidqtghrhihpthhosehvghgvrhdrkhgvrhhnvg
     hlrdhorhhg
-X-ME-Proxy: <xmx:rmRqae-Et1RvgivnfqlgBt1TdFkwV-OCSII-azW6cdvYr-Mzn8ix1w>
-    <xmx:rmRqaai-F39wqaxaYclp4YtCLOz1i1aXU7UvWbrvXJJWzSSIURm5Sg>
-    <xmx:rmRqafZWmK2eDfnFldT3y_kCpTJ2JyOHnJdWoD-fCwhxFMu-6ClGfA>
-    <xmx:rmRqaf9HdHlhXtvpJOuWqfOVOcEPW_QEa2zyOngtqsGSbEuOCjpMIw>
-    <xmx:rmRqaRNY0PZJSQH6k1Udx3vGS8kcWWBLsTnxcpOloR_vZ8rjwGc9chwL>
+X-ME-Proxy: <xmx:7GZqad2pb4r8xmBjttwkgKjIRZbSkgc9cYiOG8GEuhABrUGJpiqKbQ>
+    <xmx:7GZqaf5LFT9wMpkUcvn381y-AcMpAjZZN5JuPRe-IcLZ0k5dJZMRDg>
+    <xmx:7GZqaZTI0BjgH6JFTc6_gpMPaj4PEtjsFoPs1wB13wnF16yRXfypzw>
+    <xmx:7GZqaUWcOJjtF2j1vRVNmCO5WWYkGuUO9GqyzMpJes_ZqGYGtK29YQ>
+    <xmx:7GZqaeEdp9iWUfw8FQoHN11zzZpR11Cacrgc6lHV2eS2Dc2XiHbW2Xnm>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A2C79780070; Fri, 16 Jan 2026 11:17:50 -0500 (EST)
+	id 44B69780070; Fri, 16 Jan 2026 11:27:24 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -80,170 +80,90 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AO3h44zqd9zZ
-Date: Fri, 16 Jan 2026 11:17:20 -0500
+X-ThreadId: Ad7T_HfoJT77
+Date: Fri, 16 Jan 2026 11:26:44 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Benjamin Coddington" <bcodding@hammerspace.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Eric Biggers" <ebiggers@kernel.org>, "Rick Macklem" <rick.macklem@gmail.com>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Eric Biggers" <ebiggers@kernel.org>,
+ "Rick Macklem" <rick.macklem@gmail.com>
 Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  linux-crypto@vger.kernel.org
-Message-Id: <d2c5b2df-ddb2-49d0-9c41-422449d123ab@app.fastmail.com>
-In-Reply-To: <4227ce184b668d857fc495f61c6e3526dd8862b2.camel@kernel.org>
+Message-Id: <69621716-f4f2-481e-b0af-0339f21bb139@app.fastmail.com>
+In-Reply-To: 
+ <455770c55ed3500a65a0d5d30133f5f23515a1cc.1768573690.git.bcodding@hammerspace.com>
 References: <cover.1768573690.git.bcodding@hammerspace.com>
- <c49d28aade36c044f0533d03b564ff65e00d9e05.1768573690.git.bcodding@hammerspace.com>
- <3db40beb64cb3663d9e8c83f498557bf8fbc0924.camel@kernel.org>
- <3fc1c84e-3f0b-4342-9034-93e7fb441756@app.fastmail.com>
- <3c5af19d8793c34022bde2cb7fcca1855d1ea080.camel@kernel.org>
- <703f29f8-a9e5-4947-9d93-a3cbde5cbdcc@app.fastmail.com>
- <4227ce184b668d857fc495f61c6e3526dd8862b2.camel@kernel.org>
-Subject: Re: [PATCH v1 2/4] nfsd: Add a key for signing filehandles
+ <455770c55ed3500a65a0d5d30133f5f23515a1cc.1768573690.git.bcodding@hammerspace.com>
+Subject: Re: [PATCH v1 3/4] NFSD/export: Add sign_fh export option
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
-On Fri, Jan 16, 2026, at 10:52 AM, Jeff Layton wrote:
-> On Fri, 2026-01-16 at 10:45 -0500, Chuck Lever wrote:
->> 
->> On Fri, Jan 16, 2026, at 10:25 AM, Jeff Layton wrote:
->> > On Fri, 2026-01-16 at 10:09 -0500, Chuck Lever wrote:
->> > > 
->> > > On Fri, Jan 16, 2026, at 9:59 AM, Jeff Layton wrote:
->> > > > On Fri, 2026-01-16 at 09:32 -0500, Benjamin Coddington wrote:
->> > > > > Expand the nfsd_net to hold a siphash_key_t value "fh_key".
->> > > > > 
->> > > > > Expand the netlink server interface to allow the setting of the 128-bit
->> > > > > fh_key value to be used as a signing key for filehandles.
->> > > > > 
->> > > > > Add a file to the nfsd filesystem to set and read the 128-bit key,
->> > > > > formatted as a uuid.
->> > > > > 
->> > > > > Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
->> > > > > ---
->> > > > >  Documentation/netlink/specs/nfsd.yaml | 12 ++++
->> > > > >  fs/nfsd/netlink.c                     | 15 +++++
->> > > > >  fs/nfsd/netlink.h                     |  1 +
->> > > > >  fs/nfsd/netns.h                       |  2 +
->> > > > >  fs/nfsd/nfsctl.c                      | 85 +++++++++++++++++++++++++++
->> > > > >  fs/nfsd/trace.h                       | 19 ++++++
->> > > > >  include/uapi/linux/nfsd_netlink.h     |  2 +
->> > > > >  7 files changed, 136 insertions(+)
->> > > > > 
->> > > > > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
->> > > > > index badb2fe57c98..a467888cfa62 100644
->> > > > > --- a/Documentation/netlink/specs/nfsd.yaml
->> > > > > +++ b/Documentation/netlink/specs/nfsd.yaml
->> > > > > @@ -81,6 +81,9 @@ attribute-sets:
->> > > > >        -
->> > > > >          name: min-threads
->> > > > >          type: u32
->> > > > > +      -
->> > > > > +        name: fh-key
->> > > > > +        type: binary
->> > > > >    -
->> > > > >      name: version
->> > > > >      attributes:
->> > > > > @@ -227,3 +230,12 @@ operations:
->> > > > >            attributes:
->> > > > >              - mode
->> > > > >              - npools
->> > > > > +    -
->> > > > > +      name: fh-key-set
->> > > > > +      doc: set encryption key for filehandles
->> > > > > +      attribute-set: server
->> > > > > +      flags: [admin-perm]
->> > > > > +      do:
->> > > > > +        request:
->> > > > > +          attributes:
->> > > > > +            - fh-key
->> > > > 
->> > > > Rather than a new netlink operation, I think we might be better served
->> > > > with just sending the fh-key down as an optional attribute in the
->> > > > "threads" op. It's a per-netns attribute anyway, and the threads
->> > > > setting is handled similarly.
->> > > 
->> > > Setting the FH key in the threads op seems awkward to me.
->> > > Setting a key is optional, but you always set the thread
->> > > count to start the server.
->> > > 
->> > > Key setting is done once; whereas setting the thread count
->> > > can be done many times during operation. It seems like it
->> > > would be easy to mistakenly change the key when setting the
->> > > thread count.
->> > > 
->> > > From a "UI safety" perspective, a separate op makes sense
->> > > to me.
->> > > 
->> > 
->> > I'm not convinced. We could easily vet that the key doesn't change when
->> > changing the thread count, and either return an error or throw some
->> > sort of warning and ignore the change.
->> > 
->> > My main thinking here is that you'd want to set up the key at startup
->> > time and never change it, so if the server is already running you
->> > probably want to reject key changes -- otherwise you may have already
->> > given out some unencrypted handles.
->> > 
->> > If that's the case, then now you have to ensure you run the op to set
->> > the key before issuing "threads".
->> > 
->> > Why deal with an ordering constraint like that? Optionally passing down
->> > the key with "threads" means we handle it all in one shot.
->> 
->> We already configure listeners and threads in separate operations.
->> The ordering is managed. It's reasonable for the kernel to block
->> fh_key changes while the NFS server is in operation.
->> 
->> I'd much rather set a precedent of several small ops rather than
->> one or two Swiss army knives.
->>
->> 
->
-> I disagree. Having all of the server settings as discrete elements was
-> part of the problem with the old nfsdfs-based interface. We had this
-> set of discrete knobs that needed to all be twiddled in the correct
-> order.
->
-> The fact that we can send down server parameters in a single block is a
-> strength of the netlink interface, IMO. We can easily add optional
-> parameters and I think that's what we should do here.
->
->
->> > > What feels a little strange though is where to store the
->> > > key? I was thinking in /etc/exports, but that would make
->> > > the FH key per-export rather than per-server instance.
->> > > 
->> > > That gives a cryptographic benefit, as there would be
->> > > more keying material. But maybe it doesn't make a lot of
->> > > sense from a UX perspective.
->> > > 
->> > > On the other hand, some might like to manage the key by
->> > > storing it in a trusted compute module -- systemd has
->> > > a facility to extract keys from a TCM.
->> > > 
->> > 
->> > Yeah, there are a lot of possibilities here. I like the idea of
->> > scraping this out of the TPM, but that's not going to be possible
->> > everywhere. We'll also need some alternate method of storing the key in
->> > a secure way on the fs so that nfsdctl can get to it for hosts that
->> > don't have a TPM.
->> 
->> My point is none of this has anything to do with thread count.
->> Setting the fh_key needs to be a distinct UI element.
->
-> "threads" should probably have been named "service", since it's
-> basically the method that we use to create the actual service,
-> culminating with starting threads.
+On Fri, Jan 16, 2026, at 9:32 AM, Benjamin Coddington wrote:
+> Setting the "sign_fh" export option sets NFSEXP_SIGN_FH.  In a future patch
+> NFSD uses this signal to append a MAC onto filehandles for that export.
 
-OK, you rode herd on getting the netlink stuff in, so it's
-your call here.
+Same comment on missing "why" and the use of a Link: tag
 
-It might be nice to create a new op called "service" and leave
-the legacy "threads" op in place for now.
+Also, let's see some motivation for re-ordering the export flag
+table.
 
+
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  fs/nfsd/export.c                 | 5 +++--
+>  include/uapi/linux/nfsd/export.h | 4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index 2a1499f2ad19..19c7a91c5373 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -1349,13 +1349,14 @@ static struct flags {
+>  	{ NFSEXP_ASYNC, {"async", "sync"}},
+>  	{ NFSEXP_GATHERED_WRITES, {"wdelay", "no_wdelay"}},
+>  	{ NFSEXP_NOREADDIRPLUS, {"nordirplus", ""}},
+> +	{ NFSEXP_SECURITY_LABEL, {"security_label", ""}},
+> +	{ NFSEXP_SIGN_FH, {"sign_fh", ""}},
+>  	{ NFSEXP_NOHIDE, {"nohide", ""}},
+> -	{ NFSEXP_CROSSMOUNT, {"crossmnt", ""}},
+>  	{ NFSEXP_NOSUBTREECHECK, {"no_subtree_check", ""}},
+>  	{ NFSEXP_NOAUTHNLM, {"insecure_locks", ""}},
+> +	{ NFSEXP_CROSSMOUNT, {"crossmnt", ""}},
+>  	{ NFSEXP_V4ROOT, {"v4root", ""}},
+>  	{ NFSEXP_PNFS, {"pnfs", ""}},
+> -	{ NFSEXP_SECURITY_LABEL, {"security_label", ""}},
+>  	{ 0, {"", ""}}
+>  };
+> 
+> diff --git a/include/uapi/linux/nfsd/export.h 
+> b/include/uapi/linux/nfsd/export.h
+> index 4e712bb02322..6a73955fa5ba 100644
+> --- a/include/uapi/linux/nfsd/export.h
+> +++ b/include/uapi/linux/nfsd/export.h
+> @@ -34,7 +34,7 @@
+>  #define NFSEXP_GATHERED_WRITES	BIT(5)
+>  #define NFSEXP_NOREADDIRPLUS    BIT(6)
+>  #define NFSEXP_SECURITY_LABEL	BIT(7)
+> -/* BIT(8) currently unused */
+> +#define NFSEXP_SIGN_FH			BIT(8)
+>  #define NFSEXP_NOHIDE			BIT(9)
+>  #define NFSEXP_NOSUBTREECHECK	BIT(10)
+>  #define NFSEXP_NOAUTHNLM		BIT(11)	/* Don't authenticate NLM requests - 
+> just trust */
+> @@ -55,7 +55,7 @@
+>  #define NFSEXP_PNFS				BIT(17)
+> 
+>  /* All flags that we claim to support.  (Note we don't support NOACL.) */
+> -#define NFSEXP_ALLFLAGS			BIT(18) - BIT(8) - 1
+> +#define NFSEXP_ALLFLAGS			BIT(18) - 1
+> 
+>  /* The flags that may vary depending on security flavor: */
+>  #define NFSEXP_SECINFO_FLAGS	(NFSEXP_READONLY | NFSEXP_ROOTSQUASH \
+> -- 
+> 2.50.1
 
 -- 
 Chuck Lever
