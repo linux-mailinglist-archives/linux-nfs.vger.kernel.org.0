@@ -1,180 +1,293 @@
-Return-Path: <linux-nfs+bounces-18070-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18071-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BADBD38C06
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 05:03:48 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40CA8D38D0C
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 08:05:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5B9EB302FBC6
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 04:03:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2571030060F6
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 07:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA4E29D260;
-	Sat, 17 Jan 2026 04:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F07329E6F;
+	Sat, 17 Jan 2026 07:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yb2Dwb5y"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ewwePj+P";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eQtaAVm6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A8252F88;
-	Sat, 17 Jan 2026 04:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768622624; cv=none; b=DRl1ev9VHZ0DpvnFXFBco/7nXLrKX6qg0sWt81bCxxhdMPXB/WUAnPz5WG3+5HuJJyWOhFXLZ1/2lrJD+Tn4ATxir6zq98DZY1BrOujt27p8COAGqJ+4I12ayVpExvopmXfx9ixIQ5ILwswVnpXqrtqPD93VPMAaPtihbqfipEk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768622624; c=relaxed/simple;
-	bh=o2qctAVvXh/9Vl33kymJtTohqLUBkoH6VdAaDc8/AdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDJzwglGz/9zESIhAJEYawxNMDQ+ZMN264yGXsm8/ivOdqoj3/4pa9CnnfymfXRYJs0o6NKIHaJCkEW7rx0y3rzNDhuHInL3HhY7VdaSvHbE7FG+QWohMgihAW7JxUIWLKl3l9RFLbfs4d5MLvz4aySOLQyHAQJx2bTTUEYLGZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yb2Dwb5y; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768622622; x=1800158622;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o2qctAVvXh/9Vl33kymJtTohqLUBkoH6VdAaDc8/AdA=;
-  b=Yb2Dwb5y9uFJ2X4nptUifah/BITlebaimKy1oFXSIW3Y0nwbeXQ61Br0
-   RLRIGo61JJ2tDVY0+Q1ZUZ3RlLeyvfjPPe2sUamL8B8rM20wmDbCYIEo6
-   9m3rL6OUwziJiUSRecqSgQOuIQPFiOUsUm0p1l+7T1slqV+MdkYKPSdYD
-   rnniJbq3Un/F4F1VPaZpRAm9EVBVuCuNxc197TnzTVgfCixQNZOu5noEX
-   wZptlZ10GXvJGhCJApJmEKmB0fUmm0lDR9QFfHdpDhdLpbL697QtrMxS1
-   wg4fd+fhuviRqvhJxdmNEmXIjPd2mgtjH2vtf+kruehl6wqJONQ9LrOcU
-   w==;
-X-CSE-ConnectionGUID: G5rKGyJuR8ieBtV2T4VbsQ==
-X-CSE-MsgGUID: dzDolOxwS8Wn65Z10Av4FQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11673"; a="69982896"
-X-IronPort-AV: E=Sophos;i="6.21,233,1763452800"; 
-   d="scan'208";a="69982896"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 20:03:42 -0800
-X-CSE-ConnectionGUID: 9hAiUDdSQTCIHoPINYO2VQ==
-X-CSE-MsgGUID: L+lRrGODRlqIEz0VgGdvnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,233,1763452800"; 
-   d="scan'208";a="228393086"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 16 Jan 2026 20:03:39 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vgxXE-00000000LY8-1qLn;
-	Sat, 17 Jan 2026 04:03:36 +0000
-Date: Sat, 17 Jan 2026 12:03:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH] nfsd: fix NULL pointer dereference in check_export()
-Message-ID: <202601171105.1nmOHcdX-lkp@intel.com>
-References: <20260116-nfsd-fixes-v1-1-019689b72747@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0A5328B6A
+	for <linux-nfs@vger.kernel.org>; Sat, 17 Jan 2026 07:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768633508; cv=fail; b=YF544nnIQkrposZhYJFCyUVliB/rfCTso4r1Qxoq2JOleLEvno7QdCPvDRxzW3ztKHCIOQVU0jYBrMDmdzfpKN5dwrTveXxvNnndZ0iU7NZXy6neJgzgPH1ZkTpW8/cE93PNRnNN0eU2EfELeOFj4+tW0d5UDfMn1dOuxoJFffs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768633508; c=relaxed/simple;
+	bh=fwxlSDt541cDvqM/1dkWcNuMtdceqADJgpUO9cTuK04=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=E8yG2K0PQen4Q74UiNbZgzj11z8JHkU8AzqZPyuR0rteL9Na07tDkCsKaA/sOpKIxZe5arz5cCCQrb3xKxIL3dJz2ZMHiSjpZ4ZGXl/YORppTaXpSgsR9cl03OgWWBLJCoM11iGTHdhmnpC1Rx2snWrYPZyX+puV52oX92KNsx0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ewwePj+P; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eQtaAVm6; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60H70xnt337878;
+	Sat, 17 Jan 2026 07:05:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=R+AcTQauXcygwWiM4lFuuPN0ULDavNLHZriAu0Y5o14=; b=
+	ewwePj+PNq/IdBmXOmnyGcoTuXccskRtsI4DJdR6wfUv6G0izLvVv3Ga4YbZP0+c
+	NVKqh1ifaSC1WeHJAwxUVCirZuW0lIvQYt3GgMD3LMf9Bvh/dAvvQV9FtvW2zw/a
+	SbPi8RdTcTPxf5BqmrwtT4uaJuDfFRF5+u6jt57cKt5w4OsIr7XPViDEDLQ+1Q2A
+	Cn6DesYyQDSIrelkxKNXD71IAhhBlRDBSUUjV+S6As4w8iE0qIjsN61wtgiuPzzf
+	/rK6mN2iS+Td3RSj3LaFr6D6AbvQSWMUl2mls/h4c4A3aXWRKnvVKrPg55qzugGV
+	piNK0CeRa6jDo+aSPkHJMg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br2ypr3bt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 Jan 2026 07:05:01 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60H5JPfM032201;
+	Sat, 17 Jan 2026 07:05:00 GMT
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010020.outbound.protection.outlook.com [52.101.85.20])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4br0va6m3r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 Jan 2026 07:05:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jjo1hrNPz993RW2Msszoh5dU69OXwVxbqadqW3LiL7V2VtuVR2ZHbQTy0fgDAqVPXTU60MzhH1sMlpgguxv6GvlgkrWhvEi0authp2q1x6W4gNsYEgZ3iUl27NrPnw58B4Yn7zVTvGd6nCVoHRVi7PeeV+giKlBHw6TCHWJH075ZiKpCVKngPt0T61Y7SfDhem+6sjopSK88AZyEAJYAklg8cxcs59W3G/SLMbMgw2F9SCjdpNVTYIQLDSeREZckYkW6zOC8aLPX6mXNx6L3T5ZCERDiaOnd37ATV0LKEzFneNEtgr5UzB8FOWkwqO986t8hmQaaYmeMI5mpVbWK1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R+AcTQauXcygwWiM4lFuuPN0ULDavNLHZriAu0Y5o14=;
+ b=OnVtbQL5LzrT2/Qfs9F7k0UZq6OCBKFWTWkEVsHhb3T6pMunPNkSaPDHmzTe7U6tVGCPgTrtOCevTXyJOQ4WmBZXvbx391/gyThwQl3gnAGCU/uYyjqDgqrGtw7762Q0r6i5OR9fjXfZ/GZjfKJLI3w8QnlxUVQcfvshyLwIc9MoEfWUlcTp6Qzbq6OhW7LjBnOOSBqDqBHc14eNeH9u2XKx8bMHVGPNgo1A9nLGA71mVMUe6iyn8Fzq1dMu4Klqg2ejzsirYsfrke6M0ESY6j2+OnGJS3kGid+UC1LhNIRFtt51mVvwH6ZAgJIfW1LnRde+ilu5U4i9+TePjzLeTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R+AcTQauXcygwWiM4lFuuPN0ULDavNLHZriAu0Y5o14=;
+ b=eQtaAVm6NOZQOA12sqVem/XmYA3fXm85X6zFoSaJEddxKbJJE6tc1EUoNs4GCG2UPthniYcUBT70kAcdGc2WD1xJk1DJ0AmS8fSFfhBlkWu+U2cTbn+/5lQgID0NuRsL7Bffx20B3DZ66Ar22/s6GM2HzJnch1dGnQZss8UW7Zo=
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com (2603:10b6:303:244::14)
+ by DM3PPF40B0653BC.namprd10.prod.outlook.com (2603:10b6:f:fc00::c22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Sat, 17 Jan
+ 2026 07:04:57 +0000
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6]) by MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6%5]) with mapi id 15.20.9520.003; Sat, 17 Jan 2026
+ 07:04:57 +0000
+Message-ID: <08c33c91-abda-42de-8771-e61d48b50cc7@oracle.com>
+Date: Fri, 16 Jan 2026 23:04:55 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug in nfsd4_block_get_device_info_scsi in nfsd-testing branch
+From: Dai Ngo <dai.ngo@oracle.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
+ <a1442149-fdc2-4f66-b73a-499a2e192960@app.fastmail.com>
+ <108fb719-8654-42b8-9e37-275726f4b5d8@oracle.com>
+Content-Language: en-US
+In-Reply-To: <108fb719-8654-42b8-9e37-275726f4b5d8@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0078.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::23) To MW6PR10MB7639.namprd10.prod.outlook.com
+ (2603:10b6:303:244::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260116-nfsd-fixes-v1-1-019689b72747@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR10MB7639:EE_|DM3PPF40B0653BC:EE_
+X-MS-Office365-Filtering-Correlation-Id: 741f0c4e-cb54-4912-4da7-08de5596b8c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V1VwTUlPc3dHVWdqUGprOXJQakdSa1k1MUxnSzVjQm93dk45RWZTNjRsenNB?=
+ =?utf-8?B?OTlWSVpOWk02TnNZZ211OHA5eWVFd3h5L3J5M2ZuRXNDKzVrTkVRejlTUkd4?=
+ =?utf-8?B?Q3dIdllvcmdSTnJwTFlLcmZra0lVamNCeDBIbHJScnRtVi9rL29hQzN4TCt1?=
+ =?utf-8?B?NVl5ajBrZWJLdm5QcVVOa1ZKMC8zeE5MaERiNzEyOFFMZlFrOTg1bmpYK0FX?=
+ =?utf-8?B?UTd6bk5hZEpROEprTHUzR1IzNjNVUktIdU1WNGM3NHBvMVAxZENtTUxabHhp?=
+ =?utf-8?B?NW1KYjdtM3Z1Z3FNM3BMVFlQRU9IcXRjb0NHMTJBTlNYcTRaNmlFaUpidCs5?=
+ =?utf-8?B?TkNXWFp3R2duakZxRWlRZEVRaEprUktPMFZQRlJnZDgzSlIzZFFQSVMyNGpK?=
+ =?utf-8?B?QkQxWDZoUW5uWjFldUxUSm5kY0lXR0hHdDB6bldyY0hzRkt0TkNORzNreWUw?=
+ =?utf-8?B?OGJib0xRcVk3dVdpc2J6bldtZ2FMSExZdmpwampoSUtSKzl0bElqekthdmVW?=
+ =?utf-8?B?cnkveXlxbmFGVllzZ0FZb2JLR2d3a1B3ZXp4V2poTUt5bGU5Yzl4TFBUUDdu?=
+ =?utf-8?B?WFp5UmR2U2xhN0psN2hRMmpNNEZmdmxRK2pQTk1BbHB6RGt5cSs2WkkrSkgr?=
+ =?utf-8?B?M3FsdDYwU2ZzYzhWRnk4NGJzbXk4cXR3ZHM3eHMwNzNHb1FwU0tSc0Izek1j?=
+ =?utf-8?B?ZUkvMmlURWdzUkZQV3orS0pxWjBmZGlNcUlHUTUrckVQUnpGei9PWmZKVkla?=
+ =?utf-8?B?ZDNFN1QzN0R3Y1RUWmNFTUdWcFptUGxWQW9iVEdMeTErbnVrb1N6SUtmeGZ0?=
+ =?utf-8?B?T3BYblFOOVEvWTNZOEpZRjJtM1VwUWdsL2JEM05lMFhhOE1ySSt2Qyt6NlY4?=
+ =?utf-8?B?UTg2OHQ0NmJJd3BuWFZkMVhLRE9sMU5Yd3VzdlB1OWh1VVpwNHc0SXphbDds?=
+ =?utf-8?B?Q2lhNXNpMUdCRUpReW9hNHcwVU81bE0rUGYrcGN4RVJPdjEyajVBc2VaZC9u?=
+ =?utf-8?B?akM0M1dhdFNncXVNMEJ5YmprYU1Eb2QzZHZwamI0RGFINkNNb09ad2xnY285?=
+ =?utf-8?B?elorNTV0UU80ZE53RTU4cXM0V3oya0JaYlBpaUJIK2dhT21hbjNJWk96cUNZ?=
+ =?utf-8?B?YXJaZ1l5UzNxckpYTWN3Z0hIL0I5ak5relpxMlBmaEJTMU8zZkJ4MWFuelZx?=
+ =?utf-8?B?WXdYQkIwU1pLQm9iVUFOWVdkUy81OUhUdCtPN2NkTE1hcXkzbFA4YjBVQWtL?=
+ =?utf-8?B?dElmVXRUQzRtd25QVzJrWnduY0dpNFVHZWpZL1VQVFhaVzlkaDVkYnBsbVhL?=
+ =?utf-8?B?M2pwci9KckQ4eWF0ek9IMDFFSkJKOE1lNUhkSit0OG5HcEVkUStGRmEzU1JI?=
+ =?utf-8?B?ek9rNGc1cTNCZDZLdHhYTFh4Ny92V3hXNkxtaDdmcXltbFpDc3J4ZGk1bk9m?=
+ =?utf-8?B?Y1Vza3dUMm1PMTF5YUx4ZlBGOUtrNXJteDFaSStTd0ZHMTAzcHA4QWNlQ2p0?=
+ =?utf-8?B?VWhZUVpCdUc0STNMVzlua1ZVZTJXOUFVTVg2NEU2eGxoT2RSR1hoSjA1RGd2?=
+ =?utf-8?B?aFQwNS9aY0o5alMyYnpWWlQ4Y3d2NjkrbEVBSm83bHVtdnpmMzZjNGtIcFI5?=
+ =?utf-8?B?RkYyRUNIbjNIMEVvY0RSZHhQRGgvZnFjK2hSWFpEWW1XSis5Q2pLcHBlVENT?=
+ =?utf-8?B?clRyc25BSWYrbTU1c1RBdmZtUFNMMXJFaVZZbVh6a0dPM3J5ZitRKzgvRXJa?=
+ =?utf-8?B?SmdPbHI5YmhzUXV2WDZyRFFzUXhIekw4TFQ4NlBUcmZPV0Z6ekFDY1BaWW5R?=
+ =?utf-8?B?b3ZJVTRoUG5VU1VkR2h0U2tqQkFSdHV4NUprUGxXbW83eWtZNngxNHFwWjFC?=
+ =?utf-8?B?dVdvcVREcEdJMW83a2FId3U3Z3N6VUpUMFhNbis3RnhrZjg2T0d1eGQ5c0pl?=
+ =?utf-8?B?bVRyS0VFUnRPT2NndytoU2hUV2NDL1NobFArcHA3ZmFXT1NtR3BGVTRrcmgv?=
+ =?utf-8?B?dlhhSmRKUFJaRkhIeDBEeU5SRVV6dURXSUNlaXVUVHZzb0QzVjdNQ1dkSngr?=
+ =?utf-8?B?dm1QNlV0N2NsVE1qZ3hXQi9HNU5NQlI3eXI0dW1RKzl5V21JK3hubG9uWFR5?=
+ =?utf-8?Q?ZMME=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR10MB7639.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NitzS0IxdGpQR2ZwV3FVaXlKOGRSeHlSbG1uVC9jNDRERU10Ry9Pa0dVUUda?=
+ =?utf-8?B?NmFKbUNCYVhwRW1DWHpvaXhibG1vRUM0bTBDT1F1SlhMeFA2dCt2anYrVlF6?=
+ =?utf-8?B?ZDVjT012ZzlqZXo1S0dDZ0lWNFBHcHFVUUlIMHhKN2dWUEtDbGxDcEJ4djhs?=
+ =?utf-8?B?QVdmZ2x3T2hBLytqaDFsQW45NXZydnNZYzgraVdPUXRRcWpZeEVudGRFY0Q4?=
+ =?utf-8?B?NzMzVGJsZ0RQRUV3angvTk9kQlI3ZGY1NDMyaUpENVVTTk0rTmdPdStXdGZ5?=
+ =?utf-8?B?RFg2cUFLL2RYb1VHQ1Rncmh3bTQ1OEcxbUQ4azhvRXN0aUtVbnlXcVMyaVRx?=
+ =?utf-8?B?dWZyQks5bVdpVTNCSkgxKzBhc2tXcmdkcFNlbUNUZHU1U2hhbGVQanYwR2hU?=
+ =?utf-8?B?bDVINnMwWGRhS2lITWUrbzVPSmJYS3JmcEdNbUdCMEM4WVRmTVRNOEV5U0I5?=
+ =?utf-8?B?bWR2ZFlVUklVWXgwWVVKUFQyZjBqOVdHSnBaSzBkZ3JtRnFJWnpsNmtNbHIv?=
+ =?utf-8?B?WE45eVNRVHJnVDNzUE1pYkZlZjJhTXZKL1VJditHRnF3QnZJWUxseGMvS0V6?=
+ =?utf-8?B?cEhVTkI0QkJHZzlFL2xiVFM0MzZWb0J3WUhVcmtHMjV4ZGNKVkpyT1BCUjFE?=
+ =?utf-8?B?TWJ1M1dzU25QM0xOMDc2WEZ6cFRUSGxaUkttWG5tM1V0b0o2REF0QzVoOTFJ?=
+ =?utf-8?B?RnRXN2xmVzc1SHppb1gyeUdBUmZhNUJERldJanhRenJHKzk5ck1nSm5pTTN6?=
+ =?utf-8?B?SURPdVVHY0hWOGZkYmpiN0FvMUl3WEQzV3AwTmZjZFlpNW5wLzBNczJ0OWl2?=
+ =?utf-8?B?UGZkS2F5UlZxbGVkY2VncmtIL2JBQ1NlMVdMR01BUTQ1VlNVWDY2WlVWdkxm?=
+ =?utf-8?B?NjNhU1VzVFd6MXJvM2dXQTJ5YVBORkc4YWk5TThiaG9oVGZXdndnazFUT3k3?=
+ =?utf-8?B?U0FnNytBbHkvbUlVM2dUaEQ4RGoxZW5COC9vbXg0TWVnOEFXaDBybEY4RW5G?=
+ =?utf-8?B?cUptVXFVMGF4MU5GS1FlMkFydWF6WGtFUDlFZDlIcEVZay9sZjZ3THBnQ3d3?=
+ =?utf-8?B?WHMrbXpNTnBpdFZ4ZCtMZFJ1enhGcXhaSGdFT1dVUHllMm1Cb1VWSzFsemNE?=
+ =?utf-8?B?dFYwUlRMa1pJQkxmY1gzVTQ1Z1c4VmtIQUJ1ZWZmeCsxRVplMThRcmZKaVNp?=
+ =?utf-8?B?T1lZOUlYQStrRDhCbElDaEluR0R5ZGIyeHZRYW5NUmFsd1F1eVJhc21ocVZk?=
+ =?utf-8?B?QXFuOWp2b09aajlzMk45ZCtUb2hCaWE3NG1PK2hlcjYrUXhiMDFSVGRTbjJI?=
+ =?utf-8?B?QytPQ3NENVVuSGwxd1hkTFR1VHY2NFY5Tzc0SzBHWUFSNlNkNXdZTUdRUjFE?=
+ =?utf-8?B?clVBU0VtUFBPOVJORmZFTEs4VTNiWVYzUjlIaWQ5WC9JY3lmaCs4dzlpYVRM?=
+ =?utf-8?B?TUh3cFNkTStydDBZVVI4bXZGOHkvSXJyUWNEVkVtL2FveGtFNjhEcVNzeUtC?=
+ =?utf-8?B?T04rV3FSZUtWL0Uzdi9Cam5YcjBQSE5uWmFSSlFCMlRFaDB2U0xGeDFPblM2?=
+ =?utf-8?B?czlyYTFpOUxPdEZKc1JINTIzMUpVRDMyMWoya3djK0pEMDJHOENUUHo5UHNm?=
+ =?utf-8?B?OUdHSHAydjNMYUw4cmpyQ0JSQkxVT1BOUHFvVFhsUHFnc3RTUlJ2Y3B6S0s0?=
+ =?utf-8?B?UnlGL0paTVlOd1d0alZhMHozcDhQdnRBeVFuT0prQ1plMlRidjM4SHRNKytY?=
+ =?utf-8?B?RXB5TlNyZzEvY1NhZVY0c3dibGE3TmdCVWlWVldQWnBjd0ZxZldjYXI1Tkhs?=
+ =?utf-8?B?b2tuNHdrMUw2ZW5zL3VGTEZxN2ZaOTVlNHkzVXdpdFFLbWRtYnJIZGtqK0hE?=
+ =?utf-8?B?VDR4eG5NN2w0aStKR3pGbWE5Qlo2K1NNWVE0WXQ2a1l2dHhLZnhOWkZwSysv?=
+ =?utf-8?B?RklDbHZocmp6QWs1ZGdSYVZ5amlNWU54L0drbWdrYVFiN3BlWWpUVEh5WGZs?=
+ =?utf-8?B?dHM5T0dYNFgrbnBRYVU4ekJYck1YM2VreElzQzM0M0N2aG1DcHIvNDB2ZEhE?=
+ =?utf-8?B?RjkyZFRrclJWVk9CSGtaeGlLNEhzMkN6R2d4YUR2QkZMTGREaG9vTUozYmlw?=
+ =?utf-8?B?TGFIMDNDRmpOQzAzM2RVa0FFRitsTHJQSEh0RHgwR3g2WnZ0anVUdWZpM3c2?=
+ =?utf-8?B?V3VJTHQ4ajl2TlpyZjl6Rm1RekNORzhNUG9qZEZySzBGaGpGWnVoTVQyM2lT?=
+ =?utf-8?B?MmhCU2dmWXVkcHdWbDJpQmFsamJLOUZ3TUNWWFRMM1ZWeTdxSzloQWw3WmhD?=
+ =?utf-8?B?dkZNQ25kbDU1VGZnQlNGaUNaaXhRa0NwOEFVcThxTEhVZVk2dXhCQT09?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	oWNdseF7J7mcfDIoqbbsb6J4/ClPBkjRhSutA4rEC3I93DnLpXmqNkLFr+uJMcU3BNnhZv7yfx14g1mMjkdd4yG2LbATum48m7F0OVdPzLk0MT+VKVH2YJd0zdn/0WgdTu6rX+vLJbqslOwgH6vRbOqDpTnFwf1WbQLAhsU9cENHNWWGaX9Y2+KVo6aNdKWvGdN0h5NWLHF98BeFw4jmWRplg03v8ut9bzTPLgqB4MuCKeO7VOgo519ZTmV7jrlfIkl3db1opLsXPC4f41tR7WcfoERI5g0Zt31dNG/XlwYxofBzaQ3tGtv6ryLFTxSY/VJeN8id0CQWGy6jAk3EgQMK9g6sEiA40ESovUH2CX3C3UHboeD5Eoc+xGDMEgiuqYvhh5PDMiA3YzY/VflgJ10tyghZ47QHuxUNs3Yn4egJJP4cBmMJkPq704IUjCNgO0G0zP8f0CkYxhDsU+4Reu5/sbcUamdlHk6yTizuUREnB6SexK/rg6dGUHlT2VKWFleLzmnlbOl1sKonoGg1exoCl2mbvt4dUNh+HLLi8faRJqTDV/zp7FD9j1JO905C2NXW7SmmnhXrBIqjcOE/13OlJxtDLCE3Y6xllWE8O7o=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 741f0c4e-cb54-4912-4da7-08de5596b8c9
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR10MB7639.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2026 07:04:57.0051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kDuLiyopXRcSxPOhmPv/F91X1enBWi367IMjE0qfKPMS7QBo8vtBSlWWfxs07Eaj20V8HZyRXh/RYo1LLj2v3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF40B0653BC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-16_09,2026-01-15_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
+ spamscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601170056
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE3MDA1NSBTYWx0ZWRfXz1olfF7qiXtj
+ 9zLv+qT7dRpu+O4xwtmKgjwXRuQcNrWTTYp6RwOo03vJZwZw4JGgZWsnZFcA6wrcltmZAKf3z7A
+ XrJ1svwdzdlK/Xnxoc0nRkGGHYF+31i5X94VEDq/UUgOG6ciYKW5ggq4bgc0f4QywhW/UoUCbS8
+ 0xI782ARGaEqKnHV9SfKwi3CDc7zEMW7+/tR4jBOLf9SXGgL9ZG2Zgv91NE8pLsHkaGXKQSQbPC
+ s+FlBQo38e8lHJpCOPqTDSzYAYXrpAJdM3FGe8ngC/xXDBqryGqqB2NPUaRW2ejMQAjw9acPy3G
+ wHSfVRU79pxDNnYNNaisR1yXhwAwTjpzvDUDGqQcc8OzuBrQp4/tmGFjHZ03Cx8eHrKxioLN1U5
+ O/yWUeTYqJS1cSPYEZnKRsee1SFTum6tmuKb1S1/Arytb7LXHV52+R8WdI099N5tehyd8QC9NFV
+ wfUIpzNsxKcBKVxK+kRE5qi20cK9WXTHhWbmSMRI=
+X-Authority-Analysis: v=2.4 cv=de6NHHXe c=1 sm=1 tr=0 ts=696b349d b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=spnfHENZsuSXY9qvjIIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf
+ awl=host:13654
+X-Proofpoint-ORIG-GUID: TqyMB_Nhb4KCdJOOb3D3_-qFs6tqmf9O
+X-Proofpoint-GUID: TqyMB_Nhb4KCdJOOb3D3_-qFs6tqmf9O
 
-Hi Jeff,
 
-kernel test robot noticed the following build errors:
+On 1/16/26 1:55 PM, Dai Ngo wrote:
+>
+> On 1/16/26 12:00 PM, Chuck Lever wrote:
+>>
+>> On Fri, Jan 16, 2026, at 12:15 PM, Dai Ngo wrote:
+>>> After the entry in the xarray was marked with XA_MARK_0, xa_insert
+>>> will not update the entry when nfsd4_block_get_device_info_scsi is
+>>> called again leaving the entry with XA_MARK_0.
 
-[auto build test ERROR on 983d014aafb14ee5e4915465bf8948e8f3a723b5]
+I tested the following fix and it works fine:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jeff-Layton/nfsd-fix-NULL-pointer-dereference-in-check_export/20260117-022519
-base:   983d014aafb14ee5e4915465bf8948e8f3a723b5
-patch link:    https://lore.kernel.org/r/20260116-nfsd-fixes-v1-1-019689b72747%40kernel.org
-patch subject: [PATCH] nfsd: fix NULL pointer dereference in check_export()
-config: arm64-randconfig-002-20260117 (https://download.01.org/0day-ci/archive/20260117/202601171105.1nmOHcdX-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260117/202601171105.1nmOHcdX-lkp@intel.com/reproduce)
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 60304bca1bb6..18de3e858106 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -343,14 +343,18 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
+         }
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601171105.1nmOHcdX-lkp@intel.com/
+         /*
+-        * Add the device if it does not already exist in the xarray. This
++        * Add the device if it does not already exist in the xarray. If an
++        * entry already exists for the device, then clear its XA_MARK_0. This
+          * logic prevents adding more entries to cl_dev_fences than there
+          * are exported devices on the server. XA_MARK_0 tracks whether the
+          * device has been fenced.
+          */
+         ret = xa_insert(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
+                         XA_ZERO_ENTRY, GFP_KERNEL);
+-       if (ret < 0 && ret != -EBUSY)
++       if (ret == -EBUSY)
++               xa_clear_mark(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
++                               XA_MARK_0);
++       else if (ret < 0)
+                 goto out_free_dev;
 
-All errors (new ones prefixed by >>):
+         ret = ops->pr_register(sb->s_bdev, 0, NFSD_MDS_PR_KEY, true);
 
->> fs/nfsd/export.c:408:28: error: initializing 'struct export_operations *' with an expression of type 'const struct export_operations *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-     408 |         struct export_operations *export_op = inode->i_sb->s_export_op;
-         |                                   ^           ~~~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
+-Dai
 
-
-vim +408 fs/nfsd/export.c
-
-   404	
-   405	static int check_export(const struct path *path, int *flags, unsigned char *uuid)
-   406	{
-   407		struct inode *inode = d_inode(path->dentry);
- > 408		struct export_operations *export_op = inode->i_sb->s_export_op;
-   409	
-   410		/*
-   411		 * We currently export only dirs, regular files, and (for v4
-   412		 * pseudoroot) symlinks.
-   413		 */
-   414		if (!S_ISDIR(inode->i_mode) &&
-   415		    !S_ISLNK(inode->i_mode) &&
-   416		    !S_ISREG(inode->i_mode))
-   417			return -ENOTDIR;
-   418	
-   419		/*
-   420		 * Mountd should never pass down a writeable V4ROOT export, but,
-   421		 * just to make sure:
-   422		 */
-   423		if (*flags & NFSEXP_V4ROOT)
-   424			*flags |= NFSEXP_READONLY;
-   425	
-   426		/* There are four requirements on a filesystem to be exportable:
-   427		 * 1: It must define sb->s_export_op
-   428		 * 2: We must be able to identify the filesystem from a number.
-   429		 *       either a device number (so FS_REQUIRES_DEV needed)
-   430		 *       or an FSID number (so NFSEXP_FSID or ->uuid is needed).
-   431		 * 3: We must be able to find an inode from a filehandle.
-   432		 *       This means that s_export_op must be set.
-   433		 * 4: We must not currently be on an idmapped mount.
-   434		 */
-   435		if (!export_op) {
-   436			dprintk("%s: fs doesn't define export_operations!\n", __func__);
-   437			return -EINVAL;
-   438		}
-   439	
-   440		if (!(inode->i_sb->s_type->fs_flags & FS_REQUIRES_DEV) &&
-   441		    !(*flags & NFSEXP_FSID) &&
-   442		    uuid == NULL) {
-   443			dprintk("exp_export: export of non-dev fs without fsid\n");
-   444			return -EINVAL;
-   445		}
-   446	
-   447		if (!exportfs_can_decode_fh(export_op)) {
-   448			dprintk("exp_export: export of invalid fs type.\n");
-   449			return -EINVAL;
-   450		}
-   451	
-   452		if (is_idmapped_mnt(path->mnt)) {
-   453			dprintk("exp_export: export of idmapped mounts not yet supported.\n");
-   454			return -EINVAL;
-   455		}
-   456	
-   457		if (export_op->flags & EXPORT_OP_NOSUBTREECHK &&
-   458		    !(*flags & NFSEXP_NOSUBTREECHECK)) {
-   459			dprintk("%s: %s does not support subtree checking!\n",
-   460				__func__, inode->i_sb->s_type->name);
-   461			return -EINVAL;
-   462		}
-   463		return 0;
-   464	}
-   465	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>>>
+>>> When the server needs to fence the client again, since the entry
+>>> still has XA_MARK_0, it skips the fence operation.
+>> The mark is cleared only when a pr_unregister is done.
+>
+> The nfsd server never issues pr_unregister. It uses fence to stop
+> client from accessing the device.
+>
+>>   I didn't think
+>> that an additional GETDEVICEINFO should clear an existing registration.
+>
+> When the client detects I/O error, due to SCSI reservation conflict,
+> it retries the I/O to the MDS. On new I/O, the client sends LAYOUTGET
+> then GETDEVICEINFO and send I/O to the DS again. This is why the nfsd
+> server needs to clear the mark on the xarray entry on GETDEVICEINFO
+> in case it needs to fence the client again.
+>
+> -Dai
+>
+>>
+>> So, did I misunderstand the API contract?
+>>
+>>
+>
 
