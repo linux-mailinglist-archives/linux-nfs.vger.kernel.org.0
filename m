@@ -1,187 +1,104 @@
-Return-Path: <linux-nfs+bounces-18074-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18075-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6DDCD38E88
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 13:30:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E5DED38FBB
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 17:21:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4E7CF3008F74
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 12:30:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ADDF9300646B
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 16:21:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7BA81684B4;
-	Sat, 17 Jan 2026 12:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFDDE1DFE22;
+	Sat, 17 Jan 2026 16:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="ZaQYDE+A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkbD9D6I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022084.outbound.protection.outlook.com [40.93.195.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690654A3C;
-	Sat, 17 Jan 2026 12:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768653045; cv=fail; b=ZWtPpeQE3FiiNRA+l8kJxADSY4C5CO0gUNvQXF+7rviDmp2y4FuYeJsf+REkHoRiXRR6bvwUbh1xeNos9poTDVOGn/TGRuCEIbMfepQKo0LEakdjeToBve0EZ8yUxcCbFxf/MoyMxZt3gCl1ISN65PAu9xY3/Z7KBp9vpDLbQCc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768653045; c=relaxed/simple;
-	bh=uRpaCQGezz79Mhfc6oi9msMjTNSxOfOAxEtulw4C1+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JRknaQXvMxC1sjbfZtC6xdMHjJdH/2Ow2GX4FV/HGYvxa2FtXKYvgcl9ydjid1WQlZIZ8vmk3MDnjA5Vo1bug7/WMn5+d0EF7ic600e0Y7EK2js4401GxPH6dIQtFdsl12wlWJ6xtB2NGSzhw7bbGBEEnj2cuEKdFHClMTuN3UY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=ZaQYDE+A; arc=fail smtp.client-ip=40.93.195.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q4t8jdA/iHCr4feMaf8w+K+kB+GO0Uro5mctQ5qJodI+Jep3nhGifwBACNfpLKdwUCTUOgL//baqBllmjuTfmW4Xo0G8fFugPlcv88FRciAN+UQqHnhk9ml6/w37CaWyz1NxtmelD+i27ry06n56kSw7dGqR02nJcsYL8rTyOEjEQujKrIoRm+guUShH4+PkJ897TdDwAMMKA7aXCU4+LvNejWGCcUgMoy1+7xuI6Bgy9rj/OetV6x418WuCHmu52yH6YZDo139fKB1l1jrcp/aO77V2HZLA9FiEIWtChH8k0W6vYpA8i76BgkJB+b3kIFWO5rvjRQlsbkjDjnEMLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/VbLKpMnapqSblblCyRFzC6fLbTdpkNDViSyeU3uWew=;
- b=VJ/Qe6xhk8iNJNVA34uM2RTZOnZmtEh42UtTIWC3iL/DEXQ3a9gNK8ESHMVVm1ebrhJp1aiD9h/Z0Jq3u1x3l01kDrbc81/HIjBOoOKMcAYV3amXWHMYTpQgIKWwgYuKEg3axW5S2IolUuc1QK+rXoBvsWhP1sHsQae7vB0Eco1P5np9y7o9WX98BRZuP3sYSHPGqQdgjkaqE2N+918NoZi3z/9ZVAlWxQWWqBeZRspnGShItfmBUDY2AYgvnkm7+CO3w/VAFjjnb5JniYjk/SLmzCfIADGdLdIYFG1GZ7n5VjGe9IeWbmvJdvBQAlN3ntwBWu7prEzw6jqAPRF7xA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/VbLKpMnapqSblblCyRFzC6fLbTdpkNDViSyeU3uWew=;
- b=ZaQYDE+AmAUFfGbHkjIpE900ZrJCxHanKPKlJqnDyTcC5yK3A06L/7zH8LhJeIVjI9O1436kN2xRYTMDsWBKUuqa3xgHsMC946KSAUxsh8T2y3wFBJPxy5guzCWaQa/m8AUoa4VxVHsACKmfO8KPW0jdwtRtuvVqnenlnJkaKtQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
- IA3PR13MB7001.namprd13.prod.outlook.com (2603:10b6:208:539::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Sat, 17 Jan
- 2026 12:30:42 +0000
-Received: from DM8PR13MB5239.namprd13.prod.outlook.com
- ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
- ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9520.005; Sat, 17 Jan 2026
- 12:30:42 +0000
-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] NFSD: Sign filehandles
-Date: Sat, 17 Jan 2026 07:30:41 -0500
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <EE266593-BC82-4629-9277-6DF13F809FF8@hammerspace.com>
-In-Reply-To: <176861129903.16766.18207157056062198907@noble.neil.brown.name>
-References: <cover.1768573690.git.bcodding@hammerspace.com>
- <9c9cd6131574a45f2603c9248ba205a79b00fea3.1768573690.git.bcodding@hammerspace.com>
- <176861129903.16766.18207157056062198907@noble.neil.brown.name>
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR19CA0070.namprd19.prod.outlook.com
- (2603:10b6:208:19b::47) To DM8PR13MB5239.namprd13.prod.outlook.com
- (2603:10b6:5:314::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0F61CBEB9;
+	Sat, 17 Jan 2026 16:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768666863; cv=none; b=BTiE9o14GHeR6DOEDkEhgssFSFKCyA6BNgMct+bpGW+4VkDTGetod7mfyW+KqDjozt3NNhxwKa+VoeZQ3MVMPmMjoybPFk1VZMmg4DI/tkdT7RFBX86x/F5EFikwzlBFYGfBnXsAw07FEJdXOlLKYWt+qBVhN73xlTDyKVe2Wj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768666863; c=relaxed/simple;
+	bh=sRXEST3Md9NKabX8+tV6FEXGznunHpmfHxng/9coMas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQ/t5e38YaG4h6YH9WbxmYuDIsE4Hd9iDGgb4J/MMNmEgJVtcoJ6HxzAWDpyQO8FXTwFt/XVCaDMjYhtuhC401HeTfDAFaGm2EpwKrrvv2GNTprDfKY9L90LKPFAWCAA1uGsPyfGiU2U+hevGxYx/JGP3BMh0AmEk1tOT3hqZCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkbD9D6I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66783C4CEF7;
+	Sat, 17 Jan 2026 16:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768666863;
+	bh=sRXEST3Md9NKabX8+tV6FEXGznunHpmfHxng/9coMas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jkbD9D6IG4dua8VJJV1QmtU8feqZX28mmbKnPaZpZ+gnILyJZV0c5KDqFI4vPOYa9
+	 Cz5zf0o0NzC0mDcKuwP3Z2lmQE/oUg5y78uFns7YcPVrD70jkx+Flze6u7HMcXvREp
+	 0h3G/al3nieFRSqgQo/k5diHew1xnxZFl6W5o+v5HQxkWsOHKfnQInSBCi2AIdyedB
+	 YTev55rAi30J+SnNCR+M7PQZYJ/ktw2ewj0+ceQcRI0n+83ZLTF9JYCwwUiWYpmBnT
+	 SEe5uY74zYAWLZftiidIvdkuFFAuCKZIpSItuT/3YFi5qDTftAq5fXS/EID08qozGp
+	 c4dmFydSbhYHQ==
+Date: Sat, 17 Jan 2026 18:20:56 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
+	linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
+	NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v1 1/4] RDMA/core: add bio_vec based RDMA read/write API
+Message-ID: <20260117162056.GK14359@unreal>
+References: <20260114143948.3946615-1-cel@kernel.org>
+ <20260114143948.3946615-2-cel@kernel.org>
+ <20260115155334.GB14083@lst.de>
+ <20260116212425.GJ14359@unreal>
+ <bad1a0d2-6408-4d0b-a421-f1e35265ac28@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|IA3PR13MB7001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98ded4c5-3c8a-4eec-13be-08de55c43afe
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UKYszBnGhbR6FkkO/KHgRWnRrtyje4t+5ouJr98rbswcfLBvMV4Q7ranZ7pv?=
- =?us-ascii?Q?fXWa1jzlj9YZKo6bbODhADDWIjV9gKNFg+NsESeFJ4JOPgm2J9WcljLaPKvX?=
- =?us-ascii?Q?tjpxixmm8gg40jG2graf2PaqKz3IPHf7fDGuLgKcUCMdEXyUOaZfe8di6ClX?=
- =?us-ascii?Q?jHOIZQLB+DQsl9Jo9xppFnGucuoMdU5twzXjfXgZ+YtIhh+bhG80zaphvo2J?=
- =?us-ascii?Q?30v7whB5vOlOblEB3ayFE876drNzYHGzipS92a5rEh7XooPyvz9EEUaUJqiR?=
- =?us-ascii?Q?dJC7Ps4sJTRvc4FGSzt+BdJyx0Awv8TijmUbbnOhb3TVE5J9muYCq9rA1QhX?=
- =?us-ascii?Q?kN85WGyqPOh8+47o/Ym5BTVkmSIvGedSgSjtDUF0+5ihISkjXFGWHIkwpZ3I?=
- =?us-ascii?Q?CQLcAzTefNkDfELLSFRiGtfP91l986h4fyxOEomytvBdV2xdULTn262f6UBa?=
- =?us-ascii?Q?gtOjkjlUOssK79N7Bz90R7XdMswff7yxEXxnAYSk7Uszxp6v8MXikUxPfSoY?=
- =?us-ascii?Q?T6FcKITkcdzXOAF2owfeH6WT/b6dP5sdIvAVgoxb6zZdSaA0N2hPmAHXpPx1?=
- =?us-ascii?Q?kOI9l6yKQ6S5SOmsV+n98g1+umDngYPkFcMNGVGqMshgZb3+aBC67qHbjli9?=
- =?us-ascii?Q?gntur5xfm266A3SL3uWpLfv78k2/2bpORz7Akq576QT05rXnJ6ocr8sRopEx?=
- =?us-ascii?Q?GGuzkNojNV29dB5YWzdp/snbmLUPYVSt5oqffU7rkd+ikyHF+FhvV37ojep7?=
- =?us-ascii?Q?AIQjbDiFgvjRNTXEiz/5DvYwpUkPzsIb9gcVDg/jzSipWFWxBTDIy7X9Tegl?=
- =?us-ascii?Q?JxE6firMMINgWgNHBTKZM5JOrYToas8f/MXaPLObk3gbG8B6qCmae7uTw7xU?=
- =?us-ascii?Q?OMXQpLPwHi+d8WZVMxTZZsdDOgfJ/SaU7lsv/qsIHYz7jWtR3hkEcxSlVFaq?=
- =?us-ascii?Q?Vfpd+ch6T+3iLH0osVXjuT1gWXEGGRtIeR3qL39FbuFpMhKyqXiPHzSqC8DS?=
- =?us-ascii?Q?AgTAk+07w2grxawuLAupvGFO2pNdM/1DQATOniCQooC5rVEbaQz2gPI+++Wb?=
- =?us-ascii?Q?K9uLQlw1rBgJZW3WzvR0wlAOCXYGI5luT7Lxc6E3ed/i3S5OCedkI+D3QK/t?=
- =?us-ascii?Q?fLjTNMBEZbdRWfqNlFQeR/ZQf6IktlD+IRUYWUFOdKi37oiaGUwYgmaMVb5k?=
- =?us-ascii?Q?70j5hmdv0mCcMjrkUDBy4I4Z6MYHm+z/3s2i+Pl383QKedt1+oV9+Q+60xvc?=
- =?us-ascii?Q?xIyAiEd6JPhXx10dxUIUO2rlG2+/miSmwxZ2XDOB7koVZDk/BNCxxKhayfFN?=
- =?us-ascii?Q?WrD6jqU+Xi2sm6xBPl3YU+9qoxw3M0saPkc8XEOJ6ODGmn5Ob2sfmn8CE91y?=
- =?us-ascii?Q?khyseEPxdKkax3wehV1vE7walYulWak/+InbY9W3BrLI30DjH6r3MMLZSZ5l?=
- =?us-ascii?Q?gto1uEP0cJFdzIz6jJZjl3gBNNABk9SQ6KNAAnwRmcSEry4dhUDr2WQTYllL?=
- =?us-ascii?Q?1hxpGrg63UUyh83VIlG+a1CsA9532g2L4F24dcVkvbpazEVG9+tWAa5E8qiJ?=
- =?us-ascii?Q?VG7h0wTiGJao3p12rbs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1/ZcZwgqZMObk9ig+2eJXdtkv9syESbqyRa9ZdkYAkk08kA2kol8PNW9fUZ4?=
- =?us-ascii?Q?Et5i0UbReRPTacKgTRqvjcXKlOqDro0aMOxqORVCH0vxmwqg7Z5QeEQxzfnL?=
- =?us-ascii?Q?9s0o+gxs+0l8Y84nM65ZhLq0HW7tIvuQq61CP+vWvHyVGy8c8aMSCl4b4cp/?=
- =?us-ascii?Q?AiuUTszj1YtpZ5wYJoN0vGyabAMYYPYgtXctzb+TvOVhzRTHNuVNL7lYSMwH?=
- =?us-ascii?Q?hnLfJe80r6BinPpJS0p/kqN4Mz5/xrJ+nGHcsTiCiv+Z5jPZjQ61KYQPabqq?=
- =?us-ascii?Q?3IQN42DNoqvI+KmQW3EHIlLGuosW94iogTQjVjxc6JLU+TEJ66ZcCc4DzDOL?=
- =?us-ascii?Q?CG9ZZCafiLItjC0ZQ2pgDBFH9jvM+17dQEVOS9MDBt1pemAu083qutJpTGoL?=
- =?us-ascii?Q?M8oDHjDSxtClt/9Fh+2Ym9QaKqBqIpW2J0GCVvsAmSUiEFnSB0wmV+Xqgkfm?=
- =?us-ascii?Q?HIawTkJhPUxasZPa1/TvsD4pi3SXS7S7pr2beIONxCmtgrowJbnNZi7HXs8i?=
- =?us-ascii?Q?Nc5yW/jP6+jvGw2UZTJfCwKzremk/ftPsMyqkUZUi9vOBXfgO/tgvMaES2DD?=
- =?us-ascii?Q?0CtVWWcrrAiSH9HHKu0x07KY6Qd6JiOD1hhEKbNWCwA3foeyfwC1Ch8V2m6r?=
- =?us-ascii?Q?0XMPjyvtZqzIN6gmdSqXWjbKrHq2lARyOHQD/hNv1cDg11I57ZCAsp+kDx8i?=
- =?us-ascii?Q?8o1PuF+ZuON1qTqJLbmjebC+i2Z3EWlAomDLTCREfP718ydu8DRjAMopJpXA?=
- =?us-ascii?Q?jjCK5AbYNqQq82fthS3zIN8sHgqscwL9przS+VMr1D4eSfEEa/ma7iM+smXV?=
- =?us-ascii?Q?i8I08+hNJjg0htV9IdTFRFnQgQthCC0t/5qJZxr/X4sENwmoqGo7RP+qQsBf?=
- =?us-ascii?Q?fkzzubtinRFeFiCZ3xrEuIfTRO9poWj97ZCLpk0n6gOsYOM0ujzQgcvlGL8R?=
- =?us-ascii?Q?ptbFpniLc+XZZgHGEpyQPNDbslQY0w0trViT2WV/NM+KSybrWxWfsc0HkS0/?=
- =?us-ascii?Q?gn4FY3geRJP87m2BEM/rpozZf15JReX5ZIOK0iPTDTs1dL1OJbnScQn+0LP7?=
- =?us-ascii?Q?I4ZnMYT2PALec09iVqEizJjfo15kVmi0u5yCl4tYwpiIFrGgaJCaWYp5k23Q?=
- =?us-ascii?Q?5lEDwEHzJcHpFMAe4EpGLTtQPLzVmLAoRaUZ53HYaP25qYHwxituSdws7xqH?=
- =?us-ascii?Q?/NNgLMa/9vd1i2tUbbHBKlC+5vMvLlnof0CukngPRP3EktWtu/me14jigKyI?=
- =?us-ascii?Q?xPwtVeq17SK7+kKpauYDQpvWcPRgfyQIl2UxZvMO72enSiD5JGmpg5PFfOUR?=
- =?us-ascii?Q?rt6ncOAbHYOZqNpV2gDQllAZmjKANAtE98t0buq8dboR15RC2VnA3LeOQiXf?=
- =?us-ascii?Q?NWxlIY6u0fjCF8+gJIWUb01AVD6UF3febzbBmr/zmG7uLvmpKL0QbZSz6Y8b?=
- =?us-ascii?Q?SabObtPNG1divGu427E5Hjv2akVNy2yFTckeB+UxXnc36edzmROwROw1SUXb?=
- =?us-ascii?Q?jJZdlFVwqCEjNgbIr09BCiBqsZ6FQYawbAhVqyee0JNz7aTybRUSFOpE1Ffv?=
- =?us-ascii?Q?KpgmBM2heJPbwQOnCu58oeNWcysAFV9OIf+t2Pi4ZXKZwkVhJAx5NTbf5LWM?=
- =?us-ascii?Q?hC9wBtw6BZd/2iPe68wsnNatiT4b6eCcZtVxkyv2uPDZfc+1+fyvJ1JV7u5b?=
- =?us-ascii?Q?Q5LzR5fXgAuk8G3nIgnxQAZbOVEw19LcZ/VTC2TxKY5UtiLeqgYLd2BvfX2W?=
- =?us-ascii?Q?C+ZG2eBDwKDhR7/cK/17l3afQ41nU4M=3D?=
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98ded4c5-3c8a-4eec-13be-08de55c43afe
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2026 12:30:42.5848
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MJeukiUma68LpSWcsuiNGjTvd6b61N3Saa5dQxeAACMjlFxaaAzKpxVXJIei+q+eLjxwf/msnqs4PFhSdTVWlJrAkMi00dFQuLfxX7epftI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR13MB7001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bad1a0d2-6408-4d0b-a421-f1e35265ac28@app.fastmail.com>
 
-On 16 Jan 2026, at 19:54, NeilBrown wrote:
+On Fri, Jan 16, 2026 at 04:49:06PM -0500, Chuck Lever wrote:
+> 
+> 
+> On Fri, Jan 16, 2026, at 4:24 PM, Leon Romanovsky wrote:
+> > On Thu, Jan 15, 2026 at 04:53:34PM +0100, Christoph Hellwig wrote:
+> >> > +static int rdma_rw_init_single_wr_bvec(struct rdma_rw_ctx *ctx,
+> >> > +		struct ib_qp *qp, const struct bio_vec *bvec, u32 offset,
+> >> > +		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
+> >> > +{
+> >> > +	struct ib_device *dev = qp->pd->device;
+> >> > +	struct ib_rdma_wr *rdma_wr = &ctx->single.wr;
+> >> > +	struct bio_vec adjusted = *bvec;
+> >> > +	u64 dma_addr;
+> >> > +
+> >> > +	ctx->nr_ops = 1;
+> >> > +
+> >> > +	if (offset) {
+> >> > +		adjusted.bv_offset += offset;
+> >> > +		adjusted.bv_len -= offset;
+> >> > +	}
+> >> 
+> >> Hmm, if we need to split/adjust bvecs, it might be better to
+> >> pass a bvec_iter and let the iter handle the iteration?
+> >
+> > It would also be worthwhile to support P2P scenarios in this flow.
+> 
+> I can add some code to this series to do that, but I don't believe
+> I have facilities to test it.
 
-> On Sat, 17 Jan 2026, Benjamin Coddington wrote:
->>
->> -	if (fileid_type == FILEID_ROOT)
->> +	if (fileid_type == FILEID_ROOT) {
->>  		dentry = dget(exp->ex_path.dentry);
->> -	else {
->> +	} else {
->> +		/* Root filehandle always unsigned because rpc.mountd has no key */
->
-> I don't think this is correct.
-> rpc.mountd always asks the kernel for a filehandle, so it doesn't need a
-> key.
->
-> However signing the root filehandle would be pointless as the client can
-> "PUT_ROOTFH" without needing to provide a signature.
-> So I'm happy with the root not being signed, I'm not happy with the
-> justification.
+If it is possible, let's add.
 
-ah yes - I will just drop the comment.
+Thanks
 
-Ben
+> 
+> -- 
+> Chuck Lever
 
