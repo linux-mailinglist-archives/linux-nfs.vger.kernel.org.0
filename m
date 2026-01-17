@@ -1,277 +1,478 @@
-Return-Path: <linux-nfs+bounces-18078-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18079-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F4B0D3901B
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 18:34:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF889D3913F
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 22:53:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BF7E03019E0B
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 17:34:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 525923014A1E
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 Jan 2026 21:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6502505B2;
-	Sat, 17 Jan 2026 17:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D22428851E;
+	Sat, 17 Jan 2026 21:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I5pbK+vl";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RjVpSza8"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Wr0gaasW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K95BFPZ3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CD72459CF
-	for <linux-nfs@vger.kernel.org>; Sat, 17 Jan 2026 17:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768671250; cv=fail; b=M4V7cTikFg+JSH+oufIy8DBB8Gc3dmUX+xtrW2D4ddtF40Knjhfq2NHvk7XNA9Od81dorciKSHGNZNXAxRl1PsYBZ5j7l9iSWQ6TcCvfJ12hT6aXULZHj5xhP4VvQbHQ5hTpu7rMo3HUElGMZQS1vJjsqX4lgxrVVMYLvWqdhr4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768671250; c=relaxed/simple;
-	bh=p2P1ZJYH+FOOO1rcZsKVH/tTvzzTHyICgniiR7WDsW4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=N8/yc6wOIcKoTS6ZVtZ2z4AjF48aRjNjyNgykCpBlhZ5kexDSXTO77RPjLDWJgSUNNzCt6lW4YPXNlvwJ2JIaEIAfW2cyPbdtDegcBUG4YQsFAzp2BLuZIvT8yyXvOyo3N7FZauFBAOZITTsmDT2ve9TYfr9oLZ6LRlc8cTOmJg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=I5pbK+vl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RjVpSza8; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60HHUaZk1534778;
-	Sat, 17 Jan 2026 17:34:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=e5x/n9xVe7kMHJLctVZr8C5JuI0JnfuvAbAIwnftpgA=; b=
-	I5pbK+vl+WqbJyZI3dNmwBKEky91m8MTO/ehzMjFISJmI8qIQRbFQm/ERJTHnbbL
-	y8ZiJbhCALHaqHIW7hkGUO5C402dhvuhxERQ3Q/TE6rqo0xSq/pipeWrE/SYLIfY
-	CF+zckyM72rsigBCgaMk12KPgB/8DfhXaJycCFn1a+/sT4/lZbz9w1BOrYcSYq38
-	N85LQF9xK4eMtVxN1aX9rVEWngjsmP9lpuVE57/ndRYSKGR/N/XVd2MWi3pbdvF0
-	0Ifvc4/hQ2NhpquBvZlS7Z+oyFgXK91GqNTSQlFch5Q2aqRoM5C3OeT1pIvz56Ub
-	oJL8pne61II9zUr/uAOLLA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br1b88e63-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 17 Jan 2026 17:34:03 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60HF1w2J008420;
-	Sat, 17 Jan 2026 17:34:02 GMT
-Received: from mw6pr02cu001.outbound.protection.outlook.com (mail-westus2azon11012058.outbound.protection.outlook.com [52.101.48.58])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4br0v6rhuh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 17 Jan 2026 17:34:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NnNj4S8rsvqzo88tA0c9EXD5etBiK4+J70/1eOBE4aFNnC7rWN3CeqZCQgtYeF09CMw8OA162j/LimFiZlXl7YtNwQhz9wMwLR8hGnN0GuUNthSVGkinZVK+YA5WrmH/emsgV5Nb3qjiXAHu9BMgxfxIkOhNR5/5gaewa5Bc1HUQtJhDwqhqJ1mwBhv3XMhGvPf/YSoVs98eK7AKDKTot+hOyQwKKTY4tGDgegRorvB6WZ9XQxYkt0Odv6DlWJXJ6d6fkw1qYxNgTV/Kj+Ux9gyb2zX+jNUHZ4cz2wV6IqjbMIjUsO++PnRMPrPGfv1n/2OaBW6VSwhk3cTVSXnj4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e5x/n9xVe7kMHJLctVZr8C5JuI0JnfuvAbAIwnftpgA=;
- b=Xqd8Z9ADgGLKj+XqW2Q0Gr3T0Tp7Cb30Mk0WK5yW7SEc+IOjGPOWt7kL8w+P/VVw/Dbb4EKAZhKQbHLjVn6C86jEK/TcdN7zy4us6hMbPhW1dtZg0ET467GxP0iIKRCKb6ZSUE/9HoRm8VCjgQ6OUDtfUbwLKL1oHMWCTdDBrelGg+LY8bepdZTmIhYD/h3dq5ATjQ59hY4fJWH3xk2CJTbIiAmQLxjuSuXgprEygf82b4wHKkGQ7RlJaMYz2DH59Z2HUiLME3nsMQhkZBhV3NqS/4JadkeRo0lYk+ugslmBZJV6I+MGxLRXcqpmHNiF3BIxYY58bHkeDPLaT/MyNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e5x/n9xVe7kMHJLctVZr8C5JuI0JnfuvAbAIwnftpgA=;
- b=RjVpSza8tp+gKVIGF1xDud+sm4NuaDhy1Tx7BLTkitDbVGoTfhy65qTum6GzWJo1NDhOgaSy0yzpGpFmQKLFqkrY0cOhlFooAWqvzupiaR7Ctwoq0G2SBjAQWIkGjGLy9G83q5voev2RN8k3RntpWx2MyzkPfdfGhEowSqVNtNc=
-Received: from SJ2PR10MB7618.namprd10.prod.outlook.com (2603:10b6:a03:548::11)
- by SJ0PR10MB4416.namprd10.prod.outlook.com (2603:10b6:a03:2ae::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.10; Sat, 17 Jan
- 2026 17:34:00 +0000
-Received: from SJ2PR10MB7618.namprd10.prod.outlook.com
- ([fe80::480e:bc8c:36c7:493b]) by SJ2PR10MB7618.namprd10.prod.outlook.com
- ([fe80::480e:bc8c:36c7:493b%4]) with mapi id 15.20.9520.006; Sat, 17 Jan 2026
- 17:34:00 +0000
-Message-ID: <25b3e4a2-700c-40ee-9b7c-a627e1c42f01@oracle.com>
-Date: Sat, 17 Jan 2026 09:33:58 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug in nfsd4_block_get_device_info_scsi in nfsd-testing branch
-To: Chuck Lever <cel@kernel.org>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
- <a1442149-fdc2-4f66-b73a-499a2e192960@app.fastmail.com>
- <108fb719-8654-42b8-9e37-275726f4b5d8@oracle.com>
- <08c33c91-abda-42de-8771-e61d48b50cc7@oracle.com>
- <a7493441-cc53-4b99-bb62-9092650d61f2@app.fastmail.com>
-Content-Language: en-US
-From: Dai Ngo <dai.ngo@oracle.com>
-In-Reply-To: <a7493441-cc53-4b99-bb62-9092650d61f2@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0151.namprd03.prod.outlook.com
- (2603:10b6:a03:338::6) To SJ2PR10MB7618.namprd10.prod.outlook.com
- (2603:10b6:a03:548::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462C927E7F0
+	for <linux-nfs@vger.kernel.org>; Sat, 17 Jan 2026 21:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768686807; cv=none; b=WSDy522YAVpmdrR1Ef7uQCcPzzHSt6OnSWthhIupxRk0lqS0h/ZJ38LYvip+/lwbvrMdmsGU0McYl4NCf2AFuVPNp1MOgegO7f/v+tEvC8FqjB7qeUCaQ8EmC9ApsBAJhPOrWrZhW1VjHxY9hRcVHj8Uc19Et0p3YwzVbVgMeqk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768686807; c=relaxed/simple;
+	bh=yB+wIJkyb8TJNDjhSRA7IVZ3/Z3VTZLbscPvvhDU/dw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Cm22+cXzXmMyz506qfMbDHoPlvlvucxDYr+SDd4E/Ezz0WxKPZ+P+VaIywkE0RyQplVIPjFyHMAWRZQu9xUuHLU4A+f6w7ShHqjiecdXV63CS36bKLt0SAoM9tfiNMCrpjI6uSOQGTY/h4yhR4KZxwzJe8ql50kZIRQcUwgC9Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Wr0gaasW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=K95BFPZ3; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 6F5651400220;
+	Sat, 17 Jan 2026 16:53:23 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Sat, 17 Jan 2026 16:53:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1768686803; x=1768773203; bh=pNttIx7APmDArlzFM5U5wr1pTUHXvEGY0jV
+	x84xW1Ws=; b=Wr0gaasWaTH375+RKA7FuXPStHhKz4TYG0RbyhT9+bGxw79HEnn
+	/SqdpJKogs1B+CKFNEKJptZjeJhWJSQdvFyM65OPSpyxqe8P5hMG2S1oerylkT7s
+	dQ9cbuaDPdVEXfxshSshK0iBI2YWipXXvzABGSXJN4oTvDj2tts1gS4U0YaEefMz
+	g+Z6uKITlzFlnAj9WJkGy21ARTsngvwPqcU1hE6Vr2j9HX28sazt3FYYT756HCGh
+	P+dH35xw4QwsqR0h5ceEg+44xZPdu25gpUp11QosYT9d1K2xf1qRBCKcYw8XykGe
+	sh42UjPkg4yb/7tRtQFFJ2Ag23AE/Y5p1Lw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768686803; x=
+	1768773203; bh=pNttIx7APmDArlzFM5U5wr1pTUHXvEGY0jVx84xW1Ws=; b=K
+	95BFPZ3nFw0+65JOrQ7DK0tGPc09D1f2VIhmDN6wO121vvdT4Ew9Ock3v49iObYg
+	jvoocihG3FJNZhIviIbnsa4MZtwH7g7piYrbRAQUEQHbpb0nnHE9/hGBDOLpuUpe
+	m4Fl0wdNcjjBmSldZGS46BGyLziOLk5DKpchEkDMSDUZJLb4plWd1VtMlzWwgN+F
+	bQREWkPLNLmXznmIdsrIeD7N4EUx/v9sUU4xCIxcbt1C+MvraQx3hcW6ls4NIKDn
+	vTZmdRQ53iq14ALX/AQehFsAWwFrGuumBuil40L9GGPkxTWeFDeuWcPLPfse61Uq
+	Uo6tk+uk1NXFYfgh5/Mjw==
+X-ME-Sender: <xms:0wRsaV_zPMQHpV6NgYBSaeXTxaIlG__s4tHDUnohPNcuq87hVedwbw>
+    <xme:0wRsaQngWykN-Ed9X7kKie-WCOaAWhXWJzmgmLCC95zsIzwXXSBnaHgTyZnRjMK75
+    JLmAD8z-StlnoJzG_J458Ae_SJsboF41TBBLdKzzG195NKF>
+X-ME-Received: <xmr:0wRsabUMxSAjia6lHyzL2Ok8lxg89-3Zl-EoEcwmHzUkOdw1XxTUJlJAcoZ6n_6-ePckJyrAsbCzZTfa4ud2AOVkhOkuR2VhAdGlTeF-73uN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufedvleegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    ephefgudejgfelhfehkeefteefueffgeejgfelgeffvdelhfekleevleeifffgvddunecu
+    ffhomhgrihhnpegtohhnfhdrmhgrnhenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggprhgt
+    phhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhnfh
+    hssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghvvggusehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtg
+    homhdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegstghougguihhngheshhgrmhhmvghrshhprggtvgdrtghomh
+X-ME-Proxy: <xmx:0wRsaVExzi-CYSB3QVjeyMRFAu3EMJhIB9cTKXapjxmFm4ejVfnGAA>
+    <xmx:0wRsaXeC24R5jqGS2hB3GOroSHkwOBE7EWXl3xm4uxei_uhUahYH5A>
+    <xmx:0wRsaWLQXURkWlbwRMuHx-zYSCp9Vzhy_W6R_ypj1KTQELwvLjuXvQ>
+    <xmx:0wRsacENu9FLXR15hC8vFHujCjhDP2EN74TPJWh2l5FsmBtvOi2uww>
+    <xmx:0wRsafEUjsB6OLCwdtSRI4vBoEf5lJCsopAkNCPfI7RwUM4VMJI_fk17>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 17 Jan 2026 16:53:21 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR10MB7618:EE_|SJ0PR10MB4416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7834aa9c-b19f-4af0-d92e-08de55ee9971
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QzIrK2hHMVh6UEh5b2tIendMSTVqRWVQemxKQTA1NHkvQVFDdVBhc0J6K3B0?=
- =?utf-8?B?OUk4ZWFoWE5EVllMSVhtV1JtSkdlSE03cU9mRHJiSER1YWQ5and0R3djTS9x?=
- =?utf-8?B?MVNkYWw0M1FjUDBJUDFvQS8wZGloQzgwdkg2VzBKSVB3Z0UyVERpWjFHd2ly?=
- =?utf-8?B?bnI2UXk4R3lzYkNaSTVocnBDT2FndmlhNnd0U0JQRys3VHUvYndlam13UHYr?=
- =?utf-8?B?SWpiNzk2V24rNTdmZmgwMmV0QlhzWC9mY0xwTTM2aEFqdENEWjkvT2ZJNFBL?=
- =?utf-8?B?UDZDeDBnUlQ4ZHNoblRpM0puak5sYTVwY3BFMmJxNldGY00wdExiN3ZOZDY3?=
- =?utf-8?B?VEhaSTRmbVZCZHh5bUtvWWo4a3hSaEcyeEdXd1hwQk9uZVdad1VhVG5ERGdD?=
- =?utf-8?B?ckQvaUxJbGVBS1RDMnpVVzFEY0JqL3hFT1NCZmNLSHE2dXN2V29DQkY4YWZu?=
- =?utf-8?B?bjREcGI3QkJaRE9KT0NlNFZHbDRXMjRtbzlldW4wbTJYVHllQzBYbjh3dWhM?=
- =?utf-8?B?dWM1R2M2L2N3QWNTRTA4WDFFd2pSQVkvUlB0S2F0QjhmdEgzRHlhZThJTEQ5?=
- =?utf-8?B?c1RDUmxIZnJyTmxoVnhLMkplblNrQ0FUUFErY1BXdXRrc0E4V0hWVFA2NHUv?=
- =?utf-8?B?VmhJa3oyd3lZVUJKZHJRdGdDUGJvSFhFYmZBY3NrU3F6U1RnTlpKTWYvd1Vx?=
- =?utf-8?B?WU8xRU8vVHQwTlVhS01hWlNlM2dtVm01TCtmQlE5U2I0T1FQOUxvR2JsbGJq?=
- =?utf-8?B?TGR4aDI5MmljdWplSXp4blJMQWlKRUZ3QmJJMEptTUlhTm1sYUovK1pHbEh2?=
- =?utf-8?B?NVJnbTRPbzNYVDdmYXVUVEZQNE1FTThZWXQ3M0l4U00xRHBOeUhTa0xNUk5O?=
- =?utf-8?B?VzdWbStSek1LOW9CRnhmZW15NnpRb0pVcUNXV2JDKzZVM0NWT0hoYnZRZXRF?=
- =?utf-8?B?RFBncHlmV3puYnh6OTRxR0paSWdmWitqQjRkSTNBMXV4Z24xL2VLVjZzMlRN?=
- =?utf-8?B?M0QzUVdwVUM0aTFhQVhpMHd3UXhxa1J2RFh3VEYyWVdiNGtQMUZWcXVrUkhG?=
- =?utf-8?B?OTM3TUJSSFlPS090VHJsRm9RdFVSclUxczZoa28vdVJ0MDVZcmNQaGhubnJ2?=
- =?utf-8?B?L3BlQm4yTzZOYkM0Yk9mKzk2bEVvcElPeU9zWTExOEtTdjRleHV3QVNHZTNM?=
- =?utf-8?B?L041TG9mSC9TM0RYRmtmVlBoQWhLZlFONmpwMmFLOG5zd0UyUzRTZmF3K3Rk?=
- =?utf-8?B?ZEQzbGFSRE9jWmRoNWQwN0xLa2xoZW1uejAxNkNzWkpoVCs0TWpZVitnOHpD?=
- =?utf-8?B?a1BsWmdQbFJINjVBb3Nmb3hQbkFLSjZkMnNUWEhoVFFqb0F4UnZSNHJtd3Zr?=
- =?utf-8?B?S2xzbUQ5ajhwT1o2Vis0MTdJUFFyVDQyNVBDZHZMQ3k4WThFamdzQkNHRVQz?=
- =?utf-8?B?alFUNWFydFIxUm5FRGM3Sk56NThpN0J6YmZNd0FOQ2xWTWw4L0NMOC80c0dE?=
- =?utf-8?B?REh6ZjBtTlpyQjgybnEwWGZjNW5sd3Bsai9CVWJCQlZQQUQzc1E2cjVSa1dr?=
- =?utf-8?B?V0Y1M1RVYkwyWEpGTVYyNWg2UVdpTm9NU0p6SWNtaU9pT1pjT3FjNWdIQTNt?=
- =?utf-8?B?d09OWTFGUTJwTUljL1UveGZqUkFkQ1VPdWdhK3VMOHpnR1ZqSXV5VHgrWGtu?=
- =?utf-8?B?WkMrVEN1TXB0dkc4Q3NHOVVRZlhMYTVFbDlNRXk3NEtPdXlRanJCQWlCeDVj?=
- =?utf-8?B?WHMvK3MrUkQ2cnduUWJmNVR2QUlLZzE0TkNqd0I3a3RuUEZyaVF3dmRQTmVJ?=
- =?utf-8?B?OWppOTRpZHNCUXh1QjVUS2dyUjJKK0NZdE14Ny85dXl1OWNieER3K1lIRzBZ?=
- =?utf-8?B?QmpIR0l1VkNqcjN0NTRDdDM0VytZSDlLYmhUdVhhTlJ2N1RmaXpnMk1sdnpn?=
- =?utf-8?B?ZFNuRnBrWWRNZ2xURGpjL2dLUHFXRlIvSXpxWU1DQ1hBdFF4amhIblNqbjAz?=
- =?utf-8?B?bWFNUEpNT2dTamkxOVJOTEF0dFRzRDdQUy94eUhLdXNMbVRneHUrMHM0K1Y5?=
- =?utf-8?B?V0dxNGJzM1p5WDNHb2drL0FMTjNDdGpsNjRiR251TUZ0TGlzZlFEWlZZektq?=
- =?utf-8?Q?vPRE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR10MB7618.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NHp6b3BvMWo3bElMUklGQ3l5VWRRMnUzc0FoV2RMY1p1ZUU4N1RLSHloRHIr?=
- =?utf-8?B?MUZIWDZTMitETWpLWUpKSHBCQzFTYnFJVFdrYUN2UTUwbGlqT05hMnR0cUUx?=
- =?utf-8?B?T3ZsbUswUkZ5YXFuYnJlVFZmcmZyUWgvcVRaWHMvNjFKUWhnSVVBcEt4a0Zo?=
- =?utf-8?B?RG96ZmFkWU1sYmgvYjlTWUtLMGRhZGp4ZmRmTThkMXlmSllsSXpwV00zOG5z?=
- =?utf-8?B?MVhjRjQxTStHWi9ZWXUvc3pRSEZBeG40NTFmbm9ZVXpGQ3lCcWF2c3FIQ3Ax?=
- =?utf-8?B?cE5LK25RVDhmcXhRTndkQXZhdlcwS3l2dEVzVk9FK2NjS003ZnAvRzVpcDRj?=
- =?utf-8?B?dkhGTjN4RXU5ZVVNREJYR2ZGb3RZSFNwWjJ4eUdmcEN6SVdPQSs4eXpGN0pS?=
- =?utf-8?B?ZmxmUzljRktCTGdvbHNWOXlMVE40eTNsQTZ6RzRjL09rdEtKTG1lcEk0b09H?=
- =?utf-8?B?VHo4K25EUnh6Q1ZWempYM1MvMGRDbGNKeWpuZG5HWE5PbllwMXVMbENEZm52?=
- =?utf-8?B?dldIVWdiT2JwR2NYUXdPU2VCcnV4OG12aVVWdDZnZlpLMHk0T21tVjJBQzFZ?=
- =?utf-8?B?N3RrL2JPS01tTUJQdkpiT2FCeitsWmxaamxiQkZQaHhxMVVUSTdTaXQyZFpD?=
- =?utf-8?B?ZkVkVEtOYkNWY3FselZoMUFPZFpFZmEzdEdwejNucnZsOVdtemY2ODNaNkdZ?=
- =?utf-8?B?ZzZVMDhuTEljYzlLNzAvczJJWGlTTUlVUmpqYm05Rk1QNU1jK0IvYWgvaTJJ?=
- =?utf-8?B?QkQvZnYwOGhyRWg5Y0JmVWRPcU0xVWtlTG5tejNZWFhUcmRNTmIrdDFFbmVl?=
- =?utf-8?B?cWR2Y2FVdXYwRnpEaTJCT1BXdENFUk04eVJHMUJUTG9OWDkrMmFhOHI4aFVW?=
- =?utf-8?B?RWk1R2NxRld1UG8yaitqMUxuWXN0WTNWQXhEMVBoVWFuaFN1ditnd2tkSFBI?=
- =?utf-8?B?OHRzKzBsOHFYQ3JHdCtUUk5wUUVwby9DTm9aQXp0anVFdHRvZDY1NURhd1VG?=
- =?utf-8?B?bTFsQzVUT1RjeHh5WVg2SUZvRGUrWStJeXkyUTdHVWdlYTQ2amVlSnIzVkFl?=
- =?utf-8?B?ajA2SGxQUUxzQ2Q3Z2xTWU42WUcrcElaTC85NDN2UitnaVVmVjk3ZjJ3anRu?=
- =?utf-8?B?cDMxN1h2eStMekc0NnFqdTBQWTVNd0RLUXlaTE5xcDJXUnorV2dtTDlXem1B?=
- =?utf-8?B?Tm1kbFVpcjBlKzErcWFzcEdFc0c5TVMrOER1cE51UEJ3YVlhaGE2Q1RWTy9U?=
- =?utf-8?B?VXVJWHJZeDdxNENhNTUxV0ZHa3lrSTFYdHJmR3NaaFpRdFNaUXFWWFVBcURz?=
- =?utf-8?B?S0lOVkhlMFJmWWJHNWJEWTJrVnVEYzVVYzFodGtjNkVEdmU4NktVQVhZYjl5?=
- =?utf-8?B?eDZoTFIvQ0tyclhXdXlXSmlsekZsK2JNbUMzRjR3Unl6ZUMwQ2ZPUm5lTFdq?=
- =?utf-8?B?Um45Ym94S2V3MWNSeUZBVDlveVM1eXBGMDIxVy9hc3RZS3JldnlQb2ZGSWs3?=
- =?utf-8?B?Wm4vaTRLVUtNNUhOZEdCTURPR1FBUFNDMHI0eVY4b0J6YkZnYThwRkREYVd5?=
- =?utf-8?B?YkJaSHdFVUY3TkxzRE5MNFIzQmcxS29PaHljV1crNVZVeTM0MDdvOWdJY205?=
- =?utf-8?B?YlpXMXp5anR2bkozaVR2elN2dUdDL1Y0MGxTRkRZSHBtSE1tK1U5VTR1RmZC?=
- =?utf-8?B?MjBaelRFdm04eXRIdjgzTFR1S0VmOXlUbHNIN1c0aHpDbzFVUjB1azhrelZy?=
- =?utf-8?B?Y3BLQjNra0NTb2hLaURZeVZjbG5GdEFrVUl1Yy93ZTdSRk1oTUhOYTNINWJ5?=
- =?utf-8?B?N0dzU1JNazU2Nlo1TFpnRmREaWZDVFJnc1pwMnNRUlVTSFVuUFk1WWRHZ1VD?=
- =?utf-8?B?TkY4NGEzbUxJVCtCYllqSEROanFjb3E5Q1dpWi9ZbGJCZXN3aUpYSmhGek4x?=
- =?utf-8?B?cWJBd0U2NFhYbko4ZnV0SWFIZUwrSkU2dTRHMXcwYTVtcE1BNzIvck1JOUdU?=
- =?utf-8?B?bWg2cWh3Q2txYTVIWUNDUGFvNXdXRmVFdkptYXdhMXJITHJFbnNodmFNdkRa?=
- =?utf-8?B?ZjltUWdRZDFqZEFlc2xYM05URm8zcXFKQWkrWXBLNzJiMEpRVEIrT3h6S0NT?=
- =?utf-8?B?bDlsRUFjcktMUlFSTU9sbjRVQlpaQi9xL2NMN0J5SVh1WkNBS25vT0hoREsz?=
- =?utf-8?B?Q1RlWTZFWkRTcUJ6VFVrTWIyOEZ0eFBpUDB4cmMvZG5FNW5iUUhCbTZwYXBp?=
- =?utf-8?B?U3krYzFUaXhzMEdlVXJzajdPY3RPMytLRWRxQnZuV011NGY2aTNkejFhN0wv?=
- =?utf-8?B?QkZHMWhzSE1MN2Y2TGJNSzZTS21EcDFjUzFyaThkdW9mclNTUkVhZz09?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	6jmdP0Hjh5C/8f7o0/uPgHjJPIlGUJunSN2OHl43HSzIaRaWanNlSZwZPB452i52uFmwdQxeLOc8T683myCqM8jBOu5SdkIeuiD3W3/nlfT7R/fmVvsENIK4nGhf0DhWwpI4cvQUxtkNrrsRIhl2L3z3nYrhEmsZFCUGpoA4V+mk1+eUx01Skk7WmSO7eVCp6PoTei7tFU7pWBNZ7IWCgk8Mk/PkE1SzLHHP7vockQ4Yx37x8yBXeefv1r4KIph5XimjSiqY4vN4hY5xr6PUDTQGq9gCdJMoI762HdaJVPzK67AJRcAK3XmVrlORhZ+Kd0mm0yifldC7SreJLtr+Ec60oX7rPoV0Owhm/yo1ckspTRLPeH0yoiAbntNeVskGWGr5w54mvd8mGhlQJIL+OCkualqHVPUfOZwx/Rq6i4BsvITPIb7MesVaa6U5tGkOlUPXniTT1bg9u7WNuXBTjmw9yTKHPda90nzQCm7XwXz4chperY3sj9TRduUlOVoC4jKvC1j8HjXFzFjRMBVJ31WkBQCaNMOpzfaER90Iq0obOpYAGkXuDBpJTbxp2Rzu9P236z9ILoC4TF3WzN1b5W6E0zVg3HejT6ic/8dMOFw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7834aa9c-b19f-4af0-d92e-08de55ee9971
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR10MB7618.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2026 17:33:59.9731
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DjhgunVirL1fNSF9lxWCmvpl0wI/iCSMrNwgU4Dscnk2QmCDGl05quPHzqyefleTaQNEz+OHrjEwUuqUBNPTsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4416
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-17_02,2026-01-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
- malwarescore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
- definitions=main-2601170146
-X-Authority-Analysis: v=2.4 cv=WbcBqkhX c=1 sm=1 tr=0 ts=696bc80b cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=H08s1JHxVBIS2fuimEMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE3MDE0NiBTYWx0ZWRfX0dxjAF7aOdqQ
- jL5qe7e/BCT0Zm7GxOWuXg3xHYlx0D1a59utM8Grbc8N6pOOj56FUJfAbaTpLsXR3QsBFYUecNo
- GoNPENDWfa02ysZ28uM4zFd9/UpOBF9YjeLvDBFCQamgsFRLhOyBsoHw6BfPYxI9jYBju2MT6R2
- 8WzoW55rzJtNl96BMIRGhjpoO6QLRm7heNP0Avot0H9iP6jSFZ6TnJWZrTKCWByoCs1ankXrO+M
- QNYwBA4TLCN4yZ3FWOgxH3B3o4JfyRDD3rjNxJJW/jnqiJuPQHkN0bwC0T6trUzCgPAX0MHy9Xy
- EB1w+aHhB0z7CrvazZidewFEoUbwL+h6oVJHoLK/a3b+NdhAaZr4K3YDTsQi61qMz4wEo+9kz1G
- i+rEwU3pJQcdru8Lw/0l121ClODCk1XI0pMk6tG3U4Rc26qYB8TqslEKBxgjA5TVPNXvNClrdAw
- 3vZVoU9uqdixjFYFgxg==
-X-Proofpoint-ORIG-GUID: OaEwIcS4tUu4st7mCl8aq1jsxvop3Adj
-X-Proofpoint-GUID: OaEwIcS4tUu4st7mCl8aq1jsxvop3Adj
+From: NeilBrown <neilb@ownmail.net>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>
+Cc: "Steve Dickson" <steved@redhat.com>,
+ "Benjamin Coddington" <bcodding@hammerspace.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
+Subject: Re: [PATCH v1 1/2] nfsdctl/rpc.nfsd: Add support for passing
+ encrypted filehandle key
+In-reply-to: =?utf-8?q?=3C90fad47b2b34117ae30373569a5e5a87ef63cec7=2E1768586?=
+ =?utf-8?q?942=2Egit=2Ebcodding=40hammerspace=2Ecom=3E?=
+References: <cover.1768586942.git.bcodding@hammerspace.com>, =?utf-8?q?=3C90?=
+ =?utf-8?q?fad47b2b34117ae30373569a5e5a87ef63cec7=2E1768586942=2Egit=2Ebcodd?=
+ =?utf-8?q?ing=40hammerspace=2Ecom=3E?=
+Date: Sun, 18 Jan 2026 08:53:17 +1100
+Message-id: <176868679725.16766.14739276568986177664@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
+
+On Sat, 17 Jan 2026, Benjamin Coddington wrote:
+> If fh-key-file=3D<path> is set in nfs.conf, the "nfsdctl autostart" command
+
+... is set in THE NFSD SECTION OF nfs.conf
 
 
-On 1/17/26 8:52 AM, Chuck Lever wrote:
->
-> On Sat, Jan 17, 2026, at 2:04 AM, Dai Ngo wrote:
->> On 1/16/26 1:55 PM, Dai Ngo wrote:
->>> On 1/16/26 12:00 PM, Chuck Lever wrote:
->>>> On Fri, Jan 16, 2026, at 12:15 PM, Dai Ngo wrote:
->>>>> After the entry in the xarray was marked with XA_MARK_0, xa_insert
->>>>> will not update the entry when nfsd4_block_get_device_info_scsi is
->>>>> called again leaving the entry with XA_MARK_0.
->> I tested the following fix and it works fine:
->>
->> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
->> index 60304bca1bb6..18de3e858106 100644
->> --- a/fs/nfsd/blocklayout.c
->> +++ b/fs/nfsd/blocklayout.c
->> @@ -343,14 +343,18 @@ nfsd4_block_get_device_info_scsi(struct super_block *sb,
->>           }
->>
->>           /*
->> -        * Add the device if it does not already exist in the xarray. This
->> +        * Add the device if it does not already exist in the xarray. If an
->> +        * entry already exists for the device, then clear its XA_MARK_0. This
->>            * logic prevents adding more entries to cl_dev_fences than there
->>            * are exported devices on the server. XA_MARK_0 tracks whether the
->>            * device has been fenced.
->>            */
->>           ret = xa_insert(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
->>                           XA_ZERO_ENTRY, GFP_KERNEL);
->> -       if (ret < 0 && ret != -EBUSY)
->> +       if (ret == -EBUSY)
->> +               xa_clear_mark(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
->> +                               XA_MARK_0);
->> +       else if (ret < 0)
->>                   goto out_free_dev;
->>
->>           ret = ops->pr_register(sb->s_bdev, 0, NFSD_MDS_PR_KEY, true);
->>
->> -Dai
-> I applied this fix, wrapped it in xa_lock to make the update
-> atomic, and pushed to nfsd-testing.
+> will hash the contents of the file with libuuid's uuid_generate_sha1 and
+> send the first 16 bytes into the kernel via NFSD_CMD_FH_KEY_SET.
 
-Thank you Chuck!
+This patch adds no code that uses uuid_generate_sha1(), and doesn't
+provide any code for hash_fh_key_file()...
 
--Dai
+>=20
+> If fh-key-file=3D<path> is set in nfs.conf, rpc.nfsd will also hash the
+> contents of the file with libuuid's uuid_generate_sha1 and write the
+> resulting uuid into nfsdfs's ./fh_key_file entry.
+>=20
+> A compatible kernel can use this key to sign filehandles.
+>=20
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  configure.ac                 |  4 +-
+>  nfs.conf                     |  1 +
+>  support/include/nfslib.h     |  2 +
+>  support/nfs/Makefile.am      |  4 +-
+>  systemd/nfs.conf.man         |  1 +
+>  utils/nfsd/nfsd.c            | 16 ++++++-
+>  utils/nfsd/nfssvc.c          | 26 +++++++++++
+>  utils/nfsd/nfssvc.h          |  1 +
+>  utils/nfsdctl/nfsd_netlink.h |  2 +
+>  utils/nfsdctl/nfsdctl.c      | 86 +++++++++++++++++++++++++++++++++++-
+>  10 files changed, 137 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/configure.ac b/configure.ac
+> index 33866e869666..db027ddbd995 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -265,9 +265,9 @@ AC_ARG_ENABLE(nfsdctl,
+>  		AC_CHECK_DECLS([NFSD_A_SERVER_MIN_THREADS], , ,
+>  			       [#include <linux/nfsd_netlink.h>])
+> =20
+> -		# ensure we have the pool-mode commands
+> +		# ensure we have the fh-key commands
+>  		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
+> -				                   [[int foo =3D NFSD_CMD_POOL_MODE_GET;]])],
+> +				                   [[int foo =3D NFSD_CMD_FH_KEY_SET;]])],
+>  				   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
+>  					      ["Use system's linux/nfsd_netlink.h"])])
+>  		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
+> diff --git a/nfs.conf b/nfs.conf
+> index 3cca68c3530d..39068c19d7df 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -76,6 +76,7 @@
+>  # vers4.2=3Dy
+>  rdma=3Dy
+>  rdma-port=3D20049
+> +# fh-key-file=3D/etc/nfs_fh.key
+> =20
+>  [statd]
+>  # debug=3D0
+> diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+> index eff2a486307f..c8601a156cba 100644
+> --- a/support/include/nfslib.h
+> +++ b/support/include/nfslib.h
+> @@ -22,6 +22,7 @@
+>  #include <paths.h>
+>  #include <rpcsvc/nfs_prot.h>
+>  #include <nfs/nfs.h>
+> +#include <uuid/uuid.h>
+>  #include "xlog.h"
+> =20
+>  #ifndef _PATH_EXPORTS
+> @@ -132,6 +133,7 @@ struct rmtabent *	fgetrmtabent(FILE *fp, int log, long =
+*pos);
+>  void			fputrmtabent(FILE *fp, struct rmtabent *xep, long *pos);
+>  void			fendrmtabent(FILE *fp);
+>  void			frewindrmtabent(FILE *fp);
+> +int				hash_fh_key_file(const char *fh_key_file, uuid_t hash);
+> =20
+>  _Bool state_setup_basedir(const char *, const char *);
+>  int setup_state_path_names(const char *, const char *, const char *, const=
+ char *, struct state_paths *);
+> diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
+> index 2e1577cc12df..775bccc6c5ea 100644
+> --- a/support/nfs/Makefile.am
+> +++ b/support/nfs/Makefile.am
+> @@ -7,8 +7,8 @@ libnfs_la_SOURCES =3D exports.c rmtab.c xio.c rpcmisc.c rpc=
+dispatch.c \
+>  		   xcommon.c wildmat.c mydaemon.c \
+>  		   rpc_socket.c getport.c \
+>  		   svc_socket.c cacheio.c closeall.c nfs_mntent.c \
+> -		   svc_create.c atomicio.c strlcat.c strlcpy.c
+> -libnfs_la_LIBADD =3D libnfsconf.la
+> +		   svc_create.c atomicio.c strlcat.c strlcpy.c fh_key_file.c
+> +libnfs_la_LIBADD =3D libnfsconf.la -luuid
+>  libnfs_la_CPPFLAGS =3D $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/=
+reexport
+> =20
+>  libnfsconf_la_SOURCES =3D conffile.c xlog.c
+> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+> index 484de2c086db..1fb5653042d3 100644
+> --- a/systemd/nfs.conf.man
+> +++ b/systemd/nfs.conf.man
+> @@ -176,6 +176,7 @@ Recognized values:
+>  .BR vers4.1 ,
+>  .BR vers4.2 ,
+>  .BR rdma ,
+> +.BR fh-key-file ,
+> =20
+>  Version and protocol values are Boolean values as described above,
+>  and are also used by
+> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+> index a405649976c2..08a7eaed4906 100644
+> --- a/utils/nfsd/nfsd.c
+> +++ b/utils/nfsd/nfsd.c
+> @@ -69,7 +69,7 @@ int
+>  main(int argc, char **argv)
+>  {
+>  	int	count =3D NFSD_NPROC, c, i, j, error =3D 0, portnum, fd, found_one;
+> -	char *p, *progname, *port, *rdma_port =3D NULL;
+> +	char *p, *progname, *port, *fh_key_file, *rdma_port =3D NULL;
+>  	char **haddr =3D NULL;
+>  	char *scope =3D NULL;
+>  	int hcounter =3D 0;
+> @@ -134,6 +134,8 @@ main(int argc, char **argv)
+>  		}
+>  	}
+> =20
+> +	fh_key_file =3D conf_get_str("nfsd", "fh-key-file");
+> +
+>  	/* We assume the kernel will default all minor versions to 'on',
+>  	 * and allow the config file to disable some.
+>  	 */
+> @@ -380,6 +382,18 @@ main(int argc, char **argv)
+>  		goto set_threads;
+>  	}
+> =20
+> +	if (fh_key_file) {
+> +		error =3D nfssvc_setfh_key(fh_key_file);
+> +		if (error) {
+> +			/* Common case: key is already set */
+> +			if (error !=3D -EEXIST) {
+> +				xlog(L_ERROR, "Unable to set fh_key_file, error %d", error);
+> +				goto out;
+> +			}
+> +			xlog(L_NOTICE, "fh_key_file already set");
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * Must set versions before the fd's so that the right versions get
+>  	 * registered with rpcbind. Note that on older kernels w/o the right
+> diff --git a/utils/nfsd/nfssvc.c b/utils/nfsd/nfssvc.c
+> index 9650cecee986..4f3088b74285 100644
+> --- a/utils/nfsd/nfssvc.c
+> +++ b/utils/nfsd/nfssvc.c
+> @@ -34,6 +34,7 @@
+>  #define NFSD_PORTS_FILE   NFSD_FS_DIR "/portlist"
+>  #define NFSD_VERS_FILE    NFSD_FS_DIR "/versions"
+>  #define NFSD_THREAD_FILE  NFSD_FS_DIR "/threads"
+> +#define NFSD_FH_KEY_FILE  NFSD_FS_DIR "/fh_key"
+> =20
+>  /*
+>   * declaring a common static scratch buffer here keeps us from having to
+> @@ -414,6 +415,31 @@ out:
+>  	return;
+>  }
+> =20
+> +int
+> +nfssvc_setfh_key(const char *fh_key_file)
+> +{
+> +	char uuid_str[37];
+> +	uuid_t hash;
+> +	int fd, ret;
+> +
+> +	ret =3D hash_fh_key_file(fh_key_file, hash);
+> +	if (ret)
+> +		return ret;
+> +
+> +	uuid_unparse(hash, uuid_str);
+> +
+> +	fd =3D open(NFSD_FH_KEY_FILE, O_WRONLY);
+> +	if (fd < 0)
+> +		return fd;
 
->
+return -errno ??
+
+> +
+> +	ret =3D write(fd, uuid_str, 37);
+> +	close(fd);
+> +	if (ret < 0)
+> +		return -errno;
+> +
+> +	return 0;
+> +}
+> +
+>  int
+>  nfssvc_threads(const int nrservs)
+>  {
+> diff --git a/utils/nfsd/nfssvc.h b/utils/nfsd/nfssvc.h
+> index 4d53af1a8bc3..463110cac804 100644
+> --- a/utils/nfsd/nfssvc.h
+> +++ b/utils/nfsd/nfssvc.h
+> @@ -30,3 +30,4 @@ void	nfssvc_setvers(unsigned int ctlbits, unsigned int mi=
+norvers4,
+>  		       unsigned int minorvers4set, int force4dot0);
+>  int	nfssvc_threads(int nrservs);
+>  void	nfssvc_get_minormask(unsigned int *mask);
+> +int nfssvc_setfh_key(const char *fh_key_file);
+> diff --git a/utils/nfsdctl/nfsd_netlink.h b/utils/nfsdctl/nfsd_netlink.h
+> index 887cbd12b695..f7e7f5576774 100644
+> --- a/utils/nfsdctl/nfsd_netlink.h
+> +++ b/utils/nfsdctl/nfsd_netlink.h
+> @@ -34,6 +34,7 @@ enum {
+>  	NFSD_A_SERVER_GRACETIME,
+>  	NFSD_A_SERVER_LEASETIME,
+>  	NFSD_A_SERVER_SCOPE,
+> +	NFSD_A_SERVER_FH_KEY,
+> =20
+>  	__NFSD_A_SERVER_MAX,
+>  	NFSD_A_SERVER_MAX =3D (__NFSD_A_SERVER_MAX - 1)
+> @@ -88,6 +89,7 @@ enum {
+>  	NFSD_CMD_LISTENER_GET,
+>  	NFSD_CMD_POOL_MODE_SET,
+>  	NFSD_CMD_POOL_MODE_GET,
+> +	NFSD_CMD_FH_KEY_SET,
+> =20
+>  	__NFSD_CMD_MAX,
+>  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index 48b3ba0b276c..efd4c1cf6d8a 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -29,6 +29,7 @@
+> =20
+>  #include <readline/readline.h>
+>  #include <readline/history.h>
+> +#include <uuid/uuid.h>
+> =20
+>  #ifdef USE_SYSTEM_NFSD_NETLINK_H
+>  #include <linux/nfsd_netlink.h>
+> @@ -42,6 +43,7 @@
+>  #include "lockd_netlink.h"
+>  #endif
+> =20
+> +#include "nfslib.h"
+>  #include "nfsdctl.h"
+>  #include "conffile.h"
+>  #include "xlog.h"
+> @@ -1597,6 +1599,81 @@ static int configure_listeners(void)
+>  	return ret;
+>  }
+> =20
+> +static int fh_key_file_doit(struct nl_sock *sock, const char *fh_key_file)
+> +{
+> +	struct genlmsghdr *ghdr;
+> +	struct nlmsghdr *nlh;
+> +	struct nl_data *data;
+> +	struct nl_msg *msg;
+> +	struct nl_cb *cb;
+> +	int ret;
+> +	uuid_t hash;
+> +
+> +	ret =3D hash_fh_key_file(fh_key_file, hash);
+> +	if (ret)
+> +		return ret;
+> +
+> +	msg =3D netlink_msg_alloc(sock, NFSD_FAMILY_NAME);
+> +	if (!msg) {
+> +		xlog(L_ERROR, "failed to allocate netlink msg");
+> +		return 1;
+> +	}
+> +
+> +	data =3D nl_data_alloc(hash, sizeof(hash));
+> +	if (!data) {
+> +		xlog(L_ERROR, "failed to allocate netlink data");
+> +		ret =3D 1;
+> +		goto out;
+> +	}
+> +
+> +	nla_put_data(msg, NFSD_A_SERVER_FH_KEY, data);
+> +	nlh =3D nlmsg_hdr(msg);
+> +	ghdr =3D nlmsg_data(nlh);
+> +	ghdr->cmd =3D NFSD_CMD_FH_KEY_SET;
+> +	cb =3D nl_cb_alloc(NL_CB_CUSTOM);
+> +	if (!cb) {
+> +		xlog(L_ERROR, "failed to allocate netlink callbacks");
+> +		ret =3D 1;
+> +		goto out_data;
+> +	}
+> +
+> +	ret =3D nl_send_auto(sock, msg);
+> +	if (ret < 0) {
+> +		xlog(L_ERROR, "send failed (%d)!", ret);
+> +		goto out_cb;
+> +	}
+> +
+> +	ret =3D 1;
+> +	nl_cb_err(cb, NL_CB_CUSTOM, error_handler, &ret);
+> +	nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, finish_handler, &ret);
+> +	nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, ack_handler, &ret);
+> +	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, recv_handler, NULL);
+> +
+> +	while (ret > 0)
+> +		nl_recvmsgs(sock, cb);
+> +	if (ret < 0) {
+> +		if (ret =3D=3D -EOPNOTSUPP) {
+> +			xlog(L_ERROR, "Kernel does not support encrypted filehandles: %s",
+> +						strerror(-ret));
+> +			ret =3D 0;
+> +		} else if (ret =3D=3D -EEXIST) {
+> +			xlog(L_ERROR, "fh_key_file already set: %s", strerror(-ret));
+> +			ret =3D 0;
+> +		} else {
+> +			xlog(L_ERROR, "Error setting encrypted filehandle key: %s",
+> +						strerror(-ret));
+> +			ret =3D 1;
+> +		}
+> +	}
+> +out_cb:
+> +	nl_cb_put(cb);
+> +out_data:
+> +	nl_data_free(data);
+> +out:
+> +	nlmsg_free(msg);
+> +	return ret;
+> +}
+> +
+>  static void autostart_usage(void)
+>  {
+>  	printf("Usage: %s autostart\n", taskname);
+> @@ -1611,7 +1688,7 @@ static int autostart_func(struct nl_sock *sock, int a=
+rgc, char ** argv)
+>  	int *threads, grace, lease, idx, ret, opt, pools, minthreads;
+>  	struct conf_list *thread_str;
+>  	struct conf_list_node *n;
+> -	char *scope, *pool_mode;
+> +	char *scope, *pool_mode, *fh_key_file;
+>  	bool failed_listeners =3D false;
+> =20
+>  	optind =3D 1;
+> @@ -1683,6 +1760,13 @@ static int autostart_func(struct nl_sock *sock, int =
+argc, char ** argv)
+>  		threads[0] =3D DEFAULT_AUTOSTART_THREADS;
+>  	}
+> =20
+> +	fh_key_file =3D conf_get_str("nfsd", "fh-key-file");
+> +	if (fh_key_file) {
+> +		ret =3D fh_key_file_doit(sock, fh_key_file);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	lease =3D conf_get_num("nfsd", "lease-time", 0);
+>  	scope =3D conf_get_str("nfsd", "scope");
+>  	minthreads =3D conf_get_num("nfsd", "min-threads", 0);
+> --=20
+> 2.50.1
+>=20
+>=20
+
+I haven't reviewed the netlink parts because I don't know the API well,
+but the rest seems ok, except for the missing code.
+
+Thanks,
+NeilBrown
 
