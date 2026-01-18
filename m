@@ -1,89 +1,94 @@
-Return-Path: <linux-nfs+bounces-18087-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18088-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2CB2D39B11
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 00:06:08 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6C57D39B4C
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 00:24:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 918A13000EA0
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Jan 2026 23:06:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0754E301074B
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Jan 2026 23:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225E6311C14;
-	Sun, 18 Jan 2026 23:06:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B41231AA81;
+	Sun, 18 Jan 2026 23:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="eoMCsM81";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qb3ZK/kw"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Dmw+pxT+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IGTmerXN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE0C311C09
-	for <linux-nfs@vger.kernel.org>; Sun, 18 Jan 2026 23:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0D531A065;
+	Sun, 18 Jan 2026 23:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768777565; cv=none; b=hs4iGGPHbw8fovnz423EelZ4mgPHY6IduTJY8444Sv2aOHWtkDa/FGzDGMIyhBpkzwRbHL34C6SDIEQcSltq8PIALNxzRVoYLoIuS6tUaPtGtkTB9MrbEimX3nfVj26Fyw/iyE6F0hySAX8XIG40hT/Op/cN2WghrxXB1de2bSw=
+	t=1768778620; cv=none; b=ang6xPz7J1j/n6rwW37DbJtMyTdusZHDAnHnG0zH2rhMbd+OPLsfVxknsy7BA0Mrs1VQelI4ZEex3OC0/qbr323ogqLxh7vnHsDLv3MPUp3xrQDpXF2MInf1MCZtBLLWzpSPa3CW4+7maVb4yhlotdEN4bBIAFfoIDvaXzm7BNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768777565; c=relaxed/simple;
-	bh=YHRrSnl4FoYZbjOyqKLHE7h0KGGxWZE+tSuPN9z9jL4=;
+	s=arc-20240116; t=1768778620; c=relaxed/simple;
+	bh=kQYT0dhmcYLmmCpMOddqhdpNEHl1L6rhEo00nl7FDLA=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=qacUxRi9bx0fjIG87eRTch2dbGExcTIfie00iO9ttR4C5RSUTRTporkmILi38Ce6mi9jSWHJuTIKj+L/Xr8bXLZeqpCSNaSVDAupY2Ssuh/4XpNvaAHCL0G0Xe5tqy894tac7B+zNEy+x64cg5Th9zWIvemSfp9WlhlS6VJAbWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=eoMCsM81; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qb3ZK/kw; arc=none smtp.client-ip=103.168.172.145
+	 References:Date:Message-id; b=Q4hllinH8AVISxbeP7Qsj5mj99CkV38KbR6xqtAv4YiLZjtIOwoxVDfFNqm8d+vuiKWeWBFManBJ/5ZxSO3bCoN/kDQKAH6uKupZZ+ImC7OT3YRoKNITIIFniUWZ7VMa791fsXb4nHd+JmTyRsnGaCQddGXhgzlXXHjg4OffO6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Dmw+pxT+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IGTmerXN; arc=none smtp.client-ip=103.168.172.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id E1726EC0552;
-	Sun, 18 Jan 2026 18:06:00 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Sun, 18 Jan 2026 18:06:00 -0500
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailflow.phl.internal (Postfix) with ESMTP id 044C21380091;
+	Sun, 18 Jan 2026 18:23:37 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Sun, 18 Jan 2026 18:23:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1768777560; x=1768863960; bh=tIeoQtgrj/YkBKsaMFaem/1Mq86nHKgsjiF
-	nn00H7BU=; b=eoMCsM81sbXgZVPLyK64hTb/uMjn1HDFVY7oMhSdIphe+sZ+1u7
-	UkuJ5smYxbTGZq9Q2xSOs+HTQkeZDYO5WSyPz2W/eRvrLN8kRVA5msO3TkphRnyR
-	N33gmoff2lb36qClPxSym5sxjM9OAB1JShkgpZT+4uwdorKzOn6HN19iyX4b8XFi
-	RYW+G0VX78CpWKZWjnGsMh09OgKVc4gaqwAKgn8yu1eWrXvA2P1iNTgFujPmiOr1
-	AdoZmyy29Pt1JZ0wnNqllba6IHP4g/b/e5xKAPrdDKPYuGAmSWixK8LkM/uByHgj
-	adqzEzDfqy5wpoozTGH71MYbhLFvaL333yg==
+	1768778616; x=1768785816; bh=cLWfoPH86LevLJ5dEarcfR/PsriG4IfSU/3
+	wyLJz+qM=; b=Dmw+pxT+mC6s44HDc9ViDXhGQeEmMpmNYRhtbA86QNG09PG/Ljt
+	hV85ad3/pbmWWoao3arxAaxDpjTC5inzso+nDbFp9L/ocC8FvAlBD0K6BSqaNtKf
+	C3km6dpzlK9Qvfbi4RlAOZVQRcgXUx6BbC4NNZXExiSaEBKuKkrscbvke30TKEj0
+	X3c26YUO2IvjIKJetsMrJSw+w98guonRsqk3c5wy7tRYCBiBKWCThYgKRu77I56g
+	W/jQbAZlq9qtSmpdQFd+C0/rLGEaY2+/6NIHoLbGsxK4GkDCFlahWHWTEoSSJrS/
+	k5ZW9JDwUgtzyYMplQwMaStWlBzRHOxECQQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768777560; x=
-	1768863960; bh=tIeoQtgrj/YkBKsaMFaem/1Mq86nHKgsjiFnn00H7BU=; b=Q
-	b3ZK/kwNJAw+kZWfAxMuFX7VVZ9quucSW/DhLPCeN3mf9oJ2+L9eUtfNxVGi8Ktf
-	dC0Dml6OOOpXuPpqE4MMTJeCS3Nsx0aedHL2EAMvDB3rkzqxbkQZHhHK2EtS3aDn
-	wS7i9D7eZUIfd4Motgc2Q00QvAJg345W/VVtXLDJ6HKosQd243TfrQXAtshXZ6u6
-	ghlgUNBaWGLKUTfyu/8wBOWssEJI1j1ovJUXHpZ18NMWhfN7eyMx7zrxAKJKaFSW
-	z6zru66DRX7o84cgA3JKKoloFiZ9P/SfpWVisS+jaNWgY7isT2/GuwNewxF63vnJ
-	BZrtf/nBIFWs51fI9VVkg==
-X-ME-Sender: <xms:WGdtaTajWvtC6cUDWEcRCGQGmX6t9gGGUJ8dtYblMEY3MQ5cBjVnLg>
-    <xme:WGdtaZToLtmsbp5IXoo6lmcIKI_s9IucA-r4w7efEOcgYbg3iI5fapLTg1NVO2YDG
-    zmyO9XV0YtJVeOkH-VB2AK5mJPiCW0e0QEcYgy7Xd1_6TzSRw>
-X-ME-Received: <xmr:WGdtaeSRcAE9y7CfUl-lFsEgag5ruNfrISlYPqwgrTmOAvXD4n8WTwleXEFwMfuGKFIg32teU9DSavpVZiZ1A5dywEHAFUJ85fxv-cxet-rS>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeehleejucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768778616; x=
+	1768785816; bh=cLWfoPH86LevLJ5dEarcfR/PsriG4IfSU/3wyLJz+qM=; b=I
+	GTmerXNj37QbHVnwq2oYiiWRj3dNMRiwAfGv/vxfYmuPEFFfJjUyW8ruiPn+ZUTw
+	y96Ysjc5jkE+PfgCaUfHrNzF77vJ+CHZGj8ZZyFQniCqqNBHAWqccBt7S/bU1BV3
+	Xnstc4VvhfH6RZxhRpoHiUxWSmJT21A47932/vgOnE5bxUOTfBJmpqxFnE86OITm
+	uIg7MLSy3DGOcBFTzEd5fbzcCQYBFRkQDDO9qGFEXh5IfaJ//ctGtwtYx+/A3prw
+	KJ8U8PGheh+G3smkjCFKvnDL2ddcVu2iicAyBab5Q6myVEkn0CxZuzyjCejBBwJF
+	S/bm6s4tkRpP23BkNvcHg==
+X-ME-Sender: <xms:dGttaT6YTMF6Fa6OlzcaAnM6fKqB4-4u0PRgZNSqPeyFmRns3uNnWw>
+    <xme:dGttaZPm2B1Iaa5cFSjo7JQ9nDmVsbYtDSTRFdNHBicQ-lkECLbL66rkbZK2MZehf
+    _rCs8HRq47ygqgxsOGTs2CMA0vWt7_AzG555MqfdnDHw6XZXQ>
+X-ME-Received: <xmr:dGttaV5f0odFoTqo9Cm-3bXwUWdDQe8OS_nESoDmZC33EUUTmsf8jTlPE6SJiNhWOG4bTHrmA205RC8BAhr3cbUxrYEQhQL_108cgTPUPoLg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeeitddtucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehsthgvvhgvugesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghh
-    uhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggtohguughinhhgsehhrghmmhgvrhhs
-    phgrtggvrdgtohhm
-X-ME-Proxy: <xmx:WGdtaVQg0ns4xsOOtjfc-CoqcIF5HB3k2F0ic_VslFmD9gUjtIo0Eg>
-    <xmx:WGdtab74CFyj0kS-z2VillG-bPxaBy1ovhrKQiYj08WvP4G76axARw>
-    <xmx:WGdtaZ32cFbrgC7ismBsLoXd0usXW3OSmPQ9_6XCQeWA1NCuUSljSw>
-    <xmx:WGdtaeBWnyD_kf8Mwvy9ud0nz2BW-hnexikUu_RYzpZQTMzLKwfrAQ>
-    <xmx:WGdtaZ5VYeiTkNSqCrCm07BDs7bNVRubHqGNFmHZnNtyJU0RaM4ylI1_>
+    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
+    rhgtphhtthhopeejfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhirhhose
+    iivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehguhhotghhuhhnhhgr
+    ihesvhhivhhordgtohhmpdhrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhilhhfshesvhhgvghrrd
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgvgihtgeesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:dGttaek4FCMZRAxWF6ejfvNQASS42yuMJmNL6Qr_VSzT2alP2kiMEQ>
+    <xmx:dGttacMnrF3MIVkqtagaBM_OFbr4viUT9Quj4YPA_rDrR6FZMQe15g>
+    <xmx:dGttaRUgcJhZGcX_B2l09umj3yAF-qAbVHXccqpyubd6rn2m6D7nYA>
+    <xmx:dGttaVutjkDk_cSqIw9p5HdrWWt8-J_WTU_-yJ8LgZsJLx3q9gD8ew>
+    <xmx:eGttab3JlD-dDEAYvGFUDpoqKXPgn7EN1IPurNldS43-2K0UKJSizYjm>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 18 Jan 2026 18:05:58 -0500 (EST)
+ 18 Jan 2026 18:23:15 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -93,148 +98,117 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
-To: "Benjamin Coddington" <bcodding@hammerspace.com>
-Cc: "Steve Dickson" <steved@redhat.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v1 1/2] nfsdctl/rpc.nfsd: Add support for passing
- encrypted filehandle key
-In-reply-to: <8328B53F-21DE-4237-AF79-5DE88D53D8B9@hammerspace.com>
-References: <cover.1768586942.git.bcodding@hammerspace.com>, =?utf-8?q?=3C90?=
- =?utf-8?q?fad47b2b34117ae30373569a5e5a87ef63cec7=2E1768586942=2Egit=2Ebcodd?=
- =?utf-8?q?ing=40hammerspace=2Ecom=3E=2C?=
- <176868679725.16766.14739276568986177664@noble.neil.brown.name>,
- <8328B53F-21DE-4237-AF79-5DE88D53D8B9@hammerspace.com>
-Date: Mon, 19 Jan 2026 10:05:56 +1100
-Message-id: <176877755694.16766.8795981876133751749@noble.neil.brown.name>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Amir Goldstein" <amir73il@gmail.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Carlos Maiolino" <cem@kernel.org>, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>, "Chris Mason" <clm@fb.com>,
+ "David Sterba" <dsterba@suse.com>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Phillip Lougher" <phillip@squashfs.org.uk>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Dave Kleikamp" <shaggy@kernel.org>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>, "Jan Kara" <jack@suse.cz>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>,
+ "Christoph Hellwig" <hch@infradead.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
+ linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+ linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
+ linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+In-reply-to: <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>,
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>,
+ <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
+Date: Mon, 19 Jan 2026 10:23:13 +1100
+Message-id: <176877859306.16766.15009835437490907207@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 
-On Mon, 19 Jan 2026, Benjamin Coddington wrote:
-> On 17 Jan 2026, at 16:53, NeilBrown wrote:
+On Fri, 16 Jan 2026, Jeff Layton wrote:
+> On Thu, 2026-01-15 at 19:17 +0100, Amir Goldstein wrote:
+> > On Thu, Jan 15, 2026 at 6:48=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> > >=20
+> > > In recent years, a number of filesystems that can't present stable
+> > > filehandles have grown struct export_operations. They've mostly done
+> > > this for local use-cases (enabling open_by_handle_at() and the like).
+> > > Unfortunately, having export_operations is generally sufficient to make
+> > > a filesystem be considered exportable via nfsd, but that requires that
+> > > the server present stable filehandles.
+> >=20
+> > Where does the term "stable file handles" come from? and what does it mea=
+n?
+> > Why not "persistent handles", which is described in NFS and SMB specs?
+> >=20
+> > Not to mention that EXPORT_OP_PERSISTENT_HANDLES was Acked
+> > by both Christoph and Christian:
+> >=20
+> > https://lore.kernel.org/linux-fsdevel/20260115-rundgang-leihgabe-12018e93=
+c00c@brauner/
+> >=20
+> > Am I missing anything?
+> >=20
 >=20
-> > On Sat, 17 Jan 2026, Benjamin Coddington wrote:
-> >> If fh-key-file=3D<path> is set in nfs.conf, the "nfsdctl autostart" comm=
-and
-> >
-> > ... is set in THE NFSD SECTION OF nfs.conf
-> >
-> >
-> >> will hash the contents of the file with libuuid's uuid_generate_sha1 and
-> >> send the first 16 bytes into the kernel via NFSD_CMD_FH_KEY_SET.
-> >
-> > This patch adds no code that uses uuid_generate_sha1(), and doesn't
-> > provide any code for hash_fh_key_file()...
+> This was Chuck's suggested name. His point was that STABLE means that
+> the FH's don't change during the lifetime of the file.
 >=20
-> I forgot to add the hash function after moving it into libnfs to make it
-> available to both rpc.nfsd and nfsdctl -- here it is, will fix on v2:
->=20
-> diff --git a/support/nfs/fh_key_file.c b/support/nfs/fh_key_file.c
-> new file mode 100644
-> index 000000000000..350d36bf8649
-> --- /dev/null
-> +++ b/support/nfs/fh_key_file.c
-> @@ -0,0 +1,83 @@
-> +/*
-> + * Copyright (c) 2025 Benjamin Coddington <bcodding@hammerspace.com>
-> + * All rights reserved.
-> + *
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions
-> + * are met:
-> + * 1. Redistributions of source code must retain the above copyright
-> + *    notice, this list of conditions and the following disclaimer.
-> + * 2. Redistributions in binary form must reproduce the above copyright
-> + *    notice, this list of conditions and the following disclaimer in the
-> + *    documentation and/or other materials provided with the distribution.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-> + * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTI=
-ES
-> + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-> + * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF US=
-E,
-> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
+> I don't much care about the flag name, so if everyone likes PERSISTENT
+> better I'll roll with that.
 
-I wonder if it is time to stop putting this boilerplate in nfs-utils and
-start using SPDX like the kernel does.
+I don't like PERSISTENT.
+I'd rather call a spade a spade.
 
-> +
-> +#include <sys/types.h>
-> +#include <unistd.h>
-> +#include <errno.h>
-> +#include <uuid/uuid.h>
-> +
-> +#include "nfslib.h"
-> +
-> +#define HASH_BLOCKSIZE  256
-> +int hash_fh_key_file(const char *fh_key_file, uuid_t uuid)
-> +{
-> +	const char seed_s[] =3D "8fc57f1b-1a6f-482f-af92-d2e007c1ae58";
-> +	FILE *sfile =3D NULL;
-> +	char *buf =3D malloc(HASH_BLOCKSIZE);
+  EXPORT_OP_SUPPORTS_NFS_EXPORT
+or
+  EXPORT_OP_NOT_NFS_COMPATIBLE
 
-Can this be=20
-   char buf[HASH_BLOCKSIZE];
-??
+The issue here is NFS export and indirection doesn't bring any benefits.
 
-> +	size_t pos;
-> +	int ret =3D 0;
-> +
-> +	if (!buf)
-> +		goto out;
-> +
-> +	sfile =3D fopen(fh_key_file, "r");
-> +	if (!sfile) {
-> +		ret =3D errno;
-> +		xlog(L_ERROR, "Unable to read fh-key-file %s: %s", fh_key_file, strerror=
-(errno));
-> +		goto out;
-> +	}
-> +
-> +	uuid_parse(seed_s, uuid);
-> +	while (1) {
-> +		size_t sread;
-> +		pos =3D 0;
-> +
-> +		while (1) {
-> +			if (feof(sfile))
-> +				goto finish_block;
-> +
-> +			sread =3D fread(buf + pos, 1, HASH_BLOCKSIZE - pos, sfile);
-> +			pos +=3D sread;
-> +
-> +			if (pos =3D=3D HASH_BLOCKSIZE)
-> +				break;
-> +
-> +			if (sread =3D=3D 0) {
-> +				if (ferror(sfile))
-> +					goto out;
-> +				goto finish_block;
-> +			}
-> +		}
-
-I think this inner look is not needed or wanted.
-fread() will loop as needed until EOF or an error, and we don't want to
-continue on an error.
-
-> +		uuid_generate_sha1(uuid, uuid, buf, HASH_BLOCKSIZE);
-> +	}
-> +finish_block:
-> +	if (pos)
-> +		uuid_generate_sha1(uuid, uuid, buf, pos);
-> +out:
-> +	if (sfile)
-> +		fclose(sfile);
-> +	free(buf);
-> +	return ret;
-> +}
->=20
-
-Thanks,
 NeilBrown
+
+
+>=20
+> Also, on the ovl patch: will fix...
+>=20
+> Thanks for the review!
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+
 
