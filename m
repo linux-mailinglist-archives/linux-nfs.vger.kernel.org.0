@@ -1,114 +1,241 @@
-Return-Path: <linux-nfs+bounces-18145-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18146-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BC74D3B5E0
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 19:34:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1B4BD3B8C4
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 21:46:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E08253043F6C
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 18:34:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3C84F301F3C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 20:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5851238735A;
-	Mon, 19 Jan 2026 18:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734F22F7ACA;
+	Mon, 19 Jan 2026 20:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyrNY74r"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Lc0EYW6i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ext14fYh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A4932AABF;
-	Mon, 19 Jan 2026 18:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890632E4257;
+	Mon, 19 Jan 2026 20:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768847665; cv=none; b=mIJ5+r+oeRsAykZFyk45YNb97kiBLwb92GBJRPa0s7pIQCWm4+kxdfL5fiasfL+N4xwFnvvxXvLrTx+3kA6FUK/NJrMt3VXDNl0A/3K+iVjUcN3rgeaqrD9hLYY6iHv10io8UrIgzbVrs1YNXVQ9z9zugryhEcL5c/rRMufB7s4=
+	t=1768855564; cv=none; b=l3H0vaOTNLgktKViwk6vLL8ktTyFrqQe6LHY9Ti/T6T3rafJuzqR/pDMn9Ts/2PQvhlpAK3mU7u10jJ9Jca6oakwbu7lmGxtfAPUl/kesbn1f5wA7mG5SPyj+qVodnJmJD699JvyKKCOmG6+thTICReoNHwPdeZg3VRSI6x126g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768847665; c=relaxed/simple;
-	bh=kC7Zj4+slaVhN0XLjBUuk1dKiurvs5ZgBe29k50UZRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWPGNa/s0v7Du6/IPP3HHb5R13xYjd0tatStyvV4YH1TrJBulnagomPvWblsuyoNsAC1mXnZfnRWiUqCPP7CQM7RzMzf97hcU4i51tkaHxG6V/7rRF11pvFmhYGr//MhoJQ4TVYVDBqAcWLGch32pm/LHYSCbw0k11+GUe5asLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyrNY74r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6D4C116C6;
-	Mon, 19 Jan 2026 18:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768847664;
-	bh=kC7Zj4+slaVhN0XLjBUuk1dKiurvs5ZgBe29k50UZRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oyrNY74rnQ8quiv1V36gkrSUEMAZPyVcfAypqAIuMGU+tRwLVTtudqQp7vwcHpn0N
-	 W/0nWK/dE9uLMhIYIVjLV5siiGjiDeQwEqG6QGv0KUmJMVoDfqPS7TSaP+N/oXU2Wo
-	 nlpW2tbC7HGgEPqjidHXTSHwl3mFWnq1GMuumzXD2bls0fV1eXY1m5jU+3+3K4iIoH
-	 A9cOvRal599V2P1ZSk/OyaPMQQ+5XFybuWpUdmrEkgSMFFJ77dERGfjMOXJaQqo8yY
-	 h81HTtQa+LKoJxrP3NcJHooUTdc3cLQQ+Azz4EwcCzODnvtdzuIVuYKXRE9awS0AI9
-	 WsIAZxCjf4bbQ==
-Date: Mon, 19 Jan 2026 20:34:20 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Chuck Lever <cel@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org,
-	NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v1 1/4] RDMA/core: add bio_vec based RDMA read/write API
-Message-ID: <20260119183420.GP13201@unreal>
-References: <20260114143948.3946615-1-cel@kernel.org>
- <20260114143948.3946615-2-cel@kernel.org>
- <20260115155334.GB14083@lst.de>
- <20260116212425.GJ14359@unreal>
- <bad1a0d2-6408-4d0b-a421-f1e35265ac28@app.fastmail.com>
- <20260119065212.GA1423@lst.de>
- <20260119102857.GI13201@unreal>
- <20260119120311.GA23572@lst.de>
+	s=arc-20240116; t=1768855564; c=relaxed/simple;
+	bh=Nu+u8xIi1n/SDoC4CO0WUQIjg6M4bP4ZH6PEVt+Ooxc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=NTFmOJbkyPmsjQRAoNByD7E5r9X+BYShOEneXXvHDkfqEOsQDwpwZTEjqyZSkFhaLMNUlEx2voccNaO59YLPrJfER2GnHzcs1lBGrqAXmXd/RgiPbI27/h2L2XdOs74S51A8I/Ljdiq+uqMB7Hhln3nfu/w0yLgqhYioNgk0ZxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Lc0EYW6i; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ext14fYh; arc=none smtp.client-ip=202.12.124.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id C9DA613010D8;
+	Mon, 19 Jan 2026 15:45:59 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 19 Jan 2026 15:46:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1768855559; x=1768862759; bh=v4LtkcerTNcKdHBuxb989VhIuXJUmGOFYwT
+	3m9zCWpQ=; b=Lc0EYW6ibUUqVQJUKzaim23Euwd0BGgFRXe5DALzfEojg7VN6rT
+	B6DiPIhAD3IC7M+5XEsbPahQ32cVgcxSRShqrzfxc+w2dQttIp0GWIrdUpX55qw0
+	1YJfvLNEex4MDg629sJRt0DIagYZ7O2YgHGEWRwCbzJK6pewaTBy/LwbN/3UuIrH
+	D1X+l3ArslIHe9m6/MxEM+BHkwyONj/QBcgvUoddEjQn2rtqiXm8XIlcaUBBGYcG
+	L51CiT0gWDAG38s7mrfim3JvqvUewVVj4jdamfv/vGEC6XVs37En7pvh86V+RKx9
+	u1Btsigj5UNDPW1ltBPZUH8SSA1nKU+SOjA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768855559; x=
+	1768862759; bh=v4LtkcerTNcKdHBuxb989VhIuXJUmGOFYwT3m9zCWpQ=; b=e
+	xt14fYhTflITcl6YnaiRNNIPiieIuY3T2ekw4mgpmY/v/o1D6Rm9og97ySUxlRr7
+	FuBeLtlEdjDnDlXWSfPcQ5AbZapLP6oLiXJHFrRkIH0gKfaYLMLYjIQO36N4L42d
+	r+sxyuyT+2Dw0f4nF6Lb5U2/7dD8/gO1shUXevXTcOuhLj1lVMOynN4dkejCogfQ
+	7OuzydzQDyp0GPeNwjKBxultpJ+adDUHRpRjZpvqCu+f30BBcE9P8TFFL51mFFSd
+	5nqf/ngi6HPQpjIzif8UMR8pgDgY3x6Ww4kDrS1yWA5BVy+Nd5cITHqHPkkjbEzT
+	FALc3wWKIrn/NhNHGyWNw==
+X-ME-Sender: <xms:BJhuaSbEzFcWy9Pk6146wE82fhYm_CxjTiFHqGZKgwA0vYGamqcSmg>
+    <xme:BJhuaSwoBnyfk0eKn4-Aohsxi2pWCriN6dRenPPaxnkZL7_MsdqbsQlFS_j1eycjJ
+    snQClQFRDDxmckQGHACK4fSLzS3RfNjJQu9JuQvNfYNBDMQpQ>
+X-ME-Received: <xmr:BJhuaSJdRJMi7-ZpoAEIl9nJ6TzUD9unJMV7r6q_QrUGstq03Bv3pQ2jFX3ElyETlEyXOOSz_dMOZCxbyCO3448TMs1hLaDXJLozABR1b4SI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeekheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjedvpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtohepghhuohgthhhunhhhrghisehvihhvohdrtghomhdprhgtphhtthhopehl
+    ihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhnihhlfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:BJhuaSBO9clKpBY1c8tqtIkxX8-Yutqel2bbB8TbvrqddamOXX7Ykg>
+    <xmx:BJhuaRhuOPQDyCA_KFYnfcdaAOzKUXr3io07nJfde0jw7wudsjV9Bg>
+    <xmx:BJhuade95jkbwLWPmv5m35H6i7zd7TYoRjmUJ2fQMpOWq-IJ6QyQ1w>
+    <xmx:BJhuaelSBffgMjviuHAjgSaIv0cuzLl42YuUELeDiPJYohFPRx_JkA>
+    <xmx:B5huacYgAtwv-dw4ucg_ORya8hJwBFrWvyIGFRHLnxavffYq8g3321NH>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 19 Jan 2026 15:45:39 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260119120311.GA23572@lst.de>
+From: NeilBrown <neilb@ownmail.net>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Christoph Hellwig" <hch@infradead.org>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Carlos Maiolino" <cem@kernel.org>, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>, "Chris Mason" <clm@fb.com>,
+ "David Sterba" <dsterba@suse.com>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Phillip Lougher" <phillip@squashfs.org.uk>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Dave Kleikamp" <shaggy@kernel.org>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>, "Jan Kara" <jack@suse.cz>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev,
+ ntfs3@lists.linux.dev, linux-nilfs@vger.kernel.org,
+ jfs-discussion@lists.sourceforge.net, linux-mtd@lists.infradead.org,
+ gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+In-reply-to: <20260119-kanufahren-meerjungfrau-775048806544@brauner>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>,
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>,
+ <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>,
+ <176877859306.16766.15009835437490907207@noble.neil.brown.name>,
+ <aW3SAKIr_QsnEE5Q@infradead.org>,
+ <176880736225.16766.4203157325432990313@noble.neil.brown.name>,
+ <20260119-kanufahren-meerjungfrau-775048806544@brauner>
+Date: Tue, 20 Jan 2026 07:45:35 +1100
+Message-id: <176885553525.16766.291581709413217562@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 
-On Mon, Jan 19, 2026 at 01:03:11PM +0100, Christoph Hellwig wrote:
-> On Mon, Jan 19, 2026 at 12:28:57PM +0200, Leon Romanovsky wrote:
-> > > > I can add some code to this series to do that, but I don't believe
-> > > > I have facilities to test it.
-> > > 
-> > > Please don't add untested code.  If Leon wants the P2P support and
-> > > volunteers to test it, sure.
-> > 
-> > I can do it with the help of how to setup the system.
-> > 
-> > > But let's not merge it without being tested.  And at least for NFS I don't
-> > > really see how P2P would easily fit in anyway.
-> > 
-> > Chuck is proposing a new IB/core API that will also be used by NVMe too.
-> 
-> Hopefully eventually, yes.  Not in this series, though.
+On Mon, 19 Jan 2026, Christian Brauner wrote:
+> On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
+> > On Mon, 19 Jan 2026, Christoph Hellwig wrote:
+> > > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
+> > > > > This was Chuck's suggested name. His point was that STABLE means th=
+at
+> > > > > the FH's don't change during the lifetime of the file.
+> > > > >=20
+> > > > > I don't much care about the flag name, so if everyone likes PERSIST=
+ENT
+> > > > > better I'll roll with that.
+> > > >=20
+> > > > I don't like PERSISTENT.
+> > > > I'd rather call a spade a spade.
+> > > >=20
+> > > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
+> > > > or
+> > > >   EXPORT_OP_NOT_NFS_COMPATIBLE
+> > > >=20
+> > > > The issue here is NFS export and indirection doesn't bring any benefi=
+ts.
+> > >=20
+> > > No, it absolutely is not.  And the whole concept of calling something
+> > > after the initial or main use is a recipe for a mess.
+> >=20
+> > We are calling it for it's only use.  If there was ever another use, we
+> > could change the name if that made sense.  It is not a public name, it
+> > is easy to change.
+> >=20
+> > >=20
+> > > Pick a name that conveys what the flag is about, and document those
+> > > semantics well.  This flag is about the fact that for a given file,
+> > > as long as that file exists in the file system the handle is stable.
+> > > Both stable and persistent are suitable for that, nfs is everything
+> > > but.
+> >=20
+> > My understanding is that kernfs would not get the flag.
+> > kernfs filehandles do not change as long as the file exist.
+> > But this is not sufficient for the files to be usefully exported.
+> >=20
+> > I suspect kernfs does re-use filehandles relatively soon after the
+> > file/object has been destroyed.  Maybe that is the real problem here:
+> > filehandle reuse, not filehandle stability.
+> >=20
+> > Jeff: could you please give details (and preserve them in future cover
+> > letters) of which filesystems are known to have problems and what
+> > exactly those problems are?
+> >=20
+> > >=20
+> > > Remember nfs also support volatile file handles, and other applications
+> > > might rely on this (I know of quite a few user space applications that
+> > > do, but they are kinda hardwired to xfs anyway).
+> >=20
+> > The NFS protocol supports volatile file handles.  knfsd does not.
+> > So maybe
+> >   EXPORT_OP_NOT_NFSD_COMPATIBLE
+> > might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
+> > (I prefer opt-out rather than opt-in because nfsd export was the
+> > original purpose of export_operations, but it isn't something
+> > I would fight for)
+>=20
+> I prefer one of the variants you proposed here but I don't particularly
+> care. It's not a hill worth dying on. So if Christoph insists on the
+> other name then I say let's just go with it.
+>=20
 
-Fair enough.
+This sounds like you are recommending that we give in to bullying.
+I would rather the decision be made based on the facts of the case, not
+the opinions that are stated most bluntly.
 
-> 
-> > Wouldn't p2p be useful in the general case
-> 
-> Well, P2P into a CMB might work in nfsd in theory now that there is
-> direct I/O support, but it'll require a lot of work.
-> 
-> So if you want to help to convert nvmet, the series to do that would
-> be the right place to add P2P support, as with that we can actually
-> test it.
+I actually think that what Christoph wants is actually quite different
+from what Jeff wants, and maybe two flags are needed.  But I don't yet
+have a clear understanding of what Christoph wants, so I cannot be sure.
 
-If both of you plan to attend LSF/MM this year, and I receive an
-invitation as well, we can discuss the future p2p roadmap in person
-and how we want to move forward.
+NeilBrown
 
-Most of the items from our discussion last year [1] have already been
-completed or are on track for this or the next development cycle. The
-remaining big item which is left is removing SG from RDMA.
-
-Thanks
-
-[1] https://lore.kernel.org/all/20250122071600.GC10702@unreal/
-
-
-> 
 
