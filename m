@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18102-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18103-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEE40D3AC5F
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 15:41:09 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A019DD3ACA0
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 15:46:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6582230ECC02
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 14:35:09 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 75BF83081768
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 14:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7770368261;
-	Mon, 19 Jan 2026 14:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 615E937BE7E;
+	Mon, 19 Jan 2026 14:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e26y7ZEk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHIUYhRG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E21236437
-	for <linux-nfs@vger.kernel.org>; Mon, 19 Jan 2026 14:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D12A35BDCD
+	for <linux-nfs@vger.kernel.org>; Mon, 19 Jan 2026 14:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768833260; cv=none; b=KwZBDCDQ9tCfJ1RxdX8pcMbyM/o92og1j9LJqv5Lvvza9bGlLEa+WXyBuh2pnFATI0TA2abeSlHDjwMIpSgsk5Lza+3jLDFqbCP/78qIHT4bqoP/9pAvdC3JH1EzA0gcnNnfLStHgiih9UWBbSm4TOa6+ywt9na9VtGwjZ31TRc=
+	t=1768833477; cv=none; b=IOe2yQnURp6O/tEQzTCZ8D0/WTY46mJPAEADQJ7Bl833lY/X4R5TCJ9PiF4U+Sz+fKK7r2icwi01a2sUijnYtWfkEsqphYVT2hR0PjkP5ddx310yEI3lJrQolUL1ldxYdCmLFlndpRva7xrcZCRdI8MDDTiHQ7zVTK4X56D7VqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768833260; c=relaxed/simple;
-	bh=8+5iUEYeFhSztZbbFhuKqGIp/F2DMLTZ4Vuh+kLqvrg=;
+	s=arc-20240116; t=1768833477; c=relaxed/simple;
+	bh=iIU4pivrb99XPex6iS4SIDLMh4eAmP+7YrfqxQZHbMU=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PAxmVE2jpAqDgkfPPfK/MgvrSFczL6yYC8qH03Bg48xbBncehu8AYRAkIJkKil3fXR87LJFrUcub53cBMlgrnERwgiUxoL2l+K47cXMjjjPqjDsRsovBi+g4P8nhTbiVz26rQ88s7aTYlcrxAY9IcrZNVIa7rYDR5W43MjqHwGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e26y7ZEk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DE0C19423;
-	Mon, 19 Jan 2026 14:34:20 +0000 (UTC)
+	 Subject:Content-Type; b=Nr3p2iMfnBo3rZ8qU9llITEYYQLeGty7+QCQXDByRkP8gZpV9FfkREaaiWbjKGsHRSzNfeCzb+4YZm8UAlDEVsbdBDlvZOVkzQoz1zFoVgWLhwSthGdUIoulU7vlAx+3YaqkeobABZ3dQwDuvTclAtHYztvXBAqYa3EirCplzAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHIUYhRG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B297C116C6;
+	Mon, 19 Jan 2026 14:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768833260;
-	bh=8+5iUEYeFhSztZbbFhuKqGIp/F2DMLTZ4Vuh+kLqvrg=;
+	s=k20201202; t=1768833476;
+	bh=iIU4pivrb99XPex6iS4SIDLMh4eAmP+7YrfqxQZHbMU=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=e26y7ZEkIuM5p4CtATMhNi6pPLEx5PlaSV84tpfXkpkSrnbjl5wmbzgGefr2dDR/3
-	 cysG9WbTf98HUB4/VguEadDeUKrltK9JQiok0RgH8r1OTT8Q5Vxvcf10BJWvgY/VlD
-	 5rlq2XqAr0QPHMHWxrwg5/zMxx+lgsCJ/3TkpFtrFW2Mj4OgZIRrDqsj8bFOil2FLZ
-	 TVJpsunm4hbOpEYt/sBh7R17+65SuFx8h6vykKakoQ4H1BRvqRPCR6LsVCpc7tgNOh
-	 Tq68AorZNdfdlNaMyqaS+lNH0A6VbAl+QOkea4vM+WE7VK3erkfg491XK9+rOhtBtR
-	 xFFYtqmDOR9GA==
+	b=EHIUYhRGW8F/vYmOYU7GzEhoqxs0NMD84+NOs0/e76CjI3VIu9zZ9G0G/624ECUWz
+	 YP0QGRvJQ5RfGV4ilEMOD7J7cy7MBXI9RADyeFYVk2GnQS0a3VUiqKKbo67i4BZ+gJ
+	 S7mZlmNoP0kxmGIekY3vCpUMprH051VpfgAg3DrVOT/KnLBfba0EWSD33d3oJOgSQ6
+	 hFYnn1jLu4/groWGpemUUdhlcvao5QRu8eyG8KqXEeEzzgG94cWoq06EPiLDMntwj8
+	 QrwH9iBevz4Dprob9VvVkc+UjRW77YOePk8EpND1sR1tcxK2Pe3QAMw36CZ4/OAddJ
+	 HjlvrRSlrwVcA==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 420B7F40073;
-	Mon, 19 Jan 2026 09:34:19 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id ADE73F40068;
+	Mon, 19 Jan 2026 09:37:55 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 19 Jan 2026 09:34:19 -0500
-X-ME-Sender: <xms:60BuafIDzO9Se4DM6n7uvkQ4XEy9CViuOi1f8CGWb7VpbNial8mbXQ>
-    <xme:60Buad_tD8CS5xX-KKcvUfa4f5224jmmYCe8zLGe6yQADb8mSyv9DFMFK_UaacNPM
-    xJbDDVG-6nIOAG0FZ5kYDxHu_h1GbcBxhtFCzJFy7jCO5wE154FAgU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeejkeduucetufdoteggodetrf
+  by phl-compute-10.internal (MEProxy); Mon, 19 Jan 2026 09:37:55 -0500
+X-ME-Sender: <xms:w0FuaYd0t3KiJb2Pel2KewGMULqkzhW9JO6JctenshI8k-Iwz2uphw>
+    <xme:w0FuaVC70AQb8-nexI2moDmNHdcMkqEe2We_afKMHJZoQV5gTyIzWuosx5bVGzyEB
+    pyfxqxfIwTAwRzFdaWH-Sw-gQY4kiEGj9sb5PPV6KBZ8IT2XnvRDCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeejkedvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
@@ -56,18 +56,22 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeejkeduucetufdote
     ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
     hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
     leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegurghirdhngh
-    hosehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:60BuaTn-ZoIUx8cXb7xzgMLjfI9BttlRdWcrlj32oJ494N4SFn7Teg>
-    <xmx:60Buaen3l8G6bN7GypQw-osjGNTC2INs5J9b13E_oOwDnabijh9cmQ>
-    <xmx:60BuactfnfkxvVoDHXK2ss99_CjFqxbc63JoACG3wkz75EpJ8eV7Zw>
-    <xmx:60BuaZmsxw_0ni38plV86gEjNgBl_qp3VVYn_fXr4qiAEcNgS-wz-g>
-    <xmx:60Buafv89FWPnQsIOJ2k_koPFf-rA_iMTXF5p_5RhpayPGEAVzHpHRXl>
+    hilhdrtghomhdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghonh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthht
+    ohepjhhgghesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrh
+    esohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgt
+    ohhmpdhrtghpthhtohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphhtthhope
+    hokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhp
+    vgihrdgtohhm
+X-ME-Proxy: <xmx:w0FuaUDaiJbfBaMa0j_U1OqWcVcuG0kh5zWxISpvcPGajf2T3WceSA>
+    <xmx:w0FuaSZAP7Y2ETiXECEqDwORnp17j268rlH6DlehFeavq1nhR4HzMw>
+    <xmx:w0FuaUmPY1Ne5STr3wC0wFxJMvFWYbAODqhxf6RuuLcmgE457Mrn9g>
+    <xmx:w0FuafoCnRaVn6H0OZp2I9r-YslL9ig1DWYsC-JA2XeWb0PIlkpaqw>
+    <xmx:w0FuaeAZUARzdN-OMfKDd1Rp3LowwJ2ZnIPwtYvWRiff3J5W5YCj1Yo1>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 243DC780070; Mon, 19 Jan 2026 09:34:19 -0500 (EST)
+	id 8D5B0780070; Mon, 19 Jan 2026 09:37:55 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -75,48 +79,50 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Ari2zWJUXQbN
-Date: Mon, 19 Jan 2026 09:33:37 -0500
+X-ThreadId: AJuicIy6M5dZ
+Date: Mon, 19 Jan 2026 09:37:20 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Christoph Hellwig" <hch@infradead.org>, "Dai Ngo" <dai.ngo@oracle.com>
-Cc: "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Message-Id: <453f0d57-5230-432e-90c3-df0308f7fddd@app.fastmail.com>
-In-Reply-To: <aW3jGVAHrEusJyBk@infradead.org>
-References: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
- <a1442149-fdc2-4f66-b73a-499a2e192960@app.fastmail.com>
- <108fb719-8654-42b8-9e37-275726f4b5d8@oracle.com>
- <08c33c91-abda-42de-8771-e61d48b50cc7@oracle.com>
- <aW3jGVAHrEusJyBk@infradead.org>
-Subject: Re: Bug in nfsd4_block_get_device_info_scsi in nfsd-testing branch
+To: "Christoph Hellwig" <hch@lst.de>, "Leon Romanovsky" <leon@kernel.org>
+Cc: "Jason Gunthorpe" <jgg@nvidia.com>, linux-rdma@vger.kernel.org,
+ linux-nfs@vger.kernel.org, NeilBrown <neilb@ownmail.net>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <b8001e1b-9cca-46fd-80fe-b8243fb74ae2@app.fastmail.com>
+In-Reply-To: <20260119120311.GA23572@lst.de>
+References: <20260114143948.3946615-1-cel@kernel.org>
+ <20260114143948.3946615-2-cel@kernel.org> <20260115155334.GB14083@lst.de>
+ <20260116212425.GJ14359@unreal>
+ <bad1a0d2-6408-4d0b-a421-f1e35265ac28@app.fastmail.com>
+ <20260119065212.GA1423@lst.de> <20260119102857.GI13201@unreal>
+ <20260119120311.GA23572@lst.de>
+Subject: Re: [PATCH v1 1/4] RDMA/core: add bio_vec based RDMA read/write API
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
 
-On Mon, Jan 19, 2026, at 2:54 AM, Christoph Hellwig wrote:
-> On Fri, Jan 16, 2026 at 11:04:55PM -0800, Dai Ngo wrote:
->>         ret = xa_insert(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
->>                         XA_ZERO_ENTRY, GFP_KERNEL);
->> -       if (ret < 0 && ret != -EBUSY)
->> +       if (ret == -EBUSY)
->> +               xa_clear_mark(&clp->cl_dev_fences, sb->s_bdev->bd_dev,
->> +                               XA_MARK_0);
->> +       else if (ret < 0)
->>                 goto out_free_dev;
+On Mon, Jan 19, 2026, at 7:03 AM, Christoph Hellwig wrote:
+> On Mon, Jan 19, 2026 at 12:28:57PM +0200, Leon Romanovsky wrote:
+>> > > I can add some code to this series to do that, but I don't believe
+>> > > I have facilities to test it.
+>> > 
+>> > Please don't add untested code.  If Leon wants the P2P support and
+>> > volunteers to test it, sure.
+>> 
+>> I can do it with the help of how to setup the system.
+>> 
+>> > But let's not merge it without being tested.  And at least for NFS I don't
+>> > really see how P2P would easily fit in anyway.
+>> 
+>> Chuck is proposing a new IB/core API that will also be used by NVMe too.
 >
-> This looks reasonable.  But looking at this, I think it would really help
-> to add a named constant for XA_MARK_0 to make it more clear what the
-> bit stands for,
+> Hopefully eventually, yes.  Not in this series, though.
 
-Sure, that idea has been in and out of my private working copies
-of this patch. I'll add it.
-
-
-> and maybe even add little inline helpers for
-> setting/clearing the mark.
-
-In the past you've actively hated "adding little inline helpers"
-so I don't suggest that any more. But I actually prefer that.
+I can understand that P2P is not in the narrow scope of the
+existing series. I have a patch now, but I'll postpone it
+until later. Obviously it's not something I would feel
+comfortable merging without testing.
 
 
 -- 
