@@ -1,55 +1,87 @@
-Return-Path: <linux-nfs+bounces-18097-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18098-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7454FD3A29A
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 10:14:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B18FCD3A2FF
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 10:29:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E6EC830019DE
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 09:14:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AAF543043512
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Jan 2026 09:27:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14EEC3090DD;
-	Mon, 19 Jan 2026 09:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79285357705;
+	Mon, 19 Jan 2026 09:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QW9dEtDk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mu2QXGlU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9252737E0;
-	Mon, 19 Jan 2026 09:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D14A355803;
+	Mon, 19 Jan 2026 09:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768814082; cv=none; b=rGsGO+2xuqgNNwoJKNo8tmmM8WoJ4lkI59KF0B7WW5zAyhzJleZ7MbQ0ygOL85Nn8nJEbxAaU5b9bkEK4/tYVN9xX0ha8ut7k+UU/HCXz0neKZvYeSbcn8/5NLCq+iyvTAtB1suUHdhxfWii3+42r8Bpzqz91kbGaJ4DDaHztuc=
+	t=1768814848; cv=none; b=ShkW4N3+Y4jcEOz0gpEiI2ugRkrqod+xuoty9oKvi52ZryXjwscC+HAyNLm1sTztWucCCik/fYHiWnawJTPItrzt1AjJAZMGhQuJglBHipwuBL/UMlybvhtQREs0f+LJ0ZjR8ZYG7Z7hnyp5ZPQuZTkrj8ImQETfNeFBwyoOyn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768814082; c=relaxed/simple;
-	bh=pX4uDcgtHDdV8miUnyhWv81vdKepaoYGzkVu5dlWD0U=;
+	s=arc-20240116; t=1768814848; c=relaxed/simple;
+	bh=Zn6TWVYgqMMEo3G81dyTmE6wcI+Sd3bTAPgjzlTxSPs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zvqhd9VnJyanXvxwrzAf7PaPHNg77yolswIfdxtYkFMgXoAbEiAmZZlDVXppATeAUADEmr1/3GLL5eB+iDjRwdPP3pXmW2oSquXtibaLhKmgHlS5bTMQr4K0kKAQK/bvLaiJPn9Bhe7VXcIQI7RFMLm9WoJnT7Ua9n5qcf79cKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QW9dEtDk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E7F8C116C6;
-	Mon, 19 Jan 2026 09:14:38 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=iTy1SozoKd0KZ4n626dbt2ixUJjDFlSR2rVqNrlt303DFSp9VneSGfTvBmLbntnAlf+xYRmsFnypkw1yxt/Unc93Yej/jCo0NIaxJpdmXnYdij0wB7Nfub/aT0P+1KJoWcqeWLN79ExOsRHNehBODZwBxNRMm4RS7sEGJ1y+acg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mu2QXGlU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB482C116C6;
+	Mon, 19 Jan 2026 09:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768814081;
-	bh=pX4uDcgtHDdV8miUnyhWv81vdKepaoYGzkVu5dlWD0U=;
+	s=k20201202; t=1768814847;
+	bh=Zn6TWVYgqMMEo3G81dyTmE6wcI+Sd3bTAPgjzlTxSPs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QW9dEtDknuaO2ulrpJangKho+7jzfU88tNf4rFNl41ak1ecQxAlI3hOCImLd5Nn9L
-	 Cf4szvgs07R5k5F0Got6cdMJsLv1FN/g6EbQSocaiO7bv5YsXRAd3LVMmL2nRnKW3O
-	 3PnbZyONtawcuToeb8DFNkbynSbPmmpiS83zj7V4nxbHtdN7q7pYganrN9qMA6uhZS
-	 OZUxDuEzjxG3griQ5ieBB+sguD4xM/iwaO8CRy6xl4yvKdjQ6jbHGC9VXT91nxgoQp
-	 9pm62PTtXUfo/0E56yD58Qxv2/Rp4apqw3bqgMNsO7+7cTgVUcxF6o0/GnodhSkL89
-	 m4t1LLacvvULw==
-Date: Mon, 19 Jan 2026 10:14:35 +0100
+	b=Mu2QXGlUo4aerUV1P+3KG6SEVjE4I5PwhJE94jSGcKGFEsi89NRvYzLMGsZyQmRMx
+	 AFrdo2vU9n6IMbv1w/EO9SLvuETafk1mFU5xlxvhkxtXkEJNYxoKBYE396mdxVzJZb
+	 W5ZtaIJuQRCJeroGKA0KDWsJMPfBkIPP+baoniV9KyAuTgFx19+cYmtPt33Z2z6QMh
+	 W/hxfZCWesZN7MEjTCRbAXitVDu+eK0Xl7sEvoG3LmudoMrRbWd+So2BZh0JGzK2g9
+	 bPKHftczmsMNxhRS3WkfraWatirsn1eEv2j+V31oLZsNC4UpAnMV0UccclyHU9DeQT
+	 92D5SL9b9rhFA==
+Date: Mon, 19 Jan 2026 10:27:11 +0100
 From: Christian Brauner <brauner@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>, 
-	Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, Lennart Poettering <lennart@poettering.net>
-Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
-Message-ID: <20260119-reingehen-gelitten-a5e364f704fa@brauner>
-References: <cover.1768573690.git.bcodding@hammerspace.com>
+To: NeilBrown <neil@brown.name>
+Cc: Christoph Hellwig <hch@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
+	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, 
+	Carlos Maiolino <cem@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, 
+	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
+	David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
+	Salah Triki <salah.triki@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
+	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
+	Andreas Gruenbacher <agruenba@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
+	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+Message-ID: <20260119-kanufahren-meerjungfrau-775048806544@brauner>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
+ <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
+ <176877859306.16766.15009835437490907207@noble.neil.brown.name>
+ <aW3SAKIr_QsnEE5Q@infradead.org>
+ <176880736225.16766.4203157325432990313@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,136 +90,66 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1768573690.git.bcodding@hammerspace.com>
+In-Reply-To: <176880736225.16766.4203157325432990313@noble.neil.brown.name>
 
-On Fri, Jan 16, 2026 at 09:32:10AM -0500, Benjamin Coddington wrote:
-> The following series enables the linux NFS server to add a Message
-> Authentication Code (MAC) to the filehandles it gives to clients.  This
-> provides additional protection to the exported filesystem against filehandle
-> guessing attacks.
+On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
+> On Mon, 19 Jan 2026, Christoph Hellwig wrote:
+> > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
+> > > > This was Chuck's suggested name. His point was that STABLE means that
+> > > > the FH's don't change during the lifetime of the file.
+> > > > 
+> > > > I don't much care about the flag name, so if everyone likes PERSISTENT
+> > > > better I'll roll with that.
+> > > 
+> > > I don't like PERSISTENT.
+> > > I'd rather call a spade a spade.
+> > > 
+> > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
+> > > or
+> > >   EXPORT_OP_NOT_NFS_COMPATIBLE
+> > > 
+> > > The issue here is NFS export and indirection doesn't bring any benefits.
+> > 
+> > No, it absolutely is not.  And the whole concept of calling something
+> > after the initial or main use is a recipe for a mess.
 > 
-> Filesystems generate their own filehandles through the export_operation
-> "encode_fh" and a filehandle provides sufficient access to open a file
-> without needing to perform a lookup.  An NFS client holding a valid
-> filehandle can remotely open and read the contents of the file referred to
-> by the filehandle.
+> We are calling it for it's only use.  If there was ever another use, we
+> could change the name if that made sense.  It is not a public name, it
+> is easy to change.
 > 
-> In order to acquire a filehandle, you must perform lookup operations on the
-> parent directory(ies), and the permissions on those directories may
-> prohibit you from walking into them to find the files within.  This would
-> normally be considered sufficient protection on a local filesystem to
-> prohibit users from accessing those files, however when the filesystem is
-> exported via NFS those files can still be accessed by guessing the correct,
-> valid filehandles.
+> > 
+> > Pick a name that conveys what the flag is about, and document those
+> > semantics well.  This flag is about the fact that for a given file,
+> > as long as that file exists in the file system the handle is stable.
+> > Both stable and persistent are suitable for that, nfs is everything
+> > but.
 > 
+> My understanding is that kernfs would not get the flag.
+> kernfs filehandles do not change as long as the file exist.
+> But this is not sufficient for the files to be usefully exported.
+> 
+> I suspect kernfs does re-use filehandles relatively soon after the
+> file/object has been destroyed.  Maybe that is the real problem here:
+> filehandle reuse, not filehandle stability.
+> 
+> Jeff: could you please give details (and preserve them in future cover
+> letters) of which filesystems are known to have problems and what
+> exactly those problems are?
+> 
+> > 
+> > Remember nfs also support volatile file handles, and other applications
+> > might rely on this (I know of quite a few user space applications that
+> > do, but they are kinda hardwired to xfs anyway).
+> 
+> The NFS protocol supports volatile file handles.  knfsd does not.
+> So maybe
+>   EXPORT_OP_NOT_NFSD_COMPATIBLE
+> might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
+> (I prefer opt-out rather than opt-in because nfsd export was the
+> original purpose of export_operations, but it isn't something
+> I would fight for)
 
-I really like this concept (I think Lennart has talked about support for
-this before?).
-
-Fwiw, I would really like if nsfs and pidfs file handles were signed
-specifically because they're not supposed to persist across reboot. But
-we can't do that in a backward compatbile way because userspace accesses
-the file handle directly to get e.g., the inode number out of it.
-
-But for new types of file handles for such pseudo-fses I think this
-would be very lovely to have. It would probably mean generating a
-per-boot key that is used to sign such file handles.
-
-For nfs I understand that you probably outsource the problem to
-userspace how to generate and share the key.
-
-> Filehandles are easy to guess because they are well-formed.  The
-> open_by_handle_at(2) man page contains an example C program
-> (t_name_to_handle_at.c) that can display a filehandle given a path.  Here's
-> an example filehandle from a fairly modern XFS:
-> 
-> # ./t_name_to_handle_at /exports/foo 
-> 57
-> 12 129    99 00 00 00 00 00 00 00 b4 10 0b 8c
-> 
->           ^---------  filehandle  ----------^
->           ^------- inode -------^ ^-- gen --^
-> 
-> This filehandle consists of a 64-bit inode number and 32-bit generation
-> number.  Because the handle is well-formed, its easy to fabricate
-> filehandles that match other files within the same filesystem.  You can
-> simply insert inode numbers and iterate on the generation number.
-> Eventually you'll be able to access the file using open_by_handle_at(2).
-> For a local system, open_by_handle_at(2) requires CAP_DAC_READ_SEARCH, which
-> protects against guessing attacks by unprivileged users.
-
-Fyi, it's not so simple. For some filesystems like pidfs and nsfs they
-have custom permission checks and are available to unprivileged users.
-But they also don't do any path lookup ofc.
-
-> 
-> In contrast to a local user using open_by_handle(2), the NFS server must
-> permissively allow remote clients to open by filehandle without being able
-> to check or trust the remote caller's access. Therefore additional
-> protection against this attack is needed for NFS case.  We propose to sign
-> filehandles by appending an 8-byte MAC which is the siphash of the
-> filehandle from a key set from the nfs-utilities.  NFS server can then
-> ensure that guessing a valid filehandle+MAC is practically impossible
-> without knowledge of the MAC's key.  The NFS server performs optional
-> signing by possessing a key set from userspace and having the "sign_fh"
-> export option.
-> 
-> Because filehandles are long-lived, and there's no method for expiring them,
-> the server's key should be set once and not changed.  It also should be
-> persisted across restarts.  The methods to set the key allow only setting it
-
-Right, otherwise you break a ton of stuff that relies on stable file
-handles across reboots.
-
-> once, afterward it cannot be changed.  A separate patchset for nfs-utils
-> contains the userspace changes required to set the server's key.
-> 
-> I had a previous attempt to solve this problem by encrypting filehandles,
-> which turned out to be a problematic, poor solution.  The discussion on
-> that previous attempt is here:
-> https://lore.kernel.org/linux-nfs/510E10A4-11BE-412D-93AF-C4CC969954E7@hammerspace.com/T/#t
-> 
-> There are some changes from that version:
-> 	- sign filehandles instead of encrypt them (Eric Biggers)
-> 	- fix the NFSEXP_ macros, specifically NFSEXP_ALLFLAGS (NeilBrown)
-> 	- rebase onto cel/nfsd-next (Chuck Lever)
-> 	- condensed/clarified problem explantion (thanks Chuck Lever)
-> 	- add nfsctl file "fh_key" for rpc.nfsd to also set the key
-> 
-> I plan on adding additional work to enable the server to check whether the
-> 8-byte MAC will overflow maximum filehandle length for the protocol at
-> export time.  There could be some filesystems with 40-byte fileid and
-> 24-byte fsid which would break NFSv3's 64-byte filehandle maximum with an
-> 8-byte MAC appended.  The server should refuse to export those filesystems
-> when "sign_fh" is requested.
-> 
-> Thanks for any comments and critique.
-> 
-> Benjamin Coddington (4):
->   nfsd: Convert export flags to use BIT() macro
->   nfsd: Add a key for signing filehandles
->   NFSD/export: Add sign_fh export option
->   NFSD: Sign filehandles
-> 
->  Documentation/netlink/specs/nfsd.yaml | 12 ++++
->  fs/nfsd/export.c                      |  5 +-
->  fs/nfsd/netlink.c                     | 15 +++++
->  fs/nfsd/netlink.h                     |  1 +
->  fs/nfsd/netns.h                       |  2 +
->  fs/nfsd/nfs3xdr.c                     | 20 +++---
->  fs/nfsd/nfs4xdr.c                     | 12 ++--
->  fs/nfsd/nfsctl.c                      | 87 ++++++++++++++++++++++++++-
->  fs/nfsd/nfsfh.c                       | 72 +++++++++++++++++++++-
->  fs/nfsd/nfsfh.h                       | 22 +++++++
->  fs/nfsd/trace.h                       | 19 ++++++
->  include/linux/sunrpc/svc.h            |  1 +
->  include/uapi/linux/nfsd/export.h      | 38 ++++++------
->  include/uapi/linux/nfsd_netlink.h     |  2 +
->  14 files changed, 272 insertions(+), 36 deletions(-)
-> 
-> 
-> base-commit: bfd453acb5637b5df881cef4b21803344aa9e7ac
-> -- 
-> 2.50.1
-> 
+I prefer one of the variants you proposed here but I don't particularly
+care. It's not a hill worth dying on. So if Christoph insists on the
+other name then I say let's just go with it.
 
