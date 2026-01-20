@@ -1,89 +1,69 @@
-Return-Path: <linux-nfs+bounces-18190-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18196-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6PLJBfCxb2nMKgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18190-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 17:48:48 +0100
+	id qAgtNivAb2kOMQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18196-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 18:49:31 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC74C47EDD
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 17:48:47 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CD9E48D91
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 18:49:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7EA9E7059C9
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 14:31:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E129A5CBBED
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 14:40:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C7CF44B67A;
-	Tue, 20 Jan 2026 14:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A426244A727;
+	Tue, 20 Jan 2026 14:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="brizaCx6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llllnD3z"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D031444B662;
-	Tue, 20 Jan 2026 14:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D131441057;
+	Tue, 20 Jan 2026 14:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768919114; cv=none; b=bytnXTpeZfcArA5tXGXQL/0WM2K9VIjLIe7dmFWJfYWnUIj0o/GdCmArDuzLVsHdgaG6Z93YNLufiNs9KKTuYvNWHhdivK95ls3qhIhTUqHsrYZlMf6ab2/OchnaOhVtFCGxMsbpbb5hGLZftSjGJHbPJpmfBxN5p568kckoA0c=
+	t=1768919491; cv=none; b=HNgOnsmNp1ZCdTepe9yMO9mYNo/9/cRWKKwYQhaCsQ0KNPReEsyJi4rXy7F6i+VtcouGXN+cf3+aNxlm+Ck7SR+zCURKovlzyew7jQSRWyPvqVmaAqpbRPs61QQbWDob6SjEnfgSPlZzPmiIDth+MlYV03MvEZh/5JthIz3vti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768919114; c=relaxed/simple;
-	bh=lI5RsrikT42DtmkwiTYGrVz82Xk/jcZVtoeRyes8GA8=;
+	s=arc-20240116; t=1768919491; c=relaxed/simple;
+	bh=+vqvoeBO+4EjI01MVIAsPksV5XV2mpHEwHBlfLV+LXw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rk0e9BpCvDTVo1mV3RM3UF5HYZ5vCsJutKdhYlqgvz52OWiqDDLTKOQ8hiE8MznFEWfonL84JnsraxqdKbzsD96PuYy0vT+5isG7yTJ9C/L/JY/nrd57QdL1bkKlmbU6X92rYMH/NtTDYFU3gCM0YO+wXe+zGoEOKxrzxsRT9pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=brizaCx6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82FBEC19422;
-	Tue, 20 Jan 2026 14:25:12 +0000 (UTC)
+	 MIME-Version; b=OV8X9G0ZA9tLcwUqGq/lpLTRCvBKBXVCln+dNcoHZT8Nx46Svh7cfgLsYVN+WrGcQ8wQcSnZMzU70wHmrQvr439cdePLBJEQZX/3qQ8VdTNT3PMnSaJPF1irZzX4jKgJ+BOAyTclCZMQ9E2hGnTkQ3GBrPTtwXWfMYvf1MsEjvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llllnD3z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22682C4AF09;
+	Tue, 20 Jan 2026 14:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768919114;
-	bh=lI5RsrikT42DtmkwiTYGrVz82Xk/jcZVtoeRyes8GA8=;
+	s=k20201202; t=1768919491;
+	bh=+vqvoeBO+4EjI01MVIAsPksV5XV2mpHEwHBlfLV+LXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=brizaCx6cC7SlJOOxhPatMDvM0bL8sR8qyl8HjQep1ZSs/tABs+xmnOiq14c4vJud
-	 hD00iXR8mor5vPSmJqesqDNnIe3PFiexqDasdiIHPk6dZiBfceYk+uTBiN3Ot6im+4
-	 NrDew4bfYkdM2taNqp9EmrdYoQ5cM5aUpB8ytRaAJ0+fXd3CzjkgY5/OYeLuxSMH5X
-	 4Wzsxp6T/qlGhmAd2+lMtd5R7oQVW/NK+6+a7VAdpbyY/VbA5mJw8HIQQASpiuJx4R
-	 9NJ5Ki1+JoOVLO/1lqJsHZnStPUv1gRTDzWo30NFJ9r1MzKp4xcJVa2AFeXr40616v
-	 eaWmNILxLiDsw==
+	b=llllnD3zxv9HdCeq950xlnU7da/jZxGnXbUIsG+JiYiln8nOqvHOG7VLkXXrFxfbh
+	 g9Bo6+ha1eGBlELvK2GIhbzlQ6cI6AauMv8rMOLoUqavC0AnrhEzgOI+JY7A0/E+Nj
+	 RX9aeL9cL5AbcfFcODcx455cHnoowPbf0xq62MaFepp1vfy195elZx3mG/U+Xf0YLZ
+	 PcwyuTEtq9LUFg/AOT6B/Thz5TRNa5Fs0/cQZMjemB4/h46MipK/hrbtjECFD1rtIM
+	 9PUNLcbA5tMtATuckp7tLaFaeGhCVap2AhSKyTaPiKx0Fq3hVf3MWUeBDCzTAFEiB6
+	 uZZN01DLzWv7Q==
 From: Chuck Lever <cel@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>
-Cc: <linux-fsdevel@vger.kernel.org>,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
+To: Jason Gunthorpe <jgg@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Christoph Hellwig <hch@lst.de>
+Cc: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	<linux-rdma@vger.kernel.org>,
 	<linux-nfs@vger.kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net,
-	hirofumi@mail.parknet.co.jp,
-	linkinjeon@kernel.org,
-	sj1557.seo@samsung.com,
-	yuezhang.mo@sony.com,
-	almaz.alexandrovich@paragon-software.com,
-	slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de,
-	frank.li@vivo.com,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	cem@kernel.org,
-	sfrench@samba.org,
-	pc@manguebit.org,
-	ronniesahlberg@gmail.com,
-	sprasad@microsoft.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	hansg@kernel.org,
-	senozhatsky@chromium.org,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v6 13/16] isofs: Implement fileattr_get for case sensitivity
-Date: Tue, 20 Jan 2026 09:24:36 -0500
-Message-ID: <20260120142439.1821554-14-cel@kernel.org>
+Subject: [PATCH v2 2/4] RDMA/core: use IOVA-based DMA mapping for bvec RDMA operations
+Date: Tue, 20 Jan 2026 09:31:22 -0500
+Message-ID: <20260120143124.1822121-3-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260120142439.1821554-1-cel@kernel.org>
-References: <20260120142439.1821554-1-cel@kernel.org>
+In-Reply-To: <20260120143124.1822121-1-cel@kernel.org>
+References: <20260120143124.1822121-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -92,103 +72,242 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.46 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18190-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18196-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.cz:email,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: AC74C47EDD
+	RCPT_COUNT_SEVEN(0.00)[11];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 7CD9E48D91
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Upper layers such as NFSD need a way to query whether a
-filesystem handles filenames in a case-sensitive manner so
-they can provide correct semantics to remote clients. Without
-this information, NFS exports of ISO 9660 filesystems cannot
-properly advertise their filename case behavior.
+The bvec RDMA API maps each bvec individually via dma_map_phys(),
+requiring an IOTLB sync for each mapping. For large I/O operations
+with many bvecs, this overhead becomes significant.
 
-Implement isofs_fileattr_get() to report ISO 9660 case handling
-behavior via the FS_XFLAG_CASEFOLD flag. The 'check=r' (relaxed)
-mount option enables case-insensitive lookups, and this setting
-determines the value reported. By default, Joliet extensions
-operate in relaxed mode while plain ISO 9660 uses strict
-(case-sensitive) mode. All ISO 9660 variants are case-preserving,
-meaning filenames are stored exactly as they appear on the disc.
+The two-step IOVA API (dma_iova_try_alloc / dma_iova_link /
+dma_iova_sync) allocates a contiguous IOVA range upfront, links
+all physical pages without IOTLB syncs, then performs a single
+sync at the end. This reduces IOTLB flushes from O(n) to O(1).
 
-The callback is registered only on isofs_dir_inode_operations
-because isofs has no custom inode_operations for regular
-files, and symlinks use the generic page_symlink_inode_operations.
-
-Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/isofs/dir.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/infiniband/core/rw.c | 116 +++++++++++++++++++++++++++++++++++
+ include/rdma/rw.h            |   8 +++
+ 2 files changed, 124 insertions(+)
 
-diff --git a/fs/isofs/dir.c b/fs/isofs/dir.c
-index 09df40b612fb..e1a708f219f7 100644
---- a/fs/isofs/dir.c
-+++ b/fs/isofs/dir.c
-@@ -13,6 +13,7 @@
-  */
- #include <linux/gfp.h>
- #include "isofs.h"
-+#include <linux/fileattr.h>
- 
- int isofs_name_translate(struct iso_directory_record *de, char *new, struct inode *inode)
- {
-@@ -266,6 +267,19 @@ static int isofs_readdir(struct file *file, struct dir_context *ctx)
- 	return result;
- }
- 
-+static int isofs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
-+{
-+	struct isofs_sb_info *sbi = ISOFS_SB(dentry->d_sb);
-+
-+	/*
-+	 * FS_XFLAG_CASEFOLD indicates case-insensitive lookups.
-+	 * When check=r (relaxed) is set, lookups ignore case.
-+	 */
-+	if (sbi->s_check == 'r')
-+		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
-+	return 0;
-+}
-+
- const struct file_operations isofs_dir_operations =
- {
- 	.llseek = generic_file_llseek,
-@@ -279,6 +293,7 @@ const struct file_operations isofs_dir_operations =
- const struct inode_operations isofs_dir_inode_operations =
- {
- 	.lookup = isofs_lookup,
-+	.fileattr_get = isofs_fileattr_get,
+diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
+index 59f32fecf3df..51f650c4fa8c 100644
+--- a/drivers/infiniband/core/rw.c
++++ b/drivers/infiniband/core/rw.c
+@@ -15,6 +15,7 @@ enum {
+ 	RDMA_RW_MULTI_WR,
+ 	RDMA_RW_MR,
+ 	RDMA_RW_SIG_MR,
++	RDMA_RW_IOVA,
  };
  
+ static bool rdma_rw_force_mr;
+@@ -380,6 +381,93 @@ static int rdma_rw_init_map_wrs_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 	return -ENOMEM;
+ }
  
++/*
++ * Try to use the two-step IOVA API to map bvecs into a contiguous DMA range.
++ * This reduces IOTLB sync overhead by doing one sync at the end instead of
++ * one per bvec, and produces a contiguous DMA address range that can be
++ * described by a single SGE.
++ *
++ * Returns the number of WQEs (always 1) on success, -EOPNOTSUPP if IOVA
++ * mapping is not available, or another negative error code on failure.
++ */
++static int rdma_rw_init_iova_wrs_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
++		const struct bio_vec *bvec, u32 nr_bvec,
++		struct bvec_iter *iter,
++		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
++{
++	struct ib_device *dev = qp->pd->device;
++	struct device *dma_dev = dev->dma_device;
++	struct bvec_iter link_iter;
++	struct bio_vec first_bv;
++	size_t total_len, mapped_len = 0;
++	int ret;
++
++	/* Virtual DMA devices lack IOVA allocators */
++	if (ib_uses_virt_dma(dev))
++		return -EOPNOTSUPP;
++
++	total_len = iter->bi_size;
++
++	/* Get the first (possibly offset-adjusted) bvec for starting phys addr */
++	first_bv = mp_bvec_iter_bvec(bvec, *iter);
++
++	/* Try to allocate contiguous IOVA space */
++	if (!dma_iova_try_alloc(dma_dev, &ctx->iova.state,
++				bvec_phys(&first_bv), total_len))
++		return -EOPNOTSUPP;
++
++	/* Link all bvecs into the IOVA space */
++	link_iter = *iter;
++	while (link_iter.bi_size) {
++		struct bio_vec bv = mp_bvec_iter_bvec(bvec, link_iter);
++
++		ret = dma_iova_link(dma_dev, &ctx->iova.state, bvec_phys(&bv),
++				    mapped_len, bv.bv_len, dir, 0);
++		if (ret)
++			goto out_destroy;
++
++		if (check_add_overflow(mapped_len, bv.bv_len, &mapped_len)) {
++			ret = -EOVERFLOW;
++			goto out_destroy;
++		}
++		bvec_iter_advance(bvec, &link_iter, bv.bv_len);
++	}
++
++	/* Sync the IOTLB once for all linked pages */
++	ret = dma_iova_sync(dma_dev, &ctx->iova.state, 0, mapped_len);
++	if (ret)
++		goto out_destroy;
++
++	ctx->iova.mapped_len = mapped_len;
++
++	/* Single SGE covers the entire contiguous IOVA range */
++	ctx->iova.sge.addr = ctx->iova.state.addr;
++	ctx->iova.sge.length = mapped_len;
++	ctx->iova.sge.lkey = qp->pd->local_dma_lkey;
++
++	/* Single WR for the whole transfer */
++	memset(&ctx->iova.wr, 0, sizeof(ctx->iova.wr));
++	ctx->iova.wr.wr.opcode = dir == DMA_TO_DEVICE ?
++		IB_WR_RDMA_WRITE : IB_WR_RDMA_READ;
++	ctx->iova.wr.wr.num_sge = 1;
++	ctx->iova.wr.wr.sg_list = &ctx->iova.sge;
++	ctx->iova.wr.remote_addr = remote_addr;
++	ctx->iova.wr.rkey = rkey;
++
++	ctx->type = RDMA_RW_IOVA;
++	ctx->nr_ops = 1;
++	return 1;
++
++out_destroy:
++	/*
++	 * dma_iova_destroy() expects the actual mapped length, not the
++	 * total allocation size. It unlinks only the successfully linked
++	 * range and frees the entire IOVA allocation.
++	 */
++	dma_iova_destroy(dma_dev, &ctx->iova.state, mapped_len, dir, 0);
++	return ret;
++}
++
+ /**
+  * rdma_rw_ctx_init - initialize a RDMA READ/WRITE context
+  * @ctx:	context to initialize
+@@ -484,6 +572,7 @@ int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ {
+ 	struct bvec_iter iter;
+ 	u32 i, total_len = 0;
++	int ret;
+ 
+ 	if (nr_bvec == 0 || offset >= bvec[0].bv_len)
+ 		return -EINVAL;
+@@ -507,6 +596,21 @@ int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 		return rdma_rw_init_single_wr_bvec(ctx, qp, bvec, &iter,
+ 				remote_addr, rkey, dir);
+ 
++	/*
++	 * Try IOVA-based mapping first for multi-bvec transfers.
++	 * This reduces IOTLB sync overhead by batching all mappings.
++	 */
++	ret = rdma_rw_init_iova_wrs_bvec(ctx, qp, bvec, nr_bvec, &iter,
++			remote_addr, rkey, dir);
++	if (ret != -EOPNOTSUPP)
++		return ret;
++
++	/* Fallback path requires iterator at initial state */
++	iter.bi_sector = 0;
++	iter.bi_size = total_len;
++	iter.bi_idx = 0;
++	iter.bi_bvec_done = offset;
++
+ 	return rdma_rw_init_map_wrs_bvec(ctx, qp, bvec, nr_bvec, &iter,
+ 			remote_addr, rkey, dir);
+ }
+@@ -683,6 +787,10 @@ struct ib_send_wr *rdma_rw_ctx_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 			first_wr = &ctx->reg[0].reg_wr.wr;
+ 		last_wr = &ctx->reg[ctx->nr_ops - 1].wr.wr;
+ 		break;
++	case RDMA_RW_IOVA:
++		first_wr = &ctx->iova.wr.wr;
++		last_wr = &ctx->iova.wr.wr;
++		break;
+ 	case RDMA_RW_MULTI_WR:
+ 		first_wr = &ctx->map.wrs[0].wr;
+ 		last_wr = &ctx->map.wrs[ctx->nr_ops - 1].wr;
+@@ -757,6 +865,10 @@ void rdma_rw_ctx_destroy(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 		break;
+ 	case RDMA_RW_SINGLE_WR:
+ 		break;
++	case RDMA_RW_IOVA:
++		/* IOVA contexts must use rdma_rw_ctx_destroy_bvec() */
++		WARN_ON_ONCE(1);
++		break;
+ 	default:
+ 		BUG();
+ 		break;
+@@ -790,6 +902,10 @@ void rdma_rw_ctx_destroy_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 	u32 i;
+ 
+ 	switch (ctx->type) {
++	case RDMA_RW_IOVA:
++		dma_iova_destroy(dev->dma_device, &ctx->iova.state,
++				 ctx->iova.mapped_len, dir, 0);
++		break;
+ 	case RDMA_RW_MULTI_WR:
+ 		for (i = 0; i < nr_bvec; i++)
+ 			ib_dma_unmap_bvec(dev, ctx->map.sges[i].addr,
+diff --git a/include/rdma/rw.h b/include/rdma/rw.h
+index 046a8eb57125..2a5f33665d52 100644
+--- a/include/rdma/rw.h
++++ b/include/rdma/rw.h
+@@ -31,6 +31,14 @@ struct rdma_rw_ctx {
+ 			struct ib_rdma_wr	*wrs;
+ 		} map;
+ 
++		/* for IOVA-based mapping of bvecs into contiguous DMA range: */
++		struct {
++			struct dma_iova_state	state;
++			struct ib_sge		sge;
++			struct ib_rdma_wr	wr;
++			size_t			mapped_len;
++		} iova;
++
+ 		/* for registering multiple WRs: */
+ 		struct rdma_rw_reg_ctx {
+ 			struct ib_sge		sge;
 -- 
 2.52.0
 
