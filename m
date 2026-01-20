@@ -1,506 +1,462 @@
-Return-Path: <linux-nfs+bounces-18208-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18209-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SE1NCZ7wb2m+UQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18208-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 22:16:14 +0100
+	id iE0xEn/ub2m+UQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18209-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 22:07:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF2784C157
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 22:16:13 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6A154BF5E
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 22:07:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A7F1254DC9B
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 20:20:16 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A5DA4906F7D
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 20:42:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD393A4ADB;
-	Tue, 20 Jan 2026 20:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E1A3C198E;
+	Tue, 20 Jan 2026 20:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFYGXAhK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f80.google.com (mail-oo1-f80.google.com [209.85.161.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2881737F8A2
-	for <linux-nfs@vger.kernel.org>; Tue, 20 Jan 2026 20:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E583C00AD;
+	Tue, 20 Jan 2026 20:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768940248; cv=none; b=LuDhKsZCWAp04lpfjH3xD4mH6bWQwtkYa7q51Zi4+VRe1jb8xu4+1oTHQBtR49YEYU1LuA+rqfrhXj7D9oZzD5XAsUSr8MmimsVbAVxWRuQ+kYTTZ2LH65dswhNYhJsXsjTPN7KzaoQDA45CgXmrZV/85TBv5dlROTkKpc+Exs4=
+	t=1768941704; cv=none; b=WQd3mgXwbqBbkh9PVWDlhIE0dhL8yXhXTLQrwKgBOZFPiSMkwaU8UNlB0uHzhJ/pAQSk08NiYd/zmpGFNK11tN2wq2BLMnRMeB4dcvhfawwR6qAkT2FbFeC5ehXsF8F447nNngF3CdT25oMPNM1SF6axQx4MhubiSo8Y4dIov8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768940248; c=relaxed/simple;
-	bh=El5jxZ07HsbFkZEJzysjYGQBL6lEICg4Qv2KfKEW6g8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WhFHgWGH6RR0p0T4JUEbzazbRllEZirBC0QkJsm5PiC0HKbzMIEoUuuoKEgLzDPQeQ6o+txeTnG5TdBk/UN82eRaC7ewAKTtYxCwveIxBN63TU0257lfA2ByYFVNGw97CTPe4cPmazq95UAfdqq50y0B0Ke5Nov3WCZ9cnycHY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f80.google.com with SMTP id 006d021491bc7-65f6d0bd852so14238959eaf.3
-        for <linux-nfs@vger.kernel.org>; Tue, 20 Jan 2026 12:17:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768940245; x=1769545045;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Kihzd8J+sFleTYdT1AUyJ6Rg8kcEG1pR/xOLyTyK9LE=;
-        b=vgnj+Y6mGOZWG04SEcJTGrOZcJu40kszvi3rwsVDyhpGWcOb+F90jVn3vGGBxxJD/d
-         ArUhTQgzL3ebJlM+6b3UhGV92KZL1rFLafRguICZ/RyDwxoT/Ds+sBe/6sie8Qdwxlcf
-         FEo4tt0nzgDe/6qSVH127Yx18+gbXroi4PTB9QXoiXUd8eB6O+SioY/hJqdqYGQAhYNc
-         FhCAdTkeHDCgqe2uFs+8JIaY4jRZRNuE57gCeAyL/B2KQ/eSvf0/qjxh99Hj8Bm4RCNi
-         5D90i24j0JRadnI9julRubGYUCPeiKS2d0KlCNzjD26eBy2QN3fm/kQ/dX9CtcJFP9Sx
-         xRvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ9CGC2ARwfvWwTSiET2codNaMwhSPzIEWaHgMCBKjK8/3a6pByGwpposiYk1xYPndzSVmb+nxEAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLqJGO+ipioOCzFhcfxMLbxuOhEU6qaY/mZZnoG8R2v2OWoHs5
-	SeJTnwcgz/wvr0oDT7yMSYtayyCGcsoPaIPwI236XD/7rJc0UOIN5WEC0NQF4cA7taxHYp8wV6x
-	SPeutvgafXe3BSiIALTuAL6IiY/qKFaBPiG5HzGgL8Rfx+n2NLULZhC9qY0E=
+	s=arc-20240116; t=1768941704; c=relaxed/simple;
+	bh=VH+aYLAOXd8i4YgnzVqBuKWQMvNsHwROU/zq0NAsncg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MqL6OS+QXWMv81uaFqKcv58fVQy4i4m0iekheVWaEhgpXGIGWgjh8haFMsyXEDS2J+mjNjPxZbPe4cOXcmhLJG8YlWYw13iSk/csCS/Dhbkq8x/Eq2ETmgFfnA+npH13aCTEPS8M9oijEvMGOBgZSf+Hxotb8O9VGNZ7cLt7svE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFYGXAhK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72307C4AF09;
+	Tue, 20 Jan 2026 20:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768941704;
+	bh=VH+aYLAOXd8i4YgnzVqBuKWQMvNsHwROU/zq0NAsncg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=YFYGXAhKuuuuGfdjh3K6ypXfzwSQiHtfgfj75WjPRRS5Mwp0dt7xBZtMi0HZD0Q0o
+	 BhBjCHm/ugPzseAdxM6uVZLwiUVidYBEaEGudO8y1DVKpXFk8rtKiU7VNenFjZFuki
+	 gKmdf4sxNy0Gs9k3e5wXT8tPB2JAVBfubrD7I9FKcdmPtscrfvMvb4dqir5JWiIHjy
+	 lrU5rA+mtjhs9Xv7uFYEs9uY5T6/rjSx3W4zcdoC/qwr5TKEok7rqGVxxKFe5n+pAd
+	 yOlH50qw7ytNZkjgXe9MCd9ag3DeelYxvWJs98MbSsGGagcC0oBdiCgEiwcSKxTfz8
+	 SA9GKhHiI/rwQ==
+Message-ID: <f02d32dc80e1a51f4a91c5e3ce2a5fe10680e4ea.camel@kernel.org>
+Subject: Re: [PATCH 1/1] NFSD: Enforce recall timeout for layout conflict
+From: Jeff Layton <jlayton@kernel.org>
+To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neil@brown.name, 
+	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Tue, 20 Jan 2026 15:41:42 -0500
+In-Reply-To: <20260119174737.3619599-1-dai.ngo@oracle.com>
+References: <20260119174737.3619599-1-dai.ngo@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:160f:b0:659:9a49:8ec2 with SMTP id
- 006d021491bc7-662b00c7211mr1223310eaf.70.1768940245054; Tue, 20 Jan 2026
- 12:17:25 -0800 (PST)
-Date: Tue, 20 Jan 2026 12:17:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <696fe2d5.050a0220.706b.0002.GAE@google.com>
-Subject: [syzbot] [nfs?] INFO: task hung in expkey_flush
-From: syzbot <syzbot+b6a0f8e7fb5f9c959ddd@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neil@brown.name, 
-	okorniev@redhat.com, syzkaller-bugs@googlegroups.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=ae589cd0a6acd9be];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[appspotmail.com : No valid SPF, No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18208-lists,linux-nfs=lfdr.de,b6a0f8e7fb5f9c959ddd];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18209-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	SUBJECT_HAS_QUESTION(0.00)[];
-	REDIRECTOR_URL(0.00)[goo.gl];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[syzbot@syzkaller.appspotmail.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,lst.de,gmail.com];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	R_DKIM_NA(0.00)[];
-	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[googlegroups.com:email,appspotmail.com:email,storage.googleapis.com:url,syzkaller.appspot.com:url,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,goo.gl:url]
-X-Rspamd-Queue-Id: DF2784C157
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,oracle.com:email]
+X-Rspamd-Queue-Id: D6A154BF5E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello,
+On Mon, 2026-01-19 at 09:47 -0800, Dai Ngo wrote:
+> When a layout conflict triggers a recall, enforcing a timeout
+> is necessary to prevent excessive nfsd threads from being tied
+> up in __break_lease and ensure the server can continue servicing
+> incoming requests efficiently.
+>=20
+> This patch introduces two new functions in lease_manager_operations:
+>=20
+> 1. lm_breaker_timedout: Invoked when a lease recall times out,
+>    allowing the lease manager to take appropriate action.
+>=20
+>    The NFSD lease manager uses this to handle layout recall
+>    timeouts. If the layout type supports fencing, a fence
+>    operation is issued to prevent the client from accessing
+>    the block device.
+>=20
+> 2. lm_need_to_retry: Invoked when there is a lease conflict.
+>    This allows the lease manager to instruct __break_lease
+>    to return an error to the caller, prompting a retry of
+>    the conflicting operation.
+>=20
+>    The NFSD lease manager uses this to avoid excessive nfsd
+>    from being blocked in __break_lease, which could hinder
+>    the server's ability to service incoming requests.
+>=20
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  Documentation/filesystems/locking.rst |  4 ++
+>  fs/locks.c                            | 29 +++++++++++-
+>  fs/nfsd/nfs4layouts.c                 | 65 +++++++++++++++++++++++++--
+>  include/linux/filelock.h              |  7 +++
+>  4 files changed, 100 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
+stems/locking.rst
+> index 04c7691e50e0..ae9a1b207b95 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -403,6 +403,8 @@ prototypes::
+>  	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>          bool (*lm_lock_expirable)(struct file_lock *);
+>          void (*lm_expire_lock)(void);
+> +        void (*lm_breaker_timedout)(struct file_lease *);
+> +        bool (*lm_need_to_retry)(struct file_lease *, struct file_lock_c=
+ontext *);
+> =20
+>  locking rules:
+> =20
+> @@ -417,6 +419,8 @@ lm_breaker_owns_lease:	yes     	no			no
+>  lm_lock_expirable	yes		no			no
+>  lm_expire_lock		no		no			yes
+>  lm_open_conflict	yes		no			no
+> +lm_breaker_timedout     no              no                      yes
+> +lm_need_to_retry        yes             no                      no
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  buffer_head
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 46f229f740c8..cd08642ab8bb 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -381,6 +381,14 @@ lease_dispose_list(struct list_head *dispose)
+>  	while (!list_empty(dispose)) {
+>  		flc =3D list_first_entry(dispose, struct file_lock_core, flc_list);
+>  		list_del_init(&flc->flc_list);
+> +		if (flc->flc_flags & FL_BREAKER_TIMEDOUT) {
+> +			struct file_lease *fl;
+> +
+> +			fl =3D file_lease(flc);
+> +			if (fl->fl_lmops &&
+> +					fl->fl_lmops->lm_breaker_timedout)
+> +				fl->fl_lmops->lm_breaker_timedout(fl);
+> +		}
+>  		locks_free_lease(file_lease(flc));
+>  	}
+>  }
+> @@ -1531,8 +1539,10 @@ static void time_out_leases(struct inode *inode, s=
+truct list_head *dispose)
+>  		trace_time_out_leases(inode, fl);
+>  		if (past_time(fl->fl_downgrade_time))
+>  			lease_modify(fl, F_RDLCK, dispose);
+> -		if (past_time(fl->fl_break_time))
+> +		if (past_time(fl->fl_break_time)) {
+>  			lease_modify(fl, F_UNLCK, dispose);
+> +			fl->c.flc_flags |=3D FL_BREAKER_TIMEDOUT;
+> +		}
 
-syzbot found the following issue on:
+When the lease times out, you go ahead and remove it but then mark it
+with FL_BREAKER_TIMEDOUT. Then later, you call ->lm_breaker_timedout if
+that's set.
 
-HEAD commit:    983d014aafb1 kernel: modules: Add SPDX license identifier ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=100bfdfa580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae589cd0a6acd9be
-dashboard link: https://syzkaller.appspot.com/bug?extid=b6a0f8e7fb5f9c959ddd
-compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+That means that when this happens, there is a window of time where
+there is no lease, but the rogue client isn't yet fenced. That sounds
+like a problem as you could allow competing access.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I think you'll have to do this in reverse order: fence the client and
+then remove the lease.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8a294469166c/disk-983d014a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f9504a6df5a7/vmlinux-983d014a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/88a1d939d6af/bzImage-983d014a.xz
+>  	}
+>  }
+> =20
+> @@ -1633,6 +1643,8 @@ int __break_lease(struct inode *inode, unsigned int=
+ flags)
+>  	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, c.flc_list) {
+>  		if (!leases_conflict(&fl->c, &new_fl->c))
+>  			continue;
+> +		if (new_fl->fl_lmops !=3D fl->fl_lmops)
+> +			new_fl->fl_lmops =3D fl->fl_lmops;
+>  		if (want_write) {
+>  			if (fl->c.flc_flags & FL_UNLOCK_PENDING)
+>  				continue;
+> @@ -1657,6 +1669,18 @@ int __break_lease(struct inode *inode, unsigned in=
+t flags)
+>  		goto out;
+>  	}
+> =20
+> +	/*
+> +	 * Check whether the lease manager wants the operation
+> +	 * causing the conflict to be retried.
+> +	 */
+> +	if (new_fl->fl_lmops && new_fl->fl_lmops->lm_need_to_retry &&
+> +			new_fl->fl_lmops->lm_need_to_retry(new_fl, ctx)) {
+> +		trace_break_lease_noblock(inode, new_fl);
+> +		error =3D -ERESTARTSYS;
+> +		goto out;
+> +	}
+> +	ctx->flc_in_conflict =3D true;
+> +
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b6a0f8e7fb5f9c959ddd@syzkaller.appspotmail.com
+I guess flc_in_conflict is supposed to indicate "hey, we're already
+doing a layout break on this inode". That seems reasonable, if a little
+klunky.
 
-INFO: task syz.1.1468:12715 blocked for more than 143 seconds.
-      Tainted: G             L      syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.1.1468      state:D stack:26952 pid:12715 tgid:12702 ppid:5835   task_flags:0x400140 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5256 [inline]
- __schedule+0x1139/0x6150 kernel/sched/core.c:6863
- __schedule_loop kernel/sched/core.c:6945 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6960
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7017
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0xc69/0x1ca0 kernel/locking/mutex.c:776
- expkey_flush+0x20/0x90 fs/nfsd/export.c:250
- write_flush.constprop.0+0x2af/0x3d0 net/sunrpc/cache.c:1550
- pde_write fs/proc/inode.c:330 [inline]
- proc_reg_write+0x240/0x330 fs/proc/inode.c:342
- do_loop_readv_writev fs/read_write.c:850 [inline]
- do_loop_readv_writev fs/read_write.c:835 [inline]
- vfs_writev+0x5df/0xde0 fs/read_write.c:1059
- do_writev+0x132/0x340 fs/read_write.c:1103
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb96ed8f7c9
-RSP: 002b:00007fb96cfb4038 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 00007fb96efe6180 RCX: 00007fb96ed8f7c9
-RDX: 000000000000000a RSI: 0000200000000240 RDI: 000000000000000c
-RBP: 00007fb96ee13f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fb96efe6218 R14: 00007fb96efe6180 R15: 00007fff264f2848
- </TASK>
-INFO: task syz.0.1500:12841 blocked for more than 143 seconds.
-      Tainted: G             L      syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.0.1500      state:D stack:24856 pid:12841 tgid:12839 ppid:5826   task_flags:0x400140 flags:0x00080006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5256 [inline]
- __schedule+0x1139/0x6150 kernel/sched/core.c:6863
- __schedule_loop kernel/sched/core.c:6945 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6960
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7017
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0xc69/0x1ca0 kernel/locking/mutex.c:776
- nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
- nfsd_umount+0x3b/0x60 fs/nfsd/nfsctl.c:1353
- deactivate_locked_super+0xc1/0x1a0 fs/super.c:474
- deactivate_super fs/super.c:507 [inline]
- deactivate_super+0xde/0x100 fs/super.c:503
- cleanup_mnt+0x225/0x450 fs/namespace.c:1318
- task_work_run+0x150/0x240 kernel/task_work.c:233
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- __exit_to_user_mode_loop kernel/entry/common.c:44 [inline]
- exit_to_user_mode_loop+0xfb/0x540 kernel/entry/common.c:75
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:159 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:194 [inline]
- do_syscall_64+0x4ee/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f44b698f7c9
-RSP: 002b:00007f44b78ff038 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffec RBX: 00007f44b6be5fa0 RCX: 00007f44b698f7c9
-RDX: 0000200000000580 RSI: 00002000000001c0 RDI: 0000000000000000
-RBP: 00007f44b6a13f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f44b6be6038 R14: 00007f44b6be5fa0 R15: 00007ffd112c8918
- </TASK>
-INFO: task syz.0.1500:12844 blocked for more than 143 seconds.
-      Tainted: G             L      syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.0.1500      state:D stack:27336 pid:12844 tgid:12839 ppid:5826   task_flags:0x400140 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5256 [inline]
- __schedule+0x1139/0x6150 kernel/sched/core.c:6863
- __schedule_loop kernel/sched/core.c:6945 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6960
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7017
- rwsem_down_write_slowpath+0x521/0x1310 kernel/locking/rwsem.c:1185
- __down_write_common kernel/locking/rwsem.c:1317 [inline]
- __down_write kernel/locking/rwsem.c:1326 [inline]
- down_write+0x1d6/0x200 kernel/locking/rwsem.c:1591
- __super_lock fs/super.c:57 [inline]
- super_lock+0x17d/0x3f0 fs/super.c:121
- super_lock_excl fs/super.c:146 [inline]
- grab_super+0xab/0x420 fs/super.c:531
- sget_fc+0x612/0xc20 fs/super.c:801
- vfs_get_super fs/super.c:1319 [inline]
- get_tree_keyed+0x59/0x1d0 fs/super.c:1361
- vfs_get_tree+0x8e/0x330 fs/super.c:1751
- fc_mount fs/namespace.c:1199 [inline]
- do_new_mount_fc fs/namespace.c:3636 [inline]
- do_new_mount fs/namespace.c:3712 [inline]
- path_mount+0x7bf/0x23a0 fs/namespace.c:4022
- do_mount fs/namespace.c:4035 [inline]
- __do_sys_mount fs/namespace.c:4224 [inline]
- __se_sys_mount fs/namespace.c:4201 [inline]
- __x64_sys_mount+0x293/0x310 fs/namespace.c:4201
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f44b698f7c9
-RSP: 002b:00007f44b78de038 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f44b6be6090 RCX: 00007f44b698f7c9
-RDX: 0000200000000100 RSI: 00002000000000c0 RDI: 0000000000000000
-RBP: 00007f44b6a13f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000007 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f44b6be6128 R14: 00007f44b6be6090 R15: 00007ffd112c8918
- </TASK>
-INFO: task syz.3.1556:13091 blocked for more than 144 seconds.
-      Tainted: G             L      syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.3.1556      state:D stack:24936 pid:13091 tgid:13088 ppid:7203   task_flags:0x400140 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5256 [inline]
- __schedule+0x1139/0x6150 kernel/sched/core.c:6863
- __schedule_loop kernel/sched/core.c:6945 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6960
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7017
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0xc69/0x1ca0 kernel/locking/mutex.c:776
- nfsd_nl_threads_set_doit+0x687/0xbc0 fs/nfsd/nfsctl.c:1596
- genl_family_rcv_msg_doit+0x209/0x2f0 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x55c/0x800 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2550
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1318 [inline]
- netlink_unicast+0x5aa/0x870 net/netlink/af_netlink.c:1344
- netlink_sendmsg+0x8c8/0xdd0 net/netlink/af_netlink.c:1894
- sock_sendmsg_nosec net/socket.c:727 [inline]
- __sock_sendmsg net/socket.c:742 [inline]
- ____sys_sendmsg+0xa5d/0xc30 net/socket.c:2592
- ___sys_sendmsg+0x134/0x1d0 net/socket.c:2646
- __sys_sendmsg+0x16d/0x220 net/socket.c:2678
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f62dd58f7c9
-RSP: 002b:00007f62de4b2038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f62dd7e6180 RCX: 00007f62dd58f7c9
-RDX: 0000000000004000 RSI: 0000200000000480 RDI: 0000000000000005
-RBP: 00007f62dd613f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f62dd7e6218 R14: 00007f62dd7e6180 R15: 00007ffea1c1dd18
- </TASK>
+It would be nice if you could track this flag inside of nfsd's data
+structures instead (since only it cares about the flag), but I don't
+think it has any convenient per-inode structures to set this in.
 
-Showing all locks held in the system:
-1 lock held by rcu_exp_gp_kthr/18:
- #0: ffff8880b843add8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:647 [inline]
- #0: ffff8880b843add8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x7e/0x130 kernel/sched/core.c:632
-1 lock held by khungtaskd/31:
- #0: ffffffff8e3c9520 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8e3c9520 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:867 [inline]
- #0: ffffffff8e3c9520 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x36/0x1c0 kernel/locking/lockdep.c:6775
-1 lock held by dhcpcd/5495:
- #0: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
- #0: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d/0x1f30 net/ipv4/devinet.c:1120
-2 locks held by getty/6359:
- #0: ffff8880326480a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000ee0b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x41b/0x1510 drivers/tty/n_tty.c:2211
-2 locks held by syz-executor/11006:
- #0: ffff88805871a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88805871a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88805871a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88805871a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by kworker/u8:21/11345:
- #0: ffff88801d3ae148 ((wq_completion)iou_exit){+.+.}-{0:0}, at: process_one_work+0x128d/0x1b20 kernel/workqueue.c:3232
- #1: ffffc9000bb87c90 ((work_completion)(&ctx->exit_work)){+.+.}-{0:0}, at: process_one_work+0x914/0x1b20 kernel/workqueue.c:3233
-2 locks held by syz.1.1468/12708:
- #0: ffffffff901ec4d0 (cb_lock){++++}-{4:4}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_nl_threads_set_doit+0x687/0xbc0 fs/nfsd/nfsctl.c:1596
-3 locks held by syz.1.1468/12715:
- #0: ffff888030f48638 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1255
- #1: ffff888020b2c420 (sb_writers#3){.+.+}-{0:0}, at: do_writev+0x132/0x340 fs/read_write.c:1103
- #2: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: expkey_flush+0x20/0x90 fs/nfsd/export.c:250
-2 locks held by syz.0.1500/12841:
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-1 lock held by syz.0.1500/12844:
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88805d9bc0e0 (&type->s_umount_key#53){++++}-{4:4}, at: super_lock+0x17d/0x3f0 fs/super.c:121
-2 locks held by syz-executor/12933:
- #0: ffff88805b64c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88805b64c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88805b64c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88805b64c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz.3.1556/13091:
- #0: ffffffff901ec4d0 (cb_lock){++++}-{4:4}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_nl_threads_set_doit+0x687/0xbc0 fs/nfsd/nfsctl.c:1596
-2 locks held by syz-executor/13321:
- #0: ffff888020fd00e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff888020fd00e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff888020fd00e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff888020fd00e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/13337:
- #0: ffff88807c07e0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88807c07e0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88807c07e0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88807c07e0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/13419:
- #0: ffff8880773760e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff8880773760e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff8880773760e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff8880773760e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/13551:
- #0: ffff88802bf220e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88802bf220e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88802bf220e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88802bf220e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/13792:
- #0: ffff88804bb560e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88804bb560e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88804bb560e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88804bb560e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14032:
- #0: ffff88807c7300e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88807c7300e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88807c7300e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88807c7300e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14097:
- #0: ffff888040f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff888040f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff888040f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff888040f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14164:
- #0: ffff888031f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff888031f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff888031f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff888031f180e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14216:
- #0: ffff8880403960e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff8880403960e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff8880403960e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff8880403960e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14279:
- #0: ffff88814135c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88814135c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88814135c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88814135c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14330:
- #0: ffff88804776a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88804776a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88804776a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88804776a0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14397:
- #0: ffff8880a406c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff8880a406c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff8880a406c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff8880a406c0e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14398:
- #0: ffff8880791f00e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff8880791f00e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff8880791f00e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff8880791f00e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14452:
- #0: ffff88807a0040e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock fs/super.c:57 [inline]
- #0: ffff88807a0040e0 (&type->s_umount_key#53){++++}-{4:4}, at: __super_lock_excl fs/super.c:72 [inline]
- #0: ffff88807a0040e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super fs/super.c:506 [inline]
- #0: ffff88807a0040e0 (&type->s_umount_key#53){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:503
- #1: ffffffff8e801588 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:575
-2 locks held by syz-executor/14700:
- #0: ffff88805dc8cec0 (&hdev->req_lock){+.+.}-{4:4}, at: hci_dev_do_close+0x26/0xc0 net/bluetooth/hci_core.c:499
- #1: ffff88805dc8c0c0 (&hdev->lock){+.+.}-{4:4}, at: hci_dev_close_sync+0x3af/0x1260 net/bluetooth/hci_sync.c:5315
-4 locks held by kworker/u8:45/14791:
- #0: ffff88801badf148 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x128d/0x1b20 kernel/workqueue.c:3232
- #1: ffffc9000b387c90 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x914/0x1b20 kernel/workqueue.c:3233
- #2: ffffffff9012f2d0 (pernet_ops_rwsem){++++}-{4:4}, at: cleanup_net+0xad/0x830 net/core/net_namespace.c:670
- #3: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: cfg80211_pernet_exit+0x17/0x120 net/wireless/core.c:1693
-4 locks held by kworker/u8:46/14802:
- #0: ffff88813ff69948 ((wq_completion)events_unbound#2){+.+.}-{0:0}, at: process_one_work+0x128d/0x1b20 kernel/workqueue.c:3232
- #1: ffffc9000b637c90 ((linkwatch_work).work){+.+.}-{0:0}, at: process_one_work+0x914/0x1b20 kernel/workqueue.c:3233
- #2: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: linkwatch_event+0x51/0xc0 net/core/link_watch.c:303
- #3: ffffffff8e3d4c78 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock+0x284/0x3c0 kernel/rcu/tree_exp.h:311
-3 locks held by kworker/u8:48/14896:
- #0: ffff8880b843add8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:647 [inline]
- #0: ffff8880b843add8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x7e/0x130 kernel/sched/core.c:632
- #1: ffff8880b8424608 (psi_seq){-.-.}-{0:0}, at: psi_sched_switch kernel/sched/stats.h:225 [inline]
- #1: ffff8880b8424608 (psi_seq){-.-.}-{0:0}, at: __schedule+0x19b1/0x6150 kernel/sched/core.c:6857
- #2: ffff888048ee0788 (&rdev->wiphy.mtx){+.+.}-{4:4}, at: class_wiphy_constructor include/net/cfg80211.h:6363 [inline]
- #2: ffff888048ee0788 (&rdev->wiphy.mtx){+.+.}-{4:4}, at: cfg80211_wiphy_work+0x99/0x560 net/wireless/core.c:424
-2 locks held by syz-executor/15014:
- #0: ffffffff90894028 (&ops->srcu#2){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:185 [inline]
- #0: ffffffff90894028 (&ops->srcu#2){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:277 [inline]
- #0: ffffffff90894028 (&ops->srcu#2){.+.+}-{0:0}, at: rtnl_link_ops_get+0x113/0x2c0 net/core/rtnetlink.c:574
- #1: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #1: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
- #1: ffffffff90145da8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x5f6/0x1f50 net/core/rtnetlink.c:4071
+>  restart:
+>  	fl =3D list_first_entry(&ctx->flc_lease, struct file_lease, c.flc_list)=
+;
+>  	break_time =3D fl->fl_break_time;
+> @@ -1693,6 +1717,9 @@ int __break_lease(struct inode *inode, unsigned int=
+ flags)
+>  	spin_unlock(&ctx->flc_lock);
+>  	percpu_up_read(&file_rwsem);
+>  	lease_dispose_list(&dispose);
+> +	spin_lock(&ctx->flc_lock);
+> +	ctx->flc_in_conflict =3D false;
+> +	spin_unlock(&ctx->flc_lock);
+>  free_lock:
+>  	locks_free_lease(new_fl);
+>  	return error;
+> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+> index ad7af8cfcf1f..e7777d6ee8d0 100644
+> --- a/fs/nfsd/nfs4layouts.c
+> +++ b/fs/nfsd/nfs4layouts.c
+> @@ -747,11 +747,9 @@ static bool
+>  nfsd4_layout_lm_break(struct file_lease *fl)
+>  {
+>  	/*
+> -	 * We don't want the locks code to timeout the lease for us;
+> -	 * we'll remove it ourself if a layout isn't returned
+> -	 * in time:
+> +	 * Enforce break lease timeout to prevent NFSD
+> +	 * thread from hanging in __break_lease.
+>  	 */
+> -	fl->fl_break_time =3D 0;
+>  	nfsd4_recall_file_layout(fl->c.flc_owner);
+>  	return false;
+>  }
+> @@ -782,10 +780,69 @@ nfsd4_layout_lm_open_conflict(struct file *filp, in=
+t arg)
+>  	return 0;
+>  }
+> =20
+> +/**
+> + * nfsd_layout_breaker_timedout - The layout recall has timed out.
 
-=============================================
+Please fix this kdoc header.
 
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 31 Comm: khungtaskd Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:161 [inline]
- __sys_info lib/sys_info.c:157 [inline]
- sys_info+0x133/0x180 lib/sys_info.c:165
- check_hung_uninterruptible_tasks kernel/hung_task.c:346 [inline]
- watchdog+0xe66/0x1180 kernel/hung_task.c:515
- kthread+0x3c5/0x780 kernel/kthread.c:463
- ret_from_fork+0x983/0xb10 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:246
- </TASK>
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
-RIP: 0010:pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:82
-Code: 96 61 02 c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 73 77 14 00 fb f4 <e9> cc 35 03 00 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
-RSP: 0018:ffffffff8e007df8 EFLAGS: 000002c6
-RAX: 000000000037260d RBX: 0000000000000000 RCX: ffffffff8b75e6d9
-RDX: 0000000000000000 RSI: ffffffff8dacbd06 RDI: ffffffff8bf2b780
-RBP: fffffbfff1c12f68 R08: 0000000000000001 R09: ffffed101708673d
-R10: ffff8880b84339eb R11: ffffffff8e098670 R12: 0000000000000000
-R13: ffffffff8e097b40 R14: ffffffff908901d0 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881248f9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000564b58107138 CR3: 000000000e184000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
- default_idle+0x13/0x20 arch/x86/kernel/process.c:767
- default_idle_call+0x6c/0xb0 kernel/sched/idle.c:122
- cpuidle_idle_call kernel/sched/idle.c:191 [inline]
- do_idle+0x38d/0x510 kernel/sched/idle.c:332
- cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:430
- rest_init+0x16b/0x2b0 init/main.c:757
- start_kernel+0x3ef/0x4d0 init/main.c:1206
- x86_64_start_reservations+0x18/0x30 arch/x86/kernel/head64.c:310
- x86_64_start_kernel+0x130/0x190 arch/x86/kernel/head64.c:291
- common_startup_64+0x13e/0x148
- </TASK>
+> + * If the layout type supports fence operation then do it to stop
+> + * the client from accessing the block device.
+> + *
+> + * @fl: file to check
+> + *
+> + * Return value: None.
+> + */
+> +static void
+> +nfsd4_layout_lm_breaker_timedout(struct file_lease *fl)
+> +{
+> +	struct nfs4_layout_stateid *ls =3D fl->c.flc_owner;
+> +	struct nfsd_file *nf;
+> +	u32 type;
+> +
+> +	rcu_read_lock();
+> +	nf =3D nfsd_file_get(ls->ls_file);
+> +	rcu_read_unlock();
+> +	if (!nf)
+> +		return;
+> +	type =3D ls->ls_layout_type;
+> +	if (nfsd4_layout_ops[type]->fence_client)
+> +		nfsd4_layout_ops[type]->fence_client(ls, nf);
+> +	nfsd_file_put(nf);
+> +}
+> +
+> +/**
+> + * nfsd4_layout_lm_conflict - Handle multiple conflicts in the same file=
+.
 
+kdoc header is wrong here. This should be for nfsd4_layout_lm_retry().
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> + *
+> + * This function is called from __break_lease when a conflict occurs.
+> + * For layout conflicts on the same file, each conflict triggers a
+> + * layout  recall. Only the thread handling the first conflict needs
+> + * to remain in __break_lease to manage the timeout for these recalls;
+> + * subsequent threads should not wait in __break_lease.
+> + *
+> + * This is done to prevent excessive nfsd threads from becoming tied up
+> + * in __break_lease, which could hinder the server's ability to service
+> + * incoming requests.
+> + *
+> + * Return true if thread should not wait in __break_lease else return
+> + * false.
+> + */
+> +static bool
+> +nfsd4_layout_lm_retry(struct file_lease *fl,
+> +				struct file_lock_context *ctx)
+> +{
+> +	struct svc_rqst *rqstp;
+> +
+> +	rqstp =3D nfsd_current_rqst();
+> +	if (!rqstp)
+> +		return false;
+> +	if ((fl->c.flc_flags & FL_LAYOUT) && ctx->flc_in_conflict)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+This should never be called for anything but a FL_LAYOUT lease, since
+you're only setting this in nfsd4_layouts_lm_ops.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+> +		return true;
+> +	return false;
+> +}
+> +
+>  static const struct lease_manager_operations nfsd4_layouts_lm_ops =3D {
+>  	.lm_break		=3D nfsd4_layout_lm_break,
+>  	.lm_change		=3D nfsd4_layout_lm_change,
+>  	.lm_open_conflict	=3D nfsd4_layout_lm_open_conflict,
+> +	.lm_breaker_timedout	=3D nfsd4_layout_lm_breaker_timedout,
+> +	.lm_need_to_retry	=3D nfsd4_layout_lm_retry,
+>  };
+> =20
+>  int
+> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+> index 2f5e5588ee07..6967af8b7fd2 100644
+> --- a/include/linux/filelock.h
+> +++ b/include/linux/filelock.h
+> @@ -17,6 +17,7 @@
+>  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
+>  #define FL_LAYOUT	2048	/* outstanding pNFS layout */
+>  #define FL_RECLAIM	4096	/* reclaiming from a reboot server */
+> +#define	FL_BREAKER_TIMEDOUT	8192	/* lease breaker timed out */
+> =20
+>  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
+> =20
+> @@ -50,6 +51,9 @@ struct lease_manager_operations {
+>  	void (*lm_setup)(struct file_lease *, void **);
+>  	bool (*lm_breaker_owns_lease)(struct file_lease *);
+>  	int (*lm_open_conflict)(struct file *, int);
+> +	void (*lm_breaker_timedout)(struct file_lease *fl);
+> +	bool (*lm_need_to_retry)(struct file_lease *fl,
+> +			struct file_lock_context *ctx);
+>  };
+> =20
+>  struct lock_manager {
+> @@ -145,6 +149,9 @@ struct file_lock_context {
+>  	struct list_head	flc_flock;
+>  	struct list_head	flc_posix;
+>  	struct list_head	flc_lease;
+> +
+> +	/* for FL_LAYOUT */
+> +	bool			flc_in_conflict;
+>  };
+> =20
+>  #ifdef CONFIG_FILE_LOCKING
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--=20
+Jeff Layton <jlayton@kernel.org>
 
