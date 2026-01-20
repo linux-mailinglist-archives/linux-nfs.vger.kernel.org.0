@@ -1,62 +1,46 @@
-Return-Path: <linux-nfs+bounces-18152-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18153-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C54AED3C03E
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 08:23:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C494DD3C08B
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 08:35:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AA73A404857
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 07:09:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A1F7C540FEA
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 07:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B82663816E5;
-	Tue, 20 Jan 2026 07:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZyANLSLP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AF13A1CFC;
+	Tue, 20 Jan 2026 07:26:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC513815EA
-	for <linux-nfs@vger.kernel.org>; Tue, 20 Jan 2026 07:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8206538BDB3;
+	Tue, 20 Jan 2026 07:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768892899; cv=none; b=gZg952ytZuoGesoJdZYfd2gkGmGnOR2fSucb9BFX3BO1GuLl0VHfEpJ3DqrZOSgCZn8/CBWsFhr02Y8rbMHq+OynEO+Ab52uddjQfZ1zIdcPBuxRHaqcXl72btN40MNlHd+h7KnA1Yogu59KRellpzeFP0QhHgAsoVY33Us/4wA=
+	t=1768894008; cv=none; b=Ot/HhSNh+CpC56l7g1knqCSvcVqbj3yeaLItFjUAUxfpLrDCemBXyzz2QbJLG9iQzf1dnGBz4u0rg6a8T5QhPMXlFVq9vGch7sKhEpoeMPeIS/KWIZ0GcnfkAB+QUwQZ0/XbtSeq3ou2iKSbpqieU+oSwqpBMkwuaOmRuGEXs8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768892899; c=relaxed/simple;
-	bh=I/zcfeYTBXm/zyKziKb14ZoSFB5EWnDETMZxcrhMbaA=;
+	s=arc-20240116; t=1768894008; c=relaxed/simple;
+	bh=VgY2ji32iqF7Zuuu6BiSatJ5aQnP5AIYedVUgiM0m6w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSeyQgYZwqRj3JO7vLSZ4IY/a4bFqAj1NI3+NI+UwNKCcdi573e+FPyJuUNS6u+YEkuC7PKlhUcnihm8Y6BCkSGx4V7K0o39V+hiN5wRNRe3EmKwjeaWoyCXI5beYOdyLskLKZxsrGIuaTDdMFYdB1y1H8qeO9Yxf+ZMRoS3e9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZyANLSLP; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OMQG6LW4+zygJKcYJJYsjl7dQUQeXTyCl7MhWsS0XjE=; b=ZyANLSLPMwQ1w4dHdbTE1AeOAy
-	SbhbNak+Eu6bIIoHCAxejC7TnV2zXfyrMyDzvvgm2J9yIY3JPhLw3r1DPrRyMwIAqUV4ZpI1utbR8
-	lyG3B9avij84rHmmtt1akx+mR/WCgfx6SG4VALHl5crSKxfwGNPpXuf4x6JJcfjsNkGpptNBU2XiG
-	PMD1V0+62is2dafwVksr97I0vnppmP6Jg3AM5+3+WJT+43iW2lSS6qYTR8/pqO7rdR+DlkgNvK3Ns
-	4iyzSnPb+jE6nsdW8tVq8F91et36pjXASfkDPhqYwkiaJX/equCAq7/H+706lklFh7Ncwxpuyp6rd
-	2+9iBTHA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vi5qP-00000003KHI-2B7k;
-	Tue, 20 Jan 2026 07:08:05 +0000
-Date: Mon, 19 Jan 2026 23:08:05 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Dai Ngo <dai.ngo@oracle.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Bug in nfsd4_block_get_device_info_scsi in nfsd-testing branch
-Message-ID: <aW8p1e3hIM5HHvbo@infradead.org>
-References: <45f16856-b71d-4844-bf11-fc9aa5c2feed@oracle.com>
- <a1442149-fdc2-4f66-b73a-499a2e192960@app.fastmail.com>
- <108fb719-8654-42b8-9e37-275726f4b5d8@oracle.com>
- <08c33c91-abda-42de-8771-e61d48b50cc7@oracle.com>
- <aW3jGVAHrEusJyBk@infradead.org>
- <453f0d57-5230-432e-90c3-df0308f7fddd@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCNHvwZ8CFdIdW5jraZyKMmZ2cQf2qO/xZlKN8gky1XO/bqH+NTm7YTIBjZRgodMcU/ct0TwoxiNBYvPpkhnnkBA1X/gn0BDNS4VPQ6Bz1TNX/wB8Z6swriw6RSybFp16Dmio3p+Z50dJs65kT1NxEsB75O8EK3xS4UiCQEJ7eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 9F343227AA8; Tue, 20 Jan 2026 08:26:38 +0100 (CET)
+Date: Tue, 20 Jan 2026 08:26:38 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+	okorniev@redhat.com, tom@talpey.com, hch@lst.de,
+	alex.aring@gmail.com, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] NFSD: Enforce recall timeout for layout conflict
+Message-ID: <20260120072638.GA6380@lst.de>
+References: <20260119174737.3619599-1-dai.ngo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,18 +49,38 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <453f0d57-5230-432e-90c3-df0308f7fddd@app.fastmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260119174737.3619599-1-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Jan 19, 2026 at 09:33:37AM -0500, Chuck Lever wrote:
-> > and maybe even add little inline helpers for
-> > setting/clearing the mark.
+On Mon, Jan 19, 2026 at 09:47:24AM -0800, Dai Ngo wrote:
+> When a layout conflict triggers a recall, enforcing a timeout
+> is necessary to prevent excessive nfsd threads from being tied
+> up in __break_lease and ensure the server can continue servicing
+> incoming requests efficiently.
 > 
-> In the past you've actively hated "adding little inline helpers"
-> so I don't suggest that any more. But I actually prefer that.
+> This patch introduces two new functions in lease_manager_operations:
+> 
+> 1. lm_breaker_timedout: Invoked when a lease recall times out,
+>    allowing the lease manager to take appropriate action.
+> 
+>    The NFSD lease manager uses this to handle layout recall
+>    timeouts. If the layout type supports fencing, a fence
+>    operation is issued to prevent the client from accessing
+>    the block device.
+> 
+> 2. lm_need_to_retry: Invoked when there is a lease conflict.
+>    This allows the lease manager to instruct __break_lease
+>    to return an error to the caller, prompting a retry of
+>    the conflicting operation.
+> 
+>    The NFSD lease manager uses this to avoid excessive nfsd
+>    from being blocked in __break_lease, which could hinder
+>    the server's ability to service incoming requests.
+> 
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 
-I like them when they provide a useful abstraction, and not when they
-don't.  Of course the "useful" might sometimes be in the eye of the
-beholder.
+This looks reasonable to me, but I don't really feel confident
+enough about the locks.c code that you should consider this a
+review.
 
 
