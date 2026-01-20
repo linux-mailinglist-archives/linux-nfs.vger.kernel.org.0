@@ -1,106 +1,171 @@
-Return-Path: <linux-nfs+bounces-18164-lists+linux-nfs=lfdr.de@vger.kernel.org>
-X-Original-To: lists+linux-nfs@lfdr.de
+Return-Path: <linux-nfs+bounces-18183-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD08FD3C542
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 11:31:15 +0100 (CET)
+Received: from mail.lfdr.de
+	by lfdr with LMTP
+	id mD7NOCWqb2lUEwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18183-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 17:15:33 +0100
+X-Original-To: lists+linux-nfs@lfdr.de
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 524014733F
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 17:15:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 331E04AAA16
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 10:21:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3877C94AD3A
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 14:29:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5AC3ECBC9;
-	Tue, 20 Jan 2026 10:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAC144104D;
+	Tue, 20 Jan 2026 14:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1VJUoDT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTA9yAbU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3488833A9D4;
-	Tue, 20 Jan 2026 10:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E33941B340;
+	Tue, 20 Jan 2026 14:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768904465; cv=none; b=YILI6cILRslMpNVqGsGXjZksoV01icoAjEbVJRsMoVj9JmxwlNxjy4gMqwO1ZQkB+rsLCDPrpP5iVZr+A8LeimAJmkfon8GKnpwvtUSkRhIP51oSkyOngj3EWiFB5ovRnI1RPKXO79nDOAbxSxLurYVziF4ZWA5RcuaJnBZyYpA=
+	t=1768919098; cv=none; b=M0R+M3HPmi/ah1LLNt0UdCqvIb55IsPIG4Jks08hOa1u4V8KZ7evgfYWli9OkZ5ETjZSSDWCcpYc6rkSnXn9hb6P8JRK49IEUxmvjCFY4jnC9TykjyhW7TJRsj/mI8lxhX9s3pdiLizzM94taE/BwXXB6h7tAGkreOc8D3rYfJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768904465; c=relaxed/simple;
-	bh=E5xOvww2YbwFgWAJy3KVLziGMsctGa0Tjs9kastx5yU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NPYTkZAEE15rlojP3qQW8gZ4L1rSlc6Zy7QO9g4O+Kcf7CiXWnRFFxrTkqtiXJJ3qnlna3t99Z4Yyz762W+NCygnQo9nJgercOwbPAi13AnvRdwQCRejnEfBkJGDDLAz8PfOIp7VaC4wyajCG94MzHvo3zTn/QRT4xWQaZKpjAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1VJUoDT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D04C16AAE;
-	Tue, 20 Jan 2026 10:21:00 +0000 (UTC)
+	s=arc-20240116; t=1768919098; c=relaxed/simple;
+	bh=GXwc3T1dK/s1GVRYygy2LTGFyXzE5DUI3PzhaGSwy6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Wb04inkutO3/IGzFfCNyBNkIHpLTF/BXcM2Fi/bkbq7z6AEFoaYtJWiZlkAOGSiqv9yZU1adWwzA+/GnvI3RsUOgg/LunCV4QweyM2M2PlYOclt+P5gFMTO8mu2h8ZOatDQ33mf4stzQEyZs8lmtTjGPhI2TCWJfEvyOUNEKyAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTA9yAbU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A962C16AAE;
+	Tue, 20 Jan 2026 14:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768904463;
-	bh=E5xOvww2YbwFgWAJy3KVLziGMsctGa0Tjs9kastx5yU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n1VJUoDTE1bE4Axag2MVvCjZi3r3nQzWpAiQ9pDGyo0sT1kLEez8SxjJA0+W7GZR2
-	 V5YDMRac/SRcvQhLgXtiSpTTy+Y+6KwKcUePNdU3l3VIPeWkRflL0On5H7JgnSBCVi
-	 bhHLMKxmmoOVWNLHR9NDC0PK0yECWuTxNH+IAbgD+56K4WQuXEevgg2GAOQJ9vLlCH
-	 c8SFVqfXZ5SelWF7ZE5iPDwIx9mKUHaxV2alJCPRxY7wAxpvIejQC3q3yqF0yNObbG
-	 WJpV9jEBSZ0iheGUF1G6ZpjKzos9QxsQvxnThJ/w5cDFBqlHkoIwXn0DtH1kUhI1PV
-	 h8y6DL4dovYpw==
-Date: Tue, 20 Jan 2026 11:20:58 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Benjamin Coddington <bcodding@hammerspace.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Lennart Poettering <lennart@poettering.net>
-Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
-Message-ID: <20260120-irrelevant-zeilen-b3c40a8e6c30@brauner>
-References: <cover.1768573690.git.bcodding@hammerspace.com>
- <20260119-reingehen-gelitten-a5e364f704fa@brauner>
- <176885678653.16766.8436118850581649792@noble.neil.brown.name>
- <20260120-tratsch-luftfahrt-d447fdd12c10@brauner>
- <176890236169.16766.7338555258291967939@noble.neil.brown.name>
+	s=k20201202; t=1768919097;
+	bh=GXwc3T1dK/s1GVRYygy2LTGFyXzE5DUI3PzhaGSwy6Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pTA9yAbUwn+CZIgg5zL/BRZxIOTMXA43Z7/9aPQkdBpVjTfPuppGnr+he3ruExfNV
+	 2ADLLGiK8vhP6c6DVpLiGQcljW6t3Yg+bhGbqp7QZoa+sh97X6MZyabaktt+0iTz9P
+	 PVtiWL9CrVu7tsh850C/VwdcaWZErN9TzmYpD1nbcwP54wK8ln2hihNB+DFsthKWG8
+	 pzJzvsU64dUnqstAOJGDg66GvQLi43wjKqHCbszKcDBbILDv2qE9BsTfeTJGW9KVaG
+	 oTnKLTclX1TfouH4lWi0gK2JGJAnL3SNvyz6sW1/q1HluJkWXBm6cA+B4mGn6j6wkY
+	 qwfiU3jVbMpNw==
+From: Chuck Lever <cel@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	<linux-nfs@vger.kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	hirofumi@mail.parknet.co.jp,
+	linkinjeon@kernel.org,
+	sj1557.seo@samsung.com,
+	yuezhang.mo@sony.com,
+	almaz.alexandrovich@paragon-software.com,
+	slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	frank.li@vivo.com,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	cem@kernel.org,
+	sfrench@samba.org,
+	pc@manguebit.org,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	hansg@kernel.org,
+	senozhatsky@chromium.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v6 06/16] hfsplus: Report case sensitivity in fileattr_get
+Date: Tue, 20 Jan 2026 09:24:29 -0500
+Message-ID: <20260120142439.1821554-7-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260120142439.1821554-1-cel@kernel.org>
+References: <20260120142439.1821554-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <176890236169.16766.7338555258291967939@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18183-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,oracle.com:email]
+X-Rspamd-Queue-Id: 524014733F
+X-Rspamd-Action: no action
+X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 08:46:01PM +1100, NeilBrown wrote:
-> On Tue, 20 Jan 2026, Christian Brauner wrote:
-> > > You don't need signing to ensure a filehandle doesn't persist across
-> > > reboot.  For that you just need a generation number.  Storing a random
-> > > number generated at boot time in the filehandle would be a good solution.
-> > 
-> > For pidfs I went with the 64-bit inode number. But I dislike the
-> > generation number thing. If I would have to freedom to completely redo
-> > it I would probably assign a uuid to the pidfs sb and then use that in
-> > the file handles alongside the inode number. That would be enough for
-> > sure as the uuid would change on each boot.
-> 
-> What you are calling a "uuid" in "the pidfs sb" is exactly what I am
-> calling a "generation number" - for pidfs it would be a "generation
+From: Chuck Lever <chuck.lever@oracle.com>
 
-"generation number" just evokes the 32-bit identifier in struct inode
-that's overall somewhat useless. And a UUID has much stronger
-guarantees.
+Add case sensitivity reporting to the existing hfsplus_fileattr_get()
+function via the FS_XFLAG_CASEFOLD flag. HFS+ always preserves case
+at rest.
 
-> number" for the whole filesystem, while for ext4 etc it is a generation
-> number of the inode number.
-> 
-> So we are substantially in agreement.
+Case sensitivity depends on how the volume was formatted: HFSX
+volumes may be either case-sensitive or case-insensitive, indicated
+by the HFSPLUS_SB_CASEFOLD superblock flag.
 
-Great!
+Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/hfsplus/inode.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Why do you not have freedom to add a uuid to the pidfs sb and to the
-> filehandles now?
+diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
+index 7ae6745ca7ae..ec9a144aac02 100644
+--- a/fs/hfsplus/inode.c
++++ b/fs/hfsplus/inode.c
+@@ -694,6 +694,7 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+ {
+ 	struct inode *inode = d_inode(dentry);
+ 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
++	struct hfsplus_sb_info *sbi = HFSPLUS_SB(inode->i_sb);
+ 	unsigned int flags = 0;
+ 
+ 	if (inode->i_flags & S_IMMUTABLE)
+@@ -705,6 +706,13 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+ 
+ 	fileattr_fill_flags(fa, flags);
+ 
++	/*
++	 * HFS+ preserves case (the default). Case sensitivity depends
++	 * on how the filesystem was formatted: HFSX volumes may be
++	 * either case-sensitive or case-insensitive.
++	 */
++	if (test_bit(HFSPLUS_SB_CASEFOLD, &sbi->flags))
++		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
+ 	return 0;
+ }
+ 
+-- 
+2.52.0
 
-Userspace relies on the current format to get the inode number from the
-file handle:
-https://github.com/systemd/systemd/blob/main/src/basic/pidfd-util.c#L233-L281
-
-And they often also construct them in userspace. That needs to continue
-to work. I also don't think it's that critical.
 
