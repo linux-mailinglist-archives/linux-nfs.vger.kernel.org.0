@@ -1,167 +1,157 @@
-Return-Path: <linux-nfs+bounces-18168-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18169-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ECUWLQNicmnfjQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18168-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 18:44:35 +0100
+	id APmELMGPcWkLJAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18169-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 03:47:29 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 117D96B94F
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 18:44:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02D836112F
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 03:47:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BF3FF58AB64
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 10:41:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A8A697E1440
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 10:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B51B3F23DB;
-	Tue, 20 Jan 2026 10:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2E8B3A0B33;
+	Tue, 20 Jan 2026 10:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1CnPJjX"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="UarTPr01"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD1E3ED13E;
-	Tue, 20 Jan 2026 10:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768905442; cv=none; b=Y+QPoSOGUeuPNBcrxP0+tIxlqMOsNm3Q0WI4BJaRZLMpbHhhC8n7r6FGqtDmqoRoILcbRTScPo1dQyelp/2K18kpePiRj6Lj8x58aelmzTABYsP7cc6uQ6T6do3rn2/ffrcn8oCeSsGUTS/I9jC2N7lj7D8yufVAhlNBGk6hwgs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768905442; c=relaxed/simple;
-	bh=pXSDHluWsRP0ONrt2c4w8+y04vClCGg63HGKISeqXk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oqf9S2Ax5zy6usXQYp1D2re7Q61UtgmiC2sBES374pi6t89rNtNhA3ivLheiOmJ4SVDB/zZqPM/RSPg8ptifCF4dJc69OhAJ9oNbMe/hEVOfcW5708R7wUUZO7JJllV8CtpOTR9LsEQnSjmWsX0FFG1yXAc+rOsxl1C3sMRPO9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1CnPJjX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5C9C16AAE;
-	Tue, 20 Jan 2026 10:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768905441;
-	bh=pXSDHluWsRP0ONrt2c4w8+y04vClCGg63HGKISeqXk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j1CnPJjX4mcaIEUN6krptYAmbm5vqV9fYKxtAMaWcB3j2XeJe4k7q/k9lj6ITGgiy
-	 qZ35wiEOcQyS73TdBS9Ux7cz6vN9+zOqXptZE0YdydL+C+fS3kQ9fDxKcIwQ2ADdto
-	 BBz35lqNBlRhO4xMAQZoNwdbL7c9dXC2MbM+pm2JjPFUpBje/Ih7H/stTfXmPOlyzg
-	 thMrOTxD5wcvAUs0aPKotSo/R3T5cnos7esEgUiInb3MCWfF0A+WSpLBkrw8e4w8eM
-	 VCUnXBrcciz2dippNMBrFJlZEm8wKtqPO8XylhMkJcWc9PTj+q1N6BYqKuFIzpV3OB
-	 Apy0k4iYCPSBQ==
-Date: Tue, 20 Jan 2026 11:37:16 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Benjamin Coddington <bcodding@hammerspace.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Lennart Poettering <lennart@poettering.net>
-Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
-Message-ID: <20260120-kundgeben-privat-e9077477f862@brauner>
-References: <cover.1768573690.git.bcodding@hammerspace.com>
- <20260119-reingehen-gelitten-a5e364f704fa@brauner>
- <176885678653.16766.8436118850581649792@noble.neil.brown.name>
- <20260120-tratsch-luftfahrt-d447fdd12c10@brauner>
- <176890236169.16766.7338555258291967939@noble.neil.brown.name>
- <20260120-irrelevant-zeilen-b3c40a8e6c30@brauner>
- <176890489330.16766.1807342797736472831@noble.neil.brown.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98143BFE40
+	for <linux-nfs@vger.kernel.org>; Tue, 20 Jan 2026 10:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768906542; cv=pass; b=C54NcbRsh2rGM9+/+3lcpzt8qgMIZ6oKX4YV+DrNLzIBq24/MfDVAp/a6t5VLSDJRUnFMn4h4ht4UksJgqUQSzG8gOve9PZN6yRcanHmAKOf84gPXu/vpC5biv3Hu9diBcWKTm+3YB3g7kzI0v3ocq0zDbgpxd/IMleN1HhQ+ok=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768906542; c=relaxed/simple;
+	bh=fIzQM+I1dKrQeWlW8RXDEsaXmZzlz/hUkp2KF5rWyuk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PiEY/R60EufWAY64wx3Kp7nZq1KEar/gF+Ie97veOR8aP/k17/wOFfz/iabC6+q/QmXRQaGVRmHB3eHAGoOqpMcZOiqdsxYn6DP1GZR8PEvlij61T0zV46jbKvSXrAx7FRRSsvLujs/gIqoOgvfjJdMSeK8yuSlzIG7E2LUkQWU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=UarTPr01; arc=pass smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5014b671367so65251831cf.3
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Jan 2026 02:55:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768906538; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YfGQnWQqRo1q/rbNyFC3n5CD4gHCRVTLjLy5gMgrlB7qeFisvcea9kVv8ACwG6i/r3
+         s/3AIPR86t5nKE23rDDpZiHAxGBiFqADM2TiweBhPA2QYGT8724GGejFP/i7F0RzI4mD
+         dTA0qsPOWfsmAO5jd+b+ctdH4Ej3Gr8N81XsCPt7YpWTFqIYwOsgPfx2xwWC3iytktZs
+         dSwSpV5woL8JGasR3kd/C/Cc4YcoLRw5KuCehM3sYW3dHoX3s2I7dF4KFLvSuelvrGX6
+         zGPqNSUef8rGpXaouN6z1kBU6UYZuCAPCzpDg4mMZ25XIP9Fr3RthtycQxl2OIpziZ8/
+         LWng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=+858jRkeuTzyR7QbFNMkP0w0F921+ZC4VlN4hpyPROU=;
+        fh=7QfuX+wHZYZFSPqeUOxUi4vqqDpfHKn8QSIp5lKqHrw=;
+        b=ZZFKxc0NxTaisKb90dHIUgQMBAJsapZ6WyqTWgl/AIF+ytn6BcnI3gRWQYccpZ7aJK
+         fSgiGzV+v7Pfo98zSwRobxbrDN5zdZItadF2P+frI/BjypdGoYXTtQtJU67NEudLaYDb
+         9IJ6cz53PDoJVLKBxYbk7EORVlk/lB+E8XL8KAUTqCzKscVpx3SW8kd0g0qDa+pIktRQ
+         m8nrHuz+vAJ0e6egMY5IUMUCg/y7UcRaunOemSLvaKwi5O1cuTc6j/azTcdyUEXBuENl
+         h40lovFqTrS4kKtg75qan4GrQTwjAUDIY7W1Z6CTGJlvNQ/NiDO4Z/h9dWxtz3voEYQ5
+         7DgA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1768906538; x=1769511338; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+858jRkeuTzyR7QbFNMkP0w0F921+ZC4VlN4hpyPROU=;
+        b=UarTPr015F7dRJLJacZZzl2NOK/uiKmtbKv2oceQ84MND3/ducGjUdBlaRQ98tpe8l
+         iuWAxTZguNmQtI2E46ndHWUOmlqapQTRDAKQpzRsRC2qJqYZqEE63hOzLNwSX1lv5UJM
+         uDEWvpK4Ov/L93nsSMEPmC0p+NZNnZ2Jtl50s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768906538; x=1769511338;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+858jRkeuTzyR7QbFNMkP0w0F921+ZC4VlN4hpyPROU=;
+        b=fMHoC6nphbFuJX8ehoemHRHAGM9KfTDp5sNRajN4jI51pa8qewp+g7JZK8rbM67FcG
+         r2gbpIAS2ZKZiUqzx1yd0ks4oGP0EMq1CtFk7wQ/eoTgA8TDXE28+RaIBfE111+bSxFl
+         sftvKJvGfwn/DslN7uT+DVKWjdeqntgMU+i5EtHWRw8TTvtVo7aJTfy+BXmTAi3InmAb
+         oc6gfemUAMIo7ql3MdGvWIvi8ORYzBCB8ALxmvavL7BYcJryCU4p00SaxW+ElbiLvzNV
+         wRkZKKdALUNTTpnp0r8ckXA5nfRz96D41c6UID9iONVoKRbfTAZn8wYLU/e9IBghn4Pt
+         dYxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyzYfolAPmNS/72dxsad02/Zb8J2uX94YTzvltMk8mAavYd3iwaMWjiQ3FRopa/gGqk2xoCpJEpro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ1A7pj0cuwxn+pkOEqLxGvjr9oSRevSovUmSldLgnxaj3ndON
+	DSh15E4pDjtCvQSpW4O5QmyS76tOhE0bYhH1S+nhc+VNiq1DTLebr+yrfudPEWbUqrJziBhfDAZ
+	l5sPVRPZ7aXNuISqwkQsRykoaUicSrFHS6buzhBf6AQ==
+X-Gm-Gg: AY/fxX6Tjz4WE0VKqVAC8s3DVKLXiA2KyL3IWH5csbvNyNzu95pBL3AV3i/DCd30fKI
+	nPsBDskBbqdhN8h1PQrmOwSXTLK3kd344CW5CrZt6kf1hm6XUQvyfHHcteg5tNJQKbB+2pVHxnj
+	ItVwC3rgydqvNTydaG9DrmRhgbE2ULQWMeRzBsLcq31C9aGkWv6GwxR3QdHx/UyLb48N1/hBxiS
+	8iwAei4kA4VAHgGZ/0ec/2UOh9IezLweNqUtZHFLrWsyWZ2p2WeeHDxS5ppVDQigw3J+193cDrO
+	i+D55PJ3
+X-Received: by 2002:a05:622a:f:b0:4f0:23b6:c285 with SMTP id
+ d75a77b69052e-502a1f231b4mr161536681cf.41.1768906538583; Tue, 20 Jan 2026
+ 02:55:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <176890489330.16766.1807342797736472831@noble.neil.brown.name>
+References: <cover.1768573690.git.bcodding@hammerspace.com>
+In-Reply-To: <cover.1768573690.git.bcodding@hammerspace.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 20 Jan 2026 11:55:26 +0100
+X-Gm-Features: AZwV_QjAOHMTbnCyc1vnuEuGvNZiJz2bkDzfLZ1b6HoSesVSYIgHm3F1kdUgfiM
+Message-ID: <CAJfpegt=eV=2OxgfiVYG7drw_yN14b7edJhj+bsF_ku7cVGuig@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
+To: Benjamin Coddington <bcodding@hammerspace.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [5.04 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [0.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DATE_IN_PAST(1.00)[55];
-	MID_RHS_NOT_FQDN(0.50)[];
+	DATE_IN_PAST(1.00)[39];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[szeredi.hu:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18168-lists,linux-nfs=lfdr.de];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	GREYLIST(0.00)[pass,body];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[hammerspace.com,oracle.com,kernel.org,gmail.com,vger.kernel.org,poettering.net];
+	DMARC_POLICY_ALLOW(0.00)[szeredi.hu,quarantine];
+	TAGGED_FROM(0.00)[bounces-18169-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.org,brown.name,gmail.com,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.992];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miklos@szeredi.hu,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[szeredi.hu:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 117D96B94F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,hammerspace.com:email]
+X-Rspamd-Queue-Id: 02D836112F
 X-Rspamd-Action: no action
 
-On Tue, Jan 20, 2026 at 09:28:13PM +1100, NeilBrown wrote:
-> On Tue, 20 Jan 2026, Christian Brauner wrote:
-> > On Tue, Jan 20, 2026 at 08:46:01PM +1100, NeilBrown wrote:
-> > > On Tue, 20 Jan 2026, Christian Brauner wrote:
-> > > > > You don't need signing to ensure a filehandle doesn't persist across
-> > > > > reboot.  For that you just need a generation number.  Storing a random
-> > > > > number generated at boot time in the filehandle would be a good solution.
-> > > > 
-> > > > For pidfs I went with the 64-bit inode number. But I dislike the
-> > > > generation number thing. If I would have to freedom to completely redo
-> > > > it I would probably assign a uuid to the pidfs sb and then use that in
-> > > > the file handles alongside the inode number. That would be enough for
-> > > > sure as the uuid would change on each boot.
-> > > 
-> > > What you are calling a "uuid" in "the pidfs sb" is exactly what I am
-> > > calling a "generation number" - for pidfs it would be a "generation
-> > 
-> > "generation number" just evokes the 32-bit identifier in struct inode
-> > that's overall somewhat useless. And a UUID has much stronger
-> > guarantees.
-> > 
-> > > number" for the whole filesystem, while for ext4 etc it is a generation
-> > > number of the inode number.
-> > > 
-> > > So we are substantially in agreement.
-> > 
-> > Great!
-> > 
-> > > 
-> > > Why do you not have freedom to add a uuid to the pidfs sb and to the
-> > > filehandles now?
-> > 
-> > Userspace relies on the current format to get the inode number from the
-> > file handle:
-> > https://github.com/systemd/systemd/blob/main/src/basic/pidfd-util.c#L233-L281
-> 
-> The
->   assert(r != -EOVERFLOW);
-> means you cannot extend it
-> 
-> > 
-> > And they often also construct them in userspace. That needs to continue
-> > to work. I also don't think it's that critical.
-> > 
-> 
-> as does this.
+On Fri, 16 Jan 2026 at 15:36, Benjamin Coddington
+<bcodding@hammerspace.com> wrote:
 
-Well, we could add a new version and we could make this work. I just
-don't think we need to right now.
+>  Documentation/netlink/specs/nfsd.yaml | 12 ++++
+>  fs/nfsd/export.c                      |  5 +-
 
-Btw, the manpage for name_to_handle_at() and friends mandates that file
-handles are to be treated as opaque and should not be messed with
-directly. That ship has sailed a long time ago. Userspace very much
-relies on file handle layout. That's at least true for cgroupfs and
-pidfs.
+Would this make sense as a generic utility (i.e. in fs/exportfs/)?
+
+The ultimate use case for me would be unprivileged open_by_handle_at(2).
+
+Thanks,
+Miklos
 
