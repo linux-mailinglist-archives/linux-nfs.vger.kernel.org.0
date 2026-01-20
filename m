@@ -1,91 +1,60 @@
-Return-Path: <linux-nfs+bounces-18158-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18159-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D5BCD3C31B
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 10:12:39 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92BEBD3C3C9
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 10:39:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5FC524E919A
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 09:04:39 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0C23E5260ED
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Jan 2026 09:28:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B3D3BF2FD;
-	Tue, 20 Jan 2026 09:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9BE3BF2E9;
+	Tue, 20 Jan 2026 09:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGDb6CKy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccj+s/YJ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4594A3BF2EF;
-	Tue, 20 Jan 2026 09:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306553A7853;
+	Tue, 20 Jan 2026 09:23:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768899860; cv=none; b=Rex7K93/vlhbTrb9soBqNm35S2CXseLMP4rtpwnxgLisKenIpIHgMnenloIyZ/MF4OJvizjYmoAjeEE3P/Nnz1unyQD8bvtqNouU2u1RxGGqiz2VryXNmzsUS5bslzhbmfh4WelX6nQM9r+meEl3lNxy7X/5JvugzF1BR6QIZrI=
+	t=1768900988; cv=none; b=dVahkil1DU8NH+HwxseEMymHGh+xeh8oXmf7st1f6Yg9hAIFE8hoxCHij9DEn6lJ60sM1P59e0HqbDRA2c9qsOIB31RH6LvwZP3Z+Qu4vGwJH3+1JjbHDVSr0M8FRcxq1hDnH6loJMGBwGg2MYl8NUPqQHkF2tgUKGXx+n0NQxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768899860; c=relaxed/simple;
-	bh=JhDsyPDpvGvdyDqhxS7TmcgEIlTc18FPxLf75vE9wzQ=;
+	s=arc-20240116; t=1768900988; c=relaxed/simple;
+	bh=gN06CoZo6pzfhmojwTq7NXXWYwPxUCLoA0Q9in47EjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjSiJ5JTbijWqxEauPsvXDN8eIV0R7VxFhNW0vuS5rAFu+B71cHpmLKhNKtiYFPMP82561CRm7jElGYDE36SVChf+sU9a24YxqYen2DKaM6sYEEAgwjWyQsE+OSQH+8VOdYAb0xcnF6m5ebLgA32I6En6BfCJNoukEwLAN6tWDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGDb6CKy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E27E6C16AAE;
-	Tue, 20 Jan 2026 09:04:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAQGDTmmtIo27CfzOA2WrIQ5FRTbPpU4m2CwQD7ZrocEv/VdM6F8A2LfdMAYDv746/LLWDMh6VWtCDUv9EiE+/AMKDxmOGPcVIUvWLBCrPD46OA3/Rhy5qZZxYnRp4L6+cIYz2kfx8DTCm+2aFhdmcIgwcqhKLjN5erTBYpg2A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccj+s/YJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D964BC16AAE;
+	Tue, 20 Jan 2026 09:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768899859;
-	bh=JhDsyPDpvGvdyDqhxS7TmcgEIlTc18FPxLf75vE9wzQ=;
+	s=k20201202; t=1768900987;
+	bh=gN06CoZo6pzfhmojwTq7NXXWYwPxUCLoA0Q9in47EjU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fGDb6CKy+f5LfPcob1huzIh9QAzk76QrguP0qOMXMNMmAKfWnMvffuvnLOaaLC7ew
-	 wiubvCikcdnsEOdPZbW0H4zHWxmUCevg43yAEJPXPT7hXH00W12HfQMEdyIDGD9O0j
-	 nz71osv3r1RJtNqoyCLf3dZK5Tzfa3wtmYACMeGkq0oSzzypljd57xjg95SjtXty51
-	 UWd/sW/tdqfH5YKWLFRsczUlBeW+ZFhuEDFDscE+KtGNfb9dtk0DPBFCrkx1ut54Lk
-	 X+2fXMq+FuO5POPWMylL14pwRJfTUXJAHUYehRsOz+2S0efemBjlbHErutvPMV85s8
-	 rd90Iu7ZfyW+Q==
-Date: Tue, 20 Jan 2026 10:04:02 +0100
+	b=ccj+s/YJi8n1hqrsOiUc1Lcc/IzhEcbMyQFMc4HuekAo47iNu2c60xkegMjR6g5G4
+	 L8GLFPPeBUpJYArwf2/SsYTRnGOGj2dNzdde8QBj1GRuElJMAgNZV1InEbHAAijk3r
+	 e4XI+o/y+dB+A5My2weCCJ4Xv9mHG3RDgPvsyJ44cQxancVOh3S3o5wz6hWsUPhmdL
+	 9+6T5ph7vDVebVyaSaqll4koFDeW3hyGe3JBfll5JEKZDWOY7kqy8YJf5KX7s8ZsIu
+	 4Hv9V1RiAI1iN6xpnVxc9A8d22S7JirKBmH95w9pWBiJJp47FUDnCz/ek9jls5nTM/
+	 MObTncL2tPfXA==
+Date: Tue, 20 Jan 2026 10:23:02 +0100
 From: Christian Brauner <brauner@kernel.org>
 To: NeilBrown <neil@brown.name>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, 
-	Carlos Maiolino <cem@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
-	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
-	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
- nfsd export support
-Message-ID: <20260120-entmilitarisieren-wanken-afd04b910897@brauner>
-References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
- <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
- <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
- <176877859306.16766.15009835437490907207@noble.neil.brown.name>
- <aW3SAKIr_QsnEE5Q@infradead.org>
- <176880736225.16766.4203157325432990313@noble.neil.brown.name>
- <20260119-kanufahren-meerjungfrau-775048806544@brauner>
- <176885553525.16766.291581709413217562@noble.neil.brown.name>
+Cc: Benjamin Coddington <bcodding@hammerspace.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	Lennart Poettering <lennart@poettering.net>
+Subject: Re: [PATCH v1 0/4] kNFSD Signed Filehandles
+Message-ID: <20260120-tratsch-luftfahrt-d447fdd12c10@brauner>
+References: <cover.1768573690.git.bcodding@hammerspace.com>
+ <20260119-reingehen-gelitten-a5e364f704fa@brauner>
+ <176885678653.16766.8436118850581649792@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -94,92 +63,53 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <176885553525.16766.291581709413217562@noble.neil.brown.name>
+In-Reply-To: <176885678653.16766.8436118850581649792@noble.neil.brown.name>
 
-On Tue, Jan 20, 2026 at 07:45:35AM +1100, NeilBrown wrote:
-> On Mon, 19 Jan 2026, Christian Brauner wrote:
-> > On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
-> > > On Mon, 19 Jan 2026, Christoph Hellwig wrote:
-> > > > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
-> > > > > > This was Chuck's suggested name. His point was that STABLE means that
-> > > > > > the FH's don't change during the lifetime of the file.
-> > > > > > 
-> > > > > > I don't much care about the flag name, so if everyone likes PERSISTENT
-> > > > > > better I'll roll with that.
-> > > > > 
-> > > > > I don't like PERSISTENT.
-> > > > > I'd rather call a spade a spade.
-> > > > > 
-> > > > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
-> > > > > or
-> > > > >   EXPORT_OP_NOT_NFS_COMPATIBLE
-> > > > > 
-> > > > > The issue here is NFS export and indirection doesn't bring any benefits.
-> > > > 
-> > > > No, it absolutely is not.  And the whole concept of calling something
-> > > > after the initial or main use is a recipe for a mess.
-> > > 
-> > > We are calling it for it's only use.  If there was ever another use, we
-> > > could change the name if that made sense.  It is not a public name, it
-> > > is easy to change.
-> > > 
-> > > > 
-> > > > Pick a name that conveys what the flag is about, and document those
-> > > > semantics well.  This flag is about the fact that for a given file,
-> > > > as long as that file exists in the file system the handle is stable.
-> > > > Both stable and persistent are suitable for that, nfs is everything
-> > > > but.
-> > > 
-> > > My understanding is that kernfs would not get the flag.
-> > > kernfs filehandles do not change as long as the file exist.
-> > > But this is not sufficient for the files to be usefully exported.
-> > > 
-> > > I suspect kernfs does re-use filehandles relatively soon after the
-> > > file/object has been destroyed.  Maybe that is the real problem here:
-> > > filehandle reuse, not filehandle stability.
-> > > 
-> > > Jeff: could you please give details (and preserve them in future cover
-> > > letters) of which filesystems are known to have problems and what
-> > > exactly those problems are?
-> > > 
-> > > > 
-> > > > Remember nfs also support volatile file handles, and other applications
-> > > > might rely on this (I know of quite a few user space applications that
-> > > > do, but they are kinda hardwired to xfs anyway).
-> > > 
-> > > The NFS protocol supports volatile file handles.  knfsd does not.
-> > > So maybe
-> > >   EXPORT_OP_NOT_NFSD_COMPATIBLE
-> > > might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
-> > > (I prefer opt-out rather than opt-in because nfsd export was the
-> > > original purpose of export_operations, but it isn't something
-> > > I would fight for)
-> > 
-> > I prefer one of the variants you proposed here but I don't particularly
-> > care. It's not a hill worth dying on. So if Christoph insists on the
-> > other name then I say let's just go with it.
-> > 
+> You don't need signing to ensure a filehandle doesn't persist across
+> reboot.  For that you just need a generation number.  Storing a random
+> number generated at boot time in the filehandle would be a good solution.
+
+For pidfs I went with the 64-bit inode number. But I dislike the
+generation number thing. If I would have to freedom to completely redo
+it I would probably assign a uuid to the pidfs sb and then use that in
+the file handles alongside the inode number. That would be enough for
+sure as the uuid would change on each boot.
+
+> The only reason we need signing is because filesystems only provide
+> 32bits of generation number.  If a filesystem stored 64 bits, and used a
+> crypto-safe random number for the generation number, then we wouldn't
+> need signing or a key.
 > 
-> This sounds like you are recommending that we give in to bullying.
-> I would rather the decision be made based on the facts of the case, not
-> the opinions that are stated most bluntly.
+> We need a key, effectively, to turn a 32bit number that can be iterated
+> into a 64bit number which cannot, in a non-reversible way.
 > 
-> I actually think that what Christoph wants is actually quite different
-> from what Jeff wants, and maybe two flags are needed.  But I don't yet
-> have a clear understanding of what Christoph wants, so I cannot be sure.
+> Does userspace refuse the extract the inode number if the filehandle
+> size changes?  It it can cope with size change, then adding a random
+> number to the end of the filehandle should not be a problem.
 
-I've tried to indirectly ask whether you would be willing to compromise
-here or whether you want to insist on your alternative name. Apparently
-that didn't come through.
+At least nsfs file handles are public api and may grow in size.
 
-I'm unclear what your goal is in suggesting that I recommend "we" give
-into bullying. All it achieved was to further derail this thread.
+> I didn't know that.....
+> Oh, there is a "permission" operation now:
+> 
+>  * permission:
+>  *    Allow filesystems to specify a custom permission function.
+> 
+> Not the most useful documentation I have ever read.
+> Not documented in Documentation/filesystems/exporting.rst
+> 
+> Not used in fs/exportfs/.
+> Ahhh.. used in fs/fhandle.c to bypass may_decode_fh()
+> 
+> Fair enough - seems sane for a special-purpose filesystem to give away
+> different access.
+> 
+> Thanks for the info.
+> 
+> I wonder if nfsd should refuse to export filesystems which have a
+> .permission function, as they clearly are something special.
 
-I also think it's not very helpful at v6 of the discussion to start
-figuring out what the actual key rift between Jeff's and Christoph's
-position is. If you've figured it out and gotten an agreement and this
-is already in, send a follow-up series.
-
-If I don't like it I can always just rename it to EXPORT_OP_DONKEY_KONG
-when applying.
+No problem. pidfs and nsfs have custom permission and open because they
+both don't need to reconstruct any paths and aren't subject to the same
+permission checking.
 
