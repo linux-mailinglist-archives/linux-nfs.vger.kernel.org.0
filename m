@@ -1,96 +1,100 @@
-Return-Path: <linux-nfs+bounces-18274-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18275-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oLkHCM9VcWkNEwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18274-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 23:40:15 +0100
+	id GDNZAQZYcWkNEwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18275-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 23:49:42 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B4DC5EF4D
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 23:40:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B19E5F0F3
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 23:49:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C6AEB8897DE
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 22:39:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 842098C36D8
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 22:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E407144A722;
-	Wed, 21 Jan 2026 22:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC555428490;
+	Wed, 21 Jan 2026 22:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="UT6E2AvY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CPihRHW3"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="GuovOWXR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GQln8ftB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B199441048
-	for <linux-nfs@vger.kernel.org>; Wed, 21 Jan 2026 22:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9291A3A9D98;
+	Wed, 21 Jan 2026 22:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769035136; cv=none; b=QoZj/dUbVSgNuGGOsc4tmTBA69hukK1MJsSesSZiCGfuACAE4Cnnpye+ht44AybvxaO8atsZwENbegdztEbg4nn9Ni9S2qJ28EWBNWe8z9yMtYNGbiTF3fTUalrd4m1bmN2NOO8vbHZ9WQouCfgNJVqLqYjzLMzFTLkX5E/kR8Y=
+	t=1769035693; cv=none; b=KqgwEG6JVJzgwc9uvSJTBljPfDe3iYYx3gwZ1TZwXMR7Y0VKp+nZVRPXDcOixwGVRcrcA3ud+3UP+Fo0l5nszSvcRJtw9i5VtQiDb6nKGjjPkEAw+0tHc5vC+OYwxc3+W3cSv6uVUUAMGlQcv3h10fmZqABVVk3xAPufMAy+3uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769035136; c=relaxed/simple;
-	bh=h/pEE4irDqXdXxxsbuYx4XmHfNQ9yj/IJxWP4Z0JEqA=;
+	s=arc-20240116; t=1769035693; c=relaxed/simple;
+	bh=qPvaj1CJudRWH8TWXb/DPXHF0yJiMz7RI8byLvamKBE=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=JOSpivRQZrFqBeDZv0LEGMD/p0g3GlFmGBEbf35CPSaUdQz5ubG8rLV8fiN2ePguQ4v0mEDBius2ck2LXdkySIS1/R/84V1R97g5vw88PPlmLvy9HKsC9jkEM4ZZqLeVrupn2+neHiDPZ6FjK++IPujAbBORlyuW/MNEzGXsylc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=UT6E2AvY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CPihRHW3; arc=none smtp.client-ip=202.12.124.150
+	 References:Date:Message-id; b=R4AHi9qgrXEZU56Br+ruKeD9+p0Xz8grKPbPfLi9yHZNys4amZJZCZRwrJMLoPYz1lG/qG1QeTjeV0e3oOP8pBryqa0DUcJ9eVaXDlxD4gqvrT78uGdirUa//3sGlupJvmSQGScKiQflIOovMZanTAYjw0FRjEvxRXKfotTghdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=GuovOWXR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GQln8ftB; arc=none smtp.client-ip=202.12.124.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 4567F1D00067;
-	Wed, 21 Jan 2026 17:38:53 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Wed, 21 Jan 2026 17:38:53 -0500
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.stl.internal (Postfix) with ESMTP id 8D6A31300F24;
+	Wed, 21 Jan 2026 17:48:08 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 21 Jan 2026 17:48:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1769035133; x=1769121533; bh=1SUuuTIqK1vvdl78p1pJsNvgydrEktkaNJA
-	GxWtEUNM=; b=UT6E2AvYKUe9J2GUXzz+09hxSjdYeOaQ7CJ/O68n6cXqW9+U/tT
-	e3t4dEqCvrIXekjcN5oqlr+2Wxx2yOMAnazSqVUIZUqBWNVOxLLL+ZikVbHTSjRp
-	Q3BQ+B6fSUhThUl5aT3pcG3PafmgSOQ/pGupnLOfLYAivvTKjRCt+o7oVFLSXA0F
-	K8tQiFSjz9rkGa/0gfhUqZJ/xo/dpMCCh2jeeDU13l9iyUk0XW5AnEQlQNQ+xW1o
-	vZkmJaKWujyt2Uh/yKt08pnM03XyX0wrnZn/otMnaBPP1sBPMc1mrKfVk6n6QI5e
-	YrAzOOYVgMnLAdMW/em3NgkZDD3YiXVtN5A==
+	1769035688; x=1769042888; bh=5coOyJl4iosEMxvKLf9pz/D+NbUu48dkiDD
+	9Y2kxJME=; b=GuovOWXRBLUE5OJcSyLnE/2eveX/36uTx36j9P93zjQcQRBZQL2
+	hrnzBjQOgzs/f0q+zVSV1tWHCGJeldpGO5tNxzbNYGAmGERTI/74rC4AhDEcwnbN
+	3EK+IxK9Da7qBxTZ0cL7/5RdElCmK5xx1WEmeVCQTAdbEDCJzhvLIyYH/VUBXRn2
+	h49SQEqoXX9n4peKNOiWNTGeGPiK9qsGhIMzVRsfQ8nV0r0CSHnLs3nYhgIfpNL3
+	aRQdXpKb6VS0ww0j3QddijYoBo1Kwrkcj+Ox1b+DG22Mrte7SY069e+GdbfIhnlj
+	3VqqpOkLrd4aGQop2LrD926E4486pl+anPw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769035133; x=
-	1769121533; bh=1SUuuTIqK1vvdl78p1pJsNvgydrEktkaNJAGxWtEUNM=; b=C
-	PihRHW3cd56l9MAxt8ry2NqarRM99AdpJGHpEW+GZXobKqLhaprVHJ5T2Jr0OEdL
-	Euq3ol9rTyNVn5Iwt4GvktV7g/NQODw/GtFvApiAxG1TrqcKEiYX7mNcED6+F4M6
-	OxIiZ5tMq+bDOdBBojO959vPNzVZZehGxTE1hkC6uN1iOPtp5X7iFVQ+8QCNHFR1
-	y+sXMbFdwY7dOeu1iYOTokiqbLF6EcDUnuophzIFaxjcUa3KykSaCF1UpvDySZWh
-	oNih41ZlxNMEcmZwrg6CCC34w3oLOYMKoI/hecNeyb3csTOIzz3yXW3sZACvx/BX
-	nGn7EInogPIB3dbZvXhDQ==
-X-ME-Sender: <xms:fFVxaSk7UtURhKP8Vam1PrwfVh0Lm2fVdEGQDijn3jDyFg47dNOpxQ>
-    <xme:fFVxaQvtIuhkgatiCdyzkdGKulNr5ywkWHvnvnC-zmWk3fxxy_fdsOd3ZLK96zx6z
-    1sazA7gv0izDtGtmwd0G_sFMBUPZsjtV5XfTsnDqv7K359xCw>
-X-ME-Received: <xmr:fFVxaY9iDetzWkNBnH4QrIMdXHTQreT5HR-AVZQ8MLC6lfylkCWmzRGf0j7Rzw5lW0ZXiXpxV0VQcDsFdR6hZBVLNoEr0z9y-AxlA9GBDhTa>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeeghedtucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769035688; x=
+	1769042888; bh=5coOyJl4iosEMxvKLf9pz/D+NbUu48dkiDD9Y2kxJME=; b=G
+	Qln8ftBpavKFAA+sJNEPaaNr8oKurXmo3q4BaVp9GwaWB1fm8C563yxGcgYW93DS
+	2xtNzCjbtolaXD67qz6Qutqe5geB5bsD8Ugeg6j/LWjxuo9XwZj1mmfo4drLgUP2
+	yKqhpGLcalZ4u5NUgfoc97greSYLp54DwzSB4S6wHw4u2msQsbGk5ZA8IJMGNIbQ
+	ngZ+8m6ZYaIowc/dHLMNgP5a1uqvjsJX/qkbUxNoCKOD6a2oW1oaQNc62xAi1nw9
+	1ilzAzJcDO41rfb5T7w8GgYR5Vyc6IoiPl6WjnE4pmvyLFxhbYKi59Pm07XkqffD
+	MH3MYMODbYPIXIIlLoSWg==
+X-ME-Sender: <xms:o1dxaZ-cMFc_o0d43ug7z0kzLEBmcLr7-qnETyPvdBZuqqtXE2bH3w>
+    <xme:o1dxaWu_cgJpAPDvXRifHWGeBvpSKMc12f7rFBgOoG_tMemlpn3xQTXYgCwgfa7tz
+    OXDCzuK93xla979oqbjqOFhStCl3Vabm505SJATmkmL4XzdyA>
+X-ME-Received: <xmr:o1dxaTxZPCOrm1mlblqPiWzOX285XPSCGpXm-fKvOvS9y7eJCkfR7O9aWP_lCWxHfYgXgfjqf3Vws4y9gRuwORW00qGz0381O1TtjVlRJXe1>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeeghedvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
     epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
     vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehsthgvvhgvugesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghh
-    uhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggtohguughinhhgsehhrghmmhgvrhhs
-    phgrtggvrdgtohhm
-X-ME-Proxy: <xmx:fFVxaSObtH7wcF2A6o9g04QWth2Dcah4J7kvP7NqQtMRxQum4QaJOA>
-    <xmx:fFVxaeE8ocmLUhgDXDjfjC-NUBdap4IM26M3CU5uFcXs7984I27cNA>
-    <xmx:fFVxaYRrwfeBMiOWnfd0r2e3HL-bM1d-arbv0v76mHinGGGNjpNJIw>
-    <xmx:fFVxaTun3C8LomVFPmHzepexdj1X8UT83l1i3aU_9CL0ArPUxTyoAw>
-    <xmx:fVVxaSN4jFVTl-p_frQ7DUktY6564SdIJCUVgcvkvDGqsKhWgoQELJwF>
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjeejpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtohepghhuohgthhhunhhhrghisehvihhvohdrtghomhdprhgtphhtthhopehl
+    ihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhnihhlfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:o1dxabxtlAdkhpwCkINTEBpxmOYNyzwJPUiM41SluU32_hzzNA9XZQ>
+    <xmx:o1dxafCKgd9STI3lGSZvVjQToHTy1h7liCKSrmU9waffzwMuC1NFUA>
+    <xmx:o1dxaY793FR_a6LdPfr_ZHshxnAh_1jwBDA6jddarcyZMxIXycacjw>
+    <xmx:o1dxaRMf9cXehnUejISjAclfFWLd7Zsy6-U0xLPbufXx8cPynQ1yZw>
+    <xmx:qFdxaSd_vulaCSCn1gwPqzAJtzBUIYK-Pjhk-xVuA_6gzPYpL8lA2saQ>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Jan 2026 17:38:50 -0500 (EST)
+ 21 Jan 2026 17:47:43 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -100,197 +104,192 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
-To: "Benjamin Coddington" <bcodding@hammerspace.com>
-Cc: "Steve Dickson" <steved@redhat.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v1 1/2] nfsdctl/rpc.nfsd: Add support for passing
- encrypted filehandle key
-In-reply-to: <3EB8A763-21AF-44E3-8D22-030C6DC62A8B@hammerspace.com>
-References: <cover.1768586942.git.bcodding@hammerspace.com>, =?utf-8?q?=3C90?=
- =?utf-8?q?fad47b2b34117ae30373569a5e5a87ef63cec7=2E1768586942=2Egit=2Ebcodd?=
- =?utf-8?q?ing=40hammerspace=2Ecom=3E=2C?=
- <176868679725.16766.14739276568986177664@noble.neil.brown.name>,
- <8328B53F-21DE-4237-AF79-5DE88D53D8B9@hammerspace.com>,
- <176877755694.16766.8795981876133751749@noble.neil.brown.name>,
- <3EB8A763-21AF-44E3-8D22-030C6DC62A8B@hammerspace.com>
-Date: Thu, 22 Jan 2026 09:38:49 +1100
-Message-id: <176903512916.16766.9732522324635199948@noble.neil.brown.name>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Christoph Hellwig" <hch@infradead.org>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Carlos Maiolino" <cem@kernel.org>, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>, "Chris Mason" <clm@fb.com>,
+ "David Sterba" <dsterba@suse.com>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Phillip Lougher" <phillip@squashfs.org.uk>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Dave Kleikamp" <shaggy@kernel.org>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>, "Jan Kara" <jack@suse.cz>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
+ "David Laight" <david.laight.linux@gmail.com>,
+ "Dave Chinner" <david@fromorbit.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
+ linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+ linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
+ linux-f2fs-devel@lists.sourceforge.net, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 01/31] Documentation: document EXPORT_OP_NOLOCKS
+In-reply-to: <d8d68d1df6838c382799ce58345cfb5366585a8f.camel@kernel.org>
+References: <>, <d8d68d1df6838c382799ce58345cfb5366585a8f.camel@kernel.org>
+Date: Thu, 22 Jan 2026 09:47:41 +1100
+Message-id: <176903566115.16766.12892778448343562390@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.96 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_POLICY_ALLOW(0.00)[ownmail.net,none];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	TAGGED_FROM(0.00)[bounces-18274-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,ownmail.net:dkim,messagingengine.com:dkim,hammerspace.com:email,noble.neil.brown.name:mid];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	DMARC_POLICY_ALLOW(0.00)[ownmail.net,none];
+	TAGGED_FROM(0.00)[bounces-18275-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[infradead.org,kernel.org,zeniv.linux.org.uk,oracle.com,redhat.com,talpey.com,gmail.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,nod.at,suse.cz,mail.parknet.co.jp,lwn.net,fromorbit.com,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.samba.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[77];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
-	HAS_REPLYTO(0.00)[neil@brown.name]
-X-Rspamd-Queue-Id: 7B4DC5EF4D
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,noble.neil.brown.name:mid,ownmail.net:dkim,brown.name:replyto]
+X-Rspamd-Queue-Id: 9B19E5F0F3
 X-Rspamd-Action: no action
 
-On Thu, 22 Jan 2026, Benjamin Coddington wrote:
-> On 18 Jan 2026, at 18:05, NeilBrown wrote:
+On Wed, 21 Jan 2026, Jeff Layton wrote:
+> On Wed, 2026-01-21 at 20:58 +1100, NeilBrown wrote:
+> > On Wed, 21 Jan 2026, Jeff Layton wrote:
+> > > On Tue, 2026-01-20 at 09:12 -0500, Jeff Layton wrote:
+> > > > On Tue, 2026-01-20 at 08:20 -0500, Jeff Layton wrote:
+> > > > > On Mon, 2026-01-19 at 23:44 -0800, Christoph Hellwig wrote:
+> > > > > > On Mon, Jan 19, 2026 at 11:26:18AM -0500, Jeff Layton wrote:
+> > > > > > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem.=
+ Some
+> > > > > > > +    filesystems cannot properly support file locking as implem=
+ented by
+> > > > > > > +    nfsd. A case in point is reexport of NFS itself, which can=
+'t be done
+> > > > > > > +    safely without coordinating the grace period handling. Oth=
+er clustered
+> > > > > > > +    and networked filesystems can be problematic here as well.
+> > > > > >=20
+> > > > > > I'm not sure this is very useful.  It really needs to document wh=
+at
+> > > > > > locking semantics nfs expects, because otherwise no reader will k=
+now
+> > > > > > if they set this or not.
+> > > > >=20
+> > > > > Fair point. I'll see if I can draft something better. Suggestions
+> > > > > welcome.
+> > > >=20
+> > > > How about this?
+> > > >=20
+> > > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem. Files=
+ystems
+> > > > +    that want to support locking over NFS must support POSIX file lo=
+cking
+> > > > +    semantics and must handle lock recovery requests from clients af=
+ter a
+> > > > +    reboot. Most local disk, RAM, or pseudo-filesystems use the gene=
+ric POSIX
+> > > > +    locking support in the kernel and naturally provide this capabil=
+ity. Network
+> > > > +    or clustered filesystems usually need special handling to do thi=
+s properly.
+> > >=20
+> > > Even better, I think?
+> > >=20
+> > > +
+> > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem. Filesys=
+tems
+> > > +    that want to support locking over NFS must support POSIX file lock=
+ing
+> > > +    semantics. When the server reboots, the clients will issue request=
+s to
+> > > +    recover their locks, which nfsd will issue to the filesystem as ne=
+w lock
+> > > +    requests. Those must succeed in order for lock recovery to work. M=
+ost
+> > > +    local disk, RAM, or pseudo-filesystems use the generic POSIX locki=
+ng
+> > > +    support in the kernel and naturally provide this capability. Netwo=
+rk or
+> > > +    clustered filesystems usually need special handling to do this pro=
+perly.
+> > > +    Set this flag on filesystems that can't guarantee the proper seman=
+tics
+> > > +    (e.g. reexported NFS).
+> >=20
+> > I think this is quite thorough, which it good ...  maybe too good :-) It
+> > reminds me that for true NFS compatibility the fs shouldn't allow local
+> > locks (or file opens!) until the grace period has passed.  I don't think
+> > any local filesystems enforce that - it would have to be locks.c that
+> > does I expect.  I doubt there would be much appetite for doing that
+> > though.
+> >=20
 >=20
-> > On Mon, 19 Jan 2026, Benjamin Coddington wrote:
-> >> On 17 Jan 2026, at 16:53, NeilBrown wrote:
-> >>
-> >>> On Sat, 17 Jan 2026, Benjamin Coddington wrote:
-> >>>> If fh-key-file=3D<path> is set in nfs.conf, the "nfsdctl autostart" co=
-mmand
-> >>>
-> >>> ... is set in THE NFSD SECTION OF nfs.conf
-> >>>
-> >>>
-> >>>> will hash the contents of the file with libuuid's uuid_generate_sha1 a=
-nd
-> >>>> send the first 16 bytes into the kernel via NFSD_CMD_FH_KEY_SET.
-> >>>
-> >>> This patch adds no code that uses uuid_generate_sha1(), and doesn't
-> >>> provide any code for hash_fh_key_file()...
-> >>
-> >> I forgot to add the hash function after moving it into libnfs to make it
-> >> available to both rpc.nfsd and nfsdctl -- here it is, will fix on v2:
-> >>
-> >> diff --git a/support/nfs/fh_key_file.c b/support/nfs/fh_key_file.c
-> >> new file mode 100644
-> >> index 000000000000..350d36bf8649
-> >> --- /dev/null
-> >> +++ b/support/nfs/fh_key_file.c
-> >> @@ -0,0 +1,83 @@
-> >> +/*
-> >> + * Copyright (c) 2025 Benjamin Coddington <bcodding@hammerspace.com>
-> >> + * All rights reserved.
-> >> + *
-> >> + * Redistribution and use in source and binary forms, with or without
-> >> + * modification, are permitted provided that the following conditions
-> >> + * are met:
-> >> + * 1. Redistributions of source code must retain the above copyright
-> >> + *    notice, this list of conditions and the following disclaimer.
-> >> + * 2. Redistributions in binary form must reproduce the above copyright
-> >> + *    notice, this list of conditions and the following disclaimer in t=
-he
-> >> + *    documentation and/or other materials provided with the distributi=
-on.
-> >> + *
-> >> + * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-> >> + * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRA=
-NTIES
-> >> + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIM=
-ED.
-> >> + * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> >> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,=
- BUT
-> >> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF=
- USE,
-> >> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> >> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> >> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
-E OF
-> >> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> >> + */
-> >
-> > I wonder if it is time to stop putting this boilerplate in nfs-utils and
-> > start using SPDX like the kernel does.
-> >
-> >> +
-> >> +#include <sys/types.h>
-> >> +#include <unistd.h>
-> >> +#include <errno.h>
-> >> +#include <uuid/uuid.h>
-> >> +
-> >> +#include "nfslib.h"
-> >> +
-> >> +#define HASH_BLOCKSIZE  256
-> >> +int hash_fh_key_file(const char *fh_key_file, uuid_t uuid)
-> >> +{
-> >> +	const char seed_s[] =3D "8fc57f1b-1a6f-482f-af92-d2e007c1ae58";
-> >> +	FILE *sfile =3D NULL;
-> >> +	char *buf =3D malloc(HASH_BLOCKSIZE);
-> >
-> > Can this be
-> >    char buf[HASH_BLOCKSIZE];
-> > ??
-> >
-> >> +	size_t pos;
-> >> +	int ret =3D 0;
-> >> +
-> >> +	if (!buf)
-> >> +		goto out;
-> >> +
-> >> +	sfile =3D fopen(fh_key_file, "r");
-> >> +	if (!sfile) {
-> >> +		ret =3D errno;
-> >> +		xlog(L_ERROR, "Unable to read fh-key-file %s: %s", fh_key_file, strer=
-ror(errno));
-> >> +		goto out;
-> >> +	}
-> >> +
-> >> +	uuid_parse(seed_s, uuid);
-> >> +	while (1) {
-> >> +		size_t sread;
-> >> +		pos =3D 0;
-> >> +
-> >> +		while (1) {
-> >> +			if (feof(sfile))
-> >> +				goto finish_block;
-> >> +
-> >> +			sread =3D fread(buf + pos, 1, HASH_BLOCKSIZE - pos, sfile);
-> >> +			pos +=3D sread;
-> >> +
-> >> +			if (pos =3D=3D HASH_BLOCKSIZE)
-> >> +				break;
-> >> +
-> >> +			if (sread =3D=3D 0) {
-> >> +				if (ferror(sfile))
-> >> +					goto out;
-> >> +				goto finish_block;
-> >> +			}
-> >> +		}
-> >
-> > I think this inner look is not needed or wanted.
-> > fread() will loop as needed until EOF or an error, and we don't want to
-> > continue on an error.
->=20
-> The fh_key_file can be any length - and this function reads it in
-> HASH_BLOCKSIZE chunks.  Each chuck gets hashed against the previous result.
+> Yeah, I don't see us ever doing that. It'd be a tricky chicken-and-egg
+> problem, given the demand-driven way that the mountd upcalls work
+> today. We don't even know that anything is exported until something
+> asks for it.
 
-Yes, so the outer loop is clearly needed.
-The inner loop will never execute more than once as fread() only returns
-short reads on EOF or error.
+statd keeps state in /var/lib/nfs/sm, and nfsd keeps v4 state elsewhere
+in /var/lib/nfs.  This state effectively records if any NFS client might
+try to recover a lock.
+I think the v4 state is granular enough to identify the filesystem.
+lockd could be enhanced to use the same state I suspect.
 
->=20
-> That said, there is a bug where ferror(sfile) never gets assigned to "ret",
-> fixing that..
+We would need to generalise that state and load it at mount time and
+block new state creation accordingly.
 
-Thanks.
+i.e. this would have to be a vfs-level thing which nfsd makes use of.
+
+Possibly, but there are other things better worth our time.
 
 NeilBrown
-
->=20
-> Ben
->=20
 
 
