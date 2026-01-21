@@ -1,165 +1,258 @@
-Return-Path: <linux-nfs+bounces-18231-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18232-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eJsUHs2bcGlyYgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18231-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 10:26:37 +0100
+	id sMSaEwWfcGlyYgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18232-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 10:40:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FA2154572
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 10:26:37 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96752548E8
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 10:40:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5E4BF586E24
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 09:19:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A54F3882F96
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jan 2026 09:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5369D3D7D69;
-	Wed, 21 Jan 2026 09:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39F535E529;
+	Wed, 21 Jan 2026 09:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="24wzxAEw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCQpM/mT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4FF478857;
-	Wed, 21 Jan 2026 09:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768987080; cv=none; b=K+kpS15l0Y4RE0Vb4vhyR49pO7S6YHhSNAavFyTkhSR0UXawQO+jhw4wR/DkwnxwnN/f7RXBL+YBiy4mdo+s7dZyAAmzm6OeTTDaB7rBs68FMq5YV/u+fhipaqfXMMwBCHVT5oGNAymbwjorltrNkRxu4WkwqDFCqCAnBERynK0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768987080; c=relaxed/simple;
-	bh=pO5cDfr4usmkTORPaRFpCQPiJkEaTR8DriiJ39ztdjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fVq0TamuJOU7rce4CsQMNqUghFKOjIJqCk30EkPnRzEaX0Bt/rt35nO278ZsD0Zy4vBzkd0/q6aJgOR6+Wq2vvMxiKFaAk7S6ptd/g2CyMOrE3Q9M07fG2z5WbIJT9nsoHJaEDu/szFlEE+yv47PPWLCXXz2tTnY9v/wtDaI4Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=24wzxAEw; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pO5cDfr4usmkTORPaRFpCQPiJkEaTR8DriiJ39ztdjg=; b=24wzxAEwPXJTolgvO6OimnOF/e
-	PCCP7ApFllcFgYK9BV6IZuc8L0kvbBATJY98kG3HNuTveRZoEzUleITitYeQ1sEnQgip/caZsU5xv
-	dJdwK+gChgUqQEbAxiKEXxp911m3G5JIHc4fo/9rWfbz2jLa0Cow1fhStf81u9dw3U+A3E/fWl28t
-	IuElfVoUimZYZqST6urDi+5jYot79IklyhhyH0P0aFel75wmUkQR3e1/AQ/ca6YocY6w0qefM0tUe
-	5G43HMgvqejRLyJPnuAu6NAaUiRuEcAm8fydlJcGpgj1S49T83E8l9dWUEwKUQtDLp4AvWyrlvm1Z
-	9pGZFeLQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viULN-00000005Aph-3NRp;
-	Wed, 21 Jan 2026 09:17:41 +0000
-Date: Wed, 21 Jan 2026 01:17:41 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	Phillip Lougher <phillip@squashfs.org.uk>,
-	Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	David Laight <david.laight.linux@gmail.com>,
-	Dave Chinner <david@fromorbit.com>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-	linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
-	ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
-	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
-	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
-	linux-f2fs-devel@lists.sourceforge.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/31] Documentation: document EXPORT_OP_NOLOCKS
-Message-ID: <aXCZtS2_A_GCvcQ6@infradead.org>
-References: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
- <20260119-exportfs-nfsd-v2-1-d93368f903bd@kernel.org>
- <aW8yV6v8ZDiynOUm@infradead.org>
- <9b64bed72e43d0bf24e9b1e3bc770c4a87082762.camel@kernel.org>
- <707f08e114bf603caf7de020bb630d5477e86bca.camel@kernel.org>
- <2ed97731c54ef130ea58861a91c80dacd785de9a.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D95836C5A2
+	for <linux-nfs@vger.kernel.org>; Wed, 21 Jan 2026 09:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768987536; cv=pass; b=bEgAecfE1Dn7UDigR/KHbGBSfIbSonOsAcMOW8blMzysQWf6GEMw/dS+gr6SGxcvcHi/ZUlFB0JSO+Oyllv8BXZRlKOuqY97Z2wXc9Ybj/4zTrXDs6koXRGmtv35Q4s+lxSnQ2ZxE8c6CLsoCJ3zHORFMytDCL0naU9qcZMzSc0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768987536; c=relaxed/simple;
+	bh=QHugJybIn+A13bUi62gHbfpfGj3a683riqV/MptVDbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pXDdIdVWOFpCqTBbA3pxP/7y3KJR9QF6NXkiB6E9asZ8nM9+gW+3cc8yx4BW38BU2H6TCmUs9jr7AFRe70xAh4PgN1w4F81Defr8uBSdxDxLKVWpoBD99yon5KCM1qvxCRbNoqnqiW8whcANahibBE3RBWGq/nedr4UQVjSo+ek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCQpM/mT; arc=pass smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64b9dfc146fso1281216a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 21 Jan 2026 01:25:34 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768987533; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Jv79aHzfErq2tcBgE/PCXSgbTs/EhW1tOJ4+UZdreoTxIZDmRuWJXQxRfOvhQXxEeU
+         Em2XDy6VM5Vfru/jO9R6jZ0/f2dweo53O0HIBJw/PPEIXdhR4chG4OxaJ0JV1ZEDUPjH
+         RzyeS6ChiIp/FjexRw5tDSjWLAdTqSYHPPGUD2paWu7UuUD5MKIeK/pUqnhFcJX55JKY
+         lLiALPkHrPoAWjgteerY96JzkaWlfPpC8j7/1cmDrF4vR3apQ4h24gp6gdn7WeMQTb5Y
+         ld0xdey6v2OhzJ9Li2pn8wWFq0pxUshKZTgvJOnC0/u37RHNpamy8BAW90ggVa/OxMtp
+         SC0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=AovLu71ODAdo18YutR1H+JltiofIbaBqra9fEuDNW2w=;
+        fh=SD9xnvqbik0ks64db4glQyNLTXT7L0heXNlXLtOs+fI=;
+        b=LcMOtO9RncPYEaSflDnsp7JnQSUJWu8IutXaazZQe99y0C9SXaZYNFwJBsVKT+2CZt
+         z4OVao0iwdGVGGpEuQgIDMyOS9Ug6ouhPQdk6NLEq19EljmgRiL0IT1qIp4u7+GFbLrA
+         S5NY1EdWH763/QMxSaFVn6nZn3xbskg300j9ZBYLVfKF/SjhXZuQBnGJHOdIsJqAmRba
+         nmKxsZ6cziiIbpV8BK9K3pBRUpmTUiSc3zxW32F8rOpKQmEqcEo6mCdYmgwF3YNghXsd
+         7LuwbS6xxEXyzwV3se6nO6K0gFzTQuJX3sXTApnAflbz3KCdCP9OQjX8Not+oSG0slUe
+         eq5g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768987533; x=1769592333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AovLu71ODAdo18YutR1H+JltiofIbaBqra9fEuDNW2w=;
+        b=RCQpM/mTCf0IblwbblMvXor3Ww5iKS14y0hIGBnXAGD2vs5lrrO0h90Uh2ggtKjg7E
+         vtkCbY9KgRnVP15t3soAYBliMpAJgZLejOWxcfhpeHpop1dFNC3CGlbidbiPy+Ew8YAh
+         TrTY484JamF1DNlfN3QE5BAbi9D+J0l6WbIBM5DX4FzRh5c62ySsUAjaTKwTWpiPlNpz
+         1Lkaz8+HbfKPr4IcmUfsxlNY+Gx9CgoOTT263ddJru4F060cSyx5m4N1PdMM8uh/1EiC
+         lQUsSJy/4pSMuh0L1c558fphhp1thud85h/8TjLEoLDpNwjTKu3vOxUYvev0wv1Dr1MB
+         9A9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768987533; x=1769592333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AovLu71ODAdo18YutR1H+JltiofIbaBqra9fEuDNW2w=;
+        b=oXYSqdlIJAGfH+bI9axm/xsvj+bq57HqN7UC/BoGv3EWU06M/qsaptOM+TrGUY6+aS
+         1sMf2qS5Bdlk2zB92cKTUifs5fLFWbO3ccllQ5loM68sbICXUBj6NhEGc9nBxyyjRegN
+         u42DDI4iiJlilYSduP6PcaedCfpfSAUQ40/70eEvO4oGtq6wkCmot4QCttLhMcqQn9GT
+         uITV4fbL1X7/T2xZp149wNMEL6Q3GoX+nrAXJ7utFYIwM5x+Nr8l5F6v9j6qCq1Fj0Nm
+         it3R9ICDcEKoBjYqV701Vk8/7iNVmk4WcbsbJKMZNKADmqVDIruqfj0xeo0FZDAIPbXo
+         zcyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0TyVZzYd61YTzkgmznH96vNWfN1QpNwGAZo2D5q6vzOKXW8Wk1nErcxw4CdRnf2Wwwj0SSgThAFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu04Q97IA+R6qRdW07Nfcp6ER0kwVY/4rKeP/mXUK4nFE6Q0VG
+	o2/YiARRHEcvBV8Pq5kKKBKU6/2iJGL4uMRqdZ++8EIwPXvBEOxf99GrqsBrxbapJ5Fj0REcrhM
+	lJ8j7yE7IOjzCbGss/d2TuDemhksoEmQ=
+X-Gm-Gg: AZuq6aI1UWpk6jHFarVX80SqzxvVPPOsUR/krLgmV4/65nFQ7YZ+3csEM0O9QsOqleC
+	ycRTcqMSvleWZfJ5RtJdoNlXWCOTU69w9SrzM9amg9RYZzZdzshN39X9uc5BAfto2BaYrVzVVKi
+	XorA1rXNyDbTj75TVPpaCi+n4ZQgvG8vFRcUp1mplurfohTo3YkcQldlh5QhZFSfHuA7EBukVG8
+	CkyyGt3VRjlE2vNQ/Xivc+uvW9hOxqY8A2Ht+edrwkiwg7PQcxNgn4mlypcD979cRNvzQ+/gtBS
+	HaPtFyttaKLl2YiS+mQklYoZ15mZQA==
+X-Received: by 2002:aa7:c708:0:b0:658:ded:97c8 with SMTP id
+ 4fb4d7f45d1cf-6580ded999fmr1927493a12.9.1768987532701; Wed, 21 Jan 2026
+ 01:25:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ed97731c54ef130ea58861a91c80dacd785de9a.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+References: <20260121085028.558164-1-amir73il@gmail.com>
+In-Reply-To: <20260121085028.558164-1-amir73il@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 21 Jan 2026 10:25:21 +0100
+X-Gm-Features: AZwV_Qha9OC9bEP43y2_OZbfZ-P8E78cWE_KF4QdlarDuJNF0ODtiZxG6MZgt5E
+Message-ID: <CAOQ4uxikycvR4+z34Ox5tuoaFoX3XyUkv6mP53V38b25_tNhQQ@mail.gmail.com>
+Subject: Re: [PATCH] nfsd: do not allow exporting of special kernel filesystems
+To: Christian Brauner <brauner@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-1.96 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
+	TAGGED_FROM(0.00)[bounces-18232-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,zeniv.linux.org.uk,oracle.com,brown.name,redhat.com,talpey.com,gmail.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,nod.at,suse.cz,mail.parknet.co.jp,lwn.net,fromorbit.com,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.samba.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18231-lists,linux-nfs=lfdr.de];
-	DMARC_POLICY_ALLOW(0.00)[infradead.org,none];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[78];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: 1FA2154572
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 96752548E8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 09:35:48AM -0500, Jeff Layton wrote:
-> Even better, I think?
+[cc the correct email address for Neil]
 
-This sounds great, thanks!
-
+On Wed, Jan 21, 2026 at 9:50=E2=80=AFAM Amir Goldstein <amir73il@gmail.com>=
+ wrote:
+>
+> pidfs and nsfs recently gained support for encode/decode of file handles
+> via name_to_handle_at(2)/opan_by_handle_at(2).
+>
+> These special kernel filesystems have custom ->open() and ->permission()
+> export methods, which nfsd does not respect and it was never meant to be
+> used for exporting those filesystems by nfsd.
+>
+> Therefore, do not allow nfsd to export filesystems with custom ->open()
+> or ->permission() methods.
+>
+> Fixes: b3caba8f7a34a ("pidfs: implement file handle support")
+> Fixes: 5222470b2fbb3 ("nsfs: support file handles")
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+>  fs/nfsd/export.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+>
+> Christian,
+>
+> I had enough of the stable file handles discussion [1].
+>
+> This patch which I already suggested [2] on week ago, states a justified
+> technical reason why pidfs and nsfs should not be exported by nfsd,
+> so let's use this technical reasoning and stop the philosophic discussion=
+s
+> about what is a stable file handle is please.
+>
+> Regarding cgroupfs, we can either deal with it later or not - it is not
+> a clear but as pidfs and nsfs which absolutely should be fixed
+> retroactively in stable kernels.
+>
+> If you think that cgroupfs could benefit from "exhaustive" file handles [=
+3]
+> then we can implement open_by_handle_at(FD_CGROUPFS_ROOT, ... and that
+> would classify cgroupfs the same as pidfs and nsfs.
+>
+> Thanks,
+> Amir.
+>
+> [1] https://lore.kernel.org/linux-fsdevel/20250912-work-namespace-v2-0-1a=
+247645cef5@kernel.org/
+> [2] https://lore.kernel.org/linux-fsdevel/CAOQ4uxhkaGFtQRzTj2xaf2GJucoAY5=
+CGiyUjB=3D8YA2zTbOtFvw@mail.gmail.com/
+> [3] https://lore.kernel.org/linux-fsdevel/20250912-work-namespace-v2-29-1=
+a247645cef5@kernel.org/
+>
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index 2a1499f2ad196..232dacac611e9 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -405,6 +405,7 @@ static struct svc_export *svc_export_lookup(struct sv=
+c_export *);
+>  static int check_export(const struct path *path, int *flags, unsigned ch=
+ar *uuid)
+>  {
+>         struct inode *inode =3D d_inode(path->dentry);
+> +       const struct export_operations *nop =3D inode->i_sb->s_export_op;
+>
+>         /*
+>          * We currently export only dirs, regular files, and (for v4
+> @@ -422,13 +423,12 @@ static int check_export(const struct path *path, in=
+t *flags, unsigned char *uuid
+>         if (*flags & NFSEXP_V4ROOT)
+>                 *flags |=3D NFSEXP_READONLY;
+>
+> -       /* There are two requirements on a filesystem to be exportable.
+> -        * 1:  We must be able to identify the filesystem from a number.
+> -        *       either a device number (so FS_REQUIRES_DEV needed)
+> -        *       or an FSID number (so NFSEXP_FSID or ->uuid is needed).
+> -        * 2:  We must be able to find an inode from a filehandle.
+> -        *       This means that s_export_op must be set.
+> -        * 3: We must not currently be on an idmapped mount.
+> +       /*
+> +        * The requirements for a filesystem to be exportable:
+> +        * 1. The filehandle must identify a filesystem by number
+> +        * 2. The filehandle must uniquely identify an inode
+> +        * 3. The filesystem must not have custom filehandle open/perm me=
+thods
+> +        * 4. The requested file must not reside on an idmapped mount
+>          */
+>         if (!(inode->i_sb->s_type->fs_flags & FS_REQUIRES_DEV) &&
+>             !(*flags & NFSEXP_FSID) &&
+> @@ -437,11 +437,16 @@ static int check_export(const struct path *path, in=
+t *flags, unsigned char *uuid
+>                 return -EINVAL;
+>         }
+>
+> -       if (!exportfs_can_decode_fh(inode->i_sb->s_export_op)) {
+> +       if (!exportfs_can_decode_fh(nop)) {
+>                 dprintk("exp_export: export of invalid fs type.\n");
+>                 return -EINVAL;
+>         }
+>
+> +       if (nop->open || nop->permission) {
+> +               dprintk("exp_export: export of non-standard fs type.\n");
+> +               return -EINVAL;
+> +       }
+> +
+>         if (is_idmapped_mnt(path->mnt)) {
+>                 dprintk("exp_export: export of idmapped mounts not yet su=
+pported.\n");
+>                 return -EINVAL;
+> --
+> 2.52.0
+>
 
