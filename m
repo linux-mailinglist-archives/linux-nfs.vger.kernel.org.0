@@ -1,267 +1,310 @@
-Return-Path: <linux-nfs+bounces-18291-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18292-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JXbD+E5cmlMfAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18291-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:21 +0100
+	id 4L9VFOM5cmlMfAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18292-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:23 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90CFB682C0
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87471682C8
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8A74A965262
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:13:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 91BB0627919
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:19:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 425D22ECE85;
-	Thu, 22 Jan 2026 14:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C61346760;
+	Thu, 22 Jan 2026 14:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xjd6TcGx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esL9eYXE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2AC2E265A
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 14:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40D92D9481
+	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 14:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769091204; cv=none; b=lXIsZcuV7cZgLb31zG+ltQL186dDsHL5nLoj2ZJmfKWjvkd3CcxlFL3dlozw0NIBkLspC4MnZ1DwuDw/vtuszeFYihy9Z0TjQzAMVG5TtFouOO8KZuagJWsmFoEgz2yFPsZQyq8WaLakQxI8BuHsS6Ewd4HGqnAGwWi8PCi2RQ0=
+	t=1769091589; cv=none; b=BNq6p9RcQWZ1DnS31yeRFCj1ZsD5KSxwwuX9zwRcFQK8KTmBh9eG2DKspsTyN0Hp4eWJchz0Fj7A66BpWCVM+ErpjztkDfwB7y8tFJ+lw70fH2fzHcnmePC6K/eY6v14xYuxz+BAs5lGvl0VeVZKWazWIREzSK9qQiRLUWHbUkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769091204; c=relaxed/simple;
-	bh=SZ1vDzlSsGfHpKSndfSvXZAlxMb3WXgdJYOCORPJG38=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iOmf8Jysw0E/DIh7Dkg6qTdjldeNjRAjh2sOBUFWn5xiwxsFcyulpsjhT8N3dqO833KnxHZEI3JkiLKhcapew6t1UP/SRbn2JrD2C+HQzKOpk3a9u6hzTKx5rW98FPmxYACF8eWZC9QDf9hd6UbIx1Yj7Mm59H30Gs4vWWreywY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xjd6TcGx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09009C116C6;
-	Thu, 22 Jan 2026 14:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769091202;
-	bh=SZ1vDzlSsGfHpKSndfSvXZAlxMb3WXgdJYOCORPJG38=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Xjd6TcGxjw/32Goi/xT+t3hGtvDZHV82aLfWR49Y7SZKHfOwuqAHsxvH77ANDUslY
-	 0M9UDSn9OPSrKUOA/yilVbLW30TfrReJyQhiXNUyxHDspLEKql1RdpcE0FJIeLXtIC
-	 dO2k5/9v/AM8jjUV29hKKbTMLPmjwV9Kaw8+XQNCgeIsOtv14K7MFMvRL93NaxCttH
-	 3TsV14lkINai7VFGnkTLPjEEfMr9bkTCMWRORB4LseWfyzGKe9RQ2e0OU7/7Lw0wJS
-	 p73kcOInhdlgega/h+Kb4thrx2SCPRfhLwIpn/sf2tTzTzZpO/ShUxrhc7cY95HZkf
-	 FyOHrjQvvJYyg==
-Message-ID: <b83339bfe74d64b22ef32f916ed8d37c27d1fde9.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] exportfs: Add support for export option sign_fh
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>, Steve Dickson
-	 <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
- NeilBrown	 <neil@brown.name>
-Date: Thu, 22 Jan 2026 09:13:20 -0500
-In-Reply-To: <60b48050a0998ca214526bbfec406ed084305617.1769027750.git.bcodding@hammerspace.com>
-References: <cover.1769027750.git.bcodding@hammerspace.com>
-	 <60b48050a0998ca214526bbfec406ed084305617.1769027750.git.bcodding@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=arc-20240116; t=1769091589; c=relaxed/simple;
+	bh=ZKSvcZcZxXexWNdQflQ4tF+G2p45weoUygtUEccHvJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AOuKhn/Ubop4BVzCZWwy0aVtNsV8lq9BRiBkeCOvMUDB0dlnnOV/6Q1woij3puTEz3Al0ckfJjvkwUpAsD+vNZdvf20/atNfVTKw2TR7unAmuYD8cV/1H5ZQAsnFfQX70/IzYTTxG+4ZMQ2sx0esDc/0SwQhmdA7WyCsBW8i6yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esL9eYXE; arc=none smtp.client-ip=209.85.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-6505cac9879so1552125a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 06:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769091585; x=1769696385; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iwqruOkGitQ2/+rUHzZCRQ8gnj59rMd2hhsOTht7Eoc=;
+        b=esL9eYXEMiJdzxq5cd7tNZk2R/ZrVZ9x5SlCjpR0FoZjxW1DNpJU2aRCFb65ruIcHZ
+         NfiD0Qv2IHhtE8W1hC8lPLD70ArGVeQaOrzWSG+SLVEhB1aPuuNuAtRDpfoBOvUmoJpV
+         ntm68JwvGZIEyYuIn+zo/iH1JMunXO9HggREmL12PZQaBV4wfWbBd8U5u4LScNK/TSkP
+         DrSGMNdiCx4vq0RenZ9yz+BiiwOcKSASd5jX7btfyJ9urj1LZ4H1jMotTjc3svJB3ZIO
+         QDyvyXGvoWWc8yDHVYa+7Isv1VsPM4IDbakXWO1tkd7CmWsm7SJBjs1pO5bZ7hx5tzuX
+         vZMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769091585; x=1769696385;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iwqruOkGitQ2/+rUHzZCRQ8gnj59rMd2hhsOTht7Eoc=;
+        b=D0ttZuxYUdk+EBSUOfhmqvGI332ta4U45nnEcXZD6myfByr2pPXKFvHRheFPdd/1uV
+         eLvW64d69BHGCgqpWuy5sp2YlOMJ4se8AubyV50ugyFK0eGYzQgs4mcdVTM56Gv4Yx6N
+         krpVg8gtI7Z280RDVIDZDRteF4O6MfeKl5VMlpHGRC7sE3IuExamiYrhZBonS3aef+kp
+         763eoPhBoHckMHMPGIksNoGxRZeCnL8jhVfktzD4NaneVM+maawu2d2DSHEanEUPnKhU
+         iGWWC+Y3Ap1mO/V9BFnY620U3k2UsWWzloQ3wY1o7ObXfbtpzEVYDYaLTEPLfNN+d4Hr
+         7+tg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCTB9qctBNCNKS31DYGVT3X6Qs6kPvnKPZxLd5fqNmdbvLdO5zBVQlkZ7S3FLQjEj/RrpMXLt4l7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwytlaiPGwGMFDOkNuZ+4wQeBqqogpA0j0UWVFmaXi6ZlRJq7RP
+	MlAqhRjDRJdneURqDbsreuQepG+425RV6T/4KUh8G6jl3x2BIsWaQcFG
+X-Gm-Gg: AZuq6aINaC4FQABO10qoY2TGBvg+rlzXNGG1ssIHrwC711t97k/Mdb/+bXtB8eE22lM
+	ywHbO1fO8lbnsbi8n3D/u+ykt9+0k/Iqg9gtcjJwI3vKLSyOmnBeg/opMKl8/JGb+SA2VrJbSfQ
+	leDRFlc7S50Ouc7T8JdDPZqS6JLGUKaxCAKxd72dWuAMK4HtdxYUojPG47w/vDlot7oMNnopDnT
+	N7f0grpXwutQPH/Ku9o5mITAvYzz1W1fQkU0pUViSlx2QnEDZ3j1Fr6DP+fdeNG4ZDb35I+pOi0
+	uGjmqRt+E3cJhbKK/eGd0mhSQYpBbbjoRTyXM5XvvEfckKpsSnQvO5cFdvcCyEJn8nu837t1Ht6
+	zzXYg2MHRXxc7CvMShA+C3+BQeg1w5PomWKUOIRIkBEfw2MXer5ydyBOdiUF7PZWg5EOgz2vCQh
+	qPpAIbgbRLLjQers0ENFokL4pRmuzLTP/rh7Aqck6odjEBIiSiKiA4wjbHg/ZnP/wc4SKUAechW
+	XHkAGl4DS5qNw==
+X-Received: by 2002:a05:6402:1d4a:b0:64d:16ba:b1c4 with SMTP id 4fb4d7f45d1cf-65452acddc5mr16873826a12.19.1769091585047;
+        Thu, 22 Jan 2026 06:19:45 -0800 (PST)
+Received: from localhost (2001-1c00-570d-ee00-ea02-0082-2554-e1f0.cable.dynamic.v6.ziggo.nl. [2001:1c00:570d:ee00:ea02:82:2554:e1f0])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6581329c854sm2418933a12.15.2026.01.22.06.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 06:19:44 -0800 (PST)
+From: Amir Goldstein <amir73il@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Neil Brown <neil@brown.name>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2] nfsd: do not allow exporting of special kernel filesystems
+Date: Thu, 22 Jan 2026 15:19:42 +0100
+Message-ID: <20260122141942.660948-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.96 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18291-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18292-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 90CFB682C0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,brown.name:email]
+X-Rspamd-Queue-Id: 87471682C8
 X-Rspamd-Action: no action
 
-On Wed, 2026-01-21 at 15:37 -0500, Benjamin Coddington wrote:
-> If configured with "sign_fh", exports will be flagged to signal that
-> filehandles should be signed with a Message Authentication Code (MAC).
->=20
-> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-> ---
->  support/include/nfs/export.h | 2 +-
->  support/nfs/exports.c        | 4 ++++
->  utils/exportfs/exportfs.c    | 2 ++
->  utils/exportfs/exports.man   | 9 +++++++++
->  4 files changed, 16 insertions(+), 1 deletion(-)
->=20
-> diff --git a/support/include/nfs/export.h b/support/include/nfs/export.h
-> index be5867cffc3c..ef3f3e7ea684 100644
-> --- a/support/include/nfs/export.h
-> +++ b/support/include/nfs/export.h
-> @@ -19,7 +19,7 @@
->  #define NFSEXP_GATHERED_WRITES	0x0020
->  #define NFSEXP_NOREADDIRPLUS	0x0040
->  #define NFSEXP_SECURITY_LABEL	0x0080
-> -/* 0x100 unused */
-> +#define NFSEXP_SIGN_FH		0x0100
->  #define NFSEXP_NOHIDE		0x0200
->  #define NFSEXP_NOSUBTREECHECK	0x0400
->  #define NFSEXP_NOAUTHNLM	0x0800
+pidfs and nsfs recently gained support for encode/decode of file handles
+via name_to_handle_at(2)/opan_by_handle_at(2).
 
-Side note: it would be good to convert nfs-utils to use UAPI header for
-this instead of relying on a separate copy in the tree.
+These special kernel filesystems have custom ->open() and ->permission()
+export methods, which nfsd does not respect and it was never meant to be
+used for exporting those filesystems by nfsd.
 
-> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-> index 21ec6486ba3d..6b4ca87ee957 100644
-> --- a/support/nfs/exports.c
-> +++ b/support/nfs/exports.c
-> @@ -310,6 +310,8 @@ putexportent(struct exportent *ep)
->  		fprintf(fp, "nordirplus,");
->  	if (ep->e_flags & NFSEXP_SECURITY_LABEL)
->  		fprintf(fp, "security_label,");
-> +	if (ep->e_flags & NFSEXP_SIGN_FH)
-> +		fprintf(fp, "sign_fh,");
->  	fprintf(fp, "%spnfs,", (ep->e_flags & NFSEXP_PNFS)? "" : "no_");
->  	if (ep->e_flags & NFSEXP_FSID) {
->  		fprintf(fp, "fsid=3D%d,", ep->e_fsid);
-> @@ -676,6 +678,8 @@ parseopts(char *cp, struct exportent *ep, int *had_su=
-btree_opt_ptr)
->  			setflags(NFSEXP_NOREADDIRPLUS, active, ep);
->  		else if (!strcmp(opt, "security_label"))
->  			setflags(NFSEXP_SECURITY_LABEL, active, ep);
-> +		else if (!strcmp(opt, "sign_fh"))
-> +			setflags(NFSEXP_SIGN_FH, active, ep);
->  		else if (!strcmp(opt, "nohide"))
->  			setflags(NFSEXP_NOHIDE, active, ep);
->  		else if (!strcmp(opt, "hide"))
-> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> index 748c38e3e966..54ce62c5ce9a 100644
-> --- a/utils/exportfs/exportfs.c
-> +++ b/utils/exportfs/exportfs.c
-> @@ -718,6 +718,8 @@ dump(int verbose, int export_format)
->  				c =3D dumpopt(c, "nordirplus");
->  			if (ep->e_flags & NFSEXP_SECURITY_LABEL)
->  				c =3D dumpopt(c, "security_label");
-> +			if (ep->e_flags & NFSEXP_SIGN_FH)
-> +				c =3D dumpopt(c, "sign_fh");
->  			if (ep->e_flags & NFSEXP_NOACL)
->  				c =3D dumpopt(c, "no_acl");
->  			if (ep->e_flags & NFSEXP_PNFS)
-> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
-> index 39dc30fb8290..bd6669f431ba 100644
-> --- a/utils/exportfs/exports.man
-> +++ b/utils/exportfs/exports.man
-> @@ -351,6 +351,15 @@ file.  If you put neither option,
->  .B exportfs
->  will warn you that the change has occurred.
-> =20
-> +.TP
-> +.IR sign_fh
-> +This option enforces signing filehandles on the export.  If the server h=
-as
-> +been configured with a secret key for such purpose, filehandles will inc=
-lude
-> +a hash to verify the filehandle was created by the server in order to gu=
-ard
-> +against filehandle guessing attacks which can bypass path-name based acc=
-ess
-> +restrictions.  Note that for NFSv2 and NFSv3, some exported filesystems =
-may
-> +exceed the maximum filehandle size when the signing hash is added.
-> +
->  .TP
->  .IR insecure_locks
->  .TP
+Therefore, do not allow nfsd to export filesystems with custom ->open()
+or ->permission() methods.
 
-Looks good overall though.
---=20
-Jeff Layton <jlayton@kernel.org>
+Update comments and Documentation/filesystems/nfs/exporting.rst to
+express the fact the those methods are for open_by_handle(2) system only
+and not compatible with nfsd.
+
+Fixes: b3caba8f7a34a ("pidfs: implement file handle support")
+Fixes: 5222470b2fbb3 ("nsfs: support file handles")
+Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+
+Christian,
+
+Most of the stakeholders approved the approach in v1 [1] and
+only comments were regarding lack of documentation for the new
+incomapatible methods.
+
+I did my best to add minimal documentation to express the fact
+that those methods are not compatible with nfsd and remote filesystem
+export in general.
+
+Further documentations regarding the new uses of export_operations
+beyond their original use for nfs export is outside the scope of this
+patch and frankly, outside the reach of my documentation skills...
+
+Thanks,
+Amir.
+
+Changes since v1:
+- Use helper exportfs_may_export()
+- Minimal documentation for open/permission methods
+- Add RVBs
+
+[1] https://lore.kernel.org/linux-fsdevel/20260121085028.558164-1-amir73il@gmail.com/
+
+ Documentation/filesystems/nfs/exporting.rst | 13 ++++++++-
+ fs/nfsd/export.c                            |  9 ++++--
+ include/linux/exportfs.h                    | 31 +++++++++++++++++----
+ 3 files changed, 43 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/filesystems/nfs/exporting.rst b/Documentation/filesystems/nfs/exporting.rst
+index de64d2d002a20..da5236cb35012 100644
+--- a/Documentation/filesystems/nfs/exporting.rst
++++ b/Documentation/filesystems/nfs/exporting.rst
+@@ -100,7 +100,8 @@ Filesystem Issues
+ 
+ For a filesystem to be exportable it must:
+ 
+-   1. provide the filehandle fragment routines described below.
++   1. implement all the mandatory routines described below and
++      none of the export incompatible routines below.
+    2. make sure that d_splice_alias is used rather than d_add
+       when ->lookup finds an inode for a given parent and name.
+ 
+@@ -151,6 +152,16 @@ struct which has the following members:
+     to find potential names, and matches inode numbers to find the correct
+     match.
+ 
++  permission: (incompatible for export to remote filesystem)
++    Allow filesystems to specify a custom permission function for the
++    open_by_handle_at(2) syscall instead of the default CAP_DAC_READ_SEARCH
++    check. This custom permission function is not respected by nfsd.
++
++  open: (incompatible for export to remote filesystem)
++    Allow filesystems to specify a custom open function for the
++    open_by_handle_at(2) syscall instead of the default file_open_root().
++    This custom open function is not respected by nfsd.
++
+   flags
+     Some filesystems may need to be handled differently than others. The
+     export_operations struct also includes a flags field that allows the
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 2a1499f2ad196..fef23d579b797 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -427,7 +427,9 @@ static int check_export(const struct path *path, int *flags, unsigned char *uuid
+ 	 *       either a device number (so FS_REQUIRES_DEV needed)
+ 	 *       or an FSID number (so NFSEXP_FSID or ->uuid is needed).
+ 	 * 2:  We must be able to find an inode from a filehandle.
+-	 *       This means that s_export_op must be set.
++	 *       This means that s_export_op must be set and comply with
++	 *       the requirements for remote filesystem export.
++	 *       See Documentation/filesystems/nfs/exporting.rst.
+ 	 * 3: We must not currently be on an idmapped mount.
+ 	 */
+ 	if (!(inode->i_sb->s_type->fs_flags & FS_REQUIRES_DEV) &&
+@@ -437,8 +439,9 @@ static int check_export(const struct path *path, int *flags, unsigned char *uuid
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!exportfs_can_decode_fh(inode->i_sb->s_export_op)) {
+-		dprintk("exp_export: export of invalid fs type.\n");
++	if (!exportfs_may_export(inode->i_sb->s_export_op)) {
++		dprintk("exp_export: export of invalid fs type (%s).\n",
++			inode->i_sb->s_type->name);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index f0cf2714ec52d..8ac0de399dd51 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -192,7 +192,9 @@ struct handle_to_path_ctx {
+ #define FILEID_VALID_USER_FLAGS	(FILEID_IS_CONNECTABLE | FILEID_IS_DIR)
+ 
+ /**
+- * struct export_operations - for nfsd to communicate with file systems
++ * struct export_operations
++ *
++ * Methods for nfsd to communicate with file systems:
+  * @encode_fh:      encode a file handle fragment from a dentry
+  * @fh_to_dentry:   find the implied object and get a dentry for it
+  * @fh_to_parent:   find the implied object's parent and get a dentry for it
+@@ -200,6 +202,10 @@ struct handle_to_path_ctx {
+  * @get_parent:     find the parent of a given directory
+  * @commit_metadata: commit metadata changes to stable storage
+  *
++ * Methods for open_by_handle(2) syscall with special kernel file systems:
++ * @permission:     custom permission for opening a file by handle
++ * @open:           custom open routine for opening file by handle
++ *
+  * See Documentation/filesystems/nfs/exporting.rst for details on how to use
+  * this interface correctly.
+  *
+@@ -243,14 +249,18 @@ struct handle_to_path_ctx {
+  *    is also a directory.  In the event that it cannot be found, or storage
+  *    space cannot be allocated, a %ERR_PTR should be returned.
+  *
++ * commit_metadata:
++ *    @commit_metadata should commit metadata changes to stable storage.
++ *
+  * permission:
+- *    Allow filesystems to specify a custom permission function.
++ *    Allow filesystems to specify a custom permission function for the
++ *    open_by_handle_at(2) syscall instead of the default CAP_DAC_READ_SEARCH
++ *    check. This custom permission function is not respected by nfsd.
+  *
+  * open:
+- *    Allow filesystems to specify a custom open function.
+- *
+- * commit_metadata:
+- *    @commit_metadata should commit metadata changes to stable storage.
++ *    Allow filesystems to specify a custom open function for the
++ *    open_by_handle_at(2) syscall instead of the default file_open_root().
++ *    This custom open function is not respected by nfsd.
+  *
+  * Locking rules:
+  *    get_parent is called with child->d_inode->i_rwsem down
+@@ -317,6 +327,15 @@ static inline bool exportfs_can_decode_fh(const struct export_operations *nop)
+ 	return nop && nop->fh_to_dentry;
+ }
+ 
++static inline bool exportfs_may_export(const struct export_operations *nop)
++{
++	/*
++	 * Do not allow nfs export for filesystems with custom ->open() and
++	 * ->permission() ops, which nfsd does not respect (e.g. pidfs, nsfs).
++	 */
++	return exportfs_can_decode_fh(nop) && !nop->open && !nop->permission;
++}
++
+ static inline bool exportfs_can_encode_fh(const struct export_operations *nop,
+ 					  int fh_flags)
+ {
+-- 
+2.52.0
+
 
