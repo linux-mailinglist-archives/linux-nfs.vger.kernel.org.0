@@ -1,72 +1,62 @@
-Return-Path: <linux-nfs+bounces-18290-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18291-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ULLtFIY3cmmadwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18290-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:43:18 +0100
+	id 6JXbD+E5cmlMfAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18291-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 871D7680F1
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:43:17 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90CFB682C0
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 15:53:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 620FE7EBADA
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 13:50:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8A74A965262
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D710330FC2E;
-	Thu, 22 Jan 2026 13:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 425D22ECE85;
+	Thu, 22 Jan 2026 14:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlCXNBDk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xjd6TcGx"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B482F1FE3;
-	Thu, 22 Jan 2026 13:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2AC2E265A
+	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 14:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769089806; cv=none; b=p/Ict/axubCDnT58jUuYnJmHs0f6aw5EvNzuGfOPc+o14duAHchQNM2qIwUQld0aUNV5sAm1E76xyhKHR6pGj6KS3g3/qnNMtFVgTD/2vYCzS+2Yalf6dpDI6A/1bfh182DCQ9IqIE2xDBiwrhG0iQ6hbYAwmqdBnu5gq3g5c/c=
+	t=1769091204; cv=none; b=lXIsZcuV7cZgLb31zG+ltQL186dDsHL5nLoj2ZJmfKWjvkd3CcxlFL3dlozw0NIBkLspC4MnZ1DwuDw/vtuszeFYihy9Z0TjQzAMVG5TtFouOO8KZuagJWsmFoEgz2yFPsZQyq8WaLakQxI8BuHsS6Ewd4HGqnAGwWi8PCi2RQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769089806; c=relaxed/simple;
-	bh=idi9karSPfTDdyfqVjN5b6cdZpgAnAuuR+wJEVskkvU=;
+	s=arc-20240116; t=1769091204; c=relaxed/simple;
+	bh=SZ1vDzlSsGfHpKSndfSvXZAlxMb3WXgdJYOCORPJG38=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cg6ShqRs6yxIFxyqff4x2I280P0KMwlq5/Z+7Oll3rQ45nLmLbM0eOrWilKbjWjiWlOhKhdckl1DXxTSO3+b3HumYEiV+PjzEgOqFw5YaHbs2C57eTOoaXCfbc4K84lrxs9O6mVFcEXV3MRAxx9GIt4dlgfXyAJDcHf5IajGcY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TlCXNBDk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22554C116C6;
-	Thu, 22 Jan 2026 13:50:05 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iOmf8Jysw0E/DIh7Dkg6qTdjldeNjRAjh2sOBUFWn5xiwxsFcyulpsjhT8N3dqO833KnxHZEI3JkiLKhcapew6t1UP/SRbn2JrD2C+HQzKOpk3a9u6hzTKx5rW98FPmxYACF8eWZC9QDf9hd6UbIx1Yj7Mm59H30Gs4vWWreywY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xjd6TcGx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09009C116C6;
+	Thu, 22 Jan 2026 14:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769089806;
-	bh=idi9karSPfTDdyfqVjN5b6cdZpgAnAuuR+wJEVskkvU=;
+	s=k20201202; t=1769091202;
+	bh=SZ1vDzlSsGfHpKSndfSvXZAlxMb3WXgdJYOCORPJG38=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TlCXNBDkVY75mgUsmF/d/C2MqFtuo9MO0TIyt3DivZnoeyYt/193F9z3g3czzVpAb
-	 dj+XDsobUnuEO/Vxzq3w3Di2CCXVO9mozg+DSpVt8exJWEnT8UkF6SIG647NqK7NwP
-	 50I1+AYZVHW8jDMhXX3m0Nvf8ODfqcgQ77IS3mWjlDXIFLHsJ+N6PiOteb3MkMhYYW
-	 /2z67fm8slHwPp2/ULVqIR5f+LZG+yhssEFS9UC1owpu2yf6aPSKy5bQkv3smzezM4
-	 xyOdrhyVTGuW/Cr91Ck/ppX8TPxAzFgfwWuLqmj/mbGSpg+PnH/U9XQCp1brjST62S
-	 drEHWMQKtvpmA==
-Message-ID: <bf6b833c5cf45da96df4349ab318a597e5189c83.camel@kernel.org>
-Subject: Re: [PATCH v2 1/3] NFSD: Add a key for signing filehandles
+	b=Xjd6TcGxjw/32Goi/xT+t3hGtvDZHV82aLfWR49Y7SZKHfOwuqAHsxvH77ANDUslY
+	 0M9UDSn9OPSrKUOA/yilVbLW30TfrReJyQhiXNUyxHDspLEKql1RdpcE0FJIeLXtIC
+	 dO2k5/9v/AM8jjUV29hKKbTMLPmjwV9Kaw8+XQNCgeIsOtv14K7MFMvRL93NaxCttH
+	 3TsV14lkINai7VFGnkTLPjEEfMr9bkTCMWRORB4LseWfyzGKe9RQ2e0OU7/7Lw0wJS
+	 p73kcOInhdlgega/h+Kb4thrx2SCPRfhLwIpn/sf2tTzTzZpO/ShUxrhc7cY95HZkf
+	 FyOHrjQvvJYyg==
+Message-ID: <b83339bfe74d64b22ef32f916ed8d37c27d1fde9.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] exportfs: Add support for export option sign_fh
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>
-Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>,  Eric Biggers <ebiggers@kernel.org>, Rick
- Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
-Date: Thu, 22 Jan 2026 08:50:04 -0500
-In-Reply-To: <989656C1-F190-4F58-AB82-974F63551C26@hammerspace.com>
-References: <cover.1769026777.git.bcodding@hammerspace.com>
-	 <6d7bfccbaf082194ea257749041c19c2c2385cce.1769026777.git.bcodding@hammerspace.com>
-	 <e299b7c6-9d37-4ffe-8d45-a95d92e33406@app.fastmail.com>
-	 <0D5F8EA8-D77E-4F56-9EA6-8D6FC2F2CD37@hammerspace.com>
-	 <9c5e9e07-b370-4c71-9dd6-8b6a3efe32c7@kernel.org>
-	 <5EBC1684-ECA5-497A-8892-9317B44186EC@hammerspace.com>
-	 <29aabe1c-3062-4dff-887d-805d7835912e@kernel.org>
-	 <DC80A9CE-C98B-4D03-889F-90F477065FB1@hammerspace.com>
-	 <d43cd682b0c51b187ba124f0c3c11ccc9d8698c8.camel@kernel.org>
-	 <989656C1-F190-4F58-AB82-974F63551C26@hammerspace.com>
+To: Benjamin Coddington <bcodding@hammerspace.com>, Steve Dickson
+	 <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+ NeilBrown	 <neil@brown.name>
+Date: Thu, 22 Jan 2026 09:13:20 -0500
+In-Reply-To: <60b48050a0998ca214526bbfec406ed084305617.1769027750.git.bcodding@hammerspace.com>
+References: <cover.1769027750.git.bcodding@hammerspace.com>
+	 <60b48050a0998ca214526bbfec406ed084305617.1769027750.git.bcodding@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -151,411 +141,127 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,oracle.com,brown.name,gmail.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18290-lists,linux-nfs=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18291-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,hammerspace.com:email,bcodding:email]
-X-Rspamd-Queue-Id: 871D7680F1
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,hammerspace.com:email]
+X-Rspamd-Queue-Id: 90CFB682C0
 X-Rspamd-Action: no action
 
-On Thu, 2026-01-22 at 08:28 -0500, Benjamin Coddington wrote:
-> On 22 Jan 2026, at 7:30, Jeff Layton wrote:
+On Wed, 2026-01-21 at 15:37 -0500, Benjamin Coddington wrote:
+> If configured with "sign_fh", exports will be flagged to signal that
+> filehandles should be signed with a Message Authentication Code (MAC).
 >=20
-> > On Wed, 2026-01-21 at 20:22 -0500, Benjamin Coddington wrote:
-> > > On 21 Jan 2026, at 18:55, Chuck Lever wrote:
-> > >=20
-> > > > On 1/21/26 5:56 PM, Benjamin Coddington wrote:
-> > > > > On 21 Jan 2026, at 17:17, Chuck Lever wrote:
-> > > > >=20
-> > > > > > On 1/21/26 3:54 PM, Benjamin Coddington wrote:
-> > > > > > > On 21 Jan 2026, at 15:43, Chuck Lever wrote:
-> > > > > > >=20
-> > > > > > > > On Wed, Jan 21, 2026, at 3:24 PM, Benjamin Coddington wrote=
-:
-> > > > > > > > > A future patch will enable NFSD to sign filehandles by ap=
-pending a Message
-> > > > > > > > > Authentication Code(MAC).  To do this, NFSD requires a se=
-cret 128-bit key
-> > > > > > > > > that can persist across reboots.  A persisted key allows =
-the server to
-> > > > > > > > > accept filehandles after a restart.  Enable NFSD to be co=
-nfigured with this
-> > > > > > > > > key via both the netlink and nfsd filesystem interfaces.
-> > > > > > > > >=20
-> > > > > > > > > Since key changes will break existing filehandles, the ke=
-y can only be set
-> > > > > > > > > once.  After it has been set any attempts to set it will =
-return -EEXIST.
-> > > > > > > > >=20
-> > > > > > > > > Link:
-> > > > > > > > > https://lore.kernel.org/linux-nfs/cover.1769026777.git.bc=
-odding@hammerspace.com
-> > > > > > > > > Signed-off-by: Benjamin Coddington <bcodding@hammerspace.=
-com>
-> > > > > > > > > ---
-> > > > > > > > >  Documentation/netlink/specs/nfsd.yaml |  6 ++
-> > > > > > > > >  fs/nfsd/netlink.c                     |  5 +-
-> > > > > > > > >  fs/nfsd/netns.h                       |  2 +
-> > > > > > > > >  fs/nfsd/nfsctl.c                      | 94 +++++++++++++=
-++++++++++++++
-> > > > > > > > >  fs/nfsd/trace.h                       | 25 +++++++
-> > > > > > > > >  include/uapi/linux/nfsd_netlink.h     |  1 +
-> > > > > > > > >  6 files changed, 131 insertions(+), 2 deletions(-)
-> > > > > > > > >=20
-> > > > > > > > > diff --git a/Documentation/netlink/specs/nfsd.yaml
-> > > > > > > > > b/Documentation/netlink/specs/nfsd.yaml
-> > > > > > > > > index badb2fe57c98..d348648033d9 100644
-> > > > > > > > > --- a/Documentation/netlink/specs/nfsd.yaml
-> > > > > > > > > +++ b/Documentation/netlink/specs/nfsd.yaml
-> > > > > > > > > @@ -81,6 +81,11 @@ attribute-sets:
-> > > > > > > > >        -
-> > > > > > > > >          name: min-threads
-> > > > > > > > >          type: u32
-> > > > > > > > > +      -
-> > > > > > > > > +        name: fh-key
-> > > > > > > > > +        type: binary
-> > > > > > > > > +        checks:
-> > > > > > > > > +            exact-len: 16
-> > > > > > > > >    -
-> > > > > > > > >      name: version
-> > > > > > > > >      attributes:
-> > > > > > > > > @@ -163,6 +168,7 @@ operations:
-> > > > > > > > >              - leasetime
-> > > > > > > > >              - scope
-> > > > > > > > >              - min-threads
-> > > > > > > > > +            - fh-key
-> > > > > > > > >      -
-> > > > > > > > >        name: threads-get
-> > > > > > > > >        doc: get the number of running threads
-> > > > > > > > > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> > > > > > > > > index 887525964451..81c943345d13 100644
-> > > > > > > > > --- a/fs/nfsd/netlink.c
-> > > > > > > > > +++ b/fs/nfsd/netlink.c
-> > > > > > > > > @@ -24,12 +24,13 @@ const struct nla_policy
-> > > > > > > > > nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1] =3D {
-> > > > > > > > >  };
-> > > > > > > > >=20
-> > > > > > > > >  /* NFSD_CMD_THREADS_SET - do */
-> > > > > > > > > -static const struct nla_policy
-> > > > > > > > > nfsd_threads_set_nl_policy[NFSD_A_SERVER_MIN_THREADS + 1]=
- =3D {
-> > > > > > > > > +static const struct nla_policy
-> > > > > > > > > nfsd_threads_set_nl_policy[NFSD_A_SERVER_FH_KEY + 1] =3D =
-{
-> > > > > > > > >  	[NFSD_A_SERVER_THREADS] =3D { .type =3D NLA_U32, },
-> > > > > > > > >  	[NFSD_A_SERVER_GRACETIME] =3D { .type =3D NLA_U32, },
-> > > > > > > > >  	[NFSD_A_SERVER_LEASETIME] =3D { .type =3D NLA_U32, },
-> > > > > > > > >  	[NFSD_A_SERVER_SCOPE] =3D { .type =3D NLA_NUL_STRING, }=
-,
-> > > > > > > > >  	[NFSD_A_SERVER_MIN_THREADS] =3D { .type =3D NLA_U32, },
-> > > > > > > > > +	[NFSD_A_SERVER_FH_KEY] =3D NLA_POLICY_EXACT_LEN(16),
-> > > > > > > > >  };
-> > > > > > > > >=20
-> > > > > > > > >  /* NFSD_CMD_VERSION_SET - do */
-> > > > > > > > > @@ -58,7 +59,7 @@ static const struct genl_split_ops nfsd=
-_nl_ops[] =3D {
-> > > > > > > > >  		.cmd		=3D NFSD_CMD_THREADS_SET,
-> > > > > > > > >  		.doit		=3D nfsd_nl_threads_set_doit,
-> > > > > > > > >  		.policy		=3D nfsd_threads_set_nl_policy,
-> > > > > > > > > -		.maxattr	=3D NFSD_A_SERVER_MIN_THREADS,
-> > > > > > > > > +		.maxattr	=3D NFSD_A_SERVER_FH_KEY,
-> > > > > > > > >  		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> > > > > > > > >  	},
-> > > > > > > > >  	{
-> > > > > > > > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > > > > > > > > index 9fa600602658..c8ed733240a0 100644
-> > > > > > > > > --- a/fs/nfsd/netns.h
-> > > > > > > > > +++ b/fs/nfsd/netns.h
-> > > > > > > > > @@ -16,6 +16,7 @@
-> > > > > > > > >  #include <linux/percpu-refcount.h>
-> > > > > > > > >  #include <linux/siphash.h>
-> > > > > > > > >  #include <linux/sunrpc/stats.h>
-> > > > > > > > > +#include <linux/siphash.h>
-> > > > > > > > >=20
-> > > > > > > > >  /* Hash tables for nfs4_clientid state */
-> > > > > > > > >  #define CLIENT_HASH_BITS                 4
-> > > > > > > > > @@ -224,6 +225,7 @@ struct nfsd_net {
-> > > > > > > > >  	spinlock_t              local_clients_lock;
-> > > > > > > > >  	struct list_head	local_clients;
-> > > > > > > > >  #endif
-> > > > > > > > > +	siphash_key_t		*fh_key;
-> > > > > > > > >  };
-> > > > > > > > >=20
-> > > > > > > > >  /* Simple check to find out if a given net was properly =
-initialized */
-> > > > > > > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > > > > > > > index 30caefb2522f..e59639efcf5c 100644
-> > > > > > > > > --- a/fs/nfsd/nfsctl.c
-> > > > > > > > > +++ b/fs/nfsd/nfsctl.c
-> > > > > > > > > @@ -49,6 +49,7 @@ enum {
-> > > > > > > > >  	NFSD_Ports,
-> > > > > > > > >  	NFSD_MaxBlkSize,
-> > > > > > > > >  	NFSD_MinThreads,
-> > > > > > > > > +	NFSD_Fh_Key,
-> > > > > > > > >  	NFSD_Filecache,
-> > > > > > > > >  	NFSD_Leasetime,
-> > > > > > > > >  	NFSD_Gracetime,
-> > > > > > > > > @@ -69,6 +70,7 @@ static ssize_t write_versions(struct fi=
-le *file, char
-> > > > > > > > > *buf, size_t size);
-> > > > > > > > >  static ssize_t write_ports(struct file *file, char *buf,=
- size_t size);
-> > > > > > > > >  static ssize_t write_maxblksize(struct file *file, char =
-*buf, size_t
-> > > > > > > > > size);
-> > > > > > > > >  static ssize_t write_minthreads(struct file *file, char =
-*buf, size_t
-> > > > > > > > > size);
-> > > > > > > > > +static ssize_t write_fh_key(struct file *file, char *buf=
-, size_t size);
-> > > > > > > > >  #ifdef CONFIG_NFSD_V4
-> > > > > > > > >  static ssize_t write_leasetime(struct file *file, char *=
-buf, size_t
-> > > > > > > > > size);
-> > > > > > > > >  static ssize_t write_gracetime(struct file *file, char *=
-buf, size_t
-> > > > > > > > > size);
-> > > > > > > > > @@ -88,6 +90,7 @@ static ssize_t (*const write_op[])(stru=
-ct file *,
-> > > > > > > > > char *, size_t) =3D {
-> > > > > > > > >  	[NFSD_Ports] =3D write_ports,
-> > > > > > > > >  	[NFSD_MaxBlkSize] =3D write_maxblksize,
-> > > > > > > > >  	[NFSD_MinThreads] =3D write_minthreads,
-> > > > > > > > > +	[NFSD_Fh_Key] =3D write_fh_key,
-> > > > > > > > >  #ifdef CONFIG_NFSD_V4
-> > > > > > > > >  	[NFSD_Leasetime] =3D write_leasetime,
-> > > > > > > > >  	[NFSD_Gracetime] =3D write_gracetime,
-> > > > > > > > > @@ -950,6 +953,60 @@ static ssize_t write_minthreads(stru=
-ct file *file,
-> > > > > > > > > char *buf, size_t size)
-> > > > > > > > >  	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%u\n",=
- minthreads);
-> > > > > > > > >  }
-> > > > > > > > >=20
-> > > > > > > > > +/*
-> > > > > > > > > + * write_fh_key - Set or report the current NFS filehand=
-le key, the key
-> > > > > > > > > + * 		can only be set once, else -EEXIST because changing=
- the key
-> > > > > > > > > + * 		will break existing filehandles.
-> > > > > > > >=20
-> > > > > > > > Do you really need both a /proc/fs/nfsd API and a netlink A=
-PI? I
-> > > > > > > > think one or the other would be sufficient, unless you have
-> > > > > > > > something else in mind (in which case, please elaborate in =
-the
-> > > > > > > > patch description).
-> > > > > > >=20
-> > > > > > > Yes, some distros use one or the other.  Some try to use both=
-!  Until you
-> > > > > > > guys deprecate one of the interfaces I think we're stuck expa=
-nding them
-> > > > > > > both.
-> > > > > >=20
-> > > > > > Neil has said he wants to keep /proc/fs/nfsd rather indefinitel=
-y, and
-> > > > > > we have publicly stated we will add only to netlink unless it's
-> > > > > > unavoidable. I prefer not growing the legacy API.
-> > > > >=20
-> > > > > Having both is more complete, and doesn't introduce any conflicts=
- or
-> > > > > problems.
-> > > >=20
-> > > > That doesn't tell me why you need it. It just says you want things =
-to
-> > > > be "tidy".
-> > > >=20
-> > > >=20
-> > > > > > We generally don't backport new features like this one to stabl=
-e
-> > > > > > kernels, so IMO tucking this into only netlink is defensible.
-> > > > >=20
-> > > > > Why only netlink for this one besides your preference?
-> > > >=20
-> > > > You might be channeling one of your kids there.
-> > >=20
-> > > That's unnecessary.
-> > >=20
-> > > > As I stated before: we have said we don't want to continue adding
-> > > > new APIs to procfs. It's not just NFSD that prefers this, it's a lo=
-ng
-> > > > term project across the kernel. If you have a clear technical reaso=
-n
-> > > > that a new procfs API is needed, let's hear it.
-> > >=20
-> > > You've just added one to your nfsd-testing branch two weeks ago that =
-you
-> > > asked me to rebase onto.
-> > >=20
-> >=20
-> > Mea culpa. I probably should have dropped the min-threads procfile from
-> > those patches, but it was convenient when I was doing the development
-> > work. Chuck, if you like I can send a patch to remove it before the
-> > merge window.
-> >=20
-> > I can't see why we need both interfaces. The old /proc interface is
-> > really for the case where you have old nfs-utils and/or an old kernel.
-> > In order to use this, you need both new nfs-utils and new kernel. If
-> > you have those, then both should support the netlink interface.
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  support/include/nfs/export.h | 2 +-
+>  support/nfs/exports.c        | 4 ++++
+>  utils/exportfs/exportfs.c    | 2 ++
+>  utils/exportfs/exports.man   | 9 +++++++++
+>  4 files changed, 16 insertions(+), 1 deletion(-)
 >=20
-> I'm not trying to win an argument about how I want it, but I want to just
-> point out one more thing: its possible to have products built out of the
-> server where the tooling so far hasn't been taught to use nfsdctl yet.
-> We're in that situation - we will backport the kernel bits here, and use =
-the
-> /proc interface because the tooling hasn't been converted to nfsdctl yet.
->=20
-> > > > > There's a very good reason for both interfaces - there's been no =
-work to
-> > > > > deprecate the old interface or co-ordination with distros to ensu=
-re they
-> > > > > have fully adopted the netlink interface.  Up until now new featu=
-res have
-> > > > > been added to both interfaces.
-> > > >=20
-> > > > I'm not seeing how this is a strong and specific argument for inclu=
-ding
-> > > > a procfs version of this specific interface. It's still saying "tid=
-y" to
-> > > > me and not explaining why we must have the extra clutter.
-> > > >=20
-> > > > An example of a strong technical reason would be "We have legacy us=
-er
-> > > > space applications that expect to find this API in procfs."
-> > >=20
-> > > The systemd startup for the nfs-server in RHEL falls back to rpc.nfsd=
- on
-> > > nfsdctl failure.  Without the additional interface you can have syste=
-ms that
-> > > start the nfs-server via rpc.nfsd without setting the key - exactly t=
-he
-> > > situation you're so adamant should never happen in your below argumen=
-t..
-> > >=20
-> >=20
-> > The main reason it would fail is because the kernel doesn't support the
-> > netlink interface (or e.g. nfsdctl isn't present at all). If it fails
-> > with the netlink interface for some other reason, it's quite likely to
-> > have the same failure with procfs.
->=20
-> You're right, but it also could fail for any number of other reasons -
-> admittedly unlikely ones.
->=20
-> > To be clear, the procfs interface is categorically inferior due to its
-> > piecemeal nature. There's little guidance as to how to the changes in
-> > nfsdfs should be ordered. We mostly make it work, but the cracks were
-> > showing in those interfaces long before. We really don't want to be
-> > expanding it.
->=20
-> I understand.  I'll remove the procfs interface here on the next posting,
-> and thanks for chiming in here.
->=20
-> One thing that is confusing with nfsdctl is that when it reports a failur=
-e
-> its not easy to figure out what's going wrong.  It ends up having its own
-> ordering stuff - for example:
->=20
-> (fresh boot)
-> root@bcodding:~# nfsdctl threads 4
-> nfsdctl: nfsdctl started
-> nfsdctl: failed to resolve nfsd generic netlink family
-> nfsdctl: nfsdctl exiting
-> root@bcodding:~# modprobe nfsd
-> root@bcodding:~# nfsdctl threads 4
-> nfsdctl: nfsdctl started
-> nfsdctl: Error: Input/output error
-> nfsdctl: nfsdctl exiting
->=20
-> ^^ that's an actual situation I encountered, then tried to diagnose with
-> strace (no good), then had to turn on the function tracer in the kernel t=
-o
-> find that the error was coming from somewhere in nfs4_state_start().  I
-> think something not getting set (listener?), finally I looked in the log =
-and
-> found:
->=20
-> [   47.428237] NFSD: Failed to start, no listeners configured.
->=20
-> ah - so then I knew that I had to use "autostart" before being able to us=
-e
-> the "threads".  Compared with rpc.nfsd in the same situation:
->=20
-> root@bcodding:~# rpc.nfsd 4
-> rpc.nfsd: knfsd is currently down
-> rpc.nfsd: Writing version string to kernel: -2 +3
-> rpc.nfsd: Created AF_INET TCP socket.
-> rpc.nfsd: Created AF_INET6 TCP socket.
-> rpc.nfsd: unable to interpret port name n
->=20
-> .. and I know I need to configure the ports.  It also loads the module fo=
-r
-> me.
->=20
+> diff --git a/support/include/nfs/export.h b/support/include/nfs/export.h
+> index be5867cffc3c..ef3f3e7ea684 100644
+> --- a/support/include/nfs/export.h
+> +++ b/support/include/nfs/export.h
+> @@ -19,7 +19,7 @@
+>  #define NFSEXP_GATHERED_WRITES	0x0020
+>  #define NFSEXP_NOREADDIRPLUS	0x0040
+>  #define NFSEXP_SECURITY_LABEL	0x0080
+> -/* 0x100 unused */
+> +#define NFSEXP_SIGN_FH		0x0100
+>  #define NFSEXP_NOHIDE		0x0200
+>  #define NFSEXP_NOSUBTREECHECK	0x0400
+>  #define NFSEXP_NOAUTHNLM	0x0800
 
-That's a great point. The simplest fix would be to just advise the user
-to check dmesg for errors, but that's not ideal for containers.=C2=A0
+Side note: it would be good to convert nfs-utils to use UAPI header for
+this instead of relying on a separate copy in the tree.
 
-In principle, we could have the kernel pass an error string back in the
-netlink upcall that nfsdctl could display. The problem is that nfsd
-startup is spread over a bunch of functions, so passing that string
-back from the deep call stack would take some refactoring.
+> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> index 21ec6486ba3d..6b4ca87ee957 100644
+> --- a/support/nfs/exports.c
+> +++ b/support/nfs/exports.c
+> @@ -310,6 +310,8 @@ putexportent(struct exportent *ep)
+>  		fprintf(fp, "nordirplus,");
+>  	if (ep->e_flags & NFSEXP_SECURITY_LABEL)
+>  		fprintf(fp, "security_label,");
+> +	if (ep->e_flags & NFSEXP_SIGN_FH)
+> +		fprintf(fp, "sign_fh,");
+>  	fprintf(fp, "%spnfs,", (ep->e_flags & NFSEXP_PNFS)? "" : "no_");
+>  	if (ep->e_flags & NFSEXP_FSID) {
+>  		fprintf(fp, "fsid=3D%d,", ep->e_fsid);
+> @@ -676,6 +678,8 @@ parseopts(char *cp, struct exportent *ep, int *had_su=
+btree_opt_ptr)
+>  			setflags(NFSEXP_NOREADDIRPLUS, active, ep);
+>  		else if (!strcmp(opt, "security_label"))
+>  			setflags(NFSEXP_SECURITY_LABEL, active, ep);
+> +		else if (!strcmp(opt, "sign_fh"))
+> +			setflags(NFSEXP_SIGN_FH, active, ep);
+>  		else if (!strcmp(opt, "nohide"))
+>  			setflags(NFSEXP_NOHIDE, active, ep);
+>  		else if (!strcmp(opt, "hide"))
+> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+> index 748c38e3e966..54ce62c5ce9a 100644
+> --- a/utils/exportfs/exportfs.c
+> +++ b/utils/exportfs/exportfs.c
+> @@ -718,6 +718,8 @@ dump(int verbose, int export_format)
+>  				c =3D dumpopt(c, "nordirplus");
+>  			if (ep->e_flags & NFSEXP_SECURITY_LABEL)
+>  				c =3D dumpopt(c, "security_label");
+> +			if (ep->e_flags & NFSEXP_SIGN_FH)
+> +				c =3D dumpopt(c, "sign_fh");
+>  			if (ep->e_flags & NFSEXP_NOACL)
+>  				c =3D dumpopt(c, "no_acl");
+>  			if (ep->e_flags & NFSEXP_PNFS)
+> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+> index 39dc30fb8290..bd6669f431ba 100644
+> --- a/utils/exportfs/exports.man
+> +++ b/utils/exportfs/exports.man
+> @@ -351,6 +351,15 @@ file.  If you put neither option,
+>  .B exportfs
+>  will warn you that the change has occurred.
+> =20
+> +.TP
+> +.IR sign_fh
+> +This option enforces signing filehandles on the export.  If the server h=
+as
+> +been configured with a secret key for such purpose, filehandles will inc=
+lude
+> +a hash to verify the filehandle was created by the server in order to gu=
+ard
+> +against filehandle guessing attacks which can bypass path-name based acc=
+ess
+> +restrictions.  Note that for NFSv2 and NFSv3, some exported filesystems =
+may
+> +exceed the maximum filehandle size when the signing hash is added.
+> +
+>  .TP
+>  .IR insecure_locks
+>  .TP
 
-In hindsight, I wish I had just added a single "service" netlink
-command that configured everything (listeners, versions, etc.) all at
-once. That would have made it a lot easier to ensure proper setup
-before starting things and we could more easily catch stuff like "no
-listeners" in userland before sending anything to the kernel.
-
-I guess it's not too late to add one. We could just have nfsdctl fall
-back to the old commands if necessary. It'd be a fair bit of work
-though since it'd be a UAPI change.
-
-
-> Would it make sense to have nfsctld load the nfsd module if the netlink
-> interface doesn't exist, then on error it could also suggest checking the
-> system log?
->=20
-
-That'd be a great improvement.
-
-> Please don't take this as me whining or complaining - just some
-> observations.  Most users will never encounter these problems because the
-> tooling to start the server ensures its done the right way..  So, sorry l=
-ong
-> read -- maybe we can eventually improve nfsdctl to have better stderr on
-> failure, or maybe the problem was mine because I didn't immediately look =
-in
-> the log.  :P
-
-Not at all! These are great observations.
-
-Most users don't do anything but "autostart" and "threads 0" via
-systemd, but it definitely has rough edges if you're doing things
-manually. Chuck and I would welcome improvements.
+Looks good overall though.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
