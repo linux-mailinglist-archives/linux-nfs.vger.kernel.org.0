@@ -1,206 +1,531 @@
-Return-Path: <linux-nfs+bounces-18288-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18289-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4NcWCWopcmmadwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18288-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:06 +0100
+	id YAp2OI8pcmmadwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18289-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:43 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACFD7676F9
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4177A67719
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 300445AC3AA
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 12:38:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43D13786675
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 13:32:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25ECE365A18;
-	Thu, 22 Jan 2026 12:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA85314D3F;
+	Thu, 22 Jan 2026 13:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIDf0ohZ"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="NV8+ugOC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022088.outbound.protection.outlook.com [52.101.48.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E122FBE0F;
-	Thu, 22 Jan 2026 12:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769085495; cv=none; b=FAuXFFqEJn61R4X5PZvIDANLOhFcg9nM1+8yIXV4hFPp1bVyX8nFi1LVN+YlUclDAd7mBTtpMNhIZ3qJo7nDQxStTDbxZ+M/w6GXFvrFB2uLYJVb/aRFyx4QipJrpDhuOBAAfE4321weceFDu/q1NrOgw/Orv0SON4tne60zl7U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769085495; c=relaxed/simple;
-	bh=/cDHXiO8bqpmpyc0U7S8NKBwr+ZCn9hx4lH31QN/XM8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QXtFH8clMP8IWNTUUqapUGZElExQ18Fbd94T8GsEVUF8HckISJTST0CitJi0lKqE7dp5FiaxPHoRPOgGN+bc61+JQAWoaOAFEuyptg9vqTJzXFa71RwCmZWcC0wEN0RPzuWgM1uY019pdANNCW9p3J8wowKVOyvYAIgcloJu7NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIDf0ohZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6DEC116D0;
-	Thu, 22 Jan 2026 12:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769085494;
-	bh=/cDHXiO8bqpmpyc0U7S8NKBwr+ZCn9hx4lH31QN/XM8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CIDf0ohZFjve8hEvi1xLb2o/tX61ycUB7pUYwHTBkMSFQt0Qob9iZViKEr0pashV3
-	 QjXNumdFGkqaDh1tVE4Us5YCr1xZ0r/51YMR8s4Ce8qbpHhES80RpVr/6q5T9rb9GK
-	 sPzoCJLpm84mjRnb6Lo/ip8M4N8IZsCxk5zHuUKpH7O+6WxRg5lEEL3BWPHSBdhEUg
-	 glWCV1EcjqTVyFK0b/fWl1xtm16xMzEn7muVTm9tVF6as8CY8/wD1WHyh3HCsgSQaO
-	 JEVxrZm5VXddKDDHf+zGRBfpDz0ElucPv6Xz4zKiai+SatieOFPvkKF39WVG13tO3k
-	 dMhGidWQ13sVg==
-Message-ID: <b4b88c29299dde052a8864e7104a40eb616a26ad.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4B228727D;
+	Thu, 22 Jan 2026 13:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769088531; cv=fail; b=Pao3zfyRrmijhbx7fYK3nUTNDvblFztXKCTKVczXLE92toMbGdyh+8fFNq7Ze5NbIgIxqoSryv4k3Kp0bPWApV98D70llsZg8a0L75SKjrNAYU/UU2Y/Ny4xvBl1HHDfLMJE6FZO09lgSQX6LkxXdZWQD6NdAQPpJj+jVSaf0C0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769088531; c=relaxed/simple;
+	bh=JBilhtx+moRv1O6j0N1gCbBYeR1+wY3VZadf73DObvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nOyQ4bmeqIxZxX1B848yofTWbU1E77Zh03XN30gobSJyFSq1dOdxmNGx8hRSwntsQIVmgnxIGKblOmegrK0ysC6A/zBmPvFvbP3LuSpnneqtoik46+jRg4G05kBLvjR6F84GT3ErrmAej00NVYEmmFRVNw64EGytg0/0CAYBx0E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=NV8+ugOC; arc=fail smtp.client-ip=52.101.48.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TLZ3zIl3zNNWd145i2JDvW1BlCvPi/EhtoOKtOj9nYQHnQTcwVEgIZd/ZOO/lpqhJ670SXrJxTRCFgWn8pZqrd5ScRCosRyVZ62ceu1WTxRId1Cp7rMJiZlIVr7yl1xhu2L/OWYa2eXehSj7cwjXcP2esdaG+7RoOoQjbVVLLGANsGw8zhNU+07+RoQY4A/xO5zDbCgaQfRglZs2qb5ayHF1MUEGDj7xPOTKsYsyGH/Nbgk7oz/8YfPXjraAYg2Wcw5zkx/w+tDQIoYBncn98UHcg8YWPILS0RGZLzWbY/GWfIfb7RuY4shTasfkvzx0sPSdIZ5s/2ZWjh8ysTzgpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rQdDRNxvW7iHjgTkAnLeKEmSpJmUv0ejmnA27uKQCqA=;
+ b=e7YiXNESXrgVUsB9h6vtoMjOCH+3EdbXuXjR82fBxBzyg/nT7TVX/jhjiSiqmY6Y+j2tYiyhSqbNbdDSQgOVw/pOs74OTyzWZVV3+5Lt5kK4e1ulb1pdbsDEYR1/xenWQYzITazyXxyJ/bBs34XeVWHCw+QFEwESwD3KN/+t9ZBwKClxmUGNTyUDmRGaTEcugvIgOWPHLKycw/nAmC96k2VQizXRaFBDornbIM0we3P2ghYgFZCtjPRq69GvF2cuL9QYn6D3KxVcRnu9ckPXzl0w8/NkHQrQHooKBYpmXLBPidf286yQJYUIttGvt5dabX4kIOecDpvSHYkcjEMa8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rQdDRNxvW7iHjgTkAnLeKEmSpJmUv0ejmnA27uKQCqA=;
+ b=NV8+ugOCI0HaK2u/5vhpKI1wWpSD4AkilTgBXfIzWjNEw6/Q/TmJH1PLR6AiCgEUk+JSulSKX129cUamJBSj/R49hJYuk6iLKNXcx1L3/sloQgUJegNUCCWfwYNNfnHbTxc69xXTQc/33JvncgBbYWaWhstFjK8gFYhleUN4gXs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
+ PH0PR13MB5283.namprd13.prod.outlook.com (2603:10b6:510:f4::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9542.10; Thu, 22 Jan 2026 13:28:44 +0000
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9520.011; Thu, 22 Jan 2026
+ 13:28:43 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+ Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
 Subject: Re: [PATCH v2 1/3] NFSD: Add a key for signing filehandles
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>, Chuck Lever
- <cel@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Trond
- Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Eric
- Biggers <ebiggers@kernel.org>,  Rick Macklem <rick.macklem@gmail.com>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org
-Date: Thu, 22 Jan 2026 07:38:12 -0500
-In-Reply-To: <5EBC1684-ECA5-497A-8892-9317B44186EC@hammerspace.com>
+Date: Thu, 22 Jan 2026 08:28:39 -0500
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <989656C1-F190-4F58-AB82-974F63551C26@hammerspace.com>
+In-Reply-To: <d43cd682b0c51b187ba124f0c3c11ccc9d8698c8.camel@kernel.org>
 References: <cover.1769026777.git.bcodding@hammerspace.com>
-	 <6d7bfccbaf082194ea257749041c19c2c2385cce.1769026777.git.bcodding@hammerspace.com>
-	 <e299b7c6-9d37-4ffe-8d45-a95d92e33406@app.fastmail.com>
-	 <0D5F8EA8-D77E-4F56-9EA6-8D6FC2F2CD37@hammerspace.com>
-	 <9c5e9e07-b370-4c71-9dd6-8b6a3efe32c7@kernel.org>
-	 <5EBC1684-ECA5-497A-8892-9317B44186EC@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
+ <6d7bfccbaf082194ea257749041c19c2c2385cce.1769026777.git.bcodding@hammerspace.com>
+ <e299b7c6-9d37-4ffe-8d45-a95d92e33406@app.fastmail.com>
+ <0D5F8EA8-D77E-4F56-9EA6-8D6FC2F2CD37@hammerspace.com>
+ <9c5e9e07-b370-4c71-9dd6-8b6a3efe32c7@kernel.org>
+ <5EBC1684-ECA5-497A-8892-9317B44186EC@hammerspace.com>
+ <29aabe1c-3062-4dff-887d-805d7835912e@kernel.org>
+ <DC80A9CE-C98B-4D03-889F-90F477065FB1@hammerspace.com>
+ <d43cd682b0c51b187ba124f0c3c11ccc9d8698c8.camel@kernel.org>
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+X-ClientProxiedBy: PH7PR17CA0064.namprd17.prod.outlook.com
+ (2603:10b6:510:325::21) To DM8PR13MB5239.namprd13.prod.outlook.com
+ (2603:10b6:5:314::5)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|PH0PR13MB5283:EE_
+X-MS-Office365-Filtering-Correlation-Id: a1e106b0-04c5-4fd7-2974-08de59ba29b1
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7142099003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gECqmwKKwhYVyVrLYzDMM7yraFCuB0LNdmDfuQqLC0a+0d0M0wneb8fi+Xav?=
+ =?us-ascii?Q?GHE6zONFww8phvvaitqwyYtRwQC6A1npWPWvLDDxIfgmYay8ws2BVcE/KNtg?=
+ =?us-ascii?Q?1jhaWryTY/Pf/KmqN94JsBJR9O9/tyMYy9gWdP7rm9+eHfhSnNsPcKpgrUYf?=
+ =?us-ascii?Q?fR2N/cJLV3rfZz6NOaZfTVec7k7g/CKhCA6sMpDCfPuBbYRvdDeDY7FEhIx3?=
+ =?us-ascii?Q?PvDbxUEBY2GW6AWWjnZCC309mKRpAByjf7r89nepGFOBrULEyrw3hju/Zky1?=
+ =?us-ascii?Q?mimN/w1UyTsmwsU3e5t6mTEakrhv+mm2apFGLJ54izQWaR4UjqMVkrqL7CVs?=
+ =?us-ascii?Q?xoXwDl3aVNik5XtMycSeQ9ZQD1pliLWUjSKIG8rARJYQeT4UgraWtKYs6KTS?=
+ =?us-ascii?Q?0yyfk6/XmofqIxrNrhSS/vIqbAdys6mC+RQupbl7azElG1RYvE+zlTBoktE+?=
+ =?us-ascii?Q?5MN28lw9lxXeH6Gkvd7DjJ13pmIq8Ekd4CyoA5/xGOvMcnwsta7Wvih4b/+F?=
+ =?us-ascii?Q?oVXDat/g3DSKofeQG8JgLfKH+q1wywLzYXQVjHlnE3B0qT7O3dU84WdR9Gc6?=
+ =?us-ascii?Q?td+3OWnjFVsLBhTzYe6IkPaIVbKQOK+Rcf3aw0Xya1Efofpe7bvZZeySFJNu?=
+ =?us-ascii?Q?vpxQTfcW9bRdngP6dTFYSiZVLNMPTYIPTB1OImhUkmXfA0PsKqwXJX5lScBB?=
+ =?us-ascii?Q?rjFRDNi+8NK2PwkyT4TRPQEpa5Gh2ysmGn0Mi6tBJniL0Q3THHrSnTLh6iOR?=
+ =?us-ascii?Q?loCIQAQ2jJ/KAf7UvkcFlmyg5BE79vWe0lYVvnxakbejJ5Je167t44PM9LQ2?=
+ =?us-ascii?Q?EzGDtaLqYqVohPOO/mFTxV4NPaK4Q3uIDJxTRmogcnJ2XkmrlzzLB94Hkq+1?=
+ =?us-ascii?Q?XVuQGUp7V6BgNqobjeCEB+ObdfK2ywknLILKjpd065DHcjcwX1aLTnXoj3RP?=
+ =?us-ascii?Q?UdYse3wFHfLryDGATVGIhXqK+f5tk/xd9QpI47t7WCvsi6f+2+vAzwrOgAqW?=
+ =?us-ascii?Q?N9oGRbwAS0C1dMAIr8IIM8GN1mrDlKTK1Ae6xOS+IvW3Unfzp/PFy/SwUtLY?=
+ =?us-ascii?Q?KnbvTvwrxOaAO1wwrhQpHLxaorl/vqiXxIG94oVCbFzB6DqreIVmm8XR4iYg?=
+ =?us-ascii?Q?1ilMdRAnkCh/21BIi77Xgz2OAb+NGNqHd/5fqgvyk2flX0nh63gIwDdHpbxG?=
+ =?us-ascii?Q?i6zLeZs0KIHKTbscL+C7LOT0Wkti0+w3qmX4feFwN3fJvzPIGZPy/462U34u?=
+ =?us-ascii?Q?iZNCGjQUNOERzJjXOJjEsP8JF/J+myyhDUfvqKzMI30nAuMS4c5dt57PIk7Z?=
+ =?us-ascii?Q?KAlAXgkySbazCbnCY3NQx17E1GH8kGDwEYS0Lz7IZ1P4jtc7kX0Jy4iUtv6k?=
+ =?us-ascii?Q?AwdPPovDO+q4y1aRbRlfIGmYaYFdBqSGSzssuIt48uR/e24TW3HGWi/zquUP?=
+ =?us-ascii?Q?/2ZjcbzMwd1YOW7vOUxsizf3hjP2B6s9C+XE67838At0mL4TupL+6OQwDZTG?=
+ =?us-ascii?Q?zOSPciqnihTNkIXaQt6rLNoMwESRv9m0NGmYineecY1gpy+m5ISB5ExcnoZG?=
+ =?us-ascii?Q?FD/C5Mr71vgvpT/M02c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7142099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?62hMVUnfJypgFu9JJYl3CTAYE1iYX24LBqj/An0Gp4UXsLO1+rNoevudv5M+?=
+ =?us-ascii?Q?aBaxWL/Jvj+/li43CG014zIVrCM1UkFF0cNPs+UrooIuAodoELY/xg700T3e?=
+ =?us-ascii?Q?Dpgg4owICs6SYyesS16pYXe7KnTvKeK0ebTpCjhnjdMw0amZ5BmZlRYkkHG9?=
+ =?us-ascii?Q?6YV/9fzk0iaaGXggFWaH3Ck/OoftmFt+MgmRsNKQVucKqILRDBIGsF6NmXRT?=
+ =?us-ascii?Q?bsjZ9ZbcDGlOk6ONbW7laXCReIbitqjj7Cx+5A8edGgTEEYhjDMnZiV7HT3w?=
+ =?us-ascii?Q?f8jks7YaoC/XM/U6rdusxoM2fEvuHjHq8osnAwkjXu33hy6PucfM22dSPCfS?=
+ =?us-ascii?Q?+anj2epNmBLiV+Z6Ox4RxQV33+A89joBztBjI8pFq7UFA/fjgNgauaOpxygI?=
+ =?us-ascii?Q?cvJmXTLCskeMnFf7xSwzmwujwKgtcDRcSPAV3+SNWsSIeUjMo3lviI9VeYRT?=
+ =?us-ascii?Q?U5TurzDrl43NVgcMeWjqPm9LadbBCuk1aDyMQBX/6x2UnFaVpURG4NnyELZE?=
+ =?us-ascii?Q?zrrt3G0o3cRdiQZaz8+BbSRFQv9wppSpKeh01hRlrcTRyx5Q/McN/i0w3TLS?=
+ =?us-ascii?Q?ROJ1CMRVcDxSHqux+SqXtIYTXJV89GVtCfH4orLEyzqbQ17Jyb7Ryg/I0bqw?=
+ =?us-ascii?Q?j84Pf4Fjv30q60YElpslQPN5JSNM7xmJY67Vm8GQiwkj6xetquFvVn2W8Vft?=
+ =?us-ascii?Q?h+sciE8ZRbv8ELnC5mJTNUxFoQkfDBwkl81YQ4ahUFIiaA62gF+1zN9vJI4r?=
+ =?us-ascii?Q?xCE+FsTCKblASdBb1imMO3PCDOmm5yzD3FFa5OWcgdPV8C5Cz0ruSFbm+t+a?=
+ =?us-ascii?Q?9W4ULZpEeAfaWcZV1W4KnJAzGbTe5M0xJ34FQBoXau+qI9mUuvZ0MIh7zbFa?=
+ =?us-ascii?Q?6o1B/duD5vWP+tfsa/es33q+zI0GybVgwTdM+9NZioxVn45Eo12w4bFsJrQQ?=
+ =?us-ascii?Q?kINGSiLp7nvKhIYmCNxE40+oCf3h4jcZNS0uPRtZZcnV+8K4SlGsbuwEvJPF?=
+ =?us-ascii?Q?IKzZdFBYPEo10KqlI0ze1loinitfN9ULD5raH6Tu6vVO3G3B1Y7b9s8aw7mp?=
+ =?us-ascii?Q?Hpiheu4tFPT9GDQLuquPsW+HMJLG4hQhdWQvmgB/p2UvpV5AA/pFYbvQyb4U?=
+ =?us-ascii?Q?Jt3ynZlhSHIuwa+zo8qYgQnXFiDDgLhcEUoYGugLXSfpg9TX0wimJSVEHb/T?=
+ =?us-ascii?Q?prBFo4V6g5x+JjhPC4+KjTIf92lB6koPDAhyt+fBIXixYAMK+4tCTSLf+Nct?=
+ =?us-ascii?Q?om4B+ykpCceu7z9GRNDFVuTEMhLdPtIIV2Vn5kto8xfpO/MpcnjZegQa6jU1?=
+ =?us-ascii?Q?kBZpqRsYKhHu2oWVNpohxq8Hndw4C30wVG1jfvEmKNwbkytybAoeZthccL2/?=
+ =?us-ascii?Q?Rn6EBBWIKeuwtcfzDEk0jWtQL62sV87M7xgRvHcF/30nZd19aeqIYO/IHhf4?=
+ =?us-ascii?Q?EyPgKekjqGL92AH/+uQizP6ZHF9/unTSITf9sCNkGYgU7iubNuc+kRkgM9a6?=
+ =?us-ascii?Q?kileBSDeGBH9HovD4c7TL1sL3FA4q1zhN32rkMYJ7Fg/Tal4B+VuvEbSL/nj?=
+ =?us-ascii?Q?PYZ+JjPLIOpvH7x5McFsOPCZUFDnZmfHd6vaPbpWlZQXIhbv4fwj4k/A9a/J?=
+ =?us-ascii?Q?KNKOf6IpAVEmLEWdv68T7NwPZ5xEqhx2gyiWBuy+it/9rFWVca8jW9Hy/7nO?=
+ =?us-ascii?Q?ZWum/TbXNDiDb7yIm7fhZYITsk7XOBSmPcgmeBkWiEgDa0bplytjgWfrbw31?=
+ =?us-ascii?Q?04C7NXNR5WjKG27N8VS7UEq8j6l9aiA=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1e106b0-04c5-4fd7-2974-08de59ba29b1
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2026 13:28:43.6055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aScCflrnqFP96cXUnAhx5sxJAmqPfMwqGO/3BgQUqcS+c2fO4zTFqC0lAuCgcqcE9iOZF/5oZ35jYYb2XAlklqb3TJIOjNx1+GsLtde2wtk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB5283
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.46 / 15.00];
+X-Spamd-Result: default: False [2.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	FREEMAIL_CC(0.00)[oracle.com,brown.name,kernel.org,gmail.com,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18289-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[bcodding@hammerspace.com,linux-nfs@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-18288-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
 	MIME_TRACE(0.00)[0:+];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_CC(0.00)[kernel.org,oracle.com,brown.name,gmail.com,vger.kernel.org];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: ACFD7676F9
+	MID_RHS_MATCH_FROM(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[hammerspace.com,none];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 4177A67719
 X-Rspamd-Action: no action
 
-On Wed, 2026-01-21 at 17:56 -0500, Benjamin Coddington wrote:
->=20
-> Adding instructions to unload the nfsd module would be full of footguns,
-> depend on other features/modules and config options, and guaranteed to
-> quickly be out of date.  It might be enough to say the system should be
-> restarted.  The only reason for replacing the key is (as you've said) tha=
-t
-> it was compromised.  That should be rare and serious enough to justify
-> restarting the server.
->=20
+On 22 Jan 2026, at 7:30, Jeff Layton wrote:
 
-This sounds like crazy-pants talk.
+> On Wed, 2026-01-21 at 20:22 -0500, Benjamin Coddington wrote:
+>> On 21 Jan 2026, at 18:55, Chuck Lever wrote:
+>>
+>>> On 1/21/26 5:56 PM, Benjamin Coddington wrote:
+>>>> On 21 Jan 2026, at 17:17, Chuck Lever wrote:
+>>>>
+>>>>> On 1/21/26 3:54 PM, Benjamin Coddington wrote:
+>>>>>> On 21 Jan 2026, at 15:43, Chuck Lever wrote:
+>>>>>>
+>>>>>>> On Wed, Jan 21, 2026, at 3:24 PM, Benjamin Coddington wrote:
+>>>>>>>> A future patch will enable NFSD to sign filehandles by appending a=
+ Message
+>>>>>>>> Authentication Code(MAC).  To do this, NFSD requires a secret 128-=
+bit key
+>>>>>>>> that can persist across reboots.  A persisted key allows the serve=
+r to
+>>>>>>>> accept filehandles after a restart.  Enable NFSD to be configured =
+with this
+>>>>>>>> key via both the netlink and nfsd filesystem interfaces.
+>>>>>>>>
+>>>>>>>> Since key changes will break existing filehandles, the key can onl=
+y be set
+>>>>>>>> once.  After it has been set any attempts to set it will return -E=
+EXIST.
+>>>>>>>>
+>>>>>>>> Link:
+>>>>>>>> https://lore.kernel.org/linux-nfs/cover.1769026777.git.bcodding@ha=
+mmerspace.com
+>>>>>>>> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+>>>>>>>> ---
+>>>>>>>>  Documentation/netlink/specs/nfsd.yaml |  6 ++
+>>>>>>>>  fs/nfsd/netlink.c                     |  5 +-
+>>>>>>>>  fs/nfsd/netns.h                       |  2 +
+>>>>>>>>  fs/nfsd/nfsctl.c                      | 94 ++++++++++++++++++++++=
++++++
+>>>>>>>>  fs/nfsd/trace.h                       | 25 +++++++
+>>>>>>>>  include/uapi/linux/nfsd_netlink.h     |  1 +
+>>>>>>>>  6 files changed, 131 insertions(+), 2 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/netlink/specs/nfsd.yaml
+>>>>>>>> b/Documentation/netlink/specs/nfsd.yaml
+>>>>>>>> index badb2fe57c98..d348648033d9 100644
+>>>>>>>> --- a/Documentation/netlink/specs/nfsd.yaml
+>>>>>>>> +++ b/Documentation/netlink/specs/nfsd.yaml
+>>>>>>>> @@ -81,6 +81,11 @@ attribute-sets:
+>>>>>>>>        -
+>>>>>>>>          name: min-threads
+>>>>>>>>          type: u32
+>>>>>>>> +      -
+>>>>>>>> +        name: fh-key
+>>>>>>>> +        type: binary
+>>>>>>>> +        checks:
+>>>>>>>> +            exact-len: 16
+>>>>>>>>    -
+>>>>>>>>      name: version
+>>>>>>>>      attributes:
+>>>>>>>> @@ -163,6 +168,7 @@ operations:
+>>>>>>>>              - leasetime
+>>>>>>>>              - scope
+>>>>>>>>              - min-threads
+>>>>>>>> +            - fh-key
+>>>>>>>>      -
+>>>>>>>>        name: threads-get
+>>>>>>>>        doc: get the number of running threads
+>>>>>>>> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+>>>>>>>> index 887525964451..81c943345d13 100644
+>>>>>>>> --- a/fs/nfsd/netlink.c
+>>>>>>>> +++ b/fs/nfsd/netlink.c
+>>>>>>>> @@ -24,12 +24,13 @@ const struct nla_policy
+>>>>>>>> nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1] =3D {
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  /* NFSD_CMD_THREADS_SET - do */
+>>>>>>>> -static const struct nla_policy
+>>>>>>>> nfsd_threads_set_nl_policy[NFSD_A_SERVER_MIN_THREADS + 1] =3D {
+>>>>>>>> +static const struct nla_policy
+>>>>>>>> nfsd_threads_set_nl_policy[NFSD_A_SERVER_FH_KEY + 1] =3D {
+>>>>>>>>  	[NFSD_A_SERVER_THREADS] =3D { .type =3D NLA_U32, },
+>>>>>>>>  	[NFSD_A_SERVER_GRACETIME] =3D { .type =3D NLA_U32, },
+>>>>>>>>  	[NFSD_A_SERVER_LEASETIME] =3D { .type =3D NLA_U32, },
+>>>>>>>>  	[NFSD_A_SERVER_SCOPE] =3D { .type =3D NLA_NUL_STRING, },
+>>>>>>>>  	[NFSD_A_SERVER_MIN_THREADS] =3D { .type =3D NLA_U32, },
+>>>>>>>> +	[NFSD_A_SERVER_FH_KEY] =3D NLA_POLICY_EXACT_LEN(16),
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  /* NFSD_CMD_VERSION_SET - do */
+>>>>>>>> @@ -58,7 +59,7 @@ static const struct genl_split_ops nfsd_nl_ops[]=
+ =3D {
+>>>>>>>>  		.cmd		=3D NFSD_CMD_THREADS_SET,
+>>>>>>>>  		.doit		=3D nfsd_nl_threads_set_doit,
+>>>>>>>>  		.policy		=3D nfsd_threads_set_nl_policy,
+>>>>>>>> -		.maxattr	=3D NFSD_A_SERVER_MIN_THREADS,
+>>>>>>>> +		.maxattr	=3D NFSD_A_SERVER_FH_KEY,
+>>>>>>>>  		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+>>>>>>>>  	},
+>>>>>>>>  	{
+>>>>>>>> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+>>>>>>>> index 9fa600602658..c8ed733240a0 100644
+>>>>>>>> --- a/fs/nfsd/netns.h
+>>>>>>>> +++ b/fs/nfsd/netns.h
+>>>>>>>> @@ -16,6 +16,7 @@
+>>>>>>>>  #include <linux/percpu-refcount.h>
+>>>>>>>>  #include <linux/siphash.h>
+>>>>>>>>  #include <linux/sunrpc/stats.h>
+>>>>>>>> +#include <linux/siphash.h>
+>>>>>>>>
+>>>>>>>>  /* Hash tables for nfs4_clientid state */
+>>>>>>>>  #define CLIENT_HASH_BITS                 4
+>>>>>>>> @@ -224,6 +225,7 @@ struct nfsd_net {
+>>>>>>>>  	spinlock_t              local_clients_lock;
+>>>>>>>>  	struct list_head	local_clients;
+>>>>>>>>  #endif
+>>>>>>>> +	siphash_key_t		*fh_key;
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  /* Simple check to find out if a given net was properly initializ=
+ed */
+>>>>>>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+>>>>>>>> index 30caefb2522f..e59639efcf5c 100644
+>>>>>>>> --- a/fs/nfsd/nfsctl.c
+>>>>>>>> +++ b/fs/nfsd/nfsctl.c
+>>>>>>>> @@ -49,6 +49,7 @@ enum {
+>>>>>>>>  	NFSD_Ports,
+>>>>>>>>  	NFSD_MaxBlkSize,
+>>>>>>>>  	NFSD_MinThreads,
+>>>>>>>> +	NFSD_Fh_Key,
+>>>>>>>>  	NFSD_Filecache,
+>>>>>>>>  	NFSD_Leasetime,
+>>>>>>>>  	NFSD_Gracetime,
+>>>>>>>> @@ -69,6 +70,7 @@ static ssize_t write_versions(struct file *file,=
+ char
+>>>>>>>> *buf, size_t size);
+>>>>>>>>  static ssize_t write_ports(struct file *file, char *buf, size_t s=
+ize);
+>>>>>>>>  static ssize_t write_maxblksize(struct file *file, char *buf, siz=
+e_t
+>>>>>>>> size);
+>>>>>>>>  static ssize_t write_minthreads(struct file *file, char *buf, siz=
+e_t
+>>>>>>>> size);
+>>>>>>>> +static ssize_t write_fh_key(struct file *file, char *buf, size_t =
+size);
+>>>>>>>>  #ifdef CONFIG_NFSD_V4
+>>>>>>>>  static ssize_t write_leasetime(struct file *file, char *buf, size=
+_t
+>>>>>>>> size);
+>>>>>>>>  static ssize_t write_gracetime(struct file *file, char *buf, size=
+_t
+>>>>>>>> size);
+>>>>>>>> @@ -88,6 +90,7 @@ static ssize_t (*const write_op[])(struct file *=
+,
+>>>>>>>> char *, size_t) =3D {
+>>>>>>>>  	[NFSD_Ports] =3D write_ports,
+>>>>>>>>  	[NFSD_MaxBlkSize] =3D write_maxblksize,
+>>>>>>>>  	[NFSD_MinThreads] =3D write_minthreads,
+>>>>>>>> +	[NFSD_Fh_Key] =3D write_fh_key,
+>>>>>>>>  #ifdef CONFIG_NFSD_V4
+>>>>>>>>  	[NFSD_Leasetime] =3D write_leasetime,
+>>>>>>>>  	[NFSD_Gracetime] =3D write_gracetime,
+>>>>>>>> @@ -950,6 +953,60 @@ static ssize_t write_minthreads(struct file *=
+file,
+>>>>>>>> char *buf, size_t size)
+>>>>>>>>  	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%u\n", minthrea=
+ds);
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>> +/*
+>>>>>>>> + * write_fh_key - Set or report the current NFS filehandle key, t=
+he key
+>>>>>>>> + * 		can only be set once, else -EEXIST because changing the key
+>>>>>>>> + * 		will break existing filehandles.
+>>>>>>>
+>>>>>>> Do you really need both a /proc/fs/nfsd API and a netlink API? I
+>>>>>>> think one or the other would be sufficient, unless you have
+>>>>>>> something else in mind (in which case, please elaborate in the
+>>>>>>> patch description).
+>>>>>>
+>>>>>> Yes, some distros use one or the other.  Some try to use both!  Unti=
+l you
+>>>>>> guys deprecate one of the interfaces I think we're stuck expanding t=
+hem
+>>>>>> both.
+>>>>>
+>>>>> Neil has said he wants to keep /proc/fs/nfsd rather indefinitely, and
+>>>>> we have publicly stated we will add only to netlink unless it's
+>>>>> unavoidable. I prefer not growing the legacy API.
+>>>>
+>>>> Having both is more complete, and doesn't introduce any conflicts or
+>>>> problems.
+>>>
+>>> That doesn't tell me why you need it. It just says you want things to
+>>> be "tidy".
+>>>
+>>>
+>>>>> We generally don't backport new features like this one to stable
+>>>>> kernels, so IMO tucking this into only netlink is defensible.
+>>>>
+>>>> Why only netlink for this one besides your preference?
+>>>
+>>> You might be channeling one of your kids there.
+>>
+>> That's unnecessary.
+>>
+>>> As I stated before: we have said we don't want to continue adding
+>>> new APIs to procfs. It's not just NFSD that prefers this, it's a long
+>>> term project across the kernel. If you have a clear technical reason
+>>> that a new procfs API is needed, let's hear it.
+>>
+>> You've just added one to your nfsd-testing branch two weeks ago that you
+>> asked me to rebase onto.
+>>
+>
+> Mea culpa. I probably should have dropped the min-threads procfile from
+> those patches, but it was convenient when I was doing the development
+> work. Chuck, if you like I can send a patch to remove it before the
+> merge window.
+>
+> I can't see why we need both interfaces. The old /proc interface is
+> really for the case where you have old nfs-utils and/or an old kernel.
+> In order to use this, you need both new nfs-utils and new kernel. If
+> you have those, then both should support the netlink interface.
 
-Why do we need to unload nfsd.ko to change the key? Also, what will you
-do about folks who don't build nfsd as a module?
+I'm not trying to win an argument about how I want it, but I want to just
+point out one more thing: its possible to have products built out of the
+server where the tooling so far hasn't been taught to use nfsdctl yet.
+We're in that situation - we will backport the kernel bits here, and use th=
+e
+/proc interface because the tooling hasn't been converted to nfsdctl yet.
 
-Personally, I think just disallowing key changes while the nfs server
-is running should be sufficient. If someone wants to shut down the
-threads and then change the key on the next startup, then I don't see
-why that shouldn't be allowed.
+>>>> There's a very good reason for both interfaces - there's been no work =
+to
+>>>> deprecate the old interface or co-ordination with distros to ensure th=
+ey
+>>>> have fully adopted the netlink interface.  Up until now new features h=
+ave
+>>>> been added to both interfaces.
+>>>
+>>> I'm not seeing how this is a strong and specific argument for including
+>>> a procfs version of this specific interface. It's still saying "tidy" t=
+o
+>>> me and not explaining why we must have the extra clutter.
+>>>
+>>> An example of a strong technical reason would be "We have legacy user
+>>> space applications that expect to find this API in procfs."
+>>
+>> The systemd startup for the nfs-server in RHEL falls back to rpc.nfsd on
+>> nfsdctl failure.  Without the additional interface you can have systems =
+that
+>> start the nfs-server via rpc.nfsd without setting the key - exactly the
+>> situation you're so adamant should never happen in your below argument..
+>>
+>
+> The main reason it would fail is because the kernel doesn't support the
+> netlink interface (or e.g. nfsdctl isn't present at all). If it fails
+> with the netlink interface for some other reason, it's quite likely to
+> have the same failure with procfs.
 
-We'll want to document _why_ you generally wouldn't want to do that,
-but in the case of a compromised key, it might be necessary.
---=20
-Jeff Layton <jlayton@kernel.org>
+You're right, but it also could fail for any number of other reasons -
+admittedly unlikely ones.
+
+> To be clear, the procfs interface is categorically inferior due to its
+> piecemeal nature. There's little guidance as to how to the changes in
+> nfsdfs should be ordered. We mostly make it work, but the cracks were
+> showing in those interfaces long before. We really don't want to be
+> expanding it.
+
+I understand.  I'll remove the procfs interface here on the next posting,
+and thanks for chiming in here.
+
+One thing that is confusing with nfsdctl is that when it reports a failure
+its not easy to figure out what's going wrong.  It ends up having its own
+ordering stuff - for example:
+
+(fresh boot)
+root@bcodding:~# nfsdctl threads 4
+nfsdctl: nfsdctl started
+nfsdctl: failed to resolve nfsd generic netlink family
+nfsdctl: nfsdctl exiting
+root@bcodding:~# modprobe nfsd
+root@bcodding:~# nfsdctl threads 4
+nfsdctl: nfsdctl started
+nfsdctl: Error: Input/output error
+nfsdctl: nfsdctl exiting
+
+^^ that's an actual situation I encountered, then tried to diagnose with
+strace (no good), then had to turn on the function tracer in the kernel to
+find that the error was coming from somewhere in nfs4_state_start().  I
+think something not getting set (listener?), finally I looked in the log an=
+d
+found:
+
+[   47.428237] NFSD: Failed to start, no listeners configured.
+
+ah - so then I knew that I had to use "autostart" before being able to use
+the "threads".  Compared with rpc.nfsd in the same situation:
+
+root@bcodding:~# rpc.nfsd 4
+rpc.nfsd: knfsd is currently down
+rpc.nfsd: Writing version string to kernel: -2 +3
+rpc.nfsd: Created AF_INET TCP socket.
+rpc.nfsd: Created AF_INET6 TCP socket.
+rpc.nfsd: unable to interpret port name n
+
+.. and I know I need to configure the ports.  It also loads the module for
+me.
+
+Would it make sense to have nfsctld load the nfsd module if the netlink
+interface doesn't exist, then on error it could also suggest checking the
+system log?
+
+Please don't take this as me whining or complaining - just some
+observations.  Most users will never encounter these problems because the
+tooling to start the server ensures its done the right way..  So, sorry lon=
+g
+read -- maybe we can eventually improve nfsdctl to have better stderr on
+failure, or maybe the problem was mine because I didn't immediately look in
+the log.  :P
+
+Thanks again,
+Ben
+
 
