@@ -1,197 +1,168 @@
-Return-Path: <linux-nfs+bounces-18329-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18330-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EElLOKGDcmkrlwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18329-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 21:08:01 +0100
+	id mFbQIhuTcmkMmQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18330-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 22:14:03 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEE916D559
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 21:08:00 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 297226DA31
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 22:14:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4B6863007A4D
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 20:07:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 39CCD300B9D6
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 21:14:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18A838E134;
-	Thu, 22 Jan 2026 20:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440043BB9EB;
+	Thu, 22 Jan 2026 21:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/lWqrLz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hj6uYYTX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5AB3090E4
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 20:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769112470; cv=pass; b=rafnDyoJMlPYaxVaC9vwxaVn4Keg5PRGML0TTMy8lBt6A96oxtFBmYXE76NRx/u7dzF4wvXH/uLGvm+NDEpHMSAAliZDjROrvPDTuj2jbMEdJD+854acM3BKd4TQxKVq0/ZQaz3Hxn1EOuQs+RPo/e0OkTymFp1+R1AYswB/mkQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769112470; c=relaxed/simple;
-	bh=UeToXNeIZz9y9OvrlDazfYnO7oODJgQv05/I8arOeUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EAPj6m7kuDi1CsmtDGyiTapPBp6Po/2IbZo42278bWCBbpF/dpi3At9PmcUcV39GYs/Y27gi9OqtWmwD8+f1PBVPTqVbBhyKps887vv08ISOBcFRxCRsGTz/T2vLR6Lik1fPf8VFeaQwNU+kCXKXLcLHPndVFLKM6hdR8ytZnE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/lWqrLz; arc=pass smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b8837152db5so142270966b.0
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 12:07:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769112459; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ACjvp/hBQU5qHBNWrvPvc/JmdUayGmsDYmte8fpLhqaTP73v2nzfEaCDGZm7a755Ly
-         LbQRW+pGnzW2aiJVhfXT2mp1TMBefzSdBm5wBiPXfzDeQpUlTHksTbCkWlhsrTotaeow
-         WlBGREUUVZ6wB5IRD2RzicsbRQtu3aB0moU7zA79XLWITy1Q4Uglfz6g5o29aDTEmigy
-         6c5Wm4Za/H3sO/UzzU3chMte2otNyOCu62yWFuv4BE7bPMbMswmGnhAWU2E9SrzSI3EL
-         EaFtzKNKFvb5GvBY0cL3SIpq4iz4X0YD76Te9SaJ7Fyl+XSsLPIolSGmb/zVyCfjBkeH
-         2HzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=UeToXNeIZz9y9OvrlDazfYnO7oODJgQv05/I8arOeUU=;
-        fh=2Jxtsj0n4o+KW5aJD4x8YR6oslRjSvXWwQdKEbs3JmA=;
-        b=W3fVE2M9/TSaKzp3boybLJ4KXoUaq1VWq4AaHdH74FGgAErO4JkVIhQRt/KZOwJp7U
-         Xo+Ub47O9AtLy0UNF0Xt4c/6VOm78RBNjPNgHgfW5Q5/N5dqniXxSUwyI755HU/vk3Zl
-         yFmejWwYFBX/En9U4xOJCDnzWunF+FcZO7yonoJ0cfccAGEFxD6oQX5IpGqVeKvy38jJ
-         2nGEQarPymqwyn4nw83mxjvIlHHb8aF8QesK83ApyR8oNaL6e0Xhr+INBelbnrFLYZgK
-         5vP55fYemnH8UewHF+GZAm90LyKi86wO0LC4fULBiRi9Gu9cvJ8WkRRCNrXsk+Hj6Fdp
-         xw6w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769112459; x=1769717259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UeToXNeIZz9y9OvrlDazfYnO7oODJgQv05/I8arOeUU=;
-        b=X/lWqrLz2bQ6qvlxMp7/4e7A3KNMkcvHPGvJrXvIoIFpAaXIC/J52gb0mTswrvGFCP
-         qSSVd1czapsgBn9o4IwsRwvrzkDyZFQx/Q7wv1QR4ekmsTMySm+kz1F5NgHYxohKdeQW
-         9UBy+879Kpi1tgCxNhjuYt8DS45VfiBkOyHJO/2HCOK97WnN26k3ENKaWBrgHO+JG8UL
-         BEq6qWIJt7oQcNqg684IBIHDoze+DmC0pRYl6PWRXWVulbGGtM+GXeZOX3icPwGLoZvy
-         F8yBwJU6ABDv/T7C8paHIdvH8dD98D8xBTj2IE6kxogY0Puri6AgRf99EEFaozcudOgy
-         Dzog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769112459; x=1769717259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UeToXNeIZz9y9OvrlDazfYnO7oODJgQv05/I8arOeUU=;
-        b=HrwK1wdEhjFEI2nH+SfPPfiEM/hYqzO20/JqecNrQQWxSd5K8tr5ZD9uaN/sVZTQvr
-         C3Q9sunBPiHOJJapZd9gUK+TrugVaCWMViUpQpKK0WUkBrxs/0j2UE9tbwmI9kMoxYgR
-         B8B127a05YKj1LqWLjnc1byr+o26ggCr2C7Z4oFjXTbdqDlQ/3ZRbd2DE5bfYBa34Ua8
-         mgmNjZv+Nuc4x1b2RKqIgxgDKNqcP1bkrSFu9NBY0ftbOvAb5Se/QHH/wrkHTTCSm9IO
-         N/oSV9OBbCihkfWoP13viYRPAn8yxTKTvEKxJdiLYlRPxyjUoqiQ7i7K7YaS+TBFKXRM
-         mV6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ4KHE4jR7bLNuqoaVCKpynMUYishPJ8AbjUTG+XJ9gxwRqOjAqRCEgHIR0A6BCFM/gAQH44lG868=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9AJgfed3tyb2aH/IrhvTaPSkj/4NSIFda3jB3fvZYB+GRWvP1
-	mcGeXI0ZB6MWGDnZCEusGpdh5M8Wraj6zSOLD6cjX1n55dBUT6GcE7B1dN3MjkUwB5j272M7d1S
-	bhEslQ9S0i5dl2OH8j7WicMPsTw9eQJA=
-X-Gm-Gg: AZuq6aIK4dHhlh3lb2ajsHHa8oBdnbSxk1q3sPf5cCr0TymULlctfXXW5D042BrvoEb
-	Eu+xMan8UqdovkbJ/RPijDPG6lTYWoKf3CO+2s4nlINaCwd8dKBXQN+7AkC/aG4SsgJkUiyJ0gt
-	Ihr3MHGEMMIvKXWTv0hfD1aqJWxcKHGsbkyLYLAYXQ+n5KhSGM+4q6fbE9SAUtxkNQW3ORM1iss
-	kifhtYdAVwbDMWC0Qu7Y8HVPnOR6FEhWyLqqZCahnSkK9bgOcs1qOJn8hNntt6FWrefpP0/qKin
-	ndrLM5pH1hhEB/2YpfRcdU8psovzzARGlwWCAjyG
-X-Received: by 2002:a17:907:70a:b0:b84:42e5:2b7e with SMTP id
- a640c23a62f3a-b885ae682a6mr30056466b.51.1769112458391; Thu, 22 Jan 2026
- 12:07:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF4F3AA1A9
+	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 21:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769116438; cv=none; b=ExYxLXwl00EqUuLUpe9LqplkdzCb3883vcidpOVIaS2R5Ca5rCw9p4+RuiRXJ6UImRLziZRdf6/4mqOIKNsTnqPuR+kyC9hgEsOuXrw1a0AS/cP4zDtuvxVlqRztO2y6ZrJua15Q/adIqjasE/V/G17Wga13BeHYLYP1B/h2pYI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769116438; c=relaxed/simple;
+	bh=QqdqOxEF1IZ1ZVO+IuF2xGK0+FICnSXkcrRDUwG9UEE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Q+9GOTUcuE6NbqZfqDlpHMuZX+pN2ZdU1z4hXYCxWoWwM+dR5qpURfEObW3NO7YFeBt6figxT5QKSC9F5j43unXkhvM5REnj9xs2Oka1RsQkogpjDxlbnwMjFCx3Nex8B0mt+ZT6STCq2RJ6Vg1n1HVEkFsJe0Oc97YDTdgKb68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hj6uYYTX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D44C116C6;
+	Thu, 22 Jan 2026 21:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769116436;
+	bh=QqdqOxEF1IZ1ZVO+IuF2xGK0+FICnSXkcrRDUwG9UEE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hj6uYYTXfRznuD51MgJkjbbupkHDGq8cgrKtDZXH/TDd+vrWceZMpCsKN5xsRAw3T
+	 fP7UVzhwYgLYclKbbwq6w6OEbMYfEJG0Gbc/AApdm+2HrxiOmDh8Vss9PvZZljQBt9
+	 UUm/gdipq/eVGiI1dZT5Yey4KIyH6Ox7LZgliGvjk4yjEdCMqhAMW1fI3XiZq1PZlH
+	 IQPTW6dn8iKZgrk2NQ+YANiUOo8XZidBs9/slrRfdijri79TkrpOJdFGDtO5NUJ4XV
+	 nB5ZsoS7PxTU8RvSyXKwkkTtDNMogReu7W4lenCVgUCWspFGvUwtids/lRdoBIuCoE
+	 HNlrSanOfZKiQ==
+Message-ID: <48d4e00bd1e37b95e21f2afac15e8fc96c06b868.camel@kernel.org>
+Subject: Re: Possible regression after NFS eof page pollution fix (ext4
+ checksum errors)
+From: Trond Myklebust <trondmy@kernel.org>
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: Linoy Ganti <lganti@nvidia.com>, Bar Friedman <bfriedman@nvidia.com>, 
+	linux-nfs@vger.kernel.org, Maor Gottlieb <maorg@nvidia.com>
+Date: Thu, 22 Jan 2026 16:13:55 -0500
+In-Reply-To: <9871411e-8272-4f95-80f0-2b86e55231b8@nvidia.com>
+References: <447f41f0-f3ab-462a-8b59-e27bb2dfcbc0@nvidia.com>
+	 <43278ef7e260f46de5a7130331f30e12b916f89a.camel@kernel.org>
+	 <3e7d4222-9326-4761-819f-114831919c80@nvidia.com>
+	 <d6419d6b1e24c2a704a44f6347bfcfa59fa195c2.camel@kernel.org>
+	 <211e07b8129353fbec59b44f4859ce22947f222b.camel@kernel.org>
+	 <391d9e32-afef-4b1c-adf9-422204360c77@nvidia.com>
+	 <9871411e-8272-4f95-80f0-2b86e55231b8@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114-tonyk-get_disk_uuid-v1-0-e6a319e25d57@igalia.com>
- <20260114-tonyk-get_disk_uuid-v1-3-e6a319e25d57@igalia.com>
- <20260114062608.GB10805@lst.de> <5334ebc6-ceee-4262-b477-6b161c5ca704@igalia.com>
- <20260115062944.GA9590@lst.de> <633bb5f3-4582-416c-b8b9-fd1f3b3452ab@suse.com>
- <20260115072311.GA10352@lst.de> <22b16e24-d10e-43f6-bc2b-eeaa94310e3a@igalia.com>
- <CAOQ4uxhbz7=XT=C3R8XqL0K_o7KwLKsoNwgk=qJGuw2375MTJw@mail.gmail.com>
- <0241e2c4-bf11-4372-9eda-cccaba4a6d7d@igalia.com> <CAOQ4uxi988PutUi=Owm5zf6NaCm90PUCJLu7dw8firH8305w-A@mail.gmail.com>
- <33c1ccbd-abbe-4278-8ab1-d7d645c8b6e8@igalia.com> <CAOQ4uxgCM=q29Vs+35y-2K9k7GP2A2NfPkuqCrUiMUHW+KhbWw@mail.gmail.com>
- <75a9247a-12f4-4066-9712-c70ab41c274f@igalia.com> <CAOQ4uxig==FAd=2hO0B_CVBDSuBwdqL-zaXkpf-QXn5iEL364g@mail.gmail.com>
-In-Reply-To: <CAOQ4uxig==FAd=2hO0B_CVBDSuBwdqL-zaXkpf-QXn5iEL364g@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 22 Jan 2026 21:07:27 +0100
-X-Gm-Features: AZwV_Qj-Pre4XZbhvcFXr13YDWLuhkhhzBZFRQumTLtcoMVU1rOesRZLphknff4
-Message-ID: <CAOQ4uxg6dKr4XB3yAkfGd_ehZkBMcoNHiF5CeB9=3aca44yHRg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ovl: Use real disk UUID for origin file handles
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Carlos Maiolino <cem@kernel.org>, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	kernel-dev@igalia.com, vivek@collabora.com, 
-	Ludovico de Nittis <ludovico.denittis@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-18329-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[25];
+	TAGGED_FROM(0.00)[bounces-18330-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: DEE916D559
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 297226DA31
 X-Rspamd-Action: no action
 
-On Tue, Jan 20, 2026 at 4:12=E2=80=AFPM Amir Goldstein <amir73il@gmail.com>=
- wrote:
->
-> On Mon, Jan 19, 2026 at 5:56=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid@i=
-galia.com> wrote:
-> >
-...
-> > Actually they are not in the same fs, upper and lower are coming from
-> > different fs', so when trying to mount I get the fallback to
-> > `uuid=3Dnull`. A quick hack circumventing this check makes the mount wo=
-rk.
-> >
-> > If you think this is the best way to solve this issue (rather than
-> > following the VFS helper path for instance),
->
-> That's up to you if you want to solve the "all lower layers on same fs"
-> or want to also allow lower layers on different fs.
-> The former could be solved by relaxing the ovl rules.
->
-> > please let me know how can
-> > I safely lift this restriction, like maybe adding a new flag for this?
->
-> I think the attached patch should work for you and should not
-> break anything.
->
-> It's only sanity tested and will need to write tests to verify it.
->
+On Thu, 2026-01-22 at 12:00 +0200, Mark Bloch wrote:
+>=20
+>=20
+> On 11/01/2026 9:03, Mark Bloch wrote:
+> > Hi Trond,
+> >=20
+> > On 11/01/2026 2:24, Trond Myklebust wrote:
+> > > Hi Mark,
+> > >=20
+> > > On Mon, 2026-01-05 at 10:20 -0500, Trond Myklebust wrote:
+> > > >=20
+> > > > OK so if I'm understanding correctly, this is organised as ext4
+> > > > partitions that are stored in qcow2 images that are again
+> > > > stored on a
+> > > > NFSv4.2 partition.
+> > > >=20
+> > > > Do these qcow2 images have a file size that is fixed at
+> > > > creation
+> > > > time,
+> > > > or is the file size dynamic?
+> >=20
+> > The file size is dynamic (with a fixed maximum of 35 GB).
+> >=20
+> > > > Also, does changing the "discard" option from "unmap" to
+> > > > "ignore"
+> > > > make
+> > > > any difference to the outcome?
+> >=20
+> > The discard option is already set to "ignore" in the image.
+> > Do you want us to test the other options just to see if it makes
+> > a difference?
+> >=20
+> > >=20
+> > > I've been staring at this for several days now, and the only
+> > > candidate
+> > > for a bug in the NFS client that I can see is this one. Can you
+> > > please
+> > > check if the following patch helps?
+> >=20
+> > Thanks for the patch, I'll let the team dealing with the issue know
+> > and let them test the patch.
+> > I'll update once I know anything.
+>=20
+> We've been testing your patch for some time now and didn't hit the
+> issue.
+> Feel free to add Bar's tested by tag as she was the one
+> that actually tested the fix. Thanks for looking into this.
+>=20
+> Tested-by: Bar Friedman <bfriedman@nvidia.com>
+>=20
+> Mark
+>=20
 
-Andre,
 
-I tested the patch and it looks good on my side.
-If you want me to queue this patch for 7.0,
-please let me know if it addresses your use case.
+Thank you very much for testing, Bar! I unfortunately already sent the
+patch upstream as it was clearly a necessary fix (even though it was
+not obvious to me that it would be sufficient to fix your reported
+problem). I'm therefore hoping it will hit the 6.18.x stable kernels
+soon.
 
-Thanks,
-Amir.
+>=20
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
