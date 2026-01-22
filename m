@@ -1,227 +1,275 @@
-Return-Path: <linux-nfs+bounces-18285-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18286-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sKzmBxEQcmksawAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18285-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 12:54:57 +0100
+	id 6NDCFXopcmmadwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18286-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:22 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C75486642F
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 12:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A86C67709
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 14:43:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6EDBD6AC549
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 11:40:14 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5041B762187
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jan 2026 12:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2453D350A16;
-	Thu, 22 Jan 2026 11:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DB243CEED;
+	Thu, 22 Jan 2026 12:12:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/vxHXQo";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaIxM2z8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKYitB6m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41232ABC2
-	for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 11:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769082013; cv=pass; b=U+jeWlbqjtoJqTbGXbYGN6g4+dTLLnETZZrKbXkFqgJn4nNZuMAfbBvDtKpOmwrziNHh6tMcTJ2W3gxh1BeCokEr2U9nYKsMfs6NGt7MjU2MnpZnx7yFbF7kUFjngea7x2U2Ai/cXSaLtARsI/w/cdkJMTAbaYlonx+xIrZGN5M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769082013; c=relaxed/simple;
-	bh=7nh+IiJKNSXBc5R5+FYF95YeudgFAHMqQvCHy/wJqyM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=DlEGBDjTBQiXQ62I+1CPLNIAyvSS08PRSUFdjfQ28s7CH8SqRoPT6O0kJJq863hEfmhuUVHRbx0sK3kyvhFWSnelhvIj7TSw61hXNAtgbTXuOu8TB35oqlQ3iM+U4Wvk0RKP4H3h1FOPsP/MnmcsuUFgGBIDc7NZYAsVMLun/JY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P/vxHXQo; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=FaIxM2z8; arc=pass smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769082008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=7MwNfME23czUiYvxkWZ1isZajN24xKcF+NCI+R9gLiE=;
-	b=P/vxHXQoGyIht4aqI3j2zAka1bAcrzY3SP4mQz391d1WOTzoXtL4NhWE21Zc1tt2wpHjx0
-	sL7oqj+rQHLDEu/MD1L7YHTqCEZYWGLrEacNDiit1jcCA5n/Tz4WfLfJK4ypxGaEvnpbmO
-	sLzowt6R5kDecU4IHh6IOk5TMS3nKIk=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-599-nxHChWgtNVW1dhZSwuqkww-1; Thu, 22 Jan 2026 06:40:06 -0500
-X-MC-Unique: nxHChWgtNVW1dhZSwuqkww-1
-X-Mimecast-MFC-AGG-ID: nxHChWgtNVW1dhZSwuqkww_1769082006
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-5f5337e9fc9so652323137.2
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jan 2026 03:40:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769082006; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LTcyQt75y7Qo0TJC3AGmbDqY1oCDUh9UoOjgvLLZIpEvOeppvMSEQeYsN/g7McQpWk
-         Vtjlc6rL//CmLbxyqZl2AOYOcq2iFlfBBHsMHPWp4rrw7XtEudfsPkfWVpf0nqoIYZt6
-         SUD/F64UMwlzoWNK5vpIkqv5hiwWSQaOZGALIuemwPuDyuRwGGcW/qXMtrqmE8YUgrG7
-         /tMeutvMosdaDwjYPUbMh1p4uDTzUwomoDb6ly0ZVbEJBOOCrehgtq+QpVsrczinlnBV
-         o4uBm5Zot6zfS0vzqn+hJbvRFXC8E8Ysety8jwb5oh/YHTaeEUxGrd4Z4nMzbnUc0E1F
-         qoVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=7MwNfME23czUiYvxkWZ1isZajN24xKcF+NCI+R9gLiE=;
-        fh=E/FXhmUauEGefm5R+oU9bYmTxswclnb8UjR8wmV9z8I=;
-        b=lTe8G4TugI7CoGlZgG6ti3Z4De5JUSxvpicUL48WEXOfLAY11yn8yNAxr2Gvn55QHI
-         jnGEaxQPSDqjo/8GSBAk3aX1yfRBIFRCmtwMTT73p/QkyL+owTekn6m2Nv6+xGif7Pxd
-         ryaL1lcjCUwAq7SINEGTSxg9fDXo5dv6IZ3MLFEkMEqESL8+JuDYIa6u5QGY6hq5C/RL
-         qeyw/OIQghqHhksm/b10PDOUomVeBggOUB87bXwqtn7HQRcmxWtv0rjFjL+Tkzo5W5YK
-         +xYO+Fg7pd4dL2z9mhmlN9vr2a69Mc+mX2GniJJ44lKMgmqOK8OVWE0PnMqtqwO9O6l+
-         0mPw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1769082006; x=1769686806; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7MwNfME23czUiYvxkWZ1isZajN24xKcF+NCI+R9gLiE=;
-        b=FaIxM2z82dajGLsVGFw6NRFVkOelZt1nv8yRO9BM2iEMEeQkvfA3R3/00YXMSDvf5o
-         LMnSgcuOd5DOCfQ7dLly+DE0Pf75ggSkx2nTfOpKxH8i9/ptKBOlgRRFXmA8AL4Yv3W6
-         XQ/sgsKAHnIHa0vte5xwmhlJNtiaW5rTQfBRxcMqsKEgbEbZ70imDIIJpXbIU9lvaY51
-         NzYLjtF4WHqMItl6ctqAL0FJt8fCSWhC4w22cZI9//U+vRAXlUV/cJQvHRfy8KZ22wLd
-         O6bciD03jjGF2SymlwT+yBOLcWbo1YxhyCJo+YbqFndQ/xNs95/AbAMZFE3xqP/JI7xw
-         jHuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769082006; x=1769686806;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MwNfME23czUiYvxkWZ1isZajN24xKcF+NCI+R9gLiE=;
-        b=hOX5VUcruKto8LG5YQLPen5lgkESGx1kL5P4OP/tPB7ftqCJVaKF/O4T6xJtpF8Pt4
-         8rWxWJUsnZ0bA+Mw7R+KmGWLpU+u90K9QwToXixpf7xvfSI0QnoJ/1fQzGqZLxHKeq8F
-         gObt2f6dq5jt10wVHEkbtSmxO1BCKCoH1T+69piQZjtyaeZgMSYBhJzOMffJ5ngjfm0B
-         NvG0yTYlK23QaaubzyZ+whJBiKzERRveeiZUkZnYzQgNpWcwPEczIcdFxUnIbInZxSFZ
-         9+xag5nXusZ43Gfs3Wnc/Eu1OUv4bEDtHlthreT5L95ko3ocSIgRP5s6kjlJ1rHakYkh
-         KZKg==
-X-Gm-Message-State: AOJu0Yw9M+zGazu/y/SEsMjAuGS2zkNv0ABOltYI09MWXvwsVVsSvcen
-	kkCo8SMXK4JKSxiz+OHP7AJFJgmSZi2/ksA7MrXfDUqLYlyhBBBSVmKm9lLZa5mZFL9W+357ouP
-	I/cVEsEedeYuIMrXUSZ8FrgGtCjhYiXU/rAmmtqr8dqMTgkVTg0rSMLuAUsIWHQwsYV/yNuaLwE
-	26gHU+IlkbSm0Y7XHZQEes2Ab8h18w9JhKuf2Q
-X-Gm-Gg: AZuq6aIp8U4n9YJ+j64aFkp2DthJANC3l/butxDDfQacrQoykUojoFvZ3c1F6EOkL4Z
-	0Z6uoKkwD5cWp8xiGmuwq7VaTFIayVEtbBCwn3qtxrRtSFReoqEfv/ZQVCr7DbxfUR/5XEK6Ahj
-	oCqme6yDbE4/SkEpCj2SeH6nPmTtt2HAvhXrpr/V0vv776+azo04uDGmGkoj8Se19p
-X-Received: by 2002:a05:6102:cc6:b0:5db:20ea:2329 with SMTP id ada2fe7eead31-5f1a55a32demr6162673137.35.1769082005875;
-        Thu, 22 Jan 2026 03:40:05 -0800 (PST)
-X-Received: by 2002:a05:6102:cc6:b0:5db:20ea:2329 with SMTP id
- ada2fe7eead31-5f1a55a32demr6162668137.35.1769082005477; Thu, 22 Jan 2026
- 03:40:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F32843CEE4;
+	Thu, 22 Jan 2026 12:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769083964; cv=none; b=DdKt690IAN3lU2U5bqmpsqrsCI0gep0KzHBpWdeWQ/sw6J+6PZS1x8rIBE1Uf1FZ0rVJ1l2+XhaFtRXhQbvbmSpg4ZpZIVKhb0wvEMoUtbIYnMgvPSKmvb4FR1JhXgpOCbxtc5EudBElccBrSTfyAaKcN6qsuXAc16V+8PYEbBM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769083964; c=relaxed/simple;
+	bh=1EyvdGvFteFxvvwdEjH2p9l5ziZSQoYEArisDE8vElA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AtrmP2T7LkwYDbCIWL83fJQldLZ8RTzxfB7IpovzbSgJXL+ogw5nTi45yN57LBKXIgJ4NL0P13F8yB7uhPSJtT1hTBv0SRC8a8nYQvxk4udoaY6CsYqsCRHjcSRvU+hF1p8ENhPc4k1OLa0MFRLI1d5Pp4niaz4Q7ZCQ1cse6ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKYitB6m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B24C116C6;
+	Thu, 22 Jan 2026 12:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769083964;
+	bh=1EyvdGvFteFxvvwdEjH2p9l5ziZSQoYEArisDE8vElA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=oKYitB6mIx09h9xH28S627/eTtatzeFXSQrYn5yOhkNA+QEyx615WfYUotkkAVvuU
+	 LTATx1HBCykrKukMTUDi7aWs+0fZD4k5EXaYOinUP/XGMu94oKAeFZufjUvDT10ac2
+	 gtDncLpd1Mw6uKvM1TUPD39ZOLfLEUPPPK7tCo3k12YmdCtUgCGr0ncu+R0td/8YGS
+	 UVKHwOfVJN+Qk+wPN/afCe8gE1YU3uKt1OsgumwWbXPUprB1bsa5onv9/dSQntlR8r
+	 VSI78HLGfnbOWEIXaXvgDAYflmBis0SomniOyBCfTvO+pC7iFPfS2oosnX5m081Lcv
+	 xOPqjih3iSw2A==
+Message-ID: <b491335d12e976e1ea1c07b9c14164ac69d22aea.camel@kernel.org>
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+From: Jeff Layton <jlayton@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
+ Amir Goldstein <amir73il@gmail.com>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Chuck Lever	 <chuck.lever@oracle.com>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Hugh Dickins <hughd@google.com>,  Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Theodore Ts'o	 <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
+ Jan Kara	 <jack@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu
+ <chao@kernel.org>, Yue Hu	 <zbestahu@gmail.com>, Jeffle Xu
+ <jefflexu@linux.alibaba.com>, Sandeep Dhavale	 <dhavale@google.com>, Hongbo
+ Li <lihongbo22@huawei.com>, Chunhai Guo	 <guochunhai@vivo.com>, Carlos
+ Maiolino <cem@kernel.org>, Ilya Dryomov	 <idryomov@gmail.com>, Alex Markuze
+ <amarkuze@redhat.com>, Viacheslav Dubeyko	 <slava@dubeyko.com>, Chris Mason
+ <clm@fb.com>, David Sterba <dsterba@suse.com>,  Luis de Bethencourt	
+ <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Phillip Lougher	
+ <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, Paulo
+ Alcantara	 <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+ Shyam Prasad N	 <sprasad@microsoft.com>, Bharath SM
+ <bharathsm@microsoft.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Mike
+ Marshall <hubcap@omnibond.com>, Martin Brandenburg	 <martin@omnibond.com>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker	 <jlbec@evilplan.org>, Joseph Qi
+ <joseph.qi@linux.alibaba.com>, Konstantin Komarov
+ <almaz.alexandrovich@paragon-software.com>, Ryusuke Konishi
+ <konishi.ryusuke@gmail.com>,  Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, David
+ Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan
+ Kara <jack@suse.cz>,  Andreas Gruenbacher	 <agruenba@redhat.com>, OGAWA
+ Hirofumi <hirofumi@mail.parknet.co.jp>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, 	linux-erofs@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, 	linux-cifs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, 	devel@lists.orangefs.org,
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
+	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
+	linux-f2fs-devel@lists.sourceforge.net
+Date: Thu, 22 Jan 2026 07:12:36 -0500
+In-Reply-To: <aXHFlF1tef68i2HU@infradead.org>
+References: <176880736225.16766.4203157325432990313@noble.neil.brown.name>
+	 <20260119-kanufahren-meerjungfrau-775048806544@brauner>
+	 <176885553525.16766.291581709413217562@noble.neil.brown.name>
+	 <aW8w2SRyFnmA2uqk@infradead.org>
+	 <176890126683.16766.5241619788613840985@noble.neil.brown.name>
+	 <aXCg-MqXH0E6IuwS@infradead.org>
+	 <176899164457.16766.16099772451425825775@noble.neil.brown.name>
+	 <364d2fd98af52a2e2c32ca286decbdc1fe1c80d3.camel@kernel.org>
+	 <aXDm8FPPOHs04w9m@infradead.org>
+	 <3210d04fa2c0b1f4312d10506cac30586cb49a3c.camel@kernel.org>
+	 <aXHFlF1tef68i2HU@infradead.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Animesh Javali <ajavali@redhat.com>
-Date: Thu, 22 Jan 2026 17:09:54 +0530
-X-Gm-Features: AZwV_QgqQKItXHlsXCpfXjOp5z1iqAb015HOzt1YR0NOVmCnMCFvLMMMfIJXb-Q
-Message-ID: <CAHPU9Sizox_r6-jSa8ik90f4q6itBo-3M3TopdGVmFymKJPUaA@mail.gmail.com>
-Subject: Allow NAMETOOLONG along with REQ_TOO_BIG in SEQ6
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000008410770648f88033"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.96 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[multipart/mixed,multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	DMARC_POLICY_ALLOW(0.00)[redhat.com,quarantine];
-	HAS_ATTACHMENT(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	FREEMAIL_CC(0.00)[brown.name,kernel.org,gmail.com,zeniv.linux.org.uk,oracle.com,redhat.com,talpey.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,infradead.org,nod.at,suse.cz,mail.parknet.co.jp,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18285-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18286-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ajavali@redhat.com,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:~,4:~];
+	MIME_TRACE(0.00)[0:+];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[72];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:helo,ams.mirrors.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: C75486642F
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 1A86C67709
 X-Rspamd-Action: no action
 
---0000000000008410770648f88033
-Content-Type: multipart/alternative; boundary="0000000000008410750648f88031"
+On Wed, 2026-01-21 at 22:37 -0800, Christoph Hellwig wrote:
+> On Wed, Jan 21, 2026 at 10:18:00AM -0500, Jeff Layton wrote:
+> > > fat seems to be an exception as far as the 'real' file systems go.
+> > > And it did sound to me like some of the synthetic ones had similar
+> > > issues.
+> > >=20
+> >=20
+> > Not sure what we can do about FAT without changing the filehandle
+> > format in some fashion. The export ops just use
+> > generic_encode_ino32_fh, and FAT doesn't have stable inode numbers.
+> > The "nostale" ops seem sane enough but it looks like they only work
+> > with the fs in r/o mode.
+>=20
+> Yeah.  I guess we need to ignore this because of <history>
+>=20
 
---0000000000008410750648f88031
-Content-Type: text/plain; charset="UTF-8"
+Yep. This is a case where the handles are not PERSISTENT but I don't
+think we can get away with making FAT unexportable. We're probably
+stuck with it.
 
-Hi Calum,
-
-Attaching the patch for the fix and the adjusted FIXME comment.
-
-Description:
-Ganesha returns NFS4ERR_NAMETOOLONG when a single
-pathname component exceeds MAXNAMLEN.
-RFC 5661 allows name-length validation to occur
-before request-size checks, so this behavior is
-RFC-compliant.
-
-Updated the SEQ6 test to accept both
-NFS4ERR_REQ_TOO_BIG and NFS4ERR_NAMETOOLONG as valid responses.
+> > > I think Amirs patch would take care of that.  Although userland nfs
+> > > servers or other storage applications using the handle syscalls would
+> > > still see them.  Then again fixing the problem that some handles
+> > > did not fulfill the long standing (but not documented well enough)
+> > > semantics probably is a good fix on it's own.
+> >=20
+> > Agreed. We should try to ensure uniqueness and persistence in all
+> > filehandles both for nfsd and userland applications.
+>=20
+> Sounds good to me.
 
 
-Best wishes
-Animesh
+Unfortunately, there are already exceptions. Apparently pidfs and
+cgroupfs handles (at least) can't be extended because of userspace
+expectations:
 
---0000000000008410750648f88031
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+https://lore.kernel.org/linux-nfs/20260120-irrelevant-zeilen-b3c40a8e6c30@b=
+rauner/
 
-<div dir=3D"ltr"><div>Hi Calum,</div><div><br></div><div>Attaching the patc=
-h for the fix and the adjusted FIXME comment.</div><div><br></div><div>Desc=
-ription:</div><div>Ganesha returns NFS4ERR_NAMETOOLONG when a single<br>pat=
-hname component exceeds MAXNAMLEN.<br>RFC 5661 allows name-length validatio=
-n to occur<br>before request-size checks, so this behavior is<br>RFC-compli=
-ant.<br><br>Updated the SEQ6 test to accept both<br>NFS4ERR_REQ_TOO_BIG and=
- NFS4ERR_NAMETOOLONG as valid responses.<br><br></div><div><br></div><div>B=
-est wishes</div><div>Animesh</div></div>
+My personal take is that we should try to make handle uniqueness a goal
+for most existing filesystems, but we're going to have some that can't
+achieve that. For them we probably want to be able to flag them so they
+can be id'ed by userland.
 
---0000000000008410750648f88031--
---0000000000008410770648f88033
-Content-Type: application/octet-stream; 
-	name="0001-Allow-NAMETOOLONG-along-with-REQ_TOO_BIG-in-SEQ6.patch"
-Content-Disposition: attachment; 
-	filename="0001-Allow-NAMETOOLONG-along-with-REQ_TOO_BIG-in-SEQ6.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mkpdpz8k0>
-X-Attachment-Id: f_mkpdpz8k0
+So, we will need an export_operations flag of some sort
+(EXPORT_OP_UNIQUE_HANDLES?). At that point, we'll have to decide
+whether to deny nfsd export based on that flag:
 
-RnJvbSBkYjEwOTY4MDgyYmFhZDg2ZjBjYzA0ZGI5NWRjMDY0Yjk2ZWNkOTExIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbmltZXNoIEphdmFsaSA8QW5pbWVzaC5KYXZhbGlAaWJtLmNv
-bT4KRGF0ZTogV2VkLCAyMSBKYW4gMjAyNiAwMzowMDozMyAtMDUwMApTdWJqZWN0OiBbUEFUQ0hd
-IEFsbG93IE5BTUVUT09MT05HIGFsb25nIHdpdGggUkVRX1RPT19CSUcgaW4gU0VRNgoKR2FuZXNo
-YSByZXR1cm5zIE5GUzRFUlJfTkFNRVRPT0xPTkcgd2hlbiBhIHNpbmdsZQpwYXRobmFtZSBjb21w
-b25lbnQgZXhjZWVkcyBNQVhOQU1MRU4uClJGQyA1NjYxIGFsbG93cyBuYW1lLWxlbmd0aCB2YWxp
-ZGF0aW9uIHRvIG9jY3VyCmJlZm9yZSByZXF1ZXN0LXNpemUgY2hlY2tzLCBzbyB0aGlzIGJlaGF2
-aW9yIGlzClJGQy1jb21wbGlhbnQuCgpVcGRhdGUgdGhlIFNFUTYgdGVzdCB0byBhY2NlcHQgYm90
-aApORlM0RVJSX1JFUV9UT09fQklHIGFuZCBORlM0RVJSX05BTUVUT09MT05HCmFzIHZhbGlkIHJl
-c3BvbnNlcy4KClNpZ25lZC1vZmYtYnk6IEFuaW1lc2ggSmF2YWxpIDxBbmltZXNoLkphdmFsaUBp
-Ym0uY29tPgotLS0KIG5mczQuMS9zZXJ2ZXI0MXRlc3RzL3N0X3NlcXVlbmNlLnB5IHwgNCArKy0t
-CiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAt
-LWdpdCBhL25mczQuMS9zZXJ2ZXI0MXRlc3RzL3N0X3NlcXVlbmNlLnB5IGIvbmZzNC4xL3NlcnZl
-cjQxdGVzdHMvc3Rfc2VxdWVuY2UucHkKaW5kZXggOWJlMTA5Ni4uNmMzMDZiMSAxMDA2NDQKLS0t
-IGEvbmZzNC4xL3NlcnZlcjQxdGVzdHMvc3Rfc2VxdWVuY2UucHkKKysrIGIvbmZzNC4xL3NlcnZl
-cjQxdGVzdHMvc3Rfc2VxdWVuY2UucHkKQEAgLTY4LDggKzY4LDggQEAgZGVmIHRlc3RSZXF1ZXN0
-VG9vQmlnKHQsIGVudik6CiAgICAgc2VzczEgPSBjMS5jcmVhdGVfc2Vzc2lvbihmb3JlX2F0dHJz
-ID0gYXR0cnMpCiAgICAgIyBTZW5kIGEgbG9va3VwIHJlcXVlc3Qgd2l0aCBhIHZlcnkgbG9uZyBm
-aWxlbmFtZQogICAgIHJlcyA9IHNlc3MxLmNvbXBvdW5kKFtvcC5wdXRyb290ZmgoKSwgb3AubG9v
-a3VwKGIiMTIzNDUiKjEwMCldKQotICAgICMgRklYTUUgLSBOQU1FX1RPT19CSUcgaXMgdmFsaWQs
-IGRvbid0IHdhbnQgaXQgdG8gYmUKLSAgICBjaGVjayhyZXMsIE5GUzRFUlJfUkVRX1RPT19CSUcp
-CisgICAgIyBBY2NlcHQgYm90aCBSRVFfVE9PX0JJRyBhbmQgTkFNRVRPT0xPTkcgZXJyb3JzCisg
-ICAgY2hlY2socmVzLCAoTkZTNEVSUl9SRVFfVE9PX0JJRywgTkZTNEVSUl9OQU1FVE9PTE9ORykp
-CiAKIGRlZiB0ZXN0VG9vTWFueU9wcyh0LCBlbnYpOgogICAgICIiIlNlbmQgYSByZXF1ZXN0IHdp
-dGggbW9yZSBvcHMgdGhhbiB0aGUgc2Vzc2lvbiBjYW4gaGFuZGxlCi0tIAoyLjQ3LjMKCg==
---0000000000008410770648f88033--
+We could deny export of any fs that doesn't set the flag, but NFSv4
+actually allows the server to advertise that it can't guarantee handle
+uniqueness. There isn't much guidance for the client on how to handle
+that though and the attribute seems to have the scope of the entire NFS
+server.
 
+--=20
+Jeff Layton <jlayton@kernel.org>
 
