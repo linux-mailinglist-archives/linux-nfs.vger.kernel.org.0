@@ -1,57 +1,51 @@
-Return-Path: <linux-nfs+bounces-18349-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18350-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cNFjFNF2c2kEwAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18349-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:25:37 +0100
+	id 0B38BiWCc2n2wwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18350-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:13:57 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB50576380
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:25:36 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5520B76CEF
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:13:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6CB3E30226A9
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 13:25:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B1989301BEE4
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:13:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41B330648C;
-	Fri, 23 Jan 2026 13:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7655319601;
+	Fri, 23 Jan 2026 14:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="F0TG+4Df"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osvzvb7m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD53A2E6CAB;
-	Fri, 23 Jan 2026 13:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4323274641;
+	Fri, 23 Jan 2026 14:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769174728; cv=none; b=ftvxTXbTwW5IdsGfIHmOu2fDm6LO2SqxCSCtC7bVLtocmWMP2juOfFHzikspdYC+iXFPZUUeShCivc8mPRLYZfCGHgfckWEH+et56ZPyUVdrhWJ/0shK8AqqsckF+jhbdsUkgA6QGFrd2ymJv7y/1r2t0tpAU1laGtNUlNOrOK8=
+	t=1769177633; cv=none; b=QKfQrN6nZGjEC/4m0gIvWpq0eHmkiHndgXf9aQNSlQyCIGwSnzc1wbGJXmAremoC6cNapOFmAixH8HQPe26yob3OraU6124QYLlt4Z9Yjutv4r/jqL05ReKMBF+/RuykRc9H8x3aI+kcG+UV8Ojq538ERRRLyw1x9faIjfsD10E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769174728; c=relaxed/simple;
-	bh=COI1Vn0YHKV3OVPLgMROQ8SgPobrtuTwkqABWHq9GFY=;
+	s=arc-20240116; t=1769177633; c=relaxed/simple;
+	bh=5Jq9ngGjUGPz3WSIUdzUhPNpP4sVGNNZMaI7LmtLhXw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVUwPOelcaLY6q2esZKgoBRU2kTVKu26gAU6VCClG2hwzdy+6ePM4q71O4XaY0pfASXCF97c9QmL8g9QKuWATf08XsEM6+TXEiySgtrrgixPNIxP2wxaRfAWa6Ej0HFuIuF/kJqBEW5TSMLFNXKtN/TiF0ysatKJYB3oGG6la2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=F0TG+4Df; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NkmcwHGTXfF74rwBRnsbltvXcHCGT5Xzk4r/Sa5CsWE=; b=F0TG+4DfKYqxbC9mBgnQPVdnqb
-	SZ9Dc0np9ZEglfchr7h44jnjx+M9hFgLwhavB3Lz7ZlEKpl384mNcXOUSCu/24DIYNtLoMIC4xKc2
-	2p6/dSQBF/g6NEdKb32Ql5ZLv925WgIVF1iVGSp9+Yjd3CwyEfhu4nZc4jgchJSEC3KPxz8lhTDZB
-	te2x3kgzGQJyaxuECraVFbEzOcAJ9s4Hxe+1v+xsqk1xc7y1tUgaFFqYCVUuiA45ld4ZDSvQ4H8Sr
-	ugdw6NYOtwP6YrzD9rY1US4CssTN/SBYbSu8DqbX63lqEi5/PwsaSmQxqdLIkztNuYkTpvGUzBych
-	lUXKTx+g==;
-Received: from [179.98.220.182] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1vjH9m-008tyb-VC; Fri, 23 Jan 2026 14:24:59 +0100
-Message-ID: <ee38734b-c4c3-4b96-8ff2-b4ce5730b57c@igalia.com>
-Date: Fri, 23 Jan 2026 10:24:50 -0300
+	 In-Reply-To:Content-Type; b=UHbqR8U4vYLt1o8Xy+k/i4vr4aRLtyERGcWpLbYzAq3+D/B6SWhms8d5+IZXafdUuhRA7tyj3lzxBnoBr9TvpYV8dFViBlydHd4rj23e+GrhL+uE09npitN3cLSb0uKkKc08jHwTkY1wNdTvYXORGTjZt/ku7zxLkSEmMkh5Ayg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osvzvb7m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D649C4CEF1;
+	Fri, 23 Jan 2026 14:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769177633;
+	bh=5Jq9ngGjUGPz3WSIUdzUhPNpP4sVGNNZMaI7LmtLhXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Osvzvb7mXtQRETaJ+y19L7kDJM4Fdt1GDi0Cs6mpN0kbOhtdHNiBlgRjZoIz5jUny
+	 z7jmW3yA2zg/NW8qlchp1geoP3Hp5HrZ8iBjg4xaV6Pi8ngYrCnQ2g3Ode/m0RDiFB
+	 1dtN+6jnXSpti49F/Dw5BGXd+6ByQwUkyd2vJglgZlhDjboLoiiDmOG5Se9FXLo3+Y
+	 utAHxgzs7NkQZAox1/pjyq/J3a/rBEVsYtpD4JTaD/YAN1j9znbGNilye8172qJJhF
+	 H4XrDs5tMpHfTWbejkkY1500s8Xy1UT/xHtIWwh0j+WPI0K0OHm6zbuNeVQVNyn4Nd
+	 ow/cWOF2/lEWg==
+Message-ID: <d67a30a0-5ff1-4e31-a168-81f8b7bee97f@kernel.org>
+Date: Fri, 23 Jan 2026 09:13:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,111 +53,118 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] ovl: Use real disk UUID for origin file handles
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Carlos Maiolino <cem@kernel.org>,
- Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
- Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, kernel-dev@igalia.com, vivek@collabora.com,
- Ludovico de Nittis <ludovico.denittis@collabora.com>
-References: <20260114-tonyk-get_disk_uuid-v1-0-e6a319e25d57@igalia.com>
- <20260114-tonyk-get_disk_uuid-v1-3-e6a319e25d57@igalia.com>
- <20260114062608.GB10805@lst.de>
- <5334ebc6-ceee-4262-b477-6b161c5ca704@igalia.com>
- <20260115062944.GA9590@lst.de>
- <633bb5f3-4582-416c-b8b9-fd1f3b3452ab@suse.com>
- <20260115072311.GA10352@lst.de>
- <22b16e24-d10e-43f6-bc2b-eeaa94310e3a@igalia.com>
- <CAOQ4uxhbz7=XT=C3R8XqL0K_o7KwLKsoNwgk=qJGuw2375MTJw@mail.gmail.com>
- <0241e2c4-bf11-4372-9eda-cccaba4a6d7d@igalia.com>
- <CAOQ4uxi988PutUi=Owm5zf6NaCm90PUCJLu7dw8firH8305w-A@mail.gmail.com>
- <33c1ccbd-abbe-4278-8ab1-d7d645c8b6e8@igalia.com>
- <CAOQ4uxgCM=q29Vs+35y-2K9k7GP2A2NfPkuqCrUiMUHW+KhbWw@mail.gmail.com>
- <75a9247a-12f4-4066-9712-c70ab41c274f@igalia.com>
- <CAOQ4uxig==FAd=2hO0B_CVBDSuBwdqL-zaXkpf-QXn5iEL364g@mail.gmail.com>
- <CAOQ4uxg6dKr4XB3yAkfGd_ehZkBMcoNHiF5CeB9=3aca44yHRg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] Add a bio_vec based API to core/rw.c
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, Jason Gunthorpe <jgg@nvidia.com>,
+ Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-rdma@vger.kernel.org,
+ linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20260122220401.1143331-1-cel@kernel.org>
+ <c02ab348-5243-4e97-b916-6bd59ffe769a@linux.dev>
+From: Chuck Lever <cel@kernel.org>
 Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <CAOQ4uxg6dKr4XB3yAkfGd_ehZkBMcoNHiF5CeB9=3aca44yHRg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: kernel.org
+In-Reply-To: <c02ab348-5243-4e97-b916-6bd59ffe769a@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.36 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[igalia.com:s=20170329];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[igalia.com : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18349-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18350-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[igalia.com:-];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FROM_NEQ_ENVFROM(0.00)[andrealmeid@igalia.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.993];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: DB50576380
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
+X-Rspamd-Queue-Id: 5520B76CEF
 X-Rspamd-Action: no action
 
-
-Em 22/01/2026 17:07, Amir Goldstein escreveu:
-> On Tue, Jan 20, 2026 at 4:12 PM Amir Goldstein <amir73il@gmail.com> wrote:
+On 1/23/26 1:04 AM, Zhu Yanjun wrote:
+> 在 2026/1/22 14:03, Chuck Lever 写道:
+>> From: Chuck Lever <chuck.lever@oracle.com>
 >>
->> On Mon, Jan 19, 2026 at 5:56 PM André Almeida <andrealmeid@igalia.com> wrote:
->>>
-> ...
->>> Actually they are not in the same fs, upper and lower are coming from
->>> different fs', so when trying to mount I get the fallback to
->>> `uuid=null`. A quick hack circumventing this check makes the mount work.
->>>
->>> If you think this is the best way to solve this issue (rather than
->>> following the VFS helper path for instance),
+>> This series introduces a bio_vec based API for RDMA read and write
+>> operations in the RDMA core, eliminating unnecessary scatterlist
+>> conversions for callers that already work with bvecs.
 >>
->> That's up to you if you want to solve the "all lower layers on same fs"
->> or want to also allow lower layers on different fs.
->> The former could be solved by relaxing the ovl rules.
+>> Current users of rdma_rw_ctx_init() must convert their native data
+>> structures into scatterlists. For subsystems like svcrdma that
+>> maintain data in bvec format, this conversion adds overhead both in
+>> CPU cycles and memory footprint. The new API accepts bvec arrays
+>> directly.
 >>
->>> please let me know how can
->>> I safely lift this restriction, like maybe adding a new flag for this?
+>> For hardware RDMA devices, the implementation uses the IOVA-based
+>> DMA mapping API to reduce IOTLB synchronization overhead from O(n)
+>> per-page syncs to a single O(1) sync after all mappings complete.
+>> Software RDMA devices (rxe, siw) continue using virtual addressing.
 >>
->> I think the attached patch should work for you and should not
->> break anything.
->>
->> It's only sanity tested and will need to write tests to verify it.
->>
+>> The series includes MR registration support for bvec arrays,
+>> enabling iWARP devices and the force_mr debug parameter. The MR
+>> path reuses existing ib_map_mr_sg() infrastructure by constructing
+>> a synthetic scatterlist from the bvec DMA addresses.
 > 
-> Andre,
+> Hi, Chuck Lever
 > 
-> I tested the patch and it looks good on my side.
-> If you want me to queue this patch for 7.0,
-> please let me know if it addresses your use case.
+> I’ve read through the patch series. As I understand it, the new bio_vec–
+> based RDMA read/write API allows callers that already operate on bvecs
+> (for example, svcrdma and potentially NVMe-oF) to avoid converting their
+> data into scatterlists, which should reduce CPU overhead and memory
+> usage in the data path.
 > 
+> For hardware RDMA devices, the use of the IOVA-based DMA mapping API
+> also seems likely to reduce IOTLB synchronization overhead compared to
+> the existing per-page approach, while software devices (rxe, siw) retain
+> the current virtual-addressing model.
+> 
+> Do you happen to have any performance or functional test results you
+> could share for this series, in particular:
+> 
+> Hardware RDMA devices (e.g., latency, bandwidth, or CPU utilization
+> changes), and/or
 
-Hi Amir,
+Functional tests with CX-5 Infiniband and NFS/RDMA show no regression.
 
-I'm still testing it to make sure it works my case, I will return to you 
-ASAP. Thanks for the help!
+Performance tests are difficult to evaluate because I don't have a
+multi-client set-up here to drive a heavy workload, plus filesystems
+bottleneck long before the network transport does. The changes are
+designed to improve scalability (eg lower CPU utilization for the same
+workload and less interaction between host and RNIC) more than improve
+raw throughput. So far I have seen no throughput regression and perhaps
+a bit of improvement for tail latencies.
 
-> Thanks,
-> Amir.
+The main purpose of the series, however, is part of an effort to enable
+kernel-wide replacement of the use of scatter-gather lists, which are
+technical debt. Socket APIs already support struct bio_vec.
 
+
+> Software RDMA devices such as rxe or siw?
+
+Software providers are not likely to see much change. However, you will
+need to test the series with your own preferred configuration and
+workload to assess performance and scalability delta.
+
+
+-- 
+Chuck Lever
 
