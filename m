@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18395-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18396-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mItYOPrDc2kCygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18395-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:50 +0100
+	id KC0hFvzDc2kCygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18396-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:52 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D57479DA4
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DECF579DAB
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6F5E93037F28
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2ED5C304F203
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A980F23314B;
-	Fri, 23 Jan 2026 18:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 538A227B4FA;
+	Fri, 23 Jan 2026 18:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZYWMSyE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3zjH4fl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857962BDC3E
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313E1254B03
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194410; cv=none; b=d0kN4FVqF0k3Q5NDXAGC2GzgAaXe73kYbmeT8CU2piQYWqDsP/OLHQuOkwpm4LgZyuiW78uyIP4pGlZO/C1mRkkevkh5RXKlx95017gcSmoq84ON8C57jeTMv+eKA/USaqFivzhBHXnne1GJ4a23FWTVXedt20muNFevRdrlEiQ=
+	t=1769194411; cv=none; b=fNqR4ifhbasot9fP6aBkAUdObptmIw1fsrpfspFfuHUp/LPsgZkoCKlp/rFCHVlX7VVm854HSTthl4SjEOXJPTP2nvglh8ehk+BWDx1L47b/X4VtdNhi1C94F4qyqfwWeEA7FmD0KfrcCJUUCeZgUpvpxNBZAkvL/fHj7Mqt2aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769194410; c=relaxed/simple;
-	bh=czpIBSOPZB0aGrSqwCZh9S7IE+OuJe1leMil9hTbgxM=;
+	s=arc-20240116; t=1769194411; c=relaxed/simple;
+	bh=h8timKP+RAdy+0CB3v5Y67VSDPWvPTTR7RxXIUX/FLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ESvF1hmSSfR+B24TwxpBxjnAZhfJQo2ZEWurIquhwqBu9AiRyTtKqdILh4rnkb1UqBLHe5owj9nO2cSmhYlS8JZnZ0RxVdb1rwQVnfVeDnSEYcngp9wovwlvlNcPCTg3XNAztb0fw/SKtF7eXPjhHgrjtic88re/KsNJmrptcAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZYWMSyE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80129C116D0;
-	Fri, 23 Jan 2026 18:53:29 +0000 (UTC)
+	 MIME-Version; b=l93Hc5RaLSW9q8o1yqKTzCc+qDs1o+0KqtPMTZsu/RrzU9dzzlWJ5HjlX/XfkGlYWV2gciHN3MfOzuxTvHsFprHtoFHw7rZ2iYpuWVBki1JX6h4qJCtdNkeNQBlzQOk9Dlc+IkPOF0xdZuwXMHW3Pc1g+xa7WNnFvshkf5OumoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3zjH4fl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6CCC19423;
+	Fri, 23 Jan 2026 18:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769194410;
-	bh=czpIBSOPZB0aGrSqwCZh9S7IE+OuJe1leMil9hTbgxM=;
+	bh=h8timKP+RAdy+0CB3v5Y67VSDPWvPTTR7RxXIUX/FLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hZYWMSyEEsvrYjzvj7QayT6xkUUyFx+WgkkesB8GDLrt7O2yknM95++ByOR3FUvXS
-	 wweHIvhZRqwcjNiJeERaHMlQ9ITuQTTOvHVQMHKk+xswZXw9HGDxw4iGQzC1Q/Nx4+
-	 yh9RbAnEi9o6cd+vXyW+jZBJwq0gIdeG2rpXKjr3qxMD0MKA2pbIP0S+pI+bSulFK+
-	 IVbavZapPicnNhYdzWXC0v/SIuLXcQAtakPQfJ1xFrSIPg+yPVvnNV1B98FsgMQOE4
-	 YnlRTUXde0SyMgCQ3dLbY/7WRnUQwAn+Fdac17ggdtbbExtNBbjoFN4y7TegRLSiRK
-	 cAznnokM/KDKg==
+	b=u3zjH4flxZif85/5bQLdP1FutBHpZZ07V5SAwKeMjzLHlDs1HEB+rUk1xsZq4CMAM
+	 NjgdZ782scq8GNjBECorjq8ASBFiRqHsTucRrRuhuRiv90n/aucPsFknhsecnZ3sDt
+	 PtenyhTAS/wpn3+TMbHwQZagwv225B1tpecErtc2IxAvQhNcNrWEd7SqywWmFYDfEC
+	 RHdaVjPGmrp/ZzWPr/bwSEblJcKMg3v+27AUgrTrG5kIB5Ngd1j9kA8PXsPhEU3gNE
+	 neQvy24AgsCjvZZTKzy6sqYtiwQJOuwmoXNZb557wbaJMp9xox+hhH6AXHIS5BXSUJ
+	 KK3VqtKHPkKFQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 34/42] lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
-Date: Fri, 23 Jan 2026 13:52:51 -0500
-Message-ID: <20260123185259.1215767-35-cel@kernel.org>
+Subject: [PATCH v2 35/42] lockd: Prepare share helpers for xdrgen conversion
+Date: Fri, 23 Jan 2026 13:52:52 -0500
+Message-ID: <20260123185259.1215767-36-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18395-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18396-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -89,107 +89,181 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
+	NEURAL_HAM(-0.00)[-0.998];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6D57479DA4
+X-Rspamd-Queue-Id: DECF579DAB
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The xdrgen-generated XDR decoders cannot initialize the
-file_lock structure because it is an internal kernel type,
-not part of the wire protocol. To prepare for converting
-SHARE and UNSHARE procedures to use xdrgen, the file_lock
-initialization must be moved from nlm4svc_decode_shareargs()
-into the procedure handlers themselves.
+In order to convert the NLMv4 server-side XDR functions to use
+xdrgen, the internal share helpers need to be decoupled from the
+NLMv3-specific struct nlm_args. NLMv4 procedures will use
+different argument structures once they are converted.
 
-This change removes one more dependency on the "struct
-nlm_lock::fl" field in fs/lockd/xdr4.c, allowing the XDR
-decoder to focus solely on unmarshalling wire data.
+Refactor nlmsvc_share_file() and nlmsvc_unshare_file() to accept
+individual arguments (oh, access, mode) instead of the common
+struct nlm_args. This allows both protocol versions to call these
+helpers without forcing a common argument structure.
+
+While here, add kdoc comments to both functions and fix a comment
+typo in the unshare path.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 16 ++++++++++++----
- fs/lockd/xdr4.c     |  3 ---
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ fs/lockd/share.h    |  8 ++++----
+ fs/lockd/svc4proc.c |  7 ++++---
+ fs/lockd/svcproc.c  |  7 +++++--
+ fs/lockd/svcshare.c | 35 +++++++++++++++++++++++------------
+ 4 files changed, 36 insertions(+), 21 deletions(-)
 
+diff --git a/fs/lockd/share.h b/fs/lockd/share.h
+index d8f4ebd9c278..a2867e30c593 100644
+--- a/fs/lockd/share.h
++++ b/fs/lockd/share.h
+@@ -20,10 +20,10 @@ struct nlm_share {
+ 	u32			s_mode;		/* deny mode */
+ };
+ 
+-__be32	nlmsvc_share_file(struct nlm_host *, struct nlm_file *,
+-					       struct nlm_args *);
+-__be32	nlmsvc_unshare_file(struct nlm_host *, struct nlm_file *,
+-					       struct nlm_args *);
++__be32	nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
++			  struct xdr_netobj *oh, u32 access, u32 mode);
++__be32	nlmsvc_unshare_file(struct nlm_host *host, struct nlm_file *file,
++			    struct xdr_netobj *oh);
+ void	nlmsvc_traverse_shares(struct nlm_host *, struct nlm_file *,
+ 					       nlm_host_match_fn_t);
+ 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index d8a5f662ab39..4667e4a1278f 100644
+index 4667e4a1278f..53a64709dc36 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -1040,6 +1040,7 @@ nlm4svc_proc_share(struct svc_rqst *rqstp)
- {
- 	struct nlm_args *argp = rqstp->rq_argp;
- 	struct nlm_res *resp = rqstp->rq_resp;
-+	struct nlm_lock	*lock = &argp->lock;
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
-@@ -1054,14 +1055,17 @@ nlm4svc_proc_share(struct svc_rqst *rqstp)
- 	}
- 
- 	/* Obtain client and file */
--	if ((resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
-+	locks_init_lock(&lock->fl);
-+	lock->svid = ~(u32)0;
-+	resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file);
-+	if (resp->status)
+@@ -1062,7 +1062,8 @@ nlm4svc_proc_share(struct svc_rqst *rqstp)
  		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
  
  	/* Now try to create the share */
- 	resp->status = nlmsvc_share_file(host, file, argp);
+-	resp->status = nlmsvc_share_file(host, file, argp);
++	resp->status = nlmsvc_share_file(host, file, &lock->oh,
++					 argp->fsm_access, argp->fsm_mode);
  
  	dprintk("lockd: SHARE         status %d\n", ntohl(resp->status));
--	nlmsvc_release_lockowner(&argp->lock);
-+	nlmsvc_release_lockowner(lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
- 	return rpc_success;
-@@ -1075,6 +1079,7 @@ nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- {
- 	struct nlm_args *argp = rqstp->rq_argp;
- 	struct nlm_res *resp = rqstp->rq_resp;
-+	struct nlm_lock	*lock = &argp->lock;
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
- 
-@@ -1089,14 +1094,17 @@ nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- 	}
- 
- 	/* Obtain client and file */
--	if ((resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
-+	locks_init_lock(&lock->fl);
-+	lock->svid = ~(u32)0;
-+	resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file);
-+	if (resp->status)
+ 	nlmsvc_release_lockowner(lock);
+@@ -1100,8 +1101,8 @@ nlm4svc_proc_unshare(struct svc_rqst *rqstp)
+ 	if (resp->status)
  		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
  
- 	/* Now try to lock the file */
- 	resp->status = nlmsvc_unshare_file(host, file, argp);
+-	/* Now try to lock the file */
+-	resp->status = nlmsvc_unshare_file(host, file, argp);
++	/* Now try to unshare the file */
++	resp->status = nlmsvc_unshare_file(host, file, &lock->oh);
  
  	dprintk("lockd: UNSHARE       status %d\n", ntohl(resp->status));
--	nlmsvc_release_lockowner(&argp->lock);
-+	nlmsvc_release_lockowner(lock);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
- 	return rpc_success;
-diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-index dbbb2dfcb81b..308aac92a94e 100644
---- a/fs/lockd/xdr4.c
-+++ b/fs/lockd/xdr4.c
-@@ -257,9 +257,6 @@ nlm4svc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 	struct nlm_args *argp = rqstp->rq_argp;
- 	struct nlm_lock	*lock = &argp->lock;
+ 	nlmsvc_release_lockowner(lock);
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index fe689f76aeae..bf1e8c0dd337 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -413,7 +413,9 @@ nlmsvc_proc_share(struct svc_rqst *rqstp)
+ 		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
  
--	locks_init_lock(&lock->fl);
--	lock->svid = ~(u32)0;
--
- 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
- 		return false;
- 	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
+ 	/* Now try to create the share */
+-	resp->status = cast_status(nlmsvc_share_file(host, file, argp));
++	resp->status = cast_status(nlmsvc_share_file(host, file, &argp->lock.oh,
++						     argp->fsm_access,
++						     argp->fsm_mode));
+ 
+ 	dprintk("lockd: SHARE         status %d\n", ntohl(resp->status));
+ 	nlmsvc_release_lockowner(&argp->lock);
+@@ -448,7 +450,8 @@ nlmsvc_proc_unshare(struct svc_rqst *rqstp)
+ 		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
+ 
+ 	/* Now try to unshare the file */
+-	resp->status = cast_status(nlmsvc_unshare_file(host, file, argp));
++	resp->status = cast_status(nlmsvc_unshare_file(host, file,
++						       &argp->lock.oh));
+ 
+ 	dprintk("lockd: UNSHARE       status %d\n", ntohl(resp->status));
+ 	nlmsvc_release_lockowner(&argp->lock);
+diff --git a/fs/lockd/svcshare.c b/fs/lockd/svcshare.c
+index 8675ac80ab16..53f5655c128c 100644
+--- a/fs/lockd/svcshare.c
++++ b/fs/lockd/svcshare.c
+@@ -25,12 +25,21 @@ nlm_cmp_owner(struct nlm_share *share, struct xdr_netobj *oh)
+ 	    && !memcmp(share->s_owner.data, oh->data, oh->len);
+ }
+ 
++/**
++ * nlmsvc_share_file - create a share
++ * @host: Network client peer
++ * @file: File to be shared
++ * @oh: Share owner handle
++ * @access: Requested access mode
++ * @mode: Requested file sharing mode
++ *
++ * Returns an NLM status code.
++ */
+ __be32
+ nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+-			struct nlm_args *argp)
++		  struct xdr_netobj *oh, u32 access, u32 mode)
+ {
+ 	struct nlm_share	*share;
+-	struct xdr_netobj	*oh = &argp->lock.oh;
+ 	u8			*ohdata;
+ 
+ 	if (nlmsvc_file_cannot_lock(file))
+@@ -39,13 +48,11 @@ nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+ 	for (share = file->f_shares; share; share = share->s_next) {
+ 		if (share->s_host == host && nlm_cmp_owner(share, oh))
+ 			goto update;
+-		if ((argp->fsm_access & share->s_mode)
+-		 || (argp->fsm_mode   & share->s_access ))
++		if ((access & share->s_mode) || (mode & share->s_access))
+ 			return nlm_lck_denied;
+ 	}
+ 
+-	share = kmalloc(sizeof(*share) + oh->len,
+-						GFP_KERNEL);
++	share = kmalloc(sizeof(*share) + oh->len, GFP_KERNEL);
+ 	if (share == NULL)
+ 		return nlm_lck_denied_nolocks;
+ 
+@@ -61,20 +68,24 @@ nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+ 	file->f_shares      = share;
+ 
+ update:
+-	share->s_access = argp->fsm_access;
+-	share->s_mode   = argp->fsm_mode;
++	share->s_access = access;
++	share->s_mode = mode;
+ 	return nlm_granted;
+ }
+ 
+-/*
+- * Delete a share.
++/**
++ * nlmsvc_unshare_file - delete a share
++ * @host: Network client peer
++ * @file: File to be unshared
++ * @oh: Share owner handle
++ *
++ * Returns an NLM status code.
+  */
+ __be32
+ nlmsvc_unshare_file(struct nlm_host *host, struct nlm_file *file,
+-			struct nlm_args *argp)
++		    struct xdr_netobj *oh)
+ {
+ 	struct nlm_share	*share, **shpp;
+-	struct xdr_netobj	*oh = &argp->lock.oh;
+ 
+ 	if (nlmsvc_file_cannot_lock(file))
+ 		return nlm_lck_denied_nolocks;
 -- 
 2.52.0
 
