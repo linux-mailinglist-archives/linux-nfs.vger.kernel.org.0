@@ -1,83 +1,82 @@
-Return-Path: <linux-nfs+bounces-18410-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18411-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YOVKGmTpc2nhzQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18410-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 22:34:28 +0100
+	id UPIuOVfqc2lXzgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18411-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 22:38:31 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB5EB7AEF7
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 22:34:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6043C7AF30
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 22:38:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D7CE03010B9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 21:34:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 387883011040
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 21:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEDE22F5A32;
-	Fri, 23 Jan 2026 21:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6C32F690F;
+	Fri, 23 Jan 2026 21:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3Zaz0ep"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKrLZgNb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991152F12CF
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 21:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6482F0C6A
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 21:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769204063; cv=none; b=THYJG8WYwbKIlSme7WPAd95mIWYMMfO5QgzdRHFkofJdxa3MNrR6p2RNxi/rVLi4iyr2zfXQe0yS8wTr9C4/KdfQs9cS9ykhvju5o3a5Sy02VQAqC+KgAPX5YqR5XYY98xJYC51Ya995rHP7XQ8fABdFmN7AQYP0cQPuDi0J8rg=
+	t=1769204307; cv=none; b=Fd5lSQlsFz6fRVY4qlHBgDGMxjRcxXkqyzj8PUSQTmSIAqWpoHGnedC2wNirddlBD4KYZaLlbWrR4Rdza7brIsNGD5j+qij/4nSgGGBnUqgyr/h6U+oCg10P8cj0GceiArXbhfWwvzPeiEL0NOLTxb6L691Q5dMXuryLXvkcQQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769204063; c=relaxed/simple;
-	bh=vw2/q88ZQdbNmtifK6znXic6JJELdzqo7BH4BvuRUvE=;
+	s=arc-20240116; t=1769204307; c=relaxed/simple;
+	bh=w8gPre6MwfCwqGMCAJY7XTgHmq6unCKOVtKOkoVpHLE=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Jrw4ILpQ+NKfuH+cknzP1Ji3VGPvcQXlilov8pSEUyw7yQT18gjbeDSNYASCV3UJYNKtEHl01/I8sP8e5RQ4LDGz8p4Mqomgau1vHaObuch3Zusk+iOEaOGNOlLAt9pngCNH/LdjpQGcGu9EszMk5Mq/hddKLjztIZ/APJLwVno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3Zaz0ep; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED37BC116D0;
-	Fri, 23 Jan 2026 21:34:22 +0000 (UTC)
+	 Subject:Content-Type; b=bdIXOUK4Zucnvfd1RRzem4F5NrLtuk6u69T+WRhP2hlncR6pAf/LAFW39jv7XPXQ7lhO7DjwZWtIfz/FvbKlRJGTCACcz/7TnlyFARH2x/k2fvN8vrd7AYcyuHlYBsd034pg12eODhWbVRIeyOzIinRD9SpxU0K9967OldvKu+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKrLZgNb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414BFC4CEF1;
+	Fri, 23 Jan 2026 21:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769204063;
-	bh=vw2/q88ZQdbNmtifK6znXic6JJELdzqo7BH4BvuRUvE=;
+	s=k20201202; t=1769204307;
+	bh=w8gPre6MwfCwqGMCAJY7XTgHmq6unCKOVtKOkoVpHLE=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=m3Zaz0ephijmdY+tk3sAaL9iBYU1d9GpPILkphzwiiARcEJ5LnTf4RHb1+tuDKAVf
-	 HB2Sn43M3M5j0qZTCA654n9rrjMZpFXb3bsdl87HVO+/Z0TGs6KD2dhpELsP9Kn76e
-	 TetKF42Ec+MGg+WM6tMXXLxr8zIWGdrvo25452nkLQmo2ajfwnibtsMLmQYBoLbHI/
-	 Hf7+/28lYDH4ps6AkhcgLKfHs5ETzulNYldkBSKJ5CouSNFspR7h8nQnlmWWcuBf+x
-	 fIFwDI0axlRftJlOAHhIeI6k1jZI8ENO3tnS4dB9gzJO3kxsc1f5JNdB6FckRLLcHf
-	 T+WgPl2Dw3UgA==
+	b=cKrLZgNb/PPvTluPzsaafBZ+Mjhfef5Ru04b1zwe+GHUV2CYBVYtQLdByvSxPfcMY
+	 mc3LB5WXK1QLCNJgqHbztWuIM9HmwOX7qpgTIvfcqr8AOVm/r2wNuNl7WwQ2yKr3g0
+	 eny1s4aHgKOQxqZ7d0zGJzgbYl3Hx42IwsaPuIHgDRLXfCd9CqBPSG6/V3O4B3lBs+
+	 3Irdp0Eux9yCckNweuk0oAs1OvmkLdGGn0sot6PIcvXwKKlEpIzL96ISwC+Y8RN7SW
+	 4ruI/4PSXLqEXQAHHGn2Dw8+L/riDOkIQTvrYKCUJeGz13ZTJVoYK23LRB9AE3CZ30
+	 vmOWexTnqd98A==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id DEDFDF4006A;
-	Fri, 23 Jan 2026 16:34:21 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 437D2F4006A;
+	Fri, 23 Jan 2026 16:38:26 -0500 (EST)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 23 Jan 2026 16:34:21 -0500
-X-ME-Sender: <xms:XelzaZvPjK4vfn9B0yXiTNAzLXfNTkUR_Jgn7s6GIU_5FUazJFeFOQ>
-    <xme:XelzadR67HxgsZy_rDJt95z-R3g8oOi7doYq7f16ybgf6htRTxKu4q4gWFm3zDdJ5
-    -in9hYJuYehcdCfsrr6yNgJQ2Kc_cuFzMQZCTG-_twdMb54jwYhiaKT>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduhedtuddvucetufdoteggodetrf
+  by phl-compute-10.internal (MEProxy); Fri, 23 Jan 2026 16:38:26 -0500
+X-ME-Sender: <xms:UupzaWD_lj_Ct9k2LSC039beNg4lode5NjkKL62Et-732LdRC37gOA>
+    <xme:UupzabXPyUSqMZUc-o3CRs_Fpw-WmK0euSZ01Aw2vKFrr_ZeFWTlmQEGer1GOsLQP
+    8rVJyRBvj4kUOSLPmys36QU8IsTxhbwjzRPn7nm15Igp6cXYbQpYzc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduhedtudegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
     khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
-    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
-    peduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhgvihhlsegsrhhofihnrd
-    hnrghmvgdprhgtphhtthhopehrihgtkhdrmhgrtghklhgvmhesghhmrghilhdrtghomhdp
-    rhgtphhtthhopegstghougguihhngheshhgrmhhmvghrshhprggtvgdrtghomhdprhgtph
-    htthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuh
-    igqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Xelzaf04ueCMVVFqZuctZRBW5SNcxjTCww-smmiUkmaSz93OIMHdrQ>
-    <xmx:XelzaZ78fcQM2SXZ5yR-0jnSCmZURiAtRX_2ZJ-unv743uMxm2QD8w>
-    <xmx:XelzabS8k4iVXyhDLOF_5SOZLy_3hhITT1WHkxw9NDpRJOnCe2-Myw>
-    <xmx:XelzaeVNDyMxJJswRQUYQbL63NigESwmzQktIwIlqRYjsKGEx7yb9g>
-    <xmx:XelzaQF_JllNltrRcc6qGm2IO6ii9SlKXsYaHyQFSACposv4ES6BVFyu>
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepsggtohguughinhhgsehhrghmmhgvrhhsphgrtggvrdgtohhmpdhrtghpthhtoh
+    epjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgv
+    vhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlh
+    gvrdgtohhmpdhrtghpthhtohepnhgvihhlsgesohifnhhmrghilhdrnhgvthdprhgtphht
+    thhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhesth
+    grlhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghr
+    nhgvlhdrohhrgh
+X-ME-Proxy: <xmx:UupzaYXPITR74gtEK5Hv-JYy1OQOxnWCuEVrtLokVaL6_2Oc18yPZA>
+    <xmx:UupzaWn3W6wNvSU83ArBbkU0Z00nkfSBBspjO9uUiU82jNGh5bUlMA>
+    <xmx:UupzaTA8e059q_XHtWz3qZ883KVNaBDItklQlZyAjERZJiHa7BGZyA>
+    <xmx:UupzaVi-gx_l2JW8Xg2aWxpqJmz8lyfjImV-bjRClqiLXEMzkGAcug>
+    <xmx:UupzaQxs_hP2NuLizBeECoWaotdbbJY1HDIzrOv-zG27ac9NEdbTckLA>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B866F780070; Fri, 23 Jan 2026 16:34:21 -0500 (EST)
+	id 24B09780075; Fri, 23 Jan 2026 16:38:26 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -85,237 +84,141 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AvBI4pOdhfek
-Date: Fri, 23 Jan 2026 16:33:36 -0500
+X-ThreadId: Akq3so5pvRuw
+Date: Fri, 23 Jan 2026 16:37:35 -0500
 From: "Chuck Lever" <cel@kernel.org>
-To: "Benjamin Coddington" <bcodding@hammerspace.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Eric Biggers" <ebiggers@kernel.org>,
- "Rick Macklem" <rick.macklem@gmail.com>
-Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-Message-Id: <5fb38378-a8e0-46d5-956c-de1a3bdaaf23@app.fastmail.com>
-In-Reply-To: 
- <0aaa9ca4fd3edc7e0d25433ad472cb873560bf7d.1769026777.git.bcodding@hammerspace.com>
-References: <cover.1769026777.git.bcodding@hammerspace.com>
- <0aaa9ca4fd3edc7e0d25433ad472cb873560bf7d.1769026777.git.bcodding@hammerspace.com>
-Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
+To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neilb@ownmail.net>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>,
+ "Benjamin Coddington" <bcodding@hammerspace.com>
+Cc: linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <8131fa88-2f62-4724-97d1-25615b2de7d3@app.fastmail.com>
+In-Reply-To: <5c7126f0ace2874ceb2af74726962875e647256d.camel@kernel.org>
+References: <20260123185259.1215767-1-cel@kernel.org>
+ <20260123185259.1215767-6-cel@kernel.org>
+ <53120eface645028e6a33cfb3cbf1a66ccbe2ca6.camel@kernel.org>
+ <8f13122c-66eb-4c54-a767-c152cc3db04d@kernel.org>
+ <5c7126f0ace2874ceb2af74726962875e647256d.camel@kernel.org>
+Subject: Re: [PATCH v2 05/42] NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's
+ rpc_clnt
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18410-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[hammerspace.com,oracle.com,kernel.org,brown.name,gmail.com];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-18411-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com,hammerspace.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: DB5EB7AEF7
+X-Rspamd-Queue-Id: 6043C7AF30
 X-Rspamd-Action: no action
 
 
 
-On Wed, Jan 21, 2026, at 3:24 PM, Benjamin Coddington wrote:
-> NFS clients may bypass restrictive directory permissions by using
-> open_by_handle() (or other available OS system call) to guess the
-> filehandles for files below that directory.
+On Fri, Jan 23, 2026, at 4:30 PM, Jeff Layton wrote:
+> On Fri, 2026-01-23 at 15:44 -0500, Chuck Lever wrote:
+>> On 1/23/26 3:23 PM, Jeff Layton wrote:
+>> > On Fri, 2026-01-23 at 13:52 -0500, Chuck Lever wrote:
+>> > > From: Chuck Lever <chuck.lever@oracle.com>
+>> > > 
+>> > > The external API definitions for lockd reside in linux/lockd/bind.h.
+>> > > Because "struct nlm_host" is an internal lockd structure, bind.h
+>> > > does not include a definition of it. Dereferencing that structure
+>> > > outside of lockd violates the layering boundary between NFS and
+>> > > lockd.
+>> > > 
+>> > > The proper approach is to use the nlmclnt_rpc_clnt() helper function
+>> > > already provided in lockd/bind.h, which retrieves the NLM host's
+>> > > struct rpc_clnt without exposing internal lockd structures. This
+>> > > maintains clean separation between the NFS client and lockd
+>> > > internals.
+>> > > 
+>> > > Note that the nlm_host's h_rpcclnt field can be NULL during
+>> > > initialization (host.c:141) or after cleanup (host.c:629). Add a
+>> > > NULL check before calling shutdown_client() to prevent a potential
+>> > > NULL pointer dereference in the sysfs shutdown path.
+>> > > 
+>> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> > > ---
+>> > >  fs/nfs/sysfs.c | 10 +++++++---
+>> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+>> > > 
+>> > > diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+>> > > index ea6e6168092b..186b29de0129 100644
+>> > > --- a/fs/nfs/sysfs.c
+>> > > +++ b/fs/nfs/sysfs.c
+>> > > @@ -12,7 +12,7 @@
+>> > >  #include <linux/string.h>
+>> > >  #include <linux/nfs_fs.h>
+>> > >  #include <linux/rcupdate.h>
+>> > > -#include <linux/lockd/lockd.h>
+>> > > +#include <linux/lockd/bind.h>
+>> > >  
+>> > >  #include "internal.h"
+>> > >  #include "nfs4_fs.h"
+>> > > @@ -284,8 +284,12 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+>> > >  	if (!IS_ERR(server->client_acl))
+>> > >  		shutdown_client(server->client_acl);
+>> > >  
+>> > > -	if (server->nlm_host)
+>> > > -		shutdown_client(server->nlm_host->h_rpcclnt);
+>> > > +	if (server->nlm_host) {
+>> > > +		struct rpc_clnt *nlm_clnt = nlmclnt_rpc_clnt(server->nlm_host);
+>> > > +
+>> > > +		if (nlm_clnt)
+>> > > +			shutdown_client(nlm_clnt);
+>> > 
+>> > I don't see any locking here. Soon after this thing goes NULL, the
+>> > nlm_clnt can be freed. ISTM that this ought to take a reference to
+>> > nlm_clnt and put it afterward.
+>> 
+>> So there is no locking here before the patch is applied. The patch does
+>> not change that. Do you mean that the patch should add the additional
+>> reference count bump (and document that fix in the commit message) ?
+>> 
+>> Mason's prompts did not call this out, so I assumed there wasn't an
+>> obvious UAF possible in this path.
+>> 
 >
-> In order to harden knfsd servers against this attack, create a method to
-> sign and verify filehandles using siphash as a MAC (Message Authentication
-> Code).  Filehandles that have been signed cannot be tampered with, nor can
-> clients reasonably guess correct filehandles and hashes that may exist in
-> parts of the filesystem they cannot access due to directory permissions.
+> (Adding Ben since he wrote this originally...)
 >
-> Append the 8 byte siphash to encoded filehandles for exports that have set
-> the "sign_fh" export option.  The filehandle's fh_auth_type is set to
-> FH_AT_MAC(1) to indicate the filehandle is signed.  Filehandles received from
-> clients are verified by comparing the appended hash to the expected hash.
-> If the MAC does not match the server responds with NFS error _BADHANDLE.
-> If unsigned filehandles are received for an export with "sign_fh" they are
-> rejected with NFS error _BADHANDLE.
+> Sorry, I didn't make it clear. This is (possibly) an existing bug and
+> not something that is changed by your patches.
 >
-> Link: 
-> https://lore.kernel.org/linux-nfs/cover.1769026777.git.bcodding@hammerspace.com
-> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-> ---
->  fs/nfsd/nfsfh.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++--
->  fs/nfsd/nfsfh.h |  3 ++
->  2 files changed, 73 insertions(+), 3 deletions(-)
+> If that value can go NULL and be freed (and it looks like it can in
+> nlm_shutdown_hosts_net()) then I think that could race with someone
+> writing to the "shutdown" file. OTOH, maybe that can't happen because
+> the sysfs file gets removed before lockd_down() runs? I'm not sure.
 >
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index ed85dd43da18..ea3473acbf71 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -11,6 +11,7 @@
->  #include <linux/exportfs.h>
-> 
->  #include <linux/sunrpc/svcauth_gss.h>
-> +#include <crypto/utils.h>
->  #include "nfsd.h"
->  #include "vfs.h"
->  #include "auth.h"
-> @@ -137,6 +138,61 @@ static inline __be32 check_pseudo_root(struct 
-> dentry *dentry,
->  	return nfs_ok;
->  }
-> 
-> +/*
-> + * Append an 8-byte MAC to the filehandle hashed from the server's 
-> fh_key:
-> + */
-> +static int fh_append_mac(struct svc_fh *fhp, struct net *net)
-> +{
-> +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> +	struct knfsd_fh *fh = &fhp->fh_handle;
-> +	siphash_key_t *fh_key = nn->fh_key;
-> +	u64 hash;
-> +
-> +	if (!(fhp->fh_export->ex_flags & NFSEXP_SIGN_FH))
-> +		return 0;
-> +
-> +	if (!fh_key) {
-> +		pr_warn_ratelimited("NFSD: unable to sign filehandles, fh_key not 
-> set.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (fh->fh_size + sizeof(hash) > fhp->fh_maxsize) {
-> +		pr_warn_ratelimited("NFSD: unable to sign filehandles, fh_size %d 
-> would be greater"
-> +			" than fh_maxsize %d.\n", (int)(fh->fh_size + sizeof(hash)), 
-> fhp->fh_maxsize);
-> +		return -EINVAL;
-> +	}
-> +
-> +	fh->fh_auth_type = FH_AT_MAC;
-> +	hash = siphash(&fh->fh_raw, fh->fh_size, fh_key);
-> +	memcpy(&fh->fh_raw[fh->fh_size], &hash, sizeof(hash));
-> +	fh->fh_size += sizeof(hash);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Verify that the the filehandle's MAC was hashed from this filehandle
-> + * given the server's fh_key:
-> + */
-> +static int fh_verify_mac(struct svc_fh *fhp, struct net *net)
-> +{
-> +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> +	struct knfsd_fh *fh = &fhp->fh_handle;
-> +	siphash_key_t *fh_key = nn->fh_key;
-> +	u64 hash;
-> +
-> +	if (fhp->fh_handle.fh_auth_type != FH_AT_MAC)
-> +		return -EINVAL;
-> +
-> +	if (!fh_key) {
-> +		pr_warn_ratelimited("NFSD: unable to verify signed filehandles, 
-> fh_key not set.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	hash = siphash(&fh->fh_raw, fh->fh_size - sizeof(hash),  fh_key);
-> +	return crypto_memneq(&fh->fh_raw[fh->fh_size - sizeof(hash)], &hash, 
-> sizeof(hash));
-> +}
-> +
->  /*
->   * Use the given filehandle to look up the corresponding export and
->   * dentry.  On success, the results are used to set fh_export and
-> @@ -166,8 +222,11 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst 
-> *rqstp, struct net *net,
-> 
->  	if (--data_left < 0)
->  		return error;
-> -	if (fh->fh_auth_type != 0)
-> +
-> +	/* either FH_AT_NONE or FH_AT_MAC */
-> +	if (fh->fh_auth_type > 1)
->  		return error;
-> +
->  	len = key_len(fh->fh_fsid_type) / 4;
->  	if (len == 0)
->  		return error;
-> @@ -237,9 +296,14 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst 
-> *rqstp, struct net *net,
-> 
->  	fileid_type = fh->fh_fileid_type;
-> 
-> -	if (fileid_type == FILEID_ROOT)
-> +	if (fileid_type == FILEID_ROOT) {
->  		dentry = dget(exp->ex_path.dentry);
-> -	else {
-> +	} else {
-> +		if (exp->ex_flags & NFSEXP_SIGN_FH && fh_verify_mac(fhp, net)) {
-> +			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp, -EKEYREJECTED);
-> +			goto out;
-> +		}
-> +
->  		dentry = exportfs_decode_fh_raw(exp->ex_path.mnt, fid,
->  						data_left, fileid_type, 0,
->  						nfsd_acceptable, exp);
-> @@ -495,6 +559,9 @@ static void _fh_update(struct svc_fh *fhp, struct 
-> svc_export *exp,
->  		fhp->fh_handle.fh_fileid_type =
->  			fileid_type > 0 ? fileid_type : FILEID_INVALID;
->  		fhp->fh_handle.fh_size += maxsize * 4;
-> +
-> +		if (fh_append_mac(fhp, exp->cd->net))
-> +			fhp->fh_handle.fh_fileid_type = FILEID_INVALID;
->  	} else {
->  		fhp->fh_handle.fh_fileid_type = FILEID_ROOT;
->  	}
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 5ef7191f8ad8..7fff46ac2ba8 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -59,6 +59,9 @@ struct knfsd_fh {
->  #define fh_fsid_type		fh_raw[2]
->  #define fh_fileid_type		fh_raw[3]
-> 
-> +#define FH_AT_NONE		0
-> +#define FH_AT_MAC		1
+> The safest thing might be to take and hold the (global) nlm_host_mutex
+> around the NLM parts of shutdown_store(). Maybe we could add a helper
+> to the nlm public interface that does that so we don't need to expose
+> that mutex outside of NLM?
 
-I'm pleased at how much this patch has shrunk since v1.
+I asked Claude specifically to look for races, and he agrees there
+is a pre-existing synchronization issue in here. Certainly could
+be addressed via a pre-requisite patch to 05/42.
 
-This might not be an actionable review comment, but help me understand
-this particular point. Why do you need both a sign_fh export option
-and a new FH auth type? Shouldn't the server just look for and
-validate FH signatures whenever the sign_fh export option is
-present?
-
-It seems a little subtle, so perhaps a code comment somewhere could
-explain the need for both.
-
-
-> +
->  static inline u32 *fh_fsid(const struct knfsd_fh *fh)
->  {
->  	return (u32 *)&fh->fh_raw[4];
-> -- 
-> 2.50.1
 
 -- 
 Chuck Lever
