@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18379-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18380-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +AKyG9vDc2kCygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18379-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:19 +0100
+	id GMl5NtzDc2kCygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18380-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22F8D79D5E
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BF2F79D65
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1AB413045000
+	by tor.lore.kernel.org (Postfix) with ESMTP id C718A3033E61
 	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BC42741AB;
-	Fri, 23 Jan 2026 18:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0CF723C4E9;
+	Fri, 23 Jan 2026 18:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ka9Fjfv+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5DLc0kW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488C284880
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E49827B4FA
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194397; cv=none; b=evwLkmpSEpbEGoQM6FOhoy5CvTMHut9zKZfiqpIAqVtEWtqXc4GHqX8heQgYUjF7mMRyFL9DB/zbgiC5mGL/e7ZfKdZH83hVs7kuDmC1/NvMDwE80edNeXpu0Fg7vEDCXWFuth2gK8jJQATe+t+T3rS2LKwrynGA24QQ7ndH9rk=
+	t=1769194398; cv=none; b=c04SjLsXW9eM4v6BGbmq9OJqwCcKqri2A5B6ZFfp0OUusktZXT++ecpowuCe76gkYXF7V5Cjtngk1mU+8npiYJxuUe/IuJdtotMgB1gvf8RpLHNs+3XR9T+GwZTxiXBae6oZ90k+sxtiudb2gTx1Wf5RrYs2th0KlUJ6/jOJw5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769194397; c=relaxed/simple;
-	bh=QsjMzW4C8a+s7Vr174cWB4ZwKXG5s1Bi8I8FdZ8tus4=;
+	s=arc-20240116; t=1769194398; c=relaxed/simple;
+	bh=uGKWfCjYt2F0Xku78ZZD0EXemicvVPAUT38UaWT2FAE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H9s7REkfsyKawT02rNjPbBMbnBhTWfRiiXsPw9gLwkwKa5bL6524HyydNumUUo3I0b60lAp/vmDN0jYcvtk4batoCMYXxA8s5ohefxU2WZeeyhkWCKVajOoSyoFAD0TLje/clR5cEiT1xPPoFSlh8I+nE53Hp1NlEoCv9mvuCOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ka9Fjfv+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBC5BC19425;
-	Fri, 23 Jan 2026 18:53:16 +0000 (UTC)
+	 MIME-Version; b=MOAksKM10AAISgfcT9bPL0rpLF1QKNUYAgE2ZwKnwkIL7c4xFiHAWyPI8tkUZISPMi6WoLUMyI06JXbvJjh9xg5LmNji+oQ2LHvwyOBsaHAvg5MWDVLnb42GIxGYSnq/1ZXtjCYfbu58huVeas7khd9oqa/R2zLkDo2+HxHkfc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5DLc0kW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5978C19423;
+	Fri, 23 Jan 2026 18:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769194397;
-	bh=QsjMzW4C8a+s7Vr174cWB4ZwKXG5s1Bi8I8FdZ8tus4=;
+	s=k20201202; t=1769194398;
+	bh=uGKWfCjYt2F0Xku78ZZD0EXemicvVPAUT38UaWT2FAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ka9Fjfv+cI55dubKh5XlfKDWXp6XJq15F1Dlxjh3W57JqH8sQaKhATRApjcE7p7kK
-	 Ebv3RcDDPUrGAn70lSzl18zo+XqKs2Bpga19KmQhO4hwbPcCGM3glCJRQlUr/fvMWf
-	 Ix6jfuFD3ie7omm8tM6UxsGgd7h4FNnaFMX2L3Nemy1S4sszFTOGBvQdnzQHrCxfEL
-	 hZDXO8qj1QUOiMFVvP8CjizCNobuuK45BjW6vIxNTMzu4RcxUgRFbeeECkZGRxQ98v
-	 9FYLG8DgDUDZC7HRt+OOupt32MHTTp+KfcomPbJ99nnwPUN5OhV33D14U/bB2mQC7u
-	 3TYcEvASyCOrg==
+	b=A5DLc0kWA4csr/uRA+iGh8MSUOOW9HbPV6o/aiPyF+N8xBQW+zvHQeVkQFTwrfd5L
+	 emAfujYSeE4JVqNrsL5vTwGrHAGgRQm6BrUe8AGKNQk/uWcZVqQavO2oTdGxl8Dpzp
+	 iQC7uW5L/7pzhnvTFr1eFMUCQJclgwKyAmrPHVTANqIpinDnA0/r2gNbnKkfzCCo99
+	 3Q38CrxjYcu1KEAeEECxyiG4tMDA+il5Fjr60MnDUUr8xGCtrbauaptltYi4HODAP5
+	 asUGy6CjX1Eopbo6kHpHY9HGUC1UElZ9hFsgFxQclu9f8e6km93cOSq4f04BkIQOJS
+	 pZqhvtUOWs1bg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 18/42] lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
-Date: Fri, 23 Jan 2026 13:52:35 -0500
-Message-ID: <20260123185259.1215767-19-cel@kernel.org>
+Subject: [PATCH v2 19/42] lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
+Date: Fri, 23 Jan 2026 13:52:36 -0500
+Message-ID: <20260123185259.1215767-20-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18379-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18380-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -94,72 +94,72 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 22F8D79D5E
+X-Rspamd-Queue-Id: 9BF2F79D65
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The NLM CANCEL procedure allows clients to cancel outstanding
-blocked lock requests, completing the set of lock-related
-operations that share common lookup patterns. This patch
-continues the xdrgen migration by converting the CANCEL
-procedure, leveraging the same nlm4svc_lookup_host() and
-nlm4svc_lookup_file() helpers established in the TEST procedure
-conversion to maintain consistency across the series.
+UNLOCK releases locks acquired via the LOCK procedure. Conversion
+of TEST, LOCK, CANCEL, and UNLOCK provides the complete set of
+lock lifecycle operations required by the NLM protocol, enabling
+clients to test for conflicts, acquire locks, abort pending lock
+requests, and release held locks.
 
-This patch converts the CANCEL procedure to use xdrgen functions
-nlm4_svc_decode_nlm4_cancargs and nlm4_svc_encode_nlm4_res
-generated from the NLM version 4 protocol specification. The
-procedure handler uses xdrgen types through a wrapper structure
-that bridges between generated code and the legacy nlm_lock
-representation still used by the core lockd logic.
+The procedure handler converts arguments from the xdrgen-generated
+nlm4_unlockargs structure to the legacy nlm_lock representation
+through nlm4_unlockargs_wrapper. This maintains compatibility with
+core lockd logic while using XDR decoders and encoders generated
+from the NLMv4 protocol specification.
 
-The pc_argzero field is set to zero because xdrgen decoders
-reliably initialize all arguments in the argp->xdrgen field,
-making the early defensive memset unnecessary. Remaining argp
-fields are cleared as needed.
+The original __nlm4svc_proc_unlock function is retained because
+the asynchronous callback path invokes it directly, bypassing
+the RPC dispatch mechanism.
+
+The pc_argzero field is zero because nlm4_svc_decode_nlm4_unlockargs
+initializes all fields in argp->xdrgen, eliminating the need for
+early memset of the argument buffer. Remaining argp fields outside
+the xdrgen structure are cleared explicitly where needed.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 86 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 76 insertions(+), 10 deletions(-)
+ fs/lockd/svc4proc.c | 84 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 74 insertions(+), 10 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 2da3ff76be5a..1b70935df4d0 100644
+index 1b70935df4d0..f0f3e73eee75 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -48,6 +48,13 @@ struct nlm4_lockargs_wrapper {
+@@ -55,6 +55,13 @@ struct nlm4_cancargs_wrapper {
  
- static_assert(offsetof(struct nlm4_lockargs_wrapper, xdrgen) == 0);
+ static_assert(offsetof(struct nlm4_cancargs_wrapper, xdrgen) == 0);
  
-+struct nlm4_cancargs_wrapper {
-+	struct nlm4_cancargs		xdrgen;
++struct nlm4_unlockargs_wrapper {
++	struct nlm4_unlockargs		xdrgen;
 +	struct nlm_lock			lock;
 +};
 +
-+static_assert(offsetof(struct nlm4_cancargs_wrapper, xdrgen) == 0);
++static_assert(offsetof(struct nlm4_unlockargs_wrapper, xdrgen) == 0);
 +
  struct nlm4_testres_wrapper {
  	struct nlm4_testres		xdrgen;
  	struct nlm_lock			lock;
-@@ -487,10 +494,68 @@ __nlm4svc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
+@@ -592,10 +599,66 @@ __nlm4svc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
  	return rpc_success;
  }
  
 +/**
-+ * nlm4svc_proc_cancel - CANCEL: Cancel an outstanding blocked lock request
++ * nlm4svc_proc_unlock - UNLOCK: Remove a lock
 + * @rqstp: RPC transaction context
 + *
 + * Returns:
-+ *   %rpc_success:		RPC executed successfully
-+ *   %rpc_drop_reply:		Do not send an RPC reply
++ *   %rpc_success:		RPC executed successfully.
++ *   %rpc_drop_reply:		Do not send an RPC reply.
 + *
 + * RPC synopsis:
-+ *   nlm4_res NLMPROC4_CANCEL(nlm4_cancargs) = 3;
++ *   nlm4_res NLMPROC4_UNLOCK(nlm4_unlockargs) = 4;
 + *
 + * Permissible procedure status codes:
-+ *   %NLM4_LCK_GRANTED:		The requested lock was canceled.
-+ *   %NLM4_LCK_DENIED:		There was no lock to cancel.
++ *   %NLM4_GRANTED:		The requested lock was released.
 + *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
 + *				re-establishing existing locks, and is not
 + *				yet ready to accept normal service requests.
@@ -173,11 +173,10 @@ index 2da3ff76be5a..1b70935df4d0 100644
 + *   %NLM4_FAILED:		The request failed for an unspecified reason.
 + */
  static __be32
- nlm4svc_proc_cancel(struct svc_rqst *rqstp)
+ nlm4svc_proc_unlock(struct svc_rqst *rqstp)
  {
--	return __nlm4svc_proc_cancel(rqstp, rqstp->rq_resp);
-+	struct nlm4_cancargs_wrapper *argp = rqstp->rq_argp;
-+	unsigned char type = argp->xdrgen.exclusive ? F_WRLCK : F_RDLCK;
+-	return __nlm4svc_proc_unlock(rqstp, rqstp->rq_resp);
++	struct nlm4_unlockargs_wrapper *argp = rqstp->rq_argp;
 +	struct nlm4_res_wrapper *resp = rqstp->rq_resp;
 +	struct net *net = SVC_NET(rqstp);
 +	struct nlm_host	*host = NULL;
@@ -196,11 +195,11 @@ index 2da3ff76be5a..1b70935df4d0 100644
 +
 +	resp->xdrgen.stat.stat = nlm4svc_lookup_file(rqstp, host, &argp->lock,
 +						     &file, &argp->xdrgen.alock,
-+						     type);
++						     F_UNLCK);
 +	if (resp->xdrgen.stat.stat)
 +		goto out;
 +
-+	resp->xdrgen.stat.stat = nlmsvc_cancel_blocked(net, file, &argp->lock);
++	resp->xdrgen.stat.stat = nlmsvc_unlock(net, file, &argp->lock);
 +	nlmsvc_release_lockowner(&argp->lock);
 +
 +out:
@@ -212,36 +211,36 @@ index 2da3ff76be5a..1b70935df4d0 100644
  }
  
  /*
-@@ -828,15 +893,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
+@@ -903,15 +966,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
  		.pc_xdrressize	= NLM4_nlm4_res_sz,
- 		.pc_name	= "LOCK",
+ 		.pc_name	= "CANCEL",
  	},
--	[NLMPROC_CANCEL] = {
--		.pc_func = nlm4svc_proc_cancel,
--		.pc_decode = nlm4svc_decode_cancargs,
+-	[NLMPROC_UNLOCK] = {
+-		.pc_func = nlm4svc_proc_unlock,
+-		.pc_decode = nlm4svc_decode_unlockargs,
 -		.pc_encode = nlm4svc_encode_res,
 -		.pc_argsize = sizeof(struct nlm_args),
 -		.pc_argzero = sizeof(struct nlm_args),
 -		.pc_ressize = sizeof(struct nlm_res),
 -		.pc_xdrressize = Ck+St,
--		.pc_name = "CANCEL",
-+	[NLMPROC4_CANCEL] = {
-+		.pc_func	= nlm4svc_proc_cancel,
-+		.pc_decode	= nlm4_svc_decode_nlm4_cancargs,
+-		.pc_name = "UNLOCK",
++	[NLMPROC4_UNLOCK] = {
++		.pc_func	= nlm4svc_proc_unlock,
++		.pc_decode	= nlm4_svc_decode_nlm4_unlockargs,
 +		.pc_encode	= nlm4_svc_encode_nlm4_res,
-+		.pc_argsize	= sizeof(struct nlm4_cancargs_wrapper),
++		.pc_argsize	= sizeof(struct nlm4_unlockargs_wrapper),
 +		.pc_argzero	= 0,
 +		.pc_ressize	= sizeof(struct nlm4_res_wrapper),
 +		.pc_xdrressize	= NLM4_nlm4_res_sz,
-+		.pc_name	= "CANCEL",
++		.pc_name	= "UNLOCK",
  	},
- 	[NLMPROC_UNLOCK] = {
- 		.pc_func = nlm4svc_proc_unlock,
-@@ -1046,6 +1111,7 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
- union nlm4svc_xdrstore {
+ 	[NLMPROC_GRANTED] = {
+ 		.pc_func = nlm4svc_proc_granted,
+@@ -1112,6 +1175,7 @@ union nlm4svc_xdrstore {
  	struct nlm4_testargs_wrapper	testargs;
  	struct nlm4_lockargs_wrapper	lockargs;
-+	struct nlm4_cancargs_wrapper	cancargs;
+ 	struct nlm4_cancargs_wrapper	cancargs;
++	struct nlm4_unlockargs_wrapper	unlockargs;
  	struct nlm4_testres_wrapper	testres;
  	struct nlm4_res_wrapper		res;
  	struct nlm_args			args;
