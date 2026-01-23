@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18365-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18366-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cF07EL3Dc2kCygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18365-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:49 +0100
+	id sERRAMDDc2kCygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18366-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:52 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADEA779CDD
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CE4279CF2
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E714B303B950
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D38F3303C82E
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9F02C031E;
-	Fri, 23 Jan 2026 18:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF732C08AB;
+	Fri, 23 Jan 2026 18:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4yQJz6L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghhyO4+w"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6F92C0281
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE252848AA
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194386; cv=none; b=I8bx99CRdjf7e1LdV5rOuKqLNmzEuLt1HTUf2/MEkG4BbO+w3QJOt+6tbHtV8NVChKUf4o5IS4yFE4r9DuR4mHBddgYO6r+6t3eYqoIvhTduNAHE9kAq/+gBH2EoKy3+lg0uK75JXoYpMqjxGUBARkOnnT5NxXuX8Gf2CgW4SHU=
+	t=1769194387; cv=none; b=N4LEAi7JNvEz7gSlGnTXQaqtDwcckGKsiCLHYiNTl7lZDl+eESkuXfd4eWvG3+Uax1pA9mgMPclG6oqbbxsrUKb0OgJnUBuNtQWxLe7oAFcFoBKFBwByI5U9jIQcngStPal54SkdagqgcfMPSAtlFHjBwXFy6ynoVjQ/Fo5KeTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769194386; c=relaxed/simple;
-	bh=YWNg5Cp7aj0q2W89PgTgldnAN/YyMNvUrlLO9cs6myU=;
+	s=arc-20240116; t=1769194387; c=relaxed/simple;
+	bh=2qxAVfjsfCsVnp9MlR7UX9zaCFCYPzHIjCPpyw4sZT4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eroieyHvS5/yulQQYbA9erSrR+Jx4S0uANx6ExDhuSnbMERVcYYItJaFAEjI+qycwcQaIEVlHIX8DPmJdqQlcDZJq25f/6Tr1/Xj/+v0Xk641heMsED+FmYiAW6G9BltCwmX0t4Zd712NxdXTqYlxcz/KWTmFVlTidaN8caCJJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4yQJz6L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C36A7C116D0;
-	Fri, 23 Jan 2026 18:53:05 +0000 (UTC)
+	 MIME-Version; b=fAxasl/frRqcsm8zWQ4Bxpi71tOsUOiL8aNXYC9jAIYCr2S6nFsO8DUnCup3Gd5dQHajttsgjMRMa4n4vOebZ6sA1GdzCVm3ELSoTq3tEXEYgsvIVI7prl/ZGPhPc4B4ol4DyhFk/AC26hBM7JeD4njD5tJNRpFgNvSr3bRP3RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghhyO4+w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91979C4CEF1;
+	Fri, 23 Jan 2026 18:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769194386;
-	bh=YWNg5Cp7aj0q2W89PgTgldnAN/YyMNvUrlLO9cs6myU=;
+	s=k20201202; t=1769194387;
+	bh=2qxAVfjsfCsVnp9MlR7UX9zaCFCYPzHIjCPpyw4sZT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A4yQJz6LpuZF9BBB3aSUCVgHWTG6bF0NYglCxGKdZlSg2B+whKJt5cJTsV1clOyPa
-	 516zKoDZWM78cHCu3ABdOSp+dfhMyaFM9Bnj40HPrncF8pukftBjvhKGAHBnMIsjVd
-	 xqnJL/oILlXPYQQdaWtIdCp8qvluKdhToERJquRm61d9JbcID+eyP6YNo3YDTtEQKz
-	 nC7KHHUxBoe3DwQjrqpAUsdTg2y0aLgUgU0Lon+8vJm1+0d6wbnoa0Bq+eEAgW7tY3
-	 ppqBM536qN0RqLz8mAPod6tlb1Qcf+l8Xapb69TDa2WHep57RhBFcfYm+aEE38zPKf
-	 YURLYA1rZqCOQ==
+	b=ghhyO4+wBR3rPT9/yihGh7OSFfQ5n/HgmtdP2OUb29D8syGgqdILsgI1xU+nY7+Jk
+	 vtSLqx/4w3eZeuOrQDnKv1Wqt8EhJILYMVKh+1+wizmYLZH+mcJLHbtI1GYtcJh7HX
+	 kHVxZ7mQXHRBmf1Au1pZk35r60psc1QMyhIvzEnJBlXOjYrMav/oSdkEWdXHZ7KGlA
+	 kDl1cKxm2sn8SRW4kbCwnh2O/scw2NpIKAAtLejORxCLEJe4TtegbsIYapo+PG180p
+	 0DhNoxfddF8Gr8SGeeu5wOvIsWhetfgMFkRzADEf/ADxfxeuGwWVYsuTTJFYkw9jFp
+	 MJJ3vnNLGwcsw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 04/42] lockd: Relocate nlmsvc_unlock API declarations
-Date: Fri, 23 Jan 2026 13:52:21 -0500
-Message-ID: <20260123185259.1215767-5-cel@kernel.org>
+Subject: [PATCH v2 05/42] NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's rpc_clnt
+Date: Fri, 23 Jan 2026 13:52:22 -0500
+Message-ID: <20260123185259.1215767-6-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18365-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18366-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -93,100 +93,62 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: ADEA779CDD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9CE4279CF2
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The nlmsvc_unlock_all_by_sb() and nlmsvc_unlock_all_by_ip()
-functions are part of lockd's external API, consumed by other
-kernel subsystems. Their declarations currently reside in
-linux/lockd/lockd.h alongside internal implementation details,
-which blurs the boundary between lockd's public interface and
-its private internals.
+The external API definitions for lockd reside in linux/lockd/bind.h.
+Because "struct nlm_host" is an internal lockd structure, bind.h
+does not include a definition of it. Dereferencing that structure
+outside of lockd violates the layering boundary between NFS and
+lockd.
 
-Moving these declarations to linux/lockd/bind.h groups them
-with other external API functions and makes the separation
-explicit. This clarifies which functions are intended for
-external use and reduces the risk of internal implementation
-details leaking into the public API surface.
+The proper approach is to use the nlmclnt_rpc_clnt() helper function
+already provided in lockd/bind.h, which retrieves the NLM host's
+struct rpc_clnt without exposing internal lockd structures. This
+maintains clean separation between the NFS client and lockd
+internals.
 
-Build-tested with allyesconfig; no functional changes.
+Note that the nlm_host's h_rpcclnt field can be NULL during
+initialization (host.c:141) or after cleanup (host.c:629). Add a
+NULL check before calling shutdown_client() to prevent a potential
+NULL pointer dereference in the sysfs shutdown path.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/lockd.c             | 1 +
- fs/nfsd/nfsctl.c            | 2 +-
- include/linux/lockd/bind.h  | 7 +++++++
- include/linux/lockd/lockd.h | 6 ------
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ fs/nfs/sysfs.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-index 6fe1325815e0..ca805b708a30 100644
---- a/fs/nfsd/lockd.c
-+++ b/fs/nfsd/lockd.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/file.h>
-+#include <linux/fs.h>
- #include <linux/lockd/bind.h>
- #include "nfsd.h"
- #include "vfs.h"
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 30caefb2522f..ed0588f72133 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -11,7 +11,7 @@
- #include <linux/fs_context.h>
- 
- #include <linux/sunrpc/svcsock.h>
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index ea6e6168092b..186b29de0129 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -12,7 +12,7 @@
+ #include <linux/string.h>
+ #include <linux/nfs_fs.h>
+ #include <linux/rcupdate.h>
 -#include <linux/lockd/lockd.h>
 +#include <linux/lockd/bind.h>
- #include <linux/sunrpc/addr.h>
- #include <linux/sunrpc/gss_api.h>
- #include <linux/sunrpc/rpc_pipe_fs.h>
-diff --git a/include/linux/lockd/bind.h b/include/linux/lockd/bind.h
-index 2f5dd9e943ee..82eca0a13ccc 100644
---- a/include/linux/lockd/bind.h
-+++ b/include/linux/lockd/bind.h
-@@ -21,6 +21,7 @@
- struct svc_rqst;
- struct rpc_task;
- struct rpc_clnt;
-+struct super_block;
  
- /*
-  * This is the set of functions for lockd->nfsd communication
-@@ -80,4 +81,10 @@ extern int	nlmclnt_proc(struct nlm_host *host, int cmd, struct file_lock *fl, vo
- extern int	lockd_up(struct net *net, const struct cred *cred);
- extern void	lockd_down(struct net *net);
+ #include "internal.h"
+ #include "nfs4_fs.h"
+@@ -284,8 +284,12 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	if (!IS_ERR(server->client_acl))
+ 		shutdown_client(server->client_acl);
  
-+/*
-+ * Cluster failover support
-+ */
-+int nlmsvc_unlock_all_by_sb(struct super_block *sb);
-+int nlmsvc_unlock_all_by_ip(struct sockaddr *server_addr);
+-	if (server->nlm_host)
+-		shutdown_client(server->nlm_host->h_rpcclnt);
++	if (server->nlm_host) {
++		struct rpc_clnt *nlm_clnt = nlmclnt_rpc_clnt(server->nlm_host);
 +
- #endif /* LINUX_LOCKD_BIND_H */
-diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
-index 7bf402e772b0..fe6a14fe959a 100644
---- a/include/linux/lockd/lockd.h
-+++ b/include/linux/lockd/lockd.h
-@@ -311,12 +311,6 @@ void		  nlmsvc_mark_resources(struct net *);
- void		  nlmsvc_free_host_resources(struct nlm_host *);
- void		  nlmsvc_invalidate_all(void);
- 
--/*
-- * Cluster failover support
-- */
--int           nlmsvc_unlock_all_by_sb(struct super_block *sb);
--int           nlmsvc_unlock_all_by_ip(struct sockaddr *server_addr);
--
- static inline struct file *nlmsvc_file_file(const struct nlm_file *file)
- {
- 	return file->f_file[O_RDONLY] ?
++		if (nlm_clnt)
++			shutdown_client(nlm_clnt);
++	}
+ out:
+ 	shutdown_nfs_client(server->nfs_client);
+ 	return count;
 -- 
 2.52.0
 
