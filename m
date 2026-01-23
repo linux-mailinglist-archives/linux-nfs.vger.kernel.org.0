@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18363-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18364-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0NJdGK3Dc2kCygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18363-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:33 +0100
+	id kBK8HrHDc2kCygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18364-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:37 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B90C79CBA
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C426679CC8
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:53:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9444A300B289
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EDF3230055E7
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9902BE63F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC622274FC2;
 	Fri, 23 Jan 2026 18:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwvX5904"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH30kohT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE193EBF0D
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93F32BEC4E
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194385; cv=none; b=tNw9pLi9gG2vQSB6jm3WLn2vSFHI70DNQDJl1iP8PaDA0T/H+HqrT22TmkmM6F591YUUk98qaZZdzkyqVdHz7QgcGNypSiFaKm8f7gN7GtIkuaCZyYksHxmBVKLThFN8NF8J1okmUjgUrDa9GkZbuS+uGubw+LcB2/Sln7V5/FU=
+	t=1769194385; cv=none; b=KZnixSqkaUpXGwH4RFb2V2oGx3RIpULPQvDjQl+gyeR/xdo76uIs3QGk6Qmf+Bwfus136Rznf+3bEG2Px8Ayi2Tfmvnl/05zEpj4KWbpi0yn8+MPxox/6GP94X66q2ZIk5NGi80jgvHQSwA8aE6hqnP6cv4kTMfaaiJJesnVOzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769194385; c=relaxed/simple;
-	bh=OzYnMAZMcz4Y2AJycyGMYjk8jkIT2eO3e5UyTMZHdYE=;
+	bh=gmdR4o8dgPjuFluFnFfQUjIMKlPyP4t12LBW4nE3+Mk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wn2PNyK3406uwRB7CTR1bapQUT5rjhlUFTPPiQjmdLsJ03l01MHqhuuAcGzbB3wcp8Ti47Bg4Cy28YbFH/x2pjs22itbouS69d3DMgBD3Om3rBmTWCSTSMv4WL/YuSzU+nZ7LRMmC/SQYqH9JnC/XFHOo0UGvwjj0WFg1ITaMfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwvX5904; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9DDC4CEF1;
+	 MIME-Version; b=PYaR1b31x4bDc6yxNprvRld8rTRl8jkiAT+A4H7jCT3ABIwGIHzJsxghPGw0dK8qIFgUGoU79Q8seEc1a0JKcjXRS2zWYCW80BAwu45S5GrtT+ASeJ6pABcbEVe1P9sG/cxVeRhnsxQ02DzJ8CqplBhbG4QRjfSCsgpU+jH5a4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH30kohT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06855C19423;
 	Fri, 23 Jan 2026 18:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769194384;
-	bh=OzYnMAZMcz4Y2AJycyGMYjk8jkIT2eO3e5UyTMZHdYE=;
+	s=k20201202; t=1769194385;
+	bh=gmdR4o8dgPjuFluFnFfQUjIMKlPyP4t12LBW4nE3+Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YwvX59045WVI+YNAthPw3WUHF+95OnKpJvyBQS1XNUF1XMI5zon2R5blp57Crjp+t
-	 x1SyAxgVxu16t7ceQTjN7YOf9BMUjjakjrDaWN7rPr9sepCuEw820SAeA98Au3PW7X
-	 cOH8NiOz1lZ6/SUKZZtVn5TT3TDY0S4uuU+Ea2VZMbtnYnHMOHyKIIekCoBo8GRbu4
-	 zdCegTBQSOoSax0cpXIuKzQoGL5C3MPtDwvnoBsJVEax807odYBI49LF9WRqnPfgFf
-	 dT8SE9DYPdnGEoc+0+AgVWIPcf2AdF8/ZZZDjDv1z6kISPZNO0/sMNUJMzB+4/eb9K
-	 zO5Ehy3p6krZg==
+	b=XH30kohTkIE0PrHqBodOPByElC8J79FUPQnZ3jUQsQS06w67bZPJewYBrXnumO3J6
+	 ImopcShzpOipdUSQ/4LrFrSjWZEgRdQrJWV7n7I2irdeQ2I8sjeYdVUkpUe9nVH0UM
+	 tk2Hcm2dh4UQMyPNB0w74WnAow5hW88M6NYtsuzgFkH5cxIuIPbd1TV/BA0wuk/vnz
+	 Bssms/Uu0SxGA5+bHP0EacXBBOMSrIwoauz9uAumYOEqIqMYHsg95wD3tysBE1eTuh
+	 lbitc4VODPEcmlb23Np1XnlMITLQYpe7JZoNutOXnaRMV2vhPyLI4kXAzg/2hwg8lc
+	 d6QUAgVFLhzNg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 02/42] lockd: Introduce nlm__int__deadlock
-Date: Fri, 23 Jan 2026 13:52:19 -0500
-Message-ID: <20260123185259.1215767-3-cel@kernel.org>
+Subject: [PATCH v2 03/42] lockd: Have nlm_fopen() return errno values
+Date: Fri, 23 Jan 2026 13:52:20 -0500
+Message-ID: <20260123185259.1215767-4-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18363-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18364-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,139 +93,247 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6B90C79CBA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: C426679CC8
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The use of CONFIG_LOCKD_V4 in combination with a later cast_status()
-in the NLMv3 code is difficult to reason about. Instead, replace the
-use of nlm_deadlock with an implementation-defined status value that
-version-specific code translates appropriately.
+The nlm_fopen() function is part of the API between nfsd and lockd.
 
-The new approach establishes a translation boundary: generic lockd
-code returns nlm__int__deadlock when posix_lock_file() yields
--EDEADLK. Version-specific handlers (svc4proc.c for NLMv4,
-svcproc.c for NLMv3) translate this internal status to the
-appropriate wire protocol value. NLMv4 maps to nlm4_deadlock;
-NLMv3 maps to nlm_lck_denied (since NLMv3 lacks a deadlock-specific
-status code).
+Currently its return value is an on-the-wire NLM status code. But
+that forces NFSD to include NLM wire protocol definitions despite
+having no other dependency on the NLM wire protocol.
 
-Later this modification will also remove the need to include NLMv4
-headers in NLMv3 and generic code.
+In addition, a CONFIG_LOCKD_V4 Kconfig symbol appears in the middle
+of NFSD source code.
+
+Refactor: Let's not use on-the-wire values as part of a high-level
+API between two Linux kernel modules. That's what we have errno for,
+right?
+
+And, instead of simply moving the CONFIG_LOCKD_V4 check, we can get
+rid of it entirely and let the decision of what actual NLM status
+code goes on the wire to be left up to NLM version-specific code.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c         | 10 ++++++++--
- fs/lockd/svclock.c          |  8 +-------
- fs/lockd/svcproc.c          |  4 +++-
- include/linux/lockd/lockd.h |  7 +++++++
- include/linux/lockd/xdr.h   |  2 --
- 5 files changed, 19 insertions(+), 12 deletions(-)
+ fs/lockd/svc4proc.c         | 13 +++++++---
+ fs/lockd/svcproc.c          |  9 ++++++-
+ fs/lockd/svcsubs.c          | 27 +++++++++++++++-----
+ fs/nfsd/lockd.c             | 50 +++++++++++++++++++++----------------
+ include/linux/lockd/bind.h  |  8 +++---
+ include/linux/lockd/lockd.h |  2 ++
+ 6 files changed, 72 insertions(+), 37 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 4b6f18d97734..061686b36b38 100644
+index 061686b36b38..bcad4efdf4ab 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -146,10 +146,16 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	resp->status = nlmsvc_lock(rqstp, file, host, &argp->lock,
- 					argp->block, &argp->cookie,
- 					argp->reclaim);
--	if (resp->status == nlm_drop_reply)
-+	switch (resp->status) {
-+	case nlm_drop_reply:
- 		rc = rpc_drop_reply;
--	else
-+		break;
-+	case nlm__int__deadlock:
-+		resp->status = nlm4_deadlock;
-+		fallthrough;
-+	default:
- 		dprintk("lockd: LOCK         status %d\n", ntohl(resp->status));
-+	}
+@@ -73,9 +73,16 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
  
- 	nlmsvc_release_lockowner(&argp->lock);
+ no_locks:
  	nlmsvc_release_host(host);
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 712df1e025d8..e80e3b4ee689 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -33,12 +33,6 @@
+- 	if (error)
+-		return error;	
+-	return nlm_lck_denied_nolocks;
++	switch (error) {
++	case nlm_granted:
++		return nlm_lck_denied_nolocks;
++	case nlm__int__stale_fh:
++		return nlm4_stale_fh;
++	case nlm__int__failed:
++		return nlm4_failed;
++	default:
++		return error;
++	}
+ }
  
- #define NLMDBG_FACILITY		NLMDBG_SVCLOCK
- 
--#ifdef CONFIG_LOCKD_V4
--#define nlm_deadlock	nlm4_deadlock
--#else
--#define nlm_deadlock	nlm_lck_denied
--#endif
--
- static void nlmsvc_release_block(struct nlm_block *block);
- static void	nlmsvc_insert_block(struct nlm_block *block, unsigned long);
- static void	nlmsvc_remove_block(struct nlm_block *block);
-@@ -589,7 +583,7 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
- 			goto out;
- 		case -EDEADLK:
- 			nlmsvc_remove_block(block);
--			ret = nlm_deadlock;
-+			ret = nlm__int__deadlock;
- 			goto out;
- 		default:			/* includes ENOLCK */
- 			nlmsvc_remove_block(block);
+ /*
 diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index 95c6bf7ab757..3e890534c3dc 100644
+index 3e890534c3dc..557dfd9c2a9e 100644
 --- a/fs/lockd/svcproc.c
 +++ b/fs/lockd/svcproc.c
-@@ -27,7 +27,7 @@ static inline __be32 cast_status(__be32 status)
- 	case nlm_lck_denied_grace_period:
- 	case nlm_drop_reply:
- 		break;
--	case nlm4_deadlock:
-+	case nlm__int__deadlock:
- 		status = nlm_lck_denied;
- 		break;
- 	default:
-@@ -39,6 +39,8 @@ static inline __be32 cast_status(__be32 status)
+@@ -39,8 +39,15 @@ static inline __be32 cast_status(__be32 status)
  #else
  static inline __be32 cast_status(__be32 status)
  {
-+	if (status == nlm__int__deadlock)
-+		status = nlm_lck_denied;
+-	if (status == nlm__int__deadlock)
++	switch (status) {
++	case nlm__int__deadlock:
+ 		status = nlm_lck_denied;
++		break;
++	case nlm__int__stale_fh:
++	case nlm__int__failed:
++		status = nlm_lck_denied_nolocks;
++		break;
++	}
  	return status;
  }
  #endif
+diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
+index 9103896164f6..e3ceb0745464 100644
+--- a/fs/lockd/svcsubs.c
++++ b/fs/lockd/svcsubs.c
+@@ -87,14 +87,29 @@ static __be32 nlm_do_fopen(struct svc_rqst *rqstp,
+ 			   struct nlm_file *file, int mode)
+ {
+ 	struct file **fp = &file->f_file[mode];
+-	__be32	nfserr;
++	__be32 nlmerr = nlm_granted;
++	int error;
+ 
+ 	if (*fp)
+-		return 0;
+-	nfserr = nlmsvc_ops->fopen(rqstp, &file->f_handle, fp, mode);
+-	if (nfserr)
+-		dprintk("lockd: open failed (error %d)\n", nfserr);
+-	return nfserr;
++		return nlmerr;
++
++	error = nlmsvc_ops->fopen(rqstp, &file->f_handle, fp, mode);
++	if (error) {
++		dprintk("lockd: open failed (errno %d)\n", error);
++		switch (error) {
++		case -EWOULDBLOCK:
++			nlmerr = nlm_drop_reply;
++			break;
++		case -ESTALE:
++			nlmerr = nlm__int__stale_fh;
++			break;
++		default:
++			nlmerr = nlm__int__failed;
++			break;
++		}
++	}
++
++	return nlmerr;
+ }
+ 
+ /*
+diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
+index c774ce9aa296..6fe1325815e0 100644
+--- a/fs/nfsd/lockd.c
++++ b/fs/nfsd/lockd.c
+@@ -14,19 +14,20 @@
+ 
+ #define NFSDDBG_FACILITY		NFSDDBG_LOCKD
+ 
+-#ifdef CONFIG_LOCKD_V4
+-#define nlm_stale_fh	nlm4_stale_fh
+-#define nlm_failed	nlm4_failed
+-#else
+-#define nlm_stale_fh	nlm_lck_denied_nolocks
+-#define nlm_failed	nlm_lck_denied_nolocks
+-#endif
+-/*
+- * Note: we hold the dentry use count while the file is open.
++/**
++ * nlm_fopen - Open an NFSD file
++ * @rqstp: NLM RPC procedure execution context
++ * @f: NFS file handle to be opened
++ * @filp: OUT: an opened struct file
++ * @flags: the POSIX open flags to use
++ *
++ * nlm_fopen() holds the dentry reference until nlm_fclose() releases it.
++ *
++ * Returns zero on success or a negative errno value if the file
++ * cannot be opened.
+  */
+-static __be32
+-nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct file **filp,
+-		int mode)
++static int nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f,
++		     struct file **filp, int flags)
+ {
+ 	__be32		nfserr;
+ 	int		access;
+@@ -47,18 +48,17 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct file **filp,
+ 	 * if NFSEXP_NOAUTHNLM is set.  Some older clients use AUTH_NULL
+ 	 * for NLM requests.
+ 	 */
+-	access = (mode == O_WRONLY) ? NFSD_MAY_WRITE : NFSD_MAY_READ;
++	access = (flags == O_WRONLY) ? NFSD_MAY_WRITE : NFSD_MAY_READ;
+ 	access |= NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE | NFSD_MAY_BYPASS_GSS;
+ 	nfserr = nfsd_open(rqstp, &fh, S_IFREG, access, filp);
+ 	fh_put(&fh);
+-	/* We return nlm error codes as nlm doesn't know
+-	 * about nfsd, but nfsd does know about nlm..
+-	 */
++
+ 	switch (nfserr) {
+ 	case nfs_ok:
+-		return 0;
++		break;
+ 	case nfserr_jukebox:
+-		/* this error can indicate a presence of a conflicting
++		/*
++		 * This error can indicate a presence of a conflicting
+ 		 * delegation to an NLM lock request. Options are:
+ 		 * (1) For now, drop this request and make the client
+ 		 * retry. When delegation is returned, client's lock retry
+@@ -66,19 +66,25 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh *f, struct file **filp,
+ 		 * (2) NLM4_DENIED as per "spec" signals to the client
+ 		 * that the lock is unavailable now but client can retry.
+ 		 * Linux client implementation does not. It treats
+-		 * NLM4_DENIED same as NLM4_FAILED and errors the request.
++		 * NLM4_DENIED same as NLM4_FAILED and fails the request.
+ 		 * (3) For the future, treat this as blocked lock and try
+ 		 * to callback when the delegation is returned but might
+ 		 * not have a proper lock request to block on.
+ 		 */
+-		return nlm_drop_reply;
++		return -EWOULDBLOCK;
+ 	case nfserr_stale:
+-		return nlm_stale_fh;
++		return -ESTALE;
+ 	default:
+-		return nlm_failed;
++		return -ENOLCK;
+ 	}
++
++	return 0;
+ }
+ 
++/**
++ * nlm_fclose - Close an NFSD file
++ * @filp: a struct file that was opened by nlm_fopen()
++ */
+ static void
+ nlm_fclose(struct file *filp)
+ {
+diff --git a/include/linux/lockd/bind.h b/include/linux/lockd/bind.h
+index c53c81242e72..2f5dd9e943ee 100644
+--- a/include/linux/lockd/bind.h
++++ b/include/linux/lockd/bind.h
+@@ -26,11 +26,9 @@ struct rpc_clnt;
+  * This is the set of functions for lockd->nfsd communication
+  */
+ struct nlmsvc_binding {
+-	__be32			(*fopen)(struct svc_rqst *,
+-						struct nfs_fh *,
+-						struct file **,
+-						int mode);
+-	void			(*fclose)(struct file *);
++	int		(*fopen)(struct svc_rqst *rqstp, struct nfs_fh *f,
++				 struct file **filp, int flags);
++	void		(*fclose)(struct file *filp);
+ };
+ 
+ extern const struct nlmsvc_binding *nlmsvc_ops;
 diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
-index 330e38776bb2..36a744f212ca 100644
+index 36a744f212ca..7bf402e772b0 100644
 --- a/include/linux/lockd/lockd.h
 +++ b/include/linux/lockd/lockd.h
-@@ -38,6 +38,13 @@
+@@ -44,6 +44,8 @@
   */
- #define LOCKD_DFLT_TIMEO	10
+ #define nlm_drop_reply		cpu_to_be32(30000)
+ #define nlm__int__deadlock	cpu_to_be32(30001)
++#define nlm__int__stale_fh	cpu_to_be32(30002)
++#define nlm__int__failed	cpu_to_be32(30003)
  
-+/*
-+ * Internal-use status codes, not to be placed on the wire.
-+ * Version handlers translate these to appropriate wire values.
-+ */
-+#define nlm_drop_reply		cpu_to_be32(30000)
-+#define nlm__int__deadlock	cpu_to_be32(30001)
-+
  /*
   * Lockd host handle (used both by the client and server personality).
-  */
-diff --git a/include/linux/lockd/xdr.h b/include/linux/lockd/xdr.h
-index 17d53165d9f2..292e4e38d17d 100644
---- a/include/linux/lockd/xdr.h
-+++ b/include/linux/lockd/xdr.h
-@@ -33,8 +33,6 @@ struct svc_rqst;
- #define	nlm_lck_blocked		cpu_to_be32(NLM_LCK_BLOCKED)
- #define	nlm_lck_denied_grace_period	cpu_to_be32(NLM_LCK_DENIED_GRACE_PERIOD)
- 
--#define nlm_drop_reply		cpu_to_be32(30000)
--
- /* Lock info passed via NLM */
- struct nlm_lock {
- 	char *			caller;
 -- 
 2.52.0
 
