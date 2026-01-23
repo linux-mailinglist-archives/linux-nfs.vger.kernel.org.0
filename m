@@ -1,184 +1,202 @@
-Return-Path: <linux-nfs+bounces-18352-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18353-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAnsEyWHc2krxAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18352-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:35:17 +0100
+	id yGGsJFSHc2krxAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18353-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:36:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5543D77230
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:35:16 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3038677247
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:36:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 07F0F3019048
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:35:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 619753001597
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:35:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3082BEFE1;
-	Fri, 23 Jan 2026 14:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410CA24468B;
+	Fri, 23 Jan 2026 14:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dustymabe.com header.i=@dustymabe.com header.b="4Cw36PLl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oTSNgbqp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JZDjN7AU";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="EL2TlcLL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307751FE47C
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 14:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C46A930
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 14:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769178913; cv=none; b=BP75DI3FIdvvlAIROR5naSG4zYuD7crT0NfznAhFyBoBxrPXwmjBMhzQBSJI45XnMiLMvL3+KIZOtwNBuewjLyXm5Xpbv9kv/Kh75utgpA3JvUXo3QF9C8uDO9yVR9wievp0VjkfbxoSwIY8c7XuapyhbKJHGl182gGlgk6NVo0=
+	t=1769178924; cv=none; b=s5Z7M1+7wySk7OM1OH5/pCiKsheWAS/YRh90s5qq6AvSPO00DPSemSyDoqd8IS1J6HhmDI3NNBjn2PkjfU3gu5C7M6SsRvIPcvQZ+2+ED88/ytCCnuaDeKurKO4aIK8g0KfflF6ZzsnDNlLun123+BBKVx77RSm8vp9mBr+iYZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769178913; c=relaxed/simple;
-	bh=TAXpCcZ5iwuuK6G+T2Fqfn7PSEvzzDlVcGIQj73CQOY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=joACkIsbjFoFTrP0lcdUFQqA4M1RC99OJcS2xlUHDy33waUIs2aQVH9brRYzCagvU/0atxTA3tbrtbBLTQ9tgdL0MJU/I/yEMtnUGOvCZbKTBpQuwv4ltksObO3ofHFfh3VS15cAjeWsctwPG1GX8RwnhK7Ufu7uAnhv1ZoVLgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dustymabe.com; spf=pass smtp.mailfrom=dustymabe.com; dkim=pass (2048-bit key) header.d=dustymabe.com header.i=@dustymabe.com header.b=4Cw36PLl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oTSNgbqp; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dustymabe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dustymabe.com
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 64500EC02BE
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 09:35:10 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Fri, 23 Jan 2026 09:35:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustymabe.com;
-	 h=cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1769178910; x=1769265310; bh=rtkmUzo6yATAj+XkHxY6v
-	xzVr3D9C1QbTXEws5Az7vg=; b=4Cw36PLlg2JNQpdp1I5oQKGGBCxyug860i6p0
-	H4f1shNY/YXqkGsmO6luiJzvq1hqLLCcFao9zA4v6hvu5cMbQS4AXNT2eJ8grOFi
-	PJBUCrYIrkTYOOl/uV7vQiDP8H/U/sMi93TZ82fmhkfxPficueIlktUQWBAEU1P4
-	jU7o47hSUDdXND5+Q9I+kZ4aHmXJL0tlkSGT0LouxurjFpnTMfWAWhYw7/uiQy8C
-	+i8Tgy+6QgDFVKka42Qs48VV0aZVLaZJxW4Bi1BBmIOkYXdAZ90/dvzFOaHc44cR
-	0xixNQsWD+KkdAb0rMrK9W6gae1JX4K15FIE9dMKF5+aRn/lA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1769178910; x=1769265310; bh=rtkmUzo6yATAj+XkHxY6vxzVr3D9C1QbTXE
-	ws5Az7vg=; b=oTSNgbqppwlIIc6i2YPqsu9OE2rPL0168NOQQy/zmr9GB1hrN2y
-	BPKX8r2rdNwVI+JJGtNYQDccHPSORa0u+venuOpeqnMXOLOjUHKNAyV78Y3Mub8I
-	Y++5AUXLRbjuK2DUQNvpZTMOz1npASbX5KjvRetcXnQNtEgw9f8ez2qUsOMXydls
-	XqJssQhGdkI3/0Gsa1FB9AgRPTNepOE0JvInJKpn/XAs0T+W6MEDxCOJbdb9YVVa
-	oRGxAoZuaeTIKGEX3WIBQXzomHdRKH/wFXUaiRu+aE4yXXJOHBsepJnw98OQkjJu
-	5ENaRw6ohTyWarZmDdudD+wd6Dd41wTVwPg==
-X-ME-Sender: <xms:HodzaQ0J89CpmsaWr1i_EiPnna5pkMa5ix25KWd-4SNmjr1-tTMJuA>
-    <xme:HodzaSCdOJZo8OBH7rJosOKokODRf-q_odB_72xxIZGgf8RpqwxO58O_txRg3njVY
-    wc_Pdot8lUxtLI1JR0jpCU85eT0XAA4qxrCdEFuYcDz5K3HGfbRRA>
-X-ME-Received: <xmr:HodzaegR6OhmtZMVmsdrjok8Wga_INHcpxyiGNZyo1qlddLbtWNl0MDcOSRhNXBgnt4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeelfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffuhhsthihucforggs
-    vgcuoeguuhhsthihseguuhhsthihmhgrsggvrdgtohhmqeenucggtffrrghtthgvrhhnpe
-    elueetkeehffevveetleeiuedtleevgedvtedvueehleevfedttddujeelveeuhfenucff
-    ohhmrghinhepshihshhtvghmugdrihhopdhgihhthhhusgdrtghomhdprhgvughhrghtrd
-    gtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    ughushhthiesughushhthihmrggsvgdrtghomhdpnhgspghrtghpthhtohepuddpmhhoug
-    gvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghr
-    nhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Hodzae-QO8VoUBPPdP_oghZ8LP4iCU2yY19evgLXVEOQvRj-eHkkYA>
-    <xmx:HodzaS9lDP5waEJzvA9Cz_VoPQmJCFn0ceBIfZeVTP_Gqhmydk8jMw>
-    <xmx:HodzafA7LhkUTFxuCTvoxri0D-C87EvR3Cv51Ld_J4gxXoec6G2dwQ>
-    <xmx:HodzaawuyLJhGFiJZqejwu-TTf72V7dg4ysewbo4T-VmK9-3-tE1ug>
-    <xmx:HodzaSH6gTnRMip10Q0ITBG5Am5nzvqh-f6vbnv7NXJuHXE-tFOKBZF2>
-Feedback-ID: i13394474:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 09:35:10 -0500 (EST)
-From: Dusty Mabe <dusty@dustymabe.com>
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] systemd: drop Wants=network-online.target for rpc-statd-notify
-Date: Fri, 23 Jan 2026 09:35:03 -0500
-Message-ID: <20260123143503.1342968-1-dusty@dustymabe.com>
-X-Mailer: git-send-email 2.51.1
+	s=arc-20240116; t=1769178924; c=relaxed/simple;
+	bh=PAdsefzrrZ1xaC8cC3WCC6zXeXI5h8kRPgpXsT5+rMY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PqfATCfH96oDkHijq2Jjsa4cF7JswpOtNV1Kft/CRibBCsETL4Yk7nRDlbyYzpCQw2zmZ8DOq8H4fySLIEm9YJfOkhpXIJwHQxROIQuSOadWnPyuOZzEmFoTe+zaojFj1OWL5XZvfoSXgwCY0ostUoJmB2sK14+ZKkwDEzNIfXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JZDjN7AU; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=EL2TlcLL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769178921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EDcHQn9C/gokEhBlLQhjSx406Sk+RPHdWhKQ92xoLxU=;
+	b=JZDjN7AU8/IsQrKnPoDKFPQ2NmwA552bTtTWne38ab4qa+WsSY6hCmqwzoUulGc05gGRJF
+	VzQHAlg4dkdF3/1V9qUvEwOjHMB0tQFusqZ23WI4loJ5vv1cpzvovjC/as2fHo0pbPdjLI
+	A2iTqLzzX5S+9vF5045pK8oTrZMrSC0=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-455-lcXoY-4YOsGgubHI_0XjuQ-1; Fri, 23 Jan 2026 09:35:20 -0500
+X-MC-Unique: lcXoY-4YOsGgubHI_0XjuQ-1
+X-Mimecast-MFC-AGG-ID: lcXoY-4YOsGgubHI_0XjuQ_1769178919
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-29f2b45ecffso32949515ad.2
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 06:35:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1769178919; x=1769783719; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EDcHQn9C/gokEhBlLQhjSx406Sk+RPHdWhKQ92xoLxU=;
+        b=EL2TlcLL/y9HDfNbK+MhPBz2DYo/UHGl/fYQ+jT+bNVQ31WDM9emh42USuT+lsRFeJ
+         4RJl6oeULnhUqiprcpM0mYa3L983Nc49oPLkNnvGmweN4dPCulJxtq+DU40MaC3usLGL
+         aPJjccj7cfcc8kpMX8hvdNoAzH5hMzGUf7euyocBM3o6MHyiB2wEgNroEd+TG5A/CK0L
+         JJKjpLoOL5c/z8DevlEtAmSvrLjR2zwxKfKXaVDbVjT0bdR8c5DLi3RoVjwWlzcM7HjT
+         ifD/hOKGmPSRqyf9Fn6Go13BIEfC7qAjY7i8o2Xi99XWTUeGyo4R/Am0h6ZFXjmOYv1G
+         IYMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769178919; x=1769783719;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EDcHQn9C/gokEhBlLQhjSx406Sk+RPHdWhKQ92xoLxU=;
+        b=Qwa66+t03gUiah3EVWuP/BSOvalFIDD7iLrroVCsNimF3QNkZkvUdl1whFutZqTVFa
+         LXNkwiAdeBUfude0j37ATXNGSxFxaqGvAye67WSrdSl2jMw958em1EAiT5Ul8c1GLh+V
+         np4H0lfvrbvbc2EtPVAa/9ddcBQm18Vwfs6kgOPqJsnUvgh4bpNuDMvZqSHUlQYHDz5c
+         ZU3wSqzBe9bO9sJ6ZlMHxw+3Nyh9vnmO6e27zDu2cWKAYpPekLAzj7vskgOXoYW10WII
+         BxeRREsnKbDOvq/+Ux9T2giDNUDSj9WazUOk2M9TyhExggzg5QYM038Tf0qiL6gYOe1M
+         tb7A==
+X-Gm-Message-State: AOJu0YwRssHHWgrEH3ahSikEZZJ3H3k2vHwWl5v5ccF1mXOjdqTVc3Oh
+	UUA+ALnmLxBMjeKyhiFUNsul3GFvxYcYI58PAqRU+QEo10DPT55R/1Zu1mF4yazhBLW6irmPG8y
+	6L0SD/v+1JbcadG4kkMRZuMUU8Zja8m5Rkt5G3n2I81ngZ6VUYiiRzHn0PmUy1g==
+X-Gm-Gg: AZuq6aITeqBR0o4ocZgnSGsnKMQ/hkjEqlGPgg7yEWl5ad52hxzCgKKuKTzvM7FuiSq
+	guwjfcFe/ea10CAsg+yKcO6HRZ6sKojw4+JmwO8nLu9umHPeKSX4w/gRcxPB8b3xiFZ6TmXEjZH
+	xLaYpcchGpUAVVkcd0xZYO5o9lR4TYrUE9afy6G3Wbt8lYMtbUxIrbU7S/pojvNxTDS7VIOWABL
+	WlpIAl5gMbOSRQPqMrBTGrS9K/FO5+VFIZgNw7h70/klS31V3VH1bAa5iU5/BkJnjoRTt6646yV
+	h+h4DGlmlBQXAZJWeBr+LyrTbT/RYoJ194V0dzSkBee2dndF+t1lQl2IHAHWNnCzkKM30ct9TQh
+	3oVElPG95FQ==
+X-Received: by 2002:a17:902:e547:b0:2a0:cccf:9d24 with SMTP id d9443c01a7336-2a7fe56c13emr29852475ad.16.1769178919219;
+        Fri, 23 Jan 2026 06:35:19 -0800 (PST)
+X-Received: by 2002:a17:902:e547:b0:2a0:cccf:9d24 with SMTP id d9443c01a7336-2a7fe56c13emr29852025ad.16.1769178918668;
+        Fri, 23 Jan 2026 06:35:18 -0800 (PST)
+Received: from [10.17.16.21] ([144.121.52.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a802fb0262sm22215685ad.70.2026.01.23.06.35.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jan 2026 06:35:17 -0800 (PST)
+Message-ID: <4f9e3ca5-fd16-48f0-895a-9ac74004bf69@redhat.com>
+Date: Fri, 23 Jan 2026 09:35:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Add missing exports for rpc_gss_getcred +
+ authdes_getucred
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+ Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+References: <7a1ece728aaa225a92d4d639e3f7797ae7bfb9ac.1759775772.git.trond.myklebust@hammerspace.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <7a1ece728aaa225a92d4d639e3f7797ae7bfb9ac.1759775772.git.trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[dustymabe.com:s=fm3,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	DMARC_NA(0.00)[dustymabe.com];
-	RCPT_COUNT_ONE(0.00)[1];
-	TAGGED_FROM(0.00)[bounces-18352-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dusty@dustymabe.com,linux-nfs@vger.kernel.org];
-	NEURAL_HAM(-0.00)[-0.962];
-	RCVD_COUNT_FIVE(0.00)[6];
-	DKIM_TRACE(0.00)[dustymabe.com:+,messagingengine.com:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18353-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.998];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dustymabe.com:email,dustymabe.com:dkim,dustymabe.com:mid,nss-lookup.target:url,network-online.target:url]
-X-Rspamd-Queue-Id: 5543D77230
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,hammerspace.com:email]
+X-Rspamd-Queue-Id: 3038677247
 X-Rspamd-Action: no action
 
-Pulling in network-online.target by default is generally discouraged.
-From [1]:
 
-> It is strongly recommended not to make use of this target too liberally:
-> for example network server software should generally not pull this in
-> (since server software generally is happy to accept local connections
-> even before any routable network interface is up). Its primary purpose
-> is network client software that cannot operate without network.
 
-On systems where nfs-client.target is enabled by default via presets
-(this is the case on Fedora today) then nfs-client.target will pull in
-rpc-statd-notify.service which will pull in network-online.target. This
-is the case even if the user hasn't configured any NFS mounts.
+On 10/6/25 2:52 PM, Trond Myklebust wrote:
+> From: Trond Myklebust<trond.myklebust@hammerspace.com>
+> 
+> Both functions are listed as part of the official API in the libtirpc
+> manpages. However they are not listed as being exported, and therefore
+> do not turn up in the shared library.
+> 
+> Signed-off-by: Trond Myklebust<trond.myklebust@hammerspace.com>
+Committed.... sorry it took so long.
 
-The man page for sm-notify already mentions:
+steved.
 
-> Notifications are retried if sending fails, the remote does not respond,
-> the remote's NSM service is not registered, or if there is a DNS failure
-> which prevents the remote's mon_name from being resolved to an address.
-
-So I would think it would be able to cope with a short period of time if
-it were to start before Networking were fully online.
-
-Making this change means if you are in an offline scenario (one example
-is an install environment) then you won't have to wait for network-online.target
-to timeout before the system comes up fully.
-
-We originally discussed this problem over in [2], [3].
-
-[1] https://systemd.io/NETWORK_ONLINE/
-[2] https://github.com/coreos/fedora-coreos-config/pull/3530
-[3] https://bugzilla.redhat.com/show_bug.cgi?id=2383585
-
-Signed-off-by: Dusty Mabe <dusty@dustymabe.com>
----
- systemd/rpc-statd-notify.service | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/systemd/rpc-statd-notify.service b/systemd/rpc-statd-notify.service
-index 962f18b2..821d4ea8 100644
---- a/systemd/rpc-statd-notify.service
-+++ b/systemd/rpc-statd-notify.service
-@@ -2,7 +2,6 @@
- Description=Notify NFS peers of a restart
- Documentation=man:sm-notify(8) man:rpc.statd(8)
- DefaultDependencies=no
--Wants=network-online.target
- After=local-fs.target network-online.target nss-lookup.target
- 
- # if we run an nfs server, it needs to be running before we
--- 
-2.51.1
+> ---
+>   src/libtirpc.map    | 5 +++++
+>   src/libtirpc.map.in | 5 +++++
+>   2 files changed, 10 insertions(+)
+> 
+> diff --git a/src/libtirpc.map b/src/libtirpc.map
+> index 479b4ff044b5..0d0f2f4cdf75 100644
+> --- a/src/libtirpc.map
+> +++ b/src/libtirpc.map
+> @@ -295,6 +295,11 @@ TIRPC_0.3.3 {
+>       svc_max_pollfd;
+>   } TIRPC_0.3.2;
+>   
+> +TIRPC_1.3.7 {
+> +    authdes_getucred;
+> +    rpc_gss_getcred;
+> +} TIRPC_0.3.3;
+> +
+>   TIRPC_PRIVATE {
+>     global:
+>       __libc_clntudp_bufcreate;
+> diff --git a/src/libtirpc.map.in b/src/libtirpc.map.in
+> index 6cf563b443b1..6c0b9b2e8bac 100644
+> --- a/src/libtirpc.map.in
+> +++ b/src/libtirpc.map.in
+> @@ -295,6 +295,11 @@ TIRPC_0.3.3 {
+>       svc_max_pollfd;
+>   } TIRPC_0.3.2;
+>   
+> +TIRPC_1.3.7 {
+> +    authdes_getucred;
+> +    rpc_gss_getcred;
+> +} TIRPC_0.3.3;
+> +
+>   TIRPC_PRIVATE {
+>     global:
+>       __libc_clntudp_bufcreate;
+> -- 2.51.0
+> 
 
 
