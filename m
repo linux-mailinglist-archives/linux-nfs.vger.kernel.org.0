@@ -1,97 +1,99 @@
-Return-Path: <linux-nfs+bounces-18415-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18416-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eHLKJ7r/c2mA1AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18415-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:09:46 +0100
+	id gOB4JlcDdGlA1QAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18416-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:25:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 008417B600
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:09:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC8077B79C
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:25:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF8A530107F4
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 23:09:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 42E57300EF8E
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 23:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2407129E10F;
-	Fri, 23 Jan 2026 23:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8E6217F55;
+	Fri, 23 Jan 2026 23:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="loB4uze1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="odgeeCoC"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="TWGp4qqd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qn9TNkA8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF652C08CD;
-	Fri, 23 Jan 2026 23:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015431CAA78;
+	Fri, 23 Jan 2026 23:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769209780; cv=none; b=Ea9MGWKtQQbvImUZjnpdjOfReNuLCXMgIN4I/JsNCUloQwDvvEWnNfAr0MufAGClaJcjWSwCEqyUlxt0PQ5Ll4CygASgkwNHgzcUM7DMcvVCi8HSOpTy6bg7kAMvygigSHqOn9traoTGCjw2eQajohL4ZmxS9N4dxbNGmeQhNno=
+	t=1769210708; cv=none; b=PsCAt0QFomn2G57+moPKEET+V8hkAh31s0Z1mfJE+vZYzJ9JTJJd6L/dVFmzTElup/Nt77vG57pRC0iRUh3bN41jTGjVyvQaJBIvX/j2TldX+3zdtL9pA82X9e7OQImR96gU3L6G8DffAgTgmmIaI7T7w8W7mrtDq+0uIWlVSj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769209780; c=relaxed/simple;
-	bh=jMoMs7+t/1zQmhCAHXcMOlVZTqtqaw5888TD/Z2KG1U=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=AffNOHJnqNKqnJJ+R7TemGCpgorXcLkXYbm3GRhwdmLcOxkKQNeUnotqLaiQKyjw/065scbBhwNn2cvgzaCgAZ9g5LsGy6oepz51a9TBjRuNtYgrvhs+D/KpGdjYqxP50BFIwyMyqeR8vLG6US9nmHHHbjoGX/u6GWBmF9+O6CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=loB4uze1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=odgeeCoC; arc=none smtp.client-ip=103.168.172.148
+	s=arc-20240116; t=1769210708; c=relaxed/simple;
+	bh=YuSGDcXxft7vL09xreGoN9P9ZPU+zDZ89hq2A0DCBBQ=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=SiW4nBq6IMCe67vNZ6TA9WfAV8GwIiZ53WijOm5ozW0P4J0BL8lkAurKzwFy93ZINBjlt0+IOgfWX+1MK22vkqOPI5hm6nlhGYw2Nvt1ul8wfb8iL34QP/TMCScXvCF31C8juYaE8ysdtqLON7+5PTGtPADuwwwUZsbSzCeTCY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=TWGp4qqd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qn9TNkA8; arc=none smtp.client-ip=103.168.172.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
 Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 421C7EC0175;
-	Fri, 23 Jan 2026 18:09:37 -0500 (EST)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 097C61400058;
+	Fri, 23 Jan 2026 18:25:05 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 23 Jan 2026 18:09:37 -0500
+  by phl-compute-09.internal (MEProxy); Fri, 23 Jan 2026 18:25:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm2; t=1769209777; x=
-	1769296177; bh=6Hz74XLlXKNuXciR9/DBJO/Te/Fs/bImQLb80n1DAXM=; b=l
-	oB4uze1m2uiyeoB2+3PewQUyIT5PehRm5t0WceUVeBu4w4nK2Fen78puDG3PFU9Z
-	tsOUTXz5fB+eIj0OQlrATwYAkPaXgKc0Xk5J5ASFw3SWb7WDD/foCVi4rsRTE7j4
-	GsuCD/t1RvVqnTHyZWVcBtQyLTdoOBS6SlVd6gRrzgFqt1zOOhgPOqVipWcDAYtE
-	Zph/6fOVgf27BlHKSXMz9D+5T2C0DsNMpJoWbPnK9BBhRBhKb7H1J+6b0zx/slyF
-	Bo3xOKJrn5Fyc/U9IyG2zwlMTkzKjmXVEvh/6zlZmzfiAsAhkqGh05igJYXjIagf
-	S+VjAqOA9gLvthubkckAg==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1769210705; x=1769297105; bh=2P1N8B/fi8BqjWA/ln4gJUSk+n4jq03dUUK
+	IfSOlf8c=; b=TWGp4qqdEYk/TpEMmdQE1ToYnEHDfweKMMElTxGjz9DgXnBm6oV
+	ZuYSeJLo5b/UJ1h3CWMjAHLN/eKZILhoBXMQ0I4KtwUfRHL/w5TIft5MzR2PWJsd
+	Tcp7Csalce2xSpDMQj//cMWGoXjXjWpWVIZKPgY0qpgjjCogw5Jc5yNVEvl+rB3T
+	oGemM9SIDmP9m5Tk3+paih4auvdY0UFcOCvljRlY2gXvIKml65uQ9+O5X01Ef2ZT
+	eCMnACUCfNIIOvhYHIGudSUsAvCi7Fw93WkbzLcWYEmobSwIwzvLX8zHgvHOKV9y
+	ZM6nKQareXQYbpSoNNVqxKnzAy5hd3kMt7g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1769209777; x=1769296177; bh=6Hz74XLlXKNuX
-	ciR9/DBJO/Te/Fs/bImQLb80n1DAXM=; b=odgeeCoCk2XSHBpO8jPLZj75QIV1g
-	9DDT3QH2P9EmcNRUfhf0Ai3Znt9wTE3PoYDBT5KElbnPD1lGlvWkAeP8KWch0qqj
-	pc799TpdM8fGjyaYtqaFNc2MxiIn1jN3h3mdVJAtkNIM2/25IybKt8VWI4LduPkJ
-	nH4CEmuBhtiGmx00Fuju/zKUvEbzPRxzvnDMowR/eo2tcKrz0XPQb3pTb0bVk3g0
-	8nYZ33dQAbsw0a07HZQI4gcT1Aat1z7QGysVBfdYOeqQ2FA6Wjptud2Wo/aUhSRF
-	shzxgpqX9U3Fw6Cta1Bodber1oQ1+6V7dA3qE3Dm3RCzlp+jDNcWPRHgg==
-X-ME-Sender: <xms:sP9zaRwyhBqEmC0UKlan7iip9GKscI6vfDMmEjqFOE38FvkIEpu1lQ>
-    <xme:sP9zadJQA4AQ25vWZeJsRYc1s6O11l0w9cAebmLpsfC1IeEzbEhhSN1EEJbsRMmC_
-    ygfWVRfZPtApxG9fzBy3X2eRi84jBs6o9UbTfxxQ4IVZ1maeA>
-X-ME-Received: <xmr:sP9zaYUwaemFm5uB_ZVRnKbVQyFgpv-dN6I2fmx7nUvUE3nSfXhRWjCnZ49GX0-60cJXsfIRYIJZ1KQzg26VCsAFh7T7gHVOtnwBv3DiiKSV>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduhedtfedvucetufdoteggodetrf
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769210705; x=
+	1769297105; bh=2P1N8B/fi8BqjWA/ln4gJUSk+n4jq03dUUKIfSOlf8c=; b=Q
+	n9TNkA8ljLIsPs1fIom+A/8TtMjJvRd3pWY1t7W/qGEd6sKjPFCe0g5/ifkInEgD
+	UH8QDg1q6LICiQJCDRJFg4378bRc3K5Q6UI04x5LhYdsZW3EvI78swJifD6ZCyPD
+	LlY/tEllT6He4f9sGB33Zbf6Ol9gYIi5vgb0BIR0eQ+OX5AGJX+uRuANSese17S3
+	x9xxB0/fNBSXfCbmKS5Z4SKAvpXTh2GxYyAIS1xcgnQijdzmEy4sOjFwktxwjaGT
+	bIOHGZ13mC4EZBVnHiKmQzu9NlJhsFTlaSTVaBCKeGZLuQhddgwcdK53prO9mZOw
+	vW6Xr5N6AQWn8EimJf5Pw==
+X-ME-Sender: <xms:UAN0aeNzVkvYQgnJISbp5pFxrAH0SN-5IkheZXqxcTKceG2VZutDCw>
+    <xme:UAN0aY0cFma-_NW6_foKeMiObt4U2irk5cDjz0whDdNiKJusrd0n8Phx9GdefyaVR
+    iZV_df9xLCWXArWbeLJHJfbUJHdRpDLwB5fvg1JyC7PktzC6A>
+X-ME-Received: <xmr:UAN0aSTx17z5QYpV4-cNGAVpPIZYUzPqL2w8HxPBBC3MXB_esNKpyi45CZAp_Q3dUfzsjw1b_siWJQNq7zyriS191_aQbiJ2ogrF7qypcBl->
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduhedtfeehucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheurhho
-    fihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepff
-    ehfeettedtieetuedtgeevfffhffdtheelleffffeujedvleevgfdvgfelleeunecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesoh
-    ifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgt
-    phhtthhopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhi
-    htohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegstghougguihhngheshhgrmhhmvghrshhprggtvgdrtghomh
-X-ME-Proxy: <xmx:sP9zaYaRLrEnzWmNnSX6ROZmvsmP5_rTcIrDVEXPaJBKeeZcxyc0dw>
-    <xmx:sP9zaXyTa2ut9LtRNkYdSdSBRuYU3Fiv3mcpiSc8VaJ41g5HZEmXOg>
-    <xmx:sP9zaQ1xTRTdkzi7hZ1mwTW7QZG9XQygN7BSwG-pwFFgbuM34UZ-cQ>
-    <xmx:sP9zaQlnEf2uqyi5zc4Ar8-8ydbSo0FFGxDndWT5ampzpwGv7ytbLA>
-    <xmx:sf9zadw0XYSfQUu5zQ-kVvEt57whPCmyM9ACy5muSftQvvwdANH90AC4>
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlh
+    grhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvsghighhgvghrsheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheprghnnhgrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:UAN0aTlv-ayAJs6bY_A2MNFRb6h5qVut1wg5OimX_d9Foq4cNDjunQ>
+    <xmx:UAN0abPK_n74DHtTnRK9WwPhFShRUhx2YJxgkMCQigQ-qDiXOcHh9g>
+    <xmx:UAN0aXhdS0Yw37SdUmQqmjJj_alX-LsgwzGB8EdZaiUv25zFqaqVag>
+    <xmx:UAN0aZgyOyXyO7zq5DnuIXxPoGY3rhc97Ith3RFhqs84-f0omy4laA>
+    <xmx:UQN0aV3bAqeDvzJcePvQOYbvt87DJ4ENrd2gvIcoxrNqslJIPaWJggOP>
 Feedback-ID: iab3e480c:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 23 Jan 2026 18:09:33 -0500 (EST)
+ 23 Jan 2026 18:25:01 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,37 +101,47 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>,
- Benjamin Coddington <bcodding@hammerspace.com>,
- Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>
-Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-Subject: [PATCH/RFC] nfsd: rate limit requests that result in -ESTALE from the
- filesystem
-Date: Sat, 24 Jan 2026 10:09:31 +1100
-Message-id: <176920977124.16766.1785815212991547773@noble.neil.brown.name>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>
+Cc: "Chuck Lever" <cel@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Eric Biggers" <ebiggers@kernel.org>,
+ "Rick Macklem" <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] NFSD: Add a key for signing filehandles
+In-reply-to: <C0C90433-6319-4CB5-9485-A9CA87E09AFC@hammerspace.com>
+References: <cover.1769026777.git.bcodding@hammerspace.com>, =?utf-8?q?=3C6d?=
+ =?utf-8?q?7bfccbaf082194ea257749041c19c2c2385cce=2E1769026777=2Egit=2Ebcodd?=
+ =?utf-8?q?ing=40hammerspace=2Ecom=3E=2C?=
+ <e299b7c6-9d37-4ffe-8d45-a95d92e33406@app.fastmail.com>,
+ <0D5F8EA8-D77E-4F56-9EA6-8D6FC2F2CD37@hammerspace.com>,
+ <9c5e9e07-b370-4c71-9dd6-8b6a3efe32c7@kernel.org>,
+ <5EBC1684-ECA5-497A-8892-9317B44186EC@hammerspace.com>,
+ <29aabe1c-3062-4dff-887d-805d7835912e@kernel.org>,
+ <DC80A9CE-C98B-4D03-889F-90F477065FB1@hammerspace.com>,
+ <3080c6d6-4734-41e9-81a6-8ad9fc8a1061@app.fastmail.com>,
+ <C0C90433-6319-4CB5-9485-A9CA87E09AFC@hammerspace.com>
+Date: Sat, 24 Jan 2026 10:24:58 +1100
+Message-id: <176921069844.16766.11829850179498769003@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18416-lists,linux-nfs=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18415-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[oracle.com,kernel.org,brown.name,hammerspace.com,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,oracle.com,gmail.com,vger.kernel.org];
 	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
@@ -143,147 +155,34 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,noble.neil.brown.name:mid,brown.name:replyto,brown.name:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 008417B600
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,noble.neil.brown.name:mid,messagingengine.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EC8077B79C
 X-Rspamd-Action: no action
 
+On Fri, 23 Jan 2026, Benjamin Coddington wrote:
+> On 22 Jan 2026, at 9:49, Chuck Lever wrote:
+> 
+> > On Wed, Jan 21, 2026, at 8:22 PM, Benjamin Coddington wrote:
+> >> On 21 Jan 2026, at 18:55, Chuck Lever wrote:
+> >>
+> >>> On 1/21/26 5:56 PM, Benjamin Coddington wrote:
+> >>>>
+> >>>> Why only netlink for this one besides your preference?
+> >>>
+> >>> You might be channeling one of your kids there.
+> >>
+> >> That's unnecessary.
+> >
+> > Is it? There's no point in asking that question other than as the
+> > kind of jab a kid makes when trying to catch a parent in a
+> > contradiction (which is exactly what you continue with below).
+> 
+> Wow, yes.  It's personal, and unprofessional. It has nothing to do with the
+> merits of the argument at hand.
 
-This is an idea for an alternate approach to address the problem that
-Ben is trying to address by signing file handles.
+For the record I agree with Ben.  It was reasonable question for Ben to
+ask, and an unhelpful and unprofessional response from Chuck.
 
-The reasons I think an alternate is worth considering are:
-
- - Ben's approach requires some configuration, though not much.
-   This approach requires zero configuration which is always better.
-
- - Ben's approach adds a siphash calculation or two to (almost) every
-   NFS request.  This may not be a great cost but it is still some time
-   and some power.  Less is more.
-
-Filehandles already contain 32 bits of randomness.  Rather than adding
-another 64 bits as Ben's patch does, this patch increase the time it
-take to test all possible values for those 32 bits to make it an
-impractical attack.
-
-Comments welcome.
-
-Thanks,
 NeilBrown
-
-
-
-From: NeilBrown <neil@brown.name>
-Subject: [PATCH] nfsd: rate limit requests that result in -ESTALE from the
- filesystem
-
-NFS file handles typically contain a 32 bit generation number which is
-randomly generated by the filesystem when the inode (or inode number) is
-allocated.  This makes it hard to guess correct file handles.  Hard but
-not impossible on a low latency network with a high speed server.
-
-The NFS server will reject a request to access the file associated with
-a filehandle if the user credential given is now allowed the access the
-file, but it is not able to check if the user (or client) should be
-allowed to even know that filehandle.  This would require knowing all
-the paths to a given file, all the credential that the client has access
-to, when whether some combination of those credential can complete a
-walk down any of the paths.
-
-So the NFS server currently depends on the client to "do the right
-thing".
-
-In some circumstances the client may not be sufficiently trusted, and
-path-based access controls may be an important part of the access
-management strategy.  In these cases the protection provided by nfsd may
-not be sufficient.
-
-The only known attack methodology is to guess the inode number of a file
-of interest, then iterate over all possible generation numbers.  This
-would be expected to achieve success (if the inode number is valid) in,
-on average, 2^31 guesses.  At one per microsecond this is less than one
-hour.  At one per 10 microseconds this is less than one day.
-
-When presented with an incorrect guess the filesystem with report an
-error to nfsd, either NULL or ERR_PTR(-ESTALE).  This patch causes nfsd
-to detect those errors and insert a 15ms delay.  It also take a lock so
-that all such delays are serialised.  This increases the expected time
-to success to 1 year.
-
-Normally NFSERR_STALE errors are rare and are no on a fast path.
-Normal accesses which use a filehandle which has become stale will now
-incur a 15msec does which is likely to be unnoticeable.  An attack will
-notice an intolerable delay.
-
-Possible this code could detect if there are ever a large number of
-requests over an extended time and then take more firm action.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/nfsd/netns.h  |  2 ++
- fs/nfsd/nfsctl.c |  1 +
- fs/nfsd/nfsfh.c  | 15 +++++++++++++++
- 3 files changed, 18 insertions(+)
-
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 9fa600602658..f7229d1f9d86 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -219,6 +219,8 @@ struct nfsd_net {
- 	/* last time an admin-revoke happened for NFSv4.0 */
- 	time64_t		nfs40_last_revoke;
-=20
-+	struct mutex		estale_rate_limit_mutex;
-+
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- 	/* Local clients to be invalidated when net is shut down */
- 	spinlock_t              local_clients_lock;
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 7587c64bf26d..55d25d9b414f 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2198,6 +2198,7 @@ static __net_init int nfsd_net_init(struct net *net)
- 	nfsd4_init_leases_net(nn);
- 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
- 	seqlock_init(&nn->writeverf_lock);
-+	mutex_init(&nn->estale_rate_limit_mutex);
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- 	spin_lock_init(&nn->local_clients_lock);
- 	INIT_LIST_HEAD(&nn->local_clients);
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index ed85dd43da18..7032f65fe21a 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -244,6 +244,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, =
-struct net *net,
- 						data_left, fileid_type, 0,
- 						nfsd_acceptable, exp);
- 		if (IS_ERR_OR_NULL(dentry)) {
-+			struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-+
- 			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
- 					dentry ?  PTR_ERR(dentry) : -ESTALE);
- 			switch (PTR_ERR(dentry)) {
-@@ -252,6 +254,19 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp,=
- struct net *net,
- 				break;
- 			default:
- 				dentry =3D ERR_PTR(-ESTALE);
-+				/* We limit ESTALE returns to 1 every
-+				 * 15 milliseconds (across all threads) to
-+				 * prevent a client from guessing the
-+				 * correct (32 bit) generation number
-+				 * for an given inode in significantly
-+				 * less than 1 year.  This ensures clients
-+				 * can only access files for which they
-+				 * are allowed to access a path from the
-+				 * exported root.
-+				 */
-+				mutex_lock(&nn->estale_rate_limit_mutex);
-+				msleep(15);
-+				mutex_unlock(&nn->estale_rate_limit_mutex);
- 			}
- 		}
- 	}
-
 
