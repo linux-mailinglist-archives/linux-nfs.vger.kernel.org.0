@@ -1,170 +1,121 @@
-Return-Path: <linux-nfs+bounces-18350-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18351-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0B38BiWCc2n2wwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18350-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:13:57 +0100
+	id 2E8qHH6Fc2krxAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18351-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:28:14 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5520B76CEF
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:13:56 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5AF9770B0
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 15:28:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B1989301BEE4
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:13:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3894F300877C
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 14:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7655319601;
-	Fri, 23 Jan 2026 14:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osvzvb7m"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBBBD2FD1CA;
+	Fri, 23 Jan 2026 14:28:10 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4323274641;
-	Fri, 23 Jan 2026 14:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB5913B5AE;
+	Fri, 23 Jan 2026 14:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769177633; cv=none; b=QKfQrN6nZGjEC/4m0gIvWpq0eHmkiHndgXf9aQNSlQyCIGwSnzc1wbGJXmAremoC6cNapOFmAixH8HQPe26yob3OraU6124QYLlt4Z9Yjutv4r/jqL05ReKMBF+/RuykRc9H8x3aI+kcG+UV8Ojq538ERRRLyw1x9faIjfsD10E=
+	t=1769178490; cv=none; b=puqJtHYB/0vJmHaeTnW2x9/QUGTaPBrDuInMC6g/jaNQhoE+zpcQe+faHLjORBOPKpTiu4K9XnbA7O/DrllB0qjpxz/Ty+A0J0wQ3nTlxZFLlKHpesgDGfPXKkby+vlWAFaDZ0ydCZZG1w5QYv+r1jmBurXWdAGjgmaD/V4NVnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769177633; c=relaxed/simple;
-	bh=5Jq9ngGjUGPz3WSIUdzUhPNpP4sVGNNZMaI7LmtLhXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UHbqR8U4vYLt1o8Xy+k/i4vr4aRLtyERGcWpLbYzAq3+D/B6SWhms8d5+IZXafdUuhRA7tyj3lzxBnoBr9TvpYV8dFViBlydHd4rj23e+GrhL+uE09npitN3cLSb0uKkKc08jHwTkY1wNdTvYXORGTjZt/ku7zxLkSEmMkh5Ayg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osvzvb7m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D649C4CEF1;
-	Fri, 23 Jan 2026 14:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769177633;
-	bh=5Jq9ngGjUGPz3WSIUdzUhPNpP4sVGNNZMaI7LmtLhXw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Osvzvb7mXtQRETaJ+y19L7kDJM4Fdt1GDi0Cs6mpN0kbOhtdHNiBlgRjZoIz5jUny
-	 z7jmW3yA2zg/NW8qlchp1geoP3Hp5HrZ8iBjg4xaV6Pi8ngYrCnQ2g3Ode/m0RDiFB
-	 1dtN+6jnXSpti49F/Dw5BGXd+6ByQwUkyd2vJglgZlhDjboLoiiDmOG5Se9FXLo3+Y
-	 utAHxgzs7NkQZAox1/pjyq/J3a/rBEVsYtpD4JTaD/YAN1j9znbGNilye8172qJJhF
-	 H4XrDs5tMpHfTWbejkkY1500s8Xy1UT/xHtIWwh0j+WPI0K0OHm6zbuNeVQVNyn4Nd
-	 ow/cWOF2/lEWg==
-Message-ID: <d67a30a0-5ff1-4e31-a168-81f8b7bee97f@kernel.org>
-Date: Fri, 23 Jan 2026 09:13:47 -0500
+	s=arc-20240116; t=1769178490; c=relaxed/simple;
+	bh=w5N6FEqV+2TE2TNNg+dkdmK0HAxfCvoJKGBm9cMbqTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jINgvHpdfLG6VRy8svB1Q4KvLxELBbDGcP/I2SX/hy2LDspRShplcixiJePdwwZGVQ6hifOa0j4qFAt0yUJq06ik9r35R80Z8rSi5x5EJ1HsRL4hnk5Tyvkq6PgfmKEEEmBgQ1//ulHnDv8xMefLAL7pkk85xE/zhWQy8swq/lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 835EE227AAE; Fri, 23 Jan 2026 15:28:06 +0100 (CET)
+Date: Fri, 23 Jan 2026 15:28:06 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Neil Brown <neil@brown.name>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] nfsd: do not allow exporting of special kernel
+ filesystems
+Message-ID: <20260123142806.GA26225@lst.de>
+References: <20260122141942.660948-1-amir73il@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] Add a bio_vec based API to core/rw.c
-To: Zhu Yanjun <yanjun.zhu@linux.dev>, Jason Gunthorpe <jgg@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc: NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-rdma@vger.kernel.org,
- linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <20260122220401.1143331-1-cel@kernel.org>
- <c02ab348-5243-4e97-b916-6bd59ffe769a@linux.dev>
-From: Chuck Lever <cel@kernel.org>
-Content-Language: en-US
-Organization: kernel.org
-In-Reply-To: <c02ab348-5243-4e97-b916-6bd59ffe769a@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260122141942.660948-1-amir73il@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.36 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-18350-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18351-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	R_DKIM_NA(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
-X-Rspamd-Queue-Id: 5520B76CEF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,lst.de:mid]
+X-Rspamd-Queue-Id: C5AF9770B0
 X-Rspamd-Action: no action
 
-On 1/23/26 1:04 AM, Zhu Yanjun wrote:
-> 在 2026/1/22 14:03, Chuck Lever 写道:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> This series introduces a bio_vec based API for RDMA read and write
->> operations in the RDMA core, eliminating unnecessary scatterlist
->> conversions for callers that already work with bvecs.
->>
->> Current users of rdma_rw_ctx_init() must convert their native data
->> structures into scatterlists. For subsystems like svcrdma that
->> maintain data in bvec format, this conversion adds overhead both in
->> CPU cycles and memory footprint. The new API accepts bvec arrays
->> directly.
->>
->> For hardware RDMA devices, the implementation uses the IOVA-based
->> DMA mapping API to reduce IOTLB synchronization overhead from O(n)
->> per-page syncs to a single O(1) sync after all mappings complete.
->> Software RDMA devices (rxe, siw) continue using virtual addressing.
->>
->> The series includes MR registration support for bvec arrays,
->> enabling iWARP devices and the force_mr debug parameter. The MR
->> path reuses existing ib_map_mr_sg() infrastructure by constructing
->> a synthetic scatterlist from the bvec DMA addresses.
+On Thu, Jan 22, 2026 at 03:19:42PM +0100, Amir Goldstein wrote:
+> Most of the stakeholders approved the approach in v1 [1] and
+> only comments were regarding lack of documentation for the new
+> incomapatible methods.
 > 
-> Hi, Chuck Lever
+> I did my best to add minimal documentation to express the fact
+> that those methods are not compatible with nfsd and remote filesystem
+> export in general.
 > 
-> I’ve read through the patch series. As I understand it, the new bio_vec–
-> based RDMA read/write API allows callers that already operate on bvecs
-> (for example, svcrdma and potentially NVMe-oF) to avoid converting their
-> data into scatterlists, which should reduce CPU overhead and memory
-> usage in the data path.
-> 
-> For hardware RDMA devices, the use of the IOVA-based DMA mapping API
-> also seems likely to reduce IOTLB synchronization overhead compared to
-> the existing per-page approach, while software devices (rxe, siw) retain
-> the current virtual-addressing model.
-> 
-> Do you happen to have any performance or functional test results you
-> could share for this series, in particular:
-> 
-> Hardware RDMA devices (e.g., latency, bandwidth, or CPU utilization
-> changes), and/or
+> Further documentations regarding the new uses of export_operations
+> beyond their original use for nfs export is outside the scope of this
+> patch and frankly, outside the reach of my documentation skills...
 
-Functional tests with CX-5 Infiniband and NFS/RDMA show no regression.
+As last time I'd be happy to help write documentation, but even
+after looking at the methods, their documentations and the commits
+adding them I do not understand them.  So getting an explanation
+from Christian would be really helpful to move forward here.
 
-Performance tests are difficult to evaluate because I don't have a
-multi-client set-up here to drive a heavy workload, plus filesystems
-bottleneck long before the network transport does. The changes are
-designed to improve scalability (eg lower CPU utilization for the same
-workload and less interaction between host and RNIC) more than improve
-raw throughput. So far I have seen no throughput regression and perhaps
-a bit of improvement for tail latencies.
+Note that you and Jan reviewed those patches, so I'd hope you two
+know at least a little about the use case as well.
 
-The main purpose of the series, however, is part of an effort to enable
-kernel-wide replacement of the use of scatter-gather lists, which are
-technical debt. Socket APIs already support struct bio_vec.
+Btw, the nsfs ->open method seems identical to the default.
 
 
-> Software RDMA devices such as rxe or siw?
+>   * permission:
+> + *    Allow filesystems to specify a custom permission function for the
+> + *    open_by_handle_at(2) syscall instead of the default CAP_DAC_READ_SEARCH
+> + *    check. This custom permission function is not respected by nfsd.
 
-Software providers are not likely to see much change. However, you will
-need to test the series with your own preferred configuration and
-workload to assess performance and scalability delta.
+may_decode_fh actually does a lot more things if the capable check
+fails. (btw, shouldn't that use (ns_)capable_noaudit to not generate
+audit messages?).
 
-
--- 
-Chuck Lever
 
