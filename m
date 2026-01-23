@@ -1,563 +1,140 @@
-Return-Path: <linux-nfs+bounces-18403-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18404-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qHtZKArEc2kpygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18403-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:55:06 +0100
+	id gCqQLlnKc2mQygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18404-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 20:22:01 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1361A79DE8
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:55:06 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F1347A1BE
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 20:22:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 311323039662
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B790230028DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:21:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C1E3EBF0D;
-	Fri, 23 Jan 2026 18:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71403EBF29;
+	Fri, 23 Jan 2026 19:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcANjG10"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCD5Bs/e"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4575248176
-	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2712F208961
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 19:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194417; cv=none; b=PH3dOkJKDqi5lkEV3bjYAx5KGqhcgGc/kPpts3CW54mf4hvH4EAzVkzmtKMKpz4DH42yBrKYueD8rRa8rj7D0Wy/QugG1u9Tl2zzwV3XvVbyufoysxk/xKvJHni+8jJ/tscZjsQTdpHQY2/O+jYigeG2Oqq6SsIzOJLDkp79/jE=
+	t=1769196117; cv=none; b=thn3hQhzLjtQ3CzJeXcTml9rymdLMsh2L+obn+43ToHVVyg86FZbm2UXy3tesGd8QJHnRsQKXgSFllxr/JhGKiNgccqo5DEgDIUFuX/d2tUEEVQS/7sUpNPXDRO8vyFG7YHSvoIG7DNhD1+ZDGnxD+9KmJgTWJ8ChHjFRE/0dNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769194417; c=relaxed/simple;
-	bh=crv4wSVhNCGq+96yWpX9rWczzGP/osNOsYAMd3b1b6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g/mt3MNG0Fr07S06EOpsJ05yrsbOV2WKrlQW1d3hnVfpak9VhNGZvNmZVKgBI0JtcGW7hzallaglObj1apDmEhr/alg6Hdgv+iX7NS9WBLoEEz16WfPd8fk1geNioSpl7JFetj/bq33Jv2SqT8DkmLQg9EloLxH9s52VOKBYpAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcANjG10; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAD8C116D0;
-	Fri, 23 Jan 2026 18:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769194416;
-	bh=crv4wSVhNCGq+96yWpX9rWczzGP/osNOsYAMd3b1b6g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lcANjG10hLZDmXeg6aaw+dFAhwPZUUjshzgoCIjzEeFk6SLws3Xewbj/k2YtoeeFV
-	 3U/xnKbqOvZQwT0BVgTjDqn7+OE8KjbKjKel6IzomPHu4qgJYjmtWvm1llFxmn+eUh
-	 CF5oOCAiApKU+k9Hr4b7QJ3+9UIsM/AVSmODASRW+cnXMCUgMpChqhVugV27dCvnJl
-	 mjB4GH+aEonI9K7N5I4eUX5bQk2xlnmyERsWQcPNuyRAfeGtIOweFHwamvP2pYzcHG
-	 KG6ssAjdGRLBCioOkt6dZ8Xf80e1TFBa8Xjp98zs/vi6Zh17Yki0B0KXA66cKcNqN+
-	 GYpfOxqKPpOgw==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 42/42] lockd: Remove dead code from fs/lockd/xdr4.c
-Date: Fri, 23 Jan 2026 13:52:59 -0500
-Message-ID: <20260123185259.1215767-43-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
-References: <20260123185259.1215767-1-cel@kernel.org>
+	s=arc-20240116; t=1769196117; c=relaxed/simple;
+	bh=LkyS5Abo+zTQ1y7pT7W2H8yK66PfloSDPXKQGKvViZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JXPHuBeE/0rladGPlLvkBzXb4Ji1u8C/xAUiU5/mdXLY5eJGMAVzL5vfKslXkEwKq1aSrjN7wi7PXYmXiEH54YZj5L3Svgun1ATtB4BPrWGMwZqLQlkW1MBHADUwTjQMLcZ9NZnnkvbzCFbGpHC7qRrStxnYMcodPFGpe0u1n2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HCD5Bs/e; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-432d28870ddso1397479f8f.3
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 11:21:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769196114; x=1769800914; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LkyS5Abo+zTQ1y7pT7W2H8yK66PfloSDPXKQGKvViZw=;
+        b=HCD5Bs/esXXCQ98mdfQlPiSvI4ADsNW/D8wr/iQMdqBzt8s8jABkLt+XWZId3OuP0Z
+         id47XFnjFxJ0+j7aD8xcmqavFRKZ97zmowkyF7w0fSflVIg70lT/PgeQmncCPInt1+yC
+         UBHIDVN2Ik3LPH1T6wz3PZdxgYkLVM323ZSYfq9Gu0wPl0MqNSeIRK/A21c4EDGeyqua
+         AjKMDTYUZosSNwecRDQ4DmTn0DSRvC0s2mDbzMKU9uqgbD/YDYlfzu8jCGI725b4tbjV
+         uLtSv4p88cAL3NFoNrZUm/Fa2JiSOPc0GgXWYAyAhnnSeH2ni1hekZOXgrVwKXKhK842
+         zbeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769196114; x=1769800914;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LkyS5Abo+zTQ1y7pT7W2H8yK66PfloSDPXKQGKvViZw=;
+        b=ruPaRm7+2fdawskcmGwm/jLZ72NYvl2w0vIxJspJEANy1Aw4QUCvKIuwjJYKhnVql0
+         CFnGw/+gr6MCXT6t3u64G37RPTBACTbwtvGk293Jn9xg3DQJZ28Xrsu7Cz1GbSQ8nsH5
+         WWAmYEdlRqCVeOf/FNC5VB5We3m3VYKnwjqrhCimn1ypM9YdOWRHxvTdwIAZ2/iJhtzU
+         YJPGIZTlyV6gjH0KP+rwWdLzD1EMYGD2+8z6+XbC98rxpWQ1iU/Qngh5Y5VYL8rI8iNu
+         fG16szWzycdzpeS9p+zjTbV5NN/2+lnNnzgP1V3+MH/7IBfAFneLJEcACqKfwSfpuy9E
+         RVTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+BA64VLMeWZP7jvG+tVPGmTTfxiWLkobDuHF7Sr04lv5OlSbU3/9q38FX5kyF2LIfaFOpaOJ3Jvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn+CaKiZYhTcw9Xt7QMt7UUubKhZv+0IB3ZjJ9+aLpLBkllhlj
+	JorcVP4mZWaFJVldvhb/Be92N9MTTtDp6fKQ2dH3Gzpylz6VyzMC261O
+X-Gm-Gg: AZuq6aLRySg2uXF2Dyzgkgg44bMnyhDv/2f4cVrkvJnTkgu1OAKc8yHIMbRPvXavlz4
+	kx0IbWVO16tt8+CvCBVT9bOnZcw6rOHRpLhv1ipErL9AS6sJySBJ0LYYQuttpPkvalerDS1cVmu
+	kWCFyhXMQB4PWatzAZ3pbOcQb2jqbSTut4f6JA8aXxYBDU2eBdGcbmk1ksQZ8GyAlxND7EkyaZu
+	gYIAsYdah1mpo29gbToM8+ReyajSGDITGjyRE4ZxOnwAkf5/BXoAcJ+krwC/Tg/MOBMlABKCZzS
+	VWjrVP5ztwO1d0CwTQEg/422ZlGHkM3krdtQ3K022AbD3cCs8NyIuuHhRPYQvEngu3OTw63ZeAE
+	NuuNN5nr+IxM1bRfhRxfuGLot8zIjSi2GRF2zEeVF56YirW9WO1r6m6LYG0xehGBl9W5d3Y0/fL
+	VuoR+/SLFpuJdcSLgX7dMQrYuyYhk8F0knRaJBYa25H05/1Qm3hzNjQoGcPNyz/enzFUiWxohGo
+	Ow0ZVQvwQ==
+X-Received: by 2002:a05:6000:186a:b0:435:9bf7:c6b9 with SMTP id ffacd0b85a97d-435b9307adbmr4078454f8f.24.1769196114322;
+        Fri, 23 Jan 2026 11:21:54 -0800 (PST)
+Received: from [192.168.0.125] (cdmjno2.plus.com. [31.125.38.23])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435b1f744e2sm9980903f8f.31.2026.01.23.11.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jan 2026 11:21:53 -0800 (PST)
+Message-ID: <2b7b02aa-8759-43c4-9cd1-04a57b13cf8f@gmail.com>
+Date: Fri, 23 Jan 2026 19:21:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH nfs-utils v2] nfsdctl: add support for min-threads
+ parameter
+To: Jeff Layton <jlayton@kernel.org>, Steve Dickson <steved@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
+References: <20260123-minthreads-v2-1-9bfbae745845@kernel.org>
+Content-Language: en-GB
+From: Mike Owen <mjnowen@gmail.com>
+In-Reply-To: <20260123-minthreads-v2-1-9bfbae745845@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18403-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_FROM(0.00)[bounces-18404-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,swb.de:email,uio.no:email]
-X-Rspamd-Queue-Id: 1361A79DE8
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mjnowen@gmail.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,utoronto.ca:url]
+X-Rspamd-Queue-Id: 0F1347A1BE
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On 23/01/2026 18:48, Jeff Layton wrote:
+> and the thread count will dynamically fluctuate between
+> the min and max based on load.
 
-Now that all NLMv4 server-side procedures use XDR encoder and
-decoder functions generated by xdrgen, the hand-written code in
-fs/lockd/xdr4.c is no longer needed. This file contained the
-original XDR processing logic that has been systematically
-replaced throughout this series.
-
-Remove the file and its Makefile reference to eliminate the
-dead code. The helper function nlm4svc_set_file_lock_range()
-is still needed by the generated code, so move it to xdr4.h
-as an inline function where it remains accessible.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/lockd/Makefile   |   2 +-
- fs/lockd/clnt4xdr.c |   2 -
- fs/lockd/lockd.h    |   7 +
- fs/lockd/svc4proc.c |   1 -
- fs/lockd/xdr4.c     | 334 --------------------------------------------
- fs/lockd/xdr4.h     |  33 -----
- 6 files changed, 8 insertions(+), 371 deletions(-)
- delete mode 100644 fs/lockd/xdr4.c
- delete mode 100644 fs/lockd/xdr4.h
-
-diff --git a/fs/lockd/Makefile b/fs/lockd/Makefile
-index 8e9d18a4348c..808f0f2a7be1 100644
---- a/fs/lockd/Makefile
-+++ b/fs/lockd/Makefile
-@@ -9,7 +9,7 @@ obj-$(CONFIG_LOCKD) += lockd.o
- 
- lockd-y := clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
- 	   svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o netlink.o
--lockd-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o nlm4xdr_gen.o
-+lockd-$(CONFIG_LOCKD_V4) += clnt4xdr.o svc4proc.o nlm4xdr_gen.o
- lockd-$(CONFIG_PROC_FS) += procfs.o
- 
- #
-diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
-index c09e67765cac..2058733eacf8 100644
---- a/fs/lockd/clnt4xdr.c
-+++ b/fs/lockd/clnt4xdr.c
-@@ -18,8 +18,6 @@
- 
- #include <uapi/linux/nfs3.h>
- 
--#include "xdr4.h"
--
- #define NLMDBG_FACILITY		NLMDBG_XDR
- 
- #if (NLMCLNT_OHSIZE > XDR_MAX_NETOBJ)
-diff --git a/fs/lockd/lockd.h b/fs/lockd/lockd.h
-index 17db7b3ad2c7..d63480b12858 100644
---- a/fs/lockd/lockd.h
-+++ b/fs/lockd/lockd.h
-@@ -52,6 +52,13 @@
-  */
- #define LOCKD_DFLT_TIMEO	10
- 
-+/* error codes new to NLMv4 */
-+#define	nlm4_deadlock		cpu_to_be32(NLM_DEADLCK)
-+#define	nlm4_rofs		cpu_to_be32(NLM_ROFS)
-+#define	nlm4_stale_fh		cpu_to_be32(NLM_STALE_FH)
-+#define	nlm4_fbig		cpu_to_be32(NLM_FBIG)
-+#define	nlm4_failed		cpu_to_be32(NLM_FAILED)
-+
- /*
-  * Internal-use status codes, not to be placed on the wire.
-  * Version handlers translate these to appropriate wire values.
-diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 178473fabc7f..298b8104441d 100644
---- a/fs/lockd/svc4proc.c
-+++ b/fs/lockd/svc4proc.c
-@@ -24,7 +24,6 @@
- 
- #include "share.h"
- #include "nlm4xdr_gen.h"
--#include "xdr4.h"
- 
- /*
-  * Wrapper structures combine xdrgen types with legacy nlm_lock.
-diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-deleted file mode 100644
-index 308aac92a94e..000000000000
---- a/fs/lockd/xdr4.c
-+++ /dev/null
-@@ -1,334 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * linux/fs/lockd/xdr4.c
-- *
-- * XDR support for lockd and the lock client.
-- *
-- * Copyright (C) 1995, 1996 Olaf Kirch <okir@monad.swb.de>
-- * Copyright (C) 1999, Trond Myklebust <trond.myklebust@fys.uio.no>
-- */
--
--#include <linux/types.h>
--#include <linux/sched.h>
--#include <linux/nfs.h>
--
--#include <linux/sunrpc/xdr.h>
--#include <linux/sunrpc/clnt.h>
--#include <linux/sunrpc/svc.h>
--#include <linux/sunrpc/stats.h>
--
--#include "lockd.h"
--#include "svcxdr.h"
--#include "xdr4.h"
--
--static inline s64
--loff_t_to_s64(loff_t offset)
--{
--	s64 res;
--	if (offset > NLM4_OFFSET_MAX)
--		res = NLM4_OFFSET_MAX;
--	else if (offset < -NLM4_OFFSET_MAX)
--		res = -NLM4_OFFSET_MAX;
--	else
--		res = offset;
--	return res;
--}
--
--/*
-- * NLM file handles are defined by specification to be a variable-length
-- * XDR opaque no longer than 1024 bytes. However, this implementation
-- * limits their length to the size of an NFSv3 file handle.
-- */
--static bool
--svcxdr_decode_fhandle(struct xdr_stream *xdr, struct nfs_fh *fh)
--{
--	__be32 *p;
--	u32 len;
--
--	if (xdr_stream_decode_u32(xdr, &len) < 0)
--		return false;
--	if (len > NFS_MAXFHSIZE)
--		return false;
--
--	p = xdr_inline_decode(xdr, len);
--	if (!p)
--		return false;
--	fh->size = len;
--	memcpy(fh->data, p, len);
--	memset(fh->data + len, 0, sizeof(fh->data) - len);
--
--	return true;
--}
--
--static bool
--svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
--{
--	struct file_lock *fl = &lock->fl;
--
--	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
--		return false;
--	if (!svcxdr_decode_fhandle(xdr, &lock->fh))
--		return false;
--	if (!svcxdr_decode_owner(xdr, &lock->oh))
--		return false;
--	if (xdr_stream_decode_u32(xdr, &lock->svid) < 0)
--		return false;
--	if (xdr_stream_decode_u64(xdr, &lock->lock_start) < 0)
--		return false;
--	if (xdr_stream_decode_u64(xdr, &lock->lock_len) < 0)
--		return false;
--
--	locks_init_lock(fl);
--	fl->c.flc_type  = F_RDLCK;
--	lockd_set_file_lock_range4(fl, lock->lock_start, lock->lock_len);
--	return true;
--}
--
--static bool
--svcxdr_encode_holder(struct xdr_stream *xdr, const struct nlm_lock *lock)
--{
--	const struct file_lock *fl = &lock->fl;
--	s64 start, len;
--
--	/* exclusive */
--	if (xdr_stream_encode_bool(xdr, fl->c.flc_type != F_RDLCK) < 0)
--		return false;
--	if (xdr_stream_encode_u32(xdr, lock->svid) < 0)
--		return false;
--	if (!svcxdr_encode_owner(xdr, &lock->oh))
--		return false;
--	start = loff_t_to_s64(fl->fl_start);
--	if (fl->fl_end == OFFSET_MAX)
--		len = 0;
--	else
--		len = loff_t_to_s64(fl->fl_end - fl->fl_start + 1);
--	if (xdr_stream_encode_u64(xdr, start) < 0)
--		return false;
--	if (xdr_stream_encode_u64(xdr, len) < 0)
--		return false;
--
--	return true;
--}
--
--static bool
--svcxdr_encode_testrply(struct xdr_stream *xdr, const struct nlm_res *resp)
--{
--	if (!svcxdr_encode_stats(xdr, resp->status))
--		return false;
--	switch (resp->status) {
--	case nlm_lck_denied:
--		if (!svcxdr_encode_holder(xdr, &resp->lock))
--			return false;
--	}
--
--	return true;
--}
--
--
--/*
-- * Decode Call arguments
-- */
--
--bool
--nlm4svc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	return true;
--}
--
--bool
--nlm4svc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--	u32 exclusive;
--
--	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
--		return false;
--	if (xdr_stream_decode_bool(xdr, &exclusive) < 0)
--		return false;
--	if (!svcxdr_decode_lock(xdr, &argp->lock))
--		return false;
--	if (exclusive)
--		argp->lock.fl.c.flc_type = F_WRLCK;
--
--	return true;
--}
--
--bool
--nlm4svc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--	u32 exclusive;
--
--	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
--		return false;
--	if (xdr_stream_decode_bool(xdr, &argp->block) < 0)
--		return false;
--	if (xdr_stream_decode_bool(xdr, &exclusive) < 0)
--		return false;
--	if (!svcxdr_decode_lock(xdr, &argp->lock))
--		return false;
--	if (exclusive)
--		argp->lock.fl.c.flc_type = F_WRLCK;
--	if (xdr_stream_decode_bool(xdr, &argp->reclaim) < 0)
--		return false;
--	if (xdr_stream_decode_u32(xdr, &argp->state) < 0)
--		return false;
--	argp->monitor = 1;		/* monitor client by default */
--
--	return true;
--}
--
--bool
--nlm4svc_decode_cancargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--	u32 exclusive;
--
--	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
--		return false;
--	if (xdr_stream_decode_bool(xdr, &argp->block) < 0)
--		return false;
--	if (xdr_stream_decode_bool(xdr, &exclusive) < 0)
--		return false;
--	if (!svcxdr_decode_lock(xdr, &argp->lock))
--		return false;
--	if (exclusive)
--		argp->lock.fl.c.flc_type = F_WRLCK;
--
--	return true;
--}
--
--bool
--nlm4svc_decode_unlockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--
--	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
--		return false;
--	if (!svcxdr_decode_lock(xdr, &argp->lock))
--		return false;
--	argp->lock.fl.c.flc_type = F_UNLCK;
--
--	return true;
--}
--
--bool
--nlm4svc_decode_res(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_res *resp = rqstp->rq_argp;
--
--	if (!svcxdr_decode_cookie(xdr, &resp->cookie))
--		return false;
--	if (!svcxdr_decode_stats(xdr, &resp->status))
--		return false;
--
--	return true;
--}
--
--bool
--nlm4svc_decode_reboot(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_reboot *argp = rqstp->rq_argp;
--	__be32 *p;
--	u32 len;
--
--	if (xdr_stream_decode_u32(xdr, &len) < 0)
--		return false;
--	if (len > SM_MAXSTRLEN)
--		return false;
--	p = xdr_inline_decode(xdr, len);
--	if (!p)
--		return false;
--	argp->len = len;
--	argp->mon = (char *)p;
--	if (xdr_stream_decode_u32(xdr, &argp->state) < 0)
--		return false;
--	p = xdr_inline_decode(xdr, SM_PRIV_SIZE);
--	if (!p)
--		return false;
--	memcpy(&argp->priv.data, p, sizeof(argp->priv.data));
--
--	return true;
--}
--
--bool
--nlm4svc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--	struct nlm_lock	*lock = &argp->lock;
--
--	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
--		return false;
--	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
--		return false;
--	if (!svcxdr_decode_fhandle(xdr, &lock->fh))
--		return false;
--	if (!svcxdr_decode_owner(xdr, &lock->oh))
--		return false;
--	/* XXX: Range checks are missing in the original code */
--	if (xdr_stream_decode_u32(xdr, &argp->fsm_mode) < 0)
--		return false;
--	if (xdr_stream_decode_u32(xdr, &argp->fsm_access) < 0)
--		return false;
--
--	return true;
--}
--
--bool
--nlm4svc_decode_notify(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_args *argp = rqstp->rq_argp;
--	struct nlm_lock	*lock = &argp->lock;
--
--	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
--		return false;
--	if (xdr_stream_decode_u32(xdr, &argp->state) < 0)
--		return false;
--
--	return true;
--}
--
--
--/*
-- * Encode Reply results
-- */
--
--bool
--nlm4svc_encode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	return true;
--}
--
--bool
--nlm4svc_encode_testres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_res *resp = rqstp->rq_resp;
--
--	return svcxdr_encode_cookie(xdr, &resp->cookie) &&
--		svcxdr_encode_testrply(xdr, resp);
--}
--
--bool
--nlm4svc_encode_res(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_res *resp = rqstp->rq_resp;
--
--	return svcxdr_encode_cookie(xdr, &resp->cookie) &&
--		svcxdr_encode_stats(xdr, resp->status);
--}
--
--bool
--nlm4svc_encode_shareres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
--{
--	struct nlm_res *resp = rqstp->rq_resp;
--
--	if (!svcxdr_encode_cookie(xdr, &resp->cookie))
--		return false;
--	if (!svcxdr_encode_stats(xdr, resp->status))
--		return false;
--	/* sequence */
--	if (xdr_stream_encode_u32(xdr, 0) < 0)
--		return false;
--
--	return true;
--}
-diff --git a/fs/lockd/xdr4.h b/fs/lockd/xdr4.h
-deleted file mode 100644
-index 4ddf51a2e0ea..000000000000
---- a/fs/lockd/xdr4.h
-+++ /dev/null
-@@ -1,33 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * XDR types for the NLM protocol
-- *
-- * Copyright (C) 1996 Olaf Kirch <okir@monad.swb.de>
-- */
--
--#ifndef _LOCKD_XDR4_H
--#define _LOCKD_XDR4_H
--
--/* error codes new to NLMv4 */
--#define	nlm4_deadlock		cpu_to_be32(NLM_DEADLCK)
--#define	nlm4_rofs		cpu_to_be32(NLM_ROFS)
--#define	nlm4_stale_fh		cpu_to_be32(NLM_STALE_FH)
--#define	nlm4_fbig		cpu_to_be32(NLM_FBIG)
--#define	nlm4_failed		cpu_to_be32(NLM_FAILED)
--
--bool	nlm4svc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_cancargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_unlockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_res(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_reboot(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_decode_notify(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--
--bool	nlm4svc_encode_testres(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_encode_res(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_encode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--bool	nlm4svc_encode_shareres(struct svc_rqst *rqstp, struct xdr_stream *xdr);
--
--#endif /* _LOCKD_XDR4_H */
--- 
-2.52.0
+Can "load" be described further in the manpage for users? I ask, because I'm interested to understand the heuristics it takes into account when nfsd makes a decision to increase or decrease the thread count. For example, is memory pressure + io pressure stall info + io requests all taken into account? A popular doc that is referenced in such discussions is here: [0].
+[0]: https://utcc.utoronto.ca/~cks/space/blog/linux/NFSServerHowManyThreads
 
 
