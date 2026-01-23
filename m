@@ -1,198 +1,185 @@
-Return-Path: <linux-nfs+bounces-18340-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18341-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WBajIAbEcmk/pQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18340-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 01:42:46 +0100
+	id YFQBBJAPc2ntrwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18341-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 07:05:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7DD96ED2C
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 01:42:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 609DA70B81
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 07:05:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 93DD3300D31E
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 00:42:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A4A75301625D
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 06:05:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B13B33E349;
-	Fri, 23 Jan 2026 00:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F46287507;
+	Fri, 23 Jan 2026 06:05:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShZI1/yN"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FDjGp9D5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0C5314D0C;
-	Fri, 23 Jan 2026 00:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4C723ABBD
+	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 06:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769128961; cv=none; b=uTNxrb1t/03f9ZtBy3bVPBtvb5X6npzet81voa4qPnJDNprXAgnomF+fh16CwhgLjenGF3SFdVMrIDuiUlC/gwwiTpB0Wl7qBjGNG4kb4X5YgZL3LmQijs6NRdKcApa/IusvqQjJYm+enoZCfTORqad6XJQ/opfSoK7PTMqU8Nk=
+	t=1769148299; cv=none; b=bA/t/TVje0LAl2spopqq0SarTdcuiCv+aKcGJ9HwEnDfKoxPpNmR10FRJDK01gATE+wPDbs78xP0JorXyQXG8uKdS/R1Dwe/1upXG7Lz2SLZ3FgazvUq0zZGP8ma5456wnrf2JjwiXrordVmY5kwlNFJEVknWgSh0EfQ2Bk7JvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769128961; c=relaxed/simple;
-	bh=YxGwcerMm4XsXjm+1niJ1WYBTECA2bIMf19KywNaCDg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=X8nUQ0SKpcKOkvkkJnGibow4R7U6en93Fn2uuXx6nEVLKhDcxgYrydFjF1XFj4Bd5VYkEDkeBzrugVokNZ66E4oAjR4cbYaqAKILLnZU38r2PUXzjRDP0XUBzKfSGNPkY8cwdXOwnvRcqU3RjaJCIcHCb6BoUrXWthpPVkqVuC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShZI1/yN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D617C4AF09;
-	Fri, 23 Jan 2026 00:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769128961;
-	bh=YxGwcerMm4XsXjm+1niJ1WYBTECA2bIMf19KywNaCDg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ShZI1/yNzfRZmu3sAjPE26FJHVCzdjNlR+PLLp4IBIjapKolYcMC/p/AzlQi8kHOy
-	 E6N/2W2E5pbB7ftb730Cw4JH/VlIVqvxbnyT1of+3pueWWa9Uliru6CZhIiNC88aWu
-	 VqzFK4TQxalFuLYdfa7Gk1bYZr2eTNdyfe6gSwFV/oQuP8DRhWTVOPyO0H6/XntitM
-	 tBUss/brfrvJZRVZ5OZuEX1lA9AjU+iqu/0VZA+qg0XEwsarVMGki7cWdIvd9MnvDN
-	 8t5ul/t6LL2uITv0UmRDtXRalCIU4WNFGdULXYG+BjWbMjHexyK30Qy9s4VGX+KALh
-	 C96ziga6Ri68w==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 37676F40068;
-	Thu, 22 Jan 2026 19:42:39 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 22 Jan 2026 19:42:39 -0500
-X-ME-Sender: <xms:_8NyacyT6qdzAUxIj7fj3Nsl5-8VCaqp1T4qK26YUXr5Y2aLA_2NeQ>
-    <xme:_8NyabEJSUOtxd1CnvO613uISWenl61hqckxjKSALI97Y6gbT7BTG5imlp1tVtD5E
-    dZmK-v-K3MOUkKiTHhKdFXjV_m_beGWUd8A8yfrOFy-NV1DzTUMBrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeejieefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepfeefpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehsvghnohiihhgrthhskhihsegthhhrohhmihhumhdrohhrghdprhgtphhtth
-    hopegrughilhhgvghrrdhkvghrnhgvlhesughilhhgvghrrdgtrgdprhgtphhtthhopehs
-    lhgrvhgrseguuhgsvgihkhhordgtohhmpdhrtghpthhtoheprhhonhhnihgvshgrhhhlsg
-    gvrhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gtvghmsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhgroheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepughjfihonhhgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:_8Nyae8fZEj0DQVrfCxr0FyILU_fNTywtQD_OdmOVcWNU77PmfI2QA>
-    <xmx:_8NyaVi4xh0mDAqTYl6Aak7mh9kYy0ReitnlyVgR-YCNKQ747f-2xw>
-    <xmx:_8Nyac8j6VWHBiYHUbMz1HkDlTHqHH88I_1l7dpKX9shblHKGUUhGQ>
-    <xmx:_8NyaZQERqfU2S5JiAxoVvJLMQM2fwqj5pfagVYnH43qwMV8tHCRpg>
-    <xmx:_8NyaXduDdH_fuVXwK1_-Pl2iicEZJxM3cCk9MYctO41spFo2tlD5lzS>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F0153780076; Thu, 22 Jan 2026 19:42:38 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1769148299; c=relaxed/simple;
+	bh=h9g2gyRuNShziaYijgJlBgvgS/UY03RUaLaxQiejYLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YUYhSygz5GbDQPySBYf0u/ykeoR8nnC2rNQsdhuSnuzZlwVYBAhNc2+QdGvC4hgxE+ebi8SCDFl121q48+zd48V6tb6MwJe9tAxyHDvKwRjv3MvV50uT/kZB1zn107LrD9BKrLjRbFbfFFeovXWmFkjYT/dH1UQVKShdnIbImtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FDjGp9D5; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <c02ab348-5243-4e97-b916-6bd59ffe769a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1769148291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HBjPnAPLtIJQgYd9Yf7ajYQCnwWpwqRQJkI1YWyJuP0=;
+	b=FDjGp9D52m5EaikR8iM3b52LZyCo3lZ7rh025hmcIikxPAPpLNFlEbkeEgP0tS1PK5pm+7
+	fDqoWZYrIxP5XPp3VZdbUt6jUec/nApqH+bJgrFORFTwOg0lJGpHDZzwoTXxaVgZ+dYkzf
+	TKbvZ8/IoWLQUKHp33HeKtn/J2RPTNo=
+Date: Thu, 22 Jan 2026 22:04:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A--SnukTeK5R
-Date: Thu, 22 Jan 2026 19:42:15 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net,
- "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Sungjong Seo" <sj1557.seo@samsung.com>,
- "Yuezhang Mo" <yuezhang.mo@sony.com>,
- almaz.alexandrovich@paragon-software.com,
- "Viacheslav Dubeyko" <slava@dubeyko.com>, glaubitz@physik.fu-berlin.de,
- frank.li@vivo.com, "Theodore Tso" <tytso@mit.edu>,
- adilger.kernel@dilger.ca, "Carlos Maiolino" <cem@kernel.org>,
- "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Jaegeuk Kim" <jaegeuk@kernel.org>,
- "Chao Yu" <chao@kernel.org>, "Hans de Goede" <hansg@kernel.org>,
- senozhatsky@chromium.org, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <bb2bb55c-6078-4494-9851-c684dfd9aa8c@app.fastmail.com>
-In-Reply-To: <20260123002646.GL5945@frogsfrogsfrogs>
-References: <20260122160311.1117669-1-cel@kernel.org>
- <20260122160311.1117669-2-cel@kernel.org>
- <20260123002646.GL5945@frogsfrogsfrogs>
-Subject: Re: [PATCH v7 01/16] fs: Add case sensitivity flags to file_kattr
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/5] Add a bio_vec based API to core/rw.c
+To: Chuck Lever <cel@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-rdma@vger.kernel.org,
+ linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20260122220401.1143331-1-cel@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20260122220401.1143331-1-cel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-18340-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[33];
+	TAGGED_FROM(0.00)[bounces-18341-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email,app.fastmail.com:mid];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.994];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.967];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yanjun.zhu@linux.dev,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.dev:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: C7DD96ED2C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:mid,linux.dev:dkim,oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 609DA70B81
 X-Rspamd-Action: no action
 
+在 2026/1/22 14:03, Chuck Lever 写道:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> This series introduces a bio_vec based API for RDMA read and write
+> operations in the RDMA core, eliminating unnecessary scatterlist
+> conversions for callers that already work with bvecs.
+> 
+> Current users of rdma_rw_ctx_init() must convert their native data
+> structures into scatterlists. For subsystems like svcrdma that
+> maintain data in bvec format, this conversion adds overhead both in
+> CPU cycles and memory footprint. The new API accepts bvec arrays
+> directly.
+> 
+> For hardware RDMA devices, the implementation uses the IOVA-based
+> DMA mapping API to reduce IOTLB synchronization overhead from O(n)
+> per-page syncs to a single O(1) sync after all mappings complete.
+> Software RDMA devices (rxe, siw) continue using virtual addressing.
+> 
+> The series includes MR registration support for bvec arrays,
+> enabling iWARP devices and the force_mr debug parameter. The MR
+> path reuses existing ib_map_mr_sg() infrastructure by constructing
+> a synthetic scatterlist from the bvec DMA addresses.
 
+Hi, Chuck Lever
 
-On Thu, Jan 22, 2026, at 7:26 PM, Darrick J. Wong wrote:
-> On Thu, Jan 22, 2026 at 11:02:56AM -0500, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>=20
->> Enable upper layers such as NFSD to retrieve case sensitivity
->> information from file systems by adding FS_XFLAG_CASEFOLD and
->> FS_XFLAG_CASENONPRESERVING flags.
->>=20
->> Filesystems report case-insensitive or case-nonpreserving behavior
->> by setting these flags directly in fa->fsx_xflags. The default
->> (flags unset) indicates POSIX semantics: case-sensitive and
->> case-preserving. These flags are read-only; userspace cannot set
->> them via ioctl.
->>=20
->> Remove struct file_kattr initialization from fileattr_fill_xflags()
->> and fileattr_fill_flags(). Callers at ioctl/syscall entry points
->> zero-initialize the struct themselves, which allows them to pass
->> hints (flags_valid, fsx_valid) to the filesystem's ->fileattr_get()
->> callback via the fa argument. Filesystem handlers that invoke these
->> fill functions can now set flags directly in fa->fsx_xflags before
->> calling them, without the fill functions zeroing those values.
->
-> In hindsight I regret not asking for the file_kattr initialization
-> change to be in a separate patch.
+I’ve read through the patch series. As I understand it, the new 
+bio_vec–based RDMA read/write API allows callers that already operate on 
+bvecs (for example, svcrdma and potentially NVMe-oF) to avoid converting 
+their data into scatterlists, which should reduce CPU overhead and 
+memory usage in the data path.
 
-If I=E2=80=99m asked to post another revision of this series, I=E2=80=99=
-ll look at splitting
-1/16 into two patches.
+For hardware RDMA devices, the use of the IOVA-based DMA mapping API 
+also seems likely to reduce IOTLB synchronization overhead compared to 
+the existing per-page approach, while software devices (rxe, siw) retain 
+the current virtual-addressing model.
 
+Do you happen to have any performance or functional test results you 
+could share for this series, in particular:
 
->> Case sensitivity information is exported to userspace via the
->> fa_xflags field in the FS_IOC_FSGETXATTR ioctl and file_getattr()
->> system call.
->>=20
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->
-> The UAPI changes still look ok to me.  AFAICT the file_kattr
-> initialization now seem like they don't zap fields to confuse
-> vfs_fileattr_get.
->
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Hardware RDMA devices (e.g., latency, bandwidth, or CPU utilization 
+changes), and/or
 
+Software RDMA devices such as rxe or siw?
 
---=20
-Chuck Lever
+Any data points or qualitative observations would be very helpful for 
+evaluating the impact of the new API.
+
+Zhu Yanjun
+
+> 
+> The final patch adds the first consumer for the new API: svcrdma.
+> 
+> Based on v6.19-rc6.
+> 
+> ---
+> 
+> Changes since v2:
+> - Add bvec iter arguments to the new API
+> - Add a synthetic SGL in the MR mapping function
+> - Try IOVA coalescing before max_sgl_rd triggers MR in bvec path
+> - Attempt once again to address SQ/CQ/max_rdma_ctxs sizing issues
+> 
+> Changes since v1:
+> - Simplify rw.c by using bvec iters internally
+> - IOVA mapping produces a contiguous DMA address range
+> - Clarify the comment that documents struct svc_rdma_rw_ctxt
+> - svcrdma now uses pre-allocated bio_vec arrays
+> 
+> Chuck Lever (5):
+>    RDMA/core: add bio_vec based RDMA read/write API
+>    RDMA/core: use IOVA-based DMA mapping for bvec RDMA operations
+>    RDMA/core: add MR support for bvec-based RDMA operations
+>    RDMA/core: add rdma_rw_max_sge() helper for SQ sizing
+>    svcrdma: use bvec-based RDMA read/write API
+> 
+>   drivers/infiniband/core/rw.c             | 591 ++++++++++++++++++++---
+>   drivers/infiniband/ulp/isert/ib_isert.c  |   4 +-
+>   drivers/nvme/target/rdma.c               |   4 +-
+>   include/rdma/ib_verbs.h                  |  42 ++
+>   include/rdma/rw.h                        |  36 +-
+>   net/sunrpc/xprtrdma/svc_rdma_rw.c        | 155 +++---
+>   net/sunrpc/xprtrdma/svc_rdma_transport.c |   8 +-
+>   7 files changed, 699 insertions(+), 141 deletions(-)
+> 
+
 
