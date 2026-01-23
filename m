@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18372-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18373-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4CgiOczDc2kCygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18372-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:04 +0100
+	id eDD6DM/Dc2kCygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18373-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:07 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B1CF79D32
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E2BE579D39
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 19:54:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 19E3C303FBDF
+	by tor.lore.kernel.org (Postfix) with ESMTP id CF859304069A
 	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 18:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D4829A309;
-	Fri, 23 Jan 2026 18:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C502248176;
+	Fri, 23 Jan 2026 18:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJRil/aP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbnLBzfq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0667B248176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A05523182D
 	for <linux-nfs@vger.kernel.org>; Fri, 23 Jan 2026 18:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769194392; cv=none; b=E7cPwnlgogi7+2aNZiEdKGfx8CGhI/okwA24ZOFFY92VnPZoiv5RG4iA2KYnmpAQW3B9YDM1VVxMWuxNqPAJ4QnfAkdBSJdkZ4WDvC1PmU5IGTO4UmFZWXdWY6m2cHgtpav9EgFMwcwKs/WFbkOU3QV/82Iwusf+CIxCmbJBKQs=
+	t=1769194393; cv=none; b=b8f97D4MKtNGT4xYElIZDXkaf7/H4I/YSIG8pauA+e76JoFkqGFro6JjrM5TKeBr9hMlvvHcZ+BmvYLJXktrIYTBGRaDVWJkq758n4pY+tJr9fWzaIHohtywzju0chlIl+1lYJHw5+jyugzTgorQUC0RvtOhk2jeN7+h2TiQE+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769194392; c=relaxed/simple;
-	bh=c+rl4xyUo9eQKENDc08c2U/PLQ7KQxbOHljhrqH5G10=;
+	s=arc-20240116; t=1769194393; c=relaxed/simple;
+	bh=uIR/2bwrIBSScq65Fl9f2rK4MBB4DgwLWegHpEKurFs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RaeYOTAS+n/gOAWXpMch3YjV1EPkS/W0JcIXf/kgddphCo9Q+BnM2hBpIbzmbFYMLYRguZ26sueHR7MpCgsPrn2AhdNSUQKjbHC+Zga/aAkF3rZa2WOit0INMByEFwKmzlV2Emck5xjpjeYdxfTizXMY7KidyNR9DEBBIgnd5S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJRil/aP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530FBC19424;
-	Fri, 23 Jan 2026 18:53:11 +0000 (UTC)
+	 MIME-Version; b=XeWRgPtFfaolYbgZOir+V4HmVOepiai8lzPuaFl6j/lXzbvR0pgcqyukKK3RpfSuV0oq0K8WXsG49QaKKOhEU2h+1k/b+J05SAixe7mXyBy07eIHmxSnwZxVjcNsUie9myc6b2kTZ16DanLjz8B093ZMFUg2U1rY5j9Y3BHcHxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbnLBzfq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6ACC4CEF1;
+	Fri, 23 Jan 2026 18:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769194391;
-	bh=c+rl4xyUo9eQKENDc08c2U/PLQ7KQxbOHljhrqH5G10=;
+	s=k20201202; t=1769194392;
+	bh=uIR/2bwrIBSScq65Fl9f2rK4MBB4DgwLWegHpEKurFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qJRil/aPhMe79Nt2LlI/7EgdI5LOLJ0KWx4OF0TUbg8rvsrPpoCQ7lEnAF8LbPnHa
-	 IbHq+Ju8XU5ozIEG9UTjPaQjl71Oau78gLFVakIKTAuaCo5TfJvyI09A5H8jKcHBvA
-	 ZgO0Ju10uYlKTOu/eVH8E9YVd59X6yOfmpWSfjwec58e4fg9GeSUUW5tyPxmnAS20Y
-	 r+D+OKx5ZrTkxOHoATVgVAnxY9y4RraywUq2Vupc7XZf3JvtDns5Dkz+/zxrswdOBd
-	 mHK49eYRm97Cr6I79UkVGpA1QNziPyzJzoC72FFz4ULEKuvBjJWYeFTjSuUj4Uf0Ri
-	 4CbG6zY9VVPQw==
+	b=lbnLBzfq2wEZC6geOw6FJRkwfeW38nKFaTi0gyoJOUlY2xSu9aErMVSiAY6WZerIR
+	 VOFLZv87O5wUkUGS+fGslj+ARgQV9rE3rsj7jbEu4oik/ZNzPyagv7rChvhcUBSx09
+	 KDb/LNuelpac5GCrrm+/rATuU/uNDm0Gn0HIXxILUixm60fJQQniF6BBk+X/ThxDqO
+	 YbYzdWWwUEQUBVDJDcuONR2rLHGltFzkeOeYU41LDldDmrMqYVTBQy1xRP0OZCDMeo
+	 SYqgwfpF7tSwh3U/HgL3w6D5vLwnyb6yg5gTTmuTmzCByl1DMW6/ZeMVI1lRzKNDjD
+	 l2GJq9EUglMIQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 11/42] lockd: Make linux/lockd/nlm.h an internal header
-Date: Fri, 23 Jan 2026 13:52:28 -0500
-Message-ID: <20260123185259.1215767-12-cel@kernel.org>
+Subject: [PATCH v2 12/42] lockd: Move nlm4svc_set_file_lock_range()
+Date: Fri, 23 Jan 2026 13:52:29 -0500
+Message-ID: <20260123185259.1215767-13-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18372-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18373-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,100 +93,117 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,swb.de:email]
-X-Rspamd-Queue-Id: 7B1CF79D32
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E2BE579D39
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The NLM protocol constants and status codes in nlm.h are needed
-only by lockd's internal implementation. NFS client code and
-NFSD interact with lockd through the stable API in bind.h and
-have no direct use for protocol-level definitions.
+Refactor: nlm4svc_set_file_lock_range() is used by both the
+client-side and server-side code. Remove the "svc" from the
+name and relocate the function to a generic header.
 
-Exposing these definitions globally via bind.h creates unnecessary
-coupling between lockd internals and its consumers. Moving nlm.h
-from include/linux/lockd/ to fs/lockd/ clarifies the API boundary:
-bind.h provides the lockd service interface, while nlm.h remains
-available only to code within fs/lockd/ that implements the
-protocol.
+This clean up partly enables the removal of '#include "xdr4.h"'
+from fs/lockd/clnt4xdr.c.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/lockd.h                  | 1 +
- {include/linux => fs}/lockd/nlm.h | 8 +++-----
- fs/lockd/svclock.c                | 1 -
- include/linux/lockd/bind.h        | 2 --
- 4 files changed, 4 insertions(+), 8 deletions(-)
- rename {include/linux => fs}/lockd/nlm.h (91%)
+ fs/lockd/clnt4xdr.c |  2 +-
+ fs/lockd/lockd.h    | 23 +++++++++++++++++++++++
+ fs/lockd/xdr4.c     | 13 +------------
+ fs/lockd/xdr4.h     |  1 -
+ 4 files changed, 25 insertions(+), 14 deletions(-)
 
+diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
+index 61ee5fa6dfa4..c09e67765cac 100644
+--- a/fs/lockd/clnt4xdr.c
++++ b/fs/lockd/clnt4xdr.c
+@@ -287,7 +287,7 @@ static int decode_nlm4_holder(struct xdr_stream *xdr, struct nlm_res *result)
+ 	fl->c.flc_type  = exclusive != 0 ? F_WRLCK : F_RDLCK;
+ 	p = xdr_decode_hyper(p, &l_offset);
+ 	xdr_decode_hyper(p, &l_len);
+-	nlm4svc_set_file_lock_range(fl, l_offset, l_len);
++	lockd_set_file_lock_range4(fl, l_offset, l_len);
+ 	error = 0;
+ out:
+ 	return error;
 diff --git a/fs/lockd/lockd.h b/fs/lockd/lockd.h
-index 892c54198f1e..3f44820974cd 100644
+index 3f44820974cd..c889475a74e0 100644
 --- a/fs/lockd/lockd.h
 +++ b/fs/lockd/lockd.h
-@@ -14,6 +14,7 @@
- #include <linux/kref.h>
- #include <linux/refcount.h>
- #include <linux/utsname.h>
-+#include "nlm.h"
- #include <linux/lockd/bind.h>
- #include "xdr.h"
- #include <linux/sunrpc/debug.h>
-diff --git a/include/linux/lockd/nlm.h b/fs/lockd/nlm.h
-similarity index 91%
-rename from include/linux/lockd/nlm.h
-rename to fs/lockd/nlm.h
-index 6e343ef760dc..47be65d0111f 100644
---- a/include/linux/lockd/nlm.h
-+++ b/fs/lockd/nlm.h
-@@ -1,14 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * linux/include/linux/lockd/nlm.h
-- *
-  * Declarations for the Network Lock Manager protocol.
-  *
-  * Copyright (C) 1996, Olaf Kirch <okir@monad.swb.de>
-  */
+@@ -413,6 +413,29 @@ static inline int nlm_compare_locks(const struct file_lock *fl1,
+ 	     &&(fl1->c.flc_type  == fl2->c.flc_type || fl2->c.flc_type == F_UNLCK);
+ }
  
--#ifndef LINUX_LOCKD_NLM_H
--#define LINUX_LOCKD_NLM_H
-+#ifndef _LOCKD_NLM_H
-+#define _LOCKD_NLM_H
++/**
++ * lockd_set_file_lock_range4 - set the byte range of a file_lock
++ * @fl: file_lock whose length fields are to be initialized
++ * @off: starting offset of the lock, in bytes
++ * @len: length of the byte range, in bytes, or zero
++ *
++ * NLMv4 uses a (start, length) representation for lock byte ranges,
++ * while the kernel's file_lock uses (start, end). A length of zero
++ * means "lock to end of file."  This function handles the conversion
++ * and also treats arithmetic overflow as "lock to end of file."
++ */
++static inline void
++lockd_set_file_lock_range4(struct file_lock *fl, u64 off, u64 len)
++{
++	s64 end = off + len - 1;
++
++	fl->fl_start = off;
++	if (len == 0 || end < 0)
++		fl->fl_end = OFFSET_MAX;
++	else
++		fl->fl_end = end;
++}
++
+ extern const struct lock_manager_operations nlmsvc_lock_operations;
  
+ #endif /* _LOCKD_LOCKD_H */
+diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
+index f57d4881d5f1..dbbb2dfcb81b 100644
+--- a/fs/lockd/xdr4.c
++++ b/fs/lockd/xdr4.c
+@@ -34,17 +34,6 @@ loff_t_to_s64(loff_t offset)
+ 	return res;
+ }
  
- /* Maximum file offset in file_lock.fl_end */
-@@ -55,4 +53,4 @@ enum {
- #define NLMPROC_NM_LOCK		22
- #define NLMPROC_FREE_ALL	23
- 
--#endif /* LINUX_LOCKD_NLM_H */
-+#endif /* _LOCKD_NLM_H */
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index cd9e11781494..6b3be2ff9c1c 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -28,7 +28,6 @@
- #include <linux/sched.h>
- #include <linux/sunrpc/clnt.h>
- #include <linux/sunrpc/svc_xprt.h>
--#include <linux/lockd/nlm.h>
- 
- #include "lockd.h"
- 
-diff --git a/include/linux/lockd/bind.h b/include/linux/lockd/bind.h
-index a65472139ff8..e6f1a4cdb685 100644
---- a/include/linux/lockd/bind.h
-+++ b/include/linux/lockd/bind.h
-@@ -10,8 +10,6 @@
- #ifndef LINUX_LOCKD_BIND_H
- #define LINUX_LOCKD_BIND_H
- 
--#include <linux/lockd/nlm.h>
+-void nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len)
+-{
+-	s64 end = off + len - 1;
 -
- /* Dummy declarations */
- struct nfs_fh;
- struct svc_rqst;
+-	fl->fl_start = off;
+-	if (len == 0 || end < 0)
+-		fl->fl_end = OFFSET_MAX;
+-	else
+-		fl->fl_end = end;
+-}
+-
+ /*
+  * NLM file handles are defined by specification to be a variable-length
+  * XDR opaque no longer than 1024 bytes. However, this implementation
+@@ -91,7 +80,7 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
+ 
+ 	locks_init_lock(fl);
+ 	fl->c.flc_type  = F_RDLCK;
+-	nlm4svc_set_file_lock_range(fl, lock->lock_start, lock->lock_len);
++	lockd_set_file_lock_range4(fl, lock->lock_start, lock->lock_len);
+ 	return true;
+ }
+ 
+diff --git a/fs/lockd/xdr4.h b/fs/lockd/xdr4.h
+index 7be318c0512b..4ddf51a2e0ea 100644
+--- a/fs/lockd/xdr4.h
++++ b/fs/lockd/xdr4.h
+@@ -15,7 +15,6 @@
+ #define	nlm4_fbig		cpu_to_be32(NLM_FBIG)
+ #define	nlm4_failed		cpu_to_be32(NLM_FAILED)
+ 
+-void	nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len);
+ bool	nlm4svc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlm4svc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlm4svc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
 -- 
 2.52.0
 
