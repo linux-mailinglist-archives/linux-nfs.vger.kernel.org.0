@@ -1,402 +1,325 @@
-Return-Path: <linux-nfs+bounces-18417-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18418-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SM7aIqcGdGkM1gAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18417-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:39:19 +0100
+	id UJP7FuAOdGmS1wAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18418-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 01:14:24 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E50D67B82C
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:39:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B173A7B9E4
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 01:14:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BA9FE3012240
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jan 2026 23:39:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 59BB63017259
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 00:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B547B2ECEBB;
-	Fri, 23 Jan 2026 23:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988C6175A5;
+	Sat, 24 Jan 2026 00:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="O+ab5QIA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g732HcvJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzQ0fMXr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D34A3009FA;
-	Fri, 23 Jan 2026 23:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72433C8E6;
+	Sat, 24 Jan 2026 00:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769211554; cv=none; b=eFJR4qHy9avmlwan6dIKWQR8zTph3/OzknbpngKtXTHY3Umxb1nMxpNpIsQN2sZGDoviXOlbjyNwb+Xfi9My8w1TERdzYAgunu87q25/RWXiclv97kgn3h+jt1R784H8Vh67VdFHRrTTihIqDGS8TYywA3k1OZUem+GSZHfNzU0=
+	t=1769213661; cv=none; b=eUB2pIvCschRaRKKvLcrXk9eDqIf+AfFzPP6DxRfNZH87Z2N2dFXMu20eefG2upTFnLBx8XatkmU8UZ9UsHFQhXWTFJ1EUECxzyhQusWgwoJj4UOwMy0+2zzcrbraPji9VWUzAbzFQJEUJI+Io0xOmPQDjP985UCqiMBtBu/6Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769211554; c=relaxed/simple;
-	bh=Gl5Beitxina184zGs9g94xTjTrsWcascAuDMd/mzKzc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=cUBT4bsB4fVu26KQ26FFVGn9TXeONZ2SyIkAXAeccLRIYdZgfYFYp9z3QVZjJIo35g74UvxtaEz9n56dI3bPmdH6H0aCRaKvtnSrmMJ63QygVgkVcgs/i2Os9WLfsdIDjB/Ls6uhjvHiSJwg5JlAeLG/zS3IICM5PFUsPkvCqOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=O+ab5QIA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g732HcvJ; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 17F2B14000E9;
-	Fri, 23 Jan 2026 18:38:58 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 23 Jan 2026 18:38:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1769211538; x=1769297938; bh=Wg6YyJm2qNl6d1/dYOiDgJyw6CNSoDEsGwv
-	tcbrPMbA=; b=O+ab5QIADvCzRPJ9l6TrlmTXqAYqjK15raP7WgNgiNAOwrFtPQI
-	xTKeEZ9qWkPbQ0JSTVRoUwkLx9uMbQr6Srt4zMHtKfTnKxcmIR5Mm7jZ/DdNeKrb
-	EwQ5rnbntOkc/CQWsA/rnFAWdQshVB4JK7FAv01DUFKKokMugJxAoZzWdKz0q6Kk
-	Vv0UGmUjpwBEJsL3B5RP0tak33wUlixq4PNT8g3zy0w96fmAZ2txekX9YKPOBUAw
-	olzhLbSCwTtGThAZlX40VxPouwJSPD68WANO5XphiX+kpvknYVpypJR68PxP/0bK
-	YW6SXycOe8sNoDBDFTp7YtiZBxKKrpFJTXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769211538; x=
-	1769297938; bh=Wg6YyJm2qNl6d1/dYOiDgJyw6CNSoDEsGwvtcbrPMbA=; b=g
-	732HcvJKOMZD5UQjodyElWQUJPfHm2cONps9oOvTeUwoI82c6UU/1FbsJZaNuqAN
-	9D/khZ3RUSiHVY5QnC5wimK1RYeKWY9PxWn4mvWbVXX2k4+IVQpWj7NBy7Mb29OF
-	lvmFjMEqP2g9joYoAQuLmt465e4B0Yb5iIvaB/abbCd2+4jy3DcqUKJT6BgiGHmn
-	RMYRQP9GCb0QP9nERIpjIm1K3CunUHmJNULvuOb+ngqkaG08uGiNmpPCBVSoCZiG
-	RGOEzQTemZb+oKtc23sg3ciFDs8ykbJuX/z/KivXLdC+VgA6OkaHuDNKpjeiVGJ7
-	3LebexGiq5wixLcoE/eew==
-X-ME-Sender: <xms:kQZ0aZzxXZ3fMSP7VpO2gdNOz8jQ_u5ajN-E7JV7V3cRNb6Vz_6Tfw>
-    <xme:kQZ0aYcirTtbnVlYsaECHdAAqhq0Nq75umb89ULf74fClLXJmj3PyJgt0P8HevRlo
-    eHzzKv86JdEnWtKfz6tiDB17euPQJ4PXaZacN86CmccAwuHhQ>
-X-ME-Received: <xmr:kQZ0aWBoYplmGtKwXP0KJf2L_7yFjLO89gHlM9--Z61WaKGOdgdEf9BAgc9Cu2UEX-O0UBfquDe-18Xf-vfpi7KuOTsqGTog7OqlzjknB1xi>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduhedtfeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epvdeuteelkeejkeevteetvedtkeegleduieeftdeftefgtddtleejgfelgfevffeinecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugi
-    dqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhf
-    shguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqtghrhihpthhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhuhgt
-    khdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepthhrohhnughmhieskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepvggsihhgghgvrhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gtvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:kQZ0aU7qfflDzFiTLHe6HfBvtDIhiLlNrh-zjjzgLTUAija58SMgiw>
-    <xmx:kQZ0aXcUtTFFU0j-pGEw9CA62HKYGApk8LuHW3BWg8xFY-5ajLeqjA>
-    <xmx:kQZ0aSs3uzA9euy2T0QLiHxDkKIjnwSDNfHh-Zazo0_MRKX5nS9wzg>
-    <xmx:kQZ0afnw6UO8p975iUATtZNyRhRhxmUj341HxVZoJVkfHwxEFgZwlQ>
-    <xmx:kgZ0aT9u3Q04HfJD3GXwwlMMi9wSgC0N_cneZH931JdjoM32QTZf7vKN>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 23 Jan 2026 18:38:54 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1769213661; c=relaxed/simple;
+	bh=Myx1r/NFHfWVAPL/f9/7A2AtpUuxAOTrENKN5st8jJI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MX0BDiQGMPks3001MDdMo2kzhi8MxUEsgU4iqfPA5tx31SCsc1nzvfbuoNQ8md8stavECrIpG82OD6vTyJcLHha0Ku1oAaRrJU8JPfOF0qVe51sQ3PtVdWOctcFx9G/7SjevNpZmg4+EV9NzL80YYhi3hX/IP78sZifTvI89fm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzQ0fMXr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCCBC4CEF1;
+	Sat, 24 Jan 2026 00:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769213661;
+	bh=Myx1r/NFHfWVAPL/f9/7A2AtpUuxAOTrENKN5st8jJI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=nzQ0fMXrOzhj40OJnH82XZDTPURSS2gLlgVb8BoMrd9/pU8tjKFeOpp25bzw1puRT
+	 h2Xgnneg2mtKiFPfoTQOef9T5XmVh2GqrA6GHswwkoYKtud5220gcSO/dmQhSLKawR
+	 iu3S5LRda20bSzOuSeBRLWvq8AFF4l48tTgrWrWnyjfo5D3bsTk6+fCaMq1fmb8Kh4
+	 hOwaiwi4oolUuENafwRFPsz+v2YgLuoLG/j6pZY/cVqyuvyj1H6FHohk0f0Gf5IgML
+	 +g6nUU0Rp6Z29S8k/UzuykH0UO8V+RaFs8pzj+9zjioaHwjSpzS94S5MyQjd3JFCbI
+	 MiK6Rpid9yU/A==
+Message-ID: <d1e5a45b5c3d8ac2d92ac15c8ae7ff79dafdef92.camel@kernel.org>
+Subject: Re: [PATCH/RFC] nfsd: rate limit requests that result in -ESTALE
+ from the filesystem
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>, Trond
+ Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Benjamin
+ Coddington	 <bcodding@hammerspace.com>, Eric Biggers <ebiggers@kernel.org>,
+ Rick Macklem	 <rick.macklem@gmail.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org
+Date: Fri, 23 Jan 2026 19:14:17 -0500
+In-Reply-To: <176920977124.16766.1785815212991547773@noble.neil.brown.name>
+References: <176920977124.16766.1785815212991547773@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Benjamin Coddington" <bcodding@hammerspace.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Eric Biggers" <ebiggers@kernel.org>, "Rick Macklem" <rick.macklem@gmail.com>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
-In-reply-to: <8d024335-7be0-48f3-80d3-99bd85b6386b@kernel.org>
-References: <cover.1769026777.git.bcodding@hammerspace.com>, =?utf-8?q?=3C0a?=
- =?utf-8?q?aa9ca4fd3edc7e0d25433ad472cb873560bf7d=2E1769026777=2Egit=2Ebcodd?=
- =?utf-8?q?ing=40hammerspace=2Ecom=3E=2C?=
- <5fb38378-a8e0-46d5-956c-de1a3bdaaf23@app.fastmail.com>,
- <176920688733.16766.188886135069880896@noble.neil.brown.name>,
- <8d024335-7be0-48f3-80d3-99bd85b6386b@kernel.org>
-Date: Sat, 24 Jan 2026 10:38:52 +1100
-Message-id: <176921153233.16766.17284825218875728993@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18417-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18418-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[hammerspace.com,oracle.com,kernel.org,gmail.com,vger.kernel.org];
-	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[brown.name,oracle.com,kernel.org,hammerspace.com,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,brown.name:replyto,noble.neil.brown.name:mid,ownmail.net:dkim,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: E50D67B82C
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,brown.name:email]
+X-Rspamd-Queue-Id: B173A7B9E4
 X-Rspamd-Action: no action
 
-On Sat, 24 Jan 2026, Chuck Lever wrote:
-> On 1/23/26 5:21 PM, NeilBrown wrote:
-> > On Sat, 24 Jan 2026, Chuck Lever wrote:
-> >>
-> >> On Wed, Jan 21, 2026, at 3:24 PM, Benjamin Coddington wrote:
-> >>> NFS clients may bypass restrictive directory permissions by using
-> >>> open_by_handle() (or other available OS system call) to guess the
-> >>> filehandles for files below that directory.
-> >>>
-> >>> In order to harden knfsd servers against this attack, create a method to
-> >>> sign and verify filehandles using siphash as a MAC (Message Authenticat=
-ion
-> >>> Code).  Filehandles that have been signed cannot be tampered with, nor =
-can
-> >>> clients reasonably guess correct filehandles and hashes that may exist =
-in
-> >>> parts of the filesystem they cannot access due to directory permissions.
-> >>>
-> >>> Append the 8 byte siphash to encoded filehandles for exports that have =
-set
-> >>> the "sign_fh" export option.  The filehandle's fh_auth_type is set to
-> >>> FH_AT_MAC(1) to indicate the filehandle is signed.  Filehandles receive=
-d from
-> >>> clients are verified by comparing the appended hash to the expected has=
-h.
-> >>> If the MAC does not match the server responds with NFS error _BADHANDLE.
-> >>> If unsigned filehandles are received for an export with "sign_fh" they =
-are
-> >>> rejected with NFS error _BADHANDLE.
-> >>>
-> >>> Link:=20
-> >>> https://lore.kernel.org/linux-nfs/cover.1769026777.git.bcodding@hammers=
-pace.com
-> >>> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-> >>> ---
-> >>>  fs/nfsd/nfsfh.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++--
-> >>>  fs/nfsd/nfsfh.h |  3 ++
-> >>>  2 files changed, 73 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> >>> index ed85dd43da18..ea3473acbf71 100644
-> >>> --- a/fs/nfsd/nfsfh.c
-> >>> +++ b/fs/nfsd/nfsfh.c
-> >>> @@ -11,6 +11,7 @@
-> >>>  #include <linux/exportfs.h>
-> >>>
-> >>>  #include <linux/sunrpc/svcauth_gss.h>
-> >>> +#include <crypto/utils.h>
-> >>>  #include "nfsd.h"
-> >>>  #include "vfs.h"
-> >>>  #include "auth.h"
-> >>> @@ -137,6 +138,61 @@ static inline __be32 check_pseudo_root(struct=20
-> >>> dentry *dentry,
-> >>>  	return nfs_ok;
-> >>>  }
-> >>>
-> >>> +/*
-> >>> + * Append an 8-byte MAC to the filehandle hashed from the server's=20
-> >>> fh_key:
-> >>> + */
-> >>> +static int fh_append_mac(struct svc_fh *fhp, struct net *net)
-> >>> +{
-> >>> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> >>> +	struct knfsd_fh *fh =3D &fhp->fh_handle;
-> >>> +	siphash_key_t *fh_key =3D nn->fh_key;
-> >>> +	u64 hash;
-> >>> +
-> >>> +	if (!(fhp->fh_export->ex_flags & NFSEXP_SIGN_FH))
-> >>> +		return 0;
-> >>> +
-> >>> +	if (!fh_key) {
-> >>> +		pr_warn_ratelimited("NFSD: unable to sign filehandles, fh_key not=20
-> >>> set.\n");
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	if (fh->fh_size + sizeof(hash) > fhp->fh_maxsize) {
-> >>> +		pr_warn_ratelimited("NFSD: unable to sign filehandles, fh_size %d=20
-> >>> would be greater"
-> >>> +			" than fh_maxsize %d.\n", (int)(fh->fh_size + sizeof(hash)),=20
-> >>> fhp->fh_maxsize);
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	fh->fh_auth_type =3D FH_AT_MAC;
-> >>> +	hash =3D siphash(&fh->fh_raw, fh->fh_size, fh_key);
-> >>> +	memcpy(&fh->fh_raw[fh->fh_size], &hash, sizeof(hash));
-> >>> +	fh->fh_size +=3D sizeof(hash);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +/*
-> >>> + * Verify that the the filehandle's MAC was hashed from this filehandle
-> >>> + * given the server's fh_key:
-> >>> + */
-> >>> +static int fh_verify_mac(struct svc_fh *fhp, struct net *net)
-> >>> +{
-> >>> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> >>> +	struct knfsd_fh *fh =3D &fhp->fh_handle;
-> >>> +	siphash_key_t *fh_key =3D nn->fh_key;
-> >>> +	u64 hash;
-> >>> +
-> >>> +	if (fhp->fh_handle.fh_auth_type !=3D FH_AT_MAC)
-> >>> +		return -EINVAL;
-> >>> +
-> >>> +	if (!fh_key) {
-> >>> +		pr_warn_ratelimited("NFSD: unable to verify signed filehandles,=20
-> >>> fh_key not set.\n");
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	hash =3D siphash(&fh->fh_raw, fh->fh_size - sizeof(hash),  fh_key);
-> >>> +	return crypto_memneq(&fh->fh_raw[fh->fh_size - sizeof(hash)], &hash, =
-
-> >>> sizeof(hash));
-> >>> +}
-> >>> +
-> >>>  /*
-> >>>   * Use the given filehandle to look up the corresponding export and
-> >>>   * dentry.  On success, the results are used to set fh_export and
-> >>> @@ -166,8 +222,11 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst=20
-> >>> *rqstp, struct net *net,
-> >>>
-> >>>  	if (--data_left < 0)
-> >>>  		return error;
-> >>> -	if (fh->fh_auth_type !=3D 0)
-> >>> +
-> >>> +	/* either FH_AT_NONE or FH_AT_MAC */
-> >>> +	if (fh->fh_auth_type > 1)
-> >>>  		return error;
-> >>> +
-> >>>  	len =3D key_len(fh->fh_fsid_type) / 4;
-> >>>  	if (len =3D=3D 0)
-> >>>  		return error;
-> >>> @@ -237,9 +296,14 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst=20
-> >>> *rqstp, struct net *net,
-> >>>
-> >>>  	fileid_type =3D fh->fh_fileid_type;
-> >>>
-> >>> -	if (fileid_type =3D=3D FILEID_ROOT)
-> >>> +	if (fileid_type =3D=3D FILEID_ROOT) {
-> >>>  		dentry =3D dget(exp->ex_path.dentry);
-> >>> -	else {
-> >>> +	} else {
-> >>> +		if (exp->ex_flags & NFSEXP_SIGN_FH && fh_verify_mac(fhp, net)) {
-> >>> +			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp, -EKEYREJECTED);
-> >>> +			goto out;
-> >>> +		}
-> >>> +
-> >>>  		dentry =3D exportfs_decode_fh_raw(exp->ex_path.mnt, fid,
-> >>>  						data_left, fileid_type, 0,
-> >>>  						nfsd_acceptable, exp);
-> >>> @@ -495,6 +559,9 @@ static void _fh_update(struct svc_fh *fhp, struct=20
-> >>> svc_export *exp,
-> >>>  		fhp->fh_handle.fh_fileid_type =3D
-> >>>  			fileid_type > 0 ? fileid_type : FILEID_INVALID;
-> >>>  		fhp->fh_handle.fh_size +=3D maxsize * 4;
-> >>> +
-> >>> +		if (fh_append_mac(fhp, exp->cd->net))
-> >>> +			fhp->fh_handle.fh_fileid_type =3D FILEID_INVALID;
-> >>>  	} else {
-> >>>  		fhp->fh_handle.fh_fileid_type =3D FILEID_ROOT;
-> >>>  	}
-> >>> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> >>> index 5ef7191f8ad8..7fff46ac2ba8 100644
-> >>> --- a/fs/nfsd/nfsfh.h
-> >>> +++ b/fs/nfsd/nfsfh.h
-> >>> @@ -59,6 +59,9 @@ struct knfsd_fh {
-> >>>  #define fh_fsid_type		fh_raw[2]
-> >>>  #define fh_fileid_type		fh_raw[3]
-> >>>
-> >>> +#define FH_AT_NONE		0
-> >>> +#define FH_AT_MAC		1
-> >>
-> >> I'm pleased at how much this patch has shrunk since v1.
-> >>
-> >> This might not be an actionable review comment, but help me understand
-> >> this particular point. Why do you need both a sign_fh export option
-> >> and a new FH auth type? Shouldn't the server just look for and
-> >> validate FH signatures whenever the sign_fh export option is
-> >> present?
-> >=20
-> > ...and also generate valid signatures on outgoing file handles.
-> >=20
-> > What does the server do to "look for" an FH signature so that it can
-> > "validate" it?  Answer: it inspects the fh_auth_type to see if it is
-> > FT_AT_MAC.=20
+On Sat, 2026-01-24 at 10:09 +1100, NeilBrown wrote:
+> This is an idea for an alternate approach to address the problem that
+> Ben is trying to address by signing file handles.
 >=20
-> No, NFSD checks the sign_fh export option. At first glance the two
-> seem redundant, and I might hesitate to inspect or not inspect
-> depending on information content received from a remote system. The
-> security policy is defined precisely by the "sign_fh" export option I
-> would think?
+> The reasons I think an alternate is worth considering are:
+>=20
+>  - Ben's approach requires some configuration, though not much.
+>    This approach requires zero configuration which is always better.
+>=20
+>  - Ben's approach adds a siphash calculation or two to (almost) every
+>    NFS request.  This may not be a great cost but it is still some time
+>    and some power.  Less is more.
+>=20
+> Filehandles already contain 32 bits of randomness.  Rather than adding
+> another 64 bits as Ben's patch does, this patch increase the time it
+> take to test all possible values for those 32 bits to make it an
+> impractical attack.
+>=20
+> Comments welcome.
+>=20
+> Thanks,
+> NeilBrown
+>=20
+>=20
+>=20
+> From: NeilBrown <neil@brown.name>
+> Subject: [PATCH] nfsd: rate limit requests that result in -ESTALE from th=
+e
+>  filesystem
+>=20
+> NFS file handles typically contain a 32 bit generation number which is
+> randomly generated by the filesystem when the inode (or inode number) is
+> allocated.  This makes it hard to guess correct file handles.  Hard but
+> not impossible on a low latency network with a high speed server.
+>=20
+> The NFS server will reject a request to access the file associated with
+> a filehandle if the user credential given is now allowed the access the
+> file, but it is not able to check if the user (or client) should be
+> allowed to even know that filehandle.  This would require knowing all
+> the paths to a given file, all the credential that the client has access
+> to, when whether some combination of those credential can complete a
+> walk down any of the paths.
+>=20
+> So the NFS server currently depends on the client to "do the right
+> thing".
+>=20
+> In some circumstances the client may not be sufficiently trusted, and
+> path-based access controls may be an important part of the access
+> management strategy.  In these cases the protection provided by nfsd may
+> not be sufficient.
+>=20
+> The only known attack methodology is to guess the inode number of a file
+> of interest, then iterate over all possible generation numbers.  This
+> would be expected to achieve success (if the inode number is valid) in,
+> on average, 2^31 guesses.  At one per microsecond this is less than one
+> hour.  At one per 10 microseconds this is less than one day.
+>=20
+> When presented with an incorrect guess the filesystem with report an
+> error to nfsd, either NULL or ERR_PTR(-ESTALE).  This patch causes nfsd
+> to detect those errors and insert a 15ms delay.  It also take a lock so
+> that all such delays are serialised.  This increases the expected time
+> to success to 1 year.
+>=20
+> Normally NFSERR_STALE errors are rare and are no on a fast path.
+> Normal accesses which use a filehandle which has become stale will now
+> incur a 15msec does which is likely to be unnoticeable.  An attack will
+> notice an intolerable delay.
+>=20
+> Possible this code could detect if there are ever a large number of
+> requests over an extended time and then take more firm action.
+>=20
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  fs/nfsd/netns.h  |  2 ++
+>  fs/nfsd/nfsctl.c |  1 +
+>  fs/nfsd/nfsfh.c  | 15 +++++++++++++++
+>  3 files changed, 18 insertions(+)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 9fa600602658..f7229d1f9d86 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -219,6 +219,8 @@ struct nfsd_net {
+>  	/* last time an admin-revoke happened for NFSv4.0 */
+>  	time64_t		nfs40_last_revoke;
+> =20
+> +	struct mutex		estale_rate_limit_mutex;
+> +
+>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>  	/* Local clients to be invalidated when net is shut down */
+>  	spinlock_t              local_clients_lock;
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 7587c64bf26d..55d25d9b414f 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2198,6 +2198,7 @@ static __net_init int nfsd_net_init(struct net *net=
+)
+>  	nfsd4_init_leases_net(nn);
+>  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+>  	seqlock_init(&nn->writeverf_lock);
+> +	mutex_init(&nn->estale_rate_limit_mutex);
+>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>  	spin_lock_init(&nn->local_clients_lock);
+>  	INIT_LIST_HEAD(&nn->local_clients);
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index ed85dd43da18..7032f65fe21a 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -244,6 +244,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
+tp, struct net *net,
+>  						data_left, fileid_type, 0,
+>  						nfsd_acceptable, exp);
+>  		if (IS_ERR_OR_NULL(dentry)) {
+> +			struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> +
+>  			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
+>  					dentry ?  PTR_ERR(dentry) : -ESTALE);
+>  			switch (PTR_ERR(dentry)) {
+> @@ -252,6 +254,19 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rq=
+stp, struct net *net,
+>  				break;
+>  			default:
+>  				dentry =3D ERR_PTR(-ESTALE);
+> +				/* We limit ESTALE returns to 1 every
+> +				 * 15 milliseconds (across all threads) to
+> +				 * prevent a client from guessing the
+> +				 * correct (32 bit) generation number
+> +				 * for an given inode in significantly
+> +				 * less than 1 year.  This ensures clients
+> +				 * can only access files for which they
+> +				 * are allowed to access a path from the
+> +				 * exported root.
+> +				 */
+> +				mutex_lock(&nn->estale_rate_limit_mutex);
+> +				msleep(15);
+> +				mutex_unlock(&nn->estale_rate_limit_mutex);
 
-So maybe you are thinking that, when sign_fh, is in effect - nfsd
-could always strip off the last 8 bytes, hash the remainder, and check
-the result matches the stripped bytes.
-Yes - that could work.
+Hmm...maybe a mutex_trylock and if it fails do an immediate -EAGAIN
+return (which hopefully becomes NFSERR3_JUKEBOX or NFS4ERR_DELAY)? This
+could be a way to DoS the server, otherwise.
 
-Another reason is that it helps people who are looking at network
-packets captures to try to work out what is going wrong.
-Seeing a flag to say "there is a signature" could help.
-
-Thanks,
-NeilBrown
+>  			}
+>  		}
+>  	}
 
 
->=20
->=20
-> >> It seems a little subtle, so perhaps a code comment somewhere could
-> >> explain the need for both.
-> >=20
-> > /*=20
-> >  * FT_AT_MAC allows the server to detect if a signature is expected
-> >  * in the last 8 bytes of the file handle.
-> >  */
-> >=20
-> > I wonder if it is really "last 8" for NFSv2 ...  or even if v2 is
-> > supported.  I should check the code I guess.
->=20
-> I believe NFSv2 is not supported.
->=20
->=20
-> >>
-> >>> +
-> >>>  static inline u32 *fh_fsid(const struct knfsd_fh *fh)
-> >>>  {
-> >>>  	return (u32 *)&fh->fh_raw[4];
-> >>> --=20
-> >>> 2.50.1
-> >>
-> >> --=20
-> >> Chuck Lever
-> >>
-> >=20
->=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+FWIW, I don't necessarily see this as a replacement for Ben's work, but
+it might be a nice complement.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
