@@ -1,190 +1,237 @@
-Return-Path: <linux-nfs+bounces-18432-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18433-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id HkxQFBbmdGkC+wAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18432-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 16:32:38 +0100
+	id ENuAOWPudGls/AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18433-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 17:08:03 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 972617E08F
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 16:32:37 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFD947E165
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 17:08:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CCD283007CA9
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 15:32:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3C8E5300381D
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 16:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A24E2101AE;
-	Sat, 24 Jan 2026 15:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6ACF214A9B;
+	Sat, 24 Jan 2026 16:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mF9keiXf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BmrPinF3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FEF1F4174
-	for <linux-nfs@vger.kernel.org>; Sat, 24 Jan 2026 15:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF13EBF0C;
+	Sat, 24 Jan 2026 16:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769268755; cv=none; b=rRSnyTHr1wBHy4OGw5D5VRMgOoF043ByY0G0GNgO0uv0me8iwAX/vKoGoMGSHihshddpfwTmxlt+ZRYtP3Tsz0nFoirbn5FO7U2jPPTxVgB0b7NrRQ9Qs1ojfRhVjXVmorf2rv5yfg4jXKwwloYe2uuRQZ728gKGl0xyYE1jgLU=
+	t=1769270874; cv=none; b=O+LYy9L+WWV3d7oISsvuAp6t75+kswI+HHaFsPHRjyhAJokIeJYnBTxolHrTkY1QNdAI2AGdOF/zpw9fnvxCW/bwsYx2iQQSl2TycLIFAjMd2wLN2xDajoKt4xpcl8Ux0mDNz+YpqzQjRkGaJCYE2vRd64JoZ1zIeesctNtskZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769268755; c=relaxed/simple;
-	bh=WBteHmYTEQ88ekhD0sn4+TBhZ2/u89CL3fEmEVpxttc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YlEOXvtn0sMiCU+edfR9O2eyI+2xfkJF54aNNMucrPl0Xj0EwEqrXNEM21wUNGjQbNqQxEhzZJFj1Et/5ItZZFxMepvlPY5T96i7GQ0BVoMaQrJDOeCqasonSMTKX7aoeEZWKnCniLuiIkpDcM5K4vqEPStmnU8U+oteM4++NLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mF9keiXf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04A3C116D0;
-	Sat, 24 Jan 2026 15:32:33 +0000 (UTC)
+	s=arc-20240116; t=1769270874; c=relaxed/simple;
+	bh=sM0x7LuafRplCO64dYy/ImhxFLrt50sQKSVagUQgaUE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lM0Xt6sJwuPwsbO/G73uJMUh9q0OC0GdppFFSa5ODhyzFvExNNf9Agr0doFIcwwffZAj5K6zmechgLvYY4srd0zF48GBhk5a3Gt6CcHtgiUi1xorM/VlgitmvTMHUrdJ+Cb0lGMEtWYTb00ITvCao+Ylp+JFDn8cdRQTdZyg/eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BmrPinF3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B89C116D0;
+	Sat, 24 Jan 2026 16:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769268754;
-	bh=WBteHmYTEQ88ekhD0sn4+TBhZ2/u89CL3fEmEVpxttc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mF9keiXfaV1PmJsvP27/qNjaVV8XvLSD4nKGmovkatKoB7Z2S1hCerTjiJl4aEpOO
-	 lRaayZwUONtOibi3bDdogo5vX0RNSInUWLi7E5LZWNPS8iJD3QxP4SoFbTb7TRIlnH
-	 YKctlskaYscJ0Dy2KKa5Vu4184m/bBeleuqeOsyJnloZioKgXoLmBLiaeU7v8F8ilB
-	 Ta7Dgye2fp89pyxECoHNo0lq9topoXho1d5LBLL+7ukOTvbqeI36Q8pw9ROQr6n2D4
-	 KacvWyrUp+EfqhCRCgK2tQ28/lWHefukipv/tyZBwcoPA9SECLd5sRJWmYfjzs2QSJ
-	 PYXz8ot9wWwRw==
-Message-ID: <5aea2cd26cf9d0d8c55ca2f95cf06b3224020f61.camel@kernel.org>
-Subject: Re: [PATCH v1 0/2] nfsd: Fix cred refcount leak.
-From: Jeff Layton <jlayton@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@google.com>, Chuck Lever
- <chuck.lever@oracle.com>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Lorenzo Bianconi
- <lorenzo@kernel.org>,  Kuniyuki Iwashima	 <kuni1840@gmail.com>,
- linux-nfs@vger.kernel.org
-Date: Sat, 24 Jan 2026 10:32:32 -0500
-In-Reply-To: <20260124041902.548904-1-kuniyu@google.com>
-References: <20260124041902.548904-1-kuniyu@google.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1769270874;
+	bh=sM0x7LuafRplCO64dYy/ImhxFLrt50sQKSVagUQgaUE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BmrPinF3iideNzIAJUl9uspHGXghD9dMo5tR4xoP584DXZIKNm4MxHIZEtZAzaaCu
+	 0JoG/C9wgpp2vtOdCjaNE2RT1sszEzsBtbaMuUP0w1l0poWUntS/Pwam7xgEFtVcR5
+	 /nVelzcfiHFDpK/LbBNvMOB+lfAIr3BPdYTle3KbF2q0nFu2r8aknjm2Py+QfniAGA
+	 KQgYlS4Zb/DgYh3YxRau+bIW2PGLib9TD8Q7WMtXAcASx25Fj5Ss0YVV1OPXcHP/nO
+	 lNlLjLp/N1VwtYYgyJ4Z+ncX4s/bso5QNUcQMZ4i0Cy5r3zKr3HJCdhZzyE7P144so
+	 vmdd//diUP8Mw==
+Message-ID: <77e7a645-66bd-4ce2-b963-2a2488595b00@kernel.org>
+Date: Sat, 24 Jan 2026 11:07:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
+To: Benjamin Coddington <bcodding@hammerspace.com>,
+ NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Eric Biggers <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <> <e545c35e-31fc-4069-8d83-1f9585e82532@app.fastmail.com>
+ <176921979948.16766.5458950508894093690@noble.neil.brown.name>
+ <686CBEE5-D524-409D-8508-D3D48706CC02@hammerspace.com>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <686CBEE5-D524-409D-8508-D3D48706CC02@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[brown.name,redhat.com,oracle.com,talpey.com,kernel.org,gmail.com,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-18432-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-18433-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.org,gmail.com,vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 972617E08F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EFD947E165
 X-Rspamd-Action: no action
 
-On Sat, 2026-01-24 at 04:18 +0000, Kuniyuki Iwashima wrote:
-> get_current_cred() is misused in nfsd_nl_listener_set_doit()
-> and nfsd_nl_threads_set_doit(), leaking the cred refcount.
->=20
-> Patch 1 & 2 fixes the leak in each function.
->=20
->=20
-> Kuniyuki Iwashima (2):
->   nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
->   nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
->=20
->  fs/nfsd/nfsctl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On 1/24/26 8:58 AM, Benjamin Coddington wrote:
+> Hey Chuck and Neil - Sorry to be late responding here..
+> 
+> On 23 Jan 2026, at 20:56, NeilBrown wrote:
+> 
+>> On Sat, 24 Jan 2026, Chuck Lever wrote:
+>>>
+>>> On Fri, Jan 23, 2026, at 6:38 PM, NeilBrown wrote:
+>>>> On Sat, 24 Jan 2026, Chuck Lever wrote:
+>>>>> On 1/23/26 5:21 PM, NeilBrown wrote:
+>>>>>> On Sat, 24 Jan 2026, Chuck Lever wrote:
+>>>>>>>
+>>>>>>> On Wed, Jan 21, 2026, at 3:24 PM, Benjamin Coddington wrote:
+> ...
+>>>>>>>>
+>>>>>>>> +#define FH_AT_NONE		0
+>>>>>>>> +#define FH_AT_MAC		1
+>>>>>>>
+>>>>>>> I'm pleased at how much this patch has shrunk since v1.
+> 
+> Me too, thanks for all the help refining it.
+> 
+>>>>>>>
+>>>>>>> This might not be an actionable review comment, but help me understand
+>>>>>>> this particular point. Why do you need both a sign_fh export option
+>>>>>>> and a new FH auth type? Shouldn't the server just look for and
+>>>>>>> validate FH signatures whenever the sign_fh export option is
+>>>>>>> present?
+> 
+> Its vestigial from the encrypted_fh version which required it because the
+> fsid might be encrypted, so NFSD couldn't look up the export to see if it
+> was set to encrypt until decrypting the fsid, and needed the auth type to
+> know if it was encrypted.
+> 
+>>>>>> ...and also generate valid signatures on outgoing file handles.
+>>>>>>
+>>>>>> What does the server do to "look for" an FH signature so that it can
+>>>>>> "validate" it?  Answer: it inspects the fh_auth_type to see if it is
+>>>>>> FT_AT_MAC.
+>>>>>
+>>>>> No, NFSD checks the sign_fh export option. At first glance the two
+>>>>> seem redundant, and I might hesitate to inspect or not inspect
+>>>>> depending on information content received from a remote system. The
+>>>>> security policy is defined precisely by the "sign_fh" export option I
+>>>>> would think?
+> 
+> Yes, now its a bit redundant - but it could be used to still accept
+> filehandles that are signed after removing a "sign_fh" from an export.  In
+> other words, it might be useful to be "be liberal in what you accept from
+> others".  It would be essential if future patches wanted to "drain" and
+> "fill" clients with signed/plain filehandles using more permissive policies.
+> *waves hands wildly*
+> 
+>>>> So maybe you are thinking that, when sign_fh, is in effect - nfsd
+>>>> could always strip off the last 8 bytes, hash the remainder, and check
+>>>> the result matches the stripped bytes.
+>>>
+>>> I’m wondering why there is both — the purpose of having these two
+>>> seemingly redundant signals is worth documenting. There was some
+>>> discussion a few days ago about whether the root FH could be signed
+>>> or not. I thought for a moment or two that maybe when sign_fh is
+>>> enabled, there will be one or more file handles on that export that
+>>> won’t have a signature, and FT_AT_NONE would set those apart
+>>> from the signed FHs. Again, I’d like to see that documented if that is
+>>> the case.
+> 
+> Right now no, not that I know of - the root filehandle is the only one, and
+> its easy to detect.
+> 
+>> I would document it as:
+>>
+>>  sign_fh is needs to configure server policy
+>>  FT_AT_MAC, while technically redundant with sign_fh, is valuable
+>>   whehn interpreting NFS packet captures.
+> 
+> Yes, it would allow a network dissector to locate and parse the MAC.
+> 
+>>> In addition, I’ve always been told that what comes off the network
+>>> is completely untrusted. So, I want some assurance that using the
+>>> incoming FH’s auth type as part of the decision to check the signature
+>>> conforms with known best practices.
+>>>
+>>>> Another reason is that it helps people who are looking at network
+>>>> packets captures to try to work out what is going wrong.
+>>>> Seeing a flag to say "there is a signature" could help.
+>>>
+>>> Sure. But unconditionally trusting that flag is another question.
+>>
+>> By the time the code has reached this point it has already
+>> unconditionally trusted the RPC header, the NFS opcode, the '1' in
+>> fh_version, the fh_fsid_type and the fsid itself.
+>>
+>> Going further to trust fh_auth_type to the extent that we reject the
+>> request if it is 0, and check the MAC if it is 1 - is not significant.
 
-Nice catch.
+What I'm saying is that if it makes no difference to the security level,
+then let's not bother to check it at all.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+> Not a great argument, I know, but I think its nice to keep the standard that
+> filehandles are independently self-describing.
+> 
+> We're building server systems that pass around filehandles generated by NFSD
+> and it can be a useful signal to those 3rd-party systems that there's a
+> signature.  Trond might know more about whether its essential - I'll ask him
+> to weigh in here.
+
+Thanks, yes, let's hear from Trond.
+
+
+> All said - please let me know if the next version should keep it.
+
+There are really two question marks:
+
+1. If I were a security reviewer, I would say that NFSD shouldn't rely
+on network input like this to decide whether or not to validate the MAC.
+Either the server expects a MAC and uses it to validate, or it doesn't.
+For me as a maintainer, that is a risk we probably can deal with
+immediately -- would it be OK at least to change the FH verification
+code to not use the auth_type to decide when to validate the FH's MAC?
+
+2. Is setting FH_AT_MAC still useful for other reasons? I think we don't
+really know whether to keep the auth_type or how to document it until
+we've decided on how exactly NFSD will deal with changing the sign_fh
+setting while clients have the export mounted.
+
+So, let's leave the field in place and we'll come back to it. If you
+want, add a comment like /* XXX is FH_AT_MAC still needed? */
+
+
+-- 
+Chuck Lever
 
