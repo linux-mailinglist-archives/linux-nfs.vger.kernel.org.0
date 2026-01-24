@@ -1,177 +1,194 @@
-Return-Path: <linux-nfs+bounces-18435-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18436-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ssC6BfcTdWlPAgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18435-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 19:48:23 +0100
+	id +zuWDwAidWmYBAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18436-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 20:48:16 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 587C77E884
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 19:48:22 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FCEC7EBFA
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 20:48:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1D5073006154
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 18:48:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B1255300383C
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jan 2026 19:48:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979DA1C84CB;
-	Sat, 24 Jan 2026 18:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0E1136358;
+	Sat, 24 Jan 2026 19:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o91svOgn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxg3WGWS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E412B9B9;
-	Sat, 24 Jan 2026 18:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6DA1400C;
+	Sat, 24 Jan 2026 19:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769280497; cv=none; b=dpUq6Dx9pnN99OLlYXGTQbh6vufcrksQiYMyVQW2M5pkdR2O0Gk+5gnTfOzOVBYg7mOVZByetXyVKS0aBOC81XsjORVqZPw7CWhRuOufV0jO2flsOvapdK7S+23K5uM+pBAo5c86DyaBgZaSBQFL0DHHyRyK0aoJkj1X4YqbUOU=
+	t=1769284090; cv=none; b=qMRDWFDMe8cQ61PcPdL/j0QHXM6CEW+Zzvgmnvbn1+2R/QTXt7fvDb3ZM/aZ6n6a6SAbn6oFHUqIRwa50hpUmhMRBkEfnowqQWuII5gxYWrUI2Qqmq7vJ0I05He0BuMdYZhXBBkZTp3b/kCGZYECnbgNxGBdknNnmq1UEUwvpUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769280497; c=relaxed/simple;
-	bh=oCyXSOHbDmGJqfXO2G6w+kNTI/ryPsJQUM9byBK6jFk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CR3iskS2JKrtzKZu5CvLrfh62Pe35JpozxyagDFURI8G5Z1iIMZqLYPET2X/UhMKU9pa+h7GueafOl2/LKx6GtEXKljIDIfZHiAWRcNO0YfGKpuWlliV/q6C0DlafnsbyrbTgjYUT61BSyZgigCU/7+ncxglbyGaMutNWpWOXhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o91svOgn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9EDC116D0;
-	Sat, 24 Jan 2026 18:48:16 +0000 (UTC)
+	s=arc-20240116; t=1769284090; c=relaxed/simple;
+	bh=CiwE1c3OhStdZKUSR9Ar2ANpiMWzIFWljE9nRVBZp4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eL2KNV++UsnfIRlqosM5DtAVr+/4UDCKn9S9YHCPOTCQtmLy6sQc1rP11gAFwUSsZPF043dr6+68ZFaXP6HyflaGK8qi442BWnnLG4eHJodmc61JOCPYXgTZwSWttu9wqaT4UAOhCPVx05I1U3cT14tOgDlUFnqe9FTHZttkUdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxg3WGWS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A532AC116D0;
+	Sat, 24 Jan 2026 19:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769280497;
-	bh=oCyXSOHbDmGJqfXO2G6w+kNTI/ryPsJQUM9byBK6jFk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=o91svOgnezeWNa/QMECwrJEMi+s80v+NB9DFoW6B4obdl16Epg+NWwWbCAjo8w+xr
-	 xkO7UmFc6oARBhEqE33uUzGTmnO90FFiaAxt2ZQZpsS5qRSEpRttUs2inQ/9aYYJUQ
-	 y0lKIA5zhVdEe6Vk+4zVnCV9zHJrU8i5aoVULRTPk0l3fpfV9YQZe79TYlalgM0+1b
-	 FqoZb9g1KM2ismXPV/aQEwyJKN+Kd4u70FGAj866+OFt9KoMzm5wyYdQSNbkI10u6e
-	 xmN2UeIHGXYBM789mCFhEe+RhkwHD2GFqsZUIo4Ve0Z8+m1LdiBmF30beSrW+aJ4Vm
-	 vgnq0LftyUEcQ==
-Message-ID: <8be0a065a84bed02735141b4333e9c49a2ab0c90.camel@kernel.org>
-Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
-From: Trond Myklebust <trondmy@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Benjamin Coddington
- <bcodding@hammerspace.com>,  NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
- Anna Schumaker
-	 <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>, Rick Macklem
-	 <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
-Date: Sat, 24 Jan 2026 13:48:15 -0500
-In-Reply-To: <77e7a645-66bd-4ce2-b963-2a2488595b00@kernel.org>
-References: <> <e545c35e-31fc-4069-8d83-1f9585e82532@app.fastmail.com>
-	 <176921979948.16766.5458950508894093690@noble.neil.brown.name>
-	 <686CBEE5-D524-409D-8508-D3D48706CC02@hammerspace.com>
-	 <77e7a645-66bd-4ce2-b963-2a2488595b00@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1769284090;
+	bh=CiwE1c3OhStdZKUSR9Ar2ANpiMWzIFWljE9nRVBZp4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pxg3WGWSxmZ88v29KxrQN1MDY0uuyQW39QC4XVatMhx6BjcjvT+TANNTCIPXNS2mp
+	 8/ToN864BBmgIw+7hbq95bjKg6+j+xcUhzSkBpj6qfFWOX1OYaGtvYFCF/PCR4BNtW
+	 tIOjMS7F/2FkIwm9/x91J6t3sCcWezhjbBC9mzwZn0DkSO2FeEMesAiA56hj0s5UGy
+	 TvvJIp16Lc0VWih3WyiVCgqQMkRqZqXPaB+ViFFbRxGxrKY0IJJzJF6Oshp4bgymKV
+	 gJr9Xf7FEueF2d4FL9NuODBxcjyyD1gwBtTZmljCITkKC9oiIlIgamqJ6455/CtVNr
+	 bYFDTOsAV0+yA==
+Message-ID: <33c02e5a-03e7-42ef-8ccd-790a9b29a763@kernel.org>
+Date: Sat, 24 Jan 2026 14:48:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
+To: Trond Myklebust <trondmy@kernel.org>,
+ Benjamin Coddington <bcodding@hammerspace.com>, NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+ Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+References: <> <e545c35e-31fc-4069-8d83-1f9585e82532@app.fastmail.com>
+ <176921979948.16766.5458950508894093690@noble.neil.brown.name>
+ <686CBEE5-D524-409D-8508-D3D48706CC02@hammerspace.com>
+ <77e7a645-66bd-4ce2-b963-2a2488595b00@kernel.org>
+ <8be0a065a84bed02735141b4333e9c49a2ab0c90.camel@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <8be0a065a84bed02735141b4333e9c49a2ab0c90.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[oracle.com,kernel.org,gmail.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-18435-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18436-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 587C77E884
+	FORGED_SENDER_MAILLIST(0.00)[]
+X-Rspamd-Queue-Id: 3FCEC7EBFA
 X-Rspamd-Action: no action
 
-On Sat, 2026-01-24 at 11:07 -0500, Chuck Lever wrote:
-> On 1/24/26 8:58 AM, Benjamin Coddington wrote:
-> > Hey Chuck and Neil - Sorry to be late responding here..
-> >=20
-> > On 23 Jan 2026, at 20:56, NeilBrown wrote:
->=20
->=20
-> > Not a great argument, I know, but I think its nice to keep the
-> > standard that
-> > filehandles are independently self-describing.
-> >=20
-> > We're building server systems that pass around filehandles
-> > generated by NFSD
-> > and it can be a useful signal to those 3rd-party systems that
-> > there's a
-> > signature.=C2=A0 Trond might know more about whether its essential -
-> > I'll ask him
-> > to weigh in here.
->=20
-> Thanks, yes, let's hear from Trond.
->=20
->=20
-> > All said - please let me know if the next version should keep it.
->=20
-> There are really two question marks:
->=20
-> 1. If I were a security reviewer, I would say that NFSD shouldn't
-> rely
-> on network input like this to decide whether or not to validate the
-> MAC.
-> Either the server expects a MAC and uses it to validate, or it
-> doesn't.
-> For me as a maintainer, that is a risk we probably can deal with
-> immediately -- would it be OK at least to change the FH verification
-> code to not use the auth_type to decide when to validate the FH's
-> MAC?
->=20
-> 2. Is setting FH_AT_MAC still useful for other reasons? I think we
-> don't
-> really know whether to keep the auth_type or how to document it until
-> we've decided on how exactly NFSD will deal with changing the sign_fh
-> setting while clients have the export mounted.
->=20
-> So, let's leave the field in place and we'll come back to it. If you
-> want, add a comment like /* XXX is FH_AT_MAC still needed? */
->=20
+On 1/24/26 1:48 PM, Trond Myklebust wrote:
+> On Sat, 2026-01-24 at 11:07 -0500, Chuck Lever wrote:
+>> On 1/24/26 8:58 AM, Benjamin Coddington wrote:
+>>> Hey Chuck and Neil - Sorry to be late responding here..
+>>>
+>>> On 23 Jan 2026, at 20:56, NeilBrown wrote:
+>>
+>>
+>>> Not a great argument, I know, but I think its nice to keep the
+>>> standard that
+>>> filehandles are independently self-describing.
+>>>
+>>> We're building server systems that pass around filehandles
+>>> generated by NFSD
+>>> and it can be a useful signal to those 3rd-party systems that
+>>> there's a
+>>> signature.  Trond might know more about whether its essential -
+>>> I'll ask him
+>>> to weigh in here.
+>>
+>> Thanks, yes, let's hear from Trond.
+>>
+>>
+>>> All said - please let me know if the next version should keep it.
+>>
+>> There are really two question marks:
+>>
+>> 1. If I were a security reviewer, I would say that NFSD shouldn't
+>> rely
+>> on network input like this to decide whether or not to validate the
+>> MAC.
+>> Either the server expects a MAC and uses it to validate, or it
+>> doesn't.
+>> For me as a maintainer, that is a risk we probably can deal with
+>> immediately -- would it be OK at least to change the FH verification
+>> code to not use the auth_type to decide when to validate the FH's
+>> MAC?
+>>
+>> 2. Is setting FH_AT_MAC still useful for other reasons? I think we
+>> don't
+>> really know whether to keep the auth_type or how to document it until
+>> we've decided on how exactly NFSD will deal with changing the sign_fh
+>> setting while clients have the export mounted.
+>>
+>> So, let's leave the field in place and we'll come back to it. If you
+>> want, add a comment like /* XXX is FH_AT_MAC still needed? */
+>>
+> 
+> I fully agree with the argument that policy decisions about whether to
+> check for a MAC need to be driven by the /etc/exports configuration,
+> and not by the filehandle itself. The only use I can think of for a
+> flag in that context would be to expedite the rejection of the
+> filehandle in the case where that policy was set, however that would
+> seem to be optimising for what should be a rare corner case.
+> 
+> I did speculate a little in some internal conversations whether or not
+> a metadata server that is using knfsd as a flex files data server might
+> be able to re-sign a filehandle after the secret key were changed,
+> rather than having to look up the file again using its path. However
+> that too is very much a corner case that we have no plans to optimise
+> for at this time. Even if we did, we wouldn't need a flag in the
+> filehandle to know whether or not to sign it, because we'd want to
+> determine the policy through other means (if for no other reason that
+> the metadata server needs to know the secret key as well).
+> 
+> So personally, I'm neutral about the need for that flag. I don't think
+> it is harmful (provided it isn't being used by knfsd to determine MAC
+> policy enforcement) however I don't see a strong argument for it being
+> needed either.
+> 
 
-I fully agree with the argument that policy decisions about whether to
-check for a MAC need to be driven by the /etc/exports configuration,
-and not by the filehandle itself. The only use I can think of for a
-flag in that context would be to expedite the rejection of the
-filehandle in the case where that policy was set, however that would
-seem to be optimising for what should be a rare corner case.
+Thanks for clarifying.
 
-I did speculate a little in some internal conversations whether or not
-a metadata server that is using knfsd as a flex files data server might
-be able to re-sign a filehandle after the secret key were changed,
-rather than having to look up the file again using its path. However
-that too is very much a corner case that we have no plans to optimise
-for at this time. Even if we did, we wouldn't need a flag in the
-filehandle to know whether or not to sign it, because we'd want to
-determine the policy through other means (if for no other reason that
-the metadata server needs to know the secret key as well).
+My feeling is that if FH_AT_MAC remains, those who continue maintaining
+the sign_fh feature will want to understand its purpose so they don't
+break anything when updating code. So documentation is essential.
 
-So personally, I'm neutral about the need for that flag. I don't think
-it is harmful (provided it isn't being used by knfsd to determine MAC
-policy enforcement) however I don't see a strong argument for it being
-needed either.
+But it doesn't seem necessary to keep FH_AT_MAC for good security and
+proper function.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+I can't recall if Wireshark is smart enough to introspect Linux NFSD
+file handles (I thought it could). It would be sensible to have some
+Wireshark update code in hand before making the final decision about
+keeping the new auth_type.
+
+
+-- 
+Chuck Lever
 
